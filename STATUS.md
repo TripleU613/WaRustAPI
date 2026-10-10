@@ -1,5 +1,23 @@
 # Status — 2026-10-07
 
+Supplied bundle authentication (2026-10-09, **confirmed static / implemented offline**):
+common direct/pairwise encryption verifies supplied signed device keys even with
+an existing session. A failing-before generated-key regression proves forged
+same-identity refusal; valid/no-bundle session reuse and identity policy remain.
+Notification callback construction is retained through CSu.A02; its upstream
+routing and native automatic refresh remain unknown/unported. No account or
+fresh live operation. [Validation and limits](docs/protocol/peer-identity.md#supplied-bundle-validation-with-a-held-session-2026-10-09);
+[address evidence](docs/protocol/identity-notifications.md#callback-address-construction-continuation-2026-10-09).
+
+
+Validation: 848 workspace/all-feature tests passed. Strict Clippy, warnings-
+denied Rustdoc, default CLI tests (25 plus API-symbol), regenerated CLI reference,
+formatting and whitespace checks passed. The four-topic export reproduces exactly
+(9 files / 54,997 bytes); checksum-verified cached self-diff shows four unchanged
+topics and four metadata artifacts. Hygiene passed (2,264 links / 113 bundles).
+No fresh live variant or message send was performed.
+
+
 Bulk prekey processing (2026-10-09, **confirmed static / implemented offline**):
 callback messages separate parsed candidates, no bundle and per-device errors.
 Conditional owner sync, admission/ADV gates and session construction are retained.

@@ -439,7 +439,8 @@ impl std::fmt::Debug for PreparedDirect {
 }
 
 /// Prepare one text message without mutating durable state or doing network I/O.
-/// Only a new session accepts a bundle; an existing session is never reset.
+/// Supplied bundles are authenticated; only a new session consumes their keys.
+/// An existing session is never reset.
 pub async fn prepare(
     account: &AccountRecord,
     recipient: &Jid,
@@ -473,7 +474,7 @@ pub async fn prepare(
     .await
 }
 
-/// Verify the fetched signed device key before a policy admits a new identity.
+/// Verify a fetched signed device key before encryption or identity admission.
 pub(crate) fn validate_bundle_signature(bundle: &PreKeyBundle) -> Result<()> {
     // APK 2.26.37.71 CQc.A00 0030..0064 checks this signature before
     // session derivation/save. A fetched identity signing itself is not human
@@ -536,6 +537,12 @@ pub async fn prepare_payload(
     let local = IdentityKeyPair::new(IdentityKey::new(public), private);
     let address = ProtocolAddress::new(&recipient.user, DeviceId::new(recipient.device.into()));
     validate_bundle_identity(bundle, previous_identity, recipient)?;
+    // CQc.A00 (APK 2.26.37.71, 0030..0064) verifies signed keys before
+    // session construction. Do not silently accept a supplied unverified bundle
+    // just because this local path can encrypt with an existing ratchet.
+    if let Some(bundle) = bundle {
+        validate_bundle_signature(bundle)?;
+    }
     let pinned = previous_identity
         .map(IdentityKey::decode)
         .transpose()
@@ -1079,6 +1086,97 @@ mod tests {
             Node::new("error").attr("code", "503"),
         ]);
         assert!(prekey_bundle_for(&conflicting_outer_error, &peer).is_err());
+    }
+
+    #[tokio::test]
+    async fn held_session_refuses_forged_same_identity_bundle() {
+        let mut rng = rand::rng();
+        let alice = IdentityKeyPair::generate(&mut rng);
+        let bob = IdentityKeyPair::generate(&mut rng);
+        let signed = KeyPair::generate(&mut rng);
+        let signature = bob
+            .private_key()
+            .calculate_signature(&signed.public_key.serialize(), &mut rng)
+            .unwrap();
+        let bundle = PreKeyBundle::new(
+            42,
+            DeviceId::new(0),
+            None,
+            7.into(),
+            signed.public_key,
+            signature.to_vec(),
+            *bob.identity_key(),
+        )
+        .unwrap();
+        let forged = PreKeyBundle::new(
+            42,
+            DeviceId::new(0),
+            None,
+            7.into(),
+            signed.public_key,
+            vec![0; 64],
+            *bob.identity_key(),
+        )
+        .unwrap();
+        let account = AccountRecord {
+            registration: RegistrationStatus::Registered,
+            signal_registration_id: Some(31),
+            signal_identity: Some(SignalIdentityKey(KeyMaterial {
+                public: alice.public_key().public_key_bytes().try_into().unwrap(),
+                private: *alice.private_key().serialize(),
+            })),
+            ..Default::default()
+        };
+        let recipient = Jid::parse("15551234567@s.whatsapp.net").unwrap();
+        let saved = prepare(&account, &recipient, &bundle, None, None, "first")
+            .await
+            .unwrap();
+        let session_before = saved.session.to_vec();
+        let identity_before = saved.identity.clone();
+        let error = prepare(
+            &account,
+            &recipient,
+            &forged,
+            Some(&saved.session),
+            Some(&saved.identity),
+            "second",
+        )
+        .await
+        .expect_err("forged fetched bundle must refuse even with a held session");
+        assert!(
+            error
+                .to_string()
+                .contains("invalid signed directory bundle signature")
+        );
+        assert_eq!(saved.session.as_slice(), session_before);
+        assert_eq!(saved.identity, identity_before);
+        let valid = prepare(
+            &account,
+            &recipient,
+            &bundle,
+            Some(&saved.session),
+            Some(&saved.identity),
+            "second",
+        )
+        .await
+        .unwrap();
+        assert_eq!(valid.identity, saved.identity);
+        let without_bundle = prepare_payload(
+            &account,
+            &recipient,
+            None,
+            Some(&saved.session),
+            Some(&saved.identity),
+            &[0x0a, 1, b'x'],
+        )
+        .await
+        .unwrap();
+        assert_eq!(without_bundle.identity, saved.identity);
+        assert!(
+            prepare(&account, &recipient, &forged, None, None, "first")
+                .await
+                .is_err()
+        );
     }
 
     #[tokio::test]

@@ -2733,3 +2733,33 @@ locked native session construction. Rust now accepts an absent key type as 5,
 matching Bot.A03; malformed present values and forged signatures still refuse.
 A failing-before regression verifies that boundary. Native hybrid admission
 and automatic notification refresh remain unported; no live key transition.
+
+
+## Supplied bundle validation with a held session (2026-10-09)
+
+**Confirmed static (APK 2.26.37.71):** [CQc.A00](apk/2.26.37.71-held-bundle-validation/signed-key-verification.txt)
+checks the identity signature over the serialized signed device key at
+`0030..0064`, before session derivation/save. This supports the signature
+primitive and ordering for bundle processing; it does not prove every native
+send fetches or reprocesses a bundle with an existing session.
+
+**Confirmed implementation / offline:** common `prepare_payload` previously
+checked a supplied identity against the pin but ignored its signed-key signature
+when a session already existed. A failing-before test generated independent
+Signal identities and a valid signed key, established a real session, then
+supplied the same identity/key with a forged signature. Encryption unexpectedly
+succeeded. Every supplied bundle now passes the existing signature validator
+after the unchanged-pin check and before ratchet loading/encryption. The fixed
+local diagnostic is `invalid signed directory bundle signature`; new-session
+signature failures also use that diagnostic. A changed identity still refuses
+under the existing policy before this common check.
+
+The regression proves forged same-identity refusal, unchanged input session/pin,
+valid matching-bundle acceptance, no-bundle held-session acceptance and forged
+new-session refusal. Preparation is staged in memory; this test does not claim
+an actor/store transaction or server behavior. `outbox-send` exercises this
+common preparation through its existing CLI, and `peer-keys --show` already
+provides redacted signature inspection. No new command or account operation.
+**Unknown:** native notification-driven adoption, full hybrid admission and fresh
+live validation. This is authentication of a supplied signed key, not human
+verification of an identity or permission to replace it.

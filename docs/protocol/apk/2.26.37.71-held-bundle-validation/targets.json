@@ -1,0 +1,54 @@
+{
+  "notification-address-constructor": {
+    "class": "LX/Cb1;",
+    "file": "notification-address-constructor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/direct.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "notification-address-producer": {
+    "class": "LX/CSu;",
+    "file": "notification-address-producer.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/direct.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "notification-device-conversion": {
+    "class": "LX/0DK;",
+    "file": "notification-device-conversion.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/direct.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "signed-key-verification": {
+    "class": "LX/CQc;",
+    "file": "signed-key-verification.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/direct.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  }
+}

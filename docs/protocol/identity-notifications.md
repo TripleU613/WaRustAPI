@@ -129,3 +129,31 @@ cargo run -p xtask -- apk-research-diff \
 
 Cached self-diff checks retention; it is not a comparison against a new release.
 Use separate release recipes and exact-string remapping when names change.
+
+
+## Callback address construction continuation (2026-10-09)
+
+**Confirmed static (APK 2.26.37.71):** exact declaring-class/field/type DEX
+write search for `LX/Cb1;->A02:Jid` found one direct write, in its constructor
+(DEX byte offset `0x5e6b5a`). [Constructor](apk/2.26.37.71-held-bundle-validation/notification-address-constructor.txt)
+`0006..000a` assigns first Jid argument `v1` to A02. An exact constructor
+caller search found only `CSu.A00` (invoke DEX byte offset `0x5b6174`).
+[Producer](apk/2.26.37.71-held-bundle-validation/notification-address-producer.txt)
+loads `CSu.A02` into `v1` at `0012..0016` and forwards it unchanged in
+`0044..004a`; its map branch changes the list argument only.
+
+[0DK.A00](apk/2.26.37.71-held-bundle-validation/notification-device-conversion.txt)
+returns an existing DeviceJid unchanged (`0000..000e`), preserving its device.
+Otherwise it calls `0DE.A0l`, casts accepted input to UserJid, and uses
+`getPrimaryDevice` (`000e..0036`); rejected input returns null (`0036..003a`).
+**Unknown:** writes/producers of `CSu.A02`, the complete `0DE.A0l` predicate,
+participant/recipient routing and reflection/native writes. Thus this continuation
+still does not establish that the root metadata `from` selects the callback
+device. Do not implement that assumption as a notification refresh target.
+
+Reproduce with existing `xtask apk-field-refs` (class `LX/Cb1;`, field A02,
+type `Lcom/whatsapp/infra/core/jid/Jid;`, `--writes-only`), `apk-callers`
+(class `LX/Cb1;`, method `<init>`), and the hash-pinned
+[recipe](apk/recipes/2.26.37.71-held-bundle-validation.json) using
+`apk-research-bundle`. All commands operate on the local comparison APK;
+no real account or live request was used.
