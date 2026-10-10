@@ -1,0 +1,99 @@
+# APK-derived structural disassembly: LX/Cio;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A03(LL) flags=0x11 registers=7
+  # full signature: LX/Cio;->A03(Ljava/util/Set;)Ljava/util/Set;
+  0000..0006 op=71 invoke-static {v6}, LX/1xn;->A0l(Ljava/lang/Object;)Ljava/util/ArrayList;
+  0006..0008 op=0c move-result-object v3
+  0008..000e op=72 invoke-interface {v6}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+  000e..0010 op=0c move-result-object v2
+  0010..0016 op=72 invoke-interface {v2}, Ljava/util/Iterator;->hasNext()Z
+  0016..0018 op=0a move-result v0
+  0018..001c op=38 if-eqz v0, +0xe
+  001c..0022 op=72 invoke-interface {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0022..0024 op=0c move-result-object v1
+  0024..0028 op=20 instance-of v0, v1, Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+  0028..002c op=38 if-eqz v0, -0xc
+  002c..0032 op=6e invoke-virtual {v3, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+  0032..0034 op=28 goto -0x11
+  0034..003a op=71 invoke-static {}, LX/1xf;->A1D()Ljava/util/ArrayList;
+  003a..003c op=0c move-result-object v4
+  003c..0042 op=72 invoke-interface {v3}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+  0042..0044 op=0c move-result-object v2
+  0044..004a op=72 invoke-interface {v2}, Ljava/util/Iterator;->hasNext()Z
+  004a..004c op=0a move-result v0
+  004c..0050 op=38 if-eqz v0, +0x13
+  0050..0056 op=72 invoke-interface {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0056..0058 op=0c move-result-object v1
+  0058..005a op=07 move-object v0, v1
+  005a..005e op=1f check-cast v0, LX/0Cy;
+  005e..0064 op=71 invoke-static {v0}, LX/0hd;->A02(LX/0Cy;)Z
+  0064..0066 op=0a move-result v0
+  0066..006a op=39 if-nez v0, -0x11
+  006a..0070 op=6e invoke-virtual {v4, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+  0070..0072 op=28 goto -0x16
+  0072..0078 op=71 invoke-static {}, LX/1xf;->A1D()Ljava/util/ArrayList;
+  0078..007a op=0c move-result-object v3
+  007a..0080 op=72 invoke-interface {v4}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+  0080..0082 op=0c move-result-object v2
+  0082..0088 op=72 invoke-interface {v2}, Ljava/util/Iterator;->hasNext()Z
+  0088..008a op=0a move-result v0
+  008a..008e op=38 if-eqz v0, +0x15
+  008e..0094 op=72 invoke-interface {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0094..0096 op=0c move-result-object v1
+  0096..0098 op=07 move-object v0, v1
+  0098..009c op=1f check-cast v0, Lcom/whatsapp/infra/core/jid/Jid;
+  009c..00a0 op=38 if-eqz v0, -0xd
+  00a0..00a6 op=71 invoke-static {v0}, LX/0DE;->A0h(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  00a6..00a8 op=0a move-result v0
+  00a8..00ac op=39 if-nez v0, -0x13
+  00ac..00b2 op=6e invoke-virtual {v3, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+  00b2..00b4 op=28 goto -0x18
+  00b4..00ba op=71 invoke-static {v3}, LX/0C6;->A1O(Ljava/lang/Iterable;)Ljava/util/Set;
+  00ba..00bc op=0c move-result-object v3
+  00bc..00c2 op=72 invoke-interface {v3}, Ljava/util/Set;->isEmpty()Z
+  00c2..00c4 op=0a move-result v0
+  00c4..00c8 op=39 if-nez v0, +0x32
+  00c8..00cc op=54 iget-object v0, v5, LX/Cio;->A01:LX/05B;
+  00cc..00d2 op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  00d2..00d4 op=0c move-result-object v0
+  00d4..00d8 op=1f check-cast v0, LX/0kV;
+  00d8..00de op=6e invoke-virtual {v0, v3}, LX/0kV;->A00(Ljava/util/Collection;)Ljava/util/HashMap;
+  00de..00e0 op=0c move-result-object v0
+  00e0..00e6 op=71 invoke-static {v0}, LX/1xh;->A1M(Ljava/util/AbstractMap;)Ljava/util/Iterator;
+  00e6..00e8 op=0c move-result-object v2
+  00e8..00ee op=72 invoke-interface {v2}, Ljava/util/Iterator;->hasNext()Z
+  00ee..00f0 op=0a move-result v0
+  00f0..00f4 op=38 if-eqz v0, +0x1c
+  00f4..00fa op=71 invoke-static {v2}, LX/1xk;->A0y(Ljava/util/Iterator;)Ljava/util/Map$Entry;
+  00fa..00fc op=0c move-result-object v0
+  00fc..0102 op=72 invoke-interface {v0}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+  0102..0104 op=0c move-result-object v1
+  0104..010a op=72 invoke-interface {v0}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+  010a..010c op=0c move-result-object v0
+  010c..0110 op=1f check-cast v0, LX/0DV;
+  0110..0114 op=55 iget-boolean v0, v0, LX/0DV;->A0A:Z
+  0114..0118 op=39 if-nez v0, -0x16
+  0118..011e op=71 invoke-static {v3}, LX/10S;->A00(Ljava/lang/Object;)Ljava/util/Collection;
+  011e..0120 op=0c move-result-object v0
+  0120..0126 op=72 invoke-interface {v0, v1}, Ljava/util/Collection;->remove(Ljava/lang/Object;)Z
+  0126..0128 op=28 goto -0x1f
+  0128..012e op=72 invoke-interface {v3}, Ljava/util/Set;->isEmpty()Z
+  012e..0130 op=0a move-result v0
+  0130..0134 op=39 if-nez v0, +0x19
+  0134..0138 op=54 iget-object v0, v5, LX/Cio;->A00:LX/05B;
+  0138..013e op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  013e..0140 op=0c move-result-object v2
+  0140..0144 op=1f check-cast v2, LX/0kT;
+  0144..0148 op=1a const-string v1, "requestSyncDevicesAndLidIfMissingLids"
+  0148..014c op=1a const-string v0, "PreKeyFetch"
+  014c..0152 op=6e invoke-virtual {v2, v1, v0, v3}, LX/0kT;->A05(Ljava/lang/String;Ljava/lang/String;Ljava/util/Set;)Ljava/util/Map;
+  0152..0154 op=0c move-result-object v0
+  0154..015a op=72 invoke-interface {v0}, Ljava/util/Map;->keySet()Ljava/util/Set;
+  015a..015c op=0c move-result-object v0
+  015c..0162 op=72 invoke-interface {v3, v0}, Ljava/util/Set;->removeAll(Ljava/util/Collection;)Z
+  0162..0164 op=11 return-object v3
+  # exception table: 0 try range(s)
+.end method

@@ -17,7 +17,8 @@ DeviceJid lists, prepares their combined set through `Cio.A02(..., false)`
 (`0056..00a0`) and emits handler message **what=0, arg1=87, arg2=0**
 (`01da..01e8`). It carries the lists as `jids` and `identityJids`; the reason-8
 context is used separately for job telemetry, not copied as a numeric wire
-`reason` here. **Unknown:** Cio.A02's preparatory state effects.
+`reason` here. The [processing continuation](bulk-prekey-processing.md) now traces its
+conditional owner sync; complete mapping authority remains **unknown**.
 
 The [existing full 0y0.A00 dispatcher](apk/2.26.37.71-read-receipt-job/read-dispatch.txt)
 selects 87 -> `16ae`, registers a Bot callback at `1738..175e`, and builds the
@@ -55,12 +56,13 @@ to 5 only on absence; a present type must contain exactly one byte. Identity_aut
 includes version, signature and certs; its presence is not proof of verification.
 
 Parsed candidates are handed to `1Dz.A1O` (`03a0..03d8`); requested-device
-success/error paths reach `A15` and `A1T` (`03de..04ce`).
+none/error paths reach `A15` and `A1T` (`03de..04ce`).
 [Bot.A01](apk/2.26.37.71-bulk-prekey-refresh/bulk-callback-error.txt) handles the
 outer error across requested addresses, deriving B76 with scope and B77 selected
-by PQ mode, then calling A1T (`0056..0064`). **Unknown:** complete A1O/A15/A1T
-verification, pin/session mutation, callbacks, sorting authority and partial-set
-semantics. Parsing public keys here does not establish that they can safely
+by PQ mode, then calling A1T (`0056..0064`). The [processing continuation](bulk-prekey-processing.md) follows these
+forwarding wrappers into admission and session construction. Complete native
+verification, pin/session mutation, sorting authority and partial-set semantics
+remain **unknown/unported**. Parsing public keys here does not establish that they can safely
 replace an existing authenticated pin.
 
 [Job exception policy](apk/2.26.37.71-bulk-prekey-refresh/bulk-job-exception-policy.txt)

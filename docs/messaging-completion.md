@@ -1,5 +1,20 @@
 # Messaging completion checklist
 
+Bulk prekey processing (2026-10-09, **confirmed static / implemented offline**):
+callback messages separate parsed candidates, no bundle and per-device errors.
+Conditional owner sync, admission/ADV gates and session construction are retained.
+A failing-before regression fixes missing type: absence defaults to 5; present
+malformed/duplicate/unsupported types and forged signatures still refuse. Native
+hybrid admission, mapping/primitive authority and automatic refresh remain
+unported. No real account or live operation. [Evidence and limits](protocol/bulk-prekey-processing.md).
+
+Validation: 847 workspace/all-feature tests passed; strict Clippy, warnings-
+denied Rustdoc, default CLI tests (25 plus API-symbol), CLI-reference regeneration,
+formatting and whitespace passed. Exact export check: 16 topics / 21 files /
+137,128 bytes; cached self-diff: 16 unchanged topics / four metadata artifacts.
+Hygiene passed (2,253 local links / 112 APK bundles). No fresh live variant.
+
+
 Bulk prekey request (2026-10-09, **confirmed static / implemented offline**):
 identityChangedJids selects user/@reason=identity in the normal encrypt/key IQ.
 The reusable Rust builder and peer-keys --preview-identity-change expose that

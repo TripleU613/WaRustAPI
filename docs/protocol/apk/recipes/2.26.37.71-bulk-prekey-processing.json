@@ -1,0 +1,152 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "success-callback": {
+      "class": "LX/1Dz;",
+      "method": "A1O",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "success-message": {
+      "class": "LX/1Dz;",
+      "method": "A0Z",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "none-callback": {
+      "class": "LX/1Dz;",
+      "method": "A15",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "none-message": {
+      "class": "LX/1Dz;",
+      "method": "A0M",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "error-callback": {
+      "class": "LX/1Dz;",
+      "method": "A1T",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "error-message": {
+      "class": "LX/1Dz;",
+      "method": "A0e",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "preparation-entry": {
+      "class": "LX/Cio;",
+      "method": "A02",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "preparation-core": {
+      "class": "LX/Cio;",
+      "method": "A00",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "preparation-peers": {
+      "class": "LX/Cio;",
+      "method": "A03",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "device-user-projection": {
+      "class": "LX/Ayo;",
+      "method": "A1N",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "preparation-sync-request": {
+      "class": "LX/0ss;",
+      "method": "A0A",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "preparation-sync-context": {
+      "class": "LX/0xX;",
+      "method": "<clinit>",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "incoming-prekey-dispatch": {
+      "class": "LX/14I;",
+      "method": "BFC",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "candidate-admission": {
+      "class": "LX/CPB;",
+      "method": "A00",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "session-creation": {
+      "class": "LX/0jc;",
+      "method": "A0L",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "post-session-pq": {
+      "class": "LX/14J;",
+      "method": "A01",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    }
+  }
+}

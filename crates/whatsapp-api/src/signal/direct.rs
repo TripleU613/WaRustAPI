@@ -311,7 +311,10 @@ pub fn prekey_bundle_for(reply: &Node, recipient: &Jid) -> Result<PreKeyBundle> 
     if user.child("error").is_some() {
         return Err(invalid("server refused recipient key lookup"));
     }
-    if data(child(user, "type")?)? != [5] {
+    // APK 37.71 Bot.A03 00e8..00f0 defaults only an absent type to 5.
+    // Present fields still use exact singleton/width/type checks; see
+    // bulk-prekey-processing.md. Signature verification remains a separate unchanged step.
+    if user.child("type").is_some() && data(child(user, "type")?)? != [5] {
         return Err(invalid("unsupported identity key type"));
     }
     let identity = IdentityKey::new(public(child(user, "identity")?)?);
@@ -867,6 +870,81 @@ mod tests {
             self.signed = record.clone();
             Ok(())
         }
+    }
+
+    #[test]
+    fn key_bundle_absent_type_defaults_without_relaxing_present_type_or_signature() {
+        let identity = IdentityKeyPair::generate(&mut rand::rng());
+        let signed = KeyPair::generate(&mut rand::rng());
+        let signature = identity
+            .private_key()
+            .calculate_signature(&signed.public_key.serialize(), &mut rand::rng())
+            .unwrap();
+        let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let fields = vec![
+            Node::new("registration").bytes(vec![0, 0, 0, 9]),
+            Node::new("identity").bytes(identity.public_key().public_key_bytes().to_vec()),
+            Node::new("skey").children(vec![
+                Node::new("id").bytes(vec![0, 0, 7]),
+                Node::new("value").bytes(signed.public_key.public_key_bytes().to_vec()),
+                Node::new("signature").bytes(signature.to_vec()),
+            ]),
+        ];
+        let reply = |extra: Vec<Node>| {
+            let mut all = fields.clone();
+            all.extend(extra);
+            Node::new("iq")
+                .attr("type", "result")
+                .children(vec![Node::new("list").children(vec![
+                    Node::new("user").attr("jid", peer.clone()).children(all),
+                ])])
+        };
+        // APK 37.71 Bot.A03 00e8..00f0 defaults only an absent type to 5.
+        let bundle = prekey_bundle_for(&reply(vec![]), &peer).unwrap();
+        assert_eq!(bundle.identity_key().unwrap(), identity.identity_key());
+        validate_bundle_signature(&bundle).unwrap();
+        let explicit =
+            prekey_bundle_for(&reply(vec![Node::new("type").bytes(vec![5])]), &peer).unwrap();
+        assert_eq!(
+            explicit.identity_key().unwrap(),
+            bundle.identity_key().unwrap()
+        );
+        validate_bundle_signature(&explicit).unwrap();
+        for extra in [
+            vec![Node::new("type").bytes(vec![])],
+            vec![Node::new("type").bytes(vec![5, 5])],
+            vec![Node::new("type").bytes(vec![6])],
+            vec![Node::new("type").children(vec![Node::new("private-type-canary")])],
+            vec![
+                Node::new("type").bytes(vec![5]),
+                Node::new("type").bytes(vec![5]),
+            ],
+        ] {
+            let error = prekey_bundle_for(&reply(extra), &peer).err().unwrap();
+            assert!(!error.to_string().contains(&peer.user));
+            assert!(!error.to_string().contains("private-type-canary"));
+        }
+        let mut forged = reply(vec![]);
+        let NodeContent::Children(lists) = &mut forged.content else {
+            panic!("fixture")
+        };
+        let NodeContent::Children(users) = &mut lists[0].content else {
+            panic!("fixture")
+        };
+        let NodeContent::Children(fields) = &mut users[0].content else {
+            panic!("fixture")
+        };
+        let skey = fields.iter_mut().find(|n| n.description == "skey").unwrap();
+        let NodeContent::Children(signed_fields) = &mut skey.content else {
+            panic!("fixture")
+        };
+        signed_fields
+            .iter_mut()
+            .find(|n| n.description == "signature")
+            .unwrap()
+            .content = NodeContent::Bytes(vec![0; 64].into());
+        let bundle = prekey_bundle_for(&forged, &peer).unwrap();
+        assert!(validate_bundle_signature(&bundle).is_err());
     }
 
     /// A fan-out asks for several devices in one query, so the reply carries

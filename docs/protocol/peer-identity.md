@@ -2724,3 +2724,12 @@ checked 2,162 local links and 107 existing APK bundles. No fresh live test.
 peer selection, callback-device work, the existing-key gate and reason-8 bulk
 prekey scheduling. These confirmed static branches do not authenticate a
 replacement identity. Native response/ACK handling remains unported.
+
+## Bulk prekey processing and absent type (2026-10-09)
+
+[Preparation/processing evidence](bulk-prekey-processing.md) distinguishes
+conditional owner sync, parsed/none/error callbacks, candidate/ADV admission and
+locked native session construction. Rust now accepts an absent key type as 5,
+matching Bot.A03; malformed present values and forged signatures still refuse.
+A failing-before regression verifies that boundary. Native hybrid admission
+and automatic notification refresh remain unported; no live key transition.

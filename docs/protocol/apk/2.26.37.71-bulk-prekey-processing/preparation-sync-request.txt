@@ -1,0 +1,20 @@
+# APK-derived structural disassembly: LX/0ss;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0A(LLL) flags=0x1 registers=10
+  # full signature: LX/0ss;->A0A(LX/0xX;Ljava/util/Collection;)LX/AzG;
+  0000..0002 op=07 move-object v4, v9
+  0002..0008 op=72 invoke-interface {v9}, Ljava/util/Collection;->size()I
+  0008..000c op=62 sget-object v2, LX/0xh;->A0g:LX/0xh;
+  000c..0010 op=62 sget-object v1, LX/0xo;->A0L:LX/0xo;
+  0010..0012 op=12 const/4 v5, #0x1
+  0012..0014 op=07 move-object v0, v7
+  0014..0016 op=07 move-object v3, v8
+  0016..0018 op=01 move v6, v5
+  0018..001e op=74 invoke-virtual/range {v0..v6}, LX/0ss;->A06(LX/0xo;LX/0xh;LX/0xX;Ljava/util/Collection;ZZ)LX/AzG;
+  001e..0020 op=0c move-result-object v0
+  0020..0022 op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method
