@@ -8,6 +8,14 @@ the existing earliest-positive device row behavior, and no user-row authority
 or identity cleanup is inferred. Fresh live projection remains unverified.
 [Evidence and inspection](protocol/receipt-fact-time.md).
 
+Live receive validation: one 20-second receive-only window authenticated
+and stopped cleanly (33.67 seconds total). Actions 21, receipt rows 9 and
+eligible outbox 0 remained unchanged; generation/registration/journal-head
+summaries stayed equal. Only unsupported controls appeared; no qualifying
+receipt projection or decrypted message was observed. Automatic reads,
+outbox sends and reconnects were disabled. Summary/count equality is not
+all-record byte equality. [Redacted result](protocol/receipt-fact-time-live.json).
+
 Validation: 887 workspace/all-feature tests passed (746 library, 4 codec,
 9 crash, 54 CLI, 1 API-symbol and 73 tooling tests). Strict all-target/all-feature
 Clippy, warnings-denied Rustdoc, default CLI tests, CLI-reference regeneration,

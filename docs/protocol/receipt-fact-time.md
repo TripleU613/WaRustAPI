@@ -56,3 +56,11 @@ Clippy, warnings-denied Rustdoc, default CLI tests, CLI-reference regeneration,
 formatting and whitespace checks passed. Hygiene checked 2,479 local links and
 127 APK bundles / 26,797,855 bytes. Existing APK evidence was reused; no new
 export or cross-release parity is claimed.
+
+Live receive validation: one 20-second receive-only window authenticated
+and stopped cleanly (33.67 seconds total). Actions 21, receipt rows 9 and
+eligible outbox 0 remained unchanged; generation/registration/journal-head
+summaries stayed equal. Only unsupported controls appeared; no qualifying
+receipt projection or decrypted message was observed. Automatic reads,
+outbox sends and reconnects were disabled. Summary/count equality is not
+all-record byte equality. [Redacted result](receipt-fact-time-live.json).
