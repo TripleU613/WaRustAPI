@@ -115,3 +115,28 @@ reproduced byte-for-byte. Exact APK export and cached self-diff passed; hygiene
 checked 2,423 links / 122 bundles. Initial stale two-value enum assumption was
 corrected after tracing Azc, then vectors/tests regenerated and checks rerun.
 The final incoming regression ran in the complete workspace suite.
+
+## Bounded saved-account validation
+
+**Observed:** [redacted validation](adv-details-serialization-live.json) used one
+45-second receive-only window (57.05 seconds total) on the rebuilt binary.
+Preflight had no queued actions/receipts/eligible outbox; outbox, automatic
+reads and reconnects were disabled. Authentication/activation and clean stop
+succeeded. Actions (21), receipts (9), eligible outbox (0), account generation,
+registration and journal head stayed equal. Inbound checkpoints rose
+848→856; other table counts stayed equal. This is an aggregate check,
+not byte equality of every private encrypted record.
+
+Incoming outcome logs contained 10 Unsupported controls and zero decrypted,
+duplicate or undecryptable messages. No qualifying companion ADV arrived;
+live parity remains **unknown**. Historical identity-refresh inspection remains
+verified/matching but untracked, force_override_e2ee_state=false, applied=false.
+No saved request or identity was reset, no historical guard backfilled, and no
+chat was sent. The real-crypto synthetic receive test supplies positive coverage
+of the changed branch; the live window proves ordinary receive startup/stop.
+
+The redacted incoming stanza counts are five notifications and five ib controls,
+zero message/receipt stanzas. Follow-up CLI-reference/API-symbol, whitespace
+and hygiene checks passed (2,425 links / 122 bundles). No Rust code changed in
+this validation-record follow-up; the complete implementation checks above
+remain its verification. Private key/config/logs and account state stay ignored.

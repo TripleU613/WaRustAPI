@@ -3148,3 +3148,9 @@ NON_E2EE=2; local reference schema extension is annotated and generated.
 **Observed reference:** 637 descriptor-reconstructed Java serialization vectors
 reproduce; exact APK runtime version/depth remains unknown. No membership/MAC,
 pin/state/teardown guard is bypassed. [Trace, oracle and receiving tests](adv-details-serialization.md).
+
+ADV serialization live validation: one rebuilt saved-account 45-second receive-only
+window authenticated/activated/stopped with unchanged actions/receipts/outbox,
+generation/registration/head and 8 new inbound checkpoints. No qualifying
+companion ADV or decrypted message; live branch parity unknown. Historical
+untracked identity action stays unapplied. [Redacted record](adv-details-serialization-live.json).

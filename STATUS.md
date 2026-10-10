@@ -11,6 +11,9 @@ Validation: all 874 workspace/all-feature tests, strict Clippy, Rustdoc, default
 CLI/API symbols/reference and proto-check passed. All 637 Java vectors reproduced;
 10-topic / 15-file / 113,397-byte APK export reproduces and self-diffs unchanged.
 Hygiene passed (2,423 links / 122 bundles).
+Live: one 45-second receive-only window authenticated/activated/stopped cleanly;
+actions/receipts/outbox/generation/head stayed equal, 8 new inbound checkpoints.
+No qualifying companion ADV or decrypted message; live branch parity unknown.
 
 
 Same-key primary refresh (2026-10-09, **implemented/offline**): a guarded classic
