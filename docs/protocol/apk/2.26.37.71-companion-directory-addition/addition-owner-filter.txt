@@ -1,0 +1,102 @@
+# APK-derived structural disassembly: LX/0bN;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0G(VLL) flags=0x1 registers=10
+  # full signature: LX/0bN;->A0G(Lcom/whatsapp/infra/core/jid/UserJid;Ljava/util/HashMap;)V
+  0000..0004 op=54 iget-object v0, v7, LX/0bN;->A01:LX/00s;
+  0004..000a op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  000a..000c op=0c move-result-object v0
+  000c..0010 op=1f check-cast v0, LX/00W;
+  0010..0016 op=6e invoke-virtual {v0}, LX/00W;->A01()LX/00X;
+  0016..0018 op=0c move-result-object v1
+  0018..001c op=13 const/16 v0, #0x5a3
+  001c..0022 op=71 invoke-static {v1, v0}, LX/08b;->A03(LX/00X;I)Ljava/lang/Object;
+  0022..0024 op=0c move-result-object v4
+  0024..0028 op=1f check-cast v4, LX/0AH;
+  0028..002c op=22 new-instance v3, Ljava/util/HashMap;
+  002c..0032 op=70 invoke-direct {v3}, Ljava/util/HashMap;-><init>()V
+  0032..0038 op=6e invoke-virtual {v9}, Ljava/util/AbstractMap;->entrySet()Ljava/util/Set;
+  0038..003a op=0c move-result-object v0
+  003a..0040 op=72 invoke-interface {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+  0040..0042 op=0c move-result-object v5
+  0042..0048 op=72 invoke-interface {v5}, Ljava/util/Iterator;->hasNext()Z
+  0048..004a op=0a move-result v0
+  004a..004e op=38 if-eqz v0, +0x22
+  004e..0054 op=72 invoke-interface {v5}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0054..0056 op=0c move-result-object v2
+  0056..005a op=1f check-cast v2, Ljava/util/Map$Entry;
+  005a..0060 op=72 invoke-interface {v2}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+  0060..0062 op=0c move-result-object v0
+  0062..0066 op=1f check-cast v0, Lcom/whatsapp/infra/core/jid/DeviceJid;
+  0066..006a op=54 iget-object v0, v0, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+  006a..0070 op=6e invoke-virtual {v0, v8}, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z
+  0070..0072 op=0a move-result v0
+  0072..0076 op=39 if-nez v0, -0x18
+  0076..007c op=72 invoke-interface {v2}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+  007c..007e op=0c move-result-object v1
+  007e..0084 op=72 invoke-interface {v2}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+  0084..0086 op=0c move-result-object v0
+  0086..008c op=6e invoke-virtual {v3, v1, v0}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+  008c..008e op=28 goto -0x25
+  008e..0094 op=6e invoke-virtual {v3}, Ljava/util/AbstractMap;->size()I
+  0094..0096 op=0a move-result v0
+  0096..009a op=3d if-lez v0, +0x76
+  009a..00a0 op=1b const-string/jumbo v0, "userJid="
+  00a0..00a4 op=22 new-instance v5, Ljava/lang/StringBuilder;
+  00a4..00aa op=70 invoke-direct {v5, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  00aa..00b0 op=6e invoke-virtual {v5, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  00b0..00b4 op=1a const-string v0, "; deviceJids="
+  00b4..00ba op=6e invoke-virtual {v5, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00ba..00be op=22 new-instance v6, Ljava/lang/StringBuilder;
+  00be..00c4 op=70 invoke-direct {v6}, Ljava/lang/StringBuilder;-><init>()V
+  00c4..00ca op=6e invoke-virtual {v3}, Ljava/util/AbstractMap;->entrySet()Ljava/util/Set;
+  00ca..00cc op=0c move-result-object v0
+  00cc..00d2 op=72 invoke-interface {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+  00d2..00d4 op=0c move-result-object v2
+  00d4..00da op=72 invoke-interface {v2}, Ljava/util/Iterator;->hasNext()Z
+  00da..00dc op=0a move-result v0
+  00dc..00e0 op=38 if-eqz v0, +0x21
+  00e0..00e6 op=72 invoke-interface {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  00e6..00e8 op=0c move-result-object v1
+  00e8..00ec op=1f check-cast v1, Ljava/util/Map$Entry;
+  00ec..00f0 op=1a const-string v0, ","
+  00f0..00f6 op=6e invoke-virtual {v6, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00f6..00fc op=72 invoke-interface {v1}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+  00fc..00fe op=0c move-result-object v0
+  00fe..0104 op=6e invoke-virtual {v6, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  0104..0108 op=1a const-string v0, ":"
+  0108..010e op=6e invoke-virtual {v6, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  010e..0114 op=72 invoke-interface {v1}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+  0114..0116 op=0c move-result-object v0
+  0116..011c op=6e invoke-virtual {v6, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  011c..011e op=28 goto -0x24
+  011e..0124 op=6e invoke-virtual {v6}, Ljava/lang/StringBuilder;->length()I
+  0124..0126 op=0a move-result v0
+  0126..012a op=3d if-lez v0, +0x2b
+  012a..012c op=12 const/4 v0, #0x1
+  012c..0132 op=6e invoke-virtual {v6, v0}, Ljava/lang/StringBuilder;->substring(I)Ljava/lang/String;
+  0132..0134 op=0c move-result-object v0
+  0134..013a op=6e invoke-virtual {v5, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  013a..0140 op=6e invoke-virtual {v5}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  0140..0142 op=0c move-result-object v2
+  0142..0144 op=12 const/4 v1, #0x0
+  0144..014a op=1b const-string/jumbo v0, "userdevicemanager/invalid_devices"
+  014a..0150 op=6e invoke-virtual {v4, v0, v2, v1}, LX/0AH;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+  0150..0156 op=6e invoke-virtual {v3}, Ljava/util/AbstractMap;->keySet()Ljava/util/Set;
+  0156..0158 op=0c move-result-object v0
+  0158..015e op=72 invoke-interface {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+  015e..0160 op=0c move-result-object v1
+  0160..0166 op=72 invoke-interface {v1}, Ljava/util/Iterator;->hasNext()Z
+  0166..0168 op=0a move-result v0
+  0168..016c op=38 if-eqz v0, +0xd
+  016c..0172 op=72 invoke-interface {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0172..0174 op=0c move-result-object v0
+  0174..017a op=6e invoke-virtual {v9, v0}, Ljava/util/AbstractMap;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+  017a..017c op=28 goto -0xd
+  017c..0180 op=1a const-string v0, "no-data-found"
+  0180..0182 op=28 goto -0x26
+  0182..0184 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

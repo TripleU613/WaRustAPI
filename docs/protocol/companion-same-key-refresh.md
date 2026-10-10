@@ -1,5 +1,11 @@
 # Known companion same-key directory refresh
 
+Follow-up: [returning companion directory addition](companion-directory-addition.md)
+now restores absent exact-namespace membership for a previously pinned key
+only after full signed newer ADV. A matching pin alone still cannot shortcut
+ADV verification while absent. First-seen/canonical admission remains unfinished.
+
+
 Follow-up: [changed companion directory application](companion-changed-key-refresh.md)
 now verifies full ADV for a guarded existing companion against its independent
 current primary baseline. First-seen, primary/raw-ID changes and full native

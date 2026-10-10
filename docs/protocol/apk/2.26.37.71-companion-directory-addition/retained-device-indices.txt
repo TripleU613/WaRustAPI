@@ -1,0 +1,37 @@
+# APK-derived structural disassembly: LX/0bN;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0C(LL) flags=0x1 registers=6
+  # full signature: LX/0bN;->A0C(Lcom/whatsapp/infra/core/jid/UserJid;)Ljava/util/Map;
+  0000..0004 op=54 iget-object v0, v4, LX/0bN;->A01:LX/00s;
+  0004..000a op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  000a..000c op=0c move-result-object v0
+  000c..0010 op=1f check-cast v0, LX/00W;
+  0010..0016 op=6e invoke-virtual {v0}, LX/00W;->A01()LX/00X;
+  0016..0018 op=0c move-result-object v1
+  0018..001c op=13 const/16 v0, #0xee0
+  001c..0022 op=71 invoke-static {v1, v0}, LX/08b;->A03(LX/00X;I)Ljava/lang/Object;
+  0022..0024 op=0c move-result-object v1
+  0024..0028 op=1f check-cast v1, LX/1IW;
+  0028..002c op=54 iget-object v0, v4, LX/0bN;->A02:LX/08Z;
+  002c..0032 op=72 invoke-interface {v0, v5}, LX/08Z;->BO0(LX/0Cy;)Z
+  0032..0034 op=0a move-result v0
+  0034..0038 op=38 if-eqz v0, +0x5
+  0038..003c op=62 sget-object v0, Ljava/util/Collections;->EMPTY_MAP:Ljava/util/Map;
+  003c..003e op=11 return-object v0
+  003e..0044 op=6e invoke-virtual {v1, v5}, LX/1IW;->A09(Lcom/whatsapp/infra/core/jid/UserJid;)Lcom/google/common/collect/ImmutableMap;
+  0044..0046 op=0c move-result-object v0
+  0046..004a op=22 new-instance v3, Ljava/util/HashMap;
+  004a..0050 op=70 invoke-direct {v3, v0}, Ljava/util/HashMap;-><init>(Ljava/util/Map;)V
+  0050..0056 op=6e invoke-virtual {v5}, Lcom/whatsapp/infra/core/jid/UserJid;->getPrimaryDevice()Lcom/whatsapp/infra/core/jid/DeviceJid;
+  0056..0058 op=0c move-result-object v2
+  0058..005e op=71 invoke-static {v2}, LX/00K;->A06(Ljava/lang/Object;)V
+  005e..0062 op=16 const-wide/16 v0, #0x0
+  0062..0068 op=71 invoke-static {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+  0068..006a op=0c move-result-object v0
+  006a..0070 op=6e invoke-virtual {v3, v2, v0}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+  0070..0072 op=11 return-object v3
+  # exception table: 0 try range(s)
+.end method

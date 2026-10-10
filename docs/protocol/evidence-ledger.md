@@ -1,6 +1,18 @@
 # Evidence ledger
 
 2026-10-09 — **confirmed static / implemented offline**: APK 37.71
+11T.A0D skips equal-key shortcut for absent membership, verifies full ADV and
+requires newer signed time before add-only remote allocation. 1IW/AzR/B7j
+membership/canonical/observer boundaries retained separately. Rust restores
+only a guarded previously pinned exact-namespace companion, with both signatures,
+current primary/raw-ID/E2EE baseline, atomic membership/provenance/pending sync
+and appropriate session/history. No primary floor or existing index replacement,
+first-seen pin or canonical namespace inference. Inspection adds the fixed
+ready_addition_pending status; live qualifying restoration unknown.
+[Evidence and remaining boundaries](companion-directory-addition.md).
+
+
+2026-10-09 — **confirmed static / implemented offline**: APK 37.71
 14J.A04 companion directory candidate calls 11T.A0D discriminator 4 / false.
 0jV.A0a/A08 and 08i/08a own predicates close remote login/own branch inputs.
 Both ADV signatures bind candidate and independent primary; matched E2EE/raw-ID

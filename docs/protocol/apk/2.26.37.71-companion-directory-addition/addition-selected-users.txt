@@ -1,0 +1,43 @@
+# APK-derived structural disassembly: LX/1IW;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A02(LLL) flags=0x9 registers=4
+  # full signature: LX/1IW;->A02(LX/1IW;Lcom/whatsapp/infra/core/jid/UserJid;)Ljava/util/Set;
+  0000..0004 op=54 iget-object v1, v2, LX/1IW;->A02:LX/07t;
+  0004..0008 op=62 sget-object v0, LX/0bq;->A06:LX/09P;
+  0008..000e op=6e invoke-virtual {v1, v0}, LX/00D;->A13(LX/09P;)Z
+  000e..0010 op=0a move-result v0
+  0010..0014 op=38 if-eqz v0, +0x22
+  0014..0018 op=62 sget-object v0, LX/0bq;->A07:LX/09P;
+  0018..001e op=6e invoke-virtual {v1, v0}, LX/00D;->A13(LX/09P;)Z
+  001e..0020 op=0a move-result v0
+  0020..0024 op=38 if-eqz v0, +0x1a
+  0024..0028 op=54 iget-object v0, v2, LX/1IW;->A01:LX/00s;
+  0028..002e op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  002e..0030 op=0c move-result-object v0
+  0030..0034 op=1f check-cast v0, LX/Chv;
+  0034..003a op=6e invoke-virtual {v0, v3}, LX/Chv;->A01(Lcom/whatsapp/infra/core/jid/UserJid;)Lcom/whatsapp/infra/core/jid/UserJid;
+  003a..003c op=0c move-result-object v0
+  003c..0040 op=39 if-nez v0, +0x7
+  0040..0046 op=71 invoke-static {}, Lcom/google/common/collect/ImmutableSet;->of()Lcom/google/common/collect/ImmutableSet;
+  0046..0048 op=0c move-result-object v0
+  0048..004a op=11 return-object v0
+  004a..0050 op=71 invoke-static {v0}, Lcom/google/common/collect/ImmutableSet;->of(Ljava/lang/Object;)Lcom/google/common/collect/ImmutableSet;
+  0050..0052 op=0c move-result-object v0
+  0052..0054 op=11 return-object v0
+  0054..0058 op=20 instance-of v0, v3, Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+  0058..005c op=38 if-eqz v0, +0xd
+  005c..0062 op=71 invoke-static {v3}, LX/0hd;->A02(LX/0Cy;)Z
+  0062..0064 op=0a move-result v0
+  0064..0068 op=38 if-eqz v0, +0x7
+  0068..006e op=71 invoke-static {v3}, Lcom/google/common/collect/ImmutableSet;->of(Ljava/lang/Object;)Lcom/google/common/collect/ImmutableSet;
+  006e..0070 op=0c move-result-object v0
+  0070..0072 op=11 return-object v0
+  0072..0076 op=54 iget-object v0, v2, LX/1IW;->A06:LX/0Xw;
+  0076..007c op=6e invoke-virtual {v0, v3}, LX/0Xw;->A0U(Lcom/whatsapp/infra/core/jid/UserJid;)Ljava/util/Set;
+  007c..007e op=0c move-result-object v0
+  007e..0080 op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method

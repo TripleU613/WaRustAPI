@@ -50,6 +50,9 @@ pub(crate) struct AuthoritySnapshot {
 }
 
 impl AuthoritySnapshot {
+    pub(crate) fn addition_required(&self) -> bool {
+        self.device_addition.is_some()
+    }
     pub(crate) fn refresh_required(&self) -> bool {
         self.refresh_timestamp.is_some()
     }
@@ -58,11 +61,13 @@ impl AuthoritySnapshot {
         let mut list = self.list.clone();
         if let Some(entry) = &self.device_addition {
             // 11T.A0D 06f2..0994 adds absent addresses only. Both ADV
-            // signatures and nested Signal MAC were checked before this commit.
+            // signatures and source authentication (nested Signal MAC or
+            // guarded authenticated directory reply) precede this commit.
             list.devices.push(entry.clone());
             list.devices.sort_by(|a, b| a.jid.cmp(&b.jid));
             list.adv_added_devices.push(entry.jid.clone());
             list.adv_added_devices.sort();
+            list.adv_added_devices.dedup();
             list.hash_matches = None;
             tx.put_json(
                 Table::Checkpoints,
@@ -106,8 +111,8 @@ impl AuthoritySnapshot {
 
 /// APK 37.71 11T.A0D 0044..00ec: nonnull ADV, current membership and
 /// equal held identity return true at 0e48 before ADV parsing. 14J.A04 then
-/// derives a session. This never admits a new key or updates ADV/list state.
-/// Caller must validate the signed bundle and recheck its exact pin/session.
+/// derives a session. For an absent address, full signed ADV is required
+/// before restoring membership. Caller validates its bundle and exact pin/session.
 pub(crate) fn prepare_same_key_directory_in(
     tx: &ReadTx<'_>,
     peer: &Jid,
@@ -119,8 +124,8 @@ pub(crate) fn prepare_same_key_directory_in(
 
 /// 14J.A04 passes its independently parsed directory identity to 11T.A0D.
 /// Both ADV signatures must bind this changed key to the held primary baseline.
-/// Supports existing remote membership; first-seen/addition and primary replacement
-/// remain outside this guarded identity-refresh action.
+/// A known pin with newer signed ADV may restore absent membership. First-seen
+/// pins and primary replacement remain outside this guarded refresh action.
 pub(crate) fn prepare_changed_key_directory_in(
     tx: &ReadTx<'_>,
     peer: &Jid,
@@ -230,9 +235,6 @@ fn prepare_directory_in(
     if members > 1 {
         return Ok(Refused("ambiguous_device_membership"));
     }
-    if members == 0 {
-        return Ok(Refused("missing_device_membership"));
-    }
     // This explicit local teardown guard is stricter than native fast return.
     // None is historical unknown, not an invented empty removal registry.
     if list
@@ -242,7 +244,10 @@ fn prepare_directory_in(
     {
         return Ok(Refused("pending_device_teardown"));
     }
-    let refresh_timestamp = if changed {
+    // Native 11T.A0D bypasses ADV parsing only for listed equal keys.
+    // A saved equal pin with absent membership must traverse full ADV too.
+    let mut device_addition = None;
+    let refresh_timestamp = if changed || members == 0 {
         let NodeContent::Bytes(bytes) = &adv.content else {
             unreachable!()
         };
@@ -277,6 +282,23 @@ fn prepare_directory_in(
         if !matched && !newer {
             return Ok(Refused("deleted_device"));
         }
+        if members == 0 {
+            // 11T.A0D 0690..0994 adds only absent addresses, with a positive
+            // Java-int index. Exact-owner membership is locally represented;
+            // canonical PN/LID expansion is separate and never guessed here.
+            if list.devices.len() >= 1024
+                || list
+                    .devices
+                    .iter()
+                    .any(|entry| entry.key_index == verified.key_index())
+            {
+                return Ok(Refused("conflicting_device_membership"));
+            }
+            device_addition = Some(super::devices::DeviceEntry {
+                jid: peer.clone(),
+                key_index: verified.key_index(),
+            });
+        }
         newer.then_some(verified.timestamp())
     } else {
         None
@@ -287,7 +309,7 @@ fn prepare_directory_in(
         login_identity: login,
         account,
         refresh_timestamp,
-        device_addition: None,
+        device_addition,
     })))
 }
 

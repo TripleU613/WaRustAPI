@@ -1,0 +1,316 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "device-admission": {
+      "class": "LX/11T;",
+      "method": "A0D",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "current-membership": {
+      "class": "LX/0bN;",
+      "method": "A0B",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "held-key-equality": {
+      "class": "LX/B7D;",
+      "method": "equals",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "public-key-equality": {
+      "class": "LX/B7E;",
+      "method": "equals",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "admitted-bundle-worker": {
+      "class": "LX/14J;",
+      "method": "A04",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "candidate-parser": {
+      "class": "LX/Bot;",
+      "method": "A03",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "candidate-constructor": {
+      "class": "LX/Cai;",
+      "method": "<init>",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "companion-state-admission": {
+      "class": "LX/CPB;",
+      "method": "A00",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "session-processing": {
+      "class": "LX/0jc;",
+      "method": "A0L",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "signed-bundle-derivation": {
+      "class": "LX/CQc;",
+      "method": "A00",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "pending-login-check": {
+      "class": "LX/0jV;",
+      "method": "A0a",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "pending-login-comparison": {
+      "class": "LX/0jV;",
+      "method": "A08",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "own-companion-predicate": {
+      "class": "LX/08i;",
+      "method": "BL6",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "own-companion-proxy": {
+      "class": "LX/08a;",
+      "method": "BL6",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "own-device-predicate": {
+      "class": "LX/08i;",
+      "method": "BO1",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "own-user-predicate": {
+      "class": "LX/08i;",
+      "method": "BO0",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "baseline-metadata": {
+      "class": "LX/0bN;",
+      "method": "A04",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "retained-device-indices": {
+      "class": "LX/0bN;",
+      "method": "A0C",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "pending-expectation": {
+      "class": "LX/0bN;",
+      "method": "A05",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "addition-owner-filter": {
+      "class": "LX/0bN;",
+      "method": "A0G",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "addition-selected-users": {
+      "class": "LX/1IW;",
+      "method": "A02",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "addition-cached-membership": {
+      "class": "LX/1IW;",
+      "method": "A09",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "addition-device-rebinding": {
+      "class": "LX/AzR;",
+      "method": "A00",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "addition-membership-read": {
+      "class": "LX/B7j;",
+      "method": "A00",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "addition-membership-write": {
+      "class": "LX/B7j;",
+      "method": "A03",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "addition-coordinator": {
+      "class": "LX/1IW;",
+      "method": "A05",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "addition-observers": {
+      "class": "LX/1IW;",
+      "method": "A04",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "addition-owner-observer": {
+      "class": "LX/JhE;",
+      "method": "A0L",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    }
+  }
+}

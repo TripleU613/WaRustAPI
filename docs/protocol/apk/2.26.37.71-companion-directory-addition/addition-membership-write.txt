@@ -1,0 +1,54 @@
+# APK-derived structural disassembly: LX/B7j;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A03(VLLJ) flags=0x1 registers=12
+  # full signature: LX/B7j;->A03(Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/UserJid;J)V
+  0000..0006 op=6e invoke-virtual {v8}, Lcom/whatsapp/infra/core/jid/DeviceJid;->isPrimary()Z
+  0006..0008 op=0a move-result v0
+  0008..000c op=df xor-int/lit8 v0, v0, #0x1
+  000c..0010 op=38 if-eqz v0, +0x14
+  0010..0014 op=16 const-wide/16 v1, #0x0
+  0014..0018 op=31 cmp-long v0, v10, v1
+  0018..001c op=39 if-nez v0, +0xe
+  001c..0020 op=1a const-string v0, "DeviceStore/addDeviceForUser received invalid keyIndex=0 for companion device "
+  0020..0026 op=71 invoke-static {v8, v0}, LX/000;->A07(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0026..0028 op=0c move-result-object v1
+  0028..002c op=1a const-string v0, ", ignoring"
+  002c..0032 op=71 invoke-static {v1, v0}, LX/1xj;->A1R(Ljava/lang/StringBuilder;Ljava/lang/String;)V
+  0032..0034 op=0e return-void
+  0034..0038 op=54 iget-object v0, v7, LX/B7j;->A05:LX/0Gc;
+  0038..003e op=6e invoke-virtual {v0}, LX/0Gc;->A07()LX/0ZN;
+  003e..0040 op=0c move-result-object v4
+  0040..0044 op=54 iget-object v0, v7, LX/B7j;->A04:LX/0VT;
+  0044..004a op=6e invoke-virtual {v0, v9}, LX/0VT;->A07(Lcom/whatsapp/infra/core/jid/Jid;)J
+  004a..004c op=0b move-result-wide v2
+  004c..0052 op=6e invoke-virtual {v0, v8}, LX/0VT;->A07(Lcom/whatsapp/infra/core/jid/Jid;)J
+  0052..0054 op=0b move-result-wide v0
+  0054..0056 op=12 const/4 v5, #0x3
+  0056..005c op=71 invoke-static {v5}, LX/8kT;->A05(I)Landroid/content/ContentValues;
+  005c..005e op=0c move-result-object v6
+  005e..0062 op=1a const-string v5, "user_jid_row_id"
+  0062..0068 op=71 invoke-static {v6, v5, v2, v3}, LX/1xl;->A1E(Landroid/content/ContentValues;Ljava/lang/String;J)V
+  0068..006c op=1a const-string v2, "device_jid_row_id"
+  006c..0072 op=71 invoke-static {v6, v2, v0, v1}, LX/1xl;->A1E(Landroid/content/ContentValues;Ljava/lang/String;J)V
+  0072..0076 op=1a const-string v0, "key_index"
+  0076..007c op=71 invoke-static {v6, v0, v10, v11}, LX/1xl;->A1E(Landroid/content/ContentValues;Ljava/lang/String;J)V
+  007c..0080 op=54 iget-object v3, v4, LX/0ZN;->A02:LX/0IY;
+  0080..0084 op=1a const-string v2, "user_device"
+  0084..0088 op=1a const-string v1, "INSERT_DEVICE_JID_SQL"
+  0088..008a op=12 const/4 v0, #0x4
+  008a..0090 op=6e invoke-virtual {v3, v2, v1, v6, v0}, LX/0IY;->A09(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;I)J
+  0090..0096 op=6e invoke-virtual {v4}, LX/0ZN;->close()V
+  0096..0098 op=0e return-void
+  0098..009a op=0d move-exception v1
+  009a..00a0 op=6e invoke-virtual {v4}, LX/0ZN;->close()V
+  00a0..00a2 op=27 throw v1
+  00a2..00a4 op=0d move-exception v0
+  00a4..00aa op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  00aa..00ac op=27 throw v1
+  # exception table: 2 try range(s)
+  # catch <all> code_units 0020..0048 -> 004c
+  # catch <all> code_units 004d..0050 -> 0051
+.end method

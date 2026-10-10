@@ -274,6 +274,11 @@ fn inspect_in(tx: &crate::store::ReadTx<'_>, id: &str) -> Result<Option<Inspecti
                 users[0],
                 identity.as_ref(),
             )? {
+                super::companion_admission::Admission::Ready(authority)
+                    if authority.addition_required() =>
+                {
+                    "ready_addition_pending"
+                }
                 super::companion_admission::Admission::Ready(_) => "ready",
                 super::companion_admission::Admission::Refused(reason) => reason,
             },
@@ -291,6 +296,11 @@ fn inspect_in(tx: &crate::store::ReadTx<'_>, id: &str) -> Result<Option<Inspecti
                 users[0],
                 identity.as_ref(),
             )? {
+                super::companion_admission::Admission::Ready(authority)
+                    if authority.addition_required() =>
+                {
+                    "ready_addition_pending"
+                }
                 super::companion_admission::Admission::Ready(authority)
                     if authority.refresh_required() =>
                 {

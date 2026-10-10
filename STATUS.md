@@ -1,5 +1,19 @@
 # Status — 2026-10-07
 
+Returning companion directory addition (2026-10-09, **implemented/offline**):
+an already pinned but unlisted remote companion now requires full signed newer
+ADV for equal or changed keys. Membership/provenance/hash invalidation/pending
+sync and session/history commit atomically under the original guard and policy.
+Listed equal-key shortcuts and existing indices remain unchanged. actions
+--show reports ready_addition_pending. Own/teardown/collision/overflow/old ADV
+and stale state refuse. No first-seen identity or canonical alias is inferred;
+fresh live restoration remains unknown.
+Validation: 885 workspace/all-feature tests, strict Clippy, Rustdoc,
+default CLI/API symbols, CLI reference and formatting passed. Bounded
+28-topic / 33-file APK export reproduces exactly; cached self-diff unchanged.
+[Trace and limits](docs/protocol/companion-directory-addition.md).
+
+
 Changed companion directory application (2026-10-09, **implemented/offline**):
 guarded changed classic keys now validate both ADV signatures against the
 actual candidate and independent primary, with current E2EE/raw-ID/membership
