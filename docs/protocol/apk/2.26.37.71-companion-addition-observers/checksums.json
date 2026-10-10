@@ -1,0 +1,82 @@
+{
+  "addition-coordinator.txt": {
+    "bytes": 9350,
+    "sha256": "f55da2d63f0eeb129214303f513b733c1f82bf580beac4006bb90cbfa074b016"
+  },
+  "admission-caller.txt": {
+    "bytes": 59340,
+    "sha256": "8ae7b6603f5e747862faec8fb504f1589f126be3b88818446d2e28992581d896"
+  },
+  "callback-discriminator.txt": {
+    "bytes": 661,
+    "sha256": "c256e6e26a45e49f9c78bae7ba2755ab65609e36386a5657efe7231f55116c97"
+  },
+  "device-callback.txt": {
+    "bytes": 1967,
+    "sha256": "cccd1db4dd2cbae22d31d3bf5d89762d8a61cd2bc7454f0c9e7f6ca06211705c"
+  },
+  "device-map-batch-reader.txt": {
+    "bytes": 16418,
+    "sha256": "29e2d93d283c12297a6be29699332bc6c7c6a342246988f4a6daa96fee8b3c7f"
+  },
+  "device-map-cache.txt": {
+    "bytes": 703,
+    "sha256": "0622f76263cedcc2ce95762644ef81d50d3296d45f60f85dfee23d35121310af"
+  },
+  "device-map-reader.txt": {
+    "bytes": 11534,
+    "sha256": "4a658af7964012dcc5177a4d64a6e5e456a59883b12e67f86f800edbea39a377"
+  },
+  "event-constructor.txt": {
+    "bytes": 819,
+    "sha256": "10595a8edc021e6af7bde9ce428c0005c919cb2136b361e6d5c2f9277e58385d"
+  },
+  "event-dispatch.txt": {
+    "bytes": 1048,
+    "sha256": "81c310fc467b6967574cb924090e80df0e67801d948db12d209dc99914516a0f"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "owner-dispatch.txt": {
+    "bytes": 1262,
+    "sha256": "5f67d4a20aae413a2def73b55910cf8eefa7336896202b789aa4899a479c1ae2"
+  },
+  "post-commit-worker.txt": {
+    "bytes": 110525,
+    "sha256": "f466550036150e9f7ce1b50dcc99f86e818429cc4dda41b04f14317743f9e5fb"
+  },
+  "removal-callback-owner.txt": {
+    "bytes": 5247,
+    "sha256": "c339db8e2443ba54c5a495fdc8ba1d58eb5217fb806733a30732dc38dce05862"
+  },
+  "targets.json": {
+    "bytes": 7453,
+    "sha256": "6e2875ee0190382b71cbb36ad604ff006a202ad2bb555582b00dcc3a1354101e"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  },
+  "transaction-callback-registration.txt": {
+    "bytes": 1224,
+    "sha256": "8fe29d8c47f8d72d0a2e581d052d643f273653185cf084ddb725140f1b18237e"
+  },
+  "verification-callback-owner.txt": {
+    "bytes": 10852,
+    "sha256": "6bafd2ab2157536d73376605c97a4027c1aaebac580720b0769711a4b2722245"
+  },
+  "verification-ui-schedule.txt": {
+    "bytes": 1764,
+    "sha256": "c772a1368e140e567a334a187b96b9a6b3078a49d8ef2b6fe1bd3bd80c75cfc0"
+  },
+  "worker-constructor.txt": {
+    "bytes": 751,
+    "sha256": "7d6de01524c0722642128fd6102c74210970fb90a0d1f8926320bb062d7f7844"
+  }
+}

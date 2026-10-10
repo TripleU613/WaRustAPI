@@ -1,0 +1,44 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "evidence": "confirmed static exact-name scans; not runtime observer registration coverage",
+  "method_scan": {
+    "command": "xtask apk-smali APK --class LX/ --method CBu --signatures --exceptions",
+    "complete_dump_sha256": "8c07178ab69479a1915287249c871f50365aa9d5207e6ec657feff54e413278e",
+    "declarations": [
+      {
+        "class": "LX/LZ8;",
+        "method": "CBu",
+        "body": "abstract/native"
+      },
+      {
+        "class": "LX/D0B;",
+        "method": "CBu",
+        "body": "concrete discriminator"
+      }
+    ]
+  },
+  "constructor_callers": {
+    "command": "xtask apk-callers APK --class LX/D0B; --method <init>",
+    "complete_output_sha256": "95b73f3b41b5b10cd2324beb831e0eac8d0f1dd89091108922dd492de94c2a97",
+    "callers": [
+      {
+        "dex": "classes7.dex",
+        "class": "LX/CaG;",
+        "method": "<init>",
+        "dex_byte_offset": "0x5dc65a"
+      },
+      {
+        "dex": "classes10.dex",
+        "class": "Lcom/whatsapp/identity/ui/IdentityVerificationActivity;",
+        "method": "<init>",
+        "dex_byte_offset": "0x4295ba"
+      }
+    ]
+  },
+  "unknown": [
+    "effective observer registration and lifetime",
+    "inherited or differently named callbacks",
+    "native or dynamically loaded behavior",
+    "complete UI runnable effects"
+  ]
+}

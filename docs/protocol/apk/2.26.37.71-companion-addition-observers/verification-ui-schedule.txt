@@ -1,0 +1,30 @@
+# APK-derived structural disassembly: Lcom/whatsapp/identity/ui/IdentityVerificationActivity;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A12(VLL) flags=0x19 registers=4
+  # full signature: Lcom/whatsapp/identity/ui/IdentityVerificationActivity;->A12(Lcom/whatsapp/identity/ui/IdentityVerificationActivity;Lcom/whatsapp/infra/core/jid/UserJid;)V
+  0000..0004 op=54 iget-object v0, v2, LX/0IT;->A03:LX/08Z;
+  0004..000a op=72 invoke-interface {v0, v3}, LX/08Z;->BO0(LX/0Cy;)Z
+  000a..000c op=0a move-result v0
+  000c..0010 op=39 if-nez v0, +0x19
+  0010..0014 op=38 if-eqz v3, +0x21
+  0014..0018 op=54 iget-object v0, v2, Lcom/whatsapp/identity/ui/IdentityVerificationActivity;->A06:LX/0DV;
+  0018..001c op=39 if-nez v0, +0x9
+  001c..0020 op=1a const-string v0, "contact"
+  0020..0026 op=71 invoke-static {v0}, LX/00h;->A0I(Ljava/lang/String;)V
+  0026..0028 op=12 const/4 v0, #0x0
+  0028..002a op=27 throw v0
+  002a..0030 op=71 invoke-static {v0}, LX/8kT;->A0n(LX/0DV;)Lcom/whatsapp/infra/core/jid/Jid;
+  0030..0032 op=0c move-result-object v0
+  0032..0038 op=6e invoke-virtual {v3, v0}, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z
+  0038..003a op=0a move-result v0
+  003a..003e op=38 if-eqz v0, +0xc
+  003e..0042 op=13 const/16 v1, #0x2f
+  0042..0046 op=22 new-instance v0, LX/L5A;
+  0046..004c op=70 invoke-direct {v0, v2, v1}, LX/L5A;-><init>(Ljava/lang/Object;I)V
+  004c..0052 op=6e invoke-virtual {v2, v0}, Landroid/app/Activity;->runOnUiThread(Ljava/lang/Runnable;)V
+  0052..0054 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

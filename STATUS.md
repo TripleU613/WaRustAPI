@@ -1,3 +1,19 @@
+2026-10-09 — **Confirmed static:** returning-companion addition's remote
+false-Boolean coordinator path bypasses removal/local-message/own-hosted work.
+DNd discriminator 19 clears one user-device-map cache entry; Rust reads its
+saved device list directly. Exact CBu scans identify one concrete discriminator
+callback: removal work in branch 0, activity UI scheduling in branch 1.
+Registration/lifetime, outer callback ordering and complete UI runnable effects
+remain unknown. No new Rust/runtime/account operation is claimed.
+[Evidence and exact scan boundaries](docs/protocol/companion-addition-observers.md).
+
+Validation: exact regeneration verified 16 topics / 21 files / 270,236 bytes;
+cached self-diff found 16 unchanged topics and four metadata artifacts.
+CLI-reference regeneration, OpenAPI/library-symbol checks, formatting,
+whitespace and repository hygiene passed (2,473 local links, 127 bundles /
+26,797,855 bytes). No new workspace runtime test or live account operation
+is claimed for this static-only chunk.
+
 2026-10-09 — **Confirmed static:** remote companion addition updates existing
 participant device maps, recomputes group hashes and replaces exact group/user
 device rows. New rows initialize sender-key flags to 0/0 and bucket to NULL;

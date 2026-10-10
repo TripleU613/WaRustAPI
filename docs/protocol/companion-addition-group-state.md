@@ -85,11 +85,11 @@ affects a subsequently prepared plan without requiring a second native-style
 participant-device cache. Already reserved or uncertain sends remain frozen.
 This comparison does not prove all native cache/counterpart behavior equivalent.
 
-**Unknown/unported:** concrete JhE/Kx8 registered consumers, the DNd
-addition worker, complete 1IW.A05 coordinator effects, effective hosted and
-counterpart gates, and native omission-cache parity. JhE.A0L only establishes
-that a nonempty added or removed set dispatches Kx8(user, added, removed)
-through 078.A00; it does not identify every consumer's effect. No live group
+The [observer follow-up](companion-addition-observers.md) now traces the
+DNd map invalidation, remote false-Boolean 1IW.A05 path and exact CBu
+callback declarations. **Unknown/unported:** runtime registration/lifetime,
+outer transaction callback ordering, complete UI runnable effects, effective
+hosted/counterpart gates and native omission-cache parity. No live group
 addition, omission optimization or key rotation is newly claimed.
 
 ## Reproduce and compare a release

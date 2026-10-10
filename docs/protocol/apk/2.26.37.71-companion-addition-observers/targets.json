@@ -1,0 +1,226 @@
+{
+  "addition-coordinator": {
+    "class": "LX/1IW;",
+    "file": "addition-coordinator.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A05",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/companion_admission.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/group_fanout.rs"
+    ]
+  },
+  "admission-caller": {
+    "class": "LX/11T;",
+    "file": "admission-caller.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0D",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/companion_admission.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/group_fanout.rs"
+    ]
+  },
+  "callback-discriminator": {
+    "class": "LX/D0B;",
+    "file": "callback-discriminator.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/companion_admission.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/group_fanout.rs"
+    ]
+  },
+  "device-callback": {
+    "class": "LX/D0B;",
+    "file": "device-callback.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "CBu",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/companion_admission.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/group_fanout.rs"
+    ]
+  },
+  "device-map-batch-reader": {
+    "class": "LX/B7j;",
+    "file": "device-map-batch-reader.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/companion_admission.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/group_fanout.rs"
+    ]
+  },
+  "device-map-cache": {
+    "class": "LX/B7k;",
+    "file": "device-map-cache.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/companion_admission.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/group_fanout.rs"
+    ]
+  },
+  "device-map-reader": {
+    "class": "LX/B7j;",
+    "file": "device-map-reader.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/companion_admission.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/group_fanout.rs"
+    ]
+  },
+  "event-constructor": {
+    "class": "LX/Kx8;",
+    "file": "event-constructor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/companion_admission.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/group_fanout.rs"
+    ]
+  },
+  "event-dispatch": {
+    "class": "LX/Kx8;",
+    "file": "event-dispatch.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "COL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/companion_admission.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/group_fanout.rs"
+    ]
+  },
+  "owner-dispatch": {
+    "class": "LX/JhE;",
+    "file": "owner-dispatch.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0L",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/companion_admission.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/group_fanout.rs"
+    ]
+  },
+  "post-commit-worker": {
+    "class": "LX/DNd;",
+    "file": "post-commit-worker.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "run",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/companion_admission.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/group_fanout.rs"
+    ]
+  },
+  "removal-callback-owner": {
+    "class": "LX/CaG;",
+    "file": "removal-callback-owner.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/companion_admission.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/group_fanout.rs"
+    ]
+  },
+  "transaction-callback-registration": {
+    "class": "LX/0ZN;",
+    "file": "transaction-callback-registration.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A05",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/companion_admission.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/group_fanout.rs"
+    ]
+  },
+  "verification-callback-owner": {
+    "class": "Lcom/whatsapp/identity/ui/IdentityVerificationActivity;",
+    "file": "verification-callback-owner.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/companion_admission.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/group_fanout.rs"
+    ]
+  },
+  "verification-ui-schedule": {
+    "class": "Lcom/whatsapp/identity/ui/IdentityVerificationActivity;",
+    "file": "verification-ui-schedule.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A12",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/companion_admission.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/group_fanout.rs"
+    ]
+  },
+  "worker-constructor": {
+    "class": "LX/DNd;",
+    "file": "worker-constructor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/companion_admission.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/group_fanout.rs"
+    ]
+  }
+}

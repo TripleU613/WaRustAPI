@@ -1,0 +1,18 @@
+# APK-derived structural disassembly: LX/Kx8;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method COL(VL) flags=0x11 registers=6
+  # full signature: LX/Kx8;->COL(Ljava/lang/Object;)V
+  0000..0004 op=54 iget-object v3, v4, LX/Kx8;->A00:Lcom/whatsapp/infra/core/jid/UserJid;
+  0004..0008 op=54 iget-object v2, v4, LX/Kx8;->A01:Ljava/util/Set;
+  0008..000c op=54 iget-object v1, v4, LX/Kx8;->A02:Ljava/util/Set;
+  000c..0010 op=1f check-cast v5, LX/LZ8;
+  0010..0014 op=62 sget-object v0, LX/078;->A0A:Ljava/util/List;
+  0014..0016 op=12 const/4 v0, #0x3
+  0016..001c op=71 invoke-static {v5, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  001c..0022 op=72 invoke-interface {v5, v3, v2, v1}, LX/LZ8;->CBu(Lcom/whatsapp/infra/core/jid/UserJid;Ljava/util/Set;Ljava/util/Set;)V
+  0022..0024 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

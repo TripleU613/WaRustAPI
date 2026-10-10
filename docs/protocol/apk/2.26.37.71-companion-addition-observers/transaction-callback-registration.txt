@@ -1,0 +1,21 @@
+# APK-derived structural disassembly: LX/0ZN;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A05(VLL) flags=0x1 registers=6
+  # full signature: LX/0ZN;->A05(Ljava/lang/Runnable;Ljava/lang/Object;)V
+  0000..0002 op=12 const/4 v2, #0x1
+  0002..0008 op=71 invoke-static {v5, v2}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000c op=54 iget-object v0, v3, LX/0ZN;->A02:LX/0IY;
+  000c..0010 op=54 iget-object v0, v0, LX/0IY;->A01:Landroid/database/sqlite/SQLiteDatabase;
+  0010..0016 op=6e invoke-virtual {v0}, Landroid/database/sqlite/SQLiteDatabase;->inTransaction()Z
+  0016..0018 op=0a move-result v0
+  0018..001e op=71 invoke-static {v0}, LX/00K;->A0C(Z)V
+  001e..0022 op=54 iget-object v1, v3, LX/0ZN;->A01:LX/0Gy;
+  0022..0026 op=22 new-instance v0, LX/Cpf;
+  0026..002c op=70 invoke-direct {v0, v4, v2}, LX/Cpf;-><init>(Ljava/lang/Object;I)V
+  002c..0032 op=71 invoke-static {v0, v1, v5}, LX/0Gy;->A00(LX/Ddg;LX/0Gy;Ljava/lang/Object;)V
+  0032..0034 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

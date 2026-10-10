@@ -1,0 +1,99 @@
+# APK-derived structural disassembly: LX/CaG;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VL) flags=0x10001 registers=4
+  # full signature: LX/CaG;-><init>(LX/Dd3;)V
+  0000..0006 op=70 invoke-direct {v2}, Ljava/lang/Object;-><init>()V
+  0006..000c op=71 invoke-static {}, LX/1xg;->A04()LX/059;
+  000c..000e op=0c move-result-object v0
+  000e..0012 op=5b iput-object v0, v2, LX/CaG;->A0G:LX/00s;
+  0012..0018 op=71 invoke-static {}, LX/1xg;->A05()LX/059;
+  0018..001a op=0c move-result-object v0
+  001a..001e op=5b iput-object v0, v2, LX/CaG;->A00:LX/00s;
+  001e..0022 op=13 const/16 v0, #0x36a
+  0022..0028 op=71 invoke-static {v0}, LX/00C;->A00(I)LX/059;
+  0028..002a op=0c move-result-object v0
+  002a..002e op=5b iput-object v0, v2, LX/CaG;->A0H:LX/00s;
+  002e..0034 op=71 invoke-static {}, LX/Ayj;->A04()LX/059;
+  0034..0036 op=0c move-result-object v0
+  0036..003a op=5b iput-object v0, v2, LX/CaG;->A0E:LX/00s;
+  003a..003e op=13 const/16 v0, #0x1143
+  003e..0044 op=71 invoke-static {v0}, LX/00C;->A00(I)LX/059;
+  0044..0046 op=0c move-result-object v0
+  0046..004a op=5b iput-object v0, v2, LX/CaG;->A0C:LX/00s;
+  004a..004e op=13 const/16 v0, #0x1142
+  004e..0054 op=71 invoke-static {v0}, LX/00C;->A00(I)LX/059;
+  0054..0056 op=0c move-result-object v0
+  0056..005a op=5b iput-object v0, v2, LX/CaG;->A0B:LX/00s;
+  005a..005e op=13 const/16 v0, #0xec9
+  005e..0064 op=71 invoke-static {v0}, LX/00C;->A00(I)LX/059;
+  0064..0066 op=0c move-result-object v0
+  0066..006a op=5b iput-object v0, v2, LX/CaG;->A06:LX/00s;
+  006a..006e op=13 const/16 v0, #0x1995
+  006e..0074 op=71 invoke-static {v0}, LX/00C;->A00(I)LX/059;
+  0074..0076 op=0c move-result-object v0
+  0076..007a op=5b iput-object v0, v2, LX/CaG;->A08:LX/00s;
+  007a..007e op=13 const/16 v0, #0x1126
+  007e..0084 op=71 invoke-static {v0}, LX/00C;->A00(I)LX/059;
+  0084..0086 op=0c move-result-object v0
+  0086..008a op=5b iput-object v0, v2, LX/CaG;->A07:LX/00s;
+  008a..008e op=13 const/16 v0, #0x1124
+  008e..0094 op=71 invoke-static {v0}, LX/00C;->A00(I)LX/059;
+  0094..0096 op=0c move-result-object v0
+  0096..009a op=5b iput-object v0, v2, LX/CaG;->A0A:LX/00s;
+  009a..009e op=13 const/16 v0, #0x1123
+  009e..00a4 op=71 invoke-static {v0}, LX/00C;->A00(I)LX/059;
+  00a4..00a6 op=0c move-result-object v0
+  00a6..00aa op=5b iput-object v0, v2, LX/CaG;->A09:LX/00s;
+  00aa..00ae op=13 const/16 v0, #0x18df
+  00ae..00b4 op=71 invoke-static {v0}, LX/00C;->A00(I)LX/059;
+  00b4..00b6 op=0c move-result-object v0
+  00b6..00ba op=5b iput-object v0, v2, LX/CaG;->A05:LX/00s;
+  00ba..00be op=13 const/16 v0, #0x127
+  00be..00c4 op=71 invoke-static {v0}, LX/00C;->A00(I)LX/059;
+  00c4..00c6 op=0c move-result-object v0
+  00c6..00ca op=5b iput-object v0, v2, LX/CaG;->A01:LX/00s;
+  00ca..00ce op=13 const/16 v0, #0xee6
+  00ce..00d4 op=71 invoke-static {v0}, LX/00C;->A00(I)LX/059;
+  00d4..00d6 op=0c move-result-object v0
+  00d6..00da op=5b iput-object v0, v2, LX/CaG;->A0F:LX/00s;
+  00da..00de op=13 const/16 v0, #0x74f
+  00de..00e4 op=71 invoke-static {v0}, LX/00C;->A00(I)LX/059;
+  00e4..00e6 op=0c move-result-object v0
+  00e6..00ea op=5b iput-object v0, v2, LX/CaG;->A04:LX/00s;
+  00ea..00ee op=13 const/16 v0, #0x70d
+  00ee..00f4 op=71 invoke-static {v0}, LX/00C;->A00(I)LX/059;
+  00f4..00f6 op=0c move-result-object v0
+  00f6..00fa op=5b iput-object v0, v2, LX/CaG;->A03:LX/00s;
+  00fa..0100 op=14 const v0, #0x280cd
+  0100..0106 op=71 invoke-static {v0}, LX/00C;->A00(I)LX/059;
+  0106..0108 op=0c move-result-object v0
+  0108..010c op=5b iput-object v0, v2, LX/CaG;->A02:LX/00s;
+  010c..0112 op=14 const v0, #0x18165
+  0112..0118 op=71 invoke-static {v0}, LX/00C;->A00(I)LX/059;
+  0118..011a op=0c move-result-object v0
+  011a..011e op=5b iput-object v0, v2, LX/CaG;->A0D:LX/00s;
+  011e..0122 op=22 new-instance v0, Ljava/util/concurrent/CopyOnWriteArraySet;
+  0122..0128 op=70 invoke-direct {v0}, Ljava/util/concurrent/CopyOnWriteArraySet;-><init>()V
+  0128..012c op=5b iput-object v0, v2, LX/CaG;->A0N:Ljava/util/Set;
+  012c..0132 op=71 invoke-static {}, LX/1xf;->A1M()Ljava/util/concurrent/ConcurrentHashMap;
+  0132..0134 op=0c move-result-object v0
+  0134..0138 op=5b iput-object v0, v2, LX/CaG;->A0M:Ljava/util/Map;
+  0138..013c op=22 new-instance v0, LX/D38;
+  013c..0142 op=70 invoke-direct {v0, v2}, LX/D38;-><init>(LX/CaG;)V
+  0142..0146 op=5b iput-object v0, v2, LX/CaG;->A0K:LX/DeD;
+  0146..0148 op=12 const/4 v1, #0x0
+  0148..014c op=22 new-instance v0, LX/D3k;
+  014c..0152 op=70 invoke-direct {v0, v2, v1}, LX/D3k;-><init>(Ljava/lang/Object;I)V
+  0152..0156 op=5b iput-object v0, v2, LX/CaG;->A0L:LX/DeS;
+  0156..015a op=22 new-instance v0, LX/D0B;
+  015a..0160 op=70 invoke-direct {v0, v2, v1}, LX/D0B;-><init>(Ljava/lang/Object;I)V
+  0160..0164 op=5b iput-object v0, v2, LX/CaG;->A0J:LX/LZ8;
+  0164..0168 op=22 new-instance v0, LX/Cxr;
+  0168..016e op=70 invoke-direct {v0, v3}, LX/Cxr;-><init>(LX/Dd3;)V
+  016e..0172 op=5b iput-object v0, v2, LX/CaG;->A0I:LX/Dd3;
+  0172..0174 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

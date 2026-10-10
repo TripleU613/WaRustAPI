@@ -155,3 +155,8 @@ Live-record verification: CLI-reference regeneration, whitespace and repository
 hygiene passed (2,456 local links / 125 checksum bundles). This follow-up changes
 research/status records only; the implementation's 885 tests and strict
 Clippy/Rustdoc results remain its validation. The overall goal stays incomplete.
+
+The [observer follow-up](companion-addition-observers.md) now traces the
+remote false-Boolean coordinator path, membership-map invalidation and exact
+CBu callback declarations. Runtime registration and full UI effects remain
+unknown; no new account or key rotation is inferred.
