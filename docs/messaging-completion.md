@@ -12,6 +12,11 @@ Validation: 872 workspace/all-feature tests, strict Clippy, Rustdoc, default
 CLI/API-symbol and reference checks passed. The 6-topic / 11-file / 97,899-byte
 source bundle reproduces exactly and self-diffs unchanged; hygiene passed
 (2,409 links / 121 bundles).
+Live check: one 45-second receive-only window authenticated/stopped cleanly;
+actions/receipts/pending/account generation/journal head stayed equal, ten new
+inbound checkpoints. Historical read remains untracked with server override
+absent and applied=false. No new qualifying reply; live application unknown.
+[Redacted validation](protocol/same-key-refresh.md).
 
 
 Identity ACK follow-up (2026-10-09, **confirmed static / observed**): legacy

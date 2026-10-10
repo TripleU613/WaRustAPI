@@ -3131,3 +3131,10 @@ same-key absent-CWS subset under either property value and every decoded old
 state when present. Held ratchet is archived by CQc, not discarded or reused
 as current. No-child unknown sticky state remains deferred; no metadata bypass,
 native state fabrication or transmitted override. [Evidence and tests](same-key-refresh.md).
+
+Same-key live validation: rebuilt b771786 actor authenticated/activated/stopped
+in one bounded 45-second receive-only window. Ten inbound checkpoints; actions,
+receipts, pending outbox, generation, registration and journal head unchanged.
+Historical verified matching reply has server child absent, original guard
+untracked and applied=false. No fresh qualifying reply or live application
+claimed. [Redacted record](same-key-refresh-live.json).

@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-09",
+  "build": "b771786",
+  "evidence": "observed",
+  "redacted": true,
+  "receive_exit": 0,
+  "elapsed_seconds": 56.31,
+  "requested_seconds": 45,
+  "outbox_enabled": false,
+  "automatic_reads": false,
+  "reconnect_attempts": 0,
+  "actions": {
+    "equal": true,
+    "before_rows": 21,
+    "after_rows": 21
+  },
+  "receipts": {
+    "equal": true,
+    "before_rows": 9,
+    "after_rows": 9
+  },
+  "pending": {
+    "equal": true,
+    "before_rows": 0,
+    "after_rows": 0
+  },
+  "store_summary_equal": false,
+  "identity_refresh_inspections": [
+    {
+      "status": "verified_bundle",
+      "pin_matches": true,
+      "refresh_guard": "untracked",
+      "force_override_e2ee_state": false,
+      "applied": false
+    }
+  ],
+  "authenticated_active": true,
+  "stopped_cleanly": true,
+  "identity_ack_written_log_count": 0,
+  "identity_ack_invalid_log_count": 0,
+  "account_generation_equal": true,
+  "registration_equal": true,
+  "journal_head_equal": true,
+  "inbound_checkpoints_before": 838,
+  "inbound_checkpoints_after": 848,
+  "non_checkpoint_table_counts_equal": true,
+  "incoming_log_counts": {
+    "Unsupported": 10,
+    "Decrypted": 0,
+    "Duplicate": 0,
+    "Undecryptable": 0
+  },
+  "qualifying_same_key_reply_observed": false,
+  "live_same_key_application": "unknown"
+}

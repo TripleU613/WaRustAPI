@@ -90,3 +90,25 @@ warning-denying Rustdoc. Default CLI (25 plus API-symbol), experimental
 CLI-reference regeneration, formatting and whitespace passed. Exact export
 verified 6 topics / 11 files / 97,899 bytes; cached self-diff was unchanged.
 Hygiene passed (2,409 links / 121 bundles). No new release comparison is claimed.
+
+## Bounded saved-account validation
+
+**Observed:** the rebuilt actor authenticated/activated and stopped cleanly in
+one 45-second receive-only window (56.31 seconds total). Outbox, automatic reads
+and reconnects were disabled; preflight had no queued action/receipt or eligible
+chat intent. Actions (21), receipts (9), pending outbox (0), generation,
+registration and journal head remained equal. Inbound checkpoints rose 838→848;
+other table counts stayed equal. These are summary/count checks, not all-record
+byte comparisons. [Redacted validation](same-key-refresh-live.json).
+
+The historical primary-LID read still reports verified_bundle, pin_matches=true,
+refresh_guard=untracked, **force_override_e2ee_state=false**, applied=false.
+It is not retroactively assigned provenance or reapplied. No new identity
+notification/query/reply qualified for this branch. Live same-key application
+remains **unknown**; the synthetic tests prove the bounded implementation.
+No repeated window or chat was sent to manufacture qualifying evidence.
+
+Live-record checks: regenerated CLI reference, API/library symbols, whitespace
+and hygiene passed (2,413 links / 121 bundles). This follow-up changes docs only;
+the implementation's 872 tests/strict Clippy/Rustdoc results above remain its
+verification. Private configuration, key, logs and account data are ignored.
