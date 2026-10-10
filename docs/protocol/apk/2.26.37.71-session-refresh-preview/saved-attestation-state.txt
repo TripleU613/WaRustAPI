@@ -1,0 +1,48 @@
+# APK-derived structural disassembly: LX/0kc;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A01(LLL) flags=0x19 registers=5
+  # full signature: LX/0kc;->A01(LX/0kc;[Ljava/lang/String;)LX/C0F;
+  0000..0004 op=54 iget-object v0, v3, LX/0kc;->A08:LX/0aC;
+  0004..000a op=6e invoke-virtual {v0}, LX/0aC;->A06()LX/0ZN;
+  000a..000c op=0c move-result-object v3
+  000c..0010 op=54 iget-object v2, v3, LX/0ZN;->A02:LX/0IY;
+  0010..0014 op=1a const-string v1, "SELECT account_encryption_attestation_type FROM identities WHERE recipient_id =? AND recipient_type = ? AND device_id =?"
+  0014..0018 op=1a const-string v0, "SignalIdentityKeyStore/getAccountEncryptionAttestationType"
+  0018..001e op=6e invoke-virtual {v2, v1, v0, v4}, LX/0IY;->A0A(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;
+  001e..0020 op=0c move-result-object v2
+  0020..0026 op=72 invoke-interface {v2}, Landroid/database/Cursor;->moveToNext()Z
+  0026..0028 op=0a move-result v0
+  0028..002c op=39 if-nez v0, +0x5
+  002c..0030 op=62 sget-object v0, LX/C0F;->A05:LX/C0F;
+  0030..0032 op=28 goto +0xf
+  0032..0036 op=1a const-string v0, "account_encryption_attestation_type"
+  0036..003c op=72 invoke-interface {v2, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+  003c..003e op=0a move-result v0
+  003e..0044 op=72 invoke-interface {v2, v0}, Landroid/database/Cursor;->getInt(I)I
+  0044..0046 op=0a move-result v0
+  0046..004c op=71 invoke-static {v0}, LX/C9D;->A00(I)LX/C0F;
+  004c..004e op=0c move-result-object v0
+  004e..0054 op=72 invoke-interface {v2}, Landroid/database/Cursor;->close()V
+  0054..005a op=6e invoke-virtual {v3}, LX/0ZN;->close()V
+  005a..005c op=11 return-object v0
+  005c..005e op=0d move-exception v1
+  005e..0060 op=27 throw v1
+  0060..0062 op=0d move-exception v0
+  0062..0068 op=71 invoke-static {v2, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  0068..006a op=27 throw v0
+  006a..006c op=0d move-exception v1
+  006c..006e op=27 throw v1
+  006e..0070 op=0d move-exception v0
+  0070..0076 op=71 invoke-static {v3, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  0076..0078 op=27 throw v0
+  # exception table: 6 try range(s)
+  # catch <all> code_units 0006..0010 -> 0035
+  # catch <all> code_units 0010..0027 -> 002e
+  # catch <all> code_units 0027..002a -> 0035
+  # catch <all> code_units 002f..0030 -> 0030
+  # catch <all> code_units 0031..0035 -> 0035
+  # catch <all> code_units 0036..0037 -> 0037
+.end method

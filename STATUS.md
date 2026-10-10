@@ -1,5 +1,22 @@
 # Status — 2026-10-07
 
+Identity session preview (2026-10-09, **confirmed static / implemented offline**):
+`actions --show ID --preview-session` derives and discards a primary classic
+same-identity session without constructing a chat or changing saved state.
+Held current states are archived in the candidate. Native stored attestation
+states/defaults and admission branches are retained; historical Rust absence
+is not assigned NOT_SET/E2EE. Companion/PQ/attestation/changed-key adoption,
+stale-response guards and identity ACK remain unported. [Evidence and limits](docs/protocol/session-refresh-preview.md).
+
+Validation: 854 workspace/all-feature tests passed, plus strict Clippy,
+warning-denying Rustdoc, default CLI (25 plus API-symbol), regenerated CLI
+reference, formatting and whitespace checks. The eight-topic / 13-file /
+103,739-byte export reproduces exactly and self-diffs unchanged; hygiene passed
+(2,309 links / 115 bundles). The existing saved primary-LID reply produced a
+candidate with two archived states offline; store summary stayed equal. No
+network request or candidate commit occurred. Native admission remains unported.
+
+
 Identity notification key reads (2026-10-09, **confirmed static / implemented offline**):
 the normal callback target is root from, with device preserved and participant
 separate. Authenticated receive now queues reason=identity reads for supported

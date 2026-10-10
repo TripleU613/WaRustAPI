@@ -180,3 +180,11 @@ access; exactly one live receive window ran after correction. No live replay
 was performed to test the new offline inspector or repeat the notification.
 Changed-key response admission, session adoption, companion gates, ACK lifecycle
 and human messaging confirmation remain unverified/unimplemented as stated above.
+
+## Offline session preview continuation
+
+An invokable [session preview](session-refresh-preview.md) now stages and discards
+a primary classic same-identity session from a saved read without chat encryption
+or store writes. The actor read phase above still does not adopt responses or
+ACK identity notifications. Native stored attestation state and admission remain
+unported; preview success explicitly reports admission unevaluated.

@@ -1,0 +1,28 @@
+# APK-derived structural disassembly: LX/C9D;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(LI) flags=0x19 registers=4
+  # full signature: LX/C9D;->A00(I)LX/C0F;
+  0000..0004 op=62 sget-object v0, LX/C0F;->A00:LX/05j;
+  0004..000a op=72 invoke-interface {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+  000a..000c op=0c move-result-object v2
+  000c..0012 op=72 invoke-interface {v2}, Ljava/util/Iterator;->hasNext()Z
+  0012..0014 op=0a move-result v0
+  0014..0018 op=38 if-eqz v0, +0x14
+  0018..001e op=72 invoke-interface {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  001e..0020 op=0c move-result-object v1
+  0020..0022 op=07 move-object v0, v1
+  0022..0026 op=1f check-cast v0, LX/C0F;
+  0026..002a op=52 iget v0, v0, LX/C0F;->intValue:I
+  002a..002e op=33 if-ne v0, v3, -0xf
+  002e..0032 op=1f check-cast v1, LX/C0F;
+  0032..0036 op=39 if-nez v1, +0x7
+  0036..003a op=62 sget-object v0, LX/C0F;->A05:LX/C0F;
+  003a..003c op=11 return-object v0
+  003c..003e op=12 const/4 v1, #0x0
+  003e..0040 op=28 goto -0x8
+  0040..0042 op=11 return-object v1
+  # exception table: 0 try range(s)
+.end method

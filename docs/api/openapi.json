@@ -4110,6 +4110,58 @@
             "description": "Fetched identity compared with the current exact-device pin; null without bundle/pin, and not an adoption or trust decision."
           }
         }
+      },
+      "IdentityNotificationSessionPreview": {
+        "type": "object",
+        "description": "Redacted offline session candidate diagnostics. This is neither native admission nor a committed refresh.",
+        "required": [
+          "inspection",
+          "outcome",
+          "held_session",
+          "archived_states",
+          "admission_evaluated",
+          "persisted"
+        ],
+        "properties": {
+          "inspection": {
+            "$ref": "#/components/schemas/IdentityNotificationKeyReadInspection"
+          },
+          "outcome": {
+            "type": "string",
+            "enum": [
+              "prepared",
+              "reply_not_verified",
+              "companion_admission_unported",
+              "attestation_admission_unported",
+              "pq_session_unported",
+              "missing_saved_identity",
+              "identity_replacement_unported"
+            ],
+            "description": "Fixed preparation result or reason no candidate was derived; errors are separate redacted local refusals."
+          },
+          "held_session": {
+            "type": "boolean",
+            "description": "A serialized session was present in the single read snapshot; presence alone does not prove validity."
+          },
+          "archived_states": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "description": "Old states retained in the in-memory candidate, including any held current state; null when not derived."
+          },
+          "admission_evaluated": {
+            "type": "boolean",
+            "const": false,
+            "description": "Always false: native CPB attestation/property/stored-state policy is unported."
+          },
+          "persisted": {
+            "type": "boolean",
+            "const": false,
+            "description": "Always false: candidate bytes are discarded, not exported or written."
+          }
+        }
       }
     }
   },
@@ -4529,7 +4581,7 @@
           "Chat Actions"
         ],
         "summary": "Show queued one-shot actions and their outcomes",
-        "description": "Show queued one-shot actions (block list, reports, lookups) and their outcomes (offline, redacted). Includes identity_refresh directory reads queued by authenticated identity notifications. An ok action means a correlated generic result, not verified bundle or adopted identity. Refused/invalid/uncertain reads are retained; this phase never transmits a chat or changes a pin/session. For identity_refresh actions only, --show prints a structured redacted snapshot with namespace/device, exact refusal code, signed-bundle validity and current-pin comparison; no raw request, reply, peer address or key is printed. verified_bundle authenticates the fetched signed device key, not adoption or human verification.",
+        "description": "Show queued one-shot actions (block list, reports, lookups) and their outcomes (offline, redacted). Includes identity_refresh directory reads queued by authenticated identity notifications. An ok action means a correlated generic result, not verified bundle or adopted identity. Refused/invalid/uncertain reads are retained; this phase never transmits a chat or changes a pin/session. For identity_refresh actions only, --show prints a structured redacted snapshot with namespace/device, exact refusal code, signed-bundle validity and current-pin comparison; no raw request, reply, peer address or key is printed. verified_bundle authenticates the fetched signed device key, not adoption or human verification. --show ID --preview-session is an offline cryptographic preview for identity_refresh only. It derives and discards a primary classic same-identity session, retaining held state in the candidate archive without constructing a chat. It never writes a candidate or evaluates native CPB admission. Present attestation/PQ metadata, companions, changed/missing pins and unverified replies do not derive; malformed held state refuses with fixed redacted diagnostics. Unknown native stored attestation state is not assumed NOT_SET or E2EE. Evidence: docs/protocol/session-refresh-preview.md.",
         "operationId": "listActions",
         "x-cli": "whatsapp-cli actions",
         "x-transport": [
@@ -4559,6 +4611,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "preview_session",
+            "in": "query",
+            "description": "Offline derive-and-discard preview; requires --show of an identity_refresh action. No network or store write; native admission remains unevaluated.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
           }
         ],
         "responses": {
@@ -4581,10 +4642,14 @@
         },
         "x-library": [
           "whatsapp_api::transport::actions::outcomes",
-          "whatsapp_api::transport::identity_notifications::inspect"
+          "whatsapp_api::transport::identity_notifications::inspect",
+          "whatsapp_api::transport::identity_notifications::preview_session"
         ],
         "x-cli-show-identity-refresh-schema": {
           "$ref": "#/components/schemas/IdentityNotificationKeyReadInspection"
+        },
+        "x-cli-preview-session-schema": {
+          "$ref": "#/components/schemas/IdentityNotificationSessionPreview"
         }
       }
     },

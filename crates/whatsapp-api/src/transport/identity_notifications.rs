@@ -53,127 +53,248 @@ pub struct Inspection {
 /// Inspect an identity_refresh action, its original target and current pin in
 /// one store snapshot. `actions --show ID` uses this without printing raw nodes.
 pub fn inspect(store: &ProtocolStore, id: &str) -> Result<Option<Inspection>> {
+    store.read(|tx| inspect_in(tx, id))
+}
+
+fn inspect_in(tx: &crate::store::ReadTx<'_>, id: &str) -> Result<Option<Inspection>> {
     use super::peer_keys::DirectoryStatus;
-    store.read(|tx| {
-        let Some((action, reply)) = actions::view_in(tx, id)? else {
-            return Ok(None);
-        };
-        if action.kind != "identity_refresh" {
-            return Ok(None);
-        }
+
+    let Some((action, reply)) = actions::view_in(tx, id)? else {
+        return Ok(None);
+    };
+    if action.kind != "identity_refresh" {
+        return Ok(None);
+    }
+    let request = actions::request_in(tx, id)?
+        .ok_or_else(|| Error::invalid("identity_notification", "missing saved key request"))?;
+    let users = request
+        .child("key")
+        .map(Node::child_nodes)
+        .unwrap_or_default();
+    let peer = (users.len() == 1)
+        .then(|| super::receipts::jid(&users[0], "jid"))
+        .flatten()
+        .filter(|v| {
+            !v.user.is_empty() && v.agent == 0 && matches!(v.server, Server::User | Server::Lid)
+        })
+        .ok_or_else(|| {
+            Error::invalid("identity_notification", "invalid saved key request target")
+        })?;
+    let mut result = Inspection {
+        status: match action.status {
+            actions::ActionStatus::Queued => DirectoryStatus::Queued,
+            actions::ActionStatus::Sent => DirectoryStatus::OutcomeUnknown,
+            _ => DirectoryStatus::InvalidReply,
+        },
+        peer_namespace: if peer.server == Server::User {
+            "pn"
+        } else {
+            "lid"
+        },
+        device: peer.device,
+        server_error_code: None,
+        signature_valid: None,
+        pin_matches: None,
+    };
+    let Some(reply) = reply else {
+        return Ok(Some(result));
+    };
+    if reply.description != "iq"
+        || reply.get_attr("id").and_then(|v| v.as_text()) != Some(id)
+        || !matches!(
+            reply.get_attr("type").and_then(|v| v.as_text()),
+            Some("result" | "error")
+        )
+    {
+        return Ok(Some(result));
+    }
+    // Refusals belong to this root or the exact requested device. Never
+    // report an unrelated user's error as this device's server response.
+    let root_errors: Vec<_> = reply
+        .child_nodes()
+        .iter()
+        .filter(|v| v.description == "error")
+        .collect();
+    let lists: Vec<_> = reply
+        .child_nodes()
+        .iter()
+        .filter(|v| v.description == "list")
+        .collect();
+    let users: Vec<_> = lists
+        .iter()
+        .flat_map(|v| v.child_nodes())
+        .filter(|v| {
+            v.description == "user"
+                && super::receipts::jid(v, "jid")
+                    .is_some_and(|v| super::identity_query::same_primary_address(&v, &peer))
+        })
+        .collect();
+    let errors: Vec<_> = users
+        .iter()
+        .flat_map(|v| v.child_nodes())
+        .filter(|v| v.description == "error")
+        .collect();
+    let refusal = if root_errors.len() == 1 {
+        Some(root_errors[0])
+    } else if root_errors.is_empty() && lists.len() == 1 && users.len() == 1 && errors.len() == 1 {
+        Some(errors[0])
+    } else {
+        None
+    };
+    if let Some(error) = refusal {
+        result.status = DirectoryStatus::ServerRefused;
+        result.server_error_code = error
+            .get_attr("code")
+            .and_then(|v| v.as_text())
+            .and_then(|v| v.parse().ok());
+        return Ok(Some(result));
+    }
+    let Ok(bundle) = crate::signal::direct::prekey_bundle_for(&reply, &peer) else {
+        return Ok(Some(result));
+    };
+    let valid = crate::signal::direct::validate_bundle_signature(&bundle).is_ok();
+    result.signature_valid = Some(valid);
+    let pin: Option<Vec<u8>> = tx.get_json(
+        Table::PeerIdentities,
+        format!("comparison-direct:{peer}").as_bytes(),
+        1,
+    )?;
+    result.pin_matches = pin
+        .map(|pin| {
+            bundle
+                .identity_key()
+                .map(|key| key.serialize().as_ref() == pin.as_slice())
+        })
+        .transpose()
+        .map_err(|_| Error::invalid("identity_notification", "invalid bundle identity"))?;
+    result.status = if valid {
+        DirectoryStatus::VerifiedBundle
+    } else {
+        DirectoryStatus::InvalidSignature
+    };
+    Ok(Some(result))
+}
+
+/// Result of an offline cryptographic preview. No candidate bytes are exported.
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
+pub struct SessionPreview {
+    /// Existing correlated-reply and signature diagnostics.
+    pub inspection: Inspection,
+    /// Fixed reason for skipping, or `prepared` after successful derivation.
+    pub outcome: &'static str,
+    /// Whether a serialized session existed in the inspected store snapshot.
+    pub held_session: bool,
+    /// Number of old session states in the staged candidate; null if not derived.
+    pub archived_states: Option<usize>,
+    /// Native CPB admission is not evaluated by this cryptographic preview.
+    pub admission_evaluated: bool,
+    /// Always false: the candidate is discarded without changing saved state.
+    pub persisted: bool,
+}
+
+/// Derive and discard a primary classic same-identity session from a saved read.
+/// No network, message, pin change, reservation, notification ACK or store write.
+/// Attestation/PQ/companion admission is deliberately outside this preview.
+pub async fn preview_session(store: &ProtocolStore, id: &str) -> Result<SessionPreview> {
+    use super::peer_keys::DirectoryStatus;
+    let snapshot = store.read(|tx| {
+        let inspection = inspect_in(tx, id)?.ok_or_else(|| {
+            Error::invalid("identity_notification", "not an identity refresh action")
+        })?;
         let request = actions::request_in(tx, id)?
             .ok_or_else(|| Error::invalid("identity_notification", "missing saved key request"))?;
-        let users = request
+        let peer = request
             .child("key")
-            .map(Node::child_nodes)
-            .unwrap_or_default();
-        let peer = (users.len() == 1)
-            .then(|| super::receipts::jid(&users[0], "jid"))
-            .flatten()
-            .filter(|v| {
-                !v.user.is_empty() && v.agent == 0 && matches!(v.server, Server::User | Server::Lid)
-            })
+            .and_then(|key| key.child_nodes().first())
+            .and_then(|user| super::receipts::jid(user, "jid"))
             .ok_or_else(|| {
                 Error::invalid("identity_notification", "invalid saved key request target")
             })?;
-        let mut result = Inspection {
-            status: match action.status {
-                actions::ActionStatus::Queued => DirectoryStatus::Queued,
-                actions::ActionStatus::Sent => DirectoryStatus::OutcomeUnknown,
-                _ => DirectoryStatus::InvalidReply,
-            },
-            peer_namespace: if peer.server == Server::User {
-                "pn"
-            } else {
-                "lid"
-            },
-            device: peer.device,
-            server_error_code: None,
-            signature_valid: None,
-            pin_matches: None,
-        };
-        let Some(reply) = reply else {
-            return Ok(Some(result));
-        };
-        if reply.description != "iq"
-            || reply.get_attr("id").and_then(|v| v.as_text()) != Some(id)
-            || !matches!(
-                reply.get_attr("type").and_then(|v| v.as_text()),
-                Some("result" | "error")
-            )
-        {
-            return Ok(Some(result));
-        }
-        // Refusals belong to this root or the exact requested device. Never
-        // report an unrelated user's error as this device's server response.
-        let root_errors: Vec<_> = reply
-            .child_nodes()
-            .iter()
-            .filter(|v| v.description == "error")
-            .collect();
-        let lists: Vec<_> = reply
-            .child_nodes()
-            .iter()
-            .filter(|v| v.description == "list")
-            .collect();
-        let users: Vec<_> = lists
-            .iter()
-            .flat_map(|v| v.child_nodes())
-            .filter(|v| {
-                v.description == "user"
-                    && super::receipts::jid(v, "jid")
-                        .is_some_and(|v| super::identity_query::same_primary_address(&v, &peer))
+        let key = format!("comparison-direct:{peer}");
+        let pin: Option<Vec<u8>> = tx.get_json(Table::PeerIdentities, key.as_bytes(), 1)?;
+        let session: Option<Vec<u8>> = tx.get_json(Table::SignalSessions, key.as_bytes(), 1)?;
+        let account = AccountRecord::load(tx)?;
+        let reply = actions::view_in(tx, id)?.and_then(|(_, reply)| reply);
+        Ok((
+            inspection,
+            peer,
+            pin,
+            session.map(zeroize::Zeroizing::new),
+            account,
+            reply,
+        ))
+    })?;
+    let (inspection, peer, pin, session, account, reply) = snapshot;
+    let mut result = SessionPreview {
+        inspection,
+        outcome: "reply_not_verified",
+        held_session: session.is_some(),
+        archived_states: None,
+        admission_evaluated: false,
+        persisted: false,
+    };
+    if result.inspection.status != DirectoryStatus::VerifiedBundle {
+        return Ok(result);
+    }
+    if peer.device != 0 {
+        result.outcome = "companion_admission_unported";
+        return Ok(result);
+    }
+    let reply =
+        reply.ok_or_else(|| Error::invalid("identity_notification", "missing saved reply"))?;
+    let bundle = crate::signal::direct::prekey_bundle_for(&reply, &peer)?;
+    let user = reply
+        .child("list")
+        .and_then(|list| {
+            list.child_nodes().iter().find(|user| {
+                user.description == "user"
+                    && super::receipts::jid(user, "jid")
+                        .is_some_and(|jid| super::identity_query::same_primary_address(&jid, &peer))
             })
-            .collect();
-        let errors: Vec<_> = users
-            .iter()
-            .flat_map(|v| v.child_nodes())
-            .filter(|v| v.description == "error")
-            .collect();
-        let refusal = if root_errors.len() == 1 {
-            Some(root_errors[0])
-        } else if root_errors.is_empty()
-            && lists.len() == 1
-            && users.len() == 1
-            && errors.len() == 1
-        {
-            Some(errors[0])
-        } else {
-            None
-        };
-        if let Some(error) = refusal {
-            result.status = DirectoryStatus::ServerRefused;
-            result.server_error_code = error
-                .get_attr("code")
-                .and_then(|v| v.as_text())
-                .and_then(|v| v.parse().ok());
-            return Ok(Some(result));
-        }
-        let Ok(bundle) = crate::signal::direct::prekey_bundle_for(&reply, &peer) else {
-            return Ok(Some(result));
-        };
-        let valid = crate::signal::direct::validate_bundle_signature(&bundle).is_ok();
-        result.signature_valid = Some(valid);
-        let pin: Option<Vec<u8>> = tx.get_json(
-            Table::PeerIdentities,
-            format!("comparison-direct:{peer}").as_bytes(),
-            1,
-        )?;
-        result.pin_matches = pin
-            .map(|pin| {
-                bundle
-                    .identity_key()
-                    .map(|key| key.serialize().as_ref() == pin.as_slice())
-            })
-            .transpose()
-            .map_err(|_| Error::invalid("identity_notification", "invalid bundle identity"))?;
-        result.status = if valid {
-            DirectoryStatus::VerifiedBundle
-        } else {
-            DirectoryStatus::InvalidSignature
-        };
-        Ok(Some(result))
-    })
+        })
+        .ok_or_else(|| Error::invalid("identity_notification", "missing response user"))?;
+    // Bot.A03 0248..02a6 carries non_e2ee_attestation into CPB; absence
+    // selects E2EE there but does not prove our untracked stored CPB state.
+    // Never use a classic-only preview to skip present native admission data.
+    if user.child("non_e2ee_attestation").is_some() {
+        result.outcome = "attestation_admission_unported";
+        return Ok(result);
+    }
+    if user.child("pqkey").is_some() {
+        result.outcome = "pq_session_unported";
+        return Ok(result);
+    }
+    let Some(pin) = pin else {
+        result.outcome = "missing_saved_identity";
+        return Ok(result);
+    };
+    // The read snapshot is not an OCC commit guard: this operation never
+    // commits a candidate or treats a matching pin as native admission.
+    if bundle
+        .identity_key()
+        .map_err(|_| Error::invalid("identity_notification", "invalid bundle identity"))?
+        .serialize()
+        .as_ref()
+        != pin.as_slice()
+    {
+        result.outcome = "identity_replacement_unported";
+        return Ok(result);
+    }
+    let account =
+        account.ok_or_else(|| Error::invalid("identity_notification", "missing saved account"))?;
+    let candidate = crate::signal::direct::prepare_session_refresh(
+        &account,
+        &peer,
+        &bundle,
+        session.as_deref().map(Vec::as_slice),
+        &pin,
+    )
+    .await?;
+    let record = wacore_libsignal::protocol::SessionRecord::deserialize(&candidate)
+        .map_err(|_| Error::invalid("identity_notification", "invalid staged session"))?;
+    result.outcome = "prepared";
+    result.archived_states = Some(record.previous_session_count());
+    Ok(result)
 }
 
 /// Queue the APK-derived `key/user reason=identity` read from an authenticated
@@ -368,6 +489,194 @@ mod tests {
                 ))
             })
             .unwrap()
+    }
+
+    #[tokio::test]
+    async fn session_preview_is_read_only_and_refuses_unported_inputs() {
+        use crate::session::{KeyMaterial, SignalIdentityKey};
+        for case in [
+            "prepared",
+            "no_session",
+            "companion",
+            "attestation",
+            "pq",
+            "changed",
+            "forged",
+            "queued",
+            "uncertain",
+            "refused",
+            "bad_session",
+            "missing_pin",
+            "session_identity_mismatch",
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("preview.redb");
+            let store = open(&path);
+            let mut account = account();
+            let local = IdentityKeyPair::generate(&mut rand::rng());
+            account.signal_registration_id = Some(31);
+            account.signal_identity = Some(SignalIdentityKey(KeyMaterial {
+                public: local.public_key().public_key_bytes().try_into().unwrap(),
+                private: *local.private_key().serialize(),
+            }));
+            let peer = Jid::parse(if case == "companion" {
+                "222222222222222:4@lid"
+            } else {
+                "222222222222222@lid"
+            })
+            .unwrap();
+            let identity = install_pin(&store, &peer);
+            let Refresh::Queued(id) = queue(
+                &store,
+                &account,
+                &notification(&peer.to_string(), "preview-event"),
+            )
+            .unwrap() else {
+                panic!("expected read")
+            };
+            let mut response = reply(&peer, &id, &identity, case != "forged");
+            if case == "changed" {
+                response = reply(
+                    &peer,
+                    &id,
+                    &IdentityKeyPair::generate(&mut rand::rng()),
+                    true,
+                );
+            }
+            let valid_reply = reply(&peer, &id, &identity, true);
+            let held_bundle =
+                crate::signal::direct::prekey_bundle_for(&valid_reply, &peer).unwrap();
+            let mut held = crate::signal::direct::prepare_session_refresh(
+                &account,
+                &peer,
+                &held_bundle,
+                None,
+                &identity.identity_key().serialize(),
+            )
+            .await
+            .unwrap();
+            if case == "session_identity_mismatch" {
+                let foreign = IdentityKeyPair::generate(&mut rand::rng());
+                let foreign_bundle = crate::signal::direct::prekey_bundle_for(
+                    &reply(&peer, &id, &foreign, true),
+                    &peer,
+                )
+                .unwrap();
+                held = crate::signal::direct::prepare_session_refresh(
+                    &account,
+                    &peer,
+                    &foreign_bundle,
+                    None,
+                    &foreign.identity_key().serialize(),
+                )
+                .await
+                .unwrap();
+            }
+            store
+                .write(|tx| {
+                    account.save(tx)?;
+                    let key = format!("comparison-direct:{peer}");
+                    tx.put_json(
+                        Table::SignalSessions,
+                        key.as_bytes(),
+                        1,
+                        &if case == "bad_session" {
+                            vec![1u8, 2, 3]
+                        } else {
+                            held.to_vec()
+                        },
+                    )?;
+                    if case == "no_session" {
+                        tx.delete(Table::SignalSessions, key.as_bytes())?;
+                    }
+                    if case == "missing_pin" {
+                        tx.delete(Table::PeerIdentities, key.as_bytes())?;
+                    }
+                    Ok(())
+                })
+                .unwrap();
+            if matches!(case, "attestation" | "pq") {
+                let crate::binary::NodeContent::Children(lists) = &mut response.content else {
+                    panic!("fixture lists")
+                };
+                let crate::binary::NodeContent::Children(users) = &mut lists[0].content else {
+                    panic!("fixture users")
+                };
+                let crate::binary::NodeContent::Children(fields) = &mut users[0].content else {
+                    panic!("fixture fields")
+                };
+                fields.push(Node::new(if case == "pq" {
+                    "pqkey"
+                } else {
+                    "non_e2ee_attestation"
+                }));
+            }
+            if case != "queued" {
+                actions::reserve_pending(&store).unwrap();
+                if case == "refused" {
+                    response = Node::new("iq")
+                        .attr("id", id.as_str())
+                        .attr("type", "error")
+                        .children(vec![Node::new("error").attr("code", "429")]);
+                }
+                if case != "uncertain" {
+                    assert!(actions::record_reply(&store, &response).unwrap());
+                }
+            }
+            let snapshot = |store: &ProtocolStore| {
+                store
+                    .read(|tx| {
+                        Table::ALL
+                            .iter()
+                            .map(|table| tx.scan_after(*table, 1, None, 512))
+                            .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap()
+            };
+            let before = snapshot(&store);
+            let head = store.journal_head().unwrap();
+            let result = preview_session(&store, &id).await;
+            if matches!(case, "bad_session" | "session_identity_mismatch") {
+                let error = result.unwrap_err().to_string();
+                assert!(error.contains(if case == "bad_session" {
+                    "Signal"
+                } else {
+                    "saved session identity does not match pin"
+                }));
+                assert!(!error.contains(&peer.user));
+            } else {
+                let result = result.unwrap();
+                assert_eq!(
+                    result.outcome,
+                    match case {
+                        "prepared" | "no_session" => "prepared",
+                        "companion" => "companion_admission_unported",
+                        "attestation" => "attestation_admission_unported",
+                        "pq" => "pq_session_unported",
+                        "changed" => "identity_replacement_unported",
+                        "missing_pin" => "missing_saved_identity",
+                        _ => "reply_not_verified",
+                    }
+                );
+                assert_eq!(
+                    result.archived_states,
+                    match case {
+                        "prepared" => Some(1),
+                        "no_session" => Some(0),
+                        _ => None,
+                    }
+                );
+                assert!(!result.persisted && !result.admission_evaluated);
+                let json = serde_json::to_string(&result).unwrap();
+                assert!(!json.contains(&peer.user) && !json.contains(&id));
+            }
+            assert_eq!(snapshot(&store), before);
+            assert_eq!(store.journal_head().unwrap(), head);
+            drop(store);
+            let reopened = open(&path);
+            assert_eq!(snapshot(&reopened), before);
+            assert_eq!(reopened.journal_head().unwrap(), head);
+        }
     }
 
     #[test]

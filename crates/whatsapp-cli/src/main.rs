@@ -326,6 +326,9 @@ enum Cmd {
         /// Print the request and reply stanzas of one action (numbers masked).
         #[arg(long)]
         show: Option<String>,
+        /// Derive and discard a same-identity primary session from --show (offline).
+        #[arg(long, requires = "show")]
+        preview_session: bool,
     },
     /// Group management over the durable action queue (offline; a session transmits).
     #[cfg(feature = "experimental-transport")]
@@ -1623,7 +1626,10 @@ async fn run(cli: Cli) -> Result<(), Error> {
         #[cfg(feature = "experimental-transport")]
         Cmd::ClockInspect => transport_receive::clock_inspect(&cli),
         #[cfg(feature = "experimental-transport")]
-        Cmd::Actions { show } => transport_receive::actions_status(&cli, show.as_deref()),
+        Cmd::Actions {
+            show,
+            preview_session,
+        } => transport_receive::actions_status(&cli, show.as_deref(), *preview_session).await,
         #[cfg(feature = "experimental-transport")]
         Cmd::Group { cmd } => transport_receive::group(&cli, cmd),
         Cmd::Accounts { cmd } => accounts(&cli, cmd),
@@ -3032,6 +3038,25 @@ mod group_reference_cli_tests {
 #[cfg(all(test, feature = "experimental-transport"))]
 mod identity_change_preview_cli_tests {
     use super::*;
+    #[test]
+    fn session_preview_requires_selected_action() {
+        assert!(Cli::try_parse_from(["whatsapp-cli", "actions", "--preview-session"]).is_err());
+        let cli = Cli::try_parse_from([
+            "whatsapp-cli",
+            "actions",
+            "--show",
+            "fixture",
+            "--preview-session",
+        ])
+        .unwrap();
+        assert!(matches!(
+            cli.cmd,
+            Cmd::Actions {
+                preview_session: true,
+                show: Some(_)
+            }
+        ));
+    }
     #[test]
     fn identity_change_preview_conflicts_with_saved_action_modes() {
         let args = [

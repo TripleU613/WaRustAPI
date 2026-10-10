@@ -1,0 +1,30 @@
+{
+  "validation": "offline_saved_authenticated_directory_reply",
+  "date": "2026-10-09",
+  "apk_build": "2.26.37.71",
+  "source_read_commit": "41e66e3",
+  "network_requests": 0,
+  "chat_ciphertexts_constructed": 0,
+  "store_summary_unchanged": true,
+  "store_summary_limit": "Summary equality is not a byte-level comparison of live account rows; synthetic tests compare all store table plaintext and journal head.",
+  "preview": {
+    "inspection": {
+      "status": "verified_bundle",
+      "peer_namespace": "lid",
+      "device": 0,
+      "server_error_code": null,
+      "signature_valid": true,
+      "pin_matches": true
+    },
+    "outcome": "prepared",
+    "held_session": true,
+    "archived_states": 2,
+    "admission_evaluated": false,
+    "persisted": false
+  },
+  "limits": [
+    "Candidate discarded; no automatic admission or persisted refresh.",
+    "Native stored attestation-state provenance remains unknown.",
+    "No fresh changed-key, companion, PQ or attestation live behavior was tested."
+  ]
+}

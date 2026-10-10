@@ -513,6 +513,80 @@ pub(crate) fn validate_bundle_identity(
     Ok(())
 }
 
+/// Stage a classic same-identity bundle without constructing a chat ciphertext.
+/// This is a cryptographic primitive, not native CPB admission or a store write.
+pub(crate) async fn prepare_session_refresh(
+    account: &AccountRecord,
+    recipient: &Jid,
+    bundle: &PreKeyBundle,
+    previous_session: Option<&[u8]>,
+    previous_identity: &[u8],
+) -> Result<Zeroizing<Vec<u8>>> {
+    if !account.is_registered() {
+        return Err(invalid("unregistered refresh account"));
+    }
+    validate_bundle_identity(Some(bundle), Some(previous_identity), recipient)?;
+    validate_bundle_signature(bundle)?;
+    let key = account
+        .signal_identity
+        .as_ref()
+        .ok_or_else(|| invalid("missing saved Signal identity"))?;
+    let public = PublicKey::from_djb_public_key_bytes(&key.0.public)
+        .map_err(|_| invalid("invalid local public key"))?;
+    let private = PrivateKey::deserialize(&key.0.private)
+        .map_err(|_| invalid("invalid local private key"))?;
+    let address = ProtocolAddress::new(&recipient.user, DeviceId::new(recipient.device.into()));
+    let pin = IdentityKey::decode(previous_identity).map_err(crypto)?;
+    let mut identities = Identities {
+        local: IdentityKeyPair::new(IdentityKey::new(public), private),
+        registration: account
+            .signal_registration_id
+            .ok_or_else(|| invalid("missing local registration id"))?,
+        peer: Some(pin),
+        address: address.clone(),
+    };
+    let record = previous_session
+        .map(SessionRecord::deserialize)
+        .transpose()
+        .map_err(crypto)?;
+    if let Some(record) = &record {
+        let remote = record
+            .session_state()
+            .ok_or_else(|| invalid("saved session has no current state"))?
+            .remote_identity_key()
+            .map_err(|_| invalid("invalid saved session identity"))?;
+        if remote.as_ref() != Some(&pin) {
+            return Err(invalid("saved session identity does not match pin"));
+        }
+    }
+    let mut sessions = Sessions {
+        record,
+        address: address.clone(),
+    };
+    // 37.71 0jc.A0L matching-key branch 0086..009c still reaches CQc.A00
+    // 0310..0324. CQc archives a held current state at 0124..014c before
+    // deriving another one. Unlike ordinary encryption, always process the
+    // validated classic bundle here; the backend retains the previous receiving
+    // state. Native admission remains the caller's separate responsibility.
+    process_prekey_bundle(
+        &address,
+        &mut sessions,
+        &mut identities,
+        bundle,
+        &mut task_rng(),
+        UsePQRatchet::No,
+    )
+    .await
+    .map_err(crypto)?;
+    Ok(Zeroizing::new(
+        sessions
+            .record
+            .ok_or_else(|| invalid("missing staged session"))?
+            .serialize()
+            .map_err(crypto)?,
+    ))
+}
+
 /// Encrypt a bounded, already encoded Message protobuf with the saved session.
 /// Used for non-text payloads; retains the same identity and transaction rules.
 pub async fn prepare_payload(
@@ -1133,6 +1207,44 @@ mod tests {
             .unwrap();
         let session_before = saved.session.to_vec();
         let identity_before = saved.identity.clone();
+        let staged = prepare_session_refresh(
+            &account,
+            &recipient,
+            &bundle,
+            Some(&saved.session),
+            &saved.identity,
+        )
+        .await
+        .unwrap();
+        let old = SessionRecord::deserialize(&saved.session).unwrap();
+        let new = SessionRecord::deserialize(&staged).unwrap();
+        assert_eq!(
+            new.previous_session_count(),
+            old.previous_session_count() + 1
+        );
+        let original = old.session_state().unwrap();
+        let archived = new.previous_session_states().next().unwrap().unwrap();
+        assert_eq!(archived.alice_base_key(), original.alice_base_key());
+        assert_eq!(
+            archived.get_sender_chain_key().unwrap().index(),
+            original.get_sender_chain_key().unwrap().index()
+        );
+        assert_ne!(
+            new.session_state().unwrap().alice_base_key(),
+            original.alice_base_key()
+        );
+        assert!(
+            prepare_session_refresh(
+                &account,
+                &recipient,
+                &forged,
+                Some(&saved.session),
+                &saved.identity
+            )
+            .await
+            .is_err()
+        );
+
         let error = prepare(
             &account,
             &recipient,

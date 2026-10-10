@@ -978,7 +978,11 @@ pub(super) fn identity_conflicts(cli: &super::Cli) -> Result<(), Error> {
 }
 
 /// Offline list of queued one-shot actions and their server outcomes.
-pub(super) fn actions_status(cli: &super::Cli, show: Option<&str>) -> Result<(), Error> {
+pub(super) async fn actions_status(
+    cli: &super::Cli,
+    show: Option<&str>,
+    preview_session: bool,
+) -> Result<(), Error> {
     let store = ProtocolStore::open(OpenOptions {
         path: cli.store.clone(),
         account_id: AccountId::new(cli.account.clone())?,
@@ -986,6 +990,17 @@ pub(super) fn actions_status(cli: &super::Cli, show: Option<&str>) -> Result<(),
         create: false,
     })?;
     if let Some(id) = show {
+        if preview_session {
+            let summary =
+                whatsapp_api::transport::identity_notifications::preview_session(&store, id)
+                    .await?;
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&summary)
+                    .map_err(|e| Error::invalid("actions", e.to_string()))?
+            );
+            return Ok(());
+        }
         if let Some(summary) = whatsapp_api::transport::identity_notifications::inspect(&store, id)?
         {
             println!(
