@@ -1,4 +1,4 @@
-//! APK 37.71 CPB invariant primary/classic admission and atomic application.
+//! APK 37.71 bounded primary/classic and known same-key companion application.
 //! Stored attestation state/property assignments remain unknown: this branch
 //! admits under both property values, without manufacturing either assignment.
 use super::{RefreshGuard, actions, guard, inspect_in};
@@ -62,6 +62,7 @@ struct Staged {
     identity: Vec<u8>,
     session: Zeroizing<Vec<u8>>,
     account_fingerprint: [u8; 32],
+    companion: Option<Box<super::super::companion_admission::AuthoritySnapshot>>,
 }
 enum Preparation {
     Ready(Box<Staged>),
@@ -118,9 +119,6 @@ async fn stage(
     if inspection.refresh_guard != RefreshGuard::Matches {
         return Ok(deferred("original_refresh_guard_not_matching"));
     }
-    if peer.device != 0 {
-        return Ok(deferred("companion_admission_unported"));
-    }
     let Some(account) = account.filter(AccountRecord::is_registered) else {
         return Ok(deferred("missing_registered_account"));
     };
@@ -157,7 +155,10 @@ async fn stage(
     // equal old state -> Bjo; NOT_SET -> Bjn; HYBRID/NON with A08 ->
     // Bjn at 0252 -> 0306. Disabled main property -> Bjo. All admit;
     // without that server child, unknown old state/0x7497 cannot be guessed.
-    if same_identity && user.child("force_override_e2ee_state").is_none() {
+    if peer.device != 0 && !same_identity {
+        return Ok(deferred("companion_admission_unported"));
+    }
+    if peer.device == 0 && same_identity && user.child("force_override_e2ee_state").is_none() {
         return Ok(deferred("same_identity_admission_unported"));
     }
     if inspection.pin_matches.is_none() {
@@ -174,6 +175,21 @@ async fn stage(
         .serialize()
         .to_vec();
     let pin = pin.ok_or_else(|| invalid("missing saved identity"))?;
+    let companion = if peer.device != 0 {
+        match store.read(|tx| {
+            super::super::companion_admission::prepare_same_key_directory_in(
+                tx, &peer, user, &identity,
+            )
+        })? {
+            super::super::companion_admission::Admission::Ready(authority) => Some(authority),
+            super::super::companion_admission::Admission::Refused(reason) => {
+                return Ok(deferred(reason));
+            }
+        }
+    } else {
+        None
+    };
+
     // 0jc.A0L 0096/00a2 resets a changed-key session via A0E/A0s -> A0D,
     // which deletes the selected sessions row. Derive fresh, retaining old
     // bytes in the encrypted local transition archive, not the new ratchet.
@@ -200,6 +216,7 @@ async fn stage(
         identity,
         session,
         account_fingerprint: account_fingerprint(&account)?,
+        companion,
     })))
 }
 fn commit(store: &ProtocolStore, staged: &Staged) -> Result<Application> {
@@ -257,6 +274,13 @@ fn commit(store: &ProtocolStore, staged: &Staged) -> Result<Application> {
             .any(|own| own == peer)
         {
             return Ok(Application::Deferred("own_identity"));
+        }
+        if let Some(authority) = &staged.companion
+            && !authority.matches(tx)?
+        {
+            return Ok(Application::Deferred(
+                "companion_authority_changed_before_commit",
+            ));
         }
         super::super::identity_conflicts::archive_bundle_replacement(
             tx,
@@ -421,6 +445,402 @@ mod tests {
             panic!()
         };
         fields.push(Node::new(name));
+    }
+    fn install_companion_authority(f: &Fixture) {
+        use super::super::super::devices::{DeviceEntry, DeviceList, list_key};
+        let primary = f.peer.to_non_ad();
+        let key = install_pin(&f.store, &primary);
+        let list = DeviceList {
+            owner: primary.clone(),
+            devices: vec![
+                DeviceEntry {
+                    jid: primary,
+                    key_index: 0,
+                },
+                DeviceEntry {
+                    jid: f.peer.clone(),
+                    key_index: 7,
+                },
+            ],
+            raw_id: Some(8),
+            list_timestamp: Some(9),
+            expected_timestamp: None,
+            pending_removed_devices: None,
+            adv_added_devices: vec![],
+            companions_verified: true,
+            verified_primary_key_fingerprint: Some(hex::encode(Sha256::digest(
+                key.public_key().public_key_bytes(),
+            ))),
+            unverified_reason: None,
+            notified_hash: None,
+            hash_matches: None,
+            hosted_skipped: 0,
+            fetched_at: crate::model::time::Timestamp::now(),
+        };
+        f.store.write(|tx| {
+            tx.put_json(Table::Checkpoints, list_key(&list.owner).as_bytes(), 1, &list)?;
+            tx.put_json(Table::Checkpoints, b"login-identity", 1,
+                &serde_json::json!({"pn":"15555550999@s.whatsapp.net", "lid":"999999999999999@lid"}))
+        }).unwrap();
+    }
+    fn device_identity(response: &mut Node, content: NodeContent) {
+        metadata(response, "device-identity");
+        let NodeContent::Children(lists) = &mut response.content else {
+            panic!()
+        };
+        let NodeContent::Children(users) = &mut lists[0].content else {
+            panic!()
+        };
+        let NodeContent::Children(fields) = &mut users[0].content else {
+            panic!()
+        };
+        fields.last_mut().unwrap().content = content;
+    }
+    fn change_list(
+        f: &Fixture,
+        change: impl FnOnce(&mut super::super::super::devices::DeviceList),
+    ) {
+        use super::super::super::devices::{DeviceList, list_key};
+        f.store
+            .write(|tx| {
+                let key = list_key(&f.peer.to_non_ad());
+                let mut list: DeviceList =
+                    tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?.unwrap();
+                change(&mut list);
+                tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &list)
+            })
+            .unwrap();
+    }
+    #[tokio::test]
+    async fn known_same_key_companion_refresh_archives_ratchet_and_recovers_once() {
+        for (peer, bytes) in [
+            ("15555550111:4@s.whatsapp.net", vec![]),
+            ("222222222222222:4@lid", vec![0xff]),
+        ] {
+            let f = fixture(peer).await;
+            install_companion_authority(&f);
+            let mut response = reply(&f.peer, &f.id, &f.old, true);
+            // Native fast return skips ADV parsing, even for non-protobuf bytes.
+            device_identity(&mut response, NodeContent::Bytes(bytes.into()));
+            settle(&f, &response);
+            let inspection = super::super::inspect(&f.store, &f.id).unwrap().unwrap();
+            assert_eq!(inspection.companion_same_key_authority, Some("ready"));
+            assert_eq!(inspection.force_override_e2ee_state, Some(false));
+            let before = snapshot(&f.store);
+            let head = f.store.journal_head().unwrap();
+            assert_eq!(
+                recover(&f.store, IdentityChangePolicy::ApkAuthenticated)
+                    .await
+                    .unwrap(),
+                1
+            );
+            let after = snapshot(&f.store);
+            for (i, table) in Table::ALL.iter().enumerate() {
+                if !matches!(table, Table::SignalSessions | Table::Checkpoints) {
+                    assert_eq!(before[i], after[i], "{table:?}");
+                }
+            }
+            // Exactly the application marker is added; no list/ADV refresh.
+            let checkpoints = Table::ALL
+                .iter()
+                .position(|t| *t == Table::Checkpoints)
+                .unwrap();
+            let mut expected = before[checkpoints].clone();
+            let marker = after[checkpoints]
+                .iter()
+                .find(|(k, _)| k == key(&f.id).as_bytes())
+                .unwrap();
+            expected.push(marker.clone());
+            expected.sort_by(|a, b| a.0.cmp(&b.0));
+            assert_eq!(expected, after[checkpoints]);
+            assert_eq!(f.store.journal_head().unwrap(), head);
+            let saved: Vec<u8> = f
+                .store
+                .read(|tx| {
+                    tx.get_json(
+                        Table::SignalSessions,
+                        format!("comparison-direct:{}", f.peer).as_bytes(),
+                        1,
+                    )
+                })
+                .unwrap()
+                .unwrap();
+            let old = SessionRecord::deserialize(&f.held).unwrap();
+            let new = SessionRecord::deserialize(&saved).unwrap();
+            assert_eq!(
+                new.previous_session_count(),
+                old.previous_session_count() + 1
+            );
+            assert_eq!(
+                new.previous_session_states()
+                    .next()
+                    .unwrap()
+                    .unwrap()
+                    .alice_base_key(),
+                old.session_state().unwrap().alice_base_key()
+            );
+            assert_ne!(
+                new.session_state().unwrap().alice_base_key(),
+                old.session_state().unwrap().alice_base_key()
+            );
+            assert_eq!(
+                apply(&f.store, &f.id, IdentityChangePolicy::ApkAuthenticated)
+                    .await
+                    .unwrap(),
+                Application::AlreadyApplied
+            );
+            assert_eq!(snapshot(&f.store), after);
+            let path = f.dir.path().join("application.redb");
+            drop(f.store);
+            let reopened = open(&path);
+            assert_eq!(
+                recover(&reopened, IdentityChangePolicy::ApkAuthenticated)
+                    .await
+                    .unwrap(),
+                0
+            );
+            assert_eq!(snapshot(&reopened), after);
+            assert!(actions::reserve_pending(&reopened).unwrap().is_empty());
+        }
+    }
+    #[tokio::test]
+    async fn companion_same_key_refusals_preserve_all_rows_and_explain_authority() {
+        for (case, expected) in [
+            ("missing_adv", "missing_device_identity"),
+            ("nonnull_shape", "invalid_device_identity"),
+            ("duplicate_adv", "ambiguous_input"),
+            ("oversize", "invalid_device_identity"),
+            ("missing_list", "missing_device_list"),
+            ("stale", "stale_device_list"),
+            ("foreign", "stale_device_list"),
+            ("not_member", "missing_device_membership"),
+            ("duplicate_member", "ambiguous_device_membership"),
+            ("teardown", "pending_device_teardown"),
+            ("changed", "same_identity_required"),
+            ("own", "own_device"),
+            ("unknown_own", "missing_own_identity"),
+            ("missing_primary", "missing_primary_pin"),
+        ] {
+            let f = fixture("222222222222222:4@lid").await;
+            install_companion_authority(&f);
+            let mut response = reply(
+                &f.peer,
+                &f.id,
+                if case == "changed" { &f.new } else { &f.old },
+                true,
+            );
+            if case != "missing_adv" {
+                device_identity(
+                    &mut response,
+                    if case == "nonnull_shape" {
+                        NodeContent::Empty
+                    } else {
+                        NodeContent::Bytes(
+                            if case == "oversize" {
+                                vec![0; 16385]
+                            } else {
+                                vec![]
+                            }
+                            .into(),
+                        )
+                    },
+                );
+            }
+            if case == "duplicate_adv" {
+                metadata(&mut response, "device-identity");
+            }
+            match case {
+                "stale" => change_list(&f, |l| l.verified_primary_key_fingerprint = None),
+                "foreign" => {
+                    change_list(&f, |l| l.owner = Jid::parse("888888888888888@lid").unwrap())
+                }
+                "not_member" => change_list(&f, |l| l.devices.retain(|d| d.jid != f.peer)),
+                "duplicate_member" => change_list(&f, |l| l.devices.push(l.devices[1].clone())),
+                "teardown" => change_list(&f, |l| {
+                    l.pending_removed_devices = Some(vec![f.peer.clone()])
+                }),
+                "missing_list" | "missing_primary" | "unknown_own" => {
+                    f.store
+                        .write(|tx| {
+                            tx.delete(
+                                if case == "missing_primary" {
+                                    Table::PeerIdentities
+                                } else {
+                                    Table::Checkpoints
+                                },
+                                if case == "missing_list" {
+                                    super::super::super::devices::list_key(&f.peer.to_non_ad())
+                                        .into_bytes()
+                                } else if case == "missing_primary" {
+                                    format!("comparison-direct:{}", f.peer.to_non_ad()).into_bytes()
+                                } else {
+                                    b"login-identity".to_vec()
+                                }
+                                .as_slice(),
+                            )
+                        })
+                        .unwrap();
+                }
+                "own" => {
+                    f.store
+                        .write(|tx| {
+                            tx.put_json(
+                                Table::Checkpoints,
+                                b"login-identity",
+                                1,
+                                &serde_json::json!({"lid": f.peer.to_non_ad().to_string()}),
+                            )
+                        })
+                        .unwrap();
+                }
+                _ => {}
+            }
+            settle(&f, &response);
+            let before = snapshot(&f.store);
+            let head = f.store.journal_head().unwrap();
+            let inspection = super::super::inspect(&f.store, &f.id).unwrap().unwrap();
+            assert_eq!(
+                inspection.companion_same_key_authority,
+                Some(expected),
+                "{case}"
+            );
+            assert!(
+                matches!(
+                    apply(&f.store, &f.id, IdentityChangePolicy::ApkAuthenticated)
+                        .await
+                        .unwrap(),
+                    Application::Deferred(_)
+                ),
+                "{case}"
+            );
+            assert_eq!(snapshot(&f.store), before, "{case}");
+            assert_eq!(f.store.journal_head().unwrap(), head);
+        }
+    }
+    #[tokio::test]
+    async fn ready_companion_authority_does_not_override_signature_policy_metadata_or_guard() {
+        for case in [
+            "forged",
+            "pinned",
+            "non_e2ee_attestation",
+            "pqkey",
+            "identity_auth",
+            "untracked",
+        ] {
+            let f = fixture("222222222222222:4@lid").await;
+            install_companion_authority(&f);
+            let mut response = reply(&f.peer, &f.id, &f.old, case != "forged");
+            device_identity(&mut response, NodeContent::Bytes(vec![].into()));
+            if matches!(case, "non_e2ee_attestation" | "pqkey" | "identity_auth") {
+                metadata(&mut response, case);
+            }
+            settle(&f, &response);
+            if case == "untracked" {
+                f.store
+                    .write(|tx| {
+                        tx.delete(
+                            Table::Checkpoints,
+                            format!("identity-refresh-snapshot:{}", f.id).as_bytes(),
+                        )
+                    })
+                    .unwrap();
+            }
+            let before = snapshot(&f.store);
+            let head = f.store.journal_head().unwrap();
+            let inspection = super::super::inspect(&f.store, &f.id).unwrap().unwrap();
+            assert_eq!(
+                inspection.companion_same_key_authority,
+                if case == "forged" {
+                    None
+                } else {
+                    Some("ready")
+                }
+            );
+            assert_eq!(
+                apply(
+                    &f.store,
+                    &f.id,
+                    if case == "pinned" {
+                        IdentityChangePolicy::Pinned
+                    } else {
+                        IdentityChangePolicy::ApkAuthenticated
+                    }
+                )
+                .await
+                .unwrap(),
+                Application::Deferred(match case {
+                    "forged" => "reply_not_verified",
+                    "pinned" => "identity_policy_pinned",
+                    "non_e2ee_attestation" => "attestation_admission_unported",
+                    "pqkey" => "pq_session_unported",
+                    "identity_auth" => "identity_auth_unported",
+                    _ => "original_refresh_guard_not_matching",
+                })
+            );
+            assert_eq!(snapshot(&f.store), before);
+            assert_eq!(f.store.journal_head().unwrap(), head);
+        }
+    }
+    #[tokio::test]
+    async fn companion_authority_races_cannot_overwrite_session() {
+        for case in ["primary", "list", "login", "ratchet"] {
+            let f = fixture("222222222222222:4@lid").await;
+            install_companion_authority(&f);
+            let mut response = reply(&f.peer, &f.id, &f.old, true);
+            device_identity(&mut response, NodeContent::Bytes(vec![].into()));
+            settle(&f, &response);
+            let Preparation::Ready(staged) =
+                stage(&f.store, &f.id, IdentityChangePolicy::ApkAuthenticated)
+                    .await
+                    .unwrap()
+            else {
+                panic!("stage")
+            };
+            match case {
+                "primary" => {
+                    install_pin(&f.store, &f.peer.to_non_ad());
+                }
+                "list" => change_list(&f, |l| l.expected_timestamp = Some(10)),
+                "login" => {
+                    f.store.write(|tx| tx.put_json(Table::Checkpoints, b"login-identity", 1,
+                    &serde_json::json!({"lid":"999999999999999@lid","pn":"15555550888@s.whatsapp.net"}))).unwrap();
+                }
+                _ => {
+                    let progress = crate::signal::direct::prepare_payload(
+                        &f.account,
+                        &f.peer,
+                        None,
+                        Some(&f.held),
+                        Some(&f.old.identity_key().serialize()),
+                        b"progress",
+                    )
+                    .await
+                    .unwrap();
+                    f.store
+                        .write(|tx| {
+                            tx.put_json(
+                                Table::SignalSessions,
+                                format!("comparison-direct:{}", f.peer).as_bytes(),
+                                1,
+                                &*progress.session,
+                            )
+                        })
+                        .unwrap();
+                }
+            }
+            let before = snapshot(&f.store);
+            let head = f.store.journal_head().unwrap();
+            assert_eq!(
+                commit(&f.store, &staged).unwrap(),
+                Application::Deferred(if case == "ratchet" {
+                    "peer_state_changed_before_commit"
+                } else {
+                    "companion_authority_changed_before_commit"
+                })
+            );
+            assert_eq!(snapshot(&f.store), before);
+            assert_eq!(f.store.journal_head().unwrap(), head);
+        }
     }
     #[tokio::test]
     async fn server_same_identity_override_retains_old_ratchet_without_transition_once() {

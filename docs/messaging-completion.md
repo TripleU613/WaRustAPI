@@ -1,5 +1,20 @@
 # Messaging completion checklist
 
+Known companion same-key refresh (2026-10-09, **implemented/offline**): guarded
+classic directory replies now refresh an already listed companion with the
+same held key under apk_authenticated. APK 11T.A0D returns before ADV parsing
+on this subset; a unique nonnull byte body is required, not claimed verified.
+Current list/primary binding, own identities and exact commit snapshot stay
+protected. Old receiving ratchet is archived, device-list/event/pin state
+unchanged, repeat/reopen recovery once-only. Changed keys and unsupported
+metadata remain deferred. actions --show adds companion_same_key_authority.
+Fresh live application unknown.
+Validation: 878 workspace/all-feature tests, strict Clippy, Rustdoc,
+default CLI/API symbols and CLI reference passed. Exact 10-topic / 15-file
+APK export reproduced and cached self-diff unchanged; hygiene passed.
+[Evidence and boundaries](protocol/companion-same-key-refresh.md).
+
+
 Companion ADV serialization (2026-10-09, **implemented/offline**): signature
 input now matches APK GsB parse/serialize, including normalized known fields and
 retained lite unknown fields/groups. Original-byte verification was our bug.

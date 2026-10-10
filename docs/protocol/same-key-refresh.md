@@ -1,5 +1,10 @@
 # Server-authorized same-key primary refresh
 
+Follow-up: [known companion same-key refresh](companion-same-key-refresh.md)
+now applies the native listed-device/equal-key fast return. Changed companion
+identities and full ADV/admission remain separate and unfinished.
+
+
 2026-10-09. **Confirmed static / implemented offline** in APK **2.26.37.71**,
 SHA-256 `1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
 [Recipe](apk/recipes/2.26.37.71-same-key-refresh.json) and

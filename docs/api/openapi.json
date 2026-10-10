@@ -4061,7 +4061,8 @@
           "refresh_guard",
           "attestation",
           "applied",
-          "force_override_e2ee_state"
+          "force_override_e2ee_state",
+          "companion_same_key_authority"
         ],
         "properties": {
           "status": {
@@ -4146,6 +4147,32 @@
               "null"
             ],
             "description": "Presence of force_override_e2ee_state child on the correlated selected-user parsed bundle, not root metadata or an attribute. Null until a parsed bundle, including signature-invalid bundles. This is server input inspected offline, not a local switch or complete native admission."
+          },
+          "companion_same_key_authority": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Local known-companion same-key directory authority diagnostic. Null for primary, incomplete or invalid-signature replies. ready requires a unique nonnull device-identity byte body, exact held companion key, current saved membership bound to its primary pin, protected own namespace and no explicit pending teardown. ADV bytes are not parsed on the APK same-key fast return. This diagnostic does not authorize application: pinned policy, metadata, original guards and atomic reply/session/account checks still apply. Changed companion keys remain unported.",
+            "enum": [
+              null,
+              "ready",
+              "unsupported_sender",
+              "ambiguous_input",
+              "missing_device_identity",
+              "invalid_device_identity",
+              "missing_registered_account",
+              "own_device",
+              "missing_own_identity",
+              "same_identity_required",
+              "missing_primary_pin",
+              "invalid_primary_pin",
+              "missing_device_list",
+              "stale_device_list",
+              "ambiguous_device_membership",
+              "missing_device_membership",
+              "pending_device_teardown"
+            ]
           }
         }
       },

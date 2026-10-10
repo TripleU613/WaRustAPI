@@ -116,6 +116,10 @@ pub struct Inspection {
     /// Selected user's server-provided child presence; null until a parsed bundle.
     /// This is not a local configuration switch or full native admission.
     pub force_override_e2ee_state: Option<bool>,
+    /// Local known-companion same-key authority diagnostic, not full admission.
+    /// Null for primary/incomplete/invalid-signature replies; ready still needs
+    /// policy, metadata, original guards and atomic session/reply rechecks.
+    pub companion_same_key_authority: Option<&'static str>,
     /// Durable historical application fact, not current key agreement or trust.
     pub applied: bool,
 }
@@ -174,6 +178,7 @@ fn inspect_in(tx: &crate::store::ReadTx<'_>, id: &str) -> Result<Option<Inspecti
         refresh_guard,
         attestation: None,
         force_override_e2ee_state: None,
+        companion_same_key_authority: None,
         applied: application::applied_in(tx, id, &peer)?,
     };
     let Some(reply) = reply else {
@@ -253,6 +258,23 @@ fn inspect_in(tx: &crate::store::ReadTx<'_>, id: &str) -> Result<Option<Inspecti
         })
         .transpose()
         .map_err(|_| Error::invalid("identity_notification", "invalid bundle identity"))?;
+    if valid && peer.device != 0 && users.len() == 1 {
+        let identity = bundle
+            .identity_key()
+            .map_err(|_| Error::invalid("identity_notification", "invalid bundle identity"))?
+            .serialize();
+        result.companion_same_key_authority = Some(
+            match super::companion_admission::prepare_same_key_directory_in(
+                tx,
+                &peer,
+                users[0],
+                identity.as_ref(),
+            )? {
+                super::companion_admission::Admission::Ready(_) => "ready",
+                super::companion_admission::Admission::Refused(reason) => reason,
+            },
+        );
+    }
     result.status = if valid {
         DirectoryStatus::VerifiedBundle
     } else {

@@ -1,0 +1,20 @@
+# APK-derived structural disassembly: LX/B7E;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method equals(ZL) flags=0x1 registers=4
+  # full signature: LX/B7E;->equals(Ljava/lang/Object;)Z
+  0000..0002 op=12 const/4 v1, #0x0
+  0002..0006 op=38 if-eqz v3, +0x11
+  0006..000a op=20 instance-of v0, v3, LX/B7E;
+  000a..000e op=38 if-eqz v0, +0xd
+  000e..0012 op=54 iget-object v1, v2, LX/B7E;->A01:[B
+  0012..0016 op=1f check-cast v3, LX/B7E;
+  0016..001a op=54 iget-object v0, v3, LX/B7E;->A01:[B
+  001a..0020 op=71 invoke-static {v1, v0}, Ljava/util/Arrays;->equals([B[B)Z
+  0020..0022 op=0a move-result v0
+  0022..0024 op=0f return v0
+  0024..0026 op=0f return v1
+  # exception table: 0 try range(s)
+.end method

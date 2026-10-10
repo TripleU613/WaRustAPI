@@ -1,5 +1,15 @@
 # Evidence ledger
 
+2026-10-09 — **confirmed static / implemented offline**: APK 2.26.37.71
+CPB.A00 nonprimary Bjo; 14J.A04 routes to 11T.A0D; nonnull ADV + exact current
+membership + equal held key fast-return precedes ADV parsing. B7D/B7E equality
+and 0bN.A0B map membership retained. Rust applies only equal-key guarded classic
+companion refresh, with stronger local current-primary/list/own/teardown and
+atomic authority protections. No ADV verification or changed-key admission is
+inferred from fast return. Fresh live application unknown.
+[Trace, negative results and recipe](companion-same-key-refresh.md).
+
+
 Identity notification key reads (2026-10-09, **confirmed static / implemented offline**):
 the normal callback target is root from, with device preserved and participant
 separate. Authenticated receive now queues reason=identity reads for supported

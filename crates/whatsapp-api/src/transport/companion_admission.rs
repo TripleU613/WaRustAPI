@@ -8,7 +8,7 @@ use crate::{
     model::jid::{Jid, Server},
     session::AccountRecord,
     signal::adv::VerifiedDeviceIdentity,
-    store::{ProtocolStore, Table, WriteTx},
+    store::{ProtocolStore, ReadTx, Table, WriteTx},
 };
 
 fn same_account(a: &AccountRecord, b: &AccountRecord) -> bool {
@@ -73,7 +73,7 @@ impl AuthoritySnapshot {
         }
         Ok(())
     }
-    pub(crate) fn check(&self, tx: &WriteTx<'_>) -> Result<()> {
+    pub(crate) fn matches(&self, tx: &WriteTx<'_>) -> Result<bool> {
         let list: Option<DeviceList> =
             tx.get_json(Table::Checkpoints, list_key(&self.list.owner).as_bytes(), 1)?;
         let pin: Option<Vec<u8>> = tx.get_json(
@@ -83,13 +83,15 @@ impl AuthoritySnapshot {
         )?;
         let login = tx.get_json::<serde_json::Value>(Table::Checkpoints, b"login-identity", 1)?;
         let account = AccountRecord::load_in_write(tx)?;
-        if list.as_ref() != Some(&self.list)
-            || pin.as_ref() != Some(&self.primary_pin)
-            || login != self.login_identity
-            || !account
+        Ok(list.as_ref() == Some(&self.list)
+            && pin.as_ref() == Some(&self.primary_pin)
+            && login == self.login_identity
+            && account
                 .as_ref()
-                .is_some_and(|a| same_account(a, &self.account))
-        {
+                .is_some_and(|a| same_account(a, &self.account)))
+    }
+    pub(crate) fn check(&self, tx: &WriteTx<'_>) -> Result<()> {
+        if !self.matches(tx)? {
             return Err(Error::invalid(
                 "inbox",
                 "companion authority changed; stanza not committed",
@@ -97,6 +99,119 @@ impl AuthoritySnapshot {
         }
         Ok(())
     }
+}
+
+/// APK 37.71 11T.A0D 0044..00ec: nonnull ADV, current membership and
+/// equal held identity return true at 0e48 before ADV parsing. 14J.A04 then
+/// derives a session. This never admits a new key or updates ADV/list state.
+/// Caller must validate the signed bundle and recheck its exact pin/session.
+pub(crate) fn prepare_same_key_directory_in(
+    tx: &ReadTx<'_>,
+    peer: &Jid,
+    user: &Node,
+    candidate: &[u8],
+) -> Result<Admission> {
+    use Admission::{Ready, Refused};
+    if peer.user.is_empty()
+        || peer.agent != 0
+        || peer.device == 0
+        || !matches!(peer.server, Server::User | Server::Lid)
+    {
+        return Ok(Refused("unsupported_sender"));
+    }
+    let adv: Vec<_> = user
+        .child_nodes()
+        .iter()
+        .filter(|node| node.description == "device-identity")
+        .collect();
+    if adv.len() > 1 {
+        return Ok(Refused("ambiguous_input"));
+    }
+    let Some(adv) = adv.first() else {
+        return Ok(Refused("missing_device_identity"));
+    };
+    // Bot.A03 maps the child's byte body to Cai.A09. Empty bytes are
+    // nonnull; they are not parsed on this path. The size cap is local.
+    if !matches!(&adv.content, NodeContent::Bytes(bytes) if bytes.len() <= 16 * 1024) {
+        return Ok(Refused("invalid_device_identity"));
+    }
+    let Some(account) = AccountRecord::load(tx)?.filter(AccountRecord::is_registered) else {
+        return Ok(Refused("missing_registered_account"));
+    };
+    let login: Option<serde_json::Value> = tx.get_json(Table::Checkpoints, b"login-identity", 1)?;
+    let aliases: Vec<Jid> = ["pn", "lid"]
+        .into_iter()
+        .filter_map(|field| {
+            login.as_ref()?[field]
+                .as_str()
+                .and_then(|s| Jid::parse(s).ok())
+        })
+        .chain(account.own_jid.iter().cloned())
+        .collect();
+    // Stronger local protection than the native early return: never adopt
+    // our own device, or guess an unknown own namespace.
+    if aliases.iter().any(|own| same_user(own, peer)) {
+        return Ok(Refused("own_device"));
+    }
+    if !aliases.iter().any(|own| own.server == peer.server) {
+        return Ok(Refused("missing_own_identity"));
+    }
+    let held: Option<Vec<u8>> = tx.get_json(
+        Table::PeerIdentities,
+        format!("comparison-direct:{peer}").as_bytes(),
+        1,
+    )?;
+    if held.as_deref() != Some(candidate) || candidate.len() != 33 || candidate[0] != 5 {
+        return Ok(Refused("same_identity_required"));
+    }
+    let primary = peer.to_non_ad();
+    let Some(pin): Option<Vec<u8>> = tx.get_json(
+        Table::PeerIdentities,
+        format!("comparison-direct:{primary}").as_bytes(),
+        1,
+    )?
+    else {
+        return Ok(Refused("missing_primary_pin"));
+    };
+    if pin.len() != 33 || pin[0] != 5 {
+        return Ok(Refused("invalid_primary_pin"));
+    }
+    let Some(list) = device_list_in(tx, &primary)? else {
+        return Ok(Refused("missing_device_list"));
+    };
+    // Our retained list must still bind to its independently saved primary.
+    // Native 0bN.A0B checks exact DeviceJid membership, not ADV key index.
+    if list.owner != primary || !authority_in(tx, &list)?.companions_current {
+        return Ok(Refused("stale_device_list"));
+    }
+    let members = list
+        .devices
+        .iter()
+        .filter(|entry| entry.jid == *peer)
+        .count();
+    if members > 1 {
+        return Ok(Refused("ambiguous_device_membership"));
+    }
+    if members == 0 {
+        return Ok(Refused("missing_device_membership"));
+    }
+    // This explicit local teardown guard is stricter than native fast return.
+    // None is historical unknown, not an invented empty removal registry.
+    if list
+        .pending_removed_devices
+        .as_ref()
+        .is_some_and(|pending| pending.iter().any(|jid| jid == peer))
+    {
+        return Ok(Refused("pending_device_teardown"));
+    }
+    Ok(Ready(Box::new(AuthoritySnapshot {
+        list,
+        primary_pin: pin,
+        login_identity: login,
+        account,
+        refresh_timestamp: None,
+        device_addition: None,
+    })))
 }
 
 /// Read-only admission diagnostic for an actual companion prekey candidate.

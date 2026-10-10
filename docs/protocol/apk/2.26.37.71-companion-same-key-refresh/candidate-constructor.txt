@@ -1,0 +1,24 @@
+# APK-derived structural disassembly: LX/Cai;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VLLLLLLLLLBZZ) flags=0x10001 registers=13
+  # full signature: LX/Cai;-><init>(LX/CWS;LX/B76;LX/CXs;LX/CIv;LX/CIv;LX/CIv;[B[B[BBZZ)V
+  0000..0006 op=71 invoke-static {v7, v8}, LX/1xj;->A1G(Ljava/lang/Object;Ljava/lang/Object;)V
+  0006..000c op=70 invoke-direct {v0}, Ljava/lang/Object;-><init>()V
+  000c..0010 op=5b iput-object v2, v0, LX/Cai;->A02:LX/B76;
+  0010..0014 op=5b iput-object v7, v0, LX/Cai;->A0A:[B
+  0014..0018 op=5b iput-object v8, v0, LX/Cai;->A0B:[B
+  0018..001c op=5b iput-object v9, v0, LX/Cai;->A09:[B
+  001c..0020 op=5d ?? v10, v0, LX/Cai;->A00:B
+  0020..0024 op=5b iput-object v4, v0, LX/Cai;->A05:LX/CIv;
+  0024..0028 op=5b iput-object v5, v0, LX/Cai;->A06:LX/CIv;
+  0028..002c op=5b iput-object v3, v0, LX/Cai;->A03:LX/CXs;
+  002c..0030 op=5b iput-object v6, v0, LX/Cai;->A04:LX/CIv;
+  0030..0034 op=5b iput-object v1, v0, LX/Cai;->A01:LX/CWS;
+  0034..0038 op=5c iput-boolean v11, v0, LX/Cai;->A08:Z
+  0038..003c op=5c iput-boolean v12, v0, LX/Cai;->A07:Z
+  003c..003e op=0e return-void
+  # exception table: 0 try range(s)
+.end method
