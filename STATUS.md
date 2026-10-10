@@ -1,5 +1,19 @@
 # Status — 2026-10-07
 
+Same-key primary refresh (2026-10-09, **implemented/offline**): a guarded classic
+reply carrying selected-user force_override_e2ee_state now refreshes under the
+existing apk_authenticated policy. Native admission is invariant across unknown
+state/property values for this subset. Old receiving ratchet is archived inside
+the fresh session; pin/transition/verification/sender-key state and event head
+stay unchanged. No override is invented or sent. Inspection adds nullable
+force_override_e2ee_state. No-child/companion/metadata cases remain deferred;
+fresh live application is unverified. [Evidence and limits](docs/protocol/same-key-refresh.md).
+Validation: 872 workspace/all-feature tests, strict Clippy, Rustdoc, default
+CLI/API-symbol and reference checks passed. The 6-topic / 11-file / 97,899-byte
+source bundle reproduces exactly and self-diffs unchanged; hygiene passed
+(2,409 links / 121 bundles).
+
+
 Identity ACK follow-up (2026-10-09, **confirmed static / observed**): legacy
 arg1=76 now traces through 0y0.A00 → 0y2.A02 → Cp2.A05 → 1Rd.A04.
 The 3-topic / 8-file / 177,076-byte source bundle reproduces exactly. One

@@ -1,7 +1,7 @@
 //! First phase of APK 37.71 identity notification processing: a durable key read.
 //! Notification bytes are a refresh trigger, never replacement-key authority.
-//! Changed primary classic replies can be adopted under the explicit existing
-//! APK-authenticated policy. A notification ACK records handling of the control,
+//! Invariant primary classic replies can be applied under the explicit existing
+//! APK-authenticated policy, including server-authorized same-key refresh. A notification ACK records handling of the control,
 //! independently of whether its key read is completed or its key is adopted.
 use super::{actions, messaging};
 pub(crate) mod application;
@@ -113,6 +113,9 @@ pub struct Inspection {
     pub refresh_guard: RefreshGuard,
     /// Selected-device attestation verification; null until a supported bundle.
     pub attestation: Option<AttestationInspection>,
+    /// Selected user's server-provided child presence; null until a parsed bundle.
+    /// This is not a local configuration switch or full native admission.
+    pub force_override_e2ee_state: Option<bool>,
     /// Durable historical application fact, not current key agreement or trust.
     pub applied: bool,
 }
@@ -170,6 +173,7 @@ fn inspect_in(tx: &crate::store::ReadTx<'_>, id: &str) -> Result<Option<Inspecti
         pin_matches: None,
         refresh_guard,
         attestation: None,
+        force_override_e2ee_state: None,
         applied: application::applied_in(tx, id, &peer)?,
     };
     let Some(reply) = reply else {
@@ -231,6 +235,9 @@ fn inspect_in(tx: &crate::store::ReadTx<'_>, id: &str) -> Result<Option<Inspecti
     let valid = crate::signal::direct::validate_bundle_signature(&bundle).is_ok();
     result.signature_valid = Some(valid);
     if users.len() == 1 {
+        // APK 37.71 Bot.A03 0370..0384 / 1xi.A1U uses selected-user child presence.
+        result.force_override_e2ee_state =
+            Some(users[0].child("force_override_e2ee_state").is_some());
         result.attestation = Some(attestation::inspect(
             users[0],
             bundle

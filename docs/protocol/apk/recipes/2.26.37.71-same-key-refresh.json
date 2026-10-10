@@ -1,0 +1,62 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "primary-admission": {
+      "class": "LX/CPB;",
+      "method": "A00",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs"
+      ]
+    },
+    "candidate-parser": {
+      "class": "LX/Bot;",
+      "method": "A03",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs"
+      ]
+    },
+    "candidate-constructor": {
+      "class": "LX/Cai;",
+      "method": "<init>",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs"
+      ]
+    },
+    "child-presence": {
+      "class": "LX/1xi;",
+      "method": "A1U",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs"
+      ]
+    },
+    "session-processing": {
+      "class": "LX/0jc;",
+      "method": "A0L",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs"
+      ]
+    },
+    "signed-bundle-derivation": {
+      "class": "LX/CQc;",
+      "method": "A00",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+        "crates/whatsapp-api/src/transport/identity_notifications.rs"
+      ]
+    }
+  }
+}

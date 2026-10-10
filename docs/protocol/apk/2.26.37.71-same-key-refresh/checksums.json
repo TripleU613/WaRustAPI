@@ -1,0 +1,42 @@
+{
+  "candidate-constructor.txt": {
+    "bytes": 1365,
+    "sha256": "23c715522ce5c2e3926907d33b4f456095891abe91c5719d95d87ce4d98f4aee"
+  },
+  "candidate-parser.txt": {
+    "bytes": 17648,
+    "sha256": "3df149669210a4988c3b5d0146eb23bed726ad1815715d7b36d28ec7b3d9d23e"
+  },
+  "child-presence.txt": {
+    "bytes": 568,
+    "sha256": "14408f45fe501f6d1f60038071846a04aa8e2a59b06ffaf78a7e012a3d73aa62"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "primary-admission.txt": {
+    "bytes": 12245,
+    "sha256": "006ca492032aba9ff511671469aeed349faae37edf8c5dd78c34c5d84b09b12c"
+  },
+  "session-processing.txt": {
+    "bytes": 15064,
+    "sha256": "1a19d159a911422765050a0bf4690deef2189084afa556bc0e6fa459709e28d3"
+  },
+  "signed-bundle-derivation.txt": {
+    "bytes": 20500,
+    "sha256": "cc5fb6023178d1e09e085ed06630c6ba7bb964754dd608103e03c877e89c82ef"
+  },
+  "targets.json": {
+    "bytes": 2566,
+    "sha256": "c9a4367acb2c353be35d1954da41de5b04ca6c9c35a6e285d44716001702ef70"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

@@ -1,4 +1,4 @@
-//! APK 37.71 CPB changed-primary/classic admission and atomic local adoption.
+//! APK 37.71 CPB invariant primary/classic admission and atomic application.
 //! Stored attestation state/property assignments remain unknown: this branch
 //! admits under both property values, without manufacturing either assignment.
 use super::{RefreshGuard, actions, guard, inspect_in};
@@ -121,9 +121,6 @@ async fn stage(
     if peer.device != 0 {
         return Ok(deferred("companion_admission_unported"));
     }
-    if inspection.pin_matches != Some(false) {
-        return Ok(deferred("same_identity_admission_unported"));
-    }
     let Some(account) = account.filter(AccountRecord::is_registered) else {
         return Ok(deferred("missing_registered_account"));
     };
@@ -154,6 +151,18 @@ async fn stage(
             return Ok(deferred(reason));
         }
     }
+    let same_identity = inspection.pin_matches == Some(true);
+    // Bot.A03 0370..0384 sets Cai.A08 from child presence (1xi.A1U),
+    // not its body or an attribute. CPB.A00 same-key absent-CWS E2EE:
+    // equal old state -> Bjo; NOT_SET -> Bjn; HYBRID/NON with A08 ->
+    // Bjn at 0252 -> 0306. Disabled main property -> Bjo. All admit;
+    // without that server child, unknown old state/0x7497 cannot be guessed.
+    if same_identity && user.child("force_override_e2ee_state").is_none() {
+        return Ok(deferred("same_identity_admission_unported"));
+    }
+    if inspection.pin_matches.is_none() {
+        return Ok(deferred("missing_saved_identity"));
+    }
     // CPB.A00: property 0x6f6f=false -> Bjo at 00cc; true + absent CWS
     // -> E2EE at 01e4, changed identity v12=1 at 00d2, then 0226 -> Bjn
     // at 0306, independent of old C0F/override/0x7497. Bot.A03 present
@@ -168,9 +177,20 @@ async fn stage(
     // 0jc.A0L 0096/00a2 resets a changed-key session via A0E/A0s -> A0D,
     // which deletes the selected sessions row. Derive fresh, retaining old
     // bytes in the encrypted local transition archive, not the new ratchet.
-    let session =
-        crate::signal::direct::prepare_session_refresh(&account, &peer, &bundle, None, &identity)
-            .await?;
+    // 0jc.A0L matching-key branch skips A0E reset, but CQc.A00 still
+    // archives the held current ratchet and derives a fresh one. Keep the
+    // old receiving state only for the same identity, never across key change.
+    let held = same_identity
+        .then_some(previous_session.as_deref())
+        .flatten();
+    let session = crate::signal::direct::prepare_session_refresh(
+        &account,
+        &peer,
+        &bundle,
+        held.map(Vec::as_slice),
+        &identity,
+    )
+    .await?;
     Ok(Preparation::Ready(Box::new(Staged {
         id: id.to_owned(),
         peer,
@@ -402,6 +422,239 @@ mod tests {
         };
         fields.push(Node::new(name));
     }
+    #[tokio::test]
+    async fn server_same_identity_override_retains_old_ratchet_without_transition_once() {
+        for peer in ["15555550111@s.whatsapp.net", "222222222222222@lid"] {
+            let f = fixture(peer).await;
+            let mut response = reply(&f.peer, &f.id, &f.old, true);
+            metadata(&mut response, "force_override_e2ee_state");
+            settle(&f, &response);
+            let before = snapshot(&f.store);
+            let head = f.store.journal_head().unwrap();
+            assert_eq!(
+                apply(&f.store, &f.id, IdentityChangePolicy::ApkAuthenticated)
+                    .await
+                    .unwrap(),
+                Application::Applied
+            );
+            let after = snapshot(&f.store);
+            for (index, table) in Table::ALL.iter().enumerate() {
+                if !matches!(table, Table::SignalSessions | Table::Checkpoints) {
+                    assert_eq!(after[index], before[index], "{table:?}");
+                }
+            }
+            assert_eq!(f.store.journal_head().unwrap(), head);
+            let session: Vec<u8> = f
+                .store
+                .read(|tx| {
+                    tx.get_json(
+                        Table::SignalSessions,
+                        format!("comparison-direct:{}", f.peer).as_bytes(),
+                        1,
+                    )
+                })
+                .unwrap()
+                .unwrap();
+            let old = SessionRecord::deserialize(&f.held).unwrap();
+            let new = SessionRecord::deserialize(&session).unwrap();
+            assert_eq!(
+                new.previous_session_count(),
+                old.previous_session_count() + 1
+            );
+            let original = old.session_state().unwrap();
+            let archived = new.previous_session_states().next().unwrap().unwrap();
+            assert_eq!(archived.alice_base_key(), original.alice_base_key());
+            assert_eq!(
+                archived.get_sender_chain_key().unwrap().index(),
+                original.get_sender_chain_key().unwrap().index()
+            );
+            assert_ne!(
+                new.session_state().unwrap().alice_base_key(),
+                original.alice_base_key()
+            );
+            let inspection = super::super::inspect(&f.store, &f.id).unwrap().unwrap();
+            assert_eq!(inspection.force_override_e2ee_state, Some(true));
+            assert!(inspection.applied);
+            assert_eq!(inspection.pin_matches, Some(true));
+            assert_eq!(inspection.refresh_guard, RefreshGuard::Matches);
+            assert_eq!(
+                apply(&f.store, &f.id, IdentityChangePolicy::ApkAuthenticated)
+                    .await
+                    .unwrap(),
+                Application::AlreadyApplied
+            );
+            assert_eq!(snapshot(&f.store), after);
+            let id = f.id.clone();
+            let path = f.dir.path().join("application.redb");
+            drop(f.store);
+            let reopened = open(&path);
+            assert_eq!(
+                recover(&reopened, IdentityChangePolicy::ApkAuthenticated)
+                    .await
+                    .unwrap(),
+                0
+            );
+            assert!(
+                super::super::inspect(&reopened, &id)
+                    .unwrap()
+                    .unwrap()
+                    .applied
+            );
+            assert_eq!(snapshot(&reopened), after);
+        }
+    }
+
+    #[tokio::test]
+    async fn same_identity_override_is_not_root_attribute_or_metadata_bypass() {
+        for case in [
+            "root",
+            "attribute",
+            "attestation",
+            "pq",
+            "identity_auth",
+            "forged",
+            "pinned",
+            "companion",
+        ] {
+            let f = fixture(if case == "companion" {
+                "222222222222222:4@lid"
+            } else {
+                "222222222222222@lid"
+            })
+            .await;
+            let mut response = reply(&f.peer, &f.id, &f.old, case != "forged");
+            if case == "root" {
+                let NodeContent::Children(children) = &mut response.content else {
+                    panic!()
+                };
+                children.push(Node::new("force_override_e2ee_state"));
+            } else if case == "attribute" {
+                let NodeContent::Children(lists) = &mut response.content else {
+                    panic!()
+                };
+                let NodeContent::Children(users) = &mut lists[0].content else {
+                    panic!()
+                };
+                users[0] = users[0].clone().attr("force_override_e2ee_state", "true");
+            } else {
+                metadata(&mut response, "force_override_e2ee_state");
+            }
+            if matches!(case, "attestation" | "pq" | "identity_auth") {
+                metadata(
+                    &mut response,
+                    if case == "attestation" {
+                        "non_e2ee_attestation"
+                    } else if case == "pq" {
+                        "pqkey"
+                    } else {
+                        "identity_auth"
+                    },
+                );
+            }
+            settle(&f, &response);
+            let before = snapshot(&f.store);
+            let head = f.store.journal_head().unwrap();
+            assert!(
+                matches!(
+                    apply(
+                        &f.store,
+                        &f.id,
+                        if case == "pinned" {
+                            IdentityChangePolicy::Pinned
+                        } else {
+                            IdentityChangePolicy::ApkAuthenticated
+                        }
+                    )
+                    .await
+                    .unwrap(),
+                    Application::Deferred(_)
+                ),
+                "{case}"
+            );
+            assert_eq!(snapshot(&f.store), before, "{case}");
+            assert_eq!(f.store.journal_head().unwrap(), head);
+        }
+    }
+
+    #[tokio::test]
+    async fn same_identity_staging_cannot_overwrite_intervening_ratchet_progress() {
+        let f = fixture("222222222222222@lid").await;
+        let mut response = reply(&f.peer, &f.id, &f.old, true);
+        metadata(&mut response, "force_override_e2ee_state");
+        settle(&f, &response);
+        let Preparation::Ready(staged) =
+            stage(&f.store, &f.id, IdentityChangePolicy::ApkAuthenticated)
+                .await
+                .unwrap()
+        else {
+            panic!("expected staged refresh")
+        };
+        let progress = crate::signal::direct::prepare_payload(
+            &f.account,
+            &f.peer,
+            None,
+            Some(&f.held),
+            Some(&f.old.identity_key().serialize()),
+            b"fixture progress",
+        )
+        .await
+        .unwrap();
+        f.store
+            .write(|tx| {
+                tx.put_json(
+                    Table::SignalSessions,
+                    format!("comparison-direct:{}", f.peer).as_bytes(),
+                    1,
+                    &*progress.session,
+                )
+            })
+            .unwrap();
+        let before = snapshot(&f.store);
+        let head = f.store.journal_head().unwrap();
+        assert_eq!(
+            commit(&f.store, &staged).unwrap(),
+            Application::Deferred("peer_state_changed_before_commit")
+        );
+        assert_eq!(snapshot(&f.store), before);
+        assert_eq!(f.store.journal_head().unwrap(), head);
+        assert!(
+            !super::super::inspect(&f.store, &f.id)
+                .unwrap()
+                .unwrap()
+                .applied
+        );
+        // A new stage uses the latest saved ratchet rather than freezing it at notification time.
+        assert_eq!(
+            apply(&f.store, &f.id, IdentityChangePolicy::ApkAuthenticated)
+                .await
+                .unwrap(),
+            Application::Applied
+        );
+        let session: Vec<u8> = f
+            .store
+            .read(|tx| {
+                tx.get_json(
+                    Table::SignalSessions,
+                    format!("comparison-direct:{}", f.peer).as_bytes(),
+                    1,
+                )
+            })
+            .unwrap()
+            .unwrap();
+        let refreshed = SessionRecord::deserialize(&session).unwrap();
+        let archived = refreshed.previous_session_states().next().unwrap().unwrap();
+        let advanced = SessionRecord::deserialize(&progress.session).unwrap();
+        assert_eq!(
+            archived.get_sender_chain_key().unwrap().index(),
+            advanced
+                .session_state()
+                .unwrap()
+                .get_sender_chain_key()
+                .unwrap()
+                .index()
+        );
+    }
+
     #[tokio::test]
     async fn changed_primary_adopts_fresh_session_once_and_recovers_settled_cut() {
         for peer in ["15555550111@s.whatsapp.net", "222222222222222@lid"] {

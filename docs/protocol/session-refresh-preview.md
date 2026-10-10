@@ -183,3 +183,10 @@ rechecks remain unported; no original reply is retroactively assigned a baseline
 prefix/protobuf/type/signature inputs. It does not evaluate the native stored-
 state/property/override matrix; the preview continues to refuse present
 attestation, including mathematically valid input, without a candidate commit.
+
+## Server-authorized same-key continuation
+
+[Same-key primary refresh](same-key-refresh.md) now applies the classic subset
+with an authenticated selected-user force_override_e2ee_state child. This
+supersedes the earlier blanket same-key application gap; no-child, companion
+and unsupported metadata admission still remain deferred.

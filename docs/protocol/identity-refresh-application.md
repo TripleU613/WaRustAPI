@@ -181,3 +181,10 @@ keys, IDs and account history remain local. [Redacted aggregate evidence](identi
 The earlier ACK-unported boundary is superseded by the
 [37.71 dispatch trace and actor implementation](identity-notification-ack.md).
 The ACK precedes asynchronous key application; it is not adoption evidence.
+
+## Server-authorized same-key continuation
+
+[Same-key primary refresh](same-key-refresh.md) now applies the classic subset
+with an authenticated selected-user force_override_e2ee_state child. This
+supersedes the earlier blanket same-key application gap; no-child, companion
+and unsupported metadata admission still remain deferred.

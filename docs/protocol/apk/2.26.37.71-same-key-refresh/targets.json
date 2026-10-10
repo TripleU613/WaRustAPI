@@ -1,0 +1,80 @@
+{
+  "candidate-constructor": {
+    "class": "LX/Cai;",
+    "file": "candidate-constructor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+      "crates/whatsapp-api/src/transport/identity_notifications.rs"
+    ]
+  },
+  "candidate-parser": {
+    "class": "LX/Bot;",
+    "file": "candidate-parser.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A03",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+      "crates/whatsapp-api/src/transport/identity_notifications.rs"
+    ]
+  },
+  "child-presence": {
+    "class": "LX/1xi;",
+    "file": "child-presence.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A1U",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+      "crates/whatsapp-api/src/transport/identity_notifications.rs"
+    ]
+  },
+  "primary-admission": {
+    "class": "LX/CPB;",
+    "file": "primary-admission.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+      "crates/whatsapp-api/src/transport/identity_notifications.rs"
+    ]
+  },
+  "session-processing": {
+    "class": "LX/0jc;",
+    "file": "session-processing.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0L",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+      "crates/whatsapp-api/src/transport/identity_notifications.rs"
+    ]
+  },
+  "signed-bundle-derivation": {
+    "class": "LX/CQc;",
+    "file": "signed-bundle-derivation.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_notifications/application.rs",
+      "crates/whatsapp-api/src/transport/identity_notifications.rs"
+    ]
+  }
+}

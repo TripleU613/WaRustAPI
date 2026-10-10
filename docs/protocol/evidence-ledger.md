@@ -3122,3 +3122,12 @@ route; native in-memory offline queue is not durable process-restart replay.
 **Observed:** receive-only authenticated and stopped; eight inbound checkpoints,
 unchanged actions/receipts/pending/head, no qualifying identity control. Live
 ACK acceptance **unknown**. [Trace and redacted record](identity-notification-ack.md).
+
+## 2026-10-09 — Same-key classic refresh with authenticated server child (37.71)
+
+**Confirmed static / implemented offline:** Bot.A03 → 1xi.A1U → Cai.A08
+uses selected-user force_override_e2ee_state child presence. CPB admits the
+same-key absent-CWS subset under either property value and every decoded old
+state when present. Held ratchet is archived by CQc, not discarded or reused
+as current. No-child unknown sticky state remains deferred; no metadata bypass,
+native state fabrication or transmitted override. [Evidence and tests](same-key-refresh.md).
