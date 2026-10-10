@@ -695,7 +695,21 @@ mod tests {
         for raw in ["15555550101:3@s.whatsapp.net", "99990000101:3@lid"] {
             let dir = tempfile::tempdir().unwrap();
             let path = dir.path().join("receive.redb");
-            let (store, receiver, peer, node) = fixture(&path, raw).await;
+            let (store, receiver, peer, mut node) = fixture(&path, raw).await;
+            if peer.server == Server::Lid {
+                // 37.71 11T.A0D verifies parsed GsB serialization. Wire order
+                // may differ without changing signatures or membership authority.
+                let NodeContent::Children(children) = &mut node.content else {
+                    panic!()
+                };
+                let NodeContent::Bytes(adv) = &mut children[1].content else {
+                    panic!()
+                };
+                assert_eq!(&adv[..8], &[10, 6, 8, 7, 16, 9, 24, 2]);
+                let mut reordered = adv.to_vec();
+                reordered[2..8].copy_from_slice(&[24, 2, 8, 7, 16, 9]);
+                *adv = reordered.into();
+            }
             if peer.server == Server::Lid {
                 let mut list = super::super::devices::device_list(&store, &peer)
                     .unwrap()

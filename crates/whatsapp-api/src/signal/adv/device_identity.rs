@@ -24,7 +24,7 @@ impl std::fmt::Debug for VerifiedDeviceIdentity {
     }
 }
 impl VerifiedDeviceIdentity {
-    /// Verify exact signed details and both signatures. A supplied account
+    /// Verify Java-serialized details and both signatures. A supplied account
     /// key must match the independent pin; it cannot grant itself authority.
     /// Bounds, singleton checks and required metadata are local parser policy.
     pub fn verify(bytes: &[u8], account_key: &[u8; 32], companion_key: &[u8; 32]) -> Result<Self> {
@@ -54,15 +54,18 @@ impl VerifiedDeviceIdentity {
         no_duplicate_singletons(&details_bytes, None)
             .map_err(|_| invalid("malformed signed details fields"))?;
         // GsB.dynamicMethod: rawId=1, timestamp=2, keyIndex=3, accountType=4,
-        // deviceType=5. Missing encryption types default E2EE in 11T.A0D.
-        let details = AdvDeviceIdentity::decode(details_bytes.as_ref())
+        // deviceType=5. IQg/Azc closes enum 0=E2EE, 1=HOSTED, 2=NON_E2EE.
+        // Missing encryption types default E2EE in 11T.A0D.
+        // 11T.A0D 024c..0254 serializes parsed GsB, not original details.
+        // Retain lite unknown fields/closed enums; prost re-encode alone loses them.
+        let (details, serialized_details) = super::device_identity_details::parse(&details_bytes)
             .map_err(|_| invalid("malformed signed details"))?;
         if details.raw_id.is_none() || details.timestamp.is_none() || details.key_index.is_none() {
             return Err(invalid("missing raw ID, timestamp or key index"));
         }
         let account_type = details.account_type.unwrap_or(0);
         let device_type = details.device_type.unwrap_or(0);
-        if !matches!(account_type, 0 | 1) || !matches!(device_type, 0 | 1) {
+        if !matches!(account_type, 0..=2) || !matches!(device_type, 0..=2) {
             return Err(invalid("unsupported encryption type"));
         }
         // 11T.A0D 01e0..0226 refuses HOSTED device with E2EE account.
@@ -86,10 +89,15 @@ impl VerifiedDeviceIdentity {
         // raw 32-byte keys, not their 33-byte Signal type-prefixed encoding.
         let account_prefix = if device_type == 1 { [6, 5] } else { [6, 0] };
         let device_prefix = if device_type == 1 { [6, 6] } else { [6, 1] };
-        let account_input = [&account_prefix[..], details_bytes.as_ref(), companion_key].concat();
+        let account_input = [
+            &account_prefix[..],
+            serialized_details.as_slice(),
+            companion_key,
+        ]
+        .concat();
         let device_input = [
             &device_prefix[..],
-            details_bytes.as_ref(),
+            serialized_details.as_slice(),
             companion_key,
             account_key,
         ]
@@ -204,7 +212,7 @@ mod tests {
             .to_vec()
     }
     #[test]
-    fn both_signatures_bind_exact_details_and_both_keys() {
+    fn both_signatures_bind_java_serialized_details_and_both_keys() {
         let bytes = signed(DETAILS, &[6, 0], &[6, 1]);
         let verified = VerifiedDeviceIdentity::verify(&bytes, &public(42), &public(43)).unwrap();
         assert_eq!(
@@ -246,18 +254,78 @@ mod tests {
         reordered.details = Some(vec![24, 2, 16, 9, 8, 7].into());
         assert!(
             VerifiedDeviceIdentity::verify(&reordered.encode_to_vec(), &public(42), &public(43))
-                .is_err()
+                .is_ok()
         );
-        // Equivalent protobuf semantics are fine when those EXACT bytes were signed.
+        // Original noncanonical bytes are not the APK signature input.
         assert!(
             VerifiedDeviceIdentity::verify(
                 &signed(&[24, 2, 16, 9, 8, 7], &[6, 0], &[6, 1]),
                 &public(42),
                 &public(43)
             )
-            .is_ok()
+            .is_err()
         );
     }
+    #[test]
+    fn unknown_fields_and_normalized_varints_are_retained_in_signed_input() {
+        // Literal GsB serialization projections independently covered by the Java oracle.
+        for (body, canonical) in [
+            (
+                &[48, 129, 0, 24, 2, 8, 7, 16, 9][..],
+                &[8, 7, 16, 9, 24, 2, 48, 1][..],
+            ),
+            (&[8, 135, 128, 128, 128, 16, 16, 9, 24, 2][..], DETAILS),
+            (
+                &[75, 80, 129, 0, 76, 8, 7, 16, 9, 24, 2][..],
+                &[8, 7, 16, 9, 24, 2, 75, 80, 1, 76][..],
+            ),
+            (
+                &[32, 3, 8, 7, 16, 9, 24, 2][..],
+                &[8, 7, 16, 9, 24, 2, 32, 3][..],
+            ),
+        ] {
+            let mut outer =
+                AdvSignedDeviceIdentity::decode(signed(canonical, &[6, 0], &[6, 1]).as_slice())
+                    .unwrap();
+            outer.details = Some(body.to_vec().into());
+            let verified =
+                VerifiedDeviceIdentity::verify(&outer.encode_to_vec(), &public(42), &public(43))
+                    .unwrap();
+            assert_eq!(
+                (
+                    verified.raw_id(),
+                    verified.timestamp(),
+                    verified.key_index()
+                ),
+                (7, 9, 2)
+            );
+            assert!(verified.is_e2ee());
+            assert!(
+                VerifiedDeviceIdentity::verify(
+                    &signed(body, &[6, 0], &[6, 1]),
+                    &public(42),
+                    &public(43)
+                )
+                .is_err()
+            );
+            if canonical != DETAILS {
+                // Discarding unknown fields also changes the required signed bytes.
+                let mut stripped =
+                    AdvSignedDeviceIdentity::decode(signed(DETAILS, &[6, 0], &[6, 1]).as_slice())
+                        .unwrap();
+                stripped.details = Some(body.to_vec().into());
+                assert!(
+                    VerifiedDeviceIdentity::verify(
+                        &stripped.encode_to_vec(),
+                        &public(42),
+                        &public(43)
+                    )
+                    .is_err()
+                );
+            }
+        }
+    }
+
     #[test]
     fn domain_selection_uses_device_type_and_checks_account_compatibility() {
         for (account, device, allowed) in [
@@ -265,8 +333,10 @@ mod tests {
             (1, 0, true),
             (1, 1, true),
             (0, 1, false),
-            (2, 0, false),
-            (1, 2, false),
+            (2, 0, true),
+            (1, 2, true),
+            (3, 0, true),
+            (1, 3, true),
         ] {
             let details = [DETAILS, &[32, account, 40, device]].concat();
             let (a, d) = if device == 1 {
@@ -274,8 +344,16 @@ mod tests {
             } else {
                 ([6, 0], [6, 1])
             };
+            let canonical = if account == 3 {
+                [DETAILS, &[40, device, 32, account]].concat()
+            } else {
+                details.clone()
+            };
+            let mut outer =
+                AdvSignedDeviceIdentity::decode(signed(&canonical, &a, &d).as_slice()).unwrap();
+            outer.details = Some(details.into());
             assert_eq!(
-                VerifiedDeviceIdentity::verify(&signed(&details, &a, &d), &public(42), &public(43))
+                VerifiedDeviceIdentity::verify(&outer.encode_to_vec(), &public(42), &public(43))
                     .is_ok(),
                 allowed
             );

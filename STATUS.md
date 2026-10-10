@@ -1,5 +1,18 @@
 # Status — 2026-10-07
 
+Companion ADV serialization (2026-10-09, **implemented/offline**): signature
+input now matches APK GsB parse/serialize, including normalized known fields and
+retained lite unknown fields/groups. Original-byte verification was our bug.
+Azc NON_E2EE=2 is recognized in the local schema/parser; E2EE receiving admission
+remains separate and unchanged. Independent 637-case Java oracle and incoming
+reordered companion fixture cover the correction. No qualifying live companion
+input is claimed. [Evidence and limits](docs/protocol/adv-details-serialization.md).
+Validation: all 874 workspace/all-feature tests, strict Clippy, Rustdoc, default
+CLI/API symbols/reference and proto-check passed. All 637 Java vectors reproduced;
+10-topic / 15-file / 113,397-byte APK export reproduces and self-diffs unchanged.
+Hygiene passed (2,423 links / 122 bundles).
+
+
 Same-key primary refresh (2026-10-09, **implemented/offline**): a guarded classic
 reply carrying selected-user force_override_e2ee_state now refreshes under the
 existing apk_authenticated policy. Native admission is invariant across unknown

@@ -2253,3 +2253,11 @@ now records login success and server-ping time separately from historical inferr
 message/receipt samples. Chat-mute resolution prefers confirmed elapsed/offset
 state; offline clock-inspect reports provenance without time or epoch values.
 NTP-preferred A00 and complete native mute-clock parity remain unported.
+
+## Companion ADV serialization correction (2026-10-09)
+
+[APK parse/serialize evidence](adv-details-serialization.md) supersedes the
+original-details assumption for 11T.A0D's companion device signatures only.
+GsB unknown fields/closed enums are preserved; native Azc has NON_E2EE=2.
+Signed index-list input is a separate consumer. Existing membership, own-device,
+teardown, freshness and nested-message authentication gates remain required.

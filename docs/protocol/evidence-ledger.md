@@ -3138,3 +3138,13 @@ receipts, pending outbox, generation, registration and journal head unchanged.
 Historical verified matching reply has server child absent, original guard
 untracked and applied=false. No fresh qualifying reply or live application
 claimed. [Redacted record](same-key-refresh-live.json).
+
+## 2026-10-09 — Companion ADV details parse/serialize (37.71)
+
+**Confirmed static / implemented offline:** 11T.A0D uses GsB.toByteArray at
+024c–0254 for both signatures. Original-byte signing assumption refuted;
+known normalization and lite unknown fields retained. Azc enum includes
+NON_E2EE=2; local reference schema extension is annotated and generated.
+**Observed reference:** 637 descriptor-reconstructed Java serialization vectors
+reproduce; exact APK runtime version/depth remains unknown. No membership/MAC,
+pin/state/teardown guard is bypassed. [Trace, oracle and receiving tests](adv-details-serialization.md).

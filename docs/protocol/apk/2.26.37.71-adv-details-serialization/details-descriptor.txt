@@ -1,0 +1,69 @@
+# APK-derived structural disassembly: LX/GsB;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method dynamicMethod(LLLL) flags=0x11 registers=8
+  # full signature: LX/GsB;->dynamicMethod(Lcom/google/protobuf/GeneratedMessageLite$MethodToInvoke;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+  0000..0006 op=6e invoke-virtual {v5}, Ljava/lang/Enum;->ordinal()I
+  0006..0008 op=0a move-result v2
+  0008..000a op=12 const/4 v1, #0x1
+  000a..000c op=12 const/4 v0, #0x0
+  000c..0012 op=2b packed-switch v2, payload@0xd0, cases=[0:@0x72, 1:@0x70, 2:@0x1c, 3:@0xc2, 4:@0x82, 5:@0x7c, 6:@0x8e], default@0x12
+  0012..0018 op=71 invoke-static {}, LX/6aj;->A1C()Ljava/lang/UnsupportedOperationException;
+  0018..001a op=0c move-result-object v0
+  001a..001c op=27 throw v0
+  001c..0020 op=62 sget-object v3, LX/IQg;->A00:Lcom/google/protobuf/Internal$EnumVerifier;
+  0020..0024 op=13 const/16 v0, #0x8
+  0024..0028 op=23 new-array v2, v0, [Ljava/lang/Object;
+  0028..002e op=71 invoke-static {v2}, LX/6al;->A1W([Ljava/lang/Object;)V
+  002e..0032 op=1a const-string v0, "rawId_"
+  0032..0036 op=4d aput-object v0, v2, v1
+  0036..003a op=1a const-string v1, "timestamp_"
+  003a..003c op=12 const/4 v0, #0x2
+  003c..0040 op=4d aput-object v1, v2, v0
+  0040..0044 op=1a const-string v1, "keyIndex_"
+  0044..0046 op=12 const/4 v0, #0x3
+  0046..004a op=4d aput-object v1, v2, v0
+  004a..004e op=1a const-string v0, "accountType_"
+  004e..0054 op=71 invoke-static {v0, v3, v2}, LX/6aj;->A1U(Ljava/lang/Object;Ljava/lang/Object;[Ljava/lang/Object;)V
+  0054..0058 op=1a const-string v0, "deviceType_"
+  0058..005e op=71 invoke-static {v0, v3, v2}, LX/Ayj;->A1J(Ljava/lang/Object;Ljava/lang/Object;[Ljava/lang/Object;)V
+  005e..0062 op=1a const-string v1, "\u{1}\u{5}\0\u{1}\u{1}\u{5}\u{5}\0\0\0\u{1}ဋ\0\u{2}ဃ\u{1}\u{3}ဋ\u{2}\u{4}\u{180c}\u{3}\u{5}\u{180c}\u{4}"
+  0062..0066 op=62 sget-object v0, LX/GsB;->DEFAULT_INSTANCE:LX/GsB;
+  0066..006c op=71 invoke-static {v0, v1, v2}, Lcom/google/protobuf/GeneratedMessageLite;->newMessageInfo(Lcom/google/protobuf/MessageLite;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/Object;
+  006c..006e op=0c move-result-object v0
+  006e..0070 op=11 return-object v0
+  0070..0072 op=11 return-object v0
+  0072..0078 op=71 invoke-static {v1}, Ljava/lang/Byte;->valueOf(B)Ljava/lang/Byte;
+  0078..007a op=0c move-result-object v0
+  007a..007c op=11 return-object v0
+  007c..0080 op=62 sget-object v0, LX/GsB;->DEFAULT_INSTANCE:LX/GsB;
+  0080..0082 op=11 return-object v0
+  0082..0086 op=22 new-instance v0, LX/Gpn;
+  0086..008c op=70 invoke-direct {v0}, LX/Gpn;-><init>()V
+  008c..008e op=11 return-object v0
+  008e..0092 op=62 sget-object v0, LX/GsB;->PARSER:Lcom/google/protobuf/Parser;
+  0092..0096 op=39 if-nez v0, +0x1d
+  0096..009a op=1c const-class v1, LX/GsB;
+  009a..009c op=1d monitor-enter
+  009c..00a0 op=62 sget-object v0, LX/GsB;->PARSER:Lcom/google/protobuf/Parser;
+  00a0..00a4 op=39 if-nez v0, +0xc
+  00a4..00a8 op=62 sget-object v0, Lcom/google/protobuf/AbstractParser;->EMPTY_REGISTRY:Lcom/google/protobuf/ExtensionRegistryLite;
+  00a8..00ac op=62 sget-object v0, LX/GsB;->DEFAULT_INSTANCE:LX/GsB;
+  00ac..00b2 op=71 invoke-static {v0}, LX/6ak;->A0M(Lcom/google/protobuf/GeneratedMessageLite;)Lcom/google/protobuf/GeneratedMessageLite$DefaultInstanceBasedParser;
+  00b2..00b4 op=0c move-result-object v0
+  00b4..00b8 op=69 sput-object v0, LX/GsB;->PARSER:Lcom/google/protobuf/Parser;
+  00b8..00ba op=1e monitor-exit
+  00ba..00bc op=11 return-object v0
+  00bc..00be op=0d move-exception v0
+  00be..00c0 op=1e monitor-exit
+  00c0..00c2 op=27 throw v0
+  00c2..00c6 op=22 new-instance v0, LX/GsB;
+  00c6..00cc op=70 invoke-direct {v0}, Lcom/google/protobuf/GeneratedMessageLite;-><init>()V
+  00cc..00ce op=11 return-object v0
+  00ce..00d0 op=00 nop
+  00d0..00f4 op=00 packed-switch-payload size=7
+  # exception table: 1 try range(s)
+  # catch <all> code_units 004e..0060 -> 005e
+.end method

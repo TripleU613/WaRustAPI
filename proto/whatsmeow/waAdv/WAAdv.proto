@@ -5,6 +5,8 @@ option go_package = "go.mau.fi/whatsmeow/proto/waAdv";
 enum ADVEncryptionType {
 	E2EE = 0;
 	HOSTED = 1;
+	// Local APK 2.26.37.71 extension: Azc.<clinit> 0028..003c / forNumber.
+	NON_E2EE = 2;
 }
 
 message ADVKeyIndexList {

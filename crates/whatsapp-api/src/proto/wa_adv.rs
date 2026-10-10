@@ -59,6 +59,7 @@ pub struct AdvSignedDeviceIdentityHmac {
 pub enum AdvEncryptionType {
     E2ee = 0,
     Hosted = 1,
+    NonE2ee = 2,
 }
 impl AdvEncryptionType {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -69,6 +70,7 @@ impl AdvEncryptionType {
         match self {
             Self::E2ee => "E2EE",
             Self::Hosted => "HOSTED",
+            Self::NonE2ee => "NON_E2EE",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -76,6 +78,7 @@ impl AdvEncryptionType {
         match value {
             "E2EE" => Some(Self::E2ee),
             "HOSTED" => Some(Self::Hosted),
+            "NON_E2EE" => Some(Self::NonE2ee),
             _ => None,
         }
     }

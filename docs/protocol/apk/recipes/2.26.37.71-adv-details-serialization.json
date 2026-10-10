@@ -1,0 +1,98 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "device-verifier": {
+      "class": "LX/11T;",
+      "method": "A0D",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+        "crates/whatsapp-api/src/signal/adv/device_identity_details.rs"
+      ]
+    },
+    "details-descriptor": {
+      "class": "LX/GsB;",
+      "method": "dynamicMethod",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+        "crates/whatsapp-api/src/signal/adv/device_identity_details.rs"
+      ]
+    },
+    "enum-verifier": {
+      "class": "LX/IQg;",
+      "method": "isInRange",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+        "crates/whatsapp-api/src/signal/adv/device_identity_details.rs"
+      ]
+    },
+    "enum-values": {
+      "class": "LX/Azc;",
+      "method": "forNumber",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+        "crates/whatsapp-api/src/signal/adv/device_identity_details.rs"
+      ]
+    },
+    "signed-descriptor": {
+      "class": "LX/Grz;",
+      "method": "dynamicMethod",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+        "crates/whatsapp-api/src/signal/adv/device_identity_details.rs"
+      ]
+    },
+    "signature-domains": {
+      "class": "LX/08F;",
+      "method": "<clinit>",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+        "crates/whatsapp-api/src/signal/adv/device_identity_details.rs"
+      ]
+    },
+    "descriptor-bit-field": {
+      "class": "LX/6al;",
+      "method": "A1W",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+        "crates/whatsapp-api/src/signal/adv/device_identity_details.rs"
+      ]
+    },
+    "descriptor-account-field": {
+      "class": "LX/6aj;",
+      "method": "A1U",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+        "crates/whatsapp-api/src/signal/adv/device_identity_details.rs"
+      ]
+    },
+    "descriptor-device-field": {
+      "class": "LX/Ayj;",
+      "method": "A1J",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+        "crates/whatsapp-api/src/signal/adv/device_identity_details.rs"
+      ]
+    },
+    "enum-names": {
+      "class": "LX/Azc;",
+      "method": "<clinit>",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+        "crates/whatsapp-api/src/signal/adv/device_identity_details.rs"
+      ]
+    }
+  }
+}

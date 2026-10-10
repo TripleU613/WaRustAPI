@@ -1,0 +1,133 @@
+# APK-derived structural disassembly: LX/08F;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <clinit>(V) flags=0x10009 registers=6
+  # full signature: LX/08F;-><clinit>()V
+  0000..0004 op=1a const-string v2, "com.whatsapp"
+  0004..0008 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  0008..000e op=70 invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
+  000e..0014 op=6e invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0014..0018 op=1a const-string v0, ".fileprovider"
+  0018..001e op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  001e..0024 op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  0024..0026 op=0c move-result-object v0
+  0026..002a op=69 sput-object v0, LX/08F;->A05:Ljava/lang/String;
+  002a..002e op=1a const-string v0, "android.resource://"
+  002e..0032 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  0032..0038 op=70 invoke-direct {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  0038..003e op=6e invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  003e..0042 op=1a const-string v0, "/"
+  0042..0048 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0048..004e op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  004e..0050 op=0c move-result-object v0
+  0050..0054 op=69 sput-object v0, LX/08F;->A04:Ljava/lang/String;
+  0054..0058 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  0058..005e op=70 invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
+  005e..0064 op=6e invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0064..0068 op=1a const-string v0, ".permission.BROADCAST"
+  0068..006e op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  006e..0074 op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  0074..0076 op=0c move-result-object v0
+  0076..007a op=69 sput-object v0, LX/08F;->A0B:Ljava/lang/String;
+  007a..007e op=22 new-instance v1, Ljava/lang/StringBuilder;
+  007e..0084 op=70 invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
+  0084..008a op=6e invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  008a..008e op=1a const-string v0, "_preferences"
+  008e..0094 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0094..009a op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  009a..009c op=0c move-result-object v0
+  009c..00a0 op=69 sput-object v0, LX/08F;->A09:Ljava/lang/String;
+  00a0..00a4 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  00a4..00aa op=70 invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
+  00aa..00b0 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00b0..00b4 op=1a const-string v0, "_light"
+  00b4..00ba op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00ba..00c0 op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  00c0..00c2 op=0c move-result-object v0
+  00c2..00c6 op=69 sput-object v0, LX/08F;->A08:Ljava/lang/String;
+  00c6..00ca op=22 new-instance v0, LX/08G;
+  00ca..00d0 op=70 invoke-direct {v0}, LX/08G;-><init>()V
+  00d0..00d4 op=69 sput-object v0, LX/08F;->A0D:Ljava/util/Map;
+  00d4..00da op=14 const v2, #0x93a80
+  00da..00dc op=12 const/4 v5, #0x0
+  00dc..00e2 op=14 const v1, #0x15180
+  00e2..00e8 op=14 const v0, #0x76a700
+  00e8..00ee op=24 filled-new-array {v1, v2, v0, v5}, [I
+  00ee..00f0 op=0c move-result-object v0
+  00f0..00f4 op=69 sput-object v0, LX/08F;->A0K:[I
+  00f4..00f6 op=12 const/4 v0, #0x6
+  00f6..00fa op=23 new-array v0, v0, [I
+  00fa..0100 op=26 fill-array-data v0, payload@0x1f4, element_width=4, size=6, data=[10 0e 00 00 c0 a8 00 00 80 51 01 00 80 3a 09 00 00 a7 76 00 00 00 00 00]
+  0100..0104 op=69 sput-object v0, LX/08F;->A0L:[I
+  0104..0106 op=12 const/4 v1, #0x2
+  0106..010a op=23 new-array v0, v1, [B
+  010a..0110 op=26 fill-array-data v0, payload@0x214, element_width=1, size=2, data=[06 00]
+  0110..0114 op=69 sput-object v0, LX/08F;->A0E:[B
+  0114..0118 op=23 new-array v0, v1, [B
+  0118..011e op=26 fill-array-data v0, payload@0x220, element_width=1, size=2, data=[06 05]
+  011e..0122 op=69 sput-object v0, LX/08F;->A0F:[B
+  0122..0126 op=23 new-array v0, v1, [B
+  0126..012c op=26 fill-array-data v0, payload@0x22c, element_width=1, size=2, data=[06 01]
+  012c..0130 op=69 sput-object v0, LX/08F;->A0G:[B
+  0130..0134 op=23 new-array v0, v1, [B
+  0134..013a op=26 fill-array-data v0, payload@0x238, element_width=1, size=2, data=[06 06]
+  013a..013e op=69 sput-object v0, LX/08F;->A0H:[B
+  013e..0142 op=23 new-array v0, v1, [B
+  0142..0148 op=26 fill-array-data v0, payload@0x244, element_width=1, size=2, data=[06 02]
+  0148..014c op=69 sput-object v0, LX/08F;->A0I:[B
+  014c..0150 op=23 new-array v0, v1, [B
+  0150..0156 op=26 fill-array-data v0, payload@0x250, element_width=1, size=2, data=[06 07]
+  0156..015a op=69 sput-object v0, LX/08F;->A0J:[B
+  015a..015e op=13 const/16 v0, #0xa0
+  015e..0164 op=71 invoke-static {v0}, Ljava/lang/Character;->toString(C)Ljava/lang/String;
+  0164..0166 op=0c move-result-object v0
+  0166..016a op=69 sput-object v0, LX/08F;->A07:Ljava/lang/String;
+  016a..016e op=13 const/16 v0, #0x202f
+  016e..0174 op=71 invoke-static {v0}, Ljava/lang/Character;->toString(C)Ljava/lang/String;
+  0174..0176 op=0c move-result-object v0
+  0176..017a op=69 sput-object v0, LX/08F;->A06:Ljava/lang/String;
+  017a..017e op=23 new-array v0, v5, [Ljava/lang/String;
+  017e..0182 op=69 sput-object v0, LX/08F;->A0N:[Ljava/lang/String;
+  0182..0186 op=23 new-array v0, v5, [Ljava/lang/Long;
+  0186..018a op=69 sput-object v0, LX/08F;->A0M:[Ljava/lang/Long;
+  018a..018e op=13 const/16 v1, #0x64
+  018e..0192 op=13 const/16 v4, #0xa
+  0192..0196 op=13 const/16 v3, #0x3e8
+  0196..019a op=22 new-instance v0, LX/00w;
+  019a..01a0 op=70 invoke-direct {v0, v4, v1, v3, v5}, LX/00w;-><init>(IIIZ)V
+  01a0..01a4 op=69 sput-object v0, LX/08F;->A03:LX/00w;
+  01a4..01aa op=14 const v2, #0x186a0
+  01aa..01ae op=13 const/16 v1, #0x2710
+  01ae..01b2 op=22 new-instance v0, LX/00w;
+  01b2..01b8 op=70 invoke-direct {v0, v4, v1, v2, v5}, LX/00w;-><init>(IIIZ)V
+  01b8..01bc op=69 sput-object v0, LX/08F;->A01:LX/00w;
+  01bc..01c0 op=22 new-instance v0, LX/00w;
+  01c0..01c6 op=70 invoke-direct {v0, v4, v3, v1, v5}, LX/00w;-><init>(IIIZ)V
+  01c6..01ca op=69 sput-object v0, LX/08F;->A02:LX/00w;
+  01ca..01ce op=62 sget-object v0, Ljava/nio/charset/StandardCharsets;->UTF_8:Ljava/nio/charset/Charset;
+  01ce..01d2 op=69 sput-object v0, LX/08F;->A0C:Ljava/nio/charset/Charset;
+  01d2..01d8 op=6e invoke-virtual {v0}, Ljava/nio/charset/Charset;->name()Ljava/lang/String;
+  01d8..01da op=0c move-result-object v0
+  01da..01de op=69 sput-object v0, LX/08F;->A0A:Ljava/lang/String;
+  01de..01e4 op=71 invoke-static {}, Ljava/lang/Runtime;->getRuntime()Ljava/lang/Runtime;
+  01e4..01e6 op=0c move-result-object v0
+  01e6..01ec op=6e invoke-virtual {v0}, Ljava/lang/Runtime;->maxMemory()J
+  01ec..01ee op=0b move-result-wide v0
+  01ee..01f2 op=68 sput-wide v0, LX/08F;->A00:J
+  01f2..01f4 op=0e return-void
+  01f4..0214 op=00 fill-array-data-payload element_width=4, size=6, data=[10 0e 00 00 c0 a8 00 00 80 51 01 00 80 3a 09 00 00 a7 76 00 00 00 00 00]
+  0214..021e op=00 fill-array-data-payload element_width=1, size=2, data=[06 00]
+  021e..0220 op=00 nop
+  0220..022a op=00 fill-array-data-payload element_width=1, size=2, data=[06 05]
+  022a..022c op=00 nop
+  022c..0236 op=00 fill-array-data-payload element_width=1, size=2, data=[06 01]
+  0236..0238 op=00 nop
+  0238..0242 op=00 fill-array-data-payload element_width=1, size=2, data=[06 06]
+  0242..0244 op=00 nop
+  0244..024e op=00 fill-array-data-payload element_width=1, size=2, data=[06 02]
+  024e..0250 op=00 nop
+  0250..025a op=00 fill-array-data-payload element_width=1, size=2, data=[06 07]
+  # exception table: 0 try range(s)
+.end method

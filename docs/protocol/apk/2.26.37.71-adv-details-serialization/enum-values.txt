@@ -1,0 +1,22 @@
+# APK-derived structural disassembly: LX/Azc;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method forNumber(LI) flags=0x9 registers=2
+  # full signature: LX/Azc;->forNumber(I)LX/Azc;
+  0000..0004 op=38 if-eqz v1, +0x10
+  0004..0006 op=12 const/4 v0, #0x1
+  0006..000a op=32 if-eq v1, v0, +0xa
+  000a..000c op=12 const/4 v0, #0x2
+  000c..0010 op=32 if-eq v1, v0, +0x4
+  0010..0012 op=12 const/4 v0, #0x0
+  0012..0014 op=11 return-object v0
+  0014..0018 op=62 sget-object v0, LX/Azc;->A03:LX/Azc;
+  0018..001a op=11 return-object v0
+  001a..001e op=62 sget-object v0, LX/Azc;->A02:LX/Azc;
+  001e..0020 op=11 return-object v0
+  0020..0024 op=62 sget-object v0, LX/Azc;->A01:LX/Azc;
+  0024..0026 op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method

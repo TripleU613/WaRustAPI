@@ -1,0 +1,58 @@
+{
+  "descriptor-account-field.txt": {
+    "bytes": 658,
+    "sha256": "8f1a139e8dd094f11d7cc46de12e99c0ae653b9978a42dd964cacb8ae93b0ae2"
+  },
+  "descriptor-bit-field.txt": {
+    "bytes": 591,
+    "sha256": "687cc86a1baea83328c3f3a0d1b71aeb3d6a0633427f42dcb60eedcd9b636ca4"
+  },
+  "descriptor-device-field.txt": {
+    "bytes": 658,
+    "sha256": "60e9cd2b11163e26f29fc35e7dd9a97f8d24b0e57a119823f515456ed1634cc5"
+  },
+  "details-descriptor.txt": {
+    "bytes": 4136,
+    "sha256": "7e9cb4387cb208dcea95e7b75cb75b0711a53c89bb9e64731e4773239b6bed42"
+  },
+  "device-verifier.txt": {
+    "bytes": 59340,
+    "sha256": "8ae7b6603f5e747862faec8fb504f1589f126be3b88818446d2e28992581d896"
+  },
+  "enum-names.txt": {
+    "bytes": 1550,
+    "sha256": "c2bd731889585df0ed516d2069d5463dba304bf6258bceab381a3377b19e8e33"
+  },
+  "enum-values.txt": {
+    "bytes": 965,
+    "sha256": "d79ec0e9d5821b7dbf96c3b66844d47b68f1b5ddcb3930adab63fd1cb6ceb005"
+  },
+  "enum-verifier.txt": {
+    "bytes": 672,
+    "sha256": "a2c2452a406d3f87febd929fdf8ab94d5209c1d67eee931f6700eb6087f90bec"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "signature-domains.txt": {
+    "bytes": 8498,
+    "sha256": "c05ea6d037a2fc75278c264517778bacdbc25bd57b9134951ba7cec8c05b1fb6"
+  },
+  "signed-descriptor.txt": {
+    "bytes": 3746,
+    "sha256": "bb6f58c190bcdd8ffbfd0f626a9e2c966fce58f9df4265556f130d83737a9a9b"
+  },
+  "targets.json": {
+    "bytes": 4121,
+    "sha256": "3768a442137855e7a28cb9909931ecafcc3f1e9a1b5dd781bb7806833ad60598"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

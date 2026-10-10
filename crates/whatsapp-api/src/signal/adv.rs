@@ -5,6 +5,7 @@ use crate::{Error, Result, transport::cert::SignatureVerifier};
 use prost::Message;
 use std::collections::BTreeSet;
 mod device_identity;
+mod device_identity_details;
 mod devices;
 pub use device_identity::VerifiedDeviceIdentity;
 pub use devices::{DeviceHashVersion, ReconciledDevices};

@@ -1,0 +1,132 @@
+{
+  "descriptor-account-field": {
+    "class": "LX/6aj;",
+    "file": "descriptor-account-field.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A1U",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+      "crates/whatsapp-api/src/signal/adv/device_identity_details.rs"
+    ]
+  },
+  "descriptor-bit-field": {
+    "class": "LX/6al;",
+    "file": "descriptor-bit-field.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A1W",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+      "crates/whatsapp-api/src/signal/adv/device_identity_details.rs"
+    ]
+  },
+  "descriptor-device-field": {
+    "class": "LX/Ayj;",
+    "file": "descriptor-device-field.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A1J",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+      "crates/whatsapp-api/src/signal/adv/device_identity_details.rs"
+    ]
+  },
+  "details-descriptor": {
+    "class": "LX/GsB;",
+    "file": "details-descriptor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "dynamicMethod",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+      "crates/whatsapp-api/src/signal/adv/device_identity_details.rs"
+    ]
+  },
+  "device-verifier": {
+    "class": "LX/11T;",
+    "file": "device-verifier.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0D",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+      "crates/whatsapp-api/src/signal/adv/device_identity_details.rs"
+    ]
+  },
+  "enum-names": {
+    "class": "LX/Azc;",
+    "file": "enum-names.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<clinit>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+      "crates/whatsapp-api/src/signal/adv/device_identity_details.rs"
+    ]
+  },
+  "enum-values": {
+    "class": "LX/Azc;",
+    "file": "enum-values.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "forNumber",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+      "crates/whatsapp-api/src/signal/adv/device_identity_details.rs"
+    ]
+  },
+  "enum-verifier": {
+    "class": "LX/IQg;",
+    "file": "enum-verifier.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "isInRange",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+      "crates/whatsapp-api/src/signal/adv/device_identity_details.rs"
+    ]
+  },
+  "signature-domains": {
+    "class": "LX/08F;",
+    "file": "signature-domains.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<clinit>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+      "crates/whatsapp-api/src/signal/adv/device_identity_details.rs"
+    ]
+  },
+  "signed-descriptor": {
+    "class": "LX/Grz;",
+    "file": "signed-descriptor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "dynamicMethod",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+      "crates/whatsapp-api/src/signal/adv/device_identity_details.rs"
+    ]
+  }
+}
