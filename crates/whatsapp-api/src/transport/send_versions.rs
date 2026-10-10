@@ -292,14 +292,9 @@ pub(super) fn observe_in(
     else {
         return Ok(false);
     };
-    let timestamp = node
-        .get_attr("t")
-        .and_then(|v| v.as_text())
-        // 37.71 Cmk.A03 -> 0Gv.A01 uses Java Long.parseLong, including
-        // UTF-16 BMP decimal digits; ASCII-only parsing loses received rows.
-        .and_then(super::mex::java_decimal_long)
-        .unwrap_or(0)
-        .wrapping_mul(1000);
+    let timestamp = super::receipts::server_timestamp(node)
+        .map(|time| time.as_millis())
+        .unwrap_or(0);
     if timestamp <= 0 {
         return Ok(false);
     }

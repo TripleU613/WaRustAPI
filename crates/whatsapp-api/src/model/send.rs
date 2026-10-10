@@ -74,9 +74,11 @@ pub struct DeliveryFact {
     pub device: Option<DeviceAddress>,
     /// When the fact was observed locally.
     pub observed_at: Timestamp,
-    /// Parsed server ACK time in milliseconds, kept separate from observation
-    /// time. None for historical/other facts; a current success ACK defaults
-    /// missing or invalid `t` to zero, following APK 37.71 1Qy.A02.
+    /// Parsed server ACK or supported receipt time in milliseconds, separate
+    /// from observation time. Historical facts remain unknown. Receipt times
+    /// preserve valid signed/wrapping root `t`; missing/invalid stays None.
+    /// A current success ACK instead defaults missing/invalid `t` to zero,
+    /// following APK 37.71 1Qy.A02.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub server_timestamp: Option<Timestamp>,
     /// Sanitized code, if any.

@@ -248,7 +248,7 @@ pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
                             kind: fact_kind,
                             device: Some(device.clone()),
                             observed_at: Timestamp::now(),
-                            server_timestamp: None,
+                            server_timestamp: super::receipts::server_timestamp(node),
                             code: None,
                         },
                     )?;
@@ -561,6 +561,13 @@ mod tests {
         assert_eq!(after.progress, before.progress);
         assert_eq!(after.wire_id, before.wire_id);
         assert_eq!(after.facts.len(), before.facts.len() + 2);
+        assert!(
+            after
+                .facts
+                .iter()
+                .skip(before.facts.len())
+                .all(|fact| fact.server_timestamp == Some(Timestamp(20000)))
+        );
         let versions = super::super::send_versions::inspect(&store, local).unwrap();
         let rows = versions.device_receipts.as_ref().unwrap();
         assert_eq!(

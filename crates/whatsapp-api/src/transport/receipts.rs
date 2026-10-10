@@ -630,6 +630,17 @@ pub(super) fn receipt_kind(node: &Node) -> Option<&str> {
     matches!(kind, "delivery" | "read" | "played").then_some(kind)
 }
 
+/// Supplied root receipt time, separate from local observation/admission.
+pub(super) fn server_timestamp(node: &Node) -> Option<crate::model::time::Timestamp> {
+    // APK 37.71 Cmk.A03 04e0..04fe -> 0Gv.A01: Java signed decimal
+    // seconds, then wrapping mul-long 1000. Preserve missing/invalid as
+    // unknown in public facts; the native device-cache path defaults to zero.
+    node.get_attr("t")
+        .and_then(|v| v.as_text())
+        .and_then(super::mex::java_decimal_long)
+        .map(|seconds| crate::model::time::Timestamp(seconds.wrapping_mul(1000)))
+}
+
 /// Persist supported direct receipt facts, matching sends by peer AND wire ID.
 /// Group participant facts use group_receipts; unsupported/self routes stay raw.
 pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
@@ -765,7 +776,7 @@ pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
                     kind: fact_kind,
                     device: Some(device.clone()),
                     observed_at: crate::model::time::Timestamp::now(),
-                    server_timestamp: None,
+                    server_timestamp: server_timestamp(node),
                     code: None,
                 },
             )?;
@@ -778,6 +789,74 @@ pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn supplied_receipt_times_follow_java_signed_wrapping_conversion() {
+        for (input, expected) in [
+            (None, None),
+            (Some(""), None),
+            (Some("bad"), None),
+            (Some(" 10"), None),
+            (Some("9223372036854775808"), None),
+            (Some("+２０"), Some(20000)),
+            (Some("١٠"), Some(10000)),
+            (Some("-1"), Some(-1000)),
+            (Some("0"), Some(0)),
+            (Some("9223372036854775807"), Some(-1000)),
+            (Some("-9223372036854775808"), Some(0)),
+        ] {
+            let node = match input {
+                Some(value) => Node::new("receipt").attr("t", value),
+                None => Node::new("receipt"),
+            };
+            assert_eq!(server_timestamp(&node).map(|t| t.as_millis()), expected);
+        }
+    }
+
+    #[test]
+    fn receipt_fact_times_survive_reopen_without_rewriting_historical_or_duplicate_facts() {
+        for kind in ["delivery", "read", "played"] {
+            for input in [None, Some("bad"), Some("+２０"), Some("-1"), Some("0")] {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("receipt-time.redb");
+                let store = open(&path, true);
+                let peer = "15555550100@s.whatsapp.net";
+                let local = saved_receipt_send(&store, "clock", peer, "clock-fixture");
+                let outbox = crate::outbox::Outbox::new("clock", crate::profile::Limits::default());
+                let before = store.read(|tx| outbox.get(tx, local)).unwrap().unwrap();
+                let mut receipt = Node::new("receipt")
+                    .attr("from", peer)
+                    .attr("id", "clock-fixture")
+                    .attr("type", kind);
+                if let Some(value) = input {
+                    receipt = receipt.attr("t", value);
+                }
+                assert_eq!(record(&store, &receipt).unwrap(), 1);
+                let after = store.read(|tx| outbox.get(tx, local)).unwrap().unwrap();
+                assert_eq!(after.attempts, before.attempts);
+                assert_eq!(after.progress, before.progress);
+                assert_eq!(after.facts[0], before.facts[0]);
+                assert_eq!(after.facts.len(), 2);
+                let expected = match input {
+                    Some("+２０") => Some(20000),
+                    Some("-1") => Some(-1000),
+                    Some("0") => Some(0),
+                    _ => None,
+                };
+                assert_eq!(
+                    after.facts[1].server_timestamp.map(|t| t.as_millis()),
+                    expected
+                );
+                drop(store);
+                let store = open(&path, false);
+                assert_eq!(record(&store, &receipt.attr("t", "10")).unwrap(), 0);
+                assert_eq!(
+                    store.read(|tx| outbox.get(tx, local)).unwrap().unwrap(),
+                    after
+                );
+            }
+        }
+    }
     fn open(path: &std::path::Path, create: bool) -> ProtocolStore {
         ProtocolStore::open(crate::store::OpenOptions {
             path: path.to_owned(),
@@ -1775,6 +1854,10 @@ mod tests {
             .unwrap();
         assert_eq!(status.facts.len(), 1);
         assert_eq!(status.facts[0].kind, DeliveryFactKind::Read);
+        assert_eq!(
+            status.facts[0].server_timestamp,
+            Some(crate::model::time::Timestamp(20000))
+        );
         assert!(!status.server_accepted());
     }
     fn saved_receipt_send(

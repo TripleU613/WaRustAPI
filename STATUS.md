@@ -1,3 +1,18 @@
+2026-10-09 — **Implemented/offline:** newly recorded direct/group delivery,
+read and played facts preserve valid supplied root t as signed/wrapping
+milliseconds, separate from observed_at. Missing/invalid receipt time remains
+unknown; historical and duplicate facts are unchanged. Shared parsing preserves
+the existing earliest-positive device row behavior, and no user-row authority
+or identity cleanup is inferred. Fresh live projection remains unverified.
+[Evidence and inspection](docs/protocol/receipt-fact-time.md).
+
+Validation: 887 workspace/all-feature tests passed (746 library, 4 codec,
+9 crash, 54 CLI, 1 API-symbol and 73 tooling tests). Strict all-target/all-feature
+Clippy, warnings-denied Rustdoc, default CLI tests, CLI-reference regeneration,
+formatting and whitespace checks passed. Hygiene checked 2,479 local links and
+127 APK bundles / 26,797,855 bytes. Existing APK evidence was reused; no new
+export or cross-release parity is claimed.
+
 2026-10-09 — **Confirmed static:** returning-companion addition's remote
 false-Boolean coordinator path bypasses removal/local-message/own-hosted work.
 DNd discriminator 19 clears one user-device-map cache entry; Rust reads its
