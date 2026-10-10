@@ -1,0 +1,88 @@
+# APK-derived structural disassembly: LX/Cjb;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A02(VLL) flags=0x19 registers=5
+  # full signature: LX/Cjb;->A02(LX/178;LX/178;)V
+  0000..0004 op=53 iget-wide v0, v4, LX/178;->A0j:J
+  0004..0008 op=5a iput-wide v0, v3, LX/178;->A0j:J
+  0008..000c op=53 iget-wide v0, v4, LX/178;->A0k:J
+  000c..0010 op=5a iput-wide v0, v3, LX/178;->A0k:J
+  0010..0014 op=53 iget-wide v0, v4, LX/178;->A0F:J
+  0014..0018 op=5a iput-wide v0, v3, LX/178;->A0F:J
+  0018..001c op=53 iget-wide v0, v4, LX/178;->A0C:J
+  001c..0020 op=5a iput-wide v0, v3, LX/178;->A0C:J
+  0020..0024 op=53 iget-wide v0, v4, LX/178;->A0D:J
+  0024..0028 op=5a iput-wide v0, v3, LX/178;->A0D:J
+  0028..002e op=6e invoke-virtual {v4}, LX/178;->B3b()I
+  002e..0030 op=0a move-result v1
+  0030..0036 op=6e invoke-virtual {v3}, LX/178;->B3b()I
+  0036..0038 op=0a move-result v0
+  0038..003e op=71 invoke-static {v1, v0}, LX/1hg;->A00(II)I
+  003e..0040 op=0a move-result v0
+  0040..0044 op=3d if-lez v0, +0x5
+  0044..004a op=6e invoke-virtual {v3, v1}, LX/178;->A0H(I)V
+  004a..004e op=54 iget-object v0, v4, LX/178;->A0p:Lcom/whatsapp/infra/core/jid/DeviceJid;
+  004e..0052 op=38 if-eqz v0, +0x4
+  0052..0056 op=5b iput-object v0, v3, LX/178;->A0p:Lcom/whatsapp/infra/core/jid/DeviceJid;
+  0056..005c op=6e invoke-virtual {v4}, LX/178;->B1Q()LX/0Cy;
+  005c..005e op=0c move-result-object v0
+  005e..0062 op=38 if-eqz v0, +0x5a
+  0062..0068 op=6e invoke-virtual {v3, v0}, LX/178;->CW6(LX/0Cy;)V
+  0068..006c op=53 iget-wide v0, v4, LX/178;->A0E:J
+  006c..0070 op=5a iput-wide v0, v3, LX/178;->A0E:J
+  0070..0074 op=55 iget-boolean v0, v4, LX/178;->A0Z:Z
+  0074..0078 op=5c iput-boolean v0, v3, LX/178;->A0Z:Z
+  0078..007c op=55 iget-boolean v0, v4, LX/178;->A0l:Z
+  007c..0080 op=38 if-eqz v0, +0x5
+  0080..0082 op=12 const/4 v0, #0x1
+  0082..0086 op=5c iput-boolean v0, v3, LX/178;->A0l:Z
+  0086..008a op=52 iget v0, v4, LX/178;->A04:I
+  008a..0090 op=6e invoke-virtual {v3, v0}, LX/178;->A0F(I)V
+  0090..0096 op=71 invoke-static {v4}, LX/B2N;->A00(LX/178;)LX/Fdp;
+  0096..0098 op=0c move-result-object v2
+  0098..009c op=38 if-eqz v2, +0x1b
+  009c..00a2 op=71 invoke-static {v3}, LX/B2N;->A00(LX/178;)LX/Fdp;
+  00a2..00a4 op=0c move-result-object v0
+  00a4..00a8 op=38 if-eqz v0, +0xb
+  00a8..00ac op=52 iget v1, v2, LX/Fdp;->A03:I
+  00ac..00ae op=12 const/4 v0, #0x4
+  00ae..00b2 op=32 if-eq v1, v0, +0x10
+  00b2..00b6 op=13 const/16 v0, #0x14
+  00b6..00ba op=32 if-eq v1, v0, +0xc
+  00ba..00c0 op=71 invoke-static {v3, v2}, LX/B2N;->A02(LX/178;LX/Fdp;)V
+  00c0..00c6 op=71 invoke-static {v4}, LX/1iG;->A00(LX/178;)Ljava/lang/String;
+  00c6..00c8 op=0c move-result-object v0
+  00c8..00ce op=71 invoke-static {v3, v0}, LX/1iG;->A02(LX/178;Ljava/lang/String;)V
+  00ce..00d4 op=71 invoke-static {v4}, LX/B35;->A0B(LX/178;)Z
+  00d4..00d6 op=0a move-result v0
+  00d6..00da op=38 if-eqz v0, +0x1d
+  00da..00e0 op=71 invoke-static {v4}, LX/B35;->A00(LX/178;)LX/D6C;
+  00e0..00e2 op=0c move-result-object v0
+  00e2..00e6 op=52 iget v0, v0, LX/D6C;->A03:I
+  00e6..00ec op=71 invoke-static {v3, v0}, LX/B35;->A05(LX/178;I)V
+  00ec..00f2 op=71 invoke-static {v3}, LX/B35;->A00(LX/178;)LX/D6C;
+  00f2..00f4 op=0c move-result-object v1
+  00f4..00fa op=71 invoke-static {v4}, LX/B35;->A00(LX/178;)LX/D6C;
+  00fa..00fc op=0c move-result-object v0
+  00fc..0100 op=54 iget-object v0, v0, LX/D6C;->A06:Ljava/lang/Long;
+  0100..0104 op=5b iput-object v0, v1, LX/D6C;->A06:Ljava/lang/Long;
+  0104..010a op=6e invoke-virtual {v4}, LX/178;->A07()I
+  010a..010c op=0a move-result v0
+  010c..0110 op=59 iput v0, v3, LX/178;->A03:I
+  0110..0112 op=0e return-void
+  0112..0118 op=6e invoke-virtual {v4}, LX/178;->A0D()Ljava/util/List;
+  0118..011a op=0c move-result-object v0
+  011a..011e op=38 if-eqz v0, -0x59
+  011e..0124 op=72 invoke-interface {v0}, Ljava/util/List;->isEmpty()Z
+  0124..0126 op=0a move-result v0
+  0126..012a op=39 if-nez v0, -0x5f
+  012a..0130 op=6e invoke-virtual {v4}, LX/178;->A0D()Ljava/util/List;
+  0130..0132 op=0c move-result-object v1
+  0132..0136 op=1a const-string v0, "null cannot be cast to non-null type kotlin.collections.List<com.whatsapp.infra.core.jid.UserJid>"
+  0136..013c op=71 invoke-static {v1, v0}, LX/00h;->A0D(Ljava/lang/Object;Ljava/lang/String;)V
+  013c..0142 op=6e invoke-virtual {v3, v1}, LX/178;->A0N(Ljava/util/List;)V
+  0142..0144 op=28 goto -0x6d
+  # exception table: 0 try range(s)
+.end method

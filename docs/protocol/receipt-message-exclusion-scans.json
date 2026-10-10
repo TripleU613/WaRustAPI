@@ -1,0 +1,27 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "evidence": "confirmed static physical references only; inherited/interface/reflection/native/dynamic behavior is not excluded",
+  "scans": [
+    {
+      "name": "message-mark-writers",
+      "command": "xtask apk-field-refs APK --class LX/178; --field A0l --type Z --writes-only",
+      "output_sha256": "43f09a514d9ac97f7e115633f794f58ee722860363c01febc58769c135aa9fb8",
+      "complete_output": "classes.dex  LX/0V9;->A00(ILIZ)\n  write opcode 0x5c, dex byte offset: 0x5a502a\nclasses5.dex  LX/75e;->CS5(V)\n  write opcode 0x5c, dex byte offset: 0x35e452\nclasses5.dex  LX/7z7;->A06(VLL)\n  write opcode 0x5c, dex byte offset: 0x4d678a\nclasses7.dex  LX/Cjb;->A02(VLL)\n  write opcode 0x5c, dex byte offset: 0x6293be\nclasses7.dex  LX/DNt;->run(V)\n  write opcode 0x5c, dex byte offset: 0x80bb84\nclasses8.dex  Lcom/whatsapp/newsletter/ui/status/NewsletterStatusView;->A00(LLLLLL)\n  write opcode 0x5c, dex byte offset: 0x3d54a0\nclasses8.dex  LX/Fqh;->run(V)\n  write opcode 0x5c, dex byte offset: 0x66b026\n"
+    },
+    {
+      "name": "media-mark-writers",
+      "command": "xtask apk-field-refs APK --class LX/8BW; --field A0O --type Z --writes-only",
+      "output_sha256": "5fbdbcf0118bc65e5461412d39a98b7e01dd763335df381802147922aecf36fe",
+      "complete_output": "classes5.dex  LX/7wt;->A02(VL)\n  write opcode 0x5c, dex byte offset: 0x4ab82e\nclasses5.dex  LX/89j;->A03(LL)\n  write opcode 0x5c, dex byte offset: 0x54776a\nclasses5.dex  LX/8GJ;->CS5(V)\n  write opcode 0x5c, dex byte offset: 0x577bc6\n"
+    },
+    {
+      "name": "direct-wrapper-callers",
+      "command": "xtask apk-callers APK --class LX/75e; --method CS5",
+      "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "complete_output": "",
+      "stderr": "0 caller(s) of LX/75e;->CS5\n",
+      "stderr_sha256": "26503fe8581d3a59199e3d0f09807c0232de82f365f531c55accf9b9d84e7768",
+      "physical_caller_count": 0
+    }
+  ]
+}

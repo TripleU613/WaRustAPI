@@ -1,0 +1,66 @@
+# APK-derived structural disassembly: LX/7wt;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A02(VL) flags=0x11 registers=9
+  # full signature: LX/7wt;->A02(LX/8BW;)V
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v8, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000a op=12 const/4 v0, #0x1
+  000a..000e op=5c iput-boolean v0, v8, LX/8BW;->A0O:Z
+  000e..0012 op=54 iget-object v0, v7, LX/7wt;->A02:LX/05B;
+  0012..0018 op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  0018..001a op=0c move-result-object v0
+  001a..001e op=1f check-cast v0, LX/1cC;
+  001e..0020 op=12 const/4 v1, #0x0
+  0020..0024 op=54 iget-object v0, v0, LX/1cC;->A02:LX/05B;
+  0024..002a op=71 invoke-static {v0}, LX/6ap;->A0J(LX/05B;)LX/0ZN;
+  002a..002c op=0c move-result-object v6
+  002c..0032 op=6e invoke-virtual {v6}, LX/0ZN;->A00()LX/1gB;
+  0032..0034 op=0c move-result-object v5
+  0034..0038 op=54 iget-object v4, v6, LX/0ZN;->A02:LX/0IY;
+  0038..003c op=1a const-string v3, "status"
+  003c..0040 op=1a const-string v2, "row_id = ?"
+  0040..0044 op=54 iget-object v0, v8, LX/8BW;->A0J:Ljava/lang/Long;
+  0044..004a op=71 invoke-static {v0}, Ljava/lang/String;->valueOf(Ljava/lang/Object;)Ljava/lang/String;
+  004a..004c op=0c move-result-object v0
+  004c..0052 op=71 invoke-static {v0, v1}, LX/6ak;->A1b(Ljava/lang/Object;I)[Ljava/lang/String;
+  0052..0054 op=0c move-result-object v1
+  0054..0058 op=1a const-string v0, "StatusStore/DELETE_STATUS"
+  0058..005e op=6e invoke-virtual {v4, v3, v2, v0, v1}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  005e..0064 op=6e invoke-virtual {v5}, LX/1gB;->A00()V
+  0064..006a op=6e invoke-virtual {v5}, LX/1gB;->close()V
+  006a..0070 op=6e invoke-virtual {v6}, LX/0ZN;->close()V
+  0070..0074 op=54 iget-object v0, v8, LX/8BW;->A0U:LX/6cy;
+  0074..007a op=71 invoke-static {v0, v7}, LX/7wt;->A00(LX/6cy;LX/7wt;)LX/7ye;
+  007a..007e op=54 iget-object v0, v7, LX/7wt;->A03:Ljava/util/Set;
+  007e..0084 op=72 invoke-interface {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+  0084..0086 op=0c move-result-object v1
+  0086..008c op=72 invoke-interface {v1}, Ljava/util/Iterator;->hasNext()Z
+  008c..008e op=0a move-result v0
+  008e..0092 op=38 if-eqz v0, +0xc
+  0092..0098 op=72 invoke-interface {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0098..009a op=0c move-result-object v0
+  009a..009e op=1f check-cast v0, LX/8iA;
+  009e..00a4 op=72 invoke-interface {v0, v8}, LX/8iA;->CGG(LX/8BW;)V
+  00a4..00a6 op=28 goto -0xf
+  00a6..00a8 op=0e return-void
+  00a8..00aa op=0d move-exception v1
+  00aa..00ac op=27 throw v1
+  00ac..00ae op=0d move-exception v0
+  00ae..00b4 op=71 invoke-static {v5, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  00b4..00b6 op=27 throw v0
+  00b6..00b8 op=0d move-exception v1
+  00b8..00ba op=27 throw v1
+  00ba..00bc op=0d move-exception v0
+  00bc..00c2 op=71 invoke-static {v6, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  00c2..00c4 op=27 throw v0
+  # exception table: 6 try range(s)
+  # catch <all> code_units 0016..001a -> 005b
+  # catch <all> code_units 001a..0032 -> 0054
+  # catch <all> code_units 0032..0035 -> 005b
+  # catch <all> code_units 0055..0056 -> 0056
+  # catch <all> code_units 0057..005b -> 005b
+  # catch <all> code_units 005c..005d -> 005d
+.end method

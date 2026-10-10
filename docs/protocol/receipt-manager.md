@@ -70,8 +70,9 @@ persisted column or a general "revoked" flag with complete lifecycle.
 Cjb.A02 0078..0086 copies A0l=true from one message object to another; false
 does not explicitly clear the destination. The exact-field write scan finds
 seven producer methods. Only this copier and 0V9's deletion path were traced
-in this chunk. The other five are listed in the evidence file and remain
-**uninterpreted**. No default, persistence/reload behavior or canonical name is
+in this chunk. The [writer follow-up](receipt-message-exclusion.md) now classifies the other
+five and three media-field producers, including asymmetric copy and synthetic
+UI substitution contexts. Full runtime lifecycle remains **unknown**. No default, persistence/reload behavior or canonical name is
 invented from the obfuscated member.
 
 ## Renderer correction and remaining implementation work

@@ -1,3 +1,19 @@
+2026-10-10 — **Confirmed static:** all seven physical message A0l writers
+are classified, including wrapper marking, conditional media copy, cache
+replacement and synthetic newsletter substitutions. Three media A0O producers
+show asymmetric round-trip behavior: message-to-media copies false, reverse
+conversion never clears an already marked message. The later manager filter
+is not a universal revoke or timestamp gate. Full lifecycle, user-row admission
+and primary identity cleanup remain unfinished; no runtime/account change.
+[Exact branches, scans and source](docs/protocol/receipt-message-exclusion.md).
+
+Validation: exact regeneration verified 14 topics / 19 files / 509,571 bytes;
+cached self-diff found 14 unchanged topics and four metadata artifacts.
+CLI-reference regeneration, API/library-symbol validation, formatting,
+whitespace and hygiene passed (2,491 local links; 128 bundles / 27,307,426
+bytes). No new workspace runtime test or live account operation is claimed;
+the prior functional chunk's 887-test result remains separate.
+
 2026-10-09 — **Implemented/offline:** newly recorded direct/group delivery,
 read and played facts preserve valid supplied root t as signed/wrapping
 milliseconds, separate from observed_at. Missing/invalid receipt time remains

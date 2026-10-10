@@ -1,0 +1,74 @@
+{
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "mark-deleted-message.txt": {
+    "bytes": 9562,
+    "sha256": "89cf05f0c2640588c56f8f66a375225ad6b2cc0b67ff3d8e54661dbcda98b2aa"
+  },
+  "media-status-delete.txt": {
+    "bytes": 3561,
+    "sha256": "c0a1c1a55a9bdb88f6f76c99bf5f4ab1665402451b5bef75efdb180fc6b6c089"
+  },
+  "media-to-message-mark.txt": {
+    "bytes": 13692,
+    "sha256": "7074a16161da5ab2e9d425afab233af6d4bf20edb8555bdbe31e03edb313fa13"
+  },
+  "media-wrapper-mark.txt": {
+    "bytes": 638,
+    "sha256": "5d46da5d5d876accafa96934024b3b569452b459e0f20ec1eaa0757ff5ae01bb"
+  },
+  "message-to-media-mark.txt": {
+    "bytes": 44050,
+    "sha256": "07249a80848d0629deac0bf032b069d729a2696ba80906bc0af0bed2f69da652"
+  },
+  "newsletter-synthetic-view.txt": {
+    "bytes": 51199,
+    "sha256": "379c24b77ad54db2f82a89c3260cd6746ad308a90235a1bae91511cfc6c7adcf"
+  },
+  "newsletter-synthetic-worker.txt": {
+    "bytes": 100387,
+    "sha256": "86ee9d783f413d00e606ed29186f02b115ee87d142b697d573450f61f93c0d0c"
+  },
+  "preserve-message-mark-copy.txt": {
+    "bytes": 4630,
+    "sha256": "3fd41951148a2084d5a55a4d07c6ec70df75f351455300ec3c8a4850957595be"
+  },
+  "receipt-exclusion-consumer.txt": {
+    "bytes": 73751,
+    "sha256": "c23234d6c7efc265c66cbbfcf579fb928165f2a418dcaed02ba8b9ae13154285"
+  },
+  "replacement-caller.txt": {
+    "bytes": 69924,
+    "sha256": "c882295ff26aea157acefcf949c26af94da734ea96efa9ffe3b569de94367819"
+  },
+  "replacement-worker-constructors.txt": {
+    "bytes": 1358,
+    "sha256": "fef41411b89e15fed33c5394807a6ad6729c91621b740d569cb338f41b5aeac5"
+  },
+  "replacement-worker.txt": {
+    "bytes": 99569,
+    "sha256": "1ee96e50431197f3a36c48fc96d5bba5a7602e3cff09d6a09d4a1625798e8584"
+  },
+  "targets.json": {
+    "bytes": 6765,
+    "sha256": "35d173c484251d9ecd3ba9b57d8d1aeb9519cd04e9b44091243ecf20e6164b79"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  },
+  "wrapper-mark.txt": {
+    "bytes": 638,
+    "sha256": "73dd3cf886cd7b1a31194b2024ac801ce2f5c5f44d3ec81d680e206f30a2a43a"
+  },
+  "wrapper-message-owner.txt": {
+    "bytes": 773,
+    "sha256": "38feb1a5dd7dfea9a9ecadeff762c80482b19f5f5a68d71e5db1cabdef5c5ff8"
+  }
+}
