@@ -1,0 +1,80 @@
+{
+  "receive_exit": 0,
+  "elapsed_seconds": 56.68,
+  "requested_seconds": 45,
+  "outbox_enabled": false,
+  "automatic_reads": false,
+  "reconnect_attempts": 0,
+  "actions": {
+    "equal": true,
+    "before_rows": 21,
+    "after_rows": 21
+  },
+  "receipts": {
+    "equal": true,
+    "before_rows": 9,
+    "after_rows": 9
+  },
+  "pending": {
+    "equal": true,
+    "before_rows": 0,
+    "after_rows": 0
+  },
+  "store_summary_equal": false,
+  "identity_refresh_inspections": [
+    {
+      "status": "verified_bundle",
+      "pin_matches": true,
+      "refresh_guard": "untracked",
+      "force_override_e2ee_state": false,
+      "companion_same_key_authority": null,
+      "applied": false
+    }
+  ],
+  "authenticated_active": true,
+  "stopped_cleanly": true,
+  "identity_ack_written_log_count": 0,
+  "identity_ack_invalid_log_count": 0,
+  "saved_state_checks": {
+    "generation": true,
+    "registration": true,
+    "journal_head": true
+  },
+  "table_counts_before": {
+    "Account": 2,
+    "Checkpoints": 1101,
+    "DeviceLists": 0,
+    "Groups": 0,
+    "Idempotency": 0,
+    "Inbox": 15,
+    "MediaJobs": 0,
+    "Outbox": 0,
+    "PeerIdentities": 4,
+    "Prekeys": 48,
+    "RegistrationAttempts": 1,
+    "SenderKeyDistribution": 0,
+    "SenderKeys": 3,
+    "SignalSessions": 4
+  },
+  "table_counts_after": {
+    "Account": 2,
+    "Checkpoints": 1110,
+    "DeviceLists": 0,
+    "Groups": 0,
+    "Idempotency": 0,
+    "Inbox": 15,
+    "MediaJobs": 0,
+    "Outbox": 0,
+    "PeerIdentities": 4,
+    "Prekeys": 48,
+    "RegistrationAttempts": 1,
+    "SenderKeyDistribution": 0,
+    "SenderKeys": 3,
+    "SignalSessions": 4
+  },
+  "unsupported_control_log_count": 9,
+  "decrypted_log_count": 0,
+  "duplicate_log_count": 0,
+  "undecryptable_log_count": 0,
+  "interpretation": "Summary/count comparisons, not all-record byte comparisons. No qualifying companion refresh or fresh live application established. Historical primary inspection remains untracked and unapplied."
+}

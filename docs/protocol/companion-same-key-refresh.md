@@ -112,3 +112,38 @@ cached self-diff is unchanged. Repository hygiene passed (2,433 local links,
 123 APK bundles / 25,968,663 bytes). The initial Clippy run found a collapsible
 conditional; it was fixed before the final full test/lint runs. No live branch
 acceptance is claimed by these offline checks.
+
+Next trace boundary (**confirmed caller / unknown remaining admission**):
+14J.A04 passes diagnostic discriminator 4 and Boolean false to 11T.A0D at
+0120–013e for directory replies. Ordinary receive uses another caller and
+prekey ciphertext identity extraction. Existing verify_prekey authenticates
+ADV against that extracted identity; the directory candidate already has its
+independently validated bundle key. A future changed-key implementation must
+trace the directory-specific native branches and bind verification directly
+to that candidate; it must not manufacture a receive envelope or treat the
+same-key shortcut as changed-key authority. No such application is implemented
+in this chunk.
+
+## Bounded saved-account validation
+
+**Observed:** one 45-second receive-only window (56.68 seconds total)
+authenticated/activated and stopped cleanly. Preflight had no queued action,
+receipt or eligible chat send. Outbox, automatic reads and reconnects were
+disabled. Actions (21), receipts (9), pending outbox (0), account generation,
+registration and journal head remained equal. Only checkpoint counts changed;
+these are summary/count checks, not all-record byte comparisons.
+[Redacted validation](companion-same-key-refresh-live.json).
+
+The historical primary read reports verified_bundle, pin_matches=true,
+refresh_guard=untracked, companion_same_key_authority=null and applied=false.
+It gains no retroactive notification guard or adoption. Nine unsupported
+control logs and no decrypted/duplicate/undecryptable log were recorded.
+No identity ACK or qualifying companion directory reply was seen. Fresh live
+companion application remains **unknown**; no repeated window, chat or
+synthetic server input was used to manufacture that event.
+
+Live-record verification: CLI-reference regeneration and repository hygiene
+passed (2,434 local links / 123 APK checksum bundles), plus whitespace. This
+follow-up changes research/status records only; the implementation's 878 tests,
+strict Clippy and Rustdoc results above remain its validation. Private account
+state, key, profile, receive configuration and logs remain outside Git.

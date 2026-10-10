@@ -12,6 +12,9 @@ Fresh live application unknown.
 Validation: 878 workspace/all-feature tests, strict Clippy, Rustdoc,
 default CLI/API symbols and CLI reference passed. Exact 10-topic / 15-file
 APK export reproduced and cached self-diff unchanged; hygiene passed.
+Live: one 45-second receive-only window authenticated/stopped cleanly;
+actions/receipts/outbox/generation/registration/head remained equal. No new
+qualifying companion reply, no live application claimed.
 [Evidence and boundaries](docs/protocol/companion-same-key-refresh.md).
 
 
