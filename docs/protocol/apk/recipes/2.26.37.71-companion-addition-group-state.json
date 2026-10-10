@@ -1,0 +1,138 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "addition-caller": {
+      "class": "LX/1IW;",
+      "method": "A04",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/group_fanout.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ]
+    },
+    "participant-group-lookup": {
+      "class": "LX/0bI;",
+      "method": "A0J",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/group_fanout.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ]
+    },
+    "participant-device-addition": {
+      "class": "LX/0bI;",
+      "method": "A04",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/group_fanout.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ]
+    },
+    "lid-counterpart-update": {
+      "class": "LX/0bI;",
+      "method": "A07",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/group_fanout.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ]
+    },
+    "counterpart-device-rebind": {
+      "class": "LX/0bI;",
+      "method": "A01",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/group_fanout.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ]
+    },
+    "participant-persistence": {
+      "class": "LX/0bI;",
+      "method": "A06",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/group_fanout.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ]
+    },
+    "per-group-persistence": {
+      "class": "LX/0bI;",
+      "method": "A05",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/group_fanout.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ]
+    },
+    "participant-device-values": {
+      "class": "LX/1uU;",
+      "method": "A00",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/group_fanout.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ]
+    },
+    "new-device-record": {
+      "class": "LX/1tn;",
+      "method": "<init>",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/group_fanout.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ]
+    },
+    "group-hash-refresh": {
+      "class": "LX/1jL;",
+      "method": "A05",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/group_fanout.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ]
+    },
+    "replace-participant-devices": {
+      "class": "LX/0bK;",
+      "method": "A03",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/group_fanout.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ]
+    },
+    "insert-participant-devices": {
+      "class": "LX/0bK;",
+      "method": "A02",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/group_fanout.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ]
+    },
+    "owner-event-dispatch": {
+      "class": "LX/JhE;",
+      "method": "A0L",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/group_fanout.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ]
+    }
+  }
+}

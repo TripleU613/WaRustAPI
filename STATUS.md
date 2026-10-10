@@ -1,3 +1,19 @@
+2026-10-09 — **Confirmed static:** remote companion addition updates existing
+participant device maps, recomputes group hashes and replaces exact group/user
+device rows. New rows initialize sender-key flags to 0/0 and bucket to NULL;
+existing map entries retain their values. False map values/null removal bypass
+rotation/removal paths traced here. Rust plans expand current device lists and
+distribute to every frozen target; no new runtime behavior or native omission
+cache parity is claimed. Hosted/counterpart gates and concrete event consumers
+remain unknown. [Evidence and reproducible recipe](docs/protocol/companion-addition-group-state.md).
+
+Validation: exact APK export check verified 13 topics / 18 files / 103,661
+bytes; cached self-diff reports unchanged retained topics and metadata.
+CLI-reference regeneration, OpenAPI/library-symbol validation, formatting and
+whitespace checks passed. Repository hygiene checked 2,463 local links and
+126 bundles / 26,527,619 bytes. No Rust runtime changed; no fresh workspace
+runtime test or live account operation is claimed.
+
 # Status — 2026-10-07
 
 Returning companion directory addition (2026-10-09, **implemented/offline**):

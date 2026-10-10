@@ -49,7 +49,9 @@ remain relevant, and are not newly claimed complete.
 
 The retained 1IW.A05/A04 and JhE.A0L methods delimit native addition observers.
 Removed sets are empty for this call, so removal branches do not apply.
-**Unknown/unported:** complete participant/group/cache and registered-callback
+The [group-state follow-up](companion-addition-group-state.md) now traces
+participant insertion, hash refresh and per-group device-row replacement.
+**Unknown/unported:** complete cache, counterpart and registered-callback
 side effects. Adding one signed device is not receiving a new full signed list,
 changing the primary, rotating identity, or reconciling every linked device.
 

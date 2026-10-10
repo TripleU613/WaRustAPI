@@ -1,0 +1,77 @@
+# APK-derived structural disassembly: LX/0bI;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A04(VLLLL) flags=0x9 registers=12
+  # full signature: LX/0bI;->A04(Lcom/google/common/collect/ImmutableSet;LX/0bI;Lcom/whatsapp/infra/core/jid/UserJid;LX/1jL;)V
+  0000..0006 op=6e invoke-virtual {v8}, Lcom/google/common/collect/ImmutableCollection;->iterator()LX/0N1;
+  0006..0008 op=0c move-result-object v1
+  0008..000e op=72 invoke-interface {v1}, Ljava/util/Iterator;->hasNext()Z
+  000e..0010 op=0a move-result v0
+  0010..0012 op=12 const/4 v6, #0x0
+  0012..0016 op=38 if-eqz v0, +0x71
+  0016..001c op=72 invoke-interface {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  001c..001e op=0c move-result-object v0
+  001e..0022 op=1f check-cast v0, Lcom/whatsapp/infra/core/jid/DeviceJid;
+  0022..0026 op=54 iget-object v0, v0, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+  0026..002c op=71 invoke-static {v0}, LX/0DE;->A0Z(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  002c..002e op=0a move-result v0
+  002e..0032 op=38 if-eqz v0, -0x13
+  0032..0034 op=12 const/4 v3, #0x1
+  0034..0038 op=1a const-string v2, "addDevice/group with lid"
+  0038..003c op=38 if-eqz v3, +0x10
+  003c..0042 op=6e invoke-virtual {v11}, LX/1jL;->A0X()Z
+  0042..0044 op=0a move-result v0
+  0044..0048 op=39 if-nez v0, +0xa
+  0048..004c op=54 iget-object v1, v9, LX/0bI;->A0B:LX/0AH;
+  004c..0052 op=1b const-string/jumbo v0, "trying to add a lid device for a non lid based group"
+  0052..0058 op=6e invoke-virtual {v1, v2, v0, v6}, LX/0AH;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+  0058..005e op=71 invoke-static {v10}, LX/0DE;->A0Z(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  005e..0060 op=0a move-result v7
+  0060..0064 op=39 if-nez v7, +0xb
+  0064..0068 op=38 if-eqz v3, +0x9
+  0068..006c op=54 iget-object v1, v9, LX/0bI;->A0B:LX/0AH;
+  006c..0070 op=1a const-string v0, "a non lid participant and is trying to add a lid device"
+  0070..0076 op=6e invoke-virtual {v1, v2, v0, v6}, LX/0AH;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+  0076..007c op=6e invoke-virtual {v11, v10, v6}, LX/1jL;->A0G(Lcom/whatsapp/infra/core/jid/UserJid;Z)LX/1uU;
+  007c..007e op=0c move-result-object v5
+  007e..0082 op=38 if-eqz v5, +0x46
+  0082..0084 op=12 const/4 v0, #0x1
+  0084..0088 op=5c iput-boolean v0, v11, LX/1jL;->A0H:Z
+  0088..008e op=6e invoke-virtual {v8}, Lcom/google/common/collect/ImmutableCollection;->iterator()LX/0N1;
+  008e..0090 op=0c move-result-object v4
+  0090..0096 op=72 invoke-interface {v4}, Ljava/util/Iterator;->hasNext()Z
+  0096..0098 op=0a move-result v0
+  0098..009c op=38 if-eqz v0, +0x30
+  009c..00a2 op=72 invoke-interface {v4}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  00a2..00a4 op=0c move-result-object v1
+  00a4..00a8 op=1f check-cast v1, Lcom/whatsapp/infra/core/jid/DeviceJid;
+  00a8..00ac op=39 if-nez v7, +0x8
+  00ac..00b2 op=71 invoke-static {v1}, LX/0DE;->A0Z(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  00b2..00b4 op=0a move-result v0
+  00b4..00b8 op=38 if-eqz v0, +0x9
+  00b8..00be op=6e invoke-virtual {v11}, LX/1jL;->A0X()Z
+  00be..00c0 op=0a move-result v0
+  00c0..00c4 op=39 if-nez v0, +0x3
+  00c4..00c6 op=28 goto -0x1a
+  00c6..00cc op=71 invoke-static {v1, v6}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  00cc..00ce op=12 const/4 v0, #0x0
+  00ce..00d2 op=22 new-instance v3, LX/1tn;
+  00d2..00d8 op=70 invoke-direct {v3, v1, v0, v6, v6}, LX/1tn;-><init>(Lcom/whatsapp/infra/core/jid/DeviceJid;Ljava/lang/String;ZZ)V
+  00d8..00dc op=54 iget-object v2, v5, LX/1uU;->A07:Ljava/util/concurrent/ConcurrentHashMap;
+  00dc..00e0 op=54 iget-object v1, v3, LX/1tn;->A03:Lcom/whatsapp/infra/core/jid/DeviceJid;
+  00e0..00e6 op=6e invoke-virtual {v2, v1}, Ljava/util/AbstractMap;->containsKey(Ljava/lang/Object;)Z
+  00e6..00e8 op=0a move-result v0
+  00e8..00ec op=39 if-nez v0, -0x2c
+  00ec..00f2 op=6e invoke-virtual {v2, v1, v3}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+  00f2..00f4 op=28 goto -0x31
+  00f4..00f6 op=12 const/4 v3, #0x0
+  00f6..00f8 op=28 goto -0x61
+  00f8..00fe op=6e invoke-virtual {v8}, Ljava/util/AbstractCollection;->isEmpty()Z
+  00fe..0100 op=0a move-result v0
+  0100..0104 op=39 if-nez v0, +0x5
+  0104..010a op=71 invoke-static {v11}, LX/1jL;->A05(LX/1jL;)V
+  010a..010c op=0e return-void
+  # exception table: 0 try range(s)
+.end method

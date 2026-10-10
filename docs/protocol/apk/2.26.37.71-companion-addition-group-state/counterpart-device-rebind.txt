@@ -1,0 +1,32 @@
+# APK-derived structural disassembly: LX/0bI;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A01(LLL) flags=0x9 registers=6
+  # full signature: LX/0bI;->A01(Lcom/google/common/collect/ImmutableSet;Lcom/whatsapp/infra/core/jid/UserJid;)Lcom/google/common/collect/ImmutableSet;
+  0000..0004 op=22 new-instance v3, Ljava/util/HashSet;
+  0004..000a op=70 invoke-direct {v3}, Ljava/util/HashSet;-><init>()V
+  000a..0010 op=6e invoke-virtual {v4}, Lcom/google/common/collect/ImmutableCollection;->iterator()LX/0N1;
+  0010..0012 op=0c move-result-object v2
+  0012..0018 op=72 invoke-interface {v2}, Ljava/util/Iterator;->hasNext()Z
+  0018..001a op=0a move-result v0
+  001a..001e op=38 if-eqz v0, +0x1a
+  001e..0024 op=72 invoke-interface {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0024..0026 op=0c move-result-object v0
+  0026..002a op=1f check-cast v0, Lcom/whatsapp/infra/core/jid/Jid;
+  002a..0030 op=6e invoke-virtual {v0}, Lcom/whatsapp/infra/core/jid/Jid;->getDevice()I
+  0030..0032 op=0a move-result v1
+  0032..0036 op=62 sget-object v0, Lcom/whatsapp/infra/core/jid/DeviceJid;->Companion:LX/0DK;
+  0036..003c op=6e invoke-virtual {v0, v5, v1}, LX/0DK;->A01(Lcom/whatsapp/infra/core/jid/UserJid;I)Lcom/whatsapp/infra/core/jid/DeviceJid;
+  003c..003e op=0c move-result-object v0
+  003e..0044 op=6e invoke-virtual {v3, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+  0044..0046 op=28 goto -0x19
+  0046..0048 op=0d move-exception v0
+  0048..004e op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/Throwable;)V
+  004e..0054 op=71 invoke-static {v3}, Lcom/google/common/collect/ImmutableSet;->copyOf(Ljava/util/Collection;)Lcom/google/common/collect/ImmutableSet;
+  0054..0056 op=0c move-result-object v0
+  0056..0058 op=11 return-object v0
+  # exception table: 1 try range(s)
+  # catch LX/08j; code_units 0005..0023 -> 0023
+.end method

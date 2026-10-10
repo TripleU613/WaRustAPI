@@ -1,0 +1,84 @@
+# APK-derived structural disassembly: LX/0bK;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A03(VLLLJ) flags=0x1 registers=16
+  # full signature: LX/0bK;->A03(Lcom/google/common/collect/ImmutableSet;LX/0c3;Lcom/whatsapp/infra/core/jid/UserJid;J)V
+  0000..0004 op=1a const-string v0, "ParticipantDeviceStore/updateParticipantDevices "
+  0004..0008 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  0008..000e op=70 invoke-direct {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  000e..0014 op=6e invoke-virtual {v1, v12}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  0014..0018 op=1a const-string v0, " "
+  0018..001e op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  001e..0024 op=6e invoke-virtual {v1, v13}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  0024..002a op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  002a..0030 op=6e invoke-virtual {v1, v14, v15}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+  0030..0036 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0036..003c op=6e invoke-virtual {v1, v11}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  003c..0042 op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  0042..0044 op=0c move-result-object v0
+  0044..004a op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+  004a..004e op=54 iget-object v1, v10, LX/0bK;->A04:LX/0Gc;
+  004e..0054 op=6e invoke-virtual {v1}, LX/0Gc;->A07()LX/0ZN;
+  0054..0056 op=0c move-result-object v9
+  0056..005c op=6e invoke-virtual {v9}, LX/0ZN;->A01()LX/1gB;
+  005c..005e op=0c move-result-object v8
+  005e..0062 op=54 iget-object v0, v10, LX/0bK;->A03:LX/0VT;
+  0062..0068 op=6e invoke-virtual {v0, v12}, LX/0VT;->A07(Lcom/whatsapp/infra/core/jid/Jid;)J
+  0068..006a op=0b move-result-wide v6
+  006a..0070 op=6e invoke-virtual {v1}, LX/0Gc;->A07()LX/0ZN;
+  0070..0072 op=0c move-result-object v5
+  0072..0076 op=54 iget-object v2, v5, LX/0ZN;->A02:LX/0IY;
+  0076..007a op=1a const-string v1, "\n          DELETE FROM\n            group_participant_device\n          WHERE\n            group_participant_row_id IN\n              (\n                SELECT\n                  _id\n                FROM\n                  group_participant_user\n                WHERE\n                  group_jid_row_id = ?\n                AND\n                  user_jid_row_id = ?\n              )\n        "
+  007a..007e op=1a const-string v0, "deleteParticipantDevices/DELETE_GROUP_PARTICIPANT_DEVICES_SQL"
+  007e..0084 op=6e invoke-virtual {v2, v1, v0}, LX/0IY;->A0D(Ljava/lang/String;Ljava/lang/String;)LX/HoP;
+  0084..0086 op=0c move-result-object v4
+  0086..008c op=71 invoke-static {v6, v7}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+  008c..008e op=0c move-result-object v3
+  008e..0094 op=71 invoke-static {v14, v15}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+  0094..0096 op=0c move-result-object v2
+  0096..0098 op=12 const/4 v0, #0x2
+  0098..009c op=23 new-array v1, v0, [Ljava/lang/String;
+  009c..009e op=12 const/4 v0, #0x0
+  009e..00a2 op=4d aput-object v3, v1, v0
+  00a2..00a4 op=12 const/4 v0, #0x1
+  00a4..00a8 op=4d aput-object v2, v1, v0
+  00a8..00ae op=6e invoke-virtual {v4, v1}, LX/HoP;->A09([Ljava/lang/String;)V
+  00ae..00b4 op=6e invoke-virtual {v4}, LX/HoP;->A00()I
+  00b4..00ba op=6e invoke-virtual {v5}, LX/0ZN;->close()V
+  00ba..00c0 op=74 invoke-virtual/range {v10..v15}, LX/0bK;->A02(Lcom/google/common/collect/ImmutableSet;LX/0c3;Lcom/whatsapp/infra/core/jid/UserJid;J)V
+  00c0..00c6 op=6e invoke-virtual {v8}, LX/1gB;->A00()V
+  00c6..00cc op=6e invoke-virtual {v8}, LX/1gB;->close()V
+  00cc..00d2 op=6e invoke-virtual {v9}, LX/0ZN;->close()V
+  00d2..00d4 op=0e return-void
+  00d4..00d6 op=0d move-exception v1
+  00d6..00dc op=6e invoke-virtual {v5}, LX/0ZN;->close()V
+  00dc..00de op=28 goto +0x5
+  00de..00e0 op=0d move-exception v0
+  00e0..00e6 op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  00e6..00e8 op=27 throw v1
+  00e8..00ea op=0d move-exception v1
+  00ea..00f0 op=6e invoke-virtual {v8}, LX/1gB;->close()V
+  00f0..00f2 op=28 goto +0x5
+  00f2..00f4 op=0d move-exception v0
+  00f4..00fa op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  00fa..00fc op=27 throw v1
+  00fc..00fe op=0d move-exception v1
+  00fe..0104 op=6e invoke-virtual {v9}, LX/0ZN;->close()V
+  0104..0106 op=27 throw v1
+  0106..0108 op=0d move-exception v0
+  0108..010e op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  010e..0110 op=27 throw v1
+  # exception table: 10 try range(s)
+  # catch <all> code_units 002b..002f -> 007e
+  # catch <all> code_units 002f..0039 -> 0074
+  # catch <all> code_units 0039..005a -> 006a
+  # catch <all> code_units 005a..0063 -> 0074
+  # catch <all> code_units 0063..0066 -> 007e
+  # catch <all> code_units 006b..006f -> 006f
+  # catch <all> code_units 006f..0074 -> 0074
+  # catch <all> code_units 0075..0079 -> 0079
+  # catch <all> code_units 007a..007e -> 007e
+  # catch <all> code_units 007f..0082 -> 0083
+.end method

@@ -1,0 +1,70 @@
+{
+  "addition-caller.txt": {
+    "bytes": 13064,
+    "sha256": "26c37bf98a28a7831f76893be8b231bc70e64dc367dc4b25f79dba767061d047"
+  },
+  "counterpart-device-rebind.txt": {
+    "bytes": 2089,
+    "sha256": "faf1fa64065a97c603b24134bd5a34c990b72118bb3d46059c425676ad7027d2"
+  },
+  "group-hash-refresh.txt": {
+    "bytes": 1601,
+    "sha256": "e3628edcb436090293ca689861a469fdc06f8532bafb24a9591b3f2f169a5988"
+  },
+  "insert-participant-devices.txt": {
+    "bytes": 7275,
+    "sha256": "ef2f13026092a377df9a46f91a18907b0fc852272a608b18b8b88e6d5593ac96"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "lid-counterpart-update.txt": {
+    "bytes": 4005,
+    "sha256": "9c56f7dc2cc84da264db8ca7e01c3b3869ff07243a78d3fbc2c297d28ddef397"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "new-device-record.txt": {
+    "bytes": 973,
+    "sha256": "9dd35351ccbba1a7c7a7e05a4d765dc5967cd3d321d84ce40a05387af24f8e19"
+  },
+  "owner-event-dispatch.txt": {
+    "bytes": 1262,
+    "sha256": "5f67d4a20aae413a2def73b55910cf8eefa7336896202b789aa4899a479c1ae2"
+  },
+  "participant-device-addition.txt": {
+    "bytes": 4548,
+    "sha256": "b7f94cc0265c8f81be5727515b8ae00e69b8ad663f5cc18573ac3d6efe69f669"
+  },
+  "participant-device-values.txt": {
+    "bytes": 985,
+    "sha256": "1b17c36001a412b8230c20171ba7ff646e20b531683f9642e78391a6d5046322"
+  },
+  "participant-group-lookup.txt": {
+    "bytes": 4698,
+    "sha256": "4c24f421d8af883ee3f440fe90c76e2d9dd1615b0b4f1ab5bd58612448f759e9"
+  },
+  "participant-persistence.txt": {
+    "bytes": 13907,
+    "sha256": "31d6c884cde06a473974f9e965c86ba6d1ebc8370e537cea60ce0f65fbffef49"
+  },
+  "per-group-persistence.txt": {
+    "bytes": 8619,
+    "sha256": "ddef758ed3d20d937f77dea9284028061dc13088f1675f92cfaa6d074b24c5c3"
+  },
+  "replace-participant-devices.txt": {
+    "bytes": 5572,
+    "sha256": "889604190518bdf948441b70d34befee39de74348aaf342c10970afc67d296e1"
+  },
+  "targets.json": {
+    "bytes": 6124,
+    "sha256": "b36cd25bf268530b7d9a3e79eee32fac11d81f2e8f3db9010ab39f27bc818c0e"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

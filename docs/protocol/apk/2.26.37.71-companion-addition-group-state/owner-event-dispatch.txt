@@ -1,0 +1,22 @@
+# APK-derived structural disassembly: LX/JhE;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0L(VLLL) flags=0x11 registers=6
+  # full signature: LX/JhE;->A0L(Lcom/whatsapp/infra/core/jid/UserJid;Ljava/util/Set;Ljava/util/Set;)V
+  0000..0006 op=71 invoke-static {v3, v4, v5}, LX/1xp;->A14(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+  0006..000c op=72 invoke-interface {v4}, Ljava/util/Set;->isEmpty()Z
+  000c..000e op=0a move-result v0
+  000e..0012 op=38 if-eqz v0, +0x9
+  0012..0018 op=72 invoke-interface {v5}, Ljava/util/Set;->isEmpty()Z
+  0018..001a op=0a move-result v0
+  001a..001e op=38 if-eqz v0, +0x3
+  001e..0020 op=0e return-void
+  0020..0024 op=62 sget-object v1, LX/0MN;->A02:LX/0MN;
+  0024..0028 op=22 new-instance v0, LX/Kx8;
+  0028..002e op=70 invoke-direct {v0, v3, v4, v5}, LX/Kx8;-><init>(Lcom/whatsapp/infra/core/jid/UserJid;Ljava/util/Set;Ljava/util/Set;)V
+  002e..0034 op=71 invoke-static {v2, v1, v0}, LX/078;->A00(LX/078;LX/0MN;LX/0MO;)V
+  0034..0036 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

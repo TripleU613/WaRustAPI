@@ -1,0 +1,80 @@
+# APK-derived structural disassembly: LX/0bI;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0J(LL) flags=0x1 registers=9
+  # full signature: LX/0bI;->A0J(Lcom/whatsapp/infra/core/jid/UserJid;)Ljava/util/HashSet;
+  0000..0004 op=22 new-instance v4, Ljava/util/HashSet;
+  0004..000a op=70 invoke-direct {v4}, Ljava/util/HashSet;-><init>()V
+  000a..000e op=54 iget-object v0, v7, LX/0bI;->A0G:LX/0Gc;
+  000e..0014 op=6e invoke-virtual {v0}, LX/0Gc;->A06()LX/0ZN;
+  0014..0016 op=0c move-result-object v2
+  0016..001a op=54 iget-object v6, v2, LX/0ZN;->A02:LX/0IY;
+  001a..001e op=1a const-string v5, "\n          SELECT \n            group_jid_row_id \n          FROM \n            group_participant_user \n          WHERE \n            user_jid_row_id = ?\n        "
+  001e..0024 op=6e invoke-virtual {v7, v8}, LX/0bI;->A0C(Lcom/whatsapp/infra/core/jid/UserJid;)J
+  0024..0026 op=0b move-result-wide v0
+  0026..002c op=71 invoke-static {v0, v1}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+  002c..002e op=0c move-result-object v3
+  002e..0030 op=12 const/4 v0, #0x1
+  0030..0034 op=23 new-array v1, v0, [Ljava/lang/String;
+  0034..0036 op=12 const/4 v0, #0x0
+  0036..003a op=4d aput-object v3, v1, v0
+  003a..003e op=1a const-string v0, "GET_PARTICIPANT_GROUPS_BY_USER_JID_SQL"
+  003e..0044 op=6e invoke-virtual {v6, v5, v0, v1}, LX/0IY;->A0A(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;
+  0044..0046 op=0c move-result-object v3
+  0046..004a op=1a const-string v0, "group_jid_row_id"
+  004a..0050 op=72 invoke-interface {v3, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+  0050..0052 op=0a move-result v6
+  0052..0056 op=22 new-instance v5, Ljava/util/HashSet;
+  0056..005c op=70 invoke-direct {v5}, Ljava/util/HashSet;-><init>()V
+  005c..0062 op=72 invoke-interface {v3}, Landroid/database/Cursor;->moveToNext()Z
+  0062..0064 op=0a move-result v0
+  0064..0068 op=38 if-eqz v0, +0xe
+  0068..006e op=72 invoke-interface {v3, v6}, Landroid/database/Cursor;->getLong(I)J
+  006e..0070 op=0b move-result-wide v0
+  0070..0076 op=71 invoke-static {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+  0076..0078 op=0c move-result-object v0
+  0078..007e op=6e invoke-virtual {v5, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+  007e..0080 op=28 goto -0x11
+  0080..0084 op=54 iget-object v1, v7, LX/0bI;->A0F:LX/0VT;
+  0084..0088 op=1c const-class v0, LX/0c3;
+  0088..008e op=6e invoke-virtual {v1, v0, v5}, LX/0VT;->A0E(Ljava/lang/Class;Ljava/util/Collection;)Ljava/util/HashMap;
+  008e..0090 op=0c move-result-object v0
+  0090..0096 op=6e invoke-virtual {v0}, Ljava/util/AbstractMap;->values()Ljava/util/Collection;
+  0096..0098 op=0c move-result-object v0
+  0098..009e op=72 invoke-interface {v0}, Ljava/util/Collection;->iterator()Ljava/util/Iterator;
+  009e..00a0 op=0c move-result-object v1
+  00a0..00a6 op=72 invoke-interface {v1}, Ljava/util/Iterator;->hasNext()Z
+  00a6..00a8 op=0a move-result v0
+  00a8..00ac op=38 if-eqz v0, +0xe
+  00ac..00b2 op=72 invoke-interface {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  00b2..00b4 op=0c move-result-object v0
+  00b4..00b8 op=1f check-cast v0, LX/0c3;
+  00b8..00bc op=38 if-eqz v0, -0xc
+  00bc..00c2 op=6e invoke-virtual {v4, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+  00c2..00c4 op=28 goto -0x11
+  00c4..00ca op=72 invoke-interface {v3}, Landroid/database/Cursor;->close()V
+  00ca..00d0 op=6e invoke-virtual {v2}, LX/0ZN;->close()V
+  00d0..00d2 op=11 return-object v4
+  00d2..00d4 op=0d move-exception v1
+  00d4..00d8 op=38 if-eqz v3, +0xa
+  00d8..00de op=72 invoke-interface {v3}, Landroid/database/Cursor;->close()V
+  00de..00e0 op=28 goto +0x5
+  00e0..00e2 op=0d move-exception v0
+  00e2..00e8 op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  00e8..00ea op=27 throw v1
+  00ea..00ec op=0d move-exception v1
+  00ec..00f2 op=6e invoke-virtual {v2}, LX/0ZN;->close()V
+  00f2..00f4 op=27 throw v1
+  00f4..00f6 op=0d move-exception v0
+  00f6..00fc op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  00fc..00fe op=27 throw v1
+  # exception table: 6 try range(s)
+  # catch <all> code_units 000b..0023 -> 0075
+  # catch <all> code_units 0023..0062 -> 0069
+  # catch <all> code_units 0062..0065 -> 0075
+  # catch <all> code_units 006c..0070 -> 0070
+  # catch <all> code_units 0071..0075 -> 0075
+  # catch <all> code_units 0076..0079 -> 007a
+.end method
