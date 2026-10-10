@@ -596,6 +596,12 @@ pub(crate) async fn drive(
                     }
                 }
 
+                match super::identity_notifications::queue(&store, &account, &node)? {
+                    super::identity_notifications::Refresh::Unrelated => {},
+                    super::identity_notifications::Refresh::Queued(_) => tracing::info!("identity notification key read queued or already saved; no key adopted"),
+                    outcome => tracing::info!(?outcome, "identity notification key read not queued; capture preserved"),
+                }
+
                 if let Some(low) = super::prekeys::low_count(&node)? {
                     // Local ACK ordering follows durable capture; native 14z.A02 ACKs after worker processing.
                     // Its first-child legacy flag triggers upload even for an unknown count; PQ-only is inert.
@@ -1907,6 +1913,137 @@ mod tests {
             .attr("id", id)
             .attr("from", Jid::parse("s.whatsapp.net").unwrap())
             .children(vec![Node::new(child).attr("value", value)])
+    }
+
+    #[tokio::test]
+    async fn identity_notification_read_write_cut_never_replays_or_changes_keys() {
+        use super::super::{actions, identity_notifications};
+        use wacore_libsignal::protocol::IdentityKeyPair;
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("identity-refresh.redb");
+        let store = Arc::new(identity_store(&path));
+        store
+            .write(|tx| {
+                AccountRecord {
+                    own_jid: Some(Jid::parse("15555550100@s.whatsapp.net").unwrap()),
+                    registration: crate::session::RegistrationStatus::Registered,
+                    ..Default::default()
+                }
+                .save(tx)
+            })
+            .unwrap();
+        let peer = peer().with_device(4);
+        let identity = IdentityKeyPair::generate(&mut rand::rng());
+        let pin_key = format!("comparison-direct:{peer}");
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::PeerIdentities,
+                    pin_key.as_bytes(),
+                    1,
+                    &identity.identity_key().serialize().to_vec(),
+                )?;
+                tx.put_json(
+                    Table::SignalSessions,
+                    pin_key.as_bytes(),
+                    1,
+                    &vec![1u8, 2, 3],
+                )
+            })
+            .unwrap();
+        let snapshot = |store: &ProtocolStore| {
+            store
+                .read(|tx| {
+                    Ok((
+                        tx.scan_after(Table::PeerIdentities, 1, None, 128)?,
+                        tx.scan_after(Table::SignalSessions, 1, None, 128)?,
+                        tx.scan_after(Table::Outbox, 1, None, 128)?,
+                    ))
+                })
+                .unwrap()
+        };
+        let before = snapshot(&store);
+        let head = store.journal_head().unwrap();
+        let mut settings = config();
+        settings.transport.timeout_ms = 2000;
+        let mut fake = start_with_config(&store, false, None, settings.clone());
+        fake.activate().await;
+        let notification = Node::new("notification")
+            .attr("type", "encrypt")
+            .attr("id", "fixture-identity-event")
+            .attr("from", peer.clone())
+            .attr("participant", "15555550100@s.whatsapp.net")
+            .children(vec![
+                Node::new("identity"),
+                Node::new("count").attr("value", "1"),
+            ]);
+        let wire = encode(&notification).unwrap();
+        fake.deliver(notification.clone()).await;
+        let (query, write) = fake.written().await;
+        assert_eq!(
+            query.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("encrypt")
+        );
+        let user = &query.child("key").unwrap().child_nodes()[0];
+        assert_eq!(super::super::receipts::jid(user, "jid"), Some(peer.clone()));
+        assert_eq!(
+            user.get_attr("reason").and_then(|v| v.as_text()),
+            Some("identity")
+        );
+        // Reservation already committed before the first uncertain write.
+        write
+            .send(Err(Error::Io(std::io::Error::new(
+                std::io::ErrorKind::BrokenPipe,
+                "fixture cut",
+            ))))
+            .unwrap();
+        assert!(fake.finished().await.is_err());
+        let outcomes = actions::outcomes(&store).unwrap();
+        assert_eq!(outcomes.len(), 1);
+        assert_eq!(outcomes[0].kind, "identity_refresh");
+        assert_eq!(outcomes[0].status, actions::ActionStatus::Sent);
+        let id = outcomes[0].id.clone();
+        let capture = format!(
+            "inbound:sha256:{}",
+            hex::encode(sha2::Sha256::digest(&wire))
+        );
+        assert!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                .unwrap()
+                .is_some()
+        );
+        assert_eq!(snapshot(&store), before);
+        assert_eq!(store.journal_head().unwrap(), head);
+        drop(store);
+        let store = Arc::new(identity_store(&path));
+        let account = store.read(AccountRecord::load).unwrap().unwrap();
+        assert_eq!(
+            identity_notifications::queue(&store, &account, &notification).unwrap(),
+            identity_notifications::Refresh::Queued(id)
+        );
+        let mut fake = start_with_config(&store, false, None, settings);
+        fake.activate().await;
+        // Only the ordinary keepalive is written; no refresh replay or ACK.
+        let (ping, write) = fake.written().await;
+        assert_eq!(
+            ping.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("w:p")
+        );
+        write.send(Ok(())).unwrap();
+        fake.deliver(
+            Node::new("iq")
+                .attr("type", "result")
+                .attr("id", ping.get_attr("id").and_then(|v| v.as_text()).unwrap()),
+        )
+        .await;
+        fake.deliver(notification).await;
+        fake.nothing_written(Duration::from_millis(100)).await;
+        fake.stop.send(true).unwrap();
+        fake.finished().await.unwrap();
+        assert_eq!(actions::outcomes(&store).unwrap(), outcomes);
+        assert_eq!(snapshot(&store), before);
+        assert_eq!(store.journal_head().unwrap(), head);
     }
 
     #[tokio::test]

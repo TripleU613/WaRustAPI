@@ -986,6 +986,15 @@ pub(super) fn actions_status(cli: &super::Cli, show: Option<&str>) -> Result<(),
         create: false,
     })?;
     if let Some(id) = show {
+        if let Some(summary) = whatsapp_api::transport::identity_notifications::inspect(&store, id)?
+        {
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&summary)
+                    .map_err(|e| Error::invalid("actions", e.to_string()))?
+            );
+            return Ok(());
+        }
         let mask = |text: String| {
             let mut out = String::new();
             let mut run = 0usize;

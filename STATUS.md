@@ -1,5 +1,24 @@
 # Status — 2026-10-07
 
+Identity notification key reads (2026-10-09, **confirmed static / implemented offline**):
+the normal callback target is root from, with device preserved and participant
+separate. Authenticated receive now queues reason=identity reads for supported
+existing remote PN/LID pins, with durable event/device guards and no replay of
+uncertain/refused/invalid reads. Four tests cover routes, guards, signed prior
+results and an actor write cut/reopen. Response adoption, full native admission
+and identity ACK lifecycle remain unported. [Evidence and limits](docs/protocol/identity-notification-key-read.md).
+
+
+Validation: 852 workspace/all-feature tests passed. Strict Clippy, warnings-
+denied Rustdoc, default CLI tests (25 plus API-symbol), CLI-reference regeneration,
+formatting and whitespace passed. Exact export check verified 11 topics / 16 files /
+102,122 bytes; checksum-verified cached self-diff found 11 unchanged topics and
+four metadata artifacts. Hygiene passed (2,294 links / 114 bundles).
+One 45-second authenticated receive window observed a
+primary-LID read with verified signature and matching pin; no identity transition,
+chat send or adoption was validated. [Redacted live evidence](docs/protocol/identity-notification-key-read-live.json).
+
+
 Supplied bundle authentication (2026-10-09, **confirmed static / implemented offline**):
 common direct/pairwise encryption verifies supplied signed device keys even with
 an existing session. A failing-before generated-key regression proves forged

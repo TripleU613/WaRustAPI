@@ -1,0 +1,55 @@
+{
+  "build": "2.26.37.71",
+  "implementation_base_commit": "e725e8a",
+  "live_build_scope": "working-tree read-phase actor; offline inspector was added afterwards",
+  "observed_date": "2026-10-09",
+  "process": {
+    "exit_code": 0,
+    "elapsed_seconds": 60.52,
+    "requested_receive_seconds": 45,
+    "send_outbox": false,
+    "reconnect_attempts": 0,
+    "mark_read": false
+  },
+  "authenticated": true,
+  "clean_stop": true,
+  "new_identity_refresh_actions": 1,
+  "new_identity_refresh_action_statuses": [
+    "ok"
+  ],
+  "offline_correlated_reply_inspection": {
+    "status": "verified_bundle",
+    "peer_namespace": "lid",
+    "device": 0,
+    "server_error_code": null,
+    "signature_valid": true,
+    "pin_matches": true
+  },
+  "all_previous_actions_equal": true,
+  "outbox_pending_equal": true,
+  "receipt_outcomes_equal": true,
+  "journal_head_equal": true,
+  "table_count_deltas": {
+    "Checkpoints": 12
+  },
+  "checkpoint_kind_deltas": {
+    "action-outbox": 1,
+    "identity-refresh-event": 1,
+    "identity-refresh-peer": 1,
+    "inbound": 9
+  },
+  "incoming_result_counts": {
+    "Unsupported": 11,
+    "Decrypted": 0,
+    "Undecryptable": 0,
+    "Duplicate": 0
+  },
+  "identity_read_info_log_lines": 0,
+  "limits": [
+    "One primary LID read; no changed-identity transition or companion response observed.",
+    "Notification age/redelivery history is unknown.",
+    "Generic action ok alone is not a verified signature; offline inspector supplies that check.",
+    "No session derivation/adoption, identity ACK, human handset confirmation or message sending was validated.",
+    "Count equality does not establish byte equality of existing session/pin records."
+  ]
+}

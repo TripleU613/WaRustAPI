@@ -112,6 +112,12 @@ pub mod identity_conflicts;
     feature = "experimental-noise",
     feature = "experimental-transport"
 ))]
+pub mod identity_notifications;
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
 pub mod identity_query;
 #[cfg(all(
     feature = "experimental-signal-crypto",

@@ -1,0 +1,125 @@
+# APK-derived structural disassembly: LX/Fpc;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method run(V) flags=0x11 registers=9
+  # full signature: LX/Fpc;->run()V
+  0000..0004 op=52 iget v0, v8, LX/Fpc;->$t:I
+  0004..000a op=2b packed-switch v0, payload@0x1c8, cases=[0:@0x19e, 1:@0x176, 2:@0x9a, 3:@0x72, 4:@0x42], default@0xa
+  000a..000e op=54 iget-object v1, v8, LX/Fpc;->A01:Ljava/lang/Object;
+  000e..0012 op=1f check-cast v1, Lcom/whatsapp/payments/indiaupi/ui/IndiaBillPaymentsBillSummaryActivity;
+  0012..0016 op=52 iget v7, v8, LX/Fpc;->A00:I
+  0016..001a op=54 iget-object v4, v8, LX/Fpc;->A02:Ljava/lang/Object;
+  001a..001e op=1f check-cast v4, Ljava/lang/Integer;
+  001e..0022 op=54 iget-object v5, v8, LX/Fpc;->A04:Ljava/lang/String;
+  0022..0026 op=54 iget-object v3, v8, LX/Fpc;->A03:Ljava/lang/Object;
+  0026..002a op=1f check-cast v3, LX/FM3;
+  002a..002e op=54 iget-object v0, v1, Lcom/whatsapp/payments/indiaupi/ui/IndiaBillPaymentsBillSummaryActivity;->A0I:LX/05B;
+  002e..0034 op=71 invoke-static {v0}, LX/Dep;->A0V(LX/05B;)LX/Ffz;
+  0034..0036 op=0c move-result-object v2
+  0036..003a op=54 iget-object v6, v1, LX/EOf;->A0i:Ljava/lang/String;
+  003a..0040 op=74 invoke-virtual/range {v2..v7}, LX/Ffz;->BUR(LX/FM3;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;I)V
+  0040..0042 op=0e return-void
+  0042..0046 op=54 iget-object v0, v8, LX/Fpc;->A01:Ljava/lang/Object;
+  0046..004a op=1f check-cast v0, LX/G5O;
+  004a..004e op=52 iget v5, v8, LX/Fpc;->A00:I
+  004e..0052 op=54 iget-object v2, v8, LX/Fpc;->A02:Ljava/lang/Object;
+  0052..0056 op=1f check-cast v2, Ljava/lang/Integer;
+  0056..005a op=54 iget-object v3, v8, LX/Fpc;->A04:Ljava/lang/String;
+  005a..005e op=1a const-string v4, "chat"
+  005e..0062 op=54 iget-object v1, v8, LX/Fpc;->A03:Ljava/lang/Object;
+  0062..0066 op=1f check-cast v1, LX/FM3;
+  0066..006a op=38 if-eqz v0, -0x13
+  006a..0070 op=78 invoke-interface/range {v0..v5}, LX/G5O;->BUR(LX/FM3;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;I)V
+  0070..0072 op=0e return-void
+  0072..0076 op=54 iget-object v4, v8, LX/Fpc;->A01:Ljava/lang/Object;
+  0076..007a op=1f check-cast v4, LX/0yO;
+  007a..007e op=52 iget v3, v8, LX/Fpc;->A00:I
+  007e..0082 op=54 iget-object v2, v8, LX/Fpc;->A04:Ljava/lang/String;
+  0082..0086 op=54 iget-object v1, v8, LX/Fpc;->A02:Ljava/lang/Object;
+  0086..008a op=1f check-cast v1, LX/1B3;
+  008a..008e op=54 iget-object v0, v8, LX/Fpc;->A03:Ljava/lang/Object;
+  008e..0092 op=1f check-cast v0, LX/Cb1;
+  0092..0098 op=71 invoke-static {v4, v1, v0, v2, v3}, LX/0yO;->A01(LX/0yO;LX/1B3;LX/Cb1;Ljava/lang/String;I)V
+  0098..009a op=0e return-void
+  009a..009e op=52 iget v0, v8, LX/Fpc;->A00:I
+  009e..00a2 op=54 iget-object v6, v8, LX/Fpc;->A01:Ljava/lang/Object;
+  00a2..00a6 op=1f check-cast v6, LX/F7e;
+  00a6..00aa op=54 iget-object v5, v8, LX/Fpc;->A02:Ljava/lang/Object;
+  00aa..00ae op=1f check-cast v5, Lcom/whatsapp/infra/core/jid/Jid;
+  00ae..00b2 op=54 iget-object v4, v8, LX/Fpc;->A04:Ljava/lang/String;
+  00b2..00b6 op=54 iget-object v3, v8, LX/Fpc;->A03:Ljava/lang/Object;
+  00b6..00ba op=1f check-cast v3, LX/EyZ;
+  00ba..00be op=22 new-instance v2, LX/EF3;
+  00be..00c4 op=70 invoke-direct {v2}, LX/EF3;-><init>()V
+  00c4..00ca op=71 invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  00ca..00cc op=0c move-result-object v0
+  00cc..00d0 op=5b iput-object v0, v2, LX/EF3;->A03:Ljava/lang/Integer;
+  00d0..00d6 op=71 invoke-static {}, LX/1xh;->A1A()Ljava/lang/Boolean;
+  00d6..00d8 op=0c move-result-object v1
+  00d8..00dc op=38 if-eqz v6, +0x14
+  00dc..00e0 op=54 iget-object v0, v6, LX/F7e;->A01:Ljava/lang/String;
+  00e0..00e4 op=38 if-eqz v0, +0x4
+  00e4..00e8 op=5b iput-object v1, v2, LX/EF3;->A00:Ljava/lang/Boolean;
+  00e8..00ec op=54 iget-object v0, v6, LX/F7e;->A02:Ljava/lang/String;
+  00ec..00f0 op=38 if-eqz v0, +0x4
+  00f0..00f4 op=5b iput-object v1, v2, LX/EF3;->A01:Ljava/lang/Boolean;
+  00f4..00f8 op=54 iget-object v0, v6, LX/F7e;->A00:Ljava/lang/Long;
+  00f8..00fc op=38 if-eqz v0, +0x4
+  00fc..0100 op=5b iput-object v1, v2, LX/EF3;->A02:Ljava/lang/Boolean;
+  0100..0104 op=38 if-eqz v5, +0x33
+  0104..0108 op=54 iget-object v0, v3, LX/EyZ;->A02:LX/05B;
+  0108..010e op=71 invoke-static {v0, v5}, LX/Der;->A0d(LX/05B;Lcom/whatsapp/infra/core/jid/Jid;)Ljava/lang/String;
+  010e..0110 op=0c move-result-object v0
+  0110..0116 op=71 invoke-static {v0}, LX/Deo;->A0n(Ljava/lang/String;)Ljava/lang/Long;
+  0116..0118 op=0c move-result-object v0
+  0118..011c op=5b iput-object v0, v2, LX/EF3;->A04:Ljava/lang/Long;
+  011c..0120 op=54 iget-object v0, v3, LX/EyZ;->A00:LX/05B;
+  0120..0126 op=71 invoke-static {v0}, LX/05B;->A00(LX/05B;)LX/00D;
+  0126..0128 op=0c move-result-object v1
+  0128..012c op=13 const/16 v0, #0x212c
+  012c..0132 op=6e invoke-virtual {v1, v0}, LX/00D;->A10(I)Z
+  0132..0134 op=0a move-result v0
+  0134..0138 op=38 if-eqz v0, +0x19
+  0138..013c op=54 iget-object v0, v3, LX/EyZ;->A01:LX/05B;
+  013c..0142 op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  0142..0144 op=0c move-result-object v1
+  0144..0148 op=1f check-cast v1, LX/0qp;
+  0148..014e op=6e invoke-virtual {v5}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+  014e..0150 op=0c move-result-object v0
+  0150..0156 op=6e invoke-virtual {v1, v0}, LX/0qp;->A07(Ljava/lang/String;)Ljava/lang/String;
+  0156..0158 op=0c move-result-object v0
+  0158..015c op=5b iput-object v0, v2, LX/EF3;->A06:Ljava/lang/String;
+  015c..015e op=28 goto +0x5
+  015e..0160 op=0d move-exception v0
+  0160..0166 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/Throwable;)V
+  0166..016a op=5b iput-object v4, v2, LX/EF3;->A05:Ljava/lang/String;
+  016a..016e op=54 iget-object v0, v3, LX/EyZ;->A04:LX/05B;
+  016e..0174 op=71 invoke-static {v0, v2}, LX/1xj;->A1E(LX/05B;LX/0BY;)V
+  0174..0176 op=0e return-void
+  0176..017a op=54 iget-object v4, v8, LX/Fpc;->A01:Ljava/lang/Object;
+  017a..017e op=1f check-cast v4, Lcom/whatsapp/conversation/ui/conversationrow/businessmessaging/interactive/components/InteractiveMessageButton;
+  017e..0182 op=54 iget-object v3, v8, LX/Fpc;->A02:Ljava/lang/Object;
+  0182..0186 op=1f check-cast v3, LX/1jl;
+  0186..018a op=52 iget v2, v8, LX/Fpc;->A00:I
+  018a..018e op=54 iget-object v1, v8, LX/Fpc;->A03:Ljava/lang/Object;
+  018e..0192 op=1f check-cast v1, LX/178;
+  0192..0196 op=54 iget-object v0, v8, LX/Fpc;->A04:Ljava/lang/String;
+  0196..019c op=71 invoke-static {v4, v1, v3, v0, v2}, Lcom/whatsapp/conversation/ui/conversationrow/businessmessaging/interactive/components/InteractiveMessageButton;->A0Y(Lcom/whatsapp/conversation/ui/conversationrow/businessmessaging/interactive/components/InteractiveMessageButton;LX/178;LX/1jl;Ljava/lang/String;I)V
+  019c..019e op=0e return-void
+  019e..01a2 op=54 iget-object v4, v8, LX/Fpc;->A01:Ljava/lang/Object;
+  01a2..01a6 op=1f check-cast v4, Lcom/whatsapp/calling/service/VoiceServiceEventCallback;
+  01a6..01aa op=54 iget-object v3, v8, LX/Fpc;->A04:Ljava/lang/String;
+  01aa..01ae op=54 iget-object v2, v8, LX/Fpc;->A02:Ljava/lang/Object;
+  01ae..01b2 op=1f check-cast v2, Lcom/whatsapp/infra/core/jid/DeviceJid;
+  01b2..01b6 op=54 iget-object v1, v8, LX/Fpc;->A03:Ljava/lang/Object;
+  01b6..01ba op=1f check-cast v1, [B
+  01ba..01be op=52 iget v0, v8, LX/Fpc;->A00:I
+  01be..01c4 op=6e invoke-virtual {v4, v3, v2, v1, v0}, Lcom/whatsapp/calling/service/VoiceServiceEventCallback;->lambda$rejectedDecryptionFailure$0$com-whatsapp-calling-service-VoiceServiceEventCallback(Ljava/lang/String;Lcom/whatsapp/infra/core/jid/DeviceJid;[BI)V
+  01c4..01c6 op=0e return-void
+  01c6..01c8 op=00 nop
+  01c8..01e4 op=00 packed-switch-payload size=5
+  # exception table: 1 try range(s)
+  # catch Ljava/lang/NumberFormatException; code_units 0082..00af -> 00af
+.end method

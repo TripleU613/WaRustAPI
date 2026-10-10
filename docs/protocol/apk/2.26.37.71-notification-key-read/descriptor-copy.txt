@@ -1,0 +1,47 @@
+# APK-derived structural disassembly: LX/Cb1;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(L) flags=0x1 registers=6
+  # full signature: LX/Cb1;->A00()LX/CSu;
+  0000..0004 op=22 new-instance v4, LX/CSu;
+  0004..000a op=70 invoke-direct {v4}, LX/CSu;-><init>()V
+  000a..000e op=54 iget-object v0, v5, LX/Cb1;->A02:Lcom/whatsapp/infra/core/jid/Jid;
+  000e..0012 op=5b iput-object v0, v4, LX/CSu;->A02:Lcom/whatsapp/infra/core/jid/Jid;
+  0012..0016 op=54 iget-object v0, v5, LX/Cb1;->A06:Ljava/lang/String;
+  0016..001a op=5b iput-object v0, v4, LX/CSu;->A06:Ljava/lang/String;
+  001a..001e op=54 iget-object v0, v5, LX/Cb1;->A08:Ljava/lang/String;
+  001e..0022 op=5b iput-object v0, v4, LX/CSu;->A08:Ljava/lang/String;
+  0022..0026 op=54 iget-object v0, v5, LX/Cb1;->A09:Ljava/lang/String;
+  0026..002a op=5b iput-object v0, v4, LX/CSu;->A09:Ljava/lang/String;
+  002a..002e op=54 iget-object v0, v5, LX/Cb1;->A05:Ljava/lang/String;
+  002e..0032 op=5b iput-object v0, v4, LX/CSu;->A05:Ljava/lang/String;
+  0032..0036 op=54 iget-object v0, v5, LX/Cb1;->A01:Lcom/whatsapp/infra/core/jid/Jid;
+  0036..003a op=5b iput-object v0, v4, LX/CSu;->A01:Lcom/whatsapp/infra/core/jid/Jid;
+  003a..003e op=54 iget-object v0, v5, LX/Cb1;->A03:Lcom/whatsapp/infra/core/jid/UserJid;
+  003e..0042 op=5b iput-object v0, v4, LX/CSu;->A03:Lcom/whatsapp/infra/core/jid/UserJid;
+  0042..0046 op=54 iget-object v0, v5, LX/Cb1;->A07:Ljava/lang/String;
+  0046..004a op=5b iput-object v0, v4, LX/CSu;->A07:Ljava/lang/String;
+  004a..004e op=53 iget-wide v0, v5, LX/Cb1;->A00:J
+  004e..0052 op=5a iput-wide v0, v4, LX/CSu;->A00:J
+  0052..0056 op=54 iget-object v0, v5, LX/Cb1;->A0A:Ljava/util/List;
+  0056..005a op=38 if-eqz v0, +0x1a
+  005a..0060 op=72 invoke-interface {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+  0060..0062 op=0c move-result-object v3
+  0062..0068 op=72 invoke-interface {v3}, Ljava/util/Iterator;->hasNext()Z
+  0068..006a op=0a move-result v0
+  006a..006e op=38 if-eqz v0, +0x10
+  006e..0074 op=72 invoke-interface {v3}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0074..0076 op=0c move-result-object v2
+  0076..007a op=1f check-cast v2, LX/0hq;
+  007a..007e op=54 iget-object v1, v4, LX/CSu;->A0A:Ljava/util/Map;
+  007e..0082 op=54 iget-object v0, v2, LX/0hq;->A02:Ljava/lang/String;
+  0082..0088 op=72 invoke-interface {v1, v0, v2}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+  0088..008a op=28 goto -0x13
+  008a..008e op=54 iget-object v0, v5, LX/Cb1;->A04:LX/0hs;
+  008e..0092 op=38 if-eqz v0, +0x4
+  0092..0096 op=5b iput-object v0, v4, LX/CSu;->A04:LX/0hs;
+  0096..0098 op=11 return-object v4
+  # exception table: 0 try range(s)
+.end method

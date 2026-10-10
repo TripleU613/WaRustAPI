@@ -29,9 +29,9 @@ At `0188..0198`, even after the null-metadata-peer rejoin, the handler obtains
 a DeviceJid through `0DK.A00` from base-handler `0yO.A01`. The
 [base handler](apk/2.26.37.71-identity-notifications/identity-handler-ack.txt)
 sets that field from `Cb1.A02` (`0146..014e`) before dispatching `A09`
-(`0206..020c`). **Unknown:** the complete outer Cb1 producer/address
-normalization and participant/recipient routing. Do not assume the metadata
-`from` parser selects the exact same device as this callback field.
+(`0206..020c`). **Initial trace boundary:** the outer producer was not yet traced here. The
+[normal notification continuation](identity-notification-key-read.md) now closes
+root-from device routing; other subtype/mapping behavior remains unported.
 
 The handler queues `DLp` selector **5** (`01b8..01ca`) on `16Z.A00`.
 [Constructor](apk/2.26.37.71-identity-notifications/identity-worker-constructor.txt)
@@ -97,17 +97,20 @@ A0A (`02a4..02c6`). A deferred key in that map skips to return `0352`.
 authority. Neither scheduling a worker nor receiving the notification proves
 that refresh completed or that the user identity actually changed.
 
-**Confirmed local gap:** the Rust actor durably captures these controls, but
-its supported handlers cover privacy tokens, dirty groups, device lists and
-prekey counts. It does not dispatch this identity worker, migrate metadata,
-queue this native prekey refresh or apply its ACK lifecycle. Current successful
+**Historical local gap before the read-phase continuation:** the Rust actor durably captured these controls, but
+its supported handlers covered privacy tokens, dirty groups, device lists and
+prekey counts. It did not dispatch this identity worker, migrate metadata,
+queue this native prekey refresh or apply its ACK lifecycle. The [read-phase implementation](identity-notification-key-read.md) now queues
+a once-only device-key read; response adoption and ACK lifecycle remain unported.
+Current successful
 message/bundle authentication and explicit identity-change policies continue to
 control pin adoption. This research changes no account, key, reservation or
 runtime behavior. No fresh live notification was requested or inspected here.
 
 The [bulk prekey continuation](bulk-prekey-refresh.md) now traces its wire request
-and retains its callback. Remaining prerequisites are callback authentication,
-Cio preparation, exact callback-device resolution and once-only refresh/ACK state. Preserve
+and retains its callback. Callback-device resolution and once-only reads are now implemented in the
+[read-phase continuation](identity-notification-key-read.md); complete Cio
+preparation, response adoption and refresh/ACK state remain unported. Preserve
 own-account protections, lock-equivalent transactions, existing pin authentication
 and durable reservations rather than treating the first `identity` tag as trust.
 
@@ -146,10 +149,10 @@ loads `CSu.A02` into `v1` at `0012..0016` and forwards it unchanged in
 returns an existing DeviceJid unchanged (`0000..000e`), preserving its device.
 Otherwise it calls `0DE.A0l`, casts accepted input to UserJid, and uses
 `getPrimaryDevice` (`000e..0036`); rejected input returns null (`0036..003a`).
-**Unknown:** writes/producers of `CSu.A02`, the complete `0DE.A0l` predicate,
-participant/recipient routing and reflection/native writes. Thus this continuation
-still does not establish that the root metadata `from` selects the callback
-device. Do not implement that assumption as a notification refresh target.
+**Initial trace boundary:** CSu.A02 producers and the 0DE predicate were
+untraced at this point. The [next continuation](identity-notification-key-read.md)
+closes the normal notification root-from route and retains the numeric predicate;
+other subtype correspondence and reflection/native writes remain unknown.
 
 Reproduce with existing `xtask apk-field-refs` (class `LX/Cb1;`, field A02,
 type `Lcom/whatsapp/infra/core/jid/Jid;`, `--writes-only`), `apk-callers`

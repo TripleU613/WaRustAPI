@@ -1,0 +1,183 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "build": "2.26.37.71",
+  "selector": {
+    "class": "LX/CSu;",
+    "field": "A02",
+    "type": "Lcom/whatsapp/infra/core/jid/Jid;",
+    "writes_only": true
+  },
+  "interpretation": "Exact DEX direct writes only; not evidence excluding reflection/native writes. Most belong to other stanza kinds.",
+  "matches": [
+    {
+      "dex": "classes.dex",
+      "method": "LX/0h8;->A02(LL)",
+      "write": "write opcode 0x5b, dex byte offset: 0x646636"
+    },
+    {
+      "dex": "classes.dex",
+      "method": "LX/0zH;->A05(LLLLL)",
+      "write": "write opcode 0x5b, dex byte offset: 0x76e82e"
+    },
+    {
+      "dex": "classes.dex",
+      "method": "LX/0zH;->A06(LL)",
+      "write": "write opcode 0x5b, dex byte offset: 0x76e8ee"
+    },
+    {
+      "dex": "classes.dex",
+      "method": "LX/12s;->A01(LLLLLI)",
+      "write": "write opcode 0x5b, dex byte offset: 0x7be4f0"
+    },
+    {
+      "dex": "classes.dex",
+      "method": "LX/1Qy;->A02(VL)",
+      "write": "write opcode 0x5b, dex byte offset: 0x8dcb3e"
+    },
+    {
+      "dex": "classes.dex",
+      "method": "LX/1RZ;->A03(VLI)",
+      "write": "write opcode 0x5b, dex byte offset: 0x8e41ca"
+    },
+    {
+      "dex": "classes6.dex",
+      "method": "LX/9O2;->A07(VLL)",
+      "write": "write opcode 0x5b, dex byte offset: 0x389e10"
+    },
+    {
+      "dex": "classes6.dex",
+      "method": "LX/9OR;->A07(VLL)",
+      "write": "write opcode 0x5b, dex byte offset: 0x38fbf6"
+    },
+    {
+      "dex": "classes6.dex",
+      "method": "LX/Ahc;->run(V)",
+      "write": "write opcode 0x5b, dex byte offset: 0x5c5448"
+    },
+    {
+      "dex": "classes7.dex",
+      "method": "LX/Bp1;->A08(LLL)",
+      "write": "write opcode 0x5b, dex byte offset: 0x51a826"
+    },
+    {
+      "dex": "classes7.dex",
+      "method": "LX/Cb1;->A00(L)",
+      "write": "write opcode 0x5b, dex byte offset: 0x5e6ba6"
+    },
+    {
+      "dex": "classes7.dex",
+      "method": "LX/CjN;->A08(LLL)",
+      "write": "write opcode 0x5b, dex byte offset: 0x627bca"
+    },
+    {
+      "dex": "classes7.dex",
+      "method": "LX/CmG;->A00(LLLLLLLJ)",
+      "write": "write opcode 0x5b, dex byte offset: 0x64be1a"
+    },
+    {
+      "dex": "classes7.dex",
+      "method": "LX/D37;->B38(LLLLLJ)",
+      "write": "write opcode 0x5b, dex byte offset: 0x73fc84"
+    },
+    {
+      "dex": "classes7.dex",
+      "method": "LX/D54;->BEw(VL)",
+      "write": "write opcode 0x5b, dex byte offset: 0x7525fc"
+    },
+    {
+      "dex": "classes7.dex",
+      "method": "LX/DEb;->AR2(VLLL)",
+      "write": "write opcode 0x5b, dex byte offset: 0x79e30c"
+    },
+    {
+      "dex": "classes7.dex",
+      "method": "Lcom/whatsapp/messaging/jobqueue/job/SendOrderStatusUpdateFailureReceiptJob;->A0G(V)",
+      "write": "write opcode 0x5b, dex byte offset: 0x894dce"
+    },
+    {
+      "dex": "classes7.dex",
+      "method": "Lcom/whatsapp/status/api/SendNewsletterStatusViewReceiptJob;->A0G(V)",
+      "write": "write opcode 0x5b, dex byte offset: 0x896c30"
+    },
+    {
+      "dex": "classes7.dex",
+      "method": "Lcom/whatsapp/newsletter/messages/job/SendViewReceiptJob;->A0G(V)",
+      "write": "write opcode 0x5b, dex byte offset: 0x896f06"
+    },
+    {
+      "dex": "classes7.dex",
+      "method": "Lcom/whatsapp/xmpp/jobqueue/job/ReceiptAggregatedByIdProcessingJob;->A0G(V)",
+      "write": "write opcode 0x5b, dex byte offset: 0x897942"
+    },
+    {
+      "dex": "classes7.dex",
+      "method": "Lcom/whatsapp/locationsharing/jobqueue/job/SendDisableLiveLocationJob;->A0G(V)",
+      "write": "write opcode 0x5b, dex byte offset: 0x8981c0"
+    },
+    {
+      "dex": "classes7.dex",
+      "method": "Lcom/whatsapp/payments/productinfra/jobqueue/job/SendPaymentInviteSetupJob;->A0G(V)",
+      "write": "write opcode 0x5b, dex byte offset: 0x898468"
+    },
+    {
+      "dex": "classes7.dex",
+      "method": "Lcom/whatsapp/messaging/receipts/jobqueue/job/SendPlayedReceiptJobV2;->A0G(V)",
+      "write": "write opcode 0x5b, dex byte offset: 0x898cea"
+    },
+    {
+      "dex": "classes7.dex",
+      "method": "Lcom/whatsapp/jobqueue/job/SendMediaErrorReceiptJob;->A0G(V)",
+      "write": "write opcode 0x5b, dex byte offset: 0x899052"
+    },
+    {
+      "dex": "classes7.dex",
+      "method": "Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->A0G(V)",
+      "write": "write opcode 0x5b, dex byte offset: 0x8999d2"
+    },
+    {
+      "dex": "classes7.dex",
+      "method": "Lcom/whatsapp/jobqueue/job/SendRetryReceiptJob;->A0G(V)",
+      "write": "write opcode 0x5b, dex byte offset: 0x89ab28"
+    },
+    {
+      "dex": "classes7.dex",
+      "method": "Lcom/whatsapp/locationsharing/jobqueue/job/SendLiveLocationKeyJob;->A0G(V)",
+      "write": "write opcode 0x5b, dex byte offset: 0x89c50e"
+    },
+    {
+      "dex": "classes7.dex",
+      "method": "Lcom/whatsapp/companiondevice/devices/jobqueue/job/SendPeerMessageJob;->A0G(V)",
+      "write": "write opcode 0x5b, dex byte offset: 0x89cf7e"
+    },
+    {
+      "dex": "classes7.dex",
+      "method": "Lcom/whatsapp/productinfra/status/sendflow/SendNewsletterStatusJob;->A0G(V)",
+      "write": "write opcode 0x5b, dex byte offset: 0x89dfe8"
+    },
+    {
+      "dex": "classes7.dex",
+      "method": "Lcom/whatsapp/newsletter/messages/job/SendNewsletterMessageJob;->A0G(V)",
+      "write": "write opcode 0x5b, dex byte offset: 0x89f09e"
+    },
+    {
+      "dex": "classes7.dex",
+      "method": "Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A06(ZLLLLLLLLLLIJZZ)",
+      "write": "write opcode 0x5b, dex byte offset: 0x8a10ba"
+    },
+    {
+      "dex": "classes7.dex",
+      "method": "Lcom/whatsapp/productinfra/status/sendflow/SendE2eStatusJob;->A0G(V)",
+      "write": "write opcode 0x5b, dex byte offset: 0x8a7008"
+    },
+    {
+      "dex": "classes7.dex",
+      "method": "Lcom/whatsapp/productinfra/status/sendflow/SendE2eStatusJob;->A0G(V)",
+      "write": "write opcode 0x5b, dex byte offset: 0x8a722a"
+    },
+    {
+      "dex": "classes7.dex",
+      "method": "Lcom/whatsapp/productinfra/status/sendflow/SendE2eStatusJob;->A0G(V)",
+      "write": "write opcode 0x5b, dex byte offset: 0x8a87be"
+    }
+  ]
+}

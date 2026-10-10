@@ -1,0 +1,43 @@
+# APK-derived structural disassembly: LX/0yO;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method BFC(ZLI) flags=0x1 registers=14
+  # full signature: LX/0yO;->BFC(Landroid/os/Message;I)Z
+  0000..0002 op=12 const/4 v4, #0x1
+  0002..0008 op=71 invoke-static {v12, v4}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000a op=07 move-object v8, v11
+  000a..000e op=54 iget-object v0, v11, LX/0yO;->A0D:[I
+  000e..0010 op=01 move v9, v13
+  0010..0016 op=71 invoke-static {v0, v13}, LX/08J;->A0e([II)Z
+  0016..0018 op=0a move-result v0
+  0018..001c op=39 if-nez v0, +0x4
+  001c..001e op=12 const/4 v0, #0x0
+  001e..0020 op=0f return v0
+  0020..0024 op=54 iget-object v6, v12, Landroid/os/Message;->obj:Ljava/lang/Object;
+  0024..0028 op=1a const-string v0, "null cannot be cast to non-null type com.whatsapp.infra.protocol.IncomingStanza"
+  0028..002e op=71 invoke-static {v6, v0}, LX/00h;->A0D(Ljava/lang/Object;Ljava/lang/String;)V
+  002e..0032 op=1f check-cast v6, LX/1B3;
+  0032..0038 op=72 invoke-interface {v6}, LX/1B3;->AtB()LX/0hs;
+  0038..003a op=0c move-result-object v3
+  003a..003e op=38 if-eqz v3, +0x1c
+  003e..0044 op=6e invoke-virtual {v12}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+  0044..0046 op=0c move-result-object v1
+  0046..004a op=1a const-string v0, "loggableStanzaId"
+  004a..0050 op=6e invoke-virtual {v1, v0}, Landroid/os/BaseBundle;->getLong(Ljava/lang/String;)J
+  0050..0052 op=0b move-result-wide v1
+  0052..0054 op=12 const/4 v0, #0x0
+  0054..005a op=71 invoke-static {v3, v0, v1, v2}, LX/CmG;->A02(LX/0hs;Ljava/lang/Integer;J)LX/Cb1;
+  005a..005c op=0c move-result-object v7
+  005c..0060 op=13 const/16 v10, #0x9
+  0060..0064 op=22 new-instance v5, LX/FpD;
+  0064..006a op=76 invoke-direct/range {v5..v10}, LX/FpD;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;II)V
+  006a..0070 op=6e invoke-virtual {v5}, LX/FpD;->run()V
+  0070..0072 op=0f return v4
+  0072..0076 op=1a const-string v1, "Required value was null."
+  0076..007a op=22 new-instance v0, Ljava/lang/IllegalStateException;
+  007a..0080 op=70 invoke-direct {v0, v1}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
+  0080..0082 op=27 throw v0
+  # exception table: 0 try range(s)
+.end method

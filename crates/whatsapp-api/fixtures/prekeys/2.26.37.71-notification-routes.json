@@ -1,0 +1,30 @@
+{
+  "build": "2.26.37.71",
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "evidence": "Manually derived synthetic routes: CmG.A02 -> A00 root from; participant is separate. No real account values.",
+  "cases": [
+    {
+      "from": "15555550101@s.whatsapp.net",
+      "participant": "15555550102:4@s.whatsapp.net",
+      "expected": "15555550101@s.whatsapp.net"
+    },
+    {
+      "from": "15555550101:0@s.whatsapp.net",
+      "expected": "15555550101@s.whatsapp.net"
+    },
+    {
+      "from": "15555550101:4@s.whatsapp.net",
+      "recipient": "15555550102@s.whatsapp.net",
+      "expected": "15555550101:4@s.whatsapp.net"
+    },
+    {
+      "from": "111111111111111@lid",
+      "participant": "15555550101@s.whatsapp.net",
+      "expected": "111111111111111@lid"
+    },
+    {
+      "from": "111111111111111:4@lid",
+      "expected": "111111111111111:4@lid"
+    }
+  ]
+}

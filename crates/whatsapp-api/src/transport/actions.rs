@@ -362,8 +362,12 @@ pub(crate) fn outcomes_in_write(tx: &crate::store::WriteTx<'_>) -> Result<Vec<Ac
 
 /// The queued request of an action, decoded (for diagnostics).
 pub fn request(store: &ProtocolStore, id: &str) -> Result<Option<Node>> {
-    let row: Option<Row> =
-        store.read(|tx| tx.get_json(Table::Checkpoints, key(id).as_bytes(), 1))?;
+    store.read(|tx| request_in(tx, id))
+}
+
+/// Original immutable request alongside a reply/pin inspection in one snapshot.
+pub(crate) fn request_in(tx: &crate::store::ReadTx<'_>, id: &str) -> Result<Option<Node>> {
+    let row: Option<Row> = tx.get_json(Table::Checkpoints, key(id).as_bytes(), 1)?;
     row.map(|r| decode(&r.wire)).transpose()
 }
 
