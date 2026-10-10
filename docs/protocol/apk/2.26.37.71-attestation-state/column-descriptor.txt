@@ -1,0 +1,86 @@
+# APK-derived structural disassembly: LX/0Km;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VL) flags=0x10001 registers=6
+  # full signature: LX/0Km;-><init>(LX/0Kl;)V
+  0000..0006 op=70 invoke-direct {v4}, Ljava/lang/Object;-><init>()V
+  0006..000a op=54 iget-object v0, v5, LX/0Kl;->A02:Ljava/lang/String;
+  000a..0010 op=71 invoke-static {v0}, LX/00K;->A06(Ljava/lang/Object;)V
+  0010..0016 op=71 invoke-static {v0}, LX/00h;->A06(Ljava/lang/Object;)V
+  0016..001a op=5b iput-object v0, v4, LX/0Km;->A00:Ljava/lang/String;
+  001a..001e op=54 iget-object v0, v5, LX/0Kl;->A00:LX/0Kn;
+  001e..0024 op=71 invoke-static {v0}, LX/00K;->A06(Ljava/lang/Object;)V
+  0024..002a op=71 invoke-static {v0}, LX/00h;->A06(Ljava/lang/Object;)V
+  002a..002e op=5b iput-object v0, v4, LX/0Km;->A04:LX/0Kn;
+  002e..0032 op=55 iget-boolean v0, v5, LX/0Kl;->A08:Z
+  0032..0036 op=38 if-eqz v0, +0x70
+  0036..003a op=1a const-string v3, " PRIMARY KEY"
+  003a..003e op=55 iget-boolean v0, v5, LX/0Kl;->A05:Z
+  003e..0042 op=38 if-eqz v0, +0x13
+  0042..0046 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  0046..004c op=70 invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
+  004c..0052 op=6e invoke-virtual {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0052..0056 op=1a const-string v0, " AUTOINCREMENT"
+  0056..005c op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  005c..0062 op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  0062..0064 op=0c move-result-object v3
+  0064..0068 op=55 iget-boolean v0, v5, LX/0Kl;->A06:Z
+  0068..006c op=38 if-eqz v0, +0x13
+  006c..0070 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  0070..0076 op=70 invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
+  0076..007c op=6e invoke-virtual {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  007c..0080 op=1a const-string v0, " NOT NULL"
+  0080..0086 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0086..008c op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  008c..008e op=0c move-result-object v3
+  008e..0092 op=55 iget-boolean v0, v5, LX/0Kl;->A09:Z
+  0092..0096 op=38 if-eqz v0, +0x13
+  0096..009a op=22 new-instance v1, Ljava/lang/StringBuilder;
+  009a..00a0 op=70 invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
+  00a0..00a6 op=6e invoke-virtual {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00a6..00aa op=1a const-string v0, " UNIQUE"
+  00aa..00b0 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00b0..00b6 op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  00b6..00b8 op=0c move-result-object v3
+  00b8..00bc op=54 iget-object v0, v5, LX/0Kl;->A01:Ljava/lang/String;
+  00bc..00c2 op=71 invoke-static {v0}, Lcom/whatsapp/infra/core/util/string/StringUtils;->A0J(Ljava/lang/CharSequence;)Z
+  00c2..00c4 op=0a move-result v0
+  00c4..00c8 op=39 if-nez v0, +0x18
+  00c8..00cc op=54 iget-object v2, v5, LX/0Kl;->A01:Ljava/lang/String;
+  00cc..00d0 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  00d0..00d6 op=70 invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
+  00d6..00dc op=6e invoke-virtual {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00dc..00e0 op=1a const-string v0, " DEFAULT "
+  00e0..00e6 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00e6..00ec op=6e invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00ec..00f2 op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  00f2..00f4 op=0c move-result-object v3
+  00f4..00f8 op=5b iput-object v3, v4, LX/0Km;->A05:Ljava/lang/String;
+  00f8..00fc op=55 iget-boolean v0, v5, LX/0Kl;->A07:Z
+  00fc..0100 op=5c iput-boolean v0, v4, LX/0Km;->A03:Z
+  0100..0104 op=54 iget-object v0, v5, LX/0Kl;->A04:Ljava/lang/String;
+  0104..0108 op=5b iput-object v0, v4, LX/0Km;->A02:Ljava/lang/String;
+  0108..010c op=54 iget-object v0, v5, LX/0Kl;->A03:Ljava/lang/String;
+  010c..0110 op=5b iput-object v0, v4, LX/0Km;->A01:Ljava/lang/String;
+  0110..0112 op=0e return-void
+  0112..0116 op=1a const-string v3, ""
+  0116..0118 op=28 goto -0x6e
+  # exception table: 0 try range(s)
+.end method
+
+.method <init>(VLLL) flags=0x10001 registers=5
+  # full signature: LX/0Km;-><init>(LX/0Kn;Ljava/lang/String;Ljava/lang/String;)V
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=70 invoke-direct {v1}, Ljava/lang/Object;-><init>()V
+  0008..000c op=5b iput-object v3, v1, LX/0Km;->A00:Ljava/lang/String;
+  000c..0010 op=5b iput-object v2, v1, LX/0Km;->A04:LX/0Kn;
+  0010..0014 op=5b iput-object v4, v1, LX/0Km;->A05:Ljava/lang/String;
+  0014..0018 op=5c iput-boolean v0, v1, LX/0Km;->A03:Z
+  0018..001a op=12 const/4 v0, #0x0
+  001a..001e op=5b iput-object v0, v1, LX/0Km;->A02:Ljava/lang/String;
+  001e..0022 op=5b iput-object v0, v1, LX/0Km;->A01:Ljava/lang/String;
+  0022..0024 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

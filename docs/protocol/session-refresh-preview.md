@@ -44,8 +44,9 @@ gets address components from B76.A00 and delegates to
 A01 selects `account_encryption_attestation_type` from `identities` by
 `recipient_id`, `recipient_type`, and `device_id` (`0010..001e`). No matching
 row returns C0F.A05 (`0028..0030`); an existing row uses its integer column
-and C9D.A00 (`0032..004e`). SQL schema/default/migration provenance has not
-been traced here; an existing SQL null's interpretation is not established.
+and C9D.A00 (`0032..004e`). The follow-up [stored-state trace](attestation-state.md) establishes a
+NOT NULL DEFAULT 0 schema descriptor and conditional primary backfill.
+Historical SQL migrations/null interpretation and Rust provenance remain unknown.
 
 [C0F.<clinit>](apk/2.26.37.71-session-refresh-preview/attestation-state-values.txt)
 passes these explicit integer values to its constructors:

@@ -1,0 +1,160 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "identity-schema": {
+      "class": "LX/1A2;",
+      "method": "AR4",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_notifications.rs"
+      ]
+    },
+    "column-builder": {
+      "class": "LX/0Kl;",
+      "method": "A00",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_notifications.rs"
+      ]
+    },
+    "column-descriptor": {
+      "class": "LX/0Km;",
+      "method": "<init>",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_notifications.rs"
+      ]
+    },
+    "identity-save": {
+      "class": "LX/0kc;",
+      "method": "A0G",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_notifications.rs"
+      ]
+    },
+    "sql-replace": {
+      "class": "LX/0IY;",
+      "method": "A08",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_notifications.rs"
+      ]
+    },
+    "state-update": {
+      "class": "LX/0kc;",
+      "method": "A0F",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_notifications.rs"
+      ]
+    },
+    "primary-backfill": {
+      "class": "LX/0kc;",
+      "method": "A07",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_notifications.rs"
+      ]
+    },
+    "backfill-task": {
+      "class": "LX/8oO;",
+      "method": "A0F",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_notifications.rs"
+      ]
+    },
+    "own-state-update": {
+      "class": "LX/D0O;",
+      "method": "C5T",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_notifications.rs"
+      ]
+    },
+    "gossip-state-update": {
+      "class": "LX/DEC;",
+      "method": "A00",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_notifications.rs"
+      ]
+    },
+    "property-read": {
+      "class": "LX/00D;",
+      "method": "A10",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_notifications.rs"
+      ]
+    },
+    "property-dispatch": {
+      "class": "LX/00D;",
+      "method": "A0E",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_notifications.rs"
+      ]
+    },
+    "property-precedence": {
+      "class": "LX/00D;",
+      "method": "A07",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_notifications.rs"
+      ]
+    },
+    "property-function": {
+      "class": "LX/1Y1;",
+      "method": "invoke",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_notifications.rs"
+      ]
+    },
+    "boolean-fallback": {
+      "class": "LX/00D;",
+      "method": "A0D",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_notifications.rs"
+      ]
+    },
+    "abstract-default-map": {
+      "class": "LX/00D;",
+      "method": "A15",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_notifications.rs"
+      ]
+    },
+    "concrete-default-map": {
+      "class": "LX/07t;",
+      "method": "A15",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_notifications.rs"
+      ]
+    },
+    "property-initialization": {
+      "class": "LX/07t;",
+      "method": "<init>",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_notifications.rs"
+      ]
+    },
+    "admission-baked-defaults": {
+      "class": "LX/07t;",
+      "method": "A0C",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_notifications.rs"
+      ]
+    }
+  }
+}

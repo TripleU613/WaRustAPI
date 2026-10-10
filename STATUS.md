@@ -1,5 +1,20 @@
 # Status — 2026-10-07
 
+Attestation storage trace (2026-10-09, **confirmed static**): native schema
+defaults to NOT_SET; a conditional hosted-account backfill promotes primary
+rows to E2EE. State replacement/update and own-account/gossip producers are
+kept distinct. Admission properties 28527/29847 have baked false entries;
+effective account values remain unknown. No Rust state backfill, session
+adoption, identity ACK or network request is performed.
+[Evidence and reproducible APK comparison recipe](docs/protocol/attestation-state.md).
+
+Validation: the 19-topic / 24-file / 1,266,707-byte bundle reproduces
+exactly; cached self-diff verifies all topics and four metadata artifacts
+unchanged. CLI-reference regeneration, OpenAPI/library-symbol checks,
+formatting, whitespace and hygiene passed (2,372 links / 117 bundles).
+Research/docs only: no fresh workspace runtime or live test is claimed.
+
+
 Attestation byte verification (2026-10-09, **confirmed static / implemented offline**):
 `actions --show` now verifies selected-device non_e2ee_attestation using APK
 prefix 06 07 plus original protobuf bytes. Account-type field/enum and declared

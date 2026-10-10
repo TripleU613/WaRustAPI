@@ -1,0 +1,94 @@
+{
+  "abstract-default-map.txt": {
+    "bytes": 454,
+    "sha256": "6a35b7013fa22124253edaebf5bc051dc16f8adb8807d1850aafdabc95bcbf78"
+  },
+  "admission-baked-defaults.txt": {
+    "bytes": 359403,
+    "sha256": "fdb8aa6da46a5b37262b25603b0c274b66ac44ac0ac38856caa3e93d297eddf3"
+  },
+  "backfill-task.txt": {
+    "bytes": 17492,
+    "sha256": "01c063725989bf3f685a57cbb1231e19c9a5901e3752995e5577254bba1c207c"
+  },
+  "boolean-fallback.txt": {
+    "bytes": 4580,
+    "sha256": "98890d1bb84420eccf9a51a66ee7034a9d3680014b8b7f7dadf5236202c0bf5a"
+  },
+  "column-builder.txt": {
+    "bytes": 1260,
+    "sha256": "c5ff982a4ed745f5b7df4cea2f29af3e7be2895851e6f8a2a8f67b74a3f920d7"
+  },
+  "column-descriptor.txt": {
+    "bytes": 5490,
+    "sha256": "7b24a10da7609b5eb116825f26bd0e15be8ce0255d19a007ab0851de07fc33c4"
+  },
+  "concrete-default-map.txt": {
+    "bytes": 581,
+    "sha256": "f236927ccd112fd043868631529bd79d292b2e2eb5ea163ddb58338432c24f33"
+  },
+  "gossip-state-update.txt": {
+    "bytes": 11304,
+    "sha256": "ab742f2edd2cb4f19b862da1de0821844f57dc3a6e75813b9ed3ff76427640ce"
+  },
+  "identity-save.txt": {
+    "bytes": 5172,
+    "sha256": "ce9075e7375b82f88b28ac321aad3c62c7f540c84670cd0c4c77e9c84faa3ac2"
+  },
+  "identity-schema.txt": {
+    "bytes": 6164,
+    "sha256": "e03665b4a596a22e19609c85de0200f6ef62ef66d7c92399ad5ea0d8c00e0463"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "own-state-update.txt": {
+    "bytes": 5929,
+    "sha256": "cc12e64bbc0f1af709dd342028ee5cd60594536ba39786840d9553c57132cf46"
+  },
+  "primary-backfill.txt": {
+    "bytes": 3381,
+    "sha256": "5448dd4d87fe4c1a980bce0804e4d8474162413bc088cd6a256d33b8dd42d2cd"
+  },
+  "property-dispatch.txt": {
+    "bytes": 1301,
+    "sha256": "04f279501808e1e43cc5c45e811c6b536354c047fe386285ee12bd4564bd762b"
+  },
+  "property-function.txt": {
+    "bytes": 5901,
+    "sha256": "99d8b82688ad687d03ad7f6ab00c8b588a964208b1bb1ef866d9fd0836063acb"
+  },
+  "property-initialization.txt": {
+    "bytes": 786157,
+    "sha256": "b159b2b880e802e7f9ddb170b559059c1cf215fe76d415b4c0c8d6226e5f8605"
+  },
+  "property-precedence.txt": {
+    "bytes": 10565,
+    "sha256": "eed1064882df78702a5e2d00e3aa17db8aa73175fe9c16a97e506ce3c1d849b0"
+  },
+  "property-read.txt": {
+    "bytes": 671,
+    "sha256": "23aa0cad2a7199966ea1c62f4ed3155725c47bd45e3e9bfe8354fdbdd440965d"
+  },
+  "sql-replace.txt": {
+    "bytes": 1599,
+    "sha256": "b35ecbadee4ff34b60c155d2944e634a59014b929fb72ecd18a2cd9a5abd705d"
+  },
+  "state-update.txt": {
+    "bytes": 3120,
+    "sha256": "78242341f0b5b381877c4bda61274898b0d1c697387735dcedfff41fe73c5453"
+  },
+  "targets.json": {
+    "bytes": 6513,
+    "sha256": "7df952d13c094fef36411bc1a2f64670b530e06b534ec88c30314e6b0ede289d"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

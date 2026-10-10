@@ -1,0 +1,55 @@
+# APK-derived structural disassembly: LX/0kc;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A07(I) flags=0x11 registers=12
+  # full signature: LX/0kc;->A07()I
+  0000..0004 op=1a const-string v4, "SignalIdentityKeyStore/markAllNotSetIdentitiesAsE2ee updated "
+  0004..0008 op=54 iget-object v0, v11, LX/0kc;->A08:LX/0aC;
+  0008..000e op=6e invoke-virtual {v0}, LX/0aC;->A07()LX/0ZN;
+  000e..0010 op=0c move-result-object v3
+  0010..0014 op=22 new-instance v6, Landroid/content/ContentValues;
+  0014..001a op=70 invoke-direct {v6}, Landroid/content/ContentValues;-><init>()V
+  001a..001e op=1a const-string v1, "account_encryption_attestation_type"
+  001e..0022 op=62 sget-object v0, LX/C0F;->A02:LX/C0F;
+  0022..0026 op=52 iget v0, v0, LX/C0F;->intValue:I
+  0026..002c op=71 invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  002c..002e op=0c move-result-object v0
+  002e..0034 op=6e invoke-virtual {v6, v1, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Integer;)V
+  0034..0038 op=54 iget-object v5, v3, LX/0ZN;->A02:LX/0IY;
+  0038..003c op=1a const-string v7, "identities"
+  003c..0040 op=1a const-string v8, "account_encryption_attestation_type = ? AND device_id = ?"
+  0040..0044 op=62 sget-object v0, LX/C0F;->A05:LX/C0F;
+  0044..0048 op=52 iget v0, v0, LX/C0F;->intValue:I
+  0048..004e op=71 invoke-static {v0}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+  004e..0050 op=0c move-result-object v1
+  0050..0052 op=12 const/4 v0, #0x2
+  0052..0056 op=23 new-array v10, v0, [Ljava/lang/String;
+  0056..0058 op=12 const/4 v0, #0x0
+  0058..005c op=4d aput-object v1, v10, v0
+  005c..0060 op=1a const-string v1, "0"
+  0060..0062 op=12 const/4 v0, #0x1
+  0062..0066 op=4d aput-object v1, v10, v0
+  0066..006a op=1a const-string v9, "SignalIdentityKeyStore/markAllNotSetIdentitiesAsE2ee"
+  006a..0070 op=74 invoke-virtual/range {v5..v10}, LX/0IY;->A02(Landroid/content/ContentValues;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  0070..0072 op=0a move-result v2
+  0072..0076 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  0076..007c op=70 invoke-direct {v1, v4}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  007c..0082 op=6e invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  0082..0086 op=1a const-string v0, " primary identity rows"
+  0086..008c op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  008c..0092 op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  0092..0094 op=0c move-result-object v0
+  0094..009a op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+  009a..00a0 op=6e invoke-virtual {v3}, LX/0ZN;->close()V
+  00a0..00a2 op=0f return v2
+  00a2..00a4 op=0d move-exception v1
+  00a4..00a6 op=27 throw v1
+  00a6..00a8 op=0d move-exception v0
+  00a8..00ae op=71 invoke-static {v3, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  00ae..00b0 op=27 throw v0
+  # exception table: 2 try range(s)
+  # catch <all> code_units 0008..004d -> 0051
+  # catch <all> code_units 0052..0053 -> 0053
+.end method

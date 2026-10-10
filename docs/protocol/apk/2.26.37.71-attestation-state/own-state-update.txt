@@ -1,0 +1,107 @@
+# APK-derived structural disassembly: LX/D0O;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method C5T(VL) flags=0x1 registers=16
+  # full signature: LX/D0O;->C5T(LX/CWS;)V
+  0000..0004 op=54 iget-object v0, v14, LX/D0O;->A03:LX/D0M;
+  0004..0008 op=54 iget-object v0, v0, LX/D0M;->A00:LX/05B;
+  0008..000e op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  000e..0010 op=0c move-result-object v1
+  0010..0014 op=1f check-cast v1, LX/0WK;
+  0014..0018 op=1c const-class v0, LX/13c;
+  0018..001e op=6e invoke-virtual {v1, v0}, LX/0WK;->A00(Ljava/lang/Class;)LX/0BN;
+  001e..0020 op=0c move-result-object v0
+  0020..0024 op=1f check-cast v0, LX/13c;
+  0024..002a op=6e invoke-virtual {v0, v14}, LX/13c;->A0T(LX/DeO;)V
+  002a..002e op=54 iget-object v1, v14, LX/D0O;->A02:LX/ByJ;
+  002e..0032 op=62 sget-object v0, LX/ByJ;->A02:LX/ByJ;
+  0032..0036 op=33 if-ne v1, v0, +0x23
+  0036..003a op=54 iget-object v1, v14, LX/D0O;->A04:LX/J3U;
+  003a..003e op=38 if-eqz v1, +0x7
+  003e..0042 op=13 const/16 v0, #0x9
+  0042..0048 op=72 invoke-interface {v1, v0}, LX/J3U;->BVL(I)V
+  0048..004c op=55 iget-boolean v0, v14, LX/D0O;->A09:Z
+  004c..0050 op=38 if-eqz v0, +0x87
+  0050..0054 op=54 iget-object v0, v14, LX/D0O;->A06:LX/13c;
+  0054..0058 op=62 sget-object v3, LX/C0F;->A03:LX/C0F;
+  0058..005c op=54 iget-object v0, v0, LX/13c;->A0E:LX/00s;
+  005c..0062 op=71 invoke-static {v0}, LX/Ayk;->A0c(LX/00s;)LX/0jc;
+  0062..0064 op=0c move-result-object v0
+  0064..0068 op=54 iget-object v4, v0, LX/0jc;->A0K:LX/0kc;
+  0068..006a op=12 const/4 v7, #0x0
+  006a..006e op=54 iget-object v0, v4, LX/0kc;->A08:LX/0aC;
+  006e..0074 op=6e invoke-virtual {v0}, LX/0aC;->A07()LX/0ZN;
+  0074..0076 op=0c move-result-object v2
+  0076..0078 op=28 goto +0x1b
+  0078..007c op=62 sget-object v0, LX/ByJ;->A03:LX/ByJ;
+  007c..0080 op=33 if-ne v1, v0, +0x6f
+  0080..0084 op=54 iget-object v3, v14, LX/D0O;->A01:LX/CeP;
+  0084..0088 op=38 if-eqz v3, +0xb
+  0088..008a op=12 const/4 v2, #0x3
+  008a..008c op=12 const/4 v1, #0x0
+  008c..0092 op=71 invoke-static {}, LX/3c8;->A0k()Ljava/lang/Long;
+  0092..0094 op=0c move-result-object v0
+  0094..009a op=71 invoke-static {v3, v0, v1, v2}, LX/CeP;->A00(LX/CeP;Ljava/lang/Long;Ljava/lang/String;I)V
+  009a..009e op=55 iget-boolean v0, v14, LX/D0O;->A09:Z
+  009e..00a2 op=38 if-eqz v0, +0x5e
+  00a2..00a6 op=54 iget-object v0, v14, LX/D0O;->A06:LX/13c;
+  00a6..00aa op=62 sget-object v3, LX/C0F;->A02:LX/C0F;
+  00aa..00ac op=28 goto -0x29
+  00ac..00ae op=12 const/4 v0, #0xff (-1)
+  00ae..00b4 op=71 invoke-static {v0}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+  00b4..00b6 op=0c move-result-object v1
+  00b6..00b8 op=12 const/4 v0, #0x3
+  00b8..00bc op=23 new-array v13, v0, [Ljava/lang/String;
+  00bc..00c0 op=4d aput-object v1, v13, v7
+  00c0..00c4 op=1a const-string v0, "0"
+  00c4..00c6 op=12 const/4 v5, #0x1
+  00c6..00ca op=4d aput-object v0, v13, v5
+  00ca..00cc op=12 const/4 v6, #0x2
+  00cc..00d0 op=4d aput-object v0, v13, v6
+  00d0..00d6 op=71 invoke-static {}, LX/1xk;->A06()Landroid/content/ContentValues;
+  00d6..00d8 op=0c move-result-object v9
+  00d8..00dc op=1a const-string v1, "account_encryption_attestation_type"
+  00dc..00e0 op=52 iget v0, v3, LX/C0F;->intValue:I
+  00e0..00e6 op=71 invoke-static {v9, v1, v0}, LX/1xl;->A1D(Landroid/content/ContentValues;Ljava/lang/String;I)V
+  00e6..00ea op=54 iget-object v8, v2, LX/0ZN;->A02:LX/0IY;
+  00ea..00ee op=1a const-string v10, "identities"
+  00ee..00f2 op=1a const-string v11, "recipient_id =? AND recipient_type = ? AND device_id =?"
+  00f2..00f6 op=1a const-string v12, "SignalIdentityKeyStore/saveSelfAccountEncryptionAttestationType"
+  00f6..00fc op=74 invoke-virtual/range {v8..v13}, LX/0IY;->A02(Landroid/content/ContentValues;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  00fc..00fe op=28 goto +0x8
+  00fe..0100 op=0d move-exception v1
+  0100..0102 op=27 throw v1
+  0102..0104 op=0d move-exception v0
+  0104..010a op=71 invoke-static {v2, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  010a..010c op=27 throw v0
+  010c..0112 op=6e invoke-virtual {v2}, LX/0ZN;->close()V
+  0112..0116 op=23 new-array v2, v6, [Lcom/whatsapp/infra/core/jid/UserJid;
+  0116..011a op=54 iget-object v1, v4, LX/0kc;->A04:LX/08Z;
+  011a..0120 op=72 invoke-interface {v1}, LX/08Z;->Aq0()Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+  0120..0122 op=0c move-result-object v0
+  0122..0126 op=4d aput-object v0, v2, v7
+  0126..012c op=72 invoke-interface {v1}, LX/08Z;->Apx()LX/0ZY;
+  012c..012e op=0c move-result-object v0
+  012e..0134 op=71 invoke-static {v0, v2, v5}, LX/6an;->A0i(Ljava/lang/Object;[Ljava/lang/Object;I)Ljava/util/List;
+  0134..0136 op=0c move-result-object v2
+  0136..013c op=72 invoke-interface {v2}, Ljava/util/List;->isEmpty()Z
+  013c..013e op=0a move-result v0
+  013e..0142 op=39 if-nez v0, +0xe
+  0142..0146 op=54 iget-object v0, v4, LX/0kc;->A06:LX/0kZ;
+  0146..014a op=22 new-instance v1, LX/9qn;
+  014a..0150 op=70 invoke-direct {v1, v3, v2}, LX/9qn;-><init>(LX/C0F;Ljava/util/List;)V
+  0150..0154 op=54 iget-object v0, v0, LX/0kZ;->A03:LX/0ka;
+  0154..015a op=6e invoke-virtual {v0, v1}, LX/0ka;->A01(Ljava/lang/Object;)V
+  015a..015e op=54 iget-object v3, v14, LX/D0O;->A08:LX/0ts;
+  015e..0160 op=12 const/4 v2, #0x1
+  0160..0164 op=62 sget-object v1, LX/Byz;->A05:LX/Byz;
+  0164..0168 op=22 new-instance v0, LX/CIY;
+  0168..016e op=70 invoke-direct {v0, v1, v15, v2}, LX/CIY;-><init>(LX/Byz;LX/CWS;Z)V
+  016e..0174 op=72 invoke-interface {v3, v0}, LX/0t3;->resumeWith(Ljava/lang/Object;)V
+  0174..0176 op=0e return-void
+  # exception table: 2 try range(s)
+  # catch <all> code_units 0056..007f -> 007f
+  # catch <all> code_units 0080..0081 -> 0081
+.end method

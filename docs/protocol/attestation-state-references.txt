@@ -1,0 +1,33 @@
+APK 2.26.37.71 SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+Static inventories; offsets are DEX file byte offsets, not rendered method offsets.
+
+Exact column string references
+["account_encryption_attestation_type"]  (6 reference(s))
+  classes7.dex  LX/D0O;->C5T(VL)
+    dex byte offset: 0x71decc
+  classes.dex  LX/0kc;->A01(LLL)
+    dex byte offset: 0x6684ee
+  classes.dex  LX/0kc;->A07(I)
+    dex byte offset: 0x668846
+  classes.dex  LX/0kc;->A0F(VLL)
+    dex byte offset: 0x669436
+  classes.dex  LX/0kc;->A0G(VLLL)
+    dex byte offset: 0x6695a6
+  classes.dex  LX/1A2;->AR4(VLL)
+    dex byte offset: 0x827b7e
+
+Exact per-address update callers
+classes.dex  LX/0jc;->A0L(ILLLLLLLB)
+  invoke dex byte offset: 0x65fe4e
+classes7.dex  LX/DEC;->A00(VLLL)
+  invoke dex byte offset: 0x798840
+
+Exact primary backfill callers
+classes6.dex  LX/8oO;->A0F(ZZ)
+  invoke dex byte offset: 0x29a5be
+classes6.dex  LX/8oO;->A0F(ZZ)
+  invoke dex byte offset: 0x29a7f6
+
+Boolean default map writes
+classes.dex  LX/07t;-><init>(V)
+  write opcode 0x5b, dex byte offset: 0x3fc312

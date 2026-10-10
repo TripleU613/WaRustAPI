@@ -6,6 +6,10 @@ This closes attestation byte/schema verification inputs for future native
 [refresh admission](session-refresh-preview.md). It does not yet adopt a key,
 store an attestation state or acknowledge an identity notification.
 
+The [stored-state follow-up](attestation-state.md) records schema defaults,
+conditional backfill and the two baked admission properties. Effective account
+values and native admission remain separate from this signature inspector.
+
 ## Candidate and declared account type
 
 **Confirmed static:** [Bot.A03](apk/2.26.37.71-attestation-verification/attestation-candidate.txt)

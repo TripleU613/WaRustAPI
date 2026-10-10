@@ -1,0 +1,50 @@
+# APK-derived structural disassembly: LX/0kc;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0F(VLL) flags=0x11 registers=12
+  # full signature: LX/0kc;->A0F(LX/C0F;LX/B76;)V
+  0000..0004 op=54 iget-object v0, v9, LX/0kc;->A08:LX/0aC;
+  0004..000a op=6e invoke-virtual {v0}, LX/0aC;->A07()LX/0ZN;
+  000a..000c op=0c move-result-object v2
+  000c..0010 op=22 new-instance v4, Landroid/content/ContentValues;
+  0010..0016 op=70 invoke-direct {v4}, Landroid/content/ContentValues;-><init>()V
+  0016..001a op=1a const-string v1, "account_encryption_attestation_type"
+  001a..001e op=52 iget v0, v10, LX/C0F;->intValue:I
+  001e..0024 op=71 invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  0024..0026 op=0c move-result-object v0
+  0026..002c op=6e invoke-virtual {v4, v1, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Integer;)V
+  002c..0030 op=54 iget-object v3, v2, LX/0ZN;->A02:LX/0IY;
+  0030..0034 op=1a const-string v5, "identities"
+  0034..0038 op=1a const-string v6, "recipient_id =? AND recipient_type = ? AND device_id =?"
+  0038..003e op=6e invoke-virtual {v11}, LX/B76;->A00()[Ljava/lang/String;
+  003e..0040 op=0c move-result-object v8
+  0040..0044 op=1a const-string v7, "SignalIdentityKeyStore/saveAccountEncryptionAttestationType"
+  0044..004a op=74 invoke-virtual/range {v3..v8}, LX/0IY;->A02(Landroid/content/ContentValues;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  004a..0050 op=6e invoke-virtual {v2}, LX/0ZN;->close()V
+  0050..0054 op=62 sget-object v0, LX/C0F;->A05:LX/C0F;
+  0054..0058 op=32 if-eq v10, v0, +0x1f
+  0058..005e op=71 invoke-static {v11}, LX/B7H;->A00(LX/B76;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+  005e..0060 op=0c move-result-object v0
+  0060..0064 op=38 if-eqz v0, +0x19
+  0064..0068 op=54 iget-object v0, v0, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+  0068..006c op=38 if-eqz v0, +0x15
+  006c..0070 op=54 iget-object v2, v9, LX/0kc;->A06:LX/0kZ;
+  0070..0076 op=71 invoke-static {v0}, Ljava/util/Collections;->singletonList(Ljava/lang/Object;)Ljava/util/List;
+  0076..0078 op=0c move-result-object v0
+  0078..007e op=71 invoke-static {v0}, LX/00h;->A06(Ljava/lang/Object;)V
+  007e..0082 op=22 new-instance v1, LX/9qn;
+  0082..0088 op=70 invoke-direct {v1, v10, v0}, LX/9qn;-><init>(LX/C0F;Ljava/util/List;)V
+  0088..008c op=54 iget-object v0, v2, LX/0kZ;->A03:LX/0ka;
+  008c..0092 op=6e invoke-virtual {v0, v1}, LX/0ka;->A01(Ljava/lang/Object;)V
+  0092..0094 op=0e return-void
+  0094..0096 op=0d move-exception v1
+  0096..0098 op=27 throw v1
+  0098..009a op=0d move-exception v0
+  009a..00a0 op=71 invoke-static {v2, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  00a0..00a2 op=27 throw v0
+  # exception table: 2 try range(s)
+  # catch <all> code_units 0006..0025 -> 004a
+  # catch <all> code_units 004b..004c -> 004c
+.end method

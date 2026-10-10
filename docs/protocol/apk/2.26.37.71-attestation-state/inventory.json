@@ -1,0 +1,88 @@
+{
+  "categories": {
+    "android_metadata": {
+      "compressed_bytes": 13742025,
+      "entries": 2,
+      "uncompressed_bytes": 14056860
+    },
+    "dex": {
+      "compressed_bytes": 36020822,
+      "entries": 12,
+      "uncompressed_bytes": 89141604
+    },
+    "native_libraries": {
+      "compressed_bytes": 63635868,
+      "entries": 12,
+      "uncompressed_bytes": 63635868
+    },
+    "other_excluded": {
+      "compressed_bytes": 90464,
+      "entries": 171,
+      "uncompressed_bytes": 405008
+    },
+    "resources_and_assets_excluded": {
+      "compressed_bytes": 30088245,
+      "entries": 14763,
+      "uncompressed_bytes": 42487051
+    },
+    "signature_and_packaging_metadata": {
+      "compressed_bytes": 1120220,
+      "entries": 7,
+      "uncompressed_bytes": 2519201
+    }
+  },
+  "code_and_manifest": {
+    "AndroidManifest.xml": {
+      "bytes": 363572,
+      "sha256": "664d39d60e15bbd3e37db54ef801dc9c72f2187a275eb9b8a454b3fd51f0dc78"
+    },
+    "classes.dex": {
+      "bytes": 10629116,
+      "sha256": "a73988a6e7e76eb2f9f4f6ebf2a7397fa9d19d91d770f2b63817580ccd1f15e0"
+    },
+    "classes10.dex": {
+      "bytes": 7656540,
+      "sha256": "cbabeff22dcea7a5cfdd7b66904fba60b33b26332008a536e04104ab0ceb4881"
+    },
+    "classes11.dex": {
+      "bytes": 10036556,
+      "sha256": "02530f8068685fdfba61bd30f509dd273298fd6be9d7a98c43ae789986382e9f"
+    },
+    "classes12.dex": {
+      "bytes": 4229936,
+      "sha256": "72e3f85cfa811385122638b9d262ef5cf46a52916cebf3fe104eb22818dadc4e"
+    },
+    "classes2.dex": {
+      "bytes": 1816936,
+      "sha256": "4a1fdf7ef2714953228c93b96700f59b11e0c674852a6ac788ad7ac193ed75c3"
+    },
+    "classes3.dex": {
+      "bytes": 5363088,
+      "sha256": "9a02c41a53e61da785c84d021e7306f73f58e699d525f1cec4abc9cbca0e3330"
+    },
+    "classes4.dex": {
+      "bytes": 8114008,
+      "sha256": "e9b6f9fc886a343a23fb290e96ce235a3d80929484983cb7ce16af6830de17cf"
+    },
+    "classes5.dex": {
+      "bytes": 7414356,
+      "sha256": "a651ab72ace28afde68ff34f174893623c41077d8a816650155265865e8b0afb"
+    },
+    "classes6.dex": {
+      "bytes": 7334532,
+      "sha256": "7ab560f56cf4cd42bfd9fa5caacdcdff691d5c130faca5defc97ffe8930126a5"
+    },
+    "classes7.dex": {
+      "bytes": 9797364,
+      "sha256": "9fc6fbce16aa31894a6580b1b6c3a59cab75b994e608ff001c0404b58e9b4034"
+    },
+    "classes8.dex": {
+      "bytes": 7876216,
+      "sha256": "f2b8f35ad2389afe6f1c0fbb16a382fda88ad0953450ce198c0a32f3eb16bc17"
+    },
+    "classes9.dex": {
+      "bytes": 8872956,
+      "sha256": "ecc0db7cf74782222ec8e0eb910b48b71dd10b13cbfff7fc3e846a36abc27198"
+    }
+  }
+}
