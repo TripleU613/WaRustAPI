@@ -1,0 +1,11 @@
+{
+  "source": "APK 2.26.37.71 0y0.A00 1786..193a, manually transcribed legacy IQ structure; synthetic addresses and selector. No APK/runtime execution.",
+  "iq": {"id":"fixture-query", "xmlns":"encrypt", "type":"get", "to":"s.whatsapp.net"},
+  "recipients": ["15555550100@s.whatsapp.net", "15555550100:3@s.whatsapp.net", "222222222222222@lid"],
+  "identity_changed": ["15555550100:3@s.whatsapp.net", "222222222222222@lid"],
+  "users": [
+    {"jid":"15555550100@s.whatsapp.net"},
+    {"jid":"15555550100:3@s.whatsapp.net", "reason":"identity"},
+    {"jid":"222222222222222@lid", "reason":"identity"}
+  ]
+}

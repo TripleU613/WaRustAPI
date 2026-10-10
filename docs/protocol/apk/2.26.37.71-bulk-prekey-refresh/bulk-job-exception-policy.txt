@@ -1,0 +1,18 @@
+# APK-derived structural disassembly: Lcom/whatsapp/infra/messaging/jobqueue/job/BulkGetPreKeyJob;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0I(ZL) flags=0x1 registers=4
+  # full signature: Lcom/whatsapp/infra/messaging/jobqueue/job/BulkGetPreKeyJob;->A0I(Ljava/lang/Exception;)Z
+  0000..0004 op=1a const-string v0, "exception while running bulk get pre key job"
+  0004..000a op=71 invoke-static {v0}, LX/1xf;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  000a..000c op=0c move-result-object v1
+  000c..0012 op=70 invoke-direct {v2}, Lcom/whatsapp/infra/messaging/jobqueue/job/BulkGetPreKeyJob;->A00()Ljava/lang/String;
+  0012..0014 op=0c move-result-object v0
+  0014..001a op=71 invoke-static {v0, v1, v3}, LX/Ayk;->A1K(Ljava/lang/String;Ljava/lang/StringBuilder;Ljava/lang/Throwable;)V
+  001a..001e op=55 iget-boolean v0, v2, Lcom/whatsapp/infra/messaging/jobqueue/job/BulkGetPreKeyJob;->isPqSessionUpgrade:Z
+  001e..0022 op=df xor-int/lit8 v0, v0, #0x1
+  0022..0024 op=0f return v0
+  # exception table: 0 try range(s)
+.end method

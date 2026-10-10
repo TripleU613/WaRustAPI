@@ -838,9 +838,19 @@ pub(super) fn peer_keys(
     chat: &str,
     show: bool,
     refresh: bool,
+    preview_identity_change: bool,
 ) -> Result<(), Error> {
     let peer = whatsapp_api::model::jid::Jid::parse(chat)
         .map_err(|_| Error::invalid("peer_keys", "invalid chat JID"))?;
+    if preview_identity_change {
+        let preview = whatsapp_api::transport::peer_keys::identity_change_preview(&peer)?;
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&preview)
+                .map_err(|_| Error::invalid("peer_keys", "cannot encode request preview"))?
+        );
+        return Ok(());
+    }
     let store = ProtocolStore::open(OpenOptions {
         path: cli.store.clone(),
         account_id: AccountId::new(cli.account.clone())?,

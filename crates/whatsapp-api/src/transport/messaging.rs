@@ -450,10 +450,36 @@ pub const KEY_QUERY_MAX_DEVICES: usize = 32;
 /// **unknown**, so this refuses an unreasonably wide query rather than
 /// discovering the limit against a live account.
 pub fn key_request_many(recipients: &[Jid], id: &str) -> crate::Result<Node> {
+    key_request_many_with_identity_changes(recipients, &[], id)
+}
+
+/// Build the legacy directory query, marking exactly the affected devices.
+/// APK 37.71 0y0.A00 1792..17da sets user/@reason=identity for membership
+/// in identityJids. This flag requests a refresh; it never authorizes pin adoption.
+/// PQ/context attributes and the native callback remain separate unported work.
+pub fn key_request_many_with_identity_changes(
+    recipients: &[Jid],
+    changed: &[Jid],
+    id: &str,
+) -> crate::Result<Node> {
     if recipients.is_empty() || recipients.len() > KEY_QUERY_MAX_DEVICES {
         return Err(crate::Error::invalid(
             "key_request",
             "a key query covers 1..=32 recipient devices",
+        ));
+    }
+    // Exact components keep companion devices and PN/LID namespaces distinct.
+    // Encoding-kind equivalence is our existing directory correlation policy,
+    // not a complete reconstruction of Java DeviceJid.equals.
+    let same = super::identity_query::same_primary_address;
+    if changed.len() > KEY_QUERY_MAX_DEVICES
+        || changed
+            .iter()
+            .any(|peer| !recipients.iter().any(|v| same(v, peer)))
+    {
+        return Err(crate::Error::invalid(
+            "key_request",
+            "identity-change devices must belong to the requested device set",
         ));
     }
     Ok(Node::new("iq")
@@ -468,7 +494,14 @@ pub fn key_request_many(recipients: &[Jid], id: &str) -> crate::Result<Node> {
             Node::new("key").children(
                 recipients
                     .iter()
-                    .map(|jid| Node::new("user").attr("jid", jid.clone()))
+                    .map(|jid| {
+                        let node = Node::new("user").attr("jid", jid.clone());
+                        if changed.iter().any(|peer| same(jid, peer)) {
+                            node.attr("reason", "identity")
+                        } else {
+                            node
+                        }
+                    })
                     .collect(),
             ),
         ]))
@@ -1233,6 +1266,113 @@ mod tests {
                 .unwrap()
                 .as_jid(),
             Some(&recipient)
+        );
+    }
+
+    #[test]
+    fn identity_change_key_request_matches_transcribed_apk_and_device_bounds() {
+        let fixture: serde_json::Value = serde_json::from_str(include_str!(
+            "../../fixtures/prekeys/2.26.37.71-identity-query.json"
+        ))
+        .unwrap();
+        let parse = |name: &str| {
+            fixture[name]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|v| Jid::parse(v.as_str().unwrap()).unwrap())
+                .collect::<Vec<_>>()
+        };
+        let recipients = parse("recipients");
+        let changed = parse("identity_changed");
+        let node =
+            key_request_many_with_identity_changes(&recipients, &changed, "fixture-query").unwrap();
+        assert_eq!(node.description, "iq");
+        assert_eq!(node.attributes.len(), 4);
+        for (name, value) in fixture["iq"].as_object().unwrap() {
+            let attr = node.get_attr(name).unwrap();
+            let text = attr
+                .as_text()
+                .map(str::to_owned)
+                .or_else(|| attr.as_jid().map(ToString::to_string))
+                .unwrap();
+            assert_eq!(text, value.as_str().unwrap());
+        }
+        assert_eq!(node.child_nodes().len(), 1);
+        let key = node.child("key").unwrap();
+        assert!(key.attributes.is_empty());
+        assert_eq!(key.child_nodes().len(), 3);
+        for (user, expected) in key
+            .child_nodes()
+            .iter()
+            .zip(fixture["users"].as_array().unwrap())
+        {
+            assert_eq!(user.description, "user");
+            assert_eq!(user.attributes.len(), expected.as_object().unwrap().len());
+            assert_eq!(
+                user.get_attr("jid").unwrap().as_jid().unwrap().to_string(),
+                expected["jid"].as_str().unwrap()
+            );
+            assert_eq!(
+                user.get_attr("reason").and_then(|v| v.as_text()),
+                expected["reason"].as_str()
+            );
+        }
+        let dict = TokenDictionary::comparison_2_26_37_71();
+        let wire = Encoder::new(dict).encode(&node).unwrap();
+        assert_eq!(
+            Decoder::new(&wire[1..], dict, &Limits::default())
+                .decode_node()
+                .unwrap(),
+            node
+        );
+        assert_eq!(
+            key_request_many_with_identity_changes(&recipients, &[], "normal").unwrap(),
+            key_request_many(&recipients, "normal").unwrap()
+        );
+        let encoded = Jid::new_ad(
+            recipients[1].user.clone(),
+            0,
+            3,
+            recipients[1].server.clone(),
+        )
+        .unwrap();
+        assert_eq!(
+            key_request_many_with_identity_changes(&recipients, &[encoded], "encoded")
+                .unwrap()
+                .child("key")
+                .unwrap()
+                .child_nodes()[1]
+                .get_attr("reason")
+                .and_then(|v| v.as_text()),
+            Some("identity")
+        );
+        for other in [
+            "15555550100:4@s.whatsapp.net",
+            "15555550100@lid",
+            "s.whatsapp.net",
+        ] {
+            let other = Jid::parse(other).unwrap();
+            let error = key_request_many_with_identity_changes(
+                &recipients,
+                std::slice::from_ref(&other),
+                "refuse",
+            )
+            .unwrap_err();
+            assert!(
+                error
+                    .to_string()
+                    .contains("identity-change devices must belong")
+            );
+            assert!(!error.to_string().contains(&other.to_string()));
+        }
+        assert!(
+            key_request_many_with_identity_changes(
+                &recipients,
+                &vec![changed[0].clone(); 33],
+                "too-wide"
+            )
+            .is_err()
         );
     }
 

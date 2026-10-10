@@ -1,0 +1,18 @@
+# APK-derived structural disassembly: LX/Bot;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VLLLZZ) flags=0x10001 registers=7
+  # full signature: LX/Bot;-><init>(LX/B78;LX/1Rd;[Lcom/whatsapp/infra/core/jid/DeviceJid;ZZ)V
+  0000..0004 op=5b iput-object v4, v1, LX/Bot;->A05:[Lcom/whatsapp/infra/core/jid/DeviceJid;
+  0004..0008 op=5b iput-object v2, v1, LX/Bot;->A01:LX/B78;
+  0008..000c op=5c iput-boolean v5, v1, LX/Bot;->A03:Z
+  000c..0010 op=5c iput-boolean v6, v1, LX/Bot;->A04:Z
+  0010..0014 op=5b iput-object v3, v1, LX/Bot;->A02:LX/1Rd;
+  0014..001a op=70 invoke-direct {v1}, Ljava/lang/Object;-><init>()V
+  001a..001c op=12 const/4 v0, #0x0
+  001c..0020 op=5c iput-boolean v0, v1, LX/Bot;->A00:Z
+  0020..0022 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,91 @@
+# APK-derived structural disassembly: Lcom/whatsapp/infra/messaging/jobqueue/job/BulkGetPreKeyJob;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VLLLLIZZ) flags=0x10001 registers=14
+  # full signature: Lcom/whatsapp/infra/messaging/jobqueue/job/BulkGetPreKeyJob;-><init>(LX/0Cy;LX/B78;[Lcom/whatsapp/infra/core/jid/DeviceJid;[Lcom/whatsapp/infra/core/jid/DeviceJid;IZZ)V
+  0000..0006 op=71 invoke-static {}, LX/Ayj;->A1C()LX/Azz;
+  0006..0008 op=0c move-result-object v1
+  0008..000e op=71 invoke-static {v1}, LX/Ayj;->A1Q(LX/Azz;)V
+  000e..0012 op=39 if-nez v13, +0x5
+  0012..0014 op=12 const/4 v0, #0x1
+  0014..0018 op=5c iput-boolean v0, v1, LX/Azz;->A03:Z
+  0018..001e op=6e invoke-virtual {v1}, LX/Azz;->A00()Lorg/whispersystems/jobqueue/JobParameters;
+  001e..0020 op=0c move-result-object v0
+  0020..0026 op=70 invoke-direct {v6, v0}, Lorg/whispersystems/jobqueue/Job;-><init>(Lorg/whispersystems/jobqueue/JobParameters;)V
+  0026..002a op=38 if-eqz v13, +0xb
+  002a..002e op=39 if-nez v12, +0x9
+  002e..0032 op=1a const-string v0, "a PQ session upgrade must fetch PQ prekeys"
+  0032..0038 op=71 invoke-static {v0}, LX/1xf;->A15(Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+  0038..003a op=0c move-result-object v0
+  003a..003c op=27 throw v0
+  003c..0040 op=5c iput-boolean v13, v6, Lcom/whatsapp/infra/messaging/jobqueue/job/BulkGetPreKeyJob;->isPqSessionUpgrade:Z
+  0040..0046 op=71 invoke-static {v9}, Ljava/util/Arrays;->asList([Ljava/lang/Object;)Ljava/util/List;
+  0046..0048 op=0c move-result-object v0
+  0048..004e op=71 invoke-static {v0}, LX/0DE;->A0q(Ljava/util/Collection;)[Ljava/lang/String;
+  004e..0050 op=0c move-result-object v0
+  0050..0056 op=71 invoke-static {v0}, LX/00K;->A0H([Ljava/lang/Object;)V
+  0056..005a op=5b iput-object v0, v6, Lcom/whatsapp/infra/messaging/jobqueue/job/BulkGetPreKeyJob;->jids:[Ljava/lang/String;
+  005a..005c op=12 const/4 v1, #0x0
+  005c..0060 op=39 if-nez v10, +0x2f
+  0060..0062 op=07 move-object v0, v1
+  0062..0066 op=5b iput-object v0, v6, Lcom/whatsapp/infra/messaging/jobqueue/job/BulkGetPreKeyJob;->identityChangedJids:[Ljava/lang/String;
+  0066..006a op=59 iput v11, v6, Lcom/whatsapp/infra/messaging/jobqueue/job/BulkGetPreKeyJob;->context:I
+  006a..006e op=5c iput-boolean v12, v6, Lcom/whatsapp/infra/messaging/jobqueue/job/BulkGetPreKeyJob;->fetchPqPrekey:Z
+  006e..0072 op=38 if-eqz v7, +0x6
+  0072..0078 op=6e invoke-virtual {v7}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+  0078..007a op=0c move-result-object v1
+  007a..007e op=5b iput-object v1, v6, Lcom/whatsapp/infra/messaging/jobqueue/job/BulkGetPreKeyJob;->contextRawJid:Ljava/lang/String;
+  007e..0082 op=52 iget v0, v8, LX/B78;->intValue:I
+  0082..0086 op=59 iput v0, v6, Lcom/whatsapp/infra/messaging/jobqueue/job/BulkGetPreKeyJob;->sessionScopeOrdinal:I
+  0086..0088 op=21 array-length v5, v9
+  0088..008a op=12 const/4 v4, #0x0
+  008a..008c op=12 const/4 v2, #0x0
+  008c..0090 op=1a const-string v3, "jid must be an individual jid; jid="
+  0090..0094 op=35 if-ge v2, v5, +0x2a
+  0094..0098 op=46 aget-object v1, v9, v2
+  0098..009c op=38 if-eqz v1, +0x1f
+  009c..00a2 op=71 invoke-static {v1}, LX/0DE;->A0m(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  00a2..00a4 op=0a move-result v0
+  00a4..00a8 op=39 if-nez v0, +0x14
+  00a8..00ae op=71 invoke-static {v1}, LX/0DE;->A0Q(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  00ae..00b0 op=0a move-result v0
+  00b0..00b4 op=39 if-nez v0, +0xe
+  00b4..00b8 op=d8 add-int/lit8 v2, v2, #0x1
+  00b8..00ba op=28 goto -0x16
+  00ba..00c0 op=71 invoke-static {v10}, Ljava/util/Arrays;->asList([Ljava/lang/Object;)Ljava/util/List;
+  00c0..00c2 op=0c move-result-object v0
+  00c2..00c8 op=71 invoke-static {v0}, LX/0DE;->A0q(Ljava/util/Collection;)[Ljava/lang/String;
+  00c8..00ca op=0c move-result-object v0
+  00ca..00cc op=28 goto -0x34
+  00cc..00d2 op=71 invoke-static {v1, v3}, LX/Ayq;->A0L(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+  00d2..00d4 op=0c move-result-object v0
+  00d4..00d6 op=27 throw v0
+  00d6..00da op=1a const-string v0, "an element of jids was empty"
+  00da..00e0 op=71 invoke-static {v0}, LX/1xf;->A15(Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+  00e0..00e2 op=0c move-result-object v0
+  00e2..00e4 op=27 throw v0
+  00e4..00e8 op=38 if-eqz v10, +0x24
+  00e8..00ea op=21 array-length v2, v10
+  00ea..00ee op=35 if-ge v4, v2, +0x21
+  00ee..00f2 op=46 aget-object v1, v10, v4
+  00f2..00f6 op=38 if-eqz v1, +0x16
+  00f6..00fc op=71 invoke-static {v1}, LX/0DE;->A0m(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  00fc..00fe op=0a move-result v0
+  00fe..0102 op=39 if-nez v0, +0xb
+  0102..0108 op=71 invoke-static {v1}, LX/0DE;->A0Q(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  0108..010a op=0a move-result v0
+  010a..010e op=39 if-nez v0, +0x5
+  010e..0112 op=d8 add-int/lit8 v4, v4, #0x1
+  0112..0114 op=28 goto -0x14
+  0114..011a op=71 invoke-static {v1, v3}, LX/Ayq;->A0L(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+  011a..011c op=0c move-result-object v0
+  011c..011e op=27 throw v0
+  011e..0122 op=1a const-string v0, "an element of identityChangedJids was empty"
+  0122..0128 op=71 invoke-static {v0}, LX/1xf;->A15(Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+  0128..012a op=0c move-result-object v0
+  012a..012c op=27 throw v0
+  012c..012e op=0e return-void
+  # exception table: 0 try range(s)
+.end method

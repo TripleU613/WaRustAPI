@@ -75,8 +75,10 @@ B78/B77 key selection and callback/response semantics remain **unported**.
 
 A06 filters devices again, returns for empty lists, and enqueues the named
 bulk prekey job. Large-list splitting uses separate size/config guards. This
-trace ends at job construction: **unknown** wire request, attribute use,
-response verification/adoption and failure/retry policy for this exact job.
+scheduler trace ends at job construction. The
+[bulk prekey continuation](bulk-prekey-refresh.md) now supplies its wire mapping
+and callback/job exception branches; full response verification/adoption and
+framework retry authority remain **unknown/unported**.
 The Rust `peer-keys` full-bundle inspection and explicit `identity-query`
 commands do not automatically implement this job.
 
@@ -103,8 +105,9 @@ message/bundle authentication and explicit identity-change policies continue to
 control pin adoption. This research changes no account, key, reservation or
 runtime behavior. No fresh live notification was requested or inspected here.
 
-The next implementation prerequisite is the BulkGetPreKeyJob wire/response path,
-then exact callback-device resolution and once-only refresh/ACK state. Preserve
+The [bulk prekey continuation](bulk-prekey-refresh.md) now traces its wire request
+and retains its callback. Remaining prerequisites are callback authentication,
+Cio preparation, exact callback-device resolution and once-only refresh/ACK state. Preserve
 own-account protections, lock-equivalent transactions, existing pin authentication
 and durable reservations rather than treating the first `identity` tag as trust.
 

@@ -1,0 +1,80 @@
+{
+  "bulk-callback-constructor": {
+    "class": "LX/Bot;",
+    "file": "bulk-callback-constructor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/messaging.rs",
+      "crates/whatsapp-api/src/transport/peer_keys.rs"
+    ]
+  },
+  "bulk-callback-error": {
+    "class": "LX/Bot;",
+    "file": "bulk-callback-error.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/messaging.rs",
+      "crates/whatsapp-api/src/transport/peer_keys.rs"
+    ]
+  },
+  "bulk-callback-result": {
+    "class": "LX/Bot;",
+    "file": "bulk-callback-result.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A03",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/messaging.rs",
+      "crates/whatsapp-api/src/transport/peer_keys.rs"
+    ]
+  },
+  "bulk-job-constructor": {
+    "class": "Lcom/whatsapp/infra/messaging/jobqueue/job/BulkGetPreKeyJob;",
+    "file": "bulk-job-constructor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/messaging.rs",
+      "crates/whatsapp-api/src/transport/peer_keys.rs"
+    ]
+  },
+  "bulk-job-exception-policy": {
+    "class": "Lcom/whatsapp/infra/messaging/jobqueue/job/BulkGetPreKeyJob;",
+    "file": "bulk-job-exception-policy.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0I",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/messaging.rs",
+      "crates/whatsapp-api/src/transport/peer_keys.rs"
+    ]
+  },
+  "bulk-job-run": {
+    "class": "Lcom/whatsapp/infra/messaging/jobqueue/job/BulkGetPreKeyJob;",
+    "file": "bulk-job-run.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0G",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/messaging.rs",
+      "crates/whatsapp-api/src/transport/peer_keys.rs"
+    ]
+  }
+}

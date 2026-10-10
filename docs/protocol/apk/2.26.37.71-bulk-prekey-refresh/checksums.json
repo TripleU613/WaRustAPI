@@ -1,0 +1,42 @@
+{
+  "bulk-callback-constructor.txt": {
+    "bytes": 998,
+    "sha256": "8b9eecfb9e7fe93b4b4d712e8997554fdf3e9fae9ec4df6b9e38f749c7154a34"
+  },
+  "bulk-callback-error.txt": {
+    "bytes": 1854,
+    "sha256": "0a6d07eaab006bd8d978092ab7cf739ff267c8c7af4e3485eb087729667958e9"
+  },
+  "bulk-callback-result.txt": {
+    "bytes": 17648,
+    "sha256": "3df149669210a4988c3b5d0146eb23bed726ad1815715d7b36d28ec7b3d9d23e"
+  },
+  "bulk-job-constructor.txt": {
+    "bytes": 5608,
+    "sha256": "7761aff147fc40b28e493236939033abc9e7bceea22bec868890943fdead85a6"
+  },
+  "bulk-job-exception-policy.txt": {
+    "bytes": 1252,
+    "sha256": "10e998ee55b460e4f10a1db158832ca7d27f3ba6011e9db428dd24105104dbba"
+  },
+  "bulk-job-run.txt": {
+    "bytes": 12869,
+    "sha256": "07151558091c6b83a5389350e4d3bc93cb6ead38aff056773a4605e401979710"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "targets.json": {
+    "bytes": 2522,
+    "sha256": "3ce176912a28faeda3bf3679685e58e7982f86f555eedc1443a84862cb648e00"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

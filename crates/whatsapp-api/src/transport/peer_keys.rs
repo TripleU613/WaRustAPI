@@ -1,7 +1,8 @@
 //! Read-only peer directory inspection over the existing once-only IQ queue.
 //! Uses the APK-derived encrypt/key query in messaging::key_request, never
 //! deriving a session, changing a pin or reserving/transmitting a chat.
-//! Query evidence: APK 2.26.37.70 LX/0y0.A00 1786..193a; signed-key
+//! Query baseline: APK 2.26.37.70 LX/0y0.A00 1786..193a; identity-change
+//! reason: 2.26.37.71 same writer 1792..17da (bulk-prekey-refresh.md). Signed-key
 //! check: APK 2.26.37.71 LX/CQc.A00 0030..0064 (builds kept separate).
 use super::{actions, identity_conflicts, messaging};
 use crate::{
@@ -40,6 +41,38 @@ fn key(peer: &Jid) -> String {
             format!("comparison-direct:{peer}").as_bytes()
         ))
     )
+}
+
+/// Redacted offline request preview; no store, action or account is opened.
+#[derive(Debug, Serialize)]
+pub struct IdentityChangePreview {
+    /// Fixed IQ namespace.
+    pub namespace: &'static str,
+    /// Fixed IQ type.
+    pub iq_type: &'static str,
+    /// Fixed selected-user reason; no peer address is printed.
+    pub user_reason: &'static str,
+    /// Encoded comparison request size with a fixed offline selector.
+    pub encoded_bytes: usize,
+}
+
+/// Inspect the missing native identity-change request shape without queueing.
+/// APK 37.71 0y0.A00 17b6..17c8; bulk-prekey-refresh.md records authority gaps.
+pub fn identity_change_preview(peer: &Jid) -> Result<IdentityChangePreview> {
+    validate(peer)?;
+    let node = messaging::key_request_many_with_identity_changes(
+        std::slice::from_ref(peer),
+        std::slice::from_ref(peer),
+        "offline-identity-change",
+    )?;
+    let wire = crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
+        .encode(&node)?;
+    Ok(IdentityChangePreview {
+        namespace: "encrypt",
+        iq_type: "get",
+        user_reason: "identity",
+        encoded_bytes: wire.len(),
+    })
 }
 
 /// Queue one peer directory query. Repeats return its existing ID locally.
@@ -302,6 +335,18 @@ mod tests {
         store::{MasterKey, OpenOptions, StaticKeySource},
     };
     use wacore_libsignal::protocol::{IdentityKeyPair, KeyPair};
+    #[test]
+    fn identity_change_preview_is_redacted_and_has_no_store_dependency() {
+        let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let preview = identity_change_preview(&peer).unwrap();
+        assert_eq!(preview.user_reason, "identity");
+        assert!(preview.encoded_bytes > 0);
+        let json = serde_json::to_string(&preview).unwrap();
+        assert!(!json.contains(&peer.user));
+        assert!(!json.contains("offline-identity-change"));
+        assert!(identity_change_preview(&Jid::parse("s.whatsapp.net").unwrap()).is_err());
+        assert!(identity_change_preview(&peer.with_device(3)).is_err());
+    }
     fn open(path: &std::path::Path) -> ProtocolStore {
         ProtocolStore::open(OpenOptions {
             path: path.to_owned(),

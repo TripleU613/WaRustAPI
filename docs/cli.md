@@ -204,6 +204,7 @@ Usage: whatsapp-cli peer-keys [OPTIONS]...
 
 | Flag | Value | Required | Default | Env | Values | Help |
 |------|-------|----------|---------|-----|--------|------|
+| --preview-identity-change | PREVIEW_IDENTITY_CHANGE | no |  |  | `true`, `false` | Preview the identity-change request offline without opening a store |
 | --chat | CHAT | yes |  |  |  | Primary phone-number chat JID, never printed in output |
 | --show | SHOW | no |  |  | `true`, `false` | Inspect the latest saved response and pin matches without queueing |
 | --refresh | REFRESH | no |  |  | `true`, `false` | Queue one fresh query only after a verified successful prior bundle |

@@ -287,6 +287,9 @@ enum Cmd {
     /// Queue or inspect one peer directory key query (offline; a session transmits it).
     #[cfg(feature = "experimental-transport")]
     PeerKeys {
+        /// Preview the identity-change request offline without opening a store.
+        #[arg(long, conflicts_with_all = ["show", "refresh"])]
+        preview_identity_change: bool,
         /// Primary phone-number chat JID, never printed in output.
         #[arg(long)]
         chat: String,
@@ -1609,7 +1612,8 @@ async fn run(cli: Cli) -> Result<(), Error> {
             chat,
             show,
             refresh,
-        } => transport_receive::peer_keys(&cli, chat, *show, *refresh),
+            preview_identity_change,
+        } => transport_receive::peer_keys(&cli, chat, *show, *refresh, *preview_identity_change),
         #[cfg(feature = "experimental-transport")]
         Cmd::PeerIdentityQuery { chat, show } => {
             transport_receive::peer_identity_query(&cli, chat, *show)
@@ -3022,5 +3026,33 @@ mod group_reference_cli_tests {
             ])
             .is_err()
         );
+    }
+}
+
+#[cfg(all(test, feature = "experimental-transport"))]
+mod identity_change_preview_cli_tests {
+    use super::*;
+    #[test]
+    fn identity_change_preview_conflicts_with_saved_action_modes() {
+        let args = [
+            "whatsapp-cli",
+            "peer-keys",
+            "--chat",
+            "15555550100@s.whatsapp.net",
+            "--preview-identity-change",
+        ];
+        let parsed = Cli::try_parse_from(args).unwrap();
+        assert!(matches!(
+            parsed.cmd,
+            Cmd::PeerKeys {
+                preview_identity_change: true,
+                ..
+            }
+        ));
+        for conflict in ["--refresh", "--show"] {
+            let mut conflicting = args.to_vec();
+            conflicting.push(conflict);
+            assert!(Cli::try_parse_from(conflicting).is_err());
+        }
     }
 }

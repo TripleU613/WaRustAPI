@@ -1,5 +1,21 @@
 # Messaging completion checklist
 
+Bulk prekey request (2026-10-09, **confirmed static / implemented offline**):
+identityChangedJids selects user/@reason=identity in the normal encrypt/key IQ.
+The reusable Rust builder and peer-keys --preview-identity-change expose that
+request shape without account access or queueing. Device/namespace mismatches
+refuse with fixed diagnostics. Job/callback sources are retained; Cio preparation,
+response adoption and automatic notification refresh remain unported. No live
+operation. [Evidence and limits](protocol/bulk-prekey-refresh.md).
+
+Validation: 846 workspace/all-feature tests passed; strict Clippy, warnings-
+denied Rustdoc, default CLI tests (25 plus API-symbol), CLI reference, formatting
+and whitespace passed. Exact export check: six topics / 11 files / 70,703 bytes;
+cached self-diff: six unchanged topics / four metadata artifacts. Hygiene passed
+(2,229 local links / 111 APK bundles). Actual CLI preview succeeded without a
+store or key environment and created no files. No fresh live variant was sent.
+
+
 Identity notification source (2026-10-09, **confirmed static**): metadata peer
 and callback device follow separate paths; null metadata rejoins device work.
 The native worker gates reason-8 prekey refresh on an existing identity, then
