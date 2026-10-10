@@ -146,3 +146,40 @@ Repository hygiene passed (2,444 local links / 124 checksum bundles,
 immutable Bytes conversions; those test-only ownership errors were corrected
 before the final successful full suite. No protocol finding was inferred from
 that compiler failure.
+
+Next admission boundary (**confirmed native / not yet applied here**): a
+retained companion pin may still exist after membership reconciliation removes
+its address. The original notification guard can describe that held identity,
+but this directory helper currently reports missing_device_membership.
+11T.A0D instead permits an absent newer signed index under its remote add-only
+branch, with canonical admission/device-registry effects as previously traced
+in [normal receive addition](peer-identity.md#remote-newer-adv-device-application-in-rust-2026-10-08).
+That is distinct from a first-seen pin: preserve the original guard and held
+history when implementing the directory addition branch. Do not treat this
+local membership refusal as a WhatsApp server requirement or reset an account
+or request to escape it.
+
+## Bounded saved-account validation
+
+**Observed:** one 45-second receive-only window (60.52 seconds total)
+authenticated/activated and stopped cleanly. Preflight had no queued action,
+receipt or eligible send. Outbox, automatic reads and reconnects were disabled.
+Actions (21), receipts (9), pending outbox (0), generation, registration and
+journal head remained equal. Checkpoints rose 1,110→1,118; other table counts
+were equal. These are summaries/counts, not all-record byte comparisons.
+[Redacted validation](companion-changed-key-refresh-live.json).
+
+The historical primary read remains verified_bundle/pin_matches=true,
+refresh_guard=untracked, applied=false, with both companion diagnostics null.
+No original guard is backfilled and no application occurs. Nine unsupported
+control logs and no decrypted/duplicate/undecryptable or identity ACK log were
+recorded. No qualifying companion directory reply arrived; fresh live
+changed-companion application stays **unknown**. No repeated window or chat
+was used to manufacture evidence. Private state, configuration, key and logs
+stay outside Git.
+
+Live-record verification: CLI-reference regeneration, whitespace and repository
+hygiene passed (2,446 local links / 124 checksum bundles). This follow-up changes
+research/status records only; the implementation's 882 tests and strict
+Clippy/Rustdoc results remain its validation. The goal remains incomplete;
+the next directory membership boundary is recorded above.

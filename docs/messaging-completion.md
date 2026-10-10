@@ -12,6 +12,9 @@ fresh live application unknown.
 Validation: 882 workspace/all-feature tests, strict Clippy, Rustdoc, default
 CLI/API symbols and CLI reference passed. 19-topic / 24-file source export
 reproduces exactly; cached self-diff unchanged.
+Live: one 45-second receive-only window authenticated/stopped cleanly;
+actions/receipts/outbox/generation/registration/head remained equal. Eight
+additional checkpoints, no qualifying companion reply or new application.
 [Trace and limits](protocol/companion-changed-key-refresh.md).
 
 
