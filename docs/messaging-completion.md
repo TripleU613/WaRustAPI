@@ -11,6 +11,9 @@ fresh live restoration remains unknown.
 Validation: 885 workspace/all-feature tests, strict Clippy, Rustdoc,
 default CLI/API symbols, CLI reference and formatting passed. Bounded
 28-topic / 33-file APK export reproduces exactly; cached self-diff unchanged.
+Live: one 20-second receive-only window authenticated/stopped cleanly;
+actions/receipts/outbox/generation/registration/head unchanged. Six additional
+checkpoints; no qualifying restoration or new application claimed.
 [Trace and limits](protocol/companion-directory-addition.md).
 
 

@@ -122,3 +122,34 @@ comparison with a newer release or proof of complete native parity.
 Repository hygiene passed (2,455 local links / 125 checksum bundles,
 26,423,958 APK research bytes). No qualifying live restoration is asserted by
 these offline checks.
+
+## Bounded saved-account validation
+
+**Observed:** one 20-second receive-only window (34.01 seconds total)
+authenticated/activated and stopped cleanly. Preflight had no queued action,
+receipt or eligible send. Outbox, automatic reads and reconnects were disabled.
+Actions (21), receipts (9), pending outbox (0), generation, registration and
+journal head remained equal. Checkpoints rose 1,118→1,124; all other table
+counts were equal. These are summaries/counts, not all-record byte comparisons.
+[Redacted validation](companion-directory-addition-live.json).
+
+The historical primary read remains verified_bundle/pin_matches=true,
+refresh_guard=untracked, applied=false and both companion authority diagnostics
+null. No historical guard is backfilled or read replayed. Nine unsupported
+control logs and no decrypted/duplicate/undecryptable or identity ACK log were
+recorded. No returning-companion directory reply qualified; fresh live
+membership restoration remains **unknown**. No repeated window, chat or
+synthetic server input was used to manufacture qualifying evidence. Private
+account state, key, profile, config and logs stay outside Git.
+
+Next native boundary: complete addition observer/participant/cache effects in
+1IW.A05/A04 and JhE.A0L, including their 0bI helper calls and registered
+callback, are retained but unported. Directory membership restoration does
+not prove cached group fanout or all cross-device sender-key bookkeeping is
+current. Continue from those retained calls without replaying a saved send
+or replacing its immutable target/request reservation.
+
+Live-record verification: CLI-reference regeneration, whitespace and repository
+hygiene passed (2,456 local links / 125 checksum bundles). This follow-up changes
+research/status records only; the implementation's 885 tests and strict
+Clippy/Rustdoc results remain its validation. The overall goal stays incomplete.
