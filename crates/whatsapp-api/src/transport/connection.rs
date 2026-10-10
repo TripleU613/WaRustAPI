@@ -596,11 +596,11 @@ pub(crate) async fn drive(
                     }
                 }
 
-                if let Some(low) = super::prekeys::low_count(&node) {
-                    // LX/14z.A09: acknowledge after the durable capture above, then LX/14z.A02:
-                    // legacy count triggers generate-if-empty and upload; pq-only takes no action.
+                if let Some(low) = super::prekeys::low_count(&node)? {
+                    // Local ACK ordering follows durable capture; native 14z.A02 ACKs after worker processing.
+                    // Its first-child legacy flag triggers upload even for an unknown count; PQ-only is inert.
                     link.send(&super::prekeys::low_count_ack(&node)?).await?;
-                    if low.legacy.is_some() {
+                    if low.legacy_present {
                         maybe_upload(&store, &account, &link, &mut upload, &mut upload_rounds).await?;
                     }
                 }
@@ -1909,6 +1909,99 @@ mod tests {
             .children(vec![Node::new(child).attr("value", value)])
     }
 
+    #[tokio::test]
+    async fn prekey_count_dispatch_bounds_uploads_and_keeps_malformed_capture() {
+        use super::super::prekeys::summary;
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("count-dispatch.redb");
+        let store = registered_store(&path);
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        let (initial, write) = fake.written().await;
+        write.send(Ok(())).unwrap();
+        fake.deliver(result_for(&initial, false)).await;
+        fake.nothing_written(Duration::from_millis(100)).await;
+        fake.deliver(count_notification("ignored", "count", "7").children(vec![
+            Node::new("identity"),
+            Node::new("count").attr("value", "7"),
+        ]))
+        .await;
+        fake.nothing_written(Duration::from_millis(100)).await;
+        // PQ-first dispatch ignores a later legacy child and never uploads.
+        fake.deliver(count_notification("pq", "pq_count", "٢").children(vec![
+            Node::new("pq_count"),
+            Node::new("count").attr("value", "7"),
+        ]))
+        .await;
+        let (ack, write) = fake.written().await;
+        assert_eq!(ack.get_attr("id").and_then(|v| v.as_text()), Some("pq"));
+        write.send(Ok(())).unwrap();
+        fake.nothing_written(Duration::from_millis(100)).await;
+        assert_eq!(summary(&store).unwrap().uploaded, 50);
+        // The native flag is first-child count, not successful numeric parsing.
+        fake.deliver(count_notification("legacy", "count", "invalid"))
+            .await;
+        let (ack, write) = fake.written().await;
+        assert_eq!(ack.get_attr("id").and_then(|v| v.as_text()), Some("legacy"));
+        write.send(Ok(())).unwrap();
+        let (upload, write) = fake.written().await;
+        let ids = assert_upload(&upload);
+        assert_eq!(ids.len(), 50);
+        write.send(Ok(())).unwrap();
+        fake.deliver(result_for(&upload, false)).await;
+        fake.nothing_written(Duration::from_millis(100)).await;
+        assert_eq!(summary(&store).unwrap().uploaded, 100);
+        let before = store
+            .read(|tx| {
+                Ok((
+                    tx.scan_after(Table::Prekeys, 1, None, 256)?,
+                    tx.scan_after(Table::PeerIdentities, 1, None, 256)?,
+                    tx.scan_after(Table::SignalSessions, 1, None, 256)?,
+                ))
+            })
+            .unwrap();
+        let malformed = count_notification("malformed", "pq_count", "2147483648");
+        let wire = encode(&malformed).unwrap();
+        fake.deliver(malformed).await;
+        let error = fake.finished().await.unwrap_err();
+        assert!(
+            error
+                .to_string()
+                .contains("pq_count value is not a signed 32-bit Java decimal")
+        );
+        assert!(!error.is_recoverable_by_reconnect());
+        let capture = format!(
+            "inbound:sha256:{}",
+            hex::encode(sha2::Sha256::digest(&wire))
+        );
+        assert!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                .unwrap()
+                .is_some()
+        );
+        assert_eq!(
+            store
+                .read(|tx| Ok((
+                    tx.scan_after(Table::Prekeys, 1, None, 256)?,
+                    tx.scan_after(Table::PeerIdentities, 1, None, 256)?,
+                    tx.scan_after(Table::SignalSessions, 1, None, 256)?
+                )))
+                .unwrap(),
+            before
+        );
+        let head = store.journal_head().unwrap();
+        drop(store);
+        let store = identity_store(&path);
+        assert_eq!(summary(&store).unwrap().uploaded, 100);
+        assert!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                .unwrap()
+                .is_some()
+        );
+        assert_eq!(store.journal_head().unwrap(), head);
+    }
     #[tokio::test]
     async fn prekeys_upload_at_start_follow_count_low_and_notifications_without_replaying_uncertain_batches()
      {

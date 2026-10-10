@@ -1,0 +1,38 @@
+{
+  "count-dispatch-constructor.txt": {
+    "bytes": 931,
+    "sha256": "f9206022102e67b8e72d970298b8f93bfbad73aa8ff62c2786b9f239eb02e104"
+  },
+  "count-dispatch-run.txt": {
+    "bytes": 24139,
+    "sha256": "d17d79117708a6b6df0667e3ba9d3ec65b693a414aa6bfac9c14e0c775f24542"
+  },
+  "count-notification-handler.txt": {
+    "bytes": 8512,
+    "sha256": "5db95fafd3c81d8b908dcf3c406b1313c9a4ff5e19239ccab923863041579019"
+  },
+  "count-notification-worker.txt": {
+    "bytes": 9512,
+    "sha256": "28d1581311b6cf9a7305d05d15d5cfe1e3bf6f90d8ce5f718431acef76523443"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "optional-integer-attribute.txt": {
+    "bytes": 973,
+    "sha256": "24652493d598aa1ae0de42623a00e683414bea2b81e686a3bfcb027204cbf795"
+  },
+  "targets.json": {
+    "bytes": 2003,
+    "sha256": "7b96ae25a16ae319780ccc868d23170d0c0b6688b1b2aa057c6da2417b9962d3"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

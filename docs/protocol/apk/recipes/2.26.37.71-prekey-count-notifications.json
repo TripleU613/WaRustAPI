@@ -1,0 +1,53 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "count-notification-handler": {
+      "class": "LX/14z;",
+      "method": "A09",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/prekeys.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "count-notification-worker": {
+      "class": "LX/14z;",
+      "method": "A02",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/prekeys.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "optional-integer-attribute": {
+      "class": "LX/0hs;",
+      "method": "A0H",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/prekeys.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "count-dispatch-constructor": {
+      "class": "LX/DMA;",
+      "method": "<init>",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/prekeys.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "count-dispatch-run": {
+      "class": "LX/DMA;",
+      "method": "run",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/prekeys.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    }
+  }
+}

@@ -1,4 +1,4 @@
-// Independent reference for APK 37.71 0Gv.A01 and 8kY.A0B calls.
+// Independent reference for APK 37.71 0Gv.A01, 8kY.A0B and 0hs.A0H calls.
 // Executes host Java library semantics; it does not execute Android or the APK.
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -30,6 +30,11 @@ class MexJavaNumericOracle {
                     default -> "";
                 };
                 System.out.println(role.name() + "\t" + memberRole);
+                continue;
+            }
+            if (args.length == 1 && args[0].equals("integers")) {
+                try { System.out.println("true\t" + Integer.valueOf(value)); }
+                catch (NumberFormatException ignored) { System.out.println("false\t0"); }
                 continue;
             }
             long parsed;

@@ -19,8 +19,8 @@
 //!   element (`13f0..1474`, runtime flag `0x5bf2` plus coexistence reason and
 //!   token) is not sent either.
 //! * Trigger `LX/14z.A09` `001a..008a`: `notification type=encrypt` with a
-//!   `count value=N` child (optional `pq_count`) is acknowledged, then
-//!   `LX/14z.A02` `0154..01d4` generates when nothing is unsent and uploads
+//!   first `count` child (optional signed value and sibling `pq_count`) queues
+//!   `LX/14z.A02` `0154..01d4`, which generates when nothing is unsent and uploads
 //!   legacy keys (`LX/13c.A0U`); a `pq_count`-only notification takes no action
 //!   (`01a0`). Startup `LX/DNq.run` `011a..0160` uploads existing unsent keys
 //!   or generates when none exist.
@@ -459,41 +459,58 @@ impl PendingUpload {
     }
 }
 
-/// Parsed `notification type=encrypt` counts (`LX/14z.A09`).
+/// Parsed `notification type=encrypt` counts (APK 37.71 LX/14z.A09).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct LowCount {
-    /// `count/@value`, when present.
-    pub legacy: Option<u32>,
-    /// `pq_count/@value`, when present.
-    pub pq: Option<u32>,
+    /// First child is `count`; independent of whether its value parsed.
+    pub legacy_present: bool,
+    /// Optional Java signed `count/@value` (missing/malformed becomes None).
+    pub legacy: Option<i32>,
+    /// Java signed `pq_count/@value`; a missing value defaults to zero.
+    pub pq: Option<i32>,
 }
-fn child_value(node: &Node, name: &str) -> Option<Option<u32>> {
-    node.child_nodes()
-        .iter()
-        .find(|c| c.description == name)
-        .map(|c| {
-            c.get_attr("value")
-                .and_then(|v| v.as_text())
-                .and_then(|v| v.parse().ok())
-        })
+fn count_integer(node: &Node) -> Option<i32> {
+    node.get_attr("value")
+        .and_then(|v| v.as_text())
+        .and_then(super::mex::java_decimal_long)
+        .and_then(|v| i32::try_from(v).ok())
 }
-/// Recognize a prekey-count notification. Returns `None` for anything else.
-pub fn low_count(node: &Node) -> Option<LowCount> {
+fn pq_count_integer(node: &Node) -> Result<i32> {
+    if node.get_attr("value").is_none() {
+        return Ok(0);
+    }
+    count_integer(node).ok_or_else(|| invalid("pq_count value is not a signed 32-bit Java decimal"))
+}
+/// Recognize a prekey-count notification using its first child.
+/// A malformed present PQ count refuses before ACK/upload; legacy count uses
+/// the APK's optional Integer.valueOf parser and can remain unknown.
+pub fn low_count(node: &Node) -> Result<Option<LowCount>> {
     if node.description != "notification"
         || node.get_attr("type").and_then(|v| v.as_text()) != Some("encrypt")
         || node.get_attr("participant").is_some()
     {
-        return None;
+        return Ok(None);
     }
-    let legacy = child_value(node, "count");
-    let pq = child_value(node, "pq_count");
-    if legacy.is_none() && pq.is_none() {
-        return None;
-    }
-    Some(LowCount {
-        legacy: legacy.flatten(),
-        pq: pq.flatten(),
-    })
+    let Some(first) = node.child_nodes().first() else {
+        return Ok(None);
+    };
+    // 14z.A09 000e..0038 dispatches by first child. A0H is nullable/optional;
+    // PQ A05 defaults missing to zero but rejects malformed via A06. See
+    // prekey-count-notifications.md; sibling count is not identity authority.
+    let parsed = match first.description.as_str() {
+        "count" => LowCount {
+            legacy_present: true,
+            legacy: count_integer(first),
+            pq: node.child("pq_count").map(pq_count_integer).transpose()?,
+        },
+        "pq_count" => LowCount {
+            legacy_present: false,
+            legacy: None,
+            pq: Some(pq_count_integer(first)?),
+        },
+        _ => return Ok(None),
+    };
+    Ok(Some(parsed))
 }
 /// Acknowledge a recognized count notification (`LX/0yO.A07(true)`; ack shape
 /// `APK 37.71 LX/Cp2.A05 (0036..0074)` equivalent: id/to/class/type).
@@ -776,6 +793,134 @@ mod tests {
     }
 
     #[test]
+    fn prekey_counts_match_executed_java_integer_reference() {
+        let oracle: serde_json::Value = serde_json::from_str(include_str!(
+            "../../fixtures/prekeys/2.26.37.71-count-reference.json"
+        ))
+        .unwrap();
+        for case in oracle["cases"].as_array().unwrap() {
+            let text = case["input"].as_str().unwrap();
+            let expected = case["valid"]
+                .as_bool()
+                .unwrap()
+                .then(|| case["parsed"].as_str().unwrap().parse::<i32>().unwrap());
+            let root = Node::new("notification").attr("type", "encrypt");
+            let legacy = root
+                .clone()
+                .children(vec![Node::new("count").attr("value", text)]);
+            assert_eq!(
+                low_count(&legacy).unwrap(),
+                Some(LowCount {
+                    legacy_present: true,
+                    legacy: expected,
+                    pq: None
+                }),
+                "legacy {text:?}"
+            );
+            for children in [
+                vec![
+                    Node::new("pq_count").attr("value", text),
+                    Node::new("count").attr("value", "7"),
+                ],
+                vec![
+                    Node::new("count").attr("value", "7"),
+                    Node::new("pq_count").attr("value", text),
+                ],
+            ] {
+                let legacy_present = children[0].description == "count";
+                let result = low_count(&root.clone().children(children));
+                if let Some(value) = expected {
+                    assert_eq!(
+                        result.unwrap(),
+                        Some(LowCount {
+                            legacy_present,
+                            legacy: legacy_present.then_some(7),
+                            pq: Some(value)
+                        }),
+                        "PQ {text:?}"
+                    );
+                } else {
+                    let diagnostic = result.unwrap_err().to_string();
+                    assert!(
+                        diagnostic.contains("pq_count value is not a signed 32-bit Java decimal")
+                    );
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn prekey_count_dispatch_and_missing_values_preserve_native_distinctions() {
+        let root = Node::new("notification").attr("type", "encrypt");
+        for first in ["identity", "other"] {
+            assert_eq!(
+                low_count(&root.clone().children(vec![
+                    Node::new(first),
+                    Node::new("count").attr("value", "7")
+                ]))
+                .unwrap(),
+                None
+            );
+        }
+        assert_eq!(
+            low_count(&root.clone().children(vec![Node::new("count")])).unwrap(),
+            Some(LowCount {
+                legacy_present: true,
+                legacy: None,
+                pq: None
+            })
+        );
+        assert_eq!(
+            low_count(
+                &root
+                    .clone()
+                    .children(vec![Node::new("count"), Node::new("pq_count")])
+            )
+            .unwrap(),
+            Some(LowCount {
+                legacy_present: true,
+                legacy: None,
+                pq: Some(0)
+            })
+        );
+        assert_eq!(
+            low_count(&root.clone().children(vec![
+                Node::new("pq_count"),
+                Node::new("count").attr("value", "7")
+            ]))
+            .unwrap(),
+            Some(LowCount {
+                legacy_present: false,
+                legacy: None,
+                pq: Some(0)
+            })
+        );
+        let canary = "private-count-canary";
+        let error = low_count(
+            &root
+                .clone()
+                .children(vec![Node::new("pq_count").attr("value", canary)]),
+        )
+        .unwrap_err()
+        .to_string();
+        assert!(!error.contains(canary));
+        let invalid = crate::binary::AttributeValue::Bytes(bytes::Bytes::from_static(b"\xff"));
+        assert_eq!(
+            low_count(
+                &root
+                    .clone()
+                    .children(vec![Node::new("count").attr("value", invalid.clone())])
+            )
+            .unwrap()
+            .unwrap()
+            .legacy,
+            None
+        );
+        assert!(
+            low_count(&root.children(vec![Node::new("pq_count").attr("value", invalid)])).is_err()
+        );
+    }
+    #[test]
     fn count_notifications_are_recognized_and_acknowledged() {
         let from = Jid::parse("s.whatsapp.net").unwrap();
         let node = Node::new("notification")
@@ -784,8 +929,9 @@ mod tests {
             .attr("from", from.clone())
             .children(vec![Node::new("count").attr("value", "9")]);
         assert_eq!(
-            low_count(&node),
+            low_count(&node).unwrap(),
             Some(LowCount {
+                legacy_present: true,
                 legacy: Some(9),
                 pq: None
             })
@@ -806,8 +952,9 @@ mod tests {
             .attr("id", "N2")
             .children(vec![Node::new("pq_count").attr("value", "3")]);
         assert_eq!(
-            low_count(&pq_only),
+            low_count(&pq_only).unwrap(),
             Some(LowCount {
+                legacy_present: false,
                 legacy: None,
                 pq: Some(3)
             })
@@ -825,7 +972,7 @@ mod tests {
                 .children(vec![Node::new("count").attr("value", "9")]),
             Node::new("iq").children(vec![Node::new("count").attr("value", "9")]),
         ] {
-            assert_eq!(low_count(&other), None, "{other:?}");
+            assert_eq!(low_count(&other).unwrap(), None, "{other:?}");
         }
         assert!(low_count_ack(&Node::new("notification").attr("type", "encrypt")).is_err());
     }

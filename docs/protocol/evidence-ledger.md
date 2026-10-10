@@ -1,5 +1,21 @@
 # Evidence ledger
 
+Prekey count dispatch (2026-10-09, **confirmed static / implemented offline**):
+first-child selection, signed optional legacy parsing and strict/defaulted PQ
+parsing now follow APK 37.71. Legacy dispatch remains true even for an invalid
+optional value. Identity-first children cannot trigger count replenishment.
+Five retained source topics and 487 executed Java cases support the fix; a
+fake-link test preserves malformed capture and state across reopen. Native PQ
+strategy, acknowledgement ordering and identity-first handling remain unported.
+No real account or fresh live operation. [Evidence and limits](prekey-count-notifications.md).
+
+Validation: 843 workspace/all-feature tests passed, plus default CLI tests
+(25 and API-symbol). Strict Clippy, warnings-denied Rustdoc, CLI-reference
+regeneration, formatting and whitespace checks passed. Exact bundle regeneration verified ten files / 73,903 bytes; cached self-diff
+verified five unchanged topics and four metadata artifacts. Repository hygiene
+passed (2,194 local links, 109 APK bundles).
+
+
 Bounded receive validation (2026-10-09, **observed live**): current experimental
 CLI authenticated the saved account, completed 45 receive seconds and stopped
 cleanly, with chat sends, automatic reconnects and automatic reads disabled.

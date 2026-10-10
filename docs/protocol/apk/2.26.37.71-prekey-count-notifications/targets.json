@@ -1,0 +1,67 @@
+{
+  "count-dispatch-constructor": {
+    "class": "LX/DMA;",
+    "file": "count-dispatch-constructor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/prekeys.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "count-dispatch-run": {
+    "class": "LX/DMA;",
+    "file": "count-dispatch-run.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "run",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/prekeys.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "count-notification-handler": {
+    "class": "LX/14z;",
+    "file": "count-notification-handler.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A09",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/prekeys.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "count-notification-worker": {
+    "class": "LX/14z;",
+    "file": "count-notification-worker.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/prekeys.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "optional-integer-attribute": {
+    "class": "LX/0hs;",
+    "file": "optional-integer-attribute.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0H",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/prekeys.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  }
+}

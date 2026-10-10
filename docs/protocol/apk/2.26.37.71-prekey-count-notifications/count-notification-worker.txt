@@ -1,0 +1,155 @@
+# APK-derived structural disassembly: LX/14z;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A02(VLLLLZ) flags=0x19 registers=8
+  # full signature: LX/14z;->A02(LX/AAR;LX/14z;Ljava/lang/Integer;Ljava/lang/Integer;Z)V
+  0000..0004 op=1a const-string v0, "EncryptNotificationHandler/prekey count running low; legacyCountPresent="
+  0004..0008 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  0008..000e op=70 invoke-direct {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  000e..0014 op=6e invoke-virtual {v1, v7}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+  0014..0018 op=1a const-string v0, ", remainingPreKeys="
+  0018..001e op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  001e..0024 op=6e invoke-virtual {v1, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  0024..0028 op=1a const-string v0, ", remainingPqPreKeys="
+  0028..002e op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  002e..0034 op=6e invoke-virtual {v1, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  0034..003a op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  003a..003c op=0c move-result-object v0
+  003c..0042 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+  0042..0046 op=54 iget-object v0, v4, LX/14z;->A03:LX/05B;
+  0046..004a op=54 iget-object v1, v0, LX/05B;->A00:LX/00s;
+  004a..0050 op=72 invoke-interface {v1}, LX/00s;->get()Ljava/lang/Object;
+  0050..0052 op=0c move-result-object v0
+  0052..0056 op=1f check-cast v0, LX/Can;
+  0056..005c op=6e invoke-virtual {v0}, LX/Can;->A01()Z
+  005c..005e op=0a move-result v0
+  005e..0062 op=38 if-eqz v0, +0x78
+  0062..0068 op=72 invoke-interface {v1}, LX/00s;->get()Ljava/lang/Object;
+  0068..006a op=0c move-result-object v0
+  006a..006e op=1f check-cast v0, LX/Can;
+  006e..0074 op=6e invoke-virtual {v0}, LX/Can;->A02()Z
+  0074..0076 op=0a move-result v0
+  0076..007a op=38 if-eqz v0, +0x6c
+  007a..0080 op=72 invoke-interface {v1}, LX/00s;->get()Ljava/lang/Object;
+  0080..0082 op=0c move-result-object v0
+  0082..0086 op=1f check-cast v0, LX/Can;
+  0086..008a op=54 iget-object v0, v0, LX/Can;->A00:LX/05B;
+  008a..008e op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  008e..0094 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  0094..0096 op=0c move-result-object v1
+  0096..009a op=1f check-cast v1, LX/00D;
+  009a..009e op=62 sget-object v0, LX/CDO;->A01:LX/09P;
+  009e..00a4 op=71 invoke-static {v0}, LX/00h;->A07(Ljava/lang/Object;)V
+  00a4..00aa op=6e invoke-virtual {v1, v0}, LX/00D;->A13(LX/09P;)Z
+  00aa..00ac op=0a move-result v0
+  00ac..00b0 op=38 if-eqz v0, +0x4e
+  00b0..00b4 op=62 sget-object v0, LX/02S;->A01:Ljava/lang/Integer;
+  00b4..00ba op=6e invoke-virtual {v0}, Ljava/lang/Number;->intValue()I
+  00ba..00bc op=0a move-result v0
+  00bc..00be op=12 const/4 v2, #0x0
+  00be..00c0 op=12 const/4 v1, #0x1
+  00c0..00c4 op=32 if-eq v0, v2, +0x91
+  00c4..00c8 op=32 if-eq v0, v1, +0x74
+  00c8..00cc op=1a const-string v0, "EncryptNotificationHandler/not migrated; using SET for legacy"
+  00cc..00d2 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+  00d2..00d6 op=38 if-eqz v6, +0x2a
+  00d6..00dc op=6e invoke-virtual {v6}, Ljava/lang/Number;->intValue()I
+  00dc..00de op=0a move-result v2
+  00de..00e2 op=13 const/16 v1, #0x5a3
+  00e2..00e6 op=54 iget-object v0, v4, LX/14z;->A0A:LX/05B;
+  00e6..00ea op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  00ea..00f0 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  00f0..00f2 op=0c move-result-object v0
+  00f2..00f6 op=1f check-cast v0, LX/00W;
+  00f6..00fc op=6e invoke-virtual {v0}, LX/00W;->A01()LX/00X;
+  00fc..00fe op=0c move-result-object v0
+  00fe..0104 op=71 invoke-static {v0, v1}, LX/08b;->A00(LX/00X;I)LX/05B;
+  0104..0108 op=1a const-string v1, "EncryptNotificationHandler/CRITICAL: Received PQ prekey count notification for non-migrated client; remainingPqPreKeys="
+  0108..010c op=22 new-instance v0, Ljava/lang/StringBuilder;
+  010c..0112 op=70 invoke-direct {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  0112..0118 op=6e invoke-virtual {v0, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  0118..011e op=6e invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  011e..0120 op=0c move-result-object v0
+  0120..0126 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+  0126..012a op=38 if-eqz v7, +0x3d
+  012a..012e op=54 iget-object v0, v4, LX/14z;->A08:LX/05B;
+  012e..0132 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  0132..0138 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  0138..013a op=0c move-result-object v0
+  013a..013e op=1f check-cast v0, LX/0jp;
+  013e..0144 op=6e invoke-virtual {v0}, LX/0jp;->A04()LX/B75;
+  0144..0146 op=0c move-result-object v2
+  0146..0148 op=28 goto +0x7
+  0148..014c op=62 sget-object v0, LX/02S;->A00:Ljava/lang/Integer;
+  014c..014e op=28 goto -0x4c
+  014e..0152 op=62 sget-object v0, LX/02S;->A0C:Ljava/lang/Integer;
+  0152..0154 op=28 goto -0x4f
+  0154..0158 op=54 iget-object v0, v4, LX/14z;->A06:LX/05B;
+  0158..015c op=54 iget-object v1, v0, LX/05B;->A00:LX/00s;
+  015c..0162 op=72 invoke-interface {v1}, LX/00s;->get()Ljava/lang/Object;
+  0162..0164 op=0c move-result-object v0
+  0164..0168 op=1f check-cast v0, LX/0jc;
+  0168..016e op=6e invoke-virtual {v0}, LX/0jc;->A12()Z
+  016e..0170 op=0a move-result v0
+  0170..0174 op=39 if-nez v0, +0x4f
+  0174..0178 op=1a const-string v0, "EncryptNotificationHandler/no unsent prekeys; generating some new ones"
+  0178..017e op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+  017e..0184 op=72 invoke-interface {v1}, LX/00s;->get()Ljava/lang/Object;
+  0184..0186 op=0c move-result-object v0
+  0186..018a op=1f check-cast v0, LX/0jc;
+  018a..0190 op=6e invoke-virtual {v0}, LX/0jc;->A0m()V
+  0190..0192 op=28 goto +0x3f
+  0192..0194 op=0d move-exception v1
+  0194..0196 op=27 throw v1
+  0196..0198 op=0d move-exception v0
+  0198..019e op=71 invoke-static {v2, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  019e..01a0 op=27 throw v0
+  01a0..01a4 op=1a const-string v0, "EncryptNotificationHandler/PQ-only notification for non-migrated client; no action taken"
+  01a4..01aa op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+  01aa..01ac op=28 goto +0x48
+  01ac..01b0 op=38 if-eqz v7, +0x15
+  01b0..01b4 op=1a const-string v0, "EncryptNotificationHandler/PQ low count upload disabled; uploading legacy keys only"
+  01b4..01ba op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+  01ba..01be op=54 iget-object v0, v4, LX/14z;->A02:LX/05B;
+  01be..01c2 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  01c2..01c8 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  01c8..01ca op=0c move-result-object v0
+  01ca..01ce op=1f check-cast v0, LX/13c;
+  01ce..01d4 op=6e invoke-virtual {v0, v1, v2}, LX/13c;->A0U(ZZ)V
+  01d4..01d6 op=28 goto +0x33
+  01d6..01da op=1a const-string v0, "EncryptNotificationHandler/PQ low count upload disabled and no legacy keys to replenish; skipping"
+  01da..01e0 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+  01e0..01e2 op=28 goto +0x2d
+  01e2..01e6 op=1a const-string v0, "EncryptNotificationHandler/PQ-migrated and upload enabled; using ADD for both key types"
+  01e6..01ec op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+  01ec..01f0 op=54 iget-object v0, v4, LX/14z;->A02:LX/05B;
+  01f0..01f4 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  01f4..01fa op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  01fa..01fc op=0c move-result-object v0
+  01fc..0200 op=1f check-cast v0, LX/13c;
+  0200..0204 op=38 if-eqz v6, +0x3
+  0204..0206 op=12 const/4 v2, #0x1
+  0206..020c op=6e invoke-virtual {v0, v7, v2}, LX/13c;->A0U(ZZ)V
+  020c..020e op=28 goto +0x17
+  020e..0214 op=6e invoke-virtual {v2}, LX/B75;->close()V
+  0214..0218 op=1a const-string v0, "EncryptNotificationHandler/appending additional prekeys via SET"
+  0218..021e op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+  021e..0222 op=54 iget-object v0, v4, LX/14z;->A02:LX/05B;
+  0222..0226 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  0226..022c op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  022c..022e op=0c move-result-object v1
+  022e..0232 op=1f check-cast v1, LX/13c;
+  0232..0234 op=12 const/4 v0, #0x2
+  0234..023a op=6e invoke-virtual {v1, v0}, LX/13c;->A0R(I)V
+  023a..023e op=38 if-eqz v3, +0x6
+  023e..0244 op=6e invoke-virtual {v3}, LX/AAR;->A01()V
+  0244..0246 op=0e return-void
+  0246..024a op=1a const-string v0, "EncryptNotificationHandler/stanzaMetadata is null, cannot ack prekey count notification"
+  024a..0250 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+  0250..0252 op=0e return-void
+  # exception table: 2 try range(s)
+  # catch <all> code_units 00aa..00c9 -> 00c9
+  # catch <all> code_units 00ca..00cb -> 00cb
+.end method

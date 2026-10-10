@@ -1,0 +1,2440 @@
+{
+  "oracle": "2026-10-09: executed Temurin Java 21.0.12.1+1 LTS MexJavaNumericOracle.java integers (Integer.valueOf); host semantics, not APK execution",
+  "cases": [
+    {
+      "input": "",
+      "valid": false,
+      "parsed": "0"
+    },
+    {
+      "input": "0",
+      "valid": true,
+      "parsed": "0"
+    },
+    {
+      "input": "-0",
+      "valid": true,
+      "parsed": "0"
+    },
+    {
+      "input": "+0",
+      "valid": true,
+      "parsed": "0"
+    },
+    {
+      "input": "0007",
+      "valid": true,
+      "parsed": "7"
+    },
+    {
+      "input": "+0012",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "-0012",
+      "valid": true,
+      "parsed": "-12"
+    },
+    {
+      "input": "42",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "-42",
+      "valid": true,
+      "parsed": "-42"
+    },
+    {
+      "input": "9223372036854775807",
+      "valid": false,
+      "parsed": "0"
+    },
+    {
+      "input": "-9223372036854775808",
+      "valid": false,
+      "parsed": "0"
+    },
+    {
+      "input": "9223372036854775808",
+      "valid": false,
+      "parsed": "0"
+    },
+    {
+      "input": "-9223372036854775809",
+      "valid": false,
+      "parsed": "0"
+    },
+    {
+      "input": "9223372036854775",
+      "valid": false,
+      "parsed": "0"
+    },
+    {
+      "input": "9223372036854776",
+      "valid": false,
+      "parsed": "0"
+    },
+    {
+      "input": "++1",
+      "valid": false,
+      "parsed": "0"
+    },
+    {
+      "input": "--1",
+      "valid": false,
+      "parsed": "0"
+    },
+    {
+      "input": "+-1",
+      "valid": false,
+      "parsed": "0"
+    },
+    {
+      "input": "1_000",
+      "valid": false,
+      "parsed": "0"
+    },
+    {
+      "input": " 1",
+      "valid": false,
+      "parsed": "0"
+    },
+    {
+      "input": "1 ",
+      "valid": false,
+      "parsed": "0"
+    },
+    {
+      "input": "\t1",
+      "valid": false,
+      "parsed": "0"
+    },
+    {
+      "input": "1\n",
+      "valid": false,
+      "parsed": "0"
+    },
+    {
+      "input": "1.0",
+      "valid": false,
+      "parsed": "0"
+    },
+    {
+      "input": "1e3",
+      "valid": false,
+      "parsed": "0"
+    },
+    {
+      "input": "0x10",
+      "valid": false,
+      "parsed": "0"
+    },
+    {
+      "input": "NaN",
+      "valid": false,
+      "parsed": "0"
+    },
+    {
+      "input": "Infinity",
+      "valid": false,
+      "parsed": "0"
+    },
+    {
+      "input": "\u00e9",
+      "valid": false,
+      "parsed": "0"
+    },
+    {
+      "input": "\ud835\udfd9",
+      "valid": false,
+      "parsed": "0"
+    },
+    {
+      "input": "\u0661\u0662",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\uff11\uff12",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\u22121",
+      "valid": false,
+      "parsed": "0"
+    },
+    {
+      "input": "+",
+      "valid": false,
+      "parsed": "0"
+    },
+    {
+      "input": "-",
+      "valid": false,
+      "parsed": "0"
+    },
+    {
+      "input": "02",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "12",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "22",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "32",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "42",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "52",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "62",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "72",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "82",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "92",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\u06602",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\u06612",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\u06622",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\u06632",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\u06642",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\u06652",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\u06662",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\u06672",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\u06682",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\u06692",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\u06f02",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\u06f12",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\u06f22",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\u06f32",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\u06f42",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\u06f52",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\u06f62",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\u06f72",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\u06f82",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\u06f92",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\u07c02",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\u07c12",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\u07c22",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\u07c32",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\u07c42",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\u07c52",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\u07c62",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\u07c72",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\u07c82",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\u07c92",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\u09662",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\u09672",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\u09682",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\u09692",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\u096a2",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\u096b2",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\u096c2",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\u096d2",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\u096e2",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\u096f2",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\u09e62",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\u09e72",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\u09e82",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\u09e92",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\u09ea2",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\u09eb2",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\u09ec2",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\u09ed2",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\u09ee2",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\u09ef2",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\u0a662",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\u0a672",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\u0a682",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\u0a692",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\u0a6a2",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\u0a6b2",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\u0a6c2",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\u0a6d2",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\u0a6e2",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\u0a6f2",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\u0ae62",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\u0ae72",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\u0ae82",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\u0ae92",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\u0aea2",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\u0aeb2",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\u0aec2",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\u0aed2",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\u0aee2",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\u0aef2",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\u0b662",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\u0b672",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\u0b682",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\u0b692",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\u0b6a2",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\u0b6b2",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\u0b6c2",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\u0b6d2",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\u0b6e2",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\u0b6f2",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\u0be62",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\u0be72",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\u0be82",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\u0be92",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\u0bea2",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\u0beb2",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\u0bec2",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\u0bed2",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\u0bee2",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\u0bef2",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\u0c662",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\u0c672",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\u0c682",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\u0c692",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\u0c6a2",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\u0c6b2",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\u0c6c2",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\u0c6d2",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\u0c6e2",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\u0c6f2",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\u0ce62",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\u0ce72",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\u0ce82",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\u0ce92",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\u0cea2",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\u0ceb2",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\u0cec2",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\u0ced2",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\u0cee2",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\u0cef2",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\u0d662",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\u0d672",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\u0d682",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\u0d692",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\u0d6a2",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\u0d6b2",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\u0d6c2",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\u0d6d2",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\u0d6e2",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\u0d6f2",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\u0de62",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\u0de72",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\u0de82",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\u0de92",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\u0dea2",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\u0deb2",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\u0dec2",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\u0ded2",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\u0dee2",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\u0def2",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\u0e502",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\u0e512",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\u0e522",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\u0e532",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\u0e542",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\u0e552",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\u0e562",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\u0e572",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\u0e582",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\u0e592",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\u0ed02",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\u0ed12",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\u0ed22",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\u0ed32",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\u0ed42",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\u0ed52",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\u0ed62",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\u0ed72",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\u0ed82",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\u0ed92",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\u0f202",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\u0f212",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\u0f222",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\u0f232",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\u0f242",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\u0f252",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\u0f262",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\u0f272",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\u0f282",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\u0f292",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\u10402",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\u10412",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\u10422",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\u10432",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\u10442",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\u10452",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\u10462",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\u10472",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\u10482",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\u10492",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\u10902",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\u10912",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\u10922",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\u10932",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\u10942",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\u10952",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\u10962",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\u10972",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\u10982",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\u10992",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\u17e02",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\u17e12",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\u17e22",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\u17e32",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\u17e42",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\u17e52",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\u17e62",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\u17e72",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\u17e82",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\u17e92",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\u18102",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\u18112",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\u18122",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\u18132",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\u18142",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\u18152",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\u18162",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\u18172",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\u18182",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\u18192",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\u19462",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\u19472",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\u19482",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\u19492",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\u194a2",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\u194b2",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\u194c2",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\u194d2",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\u194e2",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\u194f2",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\u19d02",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\u19d12",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\u19d22",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\u19d32",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\u19d42",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\u19d52",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\u19d62",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\u19d72",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\u19d82",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\u19d92",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\u1a802",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\u1a812",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\u1a822",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\u1a832",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\u1a842",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\u1a852",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\u1a862",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\u1a872",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\u1a882",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\u1a892",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\u1a902",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\u1a912",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\u1a922",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\u1a932",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\u1a942",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\u1a952",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\u1a962",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\u1a972",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\u1a982",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\u1a992",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\u1b502",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\u1b512",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\u1b522",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\u1b532",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\u1b542",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\u1b552",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\u1b562",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\u1b572",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\u1b582",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\u1b592",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\u1bb02",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\u1bb12",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\u1bb22",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\u1bb32",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\u1bb42",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\u1bb52",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\u1bb62",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\u1bb72",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\u1bb82",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\u1bb92",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\u1c402",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\u1c412",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\u1c422",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\u1c432",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\u1c442",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\u1c452",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\u1c462",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\u1c472",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\u1c482",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\u1c492",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\u1c502",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\u1c512",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\u1c522",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\u1c532",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\u1c542",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\u1c552",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\u1c562",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\u1c572",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\u1c582",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\u1c592",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\ua6202",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\ua6212",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\ua6222",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\ua6232",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\ua6242",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\ua6252",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\ua6262",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\ua6272",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\ua6282",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\ua6292",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\ua8d02",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\ua8d12",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\ua8d22",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\ua8d32",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\ua8d42",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\ua8d52",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\ua8d62",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\ua8d72",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\ua8d82",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\ua8d92",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\ua9002",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\ua9012",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\ua9022",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\ua9032",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\ua9042",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\ua9052",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\ua9062",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\ua9072",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\ua9082",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\ua9092",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\ua9d02",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\ua9d12",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\ua9d22",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\ua9d32",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\ua9d42",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\ua9d52",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\ua9d62",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\ua9d72",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\ua9d82",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\ua9d92",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\ua9f02",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\ua9f12",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\ua9f22",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\ua9f32",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\ua9f42",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\ua9f52",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\ua9f62",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\ua9f72",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\ua9f82",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\ua9f92",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\uaa502",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\uaa512",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\uaa522",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\uaa532",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\uaa542",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\uaa552",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\uaa562",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\uaa572",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\uaa582",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\uaa592",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\uabf02",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\uabf12",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\uabf22",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\uabf32",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\uabf42",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\uabf52",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\uabf62",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\uabf72",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\uabf82",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\uabf92",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "\uff102",
+      "valid": true,
+      "parsed": "2"
+    },
+    {
+      "input": "\uff112",
+      "valid": true,
+      "parsed": "12"
+    },
+    {
+      "input": "\uff122",
+      "valid": true,
+      "parsed": "22"
+    },
+    {
+      "input": "\uff132",
+      "valid": true,
+      "parsed": "32"
+    },
+    {
+      "input": "\uff142",
+      "valid": true,
+      "parsed": "42"
+    },
+    {
+      "input": "\uff152",
+      "valid": true,
+      "parsed": "52"
+    },
+    {
+      "input": "\uff162",
+      "valid": true,
+      "parsed": "62"
+    },
+    {
+      "input": "\uff172",
+      "valid": true,
+      "parsed": "72"
+    },
+    {
+      "input": "\uff182",
+      "valid": true,
+      "parsed": "82"
+    },
+    {
+      "input": "\uff192",
+      "valid": true,
+      "parsed": "92"
+    },
+    {
+      "input": "+901",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\u0669\u0660\u0661",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\u06f9\u06f0\u06f1",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\u07c9\u07c0\u07c1",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\u096f\u0966\u0967",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\u09ef\u09e6\u09e7",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\u0a6f\u0a66\u0a67",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\u0aef\u0ae6\u0ae7",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\u0b6f\u0b66\u0b67",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\u0bef\u0be6\u0be7",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\u0c6f\u0c66\u0c67",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\u0cef\u0ce6\u0ce7",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\u0d6f\u0d66\u0d67",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\u0def\u0de6\u0de7",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\u0e59\u0e50\u0e51",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\u0ed9\u0ed0\u0ed1",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\u0f29\u0f20\u0f21",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\u1049\u1040\u1041",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\u1099\u1090\u1091",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\u17e9\u17e0\u17e1",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\u1819\u1810\u1811",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\u194f\u1946\u1947",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\u19d9\u19d0\u19d1",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\u1a89\u1a80\u1a81",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\u1a99\u1a90\u1a91",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\u1b59\u1b50\u1b51",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\u1bb9\u1bb0\u1bb1",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\u1c49\u1c40\u1c41",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\u1c59\u1c50\u1c51",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\ua629\ua620\ua621",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\ua8d9\ua8d0\ua8d1",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\ua909\ua900\ua901",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\ua9d9\ua9d0\ua9d1",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\ua9f9\ua9f0\ua9f1",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\uaa59\uaa50\uaa51",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\uabf9\uabf0\uabf1",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "+\uff19\uff10\uff11",
+      "valid": true,
+      "parsed": "901"
+    },
+    {
+      "input": "-901",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\u0669\u0660\u0661",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\u06f9\u06f0\u06f1",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\u07c9\u07c0\u07c1",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\u096f\u0966\u0967",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\u09ef\u09e6\u09e7",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\u0a6f\u0a66\u0a67",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\u0aef\u0ae6\u0ae7",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\u0b6f\u0b66\u0b67",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\u0bef\u0be6\u0be7",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\u0c6f\u0c66\u0c67",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\u0cef\u0ce6\u0ce7",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\u0d6f\u0d66\u0d67",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\u0def\u0de6\u0de7",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\u0e59\u0e50\u0e51",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\u0ed9\u0ed0\u0ed1",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\u0f29\u0f20\u0f21",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\u1049\u1040\u1041",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\u1099\u1090\u1091",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\u17e9\u17e0\u17e1",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\u1819\u1810\u1811",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\u194f\u1946\u1947",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\u19d9\u19d0\u19d1",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\u1a89\u1a80\u1a81",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\u1a99\u1a90\u1a91",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\u1b59\u1b50\u1b51",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\u1bb9\u1bb0\u1bb1",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\u1c49\u1c40\u1c41",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\u1c59\u1c50\u1c51",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\ua629\ua620\ua621",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\ua8d9\ua8d0\ua8d1",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\ua909\ua900\ua901",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\ua9d9\ua9d0\ua9d1",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\ua9f9\ua9f0\ua9f1",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\uaa59\uaa50\uaa51",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\uabf9\uabf0\uabf1",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "-\uff19\uff10\uff11",
+      "valid": true,
+      "parsed": "-901"
+    },
+    {
+      "input": "2147483647",
+      "valid": true,
+      "parsed": "2147483647"
+    },
+    {
+      "input": "2147483648",
+      "valid": false,
+      "parsed": "0"
+    },
+    {
+      "input": "-2147483648",
+      "valid": true,
+      "parsed": "-2147483648"
+    },
+    {
+      "input": "-2147483649",
+      "valid": false,
+      "parsed": "0"
+    },
+    {
+      "input": "+2147483647",
+      "valid": true,
+      "parsed": "2147483647"
+    },
+    {
+      "input": "+2147483648",
+      "valid": false,
+      "parsed": "0"
+    },
+    {
+      "input": "\u0662\u0661\u0664\u0667\u0664\u0668\u0663\u0666\u0664\u0667",
+      "valid": true,
+      "parsed": "2147483647"
+    },
+    {
+      "input": "-\u0662\u0661\u0664\u0667\u0664\u0668\u0663\u0666\u0664\u0668",
+      "valid": true,
+      "parsed": "-2147483648"
+    }
+  ]
+}
