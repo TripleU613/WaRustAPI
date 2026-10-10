@@ -175,3 +175,10 @@ inspection snapshot. Known stale reads skip derivation with stale_refresh_guard.
 Historical untracked reads can still exercise cryptographic preview with no
 commit or claimed provenance. Automatic admission and final session/identity OCC
 rechecks remain unported; no original reply is retroactively assigned a baseline.
+
+## Attestation verification continuation
+
+[Selected-device attestation inspection](attestation-verification.md) now closes
+prefix/protobuf/type/signature inputs. It does not evaluate the native stored-
+state/property/override matrix; the preview continues to refuse present
+attestation, including mathematically valid input, without a candidate commit.

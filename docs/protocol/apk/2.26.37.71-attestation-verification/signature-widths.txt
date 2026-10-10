@@ -1,0 +1,28 @@
+# APK-derived structural disassembly: LX/1NH;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A01(ZLLL) flags=0x1 registers=6
+  # full signature: LX/1NH;->A01([B[B[B)Z
+  0000..0004 op=38 if-eqz v3, +0x19
+  0004..0006 op=21 array-length v1, v3
+  0006..000a op=13 const/16 v0, #0x20
+  000a..000e op=33 if-ne v1, v0, +0x14
+  000e..0012 op=38 if-eqz v4, +0x10
+  0012..0016 op=38 if-eqz v5, +0xe
+  0016..0018 op=21 array-length v1, v5
+  0018..001c op=13 const/16 v0, #0x40
+  001c..0020 op=33 if-ne v1, v0, +0x9
+  0020..0024 op=54 iget-object v0, v2, LX/1NH;->A00:LX/1NJ;
+  0024..002a op=72 invoke-interface {v0, v3, v4, v5}, LX/1NJ;->verifySignature([B[B[B)Z
+  002a..002c op=0a move-result v0
+  002c..002e op=0f return v0
+  002e..0030 op=12 const/4 v0, #0x0
+  0030..0032 op=0f return v0
+  0032..0036 op=1a const-string v1, "Invalid public key!"
+  0036..003a op=22 new-instance v0, Ljava/lang/IllegalArgumentException;
+  003a..0040 op=70 invoke-direct {v0, v1}, Ljava/lang/IllegalArgumentException;-><init>(Ljava/lang/String;)V
+  0040..0042 op=27 throw v0
+  # exception table: 0 try range(s)
+.end method

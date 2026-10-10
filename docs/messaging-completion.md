@@ -1,5 +1,22 @@
 # Messaging completion checklist
 
+Attestation byte verification (2026-10-09, **confirmed static / implemented offline**):
+`actions --show` now verifies selected-device non_e2ee_attestation using APK
+prefix 06 07 plus original protobuf bytes. Account-type field/enum and declared
+type checks are retained; a 1,502-case independent Java descriptor oracle checks
+closed-enum/varint/group semantics. Valid signatures remain separate from held
+pins, original guards and native admission. Stored attestation state, full CPB
+policy, adoption and identity ACK remain unported. [Evidence and limits](protocol/attestation-verification.md).
+
+Validation: 862 workspace/all-feature tests passed, plus strict Clippy,
+warning-denying Rustdoc, default CLI (25 plus API-symbol), CLI-reference
+regeneration, formatting and whitespace. All 1,502 Java oracle results were
+independently reproduced. The 18-topic / 23-file / 95,100-byte APK export
+reproduces exactly and self-diffs unchanged. Hygiene passed (2,344 links / 116
+bundles). The historical primary-LID reply reports attestation absent with
+unchanged store summary; no new network request or identity adoption occurred.
+
+
 Original identity refresh guards (2026-10-09, **implemented/offline**):
 new notification reads capture immutable pin, exact-device authenticated
 transition, primary-user version and account generation. Delayed A->B->A replies

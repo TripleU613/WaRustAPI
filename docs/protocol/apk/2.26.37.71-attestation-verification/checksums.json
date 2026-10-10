@@ -1,0 +1,90 @@
+{
+  "account-type-decode.txt": {
+    "bytes": 965,
+    "sha256": "6b96f48ef839babafe066e0c8ad7fd3474dfaeb925baf488b445f3ea16e4d7f0"
+  },
+  "account-type-enum.txt": {
+    "bytes": 1555,
+    "sha256": "0fd6a92721a366bf8a48ac7486b16c05f9d08edee528178a2e66ad6d8a12ac0a"
+  },
+  "account-type-string.txt": {
+    "bytes": 914,
+    "sha256": "b051ce015e7c08e3315a72f7dc2b917c0cc19e9d228abef21b8408dbd4e39b4f"
+  },
+  "account-type-verifier.txt": {
+    "bytes": 672,
+    "sha256": "1d779c594bbc8b6be126f6690979bebf7f217e7dba3331471822957d2fb1ae7f"
+  },
+  "allowed-account-types.txt": {
+    "bytes": 1016,
+    "sha256": "34fd28fc26ece6b8a09e7e29e80c27adcef7fd4671c9eece91941e2e9d2031d1"
+  },
+  "allowed-types-array.txt": {
+    "bytes": 560,
+    "sha256": "ce54a774ee7dba4eca27fe1f3c2e18c56a7f22674d6a2e0f1a238f49fd6d6b15"
+  },
+  "attestation-candidate.txt": {
+    "bytes": 17648,
+    "sha256": "3df149669210a4988c3b5d0146eb23bed726ad1815715d7b36d28ec7b3d9d23e"
+  },
+  "attestation-carrier.txt": {
+    "bytes": 824,
+    "sha256": "8ebeb07e2091ab8501884feb296067ac66d2b47955ceac4bbdef6580c6e9da58"
+  },
+  "descriptor-field-array.txt": {
+    "bytes": 687,
+    "sha256": "b5ed2092128bdafb363d35b04db2c7ee9e575d49c6683feafffb764591683d68"
+  },
+  "descriptor-field-objects.txt": {
+    "bytes": 624,
+    "sha256": "fed2020cddb307d696c52c10fc45643d785cfa5a781521f6e03969897702f222"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "payload-descriptor.txt": {
+    "bytes": 3520,
+    "sha256": "c495113563416747a1b72a271cc565651119213e543b0ad253a54edef2d30e2a"
+  },
+  "primary-admission.txt": {
+    "bytes": 12245,
+    "sha256": "006ca492032aba9ff511671469aeed349faae37edf8c5dd78c34c5d84b09b12c"
+  },
+  "signature-concatenate.txt": {
+    "bytes": 1332,
+    "sha256": "1acb763d74e9424bc44cd0ceebdd38d60d52ed61d93c80fcb74403b3477b217e"
+  },
+  "signature-parts-order.txt": {
+    "bytes": 624,
+    "sha256": "32fe545028c6f96ca4d50fb13e96e8dc27a2733e8658a68aef572bf99a0dce5e"
+  },
+  "signature-prefixes.txt": {
+    "bytes": 8498,
+    "sha256": "c05ea6d037a2fc75278c264517778bacdbc25bd57b9134951ba7cec8c05b1fb6"
+  },
+  "signature-provider.txt": {
+    "bytes": 3533,
+    "sha256": "8d80c864a6ad8c27ab8d0be21605d9c54c6ae243de3fc5b45fcd37af0c483e75"
+  },
+  "signature-type-check.txt": {
+    "bytes": 1235,
+    "sha256": "5a4afdf0c38045de44c1bfeb3141f4e0fd5a4f1c16483494e6d4dd3ced5a70d6"
+  },
+  "signature-widths.txt": {
+    "bytes": 1304,
+    "sha256": "9aac9213f40798bb67f8762b378d9b3a2a14cbaf3d88ee48e59d47dde3b8ccd7"
+  },
+  "targets.json": {
+    "bytes": 7765,
+    "sha256": "dade3569d5e5e2f6d5f2f0c59dc8501f7b510aaa9b12d4f89980b69cd7765a18"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

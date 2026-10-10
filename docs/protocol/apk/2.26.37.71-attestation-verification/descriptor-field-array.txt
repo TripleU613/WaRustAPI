@@ -1,0 +1,15 @@
+# APK-derived structural disassembly: LX/6ap;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A1b(L) flags=0x9 registers=3
+  # full signature: LX/6ap;->A1b()[Ljava/lang/Object;
+  0000..0002 op=12 const/4 v0, #0x3
+  0002..0006 op=23 new-array v2, v0, [Ljava/lang/Object;
+  0006..000a op=1a const-string v1, "bitField0_"
+  000a..000c op=12 const/4 v0, #0x0
+  000c..0010 op=4d aput-object v1, v2, v0
+  0010..0012 op=11 return-object v2
+  # exception table: 0 try range(s)
+.end method

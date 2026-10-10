@@ -2,6 +2,7 @@
 //! Notification bytes are a refresh trigger, never replacement-key authority.
 //! Native response adoption and deferred notification ACK are still unported.
 use super::{actions, messaging};
+mod attestation;
 mod guard;
 use crate::{
     Error, Result,
@@ -10,6 +11,7 @@ use crate::{
     session::AccountRecord,
     store::{ProtocolStore, Table},
 };
+pub use attestation::{AttestationAccountType, AttestationInspection, AttestationStatus};
 pub use guard::RefreshGuard;
 use sha2::{Digest, Sha256};
 use wacore_libsignal::protocol::IdentityKey;
@@ -52,6 +54,8 @@ pub struct Inspection {
     pub pin_matches: Option<bool>,
     /// Original notification-time identity provenance, never admission authority.
     pub refresh_guard: RefreshGuard,
+    /// Selected-device attestation verification; null until a supported bundle.
+    pub attestation: Option<AttestationInspection>,
 }
 
 /// Inspect an identity_refresh action, its original target and current pin in
@@ -106,6 +110,7 @@ fn inspect_in(tx: &crate::store::ReadTx<'_>, id: &str) -> Result<Option<Inspecti
         signature_valid: None,
         pin_matches: None,
         refresh_guard,
+        attestation: None,
     };
     let Some(reply) = reply else {
         return Ok(Some(result));
@@ -165,6 +170,14 @@ fn inspect_in(tx: &crate::store::ReadTx<'_>, id: &str) -> Result<Option<Inspecti
     };
     let valid = crate::signal::direct::validate_bundle_signature(&bundle).is_ok();
     result.signature_valid = Some(valid);
+    if users.len() == 1 {
+        result.attestation = Some(attestation::inspect(
+            users[0],
+            bundle
+                .identity_key()
+                .map_err(|_| Error::invalid("identity_notification", "invalid bundle identity"))?,
+        ));
+    }
     result.pin_matches = pin
         .map(|pin| {
             bundle
@@ -690,6 +703,79 @@ mod tests {
             let reopened = open(&path);
             assert_eq!(snapshot(&reopened), before);
             assert_eq!(reopened.journal_head().unwrap(), head);
+        }
+    }
+
+    #[tokio::test]
+    async fn verified_attestation_inspection_remains_separate_from_adoption() {
+        for valid in [true, false] {
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(&dir.path().join("attestation.redb"));
+            let peer = Jid::parse("222222222222222@lid").unwrap();
+            install_pin(&store, &peer);
+            let fetched = IdentityKeyPair::generate(&mut rand::rng());
+            let Refresh::Queued(id) = queue(
+                &store,
+                &account(),
+                &notification(&peer.to_string(), "attestation"),
+            )
+            .unwrap() else {
+                panic!("read")
+            };
+            actions::reserve_pending(&store).unwrap();
+            let body = vec![8u8, 1, 16, 7];
+            let signature = fetched
+                .private_key()
+                .calculate_signature(&[vec![6u8, 7], body.clone()].concat(), &mut rand::rng())
+                .unwrap();
+            let mut response = reply(&peer, &id, &fetched, true);
+            let crate::binary::NodeContent::Children(lists) = &mut response.content else {
+                panic!("list")
+            };
+            let crate::binary::NodeContent::Children(users) = &mut lists[0].content else {
+                panic!("users")
+            };
+            let crate::binary::NodeContent::Children(fields) = &mut users[0].content else {
+                panic!("fields")
+            };
+            fields.push(
+                Node::new("non_e2ee_attestation")
+                    .attr("account_type", "hybrid_e2ee")
+                    .children(vec![
+                        Node::new("value").bytes(body),
+                        Node::new("signature").bytes(if valid {
+                            signature.to_vec()
+                        } else {
+                            vec![0; 64]
+                        }),
+                    ]),
+            );
+            actions::record_reply(&store, &response).unwrap();
+            let before = protected(&store);
+            let head = store.journal_head().unwrap();
+            let inspection = inspect(&store, &id).unwrap().unwrap();
+            assert_eq!(inspection.pin_matches, Some(false));
+            assert_eq!(inspection.signature_valid, Some(true));
+            assert_eq!(
+                inspection.attestation.as_ref().unwrap().status,
+                if valid {
+                    AttestationStatus::Verified
+                } else {
+                    AttestationStatus::InvalidSignature
+                }
+            );
+            assert_eq!(
+                inspection.attestation.as_ref().unwrap().signature_valid,
+                Some(valid)
+            );
+            assert_eq!(
+                preview_session(&store, &id).await.unwrap().outcome,
+                "attestation_admission_unported"
+            );
+            assert_eq!(protected(&store), before);
+            assert_eq!(store.journal_head().unwrap(), head);
+            let json = serde_json::to_string(&inspection).unwrap();
+            assert!(!json.contains(&peer.user) && !json.contains(&id));
         }
     }
 

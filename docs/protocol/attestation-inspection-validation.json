@@ -1,0 +1,28 @@
+{
+  "validation": "offline_previously_saved_authenticated_directory_reply",
+  "date": "2026-10-09",
+  "implementation_base_commit": "50d3f34",
+  "original_read_commit": "41e66e3",
+  "network_requests": 0,
+  "store_summary_unchanged": true,
+  "inspection": {
+    "status": "verified_bundle",
+    "peer_namespace": "lid",
+    "device": 0,
+    "server_error_code": null,
+    "signature_valid": true,
+    "pin_matches": true,
+    "refresh_guard": "untracked",
+    "attestation": {
+      "status": "absent",
+      "declared_account_type": null,
+      "payload_account_type": null,
+      "signature_valid": null
+    }
+  },
+  "limits": [
+    "No attestation was returned on this historical selected device; no live attestation signature verification proved.",
+    "Historical original refresh guard remains untracked; no backfill, replay or adoption.",
+    "Summary equality is not a byte-level live account-row comparison."
+  ]
+}

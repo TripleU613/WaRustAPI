@@ -1,0 +1,21 @@
+# APK-derived structural disassembly: LX/A61;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <clinit>(V) flags=0x10009 registers=3
+  # full signature: LX/A61;-><clinit>()V
+  0000..0006 op=71 invoke-static {}, LX/6aj;->A1a()[Ljava/lang/String;
+  0006..0008 op=0c move-result-object v2
+  0008..000c op=1a const-string v1, "hybrid_e2ee"
+  000c..000e op=12 const/4 v0, #0x0
+  000e..0012 op=4d aput-object v1, v2, v0
+  0012..0016 op=1a const-string v1, "non_e2ee"
+  0016..0018 op=12 const/4 v0, #0x1
+  0018..001c op=4d aput-object v1, v2, v0
+  001c..0022 op=71 invoke-static {v2}, LX/08J;->A0b([Ljava/lang/Object;)Ljava/util/Set;
+  0022..0024 op=0c move-result-object v0
+  0024..0028 op=69 sput-object v0, LX/A61;->A00:Ljava/util/Set;
+  0028..002a op=0e return-void
+  # exception table: 0 try range(s)
+.end method

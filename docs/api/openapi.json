@@ -4058,7 +4058,8 @@
           "server_error_code",
           "signature_valid",
           "pin_matches",
-          "refresh_guard"
+          "refresh_guard",
+          "attestation"
         ],
         "properties": {
           "status": {
@@ -4121,6 +4122,17 @@
               "generation_changed"
             ],
             "description": "Relationship to immutable original refresh identity provenance. untracked means historical snapshot absent, not unchanged. matches is not native admission, a session OCC commit guard or proof of trust. No guard values are backfilled."
+          },
+          "attestation": {
+            "description": "Selected-device attestation verification, or null before a complete supported bundle; verified does not imply native admission or pin replacement.",
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PeerAttestationInspection"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         }
       },
@@ -4174,6 +4186,65 @@
             "type": "boolean",
             "const": false,
             "description": "Always false: candidate bytes are discarded, not exported or written."
+          }
+        }
+      },
+      "PeerAttestationInspection": {
+        "type": "object",
+        "description": "APK-derived non-E2EE attestation verification, separate from native CPB acceptance and trust.",
+        "required": [
+          "status",
+          "declared_account_type",
+          "payload_account_type",
+          "signature_valid"
+        ],
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "absent",
+              "verified",
+              "invalid_account_type",
+              "malformed_attestation",
+              "payload_too_large",
+              "malformed_protobuf",
+              "invalid_payload_account_type",
+              "account_type_mismatch",
+              "invalid_signature"
+            ],
+            "description": "Fixed redacted local verification status. Ambiguous nodes and the 64 KiB payload bound are local guards; no server refusal is inferred."
+          },
+          "declared_account_type": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "hybrid_e2ee",
+              "non_e2ee",
+              null
+            ],
+            "description": "Recognized stanza account_type, never arbitrary returned text; null if absent, unsupported or not evaluated."
+          },
+          "payload_account_type": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "e2ee",
+              "hybrid_e2ee",
+              "non_e2ee",
+              null
+            ],
+            "description": "BP2 closed protobuf enum projection: default E2EE=0, hybrid=1, non-E2EE=2. These differ from C0F stored-state values. null if parsing was not reached or failed."
+          },
+          "signature_valid": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Verification of 06 07 plus original body under the fetched type-5 identity, only after recognized types agree; null before verification. Signature alone is not native admission, directory authentication or human verification."
           }
         }
       }
@@ -4595,7 +4666,7 @@
           "Chat Actions"
         ],
         "summary": "Show queued one-shot actions and their outcomes",
-        "description": "Show queued one-shot actions (block list, reports, lookups) and their outcomes (offline, redacted). Includes identity_refresh directory reads queued by authenticated identity notifications. An ok action means a correlated generic result, not verified bundle or adopted identity. Refused/invalid/uncertain reads are retained; this phase never transmits a chat or changes a pin/session. For identity_refresh actions only, --show prints a structured redacted snapshot with namespace/device, exact refusal code, signed-bundle validity and current-pin comparison; no raw request, reply, peer address or key is printed. verified_bundle authenticates the fetched signed device key, not adoption or human verification. --show ID --preview-session is an offline cryptographic preview for identity_refresh only. It derives and discards a primary classic same-identity session, retaining held state in the candidate archive without constructing a chat. It never writes a candidate or evaluates native CPB admission. Present attestation/PQ metadata, companions, changed/missing pins and unverified replies do not derive; malformed held state refuses with fixed redacted diagnostics. Unknown native stored attestation state is not assumed NOT_SET or E2EE. Evidence: docs/protocol/session-refresh-preview.md. Newly queued identity_refresh actions now atomically capture original generation, exact pin fingerprint, exact-device authenticated transition marker and nullable primary-user version. --show prints refresh_guard (matches, untracked, pin_changed, transition_changed, primary_version_changed, generation_changed); markers and fingerprints stay private. Duplicate events keep the original baseline; missing historical snapshots remain untracked. Matching guards do not establish CPB admission or commit authority. --preview-session skips derivation for a known stale guard. Evidence: docs/protocol/identity-refresh-guards.md.",
+        "description": "Show queued one-shot actions (block list, reports, lookups) and their outcomes (offline, redacted). Includes identity_refresh directory reads queued by authenticated identity notifications. An ok action means a correlated generic result, not verified bundle or adopted identity. Refused/invalid/uncertain reads are retained; this phase never transmits a chat or changes a pin/session. For identity_refresh actions only, --show prints a structured redacted snapshot with namespace/device, exact refusal code, signed-bundle validity and current-pin comparison; no raw request, reply, peer address or key is printed. verified_bundle authenticates the fetched signed device key, not adoption or human verification. --show ID --preview-session is an offline cryptographic preview for identity_refresh only. It derives and discards a primary classic same-identity session, retaining held state in the candidate archive without constructing a chat. It never writes a candidate or evaluates native CPB admission. Present attestation/PQ metadata, companions, changed/missing pins and unverified replies do not derive; malformed held state refuses with fixed redacted diagnostics. Unknown native stored attestation state is not assumed NOT_SET or E2EE. Evidence: docs/protocol/session-refresh-preview.md. Newly queued identity_refresh actions now atomically capture original generation, exact pin fingerprint, exact-device authenticated transition marker and nullable primary-user version. --show prints refresh_guard (matches, untracked, pin_changed, transition_changed, primary_version_changed, generation_changed); markers and fingerprints stay private. Duplicate events keep the original baseline; missing historical snapshots remain untracked. Matching guards do not establish CPB admission or commit authority. --preview-session skips derivation for a known stale guard. Evidence: docs/protocol/identity-refresh-guards.md. For supported selected-device identity_refresh replies, --show additionally inspects non_e2ee_attestation: allowed declared account type, BP2 field-1 closed-enum projection, matching type and signature over APK prefix 06 07 plus the original value bytes. Attestation and signed-key validity remain separate from current-pin agreement, refresh guards and native CPB admission. Raw values/signatures and unknown server strings are never printed. Absent, malformed, oversized, mismatched and invalid-signature results are local inspector statuses, not server response codes. Native stored-state/property/override transitions remain unported; even verified attestation is not adoption authority. Evidence: docs/protocol/attestation-verification.md.",
         "operationId": "listActions",
         "x-cli": "whatsapp-cli actions",
         "x-transport": [

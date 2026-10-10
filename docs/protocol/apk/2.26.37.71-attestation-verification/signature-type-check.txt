@@ -1,0 +1,24 @@
+# APK-derived structural disassembly: LX/B7H;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A09(ZLLL) flags=0x19 registers=5
+  # full signature: LX/B7H;->A09(LX/B7E;[B[B)Z
+  0000..0006 op=71 invoke-static {v3, v4}, LX/1xj;->A1G(Ljava/lang/Object;Ljava/lang/Object;)V
+  0006..000a op=56 iget-byte v1, v2, LX/B7E;->A00:B
+  000a..000c op=12 const/4 v0, #0x5
+  000c..0010 op=33 if-ne v1, v0, +0xf
+  0010..0014 op=1a const-string v0, "best"
+  0014..001a op=71 invoke-static {v0}, LX/1NH;->A00(Ljava/lang/String;)LX/1NH;
+  001a..001c op=0c move-result-object v1
+  001c..0020 op=54 iget-object v0, v2, LX/B7E;->A01:[B
+  0020..0026 op=6e invoke-virtual {v1, v0, v3, v4}, LX/1NH;->A01([B[B[B)Z
+  0026..0028 op=0a move-result v0
+  0028..002a op=0f return v0
+  002a..002e op=1a const-string v0, "PublicKey type is invalid"
+  002e..0034 op=71 invoke-static {v0}, LX/Ayj;->A14(Ljava/lang/Object;)Ljava/lang/AssertionError;
+  0034..0036 op=0c move-result-object v0
+  0036..0038 op=27 throw v0
+  # exception table: 0 try range(s)
+.end method
