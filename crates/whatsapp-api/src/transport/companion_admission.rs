@@ -50,6 +50,9 @@ pub(crate) struct AuthoritySnapshot {
 }
 
 impl AuthoritySnapshot {
+    pub(crate) fn refresh_required(&self) -> bool {
+        self.refresh_timestamp.is_some()
+    }
     pub(crate) fn commit(&self, tx: &mut WriteTx<'_>) -> Result<()> {
         self.check(tx)?;
         let mut list = self.list.clone();
@@ -111,6 +114,29 @@ pub(crate) fn prepare_same_key_directory_in(
     user: &Node,
     candidate: &[u8],
 ) -> Result<Admission> {
+    prepare_directory_in(tx, peer, user, candidate, false)
+}
+
+/// 14J.A04 passes its independently parsed directory identity to 11T.A0D.
+/// Both ADV signatures must bind this changed key to the held primary baseline.
+/// Supports existing remote membership; first-seen/addition and primary replacement
+/// remain outside this guarded identity-refresh action.
+pub(crate) fn prepare_changed_key_directory_in(
+    tx: &ReadTx<'_>,
+    peer: &Jid,
+    user: &Node,
+    candidate: &[u8],
+) -> Result<Admission> {
+    prepare_directory_in(tx, peer, user, candidate, true)
+}
+
+fn prepare_directory_in(
+    tx: &ReadTx<'_>,
+    peer: &Jid,
+    user: &Node,
+    candidate: &[u8],
+    changed: bool,
+) -> Result<Admission> {
     use Admission::{Ready, Refused};
     if peer.user.is_empty()
         || peer.agent != 0
@@ -161,8 +187,20 @@ pub(crate) fn prepare_same_key_directory_in(
         format!("comparison-direct:{peer}").as_bytes(),
         1,
     )?;
-    if held.as_deref() != Some(candidate) || candidate.len() != 33 || candidate[0] != 5 {
+    if !changed
+        && (held.as_deref() != Some(candidate) || candidate.len() != 33 || candidate[0] != 5)
+    {
         return Ok(Refused("same_identity_required"));
+    }
+    if changed
+        && (held.as_deref() == Some(candidate)
+            || !held
+                .as_ref()
+                .is_some_and(|key| key.len() == 33 && key[0] == 5)
+            || candidate.len() != 33
+            || candidate[0] != 5)
+    {
+        return Ok(Refused("changed_identity_required"));
     }
     let primary = peer.to_non_ad();
     let Some(pin): Option<Vec<u8>> = tx.get_json(
@@ -204,12 +242,51 @@ pub(crate) fn prepare_same_key_directory_in(
     {
         return Ok(Refused("pending_device_teardown"));
     }
+    let refresh_timestamp = if changed {
+        let NodeContent::Bytes(bytes) = &adv.content else {
+            unreachable!()
+        };
+        // 11T.A0D 01a0..01cc loads independent primary when omitted;
+        // 030a..0374 verifies both signatures over the directory candidate.
+        let primary_key: &[u8; 32] = pin[1..].try_into().expect("validated primary size");
+        let candidate_key: &[u8; 32] = candidate[1..].try_into().expect("validated candidate size");
+        let Ok(verified) = VerifiedDeviceIdentity::verify(bytes, primary_key, candidate_key) else {
+            return Ok(Refused("invalid_device_identity"));
+        };
+        if !verified.is_e2ee() {
+            return Ok(Refused("unsupported_encryption_type"));
+        }
+        if list.raw_id != Some(verified.raw_id()) {
+            return Ok(Refused("raw_id_mismatch"));
+        }
+        let Some(timestamp) = list.list_timestamp else {
+            return Ok(Refused("missing_list_timestamp"));
+        };
+        if verified.key_index() == 0 || verified.key_index() > i32::MAX as u32 {
+            return Ok(Refused("invalid_companion_index"));
+        }
+        let matched = list
+            .devices
+            .iter()
+            .any(|entry| entry.jid == *peer && entry.key_index == verified.key_index());
+        // 11T.A0D 04fa..050e / 05fa..0602 uses signed Java cmp-long,
+        // even though GsB timestamp is protobuf uint64. Never promote a high
+        // bit to an unsigned newer timestamp. Existing addresses are add-only:
+        // 06f2..071e removes them before insertion, retaining their old index.
+        let newer = (verified.timestamp() as i64) > (timestamp as i64);
+        if !matched && !newer {
+            return Ok(Refused("deleted_device"));
+        }
+        newer.then_some(verified.timestamp())
+    } else {
+        None
+    };
     Ok(Ready(Box::new(AuthoritySnapshot {
         list,
         primary_pin: pin,
         login_identity: login,
         account,
-        refresh_timestamp: None,
+        refresh_timestamp,
         device_addition: None,
     })))
 }
@@ -353,7 +430,9 @@ pub(crate) fn prepare(
         let matched = entries
             .first()
             .is_some_and(|entry| entry.key_index == verified.key_index());
-        if !matched && verified.timestamp() <= timestamp {
+        // APK 37.71 11T.A0D cmp-long is signed despite protobuf uint64.
+        let newer = (verified.timestamp() as i64) > (timestamp as i64);
+        if !matched && !newer {
             return Ok(Refused("deleted_device"));
         }
         let device_addition = if entries.is_empty() {
@@ -394,7 +473,7 @@ pub(crate) fn prepare(
             primary_pin: pin,
             login_identity: login,
             account: saved_account,
-            refresh_timestamp: (verified.timestamp() > timestamp).then_some(verified.timestamp()),
+            refresh_timestamp: newer.then_some(verified.timestamp()),
         })))
     })
 }
@@ -652,6 +731,55 @@ mod tests {
         }
     }
 
+    #[tokio::test]
+    async fn authenticated_receive_uses_signed_adv_floor_and_expected_timestamp() {
+        for raw in ["15555550101:3@s.whatsapp.net", "99990000101:3@lid"] {
+            let dir = tempfile::tempdir().unwrap();
+            let (store, receiver, peer, node) =
+                fixture(&dir.path().join("signed-time.redb"), raw).await;
+            let mut baseline = super::super::devices::device_list(&store, &peer)
+                .unwrap()
+                .unwrap();
+            // APK cmp-long sees these protobuf uint64 values as negative,
+            // below the independently signed fixture timestamp 9.
+            baseline.list_timestamp = Some(1u64 << 63);
+            baseline.expected_timestamp = Some(u64::MAX);
+            store
+                .write(|tx| {
+                    tx.put_json(
+                        Table::Checkpoints,
+                        list_key(&baseline.owner).as_bytes(),
+                        1,
+                        &baseline,
+                    )
+                })
+                .unwrap();
+            assert_eq!(
+                inspect(&store, &receiver, &peer, &node, ciphertext(&node)).unwrap(),
+                "ready_refresh_pending"
+            );
+            assert_eq!(
+                super::super::devices::device_list(&store, &peer).unwrap(),
+                Some(baseline.clone())
+            );
+            let capture = super::super::inbox::preserve(&store, &node).unwrap();
+            assert_eq!(
+                super::super::inbox::process(&store, &receiver, &node, &capture)
+                    .await
+                    .unwrap(),
+                super::super::inbox::IncomingResult::Decrypted
+            );
+            baseline.expected_timestamp = Some(9);
+            assert_eq!(
+                super::super::devices::device_list(&store, &peer).unwrap(),
+                Some(baseline)
+            );
+            assert_eq!(
+                super::super::devices::pending_users(&store).unwrap(),
+                vec![peer.to_non_ad()]
+            );
+        }
+    }
     #[tokio::test]
     async fn newer_known_adv_refresh_commits_only_with_authenticated_message() {
         for (direct, corrupt, membership, raw) in [false, true].into_iter().flat_map(|direct| {

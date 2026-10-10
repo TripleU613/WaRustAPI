@@ -1,5 +1,11 @@
 # Known companion same-key directory refresh
 
+Follow-up: [changed companion directory application](companion-changed-key-refresh.md)
+now verifies full ADV for a guarded existing companion against its independent
+current primary baseline. First-seen, primary/raw-ID changes and full native
+admission remain unfinished.
+
+
 2026-10-09. **Confirmed static / implemented offline** for WhatsApp APK
 **2.26.37.71**, SHA-256
 `1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.

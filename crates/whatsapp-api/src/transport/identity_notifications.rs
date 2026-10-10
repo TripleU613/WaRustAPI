@@ -120,6 +120,9 @@ pub struct Inspection {
     /// Null for primary/incomplete/invalid-signature replies; ready still needs
     /// policy, metadata, original guards and atomic session/reply rechecks.
     pub companion_same_key_authority: Option<&'static str>,
+    /// Changed companion ADV/baseline diagnostic; null unless its supported
+    /// signed bundle differs from the held pin. Ready is not policy/guard admission.
+    pub companion_changed_key_authority: Option<&'static str>,
     /// Durable historical application fact, not current key agreement or trust.
     pub applied: bool,
 }
@@ -179,6 +182,7 @@ fn inspect_in(tx: &crate::store::ReadTx<'_>, id: &str) -> Result<Option<Inspecti
         attestation: None,
         force_override_e2ee_state: None,
         companion_same_key_authority: None,
+        companion_changed_key_authority: None,
         applied: application::applied_in(tx, id, &peer)?,
     };
     let Some(reply) = reply else {
@@ -270,6 +274,28 @@ fn inspect_in(tx: &crate::store::ReadTx<'_>, id: &str) -> Result<Option<Inspecti
                 users[0],
                 identity.as_ref(),
             )? {
+                super::companion_admission::Admission::Ready(_) => "ready",
+                super::companion_admission::Admission::Refused(reason) => reason,
+            },
+        );
+    }
+    if valid && peer.device != 0 && users.len() == 1 && result.pin_matches == Some(false) {
+        let identity = bundle
+            .identity_key()
+            .map_err(|_| Error::invalid("identity_notification", "invalid bundle identity"))?
+            .serialize();
+        result.companion_changed_key_authority = Some(
+            match super::companion_admission::prepare_changed_key_directory_in(
+                tx,
+                &peer,
+                users[0],
+                identity.as_ref(),
+            )? {
+                super::companion_admission::Admission::Ready(authority)
+                    if authority.refresh_required() =>
+                {
+                    "ready_refresh_pending"
+                }
                 super::companion_admission::Admission::Ready(_) => "ready",
                 super::companion_admission::Admission::Refused(reason) => reason,
             },

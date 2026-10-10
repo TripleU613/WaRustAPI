@@ -1,5 +1,20 @@
 # Messaging completion checklist
 
+Changed companion directory application (2026-10-09, **implemented/offline**):
+guarded changed classic keys now validate both ADV signatures against the
+actual candidate and independent primary, with current E2EE/raw-ID/membership
+baseline. Fresh session and old encrypted transition history commit once with
+applicable cleanup and newer-ADV pending sync. Existing device index/primary
+are preserved. Shared ADV floor/expected comparisons now use APK signed Java
+long semantics. actions --show adds companion_changed_key_authority. Own,
+unsupported metadata, first-seen and primary/raw-ID changes stay deferred;
+fresh live application unknown.
+Validation: 882 workspace/all-feature tests, strict Clippy, Rustdoc, default
+CLI/API symbols and CLI reference passed. 19-topic / 24-file source export
+reproduces exactly; cached self-diff unchanged.
+[Trace and limits](protocol/companion-changed-key-refresh.md).
+
+
 Known companion same-key refresh (2026-10-09, **implemented/offline**): guarded
 classic directory replies now refresh an already listed companion with the
 same held key under apk_authenticated. APK 11T.A0D returns before ADV parsing

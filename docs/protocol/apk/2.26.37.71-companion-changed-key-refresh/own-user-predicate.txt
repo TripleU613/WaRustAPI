@@ -1,0 +1,24 @@
+# APK-derived structural disassembly: LX/08i;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method BO0(ZL) flags=0x1 registers=3
+  # full signature: LX/08i;->BO0(LX/0Cy;)Z
+  0000..0004 op=38 if-eqz v2, +0x1a
+  0004..000a op=6e invoke-virtual {v1}, LX/08i;->A09()V
+  000a..000e op=54 iget-object v0, v1, LX/08i;->A0I:Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+  000e..0014 op=6e invoke-virtual {v2, v0}, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z
+  0014..0016 op=0a move-result v0
+  0016..001a op=39 if-nez v0, +0xd
+  001a..0020 op=71 invoke-static {v1}, LX/08i;->A04(LX/08i;)V
+  0020..0024 op=54 iget-object v0, v1, LX/08i;->A0H:LX/0ZY;
+  0024..002a op=6e invoke-virtual {v2, v0}, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z
+  002a..002c op=0a move-result v0
+  002c..0030 op=38 if-eqz v0, +0x4
+  0030..0032 op=12 const/4 v0, #0x1
+  0032..0034 op=0f return v0
+  0034..0036 op=12 const/4 v0, #0x0
+  0036..0038 op=0f return v0
+  # exception table: 0 try range(s)
+.end method

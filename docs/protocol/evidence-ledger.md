@@ -1,5 +1,18 @@
 # Evidence ledger
 
+2026-10-09 — **confirmed static / implemented offline**: APK 37.71
+14J.A04 companion directory candidate calls 11T.A0D discriminator 4 / false.
+0jV.A0a/A08 and 08i/08a own predicates close remote login/own branch inputs.
+Both ADV signatures bind candidate and independent primary; matched E2EE/raw-ID
+baseline then exact device-index/signed-long timestamp admission. Newer ADV
+requests sync but existing membership indices are add-only. Rust guarded
+changed companion reply application now includes this admission and atomic
+history/fresh session/pending sync; shared receive/expected comparison corrected
+from unsigned to APK signed long. No first-seen or primary/raw-ID replacement
+inferred, live qualifying application unknown.
+[Evidence, negatives and recipe](companion-changed-key-refresh.md).
+
+
 2026-10-09 — **confirmed static / implemented offline**: APK 2.26.37.71
 CPB.A00 nonprimary Bjo; 14J.A04 routes to 11T.A0D; nonnull ADV + exact current
 membership + equal held key fast-return precedes ADV parsing. B7D/B7E equality

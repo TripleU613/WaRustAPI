@@ -1,4 +1,4 @@
-//! APK 37.71 bounded primary/classic and known same-key companion application.
+//! APK 37.71 bounded primary/classic and verified remote companion application.
 //! Stored attestation state/property assignments remain unknown: this branch
 //! admits under both property values, without manufacturing either assignment.
 use super::{RefreshGuard, actions, guard, inspect_in};
@@ -155,9 +155,6 @@ async fn stage(
     // equal old state -> Bjo; NOT_SET -> Bjn; HYBRID/NON with A08 ->
     // Bjn at 0252 -> 0306. Disabled main property -> Bjo. All admit;
     // without that server child, unknown old state/0x7497 cannot be guessed.
-    if peer.device != 0 && !same_identity {
-        return Ok(deferred("companion_admission_unported"));
-    }
     if peer.device == 0 && same_identity && user.child("force_override_e2ee_state").is_none() {
         return Ok(deferred("same_identity_admission_unported"));
     }
@@ -177,9 +174,15 @@ async fn stage(
     let pin = pin.ok_or_else(|| invalid("missing saved identity"))?;
     let companion = if peer.device != 0 {
         match store.read(|tx| {
-            super::super::companion_admission::prepare_same_key_directory_in(
-                tx, &peer, user, &identity,
-            )
+            if same_identity {
+                super::super::companion_admission::prepare_same_key_directory_in(
+                    tx, &peer, user, &identity,
+                )
+            } else {
+                super::super::companion_admission::prepare_changed_key_directory_in(
+                    tx, &peer, user, &identity,
+                )
+            }
         })? {
             super::super::companion_admission::Admission::Ready(authority) => Some(authority),
             super::super::companion_admission::Admission::Refused(reason) => {
@@ -301,6 +304,12 @@ fn commit(store: &ProtocolStore, staged: &Staged) -> Result<Application> {
             1,
             &*staged.session,
         )?;
+        if let Some(authority) = &staged.companion {
+            // Directory signatures and session derivation were checked before
+            // this transaction; a newer ADV requests sync without moving its
+            // verified floor or replacing an existing membership index.
+            authority.commit(tx)?;
+        }
         tx.put_json(
             Table::Checkpoints,
             key(&staged.id).as_bytes(),
@@ -446,7 +455,7 @@ mod tests {
         };
         fields.push(Node::new(name));
     }
-    fn install_companion_authority(f: &Fixture) {
+    fn install_companion_authority(f: &Fixture) -> IdentityKeyPair {
         use super::super::super::devices::{DeviceEntry, DeviceList, list_key};
         let primary = f.peer.to_non_ad();
         let key = install_pin(&f.store, &primary);
@@ -482,6 +491,7 @@ mod tests {
             tx.put_json(Table::Checkpoints, b"login-identity", 1,
                 &serde_json::json!({"pn":"15555550999@s.whatsapp.net", "lid":"999999999999999@lid"}))
         }).unwrap();
+        key
     }
     fn device_identity(response: &mut Node, content: NodeContent) {
         metadata(response, "device-identity");
@@ -510,6 +520,368 @@ mod tests {
                 tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &list)
             })
             .unwrap();
+    }
+    // Grz fields 1..4 and GsB 1=rawId/2=timestamp/3=keyIndex are APK 37.71
+    // descriptors; this generated fixture binds the directory key directly,
+    // without manufacturing a receive prekey envelope or native login state.
+    fn signed_companion_adv(
+        primary: &IdentityKeyPair,
+        companion: &IdentityKeyPair,
+        raw_id: u32,
+        timestamp: u64,
+        key_index: u32,
+    ) -> Vec<u8> {
+        use prost::Message as _;
+        let details = crate::proto::wa_adv::AdvDeviceIdentity {
+            raw_id: Some(raw_id),
+            timestamp: Some(timestamp),
+            key_index: Some(key_index),
+            account_type: None,
+            device_type: None,
+        }
+        .encode_to_vec();
+        let remote = companion.public_key().public_key_bytes();
+        let account = primary.public_key().public_key_bytes();
+        let account_sig = primary
+            .private_key()
+            .calculate_signature(&[&[6, 0][..], &details, remote].concat(), &mut rand::rng())
+            .unwrap();
+        let device_sig = companion
+            .private_key()
+            .calculate_signature(
+                &[&[6, 1][..], &details, remote, account].concat(),
+                &mut rand::rng(),
+            )
+            .unwrap();
+        crate::proto::wa_adv::AdvSignedDeviceIdentity {
+            details: Some(details.into()),
+            account_signature_key: None,
+            account_signature: Some(account_sig.to_vec().into()),
+            device_signature: Some(device_sig.to_vec().into()),
+        }
+        .encode_to_vec()
+    }
+    #[tokio::test]
+    async fn changed_companion_adv_adopts_fresh_key_preserves_primary_and_recovers_once() {
+        for peer in ["15555550111:4@s.whatsapp.net", "222222222222222:4@lid"] {
+            // Existing-index lower/equal/newer timestamps; different-index
+            // newer candidate preserves the old add-only membership index.
+            for (timestamp, index) in [(8, 7), (9, 7), (10, 7), (10, 6), (u64::MAX, 7)] {
+                let f = fixture(peer).await;
+                let primary = install_companion_authority(&f);
+                if timestamp == 10 {
+                    change_list(&f, |l| l.expected_timestamp = Some(u64::MAX));
+                }
+                let original_list = super::super::super::devices::device_list(&f.store, &f.peer)
+                    .unwrap()
+                    .unwrap();
+                let mut response = f.response.clone();
+                device_identity(
+                    &mut response,
+                    NodeContent::Bytes(
+                        signed_companion_adv(&primary, &f.new, 8, timestamp, index).into(),
+                    ),
+                );
+                settle(&f, &response);
+                let inspection = super::super::inspect(&f.store, &f.id).unwrap().unwrap();
+                assert_eq!(
+                    inspection.companion_changed_key_authority,
+                    Some(if timestamp == 10 {
+                        "ready_refresh_pending"
+                    } else {
+                        "ready"
+                    })
+                );
+                let before = snapshot(&f.store);
+                let head = f.store.journal_head().unwrap();
+                assert_eq!(
+                    recover(&f.store, IdentityChangePolicy::ApkAuthenticated)
+                        .await
+                        .unwrap(),
+                    1
+                );
+                let (pin, session, primary_pin) = f
+                    .store
+                    .read(|tx| {
+                        Ok((
+                            tx.get_json::<Vec<u8>>(
+                                Table::PeerIdentities,
+                                format!("comparison-direct:{}", f.peer).as_bytes(),
+                                1,
+                            )?
+                            .unwrap(),
+                            tx.get_json::<Vec<u8>>(
+                                Table::SignalSessions,
+                                format!("comparison-direct:{}", f.peer).as_bytes(),
+                                1,
+                            )?
+                            .unwrap(),
+                            tx.get_json::<Vec<u8>>(
+                                Table::PeerIdentities,
+                                format!("comparison-direct:{}", f.peer.to_non_ad()).as_bytes(),
+                                1,
+                            )?
+                            .unwrap(),
+                        ))
+                    })
+                    .unwrap();
+                assert_eq!(pin, f.new.identity_key().serialize().to_vec());
+                assert_eq!(primary_pin, primary.identity_key().serialize().to_vec());
+                let record = SessionRecord::deserialize(&session).unwrap();
+                assert_eq!(record.previous_session_count(), 0);
+                assert_eq!(
+                    record
+                        .session_state()
+                        .unwrap()
+                        .remote_identity_key()
+                        .unwrap(),
+                    Some(*f.new.identity_key())
+                );
+                assert_ne!(session, f.held);
+                assert_ne!(f.store.journal_head().unwrap(), head);
+                let history: Vec<serde_json::Value> = f
+                    .store
+                    .read(|tx| {
+                        Ok(tx
+                            .scan_after(Table::Checkpoints, 1, None, 512)?
+                            .into_iter()
+                            .filter(|(k, _)| k.starts_with(b"identity-history:"))
+                            .map(|(_, v)| serde_json::from_slice(&v).unwrap())
+                            .collect())
+                    })
+                    .unwrap();
+                assert_eq!(history.len(), 1);
+                assert_eq!(history[0]["previous_session"], serde_json::json!(f.held));
+                assert_eq!(
+                    history[0]["previous_identity"],
+                    serde_json::json!(f.old.identity_key().serialize().to_vec())
+                );
+                let list = super::super::super::devices::device_list(&f.store, &f.peer)
+                    .unwrap()
+                    .unwrap();
+                let mut expected = original_list;
+                if timestamp == 10 {
+                    expected.expected_timestamp = Some(10);
+                }
+                assert_eq!(list, expected);
+                let pending = super::super::super::devices::pending_users(&f.store).unwrap();
+                assert_eq!(
+                    pending,
+                    if timestamp == 10 {
+                        vec![f.peer.to_non_ad()]
+                    } else {
+                        vec![]
+                    }
+                );
+                let after = snapshot(&f.store);
+                for (i, t) in Table::ALL.iter().enumerate() {
+                    if !matches!(
+                        t,
+                        Table::PeerIdentities | Table::SignalSessions | Table::Checkpoints
+                    ) {
+                        assert_eq!(before[i], after[i], "{t:?}");
+                    }
+                }
+                assert_eq!(
+                    apply(&f.store, &f.id, IdentityChangePolicy::ApkAuthenticated)
+                        .await
+                        .unwrap(),
+                    Application::AlreadyApplied
+                );
+                assert_eq!(snapshot(&f.store), after);
+                let path = f.dir.path().join("application.redb");
+                drop(f.store);
+                let reopened = open(&path);
+                assert_eq!(
+                    recover(&reopened, IdentityChangePolicy::ApkAuthenticated)
+                        .await
+                        .unwrap(),
+                    0
+                );
+                assert_eq!(snapshot(&reopened), after);
+                assert!(actions::reserve_pending(&reopened).unwrap().is_empty());
+            }
+        }
+    }
+    #[tokio::test]
+    async fn changed_companion_adv_refusals_and_signature_policy_preserve_all_rows() {
+        for (case, expected) in [
+            ("bad_account", "invalid_device_identity"),
+            ("bad_device", "invalid_device_identity"),
+            ("wrong_candidate", "invalid_device_identity"),
+            ("foreign_primary", "invalid_device_identity"),
+            ("raw_id", "raw_id_mismatch"),
+            ("zero_index", "invalid_companion_index"),
+            ("high_index", "invalid_companion_index"),
+            ("deleted_equal", "deleted_device"),
+            ("deleted_old", "deleted_device"),
+            ("negative_newer", "deleted_device"),
+            ("missing_timestamp", "missing_list_timestamp"),
+            ("non_e2ee_attestation", "attestation_admission_unported"),
+            ("pqkey", "pq_session_unported"),
+            ("identity_auth", "identity_auth_unported"),
+            ("pinned", "identity_policy_pinned"),
+            ("forged", "reply_not_verified"),
+            ("untracked", "original_refresh_guard_not_matching"),
+        ] {
+            let f = fixture("222222222222222:4@lid").await;
+            let primary = install_companion_authority(&f);
+            let other = IdentityKeyPair::generate(&mut rand::rng());
+            let mut bytes = signed_companion_adv(
+                if case == "foreign_primary" {
+                    &other
+                } else {
+                    &primary
+                },
+                if case == "wrong_candidate" {
+                    &other
+                } else {
+                    &f.new
+                },
+                if case == "raw_id" { 9 } else { 8 },
+                match case {
+                    "deleted_old" => 8,
+                    "negative_newer" => u64::MAX,
+                    _ => 9,
+                },
+                match case {
+                    "zero_index" => 0,
+                    "high_index" => u32::MAX,
+                    "deleted_equal" | "deleted_old" | "negative_newer" => 6,
+                    _ => 7,
+                },
+            );
+            if matches!(case, "bad_account" | "bad_device") {
+                use prost::Message as _;
+                let mut adv =
+                    crate::proto::wa_adv::AdvSignedDeviceIdentity::decode(bytes.as_slice())
+                        .unwrap();
+                let signature = if case == "bad_account" {
+                    &mut adv.account_signature
+                } else {
+                    &mut adv.device_signature
+                };
+                let mut tampered = signature.as_ref().unwrap().to_vec();
+                tampered[0] ^= 1;
+                *signature = Some(tampered.into());
+                bytes = adv.encode_to_vec();
+            }
+            let mut response = reply(&f.peer, &f.id, &f.new, case != "forged");
+            device_identity(&mut response, NodeContent::Bytes(bytes.into()));
+            if matches!(case, "non_e2ee_attestation" | "pqkey" | "identity_auth") {
+                metadata(&mut response, case);
+            }
+            if case == "missing_timestamp" {
+                change_list(&f, |l| l.list_timestamp = None);
+            }
+            settle(&f, &response);
+            if case == "untracked" {
+                f.store
+                    .write(|tx| {
+                        tx.delete(
+                            Table::Checkpoints,
+                            format!("identity-refresh-snapshot:{}", f.id).as_bytes(),
+                        )
+                    })
+                    .unwrap();
+            }
+            let before = snapshot(&f.store);
+            let head = f.store.journal_head().unwrap();
+            assert_eq!(
+                apply(
+                    &f.store,
+                    &f.id,
+                    if case == "pinned" {
+                        IdentityChangePolicy::Pinned
+                    } else {
+                        IdentityChangePolicy::ApkAuthenticated
+                    }
+                )
+                .await
+                .unwrap(),
+                Application::Deferred(expected),
+                "{case}"
+            );
+            assert_eq!(snapshot(&f.store), before, "{case}");
+            assert_eq!(f.store.journal_head().unwrap(), head);
+        }
+    }
+    #[tokio::test]
+    async fn changed_companion_authority_race_and_failed_sync_roll_back_every_effect() {
+        for case in ["primary", "list", "ratchet", "bad_pending"] {
+            let f = fixture("222222222222222:4@lid").await;
+            let primary = install_companion_authority(&f);
+            let mut response = f.response.clone();
+            device_identity(
+                &mut response,
+                NodeContent::Bytes(signed_companion_adv(&primary, &f.new, 8, 10, 7).into()),
+            );
+            settle(&f, &response);
+            if case == "bad_pending" {
+                f.store
+                    .write(|tx| {
+                        tx.put_json(
+                            Table::Checkpoints,
+                            format!("device-sync-pending:{}", f.peer.to_non_ad()).as_bytes(),
+                            1,
+                            &serde_json::json!({"malformed":true}),
+                        )
+                    })
+                    .unwrap();
+            }
+            let Preparation::Ready(staged) =
+                stage(&f.store, &f.id, IdentityChangePolicy::ApkAuthenticated)
+                    .await
+                    .unwrap()
+            else {
+                panic!("stage")
+            };
+            match case {
+                "primary" => {
+                    install_pin(&f.store, &f.peer.to_non_ad());
+                }
+                "list" => change_list(&f, |l| l.devices[1].key_index = 6),
+                "ratchet" => {
+                    let progress = crate::signal::direct::prepare_payload(
+                        &f.account,
+                        &f.peer,
+                        None,
+                        Some(&f.held),
+                        Some(&f.old.identity_key().serialize()),
+                        b"progress",
+                    )
+                    .await
+                    .unwrap();
+                    f.store
+                        .write(|tx| {
+                            tx.put_json(
+                                Table::SignalSessions,
+                                format!("comparison-direct:{}", f.peer).as_bytes(),
+                                1,
+                                &*progress.session,
+                            )
+                        })
+                        .unwrap();
+                }
+                _ => {}
+            }
+            let before = snapshot(&f.store);
+            let head = f.store.journal_head().unwrap();
+            if case == "bad_pending" {
+                assert!(commit(&f.store, &staged).is_err());
+            } else {
+                assert_eq!(
+                    commit(&f.store, &staged).unwrap(),
+                    Application::Deferred(if case == "ratchet" {
+                        "peer_state_changed_before_commit"
+                    } else {
+                        "companion_authority_changed_before_commit"
+                    })
+                );
+            }
+            assert_eq!(snapshot(&f.store), before, "{case}");
+            assert_eq!(f.store.journal_head().unwrap(), head);
+        }
     }
     #[tokio::test]
     async fn known_same_key_companion_refresh_archives_ratchet_and_recovers_once() {

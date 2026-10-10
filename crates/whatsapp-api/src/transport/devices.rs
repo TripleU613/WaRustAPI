@@ -328,7 +328,10 @@ pub(super) fn request_adv_refresh_in(
 ) -> Result<()> {
     let pending: Option<Pending> =
         tx.get_json(Table::Checkpoints, pending_key(&list.owner).as_bytes(), 1)?;
-    let raised = timestamp > list.expected_timestamp.unwrap_or(0);
+    // APK 37.71 0bN.A05 0014..001c compares signed Java longs;
+    // protobuf uint64 storage must not turn a negative expected time into a
+    // permanently unreachable unsigned ceiling.
+    let raised = (timestamp as i64) > (list.expected_timestamp.unwrap_or(0) as i64);
     if raised {
         let mut updated = list.clone();
         updated.expected_timestamp = Some(timestamp);

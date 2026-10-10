@@ -1,5 +1,11 @@
 # Changed primary classic identity-refresh application
 
+Follow-up: [changed companion directory application](companion-changed-key-refresh.md)
+now verifies full ADV for a guarded existing companion against its independent
+current primary baseline. First-seen, primary/raw-ID changes and full native
+admission remain unfinished.
+
+
 Follow-up: [known companion same-key refresh](companion-same-key-refresh.md)
 now applies the native listed-device/equal-key fast return. Changed companion
 identities and full ADV/admission remain separate and unfinished.
