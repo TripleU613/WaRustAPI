@@ -478,10 +478,15 @@ signing certificate as 2.26.37.70. Its obfuscated class names differ from the
   `LX/13c.A03` `00d6..00e4` logs "skipping kyber prekeys upload" otherwise. A
   conditional `op` element (`13f0..1474`, flag `0x5bf2`, coexistence reason and
   token) is not reproduced. This client sends neither.
-- `LX/14z.A09` `001a..008a`: `notification type=encrypt` with `count/@value`
-  (optional `pq_count`) is acknowledged; `LX/14z.A02` `0154..01d4` generates
-  when nothing is unsent and uploads legacy keys (`LX/13c.A0U`); a
-  `pq_count`-only notification takes no action (`01a0`).
+- `LX/14z.A09` `001a..008a`: first-child `count` selects legacy work
+  independently of its optional signed value; sibling PQ is strict/defaulted.
+  `LX/14z.A02` `0154..01d4` generates when nothing is unsent and uploads
+  legacy keys (`LX/13c.A0U`), then acknowledges (`023a..0244`). PQ-only
+  takes no legacy action (`01a0`). Rust keeps its local ACK-before-upload
+  order. [Count parsing evidence](prekey-count-notifications.md) records the
+  corrected first-child/value distinctions. The separate first `identity`
+  branch remains unported; its [worker trace](identity-notifications.md)
+  checks a stored identity before scheduling reason-8 bulk prekey fetching.
 - `LX/DNq.run` `011a..0160`: at start, existing unsent keys are uploaded and a
   store without any generates. `LX/Bor.A03`: the result's `list/@count_low`
   ("true") schedules another upload (`LX/1Dz.A0c`, `needsMoreLegacyPrekeys`);

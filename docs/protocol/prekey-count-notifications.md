@@ -53,7 +53,8 @@ The actor preserves the encrypted raw inbound capture before parsing. It uses
 the dispatch flag for legacy replenishment, rather than optional parse success.
 Malformed PQ refuses before ACK/upload, without retrying. Existing upload
 reservations, round bounds and identity/session guards remain in force.
-Identity-first notification handling itself remains **unported**; preventing
+[Identity-first notification handling](identity-notifications.md) remains
+**unported**; preventing
 its mistaken count classification does not implement identity notification
 validation, pin adoption, invalidation or acknowledgement.
 

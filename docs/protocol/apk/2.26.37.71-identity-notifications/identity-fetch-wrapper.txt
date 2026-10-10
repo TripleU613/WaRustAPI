@@ -1,0 +1,27 @@
+# APK-derived structural disassembly: LX/14L;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A08(VLLIIIZZ) flags=0x20001 registers=18
+  # full signature: LX/14L;->A08(LX/0Cy;[Lcom/whatsapp/infra/core/jid/DeviceJid;IIIZZ)V
+  0000..0002 op=07 move-object v1, v10
+  0002..0004 op=1d monitor-enter
+  0004..0006 op=12 const/4 v3, #0x0
+  0006..0008 op=07 move-object v2, v11
+  0008..000a op=07 move-object v4, v12
+  000a..000c op=01 move v5, v13
+  000c..000e op=01 move v6, v14
+  000e..0010 op=01 move v7, v15
+  0010..0014 op=02 move/from16 v8, v16
+  0014..0018 op=02 move/from16 v9, v17
+  0018..001e op=74 invoke-virtual/range {v1..v9}, LX/14L;->A07(LX/0Cy;LX/B78;[Lcom/whatsapp/infra/core/jid/DeviceJid;IIIZZ)V
+  001e..0020 op=1e monitor-exit
+  0020..0022 op=0e return-void
+  0022..0024 op=0d move-exception v0
+  0024..0026 op=1e monitor-exit
+  0026..0028 op=27 throw v0
+  # exception table: 2 try range(s)
+  # catch <all> code_units 0003..000f -> 0011
+  # catch <all> code_units 0012..0013 -> 0011
+.end method

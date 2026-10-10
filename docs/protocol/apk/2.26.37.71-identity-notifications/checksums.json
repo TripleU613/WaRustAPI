@@ -1,0 +1,58 @@
+{
+  "identity-fetch-core-wrapper.txt": {
+    "bytes": 1275,
+    "sha256": "1a1187559123787982057b9a69baa04ba6127a963aa4b96420a55f5eddbd5874"
+  },
+  "identity-fetch-dispatch.txt": {
+    "bytes": 17226,
+    "sha256": "8bc046d7740cc39f9e2e7063fee2178e4c68a430d748de513b8843f3aa614f98"
+  },
+  "identity-fetch-entry.txt": {
+    "bytes": 1141,
+    "sha256": "f685f4b1b662b915cde396354d6cfb9e4832fe52a65ebec1129b13d5ef338591"
+  },
+  "identity-fetch-job.txt": {
+    "bytes": 8404,
+    "sha256": "153b609329e613f3f4e96433165efd29b96b0d073da111f7a04354eb5732ea52"
+  },
+  "identity-fetch-wrapper.txt": {
+    "bytes": 1214,
+    "sha256": "99917c08aea167e090176a1d66a79bdafc98a931c5e4507bd45c53b0e27c18d2"
+  },
+  "identity-handler-ack.txt": {
+    "bytes": 14348,
+    "sha256": "1d3c503391ddef67dc0b14dd747f00bb75af76d5b31d133055b899eac59601da"
+  },
+  "identity-peer-metadata.txt": {
+    "bytes": 5642,
+    "sha256": "52ebf4821d2ac1f56cc864a484d8e813183943cc1bd19741efc8742bd4abcdd8"
+  },
+  "identity-stored-key.txt": {
+    "bytes": 3319,
+    "sha256": "62e6e7684e8629314c2ea3e0c1c44de43ee4fda2c66509dda6fee509224342b1"
+  },
+  "identity-worker-constructor.txt": {
+    "bytes": 751,
+    "sha256": "03ade7fdbb60bf7a5769f7ff4dad09fc508bcf8c96fb875dbe09751ac3605822"
+  },
+  "identity-worker-run.txt": {
+    "bytes": 55862,
+    "sha256": "73a2961ca906b75e1d2405fdf0cd16e6742e7b4030124f9dcf0c74df94122a9b"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "targets.json": {
+    "bytes": 3970,
+    "sha256": "dba5bcd089e55438d49226517aac90823ab344b8b0ae3c1a42ede26a2600bb8d"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

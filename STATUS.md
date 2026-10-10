@@ -1,5 +1,20 @@
 # Status — 2026-10-07
 
+Identity notification source (2026-10-09, **confirmed static**): metadata peer
+and callback device follow separate paths; null metadata rejoins device work.
+The native worker gates reason-8 prekey refresh on an existing identity, then
+uses filtered/in-flight-aware bulk job scheduling. No replacement key is read
+from the selected identity child. Ten retained topics close the scheduler path;
+wire response/adoption policy and deferred ACK state remain unported. No
+runtime, account or live change. [Evidence and limits](docs/protocol/identity-notifications.md).
+
+Source validation: exact regeneration verified 15 files / 141,669 bytes;
+checksum-verified cached self-diff found ten unchanged topics and four metadata
+artifacts. CLI reference, API-symbol, formatting, whitespace and repository
+hygiene passed (2,214 local links / 110 APK bundles). No fresh runtime suite
+or live validation is claimed for this source/docs-only chunk.
+
+
 Prekey count dispatch (2026-10-09, **confirmed static / implemented offline**):
 first-child selection, signed optional legacy parsing and strict/defaulted PQ
 parsing now follow APK 37.71. Legacy dispatch remains true even for an invalid

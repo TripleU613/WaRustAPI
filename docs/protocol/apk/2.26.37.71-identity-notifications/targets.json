@@ -1,0 +1,132 @@
+{
+  "identity-fetch-core-wrapper": {
+    "class": "LX/14L;",
+    "file": "identity-fetch-core-wrapper.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A07",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/connection.rs",
+      "crates/whatsapp-api/src/transport/peer_keys.rs"
+    ]
+  },
+  "identity-fetch-dispatch": {
+    "class": "LX/14L;",
+    "file": "identity-fetch-dispatch.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/connection.rs",
+      "crates/whatsapp-api/src/transport/peer_keys.rs"
+    ]
+  },
+  "identity-fetch-entry": {
+    "class": "LX/14L;",
+    "file": "identity-fetch-entry.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A09",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/connection.rs",
+      "crates/whatsapp-api/src/transport/peer_keys.rs"
+    ]
+  },
+  "identity-fetch-job": {
+    "class": "LX/14L;",
+    "file": "identity-fetch-job.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A06",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/connection.rs",
+      "crates/whatsapp-api/src/transport/peer_keys.rs"
+    ]
+  },
+  "identity-fetch-wrapper": {
+    "class": "LX/14L;",
+    "file": "identity-fetch-wrapper.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A08",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/connection.rs",
+      "crates/whatsapp-api/src/transport/peer_keys.rs"
+    ]
+  },
+  "identity-handler-ack": {
+    "class": "LX/0yO;",
+    "file": "identity-handler-ack.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/connection.rs",
+      "crates/whatsapp-api/src/transport/peer_keys.rs"
+    ]
+  },
+  "identity-peer-metadata": {
+    "class": "LX/17H;",
+    "file": "identity-peer-metadata.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A04",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/connection.rs",
+      "crates/whatsapp-api/src/transport/peer_keys.rs"
+    ]
+  },
+  "identity-stored-key": {
+    "class": "LX/0jc;",
+    "file": "identity-stored-key.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0W",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/connection.rs",
+      "crates/whatsapp-api/src/transport/peer_keys.rs"
+    ]
+  },
+  "identity-worker-constructor": {
+    "class": "LX/DLp;",
+    "file": "identity-worker-constructor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/connection.rs",
+      "crates/whatsapp-api/src/transport/peer_keys.rs"
+    ]
+  },
+  "identity-worker-run": {
+    "class": "LX/DLp;",
+    "file": "identity-worker-run.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "run",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/connection.rs",
+      "crates/whatsapp-api/src/transport/peer_keys.rs"
+    ]
+  }
+}

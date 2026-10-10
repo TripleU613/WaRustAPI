@@ -1,0 +1,87 @@
+# APK-derived structural disassembly: LX/17H;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A04(VLZ) flags=0x11 registers=16
+  # full signature: LX/17H;->A04(Ljava/util/Map;Z)V
+  0000..0004 op=22 new-instance v7, Ljava/util/LinkedHashMap;
+  0004..000a op=70 invoke-direct {v7}, Ljava/util/LinkedHashMap;-><init>()V
+  000a..000e op=22 new-instance v4, Ljava/util/LinkedHashMap;
+  000e..0014 op=70 invoke-direct {v4}, Ljava/util/LinkedHashMap;-><init>()V
+  0014..0018 op=22 new-instance v8, Ljava/util/ArrayList;
+  0018..001e op=70 invoke-direct {v8}, Ljava/util/ArrayList;-><init>()V
+  001e..0020 op=07 move-object v9, v14
+  0020..0026 op=72 invoke-interface {v14}, Ljava/util/Map;->values()Ljava/util/Collection;
+  0026..0028 op=0c move-result-object v0
+  0028..002e op=72 invoke-interface {v0}, Ljava/util/Collection;->iterator()Ljava/util/Iterator;
+  002e..0030 op=0c move-result-object v6
+  0030..0036 op=72 invoke-interface {v6}, Ljava/util/Iterator;->hasNext()Z
+  0036..0038 op=0a move-result v0
+  0038..003c op=38 if-eqz v0, +0x61
+  003c..0042 op=72 invoke-interface {v6}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0042..0044 op=0c move-result-object v5
+  0044..0048 op=1f check-cast v5, LX/31c;
+  0048..004c op=54 iget-object v2, v5, LX/31c;->A02:Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+  004c..0050 op=38 if-eqz v2, +0x18
+  0050..0054 op=54 iget-object v1, v5, LX/31c;->A03:Lcom/whatsapp/infra/core/jid/UserJid;
+  0054..005a op=71 invoke-static {v1}, LX/0DE;->A0Z(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  005a..005c op=0a move-result v0
+  005c..0060 op=38 if-eqz v0, +0x10
+  0060..0064 op=1a const-string v0, "null cannot be cast to non-null type com.whatsapp.infra.core.jid.LidUserJid"
+  0064..006a op=71 invoke-static {v1, v0}, LX/00h;->A0D(Ljava/lang/Object;Ljava/lang/String;)V
+  006a..0070 op=72 invoke-interface {v4, v1, v2}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+  0070..0076 op=71 invoke-static {v1, v0}, LX/00h;->A0D(Ljava/lang/Object;Ljava/lang/String;)V
+  0076..007c op=6e invoke-virtual {v8, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+  007c..0082 op=6e invoke-virtual {v5}, LX/31c;->A00()Z
+  0082..0084 op=0a move-result v0
+  0084..0088 op=38 if-eqz v0, +0x13
+  0088..008c op=54 iget-object v2, v5, LX/31c;->A01:LX/0ZY;
+  008c..0090 op=1a const-string v0, "null cannot be cast to non-null type com.whatsapp.infra.core.jid.LidUserJid"
+  0090..0096 op=71 invoke-static {v2, v0}, LX/00h;->A0D(Ljava/lang/Object;Ljava/lang/String;)V
+  0096..009a op=54 iget-object v1, v5, LX/31c;->A03:Lcom/whatsapp/infra/core/jid/UserJid;
+  009a..009e op=1a const-string v0, "null cannot be cast to non-null type com.whatsapp.infra.core.jid.PhoneUserJid"
+  009e..00a4 op=71 invoke-static {v1, v0}, LX/00h;->A0D(Ljava/lang/Object;Ljava/lang/String;)V
+  00a4..00aa op=72 invoke-interface {v4, v2, v1}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+  00aa..00ae op=54 iget-object v3, v5, LX/31c;->A01:LX/0ZY;
+  00ae..00b2 op=39 if-nez v3, +0x4
+  00b2..00b6 op=54 iget-object v3, v5, LX/31c;->A03:Lcom/whatsapp/infra/core/jid/UserJid;
+  00b6..00bc op=71 invoke-static {v3}, LX/0DE;->A0a(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  00bc..00be op=0a move-result v0
+  00be..00c2 op=39 if-nez v0, +0x8
+  00c2..00c8 op=71 invoke-static {v3}, LX/0DE;->A0X(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  00c8..00ca op=0a move-result v0
+  00ca..00ce op=38 if-eqz v0, -0x4d
+  00ce..00d2 op=54 iget-object v2, v5, LX/31c;->A06:Ljava/lang/String;
+  00d2..00d6 op=38 if-eqz v2, -0x51
+  00d6..00dc op=71 invoke-static {v2}, LX/0CM;->A0p(Ljava/lang/CharSequence;)Z
+  00dc..00de op=0a move-result v0
+  00de..00e0 op=12 const/4 v1, #0x1
+  00e0..00e4 op=df xor-int/lit8 v0, v0, #0x1
+  00e4..00e8 op=33 if-ne v0, v1, -0x5a
+  00e8..00ec op=1a const-string v0, "null cannot be cast to non-null type com.whatsapp.infra.core.jid.AccountUserJid"
+  00ec..00f2 op=71 invoke-static {v3, v0}, LX/00h;->A0D(Ljava/lang/Object;Ljava/lang/String;)V
+  00f2..00f8 op=72 invoke-interface {v7, v3, v2}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+  00f8..00fa op=28 goto -0x64
+  00fa..00fc op=07 move-object v10, v13
+  00fc..0100 op=54 iget-object v0, v13, LX/17H;->A04:LX/05B;
+  0100..0104 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  0104..010a op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  010a..010c op=0c move-result-object v0
+  010c..0110 op=1f check-cast v0, LX/0Xw;
+  0110..0116 op=6e invoke-virtual {v0, v4}, LX/0Xw;->A0P(Ljava/util/Map;)Ljava/util/List;
+  0116..0118 op=0c move-result-object v6
+  0118..011c op=54 iget-object v0, v13, LX/17H;->A05:LX/05B;
+  011c..0120 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  0120..0126 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  0126..0128 op=0c move-result-object v1
+  0128..012c op=1f check-cast v1, LX/07u;
+  012c..012e op=12 const/4 v11, #0x2
+  012e..0132 op=22 new-instance v5, LX/3QH;
+  0132..0134 op=01 move v12, v15
+  0134..013a op=76 invoke-direct/range {v5..v12}, LX/3QH;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;IZ)V
+  013a..013e op=1a const-string v0, "PrivacyPhoneNumberHidingHelper/updateAliasedDisplayName"
+  013e..0144 op=72 invoke-interface {v1, v0, v5}, LX/07u;->COb(Ljava/lang/String;Ljava/lang/Runnable;)V
+  0144..0146 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

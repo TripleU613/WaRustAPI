@@ -2717,3 +2717,10 @@ Validation: 837 workspace/all-feature tests passed. Strict all-target Clippy,
 warnings-denied Rustdoc, default CLI tests (25 plus API-symbol), regenerated
 CLI reference, formatting and whitespace checks passed. Repository hygiene
 checked 2,162 local links and 107 existing APK bundles. No fresh live test.
+
+## Encrypt identity notification source (2026-10-09)
+
+[Identity-notification evidence](identity-notifications.md) now separates metadata
+peer selection, callback-device work, the existing-key gate and reason-8 bulk
+prekey scheduling. These confirmed static branches do not authenticate a
+replacement identity. Native response/ACK handling remains unported.
