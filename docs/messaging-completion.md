@@ -1,5 +1,18 @@
 # Messaging completion checklist
 
+Identity notification ACK (2026-10-09, **implemented/offline**): APK 37.71
+identity dispatch schedules its worker without registering ACK deferral. The
+actor now durably handles supported controls then ACKs original metadata,
+independently of key adoption. Fresh redelivery can repeat that ACK; uncertain
+key reads retain their reservation. Startup does not reconstruct control ACKs.
+Live qualifying-control acceptance remains unverified.
+Validation: 869 workspace/all-feature tests and strict Clippy passed. The
+14-topic / 19-file / 186,462-byte source bundle reproduces exactly and cached
+self-diff is unchanged. Warning-denying Rustdoc, default CLI/API symbols, CLI-reference regeneration,
+formatting, whitespace and hygiene passed (2,395 links / 119 bundles).
+[Evidence and boundaries](protocol/identity-notification-ack.md).
+
+
 Identity-refresh application (2026-10-09, **implemented/offline**): the actor
 now adopts a verified changed-primary classic reply under the existing explicit
 apk_authenticated receive policy. Original notification guards, exact session

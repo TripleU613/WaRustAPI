@@ -1,0 +1,184 @@
+{
+  "ack-message-factory": {
+    "class": "LX/1q7;",
+    "file": "ack-message-factory.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A03",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_notifications.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "ack-node-factory": {
+    "class": "LX/1q7;",
+    "file": "ack-node-factory.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A07",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_notifications.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "ack-sender": {
+    "class": "LX/0yO;",
+    "file": "ack-sender.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_notifications.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "ack-transport": {
+    "class": "LX/0h8;",
+    "file": "ack-transport.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0N",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_notifications.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "ack-transport-core": {
+    "class": "LX/0h8;",
+    "file": "ack-transport-core.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A07",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_notifications.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "ack-wire": {
+    "class": "LX/Cp2;",
+    "file": "ack-wire.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A05",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_notifications.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "base-dispatch-ack": {
+    "class": "LX/0yO;",
+    "file": "base-dispatch-ack.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_notifications.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "deferred-ack-completion": {
+    "class": "LX/AAR;",
+    "file": "deferred-ack-completion.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_notifications.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "deferred-ack-registration": {
+    "class": "LX/0yO;",
+    "file": "deferred-ack-registration.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A07",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_notifications.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "deferred-ack-watchdog": {
+    "class": "LX/AhT;",
+    "file": "deferred-ack-watchdog.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "run",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_notifications.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "descriptor-build": {
+    "class": "LX/CSu;",
+    "file": "descriptor-build.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_notifications.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "identity-dispatch": {
+    "class": "LX/14z;",
+    "file": "identity-dispatch.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A09",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_notifications.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "notification-address": {
+    "class": "LX/CmG;",
+    "file": "notification-address.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_notifications.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "notification-descriptor": {
+    "class": "LX/CmG;",
+    "file": "notification-descriptor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_notifications.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  }
+}

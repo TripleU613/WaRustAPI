@@ -1,0 +1,35 @@
+# APK-derived structural disassembly: LX/0h8;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A07(VLZ) flags=0x12 registers=8
+  # full signature: LX/0h8;->A07(LX/Cb1;Z)V
+  0000..0004 op=38 if-eqz v7, +0x2c
+  0004..0008 op=54 iget-object v4, v5, LX/0h8;->A05:LX/0AH;
+  0008..000c op=54 iget-object v0, v6, LX/Cb1;->A06:Ljava/lang/String;
+  000c..0010 op=54 iget-object v3, v6, LX/Cb1;->A09:Ljava/lang/String;
+  0010..0016 op=6e invoke-virtual {v6}, LX/Cb1;->A01()Ljava/lang/String;
+  0016..0018 op=0c move-result-object v2
+  0018..001c op=22 new-instance v1, Ljava/lang/StringBuilder;
+  001c..0022 op=70 invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
+  0022..0028 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0028..002c op=1a const-string v0, "-"
+  002c..0032 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0032..0038 op=6e invoke-virtual {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0038..003e op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  003e..0044 op=6e invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0044..004a op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  004a..004c op=0c move-result-object v2
+  004c..004e op=12 const/4 v1, #0x1
+  004e..0052 op=1a const-string v0, "ccq_android_ack_bypassed"
+  0052..0058 op=6e invoke-virtual {v4, v0, v2, v1}, LX/0AH;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+  0058..005c op=54 iget-object v1, v5, LX/0h8;->A04:LX/07t;
+  005c..0060 op=54 iget-object v0, v5, LX/0h8;->A05:LX/0AH;
+  0060..0066 op=71 invoke-static {v1, v0, v6}, LX/1q7;->A03(LX/07t;LX/0AH;LX/Cb1;)Landroid/os/Message;
+  0066..0068 op=0c move-result-object v0
+  0068..006e op=71 invoke-static {v0}, LX/00h;->A06(Ljava/lang/Object;)V
+  006e..0074 op=6e invoke-virtual {v5, v0}, LX/0h8;->A0S(Landroid/os/Message;)Z
+  0074..0076 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

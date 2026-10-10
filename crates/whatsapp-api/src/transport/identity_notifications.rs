@@ -1,7 +1,8 @@
 //! First phase of APK 37.71 identity notification processing: a durable key read.
 //! Notification bytes are a refresh trigger, never replacement-key authority.
 //! Changed primary classic replies can be adopted under the explicit existing
-//! APK-authenticated policy. Deferred notification ACK remains unported.
+//! APK-authenticated policy. A notification ACK records handling of the control,
+//! independently of whether its key read is completed or its key is adopted.
 use super::{actions, messaging};
 pub(crate) mod application;
 mod attestation;
@@ -33,6 +34,60 @@ pub enum Refresh {
     BlockedPrior,
     /// Existing or newly queued once-only action; no pin/session has changed.
     Queued(String),
+}
+
+/// APK 37.71 14z.A09 schedules the identity worker without calling A07(true).
+/// Base 0yO.A01 therefore ACKs after dispatch, not after bundle adoption.
+/// The authenticated caller must durably capture/handle the control before write.
+/// Unsupported routes are outside this builder; no key/message trust is implied.
+pub fn notification_ack(node: &Node) -> Result<Option<Node>> {
+    if node.description != "notification"
+        || node.get_attr("type").and_then(|v| v.as_text()) != Some("encrypt")
+        || node
+            .child_nodes()
+            .first()
+            .is_none_or(|v| v.description != "identity")
+    {
+        return Ok(None);
+    }
+    let Some(from) = super::receipts::jid(node, "from").filter(|peer| {
+        !peer.user.is_empty()
+            && peer.agent == 0
+            && matches!(peer.server, Server::User | Server::Lid)
+            && matches!(peer.kind, JidKind::Plain | JidKind::AgentDevice)
+    }) else {
+        return Ok(None);
+    };
+    let id = node
+        .get_attr("id")
+        .and_then(|v| v.as_text())
+        .filter(|id| !id.is_empty() && id.len() <= 128)
+        .ok_or_else(|| {
+            Error::invalid(
+                "identity_notification",
+                "missing or excessive notification id",
+            )
+        })?;
+    let participant = node
+        .get_attr("participant")
+        .map(|_| {
+            super::receipts::jid(node, "participant").ok_or_else(|| {
+                Error::invalid("identity_notification", "invalid notification participant")
+            })
+        })
+        .transpose()?;
+    // CmG.A02/A00 -> CSu.A00 preserves root from/id/type/participant.
+    // Cp2.A05 uses notification type unchanged (only delivery receipts suppress
+    // type). Its notification descriptor does not carry recipient/category/edit.
+    let mut ack = Node::new("ack")
+        .attr("id", id)
+        .attr("to", from)
+        .attr("class", "notification")
+        .attr("type", "encrypt");
+    if let Some(participant) = participant {
+        ack = ack.attr("participant", participant);
+    }
+    Ok(Some(ack))
 }
 
 fn selector(prefix: &str, bytes: &[u8]) -> String {
@@ -452,21 +507,94 @@ pub(super) mod tests {
         })
         .unwrap()
     }
-    pub(super) fn account() -> AccountRecord {
+    pub(in crate::transport) fn account() -> AccountRecord {
         AccountRecord {
             registration: RegistrationStatus::Registered,
             own_jid: Some(Jid::parse("15555550999@s.whatsapp.net").unwrap()),
             ..Default::default()
         }
     }
-    pub(super) fn notification(peer: &str, id: &str) -> Node {
+    pub(in crate::transport) fn notification(peer: &str, id: &str) -> Node {
         Node::new("notification")
             .attr("type", "encrypt")
             .attr("from", peer)
             .attr("id", id)
             .children(vec![Node::new("identity")])
     }
-    pub(super) fn install_pin(store: &ProtocolStore, peer: &Jid) -> IdentityKeyPair {
+    #[test]
+    fn notification_ack_preserves_descriptor_and_rejects_unsupported_metadata() {
+        // APK 37.71 CmG.A00/A02 and Cp2.A05, not key-read peer canonicalization.
+        for route in [
+            "15555550101@s.whatsapp.net",
+            "15555550101:4@s.whatsapp.net",
+            "10000000001@lid",
+            "10000000001:4@lid",
+        ] {
+            let from = Jid::parse(route).unwrap();
+            for typed in [false, true] {
+                let mut input = notification(route, "fixture-ack");
+                if typed {
+                    input = input.attr("from", from.clone());
+                }
+                input = input
+                    .attr("participant", "15555550202:2@s.whatsapp.net")
+                    .attr("recipient", "15555550303@s.whatsapp.net")
+                    .attr("category", "private")
+                    .attr("edit", "1")
+                    .attr("lid", "10000000002@lid")
+                    .attr("display_name", "private");
+                let ack = notification_ack(&input).unwrap().unwrap();
+                let expected = Node::new("ack")
+                    .attr("id", "fixture-ack")
+                    .attr("to", from.clone())
+                    .attr("class", "notification")
+                    .attr("type", "encrypt")
+                    .attr(
+                        "participant",
+                        Jid::parse("15555550202:2@s.whatsapp.net").unwrap(),
+                    );
+                assert_eq!(
+                    crate::binary::Encoder::new(
+                        crate::binary::TokenDictionary::comparison_2_26_37_71()
+                    )
+                    .encode(&ack)
+                    .unwrap(),
+                    crate::binary::Encoder::new(
+                        crate::binary::TokenDictionary::comparison_2_26_37_71()
+                    )
+                    .encode(&expected)
+                    .unwrap()
+                );
+                assert!(ack.child_nodes().is_empty());
+            }
+        }
+        for route in ["s.whatsapp.net", "123@g.us", "123@broadcast", "bad-private"] {
+            assert!(
+                notification_ack(&notification(route, "fixture-ack"))
+                    .unwrap()
+                    .is_none()
+            );
+        }
+        let input = notification("15555550101@s.whatsapp.net", "fixture-ack");
+        for unrelated in [
+            input.clone().attr("type", "other"),
+            input
+                .clone()
+                .children(vec![Node::new("count"), Node::new("identity")]),
+        ] {
+            assert!(notification_ack(&unrelated).unwrap().is_none());
+        }
+        for bad in [
+            input.clone().attr("id", ""),
+            input.clone().attr("id", "x".repeat(129)),
+            input.attr("participant", "private:invalid@s.whatsapp.net"),
+        ] {
+            let error = notification_ack(&bad).unwrap_err().to_string();
+            assert!(!error.contains("private:invalid@s.whatsapp.net"));
+        }
+    }
+
+    pub(in crate::transport) fn install_pin(store: &ProtocolStore, peer: &Jid) -> IdentityKeyPair {
         let identity = IdentityKeyPair::generate(&mut rand::rng());
         store
             .write(|tx| {

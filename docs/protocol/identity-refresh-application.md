@@ -175,3 +175,9 @@ qualifying identity-refresh reply or live changed-key application occurred. This
 run checks the new actor/startup path against saved state, without claiming a
 positive live peer-reset test or resending a message. Original private JSON,
 keys, IDs and account history remain local. [Redacted aggregate evidence](identity-refresh-application-validation.json).
+
+## Follow-up: notification ACK timing
+
+The earlier ACK-unported boundary is superseded by the
+[37.71 dispatch trace and actor implementation](identity-notification-ack.md).
+The ACK precedes asynchronous key application; it is not adoption evidence.

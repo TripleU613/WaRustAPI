@@ -1,0 +1,25 @@
+# APK-derived structural disassembly: LX/1q7;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A03(LLLL) flags=0x9 registers=11
+  # full signature: LX/1q7;->A03(LX/07t;LX/0AH;LX/Cb1;)Landroid/os/Message;
+  0000..0004 op=53 iget-wide v5, v10, LX/Cb1;->A00:J
+  0004..000a op=6e invoke-virtual {v10}, LX/Cb1;->A02()Z
+  000a..000c op=0a move-result v7
+  000c..0010 op=54 iget-object v2, v10, LX/Cb1;->A06:Ljava/lang/String;
+  0010..0016 op=6e invoke-virtual {v10}, LX/Cb1;->A01()Ljava/lang/String;
+  0016..0018 op=0c move-result-object v3
+  0018..001c op=54 iget-object v4, v10, LX/Cb1;->A08:Ljava/lang/String;
+  001c..001e op=07 move-object v0, v8
+  001e..0020 op=07 move-object v1, v9
+  0020..0026 op=77 invoke-static/range {v0..v7}, LX/1q7;->A08(LX/07t;LX/0AH;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JZ)V
+  0026..0028 op=12 const/4 v2, #0x0
+  0028..002c op=13 const/16 v1, #0x4c
+  002c..002e op=12 const/4 v0, #0x0
+  002e..0034 op=71 invoke-static {v0, v2, v1, v2, v10}, Landroid/os/Message;->obtain(Landroid/os/Handler;IIILjava/lang/Object;)Landroid/os/Message;
+  0034..0036 op=0c move-result-object v0
+  0036..0038 op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method

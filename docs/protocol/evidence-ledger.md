@@ -3106,3 +3106,10 @@ regeneration, OpenAPI/library-symbol checks, formatting, whitespace and hygiene
 passed. Hygiene checked 1,499 local links and 40 bundles / 9,411,474 bytes.
 Caller/writer inventories and the no-matching ordinary override body result
 remain separately attributed. No fresh workspace/runtime or live test is claimed.
+
+## 2026-10-09 — Identity ACK dispatch correction (37.71)
+
+**Confirmed static / implemented offline:** identity dispatch does not call the
+ACK deferral used by count/PQ-count. Original descriptor is ACKed after dispatch,
+independently of worker success/adoption. Deferred watchdog logs and clears;
+no retry. [Source, reasoning and unknowns](identity-notification-ack.md).

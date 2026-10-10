@@ -1,0 +1,74 @@
+{
+  "ack-message-factory.txt": {
+    "bytes": 1406,
+    "sha256": "1da3dd85ad88629b1d598a43db6cf1de455b9802c5ce4d9c45b263175ef104be"
+  },
+  "ack-node-factory.txt": {
+    "bytes": 12125,
+    "sha256": "e9c189df6c3602302ed9e83e5af791d731e2dcc6e367046b5f94c1b15ba70b19"
+  },
+  "ack-sender.txt": {
+    "bytes": 2062,
+    "sha256": "d49ee4729009a5d77e47bc6a988be95a9809a07047562cb8cc6672a00103fd5b"
+  },
+  "ack-transport-core.txt": {
+    "bytes": 2351,
+    "sha256": "f701d4f9b82f5f405a8a8be6b2a81cf5d664ecd5116694648ece2744fd5ba819"
+  },
+  "ack-transport.txt": {
+    "bytes": 624,
+    "sha256": "7fb7b4ded1d678da0adf7d607b60d3a3f0d485608485d2d4acca37ee62b6de23"
+  },
+  "ack-wire.txt": {
+    "bytes": 4773,
+    "sha256": "d13d55dde26ac9723b6d050493f910b183a86d245c55569e544d22fcdd498be7"
+  },
+  "base-dispatch-ack.txt": {
+    "bytes": 14348,
+    "sha256": "1d3c503391ddef67dc0b14dd747f00bb75af76d5b31d133055b899eac59601da"
+  },
+  "deferred-ack-completion.txt": {
+    "bytes": 3040,
+    "sha256": "83b6e434d42a1c3246d18e3a23daf19b003ca817b11c1b652c35d5f8e908dc31"
+  },
+  "deferred-ack-registration.txt": {
+    "bytes": 4617,
+    "sha256": "0782bda9d58dbf14b7de56cb5f964c0d25750ac03d2c36797af1e353de1a41cf"
+  },
+  "deferred-ack-watchdog.txt": {
+    "bytes": 91729,
+    "sha256": "8704f8e42cf4250dde8fc0e9f10d5c72957f3bd5aebdc000f575c724364d4d4d"
+  },
+  "descriptor-build.txt": {
+    "bytes": 2145,
+    "sha256": "34596a8b095b5991aea380678f56a245e21a440c4d11ec4a69eb55fd649b4447"
+  },
+  "identity-dispatch.txt": {
+    "bytes": 8512,
+    "sha256": "5db95fafd3c81d8b908dcf3c406b1313c9a4ff5e19239ccab923863041579019"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "notification-address.txt": {
+    "bytes": 3005,
+    "sha256": "226eac573417943a2d7c4dc345ccc982853a044a8d9c2ca386e9d6e67c00eda3"
+  },
+  "notification-descriptor.txt": {
+    "bytes": 1092,
+    "sha256": "2a6216768e12d5c604a770bf86fafb27ec726646f658547a9cf7f5a7cffb0877"
+  },
+  "targets.json": {
+    "bytes": 5619,
+    "sha256": "ffbddfc6e19842896000de5cd663c868c75a0b93e31e849678f91a47f962a942"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

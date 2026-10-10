@@ -1,0 +1,59 @@
+# APK-derived structural disassembly: LX/AAR;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(VLLLL) flags=0x19 registers=11
+  # full signature: LX/AAR;->A00(LX/1B3;LX/0hs;LX/AAR;Ljava/util/List;)V
+  0000..0002 op=1d monitor-enter
+  0002..0006 op=54 iget-object v1, v9, LX/AAR;->A00:LX/9qq;
+  0006..0008 op=12 const/4 v0, #0x0
+  0008..000c op=5b iput-object v0, v9, LX/AAR;->A00:LX/9qq;
+  000c..000e op=1e monitor-exit
+  000e..0012 op=38 if-eqz v1, +0x4b
+  0012..0016 op=54 iget-object v6, v1, LX/9qq;->A00:LX/0yO;
+  0016..001a op=54 iget-object v0, v1, LX/9qq;->A01:LX/Cb1;
+  001a..001e op=54 iget-object v1, v6, LX/0yO;->A0A:Ljava/util/Map;
+  001e..0020 op=1d monitor-enter
+  0020..0026 op=72 invoke-interface {v1, v0}, Ljava/util/Map;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+  0026..002a op=54 iget-object v5, v0, LX/Cb1;->A08:Ljava/lang/String;
+  002a..0030 op=72 invoke-interface {v1}, Ljava/util/Map;->size()I
+  0030..0032 op=1e monitor-exit
+  0032..0036 op=38 if-eqz v7, +0x9
+  0036..003a op=39 if-nez v10, +0xd
+  003a..003e op=39 if-nez v8, +0xb
+  003e..0044 op=71 invoke-static {v6, v7, v0}, LX/0yO;->A00(LX/0yO;LX/1B3;LX/Cb1;)V
+  0044..0048 op=54 iget-object v0, v6, LX/0yO;->A0B:Ljava/util/Map;
+  0048..004e op=72 invoke-interface {v0, v5}, Ljava/util/Map;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+  004e..0050 op=0e return-void
+  0050..0056 op=6e invoke-virtual {v0}, LX/Cb1;->A00()LX/CSu;
+  0056..0058 op=0c move-result-object v4
+  0058..005c op=38 if-eqz v10, +0x1a
+  005c..0062 op=72 invoke-interface {v10}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+  0062..0064 op=0c move-result-object v3
+  0064..006a op=72 invoke-interface {v3}, Ljava/util/Iterator;->hasNext()Z
+  006a..006c op=0a move-result v0
+  006c..0070 op=38 if-eqz v0, +0x10
+  0070..0076 op=72 invoke-interface {v3}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0076..0078 op=0c move-result-object v2
+  0078..007c op=1f check-cast v2, LX/0hq;
+  007c..0080 op=54 iget-object v1, v4, LX/CSu;->A0A:Ljava/util/Map;
+  0080..0084 op=54 iget-object v0, v2, LX/0hq;->A02:Ljava/lang/String;
+  0084..008a op=72 invoke-interface {v1, v0, v2}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+  008a..008c op=28 goto -0x13
+  008c..0090 op=38 if-eqz v8, +0x4
+  0090..0094 op=5b iput-object v8, v4, LX/CSu;->A04:LX/0hs;
+  0094..009a op=6e invoke-virtual {v4}, LX/CSu;->A00()LX/Cb1;
+  009a..009c op=0c move-result-object v0
+  009c..009e op=28 goto -0x2f
+  009e..00a0 op=0d move-exception v0
+  00a0..00a2 op=1e monitor-exit
+  00a2..00a4 op=27 throw v0
+  00a4..00a6 op=0e return-void
+  00a6..00a8 op=0d move-exception v0
+  00a8..00aa op=1e monitor-exit
+  00aa..00ac op=27 throw v0
+  # exception table: 2 try range(s)
+  # catch <all> code_units 0001..0006 -> 0053
+  # catch <all> code_units 0010..0018 -> 004f
+.end method

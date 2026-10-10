@@ -1,0 +1,82 @@
+# APK-derived structural disassembly: LX/0yO;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A07(LZ) flags=0x11 registers=8
+  # full signature: LX/0yO;->A07(Z)LX/AAR;
+  0000..0004 op=38 if-eqz v7, +0x6d
+  0004..0008 op=13 const/16 v1, #0x5a3
+  0008..000c op=54 iget-object v0, v6, LX/0yO;->A07:LX/05B;
+  000c..0010 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  0010..0016 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  0016..0018 op=0c move-result-object v0
+  0018..001c op=1f check-cast v0, LX/00W;
+  001c..0022 op=6e invoke-virtual {v0}, LX/00W;->A01()LX/00X;
+  0022..0024 op=0c move-result-object v0
+  0024..002a op=71 invoke-static {v0, v1}, LX/08b;->A00(LX/00X;I)LX/05B;
+  002a..002e op=54 iget-object v1, v6, LX/0yO;->A0C:Ljava/util/concurrent/atomic/AtomicReference;
+  002e..0030 op=12 const/4 v0, #0x0
+  0030..0036 op=6e invoke-virtual {v1, v0}, Ljava/util/concurrent/atomic/AtomicReference;->getAndSet(Ljava/lang/Object;)Ljava/lang/Object;
+  0036..0038 op=0c move-result-object v5
+  0038..003c op=38 if-eqz v5, +0x49
+  003c..0040 op=1f check-cast v5, LX/CUu;
+  0040..0044 op=54 iget-object v1, v5, LX/CUu;->A01:LX/Cb1;
+  0044..0048 op=54 iget-object v4, v6, LX/0yO;->A0A:Ljava/util/Map;
+  0048..004a op=1d monitor-enter
+  004a..004e op=54 iget-object v0, v5, LX/CUu;->A00:LX/1B3;
+  004e..0054 op=72 invoke-interface {v4, v1, v0}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+  0054..0058 op=54 iget-object v0, v6, LX/0yO;->A02:Ljava/lang/Runnable;
+  0058..005c op=38 if-eqz v0, +0x13
+  005c..0060 op=54 iget-object v0, v6, LX/0yO;->A08:LX/05B;
+  0060..0064 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  0064..006a op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  006a..006c op=0c move-result-object v1
+  006c..0070 op=1f check-cast v1, LX/07u;
+  0070..0074 op=54 iget-object v0, v6, LX/0yO;->A02:Ljava/lang/Runnable;
+  0074..0078 op=38 if-eqz v0, +0x20
+  0078..007e op=72 invoke-interface {v1, v0}, LX/07u;->CLn(Ljava/lang/Runnable;)V
+  007e..0082 op=54 iget-object v0, v6, LX/0yO;->A08:LX/05B;
+  0082..0086 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  0086..008c op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  008c..008e op=0c move-result-object v3
+  008e..0092 op=1f check-cast v3, LX/07u;
+  0092..0096 op=13 const/16 v0, #0x28
+  0096..009a op=22 new-instance v2, LX/AhT;
+  009a..00a0 op=70 invoke-direct {v2, v6, v0}, LX/AhT;-><init>(Ljava/lang/Object;I)V
+  00a0..00a4 op=16 const-wide/16 v0, #0x1770
+  00a4..00aa op=72 invoke-interface {v3, v2, v0, v1}, LX/07u;->CP8(Ljava/lang/Runnable;J)Ljava/lang/Runnable;
+  00aa..00ac op=0c move-result-object v0
+  00ac..00b0 op=5b iput-object v0, v6, LX/0yO;->A02:Ljava/lang/Runnable;
+  00b0..00b2 op=1e monitor-exit
+  00b2..00b4 op=28 goto +0x1c
+  00b4..00b8 op=1a const-string v1, "Required value was null."
+  00b8..00bc op=22 new-instance v0, Ljava/lang/IllegalStateException;
+  00bc..00c2 op=70 invoke-direct {v0, v1}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
+  00c2..00c4 op=27 throw v0
+  00c4..00c6 op=0d move-exception v0
+  00c6..00c8 op=1e monitor-exit
+  00c8..00ca op=27 throw v0
+  00ca..00ce op=1a const-string v1, "Required value was null."
+  00ce..00d2 op=22 new-instance v0, Ljava/lang/IllegalStateException;
+  00d2..00d8 op=70 invoke-direct {v0, v1}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
+  00d8..00da op=27 throw v0
+  00da..00de op=54 iget-object v0, v6, LX/0yO;->A0C:Ljava/util/concurrent/atomic/AtomicReference;
+  00de..00e4 op=6e invoke-virtual {v0}, Ljava/util/concurrent/atomic/AtomicReference;->get()Ljava/lang/Object;
+  00e4..00e6 op=0c move-result-object v5
+  00e6..00ea op=1f check-cast v5, LX/CUu;
+  00ea..00ec op=12 const/4 v3, #0x0
+  00ec..00f0 op=39 if-nez v5, +0x3
+  00f0..00f2 op=11 return-object v3
+  00f2..00f6 op=54 iget-object v2, v5, LX/CUu;->A01:LX/Cb1;
+  00f6..00fa op=38 if-eqz v7, +0x7
+  00fa..00fe op=22 new-instance v3, LX/9qq;
+  00fe..0104 op=70 invoke-direct {v3, v6, v2}, LX/9qq;-><init>(LX/0yO;LX/Cb1;)V
+  0104..0108 op=54 iget-object v1, v5, LX/CUu;->A00:LX/1B3;
+  0108..010c op=22 new-instance v0, LX/AAR;
+  010c..0112 op=70 invoke-direct {v0, v3, v1, v2}, LX/AAR;-><init>(LX/9qq;LX/1B3;LX/Cb1;)V
+  0112..0114 op=11 return-object v0
+  # exception table: 2 try range(s)
+  # catch <all> code_units 0025..0058 -> 0062
+  # catch <all> code_units 005a..0062 -> 0062
+.end method

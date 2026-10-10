@@ -604,10 +604,26 @@ pub(crate) async fn drive(
                     }
                 }
 
-                match super::identity_notifications::queue(&store, &account, &node)? {
-                    super::identity_notifications::Refresh::Unrelated => {},
-                    super::identity_notifications::Refresh::Queued(_) => tracing::info!("identity notification key read queued or already saved; no key adopted"),
-                    outcome => tracing::info!(?outcome, "identity notification key read not queued; capture preserved"),
+                let identity_ack = match super::identity_notifications::notification_ack(&node) {
+                    Ok(ack) => ack,
+                    Err(Error::InvalidInput { reason, .. }) => {
+                        tracing::warn!(reason, "identity notification unsupported; captured without key read or ACK");
+                        None
+                    }
+                    Err(error) => return Err(error),
+                };
+                if let Some(ack) = identity_ack {
+                    let outcome = super::identity_notifications::queue(&store, &account, &node)?;
+                    // 14z identity dispatch does not defer the base ACK. Commit
+                    // capture/read-or-skip before write; bundle adoption is separate.
+                    // A freshly received duplicate may repeat this idempotent ACK,
+                    // never its queued/sent key query or any chat transmission.
+                    link.send(&ack).await?;
+                    if matches!(outcome, super::identity_notifications::Refresh::Queued(_)) {
+                        tracing::info!("identity notification ACK written; key read queued or already saved");
+                    } else {
+                        tracing::info!(?outcome, "identity notification ACK written; key read skipped; capture preserved");
+                    }
                 }
 
                 if let Some(low) = super::prekeys::low_count(&node)? {
@@ -2077,6 +2093,18 @@ mod tests {
             ]);
         let wire = encode(&notification).unwrap();
         fake.deliver(notification.clone()).await;
+        let (ack, ack_write) = fake.written().await;
+        assert_eq!(ack.description, "ack");
+        assert_eq!(
+            ack.get_attr("id").and_then(|v| v.as_text()),
+            Some("fixture-identity-event")
+        );
+        // Original capture and queued read are already durable before this ACK.
+        assert_eq!(
+            actions::outcomes(&store).unwrap()[0].status,
+            actions::ActionStatus::Queued
+        );
+        ack_write.send(Ok(())).unwrap();
         let (query, write) = fake.written().await;
         assert_eq!(
             query.get_attr("xmlns").and_then(|v| v.as_text()),
@@ -2162,10 +2190,100 @@ mod tests {
         )
         .await;
         fake.deliver(notification).await;
+        let (ack, write) = fake.written().await;
+        assert_eq!(ack.description, "ack");
+        write.send(Ok(())).unwrap();
+        // A fresh server redelivery repeats the control ACK, never the uncertain read.
         fake.nothing_written(Duration::from_millis(100)).await;
         fake.stop.send(true).unwrap();
         fake.finished().await.unwrap();
         assert_eq!(actions::outcomes(&store).unwrap(), outcomes);
+        assert_eq!(snapshot(&store), before);
+        assert_eq!(store.journal_head().unwrap(), head);
+    }
+
+    #[tokio::test]
+    async fn identity_ack_cut_preserves_queued_read_and_skipped_controls_do_not_read() {
+        use super::super::{actions, identity_notifications};
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("identity-ack-cut.redb");
+        let store = Arc::new(identity_store(&path));
+        let account = identity_notifications::tests::account();
+        store.write(|tx| account.save(tx)).unwrap();
+        let peer = peer();
+        identity_notifications::tests::install_pin(&store, &peer);
+        let snapshot = |store: &ProtocolStore| {
+            store
+                .read(|tx| {
+                    Ok((
+                        tx.scan_after(Table::PeerIdentities, 1, None, 128)?,
+                        tx.scan_after(Table::SignalSessions, 1, None, 128)?,
+                        tx.scan_after(Table::Outbox, 1, None, 128)?,
+                    ))
+                })
+                .unwrap()
+        };
+        let before = snapshot(&store);
+        let head = store.journal_head().unwrap();
+        let mut settings = config();
+        settings.transport.timeout_ms = 2000;
+        let mut fake = start_with_config(&store, false, None, settings.clone());
+        fake.activate().await;
+        // Native dispatch ACK is independent of missing/own identity skips.
+        for route in ["15555550888@s.whatsapp.net", "15555550999@s.whatsapp.net"] {
+            fake.deliver(identity_notifications::tests::notification(
+                route,
+                "fixture-skipped",
+            ))
+            .await;
+            let (ack, write) = fake.written().await;
+            assert_eq!(ack.description, "ack");
+            assert!(actions::outcomes(&store).unwrap().is_empty());
+            write.send(Ok(())).unwrap();
+        }
+        // Malformed descriptor stays captured and does not queue a new query.
+        fake.deliver(
+            identity_notifications::tests::notification(&peer.to_string(), "fixture-malformed")
+                .attr("participant", "private:invalid@s.whatsapp.net"),
+        )
+        .await;
+        fake.nothing_written(Duration::from_millis(100)).await;
+        let notification =
+            identity_notifications::tests::notification(&peer.to_string(), "fixture-cut");
+        fake.deliver(notification).await;
+        let (ack, write) = fake.written().await;
+        assert_eq!(ack.description, "ack");
+        let outcomes = actions::outcomes(&store).unwrap();
+        assert_eq!(outcomes.len(), 1);
+        assert_eq!(outcomes[0].status, actions::ActionStatus::Queued);
+        let id = outcomes[0].id.clone();
+        write
+            .send(Err(Error::Io(std::io::Error::new(
+                std::io::ErrorKind::BrokenPipe,
+                "fixture ACK cut",
+            ))))
+            .unwrap();
+        assert!(fake.finished().await.is_err());
+        assert_eq!(snapshot(&store), before);
+        assert_eq!(store.journal_head().unwrap(), head);
+        drop(store);
+        let store = Arc::new(identity_store(&path));
+        let mut fake = start_with_config(&store, false, None, settings);
+        fake.activate().await;
+        // Startup dispatches the original queued read, never reconstructs the ACK.
+        let (query, write) = fake.written().await;
+        assert_eq!(query.description, "iq");
+        assert_eq!(
+            query.get_attr("id").and_then(|v| v.as_text()),
+            Some(id.as_str())
+        );
+        assert_eq!(
+            actions::outcomes(&store).unwrap()[0].status,
+            actions::ActionStatus::Sent
+        );
+        write.send(Ok(())).unwrap();
+        fake.stop.send(true).unwrap();
+        fake.finished().await.unwrap();
         assert_eq!(snapshot(&store), before);
         assert_eq!(store.journal_head().unwrap(), head);
     }

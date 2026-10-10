@@ -1,0 +1,212 @@
+# APK-derived structural disassembly: LX/0yO;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A01(VLLLLI) flags=0x19 registers=21
+  # full signature: LX/0yO;->A01(LX/0yO;LX/1B3;LX/Cb1;Ljava/lang/String;I)V
+  0000..0004 op=08 move-object/from16 v15, v17
+  0004..0008 op=1a const-string v13, "BaseNotificationHandler/handleAndAckNotification handlerType="
+  0008..000c op=13 const/16 v1, #0x5a3
+  000c..0010 op=08 move-object/from16 v4, v16
+  0010..0014 op=54 iget-object v0, v4, LX/0yO;->A07:LX/05B;
+  0014..0018 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  0018..001e op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  001e..0020 op=0c move-result-object v0
+  0020..0024 op=1f check-cast v0, LX/00W;
+  0024..002a op=6e invoke-virtual {v0}, LX/00W;->A01()LX/00X;
+  002a..002c op=0c move-result-object v0
+  002c..0032 op=71 invoke-static {v0, v1}, LX/08b;->A00(LX/00X;I)LX/05B;
+  0032..0034 op=0c move-result-object v3
+  0034..003a op=72 invoke-interface {v15}, LX/1B3;->BPe()Z
+  003a..003c op=0a move-result v14
+  003c..0040 op=38 if-eqz v14, +0x16
+  0040..0044 op=54 iget-object v0, v4, LX/0yO;->A06:LX/05B;
+  0044..0048 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  0048..004e op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  004e..0050 op=0c move-result-object v1
+  0050..0054 op=1f check-cast v1, LX/18B;
+  0054..005a op=71 invoke-static {v15}, Ljava/util/Collections;->singletonList(Ljava/lang/Object;)Ljava/util/List;
+  005a..005c op=0c move-result-object v0
+  005c..0062 op=71 invoke-static {v0}, LX/00h;->A06(Ljava/lang/Object;)V
+  0062..0068 op=6e invoke-virtual {v1, v0}, LX/18B;->A0D(Ljava/util/List;)V
+  0068..006c op=54 iget-object v0, v4, LX/0yO;->A04:LX/05B;
+  006c..0070 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  0070..0076 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  0076..0078 op=0c move-result-object v6
+  0078..007c op=1f check-cast v6, LX/0hk;
+  007c..0080 op=08 move-object/from16 v2, v18
+  0080..0084 op=53 iget-wide v0, v2, LX/Cb1;->A00:J
+  0084..0086 op=12 const/4 v5, #0x2
+  0086..008c op=71 invoke-static {v6, v5, v0, v1}, LX/0hk;->A00(LX/0hk;IJ)LX/CjJ;
+  008c..008e op=0c move-result-object v1
+  008e..0092 op=1f check-cast v1, LX/BqF;
+  0092..0096 op=38 if-eqz v1, +0xc
+  0096..009a op=08 move-object/from16 v0, v19
+  009a..009e op=38 if-eqz v19, +0x4
+  009e..00a2 op=5b iput-object v0, v1, LX/BqF;->A00:Ljava/lang/String;
+  00a2..00a4 op=12 const/4 v0, #0x4
+  00a4..00aa op=6e invoke-virtual {v1, v0}, LX/CjJ;->A06(I)V
+  00aa..00b0 op=72 invoke-interface {v15}, LX/1B3;->AtB()LX/0hs;
+  00b0..00b2 op=0c move-result-object v9
+  00b2..00b6 op=38 if-eqz v9, +0x151
+  00b6..00ba op=54 iget-object v5, v4, LX/0yO;->A0C:Ljava/util/concurrent/atomic/AtomicReference;
+  00ba..00be op=22 new-instance v0, LX/CUu;
+  00be..00c4 op=70 invoke-direct {v0, v15, v2}, LX/CUu;-><init>(LX/1B3;LX/Cb1;)V
+  00c4..00ca op=6e invoke-virtual {v5, v0}, Ljava/util/concurrent/atomic/AtomicReference;->getAndSet(Ljava/lang/Object;)Ljava/lang/Object;
+  00ca..00cc op=0c move-result-object v0
+  00cc..00d0 op=1f check-cast v0, LX/CUu;
+  00d0..00d4 op=38 if-eqz v0, +0x44
+  00d4..00d8 op=54 iget-object v11, v0, LX/CUu;->A01:LX/Cb1;
+  00d8..00dc op=1a const-string v1, "offline"
+  00dc..00de op=12 const/4 v0, #0x0
+  00de..00e4 op=6e invoke-virtual {v9, v1, v0}, LX/0hs;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  00e4..00e6 op=0c move-result-object v7
+  00e6..00e8 op=12 const/4 v6, #0x0
+  00e8..00ec op=38 if-eqz v11, +0x2f
+  00ec..00f0 op=54 iget-object v0, v3, LX/05B;->A00:LX/00s;
+  00f0..00f6 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  00f6..00f8 op=0c move-result-object v8
+  00f8..00fc op=1f check-cast v8, LX/0AH;
+  00fc..0100 op=54 iget-object v10, v4, LX/0yO;->A0D:[I
+  0100..0104 op=1a const-string v0, "oldStanzaKey="
+  0104..0108 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  0108..010e op=70 invoke-direct {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  010e..0114 op=6e invoke-virtual {v1, v11}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  0114..0118 op=1a const-string v0, "; type="
+  0118..011e op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  011e..0124 op=6e invoke-virtual {v1, v10}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  0124..0128 op=1a const-string v0, "; offline="
+  0128..012e op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  012e..0134 op=6e invoke-virtual {v1, v7}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0134..013a op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  013a..013c op=0c move-result-object v1
+  013c..0140 op=1a const-string v0, "BaseNotificationHandler/oldStanzaKeyNotNull"
+  0140..0146 op=6e invoke-virtual {v8, v0, v1, v6}, LX/0AH;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+  0146..014a op=54 iget-object v0, v2, LX/Cb1;->A02:Lcom/whatsapp/infra/core/jid/Jid;
+  014a..014e op=5b iput-object v0, v4, LX/0yO;->A01:Lcom/whatsapp/infra/core/jid/Jid;
+  014e..0152 op=54 iget-object v0, v2, LX/Cb1;->A01:Lcom/whatsapp/infra/core/jid/Jid;
+  0152..0156 op=5b iput-object v0, v4, LX/0yO;->A00:Lcom/whatsapp/infra/core/jid/Jid;
+  0156..0158 op=28 goto +0x3
+  0158..015a op=12 const/4 v11, #0x0
+  015a..015c op=28 goto -0x41
+  015c..0160 op=02 move/from16 v8, v20
+  0160..0164 op=1a const-string v0, "id"
+  0164..0166 op=12 const/4 v1, #0x0
+  0166..016c op=6e invoke-virtual {v9, v0, v1}, LX/0hs;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  016c..016e op=0c move-result-object v12
+  016e..0174 op=1b const-string/jumbo v0, "type"
+  0174..017a op=6e invoke-virtual {v9, v0, v1}, LX/0hs;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  017a..017c op=0c move-result-object v11
+  017c..0182 op=1b const-string/jumbo v0, "t"
+  0182..0188 op=6e invoke-virtual {v9, v0, v1}, LX/0hs;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  0188..018a op=0c move-result-object v10
+  018a..0190 op=1b const-string/jumbo v0, "retry"
+  0190..0196 op=6e invoke-virtual {v9, v0, v1}, LX/0hs;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  0196..0198 op=0c move-result-object v2
+  0198..019c op=22 new-instance v1, Ljava/lang/StringBuilder;
+  019c..01a2 op=70 invoke-direct {v1, v13}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  01a2..01a8 op=6e invoke-virtual {v1, v8}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  01a8..01ac op=1a const-string v0, " id="
+  01ac..01b2 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  01b2..01b8 op=6e invoke-virtual {v1, v12}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  01b8..01bc op=1a const-string v0, " type="
+  01bc..01c2 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  01c2..01c8 op=6e invoke-virtual {v1, v11}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  01c8..01cc op=1a const-string v0, " t="
+  01cc..01d2 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  01d2..01d8 op=6e invoke-virtual {v1, v10}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  01d8..01dc op=1a const-string v0, " retry="
+  01dc..01e2 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  01e2..01e8 op=6e invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  01e8..01ec op=1a const-string v0, " offline="
+  01ec..01f2 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  01f2..01f8 op=6e invoke-virtual {v1, v7}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  01f8..01fe op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  01fe..0200 op=0c move-result-object v0
+  0200..0206 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+  0206..020c op=6e invoke-virtual {v4, v9, v8}, LX/0yO;->A09(LX/0hs;I)V
+  020c..020e op=28 goto +0x45
+  020e..0210 op=0d move-exception v7
+  0210..0214 op=54 iget-object v2, v7, LX/B7l;->stanza:Ljava/lang/String;
+  0214..0218 op=1a const-string v0, "BaseNotificationHandler/handleAndAckNotification/corrupt-stream-error/stanza "
+  0218..021c op=22 new-instance v1, Ljava/lang/StringBuilder;
+  021c..0222 op=70 invoke-direct {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  0222..0228 op=6e invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0228..022c op=1a const-string v0, " node="
+  022c..0232 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0232..0238 op=6e invoke-virtual {v1, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  0238..023e op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  023e..0240 op=0c move-result-object v0
+  0240..0246 op=71 invoke-static {v0, v7}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;Ljava/lang/Throwable;)V
+  0246..024a op=54 iget-object v0, v3, LX/05B;->A00:LX/00s;
+  024a..0250 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  0250..0252 op=0c move-result-object v3
+  0252..0256 op=1f check-cast v3, LX/0AH;
+  0256..025c op=6e invoke-virtual {v7}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+  025c..025e op=0c move-result-object v2
+  025e..0264 op=1b const-string/jumbo v0, "source=BaseNotificationHandler recvType="
+  0264..0268 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  0268..026e op=70 invoke-direct {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  026e..0274 op=6e invoke-virtual {v1, v8}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  0274..0278 op=1a const-string v0, " message="
+  0278..027e op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  027e..0284 op=6e invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0284..028a op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  028a..028c op=0c move-result-object v1
+  028c..0290 op=1a const-string v0, "CorruptStreamException"
+  0290..0296 op=6e invoke-virtual {v3, v0, v1, v6}, LX/0AH;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+  0296..0298 op=12 const/4 v0, #0x0
+  0298..029e op=6e invoke-virtual {v5, v0}, Ljava/util/concurrent/atomic/AtomicReference;->getAndSet(Ljava/lang/Object;)Ljava/lang/Object;
+  029e..02a0 op=0c move-result-object v1
+  02a0..02a4 op=1f check-cast v1, LX/CUu;
+  02a4..02a8 op=38 if-eqz v1, +0x57
+  02a8..02ac op=54 iget-object v2, v1, LX/CUu;->A01:LX/Cb1;
+  02ac..02b0 op=54 iget-object v0, v4, LX/0yO;->A0A:Ljava/util/Map;
+  02b0..02b6 op=72 invoke-interface {v0, v2}, Ljava/util/Map;->containsKey(Ljava/lang/Object;)Z
+  02b6..02b8 op=0a move-result v0
+  02b8..02bc op=39 if-nez v0, +0x4d
+  02bc..02c0 op=54 iget-object v0, v1, LX/CUu;->A00:LX/1B3;
+  02c0..02c6 op=71 invoke-static {v4, v0, v2}, LX/0yO;->A00(LX/0yO;LX/1B3;LX/Cb1;)V
+  02c6..02ca op=54 iget-object v1, v4, LX/0yO;->A0B:Ljava/util/Map;
+  02ca..02ce op=54 iget-object v0, v2, LX/Cb1;->A08:Ljava/lang/String;
+  02ce..02d4 op=72 invoke-interface {v1, v0}, Ljava/util/Map;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+  02d4..02d6 op=0e return-void
+  02d6..02d8 op=0d move-exception v2
+  02d8..02dc op=1a const-string v1, "BaseNotificationHandler/handleXmppMessage/error handling stanza="
+  02dc..02e0 op=22 new-instance v0, Ljava/lang/StringBuilder;
+  02e0..02e6 op=70 invoke-direct {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  02e6..02ec op=6e invoke-virtual {v0, v15}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  02ec..02f2 op=6e invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  02f2..02f4 op=0c move-result-object v0
+  02f4..02fa op=71 invoke-static {v0, v2}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+  02fa..02fe op=38 if-eqz v14, +0x34
+  02fe..0302 op=54 iget-object v0, v4, LX/0yO;->A06:LX/05B;
+  0302..0306 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  0306..030c op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  030c..030e op=0c move-result-object v1
+  030e..0312 op=1f check-cast v1, LX/18B;
+  0312..0316 op=1f check-cast v15, LX/1B5;
+  0316..031a op=13 const/16 v0, #0x1f4
+  031a..0320 op=71 invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  0320..0322 op=0c move-result-object v18
+  0322..0324 op=12 const/4 v14, #0x0
+  0324..0328 op=13 const/16 v20, #0x1
+  0328..032c op=22 new-instance v13, LX/CZF;
+  032c..0330 op=08 move-object/from16 v17, v14
+  0330..0334 op=08 move-object/from16 v19, v14
+  0334..0338 op=08 move-object/from16 v16, v14
+  0338..033e op=76 invoke-direct/range {v13..v20}, LX/CZF;-><init>(Landroid/os/Bundle;LX/1B5;LX/1B5;LX/1fQ;Ljava/lang/Integer;Ljava/lang/Integer;Z)V
+  033e..0344 op=71 invoke-static {v13}, Ljava/util/Collections;->singletonList(Ljava/lang/Object;)Ljava/util/List;
+  0344..0346 op=0c move-result-object v0
+  0346..034c op=71 invoke-static {v0}, LX/00h;->A06(Ljava/lang/Object;)V
+  034c..0352 op=6e invoke-virtual {v1, v0}, LX/18B;->A0C(Ljava/util/List;)V
+  0352..0354 op=0e return-void
+  0354..0358 op=1a const-string v0, "Required value was null."
+  0358..035c op=22 new-instance v2, Ljava/lang/IllegalStateException;
+  035c..0362 op=70 invoke-direct {v2, v0}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
+  0362..0364 op=27 throw v2
+  # exception table: 1 try range(s)
+  # catch LX/B7l; code_units 00ae..0107 -> 0107
+  # catch Ljava/lang/Exception; code_units 00ae..0107 -> 016b
+.end method
