@@ -1,5 +1,22 @@
 # Status — 2026-10-07
 
+Original identity refresh guards (2026-10-09, **implemented/offline**):
+new notification reads capture immutable pin, exact-device authenticated
+transition, primary-user version and account generation. Delayed A->B->A replies
+remain stale for primary and companion peers; duplicate events preserve the
+baseline. `actions --show` exposes redacted guard labels and session preview
+skips known stale reads. Historical missing snapshots stay untracked.
+Native admission, final atomic adoption and identity ACK remain unported.
+[Evidence and limits](docs/protocol/identity-refresh-guards.md).
+
+Validation: 858 workspace/all-feature tests passed, plus strict Clippy,
+warning-denying Rustdoc, default CLI (25 plus API-symbol), CLI-reference
+regeneration, formatting and whitespace. Hygiene passed (2,317 links / 115
+bundles). Historical saved-account inspection correctly reports untracked with
+a verified matching bundle and unchanged store summary; no new live query,
+identity transition, candidate commit or ACK was performed.
+
+
 Identity session preview (2026-10-09, **confirmed static / implemented offline**):
 `actions --show ID --preview-session` derives and discards a primary classic
 same-identity session without constructing a chat or changing saved state.

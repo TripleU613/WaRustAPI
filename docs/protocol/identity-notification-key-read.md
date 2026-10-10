@@ -188,3 +188,12 @@ a primary classic same-identity session from a saved read without chat encryptio
 or store writes. The actor read phase above still does not adopt responses or
 ACK identity notifications. Native stored attestation state and admission remain
 unported; preview success explicitly reports admission unevaluated.
+
+## Original refresh guards continuation
+
+New queries now atomically retain an immutable notification-time identity
+snapshot in addition to the original action/event/device markers.
+[Guard behavior and historical limits](identity-refresh-guards.md) cover delayed
+responses and primary/companion A->B->A transitions. `actions --show` exposes
+fixed redacted `refresh_guard` labels; matching is not admission or commit
+permission. Older live reads above remain untracked, without backfill or replay.

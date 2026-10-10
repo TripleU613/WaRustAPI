@@ -167,3 +167,11 @@ artifacts. Repository hygiene verified 2,309 links and 115 bundles totaling
 23,735,849 bytes. Initial Clippy fixture findings were fixed and full tests/Clippy
 rerun after the additional missing-pin/session-pin mismatch cases. No new
 network validation is claimed.
+
+## Original refresh guards continuation
+
+The new [original identity guard](identity-refresh-guards.md) is included in the
+inspection snapshot. Known stale reads skip derivation with stale_refresh_guard.
+Historical untracked reads can still exercise cryptographic preview with no
+commit or claimed provenance. Automatic admission and final session/identity OCC
+rechecks remain unported; no original reply is retroactively assigned a baseline.

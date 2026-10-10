@@ -1990,6 +1990,19 @@ mod tests {
             user.get_attr("reason").and_then(|v| v.as_text()),
             Some("identity")
         );
+        let query_id = query.get_attr("id").and_then(|v| v.as_text()).unwrap();
+        assert_eq!(
+            identity_notifications::inspect(&store, query_id)
+                .unwrap()
+                .unwrap()
+                .refresh_guard,
+            identity_notifications::RefreshGuard::Matches
+        );
+        let baseline_key = format!("identity-refresh-snapshot:{query_id}");
+        let baseline = store
+            .read(|tx| tx.get(Table::Checkpoints, baseline_key.as_bytes(), 1))
+            .unwrap();
+        assert!(baseline.is_some());
         // Reservation already committed before the first uncertain write.
         write
             .send(Err(Error::Io(std::io::Error::new(
@@ -2020,7 +2033,20 @@ mod tests {
         let account = store.read(AccountRecord::load).unwrap().unwrap();
         assert_eq!(
             identity_notifications::queue(&store, &account, &notification).unwrap(),
-            identity_notifications::Refresh::Queued(id)
+            identity_notifications::Refresh::Queued(id.clone())
+        );
+        assert_eq!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, baseline_key.as_bytes(), 1))
+                .unwrap(),
+            baseline
+        );
+        assert_eq!(
+            identity_notifications::inspect(&store, &id)
+                .unwrap()
+                .unwrap()
+                .refresh_guard,
+            identity_notifications::RefreshGuard::Matches
         );
         let mut fake = start_with_config(&store, false, None, settings);
         fake.activate().await;

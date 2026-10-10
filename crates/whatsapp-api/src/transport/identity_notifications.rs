@@ -2,6 +2,7 @@
 //! Notification bytes are a refresh trigger, never replacement-key authority.
 //! Native response adoption and deferred notification ACK are still unported.
 use super::{actions, messaging};
+mod guard;
 use crate::{
     Error, Result,
     binary::Node,
@@ -9,6 +10,7 @@ use crate::{
     session::AccountRecord,
     store::{ProtocolStore, Table},
 };
+pub use guard::RefreshGuard;
 use sha2::{Digest, Sha256};
 use wacore_libsignal::protocol::IdentityKey;
 
@@ -48,6 +50,8 @@ pub struct Inspection {
     pub signature_valid: Option<bool>,
     /// Null without a complete bundle/pin; comparison is not adoption or trust.
     pub pin_matches: Option<bool>,
+    /// Original notification-time identity provenance, never admission authority.
+    pub refresh_guard: RefreshGuard,
 }
 
 /// Inspect an identity_refresh action, its original target and current pin in
@@ -80,6 +84,12 @@ fn inspect_in(tx: &crate::store::ReadTx<'_>, id: &str) -> Result<Option<Inspecti
         .ok_or_else(|| {
             Error::invalid("identity_notification", "invalid saved key request target")
         })?;
+    let pin: Option<Vec<u8>> = tx.get_json(
+        Table::PeerIdentities,
+        format!("comparison-direct:{peer}").as_bytes(),
+        1,
+    )?;
+    let refresh_guard = guard::inspect_in(tx, id, &peer, pin.as_deref())?;
     let mut result = Inspection {
         status: match action.status {
             actions::ActionStatus::Queued => DirectoryStatus::Queued,
@@ -95,6 +105,7 @@ fn inspect_in(tx: &crate::store::ReadTx<'_>, id: &str) -> Result<Option<Inspecti
         server_error_code: None,
         signature_valid: None,
         pin_matches: None,
+        refresh_guard,
     };
     let Some(reply) = reply else {
         return Ok(Some(result));
@@ -154,11 +165,6 @@ fn inspect_in(tx: &crate::store::ReadTx<'_>, id: &str) -> Result<Option<Inspecti
     };
     let valid = crate::signal::direct::validate_bundle_signature(&bundle).is_ok();
     result.signature_valid = Some(valid);
-    let pin: Option<Vec<u8>> = tx.get_json(
-        Table::PeerIdentities,
-        format!("comparison-direct:{peer}").as_bytes(),
-        1,
-    )?;
     result.pin_matches = pin
         .map(|pin| {
             bundle
@@ -234,6 +240,13 @@ pub async fn preview_session(store: &ProtocolStore, id: &str) -> Result<SessionP
         persisted: false,
     };
     if result.inspection.status != DirectoryStatus::VerifiedBundle {
+        return Ok(result);
+    }
+    if !matches!(
+        result.inspection.refresh_guard,
+        RefreshGuard::Matches | RefreshGuard::Untracked
+    ) {
+        result.outcome = "stale_refresh_guard";
         return Ok(result);
     }
     if peer.device != 0 {
@@ -394,6 +407,7 @@ pub fn queue(store: &ProtocolStore, account: &AccountRecord, node: &Node) -> Res
                 )
             },
         )?;
+        guard::capture_in(tx, &action, &peer, &pin)?;
         tx.put_json(Table::Checkpoints, event_marker.as_bytes(), 1, &action)?;
         tx.put_json(Table::Checkpoints, peer_marker.as_bytes(), 1, &action)?;
         Ok(Refresh::Queued(action))
@@ -654,7 +668,7 @@ mod tests {
                         "attestation" => "attestation_admission_unported",
                         "pq" => "pq_session_unported",
                         "changed" => "identity_replacement_unported",
-                        "missing_pin" => "missing_saved_identity",
+                        "missing_pin" => "stale_refresh_guard",
                         _ => "reply_not_verified",
                     }
                 );
@@ -677,6 +691,354 @@ mod tests {
             assert_eq!(snapshot(&reopened), before);
             assert_eq!(reopened.journal_head().unwrap(), head);
         }
+    }
+
+    fn transition(store: &ProtocolStore, peer: &Jid, current: &[u8], incoming: bool) {
+        store
+            .write(|tx| {
+                let key = format!("comparison-direct:{peer}");
+                let previous: Vec<u8> = tx
+                    .get_json(Table::PeerIdentities, key.as_bytes(), 1)?
+                    .unwrap();
+                if incoming {
+                    super::super::identity_conflicts::archive_replacement(
+                        tx,
+                        peer,
+                        Some(&previous),
+                        None,
+                        current,
+                    )?;
+                } else {
+                    super::super::identity_conflicts::archive_bundle_replacement(
+                        tx,
+                        peer,
+                        Some(&previous),
+                        None,
+                        current,
+                    )?;
+                }
+                tx.put_json(Table::PeerIdentities, key.as_bytes(), 1, &current.to_vec())
+            })
+            .unwrap();
+    }
+
+    #[test]
+    fn original_guard_survives_duplicate_and_primary_companion_aba() {
+        for peer in [
+            "15555550100@s.whatsapp.net",
+            "222222222222222@lid",
+            "15555550100:4@s.whatsapp.net",
+            "222222222222222:4@lid",
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("aba.redb");
+            let store = open(&path);
+            let peer = Jid::parse(peer).unwrap();
+            let a = install_pin(&store, &peer);
+            let b = IdentityKeyPair::generate(&mut rand::rng());
+            let node = notification(&peer.to_string(), "original");
+            let Refresh::Queued(id) = queue(&store, &account(), &node).unwrap() else {
+                panic!("read")
+            };
+            let snapshot_key = format!("identity-refresh-snapshot:{id}");
+            let baseline = store
+                .read(|tx| tx.get(Table::Checkpoints, snapshot_key.as_bytes(), 1))
+                .unwrap();
+            assert_eq!(
+                inspect(&store, &id).unwrap().unwrap().refresh_guard,
+                RefreshGuard::Matches
+            );
+            transition(&store, &peer, &b.identity_key().serialize(), true);
+            assert_eq!(
+                inspect(&store, &id).unwrap().unwrap().refresh_guard,
+                RefreshGuard::PinChanged
+            );
+            transition(&store, &peer, &a.identity_key().serialize(), false);
+            assert_eq!(
+                inspect(&store, &id).unwrap().unwrap().refresh_guard,
+                RefreshGuard::TransitionChanged
+            );
+            assert_eq!(
+                queue(&store, &account(), &node).unwrap(),
+                Refresh::Queued(id.clone())
+            );
+            assert_eq!(
+                store
+                    .read(|tx| tx.get(Table::Checkpoints, snapshot_key.as_bytes(), 1))
+                    .unwrap(),
+                baseline
+            );
+            actions::reserve_pending(&store).unwrap();
+            assert!(actions::record_reply(&store, &reply(&peer, &id, &a, true)).unwrap());
+            let inspection = inspect(&store, &id).unwrap().unwrap();
+            assert_eq!(inspection.pin_matches, Some(true));
+            assert_eq!(inspection.refresh_guard, RefreshGuard::TransitionChanged);
+            let head = store.journal_head().unwrap();
+            drop(store);
+            let store = open(&path);
+            assert_eq!(
+                inspect(&store, &id).unwrap().unwrap().refresh_guard,
+                RefreshGuard::TransitionChanged
+            );
+            assert_eq!(store.journal_head().unwrap(), head);
+            // A distinct notification can read current state; it cannot repair
+            // or replay the stale original event/action.
+            let Refresh::Queued(next) = queue(
+                &store,
+                &account(),
+                &notification(&peer.to_string(), "new-event"),
+            )
+            .unwrap() else {
+                panic!("new read")
+            };
+            assert_ne!(next, id);
+            assert_eq!(
+                inspect(&store, &next).unwrap().unwrap().refresh_guard,
+                RefreshGuard::Matches
+            );
+            assert_eq!(
+                inspect(&store, &id).unwrap().unwrap().refresh_guard,
+                RefreshGuard::TransitionChanged
+            );
+        }
+    }
+
+    #[test]
+    fn guard_scopes_user_device_and_namespace_without_freezing_ratchets() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("scope.redb"));
+        let peer = Jid::parse("222222222222222:4@lid").unwrap();
+        install_pin(&store, &peer);
+        let Refresh::Queued(id) = queue(
+            &store,
+            &account(),
+            &notification(&peer.to_string(), "scope"),
+        )
+        .unwrap() else {
+            panic!("read")
+        };
+        for other in ["15555550100@s.whatsapp.net", "222222222222222:5@lid"] {
+            let other = Jid::parse(other).unwrap();
+            install_pin(&store, &other);
+            transition(
+                &store,
+                &other,
+                &IdentityKeyPair::generate(&mut rand::rng())
+                    .identity_key()
+                    .serialize(),
+                true,
+            );
+            assert_eq!(
+                inspect(&store, &id).unwrap().unwrap().refresh_guard,
+                RefreshGuard::Matches
+            );
+        }
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::SignalSessions,
+                    format!("comparison-direct:{peer}").as_bytes(),
+                    1,
+                    &vec![4u8, 5, 6],
+                )
+            })
+            .unwrap();
+        assert_eq!(
+            inspect(&store, &id).unwrap().unwrap().refresh_guard,
+            RefreshGuard::Matches
+        );
+        let primary = peer.to_non_ad();
+        install_pin(&store, &primary);
+        transition(
+            &store,
+            &primary,
+            &IdentityKeyPair::generate(&mut rand::rng())
+                .identity_key()
+                .serialize(),
+            false,
+        );
+        assert_eq!(
+            inspect(&store, &id).unwrap().unwrap().refresh_guard,
+            RefreshGuard::PrimaryVersionChanged
+        );
+    }
+
+    #[tokio::test]
+    async fn stale_preview_historical_missing_and_corrupt_snapshots_never_repair_state() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("snapshot.redb"));
+        let peer = Jid::parse("222222222222222@lid").unwrap();
+        let a = install_pin(&store, &peer);
+        let node = notification(&peer.to_string(), "guard");
+        let Refresh::Queued(id) = queue(&store, &account(), &node).unwrap() else {
+            panic!("read")
+        };
+        actions::reserve_pending(&store).unwrap();
+        actions::record_reply(&store, &reply(&peer, &id, &a, true)).unwrap();
+        let key = format!("identity-refresh-snapshot:{id}");
+        let baseline: serde_json::Value = store
+            .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        transition(
+            &store,
+            &peer,
+            &IdentityKeyPair::generate(&mut rand::rng())
+                .identity_key()
+                .serialize(),
+            true,
+        );
+        let before = protected(&store);
+        assert_eq!(
+            preview_session(&store, &id).await.unwrap().outcome,
+            "stale_refresh_guard"
+        );
+        assert_eq!(protected(&store), before);
+        store
+            .write(|tx| tx.delete(Table::Checkpoints, key.as_bytes()))
+            .unwrap();
+        assert_eq!(
+            inspect(&store, &id).unwrap().unwrap().refresh_guard,
+            RefreshGuard::Untracked
+        );
+        assert_eq!(
+            queue(&store, &account(), &node).unwrap(),
+            Refresh::Queued(id.clone())
+        );
+        assert!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, key.as_bytes(), 1))
+                .unwrap()
+                .is_none()
+        );
+        for malformed in [
+            "missing_primary",
+            "missing_transition",
+            "invalid_transition",
+            "other_peer",
+            "extra",
+        ] {
+            let mut value = baseline.clone();
+            match malformed {
+                "missing_primary" => {
+                    value.as_object_mut().unwrap().remove("primary_version");
+                }
+                "missing_transition" => {
+                    value.as_object_mut().unwrap().remove("transition");
+                }
+                "invalid_transition" => {
+                    value["transition"] = serde_json::json!("private-credential-marker")
+                }
+                "other_peer" => {
+                    value["peer"] =
+                        serde_json::to_value(Jid::parse("111111111111111@lid").unwrap()).unwrap()
+                }
+                _ => value["unknown"] = serde_json::json!(true),
+            }
+            store
+                .write(|tx| tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &value))
+                .unwrap();
+            let error = inspect(&store, &id).unwrap_err().to_string();
+            assert!(error.contains("invalid saved refresh snapshot"));
+            assert!(!error.contains("private-credential-marker") && !error.contains(&peer.user));
+            assert_eq!(protected(&store), before);
+        }
+        let mut changed_generation = baseline;
+        changed_generation["generation"] = serde_json::json!(999);
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &changed_generation))
+            .unwrap();
+        assert_eq!(
+            inspect(&store, &id).unwrap().unwrap().refresh_guard,
+            RefreshGuard::GenerationChanged
+        );
+        let transition_key = store
+            .read(|tx| {
+                Ok(tx
+                    .scan_after(Table::Checkpoints, 1, None, 256)?
+                    .into_iter()
+                    .find(|(key, _)| key.starts_with(b"identity-transition:"))
+                    .unwrap()
+                    .0)
+            })
+            .unwrap();
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    &transition_key,
+                    1,
+                    &"private-invalid-epoch",
+                )
+            })
+            .unwrap();
+        let unchanged = protected(&store);
+        let head = store.journal_head().unwrap();
+        let failed: Result<()> = store.write(|tx| {
+            super::super::identity_conflicts::archive_replacement(tx, &peer, Some(&[1]), None, &[2])
+        });
+        let error = failed.unwrap_err().to_string();
+        assert!(error.contains("invalid saved identity transition"));
+        assert!(!error.contains("private-invalid-epoch"));
+        assert_eq!(protected(&store), unchanged);
+        assert_eq!(store.journal_head().unwrap(), head);
+    }
+
+    #[test]
+    fn failed_snapshot_capture_rolls_back_action_and_all_markers() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("rollback.redb"));
+        let peer = Jid::parse("222222222222222@lid").unwrap();
+        install_pin(&store, &peer);
+        let key = format!("primary-device-version:{peer}");
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    key.as_bytes(),
+                    1,
+                    &"private-invalid-counter",
+                )
+            })
+            .unwrap();
+        let before = protected(&store);
+        let checkpoints = store
+            .read(|tx| tx.scan_after(Table::Checkpoints, 1, None, 256))
+            .unwrap();
+        let head = store.journal_head().unwrap();
+        let error = queue(
+            &store,
+            &account(),
+            &notification(&peer.to_string(), "rollback"),
+        )
+        .unwrap_err()
+        .to_string();
+        assert!(error.contains("invalid saved primary device version"));
+        assert!(!error.contains("private-invalid-counter"));
+        assert!(actions::outcomes(&store).unwrap().is_empty());
+        assert_eq!(protected(&store), before);
+        assert_eq!(
+            store
+                .read(|tx| tx.scan_after(Table::Checkpoints, 1, None, 256))
+                .unwrap(),
+            checkpoints
+        );
+        assert_eq!(store.journal_head().unwrap(), head);
+        store
+            .write(|tx| tx.delete(Table::Checkpoints, key.as_bytes()))
+            .unwrap();
+        let Refresh::Queued(id) = queue(
+            &store,
+            &account(),
+            &notification(&peer.to_string(), "rollback"),
+        )
+        .unwrap() else {
+            panic!("corrected local counter")
+        };
+        assert_eq!(
+            inspect(&store, &id).unwrap().unwrap().refresh_guard,
+            RefreshGuard::Matches
+        );
     }
 
     #[test]

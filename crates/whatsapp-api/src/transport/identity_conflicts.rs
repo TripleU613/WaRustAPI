@@ -412,6 +412,41 @@ pub(super) fn archive_bundle_replacement(
     )
 }
 
+// Local OCC provenance, not a native version, timestamp or trust decision.
+// Use the unique committed event ID so A->B->A cannot reuse an old guard.
+fn transition_key(peer: &Jid) -> String {
+    let mut peer = peer.clone();
+    peer.kind = crate::model::jid::JidKind::Plain;
+    format!(
+        "identity-transition:{}",
+        hex::encode(Sha256::digest(peer.to_string().as_bytes()))
+    )
+}
+
+fn decode_transition(bytes: Option<Vec<u8>>) -> Result<Option<crate::model::ids::EventId>> {
+    bytes
+        .map(|bytes| {
+            serde_json::from_slice(&bytes).map_err(|_| {
+                Error::invalid("identity_conflict", "invalid saved identity transition")
+            })
+        })
+        .transpose()
+}
+
+pub(super) fn transition_in(
+    tx: &crate::store::ReadTx<'_>,
+    peer: &Jid,
+) -> Result<Option<crate::model::ids::EventId>> {
+    decode_transition(tx.get(Table::Checkpoints, transition_key(peer).as_bytes(), 1)?)
+}
+
+pub(super) fn transition_write_in(
+    tx: &crate::store::WriteTx<'_>,
+    peer: &Jid,
+) -> Result<Option<crate::model::ids::EventId>> {
+    decode_transition(tx.get(Table::Checkpoints, transition_key(peer).as_bytes(), 1)?)
+}
+
 fn archive_identity(
     tx: &mut crate::store::WriteTx<'_>,
     peer: &Jid,
@@ -423,6 +458,8 @@ fn archive_identity(
     let Some(previous) = previous.filter(|old| *old != current) else {
         return Ok(());
     };
+    // Do not silently overwrite malformed local provenance during a change.
+    let _previous_transition = transition_write_in(tx, peer)?;
     super::peer_verification::invalidate_in(tx, peer, current)?;
     super::devices::after_primary_identity_change_in(tx, peer)?;
     super::sender_key_distribution::after_primary_change_in(tx, peer)?;
@@ -436,6 +473,12 @@ fn archive_identity(
             observed_at,
         },
     ))?;
+    tx.put_json(
+        Table::Checkpoints,
+        transition_key(peer).as_bytes(),
+        1,
+        &event.event_id,
+    )?;
     // Unique journal event selector preserves repeated A->B->A transitions;
     // a deterministic old/new selector would overwrite distinct ratchets.
     let key = format!("identity-history:{}", hex::encode(event.event_id.0));
@@ -507,6 +550,8 @@ mod tests {
         assert_eq!(version(&store, &lid), Some(1));
         assert_eq!(version(&store, &pn), Some(2));
         let head = store.journal_head().unwrap();
+        let transition_before = store.read(|tx| transition_in(tx, &pn)).unwrap();
+        assert!(transition_before.is_some());
         let failed: Result<()> = store.write(|tx| {
             archive_replacement(tx, &pn, Some(&[1]), None, &[3])?;
             Err(Error::invalid("test", "rollback"))
@@ -514,8 +559,16 @@ mod tests {
         assert!(failed.is_err());
         assert_eq!(version(&store, &pn), Some(2));
         assert_eq!(store.journal_head().unwrap(), head);
+        assert_eq!(
+            store.read(|tx| transition_in(tx, &pn)).unwrap(),
+            transition_before
+        );
         drop(store);
         let store = open(&path, false);
+        assert_eq!(
+            store.read(|tx| transition_in(tx, &pn)).unwrap(),
+            transition_before
+        );
         assert_eq!(version(&store, &pn), Some(2));
         assert_eq!(version(&store, &lid), Some(1));
         assert_eq!(
