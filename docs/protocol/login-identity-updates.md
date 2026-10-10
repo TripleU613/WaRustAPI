@@ -70,3 +70,43 @@ Validation: 840 workspace/all-feature tests passed. Strict all-target Clippy,
 warnings-denied Rustdoc, default CLI tests (25 plus API-symbol), regenerated
 CLI reference, formatting and whitespace checks passed. Repository hygiene
 checked 2,182 local links and 108 existing APK bundles. No fresh live test.
+
+## Bounded live regression (2026-10-09)
+
+**Observed live:** a newly built experimental CLI from commit `051861b` used
+the original registered account and key for one receive-only session. The private
+request copy differed only in reconnect max_attempts=0 and mark_read=false;
+`--send-outbox` was absent. Original settings and key stayed in private storage.
+No queued actions or unacknowledged receipt records were present before starting.
+The session authenticated, completed its requested **45-second receive window**,
+and stopped cleanly with exit 0. Total process time including connection was
+53.52 seconds. No additional receive run or automatic reconnect was launched.
+
+[Redacted aggregate evidence](live-login-receive-validation.json) compares fresh
+pre/post inspections: zero eligible outbox intents, 20 actions (17 ok/one error/
+two sent) and nine acknowledged receipt records are equal after
+JSON decoding. Event journal head stayed **20**. Inbound checkpoint count grew
+804→813; total checkpoints grew 1,045→1,055, including one new confirmed-clock
+record. Clock inspection now reports login_success/saved_offset and the existing
+separate inferred sample. This is a recognised live clock source, not proof of
+every native clock producer or offset's accuracy.
+
+Twelve Unsupported log lines were six ib, four notification/psa, one
+notification/encrypt and one notification/mex. Repeated captures may reuse rows;
+these line/checkpoint counts do not represent user replies. No new supported
+message/update/receipt or qualifying peer identity transition was observed.
+A raw control classification is not by itself proof that control handling failed.
+
+**Limits:** normal authenticated login exercises the changed production
+persistence path, but no fresh partial or malformed success was observed; those
+cases retain their offline validation. Pre/post queue and event equality does
+not establish that every account, pin or session value remained identical;
+authentication/login/clock state can update normally. Private detailed logs and
+inspection snapshots remain ignored with 0600 permissions. No handset delivery,
+read receipt, scan verification or complete native identity parity is claimed.
+
+Live-check validation: the experimental CLI build, CLI-reference regeneration,
+API/library-symbol checks, formatting, whitespace and repository hygiene passed
+(2,186 links/108 APK bundles). One bounded live receive run completed; no fresh
+workspace runtime suite was rerun for this evidence-only change. The preceding
+840-test implementation validation remains separate.

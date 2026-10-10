@@ -1,0 +1,61 @@
+{
+  "evidence": "observed live; redacted aggregate only",
+  "date": "2026-10-09",
+  "source_commit": "051861b",
+  "transport": "explicit comparison public-client actor",
+  "requested_receive_seconds": 45,
+  "total_process_seconds": 53.52,
+  "authenticated": true,
+  "exit_code": 0,
+  "clean_stop": true,
+  "chat_sends_enabled": false,
+  "automatic_reconnect_attempts": 0,
+  "automatic_read_receipts": false,
+  "registration_before": "Registered",
+  "registration_after": "Registered",
+  "pending_outbox_before": 0,
+  "pending_outbox_after": 0,
+  "pending_outbox_equal": true,
+  "actions_before": 20,
+  "actions_after": 20,
+  "actions_equal": true,
+  "action_status_counts": {
+    "ok": 17,
+    "error": 1,
+    "sent": 2
+  },
+  "receipt_records_before": 9,
+  "receipt_records_after": 9,
+  "receipt_records_equal": true,
+  "receipt_status_counts": {
+    "server_acknowledged": 9
+  },
+  "journal_head_before": 20,
+  "journal_head_after": 20,
+  "inbound_checkpoints_before": 804,
+  "inbound_checkpoints_after": 813,
+  "all_checkpoints_before": 1045,
+  "all_checkpoints_after": 1055,
+  "new_checkpoint_kinds": {
+    "inbound": 9,
+    "server-clock-confirmed-v1": 1
+  },
+  "unsupported_log_classes": {
+    "ib": 6,
+    "notification/psa": 4,
+    "notification/encrypt": 1,
+    "notification/mex": 1
+  },
+  "clock_after": {
+    "confirmed_source": "login_success",
+    "resolution": "saved_offset",
+    "inferred_sample_present": true
+  },
+  "limits": [
+    "No qualifying peer-identity transition, DM, delivery/read receipt, or handset confirmation was observed.",
+    "Normal login exercises current persistence; absent-member and malformed-input behavior remains offline tested.",
+    "Unsupported log lines and preserved inbound checkpoints are not user replies.",
+    "Account/login/clock timestamps can update; equal table counts do not prove every pin or session value is unchanged.",
+    "Raw captures, identities, request settings, keys, identifiers and detailed logs remain private."
+  ]
+}

@@ -1,5 +1,19 @@
 # Evidence ledger
 
+Bounded receive validation (2026-10-09, **observed live**): current experimental
+CLI authenticated the saved account, completed 45 receive seconds and stopped
+cleanly, with chat sends, automatic reconnects and automatic reads disabled.
+Outbox/action/receipt inspections and event head stayed equal; nine inbound
+checkpoints and one confirmed login-clock record were added. No supported reply
+or peer transition observed. [Redacted evidence and limits](login-identity-updates.md#bounded-live-regression-2026-10-09).
+
+Live-check validation: the experimental CLI build, CLI-reference regeneration,
+API/library-symbol checks, formatting, whitespace and repository hygiene passed
+(2,186 links/108 APK bundles). One bounded live receive run completed; no fresh
+workspace runtime suite was rerun for this evidence-only change. The preceding
+840-test implementation validation remains separate.
+
+
 Partial login identity persistence (2026-10-09, **implemented/offline tested**):
 PN-only/LID-only authenticated success updates preserve the other saved namespace.
 Malformed replacements/history refuse atomically without changing account state,
