@@ -1,5 +1,14 @@
 # Messaging completion checklist
 
+Identity ACK follow-up (2026-10-09, **confirmed static / observed**): legacy
+arg1=76 now traces through 0y0.A00 → 0y2.A02 → Cp2.A05 → 1Rd.A04.
+The 3-topic / 8-file / 177,076-byte source bundle reproduces exactly. One
+45-second saved-account receive-only window authenticated/stopped cleanly;
+actions/receipts/eligible outbox/account generation/journal head stayed equal,
+with eight new inbound checkpoints. No qualifying identity control arrived;
+server ACK acceptance remains unknown. [Evidence and validation](protocol/identity-notification-ack.md).
+
+
 Identity notification ACK (2026-10-09, **implemented/offline**): APK 37.71
 identity dispatch schedules its worker without registering ACK deferral. The
 actor now durably handles supported controls then ACKs original metadata,

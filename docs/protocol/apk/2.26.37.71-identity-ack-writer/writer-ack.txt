@@ -1,0 +1,24 @@
+# APK-derived structural disassembly: LX/0y2;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A02(VL) flags=0x1 registers=6
+  # full signature: LX/0y2;->A02(LX/Cb1;)V
+  0000..0004 op=54 iget-object v0, v4, LX/0y2;->A00:LX/0y0;
+  0004..0008 op=54 iget-object v3, v0, LX/0y0;->A00:LX/1Rd;
+  0008..000c op=54 iget-object v0, v5, LX/Cb1;->A04:LX/0hs;
+  000c..0012 op=71 invoke-static {v0, v5}, LX/Cp2;->A05(LX/0hs;LX/Cb1;)LX/0hs;
+  0012..0014 op=0c move-result-object v2
+  0014..0018 op=53 iget-wide v0, v5, LX/Cb1;->A00:J
+  0018..001e op=6e invoke-virtual {v3, v2, v0, v1}, LX/1Rd;->A04(LX/0hs;J)V
+  001e..0022 op=1a const-string v1, "WriterThread/write/send-stanza-received; stanzaKey="
+  0022..0026 op=22 new-instance v0, Ljava/lang/StringBuilder;
+  0026..002c op=70 invoke-direct {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  002c..0032 op=6e invoke-virtual {v0, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  0032..0038 op=6e invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  0038..003a op=0c move-result-object v0
+  003a..0040 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+  0040..0042 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

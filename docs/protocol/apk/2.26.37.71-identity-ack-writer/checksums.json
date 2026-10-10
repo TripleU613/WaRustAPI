@@ -1,0 +1,30 @@
+{
+  "dispatch-code.txt": {
+    "bytes": 996,
+    "sha256": "7b8dd6e2d08a32183280fbf31ee4330e97b61064a20a05afd6758bec512b3b40"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "targets.json": {
+    "bytes": 970,
+    "sha256": "185d5fcca0ec092e27f8a1f76d09610ddc594b579f80280555f9a3c60e1beacd"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  },
+  "writer-ack.txt": {
+    "bytes": 1479,
+    "sha256": "1a6ebcc4a32f2c86817335174c8a8d37dc0e9d82c0bafd41f68eff08a2fb4453"
+  },
+  "writer-dispatch.txt": {
+    "bytes": 146114,
+    "sha256": "4df630be711fb768b0b5afca688b176fcd25f1aeaeebcbcc75564cb1b2b23a22"
+  }
+}

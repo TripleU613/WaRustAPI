@@ -1,0 +1,32 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "dispatch-code": {
+      "class": "LX/1q6;",
+      "method": "A00",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "writer-dispatch": {
+      "class": "LX/0y0;",
+      "method": "A00",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "writer-ack": {
+      "class": "LX/0y2;",
+      "method": "A02",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    }
+  }
+}

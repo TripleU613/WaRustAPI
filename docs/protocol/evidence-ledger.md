@@ -3113,3 +3113,12 @@ remain separately attributed. No fresh workspace/runtime or live test is claimed
 ACK deferral used by count/PQ-count. Original descriptor is ACKed after dispatch,
 independently of worker success/adoption. Deferred watchdog logs and clears;
 no retry. [Source, reasoning and unknowns](identity-notification-ack.md).
+
+## 2026-10-09 — Identity ACK writer and bounded live validation (37.71)
+
+**Confirmed static:** arg1=76 legacy case reaches 0y2.A02, Cp2.A05 and
+1Rd.A04. Separate send-message-ACK call was insufficient evidence for this
+route; native in-memory offline queue is not durable process-restart replay.
+**Observed:** receive-only authenticated and stopped; eight inbound checkpoints,
+unchanged actions/receipts/pending/head, no qualifying identity control. Live
+ACK acceptance **unknown**. [Trace and redacted record](identity-notification-ack.md).

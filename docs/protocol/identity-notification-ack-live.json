@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-09",
+  "build": "1f04eeb",
+  "evidence": "observed",
+  "redacted": true,
+  "receive_exit": 0,
+  "elapsed_seconds": 59.2,
+  "requested_seconds": 45,
+  "outbox_enabled": false,
+  "automatic_reads": false,
+  "reconnect_attempts": 0,
+  "actions": {
+    "equal": true,
+    "before_rows": 21,
+    "after_rows": 21
+  },
+  "receipts": {
+    "equal": true,
+    "before_rows": 9,
+    "after_rows": 9
+  },
+  "pending": {
+    "equal": true,
+    "before_rows": 0,
+    "after_rows": 0
+  },
+  "store_summary_equal": false,
+  "authenticated_active": true,
+  "stopped_cleanly": true,
+  "identity_ack_written_log_count": 0,
+  "identity_ack_invalid_log_count": 0,
+  "account_generation_equal": true,
+  "registration_equal": true,
+  "journal_head_equal": true,
+  "inbound_checkpoints_before": 830,
+  "inbound_checkpoints_after": 838,
+  "non_checkpoint_table_counts_equal": true,
+  "qualifying_identity_notification_observed": false,
+  "server_identity_ack_acceptance": "unknown"
+}

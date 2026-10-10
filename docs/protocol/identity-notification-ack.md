@@ -94,3 +94,52 @@ self-diff is unchanged. This compares a bundle with itself, not two releases.
 Warning-denying Rustdoc, default CLI (25 tests plus API-symbol check), CLI-reference
 regeneration, formatting, whitespace and repository hygiene passed (2,395 links,
 119 bundles). No fresh network request was made in this implementation chunk.
+
+## Legacy writer closure — 2026-10-09
+
+**Confirmed static**, same 37.71 hash: the previously unresolved legacy
+writer mapping is now closed. [Recipe](apk/recipes/2.26.37.71-identity-ack-writer.json)
+and [source mapping](apk/2.26.37.71-identity-ack-writer/targets.json) retain
+1q6.A00, the complete 0y0.A00 dispatcher and 0y2.A02.
+
+`1q6.A00` returns arg1 unchanged except codes 233/356/6/343/486,
+which select arg2; 76 therefore stays 76. `0y0.A00` reads that code
+(004a–0052); its non-43 path sets the prebuilt-node slot null
+(0056 → 0288 → 0062). The active writer proceeds through 00be,
+loads Message.arg1 at 00ce, and dispatches case 76 at 00f0 to 11c2.
+That case casts obj to Cb1 and calls `0y2.A02` (11ca–11d0).
+`0y2.A02` gets the descriptor child, calls Cp2.A05 (000c–0012),
+and invokes `1Rd.A04` with the ACK node and descriptor timestamp
+(0014–001e). This is the stanza-received ACK path. A separate Cp2.A05
+call at 1a8e belongs to another dispatcher case; merely finding that call
+was insufficient to prove the 76 route.
+
+The native writer can queue Message copies in an in-memory ArrayDeque while
+offline (0088–009e). That is not proof of durable ACK replay across process
+restart. Rust continues to repeat an ACK only on authenticated redelivery;
+no saved replay queue or new retry authority follows from this trace.
+Alternative BPe/CCQ routing and downstream socket completion remain separate
+**unknowns**, not claims of full Android scheduler parity.
+
+## Bounded live validation — 2026-10-09
+
+**Observed:** [redacted validation](identity-notification-ack-live.json) used the
+saved account, existing keys and original action IDs. Fresh preflight had zero
+queued actions/receipts/eligible chat intents. The 45-second receive window
+(59.20 seconds total) authenticated, activated and stopped cleanly with outbox,
+automatic reads and reconnects disabled. Actions (21), receipts (9), eligible
+outbox (0), account generation, registration and journal head were unchanged.
+Inbound checkpoints rose 830→838; other table counts stayed equal. This is a
+summary/count check, not a byte comparison of every encrypted record. No identity
+ACK success or invalid-metadata log appeared, and no new identity action was
+created. **No qualifying identity control arrived; live ACK acceptance remains
+unknown.** No repeated window or new chat send was attempted.
+
+The follow-up writer bundle has 3 topics / 8 files / 177,076 bytes. Exact export
+and cached self-diff passed; this does not establish parity with a new release.
+
+Follow-up checks: source regeneration/self-diff, CLI-reference regeneration,
+API/library symbols, formatting, whitespace and hygiene passed (2,401 local
+links / 120 bundles). No Rust changes in this follow-up; workspace tests were
+not repeated after the implementation chunk. Private logs/config/state stay
+ignored and outside the commit.
