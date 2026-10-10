@@ -5,6 +5,10 @@ APK **2.26.37.71**, SHA-256
 Offsets are method-relative bytes. **Confirmed static** describes inspected DEX;
 **implemented/offline** describes Rust tests, not a live server observation.
 
+The follow-up [changed-primary application](identity-refresh-application.md) now
+implements guarded classic changed-key adoption under the explicit receive policy.
+This original read-phase trace still applies; identity ACK remains deferred.
+
 ## Normal incoming callback address
 
 **Confirmed static:** [0yO.BFC](apk/2.26.37.71-notification-key-read/notification-entry.txt)

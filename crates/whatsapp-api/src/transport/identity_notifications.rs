@@ -1,7 +1,9 @@
 //! First phase of APK 37.71 identity notification processing: a durable key read.
 //! Notification bytes are a refresh trigger, never replacement-key authority.
-//! Native response adoption and deferred notification ACK are still unported.
+//! Changed primary classic replies can be adopted under the explicit existing
+//! APK-authenticated policy. Deferred notification ACK remains unported.
 use super::{actions, messaging};
+pub(crate) mod application;
 mod attestation;
 mod guard;
 use crate::{
@@ -56,6 +58,8 @@ pub struct Inspection {
     pub refresh_guard: RefreshGuard,
     /// Selected-device attestation verification; null until a supported bundle.
     pub attestation: Option<AttestationInspection>,
+    /// Durable historical application fact, not current key agreement or trust.
+    pub applied: bool,
 }
 
 /// Inspect an identity_refresh action, its original target and current pin in
@@ -111,6 +115,7 @@ fn inspect_in(tx: &crate::store::ReadTx<'_>, id: &str) -> Result<Option<Inspecti
         pin_matches: None,
         refresh_guard,
         attestation: None,
+        applied: application::applied_in(tx, id, &peer)?,
     };
     let Some(reply) = reply else {
         return Ok(Some(result));
@@ -428,7 +433,7 @@ pub fn queue(store: &ProtocolStore, account: &AccountRecord, node: &Node) -> Res
 }
 
 #[cfg(test)]
-mod tests {
+pub(super) mod tests {
     use super::*;
     use crate::model::jid::Jid;
     use crate::{
@@ -438,7 +443,7 @@ mod tests {
     };
     use wacore_libsignal::protocol::{IdentityKeyPair, KeyPair};
 
-    fn open(path: &std::path::Path) -> ProtocolStore {
+    pub(super) fn open(path: &std::path::Path) -> ProtocolStore {
         ProtocolStore::open(OpenOptions {
             path: path.to_owned(),
             account_id: AccountId::new("fixture").unwrap(),
@@ -447,21 +452,21 @@ mod tests {
         })
         .unwrap()
     }
-    fn account() -> AccountRecord {
+    pub(super) fn account() -> AccountRecord {
         AccountRecord {
             registration: RegistrationStatus::Registered,
             own_jid: Some(Jid::parse("15555550999@s.whatsapp.net").unwrap()),
             ..Default::default()
         }
     }
-    fn notification(peer: &str, id: &str) -> Node {
+    pub(super) fn notification(peer: &str, id: &str) -> Node {
         Node::new("notification")
             .attr("type", "encrypt")
             .attr("from", peer)
             .attr("id", id)
             .children(vec![Node::new("identity")])
     }
-    fn install_pin(store: &ProtocolStore, peer: &Jid) -> IdentityKeyPair {
+    pub(super) fn install_pin(store: &ProtocolStore, peer: &Jid) -> IdentityKeyPair {
         let identity = IdentityKeyPair::generate(&mut rand::rng());
         store
             .write(|tx| {
@@ -481,7 +486,12 @@ mod tests {
             .unwrap();
         identity
     }
-    fn reply(peer: &Jid, id: &str, identity: &IdentityKeyPair, valid: bool) -> Node {
+    pub(in crate::transport) fn reply(
+        peer: &Jid,
+        id: &str,
+        identity: &IdentityKeyPair,
+        valid: bool,
+    ) -> Node {
         let signed = KeyPair::generate(&mut rand::rng());
         let signature = identity
             .private_key()

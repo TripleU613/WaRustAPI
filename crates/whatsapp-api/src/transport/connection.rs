@@ -353,6 +353,8 @@ pub(crate) async fn drive(
         .read(AccountRecord::load)?
         .ok_or(Error::NotRegistered)?;
     super::groups::recover_pending(&store)?;
+    super::identity_notifications::application::recover(&store, config.transport.identity_changes)
+        .await?;
     // Reply settlement and contact projection are separate durable commits.
     // Repair the gap after a crash without deleting markers or replaying IQs.
     super::contacts::ingest(&store)?;
@@ -533,6 +535,12 @@ pub(crate) async fn drive(
                             // 8lQ.A00 sends full state to 0yw.A0U. Our supported
                             // snapshot projection runs here, not only in CLI list.
                             super::groups::apply_pending(&store, id)?;
+                            let application = super::identity_notifications::application::apply(
+                                &store, id, config.transport.identity_changes,
+                            ).await?;
+                            if application != super::identity_notifications::application::Application::Unrelated {
+                                tracing::info!(?application, "identity refresh reply considered; notification ACK remains deferred");
+                            }
                         }
                         continue;
                     }
@@ -1913,6 +1921,96 @@ mod tests {
             .attr("id", id)
             .attr("from", Jid::parse("s.whatsapp.net").unwrap())
             .children(vec![Node::new(child).attr("value", value)])
+    }
+
+    #[tokio::test]
+    async fn identity_refresh_reply_is_applied_by_actor_without_outbox_or_identity_ack() {
+        use super::super::identity_notifications;
+        use crate::session::{KeyMaterial, SignalIdentityKey};
+        use wacore_libsignal::protocol::IdentityKeyPair;
+        let dir = tempfile::tempdir().unwrap();
+        let store = Arc::new(identity_store(
+            &dir.path().join("identity-application-actor.redb"),
+        ));
+        let local = IdentityKeyPair::generate(&mut rand::rng());
+        let account = AccountRecord {
+            own_jid: Some(Jid::parse("15555550100@s.whatsapp.net").unwrap()),
+            registration: crate::session::RegistrationStatus::Registered,
+            signal_registration_id: Some(31),
+            signal_identity: Some(SignalIdentityKey(KeyMaterial {
+                public: local.public_key().public_key_bytes().try_into().unwrap(),
+                private: *local.private_key().serialize(),
+            })),
+            ..Default::default()
+        };
+        let peer = peer();
+        let old = IdentityKeyPair::generate(&mut rand::rng());
+        store
+            .write(|tx| {
+                account.save(tx)?;
+                tx.put_json(
+                    Table::PeerIdentities,
+                    format!("comparison-direct:{peer}").as_bytes(),
+                    1,
+                    &old.identity_key().serialize().to_vec(),
+                )
+            })
+            .unwrap();
+        let notification = Node::new("notification")
+            .attr("type", "encrypt")
+            .attr("from", peer.clone())
+            .attr("id", "actor-change")
+            .children(vec![Node::new("identity")]);
+        let identity_notifications::Refresh::Queued(id) =
+            identity_notifications::queue(&store, &account, &notification).unwrap()
+        else {
+            panic!("query")
+        };
+        let mut settings = config();
+        settings.transport.identity_changes =
+            crate::registration::request::IdentityChangePolicy::ApkAuthenticated;
+        settings.transport.timeout_ms = 2000;
+        let mut fake = start_with_config(&store, false, None, settings);
+        fake.activate().await;
+        let (query, written) = fake.written().await;
+        assert_eq!(
+            query.get_attr("id").and_then(|v| v.as_text()),
+            Some(id.as_str())
+        );
+        written.send(Ok(())).unwrap();
+        let new = IdentityKeyPair::generate(&mut rand::rng());
+        fake.deliver(identity_notifications::tests::reply(&peer, &id, &new, true))
+            .await;
+        tokio::time::timeout(Duration::from_secs(5), async {
+            while !identity_notifications::inspect(&store, &id)
+                .unwrap()
+                .unwrap()
+                .applied
+            {
+                tokio::time::sleep(Duration::from_millis(2)).await;
+            }
+        })
+        .await
+        .unwrap();
+        assert!(
+            store
+                .read(|tx| tx.scan_after(Table::Outbox, 1, None, 32))
+                .unwrap()
+                .is_empty()
+        );
+        assert_eq!(
+            store
+                .read(|tx| tx.get_json::<Vec<u8>>(
+                    Table::PeerIdentities,
+                    format!("comparison-direct:{peer}").as_bytes(),
+                    1
+                ))
+                .unwrap(),
+            Some(new.identity_key().serialize().to_vec())
+        );
+        // Native identity ACK construction/lifecycle is not implemented by this chunk.
+        fake.nothing_written(Duration::from_millis(50)).await;
+        fake.stop_cleanly().await;
     }
 
     #[tokio::test]

@@ -7,6 +7,10 @@ transaction as its query and notification event/device markers. This advances
 response adoption. It does not yet implement native admission, a persisted
 session refresh or notification ACKs.
 
+The [application follow-up](identity-refresh-application.md) now rechecks these
+guards inside the transaction committing a supported changed-primary reply.
+Missing historical snapshots still cannot authorize application.
+
 ## Evidence and the stale-response problem
 
 **Confirmed static context:** APK **2.26.37.71**, SHA-256

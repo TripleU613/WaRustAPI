@@ -119,6 +119,8 @@ pub enum IdentityChangePolicy {
     /// APK 2.26.37.71 0km.BRS/COt and Cnp.A04 permit peer changes. Here the
     /// candidate is committed only after message authentication or an explicitly
     /// enabled signed directory bundle check, with prior state preserved.
+    /// Receive policy also admits the supported changed-primary classic
+    /// notification reply after original guards and atomic commit rechecks.
     /// Authentication establishes possession of the new key, not human trust.
     ApkAuthenticated,
 }

@@ -1,0 +1,98 @@
+{
+  "admitted-bundle-worker": {
+    "class": "LX/14J;",
+    "file": "admitted-bundle-worker.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A04",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_notifications/application.rs"
+    ]
+  },
+  "candidate-parser": {
+    "class": "LX/Bot;",
+    "file": "candidate-parser.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A03",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_notifications/application.rs"
+    ]
+  },
+  "primary-admission": {
+    "class": "LX/CPB;",
+    "file": "primary-admission.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_notifications/application.rs"
+    ]
+  },
+  "session-processing": {
+    "class": "LX/0jc;",
+    "file": "session-processing.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0L",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_notifications/application.rs"
+    ]
+  },
+  "session-reset-mode": {
+    "class": "LX/0jc;",
+    "file": "session-reset-mode.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0s",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_notifications/application.rs"
+    ]
+  },
+  "session-reset-row": {
+    "class": "LX/0jc;",
+    "file": "session-reset-row.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0D",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_notifications/application.rs"
+    ]
+  },
+  "session-reset-transaction": {
+    "class": "LX/0jc;",
+    "file": "session-reset-transaction.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0E",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_notifications/application.rs"
+    ]
+  },
+  "signed-bundle-derivation": {
+    "class": "LX/CQc;",
+    "file": "signed-bundle-derivation.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_notifications/application.rs"
+    ]
+  }
+}

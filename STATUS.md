@@ -1,5 +1,25 @@
 # Status — 2026-10-07
 
+Identity-refresh application (2026-10-09, **implemented/offline**): the actor
+now adopts a verified changed-primary classic reply under the existing explicit
+apk_authenticated receive policy. Original notification guards, exact session
+bytes, saved account/reply and own PN/LID are rechecked in the atomic commit.
+Old pin/session, transition invalidations and once-only application history
+are preserved; startup recovers the reply-settlement cut without IQ replay.
+`actions --show` adds applied as a historical fact. Same-key, companion,
+attestation/PQ/identity_auth admission and identity ACK remain unported.
+[APK evidence, inspection and boundaries](docs/protocol/identity-refresh-application.md).
+
+Validation: all 867 workspace/all-feature tests, strict Clippy, Rustdoc, default
+CLI/API-symbol and reference checks passed. The 8-topic / 13-file / 119,638-byte
+APK bundle reproduces exactly and self-diffs unchanged. One receive-only
+45-second window authenticated and stopped cleanly with sends, automatic reads
+and reconnects disabled: actions/receipts/eligible outbox and journal head
+were unchanged. Eight inbound checkpoints were added, with 11 unsupported
+controls and no decrypted message. Historical untracked read stays applied=false;
+no new qualifying reply or live changed-key adoption is claimed.
+
+
 Attestation storage trace (2026-10-09, **confirmed static**): native schema
 defaults to NOT_SET; a conditional hosted-account backfill promotes primary
 rows to E2EE. State replacement/update and own-account/gossip producers are

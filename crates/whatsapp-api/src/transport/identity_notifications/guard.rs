@@ -75,23 +75,58 @@ pub(super) fn inspect_in(
     peer: &Jid,
     pin: Option<&[u8]>,
 ) -> Result<RefreshGuard> {
-    let Some(bytes) = tx.get(Table::Checkpoints, key(id).as_bytes(), 1)? else {
+    inspect_snapshot(
+        tx.get(Table::Checkpoints, key(id).as_bytes(), 1)?,
+        tx.generation().0,
+        peer,
+        pin,
+        || identity_conflicts::transition_in(tx, peer),
+        || devices::primary_device_version_in(tx, &peer.to_non_ad()),
+    )
+}
+
+/// Recheck the original baseline inside the transaction adopting a candidate.
+pub(super) fn inspect_write_in(
+    tx: &WriteTx<'_>,
+    id: &str,
+    peer: &Jid,
+    pin: Option<&[u8]>,
+) -> Result<RefreshGuard> {
+    inspect_snapshot(
+        tx.get(Table::Checkpoints, key(id).as_bytes(), 1)?,
+        tx.generation().0,
+        peer,
+        pin,
+        || identity_conflicts::transition_write_in(tx, peer),
+        || devices::primary_device_version_write_in(tx, &peer.to_non_ad()),
+    )
+}
+
+fn inspect_snapshot(
+    bytes: Option<Vec<u8>>,
+    generation: u32,
+    peer: &Jid,
+    pin: Option<&[u8]>,
+    transition: impl FnOnce() -> Result<Option<EventId>>,
+    primary_version: impl FnOnce() -> Result<Option<i64>>,
+) -> Result<RefreshGuard> {
+    let Some(bytes) = bytes else {
         return Ok(RefreshGuard::Untracked);
     };
     let snapshot: Snapshot = serde_json::from_slice(&bytes).map_err(|_| invalid())?;
     if snapshot.peer != *peer {
         return Err(invalid());
     }
-    if snapshot.generation != tx.generation().0 {
+    if snapshot.generation != generation {
         return Ok(RefreshGuard::GenerationChanged);
     }
     if pin.map(|pin| <[u8; 32]>::from(Sha256::digest(pin))) != Some(snapshot.pin_fingerprint) {
         return Ok(RefreshGuard::PinChanged);
     }
-    if identity_conflicts::transition_in(tx, peer)? != snapshot.transition {
+    if transition()? != snapshot.transition {
         return Ok(RefreshGuard::TransitionChanged);
     }
-    if devices::primary_device_version_in(tx, &peer.to_non_ad())? != snapshot.primary_version {
+    if primary_version()? != snapshot.primary_version {
         return Ok(RefreshGuard::PrimaryVersionChanged);
     }
     Ok(RefreshGuard::Matches)

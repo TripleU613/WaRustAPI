@@ -1,0 +1,81 @@
+{
+  "apk_version": "2.26.37.71",
+  "classification": "observed bounded receive; changed-key adoption verified only offline",
+  "checks": {
+    "workspace_all_feature_tests": 867,
+    "strict_clippy": "passed",
+    "warning_denying_rustdoc": "passed",
+    "default_cli_tests": 25,
+    "default_cli_api_symbol_tests": 1,
+    "cli_reference": "passed",
+    "openapi_library_symbols": "passed",
+    "formatting": "passed",
+    "bundle_reproduction": "passed",
+    "cached_self_diff": "8 unchanged topics and 4 unchanged metadata artifacts"
+  },
+  "bundle": {
+    "topics": 8,
+    "files": 13,
+    "bytes": 119638
+  },
+  "live": {
+    "receive_exit": 0,
+    "requested_receive_seconds": 45,
+    "elapsed_seconds": 55.8,
+    "authenticated_and_active": true,
+    "stopped_cleanly": true,
+    "outbox_enabled": false,
+    "mark_read": false,
+    "reconnect_max_attempts": 0,
+    "actions_before": 21,
+    "actions_after": 21,
+    "actions_equal": true,
+    "receipts_before": 9,
+    "receipts_after": 9,
+    "receipts_equal": true,
+    "eligible_outbox_before": 0,
+    "eligible_outbox_after": 0,
+    "generation_equal": true,
+    "journal_head_equal": true,
+    "registration_before": "Registered",
+    "registration_after": "Registered",
+    "checkpoint_rows_before": 1067,
+    "checkpoint_rows_after": 1075,
+    "inbound_checkpoint_rows_before": 822,
+    "inbound_checkpoint_rows_after": 830,
+    "other_table_counts_equal": true,
+    "incoming_outcomes": {
+      "unsupported": 11,
+      "decrypted": 0,
+      "duplicate": 0,
+      "undecryptable": 0
+    },
+    "identity_refresh_inspections": [
+      {
+        "status": "verified_bundle",
+        "peer_namespace": "lid",
+        "device": 0,
+        "server_error_code": null,
+        "signature_valid": true,
+        "pin_matches": true,
+        "refresh_guard": "untracked",
+        "attestation": {
+          "status": "absent",
+          "declared_account_type": null,
+          "payload_account_type": null,
+          "signature_valid": null
+        },
+        "applied": false
+      }
+    ],
+    "qualifying_new_identity_refresh_reply": false,
+    "new_live_identity_application_observed": false,
+    "counts_are_not_byte_equality_proof": true
+  },
+  "limits": [
+    "Generated offline keys/backend fixtures establish bounded application behavior, not official-client execution or live peer reset.",
+    "The historical live primary LID read stays untracked and applied=false; no guard or native state is backfilled.",
+    "No same-key/companion/attestation/PQ/identity_auth admission, native C0F persistence, counterpart migration or identity-notification ACK is claimed.",
+    "Private original request/reply, identities, keys and request IDs are excluded."
+  ]
+}
