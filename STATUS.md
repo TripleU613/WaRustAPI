@@ -1,3 +1,18 @@
+2026-10-10 — **Implemented/offline tooling:** whole-APK SHA-256 file indexing
+and fast cached diffs now cover every non-directory ZIP entry. The committed
+2.26.37.71 baseline lists 14,967 files without retaining file bodies; new releases
+can report added/removed/changed paths and hashes without the old APK. Existing
+reviewed topic/remapping tools then locate methods and affected Rust files.
+[File-diff workflow and validation](docs/protocol/apk-file-diff.md).
+
+Actual debug-build measurement: 8.107389 seconds to index the 146,363,876-byte
+APK once, 0.211419 seconds to compare cached indexes. Whole APK hash matched the
+known source; committed/generated baseline comparison is unchanged. 905 workspace
+all-feature tests, strict Clippy, warnings-denied Rustdoc, default CLI/API-symbol
+and CLI-reference checks passed. Malformed/duplicate/corrupt inputs refuse.
+No account or network operation occurred. Cross-release changes remain synthetic
+validation; byte differences do not prove method semantics or compatibility.
+
 2026-10-10 — **Implemented/offline:** direct/group participants-key multi-target
 receipts now produce atomic device facts through the existing immutable target
 guards. Inner key replaces envelope ID; root status applies to every target.

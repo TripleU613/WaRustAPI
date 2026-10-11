@@ -18,6 +18,7 @@
 // A command-line tool talks to its operator through stdout/stderr.
 #![allow(clippy::print_stdout, clippy::print_stderr)]
 
+mod apk_files;
 mod axml;
 mod bundle;
 mod deps;
@@ -58,6 +59,10 @@ enum Cmd {
         #[arg(long)]
         recipe: Option<PathBuf>,
     },
+    /// Index SHA-256 of every uncompressed APK file, without extracting contents.
+    ApkFileIndex { apk: PathBuf },
+    /// Quickly compare cached whole-APK file indexes; report changed paths and hashes.
+    ApkFileDiff { old: PathBuf, new: PathBuf },
     /// Compare checksum-verified cached topic files without rescanning either APK.
     ApkResearchDiff { old: PathBuf, new: PathBuf },
     /// Locate renamed topic methods by checked exact-string anchor intersection.
@@ -312,6 +317,8 @@ fn main() -> ExitCode {
             check,
             recipe,
         } => bundle::run(&apk, &output, check, recipe.as_deref()),
+        Cmd::ApkFileIndex { apk } => apk_files::export(&apk),
+        Cmd::ApkFileDiff { old, new } => apk_files::compare(&old, &new),
         Cmd::ApkResearchDiff { old, new } => bundle::compare(&old, &new),
         Cmd::ApkResearchRemap {
             apk,

@@ -219,6 +219,18 @@
       "x-live": false,
       "x-secret-input": false,
       "description": "Independent development fixture generator for the APK 2.26.37.71 JID-map row selector. Executes literal 0Xx.A01/A00 SQL over 36 synthetic SQLite cases, applies 0eU equal-sort replacement and greatest-sort selection, and writes docs/protocol/jid-map-row-selection-fixtures.json. --check compares exact fixture bytes without modifying them and refuses a mismatch. Uses Python standard-library SQLite only; no APK, account, network, private row input or Rust implementation is opened. This corpus verifies a transcribed SQL/collection algorithm, not Android execution, authenticated mapping authority or runtime PN/LID application."
+    },
+    {
+      "x-cli": "cargo run --locked -p xtask -- apk-file-index <apk>",
+      "x-transport": "cli",
+      "x-live": false,
+      "description": "Offline whole-APK file-content index; no HTTP route. Emits format-1 JSON with whole APK SHA-256/bytes and sorted paths to uncompressed file SHA-256/bytes. Reads every file through ZIP CRC verification without extracting or executing contents. Refuses duplicate/unsafe paths, corruption and tooling bounds. Does not verify APK signatures, recover methods or change account/profile state. Committed 2.26.37.71 baseline covers 14967 files. See docs/protocol/apk-file-diff.md."
+    },
+    {
+      "x-cli": "cargo run --locked -p xtask -- apk-file-diff <old-index.json> <new-index.json>",
+      "x-transport": "cli",
+      "x-live": false,
+      "description": "Offline cached whole-APK index comparison; no HTTP route. Reports sorted added/removed/changed paths with old/new bytes and SHA-256, plus unchanged count and apk_container_changed. Validates format/hash/path/size and duplicate JSON file keys. No APK rescan, extraction, execution or automatic Rust patch. Cached self-comparison measured 0.211419 seconds locally; first indexing cost was 8.107389 seconds. This compares unmodified exported evidence, does not authenticate edited indexes or establish code semantics/signature validity/compatibility. See docs/protocol/apk-file-diff.md."
     }
   ],
   "info": {

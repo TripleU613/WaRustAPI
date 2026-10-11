@@ -1,0 +1,18 @@
+{
+  "apk_version": "2.26.37.71",
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "apk_bytes": 146363876,
+  "indexed_files": 14967,
+  "expanded_file_bytes": 212245592,
+  "index_json_bytes": 1983427,
+  "initial_index_seconds": 8.107389,
+  "cached_self_diff_seconds": 0.211419,
+  "changed_files": 0,
+  "build": "debug; local measurement, not a portable performance guarantee",
+  "validation": "actual APK index and unchanged cached self-comparison; cross-release changes tested with synthetic ZIPs only",
+  "account_operations": 0,
+  "network_requests": 0,
+  "contents_extracted": false,
+  "signature_verification": false,
+  "committed_index": "docs/protocol/apk-files/2.26.37.71.json"
+}

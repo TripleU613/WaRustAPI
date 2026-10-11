@@ -1,5 +1,9 @@
 # APK research helpers
 
+[Whole-APK file index and fast diff](../../docs/protocol/apk-file-diff.md) now complements these scoped
+method exports. The committed 2.26.37.71 index covers 14,967 archive files;
+new release indexes report changed paths before method remapping/review.
+
 Small offline helpers used on the full Dalvik disassembly of the comparison APK
 (`./target/release/xtask apk-smali ~/Downloads/WhatsApp.apk --class "" > dump.txt`,
 about 570 MB for build 2.26.37.71). The DEX helpers read their supplied dump;

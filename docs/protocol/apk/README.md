@@ -1,5 +1,9 @@
 # Compact APK research snapshot
 
+[Whole-APK file index and fast diff](../apk-file-diff.md) now complements these scoped
+method exports. The committed 2.26.37.71 index covers 14,967 archive files;
+new release indexes report changed paths before method remapping/review.
+
 [Protocol research](../apk-analysis.md) · [Findings](../decompilation-log.md)
 
 The `2.26.37.70/` bundle preserves selected protocol code as annotated Dalvik
