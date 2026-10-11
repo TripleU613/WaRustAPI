@@ -1,0 +1,42 @@
+{
+  "creator.txt": {
+    "bytes": 1621,
+    "sha256": "c8dfe56b78a83dcbb99e448320b6c0623b342ab0899ded37ddc6d1eda8f98180"
+  },
+  "decryption.txt": {
+    "bytes": 7769,
+    "sha256": "7037fbd38063a613ccb0cf2f033363f462369f7fdac4e5ad88e8ba5d4bfe91c8"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "key-mapper.txt": {
+    "bytes": 4076,
+    "sha256": "c728b614d5c966c26a09acbeabed79d801b30193738c17d85440473729a77369"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "parent-mapper.txt": {
+    "bytes": 1223,
+    "sha256": "c6781fab136b0baffd58a906fa40d9455e3af5708451ee616312a899c7515aba"
+  },
+  "secret-store.txt": {
+    "bytes": 3008,
+    "sha256": "2d4814b71b3d17e9029def51e1b9bea41b39fec78f4c45140154d7ec3b397de7"
+  },
+  "targets.json": {
+    "bytes": 2881,
+    "sha256": "dd805b7551d1b12a3fa40942b497361a21228e26937c67aae878811a9df380cc"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  },
+  "vote-receiver.txt": {
+    "bytes": 23817,
+    "sha256": "f79566e3e03aaedb687bb01b0601396fadae26fe008078f1712aa85e48ff9f5d"
+  }
+}

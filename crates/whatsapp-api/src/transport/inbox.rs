@@ -3530,6 +3530,61 @@ mod tests {
             .unwrap()
             .is_some()
         );
+        let poll_id = crate::model::ids::MessageId::new("OWN-POLL").unwrap();
+        let chat = Jid::parse("67890@lid").unwrap();
+        assert_eq!(
+            super::super::polls::own_chat_binding(&store, &poll_id, &chat).unwrap(),
+            "matched"
+        );
+        let target = crate::model::message::MessageRef {
+            key: crate::model::message::MessageKey {
+                chat: crate::model::ids::ChatId::from_jid(&chat).unwrap(),
+                sender: None,
+                direction: crate::model::message::Direction::Incoming,
+                id: poll_id.clone(),
+            },
+        };
+        let vote = super::super::polls::encrypt_vote(
+            &[7; 32],
+            "OWN-POLL",
+            &peer_device.to_non_ad(),
+            &chat,
+            &["a".into()],
+            [3; 12],
+        )
+        .unwrap();
+        let vote_payload =
+            super::super::polls::vote_payload(&peer_device.to_non_ad(), &target, vote, 5);
+        let vote_node = Node::new("message")
+            .attr("from", chat.clone())
+            .attr("id", "PEER-POLL-VOTE");
+        let before_lookup = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap();
+        let context = store
+            .write(|tx| super::super::inbox_events::poll_context(tx, &vote_node, &vote_payload))
+            .unwrap()
+            .expect("synchronized poll secret missing");
+        let decoded_vote = super::super::polls::decode_vote(&vote_payload).unwrap();
+        let hashes = super::super::polls::decrypt_vote(
+            &context.secret,
+            &context.poll_id,
+            &peer_device.to_non_ad(),
+            &chat,
+            &decoded_vote,
+        )
+        .unwrap();
+        assert_eq!(
+            super::super::polls::resolve_options(&hashes, &context.options).0,
+            vec!["a".to_owned()]
+        );
+        assert_eq!(context.target_chat, Some(chat));
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap(),
+            before_lookup
+        );
         let after_poll_head = store.journal_head().unwrap();
         let event_count =
             batch.events.len() + usize::from(cfg!(feature = "experimental-registration-https")) + 2;
@@ -3621,6 +3676,15 @@ mod tests {
             )
             .unwrap()
             .is_none()
+        );
+        assert_eq!(
+            super::super::polls::own_chat_binding(
+                &store,
+                &poll_id,
+                &Jid::parse("67890@lid").unwrap()
+            )
+            .unwrap(),
+            "unknown_poll"
         );
         let next = direct::prepare_payload(
             &sender,

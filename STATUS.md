@@ -1,3 +1,12 @@
+2026-10-11 — **Implemented/offline:** voting can now resolve a synchronized
+own poll through its authenticated wrapper when no local secret reservation
+exists. Incoming peer vote context, outgoing vote encryption and binding
+inspection share the lookup. Local reservations retain priority; foreign or
+ambiguous parents refuse. No cache import or state mutation; synchronized
+selection count is enforced. Own-device vote updates and live interoperability
+remain unfinished/unverified.
+[Parent/secret evidence and vote support](docs/protocol/synchronized-poll-secret.md).
+
 2026-10-11 — **Implemented/offline:** held own-device sessions now receive
 ordinary poll creations into outgoing events, retaining the original wrapper and
 outer-context secret. Sender confirmations, reopen deduplication and clearing

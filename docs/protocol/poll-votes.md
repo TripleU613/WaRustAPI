@@ -1,5 +1,11 @@
 # Poll vote keys and structural validation
 
+2026-10-11 follow-up: [synchronized own-poll secret lookup](synchronized-poll-secret.md)
+connects already authenticated creations to incoming peer and explicit outgoing
+votes. Current Clc.A04/1hN.A02 parent-relative storage is traced independently;
+full native parent hydration, special poll policy and own-device updates remain
+unported. Historical local reservations retain priority and are not repaired.
+
 ## Receiver and parent-key trace (2026-10-09)
 
 **Confirmed, static APK 2.26.37.71**, SHA-256

@@ -369,12 +369,7 @@ fn vote_payload_for(
     // Caller-provided target.chat alone cannot authorize another poll's secret.
     let own_record = if target.key.direction == Direction::Outgoing {
         Some(store.write(|tx| {
-            let own: serde_json::Value = tx
-                .get_json(
-                    Table::Checkpoints,
-                    format!("poll-secret:{poll_id}").as_bytes(),
-                    1,
-                )?
+            let own = super::polls::own_record_in(tx, &poll_id, peer)?
                 .ok_or_else(|| Error::invalid("poll", "unknown own poll"))?;
             let chat = super::polls::saved_chat(&own)?
                 .ok_or_else(|| Error::invalid("poll", "saved poll has no chat binding"))?;
@@ -418,7 +413,14 @@ fn vote_payload_for(
             .clone()
             .or_else(|| own_pn.clone())
             .ok_or_else(|| Error::invalid("poll", "own identity unknown"))?;
-        (secret, options, 0, creator)
+        let selectable = match own.get("selectable_count") {
+            None => 0, // Legacy reservations did not retain this bound.
+            Some(value) => value
+                .as_u64()
+                .and_then(|n| u32::try_from(n).ok())
+                .ok_or_else(|| Error::invalid("poll", "invalid saved selectable count"))?,
+        };
+        (secret, options, selectable, creator)
     };
     for name in selected {
         if !options.contains(name) {
@@ -2396,6 +2398,174 @@ mod poll_scope_tests {
         },
         store::{MasterKey, OpenOptions, StaticKeySource},
     };
+    #[test]
+    fn synchronized_own_vote_uses_authenticated_parent_without_cache_import_or_reservation_overwrite()
+     {
+        for case in [
+            "same",
+            "mapped",
+            "reverse",
+            "primary_source",
+            "missing_secret",
+            "wrong_id",
+            "alias_only",
+            "foreign",
+            "wrong_source",
+            "cleared",
+            "bad_wrapper",
+            "ambiguous",
+            "local_first",
+            "local_corrupt",
+            "unregistered",
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("sync-vote.redb");
+            let open = || {
+                ProtocolStore::open(OpenOptions {
+                    path: path.clone(),
+                    account_id: AccountId::new("fixture").unwrap(),
+                    key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                        [21; 32],
+                    ))),
+                    create: true,
+                })
+                .unwrap()
+            };
+            let store = open();
+            let pn = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+            let lid = Jid::parse("12345@lid").unwrap();
+            let own = Jid::parse("15555550199@s.whatsapp.net").unwrap();
+            let original = if case == "reverse" { &lid } else { &pn };
+            let peer = match case {
+                "mapped" | "alias_only" | "ambiguous" => lid.clone(),
+                "foreign" => Jid::parse("15555550102@s.whatsapp.net").unwrap(),
+                _ => pn.clone(),
+            };
+            let account = AccountRecord {
+                own_jid: Some(own.clone()),
+                registration: if case == "unregistered" {
+                    crate::session::RegistrationStatus::Unregistered
+                } else {
+                    crate::session::RegistrationStatus::Registered
+                },
+                ..Default::default()
+            };
+            let wrap = |chat: &Jid| {
+                let mut plain = super::super::polls::creation_payload(
+                    "Q",
+                    &["a".into(), "b".into()],
+                    1,
+                    [7; 32],
+                )
+                .unwrap();
+                if case == "missing_secret" {
+                    let mut envelope =
+                        <super::super::polls::Envelope as prost::Message>::decode(plain.as_slice())
+                            .unwrap();
+                    envelope.context = None;
+                    plain = prost::Message::encode_to_vec(&envelope);
+                }
+                let mut sent = Vec::new();
+                prost::encoding::string::encode(1, &chat.to_string(), &mut sent);
+                prost::encoding::bytes::encode(2, &plain, &mut sent);
+                let mut outer = Vec::new();
+                prost::encoding::bytes::encode(31, &sent, &mut outer);
+                outer
+            };
+            store.write(|tx| {
+                account.save(tx)?;
+                for n in 0..300 { tx.put_json(Table::Checkpoints, format!("padding:{n}").as_bytes(), 1, &n)?; }
+                tx.put_json(Table::Checkpoints, format!("received-own:{original}:{}", if case == "wrong_id" { "OTHER" } else { "SYNC" }).as_bytes(), 1, &serde_json::json!({
+                    "status":if case == "cleared" {"cleared"} else {"decrypted"},
+                    "source":if case == "wrong_source" {pn.with_device(4)} else if case == "primary_source" {own.clone()} else {own.with_device(4)},
+                    "protobuf":if case == "bad_wrapper" {vec![]} else {wrap(original)},
+                }))?;
+                if matches!(case, "mapped" | "reverse" | "ambiguous") { tx.put_json(Table::Checkpoints, b"authenticated-lid:12345@lid", 1, &pn)?; }
+                if case == "alias_only" { tx.put_json(Table::Checkpoints, format!("lid-for:{pn}").as_bytes(), 1, &lid)?; }
+                if case == "ambiguous" { tx.put_json(Table::Checkpoints, b"received-own:12345@lid:SYNC", 1, &serde_json::json!({"status":"decrypted", "source":own.with_device(4), "protobuf":wrap(&lid)}))?; }
+                if matches!(case, "local_first" | "local_corrupt") { tx.put_json(Table::Checkpoints, b"poll-secret:SYNC", 1, &serde_json::json!({"chat":if case == "local_corrupt" {"invalid".to_owned()} else {pn.to_string()},"secret":vec![9;32],"options":["local"]}))?; }
+                Ok(())
+            }).unwrap();
+            let snapshot = |store: &ProtocolStore| {
+                store
+                    .read(|tx| {
+                        Table::ALL
+                            .iter()
+                            .map(|t| tx.scan(*t, 1, 1000))
+                            .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap()
+            };
+            let before = snapshot(&store);
+            let head = store.journal_head().unwrap();
+            let target = MessageRef {
+                key: MessageKey {
+                    chat: ChatId::from_jid(&peer).unwrap(),
+                    sender: None,
+                    direction: Direction::Outgoing,
+                    id: MessageId::new("SYNC").unwrap(),
+                },
+            };
+            let selected = if case == "local_first" { "local" } else { "a" };
+            let result = vote_payload_for(&store, &account, &peer, &target, &[selected.into()]);
+            if matches!(case, "same" | "mapped" | "reverse" | "local_first") {
+                let vote = super::super::polls::decode_vote(&result.unwrap()).unwrap();
+                let secret = if case == "local_first" {
+                    [9; 32]
+                } else {
+                    [7; 32]
+                };
+                let hashes =
+                    super::super::polls::decrypt_vote(&secret, "SYNC", &own, &own, &vote).unwrap();
+                assert_eq!(
+                    hashes,
+                    vec![super::super::polls::option_hash(selected).to_vec()]
+                );
+                assert!(vote.poll_from_sender);
+                if case != "local_first" {
+                    assert!(
+                        vote_payload_for(
+                            &store,
+                            &account,
+                            &peer,
+                            &target,
+                            &["a".into(), "b".into()]
+                        )
+                        .unwrap_err()
+                        .to_string()
+                        .contains("too many options selected")
+                    );
+                }
+                assert_eq!(
+                    super::super::polls::own_chat_binding(&store, &target.key.id, &peer).unwrap(),
+                    "matched"
+                );
+            } else {
+                let error = result.unwrap_err().to_string();
+                assert!(
+                    error.contains(if case == "ambiguous" {
+                        "ambiguous synchronized poll"
+                    } else if case == "local_corrupt" {
+                        "invalid saved poll chat binding"
+                    } else {
+                        "unknown own poll"
+                    }),
+                    "{case}: {error}"
+                );
+                assert!(!error.contains(&pn.user) && !error.contains(&own.user));
+            }
+            assert_eq!(snapshot(&store), before, "{case}");
+            assert_eq!(store.journal_head().unwrap(), head);
+            drop(store);
+            let store = open();
+            assert_eq!(snapshot(&store), before);
+            if matches!(case, "same" | "mapped" | "reverse") {
+                assert!(vote_payload_for(&store, &account, &peer, &target, &["a".into()]).is_ok());
+            }
+            assert_eq!(snapshot(&store), before);
+        }
+    }
+
     #[test]
     fn own_vote_uses_saved_chat_and_refuses_missing_foreign_or_invalid_bindings() {
         for case in [

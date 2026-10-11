@@ -1,5 +1,10 @@
 # Own-device ordinary poll creation
 
+Follow-up: [voting on synchronized own polls](synchronized-poll-secret.md)
+connects authenticated parent/secret fallback to incoming peer vote context,
+explicit outgoing votes and binding inspection. It supersedes the lookup gap
+below; synchronized vote updates and special poll lifecycles remain unfinished.
+
 2026-10-11. **Implemented/offline**, WhatsApp APK **2.26.37.71**, SHA-256
 `1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
 A held, pinned own-device session can now synchronize ordinary poll creation

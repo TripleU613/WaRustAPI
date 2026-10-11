@@ -114,13 +114,11 @@ pub(super) fn poll_context(
             creators,
         }));
     }
-    // Our poll: the secret was persisted when the creation was reserved.
-    let Some(own): Option<serde_json::Value> = tx.get_json(
-        Table::Checkpoints,
-        format!("poll-secret:{poll_id}").as_bytes(),
-        1,
-    )?
-    else {
+    // Our poll: prefer its local reservation, otherwise an authenticated synchronized parent.
+    let Some(from) = super::receipts::jid(node, "from") else {
+        return Ok(None);
+    };
+    let Some(own) = super::polls::own_record_in(tx, &poll_id, &from)? else {
         return Ok(None);
     };
     // APK 37.71 Ban.A01 -> Clc.A02 -> BoQ.A00 attributes the parent to
@@ -128,9 +126,6 @@ pub(super) fn poll_context(
     // aliases and raw metadata alone cannot select another chat's poll.
     let Some(original) = super::polls::saved_chat(&own)? else {
         return Ok(None); // Legacy missing binding is unknown, not invented.
-    };
-    let Some(from) = super::receipts::jid(node, "from") else {
-        return Ok(None);
     };
     if !authenticated_direct_chat(tx, &from, &original)? {
         return Ok(None);
