@@ -1,0 +1,111 @@
+
+# class: LX/DDF;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLL)  # .registers 6
+    # full signature: LX/DDF;-><init>(Lcom/whatsapp/infra/core/jid/Jid;LX/1gc;LX/Cb1;Ljava/util/List;)V
+    0000..0002  const/4  v0, #0x3
+    0002..0008  invoke-static  {v5, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+    0008..000e  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    000e..0012  iput-object  v3, v1, LX/DDF;->A01:LX/1gc;
+    0012..0016  iput-object  v4, v1, LX/DDF;->A02:LX/Cb1;
+    0016..001a  iput-object  v2, v1, LX/DDF;->A00:Lcom/whatsapp/infra/core/jid/Jid;
+    001a..001e  iput-object  v5, v1, LX/DDF;->A03:Ljava/util/List;
+    001e..0020  return-void
+.end method
+
+.method public AT2(L)  # .registers 2
+    # full signature: LX/DDF;->AT2()Ljava/lang/String;
+    0000..0004  const-string  v0, "AGGREGATE_BY_ID"
+    0004..0006  return-object  v0
+.end method
+
+.method public BSJ(LI)  # .registers 3
+    # full signature: LX/DDF;->BSJ(I)LX/1gc;
+    0000..0004  iget-object  v0, v1, LX/DDF;->A01:LX/1gc;
+    0004..0006  return-object  v0
+.end method
+
+.method public CFC(LI)  # .registers 3
+    # full signature: LX/DDF;->CFC(I)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0000..0004  iget-object  v0, v1, LX/DDF;->A03:Ljava/util/List;
+    0004..000a  invoke-interface  {v0, v2}, Ljava/util/List;->get(I)Ljava/lang/Object;
+    000a..000c  move-result-object  v0
+    000c..0010  check-cast  v0, LX/CXQ;
+    0010..0014  iget-object  v0, v0, LX/CXQ;->A02:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0014..0016  return-object  v0
+.end method
+
+.method public CJB(L)  # .registers 2
+    # full signature: LX/DDF;->CJB()LX/0lp;
+    0000..0002  const/4  v0, #0x0
+    0002..0004  return-object  v0
+.end method
+
+.method public CJI(L)  # .registers 2
+    # full signature: LX/DDF;->CJI()Lcom/whatsapp/infra/core/jid/UserJid;
+    0000..0004  iget-object  v0, v1, LX/DDF;->A02:LX/Cb1;
+    0004..0008  iget-object  v0, v0, LX/Cb1;->A03:Lcom/whatsapp/infra/core/jid/UserJid;
+    0008..000a  return-object  v0
+.end method
+
+.method public CKw(L)  # .registers 2
+    # full signature: LX/DDF;->CKw()Lcom/whatsapp/infra/core/jid/Jid;
+    0000..0004  iget-object  v0, v1, LX/DDF;->A00:Lcom/whatsapp/infra/core/jid/Jid;
+    0004..0006  return-object  v0
+.end method
+
+.method public CPB(VLIIJZ)  # .registers 16
+    # full signature: LX/DDF;->CPB(LX/0ls;IIJZ)V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v10, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+    0008..000c  iget-object  v1, v9, LX/DDF;->A03:Ljava/util/List;
+    000c..0012  invoke-interface  {v1}, Ljava/util/List;->size()I
+    0012..0014  move-result  v0
+    0014..001a  invoke-interface  {v1, v11, v0}, Ljava/util/List;->subList(II)Ljava/util/List;
+    001a..001c  move-result-object  v4
+    001c..0020  iget-object  v2, v9, LX/DDF;->A01:LX/1gc;
+    0020..0024  iget-object  v3, v9, LX/DDF;->A02:LX/Cb1;
+    0024..0028  iget-object  v1, v9, LX/DDF;->A00:Lcom/whatsapp/infra/core/jid/Jid;
+    0028..002c  new-instance  v0, Lcom/whatsapp/xmpp/jobqueue/job/ReceiptAggregatedByIdProcessingJob;
+    002c..002e  move  v5, v12
+    002e..0030  move-wide  v6, v13
+    0030..0032  move  v8, v15
+    0032..0038  invoke-direct/range  {v0..v8}, Lcom/whatsapp/xmpp/jobqueue/job/ReceiptAggregatedByIdProcessingJob;-><init>(Lcom/whatsapp/infra/core/jid/Jid;LX/1gc;LX/Cb1;Ljava/util/List;IJZ)V
+    0038..003e  invoke-virtual  {v10, v0}, LX/0ls;->A01(Lorg/whispersystems/jobqueue/Job;)V
+    003e..0040  return-void
+.end method
+
+.method public CbP(L)  # .registers 2
+    # full signature: LX/DDF;->CbP()LX/Cb1;
+    0000..0004  iget-object  v0, v1, LX/DDF;->A02:LX/Cb1;
+    0004..0006  return-object  v0
+.end method
+
+.method public Ccf(II)  # .registers 3
+    # full signature: LX/DDF;->Ccf(I)I
+    0000..0004  iget-object  v0, v1, LX/DDF;->A03:Ljava/util/List;
+    0004..000a  invoke-interface  {v0, v2}, Ljava/util/List;->get(I)Ljava/lang/Object;
+    000a..000c  move-result-object  v0
+    000c..0010  check-cast  v0, LX/CXQ;
+    0010..0014  iget  v0, v0, LX/CXQ;->A00:I
+    0014..0016  return  v0
+.end method
+
+.method public CeD(JI)  # .registers 4
+    # full signature: LX/DDF;->CeD(I)J
+    0000..0004  iget-object  v0, v2, LX/DDF;->A03:Ljava/util/List;
+    0004..000a  invoke-interface  {v0, v3}, Ljava/util/List;->get(I)Ljava/lang/Object;
+    000a..000c  move-result-object  v0
+    000c..0010  check-cast  v0, LX/CXQ;
+    0010..0014  iget-wide  v0, v0, LX/CXQ;->A01:J
+    0014..0016  return-wide  v0
+.end method
+
+.method public size(I)  # .registers 2
+    # full signature: LX/DDF;->size()I
+    0000..0004  iget-object  v0, v1, LX/DDF;->A03:Ljava/util/List;
+    0004..000a  invoke-interface  {v0}, Ljava/util/List;->size()I
+    000a..000c  move-result  v0
+    000c..000e  return  v0
+.end method

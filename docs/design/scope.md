@@ -10,7 +10,20 @@ Original section numbers are retained for source and evidence references.
 
 Build `crates/whatsapp-api`: a standalone async Rust library that registers and operates as a WhatsApp **primary device**, using a phone number the operator controls. Normal operation must require neither a paired phone nor another WhatsApp client process. Preserve the `WhatsAppClient` / `SyncEngine` / `SyncEvent` separation so the existing bridge can adopt the library through an adapter.
 
-The long-term ambition is broad Android-client protocol coverage. The first release must make a smaller, explicit set of capabilities work reliably. “Everything the Android app does” is an eventual product ambition, not an implementable v0.1 acceptance criterion.
+Owner-updated end state (2026-10-10): expose every WhatsApp feature through a
+working API, with versioned understanding of the shipped APK code and explicit
+links from native behavior to Rust implementation and validation. Intermediate
+milestones remain useful, but do not establish that this full objective is done.
+Exporting or decompiling a method alone does not establish understanding or
+runtime parity; every unresolved branch, gate and producer stays labelled.
+
+The compatibility objective is ordinary client behavior without client-induced
+account failures. No implementation can guarantee that Meta never restricts an
+account or treats an unofficial client differently. Preserve protocol
+verification, challenges, cooldowns, trust checks and uncertain outcomes; do not
+implement ban/detection evasion, fabricated provenance or limit bypasses. Avoid
+unrelated telemetry where protocol requirements permit it, and document unknown
+requirements instead of silently guessing them.
 
 **First decisive result:** complete a primary registration, authenticate, exchange an encrypted text message with the official Android app, terminate the Rust process, and reconnect using only the persisted Rust-owned state. Complete this before building the full groups/media/bridge surface.
 

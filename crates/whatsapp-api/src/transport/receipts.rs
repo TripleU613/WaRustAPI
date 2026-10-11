@@ -644,10 +644,84 @@ pub(super) fn server_timestamp(node: &Node) -> Option<crate::model::time::Timest
 /// Persist supported direct receipt facts, matching sends by peer AND wire ID.
 /// Group participant facts use group_receipts; unsupported/self routes stay raw.
 pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
+    if node.description != "receipt" || node.get_attr("recipient").is_some() {
+        return Ok(0);
+    }
+    if let Some(participants) = node
+        .child_nodes()
+        .first()
+        .filter(|n| n.description == "participants")
+    {
+        // Cmk.A03 002a..015c: the first child's message_id selects DDF.
+        // The separate key-based DDG branch requires clock/admission work.
+        if participants.get_attr("message_id").is_none() {
+            return Ok(0);
+        }
+        let receipts = offline_aggregate(node, participants)?;
+        return store.write(|tx| {
+            receipts
+                .iter()
+                .try_fold(0, |matched, receipt| Ok(matched + record_in(tx, receipt)?))
+        });
+    }
+    store.write(|tx| record_in(tx, node))
+}
+
+fn offline_aggregate(node: &Node, participants: &Node) -> Result<Vec<Node>> {
+    let invalid = |reason| Error::invalid("receipt.aggregate", reason);
+    let id = participants
+        .get_attr("message_id")
+        .and_then(|v| v.as_text())
+        .filter(|id| !id.is_empty() && id.len() <= 128)
+        .ok_or_else(|| invalid("missing or invalid message_id"))?;
+    let from = jid(node, "from").ok_or_else(|| invalid("missing or invalid from"))?;
+    let crate::binary::NodeContent::Children(items) = &participants.content else {
+        return Err(invalid("missing participant list"));
+    };
+    if items.len() > crate::profile::Limits::default().max_children as usize {
+        return Err(invalid("participant list exceeds bound"));
+    }
+    let mut receipts = Vec::with_capacity(items.len());
+    for item in items {
+        let actor =
+            jid(item, "jid").ok_or_else(|| invalid("missing or invalid participant jid"))?;
+        let kind = match item.get_attr("type") {
+            None => "delivery",
+            Some(value) => value
+                .as_text()
+                .ok_or_else(|| invalid("invalid participant type"))?,
+        };
+        if !matches!(
+            kind,
+            "delivery" | "read" | "played" | "sender" | "inactive" | "read-self" | "played-self"
+        ) {
+            return Err(invalid("unknown participant type"));
+        }
+        // Cmk.A03 00aa..00be uses required 0hs.A07, not root's lenient time.
+        let time = item
+            .get_attr("t")
+            .and_then(|v| v.as_text())
+            .and_then(super::mex::java_decimal_long)
+            .ok_or_else(|| invalid("missing or invalid participant t"))?;
+        if matches!(kind, "delivery" | "read" | "played") {
+            receipts.push(
+                Node::new("receipt")
+                    .attr("from", from.clone())
+                    .attr("id", id)
+                    .attr("participant", actor)
+                    .attr("type", kind)
+                    .attr("t", time.to_string()),
+            );
+        }
+    }
+    Ok(receipts)
+}
+
+fn record_in(tx: &mut crate::store::WriteTx<'_>, node: &Node) -> Result<usize> {
     if node.description == "receipt"
         && jid(node, "from").is_some_and(|from| from.server == Server::Group)
     {
-        return super::group_receipts::record(store, node);
+        return super::group_receipts::record_in(tx, node);
     }
 
     if node.description != "receipt" || node.get_attr("recipient").is_some() {
@@ -697,135 +771,131 @@ pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
     let ids = ids(node)?;
     let peer = from.to_non_ad();
     let mut matched = 0;
-    store.write(|tx| {
-        for id in ids.iter().filter(|_| participant.is_none()) {
-            let key = format!(
-                "receipt-facts:{}",
-                hex::encode(Sha256::digest(format!("{peer}:{id}")))
-            );
-            let mut facts: ReceiptFacts = tx
-                .get_json(Table::Checkpoints, key.as_bytes(), 1)?
-                .unwrap_or_default();
-            facts.observe(kind);
-            tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &facts)?;
+    for id in ids.iter().filter(|_| participant.is_none()) {
+        let key = format!(
+            "receipt-facts:{}",
+            hex::encode(Sha256::digest(format!("{peer}:{id}")))
+        );
+        let mut facts: ReceiptFacts = tx
+            .get_json(Table::Checkpoints, key.as_bytes(), 1)?
+            .unwrap_or_default();
+        facts.observe(kind);
+        tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &facts)?;
+    }
+    // Keep the comparison-lab's PN-only records separate from normal
+    // outbox intents. Cmk.A02/A03 keeps message chat and actual actor
+    // distinct; only an already authenticated association may join them.
+    let mut cursor = None;
+    while participant.is_none() {
+        let page = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
+        if page.is_empty() {
+            break;
         }
-        // Keep the comparison-lab's PN-only records separate from normal
-        // outbox intents. Cmk.A02/A03 keeps message chat and actual actor
-        // distinct; only an already authenticated association may join them.
-        let mut cursor = None;
-        while participant.is_none() {
-            let page = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
-            if page.is_empty() {
-                break;
+        cursor = page.last().map(|(key, _)| key.clone());
+        for (key, _) in page {
+            if !key.starts_with(b"message:") || !key.ends_with(b":send") {
+                continue;
             }
-            cursor = page.last().map(|(key, _)| key.clone());
-            for (key, _) in page {
-                if !key.starts_with(b"message:") || !key.ends_with(b":send") {
-                    continue;
-                }
-                let Some(mut send): Option<serde_json::Value> =
-                    tx.get_json(Table::Checkpoints, &key, 1)?
-                else {
-                    continue;
-                };
-                if !send["wire_id"]
-                    .as_str()
-                    .is_some_and(|v| ids.iter().any(|id| id == v))
-                {
-                    continue;
-                }
-                let Some(phone) = send["to"]
-                    .as_str()
-                    .map(|v| v.strip_prefix('+').unwrap_or(v))
-                else {
-                    continue;
-                };
-                if phone.is_empty() || !phone.bytes().all(|b| b.is_ascii_digit()) {
-                    continue;
-                }
-                let original = Jid::parse(&format!("{phone}@s.whatsapp.net"))?;
-                if !super::jid_map::authenticated_direct_chat(tx, &from, &original)? {
-                    continue;
-                }
-                let mut facts: ReceiptFacts = if send["receipts"].is_null() {
-                    ReceiptFacts::default()
-                } else {
-                    serde_json::from_value(send["receipts"].clone())
-                        .map_err(|_| Error::invalid("receipt", "invalid saved facts"))?
-                };
-                facts.observe(kind);
-                send["receipts"] = serde_json::to_value(facts)
-                    .map_err(|_| Error::invalid("receipt", "cannot encode facts"))?;
-                tx.put_json(Table::Checkpoints, &key, 1, &send)?;
-                matched += 1;
-            }
-        }
-        let outbox =
-            crate::outbox::Outbox::new("receipt-observer", crate::profile::Limits::default());
-        let fact_kind = match kind {
-            "read" => crate::model::send::DeliveryFactKind::Read,
-            "played" => crate::model::send::DeliveryFactKind::Played,
-            _ => crate::model::send::DeliveryFactKind::Delivered,
-        };
-        // The authenticated actor remains in its received namespace even
-        // when it is associated with an original intent in the other one.
-        let device = crate::model::ids::DeviceAddress::from_jid(actor)?;
-        for id in &ids {
-            let wire_id = crate::model::ids::MessageId::new(id.clone())
-                .map_err(|_| Error::invalid("receipt", "invalid message id"))?;
-            let Some(mut entry) = outbox.by_wire_id_in_write(tx, &wire_id)? else {
+            let Some(mut send): Option<serde_json::Value> =
+                tx.get_json(Table::Checkpoints, &key, 1)?
+            else {
                 continue;
             };
-            if !super::jid_map::authenticated_direct_chat(tx, &from, entry.intent.chat.jid())? {
-                continue;
-            }
-            if participant.is_some() {
-                if !super::jid_map::authenticated_direct_chat(tx, &actor.to_non_ad(), &from)? {
-                    continue;
-                }
-                let Some(targets) = super::send_versions::targets_in(tx, entry.local_id)? else {
-                    continue;
-                };
-                let mut targeted = false;
-                for target in targets {
-                    if actor.device == target.device
-                        && super::jid_map::authenticated_direct_chat(
-                            tx,
-                            &actor.to_non_ad(),
-                            &target.to_non_ad(),
-                        )?
-                    {
-                        targeted = true;
-                        break;
-                    }
-                }
-                if !targeted {
-                    continue;
-                }
-            }
-            super::send_versions::observe_in(tx, entry.local_id, actor, node)?;
-            if entry
-                .facts
-                .iter()
-                .any(|fact| fact.kind == fact_kind && fact.device.as_ref() == Some(&device))
+            if !send["wire_id"]
+                .as_str()
+                .is_some_and(|v| ids.iter().any(|id| id == v))
             {
                 continue;
             }
-            outbox.record_fact(
-                tx,
-                &mut entry,
-                crate::model::send::DeliveryFact {
-                    kind: fact_kind,
-                    device: Some(device.clone()),
-                    observed_at: crate::model::time::Timestamp::now(),
-                    server_timestamp: server_timestamp(node),
-                    code: None,
-                },
-            )?;
+            let Some(phone) = send["to"]
+                .as_str()
+                .map(|v| v.strip_prefix('+').unwrap_or(v))
+            else {
+                continue;
+            };
+            if phone.is_empty() || !phone.bytes().all(|b| b.is_ascii_digit()) {
+                continue;
+            }
+            let original = Jid::parse(&format!("{phone}@s.whatsapp.net"))?;
+            if !super::jid_map::authenticated_direct_chat(tx, &from, &original)? {
+                continue;
+            }
+            let mut facts: ReceiptFacts = if send["receipts"].is_null() {
+                ReceiptFacts::default()
+            } else {
+                serde_json::from_value(send["receipts"].clone())
+                    .map_err(|_| Error::invalid("receipt", "invalid saved facts"))?
+            };
+            facts.observe(kind);
+            send["receipts"] = serde_json::to_value(facts)
+                .map_err(|_| Error::invalid("receipt", "cannot encode facts"))?;
+            tx.put_json(Table::Checkpoints, &key, 1, &send)?;
             matched += 1;
         }
-        Ok(())
-    })?;
+    }
+    let outbox = crate::outbox::Outbox::new("receipt-observer", crate::profile::Limits::default());
+    let fact_kind = match kind {
+        "read" => crate::model::send::DeliveryFactKind::Read,
+        "played" => crate::model::send::DeliveryFactKind::Played,
+        _ => crate::model::send::DeliveryFactKind::Delivered,
+    };
+    // The authenticated actor remains in its received namespace even
+    // when it is associated with an original intent in the other one.
+    let device = crate::model::ids::DeviceAddress::from_jid(actor)?;
+    for id in &ids {
+        let wire_id = crate::model::ids::MessageId::new(id.clone())
+            .map_err(|_| Error::invalid("receipt", "invalid message id"))?;
+        let Some(mut entry) = outbox.by_wire_id_in_write(tx, &wire_id)? else {
+            continue;
+        };
+        if !super::jid_map::authenticated_direct_chat(tx, &from, entry.intent.chat.jid())? {
+            continue;
+        }
+        if participant.is_some() {
+            if !super::jid_map::authenticated_direct_chat(tx, &actor.to_non_ad(), &from)? {
+                continue;
+            }
+            let Some(targets) = super::send_versions::targets_in(tx, entry.local_id)? else {
+                continue;
+            };
+            let mut targeted = false;
+            for target in targets {
+                if actor.device == target.device
+                    && super::jid_map::authenticated_direct_chat(
+                        tx,
+                        &actor.to_non_ad(),
+                        &target.to_non_ad(),
+                    )?
+                {
+                    targeted = true;
+                    break;
+                }
+            }
+            if !targeted {
+                continue;
+            }
+        }
+        super::send_versions::observe_in(tx, entry.local_id, actor, node)?;
+        if entry
+            .facts
+            .iter()
+            .any(|fact| fact.kind == fact_kind && fact.device.as_ref() == Some(&device))
+        {
+            continue;
+        }
+        outbox.record_fact(
+            tx,
+            &mut entry,
+            crate::model::send::DeliveryFact {
+                kind: fact_kind,
+                device: Some(device.clone()),
+                observed_at: crate::model::time::Timestamp::now(),
+                server_timestamp: server_timestamp(node),
+                code: None,
+            },
+        )?;
+        matched += 1;
+    }
     Ok(matched)
 }
 #[cfg(test)]
@@ -1945,6 +2015,303 @@ mod tests {
                 Ok(ticket.local_id)
             })
             .unwrap()
+    }
+
+    #[test]
+    fn offline_aggregated_receipts_reject_malformed_batch_without_partial_facts() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("bad-aggregate.redb"), true);
+        let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let id = saved_receipt_send(&store, "aggregate", &peer.to_string(), "fixture");
+        store
+            .write(|tx| {
+                super::super::send_versions::capture_in(tx, id, std::slice::from_ref(&peer))
+            })
+            .unwrap();
+        let good = Node::new("participant")
+            .attr("jid", peer.clone())
+            .attr("t", "20");
+        let mut missing_time = good.clone();
+        missing_time.attributes.retain(|a| a.name != "t");
+        let mut missing_jid = good.clone();
+        missing_jid.attributes.retain(|a| a.name != "jid");
+        let before = store
+            .read(|tx| {
+                Ok((
+                    tx.scan(Table::Checkpoints, 1, 100)?,
+                    tx.scan(Table::Outbox, 1, 100)?,
+                    tx.journal_head()?,
+                ))
+            })
+            .unwrap();
+        for bad in [
+            missing_time,
+            missing_jid,
+            good.clone().attr("t", ""),
+            good.clone().attr("t", "SECRET-INVALID-TIME"),
+            good.clone().attr("t", "9223372036854775808"),
+            good.clone().attr("type", "UNKNOWN-SECRET-TYPE"),
+            good.clone().attr("type", peer.clone()),
+            good.clone()
+                .attr("jid", "SECRET-BAD-JID:70000@s.whatsapp.net"),
+        ] {
+            let node = Node::new("receipt")
+                .attr("from", peer.clone())
+                .children(vec![
+                    Node::new("participants")
+                        .attr("message_id", "fixture")
+                        .children(vec![good.clone(), bad]),
+                ]);
+            let error = record(&store, &node).unwrap_err().to_string();
+            assert!(error.contains("receipt.aggregate"));
+            assert!(!error.contains("SECRET") && !error.contains("15555550100"));
+            assert_eq!(
+                before,
+                store
+                    .read(|tx| Ok((
+                        tx.scan(Table::Checkpoints, 1, 100)?,
+                        tx.scan(Table::Outbox, 1, 100)?,
+                        tx.journal_head()?
+                    )))
+                    .unwrap()
+            );
+        }
+        for participants in [
+            Node::new("participants").attr("message_id", "fixture"),
+            Node::new("participants")
+                .attr("message_id", "")
+                .children(vec![good.clone()]),
+            Node::new("participants")
+                .attr("message_id", "fixture")
+                .children(vec![good; 4097]),
+        ] {
+            assert!(
+                record(
+                    &store,
+                    &Node::new("receipt")
+                        .attr("from", peer.clone())
+                        .children(vec![participants])
+                )
+                .is_err()
+            );
+            assert_eq!(
+                before,
+                store
+                    .read(|tx| Ok((
+                        tx.scan(Table::Checkpoints, 1, 100)?,
+                        tx.scan(Table::Outbox, 1, 100)?,
+                        tx.journal_head()?
+                    )))
+                    .unwrap()
+            );
+        }
+    }
+
+    #[test]
+    fn offline_aggregated_receipts_roll_back_late_authenticated_mapping_failure() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("late-aggregate.redb"), true);
+        let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let id = saved_receipt_send(&store, "aggregate", &peer.to_string(), "fixture");
+        store
+            .write(|tx| {
+                super::super::send_versions::capture_in(
+                    tx,
+                    id,
+                    &[peer.clone(), peer.with_device(2)],
+                )?;
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"authenticated-lid:100001@lid",
+                    1,
+                    &serde_json::json!("SECRET-BAD-MAPPING"),
+                )
+            })
+            .unwrap();
+        let node = Node::new("receipt")
+            .attr("from", peer.clone())
+            .children(vec![
+                Node::new("participants")
+                    .attr("message_id", "fixture")
+                    .children(vec![
+                        Node::new("participant").attr("jid", peer).attr("t", "20"),
+                        Node::new("participant")
+                            .attr("jid", "100001:2@lid")
+                            .attr("t", "30"),
+                    ]),
+            ]);
+        let before = store
+            .read(|tx| {
+                Ok((
+                    tx.scan(Table::Checkpoints, 1, 100)?,
+                    tx.scan(Table::Outbox, 1, 100)?,
+                    tx.journal_head()?,
+                ))
+            })
+            .unwrap();
+        let error = record(&store, &node).unwrap_err().to_string();
+        assert!(error.contains("invalid authenticated LID mapping"));
+        assert!(!error.contains("SECRET"));
+        assert_eq!(
+            before,
+            store
+                .read(|tx| Ok((
+                    tx.scan(Table::Checkpoints, 1, 100)?,
+                    tx.scan(Table::Outbox, 1, 100)?,
+                    tx.journal_head()?
+                )))
+                .unwrap()
+        );
+    }
+
+    #[test]
+    fn key_based_aggregates_and_unsupported_routes_never_use_root_id_as_a_receipt() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("key-aggregate.redb"), true);
+        let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        saved_receipt_send(&store, "aggregate", &peer.to_string(), "fixture");
+        let item = Node::new("participant")
+            .attr("jid", peer.clone())
+            .attr("t", "20");
+        let base = Node::new("receipt")
+            .attr("from", peer.clone())
+            .attr("id", "fixture");
+        let before = store
+            .read(|tx| {
+                Ok((
+                    tx.scan(Table::Checkpoints, 1, 100)?,
+                    tx.scan(Table::Outbox, 1, 100)?,
+                    tx.journal_head()?,
+                ))
+            })
+            .unwrap();
+        for node in [
+            base.clone().children(vec![
+                Node::new("participants")
+                    .attr("key", "fixture")
+                    .children(vec![item.clone()]),
+            ]),
+            base.clone().attr("recipient", peer).children(vec![
+                Node::new("participants")
+                    .attr("message_id", "fixture")
+                    .children(vec![item.clone()]),
+            ]),
+            base.clone().children(vec![
+                Node::new("participants")
+                    .attr("message_id", "fixture")
+                    .children(vec![]),
+            ]),
+            base.children(vec![
+                Node::new("participants")
+                    .attr("message_id", "fixture")
+                    .children(vec![item.attr("type", "read-self")]),
+            ]),
+        ] {
+            assert_eq!(record(&store, &node).unwrap(), 0);
+            assert_eq!(
+                before,
+                store
+                    .read(|tx| Ok((
+                        tx.scan(Table::Checkpoints, 1, 100)?,
+                        tx.scan(Table::Outbox, 1, 100)?,
+                        tx.journal_head()?
+                    )))
+                    .unwrap()
+            );
+        }
+    }
+
+    #[test]
+    fn offline_aggregated_receipts_use_inner_id_and_per_device_facts_after_reopen() {
+        use crate::model::send::DeliveryFactKind;
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("aggregate.redb");
+        let store = open(&path, true);
+        let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let id = saved_receipt_send(&store, "aggregate", &peer.to_string(), "fixture");
+        store
+            .write(|tx| {
+                super::super::send_versions::capture_in(
+                    tx,
+                    id,
+                    &[peer.clone(), peer.with_device(2)],
+                )
+            })
+            .unwrap();
+        let outbox = crate::outbox::Outbox::new("aggregate", crate::profile::Limits::default());
+        let before = store.read(|tx| Ok(outbox.get(tx, id)?.unwrap())).unwrap();
+        // Cmk.A03's first-child message_id branch ignores root status/id/time.
+        let item = |actor: &str, kind: &str, time: &str| {
+            Node::new("participant")
+                .attr("jid", actor)
+                .attr("type", kind)
+                .attr("t", time)
+        };
+        let node = Node::new("receipt")
+            .attr("from", peer)
+            .attr("id", "envelope-id")
+            .attr("type", "read-self")
+            .attr("t", "999")
+            .children(vec![
+                Node::new("participants")
+                    .attr("message_id", "fixture")
+                    .children(vec![
+                        item("15555550100:2@s.whatsapp.net", "delivery", "20"),
+                        item("15555550100:2@s.whatsapp.net", "delivery", "10"),
+                        item("15555550100@s.whatsapp.net", "read", "+٢٢"),
+                        item("15555550100:2@s.whatsapp.net", "played", "-1"),
+                        item("15555550100:3@s.whatsapp.net", "delivery", "21"),
+                        item("15555550101:2@s.whatsapp.net", "delivery", "21"),
+                        item("15555550100:2@s.whatsapp.net", "read-self", "23"),
+                    ]),
+            ]);
+        let encoded =
+            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
+                .encode(&node)
+                .unwrap();
+        let node = decode(&encoded).unwrap();
+        assert_eq!(record(&store, &node).unwrap(), 3);
+        let saved = store.read(|tx| Ok(outbox.get(tx, id)?.unwrap())).unwrap();
+        assert_eq!(saved.facts.len(), 4);
+        for (kind, device, time) in [
+            (DeliveryFactKind::Delivered, 2, 20_000),
+            (DeliveryFactKind::Read, 0, 22_000),
+            (DeliveryFactKind::Played, 2, -1_000),
+        ] {
+            let fact = saved.facts.iter().find(|f| f.kind == kind).unwrap();
+            assert_eq!(fact.device.as_ref().unwrap().device.0, device);
+            assert_eq!(fact.server_timestamp.unwrap().as_millis(), time);
+        }
+        assert_eq!(saved.facts[0], before.facts[0]);
+        assert_eq!(saved.attempts, before.attempts);
+        assert_eq!(saved.progress, before.progress);
+        let rows = super::super::send_versions::inspect(&store, id)
+            .unwrap()
+            .device_receipts
+            .unwrap();
+        assert_eq!(
+            rows.iter()
+                .map(|r| (r.device, r.timestamp))
+                .collect::<Vec<_>>(),
+            vec![(0, Some(22_000)), (2, Some(10_000))]
+        );
+        assert!(
+            store
+                .read(|tx| Ok(tx
+                    .scan(Table::Checkpoints, 1, 100)?
+                    .iter()
+                    .all(|(key, _)| !key.starts_with(b"receipt-facts:"))))
+                .unwrap()
+        );
+        let head = store.read(|tx| tx.journal_head()).unwrap();
+        drop(store);
+        let store = open(&path, false);
+        assert_eq!(record(&store, &node).unwrap(), 0);
+        assert_eq!(
+            saved,
+            store.read(|tx| Ok(outbox.get(tx, id)?.unwrap())).unwrap()
+        );
+        assert_eq!(head, store.read(|tx| tx.journal_head()).unwrap());
     }
 
     #[test]

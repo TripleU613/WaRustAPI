@@ -1,3 +1,21 @@
+2026-10-10 — **Implemented/offline:** direct/group offline device aggregates
+now use inner message_id and independent entry actor/status/required time.
+The shared handler applies the entire batch atomically through existing original
+target guards; malformed input or late saved-map failure leaves no partial facts,
+row times or journal events. The unported key-based aggregate stays raw instead
+of being misattributed to root ID. REA/JADX now reads the pinned APK, and complete
+Evidence plus exact DDF methods are saved. Native primary cleanup and complete
+receipt/status parity remain unfinished; fresh live aggregates are unverified.
+[Evidence, runtime scope and reproduction](docs/protocol/offline-aggregated-receipts.md).
+
+Validation: 893 workspace/all-feature tests passed, including five new encrypted-store
+aggregate tests. Strict all-target Clippy, warnings-denied Rustdoc, default CLI
+tests and CLI-reference regeneration passed. The default build retains the
+existing unused `clock::observe_login` warning. No live request was made for
+this chunk; fresh server aggregate projection remains unverified. Repository
+hygiene passed 2,506 local links and 128 checksum-verified APK research bundles
+totaling 27,307,426 bytes.
+
 2026-10-10 — **Implemented/offline:** direct participant-qualified delivery,
 read and played receipts now retain the actual recipient device when the
 saved chat and immutable original send target both match. Authenticated PN/LID

@@ -222,3 +222,8 @@ across reopening. Strict all-target/all-feature Clippy, warnings-denied
 Rustdoc, default CLI tests and CLI-reference regeneration passed. No live
 request was made for this chunk. Repository hygiene passed 2,494 local
 links and 128 checksum-verified APK bundles totaling 27,307,426 bytes.
+
+2026-10-10 — [Offline device aggregates](offline-aggregated-receipts.md) now
+handle the first-child `participants message_id` form and resolve the earlier
+native `list/item` assignment question using REA plus the existing DEX operands.
+Root-ID, per-entry actor/time and transactional failure boundaries remain distinct.

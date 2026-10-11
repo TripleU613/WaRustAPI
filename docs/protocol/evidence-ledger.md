@@ -1,5 +1,16 @@
 # Evidence ledger
 
+2026-10-10 — **Implemented/offline:** direct/group offline device aggregates
+now use inner message_id and independent entry actor/status/required time.
+The shared handler applies the entire batch atomically through existing original
+target guards; malformed input or late saved-map failure leaves no partial facts,
+row times or journal events. The unported key-based aggregate stays raw instead
+of being misattributed to root ID. REA/JADX now reads the pinned APK, and complete
+Evidence plus exact DDF methods are saved. Native primary cleanup and complete
+receipt/status parity remain unfinished; fresh live aggregates are unverified.
+[Evidence, runtime scope and reproduction](offline-aggregated-receipts.md).
+
+
 2026-10-10 — **Implemented/offline:** direct participant-qualified delivery,
 read and played receipts now retain the actual recipient device when the
 saved chat and immutable original send target both match. Authenticated PN/LID

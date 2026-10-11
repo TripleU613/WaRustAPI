@@ -200,6 +200,13 @@ fn saved_facts(saved: &serde_json::Value) -> Result<Vec<DeviceReceipt>> {
 /// Record supported group participant facts against original addressed devices.
 /// Call only on an authenticated transport receipt. No send or ACK is performed.
 pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
+    if !jid(node, "from").is_some_and(|from| group(&from)) {
+        return Ok(0);
+    }
+    super::receipts::record(store, node)
+}
+
+pub(super) fn record_in(tx: &mut WriteTx<'_>, node: &Node) -> Result<usize> {
     if node.description != "receipt" || node.get_attr("recipient").is_some() {
         return Ok(0);
     }
@@ -214,115 +221,113 @@ pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
     }
     let ids = ids(node)?;
     let device = DeviceAddress::from_jid(&from)?;
-    store.write(|tx| {
-        let outbox = Outbox::new("group-receipt-observer", Limits::default());
-        let mut matched = 0;
-        let fact_kind = match kind {
-            "read" => DeliveryFactKind::Read,
-            "played" => DeliveryFactKind::Played,
-            _ => DeliveryFactKind::Delivered,
-        };
-        for id in &ids {
-            let wire_id = MessageId::new(id.clone())
-                .map_err(|_| invalid("invalid group receipt message id"))?;
-            if let Some(mut entry) = outbox.by_wire_id_in_write(tx, &wire_id)? {
-                if plain(entry.intent.chat.jid()) != plain(&chat) {
-                    continue;
-                }
-                let Some(targets) = entry_targets(tx, &entry, &chat, id)? else {
-                    continue;
-                };
-                if !targeted(tx, &from, &targets)? {
-                    continue;
-                }
-                super::send_versions::observe_in(tx, entry.local_id, &from, node)?;
-                if !entry
-                    .facts
-                    .iter()
-                    .any(|f| f.kind == fact_kind && f.device.as_ref() == Some(&device))
-                {
-                    outbox.record_fact(
-                        tx,
-                        &mut entry,
-                        DeliveryFact {
-                            kind: fact_kind,
-                            device: Some(device.clone()),
-                            observed_at: Timestamp::now(),
-                            server_timestamp: super::receipts::server_timestamp(node),
-                            code: None,
-                        },
-                    )?;
-                    matched += 1;
-                }
+    let outbox = Outbox::new("group-receipt-observer", Limits::default());
+    let mut matched = 0;
+    let fact_kind = match kind {
+        "read" => DeliveryFactKind::Read,
+        "played" => DeliveryFactKind::Played,
+        _ => DeliveryFactKind::Delivered,
+    };
+    for id in &ids {
+        let wire_id =
+            MessageId::new(id.clone()).map_err(|_| invalid("invalid group receipt message id"))?;
+        if let Some(mut entry) = outbox.by_wire_id_in_write(tx, &wire_id)? {
+            if plain(entry.intent.chat.jid()) != plain(&chat) {
+                continue;
             }
-        }
-        let mut seen_legacy_ids = std::collections::HashSet::new();
-        let mut cursor = None;
-        loop {
-            let page = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
-            if page.is_empty() {
-                break;
+            let Some(targets) = entry_targets(tx, &entry, &chat, id)? else {
+                continue;
+            };
+            if !targeted(tx, &from, &targets)? {
+                continue;
             }
-            cursor = page.last().map(|(k, _)| k.clone());
-            for (key, _) in page {
-                if !key.starts_with(b"message:") || !key.ends_with(b":send") {
-                    continue;
-                }
-                let Some(mut saved): Option<serde_json::Value> =
-                    tx.get_json(Table::Checkpoints, &key, 1)?
-                else {
-                    continue;
-                };
-                let Some(id) = saved["wire_id"]
-                    .as_str()
-                    .filter(|id| ids.iter().any(|v| v == id))
-                else {
-                    continue;
-                };
-                let Some(raw_chat) = saved["chat"].as_str() else {
-                    continue;
-                };
-                let saved_chat = Jid::parse(raw_chat)
-                    .map_err(|_| invalid("invalid saved group receipt chat"))?;
-                if !group(&saved_chat) || plain(&saved_chat) != plain(&chat) {
-                    continue;
-                }
-                if !seen_legacy_ids.insert(id.to_owned()) {
-                    return Err(invalid("ambiguous saved group receipt wire id"));
-                }
-                let Some(targets) = saved_targets(&saved, &chat, id)? else {
-                    continue;
-                };
-                if !targeted(tx, &from, &targets)? {
-                    continue;
-                }
-                let mut facts = saved_facts(&saved)?;
-                let index = match facts.iter().position(|r| r.device == device) {
-                    Some(index) => index,
-                    None => {
-                        if facts.len() >= Limits::default().max_children as usize {
-                            return Err(invalid("saved group receipt fact limit reached"));
-                        }
-                        facts.push(DeviceReceipt {
-                            device: device.clone(),
-                            facts: ReceiptFacts::default(),
-                        });
-                        facts.len() - 1
-                    }
-                };
-                let previous = facts[index].facts.clone();
-                facts[index].facts.observe(kind);
-                if previous == facts[index].facts {
-                    continue;
-                }
-                saved["device_receipts"] = serde_json::to_value(facts)
-                    .map_err(|_| invalid("cannot encode group receipt facts"))?;
-                tx.put_json(Table::Checkpoints, &key, 1, &saved)?;
+            super::send_versions::observe_in(tx, entry.local_id, &from, node)?;
+            if !entry
+                .facts
+                .iter()
+                .any(|f| f.kind == fact_kind && f.device.as_ref() == Some(&device))
+            {
+                outbox.record_fact(
+                    tx,
+                    &mut entry,
+                    DeliveryFact {
+                        kind: fact_kind,
+                        device: Some(device.clone()),
+                        observed_at: Timestamp::now(),
+                        server_timestamp: super::receipts::server_timestamp(node),
+                        code: None,
+                    },
+                )?;
                 matched += 1;
             }
         }
-        Ok(matched)
-    })
+    }
+    let mut seen_legacy_ids = std::collections::HashSet::new();
+    let mut cursor = None;
+    loop {
+        let page = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
+        if page.is_empty() {
+            break;
+        }
+        cursor = page.last().map(|(k, _)| k.clone());
+        for (key, _) in page {
+            if !key.starts_with(b"message:") || !key.ends_with(b":send") {
+                continue;
+            }
+            let Some(mut saved): Option<serde_json::Value> =
+                tx.get_json(Table::Checkpoints, &key, 1)?
+            else {
+                continue;
+            };
+            let Some(id) = saved["wire_id"]
+                .as_str()
+                .filter(|id| ids.iter().any(|v| v == id))
+            else {
+                continue;
+            };
+            let Some(raw_chat) = saved["chat"].as_str() else {
+                continue;
+            };
+            let saved_chat =
+                Jid::parse(raw_chat).map_err(|_| invalid("invalid saved group receipt chat"))?;
+            if !group(&saved_chat) || plain(&saved_chat) != plain(&chat) {
+                continue;
+            }
+            if !seen_legacy_ids.insert(id.to_owned()) {
+                return Err(invalid("ambiguous saved group receipt wire id"));
+            }
+            let Some(targets) = saved_targets(&saved, &chat, id)? else {
+                continue;
+            };
+            if !targeted(tx, &from, &targets)? {
+                continue;
+            }
+            let mut facts = saved_facts(&saved)?;
+            let index = match facts.iter().position(|r| r.device == device) {
+                Some(index) => index,
+                None => {
+                    if facts.len() >= Limits::default().max_children as usize {
+                        return Err(invalid("saved group receipt fact limit reached"));
+                    }
+                    facts.push(DeviceReceipt {
+                        device: device.clone(),
+                        facts: ReceiptFacts::default(),
+                    });
+                    facts.len() - 1
+                }
+            };
+            let previous = facts[index].facts.clone();
+            facts[index].facts.observe(kind);
+            if previous == facts[index].facts {
+                continue;
+            }
+            saved["device_receipts"] = serde_json::to_value(facts)
+                .map_err(|_| invalid("cannot encode group receipt facts"))?;
+            tx.put_json(Table::Checkpoints, &key, 1, &saved)?;
+            matched += 1;
+        }
+    }
+    Ok(matched)
 }
 
 /// Redacted comparison-send receipt counts; each fact concerns one device.
@@ -520,6 +525,61 @@ mod tests {
         summary(store, &ClientRequestId::new(id).unwrap())
             .unwrap()
             .unwrap()
+    }
+
+    #[test]
+    fn offline_aggregated_group_receipts_use_frozen_targets_through_public_handler() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("group-aggregate.redb");
+        let store = open(&path, true);
+        let targets = [
+            Jid::parse(PN).unwrap(),
+            Jid::parse(PN).unwrap().with_device(2),
+        ];
+        let id = queued(&store, "fixture", &targets);
+        store
+            .write(|tx| super::super::send_versions::capture_in(tx, id, &targets))
+            .unwrap();
+        let outbox = Outbox::new("group-fixture", Limits::default());
+        let before = store.read(|tx| Ok(outbox.get(tx, id)?.unwrap())).unwrap();
+        let node = Node::new("receipt")
+            .attr("from", CHAT)
+            .attr("id", "transport-id")
+            .children(vec![
+                Node::new("participants")
+                    .attr("message_id", "fixture")
+                    .children(vec![
+                        Node::new("participant").attr("jid", PN).attr("t", "20"),
+                        Node::new("participant")
+                            .attr("jid", "15555550100:2@s.whatsapp.net")
+                            .attr("type", "read")
+                            .attr("t", "30"),
+                        Node::new("participant")
+                            .attr("jid", "15555550100:3@s.whatsapp.net")
+                            .attr("t", "40"),
+                    ]),
+            ]);
+        assert_eq!(record(&store, &node).unwrap(), 2);
+        let saved = store.read(|tx| Ok(outbox.get(tx, id)?.unwrap())).unwrap();
+        assert_eq!(saved.facts.len(), 3);
+        assert_eq!(saved.facts[1].kind, DeliveryFactKind::Delivered);
+        assert_eq!(saved.facts[1].device.as_ref().unwrap().device.0, 0);
+        assert_eq!(saved.facts[1].server_timestamp, Some(Timestamp(20_000)));
+        assert_eq!(saved.facts[2].kind, DeliveryFactKind::Read);
+        assert_eq!(saved.facts[2].device.as_ref().unwrap().device.0, 2);
+        assert_eq!(saved.facts[2].server_timestamp, Some(Timestamp(30_000)));
+        assert_eq!(saved.attempts, before.attempts);
+        assert_eq!(saved.progress, before.progress);
+        assert_eq!(saved.intent, before.intent);
+        let head = store.read(|tx| tx.journal_head()).unwrap();
+        drop(store);
+        let store = open(&path, false);
+        assert_eq!(record(&store, &node).unwrap(), 0);
+        assert_eq!(
+            saved,
+            store.read(|tx| Ok(outbox.get(tx, id)?.unwrap())).unwrap()
+        );
+        assert_eq!(head, store.read(|tx| tx.journal_head()).unwrap());
     }
 
     #[test]

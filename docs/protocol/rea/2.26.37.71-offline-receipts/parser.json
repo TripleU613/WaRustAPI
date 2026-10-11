@@ -1,0 +1,144 @@
+{
+  "evidence_id": "ev_3d004b8aa9037da8f88c428311d145603eea064e9274e41e76eb4b10d53d9860",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.Cmk",
+    "method_name": "A03"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-EWMRCr/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\",\"max_heap_bytes\":15695085568,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "load_apk",
+        "input": {
+          "path": "/tmp/rea-android-EWMRCr/target.apk",
+          "threads": 1,
+          "resources": "full"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-EWMRCr/target.apk\",\"class_count\":94738,\"raw_class_count\":94738,\"resource_count\":14967,\"load_duration_ms\":14850,\"decompile_timeout_ms\":90000,\"threads\":1,\"code_cache_size\":64,\"resources\":\"full\"}"
+            }
+          ]
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.Cmk"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"name\":\"A00\",\"def_pos\":0,\"type\":\"X.05B\"},{\"name\":\"A01\",\"def_pos\":0,\"type\":\"X.05B\"},{\"name\":\"A02\",\"def_pos\":0,\"type\":\"X.05B\"}],\"field_count\":3,\"full_name\":\"X.Cmk\",\"name\":\"Cmk\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":6,\"methods\":[{\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0},{\"name\":\"A00\",\"is_constructor\":false,\"signature\":\"A00(java.lang.String): int\",\"def_pos\":0},{\"name\":\"A01\",\"is_constructor\":false,\"signature\":\"A01(X.0Cy, X.Cmk): X.0Cy\",\"def_pos\":0},{\"name\":\"A02\",\"is_constructor\":false,\"signature\":\"A02(X.Cb1): X.0Cy\",\"def_pos\":0},{\"name\":\"A03\",\"is_constructor\":false,\"signature\":\"A03(X.0hs, X.Cb1, X.BqG): X.DdM\",\"def_pos\":0},{\"name\":\"A04\",\"is_constructor\":false,\"signature\":\"A04(X.0hs, X.Cb1): X.CMU\",\"def_pos\":0}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.Cmk",
+          "method_name": "A03",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_name\":\"A03\",\"overload_count\":1,\"body\":\"    /* JADX WARN: Code duplicated, block: B:109:0x031a  */\\n    /* JADX WARN: Code duplicated, block: B:41:0x011b  */\\n    public final DdM A03(C0hs c0hs, Cb1 cb1, BqG bqG) throws B7l {\\n        boolean z;\\n        String[] strArr;\\n        C1gc[] c1gcArr;\\n        C0hs c0hsA0F;\\n        String strA0M \\u003d c0hs.A0M(\\\"type\\\", \\\"delivery\\\");\\n        C0hs c0hsA0E \\u003d c0hs.A0E(0);\\n        if (c0hsA0E !\\u003d null \\u0026\\u0026 C0hs.A02(c0hsA0E, \\\"participants\\\") \\u0026\\u0026 C8kT.A18(c0hsA0E, \\\"message_id\\\") !\\u003d null) {\\n            C0Cy c0CyA02 \\u003d A02(cb1);\\n            String strA0L \\u003d c0hsA0E.A0L(\\\"message_id\\\");\\n            C1gc c1gcA0x \\u003d Ayj.A0x(c0CyA02, strA0L, true);\\n            C0hs[] c0hsArr \\u003d c0hsA0E.A02;\\n            if (c0hsArr \\u003d\\u003d null) {\\n                throw B7l.A00(\\\"ReceiptStanzaHelper/handleOfflineAggregatedReceipt: empty participant list\\\");\\n            }\\n            ArrayList arrayListA1D \\u003d C1xf.A1D();\\n            HashSet hashSet \\u003d new HashSet(c0hsArr.length);\\n            for (C0hs c0hs2 : c0hsArr) {\\n                DeviceJid deviceJid \\u003d (DeviceJid) c0hs2.A0B(DeviceJid.class, \\\"jid\\\");\\n                String strA0M2 \\u003d c0hs2.A0M(\\\"type\\\", \\\"delivery\\\");\\n                long jA07 \\u003d c0hs2.A07(\\\"t\\\") * 1000;\\n                C00K.A06(strA0M2);\\n                C00h.A06(strA0M2);\\n                arrayListA1D.add(new CXQ(deviceJid, A00(strA0M2), jA07));\\n                hashSet.add(deviceJid);\\n            }\\n            Pair pairA09 \\u003d Ayk.A09(arrayListA1D, hashSet);\\n            List list \\u003d (List) pairA09.first;\\n            Set set \\u003d (Set) pairA09.second;\\n            if (bqG !\\u003d null) {\\n                bqG.A03 \\u003d strA0L;\\n                bqG.A04 \\u003d set;\\n                bqG.A00 \\u003d 3;\\n            }\\n            String str \\u003d c1gcA0x.A01;\\n            com.whatsapp.infra.core.jid.Jid jid \\u003d cb1.A02;\\n            StringBuilder sbA08 \\u003d AnonymousClass000.A08(\\\"ReceiptStanzaHelper/parseOfflineAggregatedReceipt: messageId\\u003d\\\", str);\\n            sbA08.append(\\\"; remoteJid\\u003d\\\");\\n            sbA08.append(jid);\\n            C1xj.A1L(list, \\\"; aggregatedData\\u003d\\\", sbA08);\\n            C00K.A06(jid);\\n            C00h.A06(jid);\\n            return new DDF(jid, c1gcA0x, cb1, list);\\n        }\\n        if (!\\\"delivery\\\".equals(strA0M) \\u0026\\u0026 !\\\"inactive\\\".equals(strA0M) \\u0026\\u0026 !\\\"sender\\\".equals(strA0M) \\u0026\\u0026 !\\\"played\\\".equals(strA0M) \\u0026\\u0026 !\\\"played-self\\\".equals(strA0M) \\u0026\\u0026 !\\\"read\\\".equals(strA0M) \\u0026\\u0026 !\\\"read-self\\\".equals(strA0M)) {\\n            throw B7l.A00(AnonymousClass000.A04(\\\"ReceiptStanzaHandler/parseMessageStatusUpdateReceipt unknown type\\u003d\\\", strA0M));\\n        }\\n        int i \\u003d 0;\\n        String str2 \\u003d cb1.A09;\\n        C00K.A06(str2);\\n        C00h.A06(str2);\\n        int iA00 \\u003d A00(str2);\\n        UserJid userJid \\u003d cb1.A03;\\n        boolean zEquals \\u003d \\\"read-self\\\".equals(str2);\\n        boolean zEquals2 \\u003d \\\"sender\\\".equals(str2);\\n        if (userJid \\u003d\\u003d null || zEquals2) {\\n            z \\u003d zEquals ? false : true;\\n        }\\n        if (zEquals2 \\u0026\\u0026 userJid \\u003d\\u003d null \\u0026\\u0026 C1xf.A0o(C0DE.A00(cb1.A01)) \\u003d\\u003d null) {\\n            com.whatsapp.infra.logging.Log.w(\\\"ReceiptStanzaHelper/handleSuccessfulMessageReceipt sender receipt without recipient or participant jid, using remoteChatJid as fallback\\\");\\n        }\\n        if (zEquals \\u0026\\u0026 userJid \\u003d\\u003d null \\u0026\\u0026 !C0DE.A0b(C0DE.A00(cb1.A02))) {\\n            com.whatsapp.infra.logging.Log.w(\\\"ReceiptStanzaHelper/handleSuccessfulMessageReceipt read-self receipt without recipient jid, using remoteChatJid as fallback\\\");\\n        }\\n        C0lp c0lp \\u003d (!\\\"delivery\\\".equals(str2) || (c0hsA0F \\u003d c0hs.A0F(\\\"biz\\\")) \\u003d\\u003d null) ? null : new C0lp(c0hsA0F.A0M(\\\"host_storage\\\", null), c0hsA0F.A0M(\\\"actual_actors\\\", null), c0hsA0F.A0M(\\\"privacy_mode_ts\\\", null));\\n        Integer numA0H \\u003d c0hs.A0H(\\\"offline\\\");\\n        C0hs c0hsA0E2 \\u003d c0hs.A0E(0);\\n        if (C0hs.A02(c0hsA0E2, \\\"participants\\\")) {\\n            C00K.A06(c0hsA0E2);\\n            C00h.A06(c0hsA0E2);\\n            String strA0L2 \\u003d c0hsA0E2.A0L(\\\"key\\\");\\n            C1gc c1gcA0x2 \\u003d Ayj.A0x(A02(cb1), strA0L2, z);\\n            C0hs[] c0hsArr2 \\u003d c0hsA0E2.A02;\\n            if (c0hsArr2 \\u003d\\u003d null) {\\n                throw B7l.A00(\\\"ReceiptStanzaHandler/handleSuccessfulMessageReceipt empty participants\\\");\\n            }\\n            int length \\u003d c0hsArr2.length;\\n            ArrayList arrayListA0x \\u003d C3c4.A0x(length);\\n            HashSet hashSet2 \\u003d new HashSet(length);\\n            long jA02 \\u003d C1xj.A02(this.A02) / 1000;\\n            while (i \\u003c length) {\\n                C0hs c0hs3 \\u003d c0hsArr2[i];\\n                com.whatsapp.infra.core.jid.Jid jidA0A \\u003d c0hs3.A0A(com.whatsapp.infra.core.jid.Jid.class, \\\"jid\\\");\\n                if (jidA0A !\\u003d null) {\\n                    DeviceJid deviceJidA0V \\u003d Ayl.A0V(jidA0A);\\n                    Pair pairCreate \\u003d Pair.create(deviceJidA0V, Long.valueOf(c0hs3.A08(\\\"t\\\", jA02) * 1000));\\n                    C00h.A06(pairCreate);\\n                    arrayListA0x.add(pairCreate);\\n                    hashSet2.add(deviceJidA0V);\\n                }\\n                i++;\\n            }\\n            Pair pairA010 \\u003d Ayk.A09(arrayListA0x, hashSet2);\\n            List list2 \\u003d (List) pairA010.first;\\n            Set set2 \\u003d (Set) pairA010.second;\\n            if (bqG !\\u003d null) {\\n                bqG.A03 \\u003d strA0L2;\\n                bqG.A04 \\u003d set2;\\n                if (set2.size() \\u003e 1) {\\n                    bqG.A00 \\u003d 2;\\n                }\\n            }\\n            String str3 \\u003d c1gcA0x2.A01;\\n            com.whatsapp.infra.core.jid.Jid jid2 \\u003d cb1.A02;\\n            DeviceJid deviceJidA0V2 \\u003d Ayl.A0V(cb1.A01);\\n            StringBuilder sbA09 \\u003d AnonymousClass000.A08(\\\"ReceiptStanzaHelper/receipt-from-multiple-targets id\\u003d\\\", str3);\\n            sbA09.append(\\\"; remoteJid\\u003d\\\");\\n            sbA09.append(jid2);\\n            Aym.A1K(deviceJidA0V2, sbA09);\\n            sbA09.append(\\\"; status\\u003d\\\");\\n            sbA09.append(iA00);\\n            sbA09.append(\\\"; offline\\u003d\\\");\\n            sbA09.append(numA0H);\\n            sbA09.append(\\\"; targetTimestampPairList\\u003d\\\");\\n            sbA09.append(list2);\\n            C1xj.A1L(c0lp, \\\"; receiptPrivacyMode\\u003d\\\", sbA09);\\n            if (jid2 \\u003d\\u003d null) {\\n                throw C1xf.A16(\\\"remoteJid must not be null for receipt\\\");\\n            }\\n            C00h.A09(list2);\\n            return new DDG(jid2, userJid, c1gcA0x2, cb1, c0lp, list2, iA00);\\n        }\\n        String strA0L3 \\u003d c0hs.A0L(\\\"id\\\");\\n        C0Cy c0CyA03 \\u003d A02(cb1);\\n        if (C0hs.A02(c0hsA0E2, \\\"biz\\\")) {\\n            c1gcArr \\u003d new C1gc[]{Ayj.A0x(c0CyA03, strA0L3, z)};\\n        } else {\\n            C0hs[] c0hsArr3 \\u003d c0hs.A02;\\n            if (c0hsArr3 \\u003d\\u003d null || c0hsArr3.length !\\u003d 1) {\\n                strArr \\u003d new String[]{strA0L3};\\n            } else {\\n                C0hs c0hs4 \\u003d c0hsArr3[0];\\n                if (C0hs.A02(c0hs4, \\\"list\\\")) {\\n                    C0hs[] c0hsArr4 \\u003d c0hs4.A02;\\n                    int length2 \\u003d c0hsArr4 !\\u003d null ? c0hsArr4.length : 0;\\n                    int i2 \\u003d length2 + 1;\\n                    strArr \\u003d new String[i2];\\n                    for (int i3 \\u003d 0; i3 \\u003c i2; i3++) {\\n                        strArr[i3] \\u003d Voip.REJECT_REASON_DECLINED;\\n                    }\\n                    while (true) {\\n                        strArr[i] \\u003d strA0L3;\\n                        if (i \\u003e\\u003d length2) {\\n                            break;\\n                        }\\n                        C00K.A06(c0hsArr4);\\n                        C0hs c0hs5 \\u003d c0hsArr4[i];\\n                        C0hs.A00(c0hs5, \\\"item\\\");\\n                        strA0L3 \\u003d c0hs5.A0L(\\\"id\\\");\\n                        i++;\\n                    }\\n                } else {\\n                    strArr \\u003d new String[]{strA0L3};\\n                }\\n            }\\n            int length3 \\u003d strArr.length;\\n            c1gcArr \\u003d new C1gc[length3];\\n            for (int i4 \\u003d 0; i4 \\u003c length3; i4++) {\\n                String str4 \\u003d strArr[i4];\\n                C00K.A06(str4);\\n                C00h.A06(str4);\\n                c1gcArr[i4] \\u003d Ayj.A0x(c0CyA03, str4, z);\\n            }\\n        }\\n        long jA01 \\u003d C0Gv.A01(C8kT.A18(c0hs, \\\"t\\\"), 0L) * 1000;\\n        if (bqG !\\u003d null \\u0026\\u0026 c1gcArr.length \\u003e 1) {\\n            bqG.A00 \\u003d 1;\\n        }\\n        String string \\u003d Arrays.toString(c1gcArr);\\n        C00h.A06(string);\\n        com.whatsapp.infra.core.jid.Jid jid3 \\u003d cb1.A02;\\n        com.whatsapp.infra.core.jid.Jid jid4 \\u003d cb1.A01;\\n        C0DK c0dk \\u003d DeviceJid.Companion;\\n        DeviceJid deviceJidA00 \\u003d c0dk.A00(jid4);\\n        StringBuilder sbA010 \\u003d AnonymousClass000.A08(\\\"ReceiptStanzaHelper/receipt-from-target keys\\u003d\\\", string);\\n        sbA010.append(\\\"; remoteJid\\u003d\\\");\\n        sbA010.append(jid3);\\n        Aym.A1K(deviceJidA00, sbA010);\\n        sbA010.append(\\\"; status\\u003d\\\");\\n        sbA010.append(iA00);\\n        sbA010.append(\\\"; timestamp\\u003d\\\");\\n        sbA010.append(jA01);\\n        sbA010.append(\\\"; offline\\u003d\\\");\\n        sbA010.append(numA0H);\\n        C1xj.A1L(c0lp, \\\"; receiptPrivacyMode\\u003d\\\", sbA010);\\n        if (jid3 !\\u003d null) {\\n            return new DDH(c0dk.A00(jid4), jid3, userJid, cb1, c0lp, c1gcArr, iA00, jA01);\\n        }\\n        throw C1xf.A16(\\\"remoteJid must not be null for receipt\\\");\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.Cmk\",\"full_name\":\"X.Cmk.A03\",\"mode\":\"java\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.Cmk",
+    "method": {
+      "name": "A03",
+      "reported_signature": "A03(X.0hs, X.Cb1, X.BqG): X.DdM",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Code duplicated, block: B:109:0x031a  */\n    /* JADX WARN: Code duplicated, block: B:41:0x011b  */\n    public final DdM A03(C0hs c0hs, Cb1 cb1, BqG bqG) throws B7l {\n        boolean z;\n        String[] strArr;\n        C1gc[] c1gcArr;\n        C0hs c0hsA0F;\n        String strA0M = c0hs.A0M(\"type\", \"delivery\");\n        C0hs c0hsA0E = c0hs.A0E(0);\n        if (c0hsA0E != null && C0hs.A02(c0hsA0E, \"participants\") && C8kT.A18(c0hsA0E, \"message_id\") != null) {\n            C0Cy c0CyA02 = A02(cb1);\n            String strA0L = c0hsA0E.A0L(\"message_id\");\n            C1gc c1gcA0x = Ayj.A0x(c0CyA02, strA0L, true);\n            C0hs[] c0hsArr = c0hsA0E.A02;\n            if (c0hsArr == null) {\n                throw B7l.A00(\"ReceiptStanzaHelper/handleOfflineAggregatedReceipt: empty participant list\");\n            }\n            ArrayList arrayListA1D = C1xf.A1D();\n            HashSet hashSet = new HashSet(c0hsArr.length);\n            for (C0hs c0hs2 : c0hsArr) {\n                DeviceJid deviceJid = (DeviceJid) c0hs2.A0B(DeviceJid.class, \"jid\");\n                String strA0M2 = c0hs2.A0M(\"type\", \"delivery\");\n                long jA07 = c0hs2.A07(\"t\") * 1000;\n                C00K.A06(strA0M2);\n                C00h.A06(strA0M2);\n                arrayListA1D.add(new CXQ(deviceJid, A00(strA0M2), jA07));\n                hashSet.add(deviceJid);\n            }\n            Pair pairA09 = Ayk.A09(arrayListA1D, hashSet);\n            List list = (List) pairA09.first;\n            Set set = (Set) pairA09.second;\n            if (bqG != null) {\n                bqG.A03 = strA0L;\n                bqG.A04 = set;\n                bqG.A00 = 3;\n            }\n            String str = c1gcA0x.A01;\n            com.whatsapp.infra.core.jid.Jid jid = cb1.A02;\n            StringBuilder sbA08 = AnonymousClass000.A08(\"ReceiptStanzaHelper/parseOfflineAggregatedReceipt: messageId=\", str);\n            sbA08.append(\"; remoteJid=\");\n            sbA08.append(jid);\n            C1xj.A1L(list, \"; aggregatedData=\", sbA08);\n            C00K.A06(jid);\n            C00h.A06(jid);\n            return new DDF(jid, c1gcA0x, cb1, list);\n        }\n        if (!\"delivery\".equals(strA0M) && !\"inactive\".equals(strA0M) && !\"sender\".equals(strA0M) && !\"played\".equals(strA0M) && !\"played-self\".equals(strA0M) && !\"read\".equals(strA0M) && !\"read-self\".equals(strA0M)) {\n            throw B7l.A00(AnonymousClass000.A04(\"ReceiptStanzaHandler/parseMessageStatusUpdateReceipt unknown type=\", strA0M));\n        }\n        int i = 0;\n        String str2 = cb1.A09;\n        C00K.A06(str2);\n        C00h.A06(str2);\n        int iA00 = A00(str2);\n        UserJid userJid = cb1.A03;\n        boolean zEquals = \"read-self\".equals(str2);\n        boolean zEquals2 = \"sender\".equals(str2);\n        if (userJid == null || zEquals2) {\n            z = zEquals ? false : true;\n        }\n        if (zEquals2 && userJid == null && C1xf.A0o(C0DE.A00(cb1.A01)) == null) {\n            com.whatsapp.infra.logging.Log.w(\"ReceiptStanzaHelper/handleSuccessfulMessageReceipt sender receipt without recipient or participant jid, using remoteChatJid as fallback\");\n        }\n        if (zEquals && userJid == null && !C0DE.A0b(C0DE.A00(cb1.A02))) {\n            com.whatsapp.infra.logging.Log.w(\"ReceiptStanzaHelper/handleSuccessfulMessageReceipt read-self receipt without recipient jid, using remoteChatJid as fallback\");\n        }\n        C0lp c0lp = (!\"delivery\".equals(str2) || (c0hsA0F = c0hs.A0F(\"biz\")) == null) ? null : new C0lp(c0hsA0F.A0M(\"host_storage\", null), c0hsA0F.A0M(\"actual_actors\", null), c0hsA0F.A0M(\"privacy_mode_ts\", null));\n        Integer numA0H = c0hs.A0H(\"offline\");\n        C0hs c0hsA0E2 = c0hs.A0E(0);\n        if (C0hs.A02(c0hsA0E2, \"participants\")) {\n            C00K.A06(c0hsA0E2);\n            C00h.A06(c0hsA0E2);\n            String strA0L2 = c0hsA0E2.A0L(\"key\");\n            C1gc c1gcA0x2 = Ayj.A0x(A02(cb1), strA0L2, z);\n            C0hs[] c0hsArr2 = c0hsA0E2.A02;\n            if (c0hsArr2 == null) {\n                throw B7l.A00(\"ReceiptStanzaHandler/handleSuccessfulMessageReceipt empty participants\");\n            }\n            int length = c0hsArr2.length;\n            ArrayList arrayListA0x = C3c4.A0x(length);\n            HashSet hashSet2 = new HashSet(length);\n            long jA02 = C1xj.A02(this.A02) / 1000;\n            while (i < length) {\n                C0hs c0hs3 = c0hsArr2[i];\n                com.whatsapp.infra.core.jid.Jid jidA0A = c0hs3.A0A(com.whatsapp.infra.core.jid.Jid.class, \"jid\");\n                if (jidA0A != null) {\n                    DeviceJid deviceJidA0V = Ayl.A0V(jidA0A);\n                    Pair pairCreate = Pair.create(deviceJidA0V, Long.valueOf(c0hs3.A08(\"t\", jA02) * 1000));\n                    C00h.A06(pairCreate);\n                    arrayListA0x.add(pairCreate);\n                    hashSet2.add(deviceJidA0V);\n                }\n                i++;\n            }\n            Pair pairA010 = Ayk.A09(arrayListA0x, hashSet2);\n            List list2 = (List) pairA010.first;\n            Set set2 = (Set) pairA010.second;\n            if (bqG != null) {\n                bqG.A03 = strA0L2;\n                bqG.A04 = set2;\n                if (set2.size() > 1) {\n                    bqG.A00 = 2;\n                }\n            }\n            String str3 = c1gcA0x2.A01;\n            com.whatsapp.infra.core.jid.Jid jid2 = cb1.A02;\n            DeviceJid deviceJidA0V2 = Ayl.A0V(cb1.A01);\n            StringBuilder sbA09 = AnonymousClass000.A08(\"ReceiptStanzaHelper/receipt-from-multiple-targets id=\", str3);\n            sbA09.append(\"; remoteJid=\");\n            sbA09.append(jid2);\n            Aym.A1K(deviceJidA0V2, sbA09);\n            sbA09.append(\"; status=\");\n            sbA09.append(iA00);\n            sbA09.append(\"; offline=\");\n            sbA09.append(numA0H);\n            sbA09.append(\"; targetTimestampPairList=\");\n            sbA09.append(list2);\n            C1xj.A1L(c0lp, \"; receiptPrivacyMode=\", sbA09);\n            if (jid2 == null) {\n                throw C1xf.A16(\"remoteJid must not be null for receipt\");\n            }\n            C00h.A09(list2);\n            return new DDG(jid2, userJid, c1gcA0x2, cb1, c0lp, list2, iA00);\n        }\n        String strA0L3 = c0hs.A0L(\"id\");\n        C0Cy c0CyA03 = A02(cb1);\n        if (C0hs.A02(c0hsA0E2, \"biz\")) {\n            c1gcArr = new C1gc[]{Ayj.A0x(c0CyA03, strA0L3, z)};\n        } else {\n            C0hs[] c0hsArr3 = c0hs.A02;\n            if (c0hsArr3 == null || c0hsArr3.length != 1) {\n                strArr = new String[]{strA0L3};\n            } else {\n                C0hs c0hs4 = c0hsArr3[0];\n                if (C0hs.A02(c0hs4, \"list\")) {\n                    C0hs[] c0hsArr4 = c0hs4.A02;\n                    int length2 = c0hsArr4 != null ? c0hsArr4.length : 0;\n                    int i2 = length2 + 1;\n                    strArr = new String[i2];\n                    for (int i3 = 0; i3 < i2; i3++) {\n                        strArr[i3] = Voip.REJECT_REASON_DECLINED;\n                    }\n                    while (true) {\n                        strArr[i] = strA0L3;\n                        if (i >= length2) {\n                            break;\n                        }\n                        C00K.A06(c0hsArr4);\n                        C0hs c0hs5 = c0hsArr4[i];\n                        C0hs.A00(c0hs5, \"item\");\n                        strA0L3 = c0hs5.A0L(\"id\");\n                        i++;\n                    }\n                } else {\n                    strArr = new String[]{strA0L3};\n                }\n            }\n            int length3 = strArr.length;\n            c1gcArr = new C1gc[length3];\n            for (int i4 = 0; i4 < length3; i4++) {\n                String str4 = strArr[i4];\n                C00K.A06(str4);\n                C00h.A06(str4);\n                c1gcArr[i4] = Ayj.A0x(c0CyA03, str4, z);\n            }\n        }\n        long jA01 = C0Gv.A01(C8kT.A18(c0hs, \"t\"), 0L) * 1000;\n        if (bqG != null && c1gcArr.length > 1) {\n            bqG.A00 = 1;\n        }\n        String string = Arrays.toString(c1gcArr);\n        C00h.A06(string);\n        com.whatsapp.infra.core.jid.Jid jid3 = cb1.A02;\n        com.whatsapp.infra.core.jid.Jid jid4 = cb1.A01;\n        C0DK c0dk = DeviceJid.Companion;\n        DeviceJid deviceJidA00 = c0dk.A00(jid4);\n        StringBuilder sbA010 = AnonymousClass000.A08(\"ReceiptStanzaHelper/receipt-from-target keys=\", string);\n        sbA010.append(\"; remoteJid=\");\n        sbA010.append(jid3);\n        Aym.A1K(deviceJidA00, sbA010);\n        sbA010.append(\"; status=\");\n        sbA010.append(iA00);\n        sbA010.append(\"; timestamp=\");\n        sbA010.append(jA01);\n        sbA010.append(\"; offline=\");\n        sbA010.append(numA0H);\n        C1xj.A1L(c0lp, \"; receiptPrivacyMode=\", sbA010);\n        if (jid3 != null) {\n            return new DDH(c0dk.A00(jid4), jid3, userJid, cb1, c0lp, c1gcArr, iA00, jA01);\n        }\n        throw C1xf.A16(\"remoteJid must not be null for receipt\");\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

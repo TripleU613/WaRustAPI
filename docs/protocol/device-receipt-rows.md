@@ -158,3 +158,8 @@ passed. The new companion-cleanup regression failed before the parser change
 and passed afterward, as did the modified normal-outbox entry-point test.
 Repository hygiene validates 1,830 local links and all 76 existing APK checksum
 bundles; no new source generation or old-snapshot rewrite was needed.
+
+2026-10-10 — [Offline device aggregates](offline-aggregated-receipts.md) feed
+required per-entry times into the existing exact-device earliest-positive row
+observer, atomically with all supported facts. They do not use root time or a
+current-clock fallback; the separate key-based form remains unported.

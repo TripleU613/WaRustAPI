@@ -1,0 +1,127 @@
+# Offline device receipt aggregates
+
+2026-10-10. **Confirmed static**, comparison APK **2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+**Implemented/offline tested:** direct and group `participants message_id`
+receipts now enter the normal durable fact path. Fresh live aggregate projection
+remains **unknown**, and this is not complete native receipt/status parity.
+
+## Evidence
+
+The complete REA/JADX Evidence envelopes are committed here:
+
+- [Package declarations](rea/2.26.37.71-offline-receipts/package.json),
+  `ev_9cce07151adf547c223d1f5647c19918bb11f8016445c9ff246f84b115db5eab`.
+  Provider reports 94,738 classes and 14,967 resources, not understood or ported
+  classes/resources. Manifest decoding does not verify APK signatures.
+- [Cmk.A03 parser](rea/2.26.37.71-offline-receipts/parser.json),
+  `ev_3d004b8aa9037da8f88c428311d145603eea064e9274e41e76eb4b10d53d9860`.
+  Java text is complete but has two JADX duplicated-block warnings. Source
+  positions and exact DEX descriptors are not supplied by this provider.
+- [Ayk.A09 pair constructor](rea/2.26.37.71-offline-receipts/pair.json),
+  `ev_cc34bc6b75f4d893e96d3d1769080c1303541e13706b663805f2bc6513348a63`.
+  It returns `new Pair(obj,obj2)`. The receipt list is not deduplicated by this
+  helper; the parallel set does not replace the list.
+- [DDF exact DEX methods](rea/2.26.37.71-offline-receipts/aggregate-model.txt).
+  The existing [Cmk bytecode](apk/2.26.37.71-direct-receipts/receipt-status-parser.txt)
+  independently anchors offsets and the DDF construction.
+
+**Confirmed:** Cmk.A03 `002a..015c` examines only the first child. A
+`participants` child with a present readable `message_id` selects the offline
+aggregate before ordinary root status validation. It builds one sent-message key
+with that inner ID and `fromMe=true`, and retains the remote chat separately.
+Each entry supplies a DeviceJid through `0hs.A0B`, type through
+`A0M("type","delivery")`, and required time through `A07("t")`, followed by
+signed wrapping multiplication by 1,000. A07 calls required A0L and strict A09;
+the [clock trace](receipt-clock.md) preserves this different parsing policy.
+There is no root timestamp or current-clock fallback in this branch.
+
+DDF.BSJ always returns its one message key. CFC(index), Ccf(index) and
+CeD(index) return that indexed CXQ's actual device, status and timestamp.
+Its `AT2` value is `AGGREGATE_BY_ID`; CPB retains the remaining sublist when
+creating `ReceiptAggregatedByIdProcessingJob`. Existing Cmn interface reads
+are documented in [receipt application](receipt-apply.md). That confirms
+per-entry attribution, not complete native scheduler, user-row or privacy policy.
+
+**Correction to an earlier negative:** the previous direct-receipt note could
+not establish the native ordinary `list/item` array assignment from its bounded
+bytecode reading. REA shows `strArr[i] = strA0L3` at each loop iteration,
+then reads the next item. The exact bytecode assignment at `060a` is reached
+again by the loop back-edge. This resolves that particular static array question;
+it does not prove full native list admission or live batch behavior.
+
+## Runtime change
+
+Before this change, the shared handler only used root `id`. An aggregate could
+be ignored, fail as missing root ID, or be misattributed to a root transport ID.
+The first-child `message_id` branch now validates all entries and applies them
+within one encrypted-store transaction. Direct and group entry points share
+the transaction-aware existing handlers; no separate store or new request
+format was introduced.
+
+Supported delivery/read/played entries become ordinary device observations using
+the inner message ID and their own supplied time. Missing type alone defaults
+to delivery. Known sender/inactive/self kinds remain unprojected, and unknown
+or malformed types refuse with fixed redacted diagnoses. Malformed required
+JID/time, missing list or invalid inner ID refuses without partial facts.
+Nonpositive/wrapped time can remain in the first public fact; only positive
+values update the earliest-positive device row. A duplicate kind/device adds
+no second fact or event but can lower that mutable row's positive time.
+
+**Existing authority remains required:** direct participant observations need
+an immutable original target snapshot and matching saved chat/user/device;
+group observations use the frozen full plan or existing known legacy wire
+recipients. Authenticated PN/LID association can join the user namespaces at
+the same device ID, retaining the actual fact actor. The mutable timestamp row
+still uses its exact saved namespace. No current membership, numeric similarity,
+new pin or guessed target is accepted. Direct legacy Boolean summaries remain
+unchanged; existing group legacy device summaries retain their own semantics.
+
+Any late mapping/corruption failure rolls back earlier facts, row times and
+journal events in the aggregate. Original intent, attempts, uncertain outcomes,
+keys and progress are preserved. The local list bound is the existing default
+Node limit (4,096 children), and the inner ID uses the existing 128-byte bound;
+neither is claimed as a WhatsApp limit. These facts do not authorize resending.
+
+**Unknown/unported:** the separate `participants key` DDG branch uses root
+status, optional entry JIDs and a current-clock default. It now stays
+unprojected instead of falling through to root-ID receipt attribution. Full
+native status/settings admission, primary identity cleanup, orphan storage,
+privacy metadata, callback deferral and own-device synchronization are not
+completed by this change.
+
+## Reproduce and inspect
+
+REA 6.3.0 needs a separately installed full JDK and `jadx-headless-mcp` 0.7.1
+JAR. The installed engine matches REA's pinned SHA-256
+`6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75`.
+The first MCP package inspection refused because that prerequisite was missing;
+that result proved a local setup gap, not an APK failure. The JAR is now installed
+outside the repository and configured under the Codex REA server environment,
+with a private configuration backup. This running MCP connection predates that
+environment update, so the successful APK calls used the existing REA CLI.
+No APK, emulator or app process was executed.
+
+```sh
+export REA_JADX_MCP_JAR=~/.local/share/rea/providers/jadx/jadx-headless-mcp-0.7.1-all.jar
+rea inspect-android-package ~/Downloads/WhatsApp.apk --json
+rea inspect-android-method ~/Downloads/WhatsApp.apk X.Cmk A03 --json
+rea inspect-android-method ~/Downloads/WhatsApp.apk X.Ayk A09 --json
+cargo test -p whatsapp-api --all-features aggregat
+whatsapp-cli --profile l --json true status --local-id ORIGINAL_LOCAL_ID
+whatsapp-cli --profile l --json true outbox-versions --local-id ORIGINAL_LOCAL_ID
+```
+
+Use the existing versioned APK recipes and `apk-research-diff` for cached
+cross-release comparisons. REA decompiled text supplies additional evidence,
+not stable obfuscated selectors across releases or automatic Rust patches.
+
+## Validation
+
+893 workspace/all-feature tests passed. Five new encrypted-store tests cover
+binary decoding, per-device kinds/times, immutable target guards, duplicate
+suppression after reopening, malformed batches, late mapping failure rollback,
+key-form isolation and the public group handler. Strict all-target Clippy,
+warnings-denied Rustdoc, default CLI tests and CLI-reference regeneration
+passed. The default CLI build retains an existing unused `clock::observe_login`
+warning. No live account operation was performed for this chunk.
