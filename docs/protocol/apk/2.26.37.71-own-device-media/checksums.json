@@ -1,0 +1,70 @@
+{
+  "audio-descriptor.txt": {
+    "bytes": 4883,
+    "sha256": "8dfedfcc5b04099fbff8194dce0c0b9d9c03872c239b740fb67581e266ff5e5b"
+  },
+  "audio-header-helper.txt": {
+    "bytes": 817,
+    "sha256": "6ba61f5d79744c5838e130041c03182a8a40df2f2cbcecd6d655dbf5afc3e782"
+  },
+  "audio-key-helper.txt": {
+    "bytes": 958,
+    "sha256": "df2f2df55c3304982eebeacaa3584248cbb7eb2e6966ccaf8d53433d8cd23671"
+  },
+  "document-descriptor.txt": {
+    "bytes": 6103,
+    "sha256": "2323ad0d980e18f65248b0e2546413154085c35a0ab6e2c3eb821aab9aa94813"
+  },
+  "image-descriptor.txt": {
+    "bytes": 7602,
+    "sha256": "6256cc99f694ea22b88ad63b4c8fa381b7b3b2d1e8b5366c93b202ccf23b366d"
+  },
+  "image-name-helper.txt": {
+    "bytes": 689,
+    "sha256": "552164f6dbcfa68c0467fcc19f73a82b3489afe1bd3749efeafac841633cbcab"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "message-descriptor.txt": {
+    "bytes": 19792,
+    "sha256": "4deb5a3c9944863696cfcd0dfb0138985e229d23606d119272f76b304f8d8b45"
+  },
+  "sticker-descriptor.txt": {
+    "bytes": 5305,
+    "sha256": "103e6933b44346fb1be0a0ebe157491cb0a1e94c3ed3371173fb3f33af556696"
+  },
+  "targets.json": {
+    "bytes": 6509,
+    "sha256": "fedc60802b86ea2f20e8eb8416cfb4c2e851d30ec45241b33313153fd98d773f"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  },
+  "unwrap-with-context.txt": {
+    "bytes": 1934,
+    "sha256": "5472813db86298622703ddb37d55c7f58233ad81b51aa2239827cc627cd2a343"
+  },
+  "video-descriptor.txt": {
+    "bytes": 7953,
+    "sha256": "7813437c328a73d41b3b4145f9cde4181e728b10ffc0bcc4b0ce92135224d20a"
+  },
+  "wrapper-descriptor.txt": {
+    "bytes": 3561,
+    "sha256": "656be1afb86f3d04031ff8909969e13e8ee456141cae54eece410ec726862610"
+  },
+  "wrapper-route-gate.txt": {
+    "bytes": 7598,
+    "sha256": "cc336df992978538879d1e2c4b47b131ea7dfa9ca4e4e2a032e72ad458570c8e"
+  },
+  "wrapper-validation.txt": {
+    "bytes": 10504,
+    "sha256": "bd503555eab5b088f5934911d468e8a57dc5f3fd6a55545c050573195caa2e29"
+  }
+}

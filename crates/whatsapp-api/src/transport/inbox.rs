@@ -3258,7 +3258,90 @@ mod tests {
                 Ok(())
             })
             .unwrap();
-        let event_count = batch.events.len();
+        #[cfg(feature = "experimental-registration-https")]
+        let continued_session = {
+            let mut image = Vec::new();
+            prost::encoding::string::encode(
+                1,
+                &"https://mmg.whatsapp.net/fixture".to_owned(),
+                &mut image,
+            );
+            prost::encoding::string::encode(2, &"image/png".to_owned(), &mut image);
+            prost::encoding::bytes::encode(4, &vec![1; 32], &mut image);
+            prost::encoding::uint64::encode(5, &42, &mut image);
+            prost::encoding::bytes::encode(8, &vec![2; 32], &mut image);
+            prost::encoding::bytes::encode(9, &vec![3; 32], &mut image);
+            let mut inner = Vec::new();
+            prost::encoding::bytes::encode(3, &image, &mut inner);
+            let mut sent_wrapper = Vec::new();
+            prost::encoding::string::encode(1, &"67890@lid".to_owned(), &mut sent_wrapper);
+            prost::encoding::bytes::encode(2, &inner, &mut sent_wrapper);
+            let mut wrapper = Vec::new();
+            prost::encoding::bytes::encode(31, &sent_wrapper, &mut wrapper);
+            let media = direct::prepare_payload(
+                &sender,
+                receiver.own_jid.as_ref().unwrap(),
+                None,
+                Some(&synced.session),
+                Some(&sent.identity),
+                &wrapper,
+            )
+            .await
+            .unwrap();
+            let media_node = Node::new("message")
+                .attr("from", peer_device.clone())
+                .attr("recipient", "67890@lid")
+                .attr("id", "OWN-MEDIA")
+                .attr("type", "media")
+                .children(vec![
+                    Node::new("enc")
+                        .attr("type", media.kind)
+                        .attr("v", "2")
+                        .bytes(media.ciphertext.to_vec()),
+                ]);
+            let media_capture = preserve(&store, &media_node).unwrap();
+            assert_eq!(
+                process(&store, &receiver, &media_node, &media_capture)
+                    .await
+                    .unwrap(),
+                IncomingResult::Decrypted
+            );
+            assert_eq!(
+                process(&store, &receiver, &media_node, &media_capture)
+                    .await
+                    .unwrap(),
+                IncomingResult::Duplicate
+            );
+            assert_eq!(
+                super::super::messaging::received_confirmation_for_account(
+                    &store,
+                    &receiver,
+                    &media_node
+                )
+                .unwrap(),
+                Some(
+                    Node::new("receipt")
+                        .attr("to", peer_device.clone())
+                        .attr("id", "OWN-MEDIA")
+                        .attr("type", "sender")
+                        .attr("recipient", Jid::parse("67890@lid").unwrap())
+                )
+            );
+            let entries = super::super::media::list(&store).unwrap();
+            assert_eq!(entries.len(), 1);
+            assert_eq!(entries[0].kind, super::super::media::MediaKind::Image);
+            assert!(
+                store
+                    .read(|tx| tx.scan(Table::Outbox, 1, 10))
+                    .unwrap()
+                    .is_empty()
+            );
+            media.session
+        };
+        #[cfg(not(feature = "experimental-registration-https"))]
+        let continued_session = synced.session.clone();
+        let event_count =
+            batch.events.len() + usize::from(cfg!(feature = "experimental-registration-https"));
         drop(store);
         let store = open(false);
         assert_eq!(
@@ -3290,8 +3373,10 @@ mod tests {
             super::super::chat_clear::clear_chat(&store, &Jid::parse("67890@lid").unwrap())
                 .unwrap()
                 .cleared_messages,
-            1
+            1 + usize::from(cfg!(feature = "experimental-registration-https"))
         );
+        #[cfg(feature = "experimental-registration-https")]
+        assert!(super::super::media::list(&store).unwrap().is_empty());
         assert_eq!(
             process(&store, &receiver, &sync_node, &sync_capture)
                 .await
@@ -3320,7 +3405,7 @@ mod tests {
             &sender,
             receiver.own_jid.as_ref().unwrap(),
             None,
-            Some(&synced.session),
+            Some(&continued_session),
             Some(&sent.identity),
             b"\x0a\x05hello",
         )

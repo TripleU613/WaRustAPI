@@ -1,3 +1,11 @@
+2026-10-11 — **Implemented/offline:** held, pinned own-device sessions now
+synchronize supported ordinary media into outgoing events with sealed attachment
+references and sender confirmations. Existing explicit retrieval, expiry and
+clearing apply to the retained original wrapper. No automatic download or new
+send intent. Bootstrap, control/view-once synchronization, echo reconciliation
+and fresh live acceptance remain open.
+[Own-device media](docs/protocol/own-device-media.md).
+
 2026-10-11 — **Build fix:** TCP/Noise now compiles without Signal crypto.
 Six stateful transport modules require their existing Signal dependencies;
 the lightweight socket/login/handshake build stays available. CI checks TCP,

@@ -1,5 +1,9 @@
 # Own-device wrapped text receive
 
+Follow-up: [ordinary media synchronization](own-device-media.md) now extends
+this same held-session path to supported media and sealed attachment references.
+The text-only support boundaries and validation counts below are historical.
+
 2026-10-11. **Confirmed static** for APK 2.26.37.71 SHA-256
 `1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
 [Recipient routing](recipient-routing.md) establishes source validation and

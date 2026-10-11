@@ -1,0 +1,21 @@
+# APK-derived structural disassembly: LX/Ayq;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A13(VLL) flags=0x9 registers=4
+  # full signature: LX/Ayq;->A13([Ljava/lang/Object;Ljava/lang/Object;)V
+  0000..0002 op=12 const/4 v0, #0x7
+  0002..0006 op=4d aput-object v3, v2, v0
+  0006..000a op=1a const-string v1, "fileEncSha256_"
+  000a..000e op=13 const/16 v0, #0x8
+  000e..0012 op=4d aput-object v1, v2, v0
+  0012..0016 op=1a const-string v1, "directPath_"
+  0016..001a op=13 const/16 v0, #0x9
+  001a..001e op=4d aput-object v1, v2, v0
+  001e..0022 op=1a const-string v1, "mediaKeyTimestamp_"
+  0022..0026 op=13 const/16 v0, #0xa
+  0026..002a op=4d aput-object v1, v2, v0
+  002a..002c op=0e return-void
+  # exception table: 0 try range(s)
+.end method

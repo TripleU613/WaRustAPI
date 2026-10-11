@@ -1,5 +1,5 @@
-//! Ordinary incoming image/audio/sticker/video/document retrieval. View-once content never enters
-//! this replayable path. APK BWp/BWZ/BZC schemas and 1qB image/audio key domains.
+//! Ordinary incoming and synchronized own-device media retrieval. View-once content never enters
+//! this replayable path. APK 37.71 BZD/BZ0/BZC schemas and 1qB image/audio key domains.
 use crate::{
     Error, Result,
     registration::request::LabRegistrationConfig,
@@ -355,7 +355,7 @@ fn candidates(store: &ProtocolStore) -> Result<Vec<(Vec<u8>, Descriptor)>> {
     }
     let mut out = Vec::new();
     for (key, bytes) in rows {
-        if !key.starts_with(b"received:") {
+        if !key.starts_with(b"received:") && !key.starts_with(b"received-own:") {
             continue;
         }
         let mut record: serde_json::Value =
@@ -365,6 +365,17 @@ fn candidates(store: &ProtocolStore) -> Result<Vec<(Vec<u8>, Descriptor)>> {
         }
         let plain: Zeroizing<Vec<u8>> = serde_json::from_value(record["protobuf"].take())
             .map_err(|_| bad("invalid protobuf record"))?;
+        let plain = if let Some(suffix) = key.strip_prefix(b"received-own:") {
+            let chat = std::str::from_utf8(suffix)
+                .ok()
+                .and_then(|s| s.split_once(':'))
+                .and_then(|(chat, _)| crate::model::jid::Jid::parse(chat).ok())
+                .ok_or_else(|| bad("invalid synchronized media chat"))?;
+            super::own_device::payload(&plain, &chat)
+                .ok_or_else(|| bad("invalid synchronized media wrapper"))?
+        } else {
+            plain
+        };
         if let Some(d) = descriptor(&plain)? {
             if let Some(duration) = media_context(&plain)?
                 .and_then(|c| c.expiration)
@@ -760,6 +771,112 @@ pub(crate) fn ensure_available(store: &ProtocolStore, id: &str) -> Result<()> {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn own_device_media_references_use_original_wrapper_and_clear_with_chat() {
+        use super::*;
+        use crate::{
+            binary::{Encoder, Node, TokenDictionary},
+            model::jid::Jid,
+            sync::SyncEvent,
+        };
+        #[derive(Message)]
+        struct Sent {
+            #[prost(string, tag = "1")]
+            destination: String,
+            #[prost(bytes = "vec", tag = "2")]
+            message: Vec<u8>,
+        }
+        #[derive(Message)]
+        struct Wrapper {
+            #[prost(message, optional, tag = "31")]
+            sent: Option<Sent>,
+        }
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(crate::store::OpenOptions {
+            path: dir.path().join("own-media.redb"),
+            account_id: crate::model::ids::AccountId::new("fixture").unwrap(),
+            create: true,
+            key_source: std::sync::Arc::new(crate::store::StaticKeySource::new(
+                crate::store::MasterKey::from_bytes([9; 32]),
+            )),
+        })
+        .unwrap();
+        let chat = Jid::parse("67890@lid").unwrap();
+        let inner = Envelope {
+            image: Some(Image {
+                url: "https://mmg.whatsapp.net/fixture".into(),
+                mime: "image/png".into(),
+                hash: vec![1; 32],
+                key: vec![2; 32],
+                enc_hash: vec![3; 32],
+                length: 42,
+                once: false,
+            }),
+            ..Default::default()
+        }
+        .encode_to_vec();
+        let wrapper = Wrapper {
+            sent: Some(Sent {
+                destination: chat.to_string(),
+                message: inner.clone(),
+            }),
+        }
+        .encode_to_vec();
+        let key = b"received-own:67890@lid:MEDIA";
+        let node = Node::new("message")
+            .attr("from", "12345:2@lid")
+            .attr("recipient", chat.clone())
+            .attr("id", "MEDIA")
+            .attr("type", "media");
+        let route = Encoder::new(TokenDictionary::comparison_2_26_37_71())
+            .encode(&node)
+            .unwrap();
+        let event = store
+            .write(|tx| {
+                let event = super::super::inbox_events::own_device_message(
+                    tx,
+                    key,
+                    &chat,
+                    &node,
+                    &inner,
+                    &[],
+                )?
+                .unwrap();
+                tx.put_json(
+                    Table::Checkpoints,
+                    key,
+                    1,
+                    &serde_json::json!({"status":"decrypted","protobuf":wrapper,"route":route}),
+                )?;
+                Ok(event)
+            })
+            .unwrap();
+        let SyncEvent::NewMessage(message) = event else {
+            panic!("media event missing")
+        };
+        assert_eq!(
+            message.key.direction,
+            crate::model::message::Direction::Outgoing
+        );
+        assert_eq!(message.key.chat.jid(), &chat);
+        assert!(message.key.sender.is_none());
+        let crate::model::message::MessageContent::Media { reference, .. } = message.content else {
+            panic!("media reference missing")
+        };
+        let id = hex::encode(Sha256::digest(key));
+        assert_eq!(reference_selector(&store, &reference).unwrap(), id);
+        assert_eq!(list(&store).unwrap()[0].id, id);
+        assert!(
+            store
+                .read(|tx| tx.scan(Table::Outbox, 1, 10))
+                .unwrap()
+                .is_empty()
+        );
+        super::super::chat_clear::clear_chat(&store, &chat).unwrap();
+        assert!(list(&store).unwrap().is_empty());
+        assert!(reference_selector(&store, &reference).is_err());
+    }
+
     #[test]
     fn ordinary_media_events_are_atomic_downloadable_and_exclude_context_and_view_once() {
         use super::*;

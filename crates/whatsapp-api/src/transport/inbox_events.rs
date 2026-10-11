@@ -715,28 +715,57 @@ fn outgoing_reaction_target(
 
 pub(super) use super::jid_map::authenticated_direct_chat;
 
-pub(super) fn own_device_text(
+pub(super) fn own_device_message(
+    tx: &WriteTx<'_>,
+    key: &[u8],
     chat: &crate::model::jid::Jid,
     node: &Node,
     payload: &[u8],
     own: &[crate::model::jid::Jid],
-) -> Option<SyncEvent> {
-    let id = node.get_attr("id")?.as_text()?;
+) -> Result<Option<SyncEvent>> {
+    let Some(id) = node.get_attr("id").and_then(|v| v.as_text()) else {
+        return Ok(None);
+    };
     let mut projection = Node::new("message")
         .attr("from", chat.clone())
         .attr("id", id);
     if let Some(t) = node.get_attr("t") {
         projection = projection.attr("t", t.clone());
     }
-    let key = format!("received:{chat}:{id}");
-    let SyncEvent::NewMessage(mut message) =
-        project(key.as_bytes(), &projection, payload, None, None, None, own)
-    else {
-        return None;
+    let projection_key = format!("received:{chat}:{id}");
+    let projected = project(
+        projection_key.as_bytes(),
+        &projection,
+        payload,
+        None,
+        None,
+        None,
+        own,
+    );
+    #[cfg(feature = "experimental-registration-https")]
+    let projected = if matches!(projected, SyncEvent::UnsupportedMessage(_)) {
+        match super::media::event_content(tx, key, payload) {
+            Ok(Some(content)) => event_with_content(
+                projection_key.as_bytes(),
+                &projection,
+                payload,
+                Some(content),
+                own,
+            ),
+            Ok(None) | Err(crate::Error::InvalidInput { .. }) => projected,
+            Err(error) => return Err(error),
+        }
+    } else {
+        projected
+    };
+    #[cfg(not(feature = "experimental-registration-https"))]
+    let _ = (tx, key);
+    let SyncEvent::NewMessage(mut message) = projected else {
+        return Ok(None);
     };
     message.key.direction = Direction::Outgoing;
     message.key.sender = None;
-    Some(SyncEvent::NewMessage(message))
+    Ok(Some(SyncEvent::NewMessage(message)))
 }
 
 /// Must be called in the ratchet/inbox write transaction, or on an already

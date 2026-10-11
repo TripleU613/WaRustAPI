@@ -1,0 +1,136 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"evidence_id\":\"ev_3a6ddef3f7c0876082edb1fa89518f90b775366cc39e856570df8ca13dad4c44\",\"subject\":{\"name\":\"WhatsApp.apk\",\"digest\":{\"sha256\":\"1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c\"},\"format\":\"apk\",\"architecture\":null,\"local_path\":\"~/Downloads/WhatsApp.apk\"},\"provider\":{\"id\":\"jadx\",\"name\":\"JADX headless\",\"version\":\"0.7.1\"},\"analysis_profile\":null,\"predicate_type\":\"rea.analysis\",\"operation\":\"inspect_android_method\",\"parameters\":{\"path\":\"~/Downloads/WhatsApp.apk\",\"class_name\":\"X.BZ0\",\"method_name\":\"dynamicMethod\"},\"raw_result\":{\"server\":{\"name\":\"rea-jadx-bridge\",\"version\":\"1\"},\"bridge_sha256\":\"5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1\",\"jar_sha256\":\"6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75\",\"loaded\":{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-aMc6RR/target.apk\",\"class_count\":94738,\"resource_count\":14967,\"threads\":1,\"resources\":\"full\"},\"calls\":[{\"operation\":\"rea_jvm_status\",\"input\":{},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"metadata_scope\\\":\\\"parsed_members\\\",\\\"max_heap_bytes\\\":15695085568,\\\"java_version\\\":\\\"21.0.12.1\\\",\\\"available_processors\\\":24,\\\"engine_reported_version\\\":\\\"0.7.1\\\"}\"}],\"isError\":false}},{\"operation\":\"get_class_summary\",\"input\":{\"class_name\":\"X.BZ0\"},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"methods\\\":[{\\\"signature\\\":\\\"\\\\u003cclinit\\\\u003e(): void\\\",\\\"is_constructor\\\":false,\\\"name\\\":\\\"\\\\u003cclinit\\\\u003e\\\",\\\"def_pos\\\":0},{\\\"signature\\\":\\\"\\\\u003cinit\\\\u003e(): void\\\",\\\"is_constructor\\\":true,\\\"name\\\":\\\"\\\\u003cinit\\\\u003e\\\",\\\"def_pos\\\":0},{\\\"signature\\\":\\\"dynamicMethod(com.google.protobuf.GeneratedMessageLite$MethodToInvoke, java.lang.Object, java.lang.Object): java.lang.Object\\\",\\\"is_constructor\\\":false,\\\"name\\\":\\\"dynamicMethod\\\",\\\"def_pos\\\":0},{\\\"signature\\\":\\\"parseFrom(java.nio.ByteBuffer): X.BZ0\\\",\\\"is_constructor\\\":false,\\\"name\\\":\\\"parseFrom\\\",\\\"def_pos\\\":0}],\\\"method_count\\\":4,\\\"inner_class_count\\\":0,\\\"inner_classes\\\":[],\\\"name\\\":\\\"BZ0\\\",\\\"full_name\\\":\\\"X.BZ0\\\",\\\"field_count\\\":35,\\\"fields\\\":[{\\\"type\\\":\\\"int\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"ACCESSIBILITY_LABEL_FIELD_NUMBER\\\"},{\\\"type\\\":\\\"int\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"BACKGROUND_ARGB_FIELD_NUMBER\\\"},{\\\"type\\\":\\\"int\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"CONTEXT_INFO_FIELD_NUMBER\\\"},{\\\"type\\\":\\\"X.BZ0\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"DEFAULT_INSTANCE\\\"},{\\\"type\\\":\\\"int\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"DIRECT_PATH_FIELD_NUMBER\\\"},{\\\"type\\\":\\\"int\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"FILE_ENC_SHA256_FIELD_NUMBER\\\"},{\\\"type\\\":\\\"int\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"FILE_LENGTH_FIELD_NUMBER\\\"},{\\\"type\\\":\\\"int\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"FILE_SHA256_FIELD_NUMBER\\\"},{\\\"type\\\":\\\"int\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"MEDIA_KEY_FIELD_NUMBER\\\"},{\\\"type\\\":\\\"int\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"MEDIA_KEY_TIMESTAMP_FIELD_NUMBER\\\"},{\\\"type\\\":\\\"int\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"MIMETYPE_FIELD_NUMBER\\\"},{\\\"type\\\":\\\"com.google.protobuf.Parser\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"PARSER\\\"},{\\\"type\\\":\\\"int\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"PTT_FIELD_NUMBER\\\"},{\\\"type\\\":\\\"int\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"SECONDS_FIELD_NUMBER\\\"},{\\\"type\\\":\\\"int\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"STREAMING_SIDECAR_FIELD_NUMBER\\\"},{\\\"type\\\":\\\"int\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"URL_FIELD_NUMBER\\\"},{\\\"type\\\":\\\"int\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"VIEW_ONCE_FIELD_NUMBER\\\"},{\\\"type\\\":\\\"int\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"WAVEFORM_FIELD_NUMBER\\\"},{\\\"type\\\":\\\"java.lang.String\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"accessibilityLabel_\\\"},{\\\"type\\\":\\\"int\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"backgroundArgb_\\\"},{\\\"type\\\":\\\"int\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"bitField0_\\\"},{\\\"type\\\":\\\"X.BZL\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"contextInfo_\\\"},{\\\"type\\\":\\\"java.lang.String\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"directPath_\\\"},{\\\"type\\\":\\\"com.google.protobuf.ByteString\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"fileEncSha256_\\\"},{\\\"type\\\":\\\"long\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"fileLength_\\\"},{\\\"type\\\":\\\"com.google.protobuf.ByteString\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"fileSha256_\\\"},{\\\"type\\\":\\\"long\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"mediaKeyTimestamp_\\\"},{\\\"type\\\":\\\"com.google.protobuf.ByteString\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"mediaKey_\\\"},{\\\"type\\\":\\\"java.lang.String\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"mimetype_\\\"},{\\\"type\\\":\\\"boolean\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"ptt_\\\"},{\\\"type\\\":\\\"int\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"seconds_\\\"},{\\\"type\\\":\\\"com.google.protobuf.ByteString\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"streamingSidecar_\\\"},{\\\"type\\\":\\\"java.lang.String\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"url_\\\"},{\\\"type\\\":\\\"boolean\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"viewOnce_\\\"},{\\\"type\\\":\\\"com.google.protobuf.ByteString\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"waveform_\\\"}]}\"}],\"isError\":false}},{\"operation\":\"get_method_body\",\"input\":{\"class_name\":\"X.BZ0\",\"method_name\":\"dynamicMethod\",\"overload_index\":0,\"smali_fallback\":true},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"markers\\\":[],\\\"mode\\\":\\\"java\\\",\\\"full_name\\\":\\\"X.BZ0.dynamicMethod\\\",\\\"class_name\\\":\\\"X.BZ0\\\",\\\"overload_index\\\":0,\\\"fell_back\\\":false,\\\"body\\\":\\\"    @Override // com.google.protobuf.GeneratedMessageLite\\\\n    public final Object dynamicMethod(GeneratedMessageLite.MethodToInvoke methodToInvoke, Object obj, Object obj2) {\\\\n        Parser parserA0M;\\\\n        switch (methodToInvoke) {\\\\n            case GET_MEMOIZED_IS_INITIALIZED:\\\\n                return (byte) 1;\\\\n            case SET_MEMOIZED_IS_INITIALIZED:\\\\n                return null;\\\\n            case BUILD_MESSAGE_INFO:\\\\n                Object[] objArr \\\\u003d new Object[17];\\\\n                C6al.A1W(objArr);\\\\n                objArr[1] \\\\u003d \\\\\\\"url_\\\\\\\";\\\\n                Ayq.A12(objArr, \\\\\\\"mimetype_\\\\\\\");\\\\n                objArr[5] \\\\u003d \\\\\\\"seconds_\\\\\\\";\\\\n                objArr[6] \\\\u003d \\\\\\\"ptt_\\\\\\\";\\\\n                Ayq.A13(objArr, \\\\\\\"mediaKey_\\\\\\\");\\\\n                objArr[11] \\\\u003d \\\\\\\"contextInfo_\\\\\\\";\\\\n                objArr[12] \\\\u003d \\\\\\\"streamingSidecar_\\\\\\\";\\\\n                objArr[13] \\\\u003d \\\\\\\"waveform_\\\\\\\";\\\\n                objArr[14] \\\\u003d \\\\\\\"backgroundArgb_\\\\\\\";\\\\n                objArr[15] \\\\u003d \\\\\\\"viewOnce_\\\\\\\";\\\\n                objArr[16] \\\\u003d \\\\\\\"accessibilityLabel_\\\\\\\";\\\\n                return GeneratedMessageLite.newMessageInfo(DEFAULT_INSTANCE, \\\\\\\"\\\\\\\\u0001\\\\\\\\u0010\\\\\\\\u0000\\\\\\\\u0001\\\\\\\\u0001\\\\\\\\u0016\\\\\\\\u0010\\\\\\\\u0000\\\\\\\\u0000\\\\\\\\u0000\\\\\\\\u0001ဈ\\\\\\\\u0000\\\\\\\\u0002ဈ\\\\\\\\u0001\\\\\\\\u0003ည\\\\\\\\u0002\\\\\\\\u0004ဃ\\\\\\\\u0003\\\\\\\\u0005ဋ\\\\\\\\u0004\\\\\\\\u0006ဇ\\\\\\\\u0005\\\\\\\\u0007ည\\\\\\\\u0006\\\\\\\\bည\\\\\\\\u0007\\\\\\\\tဈ\\\\\\\\b\\\\\\\\nဂ\\\\\\\\t\\\\\\\\u0011ဉ\\\\\\\\n\\\\\\\\u0012ည\\\\\\\\u000b\\\\\\\\u0013ည\\\\\\\\f\\\\\\\\u0014ဆ\\\\\\\\r\\\\\\\\u0015ဇ\\\\\\\\u000e\\\\\\\\u0016ဈ\\\\\\\\u000f\\\\\\\", objArr);\\\\n            case NEW_MUTABLE_INSTANCE:\\\\n                return new BZ0();\\\\n            case NEW_BUILDER:\\\\n                return new BO4();\\\\n            case GET_DEFAULT_INSTANCE:\\\\n                return DEFAULT_INSTANCE;\\\\n            case GET_PARSER:\\\\n                Parser parser \\\\u003d PARSER;\\\\n                if (parser !\\\\u003d null) {\\\\n                    return parser;\\\\n                }\\\\n                synchronized (BZ0.class) {\\\\n                    parserA0M \\\\u003d PARSER;\\\\n                    if (parserA0M \\\\u003d\\\\u003d null) {\\\\n                        ExtensionRegistryLite extensionRegistryLite \\\\u003d AbstractParser.EMPTY_REGISTRY;\\\\n                        parserA0M \\\\u003d C6ak.A0M(DEFAULT_INSTANCE);\\\\n                        PARSER \\\\u003d parserA0M;\\\\n                    }\\\\n                    break;\\\\n                }\\\\n                return parserA0M;\\\\n            default:\\\\n                throw C6aj.A1C();\\\\n        }\\\\n    }\\\",\\\"overload_count\\\":1,\\\"method_name\\\":\\\"dynamicMethod\\\"}\"}],\"isError\":false}}]},\"normalized_result\":{\"engine\":{\"name\":\"jadx-headless-mcp\",\"version\":\"0.7.1\",\"artifact_sha256\":\"6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75\",\"source_revision\":\"5844800a486d2248fa949b74c9896285f5b54de2\",\"worker_count\":1,\"heap_limit_mib\":14968},\"class_name\":\"X.BZ0\",\"method\":{\"name\":\"dynamicMethod\",\"reported_signature\":\"dynamicMethod(com.google.protobuf.GeneratedMessageLite$MethodToInvoke, java.lang.Object, java.lang.Object): java.lang.Object\",\"overload_index\":0,\"is_constructor\":false,\"dex_descriptor\":null},\"overload_count\":1,\"representation\":\"java\",\"body_status\":\"available\",\"fell_back\":false,\"markers\":[],\"source\":{\"status\":\"complete\",\"text\":\"    @Override // com.google.protobuf.GeneratedMessageLite\\n    public final Object dynamicMethod(GeneratedMessageLite.MethodToInvoke methodToInvoke, Object obj, Object obj2) {\\n        Parser parserA0M;\\n        switch (methodToInvoke) {\\n            case GET_MEMOIZED_IS_INITIALIZED:\\n                return (byte) 1;\\n            case SET_MEMOIZED_IS_INITIALIZED:\\n                return null;\\n            case BUILD_MESSAGE_INFO:\\n                Object[] objArr = new Object[17];\\n                C6al.A1W(objArr);\\n                objArr[1] = \\\"url_\\\";\\n                Ayq.A12(objArr, \\\"mimetype_\\\");\\n                objArr[5] = \\\"seconds_\\\";\\n                objArr[6] = \\\"ptt_\\\";\\n                Ayq.A13(objArr, \\\"mediaKey_\\\");\\n                objArr[11] = \\\"contextInfo_\\\";\\n                objArr[12] = \\\"streamingSidecar_\\\";\\n                objArr[13] = \\\"waveform_\\\";\\n                objArr[14] = \\\"backgroundArgb_\\\";\\n                objArr[15] = \\\"viewOnce_\\\";\\n                objArr[16] = \\\"accessibilityLabel_\\\";\\n                return GeneratedMessageLite.newMessageInfo(DEFAULT_INSTANCE, \\\"\\\\u0001\\\\u0010\\\\u0000\\\\u0001\\\\u0001\\\\u0016\\\\u0010\\\\u0000\\\\u0000\\\\u0000\\\\u0001ဈ\\\\u0000\\\\u0002ဈ\\\\u0001\\\\u0003ည\\\\u0002\\\\u0004ဃ\\\\u0003\\\\u0005ဋ\\\\u0004\\\\u0006ဇ\\\\u0005\\\\u0007ည\\\\u0006\\\\bည\\\\u0007\\\\tဈ\\\\b\\\\nဂ\\\\t\\\\u0011ဉ\\\\n\\\\u0012ည\\\\u000b\\\\u0013ည\\\\f\\\\u0014ဆ\\\\r\\\\u0015ဇ\\\\u000e\\\\u0016ဈ\\\\u000f\\\", objArr);\\n            case NEW_MUTABLE_INSTANCE:\\n                return new BZ0();\\n            case NEW_BUILDER:\\n                return new BO4();\\n            case GET_DEFAULT_INSTANCE:\\n                return DEFAULT_INSTANCE;\\n            case GET_PARSER:\\n                Parser parser = PARSER;\\n                if (parser != null) {\\n                    return parser;\\n                }\\n                synchronized (BZ0.class) {\\n                    parserA0M = PARSER;\\n                    if (parserA0M == null) {\\n                        ExtensionRegistryLite extensionRegistryLite = AbstractParser.EMPTY_REGISTRY;\\n                        parserA0M = C6ak.A0M(DEFAULT_INSTANCE);\\n                        PARSER = parserA0M;\\n                    }\\n                    break;\\n                }\\n                return parserA0M;\\n            default:\\n                throw C6aj.A1C();\\n        }\\n    }\",\"reported_total_bytes\":null}},\"confidence\":\"derived\",\"authority\":\"shipped-artifact\",\"environment\":null,\"limitations\":[\"Static decompiler observations do not establish runtime behavior; the APK is never executed.\",\"Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.\",\"Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.\",\"Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider.\"],\"locations\":[],\"evidence_links\":[]}"
+    }
+  ],
+  "structuredContent": {
+    "evidence_id": "ev_3a6ddef3f7c0876082edb1fa89518f90b775366cc39e856570df8ca13dad4c44",
+    "subject": {
+      "name": "WhatsApp.apk",
+      "digest": {
+        "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+      },
+      "format": "apk",
+      "architecture": null,
+      "local_path": "~/Downloads/WhatsApp.apk"
+    },
+    "provider": {
+      "id": "jadx",
+      "name": "JADX headless",
+      "version": "0.7.1"
+    },
+    "analysis_profile": null,
+    "predicate_type": "rea.analysis",
+    "operation": "inspect_android_method",
+    "parameters": {
+      "path": "~/Downloads/WhatsApp.apk",
+      "class_name": "X.BZ0",
+      "method_name": "dynamicMethod"
+    },
+    "raw_result": {
+      "server": {
+        "name": "rea-jadx-bridge",
+        "version": "1"
+      },
+      "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+      "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "loaded": {
+        "state": "LOADED",
+        "apk_path": "/tmp/rea-android-aMc6RR/target.apk",
+        "class_count": 94738,
+        "resource_count": 14967,
+        "threads": 1,
+        "resources": "full"
+      },
+      "calls": [
+        {
+          "operation": "rea_jvm_status",
+          "input": {},
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":15695085568,\"java_version\":\"21.0.12.1\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+              }
+            ],
+            "isError": false
+          }
+        },
+        {
+          "operation": "get_class_summary",
+          "input": {
+            "class_name": "X.BZ0"
+          },
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"methods\":[{\"signature\":\"\\u003cclinit\\u003e(): void\",\"is_constructor\":false,\"name\":\"\\u003cclinit\\u003e\",\"def_pos\":0},{\"signature\":\"\\u003cinit\\u003e(): void\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0},{\"signature\":\"dynamicMethod(com.google.protobuf.GeneratedMessageLite$MethodToInvoke, java.lang.Object, java.lang.Object): java.lang.Object\",\"is_constructor\":false,\"name\":\"dynamicMethod\",\"def_pos\":0},{\"signature\":\"parseFrom(java.nio.ByteBuffer): X.BZ0\",\"is_constructor\":false,\"name\":\"parseFrom\",\"def_pos\":0}],\"method_count\":4,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"BZ0\",\"full_name\":\"X.BZ0\",\"field_count\":35,\"fields\":[{\"type\":\"int\",\"def_pos\":0,\"name\":\"ACCESSIBILITY_LABEL_FIELD_NUMBER\"},{\"type\":\"int\",\"def_pos\":0,\"name\":\"BACKGROUND_ARGB_FIELD_NUMBER\"},{\"type\":\"int\",\"def_pos\":0,\"name\":\"CONTEXT_INFO_FIELD_NUMBER\"},{\"type\":\"X.BZ0\",\"def_pos\":0,\"name\":\"DEFAULT_INSTANCE\"},{\"type\":\"int\",\"def_pos\":0,\"name\":\"DIRECT_PATH_FIELD_NUMBER\"},{\"type\":\"int\",\"def_pos\":0,\"name\":\"FILE_ENC_SHA256_FIELD_NUMBER\"},{\"type\":\"int\",\"def_pos\":0,\"name\":\"FILE_LENGTH_FIELD_NUMBER\"},{\"type\":\"int\",\"def_pos\":0,\"name\":\"FILE_SHA256_FIELD_NUMBER\"},{\"type\":\"int\",\"def_pos\":0,\"name\":\"MEDIA_KEY_FIELD_NUMBER\"},{\"type\":\"int\",\"def_pos\":0,\"name\":\"MEDIA_KEY_TIMESTAMP_FIELD_NUMBER\"},{\"type\":\"int\",\"def_pos\":0,\"name\":\"MIMETYPE_FIELD_NUMBER\"},{\"type\":\"com.google.protobuf.Parser\",\"def_pos\":0,\"name\":\"PARSER\"},{\"type\":\"int\",\"def_pos\":0,\"name\":\"PTT_FIELD_NUMBER\"},{\"type\":\"int\",\"def_pos\":0,\"name\":\"SECONDS_FIELD_NUMBER\"},{\"type\":\"int\",\"def_pos\":0,\"name\":\"STREAMING_SIDECAR_FIELD_NUMBER\"},{\"type\":\"int\",\"def_pos\":0,\"name\":\"URL_FIELD_NUMBER\"},{\"type\":\"int\",\"def_pos\":0,\"name\":\"VIEW_ONCE_FIELD_NUMBER\"},{\"type\":\"int\",\"def_pos\":0,\"name\":\"WAVEFORM_FIELD_NUMBER\"},{\"type\":\"java.lang.String\",\"def_pos\":0,\"name\":\"accessibilityLabel_\"},{\"type\":\"int\",\"def_pos\":0,\"name\":\"backgroundArgb_\"},{\"type\":\"int\",\"def_pos\":0,\"name\":\"bitField0_\"},{\"type\":\"X.BZL\",\"def_pos\":0,\"name\":\"contextInfo_\"},{\"type\":\"java.lang.String\",\"def_pos\":0,\"name\":\"directPath_\"},{\"type\":\"com.google.protobuf.ByteString\",\"def_pos\":0,\"name\":\"fileEncSha256_\"},{\"type\":\"long\",\"def_pos\":0,\"name\":\"fileLength_\"},{\"type\":\"com.google.protobuf.ByteString\",\"def_pos\":0,\"name\":\"fileSha256_\"},{\"type\":\"long\",\"def_pos\":0,\"name\":\"mediaKeyTimestamp_\"},{\"type\":\"com.google.protobuf.ByteString\",\"def_pos\":0,\"name\":\"mediaKey_\"},{\"type\":\"java.lang.String\",\"def_pos\":0,\"name\":\"mimetype_\"},{\"type\":\"boolean\",\"def_pos\":0,\"name\":\"ptt_\"},{\"type\":\"int\",\"def_pos\":0,\"name\":\"seconds_\"},{\"type\":\"com.google.protobuf.ByteString\",\"def_pos\":0,\"name\":\"streamingSidecar_\"},{\"type\":\"java.lang.String\",\"def_pos\":0,\"name\":\"url_\"},{\"type\":\"boolean\",\"def_pos\":0,\"name\":\"viewOnce_\"},{\"type\":\"com.google.protobuf.ByteString\",\"def_pos\":0,\"name\":\"waveform_\"}]}"
+              }
+            ],
+            "isError": false
+          }
+        },
+        {
+          "operation": "get_method_body",
+          "input": {
+            "class_name": "X.BZ0",
+            "method_name": "dynamicMethod",
+            "overload_index": 0,
+            "smali_fallback": true
+          },
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.BZ0.dynamicMethod\",\"class_name\":\"X.BZ0\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    @Override // com.google.protobuf.GeneratedMessageLite\\n    public final Object dynamicMethod(GeneratedMessageLite.MethodToInvoke methodToInvoke, Object obj, Object obj2) {\\n        Parser parserA0M;\\n        switch (methodToInvoke) {\\n            case GET_MEMOIZED_IS_INITIALIZED:\\n                return (byte) 1;\\n            case SET_MEMOIZED_IS_INITIALIZED:\\n                return null;\\n            case BUILD_MESSAGE_INFO:\\n                Object[] objArr \\u003d new Object[17];\\n                C6al.A1W(objArr);\\n                objArr[1] \\u003d \\\"url_\\\";\\n                Ayq.A12(objArr, \\\"mimetype_\\\");\\n                objArr[5] \\u003d \\\"seconds_\\\";\\n                objArr[6] \\u003d \\\"ptt_\\\";\\n                Ayq.A13(objArr, \\\"mediaKey_\\\");\\n                objArr[11] \\u003d \\\"contextInfo_\\\";\\n                objArr[12] \\u003d \\\"streamingSidecar_\\\";\\n                objArr[13] \\u003d \\\"waveform_\\\";\\n                objArr[14] \\u003d \\\"backgroundArgb_\\\";\\n                objArr[15] \\u003d \\\"viewOnce_\\\";\\n                objArr[16] \\u003d \\\"accessibilityLabel_\\\";\\n                return GeneratedMessageLite.newMessageInfo(DEFAULT_INSTANCE, \\\"\\\\u0001\\\\u0010\\\\u0000\\\\u0001\\\\u0001\\\\u0016\\\\u0010\\\\u0000\\\\u0000\\\\u0000\\\\u0001ဈ\\\\u0000\\\\u0002ဈ\\\\u0001\\\\u0003ည\\\\u0002\\\\u0004ဃ\\\\u0003\\\\u0005ဋ\\\\u0004\\\\u0006ဇ\\\\u0005\\\\u0007ည\\\\u0006\\\\bည\\\\u0007\\\\tဈ\\\\b\\\\nဂ\\\\t\\\\u0011ဉ\\\\n\\\\u0012ည\\\\u000b\\\\u0013ည\\\\f\\\\u0014ဆ\\\\r\\\\u0015ဇ\\\\u000e\\\\u0016ဈ\\\\u000f\\\", objArr);\\n            case NEW_MUTABLE_INSTANCE:\\n                return new BZ0();\\n            case NEW_BUILDER:\\n                return new BO4();\\n            case GET_DEFAULT_INSTANCE:\\n                return DEFAULT_INSTANCE;\\n            case GET_PARSER:\\n                Parser parser \\u003d PARSER;\\n                if (parser !\\u003d null) {\\n                    return parser;\\n                }\\n                synchronized (BZ0.class) {\\n                    parserA0M \\u003d PARSER;\\n                    if (parserA0M \\u003d\\u003d null) {\\n                        ExtensionRegistryLite extensionRegistryLite \\u003d AbstractParser.EMPTY_REGISTRY;\\n                        parserA0M \\u003d C6ak.A0M(DEFAULT_INSTANCE);\\n                        PARSER \\u003d parserA0M;\\n                    }\\n                    break;\\n                }\\n                return parserA0M;\\n            default:\\n                throw C6aj.A1C();\\n        }\\n    }\",\"overload_count\":1,\"method_name\":\"dynamicMethod\"}"
+              }
+            ],
+            "isError": false
+          }
+        }
+      ]
+    },
+    "normalized_result": {
+      "engine": {
+        "name": "jadx-headless-mcp",
+        "version": "0.7.1",
+        "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+        "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+        "worker_count": 1,
+        "heap_limit_mib": 14968
+      },
+      "class_name": "X.BZ0",
+      "method": {
+        "name": "dynamicMethod",
+        "reported_signature": "dynamicMethod(com.google.protobuf.GeneratedMessageLite$MethodToInvoke, java.lang.Object, java.lang.Object): java.lang.Object",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      "overload_count": 1,
+      "representation": "java",
+      "body_status": "available",
+      "fell_back": false,
+      "markers": [],
+      "source": {
+        "status": "complete",
+        "text": "    @Override // com.google.protobuf.GeneratedMessageLite\n    public final Object dynamicMethod(GeneratedMessageLite.MethodToInvoke methodToInvoke, Object obj, Object obj2) {\n        Parser parserA0M;\n        switch (methodToInvoke) {\n            case GET_MEMOIZED_IS_INITIALIZED:\n                return (byte) 1;\n            case SET_MEMOIZED_IS_INITIALIZED:\n                return null;\n            case BUILD_MESSAGE_INFO:\n                Object[] objArr = new Object[17];\n                C6al.A1W(objArr);\n                objArr[1] = \"url_\";\n                Ayq.A12(objArr, \"mimetype_\");\n                objArr[5] = \"seconds_\";\n                objArr[6] = \"ptt_\";\n                Ayq.A13(objArr, \"mediaKey_\");\n                objArr[11] = \"contextInfo_\";\n                objArr[12] = \"streamingSidecar_\";\n                objArr[13] = \"waveform_\";\n                objArr[14] = \"backgroundArgb_\";\n                objArr[15] = \"viewOnce_\";\n                objArr[16] = \"accessibilityLabel_\";\n                return GeneratedMessageLite.newMessageInfo(DEFAULT_INSTANCE, \"\\u0001\\u0010\\u0000\\u0001\\u0001\\u0016\\u0010\\u0000\\u0000\\u0000\\u0001ဈ\\u0000\\u0002ဈ\\u0001\\u0003ည\\u0002\\u0004ဃ\\u0003\\u0005ဋ\\u0004\\u0006ဇ\\u0005\\u0007ည\\u0006\\bည\\u0007\\tဈ\\b\\nဂ\\t\\u0011ဉ\\n\\u0012ည\\u000b\\u0013ည\\f\\u0014ဆ\\r\\u0015ဇ\\u000e\\u0016ဈ\\u000f\", objArr);\n            case NEW_MUTABLE_INSTANCE:\n                return new BZ0();\n            case NEW_BUILDER:\n                return new BO4();\n            case GET_DEFAULT_INSTANCE:\n                return DEFAULT_INSTANCE;\n            case GET_PARSER:\n                Parser parser = PARSER;\n                if (parser != null) {\n                    return parser;\n                }\n                synchronized (BZ0.class) {\n                    parserA0M = PARSER;\n                    if (parserA0M == null) {\n                        ExtensionRegistryLite extensionRegistryLite = AbstractParser.EMPTY_REGISTRY;\n                        parserA0M = C6ak.A0M(DEFAULT_INSTANCE);\n                        PARSER = parserA0M;\n                    }\n                    break;\n                }\n                return parserA0M;\n            default:\n                throw C6aj.A1C();\n        }\n    }",
+        "reported_total_bytes": null
+      }
+    },
+    "confidence": "derived",
+    "authority": "shipped-artifact",
+    "environment": null,
+    "limitations": [
+      "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+      "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+      "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+      "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+    ],
+    "locations": [],
+    "evidence_links": []
+  }
+}

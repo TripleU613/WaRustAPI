@@ -1,4 +1,4 @@
-//! Authenticated own-device text synchronization over an already held session.
+//! Authenticated own-device text/media synchronization over an already held session.
 use super::inbox::IncomingResult;
 use crate::{
     Error, Result,
@@ -26,7 +26,10 @@ fn shape(account: &AccountRecord, node: &Node) -> Option<(Jid, Jid, String)> {
     {
         return None;
     }
-    if node.get_attr("type").and_then(|v| v.as_text()) != Some("text") {
+    if !matches!(
+        node.get_attr("type").and_then(|v| v.as_text()),
+        Some("text" | "media")
+    ) {
         return None;
     }
     let own = account.own_jid.as_ref()?;
@@ -71,7 +74,7 @@ fn route(
     Some((source, chat, key))
 }
 
-fn text_payload(payload: &[u8], chat: &Jid) -> Option<Zeroizing<Vec<u8>>> {
+pub(super) fn payload(payload: &[u8], chat: &Jid) -> Option<Zeroizing<Vec<u8>>> {
     #[derive(Message)]
     struct Envelope {
         #[prost(message, optional, tag = "31")]
@@ -89,11 +92,23 @@ fn text_payload(payload: &[u8], chat: &Jid) -> Option<Zeroizing<Vec<u8>>> {
         phash: Option<String>,
     }
     #[derive(Message)]
-    struct Text {
+    struct Content {
         #[prost(string, optional, tag = "1")]
         conversation: Option<String>,
         #[prost(bytes = "vec", optional, tag = "6")]
         extended: Option<Vec<u8>>,
+        #[prost(bytes = "vec", optional, tag = "3")]
+        image: Option<Vec<u8>>,
+        #[prost(bytes = "vec", optional, tag = "7")]
+        document: Option<Vec<u8>>,
+        #[prost(bytes = "vec", optional, tag = "8")]
+        audio: Option<Vec<u8>>,
+        #[prost(bytes = "vec", optional, tag = "9")]
+        video: Option<Vec<u8>>,
+        #[prost(bytes = "vec", optional, tag = "26")]
+        sticker: Option<Vec<u8>>,
+        #[prost(bytes = "vec", optional, tag = "66")]
+        ptv: Option<Vec<u8>>,
         #[prost(bytes = "vec", optional, tag = "35")]
         context: Option<Vec<u8>>,
     }
@@ -122,13 +137,15 @@ fn text_payload(payload: &[u8], chat: &Jid) -> Option<Zeroizing<Vec<u8>>> {
     }
     let inner = Zeroizing::new(sent.message?);
     let fields = crate::signal::direct::payload_fields(&inner).ok()?;
-    // shortcut: synchronize text first; port media/control effects before admitting other inner fields.
-    if fields.iter().any(|f| !matches!(f, 1 | 6 | 35))
-        || fields.iter().filter(|&&f| matches!(f, 1 | 6)).count() != 1
+    // shortcut: control effects and view-once synchronization need their separate native lifecycle.
+    if fields
+        .iter()
+        .any(|f| !matches!(f, 1 | 3 | 6 | 7 | 8 | 9 | 26 | 35 | 66))
+        || fields.iter().filter(|&&f| f != 35).count() != 1
     {
         return None;
     }
-    let mut text = Text::decode(inner.as_slice()).ok()?;
+    let mut text = Content::decode(inner.as_slice()).ok()?;
     if let Some(context) = &text.context {
         crate::signal::direct::payload_fields(context).ok()?;
     }
@@ -257,7 +274,7 @@ pub(super) async fn process(
             }
             Err(error) => return Err(error),
         };
-    let Some(payload) = text_payload(&received.plaintext, &chat) else {
+    let Some(payload) = payload(&received.plaintext, &chat) else {
         return Ok(IncomingResult::Unsupported);
     };
     let route_bytes =
@@ -275,7 +292,7 @@ pub(super) async fn process(
             || tx.get_json::<serde_json::Value>(Table::Checkpoints, key.as_bytes(), 1)?.is_some()
         { return Err(Error::invalid("inbox", "own-device route or session changed before commit")); }
         let own = super::inbox::own_identities_in(tx)?;
-        let Some(event) = super::inbox_events::own_device_text(&chat, node, &payload, &own) else { return Ok(IncomingResult::Unsupported); };
+        let Some(event) = super::inbox_events::own_device_message(tx, key.as_bytes(), &chat, node, &payload, &own)? else { return Ok(IncomingResult::Unsupported); };
         tx.put_json(Table::SignalSessions, peer_key.as_bytes(), 1, &*received.session)?;
         tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &serde_json::json!({
             "status":"decrypted", "source":source, "protobuf":&*received.plaintext,
@@ -428,34 +445,31 @@ mod tests {
     fn wrapper_requires_exact_destination_text_and_retains_outer_context() {
         let chat = Jid::parse("67890@lid").unwrap();
         let wire = b"\xfa\x01\x14\x0a\x0967890@lid\x12\x07\x0a\x05hello";
-        assert_eq!(
-            text_payload(wire, &chat).unwrap().as_slice(),
-            b"\x0a\x05hello"
-        );
-        assert!(text_payload(wire, &Jid::parse("67891@lid").unwrap()).is_none());
+        assert_eq!(payload(wire, &chat).unwrap().as_slice(), b"\x0a\x05hello");
+        assert!(payload(wire, &Jid::parse("67891@lid").unwrap()).is_none());
         for invalid in [
             b"\xfa\x01\x00".as_slice(),
             b"\x0a\x05hello",
             b"\xfa\x01\x01\x12",
-            b"\xfa\x01\x10\x0a\x0967890@lid\x12\x03\x1a\x01\x00",
+            b"\xfa\x01\x10\x0a\x0967890@lid\x12\x03\x62\x01\x00",
         ] {
-            assert!(text_payload(invalid, &chat).is_none());
+            assert!(payload(invalid, &chat).is_none());
         }
         let mut with_context = wire.to_vec();
         with_context.extend(b"\x9a\x02\x02\x08\x02");
         assert_eq!(
-            text_payload(&with_context, &chat).unwrap().as_slice(),
+            payload(&with_context, &chat).unwrap().as_slice(),
             b"\x0a\x05hello\x9a\x02\x02\x08\x02"
         );
         let old_context = b"\xfa\x01\x19\x0a\x0967890@lid\x12\x0c\x0a\x05hello\x9a\x02\x02\x08\x01";
         let mut replacement = old_context.to_vec();
         replacement.extend(b"\x9a\x02\x02\x08\x02");
         assert_eq!(
-            text_payload(&replacement, &chat).unwrap().as_slice(),
+            payload(&replacement, &chat).unwrap().as_slice(),
             b"\x0a\x05hello\x9a\x02\x02\x08\x02"
         );
         let mut malformed_context = wire.to_vec();
         malformed_context.extend(b"\x9a\x02\x01\x08");
-        assert!(text_payload(&malformed_context, &chat).is_none());
+        assert!(payload(&malformed_context, &chat).is_none());
     }
 }

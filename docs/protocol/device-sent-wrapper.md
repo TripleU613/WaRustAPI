@@ -98,11 +98,13 @@ inspection before the implementation.
 
 [Own-device text receive](own-device-text.md) now implements the held-session,
 unambiguous-recipient text subset with outer-context replacement.
+[Own-device media](own-device-media.md) extends this route and attachment
+retrieval; [sender confirmations](own-device-confirmation.md) are also implemented.
 
 **Unported:** complete Cm3.A07/A02 runtime admission and recovery, effective
-recipient namespace mapping, own-device session bootstrap, outer-context
-application in receive, synchronized outgoing projection and primary echo
-reconciliation, and sender/read-self receipt selection. Unsupported recipient-qualified
+recipient namespace mapping, own-device session bootstrap, complete synchronized
+content effects and primary echo reconciliation, and native read-self receipt
+selection. Unsupported recipient-qualified
 stanzas remain raw captures. No fresh live wrapper
 sample or ban-immunity claim follows from this offline trace.
 
