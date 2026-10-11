@@ -1,5 +1,11 @@
 # Receipt recipient class admission
 
+2026-10-11 correction: [the actual Java AD decoder](ad-jid-decoding.md) omits a
+zero device suffix before constructing the JID. Binary AD-zero user recipients
+are now admitted; literal text `:0` and nonzero devices retain the null path.
+Wire encoding kind alone is not the native class. Earlier 924-test validation
+below is historical; the follow-up records the corrected checks.
+
 2026-10-11. **Implemented/offline**, APK **2.26.37.71**, SHA-256
 `1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
 ACK rendering and direct/group fact routing now share a typed recipient getter.
@@ -36,7 +42,8 @@ device syntax, so the recipient getter checks it before parsing.
 Previously network_jid accepted recognized non-user/device recipients, copied
 them into ACKs and treated them as qualifiers that hid matching ordinary facts.
 The shared recipient getter now selects supported plain user namespaces,
-rejects device encodings/text suffixes and excludes the gdpr special object.
+rejects nonzero devices/unsupported encodings and explicit text device suffixes,
+and excludes the gdpr special object. Zero-component binary AD user JIDs are allowed.
 Non-user recipients follow the nullable path: ACKs omit them and fact processing
 retains its ordinary target checks. Generic participant admission stays separate.
 

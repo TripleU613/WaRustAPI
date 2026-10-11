@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_fb2206f40414e56deda0e4d5c6da6fa7885ce851a55943b34177f160fe979e86",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "com.whatsapp.infra.protocol.ProtocolJniHelper",
+    "method_name": "createKeyValue"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-yKauXY/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"max_heap_bytes\":15695085568,\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "com.whatsapp.infra.protocol.ProtocolJniHelper"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_count\":11,\"methods\":[{\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"signature\":\"\\u003cinit\\u003e(): void\"},{\"def_pos\":0,\"name\":\"createKeyValue\",\"is_constructor\":false,\"signature\":\"createKeyValue(java.lang.String, java.lang.String, java.lang.Object, byte): java.lang.Object\"},{\"def_pos\":0,\"name\":\"createNewJid\",\"is_constructor\":false,\"signature\":\"createNewJid(java.lang.String): java.lang.Object\"},{\"def_pos\":0,\"name\":\"createProtocolTreeNode\",\"is_constructor\":false,\"signature\":\"createProtocolTreeNode(java.lang.String, java.lang.Object[], java.lang.Object[], byte[]): java.lang.Object\"},{\"def_pos\":0,\"name\":\"getAttributesFromProtocolTreeNode\",\"is_constructor\":false,\"signature\":\"getAttributesFromProtocolTreeNode(java.lang.Object): java.lang.Object[]\"},{\"def_pos\":0,\"name\":\"getChildrenFromProtocolTreeNode\",\"is_constructor\":false,\"signature\":\"getChildrenFromProtocolTreeNode(java.lang.Object): java.lang.Object[]\"},{\"def_pos\":0,\"name\":\"getDataFromProtocolTreeNode\",\"is_constructor\":false,\"signature\":\"getDataFromProtocolTreeNode(java.lang.Object): byte[]\"},{\"def_pos\":0,\"name\":\"getKeyFromKeyValue\",\"is_constructor\":false,\"signature\":\"getKeyFromKeyValue(java.lang.Object): java.lang.String\"},{\"def_pos\":0,\"name\":\"getTagFromProtocolTreeNode\",\"is_constructor\":false,\"signature\":\"getTagFromProtocolTreeNode(java.lang.Object): java.lang.String\"},{\"def_pos\":0,\"name\":\"getTypeFromKeyValue\",\"is_constructor\":false,\"signature\":\"getTypeFromKeyValue(java.lang.Object): byte\"},{\"def_pos\":0,\"name\":\"getValueStringFromKeyValue\",\"is_constructor\":false,\"signature\":\"getValueStringFromKeyValue(java.lang.Object): java.lang.String\"}],\"fields\":[],\"field_count\":0,\"full_name\":\"com.whatsapp.infra.protocol.ProtocolJniHelper\",\"name\":\"ProtocolJniHelper\",\"inner_classes\":[],\"inner_class_count\":0}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "com.whatsapp.infra.protocol.ProtocolJniHelper",
+          "method_name": "createKeyValue",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"full_name\":\"com.whatsapp.infra.protocol.ProtocolJniHelper.createKeyValue\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"createKeyValue\",\"overload_count\":1,\"body\":\"    public Object createKeyValue(String str, String str2, Object obj, byte b) {\\n        if (obj \\u003d\\u003d null) {\\n            return new C0hq(null, str, str2, b);\\n        }\\n        Jid jid \\u003d (Jid) obj;\\n        return new C0hq(jid, str, jid.getRawString(), b);\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"com.whatsapp.infra.protocol.ProtocolJniHelper\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "com.whatsapp.infra.protocol.ProtocolJniHelper",
+    "method": {
+      "name": "createKeyValue",
+      "reported_signature": "createKeyValue(java.lang.String, java.lang.String, java.lang.Object, byte): java.lang.Object",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public Object createKeyValue(String str, String str2, Object obj, byte b) {\n        if (obj == null) {\n            return new C0hq(null, str, str2, b);\n        }\n        Jid jid = (Jid) obj;\n        return new C0hq(jid, str, jid.getRawString(), b);\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

@@ -2,9 +2,9 @@
 //!
 //! WhatsApp stanzas are trees of nodes encoded with a token dictionary. This
 //! module provides the in-memory [`Node`] shape, a bounded decoder and an
-//! encoder. The token dictionary and every tag constant are `ReferenceOnly`
-//! for the Android primary profile (ledger `binary.*`); the codec is therefore
-//! marked `Experimental` in the capability matrix.
+//! encoder. Evidence for individual boundaries is recorded in ledger `binary.*`
+//! and `jid.ad_domain_types`; APK 37.71 confirms AD flag/zero-device construction.
+//! Full Android primary codec parity remains `Experimental` in the capability matrix.
 //!
 //! Decoder guarantees:
 //!

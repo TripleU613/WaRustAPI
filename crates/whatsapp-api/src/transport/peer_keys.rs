@@ -746,6 +746,11 @@ mod tests {
             let store = open(&dir.path().join("refusal-encoding.redb"));
             let id = queue(&store, &expected, false).unwrap();
             actions::reserve_pending(&store).unwrap();
+            let returned = if returned.agent == 0 {
+                crate::binary::node::AttributeValue::Jid(returned)
+            } else {
+                crate::binary::node::AttributeValue::Text(returned.to_string())
+            };
             let reply = Node::new("iq")
                 .attr("id", id.as_str())
                 .attr("type", "result")

@@ -360,7 +360,12 @@ mod tests {
         Jid::parse("15555550101@s.whatsapp.net").unwrap()
     }
     fn user(peer: &Jid) -> Node {
-        Node::new("user").attr("jid", peer.clone()).children(vec![
+        let peer = if peer.agent == 0 {
+            crate::binary::node::AttributeValue::Jid(peer.clone())
+        } else {
+            crate::binary::node::AttributeValue::Text(peer.to_string())
+        };
+        Node::new("user").attr("jid", peer).children(vec![
             Node::new("type").bytes(vec![5]),
             Node::new("identity").bytes(vec![11; 32]),
         ])

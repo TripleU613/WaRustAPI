@@ -137,15 +137,18 @@ impl<'a> Encoder<'a> {
                     Server::User | Server::Lid | Server::Hosted | Server::HostedLid
                 ) =>
             {
+                if jid.agent != 0 {
+                    return Err(CodecError::Unencodable("AD JID has no agent field"));
+                }
                 if jid.device > u8::MAX as u16 {
                     return Err(CodecError::Unencodable("AD JID device exceeds u8"));
                 }
                 let domain = match jid.server {
-                    Server::User => jid.agent,
+                    Server::User => 0,
                     Server::Lid => 1,
                     Server::Hosted => 128,
                     Server::HostedLid => 129,
-                    _ => jid.agent,
+                    _ => unreachable!(),
                 };
                 self.push(tags::AD_JID);
                 self.push(domain);
@@ -290,6 +293,35 @@ mod tests {
             .decode_node()
             .unwrap();
         assert_eq!(node2, node);
+    }
+
+    #[test]
+    fn apk_ad_jid_flags_select_namespace_without_creating_an_agent() {
+        for (flags, server) in [
+            (2, Server::User),
+            (3, Server::Lid),
+            (130, Server::Hosted),
+            (131, Server::HostedLid),
+        ] {
+            let mut wire = b"\xf8\x03\xfc\x01n\xfc\x01j\xf7".to_vec();
+            wire.extend_from_slice(&[flags, 0, 0xfc, 3]);
+            wire.extend_from_slice(b"123");
+            let node = Decoder::new(&wire, dict(), &Limits::default())
+                .decode_node()
+                .unwrap();
+            let jid = node.get_attr("j").unwrap().as_jid().unwrap();
+            assert_eq!(jid.server, server);
+            assert_eq!(
+                (jid.agent, jid.device, jid.kind),
+                (0, 0, JidKind::AgentDevice)
+            );
+        }
+    }
+
+    #[test]
+    fn apk_ad_jid_writer_refuses_an_agent_in_the_flag_byte() {
+        let node = Node::new("n").attr("j", Jid::new_ad("123", 3, 2, Server::User).unwrap());
+        assert!(Encoder::new(dict()).encode(&node).is_err());
     }
 
     #[test]

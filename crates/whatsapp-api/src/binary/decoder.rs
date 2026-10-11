@@ -190,7 +190,7 @@ impl<'a> Decoder<'a> {
 
     fn read_ad_jid(&mut self) -> Result<Jid, CodecError> {
         let offset = self.pos;
-        let agent = self.byte()?;
+        let flags = self.byte()?;
         let device = self.byte()? as u16;
         let user = self
             .read_string_value()?
@@ -198,15 +198,15 @@ impl<'a> Decoder<'a> {
                 offset,
                 reason: "missing user".into(),
             })?;
-        // Domain-type mapping (`ReferenceOnly`, ledger `jid.ad_domain_types`).
-        let (server, agent) = match agent {
-            0 => (Server::User, 0),
-            1 => (Server::Lid, 0),
-            128 => (Server::Hosted, 0),
-            129 => (Server::HostedLid, 0),
-            other => (Server::User, other),
+        // APK 37.71 124.A02 uses only the LID and hosted flag bits.
+        let server = match flags & 0x81 {
+            0 => Server::User,
+            1 => Server::Lid,
+            128 => Server::Hosted,
+            129 => Server::HostedLid,
+            _ => unreachable!(),
         };
-        Jid::new_ad(user, agent, device, server).map_err(|e| CodecError::InvalidJid {
+        Jid::new_ad(user, 0, device, server).map_err(|e| CodecError::InvalidJid {
             offset,
             reason: e.to_string(),
         })

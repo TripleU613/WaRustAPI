@@ -1,3 +1,11 @@
+2026-10-11 — **Implemented/offline:** APK AD JID decoding now uses LID/hosted
+flag bits instead of inventing an agent from other flag values. The encoder
+refuses nonzero agents in AD fields. The actual Java reader omits a zero device
+suffix before JID construction, so zero-component binary AD user recipients
+are admitted; literal text :0 remains a device-class mismatch. Native JNI/interop
+codec paths and full self-status handling remain open; no live request.
+[Decoder/writer evidence, correction and checks](ad-jid-decoding.md).
+
 2026-10-11 — **Implemented/offline:** receipt recipient admission now follows
 UserJid rather than generic Jid. Recognized group/status/device recipients are
 omitted from ACKs and no longer hide matching direct/group delivery/read/played
@@ -1244,7 +1252,7 @@ headline; see ADR 0005 for AGPL files).
 | `binary.tokens` | Token dictionary content and order | 235 single + 4×256 double | **Observed (client, static)** | Recovered in order from the `const-string` initialiser in `classes2.dex @ 0x126a96` of APK 2.26.36.75 by `cargo run -p xtask -- apk-tokens <apk> --check fixtures/tokens/web-md-v3.json` (2026-09-17); identical to the web v3 list from whatsapp-rust/whatsmeow. |
 | `binary.tokens_version` | Dictionary version byte sent in header/prologue | 3 | ReferenceOnly | Not established from the APK (an integer constant, not a string). |
 | `jid.servers` | Server names | `s.whatsapp.net`, `g.us`, `lid`, `broadcast`, `newsletter`, `c.us`, `hosted`, `hosted.lid`, `msgr`, `interop` | ReferenceOnly | whatsmeow `types/jid.go`. |
-| `jid.ad_domain_types` | AD_JID first byte → server | 0→user, 1→lid, 128→hosted, 129→hosted.lid, else agent | ReferenceOnly | whatsmeow `NewADJID`. |
+| `jid.ad_domain_types` | AD_JID first byte → server | bit 1 selects LID; bit 128 selects hosted; other bits are not agents | ConfirmedStatic / Implemented | APK 37.71 124.A02 and 1Qe.A00; [source and checks](ad-jid-decoding.md). |
 | `noise.pattern` | Handshake pattern | `Noise_XX_25519_AESGCM_SHA256` (IK resume also used by web) | ReferenceOnly | whatsmeow `NoiseStartPattern`; whatsapp-rust `consts.rs`. docs/design/README.md 8.3: hypothesis until confirmed. **APK 2.26.36.75 also contains twelve pattern names including ML-KEM512 hybrids** (`noise.client_patterns`). |
 | `noise.client_patterns` | Pattern names compiled into the client | 12 names: XX, IK, XXfallback and nine `*kem*MLKEM512*` hybrids | Observed (client, static) | `xtask apk-strings`, 2026-09-17. Which one the server negotiates/accepts is `Unknown`. `snow` has no MLKEM512 hybrid patterns (ADR 0004). |
 | `noise.prologue` | Prologue | `WA 0x06 <dict_version>` | ReferenceOnly | Same bytes as the connection header in the references. |

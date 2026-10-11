@@ -1,0 +1,58 @@
+{
+  "ad-reader": {
+    "class": "LX/124;",
+    "file": "ad-reader.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/binary/decoder.rs",
+      "crates/whatsapp-api/src/binary/encoder.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "ad-writer": {
+    "class": "LX/1Qe;",
+    "file": "ad-writer.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/binary/decoder.rs",
+      "crates/whatsapp-api/src/binary/encoder.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "jid-string": {
+    "class": "LX/124;",
+    "file": "jid-string.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A03",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/binary/decoder.rs",
+      "crates/whatsapp-api/src/binary/encoder.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "node-reader": {
+    "class": "LX/124;",
+    "file": "node-reader.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/binary/decoder.rs",
+      "crates/whatsapp-api/src/binary/encoder.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  }
+}

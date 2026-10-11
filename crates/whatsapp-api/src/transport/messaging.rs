@@ -1085,7 +1085,17 @@ mod tests {
             received_confirmation(&node)
                 .unwrap()
                 .get_attr("recipient")
-                .is_none()
+                .is_some()
+        );
+        assert_eq!(
+            received_confirmation(&node)
+                .unwrap()
+                .get_attr("recipient")
+                .unwrap()
+                .as_jid()
+                .unwrap()
+                .kind,
+            crate::model::jid::JidKind::Plain
         );
     }
 

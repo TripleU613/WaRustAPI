@@ -713,15 +713,15 @@ pub(super) fn recipient(node: &Node) -> Option<Jid> {
         return None;
     }
     let value = network_jid(node, "recipient")?;
-    // shortcut: shipped UserJid namespaces/encoding, extend with special JID grammar.
-    (value.kind == crate::model::jid::JidKind::Plain
+    // shortcut: shipped UserJid namespaces/zero-device encoding, extend with special grammar.
+    (matches!(value.kind, crate::model::jid::JidKind::Plain | crate::model::jid::JidKind::AgentDevice)
         && value.agent == 0
         && value.device == 0
         && !value.user.is_empty()
         && (matches!(value.server, Server::User | Server::Lid | Server::Hosted | Server::HostedLid | Server::Interop)
             || matches!(&value.server, Server::Other(server) if matches!(server.as_str(), "bot" | "status_me" | "lid_me")))
         && !(value.server == Server::User && value.user == "gdpr"))
-    .then_some(value)
+    .then(|| value.to_non_ad())
 }
 
 pub(super) fn ids(node: &Node) -> Result<Vec<String>> {
@@ -3322,6 +3322,10 @@ mod tests {
             node.clone().attr("from", "100001@g.us"),
             node.clone()
                 .attr("participant", "15555550100@s.whatsapp.net"),
+            node.clone().attr(
+                "recipient",
+                Jid::new_ad("15555550100", 0, 0, Server::User).unwrap(),
+            ),
             node.attr("recipient", "15555550100@s.whatsapp.net"),
         ] {
             assert_eq!(record(&store, &receipt).unwrap(), 0);

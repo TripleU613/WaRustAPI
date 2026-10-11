@@ -1,0 +1,100 @@
+# APK-derived structural disassembly: LX/1Qe;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(VLL) flags=0x9 registers=5
+  # full signature: LX/1Qe;->A00(Lcom/whatsapp/infra/core/jid/Jid;Ljava/io/OutputStream;)V
+  0000..0006 op=71 invoke-static {v3}, LX/0DE;->A0X(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  0006..0008 op=0a move-result v0
+  0008..000c op=39 if-nez v0, +0xf
+  000c..0010 op=20 instance-of v0, v3, LX/1SK;
+  0010..0014 op=38 if-eqz v0, +0x29
+  0014..0018 op=1f check-cast v3, Lcom/whatsapp/infra/core/jid/DeviceJid;
+  0018..001c op=54 iget-object v3, v3, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+  001c..0020 op=1a const-string v0, "null cannot be cast to non-null type com.whatsapp.infra.core.jid.InteropUserJid"
+  0020..0026 op=71 invoke-static {v3, v0}, LX/00h;->A0D(Ljava/lang/Object;Ljava/lang/String;)V
+  0026..002a op=1f check-cast v3, LX/9Lm;
+  002a..002c op=12 const/4 v2, #0x1
+  002c..0030 op=13 const/16 v0, #0xf4
+  0030..0036 op=6e invoke-virtual {v4, v0}, Ljava/io/OutputStream;->write(I)V
+  0036..003a op=54 iget-object v0, v3, LX/9Lm;->A01:Ljava/lang/String;
+  003a..003c op=12 const/4 v1, #0x0
+  003c..0042 op=71 invoke-static {v4, v0, v2, v1}, LX/1Qe;->A05(Ljava/io/OutputStream;Ljava/lang/String;ZZ)V
+  0042..0048 op=6e invoke-virtual {v3}, Lcom/whatsapp/infra/core/jid/Jid;->getDevice()I
+  0048..004a op=0a move-result v0
+  004a..0050 op=71 invoke-static {v4, v0}, LX/1Qe;->A03(Ljava/io/OutputStream;I)V
+  0050..0054 op=52 iget v0, v3, LX/9Lm;->A00:I
+  0054..005a op=71 invoke-static {v4, v0}, LX/1Qe;->A03(Ljava/io/OutputStream;I)V
+  005a..0060 op=6e invoke-virtual {v4, v1}, Ljava/io/OutputStream;->write(I)V
+  0060..0062 op=0e return-void
+  0062..0068 op=71 invoke-static {v3}, LX/0DE;->A0W(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  0068..006a op=0a move-result v0
+  006a..006e op=38 if-eqz v0, +0x19
+  006e..0072 op=13 const/16 v0, #0xf4
+  0072..0078 op=6e invoke-virtual {v4, v0}, Ljava/io/OutputStream;->write(I)V
+  0078..007c op=54 iget-object v2, v3, Lcom/whatsapp/infra/core/jid/Jid;->user:Ljava/lang/String;
+  007c..007e op=12 const/4 v1, #0x1
+  007e..0080 op=12 const/4 v0, #0x0
+  0080..0086 op=71 invoke-static {v4, v2, v1, v0}, LX/1Qe;->A05(Ljava/io/OutputStream;Ljava/lang/String;ZZ)V
+  0086..008c op=71 invoke-static {v4, v0}, LX/1Qe;->A03(Ljava/io/OutputStream;I)V
+  008c..0092 op=71 invoke-static {v4, v0}, LX/1Qe;->A03(Ljava/io/OutputStream;I)V
+  0092..0094 op=12 const/4 v0, #0x2
+  0094..009a op=6e invoke-virtual {v4, v0}, Ljava/io/OutputStream;->write(I)V
+  009a..009c op=0e return-void
+  009c..00a2 op=6e invoke-virtual {v3}, Lcom/whatsapp/infra/core/jid/Jid;->getAgent()I
+  00a2..00a4 op=0a move-result v0
+  00a4..00a6 op=12 const/4 v2, #0x0
+  00a6..00aa op=3c if-gtz v0, +0x46
+  00aa..00b0 op=6e invoke-virtual {v3}, Lcom/whatsapp/infra/core/jid/Jid;->getDevice()I
+  00b0..00b2 op=0a move-result v0
+  00b2..00b6 op=3c if-gtz v0, +0x40
+  00b6..00bc op=6e invoke-virtual {v3}, Lcom/whatsapp/infra/core/jid/Jid;->isProtocolCompliant()Z
+  00bc..00be op=0a move-result v0
+  00be..00c2 op=38 if-eqz v0, +0x21
+  00c2..00c6 op=13 const/16 v0, #0xfa
+  00c6..00cc op=6e invoke-virtual {v4, v0}, Ljava/io/OutputStream;->write(I)V
+  00cc..00d0 op=54 iget-object v0, v3, Lcom/whatsapp/infra/core/jid/Jid;->user:Ljava/lang/String;
+  00d0..00d6 op=71 invoke-static {v0}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+  00d6..00d8 op=0a move-result v0
+  00d8..00da op=12 const/4 v1, #0x1
+  00da..00de op=38 if-eqz v0, +0xd
+  00de..00e4 op=6e invoke-virtual {v4, v2}, Ljava/io/OutputStream;->write(I)V
+  00e4..00ea op=6e invoke-virtual {v3}, Lcom/whatsapp/infra/core/jid/Jid;->getServer()Ljava/lang/String;
+  00ea..00ec op=0c move-result-object v0
+  00ec..00f2 op=71 invoke-static {v4, v0, v2, v2}, LX/1Qe;->A05(Ljava/io/OutputStream;Ljava/lang/String;ZZ)V
+  00f2..00f4 op=0e return-void
+  00f4..00f8 op=54 iget-object v0, v3, Lcom/whatsapp/infra/core/jid/Jid;->user:Ljava/lang/String;
+  00f8..00fe op=71 invoke-static {v4, v0, v1, v2}, LX/1Qe;->A05(Ljava/io/OutputStream;Ljava/lang/String;ZZ)V
+  00fe..0100 op=28 goto -0xd
+  0100..0104 op=1a const-string v1, "frame-tree-node-writer/writeJid/failed to write jid: "
+  0104..0108 op=22 new-instance v0, Ljava/lang/StringBuilder;
+  0108..010e op=70 invoke-direct {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  010e..0114 op=6e invoke-virtual {v0, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  0114..011a op=6e invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  011a..011c op=0c move-result-object v0
+  011c..0122 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+  0122..0126 op=1a const-string v1, "failed to write jid"
+  0126..012a op=22 new-instance v0, Ljava/io/IOException;
+  012a..0130 op=70 invoke-direct {v0, v1}, Ljava/io/IOException;-><init>(Ljava/lang/String;)V
+  0130..0132 op=27 throw v0
+  0132..0136 op=13 const/16 v0, #0xf7
+  0136..013c op=6e invoke-virtual {v4, v0}, Ljava/io/OutputStream;->write(I)V
+  013c..0142 op=71 invoke-static {v3}, LX/Cbb;->A00(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  0142..0144 op=0a move-result v0
+  0144..0146 op=12 const/4 v1, #0x0
+  0146..014a op=38 if-eqz v0, +0x4
+  014a..014e op=13 const/16 v1, #0x80
+  014e..0152 op=20 instance-of v0, v3, LX/0e1;
+  0152..0156 op=38 if-eqz v0, +0x4
+  0156..015a op=de or-int/lit8 v1, v1, #0x1
+  015a..0160 op=71 invoke-static {v4, v1}, LX/1Qe;->A04(Ljava/io/OutputStream;I)V
+  0160..0166 op=6e invoke-virtual {v3}, Lcom/whatsapp/infra/core/jid/Jid;->getDevice()I
+  0166..0168 op=0a move-result v0
+  0168..016e op=71 invoke-static {v4, v0}, LX/1Qe;->A04(Ljava/io/OutputStream;I)V
+  016e..0172 op=54 iget-object v1, v3, Lcom/whatsapp/infra/core/jid/Jid;->user:Ljava/lang/String;
+  0172..0174 op=12 const/4 v0, #0x1
+  0174..017a op=71 invoke-static {v4, v1, v0, v2}, LX/1Qe;->A05(Ljava/io/OutputStream;Ljava/lang/String;ZZ)V
+  017a..017c op=0e return-void
+  # exception table: 0 try range(s)
+.end method

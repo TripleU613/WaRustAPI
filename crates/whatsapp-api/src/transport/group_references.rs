@@ -320,9 +320,14 @@ pub(super) mod tests {
         sender: &Jid,
         payload: &[u8],
     ) -> Result<()> {
+        let sender = if sender.agent == 0 {
+            crate::binary::node::AttributeValue::Jid(sender.clone())
+        } else {
+            crate::binary::node::AttributeValue::Text(sender.to_string())
+        };
         let node = Node::new("message")
             .attr("from", chat.clone())
-            .attr("participant", sender.clone())
+            .attr("participant", sender)
             .attr("id", "ORIGINAL-TARGET")
             .attr("type", "text");
         let route = Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(&node)?;

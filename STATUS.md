@@ -1,3 +1,11 @@
+2026-10-11 — **Implemented/offline:** APK AD JID decoding now uses LID/hosted
+flag bits instead of inventing an agent from other flag values. The encoder
+refuses nonzero agents in AD fields. The actual Java reader omits a zero device
+suffix before JID construction, so zero-component binary AD user recipients
+are admitted; literal text :0 remains a device-class mismatch. Native JNI/interop
+codec paths and full self-status handling remain open; no live request.
+[Decoder/writer evidence, correction and checks](docs/protocol/ad-jid-decoding.md).
+
 2026-10-11 — **Implemented/offline:** receipt recipient admission now follows
 UserJid rather than generic Jid. Recognized group/status/device recipients are
 omitted from ACKs and no longer hide matching direct/group delivery/read/played
