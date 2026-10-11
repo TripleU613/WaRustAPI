@@ -1,0 +1,128 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "field-offset": {
+      "class": "LX/MZZ;",
+      "method": "A01",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/abprops.rs"
+      ]
+    },
+    "vector-start": {
+      "class": "LX/MZZ;",
+      "method": "A02",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/abprops.rs"
+      ]
+    },
+    "vector-length": {
+      "class": "LX/MZZ;",
+      "method": "A03",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/abprops.rs"
+      ]
+    },
+    "root-sentinel": {
+      "class": "LX/M6H;",
+      "method": "A06",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/abprops.rs"
+      ]
+    },
+    "source-metadata": {
+      "class": "LX/Lwj;",
+      "method": "A07",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/abprops.rs"
+      ]
+    },
+    "is-valid": {
+      "class": "LX/Lwj;",
+      "method": "isValid",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/abprops.rs"
+      ]
+    },
+    "metadata-index": {
+      "class": "LX/Lwj;",
+      "method": "A00",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/abprops.rs"
+      ]
+    },
+    "access-without-exposure": {
+      "class": "LX/Lwj;",
+      "method": "A0A",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/abprops.rs"
+      ]
+    },
+    "exposure": {
+      "class": "LX/Lwj;",
+      "method": "A0B",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/abprops.rs"
+      ]
+    },
+    "metadata-word": {
+      "class": "LX/Lwj;",
+      "method": "A02",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/abprops.rs"
+      ]
+    },
+    "metadata-sentinels": {
+      "class": "LX/MkK;",
+      "method": "<clinit>",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/abprops.rs"
+      ]
+    },
+    "unit-source-bit": {
+      "class": "LX/Dep;",
+      "method": "A00",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/abprops.rs"
+      ]
+    },
+    "nonnull-helper": {
+      "class": "LX/1xi;",
+      "method": "A1U",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/abprops.rs"
+      ]
+    },
+    "table-owner": {
+      "class": "LX/Lwj;",
+      "method": "<init>",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/abprops.rs"
+      ]
+    },
+    "snapshot-version": {
+      "class": "LX/Lwj;",
+      "method": "Ayv",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/abprops.rs"
+      ]
+    }
+  }
+}

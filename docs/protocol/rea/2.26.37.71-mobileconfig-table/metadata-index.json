@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_0b80616602483a57bfc521fd298ac39f28382a924896c5c3a9ebb2f0812eeaf2",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.Lwj",
+    "method_name": "A00"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-8kDmQg/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\",\"max_heap_bytes\":15695085568,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.Lwj"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"name\":\"A00\",\"def_pos\":0,\"type\":\"X.00r\"},{\"name\":\"A01\",\"def_pos\":0,\"type\":\"X.MmK\"},{\"name\":\"A02\",\"def_pos\":0,\"type\":\"X.MmK\"},{\"name\":\"A03\",\"def_pos\":0,\"type\":\"X.Lwi\"},{\"name\":\"A04\",\"def_pos\":0,\"type\":\"X.08z\"},{\"name\":\"A05\",\"def_pos\":0,\"type\":\"X.MYw\"},{\"name\":\"A06\",\"def_pos\":0,\"type\":\"X.00r\"}],\"field_count\":7,\"full_name\":\"X.Lwj\",\"name\":\"Lwj\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":21,\"methods\":[{\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"signature\":\"\\u003cinit\\u003e(X.MYw, X.08z, X.09C, X.092, X.00r): void\"},{\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false,\"signature\":\"A00(long): int\"},{\"def_pos\":0,\"name\":\"A01\",\"is_constructor\":false,\"signature\":\"A01(long): int\"},{\"def_pos\":0,\"name\":\"A02\",\"is_constructor\":false,\"signature\":\"A02(X.MZZ, int, int): int\"},{\"def_pos\":0,\"name\":\"A03\",\"is_constructor\":false,\"signature\":\"A03(): java.lang.String\"},{\"def_pos\":0,\"name\":\"A04\",\"is_constructor\":false,\"signature\":\"A04(X.MZZ, int, int): java.lang.String\"},{\"def_pos\":0,\"name\":\"A05\",\"is_constructor\":false,\"signature\":\"A05(double, long, boolean): double\"},{\"def_pos\":0,\"name\":\"A06\",\"is_constructor\":false,\"signature\":\"A06(long, long, boolean): long\"},{\"def_pos\":0,\"name\":\"A07\",\"is_constructor\":false,\"signature\":\"A07(long): X.09J\"},{\"def_pos\":0,\"name\":\"A08\",\"is_constructor\":false,\"signature\":\"A08(java.lang.String, long, boolean): java.lang.String\"},{\"def_pos\":0,\"name\":\"A09\",\"is_constructor\":false,\"signature\":\"A09(long, boolean, boolean): boolean\"},{\"def_pos\":0,\"name\":\"A0A\",\"is_constructor\":false,\"signature\":\"A0A(int): void\"},{\"def_pos\":0,\"name\":\"A0B\",\"is_constructor\":false,\"signature\":\"A0B(int, long): void\"},{\"def_pos\":0,\"name\":\"AeC\",\"is_constructor\":false,\"signature\":\"AeC(): java.util.Map\"},{\"def_pos\":0,\"name\":\"An3\",\"is_constructor\":false,\"signature\":\"An3(long): java.lang.String\"},{\"def_pos\":0,\"name\":\"An5\",\"is_constructor\":false,\"signature\":\"An5(long): int\"},{\"def_pos\":0,\"name\":\"Ayq\",\"is_constructor\":false,\"signature\":\"Ayq(): java.lang.String\"},{\"def_pos\":0,\"name\":\"Ayv\",\"is_constructor\":false,\"signature\":\"Ayv(): long\"},{\"def_pos\":0,\"name\":\"B8N\",\"is_constructor\":false,\"signature\":\"B8N(): java.util.List\"},{\"def_pos\":0,\"name\":\"BUY\",\"is_constructor\":false,\"signature\":\"BUY(long): void\"},{\"def_pos\":0,\"name\":\"isValid\",\"is_constructor\":false,\"signature\":\"isValid(): boolean\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.Lwj",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_name\":\"A00\",\"overload_count\":1,\"body\":\"    private int A00(long j) {\\n        N42 n42;\\n        N42 n43;\\n        int iA01 \\u003d A01(j);\\n        int i \\u003d (int) (j \\u0026 65535);\\n        Lwi lwi \\u003d this.A03;\\n        if (lwi !\\u003d null) {\\n            try {\\n                if (iA01 \\u003d\\u003d 0) {\\n                    String str \\u003d String.format(\\\"Null type specifier is given: %d\\\", C8kW.A1b(1, j));\\n                    C06S.A0F(\\\"MobileConfigContextV2Impl\\\", str);\\n                    C00r c00r \\u003d this.A00;\\n                    if (c00r !\\u003d null \\u0026\\u0026 (n43 \\u003d (N42) c00r.get()) !\\u003d null) {\\n                        n43.A00(\\\"MobileConfigError_ParamMetadata\\\", \\\"MobileConfigContextV2Impl\\\", str);\\n                    }\\n                    return MkK.A02;\\n                }\\n                if (iA01 \\u003d\\u003d 1) {\\n                    int i2 \\u003d lwi.A00;\\n                    if (i2 !\\u003d 0) {\\n                        return A02(lwi, i2, i);\\n                    }\\n                    return 0;\\n                }\\n                if (iA01 \\u003d\\u003d 2) {\\n                    int i3 \\u003d lwi.A05;\\n                    if (i3 !\\u003d 0) {\\n                        return A02(lwi, i3, i);\\n                    }\\n                    return 0;\\n                }\\n                if (iA01 \\u003d\\u003d 3) {\\n                    int i4 \\u003d lwi.A07;\\n                    if (i4 !\\u003d 0) {\\n                        return A02(lwi, i4, i);\\n                    }\\n                    return 0;\\n                }\\n                if (iA01 \\u003d\\u003d 4) {\\n                    int i5 \\u003d lwi.A02;\\n                    if (i5 !\\u003d 0) {\\n                        return A02(lwi, i5, i);\\n                    }\\n                    return 0;\\n                }\\n                String str2 \\u003d String.format(\\\"Fail to get meta for spec: %d\\\", C8kW.A1b(1, j));\\n                C06S.A0F(\\\"MobileConfigContextV2Impl\\\", str2);\\n                C00r c00r2 \\u003d this.A00;\\n                if (c00r2 !\\u003d null \\u0026\\u0026 (n42 \\u003d (N42) c00r2.get()) !\\u003d null) {\\n                    n42.A00(\\\"MobileConfigError_ParamMetadata\\\", \\\"MobileConfigContextV2Impl\\\", str2);\\n                }\\n            } catch (IndexOutOfBoundsException | BufferUnderflowException e) {\\n                NS4.A01(\\\"MobileConfigContextV2Impl\\\", \\\"Failed to get meta from config table\\\", e);\\n            }\\n        }\\n        return MkK.A01;\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.Lwj\",\"full_name\":\"X.Lwj.A00\",\"mode\":\"java\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.Lwj",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(long): int",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    private int A00(long j) {\n        N42 n42;\n        N42 n43;\n        int iA01 = A01(j);\n        int i = (int) (j & 65535);\n        Lwi lwi = this.A03;\n        if (lwi != null) {\n            try {\n                if (iA01 == 0) {\n                    String str = String.format(\"Null type specifier is given: %d\", C8kW.A1b(1, j));\n                    C06S.A0F(\"MobileConfigContextV2Impl\", str);\n                    C00r c00r = this.A00;\n                    if (c00r != null && (n43 = (N42) c00r.get()) != null) {\n                        n43.A00(\"MobileConfigError_ParamMetadata\", \"MobileConfigContextV2Impl\", str);\n                    }\n                    return MkK.A02;\n                }\n                if (iA01 == 1) {\n                    int i2 = lwi.A00;\n                    if (i2 != 0) {\n                        return A02(lwi, i2, i);\n                    }\n                    return 0;\n                }\n                if (iA01 == 2) {\n                    int i3 = lwi.A05;\n                    if (i3 != 0) {\n                        return A02(lwi, i3, i);\n                    }\n                    return 0;\n                }\n                if (iA01 == 3) {\n                    int i4 = lwi.A07;\n                    if (i4 != 0) {\n                        return A02(lwi, i4, i);\n                    }\n                    return 0;\n                }\n                if (iA01 == 4) {\n                    int i5 = lwi.A02;\n                    if (i5 != 0) {\n                        return A02(lwi, i5, i);\n                    }\n                    return 0;\n                }\n                String str2 = String.format(\"Fail to get meta for spec: %d\", C8kW.A1b(1, j));\n                C06S.A0F(\"MobileConfigContextV2Impl\", str2);\n                C00r c00r2 = this.A00;\n                if (c00r2 != null && (n42 = (N42) c00r2.get()) != null) {\n                    n42.A00(\"MobileConfigError_ParamMetadata\", \"MobileConfigContextV2Impl\", str2);\n                }\n            } catch (IndexOutOfBoundsException | BufferUnderflowException e) {\n                NS4.A01(\"MobileConfigContextV2Impl\", \"Failed to get meta from config table\", e);\n            }\n        }\n        return MkK.A01;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

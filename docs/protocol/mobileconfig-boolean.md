@@ -195,6 +195,10 @@ and return the current value, which can be the supplied default. The exact
 table construction, translation, source metadata, wrappers and exposure
 effects remain outside this complete semantic closure.
 
+The later [managed table trace](mobileconfig-table.md) resolves root helpers,
+Boolean metadata/source flags and the optional metadata filter. It does not
+yet reproduce manager updates or effective account values.
+
 ## What this permits next
 
 StatusInfraConfig's P(id) predicates require this effective Boolean pipeline,

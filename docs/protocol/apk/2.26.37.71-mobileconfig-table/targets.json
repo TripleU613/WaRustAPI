@@ -1,0 +1,182 @@
+{
+  "access-without-exposure": {
+    "class": "LX/Lwj;",
+    "file": "access-without-exposure.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0A",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  },
+  "exposure": {
+    "class": "LX/Lwj;",
+    "file": "exposure.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0B",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  },
+  "field-offset": {
+    "class": "LX/MZZ;",
+    "file": "field-offset.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  },
+  "is-valid": {
+    "class": "LX/Lwj;",
+    "file": "is-valid.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "isValid",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  },
+  "metadata-index": {
+    "class": "LX/Lwj;",
+    "file": "metadata-index.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  },
+  "metadata-sentinels": {
+    "class": "LX/MkK;",
+    "file": "metadata-sentinels.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<clinit>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  },
+  "metadata-word": {
+    "class": "LX/Lwj;",
+    "file": "metadata-word.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  },
+  "nonnull-helper": {
+    "class": "LX/1xi;",
+    "file": "nonnull-helper.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A1U",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  },
+  "root-sentinel": {
+    "class": "LX/M6H;",
+    "file": "root-sentinel.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A06",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  },
+  "snapshot-version": {
+    "class": "LX/Lwj;",
+    "file": "snapshot-version.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "Ayv",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  },
+  "source-metadata": {
+    "class": "LX/Lwj;",
+    "file": "source-metadata.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A07",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  },
+  "table-owner": {
+    "class": "LX/Lwj;",
+    "file": "table-owner.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  },
+  "unit-source-bit": {
+    "class": "LX/Dep;",
+    "file": "unit-source-bit.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  },
+  "vector-length": {
+    "class": "LX/MZZ;",
+    "file": "vector-length.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A03",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  },
+  "vector-start": {
+    "class": "LX/MZZ;",
+    "file": "vector-start.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  }
+}

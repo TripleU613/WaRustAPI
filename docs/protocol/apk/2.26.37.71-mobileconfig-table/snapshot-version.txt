@@ -1,0 +1,25 @@
+# APK-derived structural disassembly: LX/Lwj;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method Ayv(J) flags=0x1 registers=7
+  # full signature: LX/Lwj;->Ayv()J
+  0000..0004 op=16 const-wide/16 v4, #0xffff (-1)
+  0004..0008 op=54 iget-object v3, v6, LX/Lwj;->A03:LX/Lwi;
+  0008..000c op=38 if-eqz v3, +0x16
+  000c..0010 op=13 const/16 v0, #0x24
+  0010..0016 op=6e invoke-virtual {v3, v0}, LX/MZZ;->A01(I)I
+  0016..0018 op=0a move-result v2
+  0018..001c op=38 if-eqz v2, +0xc
+  001c..0020 op=54 iget-object v1, v3, LX/MZZ;->A01:Ljava/nio/ByteBuffer;
+  0020..0024 op=52 iget v0, v3, LX/MZZ;->A00:I
+  0024..0026 op=b0 add-int/2addr v2, v0
+  0026..002c op=6e invoke-virtual {v1, v2}, Ljava/nio/ByteBuffer;->getLong(I)J
+  002c..002e op=0b move-result-wide v4
+  002e..0030 op=10 return-wide v4
+  0030..0034 op=16 const-wide/16 v4, #0x0
+  0034..0036 op=10 return-wide v4
+  # exception table: 1 try range(s)
+  # catch Ljava/lang/IndexOutOfBoundsException; code_units 0002..001a -> 001a
+.end method

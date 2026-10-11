@@ -1,0 +1,78 @@
+{
+  "access-without-exposure.txt": {
+    "bytes": 3107,
+    "sha256": "413f9f40c507d94065796853ddebedf34c96cfaf9b8b945ca4ec751b7279a999"
+  },
+  "exposure.txt": {
+    "bytes": 3705,
+    "sha256": "08e1ffd0f5d596afa2cf5e8beee9b5a54ba1cab7be14cdb68c532ede57148c86"
+  },
+  "field-offset.txt": {
+    "bytes": 1236,
+    "sha256": "4644bf15a16be9c0c9373fda16c510044ba97e273f065904b838acf3099a54e8"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "is-valid.txt": {
+    "bytes": 617,
+    "sha256": "b580741e04a9c2375cfa1f85a2dc1e99a33f7dd4bc6e4d9fc02704f881f1e0ef"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "metadata-index.txt": {
+    "bytes": 4727,
+    "sha256": "948b7b7fd26d101e528b61d2d35e152909db9f88d8b8e2a7961d0e089af7dd79"
+  },
+  "metadata-sentinels.txt": {
+    "bytes": 1101,
+    "sha256": "ce1bbd222cae45472d74b332688b3257e43925e8e9947e60c3277d3f866d648f"
+  },
+  "metadata-word.txt": {
+    "bytes": 820,
+    "sha256": "ae547e028db8802e749a7df415d7816e98a37789d7b4d04fa6d93ac350895b00"
+  },
+  "nonnull-helper.txt": {
+    "bytes": 568,
+    "sha256": "14408f45fe501f6d1f60038071846a04aa8e2a59b06ffaf78a7e012a3d73aa62"
+  },
+  "root-sentinel.txt": {
+    "bytes": 948,
+    "sha256": "26f1d9cf0b6de1d4bf58b285800d884a2be50c7e684b718184c80331a61a041e"
+  },
+  "snapshot-version.txt": {
+    "bytes": 1194,
+    "sha256": "f4903a8242744d2c22baa6026a7cb11d8d1fc0e58a79fb5c7310f5aaf2b6b8b0"
+  },
+  "source-metadata.txt": {
+    "bytes": 4472,
+    "sha256": "8102a66c28083056e6fe6650756afe2f015372e055fc456bdeaba181f31b04fd"
+  },
+  "table-owner.txt": {
+    "bytes": 12358,
+    "sha256": "84c168a3ef19758ebe758d7722919ec52500e400451e4bf6b6349dae3f84902c"
+  },
+  "targets.json": {
+    "bytes": 4835,
+    "sha256": "ba90a652b0d90c7353e169367cf461873fb4b4161073331b52a7b786d1983f27"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  },
+  "unit-source-bit.txt": {
+    "bytes": 551,
+    "sha256": "9d961dfe28c527fc323d04700c0415a0a11921e8e9bd78ac81dc824b20335145"
+  },
+  "vector-length.txt": {
+    "bytes": 943,
+    "sha256": "8f2c3a3b6e7d7b01ace7f3a7c47e7bf44fdc5c54862cda5b2e1c1b112f9901bf"
+  },
+  "vector-start.txt": {
+    "bytes": 802,
+    "sha256": "bfc0e1c6b49f639137c80011d6bdf134eba77b5a48784c879a9b78238dcc2025"
+  }
+}

@@ -1,0 +1,25 @@
+# APK-derived structural disassembly: LX/MZZ;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A01(II) flags=0x1 registers=4
+  # full signature: LX/MZZ;->A01(I)I
+  0000..0004 op=52 iget v1, v2, LX/MZZ;->A00:I
+  0004..0008 op=54 iget-object v0, v2, LX/MZZ;->A01:Ljava/nio/ByteBuffer;
+  0008..000e op=6e invoke-virtual {v0, v1}, Ljava/nio/ByteBuffer;->getInt(I)I
+  000e..0010 op=0a move-result v0
+  0010..0012 op=b1 sub-int/2addr v1, v0
+  0012..0016 op=54 iget-object v0, v2, LX/MZZ;->A01:Ljava/nio/ByteBuffer;
+  0016..001c op=6e invoke-virtual {v0, v1}, Ljava/nio/ByteBuffer;->getShort(I)S
+  001c..001e op=0a move-result v0
+  001e..0022 op=35 if-ge v3, v0, +0xa
+  0022..0026 op=54 iget-object v0, v2, LX/MZZ;->A01:Ljava/nio/ByteBuffer;
+  0026..0028 op=b0 add-int/2addr v1, v3
+  0028..002e op=6e invoke-virtual {v0, v1}, Ljava/nio/ByteBuffer;->getShort(I)S
+  002e..0030 op=0a move-result v0
+  0030..0032 op=0f return v0
+  0032..0034 op=12 const/4 v0, #0x0
+  0034..0036 op=0f return v0
+  # exception table: 0 try range(s)
+.end method

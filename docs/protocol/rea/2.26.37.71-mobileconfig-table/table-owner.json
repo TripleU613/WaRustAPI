@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_41153de8f1bfefc4d9fe73e9ab71ef3b162bfb913c736f4967324d935aea59b5",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.Lwj",
+    "method_name": "<init>"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-8kDmQg/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\",\"max_heap_bytes\":15695085568,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.Lwj"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"name\":\"A00\",\"def_pos\":0,\"type\":\"X.00r\"},{\"name\":\"A01\",\"def_pos\":0,\"type\":\"X.MmK\"},{\"name\":\"A02\",\"def_pos\":0,\"type\":\"X.MmK\"},{\"name\":\"A03\",\"def_pos\":0,\"type\":\"X.Lwi\"},{\"name\":\"A04\",\"def_pos\":0,\"type\":\"X.08z\"},{\"name\":\"A05\",\"def_pos\":0,\"type\":\"X.MYw\"},{\"name\":\"A06\",\"def_pos\":0,\"type\":\"X.00r\"}],\"field_count\":7,\"full_name\":\"X.Lwj\",\"name\":\"Lwj\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":21,\"methods\":[{\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"signature\":\"\\u003cinit\\u003e(X.MYw, X.08z, X.09C, X.092, X.00r): void\"},{\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false,\"signature\":\"A00(long): int\"},{\"def_pos\":0,\"name\":\"A01\",\"is_constructor\":false,\"signature\":\"A01(long): int\"},{\"def_pos\":0,\"name\":\"A02\",\"is_constructor\":false,\"signature\":\"A02(X.MZZ, int, int): int\"},{\"def_pos\":0,\"name\":\"A03\",\"is_constructor\":false,\"signature\":\"A03(): java.lang.String\"},{\"def_pos\":0,\"name\":\"A04\",\"is_constructor\":false,\"signature\":\"A04(X.MZZ, int, int): java.lang.String\"},{\"def_pos\":0,\"name\":\"A05\",\"is_constructor\":false,\"signature\":\"A05(double, long, boolean): double\"},{\"def_pos\":0,\"name\":\"A06\",\"is_constructor\":false,\"signature\":\"A06(long, long, boolean): long\"},{\"def_pos\":0,\"name\":\"A07\",\"is_constructor\":false,\"signature\":\"A07(long): X.09J\"},{\"def_pos\":0,\"name\":\"A08\",\"is_constructor\":false,\"signature\":\"A08(java.lang.String, long, boolean): java.lang.String\"},{\"def_pos\":0,\"name\":\"A09\",\"is_constructor\":false,\"signature\":\"A09(long, boolean, boolean): boolean\"},{\"def_pos\":0,\"name\":\"A0A\",\"is_constructor\":false,\"signature\":\"A0A(int): void\"},{\"def_pos\":0,\"name\":\"A0B\",\"is_constructor\":false,\"signature\":\"A0B(int, long): void\"},{\"def_pos\":0,\"name\":\"AeC\",\"is_constructor\":false,\"signature\":\"AeC(): java.util.Map\"},{\"def_pos\":0,\"name\":\"An3\",\"is_constructor\":false,\"signature\":\"An3(long): java.lang.String\"},{\"def_pos\":0,\"name\":\"An5\",\"is_constructor\":false,\"signature\":\"An5(long): int\"},{\"def_pos\":0,\"name\":\"Ayq\",\"is_constructor\":false,\"signature\":\"Ayq(): java.lang.String\"},{\"def_pos\":0,\"name\":\"Ayv\",\"is_constructor\":false,\"signature\":\"Ayv(): long\"},{\"def_pos\":0,\"name\":\"B8N\",\"is_constructor\":false,\"signature\":\"B8N(): java.util.List\"},{\"def_pos\":0,\"name\":\"BUY\",\"is_constructor\":false,\"signature\":\"BUY(long): void\"},{\"def_pos\":0,\"name\":\"isValid\",\"is_constructor\":false,\"signature\":\"isValid(): boolean\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.Lwj",
+          "method_name": "<init>",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_name\":\"\\u003cinit\\u003e\",\"overload_count\":1,\"body\":\"    public Lwj(MYw mYw, C08z c08z, C09C c09c, AnonymousClass092 anonymousClass092, C00r c00r) {\\n        ByteBuffer javaByteBuffer;\\n        int iA01;\\n        int iA02;\\n        short s;\\n        short s2;\\n        super(c09c, anonymousClass092);\\n        this.A04 \\u003d c08z;\\n        this.A00 \\u003d c00r;\\n        this.A05 \\u003d mYw;\\n        Lwi lwi \\u003d null;\\n        if (mYw !\\u003d null \\u0026\\u0026 (javaByteBuffer \\u003d mYw.getJavaByteBuffer()) !\\u003d null \\u0026\\u0026 javaByteBuffer.capacity() \\u003e 0) {\\n            Lwi lwi2 \\u003d new Lwi();\\n            javaByteBuffer.order(ByteOrder.LITTLE_ENDIAN);\\n            ((MZZ) lwi2).A00 \\u003d javaByteBuffer.getInt(javaByteBuffer.position()) + javaByteBuffer.position();\\n            ((MZZ) lwi2).A01 \\u003d javaByteBuffer;\\n            try {\\n                if (lwi2.A06() \\u003d\\u003d 123456 \\u0026\\u0026 (((iA01 \\u003d lwi2.A01(34)) !\\u003d 0 \\u0026\\u0026 ((MZZ) lwi2).A01.getInt(iA01 + ((MZZ) lwi2).A00) \\u003d\\u003d 123456) || (iA02 \\u003d lwi2.A01(34)) \\u003d\\u003d 0 || ((MZZ) lwi2).A01.getInt(iA02 + ((MZZ) lwi2).A00) \\u003d\\u003d 0)) {\\n                    lwi2.A01 \\u003d lwi2.A01(6);\\n                    lwi2.A00 \\u003d lwi2.A01(8);\\n                    lwi2.A06 \\u003d lwi2.A01(10);\\n                    lwi2.A05 \\u003d lwi2.A01(12);\\n                    lwi2.A01(14);\\n                    lwi2.A01(16);\\n                    lwi2.A03 \\u003d lwi2.A01(18);\\n                    lwi2.A02 \\u003d lwi2.A01(20);\\n                    lwi2.A08 \\u003d lwi2.A01(22);\\n                    lwi2.A07 \\u003d lwi2.A01(24);\\n                    lwi2.A04 \\u003d lwi2.A01(26);\\n                    lwi2.A09 \\u003d lwi2.A01(42);\\n                    int iA03 \\u003d lwi2.A01(32);\\n                    if (iA03 !\\u003d 0) {\\n                        int iA04 \\u003d lwi2.A03(iA03);\\n                        if (iA04 \\u003c\\u003d 65536) {\\n                            for (int i \\u003d 0; i \\u003c iA04; i++) {\\n                                int iA05 \\u003d lwi2.A01(32);\\n                                if (iA05 !\\u003d 0) {\\n                                    int iA06 \\u003d lwi2.A02(iA05) + (i * 4);\\n                                    int i2 \\u003d iA06 + ((MZZ) lwi2).A01.getInt(iA06);\\n                                    ByteBuffer byteBuffer \\u003d ((MZZ) lwi2).A01;\\n                                    java.util.Map map \\u003d lwi2.A0A;\\n                                    int i3 \\u003d i2 - byteBuffer.getInt(i2);\\n                                    Integer numValueOf \\u003d Integer.valueOf((8 \\u003e\\u003d byteBuffer.getShort(i3) || (s2 \\u003d byteBuffer.getShort(i3 + 8)) \\u003d\\u003d 0) ? 0 : byteBuffer.getInt(s2 + i2));\\n                                    int i4 \\u003d i2 - byteBuffer.getInt(i2);\\n                                    C1YP.A0T(numValueOf, map, (6 \\u003e\\u003d byteBuffer.getShort(i4) || (s \\u003d byteBuffer.getShort(i4 + 6)) \\u003d\\u003d 0) ? 0 : byteBuffer.getInt(s + i2));\\n                                }\\n                            }\\n                            lwi \\u003d lwi2;\\n                        }\\n                    } else {\\n                        lwi \\u003d lwi2;\\n                    }\\n                } else {\\n                    lwi2.A06();\\n                    int iA07 \\u003d lwi2.A01(34);\\n                    if (iA07 !\\u003d 0) {\\n                        ((MZZ) lwi2).A01.getInt(iA07 + ((MZZ) lwi2).A00);\\n                    }\\n                }\\n            } catch (IndexOutOfBoundsException unused) {\\n            }\\n        }\\n        this.A03 \\u003d lwi;\\n        ArrayList arrayListA1D \\u003d C1xf.A1D();\\n        int iA08 \\u003d 0;\\n        if (lwi !\\u003d null) {\\n            try {\\n                try {\\n                    int iA09 \\u003d lwi.A01(26);\\n                    iA08 \\u003d iA09 !\\u003d 0 ? lwi.A03(iA09) : 0;\\n                    int i5 \\u003d 0;\\n                    while (true) {\\n                        try {\\n                            Lwi lwi3 \\u003d this.A03;\\n                            int iA010 \\u003d lwi3.A01(42);\\n                            if (i5 \\u003e\\u003d (iA010 !\\u003d 0 ? lwi3.A03(iA010) : 0)) {\\n                                break;\\n                            }\\n                            Lwi lwi4 \\u003d this.A03;\\n                            int i6 \\u003d lwi4.A09;\\n                            arrayListA1D.add(i6 !\\u003d 0 ? A04(lwi4, i6, i5) : null);\\n                            i5++;\\n                        } catch (IndexOutOfBoundsException | BufferUnderflowException e) {\\n                            e \\u003d e;\\n                            NS4.A01(\\\"MobileConfigContextV2Impl\\\", \\\"Failed to initialize config table data due to corrupted flatbuffer\\\", C3c5.A1b(e));\\n                        }\\n                    }\\n                } catch (Throwable th) {\\n                    this.A02 \\u003d new MmK(iA08);\\n                    this.A01 \\u003d new MmK(iA08);\\n                    throw th;\\n                }\\n            } catch (IndexOutOfBoundsException | BufferUnderflowException e2) {\\n                e \\u003d e2;\\n                iA08 \\u003d 0;\\n            }\\n        }\\n        this.A02 \\u003d new MmK(iA08);\\n        this.A01 \\u003d new MmK(iA08);\\n        this.A06 \\u003d new OFz(new OG0(arrayListA1D, 0));\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.Lwj\",\"full_name\":\"X.Lwj.\\u003cinit\\u003e\",\"mode\":\"java\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.Lwj",
+    "method": {
+      "name": "<init>",
+      "reported_signature": "<init>(X.MYw, X.08z, X.09C, X.092, X.00r): void",
+      "overload_index": 0,
+      "is_constructor": true,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public Lwj(MYw mYw, C08z c08z, C09C c09c, AnonymousClass092 anonymousClass092, C00r c00r) {\n        ByteBuffer javaByteBuffer;\n        int iA01;\n        int iA02;\n        short s;\n        short s2;\n        super(c09c, anonymousClass092);\n        this.A04 = c08z;\n        this.A00 = c00r;\n        this.A05 = mYw;\n        Lwi lwi = null;\n        if (mYw != null && (javaByteBuffer = mYw.getJavaByteBuffer()) != null && javaByteBuffer.capacity() > 0) {\n            Lwi lwi2 = new Lwi();\n            javaByteBuffer.order(ByteOrder.LITTLE_ENDIAN);\n            ((MZZ) lwi2).A00 = javaByteBuffer.getInt(javaByteBuffer.position()) + javaByteBuffer.position();\n            ((MZZ) lwi2).A01 = javaByteBuffer;\n            try {\n                if (lwi2.A06() == 123456 && (((iA01 = lwi2.A01(34)) != 0 && ((MZZ) lwi2).A01.getInt(iA01 + ((MZZ) lwi2).A00) == 123456) || (iA02 = lwi2.A01(34)) == 0 || ((MZZ) lwi2).A01.getInt(iA02 + ((MZZ) lwi2).A00) == 0)) {\n                    lwi2.A01 = lwi2.A01(6);\n                    lwi2.A00 = lwi2.A01(8);\n                    lwi2.A06 = lwi2.A01(10);\n                    lwi2.A05 = lwi2.A01(12);\n                    lwi2.A01(14);\n                    lwi2.A01(16);\n                    lwi2.A03 = lwi2.A01(18);\n                    lwi2.A02 = lwi2.A01(20);\n                    lwi2.A08 = lwi2.A01(22);\n                    lwi2.A07 = lwi2.A01(24);\n                    lwi2.A04 = lwi2.A01(26);\n                    lwi2.A09 = lwi2.A01(42);\n                    int iA03 = lwi2.A01(32);\n                    if (iA03 != 0) {\n                        int iA04 = lwi2.A03(iA03);\n                        if (iA04 <= 65536) {\n                            for (int i = 0; i < iA04; i++) {\n                                int iA05 = lwi2.A01(32);\n                                if (iA05 != 0) {\n                                    int iA06 = lwi2.A02(iA05) + (i * 4);\n                                    int i2 = iA06 + ((MZZ) lwi2).A01.getInt(iA06);\n                                    ByteBuffer byteBuffer = ((MZZ) lwi2).A01;\n                                    java.util.Map map = lwi2.A0A;\n                                    int i3 = i2 - byteBuffer.getInt(i2);\n                                    Integer numValueOf = Integer.valueOf((8 >= byteBuffer.getShort(i3) || (s2 = byteBuffer.getShort(i3 + 8)) == 0) ? 0 : byteBuffer.getInt(s2 + i2));\n                                    int i4 = i2 - byteBuffer.getInt(i2);\n                                    C1YP.A0T(numValueOf, map, (6 >= byteBuffer.getShort(i4) || (s = byteBuffer.getShort(i4 + 6)) == 0) ? 0 : byteBuffer.getInt(s + i2));\n                                }\n                            }\n                            lwi = lwi2;\n                        }\n                    } else {\n                        lwi = lwi2;\n                    }\n                } else {\n                    lwi2.A06();\n                    int iA07 = lwi2.A01(34);\n                    if (iA07 != 0) {\n                        ((MZZ) lwi2).A01.getInt(iA07 + ((MZZ) lwi2).A00);\n                    }\n                }\n            } catch (IndexOutOfBoundsException unused) {\n            }\n        }\n        this.A03 = lwi;\n        ArrayList arrayListA1D = C1xf.A1D();\n        int iA08 = 0;\n        if (lwi != null) {\n            try {\n                try {\n                    int iA09 = lwi.A01(26);\n                    iA08 = iA09 != 0 ? lwi.A03(iA09) : 0;\n                    int i5 = 0;\n                    while (true) {\n                        try {\n                            Lwi lwi3 = this.A03;\n                            int iA010 = lwi3.A01(42);\n                            if (i5 >= (iA010 != 0 ? lwi3.A03(iA010) : 0)) {\n                                break;\n                            }\n                            Lwi lwi4 = this.A03;\n                            int i6 = lwi4.A09;\n                            arrayListA1D.add(i6 != 0 ? A04(lwi4, i6, i5) : null);\n                            i5++;\n                        } catch (IndexOutOfBoundsException | BufferUnderflowException e) {\n                            e = e;\n                            NS4.A01(\"MobileConfigContextV2Impl\", \"Failed to initialize config table data due to corrupted flatbuffer\", C3c5.A1b(e));\n                        }\n                    }\n                } catch (Throwable th) {\n                    this.A02 = new MmK(iA08);\n                    this.A01 = new MmK(iA08);\n                    throw th;\n                }\n            } catch (IndexOutOfBoundsException | BufferUnderflowException e2) {\n                e = e2;\n                iA08 = 0;\n            }\n        }\n        this.A02 = new MmK(iA08);\n        this.A01 = new MmK(iA08);\n        this.A06 = new OFz(new OG0(arrayListA1D, 0));\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

@@ -1,0 +1,26 @@
+# APK-derived structural disassembly: LX/MkK;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <clinit>(V) flags=0x10009 registers=3
+  # full signature: LX/MkK;-><clinit>()V
+  0000..0002 op=12 const/4 v1, #0xff (-1)
+  0002..0006 op=13 const/16 v2, #0x8
+  0006..0008 op=b8 shl-int/2addr v1, v2
+  0008..000c op=13 const/16 v0, #0x11
+  000c..000e op=b6 or-int/2addr v0, v1
+  000e..0012 op=67 sput v0, LX/MkK;->A00:I
+  0012..0014 op=12 const/4 v1, #0xfe (-2)
+  0014..0016 op=b8 shl-int/2addr v1, v2
+  0016..001a op=13 const/16 v0, #0x11
+  001a..001c op=b6 or-int/2addr v0, v1
+  001c..0020 op=67 sput v0, LX/MkK;->A02:I
+  0020..0022 op=12 const/4 v1, #0xfd (-3)
+  0022..0024 op=b8 shl-int/2addr v1, v2
+  0024..0028 op=13 const/16 v0, #0x11
+  0028..002a op=b6 or-int/2addr v0, v1
+  002a..002e op=67 sput v0, LX/MkK;->A01:I
+  002e..0030 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

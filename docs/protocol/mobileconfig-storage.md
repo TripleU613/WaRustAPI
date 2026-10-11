@@ -6,6 +6,8 @@
 This extends the [snapshot and translation trace](mobileconfig-snapshots.md).
 It establishes the Java manager's file-loading boundary, not the native
 manager's network update or complete table semantics.
+The subsequent [managed table trace](mobileconfig-table.md) resolves root
+helpers, Boolean metadata and the source/default distinction.
 
 ## Manager and file selection
 

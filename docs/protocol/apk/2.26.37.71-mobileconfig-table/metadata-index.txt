@@ -1,0 +1,90 @@
+# APK-derived structural disassembly: LX/Lwj;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(IJ) flags=0x2 registers=10
+  # full signature: LX/Lwj;->A00(J)I
+  0000..0006 op=71 invoke-static {v8, v9}, LX/Lwj;->A01(J)I
+  0006..0008 op=0a move-result v6
+  0008..000e op=17 const-wide/32 v2, #0xffff
+  000e..0012 op=a0 and-long v0, v8, v2
+  0012..0014 op=84 long-to-int v2, v0
+  0014..0018 op=54 iget-object v1, v7, LX/Lwj;->A03:LX/Lwi;
+  0018..001c op=38 if-eqz v1, +0x86
+  001c..001e op=12 const/4 v5, #0x0
+  001e..0020 op=12 const/4 v4, #0x1
+  0020..0024 op=38 if-eqz v6, +0x33
+  0024..0028 op=32 if-eq v6, v4, +0x26
+  0028..002a op=12 const/4 v0, #0x2
+  002a..002e op=32 if-eq v6, v0, +0x1a
+  002e..0030 op=12 const/4 v0, #0x3
+  0030..0034 op=32 if-eq v6, v0, +0xe
+  0034..0036 op=12 const/4 v0, #0x4
+  0036..003a op=33 if-ne v6, v0, +0x57
+  003a..003e op=52 iget v0, v1, LX/Lwi;->A02:I
+  003e..0042 op=38 if-eqz v0, +0x22
+  0042..0048 op=71 invoke-static {v1, v0, v2}, LX/Lwj;->A02(LX/MZZ;II)I
+  0048..004a op=0a move-result v0
+  004a..004c op=0f return v0
+  004c..0050 op=52 iget v0, v1, LX/Lwi;->A07:I
+  0050..0054 op=38 if-eqz v0, +0x19
+  0054..005a op=71 invoke-static {v1, v0, v2}, LX/Lwj;->A02(LX/MZZ;II)I
+  005a..005c op=0a move-result v0
+  005c..005e op=0f return v0
+  005e..0062 op=52 iget v0, v1, LX/Lwi;->A05:I
+  0062..0066 op=38 if-eqz v0, +0x10
+  0066..006c op=71 invoke-static {v1, v0, v2}, LX/Lwj;->A02(LX/MZZ;II)I
+  006c..006e op=0a move-result v0
+  006e..0070 op=0f return v0
+  0070..0074 op=52 iget v0, v1, LX/Lwi;->A00:I
+  0074..0078 op=38 if-eqz v0, +0x7
+  0078..007e op=71 invoke-static {v1, v0, v2}, LX/Lwj;->A02(LX/MZZ;II)I
+  007e..0080 op=0a move-result v0
+  0080..0082 op=0f return v0
+  0082..0084 op=12 const/4 v0, #0x0
+  0084..0086 op=0f return v0
+  0086..008a op=1a const-string v1, "Null type specifier is given: %d"
+  008a..0090 op=71 invoke-static {v4, v8, v9}, LX/8kW;->A1b(IJ)[Ljava/lang/Object;
+  0090..0092 op=0c move-result-object v0
+  0092..0098 op=71 invoke-static {v1, v0}, Ljava/lang/String;->format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+  0098..009a op=0c move-result-object v3
+  009a..009e op=1a const-string v2, "MobileConfigContextV2Impl"
+  009e..00a4 op=71 invoke-static {v2, v3}, LX/06S;->A0F(Ljava/lang/String;Ljava/lang/String;)V
+  00a4..00a8 op=54 iget-object v0, v7, LX/Lwj;->A00:LX/00r;
+  00a8..00ac op=38 if-eqz v0, +0xf
+  00ac..00b2 op=72 invoke-interface {v0}, LX/00r;->get()Ljava/lang/Object;
+  00b2..00b4 op=0c move-result-object v1
+  00b4..00b8 op=1f check-cast v1, LX/N42;
+  00b8..00bc op=38 if-eqz v1, +0x7
+  00bc..00c0 op=1a const-string v0, "MobileConfigError_ParamMetadata"
+  00c0..00c6 op=6e invoke-virtual {v1, v0, v2, v3}, LX/N42;->A00(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  00c6..00ca op=60 sget v0, LX/MkK;->A02:I
+  00ca..00cc op=0f return v0
+  00cc..00ce op=0d move-exception v0
+  00ce..00d2 op=23 new-array v2, v4, [Ljava/lang/Object;
+  00d2..00d6 op=4d aput-object v0, v2, v5
+  00d6..00da op=1a const-string v1, "MobileConfigContextV2Impl"
+  00da..00de op=1a const-string v0, "Failed to get meta from config table"
+  00de..00e4 op=71 invoke-static {v1, v0, v2}, LX/NS4;->A01(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+  00e4..00ea op=71 invoke-static {v4, v8, v9}, LX/8kW;->A1b(IJ)[Ljava/lang/Object;
+  00ea..00ec op=0c move-result-object v1
+  00ec..00f0 op=1a const-string v0, "Fail to get meta for spec: %d"
+  00f0..00f6 op=71 invoke-static {v0, v1}, Ljava/lang/String;->format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+  00f6..00f8 op=0c move-result-object v3
+  00f8..00fc op=1a const-string v2, "MobileConfigContextV2Impl"
+  00fc..0102 op=71 invoke-static {v2, v3}, LX/06S;->A0F(Ljava/lang/String;Ljava/lang/String;)V
+  0102..0106 op=54 iget-object v0, v7, LX/Lwj;->A00:LX/00r;
+  0106..010a op=38 if-eqz v0, +0xf
+  010a..0110 op=72 invoke-interface {v0}, LX/00r;->get()Ljava/lang/Object;
+  0110..0112 op=0c move-result-object v1
+  0112..0116 op=1f check-cast v1, LX/N42;
+  0116..011a op=38 if-eqz v1, +0x7
+  011a..011e op=1a const-string v0, "MobileConfigError_ParamMetadata"
+  011e..0124 op=6e invoke-virtual {v1, v0, v2, v3}, LX/N42;->A00(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  0124..0128 op=60 sget v0, LX/MkK;->A01:I
+  0128..012a op=0f return v0
+  # exception table: 1 try range(s)
+  # catch Ljava/lang/IndexOutOfBoundsException; code_units 001d..0066 -> 0066
+  # catch Ljava/nio/BufferUnderflowException; code_units 001d..0066 -> 0066
+.end method

@@ -1,0 +1,68 @@
+# APK-derived structural disassembly: LX/Lwj;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A07(LJ) flags=0x1 registers=9
+  # full signature: LX/Lwj;->A07(J)LX/09J;
+  0000..0004 op=54 iget-object v0, v6, LX/Lwj;->A03:LX/Lwi;
+  0004..000a op=71 invoke-static {v0}, LX/1xi;->A1U(Ljava/lang/Object;)Z
+  000a..000c op=0a move-result v0
+  000c..0010 op=39 if-nez v0, +0xa
+  0010..0014 op=62 sget-object v1, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->DEFAULT__NO_DATA_ON_DISK:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+  0014..0018 op=22 new-instance v0, LX/09J;
+  0018..001e op=70 invoke-direct {v0, v1}, LX/09J;-><init>(Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;)V
+  001e..0020 op=11 return-object v0
+  0020..0026 op=70 invoke-direct {v6, v7, v8}, LX/Lwj;->A00(J)I
+  0026..0028 op=0a move-result v5
+  0028..002c op=60 sget v0, LX/MkK;->A00:I
+  002c..0030 op=32 if-eq v5, v0, +0x49
+  0030..0034 op=13 const/16 v0, #0x11
+  0034..0038 op=32 if-eq v5, v0, +0x45
+  0038..003c op=60 sget v0, LX/MkK;->A02:I
+  003c..0040 op=33 if-ne v5, v0, +0xe
+  0040..0044 op=62 sget-object v3, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->DEFAULT__MISSING_SERVER_VALUE_INVALID_TYPE:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+  0044..0048 op=62 sget-object v0, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->DEFAULT__MISSING_SERVER_VALUE:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+  0048..004c op=33 if-ne v3, v0, +0x3e
+  004c..0050 op=22 new-instance v2, LX/09J;
+  0050..0056 op=70 invoke-direct {v2, v3}, LX/09J;-><init>(Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;)V
+  0056..0058 op=11 return-object v2
+  0058..005c op=60 sget v0, LX/MkK;->A01:I
+  005c..0060 op=33 if-ne v5, v0, +0x5
+  0060..0064 op=62 sget-object v3, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->DEFAULT__MISSING_SERVER_VALUE_INVALID_SLOT_ID:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+  0064..0066 op=28 goto -0x10
+  0066..006a op=dd and-int/lit8 v0, v5, #0x10
+  006a..006c op=12 const/4 v4, #0x2
+  006c..006e op=12 const/4 v3, #0x0
+  006e..0074 op=71 invoke-static {v0}, LX/Dep;->A00(I)I
+  0074..0076 op=0a move-result v2
+  0076..0078 op=12 const/4 v1, #0x1
+  0078..007c op=dd and-int/lit8 v0, v5, #0x1
+  007c..0080 op=38 if-eqz v0, +0x3
+  0080..0082 op=12 const/4 v3, #0x1
+  0082..0084 op=b6 or-int/2addr v2, v3
+  0084..0088 op=38 if-eqz v2, +0x1a
+  0088..008c op=32 if-eq v2, v1, +0x15
+  008c..0090 op=32 if-eq v2, v4, +0x10
+  0090..0092 op=12 const/4 v0, #0x3
+  0092..0096 op=32 if-eq v2, v0, +0x16
+  0096..009a op=1a const-string v1, "MobileConfigTableUtil"
+  009a..00a0 op=1b const-string/jumbo v0, "should never reach default case in getValueSource"
+  00a0..00a6 op=71 invoke-static {v1, v0}, LX/06S;->A0F(Ljava/lang/String;Ljava/lang/String;)V
+  00a6..00aa op=62 sget-object v3, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->UNKNOWN:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+  00aa..00ac op=28 goto -0x33
+  00ac..00b0 op=62 sget-object v3, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->DEFAULT__SERVER_RETURNED_NULL_EMPTY_UNIT_ID:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+  00b0..00b2 op=28 goto -0x36
+  00b2..00b6 op=62 sget-object v3, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->DEFAULT__SERVER_RETURNED_NULL:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+  00b6..00b8 op=28 goto -0x39
+  00b8..00bc op=62 sget-object v3, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->SERVER:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+  00bc..00be op=28 goto -0x3c
+  00be..00c2 op=62 sget-object v3, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->DEFAULT__MISSING_SERVER_VALUE:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+  00c2..00c4 op=28 goto -0x3f
+  00c4..00ca op=6e invoke-virtual {v6}, LX/09H;->Ayv()J
+  00ca..00cc op=0b move-result-wide v0
+  00cc..00d0 op=22 new-instance v2, LX/09J;
+  00d0..00d6 op=70 invoke-direct {v2, v3, v0, v1}, LX/09J;-><init>(Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;J)V
+  00d6..00d8 op=11 return-object v2
+  # exception table: 0 try range(s)
+.end method
