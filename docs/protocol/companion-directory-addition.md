@@ -1,5 +1,12 @@
 # Restore returning companion membership from a guarded directory reply
 
+2026-10-11 follow-up: [companion attestation admission](companion-attestation-admission.md)
+supersedes the blanket companion attestation refusals below. Structurally valid
+metadata skips primary CPB policy; exact-device ADV and all other application
+guards still apply. Attestation verification is not upgraded by application;
+fresh live acceptance and full native state/routing remain unverified/unported.
+Earlier validation below is historical.
+
 2026-10-09. **Confirmed static / implemented offline**, WhatsApp APK
 **2.26.37.71**, SHA-256
 `1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.

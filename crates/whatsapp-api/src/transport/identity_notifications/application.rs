@@ -141,12 +141,12 @@ async fn stage(
         })
         .ok_or_else(|| invalid("missing response user"))?;
     let same_identity = inspection.pin_matches == Some(true);
-    let admitted_attestation = peer.device == 0
-        && super::attestation::primary_admitted(
-            user,
-            same_identity,
-            inspection.attestation.as_ref(),
-        );
+    let admitted_attestation = super::attestation::admitted(
+        user,
+        peer.device == 0,
+        same_identity,
+        inspection.attestation.as_ref(),
+    );
     if user.child("non_e2ee_attestation").is_some() && !admitted_attestation {
         return Ok(deferred("attestation_admission_unported"));
     }
@@ -759,7 +759,7 @@ mod tests {
             ("pinned", "identity_policy_pinned"),
             ("untracked", "original_refresh_guard_not_matching"),
             ("pqkey", "pq_session_unported"),
-            ("companion", "attestation_admission_unported"),
+            ("companion", "missing_device_identity"),
             ("duplicate", "attestation_admission_unported"),
             ("same_invalid_override", "attestation_admission_unported"),
         ] {
@@ -929,6 +929,120 @@ mod tests {
         .encode_to_vec()
     }
     #[tokio::test]
+    async fn companion_attestation_skips_primary_policy_without_skipping_adv() {
+        for peer in ["15555550111:4@s.whatsapp.net", "222222222222222:4@lid"] {
+            for same in [false, true] {
+                for (kind, valid) in [("hybrid_e2ee", true), ("non_e2ee", false)] {
+                    let f = fixture(peer).await;
+                    let primary = install_companion_authority(&f);
+                    let candidate = if same { &f.old } else { &f.new };
+                    let mut response = reply(&f.peer, &f.id, candidate, true);
+                    device_identity(
+                        &mut response,
+                        NodeContent::Bytes(
+                            if same {
+                                vec![]
+                            } else {
+                                signed_companion_adv(&primary, candidate, 8, 9, 7)
+                            }
+                            .into(),
+                        ),
+                    );
+                    attestation(&mut response, candidate, kind, valid);
+                    settle(&f, &response);
+                    let before = snapshot(&f.store);
+                    let head = f.store.journal_head().unwrap();
+                    let inspection = super::super::inspect(&f.store, &f.id).unwrap().unwrap();
+                    assert_eq!(inspection.attestation.unwrap().signature_valid, Some(valid));
+                    let preview = super::super::preview_session(&f.store, &f.id)
+                        .await
+                        .unwrap();
+                    assert_eq!(preview.outcome, "companion_admission_unported");
+                    assert!(!preview.persisted && !preview.admission_evaluated);
+                    assert_eq!(snapshot(&f.store), before);
+                    assert_eq!(f.store.journal_head().unwrap(), head);
+                    assert_eq!(
+                        apply(&f.store, &f.id, IdentityChangePolicy::ApkAuthenticated)
+                            .await
+                            .unwrap(),
+                        Application::Applied,
+                        "{peer} same={same} {kind} valid={valid}"
+                    );
+                    let after = snapshot(&f.store);
+                    for (index, table) in Table::ALL.iter().enumerate() {
+                        if !matches!(
+                            table,
+                            Table::PeerIdentities | Table::SignalSessions | Table::Checkpoints
+                        ) {
+                            assert_eq!(after[index], before[index], "{table:?}");
+                        }
+                    }
+                    let (pin, session, primary_pin) = f
+                        .store
+                        .read(|tx| {
+                            Ok((
+                                tx.get_json::<Vec<u8>>(
+                                    Table::PeerIdentities,
+                                    format!("comparison-direct:{}", f.peer).as_bytes(),
+                                    1,
+                                )?
+                                .unwrap(),
+                                tx.get_json::<Vec<u8>>(
+                                    Table::SignalSessions,
+                                    format!("comparison-direct:{}", f.peer).as_bytes(),
+                                    1,
+                                )?
+                                .unwrap(),
+                                tx.get_json::<Vec<u8>>(
+                                    Table::PeerIdentities,
+                                    format!("comparison-direct:{}", f.peer.to_non_ad()).as_bytes(),
+                                    1,
+                                )?
+                                .unwrap(),
+                            ))
+                        })
+                        .unwrap();
+                    assert_eq!(pin, candidate.identity_key().serialize().to_vec());
+                    assert_eq!(primary_pin, primary.identity_key().serialize().to_vec());
+                    assert_eq!(
+                        SessionRecord::deserialize(&session)
+                            .unwrap()
+                            .previous_session_count(),
+                        if same {
+                            SessionRecord::deserialize(&f.held)
+                                .unwrap()
+                                .previous_session_count()
+                                + 1
+                        } else {
+                            0
+                        }
+                    );
+                    let inspection = super::super::inspect(&f.store, &f.id).unwrap().unwrap();
+                    assert!(inspection.applied);
+                    assert_eq!(inspection.attestation.unwrap().signature_valid, Some(valid));
+                    assert_eq!(
+                        apply(&f.store, &f.id, IdentityChangePolicy::ApkAuthenticated)
+                            .await
+                            .unwrap(),
+                        Application::AlreadyApplied
+                    );
+                    assert_eq!(snapshot(&f.store), after);
+                    let path = f.dir.path().join("application.redb");
+                    drop(f.store);
+                    let reopened = open(&path);
+                    assert_eq!(
+                        recover(&reopened, IdentityChangePolicy::ApkAuthenticated)
+                            .await
+                            .unwrap(),
+                        0
+                    );
+                    assert_eq!(snapshot(&reopened), after);
+                    assert!(actions::reserve_pending(&reopened).unwrap().is_empty());
+                }
+            }
+        }
+    }
+    #[tokio::test]
     async fn returning_pinned_companion_commits_signed_addition_and_session_once() {
         for peer in ["15555550111:4@s.whatsapp.net", "222222222222222:4@lid"] {
             for changed in [false, true] {
@@ -955,6 +1069,7 @@ mod tests {
                             signed_companion_adv(&primary, candidate, 8, 10, 6).into(),
                         ),
                     );
+                    attestation(&mut response, candidate, "non_e2ee", false);
                     settle(&f, &response);
                     let inspected = super::super::inspect(&f.store, &f.id).unwrap().unwrap();
                     assert_eq!(
@@ -1478,6 +1593,9 @@ mod tests {
             device_identity(&mut response, NodeContent::Bytes(bytes.into()));
             if matches!(case, "non_e2ee_attestation" | "pqkey" | "identity_auth") {
                 metadata(&mut response, case);
+            }
+            if case != "non_e2ee_attestation" {
+                attestation(&mut response, &f.new, "non_e2ee", false);
             }
             if case == "missing_timestamp" {
                 change_list(&f, |l| l.list_timestamp = None);

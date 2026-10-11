@@ -1,4 +1,4 @@
-//! APK 37.71 attestation verification and state-independent primary admission.
+//! APK 37.71 attestation verification and state-independent admission.
 use crate::binary::{Node, NodeContent};
 use serde::Serialize;
 use wacore_libsignal::protocol::IdentityKey;
@@ -74,10 +74,11 @@ fn bytes(node: &Node) -> Option<&[u8]> {
     }
 }
 
-// CPB admits changed primary keys even after failed verification (E2EE fallback),
-// and verified same-key HYBRID/NON candidates regardless of stored state/flags.
-pub(super) fn primary_admitted(
+// CPB skips primary policy for companions; primary key changes use E2EE fallback,
+// and verified same-key HYBRID/NON candidates admit regardless of state/flags.
+pub(super) fn admitted(
     user: &Node,
+    primary: bool,
     same_identity: bool,
     inspection: Option<&AttestationInspection>,
 ) -> bool {
@@ -88,7 +89,9 @@ pub(super) fn primary_admitted(
     // Duplicate refusal is our existing local ambiguity guard.
     singleton(node, "value").and_then(bytes).is_some()
         && singleton(node, "signature").and_then(bytes).is_some()
-        && (!same_identity || inspection.is_some_and(|v| v.status == AttestationStatus::Verified))
+        && (!primary
+            || !same_identity
+            || inspection.is_some_and(|v| v.status == AttestationStatus::Verified))
 }
 
 pub(super) fn inspect(user: &Node, identity: &IdentityKey) -> AttestationInspection {
@@ -240,6 +243,41 @@ fn parse_account_type(mut body: &[u8]) -> Result<AttestationAccountType, ()> {
 mod tests {
     use super::*;
     use wacore_libsignal::protocol::IdentityKeyPair;
+
+    #[test]
+    fn companion_policy_skip_still_requires_unambiguous_candidate_byte_fields() {
+        let empty = Node::new("non_e2ee_attestation").children(vec![
+            Node::new("value").bytes(vec![]),
+            Node::new("signature").bytes(vec![]),
+        ]);
+        let candidate = Node::new("user").children(vec![empty.clone()]);
+        for same in [false, true] {
+            assert!(admitted(&candidate, false, same, None));
+        }
+        assert!(!admitted(&candidate, true, true, None));
+        for fields in [
+            vec![Node::new("value").bytes(vec![])],
+            vec![Node::new("signature").bytes(vec![])],
+            vec![Node::new("value"), Node::new("signature").bytes(vec![])],
+            vec![Node::new("value").bytes(vec![]), Node::new("signature")],
+            vec![
+                Node::new("value").bytes(vec![]),
+                Node::new("signature").bytes(vec![]),
+                Node::new("value").bytes(vec![]),
+            ],
+            vec![
+                Node::new("value").bytes(vec![]),
+                Node::new("signature").bytes(vec![]),
+                Node::new("signature").bytes(vec![]),
+            ],
+        ] {
+            let candidate = Node::new("user")
+                .children(vec![Node::new("non_e2ee_attestation").children(fields)]);
+            assert!(!admitted(&candidate, false, true, None));
+        }
+        let duplicate = Node::new("user").children(vec![empty.clone(), empty]);
+        assert!(!admitted(&duplicate, false, false, None));
+    }
 
     #[test]
     fn account_type_matches_descriptor_java_oracle() {

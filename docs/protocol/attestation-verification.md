@@ -1,5 +1,12 @@
 # Selected-device encryption attestation verification
 
+2026-10-11 follow-up: [companion attestation admission](companion-attestation-admission.md)
+supersedes the blanket companion attestation refusals below. Structurally valid
+metadata skips primary CPB policy; exact-device ADV and all other application
+guards still apply. Attestation verification is not upgraded by application;
+fresh live acceptance and full native state/routing remain unverified/unported.
+Earlier validation below is historical.
+
 2026-10-10 follow-up: [primary attestation admission](primary-attestation-admission.md)
 supersedes blanket primary attestation presence deferrals below. Structurally
 valid changed-key candidates follow the native E2EE fallback; verified same-key

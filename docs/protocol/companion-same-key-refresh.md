@@ -1,5 +1,12 @@
 # Known companion same-key directory refresh
 
+2026-10-11 follow-up: [companion attestation admission](companion-attestation-admission.md)
+supersedes the blanket companion attestation refusals below. Structurally valid
+metadata skips primary CPB policy; exact-device ADV and all other application
+guards still apply. Attestation verification is not upgraded by application;
+fresh live acceptance and full native state/routing remain unverified/unported.
+Earlier validation below is historical.
+
 2026-10-10 follow-up: [identity-auth admission correction](identity-auth.md#admission-correction--2026-10-10)
 supersedes the identity_auth presence refusals described below. Structurally valid
 metadata follows existing classic admission; malformed required fields defer.

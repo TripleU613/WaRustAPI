@@ -1,3 +1,13 @@
+2026-10-11 — **Implemented/offline:** structurally valid companion attestation
+metadata now skips primary CPB policy, matching the native early Bjo return.
+Known same-key refresh and signed ADV changed-key/returning-device application
+retain their exact original-state, prekey, pin, membership and atomic guards.
+Inspection preserves failed/null attestation verification; preview remains
+read-only and companion admission there remains unported. Native C0F state,
+non-E2EE routing and fresh live application remain unfinished/unverified.
+No network request.
+[Source, runtime guards and verification](protocol/companion-attestation-admission.md).
+
 2026-10-11 — **Implemented/offline:** receipt ACKs now share strict receipt
 kind and network namespace checks. A present non-text type no longer defaults to
 delivery; unknown namespaces cannot become ACK destinations or optional fields.

@@ -464,8 +464,9 @@ pub async fn preview_session(store: &ProtocolStore, id: &str) -> Result<SessionP
     // Share primary branch invariants with application; full stored-state
     // admission and optional state persistence remain unevaluated here.
     if user.child("non_e2ee_attestation").is_some()
-        && !attestation::primary_admitted(
+        && !attestation::admitted(
             user,
+            true,
             result.inspection.pin_matches == Some(true),
             result.inspection.attestation.as_ref(),
         )
