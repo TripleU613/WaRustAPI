@@ -1,5 +1,25 @@
 # Messaging completion checklist
 
+2026-10-10 — **Implemented/offline:** direct participant-qualified delivery,
+read and played receipts now retain the actual recipient device when the
+saved chat and immutable original send target both match. Authenticated PN/LID
+mapping can join namespaces at the same device ID; current membership cannot
+fill historical target gaps. Previously this whole direct route was discarded.
+Independent facts and server times survive restart without duplicate events;
+send progress, attempts, uncertainty and legacy lab summaries are preserved.
+No fresh live participant-qualified receipt has validated this extension.
+[APK branch, guards and inspection](protocol/direct-receipts.md#direct-participant-device-receipts--2026-10-10).
+
+Validation: 888 workspace/all-feature tests passed (747 library, 4 codec,
+9 crash, 54 CLI, 1 API-symbol and 73 tooling tests). The new encrypted-store
+fixture covers seven authority/target cases, all three fact kinds, supplied
+timestamps, legacy isolation, immutable send state and duplicate suppression
+across reopening. Strict all-target/all-feature Clippy, warnings-denied
+Rustdoc, default CLI tests and CLI-reference regeneration passed. No live
+request was made for this chunk. Repository hygiene passed 2,494 local
+links and 128 checksum-verified APK bundles totaling 27,307,426 bytes.
+
+
 2026-10-10 — **Confirmed static:** all seven physical message A0l writers
 are classified, including wrapper marking, conditional media copy, cache
 replacement and synthetic newsletter substitutions. Three media A0O producers

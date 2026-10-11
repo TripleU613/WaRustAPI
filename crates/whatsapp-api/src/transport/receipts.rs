@@ -650,10 +650,7 @@ pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
         return super::group_receipts::record(store, node);
     }
 
-    if node.description != "receipt"
-        || node.get_attr("participant").is_some()
-        || node.get_attr("recipient").is_some()
-    {
+    if node.description != "receipt" || node.get_attr("recipient").is_some() {
         return Ok(0);
     }
     let Some(kind) = receipt_kind(node) else {
@@ -676,11 +673,32 @@ pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
     {
         return Ok(0);
     }
+    // APK 37.71 Cmk.A03 051a..05bc retains remote chat separately from
+    // DeviceJid.Companion.A00(participant). Never treat a device as the chat.
+    let participant = if node.get_attr("participant").is_some() {
+        let Some(actor) = jid(node, "participant") else {
+            return Ok(0);
+        };
+        if actor.user.is_empty()
+            || actor.agent != 0
+            || !matches!(actor.server, Server::User | Server::Lid)
+            || !matches!(
+                actor.kind,
+                crate::model::jid::JidKind::Plain | crate::model::jid::JidKind::AgentDevice
+            )
+        {
+            return Ok(0);
+        }
+        Some(actor)
+    } else {
+        None
+    };
+    let actor = participant.as_ref().unwrap_or(&from);
     let ids = ids(node)?;
     let peer = from.to_non_ad();
     let mut matched = 0;
     store.write(|tx| {
-        for id in &ids {
+        for id in ids.iter().filter(|_| participant.is_none()) {
             let key = format!(
                 "receipt-facts:{}",
                 hex::encode(Sha256::digest(format!("{peer}:{id}")))
@@ -695,7 +713,7 @@ pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
         // outbox intents. Cmk.A02/A03 keeps message chat and actual actor
         // distinct; only an already authenticated association may join them.
         let mut cursor = None;
-        loop {
+        while participant.is_none() {
             let page = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
             if page.is_empty() {
                 break;
@@ -751,7 +769,7 @@ pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
         };
         // The authenticated actor remains in its received namespace even
         // when it is associated with an original intent in the other one.
-        let device = crate::model::ids::DeviceAddress::from_jid(&from)?;
+        let device = crate::model::ids::DeviceAddress::from_jid(actor)?;
         for id in &ids {
             let wire_id = crate::model::ids::MessageId::new(id.clone())
                 .map_err(|_| Error::invalid("receipt", "invalid message id"))?;
@@ -761,7 +779,31 @@ pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
             if !super::jid_map::authenticated_direct_chat(tx, &from, entry.intent.chat.jid())? {
                 continue;
             }
-            super::send_versions::observe_in(tx, entry.local_id, &from, node)?;
+            if participant.is_some() {
+                if !super::jid_map::authenticated_direct_chat(tx, &actor.to_non_ad(), &from)? {
+                    continue;
+                }
+                let Some(targets) = super::send_versions::targets_in(tx, entry.local_id)? else {
+                    continue;
+                };
+                let mut targeted = false;
+                for target in targets {
+                    if actor.device == target.device
+                        && super::jid_map::authenticated_direct_chat(
+                            tx,
+                            &actor.to_non_ad(),
+                            &target.to_non_ad(),
+                        )?
+                    {
+                        targeted = true;
+                        break;
+                    }
+                }
+                if !targeted {
+                    continue;
+                }
+            }
+            super::send_versions::observe_in(tx, entry.local_id, actor, node)?;
             if entry
                 .facts
                 .iter()
@@ -1903,6 +1945,138 @@ mod tests {
                 Ok(ticket.local_id)
             })
             .unwrap()
+    }
+
+    #[test]
+    fn direct_participant_receipts_require_original_targets_and_preserve_device_facts() {
+        use crate::model::{ids::DeviceAddress, send::DeliveryFactKind};
+        let pn = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        for (name, actor, snapshot, mapping, accepted) in [
+            ("same", "15555550100:2@s.whatsapp.net", true, false, true),
+            ("mapped", "100001:2@lid", true, true, true),
+            ("unmapped", "100001:2@lid", true, false, false),
+            (
+                "wrong-device",
+                "15555550100:3@s.whatsapp.net",
+                true,
+                false,
+                false,
+            ),
+            (
+                "wrong-user",
+                "15555550101:2@s.whatsapp.net",
+                true,
+                false,
+                false,
+            ),
+            (
+                "no-snapshot",
+                "15555550100:2@s.whatsapp.net",
+                false,
+                false,
+                false,
+            ),
+            (
+                "agent",
+                "15555550100.1:2@s.whatsapp.net",
+                true,
+                false,
+                false,
+            ),
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("participant.redb");
+            let store = open(&path, true);
+            let id = saved_receipt_send(&store, name, &pn.to_string(), "fixture");
+            store.write(|tx| {
+                if snapshot { super::super::send_versions::capture_in(tx, id, &[pn.clone(), pn.with_device(2)])?; }
+                if mapping { tx.put_json(Table::Checkpoints, b"authenticated-lid:100001@lid", 1, &pn)?; }
+                tx.put_json(Table::Checkpoints, b"message:legacy:send", 1, &serde_json::json!({"to":"+15555550100","wire_id":"fixture","status":"outcome_unknown"}))
+            }).unwrap();
+            let outbox = crate::outbox::Outbox::new(name, crate::profile::Limits::default());
+            let before = store
+                .read(|tx| {
+                    Ok((
+                        tx.scan(Table::Checkpoints, 1, 100)?,
+                        outbox.get(tx, id)?.unwrap(),
+                        tx.journal_head()?,
+                    ))
+                })
+                .unwrap();
+            let base = Node::new("receipt")
+                .attr("from", pn.clone())
+                .attr("participant", actor)
+                .attr("id", "fixture")
+                .attr("t", "20");
+            for (kind, expected_kind) in [
+                ("delivery", DeliveryFactKind::Delivered),
+                ("read", DeliveryFactKind::Read),
+                ("played", DeliveryFactKind::Played),
+            ] {
+                let node = base.clone().attr("type", kind);
+                assert_eq!(
+                    record(&store, &node).unwrap(),
+                    usize::from(accepted),
+                    "{name}/{kind}"
+                );
+                if accepted {
+                    let saved = store.read(|tx| Ok(outbox.get(tx, id)?.unwrap())).unwrap();
+                    let fact = saved
+                        .facts
+                        .iter()
+                        .find(|f| f.kind == expected_kind)
+                        .unwrap();
+                    assert_eq!(
+                        fact.device,
+                        Some(DeviceAddress::from_jid(&Jid::parse(actor).unwrap()).unwrap())
+                    );
+                    assert_eq!(fact.server_timestamp.unwrap().as_millis(), 20_000);
+                    assert_eq!(saved.progress, before.1.progress);
+                    assert_eq!(saved.attempts, before.1.attempts);
+                    assert_eq!(saved.intent, before.1.intent);
+                    assert_eq!(saved.facts[0], before.1.facts[0]);
+                    let head = store.read(|tx| tx.journal_head()).unwrap();
+                    assert_eq!(record(&store, &node.attr("t", "10")).unwrap(), 0);
+                    assert_eq!(head, store.read(|tx| tx.journal_head()).unwrap());
+                }
+            }
+            let legacy: serde_json::Value = store
+                .read(|tx| tx.get_json(Table::Checkpoints, b"message:legacy:send", 1))
+                .unwrap()
+                .unwrap();
+            assert!(legacy["receipts"].is_null());
+            assert!(
+                store
+                    .read(|tx| Ok(tx
+                        .scan(Table::Checkpoints, 1, 100)?
+                        .iter()
+                        .all(|(k, _)| !k.starts_with(b"receipt-facts:"))))
+                    .unwrap()
+            );
+            if !accepted {
+                assert_eq!(
+                    before,
+                    store
+                        .read(|tx| Ok((
+                            tx.scan(Table::Checkpoints, 1, 100)?,
+                            outbox.get(tx, id)?.unwrap(),
+                            tx.journal_head()?
+                        )))
+                        .unwrap()
+                );
+            }
+            let saved = store.read(|tx| Ok(outbox.get(tx, id)?.unwrap())).unwrap();
+            drop(store);
+            let store = open(&path, false);
+            assert_eq!(
+                record(&store, &base.clone().attr("type", "read")).unwrap(),
+                0
+            );
+            assert_eq!(
+                saved,
+                store.read(|tx| Ok(outbox.get(tx, id)?.unwrap())).unwrap()
+            );
+        }
     }
 
     #[test]

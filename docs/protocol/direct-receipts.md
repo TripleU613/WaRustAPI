@@ -168,3 +168,57 @@ selects CNn.A00 for a status predicate and separately 15A.A07 for other
 statuses. CNn/CYV row policy and complete clocks/mapping remain untraced;
 no mutable receipt ledger or runtime status promotion is claimed.
 [Writer boundary and next inputs](receipt-apply.md).
+
+## Direct participant device receipts — 2026-10-10
+
+**Confirmed static (2.26.37.71):** `Cmk.A03` at `051a..052e` reads
+`Cb1.A02` (remote chat) separately from `Cb1.A01` (participant), converts
+the latter with `DeviceJid.Companion.A00`, then passes both to `DDH` at
+`0592..05bc`. These existing bundled operands support retaining a distinct
+actual device; they do not make arbitrary participant metadata authoritative.
+
+**Confirmed local implementation:** normal-outbox direct delivery/read/played
+receipts with `participant` now correlate the root primary chat and participant
+user independently, then require the participant device in the immutable
+send-time target snapshot. Cross-namespace association requires the existing
+authenticated PN/LID mapping at the same device ID. Current directory membership
+cannot fill a missing original snapshot. Root device-qualified routes without
+participant, recipient-qualified routes, own/self kinds and aggregated receipts
+remain outside this extension.
+
+Before this change every direct participant-qualified receipt returned without
+recording a fact. A qualifying receipt now appends an independent device fact,
+retaining actual namespace/device and supplied server time. Duplicate facts
+remain immutable across reopening. Existing mutable receipt-row observation
+still requires its exact saved namespace. Mapping a public fact does not rewrite
+that row's namespace. Send intent, attempts, uncertainty facts and progress are
+preserved; no transmission or replay is introduced. Primary-only standalone
+summaries and legacy comparison-lab Boolean summaries are not updated by this
+new branch. The earlier primary-only statements describe the previous boundary.
+
+Inspect device facts using `whatsapp-cli status --local-id <local-id>` and
+original targets using `whatsapp-cli outbox-versions --local-id <local-id>`.
+Missing target instrumentation means attribution is unknown, not failed delivery.
+**Unknown live:** no fresh qualifying participant receipt has validated this
+extension; static construction plus encrypted-store fixtures are the evidence.
+
+**Additional confirmed static finding:** the local full-class extraction of
+`PhoneUserJid` found `getServer()` returning `s.whatsapp.net` (`0000..0008`)
+and `getType()` returning zero (`0000..0004`). Therefore the traced `0DE.A0m`
+1/2-type predicate cannot be assumed to select ordinary phone JIDs. Full-class
+method extraction found no method bodies for `0ZX` or `0c3`; this does not
+establish interface dispatch absence. A class-name Jid-filtered `getType`
+search found the abstract base and phone implementation only; obfuscated
+subclasses outside that name filter remain unknown. An exact `lid` string scan
+found 138 physical references, including `0ZY.getServer` and `0e1.getServer`;
+those two bodies were not traced in this chunk. None of these partial searches
+is used as device receipt authority.
+
+Validation: 888 workspace/all-feature tests passed (747 library, 4 codec,
+9 crash, 54 CLI, 1 API-symbol and 73 tooling tests). The new encrypted-store
+fixture covers seven authority/target cases, all three fact kinds, supplied
+timestamps, legacy isolation, immutable send state and duplicate suppression
+across reopening. Strict all-target/all-feature Clippy, warnings-denied
+Rustdoc, default CLI tests and CLI-reference regeneration passed. No live
+request was made for this chunk. Repository hygiene passed 2,494 local
+links and 128 checksum-verified APK bundles totaling 27,307,426 bytes.
