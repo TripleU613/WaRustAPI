@@ -1,0 +1,37 @@
+# APK-derived structural disassembly: LX/34T;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method toString(L) flags=0x1 registers=8
+  # full signature: LX/34T;->toString()Ljava/lang/String;
+  0000..0004 op=55 iget-boolean v1, v7, LX/34T;->A06:Z
+  0004..0008 op=55 iget-boolean v6, v7, LX/34T;->A01:Z
+  0008..000c op=55 iget-boolean v5, v7, LX/34T;->A02:Z
+  000c..0010 op=55 iget-boolean v4, v7, LX/34T;->A03:Z
+  0010..0014 op=55 iget-boolean v3, v7, LX/34T;->A04:Z
+  0014..0018 op=55 iget-boolean v2, v7, LX/34T;->A05:Z
+  0018..001c op=1a const-string v0, "WriteResult{wasSuccess="
+  001c..0022 op=71 invoke-static {v0, v1}, LX/1xh;->A1K(Ljava/lang/String;Z)Ljava/lang/StringBuilder;
+  0022..0024 op=0c move-result-object v1
+  0024..0028 op=1a const-string v0, ", chatAdded="
+  0028..002e op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  002e..0034 op=6e invoke-virtual {v1, v6}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+  0034..0038 op=1a const-string v0, ", chatUnarchived="
+  0038..003e op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  003e..0044 op=6e invoke-virtual {v1, v5}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+  0044..0048 op=1a const-string v0, ", isDuplicate="
+  0048..004e op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  004e..0054 op=6e invoke-virtual {v1, v4}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+  0054..0058 op=1a const-string v0, ", isExpired="
+  0058..005e op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  005e..0064 op=6e invoke-virtual {v1, v3}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+  0064..0068 op=1a const-string v0, ", isMalicious="
+  0068..006e op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  006e..0074 op=6e invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+  0074..0078 op=1a const-string v0, "}"
+  0078..007e op=71 invoke-static {v0, v1}, LX/000;->A05(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+  007e..0080 op=0c move-result-object v0
+  0080..0082 op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method

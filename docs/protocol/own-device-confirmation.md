@@ -3,6 +3,10 @@
 2026-10-11. **Confirmed static** for APK 2.26.37.71, SHA-256
 `1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
 Extends [authenticated own-device text receive](own-device-text.md).
+Follow-ups add [ordinary media](own-device-media.md) and
+[normal outgoing echo correlation](own-device-echo.md); both use this same
+committed-source sender confirmation. Historical text-only limits below remain
+applicable to the original chunk.
 [Recipe](apk/recipes/2.26.37.71-own-device-confirmation.json),
 [DEX signatures and register flow](apk/2.26.37.71-own-device-confirmation/targets.json),
 [ordinary postprocess](rea/2.26.37.71-own-device-confirmation/ordinary-postprocess.json),

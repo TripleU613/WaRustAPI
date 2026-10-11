@@ -1,0 +1,136 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"evidence_id\":\"ev_b273caffe345c6eb50ff6e51512d3d9f37e05409a1c8af3d23527ce74a92c03d\",\"subject\":{\"name\":\"WhatsApp.apk\",\"digest\":{\"sha256\":\"1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c\"},\"format\":\"apk\",\"architecture\":null,\"local_path\":\"~/Downloads/WhatsApp.apk\"},\"provider\":{\"id\":\"jadx\",\"name\":\"JADX headless\",\"version\":\"0.7.1\"},\"analysis_profile\":null,\"predicate_type\":\"rea.analysis\",\"operation\":\"inspect_android_method\",\"parameters\":{\"path\":\"~/Downloads/WhatsApp.apk\",\"class_name\":\"X.C34T\",\"method_name\":\"<init>\"},\"raw_result\":{\"server\":{\"name\":\"rea-jadx-bridge\",\"version\":\"1\"},\"bridge_sha256\":\"5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1\",\"jar_sha256\":\"6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75\",\"loaded\":{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-3JWPVa/target.apk\",\"class_count\":94738,\"resource_count\":14967,\"threads\":1,\"resources\":\"full\"},\"calls\":[{\"operation\":\"rea_jvm_status\",\"input\":{},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"metadata_scope\\\":\\\"parsed_members\\\",\\\"engine_reported_version\\\":\\\"0.7.1\\\",\\\"available_processors\\\":24,\\\"java_version\\\":\\\"21.0.12.1\\\",\\\"max_heap_bytes\\\":15695085568}\"}],\"isError\":false}},{\"operation\":\"get_class_summary\",\"input\":{\"class_name\":\"X.C34T\"},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"fields\\\":[{\\\"name\\\":\\\"A00\\\",\\\"def_pos\\\":0,\\\"type\\\":\\\"X.C0l\\\"},{\\\"name\\\":\\\"A01\\\",\\\"def_pos\\\":0,\\\"type\\\":\\\"boolean\\\"},{\\\"name\\\":\\\"A02\\\",\\\"def_pos\\\":0,\\\"type\\\":\\\"boolean\\\"},{\\\"name\\\":\\\"A03\\\",\\\"def_pos\\\":0,\\\"type\\\":\\\"boolean\\\"},{\\\"name\\\":\\\"A04\\\",\\\"def_pos\\\":0,\\\"type\\\":\\\"boolean\\\"},{\\\"name\\\":\\\"A05\\\",\\\"def_pos\\\":0,\\\"type\\\":\\\"boolean\\\"},{\\\"name\\\":\\\"A06\\\",\\\"def_pos\\\":0,\\\"type\\\":\\\"boolean\\\"},{\\\"name\\\":\\\"A07\\\",\\\"def_pos\\\":0,\\\"type\\\":\\\"X.34T\\\"}],\\\"field_count\\\":8,\\\"full_name\\\":\\\"X.C34T\\\",\\\"name\\\":\\\"C34T\\\",\\\"inner_classes\\\":[],\\\"inner_class_count\\\":0,\\\"method_count\\\":3,\\\"methods\\\":[{\\\"def_pos\\\":0,\\\"name\\\":\\\"\\\\u003cclinit\\\\u003e\\\",\\\"is_constructor\\\":false,\\\"signature\\\":\\\"\\\\u003cclinit\\\\u003e(): void\\\"},{\\\"def_pos\\\":0,\\\"name\\\":\\\"\\\\u003cinit\\\\u003e\\\",\\\"is_constructor\\\":true,\\\"signature\\\":\\\"\\\\u003cinit\\\\u003e(X.C0l, boolean, boolean, boolean, boolean, boolean, boolean): void\\\"},{\\\"def_pos\\\":0,\\\"name\\\":\\\"toString\\\",\\\"is_constructor\\\":false,\\\"signature\\\":\\\"toString(): java.lang.String\\\"}]}\"}],\"isError\":false}},{\"operation\":\"get_method_body\",\"input\":{\"class_name\":\"X.C34T\",\"method_name\":\"<init>\",\"overload_index\":0,\"smali_fallback\":true},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"markers\\\":[],\\\"method_name\\\":\\\"\\\\u003cinit\\\\u003e\\\",\\\"overload_count\\\":1,\\\"body\\\":\\\"    public C34T(C0l c0l, boolean z, boolean z2, boolean z3, boolean z4, boolean z5, boolean z6) {\\\\n        this.A06 \\\\u003d z;\\\\n        this.A01 \\\\u003d z2;\\\\n        this.A02 \\\\u003d z3;\\\\n        this.A03 \\\\u003d z4;\\\\n        this.A04 \\\\u003d z5;\\\\n        this.A05 \\\\u003d z6;\\\\n        this.A00 \\\\u003d c0l;\\\\n    }\\\",\\\"fell_back\\\":false,\\\"overload_index\\\":0,\\\"class_name\\\":\\\"X.C34T\\\",\\\"full_name\\\":\\\"X.34T.\\\\u003cinit\\\\u003e\\\",\\\"mode\\\":\\\"java\\\"}\"}],\"isError\":false}}]},\"normalized_result\":{\"engine\":{\"name\":\"jadx-headless-mcp\",\"version\":\"0.7.1\",\"artifact_sha256\":\"6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75\",\"source_revision\":\"5844800a486d2248fa949b74c9896285f5b54de2\",\"worker_count\":1,\"heap_limit_mib\":14968},\"class_name\":\"X.C34T\",\"method\":{\"name\":\"<init>\",\"reported_signature\":\"<init>(X.C0l, boolean, boolean, boolean, boolean, boolean, boolean): void\",\"overload_index\":0,\"is_constructor\":true,\"dex_descriptor\":null},\"overload_count\":1,\"representation\":\"java\",\"body_status\":\"available\",\"fell_back\":false,\"markers\":[],\"source\":{\"status\":\"complete\",\"text\":\"    public C34T(C0l c0l, boolean z, boolean z2, boolean z3, boolean z4, boolean z5, boolean z6) {\\n        this.A06 = z;\\n        this.A01 = z2;\\n        this.A02 = z3;\\n        this.A03 = z4;\\n        this.A04 = z5;\\n        this.A05 = z6;\\n        this.A00 = c0l;\\n    }\",\"reported_total_bytes\":null}},\"confidence\":\"derived\",\"authority\":\"shipped-artifact\",\"environment\":null,\"limitations\":[\"Static decompiler observations do not establish runtime behavior; the APK is never executed.\",\"Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.\",\"Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.\",\"Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider.\"],\"locations\":[],\"evidence_links\":[]}"
+    }
+  ],
+  "structuredContent": {
+    "evidence_id": "ev_b273caffe345c6eb50ff6e51512d3d9f37e05409a1c8af3d23527ce74a92c03d",
+    "subject": {
+      "name": "WhatsApp.apk",
+      "digest": {
+        "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+      },
+      "format": "apk",
+      "architecture": null,
+      "local_path": "~/Downloads/WhatsApp.apk"
+    },
+    "provider": {
+      "id": "jadx",
+      "name": "JADX headless",
+      "version": "0.7.1"
+    },
+    "analysis_profile": null,
+    "predicate_type": "rea.analysis",
+    "operation": "inspect_android_method",
+    "parameters": {
+      "path": "~/Downloads/WhatsApp.apk",
+      "class_name": "X.C34T",
+      "method_name": "<init>"
+    },
+    "raw_result": {
+      "server": {
+        "name": "rea-jadx-bridge",
+        "version": "1"
+      },
+      "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+      "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "loaded": {
+        "state": "LOADED",
+        "apk_path": "/tmp/rea-android-3JWPVa/target.apk",
+        "class_count": 94738,
+        "resource_count": 14967,
+        "threads": 1,
+        "resources": "full"
+      },
+      "calls": [
+        {
+          "operation": "rea_jvm_status",
+          "input": {},
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\",\"max_heap_bytes\":15695085568}"
+              }
+            ],
+            "isError": false
+          }
+        },
+        {
+          "operation": "get_class_summary",
+          "input": {
+            "class_name": "X.C34T"
+          },
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"fields\":[{\"name\":\"A00\",\"def_pos\":0,\"type\":\"X.C0l\"},{\"name\":\"A01\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A02\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A03\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A04\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A05\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A06\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A07\",\"def_pos\":0,\"type\":\"X.34T\"}],\"field_count\":8,\"full_name\":\"X.C34T\",\"name\":\"C34T\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":3,\"methods\":[{\"def_pos\":0,\"name\":\"\\u003cclinit\\u003e\",\"is_constructor\":false,\"signature\":\"\\u003cclinit\\u003e(): void\"},{\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"signature\":\"\\u003cinit\\u003e(X.C0l, boolean, boolean, boolean, boolean, boolean, boolean): void\"},{\"def_pos\":0,\"name\":\"toString\",\"is_constructor\":false,\"signature\":\"toString(): java.lang.String\"}]}"
+              }
+            ],
+            "isError": false
+          }
+        },
+        {
+          "operation": "get_method_body",
+          "input": {
+            "class_name": "X.C34T",
+            "method_name": "<init>",
+            "overload_index": 0,
+            "smali_fallback": true
+          },
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"markers\":[],\"method_name\":\"\\u003cinit\\u003e\",\"overload_count\":1,\"body\":\"    public C34T(C0l c0l, boolean z, boolean z2, boolean z3, boolean z4, boolean z5, boolean z6) {\\n        this.A06 \\u003d z;\\n        this.A01 \\u003d z2;\\n        this.A02 \\u003d z3;\\n        this.A03 \\u003d z4;\\n        this.A04 \\u003d z5;\\n        this.A05 \\u003d z6;\\n        this.A00 \\u003d c0l;\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.C34T\",\"full_name\":\"X.34T.\\u003cinit\\u003e\",\"mode\":\"java\"}"
+              }
+            ],
+            "isError": false
+          }
+        }
+      ]
+    },
+    "normalized_result": {
+      "engine": {
+        "name": "jadx-headless-mcp",
+        "version": "0.7.1",
+        "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+        "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+        "worker_count": 1,
+        "heap_limit_mib": 14968
+      },
+      "class_name": "X.C34T",
+      "method": {
+        "name": "<init>",
+        "reported_signature": "<init>(X.C0l, boolean, boolean, boolean, boolean, boolean, boolean): void",
+        "overload_index": 0,
+        "is_constructor": true,
+        "dex_descriptor": null
+      },
+      "overload_count": 1,
+      "representation": "java",
+      "body_status": "available",
+      "fell_back": false,
+      "markers": [],
+      "source": {
+        "status": "complete",
+        "text": "    public C34T(C0l c0l, boolean z, boolean z2, boolean z3, boolean z4, boolean z5, boolean z6) {\n        this.A06 = z;\n        this.A01 = z2;\n        this.A02 = z3;\n        this.A03 = z4;\n        this.A04 = z5;\n        this.A05 = z6;\n        this.A00 = c0l;\n    }",
+        "reported_total_bytes": null
+      }
+    },
+    "confidence": "derived",
+    "authority": "shipped-artifact",
+    "environment": null,
+    "limitations": [
+      "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+      "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+      "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+      "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+    ],
+    "locations": [],
+    "evidence_links": []
+  }
+}

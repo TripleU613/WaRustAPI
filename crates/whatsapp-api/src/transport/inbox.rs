@@ -3340,10 +3340,104 @@ mod tests {
         };
         #[cfg(not(feature = "experimental-registration-https"))]
         let continued_session = synced.session.clone();
+        let outbox =
+            crate::outbox::Outbox::new("own-echo-fixture", crate::profile::Limits::default());
+        let request = crate::model::send::SendRequest {
+            client_request_id: crate::model::ids::ClientRequestId::new("OWN-ECHO-REQUEST").unwrap(),
+            chat: crate::model::ids::ChatId::from_jid(&Jid::parse("67890@lid").unwrap()).unwrap(),
+            content: crate::model::message::MessageContent::Text {
+                body: "original intent".into(),
+                quoted: None,
+                style: Default::default(),
+            },
+        };
+        let (ticket, _) = store.write(|tx| outbox.enqueue(tx, &request)).unwrap();
+        store
+            .write(|tx| {
+                let mut entry = outbox.get_mut(tx, ticket.local_id)?.unwrap();
+                entry.wire_id = Some(crate::model::ids::MessageId::new("OWN-ECHO")?);
+                entry.progress = crate::model::send::AttemptProgress::InFlight;
+                entry.facts.push(crate::model::send::DeliveryFact {
+                    kind: crate::model::send::DeliveryFactKind::DeliveryUnknown,
+                    device: None,
+                    observed_at: crate::model::time::Timestamp(123),
+                    server_timestamp: None,
+                    code: None,
+                });
+                tx.put_json(Table::Outbox, &ticket.local_id.0, 1, &entry)
+            })
+            .unwrap();
+        let before_echo = store
+            .read(|tx| {
+                Ok((
+                    tx.scan(Table::Outbox, 1, 10)?,
+                    tx.scan(Table::Idempotency, 1, 10)?,
+                ))
+            })
+            .unwrap();
+        let before_echo_head = store.journal_head().unwrap();
+        let echo = direct::prepare_payload(
+            &sender,
+            receiver.own_jid.as_ref().unwrap(),
+            None,
+            Some(&continued_session),
+            Some(&sent.identity),
+            b"\xfa\x01\x14\x0a\x0967890@lid\x12\x07\x0a\x05hello",
+        )
+        .await
+        .unwrap();
+        let echo_node = Node::new("message")
+            .attr("from", peer_device.clone())
+            .attr("recipient", "67890@lid")
+            .attr("id", "OWN-ECHO")
+            .attr("type", "text")
+            .children(vec![
+                Node::new("enc")
+                    .attr("type", echo.kind)
+                    .attr("v", "2")
+                    .bytes(echo.ciphertext.to_vec()),
+            ]);
+        let echo_capture = preserve(&store, &echo_node).unwrap();
+        assert_eq!(
+            process(&store, &receiver, &echo_node, &echo_capture)
+                .await
+                .unwrap(),
+            IncomingResult::Decrypted
+        );
+        assert_eq!(store.journal_head().unwrap(), before_echo_head);
+        assert_eq!(
+            store
+                .read(|tx| Ok((
+                    tx.scan(Table::Outbox, 1, 10)?,
+                    tx.scan(Table::Idempotency, 1, 10)?
+                )))
+                .unwrap(),
+            before_echo
+        );
+        let marker: serde_json::Value = store
+            .read(|tx| tx.get_json(Table::Inbox, b"received-own:67890@lid:OWN-ECHO", 1))
+            .unwrap()
+            .unwrap();
+        assert_eq!(marker["kind"], "outgoing_echo");
+        assert_eq!(marker["local_id"], serde_json::json!(ticket.local_id));
+        assert!(
+            super::super::messaging::received_confirmation_for_account(
+                &store, &receiver, &echo_node
+            )
+            .unwrap()
+            .is_some()
+        );
         let event_count =
-            batch.events.len() + usize::from(cfg!(feature = "experimental-registration-https"));
+            batch.events.len() + usize::from(cfg!(feature = "experimental-registration-https")) + 1;
         drop(store);
         let store = open(false);
+        assert_eq!(
+            process(&store, &receiver, &echo_node, &echo_capture)
+                .await
+                .unwrap(),
+            IncomingResult::Duplicate
+        );
+        assert_eq!(store.journal_head().unwrap(), before_echo_head);
         assert_eq!(
             super::super::messaging::received_confirmation_for_account(
                 &store, &receiver, &sync_node
@@ -3373,7 +3467,7 @@ mod tests {
             super::super::chat_clear::clear_chat(&store, &Jid::parse("67890@lid").unwrap())
                 .unwrap()
                 .cleared_messages,
-            1 + usize::from(cfg!(feature = "experimental-registration-https"))
+            2 + usize::from(cfg!(feature = "experimental-registration-https"))
         );
         #[cfg(feature = "experimental-registration-https")]
         assert!(super::super::media::list(&store).unwrap().is_empty());
@@ -3405,7 +3499,7 @@ mod tests {
             &sender,
             receiver.own_jid.as_ref().unwrap(),
             None,
-            Some(&continued_session),
+            Some(&echo.session),
             Some(&sent.identity),
             b"\x0a\x05hello",
         )

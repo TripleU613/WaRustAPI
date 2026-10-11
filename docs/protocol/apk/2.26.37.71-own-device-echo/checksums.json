@@ -1,0 +1,54 @@
+{
+  "decrypted-processor-dispatch.txt": {
+    "bytes": 7186,
+    "sha256": "bf659b106574bd374433f9e426f30695072260d4b124869a1a4ae2f69fe2da78"
+  },
+  "duplicate-selection.txt": {
+    "bytes": 39052,
+    "sha256": "a3da552c3bdf6e3946c70ef2a0267018f4aa97b39378077c553cdacbc10c634f"
+  },
+  "incoming-storage-dispatch.txt": {
+    "bytes": 287709,
+    "sha256": "355a9024882cabc2dcf98909b5becfc8d619142f201d0df035e2a11c6f97cb52"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "own-preprocessed-store.txt": {
+    "bytes": 81038,
+    "sha256": "8f4deedc1ab25e43ed887ec4f3e193419b8d10d01a6ef4e83766256158fcdef6"
+  },
+  "own-store-entry.txt": {
+    "bytes": 752,
+    "sha256": "09d6912cddf8bd73d3e7a3f802290c89cea937bf66c397d3b6e2f643f0444911"
+  },
+  "regular-dispatch.txt": {
+    "bytes": 31151,
+    "sha256": "e85827fe9791f2c971f334df6f78eaaac0c418d650a5d19d98d81026fdd8a0b7"
+  },
+  "result-constructor.txt": {
+    "bytes": 933,
+    "sha256": "f64fe0c49bf6c68c2ab314973e417a30e31b0fab1e2bc1d05d4ed1b1eaf1c643"
+  },
+  "result-labels.txt": {
+    "bytes": 2620,
+    "sha256": "7d12bf0071aa40875eeacf99d617a24222bd3a576d2998b8f98a910382bad229"
+  },
+  "row-insert-result.txt": {
+    "bytes": 62808,
+    "sha256": "3d93bf132dae29ec55355cee326002cff50d58f09a5af2329f5e399ba4bb2004"
+  },
+  "targets.json": {
+    "bytes": 4371,
+    "sha256": "53b4f064e64cb062aa91be0a6b41e6c522a9558c8f553e7d8de00d09ecf1fb69"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

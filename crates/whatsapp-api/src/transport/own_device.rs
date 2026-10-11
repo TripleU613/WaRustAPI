@@ -197,6 +197,53 @@ pub(super) fn confirmation(
     }))
 }
 
+fn publish(
+    tx: &mut crate::store::WriteTx<'_>,
+    key: &[u8],
+    event: crate::sync::SyncEvent,
+) -> Result<()> {
+    let local_id = if let crate::sync::SyncEvent::NewMessage(message) = &event {
+        let outbox =
+            crate::outbox::Outbox::new("comparison-driver", crate::profile::Limits::default());
+        match outbox.by_wire_id_in_write(tx, &message.key.id)? {
+            Some(entry)
+                if matches!(
+                    entry.intent.content,
+                    crate::model::message::MessageContent::Text { .. }
+                        | crate::model::message::MessageContent::Media { .. }
+                        | crate::model::message::MessageContent::Poll { .. }
+                ) && super::jid_map::authenticated_direct_chat(
+                    tx,
+                    message.key.chat.jid(),
+                    entry.intent.chat.jid(),
+                )? =>
+            {
+                Some(entry.local_id)
+            }
+            _ => None,
+        }
+    } else {
+        None
+    };
+    if let Some(local_id) = local_id {
+        // 0zC.A0A preserves ordinary existing rows; an own-device echo is not a send outcome.
+        tx.put_json(
+            Table::Inbox,
+            key,
+            1,
+            &serde_json::json!({"kind":"outgoing_echo", "local_id":local_id}),
+        )
+    } else {
+        let event = tx.append_event(event)?;
+        tx.put_json(
+            Table::Inbox,
+            key,
+            1,
+            &serde_json::json!({"event_id":event.event_id,"kind":event.event.kind()}),
+        )
+    }
+}
+
 pub(super) async fn process(
     store: &ProtocolStore,
     account: &AccountRecord,
@@ -298,8 +345,7 @@ pub(super) async fn process(
             "status":"decrypted", "source":source, "protobuf":&*received.plaintext,
             "capture":capture, "route":route_bytes, "received_at":crate::model::time::Timestamp::now()
         }))?;
-        let event = tx.append_event(event)?;
-        tx.put_json(Table::Inbox, key.as_bytes(), 1, &serde_json::json!({"event_id":event.event_id,"kind":event.event.kind()}))?;
+        publish(tx, key.as_bytes(), event)?;
         Ok(IncomingResult::Decrypted)
     })
 }
@@ -307,6 +353,162 @@ pub(super) async fn process(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn outgoing_echo_matches_only_saved_wire_and_authenticated_chat_without_send_mutation() {
+        use crate::model::{
+            ids::{ChatId, ClientRequestId, MessageId},
+            message::MessageContent,
+            send::SendRequest,
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(crate::store::OpenOptions {
+            path: dir.path().join("echo.redb"),
+            account_id: crate::model::ids::AccountId::new("fixture").unwrap(),
+            create: true,
+            key_source: std::sync::Arc::new(crate::store::StaticKeySource::new(
+                crate::store::MasterKey::from_bytes([9; 32]),
+            )),
+        })
+        .unwrap();
+        let lid = Jid::parse("67890@lid").unwrap();
+        let phone = Jid::parse("15555550888@s.whatsapp.net").unwrap();
+        let foreign = Jid::parse("99999@lid").unwrap();
+        let outbox = crate::outbox::Outbox::new("fixture", crate::profile::Limits::default());
+        for (index, (actual, original, authenticated, wire_reserved, matched)) in [
+            (&lid, &lid, false, true, true),
+            (&phone, &phone, false, true, true),
+            (&lid, &phone, false, true, false),
+            (&lid, &phone, true, true, true),
+            (&phone, &lid, true, true, true),
+            (&foreign, &phone, true, true, false),
+            (&lid, &lid, false, false, false),
+        ]
+        .into_iter()
+        .enumerate()
+        {
+            let id = format!("ECHO-{index}");
+            let request = SendRequest {
+                client_request_id: ClientRequestId::new(id.clone()).unwrap(),
+                chat: ChatId::from_jid(original).unwrap(),
+                content: MessageContent::Text {
+                    body: "original".into(),
+                    quoted: None,
+                    style: Default::default(),
+                },
+            };
+            let (ticket, _) = store.write(|tx| outbox.enqueue(tx, &request)).unwrap();
+            store
+                .write(|tx| {
+                    let map_key = format!("authenticated-lid:{lid}");
+                    tx.delete(Table::Checkpoints, map_key.as_bytes())?;
+                    if authenticated {
+                        tx.put_json(Table::Checkpoints, map_key.as_bytes(), 1, &phone)?;
+                    }
+                    // A directory alias alone must not supply this association.
+                    tx.put_json(
+                        Table::Checkpoints,
+                        format!("lid-for:{phone}").as_bytes(),
+                        1,
+                        &lid,
+                    )?;
+                    let mut entry = outbox.get_mut(tx, ticket.local_id)?.unwrap();
+                    entry.wire_id = wire_reserved.then(|| MessageId::new(id.clone()).unwrap());
+                    tx.put_json(Table::Outbox, &entry.local_id.0, 1, &entry)
+                })
+                .unwrap();
+            let before = store
+                .read(|tx| {
+                    Ok((
+                        tx.scan(Table::Outbox, 1, 20)?,
+                        tx.scan(Table::Idempotency, 1, 20)?,
+                    ))
+                })
+                .unwrap();
+            let head = store.journal_head().unwrap();
+            let node = Node::new("message").attr("id", id.as_str());
+            let key = format!("received-own:{actual}:{id}");
+            store
+                .write(|tx| {
+                    let event = super::super::inbox_events::own_device_message(
+                        tx,
+                        key.as_bytes(),
+                        actual,
+                        &node,
+                        b"\x0a\x04echo",
+                        &[],
+                    )?
+                    .unwrap();
+                    publish(tx, key.as_bytes(), event)
+                })
+                .unwrap();
+            assert_eq!(
+                store
+                    .read(|tx| Ok((
+                        tx.scan(Table::Outbox, 1, 20)?,
+                        tx.scan(Table::Idempotency, 1, 20)?
+                    )))
+                    .unwrap(),
+                before
+            );
+            assert_eq!(store.journal_head().unwrap() == head, matched);
+            let marker: serde_json::Value = store
+                .read(|tx| tx.get_json(Table::Inbox, key.as_bytes(), 1))
+                .unwrap()
+                .unwrap();
+            assert_eq!(
+                marker["kind"],
+                if matched {
+                    "outgoing_echo"
+                } else {
+                    "new_message"
+                }
+            );
+            if matched {
+                assert_eq!(marker["local_id"], serde_json::json!(ticket.local_id));
+            }
+        }
+        let key = b"received-own:67890@lid:CORRUPT";
+        store
+            .write(|tx| tx.put(Table::Outbox, b"damaged", 1, b"invalid json"))
+            .unwrap();
+        let before_head = store.journal_head().unwrap();
+        let error = store
+            .write(|tx| {
+                tx.put(Table::SignalSessions, b"rollback-fixture", 1, b"advanced")?;
+                let event = super::super::inbox_events::own_device_message(
+                    tx,
+                    key,
+                    &lid,
+                    &Node::new("message").attr("id", "CORRUPT"),
+                    b"\x0a\x04echo",
+                    &[],
+                )?
+                .unwrap();
+                publish(tx, key, event)
+            })
+            .unwrap_err();
+        assert!(matches!(
+            error,
+            Error::InvalidInput {
+                field: "outbox",
+                ..
+            }
+        ));
+        assert!(
+            store
+                .read(|tx| tx.get(Table::SignalSessions, b"rollback-fixture", 1))
+                .unwrap()
+                .is_none()
+        );
+        assert!(
+            store
+                .read(|tx| tx.get(Table::Inbox, key, 1))
+                .unwrap()
+                .is_none()
+        );
+        assert_eq!(store.journal_head().unwrap(), before_head);
+    }
+
     #[test]
     fn confirmation_requires_committed_same_source_and_keeps_saved_state() {
         let dir = tempfile::tempdir().unwrap();

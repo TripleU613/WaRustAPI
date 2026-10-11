@@ -1,3 +1,11 @@
+2026-10-11 — **Implemented/offline:** authenticated own-device text/media
+echoes now correlate to an existing normal outgoing intent by unique saved wire
+ID and exact/authenticated chat association. They retain the original wrapper
+and advance the held session without a duplicate NewMessage or any send-status
+change. InFlight/DeliveryUnknown, immutable intent, IDs and waits stay intact.
+Cross-source/placeholder reconciliation and fresh live echo acceptance remain open.
+[Own-device echo correlation](docs/protocol/own-device-echo.md).
+
 2026-10-11 — **Implemented/offline:** held, pinned own-device sessions now
 synchronize supported ordinary media into outgoing events with sealed attachment
 references and sender confirmations. Existing explicit retrieval, expiry and

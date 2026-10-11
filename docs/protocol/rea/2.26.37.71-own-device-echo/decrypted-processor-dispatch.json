@@ -1,0 +1,136 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"evidence_id\":\"ev_82c272b76fbd9e638862b7c0ac2d89d7df99a71d3f187751a16e2fc361b4b7f7\",\"subject\":{\"name\":\"WhatsApp.apk\",\"digest\":{\"sha256\":\"1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c\"},\"format\":\"apk\",\"architecture\":null,\"local_path\":\"~/Downloads/WhatsApp.apk\"},\"provider\":{\"id\":\"jadx\",\"name\":\"JADX headless\",\"version\":\"0.7.1\"},\"analysis_profile\":null,\"predicate_type\":\"rea.analysis\",\"operation\":\"inspect_android_method\",\"parameters\":{\"path\":\"~/Downloads/WhatsApp.apk\",\"class_name\":\"X.CPF\",\"method_name\":\"A00\"},\"raw_result\":{\"server\":{\"name\":\"rea-jadx-bridge\",\"version\":\"1\"},\"bridge_sha256\":\"5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1\",\"jar_sha256\":\"6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75\",\"loaded\":{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-mEf0dB/target.apk\",\"class_count\":94738,\"resource_count\":14967,\"threads\":1,\"resources\":\"full\"},\"calls\":[{\"operation\":\"rea_jvm_status\",\"input\":{},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"engine_reported_version\\\":\\\"0.7.1\\\",\\\"metadata_scope\\\":\\\"parsed_members\\\",\\\"max_heap_bytes\\\":15695085568,\\\"java_version\\\":\\\"21.0.12.1\\\",\\\"available_processors\\\":24}\"}],\"isError\":false}},{\"operation\":\"get_class_summary\",\"input\":{\"class_name\":\"X.CPF\"},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"inner_classes\\\":[],\\\"name\\\":\\\"CPF\\\",\\\"full_name\\\":\\\"X.CPF\\\",\\\"field_count\\\":3,\\\"fields\\\":[{\\\"def_pos\\\":0,\\\"name\\\":\\\"A00\\\",\\\"type\\\":\\\"X.05B\\\"},{\\\"def_pos\\\":0,\\\"name\\\":\\\"A01\\\",\\\"type\\\":\\\"X.05B\\\"},{\\\"def_pos\\\":0,\\\"name\\\":\\\"A02\\\",\\\"type\\\":\\\"java.util.Set\\\"}],\\\"methods\\\":[{\\\"is_constructor\\\":true,\\\"name\\\":\\\"\\\\u003cinit\\\\u003e\\\",\\\"def_pos\\\":0,\\\"signature\\\":\\\"\\\\u003cinit\\\\u003e(): void\\\"},{\\\"is_constructor\\\":false,\\\"name\\\":\\\"A00\\\",\\\"def_pos\\\":0,\\\"signature\\\":\\\"A00(X.178, X.DFI, X.Bp2): X.Da8\\\"}],\\\"method_count\\\":2,\\\"inner_class_count\\\":0}\"}],\"isError\":false}},{\"operation\":\"get_method_body\",\"input\":{\"class_name\":\"X.CPF\",\"method_name\":\"A00\",\"overload_index\":0,\"smali_fallback\":true},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"body\\\":\\\"    /* JADX WARN: Multi-variable type inference failed */\\\\n    public final Da8 A00(AnonymousClass178 anonymousClass178, DFI dfi, Bp2 bp2) {\\\\n        C1in c1in;\\\\n        C1gc c1gc \\\\u003d anonymousClass178.A0i;\\\\n        DFN dfn \\\\u003d (DFN) C8kX.A0X(bp2, DFN.class);\\\\n        if (dfn !\\\\u003d null) {\\\\n            String str \\\\u003d dfn.A00;\\\\n            if (!(anonymousClass178 instanceof C1ik) \\\\u0026\\\\u0026 !(anonymousClass178 instanceof C1il)) {\\\\n                String strATi \\\\u003d (!(anonymousClass178 instanceof C1in) || (c1in \\\\u003d (C1in) anonymousClass178) \\\\u003d\\\\u003d null) ? null : c1in.ATi();\\\\n                if (!C00h.areEqual(str, strATi)) {\\\\n                    boolean zA0G \\\\u003d C00D.A0G(C05B.A00(this.A00), CDG.A00);\\\\n                    String strA0q \\\\u003d C3cA.A0q(anonymousClass178);\\\\n                    StringBuilder sbA08 \\\\u003d AnonymousClass000.A08(\\\\\\\"DecryptedMessageManager/validateAppDataTypeMatch: appdata mismatch stanza\\\\u003d\\\\\\\", str);\\\\n                    sbA08.append(\\\\\\\" expected\\\\u003d\\\\\\\");\\\\n                    sbA08.append(strATi);\\\\n                    sbA08.append(\\\\\\\" payload\\\\u003d\\\\\\\");\\\\n                    sbA08.append(strA0q);\\\\n                    sbA08.append(\\\\\\\" key\\\\u003d\\\\\\\");\\\\n                    sbA08.append(c1gc);\\\\n                    com.whatsapp.infra.logging.Log.w(C1xj.A18(\\\\\\\" drop_enabled\\\\u003d\\\\\\\", sbA08, zA0G));\\\\n                    if (zA0G) {\\\\n                        return new DEM(new CUt(415, 24));\\\\n                    }\\\\n                    Aym.A0u(this.A01).A0B(dfi, bp2, Boolean.valueOf(anonymousClass178.A12), null, 24);\\\\n                }\\\\n            }\\\\n        }\\\\n        for (DcU dcU : this.A02) {\\\\n            try {\\\\n                Da8 da8CHe \\\\u003d dcU.CHe(anonymousClass178, dfi, bp2);\\\\n                if (!(da8CHe instanceof DEJ)) {\\\\n                    String strAcJ \\\\u003d dcU.AcJ();\\\\n                    StringBuilder sbA18 \\\\u003d C1xi.A18(\\\\\\\"DecryptedMessageManager/processMessage/processor \\\\\\\");\\\\n                    sbA18.append(strAcJ);\\\\n                    C1xj.A1L(c1gc, \\\\\\\" handled the message, key\\\\u003d\\\\\\\", sbA18);\\\\n                    return da8CHe;\\\\n                }\\\\n            } catch (Throwable th) {\\\\n                StringBuilder sbA09 \\\\u003d AnonymousClass000.A08(\\\\\\\"DecryptedMessageManager/processMessage/processor \\\\\\\", dcU.AcJ());\\\\n                sbA09.append(\\\\\\\" failed, key\\\\u003d\\\\\\\");\\\\n                sbA09.append(c1gc);\\\\n                C6ao.A1P(\\\\\\\", error\\\\u003d\\\\\\\", sbA09, th);\\\\n                return new DEM(new CUt(ClassLoaderConfiguration.BASE_DEX_RETRY_WAIT_MS, 10));\\\\n            }\\\\n        }\\\\n        return DEJ.A00;\\\\n    }\\\",\\\"overload_count\\\":1,\\\"method_name\\\":\\\"A00\\\",\\\"markers\\\":[],\\\"mode\\\":\\\"java\\\",\\\"full_name\\\":\\\"X.CPF.A00\\\",\\\"class_name\\\":\\\"X.CPF\\\",\\\"overload_index\\\":0,\\\"fell_back\\\":false}\"}],\"isError\":false}}]},\"normalized_result\":{\"engine\":{\"name\":\"jadx-headless-mcp\",\"version\":\"0.7.1\",\"artifact_sha256\":\"6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75\",\"source_revision\":\"5844800a486d2248fa949b74c9896285f5b54de2\",\"worker_count\":1,\"heap_limit_mib\":14968},\"class_name\":\"X.CPF\",\"method\":{\"name\":\"A00\",\"reported_signature\":\"A00(X.178, X.DFI, X.Bp2): X.Da8\",\"overload_index\":0,\"is_constructor\":false,\"dex_descriptor\":null},\"overload_count\":1,\"representation\":\"java\",\"body_status\":\"available\",\"fell_back\":false,\"markers\":[],\"source\":{\"status\":\"complete\",\"text\":\"    /* JADX WARN: Multi-variable type inference failed */\\n    public final Da8 A00(AnonymousClass178 anonymousClass178, DFI dfi, Bp2 bp2) {\\n        C1in c1in;\\n        C1gc c1gc = anonymousClass178.A0i;\\n        DFN dfn = (DFN) C8kX.A0X(bp2, DFN.class);\\n        if (dfn != null) {\\n            String str = dfn.A00;\\n            if (!(anonymousClass178 instanceof C1ik) && !(anonymousClass178 instanceof C1il)) {\\n                String strATi = (!(anonymousClass178 instanceof C1in) || (c1in = (C1in) anonymousClass178) == null) ? null : c1in.ATi();\\n                if (!C00h.areEqual(str, strATi)) {\\n                    boolean zA0G = C00D.A0G(C05B.A00(this.A00), CDG.A00);\\n                    String strA0q = C3cA.A0q(anonymousClass178);\\n                    StringBuilder sbA08 = AnonymousClass000.A08(\\\"DecryptedMessageManager/validateAppDataTypeMatch: appdata mismatch stanza=\\\", str);\\n                    sbA08.append(\\\" expected=\\\");\\n                    sbA08.append(strATi);\\n                    sbA08.append(\\\" payload=\\\");\\n                    sbA08.append(strA0q);\\n                    sbA08.append(\\\" key=\\\");\\n                    sbA08.append(c1gc);\\n                    com.whatsapp.infra.logging.Log.w(C1xj.A18(\\\" drop_enabled=\\\", sbA08, zA0G));\\n                    if (zA0G) {\\n                        return new DEM(new CUt(415, 24));\\n                    }\\n                    Aym.A0u(this.A01).A0B(dfi, bp2, Boolean.valueOf(anonymousClass178.A12), null, 24);\\n                }\\n            }\\n        }\\n        for (DcU dcU : this.A02) {\\n            try {\\n                Da8 da8CHe = dcU.CHe(anonymousClass178, dfi, bp2);\\n                if (!(da8CHe instanceof DEJ)) {\\n                    String strAcJ = dcU.AcJ();\\n                    StringBuilder sbA18 = C1xi.A18(\\\"DecryptedMessageManager/processMessage/processor \\\");\\n                    sbA18.append(strAcJ);\\n                    C1xj.A1L(c1gc, \\\" handled the message, key=\\\", sbA18);\\n                    return da8CHe;\\n                }\\n            } catch (Throwable th) {\\n                StringBuilder sbA09 = AnonymousClass000.A08(\\\"DecryptedMessageManager/processMessage/processor \\\", dcU.AcJ());\\n                sbA09.append(\\\" failed, key=\\\");\\n                sbA09.append(c1gc);\\n                C6ao.A1P(\\\", error=\\\", sbA09, th);\\n                return new DEM(new CUt(ClassLoaderConfiguration.BASE_DEX_RETRY_WAIT_MS, 10));\\n            }\\n        }\\n        return DEJ.A00;\\n    }\",\"reported_total_bytes\":null}},\"confidence\":\"derived\",\"authority\":\"shipped-artifact\",\"environment\":null,\"limitations\":[\"Static decompiler observations do not establish runtime behavior; the APK is never executed.\",\"Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.\",\"Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.\",\"Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider.\"],\"locations\":[],\"evidence_links\":[]}"
+    }
+  ],
+  "structuredContent": {
+    "evidence_id": "ev_82c272b76fbd9e638862b7c0ac2d89d7df99a71d3f187751a16e2fc361b4b7f7",
+    "subject": {
+      "name": "WhatsApp.apk",
+      "digest": {
+        "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+      },
+      "format": "apk",
+      "architecture": null,
+      "local_path": "~/Downloads/WhatsApp.apk"
+    },
+    "provider": {
+      "id": "jadx",
+      "name": "JADX headless",
+      "version": "0.7.1"
+    },
+    "analysis_profile": null,
+    "predicate_type": "rea.analysis",
+    "operation": "inspect_android_method",
+    "parameters": {
+      "path": "~/Downloads/WhatsApp.apk",
+      "class_name": "X.CPF",
+      "method_name": "A00"
+    },
+    "raw_result": {
+      "server": {
+        "name": "rea-jadx-bridge",
+        "version": "1"
+      },
+      "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+      "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "loaded": {
+        "state": "LOADED",
+        "apk_path": "/tmp/rea-android-mEf0dB/target.apk",
+        "class_count": 94738,
+        "resource_count": 14967,
+        "threads": 1,
+        "resources": "full"
+      },
+      "calls": [
+        {
+          "operation": "rea_jvm_status",
+          "input": {},
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":15695085568,\"java_version\":\"21.0.12.1\",\"available_processors\":24}"
+              }
+            ],
+            "isError": false
+          }
+        },
+        {
+          "operation": "get_class_summary",
+          "input": {
+            "class_name": "X.CPF"
+          },
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"inner_classes\":[],\"name\":\"CPF\",\"full_name\":\"X.CPF\",\"field_count\":3,\"fields\":[{\"def_pos\":0,\"name\":\"A00\",\"type\":\"X.05B\"},{\"def_pos\":0,\"name\":\"A01\",\"type\":\"X.05B\"},{\"def_pos\":0,\"name\":\"A02\",\"type\":\"java.util.Set\"}],\"methods\":[{\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(): void\"},{\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0,\"signature\":\"A00(X.178, X.DFI, X.Bp2): X.Da8\"}],\"method_count\":2,\"inner_class_count\":0}"
+              }
+            ],
+            "isError": false
+          }
+        },
+        {
+          "operation": "get_method_body",
+          "input": {
+            "class_name": "X.CPF",
+            "method_name": "A00",
+            "overload_index": 0,
+            "smali_fallback": true
+          },
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"body\":\"    /* JADX WARN: Multi-variable type inference failed */\\n    public final Da8 A00(AnonymousClass178 anonymousClass178, DFI dfi, Bp2 bp2) {\\n        C1in c1in;\\n        C1gc c1gc \\u003d anonymousClass178.A0i;\\n        DFN dfn \\u003d (DFN) C8kX.A0X(bp2, DFN.class);\\n        if (dfn !\\u003d null) {\\n            String str \\u003d dfn.A00;\\n            if (!(anonymousClass178 instanceof C1ik) \\u0026\\u0026 !(anonymousClass178 instanceof C1il)) {\\n                String strATi \\u003d (!(anonymousClass178 instanceof C1in) || (c1in \\u003d (C1in) anonymousClass178) \\u003d\\u003d null) ? null : c1in.ATi();\\n                if (!C00h.areEqual(str, strATi)) {\\n                    boolean zA0G \\u003d C00D.A0G(C05B.A00(this.A00), CDG.A00);\\n                    String strA0q \\u003d C3cA.A0q(anonymousClass178);\\n                    StringBuilder sbA08 \\u003d AnonymousClass000.A08(\\\"DecryptedMessageManager/validateAppDataTypeMatch: appdata mismatch stanza\\u003d\\\", str);\\n                    sbA08.append(\\\" expected\\u003d\\\");\\n                    sbA08.append(strATi);\\n                    sbA08.append(\\\" payload\\u003d\\\");\\n                    sbA08.append(strA0q);\\n                    sbA08.append(\\\" key\\u003d\\\");\\n                    sbA08.append(c1gc);\\n                    com.whatsapp.infra.logging.Log.w(C1xj.A18(\\\" drop_enabled\\u003d\\\", sbA08, zA0G));\\n                    if (zA0G) {\\n                        return new DEM(new CUt(415, 24));\\n                    }\\n                    Aym.A0u(this.A01).A0B(dfi, bp2, Boolean.valueOf(anonymousClass178.A12), null, 24);\\n                }\\n            }\\n        }\\n        for (DcU dcU : this.A02) {\\n            try {\\n                Da8 da8CHe \\u003d dcU.CHe(anonymousClass178, dfi, bp2);\\n                if (!(da8CHe instanceof DEJ)) {\\n                    String strAcJ \\u003d dcU.AcJ();\\n                    StringBuilder sbA18 \\u003d C1xi.A18(\\\"DecryptedMessageManager/processMessage/processor \\\");\\n                    sbA18.append(strAcJ);\\n                    C1xj.A1L(c1gc, \\\" handled the message, key\\u003d\\\", sbA18);\\n                    return da8CHe;\\n                }\\n            } catch (Throwable th) {\\n                StringBuilder sbA09 \\u003d AnonymousClass000.A08(\\\"DecryptedMessageManager/processMessage/processor \\\", dcU.AcJ());\\n                sbA09.append(\\\" failed, key\\u003d\\\");\\n                sbA09.append(c1gc);\\n                C6ao.A1P(\\\", error\\u003d\\\", sbA09, th);\\n                return new DEM(new CUt(ClassLoaderConfiguration.BASE_DEX_RETRY_WAIT_MS, 10));\\n            }\\n        }\\n        return DEJ.A00;\\n    }\",\"overload_count\":1,\"method_name\":\"A00\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.CPF.A00\",\"class_name\":\"X.CPF\",\"overload_index\":0,\"fell_back\":false}"
+              }
+            ],
+            "isError": false
+          }
+        }
+      ]
+    },
+    "normalized_result": {
+      "engine": {
+        "name": "jadx-headless-mcp",
+        "version": "0.7.1",
+        "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+        "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+        "worker_count": 1,
+        "heap_limit_mib": 14968
+      },
+      "class_name": "X.CPF",
+      "method": {
+        "name": "A00",
+        "reported_signature": "A00(X.178, X.DFI, X.Bp2): X.Da8",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      "overload_count": 1,
+      "representation": "java",
+      "body_status": "available",
+      "fell_back": false,
+      "markers": [],
+      "source": {
+        "status": "complete",
+        "text": "    /* JADX WARN: Multi-variable type inference failed */\n    public final Da8 A00(AnonymousClass178 anonymousClass178, DFI dfi, Bp2 bp2) {\n        C1in c1in;\n        C1gc c1gc = anonymousClass178.A0i;\n        DFN dfn = (DFN) C8kX.A0X(bp2, DFN.class);\n        if (dfn != null) {\n            String str = dfn.A00;\n            if (!(anonymousClass178 instanceof C1ik) && !(anonymousClass178 instanceof C1il)) {\n                String strATi = (!(anonymousClass178 instanceof C1in) || (c1in = (C1in) anonymousClass178) == null) ? null : c1in.ATi();\n                if (!C00h.areEqual(str, strATi)) {\n                    boolean zA0G = C00D.A0G(C05B.A00(this.A00), CDG.A00);\n                    String strA0q = C3cA.A0q(anonymousClass178);\n                    StringBuilder sbA08 = AnonymousClass000.A08(\"DecryptedMessageManager/validateAppDataTypeMatch: appdata mismatch stanza=\", str);\n                    sbA08.append(\" expected=\");\n                    sbA08.append(strATi);\n                    sbA08.append(\" payload=\");\n                    sbA08.append(strA0q);\n                    sbA08.append(\" key=\");\n                    sbA08.append(c1gc);\n                    com.whatsapp.infra.logging.Log.w(C1xj.A18(\" drop_enabled=\", sbA08, zA0G));\n                    if (zA0G) {\n                        return new DEM(new CUt(415, 24));\n                    }\n                    Aym.A0u(this.A01).A0B(dfi, bp2, Boolean.valueOf(anonymousClass178.A12), null, 24);\n                }\n            }\n        }\n        for (DcU dcU : this.A02) {\n            try {\n                Da8 da8CHe = dcU.CHe(anonymousClass178, dfi, bp2);\n                if (!(da8CHe instanceof DEJ)) {\n                    String strAcJ = dcU.AcJ();\n                    StringBuilder sbA18 = C1xi.A18(\"DecryptedMessageManager/processMessage/processor \");\n                    sbA18.append(strAcJ);\n                    C1xj.A1L(c1gc, \" handled the message, key=\", sbA18);\n                    return da8CHe;\n                }\n            } catch (Throwable th) {\n                StringBuilder sbA09 = AnonymousClass000.A08(\"DecryptedMessageManager/processMessage/processor \", dcU.AcJ());\n                sbA09.append(\" failed, key=\");\n                sbA09.append(c1gc);\n                C6ao.A1P(\", error=\", sbA09, th);\n                return new DEM(new CUt(ClassLoaderConfiguration.BASE_DEX_RETRY_WAIT_MS, 10));\n            }\n        }\n        return DEJ.A00;\n    }",
+        "reported_total_bytes": null
+      }
+    },
+    "confidence": "derived",
+    "authority": "shipped-artifact",
+    "environment": null,
+    "limitations": [
+      "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+      "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+      "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+      "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+    ],
+    "locations": [],
+    "evidence_links": []
+  }
+}

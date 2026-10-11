@@ -1,0 +1,194 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"evidence_id\":\"ev_15577e21a1dc8e31e1afa8fffdd1176e5eb21f63bb6f8a3ffb396a0d8009f7c3\",\"subject\":{\"name\":\"WhatsApp.apk\",\"digest\":{\"sha256\":\"1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c\"},\"format\":\"apk\",\"architecture\":null,\"local_path\":\"~/Downloads/WhatsApp.apk\"},\"provider\":{\"id\":\"jadx\",\"name\":\"JADX headless\",\"version\":\"0.7.1\"},\"analysis_profile\":null,\"predicate_type\":\"rea.analysis\",\"operation\":\"trace_android_references\",\"parameters\":{\"path\":\"~/Downloads/WhatsApp.apk\",\"class_name\":\"X.DcU\"},\"raw_result\":{\"server\":{\"name\":\"rea-jadx-bridge\",\"version\":\"1\"},\"bridge_sha256\":\"5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1\",\"jar_sha256\":\"6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75\",\"loaded\":{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-mEf0dB/target.apk\",\"class_count\":94738,\"resource_count\":14967,\"threads\":1,\"resources\":\"full\"},\"calls\":[{\"operation\":\"rea_jvm_status\",\"input\":{},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"engine_reported_version\\\":\\\"0.7.1\\\",\\\"metadata_scope\\\":\\\"parsed_members\\\",\\\"max_heap_bytes\\\":15695085568,\\\"java_version\\\":\\\"21.0.12.1\\\",\\\"available_processors\\\":24}\"}],\"isError\":false}},{\"operation\":\"get_class_summary\",\"input\":{\"class_name\":\"X.DcU\"},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"inner_classes\\\":[],\\\"name\\\":\\\"DcU\\\",\\\"full_name\\\":\\\"X.DcU\\\",\\\"field_count\\\":0,\\\"fields\\\":[],\\\"methods\\\":[{\\\"is_constructor\\\":false,\\\"name\\\":\\\"AcJ\\\",\\\"def_pos\\\":0,\\\"signature\\\":\\\"AcJ(): java.lang.String\\\"},{\\\"is_constructor\\\":false,\\\"name\\\":\\\"CHe\\\",\\\"def_pos\\\":0,\\\"signature\\\":\\\"CHe(X.178, X.DFI, X.Bp2): X.Da8\\\"}],\\\"method_count\\\":2,\\\"inner_class_count\\\":0}\"}],\"isError\":false}},{\"operation\":\"get_xrefs_to_class\",\"input\":{\"class_name\":\"X.DcU\",\"limit\":2147483647,\"resolve_line\":false},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"items\\\":[{\\\"kind\\\":\\\"class\\\",\\\"name\\\":\\\"CPF\\\",\\\"full_name\\\":\\\"X.CPF\\\",\\\"containing_class\\\":\\\"\\\",\\\"top_class\\\":\\\"X.CPF\\\",\\\"def_pos\\\":160},{\\\"kind\\\":\\\"class\\\",\\\"name\\\":\\\"DDI\\\",\\\"full_name\\\":\\\"X.DDI\\\",\\\"containing_class\\\":\\\"\\\",\\\"top_class\\\":\\\"X.DDI\\\",\\\"def_pos\\\":0},{\\\"kind\\\":\\\"class\\\",\\\"name\\\":\\\"DDJ\\\",\\\"full_name\\\":\\\"X.DDJ\\\",\\\"containing_class\\\":\\\"\\\",\\\"top_class\\\":\\\"X.DDJ\\\",\\\"def_pos\\\":0},{\\\"kind\\\":\\\"class\\\",\\\"name\\\":\\\"DDK\\\",\\\"full_name\\\":\\\"X.DDK\\\",\\\"containing_class\\\":\\\"\\\",\\\"top_class\\\":\\\"X.DDK\\\",\\\"def_pos\\\":0},{\\\"kind\\\":\\\"class\\\",\\\"name\\\":\\\"DDL\\\",\\\"full_name\\\":\\\"X.DDL\\\",\\\"containing_class\\\":\\\"\\\",\\\"top_class\\\":\\\"X.DDL\\\",\\\"def_pos\\\":0},{\\\"kind\\\":\\\"class\\\",\\\"name\\\":\\\"DDM\\\",\\\"full_name\\\":\\\"X.DDM\\\",\\\"containing_class\\\":\\\"\\\",\\\"top_class\\\":\\\"X.DDM\\\",\\\"def_pos\\\":0},{\\\"kind\\\":\\\"class\\\",\\\"name\\\":\\\"DDN\\\",\\\"full_name\\\":\\\"X.DDN\\\",\\\"containing_class\\\":\\\"\\\",\\\"top_class\\\":\\\"X.DDN\\\",\\\"def_pos\\\":0},{\\\"kind\\\":\\\"class\\\",\\\"name\\\":\\\"O5m\\\",\\\"full_name\\\":\\\"X.O5m\\\",\\\"containing_class\\\":\\\"\\\",\\\"top_class\\\":\\\"X.O5m\\\",\\\"def_pos\\\":0}],\\\"count\\\":8,\\\"target\\\":\\\"X.DcU\\\",\\\"resolve_line\\\":false,\\\"total\\\":8}\"}],\"isError\":false}}]},\"normalized_result\":{\"engine\":{\"name\":\"jadx-headless-mcp\",\"version\":\"0.7.1\",\"artifact_sha256\":\"6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75\",\"source_revision\":\"5844800a486d2248fa949b74c9896285f5b54de2\",\"worker_count\":1,\"heap_limit_mib\":14968},\"class_name\":\"X.DcU\",\"method_name\":null,\"total\":8,\"references\":[{\"kind\":\"class\",\"name\":\"CPF\",\"reported_full_name\":\"X.CPF\",\"containing_class\":\"\",\"top_class\":\"X.CPF\",\"source_line\":null,\"dex_offset\":null},{\"kind\":\"class\",\"name\":\"DDI\",\"reported_full_name\":\"X.DDI\",\"containing_class\":\"\",\"top_class\":\"X.DDI\",\"source_line\":null,\"dex_offset\":null},{\"kind\":\"class\",\"name\":\"DDJ\",\"reported_full_name\":\"X.DDJ\",\"containing_class\":\"\",\"top_class\":\"X.DDJ\",\"source_line\":null,\"dex_offset\":null},{\"kind\":\"class\",\"name\":\"DDK\",\"reported_full_name\":\"X.DDK\",\"containing_class\":\"\",\"top_class\":\"X.DDK\",\"source_line\":null,\"dex_offset\":null},{\"kind\":\"class\",\"name\":\"DDL\",\"reported_full_name\":\"X.DDL\",\"containing_class\":\"\",\"top_class\":\"X.DDL\",\"source_line\":null,\"dex_offset\":null},{\"kind\":\"class\",\"name\":\"DDM\",\"reported_full_name\":\"X.DDM\",\"containing_class\":\"\",\"top_class\":\"X.DDM\",\"source_line\":null,\"dex_offset\":null},{\"kind\":\"class\",\"name\":\"DDN\",\"reported_full_name\":\"X.DDN\",\"containing_class\":\"\",\"top_class\":\"X.DDN\",\"source_line\":null,\"dex_offset\":null},{\"kind\":\"class\",\"name\":\"O5m\",\"reported_full_name\":\"X.O5m\",\"containing_class\":\"\",\"top_class\":\"X.O5m\",\"source_line\":null,\"dex_offset\":null}],\"coverage\":\"complete\"},\"confidence\":\"observed\",\"authority\":\"shipped-artifact\",\"environment\":null,\"limitations\":[\"Static decompiler observations do not establish runtime behavior; the APK is never executed.\",\"Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.\",\"Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.\",\"Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider.\"],\"locations\":[],\"evidence_links\":[]}"
+    }
+  ],
+  "structuredContent": {
+    "evidence_id": "ev_15577e21a1dc8e31e1afa8fffdd1176e5eb21f63bb6f8a3ffb396a0d8009f7c3",
+    "subject": {
+      "name": "WhatsApp.apk",
+      "digest": {
+        "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+      },
+      "format": "apk",
+      "architecture": null,
+      "local_path": "~/Downloads/WhatsApp.apk"
+    },
+    "provider": {
+      "id": "jadx",
+      "name": "JADX headless",
+      "version": "0.7.1"
+    },
+    "analysis_profile": null,
+    "predicate_type": "rea.analysis",
+    "operation": "trace_android_references",
+    "parameters": {
+      "path": "~/Downloads/WhatsApp.apk",
+      "class_name": "X.DcU"
+    },
+    "raw_result": {
+      "server": {
+        "name": "rea-jadx-bridge",
+        "version": "1"
+      },
+      "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+      "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "loaded": {
+        "state": "LOADED",
+        "apk_path": "/tmp/rea-android-mEf0dB/target.apk",
+        "class_count": 94738,
+        "resource_count": 14967,
+        "threads": 1,
+        "resources": "full"
+      },
+      "calls": [
+        {
+          "operation": "rea_jvm_status",
+          "input": {},
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":15695085568,\"java_version\":\"21.0.12.1\",\"available_processors\":24}"
+              }
+            ],
+            "isError": false
+          }
+        },
+        {
+          "operation": "get_class_summary",
+          "input": {
+            "class_name": "X.DcU"
+          },
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"inner_classes\":[],\"name\":\"DcU\",\"full_name\":\"X.DcU\",\"field_count\":0,\"fields\":[],\"methods\":[{\"is_constructor\":false,\"name\":\"AcJ\",\"def_pos\":0,\"signature\":\"AcJ(): java.lang.String\"},{\"is_constructor\":false,\"name\":\"CHe\",\"def_pos\":0,\"signature\":\"CHe(X.178, X.DFI, X.Bp2): X.Da8\"}],\"method_count\":2,\"inner_class_count\":0}"
+              }
+            ],
+            "isError": false
+          }
+        },
+        {
+          "operation": "get_xrefs_to_class",
+          "input": {
+            "class_name": "X.DcU",
+            "limit": 2147483647,
+            "resolve_line": false
+          },
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"items\":[{\"kind\":\"class\",\"name\":\"CPF\",\"full_name\":\"X.CPF\",\"containing_class\":\"\",\"top_class\":\"X.CPF\",\"def_pos\":160},{\"kind\":\"class\",\"name\":\"DDI\",\"full_name\":\"X.DDI\",\"containing_class\":\"\",\"top_class\":\"X.DDI\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"DDJ\",\"full_name\":\"X.DDJ\",\"containing_class\":\"\",\"top_class\":\"X.DDJ\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"DDK\",\"full_name\":\"X.DDK\",\"containing_class\":\"\",\"top_class\":\"X.DDK\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"DDL\",\"full_name\":\"X.DDL\",\"containing_class\":\"\",\"top_class\":\"X.DDL\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"DDM\",\"full_name\":\"X.DDM\",\"containing_class\":\"\",\"top_class\":\"X.DDM\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"DDN\",\"full_name\":\"X.DDN\",\"containing_class\":\"\",\"top_class\":\"X.DDN\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"O5m\",\"full_name\":\"X.O5m\",\"containing_class\":\"\",\"top_class\":\"X.O5m\",\"def_pos\":0}],\"count\":8,\"target\":\"X.DcU\",\"resolve_line\":false,\"total\":8}"
+              }
+            ],
+            "isError": false
+          }
+        }
+      ]
+    },
+    "normalized_result": {
+      "engine": {
+        "name": "jadx-headless-mcp",
+        "version": "0.7.1",
+        "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+        "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+        "worker_count": 1,
+        "heap_limit_mib": 14968
+      },
+      "class_name": "X.DcU",
+      "method_name": null,
+      "total": 8,
+      "references": [
+        {
+          "kind": "class",
+          "name": "CPF",
+          "reported_full_name": "X.CPF",
+          "containing_class": "",
+          "top_class": "X.CPF",
+          "source_line": null,
+          "dex_offset": null
+        },
+        {
+          "kind": "class",
+          "name": "DDI",
+          "reported_full_name": "X.DDI",
+          "containing_class": "",
+          "top_class": "X.DDI",
+          "source_line": null,
+          "dex_offset": null
+        },
+        {
+          "kind": "class",
+          "name": "DDJ",
+          "reported_full_name": "X.DDJ",
+          "containing_class": "",
+          "top_class": "X.DDJ",
+          "source_line": null,
+          "dex_offset": null
+        },
+        {
+          "kind": "class",
+          "name": "DDK",
+          "reported_full_name": "X.DDK",
+          "containing_class": "",
+          "top_class": "X.DDK",
+          "source_line": null,
+          "dex_offset": null
+        },
+        {
+          "kind": "class",
+          "name": "DDL",
+          "reported_full_name": "X.DDL",
+          "containing_class": "",
+          "top_class": "X.DDL",
+          "source_line": null,
+          "dex_offset": null
+        },
+        {
+          "kind": "class",
+          "name": "DDM",
+          "reported_full_name": "X.DDM",
+          "containing_class": "",
+          "top_class": "X.DDM",
+          "source_line": null,
+          "dex_offset": null
+        },
+        {
+          "kind": "class",
+          "name": "DDN",
+          "reported_full_name": "X.DDN",
+          "containing_class": "",
+          "top_class": "X.DDN",
+          "source_line": null,
+          "dex_offset": null
+        },
+        {
+          "kind": "class",
+          "name": "O5m",
+          "reported_full_name": "X.O5m",
+          "containing_class": "",
+          "top_class": "X.O5m",
+          "source_line": null,
+          "dex_offset": null
+        }
+      ],
+      "coverage": "complete"
+    },
+    "confidence": "observed",
+    "authority": "shipped-artifact",
+    "environment": null,
+    "limitations": [
+      "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+      "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+      "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+      "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+    ],
+    "locations": [],
+    "evidence_links": []
+  }
+}

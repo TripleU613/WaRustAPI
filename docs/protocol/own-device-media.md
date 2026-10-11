@@ -7,6 +7,9 @@ ordinary image, push-to-talk audio, sticker, document, video and video-note
 messages into the normal event journal and attachment retrieval path.
 This extends [own-device text](own-device-text.md), retaining its account,
 source, destination, transaction and deduplication checks.
+Follow-up: [normal outgoing echo correlation](own-device-echo.md) suppresses
+a second message event for a matching existing intent without changing its
+send outcome; complete cross-source/placeholder reconciliation remains open.
 
 ## Evidence and admission
 
