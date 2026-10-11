@@ -1,0 +1,71 @@
+
+# class: LX/CTx;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLL)  # .registers 3
+    # full signature: LX/CTx;-><init>(Ljava/lang/Integer;Ljava/security/cert/X509Certificate;)V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v2, v0, LX/CTx;->A01:Ljava/security/cert/X509Certificate;
+    000a..000e  iput-object  v1, v0, LX/CTx;->A00:Ljava/lang/Integer;
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public equals(ZL)  # .registers 6
+    # full signature: LX/CTx;->equals(Ljava/lang/Object;)Z
+    0000..0002  const/4  v3, #0x1
+    0002..0006  if-eq  v4, v5, +0x1a
+    0006..000a  instance-of  v0, v5, LX/CTx;
+    000a..000c  const/4  v2, #0x0
+    000c..0010  if-eqz  v0, +0x14
+    0010..0014  check-cast  v5, LX/CTx;
+    0014..0018  iget-object  v1, v4, LX/CTx;->A01:Ljava/security/cert/X509Certificate;
+    0018..001c  iget-object  v0, v5, LX/CTx;->A01:Ljava/security/cert/X509Certificate;
+    001c..0022  invoke-static  {v1, v0}, LX/00h;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    0022..0024  move-result  v0
+    0024..0028  if-eqz  v0, +0x8
+    0028..002c  iget-object  v1, v4, LX/CTx;->A00:Ljava/lang/Integer;
+    002c..0030  iget-object  v0, v5, LX/CTx;->A00:Ljava/lang/Integer;
+    0030..0034  if-eq  v1, v0, +0x3
+    0034..0036  return  v2
+    0036..0038  return  v3
+    # exception table: 0 try range(s)
+.end method
+
+.method public hashCode(I)  # .registers 5
+    # full signature: LX/CTx;->hashCode()I
+    0000..0004  iget-object  v0, v4, LX/CTx;->A01:Ljava/security/cert/X509Certificate;
+    0004..0006  const/4  v3, #0x0
+    0006..000c  invoke-static  {v0}, LX/1YP;->A05(Ljava/lang/Object;)I
+    000c..000e  move-result  v0
+    000e..0012  mul-int/lit8  v2, v0, #0x1f
+    0012..0016  iget-object  v1, v4, LX/CTx;->A00:Ljava/lang/Integer;
+    0016..001a  if-eqz  v1, +0xa
+    001a..0020  invoke-static  {v1}, LX/C7d;->A00(Ljava/lang/Integer;)Ljava/lang/String;
+    0020..0022  move-result-object  v0
+    0022..0028  invoke-static  {v1, v0}, LX/1xn;->A06(Ljava/lang/Number;Ljava/lang/String;)I
+    0028..002a  move-result  v3
+    002a..002c  add-int/2addr  v2, v3
+    002c..002e  return  v2
+    # exception table: 0 try range(s)
+.end method
+
+.method public toString(L)  # .registers 4
+    # full signature: LX/CTx;->toString()Ljava/lang/String;
+    0000..0004  iget-object  v1, v3, LX/CTx;->A01:Ljava/security/cert/X509Certificate;
+    0004..0008  iget-object  v2, v3, LX/CTx;->A00:Ljava/lang/Integer;
+    0008..000c  const-string  v0, "CertificateVerificationResult(leafCertificate="
+    000c..0012  invoke-static  {v1, v0}, LX/000;->A07(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0012..0014  move-result-object  v1
+    0014..0018  const-string  v0, ", errorType="
+    0018..001e  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    001e..0022  if-eqz  v2, +0xb
+    0022..0028  invoke-static  {v2}, LX/C7d;->A00(Ljava/lang/Integer;)Ljava/lang/String;
+    0028..002a  move-result-object  v0
+    002a..0030  invoke-static  {v0, v1}, LX/3cA;->A0u(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    0030..0032  move-result-object  v0
+    0032..0034  return-object  v0
+    0034..0038  const-string  v0, "null"
+    0038..003a  goto  -0x7
+    # exception table: 0 try range(s)
+.end method

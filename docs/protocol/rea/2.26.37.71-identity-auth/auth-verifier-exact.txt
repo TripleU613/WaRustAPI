@@ -1,0 +1,154 @@
+
+# class: LX/Cfj;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 2
+    # full signature: LX/Cfj;-><init>()V
+    0000..0006  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    0006..000c  invoke-static  {}, LX/1xg;->A07()LX/05B;
+    000c..000e  move-result-object  v0
+    000e..0012  iput-object  v0, v1, LX/Cfj;->A03:LX/05B;
+    0012..0016  const/16  v0, #0xd63
+    0016..001c  invoke-static  {v0}, LX/05C;->A00(I)LX/05B;
+    001c..001e  move-result-object  v0
+    001e..0022  iput-object  v0, v1, LX/Cfj;->A00:LX/05B;
+    0022..0026  const/16  v0, #0xf73
+    0026..002c  invoke-static  {v0}, LX/05C;->A00(I)LX/05B;
+    002c..002e  move-result-object  v0
+    002e..0032  iput-object  v0, v1, LX/Cfj;->A01:LX/05B;
+    0032..0036  const/16  v0, #0xf7c
+    0036..003c  invoke-static  {v0}, LX/05C;->A00(I)LX/05B;
+    003c..003e  move-result-object  v0
+    003e..0042  iput-object  v0, v1, LX/Cfj;->A02:LX/05B;
+    0042..0044  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method private A00(VLL)  # .registers 8
+    # full signature: LX/Cfj;->A00(LX/Bzb;Ljava/lang/String;)V
+    0000..0004  const/16  v1, #0x5a3
+    0004..0008  iget-object  v0, v5, LX/Cfj;->A03:LX/05B;
+    0008..000e  invoke-static  {v0, v1}, LX/3cB;->A0s(LX/05B;I)LX/05B;
+    000e..0010  move-result-object  v2
+    0010..0014  const-string  v0, "BotIdentityAuthUtils/Bot identity verification failed: "
+    0014..001a  invoke-static  {v0, v7}, LX/000;->A08(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    001a..001c  move-result-object  v1
+    001c..0020  const-string  v0, ", level: "
+    0020..0026  invoke-static  {v6, v0, v1}, LX/Ayk;->A1G(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    0026..002c  invoke-static  {v2}, LX/1xi;->A0h(LX/05B;)LX/0AH;
+    002c..002e  move-result-object  v4
+    002e..0034  invoke-static  {v7}, LX/1xi;->A18(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0034..0036  move-result-object  v1
+    0036..003a  const-string  v0, ":"
+    003a..0040  invoke-static  {v6, v0, v1}, LX/1xj;->A14(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    0040..0042  move-result-object  v3
+    0042..0044  const/4  v2, #0x0
+    0044..0046  const/4  v1, #0x2
+    0046..004a  const-string  v0, "bot-identity-verification-failure"
+    004a..0050  invoke-virtual  {v4, v0, v3, v2, v1}, LX/0AH;->A0h(Ljava/lang/String;Ljava/lang/String;ZI)V
+    0050..0052  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A01(ZL)  # .registers 11
+    # full signature: LX/Cfj;->A01(LX/CXs;)Z
+    0000..0002  const/4  v4, #0x0
+    0002..0006  iget-object  v0, v9, LX/Cfj;->A00:LX/05B;
+    0006..000c  invoke-static  {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+    000c..000e  move-result-object  v0
+    000e..0012  check-cast  v0, LX/CND;
+    0012..0016  iget-object  v0, v0, LX/CND;->A00:LX/05B;
+    0016..001c  invoke-static  {v0}, LX/05B;->A00(LX/05B;)LX/00D;
+    001c..001e  move-result-object  v1
+    001e..0022  const/16  v0, #0x4e8b
+    0022..0028  invoke-static  {v1, v0}, LX/1xf;->A00(LX/00D;I)I
+    0028..002a  move-result  v2
+    002a..002e  sget-object  v0, LX/Bzb;->A00:LX/05j;
+    002e..0034  invoke-interface  {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0034..0036  move-result-object  v1
+    0036..003c  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    003c..003e  move-result  v0
+    003e..0042  if-eqz  v0, +0x19
+    0042..0048  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0048..004a  move-result-object  v3
+    004a..004c  move-object  v0, v3
+    004c..0050  check-cast  v0, LX/Bzb;
+    0050..0054  iget  v0, v0, LX/Bzb;->value:I
+    0054..0058  if-ne  v0, v2, -0xf
+    0058..005c  check-cast  v3, LX/Bzb;
+    005c..0060  if-nez  v3, +0x4
+    0060..0064  sget-object  v3, LX/Bzb;->A02:LX/Bzb;
+    0064..0068  sget-object  v1, LX/Bzb;->A02:LX/Bzb;
+    0068..006a  const/4  v0, #0x1
+    006a..006e  if-ne  v3, v1, +0x5
+    006e..0070  return  v0
+    0070..0072  const/4  v3, #0x0
+    0072..0074  goto  -0xd
+    0074..0078  iget-object  v5, v10, LX/CXs;->A03:[B
+    0078..007c  iget  v8, v10, LX/CXs;->A00:I
+    007c..0080  iget-object  v2, v10, LX/CXs;->A01:Ljava/util/List;
+    0080..0084  iget-object  v7, v10, LX/CXs;->A02:[B
+    0084..0088  if-eq  v8, v0, +0xc
+    0088..008c  const-string  v0, "invalid-signature-version-"
+    008c..0092  invoke-static  {v0, v8}, LX/000;->A03(Ljava/lang/String;I)Ljava/lang/String;
+    0092..0094  move-result-object  v0
+    0094..009a  invoke-direct  {v9, v3, v0}, LX/Cfj;->A00(LX/Bzb;Ljava/lang/String;)V
+    009a..009c  return  v4
+    009c..00a2  invoke-interface  {v2}, Ljava/util/List;->isEmpty()Z
+    00a2..00a4  move-result  v0
+    00a4..00a8  if-eqz  v0, +0x5
+    00a8..00ac  const-string  v0, "empty-certificate-chain"
+    00ac..00ae  goto  -0xc
+    00ae..00b4  invoke-interface  {v2}, Ljava/util/List;->size()I
+    00b4..00b8  iget-object  v0, v9, LX/Cfj;->A02:LX/05B;
+    00b8..00be  invoke-static  {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+    00be..00c0  move-result-object  v1
+    00c0..00c4  check-cast  v1, LX/CgX;
+    00c4..00c8  new-instance  v0, Ljava/util/Date;
+    00c8..00ce  invoke-direct  {v0}, Ljava/util/Date;-><init>()V
+    00ce..00d4  invoke-virtual  {v1, v0, v2, v4}, LX/CgX;->A01(Ljava/util/Date;Ljava/util/List;Z)LX/CTx;
+    00d4..00d6  move-result-object  v0
+    00d6..00da  iget-object  v6, v0, LX/CTx;->A01:Ljava/security/cert/X509Certificate;
+    00da..00de  if-nez  v6, +0x8
+    00de..00e2  const-string  v0, "leaf-certificate-not-found"
+    00e2..00e8  invoke-direct  {v9, v3, v0}, LX/Cfj;->A00(LX/Bzb;Ljava/lang/String;)V
+    00e8..00ea  return  v4
+    00ea..00f0  invoke-static  {v8}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+    00f0..00f2  move-result-object  v1
+    00f2..00f6  sget-object  v0, Ljava/nio/charset/StandardCharsets;->UTF_8:Ljava/nio/charset/Charset;
+    00f6..00fc  invoke-static  {v1, v0}, LX/Ayn;->A1Y(Ljava/lang/String;Ljava/nio/charset/Charset;)[B
+    00fc..00fe  move-result-object  v2
+    00fe..0100  array-length  v1, v2
+    0100..0102  array-length  v0, v7
+    0102..0104  add-int/2addr  v1, v0
+    0104..010a  invoke-static  {v1}, Ljava/nio/ByteBuffer;->allocate(I)Ljava/nio/ByteBuffer;
+    010a..010c  move-result-object  v0
+    010c..0112  invoke-virtual  {v0, v2}, Ljava/nio/ByteBuffer;->put([B)Ljava/nio/ByteBuffer;
+    0112..0118  invoke-virtual  {v0, v7}, Ljava/nio/ByteBuffer;->put([B)Ljava/nio/ByteBuffer;
+    0118..011e  invoke-virtual  {v0}, Ljava/nio/ByteBuffer;->array()[B
+    011e..0120  move-result-object  v2
+    0120..0126  invoke-static  {v2}, LX/00h;->A06(Ljava/lang/Object;)V
+    0126..012a  iget-object  v0, v9, LX/Cfj;->A01:LX/05B;
+    012a..0130  invoke-static  {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+    0130..0132  move-result-object  v1
+    0132..0136  check-cast  v1, LX/Cft;
+    0136..013c  invoke-virtual  {v6}, Ljava/security/cert/Certificate;->getPublicKey()Ljava/security/PublicKey;
+    013c..013e  move-result-object  v0
+    013e..0144  invoke-interface  {v0}, Ljava/security/Key;->getEncoded()[B
+    0144..0146  move-result-object  v0
+    0146..014c  invoke-static  {v0}, LX/00h;->A06(Ljava/lang/Object;)V
+    014c..0152  invoke-virtual  {v1, v5, v2, v0}, LX/Cft;->A01([B[B[B)Z
+    0152..0154  move-result  v1
+    0154..0158  if-nez  v1, +0x7
+    0158..015c  const-string  v0, "eddsa-signature-verification-failed"
+    015c..0162  invoke-direct  {v9, v3, v0}, LX/Cfj;->A00(LX/Bzb;Ljava/lang/String;)V
+    0162..0164  return  v1
+    0164..0166  move-exception  v1
+    0166..016a  const-string  v0, "signature-verification-failed:"
+    016a..0170  invoke-static  {v0, v1}, LX/1xj;->A15(Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/String;
+    0170..0172  move-result-object  v0
+    0172..0178  invoke-direct  {v9, v3, v0}, LX/Cfj;->A00(LX/Bzb;Ljava/lang/String;)V
+    0178..017a  return  v4
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/Exception; code_units 005a..00b2 -> 00b2
+.end method

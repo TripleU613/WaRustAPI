@@ -1,0 +1,144 @@
+{
+  "evidence_id": "ev_41441e5a13ae45a037680a84fd9478fffed00b1e558b566048f0aa1f4f308170",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.CgX",
+    "method_name": "A01"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-HzuIBd/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"java_version\":\"21.0.12.1\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":15695085568}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "load_apk",
+        "input": {
+          "path": "/tmp/rea-android-HzuIBd/target.apk",
+          "threads": 1,
+          "resources": "full"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-HzuIBd/target.apk\",\"class_count\":94738,\"raw_class_count\":94738,\"resource_count\":14967,\"load_duration_ms\":14424,\"decompile_timeout_ms\":90000,\"threads\":1,\"code_cache_size\":64,\"resources\":\"full\"}"
+            }
+          ]
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.CgX"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"CgX\",\"full_name\":\"X.CgX\",\"field_count\":3,\"fields\":[{\"def_pos\":0,\"name\":\"A00\",\"type\":\"java.security.cert.X509Certificate\"},{\"def_pos\":0,\"name\":\"A01\",\"type\":\"X.05B\"},{\"def_pos\":0,\"name\":\"A02\",\"type\":\"X.05B\"}],\"methods\":[{\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(): void\"},{\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0,\"signature\":\"A00(java.security.cert.X509Certificate, java.util.Date): boolean\"},{\"is_constructor\":false,\"name\":\"A01\",\"def_pos\":0,\"signature\":\"A01(java.util.Date, java.util.List, boolean): X.CTx\"},{\"is_constructor\":false,\"name\":\"A02\",\"def_pos\":0,\"signature\":\"A02(): java.security.cert.X509Certificate\"}],\"method_count\":4}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.CgX",
+          "method_name": "A01",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"overload_index\":0,\"fell_back\":false,\"body\":\"    /* JADX WARN: Code duplicated, block: B:41:0x00ec A[DONT_INVERT] */\\n    /* JADX WARN: Code duplicated, block: B:42:0x00ee  */\\n    /* JADX WARN: Code duplicated, block: B:44:0x00f1 A[Catch: Exception -\\u003e 0x0182, TryCatch #1 {Exception -\\u003e 0x0182, blocks: (B:3:0x0002, B:5:0x0008, B:7:0x0015, B:8:0x0023, B:10:0x0029, B:12:0x003c, B:13:0x0040, B:14:0x0043, B:16:0x0049, B:18:0x0056, B:23:0x0087, B:24:0x008b, B:26:0x0091, B:45:0x00f6, B:46:0x00fa, B:35:0x00d6, B:39:0x00e6, B:44:0x00f1, B:47:0x00fb, B:49:0x0103, B:37:0x00de, B:38:0x00e4, B:33:0x00cf, B:51:0x010b, B:53:0x0111, B:55:0x011e, B:57:0x0132, B:59:0x014d, B:64:0x0167, B:60:0x015b, B:63:0x0162, B:68:0x0175, B:67:0x0170), top: B:75:0x0002, inners: #0, #2 }] */\\n    /* JADX WARN: Code duplicated, block: B:47:0x00fb A[Catch: Exception -\\u003e 0x0182, TryCatch #1 {Exception -\\u003e 0x0182, blocks: (B:3:0x0002, B:5:0x0008, B:7:0x0015, B:8:0x0023, B:10:0x0029, B:12:0x003c, B:13:0x0040, B:14:0x0043, B:16:0x0049, B:18:0x0056, B:23:0x0087, B:24:0x008b, B:26:0x0091, B:45:0x00f6, B:46:0x00fa, B:35:0x00d6, B:39:0x00e6, B:44:0x00f1, B:47:0x00fb, B:49:0x0103, B:37:0x00de, B:38:0x00e4, B:33:0x00cf, B:51:0x010b, B:53:0x0111, B:55:0x011e, B:57:0x0132, B:59:0x014d, B:64:0x0167, B:60:0x015b, B:63:0x0162, B:68:0x0175, B:67:0x0170), top: B:75:0x0002, inners: #0, #2 }] */\\n    /* JADX WARN: Code duplicated, block: B:49:0x0103 A[Catch: Exception -\\u003e 0x0182, TryCatch #1 {Exception -\\u003e 0x0182, blocks: (B:3:0x0002, B:5:0x0008, B:7:0x0015, B:8:0x0023, B:10:0x0029, B:12:0x003c, B:13:0x0040, B:14:0x0043, B:16:0x0049, B:18:0x0056, B:23:0x0087, B:24:0x008b, B:26:0x0091, B:45:0x00f6, B:46:0x00fa, B:35:0x00d6, B:39:0x00e6, B:44:0x00f1, B:47:0x00fb, B:49:0x0103, B:37:0x00de, B:38:0x00e4, B:33:0x00cf, B:51:0x010b, B:53:0x0111, B:55:0x011e, B:57:0x0132, B:59:0x014d, B:64:0x0167, B:60:0x015b, B:63:0x0162, B:68:0x0175, B:67:0x0170), top: B:75:0x0002, inners: #0, #2 }] */\\n    public final CTx A01(Date date, List list, boolean z) {\\n        String str;\\n        Integer num;\\n        int iIntValue;\\n        String str2;\\n        try {\\n            X509Certificate x509CertificateA02 \\u003d A02();\\n            if (x509CertificateA02 \\u003d\\u003d null) {\\n                com.whatsapp.infra.logging.Log.e(\\\"BotSignatureVerificationCertificateManager/Root certificate not available\\\");\\n                return new CTx(C02S.A01, null);\\n            }\\n            try {\\n                ArrayList arrayListA1D \\u003d C1xf.A1D();\\n                CertificateFactory certificateFactory \\u003d CertificateFactory.getInstance(\\\"X.509\\\");\\n                Iterator it \\u003d list.iterator();\\n                while (it.hasNext()) {\\n                    Certificate certificateGenerateCertificate \\u003d certificateFactory.generateCertificate(new ByteArrayInputStream((byte[]) it.next()));\\n                    if (certificateGenerateCertificate instanceof X509Certificate) {\\n                        arrayListA1D.add(certificateGenerateCertificate);\\n                    }\\n                }\\n                arrayListA1D.size();\\n                if (!arrayListA1D.isEmpty()) {\\n                    X509Certificate x509Certificate \\u003d (X509Certificate) C0C6.A0u(arrayListA1D);\\n                    List listA1H \\u003d C0C6.A1H(arrayListA1D, 1);\\n                    if (z) {\\n                        X509Certificate x509Certificate2 \\u003d (X509Certificate) C0C6.A0v(listA1H);\\n                        C00s c00s \\u003d this.A02.A00;\\n                        BotPkiCrlManager botPkiCrlManager \\u003d (BotPkiCrlManager) c00s.get();\\n                        C00h.A0A(x509Certificate, 0);\\n                        byte[] byteArray \\u003d x509Certificate.getSerialNumber().toByteArray();\\n                        C00h.A09(byteArray);\\n                        int iIntValue2 \\u003d BotPkiCrlManager.A01(botPkiCrlManager, \\\"whatsapp_simple_signal\\\", x509Certificate2, byteArray).intValue();\\n                        if (iIntValue2 !\\u003d 1) {\\n                            if (iIntValue2 \\u003d\\u003d 2) {\\n                                str2 \\u003d \\\"BotSignatureVerificationCertificateManager/CRL unavailable for leaf certificate\\\";\\n                            } else {\\n                                if (iIntValue2 !\\u003d 0) {\\n                                    throw C1xk.A10();\\n                                }\\n                                Iterator it2 \\u003d listA1H.iterator();\\n                                while (true) {\\n                                    if (!it2.hasNext()) {\\n                                        num \\u003d C02S.A00;\\n                                        break;\\n                                    }\\n                                    X509Certificate x509Certificate3 \\u003d (X509Certificate) it2.next();\\n                                    BotPkiCrlManager botPkiCrlManager2 \\u003d (BotPkiCrlManager) c00s.get();\\n                                    C00h.A0A(x509Certificate3, 0);\\n                                    byte[] byteArray2 \\u003d x509Certificate3.getSerialNumber().toByteArray();\\n                                    X509Certificate x509CertificateA03 \\u003d ((CgX) C05B.A02(botPkiCrlManager2.A04)).A02();\\n                                    C00h.A09(byteArray2);\\n                                    int iIntValue3 \\u003d BotPkiCrlManager.A01(botPkiCrlManager2, \\\"whatsapp_feature\\\", x509CertificateA03, byteArray2).intValue();\\n                                    if (iIntValue3 \\u003d\\u003d 1) {\\n                                        str \\u003d \\\"BotSignatureVerificationCertificateManager/Intermediate certificate is revoked\\\";\\n                                    } else if (iIntValue3 \\u003d\\u003d 2) {\\n                                        str2 \\u003d \\\"BotSignatureVerificationCertificateManager/CRL unavailable for intermediate certificate\\\";\\n                                    } else if (iIntValue3 !\\u003d 0) {\\n                                        throw C1xk.A10();\\n                                    }\\n                                }\\n                                iIntValue \\u003d num.intValue();\\n                                if (iIntValue \\u003d\\u003d 1) {\\n                                    return new CTx(C02S.A0N, x509Certificate);\\n                                }\\n                                if (iIntValue \\u003d\\u003d 2) {\\n                                    return new CTx(C02S.A0Y, x509Certificate);\\n                                }\\n                                if (iIntValue !\\u003d 0) {\\n                                    throw C1xk.A10();\\n                                }\\n                            }\\n                            com.whatsapp.infra.logging.Log.w(str2);\\n                            num \\u003d C02S.A0C;\\n                            iIntValue \\u003d num.intValue();\\n                            if (iIntValue \\u003d\\u003d 1) {\\n                                return new CTx(C02S.A0N, x509Certificate);\\n                            }\\n                            if (iIntValue \\u003d\\u003d 2) {\\n                                return new CTx(C02S.A0Y, x509Certificate);\\n                            }\\n                            if (iIntValue !\\u003d 0) {\\n                                throw C1xk.A10();\\n                            }\\n                        } else {\\n                            str \\u003d \\\"BotSignatureVerificationCertificateManager/Leaf certificate is revoked\\\";\\n                        }\\n                        com.whatsapp.infra.logging.Log.w(str);\\n                        num \\u003d C02S.A01;\\n                        iIntValue \\u003d num.intValue();\\n                        if (iIntValue \\u003d\\u003d 1) {\\n                            return new CTx(C02S.A0N, x509Certificate);\\n                        }\\n                        if (iIntValue \\u003d\\u003d 2) {\\n                            return new CTx(C02S.A0Y, x509Certificate);\\n                        }\\n                        if (iIntValue !\\u003d 0) {\\n                            throw C1xk.A10();\\n                        }\\n                    }\\n                    if (!A00(x509Certificate, date)) {\\n                        com.whatsapp.infra.logging.Log.w(\\\"BotSignatureVerificationCertificateManager/Leaf certificate not valid at server time\\\");\\n                        return new CTx(C02S.A00, x509Certificate);\\n                    }\\n                    try {\\n                        ArrayList arrayListA17 \\u003d C0C6.A17(x509CertificateA02, C0C6.A15(listA1H, C1xg.A1Q(x509Certificate)));\\n                        int size \\u003d arrayListA17.size() - 1;\\n                        int i \\u003d 0;\\n                        while (i \\u003c size) {\\n                            X509Certificate x509Certificate4 \\u003d (X509Certificate) arrayListA17.get(i);\\n                            i++;\\n                            X509Certificate x509Certificate5 \\u003d (X509Certificate) arrayListA17.get(i);\\n                            x509Certificate4.verify(x509Certificate5.getPublicKey());\\n                            if (!A00(x509Certificate5, date)) {\\n                                Ayk.A1G(x509Certificate5.getSubjectDN(), \\\"BotSignatureVerificationCertificateManager/Issuer certificate not valid at server time: \\\", C1xf.A1A());\\n                            }\\n                            return new CTx(C02S.A0C, x509Certificate);\\n                        }\\n                        return new CTx(null, x509Certificate);\\n                    } catch (Exception e) {\\n                        com.whatsapp.infra.logging.Log.e(\\\"BotSignatureVerificationCertificateManager/Certificate chain verification failed\\\", e);\\n                    }\\n                }\\n            } catch (Exception e2) {\\n                com.whatsapp.infra.logging.Log.e(\\\"BotSignatureVerificationCertificateManager/Failed to parse certificate chain\\\", e2);\\n            }\\n            com.whatsapp.infra.logging.Log.e(\\\"BotSignatureVerificationCertificateManager/Certificate chain is empty\\\");\\n            return new CTx(C02S.A01, null);\\n        } catch (Exception e3) {\\n            com.whatsapp.infra.logging.Log.e(\\\"BotSignatureVerificationCertificateManager/Certificate chain verification failed\\\", e3);\\n            return new CTx(C02S.A01, null);\\n        }\\n    }\",\"overload_count\":1,\"method_name\":\"A01\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.CgX.A01\",\"class_name\":\"X.CgX\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.CgX",
+    "method": {
+      "name": "A01",
+      "reported_signature": "A01(java.util.Date, java.util.List, boolean): X.CTx",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Code duplicated, block: B:41:0x00ec A[DONT_INVERT] */\n    /* JADX WARN: Code duplicated, block: B:42:0x00ee  */\n    /* JADX WARN: Code duplicated, block: B:44:0x00f1 A[Catch: Exception -> 0x0182, TryCatch #1 {Exception -> 0x0182, blocks: (B:3:0x0002, B:5:0x0008, B:7:0x0015, B:8:0x0023, B:10:0x0029, B:12:0x003c, B:13:0x0040, B:14:0x0043, B:16:0x0049, B:18:0x0056, B:23:0x0087, B:24:0x008b, B:26:0x0091, B:45:0x00f6, B:46:0x00fa, B:35:0x00d6, B:39:0x00e6, B:44:0x00f1, B:47:0x00fb, B:49:0x0103, B:37:0x00de, B:38:0x00e4, B:33:0x00cf, B:51:0x010b, B:53:0x0111, B:55:0x011e, B:57:0x0132, B:59:0x014d, B:64:0x0167, B:60:0x015b, B:63:0x0162, B:68:0x0175, B:67:0x0170), top: B:75:0x0002, inners: #0, #2 }] */\n    /* JADX WARN: Code duplicated, block: B:47:0x00fb A[Catch: Exception -> 0x0182, TryCatch #1 {Exception -> 0x0182, blocks: (B:3:0x0002, B:5:0x0008, B:7:0x0015, B:8:0x0023, B:10:0x0029, B:12:0x003c, B:13:0x0040, B:14:0x0043, B:16:0x0049, B:18:0x0056, B:23:0x0087, B:24:0x008b, B:26:0x0091, B:45:0x00f6, B:46:0x00fa, B:35:0x00d6, B:39:0x00e6, B:44:0x00f1, B:47:0x00fb, B:49:0x0103, B:37:0x00de, B:38:0x00e4, B:33:0x00cf, B:51:0x010b, B:53:0x0111, B:55:0x011e, B:57:0x0132, B:59:0x014d, B:64:0x0167, B:60:0x015b, B:63:0x0162, B:68:0x0175, B:67:0x0170), top: B:75:0x0002, inners: #0, #2 }] */\n    /* JADX WARN: Code duplicated, block: B:49:0x0103 A[Catch: Exception -> 0x0182, TryCatch #1 {Exception -> 0x0182, blocks: (B:3:0x0002, B:5:0x0008, B:7:0x0015, B:8:0x0023, B:10:0x0029, B:12:0x003c, B:13:0x0040, B:14:0x0043, B:16:0x0049, B:18:0x0056, B:23:0x0087, B:24:0x008b, B:26:0x0091, B:45:0x00f6, B:46:0x00fa, B:35:0x00d6, B:39:0x00e6, B:44:0x00f1, B:47:0x00fb, B:49:0x0103, B:37:0x00de, B:38:0x00e4, B:33:0x00cf, B:51:0x010b, B:53:0x0111, B:55:0x011e, B:57:0x0132, B:59:0x014d, B:64:0x0167, B:60:0x015b, B:63:0x0162, B:68:0x0175, B:67:0x0170), top: B:75:0x0002, inners: #0, #2 }] */\n    public final CTx A01(Date date, List list, boolean z) {\n        String str;\n        Integer num;\n        int iIntValue;\n        String str2;\n        try {\n            X509Certificate x509CertificateA02 = A02();\n            if (x509CertificateA02 == null) {\n                com.whatsapp.infra.logging.Log.e(\"BotSignatureVerificationCertificateManager/Root certificate not available\");\n                return new CTx(C02S.A01, null);\n            }\n            try {\n                ArrayList arrayListA1D = C1xf.A1D();\n                CertificateFactory certificateFactory = CertificateFactory.getInstance(\"X.509\");\n                Iterator it = list.iterator();\n                while (it.hasNext()) {\n                    Certificate certificateGenerateCertificate = certificateFactory.generateCertificate(new ByteArrayInputStream((byte[]) it.next()));\n                    if (certificateGenerateCertificate instanceof X509Certificate) {\n                        arrayListA1D.add(certificateGenerateCertificate);\n                    }\n                }\n                arrayListA1D.size();\n                if (!arrayListA1D.isEmpty()) {\n                    X509Certificate x509Certificate = (X509Certificate) C0C6.A0u(arrayListA1D);\n                    List listA1H = C0C6.A1H(arrayListA1D, 1);\n                    if (z) {\n                        X509Certificate x509Certificate2 = (X509Certificate) C0C6.A0v(listA1H);\n                        C00s c00s = this.A02.A00;\n                        BotPkiCrlManager botPkiCrlManager = (BotPkiCrlManager) c00s.get();\n                        C00h.A0A(x509Certificate, 0);\n                        byte[] byteArray = x509Certificate.getSerialNumber().toByteArray();\n                        C00h.A09(byteArray);\n                        int iIntValue2 = BotPkiCrlManager.A01(botPkiCrlManager, \"whatsapp_simple_signal\", x509Certificate2, byteArray).intValue();\n                        if (iIntValue2 != 1) {\n                            if (iIntValue2 == 2) {\n                                str2 = \"BotSignatureVerificationCertificateManager/CRL unavailable for leaf certificate\";\n                            } else {\n                                if (iIntValue2 != 0) {\n                                    throw C1xk.A10();\n                                }\n                                Iterator it2 = listA1H.iterator();\n                                while (true) {\n                                    if (!it2.hasNext()) {\n                                        num = C02S.A00;\n                                        break;\n                                    }\n                                    X509Certificate x509Certificate3 = (X509Certificate) it2.next();\n                                    BotPkiCrlManager botPkiCrlManager2 = (BotPkiCrlManager) c00s.get();\n                                    C00h.A0A(x509Certificate3, 0);\n                                    byte[] byteArray2 = x509Certificate3.getSerialNumber().toByteArray();\n                                    X509Certificate x509CertificateA03 = ((CgX) C05B.A02(botPkiCrlManager2.A04)).A02();\n                                    C00h.A09(byteArray2);\n                                    int iIntValue3 = BotPkiCrlManager.A01(botPkiCrlManager2, \"whatsapp_feature\", x509CertificateA03, byteArray2).intValue();\n                                    if (iIntValue3 == 1) {\n                                        str = \"BotSignatureVerificationCertificateManager/Intermediate certificate is revoked\";\n                                    } else if (iIntValue3 == 2) {\n                                        str2 = \"BotSignatureVerificationCertificateManager/CRL unavailable for intermediate certificate\";\n                                    } else if (iIntValue3 != 0) {\n                                        throw C1xk.A10();\n                                    }\n                                }\n                                iIntValue = num.intValue();\n                                if (iIntValue == 1) {\n                                    return new CTx(C02S.A0N, x509Certificate);\n                                }\n                                if (iIntValue == 2) {\n                                    return new CTx(C02S.A0Y, x509Certificate);\n                                }\n                                if (iIntValue != 0) {\n                                    throw C1xk.A10();\n                                }\n                            }\n                            com.whatsapp.infra.logging.Log.w(str2);\n                            num = C02S.A0C;\n                            iIntValue = num.intValue();\n                            if (iIntValue == 1) {\n                                return new CTx(C02S.A0N, x509Certificate);\n                            }\n                            if (iIntValue == 2) {\n                                return new CTx(C02S.A0Y, x509Certificate);\n                            }\n                            if (iIntValue != 0) {\n                                throw C1xk.A10();\n                            }\n                        } else {\n                            str = \"BotSignatureVerificationCertificateManager/Leaf certificate is revoked\";\n                        }\n                        com.whatsapp.infra.logging.Log.w(str);\n                        num = C02S.A01;\n                        iIntValue = num.intValue();\n                        if (iIntValue == 1) {\n                            return new CTx(C02S.A0N, x509Certificate);\n                        }\n                        if (iIntValue == 2) {\n                            return new CTx(C02S.A0Y, x509Certificate);\n                        }\n                        if (iIntValue != 0) {\n                            throw C1xk.A10();\n                        }\n                    }\n                    if (!A00(x509Certificate, date)) {\n                        com.whatsapp.infra.logging.Log.w(\"BotSignatureVerificationCertificateManager/Leaf certificate not valid at server time\");\n                        return new CTx(C02S.A00, x509Certificate);\n                    }\n                    try {\n                        ArrayList arrayListA17 = C0C6.A17(x509CertificateA02, C0C6.A15(listA1H, C1xg.A1Q(x509Certificate)));\n                        int size = arrayListA17.size() - 1;\n                        int i = 0;\n                        while (i < size) {\n                            X509Certificate x509Certificate4 = (X509Certificate) arrayListA17.get(i);\n                            i++;\n                            X509Certificate x509Certificate5 = (X509Certificate) arrayListA17.get(i);\n                            x509Certificate4.verify(x509Certificate5.getPublicKey());\n                            if (!A00(x509Certificate5, date)) {\n                                Ayk.A1G(x509Certificate5.getSubjectDN(), \"BotSignatureVerificationCertificateManager/Issuer certificate not valid at server time: \", C1xf.A1A());\n                            }\n                            return new CTx(C02S.A0C, x509Certificate);\n                        }\n                        return new CTx(null, x509Certificate);\n                    } catch (Exception e) {\n                        com.whatsapp.infra.logging.Log.e(\"BotSignatureVerificationCertificateManager/Certificate chain verification failed\", e);\n                    }\n                }\n            } catch (Exception e2) {\n                com.whatsapp.infra.logging.Log.e(\"BotSignatureVerificationCertificateManager/Failed to parse certificate chain\", e2);\n            }\n            com.whatsapp.infra.logging.Log.e(\"BotSignatureVerificationCertificateManager/Certificate chain is empty\");\n            return new CTx(C02S.A01, null);\n        } catch (Exception e3) {\n            com.whatsapp.infra.logging.Log.e(\"BotSignatureVerificationCertificateManager/Certificate chain verification failed\", e3);\n            return new CTx(C02S.A01, null);\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

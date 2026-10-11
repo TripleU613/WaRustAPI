@@ -1,0 +1,298 @@
+
+# class: LX/CgX;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 2
+    # full signature: LX/CgX;-><init>()V
+    0000..0006  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    0006..000c  invoke-static  {}, LX/1xg;->A0E()LX/05B;
+    000c..000e  move-result-object  v0
+    000e..0012  iput-object  v0, v1, LX/CgX;->A01:LX/05B;
+    0012..0016  const/16  v0, #0xf5f
+    0016..001c  invoke-static  {v0}, LX/053;->A00(I)LX/05B;
+    001c..001e  move-result-object  v0
+    001e..0022  iput-object  v0, v1, LX/CgX;->A02:LX/05B;
+    0022..0024  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(ZLL)  # .registers 5
+    # full signature: LX/CgX;->A00(Ljava/security/cert/X509Certificate;Ljava/util/Date;)Z
+    0000..0006  invoke-virtual  {v3, v4}, Ljava/security/cert/X509Certificate;->checkValidity(Ljava/util/Date;)V
+    0006..0008  const/4  v0, #0x1
+    0008..000a  return  v0
+    000a..000c  move-exception  v0
+    000c..0012  invoke-virtual  {v3}, Ljava/security/cert/X509Certificate;->getSubjectDN()Ljava/security/Principal;
+    0012..0014  move-result-object  v3
+    0014..001a  invoke-virtual  {v0}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    001a..001c  move-result-object  v2
+    001c..0020  const-string  v0, "BotSignatureVerificationCertificateManager/Certificate not valid at time "
+    0020..0026  invoke-static  {v4, v0}, LX/000;->A07(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0026..0028  move-result-object  v1
+    0028..002c  const-string  v0, ": "
+    002c..0032  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0032..0038  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    0038..003c  const-string  v0, ", "
+    003c..0042  invoke-static  {v1, v0, v2}, LX/Ayp;->A1H(Ljava/lang/StringBuilder;Ljava/lang/String;Ljava/lang/String;)V
+    0042..0044  const/4  v0, #0x0
+    0044..0046  return  v0
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/Exception; code_units 0000..0005 -> 0005
+.end method
+
+.method public A01(LLLZ)  # .registers 17
+    # full signature: LX/CgX;->A01(Ljava/util/Date;Ljava/util/List;Z)LX/CTx;
+    0000..0002  const/4  v2, #0x1
+    0002..0004  const/4  v3, #0x0
+    0004..000a  invoke-virtual  {v13}, LX/CgX;->A02()Ljava/security/cert/X509Certificate;
+    000a..000c  move-result-object  v4
+    000c..0010  if-nez  v4, +0xf
+    0010..0014  const-string  v0, "BotSignatureVerificationCertificateManager/Root certificate not available"
+    0014..001a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    001a..001e  sget-object  v0, LX/02S;->A01:Ljava/lang/Integer;
+    001e..0022  new-instance  v1, LX/CTx;
+    0022..0028  invoke-direct  {v1, v0, v3}, LX/CTx;-><init>(Ljava/lang/Integer;Ljava/security/cert/X509Certificate;)V
+    0028..002a  return-object  v1
+    002a..0030  invoke-static  {}, LX/1xf;->A1D()Ljava/util/ArrayList;
+    0030..0032  move-result-object  v7
+    0032..0036  const-string  v0, "X.509"
+    0036..003c  invoke-static  {v0}, Ljava/security/cert/CertificateFactory;->getInstance(Ljava/lang/String;)Ljava/security/cert/CertificateFactory;
+    003c..003e  move-result-object  v6
+    003e..0044  invoke-interface  {v15}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0044..0046  move-result-object  v5
+    0046..004c  invoke-interface  {v5}, Ljava/util/Iterator;->hasNext()Z
+    004c..004e  move-result  v0
+    004e..0052  if-eqz  v0, +0x19
+    0052..0058  invoke-interface  {v5}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0058..005a  move-result-object  v1
+    005a..005e  check-cast  v1, [B
+    005e..0062  new-instance  v0, Ljava/io/ByteArrayInputStream;
+    0062..0068  invoke-direct  {v0, v1}, Ljava/io/ByteArrayInputStream;-><init>([B)V
+    0068..006e  invoke-virtual  {v6, v0}, Ljava/security/cert/CertificateFactory;->generateCertificate(Ljava/io/InputStream;)Ljava/security/cert/Certificate;
+    006e..0070  move-result-object  v1
+    0070..0074  instance-of  v0, v1, Ljava/security/cert/X509Certificate;
+    0074..0078  if-eqz  v0, -0x17
+    0078..007e  invoke-virtual  {v7, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    007e..0080  goto  -0x1c
+    0080..0086  invoke-virtual  {v7}, Ljava/util/AbstractCollection;->size()I
+    0086..008c  invoke-virtual  {v7}, Ljava/util/AbstractCollection;->isEmpty()Z
+    008c..008e  move-result  v0
+    008e..0092  if-nez  v0, +0x12e
+    0092..0098  invoke-static  {v7}, LX/0C6;->A0u(Ljava/util/List;)Ljava/lang/Object;
+    0098..009a  move-result-object  v5
+    009a..009e  check-cast  v5, Ljava/security/cert/X509Certificate;
+    009e..00a4  invoke-static  {v7, v2}, LX/0C6;->A1H(Ljava/lang/Iterable;I)Ljava/util/List;
+    00a4..00a6  move-result-object  v6
+    00a6..00a8  const/4  v7, #0x2
+    00a8..00ac  if-eqz  v16, +0xb7
+    00ac..00b2  invoke-static  {v6}, LX/0C6;->A0v(Ljava/util/List;)Ljava/lang/Object;
+    00b2..00b4  move-result-object  v11
+    00b4..00b8  check-cast  v11, Ljava/security/cert/X509Certificate;
+    00b8..00bc  iget-object  v0, v13, LX/CgX;->A02:LX/05B;
+    00bc..00c0  iget-object  v9, v0, LX/05B;->A00:LX/00s;
+    00c0..00c6  invoke-interface  {v9}, LX/00s;->get()Ljava/lang/Object;
+    00c6..00c8  move-result-object  v8
+    00c8..00cc  check-cast  v8, Lcom/whatsapp/bot/infra/message/signature/BotPkiCrlManager;
+    00cc..00ce  const/4  v10, #0x0
+    00ce..00d4  invoke-static  {v5, v10}, LX/00h;->A0A(Ljava/lang/Object;I)V
+    00d4..00da  invoke-virtual  {v5}, Ljava/security/cert/X509Certificate;->getSerialNumber()Ljava/math/BigInteger;
+    00da..00dc  move-result-object  v0
+    00dc..00e2  invoke-virtual  {v0}, Ljava/math/BigInteger;->toByteArray()[B
+    00e2..00e4  move-result-object  v1
+    00e4..00ea  invoke-static  {v1}, LX/00h;->A09(Ljava/lang/Object;)V
+    00ea..00f0  const-string/jumbo  v0, "whatsapp_simple_signal"
+    00f0..00f6  invoke-static  {v8, v0, v11, v1}, Lcom/whatsapp/bot/infra/message/signature/BotPkiCrlManager;->A01(Lcom/whatsapp/bot/infra/message/signature/BotPkiCrlManager;Ljava/lang/String;Ljava/security/cert/X509Certificate;[B)Ljava/lang/Integer;
+    00f6..00f8  move-result-object  v0
+    00f8..00fe  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    00fe..0100  move-result  v0
+    0100..0104  if-eq  v0, v2, +0x5c
+    0104..0108  if-eq  v0, v7, +0x52
+    0108..010a  const/4  v8, #0x0
+    010a..010e  if-ne  v0, v10, +0x4a
+    010e..0114  invoke-interface  {v6}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0114..0116  move-result-object  v12
+    0116..011c  invoke-interface  {v12}, Ljava/util/Iterator;->hasNext()Z
+    011c..011e  move-result  v0
+    011e..0122  if-eqz  v0, +0x55
+    0122..0128  invoke-interface  {v12}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0128..012a  move-result-object  v0
+    012a..012e  check-cast  v0, Ljava/security/cert/X509Certificate;
+    012e..0134  invoke-interface  {v9}, LX/00s;->get()Ljava/lang/Object;
+    0134..0136  move-result-object  v11
+    0136..013a  check-cast  v11, Lcom/whatsapp/bot/infra/message/signature/BotPkiCrlManager;
+    013a..0140  invoke-static  {v0, v8}, LX/00h;->A0A(Ljava/lang/Object;I)V
+    0140..0146  invoke-virtual  {v0}, Ljava/security/cert/X509Certificate;->getSerialNumber()Ljava/math/BigInteger;
+    0146..0148  move-result-object  v0
+    0148..014e  invoke-virtual  {v0}, Ljava/math/BigInteger;->toByteArray()[B
+    014e..0150  move-result-object  v10
+    0150..0154  iget-object  v0, v11, Lcom/whatsapp/bot/infra/message/signature/BotPkiCrlManager;->A04:LX/05B;
+    0154..015a  invoke-static  {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+    015a..015c  move-result-object  v0
+    015c..0160  check-cast  v0, LX/CgX;
+    0160..0166  invoke-virtual  {v0}, LX/CgX;->A02()Ljava/security/cert/X509Certificate;
+    0166..0168  move-result-object  v1
+    0168..016e  invoke-static  {v10}, LX/00h;->A09(Ljava/lang/Object;)V
+    016e..0174  const-string/jumbo  v0, "whatsapp_feature"
+    0174..017a  invoke-static  {v11, v0, v1, v10}, Lcom/whatsapp/bot/infra/message/signature/BotPkiCrlManager;->A01(Lcom/whatsapp/bot/infra/message/signature/BotPkiCrlManager;Ljava/lang/String;Ljava/security/cert/X509Certificate;[B)Ljava/lang/Integer;
+    017a..017c  move-result-object  v0
+    017c..0182  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    0182..0184  move-result  v0
+    0184..0188  if-eq  v0, v2, +0xa
+    0188..018c  if-eq  v0, v7, +0x5
+    018c..0190  if-eq  v0, v8, -0x3b
+    0190..0192  goto  +0x2e
+    0192..0196  const-string  v0, "BotSignatureVerificationCertificateManager/CRL unavailable for intermediate certificate"
+    0196..0198  goto  +0xb
+    0198..019c  const-string  v0, "BotSignatureVerificationCertificateManager/Intermediate certificate is revoked"
+    019c..019e  goto  +0x10
+    019e..01a4  invoke-static  {}, LX/1xk;->A10()LX/OM8;
+    01a4..01a6  move-result-object  v0
+    01a6..01a8  goto  +0x27
+    01a8..01ac  const-string  v0, "BotSignatureVerificationCertificateManager/CRL unavailable for leaf certificate"
+    01ac..01b2  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    01b2..01b6  sget-object  v0, LX/02S;->A0C:Ljava/lang/Integer;
+    01b6..01b8  goto  +0xb
+    01b8..01bc  const-string  v0, "BotSignatureVerificationCertificateManager/Leaf certificate is revoked"
+    01bc..01c2  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    01c2..01c6  sget-object  v0, LX/02S;->A01:Ljava/lang/Integer;
+    01c6..01c8  goto  +0x3
+    01c8..01cc  sget-object  v0, LX/02S;->A00:Ljava/lang/Integer;
+    01cc..01d2  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    01d2..01d4  move-result  v1
+    01d4..01d8  if-eq  v1, v2, +0x19
+    01d8..01dc  if-eq  v1, v7, +0xf
+    01dc..01de  const/4  v0, #0x0
+    01de..01e2  if-eq  v1, v0, +0x1c
+    01e2..01e8  invoke-static  {}, LX/1xk;->A10()LX/OM8;
+    01e8..01ea  move-result-object  v0
+    01ea..01ec  goto  +0x5
+    01ec..01f2  invoke-static  {}, LX/1xk;->A10()LX/OM8;
+    01f2..01f4  move-result-object  v0
+    01f4..01f6  throw  v0
+    01f6..01fa  sget-object  v0, LX/02S;->A0Y:Ljava/lang/Integer;
+    01fa..01fe  new-instance  v1, LX/CTx;
+    01fe..0204  invoke-direct  {v1, v0, v5}, LX/CTx;-><init>(Ljava/lang/Integer;Ljava/security/cert/X509Certificate;)V
+    0204..0206  return-object  v1
+    0206..020a  sget-object  v0, LX/02S;->A0N:Ljava/lang/Integer;
+    020a..020e  new-instance  v1, LX/CTx;
+    020e..0214  invoke-direct  {v1, v0, v5}, LX/CTx;-><init>(Ljava/lang/Integer;Ljava/security/cert/X509Certificate;)V
+    0214..0216  return-object  v1
+    0216..021c  invoke-static  {v5, v14}, LX/CgX;->A00(Ljava/security/cert/X509Certificate;Ljava/util/Date;)Z
+    021c..021e  move-result  v0
+    021e..0222  if-nez  v0, +0xf
+    0222..0226  const-string  v0, "BotSignatureVerificationCertificateManager/Leaf certificate not valid at server time"
+    0226..022c  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    022c..0230  sget-object  v0, LX/02S;->A00:Ljava/lang/Integer;
+    0230..0234  new-instance  v1, LX/CTx;
+    0234..023a  invoke-direct  {v1, v0, v5}, LX/CTx;-><init>(Ljava/lang/Integer;Ljava/security/cert/X509Certificate;)V
+    023a..023c  return-object  v1
+    023c..0242  invoke-static  {v5}, LX/1xg;->A1Q(Ljava/lang/Object;)Ljava/util/List;
+    0242..0244  move-result-object  v0
+    0244..024a  invoke-static  {v6, v0}, LX/0C6;->A15(Ljava/lang/Iterable;Ljava/util/Collection;)Ljava/util/ArrayList;
+    024a..024c  move-result-object  v0
+    024c..0252  invoke-static  {v4, v0}, LX/0C6;->A17(Ljava/lang/Object;Ljava/util/Collection;)Ljava/util/ArrayList;
+    0252..0254  move-result-object  v7
+    0254..025a  invoke-virtual  {v7}, Ljava/util/AbstractCollection;->size()I
+    025a..025c  move-result  v6
+    025c..025e  sub-int/2addr  v6, v2
+    025e..0260  const/4  v4, #0x0
+    0260..0264  if-ge  v4, v6, +0x2b
+    0264..026a  invoke-virtual  {v7, v4}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
+    026a..026c  move-result-object  v2
+    026c..0270  check-cast  v2, Ljava/security/cert/X509Certificate;
+    0270..0274  add-int/lit8  v4, v4, #0x1
+    0274..027a  invoke-virtual  {v7, v4}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
+    027a..027c  move-result-object  v1
+    027c..0280  check-cast  v1, Ljava/security/cert/X509Certificate;
+    0280..0286  invoke-virtual  {v1}, Ljava/security/cert/Certificate;->getPublicKey()Ljava/security/PublicKey;
+    0286..0288  move-result-object  v0
+    0288..028e  invoke-virtual  {v2, v0}, Ljava/security/cert/Certificate;->verify(Ljava/security/PublicKey;)V
+    028e..0294  invoke-static  {v1, v14}, LX/CgX;->A00(Ljava/security/cert/X509Certificate;Ljava/util/Date;)Z
+    0294..0296  move-result  v0
+    0296..029a  if-nez  v0, -0x1b
+    029a..02a0  invoke-virtual  {v1}, Ljava/security/cert/X509Certificate;->getSubjectDN()Ljava/security/Principal;
+    02a0..02a2  move-result-object  v2
+    02a2..02a8  invoke-static  {}, LX/1xf;->A1A()Ljava/lang/StringBuilder;
+    02a8..02aa  move-result-object  v1
+    02aa..02ae  const-string  v0, "BotSignatureVerificationCertificateManager/Issuer certificate not valid at server time: "
+    02ae..02b4  invoke-static  {v2, v0, v1}, LX/Ayk;->A1G(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    02b4..02b6  goto  +0xd
+    02b6..02ba  new-instance  v1, LX/CTx;
+    02ba..02c0  invoke-direct  {v1, v3, v5}, LX/CTx;-><init>(Ljava/lang/Integer;Ljava/security/cert/X509Certificate;)V
+    02c0..02c2  return-object  v1
+    02c2..02c4  move-exception  v1
+    02c4..02c8  const-string  v0, "BotSignatureVerificationCertificateManager/Certificate chain verification failed"
+    02c8..02ce  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    02ce..02d2  sget-object  v0, LX/02S;->A0C:Ljava/lang/Integer;
+    02d2..02d6  new-instance  v1, LX/CTx;
+    02d6..02dc  invoke-direct  {v1, v0, v5}, LX/CTx;-><init>(Ljava/lang/Integer;Ljava/security/cert/X509Certificate;)V
+    02dc..02de  return-object  v1
+    02de..02e0  move-exception  v1
+    02e0..02e4  const-string  v0, "BotSignatureVerificationCertificateManager/Failed to parse certificate chain"
+    02e4..02ea  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    02ea..02ee  const-string  v0, "BotSignatureVerificationCertificateManager/Certificate chain is empty"
+    02ee..02f4  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    02f4..02f8  sget-object  v0, LX/02S;->A01:Ljava/lang/Integer;
+    02f8..02fc  new-instance  v1, LX/CTx;
+    02fc..0302  invoke-direct  {v1, v0, v3}, LX/CTx;-><init>(Ljava/lang/Integer;Ljava/security/cert/X509Certificate;)V
+    0302..0304  return-object  v1
+    0304..0306  move-exception  v1
+    0306..030a  const-string  v0, "BotSignatureVerificationCertificateManager/Certificate chain verification failed"
+    030a..0310  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0310..0314  sget-object  v1, LX/02S;->A01:Ljava/lang/Integer;
+    0314..0318  new-instance  v0, LX/CTx;
+    0318..031e  invoke-direct  {v0, v1, v3}, LX/CTx;-><init>(Ljava/lang/Integer;Ljava/security/cert/X509Certificate;)V
+    031e..0320  return-object  v0
+    # exception table: 5 try range(s)
+    # catch Ljava/lang/Exception; code_units 0002..0015 -> 0182
+    # catch Ljava/lang/Exception; code_units 0015..0043 -> 016f
+    # catch Ljava/lang/Exception; code_units 0015..0043 -> 0182
+    # catch Ljava/lang/Exception; code_units 0043..011e -> 0182
+    # catch Ljava/lang/Exception; code_units 011e..015b -> 0161
+    # catch Ljava/lang/Exception; code_units 011e..015b -> 0182
+    # catch Ljava/lang/Exception; code_units 015b..0182 -> 0182
+.end method
+
+.method public A02(L)  # .registers 6
+    # full signature: LX/CgX;->A02()Ljava/security/cert/X509Certificate;
+    0000..0004  iget-object  v1, v5, LX/CgX;->A00:Ljava/security/cert/X509Certificate;
+    0004..0008  if-nez  v1, +0x4c
+    0008..000c  iget-object  v0, v5, LX/CgX;->A01:LX/05B;
+    000c..0012  invoke-static  {v0}, LX/1xi;->A0h(LX/05B;)LX/0AH;
+    0012..0014  move-result-object  v4
+    0014..0016  const/4  v3, #0x0
+    0016..001c  invoke-static  {v4, v3}, LX/00h;->A0A(Ljava/lang/Object;I)V
+    001c..0020  const-string  v0, "X.509"
+    0020..0026  invoke-static  {v0}, Ljava/security/cert/CertificateFactory;->getInstance(Ljava/lang/String;)Ljava/security/cert/CertificateFactory;
+    0026..0028  move-result-object  v2
+    0028..002c  const-string  v0, "\n-----BEGIN CERTIFICATE-----\nMIIC7TCCApOgAwIBAgIUAtu5QuxmVhfGT8LPkjfm40mSl0AwCgYIKoZIzj0EAwIw\ndzEgMB4GA1UEAwwXTWV0YSBXQSBGZWF0dXJlIFJvb3QgQ0ExCzAJBgNVBAYTAlVT\nMRMwEQYDVQQIDApDYWxpZm9ybmlhMRMwEQYDVQQHDApNZW5sbyBQYXJrMRwwGgYD\nVQQKDBNNZXRhIFBsYXRmb3JtcyBJbmMuMCAXDTI1MDkwNDE3MzEyNFoYDzIwNjUw\nOTA0MTczMTI0WjB3MSAwHgYDVQQDDBdNZXRhIFdBIEZlYXR1cmUgUm9vdCBDQTEL\nMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3JuaWExEzARBgNVBAcMCk1lbmxv\nIFBhcmsxHDAaBgNVBAoME01ldGEgUGxhdGZvcm1zIEluYy4wWTATBgcqhkjOPQIB\nBggqhkjOPQMBBwNCAAT60blw90ebreMkw8+Wpcs0ETAkr1VQjoZoyi7PSSQbsoiP\nqYRnzfRrR+xiahaXbYU83qXiTHjVUiOU9wDxI83qo4H6MIH3MA8GA1UdEwEB/wQF\nMAMBAf8wHQYDVR0OBBYEFNO7KMTVSYUxkL6VS3LyWJw7m76zMIG0BgNVHSMEgaww\ngamAFNO7KMTVSYUxkL6VS3LyWJw7m76zoXukeTB3MSAwHgYDVQQDDBdNZXRhIFdB\nIEZlYXR1cmUgUm9vdCBDQTELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3Ju\naWExEzARBgNVBAcMCk1lbmxvIFBhcmsxHDAaBgNVBAoME01ldGEgUGxhdGZvcm1z\nIEluYy6CFALbuULsZlYXxk/Cz5I35uNJkpdAMA4GA1UdDwEB/wQEAwIBhjAKBggq\nhkjOPQQDAgNIADBFAiAINhjk9DbP416vx/WjqdUfexgic08aQsxnpDDsNE5M0gIh\nANorq7KwCQVMtS2or5uKJAQsx1FxCHyDafq2GCk9t0AN\n-----END CERTIFICATE-----"
+    002c..0032  invoke-static  {v0}, LX/1xm;->A0q(Ljava/lang/CharSequence;)Ljava/lang/String;
+    0032..0034  move-result-object  v0
+    0034..003a  invoke-static  {v0}, LX/6an;->A1b(Ljava/lang/String;)[B
+    003a..003c  move-result-object  v1
+    003c..0040  new-instance  v0, Ljava/io/ByteArrayInputStream;
+    0040..0046  invoke-direct  {v0, v1}, Ljava/io/ByteArrayInputStream;-><init>([B)V
+    0046..004c  invoke-virtual  {v2, v0}, Ljava/security/cert/CertificateFactory;->generateCertificate(Ljava/io/InputStream;)Ljava/security/cert/Certificate;
+    004c..004e  move-result-object  v1
+    004e..0052  const-string  v0, "null cannot be cast to non-null type java.security.cert.X509Certificate"
+    0052..0058  invoke-static  {v1, v0}, LX/00h;->A0D(Ljava/lang/Object;Ljava/lang/String;)V
+    0058..005c  check-cast  v1, Ljava/security/cert/X509Certificate;
+    005c..0062  invoke-virtual  {v1}, Ljava/security/cert/X509Certificate;->getSubjectDN()Ljava/security/Principal;
+    0062..0068  invoke-virtual  {v1}, Ljava/security/cert/X509Certificate;->getNotBefore()Ljava/util/Date;
+    0068..006e  invoke-virtual  {v1}, Ljava/security/cert/X509Certificate;->getNotAfter()Ljava/util/Date;
+    006e..0070  goto  +0x15
+    0070..0072  move-exception  v1
+    0072..0076  const-string  v0, "BotSignatureRootCertificate/Failed to load root certificate"
+    0076..007c  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    007c..0082  invoke-virtual  {v1}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    0082..0084  move-result-object  v1
+    0084..0088  if-nez  v1, +0x4
+    0088..008c  const-string  v1, "unknown"
+    008c..0090  const-string  v0, "bot-root-certificate-load-error"
+    0090..0096  invoke-virtual  {v4, v0, v1, v3}, LX/0AH;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+    0096..0098  const/4  v1, #0x0
+    0098..009c  iput-object  v1, v5, LX/CgX;->A00:Ljava/security/cert/X509Certificate;
+    009c..009e  return-object  v1
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/Exception; code_units 000e..0038 -> 0038
+.end method

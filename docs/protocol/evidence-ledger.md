@@ -1,3 +1,21 @@
+2026-10-10 — **Implemented/offline:** identity-auth metadata now follows the
+APK's NONE/LOG_ONLY admission behavior. Structurally valid selected-user metadata
+no longer blocks otherwise admitted classic identity refreshes. Missing/non-byte
+signature or absent certs defers application and preview as malformed. Prekey
+signature, policy, notification guards, own-account and companion ADV checks
+remain required. Certificate/signature trust remains explicitly unported.
+Exact enum, verifier, chain/result and public root evidence resolve the earlier
+blanket refusal; this follow-up supersedes the historical presence gates below.
+[Identity-auth admission and static evidence](identity-auth.md).
+
+Validation: 899 workspace/all-feature tests (758 library), strict all-target
+Clippy, warnings-denied Rustdoc, default CLI/API-symbol tests, CLI-reference
+check and experimental CLI build passed. Encrypted-store regression tests cover
+primary changes, same-key server override, signed companion change, malformed
+fields, preserved refusal guards and once-only recovery. No fresh live metadata
+application was checked; full certificate/backend verification remains unported.
+The default build retains the existing unused clock::observe_login warning.
+
 2026-10-10 — **Implemented/read-only:** identity-refresh inspection now reports
 selected identity_auth version, certificate count and byte-body presence with
 verification explicitly unported. Classic signed-prekey validity is separate;

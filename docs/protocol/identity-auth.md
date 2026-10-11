@@ -2,8 +2,10 @@
 
 2026-10-10. APK **2.26.37.71**, SHA-256
 `1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
-**Confirmed static / implemented read-only shape inspection.** Certificate
-validation, identity-auth signature verification and native policy are unported.
+**Implemented/offline:** structurally valid identity-auth metadata no longer
+blocks otherwise admitted classic refreshes. Native verification is log-only in
+this APK. Certificate validation and identity-auth signature verification remain
+unported; inspection reports that limitation explicitly.
 This is separate from [non-E2EE attestation](attestation-verification.md) and
 [classic identity refresh](identity-refresh-application.md).
 
@@ -31,8 +33,10 @@ The retained [14J worker](apk/2.26.37.71-companion-same-key-refresh/admitted-bun
 reads this metadata after its session-processing path at `0236..0258`. The
 [DLx async path](apk/2.26.37.71-status-observers/post-runnable-run.txt) reads
 it at `029e..02bc` and logs the returned Boolean at `02be..02c8`. These
-positions do not prove that failures have no transitive effects or authorize
-skipping authentication in Rust. Complete scheduling/admission remains unported.
+consumers process/schedule their classic session path before logging the result;
+neither branches on that Boolean to admit or invalidate a session. The verifier
+mode and failure routine below resolve the earlier admission uncertainty. Full
+native scheduling and optional metadata processing remain unported.
 
 ## Native verification boundary
 
@@ -44,9 +48,9 @@ then call CgX.A01 with a current Date, the certificate list and false. With a
 leaf certificate it concatenates UTF-8 decimal version with the supplied identity
 bytes, takes the leaf's encoded public key and calls Cft.A01. Missing leaf,
 invalid version, empty chain, verifier failure or caught exceptions report
-through Cfj.A00 and return false. Effective property values, complete Bzb mode
-semantics, Cfj.A00 effects, certificate trust roots and CgX chain policy are
-**unknown/unported**. No runtime setting is fabricated or forced.
+through Cfj.A00 and return false. Effective property values remain unknown. The exact mode/failure evidence below
+establishes a log-only result in either available mode. No runtime setting is
+fabricated or forced.
 
 [Complete Cft.A01 REA Evidence](rea/2.26.37.71-identity-auth/signature-primitive.json),
 `ev_a0864b72664e8e01d1ef5b1bc9262dafb538ad54a6bf8218599a5280882a86b6`,
@@ -72,17 +76,78 @@ only the classic signed prekey, independently of identity_auth. No certificate,
 signature, peer/account identifier or raw key is returned. The shape inspector
 does not claim native malformed-input handling or chain parsing equivalence.
 
-Automatic application still defers any identity_auth child with
-`identity_auth_unported`; no pin, session, request ID, gate or server wait
-changes. Read-only tests compare every table and journal head across inspection
-and reopening, and cover Unicode version 1, unsupported version, malformed and
-overflow versions, absent metadata, missing/non-byte bodies, empty byte bodies
-and ignored extensions/root metadata. The regression failed before adding this
-field, then passed. No new live request was made for this chunk.
+## Admission correction — 2026-10-10
+
+[Exact Bzb](rea/2.26.37.71-identity-auth/verification-modes.txt) defines only
+`NONE` (value 0, A02) and `LOG_ONLY` (value 1). Its constructor stores the supplied
+value; the two-member enum is the lookup domain. Unrecognized property 20107
+falls back to NONE in [exact Cfj](rea/2.26.37.71-identity-auth/auth-verifier-exact.txt)
+`002a..0074`. NONE returns true; LOG_ONLY computes verification and returns its
+Boolean. [Complete Cfj.A00 Evidence](rea/2.26.37.71-identity-auth/failure-logging.json)
+`ev_9e10efa187f4bd122642fe27d2a5d00d07464d1afab191c97c8d572b4735eb7f`
+and its exact method show logging and `bot-identity-verification-failure`
+telemetry. This routine does not write pins or invalidate sessions. Combined
+with the two consumers above, this supersedes the earlier blanket
+`identity_auth_unported` application refusal, which invented an admission rule.
+
+Application and read-only session preview share the required structural check:
+a present identity_auth must contain a signature byte body and a certs node.
+Missing/non-byte signature or absent certs defers with `malformed_identity_auth`.
+Empty signature bytes and an empty certs node satisfy native parser structure;
+invalid/missing versions or failed certificate verification can produce logs,
+but do not authorize or block classic adoption. No auth trust is asserted.
+Attestation/PQ still defer; signed-prekey verification, original reply/account/
+notification guards, explicit apk_authenticated policy, own-identity exclusion,
+same-key override rules and companion ADV/primary/membership checks still apply.
+The shared application path also covers actor handling and startup recovery.
+No new property, bypass option, network message or dependency is introduced.
+
+Encrypted-store regressions failed before the correction. Tests cover changed
+primary PN/LID, same-key primary with server override, and changed companion with
+both ADV signatures bound to the independent primary. Metadata includes an empty
+chain/signature and invalid/unsupported versions, which native log-only mode may
+report as failure. Reapplication/reopening retain the once-only marker and old
+history; unrelated tables remain unchanged. Missing/non-byte required fields
+refuse in application and preview without table/journal changes. Forged prekeys,
+pinned policy, absent same-key override, attestation/PQ and untracked notification
+guards remain refused with well-formed auth present.
+
+## Certificate chain evidence — static only
+
+[Complete CgX.A01 Evidence](rea/2.26.37.71-identity-auth/chain-verifier.json)
+`ev_41441e5a13ae45a037680a84fd9478fffed00b1e558b566048f0aa1f4f308170`
+has JADX duplicated-block warnings. Its apparent unconditional loop return is
+not reliable. [Exact CgX](rea/2.26.37.71-identity-auth/chain-manager-exact.txt)
+`0260..02dc` verifies each child using the following issuer public key. A valid
+issuer date at `0296` branches back to `0260`; only completing the ordered chain
+returns the null error/leaf result at `02b6`. The decoded list supplies leaf then
+intermediates, followed by the pinned root. Leaf and issuer date failures and
+signature exceptions return error results retaining the leaf. Empty/unparseable
+chains return no leaf. Cfj supplies current Java Date and false; its selected
+path does not request the separate CRL branch. Log text saying server time does
+not establish use of our confirmed protocol clock.
+
+[CTx exact fields](rea/2.26.37.71-identity-auth/chain-result-exact.txt) and
+[complete constructor Evidence](rea/2.26.37.71-identity-auth/chain-result.json)
+`ev_26280b1fd0d1ca8f25fa89ee522a845ec1112531fd2c384bed4297a506a54add`
+separate A00 error type from A01 leaf. Cfj reads only A01 at `00d6`, then uses the
+leaf key for EdDSA; leaf presence is not evidence of a successful trusted chain.
+Rust does not translate this behavior into a verified certificate verdict.
+
+[Complete root-loader Evidence](rea/2.26.37.71-identity-auth/root-loader.json)
+`ev_7cbda0f584e3b9c25a454488495b3406e1a601d99905d9946ef2ccd783873730`
+retains the public PEM literal for Meta WA Feature Root CA. The loader caches a
+parsed X.509 certificate, logs load failure and leaves a null cache for retry.
+[OpenSSL static summary](rea/2.26.37.71-identity-auth/root-summary.json) records
+753 DER bytes, SHA-256
+`0cd2cb26acc5637ae6d6cb61aaee29aa960c739286f2f08fa2b77a1d0bdf492f`,
+and validity 2025-09-04 through 2065-09-04. This public feature root is not
+installed for TLS, account identity or Rust certificate trust. Native signature
+math/backend equivalence and a fresh live identity-auth sample remain unverified.
 
 ## Validation
 
-896 workspace/all-feature tests passed (755 library, four codec, nine crash,
+899 workspace/all-feature tests passed (758 library, four codec, nine crash,
 54 CLI, one API-symbol and 73 tooling tests). Strict all-target Clippy,
 warnings-denied Rustdoc, default CLI tests, CLI-reference regeneration and
 the experimental CLI build passed. The default build retains the existing
@@ -94,4 +159,5 @@ field was present and null because that reply contains no metadata. Store
 inspection summaries remained equal. This does not validate a live certificate
 chain or prove every stored byte unchanged; the full table equality tests are
 synthetic encrypted-store tests. Private logs remain in the ignored account
-directory. No directory request, connection, replay or identity adoption occurred.
+directory. That inspection preceded the admission correction. No new live validation was
+performed for the correction; it does not prove fresh metadata adoption.

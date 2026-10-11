@@ -1,0 +1,13 @@
+{
+  "apk_version": "2.26.37.71",
+  "der_sha256": "0cd2cb26acc5637ae6d6cb61aaee29aa960c739286f2f08fa2b77a1d0bdf492f",
+  "der_bytes": 753,
+  "parsed_certificate": [
+    "subject=CN=Meta WA Feature Root CA, C=US, ST=California, L=Menlo Park, O=Meta Platforms Inc.",
+    "issuer=CN=Meta WA Feature Root CA, C=US, ST=California, L=Menlo Park, O=Meta Platforms Inc.",
+    "notBefore=Sep  4 17:31:24 2025 GMT",
+    "notAfter=Sep  4 17:31:24 2065 GMT"
+  ],
+  "authority": "public certificate literal in CgX.A02; static only",
+  "installed_for_tls": false
+}

@@ -109,6 +109,15 @@ pub struct IdentityAuthInspection {
     /// Always unported until the native certificate/signature policy is implemented.
     pub verification: &'static str,
 }
+fn identity_auth_well_formed(user: &Node) -> bool {
+    // Bot.A03/CXs require signature bytes and a certs node, not valid certs.
+    user.child("identity_auth").is_none_or(|auth| {
+        auth.child("signature")
+            .is_some_and(|node| matches!(node.content, crate::binary::NodeContent::Bytes(_)))
+            && auth.child("certs").is_some()
+    })
+}
+
 fn identity_auth_inspection(user: &Node) -> Option<IdentityAuthInspection> {
     let auth = user.child("identity_auth")?;
     let certificates: Vec<_> = auth
@@ -461,6 +470,10 @@ pub async fn preview_session(store: &ProtocolStore, id: &str) -> Result<SessionP
     }
     if user.child("pqkey").is_some() {
         result.outcome = "pq_session_unported";
+        return Ok(result);
+    }
+    if !identity_auth_well_formed(user) {
+        result.outcome = "malformed_identity_auth";
         return Ok(result);
     }
     let Some(pin) = pin else {
