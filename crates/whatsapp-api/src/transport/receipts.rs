@@ -680,6 +680,30 @@ pub(crate) fn jid(node: &Node, name: &str) -> Option<Jid> {
         .cloned()
         .or_else(|| Jid::parse(value.as_text()?).ok())
 }
+pub(super) fn network_jid(node: &Node, name: &str) -> Option<Jid> {
+    if node
+        .get_attr(name)?
+        .as_text()
+        .is_some_and(|text| text.starts_with('@'))
+    {
+        return None;
+    }
+    let value = jid(node, name)?;
+    // shortcut: namespace/server-only checks, extend when special JID grammar is ported.
+    if value.user.is_empty() {
+        return (matches!(value.server, Server::User | Server::Group)
+            || matches!(&value.server, Server::Other(server) if server == "call"))
+        .then_some(value);
+    }
+    if matches!(value.server, Server::LegacyUser | Server::Messenger)
+        || matches!(&value.server, Server::Other(server)
+            if !matches!(server.as_str(), "call" | "bot" | "temp" | "interop.g.us" | "status_me" | "lid_me"))
+    {
+        return None;
+    }
+    Some(value)
+}
+
 pub(super) fn ids(node: &Node) -> Result<Vec<String>> {
     let mut ids = std::collections::BTreeSet::new();
     let mut insert = |v: Option<&str>| -> Result<()> {
@@ -835,16 +859,9 @@ fn key_aggregate(node: &Node, participants: &Node, default_seconds: i64) -> Resu
     let mut receipts = Vec::with_capacity(items.len());
     for item in items {
         // Cmk.A03 -> 0hs.A0A: absent/unparseable JIDs skip even malformed t.
-        let Some(actor) = jid(item, "jid") else {
+        let Some(actor) = network_jid(item, "jid") else {
             continue;
         };
-        // 0D1.A00/0D2.A00 reject unknown servers instead of inventing JIDs.
-        if matches!(actor.server, Server::LegacyUser | Server::Messenger)
-            || matches!(&actor.server, Server::Other(server)
-                if !matches!(server.as_str(), "call" | "bot" | "temp" | "interop.g.us" | "status_me" | "lid_me"))
-        {
-            continue;
-        }
         let time = match item.get_attr("t") {
             None => default_seconds,
             Some(value) => value
@@ -2603,6 +2620,10 @@ mod tests {
                         Node::new("participant").attr("t", "bad"),
                         Node::new("participant")
                             .attr("jid", "invalid")
+                            .attr("t", "bad"),
+                        Node::new("participant").attr("jid", "lid").attr("t", "bad"),
+                        Node::new("participant")
+                            .attr("jid", "broadcast")
                             .attr("t", "bad"),
                         Node::new("participant")
                             .attr("jid", "15555550100:3@s.whatsapp.net")

@@ -1,3 +1,12 @@
+2026-10-11 — **Implemented/offline:** receipt ACKs now share strict receipt
+kind and network namespace checks. A present non-text type no longer defaults to
+delivery; unknown namespaces cannot become ACK destinations or optional fields.
+Bare lid/broadcast aggregate targets skip before time parsing. Unsupported
+receipts remain captured and reception continues. Keys, reservations, IDs, read
+policy and waits stay intact; specialized JID grammar and fresh live acceptance
+remain unported/unverified. No network request.
+[Source, runtime behavior and regressions](protocol/receipt-ack-namespace.md).
+
 2026-10-10 — **Implemented/offline:** matching queued read receipts now share
 native extra-ID lists. Per-message selectors and original saved wire stay intact;
 all batch members reserve atomically before writing, settle on the matching root

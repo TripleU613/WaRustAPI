@@ -700,14 +700,8 @@ pub fn received_confirmation(incoming: &Node) -> Option<Node> {
 /// ack for a type we do not process would tell the server it was handled when
 /// it was only preserved, so those stay unacknowledged.
 fn receipt_ack(incoming: &Node) -> Option<Node> {
-    let jid_of = |name: &str| {
-        let value = incoming.get_attr(name)?;
-        value
-            .as_jid()
-            .cloned()
-            .or_else(|| Jid::parse(value.as_text()?).ok())
-    };
-    let from = jid_of("from")?;
+    let from = super::receipts::network_jid(incoming, "from")?;
+    let kind = super::receipts::receipt_kind(incoming)?;
     let id = incoming.get_attr("id")?.as_text()?;
     if id.is_empty() || id.len() > 128 {
         return None;
@@ -716,17 +710,13 @@ fn receipt_ack(incoming: &Node) -> Option<Node> {
         .attr("id", id)
         .attr("to", from)
         .attr("class", "receipt");
-    match incoming.get_attr("type").and_then(|v| v.as_text()) {
-        None | Some("delivery") => {}
-        Some(kind @ ("read" | "played")) => {
-            ack = ack.attr("type", kind);
-        }
-        _ => return None,
+    if kind != "delivery" {
+        ack = ack.attr("type", kind);
     }
-    if let Some(participant) = jid_of("participant") {
+    if let Some(participant) = super::receipts::network_jid(incoming, "participant") {
         ack = ack.attr("participant", participant);
     }
-    if let Some(recipient) = jid_of("recipient") {
+    if let Some(recipient) = super::receipts::network_jid(incoming, "recipient") {
         ack = ack.attr("recipient", recipient);
     }
     if let Some(edit) = incoming
@@ -1021,6 +1011,53 @@ mod tests {
         // A type this client does not process is preserved, not acknowledged.
         let retry = group_receipt.attr("type", "retry");
         assert!(received_confirmation(&retry).is_none());
+    }
+
+    #[test]
+    fn receipt_ack_distinguishes_absent_type_and_native_namespace_failures() {
+        let base = Node::new("receipt")
+            .attr("from", Jid::parse("15555550100@s.whatsapp.net").unwrap())
+            .attr("id", "ACK-FIXTURE");
+        assert!(received_confirmation(&base).is_some());
+        for node in [
+            base.clone()
+                .attr("type", Jid::parse("15555550100@s.whatsapp.net").unwrap()),
+            base.clone().attr("from", "15555550100@unknown.example"),
+            base.clone().attr("from", "unknown.example"),
+            base.clone().attr("from", "lid"),
+            base.clone().attr("from", "broadcast"),
+            base.clone().attr("from", "@s.whatsapp.net"),
+            base.clone().attr("from", "@g.us"),
+            base.clone().attr("from", "@call"),
+            base.clone().attr("from", "15555550100@c.us"),
+            base.clone().attr("from", "15555550100@msgr"),
+        ] {
+            assert!(received_confirmation(&node).is_none());
+        }
+        for name in ["participant", "recipient"] {
+            let ack =
+                received_confirmation(&base.clone().attr(name, "15555550100@unknown.example"))
+                    .unwrap();
+            assert!(ack.get_attr(name).is_none());
+            let ack = received_confirmation(&base.clone().attr(name, "lid")).unwrap();
+            assert!(ack.get_attr(name).is_none());
+            let ack = received_confirmation(&base.clone().attr(name, "@s.whatsapp.net")).unwrap();
+            assert!(ack.get_attr(name).is_none());
+        }
+        for from in [
+            "s.whatsapp.net",
+            "g.us",
+            "call",
+            "status@broadcast",
+            "15555550100@hosted",
+            "222222222222222@hosted.lid",
+            "15555550100:4@s.whatsapp.net",
+        ] {
+            assert!(
+                received_confirmation(&base.clone().attr("from", from)).is_some(),
+                "{from}"
+            );
+        }
     }
 
     /// `LX/1Rd->A01` builds exactly one `presence` element with only a `type`

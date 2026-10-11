@@ -1635,6 +1635,44 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn unsupported_receipt_type_and_namespaces_stay_captured_without_ack() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("unsupported-receipt.redb"));
+        let base = Node::new("receipt")
+            .attr("from", peer())
+            .attr("id", "RECEIPT-FIXTURE");
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        let head = store.journal_head().unwrap();
+        for node in [
+            base.clone().attr("type", peer()),
+            base.clone().attr("from", "15555550100@unknown.example"),
+            base.clone().attr("from", "lid"),
+        ] {
+            let wire = encode(&node).unwrap();
+            let capture = format!(
+                "inbound:sha256:{}",
+                hex::encode(sha2::Sha256::digest(&wire))
+            );
+            fake.deliver(node).await;
+            fake.nothing_written(Duration::from_millis(100)).await;
+            assert!(
+                store
+                    .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                    .unwrap()
+                    .is_some()
+            );
+            assert_eq!(store.journal_head().unwrap(), head);
+        }
+        fake.deliver(base).await;
+        let (ack, reply) = fake.written().await;
+        assert_eq!(ack.description, "ack");
+        assert!(ack.get_attr("type").is_none());
+        reply.send(Ok(())).unwrap();
+        fake.stop_cleanly().await;
+    }
+
+    #[tokio::test]
     async fn delivery_confirmation_write_cut_then_redelivery_confirms_again() {
         let dir = tempfile::tempdir().unwrap();
         let store = open(&dir.path().join("confirm-cut.redb"));

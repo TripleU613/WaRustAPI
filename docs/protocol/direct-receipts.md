@@ -1,5 +1,11 @@
 # Direct receipt attribution — 2026-10-09
 
+2026-10-11 follow-up: [receipt ACK namespace/type checks](receipt-ack-namespace.md)
+now share the existing strict kind getter and aggregate-target namespace mask.
+Invalid server-only lid/broadcast targets skip before optional time parsing;
+unsupported root/type receipts remain captured without a control ACK. Native
+special JID grammar and complete ACK dispatch remain separate boundaries.
+
 Comparison APK **2.26.37.71**, SHA-256
 `1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
 The [12-topic source bundle](apk/2.26.37.71-direct-receipts/manifest.json)
