@@ -3,7 +3,8 @@
 2026-10-10. **Confirmed static**, comparison APK **2.26.37.71**, SHA-256
 `1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
 **Implemented/offline tested:** direct and group `participants message_id`
-receipts now enter the normal durable fact path. Fresh live aggregate projection
+and `participants key` receipts enter the normal durable fact path. The key
+form follow-up below supersedes the earlier unported branch. Fresh live aggregate projection
 remains **unknown**, and this is not complete native receipt/status parity.
 
 ## Evidence
@@ -83,12 +84,10 @@ keys and progress are preserved. The local list bound is the existing default
 Node limit (4,096 children), and the inner ID uses the existing 128-byte bound;
 neither is claimed as a WhatsApp limit. These facts do not authorize resending.
 
-**Unknown/unported:** the separate `participants key` DDG branch uses root
-status, optional entry JIDs and a current-clock default. It now stays
-unprojected instead of falling through to root-ID receipt attribution. Full
-native status/settings admission, primary identity cleanup, orphan storage,
-privacy metadata, callback deferral and own-device synchronization are not
-completed by this change.
+**Historical boundary:** the initial message_id implementation left DDG key
+aggregates unprojected. The follow-up below implements their supported fact path.
+Full native status/settings admission, primary identity cleanup, orphan storage,
+privacy metadata, callback deferral and own-device synchronization remain unported.
 
 ## Reproduce and inspect
 
@@ -110,8 +109,8 @@ rea inspect-android-package ~/Downloads/WhatsApp.apk --json
 rea inspect-android-method ~/Downloads/WhatsApp.apk X.Cmk A03 --json
 rea inspect-android-method ~/Downloads/WhatsApp.apk X.Ayk A09 --json
 cargo test -p whatsapp-api --all-features aggregat
-whatsapp-cli --profile l --json true status --local-id ORIGINAL_LOCAL_ID
-whatsapp-cli --profile l --json true outbox-versions --local-id ORIGINAL_LOCAL_ID
+whatsapp-cli --profile l --json status --local-id ORIGINAL_LOCAL_ID
+whatsapp-cli --profile l --json outbox-versions --local-id ORIGINAL_LOCAL_ID
 ```
 
 Use the existing versioned APK recipes and `apk-research-diff` for cached
@@ -146,3 +145,78 @@ account directory. An initial offline CLI invocation used an unsupported explici
 Boolean value for `--json`; it failed before any connection. The corrected run
 used the actual switch form. No retry of the live window was performed. The
 window ran on commit 19ca798, before the separate single-list parser fix.
+
+## Key-based multi-target receipts — 2026-10-10
+
+**Implemented/offline:** the same public handler now selects the first
+participants child's required `key` when message_id is absent. Both forms are
+parsed completely before the existing direct/group handlers commit all facts in
+one transaction. No new route, outbound message, target snapshot, retry or resend
+authority is introduced. The inner key selects the saved send; an unrelated root
+ID remains untouched. If both inner attributes exist, message_id takes precedence.
+
+[Exact Cmk.A03](rea/2.26.37.71-receipt-list-shape/parser-exact.txt)
+`0308..0328` requires key and a nonnull participant array. Root status is parsed
+before this branch; [DDG exact methods](rea/2.26.37.71-receipt-list-shape/key-aggregate-model.txt)
+return that one status/key for every entry and separate target/time pairs.
+DDG.CPB retains the remaining sublist in ReceiptMultiTargetProcessingJob. This
+proves shared root status, not use of entry type or root timestamp. Existing
+receipt scheduling/privacy/native user-row gaps remain separate.
+
+The parser reads one clock default in seconds at `0340..0354`. Each nonnull
+optional JID reaches device conversion and A08 time parsing at `0364..0390`.
+[Complete optional-time Evidence](rea/2.26.37.71-receipt-list-shape/optional-time.json)
+`ev_71525460df7acbe75a8ad272d57c7c781f9d4c52a7b5ad20f008cdeffd035b5b`
+and [exact A08](rea/2.26.37.71-receipt-list-shape/optional-time-exact.txt)
+show default only for absence; present malformed/overflow time throws through
+the existing strict Java-decimal parser. Multiplication to milliseconds wraps.
+Unknown or missing optional JIDs skip before time parsing. Entry tag/type is not
+an independent receipt kind here. Empty arrays produce no facts; missing arrays,
+invalid keys and unknown root status refuse with redacted diagnostics.
+
+[Optional-JID Evidence](rea/2.26.37.71-receipt-list-shape/optional-jid.json)
+`ev_8d5e2718747a6ec2c37e01480e80ce82896b1e1e392ecc96467a7b5eb14e73d1`
+has a JADX duplicated-block warning. Its factory is independently retained as
+[nullable A02](rea/2.26.37.71-receipt-list-shape/nullable-jid-factory.json),
+[complete A00 smali fallback](rea/2.26.37.71-receipt-list-shape/jid-parse.json)
+`ev_e84317abc282a6692ff8f69c9ad06eca12738f06f6791dfec236ca79b53d57b5`
+and [server-only parser](rea/2.26.37.71-receipt-list-shape/server-jid-parse.json).
+Unknown server strings fail the native factory and return null; our permissive
+local Jid model is not sufficient admission for this network branch. Native
+[device conversion](rea/2.26.37.71-receipt-list-shape/device-cast.json)
+`ev_3811765fef30f798d4e2dc7f3f43a77cb8c919bd9e2fc839c9f826b0df7de245`
+returns an existing device or a user primary; unsupported namespaces cannot be
+projected into saved PN/LID facts by the existing record handlers. Full special
+JID/runtime subtype equivalence remains unported.
+
+[Clock dispatch](rea/2.26.37.71-receipt-list-shape/clock-delegate.json)
+`ev_cdc634951bc5013cd41b7e5924bce12822fbb57304ddb848b69820797f473165`
+calls [08B.A00](rea/2.26.37.71-receipt-list-shape/clock-selector.json)
+`ev_c8581bbd22a4b74d482959f21bcb7e28794bccc011d5b6a0112a182d68f16e95`:
+nonzero NTP baseline, then confirmed server elapsed baseline, then wall minus
+saved offset. Rust uses its existing confirmed login/ping elapsed/offset, or local
+wall time with no confirmed sample. The same sampled second is used for every
+missing entry time. Historical inferred message/receipt clock samples are
+excluded. Native NTP acquisition/preference is still unported, so absent-time
+parity against an APK with an active NTP baseline is not established. The fact's
+server_timestamp may therefore be this parser default, rather than supplied wire
+evidence. Ordinary receipts retain their missing-time behavior; message_id
+aggregates still require every entry time.
+
+The failing-before encrypted-store regression produced zero instead of two
+facts. After binary wire encoding/decoding the fix proves inner-key/root-ID separation, root read status
+over conflicting entry played status, Unicode supplied time, confirmed-clock
+fallback, absent/invalid JID skipping, original target exclusion, immutable intent/
+attempt/progress and duplicate-free reopening. Malformed batch tests compare all
+tables and the journal head. The public group test now runs both forms, proving
+frozen target attribution and root delivery status for key aggregates. A clock
+test excludes historical inferred samples, verifies whole-second login offset,
+and reopens without writes. Shared aggregate rollback/authority regressions
+remain passing; this does not establish complete native admission.
+
+Validation: 902 workspace/all-feature tests passed (761 library, four codec,
+nine crash, 54 CLI, one API-symbol, 73 tooling). Strict all-target Clippy,
+warnings-denied Rustdoc, default CLI tests, CLI-reference check and experimental
+CLI build passed after test-only style fixes. The default build retains the
+existing unused clock::observe_login warning. No new live session was opened;
+fresh key aggregate projection remains unverified.

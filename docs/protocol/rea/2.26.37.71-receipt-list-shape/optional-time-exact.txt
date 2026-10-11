@@ -1,0 +1,16 @@
+
+# class: LX/0hs;
+# extends: Ljava/lang/Object;
+
+.method public A08(JLJ)  # .registers 6
+    # full signature: LX/0hs;->A08(Ljava/lang/String;J)J
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-virtual  {v2, v3, v0}, LX/0hs;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0008..000a  move-result-object  v0
+    000a..000e  if-nez  v0, +0x3
+    000e..0010  return-wide  v4
+    0010..0016  invoke-virtual  {v2, v0, v3}, LX/0hs;->A09(Ljava/lang/String;Ljava/lang/String;)J
+    0016..0018  move-result-wide  v0
+    0018..001a  return-wide  v0
+    # exception table: 0 try range(s)
+.end method

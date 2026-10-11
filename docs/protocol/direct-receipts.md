@@ -267,8 +267,10 @@ it does not implement NTP or validate a live default timestamp.
 [Exact DDG methods](rea/2.26.37.71-receipt-list-shape/key-aggregate-model.txt)
 confirm one message key, per-entry device/time and root status. Using the current
 Rust inferred-stanza clock for missing times would substitute a different
-authority. The key aggregate stays unported while that clock/admission work
-remains incomplete. No APK or Android process was executed.
+authority. The later [key multi-target follow-up](offline-aggregated-receipts.md#key-based-multi-target-receipts--2026-10-10)
+uses confirmed/local time instead of inferred stanza time and applies supported
+facts atomically. Native NTP preference, full admission and fresh live projection
+remain incomplete. No APK or Android process was executed.
 
 ### Validation of the single-list correction
 

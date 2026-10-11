@@ -78,7 +78,8 @@ pub struct DeliveryFact {
     /// from observation time. Historical facts remain unknown. Receipt times
     /// preserve valid signed/wrapping root `t`; missing/invalid stays None.
     /// A current success ACK instead defaults missing/invalid `t` to zero,
-    /// following APK 37.71 1Qy.A02.
+    /// following APK 37.71 1Qy.A02. Aggregate receipts use each entry time;
+    /// the key form defaults only absent time to the receipt parser clock.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub server_timestamp: Option<Timestamp>,
     /// Sanitized code, if any.

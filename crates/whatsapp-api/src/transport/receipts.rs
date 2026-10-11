@@ -651,12 +651,13 @@ pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
         .first()
         .filter(|n| n.description == "participants")
     {
-        // Cmk.A03 002a..015c: the first child's message_id selects DDF.
-        // The separate key-based DDG branch requires clock/admission work.
-        if participants.get_attr("message_id").is_none() {
-            return Ok(0);
-        }
-        let receipts = offline_aggregate(node, participants)?;
+        let receipts = if participants.get_attr("message_id").is_some() {
+            offline_aggregate(node, participants)?
+        } else {
+            let local_ms = crate::model::time::Timestamp::now().as_millis();
+            let seconds = store.read(|tx| Ok(super::clock::receipt_now(tx, local_ms)? / 1000))?;
+            key_aggregate(node, participants, seconds)?
+        };
         return store.write(|tx| {
             receipts
                 .iter()
@@ -702,6 +703,66 @@ fn offline_aggregate(node: &Node, participants: &Node) -> Result<Vec<Node>> {
             .and_then(|v| v.as_text())
             .and_then(super::mex::java_decimal_long)
             .ok_or_else(|| invalid("missing or invalid participant t"))?;
+        if matches!(kind, "delivery" | "read" | "played") {
+            receipts.push(
+                Node::new("receipt")
+                    .attr("from", from.clone())
+                    .attr("id", id)
+                    .attr("participant", actor)
+                    .attr("type", kind)
+                    .attr("t", time.to_string()),
+            );
+        }
+    }
+    Ok(receipts)
+}
+
+fn key_aggregate(node: &Node, participants: &Node, default_seconds: i64) -> Result<Vec<Node>> {
+    let invalid = |reason| Error::invalid("receipt.aggregate", reason);
+    let id = participants
+        .get_attr("key")
+        .and_then(|v| v.as_text())
+        .filter(|id| !id.is_empty() && id.len() <= 128)
+        .ok_or_else(|| invalid("missing or invalid key"))?;
+    let from = jid(node, "from").ok_or_else(|| invalid("missing or invalid from"))?;
+    let kind = match node.get_attr("type") {
+        None => "delivery",
+        Some(value) => value
+            .as_text()
+            .ok_or_else(|| invalid("invalid root type"))?,
+    };
+    if !matches!(
+        kind,
+        "delivery" | "read" | "played" | "sender" | "inactive" | "read-self" | "played-self"
+    ) {
+        return Err(invalid("unknown root type"));
+    }
+    let crate::binary::NodeContent::Children(items) = &participants.content else {
+        return Err(invalid("missing participant list"));
+    };
+    if items.len() > crate::profile::Limits::default().max_children as usize {
+        return Err(invalid("participant list exceeds bound"));
+    }
+    let mut receipts = Vec::with_capacity(items.len());
+    for item in items {
+        // Cmk.A03 -> 0hs.A0A: absent/unparseable JIDs skip even malformed t.
+        let Some(actor) = jid(item, "jid") else {
+            continue;
+        };
+        // 0D1.A00/0D2.A00 reject unknown servers instead of inventing JIDs.
+        if matches!(actor.server, Server::LegacyUser | Server::Messenger)
+            || matches!(&actor.server, Server::Other(server)
+                if !matches!(server.as_str(), "call" | "bot" | "temp" | "interop.g.us" | "status_me" | "lid_me"))
+        {
+            continue;
+        }
+        let time = match item.get_attr("t") {
+            None => default_seconds,
+            Some(value) => value
+                .as_text()
+                .and_then(super::mex::java_decimal_long)
+                .ok_or_else(|| invalid("invalid participant t"))?,
+        };
         if matches!(kind, "delivery" | "read" | "played") {
             receipts.push(
                 Node::new("receipt")
@@ -2164,7 +2225,162 @@ mod tests {
     }
 
     #[test]
-    fn key_based_aggregates_and_unsupported_routes_never_use_root_id_as_a_receipt() {
+    fn key_aggregates_use_inner_key_root_kind_and_optional_target_times_once() {
+        use crate::model::{send::DeliveryFactKind, time::Timestamp};
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("multi-target.redb");
+        let store = open(&path, true);
+        let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let id = saved_receipt_send(&store, "aggregate", &peer.to_string(), "inner-key");
+        let envelope = saved_receipt_send(&store, "aggregate", &peer.to_string(), "envelope");
+        store
+            .write(|tx| {
+                super::super::send_versions::capture_in(
+                    tx,
+                    id,
+                    &[peer.clone(), peer.clone().with_device(2)],
+                )?;
+                super::super::send_versions::capture_in(tx, envelope, std::slice::from_ref(&peer))
+            })
+            .unwrap();
+        super::super::clock::observe(
+            &store,
+            &Node::new("iq")
+                .attr("type", "get")
+                .attr("xmlns", "urn:xmpp:ping")
+                .attr("t", "1700000000"),
+        )
+        .unwrap();
+        let outbox = crate::outbox::Outbox::new("aggregate", crate::profile::Limits::default());
+        let before = store.read(|tx| Ok(outbox.get(tx, id)?.unwrap())).unwrap();
+        let root_before = store
+            .read(|tx| Ok(outbox.get(tx, envelope)?.unwrap()))
+            .unwrap();
+        let node = Node::new("receipt")
+            .attr("from", peer)
+            .attr("id", "envelope")
+            .attr("type", "read")
+            .attr("t", "999")
+            .children(vec![
+                Node::new("participants")
+                    .attr("key", "inner-key")
+                    .children(vec![
+                        Node::new("participant")
+                            .attr("jid", "15555550100:2@s.whatsapp.net")
+                            .attr("type", "played")
+                            .attr("t", "+٢٢"),
+                        Node::new("participant").attr("jid", "15555550100@s.whatsapp.net"),
+                        Node::new("participant").attr("t", "bad"),
+                        Node::new("participant")
+                            .attr("jid", "invalid")
+                            .attr("t", "bad"),
+                        Node::new("participant")
+                            .attr("jid", "15555550100:3@s.whatsapp.net")
+                            .attr("t", "10"),
+                    ]),
+            ]);
+        let encoded =
+            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
+                .encode(&node)
+                .unwrap();
+        let node = decode(&encoded).unwrap();
+        assert_eq!(record(&store, &node).unwrap(), 2);
+        let saved = store.read(|tx| Ok(outbox.get(tx, id)?.unwrap())).unwrap();
+        assert_eq!(saved.facts.len(), 3);
+        assert_eq!(saved.facts[1].kind, DeliveryFactKind::Read);
+        assert_eq!(saved.facts[1].server_timestamp, Some(Timestamp(22_000)));
+        assert_eq!(saved.facts[1].device.as_ref().unwrap().device.0, 2);
+        assert_eq!(saved.facts[2].kind, DeliveryFactKind::Read);
+        assert!(
+            (saved.facts[2].server_timestamp.unwrap().as_millis() - 1_700_000_000_000).abs() < 5000
+        );
+        assert_eq!(saved.attempts, before.attempts);
+        assert_eq!(saved.progress, before.progress);
+        assert_eq!(saved.intent, before.intent);
+        assert_eq!(
+            root_before,
+            store
+                .read(|tx| Ok(outbox.get(tx, envelope)?.unwrap()))
+                .unwrap()
+        );
+        let head = store.journal_head().unwrap();
+        drop(store);
+        let store = open(&path, false);
+        assert_eq!(record(&store, &node).unwrap(), 0);
+        assert_eq!(
+            saved,
+            store.read(|tx| Ok(outbox.get(tx, id)?.unwrap())).unwrap()
+        );
+        assert_eq!(store.journal_head().unwrap(), head);
+    }
+
+    #[test]
+    fn key_aggregates_reject_bad_fields_without_partial_facts() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("invalid-multi-target.redb"), true);
+        let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let id = saved_receipt_send(&store, "aggregate", &peer.to_string(), "fixture");
+        store
+            .write(|tx| {
+                super::super::send_versions::capture_in(tx, id, std::slice::from_ref(&peer))
+            })
+            .unwrap();
+        let item = Node::new("participant")
+            .attr("jid", peer.clone())
+            .attr("t", "20");
+        let good = Node::new("participants")
+            .attr("key", "fixture")
+            .children(vec![item.clone()]);
+        let root = Node::new("receipt")
+            .attr("from", peer)
+            .attr("id", "fixture");
+        let snapshot = || {
+            store
+                .read(|tx| {
+                    Ok((
+                        Table::ALL
+                            .iter()
+                            .map(|table| tx.scan(*table, 1, 100))
+                            .collect::<Result<Vec<_>>>()?,
+                        tx.journal_head()?,
+                    ))
+                })
+                .unwrap()
+        };
+        let before = snapshot();
+        for node in [
+            root.clone()
+                .children(vec![Node::new("participants").children(vec![item.clone()])]),
+            root.clone().children(vec![
+                Node::new("participants")
+                    .attr("key", "")
+                    .children(vec![item.clone()]),
+            ]),
+            root.clone()
+                .children(vec![Node::new("participants").attr("key", "fixture")]),
+            root.clone()
+                .attr("type", "SECRET")
+                .children(vec![good.clone()]),
+            root.clone().children(vec![
+                Node::new("participants")
+                    .attr("key", "fixture")
+                    .children(vec![item.clone(), item.clone().attr("t", "SECRET")]),
+            ]),
+            root.children(vec![
+                Node::new("participants")
+                    .attr("key", "fixture")
+                    .children(vec![item.clone(), item.attr("t", "9223372036854775808")]),
+            ]),
+        ] {
+            let error = record(&store, &node).unwrap_err().to_string();
+            assert!(error.contains("receipt.aggregate"));
+            assert!(!error.contains("SECRET"));
+            assert_eq!(snapshot(), before);
+        }
+    }
+
+    #[test]
+    fn unsupported_aggregated_routes_never_use_root_id_as_a_receipt() {
         let dir = tempfile::tempdir().unwrap();
         let store = open(&dir.path().join("key-aggregate.redb"), true);
         let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
@@ -2185,11 +2401,6 @@ mod tests {
             })
             .unwrap();
         for node in [
-            base.clone().children(vec![
-                Node::new("participants")
-                    .attr("key", "fixture")
-                    .children(vec![item.clone()]),
-            ]),
             base.clone().attr("recipient", peer).children(vec![
                 Node::new("participants")
                     .attr("message_id", "fixture")

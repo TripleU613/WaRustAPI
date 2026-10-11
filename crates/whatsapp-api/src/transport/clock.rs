@@ -199,6 +199,20 @@ fn resolve(
         "saved_offset",
     )
 }
+/// Receipt parser clock: confirmed elapsed/offset, otherwise local wall time.
+#[cfg(any(
+    test,
+    all(feature = "experimental-noise", feature = "experimental-transport")
+))]
+pub(super) fn receipt_now(tx: &ReadTx<'_>, local_ms: i64) -> Result<i64> {
+    // shortcut: native NTP preference is unavailable, upgrade when NTP acquisition is ported.
+    let value = tx.get_json::<ConfirmedClock>(Table::Checkpoints, CONFIRMED_KEY, 1)?;
+    let (epoch, elapsed) = context();
+    Ok(value.map_or(local_ms, |value| {
+        resolve(&value, local_ms, epoch, elapsed).0
+    }))
+}
+
 /// Resolve server time from confirmed input, falling back to historical inference.
 pub fn server_now(tx: &ReadTx<'_>, local_ms: i64) -> Result<Option<i64>> {
     if let Some(value) = tx.get_json::<ConfirmedClock>(Table::Checkpoints, CONFIRMED_KEY, 1)? {
@@ -255,6 +269,53 @@ mod tests {
         })
         .unwrap()
     }
+    #[test]
+    fn receipt_clock_ignores_inferred_stanzas_and_uses_confirmed_offset() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir);
+        let local_ms = 30_123;
+        assert_eq!(
+            store.read(|tx| receipt_now(tx, local_ms)).unwrap(),
+            local_ms
+        );
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    KEY,
+                    1,
+                    &ClockSample {
+                        server_ms: 9_000_000,
+                        local_ms,
+                    },
+                )
+            })
+            .unwrap();
+        assert_eq!(
+            store.read(|tx| receipt_now(tx, local_ms)).unwrap(),
+            local_ms
+        );
+        store
+            .write(|tx| {
+                update_confirmed(
+                    tx,
+                    &Node::new("success").attr("t", "20"),
+                    ConfirmedSource::LoginSuccess,
+                    local_ms,
+                    None,
+                    None,
+                )
+            })
+            .unwrap();
+        let head = store.journal_head().unwrap();
+        assert_eq!(store.read(|tx| receipt_now(tx, 31_234)).unwrap(), 21_234);
+        assert_eq!(store.journal_head().unwrap(), head);
+        drop(store);
+        let store = open(&dir);
+        assert_eq!(store.read(|tx| receipt_now(tx, 31_234)).unwrap(), 21_234);
+        assert_eq!(store.journal_head().unwrap(), head);
+    }
+
     #[test]
     fn confirmed_inputs_preserve_sources_and_ignore_non_clock_iqs() {
         let dir = tempfile::tempdir().unwrap();

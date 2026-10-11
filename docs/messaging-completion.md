@@ -1,3 +1,19 @@
+2026-10-10 — **Implemented/offline:** direct/group participants-key multi-target
+receipts now produce atomic device facts through the existing immutable target
+guards. Inner key replaces envelope ID; root status applies to every target.
+Missing optional JIDs skip; absent time uses one confirmed/local-clock default,
+and present malformed time refuses the batch. Historical inferred stanza times
+are excluded from that fallback. Native NTP preference remains unported.
+[Multi-target receipt evidence and runtime](protocol/offline-aggregated-receipts.md#key-based-multi-target-receipts--2026-10-10).
+
+Validation: 902 workspace/all-feature tests, strict Clippy, warnings-denied
+Rustdoc, default CLI/API-symbol tests, CLI-reference check and experimental
+CLI build passed. Encrypted-store regressions cover inner key/root status,
+clock/Unicode time, malformed rollback, frozen group targets and duplicate-free
+reopening. No new live operation; fresh projection and full native privacy/
+user-row admission remain unverified. The default build retains the existing
+unused clock::observe_login warning. This supersedes historical key-form gaps below.
+
 2026-10-10 — **Implemented/offline:** identity-auth metadata now follows the
 APK's NONE/LOG_ONLY admission behavior. Structurally valid selected-user metadata
 no longer blocks otherwise admitted classic identity refreshes. Missing/non-byte

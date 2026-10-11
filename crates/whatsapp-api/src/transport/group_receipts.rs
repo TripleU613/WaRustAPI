@@ -529,57 +529,66 @@ mod tests {
 
     #[test]
     fn offline_aggregated_group_receipts_use_frozen_targets_through_public_handler() {
-        let dir = tempfile::tempdir().unwrap();
-        let path = dir.path().join("group-aggregate.redb");
-        let store = open(&path, true);
-        let targets = [
-            Jid::parse(PN).unwrap(),
-            Jid::parse(PN).unwrap().with_device(2),
-        ];
-        let id = queued(&store, "fixture", &targets);
-        store
-            .write(|tx| super::super::send_versions::capture_in(tx, id, &targets))
-            .unwrap();
-        let outbox = Outbox::new("group-fixture", Limits::default());
-        let before = store.read(|tx| Ok(outbox.get(tx, id)?.unwrap())).unwrap();
-        let node = Node::new("receipt")
-            .attr("from", CHAT)
-            .attr("id", "transport-id")
-            .children(vec![
-                Node::new("participants")
-                    .attr("message_id", "fixture")
-                    .children(vec![
-                        Node::new("participant").attr("jid", PN).attr("t", "20"),
-                        Node::new("participant")
-                            .attr("jid", "15555550100:2@s.whatsapp.net")
-                            .attr("type", "read")
-                            .attr("t", "30"),
-                        Node::new("participant")
-                            .attr("jid", "15555550100:3@s.whatsapp.net")
-                            .attr("t", "40"),
-                    ]),
-            ]);
-        assert_eq!(record(&store, &node).unwrap(), 2);
-        let saved = store.read(|tx| Ok(outbox.get(tx, id)?.unwrap())).unwrap();
-        assert_eq!(saved.facts.len(), 3);
-        assert_eq!(saved.facts[1].kind, DeliveryFactKind::Delivered);
-        assert_eq!(saved.facts[1].device.as_ref().unwrap().device.0, 0);
-        assert_eq!(saved.facts[1].server_timestamp, Some(Timestamp(20_000)));
-        assert_eq!(saved.facts[2].kind, DeliveryFactKind::Read);
-        assert_eq!(saved.facts[2].device.as_ref().unwrap().device.0, 2);
-        assert_eq!(saved.facts[2].server_timestamp, Some(Timestamp(30_000)));
-        assert_eq!(saved.attempts, before.attempts);
-        assert_eq!(saved.progress, before.progress);
-        assert_eq!(saved.intent, before.intent);
-        let head = store.read(|tx| tx.journal_head()).unwrap();
-        drop(store);
-        let store = open(&path, false);
-        assert_eq!(record(&store, &node).unwrap(), 0);
-        assert_eq!(
-            saved,
-            store.read(|tx| Ok(outbox.get(tx, id)?.unwrap())).unwrap()
-        );
-        assert_eq!(head, store.read(|tx| tx.journal_head()).unwrap());
+        for form in ["message_id", "key"] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("group-aggregate.redb");
+            let store = open(&path, true);
+            let targets = [
+                Jid::parse(PN).unwrap(),
+                Jid::parse(PN).unwrap().with_device(2),
+            ];
+            let id = queued(&store, "fixture", &targets);
+            store
+                .write(|tx| super::super::send_versions::capture_in(tx, id, &targets))
+                .unwrap();
+            let outbox = Outbox::new("group-fixture", Limits::default());
+            let before = store.read(|tx| Ok(outbox.get(tx, id)?.unwrap())).unwrap();
+            let node = Node::new("receipt")
+                .attr("from", CHAT)
+                .attr("id", "transport-id")
+                .children(vec![
+                    Node::new("participants")
+                        .attr(form, "fixture")
+                        .children(vec![
+                            Node::new("participant").attr("jid", PN).attr("t", "20"),
+                            Node::new("participant")
+                                .attr("jid", "15555550100:2@s.whatsapp.net")
+                                .attr("type", "read")
+                                .attr("t", "30"),
+                            Node::new("participant")
+                                .attr("jid", "15555550100:3@s.whatsapp.net")
+                                .attr("t", "40"),
+                        ]),
+                ]);
+            assert_eq!(record(&store, &node).unwrap(), 2);
+            let saved = store.read(|tx| Ok(outbox.get(tx, id)?.unwrap())).unwrap();
+            assert_eq!(saved.facts.len(), 3);
+            assert_eq!(saved.facts[1].kind, DeliveryFactKind::Delivered);
+            assert_eq!(saved.facts[1].device.as_ref().unwrap().device.0, 0);
+            assert_eq!(saved.facts[1].server_timestamp, Some(Timestamp(20_000)));
+            assert_eq!(
+                saved.facts[2].kind,
+                if form == "key" {
+                    DeliveryFactKind::Delivered
+                } else {
+                    DeliveryFactKind::Read
+                }
+            );
+            assert_eq!(saved.facts[2].device.as_ref().unwrap().device.0, 2);
+            assert_eq!(saved.facts[2].server_timestamp, Some(Timestamp(30_000)));
+            assert_eq!(saved.attempts, before.attempts);
+            assert_eq!(saved.progress, before.progress);
+            assert_eq!(saved.intent, before.intent);
+            let head = store.read(|tx| tx.journal_head()).unwrap();
+            drop(store);
+            let store = open(&path, false);
+            assert_eq!(record(&store, &node).unwrap(), 0);
+            assert_eq!(
+                saved,
+                store.read(|tx| Ok(outbox.get(tx, id)?.unwrap())).unwrap()
+            );
+            assert_eq!(head, store.read(|tx| tx.journal_head()).unwrap());
+        }
     }
 
     #[test]
