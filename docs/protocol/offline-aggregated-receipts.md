@@ -1,5 +1,11 @@
 # Offline device receipt aggregates
 
+2026-10-11 follow-up: [nullable receipt fact routing](receipt-optional-addresses.md)
+now treats namespace-invalid optional qualifiers as absent, following the native
+accessor. Recognized qualifiers, exact original chat/device attribution and
+unsupported self statuses retain their existing guards. Earlier validation below
+is historical; fresh live projection remains unverified.
+
 2026-10-11 follow-up: [receipt ACK namespace/type checks](receipt-ack-namespace.md)
 now share the existing strict kind getter and aggregate-target namespace mask.
 Invalid server-only lid/broadcast targets skip before optional time parsing;

@@ -1,3 +1,13 @@
+2026-10-11 — **Implemented/offline:** receipt fact routing now distinguishes
+nullable optional addresses from raw attribute presence. Namespace-invalid
+participant/recipient fields follow the native null path instead of hiding
+matching direct/group observations. Recognized qualifiers and original chat,
+message-ID, mapping and addressed-device guards remain effective. Raw capture,
+read policy, keys, requests and waits stay intact. Full special JID subtype
+rules/self-status handling and fresh live projection remain unported/unverified.
+No network request.
+[Native accessors, runtime and tests](protocol/receipt-optional-addresses.md).
+
 2026-10-11 — **Implemented/offline:** structurally valid companion attestation
 metadata now skips primary CPB policy, matching the native early Bjo return.
 Known same-key refresh and signed ADV changed-key/returning-device application

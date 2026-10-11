@@ -207,7 +207,7 @@ pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
 }
 
 pub(super) fn record_in(tx: &mut WriteTx<'_>, node: &Node) -> Result<usize> {
-    if node.description != "receipt" || node.get_attr("recipient").is_some() {
+    if node.description != "receipt" || super::receipts::network_jid(node, "recipient").is_some() {
         return Ok(0);
     }
     let Some(kind) = receipt_kind(node) else {
@@ -874,6 +874,72 @@ mod tests {
             0
         );
     }
+    #[test]
+    fn invalid_optional_recipient_does_not_hide_an_original_group_target() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("optional-group-recipient.redb");
+        let store = open(&path, true);
+        let target = Jid::parse(PN).unwrap().with_device(2);
+        let local = queued(&store, "optional-group", std::slice::from_ref(&target));
+        let outbox = Outbox::new("group-fixture", Limits::default());
+        let before = store.read(|tx| outbox.get(tx, local)).unwrap().unwrap();
+        for (kind, fact_kind) in [
+            ("delivery", DeliveryFactKind::Delivered),
+            ("read", DeliveryFactKind::Read),
+            ("played", DeliveryFactKind::Played),
+        ] {
+            let node = receipt("optional-group", &target.to_string(), kind)
+                .attr("recipient", "15555550100@unknown.example");
+            assert_eq!(record(&store, &node).unwrap(), 1);
+            let head = store.journal_head().unwrap();
+            assert_eq!(record(&store, &node).unwrap(), 0);
+            assert_eq!(store.journal_head().unwrap(), head);
+            let saved = store.read(|tx| outbox.get(tx, local)).unwrap().unwrap();
+            assert_eq!(saved.attempts, before.attempts);
+            assert_eq!(saved.progress, before.progress);
+            let fact = saved
+                .facts
+                .iter()
+                .find(|fact| fact.kind == fact_kind)
+                .unwrap();
+            assert_eq!(fact.device, Some(DeviceAddress::from_jid(&target).unwrap()));
+        }
+        let saved = store.read(|tx| outbox.get(tx, local)).unwrap().unwrap();
+        let head = store.journal_head().unwrap();
+        for participant in ["unknown.example", "15555550100:3@s.whatsapp.net"] {
+            assert_eq!(
+                record(
+                    &store,
+                    &receipt("optional-group", participant, "read")
+                        .attr("recipient", "unknown.example")
+                )
+                .unwrap(),
+                0
+            );
+            assert_eq!(store.journal_head().unwrap(), head);
+            assert_eq!(
+                store.read(|tx| outbox.get(tx, local)).unwrap().unwrap(),
+                saved
+            );
+        }
+        drop(store);
+        let store = open(&path, false);
+        assert_eq!(
+            store.read(|tx| outbox.get(tx, local)).unwrap().unwrap(),
+            saved
+        );
+        assert_eq!(
+            record(
+                &store,
+                &receipt("optional-group", &target.to_string(), "read")
+                    .attr("recipient", "unknown.example")
+            )
+            .unwrap(),
+            0
+        );
+        assert_eq!(store.journal_head().unwrap(), head);
+    }
+
     #[test]
     fn group_metadata_and_malformed_type_refusals_are_side_effect_free() {
         let dir = tempfile::tempdir().unwrap();

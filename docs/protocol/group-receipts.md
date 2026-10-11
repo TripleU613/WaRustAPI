@@ -1,5 +1,11 @@
 # Group participant receipt attribution — 2026-10-09
 
+2026-10-11 follow-up: [nullable receipt fact routing](receipt-optional-addresses.md)
+now treats namespace-invalid optional qualifiers as absent, following the native
+accessor. Recognized qualifiers, exact original chat/device attribution and
+unsupported self statuses retain their existing guards. Earlier validation below
+is historical; fresh live projection remains unverified.
+
 Comparison APK **2.26.37.71**, SHA-256
 `1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
 The [source bundle](apk/2.26.37.71-group-receipts/manifest.json) preserves

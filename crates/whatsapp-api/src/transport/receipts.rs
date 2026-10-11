@@ -756,7 +756,7 @@ pub(super) fn server_timestamp(node: &Node) -> Option<crate::model::time::Timest
 /// Persist supported direct receipt facts, matching sends by peer AND wire ID.
 /// Group participant facts use group_receipts; unsupported/self routes stay raw.
 pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
-    if node.description != "receipt" || node.get_attr("recipient").is_some() {
+    if node.description != "receipt" || network_jid(node, "recipient").is_some() {
         return Ok(0);
     }
     if let Some(participants) = node
@@ -890,7 +890,7 @@ fn record_in(tx: &mut crate::store::WriteTx<'_>, node: &Node) -> Result<usize> {
         return super::group_receipts::record_in(tx, node);
     }
 
-    if node.description != "receipt" || node.get_attr("recipient").is_some() {
+    if node.description != "receipt" || network_jid(node, "recipient").is_some() {
         return Ok(0);
     }
     let Some(kind) = receipt_kind(node) else {
@@ -915,24 +915,18 @@ fn record_in(tx: &mut crate::store::WriteTx<'_>, node: &Node) -> Result<usize> {
     }
     // APK 37.71 Cmk.A03 051a..05bc retains remote chat separately from
     // DeviceJid.Companion.A00(participant). Never treat a device as the chat.
-    let participant = if node.get_attr("participant").is_some() {
-        let Some(actor) = jid(node, "participant") else {
-            return Ok(0);
-        };
-        if actor.user.is_empty()
+    let participant = network_jid(node, "participant");
+    if let Some(actor) = participant.as_ref()
+        && (actor.user.is_empty()
             || actor.agent != 0
             || !matches!(actor.server, Server::User | Server::Lid)
             || !matches!(
                 actor.kind,
                 crate::model::jid::JidKind::Plain | crate::model::jid::JidKind::AgentDevice
-            )
-        {
-            return Ok(0);
-        }
-        Some(actor)
-    } else {
-        None
-    };
+            ))
+    {
+        return Ok(0);
+    }
     let actor = participant.as_ref().unwrap_or(&from);
     let ids = ids(node)?;
     let peer = from.to_non_ad();
@@ -3189,6 +3183,78 @@ mod tests {
                     )))
                     .unwrap()
             );
+        }
+    }
+
+    #[test]
+    fn unparseable_optional_receipt_addresses_follow_native_null_semantics() {
+        use crate::model::{ids::DeviceAddress, send::DeliveryFactKind};
+        for peer in ["15555550100@s.whatsapp.net", "100001@lid"] {
+            for name in ["participant", "recipient"] {
+                for value in [
+                    "unknown.example",
+                    "15555550100@unknown.example",
+                    "lid",
+                    "@s.whatsapp.net",
+                    "15555550100@c.us",
+                ] {
+                    for (kind, fact_kind) in [
+                        ("delivery", DeliveryFactKind::Delivered),
+                        ("read", DeliveryFactKind::Read),
+                        ("played", DeliveryFactKind::Played),
+                    ] {
+                        let dir = tempfile::tempdir().unwrap();
+                        let path = dir.path().join("optional-address.redb");
+                        let store = open(&path, true);
+                        let local =
+                            saved_receipt_send(&store, "optional", peer, "optional-fixture");
+                        let outbox = crate::outbox::Outbox::new(
+                            "optional",
+                            crate::profile::Limits::default(),
+                        );
+                        let before = store.read(|tx| outbox.get(tx, local)).unwrap().unwrap();
+                        let node = Node::new("receipt")
+                            .attr("from", peer)
+                            .attr("id", "optional-fixture")
+                            .attr("type", kind)
+                            .attr("t", "20")
+                            .attr(name, value);
+                        let wire = crate::binary::Encoder::new(
+                            crate::binary::TokenDictionary::comparison_2_26_37_71(),
+                        )
+                        .encode(&node)
+                        .unwrap();
+                        let node = decode(&wire).unwrap();
+                        assert_eq!(
+                            record(&store, &node).unwrap(),
+                            1,
+                            "{peer}/{name}/{value}/{kind}"
+                        );
+                        let after = store.read(|tx| outbox.get(tx, local)).unwrap().unwrap();
+                        assert_eq!(after.intent, before.intent);
+                        assert_eq!(after.attempts, before.attempts);
+                        assert_eq!(after.progress, before.progress);
+                        assert_eq!(after.facts[0], before.facts[0]);
+                        assert_eq!(after.facts.len(), before.facts.len() + 1);
+                        let fact = after.facts.last().unwrap();
+                        assert_eq!(fact.kind, fact_kind);
+                        assert_eq!(
+                            fact.device,
+                            Some(DeviceAddress::from_jid(&Jid::parse(peer).unwrap()).unwrap())
+                        );
+                        assert_eq!(fact.server_timestamp.unwrap().as_millis(), 20_000);
+                        let head = store.journal_head().unwrap();
+                        drop(store);
+                        let store = open(&path, false);
+                        assert_eq!(record(&store, &node).unwrap(), 0);
+                        assert_eq!(store.journal_head().unwrap(), head);
+                        assert_eq!(
+                            store.read(|tx| outbox.get(tx, local)).unwrap().unwrap(),
+                            after
+                        );
+                    }
+                }
+            }
         }
     }
 
