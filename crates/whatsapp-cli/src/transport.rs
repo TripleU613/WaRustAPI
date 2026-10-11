@@ -658,7 +658,9 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
                         whatsapp_api::transport::inbox::IncomingResult::Decrypted
                             | whatsapp_api::transport::inbox::IncomingResult::Duplicate
                     ) {
-                    whatsapp_api::transport::messaging::received_confirmation(&node)
+                    whatsapp_api::transport::messaging::received_confirmation_for_account(
+                        &store, &account, &node,
+                    )?
                 } else {
                     None
                 };
@@ -834,4 +836,53 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
         );
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use whatsapp_api::{
+        binary::Node,
+        model::jid::Jid,
+        store::{MasterKey, StaticKeySource},
+    };
+
+    #[test]
+    fn cli_account_confirmation_distinguishes_own_and_remote_status() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("cli-status.redb"),
+            account_id: AccountId::new("fixture").unwrap(),
+            create: true,
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32]))),
+        })
+        .unwrap();
+        let account = AccountRecord {
+            own_jid: Some(Jid::parse("15555550999@s.whatsapp.net").unwrap()),
+            ..Default::default()
+        };
+        for (sender, expected_type) in [
+            ("15555550999:2@s.whatsapp.net", Some("sender")),
+            ("15555550100@s.whatsapp.net", None),
+        ] {
+            let incoming = Node::new("message")
+                .attr("from", "status@broadcast")
+                .attr("participant", sender)
+                .attr("id", "CLI-STATUS")
+                .attr("from_me", "true");
+            let receipt = whatsapp_api::transport::messaging::received_confirmation_for_account(
+                &store, &account, &incoming,
+            )
+            .unwrap()
+            .unwrap();
+            assert_eq!(
+                receipt.get_attr("type").and_then(|v| v.as_text()),
+                expected_type
+            );
+            assert_eq!(
+                receipt.get_attr("class").and_then(|v| v.as_text()),
+                Some("status")
+            );
+        }
+    }
 }

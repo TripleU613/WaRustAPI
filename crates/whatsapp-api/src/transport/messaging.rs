@@ -701,7 +701,14 @@ pub fn received_confirmation(incoming: &Node) -> Option<Node> {
     )
 }
 
-pub(crate) fn received_confirmation_for_account(
+/// Build a confirmation using the saved account's own PN/LID identity.
+///
+/// Receive callers must capture the node durably and authenticate/decrypt a
+/// message before confirming it. Own statuses use `type=sender`; peer metadata
+/// is never ownership authority. When own-LID authority is needed, malformed
+/// or conflicting records return an error before a confirmation can be written.
+/// This does not send or queue.
+pub fn received_confirmation_for_account(
     store: &crate::store::ProtocolStore,
     account: &crate::session::AccountRecord,
     incoming: &Node,

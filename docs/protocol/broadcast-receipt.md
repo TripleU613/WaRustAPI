@@ -73,9 +73,8 @@ account/category gates are not yet implemented; that retained metadata
 behavior is explicitly a shortcut, not full native classification.
 
 The account-aware actor and CLI use this shared base shape; own-account status
-selection is a separate [actor policy](status-ownership.md). The CLI's legacy
-receive loop still calls the context-free builder, so own-status sender-type
-parity in that loop remains open. This change does not expand explicit read
+selection is a separate [shared account policy](status-ownership.md), now used
+by the actor and the CLI's legacy receive loop. This change does not expand explicit read
 API broadcast admission, retry support, sender-key eligibility, message-type
 admission or own-list sender policy. Normal-message storage observer and
 receipt eligibility parity still need work. A broadcast namespace alone is
