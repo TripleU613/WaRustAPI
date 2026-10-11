@@ -1,3 +1,11 @@
+2026-10-11 — **Implemented/offline:** held own-device sessions now receive
+ordinary poll creations into outgoing events, retaining the original wrapper and
+outer-context secret. Sender confirmations, reopen deduplication and clearing
+work through existing paths. Quiz/timed/anonymous/add-option fields refuse rather
+than being flattened. Synchronized vote-secret lookup and updates remain unported;
+no fresh live acceptance.
+[Own-device polls](docs/protocol/own-device-poll.md).
+
 2026-10-11 — **Implemented/offline:** `actions --preview-session` now derives
 and discards authenticated companion refresh candidates from one saved snapshot.
 Same-key candidates archive receiving state; changed-key candidates start fresh.

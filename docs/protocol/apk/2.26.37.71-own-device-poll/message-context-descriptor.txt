@@ -1,0 +1,56 @@
+# APK-derived structural disassembly: LX/BQ2;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method dynamicMethod(LLLL) flags=0x11 registers=7
+  # full signature: LX/BQ2;->dynamicMethod(Lcom/google/protobuf/GeneratedMessageLite$MethodToInvoke;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+  0000..0006 op=6e invoke-virtual {v4}, Ljava/lang/Enum;->ordinal()I
+  0006..0008 op=0a move-result v2
+  0008..000a op=12 const/4 v1, #0x1
+  000a..000c op=12 const/4 v0, #0x0
+  000c..0012 op=2b packed-switch v2, payload@0x9c, cases=[0:@0x1c, 1:@0x26, 2:@0x2e, 3:@0x90, 4:@0x50, 5:@0x28, 6:@0x5c], default@0x12
+  0012..0018 op=71 invoke-static {}, LX/6aj;->A1C()Ljava/lang/UnsupportedOperationException;
+  0018..001a op=0c move-result-object v0
+  001a..001c op=27 throw v0
+  001c..0022 op=71 invoke-static {v1}, Ljava/lang/Byte;->valueOf(B)Ljava/lang/Byte;
+  0022..0024 op=0c move-result-object v0
+  0024..0026 op=11 return-object v0
+  0026..0028 op=11 return-object v0
+  0028..002c op=62 sget-object v0, LX/BQ2;->DEFAULT_INSTANCE:LX/BQ2;
+  002c..002e op=11 return-object v0
+  002e..0034 op=71 invoke-static {}, LX/6ap;->A1a()[Ljava/lang/Object;
+  0034..0036 op=0c move-result-object v2
+  0036..003a op=1a const-string v0, "messageSecret_"
+  003a..003e op=4d aput-object v0, v2, v1
+  003e..0042 op=1a const-string v1, "\u{1}\u{1}\0\u{1}\u{3}\u{3}\u{1}\0\0\0\u{3}ည\0"
+  0042..0046 op=62 sget-object v0, LX/BQ2;->DEFAULT_INSTANCE:LX/BQ2;
+  0046..004c op=71 invoke-static {v0, v1, v2}, Lcom/google/protobuf/GeneratedMessageLite;->newMessageInfo(Lcom/google/protobuf/MessageLite;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/Object;
+  004c..004e op=0c move-result-object v0
+  004e..0050 op=11 return-object v0
+  0050..0054 op=22 new-instance v0, LX/BJv;
+  0054..005a op=70 invoke-direct {v0}, LX/BJv;-><init>()V
+  005a..005c op=11 return-object v0
+  005c..0060 op=62 sget-object v0, LX/BQ2;->PARSER:Lcom/google/protobuf/Parser;
+  0060..0064 op=39 if-nez v0, +0x1d
+  0064..0068 op=1c const-class v1, LX/BQ2;
+  0068..006a op=1d monitor-enter
+  006a..006e op=62 sget-object v0, LX/BQ2;->PARSER:Lcom/google/protobuf/Parser;
+  006e..0072 op=39 if-nez v0, +0xc
+  0072..0076 op=62 sget-object v0, Lcom/google/protobuf/AbstractParser;->EMPTY_REGISTRY:Lcom/google/protobuf/ExtensionRegistryLite;
+  0076..007a op=62 sget-object v0, LX/BQ2;->DEFAULT_INSTANCE:LX/BQ2;
+  007a..0080 op=71 invoke-static {v0}, LX/6ak;->A0M(Lcom/google/protobuf/GeneratedMessageLite;)Lcom/google/protobuf/GeneratedMessageLite$DefaultInstanceBasedParser;
+  0080..0082 op=0c move-result-object v0
+  0082..0086 op=69 sput-object v0, LX/BQ2;->PARSER:Lcom/google/protobuf/Parser;
+  0086..0088 op=1e monitor-exit
+  0088..008a op=11 return-object v0
+  008a..008c op=0d move-exception v0
+  008c..008e op=1e monitor-exit
+  008e..0090 op=27 throw v0
+  0090..0094 op=22 new-instance v0, LX/BQ2;
+  0094..009a op=70 invoke-direct {v0}, LX/BQ2;-><init>()V
+  009a..009c op=11 return-object v0
+  009c..00c0 op=00 packed-switch-payload size=7
+  # exception table: 1 try range(s)
+  # catch <all> code_units 0035..0047 -> 0045
+.end method

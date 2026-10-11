@@ -540,6 +540,12 @@ status-singleton scope: [2026-10-09 evidence and limits](reactions.md).
 
 ### Polls (comparison 2.26.37.71)
 
+2026-10-11 follow-up: [own-device ordinary poll creation](own-device-poll.md)
+connects synchronized creations to events. Its current BYa descriptor also has
+endTime=9, hideParticipantName=10 and allowAddOption=11, omitted by the historical
+eight-field list below. Special poll lifecycles and synchronized vote lookup
+remain unfinished.
+
 Descriptors: `LX/BYa` (PollCreationMessage: encKey=1, name=2, options=3 of
 `LX/BSo` optionName=1/optionHash=2, selectableOptionsCount=4, contextInfo=5,
 pollContentType=6, pollType=7, correctAnswer=8), `LX/BWH` (PollUpdateMessage:

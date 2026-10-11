@@ -1,0 +1,122 @@
+{
+  "message-context-descriptor": {
+    "class": "LX/BQ2;",
+    "file": "message-context-descriptor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "dynamicMethod",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/own_device.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs",
+      "crates/whatsapp-api/src/transport/inbox_events.rs",
+      "crates/whatsapp-api/src/transport/polls.rs"
+    ]
+  },
+  "message-descriptor": {
+    "class": "LX/BZc;",
+    "file": "message-descriptor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "dynamicMethod",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/own_device.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs",
+      "crates/whatsapp-api/src/transport/inbox_events.rs",
+      "crates/whatsapp-api/src/transport/polls.rs"
+    ]
+  },
+  "poll-descriptor": {
+    "class": "LX/BYa;",
+    "file": "poll-descriptor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "dynamicMethod",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/own_device.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs",
+      "crates/whatsapp-api/src/transport/inbox_events.rs",
+      "crates/whatsapp-api/src/transport/polls.rs"
+    ]
+  },
+  "poll-option-descriptor": {
+    "class": "LX/BSo;",
+    "file": "poll-option-descriptor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "dynamicMethod",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/own_device.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs",
+      "crates/whatsapp-api/src/transport/inbox_events.rs",
+      "crates/whatsapp-api/src/transport/polls.rs"
+    ]
+  },
+  "unwrap-with-context": {
+    "class": "LX/CjY;",
+    "file": "unwrap-with-context.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/own_device.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs",
+      "crates/whatsapp-api/src/transport/inbox_events.rs",
+      "crates/whatsapp-api/src/transport/polls.rs"
+    ]
+  },
+  "wrapper-descriptor": {
+    "class": "LX/BUs;",
+    "file": "wrapper-descriptor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "dynamicMethod",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/own_device.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs",
+      "crates/whatsapp-api/src/transport/inbox_events.rs",
+      "crates/whatsapp-api/src/transport/polls.rs"
+    ]
+  },
+  "wrapper-route-gate": {
+    "class": "LX/Cm3;",
+    "file": "wrapper-route-gate.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A07",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/own_device.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs",
+      "crates/whatsapp-api/src/transport/inbox_events.rs",
+      "crates/whatsapp-api/src/transport/polls.rs"
+    ]
+  },
+  "wrapper-validation": {
+    "class": "LX/Cm3;",
+    "file": "wrapper-validation.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/own_device.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs",
+      "crates/whatsapp-api/src/transport/inbox_events.rs",
+      "crates/whatsapp-api/src/transport/polls.rs"
+    ]
+  }
+}

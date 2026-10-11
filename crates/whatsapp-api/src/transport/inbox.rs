@@ -3427,17 +3427,127 @@ mod tests {
             .unwrap()
             .is_some()
         );
+        // Native Cla.A01 moves Message context outside the one-level wrapper.
+        let options = vec!["a".to_owned(), "b".to_owned()];
+        let creation = super::super::polls::Envelope {
+            context: None,
+            update: None,
+            creation_v3: Some(super::super::polls::PollCreation {
+                name: Some("Question".into()),
+                options: options
+                    .iter()
+                    .map(|name| super::super::polls::PollOption {
+                        option_name: Some(name.clone()),
+                    })
+                    .collect(),
+                selectable_options_count: Some(1),
+            }),
+        };
+        let mut sent_poll = Vec::new();
+        prost::encoding::string::encode(1, &"67890@lid".to_owned(), &mut sent_poll);
+        prost::encoding::bytes::encode(
+            2,
+            &prost::Message::encode_to_vec(&creation),
+            &mut sent_poll,
+        );
+        let mut wrapped_poll = Vec::new();
+        prost::encoding::bytes::encode(31, &sent_poll, &mut wrapped_poll);
+        let context = super::super::polls::ContextInfo {
+            message_secret: Some(vec![7; 32]),
+        };
+        prost::encoding::bytes::encode(
+            35,
+            &prost::Message::encode_to_vec(&context),
+            &mut wrapped_poll,
+        );
+        let synchronized_poll = direct::prepare_payload(
+            &sender,
+            receiver.own_jid.as_ref().unwrap(),
+            None,
+            Some(&echo.session),
+            Some(&sent.identity),
+            &wrapped_poll,
+        )
+        .await
+        .unwrap();
+        let poll_node = Node::new("message")
+            .attr("from", peer_device.clone())
+            .attr("recipient", "67890@lid")
+            .attr("id", "OWN-POLL")
+            .attr("type", "poll")
+            .children(vec![
+                Node::new("meta").attr("polltype", "creation"),
+                Node::new("enc")
+                    .attr("type", synchronized_poll.kind)
+                    .attr("v", "2")
+                    .bytes(synchronized_poll.ciphertext.to_vec()),
+            ]);
+        let poll_capture = preserve(&store, &poll_node).unwrap();
+        assert_eq!(
+            process(&store, &receiver, &poll_node, &poll_capture)
+                .await
+                .unwrap(),
+            IncomingResult::Decrypted
+        );
+        let poll_batch = store
+            .read(|tx| {
+                tx.read_events(
+                    &crate::store::ConsumerId::new("own-poll")?,
+                    crate::model::ids::EventCursor::START,
+                    100,
+                )
+            })
+            .unwrap();
+        let crate::sync::SyncEvent::NewMessage(message) = &poll_batch.events.last().unwrap().event
+        else {
+            panic!("poll event missing")
+        };
+        assert_eq!(
+            message.key.direction,
+            crate::model::message::Direction::Outgoing
+        );
+        assert_eq!(message.key.chat.jid(), &Jid::parse("67890@lid").unwrap());
+        assert!(message.key.sender.is_none());
+        assert!(
+            matches!(&message.content, crate::model::message::MessageContent::Poll { name, options: actual, selectable_count } if name == "Question" && actual == &options && *selectable_count == 1)
+        );
+        let saved: serde_json::Value = store
+            .read(|tx| tx.get_json(Table::Checkpoints, b"received-own:67890@lid:OWN-POLL", 1))
+            .unwrap()
+            .unwrap();
+        assert_eq!(saved["protobuf"], serde_json::json!(wrapped_poll));
+        let plain =
+            super::super::own_device::payload(&wrapped_poll, &Jid::parse("67890@lid").unwrap())
+                .unwrap();
+        assert_eq!(
+            super::super::polls::decode_poll(&plain).unwrap().secret,
+            Some([7; 32])
+        );
+        assert!(
+            super::super::messaging::received_confirmation_for_account(
+                &store, &receiver, &poll_node
+            )
+            .unwrap()
+            .is_some()
+        );
+        let after_poll_head = store.journal_head().unwrap();
         let event_count =
-            batch.events.len() + usize::from(cfg!(feature = "experimental-registration-https")) + 1;
+            batch.events.len() + usize::from(cfg!(feature = "experimental-registration-https")) + 2;
         drop(store);
         let store = open(false);
+        assert_eq!(
+            process(&store, &receiver, &poll_node, &poll_capture)
+                .await
+                .unwrap(),
+            IncomingResult::Duplicate
+        );
         assert_eq!(
             process(&store, &receiver, &echo_node, &echo_capture)
                 .await
                 .unwrap(),
             IncomingResult::Duplicate
         );
-        assert_eq!(store.journal_head().unwrap(), before_echo_head);
+        assert_eq!(store.journal_head().unwrap(), after_poll_head);
         assert_eq!(
             super::super::messaging::received_confirmation_for_account(
                 &store, &receiver, &sync_node
@@ -3467,10 +3577,27 @@ mod tests {
             super::super::chat_clear::clear_chat(&store, &Jid::parse("67890@lid").unwrap())
                 .unwrap()
                 .cleared_messages,
-            2 + usize::from(cfg!(feature = "experimental-registration-https"))
+            3 + usize::from(cfg!(feature = "experimental-registration-https"))
         );
         #[cfg(feature = "experimental-registration-https")]
         assert!(super::super::media::list(&store).unwrap().is_empty());
+        assert_eq!(
+            process(&store, &receiver, &poll_node, &poll_capture)
+                .await
+                .unwrap(),
+            IncomingResult::Unsupported
+        );
+        assert!(
+            store
+                .read(|tx| tx.get_json::<serde_json::Value>(
+                    Table::Checkpoints,
+                    b"received-own:67890@lid:OWN-POLL",
+                    1
+                ))
+                .unwrap()
+                .unwrap()["protobuf"]
+                .is_null()
+        );
         assert_eq!(
             process(&store, &receiver, &sync_node, &sync_capture)
                 .await
@@ -3499,7 +3626,7 @@ mod tests {
             &sender,
             receiver.own_jid.as_ref().unwrap(),
             None,
-            Some(&echo.session),
+            Some(&synchronized_poll.session),
             Some(&sent.identity),
             b"\x0a\x05hello",
         )

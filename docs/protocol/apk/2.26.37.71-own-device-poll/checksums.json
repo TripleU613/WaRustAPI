@@ -1,0 +1,50 @@
+{
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "message-context-descriptor.txt": {
+    "bytes": 3286,
+    "sha256": "8289b08655b2ad350967d15d27a5647c9c4185b654b6d7d76058f5d5e932c8b3"
+  },
+  "message-descriptor.txt": {
+    "bytes": 19792,
+    "sha256": "4deb5a3c9944863696cfcd0dfb0138985e229d23606d119272f76b304f8d8b45"
+  },
+  "poll-descriptor.txt": {
+    "bytes": 5221,
+    "sha256": "5ed8be12620a2dc12e2fef63b297710f61a445ab6ee15daf9e35deb79c342888"
+  },
+  "poll-option-descriptor.txt": {
+    "bytes": 3447,
+    "sha256": "8deb176f154975fd58090286b74c05e363a44100520fb38acb9343353a185454"
+  },
+  "targets.json": {
+    "bytes": 4041,
+    "sha256": "6523b0c75f1385b1caabb72903c8b3bcc90dc842ec57f651ac550ddbee600af9"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  },
+  "unwrap-with-context.txt": {
+    "bytes": 1934,
+    "sha256": "5472813db86298622703ddb37d55c7f58233ad81b51aa2239827cc627cd2a343"
+  },
+  "wrapper-descriptor.txt": {
+    "bytes": 3561,
+    "sha256": "656be1afb86f3d04031ff8909969e13e8ee456141cae54eece410ec726862610"
+  },
+  "wrapper-route-gate.txt": {
+    "bytes": 7598,
+    "sha256": "cc336df992978538879d1e2c4b47b131ea7dfa9ca4e4e2a032e72ad458570c8e"
+  },
+  "wrapper-validation.txt": {
+    "bytes": 10504,
+    "sha256": "bd503555eab5b088f5934911d468e8a57dc5f3fd6a55545c050573195caa2e29"
+  }
+}
