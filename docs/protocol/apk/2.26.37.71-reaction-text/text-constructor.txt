@@ -1,0 +1,43 @@
+# APK-derived structural disassembly: LX/6bF;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VL) flags=0x10001 registers=7
+  # full signature: LX/6bF;-><init>(Ljava/lang/String;)V
+  0000..0002 op=12 const/4 v1, #0x0
+  0002..0008 op=71 invoke-static {v6, v1}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000e op=70 invoke-direct {v5}, Ljava/lang/Object;-><init>()V
+  000e..0014 op=6e invoke-virtual {v6}, Ljava/lang/String;->length()I
+  0014..0016 op=0a move-result v0
+  0016..0018 op=12 const/4 v4, #0x0
+  0018..001e op=6e invoke-virtual {v6, v1, v0}, Ljava/lang/String;->codePointCount(II)I
+  001e..0020 op=0a move-result v3
+  0020..0024 op=23 new-array v0, v3, [I
+  0024..0028 op=5b iput-object v0, v5, LX/6bF;->A00:[I
+  0028..002a op=12 const/4 v2, #0x0
+  002a..002e op=35 if-ge v4, v3, +0x16
+  002e..0032 op=54 iget-object v1, v5, LX/6bF;->A00:[I
+  0032..0038 op=6e invoke-virtual {v6, v2}, Ljava/lang/String;->codePointAt(I)I
+  0038..003a op=0a move-result v0
+  003a..003e op=4b aput v0, v1, v4
+  003e..0042 op=54 iget-object v0, v5, LX/6bF;->A00:[I
+  0042..0046 op=44 aget v0, v0, v4
+  0046..004c op=71 invoke-static {v0}, Ljava/lang/Character;->charCount(I)I
+  004c..004e op=0a move-result v0
+  004e..0050 op=b0 add-int/2addr v2, v0
+  0050..0054 op=d8 add-int/lit8 v4, v4, #0x1
+  0054..0056 op=28 goto -0x15
+  0056..0058 op=0e return-void
+  # exception table: 0 try range(s)
+.end method
+
+.method <init>(VL) flags=0x10001 registers=3
+  # full signature: LX/6bF;-><init>([I)V
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v2, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000e op=70 invoke-direct {v1}, Ljava/lang/Object;-><init>()V
+  000e..0012 op=5b iput-object v2, v1, LX/6bF;->A00:[I
+  0012..0014 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

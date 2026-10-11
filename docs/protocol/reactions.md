@@ -1,5 +1,11 @@
 # Reaction keys and historical target stability
 
+2026-10-11 follow-up: [native reaction text limit](reaction-text.md) supersedes
+the old local byte/control limits below. Bal.A01 own envelopes also reach the
+common BoQ call after setting the actor null; the earlier non-own-only wording
+was incomplete. Own-device reaction projection and full native lifecycle remain
+unported; historical validation below does not cover this follow-up.
+
 ## APK evidence, 2026-10-09
 
 **Confirmed static:** comparison APK **2.26.37.71**, SHA-256

@@ -1,3 +1,12 @@
+2026-10-11 — **Implemented/offline:** reaction receive/send text now follows
+the native 30 Unicode-code-point bound instead of 64 bytes. Thirty supplementary
+emoji and bounded ZWJ/combining sequences work; 31 ASCII characters refuse.
+Direct/group/outbox/eligibility and status-like decode share the predicate.
+Native control-character behavior and removal are preserved; saved requests,
+facts, IDs and waits are not rewritten. Own-device reactions and fresh live
+acceptance remain unfinished/unverified.
+[Native predicate, boundary regressions and API contract](docs/protocol/reaction-text.md).
+
 2026-10-11 — **Implemented/offline:** held own-device sessions now synchronize
 ordinary poll votes into MessageUpdated/PollVote. Embedded fromMe preserves
 own/peer parent ownership; AEAD must identify a saved own primary voter.

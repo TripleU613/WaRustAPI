@@ -1,0 +1,137 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"evidence_id\":\"ev_c6908c6f7cb651282cc110ee3e507a5c513bedaaf47aadf55e14653701e08410\",\"subject\":{\"name\":\"WhatsApp.apk\",\"digest\":{\"sha256\":\"1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c\"},\"format\":\"apk\",\"architecture\":null,\"local_path\":\"~/Downloads/WhatsApp.apk\"},\"provider\":{\"id\":\"jadx\",\"name\":\"JADX headless\",\"version\":\"0.7.1\"},\"analysis_profile\":null,\"predicate_type\":\"rea.analysis\",\"operation\":\"inspect_android_method\",\"parameters\":{\"path\":\"~/Downloads/WhatsApp.apk\",\"class_name\":\"X.C6bF\",\"method_name\":\"<init>\",\"overload_index\":0},\"raw_result\":{\"server\":{\"name\":\"rea-jadx-bridge\",\"version\":\"1\"},\"bridge_sha256\":\"5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1\",\"jar_sha256\":\"6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75\",\"loaded\":{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-CqrGCx/target.apk\",\"class_count\":94738,\"resource_count\":14967,\"threads\":1,\"resources\":\"full\"},\"calls\":[{\"operation\":\"rea_jvm_status\",\"input\":{},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"java_version\\\":\\\"21.0.12.1\\\",\\\"available_processors\\\":24,\\\"engine_reported_version\\\":\\\"0.7.1\\\",\\\"metadata_scope\\\":\\\"parsed_members\\\",\\\"max_heap_bytes\\\":15695085568}\"}],\"isError\":false}},{\"operation\":\"get_class_summary\",\"input\":{\"class_name\":\"X.C6bF\"},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"inner_class_count\\\":0,\\\"inner_classes\\\":[],\\\"name\\\":\\\"C6bF\\\",\\\"full_name\\\":\\\"X.C6bF\\\",\\\"field_count\\\":1,\\\"fields\\\":[{\\\"def_pos\\\":0,\\\"name\\\":\\\"A00\\\",\\\"type\\\":\\\"int[]\\\"}],\\\"methods\\\":[{\\\"is_constructor\\\":true,\\\"name\\\":\\\"\\\\u003cinit\\\\u003e\\\",\\\"def_pos\\\":0,\\\"signature\\\":\\\"\\\\u003cinit\\\\u003e(java.lang.String): void\\\"},{\\\"is_constructor\\\":true,\\\"name\\\":\\\"\\\\u003cinit\\\\u003e\\\",\\\"def_pos\\\":0,\\\"signature\\\":\\\"\\\\u003cinit\\\\u003e(int[]): void\\\"},{\\\"is_constructor\\\":false,\\\"name\\\":\\\"A00\\\",\\\"def_pos\\\":0,\\\"signature\\\":\\\"A00(int): X.6bF\\\"},{\\\"is_constructor\\\":false,\\\"name\\\":\\\"equals\\\",\\\"def_pos\\\":0,\\\"signature\\\":\\\"equals(java.lang.Object): boolean\\\"},{\\\"is_constructor\\\":false,\\\"name\\\":\\\"hashCode\\\",\\\"def_pos\\\":0,\\\"signature\\\":\\\"hashCode(): int\\\"},{\\\"is_constructor\\\":false,\\\"name\\\":\\\"toString\\\",\\\"def_pos\\\":0,\\\"signature\\\":\\\"toString(): java.lang.String\\\"}],\\\"method_count\\\":6}\"}],\"isError\":false}},{\"operation\":\"get_method_body\",\"input\":{\"class_name\":\"X.C6bF\",\"method_name\":\"<init>\",\"overload_index\":0,\"smali_fallback\":true},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"class_name\\\":\\\"X.C6bF\\\",\\\"overload_index\\\":0,\\\"fell_back\\\":false,\\\"body\\\":\\\"    public C6bF(String str) {\\\\n        C00h.A0A(str, 0);\\\\n        int iCodePointCount \\\\u003d str.codePointCount(0, str.length());\\\\n        this.A00 \\\\u003d new int[iCodePointCount];\\\\n        int iCharCount \\\\u003d 0;\\\\n        for (int i \\\\u003d 0; i \\\\u003c iCodePointCount; i++) {\\\\n            this.A00[i] \\\\u003d str.codePointAt(iCharCount);\\\\n            iCharCount +\\\\u003d Character.charCount(this.A00[i]);\\\\n        }\\\\n    }\\\",\\\"overload_count\\\":2,\\\"method_name\\\":\\\"\\\\u003cinit\\\\u003e\\\",\\\"markers\\\":[],\\\"mode\\\":\\\"java\\\",\\\"full_name\\\":\\\"X.6bF.\\\\u003cinit\\\\u003e\\\"}\"}],\"isError\":false}}]},\"normalized_result\":{\"engine\":{\"name\":\"jadx-headless-mcp\",\"version\":\"0.7.1\",\"artifact_sha256\":\"6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75\",\"source_revision\":\"5844800a486d2248fa949b74c9896285f5b54de2\",\"worker_count\":1,\"heap_limit_mib\":14968},\"class_name\":\"X.C6bF\",\"method\":{\"name\":\"<init>\",\"reported_signature\":\"<init>(java.lang.String): void\",\"overload_index\":0,\"is_constructor\":true,\"dex_descriptor\":null},\"overload_count\":2,\"representation\":\"java\",\"body_status\":\"available\",\"fell_back\":false,\"markers\":[],\"source\":{\"status\":\"complete\",\"text\":\"    public C6bF(String str) {\\n        C00h.A0A(str, 0);\\n        int iCodePointCount = str.codePointCount(0, str.length());\\n        this.A00 = new int[iCodePointCount];\\n        int iCharCount = 0;\\n        for (int i = 0; i < iCodePointCount; i++) {\\n            this.A00[i] = str.codePointAt(iCharCount);\\n            iCharCount += Character.charCount(this.A00[i]);\\n        }\\n    }\",\"reported_total_bytes\":null}},\"confidence\":\"derived\",\"authority\":\"shipped-artifact\",\"environment\":null,\"limitations\":[\"Static decompiler observations do not establish runtime behavior; the APK is never executed.\",\"Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.\",\"Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.\",\"Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider.\"],\"locations\":[],\"evidence_links\":[]}"
+    }
+  ],
+  "structuredContent": {
+    "evidence_id": "ev_c6908c6f7cb651282cc110ee3e507a5c513bedaaf47aadf55e14653701e08410",
+    "subject": {
+      "name": "WhatsApp.apk",
+      "digest": {
+        "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+      },
+      "format": "apk",
+      "architecture": null,
+      "local_path": "~/Downloads/WhatsApp.apk"
+    },
+    "provider": {
+      "id": "jadx",
+      "name": "JADX headless",
+      "version": "0.7.1"
+    },
+    "analysis_profile": null,
+    "predicate_type": "rea.analysis",
+    "operation": "inspect_android_method",
+    "parameters": {
+      "path": "~/Downloads/WhatsApp.apk",
+      "class_name": "X.C6bF",
+      "method_name": "<init>",
+      "overload_index": 0
+    },
+    "raw_result": {
+      "server": {
+        "name": "rea-jadx-bridge",
+        "version": "1"
+      },
+      "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+      "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "loaded": {
+        "state": "LOADED",
+        "apk_path": "/tmp/rea-android-CqrGCx/target.apk",
+        "class_count": 94738,
+        "resource_count": 14967,
+        "threads": 1,
+        "resources": "full"
+      },
+      "calls": [
+        {
+          "operation": "rea_jvm_status",
+          "input": {},
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"java_version\":\"21.0.12.1\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":15695085568}"
+              }
+            ],
+            "isError": false
+          }
+        },
+        {
+          "operation": "get_class_summary",
+          "input": {
+            "class_name": "X.C6bF"
+          },
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"C6bF\",\"full_name\":\"X.C6bF\",\"field_count\":1,\"fields\":[{\"def_pos\":0,\"name\":\"A00\",\"type\":\"int[]\"}],\"methods\":[{\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(java.lang.String): void\"},{\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(int[]): void\"},{\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0,\"signature\":\"A00(int): X.6bF\"},{\"is_constructor\":false,\"name\":\"equals\",\"def_pos\":0,\"signature\":\"equals(java.lang.Object): boolean\"},{\"is_constructor\":false,\"name\":\"hashCode\",\"def_pos\":0,\"signature\":\"hashCode(): int\"},{\"is_constructor\":false,\"name\":\"toString\",\"def_pos\":0,\"signature\":\"toString(): java.lang.String\"}],\"method_count\":6}"
+              }
+            ],
+            "isError": false
+          }
+        },
+        {
+          "operation": "get_method_body",
+          "input": {
+            "class_name": "X.C6bF",
+            "method_name": "<init>",
+            "overload_index": 0,
+            "smali_fallback": true
+          },
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"class_name\":\"X.C6bF\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public C6bF(String str) {\\n        C00h.A0A(str, 0);\\n        int iCodePointCount \\u003d str.codePointCount(0, str.length());\\n        this.A00 \\u003d new int[iCodePointCount];\\n        int iCharCount \\u003d 0;\\n        for (int i \\u003d 0; i \\u003c iCodePointCount; i++) {\\n            this.A00[i] \\u003d str.codePointAt(iCharCount);\\n            iCharCount +\\u003d Character.charCount(this.A00[i]);\\n        }\\n    }\",\"overload_count\":2,\"method_name\":\"\\u003cinit\\u003e\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.6bF.\\u003cinit\\u003e\"}"
+              }
+            ],
+            "isError": false
+          }
+        }
+      ]
+    },
+    "normalized_result": {
+      "engine": {
+        "name": "jadx-headless-mcp",
+        "version": "0.7.1",
+        "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+        "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+        "worker_count": 1,
+        "heap_limit_mib": 14968
+      },
+      "class_name": "X.C6bF",
+      "method": {
+        "name": "<init>",
+        "reported_signature": "<init>(java.lang.String): void",
+        "overload_index": 0,
+        "is_constructor": true,
+        "dex_descriptor": null
+      },
+      "overload_count": 2,
+      "representation": "java",
+      "body_status": "available",
+      "fell_back": false,
+      "markers": [],
+      "source": {
+        "status": "complete",
+        "text": "    public C6bF(String str) {\n        C00h.A0A(str, 0);\n        int iCodePointCount = str.codePointCount(0, str.length());\n        this.A00 = new int[iCodePointCount];\n        int iCharCount = 0;\n        for (int i = 0; i < iCodePointCount; i++) {\n            this.A00[i] = str.codePointAt(iCharCount);\n            iCharCount += Character.charCount(this.A00[i]);\n        }\n    }",
+        "reported_total_bytes": null
+      }
+    },
+    "confidence": "derived",
+    "authority": "shipped-artifact",
+    "environment": null,
+    "limitations": [
+      "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+      "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+      "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+      "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+    ],
+    "locations": [],
+    "evidence_links": []
+  }
+}

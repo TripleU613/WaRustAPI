@@ -44,8 +44,12 @@ pub(super) fn key_failure(key: &Key) -> Option<&'static str> {
     None
 }
 
-/// Longest accepted reaction text in bytes (local bound; emoji sequences).
-pub const MAX_TEXT_BYTES: usize = 64;
+/// UTF-8 byte upper bound for the APK limit of 30 Unicode code points.
+pub const MAX_TEXT_BYTES: usize = 30 * 4;
+
+fn valid_text(text: &str) -> bool {
+    text.len() <= MAX_TEXT_BYTES && text.chars().count() <= 30
+}
 
 #[derive(prost::Message)]
 pub(crate) struct Envelope {
@@ -85,11 +89,9 @@ pub fn validate(chat: &Jid, target: &MessageRef, emoji: Option<&str>) -> Result<
         return Err(invalid("target message belongs to another chat"));
     }
     if let Some(text) = emoji
-        && (text.is_empty() || text.len() > MAX_TEXT_BYTES || text.chars().any(char::is_control))
+        && (text.is_empty() || !valid_text(text))
     {
-        return Err(invalid(
-            "reaction text must be 1..=64 bytes without control characters",
-        ));
+        return Err(invalid("reaction text must be 1..=30 Unicode code points"));
     }
     Ok(())
 }
@@ -150,11 +152,9 @@ pub fn group_payload(
         return Err(invalid("invalid target message id"));
     }
     if let Some(text) = emoji
-        && (text.is_empty() || text.len() > MAX_TEXT_BYTES || text.chars().any(char::is_control))
+        && (text.is_empty() || !valid_text(text))
     {
-        return Err(invalid(
-            "reaction text must be 1..=64 bytes without control characters",
-        ));
+        return Err(invalid("reaction text must be 1..=30 Unicode code points"));
     }
     Ok(Envelope {
         reaction: Some(ReactionMessage {
@@ -418,7 +418,7 @@ pub fn decode(payload: &[u8]) -> Option<Incoming> {
     }
     let target_id = MessageId::new(key.id?).ok()?;
     let text = reaction.text.unwrap_or_default();
-    if text.len() > MAX_TEXT_BYTES || text.chars().any(char::is_control) {
+    if !valid_text(&text) {
         return None;
     }
     Some(Incoming {
@@ -667,8 +667,8 @@ mod group_tests {
         assert!(group_payload(&chat, &participant, "", false, None, 1).is_err());
         assert!(group_payload(&chat, &participant, "T", false, Some(""), 1).is_err());
         assert!(
-            group_payload(&chat, &participant, "T", false, Some("a\u{7}b"), 1).is_err(),
-            "control characters are refused"
+            group_payload(&chat, &participant, "T", false, Some("a\u{7}b"), 1).is_ok(),
+            "CB2.A00 counts code points without a control-character filter"
         );
     }
 }
@@ -692,6 +692,81 @@ mod tests {
             },
         }
     }
+    #[test]
+    fn text_matches_apk_thirty_code_points_across_decode_and_send_builders() {
+        let peer = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        let group = Jid::parse("120363000000000001@g.us").unwrap();
+        for (text, allowed) in [
+            ("a".repeat(30), true),
+            ("a".repeat(31), false),
+            ("💡".repeat(30), true),
+            ("💡".repeat(31), false),
+            ("👩‍💻".repeat(10), true),
+            ("👩‍💻".repeat(11), false),
+            ("a\u{301}".repeat(15), true),
+            ("a\u{301}".repeat(16), false),
+            ("\0\n".to_owned(), true),
+            ("".to_owned(), true),
+        ] {
+            let bytes = Envelope {
+                reaction: Some(ReactionMessage {
+                    key: Some(Key {
+                        remote_jid: Some(peer.to_string()),
+                        from_me: Some(false),
+                        id: Some("TARGET".into()),
+                        participant: None,
+                    }),
+                    text: Some(text.clone()),
+                    grouping_key: None,
+                    sender_timestamp_ms: Some(1),
+                }),
+            }
+            .encode_to_vec();
+            assert_eq!(decode(&bytes).is_some(), allowed, "receive: {text:?}");
+            if allowed {
+                assert_eq!(
+                    decode(&bytes).unwrap().emoji,
+                    (!text.is_empty()).then_some(text.clone())
+                );
+            }
+            let mut status = Envelope::decode(bytes.as_slice()).unwrap();
+            status
+                .reaction
+                .as_mut()
+                .unwrap()
+                .key
+                .as_mut()
+                .unwrap()
+                .remote_jid = Some("status@broadcast".into());
+            assert_eq!(
+                super::super::status_receipts::like_from_payload(
+                    &status.encode_to_vec(),
+                    &crate::binary::Node::new("message").attr("from", peer.clone())
+                )
+                .is_some(),
+                allowed,
+                "status: {text:?}"
+            );
+            let emoji = (!text.is_empty()).then_some(text.as_str());
+            assert_eq!(
+                validate(&peer, &target(Direction::Incoming), emoji).is_ok(),
+                allowed,
+                "validate: {text:?}"
+            );
+            assert_eq!(
+                payload(&peer, &peer, &target(Direction::Incoming), emoji, 1).is_ok(),
+                allowed,
+                "direct: {text:?}"
+            );
+            assert_eq!(
+                group_payload(&group, &peer, "TARGET", false, emoji, 1).is_ok(),
+                allowed,
+                "group: {text:?}"
+            );
+        }
+        assert!(validate(&peer, &target(Direction::Incoming), Some("")).is_err());
+    }
+
     #[test]
     fn payload_roundtrips_with_apk_field_numbers_and_sender_relative_from_me() {
         let peer = Jid::parse("15555550101@s.whatsapp.net").unwrap();
@@ -755,8 +830,8 @@ mod tests {
         let other = Jid::parse("15555550102@s.whatsapp.net").unwrap();
         assert!(validate(&other, &target(Direction::Incoming), Some("x")).is_err());
         assert!(validate(&peer, &target(Direction::Incoming), Some("")).is_err());
-        assert!(validate(&peer, &target(Direction::Incoming), Some(&"x".repeat(65))).is_err());
-        assert!(validate(&peer, &target(Direction::Incoming), Some("a\nb")).is_err());
+        assert!(validate(&peer, &target(Direction::Incoming), Some(&"x".repeat(31))).is_err());
+        assert!(validate(&peer, &target(Direction::Incoming), Some("a\nb")).is_ok());
         assert!(validate(&peer, &target(Direction::Incoming), Some("❤️")).is_ok());
         assert!(validate(&peer, &target(Direction::Incoming), None).is_ok());
     }

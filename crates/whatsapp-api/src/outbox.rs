@@ -513,6 +513,58 @@ mod tests {
     }
 
     #[test]
+    fn native_reaction_limit_queues_long_unicode_and_refuses_new_intent_without_mutation() {
+        let (_dir, store) = store();
+        let outbox = Outbox::new("fixture", Limits::default());
+        let mut request = req("unicode-reaction", "unused");
+        let target = crate::model::message::MessageRef {
+            key: crate::model::message::MessageKey {
+                chat: request.chat.clone(),
+                sender: None,
+                direction: crate::model::message::Direction::Outgoing,
+                id: MessageId::new("TARGET").unwrap(),
+            },
+        };
+        request.content = MessageContent::Reaction {
+            target: target.clone(),
+            emoji: Some("💡".repeat(30)),
+        };
+        let (ticket, created) = store.write(|tx| outbox.enqueue(tx, &request)).unwrap();
+        assert!(created);
+        let snapshot = || {
+            store
+                .read(|tx| {
+                    Table::ALL
+                        .iter()
+                        .map(|t| tx.scan(*t, 1, 100))
+                        .collect::<Result<Vec<_>>>()
+                })
+                .unwrap()
+        };
+        let before = snapshot();
+        let head = store.journal_head().unwrap();
+        let refused = SendRequest {
+            client_request_id: ClientRequestId::new("refused-reaction").unwrap(),
+            chat: request.chat.clone(),
+            content: MessageContent::Reaction {
+                target,
+                emoji: Some("a".repeat(31)),
+            },
+        };
+        let error = store.write(|tx| outbox.enqueue(tx, &refused)).unwrap_err();
+        assert!(
+            matches!(error,Error::InvalidInput {field:"reaction",reason} if reason=="reaction text must be 1..=30 Unicode code points")
+        );
+        assert_eq!(snapshot(), before);
+        assert_eq!(store.journal_head().unwrap(), head);
+        let (repeat, created) = store.write(|tx| outbox.enqueue(tx, &request)).unwrap();
+        assert!(!created);
+        assert_eq!(repeat.local_id, ticket.local_id);
+        assert_eq!(snapshot(), before);
+        assert_eq!(store.journal_head().unwrap(), head);
+    }
+
+    #[test]
     fn request_lookup_is_scoped_read_only_and_detects_missing_entries() {
         let (_d, s) = store();
         let ob = Outbox::new("test", Limits::default());

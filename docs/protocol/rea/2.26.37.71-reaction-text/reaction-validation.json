@@ -1,0 +1,152 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"evidence_id\":\"ev_f4b728a71718b401fad0959963ecc60559a5e04b12edb3b36de2249e28eb5c50\",\"subject\":{\"name\":\"WhatsApp.apk\",\"digest\":{\"sha256\":\"1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c\"},\"format\":\"apk\",\"architecture\":null,\"local_path\":\"~/Downloads/WhatsApp.apk\"},\"provider\":{\"id\":\"jadx\",\"name\":\"JADX headless\",\"version\":\"0.7.1\"},\"analysis_profile\":null,\"predicate_type\":\"rea.analysis\",\"operation\":\"inspect_android_method\",\"parameters\":{\"path\":\"~/Downloads/WhatsApp.apk\",\"class_name\":\"X.Bal\",\"method_name\":\"A02\"},\"raw_result\":{\"server\":{\"name\":\"rea-jadx-bridge\",\"version\":\"1\"},\"bridge_sha256\":\"5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1\",\"jar_sha256\":\"6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75\",\"loaded\":{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-CqrGCx/target.apk\",\"class_count\":94738,\"resource_count\":14967,\"threads\":1,\"resources\":\"full\"},\"calls\":[{\"operation\":\"rea_jvm_status\",\"input\":{},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"java_version\\\":\\\"21.0.12.1\\\",\\\"available_processors\\\":24,\\\"engine_reported_version\\\":\\\"0.7.1\\\",\\\"metadata_scope\\\":\\\"parsed_members\\\",\\\"max_heap_bytes\\\":15695085568}\"}],\"isError\":false}},{\"operation\":\"load_apk\",\"input\":{\"path\":\"/tmp/rea-android-CqrGCx/target.apk\",\"threads\":1,\"resources\":\"full\"},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"state\\\":\\\"LOADED\\\",\\\"apk_path\\\":\\\"/tmp/rea-android-CqrGCx/target.apk\\\",\\\"class_count\\\":94738,\\\"raw_class_count\\\":94738,\\\"resource_count\\\":14967,\\\"load_duration_ms\\\":16857,\\\"decompile_timeout_ms\\\":90000,\\\"threads\\\":1,\\\"code_cache_size\\\":64,\\\"resources\\\":\\\"full\\\"}\"}]}},{\"operation\":\"get_class_summary\",\"input\":{\"class_name\":\"X.Bal\"},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"inner_class_count\\\":0,\\\"inner_classes\\\":[],\\\"name\\\":\\\"Bal\\\",\\\"full_name\\\":\\\"X.Bal\\\",\\\"field_count\\\":12,\\\"fields\\\":[{\\\"def_pos\\\":0,\\\"name\\\":\\\"A00\\\",\\\"type\\\":\\\"X.00s\\\"},{\\\"def_pos\\\":0,\\\"name\\\":\\\"A01\\\",\\\"type\\\":\\\"X.00s\\\"},{\\\"def_pos\\\":0,\\\"name\\\":\\\"A02\\\",\\\"type\\\":\\\"X.00s\\\"},{\\\"def_pos\\\":0,\\\"name\\\":\\\"A03\\\",\\\"type\\\":\\\"X.00s\\\"},{\\\"def_pos\\\":0,\\\"name\\\":\\\"A04\\\",\\\"type\\\":\\\"X.00s\\\"},{\\\"def_pos\\\":0,\\\"name\\\":\\\"A05\\\",\\\"type\\\":\\\"X.00s\\\"},{\\\"def_pos\\\":0,\\\"name\\\":\\\"A06\\\",\\\"type\\\":\\\"X.00s\\\"},{\\\"def_pos\\\":0,\\\"name\\\":\\\"A07\\\",\\\"type\\\":\\\"X.00s\\\"},{\\\"def_pos\\\":0,\\\"name\\\":\\\"A08\\\",\\\"type\\\":\\\"X.05B\\\"},{\\\"def_pos\\\":0,\\\"name\\\":\\\"A09\\\",\\\"type\\\":\\\"X.07t\\\"},{\\\"def_pos\\\":0,\\\"name\\\":\\\"A0A\\\",\\\"type\\\":\\\"X.0Fs\\\"},{\\\"def_pos\\\":0,\\\"name\\\":\\\"A0B\\\",\\\"type\\\":\\\"X.08Z\\\"}],\\\"methods\\\":[{\\\"is_constructor\\\":true,\\\"name\\\":\\\"\\\\u003cinit\\\\u003e\\\",\\\"def_pos\\\":0,\\\"signature\\\":\\\"\\\\u003cinit\\\\u003e(): void\\\"},{\\\"is_constructor\\\":false,\\\"name\\\":\\\"A00\\\",\\\"def_pos\\\":0,\\\"signature\\\":\\\"A00(X.1gc, X.BWI, X.BZa, long): X.BnG\\\"},{\\\"is_constructor\\\":false,\\\"name\\\":\\\"A01\\\",\\\"def_pos\\\":0,\\\"signature\\\":\\\"A01(X.CoT): X.178\\\"},{\\\"is_constructor\\\":false,\\\"name\\\":\\\"A02\\\",\\\"def_pos\\\":0,\\\"signature\\\":\\\"A02(X.BWI): void\\\"},{\\\"is_constructor\\\":false,\\\"name\\\":\\\"AD7\\\",\\\"def_pos\\\":0,\\\"signature\\\":\\\"AD7(X.178, X.Cn6): void\\\"}],\\\"method_count\\\":5}\"}],\"isError\":false}},{\"operation\":\"get_method_body\",\"input\":{\"class_name\":\"X.Bal\",\"method_name\":\"A02\",\"overload_index\":0,\"smali_fallback\":true},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"class_name\\\":\\\"X.Bal\\\",\\\"overload_index\\\":0,\\\"fell_back\\\":false,\\\"body\\\":\\\"    public final void A02(BWI bwi) throws Bp0 {\\\\n        C0AH c0ah \\\\u003d (C0AH) C3cB.A0z(this.A08, 1443);\\\\n        if (CB2.A00(bwi.text_)) {\\\\n            return;\\\\n        }\\\\n        BZa bZa \\\\u003d bwi.key_;\\\\n        if (bZa \\\\u003d\\\\u003d null) {\\\\n            bZa \\\\u003d BZa.DEFAULT_INSTANCE;\\\\n        }\\\\n        C1xp.A1K(\\\\\\\"FMessageReactionProtobuf/validateReactionMessageText/reaction text failed validation key\\\\u003d\\\\\\\", bZa);\\\\n        c0ah.A0g(\\\\\\\"reaction text failed validation\\\\\\\", null, false);\\\\n        throw Bp0.A04(68);\\\\n    }\\\",\\\"overload_count\\\":1,\\\"method_name\\\":\\\"A02\\\",\\\"markers\\\":[],\\\"mode\\\":\\\"java\\\",\\\"full_name\\\":\\\"X.Bal.A02\\\"}\"}],\"isError\":false}}]},\"normalized_result\":{\"engine\":{\"name\":\"jadx-headless-mcp\",\"version\":\"0.7.1\",\"artifact_sha256\":\"6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75\",\"source_revision\":\"5844800a486d2248fa949b74c9896285f5b54de2\",\"worker_count\":1,\"heap_limit_mib\":14968},\"class_name\":\"X.Bal\",\"method\":{\"name\":\"A02\",\"reported_signature\":\"A02(X.BWI): void\",\"overload_index\":0,\"is_constructor\":false,\"dex_descriptor\":null},\"overload_count\":1,\"representation\":\"java\",\"body_status\":\"available\",\"fell_back\":false,\"markers\":[],\"source\":{\"status\":\"complete\",\"text\":\"    public final void A02(BWI bwi) throws Bp0 {\\n        C0AH c0ah = (C0AH) C3cB.A0z(this.A08, 1443);\\n        if (CB2.A00(bwi.text_)) {\\n            return;\\n        }\\n        BZa bZa = bwi.key_;\\n        if (bZa == null) {\\n            bZa = BZa.DEFAULT_INSTANCE;\\n        }\\n        C1xp.A1K(\\\"FMessageReactionProtobuf/validateReactionMessageText/reaction text failed validation key=\\\", bZa);\\n        c0ah.A0g(\\\"reaction text failed validation\\\", null, false);\\n        throw Bp0.A04(68);\\n    }\",\"reported_total_bytes\":null}},\"confidence\":\"derived\",\"authority\":\"shipped-artifact\",\"environment\":null,\"limitations\":[\"Static decompiler observations do not establish runtime behavior; the APK is never executed.\",\"Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.\",\"Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.\",\"Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider.\"],\"locations\":[],\"evidence_links\":[]}"
+    }
+  ],
+  "structuredContent": {
+    "evidence_id": "ev_f4b728a71718b401fad0959963ecc60559a5e04b12edb3b36de2249e28eb5c50",
+    "subject": {
+      "name": "WhatsApp.apk",
+      "digest": {
+        "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+      },
+      "format": "apk",
+      "architecture": null,
+      "local_path": "~/Downloads/WhatsApp.apk"
+    },
+    "provider": {
+      "id": "jadx",
+      "name": "JADX headless",
+      "version": "0.7.1"
+    },
+    "analysis_profile": null,
+    "predicate_type": "rea.analysis",
+    "operation": "inspect_android_method",
+    "parameters": {
+      "path": "~/Downloads/WhatsApp.apk",
+      "class_name": "X.Bal",
+      "method_name": "A02"
+    },
+    "raw_result": {
+      "server": {
+        "name": "rea-jadx-bridge",
+        "version": "1"
+      },
+      "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+      "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "loaded": {
+        "state": "LOADED",
+        "apk_path": "/tmp/rea-android-CqrGCx/target.apk",
+        "class_count": 94738,
+        "resource_count": 14967,
+        "threads": 1,
+        "resources": "full"
+      },
+      "calls": [
+        {
+          "operation": "rea_jvm_status",
+          "input": {},
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"java_version\":\"21.0.12.1\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":15695085568}"
+              }
+            ],
+            "isError": false
+          }
+        },
+        {
+          "operation": "load_apk",
+          "input": {
+            "path": "/tmp/rea-android-CqrGCx/target.apk",
+            "threads": 1,
+            "resources": "full"
+          },
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-CqrGCx/target.apk\",\"class_count\":94738,\"raw_class_count\":94738,\"resource_count\":14967,\"load_duration_ms\":16857,\"decompile_timeout_ms\":90000,\"threads\":1,\"code_cache_size\":64,\"resources\":\"full\"}"
+              }
+            ]
+          }
+        },
+        {
+          "operation": "get_class_summary",
+          "input": {
+            "class_name": "X.Bal"
+          },
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"Bal\",\"full_name\":\"X.Bal\",\"field_count\":12,\"fields\":[{\"def_pos\":0,\"name\":\"A00\",\"type\":\"X.00s\"},{\"def_pos\":0,\"name\":\"A01\",\"type\":\"X.00s\"},{\"def_pos\":0,\"name\":\"A02\",\"type\":\"X.00s\"},{\"def_pos\":0,\"name\":\"A03\",\"type\":\"X.00s\"},{\"def_pos\":0,\"name\":\"A04\",\"type\":\"X.00s\"},{\"def_pos\":0,\"name\":\"A05\",\"type\":\"X.00s\"},{\"def_pos\":0,\"name\":\"A06\",\"type\":\"X.00s\"},{\"def_pos\":0,\"name\":\"A07\",\"type\":\"X.00s\"},{\"def_pos\":0,\"name\":\"A08\",\"type\":\"X.05B\"},{\"def_pos\":0,\"name\":\"A09\",\"type\":\"X.07t\"},{\"def_pos\":0,\"name\":\"A0A\",\"type\":\"X.0Fs\"},{\"def_pos\":0,\"name\":\"A0B\",\"type\":\"X.08Z\"}],\"methods\":[{\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(): void\"},{\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0,\"signature\":\"A00(X.1gc, X.BWI, X.BZa, long): X.BnG\"},{\"is_constructor\":false,\"name\":\"A01\",\"def_pos\":0,\"signature\":\"A01(X.CoT): X.178\"},{\"is_constructor\":false,\"name\":\"A02\",\"def_pos\":0,\"signature\":\"A02(X.BWI): void\"},{\"is_constructor\":false,\"name\":\"AD7\",\"def_pos\":0,\"signature\":\"AD7(X.178, X.Cn6): void\"}],\"method_count\":5}"
+              }
+            ],
+            "isError": false
+          }
+        },
+        {
+          "operation": "get_method_body",
+          "input": {
+            "class_name": "X.Bal",
+            "method_name": "A02",
+            "overload_index": 0,
+            "smali_fallback": true
+          },
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"class_name\":\"X.Bal\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public final void A02(BWI bwi) throws Bp0 {\\n        C0AH c0ah \\u003d (C0AH) C3cB.A0z(this.A08, 1443);\\n        if (CB2.A00(bwi.text_)) {\\n            return;\\n        }\\n        BZa bZa \\u003d bwi.key_;\\n        if (bZa \\u003d\\u003d null) {\\n            bZa \\u003d BZa.DEFAULT_INSTANCE;\\n        }\\n        C1xp.A1K(\\\"FMessageReactionProtobuf/validateReactionMessageText/reaction text failed validation key\\u003d\\\", bZa);\\n        c0ah.A0g(\\\"reaction text failed validation\\\", null, false);\\n        throw Bp0.A04(68);\\n    }\",\"overload_count\":1,\"method_name\":\"A02\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.Bal.A02\"}"
+              }
+            ],
+            "isError": false
+          }
+        }
+      ]
+    },
+    "normalized_result": {
+      "engine": {
+        "name": "jadx-headless-mcp",
+        "version": "0.7.1",
+        "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+        "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+        "worker_count": 1,
+        "heap_limit_mib": 14968
+      },
+      "class_name": "X.Bal",
+      "method": {
+        "name": "A02",
+        "reported_signature": "A02(X.BWI): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      "overload_count": 1,
+      "representation": "java",
+      "body_status": "available",
+      "fell_back": false,
+      "markers": [],
+      "source": {
+        "status": "complete",
+        "text": "    public final void A02(BWI bwi) throws Bp0 {\n        C0AH c0ah = (C0AH) C3cB.A0z(this.A08, 1443);\n        if (CB2.A00(bwi.text_)) {\n            return;\n        }\n        BZa bZa = bwi.key_;\n        if (bZa == null) {\n            bZa = BZa.DEFAULT_INSTANCE;\n        }\n        C1xp.A1K(\"FMessageReactionProtobuf/validateReactionMessageText/reaction text failed validation key=\", bZa);\n        c0ah.A0g(\"reaction text failed validation\", null, false);\n        throw Bp0.A04(68);\n    }",
+        "reported_total_bytes": null
+      }
+    },
+    "confidence": "derived",
+    "authority": "shipped-artifact",
+    "environment": null,
+    "limitations": [
+      "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+      "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+      "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+      "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+    ],
+    "locations": [],
+    "evidence_links": []
+  }
+}

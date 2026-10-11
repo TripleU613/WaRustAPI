@@ -1,0 +1,38 @@
+{
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "reaction-builder.txt": {
+    "bytes": 22349,
+    "sha256": "6a03876545b4857525e9b0ac82dee68a88ba734c9209f80b84c690f3e8768eb2"
+  },
+  "reaction-validation.txt": {
+    "bytes": 1738,
+    "sha256": "ca96fcd3e139fc10b4020502985443467c6dbd7d37325a0f7e3d602916db85c5"
+  },
+  "status-validation.txt": {
+    "bytes": 4822,
+    "sha256": "92a08f91d9b986705762ba21172c03e99374971ca93ec507754d48c53b879a0b"
+  },
+  "targets.json": {
+    "bytes": 3054,
+    "sha256": "731692d23450804fb996f84a1ac7a49ba413bf002002bcd01ede22aa4eb9629a"
+  },
+  "text-constructor.txt": {
+    "bytes": 2011,
+    "sha256": "cc5ae21987b3886f0442e9c4b1e60afbcb6afb64ed95da1255676c7f27f57c39"
+  },
+  "text-policy.txt": {
+    "bytes": 893,
+    "sha256": "b564c6b962c02b8772a6712c75a771b3fcdc6bbfe5a062055085bae74d7f64a6"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}
