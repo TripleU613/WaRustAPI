@@ -108,21 +108,18 @@ delivery receipt, `recipient`/`sts` omitted, and `participant` emitted exactly
 when it is non-null and differs from `to`. That last rule is why the direct path
 never carries the attribute and the group path does.
 
-The participant keeps the incoming stanza's own **device-addressed** form
-(**confirmed**): `LX/Cp2->A06` — the receipt builder for an incoming message —
-passes `Ayl.A0V(CjN.A04())`, the message's sender JID through
-`DeviceJid.Companion.A00` (`LX/0DK->A00`), as the value `LX/CmC->A06` returns as
-its pair's second element. That helper returns an existing `DeviceJid` unchanged
-and coerces a bare `UserJid` to its primary device. The prior claim that equal
-textual rendering establishes identical wire encoding was incorrect: DeviceLid
-can require AD even at device zero. The implementation currently copies the
-attribute; complete primary factory/transport normalization remains unported.
-[Current evidence and trace boundaries](status-receipt.md#trace-boundaries-retained). For the
-sender-key storage key, the earlier deliberate device stripping was refuted by
-APK Cnr.A03 and corrected on 2026-10-07. Both now retain the actual device. A test pins
-the suffix surviving. Not examined: `LX/Cp2->A04` also reaches `A00` through a
-different pair helper (`LX/CmC->A05`); whether that path normalizes differently
-is **unknown**, but it is not the incoming-message receipt path.
+**Confirmed static / implemented 2026-10-11:** ordinary receipt Cp2.A04,
+status receipt A06 and read holder A07 all supply a DeviceJid to Cp2.A00 /
+CmC.A06. Existing companions retain their device. A bare PN/LID user reaches
+its primary device factory: PN device zero writes JID_PAIR, LID device zero
+writes AD because 0e1.getAgent returns one. The prior claim that copying the
+incoming attribute always matched native output was incorrect. The shared
+confirmation builder now selects these primary forms for direct destination
+and group/status participant, without changing user/namespace/device/agent.
+[Exact factory, writer closure and durable-read checks](message-primary-device.md).
+The previously unexamined Cp2.A04 route is now traced; full native message-class
+admission and alternate/broadcast routes remain separate. For sender-key storage,
+actual nonzero devices remain preserved, as corrected on 2026-10-07.
 
 The receipt is gated on `Decrypted`/`Duplicate`, so an Unsupported stanza is
 never confirmed and the server may redeliver it; the inbox dedupes redeliveries

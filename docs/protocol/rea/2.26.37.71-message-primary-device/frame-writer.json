@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_31cb40d30d154b9c88f819055a5ee145a3fac486c3687e2eac7db2a8bc74e853",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.C1Qe",
+    "method_name": "Ck7"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-XGtfFc/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":15695085568,\"java_version\":\"21.0.12.1\",\"available_processors\":24}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C1Qe"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"name\":\"C1Qe\",\"full_name\":\"X.C1Qe\",\"field_count\":4,\"fields\":[{\"def_pos\":0,\"name\":\"A00\",\"type\":\"X.1Qc\"},{\"def_pos\":0,\"name\":\"A01\",\"type\":\"X.123\"},{\"def_pos\":0,\"name\":\"A02\",\"type\":\"X.1Qg\"},{\"def_pos\":0,\"name\":\"A03\",\"type\":\"java.util.concurrent.atomic.AtomicReference\"}],\"methods\":[{\"is_constructor\":false,\"name\":\"\\u003cclinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cclinit\\u003e(): void\"},{\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(X.123, X.1Qc): void\"},{\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0,\"signature\":\"A00(com.whatsapp.infra.core.jid.Jid, java.io.OutputStream): void\"},{\"is_constructor\":false,\"name\":\"A01\",\"def_pos\":0,\"signature\":\"A01(X.0hs, java.io.OutputStream): void\"},{\"is_constructor\":false,\"name\":\"A02\",\"def_pos\":0,\"signature\":\"A02(java.io.OutputStream, int): void\"},{\"is_constructor\":false,\"name\":\"A03\",\"def_pos\":0,\"signature\":\"A03(java.io.OutputStream, int): void\"},{\"is_constructor\":false,\"name\":\"A04\",\"def_pos\":0,\"signature\":\"A04(java.io.OutputStream, int): void\"},{\"is_constructor\":false,\"name\":\"A05\",\"def_pos\":0,\"signature\":\"A05(java.io.OutputStream, java.lang.String, boolean, boolean): void\"},{\"is_constructor\":false,\"name\":\"A06\",\"def_pos\":0,\"signature\":\"A06(java.io.OutputStream, byte[], boolean): void\"},{\"is_constructor\":false,\"name\":\"Ck7\",\"def_pos\":0,\"signature\":\"Ck7(X.0hs, int): void\"}],\"method_count\":10,\"inner_class_count\":0,\"inner_classes\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C1Qe",
+          "method_name": "Ck7",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"body\":\"    @Override // X.C1Qb\\n    public void Ck7(C0hs c0hs, int i) throws IOException {\\n        boolean z \\u003d (i \\u0026 2) !\\u003d 0;\\n        C1Qg c1Qg \\u003d (C1Qg) A03.get();\\n        if (c1Qg \\u003d\\u003d null) {\\n            c1Qg \\u003d A02;\\n        }\\n        Integer numAnk \\u003d c1Qg.Ank();\\n        ByteArrayOutputStream mms \\u003d numAnk !\\u003d null ? new MMS(numAnk.intValue()) : new ByteArrayOutputStream(8192);\\n        if (!z) {\\n            mms.write(0);\\n        }\\n        A01(c0hs, mms);\\n        byte[] byteArray \\u003d mms.toByteArray();\\n        if (z) {\\n            int length \\u003d byteArray.length;\\n            byte[] bArr \\u003d {2};\\n            try {\\n                ByteArrayOutputStream byteArrayOutputStream \\u003d new ByteArrayOutputStream(8192);\\n                try {\\n                    DeflaterOutputStream deflaterOutputStream \\u003d new DeflaterOutputStream(byteArrayOutputStream);\\n                    try {\\n                        byteArrayOutputStream.write(bArr);\\n                        deflaterOutputStream.write(byteArray, 0, length);\\n                        deflaterOutputStream.close();\\n                        byteArray \\u003d byteArrayOutputStream.toByteArray();\\n                        C00h.A06(byteArray);\\n                        deflaterOutputStream.close();\\n                        byteArrayOutputStream.close();\\n                    } catch (Throwable th) {\\n                        try {\\n                            throw th;\\n                        } catch (Throwable th2) {\\n                            C07i.A00(deflaterOutputStream, th);\\n                            throw th2;\\n                        }\\n                    }\\n                } catch (Throwable th3) {\\n                    try {\\n                        throw th3;\\n                    } catch (Throwable th4) {\\n                        C07i.A00(byteArrayOutputStream, th3);\\n                        throw th4;\\n                    }\\n                }\\n            } catch (IOException e) {\\n                throw new AssertionError(e);\\n            }\\n        }\\n        C1Qc c1Qc \\u003d this.A00;\\n        int length2 \\u003d byteArray.length;\\n        C1QR c1qr \\u003d c1Qc.A01;\\n        byte[] bArrA01 \\u003d c1qr.A04.A01(new byte[0], byteArray, length2, c1qr.A01.getAndIncrement());\\n        OutputStream outputStream \\u003d c1Qc.A00;\\n        outputStream.write(bArrA01);\\n        outputStream.flush();\\n    }\",\"overload_count\":1,\"method_name\":\"Ck7\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.1Qe.Ck7\",\"class_name\":\"X.C1Qe\",\"overload_index\":0,\"fell_back\":false}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.C1Qe",
+    "method": {
+      "name": "Ck7",
+      "reported_signature": "Ck7(X.0hs, int): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    @Override // X.C1Qb\n    public void Ck7(C0hs c0hs, int i) throws IOException {\n        boolean z = (i & 2) != 0;\n        C1Qg c1Qg = (C1Qg) A03.get();\n        if (c1Qg == null) {\n            c1Qg = A02;\n        }\n        Integer numAnk = c1Qg.Ank();\n        ByteArrayOutputStream mms = numAnk != null ? new MMS(numAnk.intValue()) : new ByteArrayOutputStream(8192);\n        if (!z) {\n            mms.write(0);\n        }\n        A01(c0hs, mms);\n        byte[] byteArray = mms.toByteArray();\n        if (z) {\n            int length = byteArray.length;\n            byte[] bArr = {2};\n            try {\n                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(8192);\n                try {\n                    DeflaterOutputStream deflaterOutputStream = new DeflaterOutputStream(byteArrayOutputStream);\n                    try {\n                        byteArrayOutputStream.write(bArr);\n                        deflaterOutputStream.write(byteArray, 0, length);\n                        deflaterOutputStream.close();\n                        byteArray = byteArrayOutputStream.toByteArray();\n                        C00h.A06(byteArray);\n                        deflaterOutputStream.close();\n                        byteArrayOutputStream.close();\n                    } catch (Throwable th) {\n                        try {\n                            throw th;\n                        } catch (Throwable th2) {\n                            C07i.A00(deflaterOutputStream, th);\n                            throw th2;\n                        }\n                    }\n                } catch (Throwable th3) {\n                    try {\n                        throw th3;\n                    } catch (Throwable th4) {\n                        C07i.A00(byteArrayOutputStream, th3);\n                        throw th4;\n                    }\n                }\n            } catch (IOException e) {\n                throw new AssertionError(e);\n            }\n        }\n        C1Qc c1Qc = this.A00;\n        int length2 = byteArray.length;\n        C1QR c1qr = c1Qc.A01;\n        byte[] bArrA01 = c1qr.A04.A01(new byte[0], byteArray, length2, c1qr.A01.getAndIncrement());\n        OutputStream outputStream = c1Qc.A00;\n        outputStream.write(bArrA01);\n        outputStream.flush();\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

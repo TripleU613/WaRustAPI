@@ -64,3 +64,8 @@ build, CLI-reference/OpenAPI coverage, formatting and diff hygiene. Repository
 hygiene checked 2,728 local links and 131 checksum bundles / 27,485,448 bytes.
 The two-topic export reproduced exactly; all five complete REA envelopes have
 the rechecked pinned APK subject digest. No fresh live result is claimed.
+
+Follow-up: [primary device factory and writer closure](message-primary-device.md)
+now establishes and implements PN/LID primary sender wire forms in the shared
+confirmation builder. The earlier trace boundary above is historical; full
+Bp1.A05 producer/admission remains unported.

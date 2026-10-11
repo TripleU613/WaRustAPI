@@ -1,0 +1,33 @@
+# APK-derived structural disassembly: LX/0DK;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A03(LL) flags=0x11 registers=4
+  # full signature: LX/0DK;->A03(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+  0000..0004 op=62 sget-object v0, Lcom/whatsapp/infra/core/jid/Jid;->Companion:LX/0D1;
+  0004..000a op=71 invoke-static {v3}, LX/0D1;->A00(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+  000a..000c op=0c move-result-object v1
+  000c..0010 op=20 instance-of v0, v1, Lcom/whatsapp/infra/core/jid/DeviceJid;
+  0010..0014 op=38 if-eqz v0, +0x5
+  0014..0018 op=1f check-cast v1, Lcom/whatsapp/infra/core/jid/DeviceJid;
+  0018..001a op=11 return-object v1
+  001a..0020 op=71 invoke-static {v1}, LX/0DE;->A0l(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  0020..0022 op=0a move-result v0
+  0022..0026 op=38 if-eqz v0, +0x18
+  0026..002a op=1a const-string v0, "null cannot be cast to non-null type com.whatsapp.infra.core.jid.UserJid"
+  002a..0030 op=71 invoke-static {v1, v0}, LX/00h;->A0D(Ljava/lang/Object;Ljava/lang/String;)V
+  0030..0034 op=1f check-cast v1, Lcom/whatsapp/infra/core/jid/UserJid;
+  0034..0038 op=38 if-eqz v1, +0x9
+  0038..003e op=6e invoke-virtual {v1}, Lcom/whatsapp/infra/core/jid/UserJid;->getPrimaryDevice()Lcom/whatsapp/infra/core/jid/DeviceJid;
+  003e..0040 op=0c move-result-object v1
+  0040..0044 op=38 if-eqz v1, +0x3
+  0044..0046 op=11 return-object v1
+  0046..004a op=22 new-instance v0, LX/08j;
+  004a..0050 op=70 invoke-direct {v0, v3}, LX/08j;-><init>(Ljava/lang/String;)V
+  0050..0052 op=27 throw v0
+  0052..0056 op=22 new-instance v0, LX/08j;
+  0056..005c op=70 invoke-direct {v0, v3}, LX/08j;-><init>(Ljava/lang/String;)V
+  005c..005e op=27 throw v0
+  # exception table: 0 try range(s)
+.end method

@@ -593,12 +593,9 @@ pub fn available_presence() -> Node {
 /// for a plain delivery receipt; `recipient` and `sts` only when their inputs are
 /// set, which they are not here.
 ///
-/// The participant keeps the incoming stanza's own device-addressed form
-/// (**confirmed**): `LX/Cp2->A06` passes `Ayl.A0V(CjN.A04())` — the message's
-/// sender JID through `DeviceJid.Companion.A00` — as the value `LX/CmC->A06`
-/// returns as the pair's second element. That helper returns an existing
-/// `DeviceJid` unchanged and coerces a bare `UserJid` to its primary device.
-/// shortcut: primary device wire normalization is unported, replace copying after factory/transport trace.
+/// APK Cp2.A04/A06/A07 supply a DeviceJid to CmC.A06 for the sender route.
+/// Existing companions retain their device; primary PN devices use JID_PAIR,
+/// while primary LID devices use AD (0e1.getAgent=1; 1Qe.A00).
 pub fn received_confirmation(incoming: &Node) -> Option<Node> {
     if incoming.description == "receipt" {
         return receipt_ack(incoming);
@@ -606,6 +603,18 @@ pub fn received_confirmation(incoming: &Node) -> Option<Node> {
     if incoming.description != "message" || incoming.get_attr("recipient").is_some() {
         return None;
     }
+    // APK 0DK.A01 -> 0D1.A00 creates PN/LID device classes; 1Qe.A00 selects their wire form.
+    let device_form = |mut jid: Jid| {
+        use crate::model::jid::{JidKind, Server};
+        if jid.agent == 0 && jid.device == 0 {
+            match jid.server {
+                Server::User => jid.kind = JidKind::Plain,
+                Server::Lid => jid.kind = JidKind::AgentDevice,
+                _ => {}
+            }
+        }
+        jid
+    };
     // APK 37.71 Cp2.A06 passes signed -1 to A00, so sts (>0) is omitted.
     // Its sender branch carries class=status and mode=0, without a meta child.
     if incoming.description == "message"
@@ -624,7 +633,7 @@ pub fn received_confirmation(incoming: &Node) -> Option<Node> {
                 .attr("to", chat)
                 .attr("id", id)
                 .attr("type", "sender")
-                .attr("participant", participant)
+                .attr("participant", device_form(participant))
                 .attr("class", "status"),
         );
     }
@@ -643,7 +652,7 @@ pub fn received_confirmation(incoming: &Node) -> Option<Node> {
             Node::new("receipt")
                 .attr("to", group)
                 .attr("id", id)
-                .attr("participant", participant),
+                .attr("participant", device_form(participant)),
         );
     }
     if incoming.get_attr("participant").is_some() {
@@ -672,7 +681,11 @@ pub fn received_confirmation(incoming: &Node) -> Option<Node> {
     if incoming.get_attr("edit").is_some() {
         return None;
     }
-    Some(Node::new("receipt").attr("to", jid).attr("id", id))
+    Some(
+        Node::new("receipt")
+            .attr("to", device_form(jid))
+            .attr("id", id),
+    )
 }
 
 /// Acknowledge an incoming receipt, as `LX/Cp2->A05` (2.26.37.71,
@@ -1237,6 +1250,53 @@ mod tests {
         assert!(direct.get_attr("participant").is_none());
     }
     /// APK Cp2.A06 sender branch: class=status, signed sts=-1 and mode=0.
+    #[test]
+    fn message_confirmation_uses_native_primary_device_wire_forms() {
+        use crate::model::jid::{JidKind, Server};
+        for (server, user, kind) in [
+            (Server::User, "15555550100", JidKind::Plain),
+            (Server::Lid, "100001", JidKind::AgentDevice),
+        ] {
+            let primary = Jid::parse(&format!("{user}@{}", server.as_str())).unwrap();
+            for input in [
+                primary.clone(),
+                Jid::new_ad(user, 0, 0, server.clone()).unwrap(),
+            ] {
+                for chat in [None, Some("12345-67890@g.us"), Some("status@broadcast")] {
+                    let mut incoming = Node::new("message").attr("id", "PRIMARY-DEVICE");
+                    incoming = if let Some(chat) = chat {
+                        incoming
+                            .attr("from", chat)
+                            .attr("participant", input.clone())
+                    } else {
+                        incoming.attr("from", input.clone())
+                    };
+                    let before = incoming.clone();
+                    let receipt = received_confirmation(&incoming).unwrap();
+                    assert_eq!(incoming, before);
+                    let field = if chat.is_some() { "participant" } else { "to" };
+                    let result = receipt.get_attr(field).unwrap().as_jid().unwrap();
+                    assert_eq!(result.kind, kind, "{server:?} {chat:?} {input:?}");
+                    assert_eq!(
+                        (&result.user, result.agent, result.device, &result.server),
+                        (&primary.user, 0, 0, &server)
+                    );
+                    let wire = Encoder::new(TokenDictionary::comparison_2_26_37_71())
+                        .encode(&receipt)
+                        .unwrap();
+                    let decoded = Decoder::new(
+                        &wire[1..],
+                        TokenDictionary::comparison_2_26_37_71(),
+                        &Limits::default(),
+                    )
+                    .decode_node()
+                    .unwrap();
+                    assert_eq!(decoded, receipt);
+                }
+            }
+        }
+    }
+
     #[test]
     fn status_receipt_carries_sender_type_status_class_without_sts() {
         let status = Jid::parse("status@broadcast").unwrap();

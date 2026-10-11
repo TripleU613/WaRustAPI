@@ -1767,7 +1767,7 @@ mod tests {
             assert!(confirmation.get_attr("type").is_none());
             assert_eq!(
                 confirmation.get_attr("to").and_then(|v| v.as_jid()),
-                Some(&Jid::parse("12345@lid").unwrap())
+                Some(&Jid::new_ad("12345", 0, 0, crate::model::jid::Server::Lid).unwrap())
             );
             let events = store
                 .read_events(&ConsumerId::new("test").unwrap(), EventCursor::START, 10)

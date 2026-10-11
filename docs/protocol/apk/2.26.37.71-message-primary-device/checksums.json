@@ -1,0 +1,54 @@
+{
+  "device-builder.txt": {
+    "bytes": 2875,
+    "sha256": "a718e8f9fe329b5f5b4d8d3448d8ed67ecdef559944849ae0b8c8866b7a7ba4e"
+  },
+  "device-parser.txt": {
+    "bytes": 1953,
+    "sha256": "179d66b9ed96dec0534b0b09de2e35b0850a1375b2cd62c4bafb4ead2062927b"
+  },
+  "frame-writer.txt": {
+    "bytes": 5145,
+    "sha256": "289b2ab3402502964ec0ddcaada1993e7c1557022fabe22f468df32121124ed3"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "jid-factory.txt": {
+    "bytes": 12346,
+    "sha256": "5bec2cebc91b4d77f873fc0a98e8d0aece7b3c4c85e2a6379e4e2d315a03e784"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "message-receipt.txt": {
+    "bytes": 4706,
+    "sha256": "7597f1a5a0fd5b2c9a9d7926d2405329dafa0897f3a72a9e8ae6a940c62bd703"
+  },
+  "message-writer.txt": {
+    "bytes": 1507,
+    "sha256": "ea9a1680d019056e3fdffe33599fafe5193c6e024b2fef3b333ed43d84962c03"
+  },
+  "node-send.txt": {
+    "bytes": 1000,
+    "sha256": "97bb25ad3524d1cf124ec3685d8942358ceee7135c80790ec8624a3e8661d47c"
+  },
+  "read-receipt.txt": {
+    "bytes": 1821,
+    "sha256": "2048c178a04e411ac6b26bd7270de2e83863c1d544f7040431edab2292ebc7a8"
+  },
+  "targets.json": {
+    "bytes": 3388,
+    "sha256": "f0b8cd212c924bd2d164700110afdadcbc84cdd4f909b8e6fc4d7a51656a37c4"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  },
+  "user-resolver.txt": {
+    "bytes": 1582,
+    "sha256": "e7e8b893c03e849f12f8ecfe083450e08af7ccd25353a15c7a78bbc98bbc4397"
+  }
+}

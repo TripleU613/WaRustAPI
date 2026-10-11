@@ -1,3 +1,11 @@
+2026-10-11 — **Implemented/offline:** message delivery/read/opened confirmation
+addresses now match native primary devices: PN zero uses JID_PAIR and LID zero
+uses AD. Factory/subtype and direct writer closure refute the old attribute-copy
+assumption. Companion devices and raw incoming routes remain intact; durable
+LID reads settle plain ACKs after reopen without uncertain replay. Full native
+admission, hosted/interop and fresh live acceptance remain open.
+[Factory, writer closure and regression/recovery checks](docs/protocol/message-primary-device.md).
+
 2026-10-11 — **Implemented/offline / evidence correction:** status delivery
 confirmations no longer send sts=65535. Exact Cp2.A06 DEX loads signed -1;
 Cp2.A00 emits sts only for a positive long. The old signed-literal explanation

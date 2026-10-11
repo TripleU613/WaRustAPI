@@ -1622,6 +1622,69 @@ mod tests {
         assert_eq!(saved["status"], "server_acknowledged");
     }
     #[test]
+    fn primary_lid_read_uses_device_wire_and_settles_plain_ack_after_reopen() {
+        use crate::model::{
+            ids::{ChatId, MessageId},
+            jid::JidKind,
+            receipt::{Receipt, ReceiptKind},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("primary-lid.redb");
+        let store = open(&path, true);
+        let peer = Jid::parse("100001@lid").unwrap();
+        let incoming = Node::new("message")
+            .attr("id", "LID-READ")
+            .attr("from", peer.clone());
+        let route =
+            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
+                .encode(&incoming)
+                .unwrap();
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"received:100001@lid:LID-READ",
+                    1,
+                    &serde_json::json!({"status":"decrypted", "route":route}),
+                )
+            })
+            .unwrap();
+        let request = Receipt {
+            chat: ChatId::from_jid(&peer).unwrap(),
+            message_ids: vec![MessageId::new("LID-READ").unwrap()],
+            from: None,
+            kind: ReceiptKind::Read,
+            server_timestamp: None,
+            code: None,
+        };
+        assert_eq!(queue_read(&store, &request).unwrap(), 1);
+        let pending = reserve_pending(&store).unwrap();
+        assert_eq!(pending.len(), 1);
+        let to = pending[0].get_attr("to").unwrap().as_jid().unwrap();
+        assert_eq!((to.kind, to.agent, to.device), (JidKind::AgentDevice, 0, 0));
+        drop(store);
+        let store = open(&path, false);
+        assert!(
+            reserve_pending(&store).unwrap().is_empty(),
+            "uncertain wire cannot replay"
+        );
+        let ack = Node::new("ack")
+            .attr("class", "receipt")
+            .attr("type", "read")
+            .attr("id", "LID-READ")
+            .attr("from", peer);
+        assert!(record_ack(&store, &ack).unwrap());
+        assert!(!record_ack(&store, &ack).unwrap());
+        assert_eq!(outcomes(&store).unwrap()[0].status, "server_acknowledged");
+        assert_eq!(queue_read(&store, &request).unwrap(), 0);
+        let saved: serde_json::Value = store
+            .read(|tx| tx.get_json(Table::Checkpoints, b"received:100001@lid:LID-READ", 1))
+            .unwrap()
+            .unwrap();
+        assert_eq!(saved["route"], serde_json::json!(route));
+    }
+
+    #[test]
     fn explicit_read_receipts_queue_once_reserve_and_settle_by_type() {
         use crate::model::{
             ids::{ChatId, MessageId},
@@ -2122,7 +2185,10 @@ mod tests {
             .iter()
             .find(|n| jid(n, "to") == Some(group.clone()))
             .unwrap();
-        assert_eq!(jid(to_group, "participant"), Some(member.clone()));
+        assert_eq!(
+            jid(to_group, "participant"),
+            Some(Jid::new_ad("15555550100", 0, 0, Server::Lid).unwrap())
+        );
         assert!(pending.iter().any(|n| jid(n, "to") == Some(peer.clone())));
     }
 
@@ -2178,7 +2244,10 @@ mod tests {
             ["to", "id", "type", "participant"]
         );
         assert_eq!(jid(node, "to"), Some(group.clone()));
-        assert_eq!(jid(node, "participant"), Some(sender.clone()));
+        assert_eq!(
+            jid(node, "participant"),
+            Some(Jid::new_ad("15555550100", 0, 0, Server::Lid).unwrap())
+        );
         assert_eq!(
             node.get_attr("type").and_then(|v| v.as_text()),
             Some("read")
