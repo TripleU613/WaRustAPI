@@ -715,6 +715,30 @@ fn outgoing_reaction_target(
 
 pub(super) use super::jid_map::authenticated_direct_chat;
 
+pub(super) fn own_device_text(
+    chat: &crate::model::jid::Jid,
+    node: &Node,
+    payload: &[u8],
+    own: &[crate::model::jid::Jid],
+) -> Option<SyncEvent> {
+    let id = node.get_attr("id")?.as_text()?;
+    let mut projection = Node::new("message")
+        .attr("from", chat.clone())
+        .attr("id", id);
+    if let Some(t) = node.get_attr("t") {
+        projection = projection.attr("t", t.clone());
+    }
+    let key = format!("received:{chat}:{id}");
+    let SyncEvent::NewMessage(mut message) =
+        project(key.as_bytes(), &projection, payload, None, None, None, own)
+    else {
+        return None;
+    };
+    message.key.direction = Direction::Outgoing;
+    message.key.sender = None;
+    Some(SyncEvent::NewMessage(message))
+}
+
 /// Must be called in the ratchet/inbox write transaction, or on an already
 /// authenticated historical record using its original saved route. Marker and
 /// event commit together, so crashes cannot lose the event or emit it twice.

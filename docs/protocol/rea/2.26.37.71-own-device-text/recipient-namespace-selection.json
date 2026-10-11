@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_ab3e41ba831518ae9ceac017bf7e6aa211d1bce5ed023f4ab393f515b0985f0f",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.C0Yo",
+    "method_name": "A09"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-jk6ufe/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\",\"max_heap_bytes\":15695085568,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C0Yo"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"field_count\":11,\"full_name\":\"X.C0Yo\",\"name\":\"C0Yo\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":20,\"methods\":[{\"is_constructor\":true,\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\"},{\"is_constructor\":false,\"signature\":\"A00(X.0Yo): X.0Xw\",\"def_pos\":0,\"name\":\"A00\"},{\"is_constructor\":false,\"signature\":\"A01(X.0Cy, java.lang.String): X.06y\",\"def_pos\":0,\"name\":\"A01\"},{\"is_constructor\":false,\"signature\":\"A02(X.0Cy): X.0Cy\",\"def_pos\":0,\"name\":\"A02\"},{\"is_constructor\":false,\"signature\":\"A03(X.0Cy): X.0Cy\",\"def_pos\":0,\"name\":\"A03\"},{\"is_constructor\":false,\"signature\":\"A04(X.0Cy): X.0Cy\",\"def_pos\":0,\"name\":\"A04\"},{\"is_constructor\":false,\"signature\":\"A05(X.0Cy): X.0Cy\",\"def_pos\":0,\"name\":\"A05\"},{\"is_constructor\":false,\"signature\":\"A06(X.0Cy): X.0Cy\",\"def_pos\":0,\"name\":\"A06\"},{\"is_constructor\":false,\"signature\":\"A07(X.0Cy): X.0Cy\",\"def_pos\":0,\"name\":\"A07\"},{\"is_constructor\":false,\"signature\":\"A08(X.0Cy): X.0Cy\",\"def_pos\":0,\"name\":\"A08\"},{\"is_constructor\":false,\"signature\":\"A09(X.0Cy, X.0ZY, com.whatsapp.infra.core.jid.PhoneUserJid): X.0Cy\",\"def_pos\":0,\"name\":\"A09\"},{\"is_constructor\":false,\"signature\":\"A0A(X.0Cy, java.lang.String): X.0Cy\",\"def_pos\":0,\"name\":\"A0A\"},{\"is_constructor\":false,\"signature\":\"A0B(X.0Cy, boolean): X.0Cy\",\"def_pos\":0,\"name\":\"A0B\"},{\"is_constructor\":false,\"signature\":\"A0C(com.whatsapp.infra.core.jid.UserJid, java.lang.String): com.whatsapp.infra.core.jid.UserJid\",\"def_pos\":0,\"name\":\"A0C\"},{\"is_constructor\":false,\"signature\":\"A0D(com.whatsapp.infra.core.jid.UserJid, java.lang.String): com.whatsapp.infra.core.jid.UserJid\",\"def_pos\":0,\"name\":\"A0D\"},{\"is_constructor\":false,\"signature\":\"A0E(): java.lang.Long\",\"def_pos\":0,\"name\":\"A0E\"},{\"is_constructor\":false,\"signature\":\"A0F(java.util.List, java.lang.String): java.util.List\",\"def_pos\":0,\"name\":\"A0F\"},{\"is_constructor\":false,\"signature\":\"A0G(java.util.Set): java.util.Map\",\"def_pos\":0,\"name\":\"A0G\"},{\"is_constructor\":false,\"signature\":\"A0H(): boolean\",\"def_pos\":0,\"name\":\"A0H\"},{\"is_constructor\":false,\"signature\":\"A0I(com.whatsapp.infra.core.jid.UserJid): boolean\",\"def_pos\":0,\"name\":\"A0I\"}],\"fields\":[{\"def_pos\":0,\"type\":\"X.05B\",\"name\":\"A00\"},{\"def_pos\":0,\"type\":\"X.05B\",\"name\":\"A01\"},{\"def_pos\":0,\"type\":\"X.05B\",\"name\":\"A02\"},{\"def_pos\":0,\"type\":\"X.05B\",\"name\":\"A03\"},{\"def_pos\":0,\"type\":\"X.05B\",\"name\":\"A04\"},{\"def_pos\":0,\"type\":\"X.05B\",\"name\":\"A05\"},{\"def_pos\":0,\"type\":\"X.05B\",\"name\":\"A06\"},{\"def_pos\":0,\"type\":\"X.05B\",\"name\":\"A07\"},{\"def_pos\":0,\"type\":\"X.05B\",\"name\":\"A08\"},{\"def_pos\":0,\"type\":\"X.05B\",\"name\":\"A09\"},{\"def_pos\":0,\"type\":\"X.05B\",\"name\":\"A0A\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C0Yo",
+          "method_name": "A09",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"body\":\"    public C0Cy A09(C0Cy c0Cy, C0ZY c0zy, PhoneUserJid phoneUserJid) {\\n        if (C0DE.A0l(c0Cy) \\u0026\\u0026 !C0hd.A02(c0Cy)) {\\n            if (C0DE.A0a(c0Cy) \\u0026\\u0026 !A0H()) {\\n                return phoneUserJid;\\n            }\\n            if (C0DE.A0e(c0Cy) \\u0026\\u0026 A0H()) {\\n                return c0zy;\\n            }\\n        }\\n        return c0Cy;\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.C0Yo\",\"full_name\":\"X.0Yo.A09\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"A09\",\"overload_count\":1}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.C0Yo",
+    "method": {
+      "name": "A09",
+      "reported_signature": "A09(X.0Cy, X.0ZY, com.whatsapp.infra.core.jid.PhoneUserJid): X.0Cy",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public C0Cy A09(C0Cy c0Cy, C0ZY c0zy, PhoneUserJid phoneUserJid) {\n        if (C0DE.A0l(c0Cy) && !C0hd.A02(c0Cy)) {\n            if (C0DE.A0a(c0Cy) && !A0H()) {\n                return phoneUserJid;\n            }\n            if (C0DE.A0e(c0Cy) && A0H()) {\n                return c0zy;\n            }\n        }\n        return c0Cy;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

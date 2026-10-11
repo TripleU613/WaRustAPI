@@ -2217,7 +2217,7 @@ pub(super) async fn run(
                     capture_shapes.insert(format!("inbox: capture shape tag={}, type={kind}, id={id8}, attrs={attr_names:?}{codes}{ack}{retry}{routing}{timing}{sender_tail}{pins}{companion}, children={children:?}, child_attrs={child_attrs:?}, offline_count={offline:?}{observation}",node.description));
                 }
             }
-            if key.starts_with(b"received:") {
+            if key.starts_with(b"received:") || key.starts_with(b"received-own:") {
                 let mut saved: serde_json::Value = serde_json::from_slice(value)
                     .map_err(|_| Error::invalid("inbox", "invalid saved payload"))?;
                 if saved["status"] == "consumed" {

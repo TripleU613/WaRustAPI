@@ -1,0 +1,20 @@
+classes.dex  LX/12y;->A02(LLL)
+  write opcode 0x5c, dex byte offset: 0x7bfe44
+classes.dex  LX/152;->A00(LLLLZ)
+  write opcode 0x5c, dex byte offset: 0x7e1bfc
+classes.dex  LX/153;->A00(LLLIZ)
+  write opcode 0x5c, dex byte offset: 0x7e3e92
+classes.dex  LX/178;-><init>(VLIJ)
+  write opcode 0x5c, dex byte offset: 0x801d5c
+classes.dex  LX/1Uu;->A00(V)
+  write opcode 0x5c, dex byte offset: 0x91c824
+classes2.dex  LX/1fm;->A04(VLL)
+  write opcode 0x5c, dex byte offset: 0x125322
+classes2.dex  LX/1gz;->A00(LLLLL)
+  write opcode 0x5c, dex byte offset: 0x135caa
+classes3.dex  LX/3Pe;->run(V)
+  write opcode 0x5c, dex byte offset: 0x3f561a
+classes7.dex  LX/Bp2;->A0P(VLL)
+  write opcode 0x5c, dex byte offset: 0x51aaae
+classes7.dex  LX/D7E;->Byt(VLL)
+  write opcode 0x5c, dex byte offset: 0x75c65c

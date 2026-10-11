@@ -1,0 +1,46 @@
+{
+  "bot-direction-override.txt": {
+    "bytes": 3958,
+    "sha256": "75599528a1c5222c2d6ad88ea10ffca9505d2c34847555e4ac4b91d4b30fae91"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "migration-state-gate.txt": {
+    "bytes": 2477,
+    "sha256": "3358fd06f3b2ae647639b10118a55aae2c55c7859dabc02f352e9bcd31d723b8"
+  },
+  "ordinary-source-peer-flag.txt": {
+    "bytes": 4788,
+    "sha256": "e2dac608e6130b3decef4108a6ad752da88bdd164b941f4be51f7bcabcb696c2"
+  },
+  "original-direction-store.txt": {
+    "bytes": 650,
+    "sha256": "cc2fb92f0ac9459d6a9f8a6fd5750dc7f4ddb0eff6e8fe4cd89eb2b86f0d6a3d"
+  },
+  "receipt-device-route.txt": {
+    "bytes": 1593,
+    "sha256": "4d300f4f9b30cfddd8018b2a0df05bc1f0c9f7e23250e71c3641c74786765bee"
+  },
+  "receipt-peer-selection.txt": {
+    "bytes": 4706,
+    "sha256": "7597f1a5a0fd5b2c9a9d7926d2405329dafa0897f3a72a9e8ae6a940c62bd703"
+  },
+  "recipient-namespace-selection.txt": {
+    "bytes": 1440,
+    "sha256": "c6c1eae0bef3ec9f3222798a598241d1bf3ccb33e6ad823190374994c0dad995"
+  },
+  "targets.json": {
+    "bytes": 3953,
+    "sha256": "49696ec88f97fb8a9d9ddeefb990e6e41189cfc91dd35d455fcb91ad25ff0f98"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

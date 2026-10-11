@@ -77,7 +77,7 @@ fn ciphertext_bytes(node: &Node) -> Option<&[u8]> {
 /// Primary chat identity for direct inbox/event/receipt lookup. Companion
 /// session selection separately preserves the actual device and namespace.
 pub fn session_sender(node: &Node) -> Option<Jid> {
-    // shortcut: recipient routes need own-device outgoing projection, port synchronization first.
+    // Recipient-qualified synchronization uses a separate outgoing projection.
     if node.get_attr("participant").is_some()
         || node.get_attr("recipient").is_some()
         || node.get_attr("category").and_then(|v| v.as_text()) == Some("peer")
@@ -672,6 +672,9 @@ async fn process_direct(
 ) -> Result<IncomingResult> {
     if node.description != "message" {
         return Ok(IncomingResult::Unsupported);
+    }
+    if node.get_attr("recipient").is_some() {
+        return super::own_device::process(store, account, node, capture).await;
     }
     // Group messages carry a `participant` attribute (the sender device JID);
     // `from` is the group JID. Route them to the sender-key path.
@@ -3102,11 +3105,196 @@ mod tests {
                 )
             })
             .unwrap();
-        let next = direct::prepare_payload(
+        let synced = direct::prepare_payload(
             &sender,
             receiver.own_jid.as_ref().unwrap(),
             None,
             Some(&acknowledged.session),
+            Some(&sent.identity),
+            b"\xfa\x01\x14\x0a\x0967890@lid\x12\x07\x0a\x05hello",
+        )
+        .await
+        .unwrap();
+        let sync_node = Node::new("message")
+            .attr("from", peer_device.clone())
+            .attr("recipient", "67890@lid")
+            .attr("id", "OWN-LID-SYNC")
+            .attr("type", "text")
+            .children(vec![
+                Node::new("enc")
+                    .attr("type", synced.kind)
+                    .attr("v", "2")
+                    .bytes(synced.ciphertext.to_vec()),
+            ]);
+        for from in ["123456789:3@lid", "999999999:2@lid", "123456789@lid"] {
+            let unknown = sync_node.clone().attr("from", from);
+            let capture = preserve(&store, &unknown).unwrap();
+            assert_eq!(
+                process(&store, &receiver, &unknown, &capture)
+                    .await
+                    .unwrap(),
+                IncomingResult::Unsupported
+            );
+        }
+        let mut corrupt = synced.ciphertext.to_vec();
+        *corrupt.last_mut().unwrap() ^= 1;
+        let damaged_sync = Node::new("message")
+            .attr("from", peer_device.clone())
+            .attr("recipient", "67890@lid")
+            .attr("id", "OWN-LID-DAMAGED")
+            .attr("type", "text")
+            .children(vec![
+                Node::new("enc")
+                    .attr("type", "msg")
+                    .attr("v", "2")
+                    .bytes(corrupt),
+            ]);
+        let damaged_capture = preserve(&store, &damaged_sync).unwrap();
+        let before_damaged = store
+            .read(|tx| {
+                Ok((
+                    tx.scan(Table::Checkpoints, 1, 100)?,
+                    tx.scan(Table::SignalSessions, 1, 100)?,
+                    tx.scan(Table::PeerIdentities, 1, 100)?,
+                ))
+            })
+            .unwrap();
+        assert_eq!(
+            process(&store, &receiver, &damaged_sync, &damaged_capture)
+                .await
+                .unwrap(),
+            IncomingResult::Unsupported
+        );
+        assert_eq!(
+            store
+                .read(|tx| {
+                    Ok((
+                        tx.scan(Table::Checkpoints, 1, 100)?,
+                        tx.scan(Table::SignalSessions, 1, 100)?,
+                        tx.scan(Table::PeerIdentities, 1, 100)?,
+                    ))
+                })
+                .unwrap(),
+            before_damaged
+        );
+        let mismatched = sync_node.clone().attr("recipient", "67891@lid");
+        let mismatched_capture = preserve(&store, &mismatched).unwrap();
+        assert_eq!(
+            process(&store, &receiver, &mismatched, &mismatched_capture)
+                .await
+                .unwrap(),
+            IncomingResult::Unsupported
+        );
+        let sync_capture = preserve(&store, &sync_node).unwrap();
+        assert_eq!(
+            process(&store, &receiver, &sync_node, &sync_capture)
+                .await
+                .unwrap(),
+            IncomingResult::Decrypted
+        );
+        assert_eq!(
+            process(&store, &receiver, &sync_node, &sync_capture)
+                .await
+                .unwrap(),
+            IncomingResult::Duplicate
+        );
+        assert!(
+            super::super::messaging::received_confirmation_for_account(
+                &store, &receiver, &sync_node
+            )
+            .unwrap()
+            .is_none()
+        );
+        let batch = store
+            .read(|tx| {
+                tx.read_events(
+                    &crate::store::ConsumerId::new("own-sync")?,
+                    crate::model::ids::EventCursor::START,
+                    100,
+                )
+            })
+            .unwrap();
+        let crate::sync::SyncEvent::NewMessage(message) = &batch.events.last().unwrap().event
+        else {
+            panic!("outgoing text event missing")
+        };
+        assert_eq!(
+            message.key.direction,
+            crate::model::message::Direction::Outgoing
+        );
+        assert_eq!(message.key.chat.jid(), &Jid::parse("67890@lid").unwrap());
+        assert!(message.key.sender.is_none());
+        assert!(
+            matches!(&message.content, crate::model::message::MessageContent::Text { body, .. } if body == "hello")
+        );
+        store
+            .read(|tx| {
+                assert!(tx.scan(Table::Outbox, 1, 10)?.is_empty());
+                let saved = tx
+                    .get_json::<serde_json::Value>(
+                        Table::Checkpoints,
+                        b"received-own:67890@lid:OWN-LID-SYNC",
+                        1,
+                    )?
+                    .unwrap();
+                assert_eq!(
+                    saved["protobuf"],
+                    serde_json::json!(
+                        b"\xfa\x01\x14\x0a\x0967890@lid\x12\x07\x0a\x05hello".to_vec()
+                    )
+                );
+                Ok(())
+            })
+            .unwrap();
+        let event_count = batch.events.len();
+        drop(store);
+        let store = open(false);
+        assert_eq!(
+            process(&store, &receiver, &sync_node, &sync_capture)
+                .await
+                .unwrap(),
+            IncomingResult::Duplicate
+        );
+        assert_eq!(
+            store
+                .read(|tx| tx.read_events(
+                    &crate::store::ConsumerId::new("own-sync-reopen")?,
+                    crate::model::ids::EventCursor::START,
+                    100
+                ))
+                .unwrap()
+                .events
+                .len(),
+            event_count
+        );
+        assert_eq!(
+            super::super::chat_clear::clear_chat(&store, &Jid::parse("67890@lid").unwrap())
+                .unwrap()
+                .cleared_messages,
+            1
+        );
+        assert_eq!(
+            process(&store, &receiver, &sync_node, &sync_capture)
+                .await
+                .unwrap(),
+            IncomingResult::Unsupported
+        );
+        assert!(
+            store
+                .read(|tx| tx.get_json::<serde_json::Value>(
+                    Table::Checkpoints,
+                    b"received-own:67890@lid:OWN-LID-SYNC",
+                    1
+                ))
+                .unwrap()
+                .unwrap()["protobuf"]
+                .is_null()
+        );
+        let next = direct::prepare_payload(
+            &sender,
+            receiver.own_jid.as_ref().unwrap(),
+            None,
+            Some(&synced.session),
             Some(&sent.identity),
             b"\x0a\x05hello",
         )

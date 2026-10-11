@@ -8,9 +8,8 @@
 //! shape but not wired up here). What this module does is the local half
 //! only: it never sends anything.
 //!
-//! Clearing keeps every `received:<sender>:<id>` checkpoint row (see
-//! `transport/inbox.rs`, whose `key = format!("received:{sender}:{id}")` uses
-//! the sender's phone-number JID) so redeliveries stay deduplicated
+//! Clearing keeps incoming `received:<chat>:<id>` and synchronized own-device
+//! `received-own:<chat>:<id>` checkpoint rows so redeliveries stay deduplicated
 //! (`inbox::process` treats a saved row as authoritative) and any receipt
 //! correlation keyed on the same id keeps working. It removes only the
 //! authenticated plaintext (`protobuf`) and marks the row `status: "cleared"`.
@@ -36,7 +35,7 @@ fn invalid(reason: impl Into<String>) -> crate::Error {
 /// Counts of what a [`clear_chat`] call touched.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct ClearSummary {
-    /// `received:` rows whose plaintext was removed.
+    /// Incoming or synchronized own-device rows whose plaintext was removed.
     pub cleared_messages: usize,
     /// `poll-secret:` rows deleted for this chat.
     pub cleared_poll_secrets: usize,
@@ -46,17 +45,17 @@ pub struct ClearSummary {
 /// doc for what still needs the (unimplemented) `clearChatAction` app-state
 /// mutation to reach companion devices.
 ///
-/// Accepts a direct chat (the contact's phone-number JID), a group, or a
+/// Accepts a direct PN/LID chat, a group, or a
 /// broadcast (`status@broadcast` and broadcast lists). All three key their
-/// `received:` rows by the chat JID — a direct message by the sender's
-/// phone-number JID, a group or broadcast message by the chat JID that
+/// message rows by the chat JID — a direct message by its PN/LID,
+/// a group or broadcast message by the chat JID that
 /// `inbox::sender_key_chat` returns — so the prefix scan below serves all of
 /// them. Anything else has no rows keyed by it and is refused rather than
 /// silently clearing nothing.
 pub fn clear_chat(store: &ProtocolStore, chat: &Jid) -> Result<ClearSummary> {
     if !matches!(
         chat.server,
-        Server::User | Server::Group | Server::Broadcast
+        Server::User | Server::Lid | Server::Group | Server::Broadcast
     ) {
         return Err(invalid(
             "clear_chat supports direct chats, groups and broadcasts; received: rows are keyed by the chat JID",
@@ -65,6 +64,7 @@ pub fn clear_chat(store: &ProtocolStore, chat: &Jid) -> Result<ClearSummary> {
     let chat = chat.to_non_ad();
     let chat_id = ChatId::from_jid(&chat)?;
     let message_prefix = format!("received:{chat}:");
+    let own_prefix = format!("received-own:{chat}:");
     let poll_chat = chat.to_string();
     store.write(|tx| {
         let mut summary = ClearSummary::default();
@@ -74,7 +74,9 @@ pub fn clear_chat(store: &ProtocolStore, chat: &Jid) -> Result<ClearSummary> {
             let done = rows.len() < 256;
             cursor = rows.last().map(|(key, _)| key.clone());
             for (key, _) in rows {
-                if key.starts_with(message_prefix.as_bytes()) {
+                if key.starts_with(message_prefix.as_bytes())
+                    || key.starts_with(own_prefix.as_bytes())
+                {
                     let Some(mut saved) =
                         tx.get_json::<serde_json::Value>(Table::Checkpoints, &key, 1)?
                     else {
@@ -293,6 +295,51 @@ mod tests {
         assert_eq!(second.cleared_messages, 0);
     }
 
+    #[test]
+    fn clears_incoming_and_synchronized_lid_rows_without_losing_route_markers() {
+        let (_d, s) = store();
+        s.write(|tx| {
+            for key in ["received:12345@lid:IN", "received-own:12345@lid:OUT", "received-own:99999@lid:OTHER"] {
+                tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &serde_json::json!({"status":"decrypted", "protobuf":[1,2,3], "source":"12345:2@lid", "route":[4,5,6]}))?;
+            }
+            Ok(())
+        }).unwrap();
+        assert_eq!(
+            clear_chat(&s, &Jid::parse("12345@lid").unwrap())
+                .unwrap()
+                .cleared_messages,
+            2
+        );
+        s.read(|tx| {
+            for key in ["received:12345@lid:IN", "received-own:12345@lid:OUT"] {
+                let row = tx
+                    .get_json::<serde_json::Value>(Table::Checkpoints, key.as_bytes(), 1)?
+                    .unwrap();
+                assert_eq!(row["status"], "cleared");
+                assert!(row["protobuf"].is_null());
+                assert_eq!(row["route"], serde_json::json!([4, 5, 6]));
+                assert_eq!(row["source"], "12345:2@lid");
+            }
+            assert_eq!(
+                tx.get_json::<serde_json::Value>(
+                    Table::Checkpoints,
+                    b"received-own:99999@lid:OTHER",
+                    1
+                )?
+                .unwrap()["status"],
+                "decrypted"
+            );
+            Ok(())
+        })
+        .unwrap();
+        assert_eq!(
+            clear_chat(&s, &Jid::parse("12345@lid").unwrap())
+                .unwrap()
+                .cleared_messages,
+            0
+        );
+    }
+
     /// A chat becomes clearable exactly when its messages become receivable,
     /// because both use the same `received:<chat>:<id>` keying. Groups became
     /// clearable with group receive, and broadcasts (status) with
@@ -305,6 +352,7 @@ mod tests {
         for clearable in [
             "12345-6789@g.us",            // group
             "15551234567@s.whatsapp.net", // direct
+            "12345@lid",                  // direct LID
             "status@broadcast",           // status updates
             "12345@broadcast",            // broadcast list
         ] {
@@ -314,7 +362,7 @@ mod tests {
             );
         }
         // Nothing keys `received:` rows by these.
-        for refused in ["s.whatsapp.net", "12345@lid"] {
+        for refused in ["s.whatsapp.net", "12345@bot"] {
             assert!(
                 clear_chat(&s, &Jid::parse(refused).unwrap()).is_err(),
                 "{refused} should not be clearable"

@@ -208,6 +208,12 @@ pub mod outgoing;
     feature = "experimental-transport"
 ))]
 pub mod outgoing_media;
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+mod own_device;
 pub mod polls;
 #[cfg(all(
     feature = "experimental-signal-crypto",

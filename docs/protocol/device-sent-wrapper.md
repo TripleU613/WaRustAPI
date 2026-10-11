@@ -96,11 +96,14 @@ values, all absent fields, all present-empty fields, invalid UTF-8, malformed
 nested Message and excessive nesting. The regression failed on missing wrapper
 inspection before the implementation.
 
+[Own-device text receive](own-device-text.md) now implements the held-session,
+unambiguous-recipient text subset with outer-context replacement.
+
 **Unported:** complete Cm3.A07/A02 runtime admission and recovery, effective
 recipient namespace mapping, own-device session bootstrap, outer-context
 application in receive, synchronized outgoing projection and primary echo
-reconciliation, and sender/read-self receipt selection. Recipient-qualified
-stanzas remain raw captures under the prior correction. No fresh live wrapper
+reconciliation, and sender/read-self receipt selection. Unsupported recipient-qualified
+stanzas remain raw captures. No fresh live wrapper
 sample or ban-immunity claim follows from this offline trace.
 
 2026-10-11 validation: all 939 workspace/all-feature tests, strict workspace

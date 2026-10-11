@@ -579,6 +579,13 @@ matches, and appends `sync::SyncEvent::ChatCleared`. Writing the
 **deferred and not implemented**; nothing here has been live-verified against
 a WhatsApp server.
 
+2026-10-11: local clearing also accepts direct LID chats and strips plaintext
+from `received-own:<chat>:<id>` synchronized outgoing rows alongside ordinary
+incoming rows. Source/route and cleared markers stay intact, so the
+[own-device text receive path](own-device-text.md) cannot republish cleared
+content on redelivery. Historical journal events remain historical; this is
+not journal erasure or a companion app-state mutation.
+
 ## 7. Contacts
 
 The primary keeps contacts in the device address book and syncs them with

@@ -1,0 +1,72 @@
+# APK-derived structural disassembly: LX/DE4;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method CEv(VLL) flags=0x1 registers=8
+  # full signature: LX/DE4;->CEv(LX/Cih;LX/0hs;)V
+  0000..0006 op=71 invoke-static {v7, v6}, LX/00h;->A0B(Ljava/lang/Object;Ljava/lang/Object;)V
+  0006..000a op=1c const-class v0, Lcom/whatsapp/infra/core/jid/Jid;
+  000a..000e op=1a const-string v4, "from"
+  000e..0014 op=6e invoke-virtual {v7, v0, v4}, LX/0hs;->A0A(Ljava/lang/Class;Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+  0014..0016 op=0c move-result-object v1
+  0016..001a op=38 if-eqz v1, +0x33
+  001a..001e op=62 sget-object v0, LX/Cju;->A00:LX/0hh;
+  001e..0024 op=6e invoke-virtual {v1, v0}, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z
+  0024..0026 op=0a move-result v0
+  0026..002a op=38 if-eqz v0, +0x2b
+  002a..002e op=54 iget-object v0, v5, LX/DE4;->A00:LX/05B;
+  002e..0034 op=71 invoke-static {v0}, LX/05B;->A00(LX/05B;)LX/00D;
+  0034..0036 op=0c move-result-object v1
+  0036..003a op=13 const/16 v0, #0x6dce
+  003a..0040 op=6e invoke-virtual {v1, v0}, LX/00D;->A10(I)Z
+  0040..0042 op=0a move-result v0
+  0042..0046 op=38 if-eqz v0, +0x1d
+  0046..004a op=1a const-string v0, "category"
+  004a..0050 op=71 invoke-static {v7, v0}, LX/8kT;->A18(LX/0hs;Ljava/lang/String;)Ljava/lang/String;
+  0050..0052 op=0c move-result-object v1
+  0052..0056 op=1a const-string v0, "peer"
+  0056..005c op=6e invoke-virtual {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+  005c..005e op=0a move-result v0
+  005e..0062 op=39 if-nez v0, +0xf
+  0062..0066 op=1a const-string v0, "meta"
+  0066..006c op=6e invoke-virtual {v7, v0}, LX/0hs;->A0F(Ljava/lang/String;)LX/0hs;
+  006c..006e op=0c move-result-object v3
+  006e..0072 op=39 if-nez v3, +0x8
+  0072..0076 op=1a const-string v0, "IncomingBotMessageHandler/parseAttributes/CoExV2 missing meta node"
+  0076..007c op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+  007c..007e op=0e return-void
+  007e..0082 op=1a const-string v0, "target_id"
+  0082..0088 op=6e invoke-virtual {v3, v0}, LX/0hs;->A0C(Ljava/lang/String;)LX/0hq;
+  0088..008a op=0c move-result-object v0
+  008a..008e op=39 if-nez v0, -0x7
+  008e..0092 op=1c const-class v1, LX/0Cy;
+  0092..0096 op=1a const-string v0, "target_chat_jid"
+  0096..009c op=6e invoke-virtual {v3, v1, v0}, LX/0hs;->A0A(Ljava/lang/Class;Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+  009c..009e op=0c move-result-object v2
+  009e..00a2 op=1f check-cast v2, LX/0Cy;
+  00a2..00a6 op=38 if-eqz v2, -0x13
+  00a6..00aa op=1c const-class v0, Lcom/whatsapp/infra/core/jid/UserJid;
+  00aa..00b0 op=6e invoke-virtual {v3, v0, v4}, LX/0hs;->A0A(Ljava/lang/Class;Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+  00b0..00b2 op=0c move-result-object v1
+  00b2..00b6 op=1f check-cast v1, LX/0Cy;
+  00b6..00ba op=38 if-eqz v1, -0x1d
+  00ba..00c0 op=71 invoke-static {v2}, LX/0DE;->A0P(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  00c0..00c2 op=0a move-result v0
+  00c2..00c6 op=38 if-eqz v0, +0x11
+  00c6..00ca op=54 iget-object v0, v5, LX/DE4;->A01:LX/05B;
+  00ca..00d0 op=71 invoke-static {v0}, LX/Ayk;->A1V(LX/05B;)Z
+  00d0..00d2 op=0a move-result v0
+  00d2..00d6 op=38 if-eqz v0, +0x9
+  00d6..00dc op=71 invoke-static {v2}, LX/0hd;->A00(LX/0Cy;)LX/0Cy;
+  00dc..00de op=0c move-result-object v0
+  00de..00e2 op=38 if-eqz v0, +0x3
+  00e2..00e4 op=07 move-object v2, v0
+  00e4..00e8 op=5b iput-object v2, v6, LX/Cih;->A05:LX/0Cy;
+  00e8..00ec op=54 iget-object v0, v5, LX/DE4;->A05:LX/05B;
+  00ec..00f2 op=71 invoke-static {v0, v1}, LX/1xj;->A1X(LX/05B;LX/0Cy;)Z
+  00f2..00f4 op=0a move-result v0
+  00f4..00fa op=6e invoke-virtual {v6, v0}, LX/Cih;->A03(Z)V
+  00fa..00fc op=0e return-void
+  # exception table: 0 try range(s)
+.end method

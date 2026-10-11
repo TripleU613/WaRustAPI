@@ -57,6 +57,8 @@ Signal operations. Raw preservation still occurs; no historical row is deleted,
 renamed or migrated. Peer-control routing already refuses recipients separately.
 This is an explicit temporary support boundary, not the native acceptance policy:
 the APK supports validated own-source recipient routes.
+[Own-device text receive](own-device-text.md) now handles its pinned-session,
+unambiguous-recipient subset before this ordinary selector.
 
 The failing-before selector regression covers PN/LID primary and LID companion
 sources. A real valid Signal prekey fixture verifies refusal under both identity
