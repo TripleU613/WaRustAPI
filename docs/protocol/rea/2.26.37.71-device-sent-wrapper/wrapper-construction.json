@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_48ba5a36c8cfac27f8aa22d6a4ad4922ee903edf4d080e5a1c63980a26d20e28",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.Cla",
+    "method_name": "A01"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-9K8EDg/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"java_version\":\"21.0.12.1\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":15695085568}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.Cla"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"Cla\",\"full_name\":\"X.Cla\",\"field_count\":9,\"fields\":[{\"def_pos\":0,\"name\":\"A00\",\"type\":\"X.14g\"},{\"def_pos\":0,\"name\":\"A01\",\"type\":\"X.11T\"},{\"def_pos\":0,\"name\":\"A02\",\"type\":\"X.07t\"},{\"def_pos\":0,\"name\":\"A03\",\"type\":\"X.0Z4\"},{\"def_pos\":0,\"name\":\"A04\",\"type\":\"X.08Z\"},{\"def_pos\":0,\"name\":\"A05\",\"type\":\"X.B13\"},{\"def_pos\":0,\"name\":\"A06\",\"type\":\"X.0Vw\"},{\"def_pos\":0,\"name\":\"A07\",\"type\":\"X.0V9\"},{\"def_pos\":0,\"name\":\"A08\",\"type\":\"X.Cp0\"}],\"methods\":[{\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(X.14g, X.11T, X.07t, X.0Vw, X.0Z4, X.08Z, X.0V9, X.B13, X.Cp0): void\"},{\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0,\"signature\":\"A00(X.BZc, int): X.BZc\"},{\"is_constructor\":false,\"name\":\"A01\",\"def_pos\":0,\"signature\":\"A01(X.BZc, java.lang.String, java.lang.String): X.BZc\"},{\"is_constructor\":false,\"name\":\"A02\",\"def_pos\":0,\"signature\":\"A02(X.CZD, X.BZc): X.BZc\"},{\"is_constructor\":false,\"name\":\"A03\",\"def_pos\":0,\"signature\":\"A03(com.whatsapp.infra.core.jid.DeviceJid, X.178, X.1gc, X.BZc, java.lang.String): X.BZc\"},{\"is_constructor\":false,\"name\":\"A04\",\"def_pos\":0,\"signature\":\"A04(X.178, X.BZc): X.BZc\"}],\"method_count\":6}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.Cla",
+          "method_name": "A01",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"class_name\":\"X.Cla\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public static BZc A01(BZc bZc, String str, String str2) {\\n        BZU bzuA0u;\\n        GeneratedMessageLite.Builder builderCreateBuilder \\u003d BUs.DEFAULT_INSTANCE.createBuilder();\\n        if (bZc !\\u003d null) {\\n            bzuA0u \\u003d Ayl.A0u(bZc);\\n            BOG bogA0o \\u003d Ayk.A0o(bZc);\\n            CmC.A07(bogA0o);\\n            BUs bUs \\u003d (BUs) C6aj.A0c(builderCreateBuilder);\\n            bUs.message_ \\u003d Ayn.A0e(bogA0o);\\n            bUs.bitField0_ |\\u003d 2;\\n        } else {\\n            bzuA0u \\u003d null;\\n        }\\n        if (str !\\u003d null) {\\n            BUs bUs2 \\u003d (BUs) C6aj.A0c(builderCreateBuilder);\\n            bUs2.bitField0_ |\\u003d 1;\\n            bUs2.destinationJid_ \\u003d str;\\n        }\\n        if (str2 !\\u003d null) {\\n            BUs bUs3 \\u003d (BUs) C6aj.A0c(builderCreateBuilder);\\n            bUs3.bitField0_ |\\u003d 4;\\n            bUs3.phash_ \\u003d str2;\\n        }\\n        BOG bogA00 \\u003d BZc.A00();\\n        BZc bZcA0r \\u003d Ayl.A0r(bogA00);\\n        BUs bUs4 \\u003d (BUs) builderCreateBuilder.build();\\n        bUs4.getClass();\\n        bZcA0r.deviceSentMessage_ \\u003d bUs4;\\n        bZcA0r.bitField0_ |\\u003d 33554432;\\n        if (bzuA0u !\\u003d null) {\\n            bogA00.A0g(bzuA0u);\\n        }\\n        return Ayk.A0q(bogA00);\\n    }\",\"overload_count\":1,\"method_name\":\"A01\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.Cla.A01\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.Cla",
+    "method": {
+      "name": "A01",
+      "reported_signature": "A01(X.BZc, java.lang.String, java.lang.String): X.BZc",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public static BZc A01(BZc bZc, String str, String str2) {\n        BZU bzuA0u;\n        GeneratedMessageLite.Builder builderCreateBuilder = BUs.DEFAULT_INSTANCE.createBuilder();\n        if (bZc != null) {\n            bzuA0u = Ayl.A0u(bZc);\n            BOG bogA0o = Ayk.A0o(bZc);\n            CmC.A07(bogA0o);\n            BUs bUs = (BUs) C6aj.A0c(builderCreateBuilder);\n            bUs.message_ = Ayn.A0e(bogA0o);\n            bUs.bitField0_ |= 2;\n        } else {\n            bzuA0u = null;\n        }\n        if (str != null) {\n            BUs bUs2 = (BUs) C6aj.A0c(builderCreateBuilder);\n            bUs2.bitField0_ |= 1;\n            bUs2.destinationJid_ = str;\n        }\n        if (str2 != null) {\n            BUs bUs3 = (BUs) C6aj.A0c(builderCreateBuilder);\n            bUs3.bitField0_ |= 4;\n            bUs3.phash_ = str2;\n        }\n        BOG bogA00 = BZc.A00();\n        BZc bZcA0r = Ayl.A0r(bogA00);\n        BUs bUs4 = (BUs) builderCreateBuilder.build();\n        bUs4.getClass();\n        bZcA0r.deviceSentMessage_ = bUs4;\n        bZcA0r.bitField0_ |= 33554432;\n        if (bzuA0u != null) {\n            bogA00.A0g(bzuA0u);\n        }\n        return Ayk.A0q(bogA00);\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

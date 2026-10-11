@@ -1,0 +1,17 @@
+# APK-derived structural disassembly: LX/08i;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method Apt(I) flags=0x1 registers=4
+  # full signature: LX/08i;->Apt()I
+  0000..0004 op=54 iget-object v0, v3, LX/08i;->A0A:LX/08m;
+  0004..0008 op=54 iget-object v0, v0, LX/08m;->A01:LX/08n;
+  0008..000c op=54 iget-object v2, v0, LX/08n;->A00:Landroid/content/SharedPreferences;
+  000c..0010 op=1a const-string v1, "registration_device_id"
+  0010..0012 op=12 const/4 v0, #0x0
+  0012..0018 op=72 invoke-interface {v2, v1, v0}, Landroid/content/SharedPreferences;->getInt(Ljava/lang/String;I)I
+  0018..001a op=0a move-result v0
+  001a..001c op=0f return v0
+  # exception table: 0 try range(s)
+.end method

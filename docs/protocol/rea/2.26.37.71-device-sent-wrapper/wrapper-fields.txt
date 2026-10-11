@@ -1,0 +1,4 @@
+# LX/BUs;  (3 fields)
+   1  destinationJid
+   2  message
+   3  phash

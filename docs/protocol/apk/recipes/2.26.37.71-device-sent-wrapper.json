@@ -1,0 +1,147 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "message-descriptor": {
+      "class": "LX/BZc;",
+      "method": "dynamicMethod",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ]
+    },
+    "wrapper-descriptor": {
+      "class": "LX/BUs;",
+      "method": "dynamicMethod",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ]
+    },
+    "unwrap-body": {
+      "class": "LX/CjY;",
+      "method": "A00",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ]
+    },
+    "unwrap-with-context": {
+      "class": "LX/CjY;",
+      "method": "A01",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ]
+    },
+    "wrapper-validation": {
+      "class": "LX/Cm3;",
+      "method": "A02",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ]
+    },
+    "wrapper-route-gate": {
+      "class": "LX/Cm3;",
+      "method": "A07",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ]
+    },
+    "own-other-device": {
+      "class": "LX/08i;",
+      "method": "BP3",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ]
+    },
+    "registered-device": {
+      "class": "LX/08i;",
+      "method": "Apt",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ]
+    },
+    "ordinary-jid-types": {
+      "class": "LX/0DE;",
+      "method": "A0l",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ]
+    },
+    "special-jid-types": {
+      "class": "LX/0DE;",
+      "method": "A0Q",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ]
+    },
+    "broadcast-jid-type": {
+      "class": "LX/0DE;",
+      "method": "A0R",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ]
+    },
+    "source-device": {
+      "class": "LX/CjN;",
+      "method": "A00",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ]
+    },
+    "wrapper-construction": {
+      "class": "LX/Cla;",
+      "method": "A01",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ]
+    },
+    "clear-inner-context": {
+      "class": "LX/CmC;",
+      "method": "A07",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ]
+    }
+  }
+}

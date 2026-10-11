@@ -57,6 +57,8 @@ fn payload_summary_depth(bytes: &[u8], depth: usize) -> Result<String> {
     }
     #[derive(prost::Message)]
     struct Envelope {
+        #[prost(message, optional, tag = "31")]
+        device_sent: Option<DeviceSent>,
         #[prost(message, optional, tag = "37")]
         view_once: Option<Wrapper>,
         #[prost(message, optional, tag = "55")]
@@ -82,6 +84,16 @@ fn payload_summary_depth(bytes: &[u8], depth: usize) -> Result<String> {
         #[prost(bytes = "vec", tag = "1")]
         message: Vec<u8>,
     }
+    // APK 2.26.37.71 BUs.dynamicMethod: destination=1, Message=2, phash=3.
+    #[derive(prost::Message)]
+    struct DeviceSent {
+        #[prost(string, optional, tag = "1")]
+        destination: Option<String>,
+        #[prost(bytes = "vec", optional, tag = "2")]
+        message: Option<Vec<u8>>,
+        #[prost(string, optional, tag = "3")]
+        phash: Option<String>,
+    }
     #[derive(prost::Message)]
     struct ImageFlags {
         #[prost(bool, tag = "25")]
@@ -97,6 +109,21 @@ fn payload_summary_depth(bytes: &[u8], depth: usize) -> Result<String> {
     let fields = payload_fields(bytes)?;
     let envelope = Envelope::decode(bytes).map_err(|_| invalid("invalid message envelope"))?;
     let mut summary = format!("protobuf fields={fields:?}");
+    if let Some(wrapper) = envelope.device_sent {
+        let destination = wrapper.destination.map(Zeroizing::new);
+        let phash = wrapper.phash.map(Zeroizing::new);
+        let message = wrapper.message.map(Zeroizing::new);
+        summary.push_str(&format!(
+            "; device-sent destination_present={} message_present={} phash_present={}; admission not checked",
+            destination.is_some(), message.is_some(), phash.is_some()
+        ));
+        if let Some(message) = message {
+            summary.push_str(&format!(
+                "; [{}]",
+                payload_summary_depth(&message, depth + 1)?
+            ));
+        }
+    }
     for (label, wrapper) in [
         ("view-once", envelope.view_once),
         ("view-once-v2", envelope.view_once_v2),
@@ -880,6 +907,37 @@ mod tests {
         assert!(payload_fields(&vec![0; 65537]).is_err());
         assert_eq!(payload_fields(b"\x98\x06\x01").unwrap(), vec![99]);
     }
+    #[test]
+    fn device_sent_inspection_retains_presence_without_destination_or_payload_values() {
+        // Independent wire encoding: Message.31 -> BUs{1 destination, 2 Message, 3 phash}.
+        let full = b"\xfa\x01\x1a\x0a\x051@lid\x12\x08\x0a\x06secret\x1a\x07private";
+        let summary = payload_summary(full).unwrap();
+        assert!(summary.contains(
+            "device-sent destination_present=true message_present=true phash_present=true"
+        ));
+        assert!(summary.contains("[protobuf fields=[1]]"));
+        assert!(summary.contains("admission not checked"));
+        for value in ["1@lid", "secret", "private"] {
+            assert!(!summary.contains(value));
+        }
+        let absent = payload_summary(b"\xfa\x01\x00").unwrap();
+        assert!(
+            absent.contains("destination_present=false message_present=false phash_present=false")
+        );
+        let empty = payload_summary(b"\xfa\x01\x06\x0a\x00\x12\x00\x1a\x00").unwrap();
+        assert!(empty.contains("destination_present=true message_present=true phash_present=true"));
+        assert!(payload_summary(b"\xfa\x01\x03\x0a\x01\xff").is_err());
+        assert!(payload_summary(b"\xfa\x01\x03\x12\x01\x0a").is_err());
+        let mut nested = Vec::new();
+        for _ in 0..6 {
+            let mut wrapper = vec![0x12, nested.len() as u8];
+            wrapper.extend(nested);
+            nested = vec![0xfa, 0x01, wrapper.len() as u8];
+            nested.extend(wrapper);
+        }
+        assert!(payload_summary(&nested).is_err());
+    }
+
     #[test]
     fn history_notice_inspection_is_structural_and_redacted() {
         // Independently encoded BZc field 102 (wire key b2 06), containing

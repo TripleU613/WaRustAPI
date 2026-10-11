@@ -1,0 +1,74 @@
+{
+  "broadcast-jid-type.txt": {
+    "bytes": 777,
+    "sha256": "e4ca809a7b203e9ea9e9966e4c8172567e6ddd0fc60704b56a471951896cdf7e"
+  },
+  "clear-inner-context.txt": {
+    "bytes": 978,
+    "sha256": "4460a8a29942aba04e083b2bf51a5c44e04138afe3bc731452444a759274ccdf"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "message-descriptor.txt": {
+    "bytes": 19792,
+    "sha256": "4deb5a3c9944863696cfcd0dfb0138985e229d23606d119272f76b304f8d8b45"
+  },
+  "ordinary-jid-types.txt": {
+    "bytes": 1147,
+    "sha256": "9aa25334b7cfe0f8614ffabfef28182cdf513d19211a2c95cac5795f14f5f38b"
+  },
+  "own-other-device.txt": {
+    "bytes": 1131,
+    "sha256": "594e7965d02bc825151e7ac16e65f70b33d2c65507ca1a14898e750f6043a072"
+  },
+  "registered-device.txt": {
+    "bytes": 897,
+    "sha256": "689681b53425b7d1736f590d0e9ddfa8121dd9e3db8d5453bd4d45723e7e999a"
+  },
+  "source-device.txt": {
+    "bytes": 890,
+    "sha256": "5a161554bed4c513832acb20037c0c430132c29c949b85b8c20c007f4431b9c5"
+  },
+  "special-jid-types.txt": {
+    "bytes": 955,
+    "sha256": "35a6f032ef0415049ad11d266946b4fbd4a7ff55ba92585e3ce129cbeec2e22f"
+  },
+  "targets.json": {
+    "bytes": 5993,
+    "sha256": "14276128fe6c7f6042aed46ea72db0790c93cc29cb6fcd9e081e0a8b37a9677d"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  },
+  "unwrap-body.txt": {
+    "bytes": 1289,
+    "sha256": "a7885c494fa3c6ec3caccafc2d662c74c895a44c0c4102398cb23f0d95a11aa4"
+  },
+  "unwrap-with-context.txt": {
+    "bytes": 1934,
+    "sha256": "5472813db86298622703ddb37d55c7f58233ad81b51aa2239827cc627cd2a343"
+  },
+  "wrapper-construction.txt": {
+    "bytes": 3855,
+    "sha256": "cc8ab8af5f8764ab57a247a5aa44d9afa65ead06d7cd664dae307665dfc0a8cd"
+  },
+  "wrapper-descriptor.txt": {
+    "bytes": 3561,
+    "sha256": "656be1afb86f3d04031ff8909969e13e8ee456141cae54eece410ec726862610"
+  },
+  "wrapper-route-gate.txt": {
+    "bytes": 7598,
+    "sha256": "cc336df992978538879d1e2c4b47b131ea7dfa9ca4e4e2a032e72ad458570c8e"
+  },
+  "wrapper-validation.txt": {
+    "bytes": 10504,
+    "sha256": "bd503555eab5b088f5934911d468e8a57dc5f3fd6a55545c050573195caa2e29"
+  }
+}

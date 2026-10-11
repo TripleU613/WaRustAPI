@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_6105950e09bdc43202b81ff4d0b1981ac0cba2afae0c43a312b749fa07ab8488",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.Cm3",
+    "method_name": "A02"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-9K8EDg/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"java_version\":\"21.0.12.1\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":15695085568}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.Cm3"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"Cm3\",\"full_name\":\"X.Cm3\",\"field_count\":15,\"fields\":[{\"def_pos\":0,\"name\":\"A00\",\"type\":\"X.05B\"},{\"def_pos\":0,\"name\":\"A01\",\"type\":\"X.05B\"},{\"def_pos\":0,\"name\":\"A02\",\"type\":\"X.05B\"},{\"def_pos\":0,\"name\":\"A03\",\"type\":\"X.05B\"},{\"def_pos\":0,\"name\":\"A04\",\"type\":\"X.05B\"},{\"def_pos\":0,\"name\":\"A05\",\"type\":\"X.05B\"},{\"def_pos\":0,\"name\":\"A06\",\"type\":\"X.05B\"},{\"def_pos\":0,\"name\":\"A07\",\"type\":\"X.05B\"},{\"def_pos\":0,\"name\":\"A08\",\"type\":\"X.05B\"},{\"def_pos\":0,\"name\":\"A09\",\"type\":\"X.05B\"},{\"def_pos\":0,\"name\":\"A0A\",\"type\":\"X.05B\"},{\"def_pos\":0,\"name\":\"A0B\",\"type\":\"X.05B\"},{\"def_pos\":0,\"name\":\"A0C\",\"type\":\"X.05B\"},{\"def_pos\":0,\"name\":\"A0D\",\"type\":\"X.05B\"},{\"def_pos\":0,\"name\":\"A0E\",\"type\":\"X.0Ag\"}],\"methods\":[{\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(): void\"},{\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0,\"signature\":\"A00(int): int\"},{\"is_constructor\":false,\"name\":\"A01\",\"def_pos\":0,\"signature\":\"A01(X.0kX, X.CS7, X.DRv): X.CTh\"},{\"is_constructor\":false,\"name\":\"A02\",\"def_pos\":0,\"signature\":\"A02(X.Dcq, X.CjN, byte[]): X.BZc\"},{\"is_constructor\":false,\"name\":\"A03\",\"def_pos\":0,\"signature\":\"A03(X.CjN): void\"},{\"is_constructor\":false,\"name\":\"A04\",\"def_pos\":0,\"signature\":\"A04(X.CjN): void\"},{\"is_constructor\":false,\"name\":\"A05\",\"def_pos\":0,\"signature\":\"A05(X.1B3, X.Dcq, X.CjN, X.BZc, boolean, boolean): boolean\"},{\"is_constructor\":false,\"name\":\"A06\",\"def_pos\":0,\"signature\":\"A06(X.1B3, X.CjN): boolean\"},{\"is_constructor\":false,\"name\":\"A07\",\"def_pos\":0,\"signature\":\"A07(X.CjN, X.BZc): boolean\"}],\"method_count\":9}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.Cm3",
+          "method_name": "A02",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"class_name\":\"X.Cm3\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    /* JADX WARN: Code duplicated, block: B:46:0x00e2  */\\n    public final BZc A02(Dcq dcq, CjN cjN, byte[] bArr) throws Bp0 {\\n        String strA15;\\n        com.whatsapp.infra.core.jid.Jid jidA0K;\\n        boolean z;\\n        com.whatsapp.infra.core.jid.Jid jid;\\n        int iA0E \\u003d C3c8.A0E(1, cjN, dcq);\\n        C07o c07oA01 \\u003d CjY.A01(bArr);\\n        BZc bZc \\u003d (BZc) c07oA01.first;\\n        BZc bZc2 \\u003d (BZc) c07oA01.second;\\n        if (A07(cjN, bZc) \\u0026\\u0026 !Ayo.A1R(bZc.bitField0_, 33554432)) {\\n            Aym.A0u(this.A03).A05(CjN.A00(cjN), dcq, cjN, iA0E);\\n            throw Bp0.A06(\\\"Peers must use DeviceSentMessage proto\\\", 112);\\n        }\\n        if (!A07(cjN, bZc) \\u0026\\u0026 Ayo.A1R(bZc.bitField0_, 33554432)) {\\n            Aym.A0u(this.A03).A05(CjN.A00(cjN), dcq, cjN, 1);\\n            throw Bp0.A06(\\\"DeviceSentMessage proto only allowed from peer device\\\", BZc.NEWSLETTER_FOLLOWER_INVITE_MESSAGE_V2_FIELD_NUMBER);\\n        }\\n        if (Ayo.A1R(bZc.bitField0_, 33554432)) {\\n            BUs bUs \\u003d bZc.deviceSentMessage_;\\n            if (bUs \\u003d\\u003d null) {\\n                bUs \\u003d BUs.DEFAULT_INSTANCE;\\n            }\\n            int i \\u003d bUs.bitField0_;\\n            if ((i \\u0026 2) !\\u003d 0 \\u0026\\u0026 (i \\u0026 1) !\\u003d 0) {\\n                String str \\u003d bUs.destinationJid_;\\n                try {\\n                    C0D7 c0d7 \\u003d C0Cy.A00;\\n                    C0Cy c0CyA01 \\u003d C0D7.A01(str);\\n                    com.whatsapp.infra.core.jid.Jid jidA0d \\u003d C8kU.A0d(str);\\n                    com.whatsapp.infra.core.jid.Jid c0zy \\u003d null;\\n                    if (C0DE.A0P(jidA0d) \\u0026\\u0026 jidA0d !\\u003d null) {\\n                        Ayj.A17(C1xf.A1B(\\\"Jids/convertBotJidtoPnOrLidIfExists botJid must be bot jid type:\\\"), jidA0d.getType());\\n                        Boolean bool \\u003d C00K.A02;\\n                        String str2 \\u003d jidA0d.user;\\n                        HashBiMap hashBiMap \\u003d C8oC.A00;\\n                        C00h.A0A(str2, 0);\\n                        String strA0r \\u003d C1xk.A0r(str2, hashBiMap.inverse());\\n                        if (strA0r !\\u003d null) {\\n                            jidA0d \\u003d new PhoneUserJid(strA0r);\\n                        } else if (C0hd.A04(C0DE.A00(jidA0d)) \\u0026\\u0026 C00h.areEqual(jidA0d.user, \\\"1807055946647698\\\")) {\\n                            c0zy \\u003d new C0ZY(\\\"165332417282214\\\");\\n                        }\\n                        c0zy \\u003d jidA0d;\\n                    }\\n                    if (cjN instanceof Bp2) {\\n                        Bp2 bp2 \\u003d (Bp2) cjN;\\n                        jidA0K \\u003d bp2.A06;\\n                        if (jidA0K \\u003d\\u003d null) {\\n                            jidA0K \\u003d bp2.A08.A00.A00;\\n                        }\\n                    } else {\\n                        jidA0K \\u003d Ayn.A0K(cjN.A05);\\n                    }\\n                    if (C0DE.A0Q(c0CyA01) \\u0026\\u0026 (jid \\u003d cjN.A04) !\\u003d null) {\\n                        z \\u003d C00h.areEqual(c0CyA01, jid);\\n                    }\\n                    strA15 \\u003d (C00h.areEqual(c0CyA01, jidA0K) || z || (c0zy !\\u003d null \\u0026\\u0026 c0zy.equals(jidA0K)) || c0CyA01.equals(C1xi.A0w(this.A00).A0I(C0D8.A00(jidA0K)))) ? \\\"StanzaHandlerUtil/isValidDeviceSentMessage/no destination jid\\\" : C1xj.A15(\\\"StanzaHandlerUtil/isValidDeviceSentMessage/invalid destination jid: \\\", c0CyA01);\\n                } catch (C08j e) {\\n                    com.whatsapp.infra.logging.Log.e(\\\"StanzaHandlerUtil/isValidDeviceSentMessage/invalid jid\\\", e);\\n                }\\n            }\\n            com.whatsapp.infra.logging.Log.e(strA15);\\n            Aym.A0u(this.A03).A05(CjN.A00(cjN), dcq, cjN, 3);\\n            throw Bp0.A06(\\\"invalid DeviceSentMessage\\\", 114);\\n        }\\n        return bZc2;\\n    }\",\"overload_count\":1,\"method_name\":\"A02\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.Cm3.A02\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.Cm3",
+    "method": {
+      "name": "A02",
+      "reported_signature": "A02(X.Dcq, X.CjN, byte[]): X.BZc",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Code duplicated, block: B:46:0x00e2  */\n    public final BZc A02(Dcq dcq, CjN cjN, byte[] bArr) throws Bp0 {\n        String strA15;\n        com.whatsapp.infra.core.jid.Jid jidA0K;\n        boolean z;\n        com.whatsapp.infra.core.jid.Jid jid;\n        int iA0E = C3c8.A0E(1, cjN, dcq);\n        C07o c07oA01 = CjY.A01(bArr);\n        BZc bZc = (BZc) c07oA01.first;\n        BZc bZc2 = (BZc) c07oA01.second;\n        if (A07(cjN, bZc) && !Ayo.A1R(bZc.bitField0_, 33554432)) {\n            Aym.A0u(this.A03).A05(CjN.A00(cjN), dcq, cjN, iA0E);\n            throw Bp0.A06(\"Peers must use DeviceSentMessage proto\", 112);\n        }\n        if (!A07(cjN, bZc) && Ayo.A1R(bZc.bitField0_, 33554432)) {\n            Aym.A0u(this.A03).A05(CjN.A00(cjN), dcq, cjN, 1);\n            throw Bp0.A06(\"DeviceSentMessage proto only allowed from peer device\", BZc.NEWSLETTER_FOLLOWER_INVITE_MESSAGE_V2_FIELD_NUMBER);\n        }\n        if (Ayo.A1R(bZc.bitField0_, 33554432)) {\n            BUs bUs = bZc.deviceSentMessage_;\n            if (bUs == null) {\n                bUs = BUs.DEFAULT_INSTANCE;\n            }\n            int i = bUs.bitField0_;\n            if ((i & 2) != 0 && (i & 1) != 0) {\n                String str = bUs.destinationJid_;\n                try {\n                    C0D7 c0d7 = C0Cy.A00;\n                    C0Cy c0CyA01 = C0D7.A01(str);\n                    com.whatsapp.infra.core.jid.Jid jidA0d = C8kU.A0d(str);\n                    com.whatsapp.infra.core.jid.Jid c0zy = null;\n                    if (C0DE.A0P(jidA0d) && jidA0d != null) {\n                        Ayj.A17(C1xf.A1B(\"Jids/convertBotJidtoPnOrLidIfExists botJid must be bot jid type:\"), jidA0d.getType());\n                        Boolean bool = C00K.A02;\n                        String str2 = jidA0d.user;\n                        HashBiMap hashBiMap = C8oC.A00;\n                        C00h.A0A(str2, 0);\n                        String strA0r = C1xk.A0r(str2, hashBiMap.inverse());\n                        if (strA0r != null) {\n                            jidA0d = new PhoneUserJid(strA0r);\n                        } else if (C0hd.A04(C0DE.A00(jidA0d)) && C00h.areEqual(jidA0d.user, \"1807055946647698\")) {\n                            c0zy = new C0ZY(\"165332417282214\");\n                        }\n                        c0zy = jidA0d;\n                    }\n                    if (cjN instanceof Bp2) {\n                        Bp2 bp2 = (Bp2) cjN;\n                        jidA0K = bp2.A06;\n                        if (jidA0K == null) {\n                            jidA0K = bp2.A08.A00.A00;\n                        }\n                    } else {\n                        jidA0K = Ayn.A0K(cjN.A05);\n                    }\n                    if (C0DE.A0Q(c0CyA01) && (jid = cjN.A04) != null) {\n                        z = C00h.areEqual(c0CyA01, jid);\n                    }\n                    strA15 = (C00h.areEqual(c0CyA01, jidA0K) || z || (c0zy != null && c0zy.equals(jidA0K)) || c0CyA01.equals(C1xi.A0w(this.A00).A0I(C0D8.A00(jidA0K)))) ? \"StanzaHandlerUtil/isValidDeviceSentMessage/no destination jid\" : C1xj.A15(\"StanzaHandlerUtil/isValidDeviceSentMessage/invalid destination jid: \", c0CyA01);\n                } catch (C08j e) {\n                    com.whatsapp.infra.logging.Log.e(\"StanzaHandlerUtil/isValidDeviceSentMessage/invalid jid\", e);\n                }\n            }\n            com.whatsapp.infra.logging.Log.e(strA15);\n            Aym.A0u(this.A03).A05(CjN.A00(cjN), dcq, cjN, 3);\n            throw Bp0.A06(\"invalid DeviceSentMessage\", 114);\n        }\n        return bZc2;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

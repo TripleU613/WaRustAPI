@@ -1,0 +1,197 @@
+{
+  "broadcast-jid-type": {
+    "class": "LX/0DE;",
+    "file": "broadcast-jid-type.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0R",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/direct.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs",
+      "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  },
+  "clear-inner-context": {
+    "class": "LX/CmC;",
+    "file": "clear-inner-context.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A07",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/direct.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
+  "message-descriptor": {
+    "class": "LX/BZc;",
+    "file": "message-descriptor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "dynamicMethod",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/direct.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs",
+      "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  },
+  "ordinary-jid-types": {
+    "class": "LX/0DE;",
+    "file": "ordinary-jid-types.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0l",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/direct.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs",
+      "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  },
+  "own-other-device": {
+    "class": "LX/08i;",
+    "file": "own-other-device.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "BP3",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/direct.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs",
+      "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  },
+  "registered-device": {
+    "class": "LX/08i;",
+    "file": "registered-device.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "Apt",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/direct.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs",
+      "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  },
+  "source-device": {
+    "class": "LX/CjN;",
+    "file": "source-device.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/direct.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs",
+      "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  },
+  "special-jid-types": {
+    "class": "LX/0DE;",
+    "file": "special-jid-types.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0Q",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/direct.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs",
+      "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  },
+  "unwrap-body": {
+    "class": "LX/CjY;",
+    "file": "unwrap-body.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/direct.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs",
+      "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  },
+  "unwrap-with-context": {
+    "class": "LX/CjY;",
+    "file": "unwrap-with-context.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/direct.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs",
+      "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  },
+  "wrapper-construction": {
+    "class": "LX/Cla;",
+    "file": "wrapper-construction.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/direct.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs",
+      "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  },
+  "wrapper-descriptor": {
+    "class": "LX/BUs;",
+    "file": "wrapper-descriptor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "dynamicMethod",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/direct.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs",
+      "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  },
+  "wrapper-route-gate": {
+    "class": "LX/Cm3;",
+    "file": "wrapper-route-gate.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A07",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/direct.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs",
+      "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  },
+  "wrapper-validation": {
+    "class": "LX/Cm3;",
+    "file": "wrapper-validation.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/direct.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs",
+      "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  }
+}

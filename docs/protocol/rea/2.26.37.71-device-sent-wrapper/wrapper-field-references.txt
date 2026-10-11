@@ -1,0 +1,28 @@
+classes7.dex  LX/CjY;->A00(LL)
+  read opcode 0x54, dex byte offset: 0x628d1e
+classes7.dex  LX/CjY;->A01(LL)
+  read opcode 0x54, dex byte offset: 0x628d76
+classes7.dex  LX/Cla;->A01(LLLL)
+  write opcode 0x5b, dex byte offset: 0x63c728
+classes7.dex  LX/Cla;->A03(LLLLLL)
+  read opcode 0x54, dex byte offset: 0x63da92
+classes7.dex  LX/Cla;->A03(LLLLLL)
+  read opcode 0x54, dex byte offset: 0x63dab2
+classes7.dex  LX/Cla;->A03(LLLLLL)
+  read opcode 0x54, dex byte offset: 0x63dad8
+classes7.dex  LX/Cla;->A03(LLLLLL)
+  write opcode 0x5b, dex byte offset: 0x63db1e
+classes7.dex  LX/Cm3;->A02(LLLL)
+  read opcode 0x54, dex byte offset: 0x645cbc
+classes7.dex  LX/CpG;->A0U(LLLL)
+  read opcode 0x54, dex byte offset: 0x6c4230
+classes7.dex  LX/D51;->BEw(VL)
+  read opcode 0x54, dex byte offset: 0x751b56
+classes7.dex  LX/DEC;->A01(VLLLL)
+  read opcode 0x54, dex byte offset: 0x798b38
+classes7.dex  LX/DEC;->A01(VLLLL)
+  read opcode 0x54, dex byte offset: 0x798b90
+classes7.dex  LX/DPF;->invoke(LL)
+  read opcode 0x54, dex byte offset: 0x82f318
+classes7.dex  LX/DPF;->invoke(LL)
+  read opcode 0x54, dex byte offset: 0x82f5ea

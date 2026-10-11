@@ -1,0 +1,1171 @@
+{
+  "evidence_id": "ev_c097cc720e3926d84453bbf506c0948defd7cb540662062964d8dbb8572721d3",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_class",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.BZc"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-9K8EDg/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"java_version\":\"21.0.12.1\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":15695085568}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "load_apk",
+        "input": {
+          "path": "/tmp/rea-android-9K8EDg/target.apk",
+          "threads": 1,
+          "resources": "full"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-9K8EDg/target.apk\",\"class_count\":94738,\"raw_class_count\":94738,\"resource_count\":14967,\"load_duration_ms\":14415,\"decompile_timeout_ms\":90000,\"threads\":1,\"code_cache_size\":64,\"resources\":\"full\"}"
+            }
+          ]
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.BZc"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"BZc\",\"full_name\":\"X.BZc\",\"field_count\":226,\"fields\":[{\"def_pos\":0,\"name\":\"ACP2_SETTING_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"ALBUM_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"ASSOCIATED_CHILD_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"AUDIO_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"BCALL_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"BOT_FORWARDED_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"BOT_INVOKE_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"BOT_PLATFORM_REGISTRATION_SUCCESS_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"BOT_TASK_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"BUTTONS_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"BUTTONS_RESPONSE_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"CALL_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"CALL_LOG_MESSSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"CANCEL_PAYMENT_REQUEST_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"CHAT_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"COMMENT_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"CONDITIONAL_REVEAL_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"CONTACTS_ARRAY_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"CONTACT_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"CONVERSATION_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"DECLINE_PAYMENT_REQUEST_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"DEFAULT_INSTANCE\",\"type\":\"X.BZc\"},{\"def_pos\":0,\"name\":\"DEVICE_SENT_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"DOCUMENT_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"DOCUMENT_WITH_CAPTION_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"EDITED_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"ENC_COMMENT_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"ENC_EVENT_RESPONSE_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"ENC_REACTION_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"EPHEMERAL_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"EVENT_COVER_IMAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"EVENT_INVITE_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"EVENT_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"EXTENDED_TEXT_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"FAST_RATCHET_KEY_SENDER_KEY_DISTRIBUTION_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"GROUP_INVITE_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"GROUP_MENTIONED_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"GROUP_ROOT_KEY_SHARE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"GROUP_STATUS_MENTION_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"GROUP_STATUS_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"GROUP_STATUS_MESSAGE_V2_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"HIGHLY_STRUCTURED_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"IMAGE_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"INTERACTIVE_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"INTERACTIVE_RESPONSE_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"KEEP_IN_CHAT_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"LIMIT_SHARING_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"LIST_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"LIST_RESPONSE_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"LIVE_LOCATION_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"LOCATION_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"LOTTIE_STICKER_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"MESSAGE_CONTEXT_INFO_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"MESSAGE_HISTORY_BUNDLE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"MESSAGE_HISTORY_NOTICE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"MUSIC_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"NEWSLETTER_ADMIN_INVITE_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"NEWSLETTER_ADMIN_PROFILE_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"NEWSLETTER_ADMIN_PROFILE_STATUS_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"NEWSLETTER_FOLLOWER_INVITE_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"NEWSLETTER_FOLLOWER_INVITE_MESSAGE_V2_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"NEWSLETTER_SCHEDULED_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"ORDER_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"PARSER\",\"type\":\"com.google.protobuf.Parser\"},{\"def_pos\":0,\"name\":\"PAYMENT_INVITE_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"PAYMENT_REMINDER_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"PIN_IN_CHAT_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"PLACEHOLDER_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"POLL_ADD_OPTION_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"POLL_CREATION_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"POLL_CREATION_MESSAGE_V2_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"POLL_CREATION_MESSAGE_V3_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"POLL_CREATION_MESSAGE_V4_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"POLL_CREATION_MESSAGE_V5_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"POLL_CREATION_MESSAGE_V6_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"POLL_CREATION_OPTION_IMAGE_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"POLL_RESULT_SNAPSHOT_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"POLL_RESULT_SNAPSHOT_MESSAGE_V3_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"POLL_UPDATE_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"PRODUCT_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"PROTOCOL_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"PTV_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"QUESTION_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"QUESTION_REPLY_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"QUESTION_RESPONSE_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"REACTION_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"REQUEST_PAYMENT_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"REQUEST_PHONE_NUMBER_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"RICH_RESPONSE_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"ROOT_SECRET_DISTRIBUTE_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"SCHEDULED_CALL_CREATION_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"SCHEDULED_CALL_EDIT_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"SECRET_ENCRYPTED_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"SENDER_KEY_DISTRIBUTION_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"SEND_PAYMENT_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"SPLIT_PAYMENT_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"SPLIT_PAYMENT_UPDATE_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"SPOILER_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"STATUS_LINK_PREVIEW_METADATA_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"STATUS_MENTION_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"STATUS_NOTIFICATION_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"STATUS_QUESTION_ANSWER_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"STATUS_QUOTED_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"STATUS_STICKER_INTERACTION_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"STICKER_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"STICKER_PACK_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"TEMPLATE_BUTTON_REPLY_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"TEMPLATE_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"VIDEO_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"VIEW_ONCE_MESSAGE_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"VIEW_ONCE_MESSAGE_V2_EXTENSION_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"VIEW_ONCE_MESSAGE_V2_FIELD_NUMBER\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"acp2SettingMessage_\",\"type\":\"X.6tY\"},{\"def_pos\":0,\"name\":\"albumMessage_\",\"type\":\"X.BW9\"},{\"def_pos\":0,\"name\":\"associatedChildMessage_\",\"type\":\"X.6tY\"},{\"def_pos\":0,\"name\":\"audioMessage_\",\"type\":\"X.BZ0\"},{\"def_pos\":0,\"name\":\"bcallMessage_\",\"type\":\"X.E8N\"},{\"def_pos\":0,\"name\":\"bitField0_\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"bitField1_\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"bitField2_\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"bitField3_\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"botForwardedMessage_\",\"type\":\"X.6tY\"},{\"def_pos\":0,\"name\":\"botInvokeMessage_\",\"type\":\"X.6tY\"},{\"def_pos\":0,\"name\":\"botPlatformRegistrationSuccessMessage_\",\"type\":\"X.6tY\"},{\"def_pos\":0,\"name\":\"botTaskMessage_\",\"type\":\"X.6tY\"},{\"def_pos\":0,\"name\":\"buttonsMessage_\",\"type\":\"X.BXz\"},{\"def_pos\":0,\"name\":\"buttonsResponseMessage_\",\"type\":\"X.BWg\"},{\"def_pos\":0,\"name\":\"callLogMesssage_\",\"type\":\"X.BX2\"},{\"def_pos\":0,\"name\":\"call_\",\"type\":\"X.BYg\"},{\"def_pos\":0,\"name\":\"cancelPaymentRequestMessage_\",\"type\":\"X.BPe\"},{\"def_pos\":0,\"name\":\"chat_\",\"type\":\"X.BSX\"},{\"def_pos\":0,\"name\":\"commentMessage_\",\"type\":\"X.BSb\"},{\"def_pos\":0,\"name\":\"conditionalRevealMessage_\",\"type\":\"X.BWB\"},{\"def_pos\":0,\"name\":\"contactMessage_\",\"type\":\"X.BWC\"},{\"def_pos\":0,\"name\":\"contactsArrayMessage_\",\"type\":\"X.BUr\"},{\"def_pos\":0,\"name\":\"conversation_\",\"type\":\"java.lang.String\"},{\"def_pos\":0,\"name\":\"declinePaymentRequestMessage_\",\"type\":\"X.BPg\"},{\"def_pos\":0,\"name\":\"deviceSentMessage_\",\"type\":\"X.BUs\"},{\"def_pos\":0,\"name\":\"documentMessage_\",\"type\":\"X.BZB\"},{\"def_pos\":0,\"name\":\"documentWithCaptionMessage_\",\"type\":\"X.6tY\"},{\"def_pos\":0,\"name\":\"editedMessage_\",\"type\":\"X.6tY\"},{\"def_pos\":0,\"name\":\"encCommentMessage_\",\"type\":\"X.BUt\"},{\"def_pos\":0,\"name\":\"encEventResponseMessage_\",\"type\":\"X.BUu\"},{\"def_pos\":0,\"name\":\"encReactionMessage_\",\"type\":\"X.BUv\"},{\"def_pos\":0,\"name\":\"ephemeralMessage_\",\"type\":\"X.6tY\"},{\"def_pos\":0,\"name\":\"eventCoverImage_\",\"type\":\"X.6tY\"},{\"def_pos\":0,\"name\":\"eventInviteMessage_\",\"type\":\"X.BYH\"},{\"def_pos\":0,\"name\":\"eventMessage_\",\"type\":\"X.BYh\"},{\"def_pos\":0,\"name\":\"extendedTextMessage_\",\"type\":\"X.BZF\"},{\"def_pos\":0,\"name\":\"fastRatchetKeySenderKeyDistributionMessage_\",\"type\":\"X.BSu\"},{\"def_pos\":0,\"name\":\"groupInviteMessage_\",\"type\":\"X.BY3\"},{\"def_pos\":0,\"name\":\"groupMentionedMessage_\",\"type\":\"X.6tY\"},{\"def_pos\":0,\"name\":\"groupRootKeyShare_\",\"type\":\"X.BOn\"},{\"def_pos\":0,\"name\":\"groupStatusMentionMessage_\",\"type\":\"X.6tY\"},{\"def_pos\":0,\"name\":\"groupStatusMessageV2_\",\"type\":\"X.6tY\"},{\"def_pos\":0,\"name\":\"groupStatusMessage_\",\"type\":\"X.6tY\"},{\"def_pos\":0,\"name\":\"highlyStructuredMessage_\",\"type\":\"X.BYI\"},{\"def_pos\":0,\"name\":\"imageMessage_\",\"type\":\"X.BZD\"},{\"def_pos\":0,\"name\":\"interactiveMessage_\",\"type\":\"X.BZX\"},{\"def_pos\":0,\"name\":\"interactiveResponseMessage_\",\"type\":\"X.BZP\"},{\"def_pos\":0,\"name\":\"keepInChatMessage_\",\"type\":\"X.BV3\"},{\"def_pos\":0,\"name\":\"limitSharingMessage_\",\"type\":\"X.6tY\"},{\"def_pos\":0,\"name\":\"listMessage_\",\"type\":\"X.BY4\"},{\"def_pos\":0,\"name\":\"listResponseMessage_\",\"type\":\"X.BX4\"},{\"def_pos\":0,\"name\":\"liveLocationMessage_\",\"type\":\"X.BYP\"},{\"def_pos\":0,\"name\":\"locationMessage_\",\"type\":\"X.BYi\"},{\"def_pos\":0,\"name\":\"lottieStickerMessage_\",\"type\":\"X.6tY\"},{\"def_pos\":0,\"name\":\"messageContextInfo_\",\"type\":\"X.BZU\"},{\"def_pos\":0,\"name\":\"messageHistoryBundle_\",\"type\":\"X.BY5\"},{\"def_pos\":0,\"name\":\"messageHistoryNotice_\",\"type\":\"X.BV6\"},{\"def_pos\":0,\"name\":\"musicMessage_\",\"type\":\"X.6tA\"},{\"def_pos\":0,\"name\":\"newsletterAdminInviteMessage_\",\"type\":\"X.BXV\"},{\"def_pos\":0,\"name\":\"newsletterAdminProfileMessage_\",\"type\":\"X.6tY\"},{\"def_pos\":0,\"name\":\"newsletterAdminProfileStatusMessage_\",\"type\":\"X.6tY\"},{\"def_pos\":0,\"name\":\"newsletterFollowerInviteMessageV2_\",\"type\":\"X.BX6\"},{\"def_pos\":0,\"name\":\"newsletterFollowerInviteMessage_\",\"type\":\"X.BX6\"},{\"def_pos\":0,\"name\":\"newsletterScheduledMessage_\",\"type\":\"X.6tY\"},{\"def_pos\":0,\"name\":\"orderMessage_\",\"type\":\"X.BYt\"},{\"def_pos\":0,\"name\":\"paymentInviteMessage_\",\"type\":\"X.BX7\"},{\"def_pos\":0,\"name\":\"paymentReminderMessage_\",\"type\":\"X.E8T\"},{\"def_pos\":0,\"name\":\"pinInChatMessage_\",\"type\":\"X.BVD\"},{\"def_pos\":0,\"name\":\"placeholderMessage_\",\"type\":\"X.BPw\"},{\"def_pos\":0,\"name\":\"pollAddOptionMessage_\",\"type\":\"X.BVE\"},{\"def_pos\":0,\"name\":\"pollCreationMessageV2_\",\"type\":\"X.BYa\"},{\"def_pos\":0,\"name\":\"pollCreationMessageV3_\",\"type\":\"X.BYa\"},{\"def_pos\":0,\"name\":\"pollCreationMessageV4_\",\"type\":\"X.6tY\"},{\"def_pos\":0,\"name\":\"pollCreationMessageV5_\",\"type\":\"X.BYa\"},{\"def_pos\":0,\"name\":\"pollCreationMessageV6_\",\"type\":\"X.BYa\"},{\"def_pos\":0,\"name\":\"pollCreationMessage_\",\"type\":\"X.BYa\"},{\"def_pos\":0,\"name\":\"pollCreationOptionImageMessage_\",\"type\":\"X.6tY\"},{\"def_pos\":0,\"name\":\"pollResultSnapshotMessageV3_\",\"type\":\"X.BWG\"},{\"def_pos\":0,\"name\":\"pollResultSnapshotMessage_\",\"type\":\"X.BWG\"},{\"def_pos\":0,\"name\":\"pollUpdateMessage_\",\"type\":\"X.BWH\"},{\"def_pos\":0,\"name\":\"productMessage_\",\"type\":\"X.BXW\"},{\"def_pos\":0,\"name\":\"protocolMessage_\",\"type\":\"X.BZb\"},{\"def_pos\":0,\"name\":\"ptvMessage_\",\"type\":\"X.BZE\"},{\"def_pos\":0,\"name\":\"questionMessage_\",\"type\":\"X.6tY\"},{\"def_pos\":0,\"name\":\"questionReplyMessage_\",\"type\":\"X.6tY\"},{\"def_pos\":0,\"name\":\"questionResponseMessage_\",\"type\":\"X.BSs\"},{\"def_pos\":0,\"name\":\"reactionMessage_\",\"type\":\"X.BWI\"},{\"def_pos\":0,\"name\":\"requestPaymentMessage_\",\"type\":\"X.BXt\"},{\"def_pos\":0,\"name\":\"requestPhoneNumberMessage_\",\"type\":\"X.BPx\"},{\"def_pos\":0,\"name\":\"richResponseMessage_\",\"type\":\"X.BWz\"},{\"def_pos\":0,\"name\":\"rootSecretDistributeMessage_\",\"type\":\"X.BPz\"},{\"def_pos\":0,\"name\":\"scheduledCallCreationMessage_\",\"type\":\"X.6su\"},{\"def_pos\":0,\"name\":\"scheduledCallEditMessage_\",\"type\":\"X.BSt\"},{\"def_pos\":0,\"name\":\"secretEncryptedMessage_\",\"type\":\"X.BWJ\"},{\"def_pos\":0,\"name\":\"sendPaymentMessage_\",\"type\":\"X.BWK\"},{\"def_pos\":0,\"name\":\"senderKeyDistributionMessage_\",\"type\":\"X.BSu\"},{\"def_pos\":0,\"name\":\"splitPaymentMessage_\",\"type\":\"X.BXu\"},{\"def_pos\":0,\"name\":\"splitPaymentUpdateMessage_\",\"type\":\"X.BSv\"},{\"def_pos\":0,\"name\":\"spoilerMessage_\",\"type\":\"X.6tY\"},{\"def_pos\":0,\"name\":\"statusLinkPreviewMetadata_\",\"type\":\"X.BQ1\"},{\"def_pos\":0,\"name\":\"statusMentionMessage_\",\"type\":\"X.6tY\"},{\"def_pos\":0,\"name\":\"statusNotificationMessage_\",\"type\":\"X.BVI\"},{\"def_pos\":0,\"name\":\"statusQuestionAnswerMessage_\",\"type\":\"X.6sc\"},{\"def_pos\":0,\"name\":\"statusQuotedMessage_\",\"type\":\"X.6t6\"},{\"def_pos\":0,\"name\":\"statusStickerInteractionMessage_\",\"type\":\"X.6sv\"},{\"def_pos\":0,\"name\":\"stickerMessage_\",\"type\":\"X.BZC\"},{\"def_pos\":0,\"name\":\"stickerPackMessage_\",\"type\":\"X.6tX\"},{\"def_pos\":0,\"name\":\"templateButtonReplyMessage_\",\"type\":\"X.BXA\"},{\"def_pos\":0,\"name\":\"templateMessage_\",\"type\":\"X.BZZ\"},{\"def_pos\":0,\"name\":\"videoMessage_\",\"type\":\"X.BZE\"},{\"def_pos\":0,\"name\":\"viewOnceMessageV2Extension_\",\"type\":\"X.6tY\"},{\"def_pos\":0,\"name\":\"viewOnceMessageV2_\",\"type\":\"X.6tY\"},{\"def_pos\":0,\"name\":\"viewOnceMessage_\",\"type\":\"X.6tY\"}],\"methods\":[{\"is_constructor\":false,\"name\":\"\\u003cclinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cclinit\\u003e(): void\"},{\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(): void\"},{\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0,\"signature\":\"A00(): X.BOG\"},{\"is_constructor\":false,\"name\":\"A01\",\"def_pos\":0,\"signature\":\"A01(byte[]): X.BZc\"},{\"is_constructor\":false,\"name\":\"A02\",\"def_pos\":0,\"signature\":\"A02(): boolean\"},{\"is_constructor\":false,\"name\":\"A03\",\"def_pos\":0,\"signature\":\"A03(): boolean\"},{\"is_constructor\":false,\"name\":\"A04\",\"def_pos\":0,\"signature\":\"A04(): boolean\"},{\"is_constructor\":false,\"name\":\"A05\",\"def_pos\":0,\"signature\":\"A05(): boolean\"},{\"is_constructor\":false,\"name\":\"A06\",\"def_pos\":0,\"signature\":\"A06(): boolean\"},{\"is_constructor\":false,\"name\":\"A07\",\"def_pos\":0,\"signature\":\"A07(): boolean\"},{\"is_constructor\":false,\"name\":\"A08\",\"def_pos\":0,\"signature\":\"A08(): boolean\"},{\"is_constructor\":false,\"name\":\"A09\",\"def_pos\":0,\"signature\":\"A09(): boolean\"},{\"is_constructor\":false,\"name\":\"A0A\",\"def_pos\":0,\"signature\":\"A0A(): boolean\"},{\"is_constructor\":false,\"name\":\"A0B\",\"def_pos\":0,\"signature\":\"A0B(): boolean\"},{\"is_constructor\":false,\"name\":\"A0C\",\"def_pos\":0,\"signature\":\"A0C(): boolean\"},{\"is_constructor\":false,\"name\":\"A0D\",\"def_pos\":0,\"signature\":\"A0D(): boolean\"},{\"is_constructor\":false,\"name\":\"A0E\",\"def_pos\":0,\"signature\":\"A0E(): boolean\"},{\"is_constructor\":false,\"name\":\"A0F\",\"def_pos\":0,\"signature\":\"A0F(): boolean\"},{\"is_constructor\":false,\"name\":\"A0G\",\"def_pos\":0,\"signature\":\"A0G(): boolean\"},{\"is_constructor\":false,\"name\":\"A0H\",\"def_pos\":0,\"signature\":\"A0H(): boolean\"},{\"is_constructor\":false,\"name\":\"dynamicMethod\",\"def_pos\":0,\"signature\":\"dynamicMethod(com.google.protobuf.GeneratedMessageLite$MethodToInvoke, java.lang.Object, java.lang.Object): java.lang.Object\"},{\"is_constructor\":false,\"name\":\"parseFrom\",\"def_pos\":0,\"signature\":\"parseFrom(java.nio.ByteBuffer): X.BZc\"}],\"method_count\":22}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.BZc",
+    "methods": [
+      {
+        "name": "<clinit>",
+        "reported_signature": "<clinit>(): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "<init>",
+        "reported_signature": "<init>(): void",
+        "overload_index": 0,
+        "is_constructor": true,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A00",
+        "reported_signature": "A00(): X.BOG",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A01",
+        "reported_signature": "A01(byte[]): X.BZc",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A02",
+        "reported_signature": "A02(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A03",
+        "reported_signature": "A03(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A04",
+        "reported_signature": "A04(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A05",
+        "reported_signature": "A05(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A06",
+        "reported_signature": "A06(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A07",
+        "reported_signature": "A07(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A08",
+        "reported_signature": "A08(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A09",
+        "reported_signature": "A09(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A0A",
+        "reported_signature": "A0A(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A0B",
+        "reported_signature": "A0B(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A0C",
+        "reported_signature": "A0C(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A0D",
+        "reported_signature": "A0D(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A0E",
+        "reported_signature": "A0E(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A0F",
+        "reported_signature": "A0F(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A0G",
+        "reported_signature": "A0G(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A0H",
+        "reported_signature": "A0H(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "dynamicMethod",
+        "reported_signature": "dynamicMethod(com.google.protobuf.GeneratedMessageLite$MethodToInvoke, java.lang.Object, java.lang.Object): java.lang.Object",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "parseFrom",
+        "reported_signature": "parseFrom(java.nio.ByteBuffer): X.BZc",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      }
+    ],
+    "fields": [
+      {
+        "name": "ACP2_SETTING_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "ALBUM_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "ASSOCIATED_CHILD_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "AUDIO_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "BCALL_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "BOT_FORWARDED_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "BOT_INVOKE_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "BOT_PLATFORM_REGISTRATION_SUCCESS_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "BOT_TASK_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "BUTTONS_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "BUTTONS_RESPONSE_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "CALL_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "CALL_LOG_MESSSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "CANCEL_PAYMENT_REQUEST_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "CHAT_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "COMMENT_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "CONDITIONAL_REVEAL_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "CONTACTS_ARRAY_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "CONTACT_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "CONVERSATION_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "DECLINE_PAYMENT_REQUEST_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "DEFAULT_INSTANCE",
+        "reported_type": "X.BZc"
+      },
+      {
+        "name": "DEVICE_SENT_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "DOCUMENT_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "DOCUMENT_WITH_CAPTION_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "EDITED_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "ENC_COMMENT_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "ENC_EVENT_RESPONSE_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "ENC_REACTION_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "EPHEMERAL_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "EVENT_COVER_IMAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "EVENT_INVITE_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "EVENT_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "EXTENDED_TEXT_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "FAST_RATCHET_KEY_SENDER_KEY_DISTRIBUTION_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "GROUP_INVITE_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "GROUP_MENTIONED_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "GROUP_ROOT_KEY_SHARE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "GROUP_STATUS_MENTION_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "GROUP_STATUS_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "GROUP_STATUS_MESSAGE_V2_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "HIGHLY_STRUCTURED_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "IMAGE_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "INTERACTIVE_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "INTERACTIVE_RESPONSE_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "KEEP_IN_CHAT_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "LIMIT_SHARING_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "LIST_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "LIST_RESPONSE_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "LIVE_LOCATION_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "LOCATION_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "LOTTIE_STICKER_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "MESSAGE_CONTEXT_INFO_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "MESSAGE_HISTORY_BUNDLE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "MESSAGE_HISTORY_NOTICE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "MUSIC_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "NEWSLETTER_ADMIN_INVITE_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "NEWSLETTER_ADMIN_PROFILE_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "NEWSLETTER_ADMIN_PROFILE_STATUS_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "NEWSLETTER_FOLLOWER_INVITE_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "NEWSLETTER_FOLLOWER_INVITE_MESSAGE_V2_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "NEWSLETTER_SCHEDULED_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "ORDER_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "PARSER",
+        "reported_type": "com.google.protobuf.Parser"
+      },
+      {
+        "name": "PAYMENT_INVITE_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "PAYMENT_REMINDER_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "PIN_IN_CHAT_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "PLACEHOLDER_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "POLL_ADD_OPTION_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "POLL_CREATION_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "POLL_CREATION_MESSAGE_V2_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "POLL_CREATION_MESSAGE_V3_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "POLL_CREATION_MESSAGE_V4_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "POLL_CREATION_MESSAGE_V5_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "POLL_CREATION_MESSAGE_V6_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "POLL_CREATION_OPTION_IMAGE_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "POLL_RESULT_SNAPSHOT_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "POLL_RESULT_SNAPSHOT_MESSAGE_V3_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "POLL_UPDATE_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "PRODUCT_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "PROTOCOL_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "PTV_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "QUESTION_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "QUESTION_REPLY_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "QUESTION_RESPONSE_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "REACTION_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "REQUEST_PAYMENT_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "REQUEST_PHONE_NUMBER_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "RICH_RESPONSE_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "ROOT_SECRET_DISTRIBUTE_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "SCHEDULED_CALL_CREATION_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "SCHEDULED_CALL_EDIT_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "SECRET_ENCRYPTED_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "SENDER_KEY_DISTRIBUTION_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "SEND_PAYMENT_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "SPLIT_PAYMENT_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "SPLIT_PAYMENT_UPDATE_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "SPOILER_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "STATUS_LINK_PREVIEW_METADATA_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "STATUS_MENTION_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "STATUS_NOTIFICATION_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "STATUS_QUESTION_ANSWER_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "STATUS_QUOTED_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "STATUS_STICKER_INTERACTION_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "STICKER_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "STICKER_PACK_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "TEMPLATE_BUTTON_REPLY_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "TEMPLATE_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "VIDEO_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "VIEW_ONCE_MESSAGE_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "VIEW_ONCE_MESSAGE_V2_EXTENSION_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "VIEW_ONCE_MESSAGE_V2_FIELD_NUMBER",
+        "reported_type": "int"
+      },
+      {
+        "name": "acp2SettingMessage_",
+        "reported_type": "X.6tY"
+      },
+      {
+        "name": "albumMessage_",
+        "reported_type": "X.BW9"
+      },
+      {
+        "name": "associatedChildMessage_",
+        "reported_type": "X.6tY"
+      },
+      {
+        "name": "audioMessage_",
+        "reported_type": "X.BZ0"
+      },
+      {
+        "name": "bcallMessage_",
+        "reported_type": "X.E8N"
+      },
+      {
+        "name": "bitField0_",
+        "reported_type": "int"
+      },
+      {
+        "name": "bitField1_",
+        "reported_type": "int"
+      },
+      {
+        "name": "bitField2_",
+        "reported_type": "int"
+      },
+      {
+        "name": "bitField3_",
+        "reported_type": "int"
+      },
+      {
+        "name": "botForwardedMessage_",
+        "reported_type": "X.6tY"
+      },
+      {
+        "name": "botInvokeMessage_",
+        "reported_type": "X.6tY"
+      },
+      {
+        "name": "botPlatformRegistrationSuccessMessage_",
+        "reported_type": "X.6tY"
+      },
+      {
+        "name": "botTaskMessage_",
+        "reported_type": "X.6tY"
+      },
+      {
+        "name": "buttonsMessage_",
+        "reported_type": "X.BXz"
+      },
+      {
+        "name": "buttonsResponseMessage_",
+        "reported_type": "X.BWg"
+      },
+      {
+        "name": "callLogMesssage_",
+        "reported_type": "X.BX2"
+      },
+      {
+        "name": "call_",
+        "reported_type": "X.BYg"
+      },
+      {
+        "name": "cancelPaymentRequestMessage_",
+        "reported_type": "X.BPe"
+      },
+      {
+        "name": "chat_",
+        "reported_type": "X.BSX"
+      },
+      {
+        "name": "commentMessage_",
+        "reported_type": "X.BSb"
+      },
+      {
+        "name": "conditionalRevealMessage_",
+        "reported_type": "X.BWB"
+      },
+      {
+        "name": "contactMessage_",
+        "reported_type": "X.BWC"
+      },
+      {
+        "name": "contactsArrayMessage_",
+        "reported_type": "X.BUr"
+      },
+      {
+        "name": "conversation_",
+        "reported_type": "java.lang.String"
+      },
+      {
+        "name": "declinePaymentRequestMessage_",
+        "reported_type": "X.BPg"
+      },
+      {
+        "name": "deviceSentMessage_",
+        "reported_type": "X.BUs"
+      },
+      {
+        "name": "documentMessage_",
+        "reported_type": "X.BZB"
+      },
+      {
+        "name": "documentWithCaptionMessage_",
+        "reported_type": "X.6tY"
+      },
+      {
+        "name": "editedMessage_",
+        "reported_type": "X.6tY"
+      },
+      {
+        "name": "encCommentMessage_",
+        "reported_type": "X.BUt"
+      },
+      {
+        "name": "encEventResponseMessage_",
+        "reported_type": "X.BUu"
+      },
+      {
+        "name": "encReactionMessage_",
+        "reported_type": "X.BUv"
+      },
+      {
+        "name": "ephemeralMessage_",
+        "reported_type": "X.6tY"
+      },
+      {
+        "name": "eventCoverImage_",
+        "reported_type": "X.6tY"
+      },
+      {
+        "name": "eventInviteMessage_",
+        "reported_type": "X.BYH"
+      },
+      {
+        "name": "eventMessage_",
+        "reported_type": "X.BYh"
+      },
+      {
+        "name": "extendedTextMessage_",
+        "reported_type": "X.BZF"
+      },
+      {
+        "name": "fastRatchetKeySenderKeyDistributionMessage_",
+        "reported_type": "X.BSu"
+      },
+      {
+        "name": "groupInviteMessage_",
+        "reported_type": "X.BY3"
+      },
+      {
+        "name": "groupMentionedMessage_",
+        "reported_type": "X.6tY"
+      },
+      {
+        "name": "groupRootKeyShare_",
+        "reported_type": "X.BOn"
+      },
+      {
+        "name": "groupStatusMentionMessage_",
+        "reported_type": "X.6tY"
+      },
+      {
+        "name": "groupStatusMessageV2_",
+        "reported_type": "X.6tY"
+      },
+      {
+        "name": "groupStatusMessage_",
+        "reported_type": "X.6tY"
+      },
+      {
+        "name": "highlyStructuredMessage_",
+        "reported_type": "X.BYI"
+      },
+      {
+        "name": "imageMessage_",
+        "reported_type": "X.BZD"
+      },
+      {
+        "name": "interactiveMessage_",
+        "reported_type": "X.BZX"
+      },
+      {
+        "name": "interactiveResponseMessage_",
+        "reported_type": "X.BZP"
+      },
+      {
+        "name": "keepInChatMessage_",
+        "reported_type": "X.BV3"
+      },
+      {
+        "name": "limitSharingMessage_",
+        "reported_type": "X.6tY"
+      },
+      {
+        "name": "listMessage_",
+        "reported_type": "X.BY4"
+      },
+      {
+        "name": "listResponseMessage_",
+        "reported_type": "X.BX4"
+      },
+      {
+        "name": "liveLocationMessage_",
+        "reported_type": "X.BYP"
+      },
+      {
+        "name": "locationMessage_",
+        "reported_type": "X.BYi"
+      },
+      {
+        "name": "lottieStickerMessage_",
+        "reported_type": "X.6tY"
+      },
+      {
+        "name": "messageContextInfo_",
+        "reported_type": "X.BZU"
+      },
+      {
+        "name": "messageHistoryBundle_",
+        "reported_type": "X.BY5"
+      },
+      {
+        "name": "messageHistoryNotice_",
+        "reported_type": "X.BV6"
+      },
+      {
+        "name": "musicMessage_",
+        "reported_type": "X.6tA"
+      },
+      {
+        "name": "newsletterAdminInviteMessage_",
+        "reported_type": "X.BXV"
+      },
+      {
+        "name": "newsletterAdminProfileMessage_",
+        "reported_type": "X.6tY"
+      },
+      {
+        "name": "newsletterAdminProfileStatusMessage_",
+        "reported_type": "X.6tY"
+      },
+      {
+        "name": "newsletterFollowerInviteMessageV2_",
+        "reported_type": "X.BX6"
+      },
+      {
+        "name": "newsletterFollowerInviteMessage_",
+        "reported_type": "X.BX6"
+      },
+      {
+        "name": "newsletterScheduledMessage_",
+        "reported_type": "X.6tY"
+      },
+      {
+        "name": "orderMessage_",
+        "reported_type": "X.BYt"
+      },
+      {
+        "name": "paymentInviteMessage_",
+        "reported_type": "X.BX7"
+      },
+      {
+        "name": "paymentReminderMessage_",
+        "reported_type": "X.E8T"
+      },
+      {
+        "name": "pinInChatMessage_",
+        "reported_type": "X.BVD"
+      },
+      {
+        "name": "placeholderMessage_",
+        "reported_type": "X.BPw"
+      },
+      {
+        "name": "pollAddOptionMessage_",
+        "reported_type": "X.BVE"
+      },
+      {
+        "name": "pollCreationMessageV2_",
+        "reported_type": "X.BYa"
+      },
+      {
+        "name": "pollCreationMessageV3_",
+        "reported_type": "X.BYa"
+      },
+      {
+        "name": "pollCreationMessageV4_",
+        "reported_type": "X.6tY"
+      },
+      {
+        "name": "pollCreationMessageV5_",
+        "reported_type": "X.BYa"
+      },
+      {
+        "name": "pollCreationMessageV6_",
+        "reported_type": "X.BYa"
+      },
+      {
+        "name": "pollCreationMessage_",
+        "reported_type": "X.BYa"
+      },
+      {
+        "name": "pollCreationOptionImageMessage_",
+        "reported_type": "X.6tY"
+      },
+      {
+        "name": "pollResultSnapshotMessageV3_",
+        "reported_type": "X.BWG"
+      },
+      {
+        "name": "pollResultSnapshotMessage_",
+        "reported_type": "X.BWG"
+      },
+      {
+        "name": "pollUpdateMessage_",
+        "reported_type": "X.BWH"
+      },
+      {
+        "name": "productMessage_",
+        "reported_type": "X.BXW"
+      },
+      {
+        "name": "protocolMessage_",
+        "reported_type": "X.BZb"
+      },
+      {
+        "name": "ptvMessage_",
+        "reported_type": "X.BZE"
+      },
+      {
+        "name": "questionMessage_",
+        "reported_type": "X.6tY"
+      },
+      {
+        "name": "questionReplyMessage_",
+        "reported_type": "X.6tY"
+      },
+      {
+        "name": "questionResponseMessage_",
+        "reported_type": "X.BSs"
+      },
+      {
+        "name": "reactionMessage_",
+        "reported_type": "X.BWI"
+      },
+      {
+        "name": "requestPaymentMessage_",
+        "reported_type": "X.BXt"
+      },
+      {
+        "name": "requestPhoneNumberMessage_",
+        "reported_type": "X.BPx"
+      },
+      {
+        "name": "richResponseMessage_",
+        "reported_type": "X.BWz"
+      },
+      {
+        "name": "rootSecretDistributeMessage_",
+        "reported_type": "X.BPz"
+      },
+      {
+        "name": "scheduledCallCreationMessage_",
+        "reported_type": "X.6su"
+      },
+      {
+        "name": "scheduledCallEditMessage_",
+        "reported_type": "X.BSt"
+      },
+      {
+        "name": "secretEncryptedMessage_",
+        "reported_type": "X.BWJ"
+      },
+      {
+        "name": "sendPaymentMessage_",
+        "reported_type": "X.BWK"
+      },
+      {
+        "name": "senderKeyDistributionMessage_",
+        "reported_type": "X.BSu"
+      },
+      {
+        "name": "splitPaymentMessage_",
+        "reported_type": "X.BXu"
+      },
+      {
+        "name": "splitPaymentUpdateMessage_",
+        "reported_type": "X.BSv"
+      },
+      {
+        "name": "spoilerMessage_",
+        "reported_type": "X.6tY"
+      },
+      {
+        "name": "statusLinkPreviewMetadata_",
+        "reported_type": "X.BQ1"
+      },
+      {
+        "name": "statusMentionMessage_",
+        "reported_type": "X.6tY"
+      },
+      {
+        "name": "statusNotificationMessage_",
+        "reported_type": "X.BVI"
+      },
+      {
+        "name": "statusQuestionAnswerMessage_",
+        "reported_type": "X.6sc"
+      },
+      {
+        "name": "statusQuotedMessage_",
+        "reported_type": "X.6t6"
+      },
+      {
+        "name": "statusStickerInteractionMessage_",
+        "reported_type": "X.6sv"
+      },
+      {
+        "name": "stickerMessage_",
+        "reported_type": "X.BZC"
+      },
+      {
+        "name": "stickerPackMessage_",
+        "reported_type": "X.6tX"
+      },
+      {
+        "name": "templateButtonReplyMessage_",
+        "reported_type": "X.BXA"
+      },
+      {
+        "name": "templateMessage_",
+        "reported_type": "X.BZZ"
+      },
+      {
+        "name": "videoMessage_",
+        "reported_type": "X.BZE"
+      },
+      {
+        "name": "viewOnceMessageV2Extension_",
+        "reported_type": "X.6tY"
+      },
+      {
+        "name": "viewOnceMessageV2_",
+        "reported_type": "X.6tY"
+      },
+      {
+        "name": "viewOnceMessage_",
+        "reported_type": "X.6tY"
+      }
+    ],
+    "inner_classes": []
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

@@ -68,9 +68,9 @@ authentication, showing refusal did not consume its cryptographic state.
 the actual own-device Signal address, reproduce recipient mapping and key
 direction, handle payload wrappers, reconcile synchronized outgoing messages
 without inventing send intents, and trace sender/read-self receipt selection.
-DeviceSentMessage's field exists in the generated
-[message descriptor](apk/2.26.37.71-group-keep/message-descriptor.txt), but that
-descriptor alone does not establish its parsing, admission or reconciliation.
+[DeviceSentMessage](device-sent-wrapper.md) now traces its descriptor,
+peer-device admission gates, destination checks and outer-context handling;
+runtime admission and reconciliation remain unported.
 No new device admission, live delivery or complete own-device synchronization
 is proved by this correction.
 
