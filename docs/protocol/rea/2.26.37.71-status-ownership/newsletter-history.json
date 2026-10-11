@@ -1,0 +1,144 @@
+{
+  "evidence_id": "ev_a1b044b472bf9d0b57d6f9cbae5f999493cbf6674ecf041bbddeb248c9090d13",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.C9wp",
+    "method_name": "A00"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-aCRpe2/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"available_processors\":24,\"java_version\":\"21.0.12.1\",\"max_heap_bytes\":15695085568,\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "load_apk",
+        "input": {
+          "path": "/tmp/rea-android-aCRpe2/target.apk",
+          "threads": 1,
+          "resources": "full"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-aCRpe2/target.apk\",\"class_count\":94738,\"raw_class_count\":94738,\"resource_count\":14967,\"load_duration_ms\":25766,\"decompile_timeout_ms\":90000,\"threads\":1,\"code_cache_size\":64,\"resources\":\"full\"}"
+            }
+          ]
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C9wp"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":2,\"methods\":[{\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true},{\"signature\":\"A00(X.1cj, X.9P0): X.ArO\",\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false}],\"fields\":[{\"type\":\"X.05B\",\"name\":\"A00\",\"def_pos\":0},{\"type\":\"X.05B\",\"name\":\"A01\",\"def_pos\":0},{\"type\":\"X.05B\",\"name\":\"A02\",\"def_pos\":0},{\"type\":\"X.05B\",\"name\":\"A03\",\"def_pos\":0}],\"field_count\":4,\"full_name\":\"X.C9wp\",\"name\":\"C9wp\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C9wp",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.C9wp\",\"full_name\":\"X.9wp.A00\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"A00\",\"overload_count\":1,\"body\":\"    /* JADX WARN: Code duplicated, block: B:27:0x00d9  */\\n    /* JADX WARN: Code duplicated, block: B:50:0x014b  */\\n    public final ArO A00(C1cj c1cj, C9P0 c9p0) {\\n        ArO arO;\\n        String str;\\n        String str2;\\n        C0AH c0ahA0h;\\n        String strA04;\\n        String str3;\\n        boolean z;\\n        String str4;\\n        C0hs c0hsA0F;\\n        C00h.A0A(c1cj, 0);\\n        C05B c05bA0I \\u003d C1xk.A0I(this.A03, 1443);\\n        C9PF c9pf \\u003d c9p0.A03;\\n        if (c9pf !\\u003d null) {\\n            C0T3 c0t3A14 \\u003d C3c4.A14();\\n            c0t3A14.element \\u003d Act.A00;\\n            ((Asw) c9pf.A00).A7K(new A6S(c0t3A14));\\n            AtC atC \\u003d (AtC) c0t3A14.element;\\n            if (C00h.areEqual(atC, Acs.A00)) {\\n                arO \\u003d Acp.A00;\\n            } else {\\n                byte[] bArrAue \\u003d atC.Aue();\\n                if (bArrAue \\u003d\\u003d null || (str \\u003d c9p0.A05) \\u003d\\u003d null) {\\n                    arO \\u003d Aco.A00;\\n                } else {\\n                    long j \\u003d c9p0.A00;\\n                    CRF crf \\u003d new CRF();\\n                    crf.A01 \\u003d c1cj;\\n                    crf.A00 \\u003d c1cj;\\n                    crf.A0R \\u003d str;\\n                    crf.A0M \\u003d Long.valueOf(C1xo.A09(c9p0.A04) * 1000);\\n                    crf.A0D \\u003d Boolean.valueOf(C00h.areEqual(c9p0.A06, \\\"true\\\"));\\n                    Bp1 bp1A00 \\u003d crf.A00();\\n                    DFH dfh \\u003d new DFH();\\n                    try {\\n                        try {\\n                            BpH bpHA02 \\u003d ((C7wO) C05B.A02(this.A02)).A02(bp1A00, (BZc) CjY.A01(bArrAue).second, bArrAue);\\n                            if (bpHA02 \\u003d\\u003d null) {\\n                                com.whatsapp.infra.logging.Log.w(\\\"NlStatusHistoryProcessor/processHistoryStatus/parseE2eProto returned null\\\");\\n                                C1xi.A0h(c05bA0I).A0h(\\\"status-newsletter-history-dropped\\\", AnonymousClass000.A04(\\\"id\\u003d\\\", str), true, 2);\\n                                arO \\u003d Aco.A00;\\n                            } else {\\n                                if (bpHA02 instanceof C73x) {\\n                                    C8BW c8bw \\u003d ((C73x) bpHA02).A00;\\n                                    c8bw.A0N(Long.valueOf(j));\\n                                    C00s c00s \\u003d this.A00.A00;\\n                                    if (C1xf.A0e(c00s).A10(22515) \\u0026\\u0026 (c0hsA0F \\u003d c9p0.A01.A0F(\\\"meta\\\")) !\\u003d null) {\\n                                        z \\u003d c0hsA0F.A0F(\\\"paid_partnership\\\") !\\u003d null;\\n                                    }\\n                                    c8bw.A0O(z);\\n                                    C9PF c9pf2 \\u003d c9p0.A02;\\n                                    if (c9pf2 !\\u003d null \\u0026\\u0026 (str4 \\u003d ((C9On) c9pf2.A00).A01) !\\u003d null \\u0026\\u0026 str4.length() !\\u003d 0 \\u0026\\u0026 C1xf.A0e(c00s).A10(32363)) {\\n                                        C7xP.A02(c8bw, str4);\\n                                    }\\n                                }\\n                                ((CjN) bp1A00).A01 \\u003d -2L;\\n                                ((ClE) C05B.A02(this.A01)).A02(dfh, bpHA02, bp1A00, bArrAue, true, false);\\n                                arO \\u003d Acq.A00;\\n                            }\\n                        } catch (Box e) {\\n                            com.whatsapp.infra.logging.Log.w(\\\"NlStatusHistoryProcessor/processHistoryStatus/drop status processing\\\", e);\\n                        } catch (Bp0 e2) {\\n                            e \\u003d e2;\\n                            com.whatsapp.infra.logging.Log.w(\\\"NlStatusHistoryProcessor/processHistoryStatus/bad e2e message\\\", e);\\n                            c0ahA0h \\u003d C1xi.A0h(c05bA0I);\\n                            strA04 \\u003d AnonymousClass000.A04(\\\"id\\u003d\\\", str);\\n                            str3 \\u003d \\\"status-newsletter-history-bad-e2e\\\";\\n                            c0ahA0h.A0f(str3, strA04, e, 1);\\n                        } catch (Exception e3) {\\n                            e \\u003d e3;\\n                            com.whatsapp.infra.logging.Log.e(\\\"NlStatusHistoryProcessor/processHistoryStatus/failed to deserialize protobuf to FStatus\\\", e);\\n                            c0ahA0h \\u003d C1xi.A0h(c05bA0I);\\n                            strA04 \\u003d AnonymousClass000.A04(\\\"id\\u003d\\\", str);\\n                            str3 \\u003d \\\"status-newsletter-history-deserialize-error\\\";\\n                            c0ahA0h.A0f(str3, strA04, e, 1);\\n                        }\\n                    } catch (InvalidProtocolBufferException e4) {\\n                        e \\u003d e4;\\n                        str2 \\u003d \\\"NlStatusHistoryProcessor/processHistoryStatus/failed to parse E2E.Message\\\";\\n                        com.whatsapp.infra.logging.Log.w(str2, e);\\n                    } catch (Exception e5) {\\n                        e \\u003d e5;\\n                        str2 \\u003d \\\"NlStatusHistoryProcessor/processHistoryStatus/failed to extract E2E.Message\\\";\\n                        com.whatsapp.infra.logging.Log.w(str2, e);\\n                    }\\n                }\\n            }\\n        } else {\\n            arO \\u003d Aco.A00;\\n        }\\n        return arO;\\n    }\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.C9wp",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(X.1cj, X.9P0): X.ArO",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Code duplicated, block: B:27:0x00d9  */\n    /* JADX WARN: Code duplicated, block: B:50:0x014b  */\n    public final ArO A00(C1cj c1cj, C9P0 c9p0) {\n        ArO arO;\n        String str;\n        String str2;\n        C0AH c0ahA0h;\n        String strA04;\n        String str3;\n        boolean z;\n        String str4;\n        C0hs c0hsA0F;\n        C00h.A0A(c1cj, 0);\n        C05B c05bA0I = C1xk.A0I(this.A03, 1443);\n        C9PF c9pf = c9p0.A03;\n        if (c9pf != null) {\n            C0T3 c0t3A14 = C3c4.A14();\n            c0t3A14.element = Act.A00;\n            ((Asw) c9pf.A00).A7K(new A6S(c0t3A14));\n            AtC atC = (AtC) c0t3A14.element;\n            if (C00h.areEqual(atC, Acs.A00)) {\n                arO = Acp.A00;\n            } else {\n                byte[] bArrAue = atC.Aue();\n                if (bArrAue == null || (str = c9p0.A05) == null) {\n                    arO = Aco.A00;\n                } else {\n                    long j = c9p0.A00;\n                    CRF crf = new CRF();\n                    crf.A01 = c1cj;\n                    crf.A00 = c1cj;\n                    crf.A0R = str;\n                    crf.A0M = Long.valueOf(C1xo.A09(c9p0.A04) * 1000);\n                    crf.A0D = Boolean.valueOf(C00h.areEqual(c9p0.A06, \"true\"));\n                    Bp1 bp1A00 = crf.A00();\n                    DFH dfh = new DFH();\n                    try {\n                        try {\n                            BpH bpHA02 = ((C7wO) C05B.A02(this.A02)).A02(bp1A00, (BZc) CjY.A01(bArrAue).second, bArrAue);\n                            if (bpHA02 == null) {\n                                com.whatsapp.infra.logging.Log.w(\"NlStatusHistoryProcessor/processHistoryStatus/parseE2eProto returned null\");\n                                C1xi.A0h(c05bA0I).A0h(\"status-newsletter-history-dropped\", AnonymousClass000.A04(\"id=\", str), true, 2);\n                                arO = Aco.A00;\n                            } else {\n                                if (bpHA02 instanceof C73x) {\n                                    C8BW c8bw = ((C73x) bpHA02).A00;\n                                    c8bw.A0N(Long.valueOf(j));\n                                    C00s c00s = this.A00.A00;\n                                    if (C1xf.A0e(c00s).A10(22515) && (c0hsA0F = c9p0.A01.A0F(\"meta\")) != null) {\n                                        z = c0hsA0F.A0F(\"paid_partnership\") != null;\n                                    }\n                                    c8bw.A0O(z);\n                                    C9PF c9pf2 = c9p0.A02;\n                                    if (c9pf2 != null && (str4 = ((C9On) c9pf2.A00).A01) != null && str4.length() != 0 && C1xf.A0e(c00s).A10(32363)) {\n                                        C7xP.A02(c8bw, str4);\n                                    }\n                                }\n                                ((CjN) bp1A00).A01 = -2L;\n                                ((ClE) C05B.A02(this.A01)).A02(dfh, bpHA02, bp1A00, bArrAue, true, false);\n                                arO = Acq.A00;\n                            }\n                        } catch (Box e) {\n                            com.whatsapp.infra.logging.Log.w(\"NlStatusHistoryProcessor/processHistoryStatus/drop status processing\", e);\n                        } catch (Bp0 e2) {\n                            e = e2;\n                            com.whatsapp.infra.logging.Log.w(\"NlStatusHistoryProcessor/processHistoryStatus/bad e2e message\", e);\n                            c0ahA0h = C1xi.A0h(c05bA0I);\n                            strA04 = AnonymousClass000.A04(\"id=\", str);\n                            str3 = \"status-newsletter-history-bad-e2e\";\n                            c0ahA0h.A0f(str3, strA04, e, 1);\n                        } catch (Exception e3) {\n                            e = e3;\n                            com.whatsapp.infra.logging.Log.e(\"NlStatusHistoryProcessor/processHistoryStatus/failed to deserialize protobuf to FStatus\", e);\n                            c0ahA0h = C1xi.A0h(c05bA0I);\n                            strA04 = AnonymousClass000.A04(\"id=\", str);\n                            str3 = \"status-newsletter-history-deserialize-error\";\n                            c0ahA0h.A0f(str3, strA04, e, 1);\n                        }\n                    } catch (InvalidProtocolBufferException e4) {\n                        e = e4;\n                        str2 = \"NlStatusHistoryProcessor/processHistoryStatus/failed to parse E2E.Message\";\n                        com.whatsapp.infra.logging.Log.w(str2, e);\n                    } catch (Exception e5) {\n                        e = e5;\n                        str2 = \"NlStatusHistoryProcessor/processHistoryStatus/failed to extract E2E.Message\";\n                        com.whatsapp.infra.logging.Log.w(str2, e);\n                    }\n                }\n            }\n        } else {\n            arO = Aco.A00;\n        }\n        return arO;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

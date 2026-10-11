@@ -650,7 +650,7 @@ pub(crate) async fn drive(
                 }
                 let mut confirmed = false;
                 if (node.description == "receipt" || matches!(received, super::inbox::IncomingResult::Decrypted | super::inbox::IncomingResult::Duplicate))
-                    && let Some(confirmation) = super::messaging::received_confirmation(&node) {
+                    && let Some(confirmation) = super::messaging::received_confirmation_for_account(&store, &account, &node)? {
                         // Raw capture and session/inbox commit precede this write.
                         // A reconnect may confirm a genuine server redelivery again.
                         link.send(&confirmation).await?;

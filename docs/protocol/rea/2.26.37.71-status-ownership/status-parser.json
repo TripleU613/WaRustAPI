@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_78be81d0e73ab599dc3c82adc8467d5561eefbc8334614d9a3d3eeeb58b1c769",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.C1RE",
+    "method_name": "A01"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-BNUJXe/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\",\"max_heap_bytes\":15695085568}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C1RE"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"signature\":\"\\u003cinit\\u003e(): void\"},{\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false,\"signature\":\"A00(X.0Cy, X.0Cy, X.1RE, java.lang.String, long): X.Bp1\"},{\"def_pos\":0,\"name\":\"A01\",\"is_constructor\":false,\"signature\":\"A01(X.0hs, X.CaF, java.lang.Integer, long, long): android.util.Pair\"},{\"def_pos\":0,\"name\":\"A02\",\"is_constructor\":false,\"signature\":\"A02(X.0Cy, X.0Cy, java.lang.String, byte[], long): X.Bp1\"}],\"fields\":[{\"name\":\"A00\",\"def_pos\":0,\"type\":\"X.05B\"},{\"name\":\"A01\",\"def_pos\":0,\"type\":\"X.05B\"},{\"name\":\"A02\",\"def_pos\":0,\"type\":\"X.05B\"},{\"name\":\"A03\",\"def_pos\":0,\"type\":\"X.05B\"},{\"name\":\"A04\",\"def_pos\":0,\"type\":\"X.05B\"},{\"name\":\"A05\",\"def_pos\":0,\"type\":\"java.util.Set\"},{\"name\":\"A06\",\"def_pos\":0,\"type\":\"java.util.Set\"}],\"field_count\":7,\"full_name\":\"X.C1RE\",\"name\":\"C1RE\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":4}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C1RE",
+          "method_name": "A01",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"mode\":\"java\",\"markers\":[],\"method_name\":\"A01\",\"overload_count\":1,\"body\":\"    /* JADX WARN: Code duplicated, block: B:26:0x00e2  */\\n    /* JADX WARN: Code duplicated, block: B:49:0x0146  */\\n    /* JADX WARN: Code duplicated, block: B:67:0x018e  */\\n    public final Pair A01(C0hs c0hs, CaF caF, Integer num, long j, long j2) throws C4f, B7l {\\n        boolean z;\\n        boolean zValueOf;\\n        boolean z2;\\n        boolean z3;\\n        String str \\u003d caF.A0C;\\n        C05M.A0J();\\n        C00s c00s \\u003d this.A01.A00;\\n        CXt cXtA01 \\u003d CnN.A01((C08Z) c00s.get(), (Car) this.A03.A00.get(), c0hs, caF);\\n        C08B c08b \\u003d (C08B) this.A04.A00.get();\\n        C00h.A0A(c08b, 1);\\n        long jA01 \\u003d C0Gv.A01(caF.A09, C08B.A00(c08b) / 1000) * 1000;\\n        com.whatsapp.infra.core.jid.Jid jidA00 \\u003d CnN.A00(cXtA01.A00, (C08Z) c00s.get(), caF.A0A, ((C00D) this.A00.A00.get()).A10(32262));\\n        if (C0DE.A0n(jidA00) || C0DE.A0i(jidA00)) {\\n            com.whatsapp.infra.core.jid.Jid jid \\u003d cXtA01.A01;\\n            if (!CnN.A04(jid, (C08Z) c00s.get())) {\\n                C08Z c08z \\u003d (C08Z) c00s.get();\\n                C00h.A0A(c08z, 1);\\n                if (!c08z.BO0(jid instanceof UserJid ? (C0Cy) jid : null)) {\\n                    z \\u003d false;\\n                }\\n            }\\n            z \\u003d true;\\n        } else {\\n            z \\u003d false;\\n        }\\n        CRF crf \\u003d new CRF();\\n        crf.A01 \\u003d jidA00;\\n        crf.A00 \\u003d cXtA01.A01;\\n        crf.A0R \\u003d str;\\n        crf.A0M \\u003d Long.valueOf(jA01);\\n        crf.A0S \\u003d caF.A0H;\\n        crf.A0K \\u003d Long.valueOf(j2);\\n        crf.A0L \\u003d Long.valueOf(j);\\n        crf.A04 \\u003d c0hs;\\n        crf.A0J \\u003d num;\\n        if (z) {\\n            zValueOf \\u003d true;\\n        } else {\\n            zValueOf \\u003d C0DE.A0b(jidA00) ? Boolean.valueOf(caF.A0K) : false;\\n        }\\n        crf.A0D \\u003d zValueOf;\\n        Set set \\u003d this.A05;\\n        Iterator it \\u003d set.iterator();\\n        while (it.hasNext()) {\\n            ((DcW) it.next()).CF9(c0hs, crf);\\n        }\\n        C0hs[] c0hsArr \\u003d c0hs.A02;\\n        if (c0hsArr !\\u003d null) {\\n            C1ND c1nd \\u003d new C1ND(c0hsArr);\\n            while (c1nd.hasNext()) {\\n                C0hs c0hs2 \\u003d (C0hs) c1nd.next();\\n                if (c0hs2 \\u003d\\u003d null) {\\n                    throw new IllegalArgumentException(\\\"Failed requirement.\\\");\\n                }\\n                Iterator it2 \\u003d set.iterator();\\n                while (it2.hasNext()) {\\n                    ((DcW) it2.next()).CFA(c0hs2, crf);\\n                }\\n            }\\n        }\\n        Bp1 bp1A00 \\u003d crf.A00();\\n        Iterator it3 \\u003d this.A06.iterator();\\n        while (it3.hasNext()) {\\n            it3.next();\\n            String str2 \\u003d bp1A00.A0B;\\n            if (!\\\"text\\\".equals(str2) \\u0026\\u0026 !\\\"media\\\".equals(str2)) {\\n                z3 \\u003d \\\"reaction\\\".equals(str2);\\n            }\\n            if (!z3) {\\n                throw new C4f(490, \\\"Unsupported status type\\\", 4);\\n            }\\n            if (c0hs.A0F(\\\"body\\\") !\\u003d null || c0hs.A0F(\\\"media\\\") !\\u003d null) {\\n                throw new C4f(488, \\\"Received plaintext status\\\", 4);\\n            }\\n        }\\n        CaD caD \\u003d bp1A00.A00;\\n        if (!C00h.areEqual(caD.A0A, true) \\u0026\\u0026 caD.A01 \\u003d\\u003d null) {\\n            z2 \\u003d caD.A00 !\\u003d null;\\n        }\\n        Pair pairCreate \\u003d Pair.create(bp1A00, Boolean.valueOf(z2));\\n        C00h.A06(pairCreate);\\n        return pairCreate;\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.C1RE\",\"full_name\":\"X.1RE.A01\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.C1RE",
+    "method": {
+      "name": "A01",
+      "reported_signature": "A01(X.0hs, X.CaF, java.lang.Integer, long, long): android.util.Pair",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Code duplicated, block: B:26:0x00e2  */\n    /* JADX WARN: Code duplicated, block: B:49:0x0146  */\n    /* JADX WARN: Code duplicated, block: B:67:0x018e  */\n    public final Pair A01(C0hs c0hs, CaF caF, Integer num, long j, long j2) throws C4f, B7l {\n        boolean z;\n        boolean zValueOf;\n        boolean z2;\n        boolean z3;\n        String str = caF.A0C;\n        C05M.A0J();\n        C00s c00s = this.A01.A00;\n        CXt cXtA01 = CnN.A01((C08Z) c00s.get(), (Car) this.A03.A00.get(), c0hs, caF);\n        C08B c08b = (C08B) this.A04.A00.get();\n        C00h.A0A(c08b, 1);\n        long jA01 = C0Gv.A01(caF.A09, C08B.A00(c08b) / 1000) * 1000;\n        com.whatsapp.infra.core.jid.Jid jidA00 = CnN.A00(cXtA01.A00, (C08Z) c00s.get(), caF.A0A, ((C00D) this.A00.A00.get()).A10(32262));\n        if (C0DE.A0n(jidA00) || C0DE.A0i(jidA00)) {\n            com.whatsapp.infra.core.jid.Jid jid = cXtA01.A01;\n            if (!CnN.A04(jid, (C08Z) c00s.get())) {\n                C08Z c08z = (C08Z) c00s.get();\n                C00h.A0A(c08z, 1);\n                if (!c08z.BO0(jid instanceof UserJid ? (C0Cy) jid : null)) {\n                    z = false;\n                }\n            }\n            z = true;\n        } else {\n            z = false;\n        }\n        CRF crf = new CRF();\n        crf.A01 = jidA00;\n        crf.A00 = cXtA01.A01;\n        crf.A0R = str;\n        crf.A0M = Long.valueOf(jA01);\n        crf.A0S = caF.A0H;\n        crf.A0K = Long.valueOf(j2);\n        crf.A0L = Long.valueOf(j);\n        crf.A04 = c0hs;\n        crf.A0J = num;\n        if (z) {\n            zValueOf = true;\n        } else {\n            zValueOf = C0DE.A0b(jidA00) ? Boolean.valueOf(caF.A0K) : false;\n        }\n        crf.A0D = zValueOf;\n        Set set = this.A05;\n        Iterator it = set.iterator();\n        while (it.hasNext()) {\n            ((DcW) it.next()).CF9(c0hs, crf);\n        }\n        C0hs[] c0hsArr = c0hs.A02;\n        if (c0hsArr != null) {\n            C1ND c1nd = new C1ND(c0hsArr);\n            while (c1nd.hasNext()) {\n                C0hs c0hs2 = (C0hs) c1nd.next();\n                if (c0hs2 == null) {\n                    throw new IllegalArgumentException(\"Failed requirement.\");\n                }\n                Iterator it2 = set.iterator();\n                while (it2.hasNext()) {\n                    ((DcW) it2.next()).CFA(c0hs2, crf);\n                }\n            }\n        }\n        Bp1 bp1A00 = crf.A00();\n        Iterator it3 = this.A06.iterator();\n        while (it3.hasNext()) {\n            it3.next();\n            String str2 = bp1A00.A0B;\n            if (!\"text\".equals(str2) && !\"media\".equals(str2)) {\n                z3 = \"reaction\".equals(str2);\n            }\n            if (!z3) {\n                throw new C4f(490, \"Unsupported status type\", 4);\n            }\n            if (c0hs.A0F(\"body\") != null || c0hs.A0F(\"media\") != null) {\n                throw new C4f(488, \"Received plaintext status\", 4);\n            }\n        }\n        CaD caD = bp1A00.A00;\n        if (!C00h.areEqual(caD.A0A, true) && caD.A01 == null) {\n            z2 = caD.A00 != null;\n        }\n        Pair pairCreate = Pair.create(bp1A00, Boolean.valueOf(z2));\n        C00h.A06(pairCreate);\n        return pairCreate;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

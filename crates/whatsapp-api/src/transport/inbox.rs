@@ -311,8 +311,8 @@ pub fn sender_key_chat(node: &Node) -> Option<(Jid, Jid)> {
 
 /// Groups only. Separate from [`sender_key_chat`] because a group and a
 /// broadcast take *different* receipt shapes: a group's carries neither `type`
-/// nor `class`, while a status broadcast carries `type="sender"`,
-/// `class="status"`, without sts (2.26.37.71 `LX/Cp2->A06`). Widening this
+/// nor `class`, while status carries `class="status"` without sts;
+/// sender type requires own-account context (2.26.37.71 Cp2.A06). Widening this
 /// would send a group-shaped receipt for a status update.
 pub fn group_sender(node: &Node) -> Option<(Jid, Jid)> {
     let (chat, participant) = sender_key_chat(node)?;
@@ -1936,8 +1936,8 @@ mod tests {
     /// A status update is addressed `from=status@broadcast participant=<poster>`
     /// and is sender-key encrypted exactly like a group message, so it must
     /// route through the same decryption path — but it must NOT be treated as a
-    /// group by the receipt builder, whose status shape (`class="status"`,
-    /// `type="sender"`) is not implemented yet.
+    /// group by the receipt builder; a remote status carries class=status
+    /// without type, while an own-account status requires sender type.
     #[test]
     fn status_routes_for_decryption_but_not_as_a_group() {
         let status = Node::new("message")
@@ -1949,11 +1949,11 @@ mod tests {
         assert_eq!(chat.user, "status");
         assert_eq!(sender.user, "15555550100");
         // Not a group: it must never get a *group-shaped* receipt. It does get
-        // a receipt, but the status one — `type="sender"`, `class="status"`.
+        // a receipt with class=status; this peer status has no sender type.
         assert!(group_sender(&status).is_none());
         let receipt = super::super::messaging::received_confirmation(&status)
             .expect("a decrypted status is confirmed, with the status shape");
-        assert_eq!(receipt.get_attr("type").unwrap().as_text(), Some("sender"));
+        assert!(receipt.get_attr("type").is_none());
         assert_eq!(receipt.get_attr("class").unwrap().as_text(), Some("status"));
         // A broadcast list routes the same way as status.
         let list = Node::new("message")
@@ -1962,7 +1962,7 @@ mod tests {
             .attr("id", "b1");
         assert!(sender_key_chat(&list).is_some());
         assert!(group_sender(&list).is_none());
-        // A broadcast list takes the same status-shaped receipt.
+        // shortcut: broadcast-list class is unported, replace after its ordinary receive dispatch trace.
         assert_eq!(
             super::super::messaging::received_confirmation(&list)
                 .unwrap()

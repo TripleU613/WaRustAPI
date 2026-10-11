@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_8dc27f1936eef6a485cd91366b2f9dc33fdc39b1d2d181ba5197ad5c8fd47b33",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.D28",
+    "method_name": "Bz0"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-OKNyuG/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":15695085568,\"java_version\":\"21.0.12.1\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.D28"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(): void\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\"},{\"def_pos\":0,\"signature\":\"A00(): X.C3b\",\"is_constructor\":false,\"name\":\"A00\"},{\"def_pos\":0,\"signature\":\"AwH(): java.lang.Integer\",\"is_constructor\":false,\"name\":\"AwH\"},{\"def_pos\":0,\"signature\":\"Byx(X.Ciy, X.178, X.BOF): void\",\"is_constructor\":false,\"name\":\"Byx\"},{\"def_pos\":0,\"signature\":\"Byy(X.Ciy, X.8BW, X.BOF): void\",\"is_constructor\":false,\"name\":\"Byy\"},{\"def_pos\":0,\"signature\":\"Byz(X.CXl, X.178, X.BZY): void\",\"is_constructor\":false,\"name\":\"Byz\"},{\"def_pos\":0,\"signature\":\"Bz0(X.CXl, X.8BW, X.BZY): void\",\"is_constructor\":false,\"name\":\"Bz0\"},{\"def_pos\":0,\"signature\":\"BzL(): void\",\"is_constructor\":false,\"name\":\"BzL\"},{\"def_pos\":0,\"signature\":\"BzM(java.util.List): void\",\"is_constructor\":false,\"name\":\"BzM\"}],\"method_count\":9,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"D28\",\"full_name\":\"X.D28\",\"field_count\":4,\"fields\":[{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A03\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.D28",
+          "method_name": "Bz0",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.D28.Bz0\",\"class_name\":\"X.D28\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    @Override // X.DdI\\n    public void Bz0(CXl cXl, C8BW c8bw, BZY bzy) throws C73u {\\n        Long lA0p;\\n        boolean zA1Z \\u003d Ayk.A1Z(bzy, c8bw, cXl);\\n        if (bzy.messageAddOns_.size() \\u003e 0) {\\n            ArrayList arrayListA1D \\u003d C1xf.A1D();\\n            Iterator itA1C \\u003d Ayl.A1C(bzy.messageAddOns_);\\n            while (itA1C.hasNext()) {\\n                BY8 by8 \\u003d (BY8) itA1C.next();\\n                C3b c3bForNumber \\u003d C3b.forNumber(by8.messageAddOnType_);\\n                if (c3bForNumber \\u003d\\u003d null) {\\n                    c3bForNumber \\u003d C3b.A05;\\n                }\\n                if (c3bForNumber \\u003d\\u003d A00() \\u0026\\u0026 (by8.bitField0_ \\u0026 2) !\\u003d 0) {\\n                    BZc bZc \\u003d by8.messageAddOn_;\\n                    if (bZc \\u003d\\u003d null) {\\n                        bZc \\u003d BZc.DEFAULT_INSTANCE;\\n                    }\\n                    C00s c00s \\u003d this.A03.A00;\\n                    Cn8 cn8 \\u003d (Cn8) c00s.get();\\n                    BZa bZa \\u003d by8.messageAddOnKey_;\\n                    if (bZa \\u003d\\u003d null) {\\n                        bZa \\u003d BZa.DEFAULT_INSTANCE;\\n                    }\\n                    CUq cUqA02 \\u003d Cn8.A02(cXl, cn8, bZa);\\n                    c00s.get();\\n                    long jA00 \\u003d Cn8.A00(bzy);\\n                    CRF crf \\u003d new CRF();\\n                    C1gc c1gc \\u003d cUqA02.A01;\\n                    crf.A0R \\u003d c1gc.A01;\\n                    crf.A0D \\u003d Boolean.valueOf(c1gc.A02);\\n                    com.whatsapp.infra.core.jid.Jid jid \\u003d cUqA02.A00;\\n                    if (jid \\u003d\\u003d null) {\\n                        jid \\u003d C0DR.A00;\\n                    }\\n                    crf.A00 \\u003d jid;\\n                    crf.A01 \\u003d c1gc.A00;\\n                    crf.A0M \\u003d Long.valueOf(jA00);\\n                    C00h.A09(bZc);\\n                    C1vy c1vyA01 \\u003d ((C7tQ) C05B.A02(this.A02)).A01(new CXu(crf.A00(), bZc, zA1Z));\\n                    if (c1vyA01.A01 \\u003d\\u003d 0 \\u0026\\u0026 (by8.bitField0_ \\u0026 8) !\\u003d 0) {\\n                        c1vyA01.A01 \\u003d by8.serverTimestampMs_;\\n                    }\\n                    arrayListA1D.add(c1vyA01);\\n                }\\n            }\\n            if (arrayListA1D.isEmpty()) {\\n                return;\\n            }\\n            if ((this instanceof Bah) \\u0026\\u0026 (lA0p \\u003d C8kX.A0p()) !\\u003d null) {\\n                c8bw.A0K(lA0p.longValue());\\n            }\\n            C8Ep c8Ep \\u003d c8bw.A0H;\\n            if (c8Ep \\u003d\\u003d null) {\\n                c8bw.A0H \\u003d new C8Ep(arrayListA1D);\\n            } else {\\n                c8Ep.A00.addAll(arrayListA1D);\\n            }\\n        }\\n    }\",\"overload_count\":1,\"method_name\":\"Bz0\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.D28",
+    "method": {
+      "name": "Bz0",
+      "reported_signature": "Bz0(X.CXl, X.8BW, X.BZY): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    @Override // X.DdI\n    public void Bz0(CXl cXl, C8BW c8bw, BZY bzy) throws C73u {\n        Long lA0p;\n        boolean zA1Z = Ayk.A1Z(bzy, c8bw, cXl);\n        if (bzy.messageAddOns_.size() > 0) {\n            ArrayList arrayListA1D = C1xf.A1D();\n            Iterator itA1C = Ayl.A1C(bzy.messageAddOns_);\n            while (itA1C.hasNext()) {\n                BY8 by8 = (BY8) itA1C.next();\n                C3b c3bForNumber = C3b.forNumber(by8.messageAddOnType_);\n                if (c3bForNumber == null) {\n                    c3bForNumber = C3b.A05;\n                }\n                if (c3bForNumber == A00() && (by8.bitField0_ & 2) != 0) {\n                    BZc bZc = by8.messageAddOn_;\n                    if (bZc == null) {\n                        bZc = BZc.DEFAULT_INSTANCE;\n                    }\n                    C00s c00s = this.A03.A00;\n                    Cn8 cn8 = (Cn8) c00s.get();\n                    BZa bZa = by8.messageAddOnKey_;\n                    if (bZa == null) {\n                        bZa = BZa.DEFAULT_INSTANCE;\n                    }\n                    CUq cUqA02 = Cn8.A02(cXl, cn8, bZa);\n                    c00s.get();\n                    long jA00 = Cn8.A00(bzy);\n                    CRF crf = new CRF();\n                    C1gc c1gc = cUqA02.A01;\n                    crf.A0R = c1gc.A01;\n                    crf.A0D = Boolean.valueOf(c1gc.A02);\n                    com.whatsapp.infra.core.jid.Jid jid = cUqA02.A00;\n                    if (jid == null) {\n                        jid = C0DR.A00;\n                    }\n                    crf.A00 = jid;\n                    crf.A01 = c1gc.A00;\n                    crf.A0M = Long.valueOf(jA00);\n                    C00h.A09(bZc);\n                    C1vy c1vyA01 = ((C7tQ) C05B.A02(this.A02)).A01(new CXu(crf.A00(), bZc, zA1Z));\n                    if (c1vyA01.A01 == 0 && (by8.bitField0_ & 8) != 0) {\n                        c1vyA01.A01 = by8.serverTimestampMs_;\n                    }\n                    arrayListA1D.add(c1vyA01);\n                }\n            }\n            if (arrayListA1D.isEmpty()) {\n                return;\n            }\n            if ((this instanceof Bah) && (lA0p = C8kX.A0p()) != null) {\n                c8bw.A0K(lA0p.longValue());\n            }\n            C8Ep c8Ep = c8bw.A0H;\n            if (c8Ep == null) {\n                c8bw.A0H = new C8Ep(arrayListA1D);\n            } else {\n                c8Ep.A00.addAll(arrayListA1D);\n            }\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

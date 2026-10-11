@@ -36,10 +36,10 @@ broadcast list (`<id>@broadcast`), which is addressed the same way.
 
 ## Delivery receipt (implemented)
 
-`received_confirmation` emits, for its supported decrypted status sender branch:
+`received_confirmation` emits for a supported remote decrypted status:
 
 ```
-<receipt to="status@broadcast" id=<id> type="sender" participant=<poster DeviceJid> class="status"/>
+<receipt to="status@broadcast" id=<id> participant=<poster DeviceJid> class="status"/>
 ```
 
 **Confirmed static / corrected 2026-10-11:** in pinned WhatsApp 2.26.37.71,
@@ -67,10 +67,14 @@ corrects that uncertainty. The confirmed append gates are:
 
 A06 chooses sender type only when Bp1.A05 is true; its other branch passes null.
 Both branches add class=status, mode=0, null recipient and signed long -1.
-The effective Bp1.A05 producer/admission remains unported here; the current
-supported Rust status sender branch retains sender type. No meta child is
-emitted because mode=0. Attribute order is to, id, type, participant, then class
-for this branch. Primary device class/writer normalization remains separate.
+[Status ownership tracing](status-ownership.md) now establishes that Bp1.A05
+is fromMe. The actor compares the participant with saved own PN/LID authority
+and adds type=sender only on that own-account branch; peer status has no type.
+The context-free builder renders remote status. Full alternative/native status
+admission remains unfinished. No meta child is
+emitted because mode=0. Attribute order is to, id, participant, class for remote status; sender type
+precedes participant for own status. Primary device wire forms are now covered
+by the [factory/writer follow-up](message-primary-device.md).
 
 Confirmation stays gated on Decrypted/Duplicate; unsupported stanzas are not
 confirmed. Fresh status delivery/server acceptance remains unverified.

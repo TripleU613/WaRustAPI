@@ -1,3 +1,11 @@
+2026-10-11 — **Implemented/offline:** remote status confirmations now omit
+sender type; the actor adds it only for participants matching saved own PN/LID,
+including own companions. Bp1.A05 is traced through parsed fromMe and native
+BO0, with all direct field writers retained. Peer ownership/alias claims do not
+select this branch. Invalid own-LID authority refuses without repair. Broader
+status admission, broadcast-list class and fresh live acceptance remain open.
+[Ownership flow, contextual actor and source/guard tests](status-ownership.md).
+
 2026-10-11 — **Implemented/offline:** message delivery/read/opened confirmation
 addresses now match native primary devices: PN zero uses JID_PAIR and LID zero
 uses AD. Factory/subtype and direct writer closure refute the old attribute-copy

@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_34952cfd5cda783753cae8c9330d09f786e206ea46055d3adc8843be6a03b2f2",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.Bp1",
+    "method_name": "<init>"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-BNUJXe/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\",\"max_heap_bytes\":15695085568}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.Bp1"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"signature\":\"\\u003cinit\\u003e(com.whatsapp.infra.core.jid.Jid, com.whatsapp.infra.core.jid.Jid, X.0hs, X.CaD, java.lang.Integer, java.lang.Integer, java.lang.Long, java.lang.Long, java.lang.String, java.lang.String, java.lang.String, java.lang.String, long, boolean): void\"},{\"def_pos\":0,\"name\":\"A08\",\"is_constructor\":false,\"signature\":\"A08(java.lang.Integer, java.lang.String): X.Cb1\"}],\"fields\":[{\"name\":\"A00\",\"def_pos\":0,\"type\":\"X.CaD\"},{\"name\":\"A01\",\"def_pos\":0,\"type\":\"java.lang.Integer\"},{\"name\":\"A02\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"A03\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"A04\",\"def_pos\":0,\"type\":\"java.util.HashMap\"},{\"name\":\"A05\",\"def_pos\":0,\"type\":\"boolean\"}],\"field_count\":6,\"full_name\":\"X.Bp1\",\"name\":\"Bp1\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":2}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.Bp1",
+          "method_name": "<init>",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"mode\":\"java\",\"markers\":[],\"method_name\":\"\\u003cinit\\u003e\",\"overload_count\":1,\"body\":\"    public Bp1(com.whatsapp.infra.core.jid.Jid jid, com.whatsapp.infra.core.jid.Jid jid2, C0hs c0hs, CaD caD, Integer num, Integer num2, Long l, Long l2, String str, String str2, String str3, String str4, long j, boolean z) {\\n        super(jid, jid2, c0hs, num, l, l2, str, str2, j);\\n        this.A05 \\u003d z;\\n        this.A01 \\u003d num2;\\n        this.A02 \\u003d str3;\\n        this.A03 \\u003d str4;\\n        this.A00 \\u003d caD;\\n        this.A04 \\u003d C1xf.A1F();\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.Bp1\",\"full_name\":\"X.Bp1.\\u003cinit\\u003e\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.Bp1",
+    "method": {
+      "name": "<init>",
+      "reported_signature": "<init>(com.whatsapp.infra.core.jid.Jid, com.whatsapp.infra.core.jid.Jid, X.0hs, X.CaD, java.lang.Integer, java.lang.Integer, java.lang.Long, java.lang.Long, java.lang.String, java.lang.String, java.lang.String, java.lang.String, long, boolean): void",
+      "overload_index": 0,
+      "is_constructor": true,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public Bp1(com.whatsapp.infra.core.jid.Jid jid, com.whatsapp.infra.core.jid.Jid jid2, C0hs c0hs, CaD caD, Integer num, Integer num2, Long l, Long l2, String str, String str2, String str3, String str4, long j, boolean z) {\n        super(jid, jid2, c0hs, num, l, l2, str, str2, j);\n        this.A05 = z;\n        this.A01 = num2;\n        this.A02 = str3;\n        this.A03 = str4;\n        this.A00 = caD;\n        this.A04 = C1xf.A1F();\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

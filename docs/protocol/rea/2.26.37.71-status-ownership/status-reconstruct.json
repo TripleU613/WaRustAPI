@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_7ff546b770238ff5abee313429715f16f73f2ec26db451b8b5a4b7354733159b",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.Cj1",
+    "method_name": "A02"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-BNUJXe/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\",\"max_heap_bytes\":15695085568}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.Cj1"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"signature\":\"\\u003cinit\\u003e(): void\"},{\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false,\"signature\":\"A00(X.0hs): X.CWn\"},{\"def_pos\":0,\"name\":\"A01\",\"is_constructor\":false,\"signature\":\"A01(X.0hs): X.CWn\"},{\"def_pos\":0,\"name\":\"A02\",\"is_constructor\":false,\"signature\":\"A02(com.whatsapp.infra.core.jid.Jid, com.whatsapp.infra.core.jid.Jid, X.0hs, java.lang.Integer, java.lang.Long, java.lang.Long, java.lang.String, kotlin.jvm.functions.Function1, long): X.Bp1\"},{\"def_pos\":0,\"name\":\"A03\",\"is_constructor\":false,\"signature\":\"A03(X.0hs, X.BpL, X.9Qb, X.CWn, java.lang.Integer, java.lang.Long): X.Bp1\"},{\"def_pos\":0,\"name\":\"A04\",\"is_constructor\":false,\"signature\":\"A04(X.0hs, X.BpK, X.9Qb, X.CWn, java.lang.Integer, java.lang.Long): X.Bp1\"},{\"def_pos\":0,\"name\":\"A05\",\"is_constructor\":false,\"signature\":\"A05(X.0hs, java.lang.Long): X.Bp1\"}],\"fields\":[{\"name\":\"A00\",\"def_pos\":0,\"type\":\"X.05B\"},{\"name\":\"A01\",\"def_pos\":0,\"type\":\"X.05B\"}],\"field_count\":2,\"full_name\":\"X.Cj1\",\"name\":\"Cj1\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":7}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.Cj1",
+          "method_name": "A02",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"mode\":\"java\",\"markers\":[],\"method_name\":\"A02\",\"overload_count\":1,\"body\":\"    /* JADX WARN: Code duplicated, block: B:9:0x0038  */\\n    public final Bp1 A02(com.whatsapp.infra.core.jid.Jid jid, com.whatsapp.infra.core.jid.Jid jid2, C0hs c0hs, Integer num, Long l, Long l2, String str, Function1 function1, long j) {\\n        boolean z;\\n        C00h.A0A(str, 2);\\n        CRF crf \\u003d new CRF();\\n        crf.A01 \\u003d jid;\\n        crf.A00 \\u003d jid2;\\n        crf.A0R \\u003d str;\\n        crf.A0M \\u003d Long.valueOf(j);\\n        C00s c00s \\u003d this.A00.A00;\\n        if (!CnN.A04(jid2, C1xf.A0p(c00s))) {\\n            C08Z c08zA0p \\u003d C1xf.A0p(c00s);\\n            C00h.A0A(c08zA0p, 1);\\n            z \\u003d c08zA0p.BO0(jid2 instanceof UserJid ? (C0Cy) jid2 : null);\\n        }\\n        crf.A0D \\u003d Boolean.valueOf(z);\\n        crf.A0S \\u003d C8kT.A18(c0hs, \\\"type\\\");\\n        crf.A04 \\u003d c0hs;\\n        crf.A0J \\u003d num;\\n        crf.A0T \\u003d \\\"status\\\";\\n        if (l2 \\u003d\\u003d null) {\\n            l2 \\u003d Long.valueOf(C1xj.A02(this.A01));\\n        }\\n        crf.A0K \\u003d l2;\\n        C1xf.A1V(this.A01);\\n        crf.A0L \\u003d C6am.A14();\\n        crf.A0H \\u003d l !\\u003d null ? Integer.valueOf((int) l.longValue()) : null;\\n        function1.invoke(crf);\\n        return crf.A00();\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.Cj1\",\"full_name\":\"X.Cj1.A02\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.Cj1",
+    "method": {
+      "name": "A02",
+      "reported_signature": "A02(com.whatsapp.infra.core.jid.Jid, com.whatsapp.infra.core.jid.Jid, X.0hs, java.lang.Integer, java.lang.Long, java.lang.Long, java.lang.String, kotlin.jvm.functions.Function1, long): X.Bp1",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Code duplicated, block: B:9:0x0038  */\n    public final Bp1 A02(com.whatsapp.infra.core.jid.Jid jid, com.whatsapp.infra.core.jid.Jid jid2, C0hs c0hs, Integer num, Long l, Long l2, String str, Function1 function1, long j) {\n        boolean z;\n        C00h.A0A(str, 2);\n        CRF crf = new CRF();\n        crf.A01 = jid;\n        crf.A00 = jid2;\n        crf.A0R = str;\n        crf.A0M = Long.valueOf(j);\n        C00s c00s = this.A00.A00;\n        if (!CnN.A04(jid2, C1xf.A0p(c00s))) {\n            C08Z c08zA0p = C1xf.A0p(c00s);\n            C00h.A0A(c08zA0p, 1);\n            z = c08zA0p.BO0(jid2 instanceof UserJid ? (C0Cy) jid2 : null);\n        }\n        crf.A0D = Boolean.valueOf(z);\n        crf.A0S = C8kT.A18(c0hs, \"type\");\n        crf.A04 = c0hs;\n        crf.A0J = num;\n        crf.A0T = \"status\";\n        if (l2 == null) {\n            l2 = Long.valueOf(C1xj.A02(this.A01));\n        }\n        crf.A0K = l2;\n        C1xf.A1V(this.A01);\n        crf.A0L = C6am.A14();\n        crf.A0H = l != null ? Integer.valueOf((int) l.longValue()) : null;\n        function1.invoke(crf);\n        return crf.A00();\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

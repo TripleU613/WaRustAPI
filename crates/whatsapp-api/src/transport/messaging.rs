@@ -583,7 +583,7 @@ pub fn available_presence() -> Node {
     Node::new("presence").attr("type", "available")
 }
 
-/// Primary delivery receipt for a direct or group message, or a receipt
+/// Remote delivery receipt for a direct or group message, or a receipt
 /// acknowledgement. Never a read/played/opened receipt. Caller must durably
 /// store the incoming frame and authenticate messages before acknowledging them.
 ///
@@ -616,7 +616,8 @@ pub fn received_confirmation(incoming: &Node) -> Option<Node> {
         jid
     };
     // APK 37.71 Cp2.A06 passes signed -1 to A00, so sts (>0) is omitted.
-    // Its sender branch carries class=status and mode=0, without a meta child.
+    // Remote statuses carry class=status and mode=0; sender requires own-account context.
+    // shortcut: broadcast lists share status class, split after their receive dispatcher is traced.
     if incoming.description == "message"
         && let Some((chat, participant)) = super::inbox::sender_key_chat(incoming)
         && chat.server == crate::model::jid::Server::Broadcast
@@ -632,7 +633,6 @@ pub fn received_confirmation(incoming: &Node) -> Option<Node> {
             Node::new("receipt")
                 .attr("to", chat)
                 .attr("id", id)
-                .attr("type", "sender")
                 .attr("participant", device_form(participant))
                 .attr("class", "status"),
         );
@@ -686,6 +686,46 @@ pub fn received_confirmation(incoming: &Node) -> Option<Node> {
             .attr("to", device_form(jid))
             .attr("id", id),
     )
+}
+
+pub(crate) fn received_confirmation_for_account(
+    store: &crate::store::ProtocolStore,
+    account: &crate::session::AccountRecord,
+    incoming: &Node,
+) -> crate::Result<Option<Node>> {
+    let Some(mut receipt) = received_confirmation(incoming) else {
+        return Ok(None);
+    };
+    if receipt.description == "receipt"
+        && receipt
+            .get_attr("to")
+            .and_then(|v| v.as_jid())
+            .is_some_and(|jid| {
+                jid.server == crate::model::jid::Server::Broadcast && jid.user == "status"
+            })
+    {
+        let Some(sender) = super::receipts::jid(incoming, "participant") else {
+            return Ok(None);
+        };
+        let sender = sender.to_non_ad();
+        // APK 1RE.A01 / CnN.A04 -> 08i.BO0 uses stored own PN/LID, not peer aliases.
+        let own = account
+            .own_jid
+            .as_ref()
+            .is_some_and(|jid| jid.to_non_ad() == sender)
+            || (sender.server == crate::model::jid::Server::Lid
+                && super::group_send::own_lid(store)?.as_ref() == Some(&sender));
+        if own {
+            receipt.attributes.insert(
+                2,
+                crate::binary::Attribute {
+                    name: "type".into(),
+                    value: "sender".into(),
+                },
+            );
+        }
+    }
+    Ok(Some(receipt))
 }
 
 /// Acknowledge an incoming receipt, as `LX/Cp2->A05` (2.26.37.71,
@@ -1249,7 +1289,7 @@ mod tests {
                 .unwrap();
         assert!(direct.get_attr("participant").is_none());
     }
-    /// APK Cp2.A06 sender branch: class=status, signed sts=-1 and mode=0.
+    /// APK Cp2.A06 remote branch: null type, class=status, sts=-1 and mode=0.
     #[test]
     fn message_confirmation_uses_native_primary_device_wire_forms() {
         use crate::model::jid::{JidKind, Server};
@@ -1298,7 +1338,90 @@ mod tests {
     }
 
     #[test]
-    fn status_receipt_carries_sender_type_status_class_without_sts() {
+    fn status_sender_type_uses_saved_own_authority_and_keeps_attribute_order() {
+        use super::super::{group_send, identity_notifications::tests as identities};
+        let dir = tempfile::tempdir().unwrap();
+        let store = crate::store::ProtocolStore::open(crate::store::OpenOptions {
+            path: dir.path().join("status-ownership.redb"),
+            account_id: crate::model::ids::AccountId::new("fixture").unwrap(),
+            create: true,
+            key_source: std::sync::Arc::new(crate::store::StaticKeySource::new(
+                crate::store::MasterKey::from_bytes([9; 32]),
+            )),
+        })
+        .unwrap();
+        let account = identities::account();
+        store
+            .write(|tx| group_send::record_own_lid(tx, &Jid::parse("100009@lid").unwrap()))
+            .unwrap();
+        for (participant, own) in [
+            ("15555550999@s.whatsapp.net", true),
+            ("15555550999:2@s.whatsapp.net", true),
+            ("100009@lid", true),
+            ("100009:2@lid", true),
+            ("15555550100@s.whatsapp.net", false),
+            ("100001@lid", false),
+        ] {
+            let incoming = Node::new("message")
+                .attr("id", "OWN-STATUS")
+                .attr("from", "status@broadcast")
+                .attr("participant", participant)
+                .attr("from_me", "true")
+                .attr("sender_pn", "15555550999@s.whatsapp.net");
+            let before = incoming.clone();
+            let receipt = received_confirmation_for_account(&store, &account, &incoming)
+                .unwrap()
+                .unwrap();
+            assert_eq!(incoming, before);
+            assert_eq!(
+                receipt.get_attr("type").and_then(|v| v.as_text()),
+                own.then_some("sender")
+            );
+            let expected = if own {
+                vec!["to", "id", "type", "participant", "class"]
+            } else {
+                vec!["to", "id", "participant", "class"]
+            };
+            assert_eq!(
+                receipt
+                    .attributes
+                    .iter()
+                    .map(|a| a.name.as_str())
+                    .collect::<Vec<_>>(),
+                expected
+            );
+            assert_eq!(
+                receipt.get_attr("class").and_then(|v| v.as_text()),
+                Some("status")
+            );
+            assert!(receipt.get_attr("sts").is_none());
+        }
+        store
+            .write(|tx| {
+                tx.put_json(
+                    crate::store::Table::Checkpoints,
+                    b"login-identity",
+                    1,
+                    &serde_json::json!({"lid":"100008@lid"}),
+                )
+            })
+            .unwrap();
+        let incoming = Node::new("message")
+            .attr("from", "status@broadcast")
+            .attr("participant", "100009@lid")
+            .attr("id", "CONFLICT");
+        assert!(received_confirmation_for_account(&store, &account, &incoming).is_err());
+        let direct = Node::new("message")
+            .attr("from", "15555550100@s.whatsapp.net")
+            .attr("id", "DIRECT");
+        assert_eq!(
+            received_confirmation_for_account(&store, &account, &direct).unwrap(),
+            received_confirmation(&direct)
+        );
+    }
+
+    #[test]
+    fn remote_status_receipt_has_status_class_without_sender_or_sts() {
         let status = Jid::parse("status@broadcast").unwrap();
         let poster = Jid::parse("15551234567:3@s.whatsapp.net").unwrap();
         let receipt = received_confirmation(
@@ -1311,7 +1434,10 @@ mod tests {
         assert_eq!(receipt.description, "receipt");
         assert_eq!(receipt.get_attr("to").unwrap().as_jid(), Some(&status));
         assert_eq!(receipt.get_attr("id").unwrap().as_text(), Some("S1"));
-        assert_eq!(receipt.get_attr("type").unwrap().as_text(), Some("sender"));
+        assert!(
+            receipt.get_attr("type").is_none(),
+            "Cp2.A06 sender is fromMe only"
+        );
         assert_eq!(receipt.get_attr("class").unwrap().as_text(), Some("status"));
         assert!(
             receipt.get_attr("sts").is_none(),

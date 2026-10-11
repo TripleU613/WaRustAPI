@@ -1,0 +1,17 @@
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+classes.dex  LX/1RE;->A00(LLLLLJ)
+  write opcode 0x5b, dex byte offset: 0x8e037e
+classes.dex  LX/1RE;->A01(LLLLJJ)
+  write opcode 0x5b, dex byte offset: 0x8e055c
+classes.dex  LX/1RY;->A06(VLL)
+  write opcode 0x5b, dex byte offset: 0x8e3678
+classes6.dex  LX/9wp;->A00(LLL)
+  write opcode 0x5b, dex byte offset: 0x45da80
+classes7.dex  LX/CRF;->A00(L)
+  read opcode 0x54, dex byte offset: 0x5aaff0
+classes7.dex  LX/Cj1;->A02(LLLLLLLLLJ)
+  write opcode 0x5b, dex byte offset: 0x61ef82
+classes7.dex  LX/D28;->Bz0(VLLL)
+  write opcode 0x5b, dex byte offset: 0x731660
+classes7.dex  LX/DG0;->CEt(LL)
+  write opcode 0x5b, dex byte offset: 0x7a9794

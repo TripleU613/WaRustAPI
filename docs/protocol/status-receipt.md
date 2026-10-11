@@ -33,7 +33,7 @@ state, raw capture, original IDs, reservations and server waits are unchanged.
 target/debug/xtask apk-research-bundle ~/Downloads/WhatsApp.apk \
   --recipe docs/protocol/apk/recipes/2.26.37.71-status-receipt.json \
   --output docs/protocol/apk/2.26.37.71-status-receipt --check
-cargo test -p whatsapp-api --all-features status_receipt_carries
+cargo test -p whatsapp-api --all-features remote_status_receipt_has
 ```
 
 Two topics export seven files / 35,332 bytes. A later APK release requires
@@ -69,3 +69,8 @@ Follow-up: [primary device factory and writer closure](message-primary-device.md
 now establishes and implements PN/LID primary sender wire forms in the shared
 confirmation builder. The earlier trace boundary above is historical; full
 Bp1.A05 producer/admission remains unported.
+
+Follow-up: [status ownership and sender selection](status-ownership.md) now
+traces Bp1.A05 to parsed fromMe and the own-user predicate. Remote statuses omit
+type; the authenticated actor supplies sender only for saved own PN/LID. The
+earlier producer boundary above is superseded for this supported receive path.

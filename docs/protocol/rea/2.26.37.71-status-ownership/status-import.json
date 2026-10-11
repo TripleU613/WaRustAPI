@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_c4601dd4c4f7318a7c0fb57dba244e9d2637f8c82dd53d13b0726a83dd68959e",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.DG0",
+    "method_name": "CEt"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-OKNyuG/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":15695085568,\"java_version\":\"21.0.12.1\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.DG0"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(): void\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\"},{\"def_pos\":0,\"signature\":\"AD3(X.8BW, X.BOF): void\",\"is_constructor\":false,\"name\":\"AD3\"},{\"def_pos\":0,\"signature\":\"CEt(X.BZY): X.8BW\",\"is_constructor\":false,\"name\":\"CEt\"}],\"method_count\":3,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"DG0\",\"full_name\":\"X.DG0\",\"field_count\":1,\"fields\":[{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A00\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.DG0",
+          "method_name": "CEt",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.DG0.CEt\",\"class_name\":\"X.DG0\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    @Override // X.Dbh\\n    public C8BW CEt(BZY bzy) {\\n        CRF crf \\u003d new CRF();\\n        BZa bZa \\u003d bzy.key_;\\n        BZa bZa2 \\u003d bZa;\\n        if (bZa \\u003d\\u003d null) {\\n            bZa \\u003d BZa.DEFAULT_INSTANCE;\\n        }\\n        crf.A0R \\u003d bZa.id_;\\n        if (bZa2 \\u003d\\u003d null) {\\n            bZa2 \\u003d BZa.DEFAULT_INSTANCE;\\n        }\\n        crf.A0D \\u003d Boolean.valueOf(bZa2.fromMe_);\\n        C0D7 c0d7 \\u003d C0Cy.A00;\\n        C0Cy c0CyA02 \\u003d c0d7.A02(bzy.participant_);\\n        if (c0CyA02 \\u003d\\u003d null) {\\n            c0CyA02 \\u003d C0DR.A00;\\n        }\\n        crf.A00 \\u003d c0CyA02;\\n        BZa bZa3 \\u003d bzy.key_;\\n        if (bZa3 \\u003d\\u003d null) {\\n            bZa3 \\u003d BZa.DEFAULT_INSTANCE;\\n        }\\n        crf.A01 \\u003d c0d7.A02(bZa3.remoteJid_);\\n        crf.A0M \\u003d Long.valueOf(bzy.messageTimestamp_ * 1000);\\n        BZc bZc \\u003d bzy.message_;\\n        if (bZc \\u003d\\u003d null) {\\n            bZc \\u003d BZc.DEFAULT_INSTANCE;\\n        }\\n        C00h.A06(bZc);\\n        return ((C7tT) C05B.A02(this.A00)).A01(new CXu(crf.A00(), bZc, true));\\n    }\",\"overload_count\":1,\"method_name\":\"CEt\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.DG0",
+    "method": {
+      "name": "CEt",
+      "reported_signature": "CEt(X.BZY): X.8BW",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    @Override // X.Dbh\n    public C8BW CEt(BZY bzy) {\n        CRF crf = new CRF();\n        BZa bZa = bzy.key_;\n        BZa bZa2 = bZa;\n        if (bZa == null) {\n            bZa = BZa.DEFAULT_INSTANCE;\n        }\n        crf.A0R = bZa.id_;\n        if (bZa2 == null) {\n            bZa2 = BZa.DEFAULT_INSTANCE;\n        }\n        crf.A0D = Boolean.valueOf(bZa2.fromMe_);\n        C0D7 c0d7 = C0Cy.A00;\n        C0Cy c0CyA02 = c0d7.A02(bzy.participant_);\n        if (c0CyA02 == null) {\n            c0CyA02 = C0DR.A00;\n        }\n        crf.A00 = c0CyA02;\n        BZa bZa3 = bzy.key_;\n        if (bZa3 == null) {\n            bZa3 = BZa.DEFAULT_INSTANCE;\n        }\n        crf.A01 = c0d7.A02(bZa3.remoteJid_);\n        crf.A0M = Long.valueOf(bzy.messageTimestamp_ * 1000);\n        BZc bZc = bzy.message_;\n        if (bZc == null) {\n            bZc = BZc.DEFAULT_INSTANCE;\n        }\n        C00h.A06(bZc);\n        return ((C7tT) C05B.A02(this.A00)).A01(new CXu(crf.A00(), bZc, true));\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}
