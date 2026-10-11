@@ -1,0 +1,54 @@
+# APK-derived structural disassembly: LX/00t;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method get(L) flags=0x1 registers=8
+  # full signature: LX/00t;->get()Ljava/lang/Object;
+  0000..0004 op=54 iget-object v0, v7, LX/00t;->A02:Ljava/lang/Object;
+  0004..0008 op=39 if-nez v0, +0x43
+  0008..000a op=1d monitor-enter
+  000a..000e op=54 iget-object v0, v7, LX/00t;->A02:Ljava/lang/Object;
+  000e..0012 op=39 if-nez v0, +0x39
+  0012..0016 op=54 iget-object v1, v7, LX/00t;->A01:LX/00r;
+  0016..0018 op=12 const/4 v0, #0x0
+  0018..001c op=38 if-eqz v1, +0x3
+  001c..001e op=12 const/4 v0, #0x1
+  001e..0024 op=71 invoke-static {v0}, LX/00K;->A0C(Z)V
+  0024..002a op=71 invoke-static {v1}, LX/00K;->A06(Ljava/lang/Object;)V
+  002a..0030 op=71 invoke-static {}, Landroid/os/SystemClock;->uptimeMillis()J
+  0030..0032 op=0b move-result-wide v5
+  0032..0036 op=16 const-wide/16 v3, #0x0
+  0036..003c op=72 invoke-interface {v1}, LX/00r;->get()Ljava/lang/Object;
+  003c..003e op=0c move-result-object v0
+  003e..0044 op=71 invoke-static {v0}, LX/00K;->A06(Ljava/lang/Object;)V
+  0044..0048 op=5b iput-object v0, v7, LX/00t;->A02:Ljava/lang/Object;
+  0048..004a op=28 goto +0xe
+  004a..004c op=0d move-exception v2
+  004c..0052 op=71 invoke-static {}, Landroid/os/SystemClock;->uptimeMillis()J
+  0052..0054 op=0b move-result-wide v0
+  0054..0056 op=bc sub-long/2addr v0, v5
+  0056..005c op=71 invoke-static {v3, v4, v0, v1}, Ljava/lang/Math;->max(JJ)J
+  005c..005e op=0b move-result-wide v0
+  005e..0062 op=5a iput-wide v0, v7, LX/00t;->A00:J
+  0062..0064 op=27 throw v2
+  0064..006a op=71 invoke-static {}, Landroid/os/SystemClock;->uptimeMillis()J
+  006a..006c op=0b move-result-wide v0
+  006c..006e op=bc sub-long/2addr v0, v5
+  006e..0074 op=71 invoke-static {v3, v4, v0, v1}, Ljava/lang/Math;->max(JJ)J
+  0074..0076 op=0b move-result-wide v0
+  0076..007a op=5a iput-wide v0, v7, LX/00t;->A00:J
+  007a..007c op=12 const/4 v0, #0x0
+  007c..0080 op=5b iput-object v0, v7, LX/00t;->A01:LX/00r;
+  0080..0082 op=1e monitor-exit
+  0082..0084 op=28 goto +0x4
+  0084..0086 op=0d move-exception v0
+  0086..0088 op=1e monitor-exit
+  0088..008a op=27 throw v0
+  008a..008e op=54 iget-object v0, v7, LX/00t;->A02:Ljava/lang/Object;
+  008e..0090 op=11 return-object v0
+  # exception table: 3 try range(s)
+  # catch <all> code_units 0005..001b -> 0042
+  # catch <all> code_units 001b..0025 -> 0025
+  # catch <all> code_units 0025..0044 -> 0042
+.end method

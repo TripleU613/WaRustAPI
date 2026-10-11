@@ -1,0 +1,18 @@
+# APK-derived structural disassembly: LX/0WE;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(LL) flags=0x19 registers=4
+  # full signature: LX/0WE;->A00(LX/00r;)LX/0WF;
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0006 op=22 new-instance v2, LX/00t;
+  0006..000c op=70 invoke-direct {v2, v0, v3}, LX/00t;-><init>(Ljava/lang/Object;LX/00r;)V
+  000c..0010 op=22 new-instance v1, LX/0WF;
+  0010..0016 op=70 invoke-direct {v1}, Ljava/lang/Object;-><init>()V
+  0016..001a op=22 new-instance v0, Ljava/util/concurrent/atomic/AtomicReference;
+  001a..0020 op=70 invoke-direct {v0, v2}, Ljava/util/concurrent/atomic/AtomicReference;-><init>(Ljava/lang/Object;)V
+  0020..0024 op=5b iput-object v0, v1, LX/0WF;->A00:Ljava/util/concurrent/atomic/AtomicReference;
+  0024..0026 op=11 return-object v1
+  # exception table: 0 try range(s)
+.end method

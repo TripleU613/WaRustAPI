@@ -68,9 +68,10 @@ class for the separate status holder. Both preserve the
 received_confirmation changes only the shared broadcast receipt branch. A
 plain list with no recognized status metadata now has three attributes:
 to, id, participant. Exact meta is_group_status=true or
-content_type=status_notify retains the previous status class. The native
-account/category gates are not yet implemented; that retained metadata
-behavior is explicitly a shortcut, not full native classification.
+content_type=status_notify retains the previous status class for non-peer
+candidates. [Exact category=peer exclusion](status-dispatch-gate.md) is now
+implemented. The effective native configuration gate remains a shortcut,
+not full native classification.
 
 The account-aware actor and CLI use this shared base shape; own-account status
 selection is a separate [shared account policy](status-ownership.md), now used

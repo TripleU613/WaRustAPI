@@ -1,0 +1,17 @@
+# APK-derived structural disassembly: LX/11l;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A08(VJ) flags=0x11 registers=5
+  # full signature: LX/11l;->A08(J)V
+  0000..0006 op=6e invoke-virtual {v2}, LX/11l;->A01()Landroid/content/SharedPreferences;
+  0006..0008 op=0c move-result-object v0
+  0008..000e op=72 invoke-interface {v0}, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
+  000e..0010 op=0c move-result-object v1
+  0010..0014 op=1a const-string v0, "recv_flow_enabled_timestamp"
+  0014..001a op=72 invoke-interface {v1, v0, v3, v4}, Landroid/content/SharedPreferences$Editor;->putLong(Ljava/lang/String;J)Landroid/content/SharedPreferences$Editor;
+  001a..0020 op=72 invoke-interface {v1}, Landroid/content/SharedPreferences$Editor;->apply()V
+  0020..0022 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

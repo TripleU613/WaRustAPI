@@ -1,0 +1,144 @@
+{
+  "evidence_id": "ev_89011ea1ef3c33da9cbb3ed79835942ce0b8f26b3850cb8a7d118a1a803961f2",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.C0YZ",
+    "method_name": "A0E"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-EPSaLD/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":15695085568,\"java_version\":\"21.0.12.1\",\"available_processors\":24}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "load_apk",
+        "input": {
+          "path": "/tmp/rea-android-EPSaLD/target.apk",
+          "threads": 1,
+          "resources": "full"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-EPSaLD/target.apk\",\"class_count\":94738,\"raw_class_count\":94738,\"resource_count\":14967,\"load_duration_ms\":16728,\"decompile_timeout_ms\":90000,\"threads\":1,\"code_cache_size\":64,\"resources\":\"full\"}"
+            }
+          ]
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C0YZ"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_classes\":[],\"name\":\"C0YZ\",\"full_name\":\"X.C0YZ\",\"field_count\":9,\"fields\":[{\"def_pos\":0,\"name\":\"A00\",\"type\":\"X.05B\"},{\"def_pos\":0,\"name\":\"A01\",\"type\":\"X.05B\"},{\"def_pos\":0,\"name\":\"A02\",\"type\":\"X.05B\"},{\"def_pos\":0,\"name\":\"A03\",\"type\":\"X.05B\"},{\"def_pos\":0,\"name\":\"A04\",\"type\":\"X.05B\"},{\"def_pos\":0,\"name\":\"A05\",\"type\":\"X.0WF\"},{\"def_pos\":0,\"name\":\"A06\",\"type\":\"X.0WF\"},{\"def_pos\":0,\"name\":\"A07\",\"type\":\"X.0WF\"},{\"def_pos\":0,\"name\":\"A08\",\"type\":\"X.0WF\"}],\"methods\":[{\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(): void\"},{\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0,\"signature\":\"A00(X.0YZ): X.07t\"},{\"is_constructor\":false,\"name\":\"A01\",\"def_pos\":0,\"signature\":\"A01(X.0YZ): X.11l\"},{\"is_constructor\":false,\"name\":\"A02\",\"def_pos\":0,\"signature\":\"A02(X.0YZ): boolean\"},{\"is_constructor\":false,\"name\":\"A03\",\"def_pos\":0,\"signature\":\"A03(X.0YZ): boolean\"},{\"is_constructor\":false,\"name\":\"A04\",\"def_pos\":0,\"signature\":\"A04(X.0YZ): boolean\"},{\"is_constructor\":false,\"name\":\"A05\",\"def_pos\":0,\"signature\":\"A05(X.0YZ): boolean\"},{\"is_constructor\":false,\"name\":\"A06\",\"def_pos\":0,\"signature\":\"A06(int): int\"},{\"is_constructor\":false,\"name\":\"A07\",\"def_pos\":0,\"signature\":\"A07(): void\"},{\"is_constructor\":false,\"name\":\"A08\",\"def_pos\":0,\"signature\":\"A08(): void\"},{\"is_constructor\":false,\"name\":\"A09\",\"def_pos\":0,\"signature\":\"A09(): boolean\"},{\"is_constructor\":false,\"name\":\"A0A\",\"def_pos\":0,\"signature\":\"A0A(): boolean\"},{\"is_constructor\":false,\"name\":\"A0B\",\"def_pos\":0,\"signature\":\"A0B(): boolean\"},{\"is_constructor\":false,\"name\":\"A0C\",\"def_pos\":0,\"signature\":\"A0C(): boolean\"},{\"is_constructor\":false,\"name\":\"A0D\",\"def_pos\":0,\"signature\":\"A0D(): boolean\"},{\"is_constructor\":false,\"name\":\"A0E\",\"def_pos\":0,\"signature\":\"A0E(): boolean\"},{\"is_constructor\":false,\"name\":\"A0F\",\"def_pos\":0,\"signature\":\"A0F(): boolean\"},{\"is_constructor\":false,\"name\":\"A0G\",\"def_pos\":0,\"signature\":\"A0G(): boolean\"},{\"is_constructor\":false,\"name\":\"A0H\",\"def_pos\":0,\"signature\":\"A0H(): boolean\"},{\"is_constructor\":false,\"name\":\"A0I\",\"def_pos\":0,\"signature\":\"A0I(): boolean\"},{\"is_constructor\":false,\"name\":\"A0J\",\"def_pos\":0,\"signature\":\"A0J(): boolean\"},{\"is_constructor\":false,\"name\":\"A0K\",\"def_pos\":0,\"signature\":\"A0K(): boolean\"},{\"is_constructor\":false,\"name\":\"A0L\",\"def_pos\":0,\"signature\":\"A0L(): boolean\"},{\"is_constructor\":false,\"name\":\"A0M\",\"def_pos\":0,\"signature\":\"A0M(): boolean\"},{\"is_constructor\":false,\"name\":\"A0N\",\"def_pos\":0,\"signature\":\"A0N(): boolean\"},{\"is_constructor\":false,\"name\":\"A0O\",\"def_pos\":0,\"signature\":\"A0O(): boolean\"}],\"method_count\":26,\"inner_class_count\":0}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C0YZ",
+          "method_name": "A0E",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"body\":\"    public final boolean A0E() {\\n        return ((Boolean) this.A05.get()).booleanValue();\\n    }\",\"overload_count\":1,\"method_name\":\"A0E\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.0YZ.A0E\",\"class_name\":\"X.C0YZ\",\"overload_index\":0,\"fell_back\":false}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.C0YZ",
+    "method": {
+      "name": "A0E",
+      "reported_signature": "A0E(): boolean",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public final boolean A0E() {\n        return ((Boolean) this.A05.get()).booleanValue();\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

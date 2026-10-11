@@ -1,0 +1,315 @@
+{
+  "evidence_id": "ev_2f51a451affd45d8b6734b04947efcadafc491cf6a826099cb020a0e24599750",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_class",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.C0YZ"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-EPSaLD/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":15695085568,\"java_version\":\"21.0.12.1\",\"available_processors\":24}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C0YZ"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_classes\":[],\"name\":\"C0YZ\",\"full_name\":\"X.C0YZ\",\"field_count\":9,\"fields\":[{\"def_pos\":0,\"name\":\"A00\",\"type\":\"X.05B\"},{\"def_pos\":0,\"name\":\"A01\",\"type\":\"X.05B\"},{\"def_pos\":0,\"name\":\"A02\",\"type\":\"X.05B\"},{\"def_pos\":0,\"name\":\"A03\",\"type\":\"X.05B\"},{\"def_pos\":0,\"name\":\"A04\",\"type\":\"X.05B\"},{\"def_pos\":0,\"name\":\"A05\",\"type\":\"X.0WF\"},{\"def_pos\":0,\"name\":\"A06\",\"type\":\"X.0WF\"},{\"def_pos\":0,\"name\":\"A07\",\"type\":\"X.0WF\"},{\"def_pos\":0,\"name\":\"A08\",\"type\":\"X.0WF\"}],\"methods\":[{\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(): void\"},{\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0,\"signature\":\"A00(X.0YZ): X.07t\"},{\"is_constructor\":false,\"name\":\"A01\",\"def_pos\":0,\"signature\":\"A01(X.0YZ): X.11l\"},{\"is_constructor\":false,\"name\":\"A02\",\"def_pos\":0,\"signature\":\"A02(X.0YZ): boolean\"},{\"is_constructor\":false,\"name\":\"A03\",\"def_pos\":0,\"signature\":\"A03(X.0YZ): boolean\"},{\"is_constructor\":false,\"name\":\"A04\",\"def_pos\":0,\"signature\":\"A04(X.0YZ): boolean\"},{\"is_constructor\":false,\"name\":\"A05\",\"def_pos\":0,\"signature\":\"A05(X.0YZ): boolean\"},{\"is_constructor\":false,\"name\":\"A06\",\"def_pos\":0,\"signature\":\"A06(int): int\"},{\"is_constructor\":false,\"name\":\"A07\",\"def_pos\":0,\"signature\":\"A07(): void\"},{\"is_constructor\":false,\"name\":\"A08\",\"def_pos\":0,\"signature\":\"A08(): void\"},{\"is_constructor\":false,\"name\":\"A09\",\"def_pos\":0,\"signature\":\"A09(): boolean\"},{\"is_constructor\":false,\"name\":\"A0A\",\"def_pos\":0,\"signature\":\"A0A(): boolean\"},{\"is_constructor\":false,\"name\":\"A0B\",\"def_pos\":0,\"signature\":\"A0B(): boolean\"},{\"is_constructor\":false,\"name\":\"A0C\",\"def_pos\":0,\"signature\":\"A0C(): boolean\"},{\"is_constructor\":false,\"name\":\"A0D\",\"def_pos\":0,\"signature\":\"A0D(): boolean\"},{\"is_constructor\":false,\"name\":\"A0E\",\"def_pos\":0,\"signature\":\"A0E(): boolean\"},{\"is_constructor\":false,\"name\":\"A0F\",\"def_pos\":0,\"signature\":\"A0F(): boolean\"},{\"is_constructor\":false,\"name\":\"A0G\",\"def_pos\":0,\"signature\":\"A0G(): boolean\"},{\"is_constructor\":false,\"name\":\"A0H\",\"def_pos\":0,\"signature\":\"A0H(): boolean\"},{\"is_constructor\":false,\"name\":\"A0I\",\"def_pos\":0,\"signature\":\"A0I(): boolean\"},{\"is_constructor\":false,\"name\":\"A0J\",\"def_pos\":0,\"signature\":\"A0J(): boolean\"},{\"is_constructor\":false,\"name\":\"A0K\",\"def_pos\":0,\"signature\":\"A0K(): boolean\"},{\"is_constructor\":false,\"name\":\"A0L\",\"def_pos\":0,\"signature\":\"A0L(): boolean\"},{\"is_constructor\":false,\"name\":\"A0M\",\"def_pos\":0,\"signature\":\"A0M(): boolean\"},{\"is_constructor\":false,\"name\":\"A0N\",\"def_pos\":0,\"signature\":\"A0N(): boolean\"},{\"is_constructor\":false,\"name\":\"A0O\",\"def_pos\":0,\"signature\":\"A0O(): boolean\"}],\"method_count\":26,\"inner_class_count\":0}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.C0YZ",
+    "methods": [
+      {
+        "name": "<init>",
+        "reported_signature": "<init>(): void",
+        "overload_index": 0,
+        "is_constructor": true,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A00",
+        "reported_signature": "A00(X.0YZ): X.07t",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A01",
+        "reported_signature": "A01(X.0YZ): X.11l",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A02",
+        "reported_signature": "A02(X.0YZ): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A03",
+        "reported_signature": "A03(X.0YZ): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A04",
+        "reported_signature": "A04(X.0YZ): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A05",
+        "reported_signature": "A05(X.0YZ): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A06",
+        "reported_signature": "A06(int): int",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A07",
+        "reported_signature": "A07(): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A08",
+        "reported_signature": "A08(): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A09",
+        "reported_signature": "A09(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A0A",
+        "reported_signature": "A0A(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A0B",
+        "reported_signature": "A0B(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A0C",
+        "reported_signature": "A0C(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A0D",
+        "reported_signature": "A0D(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A0E",
+        "reported_signature": "A0E(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A0F",
+        "reported_signature": "A0F(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A0G",
+        "reported_signature": "A0G(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A0H",
+        "reported_signature": "A0H(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A0I",
+        "reported_signature": "A0I(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A0J",
+        "reported_signature": "A0J(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A0K",
+        "reported_signature": "A0K(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A0L",
+        "reported_signature": "A0L(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A0M",
+        "reported_signature": "A0M(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A0N",
+        "reported_signature": "A0N(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      {
+        "name": "A0O",
+        "reported_signature": "A0O(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      }
+    ],
+    "fields": [
+      {
+        "name": "A00",
+        "reported_type": "X.05B"
+      },
+      {
+        "name": "A01",
+        "reported_type": "X.05B"
+      },
+      {
+        "name": "A02",
+        "reported_type": "X.05B"
+      },
+      {
+        "name": "A03",
+        "reported_type": "X.05B"
+      },
+      {
+        "name": "A04",
+        "reported_type": "X.05B"
+      },
+      {
+        "name": "A05",
+        "reported_type": "X.0WF"
+      },
+      {
+        "name": "A06",
+        "reported_type": "X.0WF"
+      },
+      {
+        "name": "A07",
+        "reported_type": "X.0WF"
+      },
+      {
+        "name": "A08",
+        "reported_type": "X.0WF"
+      }
+    ],
+    "inner_classes": []
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

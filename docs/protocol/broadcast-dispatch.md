@@ -21,8 +21,9 @@ combines those conditions. The DEX branch at 007a explicitly sets v5 to true;
 the [Java envelope](rea/2.26.37.71-broadcast-dispatch/processor.json) leaves
 the corresponding local looking uninitialized, so DEX is authoritative.
 The status path additionally requires 0YZ.A0E() and category different from
-peer at 008a..00c2. The meaning and persisted authority of that account gate
-remain outside this trace.
+peer at 008a..00c2. The subsequent [configuration gate trace](status-dispatch-gate.md)
+resolves its cached Boolean/timestamp inputs; effective property application
+remains unported. Exact peer-category exclusion is now implemented in receipts.
 
 | Input | Selection before the account/category gates |
 |---|---|

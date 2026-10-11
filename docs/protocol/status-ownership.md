@@ -57,6 +57,10 @@ malformed/conflicting records. It never consults a peer mapping. Sender type is
 inserted before participant, matching native append order. Other confirmation
 branches and original status/device/ID fields keep their existing behavior.
 
+[Peer-category candidates](status-dispatch-gate.md) use the ordinary receipt
+shape and skip this status ownership policy; they do not read own LID here.
+Effective non-peer StatusInfraConfig selection remains unported.
+
 When saved own-LID authority must be read, corrupt/conflicting records cause
 the contextual builder to return an error;
 the actor stops that epoch and the CLI returns an error after capture, without guessing ownership or writing

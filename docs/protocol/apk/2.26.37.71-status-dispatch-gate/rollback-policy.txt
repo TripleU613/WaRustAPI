@@ -1,0 +1,38 @@
+# APK-derived structural disassembly: LX/0YZ;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A05(ZL) flags=0x19 registers=7
+  # full signature: LX/0YZ;->A05(LX/0YZ;)Z
+  0000..0006 op=71 invoke-static {v6}, LX/0YZ;->A00(LX/0YZ;)LX/07t;
+  0006..0008 op=0c move-result-object v1
+  0008..000c op=13 const/16 v0, #0x70fd
+  000c..0012 op=6e invoke-virtual {v1, v0}, LX/00D;->A10(I)Z
+  0012..0014 op=0a move-result v0
+  0014..0016 op=12 const/4 v5, #0x0
+  0016..001a op=38 if-eqz v0, +0x2b
+  001a..0020 op=71 invoke-static {v6}, LX/0YZ;->A01(LX/0YZ;)LX/11l;
+  0020..0022 op=0c move-result-object v0
+  0022..0028 op=6e invoke-virtual {v0}, LX/11l;->A01()Landroid/content/SharedPreferences;
+  0028..002a op=0c move-result-object v1
+  002a..002e op=1a const-string v0, "recv_flow_disabled_timestamp"
+  002e..0032 op=16 const-wide/16 v3, #0x0
+  0032..0038 op=72 invoke-interface {v1, v0, v3, v4}, Landroid/content/SharedPreferences;->getLong(Ljava/lang/String;J)J
+  0038..003a op=0b move-result-wide v1
+  003a..003e op=31 cmp-long v0, v1, v3
+  003e..0042 op=3d if-lez v0, +0x17
+  0042..0046 op=54 iget-object v0, v6, LX/0YZ;->A01:LX/05B;
+  0046..004a op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  004a..0050 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  0050..0056 op=71 invoke-static {}, Ljava/lang/System;->currentTimeMillis()J
+  0056..0058 op=0b move-result-wide v3
+  0058..005a op=bc sub-long/2addr v3, v1
+  005a..0060 op=17 const-wide/32 v1, #0x5943900
+  0060..0064 op=31 cmp-long v0, v3, v1
+  0064..0068 op=3b if-gez v0, +0x4
+  0068..006a op=12 const/4 v0, #0x1
+  006a..006c op=0f return v0
+  006c..006e op=0f return v5
+  # exception table: 0 try range(s)
+.end method

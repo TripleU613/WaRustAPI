@@ -629,21 +629,25 @@ pub fn received_confirmation(incoming: &Node) -> Option<Node> {
         if id.is_empty() || id.len() > 128 {
             return None;
         }
-        let status = chat.user == "status"
-            || incoming.child("meta").is_some_and(|meta| {
-                meta.get_attr("is_group_status")
-                    .and_then(|value| value.as_text())
-                    == Some("true")
-                    || meta
-                        .get_attr("content_type")
+        let status = incoming
+            .get_attr("category")
+            .and_then(|value| value.as_text())
+            != Some("peer")
+            && (chat.user == "status"
+                || incoming.child("meta").is_some_and(|meta| {
+                    meta.get_attr("is_group_status")
                         .and_then(|value| value.as_text())
-                        == Some("status_notify")
-            });
+                        == Some("true")
+                        || meta
+                            .get_attr("content_type")
+                            .and_then(|value| value.as_text())
+                            == Some("status_notify")
+                }));
         let receipt = Node::new("receipt")
             .attr("to", chat)
             .attr("id", id)
             .attr("participant", device_form(participant));
-        // shortcut: metadata status keeps its prior class, port the native account/category gates next.
+        // shortcut: status candidates keep their prior class, port effective StatusInfraConfig next.
         return Some(if status {
             receipt.attr("class", "status")
         } else {
@@ -717,6 +721,7 @@ pub fn received_confirmation_for_account(
         return Ok(None);
     };
     if receipt.description == "receipt"
+        && receipt.get_attr("class").and_then(|value| value.as_text()) == Some("status")
         && receipt
             .get_attr("to")
             .and_then(|v| v.as_jid())
@@ -1347,6 +1352,27 @@ mod tests {
     }
 
     #[test]
+    fn peer_category_uses_ordinary_receipts_even_with_status_metadata() {
+        for chat in ["status@broadcast", "12345@broadcast"] {
+            let incoming = Node::new("message")
+                .attr("from", chat)
+                .attr("participant", "100001:7@lid")
+                .attr("id", "PEER-STATUS")
+                .attr("category", "peer")
+                .children(vec![
+                    Node::new("meta").attr("content_type", "status_notify"),
+                ]);
+            let before = incoming.clone();
+            let receipt = received_confirmation(&incoming).unwrap();
+            assert_eq!(incoming, before);
+            assert!(receipt.get_attr("class").is_none());
+            assert!(receipt.get_attr("type").is_none());
+            assert!(receipt.get_attr("sts").is_none());
+            assert_eq!(receipt.attributes.len(), 3);
+        }
+    }
+
+    #[test]
     fn broadcast_status_metadata_keeps_its_existing_class() {
         for (name, value, status) in [
             ("is_group_status", "true", true),
@@ -1491,6 +1517,11 @@ mod tests {
             .attr("participant", "100009@lid")
             .attr("id", "CONFLICT");
         assert!(received_confirmation_for_account(&store, &account, &incoming).is_err());
+        let peer = incoming.clone().attr("category", "peer");
+        assert_eq!(
+            received_confirmation_for_account(&store, &account, &peer).unwrap(),
+            received_confirmation(&peer)
+        );
         let direct = Node::new("message")
             .attr("from", "15555550100@s.whatsapp.net")
             .attr("id", "DIRECT");

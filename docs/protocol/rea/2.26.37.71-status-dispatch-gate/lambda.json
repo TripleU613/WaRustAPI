@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_1023676391613e9c12115e7ee523c1fc1df0ff6b22b6213c419b6c9b90fccafd",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.C1Xe",
+    "method_name": "get"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-EPSaLD/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":15695085568,\"java_version\":\"21.0.12.1\",\"available_processors\":24}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C1Xe"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_classes\":[],\"name\":\"C1Xe\",\"full_name\":\"X.C1Xe\",\"field_count\":2,\"fields\":[{\"def_pos\":0,\"name\":\"$t\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"A00\",\"type\":\"java.lang.Object\"}],\"methods\":[{\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(java.lang.Object, int): void\"},{\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0,\"signature\":\"A00(X.1Xe): X.00s\"},{\"is_constructor\":false,\"name\":\"get\",\"def_pos\":0,\"signature\":\"get(): java.lang.Object\"}],\"method_count\":3,\"inner_class_count\":0}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C1Xe",
+          "method_name": "get",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"body\":\"    /* JADX WARN: Code duplicated, block: B:46:0x0192  */\\n    @Override // X.C00r\\n    public final Object get() {\\n        boolean z;\\n        Object obj;\\n        switch (this.$t) {\\n            case 0:\\n                return new C2Wj(A00(this));\\n            case 1:\\n                return new C2Wt(A00(this));\\n            case 2:\\n                return new C71I(A00(this));\\n            case 3:\\n                return new GyZ(A00(this));\\n            case 4:\\n                return new EGy(A00(this));\\n            case 5:\\n                return new Blc(A00(this));\\n            case 6:\\n                return new Bld(A00(this));\\n            case 7:\\n                return new C1GP(A00(this));\\n            case 8:\\n                return new C9Ll(A00(this));\\n            case 9:\\n                return new C0l7(A00(this));\\n            case 10:\\n                return new C2Wu(A00(this));\\n            case 11:\\n                return new C2Wx(A00(this));\\n            case 12:\\n                return new C2Ww(A00(this));\\n            case 13:\\n                return new C2Wz(A00(this));\\n            case 14:\\n                return new C2X0(A00(this));\\n            case 15:\\n                return new Gyf(A00(this));\\n            case 16:\\n                return new C2Wy(A00(this));\\n            case 17:\\n                return new C1Q7(A00(this));\\n            case 18:\\n                return new C2X1(A00(this));\\n            case 19:\\n                return new Gyg(A00(this));\\n            case 20:\\n                return C0K1.A01((C0K1) this.A00);\\n            case 21:\\n                C0K2 c0k2 \\u003d (C0K2) this.A00;\\n                return ((C00R) C05B.A02(c0k2.A02)).A03(new C00G(false, false, C00D.A0E(C00F.A02, C0FX.A00((C0FX) C05B.A02(c0k2.A01)), null, 15532)), C08F.A08);\\n            case 22:\\n                C0nl c0nl \\u003d (C0nl) this.A00;\\n                return new B4O((C0AH) C00C.A02(253), c0nl.A01, c0nl.A02);\\n            case 23:\\n                com.whatsapp.infra.logging.Log.i(\\\"externalfilevalidator/initializing allowlist lazily\\\");\\n                return Collections.unmodifiableSet(((C0HR) ((C0nn) this.A00).A02.get()).ATO());\\n            case 24:\\n                HashSet hashSet \\u003d new HashSet();\\n                for (File file : ((C0HR) ((C0nn) this.A00).A02.get()).ATO()) {\\n                    try {\\n                        StringBuilder sb \\u003d new StringBuilder();\\n                        sb.append(file.getCanonicalPath());\\n                        hashSet.add(AnonymousClass000.A05(\\\"/\\\", sb));\\n                    } catch (Exception unused) {\\n                    }\\n                }\\n                return Collections.unmodifiableSet(hashSet);\\n            case 25:\\n            case 26:\\n            default:\\n                return new C08S(((C13c) this.A00).A0L, true);\\n            case 27:\\n                return C00D.A04(C05B.A00(((AnonymousClass104) this.A00).A00), CDP.A01);\\n            case 28:\\n                return new DNq(this.A00, 33);\\n            case 29:\\n                return new DNq(this.A00, 32);\\n            case 30:\\n                return ((Function0) this.A00).invoke();\\n            case 31:\\n                return this.A00;\\n            case 32:\\n                return Boolean.valueOf(C0YZ.A04((C0YZ) this.A00));\\n            case 33:\\n                C0YZ c0yz \\u003d (C0YZ) this.A00;\\n                if (!C0YZ.A00(c0yz).A10(16422)) {\\n                    z \\u003d C0YZ.A05(c0yz);\\n                }\\n                return Boolean.valueOf(z);\\n            case 34:\\n                return Boolean.valueOf(C0YZ.A03((C0YZ) this.A00));\\n            case 35:\\n                C0YZ c0yz2 \\u003d (C0YZ) this.A00;\\n                boolean zA02 \\u003d C0YZ.A02(c0yz2);\\n                Boolean boolValueOf \\u003d Boolean.valueOf(zA02);\\n                long j \\u003d C0YZ.A01(c0yz2).A01().getLong(\\\"recv_flow_enabled_timestamp\\\", 0L);\\n                if (zA02) {\\n                    if (j \\u003e 0) {\\n                        return boolValueOf;\\n                    }\\n                    C11l c11lA01 \\u003d C0YZ.A01(c0yz2);\\n                    c0yz2.A01.A00.get();\\n                    c11lA01.A08(System.currentTimeMillis());\\n                    C0YZ.A01(c0yz2).A07(0L);\\n                    return boolValueOf;\\n                }\\n                if (j \\u003c\\u003d 0) {\\n                    return boolValueOf;\\n                }\\n                C0YZ.A01(c0yz2).A08(0L);\\n                C11l c11lA02 \\u003d C0YZ.A01(c0yz2);\\n                c0yz2.A01.A00.get();\\n                c11lA02.A07(System.currentTimeMillis());\\n                return boolValueOf;\\n            case 36:\\n                return C0YK.A04((C0YK) this.A00);\\n            case 37:\\n                return ((C1hX) C05B.A02(((C0YK) this.A00).A04)).A06();\\n            case 38:\\n                return ((C0Gr) this.A00).A00.getDatabasePath(\\\"msgstore.db\\\");\\n            case 39:\\n                C0t7 c0t7 \\u003d (C0t7) this.A00;\\n                C0Jr c0Jr \\u003d c0t7.A0q;\\n                C0AH c0ah \\u003d c0t7.A0m;\\n                C07u c07u \\u003d c0t7.A0p;\\n                GEu gEu \\u003d (GEu) C00C.A02(131254);\\n                C0sx c0sx \\u003d (C0sx) c0t7.A0U.get();\\n                C0Xw c0Xw \\u003d (C0Xw) C00C.A02(3225);\\n                B2G b2g \\u003d (B2G) C00C.A02(98923);\\n                C1M9 c1m9 \\u003d (C1M9) C00C.A02(2596);\\n                C0Gc c0Gc \\u003d (C0Gc) c0t7.A0O.get();\\n                C0fS c0fS \\u003d (C0fS) c0t7.A0K.get();\\n                C0WG c0wg \\u003d (C0WG) C00C.A02(2614);\\n                C0q7 c0q7 \\u003d (C0q7) C00S.A03(4583);\\n                C00C.A02(59);\\n                return new C8nf(gEu, c1m9, c0q7, c0wg, c0ah, c07u, c0Gc, c0Xw, b2g, c0sx, c0Jr, c0fS);\\n            case 40:\\n                return ((C0IF) this.A00).A3N();\\n            case 41:\\n                return ((C00s) this.A00).get();\\n            case 42:\\n                Object obj2 \\u003d this.A00;\\n                WeakHashMap weakHashMap \\u003d ((C0Lk) C00C.A02(1325)).A01;\\n                Reference reference \\u003d (Reference) weakHashMap.get(obj2);\\n                if (reference !\\u003d null \\u0026\\u0026 (obj \\u003d reference.get()) !\\u003d null) {\\n                    return obj;\\n                }\\n                C1Gz c1Gz \\u003d new C1Gz();\\n                weakHashMap.put(obj2, new WeakReference(c1Gz));\\n                return c1Gz;\\n            case 43:\\n                return ((WaFragment) this.A00).A01.get();\\n            case 44:\\n                return Integer.valueOf(ViewConfiguration.get((Context) this.A00).getScaledTouchSlop());\\n            case 45:\\n                return new C08S((C07u) C05B.A02(((C0Ll) this.A00).A03), true);\\n            case 46:\\n                return ((C0IT) this.A00).A4e();\\n        }\\n    }\",\"overload_count\":1,\"method_name\":\"get\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.1Xe.get\",\"class_name\":\"X.C1Xe\",\"overload_index\":0,\"fell_back\":false}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.C1Xe",
+    "method": {
+      "name": "get",
+      "reported_signature": "get(): java.lang.Object",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Code duplicated, block: B:46:0x0192  */\n    @Override // X.C00r\n    public final Object get() {\n        boolean z;\n        Object obj;\n        switch (this.$t) {\n            case 0:\n                return new C2Wj(A00(this));\n            case 1:\n                return new C2Wt(A00(this));\n            case 2:\n                return new C71I(A00(this));\n            case 3:\n                return new GyZ(A00(this));\n            case 4:\n                return new EGy(A00(this));\n            case 5:\n                return new Blc(A00(this));\n            case 6:\n                return new Bld(A00(this));\n            case 7:\n                return new C1GP(A00(this));\n            case 8:\n                return new C9Ll(A00(this));\n            case 9:\n                return new C0l7(A00(this));\n            case 10:\n                return new C2Wu(A00(this));\n            case 11:\n                return new C2Wx(A00(this));\n            case 12:\n                return new C2Ww(A00(this));\n            case 13:\n                return new C2Wz(A00(this));\n            case 14:\n                return new C2X0(A00(this));\n            case 15:\n                return new Gyf(A00(this));\n            case 16:\n                return new C2Wy(A00(this));\n            case 17:\n                return new C1Q7(A00(this));\n            case 18:\n                return new C2X1(A00(this));\n            case 19:\n                return new Gyg(A00(this));\n            case 20:\n                return C0K1.A01((C0K1) this.A00);\n            case 21:\n                C0K2 c0k2 = (C0K2) this.A00;\n                return ((C00R) C05B.A02(c0k2.A02)).A03(new C00G(false, false, C00D.A0E(C00F.A02, C0FX.A00((C0FX) C05B.A02(c0k2.A01)), null, 15532)), C08F.A08);\n            case 22:\n                C0nl c0nl = (C0nl) this.A00;\n                return new B4O((C0AH) C00C.A02(253), c0nl.A01, c0nl.A02);\n            case 23:\n                com.whatsapp.infra.logging.Log.i(\"externalfilevalidator/initializing allowlist lazily\");\n                return Collections.unmodifiableSet(((C0HR) ((C0nn) this.A00).A02.get()).ATO());\n            case 24:\n                HashSet hashSet = new HashSet();\n                for (File file : ((C0HR) ((C0nn) this.A00).A02.get()).ATO()) {\n                    try {\n                        StringBuilder sb = new StringBuilder();\n                        sb.append(file.getCanonicalPath());\n                        hashSet.add(AnonymousClass000.A05(\"/\", sb));\n                    } catch (Exception unused) {\n                    }\n                }\n                return Collections.unmodifiableSet(hashSet);\n            case 25:\n            case 26:\n            default:\n                return new C08S(((C13c) this.A00).A0L, true);\n            case 27:\n                return C00D.A04(C05B.A00(((AnonymousClass104) this.A00).A00), CDP.A01);\n            case 28:\n                return new DNq(this.A00, 33);\n            case 29:\n                return new DNq(this.A00, 32);\n            case 30:\n                return ((Function0) this.A00).invoke();\n            case 31:\n                return this.A00;\n            case 32:\n                return Boolean.valueOf(C0YZ.A04((C0YZ) this.A00));\n            case 33:\n                C0YZ c0yz = (C0YZ) this.A00;\n                if (!C0YZ.A00(c0yz).A10(16422)) {\n                    z = C0YZ.A05(c0yz);\n                }\n                return Boolean.valueOf(z);\n            case 34:\n                return Boolean.valueOf(C0YZ.A03((C0YZ) this.A00));\n            case 35:\n                C0YZ c0yz2 = (C0YZ) this.A00;\n                boolean zA02 = C0YZ.A02(c0yz2);\n                Boolean boolValueOf = Boolean.valueOf(zA02);\n                long j = C0YZ.A01(c0yz2).A01().getLong(\"recv_flow_enabled_timestamp\", 0L);\n                if (zA02) {\n                    if (j > 0) {\n                        return boolValueOf;\n                    }\n                    C11l c11lA01 = C0YZ.A01(c0yz2);\n                    c0yz2.A01.A00.get();\n                    c11lA01.A08(System.currentTimeMillis());\n                    C0YZ.A01(c0yz2).A07(0L);\n                    return boolValueOf;\n                }\n                if (j <= 0) {\n                    return boolValueOf;\n                }\n                C0YZ.A01(c0yz2).A08(0L);\n                C11l c11lA02 = C0YZ.A01(c0yz2);\n                c0yz2.A01.A00.get();\n                c11lA02.A07(System.currentTimeMillis());\n                return boolValueOf;\n            case 36:\n                return C0YK.A04((C0YK) this.A00);\n            case 37:\n                return ((C1hX) C05B.A02(((C0YK) this.A00).A04)).A06();\n            case 38:\n                return ((C0Gr) this.A00).A00.getDatabasePath(\"msgstore.db\");\n            case 39:\n                C0t7 c0t7 = (C0t7) this.A00;\n                C0Jr c0Jr = c0t7.A0q;\n                C0AH c0ah = c0t7.A0m;\n                C07u c07u = c0t7.A0p;\n                GEu gEu = (GEu) C00C.A02(131254);\n                C0sx c0sx = (C0sx) c0t7.A0U.get();\n                C0Xw c0Xw = (C0Xw) C00C.A02(3225);\n                B2G b2g = (B2G) C00C.A02(98923);\n                C1M9 c1m9 = (C1M9) C00C.A02(2596);\n                C0Gc c0Gc = (C0Gc) c0t7.A0O.get();\n                C0fS c0fS = (C0fS) c0t7.A0K.get();\n                C0WG c0wg = (C0WG) C00C.A02(2614);\n                C0q7 c0q7 = (C0q7) C00S.A03(4583);\n                C00C.A02(59);\n                return new C8nf(gEu, c1m9, c0q7, c0wg, c0ah, c07u, c0Gc, c0Xw, b2g, c0sx, c0Jr, c0fS);\n            case 40:\n                return ((C0IF) this.A00).A3N();\n            case 41:\n                return ((C00s) this.A00).get();\n            case 42:\n                Object obj2 = this.A00;\n                WeakHashMap weakHashMap = ((C0Lk) C00C.A02(1325)).A01;\n                Reference reference = (Reference) weakHashMap.get(obj2);\n                if (reference != null && (obj = reference.get()) != null) {\n                    return obj;\n                }\n                C1Gz c1Gz = new C1Gz();\n                weakHashMap.put(obj2, new WeakReference(c1Gz));\n                return c1Gz;\n            case 43:\n                return ((WaFragment) this.A00).A01.get();\n            case 44:\n                return Integer.valueOf(ViewConfiguration.get((Context) this.A00).getScaledTouchSlop());\n            case 45:\n                return new C08S((C07u) C05B.A02(((C0Ll) this.A00).A03), true);\n            case 46:\n                return ((C0IT) this.A00).A4e();\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}
