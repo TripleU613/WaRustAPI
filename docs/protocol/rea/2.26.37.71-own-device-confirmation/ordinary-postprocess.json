@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_74f4aa86fa1258ae19453521c6c6fdb83714f1deb2f8bdb8e8ffcf6d8b48bb45",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.C1hF",
+    "method_name": "A03"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-JvvtPV/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":15695085568,\"java_version\":\"21.0.12.1\",\"available_processors\":24}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C1hF"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_classes\":[],\"name\":\"C1hF\",\"full_name\":\"X.C1hF\",\"field_count\":4,\"fields\":[{\"def_pos\":0,\"name\":\"A00\",\"type\":\"X.1Zg\"},{\"def_pos\":0,\"name\":\"A01\",\"type\":\"X.0V9\"},{\"def_pos\":0,\"name\":\"A02\",\"type\":\"X.17G\"},{\"def_pos\":0,\"name\":\"A03\",\"type\":\"X.0zy\"}],\"methods\":[{\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(): void\"},{\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0,\"signature\":\"A00(X.178, X.Bp2): void\"},{\"is_constructor\":false,\"name\":\"A01\",\"def_pos\":0,\"signature\":\"A01(X.DFI, X.Bp2, X.BZL, byte[], int, int): X.1il\"},{\"is_constructor\":false,\"name\":\"A02\",\"def_pos\":0,\"signature\":\"A02(X.DFI, X.Bp2): X.Bpm\"},{\"is_constructor\":false,\"name\":\"A03\",\"def_pos\":0,\"signature\":\"A03(X.178, X.DFI, X.Bp2, X.BZL, X.BZU, byte[]): void\"}],\"method_count\":5,\"inner_class_count\":0}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C1hF",
+          "method_name": "A03",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fell_back\":false,\"body\":\"    public final void A03(AnonymousClass178 anonymousClass178, DFI dfi, Bp2 bp2, BZL bzl, BZU bzu, byte[] bArr) throws Bp0 {\\n        int i;\\n        bp2.A0O(anonymousClass178, dfi);\\n        AnonymousClass178 anonymousClass178A09 \\u003d anonymousClass178.A09();\\n        if ((anonymousClass178A09 instanceof Bpp) \\u0026\\u0026 anonymousClass178A09 !\\u003d null) {\\n            AnonymousClass178 anonymousClass178Aon \\u003d this.A01.Aon(anonymousClass178A09.A0i);\\n            if (anonymousClass178Aon \\u003d\\u003d null || C1gd.A1A(anonymousClass178Aon) || (i \\u003d anonymousClass178Aon.A0h) \\u003d\\u003d 12 || i \\u003d\\u003d 90 || CmC.A08(anonymousClass178Aon)) {\\n                anonymousClass178.A0H \\u003d null;\\n            } else {\\n                this.A00.A00(anonymousClass178, anonymousClass178Aon);\\n            }\\n        }\\n        if (bzu !\\u003d null \\u0026\\u0026 (bzu.bitField0_ \\u0026 16384) !\\u003d 0) {\\n            C20 c20ForNumber \\u003d C20.forNumber(bzu.weblinkRenderConfig_);\\n            if (c20ForNumber \\u003d\\u003d null) {\\n                c20ForNumber \\u003d C20.A02;\\n            }\\n            anonymousClass178.A0A(D5u.class).A03(new D5u(c20ForNumber \\u003d\\u003d C20.A01 ? C02S.A01 : C02S.A00));\\n            anonymousClass178.A0I(Voip.MAX_DATA_USAGE_IN_A_CALL);\\n        }\\n        if (bzl !\\u003d null \\u0026\\u0026 (bzl.bitField0_ \\u0026 1024) !\\u003d 0) {\\n            C6a c6a \\u003d bp2.A08;\\n            String str \\u003d c6a.A00.A01;\\n            String str2 \\u003d ((CjN) bp2).A0A;\\n            if (!C00h.areEqual(str, str2)) {\\n                anonymousClass178.A0I \\u003d new C1gc(bp2.A03(), str2, c6a.A00.A02);\\n            }\\n        }\\n        try {\\n            D6j d6jA02 \\u003d C7ym.A02(anonymousClass178);\\n            if (d6jA02 !\\u003d null) {\\n                this.A03.Asq(anonymousClass178, d6jA02);\\n            }\\n        } catch (Bp0 e) {\\n            com.whatsapp.infra.logging.Log.e(\\\"TODO(T216351124) in later diffs\\\", e);\\n        }\\n        try {\\n            this.A02.A03(anonymousClass178, bp2, bzl, bzu, bArr);\\n        } catch (Bp0 e2) {\\n            if (!(anonymousClass178 instanceof C1ik)) {\\n                throw e2;\\n            }\\n            String str3 \\u003d e2.description;\\n            StringBuilder sb \\u003d new StringBuilder(\\\"IncomingFMessageHelper/postProcessIncomingFMessage e2e\\u003d\\\");\\n            sb.append(str3);\\n            com.whatsapp.infra.logging.Log.w(sb.toString(), e2);\\n        }\\n    }\",\"overload_count\":1,\"method_name\":\"A03\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.1hF.A03\",\"class_name\":\"X.C1hF\",\"overload_index\":0}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.C1hF",
+    "method": {
+      "name": "A03",
+      "reported_signature": "A03(X.178, X.DFI, X.Bp2, X.BZL, X.BZU, byte[]): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public final void A03(AnonymousClass178 anonymousClass178, DFI dfi, Bp2 bp2, BZL bzl, BZU bzu, byte[] bArr) throws Bp0 {\n        int i;\n        bp2.A0O(anonymousClass178, dfi);\n        AnonymousClass178 anonymousClass178A09 = anonymousClass178.A09();\n        if ((anonymousClass178A09 instanceof Bpp) && anonymousClass178A09 != null) {\n            AnonymousClass178 anonymousClass178Aon = this.A01.Aon(anonymousClass178A09.A0i);\n            if (anonymousClass178Aon == null || C1gd.A1A(anonymousClass178Aon) || (i = anonymousClass178Aon.A0h) == 12 || i == 90 || CmC.A08(anonymousClass178Aon)) {\n                anonymousClass178.A0H = null;\n            } else {\n                this.A00.A00(anonymousClass178, anonymousClass178Aon);\n            }\n        }\n        if (bzu != null && (bzu.bitField0_ & 16384) != 0) {\n            C20 c20ForNumber = C20.forNumber(bzu.weblinkRenderConfig_);\n            if (c20ForNumber == null) {\n                c20ForNumber = C20.A02;\n            }\n            anonymousClass178.A0A(D5u.class).A03(new D5u(c20ForNumber == C20.A01 ? C02S.A01 : C02S.A00));\n            anonymousClass178.A0I(Voip.MAX_DATA_USAGE_IN_A_CALL);\n        }\n        if (bzl != null && (bzl.bitField0_ & 1024) != 0) {\n            C6a c6a = bp2.A08;\n            String str = c6a.A00.A01;\n            String str2 = ((CjN) bp2).A0A;\n            if (!C00h.areEqual(str, str2)) {\n                anonymousClass178.A0I = new C1gc(bp2.A03(), str2, c6a.A00.A02);\n            }\n        }\n        try {\n            D6j d6jA02 = C7ym.A02(anonymousClass178);\n            if (d6jA02 != null) {\n                this.A03.Asq(anonymousClass178, d6jA02);\n            }\n        } catch (Bp0 e) {\n            com.whatsapp.infra.logging.Log.e(\"TODO(T216351124) in later diffs\", e);\n        }\n        try {\n            this.A02.A03(anonymousClass178, bp2, bzl, bzu, bArr);\n        } catch (Bp0 e2) {\n            if (!(anonymousClass178 instanceof C1ik)) {\n                throw e2;\n            }\n            String str3 = e2.description;\n            StringBuilder sb = new StringBuilder(\"IncomingFMessageHelper/postProcessIncomingFMessage e2e=\");\n            sb.append(str3);\n            com.whatsapp.infra.logging.Log.w(sb.toString(), e2);\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

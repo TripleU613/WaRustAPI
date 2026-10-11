@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_446936fce74c872602ede60d945bade7c654154fdde88de6d3cd624a339846db",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.CRD",
+    "method_name": "A00"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-va9AIw/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\",\"max_heap_bytes\":15695085568,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.CRD"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"name\":\"A00\",\"def_pos\":0,\"type\":\"int\"},{\"name\":\"A01\",\"def_pos\":0,\"type\":\"int\"},{\"name\":\"A02\",\"def_pos\":0,\"type\":\"X.0Cy\"},{\"name\":\"A03\",\"def_pos\":0,\"type\":\"com.whatsapp.infra.core.jid.Jid\"},{\"name\":\"A04\",\"def_pos\":0,\"type\":\"com.whatsapp.infra.core.jid.UserJid\"},{\"name\":\"A05\",\"def_pos\":0,\"type\":\"com.whatsapp.infra.core.jid.UserJid\"},{\"name\":\"A06\",\"def_pos\":0,\"type\":\"X.1gc\"},{\"name\":\"A07\",\"def_pos\":0,\"type\":\"X.CUq\"},{\"name\":\"A08\",\"def_pos\":0,\"type\":\"X.Fdp\"},{\"name\":\"A09\",\"def_pos\":0,\"type\":\"java.lang.Integer\"},{\"name\":\"A0A\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"A0B\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"A0C\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"A0D\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"A0E\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"A0F\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"A0G\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"A0H\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"A0I\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"A0J\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"A0K\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A0L\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A0M\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A0N\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A0O\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A0P\",\"def_pos\":0,\"type\":\"X.BZc\"},{\"name\":\"A0Q\",\"def_pos\":0,\"type\":\"long\"},{\"name\":\"A0R\",\"def_pos\":0,\"type\":\"X.1gc\"},{\"name\":\"A0S\",\"def_pos\":0,\"type\":\"X.BZc\"}],\"field_count\":29,\"full_name\":\"X.CRD\",\"name\":\"CRD\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":2,\"methods\":[{\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"signature\":\"\\u003cinit\\u003e(X.1gc, X.BZc, X.BZc, long): void\",\"def_pos\":0},{\"name\":\"A00\",\"is_constructor\":false,\"signature\":\"A00(): X.CoT\",\"def_pos\":0}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.CRD",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_name\":\"A00\",\"overload_count\":1,\"body\":\"    public final CoT A00() {\\n        BZc bZc \\u003d this.A0S;\\n        BZc bZc2 \\u003d this.A0P;\\n        Fdp fdp \\u003d this.A08;\\n        C1gc c1gc \\u003d this.A06;\\n        if (c1gc \\u003d\\u003d null) {\\n            c1gc \\u003d this.A0R;\\n        }\\n        C1gc c1gc2 \\u003d this.A0R;\\n        C0Cy c0Cy \\u003d this.A02;\\n        long j \\u003d this.A0Q;\\n        boolean z \\u003d this.A0K;\\n        boolean z2 \\u003d this.A0M;\\n        boolean z3 \\u003d this.A0O;\\n        int i \\u003d this.A00;\\n        String str \\u003d this.A0G;\\n        String str2 \\u003d this.A0C;\\n        String str3 \\u003d this.A0I;\\n        String str4 \\u003d this.A0D;\\n        String str5 \\u003d this.A0A;\\n        UserJid userJid \\u003d this.A04;\\n        boolean z4 \\u003d this.A0N;\\n        int i2 \\u003d this.A01;\\n        com.whatsapp.infra.core.jid.Jid jid \\u003d this.A03;\\n        String str6 \\u003d this.A0J;\\n        String str7 \\u003d this.A0F;\\n        Integer num \\u003d this.A09;\\n        String str8 \\u003d this.A0H;\\n        boolean z5 \\u003d this.A0L;\\n        String str9 \\u003d this.A0B;\\n        String str10 \\u003d this.A0E;\\n        return new CoT(c0Cy, jid, userJid, this.A05, c1gc, c1gc2, this.A07, fdp, null, bZc, bZc2, num, str, str2, str3, str4, str5, str6, str7, str8, str9, str10, i, i2, 0, j, z, z2, true, z3, false, z4, z5);\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.CRD\",\"full_name\":\"X.CRD.A00\",\"mode\":\"java\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.CRD",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(): X.CoT",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public final CoT A00() {\n        BZc bZc = this.A0S;\n        BZc bZc2 = this.A0P;\n        Fdp fdp = this.A08;\n        C1gc c1gc = this.A06;\n        if (c1gc == null) {\n            c1gc = this.A0R;\n        }\n        C1gc c1gc2 = this.A0R;\n        C0Cy c0Cy = this.A02;\n        long j = this.A0Q;\n        boolean z = this.A0K;\n        boolean z2 = this.A0M;\n        boolean z3 = this.A0O;\n        int i = this.A00;\n        String str = this.A0G;\n        String str2 = this.A0C;\n        String str3 = this.A0I;\n        String str4 = this.A0D;\n        String str5 = this.A0A;\n        UserJid userJid = this.A04;\n        boolean z4 = this.A0N;\n        int i2 = this.A01;\n        com.whatsapp.infra.core.jid.Jid jid = this.A03;\n        String str6 = this.A0J;\n        String str7 = this.A0F;\n        Integer num = this.A09;\n        String str8 = this.A0H;\n        boolean z5 = this.A0L;\n        String str9 = this.A0B;\n        String str10 = this.A0E;\n        return new CoT(c0Cy, jid, userJid, this.A05, c1gc, c1gc2, this.A07, fdp, null, bZc, bZc2, num, str, str2, str3, str4, str5, str6, str7, str8, str9, str10, i, i2, 0, j, z, z2, true, z3, false, z4, z5);\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

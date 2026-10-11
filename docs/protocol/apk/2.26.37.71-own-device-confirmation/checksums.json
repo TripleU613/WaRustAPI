@@ -1,0 +1,86 @@
+{
+  "delivery-placeholder.txt": {
+    "bytes": 6371,
+    "sha256": "12845f147a865d2ed52acc5ae0a9cbb97e3044977aa7fbddffaebd13d4319426"
+  },
+  "delivery-selection.txt": {
+    "bytes": 1318,
+    "sha256": "283e60c6085d423d62933533f80622d5bf6c8e03b3c164f9dabeb4fae85e6b11"
+  },
+  "domain-sender.txt": {
+    "bytes": 515,
+    "sha256": "81dd3efc8b8bc9cce20330f40c962a336901ca72d4a52d824ecaa74a640df022"
+  },
+  "envelope-key-init.txt": {
+    "bytes": 3890,
+    "sha256": "659273521ad89b091f4029b78f02dfa4510ece0be901caae17e5a2265d13e7f8"
+  },
+  "envelope-key-selection.txt": {
+    "bytes": 4869,
+    "sha256": "36264d8f8e04b67e339f44edf7f3eb1785f5dfd5aea13b56d2847f482fcb8a12"
+  },
+  "envelope-key-transfer.txt": {
+    "bytes": 7243,
+    "sha256": "209e5694b5f396dea24163f1ee9eb23836758be1d655e44d055bee799d0e084d"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "key-direction.txt": {
+    "bytes": 3987,
+    "sha256": "1b8cacc23e0d5caa11dbea7c9740f522077623bc390fa646abaf5e92a472ae27"
+  },
+  "key-transfer.txt": {
+    "bytes": 6805,
+    "sha256": "6cc07a46716fda90a784f5033b87b9294fa495b759c185c61e619a7fd2b7999b"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "message-init.txt": {
+    "bytes": 2967,
+    "sha256": "8607269dc0b8e50417fb748e1787afe77cba598fcfa9e98a1f9685ddfd149a19"
+  },
+  "ordinary-postprocess.txt": {
+    "bytes": 5923,
+    "sha256": "1da14b0d4bfae4e2b62a9144639837ec9d48231e56efe019961b3f6bcfb4a12c"
+  },
+  "peer-flag-postprocess.txt": {
+    "bytes": 4788,
+    "sha256": "e2dac608e6130b3decef4108a6ad752da88bdd164b941f4be51f7bcabcb696c2"
+  },
+  "receipt-device.txt": {
+    "bytes": 1593,
+    "sha256": "4d300f4f9b30cfddd8018b2a0df05bc1f0c9f7e23250e71c3641c74786765bee"
+  },
+  "receipt-node.txt": {
+    "bytes": 5075,
+    "sha256": "f2b001f1c8610ae78486d24be7a7895a9cf44c410c4605f90412adf9c3747c3e"
+  },
+  "receipt-recipient.txt": {
+    "bytes": 1130,
+    "sha256": "b19b6cc651d1f7112a5570affe60bb948dfc43eaded24c88e17a4b9eedeab6ed"
+  },
+  "receipt-type.txt": {
+    "bytes": 4706,
+    "sha256": "7597f1a5a0fd5b2c9a9d7926d2405329dafa0897f3a72a9e8ae6a940c62bd703"
+  },
+  "route-init.txt": {
+    "bytes": 4474,
+    "sha256": "1200d5414a9754f03ffa8695c0e0c508cd36b9331d0e3d4da4b84abba609cf95"
+  },
+  "sender-setter.txt": {
+    "bytes": 617,
+    "sha256": "870f357224b94053779b53d376d64249056f000fc1ae38bdff5381b1e77c247d"
+  },
+  "targets.json": {
+    "bytes": 7135,
+    "sha256": "a8e7105072c40fab3d5f9ca2d9839046bd3d03d862f5d9ce44deb68b5140cc02"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

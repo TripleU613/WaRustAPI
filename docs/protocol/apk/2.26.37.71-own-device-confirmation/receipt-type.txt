@@ -1,0 +1,76 @@
+# APK-derived structural disassembly: LX/Cp2;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A04(LLI) flags=0x9 registers=15
+  # full signature: LX/Cp2;->A04(LX/178;I)LX/0hs;
+  0000..0004 op=55 iget-boolean v1, v13, LX/178;->A0y:Z
+  0004..0008 op=38 if-eqz v1, +0x77
+  0008..000c op=1a const-string v8, "sender"
+  000c..0010 op=54 iget-object v2, v13, LX/178;->A0i:LX/1gc;
+  0010..0014 op=54 iget-object v4, v2, LX/1gc;->A00:LX/0Cy;
+  0014..0018 op=20 instance-of v0, v4, LX/0c3;
+  0018..001c op=38 if-eqz v1, +0x6b
+  001c..0020 op=39 if-nez v0, +0x69
+  0020..0026 op=71 invoke-static {v4}, LX/0hd;->A05(LX/0Cy;)Z
+  0026..0028 op=0a move-result v0
+  0028..002e op=71 invoke-static {v4}, LX/1xf;->A0o(Lcom/whatsapp/infra/core/jid/Jid;)Lcom/whatsapp/infra/core/jid/UserJid;
+  002e..0030 op=0c move-result-object v3
+  0030..0034 op=38 if-eqz v0, +0x9
+  0034..003a op=71 invoke-static {v3}, LX/00K;->A06(Ljava/lang/Object;)V
+  003a..0040 op=71 invoke-static {v3}, LX/0DE;->A08(Lcom/whatsapp/infra/core/jid/UserJid;)Lcom/whatsapp/infra/core/jid/UserJid;
+  0040..0042 op=0c move-result-object v3
+  0042..004c op=18 const-wide v0, #0x80000000000 (8796093022208)
+  004c..0052 op=6e invoke-virtual {v13, v0, v1}, LX/178;->A0b(J)Z
+  0052..0054 op=0a move-result v0
+  0054..005a op=71 invoke-static {v4, v3, v0}, LX/CmC;->A05(LX/0Cy;Lcom/whatsapp/infra/core/jid/UserJid;Z)Landroid/util/Pair;
+  005a..005c op=0c move-result-object v0
+  005c..0060 op=54 iget-object v3, v0, Landroid/util/Pair;->first:Ljava/lang/Object;
+  0060..0064 op=1f check-cast v3, LX/0Cy;
+  0064..0068 op=54 iget-object v6, v0, Landroid/util/Pair;->second:Ljava/lang/Object;
+  0068..006c op=1f check-cast v6, Lcom/whatsapp/infra/core/jid/UserJid;
+  006c..0070 op=1a const-string v0, "inactive"
+  0070..0076 op=6e invoke-virtual {v0, v8}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+  0076..0078 op=0a move-result v0
+  0078..007c op=38 if-eqz v0, +0x29
+  007c..0080 op=38 if-eqz v6, +0x27
+  0080..0084 op=1a const-string v0, "ProtocolTreeEncoder/encodeMessageReceived sending inactive receipt with recipient attr key="
+  0084..008a op=71 invoke-static {v2, v0}, LX/000;->A07(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/StringBuilder;
+  008a..008c op=0c move-result-object v1
+  008c..0090 op=1a const-string v0, " recipient="
+  0090..0096 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0096..009c op=6e invoke-virtual {v1, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  009c..00a0 op=1a const-string v0, " msgType="
+  00a0..00a6 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00a6..00aa op=52 iget v0, v13, LX/178;->A0h:I
+  00aa..00b0 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  00b0..00b4 op=1a const-string v0, " isFromPeerDevice="
+  00b4..00ba op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00ba..00be op=55 iget-boolean v0, v13, LX/178;->A0y:Z
+  00be..00c4 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+  00c4..00ca op=71 invoke-static {v1}, LX/Ayj;->A1F(Ljava/lang/Object;)V
+  00ca..00ce op=54 iget-object v7, v2, LX/1gc;->A01:Ljava/lang/String;
+  00ce..00d4 op=6e invoke-virtual {v13}, LX/178;->B1Q()LX/0Cy;
+  00d4..00d6 op=0c move-result-object v4
+  00d6..00da op=54 iget-object v5, v13, LX/178;->A0p:Lcom/whatsapp/infra/core/jid/DeviceJid;
+  00da..00dc op=12 const/4 v9, #0x0
+  00dc..00e0 op=16 const-wide/16 v12, #0xffff (-1)
+  00e0..00e2 op=01 move v11, v14
+  00e2..00e4 op=07 move-object v10, v9
+  00e4..00ea op=77 invoke-static/range {v3..v13}, LX/Cp2;->A00(LX/0Cy;LX/0Cy;Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/UserJid;Ljava/lang/String;Ljava/lang/String;[LX/0hq;[Ljava/lang/String;IJ)LX/0hs;
+  00ea..00ec op=0c move-result-object v0
+  00ec..00ee op=11 return-object v0
+  00ee..00f0 op=12 const/4 v3, #0x0
+  00f0..00f2 op=28 goto -0x57
+  00f2..00f6 op=20 instance-of v0, v13, LX/DbP;
+  00f6..00fa op=38 if-eqz v0, +0xa
+  00fa..00fc op=07 move-object v0, v13
+  00fc..0100 op=1f check-cast v0, LX/DbP;
+  0100..0106 op=72 invoke-interface {v0}, LX/DbP;->Aow()Ljava/lang/String;
+  0106..0108 op=0c move-result-object v8
+  0108..010a op=28 goto -0x7e
+  010a..010c op=12 const/4 v8, #0x0
+  010c..010e op=28 goto -0x80
+  # exception table: 0 try range(s)
+.end method

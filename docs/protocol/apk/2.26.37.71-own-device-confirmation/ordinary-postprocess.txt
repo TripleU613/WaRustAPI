@@ -1,0 +1,109 @@
+# APK-derived structural disassembly: LX/1hF;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A03(VLLLLLL) flags=0x11 registers=16
+  # full signature: LX/1hF;->A03(LX/178;LX/DFI;LX/Bp2;LX/BZL;LX/BZU;[B)V
+  0000..0002 op=07 move-object v4, v10
+  0002..0004 op=07 move-object v5, v12
+  0004..000a op=6e invoke-virtual {v12, v10, v11}, LX/Bp2;->A0O(LX/178;LX/DFI;)V
+  000a..0010 op=6e invoke-virtual {v10}, LX/178;->A09()LX/178;
+  0010..0012 op=0c move-result-object v2
+  0012..0016 op=20 instance-of v0, v2, LX/Bpp;
+  0016..0018 op=12 const/4 v3, #0x0
+  0018..001c op=38 if-eqz v0, +0x29
+  001c..0020 op=38 if-eqz v2, +0x27
+  0020..0024 op=54 iget-object v1, v9, LX/1hF;->A01:LX/0V9;
+  0024..0028 op=54 iget-object v0, v2, LX/178;->A0i:LX/1gc;
+  0028..002e op=6e invoke-virtual {v1, v0}, LX/0V9;->Aon(LX/1gc;)LX/178;
+  002e..0030 op=0c move-result-object v2
+  0030..0034 op=38 if-eqz v2, +0x76
+  0034..003a op=71 invoke-static {v2}, LX/1gd;->A1A(LX/178;)Z
+  003a..003c op=0a move-result v0
+  003c..0040 op=39 if-nez v0, +0x70
+  0040..0044 op=52 iget v1, v2, LX/178;->A0h:I
+  0044..0048 op=13 const/16 v0, #0xc
+  0048..004c op=32 if-eq v1, v0, +0x6a
+  004c..0050 op=13 const/16 v0, #0x5a
+  0050..0054 op=32 if-eq v1, v0, +0x66
+  0054..005a op=71 invoke-static {v2}, LX/CmC;->A08(LX/178;)Z
+  005a..005c op=0a move-result v0
+  005c..0060 op=39 if-nez v0, +0x60
+  0060..0064 op=54 iget-object v0, v9, LX/1hF;->A00:LX/1Zg;
+  0064..006a op=6e invoke-virtual {v0, v10, v2}, LX/1Zg;->A00(LX/178;LX/178;)V
+  006a..006c op=07 move-object v7, v14
+  006c..0070 op=38 if-eqz v14, +0x2e
+  0070..0074 op=52 iget v0, v14, LX/BZU;->bitField0_:I
+  0074..0078 op=d5 and-int/lit16 v0, v0, #0x4000
+  0078..007c op=38 if-eqz v0, +0x28
+  007c..0080 op=52 iget v0, v14, LX/BZU;->weblinkRenderConfig_:I
+  0080..0086 op=71 invoke-static {v0}, LX/C20;->forNumber(I)LX/C20;
+  0086..0088 op=0c move-result-object v1
+  0088..008c op=39 if-nez v1, +0x4
+  008c..0090 op=62 sget-object v1, LX/C20;->A02:LX/C20;
+  0090..0094 op=62 sget-object v0, LX/C20;->A01:LX/C20;
+  0094..0098 op=33 if-ne v1, v0, +0x41
+  0098..009c op=62 sget-object v0, LX/02S;->A01:Ljava/lang/Integer;
+  009c..00a0 op=22 new-instance v1, LX/D5u;
+  00a0..00a6 op=70 invoke-direct {v1, v0}, LX/D5u;-><init>(Ljava/lang/Integer;)V
+  00a6..00aa op=1c const-class v0, LX/D5u;
+  00aa..00b0 op=6e invoke-virtual {v10, v0}, LX/178;->A0A(Ljava/lang/Class;)LX/1i8;
+  00b0..00b2 op=0c move-result-object v0
+  00b2..00b8 op=6e invoke-virtual {v0, v1}, LX/1i7;->A03(LX/1i2;)V
+  00b8..00c2 op=18 const-wide v0, #0x80000000 (2147483648)
+  00c2..00c8 op=6e invoke-virtual {v10, v0, v1}, LX/178;->A0I(J)V
+  00c8..00ca op=07 move-object v6, v13
+  00ca..00ce op=38 if-eqz v13, +0x2c
+  00ce..00d2 op=52 iget v0, v13, LX/BZL;->bitField0_:I
+  00d2..00d6 op=d5 and-int/lit16 v0, v0, #0x400
+  00d6..00da op=38 if-eqz v0, +0x26
+  00da..00de op=54 iget-object v1, v12, LX/Bp2;->A08:LX/C6a;
+  00de..00e2 op=54 iget-object v0, v1, LX/C6a;->A00:LX/1gc;
+  00e2..00e6 op=54 iget-object v0, v0, LX/1gc;->A01:Ljava/lang/String;
+  00e6..00ea op=54 iget-object v3, v12, LX/CjN;->A0A:Ljava/lang/String;
+  00ea..00f0 op=71 invoke-static {v0, v3}, LX/00h;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+  00f0..00f2 op=0a move-result v0
+  00f2..00f6 op=39 if-nez v0, +0x18
+  00f6..00fc op=6e invoke-virtual {v12}, LX/CjN;->A03()LX/0Cy;
+  00fc..00fe op=0c move-result-object v2
+  00fe..0102 op=54 iget-object v0, v1, LX/C6a;->A00:LX/1gc;
+  0102..0106 op=55 iget-boolean v1, v0, LX/1gc;->A02:Z
+  0106..010a op=22 new-instance v0, LX/1gc;
+  010a..0110 op=70 invoke-direct {v0, v2, v3, v1}, LX/1gc;-><init>(LX/0Cy;Ljava/lang/String;Z)V
+  0110..0114 op=5b iput-object v0, v10, LX/178;->A0I:LX/1gc;
+  0114..0116 op=28 goto +0x7
+  0116..011a op=62 sget-object v0, LX/02S;->A00:Ljava/lang/Integer;
+  011a..011c op=28 goto -0x3f
+  011c..0120 op=5b iput-object v3, v10, LX/178;->A0H:LX/178;
+  0120..0122 op=28 goto -0x5b
+  0122..0128 op=71 invoke-static {v10}, LX/7ym;->A02(LX/178;)LX/D6j;
+  0128..012a op=0c move-result-object v1
+  012a..012e op=38 if-eqz v1, +0xe
+  012e..0132 op=54 iget-object v0, v9, LX/1hF;->A03:LX/0zy;
+  0132..0138 op=72 invoke-interface {v0, v10, v1}, LX/0zy;->Asq(LX/178;LX/D6j;)LX/178;
+  0138..013a op=28 goto +0x7
+  013a..013c op=0d move-exception v1
+  013c..0140 op=1a const-string v0, "TODO(T216351124) in later diffs"
+  0140..0146 op=71 invoke-static {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+  0146..014a op=54 iget-object v3, v9, LX/1hF;->A02:LX/17G;
+  014a..014c op=07 move-object v8, v15
+  014c..0152 op=74 invoke-virtual/range {v3..v8}, LX/17G;->A03(LX/178;LX/Bp2;LX/BZL;LX/BZU;[B)V
+  0152..0154 op=0e return-void
+  0154..0156 op=0d move-exception v3
+  0156..015a op=20 instance-of v0, v10, LX/1ik;
+  015a..015e op=38 if-eqz v0, +0x16
+  015e..0162 op=54 iget-object v2, v3, LX/Bp0;->description:Ljava/lang/String;
+  0162..0166 op=1a const-string v1, "IncomingFMessageHelper/postProcessIncomingFMessage e2e="
+  0166..016a op=22 new-instance v0, Ljava/lang/StringBuilder;
+  016a..0170 op=70 invoke-direct {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  0170..0176 op=6e invoke-virtual {v0, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0176..017c op=6e invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  017c..017e op=0c move-result-object v0
+  017e..0184 op=71 invoke-static {v0, v3}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;Ljava/lang/Throwable;)V
+  0184..0186 op=0e return-void
+  0186..0188 op=27 throw v3
+  # exception table: 2 try range(s)
+  # catch LX/Bp0; code_units 0091..009d -> 009d
+  # catch LX/Bp0; code_units 00a3..00aa -> 00aa
+.end method

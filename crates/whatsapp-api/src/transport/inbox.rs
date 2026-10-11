@@ -3126,6 +3126,13 @@ mod tests {
                     .attr("v", "2")
                     .bytes(synced.ciphertext.to_vec()),
             ]);
+        assert!(
+            super::super::messaging::received_confirmation_for_account(
+                &store, &receiver, &sync_node
+            )
+            .unwrap()
+            .is_none()
+        );
         for from in ["123456789:3@lid", "999999999:2@lid", "123456789@lid"] {
             let unknown = sync_node.clone().attr("from", from);
             let capture = preserve(&store, &unknown).unwrap();
@@ -3198,12 +3205,17 @@ mod tests {
                 .unwrap(),
             IncomingResult::Duplicate
         );
-        assert!(
+        let expected_confirmation = Node::new("receipt")
+            .attr("to", peer_device.clone())
+            .attr("id", "OWN-LID-SYNC")
+            .attr("type", "sender")
+            .attr("recipient", Jid::parse("67890@lid").unwrap());
+        assert_eq!(
             super::super::messaging::received_confirmation_for_account(
                 &store, &receiver, &sync_node
             )
-            .unwrap()
-            .is_none()
+            .unwrap(),
+            Some(expected_confirmation.clone())
         );
         let batch = store
             .read(|tx| {
@@ -3250,6 +3262,13 @@ mod tests {
         drop(store);
         let store = open(false);
         assert_eq!(
+            super::super::messaging::received_confirmation_for_account(
+                &store, &receiver, &sync_node
+            )
+            .unwrap(),
+            Some(expected_confirmation)
+        );
+        assert_eq!(
             process(&store, &receiver, &sync_node, &sync_capture)
                 .await
                 .unwrap(),
@@ -3289,6 +3308,13 @@ mod tests {
                 .unwrap()
                 .unwrap()["protobuf"]
                 .is_null()
+        );
+        assert!(
+            super::super::messaging::received_confirmation_for_account(
+                &store, &receiver, &sync_node
+            )
+            .unwrap()
+            .is_none()
         );
         let next = direct::prepare_payload(
             &sender,

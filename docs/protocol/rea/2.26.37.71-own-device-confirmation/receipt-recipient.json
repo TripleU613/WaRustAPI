@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_3adb59aff2fe8e071977bf7899e995603dcf2a389e17867eda76afaadb57657c",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.CmC",
+    "method_name": "A05"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-JvvtPV/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":15695085568,\"java_version\":\"21.0.12.1\",\"available_processors\":24}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.CmC"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_classes\":[],\"name\":\"CmC\",\"full_name\":\"X.CmC\",\"field_count\":0,\"fields\":[],\"methods\":[{\"is_constructor\":false,\"name\":\"A05\",\"def_pos\":0,\"signature\":\"A05(X.0Cy, com.whatsapp.infra.core.jid.UserJid, boolean): android.util.Pair\"},{\"is_constructor\":false,\"name\":\"A06\",\"def_pos\":0,\"signature\":\"A06(com.whatsapp.infra.core.jid.DeviceJid, com.whatsapp.infra.core.jid.Jid, com.whatsapp.infra.core.jid.Jid): android.util.Pair\"},{\"is_constructor\":false,\"name\":\"A07\",\"def_pos\":0,\"signature\":\"A07(X.BOG): void\"},{\"is_constructor\":false,\"name\":\"A08\",\"def_pos\":0,\"signature\":\"A08(X.178): boolean\"}],\"method_count\":4,\"inner_class_count\":0}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.CmC",
+          "method_name": "A05",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fell_back\":false,\"body\":\"/* JADX INFO: loaded from: classes7.dex */\\npublic abstract class CmC {\\n    public static Pair A05(C0Cy c0Cy, UserJid userJid, boolean z) {\\n        if (z) {\\n            userJid \\u003d C1xf.A0o(c0Cy);\\n            c0Cy \\u003d Cju.A00;\\n            if (C00h.areEqual(userJid, c0Cy)) {\\n                userJid \\u003d null;\\n            }\\n        }\\n        return Ayk.A09(c0Cy, userJid);\\n    }\",\"overload_count\":1,\"method_name\":\"A05\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.CmC.A05\",\"class_name\":\"X.CmC\",\"overload_index\":0}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.CmC",
+    "method": {
+      "name": "A05",
+      "reported_signature": "A05(X.0Cy, com.whatsapp.infra.core.jid.UserJid, boolean): android.util.Pair",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "/* JADX INFO: loaded from: classes7.dex */\npublic abstract class CmC {\n    public static Pair A05(C0Cy c0Cy, UserJid userJid, boolean z) {\n        if (z) {\n            userJid = C1xf.A0o(c0Cy);\n            c0Cy = Cju.A00;\n            if (C00h.areEqual(userJid, c0Cy)) {\n                userJid = null;\n            }\n        }\n        return Ayk.A09(c0Cy, userJid);\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

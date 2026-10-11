@@ -1,0 +1,2 @@
+classes.dex  LX/178;->CW6(VL)
+  write opcode 0x5b, dex byte offset: 0x802958

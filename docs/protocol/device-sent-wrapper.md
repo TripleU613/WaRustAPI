@@ -39,7 +39,7 @@ number different from Apt(). Apt reads saved `registration_device_id` with
 default zero. BP3 is not just BO0, a nonzero-device test, or `category="peer"`.
 BO0's stored PN/LID authority is established in [own identity](own-identity.md).
 
-`Cm3.A07` obtains Bp2's original key chat, or the other stanza's normalized
+`Cm3.A07` obtains Bp2's normalized key chat, or the other stanza's normalized
 remote chat. Its ordinary-type predicate `0DE.A0l` accepts native JID types
 0, 11, 18, 22, 26 and 7. In that branch:
 
@@ -67,7 +67,7 @@ the recovery side effects are not reconstructed by this trace.
 
 With a wrapper, A02 requires BUs message and destination presence bits
 (`00dc..00f0`) and parses destination through 0D7.A01. For Bp2, the expected
-chat is its recipient A06 when present, else the original key's chat
+chat is its recipient A06 when present, else the normalized key's chat
 (`0180..01a2`); other stanzas use normalized CjN.A05. Equality with that chat
 jumps to the successful return at `0296`. Additional success branches allow
 a type-3/5/6 destination equal to CjN.A04, a converted bot destination, or

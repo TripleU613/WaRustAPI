@@ -29,11 +29,13 @@ The complete Cih.A03 call census has 11 sites. The additional network parser
 DE4.CEv is a bot-specific override guarded by a special source, configuration
 28110 and meta fields. It does not make ordinary recipient presence equivalent
 to an original fromMe flag. Bp2.A0P sets the domain source device from CjN.A00
-and sets 178.A0y when the **original** key's fromMe flag is true. Cp2.A04 uses
-that flag for `type=sender` and recipient selection, then passes the device
-through CmC.A06. Normalized outgoing direction alone is insufficient evidence
-for that receipt. The full domain/receipt decision and primary echo
-reconciliation remain open; this chunk does not add a confirmation builder.
+and sets 178.A0y when Bp2.A08/C6a.A00's fromMe flag is true. The subsequent
+[constructor and receipt trace](own-device-confirmation.md) establishes that
+A08 holds the **normalized** key, correcting the earlier original-key label.
+Cp2.A04 uses that flag for `type=sender` and recipient selection, then passes
+the device through CmC.A06. That trace now implements delivery confirmation
+for the authenticated supported text route. Primary echo reconciliation remains
+open.
 
 ## Runtime receive and API/CLI behavior
 
@@ -78,9 +80,9 @@ Other chats are untouched. This follows existing local clear semantics:
 historical journal events remain historical, and no companion app-state clear
 patch is transmitted.
 
-Delivery confirmations, automatic reads and retry recovery for this route
-remain unimplemented and emit no traffic. Server redelivery may therefore
-continue; it does not duplicate the committed event. This is functioning offline
+Delivery confirmations are implemented by the subsequent
+[own-device confirmation](own-device-confirmation.md) change. Automatic reads
+and retry recovery remain unimplemented. This is functioning offline
 receive/projection through a held session, not complete own-device messaging.
 
 ## Tests and remaining work
@@ -108,5 +110,5 @@ formatting and diff checks passed. The seven-topic APK bundle reproduced all
 **Unported:** synchronized media and control effects, namespace mapping with
 alternate attributes, migration-state import, special/hosted routes, admission
 and lifecycle of new own devices, primary echo reconciliation with existing
-outgoing intents, and native confirmation/read-self/retry behavior. No fresh
+outgoing intents, and native read-self/retry behavior. No fresh
 live own-device text sample was observed. No claim of ban immunity is made.

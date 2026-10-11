@@ -141,6 +141,45 @@ fn text_payload(payload: &[u8], chat: &Jid) -> Option<Zeroizing<Vec<u8>>> {
     }
 }
 
+pub(super) fn confirmation(
+    store: &ProtocolStore,
+    account: &AccountRecord,
+    node: &Node,
+) -> Result<Option<Node>> {
+    let Some(id) = node.get_attr("id").and_then(|value| value.as_text()) else {
+        return Ok(None);
+    };
+    let Some((source, _, _)) = shape(account, node) else {
+        return Ok(None);
+    };
+    let lid = if source.server == Server::Lid {
+        super::group_send::own_lid(store)?
+    } else {
+        None
+    };
+    let Some((source, chat, key)) = route(account, node, lid.as_ref()) else {
+        return Ok(None);
+    };
+    let authenticated = store.read(|tx| {
+        let saved = tx.get_json::<serde_json::Value>(Table::Checkpoints, key.as_bytes(), 1)?;
+        Ok(saved.is_some_and(|saved| {
+            saved["status"] == "decrypted"
+                && serde_json::from_value::<Jid>(saved["source"].clone())
+                    .ok()
+                    .as_ref()
+                    == Some(&source)
+        }))
+    })?;
+    // Bp2.A0P uses the normalized key held in A08; Cp2.A04 selects sender/recipient.
+    Ok(authenticated.then(|| {
+        Node::new("receipt")
+            .attr("to", source)
+            .attr("id", id)
+            .attr("type", "sender")
+            .attr("recipient", chat)
+    }))
+}
+
 pub(super) async fn process(
     store: &ProtocolStore,
     account: &AccountRecord,
@@ -251,6 +290,79 @@ pub(super) async fn process(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn confirmation_requires_committed_same_source_and_keeps_saved_state() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(crate::store::OpenOptions {
+            path: dir.path().join("own-receipt.redb"),
+            account_id: crate::model::ids::AccountId::new("fixture").unwrap(),
+            create: true,
+            key_source: std::sync::Arc::new(crate::store::StaticKeySource::new(
+                crate::store::MasterKey::from_bytes([9; 32]),
+            )),
+        })
+        .unwrap();
+        let account = AccountRecord {
+            own_jid: Some(Jid::parse("15555550100@s.whatsapp.net").unwrap()),
+            registration: crate::session::RegistrationStatus::Registered,
+            ..Default::default()
+        };
+        let source = Jid::parse("15555550100:2@s.whatsapp.net").unwrap();
+        let chat = Jid::parse("67890@lid").unwrap();
+        let node = Node::new("message")
+            .attr("from", source.clone())
+            .attr("recipient", chat.clone())
+            .attr("type", "text")
+            .attr("id", "SYNC");
+        assert!(confirmation(&store, &account, &node).unwrap().is_none());
+        for (status, saved_source, accepted) in [
+            ("pending", source.clone(), false),
+            ("cleared", source.clone(), false),
+            (
+                "decrypted",
+                Jid::parse("15555550100:3@s.whatsapp.net").unwrap(),
+                false,
+            ),
+            ("decrypted", source.clone(), true),
+        ] {
+            store
+                .write(|tx| {
+                    tx.put_json(
+                        Table::Checkpoints,
+                        b"received-own:67890@lid:SYNC",
+                        1,
+                        &serde_json::json!({"status": status, "source": saved_source}),
+                    )
+                })
+                .unwrap();
+            let before = store.read(|tx| tx.scan(Table::Checkpoints, 1, 10)).unwrap();
+            let receipt = confirmation(&store, &account, &node).unwrap();
+            assert_eq!(
+                receipt,
+                accepted.then(|| Node::new("receipt")
+                    .attr("to", source.clone())
+                    .attr("id", "SYNC")
+                    .attr("type", "sender")
+                    .attr("recipient", chat.clone()))
+            );
+            assert_eq!(
+                store.read(|tx| tx.scan(Table::Checkpoints, 1, 10)).unwrap(),
+                before
+            );
+        }
+        for changed in [
+            node.clone().attr("from", "15555550999:2@s.whatsapp.net"),
+            node.clone().attr("recipient", "67891@lid"),
+            node.clone().attr("participant", source),
+            node.clone().attr("category", "peer"),
+            node.clone()
+                .attr("peer_recipient_pn", "15555550888@s.whatsapp.net"),
+        ] {
+            assert!(confirmation(&store, &account, &changed).unwrap().is_none());
+        }
+        assert!(super::super::messaging::received_confirmation(&node).is_none());
+    }
+
     #[test]
     fn own_route_requires_saved_user_companion_and_unambiguous_primary_recipient() {
         let account = AccountRecord {

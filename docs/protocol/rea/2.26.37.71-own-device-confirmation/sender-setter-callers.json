@@ -1,0 +1,1340 @@
+{
+  "evidence_id": "ev_2706fb891ab4a3bf1ac61e8908f852484e865b407086b9887ffbd9e81ce1e68c",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "trace_android_references",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.AnonymousClass178",
+    "method_name": "CW6"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-va9AIw/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\",\"max_heap_bytes\":15695085568,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.AnonymousClass178"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"name\":\"A00\",\"def_pos\":0,\"type\":\"int\"},{\"name\":\"A01\",\"def_pos\":0,\"type\":\"int\"},{\"name\":\"A02\",\"def_pos\":0,\"type\":\"int\"},{\"name\":\"A03\",\"def_pos\":0,\"type\":\"int\"},{\"name\":\"A04\",\"def_pos\":0,\"type\":\"int\"},{\"name\":\"A05\",\"def_pos\":0,\"type\":\"int\"},{\"name\":\"A06\",\"def_pos\":0,\"type\":\"int\"},{\"name\":\"A07\",\"def_pos\":0,\"type\":\"int\"},{\"name\":\"A08\",\"def_pos\":0,\"type\":\"int\"},{\"name\":\"A09\",\"def_pos\":0,\"type\":\"int\"},{\"name\":\"A0A\",\"def_pos\":0,\"type\":\"long\"},{\"name\":\"A0B\",\"def_pos\":0,\"type\":\"long\"},{\"name\":\"A0C\",\"def_pos\":0,\"type\":\"long\"},{\"name\":\"A0D\",\"def_pos\":0,\"type\":\"long\"},{\"name\":\"A0E\",\"def_pos\":0,\"type\":\"long\"},{\"name\":\"A0F\",\"def_pos\":0,\"type\":\"long\"},{\"name\":\"A0G\",\"def_pos\":0,\"type\":\"X.1hw\"},{\"name\":\"A0H\",\"def_pos\":0,\"type\":\"X.178\"},{\"name\":\"A0I\",\"def_pos\":0,\"type\":\"X.1gc\"},{\"name\":\"A0J\",\"def_pos\":0,\"type\":\"X.0Zk\"},{\"name\":\"A0K\",\"def_pos\":0,\"type\":\"X.0lp\"},{\"name\":\"A0L\",\"def_pos\":0,\"type\":\"java.lang.Integer\"},{\"name\":\"A0M\",\"def_pos\":0,\"type\":\"java.lang.Integer\"},{\"name\":\"A0N\",\"def_pos\":0,\"type\":\"java.lang.Long\"},{\"name\":\"A0O\",\"def_pos\":0,\"type\":\"java.lang.Long\"},{\"name\":\"A0P\",\"def_pos\":0,\"type\":\"java.lang.Long\"},{\"name\":\"A0Q\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"A0R\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"A0S\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"A0T\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"A0U\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"A0V\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"A0W\",\"def_pos\":0,\"type\":\"java.util.List\"},{\"name\":\"A0X\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A0Y\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A0Z\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A0a\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A0b\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A0c\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A0d\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A0e\",\"def_pos\":0,\"type\":\"byte[]\"},{\"name\":\"A0f\",\"def_pos\":0,\"type\":\"int\"},{\"name\":\"A0g\",\"def_pos\":0,\"type\":\"X.0Cy\"},{\"name\":\"A0h\",\"def_pos\":0,\"type\":\"int\"},{\"name\":\"A0i\",\"def_pos\":0,\"type\":\"X.1gc\"},{\"name\":\"A0j\",\"def_pos\":0,\"type\":\"long\"},{\"name\":\"A0k\",\"def_pos\":0,\"type\":\"long\"},{\"name\":\"A0l\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A0m\",\"def_pos\":0,\"type\":\"long\"},{\"name\":\"A0n\",\"def_pos\":0,\"type\":\"long\"},{\"name\":\"A0o\",\"def_pos\":0,\"type\":\"long\"},{\"name\":\"A0p\",\"def_pos\":0,\"type\":\"com.whatsapp.infra.core.jid.DeviceJid\"},{\"name\":\"A0q\",\"def_pos\":0,\"type\":\"com.whatsapp.infra.core.jid.PhoneUserJid\"},{\"name\":\"A0r\",\"def_pos\":0,\"type\":\"java.lang.Integer\"},{\"name\":\"A0s\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"A0t\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"A0u\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"A0v\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A0w\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A0x\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A0y\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A0z\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A10\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A11\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A12\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A13\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A14\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A15\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A16\",\"def_pos\":0,\"type\":\"byte[]\"},{\"name\":\"A17\",\"def_pos\":0,\"type\":\"long\"},{\"name\":\"A18\",\"def_pos\":0,\"type\":\"java.lang.Object\"},{\"name\":\"A19\",\"def_pos\":0,\"type\":\"java.lang.Object\"},{\"name\":\"A1A\",\"def_pos\":0,\"type\":\"java.util.concurrent.ConcurrentHashMap\"},{\"name\":\"A1B\",\"def_pos\":0,\"type\":\"int\"}],\"field_count\":74,\"full_name\":\"X.AnonymousClass178\",\"name\":\"AnonymousClass178\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":55,\"methods\":[{\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"signature\":\"\\u003cinit\\u003e(X.1gc, int, long): void\",\"def_pos\":0},{\"name\":\"A06\",\"is_constructor\":false,\"signature\":\"A06(): int\",\"def_pos\":0},{\"name\":\"A07\",\"is_constructor\":false,\"signature\":\"A07(): int\",\"def_pos\":0},{\"name\":\"A08\",\"is_constructor\":false,\"signature\":\"A08(): long\",\"def_pos\":0},{\"name\":\"A09\",\"is_constructor\":false,\"signature\":\"A09(): X.178\",\"def_pos\":0},{\"name\":\"A0A\",\"is_constructor\":false,\"signature\":\"A0A(java.lang.Class): X.1i8\",\"def_pos\":0},{\"name\":\"A0B\",\"is_constructor\":false,\"signature\":\"A0B(java.lang.Class): X.1i8\",\"def_pos\":0},{\"name\":\"A0C\",\"is_constructor\":false,\"signature\":\"A0C(): X.1j7\",\"def_pos\":0},{\"name\":\"A0D\",\"is_constructor\":false,\"signature\":\"A0D(): java.util.List\",\"def_pos\":0},{\"name\":\"A0E\",\"is_constructor\":false,\"signature\":\"A0E(): void\",\"def_pos\":0},{\"name\":\"A0F\",\"is_constructor\":false,\"signature\":\"A0F(int): void\",\"def_pos\":0},{\"name\":\"A0G\",\"is_constructor\":false,\"signature\":\"A0G(int): void\",\"def_pos\":0},{\"name\":\"A0H\",\"is_constructor\":false,\"signature\":\"A0H(int): void\",\"def_pos\":0},{\"name\":\"A0I\",\"is_constructor\":false,\"signature\":\"A0I(long): void\",\"def_pos\":0},{\"name\":\"A0J\",\"is_constructor\":false,\"signature\":\"A0J(long): void\",\"def_pos\":0},{\"name\":\"A0K\",\"is_constructor\":false,\"signature\":\"A0K(long): void\",\"def_pos\":0},{\"name\":\"A0L\",\"is_constructor\":false,\"signature\":\"A0L(long): void\",\"def_pos\":0},{\"name\":\"A0M\",\"is_constructor\":false,\"signature\":\"A0M(X.178): void\",\"def_pos\":0},{\"name\":\"A0N\",\"is_constructor\":false,\"signature\":\"A0N(java.util.List): void\",\"def_pos\":0},{\"name\":\"A0O\",\"is_constructor\":false,\"signature\":\"A0O(byte[]): void\",\"def_pos\":0},{\"name\":\"A0P\",\"is_constructor\":false,\"signature\":\"A0P(byte[]): void\",\"def_pos\":0},{\"name\":\"A0Q\",\"is_constructor\":false,\"signature\":\"A0Q(byte[], boolean): void\",\"def_pos\":0},{\"name\":\"A0R\",\"is_constructor\":false,\"signature\":\"A0R(): boolean\",\"def_pos\":0},{\"name\":\"A0S\",\"is_constructor\":false,\"signature\":\"A0S(): boolean\",\"def_pos\":0},{\"name\":\"A0T\",\"is_constructor\":false,\"signature\":\"A0T(): boolean\",\"def_pos\":0},{\"name\":\"A0U\",\"is_constructor\":false,\"signature\":\"A0U(): boolean\",\"def_pos\":0},{\"name\":\"A0V\",\"is_constructor\":false,\"signature\":\"A0V(): boolean\",\"def_pos\":0},{\"name\":\"A0W\",\"is_constructor\":false,\"signature\":\"A0W(): boolean\",\"def_pos\":0},{\"name\":\"A0X\",\"is_constructor\":false,\"signature\":\"A0X(): boolean\",\"def_pos\":0},{\"name\":\"A0Y\",\"is_constructor\":false,\"signature\":\"A0Y(): boolean\",\"def_pos\":0},{\"name\":\"A0Z\",\"is_constructor\":false,\"signature\":\"A0Z(int): boolean\",\"def_pos\":0},{\"name\":\"A0a\",\"is_constructor\":false,\"signature\":\"A0a(long): boolean\",\"def_pos\":0},{\"name\":\"A0b\",\"is_constructor\":false,\"signature\":\"A0b(long): boolean\",\"def_pos\":0},{\"name\":\"A0c\",\"is_constructor\":false,\"signature\":\"A0c(): byte[]\",\"def_pos\":0},{\"name\":\"A0d\",\"is_constructor\":false,\"signature\":\"A0d(): byte[]\",\"def_pos\":0},{\"name\":\"A0e\",\"is_constructor\":false,\"signature\":\"A0e(): int\",\"def_pos\":0},{\"name\":\"A0f\",\"is_constructor\":false,\"signature\":\"A0f(): java.lang.String\",\"def_pos\":0},{\"name\":\"A0g\",\"is_constructor\":false,\"signature\":\"A0g(): java.lang.String\",\"def_pos\":0},{\"name\":\"A0h\",\"is_constructor\":false,\"signature\":\"A0h(int): void\",\"def_pos\":0},{\"name\":\"A0i\",\"is_constructor\":false,\"signature\":\"A0i(java.lang.String): void\",\"def_pos\":0},{\"name\":\"A0j\",\"is_constructor\":false,\"signature\":\"A0j(java.lang.String): void\",\"def_pos\":0},{\"name\":\"A0k\",\"is_constructor\":false,\"signature\":\"A0k(): boolean\",\"def_pos\":0},{\"name\":\"A0l\",\"is_constructor\":false,\"signature\":\"A0l(): boolean\",\"def_pos\":0},{\"name\":\"A0m\",\"is_constructor\":false,\"signature\":\"A0m(): boolean\",\"def_pos\":0},{\"name\":\"A0n\",\"is_constructor\":false,\"signature\":\"A0n(): boolean\",\"def_pos\":0},{\"name\":\"A0o\",\"is_constructor\":false,\"signature\":\"A0o(): boolean\",\"def_pos\":0},{\"name\":\"Alc\",\"is_constructor\":false,\"signature\":\"Alc(): X.1gc\",\"def_pos\":0},{\"name\":\"Apk\",\"is_constructor\":false,\"signature\":\"Apk(): java.lang.String\",\"def_pos\":0},{\"name\":\"B1Q\",\"is_constructor\":false,\"signature\":\"B1Q(): X.0Cy\",\"def_pos\":0},{\"name\":\"B1V\",\"is_constructor\":false,\"signature\":\"B1V(): com.whatsapp.infra.core.jid.UserJid\",\"def_pos\":0},{\"name\":\"B3b\",\"is_constructor\":false,\"signature\":\"B3b(): int\",\"def_pos\":0},{\"name\":\"B6e\",\"is_constructor\":false,\"signature\":\"B6e(): long\",\"def_pos\":0},{\"name\":\"BHP\",\"is_constructor\":false,\"signature\":\"BHP(): boolean\",\"def_pos\":0},{\"name\":\"CW6\",\"is_constructor\":false,\"signature\":\"CW6(X.0Cy): void\",\"def_pos\":0},{\"name\":\"toString\",\"is_constructor\":false,\"signature\":\"toString(): java.lang.String\",\"def_pos\":0}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_xrefs_to_method",
+        "input": {
+          "class_name": "X.AnonymousClass178",
+          "method_name": "CW6",
+          "limit": 2147483647,
+          "resolve_line": false
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"items\":[{\"kind\":\"method\",\"name\":\"A00\",\"full_name\":\"X.0VA.A00\",\"containing_class\":\"X.C0VA\",\"top_class\":\"X.C0VA\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A09\",\"full_name\":\"X.0Z0.A09\",\"containing_class\":\"X.C0Z0\",\"top_class\":\"X.C0Z0\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A01\",\"full_name\":\"X.0Z2.A01\",\"containing_class\":\"X.C0Z2\",\"top_class\":\"X.C0Z2\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A04\",\"full_name\":\"X.0yv.A04\",\"containing_class\":\"X.C0yv\",\"top_class\":\"X.C0yv\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A09\",\"full_name\":\"X.0yv.A09\",\"containing_class\":\"X.C0yv\",\"top_class\":\"X.C0yv\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A0F\",\"full_name\":\"X.0yw.A0F\",\"containing_class\":\"X.C0yw\",\"top_class\":\"X.C0yw\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A0H\",\"full_name\":\"X.0yw.A0H\",\"containing_class\":\"X.C0yw\",\"top_class\":\"X.C0yw\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A0O\",\"full_name\":\"X.0yw.A0O\",\"containing_class\":\"X.C0yw\",\"top_class\":\"X.C0yw\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A0U\",\"full_name\":\"X.0yw.A0U\",\"containing_class\":\"X.C0yw\",\"top_class\":\"X.C0yw\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A0Z\",\"full_name\":\"X.0yw.A0Z\",\"containing_class\":\"X.C0yw\",\"top_class\":\"X.C0yw\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A0g\",\"full_name\":\"X.0yw.A0g\",\"containing_class\":\"X.C0yw\",\"top_class\":\"X.C0yw\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A0l\",\"full_name\":\"X.0yw.A0l\",\"containing_class\":\"X.C0yw\",\"top_class\":\"X.C0yw\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A0m\",\"full_name\":\"X.0yw.A0m\",\"containing_class\":\"X.C0yw\",\"top_class\":\"X.C0yw\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A09\",\"full_name\":\"X.0zC.A09\",\"containing_class\":\"X.C0zC\",\"top_class\":\"X.C0zC\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A0A\",\"full_name\":\"X.0zC.A0A\",\"containing_class\":\"X.C0zC\",\"top_class\":\"X.C0zC\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A0J\",\"full_name\":\"X.0zC.A0J\",\"containing_class\":\"X.C0zC\",\"top_class\":\"X.C0zC\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A00\",\"full_name\":\"X.10h.A00\",\"containing_class\":\"X.C10h\",\"top_class\":\"X.C10h\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A01\",\"full_name\":\"X.10h.A01\",\"containing_class\":\"X.C10h\",\"top_class\":\"X.C10h\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A06\",\"full_name\":\"X.10h.A06\",\"containing_class\":\"X.C10h\",\"top_class\":\"X.C10h\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A08\",\"full_name\":\"X.10h.A08\",\"containing_class\":\"X.C10h\",\"top_class\":\"X.C10h\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A09\",\"full_name\":\"X.11m.A09\",\"containing_class\":\"X.C11m\",\"top_class\":\"X.C11m\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A0P\",\"full_name\":\"X.11y.A0P\",\"containing_class\":\"X.C11y\",\"top_class\":\"X.C11y\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A03\",\"full_name\":\"X.13J.A03\",\"containing_class\":\"X.C13J\",\"top_class\":\"X.C13J\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A00\",\"full_name\":\"X.153.A00\",\"containing_class\":\"X.AnonymousClass153\",\"top_class\":\"X.AnonymousClass153\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A0N\",\"full_name\":\"X.178.A0N\",\"containing_class\":\"X.AnonymousClass178\",\"top_class\":\"X.AnonymousClass178\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A05\",\"full_name\":\"X.1IW.A05\",\"containing_class\":\"X.C1IW\",\"top_class\":\"X.C1IW\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A00\",\"full_name\":\"X.1Uu.A00\",\"containing_class\":\"X.C1Uu\",\"top_class\":\"X.C1Uu\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A00\",\"full_name\":\"X.1Zg.A00\",\"containing_class\":\"X.C1Zg\",\"top_class\":\"X.C1Zg\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CW6\",\"full_name\":\"X.1bh.CW6\",\"containing_class\":\"X.C1bh\",\"top_class\":\"X.C1bh\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A00\",\"full_name\":\"X.1di.A00\",\"containing_class\":\"X.C1di\",\"top_class\":\"X.C1di\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A02\",\"full_name\":\"X.1fW.A02\",\"containing_class\":\"X.C1fW\",\"top_class\":\"X.C1fW\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A04\",\"full_name\":\"X.1fm.A04\",\"containing_class\":\"X.C1fm\",\"top_class\":\"X.C1fm\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CHJ\",\"full_name\":\"X.1iq.CHJ\",\"containing_class\":\"X.C1iq\",\"top_class\":\"X.C0qn\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"\\u003cinit\\u003e\",\"full_name\":\"X.1jt.\\u003cinit\\u003e\",\"containing_class\":\"X.C1jt\",\"top_class\":\"X.C1jt\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A00\",\"full_name\":\"X.1sS.A00\",\"containing_class\":\"X.C1sS\",\"top_class\":\"X.C1sS\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A00\",\"full_name\":\"X.2vi.A00\",\"containing_class\":\"X.C2vi\",\"top_class\":\"X.C2vi\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A00\",\"full_name\":\"X.36W.A00\",\"containing_class\":\"X.C36W\",\"top_class\":\"X.C36W\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A03\",\"full_name\":\"X.36e.A03\",\"containing_class\":\"X.C36e\",\"top_class\":\"X.C36e\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A00\",\"full_name\":\"X.37F.A00\",\"containing_class\":\"X.C37F\",\"top_class\":\"X.C37F\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"BuN\",\"full_name\":\"X.3Li.BuN\",\"containing_class\":\"X.C3Li\",\"top_class\":\"X.C1xr\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CFe\",\"full_name\":\"X.3Nt.CFe\",\"containing_class\":\"X.C3Nt\",\"top_class\":\"X.C1xr\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CW6\",\"full_name\":\"X.75e.CW6\",\"containing_class\":\"X.C75e\",\"top_class\":\"X.C75e\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A01\",\"full_name\":\"X.7or.A01\",\"containing_class\":\"X.C7or\",\"top_class\":\"X.C7or\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A00\",\"full_name\":\"X.7t8.A00\",\"containing_class\":\"X.C7t8\",\"top_class\":\"X.C7t8\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A06\",\"full_name\":\"X.7z7.A06\",\"containing_class\":\"X.C7z7\",\"top_class\":\"X.C7z7\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"BWC\",\"full_name\":\"X.8Fn.BWC\",\"containing_class\":\"X.C8Fn\",\"top_class\":\"X.C6as\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"BWD\",\"full_name\":\"X.8Fn.BWD\",\"containing_class\":\"X.C8Fn\",\"top_class\":\"X.C6as\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"BWC\",\"full_name\":\"X.8Fo.BWC\",\"containing_class\":\"X.C8Fo\",\"top_class\":\"X.C8Fo\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"BWD\",\"full_name\":\"X.8Fo.BWD\",\"containing_class\":\"X.C8Fo\",\"top_class\":\"X.C8Fo\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CM7\",\"full_name\":\"X.8PK.CM7\",\"containing_class\":\"X.C8PK\",\"top_class\":\"X.C8PK\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"run\",\"full_name\":\"X.8UN.run\",\"containing_class\":\"X.C8UN\",\"top_class\":\"X.C8UN\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A00\",\"full_name\":\"X.8mm.A00\",\"containing_class\":\"X.C8mm\",\"top_class\":\"X.C8mm\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"C8k\",\"full_name\":\"X.9L7.C8k\",\"containing_class\":\"X.C9L7\",\"top_class\":\"X.AhP\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A07\",\"full_name\":\"X.9O2.A07\",\"containing_class\":\"X.C9O2\",\"top_class\":\"X.C0Wg\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A07\",\"full_name\":\"X.9O9.A07\",\"containing_class\":\"X.C9O9\",\"top_class\":\"X.C1xr\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A07\",\"full_name\":\"X.9OJ.A07\",\"containing_class\":\"X.C9OJ\",\"top_class\":\"X.C0wQ\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A00\",\"full_name\":\"X.9QW.A00\",\"containing_class\":\"X.C9QW\",\"top_class\":\"X.C9QW\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A00\",\"full_name\":\"X.9QX.A00\",\"containing_class\":\"X.C9QX\",\"top_class\":\"X.C9QX\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A00\",\"full_name\":\"X.9lA.A00\",\"containing_class\":\"X.C9lA\",\"top_class\":\"X.C9lA\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A00\",\"full_name\":\"X.9xx.A00\",\"containing_class\":\"X.C9xx\",\"top_class\":\"X.C9xx\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A01\",\"full_name\":\"X.9xx.A01\",\"containing_class\":\"X.C9xx\",\"top_class\":\"X.C9xx\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A00\",\"full_name\":\"X.9yf.A00\",\"containing_class\":\"X.C9yf\",\"top_class\":\"X.C9yf\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"C8f\",\"full_name\":\"X.AWT.C8f\",\"containing_class\":\"X.AWT\",\"top_class\":\"X.AWT\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"Bqg\",\"full_name\":\"X.AZT.Bqg\",\"containing_class\":\"X.AZT\",\"top_class\":\"X.AZT\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"run\",\"full_name\":\"X.Aha.run\",\"containing_class\":\"X.Aha\",\"top_class\":\"X.Aha\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A1M\",\"full_name\":\"X.Ayl.A1M\",\"containing_class\":\"X.Ayl\",\"top_class\":\"X.Ayl\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A19\",\"full_name\":\"X.Ayo.A19\",\"containing_class\":\"X.Ayo\",\"top_class\":\"X.Ayo\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A0l\",\"full_name\":\"X.Ayq.A0l\",\"containing_class\":\"X.Ayq\",\"top_class\":\"X.Ayq\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A00\",\"full_name\":\"X.B2c.A00\",\"containing_class\":\"X.B2c\",\"top_class\":\"X.B2c\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"Byz\",\"full_name\":\"X.Bah.Byz\",\"containing_class\":\"X.Bah\",\"top_class\":\"X.Bah\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CEy\",\"full_name\":\"X.Bjh.CEy\",\"containing_class\":\"X.Bjh\",\"top_class\":\"X.Bjh\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A00\",\"full_name\":\"X.Bjj.A00\",\"containing_class\":\"X.Bjj\",\"top_class\":\"X.Bjj\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A0P\",\"full_name\":\"X.Bp2.A0P\",\"containing_class\":\"X.Bp2\",\"top_class\":\"X.Bp2\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"\\u003cinit\\u003e\",\"full_name\":\"X.Bpt.\\u003cinit\\u003e\",\"containing_class\":\"X.Bpt\",\"top_class\":\"X.Bpt\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CF4\",\"full_name\":\"X.Bua.CF4\",\"containing_class\":\"X.Bua\",\"top_class\":\"X.Bua\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A00\",\"full_name\":\"X.C9N.A00\",\"containing_class\":\"X.C9N\",\"top_class\":\"X.C9N\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A00\",\"full_name\":\"X.CQd.A00\",\"containing_class\":\"X.CQd\",\"top_class\":\"X.CQd\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A01\",\"full_name\":\"X.CSj.A01\",\"containing_class\":\"X.CSj\",\"top_class\":\"X.CSj\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A00\",\"full_name\":\"X.Cix.A00\",\"containing_class\":\"X.Cix\",\"top_class\":\"X.Cix\",\"def_pos\":1675},{\"kind\":\"method\",\"name\":\"A02\",\"full_name\":\"X.Cjb.A02\",\"containing_class\":\"X.Cjb\",\"top_class\":\"X.Cjb\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A05\",\"full_name\":\"X.CoJ.A05\",\"containing_class\":\"X.CoJ\",\"top_class\":\"X.CoJ\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A09\",\"full_name\":\"X.CoW.A09\",\"containing_class\":\"X.CoW\",\"top_class\":\"X.CoW\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CEx\",\"full_name\":\"X.D1f.CEx\",\"containing_class\":\"X.D1f\",\"top_class\":\"X.D1f\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CEx\",\"full_name\":\"X.D1g.CEx\",\"containing_class\":\"X.D1g\",\"top_class\":\"X.D1g\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CEx\",\"full_name\":\"X.D1k.CEx\",\"containing_class\":\"X.D1k\",\"top_class\":\"X.D1k\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CNt\",\"full_name\":\"X.D1l.CNt\",\"containing_class\":\"X.D1l\",\"top_class\":\"X.D1l\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"Byz\",\"full_name\":\"X.D1t.Byz\",\"containing_class\":\"X.D1t\",\"top_class\":\"X.D1t\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"Byz\",\"full_name\":\"X.D28.Byz\",\"containing_class\":\"X.D28\",\"top_class\":\"X.D28\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A00\",\"full_name\":\"X.D4x.A00\",\"containing_class\":\"X.D4x\",\"top_class\":\"X.D4x\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"BEw\",\"full_name\":\"X.D54.BEw\",\"containing_class\":\"X.D54\",\"top_class\":\"X.D54\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"Byt\",\"full_name\":\"X.D7E.Byt\",\"containing_class\":\"X.D7E\",\"top_class\":\"X.D7E\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CF4\",\"full_name\":\"X.DA9.CF4\",\"containing_class\":\"X.DA9\",\"top_class\":\"X.DA9\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CF4\",\"full_name\":\"X.DAM.CF4\",\"containing_class\":\"X.DAM\",\"top_class\":\"X.DAM\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"BzB\",\"full_name\":\"X.DAg.BzB\",\"containing_class\":\"X.DAg\",\"top_class\":\"X.DAg\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"Ciq\",\"full_name\":\"X.DAq.Ciq\",\"containing_class\":\"X.DAq\",\"top_class\":\"X.DAq\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CNt\",\"full_name\":\"X.DBZ.CNt\",\"containing_class\":\"X.DBZ\",\"top_class\":\"X.DBZ\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CNt\",\"full_name\":\"X.DBa.CNt\",\"containing_class\":\"X.DBa\",\"top_class\":\"X.DBa\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CNt\",\"full_name\":\"X.DBe.CNt\",\"containing_class\":\"X.DBe\",\"top_class\":\"X.DBe\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CNt\",\"full_name\":\"X.DBj.CNt\",\"containing_class\":\"X.DBj\",\"top_class\":\"X.DBj\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CNt\",\"full_name\":\"X.DBk.CNt\",\"containing_class\":\"X.DBk\",\"top_class\":\"X.DBk\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CNt\",\"full_name\":\"X.DBp.CNt\",\"containing_class\":\"X.DBp\",\"top_class\":\"X.DBp\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CNt\",\"full_name\":\"X.DBt.CNt\",\"containing_class\":\"X.DBt\",\"top_class\":\"X.DBt\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CNt\",\"full_name\":\"X.DBu.CNt\",\"containing_class\":\"X.DBu\",\"top_class\":\"X.DBu\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CNt\",\"full_name\":\"X.DC7.CNt\",\"containing_class\":\"X.DC7\",\"top_class\":\"X.DC7\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CNt\",\"full_name\":\"X.DCC.CNt\",\"containing_class\":\"X.DCC\",\"top_class\":\"X.DCC\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CNt\",\"full_name\":\"X.DCD.CNt\",\"containing_class\":\"X.DCD\",\"top_class\":\"X.DCD\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CNt\",\"full_name\":\"X.DCH.CNt\",\"containing_class\":\"X.DCH\",\"top_class\":\"X.DCH\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CNt\",\"full_name\":\"X.DCK.CNt\",\"containing_class\":\"X.DCK\",\"top_class\":\"X.DCK\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CNt\",\"full_name\":\"X.DCL.CNt\",\"containing_class\":\"X.DCL\",\"top_class\":\"X.DCL\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CNt\",\"full_name\":\"X.DCN.CNt\",\"containing_class\":\"X.DCN\",\"top_class\":\"X.DCN\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CNt\",\"full_name\":\"X.DCO.CNt\",\"containing_class\":\"X.DCO\",\"top_class\":\"X.DCO\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CNt\",\"full_name\":\"X.DCU.CNt\",\"containing_class\":\"X.DCU\",\"top_class\":\"X.DCU\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CNt\",\"full_name\":\"X.DCZ.CNt\",\"containing_class\":\"X.DCZ\",\"top_class\":\"X.DCZ\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CNt\",\"full_name\":\"X.DCg.CNt\",\"containing_class\":\"X.DCg\",\"top_class\":\"X.DCg\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CNt\",\"full_name\":\"X.DCh.CNt\",\"containing_class\":\"X.DCh\",\"top_class\":\"X.DCh\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CNt\",\"full_name\":\"X.DCk.CNt\",\"containing_class\":\"X.DCk\",\"top_class\":\"X.DCk\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CNt\",\"full_name\":\"X.DCl.CNt\",\"containing_class\":\"X.DCl\",\"top_class\":\"X.DCl\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CNt\",\"full_name\":\"X.DCn.CNt\",\"containing_class\":\"X.DCn\",\"top_class\":\"X.DCn\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CNt\",\"full_name\":\"X.DCp.CNt\",\"containing_class\":\"X.DCp\",\"top_class\":\"X.DCp\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CNt\",\"full_name\":\"X.DCq.CNt\",\"containing_class\":\"X.DCq\",\"top_class\":\"X.DCq\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CNt\",\"full_name\":\"X.DCs.CNt\",\"containing_class\":\"X.DCs\",\"top_class\":\"X.DCs\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"CNt\",\"full_name\":\"X.DCt.CNt\",\"containing_class\":\"X.DCt\",\"top_class\":\"X.DCt\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A01\",\"full_name\":\"X.DDE.A01\",\"containing_class\":\"X.DDE\",\"top_class\":\"X.DDE\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"BqP\",\"full_name\":\"X.DDt.BqP\",\"containing_class\":\"X.DDt\",\"top_class\":\"X.DDt\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"BqP\",\"full_name\":\"X.DDu.BqP\",\"containing_class\":\"X.DDu\",\"top_class\":\"X.DDu\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"BqP\",\"full_name\":\"X.DE4.BqP\",\"containing_class\":\"X.DE4\",\"top_class\":\"X.DE4\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"BEl\",\"full_name\":\"X.DLF.BEl\",\"containing_class\":\"X.DLF\",\"top_class\":\"X.DLF\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"BEl\",\"full_name\":\"X.DLG.BEl\",\"containing_class\":\"X.DLG\",\"top_class\":\"X.DLG\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"run\",\"full_name\":\"X.DLy.run\",\"containing_class\":\"X.DLy\",\"top_class\":\"X.DLy\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"run\",\"full_name\":\"X.DNr.run\",\"containing_class\":\"X.DNr\",\"top_class\":\"X.DNr\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"run\",\"full_name\":\"X.DNu.run\",\"containing_class\":\"X.DNu\",\"top_class\":\"X.DNu\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A0Z\",\"full_name\":\"X.EHp.A0Z\",\"containing_class\":\"X.EHp\",\"top_class\":\"X.EHp\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A0Z\",\"full_name\":\"X.EHq.A0Z\",\"containing_class\":\"X.EHq\",\"top_class\":\"X.EHq\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A5H\",\"full_name\":\"X.EfT.A5H\",\"containing_class\":\"X.EfT\",\"top_class\":\"X.EfT\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A00\",\"full_name\":\"X.FLK.A00\",\"containing_class\":\"X.FLK\",\"top_class\":\"X.FLK\",\"def_pos\":0},{\"kind\":\"method\",\"name\":\"A00\",\"full_name\":\"com.whatsapp.groupnotificationhandler.group.GroupJoinViaLinkSystemMessageHandler.A00\",\"containing_class\":\"com.whatsapp.groupnotificationhandler.group.GroupJoinViaLinkSystemMessageHandler\",\"top_class\":\"com.whatsapp.groupnotificationhandler.group.GroupJoinViaLinkSystemMessageHandler\",\"def_pos\":0}],\"total\":136,\"resolve_line\":false,\"target\":\"X.AnonymousClass178.CW6\",\"count\":136}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.AnonymousClass178",
+    "method_name": "CW6",
+    "total": 136,
+    "references": [
+      {
+        "kind": "method",
+        "name": "A00",
+        "reported_full_name": "X.0VA.A00",
+        "containing_class": "X.C0VA",
+        "top_class": "X.C0VA",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A09",
+        "reported_full_name": "X.0Z0.A09",
+        "containing_class": "X.C0Z0",
+        "top_class": "X.C0Z0",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A01",
+        "reported_full_name": "X.0Z2.A01",
+        "containing_class": "X.C0Z2",
+        "top_class": "X.C0Z2",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A04",
+        "reported_full_name": "X.0yv.A04",
+        "containing_class": "X.C0yv",
+        "top_class": "X.C0yv",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A09",
+        "reported_full_name": "X.0yv.A09",
+        "containing_class": "X.C0yv",
+        "top_class": "X.C0yv",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A0F",
+        "reported_full_name": "X.0yw.A0F",
+        "containing_class": "X.C0yw",
+        "top_class": "X.C0yw",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A0H",
+        "reported_full_name": "X.0yw.A0H",
+        "containing_class": "X.C0yw",
+        "top_class": "X.C0yw",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A0O",
+        "reported_full_name": "X.0yw.A0O",
+        "containing_class": "X.C0yw",
+        "top_class": "X.C0yw",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A0U",
+        "reported_full_name": "X.0yw.A0U",
+        "containing_class": "X.C0yw",
+        "top_class": "X.C0yw",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A0Z",
+        "reported_full_name": "X.0yw.A0Z",
+        "containing_class": "X.C0yw",
+        "top_class": "X.C0yw",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A0g",
+        "reported_full_name": "X.0yw.A0g",
+        "containing_class": "X.C0yw",
+        "top_class": "X.C0yw",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A0l",
+        "reported_full_name": "X.0yw.A0l",
+        "containing_class": "X.C0yw",
+        "top_class": "X.C0yw",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A0m",
+        "reported_full_name": "X.0yw.A0m",
+        "containing_class": "X.C0yw",
+        "top_class": "X.C0yw",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A09",
+        "reported_full_name": "X.0zC.A09",
+        "containing_class": "X.C0zC",
+        "top_class": "X.C0zC",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A0A",
+        "reported_full_name": "X.0zC.A0A",
+        "containing_class": "X.C0zC",
+        "top_class": "X.C0zC",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A0J",
+        "reported_full_name": "X.0zC.A0J",
+        "containing_class": "X.C0zC",
+        "top_class": "X.C0zC",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A00",
+        "reported_full_name": "X.10h.A00",
+        "containing_class": "X.C10h",
+        "top_class": "X.C10h",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A01",
+        "reported_full_name": "X.10h.A01",
+        "containing_class": "X.C10h",
+        "top_class": "X.C10h",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A06",
+        "reported_full_name": "X.10h.A06",
+        "containing_class": "X.C10h",
+        "top_class": "X.C10h",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A08",
+        "reported_full_name": "X.10h.A08",
+        "containing_class": "X.C10h",
+        "top_class": "X.C10h",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A09",
+        "reported_full_name": "X.11m.A09",
+        "containing_class": "X.C11m",
+        "top_class": "X.C11m",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A0P",
+        "reported_full_name": "X.11y.A0P",
+        "containing_class": "X.C11y",
+        "top_class": "X.C11y",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A03",
+        "reported_full_name": "X.13J.A03",
+        "containing_class": "X.C13J",
+        "top_class": "X.C13J",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A00",
+        "reported_full_name": "X.153.A00",
+        "containing_class": "X.AnonymousClass153",
+        "top_class": "X.AnonymousClass153",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A0N",
+        "reported_full_name": "X.178.A0N",
+        "containing_class": "X.AnonymousClass178",
+        "top_class": "X.AnonymousClass178",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A05",
+        "reported_full_name": "X.1IW.A05",
+        "containing_class": "X.C1IW",
+        "top_class": "X.C1IW",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A00",
+        "reported_full_name": "X.1Uu.A00",
+        "containing_class": "X.C1Uu",
+        "top_class": "X.C1Uu",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A00",
+        "reported_full_name": "X.1Zg.A00",
+        "containing_class": "X.C1Zg",
+        "top_class": "X.C1Zg",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CW6",
+        "reported_full_name": "X.1bh.CW6",
+        "containing_class": "X.C1bh",
+        "top_class": "X.C1bh",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A00",
+        "reported_full_name": "X.1di.A00",
+        "containing_class": "X.C1di",
+        "top_class": "X.C1di",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A02",
+        "reported_full_name": "X.1fW.A02",
+        "containing_class": "X.C1fW",
+        "top_class": "X.C1fW",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A04",
+        "reported_full_name": "X.1fm.A04",
+        "containing_class": "X.C1fm",
+        "top_class": "X.C1fm",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CHJ",
+        "reported_full_name": "X.1iq.CHJ",
+        "containing_class": "X.C1iq",
+        "top_class": "X.C0qn",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "<init>",
+        "reported_full_name": "X.1jt.<init>",
+        "containing_class": "X.C1jt",
+        "top_class": "X.C1jt",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A00",
+        "reported_full_name": "X.1sS.A00",
+        "containing_class": "X.C1sS",
+        "top_class": "X.C1sS",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A00",
+        "reported_full_name": "X.2vi.A00",
+        "containing_class": "X.C2vi",
+        "top_class": "X.C2vi",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A00",
+        "reported_full_name": "X.36W.A00",
+        "containing_class": "X.C36W",
+        "top_class": "X.C36W",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A03",
+        "reported_full_name": "X.36e.A03",
+        "containing_class": "X.C36e",
+        "top_class": "X.C36e",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A00",
+        "reported_full_name": "X.37F.A00",
+        "containing_class": "X.C37F",
+        "top_class": "X.C37F",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "BuN",
+        "reported_full_name": "X.3Li.BuN",
+        "containing_class": "X.C3Li",
+        "top_class": "X.C1xr",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CFe",
+        "reported_full_name": "X.3Nt.CFe",
+        "containing_class": "X.C3Nt",
+        "top_class": "X.C1xr",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CW6",
+        "reported_full_name": "X.75e.CW6",
+        "containing_class": "X.C75e",
+        "top_class": "X.C75e",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A01",
+        "reported_full_name": "X.7or.A01",
+        "containing_class": "X.C7or",
+        "top_class": "X.C7or",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A00",
+        "reported_full_name": "X.7t8.A00",
+        "containing_class": "X.C7t8",
+        "top_class": "X.C7t8",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A06",
+        "reported_full_name": "X.7z7.A06",
+        "containing_class": "X.C7z7",
+        "top_class": "X.C7z7",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "BWC",
+        "reported_full_name": "X.8Fn.BWC",
+        "containing_class": "X.C8Fn",
+        "top_class": "X.C6as",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "BWD",
+        "reported_full_name": "X.8Fn.BWD",
+        "containing_class": "X.C8Fn",
+        "top_class": "X.C6as",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "BWC",
+        "reported_full_name": "X.8Fo.BWC",
+        "containing_class": "X.C8Fo",
+        "top_class": "X.C8Fo",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "BWD",
+        "reported_full_name": "X.8Fo.BWD",
+        "containing_class": "X.C8Fo",
+        "top_class": "X.C8Fo",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CM7",
+        "reported_full_name": "X.8PK.CM7",
+        "containing_class": "X.C8PK",
+        "top_class": "X.C8PK",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "run",
+        "reported_full_name": "X.8UN.run",
+        "containing_class": "X.C8UN",
+        "top_class": "X.C8UN",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A00",
+        "reported_full_name": "X.8mm.A00",
+        "containing_class": "X.C8mm",
+        "top_class": "X.C8mm",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "C8k",
+        "reported_full_name": "X.9L7.C8k",
+        "containing_class": "X.C9L7",
+        "top_class": "X.AhP",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A07",
+        "reported_full_name": "X.9O2.A07",
+        "containing_class": "X.C9O2",
+        "top_class": "X.C0Wg",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A07",
+        "reported_full_name": "X.9O9.A07",
+        "containing_class": "X.C9O9",
+        "top_class": "X.C1xr",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A07",
+        "reported_full_name": "X.9OJ.A07",
+        "containing_class": "X.C9OJ",
+        "top_class": "X.C0wQ",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A00",
+        "reported_full_name": "X.9QW.A00",
+        "containing_class": "X.C9QW",
+        "top_class": "X.C9QW",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A00",
+        "reported_full_name": "X.9QX.A00",
+        "containing_class": "X.C9QX",
+        "top_class": "X.C9QX",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A00",
+        "reported_full_name": "X.9lA.A00",
+        "containing_class": "X.C9lA",
+        "top_class": "X.C9lA",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A00",
+        "reported_full_name": "X.9xx.A00",
+        "containing_class": "X.C9xx",
+        "top_class": "X.C9xx",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A01",
+        "reported_full_name": "X.9xx.A01",
+        "containing_class": "X.C9xx",
+        "top_class": "X.C9xx",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A00",
+        "reported_full_name": "X.9yf.A00",
+        "containing_class": "X.C9yf",
+        "top_class": "X.C9yf",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "C8f",
+        "reported_full_name": "X.AWT.C8f",
+        "containing_class": "X.AWT",
+        "top_class": "X.AWT",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "Bqg",
+        "reported_full_name": "X.AZT.Bqg",
+        "containing_class": "X.AZT",
+        "top_class": "X.AZT",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "run",
+        "reported_full_name": "X.Aha.run",
+        "containing_class": "X.Aha",
+        "top_class": "X.Aha",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A1M",
+        "reported_full_name": "X.Ayl.A1M",
+        "containing_class": "X.Ayl",
+        "top_class": "X.Ayl",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A19",
+        "reported_full_name": "X.Ayo.A19",
+        "containing_class": "X.Ayo",
+        "top_class": "X.Ayo",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A0l",
+        "reported_full_name": "X.Ayq.A0l",
+        "containing_class": "X.Ayq",
+        "top_class": "X.Ayq",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A00",
+        "reported_full_name": "X.B2c.A00",
+        "containing_class": "X.B2c",
+        "top_class": "X.B2c",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "Byz",
+        "reported_full_name": "X.Bah.Byz",
+        "containing_class": "X.Bah",
+        "top_class": "X.Bah",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CEy",
+        "reported_full_name": "X.Bjh.CEy",
+        "containing_class": "X.Bjh",
+        "top_class": "X.Bjh",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A00",
+        "reported_full_name": "X.Bjj.A00",
+        "containing_class": "X.Bjj",
+        "top_class": "X.Bjj",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A0P",
+        "reported_full_name": "X.Bp2.A0P",
+        "containing_class": "X.Bp2",
+        "top_class": "X.Bp2",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "<init>",
+        "reported_full_name": "X.Bpt.<init>",
+        "containing_class": "X.Bpt",
+        "top_class": "X.Bpt",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CF4",
+        "reported_full_name": "X.Bua.CF4",
+        "containing_class": "X.Bua",
+        "top_class": "X.Bua",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A00",
+        "reported_full_name": "X.C9N.A00",
+        "containing_class": "X.C9N",
+        "top_class": "X.C9N",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A00",
+        "reported_full_name": "X.CQd.A00",
+        "containing_class": "X.CQd",
+        "top_class": "X.CQd",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A01",
+        "reported_full_name": "X.CSj.A01",
+        "containing_class": "X.CSj",
+        "top_class": "X.CSj",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A00",
+        "reported_full_name": "X.Cix.A00",
+        "containing_class": "X.Cix",
+        "top_class": "X.Cix",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A02",
+        "reported_full_name": "X.Cjb.A02",
+        "containing_class": "X.Cjb",
+        "top_class": "X.Cjb",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A05",
+        "reported_full_name": "X.CoJ.A05",
+        "containing_class": "X.CoJ",
+        "top_class": "X.CoJ",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A09",
+        "reported_full_name": "X.CoW.A09",
+        "containing_class": "X.CoW",
+        "top_class": "X.CoW",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CEx",
+        "reported_full_name": "X.D1f.CEx",
+        "containing_class": "X.D1f",
+        "top_class": "X.D1f",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CEx",
+        "reported_full_name": "X.D1g.CEx",
+        "containing_class": "X.D1g",
+        "top_class": "X.D1g",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CEx",
+        "reported_full_name": "X.D1k.CEx",
+        "containing_class": "X.D1k",
+        "top_class": "X.D1k",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CNt",
+        "reported_full_name": "X.D1l.CNt",
+        "containing_class": "X.D1l",
+        "top_class": "X.D1l",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "Byz",
+        "reported_full_name": "X.D1t.Byz",
+        "containing_class": "X.D1t",
+        "top_class": "X.D1t",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "Byz",
+        "reported_full_name": "X.D28.Byz",
+        "containing_class": "X.D28",
+        "top_class": "X.D28",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A00",
+        "reported_full_name": "X.D4x.A00",
+        "containing_class": "X.D4x",
+        "top_class": "X.D4x",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "BEw",
+        "reported_full_name": "X.D54.BEw",
+        "containing_class": "X.D54",
+        "top_class": "X.D54",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "Byt",
+        "reported_full_name": "X.D7E.Byt",
+        "containing_class": "X.D7E",
+        "top_class": "X.D7E",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CF4",
+        "reported_full_name": "X.DA9.CF4",
+        "containing_class": "X.DA9",
+        "top_class": "X.DA9",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CF4",
+        "reported_full_name": "X.DAM.CF4",
+        "containing_class": "X.DAM",
+        "top_class": "X.DAM",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "BzB",
+        "reported_full_name": "X.DAg.BzB",
+        "containing_class": "X.DAg",
+        "top_class": "X.DAg",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "Ciq",
+        "reported_full_name": "X.DAq.Ciq",
+        "containing_class": "X.DAq",
+        "top_class": "X.DAq",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CNt",
+        "reported_full_name": "X.DBZ.CNt",
+        "containing_class": "X.DBZ",
+        "top_class": "X.DBZ",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CNt",
+        "reported_full_name": "X.DBa.CNt",
+        "containing_class": "X.DBa",
+        "top_class": "X.DBa",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CNt",
+        "reported_full_name": "X.DBe.CNt",
+        "containing_class": "X.DBe",
+        "top_class": "X.DBe",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CNt",
+        "reported_full_name": "X.DBj.CNt",
+        "containing_class": "X.DBj",
+        "top_class": "X.DBj",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CNt",
+        "reported_full_name": "X.DBk.CNt",
+        "containing_class": "X.DBk",
+        "top_class": "X.DBk",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CNt",
+        "reported_full_name": "X.DBp.CNt",
+        "containing_class": "X.DBp",
+        "top_class": "X.DBp",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CNt",
+        "reported_full_name": "X.DBt.CNt",
+        "containing_class": "X.DBt",
+        "top_class": "X.DBt",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CNt",
+        "reported_full_name": "X.DBu.CNt",
+        "containing_class": "X.DBu",
+        "top_class": "X.DBu",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CNt",
+        "reported_full_name": "X.DC7.CNt",
+        "containing_class": "X.DC7",
+        "top_class": "X.DC7",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CNt",
+        "reported_full_name": "X.DCC.CNt",
+        "containing_class": "X.DCC",
+        "top_class": "X.DCC",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CNt",
+        "reported_full_name": "X.DCD.CNt",
+        "containing_class": "X.DCD",
+        "top_class": "X.DCD",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CNt",
+        "reported_full_name": "X.DCH.CNt",
+        "containing_class": "X.DCH",
+        "top_class": "X.DCH",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CNt",
+        "reported_full_name": "X.DCK.CNt",
+        "containing_class": "X.DCK",
+        "top_class": "X.DCK",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CNt",
+        "reported_full_name": "X.DCL.CNt",
+        "containing_class": "X.DCL",
+        "top_class": "X.DCL",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CNt",
+        "reported_full_name": "X.DCN.CNt",
+        "containing_class": "X.DCN",
+        "top_class": "X.DCN",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CNt",
+        "reported_full_name": "X.DCO.CNt",
+        "containing_class": "X.DCO",
+        "top_class": "X.DCO",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CNt",
+        "reported_full_name": "X.DCU.CNt",
+        "containing_class": "X.DCU",
+        "top_class": "X.DCU",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CNt",
+        "reported_full_name": "X.DCZ.CNt",
+        "containing_class": "X.DCZ",
+        "top_class": "X.DCZ",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CNt",
+        "reported_full_name": "X.DCg.CNt",
+        "containing_class": "X.DCg",
+        "top_class": "X.DCg",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CNt",
+        "reported_full_name": "X.DCh.CNt",
+        "containing_class": "X.DCh",
+        "top_class": "X.DCh",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CNt",
+        "reported_full_name": "X.DCk.CNt",
+        "containing_class": "X.DCk",
+        "top_class": "X.DCk",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CNt",
+        "reported_full_name": "X.DCl.CNt",
+        "containing_class": "X.DCl",
+        "top_class": "X.DCl",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CNt",
+        "reported_full_name": "X.DCn.CNt",
+        "containing_class": "X.DCn",
+        "top_class": "X.DCn",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CNt",
+        "reported_full_name": "X.DCp.CNt",
+        "containing_class": "X.DCp",
+        "top_class": "X.DCp",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CNt",
+        "reported_full_name": "X.DCq.CNt",
+        "containing_class": "X.DCq",
+        "top_class": "X.DCq",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CNt",
+        "reported_full_name": "X.DCs.CNt",
+        "containing_class": "X.DCs",
+        "top_class": "X.DCs",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "CNt",
+        "reported_full_name": "X.DCt.CNt",
+        "containing_class": "X.DCt",
+        "top_class": "X.DCt",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A01",
+        "reported_full_name": "X.DDE.A01",
+        "containing_class": "X.DDE",
+        "top_class": "X.DDE",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "BqP",
+        "reported_full_name": "X.DDt.BqP",
+        "containing_class": "X.DDt",
+        "top_class": "X.DDt",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "BqP",
+        "reported_full_name": "X.DDu.BqP",
+        "containing_class": "X.DDu",
+        "top_class": "X.DDu",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "BqP",
+        "reported_full_name": "X.DE4.BqP",
+        "containing_class": "X.DE4",
+        "top_class": "X.DE4",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "BEl",
+        "reported_full_name": "X.DLF.BEl",
+        "containing_class": "X.DLF",
+        "top_class": "X.DLF",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "BEl",
+        "reported_full_name": "X.DLG.BEl",
+        "containing_class": "X.DLG",
+        "top_class": "X.DLG",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "run",
+        "reported_full_name": "X.DLy.run",
+        "containing_class": "X.DLy",
+        "top_class": "X.DLy",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "run",
+        "reported_full_name": "X.DNr.run",
+        "containing_class": "X.DNr",
+        "top_class": "X.DNr",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "run",
+        "reported_full_name": "X.DNu.run",
+        "containing_class": "X.DNu",
+        "top_class": "X.DNu",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A0Z",
+        "reported_full_name": "X.EHp.A0Z",
+        "containing_class": "X.EHp",
+        "top_class": "X.EHp",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A0Z",
+        "reported_full_name": "X.EHq.A0Z",
+        "containing_class": "X.EHq",
+        "top_class": "X.EHq",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A5H",
+        "reported_full_name": "X.EfT.A5H",
+        "containing_class": "X.EfT",
+        "top_class": "X.EfT",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A00",
+        "reported_full_name": "X.FLK.A00",
+        "containing_class": "X.FLK",
+        "top_class": "X.FLK",
+        "source_line": null,
+        "dex_offset": null
+      },
+      {
+        "kind": "method",
+        "name": "A00",
+        "reported_full_name": "com.whatsapp.groupnotificationhandler.group.GroupJoinViaLinkSystemMessageHandler.A00",
+        "containing_class": "com.whatsapp.groupnotificationhandler.group.GroupJoinViaLinkSystemMessageHandler",
+        "top_class": "com.whatsapp.groupnotificationhandler.group.GroupJoinViaLinkSystemMessageHandler",
+        "source_line": null,
+        "dex_offset": null
+      }
+    ],
+    "coverage": "complete"
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

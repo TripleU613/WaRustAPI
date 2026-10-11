@@ -708,7 +708,8 @@ pub fn received_confirmation(incoming: &Node) -> Option<Node> {
 /// Build a confirmation using the saved account's own PN/LID identity.
 ///
 /// Receive callers must capture the node durably and authenticate/decrypt a
-/// message before confirming it. Own statuses use `type=sender`; peer metadata
+/// message before confirming it. Own statuses and supported committed own-device
+/// text use `type=sender`; peer metadata
 /// is never ownership authority. When own-LID authority is needed, malformed
 /// or conflicting records return an error before a confirmation can be written.
 /// This does not send or queue.
@@ -717,6 +718,12 @@ pub fn received_confirmation_for_account(
     account: &crate::session::AccountRecord,
     incoming: &Node,
 ) -> crate::Result<Option<Node>> {
+    if incoming.description == "message" && incoming.get_attr("recipient").is_some() {
+        #[cfg(feature = "experimental-signal-crypto")]
+        return super::own_device::confirmation(store, account, incoming);
+        #[cfg(not(feature = "experimental-signal-crypto"))]
+        return Ok(None);
+    }
     let Some(mut receipt) = received_confirmation(incoming) else {
         return Ok(None);
     };

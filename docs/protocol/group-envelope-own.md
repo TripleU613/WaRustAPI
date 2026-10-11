@@ -50,13 +50,14 @@ type-1 groups. Cih.A03 stores the boxed flag in A0Y (`0000..000e`).
 key path passes it through `Ayj.A0x` to `1gc.<init>` (`0092..00a6`), keeping
 original and normal keys together. Its recipient/special-chat normalization
 branches are not implemented here. `Cih.A01` forwards A0X/A09 at
-`004e..007c`, `0194..019c`; `Bp2.<init>` stores the original key in
-C6a.A00 (`00f2..00fe`) and the normal key in Bp2.A07 (`0028..0030`).
+`004e..007c`, `0194..019c`; `Bp2.<init>` stores the normalized key in
+C6a.A00 (`00f2..00fe`) and the original key in Bp2.A07 (`0028..0030`).
 
-`Cna.A01` feeds the original key to C9O.A00 (`0018..002a`), which constructs
+`Cna.A01` feeds the normalized key to C9O.A00 (`0018..002a`), which constructs
 CRD. CRD's constructor retains it as A0R (`000e..0012`). Cna also forwards
-the normal key to CRD.A06 (`0114..011c`). The already exported CRD.A00 prefers
-A06 over A0R (`0020..002c`) and CoT retains that key as A0A. This connects the
+the original key to CRD.A06 (`0114..011c`). CRD.A00 prefers A06 over A0R for
+the fifth constructor argument (`0020..002c`), retained as CoT.A0B; its sixth
+argument is A0R, retained as **CoT.A0A**, the normalized key. This connects the
 ordinary group sender decision to the envelope key read by Bal/BoQ.
 
 **Confirmed:** Cna derives the reaction's source CoT.A06 from CjN.A04 via
