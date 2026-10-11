@@ -1860,6 +1860,8 @@ pub struct MethodDump {
     /// Parameter and return descriptors from proto_id_item/type_list, not shorties.
     pub method_signature: Result<String, String>,
     pub access_flags: u32,
+    /// Declaration came from encoded virtual_methods, not inferred from access flags.
+    pub virtual_method: bool,
     pub registers: u16,
     pub insns: Vec<Insn>,
     pub try_blocks: Vec<TryBlock>,
@@ -1876,7 +1878,7 @@ fn smali_one(
     for ci in 0..dex.class_count {
         let cdef_off = dex.class_off as usize + 32 * ci as usize;
         let class_idx = u32le(d, cdef_off)?;
-        let class_name = dex.type_name(class_idx).unwrap_or_default();
+        let class_name = dex.type_name(class_idx)?;
 
         if !class_name.contains(class_filter) {
             continue;
@@ -1890,23 +1892,27 @@ fn smali_one(
         }
 
         let mut pos = class_data_off as usize;
-        let (sf, p) = uleb128(d, pos).unwrap_or((0, pos + 1));
+        let (sf, p) = uleb128(d, pos)?;
         pos = p;
-        let (inf, p) = uleb128(d, pos).unwrap_or((0, pos + 1));
+        let (inf, p) = uleb128(d, pos)?;
         pos = p;
-        let (dm, p) = uleb128(d, pos).unwrap_or((0, pos + 1));
+        let (dm, p) = uleb128(d, pos)?;
         pos = p;
-        let (vm, p) = uleb128(d, pos).unwrap_or((0, pos + 1));
+        let (vm, p) = uleb128(d, pos)?;
         pos = p;
 
         for _ in 0..(sf + inf) {
-            let (_, p) = uleb128(d, pos).unwrap_or((0, pos + 1));
-            let (_, p2) = uleb128(d, p).unwrap_or((0, p + 1));
+            let (_, p) = uleb128(d, pos)?;
+            let (_, p2) = uleb128(d, p)?;
             pos = p2;
         }
 
-        for (method_idx, access_flags, code_off) in encoded_methods(d, &mut pos, dm, vm)? {
-            let (_, method_name, method_proto) = dex.method_info(method_idx).unwrap_or_default();
+        for (method_order, (method_idx, access_flags, code_off)) in
+            encoded_methods(d, &mut pos, dm, vm)?
+                .into_iter()
+                .enumerate()
+        {
+            let (_, method_name, method_proto) = dex.method_info(method_idx)?;
 
             if let Some(mf) = method_filter
                 && !method_name.contains(mf)
@@ -1927,6 +1933,7 @@ fn smali_one(
                     method_proto,
                     method_signature,
                     access_flags,
+                    virtual_method: method_order >= dm as usize,
                     registers: 0,
                     insns: vec![],
                     try_blocks: vec![],
@@ -1937,10 +1944,12 @@ fn smali_one(
             let ci_off = code_off as usize;
             let try_blocks = code_try_blocks(&dex, ci_off)?;
             let registers = u16le(d, ci_off)?;
-            let insns_size = u32le(d, ci_off + 12).unwrap_or(0);
+            let insns_size = u32le(d, ci_off + 12)?;
             let insns_start = ci_off + 16;
             let insns_end = insns_start + insns_size as usize * 2;
-            let raw = d.get(insns_start..insns_end).unwrap_or(&[]);
+            let raw = d
+                .get(insns_start..insns_end)
+                .ok_or("dex: instruction extent outside DEX")?;
             let insns = decode_insns(raw, &dex);
 
             out.push(MethodDump {
@@ -1950,6 +1959,7 @@ fn smali_one(
                 method_proto,
                 method_signature,
                 access_flags,
+                virtual_method: method_order >= dm as usize,
                 registers,
                 insns,
                 try_blocks,
@@ -2006,8 +2016,12 @@ pub fn run_smali(
         }
         return Ok(());
     }
+    print_smali(&methods, exceptions, signatures)
+}
+
+fn print_smali(methods: &[MethodDump], exceptions: bool, signatures: bool) -> Result<(), String> {
     let mut last_class = String::new();
-    for m in &methods {
+    for m in methods {
         if m.class_name != last_class {
             println!("\n# class: {}", m.class_name);
             println!("# extends: {}", m.superclass);
@@ -2076,6 +2090,130 @@ pub fn run_smali(
         seen.len()
     });
     Ok(())
+}
+
+fn hierarchy_one(d: &[u8], out: &mut BTreeMap<String, String>) -> Result<(), String> {
+    let dex = DexFile::parse(d)?;
+    for ci in 0..dex.class_count {
+        let off = dex.class_off as usize + 32 * ci as usize;
+        let class = dex.type_name(u32le(d, off)?)?;
+        let superclass = dex.type_name(u32le(d, off + 8)?)?;
+        if class == "<none>" || out.insert(class, superclass).is_some() {
+            return Err("dex: missing or duplicate class definition".into());
+        }
+    }
+    Ok(())
+}
+
+fn select_virtual_overrides(
+    methods: Vec<MethodDump>,
+    hierarchy: &BTreeMap<String, String>,
+    root: &str,
+    name: &str,
+    signature: &str,
+) -> Result<Vec<MethodDump>, String> {
+    if !hierarchy.contains_key(root) {
+        return Err("virtual overrides: declaring class is not defined in the APK".into());
+    }
+    let mut selected = Vec::new();
+    for method in methods {
+        if method.method_name != name
+            || !method.virtual_method
+            || method.access_flags & (0x2 | 0x8) != 0
+            || method.method_signature.as_ref().map_err(Clone::clone)? != signature
+        {
+            continue;
+        }
+        let mut class = method.class_name.as_str();
+        let mut seen = std::collections::BTreeSet::new();
+        let mut belongs = false;
+        while let Some(superclass) = hierarchy.get(class) {
+            if !seen.insert(class) {
+                return Err("virtual overrides: superclass cycle".into());
+            }
+            belongs |= class == root;
+            class = superclass;
+        }
+        if belongs {
+            if selected
+                .iter()
+                .any(|m: &MethodDump| m.class_name == method.class_name)
+            {
+                return Err("virtual overrides: duplicate exact instance declaration".into());
+            }
+            selected.push(method);
+        }
+    }
+    if selected.iter().filter(|m| m.class_name == root).count() != 1 {
+        return Err(
+            "virtual overrides: expected one exact non-private instance declaration".into(),
+        );
+    }
+    let declaration = selected.iter().find(|m| m.class_name == root).unwrap();
+    if name.starts_with('<') || declaration.access_flags & (0x1 | 0x4) == 0 {
+        return Err(
+            "virtual overrides: requires a public/protected ordinary instance declaration".into(),
+        );
+    }
+    if declaration.access_flags & 0x10 != 0 && selected.len() != 1 {
+        return Err("virtual overrides: cannot override a final declaration".into());
+    }
+    selected.sort_by(|a, b| a.class_name.cmp(&b.class_name));
+    Ok(selected)
+}
+
+/// Declared class overrides inside this APK, not inferred runtime dispatch or interface implementations.
+pub fn run_virtual_overrides(
+    apk: &Path,
+    root: &str,
+    name: &str,
+    signature: &str,
+) -> Result<(), String> {
+    let f = std::fs::File::open(apk).map_err(|e| format!("{}: {e}", apk.display()))?;
+    let mut zip = zip::ZipArchive::new(f).map_err(|e| format!("zip: {e}"))?;
+    let names: Vec<String> = zip
+        .file_names()
+        .filter(|n| n.starts_with("classes") && n.ends_with(".dex"))
+        .map(str::to_owned)
+        .collect();
+    if names.is_empty() {
+        return Err("no classes*.dex in APK".into());
+    }
+    let mut hierarchy = BTreeMap::new();
+    let mut methods = Vec::new();
+    for dex_name in names {
+        let mut data = Vec::new();
+        zip.by_name(&dex_name)
+            .map_err(|e| e.to_string())?
+            .read_to_end(&mut data)
+            .map_err(|e| e.to_string())?;
+        hierarchy_one(&data, &mut hierarchy).map_err(|e| format!("{dex_name}: {e}"))?;
+        smali_one(&data, "", Some(name), &mut methods).map_err(|e| format!("{dex_name}: {e}"))?;
+    }
+    let selected = select_virtual_overrides(methods, &hierarchy, root, name, signature)?;
+    // Validate signatures before emitting any purportedly complete census.
+    for method in &selected {
+        for instruction in &method.insns {
+            if let Some(signature) = &instruction.signature_annotation {
+                signature.as_ref().map_err(Clone::clone)?;
+            }
+        }
+    }
+    println!("# Declared overrides: {root}->{name}{signature}");
+    println!(
+        "# Coverage: {} APK classes; superclass ancestry only; external/runtime/interface dispatch unverified",
+        hierarchy.len()
+    );
+    for method in &selected {
+        let mut path = vec![method.class_name.as_str()];
+        let mut class = method.class_name.as_str();
+        while let Some(superclass) = hierarchy.get(class) {
+            path.push(superclass);
+            class = superclass;
+        }
+        println!("# ancestry: {}", path.join(" -> "));
+    }
+    print_smali(&selected, true, true)
 }
 
 fn access_flags_str(flags: u32) -> &'static str {
@@ -3401,6 +3539,194 @@ mod tests {
             catch_sleb(&[0x80, 0x80, 0x80, 0x80, 0x78], &mut 0).unwrap(),
             i32::MIN
         );
+    }
+
+    #[test]
+    fn virtual_override_selection_follows_full_ancestry_and_exact_signature() {
+        let hierarchy: BTreeMap<String, String> = BTreeMap::from([
+            ("LX/Base;".into(), "Ljava/lang/Object;".into()),
+            ("LX/Middle;".into(), "LX/Base;".into()),
+            ("LX/Leaf;".into(), "LX/Middle;".into()),
+            ("LX/Other;".into(), "Ljava/lang/Object;".into()),
+        ]);
+        let method = |class: &str, name: &str, signature: &str, flags| MethodDump {
+            class_name: class.into(),
+            superclass: hierarchy[class].clone(),
+            method_name: name.into(),
+            method_proto: "Z".into(),
+            method_signature: Ok(signature.into()),
+            access_flags: flags,
+            virtual_method: true,
+            registers: 0,
+            insns: vec![],
+            try_blocks: vec![],
+        };
+        let methods = vec![
+            method("LX/Base;", "A0l", "()Z", 1),
+            method("LX/Leaf;", "A0l", "()Z", 0x401),
+            method("LX/Other;", "A0l", "()Z", 1),
+            method("LX/Leaf;", "A0l", "(Ljava/lang/Object;)Z", 1),
+            method("LX/Leaf;", "A0lExtra", "()Z", 1),
+            method("LX/Middle;", "A0l", "()Z", 9),
+            method("LX/Middle;", "A0l", "()Z", 2),
+        ];
+        let selected =
+            select_virtual_overrides(methods, &hierarchy, "LX/Base;", "A0l", "()Z").unwrap();
+        assert_eq!(
+            selected
+                .iter()
+                .map(|m| m.class_name.as_str())
+                .collect::<Vec<_>>(),
+            ["LX/Base;", "LX/Leaf;"]
+        );
+        assert_eq!(selected[1].access_flags, 0x401);
+    }
+
+    #[test]
+    fn virtual_override_census_refuses_later_bad_dex_before_printing() {
+        use std::io::Write as _;
+        let mut first = catch_fixture();
+        first[0xb0..0xb4].copy_from_slice(&3u32.to_le_bytes());
+        first[0xa8..0xaa].copy_from_slice(&3u16.to_le_bytes());
+        first[0xb8..0xbc].copy_from_slice(&u32::MAX.to_le_bytes());
+        first[0xe2] = 0;
+        first[0xe3] = 1;
+        for mut invalid in [b"malformed".to_vec(), catch_fixture()] {
+            if invalid.len() > 0x123 {
+                invalid[0x123] = 3;
+            }
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("fixture.apk");
+            let mut zip = zip::ZipWriter::new(std::fs::File::create(&path).unwrap());
+            let opts = zip::write::FileOptions::default();
+            zip.start_file("classes.dex", opts).unwrap();
+            zip.write_all(&first).unwrap();
+            zip.start_file("classes2.dex", opts).unwrap();
+            zip.write_all(&invalid).unwrap();
+            zip.finish().unwrap();
+            let error =
+                run_virtual_overrides(&path, "LX/Other;", "update", "(LX/Contact;)V").unwrap_err();
+            assert!(error.starts_with("classes2.dex:"), "{error}");
+        }
+    }
+
+    #[test]
+    fn smali_does_not_silently_omit_malformed_declarations_or_instruction_extents() {
+        for case in ["class", "method", "class_data", "instructions"] {
+            let mut data = object_signature_fixture(0, &[0x0e, 0]);
+            match case {
+                "class" => data[0xb0..0xb4].copy_from_slice(&4u32.to_le_bytes()),
+                "method" => data[0xe4] = 1,
+                "class_data" => data[0xc8..0xcc].copy_from_slice(&0x1ffu32.to_le_bytes()),
+                _ => data[0x10c..0x110].copy_from_slice(&0x1000u32.to_le_bytes()),
+            }
+            assert!(
+                smali_one(&data, "LX/", None, &mut Vec::new()).is_err(),
+                "{case}"
+            );
+        }
+    }
+
+    #[test]
+    fn method_dump_distinguishes_declared_virtual_from_nonprivate_direct_methods() {
+        let mut data = object_signature_fixture(0, &[0x0e, 0]);
+        let mut methods = Vec::new();
+        smali_one(&data, "LX/Contact;", None, &mut methods).unwrap();
+        assert_eq!(methods[0].access_flags, 1);
+        assert!(!methods[0].virtual_method);
+        data[0xe2] = 0;
+        data[0xe3] = 1;
+        let mut methods = Vec::new();
+        smali_one(&data, "LX/Contact;", None, &mut methods).unwrap();
+        assert_eq!(methods[0].access_flags, 1);
+        assert!(methods[0].virtual_method);
+    }
+
+    #[test]
+    fn hierarchy_reads_classes_without_methods_and_refuses_duplicate_or_bad_types() {
+        let mut data = object_signature_fixture(0, &[0x0e, 0]);
+        data[0xb8..0xbc].copy_from_slice(&u32::MAX.to_le_bytes());
+        data[0xc8..0xcc].copy_from_slice(&0u32.to_le_bytes());
+        let mut hierarchy = BTreeMap::new();
+        hierarchy_one(&data, &mut hierarchy).unwrap();
+        assert_eq!(hierarchy["LX/Contact;"], "<none>");
+        assert!(
+            hierarchy_one(&data, &mut hierarchy)
+                .unwrap_err()
+                .contains("duplicate")
+        );
+        data[0xb8..0xbc].copy_from_slice(&4u32.to_le_bytes());
+        assert!(hierarchy_one(&data, &mut BTreeMap::new()).is_err());
+    }
+
+    #[test]
+    fn virtual_override_selection_refuses_ambiguous_or_unsupported_declarations() {
+        for case in [
+            "static",
+            "direct",
+            "private",
+            "package",
+            "constructor",
+            "missing",
+            "cycle",
+            "duplicate",
+            "final",
+        ] {
+            let mut data = object_signature_fixture(0, &[0x0e, 0]);
+            if case != "direct" {
+                data[0xe2] = 0;
+                data[0xe3] = 1;
+            }
+            let mut methods = Vec::new();
+            smali_one(&data, "LX/Contact;", None, &mut methods).unwrap();
+            methods[0].method_name = if case == "constructor" {
+                "<init>"
+            } else {
+                "A0l"
+            }
+            .into();
+            methods[0].method_signature = Ok("()Z".into());
+            methods[0].access_flags = match case {
+                "static" => 9,
+                "private" => 2,
+                "package" => 0,
+                "final" => 0x11,
+                _ => 1,
+            };
+            let mut hierarchy = BTreeMap::from([("LX/Contact;".into(), "<none>".into())]);
+            if case == "cycle" {
+                hierarchy.insert("LX/Contact;".into(), "LX/Contact;".into());
+            }
+            if matches!(case, "duplicate" | "final") {
+                smali_one(&data, "LX/Contact;", None, &mut methods).unwrap();
+                methods[1].method_name = "A0l".into();
+                methods[1].method_signature = Ok("()Z".into());
+                methods[1].access_flags = 1;
+                if case == "final" {
+                    methods[1].class_name = "LX/Other;".into();
+                    hierarchy.insert("LX/Other;".into(), "LX/Contact;".into());
+                }
+            }
+            assert!(
+                select_virtual_overrides(
+                    methods,
+                    &hierarchy,
+                    if case == "missing" {
+                        "LX/Absent;"
+                    } else {
+                        "LX/Contact;"
+                    },
+                    if case == "constructor" {
+                        "<init>"
+                    } else {
+                        "A0l"
+                    },
+                    "()Z"
+                )
+                .is_err(),
+                "{case}"
+            );
+        }
     }
 
     #[test]

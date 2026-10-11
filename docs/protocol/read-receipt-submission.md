@@ -1,5 +1,10 @@
 # Saved read-receipt submission
 
+2026-10-11 follow-up: [exact self-read virtual census](self-read-eligibility.md)
+closes the A0l base/override boundary: the base is true, three declared subtype
+overrides are false. Full native message-class mapping, chat preference policy
+and self-read state/submission effects remain unfinished; no runtime change.
+
 2026-10-09. **Confirmed static**, APK **2.26.37.71**, SHA-256
 `1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
 [13-topic recipe](apk/recipes/2.26.37.71-read-receipt-submission.json),

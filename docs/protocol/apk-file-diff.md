@@ -73,6 +73,12 @@ covers their outer archive entries. No method is declared understood just
 because its DEX file was indexed; no Rust patch, APK profile update, key
 rotation or server operation occurs automatically.
 
+For a virtual method, the [exact superclass override census](self-read-eligibility.md)
+also compares full DEX signatures and declared subtype bodies. Remap the root and
+method first; scan each APK with `apk-virtual-overrides` and retain the results
+beside the reviewed topic diff. Inherited behavior is not determined by inspecting
+only a base declaration.
+
 ## Input validation and bounds
 
 The reader uses streaming SHA-256 with a 64 KiB buffer and validates ZIP reads

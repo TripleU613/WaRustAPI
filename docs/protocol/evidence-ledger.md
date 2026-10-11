@@ -1,3 +1,13 @@
+2026-10-11 — **Confirmed static / implemented analysis tooling:** exact DEX
+virtual-override lookup now follows superclass ancestry and encoded virtual
+method declarations. The pinned APK contains four A0l()Z declarations across
+101,453 physical class definitions: base true, three subtype overrides false.
+Shared smali parsing now refuses malformed declarations/body extents instead of
+silently omitting them. Complete self-read state/submission effects, native
+message-class mapping and effective ordinary-chat preference checks remain open.
+No runtime/account/network change.
+[Source, override census and update workflow](self-read-eligibility.md).
+
 2026-10-11 — **Implemented/offline:** receipt fact routing now distinguishes
 nullable optional addresses from raw attribute presence. Namespace-invalid
 participant/recipient fields follow the native null path instead of hiding

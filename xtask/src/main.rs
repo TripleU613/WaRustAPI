@@ -10,6 +10,7 @@
 //! * `apk-xref <apk> --anchor <s>…` — find classes/methods referencing string constants.
 //! * `apk-callers <apk> --class <c> --method <m>` — find callers of a method.
 //! * `apk-field-refs <apk> --class <c> --field <f> --type <t>` — exact field access sites.
+//! * `apk-virtual-overrides <apk> --class <c> --method <m> --signature <s>` — exact superclass override census.
 //! * `apk-smali <apk> --class <filter>` — dump Dalvik instructions for matching classes.
 //! * `apk-registration-token <apk> …` — derive the comparison build's code-request token.
 //! * `apk-token-material --from-dir <dir> --logo-from <apk> --out <zip> [--verify-config <json>]` — assemble token material archive.
@@ -227,6 +228,18 @@ enum Cmd {
         #[arg(long)]
         writes_only: bool,
     },
+    /// Dump exact declared instance overrides through the APK superclass hierarchy.
+    ApkVirtualOverrides {
+        apk: PathBuf,
+        /// Exact declaring class descriptor, for example LX/178;.
+        #[arg(long = "class")]
+        class_name: String,
+        #[arg(long = "method")]
+        method_name: String,
+        /// Full DEX parameter/return descriptor, for example ()Z.
+        #[arg(long)]
+        signature: String,
+    },
     /// Dump the Dalvik instruction stream for classes whose name contains `--class`.
     ///
     /// Resolves string, type, method, and field references symbolically.
@@ -382,6 +395,12 @@ fn main() -> ExitCode {
             field_type,
             writes_only,
         } => xref::run_field_refs(&apk, &class_name, &field_name, &field_type, writes_only),
+        Cmd::ApkVirtualOverrides {
+            apk,
+            class_name,
+            method_name,
+            signature,
+        } => xref::run_virtual_overrides(&apk, &class_name, &method_name, &signature),
         Cmd::ApkSmali {
             apk,
             class_filter,
