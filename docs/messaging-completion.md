@@ -1,3 +1,14 @@
+2026-10-10 — **Implemented/offline:** primary attestation no longer causes a
+blanket identity-refresh refusal. Verified same-key hybrid/non-E2EE metadata
+permits guarded session refresh without an override child; structurally valid
+changed-key metadata follows the APK E2EE fallback even when verification fails.
+Classic signed-prekey, original-state, policy and own-identity guards still apply;
+invalid same-key, ambiguous/missing byte fields, PQ and companion metadata defer.
+Inspection preserves failed verification and preview remains read-only. Native
+attestation-state storage and non-E2EE routing remain unfinished. No live request.
+908 workspace tests, strict Clippy/Rustdoc and CLI checks passed.
+[Native branches, runtime scope and tests](protocol/primary-attestation-admission.md).
+
 2026-10-10 — **Implemented/offline tooling:** whole-APK SHA-256 file indexing
 and fast cached diffs now cover every non-directory ZIP entry. The committed
 2.26.37.71 baseline lists 14,967 files without retaining file bodies; new releases

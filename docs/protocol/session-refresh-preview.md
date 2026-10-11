@@ -1,5 +1,12 @@
 # Identity refresh session preview
 
+2026-10-10 follow-up: [primary attestation admission](primary-attestation-admission.md)
+supersedes blanket primary attestation presence deferrals below. Structurally
+valid changed-key candidates follow the native E2EE fallback; verified same-key
+hybrid/non-E2EE candidates may refresh without an override child. Failed same-key
+metadata and companion attestation remain deferred. Native state persistence
+and non-E2EE routing remain unported; earlier validation below is historical.
+
 2026-10-09. APK **2.26.37.71**, SHA-256
 `1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
 This continues the [durable notification key read](identity-notification-key-read.md).

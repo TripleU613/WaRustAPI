@@ -1,10 +1,17 @@
 # Server-authorized same-key primary refresh
 
+2026-10-10 follow-up: [primary attestation admission](primary-attestation-admission.md)
+supersedes blanket primary attestation presence deferrals below. Structurally
+valid changed-key candidates follow the native E2EE fallback; verified same-key
+hybrid/non-E2EE candidates may refresh without an override child. Failed same-key
+metadata and companion attestation remain deferred. Native state persistence
+and non-E2EE routing remain unported; earlier validation below is historical.
+
 2026-10-10 follow-up: [identity-auth admission correction](identity-auth.md#admission-correction--2026-10-10)
 supersedes the identity_auth presence refusals described below. Structurally valid
 metadata follows existing classic admission; malformed required fields defer.
-Certificate/signature verification remains explicitly unported. Attestation/PQ
-and all other application guards remain unchanged. Earlier validation below is
+Certificate/signature verification remains explicitly unported. PQ and
+all other application guards remain unchanged. Earlier validation below is
 historical and does not verify this follow-up.
 
 Follow-up: [known companion same-key refresh](companion-same-key-refresh.md)

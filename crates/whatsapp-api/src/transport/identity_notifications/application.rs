@@ -140,26 +140,34 @@ async fn stage(
             })
         })
         .ok_or_else(|| invalid("missing response user"))?;
-    for (name, reason) in [
-        ("non_e2ee_attestation", "attestation_admission_unported"),
-        ("pqkey", "pq_session_unported"),
-    ] {
-        if user.child(name).is_some() {
-            return Ok(deferred(reason));
-        }
+    let same_identity = inspection.pin_matches == Some(true);
+    let admitted_attestation = peer.device == 0
+        && super::attestation::primary_admitted(
+            user,
+            same_identity,
+            inspection.attestation.as_ref(),
+        );
+    if user.child("non_e2ee_attestation").is_some() && !admitted_attestation {
+        return Ok(deferred("attestation_admission_unported"));
+    }
+    if user.child("pqkey").is_some() {
+        return Ok(deferred("pq_session_unported"));
     }
     // APK Bzb has NONE/LOG_ONLY only; 14J.A04 and DLx log auth after processing.
     // Preserve Bot.A03's required fields without inventing an admission gate.
     if !super::identity_auth_well_formed(user) {
         return Ok(deferred("malformed_identity_auth"));
     }
-    let same_identity = inspection.pin_matches == Some(true);
     // Bot.A03 0370..0384 sets Cai.A08 from child presence (1xi.A1U),
     // not its body or an attribute. CPB.A00 same-key absent-CWS E2EE:
     // equal old state -> Bjo; NOT_SET -> Bjn; HYBRID/NON with A08 ->
     // Bjn at 0252 -> 0306. Disabled main property -> Bjo. All admit;
     // without that server child, unknown old state/0x7497 cannot be guessed.
-    if peer.device == 0 && same_identity && user.child("force_override_e2ee_state").is_none() {
+    if peer.device == 0
+        && same_identity
+        && !admitted_attestation
+        && user.child("force_override_e2ee_state").is_none()
+    {
         return Ok(deferred("same_identity_admission_unported"));
     }
     if inspection.pin_matches.is_none() {
@@ -167,8 +175,8 @@ async fn stage(
     }
     // CPB.A00: property 0x6f6f=false -> Bjo at 00cc; true + absent CWS
     // -> E2EE at 01e4, changed identity v12=1 at 00d2, then 0226 -> Bjn
-    // at 0306, independent of old C0F/override/0x7497. Bot.A03 present
-    // native metadata is refused above; never infer a runtime flag/state.
+    // at 0306, independent of old C0F/override/0x7497. Present CWS uses
+    // the shared branch invariant above; no runtime flag/state is inferred.
     let bundle = crate::signal::direct::prekey_bundle_for(&reply, &peer)?;
     let identity = bundle
         .identity_key()
@@ -460,6 +468,360 @@ mod tests {
         };
         fields.push(Node::new(name));
     }
+    fn attestation(response: &mut Node, key: &IdentityKeyPair, kind: &str, valid: bool) {
+        let body = vec![8, if kind == "hybrid_e2ee" { 1 } else { 2 }, 16, 7];
+        let mut signature = key
+            .private_key()
+            .calculate_signature(&[vec![6, 7], body.clone()].concat(), &mut rand::rng())
+            .unwrap()
+            .to_vec();
+        if !valid {
+            signature[0] ^= 1;
+        }
+        metadata(response, "non_e2ee_attestation");
+        let NodeContent::Children(lists) = &mut response.content else {
+            panic!()
+        };
+        let NodeContent::Children(users) = &mut lists[0].content else {
+            panic!()
+        };
+        let NodeContent::Children(fields) = &mut users[0].content else {
+            panic!()
+        };
+        *fields.last_mut().unwrap() = Node::new("non_e2ee_attestation")
+            .attr("account_type", kind)
+            .children(vec![
+                Node::new("value").bytes(body),
+                Node::new("signature").bytes(signature),
+            ]);
+    }
+
+    #[tokio::test]
+    async fn primary_attestation_admission_refreshes_guarded_sessions_once() {
+        for peer in ["15555550111@s.whatsapp.net", "222222222222222@lid"] {
+            for same in [false, true] {
+                for kind in ["hybrid_e2ee", "non_e2ee"] {
+                    for valid in [true, false] {
+                        let f = fixture(peer).await;
+                        let candidate = if same { &f.old } else { &f.new };
+                        let mut response = reply(&f.peer, &f.id, candidate, true);
+                        attestation(&mut response, candidate, kind, valid);
+                        settle(&f, &response);
+                        let before = snapshot(&f.store);
+                        let head = f.store.journal_head().unwrap();
+                        let inspection = super::super::inspect(&f.store, &f.id).unwrap().unwrap();
+                        assert_eq!(inspection.signature_valid, Some(true));
+                        assert_eq!(inspection.attestation.unwrap().signature_valid, Some(valid));
+                        let accepted = !same || valid;
+                        let preview = super::super::preview_session(&f.store, &f.id)
+                            .await
+                            .unwrap();
+                        assert_eq!(
+                            preview.outcome,
+                            if !accepted {
+                                "attestation_admission_unported"
+                            } else if same {
+                                "prepared"
+                            } else {
+                                "identity_replacement_unported"
+                            }
+                        );
+                        assert!(!preview.admission_evaluated && !preview.persisted);
+                        assert_eq!(snapshot(&f.store), before);
+                        assert_eq!(f.store.journal_head().unwrap(), head);
+                        assert_eq!(
+                            apply(&f.store, &f.id, IdentityChangePolicy::ApkAuthenticated)
+                                .await
+                                .unwrap(),
+                            if accepted {
+                                Application::Applied
+                            } else {
+                                Application::Deferred("attestation_admission_unported")
+                            },
+                            "{peer} same={same} {kind} valid={valid}"
+                        );
+                        if !accepted {
+                            assert_eq!(snapshot(&f.store), before);
+                            assert_eq!(f.store.journal_head().unwrap(), head);
+                            continue;
+                        }
+                        let after = snapshot(&f.store);
+                        for (index, table) in Table::ALL.iter().enumerate() {
+                            if !matches!(
+                                table,
+                                Table::PeerIdentities | Table::SignalSessions | Table::Checkpoints
+                            ) {
+                                assert_eq!(after[index], before[index], "{table:?}");
+                            }
+                        }
+                        let (pin, session) = f
+                            .store
+                            .read(|tx| {
+                                Ok((
+                                    tx.get_json::<Vec<u8>>(
+                                        Table::PeerIdentities,
+                                        format!("comparison-direct:{}", f.peer).as_bytes(),
+                                        1,
+                                    )?
+                                    .unwrap(),
+                                    tx.get_json::<Vec<u8>>(
+                                        Table::SignalSessions,
+                                        format!("comparison-direct:{}", f.peer).as_bytes(),
+                                        1,
+                                    )?
+                                    .unwrap(),
+                                ))
+                            })
+                            .unwrap();
+                        assert_eq!(pin, candidate.identity_key().serialize().to_vec());
+                        let record = SessionRecord::deserialize(&session).unwrap();
+                        let old = SessionRecord::deserialize(&f.held).unwrap();
+                        assert_eq!(
+                            record.previous_session_count(),
+                            if same {
+                                old.previous_session_count() + 1
+                            } else {
+                                0
+                            }
+                        );
+                        if same {
+                            assert_eq!(
+                                record
+                                    .previous_session_states()
+                                    .next()
+                                    .unwrap()
+                                    .unwrap()
+                                    .alice_base_key(),
+                                old.session_state().unwrap().alice_base_key()
+                            );
+                        }
+                        assert_eq!(f.store.journal_head().unwrap() == head, same);
+                        assert_eq!(
+                            apply(&f.store, &f.id, IdentityChangePolicy::ApkAuthenticated)
+                                .await
+                                .unwrap(),
+                            Application::AlreadyApplied
+                        );
+                        assert_eq!(snapshot(&f.store), after);
+                        let head = f.store.journal_head().unwrap();
+                        let path = f.dir.path().join("application.redb");
+                        drop(f.store);
+                        let store = open(&path);
+                        assert_eq!(
+                            recover(&store, IdentityChangePolicy::ApkAuthenticated)
+                                .await
+                                .unwrap(),
+                            0
+                        );
+                        assert_eq!(snapshot(&store), after);
+                        assert_eq!(store.journal_head().unwrap(), head);
+                    }
+                }
+            }
+        }
+    }
+
+    #[tokio::test]
+    async fn changed_primary_attestation_fallback_requires_unambiguous_byte_fields() {
+        for (node, accepted) in [
+            (
+                Node::new("non_e2ee_attestation").children(vec![
+                    Node::new("value").bytes(vec![]),
+                    Node::new("signature").bytes(vec![]),
+                ]),
+                true,
+            ),
+            (
+                Node::new("non_e2ee_attestation")
+                    .attr("account_type", "unknown")
+                    .children(vec![
+                        Node::new("value").bytes(vec![255]),
+                        Node::new("signature").bytes(vec![0]),
+                    ]),
+                true,
+            ),
+            (
+                Node::new("non_e2ee_attestation")
+                    .attr("account_type", "hybrid_e2ee")
+                    .children(vec![
+                        Node::new("value").bytes(vec![8, 2]),
+                        Node::new("signature").bytes(vec![0; 64]),
+                    ]),
+                true,
+            ),
+            (
+                Node::new("non_e2ee_attestation")
+                    .attr("account_type", "hybrid_e2ee")
+                    .children(vec![
+                        Node::new("value").bytes(vec![255]),
+                        Node::new("signature").bytes(vec![0; 64]),
+                    ]),
+                true,
+            ),
+            (
+                Node::new("non_e2ee_attestation")
+                    .attr("account_type", "hybrid_e2ee")
+                    .children(vec![
+                        Node::new("value").bytes(vec![0; 65537]),
+                        Node::new("signature").bytes(vec![0; 64]),
+                    ]),
+                true,
+            ),
+            (
+                Node::new("non_e2ee_attestation")
+                    .children(vec![Node::new("signature").bytes(vec![])]),
+                false,
+            ),
+            (
+                Node::new("non_e2ee_attestation").children(vec![Node::new("value").bytes(vec![])]),
+                false,
+            ),
+            (
+                Node::new("non_e2ee_attestation").children(vec![
+                    Node::new("value").children(vec![]),
+                    Node::new("signature").bytes(vec![]),
+                ]),
+                false,
+            ),
+            (
+                Node::new("non_e2ee_attestation").children(vec![
+                    Node::new("value").bytes(vec![]),
+                    Node::new("signature").bytes(vec![]),
+                    Node::new("value").bytes(vec![]),
+                ]),
+                false,
+            ),
+            (
+                Node::new("non_e2ee_attestation").children(vec![
+                    Node::new("value").bytes(vec![]),
+                    Node::new("signature").bytes(vec![]),
+                    Node::new("signature").bytes(vec![]),
+                ]),
+                false,
+            ),
+        ] {
+            let f = fixture("222222222222222@lid").await;
+            let mut response = f.response.clone();
+            metadata(&mut response, "non_e2ee_attestation");
+            let NodeContent::Children(lists) = &mut response.content else {
+                panic!()
+            };
+            let NodeContent::Children(users) = &mut lists[0].content else {
+                panic!()
+            };
+            let NodeContent::Children(fields) = &mut users[0].content else {
+                panic!()
+            };
+            *fields.last_mut().unwrap() = node;
+            settle(&f, &response);
+            let before = snapshot(&f.store);
+            let head = f.store.journal_head().unwrap();
+            let inspection = super::super::inspect(&f.store, &f.id).unwrap().unwrap();
+            assert_ne!(
+                inspection.attestation.unwrap().status,
+                super::super::AttestationStatus::Verified
+            );
+            let preview = super::super::preview_session(&f.store, &f.id)
+                .await
+                .unwrap();
+            assert_eq!(
+                preview.outcome,
+                if accepted {
+                    "identity_replacement_unported"
+                } else {
+                    "attestation_admission_unported"
+                }
+            );
+            assert!(!preview.admission_evaluated && !preview.persisted);
+            assert_eq!(snapshot(&f.store), before);
+            assert_eq!(f.store.journal_head().unwrap(), head);
+            assert_eq!(
+                apply(&f.store, &f.id, IdentityChangePolicy::ApkAuthenticated)
+                    .await
+                    .unwrap(),
+                if accepted {
+                    Application::Applied
+                } else {
+                    Application::Deferred("attestation_admission_unported")
+                }
+            );
+            if !accepted {
+                assert_eq!(snapshot(&f.store), before);
+                assert_eq!(f.store.journal_head().unwrap(), head);
+            }
+        }
+    }
+
+    #[tokio::test]
+    async fn primary_attestation_keeps_classic_policy_and_metadata_guards() {
+        for (case, reason) in [
+            ("forged", "reply_not_verified"),
+            ("pinned", "identity_policy_pinned"),
+            ("untracked", "original_refresh_guard_not_matching"),
+            ("pqkey", "pq_session_unported"),
+            ("companion", "attestation_admission_unported"),
+            ("duplicate", "attestation_admission_unported"),
+            ("same_invalid_override", "attestation_admission_unported"),
+        ] {
+            let f = fixture(if case == "companion" {
+                "222222222222222:4@lid"
+            } else {
+                "222222222222222@lid"
+            })
+            .await;
+            let key = if case == "same_invalid_override" {
+                &f.old
+            } else {
+                &f.new
+            };
+            let mut response = reply(&f.peer, &f.id, key, case != "forged");
+            attestation(
+                &mut response,
+                key,
+                "hybrid_e2ee",
+                case != "same_invalid_override",
+            );
+            if case == "duplicate" {
+                attestation(&mut response, key, "hybrid_e2ee", true);
+            }
+            if case == "pqkey" {
+                metadata(&mut response, "pqkey");
+            }
+            if case == "same_invalid_override" {
+                metadata(&mut response, "force_override_e2ee_state");
+            }
+            settle(&f, &response);
+            if case == "untracked" {
+                f.store
+                    .write(|tx| {
+                        tx.delete(
+                            Table::Checkpoints,
+                            format!("identity-refresh-snapshot:{}", f.id).as_bytes(),
+                        )
+                    })
+                    .unwrap();
+            }
+            let before = snapshot(&f.store);
+            let head = f.store.journal_head().unwrap();
+            assert_eq!(
+                apply(
+                    &f.store,
+                    &f.id,
+                    if case == "pinned" {
+                        IdentityChangePolicy::Pinned
+                    } else {
+                        IdentityChangePolicy::ApkAuthenticated
+                    }
+                )
+                .await
+                .unwrap(),
+                Application::Deferred(reason)
+            );
+            assert_eq!(snapshot(&f.store), before);
+            assert_eq!(f.store.journal_head().unwrap(), head);
+        }
+    }
+
     fn install_companion_authority(f: &Fixture) -> IdentityKeyPair {
         use super::super::super::devices::{DeviceEntry, DeviceList, list_key};
         let primary = f.peer.to_non_ad();

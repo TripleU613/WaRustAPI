@@ -461,10 +461,15 @@ pub async fn preview_session(store: &ProtocolStore, id: &str) -> Result<SessionP
             })
         })
         .ok_or_else(|| Error::invalid("identity_notification", "missing response user"))?;
-    // Bot.A03 0248..02a6 carries non_e2ee_attestation into CPB; absence
-    // selects E2EE there but does not prove our untracked stored CPB state.
-    // Never use a classic-only preview to skip present native admission data.
-    if user.child("non_e2ee_attestation").is_some() {
+    // Share primary branch invariants with application; full stored-state
+    // admission and optional state persistence remain unevaluated here.
+    if user.child("non_e2ee_attestation").is_some()
+        && !attestation::primary_admitted(
+            user,
+            result.inspection.pin_matches == Some(true),
+            result.inspection.attestation.as_ref(),
+        )
+    {
         result.outcome = "attestation_admission_unported";
         return Ok(result);
     }
@@ -1154,7 +1159,7 @@ pub(super) mod tests {
             );
             assert_eq!(
                 preview_session(&store, &id).await.unwrap().outcome,
-                "attestation_admission_unported"
+                "identity_replacement_unported"
             );
             assert_eq!(protected(&store), before);
             assert_eq!(store.journal_head().unwrap(), head);

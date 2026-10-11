@@ -1,4 +1,4 @@
-//! APK 37.71 CPB.A00's attestation verification, separate from native admission.
+//! APK 37.71 attestation verification and state-independent primary admission.
 use crate::binary::{Node, NodeContent};
 use serde::Serialize;
 use wacore_libsignal::protocol::IdentityKey;
@@ -72,6 +72,23 @@ fn bytes(node: &Node) -> Option<&[u8]> {
         NodeContent::Bytes(bytes) => Some(bytes),
         _ => None,
     }
+}
+
+// CPB admits changed primary keys even after failed verification (E2EE fallback),
+// and verified same-key HYBRID/NON candidates regardless of stored state/flags.
+pub(super) fn primary_admitted(
+    user: &Node,
+    same_identity: bool,
+    inspection: Option<&AttestationInspection>,
+) -> bool {
+    let Some(node) = singleton(user, "non_e2ee_attestation") else {
+        return false;
+    };
+    // Bot/CWS require byte bodies, but permit nullable type and empty bytes.
+    // Duplicate refusal is our existing local ambiguity guard.
+    singleton(node, "value").and_then(bytes).is_some()
+        && singleton(node, "signature").and_then(bytes).is_some()
+        && (!same_identity || inspection.is_some_and(|v| v.status == AttestationStatus::Verified))
 }
 
 pub(super) fn inspect(user: &Node, identity: &IdentityKey) -> AttestationInspection {
