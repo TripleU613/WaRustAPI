@@ -1,0 +1,28 @@
+{
+  "receipt-builder": {
+    "class": "LX/Cp2;",
+    "file": "receipt-builder.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/messaging.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
+  "status-receipt": {
+    "class": "LX/Cp2;",
+    "file": "status-receipt.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A06",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/messaging.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  }
+}

@@ -113,9 +113,11 @@ The participant keeps the incoming stanza's own **device-addressed** form
 passes `Ayl.A0V(CjN.A04())`, the message's sender JID through
 `DeviceJid.Companion.A00` (`LX/0DK->A00`), as the value `LX/CmC->A06` returns as
 its pair's second element. That helper returns an existing `DeviceJid` unchanged
-and only coerces a bare `UserJid` to its primary device, which renders
-identically. There is no device stripping and no PN/LID conversion on this path,
-so the implementation echoes the attribute verbatim. For the
+and coerces a bare `UserJid` to its primary device. The prior claim that equal
+textual rendering establishes identical wire encoding was incorrect: DeviceLid
+can require AD even at device zero. The implementation currently copies the
+attribute; complete primary factory/transport normalization remains unported.
+[Current evidence and trace boundaries](status-receipt.md#trace-boundaries-retained). For the
 sender-key storage key, the earlier deliberate device stripping was refuted by
 APK Cnr.A03 and corrected on 2026-10-07. Both now retain the actual device. A test pins
 the suffix surviving. Not examined: `LX/Cp2->A04` also reaches `A00` through a

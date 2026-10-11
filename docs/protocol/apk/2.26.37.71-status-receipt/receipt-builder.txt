@@ -1,0 +1,81 @@
+# APK-derived structural disassembly: LX/Cp2;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(LLLLLLLLLIJ) flags=0x9 registers=13
+  # full signature: LX/Cp2;->A00(LX/0Cy;LX/0Cy;Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/UserJid;Ljava/lang/String;Ljava/lang/String;[LX/0hq;[Ljava/lang/String;IJ)LX/0hs;
+  0000..0006 op=71 invoke-static {v4, v2, v3}, LX/CmC;->A06(Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/Jid;Lcom/whatsapp/infra/core/jid/Jid;)Landroid/util/Pair;
+  0006..0008 op=0c move-result-object v4
+  0008..000e op=71 invoke-static {v9}, LX/Cp2;->A0A([Ljava/lang/String;)[LX/0hs;
+  000e..0010 op=0c move-result-object v0
+  0010..0014 op=38 if-eqz v10, +0x2a
+  0014..0018 op=62 sget-object v1, LX/CBs;->A00:Ljava/util/Set;
+  0018..001e op=72 invoke-interface {v1, v7}, Ljava/util/Set;->contains(Ljava/lang/Object;)Z
+  001e..0020 op=0a move-result v1
+  0020..0024 op=38 if-eqz v1, +0x22
+  0024..0026 op=12 const/4 v1, #0x1
+  0026..002a op=23 new-array v3, v1, [LX/0hq;
+  002a..002e op=1a const-string v2, "mode"
+  002e..0034 op=71 invoke-static {v10}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+  0034..0036 op=0c move-result-object v1
+  0036..003c op=71 invoke-static {v2, v1, v3}, LX/Ayo;->A1L(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+  003c..0040 op=1a const-string v1, "meta"
+  0040..0046 op=71 invoke-static {v1, v3}, LX/Ayj;->A0z(Ljava/lang/String;[LX/0hq;)LX/0hs;
+  0046..0048 op=0c move-result-object v3
+  0048..004c op=38 if-eqz v3, +0xe
+  004c..004e op=12 const/4 v2, #0x1
+  004e..0052 op=39 if-nez v0, +0x5f
+  0052..0056 op=23 new-array v0, v2, [LX/0hs;
+  0056..0058 op=12 const/4 v1, #0x0
+  0058..005c op=4d aput-object v3, v0, v1
+  005c..005e op=21 array-length v1, v0
+  005e..0060 op=b1 sub-int/2addr v1, v2
+  0060..0064 op=4d aput-object v3, v0, v1
+  0064..0068 op=54 iget-object v3, v4, Landroid/util/Pair;->first:Ljava/lang/Object;
+  0068..006c op=1f check-cast v3, Lcom/whatsapp/infra/core/jid/Jid;
+  006c..0070 op=54 iget-object v2, v4, Landroid/util/Pair;->second:Ljava/lang/Object;
+  0070..0074 op=1f check-cast v2, Lcom/whatsapp/infra/core/jid/Jid;
+  0074..007a op=71 invoke-static {}, LX/1xf;->A1D()Ljava/util/ArrayList;
+  007a..007c op=0c move-result-object v4
+  007c..0080 op=1a const-string v1, "to"
+  0080..0086 op=71 invoke-static {v3, v1, v4}, LX/Aym;->A1J(Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;Ljava/util/AbstractCollection;)V
+  0086..008a op=1a const-string v1, "id"
+  008a..0090 op=71 invoke-static {v1, v6, v4}, LX/Aym;->A1L(Ljava/lang/String;Ljava/lang/String;Ljava/util/AbstractCollection;)V
+  0090..0094 op=38 if-eqz v7, +0x7
+  0094..0098 op=1a const-string v1, "type"
+  0098..009e op=71 invoke-static {v1, v7, v4}, LX/Aym;->A1L(Ljava/lang/String;Ljava/lang/String;Ljava/util/AbstractCollection;)V
+  009e..00a2 op=38 if-eqz v2, +0xd
+  00a2..00a8 op=6e invoke-virtual {v2, v3}, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z
+  00a8..00aa op=0a move-result v1
+  00aa..00ae op=39 if-nez v1, +0x7
+  00ae..00b2 op=1a const-string v1, "participant"
+  00b2..00b8 op=71 invoke-static {v2, v1, v4}, LX/Aym;->A1J(Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;Ljava/util/AbstractCollection;)V
+  00b8..00bc op=38 if-eqz v5, +0x7
+  00bc..00c0 op=1a const-string v1, "recipient"
+  00c0..00c6 op=71 invoke-static {v5, v1, v4}, LX/Aym;->A1J(Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;Ljava/util/AbstractCollection;)V
+  00c6..00ca op=16 const-wide/16 v2, #0x0
+  00ca..00ce op=31 cmp-long v1, v11, v2
+  00ce..00d2 op=3d if-lez v1, +0xb
+  00d2..00d6 op=1a const-string v2, "sts"
+  00d6..00dc op=71 invoke-static {v11, v12}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+  00dc..00de op=0c move-result-object v1
+  00de..00e4 op=71 invoke-static {v2, v1, v4}, LX/Aym;->A1L(Ljava/lang/String;Ljava/lang/String;Ljava/util/AbstractCollection;)V
+  00e4..00e8 op=38 if-eqz v8, +0x5
+  00e8..00ee op=71 invoke-static {v4, v8}, Ljava/util/Collections;->addAll(Ljava/util/Collection;[Ljava/lang/Object;)Z
+  00ee..00f2 op=62 sget-object v1, LX/Cp2;->A00:[LX/0hq;
+  00f2..00f8 op=6e invoke-virtual {v4, v1}, Ljava/util/AbstractCollection;->toArray([Ljava/lang/Object;)[Ljava/lang/Object;
+  00f8..00fa op=0c move-result-object v2
+  00fa..00fe op=1f check-cast v2, [LX/0hq;
+  00fe..0102 op=1a const-string v1, "receipt"
+  0102..0108 op=71 invoke-static {v1, v2, v0}, LX/Ayj;->A10(Ljava/lang/String;[LX/0hq;[LX/0hs;)LX/0hs;
+  0108..010a op=0c move-result-object v0
+  010a..010c op=11 return-object v0
+  010c..010e op=21 array-length v1, v0
+  010e..0112 op=d8 add-int/lit8 v1, v1, #0x1
+  0112..0118 op=71 invoke-static {v0, v1}, Ljava/util/Arrays;->copyOf([Ljava/lang/Object;I)[Ljava/lang/Object;
+  0118..011a op=0c move-result-object v0
+  011a..011e op=1f check-cast v0, [LX/0hs;
+  011e..0120 op=28 goto -0x61
+  # exception table: 0 try range(s)
+.end method

@@ -597,9 +597,8 @@ pub fn available_presence() -> Node {
 /// (**confirmed**): `LX/Cp2->A06` passes `Ayl.A0V(CjN.A04())` — the message's
 /// sender JID through `DeviceJid.Companion.A00` — as the value `LX/CmC->A06`
 /// returns as the pair's second element. That helper returns an existing
-/// `DeviceJid` unchanged and only coerces a bare `UserJid` to its primary
-/// device, which renders identically. So there is no device stripping and no
-/// PN/LID conversion on this path, and echoing the attribute verbatim matches.
+/// `DeviceJid` unchanged and coerces a bare `UserJid` to its primary device.
+/// shortcut: primary device wire normalization is unported, replace copying after factory/transport trace.
 pub fn received_confirmation(incoming: &Node) -> Option<Node> {
     if incoming.description == "receipt" {
         return receipt_ack(incoming);
@@ -607,15 +606,8 @@ pub fn received_confirmation(incoming: &Node) -> Option<Node> {
     if incoming.description != "message" || incoming.get_attr("recipient").is_some() {
         return None;
     }
-    // Status / broadcast: a different receipt shape from an ordinary message.
-    // Comparison 2.26.37.71 `LX/Cp2->A06` true branch (**confirmed**): it passes
-    // `type="sender"`, an extra `class="status"` attribute, a null recipient, a
-    // zero `<meta mode>` int and the long `0xffff`. `A00` emits `sts` whenever
-    // that long is > 0, so a status receipt carries the literal `sts="65535"` —
-    // a hardcoded constant, not a timestamp. The `<meta mode>` child is *not*
-    // emitted: its gate tests the mode int first, which is zero, so the type-set
-    // membership check is never reached. Attribute order follows `A00`'s append
-    // order: to, id, type, participant, recipient, sts, then the extra class.
+    // APK 37.71 Cp2.A06 passes signed -1 to A00, so sts (>0) is omitted.
+    // Its sender branch carries class=status and mode=0, without a meta child.
     if incoming.description == "message"
         && let Some((chat, participant)) = super::inbox::sender_key_chat(incoming)
         && chat.server == crate::model::jid::Server::Broadcast
@@ -633,7 +625,6 @@ pub fn received_confirmation(incoming: &Node) -> Option<Node> {
                 .attr("id", id)
                 .attr("type", "sender")
                 .attr("participant", participant)
-                .attr("sts", "65535")
                 .attr("class", "status"),
         );
     }
@@ -1245,12 +1236,9 @@ mod tests {
                 .unwrap();
         assert!(direct.get_attr("participant").is_none());
     }
-    /// The exact status receipt, per `LX/Cp2->A06`'s true branch: `type="sender"`,
-    /// `class="status"`, the literal `sts="65535"` (a hardcoded constant, not a
-    /// timestamp), no `recipient`, and no `<meta>` child because the mode int is
-    /// zero and short-circuits its gate.
+    /// APK Cp2.A06 sender branch: class=status, signed sts=-1 and mode=0.
     #[test]
-    fn status_receipt_carries_sender_type_status_class_and_the_literal_sts() {
+    fn status_receipt_carries_sender_type_status_class_without_sts() {
         let status = Jid::parse("status@broadcast").unwrap();
         let poster = Jid::parse("15551234567:3@s.whatsapp.net").unwrap();
         let receipt = received_confirmation(
@@ -1265,7 +1253,10 @@ mod tests {
         assert_eq!(receipt.get_attr("id").unwrap().as_text(), Some("S1"));
         assert_eq!(receipt.get_attr("type").unwrap().as_text(), Some("sender"));
         assert_eq!(receipt.get_attr("class").unwrap().as_text(), Some("status"));
-        assert_eq!(receipt.get_attr("sts").unwrap().as_text(), Some("65535"));
+        assert!(
+            receipt.get_attr("sts").is_none(),
+            "Cp2.A06 passes signed -1"
+        );
         // The poster keeps its device-addressed form, as on the group path.
         assert_eq!(
             receipt.get_attr("participant").unwrap().as_jid(),

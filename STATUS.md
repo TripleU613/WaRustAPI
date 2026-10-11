@@ -1,3 +1,11 @@
+2026-10-11 — **Implemented/offline / evidence correction:** status delivery
+confirmations no longer send sts=65535. Exact Cp2.A06 DEX loads signed -1;
+Cp2.A00 emits sts only for a positive long. The old signed-literal explanation
+was wrong and is replaced with full descriptors and independent REA evidence.
+Original IDs, poster device and sender/class fields remain intact. Bp1.A05
+producer policy, primary device wire normalization and live acceptance remain open.
+[Exact producer/gate, runtime fix and trace boundaries](docs/protocol/status-receipt.md).
+
 2026-10-11 — **Implemented/offline:** identity, device-list, count, group-dirty
 and privacy-token ACKs now share the APK-derived zero-device PN/LID user-pair
 conversion with receipt ACKs. Literal-wire regressions reproduced identity and

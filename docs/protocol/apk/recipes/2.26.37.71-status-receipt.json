@@ -1,0 +1,26 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "status-receipt": {
+      "class": "LX/Cp2;",
+      "method": "A06",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/messaging.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ]
+    },
+    "receipt-builder": {
+      "class": "LX/Cp2;",
+      "method": "A00",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/messaging.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ]
+    }
+  }
+}

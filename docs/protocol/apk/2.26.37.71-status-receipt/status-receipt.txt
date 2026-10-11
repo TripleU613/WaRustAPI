@@ -1,0 +1,36 @@
+# APK-derived structural disassembly: LX/Cp2;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A06(LL) flags=0x9 registers=12
+  # full signature: LX/Cp2;->A06(LX/Bp1;)LX/0hs;
+  0000..0004 op=55 iget-boolean v0, v11, LX/Bp1;->A05:Z
+  0004..0008 op=38 if-eqz v0, +0x2c
+  0008..000c op=1a const-string v6, "sender"
+  000c..000e op=12 const/4 v0, #0x1
+  000e..0012 op=23 new-array v7, v0, [LX/0hq;
+  0012..0016 op=1a const-string v1, "class"
+  0016..001a op=1a const-string v0, "status"
+  001a..0020 op=71 invoke-static {v1, v0, v7}, LX/Ayo;->A1L(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+  0020..0024 op=54 iget-object v5, v11, LX/CjN;->A0A:Ljava/lang/String;
+  0024..0028 op=54 iget-object v0, v11, LX/CjN;->A05:Lcom/whatsapp/infra/core/jid/Jid;
+  0028..002e op=71 invoke-static {v0}, LX/Ayn;->A0K(Lcom/whatsapp/infra/core/jid/Jid;)LX/0Cy;
+  002e..0030 op=0c move-result-object v1
+  0030..0036 op=6e invoke-virtual {v11}, LX/CjN;->A05()Lcom/whatsapp/infra/core/jid/UserJid;
+  0036..0038 op=0c move-result-object v2
+  0038..003e op=6e invoke-virtual {v11}, LX/CjN;->A04()Lcom/whatsapp/infra/core/jid/Jid;
+  003e..0040 op=0c move-result-object v0
+  0040..0046 op=71 invoke-static {v0}, LX/Ayl;->A0V(Lcom/whatsapp/infra/core/jid/Jid;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+  0046..0048 op=0c move-result-object v3
+  0048..004c op=16 const-wide/16 v10, #0xffff (-1)
+  004c..004e op=12 const/4 v9, #0x0
+  004e..0050 op=12 const/4 v4, #0x0
+  0050..0052 op=07 move-object v8, v4
+  0052..0058 op=77 invoke-static/range {v1..v11}, LX/Cp2;->A00(LX/0Cy;LX/0Cy;Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/UserJid;Ljava/lang/String;Ljava/lang/String;[LX/0hq;[Ljava/lang/String;IJ)LX/0hs;
+  0058..005a op=0c move-result-object v0
+  005a..005c op=11 return-object v0
+  005c..005e op=12 const/4 v6, #0x0
+  005e..0060 op=28 goto -0x29
+  # exception table: 0 try range(s)
+.end method

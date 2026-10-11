@@ -1,0 +1,26 @@
+{
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "receipt-builder.txt": {
+    "bytes": 5075,
+    "sha256": "f2b001f1c8610ae78486d24be7a7895a9cf44c410c4605f90412adf9c3747c3e"
+  },
+  "status-receipt.txt": {
+    "bytes": 2110,
+    "sha256": "a934f20009ade9bbf0464f473436f96cfcfb486e7444777e272f0c2abff818ca"
+  },
+  "targets.json": {
+    "bytes": 757,
+    "sha256": "ce2b254830dcd516c30ba791f3f9e84996bb105f88cd6a04e5ac63b8f907123b"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

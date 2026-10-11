@@ -36,49 +36,44 @@ broadcast list (`<id>@broadcast`), which is addressed the same way.
 
 ## Delivery receipt (implemented)
 
-`received_confirmation` emits, for a decrypted status:
+`received_confirmation` emits, for its supported decrypted status sender branch:
 
 ```
-<receipt to="status@broadcast" id=<id> type="sender" participant=<poster DeviceJid> sts="65535" class="status"/>
+<receipt to="status@broadcast" id=<id> type="sender" participant=<poster DeviceJid> class="status"/>
 ```
 
-Resolved 2026-09-22 by mapping `LX/Cp2->A00`'s parameters to its emitted
-attributes (**confirmed**). `A00` takes nine objects, an int and a long; with
-`.registers 13` leaving one local, the parameters occupy `v1..v12`, and the
-caller's `invoke-static/range` aligns as `A00 v_k = caller v_{k-1}`. Both
-candidate alignments yield the same *relative* mapping, so the attribute sources
-hold regardless of the one-register discrepancy in the tool's decoded signature.
+**Confirmed static / corrected 2026-10-11:** in pinned WhatsApp 2.26.37.71,
+[Cp2.A06](apk/2.26.37.71-status-receipt/status-receipt.txt) loads
+`const-wide/16 v10, #0xffff (-1)` at 0048. This is a signed 16-bit literal
+extended to a long, not positive 65535. The original 2026-09-22 explanation
+misread that literal and incorrectly added `sts="65535"` to Rust output.
+[Cp2.A00](apk/2.26.37.71-status-receipt/receipt-builder.txt) compares the supplied
+long with zero at 00ca and skips its sts append when <=0 at 00ce. Rust now omits
+sts. [Full evidence, reproduction and checks](status-receipt.md).
 
-| attribute | source | gate |
-|---|---|---|
-| `to` | `pair.first` from `CmC->A06` | always |
-| `id` | `v6` | always |
-| `type` | `v7` | non-null |
-| `participant` | `pair.second` | non-null and `!= to` |
-| `recipient` | `v5` | non-null |
-| `sts` | the long `v11:v12` | `> 0` |
-| `<meta mode>` | the int `v10` | `!= 0` **and** type in `LX/CBs->A00` |
+The exact DEX descriptor has eight object parameters, an int and a long;
+A00's 13 registers leave two locals and put arguments in v2..v12. The old
+shorty-only explanation claimed nine objects and one local; the full descriptor
+corrects that uncertainty. The confirmed append gates are:
 
-`LX/Cp2->A06`'s status branch passes `type="sender"`, the extra attribute
-`class="status"`, a null recipient, a **zero** mode int and the long `0xffff`.
-So:
+| Attribute | Gate |
+|---|---|
+| to / id | Always |
+| type | Non-null |
+| participant | Non-null and unequal to destination |
+| recipient | Non-null |
+| sts | Supplied signed long >0 |
+| meta mode child | Supplied int !=0 and type in CBs.A00 |
 
-- **`sts="65535"` is emitted**, because `65535 > 0`. It is a hardcoded constant,
-  not a timestamp, and is written as the literal string.
-- **No `<meta>` child is emitted**: the gate tests the mode int first, and it is
-  zero, so the `LX/CBs->A00` membership check is never reached. Whether
-  `"sender"` belongs to that set is moot on this path.
+A06 chooses sender type only when Bp1.A05 is true; its other branch passes null.
+Both branches add class=status, mode=0, null recipient and signed long -1.
+The effective Bp1.A05 producer/admission remains unported here; the current
+supported Rust status sender branch retains sender type. No meta child is
+emitted because mode=0. Attribute order is to, id, type, participant, then class
+for this branch. Primary device class/writer normalization remains separate.
 
-Attribute order follows `A00`'s append order: `to, id, type, participant,
-recipient, sts`, then the extra `class`.
-
-The receipt stays gated on `Decrypted`/`Duplicate`, so an Unsupported stanza is
-never confirmed. **Never exercised live**, because no status has ever been
-delivered to this account.
-
-**Unknown:** what sets `LX/Bp1->A05`, the boolean selecting the status branch —
-it is a constructor-supplied field on the incoming-message model, and the
-constructor's call sites were not reachable.
+Confirmation stays gated on Decrypted/Duplicate; unsupported stanzas are not
+confirmed. Fresh status delivery/server acceptance remains unverified.
 
 ## The server never queues a status for this account (observed)
 

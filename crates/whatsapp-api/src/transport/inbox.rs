@@ -312,7 +312,7 @@ pub fn sender_key_chat(node: &Node) -> Option<(Jid, Jid)> {
 /// Groups only. Separate from [`sender_key_chat`] because a group and a
 /// broadcast take *different* receipt shapes: a group's carries neither `type`
 /// nor `class`, while a status broadcast carries `type="sender"`,
-/// `class="status"` and `sts="65535"` (2.26.37.71 `LX/Cp2->A06`). Widening this
+/// `class="status"`, without sts (2.26.37.71 `LX/Cp2->A06`). Widening this
 /// would send a group-shaped receipt for a status update.
 pub fn group_sender(node: &Node) -> Option<(Jid, Jid)> {
     let (chat, participant) = sender_key_chat(node)?;
