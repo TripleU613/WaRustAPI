@@ -37,6 +37,12 @@ exposure-key, sampling, app-version, refresh-time and invalidation operations
 are separate from identity/session state. Complete application and scheduling
 are not ported by this read path.
 
+The [effective Boolean/cache trace](mobileconfig-boolean.md) now establishes
+the base fallback reset and its direct caller order: online IWy.C8f invokes
+the reset before applying its editor, while offline GFB.A00 applies first.
+Remaining callbacks and manager snapshots prevent treating a saved reply as
+the effective runtime configuration.
+
 **Confirmed typed Boolean:** base 00D.A15 has no code body. Direct subclasses
 07t/0Ck/0Dw return the same 07t.A00 map (two by delegation). 07t constructor
 passes Boolean builder v14 through A0J, then assigns its built map to A00.

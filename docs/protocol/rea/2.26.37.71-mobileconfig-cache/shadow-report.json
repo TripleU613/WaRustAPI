@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_e005660c005cc10c328c152cb79724601c149b7177ce45804c4007cb4170899b",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.C1UF",
+    "method_name": "A00"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-vXnzTU/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\",\"max_heap_bytes\":15695085568,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C1UF"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"def_pos\":0,\"type\":\"X.05B\",\"name\":\"A00\"},{\"def_pos\":0,\"type\":\"X.05B\",\"name\":\"A01\"},{\"def_pos\":0,\"type\":\"X.05B\",\"name\":\"A02\"},{\"def_pos\":0,\"type\":\"X.05B\",\"name\":\"A03\"},{\"def_pos\":0,\"type\":\"X.05B\",\"name\":\"A04\"},{\"def_pos\":0,\"type\":\"java.lang.Runnable\",\"name\":\"A05\"}],\"field_count\":6,\"full_name\":\"X.C1UF\",\"name\":\"C1UF\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":2,\"methods\":[{\"is_constructor\":true,\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\"},{\"is_constructor\":false,\"signature\":\"A00(long, long): void\",\"def_pos\":0,\"name\":\"A00\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C1UF",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"body\":\"    public final void A00(final long j, final long j2) {\\n        C00D c00d \\u003d (C00D) this.A00.A00.get();\\n        if (c00d.A0A \\u0026\\u0026 c00d.A0C) {\\n            this.A05 \\u003d ((C07u) this.A04.A00.get()).CP8(new Runnable() { // from class: X.3Ph\\n                @Override // java.lang.Runnable\\n                public final void run() {\\n                    int i;\\n                    int i2;\\n                    int i3;\\n                    int i4;\\n                    int i5;\\n                    int i6;\\n                    int i7;\\n                    int i8;\\n                    Boolean bool;\\n                    C1UF c1uf \\u003d this.A02;\\n                    long j3 \\u003d j2;\\n                    long j4 \\u003d j;\\n                    long jA03 \\u003d C1xm.A03(c1uf.A03) - j3;\\n                    C00s c00s \\u003d c1uf.A02.A00;\\n                    C2tO c2tO \\u003d (C2tO) c00s.get();\\n                    synchronized (c2tO.A0A) {\\n                        i \\u003d c2tO.A03;\\n                        i2 \\u003d c2tO.A07;\\n                        i3 \\u003d c2tO.A02;\\n                        i4 \\u003d c2tO.A06;\\n                        i5 \\u003d c2tO.A01;\\n                        i6 \\u003d c2tO.A05;\\n                        i7 \\u003d c2tO.A00;\\n                        i8 \\u003d c2tO.A04;\\n                        bool \\u003d c2tO.A08;\\n                    }\\n                    C2VV c2vv \\u003d new C2VV();\\n                    c2vv.A03 \\u003d C1xf.A17(i);\\n                    c2vv.A07 \\u003d C1xf.A17(i2);\\n                    c2vv.A02 \\u003d C1xf.A17(i3);\\n                    c2vv.A06 \\u003d C1xf.A17(i4);\\n                    c2vv.A01 \\u003d C1xf.A17(i5);\\n                    c2vv.A05 \\u003d C1xf.A17(i6);\\n                    c2vv.A00 \\u003d C1xf.A17(i7);\\n                    c2vv.A04 \\u003d C1xf.A17(i8);\\n                    c2vv.A0A \\u003d Long.valueOf((long) (jA03 / 1000.0d));\\n                    if (bool !\\u003d null) {\\n                        c2vv.A08 \\u003d Long.valueOf(bool.booleanValue() ? 1L : 0L);\\n                    }\\n                    c2vv.A09 \\u003d 0L;\\n                    C1xj.A1E(c2tO.A09, c2vv);\\n                    C2tO c2tO2 \\u003d (C2tO) c00s.get();\\n                    String strA11 \\u003d C0C6.A11(\\\",\\\", Voip.REJECT_REASON_DECLINED, Voip.REJECT_REASON_DECLINED, C0C6.A1D(C0C6.A1F(C05B.A00(c1uf.A00).A0g())), null);\\n                    String strA12 \\u003d C0C6.A11(\\\",\\\", Voip.REJECT_REASON_DECLINED, Voip.REJECT_REASON_DECLINED, C0C6.A1D(((He8) C05B.A02(c1uf.A01)).A00(\\\"mc_expo:sys:last_exposure_keys_without_logging\\\")), null);\\n                    C1xi.A1I(strA11, 0, strA12);\\n                    C2UV c2uv \\u003d new C2UV();\\n                    c2uv.A00 \\u003d strA11;\\n                    c2uv.A01 \\u003d strA12;\\n                    C1xj.A1E(c2tO2.A09, c2uv);\\n                    long j5 \\u003d j4 * 2;\\n                    if (j5 \\u003e 14400000) {\\n                        j5 \\u003d 14400000;\\n                    }\\n                    c1uf.A00(j5, j3);\\n                }\\n            }, j);\\n        }\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.C1UF\",\"full_name\":\"X.1UF.A00\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"A00\",\"overload_count\":1}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.C1UF",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(long, long): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public final void A00(final long j, final long j2) {\n        C00D c00d = (C00D) this.A00.A00.get();\n        if (c00d.A0A && c00d.A0C) {\n            this.A05 = ((C07u) this.A04.A00.get()).CP8(new Runnable() { // from class: X.3Ph\n                @Override // java.lang.Runnable\n                public final void run() {\n                    int i;\n                    int i2;\n                    int i3;\n                    int i4;\n                    int i5;\n                    int i6;\n                    int i7;\n                    int i8;\n                    Boolean bool;\n                    C1UF c1uf = this.A02;\n                    long j3 = j2;\n                    long j4 = j;\n                    long jA03 = C1xm.A03(c1uf.A03) - j3;\n                    C00s c00s = c1uf.A02.A00;\n                    C2tO c2tO = (C2tO) c00s.get();\n                    synchronized (c2tO.A0A) {\n                        i = c2tO.A03;\n                        i2 = c2tO.A07;\n                        i3 = c2tO.A02;\n                        i4 = c2tO.A06;\n                        i5 = c2tO.A01;\n                        i6 = c2tO.A05;\n                        i7 = c2tO.A00;\n                        i8 = c2tO.A04;\n                        bool = c2tO.A08;\n                    }\n                    C2VV c2vv = new C2VV();\n                    c2vv.A03 = C1xf.A17(i);\n                    c2vv.A07 = C1xf.A17(i2);\n                    c2vv.A02 = C1xf.A17(i3);\n                    c2vv.A06 = C1xf.A17(i4);\n                    c2vv.A01 = C1xf.A17(i5);\n                    c2vv.A05 = C1xf.A17(i6);\n                    c2vv.A00 = C1xf.A17(i7);\n                    c2vv.A04 = C1xf.A17(i8);\n                    c2vv.A0A = Long.valueOf((long) (jA03 / 1000.0d));\n                    if (bool != null) {\n                        c2vv.A08 = Long.valueOf(bool.booleanValue() ? 1L : 0L);\n                    }\n                    c2vv.A09 = 0L;\n                    C1xj.A1E(c2tO.A09, c2vv);\n                    C2tO c2tO2 = (C2tO) c00s.get();\n                    String strA11 = C0C6.A11(\",\", Voip.REJECT_REASON_DECLINED, Voip.REJECT_REASON_DECLINED, C0C6.A1D(C0C6.A1F(C05B.A00(c1uf.A00).A0g())), null);\n                    String strA12 = C0C6.A11(\",\", Voip.REJECT_REASON_DECLINED, Voip.REJECT_REASON_DECLINED, C0C6.A1D(((He8) C05B.A02(c1uf.A01)).A00(\"mc_expo:sys:last_exposure_keys_without_logging\")), null);\n                    C1xi.A1I(strA11, 0, strA12);\n                    C2UV c2uv = new C2UV();\n                    c2uv.A00 = strA11;\n                    c2uv.A01 = strA12;\n                    C1xj.A1E(c2tO2.A09, c2uv);\n                    long j5 = j4 * 2;\n                    if (j5 > 14400000) {\n                        j5 = 14400000;\n                    }\n                    c1uf.A00(j5, j3);\n                }\n            }, j);\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

@@ -7,6 +7,9 @@ This extends the [existing provider/mapping trace](token-feature-inputs.md)
 with the readiness writer, fallback cache effects, concrete context and
 snapshot Boolean read. It does not make a saved AB reply an effective value.
 
+The subsequent cache trace below establishes the direct reset and online
+callback order; snapshot invalidation and callback side effects remain open.
+
 ## Resolver return branches
 
 00D.A10 uses false-mode 00F.A03 -> A0E ->
@@ -94,6 +97,64 @@ finds A0u in 00D, 0Ck and 0Dw. The latter two use their own maps. The
 calls its 00D constructor; no 07t override appears in that census. This does
 not establish cache invalidation order or authority after a later AB update.
 
+## Direct fallback reset and AB callback order
+
+The [A0N field census](rea/2.26.37.71-mobileconfig-cache/field-A0N.txt)
+finds eight physical references: construction, A0h lookup, A0o reset and
+five typed inserts. The other insert methods store
+[float](apk/2.26.37.71-mobileconfig-cache/cache-float.txt),
+[int](apk/2.26.37.71-mobileconfig-cache/cache-int.txt),
+[string](apk/2.26.37.71-mobileconfig-cache/cache-string.txt) and
+[JSON](apk/2.26.37.71-mobileconfig-cache/cache-json.txt); A0u stores Boolean.
+The field's map is not a Boolean-only cache.
+
+[00D.A0o](apk/2.26.37.71-mobileconfig-cache/cache-reset.txt) first clears
+A0N, then calls fallback A0D(false-mode, null default, 25403), and sets the
+existing AtomicBoolean A0Q to that result. The reset therefore also repopulates
+the fallback value for 25403 through A0D. It does not clear true-mode A05,
+reset readiness A06, recompute constructor controls or reset 099 snapshots.
+If the fallback read throws, the map has already been cleared and the final
+A0Q.set has not happened; this method has no catch table.
+
+Direct field references to [A0A](rea/2.26.37.71-mobileconfig-cache/field-A0A.txt),
+[A0b](rea/2.26.37.71-mobileconfig-cache/field-A0b.txt) and
+[A0C](rea/2.26.37.71-mobileconfig-cache/field-A0C.txt) show only constructor
+writes in this APK. [A0Q](rea/2.26.37.71-mobileconfig-cache/field-A0Q.txt)
+has constructor assignment, A0z read and this reset's reference read followed
+by AtomicBoolean.set. The separate [1UF.A00](apk/2.26.37.71-mobileconfig-cache/shadow-report.txt)
+checks A0A/A0C to schedule reporting; it does not update them. These censuses
+do not cover escaped aliases, reflection/native mutation or new-instance
+lifecycle.
+
+The [virtual declaration census](rea/2.26.37.71-mobileconfig-cache/reset-overrides.txt)
+finds 00D, 0Ck and 0Dw. The latter two clear only their own maps and do not
+call the base reset; no 07t declaration appears. The
+[physical caller census](rea/2.26.37.71-mobileconfig-cache/reset-callers.txt)
+finds GFB.A00, I4z.A02, IWy.C8f, 0Ci.A04 and PrivateABExpFetcher.A01.
+This is a call-site census, not complete dispatch or lifecycle coverage.
+
+The online [IWy.C8f case 1](apk/2.26.37.71-mobileconfig-cache/ab-reply.txt)
+collects values into an editor and invokes A0o at 04aa..04b0. It writes later
+metadata, checks A0z at 04e2..04e8, and applies that same editor at
+054e..0554. Thus this reset precedes the callback's final preference apply.
+It is reached for a delta or a full reply with a nonempty hash; a full
+hashless reply skips that value/reset branch. Later calls
+[0Ci.A06](apk/2.26.37.71-mobileconfig-cache/error-clear.txt) and
+[0Ci.A05](apk/2.26.37.71-mobileconfig-cache/attempt-clear.txt) only apply
+last-error and fetch-attempt integers; neither repeats the reset.
+
+The offline [GFB.A00](apk/2.26.37.71-mobileconfig-cache/offline-assignment.txt)
+instead applies its assignment editor before calling A0o. These paths cannot
+be reduced to one assumed apply-then-clear operation. Exact preference
+visibility, notifications, remaining helper side effects and later resets
+must be traced before inferring which value survives an online update.
+No historical account preferences or effective value were inferred here.
+
+The [cache recipe](apk/recipes/2.26.37.71-mobileconfig-cache.json) retains
+ten DEX topics; ten full REA envelopes and seven physical inventories retain
+the source observations and their coverage limits. This extends the static
+trace only; the Rust AB reply remains inspection evidence.
+
 ## Concrete Boolean context and specifier fields
 
 [099.AVn](apk/2.26.37.71-mobileconfig-boolean/boolean-default.txt) supplies
@@ -137,7 +198,7 @@ effects remain outside this complete semantic closure.
 
 StatusInfraConfig's P(id) predicates require this effective Boolean pipeline,
 not the raw rows surfaced by abprops-query --show. The next required closures
-are fallback cache invalidation/update ordering, A0z's mutable control inputs,
+are remaining callback/helper side effects and reset lifecycle,
 manager snapshot/translation/overlay storage and correlated AB application.
 The [status-dispatch gate](status-dispatch-gate.md) remains unported until those
 authorities can be reproduced; no flags, defaults or migration timestamps

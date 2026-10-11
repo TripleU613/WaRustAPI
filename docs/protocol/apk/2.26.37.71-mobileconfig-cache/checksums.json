@@ -1,0 +1,58 @@
+{
+  "ab-reply.txt": {
+    "bytes": 30514,
+    "sha256": "0d1fa8c887017c6fec6f2218cfd2e146ec9acf7acb886a55c025195571de4758"
+  },
+  "attempt-clear.txt": {
+    "bytes": 1290,
+    "sha256": "27b43e582dfa7a8e540230415e2986d9f1f34a9121ddfdc24a8e0d9373a03edd"
+  },
+  "cache-float.txt": {
+    "bytes": 932,
+    "sha256": "9d1610e080a4b97167e3269f86e32a8e6a09ad11e317383914ff47176f9fbf97"
+  },
+  "cache-int.txt": {
+    "bytes": 936,
+    "sha256": "33c38cac36b22023de5239a987febaa44c81a06b9924afbb5618eb1e331f8ab8"
+  },
+  "cache-json.txt": {
+    "bytes": 825,
+    "sha256": "fd3944a4303e0d7821718c2df818f864f407c52b65202c7e73ab8a627faa11e7"
+  },
+  "cache-reset.txt": {
+    "bytes": 1071,
+    "sha256": "9f5a1e306816761bc8822c536cd4d15ecdc3bbd2214c70b8e0a26e6db0d7f3db"
+  },
+  "cache-string.txt": {
+    "bytes": 822,
+    "sha256": "d994b311d2b8a83ce7aef9d91973eb2480f34d66b572aab83b04aa2caa397809"
+  },
+  "error-clear.txt": {
+    "bytes": 1287,
+    "sha256": "f4e2ca0cc18dd739a32de1d95c6a1b378daa3c357e6d28b8b0cc85d863142939"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "offline-assignment.txt": {
+    "bytes": 10523,
+    "sha256": "d6dadb99a3594bf585715f6e3db6626eec9c639c8b31474e2d3e9c8948208ada"
+  },
+  "shadow-report.txt": {
+    "bytes": 1644,
+    "sha256": "adc1dd9bb4f12495b1fc9b6a0135a3d1184f0e736cfbc947fd70145099de874e"
+  },
+  "targets.json": {
+    "bytes": 3175,
+    "sha256": "9b4337806bf00a7bc55aebff566ff30c67af9256610362c2e540277da67fc791"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

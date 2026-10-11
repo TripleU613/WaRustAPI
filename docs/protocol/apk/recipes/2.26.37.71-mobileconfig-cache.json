@@ -1,0 +1,88 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "cache-reset": {
+      "class": "LX/00D;",
+      "method": "A0o",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/abprops.rs"
+      ]
+    },
+    "ab-reply": {
+      "class": "LX/IWy;",
+      "method": "C8f",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/abprops.rs"
+      ]
+    },
+    "error-clear": {
+      "class": "LX/0Ci;",
+      "method": "A06",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/abprops.rs"
+      ]
+    },
+    "attempt-clear": {
+      "class": "LX/0Ci;",
+      "method": "A05",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/abprops.rs"
+      ]
+    },
+    "offline-assignment": {
+      "class": "LX/GFB;",
+      "method": "A00",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/abprops.rs"
+      ]
+    },
+    "shadow-report": {
+      "class": "LX/1UF;",
+      "method": "A00",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/abprops.rs"
+      ]
+    },
+    "cache-json": {
+      "class": "LX/00D;",
+      "method": "A0y",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/abprops.rs"
+      ]
+    },
+    "cache-float": {
+      "class": "LX/00D;",
+      "method": "A0r",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/abprops.rs"
+      ]
+    },
+    "cache-int": {
+      "class": "LX/00D;",
+      "method": "A0s",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/abprops.rs"
+      ]
+    },
+    "cache-string": {
+      "class": "LX/00D;",
+      "method": "A0t",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/abprops.rs"
+      ]
+    }
+  }
+}

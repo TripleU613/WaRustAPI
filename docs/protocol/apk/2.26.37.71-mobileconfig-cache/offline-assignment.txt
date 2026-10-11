@@ -1,0 +1,170 @@
+# APK-derived structural disassembly: LX/GFB;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(VL) flags=0x20019 registers=13
+  # full signature: LX/GFB;->A00(LX/GFB;)V
+  0000..0002 op=1d monitor-enter
+  0002..0006 op=55 iget-boolean v0, v12, LX/GFB;->A07:Z
+  0006..000a op=39 if-nez v0, +0x126
+  000a..000e op=13 const/16 v1, #0x49
+  000e..0012 op=54 iget-object v0, v12, LX/GFB;->A00:LX/05B;
+  0012..0018 op=71 invoke-static {v0}, LX/Ayk;->A0i(LX/05B;)LX/00Y;
+  0018..001a op=0c move-result-object v0
+  001a..0020 op=71 invoke-static {v0, v1}, LX/08b;->A03(LX/00X;I)Ljava/lang/Object;
+  0020..0022 op=0c move-result-object v6
+  0022..0026 op=1f check-cast v6, LX/HgM;
+  0026..002a op=54 iget-object v4, v12, LX/GFB;->A03:LX/LcV;
+  002a..002e op=54 iget-object v0, v12, LX/GFB;->A02:LX/On5;
+  002e..0032 op=54 iget-object v1, v0, LX/On5;->A00:Ljava/util/List;
+  0032..0036 op=39 if-nez v1, +0x4
+  0036..003a op=62 sget-object v1, LX/01f;->A00:LX/01f;
+  003a..003e op=1a const-string v7, "device_id"
+  003e..0044 op=71 invoke-static {}, LX/05M;->A0J()LX/05N;
+  0044..0046 op=0c move-result-object v0
+  0046..0048 op=12 const/4 v3, #0x1
+  0048..004e op=71 invoke-static {v6, v3, v0}, LX/1xi;->A1K(Ljava/lang/Object;ILjava/lang/Object;)V
+  004e..0054 op=71 invoke-static {}, LX/1xf;->A1D()Ljava/util/ArrayList;
+  0054..0056 op=0c move-result-object v9
+  0056..005c op=71 invoke-static {}, LX/1xf;->A1D()Ljava/util/ArrayList;
+  005c..005e op=0c move-result-object v10
+  005e..0064 op=71 invoke-static {}, LX/1xf;->A1D()Ljava/util/ArrayList;
+  0064..0066 op=0c move-result-object v11
+  0066..006c op=72 invoke-interface {v1}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+  006c..006e op=0c move-result-object v1
+  006e..0074 op=72 invoke-interface {v1}, Ljava/util/Iterator;->hasNext()Z
+  0074..0076 op=0a move-result v0
+  0076..007a op=38 if-eqz v0, +0xd
+  007a..0080 op=72 invoke-interface {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0080..0082 op=0c move-result-object v5
+  0082..0086 op=1f check-cast v5, LX/LcS;
+  0086..0088 op=12 const/4 v8, #0x0
+  0088..008e op=77 invoke-static/range {v4..v11}, LX/LcV;->A01(LX/LcV;LX/LcS;LX/HgM;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/List;)V
+  008e..0090 op=28 goto -0x10
+  0090..0094 op=22 new-instance v6, Landroid/util/SparseArray;
+  0094..009a op=70 invoke-direct {v6}, Landroid/util/SparseArray;-><init>()V
+  009a..00a0 op=6e invoke-virtual {v10}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+  00a0..00a2 op=0c move-result-object v4
+  00a2..00a8 op=72 invoke-interface {v4}, Ljava/util/Iterator;->hasNext()Z
+  00a8..00aa op=0a move-result v0
+  00aa..00ae op=38 if-eqz v0, +0x24
+  00ae..00b4 op=72 invoke-interface {v4}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  00b4..00b6 op=0c move-result-object v0
+  00b6..00ba op=1f check-cast v0, Lcom/whatsapp/fieldstats/offlineab/ConfigVariable;
+  00ba..00be op=52 iget v2, v0, Lcom/whatsapp/fieldstats/offlineab/ConfigVariable;->A00:I
+  00be..00c2 op=54 iget-object v1, v0, Lcom/whatsapp/fieldstats/offlineab/ConfigVariable;->A02:Ljava/lang/Object;
+  00c2..00c6 op=20 instance-of v0, v1, Ljava/lang/Boolean;
+  00c6..00ca op=38 if-eqz v0, +0xe
+  00ca..00d0 op=71 invoke-static {v1}, LX/1xf;->A1Z(Ljava/lang/Object;)Z
+  00d0..00d2 op=0a move-result v0
+  00d2..00d8 op=71 invoke-static {v0}, LX/1xi;->A1P(I)Z
+  00d8..00da op=0a move-result v0
+  00da..00e0 op=71 invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  00e0..00e2 op=0c move-result-object v1
+  00e2..00e8 op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  00e8..00ea op=0c move-result-object v0
+  00ea..00f0 op=6e invoke-virtual {v6, v2, v0}, Landroid/util/SparseArray;->append(ILjava/lang/Object;)V
+  00f0..00f2 op=28 goto -0x27
+  00f2..00f6 op=54 iget-object v5, v12, LX/GFB;->A01:LX/0Ci;
+  00f6..00f8 op=1d monitor-enter
+  00f8..00fc op=54 iget-object v0, v5, LX/0Ci;->A04:LX/05B;
+  00fc..0102 op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  0102..0104 op=0c move-result-object v0
+  0104..0108 op=1f check-cast v0, LX/08n;
+  0108..010a op=12 const/4 v2, #0x0
+  010a..010e op=54 iget-object v1, v0, LX/08n;->A00:Landroid/content/SharedPreferences;
+  010e..0112 op=1a const-string v0, "registration_state"
+  0112..0118 op=72 invoke-interface {v1, v0, v2}, Landroid/content/SharedPreferences;->getInt(Ljava/lang/String;I)I
+  0118..011a op=0a move-result v1
+  011a..011c op=12 const/4 v0, #0x3
+  011c..0120 op=33 if-ne v1, v0, +0x17
+  0120..0124 op=13 const/16 v1, #0x5a3
+  0124..0128 op=54 iget-object v0, v5, LX/0Ci;->A05:LX/05B;
+  0128..012e op=71 invoke-static {v0}, LX/Ayk;->A0i(LX/05B;)LX/00Y;
+  012e..0130 op=0c move-result-object v0
+  0130..0136 op=71 invoke-static {v0, v1}, LX/1xj;->A0x(LX/00X;I)Ljava/lang/Object;
+  0136..0138 op=0c move-result-object v2
+  0138..013c op=1f check-cast v2, LX/0Gb;
+  013c..0140 op=1a const-string v1, "abprops-offline-assigned-after-registration-verified"
+  0140..0144 op=1a const-string v0, "Only access online ABProps post-registration to avoid repeating S689196"
+  0144..014a op=6e invoke-virtual {v2, v1, v0, v3, v3}, LX/0AH;->A0h(Ljava/lang/String;Ljava/lang/String;ZI)V
+  014a..014e op=54 iget-object v0, v5, LX/0Ci;->A00:Landroid/content/SharedPreferences;
+  014e..0154 op=72 invoke-interface {v0}, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
+  0154..0156 op=0c move-result-object v4
+  0156..015a op=1a const-string v0, "ab_props:sys:config_hash"
+  015a..0160 op=72 invoke-interface {v4, v0}, Landroid/content/SharedPreferences$Editor;->remove(Ljava/lang/String;)Landroid/content/SharedPreferences$Editor;
+  0160..0164 op=1a const-string v0, "ab_props:sys:last_refresh_time"
+  0164..016a op=72 invoke-interface {v4, v0}, Landroid/content/SharedPreferences$Editor;->remove(Ljava/lang/String;)Landroid/content/SharedPreferences$Editor;
+  016a..016e op=1a const-string v0, "ab_props:sys:fetch_app_version"
+  016e..0174 op=72 invoke-interface {v4, v0}, Landroid/content/SharedPreferences$Editor;->remove(Ljava/lang/String;)Landroid/content/SharedPreferences$Editor;
+  0174..0178 op=1a const-string v0, "ab_props:sys:last_version"
+  0178..017e op=72 invoke-interface {v4, v0}, Landroid/content/SharedPreferences$Editor;->remove(Ljava/lang/String;)Landroid/content/SharedPreferences$Editor;
+  017e..0184 op=6e invoke-virtual {v6}, Landroid/util/SparseArray;->size()I
+  0184..0186 op=0a move-result v3
+  0186..0188 op=12 const/4 v2, #0x0
+  0188..018c op=35 if-ge v2, v3, +0x12
+  018c..0192 op=6e invoke-virtual {v6, v2}, Landroid/util/SparseArray;->keyAt(I)I
+  0192..0194 op=0a move-result v1
+  0194..019a op=6e invoke-virtual {v6, v2}, Landroid/util/SparseArray;->valueAt(I)Ljava/lang/Object;
+  019a..019c op=0c move-result-object v0
+  019c..01a0 op=1f check-cast v0, Ljava/lang/String;
+  01a0..01a6 op=71 invoke-static {v4, v5, v0, v1}, LX/0Ci;->A00(Landroid/content/SharedPreferences$Editor;LX/0Ci;Ljava/lang/String;I)Z
+  01a6..01aa op=d8 add-int/lit8 v2, v2, #0x1
+  01aa..01ac op=28 goto -0x11
+  01ac..01b2 op=72 invoke-interface {v4}, Landroid/content/SharedPreferences$Editor;->apply()V
+  01b2..01b6 op=54 iget-object v0, v5, LX/0Ci;->A08:LX/00D;
+  01b6..01bc op=6e invoke-virtual {v0}, LX/00D;->A0o()V
+  01bc..01be op=1e monitor-exit
+  01be..01c4 op=71 invoke-static {}, LX/1xf;->A1G()Ljava/util/HashSet;
+  01c4..01c6 op=0c move-result-object v3
+  01c6..01cc op=6e invoke-virtual {v9}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+  01cc..01ce op=0c move-result-object v1
+  01ce..01d4 op=72 invoke-interface {v1}, Ljava/util/Iterator;->hasNext()Z
+  01d4..01d6 op=0a move-result v0
+  01d6..01da op=38 if-eqz v0, +0xc
+  01da..01e0 op=72 invoke-interface {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  01e0..01e2 op=0c move-result-object v0
+  01e2..01e6 op=1f check-cast v0, LX/N4c;
+  01e6..01ec op=71 invoke-static {v0, v3}, LX/6al;->A1P(Ljava/lang/Object;Ljava/util/AbstractCollection;)V
+  01ec..01ee op=28 goto -0xf
+  01ee..01f4 op=71 invoke-static {}, LX/1xf;->A1G()Ljava/util/HashSet;
+  01f4..01f6 op=0c move-result-object v2
+  01f6..01fc op=6e invoke-virtual {v11}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+  01fc..01fe op=0c move-result-object v1
+  01fe..0204 op=72 invoke-interface {v1}, Ljava/util/Iterator;->hasNext()Z
+  0204..0206 op=0a move-result v0
+  0206..020a op=38 if-eqz v0, +0xc
+  020a..0210 op=72 invoke-interface {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0210..0212 op=0c move-result-object v0
+  0212..0216 op=1f check-cast v0, LX/N3K;
+  0216..021c op=71 invoke-static {v0, v2}, LX/6al;->A1P(Ljava/lang/Object;Ljava/util/AbstractCollection;)V
+  021c..021e op=28 goto -0xf
+  021e..0222 op=54 iget-object v0, v12, LX/GFB;->A05:LX/00l;
+  0222..0228 op=71 invoke-static {v0}, LX/1YP;->A0B(LX/00l;)Landroid/content/SharedPreferences$Editor;
+  0228..022a op=0c move-result-object v1
+  022a..022e op=1a const-string v0, "ab_offline_props:offline_exposure_strings"
+  022e..0234 op=72 invoke-interface {v1, v0, v3}, Landroid/content/SharedPreferences$Editor;->putStringSet(Ljava/lang/String;Ljava/util/Set;)Landroid/content/SharedPreferences$Editor;
+  0234..0238 op=1a const-string v0, "ab_offline_props:offline_exposure_hash_strings"
+  0238..023e op=72 invoke-interface {v1, v0, v2}, Landroid/content/SharedPreferences$Editor;->putStringSet(Ljava/lang/String;Ljava/util/Set;)Landroid/content/SharedPreferences$Editor;
+  023e..0244 op=72 invoke-interface {v1}, Landroid/content/SharedPreferences$Editor;->apply()V
+  0244..0246 op=12 const/4 v0, #0x1
+  0246..024a op=5c iput-boolean v0, v12, LX/GFB;->A07:Z
+  024a..024c op=28 goto +0x4
+  024c..024e op=0d move-exception v0
+  024e..0250 op=1e monitor-exit
+  0250..0252 op=27 throw v0
+  0252..0254 op=1e monitor-exit
+  0254..0256 op=0e return-void
+  0256..0258 op=0d move-exception v0
+  0258..025a op=1e monitor-exit
+  025a..025c op=27 throw v0
+  # exception table: 7 try range(s)
+  # catch <all> code_units 0001..0069 -> 012b
+  # catch <all> code_units 006d..007c -> 012b
+  # catch <all> code_units 007c..00de -> 0126
+  # catch <all> code_units 00de..0126 -> 012b
+  # catch <all> code_units 0127..0128 -> 0126
+  # catch <all> code_units 0128..0129 -> 012b
+  # catch <all> code_units 012c..012d -> 012b
+.end method

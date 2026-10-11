@@ -1,0 +1,23 @@
+# APK-derived structural disassembly: LX/0Ci;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A06(VI) flags=0x20011 registers=4
+  # full signature: LX/0Ci;->A06(I)V
+  0000..0002 op=1d monitor-enter
+  0002..0006 op=54 iget-object v0, v2, LX/0Ci;->A00:Landroid/content/SharedPreferences;
+  0006..000c op=72 invoke-interface {v0}, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
+  000c..000e op=0c move-result-object v1
+  000e..0012 op=1a const-string v0, "ab_props:sys:last_error_code"
+  0012..0018 op=72 invoke-interface {v1, v0, v3}, Landroid/content/SharedPreferences$Editor;->putInt(Ljava/lang/String;I)Landroid/content/SharedPreferences$Editor;
+  0018..001e op=72 invoke-interface {v1}, Landroid/content/SharedPreferences$Editor;->apply()V
+  001e..0020 op=1e monitor-exit
+  0020..0022 op=0e return-void
+  0022..0024 op=0d move-exception v0
+  0024..0026 op=1e monitor-exit
+  0026..0028 op=27 throw v0
+  # exception table: 2 try range(s)
+  # catch <all> code_units 0001..000f -> 0011
+  # catch <all> code_units 0012..0013 -> 0011
+.end method

@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_384458fea95d729899e83adc0b1c7a8ae55a664237f3f9742e30e2cd22011522",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.GFB",
+    "method_name": "A00"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-vXnzTU/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\",\"max_heap_bytes\":15695085568,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.GFB"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"def_pos\":0,\"type\":\"X.05B\",\"name\":\"A00\"},{\"def_pos\":0,\"type\":\"X.0Ci\",\"name\":\"A01\"},{\"def_pos\":0,\"type\":\"X.On5\",\"name\":\"A02\"},{\"def_pos\":0,\"type\":\"X.LcV\",\"name\":\"A03\"},{\"def_pos\":0,\"type\":\"X.00R\",\"name\":\"A04\"},{\"def_pos\":0,\"type\":\"X.00l\",\"name\":\"A05\"},{\"def_pos\":0,\"type\":\"X.07t\",\"name\":\"A06\"},{\"def_pos\":0,\"type\":\"boolean\",\"name\":\"A07\"}],\"field_count\":8,\"full_name\":\"X.GFB\",\"name\":\"GFB\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":4,\"methods\":[{\"is_constructor\":true,\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\"},{\"is_constructor\":false,\"signature\":\"A00(X.GFB): void\",\"def_pos\":0,\"name\":\"A00\"},{\"is_constructor\":false,\"signature\":\"A01(int): int\",\"def_pos\":0,\"name\":\"A01\"},{\"is_constructor\":false,\"signature\":\"A02(int): boolean\",\"def_pos\":0,\"name\":\"A02\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.GFB",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"body\":\"    /* JADX WARN: In static synchronized method top region not synchronized by class const: (r12v0 X.GFB) */\\n    public static final synchronized void A00(GFB gfb) {\\n        synchronized (gfb) {\\n            if (!gfb.A07) {\\n                HgM hgM \\u003d (HgM) C08b.A03(Ayk.A0i(gfb.A00), 73);\\n                LcV lcV \\u003d gfb.A03;\\n                List list \\u003d gfb.A02.A00;\\n                if (list \\u003d\\u003d null) {\\n                    list \\u003d C01f.A00;\\n                }\\n                C1xi.A1K(hgM, 1, C05M.A0J());\\n                ArrayList arrayListA1D \\u003d C1xf.A1D();\\n                ArrayList\\u003cConfigVariable\\u003e arrayListA1D2 \\u003d C1xf.A1D();\\n                ArrayList arrayListA1D3 \\u003d C1xf.A1D();\\n                Iterator it \\u003d list.iterator();\\n                while (it.hasNext()) {\\n                    LcV.A01(lcV, (LcS) it.next(), hgM, \\\"device_id\\\", null, arrayListA1D, arrayListA1D2, arrayListA1D3);\\n                }\\n                SparseArray sparseArray \\u003d new SparseArray();\\n                for (ConfigVariable configVariable : arrayListA1D2) {\\n                    int i \\u003d configVariable.A00;\\n                    Object objValueOf \\u003d configVariable.A02;\\n                    if (objValueOf instanceof Boolean) {\\n                        objValueOf \\u003d Integer.valueOf(C1xi.A1P(C1xf.A1Z(objValueOf) ? 1 : 0) ? 1 : 0);\\n                    }\\n                    sparseArray.append(i, objValueOf.toString());\\n                }\\n                C0Ci c0Ci \\u003d gfb.A01;\\n                synchronized (c0Ci) {\\n                    if (((C08n) C05B.A02(c0Ci.A04)).A00.getInt(\\\"registration_state\\\", 0) \\u003d\\u003d 3) {\\n                        ((C0Gb) C1xj.A0x(Ayk.A0i(c0Ci.A05), 1443)).A0h(\\\"abprops-offline-assigned-after-registration-verified\\\", \\\"Only access online ABProps post-registration to avoid repeating S689196\\\", true, 1);\\n                    }\\n                    SharedPreferences.Editor editorEdit \\u003d c0Ci.A00.edit();\\n                    editorEdit.remove(\\\"ab_props:sys:config_hash\\\");\\n                    editorEdit.remove(\\\"ab_props:sys:last_refresh_time\\\");\\n                    editorEdit.remove(\\\"ab_props:sys:fetch_app_version\\\");\\n                    editorEdit.remove(\\\"ab_props:sys:last_version\\\");\\n                    int size \\u003d sparseArray.size();\\n                    for (int i2 \\u003d 0; i2 \\u003c size; i2++) {\\n                        C0Ci.A00(editorEdit, c0Ci, (String) sparseArray.valueAt(i2), sparseArray.keyAt(i2));\\n                    }\\n                    editorEdit.apply();\\n                    c0Ci.A08.A0o();\\n                }\\n                HashSet hashSetA1G \\u003d C1xf.A1G();\\n                Iterator it2 \\u003d arrayListA1D.iterator();\\n                while (it2.hasNext()) {\\n                    C6al.A1P((N4c) it2.next(), hashSetA1G);\\n                }\\n                HashSet hashSetA1G2 \\u003d C1xf.A1G();\\n                Iterator it3 \\u003d arrayListA1D3.iterator();\\n                while (it3.hasNext()) {\\n                    C6al.A1P((N3K) it3.next(), hashSetA1G2);\\n                }\\n                SharedPreferences.Editor editorA0B \\u003d C1YP.A0B(gfb.A05);\\n                editorA0B.putStringSet(\\\"ab_offline_props:offline_exposure_strings\\\", hashSetA1G);\\n                editorA0B.putStringSet(\\\"ab_offline_props:offline_exposure_hash_strings\\\", hashSetA1G2);\\n                editorA0B.apply();\\n                gfb.A07 \\u003d true;\\n            }\\n        }\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.GFB\",\"full_name\":\"X.GFB.A00\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"A00\",\"overload_count\":1}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.GFB",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(X.GFB): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: In static synchronized method top region not synchronized by class const: (r12v0 X.GFB) */\n    public static final synchronized void A00(GFB gfb) {\n        synchronized (gfb) {\n            if (!gfb.A07) {\n                HgM hgM = (HgM) C08b.A03(Ayk.A0i(gfb.A00), 73);\n                LcV lcV = gfb.A03;\n                List list = gfb.A02.A00;\n                if (list == null) {\n                    list = C01f.A00;\n                }\n                C1xi.A1K(hgM, 1, C05M.A0J());\n                ArrayList arrayListA1D = C1xf.A1D();\n                ArrayList<ConfigVariable> arrayListA1D2 = C1xf.A1D();\n                ArrayList arrayListA1D3 = C1xf.A1D();\n                Iterator it = list.iterator();\n                while (it.hasNext()) {\n                    LcV.A01(lcV, (LcS) it.next(), hgM, \"device_id\", null, arrayListA1D, arrayListA1D2, arrayListA1D3);\n                }\n                SparseArray sparseArray = new SparseArray();\n                for (ConfigVariable configVariable : arrayListA1D2) {\n                    int i = configVariable.A00;\n                    Object objValueOf = configVariable.A02;\n                    if (objValueOf instanceof Boolean) {\n                        objValueOf = Integer.valueOf(C1xi.A1P(C1xf.A1Z(objValueOf) ? 1 : 0) ? 1 : 0);\n                    }\n                    sparseArray.append(i, objValueOf.toString());\n                }\n                C0Ci c0Ci = gfb.A01;\n                synchronized (c0Ci) {\n                    if (((C08n) C05B.A02(c0Ci.A04)).A00.getInt(\"registration_state\", 0) == 3) {\n                        ((C0Gb) C1xj.A0x(Ayk.A0i(c0Ci.A05), 1443)).A0h(\"abprops-offline-assigned-after-registration-verified\", \"Only access online ABProps post-registration to avoid repeating S689196\", true, 1);\n                    }\n                    SharedPreferences.Editor editorEdit = c0Ci.A00.edit();\n                    editorEdit.remove(\"ab_props:sys:config_hash\");\n                    editorEdit.remove(\"ab_props:sys:last_refresh_time\");\n                    editorEdit.remove(\"ab_props:sys:fetch_app_version\");\n                    editorEdit.remove(\"ab_props:sys:last_version\");\n                    int size = sparseArray.size();\n                    for (int i2 = 0; i2 < size; i2++) {\n                        C0Ci.A00(editorEdit, c0Ci, (String) sparseArray.valueAt(i2), sparseArray.keyAt(i2));\n                    }\n                    editorEdit.apply();\n                    c0Ci.A08.A0o();\n                }\n                HashSet hashSetA1G = C1xf.A1G();\n                Iterator it2 = arrayListA1D.iterator();\n                while (it2.hasNext()) {\n                    C6al.A1P((N4c) it2.next(), hashSetA1G);\n                }\n                HashSet hashSetA1G2 = C1xf.A1G();\n                Iterator it3 = arrayListA1D3.iterator();\n                while (it3.hasNext()) {\n                    C6al.A1P((N3K) it3.next(), hashSetA1G2);\n                }\n                SharedPreferences.Editor editorA0B = C1YP.A0B(gfb.A05);\n                editorA0B.putStringSet(\"ab_offline_props:offline_exposure_strings\", hashSetA1G);\n                editorA0B.putStringSet(\"ab_offline_props:offline_exposure_hash_strings\", hashSetA1G2);\n                editorA0B.apply();\n                gfb.A07 = true;\n            }\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

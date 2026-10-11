@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_511f2663bc70175ae0400a67bb2256924cc95815839dd35d32a3ceb3d80d4a26",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.C00D",
+    "method_name": "A0t"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-vXnzTU/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\",\"max_heap_bytes\":15695085568,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C00D"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"def_pos\":0,\"type\":\"android.content.SharedPreferences\",\"name\":\"A00\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A01\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A02\"},{\"def_pos\":0,\"type\":\"X.05B\",\"name\":\"A03\"},{\"def_pos\":0,\"type\":\"X.05B\",\"name\":\"A04\"},{\"def_pos\":0,\"type\":\"java.util.concurrent.ConcurrentHashMap\",\"name\":\"A05\"},{\"def_pos\":0,\"type\":\"java.util.concurrent.atomic.AtomicBoolean\",\"name\":\"A06\"},{\"def_pos\":0,\"type\":\"java.util.concurrent.atomic.AtomicBoolean\",\"name\":\"A07\"},{\"def_pos\":0,\"type\":\"X.00l\",\"name\":\"A08\"},{\"def_pos\":0,\"type\":\"X.00l\",\"name\":\"A09\"},{\"def_pos\":0,\"type\":\"boolean\",\"name\":\"A0A\"},{\"def_pos\":0,\"type\":\"boolean\",\"name\":\"A0B\"},{\"def_pos\":0,\"type\":\"boolean\",\"name\":\"A0C\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"A0D\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"A0E\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"A0F\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A0G\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A0H\"},{\"def_pos\":0,\"type\":\"com.facebook.mobileconfig.factory.MobileConfigUnsafeContext\",\"name\":\"A0I\"},{\"def_pos\":0,\"type\":\"X.084\",\"name\":\"A0J\"},{\"def_pos\":0,\"type\":\"X.07u\",\"name\":\"A0K\"},{\"def_pos\":0,\"type\":\"X.09M\",\"name\":\"A0L\"},{\"def_pos\":0,\"type\":\"java.lang.String\",\"name\":\"A0M\"},{\"def_pos\":0,\"type\":\"java.util.concurrent.ConcurrentHashMap\",\"name\":\"A0N\"},{\"def_pos\":0,\"type\":\"java.util.concurrent.ConcurrentHashMap\",\"name\":\"A0O\"},{\"def_pos\":0,\"type\":\"java.util.concurrent.ConcurrentHashMap\",\"name\":\"A0P\"},{\"def_pos\":0,\"type\":\"java.util.concurrent.atomic.AtomicBoolean\",\"name\":\"A0Q\"},{\"def_pos\":0,\"type\":\"X.09T\",\"name\":\"A0R\"},{\"def_pos\":0,\"type\":\"X.09T\",\"name\":\"A0S\"},{\"def_pos\":0,\"type\":\"X.09T\",\"name\":\"A0T\"},{\"def_pos\":0,\"type\":\"X.09T\",\"name\":\"A0U\"},{\"def_pos\":0,\"type\":\"X.09T\",\"name\":\"A0V\"},{\"def_pos\":0,\"type\":\"X.09U\",\"name\":\"A0W\"},{\"def_pos\":0,\"type\":\"X.09U\",\"name\":\"A0X\"},{\"def_pos\":0,\"type\":\"X.09U\",\"name\":\"A0Y\"},{\"def_pos\":0,\"type\":\"X.09U\",\"name\":\"A0Z\"},{\"def_pos\":0,\"type\":\"X.09U\",\"name\":\"A0a\"},{\"def_pos\":0,\"type\":\"boolean\",\"name\":\"A0b\"}],\"field_count\":38,\"full_name\":\"X.C00D\",\"name\":\"C00D\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":55,\"methods\":[{\"is_constructor\":true,\"signature\":\"\\u003cinit\\u003e(X.00s, X.00s, X.00s, X.00s, com.facebook.mobileconfig.factory.MobileConfigUnsafeContext, X.084, X.00R, X.07u, X.09M, X.08A, java.lang.String): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\"},{\"is_constructor\":false,\"signature\":\"A00(X.00F, X.00D, java.lang.Float, int): float\",\"def_pos\":0,\"name\":\"A00\"},{\"is_constructor\":false,\"signature\":\"A01(X.00F, X.00D, java.lang.Integer, int): int\",\"def_pos\":0,\"name\":\"A01\"},{\"is_constructor\":false,\"signature\":\"A02(X.00F, X.00D, java.lang.Integer, int): int\",\"def_pos\":0,\"name\":\"A02\"},{\"is_constructor\":false,\"signature\":\"A03(X.00D, int): java.lang.Boolean\",\"def_pos\":0,\"name\":\"A03\"},{\"is_constructor\":false,\"signature\":\"A04(X.00D, X.09P): java.lang.Boolean\",\"def_pos\":0,\"name\":\"A04\"},{\"is_constructor\":false,\"signature\":\"A05(X.00D, int): java.lang.Integer\",\"def_pos\":0,\"name\":\"A05\"},{\"is_constructor\":false,\"signature\":\"A06(X.00D, X.09R): java.lang.Integer\",\"def_pos\":0,\"name\":\"A06\"},{\"is_constructor\":false,\"signature\":\"A07(X.00F, java.lang.Integer, X.09m, X.09T, X.09U, int): java.lang.Object\",\"def_pos\":0,\"name\":\"A07\"},{\"is_constructor\":false,\"signature\":\"A08(X.00F, X.00D, java.lang.String, int): java.lang.String\",\"def_pos\":0,\"name\":\"A08\"},{\"is_constructor\":false,\"signature\":\"A09(X.00F, X.00D, java.lang.String, int): org.json.JSONObject\",\"def_pos\":0,\"name\":\"A09\"},{\"is_constructor\":false,\"signature\":\"A0A(X.00F, X.00D, int): void\",\"def_pos\":0,\"name\":\"A0A\"},{\"is_constructor\":false,\"signature\":\"A0B(X.00F, X.00D, java.lang.String): void\",\"def_pos\":0,\"name\":\"A0B\"},{\"is_constructor\":false,\"signature\":\"A0C(X.Hln, java.lang.Integer, java.lang.Object, int, boolean): void\",\"def_pos\":0,\"name\":\"A0C\"},{\"is_constructor\":false,\"signature\":\"A0D(X.00F, X.00D, java.lang.Boolean, int): boolean\",\"def_pos\":0,\"name\":\"A0D\"},{\"is_constructor\":false,\"signature\":\"A0E(X.00F, X.00D, java.lang.Boolean, int): boolean\",\"def_pos\":0,\"name\":\"A0E\"},{\"is_constructor\":false,\"signature\":\"A0F(X.00D, int): boolean\",\"def_pos\":0,\"name\":\"A0F\"},{\"is_constructor\":false,\"signature\":\"A0G(X.00D, X.09P): boolean\",\"def_pos\":0,\"name\":\"A0G\"},{\"is_constructor\":false,\"signature\":\"A0Z(int): float\",\"def_pos\":0,\"name\":\"A0Z\"},{\"is_constructor\":false,\"signature\":\"A0a(X.1cQ): float\",\"def_pos\":0,\"name\":\"A0a\"},{\"is_constructor\":false,\"signature\":\"A0b(int): int\",\"def_pos\":0,\"name\":\"A0b\"},{\"is_constructor\":false,\"signature\":\"A0c(X.00F, int): int\",\"def_pos\":0,\"name\":\"A0c\"},{\"is_constructor\":false,\"signature\":\"A0d(X.00F, X.09R): int\",\"def_pos\":0,\"name\":\"A0d\"},{\"is_constructor\":false,\"signature\":\"A0e(X.09R): int\",\"def_pos\":0,\"name\":\"A0e\"},{\"is_constructor\":false,\"signature\":\"A0f(X.09R): int\",\"def_pos\":0,\"name\":\"A0f\"},{\"is_constructor\":false,\"signature\":\"A0g(): X.0Du\",\"def_pos\":0,\"name\":\"A0g\"},{\"is_constructor\":false,\"signature\":\"A0h(X.00F, int): java.lang.Object\",\"def_pos\":0,\"name\":\"A0h\"},{\"is_constructor\":false,\"signature\":\"A0i(int): java.lang.String\",\"def_pos\":0,\"name\":\"A0i\"},{\"is_constructor\":false,\"signature\":\"A0j(X.00F, int): java.lang.String\",\"def_pos\":0,\"name\":\"A0j\"},{\"is_constructor\":false,\"signature\":\"A0k(X.09Q): java.lang.String\",\"def_pos\":0,\"name\":\"A0k\"},{\"is_constructor\":false,\"signature\":\"A0l(boolean): java.util.Set\",\"def_pos\":0,\"name\":\"A0l\"},{\"is_constructor\":false,\"signature\":\"A0m(int): org.json.JSONObject\",\"def_pos\":0,\"name\":\"A0m\"},{\"is_constructor\":false,\"signature\":\"A0n(X.09S): org.json.JSONObject\",\"def_pos\":0,\"name\":\"A0n\"},{\"is_constructor\":false,\"signature\":\"A0o(): void\",\"def_pos\":0,\"name\":\"A0o\"},{\"is_constructor\":false,\"signature\":\"A0p(): void\",\"def_pos\":0,\"name\":\"A0p\"},{\"is_constructor\":false,\"signature\":\"A0q(): void\",\"def_pos\":0,\"name\":\"A0q\"},{\"is_constructor\":false,\"signature\":\"A0r(int, float): void\",\"def_pos\":0,\"name\":\"A0r\"},{\"is_constructor\":false,\"signature\":\"A0s(int, int): void\",\"def_pos\":0,\"name\":\"A0s\"},{\"is_constructor\":false,\"signature\":\"A0t(int, java.lang.String): void\",\"def_pos\":0,\"name\":\"A0t\"},{\"is_constructor\":false,\"signature\":\"A0u(int, boolean): void\",\"def_pos\":0,\"name\":\"A0u\"},{\"is_constructor\":false,\"signature\":\"A0v(android.content.SharedPreferences$Editor, java.util.Set, boolean): void\",\"def_pos\":0,\"name\":\"A0v\"},{\"is_constructor\":false,\"signature\":\"A0w(android.content.SharedPreferences$Editor, java.util.Set, boolean, boolean): void\",\"def_pos\":0,\"name\":\"A0w\"},{\"is_constructor\":false,\"signature\":\"A0x(java.lang.String, boolean): void\",\"def_pos\":0,\"name\":\"A0x\"},{\"is_constructor\":false,\"signature\":\"A0y(org.json.JSONObject, int): void\",\"def_pos\":0,\"name\":\"A0y\"},{\"is_constructor\":false,\"signature\":\"A0z(): boolean\",\"def_pos\":0,\"name\":\"A0z\"},{\"is_constructor\":false,\"signature\":\"A10(int): boolean\",\"def_pos\":0,\"name\":\"A10\"},{\"is_constructor\":false,\"signature\":\"A11(X.00F, int): boolean\",\"def_pos\":0,\"name\":\"A11\"},{\"is_constructor\":false,\"signature\":\"A12(X.00F, X.09P): boolean\",\"def_pos\":0,\"name\":\"A12\"},{\"is_constructor\":false,\"signature\":\"A13(X.09P): boolean\",\"def_pos\":0,\"name\":\"A13\"},{\"is_constructor\":false,\"signature\":\"A14(X.09P): boolean\",\"def_pos\":0,\"name\":\"A14\"},{\"is_constructor\":false,\"signature\":\"A15(): com.google.common.collect.ImmutableMap\",\"def_pos\":0,\"name\":\"A15\"},{\"is_constructor\":false,\"signature\":\"A16(): com.google.common.collect.ImmutableMap\",\"def_pos\":0,\"name\":\"A16\"},{\"is_constructor\":false,\"signature\":\"A17(): com.google.common.collect.ImmutableMap\",\"def_pos\":0,\"name\":\"A17\"},{\"is_constructor\":false,\"signature\":\"A18(): com.google.common.collect.ImmutableMap\",\"def_pos\":0,\"name\":\"A18\"},{\"is_constructor\":false,\"signature\":\"A19(): com.google.common.collect.ImmutableMap\",\"def_pos\":0,\"name\":\"A19\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C00D",
+          "method_name": "A0t",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"body\":\"    public void A0t(int i, String str) {\\n        this.A0N.put(Integer.valueOf(i), str);\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.C00D\",\"full_name\":\"X.00D.A0t\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"A0t\",\"overload_count\":1}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.C00D",
+    "method": {
+      "name": "A0t",
+      "reported_signature": "A0t(int, java.lang.String): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public void A0t(int i, String str) {\n        this.A0N.put(Integer.valueOf(i), str);\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

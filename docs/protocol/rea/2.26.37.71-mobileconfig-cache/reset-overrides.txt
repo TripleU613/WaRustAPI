@@ -1,0 +1,46 @@
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Declared overrides: LX/00D;->A0o()V
+# Coverage: 101453 APK classes; superclass ancestry only; external/runtime/interface dispatch unverified
+# ancestry: LX/00D; -> Ljava/lang/Object;
+# ancestry: LX/0Ck; -> LX/00D; -> Ljava/lang/Object;
+# ancestry: LX/0Dw; -> LX/00D; -> Ljava/lang/Object;
+
+# class: LX/00D;
+# extends: Ljava/lang/Object;
+
+.method public A0o(V)  # .registers 5
+    # full signature: LX/00D;->A0o()V
+    0000..0004  iget-object  v0, v4, LX/00D;->A0N:Ljava/util/concurrent/ConcurrentHashMap;
+    0004..000a  invoke-virtual  {v0}, Ljava/util/AbstractMap;->clear()V
+    000a..000e  iget-object  v3, v4, LX/00D;->A0Q:Ljava/util/concurrent/atomic/AtomicBoolean;
+    000e..0012  sget-object  v2, LX/00F;->A03:LX/00F;
+    0012..0014  const/4  v1, #0x0
+    0014..0018  const/16  v0, #0x633b
+    0018..001e  invoke-static  {v2, v4, v1, v0}, LX/00D;->A0D(LX/00F;LX/00D;Ljava/lang/Boolean;I)Z
+    001e..0020  move-result  v0
+    0020..0026  invoke-virtual  {v3, v0}, Ljava/util/concurrent/atomic/AtomicBoolean;->set(Z)V
+    0026..0028  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/0Ck;
+# extends: LX/00D;
+
+.method public A0o(V)  # .registers 2
+    # full signature: LX/0Ck;->A0o()V
+    0000..0004  iget-object  v0, v1, LX/0Ck;->A05:Ljava/util/concurrent/ConcurrentHashMap;
+    0004..000a  invoke-virtual  {v0}, Ljava/util/AbstractMap;->clear()V
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/0Dw;
+# extends: LX/00D;
+
+.method public A0o(V)  # .registers 2
+    # full signature: LX/0Dw;->A0o()V
+    0000..0004  iget-object  v0, v1, LX/0Dw;->A08:Ljava/util/concurrent/ConcurrentHashMap;
+    0004..000a  invoke-virtual  {v0}, Ljava/util/AbstractMap;->clear()V
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,11 @@
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+classes9.dex  LX/GFB;->A00(VL)
+  invoke dex byte offset: 0x395ab2
+classes9.dex  LX/I4z;->A02(VLLLLLLLLLLLLLLLLLLLLLIIZ)
+  invoke dex byte offset: 0x5da300
+classes9.dex  LX/IWy;->C8f(VLL)
+  invoke dex byte offset: 0x6d22b2
+classes.dex  LX/0Ci;->A04(V)
+  invoke dex byte offset: 0x499138
+classes.dex  Lcom/whatsapp/infra/privateexp/PrivateABExpFetcher;->A01(LL)
+  invoke dex byte offset: 0x8f50aa
