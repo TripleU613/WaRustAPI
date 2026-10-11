@@ -1,0 +1,25 @@
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Declared overrides: Lcom/whatsapp/infra/core/jid/Jid;->isProtocolCompliant()Z
+# Coverage: 101453 APK classes; superclass ancestry only; external/runtime/interface dispatch unverified
+# ancestry: Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+
+# class: Lcom/whatsapp/infra/core/jid/Jid;
+# extends: Ljava/lang/Object;
+
+.method public isProtocolCompliant(Z)  # .registers 4
+    # full signature: Lcom/whatsapp/infra/core/jid/Jid;->isProtocolCompliant()Z
+    0000..0006  invoke-virtual  {v3}, Lcom/whatsapp/infra/core/jid/Jid;->getType()I
+    0006..0008  move-result  v2
+    0008..000a  const/4  v0, #0x2
+    000a..000e  if-eq  v2, v0, +0xf
+    000e..0012  const/16  v0, #0x9
+    0012..0016  if-eq  v2, v0, +0xb
+    0016..001a  const/16  v0, #0xb
+    001a..001e  if-eq  v2, v0, +0x7
+    001e..0022  const/16  v1, #0x8
+    0022..0024  const/4  v0, #0x1
+    0024..0028  if-ne  v2, v1, +0x3
+    0028..002a  const/4  v0, #0x0
+    002a..002c  return  v0
+    # exception table: 0 try range(s)
+.end method

@@ -99,3 +99,8 @@ checks, strict workspace Clippy, warnings-denied Rustdoc, CLI build, formatting,
 CLI-reference/OpenAPI coverage and repository hygiene (2,699 local links;
 130 checksum bundles / 27,450,116 bytes). Four complete REA envelopes match the
 pinned subject hash. No live receipt acceptance or cross-release parity is claimed.
+
+Follow-up: [generic receipt ACK primary user encoding](receipt-primary-ack.md)
+now canonicalizes decoded binary zero PN/LID `to`/`participant` values. The
+complete writer class census explains why this rule cannot apply globally to
+explicitly constructed DeviceLid addresses.

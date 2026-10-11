@@ -1,0 +1,80 @@
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Declared overrides: Lcom/whatsapp/infra/core/jid/Jid;->getDevice()I
+# Coverage: 101453 APK classes; superclass ancestry only; external/runtime/interface dispatch unverified
+# ancestry: LX/0DO; -> Lcom/whatsapp/infra/core/jid/DeviceJid; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: LX/0e1; -> LX/0e0; -> Lcom/whatsapp/infra/core/jid/DeviceJid; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: LX/1SK; -> LX/0e0; -> Lcom/whatsapp/infra/core/jid/DeviceJid; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: LX/Ble; -> LX/0e0; -> Lcom/whatsapp/infra/core/jid/DeviceJid; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: LX/Blg; -> Lcom/whatsapp/infra/core/jid/DeviceJid; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: LX/Bli; -> LX/0e1; -> LX/0e0; -> Lcom/whatsapp/infra/core/jid/DeviceJid; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+
+# class: LX/0DO;
+# extends: Lcom/whatsapp/infra/core/jid/DeviceJid;
+
+.method public getDevice(I)  # .registers 2
+    # full signature: LX/0DO;->getDevice()I
+    0000..0004  iget  v0, v1, LX/0DO;->A00:I
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/0e1;
+# extends: LX/0e0;
+
+.method public getDevice(I)  # .registers 2
+    # full signature: LX/0e1;->getDevice()I
+    0000..0004  iget  v0, v1, LX/0e1;->A00:I
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/1SK;
+# extends: LX/0e0;
+
+.method public getDevice(I)  # .registers 2
+    # full signature: LX/1SK;->getDevice()I
+    0000..0004  iget  v0, v1, LX/1SK;->A00:I
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/Ble;
+# extends: LX/0e0;
+
+.method public getDevice(I)  # .registers 2
+    # full signature: LX/Ble;->getDevice()I
+    0000..0004  iget  v0, v1, LX/Ble;->A00:I
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/Blg;
+# extends: Lcom/whatsapp/infra/core/jid/DeviceJid;
+
+.method public getDevice(I)  # .registers 2
+    # full signature: LX/Blg;->getDevice()I
+    0000..0004  iget  v0, v1, LX/Blg;->A00:I
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/Bli;
+# extends: LX/0e1;
+
+.method public getDevice(I)  # .registers 2
+    # full signature: LX/Bli;->getDevice()I
+    0000..0004  iget  v0, v1, LX/Bli;->A00:I
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: Lcom/whatsapp/infra/core/jid/Jid;
+# extends: Ljava/lang/Object;
+
+.method public getDevice(I)  # .registers 2
+    # full signature: Lcom/whatsapp/infra/core/jid/Jid;->getDevice()I
+    0000..0002  const/4  v0, #0x0
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method

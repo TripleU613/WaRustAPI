@@ -700,7 +700,20 @@ pub fn received_confirmation(incoming: &Node) -> Option<Node> {
 /// ack for a type we do not process would tell the server it was handled when
 /// it was only preserved, so those stay unacknowledged.
 fn receipt_ack(incoming: &Node) -> Option<Node> {
-    let from = super::receipts::network_jid(incoming, "from")?;
+    // APK 124.A03 reconstructs zero-AD users; 1Qe.A00 writes their JID_PAIR form.
+    let user_form = |jid: Jid| {
+        use crate::model::jid::{JidKind, Server};
+        if jid.kind == JidKind::AgentDevice
+            && jid.agent == 0
+            && jid.device == 0
+            && matches!(jid.server, Server::User | Server::Lid)
+        {
+            jid.to_non_ad()
+        } else {
+            jid
+        }
+    };
+    let from = user_form(super::receipts::network_jid(incoming, "from")?);
     let kind = super::receipts::receipt_kind(incoming)?;
     let id = incoming.get_attr("id")?.as_text()?;
     if id.is_empty() || id.len() > 128 {
@@ -714,7 +727,7 @@ fn receipt_ack(incoming: &Node) -> Option<Node> {
         ack = ack.attr("type", kind);
     }
     if let Some(participant) = super::receipts::network_jid(incoming, "participant") {
-        ack = ack.attr("participant", participant);
+        ack = ack.attr("participant", user_form(participant));
     }
     if let Some(recipient) = super::receipts::recipient(incoming) {
         ack = ack.attr("recipient", recipient);
@@ -1011,6 +1024,49 @@ mod tests {
         // A type this client does not process is preserved, not acknowledged.
         let retry = group_receipt.attr("type", "retry");
         assert!(received_confirmation(&retry).is_none());
+    }
+
+    #[test]
+    fn binary_zero_primary_receipt_ack_uses_user_pairs_without_changing_capture() {
+        let wire = b"\x00\xf8\x07\xfc\x07receipt\xfc\x04from\xf7\x01\x00\xfc\x06100001\xfc\x02id\xfc\x0aACK-ZERO-1\xfc\x0bparticipant\xf7\x00\x00\xfc\x0b15555550100";
+        let decode = |wire: &[u8]| {
+            Decoder::new(
+                &wire[1..],
+                TokenDictionary::comparison_2_26_37_71(),
+                &Limits::default(),
+            )
+            .decode_node()
+            .unwrap()
+        };
+        let node = decode(wire);
+        let before = node.clone();
+        for name in ["from", "participant"] {
+            assert_eq!(
+                node.get_attr(name).unwrap().as_jid().unwrap().kind,
+                crate::model::jid::JidKind::AgentDevice
+            );
+        }
+        let ack = received_confirmation(&node).unwrap();
+        assert_eq!(node, before);
+        assert_eq!(ack.get_attr("id").unwrap().as_text(), Some("ACK-ZERO-1"));
+        assert_eq!(ack.get_attr("class").unwrap().as_text(), Some("receipt"));
+        for name in ["to", "participant"] {
+            let jid = ack.get_attr(name).unwrap().as_jid().unwrap();
+            assert_eq!(jid.kind, crate::model::jid::JidKind::Plain, "{name}");
+            assert_eq!((jid.agent, jid.device), (0, 0));
+        }
+        let output = Encoder::new(TokenDictionary::comparison_2_26_37_71())
+            .encode(&ack)
+            .unwrap();
+        assert_eq!(decode(&output), ack);
+        assert_eq!(
+            ack.get_attr("to").unwrap().as_jid().unwrap(),
+            &Jid::parse("100001@lid").unwrap()
+        );
+        assert_eq!(
+            ack.get_attr("participant").unwrap().as_jid().unwrap(),
+            &Jid::parse("15555550100@s.whatsapp.net").unwrap()
+        );
     }
 
     #[test]

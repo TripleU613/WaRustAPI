@@ -1,3 +1,10 @@
+2026-10-11 — **Implemented/offline:** receipt ACK `to`/`participant` now use
+JID_PAIR for decoded binary zero-device PN/LID users. Complete writer override
+censuses distinguish these users from primary DeviceLid objects, which may still
+require AD. Input capture, nonzero device paths and the global encoder remain
+intact. Hosted/text-zero/JNI class fidelity and live acceptance remain open.
+[Writer census, runtime correction and reproduction](docs/protocol/receipt-primary-ack.md).
+
 2026-10-11 — **Implemented/offline:** APK AD JID decoding now uses LID/hosted
 flag bits instead of inventing an agent from other flag values. The encoder
 refuses nonzero agents in AD fields. The actual Java reader omits a zero device
