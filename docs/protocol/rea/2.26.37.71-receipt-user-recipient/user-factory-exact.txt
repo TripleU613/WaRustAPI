@@ -1,0 +1,76 @@
+
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# class: LX/0D2;
+# extends: Ljava/lang/Object;
+
+.method public A02(LLL)  # .registers 3
+    # full signature: LX/0D2;->A02(Ljava/lang/String;Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/UserJid;
+    0000..0006  invoke-virtual  {v2}, Ljava/lang/String;->hashCode()I
+    0006..0008  move-result  v0
+    0008..000e  sparse-switch  v0, payload@0x100, cases=[-2070199035:@0xda, -1673355044:@0x9c, -1211484089:@0x96, -1102975408:@0x80, -605206432:@0x64, 97735:@0x48, 107143:@0x42, 1958063037:@0x26], default@0xe
+    000e..0012  sget-object  v0, Lcom/whatsapp/infra/core/jid/Jid;->Companion:LX/0D1;
+    0012..0018  invoke-static  {v1, v2}, LX/0D1;->A01(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0018..001a  move-result-object  v1
+    001a..001e  new-instance  v0, LX/08j;
+    001e..0024  invoke-direct  {v0, v1}, LX/08j;-><init>(Ljava/lang/String;)V
+    0024..0026  throw  v0
+    0026..002a  const-string  v0, "interop"
+    002a..0030  invoke-virtual  {v2, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0030..0032  move-result  v0
+    0032..0036  if-eqz  v0, -0x12
+    0036..003a  new-instance  v0, LX/9Lm;
+    003a..0040  invoke-direct  {v0, v1}, LX/9Lm;-><init>(Ljava/lang/String;)V
+    0040..0042  return-object  v0
+    0042..0046  const-string  v0, "lid"
+    0046..0048  goto  +0x11
+    0048..004c  const-string  v0, "bot"
+    004c..0052  invoke-virtual  {v2, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0052..0054  move-result  v0
+    0054..0058  if-eqz  v0, -0x23
+    0058..005c  new-instance  v0, LX/0hh;
+    005c..0062  invoke-direct  {v0, v1}, LX/0hh;-><init>(Ljava/lang/String;)V
+    0062..0064  return-object  v0
+    0064..0068  const-string  v0, "hosted.lid"
+    0068..006e  invoke-virtual  {v2, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    006e..0070  move-result  v0
+    0070..0074  if-eqz  v0, -0x31
+    0074..0078  new-instance  v0, LX/0ZY;
+    0078..007e  invoke-direct  {v0, v1}, LX/0ZY;-><init>(Ljava/lang/String;)V
+    007e..0080  return-object  v0
+    0080..0084  const-string  v0, "lid_me"
+    0084..008a  invoke-virtual  {v2, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    008a..008c  move-result  v0
+    008c..0090  if-eqz  v0, -0x3f
+    0090..0094  sget-object  v0, LX/1xv;->A00:LX/1xv;
+    0094..0096  return-object  v0
+    0096..009a  const-string  v0, "hosted"
+    009a..009c  goto  +0x4
+    009c..00a2  const-string/jumbo  v0, "s.whatsapp.net"
+    00a2..00a8  invoke-virtual  {v2, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    00a8..00aa  move-result  v0
+    00aa..00ae  if-eqz  v0, -0x4e
+    00ae..00b2  const-string  v0, "Server"
+    00b2..00b8  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    00b8..00ba  move-result  v0
+    00ba..00be  if-nez  v0, +0x1f
+    00be..00c2  const-string  v0, "0"
+    00c2..00c8  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    00c8..00ca  move-result  v0
+    00ca..00ce  if-nez  v0, +0x14
+    00ce..00d2  new-instance  v0, Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+    00d2..00d8  invoke-direct  {v0, v1}, Lcom/whatsapp/infra/core/jid/PhoneUserJid;-><init>(Ljava/lang/String;)V
+    00d8..00da  return-object  v0
+    00da..00e0  const-string/jumbo  v0, "status_me"
+    00e0..00e6  invoke-virtual  {v2, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    00e6..00e8  move-result  v0
+    00e8..00ec  if-eqz  v0, -0x6d
+    00ec..00f0  sget-object  v0, LX/0DR;->A00:LX/0DR;
+    00f0..00f2  return-object  v0
+    00f2..00f6  sget-object  v0, LX/8l6;->A00:LX/8l6;
+    00f6..00f8  return-object  v0
+    00f8..00fc  sget-object  v0, LX/Blj;->A00:LX/Blj;
+    00fc..00fe  return-object  v0
+    00fe..0100  nop
+    0100..0144  sparse-switch-payload  size=8
+    # exception table: 0 try range(s)
+.end method

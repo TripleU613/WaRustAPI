@@ -207,7 +207,7 @@ pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
 }
 
 pub(super) fn record_in(tx: &mut WriteTx<'_>, node: &Node) -> Result<usize> {
-    if node.description != "receipt" || super::receipts::network_jid(node, "recipient").is_some() {
+    if node.description != "receipt" || super::receipts::recipient(node).is_some() {
         return Ok(0);
     }
     let Some(kind) = receipt_kind(node) else {
@@ -883,13 +883,21 @@ mod tests {
         let local = queued(&store, "optional-group", std::slice::from_ref(&target));
         let outbox = Outbox::new("group-fixture", Limits::default());
         let before = store.read(|tx| outbox.get(tx, local)).unwrap().unwrap();
-        for (kind, fact_kind) in [
-            ("delivery", DeliveryFactKind::Delivered),
-            ("read", DeliveryFactKind::Read),
-            ("played", DeliveryFactKind::Played),
+        for (kind, fact_kind, recipient) in [
+            (
+                "delivery",
+                DeliveryFactKind::Delivered,
+                "15555550100@unknown.example",
+            ),
+            ("read", DeliveryFactKind::Read, "120363000000000001@g.us"),
+            (
+                "played",
+                DeliveryFactKind::Played,
+                "15555550100:2@s.whatsapp.net",
+            ),
         ] {
-            let node = receipt("optional-group", &target.to_string(), kind)
-                .attr("recipient", "15555550100@unknown.example");
+            let node =
+                receipt("optional-group", &target.to_string(), kind).attr("recipient", recipient);
             assert_eq!(record(&store, &node).unwrap(), 1);
             let head = store.journal_head().unwrap();
             assert_eq!(record(&store, &node).unwrap(), 0);

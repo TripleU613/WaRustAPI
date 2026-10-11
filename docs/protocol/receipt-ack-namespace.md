@@ -1,5 +1,10 @@
 # Receipt ACK type and namespace admission
 
+2026-10-11 follow-up: [recipient class admission](receipt-user-recipient.md)
+now additionally requires the supported UserJid class domain for recipient.
+Recognized non-user/device recipients omit that ACK field; generic participant
+admission stays separate.
+
 2026-10-11. **Implemented/offline**, APK **2.26.37.71**, SHA-256
 `1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
 Incoming supported receipt ACKs now reuse the strict receipt-kind getter and the

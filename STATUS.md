@@ -1,3 +1,11 @@
+2026-10-11 — **Implemented/offline:** receipt recipient admission now follows
+UserJid rather than generic Jid. Recognized group/status/device recipients are
+omitted from ACKs and no longer hide matching direct/group delivery/read/played
+facts. Generic participant routing and original chat/device/mapping guards remain
+separate. Full special grammar and self-status handling remain unfinished; no
+live request or account-state migration.
+[Native class evidence, runtime and checks](docs/protocol/receipt-user-recipient.md).
+
 2026-10-11 — **Confirmed static / documentation correction:** incoming status-17
 self-read submission and common state pools are now separated by exact branch
 targets. Failed A09 eligibility reaches common state processing; qualifying

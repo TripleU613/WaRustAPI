@@ -704,6 +704,26 @@ pub(super) fn network_jid(node: &Node, name: &str) -> Option<Jid> {
     Some(value)
 }
 
+pub(super) fn recipient(node: &Node) -> Option<Jid> {
+    // Text :0 still constructs DeviceJid; local parsing loses that class distinction.
+    if node.get_attr("recipient")?.as_text().is_some_and(|text| {
+        text.rsplit_once('@')
+            .is_some_and(|(user, _)| user.contains(':'))
+    }) {
+        return None;
+    }
+    let value = network_jid(node, "recipient")?;
+    // shortcut: shipped UserJid namespaces/encoding, extend with special JID grammar.
+    (value.kind == crate::model::jid::JidKind::Plain
+        && value.agent == 0
+        && value.device == 0
+        && !value.user.is_empty()
+        && (matches!(value.server, Server::User | Server::Lid | Server::Hosted | Server::HostedLid | Server::Interop)
+            || matches!(&value.server, Server::Other(server) if matches!(server.as_str(), "bot" | "status_me" | "lid_me")))
+        && !(value.server == Server::User && value.user == "gdpr"))
+    .then_some(value)
+}
+
 pub(super) fn ids(node: &Node) -> Result<Vec<String>> {
     let mut ids = std::collections::BTreeSet::new();
     let mut insert = |v: Option<&str>| -> Result<()> {
@@ -756,7 +776,7 @@ pub(super) fn server_timestamp(node: &Node) -> Option<crate::model::time::Timest
 /// Persist supported direct receipt facts, matching sends by peer AND wire ID.
 /// Group participant facts use group_receipts; unsupported/self routes stay raw.
 pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
-    if node.description != "receipt" || network_jid(node, "recipient").is_some() {
+    if node.description != "receipt" || recipient(node).is_some() {
         return Ok(0);
     }
     if let Some(participants) = node
@@ -890,7 +910,7 @@ fn record_in(tx: &mut crate::store::WriteTx<'_>, node: &Node) -> Result<usize> {
         return super::group_receipts::record_in(tx, node);
     }
 
-    if node.description != "receipt" || network_jid(node, "recipient").is_some() {
+    if node.description != "receipt" || recipient(node).is_some() {
         return Ok(0);
     }
     let Some(kind) = receipt_kind(node) else {
@@ -3197,7 +3217,22 @@ mod tests {
                     "lid",
                     "@s.whatsapp.net",
                     "15555550100@c.us",
-                ] {
+                ]
+                .into_iter()
+                .chain(
+                    (name == "recipient")
+                        .then_some([
+                            "120363000000000001@g.us",
+                            "status@broadcast",
+                            "123@newsletter",
+                            "s.whatsapp.net",
+                            "gdpr@s.whatsapp.net",
+                            "15555550100:2@s.whatsapp.net",
+                            "100001:0@lid",
+                        ])
+                        .into_iter()
+                        .flatten(),
+                ) {
                     for (kind, fact_kind) in [
                         ("delivery", DeliveryFactKind::Delivered),
                         ("read", DeliveryFactKind::Read),

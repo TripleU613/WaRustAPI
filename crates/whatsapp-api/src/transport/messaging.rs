@@ -716,7 +716,7 @@ fn receipt_ack(incoming: &Node) -> Option<Node> {
     if let Some(participant) = super::receipts::network_jid(incoming, "participant") {
         ack = ack.attr("participant", participant);
     }
-    if let Some(recipient) = super::receipts::network_jid(incoming, "recipient") {
+    if let Some(recipient) = super::receipts::recipient(incoming) {
         ack = ack.attr("recipient", recipient);
     }
     if let Some(edit) = incoming
@@ -1011,6 +1011,82 @@ mod tests {
         // A type this client does not process is preserved, not acknowledged.
         let retry = group_receipt.attr("type", "retry");
         assert!(received_confirmation(&retry).is_none());
+    }
+
+    #[test]
+    fn receipt_ack_requires_user_recipient_but_keeps_generic_participant() {
+        let base = Node::new("receipt")
+            .attr("from", "15555550100@s.whatsapp.net")
+            .attr("id", "TYPED-RECIPIENT");
+        for recipient in [
+            "120363000000000001@g.us",
+            "status@broadcast",
+            "123@newsletter",
+            "s.whatsapp.net",
+            "123@call",
+            "123@temp",
+            "123@interop.g.us",
+            "gdpr@s.whatsapp.net",
+            "15555550100:2@s.whatsapp.net",
+            "100001:0@lid",
+            "15555550100:2@hosted",
+            "100001:2@hosted.lid",
+        ] {
+            let node = base
+                .clone()
+                .attr("recipient", recipient)
+                .attr("participant", recipient);
+            let wire = Encoder::new(TokenDictionary::comparison_2_26_37_71())
+                .encode(&node)
+                .unwrap();
+            let node = Decoder::new(
+                &wire[1..],
+                TokenDictionary::comparison_2_26_37_71(),
+                &Limits::default(),
+            )
+            .decode_node()
+            .unwrap();
+            let ack = received_confirmation(&node).unwrap();
+            assert!(ack.get_attr("recipient").is_none(), "{recipient}");
+            assert!(ack.get_attr("participant").is_some(), "{recipient}");
+        }
+        for recipient in [
+            "15555550100@s.whatsapp.net",
+            "100001@lid",
+            "15555550100@hosted",
+            "100001@hosted.lid",
+            "123@bot",
+            "123@interop",
+        ] {
+            let node = base.clone().attr("recipient", recipient);
+            assert!(
+                received_confirmation(&node)
+                    .unwrap()
+                    .get_attr("recipient")
+                    .is_some(),
+                "{recipient}"
+            );
+        }
+        let node = base.attr(
+            "recipient",
+            Jid::new_ad("100001", 0, 0, crate::model::jid::Server::Lid).unwrap(),
+        );
+        let wire = Encoder::new(TokenDictionary::comparison_2_26_37_71())
+            .encode(&node)
+            .unwrap();
+        let node = Decoder::new(
+            &wire[1..],
+            TokenDictionary::comparison_2_26_37_71(),
+            &Limits::default(),
+        )
+        .decode_node()
+        .unwrap();
+        assert!(
+            received_confirmation(&node)
+                .unwrap()
+                .get_attr("recipient")
+                .is_none()
+        );
     }
 
     #[test]

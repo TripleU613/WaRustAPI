@@ -1664,10 +1664,12 @@ mod tests {
             );
             assert_eq!(store.journal_head().unwrap(), head);
         }
-        fake.deliver(base).await;
+        fake.deliver(base.attr("recipient", "120363000000000001@g.us"))
+            .await;
         let (ack, reply) = fake.written().await;
         assert_eq!(ack.description, "ack");
         assert!(ack.get_attr("type").is_none());
+        assert!(ack.get_attr("recipient").is_none());
         reply.send(Ok(())).unwrap();
         fake.stop_cleanly().await;
     }

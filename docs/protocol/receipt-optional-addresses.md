@@ -1,5 +1,10 @@
 # Optional receipt addresses and fact projection
 
+2026-10-11 follow-up: [typed recipient admission](receipt-user-recipient.md)
+distinguishes UserJid recipient from generic participant. Recognized non-user
+and device recipients also follow the native null path; original target guards
+and generic participant handling remain separate.
+
 2026-10-11, **implemented/offline**, APK **2.26.37.71**, SHA-256
 `1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
 Supported direct/group receipt facts now use the same nullable namespace

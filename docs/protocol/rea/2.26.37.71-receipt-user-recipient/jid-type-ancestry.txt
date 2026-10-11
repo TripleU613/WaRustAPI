@@ -1,0 +1,299 @@
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Declared overrides: Lcom/whatsapp/infra/core/jid/Jid;->getType()I
+# Coverage: 101453 APK classes; superclass ancestry only; external/runtime/interface dispatch unverified
+# ancestry: LX/0DO; -> Lcom/whatsapp/infra/core/jid/DeviceJid; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: LX/0DR; -> Lcom/whatsapp/infra/core/jid/UserJid; -> LX/0Cy; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: LX/0ZY; -> LX/0ZX; -> Lcom/whatsapp/infra/core/jid/UserJid; -> LX/0Cy; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: LX/0e1; -> LX/0e0; -> Lcom/whatsapp/infra/core/jid/DeviceJid; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: LX/0hh; -> LX/0ZX; -> Lcom/whatsapp/infra/core/jid/UserJid; -> LX/0Cy; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: LX/1S7; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: LX/1SK; -> LX/0e0; -> Lcom/whatsapp/infra/core/jid/DeviceJid; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: LX/1bn; -> Lcom/whatsapp/infra/core/jid/GroupJid; -> LX/0c3; -> LX/0Cy; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: LX/1cj; -> LX/0Cy; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: LX/1xv; -> Lcom/whatsapp/infra/core/jid/UserJid; -> LX/0Cy; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: LX/8l6; -> Lcom/whatsapp/infra/core/jid/UserJid; -> LX/0Cy; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: LX/8oR; -> LX/9Lq; -> LX/0c3; -> LX/0Cy; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: LX/9Lm; -> LX/0ZX; -> Lcom/whatsapp/infra/core/jid/UserJid; -> LX/0Cy; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: LX/9Ln; -> LX/9Lq; -> LX/0c3; -> LX/0Cy; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: LX/9Lo; -> Lcom/whatsapp/infra/core/jid/GroupJid; -> LX/0c3; -> LX/0Cy; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: LX/9Lp; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: LX/Ble; -> LX/0e0; -> Lcom/whatsapp/infra/core/jid/DeviceJid; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: LX/Blf; -> LX/9Lq; -> LX/0c3; -> LX/0Cy; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: LX/Blg; -> Lcom/whatsapp/infra/core/jid/DeviceJid; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: LX/Blh; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: LX/Bli; -> LX/0e1; -> LX/0e0; -> Lcom/whatsapp/infra/core/jid/DeviceJid; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: LX/Blj; -> Lcom/whatsapp/infra/core/jid/UserJid; -> LX/0Cy; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: LX/Gyk; -> LX/0Cy; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: LX/Gyl; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: LX/Gym; -> LX/1bn; -> Lcom/whatsapp/infra/core/jid/GroupJid; -> LX/0c3; -> LX/0Cy; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: Lcom/whatsapp/infra/core/jid/PhoneUserJid; -> Lcom/whatsapp/infra/core/jid/UserJid; -> LX/0Cy; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+
+# class: LX/0DO;
+# extends: Lcom/whatsapp/infra/core/jid/DeviceJid;
+
+.method public getType(I)  # .registers 2
+    # full signature: LX/0DO;->getType()I
+    0000..0004  const/16  v0, #0x11
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/0DR;
+# extends: Lcom/whatsapp/infra/core/jid/UserJid;
+
+.method public getType(I)  # .registers 2
+    # full signature: LX/0DR;->getType()I
+    0000..0004  const/16  v0, #0xb
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/0ZY;
+# extends: LX/0ZX;
+
+.method public getType(I)  # .registers 2
+    # full signature: LX/0ZY;->getType()I
+    0000..0004  const/16  v0, #0x12
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/0e1;
+# extends: LX/0e0;
+
+.method public getType(I)  # .registers 2
+    # full signature: LX/0e1;->getType()I
+    0000..0004  const/16  v0, #0x13
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/0hh;
+# extends: LX/0ZX;
+
+.method public getType(I)  # .registers 2
+    # full signature: LX/0hh;->getType()I
+    0000..0004  const/16  v0, #0x1a
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/1S7;
+# extends: Lcom/whatsapp/infra/core/jid/Jid;
+
+.method public getType(I)  # .registers 2
+    # full signature: LX/1S7;->getType()I
+    0000..0004  const/16  v0, #0xd
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/1SK;
+# extends: LX/0e0;
+
+.method public getType(I)  # .registers 2
+    # full signature: LX/1SK;->getType()I
+    0000..0004  const/16  v0, #0x17
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/1bn;
+# extends: Lcom/whatsapp/infra/core/jid/GroupJid;
+
+.method public getType(I)  # .registers 2
+    # full signature: LX/1bn;->getType()I
+    0000..0002  const/4  v0, #0x1
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/1cj;
+# extends: LX/0Cy;
+
+.method public getType(I)  # .registers 2
+    # full signature: LX/1cj;->getType()I
+    0000..0004  const/16  v0, #0x15
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/1xv;
+# extends: Lcom/whatsapp/infra/core/jid/UserJid;
+
+.method public getType(I)  # .registers 2
+    # full signature: LX/1xv;->getType()I
+    0000..0004  const/16  v0, #0xb
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/8l6;
+# extends: Lcom/whatsapp/infra/core/jid/UserJid;
+
+.method public getType(I)  # .registers 2
+    # full signature: LX/8l6;->getType()I
+    0000..0002  const/4  v0, #0x7
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/8oR;
+# extends: LX/9Lq;
+
+.method public getType(I)  # .registers 2
+    # full signature: LX/8oR;->getType()I
+    0000..0002  const/4  v0, #0x5
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/9Lm;
+# extends: LX/0ZX;
+
+.method public getType(I)  # .registers 2
+    # full signature: LX/9Lm;->getType()I
+    0000..0004  const/16  v0, #0x16
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/9Ln;
+# extends: LX/9Lq;
+
+.method public getType(I)  # .registers 2
+    # full signature: LX/9Ln;->getType()I
+    0000..0002  const/4  v0, #0x3
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/9Lo;
+# extends: Lcom/whatsapp/infra/core/jid/GroupJid;
+
+.method public getType(I)  # .registers 2
+    # full signature: LX/9Lo;->getType()I
+    0000..0002  const/4  v0, #0x2
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/9Lp;
+# extends: Lcom/whatsapp/infra/core/jid/Jid;
+
+.method public getType(I)  # .registers 2
+    # full signature: LX/9Lp;->getType()I
+    0000..0004  const/16  v0, #0x10
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/Ble;
+# extends: LX/0e0;
+
+.method public getType(I)  # .registers 2
+    # full signature: LX/Ble;->getType()I
+    0000..0004  const/16  v0, #0x1b
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/Blf;
+# extends: LX/9Lq;
+
+.method public getType(I)  # .registers 2
+    # full signature: LX/Blf;->getType()I
+    0000..0002  const/4  v0, #0x6
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/Blg;
+# extends: Lcom/whatsapp/infra/core/jid/DeviceJid;
+
+.method public getType(I)  # .registers 2
+    # full signature: LX/Blg;->getType()I
+    0000..0004  const/16  v0, #0x18
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/Blh;
+# extends: Lcom/whatsapp/infra/core/jid/Jid;
+
+.method public getType(I)  # .registers 2
+    # full signature: LX/Blh;->getType()I
+    0000..0004  const/16  v0, #0xa
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/Bli;
+# extends: LX/0e1;
+
+.method public getType(I)  # .registers 2
+    # full signature: LX/Bli;->getType()I
+    0000..0004  const/16  v0, #0x19
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/Blj;
+# extends: Lcom/whatsapp/infra/core/jid/UserJid;
+
+.method public getType(I)  # .registers 2
+    # full signature: LX/Blj;->getType()I
+    0000..0004  const/16  v0, #0x8
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/Gyk;
+# extends: LX/0Cy;
+
+.method public getType(I)  # .registers 2
+    # full signature: LX/Gyk;->getType()I
+    0000..0004  const/16  v0, #0x9
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/Gyl;
+# extends: Lcom/whatsapp/infra/core/jid/Jid;
+
+.method public getType(I)  # .registers 2
+    # full signature: LX/Gyl;->getType()I
+    0000..0004  const/16  v0, #0x14
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/Gym;
+# extends: LX/1bn;
+
+.method public getType(I)  # .registers 2
+    # full signature: LX/Gym;->getType()I
+    0000..0004  const/16  v0, #0x1c
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: Lcom/whatsapp/infra/core/jid/Jid;
+# extends: Ljava/lang/Object;
+
+.method public getType(I)  # .registers 0
+    # full signature: Lcom/whatsapp/infra/core/jid/Jid;->getType()I
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+# class: Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+# extends: Lcom/whatsapp/infra/core/jid/UserJid;
+
+.method public getType(I)  # .registers 2
+    # full signature: Lcom/whatsapp/infra/core/jid/PhoneUserJid;->getType()I
+    0000..0002  const/4  v0, #0x0
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method
