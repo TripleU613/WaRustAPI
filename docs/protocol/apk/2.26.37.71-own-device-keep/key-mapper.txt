@@ -1,0 +1,85 @@
+# APK-derived structural disassembly: LX/BoQ;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(LLLLLZZ) flags=0x19 registers=13
+  # full signature: LX/BoQ;->A00(LX/0Cy;LX/08Z;LX/1gc;LX/BZa;ZZ)LX/CUq;
+  0000..0006 op=71 invoke-static {v8, v10}, LX/3cA;->A1H(Ljava/lang/Object;Ljava/lang/Object;)V
+  0006..000a op=62 sget-object v1, Lcom/whatsapp/infra/core/jid/UserJid;->Companion:LX/0D8;
+  000a..000e op=54 iget-object v0, v10, LX/BZa;->participant_:Ljava/lang/String;
+  000e..0014 op=6e invoke-virtual {v1, v0}, LX/0D8;->A02(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/UserJid;
+  0014..0016 op=0c move-result-object v3
+  0016..001a op=54 iget-object v4, v10, LX/BZa;->remoteJid_:Ljava/lang/String;
+  001a..001e op=62 sget-object v0, LX/8oR;->A00:LX/8oR;
+  001e..0020 op=12 const/4 v2, #0x0
+  0020..0024 op=38 if-eqz v4, +0x25
+  0024..002a op=6e invoke-virtual {v4}, Ljava/lang/String;->length()I
+  002a..002c op=0a move-result v0
+  002c..0030 op=38 if-eqz v0, +0x1f
+  0030..0036 op=71 invoke-static {v4}, LX/0D1;->A00(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+  0036..0038 op=0c move-result-object v1
+  0038..003c op=20 instance-of v0, v1, LX/8oR;
+  003c..0040 op=38 if-eqz v0, +0x7
+  0040..0044 op=1f check-cast v1, LX/8oR;
+  0044..0048 op=38 if-eqz v1, +0x3
+  0048..004a op=28 goto +0xc
+  004a..004e op=22 new-instance v0, LX/08j;
+  004e..0054 op=70 invoke-direct {v0, v4}, LX/08j;-><init>(Ljava/lang/String;)V
+  0054..0056 op=27 throw v0
+  0056..0058 op=0d move-exception v0
+  0058..005e op=71 invoke-static {v0}, LX/1xf;->A1N(Ljava/lang/Throwable;)LX/0Zd;
+  005e..0060 op=0c move-result-object v1
+  0060..0064 op=20 instance-of v0, v1, LX/0Zd;
+  0064..0068 op=39 if-nez v0, +0x3
+  0068..006a op=07 move-object v2, v1
+  006a..006c op=12 const/4 v5, #0x1
+  006c..0070 op=38 if-eqz v2, +0x49
+  0070..0072 op=12 const/4 v6, #0x1
+  0072..0076 op=62 sget-object v4, LX/8oR;->A00:LX/8oR;
+  0076..007a op=55 iget-boolean v0, v9, LX/1gc;->A02:Z
+  007a..007e op=39 if-nez v0, +0x3e
+  007e..0082 op=54 iget-object v1, v9, LX/1gc;->A00:LX/0Cy;
+  0082..0088 op=71 invoke-static {v1}, LX/0DE;->A0m(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  0088..008a op=0a move-result v0
+  008a..008e op=39 if-nez v0, +0xb
+  008e..0094 op=71 invoke-static {v1}, LX/0DE;->A0i(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  0094..0096 op=0a move-result v0
+  0096..009a op=39 if-nez v0, +0x5
+  009a..009c op=12 const/4 v1, #0x0
+  009c..00a0 op=38 if-eqz v12, +0x3
+  00a0..00a2 op=12 const/4 v1, #0x1
+  00a2..00a6 op=55 iget-boolean v0, v10, LX/BZa;->fromMe_:Z
+  00a6..00a8 op=12 const/4 v2, #0x0
+  00a8..00ac op=38 if-eqz v0, +0x1a
+  00ac..00b0 op=38 if-eqz v6, +0x11
+  00b0..00b4 op=39 if-nez v7, +0x3
+  00b4..00b6 op=07 move-object v7, v3
+  00b6..00b8 op=07 move-object v2, v7
+  00b8..00ba op=12 const/4 v5, #0x0
+  00ba..00c0 op=71 invoke-static {v4, v10, v5}, LX/Ayo;->A0S(LX/0Cy;LX/BZa;Z)LX/1gc;
+  00c0..00c2 op=0c move-result-object v1
+  00c2..00c6 op=22 new-instance v0, LX/CUq;
+  00c6..00cc op=70 invoke-direct {v0, v2, v1}, LX/CUq;-><init>(LX/0Cy;LX/1gc;)V
+  00cc..00ce op=11 return-object v0
+  00ce..00d2 op=38 if-eqz v1, -0xb
+  00d2..00d6 op=38 if-eqz v7, -0xd
+  00d6..00da op=38 if-eqz v3, -0x10
+  00da..00dc op=28 goto -0x13
+  00dc..00e2 op=72 invoke-interface {v8, v3}, LX/08Z;->BO0(LX/0Cy;)Z
+  00e2..00e4 op=0a move-result v0
+  00e4..00e8 op=39 if-nez v0, -0x15
+  00e8..00ec op=39 if-nez v1, +0x5
+  00ec..00f0 op=39 if-nez v11, +0x3
+  00f0..00f2 op=28 goto -0x1b
+  00f2..00f4 op=07 move-object v2, v3
+  00f4..00f6 op=28 goto -0x1e
+  00f6..00fa op=55 iget-boolean v5, v10, LX/BZa;->fromMe_:Z
+  00fa..00fc op=07 move-object v2, v3
+  00fc..00fe op=28 goto -0x21
+  00fe..0100 op=12 const/4 v6, #0x0
+  0100..0104 op=54 iget-object v4, v9, LX/1gc;->A00:LX/0Cy;
+  0104..0106 op=28 goto -0x47
+  # exception table: 1 try range(s)
+  # catch <all> code_units 0018..002b -> 002b
+.end method

@@ -1,3 +1,11 @@
+2026-10-11 — **Implemented/offline:** held own-device sessions synchronize
+ordinary keep/unkeep with original target ownership, authenticated own actor,
+sender timestamp and update ID. Shared keep decode validates the supported full
+parent key; keep and reactions reuse source/parent checks. Signal confirmation,
+reopen deduplication, clearing and continued ratchet use are covered. Native
+permission, physical retention/expiry, conflict ordering and live interoperability
+remain open. [Own-device keep evidence and tests](docs/protocol/own-device-keep.md).
+
 2026-10-11 — **Implemented/offline:** held own-device sessions now synchronize
 legacy disappearing-timer set/off/sync events. Shared decode clamps signed
 nonpositive native duration bits to zero and fixes BW7 device-string/initiated

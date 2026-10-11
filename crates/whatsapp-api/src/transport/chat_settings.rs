@@ -216,6 +216,9 @@ pub struct IncomingKeep {
 pub fn decode_keep(payload: &[u8]) -> Option<IncomingKeep> {
     let keep_in_chat = Envelope::decode(payload).ok()?.keep_in_chat?;
     let key = keep_in_chat.key?;
+    if super::reactions::key_failure(&key).is_some() {
+        return None;
+    }
     let target_id = MessageId::new(key.id?).ok()?;
     let keep = match keep_in_chat.keep_type {
         Some(KEEP_FOR_ALL) => true,
@@ -403,6 +406,35 @@ mod tests {
         ids::{ChatId, DeviceAddress, MessageId},
         message::MessageKey,
     };
+    #[test]
+    fn keep_decode_requires_native_parent_key_shape_without_using_remote_as_authority() {
+        for (remote, expected) in [
+            (None, false),
+            (Some(""), false),
+            (Some("not-a-jid"), false),
+            (Some("s.whatsapp.net"), false),
+            (Some("12345@unknown.invalid"), false),
+            (Some("12345@lid"), true),
+            (Some("15555550100@s.whatsapp.net"), true),
+        ] {
+            let bytes = Envelope {
+                keep_in_chat: Some(KeepInChatMessage {
+                    key: Some(super::super::reactions::Key {
+                        id: Some("TARGET".into()),
+                        remote_jid: remote.map(str::to_owned),
+                        from_me: Some(true),
+                        participant: None,
+                    }),
+                    keep_type: Some(KEEP_FOR_ALL),
+                    timestamp_ms: Some(7),
+                }),
+                ..Default::default()
+            }
+            .encode_to_vec();
+            assert_eq!(decode_keep(&bytes).is_some(), expected, "{remote:?}");
+        }
+    }
+
     #[test]
     fn group_keep_targets_use_descriptor_keys_and_authenticated_sender_context() {
         // Independent BV3 key=1/keepType=2 inside Message field 51.
@@ -706,13 +738,19 @@ mod tests {
     fn keep_timestamp_preserves_wire_presence_zero_and_signed_values() {
         // Independent BZc.51/BV3.1,2,3 fixture: target abc, keep type 1.
         // No timestamp field must not acquire stanza/observation/current time.
-        let prefix = hex::decode("9a03090a051a036162631001").unwrap();
+        let prefix = hex::decode("9a03120a0e0a07323232406c69641a036162631001").unwrap();
         assert_eq!(decode_keep(&prefix).unwrap().sender_timestamp, None);
         for (literal, expected) in [
-            ("9a030b0a051a0361626310011800", 0),
-            ("9a030b0a051a036162631001182a", 42),
-            ("9a03140a051a03616263100118ffffffffffffffffff01", -1),
-            ("9a03130a051a03616263100118ffffffffffffffff7f", i64::MAX),
+            ("9a03140a0e0a07323232406c69641a0361626310011800", 0),
+            ("9a03140a0e0a07323232406c69641a036162631001182a", 42),
+            (
+                "9a031d0a0e0a07323232406c69641a03616263100118ffffffffffffffffff01",
+                -1,
+            ),
+            (
+                "9a031c0a0e0a07323232406c69641a03616263100118ffffffffffffffff7f",
+                i64::MAX,
+            ),
         ] {
             assert_eq!(
                 decode_keep(&hex::decode(literal).unwrap())
@@ -721,7 +759,10 @@ mod tests {
                 Some(crate::model::time::Timestamp(expected))
             );
         }
-        assert!(decode_keep(&hex::decode("9a030b0a051a0361626310011880").unwrap()).is_none());
+        assert!(
+            decode_keep(&hex::decode("9a03140a0e0a07323232406c69641a0361626310011880").unwrap())
+                .is_none()
+        );
     }
     #[test]
     fn validation_rejects_other_chats() {

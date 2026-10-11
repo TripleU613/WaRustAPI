@@ -1,0 +1,144 @@
+{
+  "evidence_id": "ev_523d4e5950c33d7c0c9e5118a0b7280aa6a12c2cbaf201b307810d9e6c01ac2c",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.C7G",
+    "method_name": "A00"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-em3VkV/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"max_heap_bytes\":15695085568,\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "load_apk",
+        "input": {
+          "path": "/tmp/rea-android-em3VkV/target.apk",
+          "threads": 1,
+          "resources": "full"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-em3VkV/target.apk\",\"class_count\":94738,\"raw_class_count\":94738,\"resource_count\":14967,\"load_duration_ms\":17604,\"decompile_timeout_ms\":90000,\"threads\":1,\"code_cache_size\":64,\"resources\":\"full\"}"
+            }
+          ]
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C7G"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false,\"signature\":\"A00(X.BZa): boolean\"}],\"fields\":[],\"field_count\":0,\"full_name\":\"X.C7G\",\"name\":\"C7G\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":1}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C7G",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"mode\":\"java\",\"markers\":[],\"method_name\":\"A00\",\"overload_count\":1,\"body\":\"/* JADX INFO: loaded from: classes7.dex */\\npublic abstract class C7G {\\n    public static final boolean A00(BZa bZa) {\\n        String str;\\n        String str2;\\n        if (bZa !\\u003d null) {\\n            int i \\u003d bZa.bitField0_;\\n            if ((i \\u0026 4) !\\u003d 0 \\u0026\\u0026 (str \\u003d bZa.id_) !\\u003d null \\u0026\\u0026 str.length() !\\u003d 0 \\u0026\\u0026 (i \\u0026 1) !\\u003d 0 \\u0026\\u0026 (str2 \\u003d bZa.remoteJid_) !\\u003d null \\u0026\\u0026 str2.length() !\\u003d 0 \\u0026\\u0026 C1xf.A0k(str2) !\\u003d null) {\\n                return true;\\n            }\\n        }\\n        return false;\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.C7G\",\"full_name\":\"X.C7G.A00\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.C7G",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(X.BZa): boolean",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "/* JADX INFO: loaded from: classes7.dex */\npublic abstract class C7G {\n    public static final boolean A00(BZa bZa) {\n        String str;\n        String str2;\n        if (bZa != null) {\n            int i = bZa.bitField0_;\n            if ((i & 4) != 0 && (str = bZa.id_) != null && str.length() != 0 && (i & 1) != 0 && (str2 = bZa.remoteJid_) != null && str2.length() != 0 && C1xf.A0k(str2) != null) {\n                return true;\n            }\n        }\n        return false;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

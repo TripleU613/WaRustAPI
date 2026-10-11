@@ -115,6 +115,8 @@ pub(super) fn payload(payload: &[u8], chat: &Jid) -> Option<Zeroizing<Vec<u8>>> 
         reaction: Option<Vec<u8>>,
         #[prost(bytes = "vec", optional, tag = "50")]
         vote: Option<Vec<u8>>,
+        #[prost(bytes = "vec", optional, tag = "51")]
+        keep: Option<Vec<u8>>,
         #[prost(bytes = "vec", optional, tag = "64")]
         poll: Option<Vec<u8>>,
         #[prost(bytes = "vec", optional, tag = "35")]
@@ -146,10 +148,12 @@ pub(super) fn payload(payload: &[u8], chat: &Jid) -> Option<Zeroizing<Vec<u8>>> 
     let inner = Zeroizing::new(sent.message?);
     let fields = crate::signal::direct::payload_fields(&inner).ok()?;
     // shortcut: other control effects and view-once synchronization need their separate native lifecycle.
-    if fields
-        .iter()
-        .any(|f| !matches!(f, 1 | 3 | 6 | 7 | 8 | 9 | 12 | 26 | 35 | 46 | 50 | 64 | 66))
-        || fields.iter().filter(|&&f| f != 35).count() != 1
+    if fields.iter().any(|f| {
+        !matches!(
+            f,
+            1 | 3 | 6 | 7 | 8 | 9 | 12 | 26 | 35 | 46 | 50 | 51 | 64 | 66
+        )
+    }) || fields.iter().filter(|&&f| f != 35).count() != 1
     {
         return None;
     }
@@ -248,7 +252,7 @@ pub(super) fn record_in(
                 continue;
             };
             if crate::signal::direct::payload_fields(&plain)
-                .is_ok_and(|fields| fields.iter().any(|f| matches!(f, 12 | 46 | 50)))
+                .is_ok_and(|fields| fields.iter().any(|f| matches!(f, 12 | 46 | 50 | 51)))
             {
                 continue;
             }

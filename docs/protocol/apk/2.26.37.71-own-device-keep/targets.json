@@ -1,0 +1,122 @@
+{
+  "keep-descriptor": {
+    "class": "LX/BV3;",
+    "file": "keep-descriptor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "dynamicMethod",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/chat_settings.rs",
+      "crates/whatsapp-api/src/transport/own_device.rs",
+      "crates/whatsapp-api/src/transport/inbox_events.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
+  "keep-enum": {
+    "class": "LX/C2L;",
+    "file": "keep-enum.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<clinit>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/chat_settings.rs",
+      "crates/whatsapp-api/src/transport/own_device.rs",
+      "crates/whatsapp-api/src/transport/inbox_events.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
+  "keep-receiver": {
+    "class": "LX/D9L;",
+    "file": "keep-receiver.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/chat_settings.rs",
+      "crates/whatsapp-api/src/transport/own_device.rs",
+      "crates/whatsapp-api/src/transport/inbox_events.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
+  "key-constructor": {
+    "class": "LX/Ayo;",
+    "file": "key-constructor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0S",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/chat_settings.rs",
+      "crates/whatsapp-api/src/transport/own_device.rs",
+      "crates/whatsapp-api/src/transport/inbox_events.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
+  "key-mapper": {
+    "class": "LX/BoQ;",
+    "file": "key-mapper.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/chat_settings.rs",
+      "crates/whatsapp-api/src/transport/own_device.rs",
+      "crates/whatsapp-api/src/transport/inbox_events.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
+  "key-validator": {
+    "class": "LX/C7G;",
+    "file": "key-validator.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/chat_settings.rs",
+      "crates/whatsapp-api/src/transport/own_device.rs",
+      "crates/whatsapp-api/src/transport/inbox_events.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
+  "message-descriptor": {
+    "class": "LX/BZc;",
+    "file": "message-descriptor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "dynamicMethod",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/chat_settings.rs",
+      "crates/whatsapp-api/src/transport/own_device.rs",
+      "crates/whatsapp-api/src/transport/inbox_events.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
+  "unwrap-with-context": {
+    "class": "LX/CjY;",
+    "file": "unwrap-with-context.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/chat_settings.rs",
+      "crates/whatsapp-api/src/transport/own_device.rs",
+      "crates/whatsapp-api/src/transport/inbox_events.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  }
+}
