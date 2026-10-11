@@ -1,3 +1,14 @@
+2026-10-10 — **Implemented/read-only:** identity-refresh inspection now reports
+selected identity_auth version, certificate count and byte-body presence with
+verification explicitly unported. Classic signed-prekey validity is separate;
+metadata never authorizes adoption. Encrypted-store tests cover signed BMP-int
+parsing/defaults, malformed/empty bodies, ignored extensions, redaction and
+unchanged tables/journal across reopening. Complete REA verifier/primitive
+Evidence and exact candidate/parser/field-reference dumps are retained. Native
+X.509 roots/chain policy, runtime property 20107, verifier effects and actual
+identity-auth signature validation remain unfinished. No new live request.
+[Identity-auth evidence and inspection](protocol/identity-auth.md).
+
 2026-10-10 — **Implemented/offline:** ordinary receipt list selection now matches
 Cmk.A03: only a sole list child expands message IDs. A list beside business
 metadata, another list or unrelated children selects only root ID. Previously

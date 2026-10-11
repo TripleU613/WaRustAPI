@@ -1,0 +1,210 @@
+
+# class: LX/Cai;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLLLLLLBZZ)  # .registers 13
+    # full signature: LX/Cai;-><init>(LX/CWS;LX/B76;LX/CXs;LX/CIv;LX/CIv;LX/CIv;[B[B[BBZZ)V
+    0000..0006  invoke-static  {v7, v8}, LX/1xj;->A1G(Ljava/lang/Object;Ljava/lang/Object;)V
+    0006..000c  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    000c..0010  iput-object  v2, v0, LX/Cai;->A02:LX/B76;
+    0010..0014  iput-object  v7, v0, LX/Cai;->A0A:[B
+    0014..0018  iput-object  v8, v0, LX/Cai;->A0B:[B
+    0018..001c  iput-object  v9, v0, LX/Cai;->A09:[B
+    001c..0020  ??(0x5d)  v10, v0, LX/Cai;->A00:B
+    0020..0024  iput-object  v4, v0, LX/Cai;->A05:LX/CIv;
+    0024..0028  iput-object  v5, v0, LX/Cai;->A06:LX/CIv;
+    0028..002c  iput-object  v3, v0, LX/Cai;->A03:LX/CXs;
+    002c..0030  iput-object  v6, v0, LX/Cai;->A04:LX/CIv;
+    0030..0034  iput-object  v1, v0, LX/Cai;->A01:LX/CWS;
+    0034..0038  iput-boolean  v11, v0, LX/Cai;->A08:Z
+    0038..003c  iput-boolean  v12, v0, LX/Cai;->A07:Z
+    003c..003e  return-void
+.end method
+
+.method public A00(L)  # .registers 2
+    # full signature: LX/Cai;->A00()Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0000..0004  iget-object  v0, v1, LX/Cai;->A02:LX/B76;
+    0004..000a  invoke-static  {v0}, LX/B7H;->A00(LX/B76;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    000a..000c  move-result-object  v0
+    000c..0010  if-eqz  v0, +0x3
+    0010..0012  return-object  v0
+    0012..0018  invoke-static  {}, LX/1xh;->A1B()Ljava/lang/IllegalStateException;
+    0018..001a  move-result-object  v0
+    001a..001c  throw  v0
+.end method
+
+.method public equals(ZL)  # .registers 6
+    # full signature: LX/Cai;->equals(Ljava/lang/Object;)Z
+    0000..0002  const/4  v3, #0x1
+    0002..0006  if-eq  v4, v5, +0x76
+    0006..000a  instance-of  v0, v5, LX/Cai;
+    000a..000c  const/4  v2, #0x0
+    000c..0010  if-eqz  v0, +0x70
+    0010..0014  check-cast  v5, LX/Cai;
+    0014..0018  iget-object  v1, v4, LX/Cai;->A02:LX/B76;
+    0018..001c  iget-object  v0, v5, LX/Cai;->A02:LX/B76;
+    001c..0022  invoke-static  {v1, v0}, LX/00h;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    0022..0024  move-result  v0
+    0024..0028  if-eqz  v0, +0x64
+    0028..002c  iget-object  v1, v4, LX/Cai;->A0A:[B
+    002c..0030  iget-object  v0, v5, LX/Cai;->A0A:[B
+    0030..0036  invoke-static  {v1, v0}, LX/00h;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    0036..0038  move-result  v0
+    0038..003c  if-eqz  v0, +0x5a
+    003c..0040  iget-object  v1, v4, LX/Cai;->A0B:[B
+    0040..0044  iget-object  v0, v5, LX/Cai;->A0B:[B
+    0044..004a  invoke-static  {v1, v0}, LX/00h;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    004a..004c  move-result  v0
+    004c..0050  if-eqz  v0, +0x50
+    0050..0054  iget-object  v1, v4, LX/Cai;->A09:[B
+    0054..0058  iget-object  v0, v5, LX/Cai;->A09:[B
+    0058..005e  invoke-static  {v1, v0}, LX/00h;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    005e..0060  move-result  v0
+    0060..0064  if-eqz  v0, +0x46
+    0064..0068  iget-byte  v1, v4, LX/Cai;->A00:B
+    0068..006c  iget-byte  v0, v5, LX/Cai;->A00:B
+    006c..0070  if-ne  v1, v0, +0x40
+    0070..0074  iget-object  v1, v4, LX/Cai;->A05:LX/CIv;
+    0074..0078  iget-object  v0, v5, LX/Cai;->A05:LX/CIv;
+    0078..007e  invoke-static  {v1, v0}, LX/00h;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    007e..0080  move-result  v0
+    0080..0084  if-eqz  v0, +0x36
+    0084..0088  iget-object  v1, v4, LX/Cai;->A06:LX/CIv;
+    0088..008c  iget-object  v0, v5, LX/Cai;->A06:LX/CIv;
+    008c..0092  invoke-static  {v1, v0}, LX/00h;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    0092..0094  move-result  v0
+    0094..0098  if-eqz  v0, +0x2c
+    0098..009c  iget-object  v1, v4, LX/Cai;->A03:LX/CXs;
+    009c..00a0  iget-object  v0, v5, LX/Cai;->A03:LX/CXs;
+    00a0..00a6  invoke-static  {v1, v0}, LX/00h;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    00a6..00a8  move-result  v0
+    00a8..00ac  if-eqz  v0, +0x22
+    00ac..00b0  iget-object  v1, v4, LX/Cai;->A04:LX/CIv;
+    00b0..00b4  iget-object  v0, v5, LX/Cai;->A04:LX/CIv;
+    00b4..00ba  invoke-static  {v1, v0}, LX/00h;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    00ba..00bc  move-result  v0
+    00bc..00c0  if-eqz  v0, +0x18
+    00c0..00c4  iget-object  v1, v4, LX/Cai;->A01:LX/CWS;
+    00c4..00c8  iget-object  v0, v5, LX/Cai;->A01:LX/CWS;
+    00c8..00ce  invoke-static  {v1, v0}, LX/00h;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    00ce..00d0  move-result  v0
+    00d0..00d4  if-eqz  v0, +0xe
+    00d4..00d8  iget-boolean  v1, v4, LX/Cai;->A08:Z
+    00d8..00dc  iget-boolean  v0, v5, LX/Cai;->A08:Z
+    00dc..00e0  if-ne  v1, v0, +0x8
+    00e0..00e4  iget-boolean  v1, v4, LX/Cai;->A07:Z
+    00e4..00e8  iget-boolean  v0, v5, LX/Cai;->A07:Z
+    00e8..00ec  if-eq  v1, v0, +0x3
+    00ec..00ee  return  v2
+    00ee..00f0  return  v3
+.end method
+
+.method public hashCode(I)  # .registers 3
+    # full signature: LX/Cai;->hashCode()I
+    0000..0004  iget-object  v0, v2, LX/Cai;->A02:LX/B76;
+    0004..000a  invoke-static  {v0}, LX/1xk;->A02(Ljava/lang/Object;)I
+    000a..000c  move-result  v1
+    000c..0010  iget-object  v0, v2, LX/Cai;->A0A:[B
+    0010..0016  invoke-static  {v0, v1}, LX/Aym;->A05([BI)I
+    0016..0018  move-result  v1
+    0018..001c  iget-object  v0, v2, LX/Cai;->A0B:[B
+    001c..0022  invoke-static  {v0, v1}, LX/Aym;->A05([BI)I
+    0022..0024  move-result  v1
+    0024..0028  iget-object  v0, v2, LX/Cai;->A09:[B
+    0028..002e  invoke-static  {v0}, LX/Ayo;->A05([B)I
+    002e..0030  move-result  v0
+    0030..0032  add-int/2addr  v1, v0
+    0032..0036  mul-int/lit8  v1, v1, #0x1f
+    0036..003a  iget-byte  v0, v2, LX/Cai;->A00:B
+    003a..003c  add-int/2addr  v1, v0
+    003c..0040  mul-int/lit8  v1, v1, #0x1f
+    0040..0044  iget-object  v0, v2, LX/Cai;->A05:LX/CIv;
+    0044..004a  invoke-static  {v0}, LX/1YP;->A05(Ljava/lang/Object;)I
+    004a..004c  move-result  v0
+    004c..004e  add-int/2addr  v1, v0
+    004e..0052  mul-int/lit8  v1, v1, #0x1f
+    0052..0056  iget-object  v0, v2, LX/Cai;->A06:LX/CIv;
+    0056..005c  invoke-static  {v0, v1}, LX/1YP;->A07(Ljava/lang/Object;I)I
+    005c..005e  move-result  v1
+    005e..0062  iget-object  v0, v2, LX/Cai;->A03:LX/CXs;
+    0062..0068  invoke-static  {v0}, LX/1YP;->A05(Ljava/lang/Object;)I
+    0068..006a  move-result  v0
+    006a..006c  add-int/2addr  v1, v0
+    006c..0070  mul-int/lit8  v1, v1, #0x1f
+    0070..0074  iget-object  v0, v2, LX/Cai;->A04:LX/CIv;
+    0074..007a  invoke-static  {v0}, LX/1YP;->A05(Ljava/lang/Object;)I
+    007a..007c  move-result  v0
+    007c..007e  add-int/2addr  v1, v0
+    007e..0082  mul-int/lit8  v1, v1, #0x1f
+    0082..0086  iget-object  v0, v2, LX/Cai;->A01:LX/CWS;
+    0086..008c  invoke-static  {v0}, LX/1YP;->A06(Ljava/lang/Object;)I
+    008c..008e  move-result  v0
+    008e..0090  add-int/2addr  v1, v0
+    0090..0094  mul-int/lit8  v1, v1, #0x1f
+    0094..0098  iget-boolean  v0, v2, LX/Cai;->A08:Z
+    0098..009e  invoke-static  {v1, v0}, LX/361;->A01(IZ)I
+    009e..00a0  move-result  v1
+    00a0..00a4  iget-boolean  v0, v2, LX/Cai;->A07:Z
+    00a4..00aa  invoke-static  {v1, v0}, LX/361;->A00(IZ)I
+    00aa..00ac  move-result  v0
+    00ac..00ae  return  v0
+.end method
+
+.method public toString(L)  # .registers 14
+    # full signature: LX/Cai;->toString()Ljava/lang/String;
+    0000..0004  iget-object  v1, v13, LX/Cai;->A02:LX/B76;
+    0004..0008  iget-object  v0, v13, LX/Cai;->A0A:[B
+    0008..000e  invoke-static  {v0}, Ljava/util/Arrays;->toString([B)Ljava/lang/String;
+    000e..0010  move-result-object  v12
+    0010..0014  iget-object  v0, v13, LX/Cai;->A0B:[B
+    0014..001a  invoke-static  {v0}, Ljava/util/Arrays;->toString([B)Ljava/lang/String;
+    001a..001c  move-result-object  v11
+    001c..0020  iget-object  v0, v13, LX/Cai;->A09:[B
+    0020..0026  invoke-static  {v0}, Ljava/util/Arrays;->toString([B)Ljava/lang/String;
+    0026..0028  move-result-object  v10
+    0028..002c  iget-byte  v9, v13, LX/Cai;->A00:B
+    002c..0030  iget-object  v8, v13, LX/Cai;->A05:LX/CIv;
+    0030..0034  iget-object  v7, v13, LX/Cai;->A06:LX/CIv;
+    0034..0038  iget-object  v6, v13, LX/Cai;->A03:LX/CXs;
+    0038..003c  iget-object  v5, v13, LX/Cai;->A04:LX/CIv;
+    003c..0040  iget-object  v4, v13, LX/Cai;->A01:LX/CWS;
+    0040..0044  iget-boolean  v3, v13, LX/Cai;->A08:Z
+    0044..0048  iget-boolean  v2, v13, LX/Cai;->A07:Z
+    0048..004c  const-string  v0, "PreKeyData(signalAddress="
+    004c..0052  invoke-static  {v1, v0}, LX/000;->A07(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0052..0054  move-result-object  v1
+    0054..0058  const-string  v0, ", identity="
+    0058..005e  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    005e..0064  invoke-virtual  {v1, v12}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0064..0068  const-string  v0, ", registration="
+    0068..006e  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    006e..0074  invoke-virtual  {v1, v11}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0074..0078  const-string  v0, ", deviceIdentity="
+    0078..007e  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    007e..0084  invoke-virtual  {v1, v10}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0084..0088  const-string  v0, ", type="
+    0088..008e  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    008e..0094  invoke-virtual  {v1, v9}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0094..0098  const-string  v0, ", preKey="
+    0098..009e  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    009e..00a4  invoke-virtual  {v1, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    00a4..00a8  const-string  v0, ", signedPreKey="
+    00a8..00ae  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00ae..00b4  invoke-virtual  {v1, v7}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    00b4..00b8  const-string  v0, ", identityAuth="
+    00b8..00be  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00be..00c4  invoke-virtual  {v1, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    00c4..00c8  const-string  v0, ", pqPreKey="
+    00c8..00ce  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00ce..00d4  invoke-virtual  {v1, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    00d4..00d8  const-string  v0, ", encryptionAttestationData="
+    00d8..00de  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00de..00e4  invoke-virtual  {v1, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    00e4..00e8  const-string  v0, ", shouldForceE2eeOverride="
+    00e8..00ee  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00ee..00f4  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    00f4..00f8  const-string  v0, ", isPqSessionUpgrade="
+    00f8..00fe  invoke-static  {v0, v1, v2}, LX/1YP;->A0L(Ljava/lang/String;Ljava/lang/StringBuilder;Z)Ljava/lang/String;
+    00fe..0100  move-result-object  v0
+    0100..0102  return-object  v0
+.end method

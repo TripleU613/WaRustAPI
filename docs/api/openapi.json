@@ -4063,7 +4063,8 @@
           "applied",
           "force_override_e2ee_state",
           "companion_same_key_authority",
-          "companion_changed_key_authority"
+          "companion_changed_key_authority",
+          "identity_auth"
         ],
         "properties": {
           "status": {
@@ -4208,6 +4209,17 @@
               "deleted_device"
             ],
             "description": "Local changed-companion directory authority diagnostic. Null for primary, incomplete/invalid-signature replies or when no differing held pin exists. Requires independently pinned primary, current bound device-list baseline, both ADV signatures over the actual directory identity, E2EE/raw-ID baseline and signed Java-long freshness. ready_refresh_pending raises the pending expectation atomically with application, retaining the verified floor and existing device index. ready is not permission to bypass identity policy, original notification guards, unsupported metadata, own identity or exact commit-state checks. First-seen companions, primary/raw-ID replacement and full native admission remain unported. ready_addition_pending means an already pinned companion is absent from retained membership and its full signed ADV passes independent-primary/E2EE/raw-ID/index/newer signed-time admission. If application policy/metadata/original guards and exact transaction state still permit it, membership plus ADV provenance, pending sync and session are committed together. A same key does not bypass ADV parsing while absent. Index collision, 1024-device overflow or explicit pending teardown refuse. No first-seen pin, invented removal state or canonical PN/LID alias is authorized."
+          },
+          "identity_auth": {
+            "description": "Content-free selected-user identity_auth shape, or null when absent/unavailable. The classic prekey signature_valid field does not verify identity_auth certificates or signature. Verification/admission remain unported.",
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/IdentityAuthInspection"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         }
       },
@@ -4320,6 +4332,44 @@
               "null"
             ],
             "description": "Verification of 06 07 plus original body under the fetched type-5 identity, only after recognized types agree; null before verification. Signature alone is not native admission, directory authentication or human verification."
+          }
+        }
+      },
+      "IdentityAuthInspection": {
+        "type": "object",
+        "description": "Read-only selected directory-user identity_auth shape (APK Bot.A03/CXs). No raw certificates, signatures, keys or IDs. X.509 chain validation, EdDSA verification, runtime property 20107 and native policy are unported; presence is not validity.",
+        "required": [
+          "version",
+          "certificate_count",
+          "certificate_bytes_present",
+          "signature_bytes_present",
+          "verification"
+        ],
+        "properties": {
+          "version": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Signed Java-decimal version; missing/invalid/out-of-int32 input reports -1, matching 0Gv.A00 default. Version 1 alone does not imply validity."
+          },
+          "certificate_count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of cert children under selected certs child; other extensions ignored."
+          },
+          "certificate_bytes_present": {
+            "type": "boolean",
+            "description": "A nonempty certificate list where every cert has a byte body. Empty byte bodies count as present and are not validated."
+          },
+          "signature_bytes_present": {
+            "type": "boolean",
+            "description": "Selected signature child has a byte body; even empty bytes are presence, not validity."
+          },
+          "verification": {
+            "type": "string",
+            "enum": [
+              "unported"
+            ],
+            "description": "No certificate or identity-auth signature verification is performed by this shape inspection."
           }
         }
       }
@@ -4741,7 +4791,7 @@
           "Chat Actions"
         ],
         "summary": "Show queued one-shot actions and their outcomes",
-        "description": "Show queued one-shot actions (block list, reports, lookups) and their outcomes (offline, redacted). Includes identity_refresh directory reads queued by authenticated identity notifications. An ok action means a correlated generic result, not verified bundle or adopted identity. Refused/invalid/uncertain reads are retained; offline inspection never transmits a chat or changes a pin/session. For identity_refresh actions only, --show prints a structured redacted snapshot with namespace/device, exact refusal code, signed-bundle validity and current-pin comparison; no raw request, reply, peer address or key is printed. verified_bundle authenticates the fetched signed device key, not adoption or human verification. --show ID --preview-session is an offline cryptographic preview for identity_refresh only. It derives and discards a primary classic same-identity session, retaining held state in the candidate archive without constructing a chat. It never writes a candidate or evaluates native CPB admission. Present attestation/PQ metadata, companions, changed/missing pins and unverified replies do not derive; malformed held state refuses with fixed redacted diagnostics. Unknown native stored attestation state is not assumed NOT_SET or E2EE. Evidence: docs/protocol/session-refresh-preview.md. Newly queued identity_refresh actions now atomically capture original generation, exact pin fingerprint, exact-device authenticated transition marker and nullable primary-user version. --show prints refresh_guard (matches, untracked, pin_changed, transition_changed, primary_version_changed, generation_changed); markers and fingerprints stay private. Duplicate events keep the original baseline; missing historical snapshots remain untracked. Matching guards do not establish CPB admission or commit authority. --preview-session skips derivation for a known stale guard. Evidence: docs/protocol/identity-refresh-guards.md. For supported selected-device identity_refresh replies, --show additionally inspects non_e2ee_attestation: allowed declared account type, BP2 field-1 closed-enum projection, matching type and signature over APK prefix 06 07 plus the original value bytes. Attestation and signed-key validity remain separate from current-pin agreement, refresh guards and native CPB admission. Raw values/signatures and unknown server strings are never printed. Absent, malformed, oversized, mismatched and invalid-signature results are local inspector statuses, not server response codes. Native stored-state/property/override transitions remain unported; even verified attestation is not adoption authority. Evidence: docs/protocol/attestation-verification.md. With transport.identity_changes=apk_authenticated, the actor now applies a correlated verified changed-primary classic identity_refresh reply when its original notification guard still matches. Present non_e2ee_attestation, pqkey or identity_auth metadata and companion candidates and same-key candidates without a selected-user force_override_e2ee_state child remain deferred. The APK CPB plain changed-key branch admits under both main-property values; native stored attestation state/effective properties remain unknown and are not synthesized. Pin, fresh session, encrypted old-state archive, transition invalidation and once-only application marker commit atomically after reply/account/guard/session/own PN-LID rechecks. Startup repairs a cut after settlement without replaying IQs. --show reports applied as a historical fact; pin_matches and refresh_guard describe current state. No chat or identity-notification ACK is created. Evidence: docs/protocol/identity-refresh-application.md. Identity refresh inspection includes nullable force_override_e2ee_state from the correlated selected-user child; presence is separate from signature/admission/guard/application. See docs/protocol/same-key-refresh.md.",
+        "description": "Show queued one-shot actions (block list, reports, lookups) and their outcomes (offline, redacted). Includes identity_refresh directory reads queued by authenticated identity notifications. An ok action means a correlated generic result, not verified bundle or adopted identity. Refused/invalid/uncertain reads are retained; offline inspection never transmits a chat or changes a pin/session. For identity_refresh actions only, --show prints a structured redacted snapshot with namespace/device, exact refusal code, signed-bundle validity and current-pin comparison; no raw request, reply, peer address or key is printed. verified_bundle authenticates the fetched signed device key, not adoption or human verification. --show ID --preview-session is an offline cryptographic preview for identity_refresh only. It derives and discards a primary classic same-identity session, retaining held state in the candidate archive without constructing a chat. It never writes a candidate or evaluates native CPB admission. Present attestation/PQ metadata, companions, changed/missing pins and unverified replies do not derive; malformed held state refuses with fixed redacted diagnostics. Unknown native stored attestation state is not assumed NOT_SET or E2EE. Evidence: docs/protocol/session-refresh-preview.md. Newly queued identity_refresh actions now atomically capture original generation, exact pin fingerprint, exact-device authenticated transition marker and nullable primary-user version. --show prints refresh_guard (matches, untracked, pin_changed, transition_changed, primary_version_changed, generation_changed); markers and fingerprints stay private. Duplicate events keep the original baseline; missing historical snapshots remain untracked. Matching guards do not establish CPB admission or commit authority. --preview-session skips derivation for a known stale guard. Evidence: docs/protocol/identity-refresh-guards.md. For supported selected-device identity_refresh replies, --show additionally inspects non_e2ee_attestation: allowed declared account type, BP2 field-1 closed-enum projection, matching type and signature over APK prefix 06 07 plus the original value bytes. Attestation and signed-key validity remain separate from current-pin agreement, refresh guards and native CPB admission. Raw values/signatures and unknown server strings are never printed. Absent, malformed, oversized, mismatched and invalid-signature results are local inspector statuses, not server response codes. Native stored-state/property/override transitions remain unported; even verified attestation is not adoption authority. Evidence: docs/protocol/attestation-verification.md. With transport.identity_changes=apk_authenticated, the actor now applies a correlated verified changed-primary classic identity_refresh reply when its original notification guard still matches. Present non_e2ee_attestation, pqkey or identity_auth metadata and companion candidates and same-key candidates without a selected-user force_override_e2ee_state child remain deferred. The APK CPB plain changed-key branch admits under both main-property values; native stored attestation state/effective properties remain unknown and are not synthesized. Pin, fresh session, encrypted old-state archive, transition invalidation and once-only application marker commit atomically after reply/account/guard/session/own PN-LID rechecks. Startup repairs a cut after settlement without replaying IQs. --show reports applied as a historical fact; pin_matches and refresh_guard describe current state. No chat or identity-notification ACK is created. Evidence: docs/protocol/identity-refresh-application.md. Identity refresh inspection includes nullable force_override_e2ee_state from the correlated selected-user child; presence is separate from signature/admission/guard/application. See docs/protocol/same-key-refresh.md. Identity refresh inspection now includes nullable identity_auth metadata shape: effective int32 version, certificate count, byte-body presence and explicit unported verification. This reports no raw certificates/signatures and is separate from classic signed-prekey signature_valid; present identity_auth still defers automatic adoption. See docs/protocol/identity-auth.md.",
         "operationId": "listActions",
         "x-cli": "whatsapp-cli actions",
         "x-transport": [

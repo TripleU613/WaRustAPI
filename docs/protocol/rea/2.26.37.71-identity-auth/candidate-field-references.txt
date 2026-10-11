@@ -1,0 +1,14 @@
+classes.dex  LX/14J;->A04(VLI)
+  read opcode 0x54, dex byte offset: 0x7d4e06
+classes7.dex  LX/Cai;-><init>(VLLLLLLLLLBZZ)
+  write opcode 0x5b, dex byte offset: 0x5e1c34
+classes7.dex  LX/Cai;->equals(ZL)
+  read opcode 0x54, dex byte offset: 0x5e1d20
+classes7.dex  LX/Cai;->equals(ZL)
+  read opcode 0x54, dex byte offset: 0x5e1d24
+classes7.dex  LX/Cai;->hashCode(I)
+  read opcode 0x54, dex byte offset: 0x5e1de6
+classes7.dex  LX/Cai;->toString(L)
+  read opcode 0x54, dex byte offset: 0x5e1e7c
+classes7.dex  LX/DLx;->run(V)
+  read opcode 0x54, dex byte offset: 0x7d5f0e

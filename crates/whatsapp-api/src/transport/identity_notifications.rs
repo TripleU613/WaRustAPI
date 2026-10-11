@@ -94,6 +94,49 @@ fn selector(prefix: &str, bytes: &[u8]) -> String {
     format!("{prefix}:{}", hex::encode(Sha256::digest(bytes)))
 }
 
+/// Content-free identity_auth shape from the selected directory user.
+/// This is not X.509 chain or identity signature verification.
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
+pub struct IdentityAuthInspection {
+    /// Bot.A03 / 0Gv.A00: signed int version, default -1 on invalid input.
+    pub version: i32,
+    /// Number of cert children; other extension children are ignored.
+    pub certificate_count: usize,
+    /// Every selected certificate has a byte body; no validity is inferred.
+    pub certificate_bytes_present: bool,
+    /// The signature child has a byte body; no validity is inferred.
+    pub signature_bytes_present: bool,
+    /// Always unported until the native certificate/signature policy is implemented.
+    pub verification: &'static str,
+}
+fn identity_auth_inspection(user: &Node) -> Option<IdentityAuthInspection> {
+    let auth = user.child("identity_auth")?;
+    let certificates: Vec<_> = auth
+        .child("certs")
+        .map(Node::child_nodes)
+        .unwrap_or_default()
+        .iter()
+        .filter(|node| node.description == "cert")
+        .collect();
+    Some(IdentityAuthInspection {
+        version: auth
+            .get_attr("version")
+            .and_then(|v| v.as_text())
+            .and_then(super::mex::java_decimal_long)
+            .and_then(|v| i32::try_from(v).ok())
+            .unwrap_or(-1),
+        certificate_count: certificates.len(),
+        certificate_bytes_present: !certificates.is_empty()
+            && certificates
+                .iter()
+                .all(|node| matches!(node.content, crate::binary::NodeContent::Bytes(_))),
+        signature_bytes_present: auth
+            .child("signature")
+            .is_some_and(|node| matches!(node.content, crate::binary::NodeContent::Bytes(_))),
+        verification: "unported",
+    })
+}
+
 /// Offline diagnosis of a correlated read; contains no peer address or key.
 #[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
 pub struct Inspection {
@@ -113,6 +156,9 @@ pub struct Inspection {
     pub refresh_guard: RefreshGuard,
     /// Selected-device attestation verification; null until a supported bundle.
     pub attestation: Option<AttestationInspection>,
+    /// Selected identity_auth metadata shape, null when absent/unavailable.
+    /// The classic prekey signature_valid field does not verify this signature.
+    pub identity_auth: Option<IdentityAuthInspection>,
     /// Selected user's server-provided child presence; null until a parsed bundle.
     /// This is not a local configuration switch or full native admission.
     pub force_override_e2ee_state: Option<bool>,
@@ -180,6 +226,7 @@ fn inspect_in(tx: &crate::store::ReadTx<'_>, id: &str) -> Result<Option<Inspecti
         pin_matches: None,
         refresh_guard,
         attestation: None,
+        identity_auth: None,
         force_override_e2ee_state: None,
         companion_same_key_authority: None,
         companion_changed_key_authority: None,
@@ -244,6 +291,7 @@ fn inspect_in(tx: &crate::store::ReadTx<'_>, id: &str) -> Result<Option<Inspecti
     let valid = crate::signal::direct::validate_bundle_signature(&bundle).is_ok();
     result.signature_valid = Some(valid);
     if users.len() == 1 {
+        result.identity_auth = identity_auth_inspection(users[0]);
         // APK 37.71 Bot.A03 0370..0384 / 1xi.A1U uses selected-user child presence.
         result.force_override_e2ee_state =
             Some(users[0].child("force_override_e2ee_state").is_some());
@@ -906,6 +954,126 @@ pub(super) mod tests {
             let reopened = open(&path);
             assert_eq!(snapshot(&reopened), before);
             assert_eq!(reopened.journal_head().unwrap(), head);
+        }
+    }
+
+    #[test]
+    fn identity_auth_shape_distinguishes_missing_bodies_and_ignores_extensions() {
+        assert!(identity_auth_inspection(&Node::new("user")).is_none());
+        let inspect_auth =
+            |auth| identity_auth_inspection(&Node::new("user").children(vec![auth])).unwrap();
+        let missing = inspect_auth(Node::new("identity_auth"));
+        assert_eq!(missing.version, -1);
+        assert_eq!(missing.certificate_count, 0);
+        assert!(!missing.signature_bytes_present && !missing.certificate_bytes_present);
+        let malformed = inspect_auth(Node::new("identity_auth").attr("version", " 1").children(
+            vec![
+                Node::new("signature").text("PRIVATE"),
+                Node::new("certs").children(vec![Node::new("cert"), Node::new("ignored")]),
+            ],
+        ));
+        assert_eq!(malformed.version, -1);
+        assert_eq!(malformed.certificate_count, 1);
+        assert!(!malformed.signature_bytes_present && !malformed.certificate_bytes_present);
+        let empty = inspect_auth(
+            Node::new("identity_auth")
+                .attr("version", "1")
+                .children(vec![
+                    Node::new("signature").bytes(vec![]),
+                    Node::new("certs").children(vec![Node::new("cert").bytes(vec![])]),
+                ]),
+        );
+        assert!(empty.signature_bytes_present && empty.certificate_bytes_present);
+        assert_eq!(
+            empty.verification, "unported",
+            "empty bytes are presence, not a valid signature/chain"
+        );
+        let root = Node::new("iq").children(vec![Node::new("identity_auth"), Node::new("user")]);
+        assert!(identity_auth_inspection(root.child("user").unwrap()).is_none());
+    }
+
+    #[test]
+    fn identity_auth_inspection_is_redacted_read_only_and_not_verification() {
+        use crate::binary::NodeContent;
+        for (version, expected) in [("+١", 1), ("2", 2), ("bad", -1), ("2147483648", -1)] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("identity-auth.redb");
+            let store = open(&path);
+            let peer = Jid::parse("222222222222222@lid").unwrap();
+            let identity = install_pin(&store, &peer);
+            let Refresh::Queued(id) =
+                queue(&store, &account(), &notification(&peer.to_string(), "auth")).unwrap()
+            else {
+                panic!("read")
+            };
+            assert!(serde_json::to_value(inspect(&store, &id).unwrap().unwrap()).unwrap()["identity_auth"].is_null());
+            actions::reserve_pending(&store).unwrap();
+            let mut response = reply(&peer, &id, &identity, true);
+            let NodeContent::Children(lists) = &mut response.content else {
+                panic!("lists")
+            };
+            let NodeContent::Children(users) = &mut lists[0].content else {
+                panic!("users")
+            };
+            let NodeContent::Children(fields) = &mut users[0].content else {
+                panic!("fields")
+            };
+            fields.push(
+                Node::new("identity_auth")
+                    .attr("version", version)
+                    .children(vec![
+                        Node::new("signature").bytes(b"PRIVATE-SIGNATURE".to_vec()),
+                        Node::new("certs").children(vec![
+                            Node::new("cert").bytes(b"PRIVATE-CERTIFICATE".to_vec()),
+                            Node::new("ignored").bytes(b"PRIVATE-EXTENSION".to_vec()),
+                        ]),
+                    ]),
+            );
+            actions::record_reply(&store, &response).unwrap();
+            let snapshot = |store: &ProtocolStore| {
+                store
+                    .read(|tx| {
+                        Table::ALL
+                            .iter()
+                            .map(|table| tx.scan_after(*table, 1, None, 512))
+                            .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap()
+            };
+            let before = snapshot(&store);
+            let head = store.journal_head().unwrap();
+            let result = serde_json::to_value(inspect(&store, &id).unwrap().unwrap()).unwrap();
+            assert_eq!(
+                result["identity_auth"],
+                serde_json::json!({
+                    "version":expected, "certificate_count":1,
+                    "certificate_bytes_present":true, "signature_bytes_present":true,
+                    "verification":"unported"
+                })
+            );
+            assert_eq!(
+                result["signature_valid"], true,
+                "this verifies only the classic signed prekey"
+            );
+            let json = serde_json::to_string(&result).unwrap();
+            assert!(!json.contains("PRIVATE") && !json.contains(&peer.user) && !json.contains(&id));
+            assert_eq!(snapshot(&store), before);
+            assert_eq!(store.journal_head().unwrap(), head);
+            drop(store);
+            let store = ProtocolStore::open(OpenOptions {
+                path: path.clone(),
+                account_id: AccountId::new("fixture").unwrap(),
+                create: false,
+                key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                    [9; 32],
+                ))),
+            })
+            .unwrap();
+            assert_eq!(
+                serde_json::to_value(inspect(&store, &id).unwrap().unwrap()).unwrap(),
+                result
+            );
+            assert_eq!(snapshot(&store), before);
         }
     }
 

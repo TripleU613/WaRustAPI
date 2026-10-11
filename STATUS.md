@@ -1,3 +1,22 @@
+2026-10-10 — **Implemented/read-only:** identity-refresh inspection now reports
+selected identity_auth version, certificate count and byte-body presence with
+verification explicitly unported. Classic signed-prekey validity is separate;
+metadata never authorizes adoption. Encrypted-store tests cover signed BMP-int
+parsing/defaults, malformed/empty bodies, ignored extensions, redaction and
+unchanged tables/journal across reopening. Complete REA verifier/primitive
+Evidence and exact candidate/parser/field-reference dumps are retained. Native
+X.509 roots/chain policy, runtime property 20107, verifier effects and actual
+identity-auth signature validation remain unfinished. No new live request.
+[Identity-auth evidence and inspection](docs/protocol/identity-auth.md).
+
+Validation: 896 workspace/all-feature tests, strict Clippy, warnings-denied
+Rustdoc, default CLI/API-symbol tests, CLI-reference regeneration and rebuilt
+experimental CLI passed. Offline CLI inspection of one saved refresh reports
+the new field as null; before/after store summaries are equal. No qualifying
+identity-auth sample or live verification is claimed. The default build retains
+the existing unused clock::observe_login warning. Repository hygiene passed
+2,537 local links and 128 checksum-verified APK bundles / 27,307,426 bytes.
+
 2026-10-10 — **Implemented/offline:** ordinary receipt list selection now matches
 Cmk.A03: only a sole list child expands message IDs. A list beside business
 metadata, another list or unrelated children selects only root ID. Previously

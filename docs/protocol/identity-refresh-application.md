@@ -199,3 +199,7 @@ The ACK precedes asynchronous key application; it is not adoption evidence.
 with an authenticated selected-user force_override_e2ee_state child. This
 supersedes the earlier blanket same-key application gap; no-child, companion
 and unsupported metadata admission still remain deferred.
+
+Follow-up: [identity_auth inspection](identity-auth.md) now exposes only metadata
+shape, separate from the classic prekey signature result. Certificate policy and
+identity-auth verification remain unported; present metadata still defers.
