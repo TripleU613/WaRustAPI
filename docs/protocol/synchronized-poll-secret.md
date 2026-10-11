@@ -1,5 +1,10 @@
 # Voting on synchronized own polls
 
+Follow-up: [shared normal own-parent selection](own-device-reaction.md) now lives
+in own_device::record_in and also supplies reaction targets. Local poll-secret
+reservations retain priority; ambiguity is detected across attributed normal
+parents before poll/secret decoding. Earlier validation below is historical.
+
 Follow-up: [own-device ordinary vote updates](own-device-vote.md)
 adds supported wrapped own votes on our or a received peer poll. It supersedes
 the own-device-update gap below; special/edit/group/status paths remain unfinished.

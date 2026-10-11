@@ -718,6 +718,127 @@ fn outgoing_reaction_target(
 
 pub(super) use super::jid_map::authenticated_direct_chat;
 
+fn own_device_reaction(
+    tx: &WriteTx<'_>,
+    chat: &crate::model::jid::Jid,
+    node: &Node,
+    payload: &[u8],
+) -> Result<Option<SyncEvent>> {
+    use prost::Message as _;
+    let Ok(fields) = crate::signal::direct::payload_fields(payload) else {
+        return Ok(None);
+    };
+    if fields.iter().any(|f| !matches!(f, 46 | 35))
+        || fields.iter().filter(|&&f| f == 46).count() != 1
+    {
+        return Ok(None);
+    }
+    let Some(reaction) = super::reactions::decode(payload) else {
+        return Ok(None);
+    };
+    let Ok(envelope) = super::reactions::Envelope::decode(payload) else {
+        return Ok(None);
+    };
+    let Some(key) = envelope.reaction.and_then(|r| r.key) else {
+        return Ok(None);
+    };
+    if key.participant.as_ref().is_some_and(|p| !p.is_empty())
+        || !key
+            .remote_jid
+            .as_deref()
+            .and_then(|s| crate::model::jid::Jid::parse(s).ok())
+            .is_some_and(|j| {
+                j.agent == 0
+                    && j.device == 0
+                    && j.kind == crate::model::jid::JidKind::Plain
+                    && matches!(
+                        j.server,
+                        crate::model::jid::Server::User | crate::model::jid::Server::Lid
+                    )
+            })
+    {
+        return Ok(None);
+    }
+    let Some(account) = crate::session::AccountRecord::load_in_write(tx)? else {
+        return Ok(None);
+    };
+    let lid = if super::receipts::jid(node, "from")
+        .is_some_and(|j| j.server == crate::model::jid::Server::Lid)
+    {
+        super::group_send::own_lid_in(tx)?
+    } else {
+        None
+    };
+    let Some((source, recipient, _)) = super::own_device::route(&account, node, lid.as_ref())
+    else {
+        return Ok(None);
+    };
+    if recipient != *chat {
+        return Ok(None);
+    }
+    let owns_parent = reaction.target_from_sender;
+    let parent = if owns_parent {
+        if let Some(target) = outgoing_reaction_target(tx, chat, reaction.target_id.clone())? {
+            Some(target)
+        } else {
+            super::own_device::record_in(tx, chat, reaction.target_id.as_str())?
+                .map(|record| -> Result<MessageKey> {
+                    Ok(MessageKey {
+                        chat: ChatId::from_jid(&record.chat)?,
+                        sender: None,
+                        direction: Direction::Outgoing,
+                        id: reaction.target_id.clone(),
+                    })
+                })
+                .transpose()?
+        }
+    } else {
+        let target = Node::new("message")
+            .attr("from", chat.clone())
+            .attr("id", reaction.target_id.as_str());
+        super::inbox::direct_record_in(&target, |k| tx.get_json(Table::Checkpoints, k, 1))?
+            .filter(|r| {
+                r.saved
+                    .as_ref()
+                    .is_some_and(|s| matches!(s["status"].as_str(), Some("decrypted" | "consumed")))
+            })
+            .map(|record| -> Result<MessageKey> {
+                Ok(MessageKey {
+                    chat: ChatId::from_jid(&record.chat)?,
+                    sender: Some(DeviceAddress::from_jid(&record.chat)?),
+                    direction: Direction::Incoming,
+                    id: reaction.target_id.clone(),
+                })
+            })
+            .transpose()?
+    };
+    // Bal.A01/BoQ.A00 retain a typed reference even when the parent is not loaded.
+    let target = parent.unwrap_or(MessageKey {
+        chat: ChatId::from_jid(chat)?,
+        sender: if owns_parent {
+            None
+        } else {
+            Some(DeviceAddress::from_jid(chat)?)
+        },
+        direction: if owns_parent {
+            Direction::Outgoing
+        } else {
+            Direction::Incoming
+        },
+        id: reaction.target_id,
+    });
+    Ok(Some(SyncEvent::MessageUpdated(
+        crate::model::message::MessageUpdate {
+            key: target,
+            change: crate::model::message::MessageChange::Reaction {
+                by: DeviceAddress::from_jid(&source.to_non_ad())?,
+                emoji: reaction.emoji,
+            },
+            server_timestamp: stanza_timestamp(node),
+        },
+    )))
+}
+
 fn own_device_vote(
     tx: &WriteTx<'_>,
     chat: &crate::model::jid::Jid,
@@ -859,6 +980,9 @@ pub(super) fn own_device_message(
     let Some(id) = node.get_attr("id").and_then(|v| v.as_text()) else {
         return Ok(None);
     };
+    if crate::signal::direct::payload_fields(payload).is_ok_and(|fields| fields.contains(&46)) {
+        return own_device_reaction(tx, chat, node, payload);
+    }
     if crate::signal::direct::payload_fields(payload).is_ok_and(|fields| fields.contains(&50)) {
         return own_device_vote(tx, chat, node, payload);
     }
@@ -1095,6 +1219,205 @@ mod tests {
             .attr("id", "fixture")
             .attr("t", "123")
     }
+    #[test]
+    fn own_reactions_keep_parent_perspective_original_keys_and_saved_state() {
+        use crate::model::{jid::Jid, message::MessageRef};
+        for peer in ["15555550100@s.whatsapp.net", "12345@lid"] {
+            for ours in [false, true] {
+                for case in [
+                    "normal",
+                    "remove",
+                    "unloaded",
+                    "outbox",
+                    "mapped",
+                    "alias_only",
+                    "remote_other",
+                    "own_lid",
+                    "foreign_actor",
+                    "unregistered",
+                    "participant",
+                    "status",
+                    "long",
+                    "mixed",
+                    "ambiguous",
+                ] {
+                    if (!ours && matches!(case, "outbox" | "ambiguous"))
+                        || (peer.ends_with("whatsapp.net")
+                            && matches!(case, "mapped" | "alias_only" | "ambiguous"))
+                    {
+                        continue;
+                    }
+                    let dir = tempfile::tempdir().unwrap();
+                    let store = ProtocolStore::open(OpenOptions {
+                        path: dir.path().join("own-react.redb"),
+                        account_id: AccountId::new("fixture").unwrap(),
+                        key_source: std::sync::Arc::new(StaticKeySource::new(
+                            MasterKey::from_bytes([23; 32]),
+                        )),
+                        create: true,
+                    })
+                    .unwrap();
+                    let chat = Jid::parse(peer).unwrap();
+                    let pn = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+                    let own = Jid::parse("15555550199@s.whatsapp.net").unwrap();
+                    let own_lid = Jid::parse("99999@lid").unwrap();
+                    let actor = if case == "own_lid" {
+                        own_lid.clone()
+                    } else if case == "foreign_actor" {
+                        chat.clone()
+                    } else {
+                        own.clone()
+                    };
+                    let original = if matches!(case, "mapped" | "alias_only" | "ambiguous") {
+                        pn.clone()
+                    } else {
+                        chat.clone()
+                    };
+                    let target = MessageRef {
+                        key: MessageKey {
+                            chat: ChatId::from_jid(&chat).unwrap(),
+                            sender: if ours {
+                                None
+                            } else {
+                                Some(DeviceAddress::from_jid(&chat).unwrap())
+                            },
+                            direction: if ours {
+                                Direction::Outgoing
+                            } else {
+                                Direction::Incoming
+                            },
+                            id: MessageId::new("TARGET").unwrap(),
+                        },
+                    };
+                    let wrap = |destination: &Jid| {
+                        let mut sent = Vec::new();
+                        prost::encoding::string::encode(1, &destination.to_string(), &mut sent);
+                        prost::encoding::bytes::encode(2, &b"\x0a\x05hello".to_vec(), &mut sent);
+                        let mut out = Vec::new();
+                        prost::encoding::bytes::encode(31, &sent, &mut out);
+                        out
+                    };
+                    store.write(|tx|{
+                        crate::session::AccountRecord {own_jid:Some(own.clone()),registration:if case=="unregistered" {crate::session::RegistrationStatus::Unregistered} else {crate::session::RegistrationStatus::Registered},..Default::default()}.save(tx)?;
+                        tx.put_json(Table::Checkpoints,b"login-identity",1,&serde_json::json!({"pn":own.to_string(),"lid":own_lid.to_string()}))?;
+                        if matches!(case,"mapped"|"ambiguous") {tx.put_json(Table::Checkpoints,b"authenticated-lid:12345@lid",1,&pn)?;}
+                        if case=="alias_only" {tx.put_json(Table::Checkpoints,format!("lid-for:{pn}").as_bytes(),1,&chat)?;}
+                        if case=="outbox" {
+                            let ob=crate::outbox::Outbox::new("fixture",crate::profile::Limits::default());
+                            let req=crate::model::send::SendRequest {client_request_id:crate::model::ids::ClientRequestId::new("PARENT")?,chat:ChatId::from_jid(&original)?,content:MessageContent::Text {body:"unchanged".into(),quoted:None,style:Default::default()}};
+                            let ticket=ob.enqueue(tx,&req)?.0; let mut entry=ob.get_mut(tx,ticket.local_id)?.unwrap(); entry.wire_id=Some(MessageId::new("TARGET")?); tx.put_json(Table::Outbox,&entry.local_id.0,1,&entry)?;
+                        } else if case!="unloaded" {
+                            if ours {tx.put_json(Table::Checkpoints,format!("received-own:{original}:TARGET").as_bytes(),1,&serde_json::json!({"status":"decrypted","source":own.with_device(4),"protobuf":wrap(&original)}))?;}
+                            else {
+                                let route=crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71()).encode(&Node::new("message").attr("from",chat.clone()).attr("sender_pn",pn.clone()).attr("id","TARGET"))?;
+                                tx.put_json(Table::Checkpoints,format!("received:{original}:TARGET").as_bytes(),1,&serde_json::json!({"status":"decrypted","route":route}))?;
+                            }
+                        }
+                        if case=="ambiguous" {tx.put_json(Table::Checkpoints,format!("received-own:{chat}:TARGET").as_bytes(),1,&serde_json::json!({"status":"decrypted","source":own.with_device(4),"protobuf":wrap(&chat)}))?;}
+                        Ok(())
+                    }).unwrap();
+                    let emoji = if case == "remove" { None } else { Some("👍") };
+                    let mut envelope =
+                        <super::super::reactions::Envelope as prost::Message>::decode(
+                            super::super::reactions::payload(&chat, &chat, &target, emoji, 7)
+                                .unwrap()
+                                .as_slice(),
+                        )
+                        .unwrap();
+                    let reaction = envelope.reaction.as_mut().unwrap();
+                    if case == "long" {
+                        reaction.text = Some("a".repeat(31));
+                    }
+                    let key = reaction.key.as_mut().unwrap();
+                    if case == "participant" {
+                        key.participant = Some(own.to_string());
+                    }
+                    if matches!(case, "remote_other" | "status") {
+                        key.remote_jid = Some(
+                            if case == "status" {
+                                "status@broadcast"
+                            } else {
+                                "15555550999@s.whatsapp.net"
+                            }
+                            .into(),
+                        );
+                    }
+                    let mut payload = prost::Message::encode_to_vec(&envelope);
+                    if case == "mixed" {
+                        payload.extend(b"\x0a\x01X");
+                    }
+                    let node = Node::new("message")
+                        .attr("from", actor.with_device(4))
+                        .attr("recipient", peer)
+                        .attr("id", "UPDATE")
+                        .attr("type", "reaction")
+                        .attr("t", "123");
+                    let snapshot = || {
+                        store
+                            .read(|tx| {
+                                Table::ALL
+                                    .iter()
+                                    .map(|t| tx.scan(*t, 1, 100))
+                                    .collect::<Result<Vec<_>>>()
+                            })
+                            .unwrap()
+                    };
+                    let before = snapshot();
+                    let head = store.journal_head().unwrap();
+                    let event = store.write(|tx| {
+                        own_device_message(
+                            tx,
+                            b"received-own:fixture:UPDATE",
+                            &chat,
+                            &node,
+                            &payload,
+                            &[],
+                        )
+                    });
+                    if case == "ambiguous" {
+                        assert!(
+                            event
+                                .unwrap_err()
+                                .to_string()
+                                .contains("ambiguous synchronized parent")
+                        );
+                    } else if matches!(
+                        case,
+                        "foreign_actor"
+                            | "unregistered"
+                            | "participant"
+                            | "status"
+                            | "long"
+                            | "mixed"
+                    ) {
+                        assert!(event.unwrap().is_none(), "{peer}/{ours}/{case}");
+                    } else {
+                        let Some(SyncEvent::MessageUpdated(update)) = event.unwrap() else {
+                            panic!("{peer}/{ours}/{case}: missing reaction")
+                        };
+                        let expected = if case == "mapped" { &original } else { &chat };
+                        assert_eq!(update.key.chat.jid(), expected, "{peer}/{ours}/{case}");
+                        assert_eq!(update.key.direction, target.key.direction);
+                        assert_eq!(
+                            update.key.sender,
+                            if ours {
+                                None
+                            } else {
+                                Some(DeviceAddress::from_jid(expected).unwrap())
+                            }
+                        );
+                        assert_eq!(update.key.id, target.key.id);
+                        assert!(
+                            matches!(update.change,crate::model::message::MessageChange::Reaction{by,emoji:actual} if by.to_jid()==actor && actual.as_deref()==emoji)
+                        );
+                    }
+                    assert_eq!(snapshot(), before);
+                    assert_eq!(store.journal_head().unwrap(), head);
+                }
+            }
+        }
+    }
+
     #[test]
     fn own_device_votes_preserve_parent_ownership_and_authenticate_only_saved_own_voters() {
         use crate::model::{jid::Jid, message::MessageRef};

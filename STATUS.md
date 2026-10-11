@@ -1,3 +1,12 @@
+2026-10-11 — **Implemented/offline:** held own-device sessions now synchronize
+ordinary reaction set/removal. Embedded fromMe preserves own/peer targets;
+registered own source supplies the actor. Known original keys and unloaded typed
+references work without fetching history or changing send facts/IDs/waits.
+The shared own-parent lookup also serves polls, retaining local reservation
+priority and ambiguity guards. Encrypted/special reactions, temporal policy and
+fresh live interoperability remain unfinished/unverified.
+[Own-device reactions and mapper/source checks](docs/protocol/own-device-reaction.md).
+
 2026-10-11 — **Implemented/offline:** reaction receive/send text now follows
 the native 30 Unicode-code-point bound instead of 64 bytes. Thirty supplementary
 emoji and bounded ZWJ/combining sequences work; 31 ASCII characters refuse.

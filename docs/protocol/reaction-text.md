@@ -1,5 +1,9 @@
 # Native reaction text limit
 
+Follow-up: [own-device ordinary reactions](own-device-reaction.md) now synchronize
+supported plain set/removal updates. It supersedes the blanket own-device
+projection limitation below; encrypted/special/temporal policy remains open.
+
 2026-10-11. **Implemented/offline**, APK **2.26.37.71**, SHA-256
 `1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
 Ordinary reaction receive/send validation now uses the APK's 30 Unicode code

@@ -2474,7 +2474,7 @@ mod poll_scope_tests {
             };
             store.write(|tx| {
                 account.save(tx)?;
-                for n in 0..300 { tx.put_json(Table::Checkpoints, format!("padding:{n}").as_bytes(), 1, &n)?; }
+                for n in 0..300 { tx.put_json(Table::Checkpoints, format!("received-own:000{n}@lid:PADDING").as_bytes(), 1, &n)?; }
                 tx.put_json(Table::Checkpoints, format!("received-own:{original}:{}", if case == "wrong_id" { "OTHER" } else { "SYNC" }).as_bytes(), 1, &serde_json::json!({
                     "status":if case == "cleared" {"cleared"} else {"decrypted"},
                     "source":if case == "wrong_source" {pn.with_device(4)} else if case == "primary_source" {own.clone()} else {own.with_device(4)},

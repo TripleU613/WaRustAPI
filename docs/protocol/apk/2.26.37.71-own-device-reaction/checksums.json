@@ -1,0 +1,50 @@
+{
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "key-constructor.txt": {
+    "bytes": 757,
+    "sha256": "62a74c74bc41ba0029215e56be11ee64651275190d2303d2c7d77bd758ba2c9f"
+  },
+  "key-mapper.txt": {
+    "bytes": 4076,
+    "sha256": "c728b614d5c966c26a09acbeabed79d801b30193738c17d85440473729a77369"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "message-descriptor.txt": {
+    "bytes": 19792,
+    "sha256": "4deb5a3c9944863696cfcd0dfb0138985e229d23606d119272f76b304f8d8b45"
+  },
+  "reaction-builder.txt": {
+    "bytes": 22349,
+    "sha256": "6a03876545b4857525e9b0ac82dee68a88ba734c9209f80b84c690f3e8768eb2"
+  },
+  "reaction-model.txt": {
+    "bytes": 2031,
+    "sha256": "541eb3aeb87b0d825253bbc155278bf1d0a65b917b7bf034c069b7c088899120"
+  },
+  "reaction-schema.txt": {
+    "bytes": 3584,
+    "sha256": "4785b33a244e4e0d0987896c93eaa1a3423fea401f609f0991ad4a01defe9b8c"
+  },
+  "targets.json": {
+    "bytes": 4393,
+    "sha256": "339298ab8fd3716d463e0832f97983f7ae0f00ab1f977c90353fa303cc4fac66"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  },
+  "unwrap-with-context.txt": {
+    "bytes": 1934,
+    "sha256": "5472813db86298622703ddb37d55c7f58233ad81b51aa2239827cc627cd2a343"
+  },
+  "wrapper-validation.txt": {
+    "bytes": 10504,
+    "sha256": "bd503555eab5b088f5934911d468e8a57dc5f3fd6a55545c050573195caa2e29"
+  }
+}

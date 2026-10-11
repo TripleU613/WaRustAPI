@@ -260,88 +260,48 @@ pub(super) fn own_record_in(
     )? {
         return Ok(Some(record));
     }
-    let Some(account) =
-        crate::session::AccountRecord::load_in_write(tx)?.filter(|a| a.is_registered())
+    let selected =
+        super::own_device::record_in(tx, peer, poll_id).map_err(|error| match error {
+            Error::InvalidInput {
+                field: "own_device",
+                ref reason,
+            } if reason == "ambiguous synchronized parent" => {
+                invalid("ambiguous synchronized poll")
+            }
+            other => other,
+        })?;
+    let Some(record) = selected else {
+        return Ok(None);
+    };
+    let Some(saved) = record.saved else {
+        return Ok(None);
+    };
+    let Ok(wrapped) =
+        serde_json::from_value::<Vec<u8>>(saved["protobuf"].clone()).map(zeroize::Zeroizing::new)
     else {
         return Ok(None);
     };
-    let Some(own_pn) = account
-        .own_jid
-        .filter(|j| j.server == crate::model::jid::Server::User && j.agent == 0 && j.device == 0)
-    else {
+    let Some(plain) = super::own_device::payload(&wrapped, &record.chat) else {
+        return Ok(None);
+    };
+    let Some(poll) = decode_poll(&plain) else {
+        return Ok(None);
+    };
+    let Some(secret) = poll.secret else {
+        return Ok(None);
+    };
+    let Some(account) = crate::session::AccountRecord::load_in_write(tx)? else {
+        return Ok(None);
+    };
+    let Some(own_pn) = account.own_jid else {
         return Ok(None);
     };
     let own_lid = super::group_send::own_lid_in(tx)?;
-    let mut selected = None;
-    // shortcut: synchronized parents use a paged scan; index them when large histories need faster vote lookup.
-    let mut cursor = None;
-    loop {
-        let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
-        let done = rows.len() < 256;
-        cursor = rows.last().map(|(key, _)| key.clone());
-        for (key, _) in rows {
-            let Some((chat, id)) = std::str::from_utf8(&key)
-                .ok()
-                .and_then(|k| k.strip_prefix("received-own:"))
-                .and_then(|k| k.rsplit_once(':'))
-            else {
-                continue;
-            };
-            if id != poll_id {
-                continue;
-            }
-            let Ok(chat) = Jid::parse(chat) else {
-                continue;
-            };
-            if !super::jid_map::authenticated_direct_chat(tx, peer, &chat)? {
-                continue;
-            }
-            let Some(saved) = tx.get_json::<serde_json::Value>(Table::Checkpoints, &key, 1)? else {
-                continue;
-            };
-            if saved["status"] != "decrypted" {
-                continue;
-            }
-            let Ok(source) = serde_json::from_value::<Jid>(saved["source"].clone()) else {
-                continue;
-            };
-            if source.agent != 0
-                || source.device == 0
-                || (source.to_non_ad() != own_pn.to_non_ad()
-                    && own_lid.as_ref() != Some(&source.to_non_ad()))
-            {
-                continue;
-            }
-            let Ok(wrapped) = serde_json::from_value::<Vec<u8>>(saved["protobuf"].clone())
-                .map(zeroize::Zeroizing::new)
-            else {
-                continue;
-            };
-            let Some(plain) = super::own_device::payload(&wrapped, &chat) else {
-                continue;
-            };
-            let Some(poll) = decode_poll(&plain) else {
-                continue;
-            };
-            let Some(secret) = poll.secret else {
-                continue;
-            };
-            // Native Clc.A04 selects a parent before loading its secret; never merge two parents.
-            if selected.is_some() {
-                return Err(invalid("ambiguous synchronized poll"));
-            }
-            selected = Some(serde_json::json!({
-                "chat":chat.to_string(), "secret":secret, "options":poll.options,
-                "name":poll.name, "selectable_count":poll.selectable_count,
-                "creator_pn":own_pn.to_non_ad().to_string(),
-                "creator_lid":own_lid.as_ref().map(ToString::to_string),
-            }));
-        }
-        if done {
-            break;
-        }
-    }
-    Ok(selected)
+    Ok(Some(serde_json::json!({
+        "chat":record.chat.to_string(),"secret":secret,"options":poll.options,"name":poll.name,
+        "selectable_count":poll.selectable_count,"creator_pn":own_pn.to_non_ad().to_string(),
+        "creator_lid":own_lid.as_ref().map(ToString::to_string),
+    })))
 }
 
 /// Read-only local binding diagnosis for a saved own poll and primary peer.

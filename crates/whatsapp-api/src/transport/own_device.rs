@@ -1,4 +1,4 @@
-//! Authenticated own-device text/media/poll synchronization over an already held session.
+//! Authenticated own-device text/media/poll/reaction synchronization over an already held session.
 use super::inbox::IncomingResult;
 use crate::{
     Error, Result,
@@ -28,7 +28,7 @@ fn shape(account: &AccountRecord, node: &Node) -> Option<(Jid, Jid, String)> {
     }
     if !matches!(
         node.get_attr("type").and_then(|v| v.as_text()),
-        Some("text" | "media" | "poll")
+        Some("text" | "media" | "poll" | "reaction")
     ) {
         return None;
     }
@@ -56,7 +56,7 @@ fn shape(account: &AccountRecord, node: &Node) -> Option<(Jid, Jid, String)> {
     Some((source, chat.to_non_ad(), key))
 }
 
-fn route(
+pub(super) fn route(
     account: &AccountRecord,
     node: &Node,
     own_lid: Option<&Jid>,
@@ -109,6 +109,8 @@ pub(super) fn payload(payload: &[u8], chat: &Jid) -> Option<Zeroizing<Vec<u8>>> 
         sticker: Option<Vec<u8>>,
         #[prost(bytes = "vec", optional, tag = "66")]
         ptv: Option<Vec<u8>>,
+        #[prost(bytes = "vec", optional, tag = "46")]
+        reaction: Option<Vec<u8>>,
         #[prost(bytes = "vec", optional, tag = "50")]
         vote: Option<Vec<u8>>,
         #[prost(bytes = "vec", optional, tag = "64")]
@@ -144,7 +146,7 @@ pub(super) fn payload(payload: &[u8], chat: &Jid) -> Option<Zeroizing<Vec<u8>>> 
     // shortcut: control effects and view-once synchronization need their separate native lifecycle.
     if fields
         .iter()
-        .any(|f| !matches!(f, 1 | 3 | 6 | 7 | 8 | 9 | 26 | 35 | 50 | 64 | 66))
+        .any(|f| !matches!(f, 1 | 3 | 6 | 7 | 8 | 9 | 26 | 35 | 46 | 50 | 64 | 66))
         || fields.iter().filter(|&&f| f != 35).count() != 1
     {
         return None;
@@ -163,6 +165,97 @@ pub(super) fn payload(payload: &[u8], chat: &Jid) -> Option<Zeroizing<Vec<u8>>> 
     } else {
         Some(inner)
     }
+}
+
+/// A unique authenticated normal own message, retaining its original chat selector.
+pub(super) fn record_in(
+    tx: &crate::store::WriteTx<'_>,
+    peer: &Jid,
+    message_id: &str,
+) -> Result<Option<super::inbox::DirectRecord>> {
+    let Some(account) = AccountRecord::load_in_write(tx)?.filter(|a| a.is_registered()) else {
+        return Ok(None);
+    };
+    let Some(own_pn) = account
+        .own_jid
+        .filter(|j| j.server == Server::User && j.agent == 0 && j.device == 0)
+    else {
+        return Ok(None);
+    };
+    let own_lid = super::group_send::own_lid_in(tx)?;
+    let mut selected = None;
+    // shortcut: synchronized parents use a paged scan; index them when large histories need faster parent lookup.
+    let mut cursor = Some(b"received-own:".to_vec());
+    loop {
+        let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
+        let done = rows.len() < 256;
+        cursor = rows.last().map(|(key, _)| key.clone());
+        for (key, _) in rows {
+            if !key.starts_with(b"received-own:") {
+                return Ok(selected);
+            }
+            let Some((chat, id)) = std::str::from_utf8(&key)
+                .ok()
+                .and_then(|k| k.strip_prefix("received-own:"))
+                .and_then(|k| k.rsplit_once(':'))
+            else {
+                continue;
+            };
+            if id != message_id {
+                continue;
+            }
+            let Ok(chat) = Jid::parse(chat) else {
+                continue;
+            };
+            if !super::jid_map::authenticated_direct_chat(tx, peer, &chat)? {
+                continue;
+            }
+            let Some(saved) = tx.get_json::<serde_json::Value>(Table::Checkpoints, &key, 1)? else {
+                continue;
+            };
+            if saved["status"] != "decrypted" {
+                continue;
+            }
+            let Ok(source) = serde_json::from_value::<Jid>(saved["source"].clone()) else {
+                continue;
+            };
+            if source.agent != 0
+                || source.device == 0
+                || (source.to_non_ad() != own_pn.to_non_ad()
+                    && own_lid.as_ref() != Some(&source.to_non_ad()))
+            {
+                continue;
+            }
+            let Ok(wrapped) =
+                serde_json::from_value::<Vec<u8>>(saved["protobuf"].clone()).map(Zeroizing::new)
+            else {
+                continue;
+            };
+            let Some(plain) = payload(&wrapped, &chat) else {
+                continue;
+            };
+            if crate::signal::direct::payload_fields(&plain)
+                .is_ok_and(|fields| fields.iter().any(|f| matches!(f, 46 | 50)))
+            {
+                continue;
+            }
+            if selected.is_some() {
+                return Err(Error::invalid(
+                    "own_device",
+                    "ambiguous synchronized parent",
+                ));
+            }
+            selected = Some(super::inbox::DirectRecord {
+                chat: chat.clone(),
+                key: format!("received-own:{chat}:{id}"),
+                saved: Some(saved),
+            });
+        }
+        if done {
+            break;
+        }
+    }
+    Ok(selected)
 }
 
 pub(super) fn confirmation(
