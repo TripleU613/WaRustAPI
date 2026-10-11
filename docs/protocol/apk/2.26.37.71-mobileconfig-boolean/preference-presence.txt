@@ -1,0 +1,15 @@
+# APK-derived structural disassembly: LX/00D;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0F(ZLI) flags=0x19 registers=3
+  # full signature: LX/00D;->A0F(LX/00D;I)Z
+  0000..0004 op=54 iget-object v1, v1, LX/00D;->A00:Landroid/content/SharedPreferences;
+  0004..000a op=71 invoke-static {v2}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+  000a..000c op=0c move-result-object v0
+  000c..0012 op=72 invoke-interface {v1, v0}, Landroid/content/SharedPreferences;->contains(Ljava/lang/String;)Z
+  0012..0014 op=0a move-result v0
+  0014..0016 op=0f return v0
+  # exception table: 0 try range(s)
+.end method

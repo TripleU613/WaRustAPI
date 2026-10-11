@@ -1,0 +1,45 @@
+# APK-derived structural disassembly: LX/09W;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method Bpp(V) flags=0x1 registers=13
+  # full signature: LX/09W;->Bpp()V
+  0000..0004 op=54 iget-object v0, v12, LX/09W;->A00:LX/00D;
+  0004..000a op=6e invoke-virtual {v0}, LX/00D;->A0z()Z
+  000a..000c op=0a move-result v9
+  000c..0012 op=6e invoke-virtual {v0, v9}, LX/00D;->A0l(Z)Ljava/util/Set;
+  0012..0014 op=0c move-result-object v8
+  0014..0018 op=54 iget-object v0, v0, LX/00D;->A01:LX/00s;
+  0018..001e op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  001e..0020 op=0c move-result-object v7
+  0020..0024 op=1f check-cast v7, LX/1fY;
+  0024..0028 op=54 iget-object v11, v7, LX/1fY;->A05:LX/00l;
+  0028..002e op=72 invoke-interface {v11}, LX/00l;->getValue()Ljava/lang/Object;
+  002e..0030 op=0c move-result-object v2
+  0030..0034 op=1f check-cast v2, Landroid/content/SharedPreferences;
+  0034..0038 op=16 const-wide/16 v0, #0x0
+  0038..003c op=1a const-string v10, "ab_props:sys:last_daily_expo_key_update"
+  003c..0042 op=72 invoke-interface {v2, v10, v0, v1}, Landroid/content/SharedPreferences;->getLong(Ljava/lang/String;J)J
+  0042..0044 op=0b move-result-wide v3
+  0044..0048 op=54 iget-object v0, v7, LX/1fY;->A01:LX/05B;
+  0048..004c op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  004c..0052 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  0052..0058 op=71 invoke-static {}, Ljava/lang/System;->currentTimeMillis()J
+  0058..005a op=0b move-result-wide v1
+  005a..005e op=9c sub-long v5, v1, v3
+  005e..0064 op=17 const-wide/32 v3, #0x5265c00
+  0064..0068 op=31 cmp-long v0, v5, v3
+  0068..006c op=3d if-lez v0, +0x16
+  006c..0072 op=72 invoke-interface {v11}, LX/00l;->getValue()Ljava/lang/Object;
+  0072..0074 op=0c move-result-object v0
+  0074..0078 op=1f check-cast v0, Landroid/content/SharedPreferences;
+  0078..007e op=72 invoke-interface {v0}, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
+  007e..0080 op=0c move-result-object v0
+  0080..0086 op=72 invoke-interface {v0, v10, v1, v2}, Landroid/content/SharedPreferences$Editor;->putLong(Ljava/lang/String;J)Landroid/content/SharedPreferences$Editor;
+  0086..008c op=72 invoke-interface {v0}, Landroid/content/SharedPreferences$Editor;->apply()V
+  008c..008e op=12 const/4 v0, #0x1
+  008e..0094 op=71 invoke-static {v7, v8, v0, v9}, LX/1fY;->A00(LX/1fY;Ljava/util/Set;ZZ)V
+  0094..0096 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

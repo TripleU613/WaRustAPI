@@ -1,0 +1,25 @@
+# APK-derived structural disassembly: LX/00F;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(L) flags=0x11 registers=4
+  # full signature: LX/00F;->A00()LX/00F;
+  0000..0004 op=54 iget-object v0, v3, LX/00F;->A00:Ljava/lang/Integer;
+  0004..0008 op=62 sget-object v2, LX/02S;->A00:Ljava/lang/Integer;
+  0008..000c op=33 if-ne v0, v2, +0x3
+  000c..000e op=11 return-object v3
+  000e..0012 op=62 sget-object v0, LX/00F;->A03:LX/00F;
+  0012..0016 op=33 if-ne v3, v0, +0x5
+  0016..001a op=62 sget-object v1, LX/00F;->A06:LX/00F;
+  001a..001c op=11 return-object v1
+  001c..0020 op=62 sget-object v0, LX/00F;->A02:LX/00F;
+  0020..0024 op=33 if-ne v3, v0, +0x5
+  0024..0028 op=62 sget-object v1, LX/00F;->A05:LX/00F;
+  0028..002a op=11 return-object v1
+  002a..002e op=55 iget-boolean v0, v3, LX/00F;->A01:Z
+  002e..0032 op=22 new-instance v1, LX/00F;
+  0032..0038 op=70 invoke-direct {v1, v2, v0}, LX/00F;-><init>(Ljava/lang/Integer;Z)V
+  0038..003a op=11 return-object v1
+  # exception table: 0 try range(s)
+.end method

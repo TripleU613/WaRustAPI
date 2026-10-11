@@ -1,0 +1,70 @@
+# APK-derived structural disassembly: LX/099;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method AVo(ZLJZ) flags=0x1 registers=12
+  # full signature: LX/099;->AVo(LX/0E8;JZ)Z
+  0000..0006 op=70 invoke-direct {v7}, LX/099;->A03()Ljava/util/Set;
+  0006..0008 op=0c move-result-object v6
+  0008..000e op=72 invoke-interface {v6}, Ljava/util/Set;->isEmpty()Z
+  000e..0010 op=0a move-result v0
+  0010..0014 op=39 if-nez v0, +0x9
+  0014..001a op=71 invoke-static {v8}, LX/0E8;->A00(LX/0E8;)LX/0E8;
+  001a..001c op=0c move-result-object v8
+  001c..001e op=12 const/4 v0, #0x1
+  001e..0022 op=5c iput-boolean v0, v8, LX/0E8;->A02:Z
+  0022..0028 op=70 invoke-direct {v7, v9, v10}, LX/099;->A06(J)Z
+  0028..002a op=0a move-result v0
+  002a..002e op=39 if-nez v0, +0x2b
+  002e..0032 op=55 iget-boolean v0, v8, LX/0E8;->A02:Z
+  0032..0036 op=38 if-eqz v0, +0x7
+  0036..003a op=62 sget-object v0, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->DEFAULT__MISMATCH_UNIT_TYPE:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+  003a..0040 op=6e invoke-virtual {v8, v0}, LX/0E8;->A01(Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;)V
+  0040..0046 op=72 invoke-interface {v6}, Ljava/util/Set;->isEmpty()Z
+  0046..0048 op=0a move-result v0
+  0048..004c op=39 if-nez v0, +0x50
+  004c..0050 op=54 iget-object v0, v7, LX/099;->A0A:LX/090;
+  0050..0056 op=6e invoke-virtual {v0}, LX/08z;->syncFetchReason()Ljava/lang/String;
+  0056..005c op=72 invoke-interface {v6}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+  005c..005e op=0c move-result-object v1
+  005e..0064 op=72 invoke-interface {v1}, Ljava/util/Iterator;->hasNext()Z
+  0064..0066 op=0a move-result v0
+  0066..006a op=38 if-eqz v0, +0x41
+  006a..0070 op=72 invoke-interface {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0070..0074 op=1a const-string v1, "getSamplingRate"
+  0074..0078 op=22 new-instance v0, Ljava/lang/NullPointerException;
+  0078..007e op=70 invoke-direct {v0, v1}, Ljava/lang/NullPointerException;-><init>(Ljava/lang/String;)V
+  007e..0080 op=27 throw v0
+  0080..0082 op=12 const/4 v5, #0x1
+  0082..0086 op=13 const/16 v0, #0x30
+  0086..008a op=a5 ushr-long v1, v9, v0
+  008a..008e op=16 const-wide/16 v3, #0x3f
+  008e..0090 op=c0 and-long/2addr v1, v3
+  0090..0092 op=84 long-to-int v0, v1
+  0092..0096 op=32 if-eq v5, v0, +0x10
+  0096..009c op=71 invoke-static {v11}, Ljava/lang/String;->valueOf(Z)Ljava/lang/String;
+  009c..009e op=0c move-result-object v0
+  009e..00a4 op=70 invoke-direct {v7, v9, v10, v0}, LX/099;->A04(JLjava/lang/String;)V
+  00a4..00a8 op=55 iget-boolean v0, v8, LX/0E8;->A02:Z
+  00a8..00ac op=38 if-eqz v0, -0x34
+  00ac..00b0 op=62 sget-object v0, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->DEFAULT__MISMATCH_PARAM_TYPE:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+  00b0..00b2 op=28 goto -0x3b
+  00b2..00b6 op=55 iget-boolean v5, v8, LX/0E8;->A01:Z
+  00b6..00ba op=13 const/16 v0, #0x20
+  00ba..00be op=a5 ushr-long v1, v9, v0
+  00be..00c4 op=17 const-wide/32 v3, #0xffff
+  00c4..00c6 op=c0 and-long/2addr v1, v3
+  00c6..00c8 op=84 long-to-int v0, v1
+  00c8..00cc op=38 if-eqz v5, +0xb
+  00cc..00d2 op=6e invoke-virtual {v7, v0}, LX/099;->A08(I)LX/098;
+  00d2..00d4 op=0c move-result-object v0
+  00d4..00da op=72 invoke-interface {v0, v8, v9, v10, v11}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->AVo(LX/0E8;JZ)Z
+  00da..00dc op=0a move-result v11
+  00dc..00de op=28 goto -0x4e
+  00de..00e4 op=6e invoke-virtual {v7, v0}, LX/099;->A07(I)LX/098;
+  00e4..00e6 op=0c move-result-object v0
+  00e6..00e8 op=28 goto -0x9
+  00e8..00ea op=0f return v11
+  # exception table: 0 try range(s)
+.end method

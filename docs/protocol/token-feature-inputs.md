@@ -46,6 +46,10 @@ not a constant false feature value.
 
 ## Preferences, cache and MobileConfig boundary
 
+The later [effective Boolean trace](mobileconfig-boolean.md) closes the direct
+readiness mutation, fallback cache helpers and managed snapshot read boundary.
+Effective account values and update/invalidation authority remain unported.
+
 **Confirmed static:** `00D.A0D` returns a cached Boolean if present, otherwise
 locks and rechecks, invokes exposure helper `A0B` with `id + "_expo_key"`, and
 looks up the virtual `A15` default map. A map value supersedes the nullable

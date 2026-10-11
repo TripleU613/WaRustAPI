@@ -1,0 +1,44 @@
+# APK-derived structural disassembly: LX/00D;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0q(V) flags=0x11 registers=11
+  # full signature: LX/00D;->A0q()V
+  0000..0004 op=54 iget-object v1, v10, LX/00D;->A07:Ljava/util/concurrent/atomic/AtomicBoolean;
+  0004..0006 op=12 const/4 v0, #0x0
+  0006..000c op=6e invoke-virtual {v1, v0}, Ljava/util/concurrent/atomic/AtomicBoolean;->set(Z)V
+  000c..0010 op=54 iget-object v3, v10, LX/00D;->A0I:Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+  0010..0014 op=20 instance-of v0, v3, LX/099;
+  0014..0018 op=38 if-eqz v0, +0x38
+  0018..001c op=54 iget-object v4, v10, LX/00D;->A0L:LX/09M;
+  001c..0020 op=38 if-eqz v4, +0x23
+  0020..0022 op=07 move-object v5, v3
+  0022..0026 op=1f check-cast v5, LX/099;
+  0026..002a op=62 sget-object v2, LX/00F;->A02:LX/00F;
+  002a..002c op=12 const/4 v1, #0x0
+  002c..0030 op=13 const/16 v0, #0x679c
+  0030..0036 op=71 invoke-static {v2, v10, v1, v0}, LX/00D;->A0D(LX/00F;LX/00D;Ljava/lang/Boolean;I)Z
+  0036..0038 op=0a move-result v7
+  0038..003c op=13 const/16 v0, #0x679d
+  003c..0042 op=71 invoke-static {v2, v10, v1, v0}, LX/00D;->A01(LX/00F;LX/00D;Ljava/lang/Integer;I)I
+  0042..0044 op=0a move-result v6
+  0044..0048 op=13 const/16 v0, #0x6f1b
+  0048..004e op=71 invoke-static {v2, v10, v1, v0}, LX/00D;->A0D(LX/00F;LX/00D;Ljava/lang/Boolean;I)Z
+  004e..0050 op=0a move-result v8
+  0050..0054 op=13 const/16 v0, #0x76e9
+  0054..005a op=71 invoke-static {v2, v10, v1, v0}, LX/00D;->A0D(LX/00F;LX/00D;Ljava/lang/Boolean;I)Z
+  005a..005c op=0a move-result v9
+  005c..0062 op=78 invoke-interface/range {v4..v9}, LX/09M;->CTW(LX/099;IZZZ)V
+  0062..0066 op=62 sget-object v2, LX/00F;->A03:LX/00F;
+  0066..0068 op=12 const/4 v1, #0x0
+  0068..006c op=13 const/16 v0, #0x6810
+  006c..0072 op=71 invoke-static {v2, v10, v1, v0}, LX/00D;->A0D(LX/00F;LX/00D;Ljava/lang/Boolean;I)Z
+  0072..0074 op=0a move-result v1
+  0074..0078 op=38 if-eqz v4, +0x8
+  0078..007c op=1f check-cast v3, LX/099;
+  007c..007e op=12 const/4 v0, #0x0
+  007e..0084 op=72 invoke-interface {v4, v3, v1, v0}, LX/09M;->BJ1(LX/099;ZZ)V
+  0084..0086 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

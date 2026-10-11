@@ -1,0 +1,146 @@
+{
+  "evidence_id": "ev_ba1479b13e8ebcb6bdd3493c6a92cc01b9b47de3af2e98458223fa7b55e06636",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.C09H",
+    "method_name": "AVo"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-4dnaVb/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":15695085568,\"java_version\":\"21.0.12.1\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "load_apk",
+        "input": {
+          "path": "/tmp/rea-android-4dnaVb/target.apk",
+          "threads": 1,
+          "resources": "full"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-4dnaVb/target.apk\",\"class_count\":94738,\"raw_class_count\":94738,\"resource_count\":14967,\"load_duration_ms\":14423,\"decompile_timeout_ms\":90000,\"threads\":1,\"code_cache_size\":64,\"resources\":\"full\"}"
+            }
+          ]
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C09H"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"type\":\"X.09C\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"X.092\",\"def_pos\":0,\"name\":\"A01\"}],\"methods\":[{\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(X.09C, X.092): void\",\"is_constructor\":true},{\"name\":\"A00\",\"def_pos\":0,\"signature\":\"A00(X.0E8, long): java.lang.Integer\",\"is_constructor\":false},{\"name\":\"A05\",\"def_pos\":0,\"signature\":\"A05(double, long, boolean): double\",\"is_constructor\":false},{\"name\":\"A06\",\"def_pos\":0,\"signature\":\"A06(long, long, boolean): long\",\"is_constructor\":false},{\"name\":\"A07\",\"def_pos\":0,\"signature\":\"A07(long): X.09J\",\"is_constructor\":false},{\"name\":\"A08\",\"def_pos\":0,\"signature\":\"A08(java.lang.String, long, boolean): java.lang.String\",\"is_constructor\":false},{\"name\":\"A09\",\"def_pos\":0,\"signature\":\"A09(long, boolean, boolean): boolean\",\"is_constructor\":false},{\"name\":\"AVm\",\"def_pos\":0,\"signature\":\"AVm(long): boolean\",\"is_constructor\":false},{\"name\":\"AVn\",\"def_pos\":0,\"signature\":\"AVn(X.0E8, long): boolean\",\"is_constructor\":false},{\"name\":\"AVo\",\"def_pos\":0,\"signature\":\"AVo(X.0E8, long, boolean): boolean\",\"is_constructor\":false},{\"name\":\"AdL\",\"def_pos\":0,\"signature\":\"AdL(X.0E8, double, long): double\",\"is_constructor\":false},{\"name\":\"AdM\",\"def_pos\":0,\"signature\":\"AdM(X.0E8, long): double\",\"is_constructor\":false},{\"name\":\"An9\",\"def_pos\":0,\"signature\":\"An9(long): long\",\"is_constructor\":false},{\"name\":\"AnD\",\"def_pos\":0,\"signature\":\"AnD(X.0E8, long, long): long\",\"is_constructor\":false},{\"name\":\"AnE\",\"def_pos\":0,\"signature\":\"AnE(X.0E8, long): long\",\"is_constructor\":false},{\"name\":\"Ayq\",\"def_pos\":0,\"signature\":\"Ayq(): java.lang.String\",\"is_constructor\":false},{\"name\":\"Ayv\",\"def_pos\":0,\"signature\":\"Ayv(): long\",\"is_constructor\":false},{\"name\":\"B4W\",\"def_pos\":0,\"signature\":\"B4W(X.0E8, long): java.lang.String\",\"is_constructor\":false},{\"name\":\"B4X\",\"def_pos\":0,\"signature\":\"B4X(X.0E8, java.lang.String, long): java.lang.String\",\"is_constructor\":false},{\"name\":\"B7f\",\"def_pos\":0,\"signature\":\"B7f(): int\",\"is_constructor\":false}],\"method_count\":20,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"C09H\",\"full_name\":\"X.C09H\",\"field_count\":2}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C09H",
+          "method_name": "AVo",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"overload_count\":1,\"method_name\":\"AVo\",\"markers\":[\"Code decompiled incorrectly, please refer to instructions dump\"],\"mode\":\"smali\",\"full_name\":\"X.09H.AVo\",\"class_name\":\"X.C09H\",\"overload_index\":0,\"fell_back\":true,\"body\":\"// [jadx java-decompile failed → smali]\\n// target: X.09H.AVo\\n// markers: Code decompiled incorrectly, please refer to instructions dump\\n// (Java body was an anti-decompile stub; showing smali. Pass smali_fallback\\u003dfalse for the partial Java.)\\n\\n.method public AVo(LX/0E8;JZ)Z\\n    .registers 8\\n\\n    .line 0\\n    sget-boolean v0, LX/09D;-\\u003eA0B:Z\\n\\n    .line 1\\n    .line 2\\n    if-eqz v0, :cond_1c\\n\\n    .line 3\\n    .line 4\\n    iget-object v1, p0, LX/09H;-\\u003eA00:LX/09C;\\n\\n    .line 5\\n    .line 6\\n    if-eqz v1, :cond_1c\\n\\n    .line 7\\n    .line 8\\n    invoke-interface {v1, p2, p3}, LX/09C;-\\u003ehasBoolOverrideForParam(J)Z\\n\\n    .line 9\\n    .line 10\\n    .line 11\\n    move-result v0\\n\\n    .line 12\\n    if-eqz v0, :cond_1c\\n\\n    .line 13\\n    .line 14\\n    iget-boolean v0, p1, LX/0E8;-\\u003eA02:Z\\n\\n    .line 15\\n    .line 16\\n    if-eqz v0, :cond_17\\n\\n    .line 17\\n    .line 18\\n    sget-object v0, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;-\\u003eOVERRIDE:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;\\n\\n    .line 19\\n    .line 20\\n    invoke-virtual {p1, v0}, LX/0E8;-\\u003eA01(Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;)V\\n\\n    .line 21\\n    .line 22\\n    .line 23\\n    :cond_17\\n    invoke-interface {v1, p2, p3, p4}, LX/09C;-\\u003eboolOverrideForParam(JZ)Z\\n\\n    .line 24\\n    .line 25\\n    .line 26\\n    move-result v0\\n\\n    .line 27\\n    return v0\\n\\n    .line 28\\n    :cond_1c\\n    invoke-static {p1, p2, p3}, LX/09H;-\\u003eA00(LX/0E8;J)Ljava/lang/Integer;\\n\\n    .line 29\\n    .line 30\\n    .line 31\\n    move-result-object v1\\n\\n    .line 32\\n    sget-object v0, LX/02S;-\\u003eA01:Ljava/lang/Integer;\\n\\n    .line 33\\n    .line 34\\n    if-ne v1, v0, :cond_54\\n\\n    .line 35\\n    .line 36\\n    invoke-static {p4}, Ljava/lang/Boolean;-\\u003evalueOf(Z)Ljava/lang/Boolean;\\n\\n    .line 37\\n    .line 38\\n    .line 39\\n    move-result-object v1\\n\\n    .line 40\\n    sget-boolean v0, LX/0Dp;-\\u003eA03:Z\\n\\n    .line 41\\n    .line 42\\n    if-eqz v0, :cond_4f\\n\\n    .line 43\\n    .line 44\\n    invoke-static {}, LX/0Dp;-\\u003eA01()LX/0Dt;\\n\\n    .line 45\\n    .line 46\\n    .line 47\\n    move-result-object v0\\n\\n    .line 48\\n    if-eqz v0, :cond_4f\\n\\n    .line 49\\n    .line 50\\n    invoke-virtual {v0, p2, p3}, LX/0Dt;-\\u003eA05(J)LX/I3z;\\n\\n    .line 51\\n    .line 52\\n    .line 53\\n    move-result-object v2\\n\\n    .line 54\\n    if-eqz v2, :cond_4b\\n\\n    .line 55\\n    .line 56\\n    iget-object v0, v2, LX/I3z;-\\u003eA02:Ljava/lang/Object;\\n\\n    .line 57\\n    .line 58\\n    if-eqz v0, :cond_4b\\n\\n    .line 59\\n    .line 60\\n    const/4 v1, 0x1\\n\\n    .line 61\\n    iget v0, v2, LX/I3z;-\\u003eA00:I\\n\\n    .line 62\\n    .line 63\\n    if-ne v0, v1, :cond_4b\\n\\n    .line 64\\n    .line 65\\n    invoke-virtual {v2}, LX/I3z;-\\u003eA00()Ljava/lang/Boolean;\\n\\n    .line 66\\n    .line 67\\n    .line 68\\n    move-result-object v0\\n\\n    .line 69\\n    if-eqz v0, :cond_4b\\n\\n    .line 70\\n    .line 71\\n    invoke-virtual {v0}, Ljava/lang/Boolean;-\\u003ebooleanValue()Z\\n\\n    .line 72\\n    .line 73\\n    .line 74\\n    move-result p4\\n\\n    .line 75\\n    :cond_4b\\n    invoke-static {p4}, Ljava/lang/Boolean;-\\u003evalueOf(Z)Ljava/lang/Boolean;\\n\\n    .line 76\\n    .line 77\\n    .line 78\\n    move-result-object v1\\n\\n    .line 79\\n    :cond_4f\\n    invoke-virtual {v1}, Ljava/lang/Boolean;-\\u003ebooleanValue()Z\\n\\n    .line 80\\n    .line 81\\n    .line 82\\n    move-result v0\\n\\n    .line 83\\n    return v0\\n\\n    .line 84\\n    :cond_54\\n    sget-object v0, LX/02S;-\\u003eA0C:Ljava/lang/Integer;\\n\\n    .line 85\\n    .line 86\\n    if-eq v1, v0, :cond_73\\n\\n    .line 87\\n    .line 88\\n    iget-boolean v0, p1, LX/0E8;-\\u003eA02:Z\\n\\n    .line 89\\n    .line 90\\n    if-eqz v0, :cond_6c\\n\\n    .line 91\\n    .line 92\\n    invoke-virtual {p0, p2, p3}, LX/09H;-\\u003eA07(J)LX/09J;\\n\\n    .line 93\\n    .line 94\\n    .line 95\\n    move-result-object v0\\n\\n    .line 96\\n    iput-object v0, p1, LX/0E8;-\\u003eA00:LX/09J;\\n\\n    .line 97\\n    .line 98\\n    iget-object v1, v0, LX/09J;-\\u003eA00:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;\\n\\n    .line 99\\n    .line 100\\n    sget-object v0, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;-\\u003eSERVER:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;\\n\\n    .line 101\\n    .line 102\\n    if-eq v1, v0, :cond_6c\\n\\n    .line 103\\n    .line 104\\n    sget-object v0, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;-\\u003eDEFAULT__SERVER_RETURNED_NULL:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;\\n\\n    .line 105\\n    .line 106\\n    if-ne v1, v0, :cond_73\\n\\n    .line 107\\n    .line 108\\n    :cond_6c\\n    iget-boolean v0, p1, LX/0E7;-\\u003eA00:Z\\n\\n    .line 109\\n    .line 110\\n    invoke-virtual {p0, p2, p3, p4, v0}, LX/09H;-\\u003eA09(JZZ)Z\\n\\n    .line 111\\n    .line 112\\n    .line 113\\n    move-result v0\\n\\n    .line 114\\n    return v0\\n\\n    .line 115\\n    :cond_73\\n    return p4\\n.end method\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.C09H",
+    "method": {
+      "name": "AVo",
+      "reported_signature": "AVo(X.0E8, long, boolean): boolean",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "smali",
+    "body_status": "available",
+    "fell_back": true,
+    "markers": [
+      "Code decompiled incorrectly, please refer to instructions dump"
+    ],
+    "source": {
+      "status": "complete",
+      "text": "// [jadx java-decompile failed → smali]\n// target: X.09H.AVo\n// markers: Code decompiled incorrectly, please refer to instructions dump\n// (Java body was an anti-decompile stub; showing smali. Pass smali_fallback=false for the partial Java.)\n\n.method public AVo(LX/0E8;JZ)Z\n    .registers 8\n\n    .line 0\n    sget-boolean v0, LX/09D;->A0B:Z\n\n    .line 1\n    .line 2\n    if-eqz v0, :cond_1c\n\n    .line 3\n    .line 4\n    iget-object v1, p0, LX/09H;->A00:LX/09C;\n\n    .line 5\n    .line 6\n    if-eqz v1, :cond_1c\n\n    .line 7\n    .line 8\n    invoke-interface {v1, p2, p3}, LX/09C;->hasBoolOverrideForParam(J)Z\n\n    .line 9\n    .line 10\n    .line 11\n    move-result v0\n\n    .line 12\n    if-eqz v0, :cond_1c\n\n    .line 13\n    .line 14\n    iget-boolean v0, p1, LX/0E8;->A02:Z\n\n    .line 15\n    .line 16\n    if-eqz v0, :cond_17\n\n    .line 17\n    .line 18\n    sget-object v0, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->OVERRIDE:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;\n\n    .line 19\n    .line 20\n    invoke-virtual {p1, v0}, LX/0E8;->A01(Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;)V\n\n    .line 21\n    .line 22\n    .line 23\n    :cond_17\n    invoke-interface {v1, p2, p3, p4}, LX/09C;->boolOverrideForParam(JZ)Z\n\n    .line 24\n    .line 25\n    .line 26\n    move-result v0\n\n    .line 27\n    return v0\n\n    .line 28\n    :cond_1c\n    invoke-static {p1, p2, p3}, LX/09H;->A00(LX/0E8;J)Ljava/lang/Integer;\n\n    .line 29\n    .line 30\n    .line 31\n    move-result-object v1\n\n    .line 32\n    sget-object v0, LX/02S;->A01:Ljava/lang/Integer;\n\n    .line 33\n    .line 34\n    if-ne v1, v0, :cond_54\n\n    .line 35\n    .line 36\n    invoke-static {p4}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;\n\n    .line 37\n    .line 38\n    .line 39\n    move-result-object v1\n\n    .line 40\n    sget-boolean v0, LX/0Dp;->A03:Z\n\n    .line 41\n    .line 42\n    if-eqz v0, :cond_4f\n\n    .line 43\n    .line 44\n    invoke-static {}, LX/0Dp;->A01()LX/0Dt;\n\n    .line 45\n    .line 46\n    .line 47\n    move-result-object v0\n\n    .line 48\n    if-eqz v0, :cond_4f\n\n    .line 49\n    .line 50\n    invoke-virtual {v0, p2, p3}, LX/0Dt;->A05(J)LX/I3z;\n\n    .line 51\n    .line 52\n    .line 53\n    move-result-object v2\n\n    .line 54\n    if-eqz v2, :cond_4b\n\n    .line 55\n    .line 56\n    iget-object v0, v2, LX/I3z;->A02:Ljava/lang/Object;\n\n    .line 57\n    .line 58\n    if-eqz v0, :cond_4b\n\n    .line 59\n    .line 60\n    const/4 v1, 0x1\n\n    .line 61\n    iget v0, v2, LX/I3z;->A00:I\n\n    .line 62\n    .line 63\n    if-ne v0, v1, :cond_4b\n\n    .line 64\n    .line 65\n    invoke-virtual {v2}, LX/I3z;->A00()Ljava/lang/Boolean;\n\n    .line 66\n    .line 67\n    .line 68\n    move-result-object v0\n\n    .line 69\n    if-eqz v0, :cond_4b\n\n    .line 70\n    .line 71\n    invoke-virtual {v0}, Ljava/lang/Boolean;->booleanValue()Z\n\n    .line 72\n    .line 73\n    .line 74\n    move-result p4\n\n    .line 75\n    :cond_4b\n    invoke-static {p4}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;\n\n    .line 76\n    .line 77\n    .line 78\n    move-result-object v1\n\n    .line 79\n    :cond_4f\n    invoke-virtual {v1}, Ljava/lang/Boolean;->booleanValue()Z\n\n    .line 80\n    .line 81\n    .line 82\n    move-result v0\n\n    .line 83\n    return v0\n\n    .line 84\n    :cond_54\n    sget-object v0, LX/02S;->A0C:Ljava/lang/Integer;\n\n    .line 85\n    .line 86\n    if-eq v1, v0, :cond_73\n\n    .line 87\n    .line 88\n    iget-boolean v0, p1, LX/0E8;->A02:Z\n\n    .line 89\n    .line 90\n    if-eqz v0, :cond_6c\n\n    .line 91\n    .line 92\n    invoke-virtual {p0, p2, p3}, LX/09H;->A07(J)LX/09J;\n\n    .line 93\n    .line 94\n    .line 95\n    move-result-object v0\n\n    .line 96\n    iput-object v0, p1, LX/0E8;->A00:LX/09J;\n\n    .line 97\n    .line 98\n    iget-object v1, v0, LX/09J;->A00:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;\n\n    .line 99\n    .line 100\n    sget-object v0, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->SERVER:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;\n\n    .line 101\n    .line 102\n    if-eq v1, v0, :cond_6c\n\n    .line 103\n    .line 104\n    sget-object v0, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->DEFAULT__SERVER_RETURNED_NULL:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;\n\n    .line 105\n    .line 106\n    if-ne v1, v0, :cond_73\n\n    .line 107\n    .line 108\n    :cond_6c\n    iget-boolean v0, p1, LX/0E7;->A00:Z\n\n    .line 109\n    .line 110\n    invoke-virtual {p0, p2, p3, p4, v0}, LX/09H;->A09(JZZ)Z\n\n    .line 111\n    .line 112\n    .line 113\n    move-result v0\n\n    .line 114\n    return v0\n\n    .line 115\n    :cond_73\n    return p4\n.end method",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

@@ -1,0 +1,63 @@
+# APK-derived structural disassembly: LX/099;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A08(LI) flags=0x1 registers=10
+  # full signature: LX/099;->A08(I)LX/098;
+  0000..0004 op=52 iget v2, v8, LX/099;->A08:I
+  0004..0006 op=12 const/4 v0, #0x2
+  0006..000a op=33 if-ne v2, v0, +0x1c
+  000a..000e op=1a const-string v1, ""
+  000e..0014 op=6e invoke-virtual {v8}, LX/099;->A0B()Ljava/lang/String;
+  0014..0016 op=0c move-result-object v0
+  0016..001c op=6e invoke-virtual {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+  001c..001e op=0a move-result v0
+  001e..0022 op=38 if-eqz v0, +0x10
+  0022..0026 op=1a const-string v2, "MobileConfigFactoryImpl"
+  0026..002a op=1a const-string v1, "Attempt to read config (index:%d) after logout, see https://fburl.com/bicj8iz0"
+  002a..0030 op=71 invoke-static {v9}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  0030..0032 op=0c move-result-object v0
+  0032..0038 op=71 invoke-static {v0, v2, v1}, LX/06S;->A0C(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)V
+  0038..003c op=54 iget-object v0, v8, LX/099;->A0K:LX/09I;
+  003c..003e op=11 return-object v0
+  003e..0042 op=54 iget-object v7, v8, LX/099;->A0X:LX/098;
+  0042..0046 op=39 if-nez v7, +0x3c
+  0046..0048 op=1d monitor-enter
+  0048..004c op=54 iget-object v0, v8, LX/099;->A0X:LX/098;
+  004c..0050 op=38 if-eqz v0, +0x4
+  0050..0052 op=1e monitor-exit
+  0052..0054 op=11 return-object v0
+  0054..005a op=70 invoke-direct {v8}, LX/099;->A01()LX/09G;
+  005a..005c op=0c move-result-object v7
+  005c..0060 op=5b iput-object v7, v8, LX/099;->A0X:LX/098;
+  0060..0062 op=1e monitor-exit
+  0062..0064 op=28 goto +0x4
+  0064..0066 op=0d move-exception v0
+  0066..0068 op=1e monitor-exit
+  0068..006a op=27 throw v0
+  006a..006e op=1a const-string v6, "MobileConfigFactoryImpl"
+  006e..0072 op=1a const-string v5, "Updated cached latest contextV2 - isValid: %s, unitType: %s withTranslationTable: %s"
+  0072..0078 op=72 invoke-interface {v7}, LX/09G;->isValid()Z
+  0078..007a op=0a move-result v0
+  007a..0080 op=71 invoke-static {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+  0080..0082 op=0c move-result-object v4
+  0082..0088 op=71 invoke-static {v2}, LX/GAe;->A00(I)Ljava/lang/String;
+  0088..008a op=0c move-result-object v3
+  008a..0090 op=72 invoke-interface {v7}, LX/09G;->B7f()I
+  0090..0092 op=0a move-result v0
+  0092..0098 op=71 invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  0098..009a op=0c move-result-object v2
+  009a..009e op=62 sget-object v1, LX/06S;->A01:LX/06T;
+  009e..00a0 op=12 const/4 v0, #0x4
+  00a0..00a6 op=72 invoke-interface {v1, v0}, LX/06T;->BNl(I)Z
+  00a6..00a8 op=0a move-result v0
+  00a8..00ac op=38 if-eqz v0, +0x9
+  00ac..00b2 op=71 invoke-static {v5, v4, v3, v2}, Lcom/facebook/common/stringformat/StringFormatUtil;->formatStrLocaleSafe(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/String;
+  00b2..00b4 op=0c move-result-object v0
+  00b4..00ba op=71 invoke-static {v6, v0}, LX/06S;->A0G(Ljava/lang/String;Ljava/lang/String;)V
+  00ba..00bc op=11 return-object v7
+  # exception table: 2 try range(s)
+  # catch <all> code_units 0024..0032 -> 0032
+  # catch <all> code_units 0033..0034 -> 0032
+.end method

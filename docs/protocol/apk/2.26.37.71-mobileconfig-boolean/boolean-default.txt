@@ -1,0 +1,20 @@
+# APK-derived structural disassembly: LX/099;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method AVn(ZLJ) flags=0x1 registers=10
+  # full signature: LX/099;->AVn(LX/0E8;J)Z
+  0000..0004 op=13 const/16 v0, #0x3d
+  0004..0008 op=a5 ushr-long v4, v8, v0
+  0008..000c op=16 const-wide/16 v2, #0x1
+  000c..000e op=c0 and-long/2addr v4, v2
+  000e..0012 op=31 cmp-long v1, v4, v2
+  0012..0014 op=12 const/4 v0, #0x0
+  0014..0018 op=39 if-nez v1, +0x3
+  0018..001a op=12 const/4 v0, #0x1
+  001a..0020 op=6e invoke-virtual {v6, v7, v8, v9, v0}, LX/099;->AVo(LX/0E8;JZ)Z
+  0020..0022 op=0a move-result v0
+  0022..0024 op=0f return v0
+  # exception table: 0 try range(s)
+.end method

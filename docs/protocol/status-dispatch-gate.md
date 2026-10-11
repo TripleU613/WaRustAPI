@@ -19,6 +19,10 @@ handoff reaches the [ordinary receipt writer](broadcast-receipt.md).
 
 ## Cached configuration owner
 
+The subsequent [effective Boolean provider trace](mobileconfig-boolean.md)
+resolves readiness setup and the concrete managed Boolean context. It does
+not yet establish the effective saved account configuration.
+
 [0YZ.A0E](apk/2.26.37.71-status-dispatch-gate/receive-gate.txt) reads A05.get.
 The [constructor DEX](apk/2.26.37.71-status-dispatch-gate/constructor.txt)
 assigns A05 from 0WE.A00(new 1Xe(this,35)), at 00a4..00be.

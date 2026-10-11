@@ -1,0 +1,69 @@
+# APK-derived structural disassembly: LX/Lwj;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A09(ZJZZ) flags=0x1 registers=15
+  # full signature: LX/Lwj;->A09(JZZ)Z
+  0000..0004 op=1a const-string v3, "MobileConfigContextV2Impl"
+  0004..0008 op=54 iget-object v8, v10, LX/Lwj;->A03:LX/Lwi;
+  0008..000c op=38 if-eqz v8, +0x61
+  000c..0012 op=71 invoke-static {v11, v12}, LX/Lwj;->A01(J)I
+  0012..0014 op=0a move-result v0
+  0014..0016 op=12 const/4 v5, #0x1
+  0016..001a op=33 if-ne v0, v5, +0x5a
+  001a..0020 op=17 const-wide/32 v6, #0xffff
+  0020..0024 op=a0 and-long v0, v11, v6
+  0024..0026 op=84 long-to-int v7, v0
+  0026..0028 op=12 const/4 v9, #0x0
+  0028..002c op=52 iget v0, v8, LX/Lwi;->A01:I
+  002c..0030 op=38 if-eqz v0, +0x3f
+  0030..0034 op=54 iget-object v1, v8, LX/MZZ;->A01:Ljava/nio/ByteBuffer;
+  0034..003a op=6e invoke-virtual {v8, v0}, LX/MZZ;->A02(I)I
+  003a..003c op=0a move-result v0
+  003c..003e op=b0 add-int/2addr v0, v7
+  003e..0044 op=6e invoke-virtual {v1, v0}, Ljava/nio/ByteBuffer;->get(I)B
+  0044..0046 op=0a move-result v6
+  0046..004a op=dd and-int/lit8 v0, v6, #0x6
+  004a..004e op=38 if-eqz v0, +0x27
+  004e..0052 op=60 sget v4, LX/MkK;->A00:I
+  0052..0056 op=52 iget v0, v8, LX/Lwi;->A00:I
+  0056..005a op=38 if-eqz v0, +0x1b
+  005a..005e op=54 iget-object v2, v8, LX/MZZ;->A01:Ljava/nio/ByteBuffer;
+  005e..0064 op=6e invoke-virtual {v8, v0}, LX/MZZ;->A02(I)I
+  0064..0066 op=0a move-result v1
+  0066..006a op=da mul-int/lit8 v0, v7, #0x4
+  006a..006c op=b0 add-int/2addr v1, v0
+  006c..0072 op=6e invoke-virtual {v2, v1}, Ljava/nio/ByteBuffer;->getInt(I)I
+  0072..0074 op=0a move-result v4
+  0074..0076 op=28 goto +0xd
+  0076..0078 op=0d move-exception v0
+  0078..007c op=23 new-array v1, v5, [Ljava/lang/Object;
+  007c..0080 op=4d aput-object v0, v1, v9
+  0080..0084 op=1a const-string v0, "Failed to get boolean meta from config table"
+  0084..008a op=71 invoke-static {v3, v0, v1}, LX/NS4;->A01(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+  008a..008c op=28 goto +0x2
+  008c..008e op=12 const/4 v4, #0x0
+  008e..0092 op=39 if-nez v14, +0x10
+  0092..0098 op=6e invoke-virtual {v10, v4, v11, v12}, LX/Lwj;->A0B(IJ)V
+  0098..009c op=dd and-int/lit8 v0, v6, #0x11
+  009c..00a0 op=39 if-nez v0, +0x17
+  00a0..00a4 op=e2 ushr-int/lit8 v0, v6, #0x7
+  00a4..00a6 op=12 const/4 v13, #0x1
+  00a6..00aa op=39 if-nez v0, +0x12
+  00aa..00ac op=12 const/4 v13, #0x0
+  00ac..00ae op=0f return v13
+  00ae..00b4 op=6e invoke-virtual {v10, v4}, LX/Lwj;->A0A(I)V
+  00b4..00b6 op=28 goto -0xe
+  00b6..00b8 op=0d move-exception v0
+  00b8..00bc op=23 new-array v1, v5, [Ljava/lang/Object;
+  00bc..00c0 op=4d aput-object v0, v1, v9
+  00c0..00c4 op=1a const-string v0, "Failed to get boolean data from config table"
+  00c4..00ca op=71 invoke-static {v3, v0, v1}, LX/NS4;->A01(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+  00ca..00cc op=0f return v13
+  # exception table: 2 try range(s)
+  # catch Ljava/lang/IndexOutOfBoundsException; code_units 0014..0027 -> 005b
+  # catch Ljava/nio/BufferUnderflowException; code_units 0014..0027 -> 005b
+  # catch Ljava/lang/IndexOutOfBoundsException; code_units 0029..003b -> 003b
+  # catch Ljava/nio/BufferUnderflowException; code_units 0029..003b -> 003b
+.end method

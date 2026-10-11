@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_99b587ceb3b62f5bcacef2d1c67567bc9c498bcdf06c0b469cae34057e50df7e",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.C09H",
+    "method_name": "A00"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-4dnaVb/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":15695085568,\"java_version\":\"21.0.12.1\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C09H"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"type\":\"X.09C\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"X.092\",\"def_pos\":0,\"name\":\"A01\"}],\"methods\":[{\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(X.09C, X.092): void\",\"is_constructor\":true},{\"name\":\"A00\",\"def_pos\":0,\"signature\":\"A00(X.0E8, long): java.lang.Integer\",\"is_constructor\":false},{\"name\":\"A05\",\"def_pos\":0,\"signature\":\"A05(double, long, boolean): double\",\"is_constructor\":false},{\"name\":\"A06\",\"def_pos\":0,\"signature\":\"A06(long, long, boolean): long\",\"is_constructor\":false},{\"name\":\"A07\",\"def_pos\":0,\"signature\":\"A07(long): X.09J\",\"is_constructor\":false},{\"name\":\"A08\",\"def_pos\":0,\"signature\":\"A08(java.lang.String, long, boolean): java.lang.String\",\"is_constructor\":false},{\"name\":\"A09\",\"def_pos\":0,\"signature\":\"A09(long, boolean, boolean): boolean\",\"is_constructor\":false},{\"name\":\"AVm\",\"def_pos\":0,\"signature\":\"AVm(long): boolean\",\"is_constructor\":false},{\"name\":\"AVn\",\"def_pos\":0,\"signature\":\"AVn(X.0E8, long): boolean\",\"is_constructor\":false},{\"name\":\"AVo\",\"def_pos\":0,\"signature\":\"AVo(X.0E8, long, boolean): boolean\",\"is_constructor\":false},{\"name\":\"AdL\",\"def_pos\":0,\"signature\":\"AdL(X.0E8, double, long): double\",\"is_constructor\":false},{\"name\":\"AdM\",\"def_pos\":0,\"signature\":\"AdM(X.0E8, long): double\",\"is_constructor\":false},{\"name\":\"An9\",\"def_pos\":0,\"signature\":\"An9(long): long\",\"is_constructor\":false},{\"name\":\"AnD\",\"def_pos\":0,\"signature\":\"AnD(X.0E8, long, long): long\",\"is_constructor\":false},{\"name\":\"AnE\",\"def_pos\":0,\"signature\":\"AnE(X.0E8, long): long\",\"is_constructor\":false},{\"name\":\"Ayq\",\"def_pos\":0,\"signature\":\"Ayq(): java.lang.String\",\"is_constructor\":false},{\"name\":\"Ayv\",\"def_pos\":0,\"signature\":\"Ayv(): long\",\"is_constructor\":false},{\"name\":\"B4W\",\"def_pos\":0,\"signature\":\"B4W(X.0E8, long): java.lang.String\",\"is_constructor\":false},{\"name\":\"B4X\",\"def_pos\":0,\"signature\":\"B4X(X.0E8, java.lang.String, long): java.lang.String\",\"is_constructor\":false},{\"name\":\"B7f\",\"def_pos\":0,\"signature\":\"B7f(): int\",\"is_constructor\":false}],\"method_count\":20,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"C09H\",\"full_name\":\"X.C09H\",\"field_count\":2}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C09H",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"overload_count\":1,\"method_name\":\"A00\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.09H.A00\",\"class_name\":\"X.C09H\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    /* JADX WARN: Code duplicated, block: B:26:0x0048 A[Catch: all -\\u003e 0x004c, TRY_LEAVE, TryCatch #0 {, blocks: (B:8:0x000d, B:10:0x0011, B:11:0x0014, B:13:0x001e, B:14:0x0021, B:16:0x0029, B:18:0x002f, B:19:0x0032, B:23:0x003a, B:25:0x0045, B:26:0x0048), top: B:47:0x000d }] */\\n    public static Integer A00(C0E8 c0e8, long j) {\\n        Integer num;\\n        MobileConfigValueSource mobileConfigValueSource;\\n        C0Dt c0DtA01;\\n        I3z i3z;\\n        if (!C0Dp.A03 || (c0DtA01 \\u003d C0Dp.A01()) \\u003d\\u003d null) {\\n            num \\u003d C02S.A00;\\n        } else {\\n            synchronized (c0DtA01.A04) {\\n                if (c0DtA01.A02 \\u0026\\u0026 (i3z \\u003d (I3z) c0DtA01.A03.A05(j)) !\\u003d null) {\\n                    long j2 \\u003d c0DtA01.A00;\\n                    if (j2 \\u003c\\u003d 0 || i3z.A01 \\u003e\\u003d j2) {\\n                        if (!(i3z.A02 !\\u003d null)) {\\n                            num \\u003d C02S.A0C;\\n                        } else if (i3z.A00 \\u003d\\u003d ((int) ((j \\u003e\\u003e\\u003e 48) \\u0026 63))) {\\n                            num \\u003d C02S.A01;\\n                        } else {\\n                            num \\u003d C02S.A0C;\\n                        }\\n                    } else {\\n                        num \\u003d C02S.A00;\\n                    }\\n                } else {\\n                    num \\u003d C02S.A00;\\n                }\\n            }\\n        }\\n        Integer num2 \\u003d C02S.A01;\\n        if (num !\\u003d num2) {\\n            num2 \\u003d C02S.A0C;\\n            if (num !\\u003d num2) {\\n                return C02S.A00;\\n            }\\n            if (c0e8.A02) {\\n                mobileConfigValueSource \\u003d MobileConfigValueSource.DEFAULT__FROM_SILENT_PUSH_FALLBACK;\\n                c0e8.A01(mobileConfigValueSource);\\n            }\\n        } else if (c0e8.A02) {\\n            mobileConfigValueSource \\u003d MobileConfigValueSource.SILENT_PUSH_VALUE;\\n            c0e8.A01(mobileConfigValueSource);\\n        }\\n        return num2;\\n    }\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.C09H",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(X.0E8, long): java.lang.Integer",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Code duplicated, block: B:26:0x0048 A[Catch: all -> 0x004c, TRY_LEAVE, TryCatch #0 {, blocks: (B:8:0x000d, B:10:0x0011, B:11:0x0014, B:13:0x001e, B:14:0x0021, B:16:0x0029, B:18:0x002f, B:19:0x0032, B:23:0x003a, B:25:0x0045, B:26:0x0048), top: B:47:0x000d }] */\n    public static Integer A00(C0E8 c0e8, long j) {\n        Integer num;\n        MobileConfigValueSource mobileConfigValueSource;\n        C0Dt c0DtA01;\n        I3z i3z;\n        if (!C0Dp.A03 || (c0DtA01 = C0Dp.A01()) == null) {\n            num = C02S.A00;\n        } else {\n            synchronized (c0DtA01.A04) {\n                if (c0DtA01.A02 && (i3z = (I3z) c0DtA01.A03.A05(j)) != null) {\n                    long j2 = c0DtA01.A00;\n                    if (j2 <= 0 || i3z.A01 >= j2) {\n                        if (!(i3z.A02 != null)) {\n                            num = C02S.A0C;\n                        } else if (i3z.A00 == ((int) ((j >>> 48) & 63))) {\n                            num = C02S.A01;\n                        } else {\n                            num = C02S.A0C;\n                        }\n                    } else {\n                        num = C02S.A00;\n                    }\n                } else {\n                    num = C02S.A00;\n                }\n            }\n        }\n        Integer num2 = C02S.A01;\n        if (num != num2) {\n            num2 = C02S.A0C;\n            if (num != num2) {\n                return C02S.A00;\n            }\n            if (c0e8.A02) {\n                mobileConfigValueSource = MobileConfigValueSource.DEFAULT__FROM_SILENT_PUSH_FALLBACK;\n                c0e8.A01(mobileConfigValueSource);\n            }\n        } else if (c0e8.A02) {\n            mobileConfigValueSource = MobileConfigValueSource.SILENT_PUSH_VALUE;\n            c0e8.A01(mobileConfigValueSource);\n        }\n        return num2;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

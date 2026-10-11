@@ -1,0 +1,73 @@
+# APK-derived structural disassembly: LX/09H;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(LLJ) flags=0x9 registers=10
+  # full signature: LX/09H;->A00(LX/0E8;J)Ljava/lang/Integer;
+  0000..0004 op=63 ?? v0, LX/0Dp;->A03:Z
+  0004..0008 op=38 if-eqz v0, +0x4d
+  0008..000e op=71 invoke-static {}, LX/0Dp;->A01()LX/0Dt;
+  000e..0010 op=0c move-result-object v1
+  0010..0014 op=38 if-eqz v1, +0x47
+  0014..0018 op=54 iget-object v3, v1, LX/0Dt;->A04:Ljava/lang/Object;
+  0018..001a op=1d monitor-enter
+  001a..001e op=55 iget-boolean v0, v1, LX/0Dt;->A02:Z
+  001e..0022 op=39 if-nez v0, +0x5
+  0022..0026 op=62 sget-object v0, LX/02S;->A00:Ljava/lang/Integer;
+  0026..0028 op=28 goto +0x37
+  0028..002c op=54 iget-object v0, v1, LX/0Dt;->A03:LX/09E;
+  002c..0032 op=6e invoke-virtual {v0, v8, v9}, LX/09E;->A05(J)Ljava/lang/Object;
+  0032..0034 op=0c move-result-object v6
+  0034..0038 op=1f check-cast v6, LX/I3z;
+  0038..003c op=39 if-nez v6, +0x5
+  003c..0040 op=62 sget-object v0, LX/02S;->A00:Ljava/lang/Integer;
+  0040..0042 op=28 goto +0x2a
+  0042..0046 op=53 iget-wide v4, v1, LX/0Dt;->A00:J
+  0046..004a op=16 const-wide/16 v1, #0x0
+  004a..004e op=31 cmp-long v0, v4, v1
+  004e..0052 op=3d if-lez v0, +0xb
+  0052..0056 op=53 iget-wide v1, v6, LX/I3z;->A01:J
+  0056..005a op=31 cmp-long v0, v1, v4
+  005a..005e op=3b if-gez v0, +0x5
+  005e..0062 op=62 sget-object v0, LX/02S;->A00:Ljava/lang/Integer;
+  0062..0064 op=28 goto +0x19
+  0064..0068 op=54 iget-object v1, v6, LX/I3z;->A02:Ljava/lang/Object;
+  0068..006a op=12 const/4 v0, #0x0
+  006a..006e op=38 if-eqz v1, +0x3
+  006e..0070 op=12 const/4 v0, #0x1
+  0070..0074 op=38 if-eqz v0, +0x10
+  0074..0078 op=13 const/16 v0, #0x30
+  0078..007a op=c5 ushr-long/2addr v8, v0
+  007a..007e op=16 const-wide/16 v0, #0x3f
+  007e..0080 op=c0 and-long/2addr v8, v0
+  0080..0082 op=84 long-to-int v1, v8
+  0082..0086 op=52 iget v0, v6, LX/I3z;->A00:I
+  0086..008a op=33 if-ne v0, v1, +0x5
+  008a..008e op=62 sget-object v0, LX/02S;->A01:Ljava/lang/Integer;
+  008e..0090 op=28 goto +0x3
+  0090..0094 op=62 sget-object v0, LX/02S;->A0C:Ljava/lang/Integer;
+  0094..0096 op=1e monitor-exit
+  0096..0098 op=28 goto +0x6
+  0098..009a op=0d move-exception v0
+  009a..009c op=1e monitor-exit
+  009c..009e op=27 throw v0
+  009e..00a2 op=62 sget-object v0, LX/02S;->A00:Ljava/lang/Integer;
+  00a2..00a6 op=62 sget-object v1, LX/02S;->A01:Ljava/lang/Integer;
+  00a6..00aa op=33 if-ne v0, v1, +0xc
+  00aa..00ae op=55 iget-boolean v0, v7, LX/0E8;->A02:Z
+  00ae..00b2 op=38 if-eqz v0, +0x7
+  00b2..00b6 op=62 sget-object v0, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->SILENT_PUSH_VALUE:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+  00b6..00bc op=6e invoke-virtual {v7, v0}, LX/0E8;->A01(Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;)V
+  00bc..00be op=11 return-object v1
+  00be..00c2 op=62 sget-object v1, LX/02S;->A0C:Ljava/lang/Integer;
+  00c2..00c6 op=33 if-ne v0, v1, +0x9
+  00c6..00ca op=55 iget-boolean v0, v7, LX/0E8;->A02:Z
+  00ca..00ce op=38 if-eqz v0, -0x7
+  00ce..00d2 op=62 sget-object v0, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->DEFAULT__FROM_SILENT_PUSH_FALLBACK:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+  00d2..00d4 op=28 goto -0xe
+  00d4..00d8 op=62 sget-object v1, LX/02S;->A00:Ljava/lang/Integer;
+  00d8..00da op=11 return-object v1
+  # exception table: 1 try range(s)
+  # catch <all> code_units 000d..004a -> 004c
+.end method

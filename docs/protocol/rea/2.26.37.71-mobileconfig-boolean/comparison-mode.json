@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_0372e89d5e1e4783c7d4120450de30e005f9f36d9f6d8f3c0cc0fb74ba13a43b",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.C00F",
+    "method_name": "A00"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-4dnaVb/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":15695085568,\"java_version\":\"21.0.12.1\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C00F"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"type\":\"java.lang.Integer\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"boolean\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"X.00F\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"X.00F\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"X.00F\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"X.00F\",\"def_pos\":0,\"name\":\"A05\"},{\"type\":\"X.00F\",\"def_pos\":0,\"name\":\"A06\"}],\"methods\":[{\"name\":\"\\u003cclinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cclinit\\u003e(): void\",\"is_constructor\":false},{\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(java.lang.Integer, boolean): void\",\"is_constructor\":true},{\"name\":\"A00\",\"def_pos\":0,\"signature\":\"A00(): X.00F\",\"is_constructor\":false},{\"name\":\"equals\",\"def_pos\":0,\"signature\":\"equals(java.lang.Object): boolean\",\"is_constructor\":false},{\"name\":\"hashCode\",\"def_pos\":0,\"signature\":\"hashCode(): int\",\"is_constructor\":false},{\"name\":\"toString\",\"def_pos\":0,\"signature\":\"toString(): java.lang.String\",\"is_constructor\":false}],\"method_count\":6,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"C00F\",\"full_name\":\"X.C00F\",\"field_count\":7}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C00F",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"overload_count\":1,\"method_name\":\"A00\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.00F.A00\",\"class_name\":\"X.C00F\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public final C00F A00() {\\n        Integer num \\u003d this.A00;\\n        Integer num2 \\u003d C02S.A00;\\n        if (num \\u003d\\u003d num2) {\\n            return this;\\n        }\\n        if (this \\u003d\\u003d A03) {\\n            return A06;\\n        }\\n        return this \\u003d\\u003d A02 ? A05 : new C00F(num2, this.A01);\\n    }\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.C00F",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(): X.00F",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public final C00F A00() {\n        Integer num = this.A00;\n        Integer num2 = C02S.A00;\n        if (num == num2) {\n            return this;\n        }\n        if (this == A03) {\n            return A06;\n        }\n        return this == A02 ? A05 : new C00F(num2, this.A01);\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}
