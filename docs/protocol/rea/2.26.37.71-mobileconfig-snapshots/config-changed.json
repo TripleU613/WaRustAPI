@@ -1,0 +1,129 @@
+{
+  "evidence_id": "ev_0d9bf3b4b533fb264d9c5f004205177e0eb28e03a84fa9cff2f5da627ac85b5e",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.AnonymousClass099",
+    "method_name": "onConfigChanged",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-OV1fW4/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\",\"max_heap_bytes\":15695085568,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.AnonymousClass099"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"def_pos\":0,\"type\":\"int\",\"name\":\"A00\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"A01\"},{\"def_pos\":0,\"type\":\"X.09C\",\"name\":\"A02\"},{\"def_pos\":0,\"type\":\"X.09K\",\"name\":\"A03\"},{\"def_pos\":0,\"type\":\"X.00r\",\"name\":\"A04\"},{\"def_pos\":0,\"type\":\"boolean\",\"name\":\"A05\"},{\"def_pos\":0,\"type\":\"X.Hfz\",\"name\":\"A06\"},{\"def_pos\":0,\"type\":\"int[][]\",\"name\":\"A07\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"A08\"},{\"def_pos\":0,\"type\":\"X.09B\",\"name\":\"A09\"},{\"def_pos\":0,\"type\":\"X.090\",\"name\":\"A0A\"},{\"def_pos\":0,\"type\":\"X.092\",\"name\":\"A0B\"},{\"def_pos\":0,\"type\":\"java.io.File\",\"name\":\"A0C\"},{\"def_pos\":0,\"type\":\"java.util.Set\",\"name\":\"A0D\"},{\"def_pos\":0,\"type\":\"java.util.concurrent.atomic.AtomicBoolean\",\"name\":\"A0E\"},{\"def_pos\":0,\"type\":\"java.util.concurrent.atomic.AtomicBoolean\",\"name\":\"A0F\"},{\"def_pos\":0,\"type\":\"java.util.concurrent.atomic.AtomicBoolean\",\"name\":\"A0G\"},{\"def_pos\":0,\"type\":\"java.util.concurrent.atomic.AtomicBoolean\",\"name\":\"A0H\"},{\"def_pos\":0,\"type\":\"boolean\",\"name\":\"A0I\"},{\"def_pos\":0,\"type\":\"android.content.res.AssetManager\",\"name\":\"A0J\"},{\"def_pos\":0,\"type\":\"X.09I\",\"name\":\"A0K\"},{\"def_pos\":0,\"type\":\"X.09I\",\"name\":\"A0L\"},{\"def_pos\":0,\"type\":\"X.09I\",\"name\":\"A0M\"},{\"def_pos\":0,\"type\":\"X.09I\",\"name\":\"A0N\"},{\"def_pos\":0,\"type\":\"X.08x\",\"name\":\"A0O\"},{\"def_pos\":0,\"type\":\"X.08y\",\"name\":\"A0P\"},{\"def_pos\":0,\"type\":\"X.08w\",\"name\":\"A0Q\"},{\"def_pos\":0,\"type\":\"java.lang.Object\",\"name\":\"A0R\"},{\"def_pos\":0,\"type\":\"java.util.Random\",\"name\":\"A0S\"},{\"def_pos\":0,\"type\":\"java.util.Set\",\"name\":\"A0T\"},{\"def_pos\":0,\"type\":\"java.util.Set\",\"name\":\"A0U\"},{\"def_pos\":0,\"type\":\"boolean\",\"name\":\"A0V\"},{\"def_pos\":0,\"type\":\"X.09A\",\"name\":\"A0W\"},{\"def_pos\":0,\"type\":\"X.098\",\"name\":\"A0X\"},{\"def_pos\":0,\"type\":\"java.util.concurrent.atomic.AtomicReferenceArray\",\"name\":\"A0Y\"},{\"def_pos\":0,\"type\":\"X.00r\",\"name\":\"A0Z\"},{\"def_pos\":0,\"type\":\"X.00r\",\"name\":\"A0a\"},{\"def_pos\":0,\"type\":\"boolean\",\"name\":\"A0b\"},{\"def_pos\":0,\"type\":\"boolean\",\"name\":\"A0c\"},{\"def_pos\":0,\"type\":\"boolean\",\"name\":\"A0d\"}],\"field_count\":40,\"full_name\":\"X.AnonymousClass099\",\"name\":\"AnonymousClass099\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":32,\"methods\":[{\"is_constructor\":true,\"signature\":\"\\u003cinit\\u003e(android.content.res.AssetManager, X.090, X.08x, X.092, X.08y, X.08w, java.io.File, java.util.Set, X.00r, X.00r, X.00r, int[][], int, boolean): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\"},{\"is_constructor\":false,\"signature\":\"A00(long): int\",\"def_pos\":0,\"name\":\"A00\"},{\"is_constructor\":false,\"signature\":\"A01(): X.09G\",\"def_pos\":0,\"name\":\"A01\"},{\"is_constructor\":false,\"signature\":\"A02(X.099): java.io.File\",\"def_pos\":0,\"name\":\"A02\"},{\"is_constructor\":false,\"signature\":\"A03(): java.util.Set\",\"def_pos\":0,\"name\":\"A03\"},{\"is_constructor\":false,\"signature\":\"A04(long, java.lang.String): void\",\"def_pos\":0,\"name\":\"A04\"},{\"is_constructor\":false,\"signature\":\"A05(java.lang.String, java.lang.String): void\",\"def_pos\":0,\"name\":\"A05\"},{\"is_constructor\":false,\"signature\":\"A06(long): boolean\",\"def_pos\":0,\"name\":\"A06\"},{\"is_constructor\":false,\"signature\":\"A07(int): X.098\",\"def_pos\":0,\"name\":\"A07\"},{\"is_constructor\":false,\"signature\":\"A08(int): X.098\",\"def_pos\":0,\"name\":\"A08\"},{\"is_constructor\":false,\"signature\":\"A09(): X.090\",\"def_pos\":0,\"name\":\"A09\"},{\"is_constructor\":false,\"signature\":\"A0A(): X.Hfz\",\"def_pos\":0,\"name\":\"A0A\"},{\"is_constructor\":false,\"signature\":\"A0B(): java.lang.String\",\"def_pos\":0,\"name\":\"A0B\"},{\"is_constructor\":false,\"signature\":\"A0C(): void\",\"def_pos\":0,\"name\":\"A0C\"},{\"is_constructor\":false,\"signature\":\"A0D(): void\",\"def_pos\":0,\"name\":\"A0D\"},{\"is_constructor\":false,\"signature\":\"A0E(X.08z): void\",\"def_pos\":0,\"name\":\"A0E\"},{\"is_constructor\":false,\"signature\":\"A0F(): int[]\",\"def_pos\":0,\"name\":\"A0F\"},{\"is_constructor\":false,\"signature\":\"AVm(long): boolean\",\"def_pos\":0,\"name\":\"AVm\"},{\"is_constructor\":false,\"signature\":\"AVn(X.0E8, long): boolean\",\"def_pos\":0,\"name\":\"AVn\"},{\"is_constructor\":false,\"signature\":\"AVo(X.0E8, long, boolean): boolean\",\"def_pos\":0,\"name\":\"AVo\"},{\"is_constructor\":false,\"signature\":\"AdL(X.0E8, double, long): double\",\"def_pos\":0,\"name\":\"AdL\"},{\"is_constructor\":false,\"signature\":\"AdM(X.0E8, long): double\",\"def_pos\":0,\"name\":\"AdM\"},{\"is_constructor\":false,\"signature\":\"AeC(): java.util.Map\",\"def_pos\":0,\"name\":\"AeC\"},{\"is_constructor\":false,\"signature\":\"An9(long): long\",\"def_pos\":0,\"name\":\"An9\"},{\"is_constructor\":false,\"signature\":\"AnD(X.0E8, long, long): long\",\"def_pos\":0,\"name\":\"AnD\"},{\"is_constructor\":false,\"signature\":\"AnE(X.0E8, long): long\",\"def_pos\":0,\"name\":\"AnE\"},{\"is_constructor\":false,\"signature\":\"B4W(X.0E8, long): java.lang.String\",\"def_pos\":0,\"name\":\"B4W\"},{\"is_constructor\":false,\"signature\":\"B4X(X.0E8, java.lang.String, long): java.lang.String\",\"def_pos\":0,\"name\":\"B4X\"},{\"is_constructor\":false,\"signature\":\"BUY(long): void\",\"def_pos\":0,\"name\":\"BUY\"},{\"is_constructor\":false,\"signature\":\"onConfigChanged(java.lang.String[]): void\",\"def_pos\":0,\"name\":\"onConfigChanged\"},{\"is_constructor\":false,\"signature\":\"onConfigChanged(java.lang.String[], java.lang.String): void\",\"def_pos\":0,\"name\":\"onConfigChanged\"},{\"is_constructor\":false,\"signature\":\"onEpConfigChanged(java.lang.String[], java.lang.String[]): boolean\",\"def_pos\":0,\"name\":\"onEpConfigChanged\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.AnonymousClass099",
+          "method_name": "onConfigChanged",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"overload_count\":2,\"body\":\"    @Override // com.facebook.mobileconfig.MobileConfigCxxChangeListener\\n    public void onConfigChanged(String[] strArr) {\\n        C09G c09gA01;\\n        if (strArr \\u003d\\u003d null || strArr.length \\u003c\\u003d 0) {\\n            return;\\n        }\\n        C06S.A0G(\\\"MobileConfigFactoryImpl\\\", \\\"Refreshing cached config context\\\");\\n        synchronized (this) {\\n            try {\\n                c09gA01 \\u003d A01();\\n            } catch (Throwable th) {\\n                C06S.A0U(\\\"MobileConfigFactoryImpl\\\", th, \\\"Failed to pre-warm cached config context\\\");\\n                c09gA01 \\u003d null;\\n            }\\n            this.A0X \\u003d c09gA01;\\n        }\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.AnonymousClass099\",\"full_name\":\"X.099.onConfigChanged\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"onConfigChanged\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.AnonymousClass099",
+    "method": {
+      "name": "onConfigChanged",
+      "reported_signature": "onConfigChanged(java.lang.String[]): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 2,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    @Override // com.facebook.mobileconfig.MobileConfigCxxChangeListener\n    public void onConfigChanged(String[] strArr) {\n        C09G c09gA01;\n        if (strArr == null || strArr.length <= 0) {\n            return;\n        }\n        C06S.A0G(\"MobileConfigFactoryImpl\", \"Refreshing cached config context\");\n        synchronized (this) {\n            try {\n                c09gA01 = A01();\n            } catch (Throwable th) {\n                C06S.A0U(\"MobileConfigFactoryImpl\", th, \"Failed to pre-warm cached config context\");\n                c09gA01 = null;\n            }\n            this.A0X = c09gA01;\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

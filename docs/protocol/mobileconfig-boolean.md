@@ -176,7 +176,8 @@ separate synchronized latest snapshot cache.
 [A01](apk/2.26.37.71-mobileconfig-boolean/snapshot-factory.txt) gets the latest
 handle/buffer and builds Lwj, optionally wrapped in IIY for the Java manager.
 The [Lwj constructor](apk/2.26.37.71-mobileconfig-boolean/snapshot-owner.txt)
-establishes its 09H base. The optional IIY path remains untraced here.
+establishes its 09H base. The later [snapshot trace](mobileconfig-snapshots.md)
+resolves the optional IIY Boolean wrapper, translation and direct cache resets.
 
 [09H.AVo](apk/2.26.37.71-mobileconfig-boolean/snapshot-boolean.txt) applies
 enabled Boolean overrides first. It then consults the

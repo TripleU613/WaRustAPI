@@ -1,0 +1,40 @@
+# APK-derived structural disassembly: LX/099;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method onConfigChanged(VL) flags=0x1 registers=5
+  # full signature: LX/099;->onConfigChanged([Ljava/lang/String;)V
+  0000..0004 op=38 if-eqz v4, +0x20
+  0004..0006 op=21 array-length v0, v4
+  0006..000a op=3d if-lez v0, +0x1d
+  000a..000e op=1a const-string v2, "MobileConfigFactoryImpl"
+  000e..0012 op=1a const-string v0, "Refreshing cached config context"
+  0012..0018 op=71 invoke-static {v2, v0}, LX/06S;->A0G(Ljava/lang/String;Ljava/lang/String;)V
+  0018..001a op=1d monitor-enter
+  001a..0020 op=70 invoke-direct {v3}, LX/099;->A01()LX/09G;
+  0020..0022 op=0c move-result-object v0
+  0022..0024 op=28 goto +0x8
+  0024..0026 op=0d move-exception v1
+  0026..002a op=1a const-string v0, "Failed to pre-warm cached config context"
+  002a..0030 op=71 invoke-static {v2, v1, v0}, LX/06S;->A0U(Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/String;)V
+  0030..0032 op=12 const/4 v0, #0x0
+  0032..0036 op=5b iput-object v0, v3, LX/099;->A0X:LX/098;
+  0036..0038 op=1e monitor-exit
+  0038..003a op=0e return-void
+  003a..003c op=0d move-exception v0
+  003c..003e op=1e monitor-exit
+  003e..0040 op=27 throw v0
+  0040..0042 op=0e return-void
+  # exception table: 3 try range(s)
+  # catch <all> code_units 000d..0012 -> 0012
+  # catch <all> code_units 0013..001d -> 001d
+  # catch <all> code_units 001e..001f -> 001d
+.end method
+
+.method onConfigChanged(VLL) flags=0x1001 registers=3
+  # full signature: LX/099;->onConfigChanged([Ljava/lang/String;Ljava/lang/String;)V
+  0000..0006 op=6e invoke-virtual {v0, v1}, LX/099;->onConfigChanged([Ljava/lang/String;)V
+  0006..0008 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

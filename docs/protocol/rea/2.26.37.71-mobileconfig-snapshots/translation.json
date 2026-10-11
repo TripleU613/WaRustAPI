@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_f44f1b21930535b34c285302f71eb7af76fbcb7a166ab1535398ce8a67c3ce49",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.Heh",
+    "method_name": "A00"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-GbMNI1/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"available_processors\":24,\"java_version\":\"21.0.12.1\",\"max_heap_bytes\":15695085568,\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.Heh"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"name\":\"Heh\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":2,\"methods\":[{\"signature\":\"\\u003cinit\\u003e(X.00r, int[][]): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true},{\"signature\":\"A00(long): long\",\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false}],\"fields\":[{\"type\":\"X.00r\",\"name\":\"A00\",\"def_pos\":0},{\"type\":\"int[][]\",\"name\":\"A01\",\"def_pos\":0}],\"field_count\":2,\"full_name\":\"X.Heh\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.Heh",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.Heh\",\"full_name\":\"X.Heh.A00\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"A00\",\"overload_count\":1,\"body\":\"    public long A00(long j) {\\n        int i;\\n        int[] iArr;\\n        int i2;\\n        int i3;\\n        int[] iArr2;\\n        if (((j \\u003e\\u003e\\u003e 62) \\u0026 1) \\u003d\\u003d 1) {\\n            return j;\\n        }\\n        int i4 \\u003d (int) ((j \\u003e\\u003e\\u003e 32) \\u0026 65535);\\n        int iA00 \\u003d C0ED.A00(j);\\n        HXc hXc \\u003d (HXc) this.A00.get();\\n        if (hXc \\u003d\\u003d null || (iArr \\u003d hXc.A01) \\u003d\\u003d null) {\\n            i \\u003d 65535;\\n        } else {\\n            int i5 \\u003d (int) ((j \\u003e\\u003e\\u003e 54) \\u0026 63);\\n            int[][] iArr3 \\u003d this.A01;\\n            int i6 \\u003d (iArr3 \\u003d\\u003d null || i5 \\u003c 0 || i5 \\u003e\\u003d iArr3.length || (iArr2 \\u003d iArr3[i5]) \\u003d\\u003d null || i4 \\u003c 0 || i4 \\u003e\\u003d iArr2.length) ? -1 : iArr2[i4];\\n            if (i6 \\u003c 0) {\\n                C06S.A0R(\\\"MobileConfigAppUpgradeSpecifierLazyTranslation\\\", \\\"Can\\u0027t find configKey for unit type %d, config index %d\\\", C3cA.A1b(Integer.valueOf(i5), Integer.valueOf(i4), 0));\\n            } else {\\n                int i7 \\u003d hXc.A00;\\n                int length \\u003d iArr.length;\\n                if (length % 2 \\u003d\\u003d 0) {\\n                    int i8 \\u003d i7 - 1;\\n                    int i9 \\u003d 0;\\n                    while (true) {\\n                        if (i9 \\u003c\\u003d i8) {\\n                            int i10 \\u003d ((i8 - i9) / 2) + i9;\\n                            i2 \\u003d i10 * 2;\\n                            i3 \\u003d i2 + 1;\\n                            int i11 \\u003d iArr[i3];\\n                            int i12 \\u003d i11 \\u003e\\u003e\\u003e 12;\\n                            int i13 \\u003d i11 \\u0026 4095;\\n                            if (i12 !\\u003d i6 || i13 !\\u003d iA00) {\\n                                if (i12 \\u003c i6 || (i12 \\u003d\\u003d i6 \\u0026\\u0026 i13 \\u003c iA00)) {\\n                                    i9 \\u003d i10 + 1;\\n                                } else {\\n                                    i8 \\u003d i10 - 1;\\n                                }\\n                            }\\n                        } else {\\n                            int i14 \\u003d (length / 2) - 1;\\n                            while (true) {\\n                                if (i7 \\u003c\\u003d i14) {\\n                                    int i15 \\u003d ((i14 - i7) / 2) + i7;\\n                                    i2 \\u003d i15 * 2;\\n                                    i3 \\u003d i2 + 1;\\n                                    int i16 \\u003d iArr[i3];\\n                                    int i17 \\u003d i16 \\u003e\\u003e\\u003e 12;\\n                                    int i18 \\u003d i16 \\u0026 4095;\\n                                    if (i17 !\\u003d i6 || i18 !\\u003d iA00) {\\n                                        if (i17 \\u003c i6 || (i17 \\u003d\\u003d i6 \\u0026\\u0026 i18 \\u003c iA00)) {\\n                                            i7 \\u003d i15 + 1;\\n                                        } else {\\n                                            i14 \\u003d i15 - 1;\\n                                        }\\n                                    }\\n                                }\\n                            }\\n                        }\\n                        i \\u003d (new int[]{iArr[i2], iArr[i3]}[0] \\u0026 (-65536)) \\u003e\\u003e 16;\\n                    }\\n                }\\n            }\\n            i \\u003d 65535;\\n        }\\n        return C0ED.A01((int) ((j \\u003e\\u003e\\u003e 48) \\u0026 63), (i4 \\u003c\\u003c 16) + iA00, i, (int) ((j \\u003e\\u003e\\u003e 54) \\u0026 63), C1xm.A1P((((j \\u003e\\u003e\\u003e 60) \\u0026 1) \\u003e 1L ? 1 : (((j \\u003e\\u003e\\u003e 60) \\u0026 1) \\u003d\\u003d 1L ? 0 : -1))), C1xm.A1P((((j \\u003e\\u003e\\u003e 61) \\u0026 1) \\u003e 1L ? 1 : (((j \\u003e\\u003e\\u003e 61) \\u0026 1) \\u003d\\u003d 1L ? 0 : -1))));\\n    }\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.Heh",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(long): long",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public long A00(long j) {\n        int i;\n        int[] iArr;\n        int i2;\n        int i3;\n        int[] iArr2;\n        if (((j >>> 62) & 1) == 1) {\n            return j;\n        }\n        int i4 = (int) ((j >>> 32) & 65535);\n        int iA00 = C0ED.A00(j);\n        HXc hXc = (HXc) this.A00.get();\n        if (hXc == null || (iArr = hXc.A01) == null) {\n            i = 65535;\n        } else {\n            int i5 = (int) ((j >>> 54) & 63);\n            int[][] iArr3 = this.A01;\n            int i6 = (iArr3 == null || i5 < 0 || i5 >= iArr3.length || (iArr2 = iArr3[i5]) == null || i4 < 0 || i4 >= iArr2.length) ? -1 : iArr2[i4];\n            if (i6 < 0) {\n                C06S.A0R(\"MobileConfigAppUpgradeSpecifierLazyTranslation\", \"Can't find configKey for unit type %d, config index %d\", C3cA.A1b(Integer.valueOf(i5), Integer.valueOf(i4), 0));\n            } else {\n                int i7 = hXc.A00;\n                int length = iArr.length;\n                if (length % 2 == 0) {\n                    int i8 = i7 - 1;\n                    int i9 = 0;\n                    while (true) {\n                        if (i9 <= i8) {\n                            int i10 = ((i8 - i9) / 2) + i9;\n                            i2 = i10 * 2;\n                            i3 = i2 + 1;\n                            int i11 = iArr[i3];\n                            int i12 = i11 >>> 12;\n                            int i13 = i11 & 4095;\n                            if (i12 != i6 || i13 != iA00) {\n                                if (i12 < i6 || (i12 == i6 && i13 < iA00)) {\n                                    i9 = i10 + 1;\n                                } else {\n                                    i8 = i10 - 1;\n                                }\n                            }\n                        } else {\n                            int i14 = (length / 2) - 1;\n                            while (true) {\n                                if (i7 <= i14) {\n                                    int i15 = ((i14 - i7) / 2) + i7;\n                                    i2 = i15 * 2;\n                                    i3 = i2 + 1;\n                                    int i16 = iArr[i3];\n                                    int i17 = i16 >>> 12;\n                                    int i18 = i16 & 4095;\n                                    if (i17 != i6 || i18 != iA00) {\n                                        if (i17 < i6 || (i17 == i6 && i18 < iA00)) {\n                                            i7 = i15 + 1;\n                                        } else {\n                                            i14 = i15 - 1;\n                                        }\n                                    }\n                                }\n                            }\n                        }\n                        i = (new int[]{iArr[i2], iArr[i3]}[0] & (-65536)) >> 16;\n                    }\n                }\n            }\n            i = 65535;\n        }\n        return C0ED.A01((int) ((j >>> 48) & 63), (i4 << 16) + iA00, i, (int) ((j >>> 54) & 63), C1xm.A1P((((j >>> 60) & 1) > 1L ? 1 : (((j >>> 60) & 1) == 1L ? 0 : -1))), C1xm.A1P((((j >>> 61) & 1) > 1L ? 1 : (((j >>> 61) & 1) == 1L ? 0 : -1))));\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

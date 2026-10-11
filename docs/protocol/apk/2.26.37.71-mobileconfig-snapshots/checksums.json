@@ -1,0 +1,82 @@
+{
+  "base-mode-init.txt": {
+    "bytes": 614,
+    "sha256": "59f428c8ae5d7725b475fad65f05fcf1726209a5fb6c734a567277b30de7a57e"
+  },
+  "config-changed.txt": {
+    "bytes": 1931,
+    "sha256": "23d9b8865f8b236d930b886caa3ac3e60daf505dca133d887c0814c32fbb057d"
+  },
+  "consistency-reader.txt": {
+    "bytes": 163808,
+    "sha256": "a6dcd3445a8a07a0f6535afbfa0c18e46d8f0c4d52286fcbfad1ca95add19443"
+  },
+  "context-mode-builder.txt": {
+    "bytes": 1356,
+    "sha256": "da636a5426f33d558dc0c98d1b84a5dd1b7f6bda32ca20143a54bbf27760480a"
+  },
+  "context-mode-init.txt": {
+    "bytes": 774,
+    "sha256": "c49583b38c219e8b333f6ac46b86d09b1e36527791b25b6610fcc597046ae01c"
+  },
+  "context-modes.txt": {
+    "bytes": 1782,
+    "sha256": "c02e6c73dfa5c1e81d61b0b69f46a991cead0d06e8e63f688e392439173a157d"
+  },
+  "ep-changed.txt": {
+    "bytes": 40542,
+    "sha256": "e5b49152dab0b5ad23fc98c2f2480d40b96cf4b20300797adf653238283967f2"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "parameter-index.txt": {
+    "bytes": 1098,
+    "sha256": "d306b44087beedc468302d58a68c89263cddab29a0eb6277ad2c27b22c8375b2"
+  },
+  "session-reset.txt": {
+    "bytes": 4572,
+    "sha256": "f77cbf0bc2eadc6d2d6434bfe7cca2a7700c6cf1e3aa2f4582ffcd72f0d24f88"
+  },
+  "silent-lookup.txt": {
+    "bytes": 853,
+    "sha256": "428856628399d744f25b1b3749c87df7c9e10d1f513e33e44fc8dcf212691ce1"
+  },
+  "specifier-builder.txt": {
+    "bytes": 1714,
+    "sha256": "653d12f425dfd780ae9ff2654ec515b889a189d2532633e58fc7f3cec1fad8b0"
+  },
+  "targets.json": {
+    "bytes": 6063,
+    "sha256": "d4dac4f4df464c93527819294b8a7462c057e7866abe286917a25795dc4f1d45"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  },
+  "translation.txt": {
+    "bytes": 6193,
+    "sha256": "50883cba674be3618fe824d7e42181ee7703a8ee8923256e0e71b449c6c849dc"
+  },
+  "wrapper-boolean.txt": {
+    "bytes": 1132,
+    "sha256": "5ffa6f99fa35aca99ecb392ac013f7ca555bb3e136593a4715e0ca1c82d7cb62"
+  },
+  "wrapper-default.txt": {
+    "bytes": 1418,
+    "sha256": "16220019aee7359e499cfb440751695ed37491f11838ba4a04b5f8d4675e3092"
+  },
+  "wrapper-owner.txt": {
+    "bytes": 727,
+    "sha256": "82afab1dbf7377f2d7326d3ea05da7e52827f0b49c402a0aad187a6589445164"
+  },
+  "wrapper-silent-value.txt": {
+    "bytes": 1833,
+    "sha256": "760fc083541267238e90dba67993c10243baca9f1dbfb0fc7bfab69d4b65ce05"
+  }
+}

@@ -1,0 +1,29 @@
+# APK-derived structural disassembly: LX/IIY;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method AVn(ZLJ) flags=0x1 registers=8
+  # full signature: LX/IIY;->AVn(LX/0E8;J)Z
+  0000..0006 op=71 invoke-static {v6, v7}, LX/0Dp;->A00(J)LX/I3z;
+  0006..0008 op=0c move-result-object v3
+  0008..000c op=38 if-eqz v3, +0x13
+  000c..0010 op=13 const/16 v0, #0x3d
+  0010..0012 op=c5 ushr-long/2addr v6, v0
+  0012..0016 op=16 const-wide/16 v1, #0x1
+  0016..0018 op=c0 and-long/2addr v6, v1
+  0018..001c op=31 cmp-long v0, v6, v1
+  001c..0022 op=71 invoke-static {v0}, LX/1xm;->A1P(I)Z
+  0022..0024 op=0a move-result v0
+  0024..002a op=71 invoke-static {v5, v3, v0}, LX/IIY;->A03(LX/0E8;LX/I3z;Z)Z
+  002a..002c op=0a move-result v0
+  002c..002e op=0f return v0
+  002e..0032 op=54 iget-object v0, v4, LX/IIY;->A01:LX/Heh;
+  0032..0038 op=6e invoke-virtual {v0, v6, v7}, LX/Heh;->A00(J)J
+  0038..003a op=0b move-result-wide v1
+  003a..003e op=54 iget-object v0, v4, LX/IIY;->A00:LX/09G;
+  003e..0044 op=72 invoke-interface {v0, v5, v1, v2}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->AVn(LX/0E8;J)Z
+  0044..0046 op=0a move-result v0
+  0046..0048 op=0f return v0
+  # exception table: 0 try range(s)
+.end method

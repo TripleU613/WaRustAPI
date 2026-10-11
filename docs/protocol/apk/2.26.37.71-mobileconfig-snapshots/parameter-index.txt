@@ -1,0 +1,26 @@
+# APK-derived structural disassembly: LX/0ED;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(IJ) flags=0x9 registers=8
+  # full signature: LX/0ED;->A00(J)I
+  0000..0004 op=13 const/16 v0, #0x3e
+  0004..0008 op=a5 ushr-long v4, v6, v0
+  0008..000c op=16 const-wide/16 v2, #0x1
+  000c..000e op=c0 and-long/2addr v4, v2
+  000e..0012 op=31 cmp-long v1, v4, v2
+  0012..0016 op=13 const/16 v0, #0x10
+  0016..0018 op=c5 ushr-long/2addr v6, v0
+  0018..001c op=39 if-nez v1, +0xc
+  001c..0026 op=18 const-wide v0, #0xffffffff (4294967295)
+  0026..0028 op=c0 and-long/2addr v6, v0
+  0028..002a op=84 long-to-int v0, v6
+  002a..002e op=d5 and-int/lit16 v0, v0, #0xfff
+  002e..0030 op=0f return v0
+  0030..0036 op=17 const-wide/32 v0, #0xffff
+  0036..0038 op=c0 and-long/2addr v6, v0
+  0038..003a op=84 long-to-int v0, v6
+  003a..003c op=0f return v0
+  # exception table: 0 try range(s)
+.end method

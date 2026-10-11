@@ -1,0 +1,81 @@
+# APK-derived structural disassembly: LX/099;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0D(V) flags=0x1 registers=7
+  # full signature: LX/099;->A0D()V
+  0000..0004 op=52 iget v1, v6, LX/099;->A08:I
+  0004..0006 op=12 const/4 v0, #0x2
+  0006..000a op=33 if-ne v1, v0, +0xf
+  000a..000e op=1a const-string v1, ""
+  000e..0014 op=6e invoke-virtual {v6}, LX/099;->A0B()Ljava/lang/String;
+  0014..0016 op=0c move-result-object v0
+  0016..001c op=6e invoke-virtual {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+  001c..001e op=0a move-result v0
+  001e..0020 op=12 const/4 v5, #0x1
+  0020..0024 op=39 if-nez v0, +0x3
+  0024..0026 op=12 const/4 v5, #0x0
+  0026..002a op=1a const-string v2, "refreshSessionState isLoggedOut: %s"
+  002a..0030 op=71 invoke-static {v5}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+  0030..0032 op=0c move-result-object v1
+  0032..0036 op=1a const-string v0, "MobileConfigFactoryImpl"
+  0036..003c op=71 invoke-static {v1, v0, v2}, LX/06S;->A0D(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)V
+  003c..003e op=07 move-object v4, v6
+  003e..0040 op=1d monitor-enter
+  0040..0044 op=54 iget-object v0, v6, LX/099;->A0A:LX/090;
+  0044..004a op=6e invoke-virtual {v0}, LX/08z;->getOrCreateOverridesTable()LX/09C;
+  004a..004c op=0c move-result-object v0
+  004c..0050 op=5b iput-object v0, v6, LX/099;->A02:LX/09C;
+  0050..0054 op=52 iget v1, v6, LX/099;->A01:I
+  0054..0058 op=22 new-instance v0, Ljava/util/concurrent/atomic/AtomicReferenceArray;
+  0058..005e op=70 invoke-direct {v0, v1}, Ljava/util/concurrent/atomic/AtomicReferenceArray;-><init>(I)V
+  005e..0062 op=5b iput-object v0, v6, LX/099;->A0Y:Ljava/util/concurrent/atomic/AtomicReferenceArray;
+  0062..0064 op=12 const/4 v3, #0x0
+  0064..0068 op=5b iput-object v3, v6, LX/099;->A0X:LX/098;
+  0068..006c op=54 iget-object v0, v6, LX/099;->A0D:Ljava/util/Set;
+  006c..0072 op=72 invoke-interface {v0}, Ljava/util/Set;->clear()V
+  0072..0076 op=54 iget-object v1, v6, LX/099;->A09:LX/09B;
+  0076..007a op=54 iget-object v0, v1, LX/09B;->A00:Ljava/util/Map;
+  007a..0080 op=72 invoke-interface {v0}, Ljava/util/Map;->clear()V
+  0080..0084 op=54 iget-object v1, v1, LX/09B;->A01:Ljava/util/concurrent/atomic/AtomicBoolean;
+  0084..0086 op=12 const/4 v0, #0x0
+  0086..008c op=6e invoke-virtual {v1, v0}, Ljava/util/concurrent/atomic/AtomicBoolean;->set(Z)V
+  008c..0090 op=38 if-eqz v5, +0x30
+  0090..0094 op=62 sget-object v1, LX/2jK;->A00:LX/3Bi;
+  0094..0098 op=39 if-nez v1, +0x9
+  0098..009c op=22 new-instance v1, LX/3Bi;
+  009c..00a2 op=70 invoke-direct {v1}, LX/3Bi;-><init>()V
+  00a2..00a6 op=69 sput-object v1, LX/2jK;->A00:LX/3Bi;
+  00a6..00a8 op=1d monitor-enter
+  00a8..00ac op=54 iget-object v0, v1, LX/3Bi;->A00:Ljava/util/Map;
+  00ac..00b2 op=72 invoke-interface {v0}, Ljava/util/Map;->clear()V
+  00b2..00b4 op=1e monitor-exit
+  00b4..00b8 op=54 iget-object v0, v6, LX/099;->A0G:Ljava/util/concurrent/atomic/AtomicBoolean;
+  00b8..00ba op=12 const/4 v2, #0x0
+  00ba..00c0 op=6e invoke-virtual {v0, v2}, Ljava/util/concurrent/atomic/AtomicBoolean;->set(Z)V
+  00c0..00c4 op=54 iget-object v0, v6, LX/099;->A0H:Ljava/util/concurrent/atomic/AtomicBoolean;
+  00c4..00ca op=6e invoke-virtual {v0, v2}, Ljava/util/concurrent/atomic/AtomicBoolean;->set(Z)V
+  00ca..00ce op=54 iget-object v1, v6, LX/099;->A0F:Ljava/util/concurrent/atomic/AtomicBoolean;
+  00ce..00d0 op=12 const/4 v0, #0x1
+  00d0..00d6 op=6e invoke-virtual {v1, v0}, Ljava/util/concurrent/atomic/AtomicBoolean;->set(Z)V
+  00d6..00da op=54 iget-object v0, v6, LX/099;->A0E:Ljava/util/concurrent/atomic/AtomicBoolean;
+  00da..00e0 op=6e invoke-virtual {v0, v2}, Ljava/util/concurrent/atomic/AtomicBoolean;->set(Z)V
+  00e0..00e4 op=5b iput-object v3, v6, LX/099;->A0Z:LX/00r;
+  00e4..00e6 op=28 goto +0x4
+  00e6..00e8 op=0d move-exception v0
+  00e8..00ea op=1e monitor-exit
+  00ea..00ec op=27 throw v0
+  00ec..00ee op=1e monitor-exit
+  00ee..00f0 op=0e return-void
+  00f0..00f2 op=0d move-exception v0
+  00f2..00f4 op=1e monitor-exit
+  00f4..00f6 op=27 throw v0
+  # exception table: 6 try range(s)
+  # catch <all> code_units 0020..0054 -> 0078
+  # catch <all> code_units 0054..0059 -> 0073
+  # catch <all> code_units 0059..0073 -> 0078
+  # catch <all> code_units 0074..0075 -> 0073
+  # catch <all> code_units 0075..0076 -> 0078
+  # catch <all> code_units 0079..007a -> 0078
+.end method

@@ -1,0 +1,31 @@
+# APK-derived structural disassembly: LX/IIY;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A03(ZLLZ) flags=0x9 registers=5
+  # full signature: LX/IIY;->A03(LX/0E8;LX/I3z;Z)Z
+  0000..0004 op=54 iget-object v0, v3, LX/I3z;->A02:Ljava/lang/Object;
+  0004..0008 op=38 if-eqz v0, +0x1d
+  0008..000c op=52 iget v1, v3, LX/I3z;->A00:I
+  000c..000e op=12 const/4 v0, #0x1
+  000e..0012 op=33 if-ne v1, v0, +0x18
+  0012..0018 op=6e invoke-virtual {v3}, LX/I3z;->A00()Ljava/lang/Boolean;
+  0018..001a op=0c move-result-object v1
+  001a..001e op=38 if-eqz v1, +0x12
+  001e..0022 op=38 if-eqz v2, +0xb
+  0022..0026 op=55 iget-boolean v0, v2, LX/0E8;->A02:Z
+  0026..002a op=38 if-eqz v0, +0x7
+  002a..002e op=62 sget-object v0, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->SILENT_PUSH_VALUE:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+  002e..0034 op=6e invoke-virtual {v2, v0}, LX/0E8;->A01(Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;)V
+  0034..003a op=6e invoke-virtual {v1}, Ljava/lang/Boolean;->booleanValue()Z
+  003a..003c op=0a move-result v0
+  003c..003e op=0f return v0
+  003e..0042 op=38 if-eqz v2, +0xb
+  0042..0046 op=55 iget-boolean v0, v2, LX/0E8;->A02:Z
+  0046..004a op=38 if-eqz v0, +0x7
+  004a..004e op=62 sget-object v0, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->DEFAULT__FROM_SILENT_PUSH_FALLBACK:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+  004e..0054 op=6e invoke-virtual {v2, v0}, LX/0E8;->A01(Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;)V
+  0054..0056 op=0f return v4
+  # exception table: 0 try range(s)
+.end method
