@@ -1962,14 +1962,11 @@ mod tests {
             .attr("id", "b1");
         assert!(sender_key_chat(&list).is_some());
         assert!(group_sender(&list).is_none());
-        // shortcut: broadcast-list class is unported, replace after its ordinary receive dispatch trace.
-        assert_eq!(
+        assert!(
             super::super::messaging::received_confirmation(&list)
                 .unwrap()
                 .get_attr("class")
-                .unwrap()
-                .as_text(),
-            Some("status")
+                .is_none()
         );
         // A group still routes as a group and still gets its receipt.
         let group = Node::new("message")

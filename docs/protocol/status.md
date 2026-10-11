@@ -36,6 +36,9 @@ broadcast list (`<id>@broadcast`), which is addressed the same way.
 
 ## Delivery receipt (implemented)
 
+Ordinary broadcast-list delivery receipts omit the status class; see the
+[dispatch, writer evidence and remaining policy gaps](broadcast-receipt.md).
+
 `received_confirmation` emits for a supported remote decrypted status:
 
 ```

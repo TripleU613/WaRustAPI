@@ -1,0 +1,146 @@
+{
+  "evidence_id": "ev_5e86ee852b12a80ac5ffa505da8fb65e6f928c49474327dfd551f4027dc1e420",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.By0",
+    "method_name": "A0B"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-PrrK9G/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"max_heap_bytes\":15695085568,\"java_version\":\"21.0.12.1\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "load_apk",
+        "input": {
+          "path": "/tmp/rea-android-PrrK9G/target.apk",
+          "threads": 1,
+          "resources": "full"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-PrrK9G/target.apk\",\"class_count\":94738,\"raw_class_count\":94738,\"resource_count\":14967,\"load_duration_ms\":21633,\"decompile_timeout_ms\":90000,\"threads\":1,\"code_cache_size\":64,\"resources\":\"full\"}"
+            }
+          ]
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.By0"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cinit\\u003e(): void\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0},{\"signature\":\"A0B(X.DFI, X.Bp2, X.1B3): void\",\"is_constructor\":false,\"name\":\"A0B\",\"def_pos\":0}],\"method_count\":2,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"By0\",\"full_name\":\"X.By0\",\"field_count\":17,\"fields\":[{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A05\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A06\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A07\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A08\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A09\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0A\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0B\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0C\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0D\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0E\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0F\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0G\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.By0",
+          "method_name": "A0B",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"mode\":\"smali\",\"full_name\":\"X.By0.A0B\",\"class_name\":\"X.By0\",\"overload_index\":0,\"fell_back\":true,\"body\":\"// [jadx java-decompile failed → smali]\\n// target: X.By0.A0B\\n// markers: Code decompiled incorrectly, please refer to instructions dump\\n// (Java body was an anti-decompile stub; showing smali. Pass smali_fallback\\u003dfalse for the partial Java.)\\n\\n.method public A0B(LX/DFI;LX/Bp2;LX/1B3;)V\\n    .registers 18\\n\\n    .line 0\\n    move-object v8, p1\\n\\n    .line 1\\n    move-object/from16 v9, p2\\n\\n    .line 2\\n    .line 3\\n    invoke-static {v9, p1}, LX/1xj;-\\u003eA1G(Ljava/lang/Object;Ljava/lang/Object;)V\\n\\n    .line 4\\n    .line 5\\n    .line 6\\n    const-string v0, \\\"DecryptMessageRunnable/sendRetry\\\"\\n\\n    .line 7\\n    .line 8\\n    invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;-\\u003ei(Ljava/lang/String;)V\\n\\n    .line 9\\n    .line 10\\n    .line 11\\n    iget-object v0, v9, LX/Bp2;-\\u003eA09:LX/ClY;\\n\\n    .line 12\\n    .line 13\\n    if-eqz v0, :cond_3b\\n\\n    .line 14\\n    .line 15\\n    iget-boolean v1, v0, LX/ClY;-\\u003eA04:Z\\n\\n    .line 16\\n    .line 17\\n    const/4 v0, 0x1\\n\\n    .line 18\\n    if-ne v1, v0, :cond_3b\\n\\n    .line 19\\n    .line 20\\n    iget-object v0, p0, LX/By0;-\\u003eA0E:LX/05B;\\n\\n    .line 21\\n    .line 22\\n    invoke-static {v0}, LX/05B;-\\u003eA02(LX/05B;)Ljava/lang/Object;\\n\\n    .line 23\\n    .line 24\\n    .line 25\\n    move-result-object v0\\n\\n    .line 26\\n    check-cast v0, LX/B7h;\\n\\n    .line 27\\n    .line 28\\n    iget-object v2, v0, LX/B7h;-\\u003eA00:LX/05B;\\n\\n    .line 29\\n    .line 30\\n    invoke-static {v2}, LX/05B;-\\u003eA00(LX/05B;)LX/00D;\\n\\n    .line 31\\n    .line 32\\n    .line 33\\n    move-result-object v1\\n\\n    .line 34\\n    const/16 v0, 0x53e5\\n\\n    .line 35\\n    .line 36\\n    invoke-virtual {v1, v0}, LX/00D;-\\u003eA0b(I)I\\n\\n    .line 37\\n    .line 38\\n    .line 39\\n    move-result v0\\n\\n    .line 40\\n    invoke-static {v0}, LX/1xi;-\\u003eA1Q(I)Z\\n\\n    .line 41\\n    .line 42\\n    .line 43\\n    move-result v0\\n\\n    .line 44\\n    if-eqz v0, :cond_3b\\n\\n    .line 45\\n    .line 46\\n    invoke-static {v2}, LX/05B;-\\u003eA00(LX/05B;)LX/00D;\\n\\n    .line 47\\n    .line 48\\n    .line 49\\n    move-result-object v1\\n\\n    .line 50\\n    const/16 v0, 0x5d4c\\n\\n    .line 51\\n    .line 52\\n    invoke-virtual {v1, v0}, LX/00D;-\\u003eA10(I)Z\\n\\n    .line 53\\n    .line 54\\n    .line 55\\n    move-result v0\\n\\n    .line 56\\n    const/4 v1, 0x1\\n\\n    .line 57\\n    if-nez v0, :cond_3c\\n\\n    .line 58\\n    .line 59\\n    :cond_3b\\n    const/4 v1, 0x0\\n\\n    .line 60\\n    :cond_3c\\n    invoke-virtual {v9}, LX/CjN;-\\u003eA02()I\\n\\n    .line 61\\n    .line 62\\n    .line 63\\n    move-result v0\\n\\n    .line 64\\n    const/4 v10, 0x0\\n\\n    .line 65\\n    if-gtz v0, :cond_bf\\n\\n    .line 66\\n    .line 67\\n    if-nez v1, :cond_bf\\n\\n    .line 68\\n    .line 69\\n    move-object v5, v10\\n\\n    .line 70\\n    move-object v6, v10\\n\\n    .line 71\\n    move-object v11, v10\\n\\n    .line 72\\n    move-object v7, v10\\n\\n    .line 73\\n    :goto_49\\n    iget-object v0, v9, LX/CjN;-\\u003eA05:Lcom/whatsapp/infra/core/jid/Jid;\\n\\n    .line 74\\n    .line 75\\n    invoke-static {v0}, LX/0DE;-\\u003eA0i(Lcom/whatsapp/infra/core/jid/Jid;)Z\\n\\n    .line 76\\n    .line 77\\n    .line 78\\n    move-result v0\\n\\n    .line 79\\n    move-object/from16 v4, p3\\n\\n    .line 80\\n    .line 81\\n    if-eqz v0, :cond_a2\\n\\n    .line 82\\n    .line 83\\n    iget v1, v9, LX/Bp2;-\\u003eA02:I\\n\\n    .line 84\\n    .line 85\\n    const/4 v0, 0x7\\n\\n    .line 86\\n    if-ne v1, v0, :cond_a2\\n\\n    .line 87\\n    .line 88\\n    invoke-virtual {v9}, LX/CjN;-\\u003eA0H()Ljava/lang/Integer;\\n\\n    .line 89\\n    .line 90\\n    .line 91\\n    move-result-object v0\\n\\n    .line 92\\n    invoke-static {v0}, LX/1xi;-\\u003eA1U(Ljava/lang/Object;)Z\\n\\n    .line 93\\n    .line 94\\n    .line 95\\n    move-result v0\\n\\n    .line 96\\n    if-eqz v0, :cond_88\\n\\n    .line 97\\n    .line 98\\n    iget-object v0, p0, LX/By0;-\\u003eA05:LX/05B;\\n\\n    .line 99\\n    .line 100\\n    invoke-static {v0}, LX/05B;-\\u003eA02(LX/05B;)Ljava/lang/Object;\\n\\n    .line 101\\n    .line 102\\n    .line 103\\n    move-result-object v3\\n\\n    .line 104\\n    check-cast v3, LX/153;\\n\\n    .line 105\\n    .line 106\\n    iget-object v0, v3, LX/153;-\\u003eA00:LX/00s;\\n\\n    .line 107\\n    .line 108\\n    invoke-interface {v0}, LX/00s;-\\u003eget()Ljava/lang/Object;\\n\\n    .line 109\\n    .line 110\\n    .line 111\\n    move-result-object v2\\n\\n    .line 112\\n    check-cast v2, LX/1f0;\\n\\n    .line 113\\n    .line 114\\n    const/16 v0, 0x1b\\n\\n    .line 115\\n    .line 116\\n    new-instance v1, LX/DNr;\\n\\n    .line 117\\n    .line 118\\n    invoke-direct {v1, v9, v3, v0}, LX/DNr;-\\u003e\\u003cinit\\u003e(Ljava/lang/Object;Ljava/lang/Object;I)V\\n\\n    .line 119\\n    .line 120\\n    .line 121\\n    const/16 v0, 0x1d\\n\\n    .line 122\\n    .line 123\\n    invoke-virtual {v2, v1, v0}, LX/1f0;-\\u003eA01(Ljava/lang/Runnable;I)V\\n\\n    .line 124\\n    .line 125\\n    .line 126\\n    :cond_7e\\n    iget-object v0, p0, LX/By0;-\\u003eA0B:LX/05B;\\n\\n    .line 127\\n    .line 128\\n    invoke-static {v0}, LX/Aym;-\\u003eA0v(LX/05B;)LX/0zH;\\n\\n    .line 129\\n    .line 130\\n    .line 131\\n    move-result-object v0\\n\\n    .line 132\\n    invoke-virtual {v0, v4, v9}, LX/0zH;-\\u003eA0S(LX/1B3;LX/CjN;)V\\n\\n    .line 133\\n    .line 134\\n    .line 135\\n    return-void\\n\\n    .line 136\\n    :cond_88\\n    iget-object v0, p0, LX/By0;-\\u003eA0G:LX/05B;\\n\\n    .line 137\\n    .line 138\\n    invoke-static {v0}, LX/05B;-\\u003eA02(LX/05B;)Ljava/lang/Object;\\n\\n    .line 139\\n    .line 140\\n    .line 141\\n    move-result-object v1\\n\\n    .line 142\\n    check-cast v1, LX/0YK;\\n\\n    .line 143\\n    .line 144\\n    sget-object v0, Lcom/whatsapp/infra/core/jid/UserJid;-\\u003eCompanion:LX/0D8;\\n\\n    .line 145\\n    .line 146\\n    iget-object v0, v9, LX/CjN;-\\u003eA04:Lcom/whatsapp/infra/core/jid/Jid;\\n\\n    .line 147\\n    .line 148\\n    invoke-static {v0}, LX/0DE;-\\u003eA00(Lcom/whatsapp/infra/core/jid/Jid;)LX/0Cy;\\n\\n    .line 149\\n    .line 150\\n    .line 151\\n    move-result-object v0\\n\\n    .line 152\\n    invoke-static {v0}, LX/0D8;-\\u003eA00(Lcom/whatsapp/infra/core/jid/Jid;)Lcom/whatsapp/infra/core/jid/UserJid;\\n\\n    .line 153\\n    .line 154\\n    .line 155\\n    move-result-object v0\\n\\n    .line 156\\n    invoke-virtual {v1, v0}, LX/0YK;-\\u003eA0K(LX/0Cy;)LX/7yi;\\n\\n    .line 157\\n    .line 158\\n    .line 159\\n    move-result-object v0\\n\\n    .line 160\\n    if-eqz v0, :cond_7e\\n\\n    .line 161\\n    .line 162\\n    :cond_a2\\n    iget-object v0, p0, LX/By0;-\\u003eA0C:LX/05B;\\n\\n    .line 163\\n    .line 164\\n    invoke-static {v0}, LX/05B;-\\u003eA02(LX/05B;)Ljava/lang/Object;\\n\\n    .line 165\\n    .line 166\\n    .line 167\\n    move-result-object v0\\n\\n    .line 168\\n    check-cast v0, LX/16T;\\n\\n    .line 169\\n    .line 170\\n    const/4 v12, 0x0\\n\\n    .line 171\\n    new-instance v3, LX/CMD;\\n\\n    .line 172\\n    .line 173\\n    move v13, v12\\n\\n    .line 174\\n    invoke-direct/range {v3 .. v13}, LX/CMD;-\\u003e\\u003cinit\\u003e(LX/1B3;LX/CIv;LX/CIv;LX/CIv;LX/Dcq;LX/CjN;[B[BIZ)V\\n\\n    .line 175\\n    .line 176\\n    .line 177\\n    invoke-virtual {v0, v3}, LX/16T;-\\u003eA00(LX/CMD;)LX/CgK;\\n\\n    .line 178\\n    .line 179\\n    .line 180\\n    move-result-object v1\\n\\n    .line 181\\n    iget v0, v9, LX/CjN;-\\u003eA00:I\\n\\n    .line 182\\n    .line 183\\n    invoke-static {v0}, LX/BoP;-\\u003eA00(I)I\\n\\n    .line 184\\n    .line 185\\n    .line 186\\n    move-result v0\\n\\n    .line 187\\n    invoke-virtual {v1, v0}, LX/CgK;-\\u003eA01(I)V\\n\\n    .line 188\\n    .line 189\\n    .line 190\\n    return-void\\n\\n    .line 191\\n    :cond_bf\\n    iget-object v0, p0, LX/By0;-\\u003eA0D:LX/05B;\\n\\n    .line 192\\n    .line 193\\n    iget-object v3, v0, LX/05B;-\\u003eA00:LX/00s;\\n\\n    .line 194\\n    .line 195\\n    invoke-static {v3}, LX/Ayk;-\\u003eA0c(LX/00s;)LX/0jc;\\n\\n    .line 196\\n    .line 197\\n    .line 198\\n    move-result-object v0\\n\\n    .line 199\\n    invoke-virtual {v0}, LX/0jc;-\\u003eA1B()[B\\n\\n    .line 200\\n    .line 201\\n    .line 202\\n    move-result-object v2\\n\\n    .line 203\\n    invoke-static {v3}, LX/Ayk;-\\u003eA0c(LX/00s;)LX/0jc;\\n\\n    .line 204\\n    .line 205\\n    .line 206\\n    move-result-object v0\\n\\n    .line 207\\n    invoke-virtual {v0}, LX/0jc;-\\u003eA0d()LX/CIv;\\n\\n    .line 208\\n    .line 209\\n    .line 210\\n    move-result-object v5\\n\\n    .line 211\\n    invoke-static {v3}, LX/Ayk;-\\u003eA0c(LX/00s;)LX/0jc;\\n\\n    .line 212\\n    .line 213\\n    .line 214\\n    move-result-object v0\\n\\n    .line 215\\n    invoke-virtual {v0}, LX/0jc;-\\u003eA0e()LX/CIv;\\n\\n    .line 216\\n    .line 217\\n    .line 218\\n    move-result-object v6\\n\\n    .line 219\\n    invoke-virtual {v9}, LX/CjN;-\\u003eA0L()Z\\n\\n    .line 220\\n    .line 221\\n    .line 222\\n    move-result v0\\n\\n    .line 223\\n    if-eqz v0, :cond_111\\n\\n    .line 224\\n    .line 225\\n    iget-object v0, p0, LX/By0;-\\u003eA0A:LX/05B;\\n\\n    .line 226\\n    .line 227\\n    invoke-static {v0}, LX/05B;-\\u003eA02(LX/05B;)Ljava/lang/Object;\\n\\n    .line 228\\n    .line 229\\n    .line 230\\n    move-result-object v1\\n\\n    .line 231\\n    check-cast v1, LX/Can;\\n\\n    .line 232\\n    .line 233\\n    iget-object v0, v9, LX/CjN;-\\u003eA05:Lcom/whatsapp/infra/core/jid/Jid;\\n\\n    .line 234\\n    .line 235\\n    invoke-virtual {v1, v0}, LX/Can;-\\u003eA04(Lcom/whatsapp/infra/core/jid/Jid;)Z\\n\\n    .line 236\\n    .line 237\\n    .line 238\\n    move-result v0\\n\\n    .line 239\\n    if-eqz v0, :cond_111\\n\\n    .line 240\\n    .line 241\\n    invoke-static {v3}, LX/Ayk;-\\u003eA0c(LX/00s;)LX/0jc;\\n\\n    .line 242\\n    .line 243\\n    .line 244\\n    move-result-object v0\\n\\n    .line 245\\n    invoke-virtual {v0}, LX/0jc;-\\u003eA0b()LX/CIv;\\n\\n    .line 246\\n    .line 247\\n    .line 248\\n    move-result-object v7\\n\\n    .line 249\\n    :goto_f9\\n    iget-object v0, p0, LX/By0;-\\u003eA08:LX/05B;\\n\\n    .line 250\\n    .line 251\\n    invoke-static {v0}, LX/1xo;-\\u003eA1T(LX/05B;)Z\\n\\n    .line 252\\n    .line 253\\n    .line 254\\n    move-result v0\\n\\n    .line 255\\n    if-eqz v0, :cond_10d\\n\\n    .line 256\\n    .line 257\\n    iget-object v0, p0, LX/By0;-\\u003eA02:LX/05B;\\n\\n    .line 258\\n    .line 259\\n    invoke-static {v0}, LX/05B;-\\u003eA02(LX/05B;)Ljava/lang/Object;\\n\\n    .line 260\\n    .line 261\\n    .line 262\\n    move-result-object v0\\n\\n    .line 263\\n    check-cast v0, LX/08s;\\n\\n    .line 264\\n    .line 265\\n    invoke-virtual {v0}, LX/08s;-\\u003eA05()[B\\n\\n    .line 266\\n    .line 267\\n    .line 268\\n    move-result-object v10\\n\\n    .line 269\\n    :cond_10d\\n    move-object v11, v10\\n\\n    .line 270\\n    move-object v10, v2\\n\\n    .line 271\\n    goto/16 :goto_49\\n\\n    .line 272\\n    .line 273\\n    :cond_111\\n    move-object v7, v10\\n\\n    .line 274\\n    goto :goto_f9\\n.end method\",\"overload_count\":1,\"method_name\":\"A0B\",\"markers\":[\"Code decompiled incorrectly, please refer to instructions dump\"]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.By0",
+    "method": {
+      "name": "A0B",
+      "reported_signature": "A0B(X.DFI, X.Bp2, X.1B3): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "smali",
+    "body_status": "available",
+    "fell_back": true,
+    "markers": [
+      "Code decompiled incorrectly, please refer to instructions dump"
+    ],
+    "source": {
+      "status": "complete",
+      "text": "// [jadx java-decompile failed → smali]\n// target: X.By0.A0B\n// markers: Code decompiled incorrectly, please refer to instructions dump\n// (Java body was an anti-decompile stub; showing smali. Pass smali_fallback=false for the partial Java.)\n\n.method public A0B(LX/DFI;LX/Bp2;LX/1B3;)V\n    .registers 18\n\n    .line 0\n    move-object v8, p1\n\n    .line 1\n    move-object/from16 v9, p2\n\n    .line 2\n    .line 3\n    invoke-static {v9, p1}, LX/1xj;->A1G(Ljava/lang/Object;Ljava/lang/Object;)V\n\n    .line 4\n    .line 5\n    .line 6\n    const-string v0, \"DecryptMessageRunnable/sendRetry\"\n\n    .line 7\n    .line 8\n    invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V\n\n    .line 9\n    .line 10\n    .line 11\n    iget-object v0, v9, LX/Bp2;->A09:LX/ClY;\n\n    .line 12\n    .line 13\n    if-eqz v0, :cond_3b\n\n    .line 14\n    .line 15\n    iget-boolean v1, v0, LX/ClY;->A04:Z\n\n    .line 16\n    .line 17\n    const/4 v0, 0x1\n\n    .line 18\n    if-ne v1, v0, :cond_3b\n\n    .line 19\n    .line 20\n    iget-object v0, p0, LX/By0;->A0E:LX/05B;\n\n    .line 21\n    .line 22\n    invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;\n\n    .line 23\n    .line 24\n    .line 25\n    move-result-object v0\n\n    .line 26\n    check-cast v0, LX/B7h;\n\n    .line 27\n    .line 28\n    iget-object v2, v0, LX/B7h;->A00:LX/05B;\n\n    .line 29\n    .line 30\n    invoke-static {v2}, LX/05B;->A00(LX/05B;)LX/00D;\n\n    .line 31\n    .line 32\n    .line 33\n    move-result-object v1\n\n    .line 34\n    const/16 v0, 0x53e5\n\n    .line 35\n    .line 36\n    invoke-virtual {v1, v0}, LX/00D;->A0b(I)I\n\n    .line 37\n    .line 38\n    .line 39\n    move-result v0\n\n    .line 40\n    invoke-static {v0}, LX/1xi;->A1Q(I)Z\n\n    .line 41\n    .line 42\n    .line 43\n    move-result v0\n\n    .line 44\n    if-eqz v0, :cond_3b\n\n    .line 45\n    .line 46\n    invoke-static {v2}, LX/05B;->A00(LX/05B;)LX/00D;\n\n    .line 47\n    .line 48\n    .line 49\n    move-result-object v1\n\n    .line 50\n    const/16 v0, 0x5d4c\n\n    .line 51\n    .line 52\n    invoke-virtual {v1, v0}, LX/00D;->A10(I)Z\n\n    .line 53\n    .line 54\n    .line 55\n    move-result v0\n\n    .line 56\n    const/4 v1, 0x1\n\n    .line 57\n    if-nez v0, :cond_3c\n\n    .line 58\n    .line 59\n    :cond_3b\n    const/4 v1, 0x0\n\n    .line 60\n    :cond_3c\n    invoke-virtual {v9}, LX/CjN;->A02()I\n\n    .line 61\n    .line 62\n    .line 63\n    move-result v0\n\n    .line 64\n    const/4 v10, 0x0\n\n    .line 65\n    if-gtz v0, :cond_bf\n\n    .line 66\n    .line 67\n    if-nez v1, :cond_bf\n\n    .line 68\n    .line 69\n    move-object v5, v10\n\n    .line 70\n    move-object v6, v10\n\n    .line 71\n    move-object v11, v10\n\n    .line 72\n    move-object v7, v10\n\n    .line 73\n    :goto_49\n    iget-object v0, v9, LX/CjN;->A05:Lcom/whatsapp/infra/core/jid/Jid;\n\n    .line 74\n    .line 75\n    invoke-static {v0}, LX/0DE;->A0i(Lcom/whatsapp/infra/core/jid/Jid;)Z\n\n    .line 76\n    .line 77\n    .line 78\n    move-result v0\n\n    .line 79\n    move-object/from16 v4, p3\n\n    .line 80\n    .line 81\n    if-eqz v0, :cond_a2\n\n    .line 82\n    .line 83\n    iget v1, v9, LX/Bp2;->A02:I\n\n    .line 84\n    .line 85\n    const/4 v0, 0x7\n\n    .line 86\n    if-ne v1, v0, :cond_a2\n\n    .line 87\n    .line 88\n    invoke-virtual {v9}, LX/CjN;->A0H()Ljava/lang/Integer;\n\n    .line 89\n    .line 90\n    .line 91\n    move-result-object v0\n\n    .line 92\n    invoke-static {v0}, LX/1xi;->A1U(Ljava/lang/Object;)Z\n\n    .line 93\n    .line 94\n    .line 95\n    move-result v0\n\n    .line 96\n    if-eqz v0, :cond_88\n\n    .line 97\n    .line 98\n    iget-object v0, p0, LX/By0;->A05:LX/05B;\n\n    .line 99\n    .line 100\n    invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;\n\n    .line 101\n    .line 102\n    .line 103\n    move-result-object v3\n\n    .line 104\n    check-cast v3, LX/153;\n\n    .line 105\n    .line 106\n    iget-object v0, v3, LX/153;->A00:LX/00s;\n\n    .line 107\n    .line 108\n    invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;\n\n    .line 109\n    .line 110\n    .line 111\n    move-result-object v2\n\n    .line 112\n    check-cast v2, LX/1f0;\n\n    .line 113\n    .line 114\n    const/16 v0, 0x1b\n\n    .line 115\n    .line 116\n    new-instance v1, LX/DNr;\n\n    .line 117\n    .line 118\n    invoke-direct {v1, v9, v3, v0}, LX/DNr;-><init>(Ljava/lang/Object;Ljava/lang/Object;I)V\n\n    .line 119\n    .line 120\n    .line 121\n    const/16 v0, 0x1d\n\n    .line 122\n    .line 123\n    invoke-virtual {v2, v1, v0}, LX/1f0;->A01(Ljava/lang/Runnable;I)V\n\n    .line 124\n    .line 125\n    .line 126\n    :cond_7e\n    iget-object v0, p0, LX/By0;->A0B:LX/05B;\n\n    .line 127\n    .line 128\n    invoke-static {v0}, LX/Aym;->A0v(LX/05B;)LX/0zH;\n\n    .line 129\n    .line 130\n    .line 131\n    move-result-object v0\n\n    .line 132\n    invoke-virtual {v0, v4, v9}, LX/0zH;->A0S(LX/1B3;LX/CjN;)V\n\n    .line 133\n    .line 134\n    .line 135\n    return-void\n\n    .line 136\n    :cond_88\n    iget-object v0, p0, LX/By0;->A0G:LX/05B;\n\n    .line 137\n    .line 138\n    invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;\n\n    .line 139\n    .line 140\n    .line 141\n    move-result-object v1\n\n    .line 142\n    check-cast v1, LX/0YK;\n\n    .line 143\n    .line 144\n    sget-object v0, Lcom/whatsapp/infra/core/jid/UserJid;->Companion:LX/0D8;\n\n    .line 145\n    .line 146\n    iget-object v0, v9, LX/CjN;->A04:Lcom/whatsapp/infra/core/jid/Jid;\n\n    .line 147\n    .line 148\n    invoke-static {v0}, LX/0DE;->A00(Lcom/whatsapp/infra/core/jid/Jid;)LX/0Cy;\n\n    .line 149\n    .line 150\n    .line 151\n    move-result-object v0\n\n    .line 152\n    invoke-static {v0}, LX/0D8;->A00(Lcom/whatsapp/infra/core/jid/Jid;)Lcom/whatsapp/infra/core/jid/UserJid;\n\n    .line 153\n    .line 154\n    .line 155\n    move-result-object v0\n\n    .line 156\n    invoke-virtual {v1, v0}, LX/0YK;->A0K(LX/0Cy;)LX/7yi;\n\n    .line 157\n    .line 158\n    .line 159\n    move-result-object v0\n\n    .line 160\n    if-eqz v0, :cond_7e\n\n    .line 161\n    .line 162\n    :cond_a2\n    iget-object v0, p0, LX/By0;->A0C:LX/05B;\n\n    .line 163\n    .line 164\n    invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;\n\n    .line 165\n    .line 166\n    .line 167\n    move-result-object v0\n\n    .line 168\n    check-cast v0, LX/16T;\n\n    .line 169\n    .line 170\n    const/4 v12, 0x0\n\n    .line 171\n    new-instance v3, LX/CMD;\n\n    .line 172\n    .line 173\n    move v13, v12\n\n    .line 174\n    invoke-direct/range {v3 .. v13}, LX/CMD;-><init>(LX/1B3;LX/CIv;LX/CIv;LX/CIv;LX/Dcq;LX/CjN;[B[BIZ)V\n\n    .line 175\n    .line 176\n    .line 177\n    invoke-virtual {v0, v3}, LX/16T;->A00(LX/CMD;)LX/CgK;\n\n    .line 178\n    .line 179\n    .line 180\n    move-result-object v1\n\n    .line 181\n    iget v0, v9, LX/CjN;->A00:I\n\n    .line 182\n    .line 183\n    invoke-static {v0}, LX/BoP;->A00(I)I\n\n    .line 184\n    .line 185\n    .line 186\n    move-result v0\n\n    .line 187\n    invoke-virtual {v1, v0}, LX/CgK;->A01(I)V\n\n    .line 188\n    .line 189\n    .line 190\n    return-void\n\n    .line 191\n    :cond_bf\n    iget-object v0, p0, LX/By0;->A0D:LX/05B;\n\n    .line 192\n    .line 193\n    iget-object v3, v0, LX/05B;->A00:LX/00s;\n\n    .line 194\n    .line 195\n    invoke-static {v3}, LX/Ayk;->A0c(LX/00s;)LX/0jc;\n\n    .line 196\n    .line 197\n    .line 198\n    move-result-object v0\n\n    .line 199\n    invoke-virtual {v0}, LX/0jc;->A1B()[B\n\n    .line 200\n    .line 201\n    .line 202\n    move-result-object v2\n\n    .line 203\n    invoke-static {v3}, LX/Ayk;->A0c(LX/00s;)LX/0jc;\n\n    .line 204\n    .line 205\n    .line 206\n    move-result-object v0\n\n    .line 207\n    invoke-virtual {v0}, LX/0jc;->A0d()LX/CIv;\n\n    .line 208\n    .line 209\n    .line 210\n    move-result-object v5\n\n    .line 211\n    invoke-static {v3}, LX/Ayk;->A0c(LX/00s;)LX/0jc;\n\n    .line 212\n    .line 213\n    .line 214\n    move-result-object v0\n\n    .line 215\n    invoke-virtual {v0}, LX/0jc;->A0e()LX/CIv;\n\n    .line 216\n    .line 217\n    .line 218\n    move-result-object v6\n\n    .line 219\n    invoke-virtual {v9}, LX/CjN;->A0L()Z\n\n    .line 220\n    .line 221\n    .line 222\n    move-result v0\n\n    .line 223\n    if-eqz v0, :cond_111\n\n    .line 224\n    .line 225\n    iget-object v0, p0, LX/By0;->A0A:LX/05B;\n\n    .line 226\n    .line 227\n    invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;\n\n    .line 228\n    .line 229\n    .line 230\n    move-result-object v1\n\n    .line 231\n    check-cast v1, LX/Can;\n\n    .line 232\n    .line 233\n    iget-object v0, v9, LX/CjN;->A05:Lcom/whatsapp/infra/core/jid/Jid;\n\n    .line 234\n    .line 235\n    invoke-virtual {v1, v0}, LX/Can;->A04(Lcom/whatsapp/infra/core/jid/Jid;)Z\n\n    .line 236\n    .line 237\n    .line 238\n    move-result v0\n\n    .line 239\n    if-eqz v0, :cond_111\n\n    .line 240\n    .line 241\n    invoke-static {v3}, LX/Ayk;->A0c(LX/00s;)LX/0jc;\n\n    .line 242\n    .line 243\n    .line 244\n    move-result-object v0\n\n    .line 245\n    invoke-virtual {v0}, LX/0jc;->A0b()LX/CIv;\n\n    .line 246\n    .line 247\n    .line 248\n    move-result-object v7\n\n    .line 249\n    :goto_f9\n    iget-object v0, p0, LX/By0;->A08:LX/05B;\n\n    .line 250\n    .line 251\n    invoke-static {v0}, LX/1xo;->A1T(LX/05B;)Z\n\n    .line 252\n    .line 253\n    .line 254\n    move-result v0\n\n    .line 255\n    if-eqz v0, :cond_10d\n\n    .line 256\n    .line 257\n    iget-object v0, p0, LX/By0;->A02:LX/05B;\n\n    .line 258\n    .line 259\n    invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;\n\n    .line 260\n    .line 261\n    .line 262\n    move-result-object v0\n\n    .line 263\n    check-cast v0, LX/08s;\n\n    .line 264\n    .line 265\n    invoke-virtual {v0}, LX/08s;->A05()[B\n\n    .line 266\n    .line 267\n    .line 268\n    move-result-object v10\n\n    .line 269\n    :cond_10d\n    move-object v11, v10\n\n    .line 270\n    move-object v10, v2\n\n    .line 271\n    goto/16 :goto_49\n\n    .line 272\n    .line 273\n    :cond_111\n    move-object v7, v10\n\n    .line 274\n    goto :goto_f9\n.end method",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

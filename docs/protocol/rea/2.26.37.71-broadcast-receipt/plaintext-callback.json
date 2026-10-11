@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_bfbf6c0e17f9cb17f56934d0a8ce78f39216599b95b88bd36a6cc2489a027dd3",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.D52",
+    "method_name": "BEw"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-PrrK9G/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"max_heap_bytes\":15695085568,\"java_version\":\"21.0.12.1\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.D52"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cinit\\u003e(X.CZV): void\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0},{\"signature\":\"BEw(byte[]): void\",\"is_constructor\":false,\"name\":\"BEw\",\"def_pos\":0}],\"method_count\":2,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"D52\",\"full_name\":\"X.D52\",\"field_count\":10,\"fields\":[{\"type\":\"int\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"X.Bgy\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"X.1B3\",\"def_pos\":0,\"name\":\"A05\"},{\"type\":\"X.Dcq\",\"def_pos\":0,\"name\":\"A06\"},{\"type\":\"X.CjN\",\"def_pos\":0,\"name\":\"A07\"},{\"type\":\"X.BqD\",\"def_pos\":0,\"name\":\"A08\"},{\"type\":\"boolean\",\"def_pos\":0,\"name\":\"A09\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.D52",
+          "method_name": "BEw",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"mode\":\"java\",\"full_name\":\"X.D52.BEw\",\"class_name\":\"X.D52\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    @Override // X.DbK\\n    public void BEw(byte[] bArr) {\\n        BqD bqD \\u003d this.A08;\\n        if (bqD !\\u003d null) {\\n            ((BqE) bqD).A01 \\u003d true;\\n        }\\n        CjN cjN \\u003d this.A07;\\n        String str \\u003d cjN.A0A;\\n        com.whatsapp.infra.core.jid.Jid jid \\u003d cjN.A05;\\n        int i \\u003d this.A00;\\n        StringBuilder sbA08 \\u003d AnonymousClass000.A08(\\\"DecryptionCallbackFuture/handlePlaintext id\\u003d\\\", str);\\n        sbA08.append(\\\" chatJid\\u003d\\\");\\n        sbA08.append(jid);\\n        C1xj.A1M(\\\" version\\u003d\\\", sbA08, i);\\n        if (bArr \\u003d\\u003d null || bArr.length \\u003d\\u003d 0) {\\n            com.whatsapp.infra.logging.Log.w(\\\"DecryptionCallbackFuture/handlePlaintext empty, ignoring\\\");\\n            if (this.A09) {\\n                Aym.A0v(this.A02).A0R(null, this.A06, cjN, 0);\\n            }\\n            ((Cnu) C05B.A02(this.A03)).A06(null, this.A05, null);\\n            return;\\n        }\\n        Bgy bgy \\u003d this.A04;\\n        bgy.A00 \\u003d true;\\n        bgy.A0I \\u003d C6al.A0u();\\n        boolean z \\u003d cjN instanceof Bp1;\\n        C00s c00s \\u003d this.A03.A00;\\n        Cnu cnu \\u003d (Cnu) c00s.get();\\n        C1B3 c1b3 \\u003d this.A05;\\n        C0p c0p \\u003d C0p.A04;\\n        Dcq dcq \\u003d this.A06;\\n        C1B3 c1b3A05 \\u003d z ? cnu.A05(c0p, c1b3, dcq, cjN, bArr) : cnu.A04(c0p, c1b3, dcq, cjN, bArr);\\n        if (c1b3A05 instanceof BlP) {\\n            return;\\n        }\\n        ((DDD) C05B.A02(this.A01)).A00(dcq, cjN, bArr, false, c1b3.BNe());\\n        ((Cnu) c00s.get()).A06(null, c1b3A05, null);\\n    }\",\"overload_count\":1,\"method_name\":\"BEw\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.D52",
+    "method": {
+      "name": "BEw",
+      "reported_signature": "BEw(byte[]): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    @Override // X.DbK\n    public void BEw(byte[] bArr) {\n        BqD bqD = this.A08;\n        if (bqD != null) {\n            ((BqE) bqD).A01 = true;\n        }\n        CjN cjN = this.A07;\n        String str = cjN.A0A;\n        com.whatsapp.infra.core.jid.Jid jid = cjN.A05;\n        int i = this.A00;\n        StringBuilder sbA08 = AnonymousClass000.A08(\"DecryptionCallbackFuture/handlePlaintext id=\", str);\n        sbA08.append(\" chatJid=\");\n        sbA08.append(jid);\n        C1xj.A1M(\" version=\", sbA08, i);\n        if (bArr == null || bArr.length == 0) {\n            com.whatsapp.infra.logging.Log.w(\"DecryptionCallbackFuture/handlePlaintext empty, ignoring\");\n            if (this.A09) {\n                Aym.A0v(this.A02).A0R(null, this.A06, cjN, 0);\n            }\n            ((Cnu) C05B.A02(this.A03)).A06(null, this.A05, null);\n            return;\n        }\n        Bgy bgy = this.A04;\n        bgy.A00 = true;\n        bgy.A0I = C6al.A0u();\n        boolean z = cjN instanceof Bp1;\n        C00s c00s = this.A03.A00;\n        Cnu cnu = (Cnu) c00s.get();\n        C1B3 c1b3 = this.A05;\n        C0p c0p = C0p.A04;\n        Dcq dcq = this.A06;\n        C1B3 c1b3A05 = z ? cnu.A05(c0p, c1b3, dcq, cjN, bArr) : cnu.A04(c0p, c1b3, dcq, cjN, bArr);\n        if (c1b3A05 instanceof BlP) {\n            return;\n        }\n        ((DDD) C05B.A02(this.A01)).A00(dcq, cjN, bArr, false, c1b3.BNe());\n        ((Cnu) c00s.get()).A06(null, c1b3A05, null);\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

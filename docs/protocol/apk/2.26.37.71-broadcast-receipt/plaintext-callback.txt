@@ -1,0 +1,90 @@
+# APK-derived structural disassembly: LX/D52;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method BEw(VL) flags=0x1 registers=19
+  # full signature: LX/D52;->BEw([B)V
+  0000..0004 op=08 move-object/from16 v4, v17
+  0004..0008 op=54 iget-object v0, v4, LX/D52;->A08:LX/BqD;
+  0008..000a op=12 const/4 v5, #0x1
+  000a..000e op=38 if-eqz v0, +0x4
+  000e..0012 op=5c iput-boolean v5, v0, LX/BqE;->A01:Z
+  0012..0016 op=54 iget-object v9, v4, LX/D52;->A07:LX/CjN;
+  0016..001a op=54 iget-object v1, v9, LX/CjN;->A0A:Ljava/lang/String;
+  001a..001e op=54 iget-object v3, v9, LX/CjN;->A05:Lcom/whatsapp/infra/core/jid/Jid;
+  001e..0022 op=52 iget v2, v4, LX/D52;->A00:I
+  0022..0026 op=1a const-string v0, "DecryptionCallbackFuture/handlePlaintext id="
+  0026..002c op=71 invoke-static {v0, v1}, LX/000;->A08(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+  002c..002e op=0c move-result-object v1
+  002e..0032 op=1a const-string v0, " chatJid="
+  0032..0038 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0038..003e op=6e invoke-virtual {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  003e..0042 op=1a const-string v0, " version="
+  0042..0048 op=71 invoke-static {v0, v1, v2}, LX/1xj;->A1M(Ljava/lang/String;Ljava/lang/StringBuilder;I)V
+  0048..004c op=08 move-object/from16 v10, v18
+  004c..0050 op=38 if-eqz v18, +0x52
+  0050..0052 op=21 array-length v0, v10
+  0052..0056 op=38 if-eqz v0, +0x4f
+  0056..005a op=54 iget-object v1, v4, LX/D52;->A04:LX/Bgy;
+  005a..0060 op=71 invoke-static {v5}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+  0060..0062 op=0c move-result-object v0
+  0062..0066 op=5b iput-object v0, v1, LX/Bgy;->A00:Ljava/lang/Boolean;
+  0066..006c op=71 invoke-static {}, LX/6al;->A0u()Ljava/lang/Integer;
+  006c..006e op=0c move-result-object v0
+  006e..0072 op=5b iput-object v0, v1, LX/Bgy;->A0I:Ljava/lang/Integer;
+  0072..0076 op=20 instance-of v1, v9, LX/Bp1;
+  0076..007a op=54 iget-object v0, v4, LX/D52;->A03:LX/05B;
+  007a..007e op=54 iget-object v3, v0, LX/05B;->A00:LX/00s;
+  007e..0084 op=72 invoke-interface {v3}, LX/00s;->get()Ljava/lang/Object;
+  0084..0086 op=0c move-result-object v5
+  0086..008a op=1f check-cast v5, LX/Cnu;
+  008a..008e op=54 iget-object v7, v4, LX/D52;->A05:LX/1B3;
+  008e..0092 op=62 sget-object v6, LX/C0p;->A04:LX/C0p;
+  0092..0096 op=54 iget-object v8, v4, LX/D52;->A06:LX/Dcq;
+  0096..009a op=38 if-eqz v1, +0x28
+  009a..00a0 op=74 invoke-virtual/range {v5..v10}, LX/Cnu;->A05(LX/C0p;LX/1B3;LX/Dcq;LX/CjN;[B)LX/1B3;
+  00a0..00a2 op=0c move-result-object v2
+  00a2..00a6 op=20 instance-of v0, v2, LX/BlP;
+  00a6..00aa op=39 if-nez v0, +0x1f
+  00aa..00ae op=54 iget-object v0, v4, LX/D52;->A01:LX/05B;
+  00ae..00b4 op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  00b4..00b6 op=0c move-result-object v11
+  00b6..00ba op=1f check-cast v11, LX/DDD;
+  00ba..00c0 op=72 invoke-interface {v7}, LX/1B3;->BNe()Z
+  00c0..00c2 op=0a move-result v16
+  00c2..00c4 op=12 const/4 v1, #0x0
+  00c4..00c6 op=12 const/4 v15, #0x0
+  00c6..00c8 op=07 move-object v12, v8
+  00c8..00ca op=07 move-object v13, v9
+  00ca..00cc op=07 move-object v14, v10
+  00cc..00d2 op=74 invoke-virtual/range {v11..v16}, LX/DDD;->A00(LX/Dcq;LX/CjN;[BZZ)LX/1fQ;
+  00d2..00d8 op=72 invoke-interface {v3}, LX/00s;->get()Ljava/lang/Object;
+  00d8..00da op=0c move-result-object v0
+  00da..00de op=1f check-cast v0, LX/Cnu;
+  00de..00e4 op=6e invoke-virtual {v0, v1, v2, v1}, LX/Cnu;->A06(LX/1B5;LX/1B3;LX/1fQ;)V
+  00e4..00e6 op=0e return-void
+  00e6..00ec op=74 invoke-virtual/range {v5..v10}, LX/Cnu;->A04(LX/C0p;LX/1B3;LX/Dcq;LX/CjN;[B)LX/1B3;
+  00ec..00ee op=0c move-result-object v2
+  00ee..00f0 op=28 goto -0x26
+  00f0..00f4 op=1a const-string v0, "DecryptionCallbackFuture/handlePlaintext empty, ignoring"
+  00f4..00fa op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+  00fa..00fe op=55 iget-boolean v0, v4, LX/D52;->A09:Z
+  00fe..0102 op=38 if-eqz v0, +0xf
+  0102..0106 op=54 iget-object v0, v4, LX/D52;->A02:LX/05B;
+  0106..010c op=71 invoke-static {v0}, LX/Aym;->A0v(LX/05B;)LX/0zH;
+  010c..010e op=0c move-result-object v3
+  010e..0112 op=54 iget-object v2, v4, LX/D52;->A06:LX/Dcq;
+  0112..0114 op=12 const/4 v1, #0x0
+  0114..0116 op=12 const/4 v0, #0x0
+  0116..011c op=6e invoke-virtual {v3, v1, v2, v9, v0}, LX/0zH;->A0R(LX/1B3;LX/Dcq;LX/CjN;I)V
+  011c..0120 op=54 iget-object v0, v4, LX/D52;->A03:LX/05B;
+  0120..0126 op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  0126..0128 op=0c move-result-object v2
+  0128..012c op=1f check-cast v2, LX/Cnu;
+  012c..0130 op=54 iget-object v1, v4, LX/D52;->A05:LX/1B3;
+  0130..0132 op=12 const/4 v0, #0x0
+  0132..0138 op=6e invoke-virtual {v2, v0, v1, v0}, LX/Cnu;->A06(LX/1B5;LX/1B3;LX/1fQ;)V
+  0138..013a op=0e return-void
+  # exception table: 0 try range(s)
+.end method

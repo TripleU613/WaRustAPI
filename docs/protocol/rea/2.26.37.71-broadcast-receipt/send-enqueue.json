@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_c665236d84930bfb5e63cf47441c7a5ab526175032ec5973011541de02af841c",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.C0h8",
+    "method_name": "A09"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-PrrK9G/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"max_heap_bytes\":15695085568,\"java_version\":\"21.0.12.1\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C0h8"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cclinit\\u003e(): void\",\"is_constructor\":false,\"name\":\"\\u003cclinit\\u003e\",\"def_pos\":0},{\"signature\":\"\\u003cinit\\u003e(): void\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0},{\"signature\":\"A00(android.os.Message): android.os.Message\",\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0},{\"signature\":\"A01(X.0hs, java.lang.Boolean, java.lang.String, int, boolean, boolean): android.os.Message\",\"is_constructor\":false,\"name\":\"A01\",\"def_pos\":0},{\"signature\":\"A02(X.Cb1): X.Cb1\",\"is_constructor\":false,\"name\":\"A02\",\"def_pos\":0},{\"signature\":\"A03(X.0h8): X.0y8\",\"is_constructor\":false,\"name\":\"A03\",\"def_pos\":0},{\"signature\":\"A04(android.os.Message, X.1Yj, X.0h8, java.lang.String, long, boolean): void\",\"is_constructor\":false,\"name\":\"A04\",\"def_pos\":0},{\"signature\":\"A05(android.os.Message, X.0h8, boolean, boolean): void\",\"is_constructor\":false,\"name\":\"A05\",\"def_pos\":0},{\"signature\":\"A06(X.0rX, X.0hs, X.0h8, java.lang.String, int, long, boolean): void\",\"is_constructor\":false,\"name\":\"A06\",\"def_pos\":0},{\"signature\":\"A07(X.Cb1, boolean): void\",\"is_constructor\":false,\"name\":\"A07\",\"def_pos\":0},{\"signature\":\"A08(X.0h8, java.util.Map): void\",\"is_constructor\":false,\"name\":\"A08\",\"def_pos\":0},{\"signature\":\"A09(android.os.Message, X.0h8, boolean, boolean): boolean\",\"is_constructor\":false,\"name\":\"A09\",\"def_pos\":0},{\"signature\":\"A0A(X.0rX, X.0hs, X.0h8, java.lang.String, int, long, boolean): boolean\",\"is_constructor\":false,\"name\":\"A0A\",\"def_pos\":0},{\"signature\":\"A0B(android.os.Message, X.Cb1): X.AzY\",\"is_constructor\":false,\"name\":\"A0B\",\"def_pos\":0},{\"signature\":\"A0C(X.0hs, X.Cb1, int): X.AzY\",\"is_constructor\":false,\"name\":\"A0C\",\"def_pos\":0},{\"signature\":\"A0D(X.0hs, java.lang.String, int): X.AzY\",\"is_constructor\":false,\"name\":\"A0D\",\"def_pos\":0},{\"signature\":\"A0E(X.0hs, java.lang.String, X.0t3, int, long, boolean): java.lang.Object\",\"is_constructor\":false,\"name\":\"A0E\",\"def_pos\":0},{\"signature\":\"A0F(): java.lang.String\",\"is_constructor\":false,\"name\":\"A0F\",\"def_pos\":0},{\"signature\":\"A0G(): java.lang.String\",\"is_constructor\":false,\"name\":\"A0G\",\"def_pos\":0},{\"signature\":\"A0H(): void\",\"is_constructor\":false,\"name\":\"A0H\",\"def_pos\":0},{\"signature\":\"A0I(): void\",\"is_constructor\":false,\"name\":\"A0I\",\"def_pos\":0},{\"signature\":\"A0J(long): void\",\"is_constructor\":false,\"name\":\"A0J\",\"def_pos\":0},{\"signature\":\"A0K(android.os.Message, java.lang.String): void\",\"is_constructor\":false,\"name\":\"A0K\",\"def_pos\":0},{\"signature\":\"A0L(android.os.Message, java.lang.String): void\",\"is_constructor\":false,\"name\":\"A0L\",\"def_pos\":0},{\"signature\":\"A0M(X.0nz, X.0rX, X.0hs, java.lang.String, int, long, boolean): void\",\"is_constructor\":false,\"name\":\"A0M\",\"def_pos\":0},{\"signature\":\"A0N(X.1B3, X.Cb1): void\",\"is_constructor\":false,\"name\":\"A0N\",\"def_pos\":0},{\"signature\":\"A0O(X.0rX, X.0hs, java.lang.String, int, long): void\",\"is_constructor\":false,\"name\":\"A0O\",\"def_pos\":0},{\"signature\":\"A0P(X.0rX, X.0hs, java.lang.String, int, long): void\",\"is_constructor\":false,\"name\":\"A0P\",\"def_pos\":0},{\"signature\":\"A0Q(X.Cb1): void\",\"is_constructor\":false,\"name\":\"A0Q\",\"def_pos\":0},{\"signature\":\"A0R(): boolean\",\"is_constructor\":false,\"name\":\"A0R\",\"def_pos\":0},{\"signature\":\"A0S(android.os.Message): boolean\",\"is_constructor\":false,\"name\":\"A0S\",\"def_pos\":0},{\"signature\":\"A0T(X.0rX, X.0hs, java.lang.String, int, long): boolean\",\"is_constructor\":false,\"name\":\"A0T\",\"def_pos\":0},{\"signature\":\"A0U(X.0hs, int): boolean\",\"is_constructor\":false,\"name\":\"A0U\",\"def_pos\":0},{\"signature\":\"A0V(java.util.List): boolean\",\"is_constructor\":false,\"name\":\"A0V\",\"def_pos\":0}],\"method_count\":34,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"C0h8\",\"full_name\":\"X.C0h8\",\"field_count\":22,\"fields\":[{\"type\":\"X.17y\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"X.07t\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"X.0AH\",\"def_pos\":0,\"name\":\"A05\"},{\"type\":\"X.08B\",\"def_pos\":0,\"name\":\"A06\"},{\"type\":\"X.09Y\",\"def_pos\":0,\"name\":\"A07\"},{\"type\":\"X.0Aq\",\"def_pos\":0,\"name\":\"A08\"},{\"type\":\"X.0hb\",\"def_pos\":0,\"name\":\"A09\"},{\"type\":\"X.0hZ\",\"def_pos\":0,\"name\":\"A0A\"},{\"type\":\"X.0hn\",\"def_pos\":0,\"name\":\"A0B\"},{\"type\":\"X.0ha\",\"def_pos\":0,\"name\":\"A0C\"},{\"type\":\"X.0hk\",\"def_pos\":0,\"name\":\"A0D\"},{\"type\":\"java.util.Map\",\"def_pos\":0,\"name\":\"A0E\"},{\"type\":\"java.util.concurrent.atomic.AtomicInteger\",\"def_pos\":0,\"name\":\"A0F\"},{\"type\":\"X.00l\",\"def_pos\":0,\"name\":\"A0G\"},{\"type\":\"X.0hX\",\"def_pos\":0,\"name\":\"A0H\"},{\"type\":\"long\",\"def_pos\":0,\"name\":\"A0I\"},{\"type\":\"X.17t\",\"def_pos\":0,\"name\":\"A0J\"},{\"type\":\"java.util.Set\",\"def_pos\":0,\"name\":\"A0K\"},{\"type\":\"X.0hB\",\"def_pos\":0,\"name\":\"A0L\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C0h8",
+          "method_name": "A09",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"mode\":\"java\",\"full_name\":\"X.0h8.A09\",\"class_name\":\"X.C0h8\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    /* JADX WARN: Code duplicated, block: B:6:0x000d  */\\n    @Deprecated(message \\u003d \\\"Use other non-deprecated sendIq APIs\\\")\\n    public static final boolean A09(Message message, C0h8 c0h8, boolean z, boolean z2) {\\n        boolean z3;\\n        int iA00 \\u003d C1q6.A00(message);\\n        if (z) {\\n            z3 \\u003d c0h8.A0J !\\u003d null;\\n        }\\n        if (c0h8.A07.A06 \\u0026\\u0026 z3) {\\n            StringBuilder sb \\u003d new StringBuilder(\\\"MessageClient/sendXmppIfReady type\\u003d\\\");\\n            sb.append(iA00);\\n            com.whatsapp.infra.logging.Log.i(sb.toString());\\n            A05(message, c0h8, false, z2);\\n            return true;\\n        }\\n        StringBuilder sb2 \\u003d new StringBuilder(\\\"MessageClient/sendXmppIfReady not-ready type\\u003d\\\");\\n        sb2.append(iA00);\\n        com.whatsapp.infra.logging.Log.i(sb2.toString());\\n        if (!z2) {\\n            c0h8.A00(message);\\n        }\\n        return false;\\n    }\",\"overload_count\":1,\"method_name\":\"A09\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.C0h8",
+    "method": {
+      "name": "A09",
+      "reported_signature": "A09(android.os.Message, X.0h8, boolean, boolean): boolean",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Code duplicated, block: B:6:0x000d  */\n    @Deprecated(message = \"Use other non-deprecated sendIq APIs\")\n    public static final boolean A09(Message message, C0h8 c0h8, boolean z, boolean z2) {\n        boolean z3;\n        int iA00 = C1q6.A00(message);\n        if (z) {\n            z3 = c0h8.A0J != null;\n        }\n        if (c0h8.A07.A06 && z3) {\n            StringBuilder sb = new StringBuilder(\"MessageClient/sendXmppIfReady type=\");\n            sb.append(iA00);\n            com.whatsapp.infra.logging.Log.i(sb.toString());\n            A05(message, c0h8, false, z2);\n            return true;\n        }\n        StringBuilder sb2 = new StringBuilder(\"MessageClient/sendXmppIfReady not-ready type=\");\n        sb2.append(iA00);\n        com.whatsapp.infra.logging.Log.i(sb2.toString());\n        if (!z2) {\n            c0h8.A00(message);\n        }\n        return false;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

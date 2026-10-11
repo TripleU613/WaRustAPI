@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_9183ecd80dbe34bd49133cdae6e64d56e315e1b5b67d80e7d1321bf53854dd54",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.CQn",
+    "method_name": "A00"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-PrrK9G/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"max_heap_bytes\":15695085568,\"java_version\":\"21.0.12.1\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.CQn"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cinit\\u003e(X.07t, X.08l, X.07u, X.0jc, X.1B3, X.Dcq, X.CjN, X.CLj): void\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0},{\"signature\":\"A00(X.Bgy, X.B76, X.ClY, X.BqD, boolean): X.CfP\",\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0}],\"method_count\":2,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"CQn\",\"full_name\":\"X.CQn\",\"field_count\":8,\"fields\":[{\"type\":\"X.07t\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"X.08l\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"X.07u\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"X.0jc\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"X.1B3\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"X.Dcq\",\"def_pos\":0,\"name\":\"A05\"},{\"type\":\"X.CjN\",\"def_pos\":0,\"name\":\"A06\"},{\"type\":\"X.CLj\",\"def_pos\":0,\"name\":\"A07\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.CQn",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"mode\":\"java\",\"full_name\":\"X.CQn.A00\",\"class_name\":\"X.CQn\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public final CfP A00(Bgy bgy, B76 b76, ClY clY, BqD bqD, boolean z) {\\n        int i;\\n        DbK d55;\\n        DbK d51;\\n        CfP cfPA00;\\n        byte[] bArrA00;\\n        int i2;\\n        DbK d54;\\n        if (clY \\u003d\\u003d null) {\\n            return null;\\n        }\\n        int i3 \\u003d clY.A00;\\n        CjN cjN \\u003d this.A06;\\n        String str \\u003d cjN.A0A;\\n        CLj cLj \\u003d this.A07;\\n        Integer numValueOf \\u003d Integer.valueOf(i3);\\n        C1B3 c1b3 \\u003d this.A04;\\n        Dcq dcq \\u003d this.A05;\\n        try {\\n            if (cjN instanceof Bp2) {\\n                Bp2 bp2 \\u003d (Bp2) cjN;\\n                DFI dfi \\u003d (DFI) dcq;\\n                if (C05B.A00(cLj.A00).A10(5760) \\u0026\\u0026 C0DE.A0V(Ayn.A0K(((CjN) bp2).A05))) {\\n                    C00S.A07(cLj.A02);\\n                    d54 \\u003d new D53(dfi, bp2, c1b3, numValueOf, z);\\n                } else {\\n                    ClY clY2 \\u003d bp2.A0A;\\n                    if (clY2 \\u003d\\u003d null \\u0026\\u0026 (clY2 \\u003d bp2.A09) \\u003d\\u003d null) {\\n                        i2 \\u003d 0;\\n                    } else {\\n                        i2 \\u003d clY2.A01;\\n                        if (i2 \\u003d\\u003d 2) {\\n                            bgy.A0P \\u003d 2L;\\n                            BBu bBu \\u003d cLj.A05;\\n                            CYk cYk \\u003d new CYk(dfi, bp2, c1b3, numValueOf, z);\\n                            C00S.A07(bBu);\\n                            d51 \\u003d new D51(cYk);\\n                            C00S.A06();\\n                            if (numValueOf !\\u003d null \\u0026\\u0026 i3 \\u003d\\u003d 4) {\\n                                C00S.A07(cLj.A04);\\n                                d54 \\u003d new D54(d51, dfi, bp2, c1b3, numValueOf);\\n                            }\\n                        }\\n                    }\\n                    BqD bqD2 \\u003d (BqD) C0hk.A00(cLj.A01, 0, ((CjN) bp2).A01);\\n                    BBs bBs \\u003d cLj.A03;\\n                    CZV czv \\u003d new CZV(bgy, c1b3, dfi, bp2, bqD2, i2, z);\\n                    C00S.A07(bBs);\\n                    d54 \\u003d new D52(czv);\\n                }\\n                C00S.A06();\\n                d51 \\u003d d54;\\n            } else {\\n                if (!(cjN instanceof Bp1)) {\\n                    throw C1xf.A15(\\\"Unsupported content stanza type\\\");\\n                }\\n                Bp1 bp1 \\u003d (Bp1) cjN;\\n                DFH dfh \\u003d (DFH) dcq;\\n                CaD caD \\u003d bp1.A00;\\n                ClY clY3 \\u003d caD.A01;\\n                if (clY3 \\u003d\\u003d null \\u0026\\u0026 (clY3 \\u003d caD.A00) \\u003d\\u003d null) {\\n                    i \\u003d 0;\\n                } else {\\n                    i \\u003d clY3.A01;\\n                    if (i \\u003d\\u003d 2) {\\n                        bgy.A0P \\u003d 2L;\\n                        BBv bBv \\u003d cLj.A06;\\n                        CYl cYl \\u003d new CYl(c1b3, dfh, bp1, numValueOf, z);\\n                        C00S.A07(bBv);\\n                        d55 \\u003d new D55(cYl);\\n                    }\\n                    C00S.A06();\\n                    d51 \\u003d d55;\\n                }\\n                BqD bqD3 \\u003d (BqD) C0hk.A00(cLj.A01, 0, ((CjN) bp1).A01);\\n                BBs bBs2 \\u003d cLj.A03;\\n                CZV czv2 \\u003d new CZV(bgy, c1b3, dfh, bp1, bqD3, i, z);\\n                C00S.A07(bBs2);\\n                d55 \\u003d new D52(czv2);\\n                C00S.A06();\\n                d51 \\u003d d55;\\n            }\\n            if (i3 \\u003d\\u003d 0) {\\n                bgy.A09 \\u003d 0;\\n                C0jc c0jc \\u003d this.A03;\\n                byte[] bArr \\u003d clY.A05;\\n                if (bArr !\\u003d null) {\\n                    return c0jc.A0N(d51, b76, bArr);\\n                }\\n                throw C1xf.A16(\\\"Required value was null.\\\");\\n            }\\n            if (i3 \\u003d\\u003d 1) {\\n                bgy.A09 \\u003d 1;\\n                C0jc c0jc2 \\u003d this.A03;\\n                byte[] bArr2 \\u003d clY.A05;\\n                if (bArr2 \\u003d\\u003d null) {\\n                    throw C1xf.A16(\\\"Required value was null.\\\");\\n                }\\n                ThreadLocal threadLocal \\u003d C0jc.A0U;\\n                threadLocal.set(c1b3);\\n                try {\\n                    return c0jc2.A0O(d51, b76, bArr2);\\n                } finally {\\n                    threadLocal.remove();\\n                }\\n            }\\n            if (i3 !\\u003d 2) {\\n                if (i3 \\u003d\\u003d 4) {\\n                    bgy.A09 \\u003d C1xg.A18();\\n                    if (C00D.A0G(this.A00, C0fi.A05)) {\\n                        d51.BEw(clY.A05);\\n                    } else {\\n                        this.A02.COb(\\\"bot_chat_decryption\\\", new DLp(clY, d51, 3));\\n                    }\\n                    return new CfP(clY.A05, 0);\\n                }\\n                com.whatsapp.infra.core.jid.Jid jid \\u003d cjN.A05;\\n                StringBuilder sbA08 \\u003d AnonymousClass000.A08(\\\"MessageDecryptor/axolotl unrecognized ciphertext type; id\\u003d\\\", str);\\n                sbA08.append(\\\"; remoteJid\\u003d\\\");\\n                sbA08.append(jid);\\n                Ayp.A1C(\\\" type\\u003d\\\", sbA08, i3);\\n                if (bqD !\\u003d null) {\\n                    ((BqE) bqD).A01 \\u003d false;\\n                }\\n                bgy.A00 \\u003d false;\\n                bgy.A0B \\u003d C1xg.A1D();\\n                return null;\\n            }\\n            bgy.A09 \\u003d 2;\\n            C0Cy c0CyA00 \\u003d C0DE.A00(cjN.A04);\\n            String strA09 \\u003d C0DE.A09(C0DE.A00(cjN.A05));\\n            String strA010 \\u003d C0DE.A09(c0CyA00);\\n            if (C0DE.A0Q(c0CyA00)) {\\n                if (strA010 \\u003d\\u003d null) {\\n                    throw C1xf.A16(\\\"Required value was null.\\\");\\n                }\\n            } else {\\n                if (strA09 \\u003d\\u003d null) {\\n                    throw C1xf.A16(\\\"Required value was null.\\\");\\n                }\\n                strA010 \\u003d strA09;\\n            }\\n            Cnr cnr \\u003d new Cnr(b76, strA010, Voip.REJECT_REASON_DECLINED);\\n            C0jc c0jc3 \\u003d this.A03;\\n            byte[] bArr3 \\u003d clY.A05;\\n            if (bArr3 \\u003d\\u003d null) {\\n                throw C1xf.A16(\\\"Required value was null.\\\");\\n            }\\n            B75 b75A01 \\u003d C0jp.A01(cnr, c0jc3.A0J);\\n            b75A01.lock();\\n            try {\\n                C0ko c0ko \\u003d c0jc3.A01;\\n                C0kX c0kX \\u003d c0ko.A03.A08;\\n                CS7 cs7A06 \\u003d CoY.A06(cnr);\\n                try {\\n                    try {\\n                        try {\\n                            try {\\n                                Dc6 dRs \\u003d d51 !\\u003d null ? new DRs(d51) : new DRr();\\n                                if (C1xg.A1a(c0ko.A00, 24805) || !c0ko.A05.A02()) {\\n                                    bArrA00 \\u003d Cjs.A00(dRs, cs7A06, c0kX, bArr3);\\n                                } else {\\n                                    synchronized (Cjs.A00) {\\n                                        bArrA00 \\u003d Cjs.A00(dRs, cs7A06, c0kX, bArr3);\\n                                    }\\n                                }\\n                                cfPA00 \\u003d C9E.A00(null, bArrA00, 0);\\n                            } catch (Exception e) {\\n                                if ((e instanceof SQLiteFullException) || (e instanceof SQLiteDatabaseCorruptException)) {\\n                                    throw e;\\n                                }\\n                                com.whatsapp.infra.logging.Log.w(\\\"SignalCoordinatorDefault/decryptForGroup\\\", e);\\n                                cfPA00 \\u003d C9E.A00(e, null, -1000);\\n                            }\\n                        } catch (C4V e2) {\\n                            cfPA00 \\u003d C9E.A00(e2, null, -1007);\\n                        }\\n                    } catch (C4T e3) {\\n                        cfPA00 \\u003d C9E.A00(e3, null, -1001);\\n                    }\\n                } catch (C4r e4) {\\n                    cfPA00 \\u003d C9E.A00(e4, null, -1008);\\n                } catch (C4x e5) {\\n                    cfPA00 \\u003d C9E.A00(e5, null, -1005);\\n                }\\n                b75A01.close();\\n                return cfPA00;\\n            } catch (Throwable th) {\\n                try {\\n                    b75A01.close();\\n                    throw th;\\n                } catch (Throwable th2) {\\n                    Throwable.class.getDeclaredMethod(\\\"addSuppressed\\\", Throwable.class).invoke(th, th2);\\n                    throw th;\\n                }\\n            }\\n        } catch (Throwable th3) {\\n            C00S.A06();\\n            throw th3;\\n        }\\n    }\",\"overload_count\":1,\"method_name\":\"A00\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.CQn",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(X.Bgy, X.B76, X.ClY, X.BqD, boolean): X.CfP",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public final CfP A00(Bgy bgy, B76 b76, ClY clY, BqD bqD, boolean z) {\n        int i;\n        DbK d55;\n        DbK d51;\n        CfP cfPA00;\n        byte[] bArrA00;\n        int i2;\n        DbK d54;\n        if (clY == null) {\n            return null;\n        }\n        int i3 = clY.A00;\n        CjN cjN = this.A06;\n        String str = cjN.A0A;\n        CLj cLj = this.A07;\n        Integer numValueOf = Integer.valueOf(i3);\n        C1B3 c1b3 = this.A04;\n        Dcq dcq = this.A05;\n        try {\n            if (cjN instanceof Bp2) {\n                Bp2 bp2 = (Bp2) cjN;\n                DFI dfi = (DFI) dcq;\n                if (C05B.A00(cLj.A00).A10(5760) && C0DE.A0V(Ayn.A0K(((CjN) bp2).A05))) {\n                    C00S.A07(cLj.A02);\n                    d54 = new D53(dfi, bp2, c1b3, numValueOf, z);\n                } else {\n                    ClY clY2 = bp2.A0A;\n                    if (clY2 == null && (clY2 = bp2.A09) == null) {\n                        i2 = 0;\n                    } else {\n                        i2 = clY2.A01;\n                        if (i2 == 2) {\n                            bgy.A0P = 2L;\n                            BBu bBu = cLj.A05;\n                            CYk cYk = new CYk(dfi, bp2, c1b3, numValueOf, z);\n                            C00S.A07(bBu);\n                            d51 = new D51(cYk);\n                            C00S.A06();\n                            if (numValueOf != null && i3 == 4) {\n                                C00S.A07(cLj.A04);\n                                d54 = new D54(d51, dfi, bp2, c1b3, numValueOf);\n                            }\n                        }\n                    }\n                    BqD bqD2 = (BqD) C0hk.A00(cLj.A01, 0, ((CjN) bp2).A01);\n                    BBs bBs = cLj.A03;\n                    CZV czv = new CZV(bgy, c1b3, dfi, bp2, bqD2, i2, z);\n                    C00S.A07(bBs);\n                    d54 = new D52(czv);\n                }\n                C00S.A06();\n                d51 = d54;\n            } else {\n                if (!(cjN instanceof Bp1)) {\n                    throw C1xf.A15(\"Unsupported content stanza type\");\n                }\n                Bp1 bp1 = (Bp1) cjN;\n                DFH dfh = (DFH) dcq;\n                CaD caD = bp1.A00;\n                ClY clY3 = caD.A01;\n                if (clY3 == null && (clY3 = caD.A00) == null) {\n                    i = 0;\n                } else {\n                    i = clY3.A01;\n                    if (i == 2) {\n                        bgy.A0P = 2L;\n                        BBv bBv = cLj.A06;\n                        CYl cYl = new CYl(c1b3, dfh, bp1, numValueOf, z);\n                        C00S.A07(bBv);\n                        d55 = new D55(cYl);\n                    }\n                    C00S.A06();\n                    d51 = d55;\n                }\n                BqD bqD3 = (BqD) C0hk.A00(cLj.A01, 0, ((CjN) bp1).A01);\n                BBs bBs2 = cLj.A03;\n                CZV czv2 = new CZV(bgy, c1b3, dfh, bp1, bqD3, i, z);\n                C00S.A07(bBs2);\n                d55 = new D52(czv2);\n                C00S.A06();\n                d51 = d55;\n            }\n            if (i3 == 0) {\n                bgy.A09 = 0;\n                C0jc c0jc = this.A03;\n                byte[] bArr = clY.A05;\n                if (bArr != null) {\n                    return c0jc.A0N(d51, b76, bArr);\n                }\n                throw C1xf.A16(\"Required value was null.\");\n            }\n            if (i3 == 1) {\n                bgy.A09 = 1;\n                C0jc c0jc2 = this.A03;\n                byte[] bArr2 = clY.A05;\n                if (bArr2 == null) {\n                    throw C1xf.A16(\"Required value was null.\");\n                }\n                ThreadLocal threadLocal = C0jc.A0U;\n                threadLocal.set(c1b3);\n                try {\n                    return c0jc2.A0O(d51, b76, bArr2);\n                } finally {\n                    threadLocal.remove();\n                }\n            }\n            if (i3 != 2) {\n                if (i3 == 4) {\n                    bgy.A09 = C1xg.A18();\n                    if (C00D.A0G(this.A00, C0fi.A05)) {\n                        d51.BEw(clY.A05);\n                    } else {\n                        this.A02.COb(\"bot_chat_decryption\", new DLp(clY, d51, 3));\n                    }\n                    return new CfP(clY.A05, 0);\n                }\n                com.whatsapp.infra.core.jid.Jid jid = cjN.A05;\n                StringBuilder sbA08 = AnonymousClass000.A08(\"MessageDecryptor/axolotl unrecognized ciphertext type; id=\", str);\n                sbA08.append(\"; remoteJid=\");\n                sbA08.append(jid);\n                Ayp.A1C(\" type=\", sbA08, i3);\n                if (bqD != null) {\n                    ((BqE) bqD).A01 = false;\n                }\n                bgy.A00 = false;\n                bgy.A0B = C1xg.A1D();\n                return null;\n            }\n            bgy.A09 = 2;\n            C0Cy c0CyA00 = C0DE.A00(cjN.A04);\n            String strA09 = C0DE.A09(C0DE.A00(cjN.A05));\n            String strA010 = C0DE.A09(c0CyA00);\n            if (C0DE.A0Q(c0CyA00)) {\n                if (strA010 == null) {\n                    throw C1xf.A16(\"Required value was null.\");\n                }\n            } else {\n                if (strA09 == null) {\n                    throw C1xf.A16(\"Required value was null.\");\n                }\n                strA010 = strA09;\n            }\n            Cnr cnr = new Cnr(b76, strA010, Voip.REJECT_REASON_DECLINED);\n            C0jc c0jc3 = this.A03;\n            byte[] bArr3 = clY.A05;\n            if (bArr3 == null) {\n                throw C1xf.A16(\"Required value was null.\");\n            }\n            B75 b75A01 = C0jp.A01(cnr, c0jc3.A0J);\n            b75A01.lock();\n            try {\n                C0ko c0ko = c0jc3.A01;\n                C0kX c0kX = c0ko.A03.A08;\n                CS7 cs7A06 = CoY.A06(cnr);\n                try {\n                    try {\n                        try {\n                            try {\n                                Dc6 dRs = d51 != null ? new DRs(d51) : new DRr();\n                                if (C1xg.A1a(c0ko.A00, 24805) || !c0ko.A05.A02()) {\n                                    bArrA00 = Cjs.A00(dRs, cs7A06, c0kX, bArr3);\n                                } else {\n                                    synchronized (Cjs.A00) {\n                                        bArrA00 = Cjs.A00(dRs, cs7A06, c0kX, bArr3);\n                                    }\n                                }\n                                cfPA00 = C9E.A00(null, bArrA00, 0);\n                            } catch (Exception e) {\n                                if ((e instanceof SQLiteFullException) || (e instanceof SQLiteDatabaseCorruptException)) {\n                                    throw e;\n                                }\n                                com.whatsapp.infra.logging.Log.w(\"SignalCoordinatorDefault/decryptForGroup\", e);\n                                cfPA00 = C9E.A00(e, null, -1000);\n                            }\n                        } catch (C4V e2) {\n                            cfPA00 = C9E.A00(e2, null, -1007);\n                        }\n                    } catch (C4T e3) {\n                        cfPA00 = C9E.A00(e3, null, -1001);\n                    }\n                } catch (C4r e4) {\n                    cfPA00 = C9E.A00(e4, null, -1008);\n                } catch (C4x e5) {\n                    cfPA00 = C9E.A00(e5, null, -1005);\n                }\n                b75A01.close();\n                return cfPA00;\n            } catch (Throwable th) {\n                try {\n                    b75A01.close();\n                    throw th;\n                } catch (Throwable th2) {\n                    Throwable.class.getDeclaredMethod(\"addSuppressed\", Throwable.class).invoke(th, th2);\n                    throw th;\n                }\n            }\n        } catch (Throwable th3) {\n            C00S.A06();\n            throw th3;\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

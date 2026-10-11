@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_279e1a01aa50becfee1e0907c8f390c5fad64013e24069597184b5b7c57ef900",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.A7Z",
+    "method_name": "A00"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-lrbvwo/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"max_heap_bytes\":15695085568,\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.A7Z"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_class_count\":0,\"method_count\":2,\"methods\":[{\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true},{\"signature\":\"A00(X.DFI, X.Bp2, X.1B3, X.A7Z, kotlin.jvm.functions.Function0): void\",\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false}],\"fields\":[{\"type\":\"X.05B\",\"name\":\"A00\",\"def_pos\":0},{\"type\":\"X.05B\",\"name\":\"A01\",\"def_pos\":0},{\"type\":\"X.05B\",\"name\":\"A02\",\"def_pos\":0},{\"type\":\"X.05B\",\"name\":\"A03\",\"def_pos\":0},{\"type\":\"X.05B\",\"name\":\"A04\",\"def_pos\":0},{\"type\":\"X.05B\",\"name\":\"A05\",\"def_pos\":0},{\"type\":\"X.05B\",\"name\":\"A06\",\"def_pos\":0},{\"type\":\"X.05B\",\"name\":\"A07\",\"def_pos\":0},{\"type\":\"java.util.Set\",\"name\":\"A08\",\"def_pos\":0},{\"type\":\"java.util.concurrent.atomic.AtomicInteger\",\"name\":\"A09\",\"def_pos\":0}],\"field_count\":10,\"full_name\":\"X.A7Z\",\"name\":\"A7Z\",\"inner_classes\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.A7Z",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"overload_index\":0,\"class_name\":\"X.A7Z\",\"full_name\":\"X.A7Z.A00\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"A00\",\"overload_count\":1,\"body\":\"    public static final void A00(DFI dfi, Bp2 bp2, C1B3 c1b3, A7Z a7z, Function0 function0) {\\n        BqD bqD \\u003d (BqD) C0hk.A00((C0hk) C05B.A02(a7z.A02), 0, ((CjN) bp2).A01);\\n        if (bqD !\\u003d null) {\\n            bqD.A00 \\u003d a7z.A09.get();\\n            bqD.A06(5);\\n        }\\n        a7z.A09.incrementAndGet();\\n        ((C16Z) C05B.A02(a7z.A00)).A00(new Agb(dfi, function0, c1b3, a7z, bp2, 11));\\n    }\",\"fell_back\":false}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.A7Z",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(X.DFI, X.Bp2, X.1B3, X.A7Z, kotlin.jvm.functions.Function0): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public static final void A00(DFI dfi, Bp2 bp2, C1B3 c1b3, A7Z a7z, Function0 function0) {\n        BqD bqD = (BqD) C0hk.A00((C0hk) C05B.A02(a7z.A02), 0, ((CjN) bp2).A01);\n        if (bqD != null) {\n            bqD.A00 = a7z.A09.get();\n            bqD.A06(5);\n        }\n        a7z.A09.incrementAndGet();\n        ((C16Z) C05B.A02(a7z.A00)).A00(new Agb(dfi, function0, c1b3, a7z, bp2, 11));\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

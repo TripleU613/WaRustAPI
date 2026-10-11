@@ -617,7 +617,7 @@ pub fn received_confirmation(incoming: &Node) -> Option<Node> {
     };
     // APK 37.71 Cp2.A06 passes signed -1 to A00, so sts (>0) is omitted.
     // Remote statuses carry class=status and mode=0; sender requires own-account context.
-    // shortcut: broadcast lists share status class, split after their receive dispatcher is traced.
+    // APK 1RC.A06 routes ordinary lists to Bp2; Cp2.A04 supplies no class.
     if incoming.description == "message"
         && let Some((chat, participant)) = super::inbox::sender_key_chat(incoming)
         && chat.server == crate::model::jid::Server::Broadcast
@@ -629,13 +629,26 @@ pub fn received_confirmation(incoming: &Node) -> Option<Node> {
         if id.is_empty() || id.len() > 128 {
             return None;
         }
-        return Some(
-            Node::new("receipt")
-                .attr("to", chat)
-                .attr("id", id)
-                .attr("participant", device_form(participant))
-                .attr("class", "status"),
-        );
+        let status = chat.user == "status"
+            || incoming.child("meta").is_some_and(|meta| {
+                meta.get_attr("is_group_status")
+                    .and_then(|value| value.as_text())
+                    == Some("true")
+                    || meta
+                        .get_attr("content_type")
+                        .and_then(|value| value.as_text())
+                        == Some("status_notify")
+            });
+        let receipt = Node::new("receipt")
+            .attr("to", chat)
+            .attr("id", id)
+            .attr("participant", device_form(participant));
+        // shortcut: metadata status keeps its prior class, port the native account/category gates next.
+        return Some(if status {
+            receipt.attr("class", "status")
+        } else {
+            receipt
+        });
     }
     // Group message: the chat is the group and `participant` names the sender.
     if incoming.description == "message"
@@ -1289,7 +1302,62 @@ mod tests {
                 .unwrap();
         assert!(direct.get_attr("participant").is_none());
     }
-    /// APK Cp2.A06 remote branch: null type, class=status, sts=-1 and mode=0.
+    #[test]
+    fn ordinary_broadcast_list_confirmation_has_no_status_class() {
+        for sender in ["15555550100@s.whatsapp.net", "100001@lid", "100001:7@lid"] {
+            let incoming = Node::new("message")
+                .attr("from", "12345@broadcast")
+                .attr("participant", sender)
+                .attr("id", "LIST-DELIVERY");
+            let before = incoming.clone();
+            let receipt = received_confirmation(&incoming).unwrap();
+            assert_eq!(incoming, before);
+            assert_eq!(receipt.attributes.len(), 3);
+            assert!(receipt.get_attr("class").is_none());
+            assert!(receipt.get_attr("type").is_none());
+            assert!(receipt.get_attr("sts").is_none());
+            assert_eq!(
+                receipt
+                    .get_attr("to")
+                    .unwrap()
+                    .as_jid()
+                    .unwrap()
+                    .to_string(),
+                "12345@broadcast"
+            );
+            assert_eq!(
+                receipt
+                    .get_attr("participant")
+                    .unwrap()
+                    .as_jid()
+                    .unwrap()
+                    .user,
+                Jid::parse(sender).unwrap().user
+            );
+            assert!(received_confirmation(&incoming.clone().attr("edit", "7")).is_none());
+            assert!(received_confirmation(&incoming.attr("recipient", sender)).is_none());
+        }
+    }
+
+    #[test]
+    fn broadcast_status_metadata_keeps_its_existing_class() {
+        for (name, value, status) in [
+            ("is_group_status", "true", true),
+            ("content_type", "status_notify", true),
+            ("is_group_status", "false", false),
+            ("is_group_status", "TRUE", false),
+            ("content_type", "add_on", false),
+        ] {
+            let incoming = Node::new("message")
+                .attr("from", "12345@broadcast")
+                .attr("participant", "100001@lid")
+                .attr("id", "LIST-META")
+                .children(vec![Node::new("meta").attr(name, value)]);
+            let receipt = received_confirmation(&incoming).unwrap();
+            assert_eq!(receipt.get_attr("class").is_some(), status);
+        }
+    }
+
     #[test]
     fn message_confirmation_uses_native_primary_device_wire_forms() {
         use crate::model::jid::{JidKind, Server};
@@ -1302,7 +1370,12 @@ mod tests {
                 primary.clone(),
                 Jid::new_ad(user, 0, 0, server.clone()).unwrap(),
             ] {
-                for chat in [None, Some("12345-67890@g.us"), Some("status@broadcast")] {
+                for chat in [
+                    None,
+                    Some("12345-67890@g.us"),
+                    Some("status@broadcast"),
+                    Some("12345@broadcast"),
+                ] {
                     let mut incoming = Node::new("message").attr("id", "PRIMARY-DEVICE");
                     incoming = if let Some(chat) = chat {
                         incoming

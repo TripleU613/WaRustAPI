@@ -51,13 +51,12 @@ has one constructor write and two reads:
 - [16w.BFC](apk/2.26.37.71-broadcast-dispatch/newsletter-dispatch.txt)
   accepts what=280 and runs AgE(holder.A01, holder.A00, this, 2).
 
-The next trace must follow Ahc.run case 19 through decryption/message creation
-to the ordinary confirmation writer. Existing [primary-device evidence](message-primary-device.md)
-establishes 0y2.A00 -> Cp2.A04 -> node write, but does not connect this Bp2
-admission to that writer. The runtime broadcast-list class=status shortcut
-therefore remains explicitly unverified. No receipt policy was changed by this
-evidence chunk. Group-status metadata, peer-category handling and the account
-gate also remain unported receive distinctions.
+The subsequent [ordinary receipt trace](broadcast-receipt.md) follows the
+consumer through the decrypt worker, ordinary message construction and
+receipt policy, and corrects the list's extra status class. Complete admission,
+storage observers, group-status metadata, peer-category handling and the
+account gate remain unported receive distinctions. This dispatch checkpoint
+alone does not prove the entire decrypted-list-to-receipt path.
 
 ## Status phash exemption resolved
 

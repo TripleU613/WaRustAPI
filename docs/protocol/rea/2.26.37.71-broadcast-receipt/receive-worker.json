@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_302621eda6d93277918aa4c0c1dfdc770a2c23f2267dec31135113f1df1a651e",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.Agb",
+    "method_name": "run"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-lrbvwo/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"max_heap_bytes\":15695085568,\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.Agb"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_class_count\":0,\"method_count\":2,\"methods\":[{\"signature\":\"\\u003cinit\\u003e(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, int): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true},{\"signature\":\"run(): void\",\"def_pos\":0,\"name\":\"run\",\"is_constructor\":false}],\"fields\":[{\"type\":\"int\",\"name\":\"$t\",\"def_pos\":0},{\"type\":\"java.lang.Object\",\"name\":\"A00\",\"def_pos\":0},{\"type\":\"java.lang.Object\",\"name\":\"A01\",\"def_pos\":0},{\"type\":\"java.lang.Object\",\"name\":\"A02\",\"def_pos\":0},{\"type\":\"java.lang.Object\",\"name\":\"A03\",\"def_pos\":0},{\"type\":\"java.lang.Object\",\"name\":\"A04\",\"def_pos\":0}],\"field_count\":6,\"full_name\":\"X.Agb\",\"name\":\"Agb\",\"inner_classes\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.Agb",
+          "method_name": "run",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"overload_index\":0,\"class_name\":\"X.Agb\",\"full_name\":\"X.Agb.run\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"run\",\"overload_count\":1,\"body\":\"    /* JADX WARN: Code duplicated, block: B:15:0x0063 A[Catch: all -\\u003e 0x007e, TRY_LEAVE, TryCatch #4 {all -\\u003e 0x007e, blocks: (B:5:0x001d, B:7:0x0021, B:8:0x0033, B:10:0x0041, B:13:0x0049, B:15:0x0063, B:12:0x0046, B:17:0x007b, B:19:0x007d), top: B:97:0x001d, inners: #6, #5 }] */\\n    /* JADX WARN: Code duplicated, block: B:62:0x01e1  */\\n    /* JADX WARN: Code duplicated, block: B:82:0x0263  */\\n    @Override // java.lang.Runnable\\n    public final void run() {\\n        AnonymousClass078 anonymousClass078;\\n        Object obj;\\n        Object obj2;\\n        Object obj3;\\n        Object obj4;\\n        C0MN c0mn;\\n        int i;\\n        List listA1F;\\n        GroupJid groupJid;\\n        boolean z;\\n        switch (this.$t) {\\n            case 0:\\n                ((C0Jr) this.A02).COX(new AgD(this.A03, this.A04, 2, ((C0W2) this.A00).A0U((C0Cy) this.A01).A09()));\\n                return;\\n            case 1:\\n                VoipParticipantPickerFragment.A04((View) this.A03, (C10) this.A00, (VoipParticipantPickerFragment) this.A01, (C9Ix) this.A04, (C0DV) this.A02);\\n                return;\\n            case 2:\\n                anonymousClass078 \\u003d (AnonymousClass078) this.A00;\\n                obj \\u003d this.A01;\\n                obj2 \\u003d this.A02;\\n                obj3 \\u003d this.A03;\\n                obj4 \\u003d this.A04;\\n                List list \\u003d AnonymousClass078.A0A;\\n                c0mn \\u003d C0MN.A02;\\n                i \\u003d 0;\\n                break;\\n            case 3:\\n                C1OX c1ox \\u003d (C1OX) this.A00;\\n                C1bn c1bn \\u003d (C1bn) this.A01;\\n                Object obj5 \\u003d this.A02;\\n                Object obj6 \\u003d this.A03;\\n                Object obj7 \\u003d this.A04;\\n                C0a6 c0a6A01 \\u003d C1OX.A01(c1ox);\\n                if (c0a6A01.A0A.A10(6884)) {\\n                    listA1F \\u003d c0a6A01.A0C(c1bn);\\n                } else {\\n                    Set setA0E \\u003d c0a6A01.A0E(c1bn);\\n                    ArrayList arrayListA1D \\u003d C1xf.A1D();\\n                    for (Object obj8 : setA0E) {\\n                        if (c0a6A01.A0D.A05(((AC3) obj8).A02) \\u003e 0) {\\n                            arrayListA1D.add(obj8);\\n                        }\\n                    }\\n                    listA1F \\u003d C0C6.A1F(arrayListA1D);\\n                }\\n                if (listA1F.size() \\u003d\\u003d 1) {\\n                    groupJid \\u003d ((AC3) listA1F.get(0)).A02;\\n                    if (c0a6A01.A0D.A0X(groupJid) || c0a6A01.A09.A0y(groupJid)) {\\n                        groupJid \\u003d null;\\n                    }\\n                } else {\\n                    groupJid \\u003d null;\\n                }\\n                C1xi.A12(c1ox.A0B).COX(new Agr(groupJid, obj6, c1ox, c1bn, obj7, obj5, 1));\\n                return;\\n            case 4:\\n                C9rR c9rR \\u003d (C9rR) this.A00;\\n                EphemeralMessagesInfoView ephemeralMessagesInfoView \\u003d (EphemeralMessagesInfoView) this.A01;\\n                C0DV c0dv \\u003d (C0DV) this.A02;\\n                C1bn c1bn2 \\u003d (C1bn) this.A03;\\n                C9JV c9jv \\u003d (C9JV) this.A04;\\n                if (c9rR !\\u003d null) {\\n                    ephemeralMessagesInfoView.A0A(c9jv, c0dv, c1bn2, c9rR.A02);\\n                    return;\\n                }\\n                return;\\n            case 5:\\n                C8sm c8sm \\u003d (C8sm) this.A00;\\n                C0c3 c0c3 \\u003d (C0c3) this.A01;\\n                UserJid userJid \\u003d (UserJid) this.A02;\\n                Object obj9 \\u003d this.A03;\\n                Object obj10 \\u003d this.A04;\\n                C1uU c1uUA09 \\u003d c8sm.A0i.A09(c0c3, userJid);\\n                if (c1uUA09 !\\u003d null) {\\n                    z \\u003d c1uUA09.A00 \\u003d\\u003d 2;\\n                }\\n                c8sm.A0t.COX(new Agq(obj9, c8sm, c0c3, obj10, userJid, 3, z));\\n                return;\\n            case 6:\\n                C9yQ c9yQ \\u003d (C9yQ) this.A00;\\n                com.whatsapp.infra.core.jid.Jid jid \\u003d (com.whatsapp.infra.core.jid.Jid) this.A01;\\n                Integer num \\u003d (Integer) this.A02;\\n                Integer num2 \\u003d (Integer) this.A03;\\n                Integer num3 \\u003d (Integer) this.A04;\\n                C9II c9ii \\u003d new C9II();\\n                Integer numA17 \\u003d C1xg.A17();\\n                c9ii.A00 \\u003d numA17;\\n                c9ii.A01 \\u003d numA17;\\n                c9ii.A06 \\u003d c9yQ.A03.A00(jid);\\n                c9ii.A02 \\u003d num;\\n                c9ii.A03 \\u003d num2;\\n                c9ii.A04 \\u003d num3;\\n                c9ii.A05 \\u003d C1xf.A17(c9yQ.A04.getAndIncrement());\\n                c9yQ.A01.CGQ(c9ii);\\n                return;\\n            case 7:\\n                C0yw c0yw \\u003d (C0yw) this.A00;\\n                java.util.Map map \\u003d (java.util.Map) this.A01;\\n                C1bn c1bn3 \\u003d (C1bn) this.A02;\\n                AbstractCollection abstractCollection \\u003d (AbstractCollection) this.A03;\\n                ImmutableMap immutableMap \\u003d (ImmutableMap) this.A04;\\n                if (!map.isEmpty()) {\\n                    ((C17H) c0yw.A0d.get()).A03(map);\\n                }\\n                for (C1jj c1jj : c0yw.A14.A00(c1bn3, C1xl.A06(C08B.A00(c0yw.A1D)))) {\\n                    UserJid userJidA0o \\u003d C1xf.A0o(c1jj.A0i.A00);\\n                    if (!abstractCollection.contains(userJidA0o)) {\\n                        if (immutableMap.containsKey(userJidA0o)) {\\n                            Object obj11 \\u003d immutableMap.get(userJidA0o);\\n                            C00K.A06(obj11);\\n                            if (AnonymousClass000.A00(obj11) !\\u003d 500) {\\n                            }\\n                        }\\n                    }\\n                    c1jj.A07 \\u003d true;\\n                    c1jj.A01 \\u003d 0L;\\n                    c0yw.A0m.A0M(c1jj);\\n                }\\n                return;\\n            case 8:\\n                AtomicBoolean atomicBoolean \\u003d (AtomicBoolean) this.A00;\\n                AtomicReference atomicReference \\u003d (AtomicReference) this.A01;\\n                Function0 function0 \\u003d (Function0) this.A02;\\n                C9nm c9nm \\u003d (C9nm) this.A03;\\n                Runnable runnable \\u003d (Runnable) this.A04;\\n                if (C1xj.A1a(atomicBoolean)) {\\n                    Thread thread \\u003d (Thread) atomicReference.getAndSet(null);\\n                    if (thread !\\u003d null) {\\n                        thread.interrupt();\\n                    }\\n                    if (!C1YP.A0W(function0)) {\\n                        com.whatsapp.infra.logging.Log.i(\\\"PerfDeviceIdInitializer/uuid-fallback\\\");\\n                        ((C0IM) c9nm.A00).A08.A0I().A04(C1xj.A12());\\n                    }\\n                    runnable.run();\\n                    return;\\n                }\\n                return;\\n            case 9:\\n                anonymousClass078 \\u003d (AnonymousClass078) this.A00;\\n                obj \\u003d this.A01;\\n                obj2 \\u003d this.A02;\\n                obj3 \\u003d this.A03;\\n                obj4 \\u003d this.A04;\\n                List list2 \\u003d AnonymousClass078.A0A;\\n                c0mn \\u003d C0MN.A03;\\n                i \\u003d 1;\\n                break;\\n            case 10:\\n                ABr aBr \\u003d (ABr) this.A00;\\n                C1cj c1cj \\u003d (C1cj) this.A01;\\n                Long l \\u003d (Long) this.A02;\\n                AtomicBoolean atomicBoolean2 \\u003d (AtomicBoolean) this.A03;\\n                Function1 function1 \\u003d (Function1) this.A04;\\n                ArN arNA00 \\u003d ABr.A00(c1cj, aBr, l, atomicBoolean2);\\n                try {\\n                    if (!atomicBoolean2.get()) {\\n                        function1.invoke(arNA00);\\n                        break;\\n                    }\\n                    return;\\n                } finally {\\n                    aBr.A09.remove(c1cj, atomicBoolean2);\\n                }\\n            default:\\n                C1B3 c1b3 \\u003d (C1B3) this.A00;\\n                A7Z a7z \\u003d (A7Z) this.A01;\\n                CjN cjN \\u003d (CjN) this.A02;\\n                DFI dfi \\u003d (DFI) this.A03;\\n                Function0 function2 \\u003d (Function0) this.A04;\\n                try {\\n                    try {\\n                        try {\\n                            if (c1b3 instanceof C1B5) {\\n                                ((C18B) C05B.A02(a7z.A06)).A0D(C1xg.A1Q((C1B5) c1b3));\\n                            }\\n                            ((By0) C05B.A02(a7z.A01)).A09(c1b3, dfi, cjN);\\n                        } catch (Throwable th) {\\n                            a7z.A09.decrementAndGet();\\n                            function2.invoke();\\n                            throw th;\\n                        }\\n                    } catch (SQLiteFullException e) {\\n                        throw e;\\n                    } catch (StackOverflowError e2) {\\n                        C8kT.A1N(c1b3, \\\"IncomingMessageXmppHandler/decryptIncomingMessage/StackOverflowError while handling \\\", e2);\\n                        ((C0z9) C05B.A02(a7z.A03)).A0B(dfi, cjN, Boolean.valueOf(c1b3.BNe()), null, 10);\\n                        if (c1b3 instanceof C1B5) {\\n                            ((Cnu) C05B.A02(a7z.A07)).A08(c1b3, Integer.valueOf(ClassLoaderConfiguration.BASE_DEX_RETRY_WAIT_MS), null, !cjN.A02);\\n                        }\\n                    }\\n                    break;\\n                } catch (SQLiteDatabaseCorruptException e3) {\\n                    throw e3;\\n                } catch (Exception e4) {\\n                    C8kT.A1N(c1b3, \\\"IncomingMessageXmppHandler/decryptIncomingMessage/Exception while handling \\\", e4);\\n                    ((C0z9) C05B.A02(a7z.A03)).A0B(dfi, cjN, Boolean.valueOf(c1b3.BNe()), null, 10);\\n                    if (c1b3 instanceof C1B5) {\\n                        ((Cnu) C05B.A02(a7z.A07)).A08(c1b3, Integer.valueOf(ClassLoaderConfiguration.BASE_DEX_RETRY_WAIT_MS), null, !cjN.A02);\\n                    }\\n                }\\n                a7z.A09.decrementAndGet();\\n                function2.invoke();\\n                return;\\n        }\\n        AnonymousClass078.A00(anonymousClass078, c0mn, new ATT(obj2, obj3, obj, obj4, i));\\n    }\",\"fell_back\":false}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.Agb",
+    "method": {
+      "name": "run",
+      "reported_signature": "run(): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Code duplicated, block: B:15:0x0063 A[Catch: all -> 0x007e, TRY_LEAVE, TryCatch #4 {all -> 0x007e, blocks: (B:5:0x001d, B:7:0x0021, B:8:0x0033, B:10:0x0041, B:13:0x0049, B:15:0x0063, B:12:0x0046, B:17:0x007b, B:19:0x007d), top: B:97:0x001d, inners: #6, #5 }] */\n    /* JADX WARN: Code duplicated, block: B:62:0x01e1  */\n    /* JADX WARN: Code duplicated, block: B:82:0x0263  */\n    @Override // java.lang.Runnable\n    public final void run() {\n        AnonymousClass078 anonymousClass078;\n        Object obj;\n        Object obj2;\n        Object obj3;\n        Object obj4;\n        C0MN c0mn;\n        int i;\n        List listA1F;\n        GroupJid groupJid;\n        boolean z;\n        switch (this.$t) {\n            case 0:\n                ((C0Jr) this.A02).COX(new AgD(this.A03, this.A04, 2, ((C0W2) this.A00).A0U((C0Cy) this.A01).A09()));\n                return;\n            case 1:\n                VoipParticipantPickerFragment.A04((View) this.A03, (C10) this.A00, (VoipParticipantPickerFragment) this.A01, (C9Ix) this.A04, (C0DV) this.A02);\n                return;\n            case 2:\n                anonymousClass078 = (AnonymousClass078) this.A00;\n                obj = this.A01;\n                obj2 = this.A02;\n                obj3 = this.A03;\n                obj4 = this.A04;\n                List list = AnonymousClass078.A0A;\n                c0mn = C0MN.A02;\n                i = 0;\n                break;\n            case 3:\n                C1OX c1ox = (C1OX) this.A00;\n                C1bn c1bn = (C1bn) this.A01;\n                Object obj5 = this.A02;\n                Object obj6 = this.A03;\n                Object obj7 = this.A04;\n                C0a6 c0a6A01 = C1OX.A01(c1ox);\n                if (c0a6A01.A0A.A10(6884)) {\n                    listA1F = c0a6A01.A0C(c1bn);\n                } else {\n                    Set setA0E = c0a6A01.A0E(c1bn);\n                    ArrayList arrayListA1D = C1xf.A1D();\n                    for (Object obj8 : setA0E) {\n                        if (c0a6A01.A0D.A05(((AC3) obj8).A02) > 0) {\n                            arrayListA1D.add(obj8);\n                        }\n                    }\n                    listA1F = C0C6.A1F(arrayListA1D);\n                }\n                if (listA1F.size() == 1) {\n                    groupJid = ((AC3) listA1F.get(0)).A02;\n                    if (c0a6A01.A0D.A0X(groupJid) || c0a6A01.A09.A0y(groupJid)) {\n                        groupJid = null;\n                    }\n                } else {\n                    groupJid = null;\n                }\n                C1xi.A12(c1ox.A0B).COX(new Agr(groupJid, obj6, c1ox, c1bn, obj7, obj5, 1));\n                return;\n            case 4:\n                C9rR c9rR = (C9rR) this.A00;\n                EphemeralMessagesInfoView ephemeralMessagesInfoView = (EphemeralMessagesInfoView) this.A01;\n                C0DV c0dv = (C0DV) this.A02;\n                C1bn c1bn2 = (C1bn) this.A03;\n                C9JV c9jv = (C9JV) this.A04;\n                if (c9rR != null) {\n                    ephemeralMessagesInfoView.A0A(c9jv, c0dv, c1bn2, c9rR.A02);\n                    return;\n                }\n                return;\n            case 5:\n                C8sm c8sm = (C8sm) this.A00;\n                C0c3 c0c3 = (C0c3) this.A01;\n                UserJid userJid = (UserJid) this.A02;\n                Object obj9 = this.A03;\n                Object obj10 = this.A04;\n                C1uU c1uUA09 = c8sm.A0i.A09(c0c3, userJid);\n                if (c1uUA09 != null) {\n                    z = c1uUA09.A00 == 2;\n                }\n                c8sm.A0t.COX(new Agq(obj9, c8sm, c0c3, obj10, userJid, 3, z));\n                return;\n            case 6:\n                C9yQ c9yQ = (C9yQ) this.A00;\n                com.whatsapp.infra.core.jid.Jid jid = (com.whatsapp.infra.core.jid.Jid) this.A01;\n                Integer num = (Integer) this.A02;\n                Integer num2 = (Integer) this.A03;\n                Integer num3 = (Integer) this.A04;\n                C9II c9ii = new C9II();\n                Integer numA17 = C1xg.A17();\n                c9ii.A00 = numA17;\n                c9ii.A01 = numA17;\n                c9ii.A06 = c9yQ.A03.A00(jid);\n                c9ii.A02 = num;\n                c9ii.A03 = num2;\n                c9ii.A04 = num3;\n                c9ii.A05 = C1xf.A17(c9yQ.A04.getAndIncrement());\n                c9yQ.A01.CGQ(c9ii);\n                return;\n            case 7:\n                C0yw c0yw = (C0yw) this.A00;\n                java.util.Map map = (java.util.Map) this.A01;\n                C1bn c1bn3 = (C1bn) this.A02;\n                AbstractCollection abstractCollection = (AbstractCollection) this.A03;\n                ImmutableMap immutableMap = (ImmutableMap) this.A04;\n                if (!map.isEmpty()) {\n                    ((C17H) c0yw.A0d.get()).A03(map);\n                }\n                for (C1jj c1jj : c0yw.A14.A00(c1bn3, C1xl.A06(C08B.A00(c0yw.A1D)))) {\n                    UserJid userJidA0o = C1xf.A0o(c1jj.A0i.A00);\n                    if (!abstractCollection.contains(userJidA0o)) {\n                        if (immutableMap.containsKey(userJidA0o)) {\n                            Object obj11 = immutableMap.get(userJidA0o);\n                            C00K.A06(obj11);\n                            if (AnonymousClass000.A00(obj11) != 500) {\n                            }\n                        }\n                    }\n                    c1jj.A07 = true;\n                    c1jj.A01 = 0L;\n                    c0yw.A0m.A0M(c1jj);\n                }\n                return;\n            case 8:\n                AtomicBoolean atomicBoolean = (AtomicBoolean) this.A00;\n                AtomicReference atomicReference = (AtomicReference) this.A01;\n                Function0 function0 = (Function0) this.A02;\n                C9nm c9nm = (C9nm) this.A03;\n                Runnable runnable = (Runnable) this.A04;\n                if (C1xj.A1a(atomicBoolean)) {\n                    Thread thread = (Thread) atomicReference.getAndSet(null);\n                    if (thread != null) {\n                        thread.interrupt();\n                    }\n                    if (!C1YP.A0W(function0)) {\n                        com.whatsapp.infra.logging.Log.i(\"PerfDeviceIdInitializer/uuid-fallback\");\n                        ((C0IM) c9nm.A00).A08.A0I().A04(C1xj.A12());\n                    }\n                    runnable.run();\n                    return;\n                }\n                return;\n            case 9:\n                anonymousClass078 = (AnonymousClass078) this.A00;\n                obj = this.A01;\n                obj2 = this.A02;\n                obj3 = this.A03;\n                obj4 = this.A04;\n                List list2 = AnonymousClass078.A0A;\n                c0mn = C0MN.A03;\n                i = 1;\n                break;\n            case 10:\n                ABr aBr = (ABr) this.A00;\n                C1cj c1cj = (C1cj) this.A01;\n                Long l = (Long) this.A02;\n                AtomicBoolean atomicBoolean2 = (AtomicBoolean) this.A03;\n                Function1 function1 = (Function1) this.A04;\n                ArN arNA00 = ABr.A00(c1cj, aBr, l, atomicBoolean2);\n                try {\n                    if (!atomicBoolean2.get()) {\n                        function1.invoke(arNA00);\n                        break;\n                    }\n                    return;\n                } finally {\n                    aBr.A09.remove(c1cj, atomicBoolean2);\n                }\n            default:\n                C1B3 c1b3 = (C1B3) this.A00;\n                A7Z a7z = (A7Z) this.A01;\n                CjN cjN = (CjN) this.A02;\n                DFI dfi = (DFI) this.A03;\n                Function0 function2 = (Function0) this.A04;\n                try {\n                    try {\n                        try {\n                            if (c1b3 instanceof C1B5) {\n                                ((C18B) C05B.A02(a7z.A06)).A0D(C1xg.A1Q((C1B5) c1b3));\n                            }\n                            ((By0) C05B.A02(a7z.A01)).A09(c1b3, dfi, cjN);\n                        } catch (Throwable th) {\n                            a7z.A09.decrementAndGet();\n                            function2.invoke();\n                            throw th;\n                        }\n                    } catch (SQLiteFullException e) {\n                        throw e;\n                    } catch (StackOverflowError e2) {\n                        C8kT.A1N(c1b3, \"IncomingMessageXmppHandler/decryptIncomingMessage/StackOverflowError while handling \", e2);\n                        ((C0z9) C05B.A02(a7z.A03)).A0B(dfi, cjN, Boolean.valueOf(c1b3.BNe()), null, 10);\n                        if (c1b3 instanceof C1B5) {\n                            ((Cnu) C05B.A02(a7z.A07)).A08(c1b3, Integer.valueOf(ClassLoaderConfiguration.BASE_DEX_RETRY_WAIT_MS), null, !cjN.A02);\n                        }\n                    }\n                    break;\n                } catch (SQLiteDatabaseCorruptException e3) {\n                    throw e3;\n                } catch (Exception e4) {\n                    C8kT.A1N(c1b3, \"IncomingMessageXmppHandler/decryptIncomingMessage/Exception while handling \", e4);\n                    ((C0z9) C05B.A02(a7z.A03)).A0B(dfi, cjN, Boolean.valueOf(c1b3.BNe()), null, 10);\n                    if (c1b3 instanceof C1B5) {\n                        ((Cnu) C05B.A02(a7z.A07)).A08(c1b3, Integer.valueOf(ClassLoaderConfiguration.BASE_DEX_RETRY_WAIT_MS), null, !cjN.A02);\n                    }\n                }\n                a7z.A09.decrementAndGet();\n                function2.invoke();\n                return;\n        }\n        AnonymousClass078.A00(anonymousClass078, c0mn, new ATT(obj2, obj3, obj, obj4, i));\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

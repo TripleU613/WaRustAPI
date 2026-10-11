@@ -1,0 +1,102 @@
+{
+  "content-processor.txt": {
+    "bytes": 3083,
+    "sha256": "f3f69d2dfbaa3c3773bc971c53137c81f4dd2fa7387b8f8b3d16675702bd6b9e"
+  },
+  "decrypt-entry.txt": {
+    "bytes": 10108,
+    "sha256": "3dd2a7867964d5d664cdae285a779ec76746fa0a5d725f4692de67be887bb897"
+  },
+  "decrypt-factory.txt": {
+    "bytes": 1664,
+    "sha256": "9d9588e25a181c8c7674ee2f77041577d85b908eef10fe39dd3569d08980f593"
+  },
+  "decrypt-flow.txt": {
+    "bytes": 47533,
+    "sha256": "326fb274dc45e3c45a9c40d42001e2688c4eb457fa618b393bacebddefa197fe"
+  },
+  "decrypt-owner.txt": {
+    "bytes": 7978,
+    "sha256": "b61f36ce62eb512bdb936b029bc7ec417aaf38fcf3a5561c23044679fb5223b8"
+  },
+  "decrypt-result.txt": {
+    "bytes": 5416,
+    "sha256": "a207d9be3648c32c695a817dc4a4f4015845ae217b80727662d5f92ea55aef2f"
+  },
+  "decryption-result.txt": {
+    "bytes": 9869,
+    "sha256": "dcd8e8ccf1be37983ee3ae3f756a5a34297e3e2317fc3d2010c3e5fc77e89857"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "message-ack.txt": {
+    "bytes": 6512,
+    "sha256": "e01ccdb6fb1f50de2de28f0fd3caa5f4547506b4a0f94e6a5f5979570bd12657"
+  },
+  "message-persist.txt": {
+    "bytes": 287709,
+    "sha256": "355a9024882cabc2dcf98909b5becfc8d619142f201d0df035e2a11c6f97cb52"
+  },
+  "message-process.txt": {
+    "bytes": 1256,
+    "sha256": "507ce9ad9a7c922687247db4f5c719f4b95c81fd094a574999cd5e8b930d64df"
+  },
+  "ordinary-consumer.txt": {
+    "bytes": 91995,
+    "sha256": "d635bf471547578871b290c3a53249e1790121537677057f3b59979335610d49"
+  },
+  "plaintext-callback.txt": {
+    "bytes": 5142,
+    "sha256": "07b7349c88f3eca125764a91fd6106f0ff8f0582e16dcbe83578d7ae4df987de"
+  },
+  "plaintext-handoff.txt": {
+    "bytes": 21018,
+    "sha256": "dc6537719efed4210bd59e4a479c265c276233f257dad07cfc00dcec3012c9df"
+  },
+  "receipt-admission.txt": {
+    "bytes": 1358,
+    "sha256": "89f666711df137f21e8970859f4ac4e1244e534da05e6abd9ff9e054791ee786"
+  },
+  "receipt-builder.txt": {
+    "bytes": 4706,
+    "sha256": "7597f1a5a0fd5b2c9a9d7926d2405329dafa0897f3a72a9e8ae6a940c62bd703"
+  },
+  "receipt-forward.txt": {
+    "bytes": 832,
+    "sha256": "a830ef743c103357914f89d567d1f41523c85a676661470baf6a0d56ad2eb309"
+  },
+  "receipt-message.txt": {
+    "bytes": 1318,
+    "sha256": "283e60c6085d423d62933533f80622d5bf6c8e03b3c164f9dabeb4fae85e6b11"
+  },
+  "receive-process.txt": {
+    "bytes": 2369,
+    "sha256": "bbe493dc7f78e809ecfb1c86b571718df97e3a1e61d681100a10d5db1e0ae9b7"
+  },
+  "receive-worker.txt": {
+    "bytes": 24023,
+    "sha256": "32988caa25160c85b86e27a74eb977039f5c1bd7ac6e80c68946d91e3b394e6a"
+  },
+  "send-enqueue.txt": {
+    "bytes": 2446,
+    "sha256": "4e9b3c6aa34c47fdf1f711bb743821026c2fae7aa1c9c478782392151b513f78"
+  },
+  "send-queue.txt": {
+    "bytes": 708,
+    "sha256": "41cbe7e7bfb9f7c3a18beb996298d325878e8711d8d69d35013f8ebd8148eeca"
+  },
+  "targets.json": {
+    "bytes": 7925,
+    "sha256": "a4a095326bce4fe0eb251c28eb27beb1ae284c6bf401d5a70dab76a71540c71f"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

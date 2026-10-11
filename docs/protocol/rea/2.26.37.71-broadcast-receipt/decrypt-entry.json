@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_eed50dd873b1bb76533377b4d34425215ccfd6b91621d667a8c35410d73c5175",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.CoU",
+    "method_name": "A09"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-PrrK9G/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"max_heap_bytes\":15695085568,\"java_version\":\"21.0.12.1\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.CoU"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cinit\\u003e(): void\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0},{\"signature\":\"A00(X.1B3, X.Dcq, X.CjN): X.CQn\",\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0},{\"signature\":\"A01(X.Bgy, X.CfP, X.1B3, X.Dcq, X.CjN, X.BqD, boolean): java.lang.Integer\",\"is_constructor\":false,\"name\":\"A01\",\"def_pos\":0},{\"signature\":\"A02(X.Bgy, X.1B3, X.Dcq, X.CjN, X.BqD): void\",\"is_constructor\":false,\"name\":\"A02\",\"def_pos\":0},{\"signature\":\"A03(X.Bgy, X.1B3, X.Dcq, X.CjN, X.BqD, X.CoU): void\",\"is_constructor\":false,\"name\":\"A03\",\"def_pos\":0},{\"signature\":\"A04(X.1B3, X.Dcq, X.CjN): void\",\"is_constructor\":false,\"name\":\"A04\",\"def_pos\":0},{\"signature\":\"A05(X.Dcq, X.CjN): X.Bgy\",\"is_constructor\":false,\"name\":\"A05\",\"def_pos\":0},{\"signature\":\"A06(X.Bgy, X.Dcq, X.CjN): void\",\"is_constructor\":false,\"name\":\"A06\",\"def_pos\":0},{\"signature\":\"A07(X.Bgy, X.Dcq, X.CjN): void\",\"is_constructor\":false,\"name\":\"A07\",\"def_pos\":0},{\"signature\":\"A08(X.1B3, X.Dcq, X.CjN): void\",\"is_constructor\":false,\"name\":\"A08\",\"def_pos\":0},{\"signature\":\"A09(X.1B3, X.Dcq, X.CjN): void\",\"is_constructor\":false,\"name\":\"A09\",\"def_pos\":0},{\"signature\":\"A0A(X.1B3, X.Dcq, X.CjN, int, int): void\",\"is_constructor\":false,\"name\":\"A0A\",\"def_pos\":0}],\"method_count\":12,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"CoU\",\"full_name\":\"X.CoU\",\"field_count\":33,\"fields\":[{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A05\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A06\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A07\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A08\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A09\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0A\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0B\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0C\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0D\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0E\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0F\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0G\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0H\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0I\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0J\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0K\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0L\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0M\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0N\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0O\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0P\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0Q\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0R\"},{\"type\":\"java.util.List\",\"def_pos\":0,\"name\":\"A0S\"},{\"type\":\"java.util.concurrent.atomic.AtomicBoolean\",\"def_pos\":0,\"name\":\"A0T\"},{\"type\":\"java.util.concurrent.atomic.AtomicBoolean\",\"def_pos\":0,\"name\":\"A0U\"},{\"type\":\"java.util.concurrent.atomic.AtomicInteger\",\"def_pos\":0,\"name\":\"A0V\"},{\"type\":\"java.util.concurrent.atomic.AtomicInteger\",\"def_pos\":0,\"name\":\"A0W\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.CoU",
+          "method_name": "A09",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"mode\":\"java\",\"full_name\":\"X.CoU.A09\",\"class_name\":\"X.CoU\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public final void A09(C1B3 c1b3, Dcq dcq, CjN cjN) throws IllegalAccessException, B7l, InvocationTargetException {\\n        Da6 da6AC3;\\n        if (!(this instanceof Bxz)) {\\n            By0 by0 \\u003d (By0) this;\\n            Bp2 bp2 \\u003d (Bp2) cjN;\\n            DFI dfi \\u003d (DFI) dcq;\\n            C1xi.A1J(bp2, 1, dfi);\\n            Iterator it \\u003d ((C17G) C05B.A02(by0.A07)).A03.iterator();\\n            while (true) {\\n                if (!it.hasNext()) {\\n                    da6AC3 \\u003d DDT.A00;\\n                    break;\\n                }\\n                C0zU c0zU \\u003d (C0zU) it.next();\\n                try {\\n                    da6AC3 \\u003d c0zU.AC3(dfi, bp2, c1b3);\\n                    if (!C00h.areEqual(da6AC3, DDT.A00)) {\\n                        String strAjt \\u003d c0zU.Ajt();\\n                        StringBuilder sbA18 \\u003d C1xi.A18(\\\"IncomingMessageManager/notifyBeforeMessageDecrypted \\\");\\n                        sbA18.append(strAjt);\\n                        sbA18.append(\\\" returned \\\");\\n                        sbA18.append(da6AC3);\\n                        C1xj.A1R(sbA18, \\\", stopping\\\");\\n                        break;\\n                    }\\n                } catch (Throwable th) {\\n                    String strAjt2 \\u003d c0zU.Ajt();\\n                    Ayp.A1H(AnonymousClass000.A08(\\\"IncomingMessageManager/notifyBeforeMessageDecrypted \\\", strAjt2), \\\" failed to process \\\", ((CjN) bp2).A0A);\\n                    throw th;\\n                }\\n            }\\n            if (da6AC3 instanceof DDR) {\\n                com.whatsapp.infra.logging.Log.i(\\\"DecryptMessageRunnable/beforeDecrypt StopAndSendRetry action received\\\");\\n                ((CjN) bp2).A02 \\u003d true;\\n                ((CjN) bp2).A00 \\u003d 1;\\n                Bgy bgyA05 \\u003d by0.A05(dfi, bp2);\\n                bgyA05.A06 \\u003d Boolean.valueOf(c1b3.BNe());\\n                bgyA05.A00 \\u003d false;\\n                bgyA05.A0B \\u003d 0;\\n                by0.A06(bgyA05, dfi, bp2);\\n                by0.A07(bgyA05, dfi, bp2);\\n                by0.A0B(dfi, bp2, c1b3);\\n                by0.A08(c1b3, dfi, bp2);\\n                return;\\n            }\\n            if (da6AC3 instanceof DDS) {\\n                Aym.A0v(by0.A0B).A0T(c1b3, bp2, ((DDS) da6AC3).A00);\\n                return;\\n            }\\n            if (da6AC3 instanceof DDV) {\\n                Aym.A0v(by0.A0B).A0S(c1b3, bp2);\\n                return;\\n            } else if (da6AC3 instanceof DDW) {\\n                Aym.A0v(by0.A0B).A0R(c1b3, dfi, bp2, 0);\\n                return;\\n            } else if (da6AC3 instanceof DDU) {\\n                return;\\n            }\\n        }\\n        Integer num \\u003d cjN.A07;\\n        if (num !\\u003d null) {\\n            AnonymousClass187 anonymousClass187 \\u003d (AnonymousClass187) C05B.A02(this.A0C);\\n            if (!anonymousClass187.A01.getAndSet(true)) {\\n                AnonymousClass189 anonymousClass189 \\u003d (AnonymousClass189) anonymousClass187.A02.getValue();\\n                synchronized (anonymousClass189) {\\n                    LinkedHashSet linkedHashSet \\u003d anonymousClass189.A00;\\n                    if (linkedHashSet.contains(num)) {\\n                        Iterator it2 \\u003d linkedHashSet.iterator();\\n                        while (it2.hasNext() \\u0026\\u0026 !C00h.areEqual(it2.next(), num)) {\\n                            it2.remove();\\n                        }\\n                        linkedHashSet.size();\\n                        anonymousClass189.A02 \\u003d true;\\n                        AnonymousClass189.A00(anonymousClass189);\\n                    } else {\\n                        linkedHashSet.size();\\n                    }\\n                }\\n            }\\n        }\\n        DeviceJid deviceJidA00 \\u003d CjN.A00(cjN);\\n        if (deviceJidA00 \\u003d\\u003d null) {\\n            A04(c1b3, dcq, cjN);\\n            return;\\n        }\\n        B75 b75A05 \\u003d ((C0jp) C05B.A02(this.A0K)).A05(deviceJidA00);\\n        try {\\n            A04(c1b3, dcq, cjN);\\n            b75A05.close();\\n        } catch (Throwable th2) {\\n            try {\\n                throw th2;\\n            } catch (Throwable th3) {\\n                C07i.A00(b75A05, th2);\\n                throw th3;\\n            }\\n        }\\n    }\",\"overload_count\":1,\"method_name\":\"A09\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.CoU",
+    "method": {
+      "name": "A09",
+      "reported_signature": "A09(X.1B3, X.Dcq, X.CjN): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public final void A09(C1B3 c1b3, Dcq dcq, CjN cjN) throws IllegalAccessException, B7l, InvocationTargetException {\n        Da6 da6AC3;\n        if (!(this instanceof Bxz)) {\n            By0 by0 = (By0) this;\n            Bp2 bp2 = (Bp2) cjN;\n            DFI dfi = (DFI) dcq;\n            C1xi.A1J(bp2, 1, dfi);\n            Iterator it = ((C17G) C05B.A02(by0.A07)).A03.iterator();\n            while (true) {\n                if (!it.hasNext()) {\n                    da6AC3 = DDT.A00;\n                    break;\n                }\n                C0zU c0zU = (C0zU) it.next();\n                try {\n                    da6AC3 = c0zU.AC3(dfi, bp2, c1b3);\n                    if (!C00h.areEqual(da6AC3, DDT.A00)) {\n                        String strAjt = c0zU.Ajt();\n                        StringBuilder sbA18 = C1xi.A18(\"IncomingMessageManager/notifyBeforeMessageDecrypted \");\n                        sbA18.append(strAjt);\n                        sbA18.append(\" returned \");\n                        sbA18.append(da6AC3);\n                        C1xj.A1R(sbA18, \", stopping\");\n                        break;\n                    }\n                } catch (Throwable th) {\n                    String strAjt2 = c0zU.Ajt();\n                    Ayp.A1H(AnonymousClass000.A08(\"IncomingMessageManager/notifyBeforeMessageDecrypted \", strAjt2), \" failed to process \", ((CjN) bp2).A0A);\n                    throw th;\n                }\n            }\n            if (da6AC3 instanceof DDR) {\n                com.whatsapp.infra.logging.Log.i(\"DecryptMessageRunnable/beforeDecrypt StopAndSendRetry action received\");\n                ((CjN) bp2).A02 = true;\n                ((CjN) bp2).A00 = 1;\n                Bgy bgyA05 = by0.A05(dfi, bp2);\n                bgyA05.A06 = Boolean.valueOf(c1b3.BNe());\n                bgyA05.A00 = false;\n                bgyA05.A0B = 0;\n                by0.A06(bgyA05, dfi, bp2);\n                by0.A07(bgyA05, dfi, bp2);\n                by0.A0B(dfi, bp2, c1b3);\n                by0.A08(c1b3, dfi, bp2);\n                return;\n            }\n            if (da6AC3 instanceof DDS) {\n                Aym.A0v(by0.A0B).A0T(c1b3, bp2, ((DDS) da6AC3).A00);\n                return;\n            }\n            if (da6AC3 instanceof DDV) {\n                Aym.A0v(by0.A0B).A0S(c1b3, bp2);\n                return;\n            } else if (da6AC3 instanceof DDW) {\n                Aym.A0v(by0.A0B).A0R(c1b3, dfi, bp2, 0);\n                return;\n            } else if (da6AC3 instanceof DDU) {\n                return;\n            }\n        }\n        Integer num = cjN.A07;\n        if (num != null) {\n            AnonymousClass187 anonymousClass187 = (AnonymousClass187) C05B.A02(this.A0C);\n            if (!anonymousClass187.A01.getAndSet(true)) {\n                AnonymousClass189 anonymousClass189 = (AnonymousClass189) anonymousClass187.A02.getValue();\n                synchronized (anonymousClass189) {\n                    LinkedHashSet linkedHashSet = anonymousClass189.A00;\n                    if (linkedHashSet.contains(num)) {\n                        Iterator it2 = linkedHashSet.iterator();\n                        while (it2.hasNext() && !C00h.areEqual(it2.next(), num)) {\n                            it2.remove();\n                        }\n                        linkedHashSet.size();\n                        anonymousClass189.A02 = true;\n                        AnonymousClass189.A00(anonymousClass189);\n                    } else {\n                        linkedHashSet.size();\n                    }\n                }\n            }\n        }\n        DeviceJid deviceJidA00 = CjN.A00(cjN);\n        if (deviceJidA00 == null) {\n            A04(c1b3, dcq, cjN);\n            return;\n        }\n        B75 b75A05 = ((C0jp) C05B.A02(this.A0K)).A05(deviceJidA00);\n        try {\n            A04(c1b3, dcq, cjN);\n            b75A05.close();\n        } catch (Throwable th2) {\n            try {\n                throw th2;\n            } catch (Throwable th3) {\n                C07i.A00(b75A05, th2);\n                throw th3;\n            }\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

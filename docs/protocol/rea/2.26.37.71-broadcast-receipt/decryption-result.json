@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_358729e4977565c9e76d374d5b13e602e84cf7181f42655b0f724facaec9b6d2",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.CoU",
+    "method_name": "A01"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-PrrK9G/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"max_heap_bytes\":15695085568,\"java_version\":\"21.0.12.1\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.CoU"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cinit\\u003e(): void\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0},{\"signature\":\"A00(X.1B3, X.Dcq, X.CjN): X.CQn\",\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0},{\"signature\":\"A01(X.Bgy, X.CfP, X.1B3, X.Dcq, X.CjN, X.BqD, boolean): java.lang.Integer\",\"is_constructor\":false,\"name\":\"A01\",\"def_pos\":0},{\"signature\":\"A02(X.Bgy, X.1B3, X.Dcq, X.CjN, X.BqD): void\",\"is_constructor\":false,\"name\":\"A02\",\"def_pos\":0},{\"signature\":\"A03(X.Bgy, X.1B3, X.Dcq, X.CjN, X.BqD, X.CoU): void\",\"is_constructor\":false,\"name\":\"A03\",\"def_pos\":0},{\"signature\":\"A04(X.1B3, X.Dcq, X.CjN): void\",\"is_constructor\":false,\"name\":\"A04\",\"def_pos\":0},{\"signature\":\"A05(X.Dcq, X.CjN): X.Bgy\",\"is_constructor\":false,\"name\":\"A05\",\"def_pos\":0},{\"signature\":\"A06(X.Bgy, X.Dcq, X.CjN): void\",\"is_constructor\":false,\"name\":\"A06\",\"def_pos\":0},{\"signature\":\"A07(X.Bgy, X.Dcq, X.CjN): void\",\"is_constructor\":false,\"name\":\"A07\",\"def_pos\":0},{\"signature\":\"A08(X.1B3, X.Dcq, X.CjN): void\",\"is_constructor\":false,\"name\":\"A08\",\"def_pos\":0},{\"signature\":\"A09(X.1B3, X.Dcq, X.CjN): void\",\"is_constructor\":false,\"name\":\"A09\",\"def_pos\":0},{\"signature\":\"A0A(X.1B3, X.Dcq, X.CjN, int, int): void\",\"is_constructor\":false,\"name\":\"A0A\",\"def_pos\":0}],\"method_count\":12,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"CoU\",\"full_name\":\"X.CoU\",\"field_count\":33,\"fields\":[{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A05\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A06\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A07\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A08\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A09\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0A\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0B\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0C\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0D\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0E\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0F\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0G\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0H\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0I\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0J\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0K\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0L\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0M\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0N\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0O\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0P\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0Q\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0R\"},{\"type\":\"java.util.List\",\"def_pos\":0,\"name\":\"A0S\"},{\"type\":\"java.util.concurrent.atomic.AtomicBoolean\",\"def_pos\":0,\"name\":\"A0T\"},{\"type\":\"java.util.concurrent.atomic.AtomicBoolean\",\"def_pos\":0,\"name\":\"A0U\"},{\"type\":\"java.util.concurrent.atomic.AtomicInteger\",\"def_pos\":0,\"name\":\"A0V\"},{\"type\":\"java.util.concurrent.atomic.AtomicInteger\",\"def_pos\":0,\"name\":\"A0W\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.CoU",
+          "method_name": "A01",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"mode\":\"java\",\"full_name\":\"X.CoU.A01\",\"class_name\":\"X.CoU\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    /* JADX WARN: Code duplicated, block: B:35:0x0085  */\\n    /* JADX WARN: Code duplicated, block: B:60:0x0127  */\\n    private final Integer A01(Bgy bgy, CfP cfP, C1B3 c1b3, Dcq dcq, CjN cjN, BqD bqD, boolean z) throws IllegalAccessException, InvocationTargetException {\\n        boolean zContains;\\n        if (cfP !\\u003d null) {\\n            int i \\u003d cfP.A00;\\n            String str \\u003d cjN.A0A;\\n            com.whatsapp.infra.core.jid.Jid jid \\u003d cjN.A05;\\n            StringBuilder sbA06 \\u003d AnonymousClass000.A06(i, \\\"DecryptMessageRunnable/handleDecryptionResult axolotl status\\u003d\\\");\\n            sbA06.append(\\\" id\\u003d\\\");\\n            sbA06.append(str);\\n            C1xj.A1L(jid, \\\", chatJid\\u003d\\\", sbA06);\\n            if (i !\\u003d 0) {\\n                bgy.A00 \\u003d false;\\n                if (bqD !\\u003d null) {\\n                    ((BqE) bqD).A01 \\u003d false;\\n                }\\n                if (i !\\u003d -1001) {\\n                    bgy.A0B \\u003d C0zK.A01(i);\\n                    Iterator it \\u003d this.A0S.iterator();\\n                    if (it.hasNext()) {\\n                        it.next();\\n                        throw C1xf.A18(\\\"onDecryptFailed\\\");\\n                    }\\n                }\\n                if (cfP.A00()) {\\n                    cjN.A02 \\u003d true;\\n                    int i2 \\u003d 1;\\n                    if (i !\\u003d -1008) {\\n                        i2 \\u003d 4;\\n                        if (i !\\u003d -1005) {\\n                            i2 \\u003d 3;\\n                            if (i !\\u003d -1003) {\\n                                if (i !\\u003d -1002) {\\n                                    switch (i) {\\n                                        case -1206:\\n                                            i2 \\u003d 2;\\n                                            break;\\n                                        case -1205:\\n                                            i2 \\u003d 13;\\n                                            break;\\n                                        case -1204:\\n                                            i2 \\u003d 12;\\n                                            break;\\n                                        case -1203:\\n                                            i2 \\u003d 11;\\n                                            break;\\n                                        case -1202:\\n                                            i2 \\u003d 10;\\n                                            break;\\n                                        default:\\n                                            i2 \\u003d 0;\\n                                            break;\\n                                    }\\n                                } else {\\n                                    i2 \\u003d 2;\\n                                }\\n                            }\\n                        }\\n                    }\\n                    cjN.A00 \\u003d i2;\\n                } else {\\n                    if (i !\\u003d -1006) {\\n                        if (i \\u003d\\u003d -1007) {\\n                            if (!(this instanceof Bxz)) {\\n                                Bp2 bp2 \\u003d (Bp2) cjN;\\n                                C00h.A0A(bp2, 0);\\n                                C1xh.A0n(((By0) this).A03).A0J(C0DE.A00(((CjN) bp2).A04), bp2.A08.A00, null, 415, ((CjN) bp2).A03);\\n                            }\\n                        } else if (i \\u003d\\u003d -1001 \\u0026\\u0026 !z \\u0026\\u0026 !cjN.A02) {\\n                            if (C1xi.A1U(cjN.A0H())) {\\n                                Integer num \\u003d cjN.A07;\\n                                if (num !\\u003d null) {\\n                                    AnonymousClass189 anonymousClass189 \\u003d (AnonymousClass189) ((AnonymousClass187) C05B.A02(this.A0C)).A02.getValue();\\n                                    synchronized (anonymousClass189) {\\n                                        zContains \\u003d anonymousClass189.A00.contains(num);\\n                                    }\\n                                    if (zContains) {\\n                                        C1xk.A1T(\\\"DecryptMessageRunnable/maybeLogMessageDropEventAndSendAck logging DUPLICATE_MESSAGE and sending receipt using cache id\\u003d\\\", str);\\n                                        Aym.A0u(this.A0F).A0B(dcq, cjN, Boolean.valueOf(c1b3.BNe()), null, 15);\\n                                        Aym.A0v(this.A0I).A0S(c1b3, cjN);\\n                                    } else {\\n                                        C1xh.A11(this.A0Q).COM(new DMi(dcq, cjN, bgy, bqD, c1b3, this, 4));\\n                                    }\\n                                } else {\\n                                    C1xh.A11(this.A0Q).COM(new DMi(dcq, cjN, bgy, bqD, c1b3, this, 4));\\n                                }\\n                            } else {\\n                                A03(bgy, c1b3, dcq, cjN, bqD, this);\\n                            }\\n                            return C02S.A0C;\\n                        }\\n                    }\\n                    Aym.A0v(this.A0I).A0R(c1b3, dcq, cjN, 0);\\n                }\\n                if (z) {\\n                    return C02S.A01;\\n                }\\n            }\\n        }\\n        return C02S.A00;\\n    }\",\"overload_count\":1,\"method_name\":\"A01\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.CoU",
+    "method": {
+      "name": "A01",
+      "reported_signature": "A01(X.Bgy, X.CfP, X.1B3, X.Dcq, X.CjN, X.BqD, boolean): java.lang.Integer",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Code duplicated, block: B:35:0x0085  */\n    /* JADX WARN: Code duplicated, block: B:60:0x0127  */\n    private final Integer A01(Bgy bgy, CfP cfP, C1B3 c1b3, Dcq dcq, CjN cjN, BqD bqD, boolean z) throws IllegalAccessException, InvocationTargetException {\n        boolean zContains;\n        if (cfP != null) {\n            int i = cfP.A00;\n            String str = cjN.A0A;\n            com.whatsapp.infra.core.jid.Jid jid = cjN.A05;\n            StringBuilder sbA06 = AnonymousClass000.A06(i, \"DecryptMessageRunnable/handleDecryptionResult axolotl status=\");\n            sbA06.append(\" id=\");\n            sbA06.append(str);\n            C1xj.A1L(jid, \", chatJid=\", sbA06);\n            if (i != 0) {\n                bgy.A00 = false;\n                if (bqD != null) {\n                    ((BqE) bqD).A01 = false;\n                }\n                if (i != -1001) {\n                    bgy.A0B = C0zK.A01(i);\n                    Iterator it = this.A0S.iterator();\n                    if (it.hasNext()) {\n                        it.next();\n                        throw C1xf.A18(\"onDecryptFailed\");\n                    }\n                }\n                if (cfP.A00()) {\n                    cjN.A02 = true;\n                    int i2 = 1;\n                    if (i != -1008) {\n                        i2 = 4;\n                        if (i != -1005) {\n                            i2 = 3;\n                            if (i != -1003) {\n                                if (i != -1002) {\n                                    switch (i) {\n                                        case -1206:\n                                            i2 = 2;\n                                            break;\n                                        case -1205:\n                                            i2 = 13;\n                                            break;\n                                        case -1204:\n                                            i2 = 12;\n                                            break;\n                                        case -1203:\n                                            i2 = 11;\n                                            break;\n                                        case -1202:\n                                            i2 = 10;\n                                            break;\n                                        default:\n                                            i2 = 0;\n                                            break;\n                                    }\n                                } else {\n                                    i2 = 2;\n                                }\n                            }\n                        }\n                    }\n                    cjN.A00 = i2;\n                } else {\n                    if (i != -1006) {\n                        if (i == -1007) {\n                            if (!(this instanceof Bxz)) {\n                                Bp2 bp2 = (Bp2) cjN;\n                                C00h.A0A(bp2, 0);\n                                C1xh.A0n(((By0) this).A03).A0J(C0DE.A00(((CjN) bp2).A04), bp2.A08.A00, null, 415, ((CjN) bp2).A03);\n                            }\n                        } else if (i == -1001 && !z && !cjN.A02) {\n                            if (C1xi.A1U(cjN.A0H())) {\n                                Integer num = cjN.A07;\n                                if (num != null) {\n                                    AnonymousClass189 anonymousClass189 = (AnonymousClass189) ((AnonymousClass187) C05B.A02(this.A0C)).A02.getValue();\n                                    synchronized (anonymousClass189) {\n                                        zContains = anonymousClass189.A00.contains(num);\n                                    }\n                                    if (zContains) {\n                                        C1xk.A1T(\"DecryptMessageRunnable/maybeLogMessageDropEventAndSendAck logging DUPLICATE_MESSAGE and sending receipt using cache id=\", str);\n                                        Aym.A0u(this.A0F).A0B(dcq, cjN, Boolean.valueOf(c1b3.BNe()), null, 15);\n                                        Aym.A0v(this.A0I).A0S(c1b3, cjN);\n                                    } else {\n                                        C1xh.A11(this.A0Q).COM(new DMi(dcq, cjN, bgy, bqD, c1b3, this, 4));\n                                    }\n                                } else {\n                                    C1xh.A11(this.A0Q).COM(new DMi(dcq, cjN, bgy, bqD, c1b3, this, 4));\n                                }\n                            } else {\n                                A03(bgy, c1b3, dcq, cjN, bqD, this);\n                            }\n                            return C02S.A0C;\n                        }\n                    }\n                    Aym.A0v(this.A0I).A0R(c1b3, dcq, cjN, 0);\n                }\n                if (z) {\n                    return C02S.A01;\n                }\n            }\n        }\n        return C02S.A00;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}
