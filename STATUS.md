@@ -1,3 +1,13 @@
+2026-10-11 — **Confirmed static / documentation correction:** incoming status-17
+self-read submission and common state pools are now separated by exact branch
+targets. Failed A09 eligibility reaches common state processing; qualifying
+messages reach the separate grouped submission/local status-16 path. Rechecking
+the contact policy corrected prior prose: an absent contact is allowed, while
+the premium-message query applies to a present smb: contact. Original structural
+bytes and complete REA smali agree. Runtime self-read handling remains unported;
+no account or network change.
+[Worker paths, corrected policy and reproduction](docs/protocol/self-read-worker.md).
+
 2026-10-11 — **Confirmed static / implemented analysis tooling:** exact DEX
 virtual-override lookup now follows superclass ancestry and encoded virtual
 method declarations. The pinned APK contains four A0l()Z declarations across

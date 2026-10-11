@@ -1,0 +1,50 @@
+{
+  "chat-guard": {
+    "class": "LX/0DE;",
+    "file": "chat-guard.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0h",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "message-guard": {
+    "class": "LX/Ayn;",
+    "file": "message-guard.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A1S",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "worker": {
+    "class": "LX/Cmn;",
+    "file": "worker.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A04",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "worker-observers": {
+    "class": "LX/Cmn;",
+    "file": "worker-observers.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  }
+}

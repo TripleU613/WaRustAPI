@@ -37,14 +37,22 @@ or no derived user returns true; no contact record is fabricated. For a
 nonnull chat/user:
 
 - 0yy.A0D(user) true returns true immediately.
-- Otherwise 0YA.A09(chat) supplies a nullable contact. A present contact
-  must have nonnull A0D.A0J (0lr), and that object's A03 or A02 must be true.
-  Missing A0J or both false returns false. 0lr.A03 tests A07 startsWith
-  smb:, A02 tests startsWith ent:; null string returns false. These are
-  literal prefix predicates, not authenticated business identity claims.
-- An absent contact instead calls 25v.A00(user) and returns its Boolean.
-  False logs Disabling read receipts for possible spam. The diagnostic
-  does not establish how the account/user was classified.
+- Otherwise 0YA.A09(chat) supplies a nullable contact. An absent contact
+  returns true: the branch at 004a targets the true return at 0072.
+- A present contact must have nonnull A0D.A0J (0lr). Missing A0J returns
+  false. Its A03 tests A07 startsWith smb:; when true, the branch at 0062
+  targets 0078, calls 25v.A00(user), and returns that Boolean. A false query
+  result logs Disabling read receipts for possible spam.
+- Only when A03 is false does A02 run. A02 tests startsWith ent:; true
+  returns true and false returns false. Null strings fail both prefix tests.
+  These are literal predicates, not authenticated business identity claims.
+
+**2026-10-11 correction:** the earlier prose incorrectly placed the query on
+the absent-contact path and treated both prefixes as sufficient. The retained
+structural source and [complete REA smali fallback](rea/2.26.37.71-self-read-worker/contact-policy.json)
+agree on the branches above. No Rust contact policy had been ported from that
+prose. The query artifact's historical topic name `contact-fallback-query`
+is retained for checksum reproducibility; its actual caller is the smb: branch.
 
 0yy.A0D short-circuits true for 1qW.A00 or 1dt.A01, or BMv true. Otherwise,
 A07 false returns true; A07 true requires loaded 0DV.A0L true. Their full

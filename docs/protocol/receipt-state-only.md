@@ -122,6 +122,10 @@ cargo run -p xtask -- apk-research-diff \
 
 Static artifact agreement does not prove full receipt parity or live delivery.
 
+Follow-up: [incoming self-read worker](self-read-worker.md) distinguishes the
+status-17 common pool from qualifying submission/local status-16 marking.
+Submission eligibility is not a blanket gate for common receipt state processing.
+
 Follow-up: [receipt read policy](receipt-read-policy.md) traces the factory
 preference/default and immediate contact/account predicates. Effective saved
 settings and their synchronization remain unknown.

@@ -76,6 +76,11 @@ formatting, build and repository link/evidence hygiene checks passed.
 
 ## Remaining runtime work
 
+Follow-up: [self-read worker paths](self-read-worker.md) resolves the immediate
+submission/common-state split and corrects the contact-query branch in existing
+policy prose. A false A09 selects common state processing rather than a blanket
+rejection; effective state, target authority and complete persistence remain open.
+
 Next required evidence connects supported protobuf/message factories to these
 native classes, resolves A07's effective ordinary-chat preference checks, and
 separates the qualifying self-read submission pool from common status-17

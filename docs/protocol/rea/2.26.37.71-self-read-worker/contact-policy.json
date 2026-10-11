@@ -1,0 +1,130 @@
+{
+  "evidence_id": "ev_3516f5298dbd2a1a3628422c58c972f52d9acd8b258adbce02d2dd9e19d82051",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.C0zd",
+    "method_name": "A00"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-MGg8LM/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"max_heap_bytes\":15695085568,\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C0zd"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_count\":11,\"methods\":[{\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true},{\"signature\":\"A00(X.0Cy): boolean\",\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false},{\"signature\":\"A01(X.0Cy): boolean\",\"def_pos\":0,\"name\":\"A01\",\"is_constructor\":false},{\"signature\":\"A02(com.whatsapp.infra.core.jid.Jid): boolean\",\"def_pos\":0,\"name\":\"A02\",\"is_constructor\":false},{\"signature\":\"A03(X.Cb1): X.0hs\",\"def_pos\":0,\"name\":\"A03\",\"is_constructor\":false},{\"signature\":\"A04(X.0Cy, X.0Cy, com.whatsapp.infra.core.jid.DeviceJid, com.whatsapp.infra.core.jid.UserJid, java.lang.String, java.lang.String[], long, long, boolean): X.CM8\",\"def_pos\":0,\"name\":\"A04\",\"is_constructor\":false},{\"signature\":\"A05(X.0Cy, boolean): java.lang.String\",\"def_pos\":0,\"name\":\"A05\",\"is_constructor\":false},{\"signature\":\"A06(X.0Cy): boolean\",\"def_pos\":0,\"name\":\"A06\",\"is_constructor\":false},{\"signature\":\"A07(X.0Cy): boolean\",\"def_pos\":0,\"name\":\"A07\",\"is_constructor\":false},{\"signature\":\"A08(X.0Cy, java.lang.Throwable, java.lang.String[], long, boolean): boolean\",\"def_pos\":0,\"name\":\"A08\",\"is_constructor\":false},{\"signature\":\"A09(X.178): boolean\",\"def_pos\":0,\"name\":\"A09\",\"is_constructor\":false}],\"fields\":[{\"type\":\"X.00s\",\"name\":\"A00\",\"def_pos\":0},{\"type\":\"X.00s\",\"name\":\"A01\",\"def_pos\":0},{\"type\":\"X.00s\",\"name\":\"A02\",\"def_pos\":0},{\"type\":\"X.08Z\",\"name\":\"A03\",\"def_pos\":0},{\"type\":\"X.00s\",\"name\":\"A04\",\"def_pos\":0},{\"type\":\"X.00s\",\"name\":\"A05\",\"def_pos\":0},{\"type\":\"X.00s\",\"name\":\"A06\",\"def_pos\":0},{\"type\":\"X.00s\",\"name\":\"A07\",\"def_pos\":0},{\"type\":\"X.00s\",\"name\":\"A08\",\"def_pos\":0},{\"type\":\"X.00s\",\"name\":\"A09\",\"def_pos\":0},{\"type\":\"X.08B\",\"name\":\"A0A\",\"def_pos\":0}],\"field_count\":11,\"full_name\":\"X.C0zd\",\"name\":\"C0zd\",\"inner_classes\":[],\"inner_class_count\":0}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C0zd",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"class_name\":\"X.C0zd\",\"full_name\":\"X.0zd.A00\",\"mode\":\"smali\",\"markers\":[\"Code decompiled incorrectly, please refer to instructions dump\"],\"method_name\":\"A00\",\"overload_count\":1,\"body\":\"// [jadx java-decompile failed → smali]\\n// target: X.0zd.A00\\n// markers: Code decompiled incorrectly, please refer to instructions dump\\n// (Java body was an anti-decompile stub; showing smali. Pass smali_fallback\\u003dfalse for the partial Java.)\\n\\n.method private A00(LX/0Cy;)Z\\n    .registers 6\\n\\n    .line 0\\n    sget-object v0, Lcom/whatsapp/infra/core/jid/UserJid;-\\u003eCompanion:LX/0D8;\\n\\n    .line 1\\n    .line 2\\n    invoke-static {p1}, LX/0D8;-\\u003eA00(Lcom/whatsapp/infra/core/jid/Jid;)Lcom/whatsapp/infra/core/jid/UserJid;\\n\\n    .line 3\\n    .line 4\\n    .line 5\\n    move-result-object v3\\n\\n    .line 6\\n    const/4 v2, 0x1\\n\\n    .line 7\\n    if-eqz p1, :cond_39\\n\\n    .line 8\\n    .line 9\\n    if-eqz v3, :cond_39\\n\\n    .line 10\\n    .line 11\\n    iget-object v0, p0, LX/0zd;-\\u003eA08:LX/00s;\\n\\n    .line 12\\n    .line 13\\n    invoke-interface {v0}, LX/00s;-\\u003eget()Ljava/lang/Object;\\n\\n    .line 14\\n    .line 15\\n    .line 16\\n    move-result-object v0\\n\\n    .line 17\\n    check-cast v0, LX/0yy;\\n\\n    .line 18\\n    .line 19\\n    invoke-virtual {v0, v3}, LX/0yy;-\\u003eA0D(Lcom/whatsapp/infra/core/jid/UserJid;)Z\\n\\n    .line 20\\n    .line 21\\n    .line 22\\n    move-result v0\\n\\n    .line 23\\n    if-nez v0, :cond_39\\n\\n    .line 24\\n    .line 25\\n    iget-object v0, p0, LX/0zd;-\\u003eA04:LX/00s;\\n\\n    .line 26\\n    .line 27\\n    invoke-interface {v0}, LX/00s;-\\u003eget()Ljava/lang/Object;\\n\\n    .line 28\\n    .line 29\\n    .line 30\\n    move-result-object v0\\n\\n    .line 31\\n    check-cast v0, LX/0YA;\\n\\n    .line 32\\n    .line 33\\n    invoke-virtual {v0, p1}, LX/0YA;-\\u003eA09(LX/0Cy;)LX/0DV;\\n\\n    .line 34\\n    .line 35\\n    .line 36\\n    move-result-object v0\\n\\n    .line 37\\n    if-eqz v0, :cond_39\\n\\n    .line 38\\n    .line 39\\n    iget-object v0, v0, LX/0DV;-\\u003eA0D:LX/0Da;\\n\\n    .line 40\\n    .line 41\\n    iget-object v1, v0, LX/0Da;-\\u003eA0J:LX/0lr;\\n\\n    .line 42\\n    .line 43\\n    if-eqz v1, :cond_3a\\n\\n    .line 44\\n    .line 45\\n    invoke-virtual {v1}, LX/0lr;-\\u003eA03()Z\\n\\n    .line 46\\n    .line 47\\n    .line 48\\n    move-result v0\\n\\n    .line 49\\n    if-nez v0, :cond_3c\\n\\n    .line 50\\n    .line 51\\n    invoke-virtual {v1}, LX/0lr;-\\u003eA02()Z\\n\\n    .line 52\\n    .line 53\\n    .line 54\\n    move-result v0\\n\\n    .line 55\\n    if-eqz v0, :cond_3a\\n\\n    .line 56\\n    .line 57\\n    :cond_39\\n    return v2\\n\\n    .line 58\\n    :cond_3a\\n    const/4 v2, 0x0\\n\\n    .line 59\\n    goto :goto_4a\\n\\n    .line 60\\n    :cond_3c\\n    iget-object v0, p0, LX/0zd;-\\u003eA07:LX/00s;\\n\\n    .line 61\\n    .line 62\\n    invoke-interface {v0}, LX/00s;-\\u003eget()Ljava/lang/Object;\\n\\n    .line 63\\n    .line 64\\n    .line 65\\n    move-result-object v0\\n\\n    .line 66\\n    check-cast v0, LX/25v;\\n\\n    .line 67\\n    .line 68\\n    invoke-virtual {v0, v3}, LX/25v;-\\u003eA00(LX/0Cy;)Z\\n\\n    .line 69\\n    .line 70\\n    .line 71\\n    move-result v2\\n\\n    .line 72\\n    if-nez v2, :cond_39\\n\\n    .line 73\\n    .line 74\\n    :goto_4a\\n    const-string v0, \\\"ReadReceiptUtils/Disabling read receipts for possible spam\\\"\\n\\n    .line 75\\n    .line 76\\n    invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;-\\u003ei(Ljava/lang/String;)V\\n\\n    .line 77\\n    .line 78\\n    .line 79\\n    return v2\\n.end method\",\"fell_back\":true,\"overload_index\":0}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.C0zd",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(X.0Cy): boolean",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "smali",
+    "body_status": "available",
+    "fell_back": true,
+    "markers": [
+      "Code decompiled incorrectly, please refer to instructions dump"
+    ],
+    "source": {
+      "status": "complete",
+      "text": "// [jadx java-decompile failed → smali]\n// target: X.0zd.A00\n// markers: Code decompiled incorrectly, please refer to instructions dump\n// (Java body was an anti-decompile stub; showing smali. Pass smali_fallback=false for the partial Java.)\n\n.method private A00(LX/0Cy;)Z\n    .registers 6\n\n    .line 0\n    sget-object v0, Lcom/whatsapp/infra/core/jid/UserJid;->Companion:LX/0D8;\n\n    .line 1\n    .line 2\n    invoke-static {p1}, LX/0D8;->A00(Lcom/whatsapp/infra/core/jid/Jid;)Lcom/whatsapp/infra/core/jid/UserJid;\n\n    .line 3\n    .line 4\n    .line 5\n    move-result-object v3\n\n    .line 6\n    const/4 v2, 0x1\n\n    .line 7\n    if-eqz p1, :cond_39\n\n    .line 8\n    .line 9\n    if-eqz v3, :cond_39\n\n    .line 10\n    .line 11\n    iget-object v0, p0, LX/0zd;->A08:LX/00s;\n\n    .line 12\n    .line 13\n    invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;\n\n    .line 14\n    .line 15\n    .line 16\n    move-result-object v0\n\n    .line 17\n    check-cast v0, LX/0yy;\n\n    .line 18\n    .line 19\n    invoke-virtual {v0, v3}, LX/0yy;->A0D(Lcom/whatsapp/infra/core/jid/UserJid;)Z\n\n    .line 20\n    .line 21\n    .line 22\n    move-result v0\n\n    .line 23\n    if-nez v0, :cond_39\n\n    .line 24\n    .line 25\n    iget-object v0, p0, LX/0zd;->A04:LX/00s;\n\n    .line 26\n    .line 27\n    invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;\n\n    .line 28\n    .line 29\n    .line 30\n    move-result-object v0\n\n    .line 31\n    check-cast v0, LX/0YA;\n\n    .line 32\n    .line 33\n    invoke-virtual {v0, p1}, LX/0YA;->A09(LX/0Cy;)LX/0DV;\n\n    .line 34\n    .line 35\n    .line 36\n    move-result-object v0\n\n    .line 37\n    if-eqz v0, :cond_39\n\n    .line 38\n    .line 39\n    iget-object v0, v0, LX/0DV;->A0D:LX/0Da;\n\n    .line 40\n    .line 41\n    iget-object v1, v0, LX/0Da;->A0J:LX/0lr;\n\n    .line 42\n    .line 43\n    if-eqz v1, :cond_3a\n\n    .line 44\n    .line 45\n    invoke-virtual {v1}, LX/0lr;->A03()Z\n\n    .line 46\n    .line 47\n    .line 48\n    move-result v0\n\n    .line 49\n    if-nez v0, :cond_3c\n\n    .line 50\n    .line 51\n    invoke-virtual {v1}, LX/0lr;->A02()Z\n\n    .line 52\n    .line 53\n    .line 54\n    move-result v0\n\n    .line 55\n    if-eqz v0, :cond_3a\n\n    .line 56\n    .line 57\n    :cond_39\n    return v2\n\n    .line 58\n    :cond_3a\n    const/4 v2, 0x0\n\n    .line 59\n    goto :goto_4a\n\n    .line 60\n    :cond_3c\n    iget-object v0, p0, LX/0zd;->A07:LX/00s;\n\n    .line 61\n    .line 62\n    invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;\n\n    .line 63\n    .line 64\n    .line 65\n    move-result-object v0\n\n    .line 66\n    check-cast v0, LX/25v;\n\n    .line 67\n    .line 68\n    invoke-virtual {v0, v3}, LX/25v;->A00(LX/0Cy;)Z\n\n    .line 69\n    .line 70\n    .line 71\n    move-result v2\n\n    .line 72\n    if-nez v2, :cond_39\n\n    .line 73\n    .line 74\n    :goto_4a\n    const-string v0, \"ReadReceiptUtils/Disabling read receipts for possible spam\"\n\n    .line 75\n    .line 76\n    invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V\n\n    .line 77\n    .line 78\n    .line 79\n    return v2\n.end method",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}
