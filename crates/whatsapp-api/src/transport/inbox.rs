@@ -3585,11 +3585,175 @@ mod tests {
                 .unwrap(),
             before_lookup
         );
+        let own_vote_target = crate::model::message::MessageRef {
+            key: crate::model::message::MessageKey {
+                chat: crate::model::ids::ChatId::from_jid(&Jid::parse("67890@lid").unwrap())
+                    .unwrap(),
+                sender: None,
+                direction: crate::model::message::Direction::Outgoing,
+                id: poll_id.clone(),
+            },
+        };
+        let own_vote = super::super::polls::encrypt_vote(
+            &[7; 32],
+            "OWN-POLL",
+            &peer_device.to_non_ad(),
+            &peer_device.to_non_ad(),
+            &["b".into()],
+            [5; 12],
+        )
+        .unwrap();
+        let inner_vote = super::super::polls::vote_payload(
+            &Jid::parse("67890@lid").unwrap(),
+            &own_vote_target,
+            own_vote,
+            6,
+        );
+        let mut sent_vote = Vec::new();
+        prost::encoding::string::encode(1, &"67890@lid".to_owned(), &mut sent_vote);
+        prost::encoding::bytes::encode(2, &inner_vote, &mut sent_vote);
+        let mut wrapped_vote = Vec::new();
+        prost::encoding::bytes::encode(31, &sent_vote, &mut wrapped_vote);
+        let foreign_vote = super::super::polls::encrypt_vote(
+            &[7; 32],
+            "OWN-POLL",
+            &peer_device.to_non_ad(),
+            &Jid::parse("67890@lid").unwrap(),
+            &["b".into()],
+            [9; 12],
+        )
+        .unwrap();
+        let foreign_inner = super::super::polls::vote_payload(
+            &Jid::parse("67890@lid").unwrap(),
+            &own_vote_target,
+            foreign_vote,
+            6,
+        );
+        let mut bad_sent = Vec::new();
+        prost::encoding::string::encode(1, &"67890@lid".to_owned(), &mut bad_sent);
+        prost::encoding::bytes::encode(2, &foreign_inner, &mut bad_sent);
+        let mut bad_wrapped = Vec::new();
+        prost::encoding::bytes::encode(31, &bad_sent, &mut bad_wrapped);
+        let bad = direct::prepare_payload(
+            &sender,
+            receiver.own_jid.as_ref().unwrap(),
+            None,
+            Some(&synchronized_poll.session),
+            Some(&sent.identity),
+            &bad_wrapped,
+        )
+        .await
+        .unwrap();
+        let bad_node = Node::new("message")
+            .attr("from", peer_device.clone())
+            .attr("recipient", "67890@lid")
+            .attr("id", "BAD-OWN-VOTE")
+            .attr("type", "poll")
+            .children(vec![
+                Node::new("enc")
+                    .attr("type", bad.kind)
+                    .attr("v", "2")
+                    .bytes(bad.ciphertext.to_vec()),
+            ]);
+        let bad_capture = preserve(&store, &bad_node).unwrap();
+        let before_bad = store
+            .read(|tx| {
+                Ok((
+                    tx.scan(Table::Checkpoints, 1, 100)?,
+                    tx.scan(Table::SignalSessions, 1, 100)?,
+                    tx.scan(Table::PeerIdentities, 1, 100)?,
+                ))
+            })
+            .unwrap();
+        assert_eq!(
+            process(&store, &receiver, &bad_node, &bad_capture)
+                .await
+                .unwrap(),
+            IncomingResult::Unsupported
+        );
+        assert_eq!(
+            store
+                .read(|tx| Ok((
+                    tx.scan(Table::Checkpoints, 1, 100)?,
+                    tx.scan(Table::SignalSessions, 1, 100)?,
+                    tx.scan(Table::PeerIdentities, 1, 100)?
+                )))
+                .unwrap(),
+            before_bad
+        );
+        assert!(
+            super::super::messaging::received_confirmation_for_account(
+                &store, &receiver, &bad_node
+            )
+            .unwrap()
+            .is_none()
+        );
+        let synchronized_vote = direct::prepare_payload(
+            &sender,
+            receiver.own_jid.as_ref().unwrap(),
+            None,
+            Some(&synchronized_poll.session),
+            Some(&sent.identity),
+            &wrapped_vote,
+        )
+        .await
+        .unwrap();
+        let own_vote_node = Node::new("message")
+            .attr("from", peer_device.clone())
+            .attr("recipient", "67890@lid")
+            .attr("id", "OWN-VOTE")
+            .attr("type", "poll")
+            .children(vec![
+                Node::new("meta").attr("polltype", "vote"),
+                Node::new("enc")
+                    .attr("type", synchronized_vote.kind)
+                    .attr("v", "2")
+                    .bytes(synchronized_vote.ciphertext.to_vec()),
+            ]);
+        let own_vote_capture = preserve(&store, &own_vote_node).unwrap();
+        assert_eq!(
+            process(&store, &receiver, &own_vote_node, &own_vote_capture)
+                .await
+                .unwrap(),
+            IncomingResult::Decrypted
+        );
+        let votes = store
+            .read(|tx| {
+                tx.read_events(
+                    &crate::store::ConsumerId::new("own-vote")?,
+                    crate::model::ids::EventCursor::START,
+                    100,
+                )
+            })
+            .unwrap();
+        let crate::sync::SyncEvent::MessageUpdated(update) = &votes.events.last().unwrap().event
+        else {
+            panic!("own vote event missing")
+        };
+        assert_eq!(update.key, own_vote_target.key);
+        assert!(
+            matches!(&update.change,crate::model::message::MessageChange::PollVote{by,selected,unresolved} if by.to_jid().to_non_ad()==peer_device.to_non_ad() && selected==&vec!["b".to_owned()] && unresolved.is_empty())
+        );
+        assert!(
+            super::super::messaging::received_confirmation_for_account(
+                &store,
+                &receiver,
+                &own_vote_node
+            )
+            .unwrap()
+            .is_some()
+        );
         let after_poll_head = store.journal_head().unwrap();
         let event_count =
-            batch.events.len() + usize::from(cfg!(feature = "experimental-registration-https")) + 2;
+            batch.events.len() + usize::from(cfg!(feature = "experimental-registration-https")) + 3;
         drop(store);
         let store = open(false);
+        assert_eq!(
+            process(&store, &receiver, &own_vote_node, &own_vote_capture)
+                .await
+                .unwrap(),
+            IncomingResult::Duplicate
+        );
         assert_eq!(
             process(&store, &receiver, &poll_node, &poll_capture)
                 .await
@@ -3632,7 +3796,7 @@ mod tests {
             super::super::chat_clear::clear_chat(&store, &Jid::parse("67890@lid").unwrap())
                 .unwrap()
                 .cleared_messages,
-            3 + usize::from(cfg!(feature = "experimental-registration-https"))
+            4 + usize::from(cfg!(feature = "experimental-registration-https"))
         );
         #[cfg(feature = "experimental-registration-https")]
         assert!(super::super::media::list(&store).unwrap().is_empty());
@@ -3690,7 +3854,7 @@ mod tests {
             &sender,
             receiver.own_jid.as_ref().unwrap(),
             None,
-            Some(&synchronized_poll.session),
+            Some(&synchronized_vote.session),
             Some(&sent.identity),
             b"\x0a\x05hello",
         )

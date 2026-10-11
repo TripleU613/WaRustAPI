@@ -1,4 +1,4 @@
-//! Authenticated own-device text/media/poll-creation synchronization over an already held session.
+//! Authenticated own-device text/media/poll synchronization over an already held session.
 use super::inbox::IncomingResult;
 use crate::{
     Error, Result,
@@ -109,6 +109,8 @@ pub(super) fn payload(payload: &[u8], chat: &Jid) -> Option<Zeroizing<Vec<u8>>> 
         sticker: Option<Vec<u8>>,
         #[prost(bytes = "vec", optional, tag = "66")]
         ptv: Option<Vec<u8>>,
+        #[prost(bytes = "vec", optional, tag = "50")]
+        vote: Option<Vec<u8>>,
         #[prost(bytes = "vec", optional, tag = "64")]
         poll: Option<Vec<u8>>,
         #[prost(bytes = "vec", optional, tag = "35")]
@@ -142,21 +144,14 @@ pub(super) fn payload(payload: &[u8], chat: &Jid) -> Option<Zeroizing<Vec<u8>>> 
     // shortcut: control effects and view-once synchronization need their separate native lifecycle.
     if fields
         .iter()
-        .any(|f| !matches!(f, 1 | 3 | 6 | 7 | 8 | 9 | 26 | 35 | 64 | 66))
+        .any(|f| !matches!(f, 1 | 3 | 6 | 7 | 8 | 9 | 26 | 35 | 50 | 64 | 66))
         || fields.iter().filter(|&&f| f != 35).count() != 1
     {
         return None;
     }
     let mut text = Content::decode(inner.as_slice()).ok()?;
-    if let Some(poll) = &text.poll {
-        // shortcut: quiz, timed, anonymous and add-option polls need their separate native lifecycle.
-        if crate::signal::direct::payload_fields(poll)
-            .ok()?
-            .iter()
-            .any(|f| !matches!(f, 1..=5))
-        {
-            return None;
-        }
+    if text.poll.is_some() && !super::polls::ordinary_creation_fields(&inner) {
+        return None;
     }
     if let Some(context) = &text.context {
         crate::signal::direct::payload_fields(context).ok()?;
@@ -656,7 +651,7 @@ mod tests {
         assert!(route(&account, &node.attr("category", "peer"), Some(&lid)).is_none());
     }
     #[test]
-    fn synchronized_poll_keeps_ordinary_body_and_refuses_special_forms_and_updates() {
+    fn synchronized_poll_keeps_ordinary_body_and_refuses_special_forms_and_mixed_content() {
         let chat = Jid::parse("67890@lid").unwrap();
         let wrap = |inner: &[u8]| {
             let mut sent = Vec::new();
@@ -683,12 +678,8 @@ mod tests {
                 "special field {field}"
             );
         }
-        for inner in [
-            b"\x92\x03\x00".to_vec(),
-            [ordinary.as_slice(), b"\x0a\x01X"].concat(),
-        ] {
-            assert!(payload(&wrap(&inner), &chat).is_none());
-        }
+        assert!(payload(&wrap(b"\x92\x03\x00"), &chat).is_some()); // Vote validation follows unwrapping.
+        assert!(payload(&wrap(&[ordinary.as_slice(), b"\x0a\x01X"].concat()), &chat).is_none());
     }
 
     #[test]

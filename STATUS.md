@@ -1,3 +1,12 @@
+2026-10-11 — **Implemented/offline:** held own-device sessions now synchronize
+ordinary poll votes into MessageUpdated/PollVote. Embedded fromMe preserves
+own/peer parent ownership; AEAD must identify a saved own primary voter.
+Foreign voters, special parents/routes and edited metadata refuse without a
+ratchet commit or confirmation. Reopen deduplication and sender confirmations
+use existing paths; no send intent or status mutation. Full edit/special/native
+parent policy and fresh live interoperability remain unfinished/unverified.
+[Own-device votes and native mapper closure](docs/protocol/own-device-vote.md).
+
 2026-10-11 — **Implemented/offline:** voting can now resolve a synchronized
 own poll through its authenticated wrapper when no local secret reservation
 exists. Incoming peer vote context, outgoing vote encryption and binding

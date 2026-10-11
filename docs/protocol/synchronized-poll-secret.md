@@ -1,5 +1,9 @@
 # Voting on synchronized own polls
 
+Follow-up: [own-device ordinary vote updates](own-device-vote.md)
+adds supported wrapped own votes on our or a received peer poll. It supersedes
+the own-device-update gap below; special/edit/group/status paths remain unfinished.
+
 2026-10-11. **Implemented/offline**, APK **2.26.37.71**, SHA-256
 `1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
 The shared own-poll lookup now resolves a supported authenticated synchronized

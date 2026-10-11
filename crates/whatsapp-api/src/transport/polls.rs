@@ -189,6 +189,33 @@ pub fn decode_poll(payload: &[u8]) -> Option<Poll> {
         secret,
     })
 }
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub(super) fn ordinary_creation_fields(payload: &[u8]) -> bool {
+    #[derive(prost::Message)]
+    struct Raw {
+        #[prost(bytes = "vec", optional, tag = "64")]
+        poll: Option<Vec<u8>>,
+    }
+    let Ok(fields) = crate::signal::direct::payload_fields(payload) else {
+        return false;
+    };
+    if fields.iter().any(|f| !matches!(f, 64 | 35))
+        || fields.iter().filter(|&&f| f == 64).count() != 1
+    {
+        return false;
+    }
+    let Some(poll) = Raw::decode(payload).ok().and_then(|r| r.poll) else {
+        return false;
+    };
+    // shortcut: quiz, timed, anonymous and add-option polls need their separate native lifecycle.
+    crate::signal::direct::payload_fields(&poll)
+        .is_ok_and(|fields| fields.iter().all(|f| matches!(f, 1..=5)))
+}
+
 /// Original local poll reservation chat. Missing legacy provenance remains
 /// unknown; malformed/unsupported saved bindings refuse with a fixed diagnosis.
 #[cfg(all(

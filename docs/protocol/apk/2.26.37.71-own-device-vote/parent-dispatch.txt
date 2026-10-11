@@ -1,0 +1,16 @@
+# APK-derived structural disassembly: LX/Ayo;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0R(LLL) flags=0x9 registers=2
+  # full signature: LX/Ayo;->A0R(LX/05B;LX/1gc;)LX/1gc;
+  0000..0004 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  0004..000a op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  000a..000c op=0c move-result-object v0
+  000c..0010 op=1f check-cast v0, LX/1hQ;
+  0010..0016 op=6e invoke-virtual {v0, v1}, LX/1hQ;->A02(LX/1gc;)LX/1gc;
+  0016..0018 op=0c move-result-object v0
+  0018..001a op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method

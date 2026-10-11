@@ -70,6 +70,14 @@ pub(super) fn poll_context(
     let Some(vote) = super::polls::decode_vote(payload) else {
         return Ok(None);
     };
+    poll_context_for(tx, node, &vote)
+}
+
+fn poll_context_for(
+    tx: &WriteTx<'_>,
+    node: &Node,
+    vote: &super::polls::EncryptedVote,
+) -> Result<Option<PollContext>> {
     if super::inbox::session_sender(node).is_none() {
         return Ok(None);
     }
@@ -710,6 +718,136 @@ fn outgoing_reaction_target(
 
 pub(super) use super::jid_map::authenticated_direct_chat;
 
+fn own_device_vote(
+    tx: &WriteTx<'_>,
+    chat: &crate::model::jid::Jid,
+    node: &Node,
+    payload: &[u8],
+) -> Result<Option<SyncEvent>> {
+    use prost::Message as _;
+    let Ok(fields) = crate::signal::direct::payload_fields(payload) else {
+        return Ok(None);
+    };
+    if fields.iter().any(|f| !matches!(f, 50 | 35))
+        || fields.iter().filter(|&&f| f == 50).count() != 1
+    {
+        return Ok(None);
+    }
+    let Some(mut vote) = super::polls::decode_vote(payload) else {
+        return Ok(None);
+    };
+    let Ok(envelope) = super::polls::Envelope::decode(payload) else {
+        return Ok(None);
+    };
+    let Some(update) = envelope.update else {
+        return Ok(None);
+    };
+    if update.metadata.as_ref().is_some_and(|m| !m.is_empty()) {
+        return Ok(None);
+    }
+    let Some(key) = update.poll_creation_message_key else {
+        return Ok(None);
+    };
+    if key.participant.as_ref().is_some_and(|p| !p.is_empty()) {
+        return Ok(None);
+    }
+    // BoQ.A00 uses the envelope chat for ordinary direct keys.
+    if !key
+        .remote_jid
+        .as_deref()
+        .and_then(|s| crate::model::jid::Jid::parse(s).ok())
+        .is_some_and(|j| {
+            j.agent == 0
+                && j.device == 0
+                && j.kind == crate::model::jid::JidKind::Plain
+                && matches!(
+                    j.server,
+                    crate::model::jid::Server::User | crate::model::jid::Server::Lid
+                )
+        })
+    {
+        return Ok(None);
+    }
+    let owns_parent = vote.poll_from_sender;
+    // Clc.A02/BoQ.A00 retain fromMe for an own envelope; peer projection uses the opposite perspective.
+    vote.poll_from_sender = !owns_parent;
+    let parent = Node::new("message")
+        .attr("from", chat.clone())
+        .attr("id", vote.poll_id.as_str());
+    let Some(context) = poll_context_for(tx, &parent, &vote)? else {
+        return Ok(None);
+    };
+    if !owns_parent {
+        let original = context.target_chat.as_ref().unwrap_or(chat);
+        let saved = tx.get_json::<serde_json::Value>(
+            Table::Checkpoints,
+            format!("received:{original}:{}", vote.poll_id.as_str()).as_bytes(),
+            1,
+        )?;
+        let Some(saved) = saved.filter(|s| s["status"] == "decrypted") else {
+            return Ok(None);
+        };
+        let Ok(plain) = serde_json::from_value::<Vec<u8>>(saved["protobuf"].clone())
+            .map(zeroize::Zeroizing::new)
+        else {
+            return Ok(None);
+        };
+        if !super::polls::ordinary_creation_fields(&plain) {
+            return Ok(None);
+        }
+    }
+    let Some(account) =
+        crate::session::AccountRecord::load_in_write(tx)?.filter(|a| a.is_registered())
+    else {
+        return Ok(None);
+    };
+    let Some(pn) = account
+        .own_jid
+        .filter(|j| j.agent == 0 && j.device == 0 && j.server == crate::model::jid::Server::User)
+    else {
+        return Ok(None);
+    };
+    let mut voters = vec![pn.to_non_ad()];
+    if let Some(lid) = super::group_send::own_lid_in(tx)? {
+        voters.push(lid);
+    }
+    let Some((voter, hashes)) = context.creators.iter().find_map(|creator| {
+        voters.iter().find_map(|voter| {
+            super::polls::decrypt_vote(&context.secret, &context.poll_id, creator, voter, &vote)
+                .ok()
+                .map(|hashes| (voter, hashes))
+        })
+    }) else {
+        return Ok(None);
+    };
+    let target_chat = context.target_chat.as_ref().unwrap_or(chat);
+    let (selected, unresolved) = super::polls::resolve_options(&hashes, &context.options);
+    Ok(Some(SyncEvent::MessageUpdated(
+        crate::model::message::MessageUpdate {
+            key: MessageKey {
+                chat: ChatId::from_jid(target_chat)?,
+                sender: if owns_parent {
+                    None
+                } else {
+                    Some(DeviceAddress::from_jid(target_chat)?)
+                },
+                direction: if owns_parent {
+                    Direction::Outgoing
+                } else {
+                    Direction::Incoming
+                },
+                id: vote.poll_id,
+            },
+            change: crate::model::message::MessageChange::PollVote {
+                by: DeviceAddress::from_jid(voter)?,
+                selected,
+                unresolved,
+            },
+            server_timestamp: stanza_timestamp(node),
+        },
+    )))
+}
+
 pub(super) fn own_device_message(
     tx: &WriteTx<'_>,
     key: &[u8],
@@ -721,6 +859,9 @@ pub(super) fn own_device_message(
     let Some(id) = node.get_attr("id").and_then(|v| v.as_text()) else {
         return Ok(None);
     };
+    if crate::signal::direct::payload_fields(payload).is_ok_and(|fields| fields.contains(&50)) {
+        return own_device_vote(tx, chat, node, payload);
+    }
     let mut projection = Node::new("message")
         .attr("from", chat.clone())
         .attr("id", id);
@@ -954,6 +1095,188 @@ mod tests {
             .attr("id", "fixture")
             .attr("t", "123")
     }
+    #[test]
+    fn own_device_votes_preserve_parent_ownership_and_authenticate_only_saved_own_voters() {
+        use crate::model::{jid::Jid, message::MessageRef};
+        for peer in ["15555550100@s.whatsapp.net", "12345@lid"] {
+            for owns_parent in [false, true] {
+                for case in [
+                    "good",
+                    "empty",
+                    "remote_other",
+                    "missing_parent",
+                    "wrong_voter",
+                    "wrong_creator",
+                    "metadata",
+                    "participant",
+                    "status",
+                    "group",
+                    "mixed",
+                    "unregistered",
+                    "special_parent",
+                ] {
+                    if owns_parent && case == "special_parent" {
+                        continue;
+                    }
+                    let dir = tempfile::tempdir().unwrap();
+                    let store = ProtocolStore::open(OpenOptions {
+                        path: dir.path().join("own-vote.redb"),
+                        account_id: AccountId::new("fixture").unwrap(),
+                        key_source: std::sync::Arc::new(StaticKeySource::new(
+                            MasterKey::from_bytes([18; 32]),
+                        )),
+                        create: true,
+                    })
+                    .unwrap();
+                    let chat = Jid::parse(peer).unwrap();
+                    let own = Jid::parse("15555550199@s.whatsapp.net").unwrap();
+                    let account = crate::session::AccountRecord {
+                        own_jid: Some(own.clone()),
+                        registration: if case == "unregistered" {
+                            crate::session::RegistrationStatus::Unregistered
+                        } else {
+                            crate::session::RegistrationStatus::Registered
+                        },
+                        ..Default::default()
+                    };
+                    let options = vec!["a".to_owned(), "b".to_owned()];
+                    let mut plain =
+                        super::super::polls::creation_payload("Q", &options, 1, [7; 32]).unwrap();
+                    if case == "special_parent" {
+                        let parent = <super::super::polls::Envelope as prost::Message>::decode(
+                            plain.as_slice(),
+                        )
+                        .unwrap();
+                        let mut body = prost::Message::encode_to_vec(&parent.creation_v3.unwrap());
+                        prost::encoding::uint32::encode(9, &1, &mut body);
+                        plain.clear();
+                        prost::encoding::bytes::encode(64, &body, &mut plain);
+                        prost::encoding::bytes::encode(
+                            35,
+                            &prost::Message::encode_to_vec(&parent.context.unwrap()),
+                            &mut plain,
+                        );
+                    }
+                    store.write(|tx|{
+                        account.save(tx)?;
+                        if case!="missing_parent" {
+                            if owns_parent {tx.put_json(Table::Checkpoints,b"poll-secret:POLL",1,&serde_json::json!({"chat":peer,"secret":vec![7;32],"options":options,"creator_pn":own.to_string()}))?;}
+                            else {tx.put_json(Table::Checkpoints,format!("received:{chat}:POLL").as_bytes(),1,&serde_json::json!({"status":"decrypted","protobuf":plain}))?;}
+                        }
+                        Ok(())
+                    }).unwrap();
+                    let direction = if owns_parent {
+                        Direction::Outgoing
+                    } else {
+                        Direction::Incoming
+                    };
+                    let target = MessageRef {
+                        key: MessageKey {
+                            chat: ChatId::from_jid(&chat).unwrap(),
+                            sender: if owns_parent {
+                                None
+                            } else {
+                                Some(DeviceAddress::from_jid(&chat).unwrap())
+                            },
+                            direction,
+                            id: MessageId::new("POLL").unwrap(),
+                        },
+                    };
+                    let creator = if owns_parent { &own } else { &chat };
+                    let selected = if case == "empty" {
+                        vec![]
+                    } else {
+                        vec!["a".to_owned()]
+                    };
+                    let foreign_creator = Jid::parse("99999@lid").unwrap();
+                    let encrypted = super::super::polls::encrypt_vote(
+                        &[7; 32],
+                        "POLL",
+                        if case == "wrong_creator" {
+                            &foreign_creator
+                        } else {
+                            creator
+                        },
+                        if case == "wrong_voter" { &chat } else { &own },
+                        &selected,
+                        [6; 12],
+                    )
+                    .unwrap();
+                    let mut envelope = <super::super::polls::Envelope as prost::Message>::decode(
+                        super::super::polls::vote_payload(&chat, &target, encrypted, 1).as_slice(),
+                    )
+                    .unwrap();
+                    let update = envelope.update.as_mut().unwrap();
+                    if case == "metadata" {
+                        update.metadata = Some(vec![8, 1]);
+                    }
+                    let key = update.poll_creation_message_key.as_mut().unwrap();
+                    if case == "participant" {
+                        key.participant = Some(own.to_string());
+                    }
+                    if matches!(case, "remote_other" | "status" | "group") {
+                        key.remote_jid = Some(
+                            match case {
+                                "status" => "status@broadcast",
+                                "group" => "120363000000001@g.us",
+                                _ => "15555550999@s.whatsapp.net",
+                            }
+                            .into(),
+                        );
+                    }
+                    let mut payload = prost::Message::encode_to_vec(&envelope);
+                    if case == "mixed" {
+                        payload.extend(b"\x0a\x01X");
+                    }
+                    let node = Node::new("message")
+                        .attr("from", own.with_device(4))
+                        .attr("recipient", peer)
+                        .attr("id", "UPDATE")
+                        .attr("type", "poll")
+                        .attr("t", "123");
+                    let snapshot = || {
+                        store
+                            .read(|tx| {
+                                Table::ALL
+                                    .iter()
+                                    .map(|t| tx.scan(*t, 1, 100))
+                                    .collect::<Result<Vec<_>>>()
+                            })
+                            .unwrap()
+                    };
+                    let before = snapshot();
+                    let head = store.journal_head().unwrap();
+                    let event = store
+                        .write(|tx| {
+                            own_device_message(
+                                tx,
+                                b"received-own:fixture:UPDATE",
+                                &chat,
+                                &node,
+                                &payload,
+                                &[],
+                            )
+                        })
+                        .unwrap();
+                    if matches!(case, "good" | "empty" | "remote_other") {
+                        let Some(SyncEvent::MessageUpdated(update)) = event else {
+                            panic!("{peer}/{owns_parent}/{case}: update missing")
+                        };
+                        assert_eq!(update.key, target.key);
+                        assert_eq!(update.server_timestamp, Some(Timestamp(123000)));
+                        assert!(
+                            matches!(update.change,crate::model::message::MessageChange::PollVote{by,selected:actual,unresolved} if by.to_jid().to_non_ad()==own && actual==selected && unresolved.is_empty())
+                        );
+                    } else {
+                        assert!(event.is_none(), "{peer}/{owns_parent}/{case}");
+                    }
+                    assert_eq!(snapshot(), before);
+                    assert_eq!(store.journal_head().unwrap(), head);
+                }
+            }
+        }
+    }
+
     #[test]
     fn explicit_message_timestamps_match_java_oracle_across_event_kinds() {
         use crate::model::{ids::ChatId, jid::Jid, message::MessageRef};

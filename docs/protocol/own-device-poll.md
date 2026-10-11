@@ -1,5 +1,9 @@
 # Own-device ordinary poll creation
 
+Follow-up: [own-device ordinary vote updates](own-device-vote.md) now project
+supported wrapped votes with authenticated own voter and correct parent ownership.
+Special poll lifecycles and full native parent policy remain unfinished.
+
 Follow-up: [voting on synchronized own polls](synchronized-poll-secret.md)
 connects authenticated parent/secret fallback to incoming peer vote context,
 explicit outgoing votes and binding inspection. It supersedes the lookup gap

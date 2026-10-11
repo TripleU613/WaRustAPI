@@ -1,0 +1,152 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"evidence_id\":\"ev_ecb60fe215a1ed2c0c13d6f7426c9c4801e60cc12a779eb8acb4ee0268016bfc\",\"subject\":{\"name\":\"WhatsApp.apk\",\"digest\":{\"sha256\":\"1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c\"},\"format\":\"apk\",\"architecture\":null,\"local_path\":\"~/Downloads/WhatsApp.apk\"},\"provider\":{\"id\":\"jadx\",\"name\":\"JADX headless\",\"version\":\"0.7.1\"},\"analysis_profile\":null,\"predicate_type\":\"rea.analysis\",\"operation\":\"inspect_android_method\",\"parameters\":{\"path\":\"~/Downloads/WhatsApp.apk\",\"class_name\":\"X.BoQ\",\"method_name\":\"A00\"},\"raw_result\":{\"server\":{\"name\":\"rea-jadx-bridge\",\"version\":\"1\"},\"bridge_sha256\":\"5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1\",\"jar_sha256\":\"6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75\",\"loaded\":{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-IMjryB/target.apk\",\"class_count\":94738,\"resource_count\":14967,\"threads\":1,\"resources\":\"full\"},\"calls\":[{\"operation\":\"rea_jvm_status\",\"input\":{},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"metadata_scope\\\":\\\"parsed_members\\\",\\\"engine_reported_version\\\":\\\"0.7.1\\\",\\\"available_processors\\\":24,\\\"java_version\\\":\\\"21.0.12.1\\\",\\\"max_heap_bytes\\\":15695085568}\"}],\"isError\":false}},{\"operation\":\"load_apk\",\"input\":{\"path\":\"/tmp/rea-android-IMjryB/target.apk\",\"threads\":1,\"resources\":\"full\"},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"state\\\":\\\"LOADED\\\",\\\"apk_path\\\":\\\"/tmp/rea-android-IMjryB/target.apk\\\",\\\"class_count\\\":94738,\\\"raw_class_count\\\":94738,\\\"resource_count\\\":14967,\\\"load_duration_ms\\\":14072,\\\"decompile_timeout_ms\\\":90000,\\\"threads\\\":1,\\\"code_cache_size\\\":64,\\\"resources\\\":\\\"full\\\"}\"}]}},{\"operation\":\"get_class_summary\",\"input\":{\"class_name\":\"X.BoQ\"},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"fields\\\":[],\\\"field_count\\\":0,\\\"full_name\\\":\\\"X.BoQ\\\",\\\"name\\\":\\\"BoQ\\\",\\\"inner_classes\\\":[],\\\"inner_class_count\\\":0,\\\"method_count\\\":2,\\\"methods\\\":[{\\\"def_pos\\\":0,\\\"name\\\":\\\"A00\\\",\\\"is_constructor\\\":false,\\\"signature\\\":\\\"A00(X.0Cy, X.08Z, X.1gc, X.BZa, boolean, boolean): X.CUq\\\"},{\\\"def_pos\\\":0,\\\"name\\\":\\\"A01\\\",\\\"is_constructor\\\":false,\\\"signature\\\":\\\"A01(X.178): X.CUq\\\"}]}\"}],\"isError\":false}},{\"operation\":\"get_method_body\",\"input\":{\"class_name\":\"X.BoQ\",\"method_name\":\"A00\",\"overload_index\":0,\"smali_fallback\":true},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"markers\\\":[],\\\"method_name\\\":\\\"A00\\\",\\\"overload_count\\\":1,\\\"body\\\":\\\"    /* JADX WARN: Code duplicated, block: B:29:0x0050  */\\\\n    /* JADX WARN: Code duplicated, block: B:34:0x005a  */\\\\n    public static final CUq A00(C0Cy c0Cy, C08Z c08z, C1gc c1gc, BZa bZa, boolean z, boolean z2) {\\\\n        boolean z3;\\\\n        C0Cy c0Cy2;\\\\n        C0Cy c0Cy3;\\\\n        boolean z4;\\\\n        Object objA1N;\\\\n        C3cA.A1H(c08z, bZa);\\\\n        UserJid userJidA02 \\\\u003d UserJid.Companion.A02(bZa.participant_);\\\\n        String str \\\\u003d bZa.remoteJid_;\\\\n        C8oR c8oR \\\\u003d C8oR.A00;\\\\n        Object obj \\\\u003d null;\\\\n        if (str !\\\\u003d null \\\\u0026\\\\u0026 str.length() !\\\\u003d 0) {\\\\n            try {\\\\n                com.whatsapp.infra.core.jid.Jid jidA00 \\\\u003d C0D1.A00(str);\\\\n                if (!(jidA00 instanceof C8oR) || (objA1N \\\\u003d (C8oR) jidA00) \\\\u003d\\\\u003d null) {\\\\n                    throw new C08j(str);\\\\n                }\\\\n            } catch (Throwable th) {\\\\n                objA1N \\\\u003d C1xf.A1N(th);\\\\n            }\\\\n            if (!(objA1N instanceof C0Zd)) {\\\\n                obj \\\\u003d objA1N;\\\\n            }\\\\n        }\\\\n        boolean z5 \\\\u003d true;\\\\n        if (obj !\\\\u003d null) {\\\\n            z3 \\\\u003d true;\\\\n            c0Cy2 \\\\u003d C8oR.A00;\\\\n        } else {\\\\n            z3 \\\\u003d false;\\\\n            c0Cy2 \\\\u003d c1gc.A00;\\\\n        }\\\\n        if (c1gc.A02) {\\\\n            z5 \\\\u003d bZa.fromMe_;\\\\n            c0Cy3 \\\\u003d userJidA02;\\\\n        } else {\\\\n            C0Cy c0Cy4 \\\\u003d c1gc.A00;\\\\n            if (!C0DE.A0m(c0Cy4) \\\\u0026\\\\u0026 !C0DE.A0i(c0Cy4)) {\\\\n                z4 \\\\u003d z2;\\\\n            }\\\\n            c0Cy3 \\\\u003d null;\\\\n            if (bZa.fromMe_) {\\\\n                if (z3) {\\\\n                    if (c0Cy \\\\u003d\\\\u003d null) {\\\\n                        c0Cy \\\\u003d userJidA02;\\\\n                    }\\\\n                    c0Cy3 \\\\u003d c0Cy;\\\\n                } else if (z4 \\\\u0026\\\\u0026 c0Cy !\\\\u003d null) {\\\\n                    if (userJidA02 !\\\\u003d null) {\\\\n                        c0Cy \\\\u003d userJidA02;\\\\n                    }\\\\n                    c0Cy3 \\\\u003d c0Cy;\\\\n                }\\\\n            } else if (!c08z.BO0(userJidA02) \\\\u0026\\\\u0026 (z4 || z)) {\\\\n                c0Cy3 \\\\u003d userJidA02;\\\\n            }\\\\n            z5 \\\\u003d false;\\\\n        }\\\\n        return new CUq(c0Cy3, Ayo.A0S(c0Cy2, bZa, z5));\\\\n    }\\\",\\\"fell_back\\\":false,\\\"overload_index\\\":0,\\\"class_name\\\":\\\"X.BoQ\\\",\\\"full_name\\\":\\\"X.BoQ.A00\\\",\\\"mode\\\":\\\"java\\\"}\"}],\"isError\":false}}]},\"normalized_result\":{\"engine\":{\"name\":\"jadx-headless-mcp\",\"version\":\"0.7.1\",\"artifact_sha256\":\"6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75\",\"source_revision\":\"5844800a486d2248fa949b74c9896285f5b54de2\",\"worker_count\":1,\"heap_limit_mib\":14968},\"class_name\":\"X.BoQ\",\"method\":{\"name\":\"A00\",\"reported_signature\":\"A00(X.0Cy, X.08Z, X.1gc, X.BZa, boolean, boolean): X.CUq\",\"overload_index\":0,\"is_constructor\":false,\"dex_descriptor\":null},\"overload_count\":1,\"representation\":\"java\",\"body_status\":\"available\",\"fell_back\":false,\"markers\":[],\"source\":{\"status\":\"complete\",\"text\":\"    /* JADX WARN: Code duplicated, block: B:29:0x0050  */\\n    /* JADX WARN: Code duplicated, block: B:34:0x005a  */\\n    public static final CUq A00(C0Cy c0Cy, C08Z c08z, C1gc c1gc, BZa bZa, boolean z, boolean z2) {\\n        boolean z3;\\n        C0Cy c0Cy2;\\n        C0Cy c0Cy3;\\n        boolean z4;\\n        Object objA1N;\\n        C3cA.A1H(c08z, bZa);\\n        UserJid userJidA02 = UserJid.Companion.A02(bZa.participant_);\\n        String str = bZa.remoteJid_;\\n        C8oR c8oR = C8oR.A00;\\n        Object obj = null;\\n        if (str != null && str.length() != 0) {\\n            try {\\n                com.whatsapp.infra.core.jid.Jid jidA00 = C0D1.A00(str);\\n                if (!(jidA00 instanceof C8oR) || (objA1N = (C8oR) jidA00) == null) {\\n                    throw new C08j(str);\\n                }\\n            } catch (Throwable th) {\\n                objA1N = C1xf.A1N(th);\\n            }\\n            if (!(objA1N instanceof C0Zd)) {\\n                obj = objA1N;\\n            }\\n        }\\n        boolean z5 = true;\\n        if (obj != null) {\\n            z3 = true;\\n            c0Cy2 = C8oR.A00;\\n        } else {\\n            z3 = false;\\n            c0Cy2 = c1gc.A00;\\n        }\\n        if (c1gc.A02) {\\n            z5 = bZa.fromMe_;\\n            c0Cy3 = userJidA02;\\n        } else {\\n            C0Cy c0Cy4 = c1gc.A00;\\n            if (!C0DE.A0m(c0Cy4) && !C0DE.A0i(c0Cy4)) {\\n                z4 = z2;\\n            }\\n            c0Cy3 = null;\\n            if (bZa.fromMe_) {\\n                if (z3) {\\n                    if (c0Cy == null) {\\n                        c0Cy = userJidA02;\\n                    }\\n                    c0Cy3 = c0Cy;\\n                } else if (z4 && c0Cy != null) {\\n                    if (userJidA02 != null) {\\n                        c0Cy = userJidA02;\\n                    }\\n                    c0Cy3 = c0Cy;\\n                }\\n            } else if (!c08z.BO0(userJidA02) && (z4 || z)) {\\n                c0Cy3 = userJidA02;\\n            }\\n            z5 = false;\\n        }\\n        return new CUq(c0Cy3, Ayo.A0S(c0Cy2, bZa, z5));\\n    }\",\"reported_total_bytes\":null}},\"confidence\":\"derived\",\"authority\":\"shipped-artifact\",\"environment\":null,\"limitations\":[\"Static decompiler observations do not establish runtime behavior; the APK is never executed.\",\"Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.\",\"Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.\",\"Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider.\"],\"locations\":[],\"evidence_links\":[]}"
+    }
+  ],
+  "structuredContent": {
+    "evidence_id": "ev_ecb60fe215a1ed2c0c13d6f7426c9c4801e60cc12a779eb8acb4ee0268016bfc",
+    "subject": {
+      "name": "WhatsApp.apk",
+      "digest": {
+        "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+      },
+      "format": "apk",
+      "architecture": null,
+      "local_path": "~/Downloads/WhatsApp.apk"
+    },
+    "provider": {
+      "id": "jadx",
+      "name": "JADX headless",
+      "version": "0.7.1"
+    },
+    "analysis_profile": null,
+    "predicate_type": "rea.analysis",
+    "operation": "inspect_android_method",
+    "parameters": {
+      "path": "~/Downloads/WhatsApp.apk",
+      "class_name": "X.BoQ",
+      "method_name": "A00"
+    },
+    "raw_result": {
+      "server": {
+        "name": "rea-jadx-bridge",
+        "version": "1"
+      },
+      "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+      "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "loaded": {
+        "state": "LOADED",
+        "apk_path": "/tmp/rea-android-IMjryB/target.apk",
+        "class_count": 94738,
+        "resource_count": 14967,
+        "threads": 1,
+        "resources": "full"
+      },
+      "calls": [
+        {
+          "operation": "rea_jvm_status",
+          "input": {},
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\",\"max_heap_bytes\":15695085568}"
+              }
+            ],
+            "isError": false
+          }
+        },
+        {
+          "operation": "load_apk",
+          "input": {
+            "path": "/tmp/rea-android-IMjryB/target.apk",
+            "threads": 1,
+            "resources": "full"
+          },
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-IMjryB/target.apk\",\"class_count\":94738,\"raw_class_count\":94738,\"resource_count\":14967,\"load_duration_ms\":14072,\"decompile_timeout_ms\":90000,\"threads\":1,\"code_cache_size\":64,\"resources\":\"full\"}"
+              }
+            ]
+          }
+        },
+        {
+          "operation": "get_class_summary",
+          "input": {
+            "class_name": "X.BoQ"
+          },
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"fields\":[],\"field_count\":0,\"full_name\":\"X.BoQ\",\"name\":\"BoQ\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":2,\"methods\":[{\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false,\"signature\":\"A00(X.0Cy, X.08Z, X.1gc, X.BZa, boolean, boolean): X.CUq\"},{\"def_pos\":0,\"name\":\"A01\",\"is_constructor\":false,\"signature\":\"A01(X.178): X.CUq\"}]}"
+              }
+            ],
+            "isError": false
+          }
+        },
+        {
+          "operation": "get_method_body",
+          "input": {
+            "class_name": "X.BoQ",
+            "method_name": "A00",
+            "overload_index": 0,
+            "smali_fallback": true
+          },
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"markers\":[],\"method_name\":\"A00\",\"overload_count\":1,\"body\":\"    /* JADX WARN: Code duplicated, block: B:29:0x0050  */\\n    /* JADX WARN: Code duplicated, block: B:34:0x005a  */\\n    public static final CUq A00(C0Cy c0Cy, C08Z c08z, C1gc c1gc, BZa bZa, boolean z, boolean z2) {\\n        boolean z3;\\n        C0Cy c0Cy2;\\n        C0Cy c0Cy3;\\n        boolean z4;\\n        Object objA1N;\\n        C3cA.A1H(c08z, bZa);\\n        UserJid userJidA02 \\u003d UserJid.Companion.A02(bZa.participant_);\\n        String str \\u003d bZa.remoteJid_;\\n        C8oR c8oR \\u003d C8oR.A00;\\n        Object obj \\u003d null;\\n        if (str !\\u003d null \\u0026\\u0026 str.length() !\\u003d 0) {\\n            try {\\n                com.whatsapp.infra.core.jid.Jid jidA00 \\u003d C0D1.A00(str);\\n                if (!(jidA00 instanceof C8oR) || (objA1N \\u003d (C8oR) jidA00) \\u003d\\u003d null) {\\n                    throw new C08j(str);\\n                }\\n            } catch (Throwable th) {\\n                objA1N \\u003d C1xf.A1N(th);\\n            }\\n            if (!(objA1N instanceof C0Zd)) {\\n                obj \\u003d objA1N;\\n            }\\n        }\\n        boolean z5 \\u003d true;\\n        if (obj !\\u003d null) {\\n            z3 \\u003d true;\\n            c0Cy2 \\u003d C8oR.A00;\\n        } else {\\n            z3 \\u003d false;\\n            c0Cy2 \\u003d c1gc.A00;\\n        }\\n        if (c1gc.A02) {\\n            z5 \\u003d bZa.fromMe_;\\n            c0Cy3 \\u003d userJidA02;\\n        } else {\\n            C0Cy c0Cy4 \\u003d c1gc.A00;\\n            if (!C0DE.A0m(c0Cy4) \\u0026\\u0026 !C0DE.A0i(c0Cy4)) {\\n                z4 \\u003d z2;\\n            }\\n            c0Cy3 \\u003d null;\\n            if (bZa.fromMe_) {\\n                if (z3) {\\n                    if (c0Cy \\u003d\\u003d null) {\\n                        c0Cy \\u003d userJidA02;\\n                    }\\n                    c0Cy3 \\u003d c0Cy;\\n                } else if (z4 \\u0026\\u0026 c0Cy !\\u003d null) {\\n                    if (userJidA02 !\\u003d null) {\\n                        c0Cy \\u003d userJidA02;\\n                    }\\n                    c0Cy3 \\u003d c0Cy;\\n                }\\n            } else if (!c08z.BO0(userJidA02) \\u0026\\u0026 (z4 || z)) {\\n                c0Cy3 \\u003d userJidA02;\\n            }\\n            z5 \\u003d false;\\n        }\\n        return new CUq(c0Cy3, Ayo.A0S(c0Cy2, bZa, z5));\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.BoQ\",\"full_name\":\"X.BoQ.A00\",\"mode\":\"java\"}"
+              }
+            ],
+            "isError": false
+          }
+        }
+      ]
+    },
+    "normalized_result": {
+      "engine": {
+        "name": "jadx-headless-mcp",
+        "version": "0.7.1",
+        "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+        "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+        "worker_count": 1,
+        "heap_limit_mib": 14968
+      },
+      "class_name": "X.BoQ",
+      "method": {
+        "name": "A00",
+        "reported_signature": "A00(X.0Cy, X.08Z, X.1gc, X.BZa, boolean, boolean): X.CUq",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      "overload_count": 1,
+      "representation": "java",
+      "body_status": "available",
+      "fell_back": false,
+      "markers": [],
+      "source": {
+        "status": "complete",
+        "text": "    /* JADX WARN: Code duplicated, block: B:29:0x0050  */\n    /* JADX WARN: Code duplicated, block: B:34:0x005a  */\n    public static final CUq A00(C0Cy c0Cy, C08Z c08z, C1gc c1gc, BZa bZa, boolean z, boolean z2) {\n        boolean z3;\n        C0Cy c0Cy2;\n        C0Cy c0Cy3;\n        boolean z4;\n        Object objA1N;\n        C3cA.A1H(c08z, bZa);\n        UserJid userJidA02 = UserJid.Companion.A02(bZa.participant_);\n        String str = bZa.remoteJid_;\n        C8oR c8oR = C8oR.A00;\n        Object obj = null;\n        if (str != null && str.length() != 0) {\n            try {\n                com.whatsapp.infra.core.jid.Jid jidA00 = C0D1.A00(str);\n                if (!(jidA00 instanceof C8oR) || (objA1N = (C8oR) jidA00) == null) {\n                    throw new C08j(str);\n                }\n            } catch (Throwable th) {\n                objA1N = C1xf.A1N(th);\n            }\n            if (!(objA1N instanceof C0Zd)) {\n                obj = objA1N;\n            }\n        }\n        boolean z5 = true;\n        if (obj != null) {\n            z3 = true;\n            c0Cy2 = C8oR.A00;\n        } else {\n            z3 = false;\n            c0Cy2 = c1gc.A00;\n        }\n        if (c1gc.A02) {\n            z5 = bZa.fromMe_;\n            c0Cy3 = userJidA02;\n        } else {\n            C0Cy c0Cy4 = c1gc.A00;\n            if (!C0DE.A0m(c0Cy4) && !C0DE.A0i(c0Cy4)) {\n                z4 = z2;\n            }\n            c0Cy3 = null;\n            if (bZa.fromMe_) {\n                if (z3) {\n                    if (c0Cy == null) {\n                        c0Cy = userJidA02;\n                    }\n                    c0Cy3 = c0Cy;\n                } else if (z4 && c0Cy != null) {\n                    if (userJidA02 != null) {\n                        c0Cy = userJidA02;\n                    }\n                    c0Cy3 = c0Cy;\n                }\n            } else if (!c08z.BO0(userJidA02) && (z4 || z)) {\n                c0Cy3 = userJidA02;\n            }\n            z5 = false;\n        }\n        return new CUq(c0Cy3, Ayo.A0S(c0Cy2, bZa, z5));\n    }",
+        "reported_total_bytes": null
+      }
+    },
+    "confidence": "derived",
+    "authority": "shipped-artifact",
+    "environment": null,
+    "limitations": [
+      "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+      "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+      "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+      "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+    ],
+    "locations": [],
+    "evidence_links": []
+  }
+}

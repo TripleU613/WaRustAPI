@@ -1,0 +1,48 @@
+# APK-derived structural disassembly: LX/1hQ;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A02(LL) flags=0x11 registers=8
+  # full signature: LX/1hQ;->A02(LX/1gc;)LX/1gc;
+  0000..0002 op=12 const/4 v5, #0x0
+  0002..0006 op=38 if-eqz v7, +0x4a
+  0006..000a op=54 iget-object v0, v6, LX/1hQ;->A00:LX/05B;
+  000a..000e op=54 iget-object v4, v0, LX/05B;->A00:LX/00s;
+  000e..0014 op=72 invoke-interface {v4}, LX/00s;->get()Ljava/lang/Object;
+  0014..0016 op=0c move-result-object v0
+  0016..001a op=1f check-cast v0, LX/0V9;
+  001a..0020 op=6e invoke-virtual {v0, v7}, LX/0V9;->Aon(LX/1gc;)LX/178;
+  0020..0022 op=0c move-result-object v0
+  0022..0026 op=39 if-nez v0, +0x37
+  0026..002c op=6e invoke-virtual {v6, v7}, LX/1hQ;->A00(LX/1gc;)LX/178;
+  002c..002e op=0c move-result-object v0
+  002e..0032 op=39 if-nez v0, +0x31
+  0032..0036 op=54 iget-object v2, v7, LX/1gc;->A01:Ljava/lang/String;
+  0036..003a op=1a const-string v0, "__part__"
+  003a..003c op=12 const/4 v1, #0x0
+  003c..0042 op=71 invoke-static {v2, v0, v1, v1}, LX/0CM;->A0N(Ljava/lang/CharSequence;Ljava/lang/String;IZ)I
+  0042..0044 op=0a move-result v0
+  0044..0048 op=3d if-lez v0, +0x29
+  0048..004e op=6e invoke-virtual {v2, v1, v0}, Ljava/lang/String;->substring(II)Ljava/lang/String;
+  004e..0050 op=0c move-result-object v3
+  0050..0056 op=71 invoke-static {v3}, LX/00h;->A06(Ljava/lang/Object;)V
+  0056..005a op=54 iget-object v2, v7, LX/1gc;->A00:LX/0Cy;
+  005a..005e op=38 if-eqz v2, +0x1e
+  005e..0062 op=55 iget-boolean v0, v7, LX/1gc;->A02:Z
+  0062..0066 op=22 new-instance v1, LX/1gc;
+  0066..006c op=70 invoke-direct {v1, v2, v3, v0}, LX/1gc;-><init>(LX/0Cy;Ljava/lang/String;Z)V
+  006c..0072 op=72 invoke-interface {v4}, LX/00s;->get()Ljava/lang/Object;
+  0072..0074 op=0c move-result-object v0
+  0074..0078 op=1f check-cast v0, LX/0V9;
+  0078..007e op=6e invoke-virtual {v0, v1}, LX/0V9;->Aon(LX/1gc;)LX/178;
+  007e..0080 op=0c move-result-object v0
+  0080..0084 op=39 if-nez v0, +0x8
+  0084..008a op=6e invoke-virtual {v6, v1}, LX/1hQ;->A00(LX/1gc;)LX/178;
+  008a..008c op=0c move-result-object v0
+  008c..0090 op=38 if-eqz v0, +0x5
+  0090..0094 op=54 iget-object v0, v0, LX/178;->A0i:LX/1gc;
+  0094..0096 op=11 return-object v0
+  0096..0098 op=11 return-object v5
+  # exception table: 0 try range(s)
+.end method
