@@ -1,0 +1,50 @@
+{
+  "attribute-constructor.txt": {
+    "bytes": 2894,
+    "sha256": "98f2977e16ba74ce9491527278dbfc5b3929d210e82c1e6c26fc2231f15e9040"
+  },
+  "attribute-parser.txt": {
+    "bytes": 6948,
+    "sha256": "ac40beeedc9bc124e29f165b22e62f66a2cff08fbe292406ec2f5b7cb362a26d"
+  },
+  "core-route-validation.txt": {
+    "bytes": 42139,
+    "sha256": "39062950a42b5e284c10ac7cd3468e4fbff4782fc3506b7ebde210946735a62f"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "jid-selection.txt": {
+    "bytes": 3764,
+    "sha256": "82c0eafcf8fda4954a19a15b964fcb5a86319ae7a963cc550ec55c0e6e0f7b9f"
+  },
+  "key-direction.txt": {
+    "bytes": 3987,
+    "sha256": "1b8cacc23e0d5caa11dbea7c9740f522077623bc390fa646abaf5e92a472ae27"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "own-chat-normalization.txt": {
+    "bytes": 2084,
+    "sha256": "b2283a1912918fa04acd914360658da82671c0af5edbfffc4c11351fa82b2251"
+  },
+  "recipient-mapping.txt": {
+    "bytes": 857,
+    "sha256": "589815af2b021aaaaedd2e7ba355201a23f7388a85ec347fef2ef61e2c438c1c"
+  },
+  "stanza-construction.txt": {
+    "bytes": 6805,
+    "sha256": "6cc07a46716fda90a784f5033b87b9294fa495b759c185c61e619a7fd2b7999b"
+  },
+  "targets.json": {
+    "bytes": 3549,
+    "sha256": "9446ce5566cd8f66df2f979f10d964bc766bc45e3603bc8ff2b202b6271c9b5f"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

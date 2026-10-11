@@ -27,7 +27,9 @@ identity before committing the ratchet and event. The route still requires an
 existing device identity pin and Signal session, `enc type=msg`, no participant
 or recipient, and a nonzero device with agent zero. It does not create a device
 session or infer own identity from a remote alias. Ordinary own-device messages
-with a recipient and complete native peer-control handling remain unported.
+with a recipient and complete native peer-control handling remain unported;
+[recipient routing](recipient-routing.md) traces the separate chat/direction
+requirements and the ordinary-selector correction.
 
 Offline tests cover missing/foreign/primary/agent-bearing LID rejection,
 recipient/participant exclusion, refusal to bootstrap PN or LID devices under

@@ -77,7 +77,9 @@ fn ciphertext_bytes(node: &Node) -> Option<&[u8]> {
 /// Primary chat identity for direct inbox/event/receipt lookup. Companion
 /// session selection separately preserves the actual device and namespace.
 pub fn session_sender(node: &Node) -> Option<Jid> {
+    // shortcut: recipient routes need own-device outgoing projection, port synchronization first.
     if node.get_attr("participant").is_some()
+        || node.get_attr("recipient").is_some()
         || node.get_attr("category").and_then(|v| v.as_text()) == Some("peer")
     {
         return None;
@@ -2909,6 +2911,42 @@ mod tests {
                     .attr("v", "2")
                     .bytes(sent.ciphertext.clone()),
             ]);
+        let qualified = node.clone().attr("recipient", "987654321@lid");
+        let qualified_capture = preserve(&store, &qualified).unwrap();
+        for policy in [
+            IdentityChangePolicy::Pinned,
+            IdentityChangePolicy::ApkAuthenticated,
+        ] {
+            assert_eq!(
+                process_with_policy(&store, &receiver, &qualified, &qualified_capture, policy)
+                    .await
+                    .unwrap(),
+                IncomingResult::Unsupported
+            );
+        }
+        store
+            .read(|tx| {
+                assert_eq!(
+                    tx.get_json::<Vec<u8>>(Table::Prekeys, b"comparison-prekey:11", 1)?,
+                    Some(prekey.clone())
+                );
+                assert!(tx.scan(Table::SignalSessions, 1, 10)?.is_empty());
+                assert!(tx.scan(Table::PeerIdentities, 1, 10)?.is_empty());
+                assert!(
+                    tx.get_json::<serde_json::Value>(
+                        Table::Checkpoints,
+                        format!("received:{peer}:BARE-PREKEY").as_bytes(),
+                        1
+                    )?
+                    .is_none()
+                );
+                assert!(
+                    tx.get_json::<Vec<u8>>(Table::Checkpoints, &qualified_capture, 1)?
+                        .is_some()
+                );
+                Ok(())
+            })
+            .unwrap();
         let mut bad = sent.ciphertext.clone();
         *bad.last_mut().unwrap() ^= 1;
         let damaged = Node::new("message")
@@ -3415,6 +3453,23 @@ mod tests {
                 .is_empty()
         );
     }
+    #[test]
+    fn recipient_routes_do_not_project_as_ordinary_incoming_chats() {
+        for from in ["15555550100@s.whatsapp.net", "12345@lid", "12345:2@lid"] {
+            let node = Node::new("message").attr("from", from).attr("id", "SYNC");
+            assert!(session_sender(&node).is_some());
+            for recipient in ["15555550200@s.whatsapp.net", "67890@lid", "invalid", ""] {
+                let qualified = node.clone().attr("recipient", recipient);
+                assert!(session_sender(&qualified).is_none());
+                assert!(
+                    direct_record_in(&qualified, |_| panic!("must not read an incoming row"))
+                        .unwrap()
+                        .is_none()
+                );
+            }
+        }
+    }
+
     #[test]
     fn peer_messages_accept_only_the_saved_own_lid_device() {
         let account = AccountRecord {
