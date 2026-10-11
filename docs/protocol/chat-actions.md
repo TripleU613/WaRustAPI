@@ -155,6 +155,13 @@ APK-derived only, and the server's exact accept/refuse response is unknown.
 
 ### Per-chat timer: E2E `protocolMessage`
 
+2026-10-11 follow-up: [legacy timers and own-device synchronization](own-device-timer.md)
+corrects signed duration interpretation, confirms current BW7 device/initiated
+fields 3/4 and adds supported own-wrapper events. Nonzero after-read duration
+remains unsupported pending native feature/state policy. Earlier generic uint32
+and inferred three-field mode descriptions below are superseded; historical
+validation does not cover this follow-up.
+
 `LX/D9s.AD7` (`FMessageEphemeralSettingChangeProtobuf`), **confirmed**: the
 message is `Message.protocolMessage` (field 12, already live-decoded for type 4)
 with `ProtocolMessage.type = EPHEMERAL_SETTING (3)` (`LX/C4F.<clinit>`),

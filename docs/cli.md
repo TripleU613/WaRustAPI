@@ -708,7 +708,7 @@ Usage: whatsapp-cli disappearing [OPTIONS]...
 | Flag | Value | Required | Default | Env | Values | Help |
 |------|-------|----------|---------|-----|--------|------|
 | --chat | CHAT | yes |  |  |  | Chat JID |
-| --seconds | SECONDS | yes |  |  |  | New timer in seconds (0 = off; the UI offers 0, 86400, 604800, 7776000) |
+| --seconds | SECONDS | yes |  |  |  | New timer in seconds, 0..2147483647 (0 = off; UI: 86400, 604800, 7776000) |
 | --request-id | REQUEST_ID | no |  |  |  | Caller idempotency key; defaults to a chat/timer digest (no phone number) |
 
 ## whatsapp-cli keep

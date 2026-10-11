@@ -1,0 +1,152 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"evidence_id\":\"ev_c683b78a2bec5cd8348bbfc5615de678afc708a1238d5f41fc75d2bc1b2d013e\",\"subject\":{\"name\":\"WhatsApp.apk\",\"digest\":{\"sha256\":\"1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c\"},\"format\":\"apk\",\"architecture\":null,\"local_path\":\"~/Downloads/WhatsApp.apk\"},\"provider\":{\"id\":\"jadx\",\"name\":\"JADX headless\",\"version\":\"0.7.1\"},\"analysis_profile\":null,\"predicate_type\":\"rea.analysis\",\"operation\":\"inspect_android_method\",\"parameters\":{\"path\":\"~/Downloads/WhatsApp.apk\",\"class_name\":\"X.D9s\",\"method_name\":\"CF4\"},\"raw_result\":{\"server\":{\"name\":\"rea-jadx-bridge\",\"version\":\"1\"},\"bridge_sha256\":\"5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1\",\"jar_sha256\":\"6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75\",\"loaded\":{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-qP901m/target.apk\",\"class_count\":94738,\"resource_count\":14967,\"threads\":1,\"resources\":\"full\"},\"calls\":[{\"operation\":\"rea_jvm_status\",\"input\":{},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"engine_reported_version\\\":\\\"0.7.1\\\",\\\"available_processors\\\":24,\\\"java_version\\\":\\\"21.0.12.1\\\",\\\"max_heap_bytes\\\":15695085568,\\\"metadata_scope\\\":\\\"parsed_members\\\"}\"}],\"isError\":false}},{\"operation\":\"load_apk\",\"input\":{\"path\":\"/tmp/rea-android-qP901m/target.apk\",\"threads\":1,\"resources\":\"full\"},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"state\\\":\\\"LOADED\\\",\\\"apk_path\\\":\\\"/tmp/rea-android-qP901m/target.apk\\\",\\\"class_count\\\":94738,\\\"raw_class_count\\\":94738,\\\"resource_count\\\":14967,\\\"load_duration_ms\\\":13912,\\\"decompile_timeout_ms\\\":90000,\\\"threads\\\":1,\\\"code_cache_size\\\":64,\\\"resources\\\":\\\"full\\\"}\"}]}},{\"operation\":\"get_class_summary\",\"input\":{\"class_name\":\"X.D9s\"},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"name\\\":\\\"D9s\\\",\\\"inner_classes\\\":[],\\\"inner_class_count\\\":0,\\\"method_count\\\":3,\\\"methods\\\":[{\\\"signature\\\":\\\"\\\\u003cinit\\\\u003e(): void\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"\\\\u003cinit\\\\u003e\\\",\\\"is_constructor\\\":true},{\\\"signature\\\":\\\"AD7(X.178, X.Cn6): void\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"AD7\\\",\\\"is_constructor\\\":false},{\\\"signature\\\":\\\"CF4(X.CoT): X.178\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"CF4\\\",\\\"is_constructor\\\":false}],\\\"fields\\\":[{\\\"type\\\":\\\"X.05B\\\",\\\"name\\\":\\\"A00\\\",\\\"def_pos\\\":0},{\\\"type\\\":\\\"X.05B\\\",\\\"name\\\":\\\"A01\\\",\\\"def_pos\\\":0}],\\\"field_count\\\":2,\\\"full_name\\\":\\\"X.D9s\\\"}\"}],\"isError\":false}},{\"operation\":\"get_method_body\",\"input\":{\"class_name\":\"X.D9s\",\"method_name\":\"CF4\",\"overload_index\":0,\"smali_fallback\":true},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"fell_back\\\":false,\\\"overload_index\\\":0,\\\"class_name\\\":\\\"X.D9s\\\",\\\"full_name\\\":\\\"X.D9s.CF4\\\",\\\"mode\\\":\\\"java\\\",\\\"markers\\\":[],\\\"method_name\\\":\\\"CF4\\\",\\\"overload_count\\\":1,\\\"body\\\":\\\"    /* JADX WARN: Code duplicated, block: B:8:0x0024  */\\\\n    @Override // X.DbV\\\\n    public AnonymousClass178 CF4(CoT coT) {\\\\n        int i;\\\\n        boolean z;\\\\n        C00h.A0A(coT, 0);\\\\n        if (Cbf.A01(coT) !\\\\u003d C4F.A0D) {\\\\n            return null;\\\\n        }\\\\n        BZb bZbA02 \\\\u003d CoT.A02(coT);\\\\n        C1gc c1gc \\\\u003d coT.A0A;\\\\n        C9NJ c9nj \\\\u003d new C9NJ(c1gc, coT.A05);\\\\n        int i2 \\\\u003d bZbA02.ephemeralExpiration_;\\\\n        if (Integer.valueOf(i2) !\\\\u003d null) {\\\\n            i \\\\u003d i2;\\\\n            if (i2 \\\\u003c\\\\u003d 0) {\\\\n                i \\\\u003d 0;\\\\n            }\\\\n        } else {\\\\n            i \\\\u003d 0;\\\\n        }\\\\n        c9nj.A01 \\\\u003d i;\\\\n        int i3 \\\\u003d bZbA02.afterReadDuration_;\\\\n        c9nj.A00 \\\\u003d i3;\\\\n        if (i3 \\\\u003e 0 \\\\u0026\\\\u0026 !C8kT.A1R(this.A00.A00)) {\\\\n            c9nj.A01 \\\\u003d 0;\\\\n            c9nj.A00 \\\\u003d 0;\\\\n        }\\\\n        UserJid userJidA0o \\\\u003d C1xf.A0o(c1gc.A00);\\\\n        if (userJidA0o !\\\\u003d null) {\\\\n            C0Zi c0ZiA0J \\\\u003d C1xh.A0v(this.A01).A0J(userJidA0o);\\\\n            c9nj.A02 \\\\u003d c0ZiA0J !\\\\u003d null ? c0ZiA0J.expiration : 0;\\\\n        }\\\\n        BW7 bw7 \\\\u003d bZbA02.disappearingMode_;\\\\n        if (bw7 \\\\u003d\\\\u003d null) {\\\\n            bw7 \\\\u003d BW7.DEFAULT_INSTANCE;\\\\n        }\\\\n        C3j c3jForNumber \\\\u003d C3j.forNumber(bw7.trigger_);\\\\n        if (c3jForNumber \\\\u003d\\\\u003d null) {\\\\n            c3jForNumber \\\\u003d C3j.A05;\\\\n        }\\\\n        int iA00 \\\\u003d Cbi.A00(c3jForNumber);\\\\n        if (i2 \\\\u003e 0) {\\\\n            B35.A04(c9nj, iA00);\\\\n            BW7 bw8 \\\\u003d bZbA02.disappearingMode_;\\\\n            if (bw8 \\\\u003d\\\\u003d null) {\\\\n                bw8 \\\\u003d BW7.DEFAULT_INSTANCE;\\\\n            }\\\\n            boolean z2 \\\\u003d bw8.initiatedByMe_;\\\\n            B35.A06(c9nj, Boolean.valueOf(C1xi.A1R(c9nj.A0i.A02 ? 1 : 0, z2 ? 1 : 0)));\\\\n            BW7 bw9 \\\\u003d bZbA02.disappearingMode_;\\\\n            if (bw9 \\\\u003d\\\\u003d null) {\\\\n                bw9 \\\\u003d BW7.DEFAULT_INSTANCE;\\\\n            }\\\\n            C39 c39ForNumber \\\\u003d C39.forNumber(bw9.initiator_);\\\\n            if (c39ForNumber \\\\u003d\\\\u003d null) {\\\\n                c39ForNumber \\\\u003d C39.A02;\\\\n            }\\\\n            int number \\\\u003d c39ForNumber.getNumber();\\\\n            if (iA00 \\\\u003d\\\\u003d 0) {\\\\n                if (number \\\\u003d\\\\u003d 0) {\\\\n                    B35.A04(c9nj, 1);\\\\n                    B35.A06(c9nj, null);\\\\n                    return c9nj;\\\\n                }\\\\n                if (number \\\\u003d\\\\u003d 1) {\\\\n                    B35.A04(c9nj, 2);\\\\n                    z \\\\u003d true;\\\\n                } else if (number \\\\u003d\\\\u003d 2) {\\\\n                    B35.A04(c9nj, 2);\\\\n                    z \\\\u003d false;\\\\n                }\\\\n                B35.A06(c9nj, z);\\\\n            }\\\\n        } else {\\\\n            B35.A04(c9nj, 0);\\\\n            B35.A06(c9nj, null);\\\\n            if (i2 \\\\u003d\\\\u003d 0 \\\\u0026\\\\u0026 iA00 \\\\u003d\\\\u003d 4) {\\\\n                B35.A04(c9nj, 4);\\\\n                return c9nj;\\\\n            }\\\\n        }\\\\n        return c9nj;\\\\n    }\\\"}\"}],\"isError\":false}}]},\"normalized_result\":{\"engine\":{\"name\":\"jadx-headless-mcp\",\"version\":\"0.7.1\",\"artifact_sha256\":\"6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75\",\"source_revision\":\"5844800a486d2248fa949b74c9896285f5b54de2\",\"worker_count\":1,\"heap_limit_mib\":14968},\"class_name\":\"X.D9s\",\"method\":{\"name\":\"CF4\",\"reported_signature\":\"CF4(X.CoT): X.178\",\"overload_index\":0,\"is_constructor\":false,\"dex_descriptor\":null},\"overload_count\":1,\"representation\":\"java\",\"body_status\":\"available\",\"fell_back\":false,\"markers\":[],\"source\":{\"status\":\"complete\",\"text\":\"    /* JADX WARN: Code duplicated, block: B:8:0x0024  */\\n    @Override // X.DbV\\n    public AnonymousClass178 CF4(CoT coT) {\\n        int i;\\n        boolean z;\\n        C00h.A0A(coT, 0);\\n        if (Cbf.A01(coT) != C4F.A0D) {\\n            return null;\\n        }\\n        BZb bZbA02 = CoT.A02(coT);\\n        C1gc c1gc = coT.A0A;\\n        C9NJ c9nj = new C9NJ(c1gc, coT.A05);\\n        int i2 = bZbA02.ephemeralExpiration_;\\n        if (Integer.valueOf(i2) != null) {\\n            i = i2;\\n            if (i2 <= 0) {\\n                i = 0;\\n            }\\n        } else {\\n            i = 0;\\n        }\\n        c9nj.A01 = i;\\n        int i3 = bZbA02.afterReadDuration_;\\n        c9nj.A00 = i3;\\n        if (i3 > 0 && !C8kT.A1R(this.A00.A00)) {\\n            c9nj.A01 = 0;\\n            c9nj.A00 = 0;\\n        }\\n        UserJid userJidA0o = C1xf.A0o(c1gc.A00);\\n        if (userJidA0o != null) {\\n            C0Zi c0ZiA0J = C1xh.A0v(this.A01).A0J(userJidA0o);\\n            c9nj.A02 = c0ZiA0J != null ? c0ZiA0J.expiration : 0;\\n        }\\n        BW7 bw7 = bZbA02.disappearingMode_;\\n        if (bw7 == null) {\\n            bw7 = BW7.DEFAULT_INSTANCE;\\n        }\\n        C3j c3jForNumber = C3j.forNumber(bw7.trigger_);\\n        if (c3jForNumber == null) {\\n            c3jForNumber = C3j.A05;\\n        }\\n        int iA00 = Cbi.A00(c3jForNumber);\\n        if (i2 > 0) {\\n            B35.A04(c9nj, iA00);\\n            BW7 bw8 = bZbA02.disappearingMode_;\\n            if (bw8 == null) {\\n                bw8 = BW7.DEFAULT_INSTANCE;\\n            }\\n            boolean z2 = bw8.initiatedByMe_;\\n            B35.A06(c9nj, Boolean.valueOf(C1xi.A1R(c9nj.A0i.A02 ? 1 : 0, z2 ? 1 : 0)));\\n            BW7 bw9 = bZbA02.disappearingMode_;\\n            if (bw9 == null) {\\n                bw9 = BW7.DEFAULT_INSTANCE;\\n            }\\n            C39 c39ForNumber = C39.forNumber(bw9.initiator_);\\n            if (c39ForNumber == null) {\\n                c39ForNumber = C39.A02;\\n            }\\n            int number = c39ForNumber.getNumber();\\n            if (iA00 == 0) {\\n                if (number == 0) {\\n                    B35.A04(c9nj, 1);\\n                    B35.A06(c9nj, null);\\n                    return c9nj;\\n                }\\n                if (number == 1) {\\n                    B35.A04(c9nj, 2);\\n                    z = true;\\n                } else if (number == 2) {\\n                    B35.A04(c9nj, 2);\\n                    z = false;\\n                }\\n                B35.A06(c9nj, z);\\n            }\\n        } else {\\n            B35.A04(c9nj, 0);\\n            B35.A06(c9nj, null);\\n            if (i2 == 0 && iA00 == 4) {\\n                B35.A04(c9nj, 4);\\n                return c9nj;\\n            }\\n        }\\n        return c9nj;\\n    }\",\"reported_total_bytes\":null}},\"confidence\":\"derived\",\"authority\":\"shipped-artifact\",\"environment\":null,\"limitations\":[\"Static decompiler observations do not establish runtime behavior; the APK is never executed.\",\"Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.\",\"Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.\",\"Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider.\"],\"locations\":[],\"evidence_links\":[]}"
+    }
+  ],
+  "structuredContent": {
+    "evidence_id": "ev_c683b78a2bec5cd8348bbfc5615de678afc708a1238d5f41fc75d2bc1b2d013e",
+    "subject": {
+      "name": "WhatsApp.apk",
+      "digest": {
+        "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+      },
+      "format": "apk",
+      "architecture": null,
+      "local_path": "~/Downloads/WhatsApp.apk"
+    },
+    "provider": {
+      "id": "jadx",
+      "name": "JADX headless",
+      "version": "0.7.1"
+    },
+    "analysis_profile": null,
+    "predicate_type": "rea.analysis",
+    "operation": "inspect_android_method",
+    "parameters": {
+      "path": "~/Downloads/WhatsApp.apk",
+      "class_name": "X.D9s",
+      "method_name": "CF4"
+    },
+    "raw_result": {
+      "server": {
+        "name": "rea-jadx-bridge",
+        "version": "1"
+      },
+      "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+      "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "loaded": {
+        "state": "LOADED",
+        "apk_path": "/tmp/rea-android-qP901m/target.apk",
+        "class_count": 94738,
+        "resource_count": 14967,
+        "threads": 1,
+        "resources": "full"
+      },
+      "calls": [
+        {
+          "operation": "rea_jvm_status",
+          "input": {},
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\",\"max_heap_bytes\":15695085568,\"metadata_scope\":\"parsed_members\"}"
+              }
+            ],
+            "isError": false
+          }
+        },
+        {
+          "operation": "load_apk",
+          "input": {
+            "path": "/tmp/rea-android-qP901m/target.apk",
+            "threads": 1,
+            "resources": "full"
+          },
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-qP901m/target.apk\",\"class_count\":94738,\"raw_class_count\":94738,\"resource_count\":14967,\"load_duration_ms\":13912,\"decompile_timeout_ms\":90000,\"threads\":1,\"code_cache_size\":64,\"resources\":\"full\"}"
+              }
+            ]
+          }
+        },
+        {
+          "operation": "get_class_summary",
+          "input": {
+            "class_name": "X.D9s"
+          },
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"name\":\"D9s\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":3,\"methods\":[{\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true},{\"signature\":\"AD7(X.178, X.Cn6): void\",\"def_pos\":0,\"name\":\"AD7\",\"is_constructor\":false},{\"signature\":\"CF4(X.CoT): X.178\",\"def_pos\":0,\"name\":\"CF4\",\"is_constructor\":false}],\"fields\":[{\"type\":\"X.05B\",\"name\":\"A00\",\"def_pos\":0},{\"type\":\"X.05B\",\"name\":\"A01\",\"def_pos\":0}],\"field_count\":2,\"full_name\":\"X.D9s\"}"
+              }
+            ],
+            "isError": false
+          }
+        },
+        {
+          "operation": "get_method_body",
+          "input": {
+            "class_name": "X.D9s",
+            "method_name": "CF4",
+            "overload_index": 0,
+            "smali_fallback": true
+          },
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.D9s\",\"full_name\":\"X.D9s.CF4\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"CF4\",\"overload_count\":1,\"body\":\"    /* JADX WARN: Code duplicated, block: B:8:0x0024  */\\n    @Override // X.DbV\\n    public AnonymousClass178 CF4(CoT coT) {\\n        int i;\\n        boolean z;\\n        C00h.A0A(coT, 0);\\n        if (Cbf.A01(coT) !\\u003d C4F.A0D) {\\n            return null;\\n        }\\n        BZb bZbA02 \\u003d CoT.A02(coT);\\n        C1gc c1gc \\u003d coT.A0A;\\n        C9NJ c9nj \\u003d new C9NJ(c1gc, coT.A05);\\n        int i2 \\u003d bZbA02.ephemeralExpiration_;\\n        if (Integer.valueOf(i2) !\\u003d null) {\\n            i \\u003d i2;\\n            if (i2 \\u003c\\u003d 0) {\\n                i \\u003d 0;\\n            }\\n        } else {\\n            i \\u003d 0;\\n        }\\n        c9nj.A01 \\u003d i;\\n        int i3 \\u003d bZbA02.afterReadDuration_;\\n        c9nj.A00 \\u003d i3;\\n        if (i3 \\u003e 0 \\u0026\\u0026 !C8kT.A1R(this.A00.A00)) {\\n            c9nj.A01 \\u003d 0;\\n            c9nj.A00 \\u003d 0;\\n        }\\n        UserJid userJidA0o \\u003d C1xf.A0o(c1gc.A00);\\n        if (userJidA0o !\\u003d null) {\\n            C0Zi c0ZiA0J \\u003d C1xh.A0v(this.A01).A0J(userJidA0o);\\n            c9nj.A02 \\u003d c0ZiA0J !\\u003d null ? c0ZiA0J.expiration : 0;\\n        }\\n        BW7 bw7 \\u003d bZbA02.disappearingMode_;\\n        if (bw7 \\u003d\\u003d null) {\\n            bw7 \\u003d BW7.DEFAULT_INSTANCE;\\n        }\\n        C3j c3jForNumber \\u003d C3j.forNumber(bw7.trigger_);\\n        if (c3jForNumber \\u003d\\u003d null) {\\n            c3jForNumber \\u003d C3j.A05;\\n        }\\n        int iA00 \\u003d Cbi.A00(c3jForNumber);\\n        if (i2 \\u003e 0) {\\n            B35.A04(c9nj, iA00);\\n            BW7 bw8 \\u003d bZbA02.disappearingMode_;\\n            if (bw8 \\u003d\\u003d null) {\\n                bw8 \\u003d BW7.DEFAULT_INSTANCE;\\n            }\\n            boolean z2 \\u003d bw8.initiatedByMe_;\\n            B35.A06(c9nj, Boolean.valueOf(C1xi.A1R(c9nj.A0i.A02 ? 1 : 0, z2 ? 1 : 0)));\\n            BW7 bw9 \\u003d bZbA02.disappearingMode_;\\n            if (bw9 \\u003d\\u003d null) {\\n                bw9 \\u003d BW7.DEFAULT_INSTANCE;\\n            }\\n            C39 c39ForNumber \\u003d C39.forNumber(bw9.initiator_);\\n            if (c39ForNumber \\u003d\\u003d null) {\\n                c39ForNumber \\u003d C39.A02;\\n            }\\n            int number \\u003d c39ForNumber.getNumber();\\n            if (iA00 \\u003d\\u003d 0) {\\n                if (number \\u003d\\u003d 0) {\\n                    B35.A04(c9nj, 1);\\n                    B35.A06(c9nj, null);\\n                    return c9nj;\\n                }\\n                if (number \\u003d\\u003d 1) {\\n                    B35.A04(c9nj, 2);\\n                    z \\u003d true;\\n                } else if (number \\u003d\\u003d 2) {\\n                    B35.A04(c9nj, 2);\\n                    z \\u003d false;\\n                }\\n                B35.A06(c9nj, z);\\n            }\\n        } else {\\n            B35.A04(c9nj, 0);\\n            B35.A06(c9nj, null);\\n            if (i2 \\u003d\\u003d 0 \\u0026\\u0026 iA00 \\u003d\\u003d 4) {\\n                B35.A04(c9nj, 4);\\n                return c9nj;\\n            }\\n        }\\n        return c9nj;\\n    }\"}"
+              }
+            ],
+            "isError": false
+          }
+        }
+      ]
+    },
+    "normalized_result": {
+      "engine": {
+        "name": "jadx-headless-mcp",
+        "version": "0.7.1",
+        "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+        "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+        "worker_count": 1,
+        "heap_limit_mib": 14968
+      },
+      "class_name": "X.D9s",
+      "method": {
+        "name": "CF4",
+        "reported_signature": "CF4(X.CoT): X.178",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      "overload_count": 1,
+      "representation": "java",
+      "body_status": "available",
+      "fell_back": false,
+      "markers": [],
+      "source": {
+        "status": "complete",
+        "text": "    /* JADX WARN: Code duplicated, block: B:8:0x0024  */\n    @Override // X.DbV\n    public AnonymousClass178 CF4(CoT coT) {\n        int i;\n        boolean z;\n        C00h.A0A(coT, 0);\n        if (Cbf.A01(coT) != C4F.A0D) {\n            return null;\n        }\n        BZb bZbA02 = CoT.A02(coT);\n        C1gc c1gc = coT.A0A;\n        C9NJ c9nj = new C9NJ(c1gc, coT.A05);\n        int i2 = bZbA02.ephemeralExpiration_;\n        if (Integer.valueOf(i2) != null) {\n            i = i2;\n            if (i2 <= 0) {\n                i = 0;\n            }\n        } else {\n            i = 0;\n        }\n        c9nj.A01 = i;\n        int i3 = bZbA02.afterReadDuration_;\n        c9nj.A00 = i3;\n        if (i3 > 0 && !C8kT.A1R(this.A00.A00)) {\n            c9nj.A01 = 0;\n            c9nj.A00 = 0;\n        }\n        UserJid userJidA0o = C1xf.A0o(c1gc.A00);\n        if (userJidA0o != null) {\n            C0Zi c0ZiA0J = C1xh.A0v(this.A01).A0J(userJidA0o);\n            c9nj.A02 = c0ZiA0J != null ? c0ZiA0J.expiration : 0;\n        }\n        BW7 bw7 = bZbA02.disappearingMode_;\n        if (bw7 == null) {\n            bw7 = BW7.DEFAULT_INSTANCE;\n        }\n        C3j c3jForNumber = C3j.forNumber(bw7.trigger_);\n        if (c3jForNumber == null) {\n            c3jForNumber = C3j.A05;\n        }\n        int iA00 = Cbi.A00(c3jForNumber);\n        if (i2 > 0) {\n            B35.A04(c9nj, iA00);\n            BW7 bw8 = bZbA02.disappearingMode_;\n            if (bw8 == null) {\n                bw8 = BW7.DEFAULT_INSTANCE;\n            }\n            boolean z2 = bw8.initiatedByMe_;\n            B35.A06(c9nj, Boolean.valueOf(C1xi.A1R(c9nj.A0i.A02 ? 1 : 0, z2 ? 1 : 0)));\n            BW7 bw9 = bZbA02.disappearingMode_;\n            if (bw9 == null) {\n                bw9 = BW7.DEFAULT_INSTANCE;\n            }\n            C39 c39ForNumber = C39.forNumber(bw9.initiator_);\n            if (c39ForNumber == null) {\n                c39ForNumber = C39.A02;\n            }\n            int number = c39ForNumber.getNumber();\n            if (iA00 == 0) {\n                if (number == 0) {\n                    B35.A04(c9nj, 1);\n                    B35.A06(c9nj, null);\n                    return c9nj;\n                }\n                if (number == 1) {\n                    B35.A04(c9nj, 2);\n                    z = true;\n                } else if (number == 2) {\n                    B35.A04(c9nj, 2);\n                    z = false;\n                }\n                B35.A06(c9nj, z);\n            }\n        } else {\n            B35.A04(c9nj, 0);\n            B35.A06(c9nj, null);\n            if (i2 == 0 && iA00 == 4) {\n                B35.A04(c9nj, 4);\n                return c9nj;\n            }\n        }\n        return c9nj;\n    }",
+        "reported_total_bytes": null
+      }
+    },
+    "confidence": "derived",
+    "authority": "shipped-artifact",
+    "environment": null,
+    "limitations": [
+      "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+      "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+      "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+      "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+    ],
+    "locations": [],
+    "evidence_links": []
+  }
+}

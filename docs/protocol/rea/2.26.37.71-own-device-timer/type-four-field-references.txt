@@ -1,0 +1,8 @@
+classes7.dex  LX/C4F;-><clinit>(V)
+  write opcode 0x69, dex byte offset: 0x3a3334
+classes7.dex  LX/C4F;->forNumber(LI)
+  read opcode 0x62, dex byte offset: 0x579cc6
+classes7.dex  LX/D9i;->AD7(VLL)
+  read opcode 0x62, dex byte offset: 0x770126
+classes7.dex  LX/D9i;->CF4(LL)
+  read opcode 0x62, dex byte offset: 0x7701ac

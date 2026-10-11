@@ -1,0 +1,152 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"evidence_id\":\"ev_b764b70fd97a3ae5ec59ab6d7313e70eca9b28b4137d06824999d330a07c089a\",\"subject\":{\"name\":\"WhatsApp.apk\",\"digest\":{\"sha256\":\"1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c\"},\"format\":\"apk\",\"architecture\":null,\"local_path\":\"~/Downloads/WhatsApp.apk\"},\"provider\":{\"id\":\"jadx\",\"name\":\"JADX headless\",\"version\":\"0.7.1\"},\"analysis_profile\":null,\"predicate_type\":\"rea.analysis\",\"operation\":\"inspect_android_method\",\"parameters\":{\"path\":\"~/Downloads/WhatsApp.apk\",\"class_name\":\"X.BW7\",\"method_name\":\"dynamicMethod\"},\"raw_result\":{\"server\":{\"name\":\"rea-jadx-bridge\",\"version\":\"1\"},\"bridge_sha256\":\"5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1\",\"jar_sha256\":\"6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75\",\"loaded\":{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-WWWBPa/target.apk\",\"class_count\":94738,\"resource_count\":14967,\"threads\":1,\"resources\":\"full\"},\"calls\":[{\"operation\":\"rea_jvm_status\",\"input\":{},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"engine_reported_version\\\":\\\"0.7.1\\\",\\\"available_processors\\\":24,\\\"java_version\\\":\\\"21.0.12.1\\\",\\\"max_heap_bytes\\\":15695085568,\\\"metadata_scope\\\":\\\"parsed_members\\\"}\"}],\"isError\":false}},{\"operation\":\"load_apk\",\"input\":{\"path\":\"/tmp/rea-android-WWWBPa/target.apk\",\"threads\":1,\"resources\":\"full\"},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"state\\\":\\\"LOADED\\\",\\\"apk_path\\\":\\\"/tmp/rea-android-WWWBPa/target.apk\\\",\\\"class_count\\\":94738,\\\"raw_class_count\\\":94738,\\\"resource_count\\\":14967,\\\"load_duration_ms\\\":13952,\\\"decompile_timeout_ms\\\":90000,\\\"threads\\\":1,\\\"code_cache_size\\\":64,\\\"resources\\\":\\\"full\\\"}\"}]}},{\"operation\":\"get_class_summary\",\"input\":{\"class_name\":\"X.BW7\"},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"field_count\\\":11,\\\"full_name\\\":\\\"X.BW7\\\",\\\"name\\\":\\\"BW7\\\",\\\"inner_classes\\\":[],\\\"inner_class_count\\\":0,\\\"method_count\\\":4,\\\"methods\\\":[{\\\"is_constructor\\\":false,\\\"signature\\\":\\\"\\\\u003cclinit\\\\u003e(): void\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"\\\\u003cclinit\\\\u003e\\\"},{\\\"is_constructor\\\":true,\\\"signature\\\":\\\"\\\\u003cinit\\\\u003e(): void\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"\\\\u003cinit\\\\u003e\\\"},{\\\"is_constructor\\\":false,\\\"signature\\\":\\\"dynamicMethod(com.google.protobuf.GeneratedMessageLite$MethodToInvoke, java.lang.Object, java.lang.Object): java.lang.Object\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"dynamicMethod\\\"},{\\\"is_constructor\\\":false,\\\"signature\\\":\\\"parseFrom(java.nio.ByteBuffer): X.BW7\\\",\\\"def_pos\\\":0,\\\"name\\\":\\\"parseFrom\\\"}],\\\"fields\\\":[{\\\"def_pos\\\":0,\\\"type\\\":\\\"X.BW7\\\",\\\"name\\\":\\\"DEFAULT_INSTANCE\\\"},{\\\"def_pos\\\":0,\\\"type\\\":\\\"int\\\",\\\"name\\\":\\\"INITIATED_BY_ME_FIELD_NUMBER\\\"},{\\\"def_pos\\\":0,\\\"type\\\":\\\"int\\\",\\\"name\\\":\\\"INITIATOR_DEVICE_JID_FIELD_NUMBER\\\"},{\\\"def_pos\\\":0,\\\"type\\\":\\\"int\\\",\\\"name\\\":\\\"INITIATOR_FIELD_NUMBER\\\"},{\\\"def_pos\\\":0,\\\"type\\\":\\\"com.google.protobuf.Parser\\\",\\\"name\\\":\\\"PARSER\\\"},{\\\"def_pos\\\":0,\\\"type\\\":\\\"int\\\",\\\"name\\\":\\\"TRIGGER_FIELD_NUMBER\\\"},{\\\"def_pos\\\":0,\\\"type\\\":\\\"int\\\",\\\"name\\\":\\\"bitField0_\\\"},{\\\"def_pos\\\":0,\\\"type\\\":\\\"boolean\\\",\\\"name\\\":\\\"initiatedByMe_\\\"},{\\\"def_pos\\\":0,\\\"type\\\":\\\"java.lang.String\\\",\\\"name\\\":\\\"initiatorDeviceJid_\\\"},{\\\"def_pos\\\":0,\\\"type\\\":\\\"int\\\",\\\"name\\\":\\\"initiator_\\\"},{\\\"def_pos\\\":0,\\\"type\\\":\\\"int\\\",\\\"name\\\":\\\"trigger_\\\"}]}\"}],\"isError\":false}},{\"operation\":\"get_method_body\",\"input\":{\"class_name\":\"X.BW7\",\"method_name\":\"dynamicMethod\",\"overload_index\":0,\"smali_fallback\":true},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"body\\\":\\\"    @Override // com.google.protobuf.GeneratedMessageLite\\\\n    public final Object dynamicMethod(GeneratedMessageLite.MethodToInvoke methodToInvoke, Object obj, Object obj2) {\\\\n        Parser parserA0M;\\\\n        switch (methodToInvoke) {\\\\n            case GET_MEMOIZED_IS_INITIALIZED:\\\\n                return (byte) 1;\\\\n            case SET_MEMOIZED_IS_INITIALIZED:\\\\n                return null;\\\\n            case BUILD_MESSAGE_INFO:\\\\n                Internal.EnumVerifier enumVerifier \\\\u003d Cux.A00;\\\\n                Internal.EnumVerifier enumVerifier2 \\\\u003d Cuy.A00;\\\\n                Object[] objArr \\\\u003d new Object[7];\\\\n                C6al.A1W(objArr);\\\\n                C6aj.A1V(\\\\\\\"initiator_\\\\\\\", enumVerifier, objArr, 1);\\\\n                C1xi.A1M(\\\\\\\"trigger_\\\\\\\", enumVerifier2, objArr);\\\\n                objArr[5] \\\\u003d \\\\\\\"initiatorDeviceJid_\\\\\\\";\\\\n                objArr[6] \\\\u003d \\\\\\\"initiatedByMe_\\\\\\\";\\\\n                return GeneratedMessageLite.newMessageInfo(DEFAULT_INSTANCE, \\\\\\\"\\\\\\\\u0001\\\\\\\\u0004\\\\\\\\u0000\\\\\\\\u0001\\\\\\\\u0001\\\\\\\\u0004\\\\\\\\u0004\\\\\\\\u0000\\\\\\\\u0000\\\\\\\\u0000\\\\\\\\u0001᠌\\\\\\\\u0000\\\\\\\\u0002᠌\\\\\\\\u0001\\\\\\\\u0003ဈ\\\\\\\\u0002\\\\\\\\u0004ဇ\\\\\\\\u0003\\\\\\\", objArr);\\\\n            case NEW_MUTABLE_INSTANCE:\\\\n                return new BW7();\\\\n            case NEW_BUILDER:\\\\n                return new BNw();\\\\n            case GET_DEFAULT_INSTANCE:\\\\n                return DEFAULT_INSTANCE;\\\\n            case GET_PARSER:\\\\n                Parser parser \\\\u003d PARSER;\\\\n                if (parser !\\\\u003d null) {\\\\n                    return parser;\\\\n                }\\\\n                synchronized (BW7.class) {\\\\n                    parserA0M \\\\u003d PARSER;\\\\n                    if (parserA0M \\\\u003d\\\\u003d null) {\\\\n                        ExtensionRegistryLite extensionRegistryLite \\\\u003d AbstractParser.EMPTY_REGISTRY;\\\\n                        parserA0M \\\\u003d C6ak.A0M(DEFAULT_INSTANCE);\\\\n                        PARSER \\\\u003d parserA0M;\\\\n                    }\\\\n                    break;\\\\n                }\\\\n                return parserA0M;\\\\n            default:\\\\n                throw C6aj.A1C();\\\\n        }\\\\n    }\\\",\\\"fell_back\\\":false,\\\"overload_index\\\":0,\\\"class_name\\\":\\\"X.BW7\\\",\\\"full_name\\\":\\\"X.BW7.dynamicMethod\\\",\\\"mode\\\":\\\"java\\\",\\\"markers\\\":[],\\\"method_name\\\":\\\"dynamicMethod\\\",\\\"overload_count\\\":1}\"}],\"isError\":false}}]},\"normalized_result\":{\"engine\":{\"name\":\"jadx-headless-mcp\",\"version\":\"0.7.1\",\"artifact_sha256\":\"6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75\",\"source_revision\":\"5844800a486d2248fa949b74c9896285f5b54de2\",\"worker_count\":1,\"heap_limit_mib\":14968},\"class_name\":\"X.BW7\",\"method\":{\"name\":\"dynamicMethod\",\"reported_signature\":\"dynamicMethod(com.google.protobuf.GeneratedMessageLite$MethodToInvoke, java.lang.Object, java.lang.Object): java.lang.Object\",\"overload_index\":0,\"is_constructor\":false,\"dex_descriptor\":null},\"overload_count\":1,\"representation\":\"java\",\"body_status\":\"available\",\"fell_back\":false,\"markers\":[],\"source\":{\"status\":\"complete\",\"text\":\"    @Override // com.google.protobuf.GeneratedMessageLite\\n    public final Object dynamicMethod(GeneratedMessageLite.MethodToInvoke methodToInvoke, Object obj, Object obj2) {\\n        Parser parserA0M;\\n        switch (methodToInvoke) {\\n            case GET_MEMOIZED_IS_INITIALIZED:\\n                return (byte) 1;\\n            case SET_MEMOIZED_IS_INITIALIZED:\\n                return null;\\n            case BUILD_MESSAGE_INFO:\\n                Internal.EnumVerifier enumVerifier = Cux.A00;\\n                Internal.EnumVerifier enumVerifier2 = Cuy.A00;\\n                Object[] objArr = new Object[7];\\n                C6al.A1W(objArr);\\n                C6aj.A1V(\\\"initiator_\\\", enumVerifier, objArr, 1);\\n                C1xi.A1M(\\\"trigger_\\\", enumVerifier2, objArr);\\n                objArr[5] = \\\"initiatorDeviceJid_\\\";\\n                objArr[6] = \\\"initiatedByMe_\\\";\\n                return GeneratedMessageLite.newMessageInfo(DEFAULT_INSTANCE, \\\"\\\\u0001\\\\u0004\\\\u0000\\\\u0001\\\\u0001\\\\u0004\\\\u0004\\\\u0000\\\\u0000\\\\u0000\\\\u0001᠌\\\\u0000\\\\u0002᠌\\\\u0001\\\\u0003ဈ\\\\u0002\\\\u0004ဇ\\\\u0003\\\", objArr);\\n            case NEW_MUTABLE_INSTANCE:\\n                return new BW7();\\n            case NEW_BUILDER:\\n                return new BNw();\\n            case GET_DEFAULT_INSTANCE:\\n                return DEFAULT_INSTANCE;\\n            case GET_PARSER:\\n                Parser parser = PARSER;\\n                if (parser != null) {\\n                    return parser;\\n                }\\n                synchronized (BW7.class) {\\n                    parserA0M = PARSER;\\n                    if (parserA0M == null) {\\n                        ExtensionRegistryLite extensionRegistryLite = AbstractParser.EMPTY_REGISTRY;\\n                        parserA0M = C6ak.A0M(DEFAULT_INSTANCE);\\n                        PARSER = parserA0M;\\n                    }\\n                    break;\\n                }\\n                return parserA0M;\\n            default:\\n                throw C6aj.A1C();\\n        }\\n    }\",\"reported_total_bytes\":null}},\"confidence\":\"derived\",\"authority\":\"shipped-artifact\",\"environment\":null,\"limitations\":[\"Static decompiler observations do not establish runtime behavior; the APK is never executed.\",\"Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.\",\"Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.\",\"Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider.\"],\"locations\":[],\"evidence_links\":[]}"
+    }
+  ],
+  "structuredContent": {
+    "evidence_id": "ev_b764b70fd97a3ae5ec59ab6d7313e70eca9b28b4137d06824999d330a07c089a",
+    "subject": {
+      "name": "WhatsApp.apk",
+      "digest": {
+        "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+      },
+      "format": "apk",
+      "architecture": null,
+      "local_path": "~/Downloads/WhatsApp.apk"
+    },
+    "provider": {
+      "id": "jadx",
+      "name": "JADX headless",
+      "version": "0.7.1"
+    },
+    "analysis_profile": null,
+    "predicate_type": "rea.analysis",
+    "operation": "inspect_android_method",
+    "parameters": {
+      "path": "~/Downloads/WhatsApp.apk",
+      "class_name": "X.BW7",
+      "method_name": "dynamicMethod"
+    },
+    "raw_result": {
+      "server": {
+        "name": "rea-jadx-bridge",
+        "version": "1"
+      },
+      "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+      "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "loaded": {
+        "state": "LOADED",
+        "apk_path": "/tmp/rea-android-WWWBPa/target.apk",
+        "class_count": 94738,
+        "resource_count": 14967,
+        "threads": 1,
+        "resources": "full"
+      },
+      "calls": [
+        {
+          "operation": "rea_jvm_status",
+          "input": {},
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\",\"max_heap_bytes\":15695085568,\"metadata_scope\":\"parsed_members\"}"
+              }
+            ],
+            "isError": false
+          }
+        },
+        {
+          "operation": "load_apk",
+          "input": {
+            "path": "/tmp/rea-android-WWWBPa/target.apk",
+            "threads": 1,
+            "resources": "full"
+          },
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-WWWBPa/target.apk\",\"class_count\":94738,\"raw_class_count\":94738,\"resource_count\":14967,\"load_duration_ms\":13952,\"decompile_timeout_ms\":90000,\"threads\":1,\"code_cache_size\":64,\"resources\":\"full\"}"
+              }
+            ]
+          }
+        },
+        {
+          "operation": "get_class_summary",
+          "input": {
+            "class_name": "X.BW7"
+          },
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"field_count\":11,\"full_name\":\"X.BW7\",\"name\":\"BW7\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":4,\"methods\":[{\"is_constructor\":false,\"signature\":\"\\u003cclinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cclinit\\u003e\"},{\"is_constructor\":true,\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\"},{\"is_constructor\":false,\"signature\":\"dynamicMethod(com.google.protobuf.GeneratedMessageLite$MethodToInvoke, java.lang.Object, java.lang.Object): java.lang.Object\",\"def_pos\":0,\"name\":\"dynamicMethod\"},{\"is_constructor\":false,\"signature\":\"parseFrom(java.nio.ByteBuffer): X.BW7\",\"def_pos\":0,\"name\":\"parseFrom\"}],\"fields\":[{\"def_pos\":0,\"type\":\"X.BW7\",\"name\":\"DEFAULT_INSTANCE\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"INITIATED_BY_ME_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"INITIATOR_DEVICE_JID_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"INITIATOR_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"com.google.protobuf.Parser\",\"name\":\"PARSER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"TRIGGER_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"bitField0_\"},{\"def_pos\":0,\"type\":\"boolean\",\"name\":\"initiatedByMe_\"},{\"def_pos\":0,\"type\":\"java.lang.String\",\"name\":\"initiatorDeviceJid_\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"initiator_\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"trigger_\"}]}"
+              }
+            ],
+            "isError": false
+          }
+        },
+        {
+          "operation": "get_method_body",
+          "input": {
+            "class_name": "X.BW7",
+            "method_name": "dynamicMethod",
+            "overload_index": 0,
+            "smali_fallback": true
+          },
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"body\":\"    @Override // com.google.protobuf.GeneratedMessageLite\\n    public final Object dynamicMethod(GeneratedMessageLite.MethodToInvoke methodToInvoke, Object obj, Object obj2) {\\n        Parser parserA0M;\\n        switch (methodToInvoke) {\\n            case GET_MEMOIZED_IS_INITIALIZED:\\n                return (byte) 1;\\n            case SET_MEMOIZED_IS_INITIALIZED:\\n                return null;\\n            case BUILD_MESSAGE_INFO:\\n                Internal.EnumVerifier enumVerifier \\u003d Cux.A00;\\n                Internal.EnumVerifier enumVerifier2 \\u003d Cuy.A00;\\n                Object[] objArr \\u003d new Object[7];\\n                C6al.A1W(objArr);\\n                C6aj.A1V(\\\"initiator_\\\", enumVerifier, objArr, 1);\\n                C1xi.A1M(\\\"trigger_\\\", enumVerifier2, objArr);\\n                objArr[5] \\u003d \\\"initiatorDeviceJid_\\\";\\n                objArr[6] \\u003d \\\"initiatedByMe_\\\";\\n                return GeneratedMessageLite.newMessageInfo(DEFAULT_INSTANCE, \\\"\\\\u0001\\\\u0004\\\\u0000\\\\u0001\\\\u0001\\\\u0004\\\\u0004\\\\u0000\\\\u0000\\\\u0000\\\\u0001᠌\\\\u0000\\\\u0002᠌\\\\u0001\\\\u0003ဈ\\\\u0002\\\\u0004ဇ\\\\u0003\\\", objArr);\\n            case NEW_MUTABLE_INSTANCE:\\n                return new BW7();\\n            case NEW_BUILDER:\\n                return new BNw();\\n            case GET_DEFAULT_INSTANCE:\\n                return DEFAULT_INSTANCE;\\n            case GET_PARSER:\\n                Parser parser \\u003d PARSER;\\n                if (parser !\\u003d null) {\\n                    return parser;\\n                }\\n                synchronized (BW7.class) {\\n                    parserA0M \\u003d PARSER;\\n                    if (parserA0M \\u003d\\u003d null) {\\n                        ExtensionRegistryLite extensionRegistryLite \\u003d AbstractParser.EMPTY_REGISTRY;\\n                        parserA0M \\u003d C6ak.A0M(DEFAULT_INSTANCE);\\n                        PARSER \\u003d parserA0M;\\n                    }\\n                    break;\\n                }\\n                return parserA0M;\\n            default:\\n                throw C6aj.A1C();\\n        }\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.BW7\",\"full_name\":\"X.BW7.dynamicMethod\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"dynamicMethod\",\"overload_count\":1}"
+              }
+            ],
+            "isError": false
+          }
+        }
+      ]
+    },
+    "normalized_result": {
+      "engine": {
+        "name": "jadx-headless-mcp",
+        "version": "0.7.1",
+        "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+        "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+        "worker_count": 1,
+        "heap_limit_mib": 14968
+      },
+      "class_name": "X.BW7",
+      "method": {
+        "name": "dynamicMethod",
+        "reported_signature": "dynamicMethod(com.google.protobuf.GeneratedMessageLite$MethodToInvoke, java.lang.Object, java.lang.Object): java.lang.Object",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      "overload_count": 1,
+      "representation": "java",
+      "body_status": "available",
+      "fell_back": false,
+      "markers": [],
+      "source": {
+        "status": "complete",
+        "text": "    @Override // com.google.protobuf.GeneratedMessageLite\n    public final Object dynamicMethod(GeneratedMessageLite.MethodToInvoke methodToInvoke, Object obj, Object obj2) {\n        Parser parserA0M;\n        switch (methodToInvoke) {\n            case GET_MEMOIZED_IS_INITIALIZED:\n                return (byte) 1;\n            case SET_MEMOIZED_IS_INITIALIZED:\n                return null;\n            case BUILD_MESSAGE_INFO:\n                Internal.EnumVerifier enumVerifier = Cux.A00;\n                Internal.EnumVerifier enumVerifier2 = Cuy.A00;\n                Object[] objArr = new Object[7];\n                C6al.A1W(objArr);\n                C6aj.A1V(\"initiator_\", enumVerifier, objArr, 1);\n                C1xi.A1M(\"trigger_\", enumVerifier2, objArr);\n                objArr[5] = \"initiatorDeviceJid_\";\n                objArr[6] = \"initiatedByMe_\";\n                return GeneratedMessageLite.newMessageInfo(DEFAULT_INSTANCE, \"\\u0001\\u0004\\u0000\\u0001\\u0001\\u0004\\u0004\\u0000\\u0000\\u0000\\u0001᠌\\u0000\\u0002᠌\\u0001\\u0003ဈ\\u0002\\u0004ဇ\\u0003\", objArr);\n            case NEW_MUTABLE_INSTANCE:\n                return new BW7();\n            case NEW_BUILDER:\n                return new BNw();\n            case GET_DEFAULT_INSTANCE:\n                return DEFAULT_INSTANCE;\n            case GET_PARSER:\n                Parser parser = PARSER;\n                if (parser != null) {\n                    return parser;\n                }\n                synchronized (BW7.class) {\n                    parserA0M = PARSER;\n                    if (parserA0M == null) {\n                        ExtensionRegistryLite extensionRegistryLite = AbstractParser.EMPTY_REGISTRY;\n                        parserA0M = C6ak.A0M(DEFAULT_INSTANCE);\n                        PARSER = parserA0M;\n                    }\n                    break;\n                }\n                return parserA0M;\n            default:\n                throw C6aj.A1C();\n        }\n    }",
+        "reported_total_bytes": null
+      }
+    },
+    "confidence": "derived",
+    "authority": "shipped-artifact",
+    "environment": null,
+    "limitations": [
+      "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+      "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+      "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+      "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+    ],
+    "locations": [],
+    "evidence_links": []
+  }
+}

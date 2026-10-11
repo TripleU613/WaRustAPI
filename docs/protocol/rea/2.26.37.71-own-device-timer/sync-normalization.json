@@ -1,0 +1,136 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"evidence_id\":\"ev_29c5479a53065120ede43e7c57e2235537775fab48836557202d6fd98dc9e06e\",\"subject\":{\"name\":\"WhatsApp.apk\",\"digest\":{\"sha256\":\"1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c\"},\"format\":\"apk\",\"architecture\":null,\"local_path\":\"~/Downloads/WhatsApp.apk\"},\"provider\":{\"id\":\"jadx\",\"name\":\"JADX headless\",\"version\":\"0.7.1\"},\"analysis_profile\":null,\"predicate_type\":\"rea.analysis\",\"operation\":\"inspect_android_method\",\"parameters\":{\"path\":\"~/Downloads/WhatsApp.apk\",\"class_name\":\"X.Bn8\",\"method_name\":\"A0q\"},\"raw_result\":{\"server\":{\"name\":\"rea-jadx-bridge\",\"version\":\"1\"},\"bridge_sha256\":\"5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1\",\"jar_sha256\":\"6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75\",\"loaded\":{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-hhb7eE/target.apk\",\"class_count\":94738,\"resource_count\":14967,\"threads\":1,\"resources\":\"full\"},\"calls\":[{\"operation\":\"rea_jvm_status\",\"input\":{},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"java_version\\\":\\\"21.0.12.1\\\",\\\"available_processors\\\":24,\\\"engine_reported_version\\\":\\\"0.7.1\\\",\\\"metadata_scope\\\":\\\"parsed_members\\\",\\\"max_heap_bytes\\\":15695085568}\"}],\"isError\":false}},{\"operation\":\"get_class_summary\",\"input\":{\"class_name\":\"X.Bn8\"},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"inner_class_count\\\":0,\\\"inner_classes\\\":[],\\\"name\\\":\\\"Bn8\\\",\\\"full_name\\\":\\\"X.Bn8\\\",\\\"field_count\\\":3,\\\"fields\\\":[{\\\"def_pos\\\":0,\\\"name\\\":\\\"A00\\\",\\\"type\\\":\\\"int\\\"},{\\\"def_pos\\\":0,\\\"name\\\":\\\"A01\\\",\\\"type\\\":\\\"int\\\"},{\\\"def_pos\\\":0,\\\"name\\\":\\\"A02\\\",\\\"type\\\":\\\"com.whatsapp.infra.core.jid.DeviceJid\\\"}],\\\"methods\\\":[{\\\"is_constructor\\\":false,\\\"name\\\":\\\"A0J\\\",\\\"def_pos\\\":0,\\\"signature\\\":\\\"A0J(long): void\\\"},{\\\"is_constructor\\\":false,\\\"name\\\":\\\"A0m\\\",\\\"def_pos\\\":0,\\\"signature\\\":\\\"A0m(): boolean\\\"},{\\\"is_constructor\\\":false,\\\"name\\\":\\\"A0n\\\",\\\"def_pos\\\":0,\\\"signature\\\":\\\"A0n(): boolean\\\"},{\\\"is_constructor\\\":false,\\\"name\\\":\\\"A0o\\\",\\\"def_pos\\\":0,\\\"signature\\\":\\\"A0o(): boolean\\\"},{\\\"is_constructor\\\":false,\\\"name\\\":\\\"A0p\\\",\\\"def_pos\\\":0,\\\"signature\\\":\\\"A0p(): long\\\"},{\\\"is_constructor\\\":false,\\\"name\\\":\\\"A0q\\\",\\\"def_pos\\\":0,\\\"signature\\\":\\\"A0q(java.lang.Integer): void\\\"},{\\\"is_constructor\\\":false,\\\"name\\\":\\\"ATi\\\",\\\"def_pos\\\":0,\\\"signature\\\":\\\"ATi(): java.lang.String\\\"}],\\\"method_count\\\":7}\"}],\"isError\":false}},{\"operation\":\"get_method_body\",\"input\":{\"class_name\":\"X.Bn8\",\"method_name\":\"A0q\",\"overload_index\":0,\"smali_fallback\":true},\"response\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"class_name\\\":\\\"X.Bn8\\\",\\\"overload_index\\\":0,\\\"fell_back\\\":false,\\\"body\\\":\\\"    public final void A0q(Integer num) {\\\\n        if (num \\\\u003d\\\\u003d null || num.intValue() \\\\u003c\\\\u003d 0) {\\\\n            num \\\\u003d C1xl.A0q();\\\\n        }\\\\n        this.A01 \\\\u003d num.intValue();\\\\n    }\\\",\\\"overload_count\\\":1,\\\"method_name\\\":\\\"A0q\\\",\\\"markers\\\":[],\\\"mode\\\":\\\"java\\\",\\\"full_name\\\":\\\"X.Bn8.A0q\\\"}\"}],\"isError\":false}}]},\"normalized_result\":{\"engine\":{\"name\":\"jadx-headless-mcp\",\"version\":\"0.7.1\",\"artifact_sha256\":\"6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75\",\"source_revision\":\"5844800a486d2248fa949b74c9896285f5b54de2\",\"worker_count\":1,\"heap_limit_mib\":14968},\"class_name\":\"X.Bn8\",\"method\":{\"name\":\"A0q\",\"reported_signature\":\"A0q(java.lang.Integer): void\",\"overload_index\":0,\"is_constructor\":false,\"dex_descriptor\":null},\"overload_count\":1,\"representation\":\"java\",\"body_status\":\"available\",\"fell_back\":false,\"markers\":[],\"source\":{\"status\":\"complete\",\"text\":\"    public final void A0q(Integer num) {\\n        if (num == null || num.intValue() <= 0) {\\n            num = C1xl.A0q();\\n        }\\n        this.A01 = num.intValue();\\n    }\",\"reported_total_bytes\":null}},\"confidence\":\"derived\",\"authority\":\"shipped-artifact\",\"environment\":null,\"limitations\":[\"Static decompiler observations do not establish runtime behavior; the APK is never executed.\",\"Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.\",\"Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.\",\"Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider.\"],\"locations\":[],\"evidence_links\":[]}"
+    }
+  ],
+  "structuredContent": {
+    "evidence_id": "ev_29c5479a53065120ede43e7c57e2235537775fab48836557202d6fd98dc9e06e",
+    "subject": {
+      "name": "WhatsApp.apk",
+      "digest": {
+        "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+      },
+      "format": "apk",
+      "architecture": null,
+      "local_path": "~/Downloads/WhatsApp.apk"
+    },
+    "provider": {
+      "id": "jadx",
+      "name": "JADX headless",
+      "version": "0.7.1"
+    },
+    "analysis_profile": null,
+    "predicate_type": "rea.analysis",
+    "operation": "inspect_android_method",
+    "parameters": {
+      "path": "~/Downloads/WhatsApp.apk",
+      "class_name": "X.Bn8",
+      "method_name": "A0q"
+    },
+    "raw_result": {
+      "server": {
+        "name": "rea-jadx-bridge",
+        "version": "1"
+      },
+      "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+      "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "loaded": {
+        "state": "LOADED",
+        "apk_path": "/tmp/rea-android-hhb7eE/target.apk",
+        "class_count": 94738,
+        "resource_count": 14967,
+        "threads": 1,
+        "resources": "full"
+      },
+      "calls": [
+        {
+          "operation": "rea_jvm_status",
+          "input": {},
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"java_version\":\"21.0.12.1\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":15695085568}"
+              }
+            ],
+            "isError": false
+          }
+        },
+        {
+          "operation": "get_class_summary",
+          "input": {
+            "class_name": "X.Bn8"
+          },
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"Bn8\",\"full_name\":\"X.Bn8\",\"field_count\":3,\"fields\":[{\"def_pos\":0,\"name\":\"A00\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"A01\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"A02\",\"type\":\"com.whatsapp.infra.core.jid.DeviceJid\"}],\"methods\":[{\"is_constructor\":false,\"name\":\"A0J\",\"def_pos\":0,\"signature\":\"A0J(long): void\"},{\"is_constructor\":false,\"name\":\"A0m\",\"def_pos\":0,\"signature\":\"A0m(): boolean\"},{\"is_constructor\":false,\"name\":\"A0n\",\"def_pos\":0,\"signature\":\"A0n(): boolean\"},{\"is_constructor\":false,\"name\":\"A0o\",\"def_pos\":0,\"signature\":\"A0o(): boolean\"},{\"is_constructor\":false,\"name\":\"A0p\",\"def_pos\":0,\"signature\":\"A0p(): long\"},{\"is_constructor\":false,\"name\":\"A0q\",\"def_pos\":0,\"signature\":\"A0q(java.lang.Integer): void\"},{\"is_constructor\":false,\"name\":\"ATi\",\"def_pos\":0,\"signature\":\"ATi(): java.lang.String\"}],\"method_count\":7}"
+              }
+            ],
+            "isError": false
+          }
+        },
+        {
+          "operation": "get_method_body",
+          "input": {
+            "class_name": "X.Bn8",
+            "method_name": "A0q",
+            "overload_index": 0,
+            "smali_fallback": true
+          },
+          "response": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"class_name\":\"X.Bn8\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public final void A0q(Integer num) {\\n        if (num \\u003d\\u003d null || num.intValue() \\u003c\\u003d 0) {\\n            num \\u003d C1xl.A0q();\\n        }\\n        this.A01 \\u003d num.intValue();\\n    }\",\"overload_count\":1,\"method_name\":\"A0q\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.Bn8.A0q\"}"
+              }
+            ],
+            "isError": false
+          }
+        }
+      ]
+    },
+    "normalized_result": {
+      "engine": {
+        "name": "jadx-headless-mcp",
+        "version": "0.7.1",
+        "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+        "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+        "worker_count": 1,
+        "heap_limit_mib": 14968
+      },
+      "class_name": "X.Bn8",
+      "method": {
+        "name": "A0q",
+        "reported_signature": "A0q(java.lang.Integer): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": null
+      },
+      "overload_count": 1,
+      "representation": "java",
+      "body_status": "available",
+      "fell_back": false,
+      "markers": [],
+      "source": {
+        "status": "complete",
+        "text": "    public final void A0q(Integer num) {\n        if (num == null || num.intValue() <= 0) {\n            num = C1xl.A0q();\n        }\n        this.A01 = num.intValue();\n    }",
+        "reported_total_bytes": null
+      }
+    },
+    "confidence": "derived",
+    "authority": "shipped-artifact",
+    "environment": null,
+    "limitations": [
+      "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+      "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+      "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+      "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+    ],
+    "locations": [],
+    "evidence_links": []
+  }
+}

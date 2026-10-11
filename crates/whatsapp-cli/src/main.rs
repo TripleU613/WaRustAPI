@@ -471,7 +471,7 @@ enum Cmd {
         /// Chat JID.
         #[arg(long)]
         chat: String,
-        /// New timer in seconds (0 = off; the UI offers 0, 86400, 604800, 7776000).
+        /// New timer in seconds, 0..2147483647 (0 = off; UI: 86400, 604800, 7776000).
         #[arg(long)]
         seconds: u32,
         /// Caller idempotency key; defaults to a chat/timer digest (no phone number).

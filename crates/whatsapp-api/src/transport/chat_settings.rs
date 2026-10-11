@@ -6,9 +6,8 @@
 //! * `ProtocolMessage` (`Message.protocolMessage`, field 12; `LX/BZb`
 //!   descriptor, confirmed): `key`=1 (reuses `super::reactions::Key`),
 //!   `type`=2, `ephemeralExpiration`=4 (uint32 seconds), `ephemeralSettingTimestamp`=5,
-//!   `disappearingMode`=11 (`initiator`=1, `trigger`=2, `initiatedByMe`=3 —
-//!   **inferred** field numbers, consistent with the public schema; not
-//!   independently confirmed against the descriptor dump), `limitSharing`=24
+//!   `disappearingMode`=11 (`initiator`=1, `trigger`=2, `initiatorDeviceJid`=3,
+//!   `initiatedByMe`=4 — confirmed against the current BW7 descriptor), `limitSharing`=24
 //!   (`sharingLimited`=1 bool, `trigger`=2 enum, `limitSharingSettingTimestamp`=3
 //!   int64, `initiatedByMe`=4 bool — confirmed, `LX/BWR`), `afterReadDuration`=29,
 //!   `acp2Setting`=35 (`enabled`=1 bool, `trigger`=2 enum, `settingTimestamp`=3
@@ -52,9 +51,9 @@ pub const KEEP_FOR_ALL: i32 = 1;
 pub const UNDO_KEEP_FOR_ALL: i32 = 2;
 
 /// Disappearing timer values the official UI offers, plus `0` (off). Any
-/// `u32` is accepted by [`disappearing_payload`]/decoding: the protocol field
-/// itself carries whatever value is sent (chat-actions.md §3, "inferred from
-/// the observed 7776000 on live traffic").
+/// `u32` can be encoded by the raw [`disappearing_payload`] codec. Native
+/// builders interpret its bits as a Java int and clamp nonpositive values
+/// to zero; normal intents require the nonnegative signed range.
 pub const UI_TIMER_VALUES: [u32; 4] = [0, 86_400, 604_800, 7_776_000];
 
 fn invalid(reason: &'static str) -> Error {
@@ -95,7 +94,9 @@ pub(crate) struct DisappearingMode {
     pub(crate) initiator: Option<i32>,
     #[prost(int32, optional, tag = "2")]
     pub(crate) trigger: Option<i32>,
-    #[prost(bool, optional, tag = "3")]
+    #[prost(string, optional, tag = "3")]
+    pub(crate) initiator_device_jid: Option<String>,
+    #[prost(bool, optional, tag = "4")]
     pub(crate) initiated_by_me: Option<bool>,
 }
 /// `LX/BWR` (confirmed).
@@ -161,17 +162,30 @@ pub enum Setting {
     },
 }
 
+/// Validate a legacy timer intent without silently sending a native disable value.
+pub fn validate_timer(seconds: u32) -> Result<()> {
+    if seconds > i32::MAX as u32 {
+        return Err(invalid("timer seconds exceed the native signed range"));
+    }
+    Ok(())
+}
+
 /// Decode a chat-setting `protocolMessage` (field 12). Returns `None` for
 /// malformed content or a `type` this module does not recognise.
 pub fn decode_protocol(payload: &[u8]) -> Option<Setting> {
     let protocol = Envelope::decode(payload).ok()?.protocol?;
+    if matches!(
+        protocol.type_,
+        Some(TYPE_EPHEMERAL_SETTING | TYPE_EPHEMERAL_SYNC_RESPONSE)
+    ) && protocol.after_read_duration.unwrap_or(0) != 0
+    {
+        // shortcut: after-read timers need feature 25649 and duration/ordering state before projection.
+        return None;
+    }
+    let seconds = (protocol.ephemeral_expiration.unwrap_or(0) as i32).max(0) as u32;
     match protocol.type_ {
-        Some(TYPE_EPHEMERAL_SETTING) => Some(Setting::DisappearingTimer {
-            seconds: protocol.ephemeral_expiration.unwrap_or(0),
-        }),
-        Some(TYPE_EPHEMERAL_SYNC_RESPONSE) => Some(Setting::EphemeralSyncResponse {
-            seconds: protocol.ephemeral_expiration.unwrap_or(0),
-        }),
+        Some(TYPE_EPHEMERAL_SETTING) => Some(Setting::DisappearingTimer { seconds }),
+        Some(TYPE_EPHEMERAL_SYNC_RESPONSE) => Some(Setting::EphemeralSyncResponse { seconds }),
         Some(TYPE_LIMIT_SHARING) => Some(Setting::LimitSharing {
             enabled: protocol.limit_sharing?.sharing_limited.unwrap_or(false),
         }),
@@ -467,6 +481,73 @@ mod tests {
                 direction,
                 id: MessageId::new("ABCDEF0123456789ABCDEF0123456789").unwrap(),
             },
+        }
+    }
+
+    #[test]
+    fn disappearing_mode_device_string_and_initiated_flag_use_current_descriptor_tags() {
+        let mut mode = Vec::new();
+        prost::encoding::string::encode(3, &"12345:4@lid".to_owned(), &mut mode);
+        prost::encoding::bool::encode(4, &true, &mut mode);
+        let mut protocol = Vec::new();
+        prost::encoding::int32::encode(2, &3, &mut protocol);
+        prost::encoding::uint32::encode(4, &86400, &mut protocol);
+        prost::encoding::bytes::encode(11, &mode, &mut protocol);
+        let mut bytes = Vec::new();
+        prost::encoding::bytes::encode(12, &protocol, &mut bytes);
+        assert_eq!(
+            decode_protocol(&bytes),
+            Some(Setting::DisappearingTimer { seconds: 86400 })
+        );
+        let mode = Envelope::decode(bytes.as_slice())
+            .unwrap()
+            .protocol
+            .unwrap()
+            .disappearing_mode
+            .unwrap();
+        assert_eq!(mode.initiator_device_jid.as_deref(), Some("12345:4@lid"));
+        assert_eq!(mode.initiated_by_me, Some(true));
+    }
+
+    #[test]
+    fn timer_decode_matches_native_signed_duration_and_does_not_flatten_after_read() {
+        for kind in [TYPE_EPHEMERAL_SETTING, TYPE_EPHEMERAL_SYNC_RESPONSE] {
+            for (raw, effective) in [
+                (0, 0),
+                (1, 1),
+                (i32::MAX as u32, i32::MAX as u32),
+                (0x80000000, 0),
+                (u32::MAX, 0),
+            ] {
+                let bytes = Envelope {
+                    protocol: Some(ProtocolMessage {
+                        type_: Some(kind),
+                        ephemeral_expiration: Some(raw),
+                        ..Default::default()
+                    }),
+                    ..Default::default()
+                }
+                .encode_to_vec();
+                assert_eq!(
+                    decode_protocol(&bytes),
+                    Some(if kind == TYPE_EPHEMERAL_SETTING {
+                        Setting::DisappearingTimer { seconds: effective }
+                    } else {
+                        Setting::EphemeralSyncResponse { seconds: effective }
+                    })
+                );
+            }
+            let bytes = Envelope {
+                protocol: Some(ProtocolMessage {
+                    type_: Some(kind),
+                    ephemeral_expiration: Some(86400),
+                    after_read_duration: Some(60),
+                    ..Default::default()
+                }),
+                ..Default::default()
+            }
+            .encode_to_vec();
+            assert!(decode_protocol(&bytes).is_none());
         }
     }
 

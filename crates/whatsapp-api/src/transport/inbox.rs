@@ -3825,11 +3825,107 @@ mod tests {
                 .unwrap(),
             before_echo
         );
+        let mut after_settings_session = after_reactions_session.clone();
+        let mut own_settings = Vec::new();
+        for (id, kind, seconds) in [
+            (
+                "OWN-TIMER-SET",
+                super::super::chat_settings::TYPE_EPHEMERAL_SETTING,
+                86400,
+            ),
+            (
+                "OWN-TIMER-OFF",
+                super::super::chat_settings::TYPE_EPHEMERAL_SETTING,
+                0,
+            ),
+            (
+                "OWN-TIMER-SYNC",
+                super::super::chat_settings::TYPE_EPHEMERAL_SYNC_RESPONSE,
+                604800,
+            ),
+        ] {
+            let inner = prost::Message::encode_to_vec(&super::super::chat_settings::Envelope {
+                protocol: Some(super::super::chat_settings::ProtocolMessage {
+                    type_: Some(kind),
+                    ephemeral_expiration: Some(seconds),
+                    ..Default::default()
+                }),
+                ..Default::default()
+            });
+            let mut sent_setting = Vec::new();
+            prost::encoding::string::encode(1, &"67890@lid".to_owned(), &mut sent_setting);
+            prost::encoding::bytes::encode(2, &inner, &mut sent_setting);
+            let mut wrapped = Vec::new();
+            prost::encoding::bytes::encode(31, &sent_setting, &mut wrapped);
+            let synchronized = direct::prepare_payload(
+                &sender,
+                receiver.own_jid.as_ref().unwrap(),
+                None,
+                Some(&after_settings_session),
+                Some(&sent.identity),
+                &wrapped,
+            )
+            .await
+            .unwrap();
+            let node = Node::new("message")
+                .attr("from", peer_device.clone())
+                .attr("recipient", "67890@lid")
+                .attr("id", id)
+                .attr("type", "text")
+                .children(vec![
+                    Node::new("enc")
+                        .attr("type", synchronized.kind)
+                        .attr("v", "2")
+                        .bytes(synchronized.ciphertext.to_vec()),
+                ]);
+            let capture = preserve(&store, &node).unwrap();
+            assert_eq!(
+                process(&store, &receiver, &node, &capture).await.unwrap(),
+                IncomingResult::Decrypted
+            );
+            let events = store
+                .read(|tx| {
+                    tx.read_events(
+                        &crate::store::ConsumerId::new("own-timers")?,
+                        crate::model::ids::EventCursor::START,
+                        100,
+                    )
+                })
+                .unwrap();
+            let crate::sync::SyncEvent::NewMessage(message) = &events.events.last().unwrap().event
+            else {
+                panic!("own setting event missing")
+            };
+            assert_eq!(message.key.chat.jid(), &Jid::parse("67890@lid").unwrap());
+            assert_eq!(
+                message.key.direction,
+                crate::model::message::Direction::Outgoing
+            );
+            assert!(message.key.sender.is_none());
+            assert!(
+                matches!(message.content,crate::model::message::MessageContent::DisappearingTimer {seconds:actual} if actual==seconds)
+            );
+            assert!(
+                super::super::messaging::received_confirmation_for_account(
+                    &store, &receiver, &node
+                )
+                .unwrap()
+                .is_some()
+            );
+            after_settings_session = synchronized.session;
+            own_settings.push((node, capture));
+        }
         let after_poll_head = store.journal_head().unwrap();
         let event_count =
-            batch.events.len() + usize::from(cfg!(feature = "experimental-registration-https")) + 5;
+            batch.events.len() + usize::from(cfg!(feature = "experimental-registration-https")) + 8;
         drop(store);
         let store = open(false);
+        for (node, capture) in &own_settings {
+            assert_eq!(
+                process(&store, &receiver, node, capture).await.unwrap(),
+                IncomingResult::Duplicate
+            );
+        }
         for (node, capture) in &own_reactions {
             assert_eq!(
                 process(&store, &receiver, node, capture).await.unwrap(),
@@ -3884,7 +3980,7 @@ mod tests {
             super::super::chat_clear::clear_chat(&store, &Jid::parse("67890@lid").unwrap())
                 .unwrap()
                 .cleared_messages,
-            6 + usize::from(cfg!(feature = "experimental-registration-https"))
+            9 + usize::from(cfg!(feature = "experimental-registration-https"))
         );
         #[cfg(feature = "experimental-registration-https")]
         assert!(super::super::media::list(&store).unwrap().is_empty());
@@ -3942,7 +4038,7 @@ mod tests {
             &sender,
             receiver.own_jid.as_ref().unwrap(),
             None,
-            Some(&after_reactions_session),
+            Some(&after_settings_session),
             Some(&sent.identity),
             b"\x0a\x05hello",
         )

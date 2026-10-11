@@ -250,9 +250,10 @@ pub fn begin_selected(
                 MessageContent::PollVote { target, .. } => {
                     target.key.chat.jid().to_non_ad() == peer.to_non_ad()
                 }
-                MessageContent::DisappearingTimer { .. } | MessageContent::ChatPrivacy { .. } => {
-                    true
+                MessageContent::DisappearingTimer { seconds } => {
+                    super::chat_settings::validate_timer(*seconds).is_ok()
                 }
+                MessageContent::ChatPrivacy { .. } => true,
                 MessageContent::KeepInChat { target, .. } => {
                     super::chat_settings::validate_keep(peer, target).is_ok()
                 }
@@ -526,6 +527,7 @@ fn chat_setting_payload_for(
 ) -> Result<Option<Vec<u8>>> {
     Ok(match content {
         MessageContent::DisappearingTimer { seconds } => {
+            super::chat_settings::validate_timer(*seconds)?;
             Some(super::chat_settings::disappearing_payload(*seconds))
         }
         MessageContent::ChatPrivacy { limited } => Some(

@@ -182,7 +182,9 @@ fn validate(req: &SendRequest, limits: &Limits) -> Result<()> {
             }
             Ok(())
         }
-        MessageContent::DisappearingTimer { .. } => Ok(()),
+        MessageContent::DisappearingTimer { seconds } => {
+            crate::transport::chat_settings::validate_timer(*seconds)
+        }
         MessageContent::ChatPrivacy { .. } => Ok(()),
         MessageContent::KeepInChat { target, .. } => {
             crate::transport::chat_settings::validate_keep(req.chat.jid(), target)
@@ -510,6 +512,48 @@ mod tests {
                 style: Default::default(),
             },
         }
+    }
+
+    #[test]
+    fn timer_intent_refuses_unsigned_values_that_native_clients_treat_as_disable() {
+        let (_dir, store) = store();
+        let outbox = Outbox::new("fixture", Limits::default());
+        let mut request = req("timer-boundary", "unused");
+        request.content = MessageContent::DisappearingTimer {
+            seconds: i32::MAX as u32,
+        };
+        let (ticket, created) = store.write(|tx| outbox.enqueue(tx, &request)).unwrap();
+        assert!(created);
+        let before = store
+            .read(|tx| {
+                Table::ALL
+                    .iter()
+                    .map(|t| tx.scan(*t, 1, 100))
+                    .collect::<Result<Vec<_>>>()
+            })
+            .unwrap();
+        let head = store.journal_head().unwrap();
+        for seconds in [0x80000000, u32::MAX] {
+            let mut invalid = request.clone();
+            invalid.client_request_id = ClientRequestId::new("invalid-timer").unwrap();
+            invalid.content = MessageContent::DisappearingTimer { seconds };
+            assert!(
+                matches!(store.write(|tx|outbox.enqueue(tx,&invalid)).unwrap_err(),Error::InvalidInput {field:"chat_settings",reason} if reason=="timer seconds exceed the native signed range")
+            );
+        }
+        let (repeat, created) = store.write(|tx| outbox.enqueue(tx, &request)).unwrap();
+        assert!(!created);
+        assert_eq!(repeat.local_id, ticket.local_id);
+        assert_eq!(
+            store
+                .read(|tx| Table::ALL
+                    .iter()
+                    .map(|t| tx.scan(*t, 1, 100))
+                    .collect::<Result<Vec<_>>>())
+                .unwrap(),
+            before
+        );
+        assert_eq!(store.journal_head().unwrap(), head);
     }
 
     #[test]

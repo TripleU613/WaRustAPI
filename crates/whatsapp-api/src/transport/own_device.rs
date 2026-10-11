@@ -109,6 +109,8 @@ pub(super) fn payload(payload: &[u8], chat: &Jid) -> Option<Zeroizing<Vec<u8>>> 
         sticker: Option<Vec<u8>>,
         #[prost(bytes = "vec", optional, tag = "66")]
         ptv: Option<Vec<u8>>,
+        #[prost(bytes = "vec", optional, tag = "12")]
+        protocol: Option<Vec<u8>>,
         #[prost(bytes = "vec", optional, tag = "46")]
         reaction: Option<Vec<u8>>,
         #[prost(bytes = "vec", optional, tag = "50")]
@@ -143,16 +145,27 @@ pub(super) fn payload(payload: &[u8], chat: &Jid) -> Option<Zeroizing<Vec<u8>>> 
     }
     let inner = Zeroizing::new(sent.message?);
     let fields = crate::signal::direct::payload_fields(&inner).ok()?;
-    // shortcut: control effects and view-once synchronization need their separate native lifecycle.
+    // shortcut: other control effects and view-once synchronization need their separate native lifecycle.
     if fields
         .iter()
-        .any(|f| !matches!(f, 1 | 3 | 6 | 7 | 8 | 9 | 26 | 35 | 46 | 50 | 64 | 66))
+        .any(|f| !matches!(f, 1 | 3 | 6 | 7 | 8 | 9 | 12 | 26 | 35 | 46 | 50 | 64 | 66))
         || fields.iter().filter(|&&f| f != 35).count() != 1
     {
         return None;
     }
     let mut text = Content::decode(inner.as_slice()).ok()?;
     if text.poll.is_some() && !super::polls::ordinary_creation_fields(&inner) {
+        return None;
+    }
+    if text.protocol.is_some()
+        && !matches!(
+            super::chat_settings::decode_protocol(&inner),
+            Some(
+                super::chat_settings::Setting::DisappearingTimer { .. }
+                    | super::chat_settings::Setting::EphemeralSyncResponse { .. }
+            )
+        )
+    {
         return None;
     }
     if let Some(context) = &text.context {
@@ -235,7 +248,7 @@ pub(super) fn record_in(
                 continue;
             };
             if crate::signal::direct::payload_fields(&plain)
-                .is_ok_and(|fields| fields.iter().any(|f| matches!(f, 46 | 50)))
+                .is_ok_and(|fields| fields.iter().any(|f| matches!(f, 12 | 46 | 50)))
             {
                 continue;
             }
@@ -773,6 +786,33 @@ mod tests {
         }
         assert!(payload(&wrap(b"\x92\x03\x00"), &chat).is_some()); // Vote validation follows unwrapping.
         assert!(payload(&wrap(&[ordinary.as_slice(), b"\x0a\x01X"].concat()), &chat).is_none());
+    }
+
+    #[test]
+    fn wrapper_accepts_legacy_timer_protocols_without_admitting_unported_controls() {
+        let chat = Jid::parse("67890@lid").unwrap();
+        let wrap = |inner: &[u8]| {
+            let mut sent = Vec::new();
+            prost::encoding::string::encode(1, &chat.to_string(), &mut sent);
+            prost::encoding::bytes::encode(2, &inner.to_vec(), &mut sent);
+            let mut out = Vec::new();
+            prost::encoding::bytes::encode(31, &sent, &mut out);
+            out
+        };
+        for inner in [
+            b"\x62\x04\x10\x03\x20\x3c".as_slice(),
+            b"\x62\x04\x10\x04\x20\x00",
+        ] {
+            assert_eq!(payload(&wrap(inner), &chat).unwrap().as_slice(), inner);
+        }
+        for inner in [
+            b"\x62\x02\x10\x00".to_vec(),
+            b"\x62\x07\x10\x03\x20\x3c\xe8\x01\x01".to_vec(),
+            b"\x62\x04\x10\x03\x20\x3c\x0a\x01X".to_vec(),
+            super::super::chat_settings::limit_sharing_payload(true, 0),
+        ] {
+            assert!(payload(&wrap(&inner), &chat).is_none());
+        }
     }
 
     #[test]

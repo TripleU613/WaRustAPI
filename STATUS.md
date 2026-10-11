@@ -1,4 +1,12 @@
 2026-10-11 — **Implemented/offline:** held own-device sessions now synchronize
+legacy disappearing-timer set/off/sync events. Shared decode clamps signed
+nonpositive native duration bits to zero and fixes BW7 device-string/initiated
+fields 3/4. Send intents reject unsigned values that native clients would disable.
+After-read payloads decline pending property 25649 and second-duration state;
+full setting application/ordering/expiry and live interoperability remain open.
+[Native timer builders, mode correction and receive tests](docs/protocol/own-device-timer.md).
+
+2026-10-11 — **Implemented/offline:** held own-device sessions now synchronize
 ordinary reaction set/removal. Embedded fromMe preserves own/peer targets;
 registered own source supplies the actor. Known original keys and unloaded typed
 references work without fetching history or changing send facts/IDs/waits.
