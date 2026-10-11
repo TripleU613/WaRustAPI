@@ -1,0 +1,85 @@
+# APK-derived structural disassembly: LX/0Dk;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A01(LL) flags=0x19 registers=10
+  # full signature: LX/0Dk;->A01(Ljava/lang/String;)Ljava/lang/String;
+  0000..0004 op=22 new-instance v1, Ljava/io/File;
+  0004..000a op=70 invoke-direct {v1, v9}, Ljava/io/File;-><init>(Ljava/lang/String;)V
+  000a..000e op=62 sget-object v0, LX/0Dm;->A00:LX/0Dm;
+  000e..0014 op=6e invoke-virtual {v1, v0}, Ljava/io/File;->listFiles(Ljava/io/FilenameFilter;)[Ljava/io/File;
+  0014..0016 op=0c move-result-object v0
+  0016..001a op=1a const-string v9, ""
+  001a..001e op=38 if-eqz v0, +0x87
+  001e..0022 op=22 new-instance v4, Ljava/util/ArrayList;
+  0022..0028 op=70 invoke-direct {v4}, Ljava/util/ArrayList;-><init>()V
+  0028..002c op=22 new-instance v8, LX/1ND;
+  002c..0032 op=70 invoke-direct {v8, v0}, LX/1ND;-><init>([Ljava/lang/Object;)V
+  0032..0038 op=6e invoke-virtual {v8}, LX/1ND;->hasNext()Z
+  0038..003a op=0a move-result v0
+  003a..003c op=12 const/4 v6, #0x0
+  003c..003e op=12 const/4 v7, #0x1
+  003e..0042 op=38 if-eqz v0, +0x3a
+  0042..0048 op=6e invoke-virtual {v8}, LX/1ND;->next()Ljava/lang/Object;
+  0048..004a op=0c move-result-object v5
+  004a..004e op=1f check-cast v5, Ljava/io/File;
+  004e..0054 op=6e invoke-virtual {v5}, Ljava/io/File;->getName()Ljava/lang/String;
+  0054..0056 op=0c move-result-object v1
+  0056..005c op=71 invoke-static {v1}, LX/00h;->A09(Ljava/lang/Object;)V
+  005c..0062 op=6e invoke-virtual {v1}, Ljava/lang/String;->length()I
+  0062..0064 op=0a move-result v0
+  0064..0068 op=d8 add-int/lit8 v0, v0, #0xf8 (-8)
+  0068..006e op=6e invoke-virtual {v1, v6, v0}, Ljava/lang/String;->substring(II)Ljava/lang/String;
+  006e..0070 op=0c move-result-object v0
+  0070..0076 op=71 invoke-static {v0}, LX/00h;->A06(Ljava/lang/Object;)V
+  0076..007c op=71 invoke-static {v0}, Ljava/lang/Integer;->parseInt(Ljava/lang/String;)I
+  007c..007e op=0a move-result v0
+  007e..0084 op=71 invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  0084..0086 op=0c move-result-object v1
+  0086..008a op=22 new-instance v0, LX/07o;
+  008a..0090 op=70 invoke-direct {v0, v1, v5}, LX/07o;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V
+  0090..0096 op=6e invoke-virtual {v4, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+  0096..0098 op=28 goto -0x32
+  0098..009a op=0d move-exception v3
+  009a..009e op=1a const-string v2, "MobileConfigPathUtils"
+  009e..00a2 op=23 new-array v1, v7, [Ljava/lang/Object;
+  00a2..00a6 op=4d aput-object v5, v1, v6
+  00a6..00aa op=1a const-string v0, "Unexpected mctable file: %s"
+  00aa..00b0 op=71 invoke-static {v2, v3, v0, v1}, LX/06S;->A0Z(Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/String;[Ljava/lang/Object;)V
+  00b0..00b2 op=28 goto -0x3f
+  00b2..00b8 op=6e invoke-virtual {v4}, Ljava/util/AbstractCollection;->size()I
+  00b8..00ba op=0a move-result v0
+  00ba..00be op=37 if-le v0, v7, +0xa
+  00be..00c2 op=22 new-instance v0, LX/3RM;
+  00c2..00c8 op=70 invoke-direct {v0, v6}, LX/3RM;-><init>(I)V
+  00c8..00ce op=71 invoke-static {v4, v0}, LX/0C2;->A0L(Ljava/util/List;Ljava/util/Comparator;)V
+  00ce..00d4 op=6e invoke-virtual {v4}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+  00d4..00d6 op=0c move-result-object v5
+  00d6..00dc op=72 invoke-interface {v5}, Ljava/util/Iterator;->hasNext()Z
+  00dc..00de op=0a move-result v0
+  00de..00e2 op=38 if-eqz v0, +0x25
+  00e2..00e8 op=72 invoke-interface {v5}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  00e8..00ea op=0c move-result-object v0
+  00ea..00ee op=1f check-cast v0, LX/07o;
+  00ee..00f2 op=54 iget-object v4, v0, LX/07o;->second:Ljava/lang/Object;
+  00f2..00f6 op=1f check-cast v4, Ljava/io/File;
+  00f6..00fc op=6e invoke-virtual {v4}, Ljava/io/File;->getCanonicalPath()Ljava/lang/String;
+  00fc..00fe op=0c move-result-object v0
+  00fe..0104 op=71 invoke-static {v0}, LX/00h;->A06(Ljava/lang/Object;)V
+  0104..0106 op=28 goto +0x11
+  0106..0108 op=0d move-exception v3
+  0108..010c op=1a const-string v2, "MobileConfigPathUtils"
+  010c..010e op=12 const/4 v0, #0x2
+  010e..0112 op=23 new-array v1, v0, [Ljava/lang/Object;
+  0112..0116 op=4d aput-object v4, v1, v6
+  0116..011a op=4d aput-object v3, v1, v7
+  011a..011e op=1a const-string v0, "In findLatestFlatbufferUnderDir, fail to get canonical path for %s: %s"
+  011e..0124 op=71 invoke-static {v2, v3, v0, v1}, LX/06S;->A0Z(Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/String;[Ljava/lang/Object;)V
+  0124..0126 op=28 goto -0x27
+  0126..0128 op=11 return-object v0
+  0128..012a op=11 return-object v9
+  # exception table: 2 try range(s)
+  # catch Ljava/lang/NumberFormatException; code_units 002b..003f -> 004c
+  # catch Ljava/io/IOException; code_units 007b..0083 -> 0083
+.end method

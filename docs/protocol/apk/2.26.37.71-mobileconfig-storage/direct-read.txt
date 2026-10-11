@@ -1,0 +1,76 @@
+# APK-derived structural disassembly: Lcom/facebook/mobileconfig/MobileConfigFileRepository;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method readBuffer(LL) flags=0x9 registers=12
+  # full signature: Lcom/facebook/mobileconfig/MobileConfigFileRepository;->readBuffer(Ljava/lang/String;)Ljava/nio/ByteBuffer;
+  0000..0004 op=1a const-string v3, "MobileConfigFileRepository"
+  0004..000a op=71 invoke-static {v11}, LX/6aj;->A15(Ljava/lang/String;)Ljava/io/File;
+  000a..000c op=0c move-result-object v10
+  000c..000e op=12 const/4 v9, #0x0
+  000e..0010 op=12 const/4 v4, #0x0
+  0010..0012 op=12 const/4 v5, #0x1
+  0012..0018 op=71 invoke-static {v10}, LX/6ak;->A15(Ljava/io/File;)Ljava/io/FileInputStream;
+  0018..001a op=0c move-result-object v8
+  001a..0020 op=6e invoke-virtual {v8}, Ljava/io/FileInputStream;->getChannel()Ljava/nio/channels/FileChannel;
+  0020..0022 op=0c move-result-object v7
+  0022..0028 op=6e invoke-virtual {v7}, Ljava/nio/channels/FileChannel;->size()J
+  0028..002a op=0b move-result-wide v0
+  002a..002c op=84 long-to-int v2, v0
+  002c..0032 op=71 invoke-static {v2}, Ljava/nio/ByteBuffer;->allocateDirect(I)Ljava/nio/ByteBuffer;
+  0032..0034 op=0c move-result-object v6
+  0034..0038 op=62 sget-object v0, Ljava/nio/ByteOrder;->LITTLE_ENDIAN:Ljava/nio/ByteOrder;
+  0038..003e op=6e invoke-virtual {v6, v0}, Ljava/nio/ByteBuffer;->order(Ljava/nio/ByteOrder;)Ljava/nio/ByteBuffer;
+  003e..0044 op=6e invoke-virtual {v7, v6}, Ljava/nio/channels/FileChannel;->read(Ljava/nio/ByteBuffer;)I
+  0044..004a op=6e invoke-virtual {v6}, Ljava/nio/Buffer;->flip()Ljava/nio/Buffer;
+  004a..0050 op=6e invoke-virtual {v10}, Ljava/io/File;->length()J
+  0050..0052 op=0b move-result-wide v1
+  0052..0054 op=84 long-to-int v0, v1
+  0054..005a op=71 invoke-static {v6, v0}, LX/Hq6;->A00(Ljava/nio/ByteBuffer;I)Ljava/lang/String;
+  005a..005c op=0c move-result-object v2
+  005c..0062 op=6e invoke-virtual {v2}, Ljava/lang/String;->isEmpty()Z
+  0062..0064 op=0a move-result v0
+  0064..0068 op=39 if-nez v0, +0x12
+  0068..006c op=1a const-string v1, "Cannot validate (from direct read) \"%s\", err:%s"
+  006c..0072 op=71 invoke-static {v11, v2, v4, v5}, LX/1xi;->A1b(Ljava/lang/Object;Ljava/lang/Object;II)[Ljava/lang/Object;
+  0072..0074 op=0c move-result-object v0
+  0074..007a op=71 invoke-static {v3, v1, v0}, LX/06S;->A0R(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+  007a..0080 op=6e invoke-virtual {v7}, Ljava/nio/channels/spi/AbstractInterruptibleChannel;->close()V
+  0080..0086 op=6e invoke-virtual {v8}, Ljava/io/InputStream;->close()V
+  0086..0088 op=11 return-object v9
+  0088..008e op=6e invoke-virtual {v7}, Ljava/nio/channels/spi/AbstractInterruptibleChannel;->close()V
+  008e..0094 op=6e invoke-virtual {v8}, Ljava/io/InputStream;->close()V
+  0094..0096 op=11 return-object v6
+  0096..0098 op=0d move-exception v1
+  0098..009c op=38 if-eqz v7, +0xa
+  009c..00a2 op=6e invoke-virtual {v7}, Ljava/nio/channels/spi/AbstractInterruptibleChannel;->close()V
+  00a2..00a4 op=28 goto +0x5
+  00a4..00a6 op=0d move-exception v0
+  00a6..00ac op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  00ac..00ae op=27 throw v1
+  00ae..00b0 op=0d move-exception v1
+  00b0..00b6 op=6e invoke-virtual {v8}, Ljava/io/InputStream;->close()V
+  00b6..00b8 op=28 goto +0x5
+  00b8..00ba op=0d move-exception v0
+  00ba..00c0 op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  00c0..00c2 op=27 throw v1
+  00c2..00c4 op=0d move-exception v2
+  00c4..00c8 op=23 new-array v1, v5, [Ljava/lang/Object;
+  00c8..00cc op=4d aput-object v11, v1, v4
+  00cc..00d0 op=1a const-string v0, "Cannot open \"%s\""
+  00d0..00d6 op=71 invoke-static {v3, v2, v0, v1}, LX/06S;->A0Z(Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/String;[Ljava/lang/Object;)V
+  00d6..00d8 op=11 return-object v9
+  # exception table: 11 try range(s)
+  # catch Ljava/io/IOException; code_units 0009..000d -> 0061
+  # catch <all> code_units 000d..0011 -> 0057
+  # catch <all> code_units 0011..003d -> 004b
+  # catch <all> code_units 003d..0040 -> 0057
+  # catch Ljava/io/IOException; code_units 0040..0044 -> 0061
+  # catch <all> code_units 0044..0047 -> 0057
+  # catch Ljava/io/IOException; code_units 0047..004b -> 0061
+  # catch <all> code_units 004e..0052 -> 0052
+  # catch <all> code_units 0053..0057 -> 0057
+  # catch <all> code_units 0058..005c -> 005c
+  # catch Ljava/io/IOException; code_units 005d..0061 -> 0061
+.end method

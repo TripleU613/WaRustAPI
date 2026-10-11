@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_453accecc5056fbd543cd235a2142856a2871ce15088de59d096f33bd6c7f784",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.Hq6",
+    "method_name": "A00"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-uk7Xck/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\",\"max_heap_bytes\":15695085568,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.Hq6"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"name\":\"A00\",\"def_pos\":0,\"type\":\"byte[]\"}],\"field_count\":1,\"full_name\":\"X.Hq6\",\"name\":\"Hq6\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":2,\"methods\":[{\"is_constructor\":false,\"signature\":\"\\u003cclinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cclinit\\u003e\"},{\"is_constructor\":false,\"signature\":\"A00(java.nio.ByteBuffer, int): java.lang.String\",\"def_pos\":0,\"name\":\"A00\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.Hq6",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_name\":\"A00\",\"overload_count\":1,\"body\":\"    public static String A00(ByteBuffer byteBuffer, int i) {\\n        Object[] objArrA1b;\\n        String str;\\n        int i2;\\n        if (i \\u003c 8) {\\n            return \\\"file size too small\\\";\\n        }\\n        if (byteBuffer.limit() \\u003c i) {\\n            return String.format(Locale.ROOT, \\\"Buffer limit %d is less than file length %d\\\", C1xn.A1Z(Integer.valueOf(byteBuffer.limit()), i, 2, 1));\\n        }\\n        byte b \\u003d byteBuffer.get();\\n        byte[] bArr \\u003d A00;\\n        if (b !\\u003d bArr[0] || byteBuffer.get() !\\u003d bArr[1]) {\\n            byteBuffer.position(0);\\n            return Voip.REJECT_REASON_DECLINED;\\n        }\\n        byte b2 \\u003d byteBuffer.get();\\n        if (b2 \\u003c\\u003d 0 || b2 \\u003e 1) {\\n            objArrA1b \\u003d C1xf.A1b(Byte.valueOf(b2), (byte) 1, 2, 1);\\n            str \\u003d \\\"Bad file ver:%d, current:%d\\\";\\n        } else {\\n            byte b3 \\u003d byteBuffer.get();\\n            if (b3 \\u003c\\u003d 0 || b3 \\u003e\\u003d (i2 \\u003d i - 2)) {\\n                objArrA1b \\u003d new Object[]{Byte.valueOf(b3)};\\n                str \\u003d \\\"Bad bodyOffset:%d\\\";\\n            } else {\\n                int i3 \\u003d byteBuffer.getInt();\\n                if (i3 !\\u003d i) {\\n                    objArrA1b \\u003d C1xn.A1Z(Integer.valueOf(i3), i, 2, 1);\\n                    str \\u003d \\\"Bad fileSize:%d, actual fileSize:%d\\\";\\n                } else {\\n                    byteBuffer.position(i2);\\n                    byte b4 \\u003d byteBuffer.get();\\n                    byte b5 \\u003d byteBuffer.get();\\n                    if (b4 \\u003d\\u003d bArr[0] \\u0026\\u0026 b5 \\u003d\\u003d bArr[1]) {\\n                        byteBuffer.position(b3);\\n                        return Voip.REJECT_REASON_DECLINED;\\n                    }\\n                    objArrA1b \\u003d C1xf.A1b(Byte.valueOf(b4), Byte.valueOf(b5), 2, 1);\\n                    str \\u003d \\\"Bad footer magicHex:%02X %02X\\\";\\n                }\\n            }\\n        }\\n        return String.format(str, objArrA1b);\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.Hq6\",\"full_name\":\"X.Hq6.A00\",\"mode\":\"java\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.Hq6",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(java.nio.ByteBuffer, int): java.lang.String",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public static String A00(ByteBuffer byteBuffer, int i) {\n        Object[] objArrA1b;\n        String str;\n        int i2;\n        if (i < 8) {\n            return \"file size too small\";\n        }\n        if (byteBuffer.limit() < i) {\n            return String.format(Locale.ROOT, \"Buffer limit %d is less than file length %d\", C1xn.A1Z(Integer.valueOf(byteBuffer.limit()), i, 2, 1));\n        }\n        byte b = byteBuffer.get();\n        byte[] bArr = A00;\n        if (b != bArr[0] || byteBuffer.get() != bArr[1]) {\n            byteBuffer.position(0);\n            return Voip.REJECT_REASON_DECLINED;\n        }\n        byte b2 = byteBuffer.get();\n        if (b2 <= 0 || b2 > 1) {\n            objArrA1b = C1xf.A1b(Byte.valueOf(b2), (byte) 1, 2, 1);\n            str = \"Bad file ver:%d, current:%d\";\n        } else {\n            byte b3 = byteBuffer.get();\n            if (b3 <= 0 || b3 >= (i2 = i - 2)) {\n                objArrA1b = new Object[]{Byte.valueOf(b3)};\n                str = \"Bad bodyOffset:%d\";\n            } else {\n                int i3 = byteBuffer.getInt();\n                if (i3 != i) {\n                    objArrA1b = C1xn.A1Z(Integer.valueOf(i3), i, 2, 1);\n                    str = \"Bad fileSize:%d, actual fileSize:%d\";\n                } else {\n                    byteBuffer.position(i2);\n                    byte b4 = byteBuffer.get();\n                    byte b5 = byteBuffer.get();\n                    if (b4 == bArr[0] && b5 == bArr[1]) {\n                        byteBuffer.position(b3);\n                        return Voip.REJECT_REASON_DECLINED;\n                    }\n                    objArrA1b = C1xf.A1b(Byte.valueOf(b4), Byte.valueOf(b5), 2, 1);\n                    str = \"Bad footer magicHex:%02X %02X\";\n                }\n            }\n        }\n        return String.format(str, objArrA1b);\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

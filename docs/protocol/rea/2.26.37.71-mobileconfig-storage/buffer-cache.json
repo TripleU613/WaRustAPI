@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_879b63100a99dbeaabba57e582c8f273fd8deb6c494459475320811c9cdd7348",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "com.facebook.mobileconfig.MobileConfigFileRepository",
+    "method_name": "getJavaByteBuffer"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-uk7Xck/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\",\"max_heap_bytes\":15695085568,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "com.facebook.mobileconfig.MobileConfigFileRepository"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"name\":\"TAG\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"mFileCache\",\"def_pos\":0,\"type\":\"java.util.Map\"},{\"name\":\"mFileCacheLock\",\"def_pos\":0,\"type\":\"java.lang.Object\"}],\"field_count\":3,\"full_name\":\"com.facebook.mobileconfig.MobileConfigFileRepository\",\"name\":\"MobileConfigFileRepository\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":5,\"methods\":[{\"is_constructor\":false,\"signature\":\"\\u003cclinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cclinit\\u003e\"},{\"is_constructor\":true,\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\"},{\"is_constructor\":false,\"signature\":\"getJavaByteBuffer(java.lang.String): java.nio.ByteBuffer\",\"def_pos\":0,\"name\":\"getJavaByteBuffer\"},{\"is_constructor\":false,\"signature\":\"readBuffer(java.lang.String): java.nio.ByteBuffer\",\"def_pos\":0,\"name\":\"readBuffer\"},{\"is_constructor\":false,\"signature\":\"releaseBuffer(java.lang.String): void\",\"def_pos\":0,\"name\":\"releaseBuffer\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "com.facebook.mobileconfig.MobileConfigFileRepository",
+          "method_name": "getJavaByteBuffer",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_name\":\"getJavaByteBuffer\",\"overload_count\":1,\"body\":\"    /* JADX WARN: Code duplicated, block: B:7:0x000b A[Catch: all -\\u003e 0x0082, TryCatch #0 {, blocks: (B:5:0x0005, B:8:0x0012, B:10:0x001c, B:12:0x0031, B:13:0x0038, B:26:0x0076, B:27:0x0081, B:15:0x003a, B:18:0x0041, B:20:0x0043, B:22:0x0061, B:23:0x0068, B:25:0x006a, B:7:0x000b), top: B:31:0x0005 }] */\\n    public static ByteBuffer getJavaByteBuffer(String str) {\\n        synchronized (mFileCacheLock) {\\n            if (str \\u003d\\u003d null) {\\n                C06S.A0I(TAG, \\\"Filename should not be null or empty.\\\");\\n            } else if (str.isEmpty()) {\\n                C06S.A0I(TAG, \\\"Filename should not be null or empty.\\\");\\n            }\\n            Map map \\u003d mFileCache;\\n            HJh hJh \\u003d (HJh) map.get(str);\\n            if (hJh !\\u003d null) {\\n                C06S.A0B(Integer.valueOf(hJh.A01.get()), str, TAG, \\\"Returning existing buffer with count: %d for filename: %s\\\");\\n                if (hJh.A00 \\u003d\\u003d null) {\\n                    C06S.A0F(TAG, \\\"Cannot create new reference for null buffer.\\\");\\n                    throw C1xf.A16(\\\"ByteBuffer has already been released.\\\");\\n                }\\n                hJh.A01.incrementAndGet();\\n                return hJh.A00;\\n            }\\n            ByteBuffer buffer \\u003d readBuffer(str);\\n            if (buffer \\u003d\\u003d null) {\\n                return null;\\n            }\\n            C06S.A0D(str, TAG, \\\"Created new buffer handle for filename: %s\\\");\\n            HJh hJh2 \\u003d new HJh();\\n            hJh2.A00 \\u003d buffer;\\n            hJh2.A01 \\u003d Ayj.A1A(0);\\n            hJh2.A02 \\u003d false;\\n            map.put(str, hJh2);\\n            if (hJh2.A00 \\u003d\\u003d null) {\\n                C06S.A0F(TAG, \\\"Cannot create new reference for null buffer.\\\");\\n                throw C1xf.A16(\\\"ByteBuffer has already been released.\\\");\\n            }\\n            hJh2.A01.incrementAndGet();\\n            return hJh2.A00;\\n        }\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"com.facebook.mobileconfig.MobileConfigFileRepository\",\"full_name\":\"com.facebook.mobileconfig.MobileConfigFileRepository.getJavaByteBuffer\",\"mode\":\"java\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "com.facebook.mobileconfig.MobileConfigFileRepository",
+    "method": {
+      "name": "getJavaByteBuffer",
+      "reported_signature": "getJavaByteBuffer(java.lang.String): java.nio.ByteBuffer",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Code duplicated, block: B:7:0x000b A[Catch: all -> 0x0082, TryCatch #0 {, blocks: (B:5:0x0005, B:8:0x0012, B:10:0x001c, B:12:0x0031, B:13:0x0038, B:26:0x0076, B:27:0x0081, B:15:0x003a, B:18:0x0041, B:20:0x0043, B:22:0x0061, B:23:0x0068, B:25:0x006a, B:7:0x000b), top: B:31:0x0005 }] */\n    public static ByteBuffer getJavaByteBuffer(String str) {\n        synchronized (mFileCacheLock) {\n            if (str == null) {\n                C06S.A0I(TAG, \"Filename should not be null or empty.\");\n            } else if (str.isEmpty()) {\n                C06S.A0I(TAG, \"Filename should not be null or empty.\");\n            }\n            Map map = mFileCache;\n            HJh hJh = (HJh) map.get(str);\n            if (hJh != null) {\n                C06S.A0B(Integer.valueOf(hJh.A01.get()), str, TAG, \"Returning existing buffer with count: %d for filename: %s\");\n                if (hJh.A00 == null) {\n                    C06S.A0F(TAG, \"Cannot create new reference for null buffer.\");\n                    throw C1xf.A16(\"ByteBuffer has already been released.\");\n                }\n                hJh.A01.incrementAndGet();\n                return hJh.A00;\n            }\n            ByteBuffer buffer = readBuffer(str);\n            if (buffer == null) {\n                return null;\n            }\n            C06S.A0D(str, TAG, \"Created new buffer handle for filename: %s\");\n            HJh hJh2 = new HJh();\n            hJh2.A00 = buffer;\n            hJh2.A01 = Ayj.A1A(0);\n            hJh2.A02 = false;\n            map.put(str, hJh2);\n            if (hJh2.A00 == null) {\n                C06S.A0F(TAG, \"Cannot create new reference for null buffer.\");\n                throw C1xf.A16(\"ByteBuffer has already been released.\");\n            }\n            hJh2.A01.incrementAndGet();\n            return hJh2.A00;\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

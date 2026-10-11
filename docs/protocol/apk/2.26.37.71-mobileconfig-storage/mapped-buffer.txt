@@ -1,0 +1,13 @@
+# APK-derived structural disassembly: LX/GQt;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method getJavaByteBuffer(L) flags=0x1 registers=2
+  # full signature: LX/GQt;->getJavaByteBuffer()Ljava/nio/ByteBuffer;
+  0000..0004 op=54 iget-object v0, v1, LX/GQt;->A00:Ljava/lang/String;
+  0004..000a op=71 invoke-static {v0}, LX/GQv;->A00(Ljava/lang/String;)Ljava/nio/MappedByteBuffer;
+  000a..000c op=0c move-result-object v0
+  000c..000e op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method

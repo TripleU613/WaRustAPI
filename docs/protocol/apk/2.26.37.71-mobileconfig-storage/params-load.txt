@@ -1,0 +1,100 @@
+# APK-derived structural disassembly: LX/Hvv;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A01(VL) flags=0x1 registers=8
+  # full signature: LX/Hvv;->A01(Ljava/lang/String;)V
+  0000..0004 op=54 iget-object v0, v6, LX/Hvv;->A06:Ljava/lang/StringBuilder;
+  0004..0006 op=12 const/4 v5, #0x0
+  0006..000c op=6e invoke-virtual {v0, v5}, Ljava/lang/StringBuilder;->setLength(I)V
+  000c..0010 op=1a const-string v3, ""
+  0010..0016 op=71 invoke-static {v7}, LX/6aj;->A15(Ljava/lang/String;)Ljava/io/File;
+  0016..0018 op=0c move-result-object v0
+  0018..001e op=71 invoke-static {v0}, LX/6ak;->A15(Ljava/io/File;)Ljava/io/FileInputStream;
+  001e..0020 op=0c move-result-object v2
+  0020..0022 op=12 const/4 v1, #0x2
+  0022..0026 op=23 new-array v0, v1, [B
+  0026..002c op=6e invoke-virtual {v2, v0}, Ljava/io/InputStream;->read([B)I
+  002c..0030 op=22 new-instance v4, Ljava/lang/String;
+  0030..0036 op=70 invoke-direct {v4, v0, v5, v1}, Ljava/lang/String;-><init>([BII)V
+  0036..003c op=6e invoke-virtual {v2}, Ljava/io/InputStream;->close()V
+  003c..003e op=28 goto +0x16
+  003e..0040 op=0d move-exception v2
+  0040..0042 op=28 goto +0xd
+  0042..0044 op=0d move-exception v1
+  0044..004a op=6e invoke-virtual {v2}, Ljava/io/InputStream;->close()V
+  004a..004c op=28 goto +0x5
+  004c..004e op=0d move-exception v0
+  004e..0054 op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  0054..0056 op=27 throw v1
+  0056..0058 op=0d move-exception v2
+  0058..005a op=07 move-object v4, v3
+  005a..005e op=1a const-string v1, "ParamsMapParser"
+  005e..0062 op=1a const-string v0, "could not read param map file to verify version from header"
+  0062..0068 op=71 invoke-static {v1, v0, v2}, LX/06S;->A0L(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+  0068..006c op=1a const-string v0, "v4"
+  006c..0072 op=6e invoke-virtual {v4, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+  0072..0074 op=0a move-result v0
+  0074..0078 op=39 if-nez v0, +0x10
+  0078..007e op=6e invoke-virtual {v4, v3}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+  007e..0080 op=0a move-result v0
+  0080..0084 op=38 if-eqz v0, +0x5c
+  0084..0088 op=1a const-string v0, "_v4_u"
+  0088..008e op=6e invoke-virtual {v7, v0}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+  008e..0090 op=0a move-result v0
+  0090..0094 op=38 if-eqz v0, +0x54
+  0094..009a op=71 invoke-static {v7}, LX/6aj;->A15(Ljava/lang/String;)Ljava/io/File;
+  009a..009c op=0c move-result-object v4
+  009c..00a2 op=6e invoke-virtual {v4}, Ljava/io/File;->getName()Ljava/lang/String;
+  00a2..00a4 op=0c move-result-object v2
+  00a4..00a8 op=1a const-string v1, "params_map"
+  00a8..00ac op=1a const-string v0, "params_names"
+  00ac..00b2 op=6e invoke-virtual {v2, v1, v0}, Ljava/lang/String;->replace(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;
+  00b2..00b4 op=0c move-result-object v2
+  00b4..00ba op=6e invoke-virtual {v4}, Ljava/io/File;->getParent()Ljava/lang/String;
+  00ba..00bc op=0c move-result-object v0
+  00bc..00c0 op=38 if-eqz v0, +0xf
+  00c0..00c6 op=6e invoke-virtual {v4}, Ljava/io/File;->getParent()Ljava/lang/String;
+  00c6..00c8 op=0c move-result-object v1
+  00c8..00cc op=22 new-instance v0, Ljava/io/File;
+  00cc..00d2 op=70 invoke-direct {v0, v1, v2}, Ljava/io/File;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+  00d2..00d8 op=6e invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  00d8..00da op=0c move-result-object v3
+  00da..00e0 op=71 invoke-static {v3}, LX/6an;->A1a(Ljava/lang/String;)Z
+  00e0..00e2 op=0a move-result v2
+  00e2..00e6 op=1a const-string v0, "_v4_u1."
+  00e6..00ec op=6e invoke-virtual {v7, v0}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+  00ec..00ee op=0a move-result v0
+  00ee..00f2 op=39 if-nez v0, +0x1b
+  00f2..00f6 op=1a const-string v0, "_v4_u2."
+  00f6..00fc op=6e invoke-virtual {v7, v0}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+  00fc..00fe op=0a move-result v0
+  00fe..0102 op=39 if-nez v0, +0x13
+  0102..0106 op=1a const-string v0, "_kMobileConfigSessionless"
+  0106..010c op=6e invoke-virtual {v7, v0}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+  010c..010e op=0a move-result v0
+  010e..0112 op=39 if-nez v0, +0xb
+  0112..0116 op=1a const-string v0, "_kMobileConfigSessionbased"
+  0116..011c op=6e invoke-virtual {v7, v0}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+  011c..011e op=0a move-result v0
+  011e..0120 op=12 const/4 v1, #0x0
+  0120..0124 op=38 if-eqz v0, +0x3
+  0124..0126 op=12 const/4 v1, #0x1
+  0126..012a op=38 if-eqz v2, +0xa
+  012a..0130 op=71 invoke-static {v7, v1}, LX/Hvv;->A00(Ljava/lang/String;Z)I
+  0130..0132 op=0a move-result v0
+  0132..0138 op=6e invoke-virtual {v6, v7, v3, v0}, LX/Hvv;->A02(Ljava/lang/String;Ljava/lang/String;I)V
+  0138..013a op=0e return-void
+  013a..0140 op=71 invoke-static {v7, v1}, LX/Hvv;->A00(Ljava/lang/String;Z)I
+  0140..0142 op=0a move-result v1
+  0142..0144 op=12 const/4 v0, #0x0
+  0144..014a op=6e invoke-virtual {v6, v7, v0, v1}, LX/Hvv;->A02(Ljava/lang/String;Ljava/lang/String;I)V
+  014a..014c op=0e return-void
+  # exception table: 5 try range(s)
+  # catch Ljava/io/IOException; code_units 0008..0011 -> 002b
+  # catch <all> code_units 0011..001b -> 0021
+  # catch Ljava/io/IOException; code_units 001b..001f -> 001f
+  # catch <all> code_units 0022..0026 -> 0026
+  # catch Ljava/io/IOException; code_units 0027..002b -> 002b
+.end method

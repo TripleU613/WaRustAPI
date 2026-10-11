@@ -1,0 +1,54 @@
+# APK-derived structural disassembly: LX/0Dk;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A02(LLZ) flags=0x19 registers=10
+  # full signature: LX/0Dk;->A02(Ljava/lang/String;Z)Ljava/lang/String;
+  0000..0002 op=12 const/4 v5, #0x0
+  0002..0008 op=71 invoke-static {v8, v5}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000c op=38 if-eqz v9, +0x4d
+  000c..000e op=12 const/4 v7, #0x0
+  000e..0012 op=1a const-string v0, "latest.idx"
+  0012..0016 op=22 new-instance v1, Ljava/io/File;
+  0016..001c op=70 invoke-direct {v1, v8, v0}, Ljava/io/File;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+  001c..001e op=12 const/4 v6, #0x1
+  001e..0022 op=62 sget-object v0, LX/07l;->A05:Ljava/nio/charset/Charset;
+  0022..0028 op=71 invoke-static {v1, v0}, LX/07k;->A02(Ljava/io/File;Ljava/nio/charset/Charset;)Ljava/lang/String;
+  0028..002a op=0c move-result-object v0
+  002a..0030 op=71 invoke-static {v0}, LX/0CM;->A0Q(Ljava/lang/CharSequence;)Ljava/lang/CharSequence;
+  0030..0032 op=0c move-result-object v0
+  0032..0038 op=6e invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  0038..003a op=0c move-result-object v0
+  003a..0040 op=71 invoke-static {v0}, Ljava/lang/Integer;->parseInt(Ljava/lang/String;)I
+  0040..0042 op=0a move-result v0
+  0042..0046 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  0046..004c op=70 invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
+  004c..0052 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  0052..0056 op=1a const-string v0, ".mctable"
+  0056..005c op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  005c..0062 op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  0062..0064 op=0c move-result-object v0
+  0064..0068 op=22 new-instance v4, Ljava/io/File;
+  0068..006e op=70 invoke-direct {v4, v8, v0}, Ljava/io/File;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+  006e..0074 op=6e invoke-virtual {v4}, Ljava/io/File;->exists()Z
+  0074..0076 op=0a move-result v0
+  0076..007a op=38 if-eqz v0, +0x13
+  007a..0080 op=6e invoke-virtual {v4}, Ljava/io/File;->getCanonicalPath()Ljava/lang/String;
+  0080..0082 op=0c move-result-object v7
+  0082..0084 op=28 goto +0xd
+  0084..0086 op=0d move-exception v3
+  0086..008a op=1a const-string v2, "MobileConfigPathUtils"
+  008a..008e op=23 new-array v1, v6, [Ljava/lang/Object;
+  008e..0092 op=4d aput-object v4, v1, v5
+  0092..0096 op=1a const-string v0, "Failed to get canonical path for cached mctable: %s"
+  0096..009c op=71 invoke-static {v2, v3, v0, v1}, LX/06S;->A0Z(Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/String;[Ljava/lang/Object;)V
+  009c..00a0 op=38 if-eqz v7, +0x3
+  00a0..00a2 op=11 return-object v7
+  00a2..00a8 op=71 invoke-static {v8}, LX/0Dk;->A01(Ljava/lang/String;)Ljava/lang/String;
+  00a8..00aa op=0c move-result-object v0
+  00aa..00ac op=11 return-object v0
+  # exception table: 2 try range(s)
+  # catch Ljava/lang/Exception; code_units 0007..0021 -> 004e
+  # catch Ljava/io/IOException; code_units 003d..0042 -> 0042
+.end method

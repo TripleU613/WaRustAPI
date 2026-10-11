@@ -1,0 +1,35 @@
+# APK-derived structural disassembly: LX/0Dk;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VLLLIZZ) flags=0x10001 registers=9
+  # full signature: LX/0Dk;-><init>(LX/092;Ljava/io/File;Ljava/lang/String;IZZ)V
+  0000..0006 op=70 invoke-direct {v2}, Ljava/lang/Object;-><init>()V
+  0006..0008 op=12 const/4 v1, #0x0
+  0008..000e op=71 invoke-static {v4}, LX/GAg;->A00(Ljava/io/File;)Ljava/lang/String;
+  000e..0010 op=0c move-result-object v0
+  0010..0014 op=5b iput-object v0, v2, LX/0Dk;->A0A:Ljava/lang/String;
+  0014..0018 op=5b iput-object v5, v2, LX/0Dk;->A0B:Ljava/lang/String;
+  0018..001c op=59 iput v6, v2, LX/0Dk;->A05:I
+  001c..0020 op=5b iput-object v3, v2, LX/0Dk;->A09:LX/092;
+  0020..0026 op=71 invoke-static {}, Ljava/util/concurrent/ConcurrentHashMap;->newKeySet()Ljava/util/concurrent/ConcurrentHashMap$KeySetView;
+  0026..0028 op=0c move-result-object v0
+  0028..002c op=5b iput-object v0, v2, LX/0Dk;->A08:Ljava/util/Set;
+  002c..0032 op=71 invoke-static {}, Ljava/util/concurrent/ConcurrentHashMap;->newKeySet()Ljava/util/concurrent/ConcurrentHashMap$KeySetView;
+  0032..0034 op=0c move-result-object v0
+  0034..0038 op=5b iput-object v0, v2, LX/0Dk;->A07:Ljava/util/Set;
+  0038..003e op=71 invoke-static {}, Ljava/util/concurrent/ConcurrentHashMap;->newKeySet()Ljava/util/concurrent/ConcurrentHashMap$KeySetView;
+  003e..0040 op=0c move-result-object v0
+  0040..0044 op=5b iput-object v0, v2, LX/0Dk;->A06:Ljava/util/Set;
+  0044..0046 op=12 const/4 v0, #0x0
+  0046..004a op=5b iput-object v0, v2, LX/0Dk;->A03:LX/GQt;
+  004a..004e op=5b iput-object v0, v2, LX/0Dk;->A00:LX/HXc;
+  004e..0052 op=5b iput-object v0, v2, LX/0Dk;->A02:LX/GQr;
+  0052..0056 op=38 if-eqz v7, +0x3
+  0056..0058 op=12 const/4 v1, #0x1
+  0058..005c op=5c iput-boolean v1, v2, LX/0Dk;->A04:Z
+  005c..0060 op=5c iput-boolean v8, v2, LX/0Dk;->A0C:Z
+  0060..0062 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

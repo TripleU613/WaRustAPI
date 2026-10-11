@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_c76d34982fa090c8e365f2a47a475050a9d77aedbe2fd744d589242d956b0d01",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.C0Dk",
+    "method_name": "A02"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-uk7Xck/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\",\"max_heap_bytes\":15695085568,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C0Dk"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"name\":\"A00\",\"def_pos\":0,\"type\":\"X.HXc\"},{\"name\":\"A01\",\"def_pos\":0,\"type\":\"X.00r\"},{\"name\":\"A02\",\"def_pos\":0,\"type\":\"X.GQr\"},{\"name\":\"A03\",\"def_pos\":0,\"type\":\"X.GQt\"},{\"name\":\"A04\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A05\",\"def_pos\":0,\"type\":\"int\"},{\"name\":\"A06\",\"def_pos\":0,\"type\":\"java.util.Set\"},{\"name\":\"A07\",\"def_pos\":0,\"type\":\"java.util.Set\"},{\"name\":\"A08\",\"def_pos\":0,\"type\":\"java.util.Set\"},{\"name\":\"A09\",\"def_pos\":0,\"type\":\"X.092\"},{\"name\":\"A0A\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"A0B\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"A0C\",\"def_pos\":0,\"type\":\"boolean\"}],\"field_count\":13,\"full_name\":\"X.C0Dk\",\"name\":\"C0Dk\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":18,\"methods\":[{\"is_constructor\":true,\"signature\":\"\\u003cinit\\u003e(X.092, java.io.File, java.lang.String, int, boolean, boolean): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\"},{\"is_constructor\":false,\"signature\":\"A00(): java.lang.String\",\"def_pos\":0,\"name\":\"A00\"},{\"is_constructor\":false,\"signature\":\"A01(java.lang.String): java.lang.String\",\"def_pos\":0,\"name\":\"A01\"},{\"is_constructor\":false,\"signature\":\"A02(java.lang.String, boolean): java.lang.String\",\"def_pos\":0,\"name\":\"A02\"},{\"is_constructor\":false,\"signature\":\"A03(X.09K, java.io.File, java.lang.String, int): void\",\"def_pos\":0,\"name\":\"A03\"},{\"is_constructor\":false,\"signature\":\"getDataDirPath(): java.lang.String\",\"def_pos\":0,\"name\":\"getDataDirPath\"},{\"is_constructor\":false,\"signature\":\"getLatestEPRefreshId(): java.lang.Integer\",\"def_pos\":0,\"name\":\"getLatestEPRefreshId\"},{\"is_constructor\":false,\"signature\":\"getLatestFetchIntervalSec(): java.lang.Long\",\"def_pos\":0,\"name\":\"getLatestFetchIntervalSec\"},{\"is_constructor\":false,\"signature\":\"getLatestHandle(): X.MYw\",\"def_pos\":0,\"name\":\"getLatestHandle\"},{\"is_constructor\":false,\"signature\":\"getOrCreateOverridesTable(): X.09C\",\"def_pos\":0,\"name\":\"getOrCreateOverridesTable\"},{\"is_constructor\":false,\"signature\":\"isConsistencyLoggingNeeded(X.HBf): boolean\",\"def_pos\":0,\"name\":\"isConsistencyLoggingNeeded\"},{\"is_constructor\":false,\"signature\":\"isValid(): boolean\",\"def_pos\":0,\"name\":\"isValid\"},{\"is_constructor\":false,\"signature\":\"logAccessWithoutExposure(java.lang.String, java.lang.String): void\",\"def_pos\":0,\"name\":\"logAccessWithoutExposure\"},{\"is_constructor\":false,\"signature\":\"logConfigs(java.lang.String, X.HBf, java.util.Map): void\",\"def_pos\":0,\"name\":\"logConfigs\"},{\"is_constructor\":false,\"signature\":\"logExposure(java.lang.String, long, java.lang.String, java.lang.String): void\",\"def_pos\":0,\"name\":\"logExposure\"},{\"is_constructor\":false,\"signature\":\"syncFetchReason(): java.lang.String\",\"def_pos\":0,\"name\":\"syncFetchReason\"},{\"is_constructor\":false,\"signature\":\"updateConfigs(X.HUl): boolean\",\"def_pos\":0,\"name\":\"updateConfigs\"},{\"is_constructor\":false,\"signature\":\"updateEmergencyPushConfigs(com.facebook.mobileconfig.factory.MobileConfigUpdateConfigsCallback): boolean\",\"def_pos\":0,\"name\":\"updateEmergencyPushConfigs\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C0Dk",
+          "method_name": "A02",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_name\":\"A02\",\"overload_count\":1,\"body\":\"    public static final String A02(String str, boolean z) {\\n        C00h.A0A(str, 0);\\n        if (z) {\\n            String canonicalPath \\u003d null;\\n            try {\\n                int i \\u003d Integer.parseInt(C0CM.A0Q(C07k.A02(new File(str, \\\"latest.idx\\\"), C07l.A05)).toString());\\n                StringBuilder sb \\u003d new StringBuilder();\\n                sb.append(i);\\n                sb.append(\\\".mctable\\\");\\n                File file \\u003d new File(str, sb.toString());\\n                if (file.exists()) {\\n                    try {\\n                        canonicalPath \\u003d file.getCanonicalPath();\\n                    } catch (IOException e) {\\n                        C06S.A0Z(\\\"MobileConfigPathUtils\\\", e, \\\"Failed to get canonical path for cached mctable: %s\\\", file);\\n                    }\\n                }\\n            } catch (Exception unused) {\\n            }\\n            if (canonicalPath !\\u003d null) {\\n                return canonicalPath;\\n            }\\n        }\\n        return A01(str);\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.C0Dk\",\"full_name\":\"X.0Dk.A02\",\"mode\":\"java\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.C0Dk",
+    "method": {
+      "name": "A02",
+      "reported_signature": "A02(java.lang.String, boolean): java.lang.String",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public static final String A02(String str, boolean z) {\n        C00h.A0A(str, 0);\n        if (z) {\n            String canonicalPath = null;\n            try {\n                int i = Integer.parseInt(C0CM.A0Q(C07k.A02(new File(str, \"latest.idx\"), C07l.A05)).toString());\n                StringBuilder sb = new StringBuilder();\n                sb.append(i);\n                sb.append(\".mctable\");\n                File file = new File(str, sb.toString());\n                if (file.exists()) {\n                    try {\n                        canonicalPath = file.getCanonicalPath();\n                    } catch (IOException e) {\n                        C06S.A0Z(\"MobileConfigPathUtils\", e, \"Failed to get canonical path for cached mctable: %s\", file);\n                    }\n                }\n            } catch (Exception unused) {\n            }\n            if (canonicalPath != null) {\n                return canonicalPath;\n            }\n        }\n        return A01(str);\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

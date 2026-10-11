@@ -1,0 +1,14 @@
+# APK-derived structural disassembly: LX/GQr;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VL) flags=0x10001 registers=3
+  # full signature: LX/GQr;-><init>(Ljava/lang/String;)V
+  0000..0006 op=70 invoke-direct {v1}, Ljava/lang/Object;-><init>()V
+  0006..000a op=5b iput-object v2, v1, LX/GQr;->A01:Ljava/lang/String;
+  000a..000c op=12 const/4 v0, #0x0
+  000c..0010 op=5b iput-object v0, v1, LX/GQr;->A00:Ljava/nio/ByteBuffer;
+  0010..0012 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

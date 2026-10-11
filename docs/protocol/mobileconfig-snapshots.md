@@ -6,6 +6,8 @@
 This extends the [effective Boolean trace](mobileconfig-boolean.md).
 The Java-manager wrapper is resolved here; manager storage, callback
 registration and complete update authority remain open.
+The later [storage trace](mobileconfig-storage.md) establishes file selection,
+buffer validation and translation-table assignment for the Java manager.
 
 ## Java-manager Boolean wrapper
 

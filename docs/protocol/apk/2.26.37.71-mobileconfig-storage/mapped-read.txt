@@ -1,0 +1,76 @@
+# APK-derived structural disassembly: LX/GQv;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(LL) flags=0x9 registers=16
+  # full signature: LX/GQv;->A00(Ljava/lang/String;)Ljava/nio/MappedByteBuffer;
+  0000..0006 op=71 invoke-static {v15}, LX/6aj;->A15(Ljava/lang/String;)Ljava/io/File;
+  0006..0008 op=0c move-result-object v1
+  0008..000a op=12 const/4 v8, #0x0
+  000a..000c op=12 const/4 v4, #0x0
+  000c..000e op=12 const/4 v5, #0x1
+  000e..0014 op=71 invoke-static {v1}, LX/6ak;->A15(Ljava/io/File;)Ljava/io/FileInputStream;
+  0014..0016 op=0c move-result-object v7
+  0016..001c op=6e invoke-virtual {v7}, Ljava/io/FileInputStream;->getChannel()Ljava/nio/channels/FileChannel;
+  001c..001e op=0c move-result-object v9
+  001e..0022 op=62 sget-object v10, Ljava/nio/channels/FileChannel$MapMode;->READ_ONLY:Ljava/nio/channels/FileChannel$MapMode;
+  0022..0028 op=6e invoke-virtual {v9}, Ljava/nio/channels/FileChannel;->size()J
+  0028..002a op=0b move-result-wide v13
+  002a..002e op=16 const-wide/16 v11, #0x0
+  002e..0034 op=74 invoke-virtual/range {v9..v14}, Ljava/nio/channels/FileChannel;->map(Ljava/nio/channels/FileChannel$MapMode;JJ)Ljava/nio/MappedByteBuffer;
+  0034..0036 op=0c move-result-object v6
+  0036..003a op=62 sget-object v0, Ljava/nio/ByteOrder;->LITTLE_ENDIAN:Ljava/nio/ByteOrder;
+  003a..0040 op=6e invoke-virtual {v6, v0}, Ljava/nio/ByteBuffer;->order(Ljava/nio/ByteOrder;)Ljava/nio/ByteBuffer;
+  0040..0046 op=6e invoke-virtual {v1}, Ljava/io/File;->length()J
+  0046..0048 op=0b move-result-wide v1
+  0048..004a op=84 long-to-int v0, v1
+  004a..0050 op=71 invoke-static {v6, v0}, LX/Hq6;->A00(Ljava/nio/ByteBuffer;I)Ljava/lang/String;
+  0050..0052 op=0c move-result-object v3
+  0052..0058 op=6e invoke-virtual {v3}, Ljava/lang/String;->isEmpty()Z
+  0058..005a op=0a move-result v0
+  005a..005e op=39 if-nez v0, +0x14
+  005e..0062 op=1a const-string v2, "MobileConfigMmapHandle"
+  0062..0066 op=1a const-string v1, "Cannot validate \"%s\", err:%s"
+  0066..006c op=71 invoke-static {v15, v3, v4, v5}, LX/1xi;->A1b(Ljava/lang/Object;Ljava/lang/Object;II)[Ljava/lang/Object;
+  006c..006e op=0c move-result-object v0
+  006e..0074 op=71 invoke-static {v2, v1, v0}, LX/06S;->A0R(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+  0074..007a op=6e invoke-virtual {v9}, Ljava/nio/channels/spi/AbstractInterruptibleChannel;->close()V
+  007a..0080 op=6e invoke-virtual {v7}, Ljava/io/InputStream;->close()V
+  0080..0082 op=11 return-object v8
+  0082..0088 op=6e invoke-virtual {v9}, Ljava/nio/channels/spi/AbstractInterruptibleChannel;->close()V
+  0088..008e op=6e invoke-virtual {v7}, Ljava/io/InputStream;->close()V
+  008e..0090 op=11 return-object v6
+  0090..0092 op=0d move-exception v1
+  0092..0096 op=38 if-eqz v9, +0xa
+  0096..009c op=6e invoke-virtual {v9}, Ljava/nio/channels/spi/AbstractInterruptibleChannel;->close()V
+  009c..009e op=28 goto +0x5
+  009e..00a0 op=0d move-exception v0
+  00a0..00a6 op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  00a6..00a8 op=27 throw v1
+  00a8..00aa op=0d move-exception v1
+  00aa..00b0 op=6e invoke-virtual {v7}, Ljava/io/InputStream;->close()V
+  00b0..00b2 op=28 goto +0x5
+  00b2..00b4 op=0d move-exception v0
+  00b4..00ba op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  00ba..00bc op=27 throw v1
+  00bc..00be op=0d move-exception v3
+  00be..00c2 op=1a const-string v2, "MobileConfigMmapHandle"
+  00c2..00c6 op=23 new-array v1, v5, [Ljava/lang/Object;
+  00c6..00ca op=4d aput-object v15, v1, v4
+  00ca..00ce op=1a const-string v0, "Cannot open \"%s\""
+  00ce..00d4 op=71 invoke-static {v2, v3, v0, v1}, LX/06S;->A0Z(Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/String;[Ljava/lang/Object;)V
+  00d4..00d6 op=11 return-object v8
+  # exception table: 11 try range(s)
+  # catch Ljava/io/IOException; code_units 0007..000b -> 005e
+  # catch <all> code_units 000b..000f -> 0054
+  # catch <all> code_units 000f..003a -> 0048
+  # catch <all> code_units 003a..003d -> 0054
+  # catch Ljava/io/IOException; code_units 003d..0041 -> 005e
+  # catch <all> code_units 0041..0044 -> 0054
+  # catch Ljava/io/IOException; code_units 0044..0048 -> 005e
+  # catch <all> code_units 004b..004f -> 004f
+  # catch <all> code_units 0050..0054 -> 0054
+  # catch <all> code_units 0055..0059 -> 0059
+  # catch Ljava/io/IOException; code_units 005a..005e -> 005e
+.end method

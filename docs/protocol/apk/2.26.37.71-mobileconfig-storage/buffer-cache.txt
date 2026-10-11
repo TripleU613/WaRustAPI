@@ -1,0 +1,79 @@
+# APK-derived structural disassembly: Lcom/facebook/mobileconfig/MobileConfigFileRepository;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method getJavaByteBuffer(LL) flags=0x9 registers=7
+  # full signature: Lcom/facebook/mobileconfig/MobileConfigFileRepository;->getJavaByteBuffer(Ljava/lang/String;)Ljava/nio/ByteBuffer;
+  0000..0004 op=62 sget-object v5, Lcom/facebook/mobileconfig/MobileConfigFileRepository;->mFileCacheLock:Ljava/lang/Object;
+  0004..0006 op=1d monitor-enter
+  0006..000a op=38 if-eqz v6, +0x8
+  000a..0010 op=6e invoke-virtual {v6}, Ljava/lang/String;->isEmpty()Z
+  0010..0012 op=0a move-result v0
+  0012..0016 op=38 if-eqz v0, +0x9
+  0016..001a op=1a const-string v1, "MobileConfigFileRepository"
+  001a..001e op=1a const-string v0, "Filename should not be null or empty."
+  001e..0024 op=71 invoke-static {v1, v0}, LX/06S;->A0I(Ljava/lang/String;Ljava/lang/String;)V
+  0024..0028 op=62 sget-object v4, Lcom/facebook/mobileconfig/MobileConfigFileRepository;->mFileCache:Ljava/util/Map;
+  0028..002e op=72 invoke-interface {v4, v6}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+  002e..0030 op=0c move-result-object v3
+  0030..0034 op=1f check-cast v3, LX/HJh;
+  0034..0038 op=38 if-eqz v3, +0x20
+  0038..003c op=1a const-string v2, "MobileConfigFileRepository"
+  003c..0040 op=1a const-string v1, "Returning existing buffer with count: %d for filename: %s"
+  0040..0044 op=54 iget-object v0, v3, LX/HJh;->A01:Ljava/util/concurrent/atomic/AtomicInteger;
+  0044..004a op=6e invoke-virtual {v0}, Ljava/util/concurrent/atomic/AtomicInteger;->get()I
+  004a..004c op=0a move-result v0
+  004c..0052 op=71 invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  0052..0054 op=0c move-result-object v0
+  0054..005a op=71 invoke-static {v0, v6, v2, v1}, LX/06S;->A0B(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)V
+  005a..005e op=54 iget-object v0, v3, LX/HJh;->A00:Ljava/nio/ByteBuffer;
+  005e..0062 op=38 if-eqz v0, +0x47
+  0062..0066 op=54 iget-object v0, v3, LX/HJh;->A01:Ljava/util/concurrent/atomic/AtomicInteger;
+  0066..006c op=6e invoke-virtual {v0}, Ljava/util/concurrent/atomic/AtomicInteger;->incrementAndGet()I
+  006c..0070 op=54 iget-object v0, v3, LX/HJh;->A00:Ljava/nio/ByteBuffer;
+  0070..0072 op=1e monitor-exit
+  0072..0074 op=11 return-object v0
+  0074..007a op=71 invoke-static {v6}, Lcom/facebook/mobileconfig/MobileConfigFileRepository;->readBuffer(Ljava/lang/String;)Ljava/nio/ByteBuffer;
+  007a..007c op=0c move-result-object v1
+  007c..0080 op=39 if-nez v1, +0x5
+  0080..0082 op=12 const/4 v0, #0x0
+  0082..0084 op=1e monitor-exit
+  0084..0086 op=11 return-object v0
+  0086..008a op=1a const-string v3, "MobileConfigFileRepository"
+  008a..008e op=1a const-string v0, "Created new buffer handle for filename: %s"
+  008e..0094 op=71 invoke-static {v6, v3, v0}, LX/06S;->A0D(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)V
+  0094..0098 op=22 new-instance v2, LX/HJh;
+  0098..009e op=70 invoke-direct {v2}, Ljava/lang/Object;-><init>()V
+  009e..00a2 op=5b iput-object v1, v2, LX/HJh;->A00:Ljava/nio/ByteBuffer;
+  00a2..00a4 op=12 const/4 v1, #0x0
+  00a4..00aa op=71 invoke-static {v1}, LX/Ayj;->A1A(I)Ljava/util/concurrent/atomic/AtomicInteger;
+  00aa..00ac op=0c move-result-object v0
+  00ac..00b0 op=5b iput-object v0, v2, LX/HJh;->A01:Ljava/util/concurrent/atomic/AtomicInteger;
+  00b0..00b4 op=5c iput-boolean v1, v2, LX/HJh;->A02:Z
+  00b4..00ba op=72 invoke-interface {v4, v6, v2}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+  00ba..00be op=54 iget-object v0, v2, LX/HJh;->A00:Ljava/nio/ByteBuffer;
+  00be..00c2 op=38 if-eqz v0, +0xb
+  00c2..00c6 op=54 iget-object v0, v2, LX/HJh;->A01:Ljava/util/concurrent/atomic/AtomicInteger;
+  00c6..00cc op=6e invoke-virtual {v0}, Ljava/util/concurrent/atomic/AtomicInteger;->incrementAndGet()I
+  00cc..00d0 op=54 iget-object v0, v2, LX/HJh;->A00:Ljava/nio/ByteBuffer;
+  00d0..00d2 op=1e monitor-exit
+  00d2..00d4 op=11 return-object v0
+  00d4..00d8 op=1a const-string v0, "Cannot create new reference for null buffer."
+  00d8..00de op=71 invoke-static {v3, v0}, LX/06S;->A0F(Ljava/lang/String;Ljava/lang/String;)V
+  00de..00e2 op=1a const-string v0, "ByteBuffer has already been released."
+  00e2..00e8 op=71 invoke-static {v0}, LX/1xf;->A16(Ljava/lang/String;)Ljava/lang/IllegalStateException;
+  00e8..00ea op=0c move-result-object v0
+  00ea..00ec op=28 goto +0xc
+  00ec..00f0 op=1a const-string v0, "Cannot create new reference for null buffer."
+  00f0..00f6 op=71 invoke-static {v2, v0}, LX/06S;->A0F(Ljava/lang/String;Ljava/lang/String;)V
+  00f6..00fa op=1a const-string v0, "ByteBuffer has already been released."
+  00fa..0100 op=71 invoke-static {v0}, LX/1xf;->A16(Ljava/lang/String;)Ljava/lang/IllegalStateException;
+  0100..0102 op=0c move-result-object v0
+  0102..0104 op=27 throw v0
+  0104..0106 op=0d move-exception v0
+  0106..0108 op=1e monitor-exit
+  0108..010a op=27 throw v0
+  # exception table: 1 try range(s)
+  # catch <all> code_units 0005..0084 -> 0082
+.end method

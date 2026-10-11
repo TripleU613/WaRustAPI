@@ -1,0 +1,17 @@
+# APK-derived structural disassembly: LX/0Dk;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method updateConfigs(ZL) flags=0x1 registers=4
+  # full signature: LX/0Dk;->updateConfigs(LX/HUl;)Z
+  0000..0004 op=1a const-string v1, "MobileConfigJavaManager"
+  0004..000a op=1b const-string/jumbo v0, "updateConfigs(options)"
+  000a..0010 op=71 invoke-static {v1, v0}, LX/06S;->A0G(Ljava/lang/String;Ljava/lang/String;)V
+  0010..0014 op=54 iget-object v1, v3, LX/HUl;->A00:Lcom/facebook/mobileconfig/factory/MobileConfigUpdateConfigsCallback;
+  0014..0016 op=12 const/4 v0, #0x0
+  0016..001a op=38 if-eqz v1, +0x5
+  001a..0020 op=72 invoke-interface {v1, v0}, Lcom/facebook/mobileconfig/factory/MobileConfigUpdateConfigsCallback;->onNetworkComplete(Z)V
+  0020..0022 op=0f return v0
+  # exception table: 0 try range(s)
+.end method

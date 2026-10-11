@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_0b286e8c645e417af814d115ab5616345a7fdeb8e7571fb1e65fe0cfb0e76453",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.Hvv",
+    "method_name": "A01"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-uk7Xck/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\",\"max_heap_bytes\":15695085568,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.Hvv"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"name\":\"A00\",\"def_pos\":0,\"type\":\"int\"},{\"name\":\"A01\",\"def_pos\":0,\"type\":\"X.HbE\"},{\"name\":\"A02\",\"def_pos\":0,\"type\":\"X.HXb\"},{\"name\":\"A03\",\"def_pos\":0,\"type\":\"java.util.Map\"},{\"name\":\"A04\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A05\",\"def_pos\":0,\"type\":\"int[]\"},{\"name\":\"A06\",\"def_pos\":0,\"type\":\"java.lang.StringBuilder\"}],\"field_count\":7,\"full_name\":\"X.Hvv\",\"name\":\"Hvv\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":4,\"methods\":[{\"is_constructor\":true,\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\"},{\"is_constructor\":false,\"signature\":\"A00(java.lang.String, boolean): int\",\"def_pos\":0,\"name\":\"A00\"},{\"is_constructor\":false,\"signature\":\"A01(java.lang.String): void\",\"def_pos\":0,\"name\":\"A01\"},{\"is_constructor\":false,\"signature\":\"A02(java.lang.String, java.lang.String, int): void\",\"def_pos\":0,\"name\":\"A02\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.Hvv",
+          "method_name": "A01",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_name\":\"A01\",\"overload_count\":1,\"body\":\"    /* JADX WARN: Code duplicated, block: B:33:0x0092  */\\n    public void A01(String str) throws IllegalAccessException, InvocationTargetException {\\n        String str2;\\n        boolean z;\\n        this.A06.setLength(0);\\n        String string \\u003d Voip.REJECT_REASON_DECLINED;\\n        try {\\n            FileInputStream fileInputStreamA15 \\u003d C6ak.A15(C6aj.A15(str));\\n            try {\\n                byte[] bArr \\u003d new byte[2];\\n                fileInputStreamA15.read(bArr);\\n                str2 \\u003d new String(bArr, 0, 2);\\n                try {\\n                    fileInputStreamA15.close();\\n                } catch (IOException e) {\\n                    e \\u003d e;\\n                    C06S.A0L(\\\"ParamsMapParser\\\", \\\"could not read param map file to verify version from header\\\", e);\\n                }\\n            } catch (Throwable th) {\\n                try {\\n                    fileInputStreamA15.close();\\n                } catch (Throwable th2) {\\n                    Throwable.class.getDeclaredMethod(\\\"addSuppressed\\\", Throwable.class).invoke(th, th2);\\n                }\\n                throw th;\\n            }\\n        } catch (IOException e2) {\\n            e \\u003d e2;\\n            str2 \\u003d Voip.REJECT_REASON_DECLINED;\\n        }\\n        if (str2.equals(\\\"v4\\\") || (str2.equals(Voip.REJECT_REASON_DECLINED) \\u0026\\u0026 str.contains(\\\"_v4_u\\\"))) {\\n            File fileA15 \\u003d C6aj.A15(str);\\n            String strReplace \\u003d fileA15.getName().replace(\\\"params_map\\\", \\\"params_names\\\");\\n            if (fileA15.getParent() !\\u003d null) {\\n                string \\u003d new File(fileA15.getParent(), strReplace).toString();\\n            }\\n            boolean zA1a \\u003d C6an.A1a(string);\\n            if (!str.contains(\\\"_v4_u1.\\\") \\u0026\\u0026 !str.contains(\\\"_v4_u2.\\\") \\u0026\\u0026 !str.contains(\\\"_kMobileConfigSessionless\\\")) {\\n                z \\u003d str.contains(\\\"_kMobileConfigSessionbased\\\");\\n            }\\n            if (zA1a) {\\n                A02(str, string, A00(str, z));\\n            } else {\\n                A02(str, null, A00(str, z));\\n            }\\n        }\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.Hvv\",\"full_name\":\"X.Hvv.A01\",\"mode\":\"java\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.Hvv",
+    "method": {
+      "name": "A01",
+      "reported_signature": "A01(java.lang.String): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Code duplicated, block: B:33:0x0092  */\n    public void A01(String str) throws IllegalAccessException, InvocationTargetException {\n        String str2;\n        boolean z;\n        this.A06.setLength(0);\n        String string = Voip.REJECT_REASON_DECLINED;\n        try {\n            FileInputStream fileInputStreamA15 = C6ak.A15(C6aj.A15(str));\n            try {\n                byte[] bArr = new byte[2];\n                fileInputStreamA15.read(bArr);\n                str2 = new String(bArr, 0, 2);\n                try {\n                    fileInputStreamA15.close();\n                } catch (IOException e) {\n                    e = e;\n                    C06S.A0L(\"ParamsMapParser\", \"could not read param map file to verify version from header\", e);\n                }\n            } catch (Throwable th) {\n                try {\n                    fileInputStreamA15.close();\n                } catch (Throwable th2) {\n                    Throwable.class.getDeclaredMethod(\"addSuppressed\", Throwable.class).invoke(th, th2);\n                }\n                throw th;\n            }\n        } catch (IOException e2) {\n            e = e2;\n            str2 = Voip.REJECT_REASON_DECLINED;\n        }\n        if (str2.equals(\"v4\") || (str2.equals(Voip.REJECT_REASON_DECLINED) && str.contains(\"_v4_u\"))) {\n            File fileA15 = C6aj.A15(str);\n            String strReplace = fileA15.getName().replace(\"params_map\", \"params_names\");\n            if (fileA15.getParent() != null) {\n                string = new File(fileA15.getParent(), strReplace).toString();\n            }\n            boolean zA1a = C6an.A1a(string);\n            if (!str.contains(\"_v4_u1.\") && !str.contains(\"_v4_u2.\") && !str.contains(\"_kMobileConfigSessionless\")) {\n                z = str.contains(\"_kMobileConfigSessionbased\");\n            }\n            if (zA1a) {\n                A02(str, string, A00(str, z));\n            } else {\n                A02(str, null, A00(str, z));\n            }\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

@@ -1,0 +1,15 @@
+# APK-derived structural disassembly: LX/0Dm;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method accept(ZLL) flags=0x11 registers=5
+  # full signature: LX/0Dm;->accept(Ljava/io/File;Ljava/lang/String;)Z
+  0000..0006 op=71 invoke-static {v4}, LX/00h;->A09(Ljava/lang/Object;)V
+  0006..000a op=1a const-string v1, ".mctable"
+  000a..000c op=12 const/4 v0, #0x0
+  000c..0012 op=71 invoke-static {v4, v1, v0}, LX/0CL;->A0F(Ljava/lang/String;Ljava/lang/String;Z)Z
+  0012..0014 op=0a move-result v0
+  0014..0016 op=0f return v0
+  # exception table: 0 try range(s)
+.end method

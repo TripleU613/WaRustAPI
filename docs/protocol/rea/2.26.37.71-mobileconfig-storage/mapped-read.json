@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_30b3e635baaee8d56fe19a8e2d96e0bff6caef26dd889bc62d824c0cfa4f1776",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.GQv",
+    "method_name": "A00"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-uk7Xck/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\",\"max_heap_bytes\":15695085568,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.GQv"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[],\"field_count\":0,\"full_name\":\"X.GQv\",\"name\":\"GQv\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":1,\"methods\":[{\"is_constructor\":false,\"signature\":\"A00(java.lang.String): java.nio.MappedByteBuffer\",\"def_pos\":0,\"name\":\"A00\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.GQv",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_name\":\"A00\",\"overload_count\":1,\"body\":\"/* JADX INFO: loaded from: classes9.dex */\\npublic abstract class GQv extends MYw {\\n    public static MappedByteBuffer A00(String str) throws IllegalAccessException, InvocationTargetException {\\n        File fileA15 \\u003d C6aj.A15(str);\\n        try {\\n            FileInputStream fileInputStreamA15 \\u003d C6ak.A15(fileA15);\\n            try {\\n                FileChannel channel \\u003d fileInputStreamA15.getChannel();\\n                try {\\n                    MappedByteBuffer map \\u003d channel.map(FileChannel.MapMode.READ_ONLY, 0L, channel.size());\\n                    map.order(ByteOrder.LITTLE_ENDIAN);\\n                    String strA00 \\u003d Hq6.A00(map, (int) fileA15.length());\\n                    if (strA00.isEmpty()) {\\n                        channel.close();\\n                        fileInputStreamA15.close();\\n                        return map;\\n                    }\\n                    C06S.A0R(\\\"MobileConfigMmapHandle\\\", \\\"Cannot validate \\\\\\\"%s\\\\\\\", err:%s\\\", C1xi.A1b(str, strA00, 0, 1));\\n                    channel.close();\\n                    fileInputStreamA15.close();\\n                    return null;\\n                } catch (Throwable th) {\\n                    if (channel !\\u003d null) {\\n                        try {\\n                            channel.close();\\n                        } catch (Throwable th2) {\\n                            Throwable.class.getDeclaredMethod(\\\"addSuppressed\\\", Throwable.class).invoke(th, th2);\\n                        }\\n                    }\\n                    throw th;\\n                }\\n            } catch (Throwable th3) {\\n                fileInputStreamA15.close();\\n                throw th3;\\n            }\\n            try {\\n                fileInputStreamA15.close();\\n            } catch (Throwable th4) {\\n                Throwable.class.getDeclaredMethod(\\\"addSuppressed\\\", Throwable.class).invoke(th3, th4);\\n            }\\n            throw th3;\\n        } catch (IOException e) {\\n            C06S.A0Z(\\\"MobileConfigMmapHandle\\\", e, \\\"Cannot open \\\\\\\"%s\\\\\\\"\\\", str);\\n            return null;\\n        }\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.GQv\",\"full_name\":\"X.GQv.A00\",\"mode\":\"java\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.GQv",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(java.lang.String): java.nio.MappedByteBuffer",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "/* JADX INFO: loaded from: classes9.dex */\npublic abstract class GQv extends MYw {\n    public static MappedByteBuffer A00(String str) throws IllegalAccessException, InvocationTargetException {\n        File fileA15 = C6aj.A15(str);\n        try {\n            FileInputStream fileInputStreamA15 = C6ak.A15(fileA15);\n            try {\n                FileChannel channel = fileInputStreamA15.getChannel();\n                try {\n                    MappedByteBuffer map = channel.map(FileChannel.MapMode.READ_ONLY, 0L, channel.size());\n                    map.order(ByteOrder.LITTLE_ENDIAN);\n                    String strA00 = Hq6.A00(map, (int) fileA15.length());\n                    if (strA00.isEmpty()) {\n                        channel.close();\n                        fileInputStreamA15.close();\n                        return map;\n                    }\n                    C06S.A0R(\"MobileConfigMmapHandle\", \"Cannot validate \\\"%s\\\", err:%s\", C1xi.A1b(str, strA00, 0, 1));\n                    channel.close();\n                    fileInputStreamA15.close();\n                    return null;\n                } catch (Throwable th) {\n                    if (channel != null) {\n                        try {\n                            channel.close();\n                        } catch (Throwable th2) {\n                            Throwable.class.getDeclaredMethod(\"addSuppressed\", Throwable.class).invoke(th, th2);\n                        }\n                    }\n                    throw th;\n                }\n            } catch (Throwable th3) {\n                fileInputStreamA15.close();\n                throw th3;\n            }\n            try {\n                fileInputStreamA15.close();\n            } catch (Throwable th4) {\n                Throwable.class.getDeclaredMethod(\"addSuppressed\", Throwable.class).invoke(th3, th4);\n            }\n            throw th3;\n        } catch (IOException e) {\n            C06S.A0Z(\"MobileConfigMmapHandle\", e, \"Cannot open \\\"%s\\\"\", str);\n            return null;\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}
