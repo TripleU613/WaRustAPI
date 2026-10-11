@@ -1,3 +1,11 @@
+2026-10-11 — **Implemented/offline:** `actions --preview-session` now derives
+and discards authenticated companion refresh candidates from one saved snapshot.
+Same-key candidates archive receiving state; changed-key candidates start fresh.
+Existing ADV/membership guards report concrete refusals, including returning-device
+checks. No key, list, pending refresh, journal or network mutation. Full native
+admission and fresh live application remain unverified.
+[Companion preview](docs/protocol/companion-attestation-admission.md#companion-session-preview--2026-10-11).
+
 2026-10-11 — **Implemented/offline:** authenticated own-device text/media
 echoes now correlate to an existing normal outgoing intent by unique saved wire
 ID and exact/authenticated chat association. They retain the original wrapper

@@ -1,5 +1,11 @@
 # Identity refresh session preview
 
+2026-10-11 follow-up: [companion session preview](companion-attestation-admission.md#companion-session-preview--2026-10-11)
+adds supported same/changed-key and returning-device derivation through existing
+directory ADV authority. It supersedes the primary-only and blanket companion
+refusals below; no candidate or authority effects are committed. Earlier tests
+below describe the original scope.
+
 2026-10-10 follow-up: [primary attestation admission](primary-attestation-admission.md)
 supersedes blanket primary attestation presence deferrals below. Structurally
 valid changed-key candidates follow the native E2EE fallback; verified same-key

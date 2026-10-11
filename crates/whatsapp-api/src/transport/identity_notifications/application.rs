@@ -957,7 +957,8 @@ mod tests {
                     let preview = super::super::preview_session(&f.store, &f.id)
                         .await
                         .unwrap();
-                    assert_eq!(preview.outcome, "companion_admission_unported");
+                    assert_eq!(preview.outcome, "prepared");
+                    assert_eq!(preview.archived_states, Some(usize::from(same)));
                     assert!(!preview.persisted && !preview.admission_evaluated);
                     assert_eq!(snapshot(&f.store), before);
                     assert_eq!(f.store.journal_head().unwrap(), head);
@@ -1082,6 +1083,14 @@ mod tests {
                     );
                     let before = snapshot(&f.store);
                     let head = f.store.journal_head().unwrap();
+                    let preview = super::super::preview_session(&f.store, &f.id)
+                        .await
+                        .unwrap();
+                    assert_eq!(preview.outcome, "prepared");
+                    assert_eq!(preview.archived_states, Some(usize::from(!changed)));
+                    assert!(!preview.persisted && !preview.admission_evaluated);
+                    assert_eq!(snapshot(&f.store), before);
+                    assert_eq!(f.store.journal_head().unwrap(), head);
                     assert_eq!(
                         recover(&f.store, IdentityChangePolicy::ApkAuthenticated)
                             .await
@@ -1278,6 +1287,16 @@ mod tests {
                 }
                 let before = snapshot(&f.store);
                 let head = f.store.journal_head().unwrap();
+                if !matches!(case, "untracked" | "pinned") {
+                    let preview = super::super::preview_session(&f.store, &f.id)
+                        .await
+                        .unwrap();
+                    assert_eq!(preview.outcome, expected, "{case}/{changed}");
+                    assert_eq!(preview.archived_states, None);
+                    assert!(!preview.persisted && !preview.admission_evaluated);
+                    assert_eq!(snapshot(&f.store), before);
+                    assert_eq!(f.store.journal_head().unwrap(), head);
+                }
                 assert_eq!(
                     apply(
                         &f.store,

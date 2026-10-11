@@ -253,7 +253,7 @@ Usage: whatsapp-cli actions [OPTIONS]...
 | Flag | Value | Required | Default | Env | Values | Help |
 |------|-------|----------|---------|-----|--------|------|
 | --show | SHOW | no |  |  |  | Print the request and reply stanzas of one action (numbers masked) |
-| --preview-session | PREVIEW_SESSION | no |  |  | `true`, `false` | Derive and discard a same-identity primary session from --show (offline) |
+| --preview-session | PREVIEW_SESSION | no |  |  | `true`, `false` | Derive and discard a supported primary or authenticated companion session from --show (offline) |
 
 ## whatsapp-cli group
 

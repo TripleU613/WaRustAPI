@@ -326,7 +326,7 @@ enum Cmd {
         /// Print the request and reply stanzas of one action (numbers masked).
         #[arg(long)]
         show: Option<String>,
-        /// Derive and discard a same-identity primary session from --show (offline).
+        /// Derive and discard a supported primary or authenticated companion session from --show (offline).
         #[arg(long, requires = "show")]
         preview_session: bool,
     },

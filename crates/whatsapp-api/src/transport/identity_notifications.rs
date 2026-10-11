@@ -393,9 +393,9 @@ pub struct SessionPreview {
     pub persisted: bool,
 }
 
-/// Derive and discard a primary classic same-identity session from a saved read.
+/// Derive and discard a supported primary or authenticated companion session.
 /// No network, message, pin change, reservation, notification ACK or store write.
-/// Attestation/PQ/companion admission is deliberately outside this preview.
+/// Full stored attestation policy and PQ sessions remain outside this preview.
 pub async fn preview_session(store: &ProtocolStore, id: &str) -> Result<SessionPreview> {
     use super::peer_keys::DirectoryStatus;
     let snapshot = store.read(|tx| {
@@ -444,9 +444,20 @@ pub async fn preview_session(store: &ProtocolStore, id: &str) -> Result<SessionP
         result.outcome = "stale_refresh_guard";
         return Ok(result);
     }
+    let same_identity = result.inspection.pin_matches == Some(true);
     if peer.device != 0 {
-        result.outcome = "companion_admission_unported";
-        return Ok(result);
+        let authority = if same_identity {
+            result.inspection.companion_same_key_authority
+        } else {
+            result.inspection.companion_changed_key_authority
+        };
+        match authority {
+            Some("ready" | "ready_addition_pending" | "ready_refresh_pending") => {}
+            reason => {
+                result.outcome = reason.unwrap_or("missing_saved_identity");
+                return Ok(result);
+            }
+        }
     }
     let reply =
         reply.ok_or_else(|| Error::invalid("identity_notification", "missing saved reply"))?;
@@ -461,13 +472,13 @@ pub async fn preview_session(store: &ProtocolStore, id: &str) -> Result<SessionP
             })
         })
         .ok_or_else(|| Error::invalid("identity_notification", "missing response user"))?;
-    // Share primary branch invariants with application; full stored-state
+    // Share metadata branch invariants with application; full stored-state
     // admission and optional state persistence remain unevaluated here.
     if user.child("non_e2ee_attestation").is_some()
         && !attestation::admitted(
             user,
-            true,
-            result.inspection.pin_matches == Some(true),
+            peer.device == 0,
+            same_identity,
             result.inspection.attestation.as_ref(),
         )
     {
@@ -488,13 +499,11 @@ pub async fn preview_session(store: &ProtocolStore, id: &str) -> Result<SessionP
     };
     // The read snapshot is not an OCC commit guard: this operation never
     // commits a candidate or treats a matching pin as native admission.
-    if bundle
+    let identity = bundle
         .identity_key()
         .map_err(|_| Error::invalid("identity_notification", "invalid bundle identity"))?
-        .serialize()
-        .as_ref()
-        != pin.as_slice()
-    {
+        .serialize();
+    if peer.device == 0 && identity.as_ref() != pin.as_slice() {
         result.outcome = "identity_replacement_unported";
         return Ok(result);
     }
@@ -504,8 +513,11 @@ pub async fn preview_session(store: &ProtocolStore, id: &str) -> Result<SessionP
         &account,
         &peer,
         &bundle,
-        session.as_deref().map(Vec::as_slice),
-        &pin,
+        same_identity
+            .then_some(session.as_deref())
+            .flatten()
+            .map(Vec::as_slice),
+        identity.as_ref(),
     )
     .await?;
     let record = wacore_libsignal::protocol::SessionRecord::deserialize(&candidate)
@@ -1049,7 +1061,7 @@ pub(super) mod tests {
                     result.outcome,
                     match case {
                         "prepared" | "no_session" => "prepared",
-                        "companion" => "companion_admission_unported",
+                        "companion" => "missing_device_identity",
                         "attestation" => "attestation_admission_unported",
                         "pq" => "pq_session_unported",
                         "changed" => "identity_replacement_unported",

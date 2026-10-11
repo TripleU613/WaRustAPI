@@ -50,8 +50,8 @@ authority atomically. Duplicate/reopen recovery cannot apply the session twice.
 
 Inspection still reports its actual attestation verification result, including
 false/null; `applied=true` is not attestation trust. No native C0F value is guessed
-or persisted. Read-only preview still reports `companion_admission_unported`,
-with `persisted=false` and `admission_evaluated=false`. Existing `actions --show`
+or persisted. The companion preview follow-up below supersedes the original
+blanket preview refusal. Existing `actions --show`
 and listen API descriptions document application; no endpoint, option, schema or
 network request is added.
 
@@ -76,3 +76,44 @@ repository formatting/link/evidence hygiene passed.
 Native stored attestation transitions, non-E2EE routing, complete companion
 preview/first-seen admission and fresh live application remain unfinished or
 unverified. No account operation or fresh network request ran for this change.
+
+## Companion session preview — 2026-10-11
+
+The existing `actions --show ID --preview-session` now derives and discards a
+supported companion candidate using the same read snapshot as inspection. It
+uses the existing exact-device same-key or changed-key directory authority
+checks, backed by the pinned `11T.A0D` and `14J.A04` traces linked above. No new
+native admission claim is inferred from successful cryptographic derivation.
+Known same-key membership uses the native nonnull-ADV/equality branch; changed
+keys and returning devices require independently bound signed ADV. Missing,
+invalid, deleted, ambiguous or conflicting authority reports its fixed reason.
+First-seen pins remain unsupported.
+
+Metadata shape, classic signature, PQ refusal and saved account requirements
+remain effective. Companion attestation follows the existing early companion
+return without turning failed attestation verification into trust. Same identity
+archives the held receiving session in the discarded candidate; changed identity
+derives fresh with zero archived states, preserving saved old state. Primary
+changed-key preview retains its existing refusal.
+
+`persisted` and `admission_evaluated` stay false: no full native CPB stored-state
+policy, application-policy approval, commit guard, list addition, pending refresh,
+key change, acknowledgement or network action is performed. A ready addition or
+refresh remains pending. As before, an untracked historical refresh can be
+previewed; it cannot authorize application. Candidate bytes are never exported.
+The existing API schema now enumerates companion refusal reasons and malformed
+identity_auth; no command, route, option or dependency is added.
+
+The previously blanket-refused companion regression failed before the change.
+PN/LID fixtures cover same/changed keys and valid/invalid attestation, archive
+counts and unchanged tables/journal. Returning-device fixtures cover discarded
+same/changed candidates and missing/invalid ADV, signatures, independent primary,
+raw ID, timestamps, teardown, index collision/overflow and invalid index refusals.
+Existing primary preview/error, redaction and reopen checks remain active. Fresh
+live companion preview/application and complete native parity remain unverified.
+
+Validation: 945 workspace/all-feature tests, strict Clippy, warnings-denied
+Rustdoc, 26 default CLI tests, experimental CLI build/reference and minimal
+TCP/Noise/Signal companion regression passed. API enums cover the shared
+directory refusal literals; formatting and repository link/evidence hygiene
+passed. Existing pinned source bundles are reused without a new APK parity claim.
