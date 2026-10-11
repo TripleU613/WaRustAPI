@@ -1,3 +1,8 @@
+2026-10-11 follow-up: [primary user ACK emission](receipt-primary-ack.md#all-supported-notification-ack-callers--2026-10-11)
+now uses JID_PAIR for decoded zero-device PN/LID users. Preserving the descriptor
+means preserving its native user class, not blindly retaining AD wire encoding.
+Concrete nonzero device routes remain unchanged; earlier validation is historical.
+
 # Identity notification acknowledgement — 2026-10-09
 
 Evidence is **confirmed static** in WhatsApp **2.26.37.71**, SHA-256

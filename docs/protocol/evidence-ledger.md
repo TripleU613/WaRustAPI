@@ -1,3 +1,11 @@
+2026-10-11 — **Implemented/offline:** identity, device-list, count, group-dirty
+and privacy-token ACKs now share the APK-derived zero-device PN/LID user-pair
+conversion with receipt ACKs. Literal-wire regressions reproduced identity and
+all four other notification failures. Durable control effects and nonzero device
+routes remain intact; the identity reply diagnostic no longer falsely says its
+ACK is deferred. Full class grammar/native codecs and live acceptance remain open.
+[Shared emission, source evidence and regression coverage](receipt-primary-ack.md).
+
 2026-10-11 — **Implemented/offline:** receipt ACK `to`/`participant` now use
 JID_PAIR for decoded binary zero-device PN/LID users. Complete writer override
 censuses distinguish these users from primary DeviceLid objects, which may still

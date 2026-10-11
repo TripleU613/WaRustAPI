@@ -539,7 +539,7 @@ pub(crate) async fn drive(
                                 &store, id, config.transport.identity_changes,
                             ).await?;
                             if application != super::identity_notifications::application::Application::Unrelated {
-                                tracing::info!(?application, "identity refresh reply considered; notification ACK remains deferred");
+                                tracing::info!(?application, "identity refresh reply considered; notification ACK handled separately");
                             }
                         }
                         continue;

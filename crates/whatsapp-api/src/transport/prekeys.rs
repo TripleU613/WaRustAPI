@@ -522,7 +522,7 @@ pub fn low_count_ack(node: &Node) -> Result<Node> {
         .ok_or_else(|| invalid("count notification without id"))?;
     let to = super::receipts::jid(node, "from").unwrap_or(Jid::parse("s.whatsapp.net")?);
     Ok(Node::new("ack")
-        .attr("to", to)
+        .attr("to", super::receipts::ack_address(to))
         .attr("id", id)
         .attr("class", "notification")
         .attr("type", "encrypt"))

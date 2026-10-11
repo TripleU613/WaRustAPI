@@ -81,11 +81,11 @@ pub fn notification_ack(node: &Node) -> Result<Option<Node>> {
     // type). Its notification descriptor does not carry recipient/category/edit.
     let mut ack = Node::new("ack")
         .attr("id", id)
-        .attr("to", from)
+        .attr("to", super::receipts::ack_address(from))
         .attr("class", "notification")
         .attr("type", "encrypt");
     if let Some(participant) = participant {
-        ack = ack.attr("participant", participant);
+        ack = ack.attr("participant", super::receipts::ack_address(participant));
     }
     Ok(Some(ack))
 }
@@ -653,6 +653,108 @@ pub(super) mod tests {
             .attr("id", id)
             .children(vec![Node::new("identity")])
     }
+    #[test]
+    fn binary_zero_identity_ack_uses_primary_user_pairs() {
+        use crate::binary::{Decoder, Encoder, TokenDictionary};
+        use crate::profile::Limits;
+        let wire = b"\x00\xf8\x0a\xfc\x0cnotification\xfc\x04type\xfc\x07encrypt\xfc\x04from\xf7\x01\x00\xfc\x06100001\xfc\x02id\xfc\x08ZERO-ID1\xfc\x0bparticipant\xf7\x00\x00\xfc\x0b15555550100\xf8\x01\xf8\x01\xfc\x08identity";
+        let dict = TokenDictionary::comparison_2_26_37_71();
+        let decode = |wire: &[u8]| {
+            Decoder::new(&wire[1..], dict, &Limits::default())
+                .decode_node()
+                .unwrap()
+        };
+        let input = decode(wire);
+        let before = input.clone();
+        assert_eq!(
+            input.get_attr("from").unwrap().as_jid().unwrap().kind,
+            JidKind::AgentDevice
+        );
+        let ack = notification_ack(&input).unwrap().unwrap();
+        assert_eq!(input, before);
+        let expected = Node::new("ack")
+            .attr("id", "ZERO-ID1")
+            .attr("to", Jid::parse("100001@lid").unwrap())
+            .attr("class", "notification")
+            .attr("type", "encrypt")
+            .attr(
+                "participant",
+                Jid::parse("15555550100@s.whatsapp.net").unwrap(),
+            );
+        assert_eq!(ack, expected);
+        assert_eq!(decode(&Encoder::new(dict).encode(&ack).unwrap()), expected);
+    }
+
+    #[test]
+    fn binary_zero_users_use_pairs_in_other_notification_acks() {
+        use crate::binary::{Decoder, TokenDictionary};
+        use crate::profile::Limits;
+        let raw = b"\xf8\x03\xfc\x01n\xfc\x04from\xf7\x01\x00\xfc\x06100001";
+        let decoded = Decoder::new(
+            raw,
+            TokenDictionary::comparison_2_26_37_71(),
+            &Limits::default(),
+        )
+        .decode_node()
+        .unwrap();
+        let from = decoded.get_attr("from").unwrap().as_jid().unwrap().clone();
+        let base = Node::new("notification")
+            .attr("from", from.clone())
+            .attr("id", "ZERO-ID2");
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("notifications.redb"));
+        let dirty = base
+            .clone()
+            .attr("type", "w:gp2")
+            .attr("participant", from)
+            .children(vec![Node::new("groups_dirty").children(vec![
+                Node::new("group").attr("jid", "12345-67890@g.us"),
+            ])]);
+        let privacy = base
+            .clone()
+            .attr("type", "privacy_token")
+            .attr("t", "1")
+            .children(vec![Node::new("tokens").children(
+                vec![Node::new("token").attr("type", "trusted_contact").bytes(vec![1])],
+            )]);
+        let acks = [
+            (
+                "devices",
+                super::super::devices::notification_ack(&base).unwrap(),
+            ),
+            (
+                "count",
+                super::super::prekeys::low_count_ack(&base).unwrap(),
+            ),
+            (
+                "groups_dirty",
+                super::super::groups::handle_dirty_notification(&store, &dirty)
+                    .unwrap()
+                    .unwrap(),
+            ),
+            (
+                "privacy_token",
+                super::super::notifications::handle(&store, &privacy)
+                    .unwrap()
+                    .unwrap(),
+            ),
+        ];
+        let primary = Jid::parse("100001@lid").unwrap();
+        for (handler, ack) in acks {
+            assert_eq!(
+                ack.get_attr("to").and_then(|v| v.as_jid()),
+                Some(&primary),
+                "{handler}"
+            );
+            if handler == "groups_dirty" {
+                assert_eq!(
+                    ack.get_attr("participant").and_then(|v| v.as_jid()),
+                    Some(&primary)
+                );
+            }
+        }
+    }
+
     #[test]
     fn notification_ack_preserves_descriptor_and_rejects_unsupported_metadata() {
         // APK 37.71 CmG.A00/A02 and Cp2.A05, not key-read peer canonicalization.

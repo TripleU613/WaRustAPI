@@ -295,7 +295,7 @@ pub fn notification_ack(node: &Node) -> Result<Node> {
         .ok_or_else(|| invalid("devices notification without id"))?;
     let to = attr_jid(node, "from").ok_or_else(|| invalid("devices notification without from"))?;
     Ok(Node::new("ack")
-        .attr("to", to)
+        .attr("to", super::receipts::ack_address(to))
         .attr("id", id)
         .attr("class", "notification")
         .attr("type", "devices"))

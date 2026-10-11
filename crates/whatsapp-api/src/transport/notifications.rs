@@ -48,7 +48,7 @@ pub fn handle(store: &ProtocolStore, node: &Node) -> Result<Option<Node>> {
     }
     Ok(Some(
         Node::new("ack")
-            .attr("to", from)
+            .attr("to", super::receipts::ack_address(from))
             .attr("id", id)
             .attr("class", "notification")
             .attr("type", "privacy_token"),

@@ -700,20 +700,7 @@ pub fn received_confirmation(incoming: &Node) -> Option<Node> {
 /// ack for a type we do not process would tell the server it was handled when
 /// it was only preserved, so those stay unacknowledged.
 fn receipt_ack(incoming: &Node) -> Option<Node> {
-    // APK 124.A03 reconstructs zero-AD users; 1Qe.A00 writes their JID_PAIR form.
-    let user_form = |jid: Jid| {
-        use crate::model::jid::{JidKind, Server};
-        if jid.kind == JidKind::AgentDevice
-            && jid.agent == 0
-            && jid.device == 0
-            && matches!(jid.server, Server::User | Server::Lid)
-        {
-            jid.to_non_ad()
-        } else {
-            jid
-        }
-    };
-    let from = user_form(super::receipts::network_jid(incoming, "from")?);
+    let from = super::receipts::ack_address(super::receipts::network_jid(incoming, "from")?);
     let kind = super::receipts::receipt_kind(incoming)?;
     let id = incoming.get_attr("id")?.as_text()?;
     if id.is_empty() || id.len() > 128 {
@@ -727,7 +714,7 @@ fn receipt_ack(incoming: &Node) -> Option<Node> {
         ack = ack.attr("type", kind);
     }
     if let Some(participant) = super::receipts::network_jid(incoming, "participant") {
-        ack = ack.attr("participant", user_form(participant));
+        ack = ack.attr("participant", super::receipts::ack_address(participant));
     }
     if let Some(recipient) = super::receipts::recipient(incoming) {
         ack = ack.attr("recipient", recipient);

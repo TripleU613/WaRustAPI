@@ -73,3 +73,41 @@ checks, strict workspace Clippy, warnings-denied Rustdoc, experimental CLI build
 formatting, CLI-reference/OpenAPI coverage and repository hygiene (2,708 local
 links; 130 checksum bundles / 27,450,116 bytes). All three saved censuses
 reproduced byte-for-byte from the rechecked pinned APK.
+
+## All supported notification ACK callers — 2026-10-11
+
+**Implemented/offline, same pinned subject.** The caller audit found the same
+wire/class distinction in identity, device-list, count, group-dirty and
+privacy-token ACKs. All six supported ACK paths now use receipts::ack_address
+at their output fields. It is the existing receipt conversion moved into one
+shared function, not a global parser or encoder rewrite.
+
+**Confirmed static:** [CmG.A00](apk/2.26.37.71-identity-notification-ack/notification-address.txt)
+reads root from and participant as Jid.class (0004..0014, 0020..0030), stores
+those objects in CSu (004a, 0056), and
+[CSu.A00](apk/2.26.37.71-identity-notification-ack/descriptor-build.txt)
+copies them to Cb1. [Cp2.A05](apk/2.26.37.71-identity-notification-ack/ack-wire.txt)
+renders those descriptor objects. The reader/writer/class census above therefore
+applies to notification addresses too. This does not change the control's
+original ID, type, dispatch ordering or admission policy.
+
+The identity literal-wire regression failed before the change and now expects
+plain LID to / PN participant with encrypt type retained and unchanged input.
+A second independent literal LID fixture caught five mismatched output fields:
+devices to, count to, group-dirty to/participant and privacy-token to. All now
+return the plain user form. Existing fixtures cover server-only roots, concrete
+device routes, strict input refusals, durable effects and uncertain query cuts.
+Group-dirty deduplication/fingerprints, stored tokens, selected identity key-read
+addresses and raw captures are untouched by the emission-only conversion.
+
+The actor's stale reply diagnostic now says the notification ACK is handled
+separately; it previously said deferred even though the traced identity dispatch
+ACKs independently of adoption. No new API/CLI field or command is needed.
+Hosted aliases, explicit text-zero class validation and other native codecs
+remain unfinished; no fresh live window ran for this correction.
+
+Follow-up validation: 929 workspace/all-feature tests, strict Clippy,
+warnings-denied Rustdoc, default CLI/API symbols, experimental CLI build,
+CLI-reference/OpenAPI coverage and formatting passed. Hygiene checked 2,714
+local links and 130 APK checksum bundles / 27,450,116 bytes. The 14-topic
+identity-notification ACK evidence reproduced exactly: 19 files / 186,462 bytes.

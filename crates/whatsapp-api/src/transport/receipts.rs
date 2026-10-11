@@ -680,6 +680,19 @@ pub(crate) fn jid(node: &Node, name: &str) -> Option<Jid> {
         .cloned()
         .or_else(|| Jid::parse(value.as_text()?).ok())
 }
+// APK 124.A03 reconstructs zero-AD users; 1Qe.A00 writes their JID_PAIR form.
+pub(super) fn ack_address(jid: Jid) -> Jid {
+    if jid.kind == crate::model::jid::JidKind::AgentDevice
+        && jid.agent == 0
+        && jid.device == 0
+        && matches!(jid.server, Server::User | Server::Lid)
+    {
+        jid.to_non_ad()
+    } else {
+        jid
+    }
+}
+
 pub(super) fn network_jid(node: &Node, name: &str) -> Option<Jid> {
     if node
         .get_attr(name)?
