@@ -127,12 +127,13 @@ bundles with `apk-research-diff`. No APK decompression or account state is neede
 for that cached comparison. Full mapping/scheduler parity and fresh live
 PN/LID receipt attribution remain unverified.
 
-**Negative local feature check:** a no-default-features build enabling only
-`experimental-noise,experimental-transport` fails in the existing `about` /
+**Historical negative local feature check:** a no-default-features build enabling only
+`experimental-noise,experimental-transport` failed in the existing `about` /
 `actions` feature graph (six missing-module errors outside this correction).
-This narrow combination is not claimed passing; supported CLI and workspace
-feature combinations are verified separately. No unrelated feature rewrite
-is part of the receipt correction.
+At that correction, supported CLI and workspace feature combinations were
+verified separately. The subsequent
+[feature-boundary fix](../../crates/whatsapp-api/README.md#features) resolves
+the lightweight transport build and checks it independently in CI.
 
 ## Local validation
 

@@ -719,10 +719,7 @@ pub fn received_confirmation_for_account(
     incoming: &Node,
 ) -> crate::Result<Option<Node>> {
     if incoming.description == "message" && incoming.get_attr("recipient").is_some() {
-        #[cfg(feature = "experimental-signal-crypto")]
         return super::own_device::confirmation(store, account, incoming);
-        #[cfg(not(feature = "experimental-signal-crypto"))]
-        return Ok(None);
     }
     let Some(mut receipt) = received_confirmation(incoming) else {
         return Ok(None);

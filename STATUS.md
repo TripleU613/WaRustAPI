@@ -1,3 +1,10 @@
+2026-10-11 — **Build fix:** TCP/Noise now compiles without Signal crypto.
+Six stateful transport modules require their existing Signal dependencies;
+the lightweight socket/login/handshake build stays available. CI checks TCP,
+TCP/Noise (261 local tests), and the minimal three-feature messaging build.
+No account-state or wire-format changes and no fresh live validation.
+[Feature boundaries](crates/whatsapp-api/README.md#features).
+
 2026-10-11 — **Implemented/offline:** remote status confirmations now omit
 sender type; the actor adds it only for participants matching saved own PN/LID,
 including own companions. Bp1.A05 is traced through parsed fromMe and native

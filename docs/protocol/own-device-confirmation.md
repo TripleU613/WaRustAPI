@@ -98,5 +98,7 @@ An additional `cargo check -p whatsapp-api --no-default-features --features
 experimental-noise,experimental-transport` fails with 16 feature-gating errors
 in existing group receipts, directory queries, receive, receipts and retries.
 A clean archive of baseline commit 1e2b00a reproduces the same 16 missing-module
-errors. This optional combination is not validated as a working build by the
-receipt change; it needs a separate feature-boundary fix.
+errors. That was outside the receipt change. The subsequent
+[feature-boundary fix](../../crates/whatsapp-api/README.md#features) aligns the
+stateful module gates with their Signal dependencies and verifies this
+lightweight transport combination independently.

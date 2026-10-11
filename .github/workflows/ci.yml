@@ -203,6 +203,11 @@ jobs:
           cargo test --locked -p whatsapp-api --features experimental-noise
           cargo test --locked -p whatsapp-api --features experimental-signal-crypto
           cargo test --locked -p whatsapp-api --features experimental-registration-https
+      - name: TCP and Noise transport feature boundaries
+        run: |
+          cargo check --locked -p whatsapp-api --no-default-features --features experimental-transport
+          cargo test --locked -p whatsapp-api --no-default-features --features experimental-noise,experimental-transport
+          cargo check --locked -p whatsapp-api --no-default-features --features experimental-noise,experimental-transport,experimental-signal-crypto
       - name: Release-mode property stress and crash recovery
         run: cargo test --locked -p whatsapp-api --all-features --release --tests
         env:

@@ -4,13 +4,14 @@ Standalone async Rust library intended to register and operate as a WhatsApp
 **primary device**. See the [design plan](../../docs/design/README.md)
 and [current status](../../STATUS.md) for what is actually working.
 
-## Status: experimental, offline gates only
+## Status: experimental
 
-Nothing in this crate has exchanged a message with a WhatsApp server. The
-Android primary-device registration, login payload and transport endpoint are
-`Unknown` in the evidence ledger. Every protocol-facing operation returns a
-typed `Error::Unsupported` or `Error::ProfileIncomplete` naming the missing
-facts. What does work, and is tested offline:
+The default profile retains explicit capability and evidence gates. An opt-in
+comparison client provides registration, login, receive and messaging paths;
+their implemented subsets and validation are recorded in
+[current status](../../STATUS.md) and the versioned protocol notes. Enabling a
+feature does not establish complete APK parity or server acceptance. The
+default build includes these offline components:
 
 - typed domain model, identifiers and public API contract;
 - encrypted transactional store (`redb`, XChaCha20-Poly1305 envelopes,
@@ -59,11 +60,24 @@ println!("{:?}", client.capabilities());
   login or ratchet messaging, or select a trust root.
 - `experimental-noise`: compiles the `snow`-based Noise adapter. `snow` is
   used without its `std` feature because that feature pulls in `ring`.
+- `experimental-transport`: compiles the TCP connector and login payload
+  helpers. It does not enable the Signal backend. Combined with
+  `experimental-noise`, it also exposes the encrypted connection/handshake.
+  Stateful messaging, delivery receipts, notifications, About and two-factor
+  actions require all three transport/Noise/Signal features, matching their
+  receive, identity and durable-action dependencies.
+- `comparison-client`: enables all three above plus registration HTTPS.
+  This is the full comparison feature set used by the live-capable client
+  and the CLI's `experimental-transport` feature.
 - `experimental-registration-https`: compiles the constrained, lab-only
   reqwest/rustls registration transport with the explicit `ring` provider.
   This owner-approved native-crypto exception needs a C build toolchain.
   Normal certificate/hostname validation stays enabled; the registration
   protocol remains experimental and has not passed live interoperability.
+
+The lightweight `experimental-noise,experimental-transport` combination and
+the three-feature messaging combination are checked independently in CI.
+No feature combination automatically registers or connects an account.
 
 ## Licence
 

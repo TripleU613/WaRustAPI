@@ -4,6 +4,8 @@
 //! Offline framing and inspection helpers compile by default. The Noise adapter lives behind the
 //! `experimental-noise` feature because the handshake pattern, prologue and
 //! trust root are `ReferenceOnly` for the Android primary profile.
+//! Stateful messaging modules additionally require `experimental-signal-crypto`;
+//! enabling TCP/Noise alone keeps socket, login payload and handshake support.
 
 #[cfg(all(
     feature = "experimental-signal-crypto",
@@ -151,7 +153,11 @@ pub mod sender_key_distribution;
     feature = "experimental-transport"
 ))]
 pub mod companion_admission;
-#[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
 pub mod group_receipts;
 #[cfg(all(
     feature = "experimental-registration-https",
@@ -189,12 +195,20 @@ pub mod login;
     feature = "experimental-transport"
 ))]
 pub mod media;
-#[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
 pub mod messaging;
 pub mod mex;
 #[cfg(feature = "experimental-noise")]
 pub mod noise;
-#[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
 pub mod notifications;
 #[cfg(all(
     feature = "experimental-signal-crypto",
@@ -223,7 +237,11 @@ pub mod polls;
 pub mod prekeys;
 pub mod quotes;
 pub mod reactions;
-#[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
 pub mod receipts;
 #[cfg(all(
     feature = "experimental-signal-crypto",
@@ -338,11 +356,19 @@ impl ConnectionEpoch {
     }
 }
 
-#[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
 pub mod two_factor;
 
 #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
 pub mod presence;
 
-#[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
 pub mod about;
