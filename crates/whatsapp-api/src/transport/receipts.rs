@@ -109,8 +109,8 @@ fn saved_route(tx: &crate::store::WriteTx<'_>, saved: &serde_json::Value) -> Res
 /// group messages, one receipt per message ID, all-or-nothing and idempotent.
 /// APK 2.26.37.71 SendReadReceiptJob.A0G -> 0zd.A04 -> CM8 ->
 /// Cp2.A07/A00 confirms the shared receipt builder and optional participant.
-/// Cp2.A0A also builds native extra-ID lists; this implementation queues one
-/// authenticated ID per receipt and retains its existing durable reservation.
+/// Cp2.A0A builds native extra-ID lists at reservation for matching read routes;
+/// each authenticated ID retains its original durable reservation.
 /// See docs/protocol/read-receipt-job.md for the traced policy/route boundaries.
 /// Full APK preference/contact policy and read-self selection remain unported;
 /// this API is an explicit read action (`ReceiptPolicy::ExplicitOnly`).
@@ -188,10 +188,18 @@ pub fn queue_read(
                 continue;
             }
             let incoming = decode(&saved_route(tx, &saved)?)?;
-            let node = super::messaging::received_confirmation(&incoming)
+            let mut node = super::messaging::received_confirmation(&incoming)
                 .filter(|n| n.description == "receipt")
                 .ok_or_else(|| Error::invalid("receipt", "unsupported read receipt routing"))?
                 .attr("type", "read");
+            // Cp2.A00 appends read type before the optional participant.
+            node.attributes.sort_by_key(|a| match a.name.as_str() {
+                "to" => 0,
+                "id" => 1,
+                "type" => 2,
+                "participant" => 3,
+                _ => 4,
+            });
             let wire = crate::binary::Encoder::new(
                 crate::binary::TokenDictionary::comparison_2_26_37_71(),
             )
@@ -399,6 +407,17 @@ pub struct ReceiptOutcome {
     /// Wire message id the receipt refers to.
     pub message_id: String,
 }
+fn batch_ack_id(row: &serde_json::Value) -> Result<Option<&str>> {
+    row.get("batch_ack_id")
+        .map(|value| {
+            value
+                .as_str()
+                .filter(|id| !id.is_empty() && id.len() <= 128)
+                .ok_or_else(|| Error::invalid("receipt", "invalid saved batch correlation"))
+        })
+        .transpose()
+}
+
 /// Every receipt ever queued, in key order. No recipient is printed.
 /// Malformed saved wire/IDs return fixed redacted errors; inspection never
 /// rewrites or repairs a reservation, including uncertain outcomes.
@@ -423,6 +442,7 @@ pub fn outcomes(store: &ProtocolStore) -> Result<Vec<ReceiptOutcome>> {
                     continue;
                 };
                 let kind = rest.rsplit(':').next().unwrap_or("").to_owned();
+                let _ = batch_ack_id(&row)?;
                 if row["wire"].is_null() {
                     return Err(Error::invalid("receipt", "missing saved receipt wire"));
                 }
@@ -461,13 +481,13 @@ pub fn outcomes(store: &ProtocolStore) -> Result<Vec<ReceiptOutcome>> {
     })
 }
 
-/// Reserve at most sixteen pending explicit receipts before any socket write.
-/// Unknown outcomes are excluded, including after a crash/reconnect.
+/// Reserve at most sixteen pending per-message receipts before any socket write.
+/// Matching read routes share the APK extra-ID list; unknown outcomes never replay.
 pub fn reserve_pending(store: &ProtocolStore) -> Result<Vec<Node>> {
     store.write(|tx| {
-        let mut out = Vec::new();
+        let mut pending = Vec::new();
         let mut cursor = None;
-        while out.len() < 16 {
+        while pending.len() < 16 {
             let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
             if rows.is_empty() {
                 break;
@@ -477,10 +497,10 @@ pub fn reserve_pending(store: &ProtocolStore) -> Result<Vec<Node>> {
                 .iter()
                 .filter(|(key, _)| key.starts_with(b"receipt-outbox:"))
             {
-                if out.len() == 16 {
+                if pending.len() == 16 {
                     break;
                 }
-                let Some(mut row): Option<serde_json::Value> =
+                let Some(row): Option<serde_json::Value> =
                     tx.get_json(Table::Checkpoints, key, 1)?
                 else {
                     continue;
@@ -488,12 +508,77 @@ pub fn reserve_pending(store: &ProtocolStore) -> Result<Vec<Node>> {
                 if row["status"] != "pending" {
                     continue;
                 }
+                if row.get("batch_ack_id").is_some() {
+                    return Err(Error::invalid(
+                        "receipt",
+                        "pending receipt has batch correlation",
+                    ));
+                }
                 let wire: Vec<u8> = serde_json::from_value(row["wire"].clone())
                     .map_err(|_| Error::invalid("receipt", "invalid receipt intent"))?;
-                out.push(decode(&wire)?);
-                row["status"] = serde_json::json!("outcome_unknown");
-                tx.put_json(Table::Checkpoints, key, 1, &row)?;
+                pending.push((key.clone(), row, decode(&wire)?));
             }
+        }
+        let batchable = |node: &Node| {
+            node.description == "receipt"
+                && jid(node, "to").is_some_and(|j| {
+                    j.agent == 0
+                        && matches!(j.server, Server::User | Server::Lid | Server::Group)
+                        && (j.server != Server::Group || j.device == 0)
+                })
+                && node.get_attr("type").and_then(|v| v.as_text()) == Some("read")
+                && node
+                    .get_attr("id")
+                    .and_then(|v| v.as_text())
+                    .is_some_and(|id| !id.is_empty() && id.len() <= 128)
+                && matches!(node.content, crate::binary::NodeContent::Empty)
+                && node
+                    .attributes
+                    .iter()
+                    .all(|a| matches!(a.name.as_str(), "to" | "id" | "type" | "participant"))
+        };
+        let mut out = Vec::new();
+        while !pending.is_empty() {
+            let (key, row, mut node) = pending.remove(0);
+            let mut reserved = vec![(key, row)];
+            let mut extras = Vec::new();
+            if batchable(&node) {
+                let mut i = 0;
+                while i < pending.len() {
+                    let other = &pending[i].2;
+                    if batchable(other)
+                        && node
+                            .attributes
+                            .iter()
+                            .filter(|a| a.name != "id")
+                            .eq(other.attributes.iter().filter(|a| a.name != "id"))
+                    {
+                        let (key, row, other) = pending.remove(i);
+                        extras.push(
+                            Node::new("item").attr("id", other.get_attr("id").unwrap().clone()),
+                        );
+                        reserved.push((key, row));
+                    } else {
+                        i += 1;
+                    }
+                }
+            }
+            let batched = !extras.is_empty();
+            if batched {
+                // Cp2.A0A: first ID stays at root; only the remainder enters list.
+                node.content =
+                    crate::binary::NodeContent::Children(vec![Node::new("list").children(extras)]);
+            }
+            for (key, mut row) in reserved {
+                row["status"] = serde_json::json!("outcome_unknown");
+                if batched {
+                    row["batch_ack_id"] =
+                        serde_json::json!(node.get_attr("id").unwrap().as_text().unwrap());
+                }
+                // Preserve the original per-message wire for inspection/deduplication.
+                tx.put_json(Table::Checkpoints, &key, 1, &row)?;
+            }
+            out.push(node);
         }
         Ok(out)
     })
@@ -514,10 +599,11 @@ pub fn record_ack(store: &ProtocolStore, node: &Node) -> Result<bool> {
     }
     store.write(|tx| {
         let mut cursor = None;
+        let mut matched = false;
         loop {
             let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
             if rows.is_empty() {
-                return Ok(false);
+                return Ok(matched);
             }
             cursor = rows.last().map(|(key, _)| key.clone());
             for (key, _) in rows
@@ -534,7 +620,10 @@ pub fn record_ack(store: &ProtocolStore, node: &Node) -> Result<bool> {
                 }
                 let wire: Vec<u8> = serde_json::from_value(row["wire"].clone())
                     .map_err(|_| Error::invalid("receipt", "invalid intent"))?;
-                let sent = decode(&wire)?;
+                let mut sent = decode(&wire)?;
+                if let Some(root) = batch_ack_id(&row)? {
+                    sent = sent.attr("id", root);
+                }
                 // APK 37.71 Cb1.equals 0086..00a6 compares nullable participant
                 // fields. An absent ACK participant cannot settle a group receipt
                 // naming a member; ID/from/type alone leaves that member ambiguous.
@@ -558,7 +647,7 @@ pub fn record_ack(store: &ProtocolStore, node: &Node) -> Result<bool> {
                     "server_acknowledged"
                 });
                 tx.put_json(Table::Checkpoints, key, 1, &row)?;
-                return Ok(true);
+                matched = true;
             }
         }
     })
@@ -1601,29 +1690,37 @@ mod tests {
         );
         assert_eq!(saved["read_receipt"], "queued");
 
-        // Restart, then reserve: the wire is to/id/type only, no timestamp.
+        // Restart, then reserve: one root ID and the native extra-ID list.
         drop(store);
         let store = open(&path, false);
         let pending = reserve_pending(&store).unwrap();
-        assert_eq!(pending.len(), 2);
-        for node in &pending {
-            assert_eq!(node.description, "receipt");
-            assert_eq!(jid(node, "to"), Some(peer.clone()));
-            assert_eq!(
-                node.get_attr("type").and_then(|v| v.as_text()),
-                Some("read")
-            );
-            assert!(node.get_attr("t").is_none());
-            assert!(node.get_attr("participant").is_none());
-            assert!(
-                !matches!(node.content, crate::binary::NodeContent::Children(_)),
-                "no list children without evidence"
-            );
-        }
-        let mut ids: Vec<&str> = pending
-            .iter()
-            .filter_map(|n| n.get_attr("id").and_then(|v| v.as_text()))
-            .collect();
+        assert_eq!(pending.len(), 1);
+        let node = &pending[0];
+        assert_eq!(node.description, "receipt");
+        assert_eq!(jid(node, "to"), Some(peer.clone()));
+        assert_eq!(
+            node.get_attr("type").and_then(|v| v.as_text()),
+            Some("read")
+        );
+        assert!(node.get_attr("t").is_none());
+        assert!(node.get_attr("participant").is_none());
+        let binary =
+            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
+                .encode(node)
+                .unwrap();
+        assert_eq!(decode(&binary).unwrap(), *node);
+        let root = node.get_attr("id").unwrap().as_text().unwrap().to_owned();
+        let list = node.child("list").unwrap();
+        assert_eq!(node.child_nodes().len(), 1);
+        assert_eq!(list.child_nodes().len(), 1);
+        assert_eq!(list.child_nodes()[0].description, "item");
+        let extra = list.child_nodes()[0]
+            .get_attr("id")
+            .unwrap()
+            .as_text()
+            .unwrap()
+            .to_owned();
+        let mut ids = vec![root.as_str(), extra.as_str()];
         ids.sort_unstable();
         assert_eq!(ids, ["first", "second"]);
         drop(store);
@@ -1637,7 +1734,7 @@ mod tests {
             0
         );
 
-        // Acknowledgements settle by peer, id and exact type.
+        // Only the batch root ACK can settle all immutable per-ID reservations.
         let ack = |id: &str, kind: &str, from: &str| {
             Node::new("ack")
                 .attr("id", id)
@@ -1645,23 +1742,11 @@ mod tests {
                 .attr("type", kind)
                 .attr("from", from)
         };
-        assert!(
-            !record_ack(
-                &store,
-                &ack("first", "played", "15555550100@s.whatsapp.net")
-            )
-            .unwrap()
-        );
-        assert!(!record_ack(&store, &ack("first", "read", "15555550101@s.whatsapp.net")).unwrap());
-        assert!(record_ack(&store, &ack("first", "read", "15555550100@s.whatsapp.net")).unwrap());
-        assert!(!record_ack(&store, &ack("first", "read", "15555550100@s.whatsapp.net")).unwrap());
-        assert!(
-            record_ack(
-                &store,
-                &ack("second", "read", "15555550100@s.whatsapp.net").attr("error", "479")
-            )
-            .unwrap()
-        );
+        assert!(!record_ack(&store, &ack(&root, "played", "15555550100@s.whatsapp.net")).unwrap());
+        assert!(!record_ack(&store, &ack(&root, "read", "15555550101@s.whatsapp.net")).unwrap());
+        assert!(!record_ack(&store, &ack(&extra, "read", "15555550100@s.whatsapp.net")).unwrap());
+        assert!(record_ack(&store, &ack(&root, "read", "15555550100@s.whatsapp.net")).unwrap());
+        assert!(!record_ack(&store, &ack(&root, "read", "15555550100@s.whatsapp.net")).unwrap());
         let status = |id: &str| -> serde_json::Value {
             let key = format!(
                 "receipt-outbox:{}:read",
@@ -1676,7 +1761,245 @@ mod tests {
                 .clone()
         };
         assert_eq!(status("first"), "server_acknowledged");
-        assert_eq!(status("second"), "refused");
+        assert_eq!(status("second"), "server_acknowledged");
+    }
+
+    fn pending_receipt(store: &ProtocolStore, key: &str, node: &Node) -> Vec<u8> {
+        let wire =
+            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
+                .encode(node)
+                .unwrap();
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    key.as_bytes(),
+                    1,
+                    &serde_json::json!({"status":"pending", "wire":wire}),
+                )
+            })
+            .unwrap();
+        wire
+    }
+
+    #[test]
+    fn read_batches_keep_group_devices_and_other_receipt_types_separate() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("read-batches.redb");
+        let store = open(&path, true);
+        let group = Jid::parse("120363000000000001@g.us").unwrap();
+        let a = Jid::parse("222222222222222:4@lid").unwrap();
+        let b = Jid::parse("222222222222222:5@lid").unwrap();
+        let base = Node::new("receipt")
+            .attr("to", group.clone())
+            .attr("type", "read");
+        let mut originals = Vec::new();
+        for (i, node) in [
+            base.clone().attr("id", "G1").attr("participant", a.clone()),
+            base.clone().attr("id", "G2").attr("participant", a.clone()),
+            base.clone().attr("id", "G3").attr("participant", b.clone()),
+            base.clone().attr("id", "G4").attr("participant", b.clone()),
+            Node::new("receipt")
+                .attr("id", "D1")
+                .attr("to", a.clone())
+                .attr("type", "read"),
+            Node::new("receipt")
+                .attr("id", "D2")
+                .attr("to", a.clone())
+                .attr("type", "read"),
+            base.clone()
+                .attr("id", "PLAYED")
+                .attr("participant", a.clone())
+                .attr("type", "played"),
+            base.attr("id", "RETRY")
+                .attr("participant", a.clone())
+                .attr("type", "retry")
+                .children(vec![Node::new("retry")]),
+        ]
+        .iter()
+        .enumerate()
+        {
+            let key = format!(
+                "receipt-outbox:batch-{i}:{}",
+                node.get_attr("type").unwrap().as_text().unwrap()
+            );
+            originals.push((key.clone(), pending_receipt(&store, &key, node)));
+        }
+        let head = store.journal_head().unwrap();
+        let wire = reserve_pending(&store).unwrap();
+        assert_eq!(wire.len(), 5);
+        let batch = wire
+            .iter()
+            .find(|n| {
+                n.get_attr("type").and_then(|v| v.as_text()) == Some("read")
+                    && jid(n, "participant") == Some(a.clone())
+            })
+            .unwrap();
+        assert_eq!(batch.get_attr("id").unwrap().as_text(), Some("G1"));
+        assert_eq!(
+            batch.child("list").unwrap().child_nodes()[0]
+                .get_attr("id")
+                .unwrap()
+                .as_text(),
+            Some("G2")
+        );
+        let mut ack = Node::new("ack")
+            .attr("class", "receipt")
+            .attr("id", "G1")
+            .attr("type", "read")
+            .attr("from", group);
+        assert!(!record_ack(&store, &ack).unwrap());
+        assert!(!record_ack(&store, &ack.clone().attr("participant", b)).unwrap());
+        ack = ack.attr("participant", a);
+        assert!(!record_ack(&store, &ack.clone().attr("id", "G2")).unwrap());
+        assert!(record_ack(&store, &ack.clone().attr("error", "479")).unwrap());
+        assert!(!record_ack(&store, &ack).unwrap());
+        let before = outcomes(&store).unwrap();
+        assert_eq!(before.len(), 8);
+        assert_eq!(before.iter().filter(|o| o.status == "refused").count(), 2);
+        assert_eq!(
+            before
+                .iter()
+                .filter(|o| o.status == "outcome_unknown")
+                .count(),
+            6
+        );
+        for (key, original) in &originals {
+            let row: serde_json::Value = store
+                .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))
+                .unwrap()
+                .unwrap();
+            assert_eq!(row["wire"], serde_json::json!(original));
+        }
+        assert_eq!(store.journal_head().unwrap(), head);
+        drop(store);
+        let store = open(&path, false);
+        assert!(reserve_pending(&store).unwrap().is_empty());
+        assert_eq!(outcomes(&store).unwrap(), before);
+    }
+
+    #[test]
+    fn read_batch_reservation_limit_counts_ids_and_singletons_keep_legacy_ack() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("limit.redb"), true);
+        for i in 0..17 {
+            pending_receipt(
+                &store,
+                &format!("receipt-outbox:limit-{i:02}:read"),
+                &Node::new("receipt")
+                    .attr("id", format!("ID{i:02}"))
+                    .attr("to", Jid::parse("222222222222222@lid").unwrap())
+                    .attr("type", "read"),
+            );
+        }
+        let first = reserve_pending(&store).unwrap();
+        assert_eq!(first.len(), 1);
+        assert_eq!(first[0].child("list").unwrap().child_nodes().len(), 15);
+        assert_eq!(
+            outcomes(&store)
+                .unwrap()
+                .iter()
+                .filter(|o| o.status == "pending")
+                .count(),
+            1
+        );
+        let second = reserve_pending(&store).unwrap();
+        assert_eq!(second.len(), 1);
+        assert!(second[0].child("list").is_none());
+        let ack = Node::new("ack")
+            .attr("class", "receipt")
+            .attr("type", "read")
+            .attr("from", Jid::parse("222222222222222@lid").unwrap())
+            .attr("id", second[0].get_attr("id").unwrap().clone());
+        assert!(record_ack(&store, &ack).unwrap());
+        assert_eq!(
+            outcomes(&store)
+                .unwrap()
+                .iter()
+                .filter(|o| o.status == "server_acknowledged")
+                .count(),
+            1
+        );
+        assert!(reserve_pending(&store).unwrap().is_empty());
+    }
+
+    #[test]
+    fn corrupt_read_batch_state_rolls_back_reservation_and_ack_atomically() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("batch-corruption.redb"), true);
+        let snapshot = || {
+            store
+                .read(|tx| {
+                    Table::ALL
+                        .iter()
+                        .map(|t| tx.scan_after(*t, 1, None, 512))
+                        .collect::<Result<Vec<_>>>()
+                })
+                .unwrap()
+        };
+        for i in 0..2 {
+            pending_receipt(
+                &store,
+                &format!("receipt-outbox:corrupt-{i}:read"),
+                &Node::new("receipt")
+                    .attr("id", format!("ID{i}"))
+                    .attr("to", Jid::parse("222222222222222@lid").unwrap())
+                    .attr("type", "read"),
+            );
+        }
+        let key = b"receipt-outbox:corrupt-1:read";
+        store
+            .write(|tx| {
+                let mut row: serde_json::Value = tx.get_json(Table::Checkpoints, key, 1)?.unwrap();
+                row["batch_ack_id"] = serde_json::json!("unexpected");
+                tx.put_json(Table::Checkpoints, key, 1, &row)
+            })
+            .unwrap();
+        let before = snapshot();
+        let head = store.journal_head().unwrap();
+        assert!(
+            reserve_pending(&store)
+                .unwrap_err()
+                .to_string()
+                .contains("pending receipt has batch correlation")
+        );
+        assert_eq!(snapshot(), before);
+        assert_eq!(store.journal_head().unwrap(), head);
+        store
+            .write(|tx| {
+                let mut row: serde_json::Value = tx.get_json(Table::Checkpoints, key, 1)?.unwrap();
+                row.as_object_mut().unwrap().remove("batch_ack_id");
+                tx.put_json(Table::Checkpoints, key, 1, &row)
+            })
+            .unwrap();
+        let sent = reserve_pending(&store).unwrap();
+        store
+            .write(|tx| {
+                let mut row: serde_json::Value = tx.get_json(Table::Checkpoints, key, 1)?.unwrap();
+                row["batch_ack_id"] = serde_json::json!(999);
+                tx.put_json(Table::Checkpoints, key, 1, &row)
+            })
+            .unwrap();
+        let before = snapshot();
+        assert!(
+            outcomes(&store)
+                .unwrap_err()
+                .to_string()
+                .contains("invalid saved batch correlation")
+        );
+        let ack = Node::new("ack")
+            .attr("class", "receipt")
+            .attr("type", "read")
+            .attr("from", Jid::parse("222222222222222@lid").unwrap())
+            .attr("id", sent[0].get_attr("id").unwrap().clone());
+        assert!(
+            record_ack(&store, &ack)
+                .unwrap_err()
+                .to_string()
+                .contains("invalid saved batch correlation")
+        );
+        assert_eq!(snapshot(), before);
+        assert_eq!(store.journal_head().unwrap(), head);
     }
 
     /// Automatic read receipts go only to content a person reads, in direct
@@ -1803,6 +2126,13 @@ mod tests {
         let pending = reserve_pending(&store).unwrap();
         assert_eq!(pending.len(), 1);
         let node = &pending[0];
+        assert_eq!(
+            node.attributes
+                .iter()
+                .map(|a| a.name.as_str())
+                .collect::<Vec<_>>(),
+            ["to", "id", "type", "participant"]
+        );
         assert_eq!(jid(node, "to"), Some(group.clone()));
         assert_eq!(jid(node, "participant"), Some(sender.clone()));
         assert_eq!(

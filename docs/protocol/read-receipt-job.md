@@ -1,5 +1,10 @@
 # Outgoing read-receipt job and wire construction
 
+2026-10-10 follow-up: [durable outgoing read batching](read-receipt-batching.md)
+now ports the extra-ID wire shape and root ACK lifecycle for matching queued
+read routes. Single-ID limitations below describe the earlier runtime; native
+privacy/read-self and specialized routing boundaries remain unfinished.
+
 2026-10-09. **Confirmed static**, APK **2.26.37.71**, SHA-256
 `1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
 [Eleven-topic recipe](apk/recipes/2.26.37.71-read-receipt-job.json),

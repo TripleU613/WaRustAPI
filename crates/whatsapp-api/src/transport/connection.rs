@@ -1514,6 +1514,7 @@ mod tests {
         let dir = tempfile::tempdir().unwrap();
         let store = open(&dir.path().join("receipt-cut.redb"));
         queue_read_receipt(&store, "first");
+        queue_read_receipt(&store, "second");
         let mut fake = start(&store, false, None);
         fake.activate().await;
         let (receipt, reply) = fake.written().await;
@@ -1527,6 +1528,15 @@ mod tests {
             "outcome_unknown",
             "reserved before the write"
         );
+        let root = receipt
+            .get_attr("id")
+            .unwrap()
+            .as_text()
+            .unwrap()
+            .to_owned();
+        let list = receipt.child("list").unwrap();
+        assert_eq!(list.child_nodes().len(), 1);
+        assert_eq!(receipt_status(&store, "second"), "outcome_unknown");
         reply
             .send(Err(Error::Transport(TransportError::Io(
                 std::io::ErrorKind::ConnectionReset,
@@ -1535,6 +1545,7 @@ mod tests {
         let err = fake.finished().await.unwrap_err();
         assert!(err.is_recoverable_by_reconnect(), "{err:?}");
         assert_eq!(receipt_status(&store, "first"), "outcome_unknown");
+        assert_eq!(receipt_status(&store, "second"), "outcome_unknown");
 
         // Next epoch: no replay, and the server's late ACK settles the reservation.
         let mut fake = start(&store, false, None);
@@ -1542,14 +1553,17 @@ mod tests {
         fake.nothing_written(Duration::from_millis(300)).await;
         fake.deliver(
             Node::new("ack")
-                .attr("id", "first")
+                .attr("id", root)
                 .attr("class", "receipt")
                 .attr("type", "read")
                 .attr("from", peer()),
         )
         .await;
         tokio::time::timeout(Duration::from_secs(5), async {
-            while receipt_status(&store, "first") != "server_acknowledged" {
+            while ["first", "second"]
+                .iter()
+                .any(|id| receipt_status(&store, id) != "server_acknowledged")
+            {
                 tokio::time::sleep(Duration::from_millis(20)).await;
             }
         })

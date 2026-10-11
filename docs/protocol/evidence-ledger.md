@@ -1,3 +1,14 @@
+2026-10-10 — **Implemented/offline:** matching queued read receipts now share
+native extra-ID lists. Per-message selectors and original saved wire stay intact;
+all batch members reserve atomically before writing, settle on the matching root
+ACK and never replay unknown writes. Group member devices, destinations and
+played/retry receipts remain separate. Public queue counts still count IDs.
+Fresh live batch ACK/UI read indicators and full native privacy/read-self policy
+remain unverified/unported. No network request.
+911 workspace tests, strict Clippy/Rustdoc and CLI checks passed. New group read
+attributes also follow the native order; historical wire remains unchanged.
+[Native shape, recovery and API scope](read-receipt-batching.md).
+
 2026-10-10 — **Implemented/offline:** primary attestation no longer causes a
 blanket identity-refresh refusal. Verified same-key hybrid/non-E2EE metadata
 permits guarded session refresh without an override child; structurally valid
