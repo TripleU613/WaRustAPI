@@ -1,0 +1,7 @@
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+classes.dex  LX/16p;->BFC(ZLI)
+  read opcode 0x54, dex byte offset: 0x8008ea
+classes.dex  LX/16w;->BFC(ZLI)
+  read opcode 0x54, dex byte offset: 0x8017d6
+classes.dex  LX/1UM;-><init>(VLLL)
+  write opcode 0x5b, dex byte offset: 0x918bda

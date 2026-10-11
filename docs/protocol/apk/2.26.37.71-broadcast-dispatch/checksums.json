@@ -1,0 +1,70 @@
+{
+  "flags-holder.txt": {
+    "bytes": 2894,
+    "sha256": "98f2977e16ba74ce9491527278dbfc5b3929d210e82c1e6c26fc2231f15e9040"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "list-type.txt": {
+    "bytes": 486,
+    "sha256": "252ccd9b3240c05bc9c2c364a821b5aea6c45dd519a7b58dfd21d3caf88aee7c"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "metadata-discriminator.txt": {
+    "bytes": 1479,
+    "sha256": "cba51c5b8c05642ea178eeef0c498439f3ecfb3cf6b025abf47b4fe89f569308"
+  },
+  "newsletter-dispatch.txt": {
+    "bytes": 1611,
+    "sha256": "3929463a68ddb011ed3a3415b02e9fd1efcb912c7c8afe2c6ae3af393a115869"
+  },
+  "node-flags.txt": {
+    "bytes": 6948,
+    "sha256": "ac40beeedc9bc124e29f165b22e62f66a2cff08fbe292406ec2f5b7cb362a26d"
+  },
+  "ordinary-dispatch.txt": {
+    "bytes": 1623,
+    "sha256": "ceb8205df4a1f59ddb2694cc7a3502efcef06fa427c4f2b0e990b5e8773acad6"
+  },
+  "ordinary-holder.txt": {
+    "bytes": 6805,
+    "sha256": "6cc07a46716fda90a784f5033b87b9294fa495b759c185c61e619a7fd2b7999b"
+  },
+  "ordinary-parser.txt": {
+    "bytes": 42139,
+    "sha256": "39062950a42b5e284c10ac7cd3468e4fbff4782fc3506b7ebde210946735a62f"
+  },
+  "phash-exemption.txt": {
+    "bytes": 833,
+    "sha256": "4e614fa9a389838a404c036b37fb269a782350c0cdcdb6e5adca547d643da96b"
+  },
+  "phash-types.txt": {
+    "bytes": 1129,
+    "sha256": "f0086989a9aa0d164b3025fafc1b69b3cae1c60411a5ae58fdc9c04273c87ea8"
+  },
+  "processor.txt": {
+    "bytes": 12679,
+    "sha256": "84dce66017341c86ee6e68af34f53a306b73ab9d3df523a913848cb10dff12f9"
+  },
+  "status-predicate.txt": {
+    "bytes": 777,
+    "sha256": "a8704f0e341dd4bf57aa95f6e67f3fd7629e8203363d29c1b63a4ea171d63177"
+  },
+  "status-type.txt": {
+    "bytes": 486,
+    "sha256": "e3db5064e39fc98fdfc1b5049713c1cf601c25edafc6265d69f0f0b30ab4122c"
+  },
+  "targets.json": {
+    "bytes": 4900,
+    "sha256": "2a77ce547f3069611ac6b8c18b381d60a2bbe046cfaa358140ae495009ecdfa5"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

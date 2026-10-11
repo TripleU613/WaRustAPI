@@ -1,0 +1,28 @@
+# APK-derived structural disassembly: LX/16p;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method BFC(ZLI) flags=0x1 registers=11
+  # full signature: LX/16p;->BFC(Landroid/os/Message;I)Z
+  0000..0002 op=12 const/4 v1, #0x1
+  0002..0008 op=71 invoke-static {v9, v1}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000c op=39 if-nez v10, +0x21
+  000c..0010 op=54 iget-object v4, v9, Landroid/os/Message;->obj:Ljava/lang/Object;
+  0010..0014 op=1a const-string v0, "null cannot be cast to non-null type com.whatsapp.infra.messaging.XmppRecvMessage.RecvMessageForMe"
+  0014..001a op=71 invoke-static {v4, v0}, LX/00h;->A0D(Ljava/lang/Object;Ljava/lang/String;)V
+  001a..0020 op=71 invoke-static {v4}, LX/00K;->A06(Ljava/lang/Object;)V
+  0020..0026 op=71 invoke-static {v4}, LX/00h;->A06(Ljava/lang/Object;)V
+  0026..002a op=1f check-cast v4, LX/1UM;
+  002a..002e op=54 iget-object v6, v4, LX/1UM;->A00:LX/Bp2;
+  002e..0032 op=54 iget-object v5, v4, LX/1UM;->A01:LX/1B3;
+  0032..0036 op=13 const/16 v7, #0x13
+  0036..003a op=22 new-instance v2, LX/Ahc;
+  003a..003c op=07 move-object v3, v8
+  003c..0042 op=76 invoke-direct/range {v2..v7}, LX/Ahc;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
+  0042..0048 op=6e invoke-virtual {v2}, LX/Ahc;->run()V
+  0048..004a op=0f return v1
+  004a..004c op=12 const/4 v0, #0x0
+  004c..004e op=0f return v0
+  # exception table: 0 try range(s)
+.end method

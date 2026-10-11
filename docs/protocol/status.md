@@ -365,17 +365,16 @@ send. That the fan-out therefore takes the group shape — a `<participants>`
 wrapper of per-device `enc` plus one top-level `skmsg` — is **inferred**; the
 assembler was not located.
 
-**A `phash` exemption exists but its applicability is unresolved.**
+**The `phash` exemption's status address condition is resolved.**
 `SendE2EMessageJob->A02` throws *"cannot send e2e message to a group without a
 participant hash"* unless `LX/1Yx->A04(jid, messageType)` holds, which is
 `jid.getType() == 5` **and** the message type being one of
-`{0x38,0x43,0x44,0x4f,0x56,0x5d,0x79,0x7d}` (**confirmed**). Whether
-`status@broadcast` is type 5 is **unknown**: it is parsed by the generic
-`LX/0D1->A00` dispatcher, and the JID classes constructed around its
-`broadcast`/`status` branch return type 3 (`LX/9Ln`), 10 (`LX/Blh`), 1
-(`LX/1bn`), 2 (`LX/9Lo`), 0x13 (`LX/0e1`) and 0x19 (`LX/Bli`) — none of them 5 —
-but the string-to-class mapping in that hash switch is not positional, so this
-neither confirms nor refutes the exemption.
+`{0x38,0x43,0x44,0x4f,0x56,0x5d,0x79,0x7d}` (**confirmed**).
+The [pinned factory and type trace](broadcast-dispatch.md) now resolves
+`status@broadcast` to `LX/8oR`, whose getType returns 5. Ordinary broadcast
+lists resolve to `LX/9Ln`, type 3. Status therefore satisfies the address
+condition; the exemption still requires one of the exact message types above.
+The hash input set for other message types remains unported.
 
 ### Why none of it is implemented
 
@@ -386,7 +385,7 @@ Three inputs for that are **unknown**:
 
 1. the fan-out assembler that places the per-recipient children and the `skmsg`;
 2. how `status_distribution` becomes a device-level recipient list;
-3. whether a `phash` is required, and over which JID set.
+3. the `phash` input set when the exact status/type exemption does not apply.
 
 The liking payload is additionally **unknown**: the `STATUS_ADD_ON` kind is
 confirmed, but the protobuf it carries was not reached, so it is *not*

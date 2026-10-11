@@ -1,0 +1,28 @@
+# APK-derived structural disassembly: LX/1Yx;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A02(ZI) flags=0x19 registers=3
+  # full signature: LX/1Yx;->A02(I)Z
+  0000..0004 op=13 const/16 v0, #0x38
+  0004..0008 op=32 if-eq v2, v0, +0x1f
+  0008..000c op=13 const/16 v0, #0x43
+  000c..0010 op=32 if-eq v2, v0, +0x1b
+  0010..0014 op=13 const/16 v0, #0x44
+  0014..0018 op=32 if-eq v2, v0, +0x17
+  0018..001c op=13 const/16 v0, #0x4f
+  001c..0020 op=32 if-eq v2, v0, +0x13
+  0020..0024 op=13 const/16 v0, #0x56
+  0024..0028 op=32 if-eq v2, v0, +0xf
+  0028..002c op=13 const/16 v0, #0x5d
+  002c..0030 op=32 if-eq v2, v0, +0xb
+  0030..0034 op=13 const/16 v0, #0x79
+  0034..0038 op=32 if-eq v2, v0, +0x7
+  0038..003c op=13 const/16 v1, #0x7d
+  003c..003e op=12 const/4 v0, #0x0
+  003e..0042 op=33 if-ne v2, v1, +0x3
+  0042..0044 op=12 const/4 v0, #0x1
+  0044..0046 op=0f return v0
+  # exception table: 0 try range(s)
+.end method
