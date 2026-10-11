@@ -1,0 +1,66 @@
+{
+  "date": "2026-10-10",
+  "seconds": 20,
+  "chat_sends_enabled": false,
+  "mark_read": false,
+  "automatic_reconnect": false,
+  "exit_code": 0,
+  "authenticated_and_active": true,
+  "stopped_cleanly": true,
+  "pending_before": 0,
+  "pending_after": 0,
+  "action_states_before": {
+    "error": 1,
+    "ok": 18,
+    "sent": 2
+  },
+  "action_states_after": {
+    "error": 1,
+    "ok": 18,
+    "sent": 2
+  },
+  "receipt_states_before": {
+    "server_acknowledged": 9
+  },
+  "receipt_states_after": {
+    "server_acknowledged": 9
+  },
+  "action_summaries_unchanged": true,
+  "receipt_summaries_unchanged": true,
+  "registration_summary_unchanged": true,
+  "generation_unchanged": true,
+  "journal_head_unchanged": true,
+  "tables_before": {
+    "Account": 2,
+    "Checkpoints": 1130,
+    "DeviceLists": 0,
+    "Groups": 0,
+    "Idempotency": 0,
+    "Inbox": 15,
+    "MediaJobs": 0,
+    "Outbox": 0,
+    "PeerIdentities": 4,
+    "Prekeys": 48,
+    "RegistrationAttempts": 1,
+    "SenderKeyDistribution": 0,
+    "SenderKeys": 3,
+    "SignalSessions": 4
+  },
+  "tables_after": {
+    "Account": 2,
+    "Checkpoints": 1139,
+    "DeviceLists": 0,
+    "Groups": 0,
+    "Idempotency": 0,
+    "Inbox": 15,
+    "MediaJobs": 0,
+    "Outbox": 0,
+    "PeerIdentities": 4,
+    "Prekeys": 48,
+    "RegistrationAttempts": 1,
+    "SenderKeyDistribution": 0,
+    "SenderKeys": 3,
+    "SignalSessions": 4
+  },
+  "fresh_aggregate_projection": "unverified"
+}

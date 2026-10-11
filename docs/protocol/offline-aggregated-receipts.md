@@ -98,8 +98,10 @@ JAR. The installed engine matches REA's pinned SHA-256
 The first MCP package inspection refused because that prerequisite was missing;
 that result proved a local setup gap, not an APK failure. The JAR is now installed
 outside the repository and configured under the Codex REA server environment,
-with a private configuration backup. This running MCP connection predates that
-environment update, so the successful APK calls used the existing REA CLI.
+with a private configuration backup. At the time of this extraction the MCP connection predated that
+environment update, so these APK calls used the existing REA CLI. The subsequent
+[single-list follow-up](direct-receipts.md#single-list-branch-correction--2026-10-10)
+records successful method calls through the connected MCP provider.
 No APK, emulator or app process was executed.
 
 ```sh
@@ -125,3 +127,22 @@ key-form isolation and the public group handler. Strict all-target Clippy,
 warnings-denied Rustdoc, default CLI tests and CLI-reference regeneration
 passed. The default CLI build retains an existing unused `clock::observe_login`
 warning. No live account operation was performed for this chunk.
+
+## Bounded live receive regression — 2026-10-10
+
+[Content-free live report](offline-aggregated-receipts-live.json): one 20-second
+window authenticated and stopped cleanly, using the saved account/profile with
+read marking disabled, automatic reconnect disabled and no chat outbox sends.
+Preflight found no queued action, receipt or chat send. Existing action summaries
+(18 OK, one error, two sent/unknown), nine acknowledged receipt summaries,
+registration summary, generation and journal head remained unchanged. Nine
+additional checkpoints were retained; inbox, outbox, identity and session table
+counts stayed unchanged. Counts and summaries do not prove every stored byte
+unchanged. Receive-side protocol controls remain allowed in this window.
+
+No fresh aggregate receipt or new message was validated; aggregate projection
+remains unverified. Private config/logs remain outside Git under the ignored
+account directory. An initial offline CLI invocation used an unsupported explicit
+Boolean value for `--json`; it failed before any connection. The corrected run
+used the actual switch form. No retry of the live window was performed. The
+window ran on commit 19ca798, before the separate single-list parser fix.

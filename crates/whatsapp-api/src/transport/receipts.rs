@@ -604,10 +604,9 @@ pub(super) fn ids(node: &Node) -> Result<Vec<String>> {
         Ok(())
     };
     insert(node.get_attr("id").and_then(|v| v.as_text()))?;
-    for list in node
-        .child_nodes()
-        .iter()
-        .filter(|n| n.description == "list")
+    // Cmk.A03 05be..05e0 expands only one sole list child, not extensions.
+    if let [list] = node.child_nodes()
+        && list.description == "list"
     {
         if list.child_nodes().len() > 256 {
             return Err(Error::invalid("receipt", "receipt list exceeds bound"));
@@ -2797,6 +2796,58 @@ mod tests {
         read.observe("read");
         assert!(!read.delivered && !read.played && read.read);
     }
+    #[test]
+    fn receipt_lists_only_expand_the_single_native_list_branch() {
+        let list = || Node::new("list").children(vec![Node::new("item").attr("id", "extra")]);
+        for children in [
+            vec![list(), list()],
+            vec![Node::new("biz"), list()],
+            vec![list(), Node::new("biz")],
+            vec![Node::new("unknown"), list()],
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("list-shape.redb");
+            let store = open(&path, true);
+            let peer = "15555550100@s.whatsapp.net";
+            let root = saved_receipt_send(&store, "list-shape", peer, "root");
+            let extra = saved_receipt_send(&store, "list-shape", peer, "extra");
+            let outbox = crate::outbox::Outbox::new("inspect", crate::profile::Limits::default());
+            let before = store.read(|tx| outbox.get(tx, extra)).unwrap().unwrap();
+            let receipt = Node::new("receipt")
+                .attr("id", "root")
+                .attr("from", peer)
+                .attr("type", "read")
+                .attr("t", "20")
+                .children(children);
+            assert_eq!(record(&store, &receipt).unwrap(), 1);
+            assert_eq!(
+                store.read(|tx| outbox.get(tx, extra)).unwrap().unwrap(),
+                before
+            );
+            assert_eq!(
+                store
+                    .read(|tx| outbox.get(tx, root))
+                    .unwrap()
+                    .unwrap()
+                    .facts
+                    .len(),
+                2
+            );
+            let head = store.read(|tx| tx.journal_head()).unwrap();
+            drop(store);
+            let store = open(&path, false);
+            assert_eq!(record(&store, &receipt).unwrap(), 0);
+            assert_eq!(store.read(|tx| tx.journal_head()).unwrap(), head);
+            assert_eq!(
+                store.read(|tx| outbox.get(tx, extra)).unwrap().unwrap(),
+                before
+            );
+            // The same saved extra ID is admitted when the actual single-list
+            // branch selects it; ignored extensions cannot invent that fact.
+            assert_eq!(record(&store, &receipt.children(vec![list()])).unwrap(), 1);
+        }
+    }
+
     #[test]
     fn batch_ids_are_bounded_and_deduplicated() {
         let node = Node::new("receipt")

@@ -1,3 +1,18 @@
+2026-10-10 — **Implemented/offline:** ordinary receipt list selection now matches
+Cmk.A03: only a sole list child expands message IDs. A list beside business
+metadata, another list or unrelated children selects only root ID. Previously
+Rust could add receipt facts to an extra intent the native branch did not select.
+The shared direct/group helper is corrected; encrypted-store tests prove the
+failure before the fix and duplicate-free reopening afterward.
+[Parser selection and evidence](protocol/direct-receipts.md#single-list-branch-correction--2026-10-10).
+
+A single bounded 20-second receive window on the preceding aggregate commit
+19ca798 authenticated and stopped cleanly, with no queued sends/actions/receipts,
+no automatic reconnect or read marking. Registration summary, generation,
+journal head and action/receipt summaries stayed unchanged. Nine checkpoints
+were retained. Fresh aggregate/list projection remains unverified.
+[Redacted live report](protocol/offline-aggregated-receipts-live.json).
+
 # Messaging completion checklist
 
 2026-10-10 — **Implemented/offline:** direct/group offline device aggregates

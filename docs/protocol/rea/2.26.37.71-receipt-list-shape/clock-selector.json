@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_c8581bbd22a4b74d482959f21bcb7e28794bccc011d5b6a0112a182d68f16e95",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.C08B",
+    "method_name": "A00"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-4CS4Fq/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"java_version\":\"21.0.12.1\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":15695085568}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C08B"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cinit\\u003e(): void\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0},{\"signature\":\"A00(X.08B): long\",\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0},{\"signature\":\"A01(X.08B, long): void\",\"is_constructor\":false,\"name\":\"A01\",\"def_pos\":0},{\"signature\":\"A02(): long\",\"is_constructor\":false,\"name\":\"A02\",\"def_pos\":0},{\"signature\":\"A03(): long\",\"is_constructor\":false,\"name\":\"A03\",\"def_pos\":0},{\"signature\":\"A04(): long\",\"is_constructor\":false,\"name\":\"A04\",\"def_pos\":0},{\"signature\":\"A05(): long\",\"is_constructor\":false,\"name\":\"A05\",\"def_pos\":0},{\"signature\":\"A06(long): long\",\"is_constructor\":false,\"name\":\"A06\",\"def_pos\":0},{\"signature\":\"A07(long, long): void\",\"is_constructor\":false,\"name\":\"A07\",\"def_pos\":0}],\"method_count\":9,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"C08B\",\"full_name\":\"X.C08B\",\"field_count\":5,\"fields\":[{\"type\":\"X.08D\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"X.08C\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"long\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"long\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"long\",\"def_pos\":0,\"name\":\"A04\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C08B",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"mode\":\"java\",\"full_name\":\"X.08B.A00\",\"class_name\":\"X.C08B\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public static long A00(C08B c08b) {\\n        long j;\\n        long jElapsedRealtime \\u003d SystemClock.elapsedRealtime();\\n        if (c08b.A03 !\\u003d 0) {\\n            j \\u003d c08b.A03;\\n        } else {\\n            if (c08b.A04 \\u003d\\u003d 0) {\\n                return System.currentTimeMillis() - c08b.A02;\\n            }\\n            j \\u003d c08b.A04;\\n        }\\n        return j + jElapsedRealtime;\\n    }\",\"overload_count\":1,\"method_name\":\"A00\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.C08B",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(X.08B): long",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public static long A00(C08B c08b) {\n        long j;\n        long jElapsedRealtime = SystemClock.elapsedRealtime();\n        if (c08b.A03 != 0) {\n            j = c08b.A03;\n        } else {\n            if (c08b.A04 == 0) {\n                return System.currentTimeMillis() - c08b.A02;\n            }\n            j = c08b.A04;\n        }\n        return j + jElapsedRealtime;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

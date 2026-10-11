@@ -227,3 +227,55 @@ links and 128 checksum-verified APK bundles totaling 27,307,426 bytes.
 handle the first-child `participants message_id` form and resolve the earlier
 native `list/item` assignment question using REA plus the existing DEX operands.
 Root-ID, per-entry actor/time and transactional failure boundaries remain distinct.
+
+## Single-list branch correction — 2026-10-10
+
+**Implemented/offline:** ordinary direct and group receipts expand `list/item`
+IDs only when `list` is the sole child. The APK Cmk.A03 checks the first `biz`
+child at `04be..04d0`, otherwise requires exactly one child at `05be..05cc`
+and its `list` name at `05d0..05e0`. Multiple children, including a list beside
+business metadata or another list, select only the root ID. The existing
+[exact parser](apk/2.26.37.71-direct-receipts/receipt-status-parser.txt) and
+[complete REA parser](rea/2.26.37.71-offline-receipts/parser.json) independently
+confirm that selection. The list assignment at `060a` repeats on the back-edge;
+see the earlier [array correction](offline-aggregated-receipts.md).
+
+Before this fix, the shared Rust `ids` helper scanned every list among the
+children. It could attribute extra delivery/read/played facts to messages the
+native branch did not select. The encrypted-store regression failed with two
+matched intents instead of one, then passed after changing that one helper.
+It covers duplicate lists, business metadata before/after a list, unrelated
+children, reopening without duplicate journal writes, and subsequent admission
+through a real single-list receipt. Both direct and group callers use this
+helper. Existing item validation, local 256-item bound, ID deduplication, original
+target guards and all-or-nothing writes remain in force. Native duplicate list
+entries are retained by its parser; local fact deduplication is not a claim of
+native scheduler equivalence. No key-based or self-receipt branch was enabled.
+
+### Separate key aggregate clock follow-up
+
+The connected REA MCP provider now successfully reads APK methods.
+[1xj.A02 Evidence](rea/2.26.37.71-receipt-list-shape/clock-delegate.json),
+`ev_cdc634951bc5013cd41b7e5924bce12822fbb57304ddb848b69820797f473165`,
+confirms the aggregate clock delegate calls `08B.A00`.
+[08B.A00 Evidence](rea/2.26.37.71-receipt-list-shape/clock-selector.json),
+`ev_c8581bbd22a4b74d482959f21bcb7e28794bccc011d5b6a0112a182d68f16e95`,
+confirms NTP elapsed baseline first, WhatsApp elapsed baseline second, otherwise
+wall clock minus saved server offset. This corroborates the earlier
+[NTP trace](token-clock-producers.md#ntp-preference-and-acquisition-2026-10-09-continuation);
+it does not implement NTP or validate a live default timestamp.
+[Exact DDG methods](rea/2.26.37.71-receipt-list-shape/key-aggregate-model.txt)
+confirm one message key, per-entry device/time and root status. Using the current
+Rust inferred-stanza clock for missing times would substitute a different
+authority. The key aggregate stays unported while that clock/admission work
+remains incomplete. No APK or Android process was executed.
+
+### Validation of the single-list correction
+
+Validation: 894 workspace/all-feature tests passed (753 library, four codec,
+nine crash, 54 CLI, one API-symbol and 73 tooling tests). Strict Clippy,
+warnings-denied Rustdoc, 25 default CLI tests plus API-symbol coverage,
+CLI-reference regeneration and the experimental CLI build passed. The default
+build retains the existing unused `clock::observe_login` warning. No live request
+was made after the list-selection change; the preceding window is recorded
+separately above.
