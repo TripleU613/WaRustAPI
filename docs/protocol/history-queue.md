@@ -20,6 +20,23 @@ implementations and stored PN/LID sources were already traced in
 [stored own identity](own-identity.md). Full source import/repair, active
 account settings and upstream message authentication remain **unknown**.
 
+2026-10-11 **Implemented subset:** inbox peer routing now accepts a device in
+saved own PN or validated own LID authority, using the shared lookup described
+above. LID authority is rechecked in the write transaction alongside account
+identity before committing the ratchet and event. The route still requires an
+existing device identity pin and Signal session, `enc type=msg`, no participant
+or recipient, and a nonzero device with agent zero. It does not create a device
+session or infer own identity from a remote alias. Ordinary own-device messages
+with a recipient and complete native peer-control handling remain unported.
+
+Offline tests cover missing/foreign/primary/agent-bearing LID rejection,
+recipient/participant exclusion, refusal to bootstrap PN or LID devices under
+either identity policy, and authenticated decryption plus duplicate redelivery
+through an explicitly held LID-device fixture. No live own-LID delivery was
+observed for this change. All 937 workspace/all-feature tests, strict Clippy,
+warning-denying Rustdoc, default CLI tests, formatting and experimental CLI
+build passed.
+
 The Bng subtype branch at 09da identifies itself as
 `PeerMessageHandler/handleHistorySyncNoticationMessage`. It then calls
 08Z.BMv at 0a00..0a0c. False logs

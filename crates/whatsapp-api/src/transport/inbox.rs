@@ -322,7 +322,7 @@ pub fn group_sender(node: &Node) -> Option<(Jid, Jid)> {
 /// Comparison 1gz.A00 015a..01ba: peer category, DeviceJid and own UserJid.
 /// This selects a route only. `process` additionally requires a previously
 /// pinned device identity AND session; it never bootstraps a linked device.
-fn own_peer_sender(account: &AccountRecord, node: &Node) -> Option<Jid> {
+fn own_peer_sender(account: &AccountRecord, node: &Node, own_lid: Option<&Jid>) -> Option<Jid> {
     if node.get_attr("category").and_then(|v| v.as_text()) != Some("peer")
         || node.get_attr("participant").is_some()
         || node.get_attr("recipient").is_some()
@@ -330,12 +330,15 @@ fn own_peer_sender(account: &AccountRecord, node: &Node) -> Option<Jid> {
         return None;
     }
     let from = super::receipts::jid(node, "from")?;
-    let own = account.own_jid.as_ref()?;
-    (from.server == Server::User
-        && from.device != 0
-        && own.server == Server::User
-        && from.to_non_ad() == own.to_non_ad())
-    .then_some(from)
+    if from.agent != 0 || from.device == 0 || from.user.is_empty() {
+        return None;
+    }
+    let own = match from.server {
+        Server::User => account.own_jid.as_ref()?,
+        Server::Lid => own_lid?,
+        _ => return None,
+    };
+    (own.server == from.server && from.to_non_ad() == own.to_non_ad()).then_some(from)
 }
 
 /// Our own identities as the server reported them in the latest saved login
@@ -675,8 +678,18 @@ async fn process_direct(
         return process_group(store, account, node, capture, policy).await;
     }
     let peer_category = node.get_attr("category").and_then(|v| v.as_text()) == Some("peer");
+    let own_peer_lid = if peer_category
+        && node.get_attr("participant").is_none()
+        && node.get_attr("recipient").is_none()
+        && super::receipts::jid(node, "from")
+            .is_some_and(|jid| jid.server == Server::Lid && jid.device != 0 && jid.agent == 0)
+    {
+        super::group_send::own_lid(store)?
+    } else {
+        None
+    };
     let sender = if peer_category {
-        own_peer_sender(account, node)
+        own_peer_sender(account, node, own_peer_lid.as_ref())
     } else {
         session_sender(node)
     };
@@ -902,6 +915,11 @@ async fn process_direct(
         }
         if peer_category {
             let current_account = AccountRecord::load_in_write(tx)?.ok_or(Error::NotRegistered)?;
+            let current_own_lid = if sender.server == Server::Lid {
+                super::group_send::own_lid_in(tx)?
+            } else {
+                None
+            };
             if !current_account.is_registered()
                 || current_account.generation != account.generation
                 || current_account.signal_registration_id != account.signal_registration_id
@@ -910,7 +928,8 @@ async fn process_direct(
                     .as_ref()
                     .map(|key| &key.0.public)
                     != account.signal_identity.as_ref().map(|key| &key.0.public)
-                || own_peer_sender(&current_account, node).as_ref() != Some(&sender)
+                || own_peer_sender(&current_account, node, current_own_lid.as_ref()).as_ref()
+                    != Some(&sender)
             {
                 return Err(Error::invalid(
                     "inbox",
@@ -2990,6 +3009,95 @@ mod tests {
                 .unwrap()
                 .is_none()
         );
+        // Reuse the authenticated ratchet as a fixture for a separately held own device.
+        let peer_device = Jid::parse(&format!("{}:2@lid", peer.user)).unwrap();
+        let (held_session, held_identity) = store
+            .read(|tx| {
+                let key = format!("comparison-direct:{peer}");
+                Ok((
+                    tx.get_json::<Vec<u8>>(Table::SignalSessions, key.as_bytes(), 1)?
+                        .unwrap(),
+                    tx.get_json::<Vec<u8>>(Table::PeerIdentities, key.as_bytes(), 1)?
+                        .unwrap(),
+                ))
+            })
+            .unwrap();
+        let reply = direct::prepare_payload(
+            &receiver,
+            &peer,
+            None,
+            Some(&held_session),
+            Some(&held_identity),
+            b"\x0a\x05hello",
+        )
+        .await
+        .unwrap();
+        let acknowledged = direct::receive(
+            &sender,
+            receiver.own_jid.as_ref().unwrap(),
+            &sent.session,
+            &sent.identity,
+            &reply.ciphertext,
+        )
+        .await
+        .unwrap();
+        store
+            .write(|tx| {
+                let device_key = format!("comparison-direct:{peer_device}");
+                tx.put_json(
+                    Table::SignalSessions,
+                    device_key.as_bytes(),
+                    1,
+                    &*reply.session,
+                )?;
+                tx.put_json(
+                    Table::PeerIdentities,
+                    device_key.as_bytes(),
+                    1,
+                    &held_identity,
+                )?;
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"login-identity",
+                    1,
+                    &serde_json::json!({"lid":peer.to_string()}),
+                )
+            })
+            .unwrap();
+        let next = direct::prepare_payload(
+            &sender,
+            receiver.own_jid.as_ref().unwrap(),
+            None,
+            Some(&acknowledged.session),
+            Some(&sent.identity),
+            b"\x0a\x05hello",
+        )
+        .await
+        .unwrap();
+        assert_eq!(next.kind, "msg");
+        let peer_node = Node::new("message")
+            .attr("category", "peer")
+            .attr("from", peer_device)
+            .attr("id", "OWN-LID-PEER")
+            .children(vec![
+                Node::new("enc")
+                    .attr("type", next.kind)
+                    .attr("v", "2")
+                    .bytes(next.ciphertext.to_vec()),
+            ]);
+        let capture = preserve(&store, &peer_node).unwrap();
+        assert_eq!(
+            process(&store, &receiver, &peer_node, &capture)
+                .await
+                .unwrap(),
+            IncomingResult::Decrypted
+        );
+        assert_eq!(
+            process(&store, &receiver, &peer_node, &capture)
+                .await
+                .unwrap(),
+            IncomingResult::Duplicate
+        );
     }
 
     #[tokio::test]
@@ -3232,10 +3340,25 @@ mod tests {
             registration: crate::session::RegistrationStatus::Registered,
             ..Default::default()
         };
-        for kind in ["msg", "pkmsg"] {
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"login-identity",
+                    1,
+                    &serde_json::json!({"pn":"15555550100@s.whatsapp.net","lid":"123456789@lid"}),
+                )
+            })
+            .unwrap();
+        for (from, kind) in [
+            ("15555550100:2@s.whatsapp.net", "msg"),
+            ("15555550100:2@s.whatsapp.net", "pkmsg"),
+            ("123456789:2@lid", "msg"),
+            ("123456789:2@lid", "pkmsg"),
+        ] {
             let node = Node::new("message")
                 .attr("category", "peer")
-                .attr("from", "15555550100:2@s.whatsapp.net")
+                .attr("from", from)
                 .attr("id", kind)
                 .children(vec![
                     Node::new("enc")
@@ -3261,16 +3384,6 @@ mod tests {
                 IncomingResult::Unsupported
             );
         }
-        store
-            .write(|tx| {
-                tx.put_json(
-                    Table::Checkpoints,
-                    b"login-identity",
-                    1,
-                    &serde_json::json!({"pn":"15555550100@s.whatsapp.net","lid":"123456789@lid"}),
-                )
-            })
-            .unwrap();
         for own in ["15555550100@s.whatsapp.net", "123456789:2@lid"] {
             assert_eq!(
                 remote_identity_policy(
@@ -3303,6 +3416,37 @@ mod tests {
         );
     }
     #[test]
+    fn peer_messages_accept_only_the_saved_own_lid_device() {
+        let account = AccountRecord {
+            own_jid: Some(Jid::parse("15555550100@s.whatsapp.net").unwrap()),
+            ..Default::default()
+        };
+        let own_lid = Jid::parse("12345@lid").unwrap();
+        let sender = Jid::parse("12345:2@lid").unwrap();
+        let node = Node::new("message")
+            .attr("category", "peer")
+            .attr("from", sender.clone());
+        assert_eq!(
+            own_peer_sender(&account, &node, Some(&own_lid)),
+            Some(sender)
+        );
+        assert!(own_peer_sender(&account, &node, None).is_none());
+        for from in ["99999:2@lid", "12345@lid", "12345_1:2@lid"] {
+            assert!(
+                own_peer_sender(&account, &node.clone().attr("from", from), Some(&own_lid))
+                    .is_none()
+            );
+        }
+        for node in [
+            node.clone().attr("recipient", "99999@lid"),
+            node.clone().attr("participant", "99999@lid"),
+            Node::new("message").attr("from", "12345:2@lid"),
+        ] {
+            assert!(own_peer_sender(&account, &node, Some(&own_lid)).is_none());
+        }
+    }
+
+    #[test]
     fn peer_messages_require_exact_own_account_device_route() {
         let account = AccountRecord {
             own_jid: Some(Jid::parse("15555550100@s.whatsapp.net").unwrap()),
@@ -3312,7 +3456,8 @@ mod tests {
         assert!(
             own_peer_sender(
                 &account,
-                &node.clone().attr("from", "15555550100:2@s.whatsapp.net")
+                &node.clone().attr("from", "15555550100:2@s.whatsapp.net"),
+                None
             )
             .is_some()
         );
@@ -3322,19 +3467,21 @@ mod tests {
             "12345:2@lid",
             "12345@g.us",
         ] {
-            assert!(own_peer_sender(&account, &node.clone().attr("from", sender)).is_none());
+            assert!(own_peer_sender(&account, &node.clone().attr("from", sender), None).is_none());
         }
         assert!(
             own_peer_sender(
                 &account,
-                &Node::new("message").attr("from", "15555550100:2@s.whatsapp.net")
+                &Node::new("message").attr("from", "15555550100:2@s.whatsapp.net"),
+                None
             )
             .is_none()
         );
         assert!(
             own_peer_sender(
                 &AccountRecord::default(),
-                &node.attr("from", "15555550100:2@s.whatsapp.net")
+                &node.attr("from", "15555550100:2@s.whatsapp.net"),
+                None
             )
             .is_none()
         );
