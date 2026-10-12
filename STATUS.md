@@ -1,3 +1,11 @@
+2026-10-12 — **Confirmed/static:** native JNI public-key length dispatch calls
+ML-KEM-512/768/1024; the Java CRYSTALS-KYBER-1024 HKDF label stays unchanged.
+The Java seed array is length-checked but never consumed; native encapsulation
+requests its own 32-byte randomness. Exact JNI widths and import/export thunks
+are retained with a hash-bound reproducer. Primitive equivalence and Rust hybrid
+sessions remain unverified; no account or network change.
+[Native dispatch, sizes and randomness](docs/protocol/native-kem.md).
+
 2026-10-12 — **Implemented/offline:** identity refresh diagnostics now expose
 redacted PQ signature verification over the original directory value bytes,
 using the returned candidate identity. Native KEMPublicKey stores/returns those

@@ -440,3 +440,15 @@ and [MCF split instructions](../../docs/protocol/fingerprint-ascii-split-evidenc
 record the implementation boundary. The CLI default is native-v4; select V3
 explicitly with `--scheme native-v3`, optional `--v3-hosted` (options 3 vs 1).
 Native class/ownership/JNI and current inventories remain unverified.
+
+## Native KEM dispatch trace
+
+`native_kem_trace.py` checks pinned ARM64 library hashes and reproduces seven
+static JNI/ML-KEM instruction trace files without executing target code. See
+[dispatch, widths, randomness and remaining limits](../../docs/protocol/native-kem.md).
+
+```sh
+python tools/apk-research/native_kem_trace.py \
+  lab/apk-2.26.37.71/native/qiling-rootfs/decoded \
+  docs/protocol/native-kem-2.26.37.71 --check
+```

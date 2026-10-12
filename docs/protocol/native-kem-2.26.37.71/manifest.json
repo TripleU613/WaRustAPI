@@ -1,0 +1,67 @@
+{
+  "apk_build": "2.26.37.71",
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "libraries": {
+    "libwhatsapp.so": "f41f3fae89dbc18f8469c2c048df3dcf0648c193f9c7d60b878ac2014ec9551a",
+    "libwhatsappmerged.so": "565f6c0e5581fe0b9ccc564f2d807d5363b8333abd32513e1722d6880d1c70aa"
+  },
+  "ranges": {
+    "jni-encapsulate": {
+      "library": "libwhatsapp.so",
+      "start": "0x622f70",
+      "end_exclusive": "0x6232a0"
+    },
+    "jni-decapsulate": {
+      "library": "libwhatsapp.so",
+      "start": "0x622cac",
+      "end_exclusive": "0x622f0c"
+    },
+    "jni-dispatch": {
+      "library": "libwhatsapp.so",
+      "start": "0x617050",
+      "end_exclusive": "0x6170b0"
+    },
+    "ml-kem-exports": {
+      "library": "libwhatsappmerged.so",
+      "start": "0x2baba0",
+      "end_exclusive": "0x2bac08"
+    },
+    "ml-kem-dispatch": {
+      "library": "libwhatsappmerged.so",
+      "start": "0x70a6a8",
+      "end_exclusive": "0x70a6d0"
+    },
+    "ml-kem-encapsulate": {
+      "library": "libwhatsappmerged.so",
+      "start": "0x70a9dc",
+      "end_exclusive": "0x70aa78"
+    }
+  },
+  "files": {
+    "jni-encapsulate.txt": {
+      "bytes": 10693,
+      "sha256": "96c02919787af1bc2bc31ed91b917112dcf8b018f476810ad4817e03d6ff4fc5"
+    },
+    "jni-decapsulate.txt": {
+      "bytes": 7906,
+      "sha256": "f6d7773444f7b4cc2568588d5650dbd71256a6515e18ed1867ebb7369058f633"
+    },
+    "jni-dispatch.txt": {
+      "bytes": 1310,
+      "sha256": "f7e59646a6f56066d8dfbc192557e1208f19576046293eb01508c4a02e08a25d"
+    },
+    "ml-kem-exports.txt": {
+      "bytes": 2757,
+      "sha256": "3229f62c72f8471f36733d32ceb5e2307476ffed8af3a7925e5b9e9db0fbb248"
+    },
+    "ml-kem-dispatch.txt": {
+      "bytes": 988,
+      "sha256": "12d9749e494abd72d6709df9af6cdaafb395e5da1fb9ebe20f9ffdf411bf2901"
+    },
+    "ml-kem-encapsulate.txt": {
+      "bytes": 2126,
+      "sha256": "56f23bbb3d94c86bc4032bdb6956a850ebd5543b7a7936926926099fa50b5c25"
+    }
+  },
+  "coverage": "Static instruction trace; no target execution or primitive equivalence test."
+}

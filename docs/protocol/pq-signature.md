@@ -34,7 +34,9 @@ is appended after the EC agreements in `CQc.A00`. The hybrid HKDF label at
 `028c..0296` is `WhisperText_X25519_SHA-256_CRYSTALS-KYBER-1024`; the classic
 branch uses `WhisperText`. This identifies the Java suite label, not the JNI
 algorithm revision, deterministic encoding, key lengths or full compatibility.
-The native encapsulation implementation and Rust hybrid backend remain unported.
+The subsequent [native JNI trace](native-kem.md) resolves dispatch to ML-KEM
+and shows that Java seed contents are not consumed. Primitive equivalence and
+the Rust hybrid backend remain unported.
 These observations are static APK evidence, not execution of JNI or Android.
 
 ## API and CLI result

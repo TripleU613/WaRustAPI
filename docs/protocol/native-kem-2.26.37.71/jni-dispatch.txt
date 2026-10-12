@@ -1,0 +1,30 @@
+
+libwhatsapp.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+00000000005e8350 <ScanOggStream>:
+  617050: d503245f     	bti	c
+  617054: 141b3c9b     	b	0xce62c0 <OQS_KEM_ml_kem_512_decaps@plt>
+  617058: d503245f     	bti	c
+  61705c: 141b3c9d     	b	0xce62d0 <OQS_KEM_ml_kem_768_decaps@plt>
+  617060: d503245f     	bti	c
+  617064: 141b3c9f     	b	0xce62e0 <OQS_KEM_ml_kem_1024_decaps@plt>
+  617068: d503245f     	bti	c
+  61706c: 141b3cad     	b	0xce6320 <OQS_KEM_ml_kem_512_keypair@plt>
+  617070: d503245f     	bti	c
+  617074: 141b3caf     	b	0xce6330 <OQS_KEM_ml_kem_768_keypair@plt>
+  617078: d503245f     	bti	c
+  61707c: 141b3cb1     	b	0xce6340 <OQS_KEM_ml_kem_1024_keypair@plt>
+  617080: d503245f     	bti	c
+  617084: 141b3c9b     	b	0xce62f0 <OQS_KEM_ml_kem_512_encaps@plt>
+  617088: d503245f     	bti	c
+  61708c: 141b3c9d     	b	0xce6300 <OQS_KEM_ml_kem_768_encaps@plt>
+  617090: d503245f     	bti	c
+  617094: 141b3c9f     	b	0xce6310 <OQS_KEM_ml_kem_1024_encaps@plt>
+  617098: d503245f     	bti	c
+  61709c: 141b3cad     	b	0xce6350 <OQS_KEM_ml_kem_512_keypair_derand@plt>
+  6170a0: d503245f     	bti	c
+  6170a4: 141b3caf     	b	0xce6360 <OQS_KEM_ml_kem_768_keypair_derand@plt>
+  6170a8: d503245f     	bti	c
+  6170ac: 141b3cb1     	b	0xce6370 <OQS_KEM_ml_kem_1024_keypair_derand@plt>

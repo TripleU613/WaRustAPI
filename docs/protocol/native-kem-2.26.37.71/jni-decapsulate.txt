@@ -1,0 +1,158 @@
+
+libwhatsapp.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+0000000000622cac <Java_org_whispersystems_libsignal_kem_KEMSecretKey_decapsulateNative>:
+  622cac: d503233f     	paciasp
+  622cb0: a9ba7bfd     	stp	x29, x30, [sp, #-0x60]!
+  622cb4: f9000bfb     	str	x27, [sp, #0x10]
+  622cb8: a90267fa     	stp	x26, x25, [sp, #0x20]
+  622cbc: a9035ff8     	stp	x24, x23, [sp, #0x30]
+  622cc0: a90457f6     	stp	x22, x21, [sp, #0x40]
+  622cc4: a9054ff4     	stp	x20, x19, [sp, #0x50]
+  622cc8: 910003fd     	mov	x29, sp
+  622ccc: aa0003f3     	mov	x19, x0
+  622cd0: b4000422     	cbz	x2, 0x622d54 <Java_org_whispersystems_libsignal_kem_KEMSecretKey_decapsulateNative+0xa8>
+  622cd4: aa0303f4     	mov	x20, x3
+  622cd8: b4000443     	cbz	x3, 0x622d60 <Java_org_whispersystems_libsignal_kem_KEMSecretKey_decapsulateNative+0xb4>
+  622cdc: f9400268     	ldr	x8, [x19]
+  622ce0: aa1303e0     	mov	x0, x19
+  622ce4: aa0203e1     	mov	x1, x2
+  622ce8: aa0203f5     	mov	x21, x2
+  622cec: f942ad08     	ldr	x8, [x8, #0x558]
+  622cf0: d63f0100     	blr	x8
+  622cf4: f9400268     	ldr	x8, [x19]
+  622cf8: 2a0003f6     	mov	w22, w0
+  622cfc: aa1303e0     	mov	x0, x19
+  622d00: aa1403e1     	mov	x1, x20
+  622d04: f942ad08     	ldr	x8, [x8, #0x558]
+  622d08: d63f0100     	blr	x8
+  622d0c: 2a0003f7     	mov	w23, w0
+  622d10: f0ffd860     	adrp	x0, 0x131000
+  622d14: 91398000     	add	x0, x0, #0xe60
+  622d18: 2a1603e1     	mov	w1, w22
+  622d1c: 2a1703e2     	mov	w2, w23
+  622d20: 941b0d5c     	bl	0xce6290 <wa_logf_nd@plt>
+  622d24: 710c02df     	cmp	w22, #0x300
+  622d28: 540008c0     	b.eq	0x622e40 <Java_org_whispersystems_libsignal_kem_KEMSecretKey_decapsulateNative+0x194>
+  622d2c: 711882df     	cmp	w22, #0x620
+  622d30: 540001e0     	b.eq	0x622d6c <Java_org_whispersystems_libsignal_kem_KEMSecretKey_decapsulateNative+0xc0>
+  622d34: 711102df     	cmp	w22, #0x440
+  622d38: 54000941     	b.ne	0x622e60 <Java_org_whispersystems_libsignal_kem_KEMSecretKey_decapsulateNative+0x1b4>
+  622d3c: d503201f     	nop
+  622d40: 10fa18db     	adr	x27, 0x617058 <ScanOggStream+0x2ed08>
+  622d44: 52812c08     	mov	w8, #0x960              // =2400
+  622d48: eb37c11f     	cmp	x8, w23, sxtw
+  622d4c: 540001a0     	b.eq	0x622d80 <Java_org_whispersystems_libsignal_kem_KEMSecretKey_decapsulateNative+0xd4>
+  622d50: 14000041     	b	0x622e54 <Java_org_whispersystems_libsignal_kem_KEMSecretKey_decapsulateNative+0x1a8>
+  622d54: f0ffd661     	adrp	x1, 0xf1000
+  622d58: 91247c21     	add	x1, x1, #0x91f
+  622d5c: 14000043     	b	0x622e68 <Java_org_whispersystems_libsignal_kem_KEMSecretKey_decapsulateNative+0x1bc>
+  622d60: f0ffd661     	adrp	x1, 0xf1000
+  622d64: 9123a821     	add	x1, x1, #0x8ea
+  622d68: 14000040     	b	0x622e68 <Java_org_whispersystems_libsignal_kem_KEMSecretKey_decapsulateNative+0x1bc>
+  622d6c: d503201f     	nop
+  622d70: 10fa179b     	adr	x27, 0x617060 <ScanOggStream+0x2ed10>
+  622d74: 52818c08     	mov	w8, #0xc60              // =3168
+  622d78: eb37c11f     	cmp	x8, w23, sxtw
+  622d7c: 540006c1     	b.ne	0x622e54 <Java_org_whispersystems_libsignal_kem_KEMSecretKey_decapsulateNative+0x1a8>
+  622d80: f9400268     	ldr	x8, [x19]
+  622d84: aa1303e0     	mov	x0, x19
+  622d88: 52800401     	mov	w1, #0x20               // =32
+  622d8c: f942c108     	ldr	x8, [x8, #0x580]
+  622d90: d63f0100     	blr	x8
+  622d94: b4000700     	cbz	x0, 0x622e74 <Java_org_whispersystems_libsignal_kem_KEMSecretKey_decapsulateNative+0x1c8>
+  622d98: f9400268     	ldr	x8, [x19]
+  622d9c: aa0003e1     	mov	x1, x0
+  622da0: aa1303e0     	mov	x0, x19
+  622da4: aa1f03e2     	mov	x2, xzr
+  622da8: aa0103f7     	mov	x23, x1
+  622dac: f942e108     	ldr	x8, [x8, #0x5c0]
+  622db0: d63f0100     	blr	x8
+  622db4: f9400268     	ldr	x8, [x19]
+  622db8: aa0003fa     	mov	x26, x0
+  622dbc: aa1303e0     	mov	x0, x19
+  622dc0: aa1503e1     	mov	x1, x21
+  622dc4: aa1f03e2     	mov	x2, xzr
+  622dc8: f942e108     	ldr	x8, [x8, #0x5c0]
+  622dcc: d63f0100     	blr	x8
+  622dd0: f9400268     	ldr	x8, [x19]
+  622dd4: aa0003f9     	mov	x25, x0
+  622dd8: aa1303e0     	mov	x0, x19
+  622ddc: aa1403e1     	mov	x1, x20
+  622de0: aa1f03e2     	mov	x2, xzr
+  622de4: f942e108     	ldr	x8, [x8, #0x5c0]
+  622de8: d63f0100     	blr	x8
+  622dec: d503201f     	nop
+  622df0: 10fa1308     	adr	x8, 0x617050 <ScanOggStream+0x2ed00>
+  622df4: cb080368     	sub	x8, x27, x8
+  622df8: 93c80d08     	ror	x8, x8, #0x3
+  622dfc: f1000d1f     	cmp	x8, #0x3
+  622e00: 54000842     	b.hs	0x622f08 <Java_org_whispersystems_libsignal_kem_KEMSecretKey_decapsulateNative+0x25c>
+  622e04: aa0003f8     	mov	x24, x0
+  622e08: aa1a03e0     	mov	x0, x26
+  622e0c: aa1903e1     	mov	x1, x25
+  622e10: aa1803e2     	mov	x2, x24
+  622e14: d63f0360     	blr	x27
+  622e18: 340003e0     	cbz	w0, 0x622e94 <Java_org_whispersystems_libsignal_kem_KEMSecretKey_decapsulateNative+0x1e8>
+  622e1c: f0ffd860     	adrp	x0, 0x131000
+  622e20: 913b8c00     	add	x0, x0, #0xee3
+  622e24: 2a1603e1     	mov	w1, w22
+  622e28: 941b0d1a     	bl	0xce6290 <wa_logf_nd@plt>
+  622e2c: d0ffd821     	adrp	x1, 0x128000
+  622e30: 91320421     	add	x1, x1, #0xc81
+  622e34: aa1303e0     	mov	x0, x19
+  622e38: 94000035     	bl	0x622f0c <Java_org_whispersystems_libsignal_kem_KEMSecretKey_decapsulateNative+0x260>
+  622e3c: 1400001a     	b	0x622ea4 <Java_org_whispersystems_libsignal_kem_KEMSecretKey_decapsulateNative+0x1f8>
+  622e40: d503201f     	nop
+  622e44: 10fa107b     	adr	x27, 0x617050 <ScanOggStream+0x2ed00>
+  622e48: 5280cc08     	mov	w8, #0x660              // =1632
+  622e4c: eb37c11f     	cmp	x8, w23, sxtw
+  622e50: 54fff980     	b.eq	0x622d80 <Java_org_whispersystems_libsignal_kem_KEMSecretKey_decapsulateNative+0xd4>
+  622e54: 90ffd661     	adrp	x1, 0xee000
+  622e58: 91088021     	add	x1, x1, #0x220
+  622e5c: 14000003     	b	0x622e68 <Java_org_whispersystems_libsignal_kem_KEMSecretKey_decapsulateNative+0x1bc>
+  622e60: 90ffd6c1     	adrp	x1, 0xfa000
+  622e64: 911ccc21     	add	x1, x1, #0x733
+  622e68: aa1303e0     	mov	x0, x19
+  622e6c: 94000028     	bl	0x622f0c <Java_org_whispersystems_libsignal_kem_KEMSecretKey_decapsulateNative+0x260>
+  622e70: aa1f03e0     	mov	x0, xzr
+  622e74: a9454ff4     	ldp	x20, x19, [sp, #0x50]
+  622e78: f9400bfb     	ldr	x27, [sp, #0x10]
+  622e7c: a94457f6     	ldp	x22, x21, [sp, #0x40]
+  622e80: a9435ff8     	ldp	x24, x23, [sp, #0x30]
+  622e84: a94267fa     	ldp	x26, x25, [sp, #0x20]
+  622e88: a8c67bfd     	ldp	x29, x30, [sp], #0x60
+  622e8c: d50323bf     	autiasp
+  622e90: d65f03c0     	ret
+  622e94: f0ffd860     	adrp	x0, 0x131000
+  622e98: 913c7c00     	add	x0, x0, #0xf1f
+  622e9c: 2a1603e1     	mov	w1, w22
+  622ea0: 941b0cfc     	bl	0xce6290 <wa_logf_nd@plt>
+  622ea4: f9400268     	ldr	x8, [x19]
+  622ea8: aa1303e0     	mov	x0, x19
+  622eac: aa1703e1     	mov	x1, x23
+  622eb0: aa1a03e2     	mov	x2, x26
+  622eb4: 2a1f03e3     	mov	w3, wzr
+  622eb8: f9430108     	ldr	x8, [x8, #0x600]
+  622ebc: d63f0100     	blr	x8
+  622ec0: b4000119     	cbz	x25, 0x622ee0 <Java_org_whispersystems_libsignal_kem_KEMSecretKey_decapsulateNative+0x234>
+  622ec4: f9400268     	ldr	x8, [x19]
+  622ec8: aa1303e0     	mov	x0, x19
+  622ecc: aa1503e1     	mov	x1, x21
+  622ed0: aa1903e2     	mov	x2, x25
+  622ed4: 52800043     	mov	w3, #0x2                // =2
+  622ed8: f9430108     	ldr	x8, [x8, #0x600]
+  622edc: d63f0100     	blr	x8
+  622ee0: b4000118     	cbz	x24, 0x622f00 <Java_org_whispersystems_libsignal_kem_KEMSecretKey_decapsulateNative+0x254>
+  622ee4: f9400268     	ldr	x8, [x19]
+  622ee8: aa1303e0     	mov	x0, x19
+  622eec: aa1403e1     	mov	x1, x20
+  622ef0: aa1803e2     	mov	x2, x24
+  622ef4: 52800043     	mov	w3, #0x2                // =2
+  622ef8: f9430108     	ldr	x8, [x8, #0x600]
+  622efc: d63f0100     	blr	x8
+  622f00: aa1703e0     	mov	x0, x23
+  622f04: 17ffffdc     	b	0x622e74 <Java_org_whispersystems_libsignal_kem_KEMSecretKey_decapsulateNative+0x1c8>
+  622f08: d42aa040     	brk	#0x5502

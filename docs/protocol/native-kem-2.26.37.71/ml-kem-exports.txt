@@ -1,0 +1,54 @@
+
+libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+00000000002baba0 <OQS_KEM_ml_kem_1024_keypair>:
+  2baba0: d503245f     	bti	c
+  2baba4: 14113ec1     	b	0x70a6a8 <_ZN6google8protobuf8internal14WireFormatLite16VerifyUtf8StringEPKciNS2_9OperationES4_+0x360>
+
+00000000002baba8 <OQS_KEM_ml_kem_512_keypair>:
+  2baba8: d503245f     	bti	c
+  2babac: 141152b6     	b	0x70f684 <_ZN6google8protobuf8internal14WireFormatLite16VerifyUtf8StringEPKciNS2_9OperationES4_+0x533c>
+
+00000000002babb0 <OQS_KEM_ml_kem_768_keypair>:
+  2babb0: d503245f     	bti	c
+  2babb4: 1411618b     	b	0x7131e0 <_ZN6google8protobuf8internal14WireFormatLite16VerifyUtf8StringEPKciNS2_9OperationES4_+0x8e98>
+
+00000000002babb8 <OQS_KEM_ml_kem_1024_keypair_derand>:
+  2babb8: d503245f     	bti	c
+  2babbc: 14113ebd     	b	0x70a6b0 <_ZN6google8protobuf8internal14WireFormatLite16VerifyUtf8StringEPKciNS2_9OperationES4_+0x368>
+
+00000000002babc0 <OQS_KEM_ml_kem_1024_encaps>:
+  2babc0: d503245f     	bti	c
+  2babc4: 14113ebd     	b	0x70a6b8 <_ZN6google8protobuf8internal14WireFormatLite16VerifyUtf8StringEPKciNS2_9OperationES4_+0x370>
+
+00000000002babc8 <OQS_KEM_ml_kem_512_keypair_derand>:
+  2babc8: d503245f     	bti	c
+  2babcc: 141152b0     	b	0x70f68c <_ZN6google8protobuf8internal14WireFormatLite16VerifyUtf8StringEPKciNS2_9OperationES4_+0x5344>
+
+00000000002babd0 <OQS_KEM_ml_kem_512_encaps>:
+  2babd0: d503245f     	bti	c
+  2babd4: 141152b0     	b	0x70f694 <_ZN6google8protobuf8internal14WireFormatLite16VerifyUtf8StringEPKciNS2_9OperationES4_+0x534c>
+
+00000000002babd8 <OQS_KEM_ml_kem_768_keypair_derand>:
+  2babd8: d503245f     	bti	c
+  2babdc: 14116183     	b	0x7131e8 <_ZN6google8protobuf8internal14WireFormatLite16VerifyUtf8StringEPKciNS2_9OperationES4_+0x8ea0>
+
+00000000002babe0 <OQS_KEM_ml_kem_768_encaps>:
+  2babe0: d503245f     	bti	c
+  2babe4: 14116183     	b	0x7131f0 <_ZN6google8protobuf8internal14WireFormatLite16VerifyUtf8StringEPKciNS2_9OperationES4_+0x8ea8>
+
+00000000002babe8 <OQS_KEM_ml_kem_1024_decaps>:
+  2babe8: d503245f     	bti	c
+  2babec: 14113eb7     	b	0x70a6c8 <_ZN6google8protobuf8internal14WireFormatLite16VerifyUtf8StringEPKciNS2_9OperationES4_+0x380>
+
+00000000002babf0 <OQS_KEM_ml_kem_512_decaps>:
+  2babf0: d503245f     	bti	c
+  2babf4: 141152ac     	b	0x70f6a4 <_ZN6google8protobuf8internal14WireFormatLite16VerifyUtf8StringEPKciNS2_9OperationES4_+0x535c>
+
+00000000002babf8 <OQS_KEM_ml_kem_768_decaps>:
+  2babf8: d503245f     	bti	c
+  2babfc: 14116181     	b	0x713200 <_ZN6google8protobuf8internal14WireFormatLite16VerifyUtf8StringEPKciNS2_9OperationES4_+0x8eb8>
+  2bac00: d503245f     	bti	c
+  2bac04: 14116b7b     	b	0x7159f0 <_ZN6google8protobuf8internal14WireFormatLite16VerifyUtf8StringEPKciNS2_9OperationES4_+0xb6a8>

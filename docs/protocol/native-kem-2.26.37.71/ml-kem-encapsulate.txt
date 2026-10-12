@@ -1,0 +1,45 @@
+
+libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000070a348 <_ZN6google8protobuf8internal14WireFormatLite16VerifyUtf8StringEPKciNS2_9OperationES4_>:
+  70a9dc: d503233f     	paciasp
+  70a9e0: a9bc7bfd     	stp	x29, x30, [sp, #-0x40]!
+  70a9e4: d10103e9     	sub	x9, sp, #0x40
+  70a9e8: f9000bf7     	str	x23, [sp, #0x10]
+  70a9ec: 910003fd     	mov	x29, sp
+  70a9f0: a90257f6     	stp	x22, x21, [sp, #0x20]
+  70a9f4: a9034ff4     	stp	x20, x19, [sp, #0x30]
+  70a9f8: 927be93f     	and	sp, x9, #0xffffffffffffffe0
+  70a9fc: 6f00e400     	movi	v0.2d, #0000000000000000
+  70aa00: d53bd056     	mrs	x22, TPIDR_EL0
+  70aa04: aa0103f4     	mov	x20, x1
+  70aa08: f94016c8     	ldr	x8, [x22, #0x28]
+  70aa0c: aa0003f5     	mov	x21, x0
+  70aa10: 910003e0     	mov	x0, sp
+  70aa14: 52800401     	mov	w1, #0x20               // =32
+  70aa18: aa0203f3     	mov	x19, x2
+  70aa1c: 910003f7     	mov	x23, sp
+  70aa20: f9001fe8     	str	x8, [sp, #0x38]
+  70aa24: ad0003e0     	stp	q0, q0, [sp]
+  70aa28: 94002c15     	bl	0x715a7c <_ZN6google8protobuf8internal14WireFormatLite16VerifyUtf8StringEPKciNS2_9OperationES4_+0xb734>
+  70aa2c: 910003e3     	mov	x3, sp
+  70aa30: aa1503e0     	mov	x0, x21
+  70aa34: aa1403e1     	mov	x1, x20
+  70aa38: aa1303e2     	mov	x2, x19
+  70aa3c: 97ffff65     	bl	0x70a7d0 <_ZN6google8protobuf8internal14WireFormatLite16VerifyUtf8StringEPKciNS2_9OperationES4_+0x488>
+  70aa40: 6f00e400     	movi	v0.2d, #0000000000000000
+  70aa44: ad0003e0     	stp	q0, q0, [sp]
+  70aa48: f94016c8     	ldr	x8, [x22, #0x28]
+  70aa4c: f9401fe9     	ldr	x9, [sp, #0x38]
+  70aa50: eb09011f     	cmp	x8, x9
+  70aa54: 54000101     	b.ne	0x70aa74 <_ZN6google8protobuf8internal14WireFormatLite16VerifyUtf8StringEPKciNS2_9OperationES4_+0x72c>
+  70aa58: 910003bf     	mov	sp, x29
+  70aa5c: a9434ff4     	ldp	x20, x19, [sp, #0x30]
+  70aa60: f9400bf7     	ldr	x23, [sp, #0x10]
+  70aa64: a94257f6     	ldp	x22, x21, [sp, #0x20]
+  70aa68: a8c47bfd     	ldp	x29, x30, [sp], #0x40
+  70aa6c: d50323bf     	autiasp
+  70aa70: d65f03c0     	ret
+  70aa74: 9400558b     	bl	0x7200a0 <__stack_chk_fail@plt>

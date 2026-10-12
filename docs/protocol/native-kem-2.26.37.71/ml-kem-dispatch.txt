@@ -1,0 +1,16 @@
+
+libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000070a348 <_ZN6google8protobuf8internal14WireFormatLite16VerifyUtf8StringEPKciNS2_9OperationES4_>:
+  70a6a8: d503245f     	bti	c
+  70a6ac: 14000023     	b	0x70a738 <_ZN6google8protobuf8internal14WireFormatLite16VerifyUtf8StringEPKciNS2_9OperationES4_+0x3f0>
+  70a6b0: d503245f     	bti	c
+  70a6b4: 14000007     	b	0x70a6d0 <_ZN6google8protobuf8internal14WireFormatLite16VerifyUtf8StringEPKciNS2_9OperationES4_+0x388>
+  70a6b8: d503245f     	bti	c
+  70a6bc: 140000c8     	b	0x70a9dc <_ZN6google8protobuf8internal14WireFormatLite16VerifyUtf8StringEPKciNS2_9OperationES4_+0x694>
+  70a6c0: d503245f     	bti	c
+  70a6c4: 14000043     	b	0x70a7d0 <_ZN6google8protobuf8internal14WireFormatLite16VerifyUtf8StringEPKciNS2_9OperationES4_+0x488>
+  70a6c8: d503245f     	bti	c
+  70a6cc: 140000eb     	b	0x70aa78 <_ZN6google8protobuf8internal14WireFormatLite16VerifyUtf8StringEPKciNS2_9OperationES4_+0x730>
