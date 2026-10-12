@@ -18,7 +18,8 @@ now work offline. [Held version-4 shared sending](held-hybrid-send.md) is integr
 [Fresh signed bundle staging](hybrid-bundle.md) is implemented offline;
 [Normal primary-peer hybrid outbox adoption](hybrid-outbox.md) now works offline.
 Same-key classic migration, auth/attestation and companion admission,
-key inventory and incoming wire support still need implementation. See
+[Staged incoming hybrid bootstrap](hybrid-incoming.md) now authenticates offline;
+key inventory and normal inbox support still need implementation. See
 [the boundary and source audit](pq-bundle-boundary.md).
 
 Own-device ordinary text edits are now projected with loaded parent kind,

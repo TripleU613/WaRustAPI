@@ -1,0 +1,38 @@
+{
+  "bob-bootstrap": {
+    "class": "LX/Cnp;",
+    "file": "bob-bootstrap.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A04",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/hybrid/incoming.rs"
+    ]
+  },
+  "kem-delete": {
+    "class": "LX/0kh;",
+    "file": "kem-delete.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "BWa",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/hybrid/incoming.rs"
+    ]
+  },
+  "kem-lookup": {
+    "class": "LX/0kh;",
+    "file": "kem-lookup.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "BTS",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/hybrid/incoming.rs"
+    ]
+  }
+}

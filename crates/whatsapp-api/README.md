@@ -93,3 +93,8 @@ bootstrap and companion/auth/attestation cases remain guarded. See
 
 [Hybrid outbox integration](../../docs/protocol/hybrid-outbox.md) uses the normal
 pin policy, request reservation and atomic commit; no new CLI command is required.
+
+Experimental `signal::hybrid::receive_prekey` accepts exact local EC/KEM inventory
+material and returns authenticated session/plaintext plus key-consumption IDs.
+Matching sessions need no prekeys; last-resort KEM keys remain reusable. Normal
+inbox integration is unfinished. See [hybrid receive](../../docs/protocol/hybrid-incoming.md).

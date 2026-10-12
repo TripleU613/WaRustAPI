@@ -1,0 +1,30 @@
+{
+  "bob-bootstrap.txt": {
+    "bytes": 23985,
+    "sha256": "9f3de033e8467fbebc006c3c3cc305eec2cfa87d2e6445fc0f2a0eaf6a812e8b"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "kem-delete.txt": {
+    "bytes": 2852,
+    "sha256": "4e253b6f842612cac25e919e1e8a64af3661d2835d94b17c1e635f5b26063ea4"
+  },
+  "kem-lookup.txt": {
+    "bytes": 3458,
+    "sha256": "caa5c985f6ca0b01138de3d88b304520f4db41b123cde101ac717012c11ca16c"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "targets.json": {
+    "bytes": 966,
+    "sha256": "3bc38cef370780d1692926dbb3dae0a89bc1097a6e39b55e22194caf325c724c"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

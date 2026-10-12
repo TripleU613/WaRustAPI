@@ -5,7 +5,9 @@ use super::{
 };
 use crate::{Error, Result};
 mod bundle;
+mod incoming;
 pub use bundle::{HybridBundle, bundle_for};
+pub use incoming::{LocalKemPrekey, ReceivedHybridPrekey, receive_prekey};
 use wacore_libsignal::{
     crypto::aes_256_cbc_encrypt_into,
     protocol::{
@@ -411,6 +413,241 @@ mod tests {
                 .is_err()
             );
             assert_eq!(b.to_bytes().unwrap().as_slice(), bob_before.as_slice());
+
+            {
+                use crate::registration::request::IdentityChangePolicy;
+                use wacore_libsignal::protocol::{
+                    GenericSignedPreKey, PreKeyRecord, SignedPreKeyRecord, Timestamp,
+                };
+                let sp = bp.our_signed_pre_key_pair();
+                let signature = bob
+                    .private_key()
+                    .calculate_signature(&sp.public_key.serialize(), &mut rand::rng())
+                    .unwrap();
+                let signed = SignedPreKeyRecord::new(
+                    7.into(),
+                    Timestamp::from_epoch_millis(0),
+                    sp,
+                    &signature,
+                )
+                .serialize()
+                .unwrap();
+                let ordinary = bp
+                    .our_one_time_pre_key_pair()
+                    .map(|key| PreKeyRecord::new(8.into(), key).serialize().unwrap());
+                let local_kem = |id, last_resort| LocalKemPrekey {
+                    id,
+                    secret: kem_secret.as_bytes(),
+                    last_resort,
+                };
+                let incoming = receive_prekey(
+                    &bob_account,
+                    &alice_jid,
+                    (None, None, IdentityChangePolicy::Pinned),
+                    Some(&signed),
+                    ordinary.as_deref(),
+                    Some(local_kem(9, false)),
+                    &first.ciphertext,
+                )
+                .await
+                .unwrap();
+                assert_eq!(
+                    incoming.incoming.received.plaintext.as_slice(),
+                    b"\x0a\x05hello"
+                );
+                assert_eq!(incoming.incoming.identity, alice.identity_key().serialize());
+                assert_eq!(incoming.incoming.consumed_prekey, one_time.then_some(8));
+                assert_eq!(incoming.consumed_kem, Some(9));
+                assert_eq!(format!("{incoming:?}"), "ReceivedHybridPrekey(<redacted>)");
+                assert_eq!(
+                    format!("{:?}", local_kem(9, false)),
+                    "LocalKemPrekey(<redacted>)"
+                );
+                let last_resort = receive_prekey(
+                    &bob_account,
+                    &alice_jid,
+                    (None, None, IdentityChangePolicy::Pinned),
+                    Some(&signed),
+                    ordinary.as_deref(),
+                    Some(local_kem(9, true)),
+                    &first.ciphertext,
+                )
+                .await
+                .unwrap();
+                assert_eq!(last_resort.consumed_kem, None);
+                if let Some(one) = bp.our_one_time_pre_key_pair() {
+                    let reusable = PreKeyRecord::new(0xffffff.into(), one).serialize().unwrap();
+                    let envelope = wire::encode_prekey(
+                        4,
+                        31,
+                        (Some(0xffffff), 7),
+                        (outer.base_key(), outer.identity_key()),
+                        outer.message().serialized(),
+                        Some((9, &kem_ciphertext)),
+                    )
+                    .unwrap();
+                    let reusable = receive_prekey(
+                        &bob_account,
+                        &alice_jid,
+                        (None, None, IdentityChangePolicy::Pinned),
+                        Some(&signed),
+                        Some(&reusable),
+                        Some(local_kem(9, false)),
+                        &envelope,
+                    )
+                    .await
+                    .unwrap();
+                    assert_eq!(reusable.incoming.consumed_prekey, None);
+                    assert_eq!(reusable.consumed_kem, Some(9));
+                }
+                for scenario in 0..7 {
+                    let mut ciphertext = first.ciphertext.clone();
+                    if scenario == 0 {
+                        *ciphertext.last_mut().unwrap() ^= 1;
+                    }
+                    if scenario == 6 {
+                        ciphertext[0] = 0x33;
+                    }
+                    let invalid_kem = if scenario == 2 {
+                        None
+                    } else {
+                        Some(local_kem(if scenario == 1 { 10 } else { 9 }, false))
+                    };
+                    let wrong_pin = bob.identity_key().serialize();
+                    let pin = (scenario == 3).then_some(wrong_pin.as_ref());
+                    let result = receive_prekey(
+                        &bob_account,
+                        &alice_jid,
+                        (None, pin, IdentityChangePolicy::Pinned),
+                        if scenario == 4 { None } else { Some(&signed) },
+                        if scenario == 5 {
+                            None
+                        } else {
+                            ordinary.as_deref()
+                        },
+                        invalid_kem,
+                        &ciphertext,
+                    )
+                    .await;
+                    if scenario == 5 && !one_time {
+                        assert!(result.is_ok());
+                    } else {
+                        assert!(result.is_err(), "scenario {scenario}");
+                    }
+                }
+                let replaced = receive_prekey(
+                    &bob_account,
+                    &alice_jid,
+                    (
+                        None,
+                        Some(&bob.identity_key().serialize()),
+                        IdentityChangePolicy::ApkAuthenticated,
+                    ),
+                    Some(&signed),
+                    ordinary.as_deref(),
+                    Some(local_kem(9, false)),
+                    &first.ciphertext,
+                )
+                .await
+                .unwrap();
+                assert_eq!(replaced.incoming.identity, alice.identity_key().serialize());
+                let next = HybridSession::from_bytes(&first.session)
+                    .unwrap()
+                    .prepare(b"\x0a\x05again")
+                    .unwrap();
+                let held = &incoming.incoming.received.session;
+                let before = held.to_vec();
+                let continued = receive_prekey(
+                    &bob_account,
+                    &alice_jid,
+                    (
+                        Some(held),
+                        Some(&alice.identity_key().serialize()),
+                        IdentityChangePolicy::Pinned,
+                    ),
+                    None,
+                    None,
+                    None,
+                    &next.ciphertext,
+                )
+                .await
+                .unwrap();
+                assert_eq!(
+                    continued.incoming.received.plaintext.as_slice(),
+                    b"\x0a\x05again"
+                );
+                assert_eq!(continued.incoming.consumed_prekey, None);
+                assert_eq!(continued.consumed_kem, None);
+                assert_eq!(held.as_slice(), before);
+                assert!(
+                    receive_prekey(
+                        &bob_account,
+                        &alice_jid,
+                        (
+                            Some(&continued.incoming.received.session),
+                            Some(&alice.identity_key().serialize()),
+                            IdentityChangePolicy::Pinned
+                        ),
+                        None,
+                        None,
+                        None,
+                        &next.ciphertext
+                    )
+                    .await
+                    .is_err()
+                );
+                let mut other = SessionRecord::deserialize(held).unwrap();
+                let mut components = b.0.clone().into_components().unwrap();
+                components.current_session.as_mut().unwrap().alice_base_key = Some(
+                    KeyPair::generate(&mut rand::rng())
+                        .public_key
+                        .serialize()
+                        .to_vec(),
+                );
+                let different = SessionRecord::from_components(components).unwrap();
+                let state = different.session_state().unwrap().clone();
+                other.promote_fresh_state(state);
+                let archived = other.serialize().unwrap();
+                let recovered = receive_prekey(
+                    &bob_account,
+                    &alice_jid,
+                    (
+                        Some(&archived),
+                        Some(&alice.identity_key().serialize()),
+                        IdentityChangePolicy::Pinned,
+                    ),
+                    None,
+                    None,
+                    None,
+                    &next.ciphertext,
+                )
+                .await
+                .unwrap();
+                assert_eq!(
+                    recovered.incoming.received.plaintext.as_slice(),
+                    b"\x0a\x05again"
+                );
+                assert_eq!(recovered.consumed_kem, None);
+                let mut wrong_account = bob_account.clone();
+                wrong_account.signal_registration_id = Some(99);
+                assert!(
+                    receive_prekey(
+                        &wrong_account,
+                        &alice_jid,
+                        (
+                            Some(held),
+                            Some(&alice.identity_key().serialize()),
+                            IdentityChangePolicy::Pinned
+                        ),
+                        None,
+                        None,
+                        None,
+                        &next.ciphertext
+                    )
+                    .await
+                    .is_err()
+                );
+            }
             let received = direct::receive(
                 &bob_account,
                 &alice_jid,

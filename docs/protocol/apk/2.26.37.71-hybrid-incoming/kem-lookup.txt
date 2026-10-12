@@ -1,0 +1,63 @@
+# APK-derived structural disassembly: LX/0kh;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method BTS(LI) flags=0x1 registers=8
+  # full signature: LX/0kh;->BTS(I)LX/CG3;
+  0000..0004 op=54 iget-object v0, v6, LX/0kh;->A01:LX/0aC;
+  0004..000a op=6e invoke-virtual {v0}, LX/0aC;->A06()LX/0ZN;
+  000a..000c op=0c move-result-object v3
+  000c..0010 op=54 iget-object v5, v3, LX/0ZN;->A02:LX/0IY;
+  0010..0014 op=1a const-string v4, "SELECT record FROM kyber_prekeys WHERE prekey_id = ?"
+  0014..001a op=71 invoke-static {v7}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+  001a..001c op=0c move-result-object v2
+  001c..001e op=12 const/4 v0, #0x1
+  001e..0022 op=23 new-array v1, v0, [Ljava/lang/String;
+  0022..0024 op=12 const/4 v0, #0x0
+  0024..0028 op=4d aput-object v2, v1, v0
+  0028..002c op=1a const-string v0, "SignalKyberPreKeyStore/getKyberPreKey"
+  002c..0032 op=6e invoke-virtual {v5, v4, v0, v1}, LX/0IY;->A0A(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;
+  0032..0034 op=0c move-result-object v2
+  0034..003a op=72 invoke-interface {v2}, Landroid/database/Cursor;->moveToNext()Z
+  003a..003c op=0a move-result v1
+  003c..003e op=12 const/4 v0, #0x0
+  003e..0042 op=38 if-eqz v1, +0xc
+  0042..0046 op=1a const-string v0, "record"
+  0046..004c op=72 invoke-interface {v2, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+  004c..004e op=0a move-result v0
+  004e..0054 op=72 invoke-interface {v2, v0}, Landroid/database/Cursor;->getBlob(I)[B
+  0054..0056 op=0c move-result-object v0
+  0056..005c op=72 invoke-interface {v2}, Landroid/database/Cursor;->close()V
+  005c..0062 op=6e invoke-virtual {v3}, LX/0ZN;->close()V
+  0062..0066 op=38 if-eqz v0, +0x7
+  0066..006c op=71 invoke-static {v0}, LX/CcS;->A01([B)LX/CG3;
+  006c..006e op=0c move-result-object v0
+  006e..0070 op=11 return-object v0
+  0070..0074 op=1a const-string v1, "No kyber prekey: "
+  0074..0078 op=22 new-instance v0, Ljava/lang/StringBuilder;
+  0078..007e op=70 invoke-direct {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  007e..0084 op=6e invoke-virtual {v0, v7}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  0084..008a op=6e invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  008a..008c op=0c move-result-object v1
+  008c..0090 op=22 new-instance v0, LX/C4q;
+  0090..0096 op=70 invoke-direct {v0, v1}, LX/C4q;-><init>(Ljava/lang/String;)V
+  0096..0098 op=27 throw v0
+  0098..009a op=0d move-exception v1
+  009a..009c op=27 throw v1
+  009c..009e op=0d move-exception v0
+  009e..00a4 op=71 invoke-static {v2, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  00a4..00a6 op=27 throw v0
+  00a6..00a8 op=0d move-exception v1
+  00a8..00aa op=27 throw v1
+  00aa..00ac op=0d move-exception v0
+  00ac..00b2 op=71 invoke-static {v3, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  00b2..00b4 op=27 throw v0
+  # exception table: 6 try range(s)
+  # catch <all> code_units 0006..001a -> 0053
+  # catch <all> code_units 001a..002b -> 004c
+  # catch <all> code_units 002b..002e -> 0053
+  # catch <all> code_units 004d..004e -> 004e
+  # catch <all> code_units 004f..0053 -> 0053
+  # catch <all> code_units 0054..0055 -> 0055
+.end method

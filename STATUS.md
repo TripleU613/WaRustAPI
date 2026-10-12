@@ -1,3 +1,11 @@
+2026-10-12 — **Implemented/offline:** staged incoming hybrid prekeys now
+bootstrap from exact local EC/KEM keys and authenticate nested ciphertext before
+reporting consumption. Matching current/archived sessions decrypt without prekey
+lookup; last-resort KEM and ordinary ID 16777215 remain reusable. Encrypted tests
+cover pin policy, delayed envelopes, replay, malformed keys and account binding.
+Normal inbox/key-inventory integration remains open.
+[Native lookup/deletion evidence, API and tests](docs/protocol/hybrid-incoming.md).
+
 2026-10-12 — **Implemented/offline:** normal outgoing key replies now explicitly
 select verified hybrid material for primary PN/LID peers. Fresh first-use and
 policy-approved identity replacement produce native 0x44 candidates through the
