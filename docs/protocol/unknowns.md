@@ -2,18 +2,19 @@
 
 Ordered by what blocks the first decisive result (docs/design/README.md section 0).
 
-PQ remains a real crypto gap: the locked wacore-libsignal backend has no KEM
+PQ remains a normal-client integration gap: the unmodified locked backend has no KEM
 bundle/session construction. Selected pqkey replies now fail explicitly instead
 of silently deriving classic state. Original-byte signature diagnostics are implemented.
 The [native JNI trace](native-kem.md) resolves ML-KEM dispatch, byte lengths and
 the unused Java seed. [Selected native ML-KEM-1024 vectors](native-kem-vectors.md)
 now match NIST. [Rust primitive support](rust-kem.md) is implemented; full
-primitive/format coverage and hybrid integration/records remain open.
+primitive/format coverage and application hybrid integration remain open.
 [Initial hybrid KDF composition](hybrid-kdf.md) and
 [incoming paired KEM metadata](prekey-kem-wire.md) are implemented. Native
 version-4 output is 0x44, while the backend emits 0x43.
 [Low-level native wire encoders](signal-wire.md) now implement 0x44/MAC and KEM
-fields; application send integration, pending wire/state,
+fields. [Staged hybrid session records and encrypted exchange](hybrid-session.md)
+now work offline; application adoption/send integration, pending coordinator,
 key inventory and incoming wire support still need implementation. See
 [the boundary and source audit](pq-bundle-boundary.md).
 

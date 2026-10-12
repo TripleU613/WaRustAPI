@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_a2b8e0c9b8997fb6c5d52228267b99c19c2222ae2df4de2e15d4cab42ff3b94a",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.Ckg",
+    "method_name": "A00"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-e2KFdO/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\",\"max_heap_bytes\":15695085568}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.Ckg"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"name\":\"A00\",\"def_pos\":0,\"type\":\"int\"},{\"name\":\"A01\",\"def_pos\":0,\"type\":\"X.Cew\"},{\"name\":\"A02\",\"def_pos\":0,\"type\":\"byte[]\"},{\"name\":\"A03\",\"def_pos\":0,\"type\":\"byte[]\"},{\"name\":\"A04\",\"def_pos\":0,\"type\":\"byte[]\"}],\"field_count\":5,\"full_name\":\"X.Ckg\",\"name\":\"Ckg\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":4,\"methods\":[{\"def_pos\":0,\"name\":\"\\u003cclinit\\u003e\",\"is_constructor\":false,\"signature\":\"\\u003cclinit\\u003e(): void\"},{\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"signature\":\"\\u003cinit\\u003e(X.Cew, byte[], int): void\"},{\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false,\"signature\":\"A00(X.Ckg, byte[]): byte[]\"},{\"def_pos\":0,\"name\":\"A01\",\"is_constructor\":false,\"signature\":\"A01(): X.CKI\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.Ckg",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"method_name\":\"A00\",\"overload_count\":1,\"body\":\"    public static byte[] A00(Ckg ckg, byte[] bArr) {\\n        try {\\n            javax.crypto.Mac mac \\u003d javax.crypto.Mac.getInstance(DefaultCrypto.HMAC_SHA256);\\n            mac.init(new SecretKeySpec(ckg.A02, DefaultCrypto.HMAC_SHA256));\\n            return mac.doFinal(bArr);\\n        } catch (InvalidKeyException | NoSuchAlgorithmException e) {\\n            throw Ayj.A14(e);\\n        }\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.Ckg\",\"full_name\":\"X.Ckg.A00\",\"mode\":\"java\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.Ckg",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(X.Ckg, byte[]): byte[]",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public static byte[] A00(Ckg ckg, byte[] bArr) {\n        try {\n            javax.crypto.Mac mac = javax.crypto.Mac.getInstance(DefaultCrypto.HMAC_SHA256);\n            mac.init(new SecretKeySpec(ckg.A02, DefaultCrypto.HMAC_SHA256));\n            return mac.doFinal(bArr);\n        } catch (InvalidKeyException | NoSuchAlgorithmException e) {\n            throw Ayj.A14(e);\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

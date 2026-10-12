@@ -1,0 +1,54 @@
+{
+  "alice-bootstrap.txt": {
+    "bytes": 20500,
+    "sha256": "cc5fb6023178d1e09e085ed06630c6ba7bb964754dd608103e03c877e89c82ef"
+  },
+  "bob-bootstrap.txt": {
+    "bytes": 23985,
+    "sha256": "9f3de033e8467fbebc006c3c3cc305eec2cfa87d2e6445fc0f2a0eaf6a812e8b"
+  },
+  "chain-hmac.txt": {
+    "bytes": 1468,
+    "sha256": "282d431e190fef93b952b5c0df5569b112e18f9827aa21d6c48bec8455d2f2e7"
+  },
+  "chain-seeds.txt": {
+    "bytes": 828,
+    "sha256": "46b421ed61f4f1c71fd5a11cb80c347b2d8944f39f4b5e7a839a36778f937997"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "message-keys.txt": {
+    "bytes": 2488,
+    "sha256": "39611e18c3c32630d518447f641d3df177e81c47972f286e24aeea1d1b7694e7"
+  },
+  "receiving-chain.txt": {
+    "bytes": 31205,
+    "sha256": "c7f79ab4c2c3131b6e21944bac6fd9f2536ae698aeecf07dc58e52eb4b4a3929"
+  },
+  "root-step.txt": {
+    "bytes": 2514,
+    "sha256": "52a2fe6b7f94ed2704ab807efc494a5108bf6ccfff03e824a4ccdd0ffa82d407"
+  },
+  "sending-chain.txt": {
+    "bytes": 11768,
+    "sha256": "8bcaff6bd11d5494e79453ddaf72cfe92f4e108f0d4fae224ab92b99d3cb366d"
+  },
+  "targets.json": {
+    "bytes": 2836,
+    "sha256": "f3d372b8f1779550b8019066e6033a9458cddc4d5b9a6ac13720d56de98e3531"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  },
+  "version-kdf.txt": {
+    "bytes": 1302,
+    "sha256": "31b8fc6aa65c32c01e964e6721302553cd6cb24f559d5e1c9dab7d962b83adcb"
+  }
+}

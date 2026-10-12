@@ -26,6 +26,8 @@ pub mod direct;
 #[cfg(feature = "experimental-signal-crypto")]
 pub mod group;
 #[cfg(feature = "experimental-signal-crypto")]
+pub mod hybrid;
+#[cfg(feature = "experimental-signal-crypto")]
 pub mod image;
 #[cfg(feature = "experimental-signal-crypto")]
 pub mod kem;

@@ -151,3 +151,8 @@ Experimental `signal::wire::encode_signal` and `encode_prekey` emit the native
 version byte/MAC and paired KEM fields from supplied encrypted bytes and keys.
 They do not advance/adopt/send sessions; see
 [API arguments, bounds and wire validation](../protocol/signal-wire.md).
+
+Experimental `signal::hybrid` initializes staged Alice/Bob ML-KEM-1024 records
+and prepares native encrypted messages with candidate records. It does not
+authorize/adopt/store/send keys or consume prekeys; see
+[API arguments, atomic commit contract and offline exchange](../protocol/hybrid-session.md).

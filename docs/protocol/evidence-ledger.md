@@ -1,3 +1,11 @@
+2026-10-12 — **Implemented/offline:** staged hybrid Alice/Bob records now
+perform real EC/KEM bootstrap, native 0x44 encryption, authenticated reply and
+continued ratcheting with/without an ordinary one-time key. Pending KEM metadata
+survives canonical reopen and clears after a valid reply; counter leasing and
+source-record preservation remain effective. Normal client adoption/send/key
+inventory is not connected; PQ guards and live-interoperability gaps remain.
+[Session API, native state/chain traces and encrypted exchange test](hybrid-session.md).
+
 2026-10-12 — **Implemented/offline:** low-level Signal wire encoders now
 construct native 0x33/0x44 version bytes before HMAC and retain paired outer KEM
 fields. Complete bytes match 24 independent nested and eight outer fixtures;

@@ -99,3 +99,7 @@ warnings-denied Rustdoc, 26 default CLI/API-symbol tests, the experimental CLI
 build, formatting and local link/artifact checks. Independent fixture creation
 reproduced 24 nested and eight outer cases; the APK bundle reproduced ten files
 / 61,581 bytes exactly. No live version-4 or hybrid-session operation was tested.
+
+The subsequent [staged hybrid adapter](hybrid-session.md) now uses these encoders
+for encrypted offline exchanges. The normal account coordinator remains
+unconnected, with all current PQ guards active.

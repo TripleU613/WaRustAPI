@@ -1,0 +1,45 @@
+# APK-derived structural disassembly: LX/Ckg;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A01(L) flags=0x1 registers=6
+  # full signature: LX/Ckg;->A01()LX/CKI;
+  0000..0004 op=62 sget-object v0, LX/Ckg;->A04:[B
+  0004..000a op=71 invoke-static {v5, v0}, LX/Ckg;->A00(LX/Ckg;[B)[B
+  000a..000c op=0c move-result-object v3
+  000c..0010 op=54 iget-object v2, v5, LX/Ckg;->A01:LX/Cew;
+  0010..0014 op=1a const-string v0, "WhisperMessageKeys"
+  0014..001a op=6e invoke-virtual {v0}, Ljava/lang/String;->getBytes()[B
+  001a..001c op=0c move-result-object v1
+  001c..0020 op=13 const/16 v0, #0x50
+  0020..0026 op=6e invoke-virtual {v2, v3, v1, v0}, LX/Cew;->A02([B[BI)[B
+  0026..0028 op=0c move-result-object v2
+  0028..002c op=13 const/16 v1, #0x10
+  002c..0030 op=13 const/16 v0, #0x20
+  0030..0036 op=71 invoke-static {v2, v0, v0, v1}, LX/Cjj;->A02([BIII)[[B
+  0036..0038 op=0c move-result-object v2
+  0038..003a op=12 const/4 v0, #0x0
+  003a..003e op=46 aget-object v0, v2, v0
+  003e..0044 op=71 invoke-static {v0}, LX/Ayl;->A1E([B)Ljavax/crypto/spec/SecretKeySpec;
+  0044..0046 op=0c move-result-object v4
+  0046..0048 op=12 const/4 v0, #0x1
+  0048..004c op=46 aget-object v1, v2, v0
+  004c..0050 op=1a const-string v0, "HmacSHA256"
+  0050..0054 op=22 new-instance v3, Ljavax/crypto/spec/SecretKeySpec;
+  0054..005a op=70 invoke-direct {v3, v1, v0}, Ljavax/crypto/spec/SecretKeySpec;-><init>([BLjava/lang/String;)V
+  005a..005c op=12 const/4 v0, #0x2
+  005c..0060 op=46 aget-object v0, v2, v0
+  0060..0064 op=22 new-instance v2, Ljavax/crypto/spec/IvParameterSpec;
+  0064..006a op=70 invoke-direct {v2, v0}, Ljavax/crypto/spec/IvParameterSpec;-><init>([B)V
+  006a..006e op=52 iget v1, v5, LX/Ckg;->A00:I
+  006e..0072 op=22 new-instance v0, LX/CKI;
+  0072..0078 op=70 invoke-direct {v0, v2, v4, v3, v1}, LX/CKI;-><init>(Ljavax/crypto/spec/IvParameterSpec;Ljavax/crypto/spec/SecretKeySpec;Ljavax/crypto/spec/SecretKeySpec;I)V
+  0078..007a op=11 return-object v0
+  007a..007c op=0d move-exception v0
+  007c..0082 op=71 invoke-static {v0}, LX/Ayj;->A14(Ljava/lang/Object;)Ljava/lang/AssertionError;
+  0082..0084 op=0c move-result-object v0
+  0084..0086 op=27 throw v0
+  # exception table: 1 try range(s)
+  # catch Ljava/text/ParseException; code_units 0018..0035 -> 003d
+.end method

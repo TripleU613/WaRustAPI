@@ -1,0 +1,110 @@
+{
+  "alice-bootstrap": {
+    "class": "LX/CQc;",
+    "file": "alice-bootstrap.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/hybrid.rs"
+    ]
+  },
+  "bob-bootstrap": {
+    "class": "LX/Cnp;",
+    "file": "bob-bootstrap.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A04",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/hybrid.rs"
+    ]
+  },
+  "chain-hmac": {
+    "class": "LX/Ckg;",
+    "file": "chain-hmac.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/hybrid.rs"
+    ]
+  },
+  "chain-seeds": {
+    "class": "LX/Ckg;",
+    "file": "chain-seeds.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<clinit>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/hybrid.rs"
+    ]
+  },
+  "message-keys": {
+    "class": "LX/Ckg;",
+    "file": "message-keys.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/hybrid.rs"
+    ]
+  },
+  "receiving-chain": {
+    "class": "LX/Cnp;",
+    "file": "receiving-chain.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/hybrid.rs"
+    ]
+  },
+  "root-step": {
+    "class": "LX/COt;",
+    "file": "root-step.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/hybrid.rs"
+    ]
+  },
+  "sending-chain": {
+    "class": "LX/Cnp;",
+    "file": "sending-chain.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A03",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/hybrid.rs"
+    ]
+  },
+  "version-kdf": {
+    "class": "LX/Cew;",
+    "file": "version-kdf.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/hybrid.rs"
+    ]
+  }
+}

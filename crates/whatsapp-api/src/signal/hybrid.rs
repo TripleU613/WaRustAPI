@@ -1,0 +1,484 @@
+//! Staged hybrid sessions; no directory admission, account-store mutation or network I/O.
+use super::{
+    direct::{IncomingKem, PreparedDirect},
+    kem, wire,
+};
+use crate::{Error, Result};
+use wacore_libsignal::{
+    crypto::aes_256_cbc_encrypt_into,
+    protocol::{
+        AliceSignalProtocolParameters, BobSignalProtocolParameters, ChainKey, KeyPair, PrivateKey,
+        PublicKey, RootKey, SessionRecord, SessionState, UsePQRatchet,
+    },
+};
+use zeroize::Zeroizing;
+
+fn invalid(reason: &'static str) -> Error {
+    Error::invalid("hybrid_session", reason)
+}
+fn agreement(private: &PrivateKey, public: &PublicKey) -> Result<Zeroizing<[u8; 32]>> {
+    private
+        .calculate_agreement(public)
+        .map(Zeroizing::new)
+        .map_err(|_| invalid("invalid agreement"))
+}
+fn keys(
+    a: &[u8; 32],
+    b: &[u8; 32],
+    c: &[u8; 32],
+    one: Option<&[u8; 32]>,
+    kem: &[u8; 32],
+) -> (RootKey, ChainKey) {
+    let (root, chain) = kem::initial_hybrid_keys(a, b, c, one, kem);
+    (
+        RootKey::new(root.as_bytes().try_into().expect("32-byte root")),
+        ChainKey::new(chain.as_bytes().try_into().expect("32-byte chain"), 0),
+    )
+}
+
+/// A staged canonical version-4 record, with secret-bearing Debug redacted.
+/// This does not establish peer trust or authorize replacing a held session.
+pub struct HybridSession(SessionRecord);
+impl std::fmt::Debug for HybridSession {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("HybridSession(<redacted>)")
+    }
+}
+impl HybridSession {
+    /// Reopen a trusted canonical record. This is not an APK database importer.
+    pub fn from_bytes(bytes: &[u8]) -> Result<Self> {
+        if bytes.len() > 1024 * 1024 {
+            return Err(invalid("record exceeds bound"));
+        }
+        let record = SessionRecord::deserialize(bytes).map_err(|_| invalid("invalid record"))?;
+        let state = record
+            .session_state()
+            .ok_or_else(|| invalid("missing current session"))?;
+        if state
+            .session_version()
+            .map_err(|_| invalid("invalid version"))?
+            != 4
+        {
+            return Err(invalid("expected version 4"));
+        }
+        Ok(Self(record))
+    }
+    /// Export secret-bearing canonical bytes for encrypted, atomic storage only.
+    pub fn to_bytes(&self) -> Result<Zeroizing<Vec<u8>>> {
+        self.0
+            .serialize()
+            .map(Zeroizing::new)
+            .map_err(|_| invalid("record serialization failed"))
+    }
+    /// Prepare padded protobuf ciphertext and an updated candidate record.
+    /// Commit the returned record atomically before sending or preparing another
+    /// payload from this session. The source record remains unchanged, even on error.
+    /// Trust/identity policy belongs to the account coordinator, not this helper.
+    pub fn prepare(&self, payload: &[u8]) -> Result<PreparedDirect> {
+        if payload.len() > 65536 {
+            return Err(invalid("payload exceeds bound"));
+        }
+        let mut candidate = self.0.clone();
+        let pending_components = candidate
+            .clone()
+            .into_components()
+            .map_err(|_| invalid("record projection failed"))?
+            .current_session
+            .and_then(|state| state.pending_pre_key);
+        let state = candidate
+            .session_state_mut()
+            .ok_or_else(|| invalid("missing current session"))?;
+        if state
+            .session_version()
+            .map_err(|_| invalid("invalid version"))?
+            != 4
+        {
+            return Err(invalid("expected version 4"));
+        }
+        let local = state
+            .local_identity_key()
+            .map_err(|_| invalid("missing local identity"))?;
+        let remote = state
+            .remote_identity_key()
+            .map_err(|_| invalid("invalid remote identity"))?
+            .ok_or_else(|| invalid("missing remote identity"))?;
+        let chain = state
+            .get_sender_chain_key()
+            .map_err(|_| invalid("missing sender chain"))?;
+        let (message_keys, next) = chain
+            .step_with_message_keys()
+            .map_err(|_| invalid("sender counter exhausted"))?;
+        let message_keys = message_keys.generate_keys();
+        let mut plain = Zeroizing::new(payload.to_vec());
+        let mut entropy = [0u8; 1];
+        getrandom::fill(&mut entropy).map_err(|_| invalid("padding entropy unavailable"))?;
+        let padding = (entropy[0] & 15) + 1;
+        let padded_length = plain.len() + usize::from(padding);
+        plain.resize(padded_length, padding);
+        let mut ciphertext = Vec::new();
+        aes_256_cbc_encrypt_into(
+            &plain,
+            message_keys.cipher_key(),
+            message_keys.iv(),
+            &mut ciphertext,
+        )
+        .map_err(|_| invalid("encryption failed"))?;
+        let nested = wire::encode_signal(
+            4,
+            message_keys.mac_key(),
+            (&local, &remote),
+            &state
+                .sender_ratchet_key()
+                .map_err(|_| invalid("missing sender ratchet"))?,
+            (chain.index(), state.previous_counter()),
+            &ciphertext,
+        )?;
+        let (ciphertext, kind) = if let Some(items) =
+            state
+                .unacknowledged_pre_key_message_items()
+                .map_err(|_| invalid("invalid pending prekey"))?
+        {
+            let pending = pending_components
+                .as_ref()
+                .ok_or_else(|| invalid("missing pending prekey"))?;
+            let kem_id = pending
+                .kyber_pre_key_id
+                .ok_or_else(|| invalid("missing pending KEM id"))?;
+            let kem_ciphertext = pending
+                .kyber_ciphertext
+                .as_deref()
+                .filter(|c| c.len() == 1568)
+                .ok_or_else(|| invalid("invalid pending KEM ciphertext"))?;
+            (
+                wire::encode_prekey(
+                    4,
+                    state.local_registration_id(),
+                    (
+                        items.pre_key_id().map(u32::from),
+                        u32::from(items.signed_pre_key_id()),
+                    ),
+                    (items.base_key(), &local),
+                    &nested,
+                    Some((kem_id, kem_ciphertext)),
+                )?,
+                "pkmsg",
+            )
+        } else {
+            (nested, "msg")
+        };
+        state
+            .set_sender_chain_key(&next)
+            .map_err(|_| invalid("sender chain advance failed"))?;
+        candidate.reserve_sender_chain_counters(chain.index());
+        Ok(PreparedDirect {
+            ciphertext,
+            kind,
+            session: Zeroizing::new(
+                candidate
+                    .serialize()
+                    .map_err(|_| invalid("record serialization failed"))?,
+            ),
+            identity: remote.serialize().to_vec(),
+        })
+    }
+}
+
+/// Initialize an Alice candidate from already-authorized EC keys and a KEM secret.
+/// Registration tuple is local/remote; pending tuple is ordinary ID/signed ID/KEM.
+/// The KEM ciphertext must be the matching ML-KEM-1024 encapsulation output.
+pub fn initialize_alice(
+    parameters: &AliceSignalProtocolParameters,
+    kem_shared: &[u8; 32],
+    sender_ratchet: &KeyPair,
+    registrations: (u32, u32),
+    pending: (Option<u32>, u32, &IncomingKem<'_>),
+) -> Result<HybridSession> {
+    if !matches!(parameters.use_pq_ratchet(), UsePQRatchet::No)
+        || parameters.their_ratchet_key() != parameters.their_signed_pre_key()
+        || pending.2.ciphertext.len() != 1568
+    {
+        return Err(invalid("unsupported hybrid parameters"));
+    }
+    let identity = parameters.our_identity_key_pair();
+    let base = parameters.our_base_key_pair();
+    let a = agreement(identity.private_key(), parameters.their_signed_pre_key())?;
+    let b = agreement(
+        &base.private_key,
+        parameters.their_identity_key().public_key(),
+    )?;
+    let c = agreement(&base.private_key, parameters.their_signed_pre_key())?;
+    let one = parameters
+        .their_one_time_pre_key()
+        .map(|key| agreement(&base.private_key, key))
+        .transpose()?;
+    let (root, chain) = keys(&a, &b, &c, one.as_deref(), kem_shared);
+    let (sender_root, sender_chain) = root
+        .create_chain(parameters.their_ratchet_key(), &sender_ratchet.private_key)
+        .map_err(|_| invalid("ratchet agreement failed"))?;
+    let mut state = SessionState::new(
+        4,
+        identity.identity_key(),
+        parameters.their_identity_key(),
+        &sender_root,
+        &base.public_key,
+    )
+    .with_receiver_chain(parameters.their_ratchet_key(), &chain)
+    .with_sender_chain(sender_ratchet, &sender_chain);
+    state.set_local_registration_id(registrations.0);
+    state.set_remote_registration_id(registrations.1);
+    state.set_unacknowledged_pre_key_message(
+        pending.0.map(Into::into),
+        pending.1.into(),
+        &base.public_key,
+    );
+    let mut components = SessionRecord::new(state)
+        .into_components()
+        .map_err(|_| invalid("record projection failed"))?;
+    let value = components
+        .current_session
+        .as_mut()
+        .expect("fresh current session")
+        .pending_pre_key
+        .as_mut()
+        .expect("pending prekey was set");
+    value.kyber_pre_key_id = Some(pending.2.prekey_id);
+    value.kyber_ciphertext = Some(pending.2.ciphertext.to_vec());
+    SessionRecord::from_components(components)
+        .map(HybridSession)
+        .map_err(|_| invalid("record construction failed"))
+}
+
+/// Initialize a Bob candidate from already-authorized EC keys and a decapsulated KEM secret.
+/// No local prekey is deleted or marked consumed; commit/deletion belongs to the coordinator.
+pub fn initialize_bob(
+    parameters: &BobSignalProtocolParameters,
+    kem_shared: &[u8; 32],
+    registrations: (u32, u32),
+) -> Result<HybridSession> {
+    if !matches!(parameters.use_pq_ratchet(), UsePQRatchet::No)
+        || parameters.our_ratchet_key_pair().public_key
+            != parameters.our_signed_pre_key_pair().public_key
+    {
+        return Err(invalid("unsupported hybrid parameters"));
+    }
+    let identity = parameters.our_identity_key_pair();
+    let signed = parameters.our_signed_pre_key_pair();
+    let a = agreement(
+        &signed.private_key,
+        parameters.their_identity_key().public_key(),
+    )?;
+    let b = agreement(identity.private_key(), parameters.their_base_key())?;
+    let c = agreement(&signed.private_key, parameters.their_base_key())?;
+    let one = parameters
+        .our_one_time_pre_key_pair()
+        .map(|key| agreement(&key.private_key, parameters.their_base_key()))
+        .transpose()?;
+    let (root, chain) = keys(&a, &b, &c, one.as_deref(), kem_shared);
+    let mut state = SessionState::new(
+        4,
+        identity.identity_key(),
+        parameters.their_identity_key(),
+        &root,
+        parameters.their_base_key(),
+    )
+    .with_sender_chain(parameters.our_ratchet_key_pair(), &chain);
+    state.set_local_registration_id(registrations.0);
+    state.set_remote_registration_id(registrations.1);
+    Ok(HybridSession(SessionRecord::new(state)))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{
+        model::jid::Jid,
+        session::{AccountRecord, KeyMaterial, RegistrationStatus, SignalIdentityKey},
+        signal::{direct, kem},
+    };
+    use wacore_libsignal::protocol::{IdentityKeyPair, KeyPair, PreKeySignalMessage, UsePQRatchet};
+    fn account(identity: &IdentityKeyPair, registration: u32) -> AccountRecord {
+        AccountRecord {
+            registration: RegistrationStatus::Registered,
+            signal_registration_id: Some(registration),
+            signal_identity: Some(SignalIdentityKey(KeyMaterial {
+                public: identity.public_key().public_key_bytes().try_into().unwrap(),
+                private: *identity.private_key().serialize(),
+            })),
+            ..Default::default()
+        }
+    }
+    #[tokio::test]
+    async fn hybrid_bootstrap_reply_reopen_and_pending_keys_are_staged() {
+        for one_time in [false, true] {
+            let alice = IdentityKeyPair::generate(&mut rand::rng());
+            let bob = IdentityKeyPair::generate(&mut rand::rng());
+            let base = KeyPair::generate(&mut rand::rng());
+            let signed = KeyPair::generate(&mut rand::rng());
+            let one = KeyPair::generate(&mut rand::rng());
+            let ratchet = KeyPair::generate(&mut rand::rng());
+            let (kem_public, kem_secret) = kem::generate_key_pair().unwrap();
+            let (kem_ciphertext, shared) = kem::encapsulate(&kem_public).unwrap();
+            let bob_shared = kem::decapsulate(kem_secret.as_bytes(), &kem_ciphertext).unwrap();
+            let mut ap = AliceSignalProtocolParameters::new(
+                alice.clone(),
+                base.clone(),
+                *bob.identity_key(),
+                signed.public_key,
+                signed.public_key,
+                UsePQRatchet::No,
+            );
+            if one_time {
+                ap.set_their_one_time_pre_key(one.public_key);
+            }
+            let bp = BobSignalProtocolParameters::new(
+                bob.clone(),
+                signed.clone(),
+                one_time.then_some(one),
+                signed,
+                *alice.identity_key(),
+                base.public_key,
+                UsePQRatchet::No,
+            );
+            let pending = IncomingKem {
+                prekey_id: 9,
+                ciphertext: &kem_ciphertext,
+            };
+            let a = initialize_alice(
+                &ap,
+                shared.as_bytes().try_into().unwrap(),
+                &ratchet,
+                (31, 42),
+                (one_time.then_some(8), 7, &pending),
+            )
+            .unwrap();
+            let b =
+                initialize_bob(&bp, bob_shared.as_bytes().try_into().unwrap(), (42, 31)).unwrap();
+            assert_eq!(format!("{a:?}"), "HybridSession(<redacted>)");
+            let before = a.to_bytes().unwrap();
+            let first = a.prepare(b"\x0a\x05hello").unwrap();
+            assert_eq!(a.to_bytes().unwrap().as_slice(), before.as_slice());
+            assert_eq!(first.kind, "pkmsg");
+            assert_eq!(first.ciphertext[0], 0x44);
+            let outer = PreKeySignalMessage::try_from(first.ciphertext.as_slice()).unwrap();
+            assert_eq!(outer.message().serialized()[0], 0x44);
+            let metadata = direct::incoming_prekey_kem(&first.ciphertext)
+                .unwrap()
+                .unwrap();
+            assert_eq!(metadata.prekey_id, 9);
+            assert_eq!(metadata.ciphertext, kem_ciphertext);
+            let bob_account = account(&bob, 42);
+            let alice_account = account(&alice, 31);
+            let alice_jid = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+            let bob_jid = Jid::parse("15555550102@s.whatsapp.net").unwrap();
+            let bob_before = b.to_bytes().unwrap();
+            let mut wrong_ciphertext = kem_ciphertext.clone();
+            wrong_ciphertext[0] ^= 1;
+            let wrong_shared = kem::decapsulate(kem_secret.as_bytes(), &wrong_ciphertext).unwrap();
+            let wrong_bob =
+                initialize_bob(&bp, wrong_shared.as_bytes().try_into().unwrap(), (42, 31)).unwrap();
+            let wrong_before = wrong_bob.to_bytes().unwrap();
+            assert!(
+                direct::receive(
+                    &bob_account,
+                    &alice_jid,
+                    &wrong_before,
+                    &alice.identity_key().serialize(),
+                    outer.message().serialized()
+                )
+                .await
+                .is_err()
+            );
+            assert_eq!(
+                wrong_bob.to_bytes().unwrap().as_slice(),
+                wrong_before.as_slice()
+            );
+            let mut forged = outer.message().serialized().to_vec();
+            *forged.last_mut().unwrap() ^= 1;
+            assert!(
+                direct::receive(
+                    &bob_account,
+                    &alice_jid,
+                    &bob_before,
+                    &alice.identity_key().serialize(),
+                    &forged
+                )
+                .await
+                .is_err()
+            );
+            assert_eq!(b.to_bytes().unwrap().as_slice(), bob_before.as_slice());
+            let received = direct::receive(
+                &bob_account,
+                &alice_jid,
+                &bob_before,
+                &alice.identity_key().serialize(),
+                outer.message().serialized(),
+            )
+            .await
+            .unwrap();
+            assert_eq!(received.plaintext.as_slice(), b"\x0a\x05hello");
+            let b = HybridSession::from_bytes(&received.session).unwrap();
+            let reply = b.prepare(b"\x0a\x05world").unwrap();
+            assert_eq!(reply.kind, "msg");
+            assert_eq!(reply.ciphertext[0], 0x44);
+            let acknowledged = direct::receive(
+                &alice_account,
+                &bob_jid,
+                &first.session,
+                &bob.identity_key().serialize(),
+                &reply.ciphertext,
+            )
+            .await
+            .unwrap();
+            assert_eq!(acknowledged.plaintext.as_slice(), b"\x0a\x05world");
+            let a = HybridSession::from_bytes(&acknowledged.session).unwrap();
+            let next = a.prepare(b"\x0a\x05again").unwrap();
+            assert_eq!(next.kind, "msg");
+            assert!(
+                direct::incoming_prekey_kem(&first.ciphertext)
+                    .unwrap()
+                    .is_some()
+            );
+            let final_reply = direct::receive(
+                &bob_account,
+                &alice_jid,
+                &reply.session,
+                &alice.identity_key().serialize(),
+                &next.ciphertext,
+            )
+            .await
+            .unwrap();
+            assert_eq!(final_reply.plaintext.as_slice(), b"\x0a\x05again");
+            let pending = HybridSession::from_bytes(&first.session)
+                .unwrap()
+                .prepare(b"\x0a\x05again")
+                .unwrap();
+            assert_eq!(pending.kind, "pkmsg");
+            assert_eq!(
+                direct::incoming_prekey_kem(&pending.ciphertext)
+                    .unwrap()
+                    .unwrap()
+                    .ciphertext,
+                kem_ciphertext
+            );
+            let parsed = PreKeySignalMessage::try_from(pending.ciphertext.as_slice()).unwrap();
+            assert!(parsed.message().counter() > outer.message().counter());
+            let a_before = a.to_bytes().unwrap();
+            assert!(a.prepare(&vec![0; 65536]).is_err());
+            assert_eq!(a.to_bytes().unwrap().as_slice(), a_before.as_slice());
+            let partial = IncomingKem {
+                prekey_id: 9,
+                ciphertext: &kem_ciphertext[..1535],
+            };
+            assert!(
+                initialize_alice(
+                    &ap,
+                    shared.as_bytes().try_into().unwrap(),
+                    &ratchet,
+                    (31, 42),
+                    (None, 7, &partial)
+                )
+                .is_err()
+            );
+        }
+    }
+}
