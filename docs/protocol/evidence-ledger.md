@@ -1,3 +1,11 @@
+2026-10-12 — **Implemented/offline:** low-level Signal wire encoders now
+construct native 0x33/0x44 version bytes before HMAC and retain paired outer KEM
+fields. Complete bytes match 24 independent nested and eight outer fixtures;
+version-3 backend equivalence and version-byte tamper authentication are checked.
+Existing application/backend send paths and PQ guards remain unchanged; hybrid
+state/coordinator integration and live interoperability remain unfinished.
+[Native schemas/MAC, encoder API and independent fixtures](signal-wire.md).
+
 2026-10-12 — **Implemented/offline:** incoming prekey APIs retain original
 paired KEM ID/ciphertext metadata and refuse incomplete pairs. A valid classic
 MAC no longer makes an envelope with ignored KEM fields consumable. Direct/group

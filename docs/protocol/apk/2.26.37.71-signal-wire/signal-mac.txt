@@ -1,0 +1,36 @@
+# APK-derived structural disassembly: LX/DRy;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(LLLLLI) flags=0x9 registers=7
+  # full signature: LX/DRy;->A00(Ljavax/crypto/spec/SecretKeySpec;LX/B7K;LX/B7K;[BI)[B
+  0000..0004 op=1a const-string v0, "HmacSHA256"
+  0004..000a op=71 invoke-static {v0}, Ljavax/crypto/Mac;->getInstance(Ljava/lang/String;)Ljavax/crypto/Mac;
+  000a..000c op=0c move-result-object v1
+  000c..0012 op=6e invoke-virtual {v1, v2}, Ljavax/crypto/Mac;->init(Ljava/security/Key;)V
+  0012..0014 op=12 const/4 v0, #0x3
+  0014..0018 op=34 if-lt v6, v0, +0x14
+  0018..001c op=54 iget-object v0, v3, LX/B7K;->A00:LX/B7N;
+  001c..0022 op=6e invoke-virtual {v0}, LX/B7N;->A00()[B
+  0022..0024 op=0c move-result-object v0
+  0024..002a op=6e invoke-virtual {v1, v0}, Ljavax/crypto/Mac;->update([B)V
+  002a..002e op=54 iget-object v0, v4, LX/B7K;->A00:LX/B7N;
+  002e..0034 op=6e invoke-virtual {v0}, LX/B7N;->A00()[B
+  0034..0036 op=0c move-result-object v0
+  0036..003c op=6e invoke-virtual {v1, v0}, Ljavax/crypto/Mac;->update([B)V
+  003c..0042 op=6e invoke-virtual {v1, v5}, Ljavax/crypto/Mac;->doFinal([B)[B
+  0042..0044 op=0c move-result-object v3
+  0044..0048 op=13 const/16 v2, #0x8
+  0048..004c op=23 new-array v1, v2, [B
+  004c..004e op=12 const/4 v0, #0x0
+  004e..0054 op=71 invoke-static {v3, v0, v1, v0, v2}, Ljava/lang/System;->arraycopy(Ljava/lang/Object;ILjava/lang/Object;II)V
+  0054..0056 op=11 return-object v1
+  0056..0058 op=0d move-exception v0
+  0058..005e op=71 invoke-static {v0}, LX/Ayj;->A14(Ljava/lang/Object;)Ljava/lang/AssertionError;
+  005e..0060 op=0c move-result-object v0
+  0060..0062 op=27 throw v0
+  # exception table: 1 try range(s)
+  # catch Ljava/security/NoSuchAlgorithmException; code_units 0000..002b -> 002b
+  # catch Ljava/security/InvalidKeyException; code_units 0000..002b -> 002b
+.end method

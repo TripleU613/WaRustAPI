@@ -466,3 +466,11 @@ See [scope, pinned NIST provenance and reproduction](../../docs/protocol/native-
 16 independent synthetic HMAC fixtures for the APK's ordered hybrid premaster
 and root/chain split. It does not execute APK code or calculate DH/KEM agreements.
 See [native evidence and scope](../../docs/protocol/hybrid-kdf.md).
+
+## Signal wire encoding vectors
+
+`signal_wire_vectors.py docs/protocol/signal-wire-vectors.json --check`
+reproduces 24 synthetic Signal protobuf/HMAC vectors and eight prekey wrappers
+for native version bytes 0x33/0x44. It uses Python standard HMAC and explicit
+protobuf framing, not APK execution or encryption. See
+[encoder evidence and scope](../../docs/protocol/signal-wire.md).

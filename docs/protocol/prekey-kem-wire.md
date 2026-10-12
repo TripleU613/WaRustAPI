@@ -109,3 +109,7 @@ The crypto-only regression, strict all-target Clippy, warnings-denied Rustdoc,
 26 default CLI/API-symbol tests, experimental CLI build, formatting and local
 link/artifact hygiene passed. The APK bundle reproduced nine files / 67,602
 bytes exactly. No live PQ receive or outgoing version-4 operation was tested.
+
+The subsequent [low-level wire encoder](signal-wire.md) implements native
+version headers and MACed nested bytes, with paired KEM fields. Application
+send integration and full hybrid sessions remain unfinished.

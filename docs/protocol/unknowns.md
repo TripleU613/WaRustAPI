@@ -11,7 +11,9 @@ now match NIST. [Rust primitive support](rust-kem.md) is implemented; full
 primitive/format coverage and hybrid integration/records remain open.
 [Initial hybrid KDF composition](hybrid-kdf.md) and
 [incoming paired KEM metadata](prekey-kem-wire.md) are implemented. Native
-version-4 output is 0x44, while the backend emits 0x43; pending wire/state,
+version-4 output is 0x44, while the backend emits 0x43.
+[Low-level native wire encoders](signal-wire.md) now implement 0x44/MAC and KEM
+fields; application send integration, pending wire/state,
 key inventory and incoming wire support still need implementation. See
 [the boundary and source audit](pq-bundle-boundary.md).
 

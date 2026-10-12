@@ -146,3 +146,8 @@ a session; see [the evidenced hybrid KDF and remaining integration](../protocol/
 prekey envelope with redacted Debug. All incoming prekey inspectors reject
 incomplete pairs; KEM receive remains unsupported before saved-state changes.
 See [wire fields, version bytes and remaining integration](../protocol/prekey-kem-wire.md).
+
+Experimental `signal::wire::encode_signal` and `encode_prekey` emit the native
+version byte/MAC and paired KEM fields from supplied encrypted bytes and keys.
+They do not advance/adopt/send sessions; see
+[API arguments, bounds and wire validation](../protocol/signal-wire.md).

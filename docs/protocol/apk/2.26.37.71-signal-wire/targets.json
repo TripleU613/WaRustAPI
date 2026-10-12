@@ -1,0 +1,62 @@
+{
+  "prekey-constructors": {
+    "class": "LX/DRw;",
+    "file": "prekey-constructors.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 2,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/wire.rs"
+    ]
+  },
+  "prekey-schema": {
+    "class": "LX/BY9;",
+    "file": "prekey-schema.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "dynamicMethod",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/wire.rs"
+    ]
+  },
+  "signal-constructors": {
+    "class": "LX/DRy;",
+    "file": "signal-constructors.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 2,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/wire.rs"
+    ]
+  },
+  "signal-mac": {
+    "class": "LX/DRy;",
+    "file": "signal-mac.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/wire.rs"
+    ]
+  },
+  "signal-schema": {
+    "class": "LX/BWY;",
+    "file": "signal-schema.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "dynamicMethod",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/wire.rs"
+    ]
+  }
+}
