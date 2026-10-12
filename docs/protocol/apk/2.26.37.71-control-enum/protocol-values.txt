@@ -1,0 +1,83 @@
+# APK-derived structural disassembly: LX/C4F;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method forNumber(LI) flags=0x9 registers=1
+  # full signature: LX/C4F;->forNumber(I)LX/C4F;
+  0000..0006 op=2b packed-switch v0, payload@0xdc, cases=[0:@0xd6, 1:@0x6, 2:@0x6, 3:@0xd0, 4:@0xca, 5:@0xc4, 6:@0xbe, 7:@0xb8, 8:@0xb2, 9:@0xac, 10:@0xa6, 11:@0xa0, 12:@0x6, 13:@0x6, 14:@0x9a, 15:@0x6, 16:@0x94, 17:@0x8e, 18:@0x88, 19:@0x82, 20:@0x7c, 21:@0x76, 22:@0x70, 23:@0x6, 24:@0x6a, 25:@0x64, 26:@0x5e, 27:@0x58, 28:@0x52, 29:@0x4c, 30:@0x46, 31:@0x40, 32:@0x3a, 33:@0x6, 34:@0x34, 35:@0x2e, 36:@0x28, 37:@0x22, 38:@0x1c, 39:@0x16, 40:@0x10, 41:@0xa], default@0x6
+  0006..0008 op=12 const/4 v0, #0x0
+  0008..000a op=11 return-object v0
+  000a..000e op=62 sget-object v0, LX/C4F;->A0U:LX/C4F;
+  000e..0010 op=11 return-object v0
+  0010..0014 op=62 sget-object v0, LX/C4F;->A0V:LX/C4F;
+  0014..0016 op=11 return-object v0
+  0016..001a op=62 sget-object v0, LX/C4F;->A01:LX/C4F;
+  001a..001c op=11 return-object v0
+  001c..0020 op=62 sget-object v0, LX/C4F;->A0Z:LX/C4F;
+  0020..0022 op=11 return-object v0
+  0022..0026 op=62 sget-object v0, LX/C4F;->A0C:LX/C4F;
+  0026..0028 op=11 return-object v0
+  0028..002c op=62 sget-object v0, LX/C4F;->A0K:LX/C4F;
+  002c..002e op=11 return-object v0
+  002e..0032 op=62 sget-object v0, LX/C4F;->A03:LX/C4F;
+  0032..0034 op=11 return-object v0
+  0034..0038 op=62 sget-object v0, LX/C4F;->A0A:LX/C4F;
+  0038..003a op=11 return-object v0
+  003a..003e op=62 sget-object v0, LX/C4F;->A0O:LX/C4F;
+  003e..0040 op=11 return-object v0
+  0040..0044 op=62 sget-object v0, LX/C4F;->A02:LX/C4F;
+  0044..0046 op=11 return-object v0
+  0046..004a op=62 sget-object v0, LX/C4F;->A0F:LX/C4F;
+  004a..004c op=11 return-object v0
+  004c..0050 op=62 sget-object v0, LX/C4F;->A05:LX/C4F;
+  0050..0052 op=11 return-object v0
+  0052..0056 op=62 sget-object v0, LX/C4F;->A04:LX/C4F;
+  0056..0058 op=11 return-object v0
+  0058..005c op=62 sget-object v0, LX/C4F;->A0J:LX/C4F;
+  005c..005e op=11 return-object v0
+  005e..0062 op=62 sget-object v0, LX/C4F;->A0Y:LX/C4F;
+  0062..0064 op=11 return-object v0
+  0064..0068 op=62 sget-object v0, LX/C4F;->A0X:LX/C4F;
+  0068..006a op=11 return-object v0
+  006a..006e op=62 sget-object v0, LX/C4F;->A0M:LX/C4F;
+  006e..0070 op=11 return-object v0
+  0070..0074 op=62 sget-object v0, LX/C4F;->A0I:LX/C4F;
+  0074..0076 op=11 return-object v0
+  0076..007a op=62 sget-object v0, LX/C4F;->A0B:LX/C4F;
+  007a..007c op=11 return-object v0
+  007c..0080 op=62 sget-object v0, LX/C4F;->A0L:LX/C4F;
+  0080..0082 op=11 return-object v0
+  0082..0086 op=62 sget-object v0, LX/C4F;->A09:LX/C4F;
+  0086..0088 op=11 return-object v0
+  0088..008c op=62 sget-object v0, LX/C4F;->A0S:LX/C4F;
+  008c..008e op=11 return-object v0
+  008e..0092 op=62 sget-object v0, LX/C4F;->A0R:LX/C4F;
+  0092..0094 op=11 return-object v0
+  0094..0098 op=62 sget-object v0, LX/C4F;->A0Q:LX/C4F;
+  0098..009a op=11 return-object v0
+  009a..009e op=62 sget-object v0, LX/C4F;->A0N:LX/C4F;
+  009e..00a0 op=11 return-object v0
+  00a0..00a4 op=62 sget-object v0, LX/C4F;->A0W:LX/C4F;
+  00a4..00a6 op=11 return-object v0
+  00a6..00aa op=62 sget-object v0, LX/C4F;->A06:LX/C4F;
+  00aa..00ac op=11 return-object v0
+  00ac..00b0 op=62 sget-object v0, LX/C4F;->A0H:LX/C4F;
+  00b0..00b2 op=11 return-object v0
+  00b2..00b6 op=62 sget-object v0, LX/C4F;->A0P:LX/C4F;
+  00b6..00b8 op=11 return-object v0
+  00b8..00bc op=62 sget-object v0, LX/C4F;->A07:LX/C4F;
+  00bc..00be op=11 return-object v0
+  00be..00c2 op=62 sget-object v0, LX/C4F;->A08:LX/C4F;
+  00c2..00c4 op=11 return-object v0
+  00c4..00c8 op=62 sget-object v0, LX/C4F;->A0G:LX/C4F;
+  00c8..00ca op=11 return-object v0
+  00ca..00ce op=62 sget-object v0, LX/C4F;->A0E:LX/C4F;
+  00ce..00d0 op=11 return-object v0
+  00d0..00d4 op=62 sget-object v0, LX/C4F;->A0D:LX/C4F;
+  00d4..00d6 op=11 return-object v0
+  00d6..00da op=62 sget-object v0, LX/C4F;->A0T:LX/C4F;
+  00da..00dc op=11 return-object v0
+  00dc..018c op=00 packed-switch-payload size=42
+  # exception table: 0 try range(s)
+.end method

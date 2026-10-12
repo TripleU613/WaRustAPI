@@ -161,82 +161,9 @@ pub(super) fn inspect(user: &Node, identity: &IdentityKey) -> AttestationInspect
     result
 }
 
-// BP2's closed enum verifier ignores unknown numeric values, retaining the last
-// recognized one or default 0. Plain prost enum decoding keeps the last unknown
-// instead. Java's raw varint32 also truncates high bits (including tags/lengths)
-// and consumes trailing continuation bytes; the independent descriptor oracle
-// exercises those differences. This parser only projects BP2.accountType.
-fn varint32(bytes: &mut &[u8]) -> Result<u32, ()> {
-    let mut value = 0;
-    let mut index = 0;
-    loop {
-        let (&byte, rest) = bytes.split_first().ok_or(())?;
-        *bytes = rest;
-        if index < 5 {
-            value |= u32::from(byte & 127) << (index * 7);
-        }
-        if byte < 128 {
-            return Ok(value);
-        }
-        index += 1;
-    }
-}
-fn skip(bytes: &mut &[u8], key: u32, depth: usize) -> Result<(), ()> {
-    if key >> 3 == 0 {
-        return Err(());
-    }
-    let length = match key & 7 {
-        0 => {
-            varint32(bytes)?;
-            0
-        }
-        1 => 8,
-        2 => {
-            let length = varint32(bytes)?;
-            if length > i32::MAX as u32 {
-                return Err(());
-            }
-            length as usize
-        }
-        3 => {
-            // The pinned Java descriptor oracle counts its root toward the
-            // default recursion limit: 99 unknown groups pass, 100 refuse.
-            // The APK protobuf runtime version/boundary is not established.
-            if depth >= 99 {
-                return Err(());
-            }
-            loop {
-                let nested = varint32(bytes)?;
-                if nested & 7 == 4 {
-                    if nested >> 3 != key >> 3 {
-                        return Err(());
-                    }
-                    break;
-                }
-                skip(bytes, nested, depth + 1)?;
-            }
-            0
-        }
-        5 => 4,
-        _ => return Err(()),
-    };
-    *bytes = bytes.get(length..).ok_or(())?;
-    Ok(())
-}
-fn parse_account_type(mut body: &[u8]) -> Result<AttestationAccountType, ()> {
-    let mut result = AttestationAccountType::E2ee;
-    while !body.is_empty() {
-        let key = varint32(&mut body)?;
-        // BP2.dynamicMethod 0032..0040: field 1, enum; Cu0/C29 verifier 0..2.
-        if key == 8 {
-            if let Some(value) = AttestationAccountType::from_value(varint32(&mut body)?) {
-                result = value;
-            }
-        } else {
-            skip(&mut body, key, 0)?;
-        }
-    }
-    Ok(result)
+fn parse_account_type(body: &[u8]) -> Result<AttestationAccountType, ()> {
+    let value = super::super::protobuf_enum::value(body, 1, |v| v <= 2, 0)?.unwrap_or(0);
+    AttestationAccountType::from_value(value).ok_or(())
 }
 
 #[cfg(test)]

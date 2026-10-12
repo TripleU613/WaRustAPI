@@ -3050,19 +3050,19 @@ mod tests {
                 .unwrap()
                 .is_none()
         );
-        let peer_revoke_body =
-            prost::Message::encode_to_vec(&super::super::chat_settings::Envelope {
-                protocol: Some(super::super::chat_settings::ProtocolMessage {
-                    key: Some(super::super::reactions::Key {
-                        id: Some("BARE-PREKEY".into()),
-                        from_me: Some(false),
-                        ..Default::default()
-                    }),
-                    type_: Some(0),
+        let mut peer_revoke_protocol =
+            prost::Message::encode_to_vec(&super::super::chat_settings::ProtocolMessage {
+                key: Some(super::super::reactions::Key {
+                    id: Some("BARE-PREKEY".into()),
+                    from_me: Some(false),
                     ..Default::default()
                 }),
+                type_: Some(0),
                 ..Default::default()
             });
+        peer_revoke_protocol.extend_from_slice(b"\x10\x63");
+        let mut peer_revoke_body = Vec::new();
+        prost::encoding::bytes::encode(12, &peer_revoke_protocol, &mut peer_revoke_body);
         let peer_revocation = direct::prepare_payload(
             &sender,
             receiver.own_jid.as_ref().unwrap(),
@@ -4016,6 +4016,17 @@ mod tests {
                 kept,
                 19,
             );
+            let mut keep_body = prost::Message::encode_to_vec(
+                &<super::super::chat_settings::Envelope as prost::Message>::decode(
+                    inner.as_slice(),
+                )
+                .unwrap()
+                .keep_in_chat
+                .unwrap(),
+            );
+            keep_body.extend_from_slice(b"\x10\x63");
+            let mut inner = Vec::new();
+            prost::encoding::bytes::encode(51, &keep_body, &mut inner);
             let mut sent_keep = Vec::new();
             prost::encoding::string::encode(1, &"67890@lid".to_owned(), &mut sent_keep);
             prost::encoding::bytes::encode(2, &inner, &mut sent_keep);
@@ -4128,20 +4139,20 @@ mod tests {
             before_edit
         );
         assert_eq!(store.journal_head().unwrap(), before_edit_head);
-        let own_revoke_body =
-            prost::Message::encode_to_vec(&super::super::chat_settings::Envelope {
-                protocol: Some(super::super::chat_settings::ProtocolMessage {
-                    key: Some(super::super::reactions::Key {
-                        id: Some(own_vote_target.key.id.as_str().into()),
-                        from_me: Some(false),
-                        remote_jid: Some("status@broadcast".into()),
-                        ..Default::default()
-                    }),
-                    type_: Some(0),
+        let mut own_revoke_protocol =
+            prost::Message::encode_to_vec(&super::super::chat_settings::ProtocolMessage {
+                key: Some(super::super::reactions::Key {
+                    id: Some(own_vote_target.key.id.as_str().into()),
+                    from_me: Some(false),
+                    remote_jid: Some("status@broadcast".into()),
                     ..Default::default()
                 }),
+                type_: Some(0),
                 ..Default::default()
             });
+        own_revoke_protocol.extend_from_slice(b"\x10\x63");
+        let mut own_revoke_body = Vec::new();
+        prost::encoding::bytes::encode(12, &own_revoke_protocol, &mut own_revoke_body);
         let mut sent_revoke = Vec::new();
         prost::encoding::string::encode(1, &"67890@lid".to_owned(), &mut sent_revoke);
         prost::encoding::bytes::encode(2, &own_revoke_body, &mut sent_revoke);

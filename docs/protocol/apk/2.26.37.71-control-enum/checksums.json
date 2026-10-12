@@ -1,0 +1,46 @@
+{
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "keep-descriptor.txt": {
+    "bytes": 3729,
+    "sha256": "6878ca640cea80bab9cc2175ef87ffb1055225b9e58acd04cb64f274ed5010c3"
+  },
+  "keep-values.txt": {
+    "bytes": 965,
+    "sha256": "054548f8d821e72a5616f8585bfbe71aaa9ecb0467e6de84757eac79c5200565"
+  },
+  "keep-verifier.txt": {
+    "bytes": 672,
+    "sha256": "c072f1d257b61558a15fd9421be90ca48636e96210237e6da69f2f4681156d66"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "message-descriptor.txt": {
+    "bytes": 19792,
+    "sha256": "4deb5a3c9944863696cfcd0dfb0138985e229d23606d119272f76b304f8d8b45"
+  },
+  "protocol-descriptor.txt": {
+    "bytes": 8643,
+    "sha256": "74c1011bdae4cd85d5092ab6de984f98ed1aaec9772aa16d5c45501c68f7f923"
+  },
+  "protocol-values.txt": {
+    "bytes": 4247,
+    "sha256": "d91e388e24cd76cc8ea5dca431f7fac4a28d82a115a4f9c42657484b206b05df"
+  },
+  "protocol-verifier.txt": {
+    "bytes": 672,
+    "sha256": "b9510c9c94cc13a13b7015e40b788e7add01e86f135aeda81e264ddf2a6e2376"
+  },
+  "targets.json": {
+    "bytes": 3724,
+    "sha256": "7a911d1e3e8a237df200b76e608f294fc68c9011bc8d05093bb146e68eaf1086"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

@@ -235,6 +235,7 @@ pub mod polls;
     feature = "experimental-transport"
 ))]
 pub mod prekeys;
+mod protobuf_enum;
 pub mod quotes;
 pub mod reactions;
 #[cfg(all(

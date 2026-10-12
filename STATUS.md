@@ -1,3 +1,11 @@
+2026-10-11 — **Implemented/offline:** protocol type and keep type now use the
+pinned closed-enum rules: unknown numbers retain the last recognized value,
+wrong-wire enum fields stay unknown, and singular message fragments merge.
+Absent/unknown-only type never becomes a revoke. Shared borrowed-byte parsing
+reuses the attestation primitives; all prior BP2 vectors remain valid. 2,040
+independent Java vectors and encrypted receive/reopen tests pass. No encoding,
+saved account/request/wait or live change. [Enum source, codec fix and limits](docs/protocol/control-enum.md).
+
 2026-10-11 — **Implemented/offline:** ordinary direct sender revocations now
 project into MessageUpdated/Revoked for peers and held own-device wrappers.
 Envelope ownership overrides embedded flags/remotes; saved peer routes retain

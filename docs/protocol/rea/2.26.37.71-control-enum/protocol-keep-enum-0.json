@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_2a9e9d45a8659a34b6486b2424cba4284dd6415eb6e57fc84eab0dcc6790c88a",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.C2L",
+    "method_name": "forNumber"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-PbBCnF/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"max_heap_bytes\":15695085568,\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C2L"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_count\":6,\"methods\":[{\"def_pos\":0,\"name\":\"\\u003cclinit\\u003e\",\"is_constructor\":false,\"signature\":\"\\u003cclinit\\u003e(): void\"},{\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"signature\":\"\\u003cinit\\u003e(java.lang.String, int, int): void\"},{\"def_pos\":0,\"name\":\"forNumber\",\"is_constructor\":false,\"signature\":\"forNumber(int): X.C2L\"},{\"def_pos\":0,\"name\":\"getNumber\",\"is_constructor\":false,\"signature\":\"getNumber(): int\"},{\"def_pos\":0,\"name\":\"valueOf\",\"is_constructor\":false,\"signature\":\"valueOf(java.lang.String): X.C2L\"},{\"def_pos\":0,\"name\":\"values\",\"is_constructor\":false,\"signature\":\"values(): X.C2L[]\"}],\"fields\":[{\"name\":\"A00\",\"def_pos\":0,\"type\":\"X.C2L[]\"},{\"name\":\"A01\",\"def_pos\":0,\"type\":\"X.C2L\"},{\"name\":\"A02\",\"def_pos\":0,\"type\":\"X.C2L\"},{\"name\":\"A03\",\"def_pos\":0,\"type\":\"X.C2L\"},{\"name\":\"value\",\"def_pos\":0,\"type\":\"int\"}],\"field_count\":5,\"full_name\":\"X.C2L\",\"name\":\"C2L\",\"inner_classes\":[],\"inner_class_count\":0}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C2L",
+          "method_name": "forNumber",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"full_name\":\"X.C2L.forNumber\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"forNumber\",\"overload_count\":1,\"body\":\"    public static C2L forNumber(int i) {\\n        if (i \\u003d\\u003d 0) {\\n            return A03;\\n        }\\n        if (i \\u003d\\u003d 1) {\\n            return A01;\\n        }\\n        if (i !\\u003d 2) {\\n            return null;\\n        }\\n        return A02;\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.C2L\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.C2L",
+    "method": {
+      "name": "forNumber",
+      "reported_signature": "forNumber(int): X.C2L",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public static C2L forNumber(int i) {\n        if (i == 0) {\n            return A03;\n        }\n        if (i == 1) {\n            return A01;\n        }\n        if (i != 2) {\n            return null;\n        }\n        return A02;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

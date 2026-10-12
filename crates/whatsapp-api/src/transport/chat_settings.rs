@@ -170,6 +170,31 @@ pub fn validate_timer(seconds: u32) -> Result<()> {
     Ok(())
 }
 
+// BZb/CvY/C4F: proto2 enum values 0..41 excluding seven gaps; absence stays absent.
+fn protocol_type(value: u32) -> bool {
+    value <= 41 && !matches!(value, 1 | 2 | 12 | 13 | 15 | 23 | 33)
+}
+fn decode_envelope(payload: &[u8]) -> Option<Envelope> {
+    let protocol =
+        super::protobuf_enum::decode_nested::<ProtocolMessage>(payload, 12, 2, protocol_type)
+            .ok()?
+            .map(|(mut message, value)| {
+                message.type_ = value.map(|v| v as i32);
+                message
+            });
+    let keep_in_chat =
+        super::protobuf_enum::decode_nested::<KeepInChatMessage>(payload, 51, 2, |v| v <= 2)
+            .ok()?
+            .map(|(mut message, value)| {
+                message.keep_type = value.map(|v| v as i32);
+                message
+            });
+    Some(Envelope {
+        protocol,
+        keep_in_chat,
+    })
+}
+
 // Bua.CF4 reads a present REVOKE type and parent id; ownership comes from CoT.
 #[cfg(all(
     feature = "experimental-signal-crypto",
@@ -183,7 +208,7 @@ pub(super) fn decode_sender_revoke(payload: &[u8]) -> Option<MessageId> {
     {
         return None;
     }
-    let protocol = Envelope::decode(payload).ok()?.protocol?;
+    let protocol = decode_envelope(payload)?.protocol?;
     if protocol.type_ != Some(0) {
         return None;
     }
@@ -214,7 +239,7 @@ pub(super) fn sender_revoke_edit(node: &crate::binary::Node) -> bool {
 /// Decode a chat-setting `protocolMessage` (field 12). Returns `None` for
 /// malformed content or a `type` this module does not recognise.
 pub fn decode_protocol(payload: &[u8]) -> Option<Setting> {
-    let protocol = Envelope::decode(payload).ok()?.protocol?;
+    let protocol = decode_envelope(payload)?.protocol?;
     if matches!(
         protocol.type_,
         Some(TYPE_EPHEMERAL_SETTING | TYPE_EPHEMERAL_SYNC_RESPONSE)
@@ -255,7 +280,7 @@ pub struct IncomingKeep {
 /// Decode a `keepInChatMessage` payload (field 51). Returns `None` for
 /// malformed content or an unrecognised `keepType`.
 pub fn decode_keep(payload: &[u8]) -> Option<IncomingKeep> {
-    let keep_in_chat = Envelope::decode(payload).ok()?.keep_in_chat?;
+    let keep_in_chat = decode_envelope(payload)?.keep_in_chat?;
     let key = keep_in_chat.key?;
     if super::reactions::key_failure(&key).is_some() {
         return None;
@@ -284,8 +309,8 @@ pub fn group_keep_target(
     payload: &[u8],
     own: &[Jid],
 ) -> Result<crate::model::message::MessageKey> {
-    let keep = Envelope::decode(payload)
-        .map_err(|_| invalid("malformed_keep"))?
+    let keep = decode_envelope(payload)
+        .ok_or_else(|| invalid("malformed_keep"))?
         .keep_in_chat
         .ok_or_else(|| invalid("missing_keep"))?;
     if !matches!(keep.keep_type, Some(KEEP_FOR_ALL | UNDO_KEEP_FOR_ALL)) {
@@ -447,6 +472,150 @@ mod tests {
         ids::{ChatId, DeviceAddress, MessageId},
         message::MessageKey,
     };
+    #[test]
+    fn closed_control_enum_projection_matches_independent_java_oracle() {
+        let fixture: serde_json::Value = serde_json::from_str(include_str!(
+            "../../fixtures/prekeys/2.26.37.71-control-enum-oracle.json"
+        ))
+        .unwrap();
+        for case in fixture["cases"].as_array().unwrap() {
+            let bytes = hex::decode(case["hex"].as_str().unwrap()).unwrap();
+            let actual = match case["mode"].as_str().unwrap() {
+                "p" => super::super::protobuf_enum::decode_nested::<ProtocolMessage>(
+                    &bytes,
+                    12,
+                    2,
+                    protocol_type,
+                )
+                .map(|v| v.and_then(|(_, value)| value)),
+                "k" => super::super::protobuf_enum::decode_nested::<KeepInChatMessage>(
+                    &bytes,
+                    51,
+                    2,
+                    |v| v <= 2,
+                )
+                .map(|v| v.and_then(|(_, value)| value)),
+                _ => panic!("unsupported oracle mode"),
+            };
+            let expected = if case["valid"].as_bool().unwrap() {
+                Ok(case["value"].as_u64().map(|v| v as u32))
+            } else {
+                Err(())
+            };
+            assert_eq!(actual, expected, "{} {}", case["mode"], case["hex"]);
+        }
+    }
+
+    #[test]
+    fn protocol_types_keep_last_recognized_value_and_presence() {
+        let wrap = |body: &[u8]| {
+            let mut out = Vec::new();
+            prost::encoding::bytes::encode(12, &body.to_vec(), &mut out);
+            out
+        };
+        for unknown in [
+            1u64,
+            2,
+            12,
+            13,
+            15,
+            23,
+            33,
+            42,
+            99,
+            u32::MAX.into(),
+            u64::MAX,
+        ] {
+            let mut body = vec![0x10, 3, 0x20, 7];
+            prost::encoding::uint64::encode(2, &unknown, &mut body);
+            assert_eq!(
+                decode_protocol(&wrap(&body)),
+                Some(Setting::DisappearingTimer { seconds: 7 }),
+                "unknown {unknown}"
+            );
+            let mut only_unknown = Vec::new();
+            prost::encoding::uint64::encode(2, &unknown, &mut only_unknown);
+            assert_eq!(decode_protocol(&wrap(&only_unknown)), None);
+            let mut split = wrap(&[0x10, 3, 0x20, 9]);
+            only_unknown.extend_from_slice(&[0x20, 7]);
+            split.extend(wrap(&only_unknown));
+            assert_eq!(
+                decode_protocol(&split),
+                Some(Setting::DisappearingTimer { seconds: 7 })
+            );
+        }
+        for wrong_wire in [
+            vec![0x12, 1, 0xff],
+            vec![0x11, 0, 0, 0, 0, 0, 0, 0, 0],
+            vec![0x15, 0, 0, 0, 0],
+            vec![0x13, 0x10, 0, 0x14],
+        ] {
+            let mut body = vec![0x10, 3, 0x20, 7];
+            body.extend(wrong_wire);
+            assert_eq!(
+                decode_protocol(&wrap(&body)),
+                Some(Setting::DisappearingTimer { seconds: 7 })
+            );
+        }
+        for known in [
+            0u8, 4, 5, 14, 18, 19, 20, 21, 22, 24, 25, 26, 27, 28, 29, 30, 31, 32, 34, 35, 36, 37,
+            38, 39, 40, 41,
+        ] {
+            let body = [0x10, 3, 0x20, 7, 0x10, known];
+            assert_eq!(
+                decode_protocol(&wrap(&body)),
+                if known == 4 {
+                    Some(Setting::EphemeralSyncResponse { seconds: 7 })
+                } else {
+                    None
+                },
+                "recognized {known}"
+            );
+        }
+        let mut body = vec![0x10, 4, 0x20, 7];
+        prost::encoding::uint64::encode(2, &0x100000003, &mut body);
+        assert_eq!(
+            decode_protocol(&wrap(&body)),
+            Some(Setting::DisappearingTimer { seconds: 7 })
+        );
+    }
+
+    #[test]
+    fn keep_type_ignores_unknown_numbers_without_erasing_group_parent() {
+        let group = Jid::parse("120363000000000001@g.us").unwrap();
+        let actor = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let target = MessageRef {
+            key: MessageKey {
+                chat: ChatId::from_jid(&group).unwrap(),
+                sender: Some(DeviceAddress::from_jid(&actor).unwrap()),
+                direction: Direction::Incoming,
+                id: MessageId::new("TARGET").unwrap(),
+            },
+        };
+        let original = group_keep_payload(&group, &actor, &target, true, 7).unwrap();
+        for unknown in [3u64, 32, 99, u32::MAX.into(), u64::MAX] {
+            let mut body = Vec::new();
+            prost::encoding::uint64::encode(2, &unknown, &mut body);
+            let mut payload = original.clone();
+            prost::encoding::bytes::encode(51, &body, &mut payload);
+            assert!(decode_keep(&payload).unwrap().keep, "unknown {unknown}");
+            let key = group_keep_target(
+                &group,
+                &actor,
+                &payload,
+                &[Jid::parse("15555550199@s.whatsapp.net").unwrap()],
+            )
+            .unwrap();
+            assert_eq!(key.id, target.key.id);
+            assert_eq!(key.sender, target.key.sender);
+        }
+        for (kind, expected) in [(0, None), (1, Some(true)), (2, Some(false))] {
+            let mut payload = original.clone();
+            prost::encoding::bytes::encode(51, &vec![0x10, kind], &mut payload);
+            assert_eq!(decode_keep(&payload).map(|v| v.keep), expected);
+        }
+    }
+
     #[test]
     fn keep_decode_requires_native_parent_key_shape_without_using_remote_as_authority() {
         for (remote, expected) in [

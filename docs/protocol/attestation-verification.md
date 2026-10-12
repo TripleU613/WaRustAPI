@@ -210,3 +210,12 @@ files / 95,100 bytes; checksum-verified self-diff found 18 unchanged topics and
 four metadata artifacts. Hygiene checked 2,344 links and 116 bundles totaling
 23,830,949 bytes. These checks do not establish the unknown APK parser runtime
 version, cross-release parity, native admission or fresh live attestation proof.
+
+## Shared control-enum parser — 2026-10-11
+
+[Protocol/keep enum projection](control-enum.md) now reuses the BP2 wire
+primitives in transport::protobuf_enum. BP2 still reads field 1 with recognized
+0..2/default E2EE and the same standalone root bound; all 1,502 independent
+Java vectors pass. Signature input and native admission remain separate and
+unchanged. The additional control fixture uses nested-message presence and
+merge semantics; it is not execution of the APK runtime.

@@ -1,0 +1,107 @@
+{
+  "keep-descriptor": {
+    "class": "LX/BV3;",
+    "file": "keep-descriptor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "dynamicMethod",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/protobuf_enum.rs",
+      "crates/whatsapp-api/src/transport/chat_settings.rs",
+      "crates/whatsapp-api/src/transport/identity_notifications/attestation.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
+  "keep-values": {
+    "class": "LX/C2L;",
+    "file": "keep-values.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "forNumber",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/protobuf_enum.rs",
+      "crates/whatsapp-api/src/transport/chat_settings.rs",
+      "crates/whatsapp-api/src/transport/identity_notifications/attestation.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
+  "keep-verifier": {
+    "class": "LX/Cv0;",
+    "file": "keep-verifier.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "isInRange",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/protobuf_enum.rs",
+      "crates/whatsapp-api/src/transport/chat_settings.rs",
+      "crates/whatsapp-api/src/transport/identity_notifications/attestation.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
+  "message-descriptor": {
+    "class": "LX/BZc;",
+    "file": "message-descriptor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "dynamicMethod",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/protobuf_enum.rs",
+      "crates/whatsapp-api/src/transport/chat_settings.rs",
+      "crates/whatsapp-api/src/transport/identity_notifications/attestation.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
+  "protocol-descriptor": {
+    "class": "LX/BZb;",
+    "file": "protocol-descriptor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "dynamicMethod",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/protobuf_enum.rs",
+      "crates/whatsapp-api/src/transport/chat_settings.rs",
+      "crates/whatsapp-api/src/transport/identity_notifications/attestation.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
+  "protocol-values": {
+    "class": "LX/C4F;",
+    "file": "protocol-values.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "forNumber",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/protobuf_enum.rs",
+      "crates/whatsapp-api/src/transport/chat_settings.rs",
+      "crates/whatsapp-api/src/transport/identity_notifications/attestation.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
+  "protocol-verifier": {
+    "class": "LX/CvY;",
+    "file": "protocol-verifier.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "isInRange",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/protobuf_enum.rs",
+      "crates/whatsapp-api/src/transport/chat_settings.rs",
+      "crates/whatsapp-api/src/transport/identity_notifications/attestation.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  }
+}
