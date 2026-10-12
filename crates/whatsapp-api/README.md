@@ -87,5 +87,9 @@ are recorded in `fixtures/` and `../../docs/protocol/`.
 Experimental `signal::hybrid::bundle_for` validates exact-recipient signed EC/KEM
 material; `HybridBundle::prepare_initial` stages fresh native version-4 ciphertext
 and session state. Callers must establish directory authority and atomically commit
-the candidate. Normal PQ adoption/receive remain guarded. See
+the candidate. Normal primary PN/LID outbox adoption is implemented offline; incoming PQ
+bootstrap and companion/auth/attestation cases remain guarded. See
 [fresh hybrid bundles](../../docs/protocol/hybrid-bundle.md).
+
+[Hybrid outbox integration](../../docs/protocol/hybrid-outbox.md) uses the normal
+pin policy, request reservation and atomic commit; no new CLI command is required.

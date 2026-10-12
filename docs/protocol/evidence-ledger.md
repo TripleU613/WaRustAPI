@@ -1,3 +1,11 @@
+2026-10-12 — **Implemented/offline:** normal outgoing key replies now explicitly
+select verified hybrid material for primary PN/LID peers. Fresh first-use and
+policy-approved identity replacement produce native 0x44 candidates through the
+existing atomic outbox transaction; held hybrid records continue without reset.
+Encrypted fixtures verify request/attempt preservation and no replay after reopen.
+Companion/auth/attestation, classic migration and incoming bootstrap remain open.
+[Coordinator behavior, evidence and tests](hybrid-outbox.md).
+
 2026-10-12 — **Implemented/offline:** fresh exact-recipient hybrid bundles now
 verify both signed EC and original KEM value bytes, validate ML-KEM-1024 encoding,
 and stage a native version-4 initial message/session candidate. PN/LID encrypted

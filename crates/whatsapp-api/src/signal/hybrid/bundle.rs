@@ -69,6 +69,35 @@ pub fn bundle_for(reply: &Node, recipient: &Jid) -> Result<HybridBundle> {
 }
 
 impl HybridBundle {
+    #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
+    pub(crate) fn classic(&self) -> &PreKeyBundle {
+        &self.classic
+    }
+    #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
+    pub(crate) async fn prepare_payload(
+        &self,
+        account: &AccountRecord,
+        previous_session: Option<&[u8]>,
+        pinned: Option<&[u8]>,
+        payload: &[u8],
+    ) -> Result<direct::PreparedDirect> {
+        if let Some(bytes) = previous_session {
+            // shortcut: same-key classic-to-hybrid archival is unported; never reset a held record to adopt PQ.
+            super::HybridSession::from_bytes(bytes)?;
+            direct::prepare_payload(
+                account,
+                &self.recipient,
+                Some(&self.classic),
+                Some(bytes),
+                pinned,
+                payload,
+            )
+            .await
+        } else {
+            self.prepare_initial(account, pinned, payload)
+        }
+    }
+
     /// Stage a fresh initial encrypted message from an already-authorized bundle.
     /// An optional held pin must match; changed keys require separate explicit policy.
     /// No held session is accepted/reset, no ID is allocated and no store/network is touched.
@@ -279,6 +308,282 @@ mod tests {
             .await
             .unwrap();
             assert_eq!(received.plaintext.as_slice(), b"\x0a\x05hello");
+            #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
+            {
+                use crate::{
+                    model::{
+                        AccountId, AttemptProgress, ChatId, ClientRequestId, DeliveryFactKind,
+                        MessageContent, SendRequest,
+                    },
+                    outbox::Outbox,
+                    profile::Limits,
+                    store::{MasterKey, OpenOptions, ProtocolStore, StaticKeySource, Table},
+                    transport::{ConnectionEpoch, outgoing},
+                };
+                for scenario in 0..9 {
+                    if scenario == 8 && peer.server != Server::Lid {
+                        continue;
+                    }
+                    let target = peer.clone();
+                    let dir = tempfile::tempdir().unwrap();
+                    let path = dir.path().join("fresh-pq.redb");
+                    let open = || {
+                        ProtocolStore::open(OpenOptions {
+                            path: path.clone(),
+                            account_id: AccountId::new("fresh-pq").unwrap(),
+                            key_source: std::sync::Arc::new(StaticKeySource::new(
+                                MasterKey::from_bytes([94; 32]),
+                            )),
+                            create: true,
+                        })
+                        .unwrap()
+                    };
+                    let store = open();
+                    let mut saved = local.clone();
+                    saved.own_jid = Some(if scenario == 3 {
+                        target.clone()
+                    } else {
+                        Jid::parse("15555550101@s.whatsapp.net").unwrap()
+                    });
+                    let outbox = Outbox::new("comparison-driver", Limits::default());
+                    let request_id = ClientRequestId::new("fresh-pq-intent").unwrap();
+                    let held_classic = if scenario == 5 {
+                        Some(
+                            direct::prepare_payload(
+                                &saved,
+                                &target,
+                                Some(&bundle.classic),
+                                None,
+                                None,
+                                b"\x0a\x05hello",
+                            )
+                            .await
+                            .unwrap()
+                            .session,
+                        )
+                    } else {
+                        None
+                    };
+
+                    let id = store
+                        .write(|tx| {
+                            AccountRecord::save(&saved, tx)?;
+                            if scenario == 8 {
+                                tx.put_json(
+                                    Table::Checkpoints,
+                                    crate::transport::group_send::OWN_LID_KEY,
+                                    1,
+                                    &target,
+                                )?;
+                            }
+                            let peer_key = format!("comparison-direct:{target}");
+                            if scenario >= 5 {
+                                let pin = if scenario == 5 {
+                                    bob.identity_key()
+                                } else {
+                                    alice.identity_key()
+                                };
+                                tx.put_json(
+                                    Table::PeerIdentities,
+                                    peer_key.as_bytes(),
+                                    1,
+                                    &pin.serialize().to_vec(),
+                                )?;
+                                tx.put_json(
+                                    Table::SignalSessions,
+                                    peer_key.as_bytes(),
+                                    1,
+                                    &held_classic
+                                        .as_deref()
+                                        .map(|bytes| bytes.as_slice())
+                                        .unwrap_or(&[1u8, 2, 3]),
+                                )?;
+                            }
+                            Ok(outbox
+                                .enqueue(
+                                    tx,
+                                    &SendRequest {
+                                        client_request_id: request_id.clone(),
+                                        chat: ChatId::from_jid(&target)?,
+                                        content: MessageContent::Text {
+                                            body: "hello".into(),
+                                            quoted: None,
+                                            style: Default::default(),
+                                        },
+                                    },
+                                )?
+                                .0
+                                .local_id)
+                        })
+                        .unwrap();
+                    let account_rows = store.read(|tx| tx.scan(Table::Account, 1, 200)).unwrap();
+                    let (pending, query) = outgoing::begin_selected(&store, Some(id))
+                        .unwrap()
+                        .unwrap_or_else(|| panic!("no query scenario {scenario}"));
+                    let mut fields = user.child_nodes().to_vec();
+                    if scenario == 1 {
+                        fields.push(Node::new("non_e2ee_attestation"));
+                    }
+                    if scenario == 2 {
+                        fields.push(Node::new("identity_auth"));
+                    }
+                    let mut returned_peer = target.clone();
+                    if scenario == 4 {
+                        returned_peer.device = 2;
+                    }
+                    let response = Node::new("iq")
+                        .attr("type", "result")
+                        .attr("id", query.get_attr("id").unwrap().as_text().unwrap())
+                        .children(vec![Node::new("list").children(
+                            vec![Node::new("user").attr("jid",returned_peer).children(fields)],
+                        )]);
+                    let snapshot = || {
+                        store
+                            .read(|tx| {
+                                Table::ALL
+                                    .iter()
+                                    .map(|table| tx.scan(*table, 1, 200))
+                                    .collect::<Result<Vec<_>>>()
+                            })
+                            .unwrap()
+                    };
+                    let before = snapshot();
+                    let head = store.journal_head().unwrap();
+                    let result = pending
+                        .prepare_with_policy(
+                            &store,
+                            &saved,
+                            &response,
+                            ConnectionEpoch(1),
+                            if scenario == 7 {
+                                crate::registration::request::IdentityChangePolicy::ApkAuthenticated
+                            } else {
+                                crate::registration::request::IdentityChangePolicy::Pinned
+                            },
+                        )
+                        .await;
+                    if (1..=5).contains(&scenario) || scenario == 8 {
+                        assert!(result.is_err(), "scenario {scenario}");
+                        assert_eq!(snapshot(), before);
+                        assert_eq!(store.journal_head().unwrap(), head);
+                        continue;
+                    }
+                    if scenario == 6 {
+                        assert!(result.unwrap().is_none());
+                        let entry = store.read(|tx| outbox.get(tx, id)).unwrap().unwrap();
+                        assert_eq!(entry.progress, AttemptProgress::Queued);
+                        assert!(entry.attempts.is_empty());
+                        assert!(entry.wire_id.is_none());
+                        let peer_key = format!("comparison-direct:{target}");
+                        assert_eq!(
+                            store
+                                .read(|tx| tx.get_json::<Vec<u8>>(
+                                    Table::PeerIdentities,
+                                    peer_key.as_bytes(),
+                                    1
+                                ))
+                                .unwrap(),
+                            Some(alice.identity_key().serialize().to_vec())
+                        );
+                        continue;
+                    }
+                    let stanza = result.unwrap().unwrap();
+                    let NodeContent::Bytes(ciphertext) = &stanza.child("enc").unwrap().content
+                    else {
+                        panic!("missing ciphertext")
+                    };
+                    assert_eq!(ciphertext[0], 0x44);
+                    let outer = PreKeySignalMessage::try_from(&ciphertext[..]).unwrap();
+                    let pq = direct::incoming_prekey_kem(ciphertext).unwrap().unwrap();
+                    let shared = kem::decapsulate(kem_secret.as_bytes(), pq.ciphertext).unwrap();
+                    let bp = BobSignalProtocolParameters::new(
+                        bob.clone(),
+                        signed.clone(),
+                        Some(one.clone()),
+                        signed.clone(),
+                        *alice.identity_key(),
+                        *outer.base_key(),
+                        UsePQRatchet::No,
+                    );
+                    let b = hybrid::initialize_bob(
+                        &bp,
+                        shared.as_bytes().try_into().unwrap(),
+                        (42, 31),
+                    )
+                    .unwrap();
+                    let received = direct::receive(
+                        &remote,
+                        saved.own_jid.as_ref().unwrap(),
+                        &b.to_bytes().unwrap(),
+                        &alice.identity_key().serialize(),
+                        outer.message().serialized(),
+                    )
+                    .await
+                    .unwrap();
+                    assert_eq!(received.plaintext.as_slice(), b"\x0a\x05hello");
+                    let entry = store.read(|tx| outbox.get(tx, id)).unwrap().unwrap();
+                    assert_eq!(entry.client_request_id, request_id);
+                    assert_eq!(entry.progress, AttemptProgress::InFlight);
+                    assert_eq!(entry.attempts.len(), 1);
+                    assert_eq!(
+                        entry.facts.last().unwrap().kind,
+                        DeliveryFactKind::DeliveryUnknown
+                    );
+                    assert_eq!(
+                        store.read(|tx| tx.scan(Table::Account, 1, 200)).unwrap(),
+                        account_rows
+                    );
+                    let peer_key = format!("comparison-direct:{target}");
+                    let session: Vec<u8> = store
+                        .read(|tx| tx.get_json(Table::SignalSessions, peer_key.as_bytes(), 1))
+                        .unwrap()
+                        .unwrap();
+                    hybrid::HybridSession::from_bytes(&session).unwrap();
+                    if scenario == 7 {
+                        let rows = store
+                            .read(|tx| tx.scan(Table::Checkpoints, 1, 200))
+                            .unwrap();
+                        let histories = rows
+                            .iter()
+                            .filter(|(key, _)| key.starts_with(b"identity-history:"))
+                            .collect::<Vec<_>>();
+                        assert_eq!(histories.len(), 1);
+                        let history: serde_json::Value =
+                            serde_json::from_slice(&histories[0].1).unwrap();
+                        assert_eq!(history["authentication"], "signed_directory_bundle");
+                        assert_eq!(
+                            serde_json::from_value::<Vec<u8>>(history["previous_identity"].clone())
+                                .unwrap(),
+                            alice.identity_key().serialize()
+                        );
+                        assert_eq!(
+                            serde_json::from_value::<Vec<u8>>(history["previous_session"].clone())
+                                .unwrap(),
+                            vec![1u8, 2, 3]
+                        );
+                    }
+
+                    assert_eq!(
+                        store
+                            .read(|tx| tx.get_json::<Vec<u8>>(
+                                Table::PeerIdentities,
+                                peer_key.as_bytes(),
+                                1
+                            ))
+                            .unwrap(),
+                        Some(bob.identity_key().serialize().to_vec())
+                    );
+                    drop(store);
+                    let store = open();
+                    assert_eq!(store.read(|tx| outbox.get(tx, id)).unwrap().unwrap(), entry);
+                    assert!(
+                        outgoing::begin_selected(&store, Some(id))
+                            .unwrap()
+                            .is_none()
+                    );
+                }
+            }
+
             assert!(matches!(
                 bundle.prepare_initial(
                     &local,

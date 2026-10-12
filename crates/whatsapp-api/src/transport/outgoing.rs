@@ -220,7 +220,7 @@ pub fn begin_selected(
         if peer.server == Server::Group {
             continue;
         }
-        let supported = peer.server == Server::User
+        let supported = matches!(peer.server, Server::User | Server::Lid)
             && peer.device == 0
             && !peer.user.is_empty()
             && match &entry.intent.content {
@@ -644,7 +644,39 @@ impl Pending {
             return Ok(None);
         }
         let peer = entry.intent.chat.jid();
-        let bundle = crate::signal::direct::prekey_bundle(node, peer)?;
+        let user = crate::signal::direct::prekey_user_for(node, peer)?;
+        let hybrid = if user.child("pqkey").is_some() {
+            // shortcut: companion/auth/attestation admission is unported; expand when the coordinator can prove that authority.
+            if peer.device != 0
+                || super::group_send::own_lid(store)?.as_ref() == Some(&peer.to_non_ad())
+                || user.child("non_e2ee_attestation").is_some()
+                || user.child("identity_auth").is_some()
+                || super::inbox::remote_identity_policy(
+                    store,
+                    account,
+                    peer,
+                    crate::registration::request::IdentityChangePolicy::ApkAuthenticated,
+                )? == crate::registration::request::IdentityChangePolicy::Pinned
+            {
+                return Err(Error::invalid(
+                    "outbox",
+                    "hybrid directory admission unsupported",
+                ));
+            }
+            Some(crate::signal::hybrid::bundle_for(node, peer)?)
+        } else {
+            None
+        };
+        let classic = if hybrid.is_none() {
+            Some(crate::signal::direct::prekey_bundle(node, peer)?)
+        } else {
+            None
+        };
+        let bundle = hybrid
+            .as_ref()
+            .map(|bundle| bundle.classic())
+            .or(classic.as_ref())
+            .expect("one verified bundle kind");
         let peer_key = format!("comparison-direct:{peer}");
         let (session, identity, reservation): (
             Option<Vec<u8>>,
@@ -668,7 +700,7 @@ impl Pending {
             if current.as_deref() != reservation["pinned_fingerprint"].as_str()
                 && (identity.is_none()
                     || crate::signal::direct::validate_bundle_identity(
-                        Some(&bundle),
+                        Some(bundle),
                         identity.as_deref(),
                         peer,
                     )
@@ -681,7 +713,7 @@ impl Pending {
             }
         }
         let replacement = match crate::signal::direct::validate_bundle_identity(
-            Some(&bundle),
+            Some(bundle),
             identity.as_deref(),
             peer,
         ) {
@@ -704,7 +736,7 @@ impl Pending {
                     )?;
                     return Ok(None);
                 }
-                if crate::signal::direct::validate_bundle_signature(&bundle).is_err() {
+                if crate::signal::direct::validate_bundle_signature(bundle).is_err() {
                     self.suspend_identity(
                         store,
                         peer,
@@ -801,51 +833,36 @@ impl Pending {
             _ => None,
         };
         let chat_setting = chat_setting_payload_for(store, peer, &entry.intent.content)?;
-        let prepared = if let Some((payload, _)) = &poll_payload {
-            crate::signal::direct::prepare_payload(
-                account,
-                peer,
-                Some(&bundle),
-                encryption_session,
-                encryption_identity,
-                payload,
-            )
-            .await?
+        let plain_text;
+        let payload = if let Some((payload, _)) = &poll_payload {
+            payload.as_slice()
         } else if let Some(payload) = reply
             .as_deref()
             .or(reaction.as_deref())
             .or(chat_setting.as_deref())
         {
-            crate::signal::direct::prepare_payload(
-                account,
-                peer,
-                Some(&bundle),
-                encryption_session,
-                encryption_identity,
-                payload,
-            )
-            .await?
+            payload
         } else if let Some((payload, _)) = &media {
-            crate::signal::direct::prepare_payload(
-                account,
-                peer,
-                Some(&bundle),
-                encryption_session,
-                encryption_identity,
-                payload,
-            )
-            .await?
+            payload.as_slice()
         } else {
             let MessageContent::Text { body, .. } = &entry.intent.content else {
                 unreachable!()
             };
-            crate::signal::direct::prepare(
+            plain_text = crate::signal::direct::text_payload(body)?;
+            plain_text.as_slice()
+        };
+        let prepared = if let Some(hybrid) = hybrid.as_ref() {
+            hybrid
+                .prepare_payload(account, encryption_session, encryption_identity, payload)
+                .await?
+        } else {
+            crate::signal::direct::prepare_payload(
                 account,
                 peer,
-                &bundle,
+                Some(bundle),
                 encryption_session,
                 encryption_identity,
-                body,
+                payload,
             )
             .await?
         };
@@ -1699,11 +1716,7 @@ mod tests {
                 .await
                 .err()
                 .unwrap();
-            assert!(
-                error
-                    .to_string()
-                    .contains("post-quantum session processing is unsupported")
-            );
+            assert!(matches!(error, Error::InvalidInput { .. }));
             assert_eq!(snapshot(), before);
             assert_eq!(store.journal_head().unwrap(), head);
             drop(store);

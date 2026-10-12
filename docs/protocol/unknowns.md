@@ -16,7 +16,8 @@ version-4 output is 0x44, while the backend emits 0x43.
 fields. [Staged hybrid session records and encrypted exchange](hybrid-session.md)
 now work offline. [Held version-4 shared sending](held-hybrid-send.md) is integrated;
 [Fresh signed bundle staging](hybrid-bundle.md) is implemented offline;
-fresh directory adoption, pending coordinator authority,
+[Normal primary-peer hybrid outbox adoption](hybrid-outbox.md) now works offline.
+Same-key classic migration, auth/attestation and companion admission,
 key inventory and incoming wire support still need implementation. See
 [the boundary and source audit](pq-bundle-boundary.md).
 

@@ -501,17 +501,7 @@ pub async fn prepare(
     if text.is_empty() || text.len() > 4096 || !account.is_registered() {
         return Err(invalid("invalid message/account"));
     }
-    #[derive(prost::Message)]
-    struct TextMessage {
-        #[prost(string, tag = "1")]
-        conversation: String,
-    }
-    let plain = Zeroizing::new(
-        TextMessage {
-            conversation: text.into(),
-        }
-        .encode_to_vec(),
-    );
+    let plain = text_payload(text)?;
     prepare_payload(
         account,
         recipient,
@@ -521,6 +511,23 @@ pub async fn prepare(
         &plain,
     )
     .await
+}
+
+pub(crate) fn text_payload(text: &str) -> Result<Zeroizing<Vec<u8>>> {
+    if text.is_empty() || text.len() > 4096 {
+        return Err(invalid("invalid text payload"));
+    }
+    #[derive(prost::Message)]
+    struct TextMessage {
+        #[prost(string, tag = "1")]
+        conversation: String,
+    }
+    Ok(Zeroizing::new(
+        TextMessage {
+            conversation: text.into(),
+        }
+        .encode_to_vec(),
+    ))
 }
 
 /// Verify a fetched signed device key before encryption or identity admission.
