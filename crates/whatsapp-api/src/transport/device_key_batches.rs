@@ -593,6 +593,7 @@ mod tests {
             "foreign",
             "user_error",
             "query_error",
+            "pqkey",
             "type",
             "signature",
             "width",
@@ -634,6 +635,11 @@ mod tests {
                 "query_error" => {
                     incoming = incoming.attr("type", "error");
                 }
+                "pqkey" => {
+                    let mut children = users[0].child_nodes().to_vec();
+                    children.push(Node::new("pqkey"));
+                    users[0] = users[0].clone().children(children);
+                }
                 "signature" | "width" => {
                     let mut children = users[0].child_nodes().to_vec();
                     let skey = children
@@ -670,7 +676,7 @@ mod tests {
                 "query_error" => "query_refused",
                 "type" => "invalid_reply",
                 "signature" => "invalid_signature",
-                "width" => "invalid_bundle",
+                "width" | "pqkey" => "invalid_bundle",
                 _ => "invalid_list",
             };
             assert_eq!(progress.blocking_reason.as_deref(), Some(expected));

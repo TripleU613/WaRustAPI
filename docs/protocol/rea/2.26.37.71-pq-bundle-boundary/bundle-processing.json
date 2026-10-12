@@ -1,0 +1,144 @@
+{
+  "evidence_id": "ev_6be405309cd0c1a580c0d56a617a206495b954eaa99c5f3c207b5e3dcd06b254",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.CQc",
+    "method_name": "A00"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-q2ZH1v/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"java_version\":\"21.0.12.1\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":15695085568}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "load_apk",
+        "input": {
+          "path": "/tmp/rea-android-q2ZH1v/target.apk",
+          "threads": 1,
+          "resources": "full"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-q2ZH1v/target.apk\",\"class_count\":94738,\"raw_class_count\":94738,\"resource_count\":14967,\"load_duration_ms\":14215,\"decompile_timeout_ms\":90000,\"threads\":1,\"code_cache_size\":64,\"resources\":\"full\"}"
+            }
+          ]
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.CQc"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"CQc\",\"full_name\":\"X.CQc\",\"field_count\":7,\"fields\":[{\"def_pos\":0,\"name\":\"A00\",\"type\":\"X.0km\"},{\"def_pos\":0,\"name\":\"A01\",\"type\":\"X.0kn\"},{\"def_pos\":0,\"name\":\"A02\",\"type\":\"X.CVq\"},{\"def_pos\":0,\"name\":\"A03\",\"type\":\"X.0kl\"},{\"def_pos\":0,\"name\":\"A04\",\"type\":\"X.0kg\"},{\"def_pos\":0,\"name\":\"A05\",\"type\":\"X.0kk\"},{\"def_pos\":0,\"name\":\"A06\",\"type\":\"X.0kp\"}],\"methods\":[{\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(X.0kp, X.0km, X.0kn, X.CVq, X.0kl, X.0kg, X.0kk): void\"},{\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0,\"signature\":\"A00(X.C6P): void\"}],\"method_count\":2}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.CQc",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"overload_index\":0,\"fell_back\":false,\"body\":\"    public void A00(C6P c6p) throws C4p {\\n        boolean z;\\n        DLY dzd;\\n        boolean z2;\\n        int i;\\n        KEMPublicKey.Encapsulated encapsulatedA00;\\n        CI7 ci7A00;\\n        C0kl c0kl \\u003d this.A03;\\n        CVq cVq \\u003d this.A02;\\n        B7K b7k \\u003d c6p.A03;\\n        c0kl.BRS(b7k, cVq);\\n        DLY dly \\u003d c6p.A07;\\n        boolean z3 \\u003d dly instanceof DZD;\\n        B7N b7n \\u003d c6p.A05;\\n        if (b7n !\\u003d null) {\\n            if (!B7M.A00.A01(b7k.A00.A00, b7n.A00(), c6p.A09)) {\\n                throw new C4p(\\\"Invalid signature on device key!\\\");\\n            }\\n        }\\n        if (z3) {\\n            if (!B7M.A00.A01(b7k.A00.A00, ((KEMPublicKey) dly.A00()).A00, (byte[]) c6p.A08.A00())) {\\n                throw new C4p(\\\"Invalid signature on Kyber pre-key!\\\");\\n            }\\n        }\\n        if (b7n \\u003d\\u003d null) {\\n            throw new C4p(\\\"No signed prekey!\\\");\\n        }\\n        C0kk c0kk \\u003d this.A05;\\n        Cgc cgcBTb \\u003d c0kk.BTb(cVq);\\n        CI6 ci6A02 \\u003d C0kr.A02();\\n        B7N b7n2 \\u003d c6p.A04;\\n        DLY dzd2 \\u003d b7n2 \\u003d\\u003d null ? DZE.A00 : new DZD(b7n2);\\n        if (dzd2 instanceof DZD) {\\n            z \\u003d true;\\n            Integer numValueOf \\u003d Integer.valueOf(c6p.A00);\\n            numValueOf.getClass();\\n            dzd \\u003d new DZD(numValueOf);\\n        } else {\\n            z \\u003d false;\\n            dzd \\u003d DZE.A00;\\n        }\\n        DLY dly2 \\u003d DZE.A00;\\n        DLY dly3 \\u003d dly2;\\n        B7L b7lAjY \\u003d c0kl.AjY();\\n        if (z3) {\\n            dly2 \\u003d dly;\\n            dly3 \\u003d c6p.A06;\\n        }\\n        if (!cgcBTb.A02) {\\n            CBM.A00(4, \\\"SessionRecord\\\", \\\"/archiveCurrentState\\\");\\n            cgcBTb.A00(new CnG());\\n        }\\n        CnG cnG \\u003d cgcBTb.A01;\\n        if (dly3 \\u003d\\u003d null) {\\n            throw C1xf.A15(\\\"Null values!\\\");\\n        }\\n        try {\\n            if (dly2 instanceof DZD) {\\n                z2 \\u003d true;\\n                i \\u003d 4;\\n            } else {\\n                z2 \\u003d false;\\n                i \\u003d 3;\\n            }\\n            GeneratedMessageLite.Builder builderA0N \\u003d Ayl.A0N(cnG.A00);\\n            BYp bYp \\u003d (BYp) builderA0N.instance;\\n            int i2 \\u003d BYp.ALICEBASEKEY_FIELD_NUMBER;\\n            bYp.bitField0_ |\\u003d 1;\\n            bYp.sessionVersion_ \\u003d i;\\n            CnG.A01(builderA0N, cnG);\\n            cnG.A08(b7k);\\n            cnG.A07(b7lAjY.A00);\\n            CI6 ci6A03 \\u003d C0kr.A02();\\n            ByteArrayOutputStream byteArrayOutputStream \\u003d new ByteArrayOutputStream();\\n            byte[] bArr \\u003d new byte[32];\\n            Arrays.fill(bArr, (byte) -1);\\n            byteArrayOutputStream.write(bArr);\\n            B7O b7o \\u003d b7lAjY.A01;\\n            C1NH c1nh \\u003d B7M.A00;\\n            byte[] bArr2 \\u003d b7n.A00;\\n            byteArrayOutputStream.write(c1nh.A02(bArr2, b7o.A00));\\n            B7N b7n3 \\u003d b7k.A00;\\n            B7O b7o2 \\u003d ci6A02.A00;\\n            byte[] bArr3 \\u003d b7n3.A00;\\n            byte[] bArr4 \\u003d b7o2.A00;\\n            byteArrayOutputStream.write(c1nh.A02(bArr3, bArr4));\\n            byteArrayOutputStream.write(c1nh.A02(bArr2, bArr4));\\n            if (z) {\\n                byteArrayOutputStream.write(c1nh.A02(((B7N) dzd2.A00()).A00, bArr4));\\n            }\\n            if (z2) {\\n                encapsulatedA00 \\u003d ((KEMPublicKey) dly2.A00()).A00();\\n                byteArrayOutputStream.write(encapsulatedA00.sharedSecret);\\n                ci7A00 \\u003d CBN.A00(\\\"WhisperText_X25519_SHA-256_CRYSTALS-KYBER-1024\\\", new DZC(), byteArrayOutputStream.toByteArray());\\n            } else {\\n                encapsulatedA00 \\u003d null;\\n                ci7A00 \\u003d CBN.A00(\\\"WhisperText\\\", new DZC(), byteArrayOutputStream.toByteArray());\\n            }\\n            CS8 cs8A00 \\u003d ci7A00.A01.A00(b7n, ci6A03);\\n            if (encapsulatedA00 !\\u003d null) {\\n                int iA00 \\u003d AnonymousClass000.A00(dly3.A00());\\n                byte[] bArr5 \\u003d encapsulatedA00.ciphertext;\\n                GeneratedMessageLite.Builder builderA0O \\u003d Ayl.A0O(BTk.DEFAULT_INSTANCE);\\n                BTk bTk \\u003d (BTk) builderA0O.instance;\\n                bTk.bitField0_ |\\u003d 1;\\n                bTk.preKeyId_ \\u003d iA00;\\n                ByteString byteString \\u003d ByteString.EMPTY;\\n                ByteString byteStringA0H \\u003d Ayo.A0H(builderA0O, bArr5);\\n                BTk bTk2 \\u003d (BTk) builderA0O.instance;\\n                bTk2.bitField0_ |\\u003d 2;\\n                bTk2.ciphertext_ \\u003d byteStringA0H;\\n                GeneratedMessageLite.Builder builder \\u003d cnG.A00.toBuilder();\\n                BTk bTk3 \\u003d (BTk) builderA0O.build();\\n                BYp bYp2 \\u003d (BYp) C6aj.A0c(builder);\\n                bTk3.getClass();\\n                bYp2.pendingKyberPreKey_ \\u003d bTk3;\\n                bYp2.bitField0_ |\\u003d 128;\\n                CnG.A01(builder, cnG);\\n            }\\n            cnG.A09(b7n, ci7A00.A00);\\n            cnG.A0A(ci6A03, (Ckg) cs8A00.A01);\\n            cnG.A0B((COt) cs8A00.A00);\\n            CnG cnG2 \\u003d cgcBTb.A01;\\n            int i3 \\u003d c6p.A02;\\n            B7N b7n4 \\u003d ci6A02.A01;\\n            GeneratedMessageLite.Builder builderA0O2 \\u003d Ayl.A0O(BVd.DEFAULT_INSTANCE);\\n            BVd bVd \\u003d (BVd) builderA0O2.instance;\\n            bVd.bitField0_ |\\u003d 2;\\n            bVd.signedPreKeyId_ \\u003d i3;\\n            ByteString byteStringA0H2 \\u003d Ayo.A0H(builderA0O2, b7n4.A00());\\n            BVd bVd2 \\u003d (BVd) builderA0O2.instance;\\n            bVd2.bitField0_ |\\u003d 4;\\n            bVd2.baseKey_ \\u003d byteStringA0H2;\\n            if (dzd instanceof DZD) {\\n                int iA01 \\u003d AnonymousClass000.A00(dzd.A00());\\n                BVd bVd3 \\u003d (BVd) C6aj.A0c(builderA0O2);\\n                bVd3.bitField0_ |\\u003d 1;\\n                bVd3.preKeyId_ \\u003d iA01;\\n            }\\n            GeneratedMessageLite.Builder builder2 \\u003d cnG2.A00.toBuilder();\\n            BVd bVd4 \\u003d (BVd) builderA0O2.build();\\n            BYp bYp3 \\u003d (BYp) C6aj.A0c(builder2);\\n            bVd4.getClass();\\n            bYp3.pendingPreKey_ \\u003d bVd4;\\n            bYp3.bitField0_ |\\u003d 64;\\n            CnG.A01(builder2, cnG2);\\n            CnG cnG3 \\u003d cgcBTb.A01;\\n            int iAmk \\u003d c0kl.Amk();\\n            GeneratedMessageLite.Builder builderA0N2 \\u003d Ayl.A0N(cnG3.A00);\\n            BYp bYp4 \\u003d (BYp) builderA0N2.instance;\\n            bYp4.bitField0_ |\\u003d 512;\\n            bYp4.localRegistrationId_ \\u003d iAmk;\\n            CnG.A01(builderA0N2, cnG3);\\n            CnG cnG4 \\u003d cgcBTb.A01;\\n            int i4 \\u003d c6p.A01;\\n            GeneratedMessageLite.Builder builderA0N3 \\u003d Ayl.A0N(cnG4.A00);\\n            BYp bYp5 \\u003d (BYp) builderA0N3.instance;\\n            bYp5.bitField0_ |\\u003d 256;\\n            bYp5.remoteRegistrationId_ \\u003d i4;\\n            CnG.A01(builderA0N3, cnG4);\\n            cgcBTb.A01.A0C(b7n4.A00());\\n            CBM.A00(4, \\\"SessionBuilder\\\", \\\"/processWithoutLock: Finish processing prekey. Store the session.\\\");\\n            c0kk.CdI(cVq, cgcBTb);\\n            c0kl.COt(b7k, cVq);\\n        } catch (IOException e) {\\n            throw Ayj.A14(e);\\n        }\\n    }\",\"overload_count\":1,\"method_name\":\"A00\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.CQc.A00\",\"class_name\":\"X.CQc\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.CQc",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(X.C6P): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public void A00(C6P c6p) throws C4p {\n        boolean z;\n        DLY dzd;\n        boolean z2;\n        int i;\n        KEMPublicKey.Encapsulated encapsulatedA00;\n        CI7 ci7A00;\n        C0kl c0kl = this.A03;\n        CVq cVq = this.A02;\n        B7K b7k = c6p.A03;\n        c0kl.BRS(b7k, cVq);\n        DLY dly = c6p.A07;\n        boolean z3 = dly instanceof DZD;\n        B7N b7n = c6p.A05;\n        if (b7n != null) {\n            if (!B7M.A00.A01(b7k.A00.A00, b7n.A00(), c6p.A09)) {\n                throw new C4p(\"Invalid signature on device key!\");\n            }\n        }\n        if (z3) {\n            if (!B7M.A00.A01(b7k.A00.A00, ((KEMPublicKey) dly.A00()).A00, (byte[]) c6p.A08.A00())) {\n                throw new C4p(\"Invalid signature on Kyber pre-key!\");\n            }\n        }\n        if (b7n == null) {\n            throw new C4p(\"No signed prekey!\");\n        }\n        C0kk c0kk = this.A05;\n        Cgc cgcBTb = c0kk.BTb(cVq);\n        CI6 ci6A02 = C0kr.A02();\n        B7N b7n2 = c6p.A04;\n        DLY dzd2 = b7n2 == null ? DZE.A00 : new DZD(b7n2);\n        if (dzd2 instanceof DZD) {\n            z = true;\n            Integer numValueOf = Integer.valueOf(c6p.A00);\n            numValueOf.getClass();\n            dzd = new DZD(numValueOf);\n        } else {\n            z = false;\n            dzd = DZE.A00;\n        }\n        DLY dly2 = DZE.A00;\n        DLY dly3 = dly2;\n        B7L b7lAjY = c0kl.AjY();\n        if (z3) {\n            dly2 = dly;\n            dly3 = c6p.A06;\n        }\n        if (!cgcBTb.A02) {\n            CBM.A00(4, \"SessionRecord\", \"/archiveCurrentState\");\n            cgcBTb.A00(new CnG());\n        }\n        CnG cnG = cgcBTb.A01;\n        if (dly3 == null) {\n            throw C1xf.A15(\"Null values!\");\n        }\n        try {\n            if (dly2 instanceof DZD) {\n                z2 = true;\n                i = 4;\n            } else {\n                z2 = false;\n                i = 3;\n            }\n            GeneratedMessageLite.Builder builderA0N = Ayl.A0N(cnG.A00);\n            BYp bYp = (BYp) builderA0N.instance;\n            int i2 = BYp.ALICEBASEKEY_FIELD_NUMBER;\n            bYp.bitField0_ |= 1;\n            bYp.sessionVersion_ = i;\n            CnG.A01(builderA0N, cnG);\n            cnG.A08(b7k);\n            cnG.A07(b7lAjY.A00);\n            CI6 ci6A03 = C0kr.A02();\n            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();\n            byte[] bArr = new byte[32];\n            Arrays.fill(bArr, (byte) -1);\n            byteArrayOutputStream.write(bArr);\n            B7O b7o = b7lAjY.A01;\n            C1NH c1nh = B7M.A00;\n            byte[] bArr2 = b7n.A00;\n            byteArrayOutputStream.write(c1nh.A02(bArr2, b7o.A00));\n            B7N b7n3 = b7k.A00;\n            B7O b7o2 = ci6A02.A00;\n            byte[] bArr3 = b7n3.A00;\n            byte[] bArr4 = b7o2.A00;\n            byteArrayOutputStream.write(c1nh.A02(bArr3, bArr4));\n            byteArrayOutputStream.write(c1nh.A02(bArr2, bArr4));\n            if (z) {\n                byteArrayOutputStream.write(c1nh.A02(((B7N) dzd2.A00()).A00, bArr4));\n            }\n            if (z2) {\n                encapsulatedA00 = ((KEMPublicKey) dly2.A00()).A00();\n                byteArrayOutputStream.write(encapsulatedA00.sharedSecret);\n                ci7A00 = CBN.A00(\"WhisperText_X25519_SHA-256_CRYSTALS-KYBER-1024\", new DZC(), byteArrayOutputStream.toByteArray());\n            } else {\n                encapsulatedA00 = null;\n                ci7A00 = CBN.A00(\"WhisperText\", new DZC(), byteArrayOutputStream.toByteArray());\n            }\n            CS8 cs8A00 = ci7A00.A01.A00(b7n, ci6A03);\n            if (encapsulatedA00 != null) {\n                int iA00 = AnonymousClass000.A00(dly3.A00());\n                byte[] bArr5 = encapsulatedA00.ciphertext;\n                GeneratedMessageLite.Builder builderA0O = Ayl.A0O(BTk.DEFAULT_INSTANCE);\n                BTk bTk = (BTk) builderA0O.instance;\n                bTk.bitField0_ |= 1;\n                bTk.preKeyId_ = iA00;\n                ByteString byteString = ByteString.EMPTY;\n                ByteString byteStringA0H = Ayo.A0H(builderA0O, bArr5);\n                BTk bTk2 = (BTk) builderA0O.instance;\n                bTk2.bitField0_ |= 2;\n                bTk2.ciphertext_ = byteStringA0H;\n                GeneratedMessageLite.Builder builder = cnG.A00.toBuilder();\n                BTk bTk3 = (BTk) builderA0O.build();\n                BYp bYp2 = (BYp) C6aj.A0c(builder);\n                bTk3.getClass();\n                bYp2.pendingKyberPreKey_ = bTk3;\n                bYp2.bitField0_ |= 128;\n                CnG.A01(builder, cnG);\n            }\n            cnG.A09(b7n, ci7A00.A00);\n            cnG.A0A(ci6A03, (Ckg) cs8A00.A01);\n            cnG.A0B((COt) cs8A00.A00);\n            CnG cnG2 = cgcBTb.A01;\n            int i3 = c6p.A02;\n            B7N b7n4 = ci6A02.A01;\n            GeneratedMessageLite.Builder builderA0O2 = Ayl.A0O(BVd.DEFAULT_INSTANCE);\n            BVd bVd = (BVd) builderA0O2.instance;\n            bVd.bitField0_ |= 2;\n            bVd.signedPreKeyId_ = i3;\n            ByteString byteStringA0H2 = Ayo.A0H(builderA0O2, b7n4.A00());\n            BVd bVd2 = (BVd) builderA0O2.instance;\n            bVd2.bitField0_ |= 4;\n            bVd2.baseKey_ = byteStringA0H2;\n            if (dzd instanceof DZD) {\n                int iA01 = AnonymousClass000.A00(dzd.A00());\n                BVd bVd3 = (BVd) C6aj.A0c(builderA0O2);\n                bVd3.bitField0_ |= 1;\n                bVd3.preKeyId_ = iA01;\n            }\n            GeneratedMessageLite.Builder builder2 = cnG2.A00.toBuilder();\n            BVd bVd4 = (BVd) builderA0O2.build();\n            BYp bYp3 = (BYp) C6aj.A0c(builder2);\n            bVd4.getClass();\n            bYp3.pendingPreKey_ = bVd4;\n            bYp3.bitField0_ |= 64;\n            CnG.A01(builder2, cnG2);\n            CnG cnG3 = cgcBTb.A01;\n            int iAmk = c0kl.Amk();\n            GeneratedMessageLite.Builder builderA0N2 = Ayl.A0N(cnG3.A00);\n            BYp bYp4 = (BYp) builderA0N2.instance;\n            bYp4.bitField0_ |= 512;\n            bYp4.localRegistrationId_ = iAmk;\n            CnG.A01(builderA0N2, cnG3);\n            CnG cnG4 = cgcBTb.A01;\n            int i4 = c6p.A01;\n            GeneratedMessageLite.Builder builderA0N3 = Ayl.A0N(cnG4.A00);\n            BYp bYp5 = (BYp) builderA0N3.instance;\n            bYp5.bitField0_ |= 256;\n            bYp5.remoteRegistrationId_ = i4;\n            CnG.A01(builderA0N3, cnG4);\n            cgcBTb.A01.A0C(b7n4.A00());\n            CBM.A00(4, \"SessionBuilder\", \"/processWithoutLock: Finish processing prekey. Store the session.\");\n            c0kk.CdI(cVq, cgcBTb);\n            c0kl.COt(b7k, cVq);\n        } catch (IOException e) {\n            throw Ayj.A14(e);\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

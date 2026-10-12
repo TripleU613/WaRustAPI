@@ -121,3 +121,9 @@ original media reference and document filename. The native one-way GIF/video
 kind exception is enforced; empty captions decline for all three families.
 Peer policy and fresh live interoperability remain unverified.
 See [decoder context and type evidence](../protocol/media-caption-edit.md).
+
+Selected `pqkey` directory replies are explicitly unsupported by the current
+session backend and cannot silently become classic encryption bundles. Identity
+diagnostics still validate classic metadata only; PQ preview/application defer.
+Some recipients requiring fresh PQ sessions remain unsupported.
+See [native processing and the backend gap](../protocol/pq-bundle-boundary.md).

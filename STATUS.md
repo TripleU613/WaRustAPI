@@ -1,3 +1,12 @@
+2026-10-11 — **Implemented/offline:** selected directory PQ key input now
+fails explicitly instead of silently becoming a consumable classic bundle.
+Direct preparation and device batches share the boundary; unrelated devices
+and classic metadata inspection retain their behavior. Identity preview/application
+still defer PQ without derivation or adoption. Saved keys, sessions, IDs, uncertain
+sends and waits stay intact. Full native KEM and fresh live interoperability remain
+unfinished; this is an unsupported-backend guard, not PQ support or native policy.
+[Native bundle path, backend audit and preservation tests](docs/protocol/pq-bundle-boundary.md).
+
 2026-10-11 — **Implemented/offline:** own ordinary video/GIF and document
 caption edits now preserve original attachments and document filenames. Native
 kind equality and the one-way video-to-GIF-parent exception are enforced using

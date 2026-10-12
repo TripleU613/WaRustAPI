@@ -1622,6 +1622,104 @@ mod tests {
         store.write(|tx| outbox().cancel(tx, id)).unwrap();
         assert!(identity_suspended(&store).unwrap().is_empty());
     }
+
+    #[tokio::test]
+    async fn pq_key_reply_never_reserves_classic_send_or_changes_saved_state() {
+        use wacore_libsignal::protocol::{IdentityKeyPair, KeyPair};
+        for populated in [false, true] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("pq.redb");
+            let store = open(&path);
+            let id = enqueue(&store);
+            let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+            let identity = IdentityKeyPair::generate(&mut rand::rng());
+            let signed = KeyPair::generate(&mut rand::rng());
+            let signature = identity
+                .private_key()
+                .calculate_signature(&signed.public_key.serialize(), &mut rand::rng())
+                .unwrap();
+            let key = format!("comparison-direct:{peer}");
+            store
+                .write(|tx| {
+                    tx.put_json(
+                        Table::PeerIdentities,
+                        key.as_bytes(),
+                        1,
+                        &identity.identity_key().serialize().to_vec(),
+                    )?;
+                    tx.put_json(Table::SignalSessions, key.as_bytes(), 1, &vec![1u8, 2, 3])
+                })
+                .unwrap();
+            let (pending, _) = begin_selected(&store, Some(id)).unwrap().unwrap();
+            let pq = if populated {
+                Node::new("pqkey").children(vec![
+                    Node::new("id").bytes(vec![0, 0, 8]),
+                    Node::new("value").bytes(vec![8; 1569]),
+                    Node::new("signature").bytes(vec![0; 64]),
+                ])
+            } else {
+                Node::new("pqkey")
+            };
+            let reply = Node::new("iq")
+                .attr("type", "result")
+                .attr("id", pending.query_id.as_str())
+                .children(vec![Node::new("list").children(vec![
+                    Node::new("user").attr("jid", peer).children(vec![
+                            Node::new("registration").bytes(vec![0, 0, 0, 9]),
+                            Node::new("identity")
+                                .bytes(identity.public_key().public_key_bytes().to_vec()),
+                            Node::new("skey").children(vec![
+                                Node::new("id").bytes(vec![0, 0, 7]),
+                                Node::new("value")
+                                    .bytes(signed.public_key.public_key_bytes().to_vec()),
+                                Node::new("signature").bytes(signature.to_vec()),
+                            ]),
+                            pq,
+                        ]),
+                ])]);
+            let snapshot = || {
+                store
+                    .read(|tx| {
+                        Table::ALL
+                            .iter()
+                            .map(|t| tx.scan(*t, 1, 100))
+                            .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap()
+            };
+            let before = snapshot();
+            let head = store.journal_head().unwrap();
+            let error = pending
+                .prepare(
+                    &store,
+                    &AccountRecord::default(),
+                    &reply,
+                    ConnectionEpoch(1),
+                )
+                .await
+                .err()
+                .unwrap();
+            assert!(
+                error
+                    .to_string()
+                    .contains("post-quantum session processing is unsupported")
+            );
+            assert_eq!(snapshot(), before);
+            assert_eq!(store.journal_head().unwrap(), head);
+            drop(store);
+            let store = open(&path);
+            assert_eq!(
+                store
+                    .read(|tx| Table::ALL
+                        .iter()
+                        .map(|t| tx.scan(*t, 1, 100))
+                        .collect::<Result<Vec<_>>>())
+                    .unwrap(),
+                before
+            );
+            assert!(begin_selected(&store, Some(id)).unwrap().is_none());
+        }
+    }
     #[test]
     fn eligible_spans_namespaces_and_excludes_reserved_or_cancelled_intents() {
         let dir = tempfile::tempdir().unwrap();

@@ -1,0 +1,62 @@
+{
+  "admitted-worker": {
+    "class": "LX/14J;",
+    "file": "admitted-worker.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A04",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/direct.rs",
+      "crates/whatsapp-api/src/transport/identity_notifications.rs",
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/device_key_batches.rs"
+    ]
+  },
+  "bundle-candidate-parse": {
+    "class": "LX/Bot;",
+    "file": "bundle-candidate-parse.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A03",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/direct.rs",
+      "crates/whatsapp-api/src/transport/identity_notifications.rs",
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/device_key_batches.rs"
+    ]
+  },
+  "bundle-processing": {
+    "class": "LX/CQc;",
+    "file": "bundle-processing.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/direct.rs",
+      "crates/whatsapp-api/src/transport/identity_notifications.rs",
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/device_key_batches.rs"
+    ]
+  },
+  "session-processing": {
+    "class": "LX/0jc;",
+    "file": "session-processing.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0L",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/direct.rs",
+      "crates/whatsapp-api/src/transport/identity_notifications.rs",
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/device_key_batches.rs"
+    ]
+  }
+}

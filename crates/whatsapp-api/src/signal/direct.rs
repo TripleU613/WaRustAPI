@@ -286,7 +286,7 @@ pub fn prekey_bundle(reply: &Node, recipient: &Jid) -> Result<PreKeyBundle> {
     prekey_bundle_for(reply, recipient)
 }
 
-/// Select and parse one recipient's bundle from a key reply that may cover
+/// Select and parse one recipient's classic bundle from a key reply that may cover
 /// several devices, as a group fan-out's batched query does.
 ///
 /// A reply listing other devices is not an error for this recipient; only the
@@ -294,7 +294,24 @@ pub fn prekey_bundle(reply: &Node, recipient: &Jid) -> Result<PreKeyBundle> {
 /// compares the complete address, including agent and device, so a reply that echoes
 /// the phone JID where we asked with a LID (or the reverse) is refused rather
 /// than silently paired with the wrong identity key.
+/// Selected `pqkey` input is unsupported until KEM session processing is available;
+/// it must not be discarded to construct a classic session.
 pub fn prekey_bundle_for(reply: &Node, recipient: &Jid) -> Result<PreKeyBundle> {
+    let user = prekey_user_for(reply, recipient)?;
+    if user.child("pqkey").is_some() {
+        // shortcut: this backend has no KEM session support; never drop a selected PQ key to derive classic state.
+        return Err(invalid("post-quantum session processing is unsupported"));
+    }
+    classic_bundle_from_user(user, recipient)
+}
+
+// Diagnostics validate only classic metadata. Callers must keep the existing PQ
+// deferral before deriving/applying any session; this is not a consumable PQ bundle.
+pub(crate) fn classic_bundle_metadata_for(reply: &Node, recipient: &Jid) -> Result<PreKeyBundle> {
+    classic_bundle_from_user(prekey_user_for(reply, recipient)?, recipient)
+}
+
+fn prekey_user_for<'a>(reply: &'a Node, recipient: &Jid) -> Result<&'a Node> {
     if reply.description != "iq"
         || reply.get_attr("type").and_then(|v| v.as_text()) != Some("result")
     {
@@ -338,6 +355,10 @@ pub fn prekey_bundle_for(reply: &Node, recipient: &Jid) -> Result<PreKeyBundle> 
     if user.child("error").is_some() {
         return Err(invalid("server refused recipient key lookup"));
     }
+    Ok(user)
+}
+
+fn classic_bundle_from_user(user: &Node, recipient: &Jid) -> Result<PreKeyBundle> {
     // APK 37.71 Bot.A03 00e8..00f0 defaults only an absent type to 5.
     // Present fields still use exact singleton/width/type checks; see
     // bulk-prekey-processing.md. Signature verification remains a separate unchanged step.
@@ -1042,6 +1063,46 @@ mod tests {
         let bundle = prekey_bundle_for(&reply(vec![]), &peer).unwrap();
         assert_eq!(bundle.identity_key().unwrap(), identity.identity_key());
         validate_bundle_signature(&bundle).unwrap();
+        for pq in [
+            Node::new("pqkey"),
+            Node::new("pqkey").children(vec![
+                Node::new("id").bytes(vec![0, 0, 8]),
+                Node::new("value").bytes(vec![8; 1569]),
+                Node::new("signature").bytes(vec![0; 64]),
+            ]),
+        ] {
+            let pq_reply = reply(vec![pq]);
+            let error = prekey_bundle_for(&pq_reply, &peer)
+                .err()
+                .expect("PQ input must not silently become a classic session bundle");
+            assert!(
+                error
+                    .to_string()
+                    .contains("post-quantum session processing is unsupported")
+            );
+            let metadata = classic_bundle_metadata_for(&pq_reply, &peer).unwrap();
+            validate_bundle_signature(&metadata).unwrap();
+            assert_eq!(
+                metadata.identity_key().unwrap(),
+                bundle.identity_key().unwrap()
+            );
+            let mut unselected = reply(vec![]);
+            let NodeContent::Children(lists) = &mut unselected.content else {
+                panic!("fixture")
+            };
+            let NodeContent::Children(users) = &mut lists[0].content else {
+                panic!("fixture")
+            };
+            let NodeContent::Children(pq_lists) = &pq_reply.content else {
+                panic!("fixture")
+            };
+            let NodeContent::Children(pq_users) = &pq_lists[0].content else {
+                panic!("fixture")
+            };
+            users.push(pq_users[0].clone().attr("jid", peer.with_device(3)));
+            validate_bundle_signature(&prekey_bundle_for(&unselected, &peer).unwrap()).unwrap();
+            assert!(prekey_bundle_for(&unselected, &peer.with_device(3)).is_err());
+        }
         let explicit =
             prekey_bundle_for(&reply(vec![Node::new("type").bytes(vec![5])]), &peer).unwrap();
         assert_eq!(

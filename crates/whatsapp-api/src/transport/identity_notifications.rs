@@ -294,7 +294,7 @@ fn inspect_in(tx: &crate::store::ReadTx<'_>, id: &str) -> Result<Option<Inspecti
             .and_then(|v| v.parse().ok());
         return Ok(Some(result));
     }
-    let Ok(bundle) = crate::signal::direct::prekey_bundle_for(&reply, &peer) else {
+    let Ok(bundle) = crate::signal::direct::classic_bundle_metadata_for(&reply, &peer) else {
         return Ok(Some(result));
     };
     let valid = crate::signal::direct::validate_bundle_signature(&bundle).is_ok();
@@ -461,7 +461,7 @@ pub async fn preview_session(store: &ProtocolStore, id: &str) -> Result<SessionP
     }
     let reply =
         reply.ok_or_else(|| Error::invalid("identity_notification", "missing saved reply"))?;
-    let bundle = crate::signal::direct::prekey_bundle_for(&reply, &peer)?;
+    let bundle = crate::signal::direct::classic_bundle_metadata_for(&reply, &peer)?;
     let user = reply
         .child("list")
         .and_then(|list| {
@@ -602,7 +602,7 @@ pub fn queue(store: &ProtocolStore, account: &AccountRecord, node: &Node) -> Res
             let Some(reply) = actions::completed_reply_in(tx, &previous)? else {
                 return Ok(Refresh::BlockedPrior);
             };
-            let verified = crate::signal::direct::prekey_bundle_for(&reply, &peer)
+            let verified = crate::signal::direct::classic_bundle_metadata_for(&reply, &peer)
                 .and_then(|bundle| crate::signal::direct::validate_bundle_signature(&bundle));
             if verified.is_err() {
                 return Ok(Refresh::BlockedPrior);

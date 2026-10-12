@@ -2763,3 +2763,13 @@ provides redacted signature inspection. No new command or account operation.
 **Unknown:** native notification-driven adoption, full hybrid admission and fresh
 live validation. This is authentication of a supplied signed key, not human
 verification of an identity or permission to replace it.
+
+## Selected PQ bundle boundary, 2026-10-11
+
+[Shared consumable bundle parsing](pq-bundle-boundary.md) now rejects selected
+PQ input instead of silently discarding it before classic session preparation.
+Identity diagnostics retain classic metadata/signature inspection and existing
+PQ deferral; no PQ pin/session is adopted. The pinned backend source audit proves
+an implementation gap, not a native refusal rule. Full KEM support and fresh
+live transitions remain unfinished. Existing protected state and history remain
+unchanged.

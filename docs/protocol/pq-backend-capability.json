@@ -1,0 +1,36 @@
+{
+  "authority": "installed-cargo-registry-source",
+  "package": {
+    "name": "wacore-libsignal",
+    "version": "0.7.0",
+    "cargo_lock_checksum": "dbf8e90eebdf77703305089c1dfe672dddf203e0238e8f47163f76e7f9d5c713",
+    "cached_archive_checksum_matches": true
+  },
+  "files": [
+    {
+      "path": "src/protocol/state/bundle.rs",
+      "sha256": "74bd9b6c316211ec8c1b60a01e3b2102f4db833c39c2a4b2b203dc4e3a6b4612",
+      "matches_locked_package_archive": true
+    },
+    {
+      "path": "src/protocol/state/session.rs",
+      "sha256": "8da37feb663c793c2fb742e91c293b595a90813e64effb260af71bdbb4ef7d0e",
+      "matches_locked_package_archive": true
+    },
+    {
+      "path": "src/protocol/legacy_session.rs",
+      "sha256": "09502646f20fdf4c049ddcfc96bcf5e8ae015772566b604a0beae24293b25e4b",
+      "matches_locked_package_archive": true
+    }
+  ],
+  "observations": [
+    "PreKeyBundle and PreKeyBundleContent contain EC prekey fields, no KEM bundle fields.",
+    "SessionState pending_prekey assigns kyber_pre_key_id and kyber_ciphertext None with an explicit unsupported-Kyber comment.",
+    "Legacy pending-prekey conversion rejects nonempty Kyber fields."
+  ],
+  "limits": [
+    "This describes the pinned local dependency, not latest upstream releases.",
+    "No PQ primitive, hybrid session or APK interoperability was executed.",
+    "Proto storage fields alone do not establish cryptographic support."
+  ]
+}
