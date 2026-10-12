@@ -163,6 +163,7 @@ pub(super) fn payload(payload: &[u8], chat: &Jid) -> Option<Zeroizing<Vec<u8>>> 
     }
     if text.protocol.is_some()
         && super::chat_settings::decode_sender_revoke(&inner).is_none()
+        && super::chat_settings::decode_edit(&inner).is_none()
         && !matches!(
             super::chat_settings::decode_protocol(&inner),
             Some(
@@ -277,13 +278,16 @@ pub(super) fn record_in(
 }
 
 fn saved_edit_matches(node: &Node, chat: &Jid, saved: &serde_json::Value) -> bool {
-    // An edited redelivery needs authenticated revoke content, not just a saved ID.
+    // An edited redelivery needs authenticated control content, not just a saved ID.
     node.get_attr("edit").is_none()
         || serde_json::from_value::<Vec<u8>>(saved["protobuf"].clone())
             .ok()
             .map(Zeroizing::new)
             .and_then(|plain| payload(&plain, chat))
-            .is_some_and(|plain| super::chat_settings::decode_sender_revoke(&plain).is_some())
+            .is_some_and(|plain| {
+                super::chat_settings::decode_sender_revoke(&plain).is_some()
+                    || super::chat_settings::decode_edit(&plain).is_some()
+            })
 }
 
 pub(super) fn confirmation(

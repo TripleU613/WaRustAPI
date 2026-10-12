@@ -4137,6 +4137,112 @@ mod tests {
             after_keeps_session = synchronized.session;
             own_keeps.push((node, capture));
         }
+        let mut own_edits = Vec::new();
+        for (index, timestamp, accepted) in [
+            (0, 20, true),
+            (1, 19, false),
+            (2, 20, true),
+            (3, 21, true),
+            (4, 0, true),
+            (5, 22, false),
+        ] {
+            // Independent ProtocolMessage bytes: key=1, MESSAGE_EDIT=14, replacement=14, timestamp=15.
+            let mut target = Vec::new();
+            prost::encoding::string::encode(1, &"status@broadcast".to_owned(), &mut target);
+            prost::encoding::bool::encode(2, &false, &mut target);
+            prost::encoding::string::encode(3, &"OWN-LID-SYNC".to_owned(), &mut target);
+            let mut protocol = Vec::new();
+            prost::encoding::bytes::encode(1, &target, &mut protocol);
+            if index == 4 {
+                protocol.extend_from_slice(b"\x10\x00");
+            } else {
+                protocol.extend_from_slice(b"\x10\x0e");
+                prost::encoding::bytes::encode(14, &b"\x0a\x06edited".to_vec(), &mut protocol);
+                prost::encoding::int64::encode(15, &timestamp, &mut protocol);
+            }
+            protocol.extend_from_slice(b"\x10\x63");
+            let mut body = Vec::new();
+            prost::encoding::bytes::encode(12, &protocol, &mut body);
+            let mut sent_edit = Vec::new();
+            prost::encoding::string::encode(1, &"67890@lid".to_owned(), &mut sent_edit);
+            prost::encoding::bytes::encode(2, &body, &mut sent_edit);
+            let mut wrapper = Vec::new();
+            prost::encoding::bytes::encode(31, &sent_edit, &mut wrapper);
+            let synchronized = direct::prepare_payload(
+                &sender,
+                receiver.own_jid.as_ref().unwrap(),
+                None,
+                Some(&after_keeps_session),
+                Some(&sent.identity),
+                &wrapper,
+            )
+            .await
+            .unwrap();
+            let node = Node::new("message")
+                .attr("from", peer_device.clone())
+                .attr("recipient", "67890@lid")
+                .attr("id", format!("OWN-EDIT-{index}"))
+                .attr("type", "text")
+                .attr("edit", "1")
+                .attr("t", "259202")
+                .children(vec![
+                    Node::new("enc")
+                        .attr("type", synchronized.kind)
+                        .attr("v", "2")
+                        .bytes(synchronized.ciphertext.to_vec()),
+                ]);
+            let capture = preserve(&store, &node).unwrap();
+            assert_eq!(
+                process(&store, &receiver, &node, &capture).await.unwrap(),
+                IncomingResult::Decrypted
+            );
+            let events = store
+                .read(|tx| {
+                    tx.read_events(
+                        &crate::store::ConsumerId::new("own-edit")?,
+                        crate::model::ids::EventCursor::START,
+                        100,
+                    )
+                })
+                .unwrap();
+            match &events.events.last().unwrap().event {
+                crate::sync::SyncEvent::MessageUpdated(update) if accepted => {
+                    assert_eq!(update.key.id.as_str(), "OWN-LID-SYNC");
+                    assert_eq!(
+                        update.key.direction,
+                        crate::model::message::Direction::Outgoing
+                    );
+                    assert!(update.key.sender.is_none());
+                    assert_eq!(update.key.chat.jid(), &Jid::parse("67890@lid").unwrap());
+                    if index == 4 {
+                        assert!(matches!(
+                            &update.change,
+                            crate::model::message::MessageChange::Revoked { .. }
+                        ));
+                    } else {
+                        assert!(
+                            matches!(&update.change, crate::model::message::MessageChange::Edited(content)
+                        if matches!(&**content, crate::model::message::MessageContent::Text {body,..} if body=="edited"))
+                        );
+                    }
+                    assert_eq!(
+                        update.server_timestamp,
+                        Some(crate::model::time::Timestamp(259202000))
+                    );
+                }
+                crate::sync::SyncEvent::UnsupportedMessage(_) if !accepted => {}
+                other => panic!("unexpected own edit event: {other:?}"),
+            }
+            assert!(
+                super::super::messaging::received_confirmation_for_account(
+                    &store, &receiver, &node
+                )
+                .unwrap()
+                .is_some()
+            );
+            after_keeps_session = synchronized.session;
+            own_edits.push((node, capture));
+        }
         let mut edited_sent = Vec::new();
         prost::encoding::string::encode(1, &"67890@lid".to_owned(), &mut edited_sent);
         prost::encoding::bytes::encode(2, &b"\x0a\x05hello".to_vec(), &mut edited_sent);
@@ -4279,7 +4385,7 @@ mod tests {
         let after_poll_head = store.journal_head().unwrap();
         let event_count = batch.events.len()
             + usize::from(cfg!(feature = "experimental-registration-https"))
-            + 11;
+            + 17;
         drop(store);
         let store = open(false);
         assert_eq!(
@@ -4300,6 +4406,12 @@ mod tests {
                 .unwrap(),
             IncomingResult::Duplicate
         );
+        for (node, capture) in &own_edits {
+            assert_eq!(
+                process(&store, &receiver, node, capture).await.unwrap(),
+                IncomingResult::Duplicate
+            );
+        }
         for (node, capture) in &own_keeps {
             assert_eq!(
                 process(&store, &receiver, node, capture).await.unwrap(),
@@ -4366,7 +4478,7 @@ mod tests {
             super::super::chat_clear::clear_chat(&store, &Jid::parse("67890@lid").unwrap())
                 .unwrap()
                 .cleared_messages,
-            12 + usize::from(cfg!(feature = "experimental-registration-https"))
+            18 + usize::from(cfg!(feature = "experimental-registration-https"))
         );
         #[cfg(feature = "experimental-registration-https")]
         assert!(super::super::media::list(&store).unwrap().is_empty());

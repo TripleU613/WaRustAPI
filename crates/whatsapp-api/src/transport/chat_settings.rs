@@ -79,6 +79,8 @@ pub(crate) struct ProtocolMessage {
     pub(crate) ephemeral_setting_timestamp: Option<i64>,
     #[prost(message, optional, tag = "11")]
     pub(crate) disappearing_mode: Option<DisappearingMode>,
+    #[prost(int64, optional, tag = "15")]
+    pub(crate) timestamp_ms: Option<i64>,
     #[prost(message, optional, tag = "24")]
     pub(crate) limit_sharing: Option<LimitSharing>,
     #[prost(uint32, optional, tag = "29")]
@@ -220,6 +222,96 @@ pub(super) fn decode_sender_revoke(payload: &[u8]) -> Option<MessageId> {
     MessageId::new(key.id?).ok()
 }
 
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub(super) struct IncomingEdit {
+    pub(super) target_id: MessageId,
+    pub(super) replacement: zeroize::Zeroizing<Vec<u8>>,
+    pub(super) sender_timestamp: i64,
+}
+
+// D9B.CF4/Ayo.A0S: only id comes from the embedded key; CoT owns chat/direction.
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub(super) fn decode_edit(payload: &[u8]) -> Option<IncomingEdit> {
+    let fields = crate::signal::direct::payload_fields(payload).ok()?;
+    if fields.iter().any(|f| !matches!(f, 12 | 35)) {
+        return None;
+    }
+    let protocol = decode_envelope(payload)?.protocol?;
+    if protocol.type_ != Some(14) {
+        return None;
+    }
+    let target_id = MessageId::new(protocol.key?.id?).ok()?;
+    let raw_protocol =
+        zeroize::Zeroizing::new(super::protobuf_enum::message_bytes(payload, 12).ok()??);
+    let mut replacement =
+        zeroize::Zeroizing::new(super::protobuf_enum::message_bytes(&raw_protocol, 14).ok()??);
+    // shortcut: caption/media and gated poll/event edits need their native content lifecycles.
+    let fields = crate::signal::direct::payload_fields(&replacement).ok()?;
+    if fields.iter().any(|f| !matches!(f, 1 | 6 | 35))
+        || !fields.iter().any(|f| matches!(f, 1 | 6))
+        || super::quotes::decode(&replacement).is_none()
+    {
+        return None;
+    }
+    if !fields.contains(&35)
+        && let Some(context) = super::protobuf_enum::message_bytes(payload, 35).ok()?
+    {
+        prost::encoding::bytes::encode(35, &context, &mut *replacement);
+    }
+    Some(IncomingEdit {
+        target_id,
+        replacement,
+        // D5e stores the native proto2 default, independently of stanza time.
+        sender_timestamp: protocol.timestamp_ms.unwrap_or(0),
+    })
+}
+
+#[cfg(all(
+    test,
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+#[test]
+fn edit_decoder_preserves_merge_context_and_native_timestamp_default() {
+    // Independent literal key id P, conflicting remote/fromMe/participant, MESSAGE_EDIT=14.
+    let mut protocol =
+        b"\x0a\x0d\x0a\x01x\x10\x00\x1a\x01P\x22\x03bad\x10\x0e\x72\x03\x0a\x01a".to_vec();
+    let envelope = |protocol: &Vec<u8>, outer_context: bool| {
+        let mut body = Vec::new();
+        prost::encoding::bytes::encode(12, protocol, &mut body);
+        if outer_context {
+            body.extend_from_slice(b"\x9a\x02\x02\x08\x01");
+        }
+        body
+    };
+    let decoded = decode_edit(&envelope(&protocol, true)).unwrap();
+    assert_eq!(decoded.target_id.as_str(), "P");
+    assert_eq!(decoded.sender_timestamp, 0);
+    assert_eq!(&*decoded.replacement, b"\x0a\x01a\x9a\x02\x02\x08\x01");
+    // Repeated editedMessage submessages merge; a present empty inner context wins.
+    protocol.extend_from_slice(b"\x72\x03\x9a\x02\x00\x10\x63");
+    prost::encoding::int64::encode(15, &-1, &mut protocol);
+    let decoded = decode_edit(&envelope(&protocol, true)).unwrap();
+    assert_eq!(&*decoded.replacement, b"\x0a\x01a\x9a\x02\x00");
+    assert_eq!(decoded.sender_timestamp, -1);
+    let mut invalid = envelope(&protocol, false);
+    invalid.extend_from_slice(b"\x0a\x01x");
+    assert!(decode_edit(&invalid).is_none());
+    protocol.extend_from_slice(b"\x10\x04");
+    assert!(decode_edit(&envelope(&protocol, false)).is_none());
+    assert!(decode_edit(b"\x62\x03\x72\x05x").is_none());
+    assert!(decode_edit(b"\x62\x0b\x0a\x03\x1a\x01P\x10\x0e\x72\x02\x1a\x00").is_none());
+}
+
 // DEy.A00 accepts empty as zero, otherwise int32 1/2/3/7/8; Bua excludes admin 8.
 #[cfg(all(
     feature = "experimental-signal-crypto",
@@ -347,6 +439,7 @@ pub fn disappearing_payload(seconds: u32) -> Vec<u8> {
             limit_sharing: None,
             after_read_duration: None,
             acp2_setting: None,
+            timestamp_ms: None,
         }),
         keep_in_chat: None,
     }
@@ -375,6 +468,7 @@ pub fn limit_sharing_payload(enabled: bool, now_ms: i64) -> Vec<u8> {
             }),
             after_read_duration: None,
             acp2_setting: None,
+            timestamp_ms: None,
         }),
         keep_in_chat: None,
     }

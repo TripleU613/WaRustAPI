@@ -1,3 +1,14 @@
+2026-10-11 — **Implemented/offline:** held authenticated own-device sessions
+receive ordinary text edits as MessageUpdated/Edited for loaded own text parents
+and attributed outgoing text intents. Parent chat/direction/ID stay intact;
+embedded ownership metadata cannot select another owner or chat. Strictly older
+edits and edits after an own revoke stay opaque with atomic ratchet/capture
+commit; equality is accepted. Existing confirmation, reopen deduplication and
+clearing paths remain effective, and uncertain send facts/IDs/waits stay unchanged.
+Peer configured-window resolution, media/special/orphan/expiry lifecycles and
+fresh live edit interoperability remain unfinished or unverified.
+[APK decoder, ordering and receive tests](docs/protocol/message-edit.md).
+
 2026-10-11 — **Implemented/offline:** supported direct peer sender revokes now
 honor the native strict three-day receive rejection when both explicit times and
 an authenticated parent are available. Signed wrapping subtraction is preserved;

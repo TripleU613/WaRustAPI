@@ -2,6 +2,12 @@
 
 Ordered by what blocks the first decisive result (docs/design/README.md section 0).
 
+Own-device ordinary text edits are now projected with loaded parent kind,
+terminal and sender-time ordering checks. Peer edits still require the effective
+native integer property 2983; a baked default or guessed 15-minute window is not
+proof. Media/caption, gated poll/event, future-proof wrapper, orphan and expiry
+lifecycles remain open. See [the receive evidence](message-edit.md).
+
 1. **Android registration protocol** (`registration.*`): payload encoding,
    URL assembly, required prerequisites and their generation timing,
    verification steps, cooldown semantics, returned credential material.

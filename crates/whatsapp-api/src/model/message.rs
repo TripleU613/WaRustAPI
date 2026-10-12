@@ -201,7 +201,8 @@ pub struct MessageUpdate {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum MessageChange {
-    /// Content replaced by an edit.
+    /// Content replaced by an edit. Supported authenticated own-device text
+    /// synchronization retains the original parent's key and stanza change time.
     Edited(Box<MessageContent>),
     /// Reaction added, changed or removed by a device.
     Reaction {

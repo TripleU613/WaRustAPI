@@ -988,6 +988,144 @@ fn own_device_revoke(
     )))
 }
 
+fn own_device_edit(
+    tx: &WriteTx<'_>,
+    update_key: &[u8],
+    chat: &crate::model::jid::Jid,
+    node: &Node,
+    edit: super::chat_settings::IncomingEdit,
+    own: &[crate::model::jid::Jid],
+) -> Result<Option<SyncEvent>> {
+    let key = super::reactions::Key {
+        id: Some(edit.target_id.as_str().to_owned()),
+        remote_jid: Some(chat.to_string()),
+        from_me: Some(true),
+        participant: None,
+    };
+    let Some((target, _)) = own_direct_update_target(tx, chat, node, &key)? else {
+        return Ok(None);
+    };
+    let outbox = crate::outbox::Outbox::new("comparison-driver", crate::profile::Limits::default());
+    let text_parent = if let Some(entry) = outbox.by_wire_id_in_write(tx, &target.id)? {
+        if !authenticated_direct_chat(tx, chat, entry.intent.chat.jid())? {
+            return Ok(None);
+        }
+        matches!(entry.intent.content, MessageContent::Text { .. })
+    } else if let Some(record) = super::own_device::record_in(tx, chat, target.id.as_str())? {
+        record
+            .saved
+            .and_then(|saved| {
+                let wrapped = zeroize::Zeroizing::new(
+                    serde_json::from_value::<Vec<u8>>(saved["protobuf"].clone()).ok()?,
+                );
+                let plain = super::own_device::payload(&wrapped, &record.chat)?;
+                let fields = crate::signal::direct::payload_fields(&plain).ok()?;
+                Some(
+                    fields.iter().all(|f| matches!(f, 1 | 6 | 35))
+                        && super::quotes::decode(&plain).is_some(),
+                )
+            })
+            .unwrap_or(false)
+    } else {
+        // shortcut: unloaded edits require 153's orphan lifecycle before projection.
+        return Ok(None);
+    };
+    if !text_parent {
+        return Ok(Some(unsupported_event(update_key)));
+    }
+    let mut latest = None;
+    // shortcut: scan committed own controls; index when large histories need faster edit ordering.
+    let mut cursor = Some(b"received-own:".to_vec());
+    'history: loop {
+        let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
+        let done = rows.len() < 256;
+        cursor = rows.last().map(|(key, _)| key.clone());
+        for (key, _) in rows {
+            if !key.starts_with(b"received-own:") {
+                break 'history;
+            }
+            let Some((saved_chat, _)) = std::str::from_utf8(&key)
+                .ok()
+                .and_then(|k| k.strip_prefix("received-own:"))
+                .and_then(|k| k.rsplit_once(':'))
+            else {
+                continue;
+            };
+            let Ok(saved_chat) = crate::model::jid::Jid::parse(saved_chat) else {
+                continue;
+            };
+            if !authenticated_direct_chat(tx, target.chat.jid(), &saved_chat)?
+                || !tx
+                    .get_json::<serde_json::Value>(Table::Inbox, &key, 1)?
+                    .is_some_and(|marker| marker["kind"] == "message_updated")
+            {
+                continue;
+            }
+            let Some(saved) = tx.get_json::<serde_json::Value>(Table::Checkpoints, &key, 1)? else {
+                continue;
+            };
+            let Ok(source) =
+                serde_json::from_value::<crate::model::jid::Jid>(saved["source"].clone())
+            else {
+                continue;
+            };
+            if saved["status"] != "decrypted"
+                || source.agent != 0
+                || source.device == 0
+                || !own.contains(&source.to_non_ad())
+            {
+                continue;
+            }
+            let Ok(wrapped) = serde_json::from_value::<Vec<u8>>(saved["protobuf"].clone()) else {
+                continue;
+            };
+            let wrapped = zeroize::Zeroizing::new(wrapped);
+            let Some(plain) = super::own_device::payload(&wrapped, &saved_chat) else {
+                continue;
+            };
+            // 152.A00 rejects editing terminal/revoked parents before ordering.
+            if super::chat_settings::decode_sender_revoke(&plain).as_ref() == Some(&target.id) {
+                return Ok(Some(unsupported_event(update_key)));
+            }
+            if let Some(previous) = super::chat_settings::decode_edit(&plain)
+                && previous.target_id == target.id
+            {
+                latest = Some(latest.map_or(previous.sender_timestamp, |old: i64| {
+                    old.max(previous.sender_timestamp)
+                }));
+            }
+        }
+        if done {
+            break;
+        }
+    }
+    if latest.is_some_and(|previous| edit.sender_timestamp < previous) {
+        return Ok(Some(unsupported_event(update_key)));
+    }
+    let projection = Node::new("message")
+        .attr("from", chat.clone())
+        .attr("id", target.id.as_str());
+    let SyncEvent::NewMessage(message) = project(
+        update_key,
+        &projection,
+        &edit.replacement,
+        None,
+        None,
+        None,
+        own,
+    ) else {
+        return Ok(None);
+    };
+    // 152.A00 bypasses peer property 2983 for authenticated fromMe edits.
+    Ok(Some(SyncEvent::MessageUpdated(
+        crate::model::message::MessageUpdate {
+            key: target,
+            change: crate::model::message::MessageChange::Edited(Box::new(message.content)),
+            server_timestamp: stanza_timestamp(node),
+        },
+    )))
+}
+
 fn own_device_keep(
     tx: &WriteTx<'_>,
     chat: &crate::model::jid::Jid,
@@ -1175,6 +1313,9 @@ pub(super) fn own_device_message(
     };
     if let Some(id) = super::chat_settings::decode_sender_revoke(payload) {
         return own_device_revoke(tx, chat, node, id);
+    }
+    if let Some(edit) = super::chat_settings::decode_edit(payload) {
+        return own_device_edit(tx, key, chat, node, edit, own);
     }
     if node.get_attr("edit").is_some() {
         return Ok(None);
@@ -2115,6 +2256,143 @@ mod tests {
                     }
                 }
             }
+        }
+    }
+
+    #[test]
+    fn own_edits_bind_saved_outbox_chat_and_kind_without_rewriting_send_state() {
+        use crate::model::jid::Jid;
+        for case in [
+            "same",
+            "mapped",
+            "alias_only",
+            "foreign",
+            "poll",
+            "unloaded",
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let store = ProtocolStore::open(OpenOptions {
+                path: dir.path().join("edit.redb"),
+                account_id: AccountId::new("fixture").unwrap(),
+                key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                    [23; 32],
+                ))),
+                create: true,
+            })
+            .unwrap();
+            let own = Jid::parse("15555550199@s.whatsapp.net").unwrap();
+            let chat = Jid::parse("12345@lid").unwrap();
+            let original = Jid::parse(if matches!(case, "mapped" | "alias_only") {
+                "15555550100@s.whatsapp.net"
+            } else if case == "foreign" {
+                "99999@lid"
+            } else {
+                "12345@lid"
+            })
+            .unwrap();
+            store
+                .write(|tx| {
+                    crate::session::AccountRecord {
+                        own_jid: Some(own.clone()),
+                        registration: crate::session::RegistrationStatus::Registered,
+                        ..Default::default()
+                    }
+                    .save(tx)?;
+                    if case == "mapped" {
+                        tx.put_json(
+                            Table::Checkpoints,
+                            b"authenticated-lid:12345@lid",
+                            1,
+                            &original,
+                        )?;
+                    }
+                    if case == "alias_only" {
+                        tx.put_json(
+                            Table::Checkpoints,
+                            format!("lid-for:{original}").as_bytes(),
+                            1,
+                            &chat,
+                        )?;
+                    }
+                    if case != "unloaded" {
+                        let outbox = crate::outbox::Outbox::new(
+                            "fixture",
+                            crate::profile::Limits::default(),
+                        );
+                        let content = if case == "poll" {
+                            MessageContent::Poll {
+                                name: "poll".into(),
+                                options: vec!["a".into(), "b".into()],
+                                selectable_count: 1,
+                            }
+                        } else {
+                            MessageContent::Text {
+                                body: "original".into(),
+                                quoted: None,
+                                style: Default::default(),
+                            }
+                        };
+                        let request = crate::model::send::SendRequest {
+                            client_request_id: crate::model::ids::ClientRequestId::new("PARENT")?,
+                            chat: ChatId::from_jid(&original)?,
+                            content,
+                        };
+                        let ticket = outbox.enqueue(tx, &request)?.0;
+                        let mut entry = outbox.get_mut(tx, ticket.local_id)?.unwrap();
+                        entry.wire_id = Some(MessageId::new("P")?);
+                        tx.put_json(Table::Outbox, &entry.local_id.0, 1, &entry)?;
+                    }
+                    Ok(())
+                })
+                .unwrap();
+            // Protocol key P; its embedded fromMe=false cannot reclassify an own-device edit.
+            let payload = b"\x62\x0e\x0a\x05\x10\x00\x1a\x01P\x10\x0e\x72\x03\x0a\x01x";
+            let node = Node::new("message")
+                .attr("from", own.with_device(4))
+                .attr("recipient", chat.clone())
+                .attr("id", "EDIT")
+                .attr("type", "text")
+                .attr("edit", "1");
+            let snapshot = || {
+                store
+                    .read(|tx| {
+                        Table::ALL
+                            .iter()
+                            .map(|t| tx.scan(*t, 1, 100))
+                            .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap()
+            };
+            let before = snapshot();
+            let head = store.journal_head().unwrap();
+            let event = store
+                .write(|tx| {
+                    own_device_message(
+                        tx,
+                        b"edit",
+                        &chat,
+                        &node,
+                        payload,
+                        std::slice::from_ref(&own),
+                    )
+                })
+                .unwrap();
+            match (case, event) {
+                ("same" | "mapped", Some(SyncEvent::MessageUpdated(update))) => {
+                    assert_eq!(update.key.chat.jid(), &original);
+                    assert_eq!(update.key.direction, Direction::Outgoing);
+                    assert!(update.key.sender.is_none());
+                    assert!(matches!(
+                        update.change,
+                        crate::model::message::MessageChange::Edited(_)
+                    ));
+                }
+                ("poll", Some(SyncEvent::UnsupportedMessage(_))) => {}
+                ("alias_only" | "foreign" | "unloaded", None) => {}
+                (_, other) => panic!("{case}: {other:?}"),
+            }
+            assert_eq!(snapshot(), before);
+            assert_eq!(store.journal_head().unwrap(), head);
         }
     }
 

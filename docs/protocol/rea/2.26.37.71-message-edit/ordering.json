@@ -1,0 +1,144 @@
+{
+  "evidence_id": "ev_d9f5663ff5ed74ff6de27c803f7c159c60fda57bef38572f1ce9d672664b0b78",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.AnonymousClass152",
+    "method_name": "A03"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-WsK835/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\",\"max_heap_bytes\":15695085568,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "load_apk",
+        "input": {
+          "path": "/tmp/rea-android-WsK835/target.apk",
+          "threads": 1,
+          "resources": "full"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-WsK835/target.apk\",\"class_count\":94738,\"raw_class_count\":94738,\"resource_count\":14967,\"load_duration_ms\":15921,\"decompile_timeout_ms\":90000,\"threads\":1,\"code_cache_size\":64,\"resources\":\"full\"}"
+            }
+          ]
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.AnonymousClass152"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"def_pos\":0,\"type\":\"int\",\"name\":\"A00\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A01\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A02\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A03\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A04\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A05\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A06\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A07\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A08\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A09\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A0A\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A0B\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A0C\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A0D\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A0E\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A0F\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A0G\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A0H\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A0I\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A0J\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A0K\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A0L\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A0M\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A0N\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A0O\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A0P\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A0Q\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A0R\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A0S\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A0T\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A0U\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A0V\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A0W\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A0X\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A0Y\"},{\"def_pos\":0,\"type\":\"X.0Z2\",\"name\":\"A0Z\"},{\"def_pos\":0,\"type\":\"X.0Y5\",\"name\":\"A0a\"},{\"def_pos\":0,\"type\":\"X.0zC\",\"name\":\"A0b\"},{\"def_pos\":0,\"type\":\"X.153\",\"name\":\"A0c\"},{\"def_pos\":0,\"type\":\"X.16P\",\"name\":\"A0d\"},{\"def_pos\":0,\"type\":\"X.15A\",\"name\":\"A0e\"},{\"def_pos\":0,\"type\":\"X.16T\",\"name\":\"A0f\"},{\"def_pos\":0,\"type\":\"X.13C\",\"name\":\"A0g\"},{\"def_pos\":0,\"type\":\"X.0ZJ\",\"name\":\"A0h\"},{\"def_pos\":0,\"type\":\"X.07t\",\"name\":\"A0i\"},{\"def_pos\":0,\"type\":\"X.0ze\",\"name\":\"A0j\"},{\"def_pos\":0,\"type\":\"X.0Fs\",\"name\":\"A0k\"},{\"def_pos\":0,\"type\":\"X.08Z\",\"name\":\"A0l\"},{\"def_pos\":0,\"type\":\"X.08B\",\"name\":\"A0m\"},{\"def_pos\":0,\"type\":\"X.07u\",\"name\":\"A0n\"},{\"def_pos\":0,\"type\":\"X.0pm\",\"name\":\"A0o\"},{\"def_pos\":0,\"type\":\"X.0zc\",\"name\":\"A0p\"},{\"def_pos\":0,\"type\":\"X.0ql\",\"name\":\"A0q\"},{\"def_pos\":0,\"type\":\"X.0Ys\",\"name\":\"A0r\"},{\"def_pos\":0,\"type\":\"X.0VS\",\"name\":\"A0s\"},{\"def_pos\":0,\"type\":\"X.16R\",\"name\":\"A0t\"},{\"def_pos\":0,\"type\":\"X.16S\",\"name\":\"A0u\"},{\"def_pos\":0,\"type\":\"X.16U\",\"name\":\"A0v\"},{\"def_pos\":0,\"type\":\"X.0Gc\",\"name\":\"A0w\"},{\"def_pos\":0,\"type\":\"X.0Xw\",\"name\":\"A0x\"},{\"def_pos\":0,\"type\":\"X.16V\",\"name\":\"A0y\"},{\"def_pos\":0,\"type\":\"X.0qk\",\"name\":\"A0z\"},{\"def_pos\":0,\"type\":\"X.16Y\",\"name\":\"A10\"},{\"def_pos\":0,\"type\":\"X.160\",\"name\":\"A11\"},{\"def_pos\":0,\"type\":\"X.13v\",\"name\":\"A12\"},{\"def_pos\":0,\"type\":\"X.0z9\",\"name\":\"A13\"},{\"def_pos\":0,\"type\":\"X.0zH\",\"name\":\"A14\"},{\"def_pos\":0,\"type\":\"X.15x\",\"name\":\"A15\"},{\"def_pos\":0,\"type\":\"X.0VQ\",\"name\":\"A16\"},{\"def_pos\":0,\"type\":\"X.16Q\",\"name\":\"A17\"},{\"def_pos\":0,\"type\":\"X.0Jr\",\"name\":\"A18\"},{\"def_pos\":0,\"type\":\"java.util.Map\",\"name\":\"A19\"}],\"field_count\":72,\"full_name\":\"X.AnonymousClass152\",\"name\":\"AnonymousClass152\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":8,\"methods\":[{\"is_constructor\":true,\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\"},{\"is_constructor\":false,\"signature\":\"A00(X.152, X.178, X.CME, boolean): X.CUU\",\"def_pos\":0,\"name\":\"A00\"},{\"is_constructor\":false,\"signature\":\"A01(X.152, X.178): void\",\"def_pos\":0,\"name\":\"A01\"},{\"is_constructor\":false,\"signature\":\"A02(X.178, X.178): void\",\"def_pos\":0,\"name\":\"A02\"},{\"is_constructor\":false,\"signature\":\"A03(X.178, X.178): boolean\",\"def_pos\":0,\"name\":\"A03\"},{\"is_constructor\":false,\"signature\":\"A04(X.BnB): X.178\",\"def_pos\":0,\"name\":\"A04\"},{\"is_constructor\":false,\"signature\":\"A05(X.178): X.DaC\",\"def_pos\":0,\"name\":\"A05\"},{\"is_constructor\":false,\"signature\":\"A06(X.178): void\",\"def_pos\":0,\"name\":\"A06\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.AnonymousClass152",
+          "method_name": "A03",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"overload_count\":1,\"body\":\"    public static final boolean A03(AnonymousClass178 anonymousClass178, AnonymousClass178 anonymousClass179) {\\n        C00h.A0A(anonymousClass178, 0);\\n        D5e d5eA00 \\u003d Cbt.A00(anonymousClass178);\\n        D5e d5eA01 \\u003d Cbt.A00(anonymousClass179);\\n        if (!anonymousClass178.A0b(131072L) || d5eA00 \\u003d\\u003d null || d5eA01 \\u003d\\u003d null || d5eA01.A01 \\u003e\\u003d d5eA00.A01) {\\n            return false;\\n        }\\n        com.whatsapp.infra.logging.Log.i(\\\"EditMessageUtils/handleEditedMessage the current message is newer than the received edited message\\\");\\n        return true;\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.AnonymousClass152\",\"full_name\":\"X.152.A03\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"A03\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.AnonymousClass152",
+    "method": {
+      "name": "A03",
+      "reported_signature": "A03(X.178, X.178): boolean",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public static final boolean A03(AnonymousClass178 anonymousClass178, AnonymousClass178 anonymousClass179) {\n        C00h.A0A(anonymousClass178, 0);\n        D5e d5eA00 = Cbt.A00(anonymousClass178);\n        D5e d5eA01 = Cbt.A00(anonymousClass179);\n        if (!anonymousClass178.A0b(131072L) || d5eA00 == null || d5eA01 == null || d5eA01.A01 >= d5eA00.A01) {\n            return false;\n        }\n        com.whatsapp.infra.logging.Log.i(\"EditMessageUtils/handleEditedMessage the current message is newer than the received edited message\");\n        return true;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

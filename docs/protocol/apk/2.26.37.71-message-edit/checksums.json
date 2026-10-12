@@ -1,0 +1,46 @@
+{
+  "edit-builder.txt": {
+    "bytes": 5994,
+    "sha256": "e678efdef578dd40b12bea75efbf960ebe89c5d80e59e8bcc29f744163c9a04e"
+  },
+  "edit-metadata.txt": {
+    "bytes": 813,
+    "sha256": "859833b3f4e5b23854acd5745c207ed39c6bbe9456b592604011aa770f0ee59c"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manager.txt": {
+    "bytes": 108231,
+    "sha256": "d23df6d490c67807d82336edde7686b1799f096821d1c2999bab0d4a4a37fe4c"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "ordering.txt": {
+    "bytes": 1521,
+    "sha256": "d14f0a9eedda6d3dc4909639b4d57fa530ec695e7ea90dedb3f03a59ac44df20"
+  },
+  "parent-key.txt": {
+    "bytes": 757,
+    "sha256": "62a74c74bc41ba0029215e56be11ee64651275190d2303d2c7d77bd758ba2c9f"
+  },
+  "protocol-descriptor.txt": {
+    "bytes": 8643,
+    "sha256": "74c1011bdae4cd85d5092ab6de984f98ed1aaec9772aa16d5c45501c68f7f923"
+  },
+  "targets.json": {
+    "bytes": 3871,
+    "sha256": "f1e4e4d049e7ef1c652c05a253219bc9745174289829cd11184a4570ddc9e2b3"
+  },
+  "text-kind.txt": {
+    "bytes": 2002,
+    "sha256": "9328ae86479e49198b4f4abd99d59b10131694f27322ea11a537abc36a149441"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

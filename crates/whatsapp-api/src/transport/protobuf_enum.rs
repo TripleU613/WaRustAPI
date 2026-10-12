@@ -57,6 +57,30 @@ fn skip(bytes: &mut &[u8], key: u32, depth: usize) -> Result<(), ()> {
     *bytes = bytes.get(length..).ok_or(())?;
     Ok(())
 }
+
+// Concatenating singular submessage bodies preserves native protobuf merge order.
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub(super) fn message_bytes(mut body: &[u8], field: u32) -> Result<Option<Vec<u8>>, ()> {
+    let mut result: Option<Vec<u8>> = None;
+    while !body.is_empty() {
+        let key = varint32(&mut body)?;
+        if key == (field << 3 | 2) {
+            let length = length(&mut body)?;
+            let nested = body.get(..length).ok_or(())?;
+            result
+                .get_or_insert_with(Vec::new)
+                .extend_from_slice(nested);
+            body = &body[length..];
+        } else {
+            skip(&mut body, key, 0)?;
+        }
+    }
+    Ok(result)
+}
 fn scan_enum(
     mut body: &[u8],
     field: u32,

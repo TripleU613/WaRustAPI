@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_652e303789d8ecda9c3a2a0226bfc2ec32c43efe30aaf8de9099577dfffe78c0",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.D9B",
+    "method_name": "CF4"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-EQjXi6/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\",\"max_heap_bytes\":15695085568,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.D9B"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"field_count\":4,\"full_name\":\"X.D9B\",\"name\":\"D9B\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":5,\"methods\":[{\"is_constructor\":true,\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\"},{\"is_constructor\":false,\"signature\":\"A00(X.Db8, X.178, X.Cn6): void\",\"def_pos\":0,\"name\":\"A00\"},{\"is_constructor\":false,\"signature\":\"AD7(X.178, X.Cn6): void\",\"def_pos\":0,\"name\":\"AD7\"},{\"is_constructor\":false,\"signature\":\"CF4(X.CoT): X.178\",\"def_pos\":0,\"name\":\"CF4\"},{\"is_constructor\":false,\"signature\":\"CHx(X.178): X.CV1\",\"def_pos\":0,\"name\":\"CHx\"}],\"fields\":[{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A00\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A01\"},{\"def_pos\":0,\"type\":\"X.00s\",\"name\":\"A02\"},{\"def_pos\":0,\"type\":\"X.07t\",\"name\":\"A03\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.D9B",
+          "method_name": "CF4",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"body\":\"    /* JADX WARN: Multi-variable type inference failed */\\n    /* JADX WARN: Type inference failed for: r0v16, types: [X.0X9] */\\n    /* JADX WARN: Type inference failed for: r3v3, types: [X.178] */\\n    /* JADX WARN: Type inference failed for: r3v4, types: [X.178] */\\n    /* JADX WARN: Type inference failed for: r3v5, types: [X.1il] */\\n    @Override // X.DbV\\n    public AnonymousClass178 CF4(CoT coT) {\\n        boolean z;\\n        BZc bZcA03 \\u003d CoT.A03(coT);\\n        if (Cbf.A01(coT) !\\u003d C4F.A0N) {\\n            if (!bZcA03.A06() || !this.A03.A10(2189)) {\\n                return null;\\n            }\\n            C6tY c6tY \\u003d bZcA03.editedMessage_;\\n            if (c6tY \\u003d\\u003d null) {\\n                c6tY \\u003d C6tY.DEFAULT_INSTANCE;\\n            }\\n            BZc bZcA0s \\u003d Ayl.A0s(c6tY);\\n            C00h.A06(bZcA0s);\\n            return CF4(coT.A05(bZcA0s));\\n        }\\n        BZb bZbA0n \\u003d Ayl.A0n(bZcA03);\\n        C00h.A06(bZbA0n);\\n        BZc bZcA0q \\u003d bZbA0n.editedMessage_;\\n        if (bZcA0q \\u003d\\u003d null) {\\n            bZcA0q \\u003d BZc.DEFAULT_INSTANCE;\\n        }\\n        C00h.A06(bZcA0q);\\n        if (!bZcA0q.A0B()) {\\n            BOG bogA0o \\u003d Ayk.A0o(bZcA0q);\\n            bogA0o.A0g(Ayl.A0u(bZcA03));\\n            bZcA0q \\u003d Ayk.A0q(bogA0o);\\n        }\\n        C00h.A06(bZcA0q);\\n        CoT coTA05 \\u003d coT.A05(bZcA0q);\\n        coTA05.A00 \\u003d 1;\\n        ?? A0U \\u003d Ayn.A0U(this.A02, coTA05);\\n        int i \\u003d A0U.A0h;\\n        boolean z2 \\u003d i \\u003d\\u003d 92;\\n        C07t c07t \\u003d this.A03;\\n        boolean z3 \\u003d i \\u003d\\u003d 110 \\u0026\\u0026 (c07t.A10(13297) || C1xg.A1a(c07t, 22771));\\n        if (!(A0U instanceof C1he) \\u0026\\u0026 !(A0U instanceof C1iB) \\u0026\\u0026 ((!((z \\u003d A0U instanceof C17A)) || c07t.A0b(24886) \\u003d\\u003d 0) \\u0026\\u0026 !z2 \\u0026\\u0026 !z3)) {\\n            int i2 \\u003d z ? 10016 : 0;\\n            A0U \\u003d CoT.A01(coT);\\n            A0U.A00 \\u003d i2;\\n        }\\n        ((C0X9) this.A01.get()).A00(A0U, coTA05);\\n        A0U.A0J(131072L);\\n        C1gc c1gc \\u003d A0U.A0i;\\n        C0Cy c0Cy \\u003d c1gc.A00;\\n        boolean z4 \\u003d c1gc.A02;\\n        BZa bZa \\u003d bZbA0n.key_;\\n        if (bZa \\u003d\\u003d null) {\\n            bZa \\u003d BZa.DEFAULT_INSTANCE;\\n        }\\n        Cbt.A01(A0U, new D5e(Ayo.A0S(c0Cy, bZa, z4), A0U.A0F, bZbA0n.timestampMs_));\\n        return A0U;\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.D9B\",\"full_name\":\"X.D9B.CF4\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"CF4\",\"overload_count\":1}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.D9B",
+    "method": {
+      "name": "CF4",
+      "reported_signature": "CF4(X.CoT): X.178",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Multi-variable type inference failed */\n    /* JADX WARN: Type inference failed for: r0v16, types: [X.0X9] */\n    /* JADX WARN: Type inference failed for: r3v3, types: [X.178] */\n    /* JADX WARN: Type inference failed for: r3v4, types: [X.178] */\n    /* JADX WARN: Type inference failed for: r3v5, types: [X.1il] */\n    @Override // X.DbV\n    public AnonymousClass178 CF4(CoT coT) {\n        boolean z;\n        BZc bZcA03 = CoT.A03(coT);\n        if (Cbf.A01(coT) != C4F.A0N) {\n            if (!bZcA03.A06() || !this.A03.A10(2189)) {\n                return null;\n            }\n            C6tY c6tY = bZcA03.editedMessage_;\n            if (c6tY == null) {\n                c6tY = C6tY.DEFAULT_INSTANCE;\n            }\n            BZc bZcA0s = Ayl.A0s(c6tY);\n            C00h.A06(bZcA0s);\n            return CF4(coT.A05(bZcA0s));\n        }\n        BZb bZbA0n = Ayl.A0n(bZcA03);\n        C00h.A06(bZbA0n);\n        BZc bZcA0q = bZbA0n.editedMessage_;\n        if (bZcA0q == null) {\n            bZcA0q = BZc.DEFAULT_INSTANCE;\n        }\n        C00h.A06(bZcA0q);\n        if (!bZcA0q.A0B()) {\n            BOG bogA0o = Ayk.A0o(bZcA0q);\n            bogA0o.A0g(Ayl.A0u(bZcA03));\n            bZcA0q = Ayk.A0q(bogA0o);\n        }\n        C00h.A06(bZcA0q);\n        CoT coTA05 = coT.A05(bZcA0q);\n        coTA05.A00 = 1;\n        ?? A0U = Ayn.A0U(this.A02, coTA05);\n        int i = A0U.A0h;\n        boolean z2 = i == 92;\n        C07t c07t = this.A03;\n        boolean z3 = i == 110 && (c07t.A10(13297) || C1xg.A1a(c07t, 22771));\n        if (!(A0U instanceof C1he) && !(A0U instanceof C1iB) && ((!((z = A0U instanceof C17A)) || c07t.A0b(24886) == 0) && !z2 && !z3)) {\n            int i2 = z ? 10016 : 0;\n            A0U = CoT.A01(coT);\n            A0U.A00 = i2;\n        }\n        ((C0X9) this.A01.get()).A00(A0U, coTA05);\n        A0U.A0J(131072L);\n        C1gc c1gc = A0U.A0i;\n        C0Cy c0Cy = c1gc.A00;\n        boolean z4 = c1gc.A02;\n        BZa bZa = bZbA0n.key_;\n        if (bZa == null) {\n            bZa = BZa.DEFAULT_INSTANCE;\n        }\n        Cbt.A01(A0U, new D5e(Ayo.A0S(c0Cy, bZa, z4), A0U.A0F, bZbA0n.timestampMs_));\n        return A0U;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

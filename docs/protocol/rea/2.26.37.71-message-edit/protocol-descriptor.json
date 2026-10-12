@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_99bca3f03a8c84fad02eec09f8758c2125b97d0de74ceb0d40c5bb7ade55df23",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.BZb",
+    "method_name": "dynamicMethod"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-EQjXi6/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\",\"max_heap_bytes\":15695085568,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.BZb"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"field_count\":72,\"full_name\":\"X.BZb\",\"name\":\"BZb\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":6,\"methods\":[{\"is_constructor\":false,\"signature\":\"\\u003cclinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cclinit\\u003e\"},{\"is_constructor\":true,\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\"},{\"is_constructor\":false,\"signature\":\"A00(): X.BOA\",\"def_pos\":0,\"name\":\"A00\"},{\"is_constructor\":false,\"signature\":\"A01(): X.C4F\",\"def_pos\":0,\"name\":\"A01\"},{\"is_constructor\":false,\"signature\":\"dynamicMethod(com.google.protobuf.GeneratedMessageLite$MethodToInvoke, java.lang.Object, java.lang.Object): java.lang.Object\",\"def_pos\":0,\"name\":\"dynamicMethod\"},{\"is_constructor\":false,\"signature\":\"parseFrom(java.nio.ByteBuffer): X.BZb\",\"def_pos\":0,\"name\":\"parseFrom\"}],\"fields\":[{\"def_pos\":0,\"type\":\"int\",\"name\":\"ACP2_SETTING_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"AFTER_READ_DURATION_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"AI_MEDIA_COLLECTION_MESSAGE_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"AI_METADATA_OPERATION_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"AI_PSI_METADATA_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"AI_QUERY_FANOUT_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"APP_STATE_FATAL_EXCEPTION_NOTIFICATION_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"APP_STATE_SYNC_KEY_REQUEST_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"APP_STATE_SYNC_KEY_SHARE_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"BOT_FEEDBACK_MESSAGE_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"CHAT_THEME_SETTING_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"CLOUD_API_THREAD_CONTROL_NOTIFICATION_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"COEX_STATE_SYNC_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"X.BZb\",\"name\":\"DEFAULT_INSTANCE\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"DISAPPEARING_MODE_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"EDITED_MESSAGE_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"EPHEMERAL_EXPIRATION_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"EPHEMERAL_SETTING_TIMESTAMP_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"HISTORY_SYNC_NOTIFICATION_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"INITIAL_SECURITY_NOTIFICATION_SETTING_SYNC_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"INVOKER_JID_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"KEY_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"LID_MIGRATION_MAPPING_SYNC_MESSAGE_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"LIMIT_SHARING_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"MARK_AS_VERIFIED_ACTION_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"MEDIA_NOTIFY_MESSAGE_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"MEMBER_LABEL_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"com.google.protobuf.Parser\",\"name\":\"PARSER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"PEER_DATA_OPERATION_REQUEST_MESSAGE_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"PEER_DATA_OPERATION_REQUEST_RESPONSE_MESSAGE_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"REQUEST_WELCOME_MESSAGE_METADATA_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"SHARED_DEVICE_CONTACT_HASH_KEY_REQUEST_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"SHARED_DEVICE_CONTACT_HASH_KEY_SHARE_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"SYNC_REQUEST_MUTATION_RETRY_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"TIMESTAMP_MS_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"TYPE_FIELD_NUMBER\"},{\"def_pos\":0,\"type\":\"X.BWQ\",\"name\":\"acp2Setting_\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"afterReadDuration_\"},{\"def_pos\":0,\"type\":\"X.BUG\",\"name\":\"aiMediaCollectionMessage_\"},{\"def_pos\":0,\"type\":\"X.BRj\",\"name\":\"aiMetadataOperation_\"},{\"def_pos\":0,\"type\":\"com.google.protobuf.ByteString\",\"name\":\"aiPsiMetadata_\"},{\"def_pos\":0,\"type\":\"X.BUm\",\"name\":\"aiQueryFanout_\"},{\"def_pos\":0,\"type\":\"X.BST\",\"name\":\"appStateFatalExceptionNotification_\"},{\"def_pos\":0,\"type\":\"X.BOo\",\"name\":\"appStateSyncKeyRequest_\"},{\"def_pos\":0,\"type\":\"X.BOp\",\"name\":\"appStateSyncKeyShare_\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"bitField0_\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"bitField1_\"},{\"def_pos\":0,\"type\":\"X.BXk\",\"name\":\"botFeedbackMessage_\"},{\"def_pos\":0,\"type\":\"X.BXK\",\"name\":\"chatThemeSetting_\"},{\"def_pos\":0,\"type\":\"X.BXU\",\"name\":\"cloudApiThreadControlNotification_\"},{\"def_pos\":0,\"type\":\"X.BOt\",\"name\":\"coexStateSync_\"},{\"def_pos\":0,\"type\":\"X.BW7\",\"name\":\"disappearingMode_\"},{\"def_pos\":0,\"type\":\"X.BZc\",\"name\":\"editedMessage_\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"ephemeralExpiration_\"},{\"def_pos\":0,\"type\":\"long\",\"name\":\"ephemeralSettingTimestamp_\"},{\"def_pos\":0,\"type\":\"X.BYx\",\"name\":\"historySyncNotification_\"},{\"def_pos\":0,\"type\":\"X.BPi\",\"name\":\"initialSecurityNotificationSettingSync_\"},{\"def_pos\":0,\"type\":\"java.lang.String\",\"name\":\"invokerJid_\"},{\"def_pos\":0,\"type\":\"X.BZa\",\"name\":\"key_\"},{\"def_pos\":0,\"type\":\"X.BPb\",\"name\":\"lidMigrationMappingSyncMessage_\"},{\"def_pos\":0,\"type\":\"X.BWR\",\"name\":\"limitSharing_\"},{\"def_pos\":0,\"type\":\"X.BWE\",\"name\":\"markAsVerifiedAction_\"},{\"def_pos\":0,\"type\":\"X.BUo\",\"name\":\"mediaNotifyMessage_\"},{\"def_pos\":0,\"type\":\"X.BSS\",\"name\":\"memberLabel_\"},{\"def_pos\":0,\"type\":\"X.BYZ\",\"name\":\"peerDataOperationRequestMessage_\"},{\"def_pos\":0,\"type\":\"X.BVC\",\"name\":\"peerDataOperationRequestResponseMessage_\"},{\"def_pos\":0,\"type\":\"X.BPy\",\"name\":\"requestWelcomeMessageMetadata_\"},{\"def_pos\":0,\"type\":\"X.BQ0\",\"name\":\"sharedDeviceContactHashKeyRequest_\"},{\"def_pos\":0,\"type\":\"X.BOr\",\"name\":\"sharedDeviceContactHashKeyShare_\"},{\"def_pos\":0,\"type\":\"X.6se\",\"name\":\"syncRequestMutationRetry_\"},{\"def_pos\":0,\"type\":\"long\",\"name\":\"timestampMs_\"},{\"def_pos\":0,\"type\":\"int\",\"name\":\"type_\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.BZb",
+          "method_name": "dynamicMethod",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"body\":\"    @Override // com.google.protobuf.GeneratedMessageLite\\n    public final Object dynamicMethod(GeneratedMessageLite.MethodToInvoke methodToInvoke, Object obj, Object obj2) {\\n        Parser parserA0M;\\n        switch (methodToInvoke.ordinal()) {\\n            case 0:\\n                return (byte) 1;\\n            case 1:\\n                return null;\\n            case 2:\\n                Internal.EnumVerifier enumVerifier \\u003d CvY.A00;\\n                Object[] objArr \\u003d new Object[37];\\n                C6al.A1W(objArr);\\n                objArr[1] \\u003d \\\"bitField1_\\\";\\n                objArr[2] \\u003d \\\"key_\\\";\\n                C1xi.A1M(\\\"type_\\\", enumVerifier, objArr);\\n                objArr[5] \\u003d \\\"ephemeralExpiration_\\\";\\n                objArr[6] \\u003d \\\"ephemeralSettingTimestamp_\\\";\\n                objArr[7] \\u003d \\\"historySyncNotification_\\\";\\n                objArr[8] \\u003d \\\"appStateSyncKeyShare_\\\";\\n                objArr[9] \\u003d \\\"appStateSyncKeyRequest_\\\";\\n                objArr[10] \\u003d \\\"initialSecurityNotificationSettingSync_\\\";\\n                objArr[11] \\u003d \\\"appStateFatalExceptionNotification_\\\";\\n                objArr[12] \\u003d \\\"disappearingMode_\\\";\\n                objArr[13] \\u003d \\\"editedMessage_\\\";\\n                objArr[14] \\u003d \\\"timestampMs_\\\";\\n                objArr[15] \\u003d \\\"peerDataOperationRequestMessage_\\\";\\n                objArr[16] \\u003d \\\"peerDataOperationRequestResponseMessage_\\\";\\n                objArr[17] \\u003d \\\"botFeedbackMessage_\\\";\\n                objArr[18] \\u003d \\\"invokerJid_\\\";\\n                objArr[19] \\u003d \\\"requestWelcomeMessageMetadata_\\\";\\n                objArr[20] \\u003d \\\"mediaNotifyMessage_\\\";\\n                objArr[21] \\u003d \\\"cloudApiThreadControlNotification_\\\";\\n                objArr[22] \\u003d \\\"lidMigrationMappingSyncMessage_\\\";\\n                objArr[23] \\u003d \\\"limitSharing_\\\";\\n                objArr[24] \\u003d \\\"aiPsiMetadata_\\\";\\n                objArr[25] \\u003d \\\"aiQueryFanout_\\\";\\n                objArr[26] \\u003d \\\"memberLabel_\\\";\\n                objArr[27] \\u003d \\\"aiMediaCollectionMessage_\\\";\\n                objArr[28] \\u003d \\\"afterReadDuration_\\\";\\n                objArr[29] \\u003d \\\"chatThemeSetting_\\\";\\n                objArr[30] \\u003d \\\"aiMetadataOperation_\\\";\\n                objArr[31] \\u003d \\\"markAsVerifiedAction_\\\";\\n                objArr[32] \\u003d \\\"coexStateSync_\\\";\\n                objArr[33] \\u003d \\\"syncRequestMutationRetry_\\\";\\n                objArr[34] \\u003d \\\"acp2Setting_\\\";\\n                objArr[35] \\u003d \\\"sharedDeviceContactHashKeyShare_\\\";\\n                objArr[36] \\u003d \\\"sharedDeviceContactHashKeyRequest_\\\";\\n                return GeneratedMessageLite.newMessageInfo(DEFAULT_INSTANCE, \\\"\\\\u0001\\\\\\\"\\\\u0000\\\\u0002\\\\u0001%\\\\\\\"\\\\u0000\\\\u0000\\\\u0000\\\\u0001ဉ\\\\u0000\\\\u0002᠌\\\\u0001\\\\u0004ဋ\\\\u0002\\\\u0005ဂ\\\\u0003\\\\u0006ဉ\\\\u0004\\\\u0007ဉ\\\\u0005\\\\bဉ\\\\u0006\\\\tဉ\\\\u0007\\\\nဉ\\\\b\\\\u000bဉ\\\\t\\\\u000eဉ\\\\n\\\\u000fဂ\\\\u000b\\\\u0010ဉ\\\\f\\\\u0011ဉ\\\\r\\\\u0012ဉ\\\\u000e\\\\u0013ဈ\\\\u000f\\\\u0014ဉ\\\\u0010\\\\u0015ဉ\\\\u0011\\\\u0016ဉ\\\\u0012\\\\u0017ဉ\\\\u0013\\\\u0018ဉ\\\\u0014\\\\u0019ည\\\\u0015\\\\u001aဉ\\\\u0016\\\\u001bဉ\\\\u0017\\\\u001cဉ\\\\u0018\\\\u001dဋ\\\\u0019\\\\u001eဉ\\\\u001a\\\\u001fဉ\\\\u001b ဉ\\\\u001c!ဉ\\\\u001d\\\\\\\"ဉ\\\\u001e#ဉ\\\\u001f$ဉ %ဉ!\\\", objArr);\\n            case 3:\\n                return new BZb();\\n            case 4:\\n                return new BOA();\\n            case 5:\\n                return DEFAULT_INSTANCE;\\n            case 6:\\n                Parser parser \\u003d PARSER;\\n                if (parser !\\u003d null) {\\n                    return parser;\\n                }\\n                synchronized (BZb.class) {\\n                    parserA0M \\u003d PARSER;\\n                    if (parserA0M \\u003d\\u003d null) {\\n                        ExtensionRegistryLite extensionRegistryLite \\u003d AbstractParser.EMPTY_REGISTRY;\\n                        parserA0M \\u003d C6ak.A0M(DEFAULT_INSTANCE);\\n                        PARSER \\u003d parserA0M;\\n                    }\\n                    break;\\n                }\\n                return parserA0M;\\n            default:\\n                throw C6aj.A1C();\\n        }\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.BZb\",\"full_name\":\"X.BZb.dynamicMethod\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"dynamicMethod\",\"overload_count\":1}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.BZb",
+    "method": {
+      "name": "dynamicMethod",
+      "reported_signature": "dynamicMethod(com.google.protobuf.GeneratedMessageLite$MethodToInvoke, java.lang.Object, java.lang.Object): java.lang.Object",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    @Override // com.google.protobuf.GeneratedMessageLite\n    public final Object dynamicMethod(GeneratedMessageLite.MethodToInvoke methodToInvoke, Object obj, Object obj2) {\n        Parser parserA0M;\n        switch (methodToInvoke.ordinal()) {\n            case 0:\n                return (byte) 1;\n            case 1:\n                return null;\n            case 2:\n                Internal.EnumVerifier enumVerifier = CvY.A00;\n                Object[] objArr = new Object[37];\n                C6al.A1W(objArr);\n                objArr[1] = \"bitField1_\";\n                objArr[2] = \"key_\";\n                C1xi.A1M(\"type_\", enumVerifier, objArr);\n                objArr[5] = \"ephemeralExpiration_\";\n                objArr[6] = \"ephemeralSettingTimestamp_\";\n                objArr[7] = \"historySyncNotification_\";\n                objArr[8] = \"appStateSyncKeyShare_\";\n                objArr[9] = \"appStateSyncKeyRequest_\";\n                objArr[10] = \"initialSecurityNotificationSettingSync_\";\n                objArr[11] = \"appStateFatalExceptionNotification_\";\n                objArr[12] = \"disappearingMode_\";\n                objArr[13] = \"editedMessage_\";\n                objArr[14] = \"timestampMs_\";\n                objArr[15] = \"peerDataOperationRequestMessage_\";\n                objArr[16] = \"peerDataOperationRequestResponseMessage_\";\n                objArr[17] = \"botFeedbackMessage_\";\n                objArr[18] = \"invokerJid_\";\n                objArr[19] = \"requestWelcomeMessageMetadata_\";\n                objArr[20] = \"mediaNotifyMessage_\";\n                objArr[21] = \"cloudApiThreadControlNotification_\";\n                objArr[22] = \"lidMigrationMappingSyncMessage_\";\n                objArr[23] = \"limitSharing_\";\n                objArr[24] = \"aiPsiMetadata_\";\n                objArr[25] = \"aiQueryFanout_\";\n                objArr[26] = \"memberLabel_\";\n                objArr[27] = \"aiMediaCollectionMessage_\";\n                objArr[28] = \"afterReadDuration_\";\n                objArr[29] = \"chatThemeSetting_\";\n                objArr[30] = \"aiMetadataOperation_\";\n                objArr[31] = \"markAsVerifiedAction_\";\n                objArr[32] = \"coexStateSync_\";\n                objArr[33] = \"syncRequestMutationRetry_\";\n                objArr[34] = \"acp2Setting_\";\n                objArr[35] = \"sharedDeviceContactHashKeyShare_\";\n                objArr[36] = \"sharedDeviceContactHashKeyRequest_\";\n                return GeneratedMessageLite.newMessageInfo(DEFAULT_INSTANCE, \"\\u0001\\\"\\u0000\\u0002\\u0001%\\\"\\u0000\\u0000\\u0000\\u0001ဉ\\u0000\\u0002᠌\\u0001\\u0004ဋ\\u0002\\u0005ဂ\\u0003\\u0006ဉ\\u0004\\u0007ဉ\\u0005\\bဉ\\u0006\\tဉ\\u0007\\nဉ\\b\\u000bဉ\\t\\u000eဉ\\n\\u000fဂ\\u000b\\u0010ဉ\\f\\u0011ဉ\\r\\u0012ဉ\\u000e\\u0013ဈ\\u000f\\u0014ဉ\\u0010\\u0015ဉ\\u0011\\u0016ဉ\\u0012\\u0017ဉ\\u0013\\u0018ဉ\\u0014\\u0019ည\\u0015\\u001aဉ\\u0016\\u001bဉ\\u0017\\u001cဉ\\u0018\\u001dဋ\\u0019\\u001eဉ\\u001a\\u001fဉ\\u001b ဉ\\u001c!ဉ\\u001d\\\"ဉ\\u001e#ဉ\\u001f$ဉ %ဉ!\", objArr);\n            case 3:\n                return new BZb();\n            case 4:\n                return new BOA();\n            case 5:\n                return DEFAULT_INSTANCE;\n            case 6:\n                Parser parser = PARSER;\n                if (parser != null) {\n                    return parser;\n                }\n                synchronized (BZb.class) {\n                    parserA0M = PARSER;\n                    if (parserA0M == null) {\n                        ExtensionRegistryLite extensionRegistryLite = AbstractParser.EMPTY_REGISTRY;\n                        parserA0M = C6ak.A0M(DEFAULT_INSTANCE);\n                        PARSER = parserA0M;\n                    }\n                    break;\n                }\n                return parserA0M;\n            default:\n                throw C6aj.A1C();\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}
