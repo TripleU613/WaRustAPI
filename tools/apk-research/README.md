@@ -459,3 +459,10 @@ python tools/apk-research/native_kem_trace.py \
 Unicorn environment against 16 retained NIST vectors. Libc memory/allocation and
 once callbacks are modeled; no account, network, JNI or native randomness runs.
 See [scope, pinned NIST provenance and reproduction](../../docs/protocol/native-kem-vectors.md).
+
+## Initial hybrid KDF vectors
+
+`hybrid_kdf_vectors.py docs/protocol/hybrid-kdf-vectors.json --check` reproduces
+16 independent synthetic HMAC fixtures for the APK's ordered hybrid premaster
+and root/chain split. It does not execute APK code or calculate DH/KEM agreements.
+See [native evidence and scope](../../docs/protocol/hybrid-kdf.md).

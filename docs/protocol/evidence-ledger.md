@@ -1,3 +1,11 @@
+2026-10-12 — **Implemented/offline:** initial hybrid root/chain derivation
+now follows the APK's discontinuity prefix, ordered EC agreements, optional
+one-time agreement, final KEM secret and exact hybrid HKDF label. Native extract,
+counter-one expansion and 64-byte split are retained; Rust outputs are checked
+against 16 independent synthetic HMAC fixtures. This is a low-level KDF helper;
+PQ admission, pending wire/state integration and live sessions remain unfinished.
+[Native construction, independent fixtures and API](hybrid-kdf.md).
+
 2026-10-12 — **Implemented/offline:** experimental `signal::kem` exposes
 Rust ML-KEM-1024 generation, encapsulation and expanded-key decapsulation using
 pinned RustCrypto with zeroization and redacted secrets. The same 16 APK/NIST

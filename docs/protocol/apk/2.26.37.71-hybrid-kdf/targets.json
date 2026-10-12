@@ -1,0 +1,74 @@
+{
+  "bundle-processing": {
+    "class": "LX/CQc;",
+    "file": "bundle-processing.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/kem.rs"
+    ]
+  },
+  "counter-variant": {
+    "class": "LX/DZC;",
+    "file": "counter-variant.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/kem.rs"
+    ]
+  },
+  "expand": {
+    "class": "LX/Cew;",
+    "file": "expand.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/kem.rs"
+    ]
+  },
+  "extract": {
+    "class": "LX/Cew;",
+    "file": "extract.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/kem.rs"
+    ]
+  },
+  "hmac-wrapper": {
+    "class": "LX/Ayp;",
+    "file": "hmac-wrapper.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A1X",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/kem.rs"
+    ]
+  },
+  "split-keys": {
+    "class": "LX/CBN;",
+    "file": "split-keys.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/kem.rs"
+    ]
+  }
+}

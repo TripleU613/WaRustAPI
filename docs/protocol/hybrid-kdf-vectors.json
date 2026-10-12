@@ -1,0 +1,198 @@
+{
+  "scope": "Synthetic already-computed agreements; Python standard HMAC, not APK execution or DH/KEM verification.",
+  "label": "WhisperText_X25519_SHA-256_CRYSTALS-KYBER-1024",
+  "cases": [
+    {
+      "name": "pattern-0-one-time-False",
+      "agreements": [
+        "0000000000000000000000000000000000000000000000000000000000000000",
+        "0000000000000000000000000000000000000000000000000000000000000000",
+        "0000000000000000000000000000000000000000000000000000000000000000"
+      ],
+      "one_time": null,
+      "kem_shared": "0000000000000000000000000000000000000000000000000000000000000000",
+      "root": "1c4f4bed0cf2b112ebf2acb56baa36df40f093671835b6d31654a83b63de337c",
+      "chain": "c40b9b39e0d2f70c60e9d065fc1ad020585cbd5b0e565feebe4c77251fd86a29"
+    },
+    {
+      "name": "pattern-0-one-time-True",
+      "agreements": [
+        "0000000000000000000000000000000000000000000000000000000000000000",
+        "0000000000000000000000000000000000000000000000000000000000000000",
+        "0000000000000000000000000000000000000000000000000000000000000000"
+      ],
+      "one_time": "0000000000000000000000000000000000000000000000000000000000000000",
+      "kem_shared": "0000000000000000000000000000000000000000000000000000000000000000",
+      "root": "3567a85b5f5dd1f26b4522ac8852b3cd18fc240488b9f3e3cb27fac5ed04a4a2",
+      "chain": "cbaa4ff252ee3e63ce44da1f24111c3e50cdd45c8d9033a9f625a185cad8381b"
+    },
+    {
+      "name": "pattern-1-one-time-False",
+      "agreements": [
+        "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      ],
+      "one_time": null,
+      "kem_shared": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "root": "1a11036f6b348379cf5bb863d63ea611caed18fdc01de386f6e52b7d7b9ddcf9",
+      "chain": "b405bdbaa7c559d898214b84f0bff6eff666bb9c724b7efd275560bef19b92f2"
+    },
+    {
+      "name": "pattern-1-one-time-True",
+      "agreements": [
+        "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      ],
+      "one_time": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "kem_shared": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "root": "52d647007cd24decc9d544c75c71bc2a9af158fa94034c3b5ea76f4d96eb1e62",
+      "chain": "58655d81c7071e9e3b768320c80eb4a6de6fa3214c84af9ee5accb0de5535bf3"
+    },
+    {
+      "name": "pattern-2-one-time-False",
+      "agreements": [
+        "eb4127d4e3af2a5dece5a7b6f01013b3263caa30c21efc0bfb94811efb6dc0d0",
+        "ec692f403499d896971d2af902545601cdf8598bcbbc7cd2b12501b537a98103",
+        "1baa3d78690ce7b4c48e2ca15e66a4cf181eb094414ae48b6d176e4e15262929"
+      ],
+      "one_time": null,
+      "kem_shared": "2103cf202df17125a3f9800385eb542a853c5b7080d6cb1811f8b81d904e2ef2",
+      "root": "078a8789a1e4733481618be930f2ab84232f6f00d021d2e8e250f17726450333",
+      "chain": "9e8ba0386d5dec7ec6b7f92f8079cd7de23ef45bd7c55fe07a928e834eb3d60e"
+    },
+    {
+      "name": "pattern-2-one-time-True",
+      "agreements": [
+        "eb4127d4e3af2a5dece5a7b6f01013b3263caa30c21efc0bfb94811efb6dc0d0",
+        "ec692f403499d896971d2af902545601cdf8598bcbbc7cd2b12501b537a98103",
+        "1baa3d78690ce7b4c48e2ca15e66a4cf181eb094414ae48b6d176e4e15262929"
+      ],
+      "one_time": "04201688a3f6a08c20906460f5e441fdf641fd40f50bc183006fcc095054fa8b",
+      "kem_shared": "2103cf202df17125a3f9800385eb542a853c5b7080d6cb1811f8b81d904e2ef2",
+      "root": "5672db523e7da7c2ffd57c8d1f829b6d0fde7dc93f7072d68ebb43e8c5267c42",
+      "chain": "cdbe20815a7415b30ff5a51572fa45970f0c68d978ce85c8d5cc54e88bf0cd38"
+    },
+    {
+      "name": "pattern-3-one-time-False",
+      "agreements": [
+        "79a97447cf4b79d0439c16d122bda9612f16e6b1ca5b599323047a48ba1192fc",
+        "b48991724288f3918bb31e0e9580d6a72a1c09d7214a207a7b9cb60209c3fc12",
+        "e9e77093b66ac9382405d56ce142ca4f931618cbda17e2e670652c245dd8f9fe"
+      ],
+      "one_time": null,
+      "kem_shared": "94c1e04f6a1b64d093e69f9f096aafa5f0e48eb7831097084e1950d5b0c0fe9c",
+      "root": "dac76fb4cb4da2a16319830503d02c920749b9ff22461cfaf4ac8c2b0e977489",
+      "chain": "b1ebcb2ee41d2fe9110eb3474f6db029c53b5bffe03bfa621b68c87cfd4be9a0"
+    },
+    {
+      "name": "pattern-3-one-time-True",
+      "agreements": [
+        "79a97447cf4b79d0439c16d122bda9612f16e6b1ca5b599323047a48ba1192fc",
+        "b48991724288f3918bb31e0e9580d6a72a1c09d7214a207a7b9cb60209c3fc12",
+        "e9e77093b66ac9382405d56ce142ca4f931618cbda17e2e670652c245dd8f9fe"
+      ],
+      "one_time": "ba590840c4b772bada766ef0ff2718bb15411be04a541b22cd0db0d1ee526e40",
+      "kem_shared": "94c1e04f6a1b64d093e69f9f096aafa5f0e48eb7831097084e1950d5b0c0fe9c",
+      "root": "90b9f2bfc4357b3d681f30ff762ac8d07cb972f2d4fea0a15449803b48a2bfa2",
+      "chain": "47e063fdb994918499514a2d69cacda12637cae5508815b1a98df730689d2253"
+    },
+    {
+      "name": "pattern-4-one-time-False",
+      "agreements": [
+        "8683b0392def759b07c8fddc4d6835cabe4a1cea00581d616a75ebb8475f3e98",
+        "98abea17bf6b13c649a973d504611d33255f540d595b7a2b5da1f83d755811fd",
+        "03e739fea2a1f941a58ab0a3a146579814ffaddf440505dbd05224adb4153509"
+      ],
+      "one_time": null,
+      "kem_shared": "3457142c67a516256e7f47f8299679deeefe6fd9b85ba72bf1926ca6f40c5d95",
+      "root": "0136565861c94137a307d63a90f25e2bc6589f75bf6c5e5522b306a89ca22f95",
+      "chain": "1c46f22ba1c55ed5bb766f1614a1b119f36e0140a4495fcd60f5e8a0be1a984a"
+    },
+    {
+      "name": "pattern-4-one-time-True",
+      "agreements": [
+        "8683b0392def759b07c8fddc4d6835cabe4a1cea00581d616a75ebb8475f3e98",
+        "98abea17bf6b13c649a973d504611d33255f540d595b7a2b5da1f83d755811fd",
+        "03e739fea2a1f941a58ab0a3a146579814ffaddf440505dbd05224adb4153509"
+      ],
+      "one_time": "12757fef3820afa3946196e69f39fcfe06e67119cf25e48410994fc36b877aff",
+      "kem_shared": "3457142c67a516256e7f47f8299679deeefe6fd9b85ba72bf1926ca6f40c5d95",
+      "root": "287648fef15cc3c1dfcb1953b69c8c5785573065e9fc5a413ac73637e06eccec",
+      "chain": "59d6c3ab6e89fab36e4234e9f39fb2c2100d27f4aa891e7782342cb34b5e3334"
+    },
+    {
+      "name": "pattern-5-one-time-False",
+      "agreements": [
+        "8e255a5b4ad4e2dacaece9e159a50f029145bb132758326017c19cf4b27d86cf",
+        "b94ce9b4bc5726822f34eca65476fb2ce30942ea3aec88ca14d4bc5d2367bde3",
+        "a4cf5e6a8e38a1d9804ac903af3504bca3899028fec4a29005af8ce246ed7b63"
+      ],
+      "one_time": null,
+      "kem_shared": "66ac3de884912a72bf8979473681d552e5b6bfc96c52d3a381371f1aacea1c4a",
+      "root": "1cfc52660eec0482a1d2e5493d3d0fb7779f6ed273a0b1a7901ee6fccc3c5c15",
+      "chain": "26dd381769061b479c0286e4d2a98fce212c6eb830a61ab0a851932d269f69a3"
+    },
+    {
+      "name": "pattern-5-one-time-True",
+      "agreements": [
+        "8e255a5b4ad4e2dacaece9e159a50f029145bb132758326017c19cf4b27d86cf",
+        "b94ce9b4bc5726822f34eca65476fb2ce30942ea3aec88ca14d4bc5d2367bde3",
+        "a4cf5e6a8e38a1d9804ac903af3504bca3899028fec4a29005af8ce246ed7b63"
+      ],
+      "one_time": "e325424e544a540a62ca3a491cab970a844a9255c0c7aeb6a4c6a1cab61ccd46",
+      "kem_shared": "66ac3de884912a72bf8979473681d552e5b6bfc96c52d3a381371f1aacea1c4a",
+      "root": "7d91f563d16cf13c934a6ccc2e93a5bb1e0f4b557250677ad884c5780386fe62",
+      "chain": "89873b71052dab608ebc4500b839f458d9fd5e934047df48c86fa12be5f7d84b"
+    },
+    {
+      "name": "pattern-6-one-time-False",
+      "agreements": [
+        "52cb80565c5bef52b5eea81389f045436a987bfa375198b8988764d74e5c6ec1",
+        "9d284826218066633c68fd182ac083973dcd429ec39c923445bf7ae96261c3d4",
+        "218f4d020d1a2ae4b5fce737746354a4b06016c91e856182c4719c23dff93a4c"
+      ],
+      "one_time": null,
+      "kem_shared": "4f26c593764732d780826860fecc769c9b41a2192df52501f8faa41b5c4daafd",
+      "root": "3663e8fde3313347dfb3777d5c594ee7c92ba94062b32f43566f6a4922bed446",
+      "chain": "69c8f01aac406d04ed821b49044081ec3d5a3b200a6ef0734f66391aceb94542"
+    },
+    {
+      "name": "pattern-6-one-time-True",
+      "agreements": [
+        "52cb80565c5bef52b5eea81389f045436a987bfa375198b8988764d74e5c6ec1",
+        "9d284826218066633c68fd182ac083973dcd429ec39c923445bf7ae96261c3d4",
+        "218f4d020d1a2ae4b5fce737746354a4b06016c91e856182c4719c23dff93a4c"
+      ],
+      "one_time": "f1d6117c7bf5bf82db9a29d2fbe96b1cd4bed791ced54577e3dd0cdc1d693ab7",
+      "kem_shared": "4f26c593764732d780826860fecc769c9b41a2192df52501f8faa41b5c4daafd",
+      "root": "73b906ca3aae7c0bfcc4d2331dfd7e7d6ac77458e411ae27626486ca81c9887a",
+      "chain": "e0cee2d1c25732263648b46d49748c2a3534bc69c60f49a8880b4b78b907f73c"
+    },
+    {
+      "name": "pattern-7-one-time-False",
+      "agreements": [
+        "cd1e9da0441b0a04a652283acd39d09d1ff2082b0b7ac7efdca83913781bde67",
+        "82941eea079dcf8e39f38aa935761ae495cc8e993a2f240ad520d1e2fd57c958",
+        "b8f72293824dfb5fdf811937a392f272bc812894cd0d5b6b859a7e91216f8209"
+      ],
+      "one_time": null,
+      "kem_shared": "a0b5f06631455bd78c39aa86d2db5a697ad3b89d971bf321b009f8ee4f2509dd",
+      "root": "dd2949a7fc2a4a421a8a39451ee0917f76364e83644c338ee7fc3fdb3dc9b010",
+      "chain": "9786cc7da160485eced533fcea8548c1b94c446c4c5dbe4902753c410c25d3d4"
+    },
+    {
+      "name": "pattern-7-one-time-True",
+      "agreements": [
+        "cd1e9da0441b0a04a652283acd39d09d1ff2082b0b7ac7efdca83913781bde67",
+        "82941eea079dcf8e39f38aa935761ae495cc8e993a2f240ad520d1e2fd57c958",
+        "b8f72293824dfb5fdf811937a392f272bc812894cd0d5b6b859a7e91216f8209"
+      ],
+      "one_time": "b236a3494b9d5a4c93c68c717e6e35ec799c97ba5d88eed365ef88cdce7cf982",
+      "kem_shared": "a0b5f06631455bd78c39aa86d2db5a697ad3b89d971bf321b009f8ee4f2509dd",
+      "root": "d334666593ceb72ee0607c46908b612f8f30529adf01104de4f9fba7b33c6c3f",
+      "chain": "e88844accaccb6d9b2d8fce3b5f8c6c416e8262920eb9b718172a11ca51c49b7"
+    }
+  ]
+}

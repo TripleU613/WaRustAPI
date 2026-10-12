@@ -1,0 +1,42 @@
+{
+  "bundle-processing.txt": {
+    "bytes": 20500,
+    "sha256": "cc5fb6023178d1e09e085ed06630c6ba7bb964754dd608103e03c877e89c82ef"
+  },
+  "counter-variant.txt": {
+    "bytes": 523,
+    "sha256": "45a32380eb768da8a35472bebf83d6946f4622113074ad934170a7f931a9d9cf"
+  },
+  "expand.txt": {
+    "bytes": 3006,
+    "sha256": "9a82ebbb49268eb223d9d2b460bb5b3dae82947f3a35bbd17a05f25fc56dab94"
+  },
+  "extract.txt": {
+    "bytes": 1194,
+    "sha256": "dd85d3239439c9eb037c2787eba90de9965e05bc374bfa92607ae4e3dbce07df"
+  },
+  "hmac-wrapper.txt": {
+    "bytes": 1017,
+    "sha256": "6f6c7cf5dccc649e3f711a62beb894b80ca7470e25b698128123d23799efdc0f"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "split-keys.txt": {
+    "bytes": 1423,
+    "sha256": "7c41578fc352d8522601748448832a6aca730bf682632be810da1655925632e0"
+  },
+  "targets.json": {
+    "bytes": 1862,
+    "sha256": "a177db4f54d5987a9bf4e7e6776b43116a0e7eff378a106db165751a906a192b"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

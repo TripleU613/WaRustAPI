@@ -81,10 +81,78 @@ pub fn decapsulate(secret: &[u8], ciphertext: &[u8]) -> Result<KemSecret> {
     Ok(result)
 }
 
+/// Derive the initial hybrid root and chain keys from already-computed agreements.
+/// Order: identity/signed, base/identity, base/signed, optional base/one-time,
+/// then KEM shared secret. This does not verify identities or create/adopt a session.
+pub fn initial_hybrid_keys(
+    identity_signed: &[u8; 32],
+    base_identity: &[u8; 32],
+    base_signed: &[u8; 32],
+    base_one_time: Option<&[u8; 32]>,
+    kem_shared: &[u8; 32],
+) -> (KemSecret, KemSecret) {
+    let mut material = Zeroizing::new([0xff; 192]);
+    let mut length = 32;
+    for agreement in [identity_signed, base_identity, base_signed]
+        .into_iter()
+        .chain(base_one_time)
+        .chain(std::iter::once(kem_shared))
+    {
+        material[length..length + 32].copy_from_slice(agreement);
+        length += 32;
+    }
+    let mut output = Zeroizing::new([0u8; 64]);
+    hkdf::Hkdf::<sha2::Sha256>::new(None, &material[..length])
+        .expand(
+            b"WhisperText_X25519_SHA-256_CRYSTALS-KYBER-1024",
+            output.as_mut(),
+        )
+        .expect("fixed 64-byte HKDF output");
+    (
+        KemSecret(Zeroizing::new(output[..32].to_vec())),
+        KemSecret(Zeroizing::new(output[32..].to_vec())),
+    )
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use ml_kem::Seed;
+
+    #[test]
+    fn hybrid_initial_keys_match_independent_hmac_vectors() {
+        let fixture: serde_json::Value = serde_json::from_str(include_str!(
+            "../../../../docs/protocol/hybrid-kdf-vectors.json"
+        ))
+        .unwrap();
+        let value = |v: &serde_json::Value| -> [u8; 32] {
+            hex::decode(v.as_str().unwrap())
+                .unwrap()
+                .try_into()
+                .unwrap()
+        };
+        let cases = fixture["cases"].as_array().unwrap();
+        assert_eq!(cases.len(), 16);
+        for case in cases {
+            let agreements = [
+                &case["agreements"][0],
+                &case["agreements"][1],
+                &case["agreements"][2],
+            ]
+            .map(value);
+            let one_time = (!case["one_time"].is_null()).then(|| value(&case["one_time"]));
+            let kem = value(&case["kem_shared"]);
+            let (root, chain) = initial_hybrid_keys(
+                &agreements[0],
+                &agreements[1],
+                &agreements[2],
+                one_time.as_ref(),
+                &kem,
+            );
+            assert_eq!(root.as_bytes(), value(&case["root"]));
+            assert_eq!(chain.as_bytes(), value(&case["chain"]));
+        }
+    }
 
     #[test]
     fn agrees_with_native_and_nist_vectors() {

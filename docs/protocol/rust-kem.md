@@ -53,3 +53,7 @@ regression, strict workspace/all-target Clippy, warnings-denied Rustdoc, the
 generated dependency audit, 26 default CLI/API-symbol tests, the experimental
 CLI build, formatting and local link/artifact hygiene. No fresh live PQ
 interoperability was tested.
+
+The subsequent [initial hybrid KDF helper](hybrid-kdf.md) implements the APK's
+ordered premaster composition and root/chain split. Full session admission,
+wire/state integration and incoming processing remain unfinished.

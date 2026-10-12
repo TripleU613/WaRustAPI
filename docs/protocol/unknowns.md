@@ -8,7 +8,8 @@ of silently deriving classic state. Original-byte signature diagnostics are impl
 The [native JNI trace](native-kem.md) resolves ML-KEM dispatch, byte lengths and
 the unused Java seed. [Selected native ML-KEM-1024 vectors](native-kem-vectors.md)
 now match NIST. [Rust primitive support](rust-kem.md) is implemented; full
-primitive/format coverage, hybrid integration/records,
+primitive/format coverage and hybrid integration/records remain open.
+[Initial hybrid KDF composition](hybrid-kdf.md) is implemented; pending wire/state,
 key inventory and incoming wire support still need implementation. See
 [the boundary and source audit](pq-bundle-boundary.md).
 

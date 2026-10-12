@@ -137,3 +137,7 @@ Experimental `signal::kem` provides ML-KEM-1024 primitive generation,
 encapsulation and expanded-key decapsulation with redacted, zeroized secrets.
 It does not enable hybrid sessions or adopt PQ bundles. See
 [API, native vectors and limitations](../protocol/rust-kem.md).
+
+`signal::kem::initial_hybrid_keys` derives the initial root/chain pair from
+ordered, already-computed EC and KEM agreements. It does not create or adopt
+a session; see [the evidenced hybrid KDF and remaining integration](../protocol/hybrid-kdf.md).
