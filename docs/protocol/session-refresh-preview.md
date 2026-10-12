@@ -1,5 +1,46 @@
 # Identity refresh session preview
 
+2026-10-11 — **Implemented/offline:** primary changed-key preview now derives
+and discards a fresh classic session with zero old receiving archives, matching
+the existing guarded application path. Same-key candidates continue archiving
+held state. Original pin/session/account/action/receipt/outbox tables and journal
+remain unchanged, including after reopen. This supersedes the historical changed
+primary refusal below; full CPB admission and state persistence remain unevaluated.
+
+The supported candidate must have a verified classic signed-prekey bundle,
+a saved pin, an original matching or historical untracked read guard, no PQ
+metadata and structurally valid identity-auth fields. Present primary attestation
+shares the existing application invariants: changed keys allow structurally valid
+metadata even when attestation verification fails; same keys require verified
+metadata. Missing/non-byte/ambiguous required bodies still refuse. The existing
+same-key absent-attestation preview remains cryptographic derivation rather than
+proof of server override or native permission. No original request or wait is
+cancelled, replayed or repaired.
+
+The native source is unchanged: [0jc.A0L](apk/2.26.37.71-identity-refresh-application/session-processing.txt)
+compares held remote identity at 0044..008a and takes the reset paths before
+classic derivation on a mismatch. The exact cleanup/observer surface remains
+partly unported; this preview does not execute it. Existing
+[changed-key application](identity-refresh-application.md) uses the shared
+classic helper with no previous session and the verified candidate identity.
+The preview now selects that same fresh derivation, held in zeroizing memory.
+Candidate bytes, base keys and identifiers are never exported.
+
+Tests cover primary PN/LID changed keys with held state, a changed key without
+held state, original same-key archival/error cases, both declared attestation
+types and valid/invalid signatures, malformed metadata fallback, unsupported
+inputs and stale guards. All saved-table snapshots and journal heads remain
+equal. These are generated offline fixtures; no fresh live identity transition
+or complete native cryptographic/session equivalence is claimed.
+
+Validation passed 956 workspace/all-feature tests, strict Clippy, warnings-denied
+Rustdoc, the preview regression with only TCP/Noise/Signal enabled, 26 default
+CLI tests, API-symbol checks and the experimental CLI build. Formatting and
+repository link/evidence hygiene passed. The existing
+eight-topic identity-refresh application bundle reproduced all 13 files /
+119,638 bytes against the pinned APK. No new source or effective-property claim
+is inferred from this reused evidence.
+
 2026-10-11 follow-up: [companion session preview](companion-attestation-admission.md#companion-session-preview--2026-10-11)
 adds supported same/changed-key and returning-device derivation through existing
 directory ADV authority. It supersedes the primary-only and blanket companion

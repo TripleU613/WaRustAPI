@@ -78,7 +78,8 @@ identity transition. Changed-key sessions start fresh and preserve encrypted
 identity history. Duplicate application and reopen recovery do not reapply.
 
 Read-only preview can prepare a matching-key verified attestation session;
-changed-key candidates still report `identity_replacement_unported`. Neither
+[the changed-primary follow-up](session-refresh-preview.md) now also derives a
+fresh candidate through the supported changed-key metadata fallback. Neither
 preview nor inspection commits anything. `admission_evaluated=false` remains
 accurate: complete native state/property admission was not evaluated.
 

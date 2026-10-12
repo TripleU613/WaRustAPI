@@ -520,11 +520,13 @@ mod tests {
                             preview.outcome,
                             if !accepted {
                                 "attestation_admission_unported"
-                            } else if same {
-                                "prepared"
                             } else {
-                                "identity_replacement_unported"
+                                "prepared"
                             }
+                        );
+                        assert_eq!(
+                            preview.archived_states,
+                            accepted.then_some(usize::from(same))
                         );
                         assert!(!preview.admission_evaluated && !preview.persisted);
                         assert_eq!(snapshot(&f.store), before);
@@ -727,7 +729,7 @@ mod tests {
             assert_eq!(
                 preview.outcome,
                 if accepted {
-                    "identity_replacement_unported"
+                    "prepared"
                 } else {
                     "attestation_admission_unported"
                 }

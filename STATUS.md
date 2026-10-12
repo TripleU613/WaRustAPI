@@ -1,3 +1,11 @@
+2026-10-11 — **Implemented/offline:** identity-refresh session preview now
+supports primary changed keys through the existing verified classic application
+helper. Changed candidates derive fresh with zero old archives; same-key
+candidates retain receiving archives. Supported changed-key attestation fallback
+keeps failed verification separate from derivation. Saved tables/journal remain
+unchanged, including after reopen; no request, key adoption or live transition.
+[Primary preview, native trace and boundaries](docs/protocol/session-refresh-preview.md).
+
 2026-10-11 — **Implemented/offline:** held own-device sessions synchronize
 ordinary keep/unkeep with original target ownership, authenticated own actor,
 sender timestamp and update ID. Shared keep decode validates the supported full

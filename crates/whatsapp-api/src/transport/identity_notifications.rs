@@ -493,20 +493,16 @@ pub async fn preview_session(store: &ProtocolStore, id: &str) -> Result<SessionP
         result.outcome = "malformed_identity_auth";
         return Ok(result);
     }
-    let Some(pin) = pin else {
+    if pin.is_none() {
         result.outcome = "missing_saved_identity";
         return Ok(result);
-    };
+    }
     // The read snapshot is not an OCC commit guard: this operation never
     // commits a candidate or treats a matching pin as native admission.
     let identity = bundle
         .identity_key()
         .map_err(|_| Error::invalid("identity_notification", "invalid bundle identity"))?
         .serialize();
-    if peer.device == 0 && identity.as_ref() != pin.as_slice() {
-        result.outcome = "identity_replacement_unported";
-        return Ok(result);
-    }
     let account =
         account.ok_or_else(|| Error::invalid("identity_notification", "missing saved account"))?;
     let candidate = crate::signal::direct::prepare_session_refresh(
@@ -912,6 +908,8 @@ pub(super) mod tests {
             "attestation",
             "pq",
             "changed",
+            "changed_pn",
+            "changed_no_session",
             "forged",
             "queued",
             "uncertain",
@@ -932,6 +930,8 @@ pub(super) mod tests {
             }));
             let peer = Jid::parse(if case == "companion" {
                 "222222222222222:4@lid"
+            } else if case == "changed_pn" {
+                "15555550100@s.whatsapp.net"
             } else {
                 "222222222222222@lid"
             })
@@ -946,7 +946,7 @@ pub(super) mod tests {
                 panic!("expected read")
             };
             let mut response = reply(&peer, &id, &identity, case != "forged");
-            if case == "changed" {
+            if matches!(case, "changed" | "changed_pn" | "changed_no_session") {
                 response = reply(
                     &peer,
                     &id,
@@ -997,7 +997,7 @@ pub(super) mod tests {
                             held.to_vec()
                         },
                     )?;
-                    if case == "no_session" {
+                    if matches!(case, "no_session" | "changed_no_session") {
                         tx.delete(Table::SignalSessions, key.as_bytes())?;
                     }
                     if case == "missing_pin" {
@@ -1060,11 +1060,11 @@ pub(super) mod tests {
                 assert_eq!(
                     result.outcome,
                     match case {
-                        "prepared" | "no_session" => "prepared",
+                        "prepared" | "no_session" | "changed" | "changed_pn"
+                        | "changed_no_session" => "prepared",
                         "companion" => "missing_device_identity",
                         "attestation" => "attestation_admission_unported",
                         "pq" => "pq_session_unported",
-                        "changed" => "identity_replacement_unported",
                         "missing_pin" => "stale_refresh_guard",
                         _ => "reply_not_verified",
                     }
@@ -1073,7 +1073,7 @@ pub(super) mod tests {
                     result.archived_states,
                     match case {
                         "prepared" => Some(1),
-                        "no_session" => Some(0),
+                        "no_session" | "changed" | "changed_pn" | "changed_no_session" => Some(0),
                         _ => None,
                     }
                 );
@@ -1217,10 +1217,20 @@ pub(super) mod tests {
             let store = open(&dir.path().join("attestation.redb"));
             let peer = Jid::parse("222222222222222@lid").unwrap();
             install_pin(&store, &peer);
+            let mut saved_account = account();
+            let local = IdentityKeyPair::generate(&mut rand::rng());
+            saved_account.signal_registration_id = Some(31);
+            saved_account.signal_identity = Some(crate::session::SignalIdentityKey(
+                crate::session::KeyMaterial {
+                    public: local.public_key().public_key_bytes().try_into().unwrap(),
+                    private: *local.private_key().serialize(),
+                },
+            ));
+            store.write(|tx| saved_account.save(tx)).unwrap();
             let fetched = IdentityKeyPair::generate(&mut rand::rng());
             let Refresh::Queued(id) = queue(
                 &store,
-                &account(),
+                &saved_account,
                 &notification(&peer.to_string(), "attestation"),
             )
             .unwrap() else {
@@ -1272,10 +1282,10 @@ pub(super) mod tests {
                 inspection.attestation.as_ref().unwrap().signature_valid,
                 Some(valid)
             );
-            assert_eq!(
-                preview_session(&store, &id).await.unwrap().outcome,
-                "identity_replacement_unported"
-            );
+            let preview = preview_session(&store, &id).await.unwrap();
+            assert_eq!(preview.outcome, "prepared");
+            assert_eq!(preview.archived_states, Some(0));
+            assert!(!preview.persisted && !preview.admission_evaluated);
             assert_eq!(protected(&store), before);
             assert_eq!(store.journal_head().unwrap(), head);
             let json = serde_json::to_string(&inspection).unwrap();
