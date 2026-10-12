@@ -452,3 +452,10 @@ python tools/apk-research/native_kem_trace.py \
   lab/apk-2.26.37.71/native/qiling-rootfs/decoded \
   docs/protocol/native-kem-2.26.37.71 --check
 ```
+
+## Native ML-KEM-1024 independent vectors
+
+`native_kem_check.py` executes pinned native arithmetic/hashing in the existing
+Unicorn environment against 16 retained NIST vectors. Libc memory/allocation and
+once callbacks are modeled; no account, network, JNI or native randomness runs.
+See [scope, pinned NIST provenance and reproduction](../../docs/protocol/native-kem-vectors.md).

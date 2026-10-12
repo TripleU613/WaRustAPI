@@ -1,3 +1,11 @@
+2026-10-12 — **Confirmed/offline execution:** the pinned APK's native
+ML-KEM-1024 arithmetic/hashing matches 16 independent NIST FIPS203 cases:
+key generation, deterministic encapsulation and valid/modified-ciphertext
+decapsulation. Only libc memory/allocation and once initialization are modeled.
+No JNI, native RNG, account or hybrid session execution is claimed. The selected
+primitive vectors pass; Rust integration and live interoperability remain open.
+[Native execution, NIST provenance and reproducer](docs/protocol/native-kem-vectors.md).
+
 2026-10-12 — **Confirmed/static:** native JNI public-key length dispatch calls
 ML-KEM-512/768/1024; the Java CRYSTALS-KYBER-1024 HKDF label stays unchanged.
 The Java seed array is length-checked but never consumed; native encapsulation

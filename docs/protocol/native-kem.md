@@ -94,3 +94,11 @@ Validation: the seven-file trace reproduced exactly; a deliberately wrong-build
 library was refused before disassembly. Local links, artifact budgets and diff
 whitespace checks passed. Runtime Rust code is unchanged; the prior 971-test
 result does not verify this native primitive.
+
+## Subsequent primitive evidence
+
+The [offline native/NIST comparison](native-kem-vectors.md) now matches selected
+ML-KEM-1024 key generation, deterministic encapsulation and decapsulation
+vectors, including five modified ciphertext cases. This narrows the earlier
+primitive-equivalence unknown; it does not close JNI, native RNG, full algorithm
+coverage, other parameter sets or hybrid-session integration.

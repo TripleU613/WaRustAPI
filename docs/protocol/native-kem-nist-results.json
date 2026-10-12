@@ -1,0 +1,270 @@
+{
+  "apk_build": "2.26.37.71",
+  "library_sha256": "565f6c0e5581fe0b9ccc564f2d807d5363b8333abd32513e1722d6880d1c70aa",
+  "fixture_sha256": "f6e859ec57d172bbe6dfadf1506f48ba222b51f8d64fa79a99814a16a450664f",
+  "scope": "Actual native ML-KEM-1024 arithmetic and hashing; modeled libc memory/allocation and pthread_once; deterministic inner encapsulation; no JNI, RNG, account, network or hybrid session.",
+  "cases": [
+    {
+      "operation": "keyGen",
+      "tcId": 51,
+      "return_code": 0,
+      "output_sha256": [
+        "b78619e4fceeeb86dee3fedb945eca6da61dae312771ef8fa871951d391bd7b6",
+        "925ed6f1cf0379ede29d8209432d6e08c73ed0423883febf85416343f4fa1f86"
+      ],
+      "modeled_callbacks": {
+        "0x71daf0": 25,
+        "0x71db20": 8,
+        "0x71e0e0": 12,
+        "0x71db00": 117,
+        "0x71d580": 8,
+        "0x71d900": 16
+      }
+    },
+    {
+      "operation": "keyGen",
+      "tcId": 52,
+      "return_code": 0,
+      "output_sha256": [
+        "a5de1425ea855091c848e1ae423b8d51e5514db52b5df12142e3d4836f2cccaa",
+        "f04f9c44dace43240b6ebb8e7bb2d59edb3c7c56e013a04481c901cd550d457c"
+      ],
+      "modeled_callbacks": {
+        "0x71daf0": 25,
+        "0x71db20": 8,
+        "0x71e0e0": 12,
+        "0x71db00": 125,
+        "0x71d580": 8,
+        "0x71d900": 16
+      }
+    },
+    {
+      "operation": "keyGen",
+      "tcId": 53,
+      "return_code": 0,
+      "output_sha256": [
+        "0162a6f9d7b7357cc6a17ed00d0e6ec48784035ba5af5ce514671c352d1bffa9",
+        "2c57f7bf79e50a23da33345f3979f2576f5b74698e739bea97de677e53dfdf94"
+      ],
+      "modeled_callbacks": {
+        "0x71daf0": 25,
+        "0x71db20": 8,
+        "0x71e0e0": 12,
+        "0x71db00": 117,
+        "0x71d580": 8,
+        "0x71d900": 16
+      }
+    },
+    {
+      "operation": "encapsulation",
+      "tcId": 51,
+      "return_code": 0,
+      "output_sha256": [
+        "50354ab14ee479abefa58be0dce589fcd8710dbbc38cfddd9cca2ac8cb3992dd",
+        "8820cec73cf9f60b1e81f3051f67e537e4e6460e8ee54df9bc2bf44b97de2230"
+      ],
+      "modeled_callbacks": {
+        "0x71daf0": 32,
+        "0x71db20": 9,
+        "0x71e0e0": 13,
+        "0x71db00": 118,
+        "0x71d580": 9,
+        "0x71d900": 16
+      }
+    },
+    {
+      "operation": "encapsulation",
+      "tcId": 52,
+      "return_code": 0,
+      "output_sha256": [
+        "68329f83934a1c821535d0d0016ce4e63082b74b83d1b48b3a6ac1f536db8973",
+        "d8db771faa66ee75f1d18c119ddfca949371145e637629bfe6e005990250f255"
+      ],
+      "modeled_callbacks": {
+        "0x71daf0": 32,
+        "0x71db20": 9,
+        "0x71e0e0": 13,
+        "0x71db00": 126,
+        "0x71d580": 9,
+        "0x71d900": 16
+      }
+    },
+    {
+      "operation": "encapsulation",
+      "tcId": 53,
+      "return_code": 0,
+      "output_sha256": [
+        "7071fc186a75a3f67aa2c2533bedc44369016bcc80f6cd2b537faec5da75d6f2",
+        "13467e8dcaeadc4fd9577600bf9101eb5f740565c44eb83287cee84db0f38933"
+      ],
+      "modeled_callbacks": {
+        "0x71daf0": 32,
+        "0x71db20": 9,
+        "0x71e0e0": 13,
+        "0x71db00": 118,
+        "0x71d580": 9,
+        "0x71d900": 16
+      }
+    },
+    {
+      "operation": "decapsulation",
+      "tcId": 96,
+      "return_code": 0,
+      "output_sha256": [
+        "27a776157ec07849b87b5166cce0356d2659f9b4e03e2c33280cab75a0a05bab"
+      ],
+      "modeled_callbacks": {
+        "0x71daf0": 37,
+        "0x71db20": 10,
+        "0x71e0e0": 14,
+        "0x71db00": 121,
+        "0x71d580": 10,
+        "0x71d900": 16
+      }
+    },
+    {
+      "operation": "decapsulation",
+      "tcId": 97,
+      "return_code": 0,
+      "output_sha256": [
+        "7f4991837e42d7955956f65e24f5c1725d2bce4accc92558cc9bc66f381048f9"
+      ],
+      "modeled_callbacks": {
+        "0x71daf0": 37,
+        "0x71db20": 10,
+        "0x71e0e0": 14,
+        "0x71db00": 121,
+        "0x71d580": 10,
+        "0x71d900": 16
+      }
+    },
+    {
+      "operation": "decapsulation",
+      "tcId": 98,
+      "return_code": 0,
+      "output_sha256": [
+        "6104107d18a9073c8179f3b08703f71274e339c96f0923f77a5918380188a829"
+      ],
+      "modeled_callbacks": {
+        "0x71daf0": 37,
+        "0x71db20": 10,
+        "0x71e0e0": 14,
+        "0x71db00": 121,
+        "0x71d580": 10,
+        "0x71d900": 16
+      }
+    },
+    {
+      "operation": "decapsulation",
+      "tcId": 99,
+      "return_code": 0,
+      "output_sha256": [
+        "95e5570ceb327d92c3997a93a627257d81ff9d8655d0012a54e8576c8678a31d"
+      ],
+      "modeled_callbacks": {
+        "0x71daf0": 37,
+        "0x71db20": 10,
+        "0x71e0e0": 14,
+        "0x71db00": 121,
+        "0x71d580": 10,
+        "0x71d900": 16
+      }
+    },
+    {
+      "operation": "decapsulation",
+      "tcId": 100,
+      "return_code": 0,
+      "output_sha256": [
+        "c66b6b8fd16bafdea42d8d5a67b4bbdc473d14214d6812a436e6e4294f37bdd6"
+      ],
+      "modeled_callbacks": {
+        "0x71daf0": 37,
+        "0x71db20": 10,
+        "0x71e0e0": 14,
+        "0x71db00": 121,
+        "0x71d580": 10,
+        "0x71d900": 16
+      }
+    },
+    {
+      "operation": "decapsulation",
+      "tcId": 101,
+      "return_code": 0,
+      "output_sha256": [
+        "9ca30e07c2b03da9a76b1e19e40a48eff5e4d1d11849ac70fa30bdf98a4ec097"
+      ],
+      "modeled_callbacks": {
+        "0x71daf0": 37,
+        "0x71db20": 10,
+        "0x71e0e0": 14,
+        "0x71db00": 121,
+        "0x71d580": 10,
+        "0x71d900": 16
+      }
+    },
+    {
+      "operation": "decapsulation",
+      "tcId": 102,
+      "return_code": 0,
+      "output_sha256": [
+        "8c4d274b6d0fd19423c0df281af60fdfecf73587cf6f252dd6e1b64918b16130"
+      ],
+      "modeled_callbacks": {
+        "0x71daf0": 37,
+        "0x71db20": 10,
+        "0x71e0e0": 14,
+        "0x71db00": 121,
+        "0x71d580": 10,
+        "0x71d900": 16
+      }
+    },
+    {
+      "operation": "decapsulation",
+      "tcId": 103,
+      "return_code": 0,
+      "output_sha256": [
+        "89b7ea6aad33f80d113a9689bc4877f8a21d115c00944e2bf7aad77d71780313"
+      ],
+      "modeled_callbacks": {
+        "0x71daf0": 37,
+        "0x71db20": 10,
+        "0x71e0e0": 14,
+        "0x71db00": 129,
+        "0x71d580": 10,
+        "0x71d900": 16
+      }
+    },
+    {
+      "operation": "decapsulation",
+      "tcId": 104,
+      "return_code": 0,
+      "output_sha256": [
+        "dd23312bb1134a4649cd17f90c15f7d3240eb19bf114fcc8ffd9e96427884c8f"
+      ],
+      "modeled_callbacks": {
+        "0x71daf0": 37,
+        "0x71db20": 10,
+        "0x71e0e0": 14,
+        "0x71db00": 121,
+        "0x71d580": 10,
+        "0x71d900": 16
+      }
+    },
+    {
+      "operation": "decapsulation",
+      "tcId": 105,
+      "return_code": 0,
+      "output_sha256": [
+        "e61682f06394688206ec1ba1078b89459fbeaa7f4fb594435d39143c3851f608"
+      ],
+      "modeled_callbacks": {
+        "0x71daf0": 37,
+        "0x71db20": 10,
+        "0x71e0e0": 14,
+        "0x71db00": 121,
+        "0x71d580": 10,
+        "0x71d900": 16
+      }
+    }
+  ]
+}

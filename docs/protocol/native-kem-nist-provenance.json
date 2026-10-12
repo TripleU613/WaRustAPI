@@ -1,0 +1,47 @@
+{
+  "source_commit": "975de31eb83d87039ec88934fdc47d8c312b892d",
+  "source_url": "https://raw.githubusercontent.com/usnistgov/ACVP-Server/975de31eb83d87039ec88934fdc47d8c312b892d/gen-val/json-files/ML-KEM-encapDecap-FIPS203/internalProjection.json",
+  "source_sha256": "a556952ce869bb89c3a3196a701dad89647c193a34c86eafb61a9d710d5b810f",
+  "decapsulation_cases": [
+    {
+      "tcId": 96,
+      "reason": "modified ciphertext"
+    },
+    {
+      "tcId": 97,
+      "reason": "valid decapsulation"
+    },
+    {
+      "tcId": 98,
+      "reason": "modified ciphertext"
+    },
+    {
+      "tcId": 99,
+      "reason": "valid decapsulation"
+    },
+    {
+      "tcId": 100,
+      "reason": "valid decapsulation"
+    },
+    {
+      "tcId": 101,
+      "reason": "modified ciphertext"
+    },
+    {
+      "tcId": 102,
+      "reason": "valid decapsulation"
+    },
+    {
+      "tcId": 103,
+      "reason": "valid decapsulation"
+    },
+    {
+      "tcId": 104,
+      "reason": "modified ciphertext"
+    },
+    {
+      "tcId": 105,
+      "reason": "modified ciphertext"
+    }
+  ]
+}
