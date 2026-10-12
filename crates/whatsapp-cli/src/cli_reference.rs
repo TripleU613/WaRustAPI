@@ -16,6 +16,8 @@ pub fn render(cmd: &Command) -> String {
     let path = Vec::new();
     render_commands(&mut output, cmd, path);
 
+    output.truncate(output.trim_end().len());
+    output.push('\n');
     output
 }
 

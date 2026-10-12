@@ -1,0 +1,42 @@
+{
+  "caption-getter.txt": {
+    "bytes": 1029,
+    "sha256": "5516a69b0e038e67bfc68f78c95a3c9c32d2a60b808cf6f16a87e6ddda3980a2"
+  },
+  "caption-setter.txt": {
+    "bytes": 847,
+    "sha256": "09e86885993384d4e7e1869ed8eaf6b6ac067309689be68a1e3eb696c48b1678"
+  },
+  "clone.txt": {
+    "bytes": 4116,
+    "sha256": "a95a010a5799bbadc4dd440157a06d648308e496dedfcd8a2bb5b7580245b98d"
+  },
+  "image-descriptor.txt": {
+    "bytes": 7602,
+    "sha256": "6256cc99f694ea22b88ad63b4c8fa381b7b3b2d1e8b5366c93b202ccf23b366d"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manager.txt": {
+    "bytes": 108231,
+    "sha256": "d23df6d490c67807d82336edde7686b1799f096821d1c2999bab0d4a4a37fe4c"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "targets.json": {
+    "bytes": 3257,
+    "sha256": "7bd1006c7811cd2b673d9a27eea1d086699d51d99ddd356bd63f8cf2ba8322e6"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  },
+  "writer.txt": {
+    "bytes": 6542,
+    "sha256": "ab83afbf63199fb2ce4ffadbfed153137302b39cbe28b2b407215443be295e0b"
+  }
+}

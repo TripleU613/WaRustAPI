@@ -202,7 +202,8 @@ pub struct MessageUpdate {
 #[non_exhaustive]
 pub enum MessageChange {
     /// Content replaced by an edit. Supported authenticated own-device text
-    /// synchronization retains the original parent's key and stanza change time.
+    /// and image-caption synchronization retains the original parent's key and
+    /// stanza change time; caption edits keep the original media reference.
     Edited(Box<MessageContent>),
     /// Reaction added, changed or removed by a device.
     Reaction {

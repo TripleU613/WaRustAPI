@@ -1,0 +1,144 @@
+{
+  "evidence_id": "ev_25f1364f33900c2e36530b4b0afe062ae5298ff0496d3267031f68c5a8179f35",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.C2vT",
+    "method_name": "A00"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-9TBgyO/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\",\"max_heap_bytes\":15695085568,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "load_apk",
+        "input": {
+          "path": "/tmp/rea-android-9TBgyO/target.apk",
+          "threads": 1,
+          "resources": "full"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-9TBgyO/target.apk\",\"class_count\":94738,\"raw_class_count\":94738,\"resource_count\":14967,\"load_duration_ms\":14466,\"decompile_timeout_ms\":90000,\"threads\":1,\"code_cache_size\":64,\"resources\":\"full\"}"
+            }
+          ]
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C2vT"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"name\":\"A00\",\"def_pos\":0,\"type\":\"X.00s\"},{\"name\":\"A01\",\"def_pos\":0,\"type\":\"X.05B\"},{\"name\":\"A02\",\"def_pos\":0,\"type\":\"X.05B\"},{\"name\":\"A03\",\"def_pos\":0,\"type\":\"X.00l\"}],\"field_count\":4,\"full_name\":\"X.C2vT\",\"name\":\"C2vT\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":2,\"methods\":[{\"is_constructor\":true,\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\"},{\"is_constructor\":false,\"signature\":\"A00(X.178, X.1gc): X.178\",\"def_pos\":0,\"name\":\"A00\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C2vT",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_name\":\"A00\",\"overload_count\":1,\"body\":\"    public AnonymousClass178 A00(AnonymousClass178 anonymousClass178, C1gc c1gc) {\\n        boolean zA1Y \\u003d C1xo.A1Y(anonymousClass178, c1gc);\\n        C1gj c1gj \\u003d (C1gj) this.A03.getValue();\\n        int i \\u003d anonymousClass178.A0h;\\n        C1gg c1ggA00 \\u003d c1gj.A00(i);\\n        C00h.A0D(c1ggA00, \\\"null cannot be cast to non-null type com.whatsapp.infra.fmessage.subsystems.cloning.integrationpoint.FMessageCloningIntegrationPoint\\u003cT of com.whatsapp.infra.fmessage.subsystems.cloning.impl.FMessageCloningSubsystemImpl.cloneUsingFMessagePlatform\\u003e\\\");\\n        AnonymousClass178 anonymousClass178AFm \\u003d ((C1gn) c1ggA00).AFm(anonymousClass178, c1gc, anonymousClass178.A0F);\\n        Iterator it \\u003d ((Iterable) C1xg.A1K(this.A00)).iterator();\\n        while (it.hasNext()) {\\n            ((C3Za) it.next()).Byt(anonymousClass178, anonymousClass178AFm);\\n        }\\n        C0AH c0ah \\u003d (C0AH) C1xk.A0p(this.A02, 1443);\\n        Class\\u003c?\\u003e cls \\u003d anonymousClass178.getClass();\\n        Class\\u003c?\\u003e cls2 \\u003d anonymousClass178AFm.getClass();\\n        if (cls !\\u003d cls2) {\\n            String simpleName \\u003d cls.getSimpleName();\\n            String simpleName2 \\u003d cls2.getSimpleName();\\n            StringBuilder sbA06 \\u003d AnonymousClass000.A06(i, \\\"type\\u003d\\\");\\n            sbA06.append(\\\", original-class\\u003d\\\");\\n            sbA06.append(simpleName);\\n            c0ah.A0g(\\\"fmessage-clone-class-mismatch\\\", C1xj.A16(\\\", cloned-class\\u003d\\\", simpleName2, sbA06), zA1Y);\\n        }\\n        return anonymousClass178AFm;\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.C2vT\",\"full_name\":\"X.2vT.A00\",\"mode\":\"java\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.C2vT",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(X.178, X.1gc): X.178",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public AnonymousClass178 A00(AnonymousClass178 anonymousClass178, C1gc c1gc) {\n        boolean zA1Y = C1xo.A1Y(anonymousClass178, c1gc);\n        C1gj c1gj = (C1gj) this.A03.getValue();\n        int i = anonymousClass178.A0h;\n        C1gg c1ggA00 = c1gj.A00(i);\n        C00h.A0D(c1ggA00, \"null cannot be cast to non-null type com.whatsapp.infra.fmessage.subsystems.cloning.integrationpoint.FMessageCloningIntegrationPoint<T of com.whatsapp.infra.fmessage.subsystems.cloning.impl.FMessageCloningSubsystemImpl.cloneUsingFMessagePlatform>\");\n        AnonymousClass178 anonymousClass178AFm = ((C1gn) c1ggA00).AFm(anonymousClass178, c1gc, anonymousClass178.A0F);\n        Iterator it = ((Iterable) C1xg.A1K(this.A00)).iterator();\n        while (it.hasNext()) {\n            ((C3Za) it.next()).Byt(anonymousClass178, anonymousClass178AFm);\n        }\n        C0AH c0ah = (C0AH) C1xk.A0p(this.A02, 1443);\n        Class<?> cls = anonymousClass178.getClass();\n        Class<?> cls2 = anonymousClass178AFm.getClass();\n        if (cls != cls2) {\n            String simpleName = cls.getSimpleName();\n            String simpleName2 = cls2.getSimpleName();\n            StringBuilder sbA06 = AnonymousClass000.A06(i, \"type=\");\n            sbA06.append(\", original-class=\");\n            sbA06.append(simpleName);\n            c0ah.A0g(\"fmessage-clone-class-mismatch\", C1xj.A16(\", cloned-class=\", simpleName2, sbA06), zA1Y);\n        }\n        return anonymousClass178AFm;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

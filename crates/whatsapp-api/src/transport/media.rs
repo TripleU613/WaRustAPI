@@ -403,6 +403,36 @@ pub fn list(store: &ProtocolStore) -> Result<Vec<MediaEntry>> {
 
 const REFERENCE_BINDING: &[u8] = b"incoming-ordinary-media-v1";
 
+// 152/16P clone the original C1iB and copy Ao1 via A0s, never edited media keys.
+pub(super) fn image_edit_caption(payload: &[u8]) -> Result<Option<Option<String>>> {
+    let fields = crate::signal::direct::payload_fields(payload)?;
+    if fields.iter().any(|f| !matches!(f, 3 | 35))
+        || fields.iter().filter(|&&f| f == 3).count() != 1
+    {
+        return Ok(None);
+    }
+    #[derive(Message)]
+    struct Caption {
+        #[prost(string, optional, tag = "3")]
+        text: Option<String>,
+        #[prost(bool, tag = "25")]
+        once: bool,
+    }
+    let raw = RawEnvelope::decode(payload).map_err(|_| bad("invalid image edit"))?;
+    let nested = Zeroizing::new(raw.image.ok_or_else(|| bad("missing image edit"))?);
+    let caption =
+        Caption::decode(nested.as_slice()).map_err(|_| bad("invalid image edit caption"))?;
+    // shortcut: quoted/expiring edits need their native context lifecycle before projection.
+    if caption.once
+        || media_context(payload)?.is_some_and(|c| {
+            c.stanza.is_some() || c.quoted.is_some() || c.expiration.is_some_and(|v| v != 0)
+        })
+    {
+        return Ok(None);
+    }
+    Ok(Some(caption.text))
+}
+
 /// Project unwrapped ordinary media while retaining expiry and refusing quotes. The
 /// caller must atomically persist the authenticated inbox record with the event.
 pub(super) fn event_content(
@@ -801,6 +831,24 @@ mod tests {
             )),
         })
         .unwrap();
+        let own = Jid::parse("15555550199@s.whatsapp.net").unwrap();
+        let source = Jid::parse("12345:2@lid").unwrap();
+        store
+            .write(|tx| {
+                crate::session::AccountRecord {
+                    own_jid: Some(own.clone()),
+                    registration: crate::session::RegistrationStatus::Registered,
+                    ..Default::default()
+                }
+                .save(tx)?;
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"login-identity",
+                    1,
+                    &serde_json::json!({"pn":own.to_string(),"lid":"12345@lid"}),
+                )
+            })
+            .unwrap();
         let chat = Jid::parse("67890@lid").unwrap();
         let inner = Envelope {
             image: Some(Image {
@@ -846,7 +894,7 @@ mod tests {
                     Table::Checkpoints,
                     key,
                     1,
-                    &serde_json::json!({"status":"decrypted","protobuf":wrapper,"route":route}),
+                    &serde_json::json!({"status":"decrypted","source":source,"protobuf":wrapper,"route":route}),
                 )?;
                 Ok(event)
             })
@@ -872,9 +920,101 @@ mod tests {
                 .unwrap()
                 .is_empty()
         );
+        let parent = store
+            .read(|tx| tx.get_json::<serde_json::Value>(Table::Checkpoints, key, 1))
+            .unwrap();
+        for (index, caption) in [(0, Some("new caption")), (1, None)] {
+            let mut image = Vec::new();
+            // Replacement attachment metadata must not select another attachment.
+            prost::encoding::string::encode(
+                1,
+                &"https://mmg.whatsapp.net/different".to_owned(),
+                &mut image,
+            );
+            prost::encoding::bytes::encode(8, &vec![99; 32], &mut image);
+            if let Some(text) = caption {
+                prost::encoding::string::encode(3, &text.to_owned(), &mut image);
+            }
+            let mut replacement = Vec::new();
+            prost::encoding::bytes::encode(3, &image, &mut replacement);
+            let mut protocol = b"\x0a\x07\x1a\x05MEDIA\x10\x0e".to_vec();
+            prost::encoding::bytes::encode(14, &replacement, &mut protocol);
+            prost::encoding::int64::encode(15, &(index + 1), &mut protocol);
+            let mut body = Vec::new();
+            prost::encoding::bytes::encode(12, &protocol, &mut body);
+            let update_key = format!("received-own:67890@lid:IMAGE-EDIT-{index}");
+            let update_node = Node::new("message")
+                .attr("from", source.clone())
+                .attr("recipient", chat.clone())
+                .attr("id", format!("IMAGE-EDIT-{index}"))
+                .attr("type", "media")
+                .attr("edit", "1");
+            let wrapped = Wrapper {
+                sent: Some(Sent {
+                    destination: chat.to_string(),
+                    message: body.clone(),
+                }),
+            }
+            .encode_to_vec();
+            let event = store.write(|tx| {
+                let event = super::super::inbox_events::own_device_message(tx,update_key.as_bytes(),&chat,&update_node,&body,&[own.clone(),source.to_non_ad()])?.unwrap();
+                tx.put_json(Table::Checkpoints,update_key.as_bytes(),1,&serde_json::json!({"status":"decrypted","source":source,"protobuf":wrapped}))?;
+                tx.put_json(Table::Inbox,update_key.as_bytes(),1,&serde_json::json!({"kind":"message_updated"}))?;
+                Ok(event)
+            }).unwrap();
+            let SyncEvent::MessageUpdated(update) = event else {
+                panic!("image edit missing")
+            };
+            let crate::model::message::MessageChange::Edited(content) = update.change else {
+                panic!("not edited")
+            };
+            let crate::model::message::MessageContent::Media {
+                reference: edited,
+                caption: actual,
+                ..
+            } = *content
+            else {
+                panic!("not media")
+            };
+            assert_eq!(actual.as_deref(), caption);
+            assert_eq!(reference_selector(&store, &edited).unwrap(), id);
+            assert_eq!(update.key.id.as_str(), "MEDIA");
+            assert_eq!(
+                update.key.direction,
+                crate::model::message::Direction::Outgoing
+            );
+            assert_eq!(
+                store
+                    .read(|tx| tx.get_json::<serde_json::Value>(Table::Checkpoints, key, 1))
+                    .unwrap(),
+                parent
+            );
+            assert_eq!(list(&store).unwrap().len(), 1);
+        }
         super::super::chat_clear::clear_chat(&store, &chat).unwrap();
         assert!(list(&store).unwrap().is_empty());
         assert!(reference_selector(&store, &reference).is_err());
+    }
+
+    #[test]
+    fn image_caption_edits_refuse_view_once_quotes_and_mixed_content() {
+        assert_eq!(
+            image_edit_caption(b"\x1a\x03\x1a\x01x").unwrap(),
+            Some(Some("x".into()))
+        );
+        assert_eq!(image_edit_caption(b"\x1a\x00").unwrap(), Some(None));
+        assert!(
+            image_edit_caption(b"\x1a\x03\xc8\x01\x01")
+                .unwrap()
+                .is_none()
+        );
+        assert!(
+            image_edit_caption(b"\x1a\x06\x8a\x01\x03\x0a\x01P")
+                .unwrap()
+                .is_none()
+        );
+        assert!(image_edit_caption(b"\x1a\x00\x0a\x01x").unwrap().is_none());
+        assert!(image_edit_caption(b"\x1a\x02\x1a\x01").is_err());
     }
 
     #[test]

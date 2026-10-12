@@ -1,3 +1,11 @@
+2026-10-11 — **Implemented/offline:** authenticated own-device ordinary image
+caption edits now emit Edited while retaining the original sealed attachment
+reference. Replacement keys/URLs do not redirect the attachment; caption removal
+is supported. Original parent bytes, send facts, IDs and waits remain unchanged.
+Kind, terminal and ordering guards still apply; other media, peer configured
+window, special/orphan/expiry lifecycles and fresh live delivery remain open.
+[Native media clone and receive tests](image-caption-edit.md).
+
 2026-10-11 — **Implemented/offline:** held authenticated own-device sessions
 receive ordinary text edits as MessageUpdated/Edited for loaded own text parents
 and attributed outgoing text intents. Parent chat/direction/ID stay intact;

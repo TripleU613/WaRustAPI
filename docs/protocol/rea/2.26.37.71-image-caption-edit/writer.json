@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_31530440fe810a0fcfd5e12094144684f9278f029a174213bf443d5f506d896e",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.D9B",
+    "method_name": "A00"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-VIYWvB/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"java_version\":\"21.0.12.1\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":15695085568}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.D9B"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"D9B\",\"full_name\":\"X.D9B\",\"field_count\":4,\"fields\":[{\"def_pos\":0,\"name\":\"A00\",\"type\":\"X.00s\"},{\"def_pos\":0,\"name\":\"A01\",\"type\":\"X.00s\"},{\"def_pos\":0,\"name\":\"A02\",\"type\":\"X.00s\"},{\"def_pos\":0,\"name\":\"A03\",\"type\":\"X.07t\"}],\"methods\":[{\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(): void\"},{\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0,\"signature\":\"A00(X.Db8, X.178, X.Cn6): void\"},{\"is_constructor\":false,\"name\":\"AD7\",\"def_pos\":0,\"signature\":\"AD7(X.178, X.Cn6): void\"},{\"is_constructor\":false,\"name\":\"CF4\",\"def_pos\":0,\"signature\":\"CF4(X.CoT): X.178\"},{\"is_constructor\":false,\"name\":\"CHx\",\"def_pos\":0,\"signature\":\"CHx(X.178): X.CV1\"}],\"method_count\":5}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.D9B",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"class_name\":\"X.D9B\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public final void A00(Db8 db8, AnonymousClass178 anonymousClass178, Cn6 cn6) throws C4y {\\n        boolean zA1X \\u003d C3c8.A1X(cn6);\\n        C07t c07t \\u003d this.A03;\\n        boolean zA10 \\u003d c07t.A10(8784);\\n        BOG bog \\u003d cn6.A01;\\n        C6tY c6tY \\u003d ((BZc) bog.instance).editedMessage_;\\n        if (c6tY \\u003d\\u003d null) {\\n            c6tY \\u003d C6tY.DEFAULT_INSTANCE;\\n        }\\n        C6ry c6ryA0p \\u003d Ayk.A0p(c6tY);\\n        BOG bogA0Z \\u003d Ayo.A0Z(c6ryA0p);\\n        GeneratedMessageLite.Builder builder \\u003d (zA10 ? bog.A0H() : bogA0Z.A0H()).toBuilder();\\n        C00h.A09(builder);\\n        BOA boa \\u003d (BOA) builder;\\n        BZc bZc \\u003d ((BZb) boa.instance).editedMessage_;\\n        if (bZc \\u003d\\u003d null) {\\n            bZc \\u003d BZc.DEFAULT_INSTANCE;\\n        }\\n        BOG bogA0o \\u003d Ayk.A0o(bZc);\\n        D5e d5eA00 \\u003d Cbt.A00(anonymousClass178);\\n        if (d5eA00 \\u003d\\u003d null) {\\n            throw C4y.A04(zA1X ? 1 : 0);\\n        }\\n        BOE boeA00 \\u003d BOA.A00(boa);\\n        ((CSZ) this.A00.get()).A01(anonymousClass178.B1V(), d5eA00.A02, boeA00, zA1X, cn6.A09);\\n        db8.APs(anonymousClass178, cn6, bogA0o);\\n        CmC.A07(bogA0o);\\n        C00h.A0A(bogA0o, zA1X ? 1 : 0);\\n        Cn6 cn6A00 \\u003d Cn6.A00(cn6, bogA0o, null, 33554430, zA1X, zA1X, zA1X, zA1X, zA1X);\\n        C9Q.A00(c07t, anonymousClass178, cn6A00, bogA0o);\\n        BOG bog2 \\u003d cn6A00.A01;\\n        BZb bZbA0m \\u003d Ayl.A0m(boa);\\n        bZbA0m.editedMessage_ \\u003d Ayn.A0e(bog2);\\n        bZbA0m.bitField0_ |\\u003d 1024;\\n        boa.A03(boeA00);\\n        boa.A02(C4F.A0N);\\n        long j \\u003d d5eA00.A01;\\n        BZb bZbA0m2 \\u003d Ayl.A0m(boa);\\n        bZbA0m2.bitField0_ |\\u003d 2048;\\n        bZbA0m2.timestampMs_ \\u003d j;\\n        if (zA10) {\\n            bog.A0V(boa);\\n            return;\\n        }\\n        bogA0Z.A0V(boa);\\n        c6ryA0p.A01(bogA0Z);\\n        BZc bZcA0r \\u003d Ayl.A0r(bog);\\n        bZcA0r.editedMessage_ \\u003d Ayn.A0d(c6ryA0p);\\n        bZcA0r.bitField1_ |\\u003d 8192;\\n    }\",\"overload_count\":1,\"method_name\":\"A00\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.D9B.A00\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.D9B",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(X.Db8, X.178, X.Cn6): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public final void A00(Db8 db8, AnonymousClass178 anonymousClass178, Cn6 cn6) throws C4y {\n        boolean zA1X = C3c8.A1X(cn6);\n        C07t c07t = this.A03;\n        boolean zA10 = c07t.A10(8784);\n        BOG bog = cn6.A01;\n        C6tY c6tY = ((BZc) bog.instance).editedMessage_;\n        if (c6tY == null) {\n            c6tY = C6tY.DEFAULT_INSTANCE;\n        }\n        C6ry c6ryA0p = Ayk.A0p(c6tY);\n        BOG bogA0Z = Ayo.A0Z(c6ryA0p);\n        GeneratedMessageLite.Builder builder = (zA10 ? bog.A0H() : bogA0Z.A0H()).toBuilder();\n        C00h.A09(builder);\n        BOA boa = (BOA) builder;\n        BZc bZc = ((BZb) boa.instance).editedMessage_;\n        if (bZc == null) {\n            bZc = BZc.DEFAULT_INSTANCE;\n        }\n        BOG bogA0o = Ayk.A0o(bZc);\n        D5e d5eA00 = Cbt.A00(anonymousClass178);\n        if (d5eA00 == null) {\n            throw C4y.A04(zA1X ? 1 : 0);\n        }\n        BOE boeA00 = BOA.A00(boa);\n        ((CSZ) this.A00.get()).A01(anonymousClass178.B1V(), d5eA00.A02, boeA00, zA1X, cn6.A09);\n        db8.APs(anonymousClass178, cn6, bogA0o);\n        CmC.A07(bogA0o);\n        C00h.A0A(bogA0o, zA1X ? 1 : 0);\n        Cn6 cn6A00 = Cn6.A00(cn6, bogA0o, null, 33554430, zA1X, zA1X, zA1X, zA1X, zA1X);\n        C9Q.A00(c07t, anonymousClass178, cn6A00, bogA0o);\n        BOG bog2 = cn6A00.A01;\n        BZb bZbA0m = Ayl.A0m(boa);\n        bZbA0m.editedMessage_ = Ayn.A0e(bog2);\n        bZbA0m.bitField0_ |= 1024;\n        boa.A03(boeA00);\n        boa.A02(C4F.A0N);\n        long j = d5eA00.A01;\n        BZb bZbA0m2 = Ayl.A0m(boa);\n        bZbA0m2.bitField0_ |= 2048;\n        bZbA0m2.timestampMs_ = j;\n        if (zA10) {\n            bog.A0V(boa);\n            return;\n        }\n        bogA0Z.A0V(boa);\n        c6ryA0p.A01(bogA0Z);\n        BZc bZcA0r = Ayl.A0r(bog);\n        bZcA0r.editedMessage_ = Ayn.A0d(c6ryA0p);\n        bZcA0r.bitField1_ |= 8192;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

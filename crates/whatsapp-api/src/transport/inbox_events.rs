@@ -1006,33 +1006,77 @@ fn own_device_edit(
         return Ok(None);
     };
     let outbox = crate::outbox::Outbox::new("comparison-driver", crate::profile::Limits::default());
-    let text_parent = if let Some(entry) = outbox.by_wire_id_in_write(tx, &target.id)? {
+    let parent = if let Some(entry) = outbox.by_wire_id_in_write(tx, &target.id)? {
         if !authenticated_direct_chat(tx, chat, entry.intent.chat.jid())? {
             return Ok(None);
         }
-        matches!(entry.intent.content, MessageContent::Text { .. })
+        Some(entry.intent.content)
     } else if let Some(record) = super::own_device::record_in(tx, chat, target.id.as_str())? {
-        record
-            .saved
-            .and_then(|saved| {
-                let wrapped = zeroize::Zeroizing::new(
-                    serde_json::from_value::<Vec<u8>>(saved["protobuf"].clone()).ok()?,
-                );
-                let plain = super::own_device::payload(&wrapped, &record.chat)?;
-                let fields = crate::signal::direct::payload_fields(&plain).ok()?;
-                Some(
-                    fields.iter().all(|f| matches!(f, 1 | 6 | 35))
-                        && super::quotes::decode(&plain).is_some(),
-                )
-            })
-            .unwrap_or(false)
+        if let Some(saved) = record.saved {
+            let wrapped = zeroize::Zeroizing::new(
+                serde_json::from_value::<Vec<u8>>(saved["protobuf"].clone())
+                    .map_err(|_| crate::Error::invalid("inbox", "invalid saved edit parent"))?,
+            );
+            let Some(plain) = super::own_device::payload(&wrapped, &record.chat) else {
+                return Ok(None);
+            };
+            let parent_node = Node::new("message")
+                .attr("from", record.chat.clone())
+                .attr("id", target.id.as_str());
+            let projected = project(
+                record.key.as_bytes(),
+                &parent_node,
+                &plain,
+                None,
+                None,
+                None,
+                own,
+            );
+            match projected {
+                SyncEvent::NewMessage(message) => Some(message.content),
+                _ => {
+                    #[cfg(feature = "experimental-registration-https")]
+                    {
+                        super::media::event_content(tx, record.key.as_bytes(), &plain)?
+                            .filter(|(_, expiration)| expiration.is_none())
+                            .map(|(content, _)| content)
+                    }
+                    #[cfg(not(feature = "experimental-registration-https"))]
+                    {
+                        None
+                    }
+                }
+            }
+        } else {
+            None
+        }
     } else {
         // shortcut: unloaded edits require 153's orphan lifecycle before projection.
         return Ok(None);
     };
-    if !text_parent {
+    let Some(mut parent) = parent else {
+        return Ok(None);
+    };
+    #[cfg(feature = "experimental-registration-https")]
+    let image_caption = super::media::image_edit_caption(&edit.replacement)?;
+    #[cfg(not(feature = "experimental-registration-https"))]
+    let image_caption: Option<Option<String>> = None;
+    let edited_media = if let Some(new_caption) = image_caption {
+        if let MessageContent::Media {
+            reference, caption, ..
+        } = &mut parent
+            && reference.kind == crate::model::message::MediaKind::Image
+        {
+            *caption = new_caption;
+            Some(parent)
+        } else {
+            return Ok(Some(unsupported_event(update_key)));
+        }
+    } else if matches!(parent, MessageContent::Text { .. }) {
+        None
+    } else {
         return Ok(Some(unsupported_event(update_key)));
-    }
+    };
     let mut latest = None;
     // shortcut: scan committed own controls; index when large histories need faster edit ordering.
     let mut cursor = Some(b"received-own:".to_vec());
@@ -1102,25 +1146,30 @@ fn own_device_edit(
     if latest.is_some_and(|previous| edit.sender_timestamp < previous) {
         return Ok(Some(unsupported_event(update_key)));
     }
-    let projection = Node::new("message")
-        .attr("from", chat.clone())
-        .attr("id", target.id.as_str());
-    let SyncEvent::NewMessage(message) = project(
-        update_key,
-        &projection,
-        &edit.replacement,
-        None,
-        None,
-        None,
-        own,
-    ) else {
-        return Ok(None);
+    let content = if let Some(content) = edited_media {
+        content
+    } else {
+        let projection = Node::new("message")
+            .attr("from", chat.clone())
+            .attr("id", target.id.as_str());
+        let SyncEvent::NewMessage(message) = project(
+            update_key,
+            &projection,
+            &edit.replacement,
+            None,
+            None,
+            None,
+            own,
+        ) else {
+            return Ok(None);
+        };
+        message.content
     };
     // 152.A00 bypasses peer property 2983 for authenticated fromMe edits.
     Ok(Some(SyncEvent::MessageUpdated(
         crate::model::message::MessageUpdate {
             key: target,
-            change: crate::model::message::MessageChange::Edited(Box::new(message.content)),
+            change: crate::model::message::MessageChange::Edited(Box::new(content)),
             server_timestamp: stanza_timestamp(node),
         },
     )))

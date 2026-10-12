@@ -253,12 +253,17 @@ pub(super) fn decode_edit(payload: &[u8]) -> Option<IncomingEdit> {
         zeroize::Zeroizing::new(super::protobuf_enum::message_bytes(payload, 12).ok()??);
     let mut replacement =
         zeroize::Zeroizing::new(super::protobuf_enum::message_bytes(&raw_protocol, 14).ok()??);
-    // shortcut: caption/media and gated poll/event edits need their native content lifecycles.
+    // shortcut: other media and gated poll/event edits need their native content lifecycles.
     let fields = crate::signal::direct::payload_fields(&replacement).ok()?;
-    if fields.iter().any(|f| !matches!(f, 1 | 6 | 35))
-        || !fields.iter().any(|f| matches!(f, 1 | 6))
-        || super::quotes::decode(&replacement).is_none()
-    {
+    let supported = fields.iter().all(|f| matches!(f, 1 | 6 | 35))
+        && fields.iter().any(|f| matches!(f, 1 | 6))
+        && super::quotes::decode(&replacement).is_some();
+    #[cfg(feature = "experimental-registration-https")]
+    let supported = supported
+        || super::media::image_edit_caption(&replacement)
+            .ok()?
+            .is_some();
+    if !supported {
         return None;
     }
     if !fields.contains(&35)
@@ -309,7 +314,10 @@ fn edit_decoder_preserves_merge_context_and_native_timestamp_default() {
     protocol.extend_from_slice(b"\x10\x04");
     assert!(decode_edit(&envelope(&protocol, false)).is_none());
     assert!(decode_edit(b"\x62\x03\x72\x05x").is_none());
-    assert!(decode_edit(b"\x62\x0b\x0a\x03\x1a\x01P\x10\x0e\x72\x02\x1a\x00").is_none());
+    assert_eq!(
+        decode_edit(b"\x62\x0b\x0a\x03\x1a\x01P\x10\x0e\x72\x02\x1a\x00").is_some(),
+        cfg!(feature = "experimental-registration-https")
+    );
 }
 
 // DEy.A00 accepts empty as zero, otherwise int32 1/2/3/7/8; Bua excludes admin 8.

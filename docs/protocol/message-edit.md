@@ -83,7 +83,9 @@ checks cover merged replacement bodies, inner context presence, outer fallback,
 default and negative sender timestamps, unknown/unsupported enum values,
 mixed content, malformed lengths and unsupported media replacement.
 
-Peer/group/status edits, media/caption and gated poll/event edits, future-proof
+[Own image caption edits](image-caption-edit.md) now retain the original media
+reference through the native clone/caption path. Other media/caption,
+peer/group/status and gated poll/event edits, future-proof
 edited wrappers, orphan storage, expiry application and full native validation
 remain unfinished. Repeated content fields still meet the existing normal text
 projection gate; merged replacement fragments with one content field are covered.

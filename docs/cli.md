@@ -1486,10 +1486,3 @@ Usage: whatsapp-cli events [OPTIONS]...
 | --consumer | CONSUMER | no | `cli` |  |  | Consumer name |
 | --limit | LIMIT | no | `50` |  |  | Maximum events |
 | --ack | ACK | no |  |  | `true`, `false` | Acknowledge the batch after printing it |
-
-
-Own-device ordinary text edits received by `listen` use the existing
-`message_updated` event with an `Edited` change. Loaded own text parents retain
-their original key; older edits and edits after an own revoke stay opaque.
-Peer/media/special/orphan edit receive and edit sending remain unfinished.
-See [APK evidence and limits](protocol/message-edit.md).

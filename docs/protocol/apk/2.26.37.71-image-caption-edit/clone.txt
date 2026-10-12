@@ -1,0 +1,64 @@
+# APK-derived structural disassembly: LX/2vT;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(LLL) flags=0x1 registers=11
+  # full signature: LX/2vT;->A00(LX/178;LX/1gc;)LX/178;
+  0000..0006 op=71 invoke-static {v9, v10}, LX/1xo;->A1Y(Ljava/lang/Object;Ljava/lang/Object;)Z
+  0006..0008 op=0a move-result v5
+  0008..000c op=54 iget-object v0, v8, LX/2vT;->A03:LX/00l;
+  000c..0012 op=72 invoke-interface {v0}, LX/00l;->getValue()Ljava/lang/Object;
+  0012..0014 op=0c move-result-object v0
+  0014..0018 op=1f check-cast v0, LX/1gj;
+  0018..001c op=52 iget v7, v9, LX/178;->A0h:I
+  001c..0022 op=6e invoke-virtual {v0, v7}, LX/1gj;->A00(I)LX/1gg;
+  0022..0024 op=0c move-result-object v2
+  0024..0028 op=1a const-string v0, "null cannot be cast to non-null type com.whatsapp.infra.fmessage.subsystems.cloning.integrationpoint.FMessageCloningIntegrationPoint<T of com.whatsapp.infra.fmessage.subsystems.cloning.impl.FMessageCloningSubsystemImpl.cloneUsingFMessagePlatform>"
+  0028..002e op=71 invoke-static {v2, v0}, LX/00h;->A0D(Ljava/lang/Object;Ljava/lang/String;)V
+  002e..0032 op=1f check-cast v2, LX/1gn;
+  0032..0036 op=53 iget-wide v0, v9, LX/178;->A0F:J
+  0036..003c op=72 invoke-interface {v2, v9, v10, v0, v1}, LX/1gn;->AFm(LX/178;LX/1gc;J)LX/178;
+  003c..003e op=0c move-result-object v6
+  003e..0042 op=54 iget-object v0, v8, LX/2vT;->A00:LX/00s;
+  0042..0048 op=71 invoke-static {v0}, LX/1xg;->A1K(LX/00s;)Ljava/lang/Object;
+  0048..004a op=0c move-result-object v0
+  004a..004e op=1f check-cast v0, Ljava/lang/Iterable;
+  004e..0054 op=72 invoke-interface {v0}, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  0054..0056 op=0c move-result-object v1
+  0056..005c op=72 invoke-interface {v1}, Ljava/util/Iterator;->hasNext()Z
+  005c..005e op=0a move-result v0
+  005e..0062 op=38 if-eqz v0, +0xc
+  0062..0068 op=72 invoke-interface {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0068..006a op=0c move-result-object v0
+  006a..006e op=1f check-cast v0, LX/3Za;
+  006e..0074 op=72 invoke-interface {v0, v9, v6}, LX/3Za;->Byt(LX/178;LX/178;)V
+  0074..0076 op=28 goto -0xf
+  0076..007a op=13 const/16 v1, #0x5a3
+  007a..007e op=54 iget-object v0, v8, LX/2vT;->A02:LX/05B;
+  007e..0084 op=71 invoke-static {v0, v1}, LX/1xk;->A0p(LX/05B;I)Ljava/lang/Object;
+  0084..0086 op=0c move-result-object v4
+  0086..008a op=1f check-cast v4, LX/0AH;
+  008a..0090 op=6e invoke-virtual {v9}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  0090..0092 op=0c move-result-object v1
+  0092..0098 op=6e invoke-virtual {v6}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  0098..009a op=0c move-result-object v0
+  009a..009e op=32 if-eq v1, v0, +0x23
+  009e..00a4 op=6e invoke-virtual {v1}, Ljava/lang/Class;->getSimpleName()Ljava/lang/String;
+  00a4..00a6 op=0c move-result-object v3
+  00a6..00ac op=6e invoke-virtual {v0}, Ljava/lang/Class;->getSimpleName()Ljava/lang/String;
+  00ac..00ae op=0c move-result-object v2
+  00ae..00b2 op=1a const-string v0, "type="
+  00b2..00b8 op=71 invoke-static {v7, v0}, LX/000;->A06(ILjava/lang/String;)Ljava/lang/StringBuilder;
+  00b8..00ba op=0c move-result-object v1
+  00ba..00be op=1a const-string v0, ", original-class="
+  00be..00c4 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00c4..00ca op=6e invoke-virtual {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00ca..00ce op=1a const-string v0, ", cloned-class="
+  00ce..00d4 op=71 invoke-static {v0, v2, v1}, LX/1xj;->A16(Ljava/lang/String;Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+  00d4..00d6 op=0c move-result-object v1
+  00d6..00da op=1a const-string v0, "fmessage-clone-class-mismatch"
+  00da..00e0 op=6e invoke-virtual {v4, v0, v1, v5}, LX/0AH;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+  00e0..00e2 op=11 return-object v6
+  # exception table: 0 try range(s)
+.end method

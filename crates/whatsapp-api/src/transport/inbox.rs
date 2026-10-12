@@ -3478,7 +3478,109 @@ mod tests {
                     .unwrap()
                     .is_empty()
             );
-            media.session
+            let before_parent = store
+                .read(|tx| {
+                    tx.get_json::<serde_json::Value>(
+                        Table::Checkpoints,
+                        b"received-own:67890@lid:OWN-MEDIA",
+                        1,
+                    )
+                })
+                .unwrap();
+            prost::encoding::string::encode(3, &"edited caption".to_owned(), &mut image);
+            let mut replacement = Vec::new();
+            prost::encoding::bytes::encode(3, &image, &mut replacement);
+            let mut protocol = b"\x0a\x0b\x1a\x09OWN-MEDIA\x10\x0e".to_vec();
+            prost::encoding::bytes::encode(14, &replacement, &mut protocol);
+            prost::encoding::int64::encode(15, &1, &mut protocol);
+            let mut body = Vec::new();
+            prost::encoding::bytes::encode(12, &protocol, &mut body);
+            let mut sent_edit = Vec::new();
+            prost::encoding::string::encode(1, &"67890@lid".to_owned(), &mut sent_edit);
+            prost::encoding::bytes::encode(2, &body, &mut sent_edit);
+            let mut wrapper = Vec::new();
+            prost::encoding::bytes::encode(31, &sent_edit, &mut wrapper);
+            let edited = direct::prepare_payload(
+                &sender,
+                receiver.own_jid.as_ref().unwrap(),
+                None,
+                Some(&media.session),
+                Some(&sent.identity),
+                &wrapper,
+            )
+            .await
+            .unwrap();
+            let edit_node = Node::new("message")
+                .attr("from", peer_device.clone())
+                .attr("recipient", "67890@lid")
+                .attr("id", "OWN-IMAGE-EDIT")
+                .attr("type", "media")
+                .attr("edit", "1")
+                .children(vec![
+                    Node::new("enc")
+                        .attr("type", edited.kind)
+                        .attr("v", "2")
+                        .bytes(edited.ciphertext.to_vec()),
+                ]);
+            let edit_capture = preserve(&store, &edit_node).unwrap();
+            assert_eq!(
+                process(&store, &receiver, &edit_node, &edit_capture)
+                    .await
+                    .unwrap(),
+                IncomingResult::Decrypted
+            );
+            assert_eq!(
+                process(&store, &receiver, &edit_node, &edit_capture)
+                    .await
+                    .unwrap(),
+                IncomingResult::Duplicate
+            );
+            let events = store
+                .read(|tx| {
+                    tx.read_events(
+                        &crate::store::ConsumerId::new("image-edit")?,
+                        crate::model::ids::EventCursor::START,
+                        100,
+                    )
+                })
+                .unwrap();
+            let crate::sync::SyncEvent::MessageUpdated(update) =
+                &events.events.last().unwrap().event
+            else {
+                panic!("caption edit missing")
+            };
+            let crate::model::message::MessageChange::Edited(content) = &update.change else {
+                panic!("not edited")
+            };
+            let crate::model::message::MessageContent::Media {
+                reference, caption, ..
+            } = &**content
+            else {
+                panic!("not image")
+            };
+            assert_eq!(caption.as_deref(), Some("edited caption"));
+            assert_eq!(
+                super::super::media::reference_selector(&store, reference).unwrap(),
+                entries[0].id
+            );
+            assert_eq!(
+                store
+                    .read(|tx| tx.get_json::<serde_json::Value>(
+                        Table::Checkpoints,
+                        b"received-own:67890@lid:OWN-MEDIA",
+                        1
+                    ))
+                    .unwrap(),
+                before_parent
+            );
+            assert!(
+                super::super::messaging::received_confirmation_for_account(
+                    &store, &receiver, &edit_node
+                )
+                .unwrap()
+                .is_some()
+            );
+            edited.session
         };
         #[cfg(not(feature = "experimental-registration-https"))]
         let continued_session = synced.session.clone();
@@ -4384,7 +4486,7 @@ mod tests {
         let after_revoke_session = synchronized.session;
         let after_poll_head = store.journal_head().unwrap();
         let event_count = batch.events.len()
-            + usize::from(cfg!(feature = "experimental-registration-https"))
+            + 2 * usize::from(cfg!(feature = "experimental-registration-https"))
             + 17;
         drop(store);
         let store = open(false);
@@ -4478,7 +4580,7 @@ mod tests {
             super::super::chat_clear::clear_chat(&store, &Jid::parse("67890@lid").unwrap())
                 .unwrap()
                 .cleared_messages,
-            18 + usize::from(cfg!(feature = "experimental-registration-https"))
+            18 + 2 * usize::from(cfg!(feature = "experimental-registration-https"))
         );
         #[cfg(feature = "experimental-registration-https")]
         assert!(super::super::media::list(&store).unwrap().is_empty());

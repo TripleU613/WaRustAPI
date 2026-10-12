@@ -110,3 +110,8 @@ Authenticated own-device ordinary text synchronization can emit the existing
 kind, terminal and sender-time ordering checks apply. Peer/media/special/orphan
 edit receive and edit sending remain unfinished; fresh live delivery is unverified.
 See [native evidence](../protocol/message-edit.md).
+
+Own-device ordinary image caption edits also emit `Edited`, preserving the
+original sealed media reference. Caption removal works; edited keys/URLs cannot
+redirect the attachment. Other media edits and fresh live delivery are unverified.
+See [native clone behavior](../protocol/image-caption-edit.md).
