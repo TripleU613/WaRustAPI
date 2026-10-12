@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_ff928a7eb0c55e236c2fdfce0002dcce11365116cb501e8cfd4019bcc0824a29",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.Cnp",
+    "method_name": "A03"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-OgfwAG/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":15695085568,\"java_version\":\"21.0.12.1\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.Cnp"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cclinit\\u003e(): void\",\"is_constructor\":false,\"name\":\"\\u003cclinit\\u003e\",\"def_pos\":0},{\"signature\":\"\\u003cinit\\u003e(X.0kp, X.0km, X.0kn, X.CVq, X.0kl, X.0kg, X.0kk): void\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0},{\"signature\":\"A00(javax.crypto.spec.SecretKeySpec, int, int): javax.crypto.Cipher\",\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0},{\"signature\":\"A01(X.DRy, X.Cgc, int): byte[]\",\"is_constructor\":false,\"name\":\"A01\",\"def_pos\":0},{\"signature\":\"A02(X.DRy, X.CnG): byte[]\",\"is_constructor\":false,\"name\":\"A02\",\"def_pos\":0},{\"signature\":\"A03(byte[]): X.Dce\",\"is_constructor\":false,\"name\":\"A03\",\"def_pos\":0},{\"signature\":\"A04(X.Dc6, X.DRw): byte[]\",\"is_constructor\":false,\"name\":\"A04\",\"def_pos\":0},{\"signature\":\"A05(X.Dc6, X.DRy): byte[]\",\"is_constructor\":false,\"name\":\"A05\",\"def_pos\":0}],\"method_count\":8,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"Cnp\",\"full_name\":\"X.Cnp\",\"field_count\":7,\"fields\":[{\"type\":\"X.CVq\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"X.0kk\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"X.0kp\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"X.0km\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"X.CQc\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"X.0kg\",\"def_pos\":0,\"name\":\"A05\"},{\"type\":\"java.lang.Object\",\"def_pos\":0,\"name\":\"A06\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.Cnp",
+          "method_name": "A03",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.Cnp.A03\",\"class_name\":\"X.Cnp\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public Dce A03(byte[] bArr) {\\n        Cipher cipherA00;\\n        DLY dzd;\\n        C0kk c0kk \\u003d this.A01;\\n        CVq cVq \\u003d this.A00;\\n        Cgc cgcBTb \\u003d c0kk.BTb(cVq);\\n        CnG cnG \\u003d cgcBTb.A01;\\n        Ckg ckgA05 \\u003d cnG.A05();\\n        CKI ckiA01 \\u003d ckgA05.A01();\\n        try {\\n            BWb bWb \\u003d cnG.A00.senderChain_;\\n            if (bWb \\u003d\\u003d null) {\\n                bWb \\u003d BWb.DEFAULT_INSTANCE;\\n            }\\n            B7N b7nA15 \\u003d Ayn.A15(bWb.senderRatchetKey_);\\n            BYp bYp \\u003d cnG.A00;\\n            int i \\u003d bYp.previousCounter_;\\n            int i2 \\u003d bYp.sessionVersion_;\\n            if (i2 \\u003d\\u003d 0) {\\n                i2 \\u003d 2;\\n            }\\n            try {\\n                if (i2 \\u003e\\u003d 3) {\\n                    SecretKeySpec secretKeySpec \\u003d ckiA01.A02;\\n                    IvParameterSpec ivParameterSpec \\u003d ckiA01.A01;\\n                    try {\\n                        cipherA00 \\u003d Cipher.getInstance(\\\"AES/CBC/PKCS5Padding\\\");\\n                        cipherA00.init(1, secretKeySpec, ivParameterSpec);\\n                    } catch (InvalidAlgorithmParameterException | InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException e) {\\n                        throw Ayj.A14(e);\\n                    }\\n                } else {\\n                    cipherA00 \\u003d A00(ckiA01.A02, 1, ckiA01.A00);\\n                }\\n                byte[] bArrDoFinal \\u003d cipherA00.doFinal(bArr);\\n                SecretKeySpec secretKeySpec2 \\u003d ckiA01.A03;\\n                int i3 \\u003d ckgA05.A00;\\n                DRy dRy \\u003d new DRy(secretKeySpec2, cnG.A03(), cnG.A04(), b7nA15, bArrDoFinal, i2, i3, i);\\n                BYp bYp2 \\u003d cnG.A00;\\n                Dce dRw \\u003d dRy;\\n                if ((bYp2.bitField0_ \\u0026 64) !\\u003d 0) {\\n                    try {\\n                        BVd bVd \\u003d bYp2.pendingPreKey_;\\n                        BVd bVd2 \\u003d bVd;\\n                        if (bVd \\u003d\\u003d null) {\\n                            bVd \\u003d BVd.DEFAULT_INSTANCE;\\n                        }\\n                        if ((bVd.bitField0_ \\u0026 1) !\\u003d 0) {\\n                            if (bVd2 \\u003d\\u003d null) {\\n                                bVd2 \\u003d BVd.DEFAULT_INSTANCE;\\n                            }\\n                            Integer numValueOf \\u003d Integer.valueOf(bVd2.preKeyId_);\\n                            numValueOf.getClass();\\n                            dzd \\u003d new DZD(numValueOf);\\n                        } else {\\n                            dzd \\u003d DZE.A00;\\n                        }\\n                        BVd bVd3 \\u003d cnG.A00.pendingPreKey_;\\n                        BVd bVd4 \\u003d bVd3;\\n                        if (bVd3 \\u003d\\u003d null) {\\n                            bVd3 \\u003d BVd.DEFAULT_INSTANCE;\\n                        }\\n                        int i4 \\u003d bVd3.signedPreKeyId_;\\n                        if (bVd4 \\u003d\\u003d null) {\\n                            bVd4 \\u003d BVd.DEFAULT_INSTANCE;\\n                        }\\n                        B7N b7nA16 \\u003d Ayn.A15(bVd4.baseKey_);\\n                        BYp bYp3 \\u003d cnG.A00;\\n                        int i5 \\u003d bYp3.localRegistrationId_;\\n                        DLY dzd2 \\u003d DZE.A00;\\n                        if ((bYp3.bitField0_ \\u0026 128) !\\u003d 0) {\\n                            BTk bTk \\u003d bYp3.pendingKyberPreKey_;\\n                            BTk bTk2 \\u003d bTk;\\n                            if (bTk \\u003d\\u003d null) {\\n                                bTk \\u003d BTk.DEFAULT_INSTANCE;\\n                            }\\n                            int i6 \\u003d bTk.preKeyId_;\\n                            if (bTk2 \\u003d\\u003d null) {\\n                                bTk2 \\u003d BTk.DEFAULT_INSTANCE;\\n                            }\\n                            dzd2 \\u003d new DZD(new CVr(i6, bTk2.ciphertext_.toByteArray()));\\n                        }\\n                        dRw \\u003d new DRw(cnG.A03(), b7nA16, dRy, dzd, dzd2, i2, i5, i4);\\n                    } catch (C4p e2) {\\n                        throw Ayj.A14(e2);\\n                    }\\n                }\\n                Ckg ckg \\u003d new Ckg(ckgA05.A01, Ckg.A00(ckgA05, Ckg.A03), i3 + 1);\\n                BNs bNs \\u003d (BNs) BTj.DEFAULT_INSTANCE.createBuilder();\\n                bNs.A01(Aym.A0F(ckg.A02));\\n                bNs.A00(ckg.A00);\\n                BTj bTj \\u003d (BTj) bNs.build();\\n                BWb bWb2 \\u003d cnG.A00.senderChain_;\\n                if (bWb2 \\u003d\\u003d null) {\\n                    bWb2 \\u003d BWb.DEFAULT_INSTANCE;\\n                }\\n                BNg bNg \\u003d (BNg) bWb2.toBuilder();\\n                bNg.A00(bTj);\\n                BWb bWb3 \\u003d (BWb) bNg.build();\\n                GeneratedMessageLite.Builder builderA0N \\u003d Ayl.A0N(cnG.A00);\\n                BYp bYp4 \\u003d (BYp) builderA0N.instance;\\n                bWb3.getClass();\\n                bYp4.senderChain_ \\u003d bWb3;\\n                bYp4.bitField0_ |\\u003d 32;\\n                CnG.A01(builderA0N, cnG);\\n                c0kk.CdI(cVq, cgcBTb);\\n                return dRw;\\n            } catch (BadPaddingException | IllegalBlockSizeException e3) {\\n                throw Ayj.A14(e3);\\n            }\\n        } catch (C4p e4) {\\n            throw Ayj.A14(e4);\\n        }\\n    }\",\"overload_count\":1,\"method_name\":\"A03\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.Cnp",
+    "method": {
+      "name": "A03",
+      "reported_signature": "A03(byte[]): X.Dce",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public Dce A03(byte[] bArr) {\n        Cipher cipherA00;\n        DLY dzd;\n        C0kk c0kk = this.A01;\n        CVq cVq = this.A00;\n        Cgc cgcBTb = c0kk.BTb(cVq);\n        CnG cnG = cgcBTb.A01;\n        Ckg ckgA05 = cnG.A05();\n        CKI ckiA01 = ckgA05.A01();\n        try {\n            BWb bWb = cnG.A00.senderChain_;\n            if (bWb == null) {\n                bWb = BWb.DEFAULT_INSTANCE;\n            }\n            B7N b7nA15 = Ayn.A15(bWb.senderRatchetKey_);\n            BYp bYp = cnG.A00;\n            int i = bYp.previousCounter_;\n            int i2 = bYp.sessionVersion_;\n            if (i2 == 0) {\n                i2 = 2;\n            }\n            try {\n                if (i2 >= 3) {\n                    SecretKeySpec secretKeySpec = ckiA01.A02;\n                    IvParameterSpec ivParameterSpec = ckiA01.A01;\n                    try {\n                        cipherA00 = Cipher.getInstance(\"AES/CBC/PKCS5Padding\");\n                        cipherA00.init(1, secretKeySpec, ivParameterSpec);\n                    } catch (InvalidAlgorithmParameterException | InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException e) {\n                        throw Ayj.A14(e);\n                    }\n                } else {\n                    cipherA00 = A00(ckiA01.A02, 1, ckiA01.A00);\n                }\n                byte[] bArrDoFinal = cipherA00.doFinal(bArr);\n                SecretKeySpec secretKeySpec2 = ckiA01.A03;\n                int i3 = ckgA05.A00;\n                DRy dRy = new DRy(secretKeySpec2, cnG.A03(), cnG.A04(), b7nA15, bArrDoFinal, i2, i3, i);\n                BYp bYp2 = cnG.A00;\n                Dce dRw = dRy;\n                if ((bYp2.bitField0_ & 64) != 0) {\n                    try {\n                        BVd bVd = bYp2.pendingPreKey_;\n                        BVd bVd2 = bVd;\n                        if (bVd == null) {\n                            bVd = BVd.DEFAULT_INSTANCE;\n                        }\n                        if ((bVd.bitField0_ & 1) != 0) {\n                            if (bVd2 == null) {\n                                bVd2 = BVd.DEFAULT_INSTANCE;\n                            }\n                            Integer numValueOf = Integer.valueOf(bVd2.preKeyId_);\n                            numValueOf.getClass();\n                            dzd = new DZD(numValueOf);\n                        } else {\n                            dzd = DZE.A00;\n                        }\n                        BVd bVd3 = cnG.A00.pendingPreKey_;\n                        BVd bVd4 = bVd3;\n                        if (bVd3 == null) {\n                            bVd3 = BVd.DEFAULT_INSTANCE;\n                        }\n                        int i4 = bVd3.signedPreKeyId_;\n                        if (bVd4 == null) {\n                            bVd4 = BVd.DEFAULT_INSTANCE;\n                        }\n                        B7N b7nA16 = Ayn.A15(bVd4.baseKey_);\n                        BYp bYp3 = cnG.A00;\n                        int i5 = bYp3.localRegistrationId_;\n                        DLY dzd2 = DZE.A00;\n                        if ((bYp3.bitField0_ & 128) != 0) {\n                            BTk bTk = bYp3.pendingKyberPreKey_;\n                            BTk bTk2 = bTk;\n                            if (bTk == null) {\n                                bTk = BTk.DEFAULT_INSTANCE;\n                            }\n                            int i6 = bTk.preKeyId_;\n                            if (bTk2 == null) {\n                                bTk2 = BTk.DEFAULT_INSTANCE;\n                            }\n                            dzd2 = new DZD(new CVr(i6, bTk2.ciphertext_.toByteArray()));\n                        }\n                        dRw = new DRw(cnG.A03(), b7nA16, dRy, dzd, dzd2, i2, i5, i4);\n                    } catch (C4p e2) {\n                        throw Ayj.A14(e2);\n                    }\n                }\n                Ckg ckg = new Ckg(ckgA05.A01, Ckg.A00(ckgA05, Ckg.A03), i3 + 1);\n                BNs bNs = (BNs) BTj.DEFAULT_INSTANCE.createBuilder();\n                bNs.A01(Aym.A0F(ckg.A02));\n                bNs.A00(ckg.A00);\n                BTj bTj = (BTj) bNs.build();\n                BWb bWb2 = cnG.A00.senderChain_;\n                if (bWb2 == null) {\n                    bWb2 = BWb.DEFAULT_INSTANCE;\n                }\n                BNg bNg = (BNg) bWb2.toBuilder();\n                bNg.A00(bTj);\n                BWb bWb3 = (BWb) bNg.build();\n                GeneratedMessageLite.Builder builderA0N = Ayl.A0N(cnG.A00);\n                BYp bYp4 = (BYp) builderA0N.instance;\n                bWb3.getClass();\n                bYp4.senderChain_ = bWb3;\n                bYp4.bitField0_ |= 32;\n                CnG.A01(builderA0N, cnG);\n                c0kk.CdI(cVq, cgcBTb);\n                return dRw;\n            } catch (BadPaddingException | IllegalBlockSizeException e3) {\n                throw Ayj.A14(e3);\n            }\n        } catch (C4p e4) {\n            throw Ayj.A14(e4);\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

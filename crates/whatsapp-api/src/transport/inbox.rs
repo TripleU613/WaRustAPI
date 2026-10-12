@@ -758,6 +758,12 @@ async fn process_direct(
     // session stays the fallback for a peer we only ever reached by number.
     // The inbox record itself stays keyed by `sender`.
     let is_prekey_message = encs[0].get_attr("type").and_then(|v| v.as_text()) == Some("pkmsg");
+    if !peer_category
+        && is_prekey_message
+        && crate::signal::direct::incoming_prekey_kem(ciphertext)?.is_some()
+    {
+        return Ok(IncomingResult::Unsupported);
+    }
     let lid_peer = if peer_category {
         None
     } else {
@@ -1235,6 +1241,13 @@ async fn process_group_inner(
         })
     };
     let direct_enc = enc_of(&["pkmsg", "msg"]);
+    if let Some(enc) = direct_enc
+        && enc.get_attr("type").and_then(|v| v.as_text()) == Some("pkmsg")
+        && let Some(ciphertext) = ciphertext_bytes(enc)
+        && crate::signal::direct::incoming_prekey_kem(ciphertext)?.is_some()
+    {
+        return Ok(IncomingResult::Unsupported);
+    }
     let sk_enc = enc_of(&["skmsg"]);
     if direct_enc.is_none() && sk_enc.is_none() {
         return Ok(IncomingResult::Unsupported);
@@ -2915,6 +2928,52 @@ mod tests {
                     .attr("v", "2")
                     .bytes(sent.ciphertext.clone()),
             ]);
+        let mut pq_wire = sent.ciphertext.clone();
+        pq_wire.extend_from_slice(&[0x38, 0, 0x42, 0]);
+        let mut unported_pq = Vec::new();
+        for group in [false, true] {
+            let mut pq_node = Node::new("message")
+                .attr("from", peer.clone())
+                .attr("id", "UNPORTED-PQ")
+                .children(vec![
+                    Node::new("enc")
+                        .attr("type", "pkmsg")
+                        .attr("v", "2")
+                        .bytes(pq_wire.clone()),
+                ]);
+            if group {
+                pq_node = pq_node
+                    .attr("from", "12345@g.us")
+                    .attr("participant", peer.clone());
+            }
+            let capture = preserve(&store, &pq_node).unwrap();
+            let snapshot = || {
+                store
+                    .read(|tx| {
+                        Table::ALL
+                            .iter()
+                            .map(|table| tx.scan(*table, 1, 200))
+                            .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap()
+            };
+            let before = snapshot();
+            let head = store.journal_head().unwrap();
+            for policy in [
+                IdentityChangePolicy::Pinned,
+                IdentityChangePolicy::ApkAuthenticated,
+            ] {
+                assert_eq!(
+                    process_with_policy(&store, &receiver, &pq_node, &capture, policy)
+                        .await
+                        .unwrap(),
+                    IncomingResult::Unsupported
+                );
+                assert_eq!(snapshot(), before);
+                assert_eq!(store.journal_head().unwrap(), head);
+            }
+            unported_pq.push((pq_node, capture));
+        }
         let qualified = node.clone().attr("recipient", "987654321@lid");
         let qualified_capture = preserve(&store, &qualified).unwrap();
         for policy in [
@@ -3013,6 +3072,34 @@ mod tests {
         );
         drop(store);
         let store = open(false);
+        for (pq_node, capture) in &unported_pq {
+            let snapshot = || {
+                store
+                    .read(|tx| {
+                        Table::ALL
+                            .iter()
+                            .map(|table| tx.scan(*table, 1, 200))
+                            .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap()
+            };
+            let before = snapshot();
+            let head = store.journal_head().unwrap();
+            assert_eq!(
+                process_with_policy(
+                    &store,
+                    &receiver,
+                    pq_node,
+                    capture,
+                    IdentityChangePolicy::ApkAuthenticated
+                )
+                .await
+                .unwrap(),
+                IncomingResult::Unsupported
+            );
+            assert_eq!(snapshot(), before);
+            assert_eq!(store.journal_head().unwrap(), head);
+        }
         let redelivery = node.clone().attr("sender_pn", "15555550101@s.whatsapp.net");
         let capture = preserve(&store, &redelivery).unwrap();
         assert_eq!(

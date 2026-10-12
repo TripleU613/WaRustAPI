@@ -1,0 +1,129 @@
+{
+  "evidence_id": "ev_afc99542f146261f2a7d48d82b5f9317e39e3ae07f561bbcde4a5b770a4f0aac",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.DRw",
+    "method_name": "<init>",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-OgfwAG/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":15695085568,\"java_version\":\"21.0.12.1\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.DRw"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cinit\\u003e(X.B7K, X.B7N, X.DRy, X.DLY, X.DLY, int, int, int): void\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0},{\"signature\":\"\\u003cinit\\u003e(byte[]): void\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0},{\"signature\":\"CQY(): byte[]\",\"is_constructor\":false,\"name\":\"CQY\",\"def_pos\":0},{\"signature\":\"getType(): int\",\"is_constructor\":false,\"name\":\"getType\",\"def_pos\":0}],\"method_count\":4,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"DRw\",\"full_name\":\"X.DRw\",\"field_count\":9,\"fields\":[{\"type\":\"int\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"int\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"int\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"X.B7K\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"X.B7N\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"X.DRy\",\"def_pos\":0,\"name\":\"A05\"},{\"type\":\"X.DLY\",\"def_pos\":0,\"name\":\"A06\"},{\"type\":\"X.DLY\",\"def_pos\":0,\"name\":\"A07\"},{\"type\":\"byte[]\",\"def_pos\":0,\"name\":\"A08\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.DRw",
+          "method_name": "<init>",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.DRw.\\u003cinit\\u003e\",\"class_name\":\"X.DRw\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public DRw(B7K b7k, B7N b7n, DRy dRy, DLY dly, DLY dly2, int i, int i2, int i3) {\\n        this.A02 \\u003d i;\\n        this.A00 \\u003d i2;\\n        this.A07 \\u003d dly;\\n        this.A01 \\u003d i3;\\n        this.A04 \\u003d b7n;\\n        this.A03 \\u003d b7k;\\n        this.A05 \\u003d dRy;\\n        this.A06 \\u003d dly2;\\n        GeneratedMessageLite.Builder builderA0O \\u003d Ayl.A0O(BY9.DEFAULT_INSTANCE);\\n        BY9 by9 \\u003d (BY9) builderA0O.instance;\\n        by9.bitField0_ |\\u003d 4;\\n        by9.signedPreKeyId_ \\u003d i3;\\n        ByteString byteStringA0E \\u003d Aym.A0E(builderA0O, b7n.A00());\\n        BY9 by10 \\u003d (BY9) builderA0O.instance;\\n        by10.bitField0_ |\\u003d 32;\\n        by10.baseKey_ \\u003d byteStringA0E;\\n        ByteString byteStringA0E2 \\u003d Aym.A0E(builderA0O, b7k.A00.A00());\\n        BY9 by11 \\u003d (BY9) builderA0O.instance;\\n        by11.bitField0_ |\\u003d 64;\\n        by11.identityKey_ \\u003d byteStringA0E2;\\n        ByteString byteStringA0E3 \\u003d Aym.A0E(builderA0O, dRy.A04);\\n        BY9 by12 \\u003d (BY9) builderA0O.instance;\\n        by12.bitField0_ |\\u003d 128;\\n        by12.message_ \\u003d byteStringA0E3;\\n        BY9 by13 \\u003d (BY9) C6aj.A0c(builderA0O);\\n        by13.bitField0_ |\\u003d 1;\\n        by13.registrationId_ \\u003d i2;\\n        if (dly instanceof DZD) {\\n            int iA00 \\u003d AnonymousClass000.A00(dly.A00());\\n            BY9 by14 \\u003d (BY9) C6aj.A0c(builderA0O);\\n            by14.bitField0_ |\\u003d 2;\\n            by14.preKeyId_ \\u003d iA00;\\n        }\\n        if (dly2 instanceof DZD) {\\n            int i4 \\u003d ((CVr) dly2.A00()).A00;\\n            BY9 by15 \\u003d (BY9) C6aj.A0c(builderA0O);\\n            by15.bitField0_ |\\u003d 8;\\n            by15.kyberPreKeyId_ \\u003d i4;\\n            ByteString byteStringA0E4 \\u003d Aym.A0E(builderA0O, ((CVr) dly2.A00()).A01);\\n            BY9 by16 \\u003d (BY9) builderA0O.instance;\\n            by16.bitField0_ |\\u003d 16;\\n            by16.kyberCiphertext_ \\u003d byteStringA0E4;\\n        }\\n        this.A08 \\u003d Cjj.A00(new byte[]{(byte) (((i \\u003c\\u003c 4) | i) \\u0026 ByteString.UNSIGNED_BYTE_MASK)}, C6am.A1Y(builderA0O));\\n    }\",\"overload_count\":2,\"method_name\":\"\\u003cinit\\u003e\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.DRw",
+    "method": {
+      "name": "<init>",
+      "reported_signature": "<init>(X.B7K, X.B7N, X.DRy, X.DLY, X.DLY, int, int, int): void",
+      "overload_index": 0,
+      "is_constructor": true,
+      "dex_descriptor": null
+    },
+    "overload_count": 2,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public DRw(B7K b7k, B7N b7n, DRy dRy, DLY dly, DLY dly2, int i, int i2, int i3) {\n        this.A02 = i;\n        this.A00 = i2;\n        this.A07 = dly;\n        this.A01 = i3;\n        this.A04 = b7n;\n        this.A03 = b7k;\n        this.A05 = dRy;\n        this.A06 = dly2;\n        GeneratedMessageLite.Builder builderA0O = Ayl.A0O(BY9.DEFAULT_INSTANCE);\n        BY9 by9 = (BY9) builderA0O.instance;\n        by9.bitField0_ |= 4;\n        by9.signedPreKeyId_ = i3;\n        ByteString byteStringA0E = Aym.A0E(builderA0O, b7n.A00());\n        BY9 by10 = (BY9) builderA0O.instance;\n        by10.bitField0_ |= 32;\n        by10.baseKey_ = byteStringA0E;\n        ByteString byteStringA0E2 = Aym.A0E(builderA0O, b7k.A00.A00());\n        BY9 by11 = (BY9) builderA0O.instance;\n        by11.bitField0_ |= 64;\n        by11.identityKey_ = byteStringA0E2;\n        ByteString byteStringA0E3 = Aym.A0E(builderA0O, dRy.A04);\n        BY9 by12 = (BY9) builderA0O.instance;\n        by12.bitField0_ |= 128;\n        by12.message_ = byteStringA0E3;\n        BY9 by13 = (BY9) C6aj.A0c(builderA0O);\n        by13.bitField0_ |= 1;\n        by13.registrationId_ = i2;\n        if (dly instanceof DZD) {\n            int iA00 = AnonymousClass000.A00(dly.A00());\n            BY9 by14 = (BY9) C6aj.A0c(builderA0O);\n            by14.bitField0_ |= 2;\n            by14.preKeyId_ = iA00;\n        }\n        if (dly2 instanceof DZD) {\n            int i4 = ((CVr) dly2.A00()).A00;\n            BY9 by15 = (BY9) C6aj.A0c(builderA0O);\n            by15.bitField0_ |= 8;\n            by15.kyberPreKeyId_ = i4;\n            ByteString byteStringA0E4 = Aym.A0E(builderA0O, ((CVr) dly2.A00()).A01);\n            BY9 by16 = (BY9) builderA0O.instance;\n            by16.bitField0_ |= 16;\n            by16.kyberCiphertext_ = byteStringA0E4;\n        }\n        this.A08 = Cjj.A00(new byte[]{(byte) (((i << 4) | i) & ByteString.UNSIGNED_BYTE_MASK)}, C6am.A1Y(builderA0O));\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

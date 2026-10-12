@@ -1,0 +1,58 @@
+{
+  "pending-send": {
+    "class": "LX/Cnp;",
+    "file": "pending-send.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A03",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/direct/incoming.rs",
+      "crates/whatsapp-api/src/transport/protobuf_enum.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
+  "prekey-constructors": {
+    "class": "LX/DRw;",
+    "file": "prekey-constructors.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 2,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/direct/incoming.rs",
+      "crates/whatsapp-api/src/transport/protobuf_enum.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
+  "proto-schema": {
+    "class": "LX/BY9;",
+    "file": "proto-schema.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "dynamicMethod",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/direct/incoming.rs",
+      "crates/whatsapp-api/src/transport/protobuf_enum.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
+  "signal-constructors": {
+    "class": "LX/DRy;",
+    "file": "signal-constructors.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 2,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/direct/incoming.rs",
+      "crates/whatsapp-api/src/transport/protobuf_enum.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  }
+}

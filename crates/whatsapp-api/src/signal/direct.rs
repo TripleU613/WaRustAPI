@@ -18,8 +18,9 @@ use wacore_libsignal::protocol::{
 use zeroize::Zeroizing;
 mod incoming;
 pub use incoming::{
-    ReceivedPrekey, incoming_prekey_id, incoming_prekey_identity_fingerprints,
-    incoming_prekey_identity_matches, receive_prekey, receive_prekey_with_policy,
+    IncomingKem, ReceivedPrekey, incoming_prekey_id, incoming_prekey_identity_fingerprints,
+    incoming_prekey_identity_matches, incoming_prekey_kem, receive_prekey,
+    receive_prekey_with_policy,
 };
 
 fn invalid(reason: &'static str) -> Error {
@@ -1536,6 +1537,48 @@ mod tests {
         let sender = Jid::parse("15557654321@s.whatsapp.net").unwrap();
         let signed_bytes = signed_keys.signed.serialize().unwrap();
         let one_bytes = keys.one.serialize().unwrap();
+        // A valid classic nested MAC must not make ignored KEM fields consumable.
+        let mut with_kem = encrypted.ciphertext.clone();
+        with_kem.extend_from_slice(&[0x38, 0, 0x42, 0]);
+        let metadata = incoming_prekey_kem(&with_kem).unwrap().unwrap();
+        assert_eq!(metadata.prekey_id, 0);
+        assert!(metadata.ciphertext.is_empty());
+        assert_eq!(format!("{metadata:?}"), "IncomingKem(<redacted>)");
+        for partial in [&[0x38, 0][..], &[0x42, 0][..]] {
+            let mut incomplete = encrypted.ciphertext.clone();
+            incomplete.extend_from_slice(partial);
+            assert!(incoming_prekey_kem(&incomplete).is_err());
+            assert!(incoming_prekey_id(&incomplete).is_err());
+            assert!(
+                incoming_prekey_identity_matches(&incomplete, &alice.identity_key().serialize())
+                    .is_err()
+            );
+            assert!(
+                incoming_prekey_identity_fingerprints(
+                    &incomplete,
+                    &alice.identity_key().serialize()
+                )
+                .is_err()
+            );
+        }
+        let mut repeated = with_kem.clone();
+        repeated.extend_from_slice(&[0x38, 0x81, 0x02, 0x42, 2, 4, 5]);
+        repeated[0] = 0x4f; // Native parsing admits high nibble 4 and ignores the low nibble.
+        let metadata = incoming_prekey_kem(&repeated).unwrap().unwrap();
+        assert_eq!(metadata.prekey_id, 257);
+        assert_eq!(metadata.ciphertext, [4, 5]);
+        assert!(
+            receive_prekey(
+                &bob_account,
+                &sender,
+                (None, None),
+                &signed_bytes,
+                Some(&one_bytes),
+                &with_kem,
+            )
+            .await
+            .is_err()
+        );
         let incoming = receive_prekey(
             &bob_account,
             &sender,

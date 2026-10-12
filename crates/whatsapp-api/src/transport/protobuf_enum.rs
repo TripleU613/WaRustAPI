@@ -58,6 +58,29 @@ fn skip(bytes: &mut &[u8], key: u32, depth: usize) -> Result<(), ()> {
     Ok(())
 }
 
+// APK BY9 scalar/bytes fields are last-one-wins; other wire types stay unknown.
+#[cfg(feature = "experimental-signal-crypto")]
+pub(crate) fn prekey_kem(mut body: &[u8]) -> Result<Option<(u32, &[u8])>, ()> {
+    let (mut id, mut ciphertext) = (None, None);
+    while !body.is_empty() {
+        let key = varint32(&mut body)?;
+        match key {
+            56 => id = Some(varint32(&mut body)?),
+            66 => {
+                let length = length(&mut body)?;
+                ciphertext = Some(body.get(..length).ok_or(())?);
+                body = &body[length..];
+            }
+            _ => skip(&mut body, key, 0)?,
+        }
+    }
+    match (id, ciphertext) {
+        (None, None) => Ok(None),
+        (Some(id), Some(ciphertext)) => Ok(Some((id, ciphertext))),
+        _ => Err(()),
+    }
+}
+
 // Concatenating singular submessage bodies preserves native protobuf merge order.
 #[cfg(all(
     feature = "experimental-signal-crypto",
@@ -149,4 +172,34 @@ pub(super) fn decode_nested<M: prost::Message + Default>(
         }
     }
     Ok(result)
+}
+
+#[cfg(all(test, feature = "experimental-signal-crypto"))]
+mod kem_tests {
+    use super::prekey_kem;
+    #[test]
+    fn kem_presence_last_values_wrong_wire_and_unknown_groups() {
+        assert_eq!(prekey_kem(&[]), Ok(None));
+        assert_eq!(prekey_kem(&[56, 0, 66, 0]), Ok(Some((0, &[][..]))));
+        assert_eq!(
+            prekey_kem(&[56, 1, 56, 2, 66, 1, 9, 66, 1, 8]),
+            Ok(Some((2, &[8][..])))
+        );
+        assert_eq!(prekey_kem(&[58, 0, 64, 1]), Ok(None));
+        assert_eq!(prekey_kem(&[75, 56, 9, 76]), Ok(None));
+        assert_eq!(
+            prekey_kem(&[56, 255, 255, 255, 255, 31, 66, 0]),
+            Ok(Some((u32::MAX, &[][..])))
+        );
+        for body in [
+            &[56, 0][..],
+            &[66, 0][..],
+            &[66, 2, 1][..],
+            &[56, 128][..],
+            &[75, 84][..],
+            &[0][..],
+        ] {
+            assert!(prekey_kem(body).is_err());
+        }
+    }
 }

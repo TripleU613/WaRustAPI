@@ -44,24 +44,45 @@ impl SignedPreKeyStore for Signed {
         Err(SignalProtocolError::InvalidSignedPreKeyId)
     }
 }
-/// Optional one-time prekey ID in a bounded incoming Signal envelope.
-pub fn incoming_prekey_id(ciphertext: &[u8]) -> Result<Option<u32>> {
+/// Borrowed KEM metadata from an incoming prekey envelope, not authentication.
+pub struct IncomingKem<'a> {
+    /// Native uint32 prekey ID, retained even when zero.
+    pub prekey_id: u32,
+    /// Original ciphertext bytes; empty presence is not a valid KEM ciphertext.
+    pub ciphertext: &'a [u8],
+}
+impl std::fmt::Debug for IncomingKem<'_> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("IncomingKem(<redacted>)")
+    }
+}
+fn parse_prekey(ciphertext: &[u8]) -> Result<(PreKeySignalMessage, Option<IncomingKem<'_>>)> {
     if ciphertext.len() > 65536 {
         return Err(invalid("prekey envelope exceeds bound"));
     }
-    Ok(PreKeySignalMessage::try_from(ciphertext)
-        .map_err(crypto)?
-        .pre_key_id()
-        .map(u32::from))
+    let message = PreKeySignalMessage::try_from(ciphertext).map_err(crypto)?;
+    let kem = crate::transport::protobuf_enum::prekey_kem(&ciphertext[1..])
+        .map_err(|_| invalid("incomplete or malformed KEM prekey metadata"))?
+        .map(|(prekey_id, ciphertext)| IncomingKem {
+            prekey_id,
+            ciphertext,
+        });
+    Ok((message, kem))
+}
+/// Inspect paired KEM fields without decrypting or modifying saved state.
+/// This validates envelope structure, not signature, trust or KEM byte encoding.
+pub fn incoming_prekey_kem(ciphertext: &[u8]) -> Result<Option<IncomingKem<'_>>> {
+    Ok(parse_prekey(ciphertext)?.1)
+}
+/// Optional one-time prekey ID in a bounded incoming Signal envelope.
+pub fn incoming_prekey_id(ciphertext: &[u8]) -> Result<Option<u32>> {
+    Ok(parse_prekey(ciphertext)?.0.pre_key_id().map(u32::from))
 }
 /// Compare an incoming prekey's public identity to a saved pin without
 /// decrypting, advancing a session or exposing either key. A match is not
 /// authentication of the message; it is only an offline inspection result.
 pub fn incoming_prekey_identity_matches(ciphertext: &[u8], pinned: &[u8]) -> Result<bool> {
-    if ciphertext.len() > 65536 {
-        return Err(invalid("prekey envelope exceeds bound"));
-    }
-    let message = PreKeySignalMessage::try_from(ciphertext).map_err(crypto)?;
+    let (message, _) = parse_prekey(ciphertext)?;
     let pinned = IdentityKey::decode(pinned).map_err(crypto)?;
     Ok(message.identity_key() == &pinned)
 }
@@ -72,10 +93,7 @@ pub fn incoming_prekey_identity_fingerprints(
     pinned: &[u8],
 ) -> Result<(String, String)> {
     use sha2::{Digest, Sha256};
-    if ciphertext.len() > 65536 {
-        return Err(invalid("prekey envelope exceeds bound"));
-    }
-    let message = PreKeySignalMessage::try_from(ciphertext).map_err(crypto)?;
+    let (message, _) = parse_prekey(ciphertext)?;
     let pinned = IdentityKey::decode(pinned).map_err(crypto)?;
     Ok((
         hex::encode(Sha256::digest(pinned.serialize())),
@@ -140,6 +158,10 @@ pub async fn receive_prekey_with_policy(
     if !account.is_registered() || ciphertext.len() > 65536 {
         return Err(invalid("invalid incoming prekey account or size"));
     }
+    let (message, kem) = parse_prekey(ciphertext)?;
+    if kem.is_some() {
+        return Err(invalid("post-quantum session processing is unsupported"));
+    }
     let key = account
         .signal_identity
         .as_ref()
@@ -149,7 +171,6 @@ pub async fn receive_prekey_with_policy(
     let private = PrivateKey::deserialize(&key.0.private)
         .map_err(|_| invalid("invalid local private identity"))?;
     let address = ProtocolAddress::new(&sender.user, DeviceId::new(sender.device.into()));
-    let message = PreKeySignalMessage::try_from(ciphertext).map_err(crypto)?;
     let saved_identity = previous
         .1
         .map(IdentityKey::decode)

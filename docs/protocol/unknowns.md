@@ -9,7 +9,9 @@ The [native JNI trace](native-kem.md) resolves ML-KEM dispatch, byte lengths and
 the unused Java seed. [Selected native ML-KEM-1024 vectors](native-kem-vectors.md)
 now match NIST. [Rust primitive support](rust-kem.md) is implemented; full
 primitive/format coverage and hybrid integration/records remain open.
-[Initial hybrid KDF composition](hybrid-kdf.md) is implemented; pending wire/state,
+[Initial hybrid KDF composition](hybrid-kdf.md) and
+[incoming paired KEM metadata](prekey-kem-wire.md) are implemented. Native
+version-4 output is 0x44, while the backend emits 0x43; pending wire/state,
 key inventory and incoming wire support still need implementation. See
 [the boundary and source audit](pq-bundle-boundary.md).
 

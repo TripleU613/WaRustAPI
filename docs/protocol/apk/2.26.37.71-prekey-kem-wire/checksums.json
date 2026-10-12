@@ -1,0 +1,34 @@
+{
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "pending-send.txt": {
+    "bytes": 11768,
+    "sha256": "8bcaff6bd11d5494e79453ddaf72cfe92f4e108f0d4fae224ab92b99d3cb366d"
+  },
+  "prekey-constructors.txt": {
+    "bytes": 13836,
+    "sha256": "ae1b15dd6b48d56d22952cba842fa77e3c80e0041eb8405cfd124f9b89c58fa0"
+  },
+  "proto-schema.txt": {
+    "bytes": 4359,
+    "sha256": "301e5745ed6c7f94b70e3d7df5a4310b246491d2c199aae134b6e4ff4f49e613"
+  },
+  "signal-constructors.txt": {
+    "bytes": 8192,
+    "sha256": "3bc033632bafc4634b030a534320c01d722fc16f915ef70733b9a47d7d1e21e7"
+  },
+  "targets.json": {
+    "bytes": 1787,
+    "sha256": "d7130b98d809f324dc620eb32e1c49e4a831dc21b7ed9e300179d5137ea2e4bf"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

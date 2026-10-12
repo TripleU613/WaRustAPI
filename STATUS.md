@@ -1,3 +1,11 @@
+2026-10-12 — **Implemented/offline:** incoming prekey APIs retain original
+paired KEM ID/ciphertext metadata and refuse incomplete pairs. A valid classic
+MAC no longer makes an envelope with ignored KEM fields consumable. Direct/group
+receive defer before conflict observation or prekey lookup; all saved tables and
+journal remain unchanged after capture and reopen. Native paired fields and
+0x44 version-4 encoding are traced; outbound/hybrid integration remains open.
+[Wire evidence, metadata API and preservation tests](docs/protocol/prekey-kem-wire.md).
+
 2026-10-12 — **Implemented/offline:** initial hybrid root/chain derivation
 now follows the APK's discontinuity prefix, ordered EC agreements, optional
 one-time agreement, final KEM secret and exact hybrid HKDF label. Native extract,

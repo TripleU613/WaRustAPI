@@ -141,3 +141,8 @@ It does not enable hybrid sessions or adopt PQ bundles. See
 `signal::kem::initial_hybrid_keys` derives the initial root/chain pair from
 ordered, already-computed EC and KEM agreements. It does not create or adopt
 a session; see [the evidenced hybrid KDF and remaining integration](../protocol/hybrid-kdf.md).
+
+`signal::direct::incoming_prekey_kem` borrows paired KEM metadata from a bounded
+prekey envelope with redacted Debug. All incoming prekey inspectors reject
+incomplete pairs; KEM receive remains unsupported before saved-state changes.
+See [wire fields, version bytes and remaining integration](../protocol/prekey-kem-wire.md).

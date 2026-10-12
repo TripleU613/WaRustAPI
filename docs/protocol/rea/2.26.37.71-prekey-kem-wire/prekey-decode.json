@@ -1,0 +1,129 @@
+{
+  "evidence_id": "ev_3de50b103261c59044e15f6cbf2967110f1d0b0b802e590d796c890d2dd52a2b",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.DRw",
+    "method_name": "<init>",
+    "overload_index": 1
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-OgfwAG/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":15695085568,\"java_version\":\"21.0.12.1\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.DRw"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cinit\\u003e(X.B7K, X.B7N, X.DRy, X.DLY, X.DLY, int, int, int): void\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0},{\"signature\":\"\\u003cinit\\u003e(byte[]): void\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0},{\"signature\":\"CQY(): byte[]\",\"is_constructor\":false,\"name\":\"CQY\",\"def_pos\":0},{\"signature\":\"getType(): int\",\"is_constructor\":false,\"name\":\"getType\",\"def_pos\":0}],\"method_count\":4,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"DRw\",\"full_name\":\"X.DRw\",\"field_count\":9,\"fields\":[{\"type\":\"int\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"int\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"int\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"X.B7K\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"X.B7N\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"X.DRy\",\"def_pos\":0,\"name\":\"A05\"},{\"type\":\"X.DLY\",\"def_pos\":0,\"name\":\"A06\"},{\"type\":\"X.DLY\",\"def_pos\":0,\"name\":\"A07\"},{\"type\":\"byte[]\",\"def_pos\":0,\"name\":\"A08\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.DRw",
+          "method_name": "<init>",
+          "overload_index": 1,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.DRw.\\u003cinit\\u003e\",\"class_name\":\"X.DRw\",\"overload_index\":1,\"fell_back\":false,\"body\":\"    public DRw(byte[] bArr) throws C4V, C4U, C4x {\\n        DLY dzd;\\n        DLY dzd2;\\n        try {\\n            int i \\u003d (bArr[0] \\u0026 255) \\u003e\\u003e 4;\\n            this.A02 \\u003d i;\\n            if (i \\u003e 4) {\\n                throw new C4U(AnonymousClass000.A03(\\\"Unknown version: \\\", i));\\n            }\\n            if (i \\u003c 3) {\\n                throw new C4V(AnonymousClass000.A03(\\\"Legacy version: \\\", i));\\n            }\\n            BY9 by9 \\u003d (BY9) GeneratedMessageLite.parseFrom(BY9.DEFAULT_INSTANCE, ByteString.copyFrom(bArr, 1, bArr.length - 1));\\n            int i2 \\u003d by9.bitField0_;\\n            if (!C1xi.A1P(i2 \\u0026 4) || (i2 \\u0026 32) \\u003d\\u003d 0 || (i2 \\u0026 64) \\u003d\\u003d 0 || (i2 \\u0026 128) \\u003d\\u003d 0) {\\n                throw new C4x(\\\"Incomplete message.\\\");\\n            }\\n            this.A08 \\u003d bArr;\\n            this.A00 \\u003d by9.registrationId_;\\n            if ((i2 \\u0026 2) !\\u003d 0) {\\n                Integer numValueOf \\u003d Integer.valueOf(by9.preKeyId_);\\n                numValueOf.getClass();\\n                dzd \\u003d new DZD(numValueOf);\\n            } else {\\n                dzd \\u003d DZE.A00;\\n            }\\n            this.A07 \\u003d dzd;\\n            this.A01 \\u003d (by9.bitField0_ \\u0026 4) !\\u003d 0 ? by9.signedPreKeyId_ : -1;\\n            this.A04 \\u003d Ayn.A15(by9.baseKey_);\\n            this.A03 \\u003d new B7K(Ayn.A15(by9.identityKey_));\\n            int i3 \\u003d by9.bitField0_;\\n            int i4 \\u003d i3 \\u0026 8;\\n            int i5 \\u003d i3 \\u0026 16;\\n            if (i4 !\\u003d 0) {\\n                if (i5 !\\u003d 0) {\\n                    dzd2 \\u003d new DZD(new CVr(by9.kyberPreKeyId_, by9.kyberCiphertext_.toByteArray()));\\n                    this.A06 \\u003d dzd2;\\n                    this.A05 \\u003d new DRy(by9.message_.toByteArray());\\n                    return;\\n                }\\n                throw new C4x(\\\"Incomplete message.\\\");\\n            }\\n            if (i5 \\u003d\\u003d 0) {\\n                dzd2 \\u003d DZE.A00;\\n                this.A06 \\u003d dzd2;\\n                this.A05 \\u003d new DRy(by9.message_.toByteArray());\\n                return;\\n            }\\n            throw new C4x(\\\"Incomplete message.\\\");\\n        } catch (C4V | C4p | InvalidProtocolBufferException e) {\\n            throw new C4x(e);\\n        }\\n    }\",\"overload_count\":2,\"method_name\":\"\\u003cinit\\u003e\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.DRw",
+    "method": {
+      "name": "<init>",
+      "reported_signature": "<init>(byte[]): void",
+      "overload_index": 1,
+      "is_constructor": true,
+      "dex_descriptor": null
+    },
+    "overload_count": 2,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public DRw(byte[] bArr) throws C4V, C4U, C4x {\n        DLY dzd;\n        DLY dzd2;\n        try {\n            int i = (bArr[0] & 255) >> 4;\n            this.A02 = i;\n            if (i > 4) {\n                throw new C4U(AnonymousClass000.A03(\"Unknown version: \", i));\n            }\n            if (i < 3) {\n                throw new C4V(AnonymousClass000.A03(\"Legacy version: \", i));\n            }\n            BY9 by9 = (BY9) GeneratedMessageLite.parseFrom(BY9.DEFAULT_INSTANCE, ByteString.copyFrom(bArr, 1, bArr.length - 1));\n            int i2 = by9.bitField0_;\n            if (!C1xi.A1P(i2 & 4) || (i2 & 32) == 0 || (i2 & 64) == 0 || (i2 & 128) == 0) {\n                throw new C4x(\"Incomplete message.\");\n            }\n            this.A08 = bArr;\n            this.A00 = by9.registrationId_;\n            if ((i2 & 2) != 0) {\n                Integer numValueOf = Integer.valueOf(by9.preKeyId_);\n                numValueOf.getClass();\n                dzd = new DZD(numValueOf);\n            } else {\n                dzd = DZE.A00;\n            }\n            this.A07 = dzd;\n            this.A01 = (by9.bitField0_ & 4) != 0 ? by9.signedPreKeyId_ : -1;\n            this.A04 = Ayn.A15(by9.baseKey_);\n            this.A03 = new B7K(Ayn.A15(by9.identityKey_));\n            int i3 = by9.bitField0_;\n            int i4 = i3 & 8;\n            int i5 = i3 & 16;\n            if (i4 != 0) {\n                if (i5 != 0) {\n                    dzd2 = new DZD(new CVr(by9.kyberPreKeyId_, by9.kyberCiphertext_.toByteArray()));\n                    this.A06 = dzd2;\n                    this.A05 = new DRy(by9.message_.toByteArray());\n                    return;\n                }\n                throw new C4x(\"Incomplete message.\");\n            }\n            if (i5 == 0) {\n                dzd2 = DZE.A00;\n                this.A06 = dzd2;\n                this.A05 = new DRy(by9.message_.toByteArray());\n                return;\n            }\n            throw new C4x(\"Incomplete message.\");\n        } catch (C4V | C4p | InvalidProtocolBufferException e) {\n            throw new C4x(e);\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}
