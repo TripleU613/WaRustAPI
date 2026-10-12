@@ -1,0 +1,33 @@
+# APK-derived structural disassembly: LX/D9M;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method AD7(VLL) flags=0x1 registers=7
+  # full signature: LX/D9M;->AD7(LX/178;LX/Cn6;)V
+  0000..0004 op=20 instance-of v0, v5, LX/1ii;
+  0004..0008 op=38 if-eqz v0, +0x28
+  0008..000c op=1f check-cast v5, LX/1ii;
+  000c..0010 op=54 iget-object v3, v6, LX/Cn6;->A01:LX/BOG;
+  0010..0016 op=71 invoke-static {v3}, LX/BOG;->A04(LX/BOG;)LX/BOA;
+  0016..0018 op=0c move-result-object v2
+  0018..001e op=71 invoke-static {v2}, LX/BOA;->A00(LX/BOA;)LX/BOE;
+  001e..0020 op=0c move-result-object v1
+  0020..0024 op=55 iget-boolean v0, v6, LX/Cn6;->A09:Z
+  0024..002a op=6e invoke-virtual {v4, v5, v1, v0}, LX/D9M;->A00(LX/1ii;LX/BOE;Z)V
+  002a..0030 op=6e invoke-virtual {v2, v1}, LX/BOA;->A03(LX/BOE;)V
+  0030..0036 op=71 invoke-static {v5}, LX/CB5;->A00(LX/178;)Z
+  0036..0038 op=0a move-result v0
+  0038..003c op=38 if-eqz v0, +0xb
+  003c..0040 op=62 sget-object v0, LX/C4F;->A0O:LX/C4F;
+  0040..0046 op=6e invoke-virtual {v2, v0}, LX/BOA;->A02(LX/C4F;)V
+  0046..004c op=6e invoke-virtual {v3, v2}, LX/BOG;->A0V(LX/BOA;)V
+  004c..004e op=0e return-void
+  004e..0052 op=62 sget-object v0, LX/C4F;->A0T:LX/C4F;
+  0052..0054 op=28 goto -0x9
+  0054..0058 op=1a const-string v0, "FMessageRevokedProtobuf/not supported message"
+  0058..005e op=71 invoke-static {v0}, LX/1xf;->A15(Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+  005e..0060 op=0c move-result-object v0
+  0060..0062 op=27 throw v0
+  # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,31 @@
+{
+  "exit_code": 0,
+  "elapsed_seconds": 58.19,
+  "requested_receive_seconds": 45,
+  "send_outbox": false,
+  "automatic_reads": false,
+  "automatic_reconnect": false,
+  "actions_equal": true,
+  "receipts_equal": true,
+  "outbox_equal": true,
+  "generation_equal": true,
+  "registration_equal": true,
+  "journal_head_equal": true,
+  "tables_count_changes": {
+    "Checkpoints": {
+      "before": 1139,
+      "after": 1149
+    }
+  },
+  "checkpoint_kinds_count_changes": {
+    "inbound": {
+      "before": 894,
+      "after": 904
+    }
+  },
+  "authenticated_active": true,
+  "logged_errors": 0,
+  "date": "2026-10-11",
+  "validation_scope": "One bounded retained-account receive-only startup/processing check; counts and redacted CLI outcomes are not all-record byte equality or positive revocation interoperability.",
+  "fresh_live_revocation_verified": false
+}

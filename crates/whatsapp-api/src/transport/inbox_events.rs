@@ -253,6 +253,77 @@ fn chat_and_sender(key: &[u8], node: &Node) -> Option<(ChatId, DeviceAddress)> {
     ))
 }
 
+fn direct_sender_revoke_route(node: &Node) -> bool {
+    node.description == "message"
+        && super::inbox::session_sender(node).is_some()
+        && super::receipts::jid(node, "from").is_some_and(|j| j.agent == 0)
+        && super::chat_settings::sender_revoke_edit(node)
+}
+
+fn direct_sender_revoke_target(
+    tx: &WriteTx<'_>,
+    node: &Node,
+    id: MessageId,
+) -> Result<Option<MessageKey>> {
+    let target = node.clone().attr("id", id.as_str());
+    let Some(record) =
+        super::inbox::direct_record_in(&target, |k| tx.get_json(Table::Checkpoints, k, 1))?
+    else {
+        return Ok(None);
+    };
+    let Some(saved) = record
+        .saved
+        .filter(|s| matches!(s["status"].as_str(), Some("decrypted" | "consumed")))
+    else {
+        return Ok(None);
+    };
+    let wire = if !saved["route"].is_null() {
+        Some(
+            serde_json::from_value::<Vec<u8>>(saved["route"].clone())
+                .map_err(|_| crate::Error::invalid("inbox", "invalid saved target route"))?,
+        )
+    } else if let Ok(capture) = serde_json::from_value::<Vec<u8>>(saved["capture"].clone()) {
+        tx.get_json(Table::Checkpoints, &capture, 1)?
+    } else {
+        None
+    };
+    let sender = if let Some(wire) = wire {
+        let limits = crate::profile::Limits::default();
+        let raw = crate::binary::unpack_frame_payload(&wire, &limits)?;
+        let original = crate::binary::Decoder::new(
+            &raw,
+            crate::binary::TokenDictionary::comparison_2_26_37_71(),
+            &limits,
+        )
+        .decode_node()?;
+        if original.description != "message"
+            || original.get_attr("id").and_then(|v| v.as_text()) != Some(id.as_str())
+        {
+            return Err(crate::Error::invalid(
+                "inbox",
+                "saved target route changed id",
+            ));
+        }
+        let (chat, sender) = chat_and_sender(record.key.as_bytes(), &original)
+            .ok_or_else(|| crate::Error::invalid("inbox", "invalid saved target sender"))?;
+        if chat.jid() != &record.chat {
+            return Err(crate::Error::invalid(
+                "inbox",
+                "saved target route changed chat",
+            ));
+        }
+        sender
+    } else {
+        DeviceAddress::from_jid(&record.chat)?
+    };
+    Ok(Some(MessageKey {
+        chat: ChatId::from_jid(&record.chat)?,
+        sender: Some(sender),
+        direction: Direction::Incoming,
+        id,
+    }))
+}
+
 /// `own` lists this account's identities (phone-number and LID) so a quoted
 /// reply's `contextInfo.participant` can be attributed to us or to the sender.
 fn project(
@@ -314,6 +385,24 @@ fn project(
         if fields.contains(&12) {
             if fields.iter().any(|v| !matches!(v, 12 | 35)) {
                 return unsupported();
+            }
+            if let Some(id) = super::chat_settings::decode_sender_revoke(payload) {
+                if !direct_sender_revoke_route(node) {
+                    return unsupported();
+                }
+                let Some((chat, by)) = chat_and_sender(key, node) else {
+                    return unsupported();
+                };
+                return SyncEvent::MessageUpdated(crate::model::message::MessageUpdate {
+                    key: reference_target.cloned().unwrap_or(MessageKey {
+                        chat,
+                        sender: Some(by.clone()),
+                        direction: Direction::Incoming,
+                        id,
+                    }),
+                    change: crate::model::message::MessageChange::Revoked { by },
+                    server_timestamp: stanza_timestamp(node),
+                });
             }
             let Some(setting) = super::chat_settings::decode_protocol(payload) else {
                 return unsupported();
@@ -857,6 +946,31 @@ fn own_device_reaction(
     )))
 }
 
+fn own_device_revoke(
+    tx: &WriteTx<'_>,
+    chat: &crate::model::jid::Jid,
+    node: &Node,
+    id: MessageId,
+) -> Result<Option<SyncEvent>> {
+    // 153.A00 builds the parent with envelope ownership, not BZb.key.fromMe.
+    let key = super::reactions::Key {
+        id: Some(id.as_str().to_owned()),
+        remote_jid: Some(chat.to_string()),
+        from_me: Some(true),
+        participant: None,
+    };
+    let Some((target, by)) = own_direct_update_target(tx, chat, node, &key)? else {
+        return Ok(None);
+    };
+    Ok(Some(SyncEvent::MessageUpdated(
+        crate::model::message::MessageUpdate {
+            key: target,
+            change: crate::model::message::MessageChange::Revoked { by },
+            server_timestamp: stanza_timestamp(node),
+        },
+    )))
+}
+
 fn own_device_keep(
     tx: &WriteTx<'_>,
     chat: &crate::model::jid::Jid,
@@ -1042,6 +1156,12 @@ pub(super) fn own_device_message(
     let Some(id) = node.get_attr("id").and_then(|v| v.as_text()) else {
         return Ok(None);
     };
+    if let Some(id) = super::chat_settings::decode_sender_revoke(payload) {
+        return own_device_revoke(tx, chat, node, id);
+    }
+    if node.get_attr("edit").is_some() {
+        return Ok(None);
+    }
     if crate::signal::direct::payload_fields(payload).is_ok_and(|fields| fields.contains(&51)) {
         return own_device_keep(tx, chat, node, payload);
     }
@@ -1115,6 +1235,10 @@ pub(super) fn publish(
         } else {
             group_update_target(tx, node, payload, &own)?
         }
+    } else if direct_sender_revoke_route(node)
+        && let Some(id) = super::chat_settings::decode_sender_revoke(payload)
+    {
+        direct_sender_revoke_target(tx, node, id)?
     } else {
         direct_reaction_target(tx, node, payload)?
     };
@@ -1285,11 +1409,201 @@ mod tests {
             .attr("t", "123")
     }
     #[test]
+    fn ordinary_sender_revoke_uses_envelope_ownership_not_embedded_flag_or_remote() {
+        // BZc.12 -> BZb {key: {id: abc}, type: REVOKE (present zero)}.
+        let literal = hex::decode("62090a051a036162631000").unwrap();
+        for embedded_flag in [None, Some(false), Some(true)] {
+            let mut envelope = <super::super::chat_settings::Envelope as prost::Message>::decode(
+                literal.as_slice(),
+            )
+            .unwrap();
+            let parent = envelope.protocol.as_mut().unwrap().key.as_mut().unwrap();
+            parent.from_me = embedded_flag;
+            parent.remote_jid = Some("status@broadcast".into());
+            let payload = prost::Message::encode_to_vec(&envelope);
+            let input = node().attr("edit", "7");
+            let SyncEvent::MessageUpdated(update) = event(b"fixture", &input, &payload) else {
+                panic!("ordinary sender revoke missing")
+            };
+            assert_eq!(update.key.id.as_str(), "abc");
+            assert_eq!(update.key.direction, Direction::Incoming);
+            assert_eq!(
+                update.key.sender.as_ref().unwrap().to_jid(),
+                super::super::receipts::jid(&input, "from").unwrap()
+            );
+            assert_eq!(update.server_timestamp, Some(Timestamp(123000)));
+            assert!(
+                matches!(update.change, crate::model::message::MessageChange::Revoked {by} if by.to_jid()==super::super::receipts::jid(&input,"from").unwrap())
+            );
+            for unsupported in [
+                input.clone().attr("edit", "8"),
+                input.clone().attr("edit", "4"),
+                input.clone().attr("edit", "0"),
+                group_node(),
+                input.clone().attr("recipient", "12345@lid"),
+            ] {
+                assert!(matches!(
+                    event(b"fixture", &unsupported, &payload),
+                    SyncEvent::UnsupportedMessage(_)
+                ));
+            }
+            envelope
+                .protocol
+                .as_mut()
+                .unwrap()
+                .key
+                .as_mut()
+                .unwrap()
+                .participant = Some("12345@lid".into());
+            assert!(matches!(
+                event(
+                    b"fixture",
+                    &input,
+                    &prost::Message::encode_to_vec(&envelope)
+                ),
+                SyncEvent::UnsupportedMessage(_)
+            ));
+        }
+        for hex in [
+            "62070a051a03616263",
+            "620b0a051a036162631000100e",
+            "62090a051a036162631020",
+        ] {
+            // Missing type, unknown/last type and unschedule must not become revokes.
+            assert!(matches!(
+                event(b"fixture", &node(), &hex::decode(hex).unwrap()),
+                SyncEvent::UnsupportedMessage(_)
+            ));
+        }
+    }
+
+    #[test]
+    fn sender_revoke_edit_parser_matches_native_non_admin_values() {
+        for edit in [
+            None,
+            Some(""),
+            Some("7"),
+            Some("+007"),
+            Some("٧"),
+            Some("1"),
+            Some("2"),
+            Some("3"),
+            Some("8"),
+            Some("0"),
+            Some("4"),
+            Some(" 7"),
+            Some("2147483655"),
+            Some("-7"),
+        ] {
+            let mut input = node();
+            if let Some(edit) = edit {
+                input = input.attr("edit", edit);
+            }
+            assert_eq!(
+                super::super::chat_settings::sender_revoke_edit(&input),
+                matches!(edit, None | Some("" | "7" | "+007" | "٧" | "1" | "2" | "3")),
+                "{edit:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn direct_sender_revoke_preserves_saved_route_device_and_alias_namespace_without_deleting_parent()
+     {
+        use crate::model::jid::Jid;
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("revoke.redb"),
+            account_id: AccountId::new("revoke").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([7; 32]))),
+            create: true,
+        })
+        .unwrap();
+        let pn = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let lid = Jid::parse("12345@lid").unwrap();
+        let original = Node::new("message")
+            .attr("from", lid.clone())
+            .attr("sender_pn", pn.clone())
+            .attr("id", "abc");
+        let wire =
+            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
+                .encode(&original)
+                .unwrap();
+        let row = format!("received:{pn}:abc");
+        let saved = serde_json::json!({"status":"consumed","route":wire});
+        store
+            .write(|tx| {
+                tx.put_json(Table::Checkpoints, row.as_bytes(), 1, &saved)?;
+                tx.put_json(Table::Checkpoints, b"authenticated-lid:12345@lid", 1, &pn)
+            })
+            .unwrap();
+        let input = Node::new("message")
+            .attr("from", lid.clone())
+            .attr("id", "revoke")
+            .attr("edit", "7");
+        let payload = hex::decode("62090a051a036162631000").unwrap();
+        assert!(
+            store
+                .write(|tx| publish(tx, b"received:12345@lid:revoke", &input, &payload))
+                .unwrap()
+        );
+        let events = store
+            .read(|tx| tx.read_events(&ConsumerId::new("revoke")?, EventCursor::START, 10))
+            .unwrap();
+        let SyncEvent::MessageUpdated(update) = &events.events[0].event else {
+            panic!("revoke missing")
+        };
+        assert_eq!(update.key.chat.jid(), &pn);
+        assert_eq!(update.key.sender.as_ref().unwrap().to_jid(), pn);
+        assert!(
+            matches!(&update.change,crate::model::message::MessageChange::Revoked {by} if by.to_jid()==lid)
+        );
+        assert_eq!(
+            store
+                .read(|tx| tx.get_json::<serde_json::Value>(Table::Checkpoints, row.as_bytes(), 1))
+                .unwrap()
+                .unwrap(),
+            saved
+        );
+        assert!(
+            !store
+                .write(|tx| publish(tx, b"received:12345@lid:revoke", &input, &payload))
+                .unwrap()
+        );
+        let device = lid.with_device(4);
+        let original = Node::new("message")
+            .attr("from", device.clone())
+            .attr("id", "abc");
+        let wire =
+            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
+                .encode(&original)
+                .unwrap();
+        store
+            .write(|tx| {
+                tx.delete(Table::Checkpoints, row.as_bytes())?;
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"received:12345@lid:abc",
+                    1,
+                    &serde_json::json!({"status":"decrypted","route":wire}),
+                )
+            })
+            .unwrap();
+        let target = store
+            .write(|tx| direct_sender_revoke_target(tx, &input, MessageId::new("abc")?))
+            .unwrap()
+            .unwrap();
+        assert_eq!(target.sender.unwrap().to_jid(), device);
+        assert_eq!(target.chat.jid(), &lid);
+    }
+
+    #[test]
     fn own_direct_updates_keep_parent_perspective_original_keys_and_saved_state() {
         use crate::model::{jid::Jid, message::MessageRef};
-        for action in ["reaction", "keep"] {
+        for action in ["reaction", "keep", "revoke"] {
             for peer in ["15555550100@s.whatsapp.net", "12345@lid"] {
                 for ours in [false, true] {
+                    let target_from_own = ours || action == "revoke";
                     for case in [
                         "normal",
                         "remove",
@@ -1307,7 +1621,7 @@ mod tests {
                         "mixed",
                         "ambiguous",
                     ] {
-                        if (!ours && matches!(case, "outbox" | "ambiguous"))
+                        if (!target_from_own && matches!(case, "outbox" | "ambiguous"))
                             || (peer.ends_with("whatsapp.net")
                                 && matches!(case, "mapped" | "alias_only" | "ambiguous"))
                         {
@@ -1342,12 +1656,12 @@ mod tests {
                         let target = MessageRef {
                             key: MessageKey {
                                 chat: ChatId::from_jid(&chat).unwrap(),
-                                sender: if ours {
+                                sender: if target_from_own {
                                     None
                                 } else {
                                     Some(DeviceAddress::from_jid(&chat).unwrap())
                                 },
-                                direction: if ours {
+                                direction: if target_from_own {
                                     Direction::Outgoing
                                 } else {
                                     Direction::Incoming
@@ -1377,7 +1691,7 @@ mod tests {
                             let req=crate::model::send::SendRequest {client_request_id:crate::model::ids::ClientRequestId::new("PARENT")?,chat:ChatId::from_jid(&original)?,content:MessageContent::Text {body:"unchanged".into(),quoted:None,style:Default::default()}};
                             let ticket=ob.enqueue(tx,&req)?.0; let mut entry=ob.get_mut(tx,ticket.local_id)?.unwrap(); entry.wire_id=Some(MessageId::new("TARGET")?); tx.put_json(Table::Outbox,&entry.local_id.0,1,&entry)?;
                         } else if case!="unloaded" {
-                            if ours {tx.put_json(Table::Checkpoints,format!("received-own:{original}:TARGET").as_bytes(),1,&serde_json::json!({"status":"decrypted","source":own.with_device(4),"protobuf":wrap(&original)}))?;}
+                            if target_from_own {tx.put_json(Table::Checkpoints,format!("received-own:{original}:TARGET").as_bytes(),1,&serde_json::json!({"status":"decrypted","source":own.with_device(4),"protobuf":wrap(&original)}))?;}
                             else {
                                 let route=crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71()).encode(&Node::new("message").attr("from",chat.clone()).attr("sender_pn",pn.clone()).attr("id","TARGET"))?;
                                 tx.put_json(Table::Checkpoints,format!("received:{original}:TARGET").as_bytes(),1,&serde_json::json!({"status":"decrypted","route":route}))?;
@@ -1399,6 +1713,9 @@ mod tests {
                             reaction.text = Some("a".repeat(31));
                         }
                         let key = reaction.key.as_mut().unwrap();
+                        if action == "revoke" {
+                            key.from_me = Some(ours);
+                        }
                         if case == "participant" {
                             key.participant = Some(own.to_string());
                         }
@@ -1414,6 +1731,19 @@ mod tests {
                         }
                         let mut payload = if action == "reaction" {
                             prost::Message::encode_to_vec(&envelope)
+                        } else if action == "revoke" {
+                            let key = <super::super::reactions::Key as prost::Message>::decode(
+                                prost::Message::encode_to_vec(key).as_slice(),
+                            )
+                            .unwrap();
+                            prost::Message::encode_to_vec(&super::super::chat_settings::Envelope {
+                                protocol: Some(super::super::chat_settings::ProtocolMessage {
+                                    key: Some(key),
+                                    type_: Some(if case == "long" { 32 } else { 0 }),
+                                    ..Default::default()
+                                }),
+                                ..Default::default()
+                            })
                         } else {
                             let mut keep =
                                 <super::super::chat_settings::Envelope as prost::Message>::decode(
@@ -1454,6 +1784,11 @@ mod tests {
                                 },
                             )
                             .attr("t", "123");
+                        let node = if action == "revoke" {
+                            node.attr("edit", "7")
+                        } else {
+                            node
+                        };
                         let snapshot = || {
                             store
                                 .read(|tx| {
@@ -1485,13 +1820,9 @@ mod tests {
                             );
                         } else if matches!(
                             case,
-                            "foreign_actor"
-                                | "unregistered"
-                                | "participant"
-                                | "status"
-                                | "long"
-                                | "mixed"
-                        ) {
+                            "foreign_actor" | "unregistered" | "participant" | "long" | "mixed"
+                        ) || (case == "status" && action != "revoke")
+                        {
                             assert!(event.unwrap().is_none(), "{peer}/{ours}/{case}");
                         } else {
                             let Some(SyncEvent::MessageUpdated(update)) = event.unwrap() else {
@@ -1502,7 +1833,7 @@ mod tests {
                             assert_eq!(update.key.direction, target.key.direction);
                             assert_eq!(
                                 update.key.sender,
-                                if ours {
+                                if target_from_own {
                                     None
                                 } else {
                                     Some(DeviceAddress::from_jid(expected).unwrap())
@@ -1512,6 +1843,10 @@ mod tests {
                             if action == "reaction" {
                                 assert!(
                                     matches!(update.change,crate::model::message::MessageChange::Reaction{by,emoji:actual} if by.to_jid()==actor && actual.as_deref()==emoji)
+                                );
+                            } else if action == "revoke" {
+                                assert!(
+                                    matches!(update.change,crate::model::message::MessageChange::Revoked {by} if by.to_jid()==actor)
                                 );
                             } else {
                                 assert!(

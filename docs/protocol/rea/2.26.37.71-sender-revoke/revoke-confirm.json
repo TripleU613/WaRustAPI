@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_ab4c3c57ef84b0f8d724ddfe361e22f8bf084122d058b80a1c42546a2a038b33",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.Bp2",
+    "method_name": "A0P"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-VDCVhg/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"java_version\":\"21.0.12.1\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":15695085568}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.Bp2"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_count\":6,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"Bp2\",\"full_name\":\"X.Bp2\",\"field_count\":26,\"fields\":[{\"type\":\"java.lang.String\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"int\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"int\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"int\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"long\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"long\",\"def_pos\":0,\"name\":\"A05\"},{\"type\":\"com.whatsapp.infra.core.jid.UserJid\",\"def_pos\":0,\"name\":\"A06\"},{\"type\":\"X.1gc\",\"def_pos\":0,\"name\":\"A07\"},{\"type\":\"X.C6a\",\"def_pos\":0,\"name\":\"A08\"},{\"type\":\"X.ClY\",\"def_pos\":0,\"name\":\"A09\"},{\"type\":\"X.ClY\",\"def_pos\":0,\"name\":\"A0A\"},{\"type\":\"java.lang.Integer\",\"def_pos\":0,\"name\":\"A0B\"},{\"type\":\"java.lang.Integer\",\"def_pos\":0,\"name\":\"A0C\"},{\"type\":\"java.lang.String\",\"def_pos\":0,\"name\":\"A0D\"},{\"type\":\"java.lang.String\",\"def_pos\":0,\"name\":\"A0E\"},{\"type\":\"java.lang.String\",\"def_pos\":0,\"name\":\"A0F\"},{\"type\":\"java.lang.String\",\"def_pos\":0,\"name\":\"A0G\"},{\"type\":\"java.lang.String\",\"def_pos\":0,\"name\":\"A0H\"},{\"type\":\"java.util.Map\",\"def_pos\":0,\"name\":\"A0I\"},{\"type\":\"boolean\",\"def_pos\":0,\"name\":\"A0J\"},{\"type\":\"boolean\",\"def_pos\":0,\"name\":\"A0K\"},{\"type\":\"byte[]\",\"def_pos\":0,\"name\":\"A0L\"},{\"type\":\"byte[]\",\"def_pos\":0,\"name\":\"A0M\"},{\"type\":\"java.lang.Integer\",\"def_pos\":0,\"name\":\"A0N\"},{\"type\":\"java.util.List\",\"def_pos\":0,\"name\":\"A0O\"},{\"type\":\"X.05B\",\"def_pos\":0,\"name\":\"A0P\"}],\"methods\":[{\"signature\":\"\\u003cclinit\\u003e(): void\",\"is_constructor\":false,\"name\":\"\\u003cclinit\\u003e\",\"def_pos\":0},{\"signature\":\"\\u003cinit\\u003e(com.whatsapp.infra.core.jid.Jid, com.whatsapp.infra.core.jid.Jid, com.whatsapp.infra.core.jid.UserJid, X.1gc, X.1gc, X.ClY, X.ClY, X.0hs, java.lang.Integer, java.lang.Integer, java.lang.Integer, java.lang.Integer, java.lang.Long, java.lang.Long, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, byte[], byte[], int, int, int, long, long, long, boolean, boolean): void\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0},{\"signature\":\"A0N(): X.CZI\",\"is_constructor\":false,\"name\":\"A0N\",\"def_pos\":0},{\"signature\":\"A0O(X.178, X.DFI): void\",\"is_constructor\":false,\"name\":\"A0O\",\"def_pos\":0},{\"signature\":\"A0P(X.178, X.DFI): void\",\"is_constructor\":false,\"name\":\"A0P\",\"def_pos\":0},{\"signature\":\"A0Q(): boolean\",\"is_constructor\":false,\"name\":\"A0Q\",\"def_pos\":0}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.Bp2",
+          "method_name": "A0P",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"mode\":\"java\",\"full_name\":\"X.Bp2.A0P\",\"class_name\":\"X.Bp2\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public final void A0P(AnonymousClass178 anonymousClass178, DFI dfi) {\\n        List list;\\n        dfi.A02 \\u003d anonymousClass178;\\n        anonymousClass178.A0p \\u003d CjN.A00(this);\\n        if (this.A08.A00.A02) {\\n            anonymousClass178.A0H(4);\\n            anonymousClass178.A0y \\u003d true;\\n            if (this.A0J \\u0026\\u0026 (list \\u003d this.A0O) !\\u003d null) {\\n                anonymousClass178.A0N(list);\\n            }\\n        } else {\\n            com.whatsapp.infra.core.jid.Jid jid \\u003d super.A04;\\n            if (jid !\\u003d null) {\\n                anonymousClass178.CW6(C0DE.A00(jid));\\n            }\\n        }\\n        Integer num \\u003d this.A0C;\\n        if (num !\\u003d null) {\\n            anonymousClass178.A07 \\u003d num.intValue();\\n        }\\n        anonymousClass178.A06 \\u003d this.A03;\\n        Long l \\u003d super.A08;\\n        if (l !\\u003d null) {\\n            anonymousClass178.A0C \\u003d l.longValue();\\n        }\\n        anonymousClass178.A0m \\u003d super.A01;\\n        Integer num2 \\u003d this.A0B;\\n        if (num2 !\\u003d null) {\\n            anonymousClass178.A0L \\u003d num2;\\n        }\\n        ClY clY \\u003d this.A09;\\n        if (clY !\\u003d null) {\\n            if (clY.A04) {\\n                anonymousClass178.A15 \\u003d true;\\n            }\\n            if (clY.A03 \\u0026\\u0026 C1xi.A1P(C00D.A0G(C05B.A00(((Can) C05B.A02(A0P)).A00), CDO.A02) ? 1 : 0)) {\\n                anonymousClass178.A0J(70368744177664L);\\n            }\\n        }\\n        String str \\u003d this.A0G;\\n        if (str !\\u003d null) {\\n            anonymousClass178.A0T \\u003d str;\\n        }\\n        String str2 \\u003d this.A0F;\\n        if (str2 !\\u003d null) {\\n            anonymousClass178.A0R \\u003d str2;\\n        }\\n        anonymousClass178.A0b \\u003d super.A02;\\n        Integer num3 \\u003d this.A0N;\\n        if (num3 !\\u003d null) {\\n            anonymousClass178.A0H(num3.intValue());\\n        }\\n        long j \\u003d this.A05;\\n        if (j \\u003e 0) {\\n            anonymousClass178.A0D \\u003d j;\\n        }\\n    }\",\"overload_count\":1,\"method_name\":\"A0P\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.Bp2",
+    "method": {
+      "name": "A0P",
+      "reported_signature": "A0P(X.178, X.DFI): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public final void A0P(AnonymousClass178 anonymousClass178, DFI dfi) {\n        List list;\n        dfi.A02 = anonymousClass178;\n        anonymousClass178.A0p = CjN.A00(this);\n        if (this.A08.A00.A02) {\n            anonymousClass178.A0H(4);\n            anonymousClass178.A0y = true;\n            if (this.A0J && (list = this.A0O) != null) {\n                anonymousClass178.A0N(list);\n            }\n        } else {\n            com.whatsapp.infra.core.jid.Jid jid = super.A04;\n            if (jid != null) {\n                anonymousClass178.CW6(C0DE.A00(jid));\n            }\n        }\n        Integer num = this.A0C;\n        if (num != null) {\n            anonymousClass178.A07 = num.intValue();\n        }\n        anonymousClass178.A06 = this.A03;\n        Long l = super.A08;\n        if (l != null) {\n            anonymousClass178.A0C = l.longValue();\n        }\n        anonymousClass178.A0m = super.A01;\n        Integer num2 = this.A0B;\n        if (num2 != null) {\n            anonymousClass178.A0L = num2;\n        }\n        ClY clY = this.A09;\n        if (clY != null) {\n            if (clY.A04) {\n                anonymousClass178.A15 = true;\n            }\n            if (clY.A03 && C1xi.A1P(C00D.A0G(C05B.A00(((Can) C05B.A02(A0P)).A00), CDO.A02) ? 1 : 0)) {\n                anonymousClass178.A0J(70368744177664L);\n            }\n        }\n        String str = this.A0G;\n        if (str != null) {\n            anonymousClass178.A0T = str;\n        }\n        String str2 = this.A0F;\n        if (str2 != null) {\n            anonymousClass178.A0R = str2;\n        }\n        anonymousClass178.A0b = super.A02;\n        Integer num3 = this.A0N;\n        if (num3 != null) {\n            anonymousClass178.A0H(num3.intValue());\n        }\n        long j = this.A05;\n        if (j > 0) {\n            anonymousClass178.A0D = j;\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

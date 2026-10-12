@@ -1,0 +1,70 @@
+{
+  "admin-builder.txt": {
+    "bytes": 4307,
+    "sha256": "72f5c7536cdc72446b1a09c08dc95e5c8405173df3c64f40fcac9d2dcbc1f516"
+  },
+  "edit-parser.txt": {
+    "bytes": 1849,
+    "sha256": "8dffe116904d786e24599f488ac6d5c6dc32ba33740eac4d8520b30911e3eda4"
+  },
+  "envelope-constructor.txt": {
+    "bytes": 3890,
+    "sha256": "659273521ad89b091f4029b78f02dfa4510ece0be901caae17e5a2265d13e7f8"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "message-factory.txt": {
+    "bytes": 27601,
+    "sha256": "a96df47401bb8beecfdca545bebeb9099a84696466522bdf6dafb6cc341db697"
+  },
+  "parent-descriptor.txt": {
+    "bytes": 3717,
+    "sha256": "06986f93ccd928abdda761b11f8b82d6c903e485d70681569aff6b81955e6dec"
+  },
+  "protocol-descriptor.txt": {
+    "bytes": 8643,
+    "sha256": "74c1011bdae4cd85d5092ab6de984f98ed1aaec9772aa16d5c45501c68f7f923"
+  },
+  "protocol-selector.txt": {
+    "bytes": 1398,
+    "sha256": "65b4c73c032de392305ab6f0df323caf85f032148b4d85b30f4a5cba69933c9e"
+  },
+  "protocol-values.txt": {
+    "bytes": 13670,
+    "sha256": "bf117051104b8f4dabba1cb68fed1574ea8c0708523c85be86513c8508da39f1"
+  },
+  "revoke-key-writer.txt": {
+    "bytes": 2589,
+    "sha256": "494dbe7fb4ed73b0ee6728cd61d2a5b5984d1c5fbfad267f16b7b4216f17334b"
+  },
+  "revoke-store.txt": {
+    "bytes": 69924,
+    "sha256": "c882295ff26aea157acefcf949c26af94da734ea96efa9ffe3b569de94367819"
+  },
+  "revoke-writer.txt": {
+    "bytes": 1735,
+    "sha256": "4d54a427bd8eb387034c30f1d26e6fcc85c8fc601556c8c352dd2812fdcaaf2a"
+  },
+  "sender-builder.txt": {
+    "bytes": 2524,
+    "sha256": "7f767aa253352ff58f3e2a6917ff29bcea13fd263ced8ce3046d28b4abb11c48"
+  },
+  "targets.json": {
+    "bytes": 6509,
+    "sha256": "6f14e366bfa93753b8261f46406683499ce16d35d43c16be645dbf182f0a6af4"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  },
+  "unwrap-context.txt": {
+    "bytes": 1934,
+    "sha256": "5472813db86298622703ddb37d55c7f58233ad81b51aa2239827cc627cd2a343"
+  }
+}

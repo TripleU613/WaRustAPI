@@ -170,6 +170,47 @@ pub fn validate_timer(seconds: u32) -> Result<()> {
     Ok(())
 }
 
+// Bua.CF4 reads a present REVOKE type and parent id; ownership comes from CoT.
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub(super) fn decode_sender_revoke(payload: &[u8]) -> Option<MessageId> {
+    let fields = crate::signal::direct::payload_fields(payload).ok()?;
+    if fields.iter().any(|f| !matches!(f, 12 | 35))
+        || fields.iter().filter(|&&f| f == 12).count() != 1
+    {
+        return None;
+    }
+    let protocol = Envelope::decode(payload).ok()?.protocol?;
+    if protocol.type_ != Some(0) {
+        return None;
+    }
+    let key = protocol.key?;
+    // shortcut: native special participant classes need their separate revoke mapper.
+    if key.participant.as_ref().is_some_and(|p| !p.is_empty()) {
+        return None;
+    }
+    MessageId::new(key.id?).ok()
+}
+
+// DEy.A00 accepts empty as zero, otherwise int32 1/2/3/7/8; Bua excludes admin 8.
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub(super) fn sender_revoke_edit(node: &crate::binary::Node) -> bool {
+    match node.get_attr("edit") {
+        None => true,
+        Some(value) => value.as_text().is_some_and(|text| {
+            text.is_empty()
+                || super::mex::java_decimal_long(text).is_some_and(|v| matches!(v, 1 | 2 | 3 | 7))
+        }),
+    }
+}
+
 /// Decode a chat-setting `protocolMessage` (field 12). Returns `None` for
 /// malformed content or a `type` this module does not recognise.
 pub fn decode_protocol(payload: &[u8]) -> Option<Setting> {

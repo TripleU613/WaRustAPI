@@ -3050,6 +3050,76 @@ mod tests {
                 .unwrap()
                 .is_none()
         );
+        let peer_revoke_body =
+            prost::Message::encode_to_vec(&super::super::chat_settings::Envelope {
+                protocol: Some(super::super::chat_settings::ProtocolMessage {
+                    key: Some(super::super::reactions::Key {
+                        id: Some("BARE-PREKEY".into()),
+                        from_me: Some(false),
+                        ..Default::default()
+                    }),
+                    type_: Some(0),
+                    ..Default::default()
+                }),
+                ..Default::default()
+            });
+        let peer_revocation = direct::prepare_payload(
+            &sender,
+            receiver.own_jid.as_ref().unwrap(),
+            None,
+            Some(&sent.session),
+            Some(&sent.identity),
+            &peer_revoke_body,
+        )
+        .await
+        .unwrap();
+        let peer_revoke_node = Node::new("message")
+            .attr("from", peer.clone())
+            .attr("id", "PEER-REVOKE")
+            .attr("type", "text")
+            .attr("edit", "7")
+            .children(vec![
+                Node::new("enc")
+                    .attr("type", peer_revocation.kind)
+                    .attr("v", "2")
+                    .bytes(peer_revocation.ciphertext.to_vec()),
+            ]);
+        let peer_revoke_capture = preserve(&store, &peer_revoke_node).unwrap();
+        assert_eq!(
+            process(&store, &receiver, &peer_revoke_node, &peer_revoke_capture)
+                .await
+                .unwrap(),
+            IncomingResult::Decrypted
+        );
+        let peer_revoke_events = store
+            .read(|tx| {
+                tx.read_events(
+                    &crate::store::ConsumerId::new("peer-revoke")?,
+                    crate::model::ids::EventCursor::START,
+                    100,
+                )
+            })
+            .unwrap();
+        let crate::sync::SyncEvent::MessageUpdated(update) =
+            &peer_revoke_events.events.last().unwrap().event
+        else {
+            panic!("peer revoke missing")
+        };
+        assert_eq!(update.key.id.as_str(), "BARE-PREKEY");
+        assert_eq!(update.key.chat.jid(), &peer);
+        assert_eq!(
+            update.key.direction,
+            crate::model::message::Direction::Incoming
+        );
+        assert!(
+            matches!(&update.change, crate::model::message::MessageChange::Revoked {by} if by.to_jid()==peer)
+        );
+        assert_eq!(
+            process(&store, &receiver, &peer_revoke_node, &peer_revoke_capture)
+                .await
+                .unwrap(),
+            IncomingResult::Duplicate
+        );
         // Reuse the authenticated ratchet as a fixture for a separately held own device.
         let peer_device = Jid::parse(&format!("{}:2@lid", peer.user)).unwrap();
         let (held_session, held_identity) = store
@@ -3076,7 +3146,7 @@ mod tests {
         let acknowledged = direct::receive(
             &sender,
             receiver.own_jid.as_ref().unwrap(),
-            &sent.session,
+            &peer_revocation.session,
             &sent.identity,
             &reply.ciphertext,
         )
@@ -3204,6 +3274,28 @@ mod tests {
                 .await
                 .unwrap(),
             IncomingResult::Duplicate
+        );
+        let edited_redelivery = sync_node.clone().attr("edit", "7");
+        let edited_redelivery_capture = preserve(&store, &edited_redelivery).unwrap();
+        assert_eq!(
+            process(
+                &store,
+                &receiver,
+                &edited_redelivery,
+                &edited_redelivery_capture
+            )
+            .await
+            .unwrap(),
+            IncomingResult::Unsupported
+        );
+        assert!(
+            super::super::messaging::received_confirmation_for_account(
+                &store,
+                &receiver,
+                &edited_redelivery
+            )
+            .unwrap()
+            .is_none()
         );
         let expected_confirmation = Node::new("receipt")
             .attr("to", peer_device.clone())
@@ -3983,12 +4075,162 @@ mod tests {
             after_keeps_session = synchronized.session;
             own_keeps.push((node, capture));
         }
+        let mut edited_sent = Vec::new();
+        prost::encoding::string::encode(1, &"67890@lid".to_owned(), &mut edited_sent);
+        prost::encoding::bytes::encode(2, &b"\x0a\x05hello".to_vec(), &mut edited_sent);
+        let mut edited_wrapper = Vec::new();
+        prost::encoding::bytes::encode(31, &edited_sent, &mut edited_wrapper);
+        let unsupported_edit = direct::prepare_payload(
+            &sender,
+            receiver.own_jid.as_ref().unwrap(),
+            None,
+            Some(&after_keeps_session),
+            Some(&sent.identity),
+            &edited_wrapper,
+        )
+        .await
+        .unwrap();
+        let edited_node = Node::new("message")
+            .attr("from", peer_device.clone())
+            .attr("recipient", "67890@lid")
+            .attr("id", "OWN-EDIT-UNPORTED")
+            .attr("type", "text")
+            .attr("edit", "7")
+            .children(vec![
+                Node::new("enc")
+                    .attr("type", unsupported_edit.kind)
+                    .attr("v", "2")
+                    .bytes(unsupported_edit.ciphertext.to_vec()),
+            ]);
+        let edited_capture = preserve(&store, &edited_node).unwrap();
+        let before_edit = store
+            .read(|tx| {
+                Table::ALL
+                    .iter()
+                    .map(|t| tx.scan(*t, 1, 200))
+                    .collect::<Result<Vec<_>>>()
+            })
+            .unwrap();
+        let before_edit_head = store.journal_head().unwrap();
+        assert_eq!(
+            process(&store, &receiver, &edited_node, &edited_capture)
+                .await
+                .unwrap(),
+            IncomingResult::Unsupported
+        );
+        assert_eq!(
+            store
+                .read(|tx| Table::ALL
+                    .iter()
+                    .map(|t| tx.scan(*t, 1, 200))
+                    .collect::<Result<Vec<_>>>())
+                .unwrap(),
+            before_edit
+        );
+        assert_eq!(store.journal_head().unwrap(), before_edit_head);
+        let own_revoke_body =
+            prost::Message::encode_to_vec(&super::super::chat_settings::Envelope {
+                protocol: Some(super::super::chat_settings::ProtocolMessage {
+                    key: Some(super::super::reactions::Key {
+                        id: Some(own_vote_target.key.id.as_str().into()),
+                        from_me: Some(false),
+                        remote_jid: Some("status@broadcast".into()),
+                        ..Default::default()
+                    }),
+                    type_: Some(0),
+                    ..Default::default()
+                }),
+                ..Default::default()
+            });
+        let mut sent_revoke = Vec::new();
+        prost::encoding::string::encode(1, &"67890@lid".to_owned(), &mut sent_revoke);
+        prost::encoding::bytes::encode(2, &own_revoke_body, &mut sent_revoke);
+        let mut revoke_wrapper = Vec::new();
+        prost::encoding::bytes::encode(31, &sent_revoke, &mut revoke_wrapper);
+        let synchronized = direct::prepare_payload(
+            &sender,
+            receiver.own_jid.as_ref().unwrap(),
+            None,
+            Some(&unsupported_edit.session),
+            Some(&sent.identity),
+            &revoke_wrapper,
+        )
+        .await
+        .unwrap();
+        let own_revoke_node = Node::new("message")
+            .attr("from", peer_device.clone())
+            .attr("recipient", "67890@lid")
+            .attr("id", "OWN-REVOKE")
+            .attr("type", "text")
+            .attr("edit", "7")
+            .children(vec![
+                Node::new("enc")
+                    .attr("type", synchronized.kind)
+                    .attr("v", "2")
+                    .bytes(synchronized.ciphertext.to_vec()),
+            ]);
+        let own_revoke_capture = preserve(&store, &own_revoke_node).unwrap();
+        assert_eq!(
+            process(&store, &receiver, &own_revoke_node, &own_revoke_capture)
+                .await
+                .unwrap(),
+            IncomingResult::Decrypted
+        );
+        let revoke_events = store
+            .read(|tx| {
+                tx.read_events(
+                    &crate::store::ConsumerId::new("own-revoke")?,
+                    crate::model::ids::EventCursor::START,
+                    100,
+                )
+            })
+            .unwrap();
+        let crate::sync::SyncEvent::MessageUpdated(update) =
+            &revoke_events.events.last().unwrap().event
+        else {
+            panic!("own revoke missing")
+        };
+        assert_eq!(update.key, own_vote_target.key);
+        assert!(
+            matches!(&update.change,crate::model::message::MessageChange::Revoked {by} if by.to_jid()==peer_device.to_non_ad())
+        );
+        assert!(
+            super::super::messaging::received_confirmation_for_account(
+                &store,
+                &receiver,
+                &own_revoke_node
+            )
+            .unwrap()
+            .is_some()
+        );
+        assert_eq!(
+            store
+                .read(|tx| Ok((
+                    tx.scan(Table::Outbox, 1, 10)?,
+                    tx.scan(Table::Idempotency, 1, 10)?
+                )))
+                .unwrap(),
+            before_echo
+        );
+        let after_revoke_session = synchronized.session;
         let after_poll_head = store.journal_head().unwrap();
         let event_count = batch.events.len()
             + usize::from(cfg!(feature = "experimental-registration-https"))
-            + 10;
+            + 11;
         drop(store);
         let store = open(false);
+        assert_eq!(
+            process(&store, &receiver, &own_revoke_node, &own_revoke_capture)
+                .await
+                .unwrap(),
+            IncomingResult::Duplicate
+        );
+        assert_eq!(
+            process(&store, &receiver, &peer_revoke_node, &peer_revoke_capture)
+                .await
+                .unwrap(),
+            IncomingResult::Duplicate
+        );
         for (node, capture) in &own_keeps {
             assert_eq!(
                 process(&store, &receiver, node, capture).await.unwrap(),
@@ -4055,7 +4297,7 @@ mod tests {
             super::super::chat_clear::clear_chat(&store, &Jid::parse("67890@lid").unwrap())
                 .unwrap()
                 .cleared_messages,
-            11 + usize::from(cfg!(feature = "experimental-registration-https"))
+            12 + usize::from(cfg!(feature = "experimental-registration-https"))
         );
         #[cfg(feature = "experimental-registration-https")]
         assert!(super::super::media::list(&store).unwrap().is_empty());
@@ -4113,7 +4355,7 @@ mod tests {
             &sender,
             receiver.own_jid.as_ref().unwrap(),
             None,
-            Some(&after_keeps_session),
+            Some(&after_revoke_session),
             Some(&sent.identity),
             b"\x0a\x05hello",
         )

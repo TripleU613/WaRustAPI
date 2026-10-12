@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_bba0fc6f1023ff1656b6c7093a524cda99ee015baaf5aa36b4227ef39a8eb9ae",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.D9M",
+    "method_name": "A00"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-9QLOMJ/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\",\"max_heap_bytes\":15695085568,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.D9M"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[],\"field_count\":0,\"full_name\":\"X.D9M\",\"name\":\"D9M\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":2,\"methods\":[{\"is_constructor\":false,\"signature\":\"A00(X.1ii, X.BOE, boolean): void\",\"def_pos\":0,\"name\":\"A00\"},{\"is_constructor\":false,\"signature\":\"AD7(X.178, X.Cn6): void\",\"def_pos\":0,\"name\":\"AD7\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.D9M",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_name\":\"A00\",\"overload_count\":1,\"body\":\"/* JADX INFO: loaded from: classes7.dex */\\npublic abstract class D9M implements DbV, C8fM, C1gs {\\n    public void A00(C1ii c1ii, BOE boe, boolean z) {\\n        C1gc c1gc \\u003d c1ii.A0i;\\n        String strA09 \\u003d C0DE.A09(((CSZ) (this instanceof Bua ? ((Bua) this).A00 : ((Bub) this).A00).get()).A00(c1gc.A00, z));\\n        C00K.A06(strA09);\\n        boe.A07(strA09);\\n        C0Cy c0CyB1Q \\u003d c1ii.B1Q();\\n        if ((c1ii instanceof Bpt) \\u0026\\u0026 c0CyB1Q !\\u003d null \\u0026\\u0026 C0hd.A02(c0CyB1Q)) {\\n            boe.A08(false);\\n            boe.A06(c0CyB1Q.getRawString());\\n        } else {\\n            boe.A08(c1gc.A02);\\n        }\\n        String str \\u003d c1ii.A01;\\n        if (str \\u003d\\u003d null) {\\n            str \\u003d c1gc.A01;\\n        }\\n        boe.A05(str);\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.D9M\",\"full_name\":\"X.D9M.A00\",\"mode\":\"java\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.D9M",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(X.1ii, X.BOE, boolean): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "/* JADX INFO: loaded from: classes7.dex */\npublic abstract class D9M implements DbV, C8fM, C1gs {\n    public void A00(C1ii c1ii, BOE boe, boolean z) {\n        C1gc c1gc = c1ii.A0i;\n        String strA09 = C0DE.A09(((CSZ) (this instanceof Bua ? ((Bua) this).A00 : ((Bub) this).A00).get()).A00(c1gc.A00, z));\n        C00K.A06(strA09);\n        boe.A07(strA09);\n        C0Cy c0CyB1Q = c1ii.B1Q();\n        if ((c1ii instanceof Bpt) && c0CyB1Q != null && C0hd.A02(c0CyB1Q)) {\n            boe.A08(false);\n            boe.A06(c0CyB1Q.getRawString());\n        } else {\n            boe.A08(c1gc.A02);\n        }\n        String str = c1ii.A01;\n        if (str == null) {\n            str = c1gc.A01;\n        }\n        boe.A05(str);\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

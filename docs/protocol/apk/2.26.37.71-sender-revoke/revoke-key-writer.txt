@@ -1,0 +1,49 @@
+# APK-derived structural disassembly: LX/D9M;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(VLLZ) flags=0x1 registers=8
+  # full signature: LX/D9M;->A00(LX/1ii;LX/BOE;Z)V
+  0000..0004 op=54 iget-object v2, v5, LX/178;->A0i:LX/1gc;
+  0004..0008 op=54 iget-object v3, v2, LX/1gc;->A00:LX/0Cy;
+  0008..000a op=07 move-object v1, v4
+  000a..000e op=20 instance-of v0, v4, LX/Bua;
+  000e..0012 op=38 if-eqz v0, +0x45
+  0012..0016 op=1f check-cast v1, LX/Bua;
+  0016..001a op=54 iget-object v0, v1, LX/Bua;->A00:LX/00s;
+  001a..0020 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  0020..0022 op=0c move-result-object v0
+  0022..0026 op=1f check-cast v0, LX/CSZ;
+  0026..002c op=6e invoke-virtual {v0, v3, v7}, LX/CSZ;->A00(LX/0Cy;Z)LX/0Cy;
+  002c..002e op=0c move-result-object v0
+  002e..0034 op=71 invoke-static {v0}, LX/0DE;->A09(Lcom/whatsapp/infra/core/jid/Jid;)Ljava/lang/String;
+  0034..0036 op=0c move-result-object v0
+  0036..003c op=71 invoke-static {v0}, LX/00K;->A06(Ljava/lang/Object;)V
+  003c..0042 op=6e invoke-virtual {v6, v0}, LX/BOE;->A07(Ljava/lang/String;)V
+  0042..0048 op=6e invoke-virtual {v5}, LX/178;->B1Q()LX/0Cy;
+  0048..004a op=0c move-result-object v1
+  004a..004e op=20 instance-of v0, v5, LX/Bpt;
+  004e..0052 op=38 if-eqz v0, +0x1f
+  0052..0056 op=38 if-eqz v1, +0x1d
+  0056..005c op=71 invoke-static {v1}, LX/0hd;->A02(LX/0Cy;)Z
+  005c..005e op=0a move-result v0
+  005e..0062 op=38 if-eqz v0, +0x17
+  0062..0064 op=12 const/4 v0, #0x0
+  0064..006a op=6e invoke-virtual {v6, v0}, LX/BOE;->A08(Z)V
+  006a..0070 op=6e invoke-virtual {v1}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+  0070..0072 op=0c move-result-object v0
+  0072..0078 op=6e invoke-virtual {v6, v0}, LX/BOE;->A06(Ljava/lang/String;)V
+  0078..007c op=54 iget-object v0, v5, LX/1ii;->A01:Ljava/lang/String;
+  007c..0080 op=39 if-nez v0, +0x4
+  0080..0084 op=54 iget-object v0, v2, LX/1gc;->A01:Ljava/lang/String;
+  0084..008a op=6e invoke-virtual {v6, v0}, LX/BOE;->A05(Ljava/lang/String;)V
+  008a..008c op=0e return-void
+  008c..0090 op=55 iget-boolean v0, v2, LX/1gc;->A02:Z
+  0090..0096 op=6e invoke-virtual {v6, v0}, LX/BOE;->A08(Z)V
+  0096..0098 op=28 goto -0xf
+  0098..009c op=1f check-cast v1, LX/Bub;
+  009c..00a0 op=54 iget-object v0, v1, LX/Bub;->A00:LX/00s;
+  00a0..00a2 op=28 goto -0x43
+  # exception table: 0 try range(s)
+.end method

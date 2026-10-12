@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_1166ee9ed5fe6d3f16281f844b98a1978b12eb68b1a4d5f355438a35f9896ad0",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.C4F",
+    "method_name": "<clinit>"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-9QLOMJ/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.12.1\",\"max_heap_bytes\":15695085568,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C4F"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"name\":\"A00\",\"def_pos\":0,\"type\":\"X.C4F[]\"},{\"name\":\"A01\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A02\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A03\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A04\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A05\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A06\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A07\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A08\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A09\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A0A\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A0B\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A0C\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A0D\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A0E\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A0F\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A0G\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A0H\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A0I\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A0J\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A0K\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A0L\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A0M\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A0N\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A0O\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A0P\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A0Q\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A0R\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A0S\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A0T\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A0U\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A0V\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A0W\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A0X\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A0Y\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"A0Z\",\"def_pos\":0,\"type\":\"X.C4F\"},{\"name\":\"value\",\"def_pos\":0,\"type\":\"int\"}],\"field_count\":37,\"full_name\":\"X.C4F\",\"name\":\"C4F\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":7,\"methods\":[{\"is_constructor\":false,\"signature\":\"\\u003cclinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cclinit\\u003e\"},{\"is_constructor\":true,\"signature\":\"\\u003cinit\\u003e(java.lang.String, int, int): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\"},{\"is_constructor\":false,\"signature\":\"A00(java.lang.String, int, int): X.C4F\",\"def_pos\":0,\"name\":\"A00\"},{\"is_constructor\":false,\"signature\":\"forNumber(int): X.C4F\",\"def_pos\":0,\"name\":\"forNumber\"},{\"is_constructor\":false,\"signature\":\"getNumber(): int\",\"def_pos\":0,\"name\":\"getNumber\"},{\"is_constructor\":false,\"signature\":\"valueOf(java.lang.String): X.C4F\",\"def_pos\":0,\"name\":\"valueOf\"},{\"is_constructor\":false,\"signature\":\"values(): X.C4F[]\",\"def_pos\":0,\"name\":\"values\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C4F",
+          "method_name": "<clinit>",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_name\":\"\\u003cclinit\\u003e\",\"overload_count\":1,\"body\":\"    static {\\n        C4F c4f \\u003d new C4F(\\\"REVOKE\\\", 0, 0);\\n        A0T \\u003d c4f;\\n        C4F c4fA00 \\u003d A00(\\\"EPHEMERAL_SETTING\\\", 1, 3);\\n        A0D \\u003d c4fA00;\\n        C4F c4fA01 \\u003d A00(\\\"EPHEMERAL_SYNC_RESPONSE\\\", 2, 4);\\n        A0E \\u003d c4fA01;\\n        C4F c4fA02 \\u003d A00(\\\"HISTORY_SYNC_NOTIFICATION\\\", 3, 5);\\n        A0G \\u003d c4fA02;\\n        C4F c4fA03 \\u003d A00(\\\"APP_STATE_SYNC_KEY_SHARE\\\", 4, 6);\\n        A08 \\u003d c4fA03;\\n        C4F c4fA04 \\u003d A00(\\\"APP_STATE_SYNC_KEY_REQUEST\\\", 5, 7);\\n        A07 \\u003d c4fA04;\\n        C4F c4fA05 \\u003d A00(\\\"MSG_FANOUT_BACKFILL_REQUEST\\\", 6, 8);\\n        A0P \\u003d c4fA05;\\n        C4F c4fA06 \\u003d A00(\\\"INITIAL_SECURITY_NOTIFICATION_SETTING_SYNC\\\", 7, 9);\\n        A0H \\u003d c4fA06;\\n        C4F c4fA07 \\u003d A00(\\\"APP_STATE_FATAL_EXCEPTION_NOTIFICATION\\\", 8, 10);\\n        A06 \\u003d c4fA07;\\n        C4F c4fA08 \\u003d A00(\\\"SHARE_PHONE_NUMBER\\\", 9, 11);\\n        A0W \\u003d c4fA08;\\n        C4F c4fA09 \\u003d A00(\\\"MESSAGE_EDIT\\\", 10, 14);\\n        A0N \\u003d c4fA09;\\n        C4F c4fA010 \\u003d A00(\\\"PEER_DATA_OPERATION_REQUEST_MESSAGE\\\", 11, 16);\\n        A0Q \\u003d c4fA010;\\n        C4F c4fA011 \\u003d A00(\\\"PEER_DATA_OPERATION_REQUEST_RESPONSE_MESSAGE\\\", 12, 17);\\n        A0R \\u003d c4fA011;\\n        C4F c4fA012 \\u003d A00(\\\"REQUEST_WELCOME_MESSAGE\\\", 13, 18);\\n        A0S \\u003d c4fA012;\\n        C4F c4fA013 \\u003d A00(\\\"BOT_FEEDBACK_MESSAGE\\\", 14, 19);\\n        A09 \\u003d c4fA013;\\n        C4F c4fA014 \\u003d A00(\\\"MEDIA_NOTIFY_MESSAGE\\\", 15, 20);\\n        A0L \\u003d c4fA014;\\n        C4F c4fA015 \\u003d A00(\\\"CLOUD_API_THREAD_CONTROL_NOTIFICATION\\\", 16, 21);\\n        A0B \\u003d c4fA015;\\n        C4F c4fA016 \\u003d A00(\\\"LID_MIGRATION_MAPPING_SYNC\\\", 17, 22);\\n        A0I \\u003d c4fA016;\\n        C4F c4fA017 \\u003d A00(\\\"MEMU_ONBOARDING_MESSAGE\\\", 18, 24);\\n        A0M \\u003d c4fA017;\\n        C4F c4fA018 \\u003d A00(\\\"STATUS_MENTION_MESSAGE\\\", 19, 25);\\n        A0X \\u003d c4fA018;\\n        C4F c4fA019 \\u003d A00(\\\"STOP_GENERATION_MESSAGE\\\", 20, 26);\\n        A0Y \\u003d c4fA019;\\n        C4F c4fA020 \\u003d A00(\\\"LIMIT_SHARING\\\", 21, 27);\\n        A0J \\u003d c4fA020;\\n        C4F c4fA021 \\u003d A00(\\\"AI_PSI_METADATA\\\", 22, 28);\\n        A04 \\u003d c4fA021;\\n        C4F c4fA022 \\u003d A00(\\\"AI_QUERY_FANOUT\\\", 23, 29);\\n        A05 \\u003d c4fA022;\\n        C4F c4fA023 \\u003d A00(\\\"GROUP_MEMBER_LABEL_CHANGE\\\", 24, 30);\\n        A0F \\u003d c4fA023;\\n        C4F c4fA024 \\u003d A00(\\\"AI_MEDIA_COLLECTION_MESSAGE\\\", 25, 31);\\n        A02 \\u003d c4fA024;\\n        C4F c4fA025 \\u003d A00(\\\"MESSAGE_UNSCHEDULE\\\", 26, 32);\\n        A0O \\u003d c4fA025;\\n        C4F c4fA026 \\u003d A00(\\\"CHAT_THEME_SETTING\\\", 27, 34);\\n        A0A \\u003d c4fA026;\\n        C4F c4fA027 \\u003d A00(\\\"AI_METADATA_OPERATION\\\", 28, 35);\\n        A03 \\u003d c4fA027;\\n        C4F c4fA028 \\u003d A00(\\\"MARK_AS_VERIFIED_ACTION\\\", 29, 36);\\n        A0K \\u003d c4fA028;\\n        C4F c4fA029 \\u003d A00(\\\"COEX_STATE_SYNC\\\", 30, 37);\\n        A0C \\u003d c4fA029;\\n        C4F c4fA030 \\u003d A00(\\\"SYNC_REQUEST_MUTATION_RETRY\\\", 31, 38);\\n        A0Z \\u003d c4fA030;\\n        C4F c4fA031 \\u003d A00(\\\"ACP2_SETTING\\\", 32, 39);\\n        A01 \\u003d c4fA031;\\n        C4F c4fA032 \\u003d A00(\\\"SHARED_DEVICE_CONTACT_HASH_KEY_SHARE\\\", 33, 40);\\n        A0V \\u003d c4fA032;\\n        C4F c4fA033 \\u003d A00(\\\"SHARED_DEVICE_CONTACT_HASH_KEY_REQUEST\\\", 34, 41);\\n        A0U \\u003d c4fA033;\\n        C4F[] c4fArr \\u003d new C4F[35];\\n        C1xk.A1J(c4f, c4fA00, c4fA01, c4fA02, c4fArr);\\n        C1xk.A1K(c4fA03, c4fA04, c4fA05, c4fA06, c4fArr);\\n        C1xk.A1L(c4fA07, c4fA08, c4fA09, c4fA010, c4fArr);\\n        C1xk.A1M(c4fA011, c4fA012, c4fA013, c4fA014, c4fArr);\\n        C1xp.A1E(c4fA015, c4fA016, c4fA017, c4fArr);\\n        C1xp.A16(c4fA018, c4fA019, c4fA020, c4fA021, c4fArr);\\n        c4fArr[23] \\u003d c4fA022;\\n        c4fArr[24] \\u003d c4fA023;\\n        c4fArr[25] \\u003d c4fA024;\\n        c4fArr[26] \\u003d c4fA025;\\n        C1xp.A1F(c4fA026, c4fA027, c4fA028, c4fArr);\\n        C1xp.A18(c4fA029, c4fA030, c4fA031, c4fA032, c4fArr);\\n        c4fArr[34] \\u003d c4fA033;\\n        A00 \\u003d c4fArr;\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.C4F\",\"full_name\":\"X.C4F.\\u003cclinit\\u003e\",\"mode\":\"java\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.C4F",
+    "method": {
+      "name": "<clinit>",
+      "reported_signature": "<clinit>(): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    static {\n        C4F c4f = new C4F(\"REVOKE\", 0, 0);\n        A0T = c4f;\n        C4F c4fA00 = A00(\"EPHEMERAL_SETTING\", 1, 3);\n        A0D = c4fA00;\n        C4F c4fA01 = A00(\"EPHEMERAL_SYNC_RESPONSE\", 2, 4);\n        A0E = c4fA01;\n        C4F c4fA02 = A00(\"HISTORY_SYNC_NOTIFICATION\", 3, 5);\n        A0G = c4fA02;\n        C4F c4fA03 = A00(\"APP_STATE_SYNC_KEY_SHARE\", 4, 6);\n        A08 = c4fA03;\n        C4F c4fA04 = A00(\"APP_STATE_SYNC_KEY_REQUEST\", 5, 7);\n        A07 = c4fA04;\n        C4F c4fA05 = A00(\"MSG_FANOUT_BACKFILL_REQUEST\", 6, 8);\n        A0P = c4fA05;\n        C4F c4fA06 = A00(\"INITIAL_SECURITY_NOTIFICATION_SETTING_SYNC\", 7, 9);\n        A0H = c4fA06;\n        C4F c4fA07 = A00(\"APP_STATE_FATAL_EXCEPTION_NOTIFICATION\", 8, 10);\n        A06 = c4fA07;\n        C4F c4fA08 = A00(\"SHARE_PHONE_NUMBER\", 9, 11);\n        A0W = c4fA08;\n        C4F c4fA09 = A00(\"MESSAGE_EDIT\", 10, 14);\n        A0N = c4fA09;\n        C4F c4fA010 = A00(\"PEER_DATA_OPERATION_REQUEST_MESSAGE\", 11, 16);\n        A0Q = c4fA010;\n        C4F c4fA011 = A00(\"PEER_DATA_OPERATION_REQUEST_RESPONSE_MESSAGE\", 12, 17);\n        A0R = c4fA011;\n        C4F c4fA012 = A00(\"REQUEST_WELCOME_MESSAGE\", 13, 18);\n        A0S = c4fA012;\n        C4F c4fA013 = A00(\"BOT_FEEDBACK_MESSAGE\", 14, 19);\n        A09 = c4fA013;\n        C4F c4fA014 = A00(\"MEDIA_NOTIFY_MESSAGE\", 15, 20);\n        A0L = c4fA014;\n        C4F c4fA015 = A00(\"CLOUD_API_THREAD_CONTROL_NOTIFICATION\", 16, 21);\n        A0B = c4fA015;\n        C4F c4fA016 = A00(\"LID_MIGRATION_MAPPING_SYNC\", 17, 22);\n        A0I = c4fA016;\n        C4F c4fA017 = A00(\"MEMU_ONBOARDING_MESSAGE\", 18, 24);\n        A0M = c4fA017;\n        C4F c4fA018 = A00(\"STATUS_MENTION_MESSAGE\", 19, 25);\n        A0X = c4fA018;\n        C4F c4fA019 = A00(\"STOP_GENERATION_MESSAGE\", 20, 26);\n        A0Y = c4fA019;\n        C4F c4fA020 = A00(\"LIMIT_SHARING\", 21, 27);\n        A0J = c4fA020;\n        C4F c4fA021 = A00(\"AI_PSI_METADATA\", 22, 28);\n        A04 = c4fA021;\n        C4F c4fA022 = A00(\"AI_QUERY_FANOUT\", 23, 29);\n        A05 = c4fA022;\n        C4F c4fA023 = A00(\"GROUP_MEMBER_LABEL_CHANGE\", 24, 30);\n        A0F = c4fA023;\n        C4F c4fA024 = A00(\"AI_MEDIA_COLLECTION_MESSAGE\", 25, 31);\n        A02 = c4fA024;\n        C4F c4fA025 = A00(\"MESSAGE_UNSCHEDULE\", 26, 32);\n        A0O = c4fA025;\n        C4F c4fA026 = A00(\"CHAT_THEME_SETTING\", 27, 34);\n        A0A = c4fA026;\n        C4F c4fA027 = A00(\"AI_METADATA_OPERATION\", 28, 35);\n        A03 = c4fA027;\n        C4F c4fA028 = A00(\"MARK_AS_VERIFIED_ACTION\", 29, 36);\n        A0K = c4fA028;\n        C4F c4fA029 = A00(\"COEX_STATE_SYNC\", 30, 37);\n        A0C = c4fA029;\n        C4F c4fA030 = A00(\"SYNC_REQUEST_MUTATION_RETRY\", 31, 38);\n        A0Z = c4fA030;\n        C4F c4fA031 = A00(\"ACP2_SETTING\", 32, 39);\n        A01 = c4fA031;\n        C4F c4fA032 = A00(\"SHARED_DEVICE_CONTACT_HASH_KEY_SHARE\", 33, 40);\n        A0V = c4fA032;\n        C4F c4fA033 = A00(\"SHARED_DEVICE_CONTACT_HASH_KEY_REQUEST\", 34, 41);\n        A0U = c4fA033;\n        C4F[] c4fArr = new C4F[35];\n        C1xk.A1J(c4f, c4fA00, c4fA01, c4fA02, c4fArr);\n        C1xk.A1K(c4fA03, c4fA04, c4fA05, c4fA06, c4fArr);\n        C1xk.A1L(c4fA07, c4fA08, c4fA09, c4fA010, c4fArr);\n        C1xk.A1M(c4fA011, c4fA012, c4fA013, c4fA014, c4fArr);\n        C1xp.A1E(c4fA015, c4fA016, c4fA017, c4fArr);\n        C1xp.A16(c4fA018, c4fA019, c4fA020, c4fA021, c4fArr);\n        c4fArr[23] = c4fA022;\n        c4fArr[24] = c4fA023;\n        c4fArr[25] = c4fA024;\n        c4fArr[26] = c4fA025;\n        C1xp.A1F(c4fA026, c4fA027, c4fA028, c4fArr);\n        C1xp.A18(c4fA029, c4fA030, c4fA031, c4fA032, c4fArr);\n        c4fArr[34] = c4fA033;\n        A00 = c4fArr;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

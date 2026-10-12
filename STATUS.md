@@ -1,3 +1,15 @@
+2026-10-11 — **Implemented/offline:** ordinary direct sender revocations now
+project into MessageUpdated/Revoked for peers and held own-device wrappers.
+Envelope ownership overrides embedded flags/remotes; saved peer routes retain
+original namespace/device. Native edit parsing admits the sender path, while
+edited non-revoke bodies and forged edited redelivery of saved text refuse.
+Signal, reopen/deduplication, unchanged uncertain sends and ratchet continuation
+are covered. Physical deletion, native timing/cleanup, group/admin/status and
+outgoing revoke/edit remain open. One bounded receive-only window authenticated
+and exited cleanly; action/receipt/outbox views and account/journal summaries
+stayed equal, with ten new inbound captures. No fresh live revoke verification.
+[Native sources, receive tests and live limits](docs/protocol/sender-revoke.md).
+
 2026-10-11 — **Implemented/offline:** identity-refresh session preview now
 supports primary changed keys through the existing verified classic application
 helper. Changed candidates derive fresh with zero old archives; same-key

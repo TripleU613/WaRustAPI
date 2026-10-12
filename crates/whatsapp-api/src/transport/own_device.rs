@@ -1,4 +1,4 @@
-//! Authenticated own-device text/media/poll/reaction synchronization over an already held session.
+//! Authenticated own-device synchronization over an already held session.
 use super::inbox::IncomingResult;
 use crate::{
     Error, Result,
@@ -14,7 +14,6 @@ fn shape(account: &AccountRecord, node: &Node) -> Option<(Jid, Jid, String)> {
     // shortcut: alternate recipient mapping and special namespaces need their saved migration state.
     if [
         "participant",
-        "edit",
         "peer_recipient_pn",
         "peer_recipient_lid",
         "peer_recipient_username",
@@ -22,6 +21,7 @@ fn shape(account: &AccountRecord, node: &Node) -> Option<(Jid, Jid, String)> {
     ]
     .iter()
     .any(|name| node.get_attr(name).is_some())
+        || !super::chat_settings::sender_revoke_edit(node)
         || node.get_attr("category").and_then(|v| v.as_text()) == Some("peer")
     {
         return None;
@@ -162,6 +162,7 @@ pub(super) fn payload(payload: &[u8], chat: &Jid) -> Option<Zeroizing<Vec<u8>>> 
         return None;
     }
     if text.protocol.is_some()
+        && super::chat_settings::decode_sender_revoke(&inner).is_none()
         && !matches!(
             super::chat_settings::decode_protocol(&inner),
             Some(
@@ -275,6 +276,16 @@ pub(super) fn record_in(
     Ok(selected)
 }
 
+fn saved_edit_matches(node: &Node, chat: &Jid, saved: &serde_json::Value) -> bool {
+    // An edited redelivery needs authenticated revoke content, not just a saved ID.
+    node.get_attr("edit").is_none()
+        || serde_json::from_value::<Vec<u8>>(saved["protobuf"].clone())
+            .ok()
+            .map(Zeroizing::new)
+            .and_then(|plain| payload(&plain, chat))
+            .is_some_and(|plain| super::chat_settings::decode_sender_revoke(&plain).is_some())
+}
+
 pub(super) fn confirmation(
     store: &ProtocolStore,
     account: &AccountRecord,
@@ -298,6 +309,7 @@ pub(super) fn confirmation(
         let saved = tx.get_json::<serde_json::Value>(Table::Checkpoints, key.as_bytes(), 1)?;
         Ok(saved.is_some_and(|saved| {
             saved["status"] == "decrypted"
+                && saved_edit_matches(node, &chat, &saved)
                 && serde_json::from_value::<Jid>(saved["source"].clone())
                     .ok()
                     .as_ref()
@@ -393,6 +405,7 @@ pub(super) async fn process(
     if let Some(saved) = saved {
         return Ok(
             if saved["status"] == "decrypted"
+                && saved_edit_matches(node, &chat, &saved)
                 && serde_json::from_value::<Jid>(saved["source"].clone())
                     .ok()
                     .as_ref()
@@ -750,13 +763,18 @@ mod tests {
         }
         for name in [
             "participant",
-            "edit",
             "peer_recipient_pn",
             "peer_recipient_lid",
             "peer_recipient_username",
             "recipient_latest_lid",
         ] {
             assert!(route(&account, &node.clone().attr(name, ""), Some(&lid)).is_none());
+        }
+        for edit in ["", "7", "+007", "1", "2", "3"] {
+            assert!(route(&account, &node.clone().attr("edit", edit), Some(&lid)).is_some());
+        }
+        for edit in ["8", "0", "4", " 7", "2147483655"] {
+            assert!(route(&account, &node.clone().attr("edit", edit), Some(&lid)).is_none());
         }
         assert!(route(&account, &node.attr("category", "peer"), Some(&lid)).is_none());
     }

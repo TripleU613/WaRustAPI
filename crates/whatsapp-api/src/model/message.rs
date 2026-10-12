@@ -220,7 +220,8 @@ pub enum MessageChange {
         /// Selected option hashes that matched no known option.
         unresolved: Vec<String>,
     },
-    /// Revoked by the acting device.
+    /// Received sender revocation from the acting device.
+    /// Journaling this action does not apply native timing, receipt cleanup or physical deletion.
     Revoked {
         /// Revoking device.
         by: DeviceAddress,
