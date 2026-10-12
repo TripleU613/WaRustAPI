@@ -1,0 +1,50 @@
+{
+  "envelope-constructor.txt": {
+    "bytes": 3890,
+    "sha256": "659273521ad89b091f4029b78f02dfa4510ece0be901caae17e5a2265d13e7f8"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "message-constructor.txt": {
+    "bytes": 2967,
+    "sha256": "8607269dc0b8e50417fb748e1787afe77cba598fcfa9e98a1f9685ddfd149a19"
+  },
+  "newsletter-predicate.txt": {
+    "bytes": 779,
+    "sha256": "adee1ec77eaddcaf5f83fda460e6e980f2b4405d6f7c22915a27a1962524ea7b"
+  },
+  "payment-addon.txt": {
+    "bytes": 922,
+    "sha256": "d9d06738d8987e850bcd45d1ebe4404bfb98c74391d1a8c290183d4d45f7b3fb"
+  },
+  "revoke-kind.txt": {
+    "bytes": 720,
+    "sha256": "190b30577a2ce3891f24743a85ff143617373bd5e3a96cda27dfa8f25e60f475"
+  },
+  "revoke-store.txt": {
+    "bytes": 69924,
+    "sha256": "c882295ff26aea157acefcf949c26af94da734ea96efa9ffe3b569de94367819"
+  },
+  "sender-builder.txt": {
+    "bytes": 2524,
+    "sha256": "7f767aa253352ff58f3e2a6917ff29bcea13fd263ced8ce3046d28b4abb11c48"
+  },
+  "sender-constructor.txt": {
+    "bytes": 2220,
+    "sha256": "21ae6c06659bb4787f0d31241d7bbb1244a4e76526290bcfbdefecd93d2f2d8c"
+  },
+  "targets.json": {
+    "bytes": 3074,
+    "sha256": "ec441c0fc5ad4f3ef2169af85d42e99e65c989263948a53689013d1aec624e5d"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

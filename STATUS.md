@@ -1,3 +1,12 @@
+2026-10-11 — **Implemented/offline:** supported direct peer sender revokes now
+honor the native strict three-day receive rejection when both explicit times and
+an authenticated parent are available. Signed wrapping subtraction is preserved;
+missing time stays unknown. Ignored controls get a final opaque marker, so replay
+or later metadata cannot turn them into updates. Own-device sender revokes retain
+their separate path, and published history/parents/IDs/waits stay intact. Full
+eligibility, physical deletion and live interoperability remain open.
+[Native timing flow and receive/recovery tests](docs/protocol/sender-revoke-window.md).
+
 2026-10-11 — **Implemented/offline:** protocol type and keep type now use the
 pinned closed-enum rules: unknown numbers retain the last recognized value,
 wrong-wire enum fields stay unknown, and singular message fragments merge.

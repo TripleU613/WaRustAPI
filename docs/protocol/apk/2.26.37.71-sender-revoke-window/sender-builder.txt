@@ -1,0 +1,49 @@
+# APK-derived structural disassembly: LX/Bua;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method CF4(LL) flags=0x1 registers=7
+  # full signature: LX/Bua;->CF4(LX/CoT;)LX/178;
+  0000..0006 op=71 invoke-static {v6}, LX/Cbf;->A00(LX/CoT;)LX/C4F;
+  0006..0008 op=0c move-result-object v1
+  0008..000c op=62 sget-object v0, LX/C4F;->A0T:LX/C4F;
+  000c..0010 op=32 if-eq v1, v0, +0x6
+  0010..0014 op=62 sget-object v0, LX/C4F;->A0O:LX/C4F;
+  0014..0018 op=33 if-ne v1, v0, +0x41
+  0018..001c op=52 iget v1, v6, LX/CoT;->A00:I
+  001c..0020 op=13 const/16 v0, #0x8
+  0020..0024 op=32 if-eq v1, v0, +0x3b
+  0024..0028 op=54 iget-object v0, v6, LX/CoT;->A0F:LX/BZc;
+  0028..002c op=54 iget-object v4, v0, LX/BZc;->protocolMessage_:LX/BZb;
+  002c..0030 op=39 if-nez v4, +0xb
+  0030..0034 op=62 sget-object v4, LX/BZb;->DEFAULT_INSTANCE:LX/BZb;
+  0034..0038 op=39 if-nez v4, +0x7
+  0038..003e op=71 invoke-static {}, LX/1xh;->A1B()Ljava/lang/IllegalStateException;
+  003e..0040 op=0c move-result-object v0
+  0040..0042 op=27 throw v0
+  0042..0046 op=54 iget-object v2, v6, LX/CoT;->A0A:LX/1gc;
+  0046..004a op=53 iget-wide v0, v6, LX/CoT;->A05:J
+  004a..004e op=22 new-instance v3, LX/Bpt;
+  004e..0054 op=70 invoke-direct {v3, v2, v0, v1}, LX/Bpt;-><init>(LX/1gc;J)V
+  0054..0058 op=54 iget-object v0, v4, LX/BZb;->key_:LX/BZa;
+  0058..005a op=07 move-object v2, v0
+  005a..005e op=39 if-nez v0, +0x4
+  005e..0062 op=62 sget-object v0, LX/BZa;->DEFAULT_INSTANCE:LX/BZa;
+  0062..0066 op=54 iget-object v0, v0, LX/BZa;->id_:Ljava/lang/String;
+  0066..006a op=5b iput-object v0, v3, LX/1ii;->A01:Ljava/lang/String;
+  006a..006e op=62 sget-object v1, LX/0Cy;->A00:LX/0D7;
+  006e..0072 op=39 if-nez v2, +0x4
+  0072..0076 op=62 sget-object v2, LX/BZa;->DEFAULT_INSTANCE:LX/BZa;
+  0076..007a op=54 iget-object v0, v2, LX/BZa;->participant_:Ljava/lang/String;
+  007a..0080 op=6e invoke-virtual {v1, v0}, LX/0D7;->A02(Ljava/lang/String;)LX/0Cy;
+  0080..0082 op=0c move-result-object v1
+  0082..0088 op=71 invoke-static {v1}, LX/0hd;->A02(LX/0Cy;)Z
+  0088..008a op=0a move-result v0
+  008a..008e op=38 if-eqz v0, +0x5
+  008e..0094 op=6e invoke-virtual {v3, v1}, LX/178;->CW6(LX/0Cy;)V
+  0094..0096 op=11 return-object v3
+  0096..0098 op=12 const/4 v3, #0x0
+  0098..009a op=11 return-object v3
+  # exception table: 0 try range(s)
+.end method

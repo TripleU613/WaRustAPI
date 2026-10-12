@@ -137,3 +137,13 @@ API-symbol test replaced the experimental executable. Rebuilding the experimenta
 CLI restored offline inspection; the same successful receive run was assessed.
 No second window, replay, new account, key change or manual message was used to
 manufacture a positive result. Fresh live revocation remains unverified.
+
+## Peer receive-window follow-up — 2026-10-11
+
+[Native peer window rejection](sender-revoke-window.md) now declines supported
+ordinary direct updates whose authenticated parent and explicit times prove the
+signed difference exceeds three days. This supersedes only that part of the
+previous timing-unported boundary. Own-device revokes retain their separate
+path; absent timestamps are not guessed. Rejected markers remain final, and
+published history is preserved. Full eligibility, outgoing revoke and physical
+body/media/receipt/cache deletion remain unfinished.

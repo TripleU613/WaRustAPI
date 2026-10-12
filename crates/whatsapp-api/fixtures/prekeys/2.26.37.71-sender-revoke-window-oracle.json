@@ -1,0 +1,99 @@
+{
+  "apk_build": "2.26.37.71",
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "source": "153.A00 0640..065e; long delta > 0x0f731400",
+  "oracle": "docs/protocol/SenderRevokeWindowOracle.java",
+  "scope": "Desktop signed-long arithmetic only, not APK execution or full admission",
+  "cases": [
+    {
+      "parent_ms": 0,
+      "update_ms": 259199999,
+      "too_old": false
+    },
+    {
+      "parent_ms": 0,
+      "update_ms": 259200000,
+      "too_old": false
+    },
+    {
+      "parent_ms": 0,
+      "update_ms": 259200001,
+      "too_old": true
+    },
+    {
+      "parent_ms": 1000,
+      "update_ms": 259201000,
+      "too_old": false
+    },
+    {
+      "parent_ms": 1000,
+      "update_ms": 259201001,
+      "too_old": true
+    },
+    {
+      "parent_ms": 1,
+      "update_ms": 1,
+      "too_old": false
+    },
+    {
+      "parent_ms": 1000,
+      "update_ms": 0,
+      "too_old": false
+    },
+    {
+      "parent_ms": 9223372036854775807,
+      "update_ms": -9223372036854775808,
+      "too_old": false
+    },
+    {
+      "parent_ms": -9223372036854775808,
+      "update_ms": 9223372036854775807,
+      "too_old": false
+    },
+    {
+      "parent_ms": 0,
+      "update_ms": 9223372036854775807,
+      "too_old": true
+    },
+    {
+      "parent_ms": 0,
+      "update_ms": -9223372036854775808,
+      "too_old": false
+    },
+    {
+      "parent_ms": -9223372036854775808,
+      "update_ms": 0,
+      "too_old": false
+    },
+    {
+      "parent_ms": 9223372036854775807,
+      "update_ms": 0,
+      "too_old": false
+    },
+    {
+      "parent_ms": -259200000,
+      "update_ms": 0,
+      "too_old": false
+    },
+    {
+      "parent_ms": -259200001,
+      "update_ms": 0,
+      "too_old": true
+    },
+    {
+      "parent_ms": -1000,
+      "update_ms": 259199001,
+      "too_old": true
+    },
+    {
+      "parent_ms": 9223372036854775797,
+      "update_ms": -9223372036596775807,
+      "too_old": false
+    },
+    {
+      "parent_ms": 9223372036854775797,
+      "update_ms": -9223372036594775807,
+      "too_old": true
+    }
+  ]
+}

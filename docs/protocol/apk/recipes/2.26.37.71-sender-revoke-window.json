@@ -1,0 +1,80 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "revoke-store": {
+      "class": "LX/153;",
+      "method": "A00",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/inbox_events.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ]
+    },
+    "revoke-kind": {
+      "class": "LX/1gd;",
+      "method": "A1A",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/inbox_events.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ]
+    },
+    "sender-constructor": {
+      "class": "LX/Bpt;",
+      "method": "<init>",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/inbox_events.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ]
+    },
+    "message-constructor": {
+      "class": "LX/178;",
+      "method": "<init>",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/inbox_events.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ]
+    },
+    "newsletter-predicate": {
+      "class": "LX/0DE;",
+      "method": "A0b",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/inbox_events.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ]
+    },
+    "payment-addon": {
+      "class": "LX/1iG;",
+      "method": "A00",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/inbox_events.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ]
+    },
+    "sender-builder": {
+      "class": "LX/Bua;",
+      "method": "CF4",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/inbox_events.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ]
+    },
+    "envelope-constructor": {
+      "class": "LX/CoT;",
+      "method": "<init>",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/inbox_events.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ]
+    }
+  }
+}

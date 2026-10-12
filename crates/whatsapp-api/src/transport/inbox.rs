@@ -2908,6 +2908,7 @@ mod tests {
         let node = Node::new("message")
             .attr("from", peer.clone())
             .attr("id", "BARE-PREKEY")
+            .attr("t", "1")
             .children(vec![
                 Node::new("enc")
                     .attr("type", sent.kind)
@@ -3076,6 +3077,7 @@ mod tests {
         let peer_revoke_node = Node::new("message")
             .attr("from", peer.clone())
             .attr("id", "PEER-REVOKE")
+            .attr("t", "259201")
             .attr("type", "text")
             .attr("edit", "7")
             .children(vec![
@@ -3120,6 +3122,54 @@ mod tests {
                 .unwrap(),
             IncomingResult::Duplicate
         );
+        let old_revocation = direct::prepare_payload(
+            &sender,
+            receiver.own_jid.as_ref().unwrap(),
+            None,
+            Some(&peer_revocation.session),
+            Some(&sent.identity),
+            &peer_revoke_body,
+        )
+        .await
+        .unwrap();
+        let old_revoke_node = Node::new("message")
+            .attr("from", peer.clone())
+            .attr("id", "PEER-OLD-REVOKE")
+            .attr("t", "259202")
+            .attr("type", "text")
+            .attr("edit", "7")
+            .children(vec![
+                Node::new("enc")
+                    .attr("type", old_revocation.kind)
+                    .attr("v", "2")
+                    .bytes(old_revocation.ciphertext.to_vec()),
+            ]);
+        let old_revoke_capture = preserve(&store, &old_revoke_node).unwrap();
+        assert_eq!(
+            process(&store, &receiver, &old_revoke_node, &old_revoke_capture)
+                .await
+                .unwrap(),
+            IncomingResult::Decrypted
+        );
+        let old_events = store
+            .read(|tx| {
+                tx.read_events(
+                    &crate::store::ConsumerId::new("old-revoke")?,
+                    crate::model::ids::EventCursor::START,
+                    100,
+                )
+            })
+            .unwrap();
+        assert!(matches!(
+            old_events.events.last().unwrap().event,
+            crate::sync::SyncEvent::UnsupportedMessage(_)
+        ));
+        assert_eq!(
+            process(&store, &receiver, &old_revoke_node, &old_revoke_capture)
+                .await
+                .unwrap(),
+            IncomingResult::Duplicate
+        );
         // Reuse the authenticated ratchet as a fixture for a separately held own device.
         let peer_device = Jid::parse(&format!("{}:2@lid", peer.user)).unwrap();
         let (held_session, held_identity) = store
@@ -3146,7 +3196,7 @@ mod tests {
         let acknowledged = direct::receive(
             &sender,
             receiver.own_jid.as_ref().unwrap(),
-            &peer_revocation.session,
+            &old_revocation.session,
             &sent.identity,
             &reply.ciphertext,
         )
@@ -3566,6 +3616,7 @@ mod tests {
             .attr("from", peer_device.clone())
             .attr("recipient", "67890@lid")
             .attr("id", "OWN-POLL")
+            .attr("t", "1")
             .attr("type", "poll")
             .children(vec![
                 Node::new("meta").attr("polltype", "creation"),
@@ -4172,6 +4223,7 @@ mod tests {
             .attr("from", peer_device.clone())
             .attr("recipient", "67890@lid")
             .attr("id", "OWN-REVOKE")
+            .attr("t", "259202")
             .attr("type", "text")
             .attr("edit", "7")
             .children(vec![
@@ -4238,6 +4290,12 @@ mod tests {
         );
         assert_eq!(
             process(&store, &receiver, &peer_revoke_node, &peer_revoke_capture)
+                .await
+                .unwrap(),
+            IncomingResult::Duplicate
+        );
+        assert_eq!(
+            process(&store, &receiver, &old_revoke_node, &old_revoke_capture)
                 .await
                 .unwrap(),
             IncomingResult::Duplicate

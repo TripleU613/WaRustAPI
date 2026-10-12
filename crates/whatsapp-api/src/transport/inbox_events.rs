@@ -260,11 +260,31 @@ fn direct_sender_revoke_route(node: &Node) -> bool {
         && super::chat_settings::sender_revoke_edit(node)
 }
 
+struct DirectRevokeParent {
+    key: MessageKey,
+    server_timestamp: Option<Timestamp>,
+}
+
+fn sender_revoke_too_old(parent: Option<Timestamp>, update: Option<Timestamp>) -> bool {
+    // APK 153.A00: signed sub-long, then strict > 0x0f731400 (three days).
+    parent
+        .zip(update)
+        .is_some_and(|(parent, update)| update.0.wrapping_sub(parent.0) > 259_200_000)
+}
+
+fn unsupported_event(key: &[u8]) -> SyncEvent {
+    SyncEvent::UnsupportedMessage(UnsupportedMessage {
+        type_hint: format!("comparison-inbox:{}", hex::encode(Sha256::digest(key))),
+        raw: bytes::Bytes::new(),
+        truncated: true,
+    })
+}
+
 fn direct_sender_revoke_target(
     tx: &WriteTx<'_>,
     node: &Node,
     id: MessageId,
-) -> Result<Option<MessageKey>> {
+) -> Result<Option<DirectRevokeParent>> {
     let target = node.clone().attr("id", id.as_str());
     let Some(record) =
         super::inbox::direct_record_in(&target, |k| tx.get_json(Table::Checkpoints, k, 1))?
@@ -287,7 +307,7 @@ fn direct_sender_revoke_target(
     } else {
         None
     };
-    let sender = if let Some(wire) = wire {
+    let (sender, server_timestamp) = if let Some(wire) = wire {
         let limits = crate::profile::Limits::default();
         let raw = crate::binary::unpack_frame_payload(&wire, &limits)?;
         let original = crate::binary::Decoder::new(
@@ -312,15 +332,18 @@ fn direct_sender_revoke_target(
                 "saved target route changed chat",
             ));
         }
-        sender
+        (sender, stanza_timestamp(&original))
     } else {
-        DeviceAddress::from_jid(&record.chat)?
+        (DeviceAddress::from_jid(&record.chat)?, None)
     };
-    Ok(Some(MessageKey {
-        chat: ChatId::from_jid(&record.chat)?,
-        sender: Some(sender),
-        direction: Direction::Incoming,
-        id,
+    Ok(Some(DirectRevokeParent {
+        server_timestamp,
+        key: MessageKey {
+            chat: ChatId::from_jid(&record.chat)?,
+            sender: Some(sender),
+            direction: Direction::Incoming,
+            id,
+        },
     }))
 }
 
@@ -335,13 +358,7 @@ fn project(
     reference_target: Option<&MessageKey>,
     own: &[crate::model::jid::Jid],
 ) -> SyncEvent {
-    let unsupported = || {
-        SyncEvent::UnsupportedMessage(UnsupportedMessage {
-            type_hint: format!("comparison-inbox:{}", hex::encode(Sha256::digest(key))),
-            raw: bytes::Bytes::new(),
-            truncated: true,
-        })
-    };
+    let unsupported = || unsupported_event(key);
     let (content, expiration_seconds) = if let Some(content) = content {
         content
     } else {
@@ -1222,8 +1239,15 @@ pub(super) fn publish(
     node: &Node,
     payload: &[u8],
 ) -> Result<bool> {
+    if tx
+        .get_json::<serde_json::Value>(Table::Inbox, key, 1)?
+        .is_some_and(|marker| marker["rejection"] == "sender_revoke_too_old")
+    {
+        return Ok(false);
+    }
     let poll = poll_context(tx, node, payload)?;
     let own = super::inbox::own_identities_in(tx)?;
+    let mut revoke_too_old = false;
     let reference_target = if super::inbox::group_sender(node).is_some() {
         // An already-published update remains historical evidence. A later
         // uncertain parent must not make its authenticated redelivery fail.
@@ -1238,7 +1262,19 @@ pub(super) fn publish(
     } else if direct_sender_revoke_route(node)
         && let Some(id) = super::chat_settings::decode_sender_revoke(payload)
     {
-        direct_sender_revoke_target(tx, node, id)?
+        let already_updated = tx
+            .get_json::<serde_json::Value>(Table::Inbox, key, 1)?
+            .is_some_and(|marker| marker["kind"] == "message_updated");
+        if already_updated {
+            None
+        } else {
+            let parent = direct_sender_revoke_target(tx, node, id)?;
+            if let Some(parent) = &parent {
+                revoke_too_old =
+                    sender_revoke_too_old(parent.server_timestamp, stanza_timestamp(node));
+            }
+            parent.map(|parent| parent.key)
+        }
     } else {
         direct_reaction_target(tx, node, payload)?
     };
@@ -1248,17 +1284,21 @@ pub(super) fn publish(
     if let Some(like) = super::status_receipts::like_from_payload(payload, node) {
         super::status_receipts::record_like_in(tx, &like)?;
     }
-    let projected = project(
-        key,
-        node,
-        payload,
-        None,
-        poll.as_ref(),
-        reference_target.as_ref(),
-        &own,
-    );
+    let projected = if revoke_too_old {
+        unsupported_event(key)
+    } else {
+        project(
+            key,
+            node,
+            payload,
+            None,
+            poll.as_ref(),
+            reference_target.as_ref(),
+            &own,
+        )
+    };
     #[cfg(feature = "experimental-registration-https")]
-    let projected = if matches!(projected, SyncEvent::UnsupportedMessage(_)) {
+    let projected = if !revoke_too_old && matches!(projected, SyncEvent::UnsupportedMessage(_)) {
         match super::media::event_content(tx, key, payload) {
             Ok(Some(content)) => event_with_content(key, node, payload, Some(content), &own),
             // Invalid/unsupported media stays an opaque event; it must not block
@@ -1298,12 +1338,11 @@ pub(super) fn publish(
         }
     }
     let envelope = tx.append_event(projected)?;
-    tx.put_json(
-        Table::Inbox,
-        key,
-        1,
-        &serde_json::json!({"event_id":envelope.event_id,"kind":envelope.event.kind()}),
-    )?;
+    let mut marker = serde_json::json!({"event_id":envelope.event_id,"kind":envelope.event.kind()});
+    if revoke_too_old {
+        marker["rejection"] = "sender_revoke_too_old".into();
+    }
+    tx.put_json(Table::Inbox, key, 1, &marker)?;
     Ok(true)
 }
 
@@ -1508,6 +1547,223 @@ mod tests {
     }
 
     #[test]
+    fn sender_revoke_window_matches_java_signed_long_boundaries_without_guessing_missing_time() {
+        let fixture: serde_json::Value = serde_json::from_str(include_str!(
+            "../../fixtures/prekeys/2.26.37.71-sender-revoke-window-oracle.json"
+        ))
+        .unwrap();
+        for case in fixture["cases"].as_array().unwrap() {
+            assert_eq!(
+                sender_revoke_too_old(
+                    Some(Timestamp(case["parent_ms"].as_i64().unwrap())),
+                    Some(Timestamp(case["update_ms"].as_i64().unwrap()))
+                ),
+                case["too_old"].as_bool().unwrap(),
+                "{case}"
+            );
+        }
+        assert!(!sender_revoke_too_old(None, Some(Timestamp(i64::MAX))));
+        assert!(!sender_revoke_too_old(Some(Timestamp(i64::MIN)), None));
+        assert!(!sender_revoke_too_old(None, None));
+    }
+
+    #[test]
+    fn peer_sender_revoke_ignores_native_expired_window_without_rewriting_parent_or_history() {
+        use crate::model::jid::Jid;
+        for saved_status in ["decrypted", "consumed"] {
+            for legacy in [false, true] {
+                for (parent_t, update_t, rejected) in [
+                    (Some("1"), Some("259201"), false),
+                    (Some("1"), Some("259202"), true),
+                    (Some("1"), Some("٢٥٩٢٠٢"), true),
+                    (Some("1"), Some("0"), false),
+                    (Some("1"), None, false),
+                    (None, Some("259202"), false),
+                    (Some("invalid"), Some("259202"), false),
+                    (Some("1"), Some("259202 "), false),
+                    (Some("9223372036854776"), Some("9223372036854775"), false),
+                ] {
+                    let dir = tempfile::tempdir().unwrap();
+                    let store = ProtocolStore::open(OpenOptions {
+                        path: dir.path().join("age.redb"),
+                        account_id: AccountId::new("age").unwrap(),
+                        key_source: std::sync::Arc::new(StaticKeySource::new(
+                            MasterKey::from_bytes([7; 32]),
+                        )),
+                        create: true,
+                    })
+                    .unwrap();
+                    let lid = Jid::parse("12345@lid").unwrap();
+                    let pn = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+                    let mut original = Node::new("message")
+                        .attr("from", lid.clone())
+                        .attr("id", "abc");
+                    if legacy {
+                        original = original.attr("sender_pn", pn.clone());
+                    }
+                    if let Some(t) = parent_t {
+                        original = original.attr("t", t);
+                    }
+                    let wire = crate::binary::Encoder::new(
+                        crate::binary::TokenDictionary::comparison_2_26_37_71(),
+                    )
+                    .encode(&original)
+                    .unwrap();
+                    let parent_key = format!("received:{}:abc", if legacy { &pn } else { &lid });
+                    let parent = serde_json::json!({"status":saved_status,"route":wire,"protobuf":if saved_status=="consumed" {serde_json::Value::Null} else {serde_json::json!([10,5,104,101,108,108,111])},"received_at":9223372036854775807i64});
+                    store
+                        .write(|tx| {
+                            tx.put_json(Table::Checkpoints, parent_key.as_bytes(), 1, &parent)?;
+                            if legacy {
+                                tx.put_json(
+                                    Table::Checkpoints,
+                                    b"authenticated-lid:12345@lid",
+                                    1,
+                                    &pn,
+                                )?;
+                            }
+                            Ok(())
+                        })
+                        .unwrap();
+                    let mut input = Node::new("message")
+                        .attr("from", lid.clone())
+                        .attr("id", "revoke")
+                        .attr("edit", "7");
+                    if let Some(t) = update_t {
+                        input = input.attr("t", t);
+                    }
+                    let payload = hex::decode("62090a051a036162631000").unwrap();
+                    assert!(
+                        store
+                            .write(|tx| publish(tx, b"received:12345@lid:revoke", &input, &payload))
+                            .unwrap()
+                    );
+                    let events = store
+                        .read(|tx| tx.read_events(&ConsumerId::new("age")?, EventCursor::START, 10))
+                        .unwrap();
+                    assert_eq!(
+                        matches!(events.events[0].event, SyncEvent::UnsupportedMessage(_)),
+                        rejected,
+                        "{saved_status}/{legacy}/{parent_t:?}/{update_t:?}"
+                    );
+                    if !rejected {
+                        assert!(
+                            matches!(&events.events[0].event,SyncEvent::MessageUpdated(u) if matches!(u.change,crate::model::message::MessageChange::Revoked {..}))
+                        );
+                    }
+                    assert_eq!(
+                        store
+                            .read(|tx| tx.get_json::<serde_json::Value>(
+                                Table::Checkpoints,
+                                parent_key.as_bytes(),
+                                1
+                            ))
+                            .unwrap()
+                            .unwrap(),
+                        parent
+                    );
+                    let head = store.journal_head().unwrap();
+                    assert!(
+                        !store
+                            .write(|tx| publish(tx, b"received:12345@lid:revoke", &input, &payload))
+                            .unwrap()
+                    );
+                    assert_eq!(store.journal_head().unwrap(), head);
+                    if rejected {
+                        let changed = original.clone().attr("t", update_t.unwrap());
+                        let wire = crate::binary::Encoder::new(
+                            crate::binary::TokenDictionary::comparison_2_26_37_71(),
+                        )
+                        .encode(&changed)
+                        .unwrap();
+                        store
+                            .write(|tx| {
+                                tx.put_json(
+                                    Table::Checkpoints,
+                                    parent_key.as_bytes(),
+                                    1,
+                                    &serde_json::json!({"status":saved_status,"route":wire}),
+                                )
+                            })
+                            .unwrap();
+                        assert!(
+                            !store
+                                .write(|tx| publish(
+                                    tx,
+                                    b"received:12345@lid:revoke",
+                                    &input,
+                                    &payload
+                                ))
+                                .unwrap()
+                        );
+                        assert_eq!(store.journal_head().unwrap(), head);
+                        assert_eq!(
+                            store
+                                .read(|tx| tx.get_json::<serde_json::Value>(
+                                    Table::Inbox,
+                                    b"received:12345@lid:revoke",
+                                    1
+                                ))
+                                .unwrap()
+                                .unwrap()["rejection"],
+                            "sender_revoke_too_old"
+                        );
+                        let fresh = input.clone().attr("id", "new-revoke");
+                        assert!(
+                            store
+                                .write(|tx| publish(
+                                    tx,
+                                    b"received:12345@lid:new-revoke",
+                                    &fresh,
+                                    &payload
+                                ))
+                                .unwrap()
+                        );
+                        let events = store
+                            .read(|tx| {
+                                tx.read_events(&ConsumerId::new("fresh")?, EventCursor::START, 10)
+                            })
+                            .unwrap();
+                        assert!(
+                            matches!(&events.events.last().unwrap().event,SyncEvent::MessageUpdated(u) if matches!(u.change,crate::model::message::MessageChange::Revoked {..}))
+                        );
+                    }
+                    // A later-loaded old timestamp does not retract already-published history.
+                    if !rejected {
+                        let changed = original.clone().attr("t", "-999999");
+                        let wire = crate::binary::Encoder::new(
+                            crate::binary::TokenDictionary::comparison_2_26_37_71(),
+                        )
+                        .encode(&changed)
+                        .unwrap();
+                        store
+                            .write(|tx| {
+                                tx.put_json(
+                                    Table::Checkpoints,
+                                    parent_key.as_bytes(),
+                                    1,
+                                    &serde_json::json!({"status":saved_status,"route":wire}),
+                                )
+                            })
+                            .unwrap();
+                        assert!(
+                            !store
+                                .write(|tx| publish(
+                                    tx,
+                                    b"received:12345@lid:revoke",
+                                    &input,
+                                    &payload
+                                ))
+                                .unwrap()
+                        );
+                        assert_eq!(store.journal_head().unwrap(), head);
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
     fn direct_sender_revoke_preserves_saved_route_device_and_alias_namespace_without_deleting_parent()
      {
         use crate::model::jid::Jid;
@@ -1593,8 +1849,8 @@ mod tests {
             .write(|tx| direct_sender_revoke_target(tx, &input, MessageId::new("abc")?))
             .unwrap()
             .unwrap();
-        assert_eq!(target.sender.unwrap().to_jid(), device);
-        assert_eq!(target.chat.jid(), &lid);
+        assert_eq!(target.key.sender.unwrap().to_jid(), device);
+        assert_eq!(target.key.chat.jid(), &lid);
     }
 
     #[test]

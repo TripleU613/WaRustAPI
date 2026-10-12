@@ -1,0 +1,106 @@
+{
+  "envelope-constructor": {
+    "class": "LX/CoT;",
+    "file": "envelope-constructor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/inbox_events.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
+  "message-constructor": {
+    "class": "LX/178;",
+    "file": "message-constructor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/inbox_events.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
+  "newsletter-predicate": {
+    "class": "LX/0DE;",
+    "file": "newsletter-predicate.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0b",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/inbox_events.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
+  "payment-addon": {
+    "class": "LX/1iG;",
+    "file": "payment-addon.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/inbox_events.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
+  "revoke-kind": {
+    "class": "LX/1gd;",
+    "file": "revoke-kind.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A1A",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/inbox_events.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
+  "revoke-store": {
+    "class": "LX/153;",
+    "file": "revoke-store.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/inbox_events.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
+  "sender-builder": {
+    "class": "LX/Bua;",
+    "file": "sender-builder.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "CF4",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/inbox_events.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
+  "sender-constructor": {
+    "class": "LX/Bpt;",
+    "file": "sender-constructor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 2,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/inbox_events.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  }
+}
