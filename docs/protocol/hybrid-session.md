@@ -129,3 +129,9 @@ exchange/reopen regression, strict all-target Clippy, warnings-denied Rustdoc,
 26 default CLI/API-symbol tests, the experimental CLI build, formatting and
 local link/artifact hygiene. The nine-topic APK bundle reproduced all fourteen
 files / 127,187 bytes exactly. No Android/server hybrid session was exercised.
+
+The subsequent [held-session send integration](held-hybrid-send.md) routes the
+normal text/encoded send adapter through native encryption for correctly owned
+held version-4 records. Fresh PQ query/adoption and incoming bootstrap remain
+guarded; the older statement that no coordinator path is connected is superseded
+for this held-session case only.

@@ -156,3 +156,9 @@ Experimental `signal::hybrid` initializes staged Alice/Bob ML-KEM-1024 records
 and prepares native encrypted messages with candidate records. It does not
 authorize/adopt/store/send keys or consume prekeys; see
 [API arguments, atomic commit contract and offline exchange](../protocol/hybrid-session.md).
+
+Existing text and encoded `signal::direct` preparation now handles correctly
+owned held version-4 sessions with native wire/MAC and pending KEM metadata.
+An explicit matching peer pin and account/ratchet checks are required; supplied
+bundle signature checks still run. See
+[normal API/outbox integration and remaining PQ gates](../protocol/held-hybrid-send.md).

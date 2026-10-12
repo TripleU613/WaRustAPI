@@ -51,6 +51,9 @@ impl HybridSession {
             return Err(invalid("record exceeds bound"));
         }
         let record = SessionRecord::deserialize(bytes).map_err(|_| invalid("invalid record"))?;
+        Self::from_record(record)
+    }
+    pub(crate) fn from_record(record: SessionRecord) -> Result<Self> {
         let state = record
             .session_state()
             .ok_or_else(|| invalid("missing current session"))?;
@@ -417,7 +420,143 @@ mod tests {
             .unwrap();
             assert_eq!(received.plaintext.as_slice(), b"\x0a\x05hello");
             let b = HybridSession::from_bytes(&received.session).unwrap();
-            let reply = b.prepare(b"\x0a\x05world").unwrap();
+            let alice_signed = KeyPair::generate(&mut rand::rng());
+            let signature = alice
+                .private_key()
+                .calculate_signature(&alice_signed.public_key.serialize(), &mut rand::rng())
+                .unwrap();
+            let alice_bundle = wacore_libsignal::protocol::PreKeyBundle::new(
+                31,
+                wacore_libsignal::protocol::DeviceId::new(0),
+                None,
+                11.into(),
+                alice_signed.public_key,
+                signature.to_vec(),
+                *alice.identity_key(),
+            )
+            .unwrap();
+            let reply = direct::prepare(
+                &bob_account,
+                &alice_jid,
+                &alice_bundle,
+                Some(&received.session),
+                Some(&alice.identity_key().serialize()),
+                "world",
+            )
+            .await
+            .unwrap();
+            assert_eq!(
+                b.to_bytes().unwrap().as_slice(),
+                received.session.as_slice()
+            );
+            assert!(
+                direct::prepare_payload(
+                    &bob_account,
+                    &alice_jid,
+                    None,
+                    Some(&received.session),
+                    None,
+                    b"\x0a\x01x"
+                )
+                .await
+                .is_err()
+            );
+            for invalid_account in [account(&alice, 42), account(&bob, 43)] {
+                assert!(
+                    direct::prepare_payload(
+                        &invalid_account,
+                        &alice_jid,
+                        None,
+                        Some(&received.session),
+                        Some(&alice.identity_key().serialize()),
+                        b"\x0a\x01x"
+                    )
+                    .await
+                    .is_err()
+                );
+            }
+            let mut mismatched_private = account(&bob, 42);
+            mismatched_private
+                .signal_identity
+                .as_mut()
+                .unwrap()
+                .0
+                .private[10] ^= 1;
+            assert!(
+                direct::prepare_payload(
+                    &mismatched_private,
+                    &alice_jid,
+                    None,
+                    Some(&received.session),
+                    Some(&alice.identity_key().serialize()),
+                    b"\x0a\x01x"
+                )
+                .await
+                .is_err()
+            );
+            assert!(matches!(
+                direct::prepare_payload(
+                    &bob_account,
+                    &alice_jid,
+                    None,
+                    Some(&received.session),
+                    Some(&bob.identity_key().serialize()),
+                    b"\x0a\x01x"
+                )
+                .await,
+                Err(Error::IdentityChanged(_))
+            ));
+            let forged_bundle = wacore_libsignal::protocol::PreKeyBundle::new(
+                31,
+                wacore_libsignal::protocol::DeviceId::new(0),
+                None,
+                11.into(),
+                alice_signed.public_key,
+                vec![0; 64],
+                *alice.identity_key(),
+            )
+            .unwrap();
+            assert!(
+                direct::prepare(
+                    &bob_account,
+                    &alice_jid,
+                    &forged_bundle,
+                    Some(&received.session),
+                    Some(&alice.identity_key().serialize()),
+                    "never"
+                )
+                .await
+                .is_err()
+            );
+            let mut broken = b.0.clone().into_components().unwrap();
+            broken
+                .current_session
+                .as_mut()
+                .unwrap()
+                .sender_chain
+                .as_mut()
+                .unwrap()
+                .sender_ratchet_key_private = Some(vec![0; 32]);
+            let broken = SessionRecord::from_components(broken)
+                .unwrap()
+                .serialize()
+                .unwrap();
+            assert!(
+                direct::prepare_payload(
+                    &bob_account,
+                    &alice_jid,
+                    None,
+                    Some(&broken),
+                    Some(&alice.identity_key().serialize()),
+                    b"\x0a\x01x"
+                )
+                .await
+                .is_err()
+            );
+            assert_eq!(
+                b.to_bytes().unwrap().as_slice(),
+                received.session.as_slice()
+            );
             assert_eq!(reply.kind, "msg");
             assert_eq!(reply.ciphertext[0], 0x44);
             let acknowledged = direct::receive(
@@ -431,7 +570,16 @@ mod tests {
             .unwrap();
             assert_eq!(acknowledged.plaintext.as_slice(), b"\x0a\x05world");
             let a = HybridSession::from_bytes(&acknowledged.session).unwrap();
-            let next = a.prepare(b"\x0a\x05again").unwrap();
+            let next = direct::prepare_payload(
+                &alice_account,
+                &bob_jid,
+                None,
+                Some(&acknowledged.session),
+                Some(&bob.identity_key().serialize()),
+                b"\x0a\x05again",
+            )
+            .await
+            .unwrap();
             assert_eq!(next.kind, "msg");
             assert!(
                 direct::incoming_prekey_kem(&first.ciphertext)
@@ -465,6 +613,181 @@ mod tests {
             let a_before = a.to_bytes().unwrap();
             assert!(a.prepare(&vec![0; 65536]).is_err());
             assert_eq!(a.to_bytes().unwrap().as_slice(), a_before.as_slice());
+            #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
+            {
+                use crate::{
+                    binary::{Node, NodeContent},
+                    model::{
+                        ids::{AccountId, ChatId, ClientRequestId},
+                        message::MessageContent,
+                        send::{AttemptProgress, DeliveryFactKind, SendRequest},
+                    },
+                    outbox::Outbox,
+                    profile::Limits,
+                    store::{MasterKey, OpenOptions, ProtocolStore, StaticKeySource, Table},
+                    transport::{ConnectionEpoch, outgoing},
+                };
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("held-hybrid.redb");
+                let open = || {
+                    ProtocolStore::open(OpenOptions {
+                        path: path.clone(),
+                        account_id: AccountId::new("held-hybrid").unwrap(),
+                        key_source: std::sync::Arc::new(StaticKeySource::new(
+                            MasterKey::from_bytes([93; 32]),
+                        )),
+                        create: true,
+                    })
+                    .unwrap()
+                };
+                let store = open();
+                let mut saved_account = account(&alice, 31);
+                saved_account.own_jid = Some(alice_jid.clone());
+                let peer_key = format!("comparison-direct:{bob_jid}");
+                let outbox = Outbox::new("comparison-driver", Limits::default());
+                let request_id = ClientRequestId::new("hybrid-held-intent").unwrap();
+                let local_id = store
+                    .write(|tx| {
+                        AccountRecord::save(&saved_account, tx)?;
+                        tx.put_json(Table::SignalSessions, peer_key.as_bytes(), 1, &*before)?;
+                        tx.put_json(
+                            Table::PeerIdentities,
+                            peer_key.as_bytes(),
+                            1,
+                            &bob.identity_key().serialize().to_vec(),
+                        )?;
+                        Ok(outbox
+                            .enqueue(
+                                tx,
+                                &SendRequest {
+                                    client_request_id: request_id.clone(),
+                                    chat: ChatId::from_jid(&bob_jid)?,
+                                    content: MessageContent::Text {
+                                        body: "coordinator".into(),
+                                        quoted: None,
+                                        style: Default::default(),
+                                    },
+                                },
+                            )?
+                            .0
+                            .local_id)
+                    })
+                    .unwrap();
+                let account_rows = store.read(|tx| tx.scan(Table::Account, 1, 200)).unwrap();
+                let (pending, query) = outgoing::begin_selected(&store, Some(local_id))
+                    .unwrap()
+                    .unwrap();
+                let signature = bob
+                    .private_key()
+                    .calculate_signature(
+                        &bp.our_signed_pre_key_pair().public_key.serialize(),
+                        &mut rand::rng(),
+                    )
+                    .unwrap();
+                let reply = Node::new("iq")
+                    .attr("type", "result")
+                    .attr("id", query.get_attr("id").unwrap().as_text().unwrap())
+                    .children(vec![Node::new("list").children(vec![
+                            Node::new("user")
+                                .attr("jid", bob_jid.clone())
+                                .children(vec![
+                                    Node::new("registration").bytes(vec![0, 0, 0, 42]),
+                                    Node::new("type").bytes(vec![5]),
+                                    Node::new("identity")
+                                        .bytes(bob.public_key().public_key_bytes().to_vec()),
+                                    Node::new("skey").children(vec![
+                                        Node::new("id").bytes(vec![0, 0, 7]),
+                                        Node::new("value").bytes(
+                                            bp.our_signed_pre_key_pair()
+                                                .public_key
+                                                .public_key_bytes()
+                                                .to_vec(),
+                                        ),
+                                        Node::new("signature").bytes(signature.to_vec()),
+                                    ]),
+                                ]),
+                        ])]);
+                let stanza = pending
+                    .prepare(&store, &saved_account, &reply, ConnectionEpoch(1))
+                    .await
+                    .unwrap()
+                    .unwrap();
+                let enc = stanza.child("enc").unwrap();
+                let NodeContent::Bytes(ciphertext) = &enc.content else {
+                    panic!("missing ciphertext")
+                };
+                assert_eq!(ciphertext[0], 0x44);
+                let parsed = PreKeySignalMessage::try_from(&ciphertext[..]).unwrap();
+                let received = direct::receive(
+                    &bob_account,
+                    &alice_jid,
+                    &bob_before,
+                    &alice.identity_key().serialize(),
+                    parsed.message().serialized(),
+                )
+                .await
+                .unwrap();
+                assert_eq!(received.plaintext.as_slice(), b"\x0a\x0bcoordinator");
+                assert_eq!(
+                    direct::incoming_prekey_kem(ciphertext)
+                        .unwrap()
+                        .unwrap()
+                        .ciphertext,
+                    kem_ciphertext
+                );
+                let entry = store.read(|tx| outbox.get(tx, local_id)).unwrap().unwrap();
+                assert_eq!(entry.client_request_id, request_id);
+                assert_eq!(entry.progress, AttemptProgress::InFlight);
+                assert_eq!(entry.attempts.len(), 1);
+                assert_eq!(
+                    entry.facts.last().unwrap().kind,
+                    DeliveryFactKind::DeliveryUnknown
+                );
+                assert_eq!(
+                    store.read(|tx| tx.scan(Table::Account, 1, 200)).unwrap(),
+                    account_rows
+                );
+                let saved = store
+                    .read(|tx| {
+                        tx.get_json::<Vec<u8>>(Table::SignalSessions, peer_key.as_bytes(), 1)
+                    })
+                    .unwrap()
+                    .unwrap();
+                assert_eq!(
+                    HybridSession::from_bytes(&saved)
+                        .unwrap()
+                        .prepare(b"\x0a\x01x")
+                        .unwrap()
+                        .ciphertext[0],
+                    0x44
+                );
+                drop(store);
+                let store = open();
+                assert!(
+                    outgoing::begin_selected(&store, Some(local_id))
+                        .unwrap()
+                        .is_none()
+                );
+                assert_eq!(
+                    store
+                        .read(|tx| outbox.get(tx, local_id))
+                        .unwrap()
+                        .unwrap()
+                        .wire_id,
+                    entry.wire_id
+                );
+                assert_eq!(
+                    store
+                        .read(|tx| tx.get_json::<Vec<u8>>(
+                            Table::SignalSessions,
+                            peer_key.as_bytes(),
+                            1
+                        ))
+                        .unwrap()
+                        .unwrap(),
+                    saved
+                );
+            }
             let partial = IncomingKem {
                 prekey_id: 9,
                 ciphertext: &kem_ciphertext[..1535],

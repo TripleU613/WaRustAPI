@@ -685,6 +685,50 @@ pub async fn prepare_payload(
             .map_err(crypto)?,
         address: address.clone(),
     };
+    if let Some(record) = sessions.record.as_ref()
+        && let Some(state) = record.session_state()
+        && state.session_version().map_err(|e| crypto(e.into()))? == 4
+    {
+        let pinned = identities
+            .peer
+            .as_ref()
+            .ok_or_else(|| invalid("missing pinned hybrid peer identity"))?;
+        if state
+            .remote_identity_key()
+            .map_err(|e| crypto(e.into()))?
+            .as_ref()
+            != Some(pinned)
+        {
+            return Err(Error::IdentityChanged(
+                crate::model::ids::DeviceAddress::from_jid(recipient)?,
+            ));
+        }
+        if state.local_identity_key().map_err(|e| crypto(e.into()))?
+            != *identities.local.identity_key()
+            || state.local_registration_id() != identities.registration
+            || identities
+                .local
+                .private_key()
+                .public_key()
+                .map_err(|e| crypto(e.into()))?
+                != *identities.local.public_key()
+        {
+            return Err(invalid("held hybrid session does not match saved account"));
+        }
+        if state
+            .sender_ratchet_private_key()
+            .map_err(|e| crypto(e.into()))?
+            .public_key()
+            .map_err(|e| crypto(e.into()))?
+            != state.sender_ratchet_key().map_err(|e| crypto(e.into()))?
+        {
+            return Err(invalid("invalid held hybrid ratchet key pair"));
+        }
+        return super::hybrid::HybridSession::from_record(
+            sessions.record.take().expect("held record"),
+        )?
+        .prepare(payload);
+    }
     if sessions.record.is_none() {
         // A bundle is needed only to establish a session. A fan-out asks for
         // bundles for the devices it has no session with, so requiring one for

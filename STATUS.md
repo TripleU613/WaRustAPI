@@ -1,3 +1,11 @@
+2026-10-12 — **Implemented/offline:** the shared send adapter now prepares
+native version-4 ciphertext from held hybrid records after account, registration,
+peer-pin and ratchet-pair checks. Text and encoded payload exchange works through
+normal APIs; an encrypted-store outbox test commits the same request/wire ID with
+DeliveryUnknown and refuses replay after reopen. Fetched signatures remain
+required. Fresh PQ directory/receive/bootstrap guards and live gaps remain.
+[Shared send integration, ownership guards and coordinator test](docs/protocol/held-hybrid-send.md).
+
 2026-10-12 — **Implemented/offline:** staged hybrid Alice/Bob records now
 perform real EC/KEM bootstrap, native 0x44 encryption, authenticated reply and
 continued ratcheting with/without an ordinary one-time key. Pending KEM metadata
