@@ -6,7 +6,7 @@ Scope: normal dependency edges only (no dev/build dependencies), Linux x86_64 ap
 
 ## `whatsapp-cli +experimental-signup`
 
-Resolved normal-edge packages: 199
+Resolved normal-edge packages: 204
 
 | Crate | Version | Enabled features | Build script | `links` | Flags |
 |---|---|---|---|---|---|
@@ -50,7 +50,7 @@ Resolved normal-edge packages: 199
 | cpufeatures | 0.3.1 | - | no | - | - |
 | crc32fast | 1.5.2 | `default, std` | yes | - | build script needs review |
 | crypto-common | 0.1.7 | - | no | - | - |
-| crypto-common | 0.2.2 | - | no | - | - |
+| crypto-common | 0.2.2 | `rand_core` | no | - | - |
 | ctr | 0.9.2 | - | no | - | - |
 | ctr | 0.10.1 | - | no | - | - |
 | ctutils | 0.4.2 | - | no | - | - |
@@ -86,7 +86,7 @@ Resolved normal-edge packages: 199
 | http-body | 1.1.0 | - | no | - | - |
 | http-body-util | 0.1.5 | `default` | no | - | - |
 | httparse | 1.10.1 | `default, std` | yes | - | - |
-| hybrid-array | 0.4.15 | - | no | - | - |
+| hybrid-array | 0.4.15 | `ctutils, extra-sizes, zeroize` | no | - | - |
 | hyper | 1.11.1 | `client, default, http1` | no | - | - |
 | hyper-rustls | 0.27.9 | `http1, tls12` | no | - | - |
 | hyper-util | 0.1.20 | `client, client-legacy, client-proxy, default, http1, tokio` | no | - | - |
@@ -105,6 +105,8 @@ Resolved normal-edge packages: 199
 | is_terminal_polyfill | 1.70.2 | `default` | no | - | - |
 | itertools | 0.14.0 | `default, use_alloc, use_std` | no | - | - |
 | itoa | 1.0.18 | - | no | - | - |
+| keccak | 0.2.2 | - | no | - | - |
+| kem | 0.3.0 | - | no | - | - |
 | lazy_static | 1.5.0 | - | no | - | - |
 | libc | 0.2.189 | `default, std` | yes | - | - |
 | litemap | 0.8.3 | - | no | - | - |
@@ -113,6 +115,8 @@ Resolved normal-edge packages: 199
 | memchr | 2.8.3 | `alloc, std` | no | - | - |
 | miniz_oxide | 0.9.1 | `default, simd, simd-adler32, std, with-alloc` | no | - | - |
 | mio | 1.2.3 | `net, os-ext, os-poll` | no | - | - |
+| ml-kem | 0.3.2 | `zeroize` | no | - | - |
+| module-lattice | 0.2.3 | `ctutils, zeroize` | no | - | - |
 | nu-ansi-term | 0.50.3 | `default, std` | no | - | - |
 | num-traits | 0.2.19 | `std` | yes | - | - |
 | once_cell | 1.21.4 | `alloc, default, race, std` | no | - | - |
@@ -145,11 +149,12 @@ Resolved normal-edge packages: 199
 | serde | 1.0.229 | `alloc, default, derive, rc, serde_derive, std` | yes | - | - |
 | serde_core | 1.0.229 | `alloc, default, rc, result, std` | yes | - | - |
 | serde_derive | 1.0.229 | `default` | no | - | - |
-| serde_json | 1.0.151 | `alloc, default, std, unbounded_depth` | yes | - | - |
+| serde_json | 1.0.151 | `alloc, default, float_roundtrip, std, unbounded_depth` | yes | - | - |
 | serde_urlencoded | 0.7.1 | - | no | - | - |
 | sha1 | 0.10.7 | - | no | - | - |
 | sha1 | 0.11.0 | - | no | - | - |
 | sha2 | 0.11.0 | - | no | - | - |
+| sha3 | 0.11.0 | - | no | - | - |
 | sharded-slab | 0.1.7 | - | no | - | - |
 | signal-hook-registry | 1.4.8 | - | no | - | - |
 | simd-adler32 | 0.3.10 | - | no | - | - |
@@ -274,7 +279,7 @@ Resolved normal-edge packages: 82
 | serde | 1.0.229 | `alloc, default, derive, serde_derive, std` | yes | - | - |
 | serde_core | 1.0.229 | `alloc, default, result, std` | yes | - | - |
 | serde_derive | 1.0.229 | `default` | no | - | - |
-| serde_json | 1.0.151 | `default, std, unbounded_depth` | yes | - | - |
+| serde_json | 1.0.151 | `default, float_roundtrip, std, unbounded_depth` | yes | - | - |
 | sha1 | 0.10.7 | - | no | - | - |
 | sha2 | 0.11.0 | - | no | - | - |
 | signal-hook-registry | 1.4.8 | - | no | - | - |
@@ -373,7 +378,7 @@ Resolved normal-edge packages: 94
 | serde | 1.0.229 | `alloc, default, derive, serde_derive, std` | yes | - | - |
 | serde_core | 1.0.229 | `alloc, default, result, std` | yes | - | - |
 | serde_derive | 1.0.229 | `default` | no | - | - |
-| serde_json | 1.0.151 | `default, std, unbounded_depth` | yes | - | - |
+| serde_json | 1.0.151 | `default, float_roundtrip, std, unbounded_depth` | yes | - | - |
 | sha1 | 0.10.7 | - | no | - | - |
 | sha2 | 0.10.9 | - | no | - | - |
 | sha2 | 0.11.0 | - | no | - | - |
@@ -501,7 +506,7 @@ Resolved normal-edge packages: 146
 | serde | 1.0.229 | `alloc, default, derive, serde_derive, std` | yes | - | - |
 | serde_core | 1.0.229 | `alloc, default, result, std` | yes | - | - |
 | serde_derive | 1.0.229 | `default` | no | - | - |
-| serde_json | 1.0.151 | `default, std, unbounded_depth` | yes | - | - |
+| serde_json | 1.0.151 | `default, float_roundtrip, std, unbounded_depth` | yes | - | - |
 | serde_urlencoded | 0.7.1 | - | no | - | - |
 | sha1 | 0.10.7 | - | no | - | - |
 | sha2 | 0.11.0 | - | no | - | - |
@@ -555,7 +560,7 @@ Resolved normal-edge packages: 146
 
 ## `whatsapp-api +experimental-signal-crypto`
 
-Resolved normal-edge packages: 114
+Resolved normal-edge packages: 119
 
 | Crate | Version | Enabled features | Build script | `links` | Flags |
 |---|---|---|---|---|---|
@@ -587,7 +592,7 @@ Resolved normal-edge packages: 114
 | cpufeatures | 0.3.1 | - | no | - | - |
 | crc32fast | 1.5.2 | `default, std` | yes | - | build script needs review |
 | crypto-common | 0.1.7 | - | no | - | - |
-| crypto-common | 0.2.2 | - | no | - | - |
+| crypto-common | 0.2.2 | `rand_core` | no | - | - |
 | ctr | 0.9.2 | - | no | - | - |
 | ctr | 0.10.1 | - | no | - | - |
 | ctutils | 0.4.2 | - | no | - | - |
@@ -611,16 +616,20 @@ Resolved normal-edge packages: 114
 | hkdf | 0.13.0 | - | no | - | - |
 | hmac | 0.12.1 | - | no | - | - |
 | hmac | 0.13.0 | - | no | - | - |
-| hybrid-array | 0.4.15 | - | no | - | - |
+| hybrid-array | 0.4.15 | `ctutils, extra-sizes, zeroize` | no | - | - |
 | inout | 0.1.4 | - | no | - | - |
 | inout | 0.2.2 | `block-padding` | no | - | - |
 | itertools | 0.14.0 | `default, use_alloc, use_std` | no | - | - |
 | itoa | 1.0.18 | - | no | - | - |
+| keccak | 0.2.2 | - | no | - | - |
+| kem | 0.3.0 | - | no | - | - |
 | libc | 0.2.189 | `default, std` | yes | - | - |
 | log | 0.4.34 | - | no | - | - |
 | memchr | 2.8.3 | `alloc, std` | no | - | - |
 | miniz_oxide | 0.9.1 | `default, simd, simd-adler32, std, with-alloc` | no | - | - |
 | mio | 1.2.3 | `net, os-ext, os-poll` | no | - | - |
+| ml-kem | 0.3.2 | `zeroize` | no | - | - |
+| module-lattice | 0.2.3 | `ctutils, zeroize` | no | - | - |
 | num-traits | 0.2.19 | `std` | yes | - | - |
 | once_cell | 1.21.4 | `alloc, default, race, std` | no | - | - |
 | opaque-debug | 0.3.1 | - | no | - | - |
@@ -642,10 +651,11 @@ Resolved normal-edge packages: 114
 | serde | 1.0.229 | `alloc, default, derive, rc, serde_derive, std` | yes | - | - |
 | serde_core | 1.0.229 | `alloc, default, rc, result, std` | yes | - | - |
 | serde_derive | 1.0.229 | `default` | no | - | - |
-| serde_json | 1.0.151 | `alloc, default, std, unbounded_depth` | yes | - | - |
+| serde_json | 1.0.151 | `alloc, default, float_roundtrip, std, unbounded_depth` | yes | - | - |
 | sha1 | 0.10.7 | - | no | - | - |
 | sha1 | 0.11.0 | - | no | - | - |
 | sha2 | 0.11.0 | - | no | - | - |
+| sha3 | 0.11.0 | - | no | - | - |
 | signal-hook-registry | 1.4.8 | - | no | - | - |
 | simd-adler32 | 0.3.10 | - | no | - | - |
 | simdutf8 | 0.1.5 | `std` | no | - | - |
@@ -755,7 +765,7 @@ Resolved normal-edge packages: 105
 | serde | 1.0.229 | `alloc, default, derive, serde_derive, std` | yes | - | - |
 | serde_core | 1.0.229 | `alloc, default, result, std` | yes | - | - |
 | serde_derive | 1.0.229 | `default` | no | - | - |
-| serde_json | 1.0.151 | `default, std, unbounded_depth` | yes | - | - |
+| serde_json | 1.0.151 | `default, float_roundtrip, std, unbounded_depth` | yes | - | - |
 | sha1 | 0.10.7 | - | no | - | - |
 | sha2 | 0.11.0 | - | no | - | - |
 | sharded-slab | 0.1.7 | - | no | - | - |

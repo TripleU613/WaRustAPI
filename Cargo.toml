@@ -53,6 +53,8 @@ webpki-roots = "1"
 # Contains AGPL-marked Signal sources despite MIT package metadata (ADR 0005).
 wacore-libsignal = { version = "=0.7.0", default-features = false }
 rand = "0.10"
+# Pinned native ML-KEM-1024 vector comparison; experimental primitive only.
+ml-kem = { version = "=0.3.2", default-features = false, features = ["zeroize"] }
 
 [workspace.lints.rust]
 unsafe_code = "forbid"

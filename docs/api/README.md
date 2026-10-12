@@ -132,3 +132,8 @@ Identity refresh inspection and session preview now expose nullable
 `pq_signature` with signature-only status, value length, nullable verification
 result and `key_validation="unported"`. This does not enable PQ session creation
 or adoption. See [original-byte signature evidence](../protocol/pq-signature.md).
+
+Experimental `signal::kem` provides ML-KEM-1024 primitive generation,
+encapsulation and expanded-key decapsulation with redacted, zeroized secrets.
+It does not enable hybrid sessions or adopt PQ bundles. See
+[API, native vectors and limitations](../protocol/rust-kem.md).

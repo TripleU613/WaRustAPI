@@ -27,6 +27,8 @@ pub mod direct;
 pub mod group;
 #[cfg(feature = "experimental-signal-crypto")]
 pub mod image;
+#[cfg(feature = "experimental-signal-crypto")]
+pub mod kem;
 
 const RECORD_V1: u16 = 1;
 

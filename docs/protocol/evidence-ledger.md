@@ -1,3 +1,11 @@
+2026-10-12 — **Implemented/offline:** experimental `signal::kem` exposes
+Rust ML-KEM-1024 generation, encapsulation and expanded-key decapsulation using
+pinned RustCrypto with zeroization and redacted secrets. The same 16 APK/NIST
+vectors exercise serialized keys, ciphertexts and shared secrets. This is a
+primitive API, not PQ session admission; all current bundle/refresh guards remain.
+Hybrid sessions and live interoperability remain unfinished.
+[Primitive API, dependency limits and tests](rust-kem.md).
+
 2026-10-12 — **Confirmed/offline execution:** the pinned APK's native
 ML-KEM-1024 arithmetic/hashing matches 16 independent NIST FIPS203 cases:
 key generation, deterministic encapsulation and valid/modified-ciphertext
