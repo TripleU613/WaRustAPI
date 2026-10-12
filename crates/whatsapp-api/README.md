@@ -83,3 +83,9 @@ No feature combination automatically registers or connects an account.
 
 MIT OR Apache-2.0 for first-party code. Third-party inputs and their licences
 are recorded in `fixtures/` and `../../docs/protocol/`.
+
+Experimental `signal::hybrid::bundle_for` validates exact-recipient signed EC/KEM
+material; `HybridBundle::prepare_initial` stages fresh native version-4 ciphertext
+and session state. Callers must establish directory authority and atomically commit
+the candidate. Normal PQ adoption/receive remain guarded. See
+[fresh hybrid bundles](../../docs/protocol/hybrid-bundle.md).

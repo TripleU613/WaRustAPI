@@ -1,3 +1,10 @@
+2026-10-12 — **Implemented/offline:** fresh exact-recipient hybrid bundles now
+verify both signed EC and original KEM value bytes, validate ML-KEM-1024 encoding,
+and stage a native version-4 initial message/session candidate. PN/LID encrypted
+fixtures cover optional ordinary prekeys, malformed metadata and pin/account
+refusals. Directory authority/adoption and incoming bootstrap remain unfinished;
+normal PQ guards are unchanged. [API, evidence and scope](docs/protocol/hybrid-bundle.md).
+
 2026-10-12 — **Implemented/offline:** the shared send adapter now prepares
 native version-4 ciphertext from held hybrid records after account, registration,
 peer-pin and ratchet-pair checks. Text and encoded payload exchange works through

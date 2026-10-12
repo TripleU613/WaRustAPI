@@ -4,6 +4,8 @@ use super::{
     kem, wire,
 };
 use crate::{Error, Result};
+mod bundle;
+pub use bundle::{HybridBundle, bundle_for};
 use wacore_libsignal::{
     crypto::aes_256_cbc_encrypt_into,
     protocol::{

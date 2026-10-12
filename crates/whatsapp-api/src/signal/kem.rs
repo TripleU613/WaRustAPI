@@ -24,7 +24,7 @@ impl std::fmt::Debug for KemSecret {
     }
 }
 
-fn public_key(bytes: &[u8]) -> Result<EncapsulationKey1024> {
+pub(crate) fn public_key(bytes: &[u8]) -> Result<EncapsulationKey1024> {
     let encoded = bytes
         .try_into()
         .map_err(|_| Error::invalid("kem_public_key", "expected 1568 bytes"))?;

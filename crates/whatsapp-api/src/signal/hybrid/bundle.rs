@@ -1,0 +1,464 @@
+//! Verified hybrid bundle material; cryptographic validation is not directory authority.
+use super::initialize_alice;
+use crate::signal::{direct, kem};
+use crate::{
+    Error, Result,
+    binary::{Node, NodeContent},
+    model::jid::{Jid, Server},
+    session::AccountRecord,
+};
+use wacore_libsignal::protocol::{
+    AliceSignalProtocolParameters, IdentityKey, IdentityKeyPair, KeyPair, PreKeyBundle, PrivateKey,
+    PublicKey, UsePQRatchet,
+};
+
+fn invalid(reason: &'static str) -> Error {
+    Error::invalid("hybrid_bundle", reason)
+}
+fn bytes(node: &Node) -> Result<&[u8]> {
+    match &node.content {
+        NodeContent::Bytes(bytes) => Ok(bytes),
+        _ => Err(invalid("expected KEM bytes")),
+    }
+}
+
+/// Exact-recipient signed EC/KEM material; not authenticated directory authority.
+/// Debug is redacted and no signature/key material is serialized by this object.
+pub struct HybridBundle {
+    recipient: Jid,
+    classic: PreKeyBundle,
+    kem_id: u32,
+    kem_public: Vec<u8>,
+}
+impl std::fmt::Debug for HybridBundle {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("HybridBundle(<redacted>)")
+    }
+}
+
+/// Validate complete ML-KEM-1024 metadata and both signatures for an exact recipient.
+/// The caller must separately establish reply correlation, freshness and key authority.
+/// Unknown/unported admission flags are not decided by this cryptographic parser.
+pub fn bundle_for(reply: &Node, recipient: &Jid) -> Result<HybridBundle> {
+    if !matches!(recipient.server, Server::User | Server::Lid) || recipient.agent != 0 {
+        return Err(invalid("unsupported bundle recipient"));
+    }
+    let user = direct::prekey_user_for(reply, recipient)?;
+    let classic = direct::classic_bundle_from_user(user, recipient)?;
+    direct::validate_bundle_signature(&classic)?;
+    let pq = direct::child(user, "pqkey")?;
+    let kem_id = direct::number(direct::child(pq, "id")?, 3)?;
+    let public = bytes(direct::child(pq, "value")?)?;
+    let signature = bytes(direct::child(pq, "signature")?)?;
+    if signature.len() != 64
+        || !classic
+            .identity_key()
+            .map_err(|_| invalid("invalid bundle identity"))?
+            .public_key()
+            .verify_signature(public, signature)
+    {
+        return Err(invalid("invalid KEM signature"));
+    }
+    kem::public_key(public)?;
+    Ok(HybridBundle {
+        recipient: recipient.clone(),
+        classic,
+        kem_id,
+        kem_public: public.to_vec(),
+    })
+}
+
+impl HybridBundle {
+    /// Stage a fresh initial encrypted message from an already-authorized bundle.
+    /// An optional held pin must match; changed keys require separate explicit policy.
+    /// No held session is accepted/reset, no ID is allocated and no store/network is touched.
+    pub fn prepare_initial(
+        &self,
+        account: &AccountRecord,
+        pinned: Option<&[u8]>,
+        payload: &[u8],
+    ) -> Result<direct::PreparedDirect> {
+        if !account.is_registered() || payload.is_empty() || payload.len() > 32768 {
+            return Err(invalid("invalid initial payload/account"));
+        }
+        direct::validate_bundle_identity(Some(&self.classic), pinned, &self.recipient)?;
+        let identity = account
+            .signal_identity
+            .as_ref()
+            .ok_or_else(|| invalid("missing local identity"))?;
+        let public = PublicKey::from_djb_public_key_bytes(&identity.0.public)
+            .map_err(|_| invalid("invalid local identity"))?;
+        let private = PrivateKey::deserialize(&identity.0.private)
+            .map_err(|_| invalid("invalid local identity"))?;
+        if private
+            .public_key()
+            .map_err(|_| invalid("invalid local identity"))?
+            != public
+        {
+            return Err(invalid("local identity key pair mismatch"));
+        }
+        let local = IdentityKeyPair::new(IdentityKey::new(public), private);
+        let registration = account
+            .signal_registration_id
+            .ok_or_else(|| invalid("missing local registration"))?;
+        let peer_identity = *self
+            .classic
+            .identity_key()
+            .map_err(|_| invalid("invalid bundle identity"))?;
+        let signed = self
+            .classic
+            .signed_pre_key_public()
+            .map_err(|_| invalid("invalid signed key"))?;
+        let mut parameters = AliceSignalProtocolParameters::new(
+            local,
+            KeyPair::generate(&mut rand::rng()),
+            peer_identity,
+            signed,
+            signed,
+            UsePQRatchet::No,
+        );
+        if let Some(one) = self
+            .classic
+            .pre_key_public()
+            .map_err(|_| invalid("invalid ordinary prekey"))?
+        {
+            parameters.set_their_one_time_pre_key(one);
+        }
+        let (ciphertext, shared) = kem::encapsulate(&self.kem_public)?;
+        let pending = direct::IncomingKem {
+            prekey_id: self.kem_id,
+            ciphertext: &ciphertext,
+        };
+        let session = initialize_alice(
+            &parameters,
+            shared.as_bytes().try_into().expect("32-byte KEM secret"),
+            &KeyPair::generate(&mut rand::rng()),
+            (
+                registration,
+                self.classic
+                    .registration_id()
+                    .map_err(|_| invalid("invalid remote registration"))?,
+            ),
+            (
+                self.classic
+                    .pre_key_id()
+                    .map_err(|_| invalid("invalid ordinary prekey"))?
+                    .map(u32::from),
+                u32::from(
+                    self.classic
+                        .signed_pre_key_id()
+                        .map_err(|_| invalid("invalid signed id"))?,
+                ),
+                &pending,
+            ),
+        )?;
+        session.prepare(payload)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{
+        session::{KeyMaterial, RegistrationStatus, SignalIdentityKey},
+        signal::{direct, hybrid, kem},
+    };
+    use wacore_libsignal::protocol::{
+        BobSignalProtocolParameters, IdentityKeyPair, KeyPair, PreKeySignalMessage, UsePQRatchet,
+    };
+
+    #[tokio::test]
+    async fn exact_selected_pq_bundle_stages_a_fresh_authentic_exchange() {
+        for raw_peer in ["15555550102@s.whatsapp.net", "67890@lid"] {
+            let peer = Jid::parse(raw_peer).unwrap();
+            let alice = IdentityKeyPair::generate(&mut rand::rng());
+            let bob = IdentityKeyPair::generate(&mut rand::rng());
+            let signed = KeyPair::generate(&mut rand::rng());
+            let one = KeyPair::generate(&mut rand::rng());
+            let (kem_public, kem_secret) = kem::generate_key_pair().unwrap();
+            let signature = bob
+                .private_key()
+                .calculate_signature(&signed.public_key.serialize(), &mut rand::rng())
+                .unwrap();
+            let pq_signature = bob
+                .private_key()
+                .calculate_signature(&kem_public, &mut rand::rng())
+                .unwrap();
+            let user = Node::new("user").attr("jid", peer.clone()).children(vec![
+                Node::new("registration").bytes(vec![0, 0, 0, 42]),
+                Node::new("type").bytes(vec![5]),
+                Node::new("identity").bytes(bob.public_key().public_key_bytes().to_vec()),
+                Node::new("key").children(vec![
+                    Node::new("id").bytes(vec![0, 0, 8]),
+                    Node::new("value").bytes(one.public_key.public_key_bytes().to_vec()),
+                ]),
+                Node::new("skey").children(vec![
+                    Node::new("id").bytes(vec![0, 0, 7]),
+                    Node::new("value").bytes(signed.public_key.public_key_bytes().to_vec()),
+                    Node::new("signature").bytes(signature.to_vec()),
+                ]),
+                Node::new("pqkey").children(vec![
+                    Node::new("id").bytes(vec![0, 0, 9]),
+                    Node::new("value").bytes(kem_public.clone()),
+                    Node::new("signature").bytes(pq_signature.to_vec()),
+                ]),
+            ]);
+            let mut other_device = peer.clone();
+            other_device.device = 2;
+            let reply_for = |selected: Node| {
+                Node::new("iq")
+                    .attr("type", "result")
+                    .children(vec![Node::new("list").children(vec![
+                        Node::new("user")
+                            .attr("jid", other_device.clone())
+                            .children(vec![Node::new("error")]),
+                        selected,
+                    ])])
+            };
+            let reply = reply_for(user.clone());
+            assert!(bundle_for(&reply, &other_device).is_err());
+            let duplicate_users = Node::new("iq").attr("type", "result").children(vec![
+                Node::new("list").children(vec![user.clone(), user.clone()]),
+            ]);
+            assert!(bundle_for(&duplicate_users, &peer).is_err());
+            assert!(direct::prekey_bundle_for(&reply, &peer).is_err());
+            let bundle = bundle_for(&reply, &peer).unwrap();
+            assert_eq!(format!("{bundle:?}"), "HybridBundle(<redacted>)");
+            let local = AccountRecord {
+                registration: RegistrationStatus::Registered,
+                signal_registration_id: Some(31),
+                signal_identity: Some(SignalIdentityKey(KeyMaterial {
+                    public: alice.public_key().public_key_bytes().try_into().unwrap(),
+                    private: *alice.private_key().serialize(),
+                })),
+                ..Default::default()
+            };
+            let prepared = bundle
+                .prepare_initial(
+                    &local,
+                    Some(&bob.identity_key().serialize()),
+                    b"\x0a\x05hello",
+                )
+                .unwrap();
+            assert_eq!(prepared.ciphertext[0], 0x44);
+            assert_eq!(prepared.identity, bob.identity_key().serialize());
+            let outer = PreKeySignalMessage::try_from(prepared.ciphertext.as_slice()).unwrap();
+            assert_eq!(outer.pre_key_id().map(u32::from), Some(8));
+            let pq = direct::incoming_prekey_kem(&prepared.ciphertext)
+                .unwrap()
+                .unwrap();
+            assert_eq!(pq.prekey_id, 9);
+            let shared = kem::decapsulate(kem_secret.as_bytes(), pq.ciphertext).unwrap();
+            let bp = BobSignalProtocolParameters::new(
+                bob.clone(),
+                signed.clone(),
+                Some(one.clone()),
+                signed.clone(),
+                *alice.identity_key(),
+                *outer.base_key(),
+                UsePQRatchet::No,
+            );
+            let b = hybrid::initialize_bob(&bp, shared.as_bytes().try_into().unwrap(), (42, 31))
+                .unwrap();
+            let remote = AccountRecord {
+                registration: RegistrationStatus::Registered,
+                signal_registration_id: Some(42),
+                signal_identity: Some(SignalIdentityKey(KeyMaterial {
+                    public: bob.public_key().public_key_bytes().try_into().unwrap(),
+                    private: *bob.private_key().serialize(),
+                })),
+                ..Default::default()
+            };
+            let received = direct::receive(
+                &remote,
+                &Jid::parse("15555550101@s.whatsapp.net").unwrap(),
+                &b.to_bytes().unwrap(),
+                &alice.identity_key().serialize(),
+                outer.message().serialized(),
+            )
+            .await
+            .unwrap();
+            assert_eq!(received.plaintext.as_slice(), b"\x0a\x05hello");
+            assert!(matches!(
+                bundle.prepare_initial(
+                    &local,
+                    Some(&alice.identity_key().serialize()),
+                    b"\x0a\x01x"
+                ),
+                Err(Error::IdentityChanged(_))
+            ));
+            assert!(
+                bundle
+                    .prepare_initial(&AccountRecord::default(), None, b"\x0a\x01x")
+                    .is_err()
+            );
+            assert!(
+                bundle
+                    .prepare_initial(&local, None, &vec![0; 32769])
+                    .is_err()
+            );
+            let mut bad_local = local.clone();
+            bad_local.signal_identity.as_mut().unwrap().0.private[10] ^= 1;
+            assert!(
+                bundle
+                    .prepare_initial(&bad_local, None, b"\x0a\x01x")
+                    .is_err()
+            );
+
+            let replace = |name: &str, replacement: Option<Node>| {
+                let mut fields = user
+                    .child_nodes()
+                    .iter()
+                    .filter(|n| n.description != name)
+                    .cloned()
+                    .collect::<Vec<_>>();
+                fields.extend(replacement);
+                Node::new("user").attr("jid", peer.clone()).children(fields)
+            };
+            for field in ["id", "value", "signature"] {
+                let children = user
+                    .child("pqkey")
+                    .unwrap()
+                    .child_nodes()
+                    .iter()
+                    .filter(|n| n.description != field)
+                    .cloned()
+                    .collect();
+                let selected = replace("pqkey", Some(Node::new("pqkey").children(children)));
+                assert!(bundle_for(&reply_for(selected), &peer).is_err());
+            }
+            let without_one = bundle_for(&reply_for(replace("key", None)), &peer).unwrap();
+            let no_one = without_one
+                .prepare_initial(&local, None, b"\x0a\x05hello")
+                .unwrap();
+            let no_one_message =
+                PreKeySignalMessage::try_from(no_one.ciphertext.as_slice()).unwrap();
+            assert!(no_one_message.pre_key_id().is_none());
+            let pq = direct::incoming_prekey_kem(&no_one.ciphertext)
+                .unwrap()
+                .unwrap();
+            let shared = kem::decapsulate(kem_secret.as_bytes(), pq.ciphertext).unwrap();
+            let params = BobSignalProtocolParameters::new(
+                bob.clone(),
+                signed.clone(),
+                None,
+                signed.clone(),
+                *alice.identity_key(),
+                *no_one_message.base_key(),
+                UsePQRatchet::No,
+            );
+            let receiver =
+                hybrid::initialize_bob(&params, shared.as_bytes().try_into().unwrap(), (42, 31))
+                    .unwrap();
+            assert_eq!(
+                direct::receive(
+                    &remote,
+                    &Jid::parse("15555550101@s.whatsapp.net").unwrap(),
+                    &receiver.to_bytes().unwrap(),
+                    &alice.identity_key().serialize(),
+                    no_one_message.message().serialized()
+                )
+                .await
+                .unwrap()
+                .plaintext
+                .as_slice(),
+                b"\x0a\x05hello"
+            );
+            for id in [vec![], vec![0, 9], vec![0, 0, 0, 9]] {
+                let selected = replace(
+                    "pqkey",
+                    Some(Node::new("pqkey").children(vec![
+                        Node::new("id").bytes(id),
+                        Node::new("value").bytes(kem_public.clone()),
+                        Node::new("signature").bytes(pq_signature.to_vec()),
+                    ])),
+                );
+                assert!(bundle_for(&reply_for(selected), &peer).is_err());
+            }
+            let wrong_signature = alice
+                .private_key()
+                .calculate_signature(&kem_public, &mut rand::rng())
+                .unwrap();
+            let selected = replace(
+                "pqkey",
+                Some(Node::new("pqkey").children(vec![
+                    Node::new("id").bytes(vec![0, 0, 9]),
+                    Node::new("value").bytes(kem_public.clone()),
+                    Node::new("signature").bytes(wrong_signature.to_vec()),
+                ])),
+            );
+            assert!(bundle_for(&reply_for(selected), &peer).is_err());
+            let bad_classic = replace(
+                "skey",
+                Some(Node::new("skey").children(vec![
+                    Node::new("id").bytes(vec![0, 0, 7]),
+                    Node::new("value").bytes(signed.public_key.public_key_bytes().to_vec()),
+                    Node::new("signature").bytes(vec![0; 64]),
+                ])),
+            );
+            assert!(bundle_for(&reply_for(bad_classic), &peer).is_err());
+            for bad_key in [vec![], vec![0; 800], vec![0xff; 1568]] {
+                let signed_bad = bob
+                    .private_key()
+                    .calculate_signature(&bad_key, &mut rand::rng())
+                    .unwrap();
+                let selected = replace(
+                    "pqkey",
+                    Some(Node::new("pqkey").children(vec![
+                        Node::new("id").bytes(vec![0, 0, 9]),
+                        Node::new("value").bytes(bad_key),
+                        Node::new("signature").bytes(signed_bad.to_vec()),
+                    ])),
+                );
+                assert!(bundle_for(&reply_for(selected), &peer).is_err());
+            }
+            let mut duplicated_values = user.child("pqkey").unwrap().child_nodes().to_vec();
+            duplicated_values.push(Node::new("value").bytes(kem_public.clone()));
+            assert!(
+                bundle_for(
+                    &reply_for(replace(
+                        "pqkey",
+                        Some(Node::new("pqkey").children(duplicated_values))
+                    )),
+                    &peer
+                )
+                .is_err()
+            );
+            let nonbytes = replace(
+                "pqkey",
+                Some(Node::new("pqkey").children(vec![
+                    Node::new("id").bytes(vec![0, 0, 9]),
+                    Node::new("value").text("PRIVATE-CANARY"),
+                    Node::new("signature").bytes(pq_signature.to_vec()),
+                ])),
+            );
+            let error = bundle_for(&reply_for(nonbytes), &peer)
+                .unwrap_err()
+                .to_string();
+            assert!(!error.contains("PRIVATE"));
+            let bad_sig = Node::new("pqkey").children(vec![
+                Node::new("id").bytes(vec![0, 0, 9]),
+                Node::new("value").bytes(kem_public.clone()),
+                Node::new("signature").bytes(vec![0; 64]),
+            ]);
+            assert!(bundle_for(&reply_for(replace("pqkey", Some(bad_sig))), &peer).is_err());
+            assert!(
+                bundle_for(&reply, &Jid::parse("15555550198@s.whatsapp.net").unwrap()).is_err()
+            );
+            assert!(bundle_for(&reply_for(replace("pqkey", None)), &peer).is_err());
+            let mut duplicate = user.child_nodes().to_vec();
+            duplicate.push(user.child("pqkey").unwrap().clone());
+            assert!(
+                bundle_for(
+                    &reply_for(
+                        Node::new("user")
+                            .attr("jid", peer.clone())
+                            .children(duplicate)
+                    ),
+                    &peer
+                )
+                .is_err()
+            );
+        }
+    }
+}

@@ -255,7 +255,7 @@ fn data(node: &Node) -> Result<&[u8]> {
         _ => Err(invalid("expected key bytes")),
     }
 }
-fn child<'a>(node: &'a Node, name: &str) -> Result<&'a Node> {
+pub(crate) fn child<'a>(node: &'a Node, name: &str) -> Result<&'a Node> {
     let mut matches = node.child_nodes().iter().filter(|v| v.description == name);
     let value = matches
         .next()
@@ -265,7 +265,7 @@ fn child<'a>(node: &'a Node, name: &str) -> Result<&'a Node> {
     }
     Ok(value)
 }
-fn number(node: &Node, size: usize) -> Result<u32> {
+pub(crate) fn number(node: &Node, size: usize) -> Result<u32> {
     let bytes = data(node)?;
     if bytes.len() != size {
         return Err(invalid("invalid key identifier width"));
@@ -312,7 +312,7 @@ pub(crate) fn classic_bundle_metadata_for(reply: &Node, recipient: &Jid) -> Resu
     classic_bundle_from_user(prekey_user_for(reply, recipient)?, recipient)
 }
 
-fn prekey_user_for<'a>(reply: &'a Node, recipient: &Jid) -> Result<&'a Node> {
+pub(crate) fn prekey_user_for<'a>(reply: &'a Node, recipient: &Jid) -> Result<&'a Node> {
     if reply.description != "iq"
         || reply.get_attr("type").and_then(|v| v.as_text()) != Some("result")
     {
@@ -359,7 +359,7 @@ fn prekey_user_for<'a>(reply: &'a Node, recipient: &Jid) -> Result<&'a Node> {
     Ok(user)
 }
 
-fn classic_bundle_from_user(user: &Node, recipient: &Jid) -> Result<PreKeyBundle> {
+pub(crate) fn classic_bundle_from_user(user: &Node, recipient: &Jid) -> Result<PreKeyBundle> {
     // APK 37.71 Bot.A03 00e8..00f0 defaults only an absent type to 5.
     // Present fields still use exact singleton/width/type checks; see
     // bulk-prekey-processing.md. Signature verification remains a separate unchanged step.
