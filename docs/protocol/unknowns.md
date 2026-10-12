@@ -4,7 +4,8 @@ Ordered by what blocks the first decisive result (docs/design/README.md section 
 
 PQ remains a real crypto gap: the locked wacore-libsignal backend has no KEM
 bundle/session construction. Selected pqkey replies now fail explicitly instead
-of silently deriving classic state. Native algorithm, signatures, hybrid records,
+of silently deriving classic state. Original-byte signature diagnostics are implemented; JNI algorithm revision,
+KEM format, hybrid records,
 key inventory and incoming wire support still need implementation. See
 [the boundary and source audit](pq-bundle-boundary.md).
 

@@ -1,3 +1,12 @@
+2026-10-12 — **Implemented/offline:** identity refresh diagnostics now expose
+redacted PQ signature verification over the original directory value bytes,
+using the returned candidate identity. Native KEMPublicKey stores/returns those
+bytes unchanged; the hybrid HKDF suite label names CRYSTALS-KYBER-1024, while
+JNI algorithm revision/format and hybrid sessions remain unported. A verified
+signature is not KEM validity or adoption: preview/application stay deferred,
+all saved state is preserved, and the consumable PQ bundle guard remains active.
+[Native byte domain and diagnostic/admission tests](pq-signature.md).
+
 2026-10-11 — **Implemented/offline:** selected directory PQ key input now
 fails explicitly instead of silently becoming a consumable classic bundle.
 Direct preparation and device batches share the boundary; unrelated devices

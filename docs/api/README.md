@@ -127,3 +127,8 @@ session backend and cannot silently become classic encryption bundles. Identity
 diagnostics still validate classic metadata only; PQ preview/application defer.
 Some recipients requiring fresh PQ sessions remain unsupported.
 See [native processing and the backend gap](../protocol/pq-bundle-boundary.md).
+
+Identity refresh inspection and session preview now expose nullable
+`pq_signature` with signature-only status, value length, nullable verification
+result and `key_validation="unported"`. This does not enable PQ session creation
+or adoption. See [original-byte signature evidence](../protocol/pq-signature.md).

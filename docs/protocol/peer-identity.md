@@ -2773,3 +2773,8 @@ PQ deferral; no PQ pin/session is adopted. The pinned backend source audit prove
 an implementation gap, not a native refusal rule. Full KEM support and fresh
 live transitions remain unfinished. Existing protected state and history remain
 unchanged.
+
+2026-10-12: [PQ signature inspection](pq-signature.md) adds a redacted independent
+signature result to identity refresh inspection/preview. It verifies candidate
+signed bytes, not a KEM key or a person's identity; existing PQ refusal and
+preview/application deferral remain effective. No saved-state or live change.

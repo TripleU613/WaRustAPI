@@ -7,6 +7,7 @@ use super::{actions, messaging};
 pub(crate) mod application;
 mod attestation;
 mod guard;
+mod pq;
 use crate::{
     Error, Result,
     binary::Node,
@@ -16,6 +17,7 @@ use crate::{
 };
 pub use attestation::{AttestationAccountType, AttestationInspection, AttestationStatus};
 pub use guard::RefreshGuard;
+pub use pq::{PqSignatureInspection, PqSignatureStatus};
 use sha2::{Digest, Sha256};
 use wacore_libsignal::protocol::IdentityKey;
 
@@ -168,6 +170,8 @@ pub struct Inspection {
     /// Selected identity_auth metadata shape, null when absent/unavailable.
     /// The classic prekey signature_valid field does not verify this signature.
     pub identity_auth: Option<IdentityAuthInspection>,
+    /// Selected PQ signature over original bytes; not KEM validation or admission.
+    pub pq_signature: Option<PqSignatureInspection>,
     /// Selected user's server-provided child presence; null until a parsed bundle.
     /// This is not a local configuration switch or full native admission.
     pub force_override_e2ee_state: Option<bool>,
@@ -236,6 +240,7 @@ fn inspect_in(tx: &crate::store::ReadTx<'_>, id: &str) -> Result<Option<Inspecti
         refresh_guard,
         attestation: None,
         identity_auth: None,
+        pq_signature: None,
         force_override_e2ee_state: None,
         companion_same_key_authority: None,
         companion_changed_key_authority: None,
@@ -301,6 +306,12 @@ fn inspect_in(tx: &crate::store::ReadTx<'_>, id: &str) -> Result<Option<Inspecti
     result.signature_valid = Some(valid);
     if users.len() == 1 {
         result.identity_auth = identity_auth_inspection(users[0]);
+        result.pq_signature = pq::inspect(
+            users[0],
+            bundle
+                .identity_key()
+                .map_err(|_| Error::invalid("identity_notification", "invalid bundle identity"))?,
+        );
         // APK 37.71 Bot.A03 0370..0384 / 1xi.A1U uses selected-user child presence.
         result.force_override_e2ee_state =
             Some(users[0].child("force_override_e2ee_state").is_some());
@@ -1207,6 +1218,168 @@ pub(super) mod tests {
                 result
             );
             assert_eq!(snapshot(&store), before);
+        }
+    }
+
+    #[tokio::test]
+    async fn pq_signature_inspection_uses_original_bytes_without_changing_admission_or_state() {
+        use crate::binary::NodeContent;
+        for case in [
+            "valid",
+            "tampered",
+            "prefixed_signature",
+            "wrong_identity",
+            "empty_value",
+            "duplicate",
+            "nonbyte",
+            "large",
+            "missing_value",
+            "missing_signature",
+            "signature_width",
+            "duplicate_value",
+            "duplicate_signature",
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("pq-signature.redb");
+            let store = open(&path);
+            let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+            store.write(|tx| account().save(tx)).unwrap();
+            let identity = install_pin(&store, &peer);
+            let Refresh::Queued(id) =
+                queue(&store, &account(), &notification(&peer.to_string(), "pq")).unwrap()
+            else {
+                panic!("read")
+            };
+            assert!(serde_json::to_value(inspect(&store,&id).unwrap().unwrap()).unwrap()["pq_signature"].is_null());
+            actions::reserve_pending(&store).unwrap();
+            let mut value = if case == "empty_value" {
+                vec![]
+            } else if case == "large" {
+                vec![9; 65537]
+            } else {
+                b"PRIVATE-PQ-KEY".to_vec()
+            };
+            let mut signed = value.clone();
+            if case == "prefixed_signature" {
+                signed.insert(0, 5);
+            }
+            let foreign = IdentityKeyPair::generate(&mut rand::rng());
+            let signer = if case == "wrong_identity" {
+                &foreign
+            } else {
+                &identity
+            };
+            let signature = signer
+                .private_key()
+                .calculate_signature(&signed, &mut rand::rng())
+                .unwrap();
+            if case == "tampered" {
+                value[0] ^= 1;
+            }
+            let mut response = reply(&peer, &id, &identity, true);
+            let NodeContent::Children(lists) = &mut response.content else {
+                panic!("list")
+            };
+            let NodeContent::Children(users) = &mut lists[0].content else {
+                panic!("users")
+            };
+            let NodeContent::Children(fields) = &mut users[0].content else {
+                panic!("fields")
+            };
+            let value_node = if case == "nonbyte" {
+                Node::new("value").attr("private", "canary")
+            } else {
+                Node::new("value").bytes(value.clone())
+            };
+            let mut children = vec![
+                Node::new("id").bytes(vec![0, 0, 8]),
+                value_node,
+                Node::new("signature").bytes(signature.to_vec()),
+            ];
+            if case == "missing_value" {
+                children.retain(|n| n.description != "value");
+            }
+            if case == "missing_signature" {
+                children.retain(|n| n.description != "signature");
+            }
+            if case == "signature_width" {
+                children[2] = Node::new("signature").bytes(vec![0; 3]);
+            }
+            if case == "duplicate_value" {
+                children.push(children[1].clone());
+            }
+            if case == "duplicate_signature" {
+                children.push(children[2].clone());
+            }
+            let pq = Node::new("pqkey").children(children);
+            fields.push(pq.clone());
+            if case == "duplicate" {
+                fields.push(pq);
+            }
+            actions::record_reply(&store, &response).unwrap();
+            let snapshot = || {
+                store
+                    .read(|tx| {
+                        Table::ALL
+                            .iter()
+                            .map(|t| tx.scan_after(*t, 1, None, 512))
+                            .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap()
+            };
+            let before = snapshot();
+            let head = store.journal_head().unwrap();
+            let result = serde_json::to_value(inspect(&store, &id).unwrap().unwrap()).unwrap();
+            let expected = match case {
+                "valid" | "empty_value" => "signature_verified",
+                "duplicate"
+                | "nonbyte"
+                | "missing_value"
+                | "missing_signature"
+                | "signature_width"
+                | "duplicate_value"
+                | "duplicate_signature" => "malformed",
+                "large" => "payload_too_large",
+                _ => "invalid_signature",
+            };
+            assert_eq!(result["pq_signature"]["status"], expected, "{case}");
+            assert_eq!(result["pq_signature"]["key_validation"], "unported");
+            assert_eq!(result["signature_valid"], true);
+            let preview = preview_session(&store, &id).await.unwrap();
+            assert_eq!(preview.outcome, "pq_session_unported");
+            assert!(!preview.persisted && preview.archived_states.is_none());
+            assert_eq!(
+                application::apply(
+                    &store,
+                    &id,
+                    crate::registration::request::IdentityChangePolicy::ApkAuthenticated
+                )
+                .await
+                .unwrap(),
+                application::Application::Deferred("pq_session_unported")
+            );
+            let rendered = serde_json::to_string(&result).unwrap();
+            assert!(
+                !rendered.contains("PRIVATE")
+                    && !rendered.contains(&peer.user)
+                    && !rendered.contains(&id)
+            );
+            assert_eq!(snapshot(), before);
+            assert_eq!(store.journal_head().unwrap(), head);
+            drop(store);
+            let store = ProtocolStore::open(OpenOptions {
+                path: path.clone(),
+                account_id: AccountId::new("fixture").unwrap(),
+                create: false,
+                key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                    [9; 32],
+                ))),
+            })
+            .unwrap();
+            assert_eq!(
+                serde_json::to_value(inspect(&store, &id).unwrap().unwrap()).unwrap(),
+                result
+            );
         }
     }
 

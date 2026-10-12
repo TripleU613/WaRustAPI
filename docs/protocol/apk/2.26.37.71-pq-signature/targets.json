@@ -1,0 +1,54 @@
+{
+  "bundle-processing": {
+    "class": "LX/CQc;",
+    "file": "bundle-processing.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_notifications.rs",
+      "crates/whatsapp-api/src/transport/identity_notifications/pq.rs"
+    ]
+  },
+  "encapsulation": {
+    "class": "Lorg/whispersystems/libsignal/kem/KEMPublicKey;",
+    "file": "encapsulation.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_notifications.rs",
+      "crates/whatsapp-api/src/transport/identity_notifications/pq.rs"
+    ]
+  },
+  "public-bytes": {
+    "class": "Lorg/whispersystems/libsignal/kem/KEMPublicKey;",
+    "file": "public-bytes.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_notifications.rs",
+      "crates/whatsapp-api/src/transport/identity_notifications/pq.rs"
+    ]
+  },
+  "public-constructor": {
+    "class": "Lorg/whispersystems/libsignal/kem/KEMPublicKey;",
+    "file": "public-constructor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_notifications.rs",
+      "crates/whatsapp-api/src/transport/identity_notifications/pq.rs"
+    ]
+  }
+}

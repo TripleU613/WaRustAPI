@@ -1,0 +1,12 @@
+# APK-derived structural disassembly: Lorg/whispersystems/libsignal/kem/KEMPublicKey;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VL) flags=0x10001 registers=2
+  # full signature: Lorg/whispersystems/libsignal/kem/KEMPublicKey;-><init>([B)V
+  0000..0006 op=70 invoke-direct {v0}, Ljava/lang/Object;-><init>()V
+  0006..000a op=5b iput-object v1, v0, Lorg/whispersystems/libsignal/kem/KEMPublicKey;->A00:[B
+  000a..000c op=0e return-void
+  # exception table: 0 try range(s)
+.end method

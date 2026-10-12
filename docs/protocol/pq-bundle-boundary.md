@@ -88,3 +88,7 @@ warnings-denied Rustdoc, the outbox refusal/reopen test with TCP/Noise/Signal
 features, 26 default CLI/API-symbol tests and the experimental CLI build.
 The four-topic APK bundle reproduced exactly, and backend source files matched
 the locked package archive. No PQ cryptographic compatibility was verified.
+
+2026-10-12 follow-up: [PQ signature diagnostics](pq-signature.md) now verify the
+original value bytes separately from the classic signed prekey. KEM validation
+and session support remain unported; no guard or adoption permission is lifted.
