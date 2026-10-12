@@ -403,34 +403,69 @@ pub fn list(store: &ProtocolStore) -> Result<Vec<MediaEntry>> {
 
 const REFERENCE_BINDING: &[u8] = b"incoming-ordinary-media-v1";
 
-// 152/16P clone the original C1iB and copy Ao1 via A0s, never edited media keys.
-pub(super) fn image_edit_caption(payload: &[u8]) -> Result<Option<Option<String>>> {
+pub(super) struct MediaCaption {
+    pub(super) kind: i32,
+    pub(super) caption: Option<String>,
+}
+
+// 152/16P clone original media; document A0w/A0x is caption, not filename.
+pub(super) fn caption_fields(payload: &[u8]) -> Result<Option<MediaCaption>> {
     let fields = crate::signal::direct::payload_fields(payload)?;
-    if fields.iter().any(|f| !matches!(f, 3 | 35))
-        || fields.iter().filter(|&&f| f == 3).count() != 1
+    if fields.iter().any(|f| !matches!(f, 3 | 7 | 9 | 35))
+        || fields.iter().filter(|&&f| matches!(f, 3 | 7 | 9)).count() != 1
     {
         return Ok(None);
     }
     #[derive(Message)]
-    struct Caption {
+    struct ImageCaption {
         #[prost(string, optional, tag = "3")]
-        text: Option<String>,
+        caption: Option<String>,
         #[prost(bool, tag = "25")]
         once: bool,
     }
-    let raw = RawEnvelope::decode(payload).map_err(|_| bad("invalid image edit"))?;
-    let nested = Zeroizing::new(raw.image.ok_or_else(|| bad("missing image edit"))?);
-    let caption =
-        Caption::decode(nested.as_slice()).map_err(|_| bad("invalid image edit caption"))?;
+    #[derive(Message)]
+    struct VideoCaption {
+        #[prost(string, optional, tag = "7")]
+        caption: Option<String>,
+        #[prost(bool, tag = "8")]
+        gif: bool,
+        #[prost(bool, tag = "20")]
+        once: bool,
+    }
+    #[derive(Message)]
+    struct DocumentCaption {
+        #[prost(string, optional, tag = "20")]
+        caption: Option<String>,
+    }
+    let raw = RawEnvelope::decode(payload).map_err(|_| bad("invalid caption envelope"))?;
+    let (kind, caption, once) = if let Some(image) = raw.image {
+        let nested = Zeroizing::new(image);
+        let labels =
+            ImageCaption::decode(nested.as_slice()).map_err(|_| bad("invalid image caption"))?;
+        (1, labels.caption, labels.once)
+    } else if let Some(video) = raw.video {
+        let nested = Zeroizing::new(video);
+        let labels =
+            VideoCaption::decode(nested.as_slice()).map_err(|_| bad("invalid video caption"))?;
+        (if labels.gif { 13 } else { 3 }, labels.caption, labels.once)
+    } else if let Some(document) = raw.document {
+        let nested = Zeroizing::new(document);
+        let labels = DocumentCaption::decode(nested.as_slice())
+            .map_err(|_| bad("invalid document caption"))?;
+        (9, labels.caption, false)
+    } else {
+        return Ok(None);
+    };
     // shortcut: quoted/expiring edits need their native context lifecycle before projection.
-    if caption.once
+    if once
         || media_context(payload)?.is_some_and(|c| {
             c.stanza.is_some() || c.quoted.is_some() || c.expiration.is_some_and(|v| v != 0)
         })
     {
         return Ok(None);
     }
-    Ok(Some(caption.text))
+    // The existing 64 KiB inspector bound is below StringUtils.A0F's 65536-code-point cap.
+    Ok(Some(MediaCaption { kind, caption }))
 }
 
 /// Project unwrapped ordinary media while retaining expiry and refusing quotes. The
@@ -956,6 +991,24 @@ mod tests {
                 }),
             }
             .encode_to_vec();
+            if caption.is_none() {
+                let head = store.journal_head().unwrap();
+                assert!(
+                    store
+                        .write(|tx| super::super::inbox_events::own_device_message(
+                            tx,
+                            update_key.as_bytes(),
+                            &chat,
+                            &update_node,
+                            &body,
+                            &[own.clone(), source.to_non_ad()]
+                        ))
+                        .unwrap()
+                        .is_none()
+                );
+                assert_eq!(store.journal_head().unwrap(), head);
+                continue;
+            }
             let event = store.write(|tx| {
                 let event = super::super::inbox_events::own_device_message(tx,update_key.as_bytes(),&chat,&update_node,&body,&[own.clone(),source.to_non_ad()])?.unwrap();
                 tx.put_json(Table::Checkpoints,update_key.as_bytes(),1,&serde_json::json!({"status":"decrypted","source":source,"protobuf":wrapped}))?;
@@ -999,22 +1052,234 @@ mod tests {
     #[test]
     fn image_caption_edits_refuse_view_once_quotes_and_mixed_content() {
         assert_eq!(
-            image_edit_caption(b"\x1a\x03\x1a\x01x").unwrap(),
-            Some(Some("x".into()))
+            caption_fields(b"\x1a\x03\x1a\x01x")
+                .unwrap()
+                .unwrap()
+                .caption,
+            Some("x".into())
         );
-        assert_eq!(image_edit_caption(b"\x1a\x00").unwrap(), Some(None));
+        // The raw reader keeps presence; MESSAGE_EDIT admission enforces nonempty text.
         assert!(
-            image_edit_caption(b"\x1a\x03\xc8\x01\x01")
+            super::super::chat_settings::decode_edit(
+                b"\x62\x0b\x0a\x03\x1a\x01P\x10\x0e\x72\x02\x1a\x00"
+            )
+            .is_none()
+        );
+        assert!(caption_fields(b"\x1a\x03\xc8\x01\x01").unwrap().is_none());
+        assert!(
+            caption_fields(b"\x1a\x06\x8a\x01\x03\x0a\x01P")
                 .unwrap()
                 .is_none()
         );
-        assert!(
-            image_edit_caption(b"\x1a\x06\x8a\x01\x03\x0a\x01P")
+        assert!(caption_fields(b"\x1a\x00\x0a\x01x").unwrap().is_none());
+        assert!(caption_fields(b"\x1a\x02\x1a\x01").is_err());
+    }
+
+    #[test]
+    fn own_video_and_document_edits_use_native_kinds_and_keep_original_attachment_labels() {
+        use crate::{binary::Node, model::jid::Jid, sync::SyncEvent};
+        for (parent_kind, edit_kind, accepted) in [
+            (1, 1, true),
+            (3, 3, true),
+            (13, 13, true),
+            (13, 3, true),
+            (3, 13, false),
+            (9, 9, true),
+            (1, 9, false),
+            (9, 1, false),
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let store = ProtocolStore::open(crate::store::OpenOptions {
+                path: dir.path().join("caption.redb"),
+                account_id: crate::model::ids::AccountId::new("fixture").unwrap(),
+                create: true,
+                key_source: std::sync::Arc::new(crate::store::StaticKeySource::new(
+                    crate::store::MasterKey::from_bytes([9; 32]),
+                )),
+            })
+            .unwrap();
+            let own = Jid::parse("15555550199@s.whatsapp.net").unwrap();
+            let source = own.with_device(4);
+            let chat = Jid::parse("67890@lid").unwrap();
+            let field = |kind| match kind {
+                1 => 3,
+                9 => 7,
+                _ => 9,
+            };
+            let wrap = |body: &Vec<u8>| {
+                let mut sent = Vec::new();
+                prost::encoding::string::encode(1, &chat.to_string(), &mut sent);
+                prost::encoding::bytes::encode(2, body, &mut sent);
+                let mut wrapper = Vec::new();
+                prost::encoding::bytes::encode(31, &sent, &mut wrapper);
+                wrapper
+            };
+            let mut attachment = match parent_kind {
+                1 => Image {
+                    url: "https://mmg.whatsapp.net/original".into(),
+                    mime: "image/png".into(),
+                    hash: vec![1; 32],
+                    key: vec![2; 32],
+                    enc_hash: vec![3; 32],
+                    length: 42,
+                    once: false,
+                }
+                .encode_to_vec(),
+                9 => Document {
+                    url: "https://mmg.whatsapp.net/original".into(),
+                    mime: "application/pdf".into(),
+                    hash: vec![1; 32],
+                    key: vec![2; 32],
+                    enc_hash: vec![3; 32],
+                    length: 42,
+                }
+                .encode_to_vec(),
+                _ => Video {
+                    url: "https://mmg.whatsapp.net/original".into(),
+                    mime: "video/mp4".into(),
+                    hash: vec![1; 32],
+                    key: vec![2; 32],
+                    enc_hash: vec![3; 32],
+                    length: 42,
+                    once: false,
+                }
+                .encode_to_vec(),
+            };
+            if parent_kind == 13 {
+                prost::encoding::bool::encode(8, &true, &mut attachment);
+            }
+            if parent_kind == 9 {
+                prost::encoding::string::encode(8, &"original.pdf".to_owned(), &mut attachment);
+            }
+            let mut original = Vec::new();
+            prost::encoding::bytes::encode(field(parent_kind), &attachment, &mut original);
+            let parent_key = b"received-own:67890@lid:P";
+            store.write(|tx| {
+                crate::session::AccountRecord {own_jid:Some(own.clone()),registration:crate::session::RegistrationStatus::Registered,..Default::default()}.save(tx)?;
+                tx.put_json(Table::Checkpoints,parent_key,1,&serde_json::json!({"status":"decrypted","source":source,"protobuf":wrap(&original)}))
+            }).unwrap();
+            let mut labels = Vec::new();
+            prost::encoding::string::encode(
+                match edit_kind {
+                    1 => 3,
+                    9 => 20,
+                    _ => 7,
+                },
+                &"edited".to_owned(),
+                &mut labels,
+            );
+            if edit_kind == 13 {
+                prost::encoding::bool::encode(8, &true, &mut labels);
+            }
+            if edit_kind == 9 {
+                prost::encoding::string::encode(8, &"changed.pdf".to_owned(), &mut labels);
+                prost::encoding::string::encode(3, &"changed title".to_owned(), &mut labels);
+            }
+            let mut replacement = Vec::new();
+            prost::encoding::bytes::encode(field(edit_kind), &labels, &mut replacement);
+            let mut protocol = b"\x0a\x03\x1a\x01P\x10\x0e".to_vec();
+            prost::encoding::bytes::encode(14, &replacement, &mut protocol);
+            let mut body = Vec::new();
+            prost::encoding::bytes::encode(12, &protocol, &mut body);
+            assert!(super::super::chat_settings::decode_edit(&body).is_some());
+            let node = Node::new("message")
+                .attr("from", source)
+                .attr("recipient", chat.clone())
+                .attr("id", "EDIT")
+                .attr("type", "media")
+                .attr("edit", "1");
+            let snapshot = || {
+                store
+                    .read(|tx| {
+                        Table::ALL
+                            .iter()
+                            .map(|t| tx.scan(*t, 1, 100))
+                            .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap()
+            };
+            let before = snapshot();
+            let event = store
+                .write(|tx| {
+                    super::super::inbox_events::own_device_message(
+                        tx,
+                        b"received-own:67890@lid:EDIT",
+                        &chat,
+                        &node,
+                        &body,
+                        std::slice::from_ref(&own),
+                    )
+                })
                 .unwrap()
-                .is_none()
-        );
-        assert!(image_edit_caption(b"\x1a\x00\x0a\x01x").unwrap().is_none());
-        assert!(image_edit_caption(b"\x1a\x02\x1a\x01").is_err());
+                .unwrap();
+            if accepted {
+                let SyncEvent::MessageUpdated(update) = event else {
+                    panic!("missing {parent_kind}/{edit_kind} edit")
+                };
+                let crate::model::message::MessageChange::Edited(content) = update.change else {
+                    panic!("wrong change")
+                };
+                let crate::model::message::MessageContent::Media {
+                    reference,
+                    caption,
+                    file_name,
+                } = *content
+                else {
+                    panic!("wrong content")
+                };
+                assert_eq!(caption.as_deref(), Some("edited"));
+                assert_eq!(
+                    file_name.as_deref(),
+                    if parent_kind == 9 {
+                        Some("original.pdf")
+                    } else {
+                        None
+                    }
+                );
+                assert_eq!(
+                    reference_selector(&store, &reference).unwrap(),
+                    hex::encode(Sha256::digest(parent_key))
+                );
+                assert_eq!(update.key.id.as_str(), "P");
+            } else {
+                assert!(matches!(event, SyncEvent::UnsupportedMessage(_)));
+            }
+            assert_eq!(snapshot(), before);
+        }
+    }
+
+    #[test]
+    fn media_edit_caption_presence_preserves_unicode_and_keeps_existing_inspection_bound() {
+        for (field, caption_field) in [(3, 3), (7, 20), (9, 7)] {
+            for text in [None, Some(""), Some(" "), Some("x")] {
+                let mut nested = Vec::new();
+                if let Some(text) = text {
+                    prost::encoding::string::encode(caption_field, &text.to_owned(), &mut nested);
+                }
+                let mut replacement = Vec::new();
+                prost::encoding::bytes::encode(field, &nested, &mut replacement);
+                let mut protocol = b"\x0a\x03\x1a\x01P\x10\x0e".to_vec();
+                prost::encoding::bytes::encode(14, &replacement, &mut protocol);
+                let mut body = Vec::new();
+                prost::encoding::bytes::encode(12, &protocol, &mut body);
+                assert_eq!(
+                    super::super::chat_settings::decode_edit(&body).is_some(),
+                    text.is_some_and(|s| !s.is_empty())
+                );
+            }
+            let mut nested = Vec::new();
+            prost::encoding::string::encode(caption_field, &"😀".repeat(1000), &mut nested);
+            let mut body = Vec::new();
+            prost::encoding::bytes::encode(field, &nested, &mut body);
+            let caption = caption_fields(&body).unwrap().unwrap().caption.unwrap();
+            assert_eq!(caption.chars().count(), 1000);
+            assert_eq!(caption.len(), 4000);
+            let mut large = Vec::new();
+            prost::encoding::string::encode(caption_field, &("😀".repeat(65536) + "x"), &mut large);
+            let mut body = Vec::new();
+            prost::encoding::bytes::encode(field, &large, &mut body);
+            assert!(caption_fields(&body).is_err());
+        }
     }
 
     #[test]

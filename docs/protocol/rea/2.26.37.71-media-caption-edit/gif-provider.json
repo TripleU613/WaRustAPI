@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_78eb64e424ace5ee6e9ed6864260808910050caee809e14c481742cf3fad608f",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.D9F",
+    "method_name": "CF4"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-2LKa5i/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"max_heap_bytes\":15695085568,\"java_version\":\"21.0.12.1\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.D9F"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cinit\\u003e(): void\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0},{\"signature\":\"A00(X.D9F, X.72r, X.Cn6): X.BO7\",\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0},{\"signature\":\"A01(X.72r, X.BZE, int, boolean): void\",\"is_constructor\":false,\"name\":\"A01\",\"def_pos\":0},{\"signature\":\"AD7(X.178, X.Cn6): void\",\"is_constructor\":false,\"name\":\"AD7\",\"def_pos\":0},{\"signature\":\"CF4(X.CoT): X.178\",\"is_constructor\":false,\"name\":\"CF4\",\"def_pos\":0},{\"signature\":\"CHx(X.178): X.CV1\",\"is_constructor\":false,\"name\":\"CHx\",\"def_pos\":0}],\"method_count\":6,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"D9F\",\"full_name\":\"X.D9F\",\"field_count\":3,\"fields\":[{\"type\":\"X.D9B\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"X.Cmr\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"X.Coc\",\"def_pos\":0,\"name\":\"A02\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.D9F",
+          "method_name": "CF4",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"mode\":\"java\",\"full_name\":\"X.D9F.CF4\",\"class_name\":\"X.D9F\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    @Override // X.DbV\\n    public AnonymousClass178 CF4(CoT coT) throws Bp0 {\\n        BZc bZc \\u003d coT.A0F;\\n        if (!bZc.A0H()) {\\n            return null;\\n        }\\n        BZE bze \\u003d bZc.videoMessage_;\\n        BZE bze2 \\u003d bze;\\n        if (bze \\u003d\\u003d null) {\\n            bze \\u003d BZE.DEFAULT_INSTANCE;\\n        }\\n        if (!bze.gifPlayback_) {\\n            return null;\\n        }\\n        if (bze2 \\u003d\\u003d null) {\\n            bze2 \\u003d BZE.DEFAULT_INSTANCE;\\n        }\\n        C1gc c1gc \\u003d coT.A0A;\\n        C72r c72r \\u003d new C72r(c1gc, coT.A05);\\n        boolean zA0b \\u003d C0DE.A0b(c1gc.A00);\\n        this.A01.A05(c72r, bze2, coT.A00, coT.A07(), coT.A0W);\\n        A01(c72r, bze2, coT.A00, coT.A0V);\\n        C6b5 c6b5 \\u003d ((C1iB) c72r).A01;\\n        if (c6b5 \\u003d\\u003d null) {\\n            return null;\\n        }\\n        if (zA0b || (bze2.bitField0_ \\u0026 32) !\\u003d 0) {\\n            c6b5.A06 \\u003d Cmr.A00(bze2);\\n        }\\n        String strAnz \\u003d c72r.Anz();\\n        if (!TextUtils.isEmpty(strAnz)) {\\n            c6b5.A0R \\u003d strAnz;\\n        }\\n        return c72r;\\n    }\",\"overload_count\":1,\"method_name\":\"CF4\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.D9F",
+    "method": {
+      "name": "CF4",
+      "reported_signature": "CF4(X.CoT): X.178",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    @Override // X.DbV\n    public AnonymousClass178 CF4(CoT coT) throws Bp0 {\n        BZc bZc = coT.A0F;\n        if (!bZc.A0H()) {\n            return null;\n        }\n        BZE bze = bZc.videoMessage_;\n        BZE bze2 = bze;\n        if (bze == null) {\n            bze = BZE.DEFAULT_INSTANCE;\n        }\n        if (!bze.gifPlayback_) {\n            return null;\n        }\n        if (bze2 == null) {\n            bze2 = BZE.DEFAULT_INSTANCE;\n        }\n        C1gc c1gc = coT.A0A;\n        C72r c72r = new C72r(c1gc, coT.A05);\n        boolean zA0b = C0DE.A0b(c1gc.A00);\n        this.A01.A05(c72r, bze2, coT.A00, coT.A07(), coT.A0W);\n        A01(c72r, bze2, coT.A00, coT.A0V);\n        C6b5 c6b5 = ((C1iB) c72r).A01;\n        if (c6b5 == null) {\n            return null;\n        }\n        if (zA0b || (bze2.bitField0_ & 32) != 0) {\n            c6b5.A06 = Cmr.A00(bze2);\n        }\n        String strAnz = c72r.Anz();\n        if (!TextUtils.isEmpty(strAnz)) {\n            c6b5.A0R = strAnz;\n        }\n        return c72r;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

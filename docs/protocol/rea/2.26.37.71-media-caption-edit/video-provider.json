@@ -1,0 +1,128 @@
+{
+  "evidence_id": "ev_e474bf5941a6c8b874cd09399b82f97493b72d346c8999801281a4b739e2d6ae",
+  "subject": {
+    "name": "WhatsApp.apk",
+    "digest": {
+      "sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c"
+    },
+    "format": "apk",
+    "architecture": null,
+    "local_path": "~/Downloads/WhatsApp.apk"
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "~/Downloads/WhatsApp.apk",
+    "class_name": "X.D9C",
+    "method_name": "CF4"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "5a5a4e32264fbe597a329d7ad4b06a6266b7b31243e86b0263dbddcecaf351a1",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-2LKa5i/target.apk",
+      "class_count": 94738,
+      "resource_count": 14967,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"max_heap_bytes\":15695085568,\"java_version\":\"21.0.12.1\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.D9C"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cinit\\u003e(): void\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0},{\"signature\":\"AD7(X.178, X.Cn6): void\",\"is_constructor\":false,\"name\":\"AD7\",\"def_pos\":0},{\"signature\":\"CF4(X.CoT): X.178\",\"is_constructor\":false,\"name\":\"CF4\",\"def_pos\":0},{\"signature\":\"CHx(X.178): X.CV1\",\"is_constructor\":false,\"name\":\"CHx\",\"def_pos\":0}],\"method_count\":4,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"D9C\",\"full_name\":\"X.D9C\",\"field_count\":3,\"fields\":[{\"type\":\"X.D9B\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"X.Cmr\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"X.Coc\",\"def_pos\":0,\"name\":\"A02\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.D9C",
+          "method_name": "CF4",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"mode\":\"java\",\"full_name\":\"X.D9C.CF4\",\"class_name\":\"X.D9C\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    /* JADX WARN: Code duplicated, block: B:11:0x0020  */\\n    @Override // X.DbV\\n    public AnonymousClass178 CF4(CoT coT) throws Bp0 {\\n        boolean z;\\n        BZc bZcA03 \\u003d CoT.A03(coT);\\n        if (!bZcA03.A0H()) {\\n            return null;\\n        }\\n        BZE bze \\u003d bZcA03.videoMessage_;\\n        BZE bze2 \\u003d bze;\\n        if (bze \\u003d\\u003d null) {\\n            bze \\u003d BZE.DEFAULT_INSTANCE;\\n        }\\n        boolean z2 \\u003d bze.gifPlayback_;\\n        if ((bze.bitField0_ \\u0026 131072) !\\u003d 0) {\\n            z \\u003d bze.viewOnce_;\\n        }\\n        if (z2 || z) {\\n            return null;\\n        }\\n        if (bze2 \\u003d\\u003d null) {\\n            bze2 \\u003d BZE.DEFAULT_INSTANCE;\\n        }\\n        C72s c72s \\u003d new C72s(coT.A0A, coT.A05);\\n        Cmr cmr \\u003d this.A01;\\n        C00h.A09(bze2);\\n        CoT.A04(c72s, cmr, coT, bze2);\\n        return c72s;\\n    }\",\"overload_count\":1,\"method_name\":\"CF4\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 14968
+    },
+    "class_name": "X.D9C",
+    "method": {
+      "name": "CF4",
+      "reported_signature": "CF4(X.CoT): X.178",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": null
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Code duplicated, block: B:11:0x0020  */\n    @Override // X.DbV\n    public AnonymousClass178 CF4(CoT coT) throws Bp0 {\n        boolean z;\n        BZc bZcA03 = CoT.A03(coT);\n        if (!bZcA03.A0H()) {\n            return null;\n        }\n        BZE bze = bZcA03.videoMessage_;\n        BZE bze2 = bze;\n        if (bze == null) {\n            bze = BZE.DEFAULT_INSTANCE;\n        }\n        boolean z2 = bze.gifPlayback_;\n        if ((bze.bitField0_ & 131072) != 0) {\n            z = bze.viewOnce_;\n        }\n        if (z2 || z) {\n            return null;\n        }\n        if (bze2 == null) {\n            bze2 = BZE.DEFAULT_INSTANCE;\n        }\n        C72s c72s = new C72s(coT.A0A, coT.A05);\n        Cmr cmr = this.A01;\n        C00h.A09(bze2);\n        CoT.A04(c72s, cmr, coT, bze2);\n        return c72s;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; exact DEX descriptors and instruction offsets are unavailable. Overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

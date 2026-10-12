@@ -3580,7 +3580,69 @@ mod tests {
                 .unwrap()
                 .is_some()
             );
-            edited.session
+            let mut invalid_protocol =
+                b"\x0a\x0b\x1a\x09OWN-MEDIA\x10\x0e\x72\x02\x1a\x00".to_vec();
+            prost::encoding::int64::encode(15, &2, &mut invalid_protocol);
+            let mut body = Vec::new();
+            prost::encoding::bytes::encode(12, &invalid_protocol, &mut body);
+            let mut sent_empty = Vec::new();
+            prost::encoding::string::encode(1, &"67890@lid".to_owned(), &mut sent_empty);
+            prost::encoding::bytes::encode(2, &body, &mut sent_empty);
+            let mut wrapper = Vec::new();
+            prost::encoding::bytes::encode(31, &sent_empty, &mut wrapper);
+            let invalid = direct::prepare_payload(
+                &sender,
+                receiver.own_jid.as_ref().unwrap(),
+                None,
+                Some(&edited.session),
+                Some(&sent.identity),
+                &wrapper,
+            )
+            .await
+            .unwrap();
+            let empty_node = Node::new("message")
+                .attr("from", peer_device.clone())
+                .attr("recipient", "67890@lid")
+                .attr("id", "OWN-CAPTION-EMPTY")
+                .attr("type", "media")
+                .attr("edit", "1")
+                .children(vec![
+                    Node::new("enc")
+                        .attr("type", invalid.kind)
+                        .attr("v", "2")
+                        .bytes(invalid.ciphertext.to_vec()),
+                ]);
+            let empty_capture = preserve(&store, &empty_node).unwrap();
+            let snapshot = || {
+                store
+                    .read(|tx| {
+                        Table::ALL
+                            .iter()
+                            .map(|t| tx.scan(*t, 1, 200))
+                            .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap()
+            };
+            let before = snapshot();
+            let head = store.journal_head().unwrap();
+            assert_eq!(
+                process(&store, &receiver, &empty_node, &empty_capture)
+                    .await
+                    .unwrap(),
+                IncomingResult::Unsupported
+            );
+            assert_eq!(snapshot(), before);
+            assert_eq!(store.journal_head().unwrap(), head);
+            assert!(
+                super::super::messaging::received_confirmation_for_account(
+                    &store,
+                    &receiver,
+                    &empty_node
+                )
+                .unwrap()
+                .is_none()
+            );
+            invalid.session
         };
         #[cfg(not(feature = "experimental-registration-https"))]
         let continued_session = synced.session.clone();

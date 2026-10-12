@@ -1,7 +1,18 @@
+2026-10-11 — **Implemented/offline:** own ordinary video/GIF and document
+caption edits now preserve original attachments and document filenames. Native
+kind equality and the one-way video-to-GIF-parent exception are enforced using
+saved synchronized payloads. The deeper decoder trace corrects image removal:
+ordinary media edits require a nonempty caption regardless of own ownership.
+Empty/missing edits decline without receive-state mutation; Unicode and whitespace
+are preserved within the existing byte bound. Peer/special/native media hooks,
+modeled document title, large Unicode payloads and fresh live delivery remain open.
+[Decoder context, kind and preservation tests](docs/protocol/media-caption-edit.md).
+
 2026-10-11 — **Implemented/offline:** authenticated own-device ordinary image
 caption edits now emit Edited while retaining the original sealed attachment
-reference. Replacement keys/URLs do not redirect the attachment; caption removal
-is supported. Original parent bytes, send facts, IDs and waits remain unchanged.
+reference. Replacement keys/URLs do not redirect the attachment. The later
+[ordinary caption decoder correction](docs/protocol/media-caption-edit.md) rejects
+caption removal; the original permissive claim is superseded. Original parent bytes, send facts, IDs and waits remain unchanged.
 Kind, terminal and ordering guards still apply; other media, peer configured
 window, special/orphan/expiry lifecycles and fresh live delivery remain open.
 [Native media clone and receive tests](docs/protocol/image-caption-edit.md).

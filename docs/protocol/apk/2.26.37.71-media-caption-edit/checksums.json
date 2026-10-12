@@ -1,0 +1,90 @@
+{
+  "context-copy.txt": {
+    "bytes": 5288,
+    "sha256": "edc548fbbfb385ecb17b76e9511ebb1c198fa4df080a6ffe69902dda4672835d"
+  },
+  "context-policy.txt": {
+    "bytes": 695,
+    "sha256": "398dad31e4f6a1b3c86de02621a118925c3c60ace37338489093506935024cb7"
+  },
+  "document-builder.txt": {
+    "bytes": 15033,
+    "sha256": "b438b3e3d3ebbb4c7b0afde6d3a9dd866eadfbaeaa98cb2e5babfb2628918c25"
+  },
+  "document-caption-getter.txt": {
+    "bytes": 940,
+    "sha256": "76a324e719e7ec06298ad3a61201066197902ff8d074dac003ade00a3f00f6f1"
+  },
+  "document-caption-setter.txt": {
+    "bytes": 1051,
+    "sha256": "7bb1481cff7d73d610419a19effb11f6b105c5790df6cdddcc8e071bc63b76a1"
+  },
+  "document-kind.txt": {
+    "bytes": 698,
+    "sha256": "f6a95fc0bac7497d9014b5cc77b90f0b1f30ff9d7920975e566cb4cff36813af"
+  },
+  "envelope-build.txt": {
+    "bytes": 4869,
+    "sha256": "36264d8f8e04b67e339f44edf7f3eb1785f5dfd5aea13b56d2847f482fcb8a12"
+  },
+  "envelope-constructor.txt": {
+    "bytes": 2510,
+    "sha256": "b06515279d1ac737ac40f10062baadbb0af64121fcd7cf2c1144c5916dfc66c3"
+  },
+  "gif-kind.txt": {
+    "bytes": 698,
+    "sha256": "86b9e2564c566370ae7f69ef085bcbfaf179db09bd1f1a2ba8a772be498df6b6"
+  },
+  "gif-provider.txt": {
+    "bytes": 2846,
+    "sha256": "feb389e84ebf5b0a9dd0d65f407d03611fa45a67151ec0ed43c3ea4f37542943"
+  },
+  "image-builder.txt": {
+    "bytes": 22675,
+    "sha256": "561406a8c63d728e600cefd6de80a0d56acc443bab1986734554e27a627887be"
+  },
+  "image-kind.txt": {
+    "bytes": 1863,
+    "sha256": "80dcc9ba82933c949b05a8c8554159285885c4fa513fad3c2cad054046d1c37f"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manager.txt": {
+    "bytes": 108231,
+    "sha256": "d23df6d490c67807d82336edde7686b1799f096821d1c2999bab0d4a4a37fe4c"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "receive-envelope.txt": {
+    "bytes": 7243,
+    "sha256": "209e5694b5f396dea24163f1ee9eb23836758be1d655e44d055bee799d0e084d"
+  },
+  "string-limit.txt": {
+    "bytes": 1174,
+    "sha256": "8227ccc7aa4f7558d9dd62aa752dc19c3ff9e7aebbd1605472761f34f87cd8e3"
+  },
+  "targets.json": {
+    "bytes": 9920,
+    "sha256": "ca84e265a5523184bc6463c41128a4b993f14c6a210c5d8c5d3d4b4f99cec709"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  },
+  "video-builder.txt": {
+    "bytes": 21865,
+    "sha256": "d703b478aca43ba5920cb2816977fd36f7cc1ff4aeb35e2d930ac0c810d4429d"
+  },
+  "video-kind.txt": {
+    "bytes": 1409,
+    "sha256": "855517b847bc87196458c0e934348caf3c513c24f8cc1ad35880ade1cac77673"
+  },
+  "video-provider.txt": {
+    "bytes": 1990,
+    "sha256": "10cd6495440ce6851fff3b0725256c626a694d851c5d683381bc031bdb255354"
+  }
+}

@@ -112,6 +112,12 @@ edit receive and edit sending remain unfinished; fresh live delivery is unverifi
 See [native evidence](../protocol/message-edit.md).
 
 Own-device ordinary image caption edits also emit `Edited`, preserving the
-original sealed media reference. Caption removal works; edited keys/URLs cannot
+original sealed media reference. Empty or absent captions decline; edited keys/URLs cannot
 redirect the attachment. Other media edits and fresh live delivery are unverified.
 See [native clone behavior](../protocol/image-caption-edit.md).
+
+Own ordinary video/GIF and document caption updates now use `Edited` with the
+original media reference and document filename. The native one-way GIF/video
+kind exception is enforced; empty captions decline for all three families.
+Peer policy and fresh live interoperability remain unverified.
+See [decoder context and type evidence](../protocol/media-caption-edit.md).

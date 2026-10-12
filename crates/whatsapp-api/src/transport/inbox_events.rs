@@ -1010,7 +1010,17 @@ fn own_device_edit(
         if !authenticated_direct_chat(tx, chat, entry.intent.chat.jid())? {
             return Ok(None);
         }
-        Some(entry.intent.content)
+        let kind = match &entry.intent.content {
+            MessageContent::Text { .. } => Some(0),
+            MessageContent::Media { reference, .. } => match reference.kind {
+                crate::model::message::MediaKind::Image => Some(1),
+                crate::model::message::MediaKind::Document => Some(9),
+                // shortcut: video references collapse GIF/PTV types; resolve saved wire kind before using them.
+                _ => None,
+            },
+            _ => None,
+        };
+        Some((entry.intent.content, kind))
     } else if let Some(record) = super::own_device::record_in(tx, chat, target.id.as_str())? {
         if let Some(saved) = record.saved {
             let wrapped = zeroize::Zeroizing::new(
@@ -1033,13 +1043,17 @@ fn own_device_edit(
                 own,
             );
             match projected {
-                SyncEvent::NewMessage(message) => Some(message.content),
+                SyncEvent::NewMessage(message) => {
+                    let kind = matches!(message.content, MessageContent::Text { .. }).then_some(0);
+                    Some((message.content, kind))
+                }
                 _ => {
                     #[cfg(feature = "experimental-registration-https")]
                     {
+                        let kind = super::media::caption_fields(&plain)?.map(|labels| labels.kind);
                         super::media::event_content(tx, record.key.as_bytes(), &plain)?
                             .filter(|(_, expiration)| expiration.is_none())
-                            .map(|(content, _)| content)
+                            .map(|(content, _)| (content, kind))
                     }
                     #[cfg(not(feature = "experimental-registration-https"))]
                     {
@@ -1054,19 +1068,22 @@ fn own_device_edit(
         // shortcut: unloaded edits require 153's orphan lifecycle before projection.
         return Ok(None);
     };
-    let Some(mut parent) = parent else {
+    let Some((mut parent, parent_kind)) = parent else {
         return Ok(None);
     };
     #[cfg(feature = "experimental-registration-https")]
-    let image_caption = super::media::image_edit_caption(&edit.replacement)?;
+    let media_caption = super::media::caption_fields(&edit.replacement)?
+        .map(|labels| (labels.kind, labels.caption));
     #[cfg(not(feature = "experimental-registration-https"))]
-    let image_caption: Option<Option<String>> = None;
-    let edited_media = if let Some(new_caption) = image_caption {
-        if let MessageContent::Media {
-            reference, caption, ..
-        } = &mut parent
-            && reference.kind == crate::model::message::MediaKind::Image
-        {
+    let media_caption: Option<(i32, Option<String>)> = None;
+    let edited_media = if let Some((edit_kind, new_caption)) = media_caption {
+        let Some(parent_kind) = parent_kind else {
+            return Ok(None);
+        };
+        if parent_kind != edit_kind && !(edit_kind == 3 && parent_kind == 13) {
+            return Ok(Some(unsupported_event(update_key)));
+        }
+        if let MessageContent::Media { caption, .. } = &mut parent {
             *caption = new_caption;
             Some(parent)
         } else {

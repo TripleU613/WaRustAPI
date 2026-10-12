@@ -5,8 +5,10 @@ Ordered by what blocks the first decisive result (docs/design/README.md section 
 Own-device ordinary text edits are now projected with loaded parent kind,
 terminal and sender-time ordering checks. Peer edits still require the effective
 native integer property 2983; a baked default or guessed 15-minute window is not
-proof. Own image captions now preserve the original attachment reference. Other
-media/caption, gated poll/event, future-proof wrapper, orphan and expiry
+proof. Own image/video/GIF/document captions now preserve original attachment references
+and enforce nonempty ordinary edits. Generic local video references still lack
+native subtype and the 64 KiB inspector bound remains stricter than native Unicode
+caps. Other media/caption, gated poll/event, future-proof wrapper, orphan and expiry
 lifecycles remain open. See [the receive evidence](message-edit.md).
 
 1. **Android registration protocol** (`registration.*`): payload encoding,

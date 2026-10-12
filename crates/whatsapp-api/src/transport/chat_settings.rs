@@ -260,9 +260,9 @@ pub(super) fn decode_edit(payload: &[u8]) -> Option<IncomingEdit> {
         && super::quotes::decode(&replacement).is_some();
     #[cfg(feature = "experimental-registration-https")]
     let supported = supported
-        || super::media::image_edit_caption(&replacement)
+        || super::media::caption_fields(&replacement)
             .ok()?
-            .is_some();
+            .is_some_and(|labels| labels.caption.is_some_and(|text| !text.is_empty()));
     if !supported {
         return None;
     }
@@ -314,10 +314,7 @@ fn edit_decoder_preserves_merge_context_and_native_timestamp_default() {
     protocol.extend_from_slice(b"\x10\x04");
     assert!(decode_edit(&envelope(&protocol, false)).is_none());
     assert!(decode_edit(b"\x62\x03\x72\x05x").is_none());
-    assert_eq!(
-        decode_edit(b"\x62\x0b\x0a\x03\x1a\x01P\x10\x0e\x72\x02\x1a\x00").is_some(),
-        cfg!(feature = "experimental-registration-https")
-    );
+    assert!(decode_edit(b"\x62\x0b\x0a\x03\x1a\x01P\x10\x0e\x72\x02\x1a\x00").is_none());
 }
 
 // DEy.A00 accepts empty as zero, otherwise int32 1/2/3/7/8; Bua excludes admin 8.

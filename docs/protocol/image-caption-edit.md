@@ -5,7 +5,8 @@ Pinned WhatsApp APK **2.26.37.71**, SHA-256
 
 Supported authenticated own-device image edits now emit the existing
 `MessageUpdated` / `Edited` event with the original image reference and edited
-caption. An absent caption removes it. This extends
+caption. Empty or absent captions decline under the ordinary native edit rule;
+see [the corrected decoder and context trace](media-caption-edit.md). This extends
 [ordinary own-device text edits](message-edit.md); it does not send edits.
 
 ## APK evidence
@@ -36,7 +37,8 @@ complete native media edit behavior.
 
 The existing wrapper, held session/pin, account generation, source/recipient,
 parent attribution, terminal and sender-time ordering checks remain in force.
-Only ordinary image-to-image caption updates use this extension. A text/image
+Image-to-image caption updates began this extension;
+[video/GIF and document captions](media-caption-edit.md) now use the same original-attachment path. A text/image
 kind mismatch stays opaque. View-once, mixed, quoted and expiring replacements
 decline, as do unloaded/cleared parents. Other media edits require their native
 type and metadata paths. The existing HTTPS media feature is required; the
@@ -51,7 +53,7 @@ configuration option, send intent or send outcome is introduced. Raw authenticat
 edit wrappers remain sealed in their own receive checkpoints. Parent bytes,
 historical events, account keys, IDs, idempotency records and waits are unchanged.
 
-The reference test sets and removes a caption with conflicting replacement
+The reference test sets a caption and now refuses removal, with conflicting replacement
 attachment metadata, verifies the original selector and unchanged parent row,
 and checks that listing exposes one attachment and clearing invalidates it.
 The real Signal regression receives an image edit, confirms and deduplicates it,

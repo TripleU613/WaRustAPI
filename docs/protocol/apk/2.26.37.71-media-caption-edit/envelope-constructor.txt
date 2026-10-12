@@ -1,0 +1,42 @@
+# APK-derived structural disassembly: LX/CRD;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VLLLJ) flags=0x10001 registers=8
+  # full signature: LX/CRD;-><init>(LX/1gc;LX/BZc;LX/BZc;J)V
+  0000..0002 op=12 const/4 v1, #0x0
+  0002..0004 op=12 const/4 v0, #0x0
+  0004..000a op=70 invoke-direct {v2}, Ljava/lang/Object;-><init>()V
+  000a..000e op=5b iput-object v4, v2, LX/CRD;->A0S:LX/BZc;
+  000e..0012 op=5b iput-object v3, v2, LX/CRD;->A0R:LX/1gc;
+  0012..0016 op=5a iput-wide v6, v2, LX/CRD;->A0Q:J
+  0016..001a op=5b iput-object v5, v2, LX/CRD;->A0P:LX/BZc;
+  001a..001e op=5b iput-object v1, v2, LX/CRD;->A08:LX/Fdp;
+  001e..0022 op=5b iput-object v1, v2, LX/CRD;->A02:LX/0Cy;
+  0022..0026 op=5c iput-boolean v0, v2, LX/CRD;->A0K:Z
+  0026..002a op=5c iput-boolean v0, v2, LX/CRD;->A0M:Z
+  002a..002e op=5c iput-boolean v0, v2, LX/CRD;->A0O:Z
+  002e..0032 op=59 iput v0, v2, LX/CRD;->A00:I
+  0032..0036 op=5b iput-object v1, v2, LX/CRD;->A0G:Ljava/lang/String;
+  0036..003a op=5b iput-object v1, v2, LX/CRD;->A0C:Ljava/lang/String;
+  003a..003e op=5b iput-object v1, v2, LX/CRD;->A0I:Ljava/lang/String;
+  003e..0042 op=5b iput-object v1, v2, LX/CRD;->A0D:Ljava/lang/String;
+  0042..0046 op=5b iput-object v1, v2, LX/CRD;->A0A:Ljava/lang/String;
+  0046..004a op=5b iput-object v1, v2, LX/CRD;->A04:Lcom/whatsapp/infra/core/jid/UserJid;
+  004a..004e op=5c iput-boolean v0, v2, LX/CRD;->A0N:Z
+  004e..0052 op=59 iput v0, v2, LX/CRD;->A01:I
+  0052..0056 op=5b iput-object v1, v2, LX/CRD;->A03:Lcom/whatsapp/infra/core/jid/Jid;
+  0056..005a op=5b iput-object v1, v2, LX/CRD;->A09:Ljava/lang/Integer;
+  005a..005e op=5b iput-object v1, v2, LX/CRD;->A06:LX/1gc;
+  005e..0062 op=5b iput-object v1, v2, LX/CRD;->A0J:Ljava/lang/String;
+  0062..0066 op=5b iput-object v1, v2, LX/CRD;->A0F:Ljava/lang/String;
+  0066..006a op=5b iput-object v1, v2, LX/CRD;->A0H:Ljava/lang/String;
+  006a..006e op=5c iput-boolean v0, v2, LX/CRD;->A0L:Z
+  006e..0072 op=5b iput-object v1, v2, LX/CRD;->A0B:Ljava/lang/String;
+  0072..0076 op=5b iput-object v1, v2, LX/CRD;->A0E:Ljava/lang/String;
+  0076..007a op=5b iput-object v1, v2, LX/CRD;->A07:LX/CUq;
+  007a..007e op=5b iput-object v1, v2, LX/CRD;->A05:Lcom/whatsapp/infra/core/jid/UserJid;
+  007e..0080 op=0e return-void
+  # exception table: 0 try range(s)
+.end method
