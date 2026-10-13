@@ -1921,7 +1921,7 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Opaque media selector"
+            "description": "Opaque selector: SHA-256 hex of the encrypted inbox record key received:{chat}:{message id} (or received-own:...); pass it to media-open or media-save."
           },
           "kind": {
             "type": "string",
@@ -1931,32 +1931,18 @@
               "sticker",
               "video",
               "video_note",
-              "view_once_image",
               "document"
             ],
-            "description": "Media type; ordinary stickers support URL-bearing WebP and video/video notes support URL-bearing MP4. CLI labels are Image, VoiceNote, Sticker, Video and VideoNote. Ordinary document selector kind is Document (document); URL-bearing retrieval uses its distinct Document Keys domain and explicit media-save output. Live incoming documents remain unverified."
+            "description": "Attachment kind. Ordinary stickers are URL-bearing WebP; video and video notes URL-bearing MP4. CLI text output prints the variant names Image, VoiceNote, Sticker, Video, VideoNote and Document. Documents use their distinct Document Keys domain and explicit media-save output; live incoming documents remain unverified. View-once content never appears here."
           },
           "bytes": {
             "type": "integer",
-            "description": "Media size in bytes"
-          },
-          "mime": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "MIME type (e.g., image/jpeg, audio/ogg)"
-          },
-          "downloaded": {
-            "type": "boolean",
-            "description": "Whether media has been downloaded and authenticated"
-          },
-          "opened": {
-            "type": "boolean",
-            "description": "Whether view-once media has been opened locally"
+            "minimum": 0,
+            "description": "Advertised plaintext length from the attachment descriptor (not verified until download)."
           }
         },
-        "description": "Incoming media attachment with download and consumption state"
+        "description": "Redacted ordinary incoming attachment selector (media-list). Corrected 2026-10-13: earlier versions of this schema listed mime, downloaded and opened fields and a view_once_image kind that the list never produced.",
+        "additionalProperties": false
       },
       "KeepInChatChange": {
         "type": "object",
@@ -4520,6 +4506,45 @@
             "description": "Error class from the current decoder, or null when it now decodes (for example after a dictionary update). Nothing is reprocessed."
           }
         }
+      },
+      "EventSummary": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "consumer",
+          "after_cursor",
+          "ack_cursor",
+          "has_more",
+          "kinds"
+        ],
+        "properties": {
+          "consumer": {
+            "type": "string",
+            "description": "The consumer name queried."
+          },
+          "after_cursor": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "The consumer's acknowledged cursor; the batch starts after it."
+          },
+          "ack_cursor": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Cursor that `events --ack` would acknowledge for this batch (equal to after_cursor when it is empty)."
+          },
+          "has_more": {
+            "type": "boolean",
+            "description": "More events exist beyond the 50-event batch."
+          },
+          "kinds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "SyncEvent::kind names in journal order. As of 2026-10-13 the set is new_message, message_updated, message_deleted, receipt_updated, send_status_changed, group_created, group_updated, identity_changed, history_gap, group_history_notice, unsupported_message, session_revoked and chat_cleared; SyncEvent::kind in crates/whatsapp-api/src/sync.rs is authoritative."
+          }
+        },
+        "description": "`events --summary --json` and GET /v1/events/summary: cursors and event kinds only."
       }
     },
     "securitySchemes": {
@@ -6399,7 +6424,7 @@
           "Events"
         ],
         "summary": "Read durable events for a consumer",
-        "description": "Retrieve durable events from the event journal for the specified consumer. The operation is offline. Results can be optionally acknowledged to advance the consumer's position. New ordinary primary LID messages use their actual primary namespace for inbox/event/read lookup even without sender_pn or username. Optional valid phone metadata is saved only after authentication. Existing PN-keyed records remain in place: a bounded lookup requires their original authenticated capture to match the actual primary LID, message ID and original PN alias; ambiguity or missing legacy route evidence refuses locally. Consumed view-once rows with matching original route proof remain duplicates without plaintext restoration or new read queuing. Redelivery never reattributes an event or advances its ratchet. Historical projection and read queuing retain the selected stored key; incoming poll votes can resolve a retained PN poll without changing its original message key. Companion, group and own-peer routes retain their separate guards. No new HTTP route, command, flag, alias guessing, pin adoption or retry/reset authority is introduced. Source and live limits: docs/protocol/peer-identity.md#primary-lid-receive-and-legacy-record-stability-2026-10-09. Incoming reaction keys require present nonempty target ID and a supported parseable remoteJid; malformed/unsupported keys remain opaque. lab-inbox --inspect adds fixed key_validation labels (valid, missing_key, missing_id, invalid_id, missing_remote_jid, invalid_remote_jid, unsupported_remote_jid, malformed_reaction) without printing the key. For primary direct reactions on the sender's own incoming message, original authenticated capture proof retains a historical PN target key while the reacting actor keeps its actual LID. Consumed target records qualify without plaintext restoration; conflicting qualifying rows or missing legacy route evidence refuse locally and atomically. Companion, group and status target reconciliation are not extended by the incoming-target correction. Existing projection markers are preserved. Source and limits: docs/protocol/reactions.md. Primary direct reactions to our normal-outbox messages resolve the original immutable chat by unique saved wire ID, either exact primary address or one existing authenticated-lid PN/LID association in either direction. Unattributed/foreign/absent targets retain the envelope namespace. Contact/directory aliases, raw sender_pn alone, companions, groups, status parents and legacy lab-only sends do not supply this association. A reaction never adds acceptance/delivery facts, retries an uncertain send or changes its original ID/progress. Lookup scans all pages and refuses duplicate wire IDs or malformed saved entries with fixed local outbox diagnoses. Source and remaining live limits: docs/protocol/reactions.md#outgoing-intent-attribution-and-quote-scope-2026-10-09. Poll vote decoding now requires a present nonempty ID, supported parseable remoteJid, senderTimestampMs presence, vote/ciphertext/IV presence and exactly twelve IV bytes, grounded in APK 2.26.37.71 Ban.A01 and C7G.A00. Absent fromMe defaults false; metadata is not required by the common structural check. Zero/negative timestamps and present empty ciphertext are structurally accepted; AEAD authentication remains separate. lab-inbox --inspect reports a fixed poll vote validation label even when decode_vote refuses: valid, missing_key, missing_id, invalid_id, missing_remote_jid, invalid_remote_jid, unsupported_remote_jid, missing_sender_timestamp, missing_vote, missing_enc_iv, invalid_enc_iv or missing_enc_payload. No identities, target IDs, timestamps, option names or ciphertext are included in the new diagnostic. Undecodable protobuf/no field-50 update has no validation label. Native JID subtype parity, effective feature selection, poll edit/expiry handling and outgoing poll chat attribution remain incomplete. Evidence: docs/protocol/poll-votes.md. Own poll votes now bind the saved poll-secret chat to the actual primary voter using exact PN/LID address identity or one existing authenticated-lid association; contact/directory aliases and raw sender_pn alone cannot attribute the poll. Successful AEAD projection preserves the original saved chat and actual voter, without changing send outcomes or projection markers. Missing legacy chat binding or unrelated/unsupported routes stay opaque; malformed saved bindings/maps refuse with fixed local diagnoses. Outgoing vote preparation additionally checks the actual saved chat before reading identity or generating entropy, reporting saved poll has no chat binding, invalid saved poll chat binding, or saved poll belongs to another chat. Queuing a vote remains offline; these checks occur when preparing it for transport. lab-inbox --inspect adds a redacted own poll stored-selector binding label: matched, unattributed, missing_chat_binding, unknown_poll, inspection_failed or invalid_peer. This checks the inspected record selector, not independently recovered envelope provenance, and does not authorize projection or pin replacement. No new HTTP route, command, alias repair, request replay or full companion/group support is supplied. Evidence: docs/protocol/poll-votes.md#saved-chat-attribution-2026-10-09. Received KeepInChat changes preserve optional sender_timestamp (payload milliseconds) and update_id (the keep envelope ID), separately from the original target ID and stanza server_timestamp. Missing historical metadata stays absent; recording does not apply native keep permission or expiry policy. Full events JSON exposes these fields; summary output remains redacted. Explicit incoming event server_timestamp retains valid root t with Java signed BMP-decimal parsing and wrapping milliseconds (APK 2.26.37.71 CgC.A01). Missing/malformed historical input remains unknown, preserving expiration guards; committed events are not migrated or replayed. Offline tested; fresh live parity and native clock fallback remain unverified. Evidence: docs/protocol/message-timestamps.md. Quoted media (2026-10-13, offline): incoming media whose contextInfo names a stanzaId now projects as a normal media event; its Media content carries an optional quoted reference (chat, sender, direction, id) attributed like a text reply, omitted when absent. A quotedMessage without stanzaId stays an unsupported_message. The quoted body is not stored or verified. Evidence docs/protocol/quoted-media.md.",
+        "description": "Retrieve durable events from the event journal for the specified consumer. The operation is offline. Results can be optionally acknowledged to advance the consumer's position. New ordinary primary LID messages use their actual primary namespace for inbox/event/read lookup even without sender_pn or username. Optional valid phone metadata is saved only after authentication. Existing PN-keyed records remain in place: a bounded lookup requires their original authenticated capture to match the actual primary LID, message ID and original PN alias; ambiguity or missing legacy route evidence refuses locally. Consumed view-once rows with matching original route proof remain duplicates without plaintext restoration or new read queuing. Redelivery never reattributes an event or advances its ratchet. Historical projection and read queuing retain the selected stored key; incoming poll votes can resolve a retained PN poll without changing its original message key. Companion, group and own-peer routes retain their separate guards. No new HTTP route, command, flag, alias guessing, pin adoption or retry/reset authority is introduced. Source and live limits: docs/protocol/peer-identity.md#primary-lid-receive-and-legacy-record-stability-2026-10-09. Incoming reaction keys require present nonempty target ID and a supported parseable remoteJid; malformed/unsupported keys remain opaque. lab-inbox --inspect adds fixed key_validation labels (valid, missing_key, missing_id, invalid_id, missing_remote_jid, invalid_remote_jid, unsupported_remote_jid, malformed_reaction) without printing the key. For primary direct reactions on the sender's own incoming message, original authenticated capture proof retains a historical PN target key while the reacting actor keeps its actual LID. Consumed target records qualify without plaintext restoration; conflicting qualifying rows or missing legacy route evidence refuse locally and atomically. Companion, group and status target reconciliation are not extended by the incoming-target correction. Existing projection markers are preserved. Source and limits: docs/protocol/reactions.md. Primary direct reactions to our normal-outbox messages resolve the original immutable chat by unique saved wire ID, either exact primary address or one existing authenticated-lid PN/LID association in either direction. Unattributed/foreign/absent targets retain the envelope namespace. Contact/directory aliases, raw sender_pn alone, companions, groups, status parents and legacy lab-only sends do not supply this association. A reaction never adds acceptance/delivery facts, retries an uncertain send or changes its original ID/progress. Lookup scans all pages and refuses duplicate wire IDs or malformed saved entries with fixed local outbox diagnoses. Source and remaining live limits: docs/protocol/reactions.md#outgoing-intent-attribution-and-quote-scope-2026-10-09. Poll vote decoding now requires a present nonempty ID, supported parseable remoteJid, senderTimestampMs presence, vote/ciphertext/IV presence and exactly twelve IV bytes, grounded in APK 2.26.37.71 Ban.A01 and C7G.A00. Absent fromMe defaults false; metadata is not required by the common structural check. Zero/negative timestamps and present empty ciphertext are structurally accepted; AEAD authentication remains separate. lab-inbox --inspect reports a fixed poll vote validation label even when decode_vote refuses: valid, missing_key, missing_id, invalid_id, missing_remote_jid, invalid_remote_jid, unsupported_remote_jid, missing_sender_timestamp, missing_vote, missing_enc_iv, invalid_enc_iv or missing_enc_payload. No identities, target IDs, timestamps, option names or ciphertext are included in the new diagnostic. Undecodable protobuf/no field-50 update has no validation label. Native JID subtype parity, effective feature selection, poll edit/expiry handling and outgoing poll chat attribution remain incomplete. Evidence: docs/protocol/poll-votes.md. Own poll votes now bind the saved poll-secret chat to the actual primary voter using exact PN/LID address identity or one existing authenticated-lid association; contact/directory aliases and raw sender_pn alone cannot attribute the poll. Successful AEAD projection preserves the original saved chat and actual voter, without changing send outcomes or projection markers. Missing legacy chat binding or unrelated/unsupported routes stay opaque; malformed saved bindings/maps refuse with fixed local diagnoses. Outgoing vote preparation additionally checks the actual saved chat before reading identity or generating entropy, reporting saved poll has no chat binding, invalid saved poll chat binding, or saved poll belongs to another chat. Queuing a vote remains offline; these checks occur when preparing it for transport. lab-inbox --inspect adds a redacted own poll stored-selector binding label: matched, unattributed, missing_chat_binding, unknown_poll, inspection_failed or invalid_peer. This checks the inspected record selector, not independently recovered envelope provenance, and does not authorize projection or pin replacement. No new HTTP route, command, alias repair, request replay or full companion/group support is supplied. Evidence: docs/protocol/poll-votes.md#saved-chat-attribution-2026-10-09. Received KeepInChat changes preserve optional sender_timestamp (payload milliseconds) and update_id (the keep envelope ID), separately from the original target ID and stanza server_timestamp. Missing historical metadata stays absent; recording does not apply native keep permission or expiry policy. Full events JSON exposes these fields; summary output remains redacted. Explicit incoming event server_timestamp retains valid root t with Java signed BMP-decimal parsing and wrapping milliseconds (APK 2.26.37.71 CgC.A01). Missing/malformed historical input remains unknown, preserving expiration guards; committed events are not migrated or replayed. Offline tested; fresh live parity and native clock fallback remain unverified. Evidence: docs/protocol/message-timestamps.md. Quoted media (2026-10-13, offline): incoming media whose contextInfo names a stanzaId now projects as a normal media event; its Media content carries an optional quoted reference (chat, sender, direction, id) attributed like a text reply, omitted when absent. A quotedMessage without stanzaId stays an unsupported_message. The quoted body is not stored or verified. Evidence docs/protocol/quoted-media.md. Summary over HTTP (2026-10-13): the `--summary --json` form is declared separately as GET /v1/events/summary and served by `serve --store-routes`; this full-content form, and acknowledging, stay CLI-only.",
         "operationId": "getEvents",
         "x-cli": "whatsapp-cli events",
         "x-transport": [
@@ -6474,6 +6499,143 @@
           "whatsapp_api::WhatsAppClient::events",
           "whatsapp_api::outbox::Outbox::by_wire_id",
           "whatsapp_api::outbox::Outbox::by_wire_id_in_write"
+        ]
+      }
+    },
+    "/v1/events/summary": {
+      "get": {
+        "tags": [
+          "Events"
+        ],
+        "summary": "Event kinds after a consumer's acknowledged cursor (offline, redacted)",
+        "description": "The `events --summary --json` form: one object with the consumer name, the acknowledged cursor the batch starts after (after_cursor), the cursor that would acknowledge it (ack_cursor), has_more, and the event kinds in journal order (for example new_message, receipt_updated, message_deleted). No message content, chat, sender or message ID. Reading never acknowledges, so repeating it answers the same batch; acknowledging stays CLI-only (`events --ack`). Without --json the CLI prints one `event: <kind>` line per event and the counts on stderr. A consumer whose cursor precedes trimmed events (for example a name never used before a trim) is refused: the CLI reports the expired cursor, HTTP answers 409 cursor_expired naming the earliest retained cursor. HTTP (2026-10-13): served read-only by `whatsapp-cli serve --store-routes --token-file <new path>` (experimental-transport build), loopback only, with `Authorization: Bearer <token>`; the store is opened per request with the serve process's --store/--account/--key-env, so it answers 503 store_unavailable only while another command (for example listen) holds the store, and 500 store_read_failed for any other read failure; a command starting during a request can fail to open the store and must be rerun. HEAD is also served. Disabled store routes answer 404 store_routes_disabled; a missing or wrong token 401 with WWW-Authenticate: Bearer. Over HTTP the limit is fixed at the CLI default (50) and the only accepted query is exactly consumer=<name>, unencoded, ASCII alphanumerics and -_.: only, at most 64 bytes (the library ConsumerId bound); a missing, renamed, repeated, empty, percent-encoded or additional parameter (including limit) answers 400 before the store opens. A consumer name using other printable characters, which the CLI accepts, cannot be queried over HTTP. The other parameters listed here are CLI flags; over HTTP the store comes from the serve process.",
+        "operationId": "getEventSummary",
+        "x-cli": "whatsapp-cli events",
+        "x-transport": [
+          "cli",
+          "http"
+        ],
+        "x-live": false,
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Profile"
+          },
+          {
+            "$ref": "#/components/parameters/Store"
+          },
+          {
+            "$ref": "#/components/parameters/Account"
+          },
+          {
+            "$ref": "#/components/parameters/KeyEnv"
+          },
+          {
+            "$ref": "#/components/parameters/ProfilesDir"
+          },
+          {
+            "name": "consumer",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9._:-]+$"
+            },
+            "description": "Consumer name (CLI --consumer, default cli). Over HTTP required, unencoded, at most 64 bytes."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Event kinds after the acknowledged cursor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventSummary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing, malformed or additional query parameter (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The consumer's cursor precedes trimmed events (code cursor_expired, HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or wrong bearer token (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Store routes not enabled on this server (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Only GET and HEAD are served (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The store could not be read for a reason other than being in use (HTTP only); details only in the server log",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Another command holds the store (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-library": [
+          "whatsapp_api::store::ProtocolStore::consumer_cursor",
+          "whatsapp_api::store::ProtocolStore::read_events",
+          "whatsapp_cli::http::serve"
+        ],
+        "security": [
+          {
+            "storeBearer": []
+          }
         ]
       }
     },
@@ -7716,11 +7878,12 @@
           "Media"
         ],
         "summary": "List ordinary incoming attachments",
-        "description": "List ordinary incoming images, voice notes, URL-bearing WebP stickers and MP4 videos/video notes by opaque selector, with content redacted. Lottie and directPath-only retrieval remain unsupported. Ordinary URL-bearing documents are now included as Document; labels, URLs and keys remain redacted. Documents require media-save for explicit private export, not media-open playback. Ordinary attachment expiry now shares the explicit root t Java signed BMP-decimal/wrapping-ms parser used by incoming events, for saved routes and historical captures. Missing time/route still refuses access; expiry is rechecked on retrieval. Offline tested, fresh live behavior unverified. Evidence: docs/protocol/message-timestamps.md#attachment-expiry-continuation. Authenticated own-device ordinary media also appears here after held-session synchronization: selectors bind the retained received-own wrapper and outgoing event reference. No bootstrap, automatic download, quoted-media or view-once synchronization is implied; expiry and local clearing still restrict retrieval. Evidence: docs/protocol/own-device-media.md. Quoted media (2026-10-13, offline): incoming media whose contextInfo names a stanzaId now projects as a normal media event; its Media content carries an optional quoted reference (chat, sender, direction, id) attributed like a text reply, omitted when absent. A quotedMessage without stanzaId stays an unsupported_message. The quoted body is not stored or verified. Evidence docs/protocol/quoted-media.md.",
+        "description": "List ordinary incoming images, voice notes, URL-bearing WebP stickers and MP4 videos/video notes by opaque selector, with content redacted. Lottie and directPath-only retrieval remain unsupported. Ordinary URL-bearing documents are now included as Document; labels, URLs and keys remain redacted. Documents require media-save for explicit private export, not media-open playback. Ordinary attachment expiry now shares the explicit root t Java signed BMP-decimal/wrapping-ms parser used by incoming events, for saved routes and historical captures. Missing time/route still refuses access; expiry is rechecked on retrieval. Offline tested, fresh live behavior unverified. Evidence: docs/protocol/message-timestamps.md#attachment-expiry-continuation. Authenticated own-device ordinary media also appears here after held-session synchronization: selectors bind the retained received-own wrapper and outgoing event reference. No bootstrap, automatic download, quoted-media or view-once synchronization is implied; expiry and local clearing still restrict retrieval. Evidence: docs/protocol/own-device-media.md. Quoted media (2026-10-13, offline): incoming media whose contextInfo names a stanzaId now projects as a normal media event; its Media content carries an optional quoted reference (chat, sender, direction, id) attributed like a text reply, omitted when absent. A quotedMessage without stanzaId stays an unsupported_message. The quoted body is not stored or verified. Evidence docs/protocol/quoted-media.md. JSON (2026-10-13): with the global --json flag the CLI prints the same array the HTTP route answers, each entry exactly {id, kind, bytes}: id is the SHA-256 hex of the inbox key received:{chat}:{message id} (or received-own:...), so it is not reversible to the chat without the random message ID; kind is snake_case (image, voice_note, sticker, video, video_note, document); bytes is the advertised plaintext length. No URL, MIME type, key, hash or chat. Text output still prints the variant name (VoiceNote). HTTP (2026-10-13): served read-only by `whatsapp-cli serve --store-routes --token-file <new path>` (experimental-transport build), loopback only, with `Authorization: Bearer <token>`; the store is opened per request with the serve process's --store/--account/--key-env, so it answers 503 store_unavailable only while another command (for example listen) holds the store, and 500 store_read_failed for any other read failure; a command starting during a request can fail to open the store and must be rerun. HEAD is also served. Disabled store routes answer 404 store_routes_disabled; a missing or wrong token 401 with WWW-Authenticate: Bearer. Same library call and JSON as `media-list --json`; any query string answers 400. The parameters listed here are CLI flags; over HTTP the store comes from the serve process.",
         "operationId": "listMedia",
         "x-cli": "whatsapp-cli media-list",
         "x-transport": [
-          "cli"
+          "cli",
+          "http"
         ],
         "x-live": false,
         "parameters": [
@@ -7742,7 +7905,7 @@
         ],
         "responses": {
           "200": {
-            "description": "List of media items",
+            "description": "Ordinary incoming attachment selectors, kinds and sizes",
             "content": {
               "application/json": {
                 "schema": {
@@ -7755,11 +7918,74 @@
             }
           },
           "400": {
-            "$ref": "#/components/responses/InvalidInput"
+            "description": "Any query string (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or wrong bearer token (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Store routes not enabled on this server (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Only GET and HEAD are served (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The store could not be read for a reason other than being in use (HTTP only); details only in the server log",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Another command holds the store (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         },
         "x-library": [
-          "whatsapp_api::transport::media::list"
+          "whatsapp_api::transport::media::list",
+          "whatsapp_cli::http::serve"
+        ],
+        "security": [
+          {
+            "storeBearer": []
+          }
         ]
       }
     },

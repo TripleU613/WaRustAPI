@@ -1,3 +1,16 @@
+2026-10-13 — **Implemented/offline (HTTP parity: media list and event kinds):**
+`serve --store-routes` now also answers `GET /v1/media` (the `media-list`
+selectors: SHA-256 of the inbox key, snake_case kind, advertised size; no URL,
+MIME, key or chat) and `GET /v1/events/summary?consumer=<name>` (the
+consumer's cursors and the next 50 event kinds; no content, chat or message
+ID). The summary never acknowledges; acknowledging and full events stay
+CLI-only. A consumer whose cursor precedes trimmed events answers 409
+`cursor_expired` naming the earliest retained cursor. The CLI gained the same
+JSON: `media-list --json` and `events --summary --json`. Corrected: the
+OpenAPI `MediaItem` schema listed `mime`, `downloaded`, `opened` and a
+`view_once_image` kind that the list never produced.
+[API README](api/README.md#store-routes-opt-in).
+
 2026-10-13 — **Fixed/offline (CLI parity):** `registration status --json` now
 prints the saved attempt as redacted JSON, the same as `lab-signup status
 --json` and the `GET /v1/signup/status` store route (one shared redaction);

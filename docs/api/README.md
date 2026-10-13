@@ -97,7 +97,10 @@ structural checkpoint kinds, any other key prefix counted as `other`),
 `/v1/receipts`,
 `/v1/prekeys`, `/v1/outbox/suspended`, `/v1/actions` (list form only),
 `/v1/identity-conflicts`, `/v1/outbox/group-preparations`,
-`/v1/diagnostics/own-lid`, `/v1/inbox/undecodable` and
+`/v1/diagnostics/own-lid`, `/v1/inbox/undecodable`, `/v1/media` (the
+`media-list --json` array: each `{id, kind, bytes}`, where `id` is the SHA-256
+of the inbox key `received:{chat}:{message id}` and so not guessable from an
+address; no URL, MIME, key or chat) and
 `/v1/outbox/{local_id}/versions` (malformed ID
 400 before the store opens, unknown ID 404 `unknown_local_id`). These refuse any
 query string with 400, so CLI-only options are never silently ignored.
@@ -118,6 +121,17 @@ helpers' signatures; any other read failure stays a generic 500. The CLI
 parameters these operations also list (store, account, key environment,
 profile) are refused over HTTP as extra query parameters.
 
+`GET /v1/events/summary?consumer=<name>` is `events --summary --json` at the
+CLI default limit (50): the consumer name, `after_cursor` (its acknowledged
+cursor), `ack_cursor`, `has_more` and the event kinds in journal order; no
+message content, chat, sender or message ID. It never acknowledges, so
+repeating it answers the same batch; `--ack` and full events stay CLI-only.
+The name follows the same unencoded ID rule but at most 64 bytes (the library
+`ConsumerId` bound); a name using other printable characters, which the CLI
+accepts, cannot be queried here, and `limit` is refused as an extra parameter.
+A consumer whose cursor precedes trimmed events (for example a name first used
+after a trim) answers 409 `cursor_expired` naming the earliest retained cursor.
+
 All store routes are declared with `x-transport: ["cli", "http"]` and the
 `storeBearer` security scheme.
 
@@ -135,9 +149,12 @@ killed or crashed server can leave it behind, still unreadable to others but
 useless, and that path is then refused until you delete it. Answers: 404
 `store_routes_disabled` when not enabled, 401 with `WWW-Authenticate: Bearer`
 for a missing or wrong token (the scheme name is case-insensitive), 400 for a
-query string the route does not take, 405 for other methods, 503 `store_unavailable` only while another
-command holds the store, 500 `store_read_failed` for any other read failure
-(details only in the server log).
+query string the route does not take, 405 for other methods, 409
+`cursor_expired` for an event summary below the trimmed journal, 422
+`saved_state_unsupported` for the saved-state refusals above, 503
+`store_unavailable` only while another command holds the store, 500
+`store_read_failed` for any other read failure (details only in the server
+log).
 
 Caveats: "read-only" means no protocol data changes; each request still takes
 the store's ownership lock briefly, so a command starting during a request

@@ -9,8 +9,10 @@ use prost::Message;
 use sha2::{Digest, Sha256};
 use zeroize::{Zeroize, Zeroizing};
 
-/// Supported ordinary attachment kinds.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+/// Supported ordinary attachment kinds. JSON names are snake_case
+/// (`voice_note`, `video_note`); CLI text output prints the variant name.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize)]
+#[serde(rename_all = "snake_case")]
 pub enum MediaKind {
     /// Image, not view-once.
     Image,
@@ -26,9 +28,11 @@ pub enum MediaKind {
     Document,
 }
 /// Redacted local attachment selector. Contains no phone, URL or media key.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, serde::Serialize)]
 pub struct MediaEntry {
-    /// Stable SHA-256 selector for the encrypted inbox record.
+    /// Stable SHA-256 selector for the encrypted inbox record: the digest of
+    /// its key `received:{chat}:{message id}` (or `received-own:…`), so it is
+    /// not reversible to the chat without the message ID.
     pub id: String,
     /// Attachment kind.
     pub kind: MediaKind,
@@ -2391,6 +2395,17 @@ mod tests {
                 .unwrap()
         };
         save(false);
+        // `media-list --json` and `GET /v1/media` serialize exactly the
+        // selector, snake_case kind and advertised length: no URL, MIME,
+        // key, hash or chat.
+        assert_eq!(
+            serde_json::to_value(list(&store).unwrap()).unwrap(),
+            serde_json::json!([{
+                "id": hex::encode(Sha256::digest(b"received:fixture")),
+                "kind": "image",
+                "bytes": 4,
+            }])
+        );
         let reference = references(&store).unwrap().pop().unwrap();
         let id = reference_selector(&store, &reference).unwrap();
         assert_eq!(id, hex::encode(Sha256::digest(b"received:fixture")));

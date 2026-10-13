@@ -14,7 +14,7 @@ exist but nothing sends/applies it; **absent** = not implemented;
 
 **Exposure.** CLI = `whatsapp-cli` command (see [cli.md](cli.md)). HTTP: by
 default `whatsapp-cli serve` serves only the service/profile endpoints, `connect`
-and `registration begin`; with `--store-routes` it also serves fourteen read-only
+and `registration begin`; with `--store-routes` it also serves sixteen read-only
 store inspections ([HTTP API parity](#http-api-parity)). Every other operation in
 [openapi.json](api/openapi.json) is `x-transport: cli`. Library = public
 `whatsapp_api` items listed in each operation's `x-library`.
@@ -131,9 +131,11 @@ added later the same day, `/v1/receipts`, `/v1/prekeys`, `/v1/outbox/suspended`,
 `/v1/outbox/group-preparations`, `/v1/outbox/{local_id}/versions`,
 `/v1/diagnostics/own-lid`, `/v1/inbox/undecodable`, and the counts-only `/v1/groups/receipts`,
 `/v1/groups/key-queries` and `/v1/groups/refresh-status` (one ID query
-parameter each, added the same day), the same library calls and JSON as the CLI. Inspections whose output carries raw
+parameter each, added the same day), then `/v1/media` (the `media-list`
+selectors, kinds and sizes) and `/v1/events/summary?consumer=<name>` (cursors
+and event kinds, never acknowledging), the same library calls and JSON as the CLI. Inspections whose output carries raw
 addresses (for example device queries, message status facts, contacts,
-blocklist) or message content (events) are not served. The access-control design is the
+blocklist, `outbox-pending`) or message content (full events) are not served. The access-control design is the
 conservative one this page previously left open: loopback only (even with
 `--allow-non-loopback`), a fresh 256-bit bearer token written only to a new
 mode-0600 file (never overwritten, never printed or logged, removed on
