@@ -69,6 +69,21 @@ const DOCS_INPUTS: &[(&str, &str)] = &[
     ),
 ];
 
+/// `docs/` path literals in crate sources that are not test inputs needing a
+/// `DOCS_INPUTS` entry, each with the reason; `docs_inputs_are_routed` accepts
+/// only these and routed paths, so a new literal forces a decision.
+#[cfg(test)]
+const DOCS_NOT_INPUTS: &[(&str, &str)] = &[
+    (
+        "docs/protocol/apk",
+        "directory: xtask coverage reads only its manifest.json/targets.json, routed by their own rule",
+    ),
+    (
+        "docs/protocol/apk/*/{manifest,targets}.json",
+        "text in the coverage report, not a path that is read",
+    ),
+];
+
 #[derive(Debug, Default, PartialEq, Eq)]
 struct Plan {
     api: bool,
@@ -348,11 +363,13 @@ mod tests {
             Plan::default()
         );
     }
-    /// Every `docs/` file the crates reach by a relative path (an
-    /// `include_str!`/`include_bytes!` literal, or a runtime path such as
-    /// `CARGO_MANIFEST_DIR/../../docs/cli.md`) routes to the Rust job of the
-    /// crate that uses it (Codex review on PR #4: changing an embedded
-    /// fixture alone skipped the build).
+    /// Every `docs/` path literal in the crates, whether relative
+    /// (`../../docs/x`, from `include_str!`/`include_bytes!` or
+    /// `CARGO_MANIFEST_DIR`) or root-relative (`root.join("docs/x")`), routes
+    /// to the Rust job of the crate that uses it, or is listed in
+    /// `DOCS_NOT_INPUTS` with a reason (Codex review on PR #4 and PR #5).
+    /// Prose that merely mentions a docs file (after a space or backtick) is
+    /// not a path literal.
     #[test]
     fn docs_inputs_are_routed() {
         fn sources(dir: &std::path::Path, out: &mut Vec<std::path::PathBuf>) {
@@ -372,25 +389,33 @@ mod tests {
         let mut found = 0;
         for file in files {
             let text = fs::read_to_string(&file).unwrap();
-            // Every such path leaves the crate with `../` segments, so the
-            // literal holds `../docs/`; prose mentions of `docs/` do not.
-            for (at, _) in text.match_indices("../docs/") {
-                let start = at + "../".len();
-                let Some(len) = text[start..].find('"') else {
+            for (at, _) in text.match_indices("docs/") {
+                let before = &text[..at];
+                if !(before.ends_with('"') || before.ends_with("../")) {
                     continue;
-                };
-                let path = &text[start..start + len];
+                }
+                let len = text[at..]
+                    .find(|c: char| c == '"' || c.is_whitespace())
+                    .unwrap_or(text.len() - at);
+                let path = &text[at..at + len];
                 found += 1;
+                if DOCS_NOT_INPUTS.iter().any(|(listed, _)| *listed == path) {
+                    continue;
+                }
                 let p = route(&[path]);
                 let file = file.to_str().unwrap();
                 let owned = if file.starts_with("xtask/") {
-                    p.xtask
+                    // A generated report is checked by its audit job.
+                    p.xtask || p.dependencies
                 } else if file.starts_with("crates/whatsapp-cli/") {
                     p.cli || p.api
                 } else {
                     p.api
                 };
-                assert!(owned, "{file} uses {path}, which CI does not route to it");
+                assert!(
+                    owned,
+                    "{file} uses {path}, which CI does not route to it; add it to DOCS_INPUTS, or to DOCS_NOT_INPUTS with the reason it is not read"
+                );
             }
         }
         assert!(found > 0, "run from the repository root");
