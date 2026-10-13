@@ -352,13 +352,31 @@ not a full filesystem or a power cut.
   replayed, so a reservation that did commit despite the error blocks rather
   than resends.
 - On the real session loop (`connection.rs`, injected link), a receipt
-  arriving while the disk is full is not acknowledged, and the session ends
-  with the storage error. After space returns and the store is reopened, the
-  server's redelivery is stored and acknowledged.
+  arriving while the disk is full is not acknowledged and leaves no record,
+  and the session ends with the storage error. After space returns and the
+  store is reopened, the server's redelivery is stored and acknowledged.
+- On the same loop, the outbox key-query reservation for a direct send:
+  - **Disk full at that commit:** the reservation does not persist, no query
+    is written, and after reopen the query is sent once.
+  - **Only `fsync` fails:** the reservation persists. After reopen the query
+    is never sent: it is reserved and unsettled, exactly as after a socket cut.
+
+  The fault is armed on the page that carries the reservation key, so it hits
+  that commit and no earlier one.
+
+**Test correction (same day).** The first version of the receive test set
+the fault immediately after activation. The session's post-activation
+receipt and action reservations, which commit even when nothing is pending,
+failed first, so the receipt was never processed. The test passed without
+exercising what it named. It now waits for the session's readiness signal,
+after which the worker idles until input arrives, and it asserts that the
+receipt left no record.
 
 Tests: `store::tests::a_full_disk_commits_nothing_and_a_reopen_recovers_committed_state`,
 `store::tests::a_failed_fsync_leaves_the_commit_unknown`,
-`transport::connection::tests::a_full_disk_ends_receive_without_an_ack_and_redelivery_confirms_after_reopen`.
+`store::tests::a_failed_rotation_commit_reports_an_unknown_outcome`,
+`transport::connection::tests::a_full_disk_ends_receive_without_an_ack_and_redelivery_confirms_after_reopen`,
+`transport::connection::tests::key_query_reservation_on_a_failing_disk_never_sends_unreserved_or_twice`.
 
 **Callers (static read, same day).** Every non-test store write in both
 crates was checked for code that catches a write error and then acts as if
@@ -396,8 +414,9 @@ network I/O:
   written, the new key when only `fsync` failed.
 
 **Not established:** behavior on a real full filesystem, and partial-page
-writes during a power cut. Outgoing paths under a failing commit were checked
-by reading the code, not by fault-injected tests.
+writes during a power cut. Of the outgoing paths, only the direct outbox
+key-query reservation has a fault-injected test. Group fan-out, media upload
+and registration under a failing commit were checked by reading the code.
 
 ## Validation
 

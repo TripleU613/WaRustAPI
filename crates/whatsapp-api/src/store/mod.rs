@@ -1320,20 +1320,74 @@ impl WriteTx<'_> {
 #[cfg(test)]
 pub(crate) mod full_disk {
     use super::*;
+    use std::sync::atomic::{AtomicBool, Ordering};
+
+    /// Faults shared between a test and its store's storage backend.
+    #[derive(Debug, Default)]
+    pub(crate) struct Faults {
+        full: AtomicBool,
+        sync_fails: AtomicBool,
+        /// Arms `full` (or `sync_fails` when true) as soon as a page about to
+        /// be written contains these bytes, so a fault hits exactly the
+        /// commit that writes a given plaintext key (checkpoint keys are not
+        /// blinded).
+        arm_on: std::sync::Mutex<Option<(Vec<u8>, bool)>>,
+    }
+
+    impl Faults {
+        pub(crate) fn new() -> Arc<Self> {
+            Arc::default()
+        }
+        /// Writes and file growth fail with `StorageFull`.
+        pub(crate) fn set_full(&self, on: bool) {
+            self.full.store(on, Ordering::SeqCst);
+        }
+        /// `fsync` fails; writes still reach the file.
+        pub(crate) fn set_sync_fails(&self, on: bool) {
+            self.sync_fails.store(on, Ordering::SeqCst);
+        }
+        /// Fail the commit whose pages contain `marker`: as a full disk (the
+        /// write is refused) or, with `fsync_only`, by its `fsync` after the
+        /// pages were written. Used by the `connection` session tests, which
+        /// need the transport features.
+        #[cfg_attr(
+            not(all(
+                feature = "experimental-signal-crypto",
+                feature = "experimental-noise",
+                feature = "experimental-transport"
+            )),
+            allow(dead_code)
+        )]
+        pub(crate) fn arm_on(&self, marker: &[u8], fsync_only: bool) {
+            *self.arm_on.lock().unwrap() = Some((marker.to_vec(), fsync_only));
+        }
+        fn trip(&self, data: &[u8]) {
+            let mut arm = self.arm_on.lock().unwrap();
+            let hit = arm.as_ref().is_some_and(|(marker, _)| {
+                !marker.is_empty() && data.windows(marker.len()).any(|w| w == marker)
+            });
+            if hit && let Some((_, fsync_only)) = arm.take() {
+                if fsync_only {
+                    self.set_sync_fails(true);
+                } else {
+                    self.set_full(true);
+                }
+            }
+        }
+    }
 
     /// File storage that refuses writes and growth with `StorageFull` while
-    /// `full` is set, as a full disk does, and fails `fsync` while
-    /// `sync_fails` is set; reads and shrinking pass through.
+    /// the faults say the disk is full, and fails `fsync` while they say so;
+    /// reads and shrinking pass through.
     #[derive(Debug)]
     struct FullDisk {
         inner: redb::backends::FileBackend,
-        full: Arc<std::sync::atomic::AtomicBool>,
-        sync_fails: Arc<std::sync::atomic::AtomicBool>,
+        faults: Arc<Faults>,
     }
 
     impl FullDisk {
         fn refuse(&self) -> std::io::Result<()> {
-            if self.full.load(std::sync::atomic::Ordering::SeqCst) {
+            if self.faults.full.load(Ordering::SeqCst) {
                 return Err(std::io::Error::new(
                     std::io::ErrorKind::StorageFull,
                     "simulated full disk",
@@ -1369,7 +1423,7 @@ pub(crate) mod full_disk {
             self.inner.set_len(len)
         }
         fn sync_data(&self) -> std::io::Result<()> {
-            if self.sync_fails.load(std::sync::atomic::Ordering::SeqCst) {
+            if self.faults.sync_fails.load(Ordering::SeqCst) {
                 return Err(std::io::Error::new(
                     std::io::ErrorKind::StorageFull,
                     "simulated fsync failure",
@@ -1378,6 +1432,7 @@ pub(crate) mod full_disk {
             self.inner.sync_data()
         }
         fn write(&self, offset: u64, data: &[u8]) -> std::io::Result<()> {
+            self.faults.trip(data);
             self.refuse()?;
             self.inner.write(offset, data)
         }
@@ -1394,17 +1449,14 @@ pub(crate) mod full_disk {
         );
     }
 
-    /// Open (or create) a store at `path` whose storage fails like a full disk
-    /// while `full` is set, and fails `fsync` while `sync_fails` is set.
+    /// Open (or create) a store at `path` whose storage obeys `faults`.
     pub(crate) fn open(
         path: &Path,
         account: &str,
         master: [u8; 32],
-        full: &Arc<std::sync::atomic::AtomicBool>,
-        sync_fails: &Arc<std::sync::atomic::AtomicBool>,
+        faults: &Arc<Faults>,
     ) -> Result<ProtocolStore> {
-        let full = full.clone();
-        let sync_fails = sync_fails.clone();
+        let faults = faults.clone();
         ProtocolStore::open_with(
             OpenOptions {
                 path: path.to_path_buf(),
@@ -1416,8 +1468,7 @@ pub(crate) mod full_disk {
                 let file = FsOpenOptions::new().read(true).write(true).open(path)?;
                 Database::builder().create_with_backend(FullDisk {
                     inner: redb::backends::FileBackend::new(file)?,
-                    full,
-                    sync_fails,
+                    faults,
                 })
             },
         )
@@ -1452,34 +1503,32 @@ mod tests {
     /// recovers exactly the state committed before the failure.
     #[test]
     fn a_full_disk_commits_nothing_and_a_reopen_recovers_committed_state() {
-        use std::sync::atomic::{AtomicBool, Ordering};
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("protocol.redb");
-        let full = Arc::new(AtomicBool::new(false));
-        let sync_fails = Arc::new(AtomicBool::new(false));
-        let store = full_disk::open(&path, "acct-1", [9u8; 32], &full, &sync_fails).unwrap();
+        let faults = full_disk::Faults::new();
+        let store = full_disk::open(&path, "acct-1", [9u8; 32], &faults).unwrap();
         disk_put(&store, b"kept", 16).unwrap();
-        full.store(true, Ordering::SeqCst);
+        faults.set_full(true);
         let failed = disk_put(&store, b"lost", 256 * 1024).unwrap_err();
         assert!(
             failed.to_string().contains("simulated full disk"),
             "{failed}"
         );
         assert!(disk_get(&store, b"kept"));
-        full.store(false, Ordering::SeqCst);
+        faults.set_full(false);
         let later = disk_put(&store, b"later", 16).unwrap_err();
         assert!(later.to_string().contains("Previous I/O error"), "{later}");
         drop(store);
-        full.store(true, Ordering::SeqCst);
-        let still_full = full_disk::open(&path, "acct-1", [9u8; 32], &full, &sync_fails)
+        faults.set_full(true);
+        let still_full = full_disk::open(&path, "acct-1", [9u8; 32], &faults)
             .err()
             .unwrap();
         assert!(
             still_full.to_string().contains("simulated full disk"),
             "{still_full}"
         );
-        full.store(false, Ordering::SeqCst);
-        let store = full_disk::open(&path, "acct-1", [9u8; 32], &full, &sync_fails).unwrap();
+        faults.set_full(false);
+        let store = full_disk::open(&path, "acct-1", [9u8; 32], &faults).unwrap();
         assert!(disk_get(&store, b"kept"));
         assert!(!disk_get(&store, b"lost"));
         assert!(!disk_get(&store, b"later"));
@@ -1493,13 +1542,11 @@ mod tests {
     /// "maybe committed", never "not committed" (see [`ProtocolStore::write`]).
     #[test]
     fn a_failed_fsync_leaves_the_commit_unknown() {
-        use std::sync::atomic::{AtomicBool, Ordering};
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("protocol.redb");
-        let full = Arc::new(AtomicBool::new(false));
-        let sync_fails = Arc::new(AtomicBool::new(false));
-        let store = full_disk::open(&path, "acct-1", [9u8; 32], &full, &sync_fails).unwrap();
-        sync_fails.store(true, Ordering::SeqCst);
+        let faults = full_disk::Faults::new();
+        let store = full_disk::open(&path, "acct-1", [9u8; 32], &faults).unwrap();
+        faults.set_sync_fails(true);
         let failed = disk_put(&store, b"unsynced", 16).unwrap_err();
         assert!(
             failed.to_string().contains("simulated fsync failure"),
@@ -1511,9 +1558,9 @@ mod tests {
                 .to_string()
                 .contains("Previous I/O error")
         );
-        sync_fails.store(false, Ordering::SeqCst);
+        faults.set_sync_fails(false);
         drop(store);
-        let store = full_disk::open(&path, "acct-1", [9u8; 32], &full, &sync_fails).unwrap();
+        let store = full_disk::open(&path, "acct-1", [9u8; 32], &faults).unwrap();
         assert!(
             disk_get(&store, b"unsynced"),
             "the failed commit is visible"
@@ -1527,7 +1574,6 @@ mod tests {
     /// only `fsync` failed.
     #[test]
     fn a_failed_rotation_commit_reports_an_unknown_outcome() {
-        use std::sync::atomic::{AtomicBool, Ordering};
         let old = MasterKey::from_bytes([9u8; 32]);
         let new = MasterKey::from_bytes([10u8; 32]);
         let opens_with = |path: &Path, key: &MasterKey| {
@@ -1542,13 +1588,12 @@ mod tests {
         for (fault, new_key_in_force) in [("full", false), ("fsync", true)] {
             let dir = tempfile::tempdir().unwrap();
             let path = dir.path().join("protocol.redb");
-            let full = Arc::new(AtomicBool::new(false));
-            let sync_fails = Arc::new(AtomicBool::new(false));
-            let store = full_disk::open(&path, "acct-1", [9u8; 32], &full, &sync_fails).unwrap();
+            let faults = full_disk::Faults::new();
+            let store = full_disk::open(&path, "acct-1", [9u8; 32], &faults).unwrap();
             if fault == "full" {
-                full.store(true, Ordering::SeqCst);
+                faults.set_full(true);
             } else {
-                sync_fails.store(true, Ordering::SeqCst);
+                faults.set_sync_fails(true);
             }
             let error = store
                 .rotate_master_key(&StaticKeySource::new(new.clone()))

@@ -7,7 +7,8 @@ not ACKed and ends the session; its redelivery after reopen is stored and
 ACKed. A failed `fsync` can leave a commit visible even though `write`
 returned an error, so a store write error now documents as "maybe committed".
 A read of every caller found none that sends, resends or compensates on a
-failed write. `store rotate-key` now reports a failed commit as an unknown
+failed write, and the direct outbox key-query reservation is fault-tested: a
+reservation that failed but landed is never sent after reopen. `store rotate-key` now reports a failed commit as an unknown
 outcome ("keep both keys") instead of a generic error that could lead to
 discarding the key in force.
 [Audit](docs/protocol/replay-safety-audit.md#disk-full-and-failed-commits-2026-10-13).
