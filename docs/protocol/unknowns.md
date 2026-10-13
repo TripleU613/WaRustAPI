@@ -99,6 +99,13 @@ version, and whether the server accepted the reference client that day.
 
 ## Comparison token dictionary: double-byte page 0 index 1
 
+**Resolved 2026-10-07, test completed 2026-10-13.** The checked 37.71
+`1Rl.<clinit>` evaluator replaced the heuristic 37.70 fixture; the four refuted
+page slot-1 entries are listed in [token-extraction.md](token-extraction.md).
+`every_checked_entry_decodes_from_its_wire_index_and_encodes_back` now decodes
+all 235 single and 1,024 double entries from index-constructed wire and encodes
+each back to the same bytes. The historical note follows.
+
 Observed 2026-09-20 on a block-list fetch reply: an `item` attribute name
 decoded as `B3b` where the official parser (`LX/8nc.A02`, 2.26.37.71) reads
 `active`, and the web-md-v3 fixture places `active` at double-byte page 0

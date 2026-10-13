@@ -167,6 +167,15 @@ fn update_confirmed(
     Ok(true)
 }
 /// Record authenticated login time in the same transaction as login success.
+/// Only the feature-gated connection actor calls it outside tests.
+#[cfg_attr(
+    not(all(
+        feature = "experimental-signal-crypto",
+        feature = "experimental-noise",
+        feature = "experimental-transport"
+    )),
+    allow(dead_code)
+)]
 pub(crate) fn observe_login(tx: &mut crate::store::WriteTx<'_>, node: &Node) -> Result<bool> {
     if node.description != "success" {
         return Ok(false);

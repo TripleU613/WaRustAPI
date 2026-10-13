@@ -255,6 +255,39 @@ mod tests {
     }
 
     #[test]
+    fn every_checked_entry_decodes_from_its_wire_index_and_encodes_back() {
+        use crate::binary::{Decoder, Encoder, Node};
+        use crate::profile::Limits;
+
+        // Wire bytes come from each entry's position in the 37.71 `1Rl.<clinit>`
+        // fixture (LIST_8 size 1, then the single index or page selector/index),
+        // not from the encoder under test. No entry is duplicated, so the
+        // encoder's token-first preference must reproduce exactly these bytes.
+        let dictionary = TokenDictionary::comparison_2_26_37_71();
+        let mut entries = Vec::new();
+        for (index, token) in dictionary.single.iter().enumerate().skip(1) {
+            entries.push((vec![248, 1, index as u8], token.as_str()));
+        }
+        for (page, tokens) in dictionary.double.iter().enumerate() {
+            for (index, token) in tokens.iter().enumerate() {
+                entries.push((vec![248, 1, 236 + page as u8, index as u8], token.as_str()));
+            }
+        }
+        assert_eq!(entries.len(), 235 + 4 * 256);
+        for (wire, token) in entries {
+            let node = Decoder::new(&wire, dictionary, &Limits::default())
+                .decode_node()
+                .unwrap_or_else(|error| panic!("{wire:?}: {error}"));
+            assert_eq!(node.description, token, "{wire:?}");
+            assert_eq!(
+                Encoder::new(dictionary).encode(&Node::new(token)).unwrap(),
+                [vec![0], wire.clone()].concat(),
+                "{token}"
+            );
+        }
+    }
+
+    #[test]
     fn embedded_dictionary_matches_reference_counts() {
         let d = TokenDictionary::web_md_v3();
         assert_eq!(d.version(), 3);

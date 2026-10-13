@@ -54,6 +54,9 @@ control flow and an invalid index. Codec tests decode independently constructed
 `LIST_8/page/index` nodes for all four corrected entries and check encoding back
 to those bytes, plus complete dictionary equality with the held reference.
 No test copies expected values from the implementation being tested.
+Since 2026-10-13 an exhaustive codec test also decodes every one of the 1,259
+non-null entries from wire built from its fixture position and checks that the
+token-first encoder reproduces those bytes (no entry is duplicated).
 
 ```sh
 target/debug/xtask apk-tokens /path/to/WhatsApp.apk \
