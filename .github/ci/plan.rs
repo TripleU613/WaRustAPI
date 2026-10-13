@@ -1,6 +1,71 @@
 //! Dependency-free CI routing; compiled with rustc, never Cargo.
 use std::{env, fs, io::Write, process::Command};
 
+/// Files under `docs/` that a crate compiles in with `include_str!` or
+/// `include_bytes!`. A change to one alone must still build and test that
+/// crate, although `docs/` is otherwise a non-build input; the
+/// `embedded_docs_are_routed` test fails when an embed is missing here.
+const EMBEDDED_DOCS: &[(&str, &str)] = &[
+    ("docs/api/openapi.json", "whatsapp-cli"),
+    (
+        "docs/protocol/fingerprint-native-comparison-cases.json",
+        "whatsapp-api",
+    ),
+    (
+        "docs/protocol/fingerprint-native-comparison-cases.json",
+        "whatsapp-cli",
+    ),
+    (
+        "docs/protocol/fingerprint-native-parser-cases.json",
+        "whatsapp-api",
+    ),
+    (
+        "docs/protocol/fingerprint-native-string-check.json",
+        "whatsapp-api",
+    ),
+    (
+        "docs/protocol/fingerprint-native-v3-comparison-cases.json",
+        "whatsapp-api",
+    ),
+    (
+        "docs/protocol/fingerprint-native-v3-lid-cases.json",
+        "whatsapp-api",
+    ),
+    ("docs/protocol/hybrid-kdf-vectors.json", "whatsapp-api"),
+    (
+        "docs/protocol/jid-map-row-selection-fixtures.json",
+        "whatsapp-api",
+    ),
+    ("docs/protocol/native-kem-nist-vectors.json", "whatsapp-api"),
+    ("docs/protocol/signal-wire-vectors.json", "whatsapp-api"),
+    ("docs/protocol/mex-long-parser-catch-fixture.json", "xtask"),
+    ("docs/protocol/receipt-status-order-evidence.txt", "xtask"),
+    (
+        "docs/protocol/apk/2.26.37.71-adv-details-serialization/descriptor-bit-field.txt",
+        "xtask",
+    ),
+    (
+        "docs/protocol/apk/2.26.37.71-own-device-media/document-descriptor.txt",
+        "xtask",
+    ),
+    (
+        "docs/protocol/apk/2.26.37.71-own-device-media/image-name-helper.txt",
+        "xtask",
+    ),
+    (
+        "docs/protocol/apk/2.26.37.71-token-import/conversation-descriptor.txt",
+        "xtask",
+    ),
+    (
+        "docs/protocol/apk/2.26.37.71-token-import/id-array-helper.txt",
+        "xtask",
+    ),
+    (
+        "docs/protocol/apk/2.26.37.71-token-import/presence-array-helper.txt",
+        "xtask",
+    ),
+];
+
 #[derive(Debug, Default, PartialEq, Eq)]
 struct Plan {
     api: bool,
@@ -52,6 +117,14 @@ impl Plan {
             self.xtask = true;
             self.dependencies |= path == "xtask/src/deps.rs";
             self.proto |= path == "xtask/src/proto.rs";
+        } else if EMBEDDED_DOCS.iter().any(|(doc, _)| *doc == path) {
+            for (_, owner) in EMBEDDED_DOCS.iter().filter(|(doc, _)| *doc == path) {
+                match *owner {
+                    "whatsapp-api" => self.api = true,
+                    "whatsapp-cli" => self.cli = true,
+                    _ => self.xtask = true,
+                }
+            }
         } else if path == "docs/protocol/dependency-report.md" {
             self.dependencies = true;
         } else if path == "docs/protocol/apk-coverage.json"
@@ -271,6 +344,66 @@ mod tests {
             route(&["docs/protocol/apk/2.26.37.71-core/frame-reader.txt"]),
             Plan::default()
         );
+    }
+    /// Every `include_str!`/`include_bytes!` of a `docs/` file in the crates
+    /// routes to the Rust job of the crate that embeds it (Codex review on
+    /// PR #4: changing an embedded fixture alone skipped the build).
+    #[test]
+    fn embedded_docs_are_routed() {
+        fn sources(dir: &std::path::Path, out: &mut Vec<std::path::PathBuf>) {
+            for entry in fs::read_dir(dir).unwrap() {
+                let path = entry.unwrap().path();
+                if path.is_dir() {
+                    sources(&path, out);
+                } else if path.extension().is_some_and(|e| e == "rs") {
+                    out.push(path);
+                }
+            }
+        }
+        let mut files = Vec::new();
+        for root in ["crates", "xtask"] {
+            sources(std::path::Path::new(root), &mut files);
+        }
+        let mut embedded = 0;
+        for file in files {
+            let text = fs::read_to_string(&file).unwrap();
+            for macro_name in ["include_str!(", "include_bytes!("] {
+                for (at, _) in text.match_indices(macro_name) {
+                    let rest = text[at + macro_name.len()..].trim_start();
+                    let Some(literal) = rest.strip_prefix('"').and_then(|r| r.split('"').next())
+                    else {
+                        continue;
+                    };
+                    let mut parts: Vec<&str> = Vec::new();
+                    let dir = file.parent().unwrap().to_str().unwrap();
+                    for part in dir.split('/').chain(literal.split('/')) {
+                        match part {
+                            "" | "." => {}
+                            ".." => {
+                                parts.pop();
+                            }
+                            part => parts.push(part),
+                        }
+                    }
+                    let path = parts.join("/");
+                    if !path.starts_with("docs/") {
+                        continue;
+                    }
+                    embedded += 1;
+                    let p = route(&[path.as_str()]);
+                    let file = file.to_str().unwrap();
+                    let owned = if file.starts_with("xtask/") {
+                        p.xtask
+                    } else if file.starts_with("crates/whatsapp-cli/") {
+                        p.cli || p.api
+                    } else {
+                        p.api
+                    };
+                    assert!(owned, "{file} embeds {path}, which CI does not route to it");
+                }
+            }
+        }
+        assert!(embedded > 0, "run from the repository root");
     }
     #[test]
     fn cli_is_scoped() {
