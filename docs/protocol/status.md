@@ -545,7 +545,16 @@ or a voice status heard — the same convention the chat receipts use.
 
 `transport::status_receipts` parses and records these, keeping the furthest
 state a viewer reached so that a delivery replayed from an offline queue cannot
-demote a view. `whatsapp-cli status-viewers` lists them offline. Recording is
+demote a view.
+
+**Regression and correction (2026-10-13, offline).** The offline-aggregate
+receipt branch added on 2026-10-10 follows APK 37.71 `Cmk.A03`, which treats a
+first `participants` child with `message_id` as an aggregate and throws on an
+empty list. This shape has no entries, so from 2026-10-10 every status receipt
+was refused and ended receive. It is now recognized before the aggregate branch,
+recorded and acknowledged again; an aggregate *with* entries is no longer
+mistaken for a status view. How the native client routes status receipts before
+`Cmk.A03` is not traced. [Details](replay-safety-audit.md#review-corrections-same-day). `whatsapp-cli status-viewers` lists them offline. Recording is
 one-directional: this client still sends no read receipt of its own, so learning
 that somebody viewed our status does not tell anybody that we viewed theirs.
 

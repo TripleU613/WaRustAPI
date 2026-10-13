@@ -78,19 +78,56 @@ numbered as in the audit report.
 
 | Finding | Before | Now | Test |
 |---|---|---|---|
-| F1 receipt content refused by `receipts::record` (aggregate participant type outside the seven known, bad `t`, unknown key-aggregate root, non-`item` list child, more than 256 items, bad id; same id checks on the group path) | `?` ended the session without reconnecting; the receipt was never acknowledged, so it was redelivered and ended every later session | Logged; capture kept; no ACK; receive continues | `refused_receipt_and_notification_content_does_not_end_receive` |
-| F2 `privacy_token` notification refused by `notifications::handle` (missing `t`, token count, non-bytes or oversized token, bad `sender_lid`) | Same | Same | Same test |
+| F1 receipt content refused by `receipts::record` (aggregate participant type outside the seven known, bad `t`, unknown key-aggregate root, non-`item` list child, more than 256 items, bad id; same id checks on the group path) | `?` ended the session without reconnecting; the receipt was never acknowledged, so it was redelivered and ended every later session | `receipts::validate` checks the wire content before the store; a refusal there is logged, the capture kept, no ACK, receive continues | `refused_receipt_and_notification_content_does_not_end_receive` |
+| F2 `privacy_token` notification refused by `notifications::handle` (missing `t`, token count, non-bytes or oversized token, bad `sender_lid`) | Same | Same, through `notifications::validate` | Same test |
 | F3 malformed `pq_count` | Same; documented as "refuses", not as ending receive | Same | `prekey_count_dispatch_bounds_uploads_and_skips_malformed_counts_without_ending_receive` |
 | F4 own-companion `category=peer` message whose app-state key share does not decode | `KeyShare::from_peer_message(..)?` ended the session; nothing committed | `Unsupported`, nothing committed, no confirmation (the group path already did this) | `primary_lid_prekey_without_alias_commits_once_after_authentication` (extended) |
 | F5 group view-once marked `consumed` after viewing, then redelivered | `Unsupported`: never confirmed, redelivered at every login | `Duplicate` and confirmed, as on the direct path | `consumed_group_record_is_a_duplicate_on_redelivery` |
-| F7 a devices notification naming our own LID | Treated as a contact's: a device sync queued for our own LID | Excluded like our own PN (devices.rs already excluded it elsewhere) | none added; one-line comparison |
+| F7 a devices notification naming our own LID | Treated as a contact's: a device sync queued for our own LID | Excluded like our own PN (devices.rs already excluded it elsewhere); the own-LID record is read only for a LID owner | `own_lid_devices_notification_queues_no_contact_sync` |
 | F8 `messaging-transport.md` said `Unsupported` content "should be acknowledged" | Doc only; the code never confirmed it | Doc corrected | n/a |
 
 Each new test was checked against the old behavior: with the fix reverted, it
 fails. A refused receipt or notification is still refused again when it is
 redelivered at the next login; the fix stops it ending the session, not the
-redelivery. Storage errors and post-decryption commit failures on the direct
-path still end the session, by design: they mean a rollback the caller must see.
+redelivery. Faults in our own stored rows, storage errors and post-decryption
+commit failures on the direct path still end the session, by design: they mean
+a rollback or a local integrity problem the operator must see.
+
+### Review corrections (same day)
+
+An independent review of the first version of these fixes found three
+problems, now corrected. All are traced in code and tested offline; none was
+seen live.
+
+- **Integrity faults were hidden as content refusals.** The first version
+  caught every `InvalidInput` from `receipts::record` and
+  `notifications::handle`, including ones raised *inside* the write transaction
+  about our stored rows (a corrupt outbox entry, two entries sharing a wire ID,
+  damaged saved facts or token timestamps). Every later receipt would then have
+  been left unacknowledged while `listen` looked healthy. Now the content checks
+  are pure functions (`receipts::validate`, `notifications::validate`) that the
+  recording paths themselves call first (`direct_target`,
+  `group_receipts::target`), so validation and recording cannot disagree, and
+  the loop catches only that stage. Test:
+  `corrupt_stored_rows_still_end_receive_on_a_valid_receipt`.
+- **Status receipts had been ending receive since 2026-10-10.** The status
+  receipt observed live on 2026-09-24 is `<participants message_id=<status
+  id>/>` with **no** entries ([status](status.md#views-status-receipts-observed-2026-09-24)).
+  The offline-aggregate branch added on 2026-10-10 follows APK 37.71
+  `Cmk.A03`, which throws "empty participant list" on that shape, so from then
+  on every status receipt ended the session; with the first version of this
+  fix it was left unacknowledged instead, while its viewer row was still
+  recorded. Now an entry-less `participants message_id` that `status_receipts`
+  recognizes (a user viewer, delivery/read/played) is recorded as a status view
+  and acknowledged, as it was before 2026-10-10, and adds no chat fact. The
+  native status dispatch, which must run before `Cmk.A03`, is **not traced**.
+  Status recording now also requires the receipt to be accepted. Test:
+  `observed_status_receipt_is_recorded_and_acknowledged`.
+- **A direct offline aggregate could be filed as a status view.**
+  `status_receipts::parse` accepted any `participants message_id` child; with
+  entries it is a chat message's aggregate whose root `from` is the chat. It
+  now requires the entry-less shape. Test:
+  `an_aggregate_with_entries_is_not_a_status_view`.
 
 ### Open (recorded, not changed)
 
@@ -134,6 +171,7 @@ path still end the session, by design: they mean a rollback the caller must see.
 - Receipt ACKs follow the recorded facts; unsupported receipt types stay
   unacknowledged. `record_ack` and `status_receipts::record` fail only on
   storage or our own stored rows, never on peer content, so they still propagate.
+  `status_receipts::record` runs only for an accepted receipt.
 - Notifications are durable before their ACK: identity, group dirty, privacy
   token, contact device sync. The prekey count ACK precedes its upload, as
   documented.

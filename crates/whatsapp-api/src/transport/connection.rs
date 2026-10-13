@@ -574,16 +574,22 @@ pub(crate) async fn drive(
                     }
                 }
                 let received = super::inbox::process_with_policy(&store, &account, &node, &capture, config.transport.identity_changes).await?;
-                // A receipt, privacy-token or prekey-count stanza whose content
-                // this client refuses is already captured; it stays without ACK
-                // but must not end the session. The server redelivers it at
-                // every login, so ending here would stop all receiving for good
-                // (receive audit F1-F3, docs/protocol/replay-safety-audit.md).
-                // Storage errors still propagate.
-                let receipt_recorded = match super::receipts::record(&store, &node) {
-                    Ok(_) => true,
+                // A receipt, privacy-token or prekey-count stanza whose wire
+                // content this client refuses is already captured; it stays
+                // without ACK but must not end the session. The server
+                // redelivers it at every login, so ending here would stop all
+                // receiving for good (receive audit F1-F3,
+                // docs/protocol/replay-safety-audit.md). Only the pure
+                // validation stage is caught: once it passes, a refusal from
+                // recording concerns our stored rows (a corrupt outbox entry,
+                // an ambiguous wire ID) and ends the session visibly.
+                let receipt_recorded = match super::receipts::validate(&node) {
+                    Ok(()) => {
+                        super::receipts::record(&store, &node)?;
+                        true
+                    }
                     Err(Error::InvalidInput { field, reason }) => {
-                        tracing::warn!(field, reason, "receipt refused locally; captured without ACK; session continues");
+                        tracing::warn!(field, reason, "receipt content refused; captured without ACK; session continues");
                         false
                     }
                     Err(error) => return Err(error),
@@ -591,15 +597,19 @@ pub(crate) async fn drive(
                 super::receipts::record_ack(&store, &node)?;
                 // Who has received or viewed a status we posted. Recording it
                 // sends nothing: this is their report about our status, not a
-                // read receipt we emit for theirs.
-                if let Some(receipt) = super::status_receipts::parse(&node) {
+                // read receipt we emit for theirs. Only for an accepted receipt,
+                // so nothing is recorded from a stanza left unacknowledged.
+                if receipt_recorded && let Some(receipt) = super::status_receipts::parse(&node) {
                     super::status_receipts::record(&store, &receipt)?;
                 }
-                match super::notifications::handle(&store, &node) {
-                    Ok(Some(ack)) => link.send(&ack).await?,
-                    Ok(None) => {}
+                match super::notifications::validate(&node) {
+                    Ok(()) => {
+                        if let Some(ack) = super::notifications::handle(&store, &node)? {
+                            link.send(&ack).await?;
+                        }
+                    }
                     Err(Error::InvalidInput { field, reason }) => {
-                        tracing::warn!(field, reason, "notification refused locally; captured without ACK; session continues");
+                        tracing::warn!(field, reason, "notification content refused; captured without ACK; session continues");
                     }
                     Err(error) => return Err(error),
                 }
@@ -610,8 +620,14 @@ pub(crate) async fn drive(
                     // not implemented: captured and acknowledged only.
                     let own = account.own_jid.as_ref().map(|j| j.to_non_ad());
                     // Our own LID is ours too (devices.rs excludes it likewise);
-                    // never queue a contact device sync for it.
-                    let own_lid = super::group_send::own_lid(&store)?;
+                    // never queue a contact device sync for it. Read only for a
+                    // LID owner, as inbox.rs does: a damaged own-LID record
+                    // must not end receive on every PN devices notification.
+                    let own_lid = if change.owner.server == crate::model::jid::Server::Lid {
+                        super::group_send::own_lid(&store)?
+                    } else {
+                        None
+                    };
                     if own.as_ref() != Some(&change.owner) && own_lid.as_ref() != Some(&change.owner) {
                         // Capture already committed above. Record pending work
                         // before ACK so a socket cut cannot silently lose it.
@@ -1762,6 +1778,135 @@ mod tests {
         let (ack, reply) = fake.written().await;
         assert_eq!(ack.description, "ack");
         reply.send(Ok(())).unwrap();
+        fake.stop_cleanly().await;
+    }
+
+    /// The status-receipt shape observed live on 2026-09-24 (an empty
+    /// `<participants message_id/>`) is recorded and acknowledged. Since the
+    /// offline-aggregate branch (2026-10-10) it had been refused as an empty
+    /// aggregate, which ended receive at every status receipt. An aggregate
+    /// with a refused entry stays unacknowledged and records no status view.
+    #[tokio::test]
+    async fn observed_status_receipt_is_recorded_and_acknowledged() {
+        use super::super::status_receipts;
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("status-receipt.redb"));
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        fake.deliver(
+            Node::new("receipt")
+                .attr("from", peer())
+                .attr("id", "STATUS-RECEIPT")
+                .attr("type", "read")
+                .attr("t", "1700000000")
+                .children(vec![
+                    Node::new("participants").attr("message_id", "OUR-STATUS"),
+                ]),
+        )
+        .await;
+        let (ack, reply) = fake.written().await;
+        assert_eq!(ack.description, "ack");
+        assert_eq!(
+            ack.get_attr("id").and_then(|v| v.as_text()),
+            Some("STATUS-RECEIPT")
+        );
+        reply.send(Ok(())).unwrap();
+        let views = status_receipts::list(&store, Some("OUR-STATUS")).unwrap();
+        assert_eq!(views.len(), 1);
+        assert_eq!(views[0].kind, status_receipts::StatusReceiptKind::Read);
+
+        fake.deliver(
+            Node::new("receipt")
+                .attr("from", peer())
+                .attr("id", "BAD-AGGREGATE")
+                .children(vec![
+                    Node::new("participants")
+                        .attr("message_id", "OUR-MESSAGE")
+                        .children(vec![
+                            Node::new("user")
+                                .attr("jid", peer())
+                                .attr("type", "not-a-type")
+                                .attr("t", "1700000000"),
+                        ]),
+                ]),
+        )
+        .await;
+        fake.nothing_written(Duration::from_millis(100)).await;
+        assert!(
+            status_receipts::list(&store, Some("OUR-MESSAGE"))
+                .unwrap()
+                .is_empty()
+        );
+        fake.stop_cleanly().await;
+    }
+
+    /// Only the receipt's wire content is refused without ending receive. A
+    /// fault in our own stored rows (here a corrupt outbox entry the receipt
+    /// lookup scans) still ends the session with the error, rather than
+    /// leaving every later receipt silently unacknowledged.
+    #[tokio::test]
+    async fn corrupt_stored_rows_still_end_receive_on_a_valid_receipt() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("corrupt-outbox.redb"));
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Outbox,
+                    b"corrupt-row",
+                    1,
+                    &serde_json::json!("not an outbox entry"),
+                )
+            })
+            .unwrap();
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        fake.deliver(
+            Node::new("receipt")
+                .attr("from", peer())
+                .attr("id", "VALID-RECEIPT")
+                .attr("t", "1700000000"),
+        )
+        .await;
+        let error = fake.finished().await.unwrap_err();
+        assert!(error.to_string().contains("invalid saved outbox entry"));
+    }
+
+    /// A devices notification naming our own LID is ours, like our own PN: it
+    /// is acknowledged without queueing a contact device sync (receive audit F7).
+    #[tokio::test]
+    async fn own_lid_devices_notification_queues_no_contact_sync() {
+        use super::super::devices::pending_users;
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("own-lid-devices.redb"));
+        let own_lid = Jid::parse("99999999@lid").unwrap();
+        store
+            .write(|tx| super::super::group_send::record_own_lid(tx, &own_lid))
+            .unwrap();
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        fake.deliver(
+            Node::new("notification")
+                .attr("type", "devices")
+                .attr("id", "OWN-DEVICES")
+                .attr("from", own_lid.clone())
+                .children(vec![Node::new("add").attr("device_hash", "2:x").children(
+                    vec![
+                        Node::new("device")
+                            .attr("jid", own_lid.with_device(3))
+                            .attr("key-index", "1"),
+                    ],
+                )]),
+        )
+        .await;
+        let (ack, reply) = fake.written().await;
+        assert_eq!(ack.description, "ack");
+        assert_eq!(
+            ack.get_attr("type").and_then(|v| v.as_text()),
+            Some("devices")
+        );
+        reply.send(Ok(())).unwrap();
+        fake.nothing_written(Duration::from_millis(100)).await;
+        assert!(pending_users(&store).unwrap().is_empty());
         fake.stop_cleanly().await;
     }
 

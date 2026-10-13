@@ -64,18 +64,59 @@ use crate::{
 /// Apply supported trusted-contact tokens atomically. This does not fabricate
 /// Signal identity mappings, acknowledge unknown notifications, or apply app-state.
 pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
+    let Some((key, updates)) = parse(node)? else {
+        return Ok(0);
+    };
+    store.write(|tx| {
+        let mut count = 0;
+        for (time, bytes) in updates {
+            let saved: Option<serde_json::Value> =
+                tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?;
+            if let Some(saved) = saved {
+                let old = saved["timestamp"].as_u64().ok_or_else(|| {
+                    Error::invalid("notification", "invalid saved token timestamp")
+                })?;
+                if old >= time {
+                    continue;
+                }
+            }
+            tx.put_json(
+                Table::Checkpoints,
+                key.as_bytes(),
+                1,
+                &serde_json::json!({"timestamp":time,"token":bytes}),
+            )?;
+            count += 1;
+        }
+        Ok(count)
+    })
+}
+
+/// The wire-content checks [`record`] makes, without the store: missing or
+/// invalid `t`, token list shape, token bytes or size, `sender_lid`. A refusal
+/// here is the stanza's own (receive audit F2); once this passes, anything
+/// [`handle`] raises concerns the stored token row or storage.
+pub fn validate(node: &Node) -> Result<()> {
+    parse(node).map(|_| ())
+}
+
+/// Checkpoint key and `(timestamp, token)` updates.
+type TokenUpdates<'a> = (String, Vec<(u64, &'a bytes::Bytes)>);
+
+/// The updates to apply, or `None` for a notification this path does not record.
+fn parse(node: &Node) -> Result<Option<TokenUpdates<'_>>> {
     if node.description != "notification"
         || node.get_attr("type").and_then(|v| v.as_text()) != Some("privacy_token")
     {
-        return Ok(0);
+        return Ok(None);
     }
     if node.get_attr("participant").is_some() || node.get_attr("recipient").is_some() {
-        return Ok(0);
+        return Ok(None);
     }
     let Some(from) = jid(node, "from").filter(|v| {
         !v.user.is_empty() && matches!(v.server, Server::User | Server::Lid) && v.device == 0
     }) else {
-        return Ok(0);
+        return Ok(None);
     };
     let target = if node.get_attr("sender_lid").is_some() {
         jid(node, "sender_lid")
@@ -129,30 +170,10 @@ pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
         };
         updates.push((time, bytes));
     }
-    let key = format!("incoming-trusted-contact:{target}");
-    store.write(|tx| {
-        let mut count = 0;
-        for (time, bytes) in updates {
-            let saved: Option<serde_json::Value> =
-                tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?;
-            if let Some(saved) = saved {
-                let old = saved["timestamp"].as_u64().ok_or_else(|| {
-                    Error::invalid("notification", "invalid saved token timestamp")
-                })?;
-                if old >= time {
-                    continue;
-                }
-            }
-            tx.put_json(
-                Table::Checkpoints,
-                key.as_bytes(),
-                1,
-                &serde_json::json!({"timestamp":time,"token":bytes}),
-            )?;
-            count += 1;
-        }
-        Ok(count)
-    })
+    Ok(Some((
+        format!("incoming-trusted-contact:{target}"),
+        updates,
+    )))
 }
 
 #[cfg(test)]

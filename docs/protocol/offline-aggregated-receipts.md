@@ -86,7 +86,19 @@ A refusal ends only that receipt, not receive (2026-10-13, receive audit F1 in
 the capture stays, no ACK is written, and `drive` continues. Before this, the
 `InvalidInput` ended the session without reconnecting, and because the receipt
 was never acknowledged the server redelivered it at every login, ending each
-later session on the same stanza. Storage errors still end the session.
+later session on the same stanza. Only the wire content is refused this way
+(`receipts::validate`, the same parsers `record` uses); a fault in our stored
+rows, such as a corrupt outbox entry, or a storage error still ends the session.
+
+**Status-receipt exception (2026-10-13).** `Cmk.A03` throws on an empty
+`participants message_id` list, and this branch does too, with one exception:
+the entry-less shape observed live as a viewer's receipt for our status
+([status](status.md#views-status-receipts-observed-2026-09-24)), recognized by
+`status_receipts` (user viewer; delivery, read or played). It is recorded as a
+status view and acknowledged, and adds no chat fact. From 2026-10-10 until this
+correction it was refused as an empty aggregate, which ended receive at every
+status receipt. Where the native client dispatches status receipts before
+`Cmk.A03` is **not traced**.
 
 **Existing authority remains required:** direct participant observations need
 an immutable original target snapshot and matching saved chat/user/device;

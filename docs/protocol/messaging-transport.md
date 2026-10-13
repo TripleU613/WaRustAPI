@@ -811,9 +811,14 @@ type, bad `t`, oversized list), a `privacy_token` notification
 `InvalidInput` ended the session without reconnecting; the stanza was never
 acknowledged, so the server redelivered it and every later `listen` ended on it.
 `drive` now logs these, keeps the capture, writes no ACK or confirmation, and
-continues, as group dirty and identity notifications already did. The key share
-maps to `Unsupported` with nothing committed, as on the group path. Storage
-errors and post-decryption commit failures on the direct path still propagate.
+continues. Only the pure wire-content stage is caught (`receipts::validate`,
+`notifications::validate`, the `pq_count` parse), as with group dirty and
+identity notifications, whose checks also run before any store access; a fault
+in our own stored rows found while recording still ends the session. The key
+share maps to `Unsupported` with nothing committed, as on the group path.
+Storage errors and post-decryption commit failures on the direct path still
+propagate. The status-receipt shape observed on 2026-09-24, which the
+2026-10-10 aggregate branch had refused, is recorded and acknowledged again.
 A redelivered receipt or notification is refused again at the next login; this
 change stops it ending the session, not the redelivery. Audit and the findings
 left open: [replay-safety-audit](replay-safety-audit.md#receive-side-audit-2026-10-13).

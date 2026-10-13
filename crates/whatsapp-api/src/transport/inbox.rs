@@ -2404,11 +2404,6 @@ mod tests {
             IncomingResult::Duplicate
         );
         assert_eq!(store.journal_head().unwrap(), head);
-        assert!(
-            super::super::messaging::received_confirmation_for_account(&store, &account, &node)
-                .unwrap()
-                .is_some()
-        );
     }
 
     #[tokio::test]

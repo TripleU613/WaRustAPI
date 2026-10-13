@@ -85,7 +85,7 @@ operation's `x-library`.
 | Group management (create, info, refresh, add/remove, promote/demote, subject, description, invite, leave) | create reply observed 2026-09-22; info and batch refresh live (2026-10-07); add/remove/promote/demote/subject/description/invite/leave not live-verified | `group …` | [groups](protocol/groups.md), [live record](protocol/groups.md#live-record), [queued replies](protocol/groups.md#apply-queued-replies-during-receiving-2026-10-07) | Live verification per action; the first create (2026-09-20) preceded stream:error 503 and the account's 403 suspension (causal role unknown); unsolicited group notifications unverified |
 | Communities | absent (complete group replies classify parent/linked_subgroup/default_subgroup/general_chat) | — (`group list --json` shows group_type/linked_parent) | [groups](protocol/groups.md#complete-reply-group-classification-and-subject-alias-boundary-2026-10-07) | Community create/link/announcement not researched |
 | Channels (newsletters) | parked | — | — | Owner deferred |
-| Status receive, viewers, likes received | live | `status-viewers` | [status](protocol/status.md) | — |
+| Status receive, viewers, likes received | live (viewers observed 2026-09-24) | `status-viewers` | [status](protocol/status.md) | Viewer receipts were refused, ending `listen`, from 2026-10-10 until the 2026-10-13 offline fix ([details](protocol/status.md#views-status-receipts-observed-2026-09-24)); not re-verified live |
 | Status post text | live | `lab-transport --message` (private JSON `status`) | same | — |
 | Status post image | acked as text earlier; media form not yet live | `lab-transport --message` (private JSON `status`) | same | Live check |
 | Status like send, audio, HD dual upload | absent | — | same | — |

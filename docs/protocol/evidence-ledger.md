@@ -1,3 +1,15 @@
+2026-10-13 — **Corrected/offline (review of the receive-audit fixes):** the
+first version caught every refusal from recording a receipt or token
+notification, which would also have hidden faults in our own stored rows (a
+corrupt outbox entry) behind silently unacknowledged receipts. Now only pure
+wire-content validation, shared with the recording code, is caught; stored-row
+faults still end the session. The review also found that status receipts had
+been ending `listen` since the 2026-10-10 aggregate branch: the shape observed
+live has an empty `participants` list, which that branch refuses. It is
+recorded and acknowledged again, and an aggregate with entries is no longer
+filed as a status view. Own-LID devices handling now has a test. Not seen live.
+[Corrections](replay-safety-audit.md#review-corrections-same-day).
+
 2026-10-13 — **Implemented/offline (HTTP):** `serve --store-routes` now also
 serves four counts-only inspections, the same library calls and JSON as the
 CLI: `GET /v1/diagnostics/own-lid`, and `/v1/groups/receipts?request_id=`,
