@@ -235,6 +235,22 @@ message builder copying `0Zi.expiration` into `ContextInfo.expiration` (25)
 is retained. The next APK trace is a `0Fs.A0J` caller on the compose/send path
 that writes `BWx`.
 
+**What is established without that trace:** native senders do set it.
+**Observed** live (recorded in
+[messaging-transport](messaging-transport.md#quoted-replies-comparison-2263771)):
+the handset's messages in a chat with a disappearing timer, including a quoted
+reply, carried the chat's timer in `contextInfo` field 25, "as already used for
+disappearing-timer context". Our receive path reads that field and keeps the
+message's expiry (`transport::quotes`). So without it our messages do not
+disappear on the recipient's side, a visible privacy difference. **Why it is
+still not sent:** this client keeps no per-chat timer state at all
+([own-device-timer](own-device-timer.md): chat and default state are not
+reproduced), and the native rule for which timer applies (the chat setting
+versus the default timer, and `0Zi.ephemeralSettingTimestamp` ordering
+against a peer's change) is untraced. The prerequisite is local per-chat timer
+state built from sent and received timer changes, with that precedence traced;
+only then can field 25 be set on outgoing content.
+
 ## Document and video sending (2026-10-13)
 
 **What retained 2.26.37.71 evidence covers:** the document and video schemas
