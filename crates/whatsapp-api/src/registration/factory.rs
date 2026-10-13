@@ -440,6 +440,19 @@ impl ComparisonRequestFactory for StoredComparisonRequestFactory {
         tx.put_json(Table::Account, MATERIAL_KEY, RECORD_VERSION, &record)
     }
 
+    /// The saved material record exactly as stored: a token correction
+    /// replaces it inside the reservation, and a request that never left puts
+    /// it back (registration safety audit review M2, 2026-10-13).
+    fn prepared_snapshot(&self, tx: &WriteTx<'_>) -> Result<Option<Zeroizing<Vec<u8>>>> {
+        Ok(tx
+            .get(Table::Account, MATERIAL_KEY, RECORD_VERSION)?
+            .map(Zeroizing::new))
+    }
+
+    fn restore_prepared(&self, tx: &mut WriteTx<'_>, snapshot: Zeroizing<Vec<u8>>) -> Result<()> {
+        tx.put(Table::Account, MATERIAL_KEY, RECORD_VERSION, &snapshot)
+    }
+
     fn code_request(&self, attempt: &RegistrationAttempt) -> Result<EncodedRegistrationRequest> {
         let method = match attempt.method {
             ChallengeMethod::Sms => "sms",
@@ -785,11 +798,11 @@ mod tests {
     }
 
     /// A corrected-token retry that never left restores the `bad_token`
-    /// refusal, but its one-shot stays spent: the reservation already saved the
-    /// corrected token, so the same correction could not be repeated anyway.
+    /// refusal and the saved token together and releases its one-shot, so the
+    /// same correction can be sent once the network is back (review M2).
     #[tokio::test]
     #[cfg(feature = "experimental-registration-https")]
-    async fn a_not_sent_correction_restores_the_refusal_and_keeps_its_one_shot() {
+    async fn a_not_sent_correction_is_undone_and_can_be_sent_later() {
         use crate::registration::BlockedReason;
         let dir = tempfile::tempdir().unwrap();
         let store = open(dir.path());
@@ -834,17 +847,74 @@ mod tests {
         let saved = service.current().await.unwrap().unwrap();
         assert_eq!(saved.state, refusal);
         assert!(saved.refused_at_code_request());
-        let again = service
+        let token = store
+            .read(|tx| tx.get_json::<Material>(Table::Account, MATERIAL_KEY, RECORD_VERSION))
+            .unwrap()
+            .unwrap()
+            .config
+            .token;
+        assert_eq!(token, config().token, "the saved token is the original");
+        // Released with the material: the same correction is accepted again
+        // (and again fails to connect here), still once per attempt.
+        assert!(matches!(
+            service.retry_corrected_token_once(config().phone).await,
+            Err(Error::RequestNotSent(_))
+        ));
+        assert_eq!(
+            *transport.0.lock().unwrap(),
+            2,
+            "two attempts, neither left"
+        );
+        // A correction that reached the server keeps its one-shot spent, even
+        // when the server refuses the corrected token again.
+        let sent_transport = Arc::new(BadTokenTransport);
+        let mut corrected = config();
+        corrected.token = Zeroizing::new("corrected-token".into());
+        let sent = RegistrationService::new(
+            store.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(
+                Arc::new(
+                    StoredComparisonRequestFactory::new_for_token_correction(
+                        store.clone(),
+                        corrected,
+                    )
+                    .unwrap(),
+                ),
+                sent_transport,
+            )),
+        );
+        sent.retry_corrected_token_once(config().phone)
+            .await
+            .unwrap();
+        assert_eq!(sent.current().await.unwrap().unwrap().state, refusal);
+        let again = sent
             .retry_corrected_token_once(config().phone)
             .await
             .unwrap_err()
             .to_string();
         assert!(again.contains("one-shot"), "{again}");
-        assert_eq!(
-            *transport.0.lock().unwrap(),
-            1,
-            "one attempt, which never left"
-        );
+    }
+
+    /// Answers every code request with HTTP 200 `bad_token`.
+    #[cfg(feature = "experimental-registration-https")]
+    #[derive(Debug)]
+    struct BadTokenTransport;
+
+    #[cfg(feature = "experimental-registration-https")]
+    impl RegistrationTransport for BadTokenTransport {
+        fn send<'a>(
+            &'a self,
+            request: EncodedRegistrationRequest,
+        ) -> RegistrationTransportFuture<'a> {
+            Box::pin(async move {
+                assert!(request.url().ends_with("/v2/code"));
+                RegistrationHttpResponse::new(
+                    200,
+                    Zeroizing::new(br#"{"status":"fail","reason":"bad_token"}"#.to_vec()),
+                )
+            })
+        }
     }
 
     /// The same saved refusal shape reached from an OTP submission (`verifying

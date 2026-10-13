@@ -182,7 +182,11 @@ impl RegistrationService {
                     RegistrationState::RegistrationOutcomeUnknown { step: 0 },
                     prior,
                     method,
-                    Some(latch),
+                    // Consent prepares nothing, so its latch can go alone.
+                    Undo {
+                        latch: Some(latch),
+                        material: None,
+                    },
                     error,
                 )
                 .await

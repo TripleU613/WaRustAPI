@@ -3,17 +3,17 @@ a second review found gaps in the fixes below, now corrected. A `/v2/exist`
 preflight that had reached the server was restored as "not sent" when the code
 request after it failed to connect, so a retry sent another preflight with a
 higher attempts counter; both requests are now built before either is sent, and
-a failure after a sent preflight records an unknown outcome. The code-request
-one-shots keep their latch when not sent (their corrected material is already
-saved). `resume-email-challenge` resumes a lost email-code request only when
+a failure after a sent preflight records an unknown outcome. A diagnostic or
+correction that never left now restores its refusal and the saved material
+together and releases its one-shot (before, the corrected token stayed saved,
+so the released one-shot refused). `resume-email-challenge` resumes a lost email-code request only when
 the server's answer arrived unreadable, never after a timeout or reset.
 `lab-signup begin` refuses a store with no attempt unless it was created for
 that number (`accounts new` and `--create-store` record the owner), so an empty
 store another command created, or a mismatched `--config`, cannot start a fresh
 identity. `accounts new` compares numbers canonically and is not blinded by
-one malformed profile. Open: a not-sent correction strands its refusal; a
-restored first `begin` reads as `cooling_down`; attempts from an older pinned
-version cannot be reset. [Audit](registration-safety-audit.md#review-corrections-2026-10-13).
+one malformed profile. Open: a restored first `begin` reads as `cooling_down`;
+attempts from an older pinned version cannot be reset. [Audit](registration-safety-audit.md#review-corrections-2026-10-13).
 
 2026-10-13 — **Fixed/offline (registration: stores and status):** `lab-signup
 begin` no longer creates a missing store unless `--create-store` is given;

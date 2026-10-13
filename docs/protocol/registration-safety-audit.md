@@ -124,10 +124,17 @@ now corrected:
   the corrected material inside their reservation. The not-sent restore put
   the refusal back and released the latch, but kept the material, so a second
   run refused with "corrected token must differ from the saved token". The
-  one-shot reservations (diagnostics, corrections, `resume-preflight`) now keep
-  their latch when restored. This changes nothing that can be sent; the
-  attempt stays stranded (open below). Test:
-  `a_not_sent_correction_restores_the_refusal_and_keeps_its_one_shot`.
+  one-shot reservations (diagnostics, corrections, `resume-preflight`) now read
+  the saved material record in the reservation transaction before `prepare`
+  runs (`prepared_snapshot`, held in memory only) and a not-sent restore writes
+  it back in the same transaction as the refusal (`restore_prepared`), then
+  releases the latch. A flow that cannot snapshot keeps its latch spent. A crash
+  while the request is in flight still leaves `preparing`, refused by every
+  command, as before. A request that may have reached the server keeps the
+  corrected material and the latch spent. Test:
+  `a_not_sent_correction_is_undone_and_can_be_sent_later` (two not-sent runs
+  reach the transport; after a `bad_token` answer to a sent correction, a third
+  run is refused as already reserved).
 - **M3. The email lost-request recovery could re-send an uncertain request.**
   It accepted any `outcome_unknown` reached from `email_challenge_required`,
   including a timeout or reset after the request was written. An email-code
@@ -171,17 +178,14 @@ written; handshake failures and the overall timeout are not connect errors).
 
 ## Confirmed open
 
-- **A not-sent correction strands its refusal** (review M2). The corrected
-  material saved by the reservation is not reverted and the latch stays used,
-  so the corrected request can never be sent from that store. Before the
-  not-sent work the same failure recorded an unknown outcome, equally stranded.
-  The fix is a factory hook that snapshots and reverts corrected material on a
-  not-sent restore (or applies it only after a definite send); not made.
 - **A restored fresh `begin` reads as a server cooldown** (review L2). Restoring
   a first `begin` saves `CoolingDown{until: now}`, shown as `cooling_down` with
   history `preparing -> cooling_down`, indistinguishable from a server wait.
-  Each not-sent failure also uses two of the 64 history entries; after about 30,
-  the preflight and diagnostics that need complete history can no longer build.
+  Each not-sent failure also uses two or three of the 64 history entries; after
+  about 25, the preflight and diagnostics that need complete history can no
+  longer build. Each also counts as a preparation in the `/v2/exist`
+  preflight's `client_metrics.attempts`, though nothing left; whether the APK
+  counts such local failures is not traced.
 - **Attempts from an older pinned version cannot be cleared** (review L3). The
   ordinary profile id is `android-primary/<version_name>`; after the pin
   changes, a previous version's attempt can be neither replaced (`begin`

@@ -478,6 +478,16 @@ fn not_built(error: Error) -> Error {
     }
 }
 
+/// What a not-sent restore undoes besides the attempt's state: the one-shot
+/// latch its reservation took, and the request material its `prepare` changed
+/// (registration safety audit review M2, 2026-10-13). A latch is released only
+/// together with the material it guards, or where nothing was prepared.
+#[derive(Default)]
+struct Undo {
+    latch: Option<&'static [u8]>,
+    material: Option<Zeroizing<Vec<u8>>>,
+}
+
 const STORE_OWNER_KEY: &[u8] = b"store-owner";
 
 /// The number this store was created for (`accounts new`, or an explicit
@@ -641,6 +651,22 @@ pub trait RegistrationFlow: Send + Sync + fmt::Debug {
     /// are committed.
     fn prepare(&self, tx: &mut WriteTx<'_>, attempt: &RegistrationAttempt) -> Result<()>;
 
+    /// The saved request material a correcting `prepare` may change, read in
+    /// the reservation transaction just before it runs. Held in memory only,
+    /// so a request that provably never left can be undone exactly
+    /// ([`Self::restore_prepared`]). `None`: this flow cannot undo `prepare`.
+    fn prepared_snapshot(&self, _tx: &WriteTx<'_>) -> Result<Option<Zeroizing<Vec<u8>>>> {
+        Ok(None)
+    }
+
+    /// Put back a [`Self::prepared_snapshot`] in the restoring transaction.
+    fn restore_prepared(&self, _tx: &mut WriteTx<'_>, _snapshot: Zeroizing<Vec<u8>>) -> Result<()> {
+        Err(Error::invalid(
+            "registration_state",
+            "flow cannot restore prepared material",
+        ))
+    }
+
     /// Request the first challenge. Returns the next state (typically
     /// `ChallengePending`, `CoolingDown` or `Blocked`) and any atomic account
     /// update.
@@ -785,6 +811,19 @@ pub trait ComparisonRequestFactory: Send + Sync + fmt::Debug {
     }
     /// Persist keys and identifiers needed by later request construction.
     fn prepare(&self, tx: &mut WriteTx<'_>, attempt: &RegistrationAttempt) -> Result<()>;
+
+    /// See [`RegistrationFlow::prepared_snapshot`].
+    fn prepared_snapshot(&self, _tx: &WriteTx<'_>) -> Result<Option<Zeroizing<Vec<u8>>>> {
+        Ok(None)
+    }
+
+    /// See [`RegistrationFlow::restore_prepared`].
+    fn restore_prepared(&self, _tx: &mut WriteTx<'_>, _snapshot: Zeroizing<Vec<u8>>) -> Result<()> {
+        Err(Error::invalid(
+            "registration_state",
+            "factory cannot restore prepared material",
+        ))
+    }
 
     /// Build a `/v2/challenge` request (email second factor).
     fn challenge_request(
@@ -1069,6 +1108,12 @@ impl RegistrationFlow for ComparisonHttpFlow {
     fn prepare(&self, tx: &mut WriteTx<'_>, attempt: &RegistrationAttempt) -> Result<()> {
         self.requests.prepare(tx, attempt)
     }
+    fn prepared_snapshot(&self, tx: &WriteTx<'_>) -> Result<Option<Zeroizing<Vec<u8>>>> {
+        self.requests.prepared_snapshot(tx)
+    }
+    fn restore_prepared(&self, tx: &mut WriteTx<'_>, snapshot: Zeroizing<Vec<u8>>) -> Result<()> {
+        self.requests.restore_prepared(tx, snapshot)
+    }
 
     fn begin<'a>(&'a self, attempt: &'a RegistrationAttempt) -> RegistrationFuture<'a> {
         Box::pin(async move {
@@ -1322,8 +1367,9 @@ impl RegistrationService {
     /// Record a failed request. A request that provably did not leave
     /// (`Error::RequestNotSent`) returns the attempt to `prior`, its state
     /// before the reservation, through a legal transition, restoring `method`
-    /// (a resend may have changed it) and releasing `release`, a one-shot latch
-    /// the reservation took. Recording `outcome_unknown` for it stranded the
+    /// (a resend may have changed it) and applying `undo`: the material the
+    /// reservation's `prepare` changed and the one-shot latch it took, in the
+    /// same transaction. Recording `outcome_unknown` for it stranded the
     /// attempt, since the HTTPS flow has no reconciliation (registration safety
     /// audit, 2026-10-13). Any other failure may have reached the server and is
     /// recorded as `unknown`. The error is returned either way.
@@ -1335,7 +1381,7 @@ impl RegistrationService {
         unknown: RegistrationState,
         prior: RegistrationState,
         method: ChallengeMethod,
-        release: Option<&'static [u8]>,
+        undo: Undo,
         error: Error,
     ) -> Result<RegistrationStep> {
         if !matches!(error, Error::RequestNotSent(_)) {
@@ -1349,6 +1395,7 @@ impl RegistrationService {
             return Err(error);
         }
         let (attempt_id, generation) = (attempt.id, attempt.generation);
+        let flow = self.flow.clone();
         self.store
             .run_blocking(move |s| {
                 s.write(|tx| {
@@ -1367,7 +1414,10 @@ impl RegistrationService {
                     }
                     current.method = method;
                     current.transition(prior, Timestamp::now())?;
-                    if let Some(latch) = release {
+                    if let Some(material) = undo.material {
+                        flow.restore_prepared(tx, material)?;
+                    }
+                    if let Some(latch) = undo.latch {
                         tx.delete(Table::RegistrationAttempts, latch)?;
                     }
                     Self::save_current(tx, &current)
@@ -1555,7 +1605,8 @@ impl RegistrationService {
             BeginPlan::Start(start) => *start,
         };
         let method = attempt.method.clone();
-        self.execute_begin(attempt, prior, method, None).await
+        self.execute_begin(attempt, prior, method, Undo::default())
+            .await
     }
 
     /// Ask the server for a **new** code on the attempt already in progress.
@@ -1620,7 +1671,8 @@ impl RegistrationService {
             })
             .await?;
         let (attempt, (prior, method)) = attempt;
-        self.execute_begin(attempt, prior, method, None).await
+        self.execute_begin(attempt, prior, method, Undo::default())
+            .await
     }
 
     /// Explicit one-shot diagnostic recovery for the lab's old, opaque refusals.
@@ -1846,20 +1898,27 @@ impl RegistrationService {
                     let prior = attempt.state.clone();
                     attempt.transition(RegistrationState::Unregistered, now)?;
                     attempt.transition(RegistrationState::Preparing, now)?;
+                    // A correcting `prepare` saves corrected material (a new
+                    // token, say); keep what it replaces so a request that
+                    // never left can put it back with the refusal.
+                    let material = flow.prepared_snapshot(tx)?;
                     flow.prepare(tx, &attempt)?;
                     tx.put_json(Table::RegistrationAttempts, latch, RECORD_V1, &attempt.id)?;
                     Self::save_current(tx, &attempt)?;
-                    Ok((attempt, prior))
+                    Ok((attempt, prior, material))
                 })
             })
             .await?;
-        let (attempt, prior) = attempt;
+        let (attempt, prior, material) = attempt;
         let method = attempt.method.clone();
-        // A not-sent failure restores the refusal but keeps the one-shot
-        // latch: the reservation's `prepare` may already have saved corrected
-        // request material (a corrected token, for example), which is not
-        // rolled back, so re-running the same one-shot would not repeat it.
-        self.execute_begin(attempt, prior, method, None).await
+        // A not-sent failure releases the one-shot only when the material is
+        // restored with it: a released latch with corrected material still
+        // saved could never be used ("must differ from the saved token").
+        let undo = Undo {
+            latch: material.is_some().then_some(latch),
+            material,
+        };
+        self.execute_begin(attempt, prior, method, undo).await
     }
 
     async fn execute_begin(
@@ -1867,7 +1926,7 @@ impl RegistrationService {
         attempt: RegistrationAttempt,
         prior: RegistrationState,
         method: ChallengeMethod,
-        release: Option<&'static [u8]>,
+        undo: Undo,
     ) -> Result<RegistrationStep> {
         let result = self.flow.begin(&attempt).await;
         match result {
@@ -1882,7 +1941,7 @@ impl RegistrationService {
                     RegistrationState::RegistrationOutcomeUnknown { step: 0 },
                     prior,
                     method,
-                    release,
+                    undo,
                     error,
                 )
                 .await
@@ -1989,7 +2048,7 @@ impl RegistrationService {
                     RegistrationState::RegistrationOutcomeUnknown { step: bound.step },
                     prior,
                     method,
-                    None,
+                    Undo::default(),
                     error,
                 )
                 .await
@@ -2092,7 +2151,7 @@ impl RegistrationService {
                         RegistrationState::RegistrationOutcomeUnknown { step: bound.step },
                         prior,
                         method,
-                        None,
+                        Undo::default(),
                         error,
                     )
                     .await;
