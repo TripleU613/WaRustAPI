@@ -358,7 +358,12 @@ Since checked (2026-10-13):
   new store file was group/world-readable under a common umask. A newly created
   store file is now 0600 (unix), created after the owner lock so a refused open
   leaves nothing behind; an existing file's mode is not changed. Test:
-  `a_new_store_file_is_private`.
+  `a_new_store_file_is_private`. **Follow-up (Codex review on PR #4):** if the
+  path was absent but the exclusive create then found it present (a dangling
+  symlink, or a file another process created meanwhile), the collision was
+  ignored and redb opened the path, following the link and creating its target
+  with the default mode. That collision is now refused with a message naming
+  both causes. Test: `a_dangling_symlink_is_not_created_through`.
 - **Fixed: the CLI suggested `request-email-code [--email <address>]`,** which
   is always rejected (the comparison client sends no address). The hint now
   names the command without it.

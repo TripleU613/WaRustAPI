@@ -370,7 +370,17 @@ impl ProtocolStore {
                 .open(&opts.path)
             {
                 Ok(_) => {}
-                Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => {}
+                // The path was absent a moment ago, so this is a dangling
+                // symlink (redb would follow it and create the target with
+                // the default mode) or a file another process created since.
+                // Neither is a store this call created privately; refuse.
+                Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => {
+                    return Err(StoreError::Io(std::io::Error::new(
+                        std::io::ErrorKind::AlreadyExists,
+                        "store path appeared while opening, or is a dangling symlink; not creating through it",
+                    ))
+                    .into());
+                }
                 Err(e) => return Err(StoreError::Io(e).into()),
             }
         }
@@ -1325,6 +1335,27 @@ mod tests {
         );
         let mode = std::fs::metadata(&path).unwrap().permissions().mode();
         assert_eq!(mode & 0o777, 0o640, "existing mode kept: {mode:o}");
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn a_dangling_symlink_is_not_created_through() {
+        // Codex review on PR #4: create_new's AlreadyExists was ignored, so
+        // redb followed the link and created its target with the default mode.
+        let dir = tempfile::tempdir().unwrap();
+        let target = dir.path().join("elsewhere.redb");
+        let path = dir.path().join("protocol.redb");
+        std::os::unix::fs::symlink(&target, &path).unwrap();
+        let Err(error) = ProtocolStore::open(OpenOptions {
+            path: path.clone(),
+            account_id: AccountId::new("acct-1").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([1u8; 32]))),
+            create: true,
+        }) else {
+            panic!("a dangling symlink was opened as a store");
+        };
+        assert!(error.to_string().contains("dangling symlink"), "{error}");
+        assert!(!target.exists(), "the link target was not created");
     }
 
     #[test]
