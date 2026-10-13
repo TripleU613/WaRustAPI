@@ -1,12 +1,15 @@
 //! Dependency-free CI routing; compiled with rustc, never Cargo.
 use std::{env, fs, io::Write, process::Command};
 
-/// Files under `docs/` that a crate compiles in with `include_str!` or
-/// `include_bytes!`. A change to one alone must still build and test that
-/// crate, although `docs/` is otherwise a non-build input; the
-/// `embedded_docs_are_routed` test fails when an embed is missing here.
-const EMBEDDED_DOCS: &[(&str, &str)] = &[
+/// Files under `docs/` that a crate's code or tests use: compiled in with
+/// `include_str!`/`include_bytes!`, or read by a relative path such as
+/// `CARGO_MANIFEST_DIR/../../docs/cli.md`. A change to one alone must still
+/// build and test that crate, although `docs/` is otherwise a non-build input;
+/// the `docs_inputs_are_routed` test fails when one is missing here.
+const DOCS_INPUTS: &[(&str, &str)] = &[
     ("docs/api/openapi.json", "whatsapp-cli"),
+    // Compared with the generated reference by the `cli_reference` test.
+    ("docs/cli.md", "whatsapp-cli"),
     (
         "docs/protocol/fingerprint-native-comparison-cases.json",
         "whatsapp-api",
@@ -117,8 +120,8 @@ impl Plan {
             self.xtask = true;
             self.dependencies |= path == "xtask/src/deps.rs";
             self.proto |= path == "xtask/src/proto.rs";
-        } else if EMBEDDED_DOCS.iter().any(|(doc, _)| *doc == path) {
-            for (_, owner) in EMBEDDED_DOCS.iter().filter(|(doc, _)| *doc == path) {
+        } else if DOCS_INPUTS.iter().any(|(doc, _)| *doc == path) {
+            for (_, owner) in DOCS_INPUTS.iter().filter(|(doc, _)| *doc == path) {
                 match *owner {
                     "whatsapp-api" => self.api = true,
                     "whatsapp-cli" => self.cli = true,
@@ -345,11 +348,13 @@ mod tests {
             Plan::default()
         );
     }
-    /// Every `include_str!`/`include_bytes!` of a `docs/` file in the crates
-    /// routes to the Rust job of the crate that embeds it (Codex review on
-    /// PR #4: changing an embedded fixture alone skipped the build).
+    /// Every `docs/` file the crates reach by a relative path (an
+    /// `include_str!`/`include_bytes!` literal, or a runtime path such as
+    /// `CARGO_MANIFEST_DIR/../../docs/cli.md`) routes to the Rust job of the
+    /// crate that uses it (Codex review on PR #4: changing an embedded
+    /// fixture alone skipped the build).
     #[test]
-    fn embedded_docs_are_routed() {
+    fn docs_inputs_are_routed() {
         fn sources(dir: &std::path::Path, out: &mut Vec<std::path::PathBuf>) {
             for entry in fs::read_dir(dir).unwrap() {
                 let path = entry.unwrap().path();
@@ -364,46 +369,31 @@ mod tests {
         for root in ["crates", "xtask"] {
             sources(std::path::Path::new(root), &mut files);
         }
-        let mut embedded = 0;
+        let mut found = 0;
         for file in files {
             let text = fs::read_to_string(&file).unwrap();
-            for macro_name in ["include_str!(", "include_bytes!("] {
-                for (at, _) in text.match_indices(macro_name) {
-                    let rest = text[at + macro_name.len()..].trim_start();
-                    let Some(literal) = rest.strip_prefix('"').and_then(|r| r.split('"').next())
-                    else {
-                        continue;
-                    };
-                    let mut parts: Vec<&str> = Vec::new();
-                    let dir = file.parent().unwrap().to_str().unwrap();
-                    for part in dir.split('/').chain(literal.split('/')) {
-                        match part {
-                            "" | "." => {}
-                            ".." => {
-                                parts.pop();
-                            }
-                            part => parts.push(part),
-                        }
-                    }
-                    let path = parts.join("/");
-                    if !path.starts_with("docs/") {
-                        continue;
-                    }
-                    embedded += 1;
-                    let p = route(&[path.as_str()]);
-                    let file = file.to_str().unwrap();
-                    let owned = if file.starts_with("xtask/") {
-                        p.xtask
-                    } else if file.starts_with("crates/whatsapp-cli/") {
-                        p.cli || p.api
-                    } else {
-                        p.api
-                    };
-                    assert!(owned, "{file} embeds {path}, which CI does not route to it");
-                }
+            // Every such path leaves the crate with `../` segments, so the
+            // literal holds `../docs/`; prose mentions of `docs/` do not.
+            for (at, _) in text.match_indices("../docs/") {
+                let start = at + "../".len();
+                let Some(len) = text[start..].find('"') else {
+                    continue;
+                };
+                let path = &text[start..start + len];
+                found += 1;
+                let p = route(&[path]);
+                let file = file.to_str().unwrap();
+                let owned = if file.starts_with("xtask/") {
+                    p.xtask
+                } else if file.starts_with("crates/whatsapp-cli/") {
+                    p.cli || p.api
+                } else {
+                    p.api
+                };
+                assert!(owned, "{file} uses {path}, which CI does not route to it");
             }
         }
-        assert!(embedded > 0, "run from the repository root");
+        assert!(found > 0, "run from the repository root");
     }
     #[test]
     fn cli_is_scoped() {

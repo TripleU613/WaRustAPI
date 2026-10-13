@@ -17,7 +17,7 @@ Superseded runs for the same event/ref are cancelled.
 | xtask Rust | xtask lint/tests; its audit/protobuf modules also trigger their corresponding checks |
 | Library Rust or embedded fixtures | Workspace lint, default/all-feature tests, package and strict rustdoc |
 | Library tests only | Workspace lint and tests; no package rebuild |
-| A `docs/` file a crate compiles in (`include_str!`/`include_bytes!`), listed in `EMBEDDED_DOCS` in `.github/ci/plan.rs` | That crate's lint/tests (the library's: workspace tests); the planner test `embedded_docs_are_routed` scans the sources and fails if an embed is missing from the list |
+| A `docs/` file a crate compiles in (`include_str!`/`include_bytes!`) or its tests read by relative path (`docs/cli.md`, `docs/api/openapi.json`), listed in `DOCS_INPUTS` in `.github/ci/plan.rs` | That crate's lint/tests (the library's: workspace tests); the planner test `docs_inputs_are_routed` scans the sources for `../docs/` paths and fails if one is missing from the list |
 | Protobuf inputs or generated protobuf | Workspace checks, regeneration check, package |
 | Cargo manifests, lockfile, toolchain, workflows, or CI tools | Full normal validation |
 | Unknown paths or unavailable Git baseline | Full normal validation, never a silent skip |
