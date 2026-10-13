@@ -210,7 +210,9 @@ runnable does not invent the value; it reads it from the message:
   at `2eb8..2ebc` while assembling the constructor arguments, but the
   `move/from16` operands are elided in the retained render.
 - **Inferred (strong):** the job's `editVersion` is the message's `178.A00`;
-  otherwise the dedupe lookup could never match the job it guards.
+  otherwise the dedupe lookup could never match the job it guards. This also
+  assumes `CSP`'s `equals`/`hashCode` include the int field; `CSP` is not
+  retained.
 - **Confirmed static, retained writers of `178.A00`** (every one found):
 
   | Writer | Message | Value |
@@ -230,8 +232,17 @@ runnable does not invent the value; it reads it from the message:
   when the envelope edit version is nonzero on KEEP_FOR_ALL
   ([keep-receiver](apk/2.26.37.71-own-device-keep/keep-receiver.txt)
   `0574..05ca`; `C2L.forNumber` maps 1 to `A01`, [keep-values](apk/2.26.37.71-control-enum/keep-values.txt)),
-  so a KEEP never carries 7 and only an undo of one's own message does.
-  Receivers do not check the value on UNDO.
+  so a KEEP never carries 7 and only an undo of one's own message does. The
+  action's own telemetry agrees: `JgH.A04` is set to 1 when `v20` is true and
+  2 when false (`007e..0128`), matching KEEP_FOR_ALL 1 / UNDO 2 (also
+  inferred). The one retained receiver check (`D9L.A01`) does not look at the
+  value on UNDO; other receivers are not retained.
+- **Written, not proven final (review correction, same day):** right after
+  each write, `Bpt` (`0016..001c`) and `Bps` (`0018..001e`) call the
+  unretained `178.A0G(0)`, and the `Bpt` copy constructor then calls the
+  unretained `Bpt.A0p(178)` (`0052`). The 7 and 8 are confirmed writes; that
+  they are still the values when the job reads `A00` assumes neither call
+  rewrites it.
 - **Inferred:** the stanza `edit` attribute is `editVersion` in decimal,
   absent when 0 (the ACK match above). So, chaining the two inferences: a
   sender revoke sends `edit="7"`, an admin revoke `edit="8"`, a poll edit
@@ -245,7 +256,9 @@ runnable does not invent the value; it reads it from the message:
   fills the protobuf key's `id` from `1ii.A01` (the target ID) and, when that
   is null, from the revoke message's *own* key ID (`0078..0084`); remoteJid
   goes through `CSZ.A00` (`0026..003c`) and `fromMe` comes from the key
-  (`008c..0090`), forced false for a `Bpt` with a participant (`0062..0064`).
+  (`008c..0090`), forced false for a `Bpt` with a participant when
+  `0hd.A02(participant)` is true (`0056..0064`; otherwise it comes from the
+  key, `005e` to `008c`).
   Both retained `Bpt` constructions are receive-side (`Bua.CF4`, an orphan
   writer), so the send-side caller that picks the revoke's own key is not
   retained: whether a native revoke goes out under a new stanza ID or the
@@ -256,7 +269,7 @@ runnable does not invent the value; it reads it from the message:
   sender's time window.
 - **Divergence, recorded, not changed:** this client's group `keep --undo`
   sends no `edit` attribute, where the native sender very probably sends
-  `edit="7"` for one's own message. Peers do not check it on UNDO (above), so
+  `edit="7"` for one's own message. The retained receiver check ignores it on UNDO (above), so
   receipt is not expected to differ; changing what a live account sends waits
   for `Civ`'s stanza writer to confirm the attribute.
 - **What the receive side constrains (confirmed static):** `DEy.A00`

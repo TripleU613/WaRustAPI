@@ -19,8 +19,8 @@ use std::collections::BTreeMap;
 use std::path::Path;
 
 use crate::xref::{
-    MethodDump, decode_proto_field_numbers, is_presence_bookkeeping, pair_proto_fields,
-    quoted_literal, unescape,
+    MethodDump, decode_proto_field_numbers, decode_proto_presence_words, is_presence_bookkeeping,
+    pair_proto_fields, quoted_literal, unescape,
 };
 
 /// Helper-call nesting followed before refusing.
@@ -39,6 +39,9 @@ pub(crate) struct Method {
     pub(crate) name: String,
     /// Parameter registers (static methods only; wide types take two).
     pub(crate) param_regs: Option<usize>,
+    /// Full descriptor `(params)return`, when the render carries it. A helper
+    /// is followed only on an exact match: shorties collide across overloads.
+    pub(crate) descriptor: Option<String>,
     pub(crate) registers: usize,
     pub(crate) insns: Vec<Insn>,
 }
@@ -52,20 +55,30 @@ pub(crate) struct Insn {
     pub(crate) operands: String,
 }
 
-/// Parse a retained disassembly file into its methods. Comment lines (`#`) are
-/// skipped: they hold signatures, exception tables and notes, never operands.
+/// Parse a retained disassembly file into its methods. Each method takes the
+/// class and APK SHA-256 of the header above it. Comment lines are skipped
+/// except a method's `# full signature`: they hold exception tables and notes,
+/// never operands.
 pub(crate) fn parse_retained(text: &str) -> Vec<Method> {
-    let header = |prefix: &str| {
-        text.lines()
-            .find_map(|line| line.strip_prefix(prefix))
-            .map(|value| value.trim().to_owned())
-            .unwrap_or_default()
-    };
-    let class = header("# APK-derived structural disassembly: ");
-    let sha256 = header("# APK SHA-256: ");
+    let mut class = String::new();
+    let mut sha256 = String::new();
     let mut methods: Vec<Method> = Vec::new();
     for line in text.lines() {
-        if let Some(rest) = line.strip_prefix(".method ") {
+        if let Some(value) = line.strip_prefix("# APK-derived structural disassembly: ") {
+            class = value.trim().to_owned();
+            // A new header without its own SHA line must not inherit one.
+            sha256.clear();
+        } else if let Some(value) = line.strip_prefix("# APK SHA-256: ") {
+            sha256 = value.trim().to_owned();
+        } else if let Some(full) = line.trim_start().strip_prefix("# full signature: ") {
+            if let Some(method) = methods.last_mut()
+                && let Some((owner, rest)) = full.split_once("->")
+                && owner == method.class
+                && let Some(proto) = rest.strip_prefix(method.name.as_str())
+            {
+                method.descriptor = Some(proto.to_owned());
+            }
+        } else if let Some(rest) = line.strip_prefix(".method ") {
             let name = rest.split('(').next().unwrap_or_default().to_owned();
             let shorty = rest
                 .split_once('(')
@@ -83,6 +96,7 @@ pub(crate) fn parse_retained(text: &str) -> Vec<Method> {
                 sha256: sha256.clone(),
                 name,
                 param_regs,
+                descriptor: None,
                 registers,
                 insns: Vec::new(),
             });
@@ -147,22 +161,26 @@ impl Helpers {
             let entries = std::fs::read_dir(&dir)
                 .map_err(|e| format!("cannot read {}: {e}", dir.display()))?;
             for entry in entries {
-                let path = entry.map_err(|e| e.to_string())?.path();
-                if path.is_dir() {
+                let entry = entry.map_err(|e| e.to_string())?;
+                let path = entry.path();
+                // Symlinks are not followed: the helper set is the tree itself.
+                let kind = entry.file_type().map_err(|e| e.to_string())?;
+                if kind.is_dir() {
                     stack.push(path);
-                } else if path.extension().is_some_and(|e| e == "txt") {
-                    let text = std::fs::read_to_string(&path)
-                        .map_err(|e| format!("cannot read {}: {e}", path.display()))?;
-                    helpers.add(parse_retained(&text));
+                } else if kind.is_file() && path.extension().is_some_and(|e| e == "txt") {
+                    match std::fs::read_to_string(&path) {
+                        Ok(text) => helpers.add(parse_retained(&text)),
+                        Err(e) => eprintln!("skipping {}: {e}", path.display()),
+                    }
                 }
             }
         }
         Ok(helpers)
     }
 
-    /// The one body for this call. Several retained copies must agree, or the
-    /// call is treated as unknown.
-    fn find(&self, sha256: &str, class: &str, name: &str, args: usize) -> Option<&Method> {
+    /// The one body for this call's exact descriptor. Several retained copies
+    /// must agree, or the call is treated as unknown.
+    fn find(&self, sha256: &str, class: &str, name: &str, descriptor: &str) -> Option<&Method> {
         if sha256.is_empty() {
             return None;
         }
@@ -171,7 +189,7 @@ impl Helpers {
             .get(&(sha256.to_owned(), class.to_owned(), name.to_owned()))?;
         let matching: Vec<_> = bodies
             .iter()
-            .filter(|m| m.param_regs == Some(args))
+            .filter(|m| m.descriptor.as_deref() == Some(descriptor))
             .collect();
         let first = *matching.first()?;
         matching
@@ -183,15 +201,15 @@ impl Helpers {
 
 /// Where helper bodies come from: retained files, or the APK itself.
 pub(crate) trait HelperSource {
-    /// The one static body for `class->name` with `args` parameter registers.
-    fn body(&mut self, build: &str, class: &str, name: &str, args: usize) -> Option<Method>;
+    /// The one static body for `class->name` with exactly this descriptor.
+    fn body(&mut self, build: &str, class: &str, name: &str, descriptor: &str) -> Option<Method>;
     /// How a refusal describes a call whose body is unavailable.
     fn missing(&self) -> &'static str;
 }
 
 impl HelperSource for Helpers {
-    fn body(&mut self, build: &str, class: &str, name: &str, args: usize) -> Option<Method> {
-        self.find(build, class, name, args).cloned()
+    fn body(&mut self, build: &str, class: &str, name: &str, descriptor: &str) -> Option<Method> {
+        self.find(build, class, name, descriptor).cloned()
     }
 
     fn missing(&self) -> &'static str {
@@ -206,7 +224,7 @@ enum Val {
     Arr(usize),
     /// A known non-string object: a class literal or a static non-String field.
     Object,
-    /// The result of a call that was not followed: "<call>, <why>".
+    /// The result of a call that was not followed: `"{call}, {why}"`.
     Opaque(String),
     Unknown,
 }
@@ -295,9 +313,24 @@ pub(crate) fn descriptor_fields(
             None => return Err(format!("objects[{index}] is never written")),
         });
     }
-    let numbers = decode_proto_field_numbers(&unescape(&info)).map_err(str::to_owned)?;
+    let info = unescape(&info);
+    let numbers = decode_proto_field_numbers(&info).map_err(str::to_owned)?;
+    // MessageSchema reads one `bitFieldN_` per presence word first (no oneofs
+    // are accepted), then the fields' objects; a hasbit name anywhere else, or
+    // a missing one, means the array is not what the descriptor describes.
+    let words = decode_proto_presence_words(&info).map_err(str::to_owned)? as usize;
+    let leading = slots
+        .iter()
+        .take(words)
+        .filter(|slot| matches!(slot, Slot::Name(n) if is_presence_bookkeeping(n)))
+        .count();
+    if leading != words || slots.len() < words {
+        return Err(format!(
+            "descriptor has {words} presence words but objects does not start with {words} bitField names"
+        ));
+    }
     let mut names = Vec::new();
-    for slot in slots {
+    for slot in slots.into_iter().skip(words) {
         let Slot::Name(name) = slot else { continue };
         let field = name
             .strip_suffix('_')
@@ -307,9 +340,10 @@ pub(crate) fn descriptor_fields(
                 "objects holds a string that is not a field name: {name:?}"
             ));
         };
-        if !is_presence_bookkeeping(&name) {
-            names.push(field.to_owned());
+        if is_presence_bookkeeping(&name) {
+            return Err(format!("{name} after the presence words"));
         }
+        names.push(field.to_owned());
     }
     if numbers.len() != names.len() {
         return Err(format!(
@@ -488,6 +522,10 @@ fn follow(
                     (Val::Arr(id), _) => {
                         let id = *id;
                         arrays.poison(id, "is written at an unknown index");
+                        // The stored array is now reachable through `id` too.
+                        if let Val::Arr(inner) = regs[value] {
+                            arrays.poison(inner, "escapes into another array");
+                        }
                     }
                     _ => arrays.poison_all("may be written through an unknown reference"),
                 }
@@ -500,7 +538,7 @@ fn follow(
                 return Ok(Outcome::Ended);
             }
             "return-object" => return Ok(Outcome::Returned(regs[reg(0)?].clone())),
-            "return-void" => return Ok(Outcome::Returned(Val::Unknown)),
+            "return-void" | "return" | "return-wide" => return Ok(Outcome::Returned(Val::Unknown)),
             "throw" => return Ok(Outcome::Ended),
             _ if m.starts_with("invoke-") => {
                 let args: Vec<Val> = operand_regs(invoke_braces(ops))
@@ -508,15 +546,19 @@ fn follow(
                     .map(|r| regs.get(r).cloned().ok_or("bad invoke register"))
                     .collect::<Result<_, _>>()?;
                 let (class, name) = invoke_target(ops).ok_or("unparsed invoke target")?;
+                let descriptor = invoke_descriptor(ops);
                 if is_new_message_info(ops) {
                     let [_, info, objects] = <[Val; 3]>::try_from(args)
                         .map_err(|_| "newMessageInfo with an unexpected argument count")?;
                     return Ok(Outcome::Descriptor { info, objects });
                 }
-                let followable = m == "invoke-static" && depth < MAX_HELPER_DEPTH;
-                let helper = followable
-                    .then(|| ctx.helpers.body(&method.sha256, class, name, args.len()))
-                    .flatten();
+                let static_call = m == "invoke-static" && depth < MAX_HELPER_DEPTH;
+                // Only an exact descriptor names one overload, and its
+                // parameter registers must be the call's argument registers.
+                let full = descriptor.filter(|d| descriptor_param_regs(d) == Some(args.len()));
+                let helper = full
+                    .filter(|_| static_call)
+                    .and_then(|d| ctx.helpers.body(&method.sha256, class, name, d));
                 match helper {
                     Some(helper) => {
                         // Static arguments occupy the callee's last registers.
@@ -535,10 +577,14 @@ fn follow(
                     }
                     None => {
                         // Code that is not followed may write any array it receives.
-                        let call = if followable {
-                            format!("{class}->{name}, {}", ctx.helpers.missing())
-                        } else {
+                        let call = if !static_call {
                             format!("{class}->{name}, which is not followed ({m})")
+                        } else if full.is_none() {
+                            format!(
+                                "{class}->{name}, whose call is rendered without its full signature"
+                            )
+                        } else {
+                            format!("{class}->{name}, {}", ctx.helpers.missing())
                         };
                         for arg in &args {
                             if let Val::Arr(id) = arg {
@@ -558,26 +604,29 @@ fn follow(
                 return Err(format!("{m} on the followed path is not modelled"));
             }
             _ if m.starts_with("aput") => {
-                if let Ok(array) = reg(1)
-                    && let Val::Arr(id) = regs[array]
-                {
+                if let Val::Arr(id) = regs[reg(1)?] {
                     arrays.poison(id, &format!("is written by {m}"));
                 }
             }
             _ if m.starts_with("iput") || m.starts_with("sput") => {
                 // An array stored in a field can be written by code not followed.
-                if let Ok(value) = reg(0)
-                    && let Val::Arr(id) = regs[value]
-                {
+                if let Val::Arr(id) = regs[reg(0)?] {
                     arrays.poison(id, &format!("escapes through {m}"));
                 }
             }
             _ if m.starts_with("monitor-") || m == "check-cast" => {}
-            // Every other instruction writes its first register.
+            // Every other instruction writes its first register. Older renders
+            // print some writes (moves, `move-result-wide`, arithmetic) and
+            // unknown opcodes (`??`) without operands; a skipped write would
+            // leave a stale value, so those are refused, never ignored.
             _ => {
-                if let Ok(dst) = reg(0) {
-                    regs[dst] = Val::Unknown;
-                }
+                let dst = reg(0).map_err(|_| {
+                    format!(
+                        "{m} at {:#x} is rendered without its destination register",
+                        insn.offset
+                    )
+                })?;
+                regs[dst] = Val::Unknown;
             }
         }
     }
@@ -644,6 +693,42 @@ fn invoke_target(ops: &str) -> Option<(&str, &str)> {
     Some((class, name))
 }
 
+/// The call's full descriptor, `([Ljava/lang/Object;Ljava/lang/Object;)V`;
+/// `None` for a shorty-only render such as `(VLL)`.
+fn invoke_descriptor(ops: &str) -> Option<&str> {
+    let (_, target) = ops.split_once("}, ")?;
+    let (_, rest) = target.split_once("->")?;
+    let proto = &rest[rest.find('(')?..];
+    let (_, ret) = proto.split_once(')')?;
+    (!ret.is_empty()).then_some(proto)
+}
+
+/// Parameter registers a JVM descriptor takes (`J`/`D` take two).
+fn descriptor_param_regs(descriptor: &str) -> Option<usize> {
+    let params = descriptor.strip_prefix('(')?.split_once(')')?.0;
+    let mut chars = params.chars();
+    let mut regs = 0;
+    while let Some(c) = chars.next() {
+        let mut c = c;
+        let mut array = false;
+        while c == '[' {
+            array = true;
+            c = chars.next()?;
+        }
+        if c == 'L' {
+            chars.by_ref().find(|c| *c == ';')?;
+        } else if !"ZBSCIJFD".contains(c) {
+            return None;
+        }
+        regs += if !array && matches!(c, 'J' | 'D') {
+            2
+        } else {
+            1
+        };
+    }
+    Some(regs)
+}
+
 /// `v0, #0x72`; a signed annotation such as `#0xff (-1)` uses its decimal.
 fn literal_int(ops: &str) -> Option<i64> {
     let (_, lit) = ops.split_once('#')?;
@@ -680,12 +765,20 @@ fn case_targets(ops: &str) -> Result<Vec<u32>, String> {
 pub fn run_fields(path: &Path, helpers: Option<&Path>, literal_order: bool) -> Result<(), String> {
     let text = std::fs::read_to_string(path)
         .map_err(|e| format!("cannot read {}: {e}", path.display()))?;
+    // The default is the bundle tree (`docs/protocol/apk/<bundle>/<file>`);
+    // anywhere else it could be an arbitrary directory, so ask for it.
     let root = match helpers {
         Some(root) => root.to_path_buf(),
         None => path
             .parent()
             .and_then(Path::parent)
-            .ok_or("no helper directory; pass --helpers")?
+            .filter(|root| root.file_name().is_some_and(|name| name == "apk"))
+            .ok_or_else(|| {
+                format!(
+                    "{} is not in a docs/protocol/apk/<bundle>/ directory; pass --helpers",
+                    path.display()
+                )
+            })?
             .to_path_buf(),
     };
     let mut helpers = Helpers::load(&root)?;
@@ -709,7 +802,7 @@ pub(crate) fn report(method: &Method, helpers: &mut dyn HelperSource, literal_or
         Ok((pairs, used)) => {
             println!("# {}  ({} fields)", method.class, pairs.len());
             for helper in used {
-                println!("#   names via helper {helper}");
+                println!("#   followed helper {helper}");
             }
             print_pairs(&pairs);
             return true;
@@ -764,6 +857,7 @@ pub(crate) fn from_dump(dump: &MethodDump, build: &str) -> Method {
         sha256: build.to_owned(),
         name: dump.method_name.clone(),
         param_regs: is_static.then(|| shorty_param_regs(&dump.method_proto)),
+        descriptor: dump.method_signature.as_ref().ok().cloned(),
         registers: usize::from(dump.registers),
         insns: dump
             .insns
@@ -772,7 +866,12 @@ pub(crate) fn from_dump(dump: &MethodDump, build: &str) -> Method {
                 offset: insn.byte_off as u32,
                 end: (insn.byte_off + insn.width * 2) as u32,
                 mnemonic: insn.mnemonic.to_owned(),
-                operands: crate::bundle::instruction_annotation(insn, true).to_owned(),
+                // Invokes carry the checked full descriptor when it resolved,
+                // so helper lookup can tell overloads with one shorty apart.
+                operands: match &insn.signature_annotation {
+                    Some(Ok(full)) => full.clone(),
+                    _ => crate::bundle::instruction_annotation(insn, true).to_owned(),
+                },
             })
             .collect(),
     }
@@ -802,21 +901,27 @@ impl ApkHelpers {
 }
 
 impl HelperSource for ApkHelpers {
-    fn body(&mut self, build: &str, class: &str, name: &str, args: usize) -> Option<Method> {
+    fn body(&mut self, build: &str, class: &str, name: &str, descriptor: &str) -> Option<Method> {
         let key = (class.to_owned(), name.to_owned());
         if !self.cache.contains_key(&key) {
-            // A failed scan leaves the call unfollowed (and the class refused).
-            let found = crate::xref::apk_smali(&self.apk, class, Some(name))
-                .unwrap_or_default()
-                .iter()
-                .filter(|m| m.class_name == class && m.method_name == name)
-                .map(|m| from_dump(m, build))
-                .collect();
+            // A failed scan leaves the call unfollowed (and the class refused);
+            // say why, so it is not mistaken for an absent method.
+            let found = match crate::xref::apk_smali(&self.apk, class, Some(name)) {
+                Ok(methods) => methods
+                    .iter()
+                    .filter(|m| m.class_name == class && m.method_name == name)
+                    .map(|m| from_dump(m, build))
+                    .collect(),
+                Err(e) => {
+                    eprintln!("{class}->{name}: APK scan failed: {e}");
+                    Vec::new()
+                }
+            };
             self.cache.insert(key.clone(), found);
         }
         let matching: Vec<_> = self.cache[&key]
             .iter()
-            .filter(|m| m.param_regs == Some(args))
+            .filter(|m| m.param_regs.is_some() && m.descriptor.as_deref() == Some(descriptor))
             .collect();
         match matching[..] {
             [only] => Some(only.clone()),
@@ -1027,10 +1132,14 @@ mod tests {
     struct Only(Vec<Method>);
 
     impl HelperSource for Only {
-        fn body(&mut self, _: &str, class: &str, name: &str, args: usize) -> Option<Method> {
+        fn body(&mut self, _: &str, class: &str, name: &str, descriptor: &str) -> Option<Method> {
             self.0
                 .iter()
-                .find(|m| m.class == class && m.name == name && m.param_regs == Some(args))
+                .find(|m| {
+                    m.class == class
+                        && m.name == name
+                        && m.descriptor.as_deref() == Some(descriptor)
+                })
                 .cloned()
         }
 
@@ -1077,7 +1186,7 @@ mod tests {
             superclass: "Ljava/lang/Object;".into(),
             method_name: "A1K".into(),
             method_proto: "VLJL".into(),
-            method_signature: Err("not needed".into()),
+            method_signature: Ok("([Ljava/lang/Object;JLjava/lang/Object;)V".into()),
             access_flags: 0x9,
             virtual_method: false,
             registers: 6,
@@ -1090,6 +1199,10 @@ mod tests {
         };
         let method = from_dump(&dump, "apk:test");
         assert_eq!(method.param_regs, Some(4), "wide J takes two registers");
+        assert_eq!(
+            method.descriptor.as_deref(),
+            Some("([Ljava/lang/Object;JLjava/lang/Object;)V")
+        );
         assert_eq!(method.registers, 6);
         assert_eq!(method.sha256, "apk:test");
         assert_eq!(
@@ -1106,6 +1219,184 @@ mod tests {
             ..dump
         };
         assert_eq!(from_dump(&instance, "apk:test").param_regs, None);
+    }
+
+    /// A synthetic `dynamicMethod` with no switch: two-slot objects array
+    /// (`bitField0_`, `value_`) and a one-field descriptor (field 5, bool with
+    /// presence bit 0), with `extra` instructions spliced in before the call.
+    fn synthetic(slot0: &str, slot1: &str, extra: &[&str]) -> String {
+        let mut lines = vec![
+            "  0000..0002 op=12 const/4 v0, #0x2".to_owned(),
+            "  0002..0006 op=23 new-array v2, v0, [Ljava/lang/Object;".to_owned(),
+            format!("  0006..000a op=1a const-string v4, \"{slot0}\""),
+            "  000a..000c op=12 const/4 v0, #0x0".to_owned(),
+            "  000c..0010 op=4d aput-object v4, v2, v0".to_owned(),
+            format!("  0010..0014 op=1a const-string v4, \"{slot1}\""),
+            "  0014..0016 op=12 const/4 v0, #0x1".to_owned(),
+            "  0016..001a op=4d aput-object v4, v2, v0".to_owned(),
+        ];
+        let mut at = 0x1a;
+        for insn in extra {
+            let (width, text) = insn.split_once(' ').unwrap();
+            let width: u32 = width.parse().unwrap();
+            lines.push(format!("  {at:04x}..{:04x} {text}", at + width));
+            at += width;
+        }
+        lines.push(format!(
+            "  {at:04x}..{:04x} op=1a const-string v1, \"\\u{{1}}\\u{{1}}\\0\\u{{1}}\\u{{5}}\\u{{5}}\\u{{1}}\\0\\0\\0\\u{{5}}\u{1007}\\0\"",
+            at + 4
+        ));
+        lines.push(format!(
+            "  {:04x}..{:04x} op=62 sget-object v0, LX/T;->DEFAULT_INSTANCE:LX/T;",
+            at + 4,
+            at + 8
+        ));
+        lines.push(format!(
+            "  {:04x}..{:04x} op=71 invoke-static {{v0, v1, v2}}, Lcom/google/protobuf/GeneratedMessageLite;->newMessageInfo(Lcom/google/protobuf/MessageLite;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/Object;",
+            at + 8,
+            at + 14
+        ));
+        format!(
+            "# APK-derived structural disassembly: LX/T;\n# APK SHA-256: {}\n.method dynamicMethod(LLLL) flags=0x11 registers=8\n{}\n.end method\n",
+            "0".repeat(64),
+            lines.join("\n")
+        )
+    }
+
+    #[test]
+    fn synthetic_methods_decode_and_misplaced_hasbits_refuse() {
+        let mut none = Helpers::default();
+        let (pairs, _) =
+            descriptor_fields(&entry(&synthetic("bitField0_", "value_", &[])), &mut none).unwrap();
+        assert_eq!(pairs, [(5, "value".to_owned())]);
+        // The descriptor has one presence word, so objects[0] must be it.
+        assert_eq!(
+            descriptor_fields(&entry(&synthetic("value_", "bitField0_", &[])), &mut none)
+                .unwrap_err(),
+            "descriptor has 1 presence words but objects does not start with 1 bitField names"
+        );
+    }
+
+    #[test]
+    fn an_array_escaping_into_another_array_is_refused() {
+        // Review finding: objects stored into an array at an unknown index,
+        // that array published to a static field, then an unfollowed call
+        // that could reach it. Accepted as exact before the fix.
+        let escaped = synthetic(
+            "bitField0_",
+            "value_",
+            &[
+                "2 op=12 const/4 v1, #0x1",
+                "4 op=23 new-array v3, v1, [Ljava/lang/Object;",
+                "4 op=4d aput-object v2, v3, v5",
+                "4 op=69 sput-object v3, LX/T;->A00:[Ljava/lang/Object;",
+                "6 op=71 invoke-static {}, LX/Zzz;->A01()V",
+            ],
+        );
+        assert_eq!(
+            descriptor_fields(&entry(&escaped), &mut Helpers::default()).unwrap_err(),
+            "objects array escapes into another array"
+        );
+    }
+
+    #[test]
+    fn writes_rendered_without_registers_are_refused() {
+        // Review finding: older renders print some writes without operands.
+        // Skipping one leaves a stale register; here v0 would keep 4 and
+        // fileLength_ would land on slot 4 (fileSha256) silently.
+        let full = &mut helpers(&[BIT_FIELD, FILE_SHA_HELPER]);
+        let stale = DOCUMENT.replace(
+            "  005c..005e op=12 const/4 v0, #0x5\n",
+            "  005c..005e op=01 move\n",
+        );
+        assert_ne!(stale, DOCUMENT);
+        assert_eq!(
+            descriptor_fields(&entry(&stale), full).unwrap_err(),
+            "move at 0x5c is rendered without its destination register"
+        );
+        let unknown = DOCUMENT.replace(
+            "  005c..005e op=12 const/4 v0, #0x5\n",
+            "  005c..005e op=fa ?? \n",
+        );
+        assert!(
+            descriptor_fields(&entry(&unknown), full)
+                .unwrap_err()
+                .contains("rendered without its destination register")
+        );
+    }
+
+    #[test]
+    fn helpers_are_matched_on_their_full_descriptor() {
+        // Review finding: a retained overload with the same shorty (VLL) but
+        // a different descriptor was followed and its name printed as exact.
+        let overload = FILE_SHA_HELPER
+            .replace(
+                "A1K([Ljava/lang/Object;Ljava/lang/Object;)V",
+                "A1K([Ljava/lang/Object;Ljava/lang/String;)V",
+            )
+            .replace("fileSha256_", "thumbnailHash_");
+        assert_ne!(overload, FILE_SHA_HELPER);
+        assert_eq!(
+            descriptor_fields(&entry(DOCUMENT), &mut helpers(&[BIT_FIELD, &overload])).unwrap_err(),
+            "objects array was passed to LX/Ayp;->A1K, whose body is not retained"
+        );
+        // A call rendered with only its shorty names no single overload.
+        let shorty = DOCUMENT.replace(
+            "LX/Ayp;->A1K([Ljava/lang/Object;Ljava/lang/Object;)V",
+            "LX/Ayp;->A1K(VLL)",
+        );
+        assert_ne!(shorty, DOCUMENT);
+        assert_eq!(
+            descriptor_fields(&entry(&shorty), &mut helpers(&[BIT_FIELD, FILE_SHA_HELPER]))
+                .unwrap_err(),
+            "objects array was passed to LX/Ayp;->A1K, whose call is rendered without its full signature"
+        );
+        assert_eq!(
+            descriptor_param_regs("(IJ[J[[Ljava/lang/String;DLX/A;)V"),
+            Some(8)
+        );
+        assert_eq!(descriptor_param_regs("()[Ljava/lang/Object;"), Some(0));
+        assert_eq!(descriptor_param_regs("(Q)V"), None);
+        assert_eq!(invoke_descriptor("{v2, v0}, LX/Ayo;->A1P(VLL)"), None);
+        assert_eq!(
+            invoke_descriptor("{v2}, LX/6al;->A1W([Ljava/lang/Object;)V"),
+            Some("([Ljava/lang/Object;)V")
+        );
+    }
+
+    #[test]
+    fn each_method_takes_the_header_above_it() {
+        let two = format!(
+            "{BIT_FIELD}\n{}",
+            FILE_SHA_HELPER.replace(
+                "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+                "1111111111111111111111111111111111111111111111111111111111111111"
+            )
+        );
+        let methods = parse_retained(&two);
+        assert_eq!(methods.len(), 2);
+        assert_eq!(
+            (methods[0].class.as_str(), methods[0].name.as_str()),
+            ("LX/6al;", "A1W")
+        );
+        assert_eq!(
+            (methods[1].class.as_str(), methods[1].name.as_str()),
+            ("LX/Ayp;", "A1K")
+        );
+        assert!(methods[1].sha256.starts_with("1111"));
+        assert_eq!(
+            methods[1].descriptor.as_deref(),
+            Some("([Ljava/lang/Object;Ljava/lang/Object;)V")
+        );
+    }
+
+    #[test]
+    fn the_default_helper_root_must_be_the_bundle_tree() {
+        let dir = tempfile::tempdir().unwrap();
+        let file = dir.path().join("descriptor.txt");
+        std::fs::write(&file, DOCUMENT).unwrap();
+        let error = run_fields(&file, None, false).unwrap_err();
+        assert!(error.ends_with("pass --helpers"), "{error}");
     }
 
     #[test]

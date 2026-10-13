@@ -2313,6 +2313,24 @@ pub(crate) fn is_presence_bookkeeping(name: &str) -> bool {
 /// (official Java runtime): low byte is type, HAS_HAS_BIT=0x1000 adds a presence
 /// index only for scalar types <=17. The former fixed triples silently stopped
 /// at repeated fields such as APK 2.26.37.71 BX5.dynamicMethod's type 26.
+/// The descriptor's presence-word count: how many `bitFieldN_` names lead the
+/// objects array (after oneof pairs, which are refused). Validates the whole
+/// descriptor first.
+pub(crate) fn decode_proto_presence_words(info: &str) -> Result<u32, &'static str> {
+    if decode_proto_field_numbers(info)?.is_empty() {
+        return Ok(0);
+    }
+    // Header: flags, field count, oneofs, presence words (validated above).
+    let mut header = info.chars().map(u32::from);
+    if header.by_ref().take(3).any(|c| c >= 0xd800) {
+        return Err("presence-word header uses continuations");
+    }
+    match header.next() {
+        Some(words) if words < 0xd800 => Ok(words),
+        _ => Err("presence-word header uses continuations"),
+    }
+}
+
 pub(crate) fn decode_proto_field_numbers(info: &str) -> Result<Vec<u32>, &'static str> {
     fn integer(input: &mut std::str::Chars<'_>) -> Result<u32, &'static str> {
         let mut value = 0u32;

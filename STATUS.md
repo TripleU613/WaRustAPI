@@ -1,3 +1,15 @@
+2026-10-13 — **Corrected/offline (independent review of the descriptor
+simulator and edit trace):** no committed decode was wrong, but the simulator
+could have printed a wrong pairing as exact in three synthetic cases. It now
+refuses instructions rendered without their destination register and unknown
+opcodes, follows a helper only on an exact full descriptor (a shorty-only call
+is not followed), poisons an array that escapes into another array, requires
+the leading `bitFieldN_` slots to match the descriptor's presence words, tracks
+headers per method, and reports APK scan failures. BSp (PollEncValue) moved
+from exact to literal-order only; the sticker has no retained pairing; the
+Bpt/Bps edit values are written, not proven final. A `cargo doc` failure in the
+new module (unescaped `<…>`) is fixed. [Notes](docs/protocol/apk-analysis.md#field-numbers-from-retained-bundles-retained-proto-fields-2026-10-13).
+
 2026-10-13 — **Changed/offline (research tooling):** `xtask apk-proto-fields`
 now uses the same exact objects-array simulator as `retained-proto-fields`,
 reading static helper bodies from the APK, instead of pairing names in method
@@ -11,7 +23,8 @@ send runnable `DNu` keys a scheduled send on the message's own edit field
 admin revoke 8, poll edit 1, and undo-keep of one's own message 7 (keep 0).
 Text-edit and pin values are not retained. The job constructor mapping and
 the stanza writer remain inferred links. This client's `keep --undo` omits
-the value (recorded divergence; receivers do not check it on undo). No sender
+the value (recorded divergence; the one retained receiver check, `D9L`, does
+not look at it on undo). No sender
 changed. [Trace](docs/protocol/unknowns.md#outgoing-revoke-and-edit-2026-10-13).
 
 2026-10-13 — **Implemented/offline (research tooling):** `xtask
@@ -20,7 +33,8 @@ research bundles, for sessions without the APK. It follows the code that builds
 the descriptor's objects array, including retained helpers from the same APK,
 and refuses (naming the missing helper) rather than pairing names in method
 order. That order is refuted for DocumentMessage: helper `Ayp.A1K` writes
-`fileSha256_` at objects[4]. Twelve classes decode exactly. They include
+`fileSha256_` at objects[4]. Eleven classes decode exactly (twelve before
+the same-day review correction below). They include
 Message, Image/Document/Video/Audio and the history Conversation. The project's
 media, PreKeySignalMessage, ADV and poll-option encoders agree with them.
 `pinInChatMessage` is 63, but pin sending stays blocked on the unretained `BVD`

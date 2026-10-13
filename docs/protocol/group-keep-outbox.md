@@ -173,9 +173,11 @@ bypass, fresh group draft or keep/unkeep transmission was performed.
 ## Undo-keep edit value (2026-10-13, retained evidence)
 
 The native keep action `11x.A01` stores edit value 7 on the keep add-on when
-the target message is one's own and the action is an undo, and 0 otherwise;
-receivers reject a nonzero edit value only on KEEP. This client's `keep
---undo` sends no `edit` attribute. Peers do not check it on UNDO, so behaviour
-is not expected to differ, and the stanza attribute is still inferred; it is
+the target message is one's own and its keep flag is false, and 0 otherwise.
+**Inferred:** that flag false means undo (the retained receiver `D9L.A01`
+rejects a nonzero edit value on KEEP, and the action's telemetry records 2 for
+it). This client's `keep --undo` sends no `edit` attribute. The one retained
+receiver check does not look at the value on UNDO, so behaviour is not
+expected to differ, and the stanza attribute is still inferred; it is
 recorded as a divergence, not changed.
 [Trace](unknowns.md#outgoing-revoke-and-edit-2026-10-13).

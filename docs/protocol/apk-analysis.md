@@ -204,13 +204,23 @@ For sessions without the APK. It reads a committed `dynamicMethod`
 disassembly and **follows the code that builds the `newMessageInfo` objects
 array** instead of pairing name literals in method order: it tracks registers,
 `new-array` and `aput-object` slots, and runs static helpers whose bodies are
-retained from the *same* APK (matched by the file's SHA-256 header; disagreeing
-copies are ignored). The leading `packed-switch` fans out, the method must have
+retained from the *same* APK (matched by the file's SHA-256 header and the
+call's **full descriptor**; a call rendered with only its shorty, such as
+`A1K(VLL)`, names no single overload and is not followed; if retained copies of
+one helper disagree, the call is treated as not retained and the class is
+refused). The leading `packed-switch` fans out, the method must have
 exactly one `newMessageInfo` call, and exactly one case must reach it in
 straight-line code, so no `MethodToInvoke` ordinal is assumed. Every slot must
-be written once with a name or a class/verifier object, every name must look
-like `field_`, and the count must equal the decoded descriptor's, or the class
-is refused with the reason. A refusal names the helper whose body is missing.
+be written once with a name or a class/verifier object, the first slots must
+be exactly the descriptor's presence-word count of `bitFieldN_` names (and no
+hasbit name may appear later), every other name must look like `field_`, and
+the count must equal the decoded descriptor's, or the class is refused with
+the reason. An array stored into another array or a field, or handed to a call
+that is not followed, is treated as possibly written by unseen code. Any
+instruction rendered without its destination register (older renders print
+some moves, `move-result-wide` and arithmetic that way) and any unknown opcode
+(`??`) refuse the path rather than leaving a stale register. A refusal names
+the helper whose body is missing.
 A followed body must start at offset 0 and be contiguous (an excerpt or an
 elided instruction is refused), and a file without an `APK SHA-256` header
 never matches a helper. All 2,695 retained methods met both conditions on
@@ -228,9 +238,10 @@ mismatch would shift every name after `title`. Followed exactly, `fileSha256`
 is 4, `mediaKey` 7, `fileName` 8 and `caption` 20.
 
 **Decoded exactly from retained files** (descriptor and every name accounted
-for; `xtask` tests pin BZB and BZK):
+for; `xtask` tests pin BZB and BZK). The last column lists every helper the
+path followed; some, such as `6al.A1W`, write only `bitField0_`:
 
-| Class | Message | Fields | Names via retained helpers |
+| Class | Message | Fields | Helpers followed |
 | --- | --- | --- | --- |
 | BZc | Message | 110 | 6al.A1W |
 | BZD | ImageMessage | 29 | 6al.A1W, Ayp.A1K |
@@ -242,14 +253,18 @@ for; `xtask` tests pin BZB and BZK):
 | GsB | ADVDeviceIdentity | 5 | 6aj.A1U, 6al.A1W, Ayj.A1J |
 | 6tK | UserReceipt | 6 | — |
 | BSo | PollCreation option | 2 | 6ap.A1b |
-| BSp | PollEncValue | 2 | 6ap.A1b |
 | BP2 | (attestation payload) | 1 | 6aj.A1V, 6ap.A1b |
 
 BZK reproduces, mechanically, the manual pairing in
 [token-import](token-import.md#field-numbers-and-a-decoder-limitation) (id 1,
 tcToken 21, tcTokenTimestamp 22, contactPrimaryIdentityKey 23,
 tcTokenSenderTimestamp 28, identityVerification 63). Where both readers decode
-a class (BZc, BY9, GsB, 6tK, BSo, BSp, BP2) their output is identical.
+a class (BZc, BY9, GsB, 6tK, BSo, BP2) their output is identical. **Corrected
+the same day** after an independent review: BSp (PollEncValue) was listed as
+exact, but its only retained copy renders the `6ap.A1b` call by shorty, so it
+is now refused (literal order still pairs `encPayload` 1, `encIv` 2,
+unverified); one of the retained BZc copies is refused for the same reason
+while another, with full signatures, decodes.
 
 **Refused, with the body to retain next time the APK is available** (these
 decode only under `--literal-order`, unverified, or not at all):
@@ -264,9 +279,12 @@ decode only under `--literal-order`, unverified, or not at all):
 | BUs | DeviceSentMessage | Ayp.A1Z creates the array |
 | BV3, BWY, BZa, Grz, BWI, BWH | KeepInChat, SignalMessage, MessageKey, ADVSignedDeviceIdentity, Reaction, PollUpdate | Ayp.A1a creates the array |
 | BQ2 | one field, literal order `messageSecret` 3 | 6ap.A1a creates the array |
+| BSp | PollEncValue | its `6ap.A1b` call is retained only as a shorty |
 
 BWI (reaction) and BWH (poll update) have 4 descriptor fields against 3 method
-literals; the fourth name is written by `Ayo.A1P`, not retained.
+literals. **Inferred:** the fourth name comes from `Ayo.A1P`, which receives the
+array; the array itself comes from `Ayp.A1a`, also not retained, which could
+pre-fill a slot as `6ap.A1b` does with `bitField0_`.
 
 **Cross-check of this project's encoders (2026-10-13, local):** every
 `prost` field whose struct corresponds to an exactly decoded class agrees with
@@ -274,11 +292,14 @@ it: `transport/media.rs` `Image`/`Audio`/`Video`/`Document`,
 `transport/image_upload.rs` `ImageMessage`, `transport/voice_note.rs`
 `AudioMessage`, `signal/wire.rs` PreKeySignalMessage (including
 `kyberPreKeyId` 7 and `kyberCiphertext` 8), `proto/wa_adv.rs`
-`AdvDeviceIdentity`, and `transport/polls.rs` `PollOption`/`EncValue`. Structs
-whose class is refused above (`KeepInChatMessage`, `DeviceSent`, SignalMessage,
-`AdvSignedDeviceIdentity`, `PollCreation`, the sticker) agree with the
-literal-order pairing only, which is weaker evidence. The comparison matched
-struct fields to descriptor names by hand-checked correspondence; it is not an
+`AdvDeviceIdentity`, and `transport/polls.rs` `PollOption`. Structs whose class
+is refused above (`KeepInChatMessage`, `DeviceSent`, SignalMessage,
+`AdvSignedDeviceIdentity`, `PollCreation`, `EncValue`) agree with the
+literal-order pairing only, which is weaker evidence. **Corrected:** the
+sticker (`transport/media.rs` `Sticker`) has no retained pairing at all: even
+literal order refuses BZC (22 fields, 13 names), so its tags rest only on the
+earlier APK-session trace through `Ayq.A11`. The comparison matched struct
+fields to descriptor names by hand-checked correspondence; it is not an
 automated test.
 
 **Pin in chat (edit thread):** BZc's exact decode gives `pinInChatMessage` = 63
