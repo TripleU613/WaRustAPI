@@ -20,6 +20,7 @@ use tokio::net::{TcpListener, TcpStream};
 use tokio::sync::Semaphore;
 use tokio::time::timeout;
 use whatsapp_api::capabilities::CapabilityMatrix;
+use whatsapp_api::model::ids::LocalMessageId;
 use whatsapp_api::registration::wire::{
     COMPARISON_SIGNAL_KEY_TYPE, MAX_RESPONSE_BODY_BYTES, RegistrationEndpoint,
     RegistrationResponseReason, RegistrationResponseStatus, WHATSAPP_2_26_37_70,
@@ -440,7 +441,7 @@ async fn store_route(request: &RequestLine, state: &ApiState) -> Option<Response
         .map_or((request.path.as_str(), None), |(path, query)| {
             (path, Some(query))
         });
-    if !STORE_ROUTES.contains(&path) {
+    if !STORE_ROUTES.contains(&path) && versions_id(path).is_none() {
         return None;
     }
     if !matches!(request.method.as_str(), "GET" | "HEAD") {
@@ -454,6 +455,15 @@ async fn store_route(request: &RequestLine, state: &ApiState) -> Option<Response
             "Bad Request",
             "invalid_input",
             "store routes take no query parameters",
+        ));
+    }
+    // Validate a path parameter before the store opens.
+    if versions_id(path).is_some_and(|id| id.parse::<LocalMessageId>().is_err()) {
+        return Some(Response::error(
+            400,
+            "Bad Request",
+            "invalid_input",
+            "local_id is not a valid local message ID",
         ));
     }
     let Some(store) = &state.store else {
@@ -479,7 +489,13 @@ async fn store_route(request: &RequestLine, state: &ApiState) -> Option<Response
     let path = path.to_owned();
     let result = tokio::task::spawn_blocking(move || read_store(options, &path)).await;
     Some(match result {
-        Ok(Ok(body)) => Response::json(200, "OK", body),
+        Ok(Ok(Some(body))) => Response::json(200, "OK", body),
+        Ok(Ok(None)) => Response::error(
+            404,
+            "Not Found",
+            "unknown_local_id",
+            "no outbox intent has this local_id",
+        ),
         Ok(Err(Error::Storage(whatsapp_api::store::StoreError::AlreadyOwned { .. }))) => {
             Response::error(
                 503,
@@ -508,12 +524,35 @@ async fn store_route(request: &RequestLine, state: &ApiState) -> Option<Response
     })
 }
 
+/// `/v1/outbox/{local_id}/versions` → the raw `local_id` segment.
+fn versions_id(path: &str) -> Option<&str> {
+    path.strip_prefix("/v1/outbox/")?
+        .strip_suffix("/versions")
+        .filter(|id| !id.is_empty() && !id.contains('/'))
+}
+
+/// `Ok(None)` when a path parameter names nothing (404).
 #[cfg(feature = "experimental-transport")]
-fn read_store(options: whatsapp_api::store::OpenOptions, path: &str) -> Result<Value, Error> {
+fn read_store(
+    options: whatsapp_api::store::OpenOptions,
+    path: &str,
+) -> Result<Option<Value>, Error> {
     use whatsapp_api::transport::{
-        actions, identity_conflicts, outgoing, outgoing_group, prekeys, receipts,
+        actions, identity_conflicts, outgoing, outgoing_group, prekeys, receipts, send_versions,
     };
     let store = whatsapp_api::store::ProtocolStore::open(options)?;
+    if let Some(id) = versions_id(path) {
+        let id: LocalMessageId = id.parse()?;
+        let known = store.read(|tx| {
+            whatsapp_api::outbox::Outbox::new("http-inspection", Default::default()).get(tx, id)
+        })?;
+        if known.is_none() {
+            return Ok(None);
+        }
+        return serde_json::to_value(send_versions::inspect(&store, id)?)
+            .map(Some)
+            .map_err(|_| Error::invalid("store_routes", "inspection did not serialize"));
+    }
     let value = match path {
         "/v1/receipts" => serde_json::to_value(receipts::outcomes(&store)?),
         "/v1/prekeys" => serde_json::to_value(prekeys::summary(&store)?),
@@ -525,11 +564,13 @@ fn read_store(options: whatsapp_api::store::OpenOptions, path: &str) -> Result<V
         }
         _ => return Err(Error::invalid("store_routes", "unknown store route")),
     };
-    value.map_err(|_| Error::invalid("store_routes", "inspection did not serialize"))
+    value
+        .map(Some)
+        .map_err(|_| Error::invalid("store_routes", "inspection did not serialize"))
 }
 
 #[cfg(not(feature = "experimental-transport"))]
-fn read_store(_: whatsapp_api::store::OpenOptions, _: &str) -> Result<Value, Error> {
+fn read_store(_: whatsapp_api::store::OpenOptions, _: &str) -> Result<Option<Value>, Error> {
     Err(Error::invalid(
         "store_routes",
         "store routes need a whatsapp-cli build with experimental-transport",
@@ -568,6 +609,7 @@ fn route(method: &str, raw_path: &str, state: &ApiState) -> Response {
             // Listed only when enabled; each needs the bearer token.
             if state.store.is_some() {
                 routes.extend(STORE_ROUTES.iter().map(|path| format!("GET {path}")));
+                routes.push("GET /v1/outbox/{local_id}/versions".to_owned());
             }
             Response::json(
                 200,
@@ -1026,7 +1068,32 @@ mod tests {
             key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([3; 32]))),
             create: true,
         };
-        drop(ProtocolStore::open(options.clone()).unwrap());
+        let known = {
+            use whatsapp_api::model::{
+                ids::{ChatId, ClientRequestId},
+                jid::Jid,
+                message::MessageContent,
+                send::SendRequest,
+            };
+            let store = ProtocolStore::open(options.clone()).unwrap();
+            let request = SendRequest {
+                client_request_id: ClientRequestId::new("served-intent").unwrap(),
+                chat: ChatId::from_jid(&Jid::parse("15550000000@s.whatsapp.net").unwrap()).unwrap(),
+                content: MessageContent::Text {
+                    body: "never sent".into(),
+                    quoted: None,
+                    style: Default::default(),
+                },
+            };
+            store
+                .write(|tx| {
+                    whatsapp_api::outbox::Outbox::new("http-test", Default::default())
+                        .enqueue(tx, &request)
+                })
+                .unwrap()
+                .0
+                .local_id
+        };
         let mut state = state();
         state.store = Some(StoreRoutes {
             options,
@@ -1085,6 +1152,39 @@ mod tests {
                 .unwrap();
             assert_eq!((listed.status, body(&listed)), (200, json!([])), "{path}");
         }
+        // Path parameter: a known intent answers its redacted snapshot (an
+        // unprepared intent has none), malformed is 400, unknown is 404.
+        let versions = store_route(
+            &request("GET", &format!("/v1/outbox/{known}/versions"), auth),
+            &state,
+        )
+        .await
+        .unwrap();
+        assert_eq!(versions.status, 200);
+        assert_eq!(body(&versions)["captured"], false);
+        assert!(!String::from_utf8_lossy(&versions.body).contains("never sent"));
+        let malformed = store_route(
+            &request("GET", "/v1/outbox/not-an-id/versions", auth),
+            &state,
+        )
+        .await
+        .unwrap();
+        assert_eq!(malformed.status, 400);
+        let unknown_id = LocalMessageId([7; 16]).to_string();
+        let unknown = store_route(
+            &request("GET", &format!("/v1/outbox/{unknown_id}/versions"), auth),
+            &state,
+        )
+        .await
+        .unwrap();
+        assert_eq!(unknown.status, 404);
+        assert_eq!(body(&unknown)["error"]["code"], "unknown_local_id");
+        let nested = store_route(
+            &request("GET", &format!("/v1/outbox/{unknown_id}/x/versions"), auth),
+            &state,
+        )
+        .await;
+        assert!(nested.is_none(), "only one path segment is a local_id");
         // While another handle holds the store (as `listen` would), the route
         // answers 503 with a fixed message instead of waiting or leaking paths.
         let held = ProtocolStore::open(state.store.as_ref().unwrap().options()).unwrap();
@@ -1243,6 +1343,7 @@ mod tests {
             ("GET", "/v1/actions"),
             ("GET", "/v1/identity-conflicts"),
             ("GET", "/v1/outbox/group-preparations"),
+            ("GET", "/v1/outbox/{local_id}/versions"),
         ];
 
         for (method, path) in &routes {

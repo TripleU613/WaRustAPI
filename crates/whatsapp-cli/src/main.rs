@@ -737,8 +737,8 @@ enum Cmd {
         allow_non_loopback: bool,
         /// Also serve read-only, redacted store inspections (`/v1/receipts`,
         /// `/v1/prekeys`, `/v1/outbox/suspended`, `/v1/actions`,
-        /// `/v1/identity-conflicts`, `/v1/outbox/group-preparations`) for the
-        /// selected account.
+        /// `/v1/identity-conflicts`, `/v1/outbox/group-preparations`,
+        /// `/v1/outbox/{local_id}/versions`) for the selected account.
         /// Loopback-only; requires a bearer token (see --token-file). The store
         /// is opened per request, so a running `listen` makes them answer 503.
         #[arg(long, requires = "token_file")]

@@ -122,10 +122,13 @@ The library and CLI cover the rows above; HTTP covers little of it. Default
 secret-free profile and capability data.
 
 **2026-10-13, opt-in store routes:** `serve --store-routes --token-file <new
-path>` (experimental-transport build) also serves six read-only, redacted
+path>` (experimental-transport build) also serves seven read-only, redacted
 inspections: `GET /v1/receipts`, `/v1/prekeys`, `/v1/outbox/suspended`,
-`/v1/actions` (list form only), `/v1/identity-conflicts` and
-`/v1/outbox/group-preparations`, the same library calls and JSON as the CLI. The access-control design is the
+`/v1/actions` (list form only), `/v1/identity-conflicts`,
+`/v1/outbox/group-preparations` and `/v1/outbox/{local_id}/versions`, the same
+library calls and JSON as the CLI. Inspections whose output carries raw
+addresses (for example device queries, message status facts, contacts,
+blocklist) or message content (events) are not served. The access-control design is the
 conservative one this page previously left open: loopback only (even with
 `--allow-non-loopback`), a fresh 256-bit bearer token written only to a new
 mode-0600 file (never overwritten, never printed or logged, removed on

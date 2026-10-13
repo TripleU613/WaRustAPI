@@ -91,8 +91,10 @@ so the CLI can embed and serve it without extra dependencies).
 `experimental-transport`) adds read-only, redacted store inspections for the
 account selected by `--store`/`--account`/`--key-env`: `GET /v1/receipts`,
 `/v1/prekeys`, `/v1/outbox/suspended`, `/v1/actions` (list form only),
-`/v1/identity-conflicts` and `/v1/outbox/group-preparations`. Query strings
-are refused with 400, so CLI-only options are never silently ignored. They are declared with
+`/v1/identity-conflicts`, `/v1/outbox/group-preparations` and
+`/v1/outbox/{local_id}/versions` (malformed ID 400 before the store opens,
+unknown ID 404 `unknown_local_id`). Query strings are refused with 400, so
+CLI-only options are never silently ignored. They are declared with
 `x-transport: ["cli", "http"]` and the `storeBearer` security scheme.
 
 ```sh

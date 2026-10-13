@@ -4452,7 +4452,7 @@
           "Service"
         ],
         "summary": "Serve the local HTTP control plane",
-        "description": "Returns the service index with available endpoints. Store routes are listed only when the server was started with --store-routes. `--store-routes` (requires `--token-file`, a new path) also serves read-only, redacted store inspections (/v1/receipts, /v1/prekeys, /v1/outbox/suspended, /v1/actions, /v1/identity-conflicts, /v1/outbox/group-preparations) for the selected account: loopback only even with --allow-non-loopback, bearer-token authenticated, store opened per request, nothing sent. The token goes to the new mode-0600 file only, never stdout or logs, and the file is removed on Ctrl-C, SIGTERM or SIGHUP. Clients should use 127.0.0.1 rather than localhost. Default serve remains store-less.",
+        "description": "Returns the service index with available endpoints. Store routes are listed only when the server was started with --store-routes. `--store-routes` (requires `--token-file`, a new path) also serves read-only, redacted store inspections (/v1/receipts, /v1/prekeys, /v1/outbox/suspended, /v1/actions, /v1/identity-conflicts, /v1/outbox/group-preparations, /v1/outbox/{local_id}/versions) for the selected account: loopback only even with --allow-non-loopback, bearer-token authenticated, store opened per request, nothing sent. The token goes to the new mode-0600 file only, never stdout or logs, and the file is removed on Ctrl-C, SIGTERM or SIGHUP. Clients should use 127.0.0.1 rather than localhost. Default serve remains store-less.",
         "operationId": "serveRoot",
         "x-cli": "whatsapp-cli serve",
         "x-transport": [
@@ -13548,11 +13548,12 @@
           "Outbox"
         ],
         "summary": "Inspect original send-time primary versions (offline, redacted)",
-        "description": "Offline inspection of an existing immutable local outbox intent. Direct and group comparison adapters capture actual target users' nullable primary-device versions in the original send reservation transaction, after authenticated replacement hooks. Group capture includes every planned device, not only newly distributed sender keys. The snapshot is immutable; namespace values stay separate and duplicate device encodings are counted once. Historical/unprepared intents without a snapshot return captured=false and users=[]; captured null counters are known missing values, not missing instrumentation. Each user exports only a normalized-JID hash, device count, at_send/current signed int64-or-null and nullable matches boolean. Equality is diagnostic, never a native resend decision; effective default/hosted gates and full sync/resend runtime remain unported. Unknown local IDs and malformed snapshots/counters refuse with fixed diagnostics; inspection neither repairs history nor sends/queues anything. No HTTP route is served. See docs/protocol/send-version-snapshot.md. New captures retain exact device components; device_targets exposes only component/hash pairs. Old count-only snapshots return null for that field and are never backfilled. Group receipt attribution uses the original full frozen targets when known, requiring original envelope sender-key targets to be a subset. Current fanout still distributes to every target; primary/counterpart cleanup and cached-key distribution omission remain unported. Separate pending device rows are now seeded with original nullable versions in the same reservation transaction. Authenticated, attributed supported root receipts update exact original-device rows with earliest positive server milliseconds (root t parsed as signed ASCII seconds, wrapping multiplication by 1000). Equal/duplicate facts may improve a timestamp without a second fact/event. Historical missing rows remain null; no namespace merging or resend is inferred; authenticated companion deletion is described below. Malformed rows refuse atomically with redacted diagnostics. See docs/protocol/device-receipt-rows.md. Authenticated companion-key replacement now removes only pending exact-device row membership on ordinary direct/group intents. Output present distinguishes removed provenance from a current row; version is current-row nullable version while at_send remains the immutable original. A later supported positive root receipt reinserts a removed original companion row using the current nullable exact-namespace user version. Existing-row timestamp changes preserve version. Both authenticated incoming-message and signed-directory replacement sources share atomic cleanup/history commits. Primary cleanup, counterpart expansion, status/coexistence branches and resend remain unfinished. See docs/protocol/companion-receipt-cleanup.md. Direct supported receipt t now uses Java-compatible UTF-16 decimal-long parsing, zero fallback and wrapping seconds-to-ms conversion before positive admission. BMP decimal input no longer leaves matching device rows falsely pending for companion cleanup. Exact attribution, earliest-positive time, nullable row versions, immutable original snapshots and reservation guards remain unchanged. Offline regression covers received versus pending companion cleanup/rollback/reopen; fresh live Unicode receipt behavior is unverified. Offline aggregated receipt support (APK 37.71 Cmk.A03/DDF): the first participants child supplies message_id, and each entry supplies its actual jid, independent type (absent defaults to delivery), and required signed BMP-decimal t. Delivery/read/played observations use existing original-target authority and commit as one transaction; malformed input or late saved-state failure commits no partial facts. Inner message_id and per-entry times override root receipt id/type/t in this branch. Unsupported known own/self statuses remain unprojected; the separate key-based participants branch remains unported and cannot fall back to root-id attribution. No original snapshot is backfilled and no resend is authorized. Fresh live aggregate projection remains unverified.",
+        "description": "Offline inspection of an existing immutable local outbox intent. Direct and group comparison adapters capture actual target users' nullable primary-device versions in the original send reservation transaction, after authenticated replacement hooks. Group capture includes every planned device, not only newly distributed sender keys. The snapshot is immutable; namespace values stay separate and duplicate device encodings are counted once. Historical/unprepared intents without a snapshot return captured=false and users=[]; captured null counters are known missing values, not missing instrumentation. Each user exports only a normalized-JID hash, device count, at_send/current signed int64-or-null and nullable matches boolean. Equality is diagnostic, never a native resend decision; effective default/hosted gates and full sync/resend runtime remain unported. Unknown local IDs and malformed snapshots/counters refuse with fixed diagnostics; inspection neither repairs history nor sends/queues anything. No HTTP route is served. See docs/protocol/send-version-snapshot.md. New captures retain exact device components; device_targets exposes only component/hash pairs. Old count-only snapshots return null for that field and are never backfilled. Group receipt attribution uses the original full frozen targets when known, requiring original envelope sender-key targets to be a subset. Current fanout still distributes to every target; primary/counterpart cleanup and cached-key distribution omission remain unported. Separate pending device rows are now seeded with original nullable versions in the same reservation transaction. Authenticated, attributed supported root receipts update exact original-device rows with earliest positive server milliseconds (root t parsed as signed ASCII seconds, wrapping multiplication by 1000). Equal/duplicate facts may improve a timestamp without a second fact/event. Historical missing rows remain null; no namespace merging or resend is inferred; authenticated companion deletion is described below. Malformed rows refuse atomically with redacted diagnostics. See docs/protocol/device-receipt-rows.md. Authenticated companion-key replacement now removes only pending exact-device row membership on ordinary direct/group intents. Output present distinguishes removed provenance from a current row; version is current-row nullable version while at_send remains the immutable original. A later supported positive root receipt reinserts a removed original companion row using the current nullable exact-namespace user version. Existing-row timestamp changes preserve version. Both authenticated incoming-message and signed-directory replacement sources share atomic cleanup/history commits. Primary cleanup, counterpart expansion, status/coexistence branches and resend remain unfinished. See docs/protocol/companion-receipt-cleanup.md. Direct supported receipt t now uses Java-compatible UTF-16 decimal-long parsing, zero fallback and wrapping seconds-to-ms conversion before positive admission. BMP decimal input no longer leaves matching device rows falsely pending for companion cleanup. Exact attribution, earliest-positive time, nullable row versions, immutable original snapshots and reservation guards remain unchanged. Offline regression covers received versus pending companion cleanup/rollback/reopen; fresh live Unicode receipt behavior is unverified. Offline aggregated receipt support (APK 37.71 Cmk.A03/DDF): the first participants child supplies message_id, and each entry supplies its actual jid, independent type (absent defaults to delivery), and required signed BMP-decimal t. Delivery/read/played observations use existing original-target authority and commit as one transaction; malformed input or late saved-state failure commits no partial facts. Inner message_id and per-entry times override root receipt id/type/t in this branch. Unsupported known own/self statuses remain unprojected; the separate key-based participants branch remains unported and cannot fall back to root-id attribution. No original snapshot is backfilled and no resend is authorized. Fresh live aggregate projection remains unverified. HTTP (2026-10-13): served read-only by `whatsapp-cli serve --store-routes --token-file <new path>` (experimental-transport build), loopback only, with `Authorization: Bearer <token>`; the store is opened per request with the serve process's --store/--account/--key-env, so it answers 503 store_unavailable only while another command (for example listen) holds the store, and 500 store_read_failed for any other read failure; a command starting during a request can fail to open the store and must be rerun. HEAD is also served. The parameters listed here are CLI flags; over HTTP the store comes from the serve process. peer_ticket is an unsalted address hash (guessable for phone numbers); treat responses as account data. Same library call and redacted JSON as the CLI. Disabled store routes answer 404 store_routes_disabled; a missing or wrong token 401 with WWW-Authenticate: Bearer; any query string 400. The local_id path segment is validated before the store opens (400 invalid_input); an ID with no outbox intent answers 404 unknown_local_id.",
         "operationId": "outboxVersions",
         "x-cli": "whatsapp-cli outbox-versions",
         "x-transport": [
-          "cli"
+          "cli",
+          "http"
         ],
         "x-live": false,
         "parameters": [
@@ -13585,10 +13586,76 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Malformed local_id or a query string (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or wrong bearer token (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Store routes not enabled, or no outbox intent has this local_id (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Only GET and HEAD are served (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The store could not be read for a reason other than being in use (HTTP only); details only in the server log",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Another command holds the store (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         },
         "x-library": [
-          "whatsapp_api::transport::send_versions::inspect"
+          "whatsapp_api::transport::send_versions::inspect",
+          "whatsapp_cli::http::serve"
+        ],
+        "security": [
+          {
+            "storeBearer": []
+          }
         ]
       }
     },
