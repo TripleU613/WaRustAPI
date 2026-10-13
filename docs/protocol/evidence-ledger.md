@@ -1,3 +1,11 @@
+2026-10-13 — **Fixed/offline (registration safety audit, waits and email
+recovery):** `resume-email-challenge` is now allowed once per recovery kind per
+attempt, so an uncertain email-code request can no longer be re-sent in a
+loop; the `challenge` refusal's `email_otp_wait` is kept (inferred meaning,
+longer value); and a shorter SMS/voice wait no longer replaces a longer
+`retry_after`. Open: a `/v2/code` refusal that stays blocked does not keep its
+SMS/voice wait (needs a saved-state field). [Audit](registration-safety-audit.md).
+
 2026-10-13 — **Corrected/offline (review of the receive hardening):** the
 first undecodable-frame change kept receiving after any undecodable frame, so an
 undecodable `stream:error` or `failure` would have been followed by

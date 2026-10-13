@@ -468,6 +468,11 @@ struct Transition {
     to: String,
 }
 
+/// The longest of the server-directed waits that are present.
+fn longest<const N: usize>(waits: [Option<std::time::Duration>; N]) -> Option<std::time::Duration> {
+    waits.into_iter().flatten().max()
+}
+
 /// Durable record of one attempt. `Debug` redacts the phone number.
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct RegistrationAttempt {
@@ -831,6 +836,10 @@ impl ComparisonHttpFlow {
             .into();
         }
         if let Some(wait) = response.retry_after {
+            // A refusal that sets a cooldown also keeps the longer of any SMS
+            // or voice wait it carries: the next code request uses one of them.
+            let wait =
+                longest([Some(wait), response.sms_wait, response.voice_wait]).unwrap_or(wait);
             return RegistrationState::CoolingDown {
                 until: Timestamp::now().saturating_add(wait),
             }
@@ -1015,9 +1024,11 @@ impl RegistrationFlow for ComparisonHttpFlow {
             if (200..300).contains(&status_code)
                 && response.status == wire::RegistrationResponseStatus::Sent
             {
+                // The longer of the method's wait and the generic one: a
+                // shorter value must never shorten a server-directed wait.
                 let retry_wait = match attempt.method {
-                    ChallengeMethod::Sms => response.sms_wait.or(response.retry_after),
-                    ChallengeMethod::Voice => response.voice_wait.or(response.retry_after),
+                    ChallengeMethod::Sms => longest([response.sms_wait, response.retry_after]),
+                    ChallengeMethod::Voice => longest([response.voice_wait, response.retry_after]),
                     ChallengeMethod::Other(_) => response.retry_after,
                 };
                 return Ok(RegistrationState::ChallengePending {
@@ -1123,8 +1134,11 @@ impl RegistrationFlow for ComparisonHttpFlow {
                         step: handle.step.saturating_add(1),
                         method: ChallengeMethod::Other("email_otp".into()),
                         expires_at: None,
-                        retry_after: response
-                            .retry_after
+                        // **Inferred:** the refusal's `email_otp_wait` is the
+                        // wait before an email code may be requested (the
+                        // `/v2/code` answer carries the same field). Keep the
+                        // longer of it and `retry_after`; it only delays.
+                        retry_after: longest([response.retry_after, response.email_otp_wait])
                             .map(|wait| Timestamp::now().saturating_add(wait)),
                     },
                 }
@@ -1880,6 +1894,12 @@ impl RegistrationService {
     /// Operator recovery, no network: an attempt refused with `challenge`
     /// before this branch existed moves to `EmailChallengeRequired` so the
     /// email second factor can be requested. Only that exact refusal qualifies.
+    ///
+    /// Each of the two recoveries (a `challenge` refusal, a lost email-code
+    /// request) is allowed once per attempt, recorded in the same transaction.
+    /// Without that, request, lose, resume and request again could repeat
+    /// without bound, re-sending an email request whose outcome is uncertain
+    /// (registration safety audit, 2026-10-13).
     pub async fn resume_email_challenge(&self) -> Result<RegistrationStep> {
         self.store
             .run_blocking(move |s| {
@@ -1917,6 +1937,26 @@ impl RegistrationService {
                             ),
                         ));
                     }
+                    let latch = format!(
+                        "email-challenge-resumed:{}:{}",
+                        if refused_with_challenge { "challenge" } else { "lost-request" },
+                        hex::encode(attempt.id.0)
+                    );
+                    if tx
+                        .get(Table::RegistrationAttempts, latch.as_bytes(), RECORD_V1)?
+                        .is_some()
+                    {
+                        return Err(Error::invalid(
+                            "challenge",
+                            "this recovery was already used for this attempt; an uncertain email-code request is not re-sent again",
+                        ));
+                    }
+                    tx.put_json(
+                        Table::RegistrationAttempts,
+                        latch.as_bytes(),
+                        RECORD_V1,
+                        &Timestamp::now(),
+                    )?;
                     let step = u32::try_from(attempt.history_len()).unwrap_or(u32::MAX);
                     let now = Timestamp::now();
                     attempt.transition(
@@ -2667,6 +2707,124 @@ mod tests {
             service.request_email_code(h2, None).await.unwrap(),
             RegistrationStep::Action(RequiredAction::WaitForCooldown { .. })
         ));
+        assert!(transport.responses.lock().unwrap().is_empty());
+    }
+
+    /// A shorter method-specific wait never shortens a longer generic one,
+    /// and a `challenge` refusal keeps its `email_otp_wait`.
+    #[tokio::test]
+    async fn server_waits_keep_the_longest_value() {
+        let (_d, s) = store();
+        let profile = ProtocolProfile::android_reference().unwrap();
+        let transport = Arc::new(ComparisonTransport {
+            responses: std::sync::Mutex::new(std::collections::VecDeque::from([
+                (
+                    "/v2/code",
+                    br#"{"status":"sent","sms_wait":30,"retry_after":600}"#.as_slice(),
+                ),
+                (
+                    "/v2/register",
+                    br#"{"status":"fail","reason":"challenge","second_factor_methods":["email_otp"],"email_otp_wait":900}"#
+                        .as_slice(),
+                ),
+            ])),
+        });
+        let service = RegistrationService::new(
+            s.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(
+                Arc::new(ComparisonRequests),
+                transport.clone(),
+            )),
+        );
+        let before = Timestamp::now();
+        let RegistrationStep::Action(RequiredAction::EnterCode(h)) =
+            service.begin(phone(), ChallengeMethod::Sms).await.unwrap()
+        else {
+            panic!("expected code")
+        };
+        let at_least = |until: Option<Timestamp>, seconds: u64| {
+            until.is_some_and(|until| {
+                until >= before.saturating_add(std::time::Duration::from_secs(seconds))
+            })
+        };
+        assert!(at_least(h.retry_after, 600), "{:?}", h.retry_after);
+        service
+            .submit(h, Answer::Code(Zeroizing::new("123456".into())))
+            .await
+            .unwrap();
+        let saved = service.current().await.unwrap().unwrap();
+        let RegistrationState::EmailChallengeRequired { handle } = saved.state else {
+            panic!("expected the email challenge, got {:?}", saved.state)
+        };
+        assert!(
+            at_least(handle.retry_after, 900),
+            "{:?}",
+            handle.retry_after
+        );
+        assert_eq!(
+            longest([None, Some(std::time::Duration::from_secs(5)), None]),
+            Some(std::time::Duration::from_secs(5))
+        );
+        assert_eq!(longest::<2>([None, None]), None);
+    }
+
+    /// Each email-challenge recovery is allowed once per attempt: a lost
+    /// email-code request can be resumed once, and a second loss stays
+    /// uncertain instead of being re-sent again.
+    #[tokio::test]
+    async fn lost_email_code_requests_resume_only_once() {
+        let (_d, s) = store();
+        let profile = ProtocolProfile::android_reference().unwrap();
+        let transport = Arc::new(ComparisonTransport {
+            responses: std::sync::Mutex::new(std::collections::VecDeque::from([
+                ("/v2/code", br#"{"status":"sent"}"#.as_slice()),
+                (
+                    "/v2/register",
+                    br#"{"status":"fail","reason":"challenge","second_factor_methods":["wa_old"]}"#
+                        .as_slice(),
+                ),
+                // Two email-code requests whose answers cannot be read.
+                ("/v2/code", b"not json".as_slice()),
+                ("/v2/code", b"not json".as_slice()),
+            ])),
+        });
+        let service = RegistrationService::new(
+            s.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(
+                Arc::new(ComparisonRequests),
+                transport.clone(),
+            )),
+        );
+        let RegistrationStep::Action(RequiredAction::EnterCode(h)) =
+            service.begin(phone(), ChallengeMethod::Sms).await.unwrap()
+        else {
+            panic!("expected code")
+        };
+        service
+            .submit(h, Answer::Code(Zeroizing::new("123456".into())))
+            .await
+            .unwrap();
+        for round in 0..2 {
+            let RegistrationStep::Action(RequiredAction::RequestEmailCode(handle)) =
+                service.resume_email_challenge().await.unwrap()
+            else {
+                panic!("expected the email challenge in round {round}")
+            };
+            let _ = service.request_email_code(handle, None).await;
+            let saved = service.current().await.unwrap().unwrap();
+            assert!(
+                matches!(
+                    saved.state,
+                    RegistrationState::RegistrationOutcomeUnknown { .. }
+                ),
+                "round {round}: {:?}",
+                saved.state
+            );
+        }
+        let error = service.resume_email_challenge().await.unwrap_err();
+        assert!(error.to_string().contains("already used"), "{error}");
         assert!(transport.responses.lock().unwrap().is_empty());
     }
 

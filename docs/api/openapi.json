@@ -9694,7 +9694,7 @@
           "Registration Lab"
         ],
         "summary": "Request a code or resume an existing attempt; no automatic retries",
-        "description": "Initiates or resumes a registration attempt. Requests a verification code via the specified method (sms or voice). Contacts WhatsApp servers.",
+        "description": "Initiates or resumes a registration attempt. Requests a verification code via the specified method (sms or voice). Contacts WhatsApp servers. Waits (2026-10-13): on sent, the handle keeps the longer of the method's wait (sms_wait or voice_wait) and retry_after; a refusal that sets a cooldown keeps the longest SMS or voice wait it carries.",
         "operationId": "labSignupBegin",
         "x-cli": "whatsapp-cli lab-signup begin",
         "x-transport": [
@@ -10358,7 +10358,7 @@
           "Registration Lab"
         ],
         "summary": "Ask the server to email the one-time code to the address on file",
-        "description": "Requests the server to email the one-time code to the registered email address. Uses /v2/code with method=email_otp. Optional email parameter is rejected when given. Contacts WhatsApp servers.",
+        "description": "Requests the server to email the one-time code to the registered email address. Uses /v2/code with method=email_otp. Optional email parameter is rejected when given. Contacts WhatsApp servers. Wait (2026-10-13): the challenge refusal's email_otp_wait is now kept with retry_after (the longer one) and enforced before this request; that it means the wait before an email code may be requested is inferred.",
         "operationId": "labSignupRequestEmailCode",
         "x-cli": "whatsapp-cli lab-signup request-email-code",
         "x-transport": [
@@ -10432,7 +10432,7 @@
           "Registration Lab"
         ],
         "summary": "Local only: move a challenge refusal to the email second-factor step",
-        "description": "Moves a challenge refusal of /v2/register to the email second-factor step (2.26.37.71 launchEmailChallengeFlow). Offline operation; no request sent to WhatsApp.",
+        "description": "Moves a challenge refusal of /v2/register to the email second-factor step (2.26.37.71 launchEmailChallengeFlow). Offline operation; no request sent to WhatsApp. Once per recovery kind (2026-10-13): a challenge refusal and a lost email-code request can each be resumed once per attempt, recorded atomically; a further loss stays uncertain instead of allowing another email-code request. Evidence docs/protocol/registration-safety-audit.md.",
         "operationId": "labSignupResumeEmailChallenge",
         "x-cli": "whatsapp-cli lab-signup resume-email-challenge",
         "x-transport": [
