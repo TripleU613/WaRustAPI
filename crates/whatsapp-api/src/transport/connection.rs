@@ -10,9 +10,8 @@ use super::{
 };
 use crate::{
     Error, Result,
-    binary::{Decoder, Encoder, Node, TokenDictionary, unpack_frame_payload},
+    binary::{Encoder, Node, TokenDictionary},
     model::time::Timestamp,
-    profile::Limits,
     registration::request::LabRegistrationConfig,
     session::{AccountRecord, ObservedCredential},
     store::{ProtocolStore, Table},
@@ -216,10 +215,7 @@ pub(crate) enum Inbound {
 
 /// Unpack and decode one decrypted frame.
 fn inbound_from_frame(frame: &[u8]) -> Inbound {
-    let limits = Limits::default();
-    match unpack_frame_payload(frame, &limits).and_then(|raw| {
-        Decoder::new(&raw, TokenDictionary::comparison_2_26_37_71(), &limits).decode_node()
-    }) {
+    match super::inbox::decode_frame(frame) {
         Ok(node) => Inbound::Node(node),
         Err(error) => Inbound::Undecodable {
             frame: frame.to_vec(),
@@ -2080,7 +2076,8 @@ mod tests {
     async fn group_outbox_socket_cuts_keep_every_query_and_ciphertext_reservation_without_replay() {
         use super::super::{group_fanout, outgoing_group};
         use outgoing_group::tests::{device_reply, enqueue, key_reply, membership};
-        let outbox = crate::outbox::Outbox::new("comparison-driver", Limits::default());
+        let outbox =
+            crate::outbox::Outbox::new("comparison-driver", crate::profile::Limits::default());
         for cut in ["membership", "devices", "keys", "send"] {
             let dir = tempfile::tempdir().unwrap();
             let store = open(&dir.path().join("normal-group-cut.redb"));

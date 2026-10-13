@@ -92,7 +92,8 @@ so the CLI can embed and serve it without extra dependencies).
 account selected by `--store`/`--account`/`--key-env`: `GET /v1/receipts`,
 `/v1/prekeys`, `/v1/outbox/suspended`, `/v1/actions` (list form only),
 `/v1/identity-conflicts`, `/v1/outbox/group-preparations`,
-`/v1/diagnostics/own-lid` and `/v1/outbox/{local_id}/versions` (malformed ID
+`/v1/diagnostics/own-lid`, `/v1/inbox/undecodable` and
+`/v1/outbox/{local_id}/versions` (malformed ID
 400 before the store opens, unknown ID 404 `unknown_local_id`). These refuse any
 query string with 400, so CLI-only options are never silently ignored.
 

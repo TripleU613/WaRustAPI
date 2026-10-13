@@ -198,7 +198,9 @@ Fixed:
   every session and left nothing to inspect. Now the reader passes the
   decrypted frame through; `drive` stores it once, encrypted, under
   `inbound-undecodable:sha256:<digest>` with a fixed error class (`store
-  inspect` counts that kind), logs the class and continues. Nothing is
+  inspect` counts that kind; `whatsapp-cli undecodable` and the
+  `GET /v1/inbox/undecodable` store route list them redacted and say whether
+  the current decoder now reads each one), logs the class and continues. Nothing is
   acknowledged, since there is no ID. A frame that decrypted cannot have
   desynchronised the stream: records are length-delimited and authenticated.
   Continuing is **local policy**; where the APK catches a decode error is not

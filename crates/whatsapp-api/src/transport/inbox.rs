@@ -527,6 +527,91 @@ pub fn preserve_in_epoch(
     )
 }
 
+/// Unpack and decode one decrypted frame exactly as the receive reader does,
+/// with the comparison dictionary and default limits.
+pub(crate) fn decode_frame(frame: &[u8]) -> std::result::Result<Node, crate::binary::CodecError> {
+    let limits = crate::profile::Limits::default();
+    crate::binary::unpack_frame_payload(frame, &limits).and_then(|raw| {
+        crate::binary::Decoder::new(
+            &raw,
+            crate::binary::TokenDictionary::comparison_2_26_37_71(),
+            &limits,
+        )
+        .decode_node()
+    })
+}
+
+const UNDECODABLE_PREFIX: &str = "inbound-undecodable:";
+
+#[derive(serde::Deserialize)]
+struct StoredUndecodable {
+    frame: Vec<u8>,
+    class: String,
+    epoch: super::ConnectionEpoch,
+    observed_at: crate::model::time::Timestamp,
+}
+
+/// One captured frame the receive loop could not decode. Redacted: the
+/// capture key is a digest of the frame; no frame bytes, stanza content or
+/// address are returned.
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+pub struct UndecodableFrame {
+    /// `inbound-undecodable:sha256:<digest of the decrypted frame>`.
+    pub capture: String,
+    /// Fixed error class when it was captured (`CodecError::class`).
+    pub class: String,
+    /// Decrypted frame length in bytes, before inflation.
+    pub bytes: usize,
+    /// First local observation.
+    pub observed_at: crate::model::time::Timestamp,
+    /// Actor-local connection epoch that captured it.
+    pub epoch: super::ConnectionEpoch,
+    /// The class the current decoder reports, or `None` when it now decodes
+    /// (for example after a dictionary update). Nothing is reprocessed: an
+    /// unacknowledged stanza is redelivered by the server.
+    pub current_class: Option<String>,
+}
+
+/// Every captured undecodable frame, re-checked with the current decoder.
+/// Read-only; nothing is decoded into the inbox, acknowledged or sent.
+pub fn undecodable_frames(store: &ProtocolStore) -> Result<Vec<UndecodableFrame>> {
+    store.read(|tx| {
+        let mut out = Vec::new();
+        let mut cursor = None;
+        loop {
+            let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
+            let done = rows.len() < 256;
+            cursor = rows.last().map(|(key, _)| key.clone());
+            for (key, _) in rows {
+                let Ok(name) = std::str::from_utf8(&key) else {
+                    continue;
+                };
+                if !name.starts_with(UNDECODABLE_PREFIX) {
+                    continue;
+                }
+                let Some(saved): Option<StoredUndecodable> =
+                    tx.get_json(Table::Checkpoints, &key, 1)?
+                else {
+                    continue;
+                };
+                out.push(UndecodableFrame {
+                    capture: name.to_owned(),
+                    class: saved.class,
+                    bytes: saved.frame.len(),
+                    observed_at: saved.observed_at,
+                    epoch: saved.epoch,
+                    current_class: decode_frame(&saved.frame)
+                        .err()
+                        .map(|error| error.class().to_owned()),
+                });
+            }
+            if done {
+                return Ok(out);
+            }
+        }
+    })
+}
+
 /// Capture a decrypted frame whose payload did not unpack or decode, so it can
 /// be inspected (`store inspect` lists the `inbound-undecodable` kind) and
 /// re-decoded by a later decoder. Encrypted at rest like every capture; keyed
@@ -539,7 +624,7 @@ pub(crate) fn preserve_undecodable(
 ) -> Result<String> {
     use sha2::{Digest, Sha256};
     let key = format!(
-        "inbound-undecodable:sha256:{}",
+        "{UNDECODABLE_PREFIX}sha256:{}",
         hex::encode(Sha256::digest(frame))
     );
     store.write(|tx| {
@@ -2362,6 +2447,52 @@ mod tests {
                 .unwrap(),
             IncomingResult::Undecryptable
         );
+    }
+
+    /// Undecodable frames are stored once per digest and listed redacted,
+    /// re-checked with the current decoder.
+    #[test]
+    fn undecodable_frames_are_stored_once_and_rechecked() {
+        use crate::{
+            model::ids::AccountId,
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("undecodable.redb"),
+            account_id: AccountId::new("fixture").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([23; 32]))),
+            create: true,
+        })
+        .unwrap();
+        let epoch = super::super::ConnectionEpoch(4);
+        // Still undecodable: a description that is a nested JID tag.
+        let mut refused = vec![0x00, crate::binary::tags::LIST_8, 1];
+        refused.extend([crate::binary::tags::JID_PAIR; 8]);
+        let class = decode_frame(&refused).unwrap_err().class();
+        let first = preserve_undecodable(&store, &refused, class, epoch).unwrap();
+        assert_eq!(
+            preserve_undecodable(&store, &refused, class, epoch).unwrap(),
+            first
+        );
+        // A frame stored as undecodable that the current decoder reads: as
+        // after a dictionary update.
+        let encoded =
+            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
+                .encode(&Node::new("ping"))
+                .unwrap();
+        preserve_undecodable(&store, &encoded, "unknown_token", epoch).unwrap();
+        let mut frames = undecodable_frames(&store).unwrap();
+        frames.sort_by_key(|f| f.bytes);
+        assert_eq!(frames.len(), 2);
+        let decodable = frames.iter().find(|f| f.class == "unknown_token").unwrap();
+        assert_eq!(decodable.current_class, None);
+        assert_eq!(decodable.bytes, encoded.len());
+        let still = frames.iter().find(|f| f.capture == first).unwrap();
+        assert_eq!(still.class, "invalid_node");
+        assert_eq!(still.current_class.as_deref(), Some("invalid_node"));
+        assert_eq!(still.epoch, epoch);
+        assert!(!serde_json::to_string(&frames).unwrap().contains("frame"));
     }
 
     /// Viewing a view-once marks its record consumed. A redelivery after a cut

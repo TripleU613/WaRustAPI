@@ -267,6 +267,10 @@ enum Cmd {
     /// Show queued read, played and retry receipts and their outcomes (offline, redacted).
     #[cfg(feature = "experimental-transport")]
     Receipts,
+    /// List received frames `listen` could not decode, re-checked with the
+    /// current decoder (offline, redacted: digest, error class, size).
+    #[cfg(feature = "experimental-transport")]
+    Undecodable,
     /// Inspect saved peer identity conflicts (offline; unauthenticated observations).
     #[cfg(feature = "experimental-transport")]
     IdentityConflicts,
@@ -738,7 +742,8 @@ enum Cmd {
         /// Also serve read-only, redacted store inspections (`/v1/receipts`,
         /// `/v1/prekeys`, `/v1/outbox/suspended`, `/v1/actions`,
         /// `/v1/identity-conflicts`, `/v1/outbox/group-preparations`,
-        /// `/v1/outbox/{local_id}/versions`, `/v1/diagnostics/own-lid`, and
+        /// `/v1/outbox/{local_id}/versions`, `/v1/diagnostics/own-lid`,
+        /// `/v1/inbox/undecodable`, and
         /// with one ID query parameter `/v1/groups/receipts`,
         /// `/v1/groups/key-queries`, `/v1/groups/refresh-status`) for the
         /// selected account. Loopback-only; requires a bearer token (see
@@ -1619,6 +1624,8 @@ async fn run(cli: Cli) -> Result<(), Error> {
         Cmd::Prekeys => transport_receive::prekeys_status(&cli),
         #[cfg(feature = "experimental-transport")]
         Cmd::Receipts => transport_receive::receipts_status(&cli),
+        #[cfg(feature = "experimental-transport")]
+        Cmd::Undecodable => transport_receive::undecodable_status(&cli),
         #[cfg(feature = "experimental-transport")]
         Cmd::IdentityConflicts => transport_receive::identity_conflicts(&cli),
         #[cfg(feature = "experimental-transport")]

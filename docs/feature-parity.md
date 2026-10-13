@@ -14,7 +14,7 @@ exist but nothing sends/applies it; **absent** = not implemented;
 
 **Exposure.** CLI = `whatsapp-cli` command (see [cli.md](cli.md)). HTTP: by
 default `whatsapp-cli serve` serves only the service/profile endpoints, `connect`
-and `registration begin`; with `--store-routes` it also serves eleven read-only
+and `registration begin`; with `--store-routes` it also serves twelve read-only
 store inspections ([HTTP API parity](#http-api-parity)). Every other operation in
 [openapi.json](api/openapi.json) is `x-transport: cli`. Library = public
 `whatsapp_api` items listed in each operation's `x-library`.
@@ -123,11 +123,11 @@ The library and CLI cover the rows above; HTTP covers little of it. Default
 secret-free profile and capability data.
 
 **2026-10-13, opt-in store routes:** `serve --store-routes --token-file <new
-path>` (experimental-transport build) also serves eleven read-only, redacted
+path>` (experimental-transport build) also serves twelve read-only, redacted
 inspections: `GET /v1/receipts`, `/v1/prekeys`, `/v1/outbox/suspended`,
 `/v1/actions` (list form only), `/v1/identity-conflicts`,
 `/v1/outbox/group-preparations`, `/v1/outbox/{local_id}/versions`,
-`/v1/diagnostics/own-lid`, and the counts-only `/v1/groups/receipts`,
+`/v1/diagnostics/own-lid`, `/v1/inbox/undecodable`, and the counts-only `/v1/groups/receipts`,
 `/v1/groups/key-queries` and `/v1/groups/refresh-status` (one ID query
 parameter each, added the same day), the same library calls and JSON as the CLI. Inspections whose output carries raw
 addresses (for example device queries, message status facts, contacts,

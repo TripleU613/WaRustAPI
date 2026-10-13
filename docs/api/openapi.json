@@ -4436,6 +4436,65 @@
             "description": "No certificate or identity-auth signature verification is performed by this shape inspection."
           }
         }
+      },
+      "UndecodableFrame": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "capture",
+          "class",
+          "bytes",
+          "observed_at",
+          "epoch",
+          "current_class"
+        ],
+        "properties": {
+          "capture": {
+            "type": "string",
+            "description": "inbound-undecodable:sha256:<digest of the decrypted frame>; a digest, not content or an address."
+          },
+          "class": {
+            "type": "string",
+            "enum": [
+              "unexpected_eof",
+              "unknown_tag",
+              "unknown_token",
+              "invalid_packed_digit",
+              "length_limit",
+              "depth_limit",
+              "invalid_node",
+              "duplicate_attribute",
+              "non_string_key",
+              "invalid_jid",
+              "compression",
+              "trailing_bytes",
+              "unencodable"
+            ],
+            "description": "Fixed decoder error class when captured (CodecError::class)."
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Decrypted frame length before inflation."
+          },
+          "observed_at": {
+            "type": "integer",
+            "format": "int64",
+            "description": "First local observation, Unix milliseconds."
+          },
+          "epoch": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Actor-local connection epoch that captured the frame."
+          },
+          "current_class": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Error class from the current decoder, or null when it now decodes (for example after a dictionary update). Nothing is reprocessed."
+          }
+        }
       }
     },
     "securitySchemes": {
@@ -4453,7 +4512,7 @@
           "Service"
         ],
         "summary": "Serve the local HTTP control plane",
-        "description": "Returns the service index with available endpoints. Store routes are listed only when the server was started with --store-routes. `--store-routes` (requires `--token-file`, a new path) also serves read-only, redacted store inspections (/v1/receipts, /v1/prekeys, /v1/outbox/suspended, /v1/actions, /v1/identity-conflicts, /v1/outbox/group-preparations, /v1/outbox/{local_id}/versions, /v1/diagnostics/own-lid, and with one ID query parameter /v1/groups/receipts, /v1/groups/key-queries, /v1/groups/refresh-status; the index lists the parameterized ones as path?name={name}) for the selected account: loopback only even with --allow-non-loopback, bearer-token authenticated, store opened per request, nothing sent. The token goes to the new mode-0600 file only, never stdout or logs, and the file is removed on Ctrl-C, SIGTERM or SIGHUP. Clients should use 127.0.0.1 rather than localhost. Default serve remains store-less.",
+        "description": "Returns the service index with available endpoints. Store routes are listed only when the server was started with --store-routes. `--store-routes` (requires `--token-file`, a new path) also serves read-only, redacted store inspections (/v1/receipts, /v1/prekeys, /v1/outbox/suspended, /v1/actions, /v1/identity-conflicts, /v1/outbox/group-preparations, /v1/outbox/{local_id}/versions, /v1/diagnostics/own-lid, /v1/inbox/undecodable, and with one ID query parameter /v1/groups/receipts, /v1/groups/key-queries, /v1/groups/refresh-status; the index lists the parameterized ones as path?name={name}) for the selected account: loopback only even with --allow-non-loopback, bearer-token authenticated, store opened per request, nothing sent. The token goes to the new mode-0600 file only, never stdout or logs, and the file is removed on Ctrl-C, SIGTERM or SIGHUP. Clients should use 127.0.0.1 rather than localhost. Default serve remains store-less.",
         "operationId": "serveRoot",
         "x-cli": "whatsapp-cli serve",
         "x-transport": [
@@ -11039,7 +11098,7 @@
           "Store"
         ],
         "summary": "Print table counts, journal head, generation and registration status",
-        "description": "Returns inspection data for the protocol store including table row counts, journal state and current registration status. Also reports checkpoint_kinds: a count of Checkpoints rows per leading key segment (for example inbound, received, app-state-key, login-identity). Checkpoints holds many unrelated record kinds under one table, so a bare row count cannot answer whether a given kind is present; only the structural prefix is shown, never the JID or digest that follows it. Since 2026-10-13 the kind inbound-undecodable counts decrypted frames listen could not decode; each is kept with its fixed error class for later inspection or re-decoding.",
+        "description": "Returns inspection data for the protocol store including table row counts, journal state and current registration status. Also reports checkpoint_kinds: a count of Checkpoints rows per leading key segment (for example inbound, received, app-state-key, login-identity). Checkpoints holds many unrelated record kinds under one table, so a bare row count cannot answer whether a given kind is present; only the structural prefix is shown, never the JID or digest that follows it. Since 2026-10-13 the kind inbound-undecodable counts decrypted frames listen could not decode; each is kept with its fixed error class for later inspection or re-decoding. whatsapp-cli undecodable lists them, re-checked with the current decoder.",
         "operationId": "inspectStore",
         "x-cli": "whatsapp-cli store inspect",
         "x-transport": [
@@ -14070,6 +14129,123 @@
             }
           }
         }
+      }
+    },
+    "/v1/inbox/undecodable": {
+      "get": {
+        "tags": [
+          "Events"
+        ],
+        "summary": "List received frames listen could not decode (offline, redacted)",
+        "operationId": "getUndecodableFrames",
+        "description": "Lists decrypted frames the receive loop could not unpack or decode, which it stores once (encrypted, keyed by digest) and skips instead of ending the session (2026-10-13). Each entry gives the capture digest, the fixed decoder error class when captured, the class the current decoder reports (null when it now decodes, for example after a dictionary update), the frame size, first observation and capturing epoch. Never frame bytes, stanza content or an address. Read-only: nothing is decoded into the inbox, acknowledged or sent; an unacknowledged stanza is redelivered by the server. Evidence docs/protocol/replay-safety-audit.md#network-input-panic-audit-2026-10-13. HTTP (2026-10-13): served read-only by `whatsapp-cli serve --store-routes --token-file <new path>` (experimental-transport build), loopback only, with `Authorization: Bearer <token>`; the store is opened per request with the serve process's --store/--account/--key-env, so it answers 503 store_unavailable only while another command (for example listen) holds the store, and 500 store_read_failed for any other read failure. HEAD is also served. The parameters listed here are CLI flags; over HTTP the store comes from the serve process. Any query string 400.",
+        "x-cli": "whatsapp-cli undecodable",
+        "x-transport": [
+          "cli",
+          "http"
+        ],
+        "x-live": false,
+        "x-library": [
+          "whatsapp_api::transport::inbox::undecodable_frames",
+          "whatsapp_cli::http::serve"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Store"
+          },
+          {
+            "$ref": "#/components/parameters/Account"
+          },
+          {
+            "$ref": "#/components/parameters/KeyEnv"
+          },
+          {
+            "$ref": "#/components/parameters/Profile"
+          },
+          {
+            "$ref": "#/components/parameters/ProfilesDir"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Captured undecodable frames, possibly empty",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UndecodableFrame"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Query parameters are not accepted on this store route (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or wrong bearer token (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Store routes not enabled on this server (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Only GET and HEAD are served (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The store could not be read for a reason other than being in use (HTTP only); details only in the server log",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Another command holds the store (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "storeBearer": []
+          }
+        ]
       }
     }
   }

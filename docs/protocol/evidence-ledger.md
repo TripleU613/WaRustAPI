@@ -1,3 +1,10 @@
+2026-10-13 — **Implemented/offline (inspection):** `whatsapp-cli undecodable`
+(also `GET /v1/inbox/undecodable` under `serve --store-routes`) lists the frames
+`listen` captured because it could not decode them: capture digest, error class
+then and now, size, epoch. "Now" re-runs the current decoder, so a dictionary
+update shows which captures it would read. Read-only and redacted; nothing is
+reprocessed or acknowledged. [Audit](replay-safety-audit.md#network-input-panic-audit-2026-10-13).
+
 2026-10-13 — **Fixed/offline (network-input panic audit):** a read-only audit
 for panics and aborts reachable from received data found one. Nested JID tags
 made the binary decoder recurse until the stack overflowed: a 4 KB compressed

@@ -843,6 +843,45 @@ pub(super) fn reproject(cli: &super::Cli) -> Result<(), Error> {
 }
 
 /// Offline list of receipts (read/played/retry) and their outcomes.
+/// Captured frames `listen` could not decode. Prints the capture digest, the
+/// error class then and now, and the frame size; never frame bytes.
+pub(super) fn undecodable_status(cli: &super::Cli) -> Result<(), Error> {
+    let store = ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })?;
+    let frames = whatsapp_api::transport::inbox::undecodable_frames(&store)?;
+    if cli.json {
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&frames)
+                .map_err(|e| Error::invalid("undecodable", e.to_string()))?
+        );
+        return Ok(());
+    }
+    if frames.is_empty() {
+        println!("undecodable: none captured");
+        return Ok(());
+    }
+    for frame in &frames {
+        println!(
+            "undecodable: {} class={} now={} bytes={} epoch={}",
+            frame.capture,
+            frame.class,
+            frame.current_class.as_deref().unwrap_or("decodes"),
+            frame.bytes,
+            frame.epoch.0
+        );
+    }
+    println!(
+        "undecodable: {} captured; not acknowledged, so the server may redeliver; nothing is reprocessed here",
+        frames.len()
+    );
+    Ok(())
+}
+
 pub(super) fn receipts_status(cli: &super::Cli) -> Result<(), Error> {
     let store = ProtocolStore::open(OpenOptions {
         path: cli.store.clone(),

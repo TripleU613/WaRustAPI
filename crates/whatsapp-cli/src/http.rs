@@ -50,12 +50,13 @@ struct ApiState {
 
 /// Read-only store routes, each the same output as an existing CLI inspection
 /// (`receipts`, `prekeys`, `outbox-suspended`, `actions` list,
-/// `identity-conflicts`, `outbox-group-preparations`, `group own-lid`): counts,
+/// `identity-conflicts`, `outbox-group-preparations`, `group own-lid`,
+/// `undecodable`): counts, capture digests, frame sizes and error classes,
 /// local and wire message/iq IDs, unsalted address hashes (`peer_ticket`,
 /// guessable for phone numbers), key fingerprints, fixed reasons and, for
 /// refused actions, the server's error text. No message content, key material
 /// or raw address. These take no query parameters.
-const STORE_ROUTES: [&str; 7] = [
+const STORE_ROUTES: [&str; 8] = [
     "/v1/receipts",
     "/v1/prekeys",
     "/v1/outbox/suspended",
@@ -63,6 +64,7 @@ const STORE_ROUTES: [&str; 7] = [
     "/v1/identity-conflicts",
     "/v1/outbox/group-preparations",
     "/v1/diagnostics/own-lid",
+    "/v1/inbox/undecodable",
 ];
 
 /// Store routes taking exactly one required query parameter, named as the
@@ -648,6 +650,9 @@ fn read_store(
         "/v1/identity-conflicts" => serde_json::to_value(identity_conflicts::list(&store)?),
         "/v1/outbox/group-preparations" => {
             serde_json::to_value(outgoing_group::preparations(&store)?)
+        }
+        "/v1/inbox/undecodable" => {
+            serde_json::to_value(whatsapp_api::transport::inbox::undecodable_frames(&store)?)
         }
         "/v1/diagnostics/own-lid" => Ok(json!({
             "lid_known": group_send::own_lid(&store).map_err(saved_state)?.is_some()
@@ -1267,6 +1272,7 @@ mod tests {
             "/v1/actions",
             "/v1/identity-conflicts",
             "/v1/outbox/group-preparations",
+            "/v1/inbox/undecodable",
         ] {
             let listed = store_route(&request("GET", path, auth), &state)
                 .await
