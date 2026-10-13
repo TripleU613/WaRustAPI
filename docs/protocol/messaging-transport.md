@@ -306,7 +306,9 @@ close at a frame boundary, unanswered keepalive, socket I/O or deadline) the
 runtime waits with capped jittered backoff and reconnects with a fresh epoch and
 full handshake, bounded by the private JSON `transport.reconnect` settings
 (`max_attempts`, default 5; `base_delay_ms`, default 2000; `max_delay_ms`,
-default 60000; `max_attempts: 0` disables). Refusals, `stream:error`/`failure`,
+default 60000; `max_attempts: 0` disables). The attempt count resets only after
+an activated connection stayed up for `max_delay_ms` (see
+[reconnect budget stability](#reconnect-budget-stability-2026-10-13)). Refusals, `stream:error`/`failure`,
 revocation, missing registration, certificate failures, worker panics and an
 uncertain saved login outcome never reconnect automatically. Reconnecting never
 replays a reserved send or receipt: durable reservations survive every epoch,
@@ -1398,6 +1400,38 @@ cannot prove that branch occurred.
 Clippy, warning-free Rustdoc and regenerated CLI/API checks passed. No live
 retry was manufactured, settled request replayed or account identity changed.
 
+### Retry once-only across PN and LID (2026-10-13)
+
+**Found by code audit, not observed live:** the selector above is keyed by the
+stanza's raw `from`/`participant`. Read receipts resolve a PN/LID redelivery
+through the stored inbox record (`inbox::direct_record_in`, group selection),
+but the retry probe only varied encoding kind. Message X delivered as
+`from=<PN>` and undecryptable reserved one retry; a redelivery as
+`from=<LID> sender_pn=<PN>`, still undecryptable, missed that row and would
+queue a second count-1 retry for the same message.
+
+**Correction:** inside the same write transaction, the probe now also covers
+the address's other spelling, keeping its device and agent:
+
+- a LID address adds the stanza's `sender_pn` (direct) or `participant_pn`
+  (group) and the authenticated `authenticated-lid:<lid>` LID-to-PN mapping;
+- a PN address adds the stanza's `sender_lid` / `participant_lid`.
+
+All four attribute names are read by **2.26.37.71** `LidMessageStanzaParser`
+(**confirmed**, [metadata-parser.txt](apk/2.26.37.71-primary-lid/metadata-parser.txt)).
+Extra probes can only suppress a request, never add one. The new reservation
+keeps the canonical raw-address selector; no row is renamed or merged. A PN
+redelivery of a LID-first message with no `sender_lid`/`participant_lid` is
+still a separate request: there is no PN-to-LID index, and scanning mappings is
+not justified for a suppression probe. A saved mapping that is not a phone JID
+refuses (fail closed, nothing queued), matching the inbox's treatment.
+
+**Test:** `retry_queue_is_once_across_pn_and_lid_redelivery` covers direct and
+group, attribute and mapping aliases in both directions, companion devices, and
+controls (another sender, another device, unmapped address) that still queue.
+**Unknown:** whether the server redelivers under the other address in practice,
+and the APK's own duplicate-retry selector.
+
 ## Direct LID sessions across attribute representations (2026-10-07)
 
 **Confirmed local bug, corrected offline:** direct contact routing accepted
@@ -1458,3 +1492,28 @@ records the empty-user receive correction against APK 37.71 `11P.A09` typed
 UserJid inputs. Server-only PN/LID values do not create tokens or ACKs; invalid
 supplied sender_lid reports a fixed diagnostic. No native fallback-policy or
 real-account live validation is claimed.
+
+## Reconnect budget stability (2026-10-13)
+
+**Found by code audit:** the runtime reset its consecutive-attempt count as
+soon as the server activated a connection. A server that activates and then
+drops at once (peer close at a frame boundary is recoverable) therefore gave an
+unbounded cycle: every 1.5-2 s a fresh Noise handshake, login, active IQ,
+presence, ping and prekey/device work. Nothing reserved was replayed, but
+repeated logins are exactly the avoidable client-induced load this project
+must not generate.
+
+**Correction (client policy, not an APK value):** the count now resets only
+when a connection that reached Ready ends after staying up for at least
+`transport.reconnect.max_delay_ms` (default 60 s), or on an explicit `connect`.
+An activate-then-drop loop exhausts `max_attempts` with the usual doubling
+delays and then stops as `Disconnected`. A flaky network whose connections
+last under a minute now ends `listen` after the budget instead of retrying
+forever; restart it deliberately. The APK's own reconnect schedule is
+**untraced**; this is a conservative local bound.
+
+**Tests:** `recoverable_loss_reconnects_with_fresh_epochs_bounded_attempts_and_kept_reservation`
+now shows a stable connection resetting to attempt 1, then three activated but
+immediately dropped connections exhausting the budget;
+`waiters_span_backoff_while_nudge_connect_and_disconnect_control_the_wait`
+shows a brief activation continuing the count (attempt 2).

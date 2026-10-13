@@ -1,3 +1,14 @@
+2026-10-13 — **Corrected/offline (second review and replay audit):** a damaged
+same-key held session no longer makes identity-refresh application error on
+every connection start; it defers as `held_session_inconsistent` (preview
+reports the same) and the row is kept. Once-only retry receipts now also probe
+the sender's other PN/LID address, so a redelivery under the other address
+cannot queue a second retry. The reconnect budget resets only after an
+activated connection stayed up for `max_delay_ms`, bounding activate-then-drop
+login loops. The hybrid receive helper refuses companion senders itself.
+Status-reply quotes (`remoteJid`) remain unread and unverified.
+[Held sessions](protocol/hybrid-identity-refresh.md#damaged-held-sessions-2026-10-13), [retry aliases](protocol/messaging-transport.md#retry-once-only-across-pn-and-lid-2026-10-13), [reconnect](protocol/messaging-transport.md#reconnect-budget-stability-2026-10-13), [audit](protocol/replay-safety-audit.md).
+
 2026-10-13 — **Corrected/offline (independent review):** hybrid receive now
 classifies missing or unusable local keys (including an unparsable KEM row)
 as Undecryptable like classic; a group companion's hybrid pairwise child is

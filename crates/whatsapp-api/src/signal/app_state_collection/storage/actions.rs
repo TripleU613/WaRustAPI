@@ -8,7 +8,8 @@ use crate::{
 use prost::Message;
 use sha2::{Digest, Sha256};
 mod mute;
-#[cfg(test)]
+// Only the comparison-client resolution test uses it.
+#[cfg(all(test, feature = "comparison-client"))]
 pub(crate) use mute::save_for_test as save_mute_for_test;
 pub use mute::{ChatMute, MuteDeadline, ResolvedChatMute, chat_mute};
 

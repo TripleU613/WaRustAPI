@@ -50,8 +50,9 @@ encrypts nothing, allocates no ID and touches no store or socket.
 
 A held record used for same-key archival must carry the bundle's identity as
 its remote identity and the saved account's local identity and registration,
-and is bounded to 1 MiB; otherwise derivation refuses. These are local
-integrity checks, not claimed native checks.
+and is bounded to 1 MiB; otherwise the refresh defers as
+`held_session_inconsistent` (see [damaged held sessions](#damaged-held-sessions-2026-10-13)).
+These are local integrity checks, not claimed native checks.
 
 The commit is the existing one: unchanged reply, original refresh guard,
 pin/session OCC, account fingerprint, own PN/LID exclusion, once-only marker.
@@ -79,6 +80,31 @@ tampered KEM signature, an invalid ML-KEM encoding, attestation plus PQ, a PQ
 companion, same identity without override and the pinned policy; every table
 and the journal head stay unchanged. Existing PQ-signature inspection tests now
 expect `pq_bundle_invalid` for their non-ML-KEM values.
+
+## Damaged held sessions (2026-10-13)
+
+**Found by review:** derivation errors on a damaged held row (does not
+deserialize, no current state, remote identity not the pin, or local
+identity/registration not the saved account) propagated out of `apply`.
+`application::recover` runs at every connection start and the actor applies
+after each settled reply, so one such row ended every connection, classic and
+hybrid alike. Our own commits keep pin, session and account consistent, so the
+row is evidence of damage, not a server condition.
+
+**Correction:** `held_session_consistent` checks the same-key held row before
+derivation (classic and hybrid paths share it). On failure preview reports
+`held_session_inconsistent` and application defers with that reason and a
+warning. Nothing is written: the row stays for inspection, the action stays
+unapplied, and outbox intents suspended for the peer stay suspended, so no send
+uses the damaged state. Other derivation failures (for example an unusable
+saved account key) remain redacted errors. The guards inside the classic and
+hybrid derivations remain as defense in depth.
+
+**Test:** `damaged_held_sessions_defer_without_stopping_recovery` covers
+garbage bytes, a foreign remote identity and a foreign local account on both
+classic and hybrid replies: preview outcome, deferral, `recover()` returning
+`Ok(0)`, and no store or journal change. The preview test's `bad_session` and
+`session_identity_mismatch` cases now expect the outcome instead of an error.
 
 ## Remaining
 

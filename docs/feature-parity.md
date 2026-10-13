@@ -25,7 +25,7 @@ operation's `x-library`.
 | Primary registration (SMS request, verify, 2FA PIN) | live (lab recipe) | `lab-signup …` | [registration-lab](protocol/registration-lab.md) | Default `registration begin` stays blocked until the pinned profile is observed |
 | Login (Noise XX, certificate, primary payload) | live | `lab-transport`, `listen` | [messaging-transport](protocol/messaging-transport.md) | Pinned 2.26.36.75 profile equivalence unobserved |
 | Prekey upload and replenishment | live | `prekeys`, `listen` | [messaging-completion](messaging-completion.md) | KEM prekey upload untraced (see PQ row) |
-| Reconnect after recoverable loss | offline | `listen` | [messaging-transport](protocol/messaging-transport.md) | Refusals never retry by design |
+| Reconnect after recoverable loss | offline | `listen` | [messaging-transport](protocol/messaging-transport.md#reconnect-budget-stability-2026-10-13) | Refusals never retry by design; budget resets only after a stable connection |
 | Two-step verification | live (set) | `two-factor` | [chat-actions](protocol/chat-actions.md) | Change/disable not live-verified |
 | Ban appeal | partial: token recovered, nothing submitted | `ban-appeal` | [ban-appeal](protocol/ban-appeal.md) | Owner's decision |
 | Account recovery / re-registration of a banned number | absent | — | — | Out of scope without owner authority |
@@ -44,7 +44,7 @@ operation's `x-library`.
 | Feature | State | CLI | Evidence | Blockers / next |
 |---|---|---|---|---|
 | Direct text (PN or LID) | live, incl. normal outbox with delivery receipt | `send`, `outbox-send` | [messaging-transport](protocol/messaging-transport.md) | Read/played receipt and handset confirmation for outbox send |
-| Replies / quotes | live (text); incoming quoted media offline | `reply` | [chat-actions](protocol/chat-actions.md), [quoted-media](protocol/quoted-media.md) | Quoted media sending |
+| Replies / quotes | live (text); incoming quoted media offline | `reply` | [chat-actions](protocol/chat-actions.md), [quoted-media](protocol/quoted-media.md) | Quoted media sending; quotes of another chat (status replies) ignore `remoteJid` |
 | Reactions | direct live; group **not rendering** (cause unknown) | `react` | [reactions](protocol/reactions.md), [groups](protocol/groups.md) | Group reaction rendering |
 | Polls and votes | direct live | `poll`, `vote` | [poll-votes](protocol/poll-votes.md) | Group polls unverified |
 | Edits | receive own-device text/caption edits offline; outgoing **modeled** only | — | [message-edit](protocol/message-edit.md), [media-caption-edit](protocol/media-caption-edit.md) | Peer edit window needs property 2983; outbox has no edit sender ([why](protocol/unknowns.md#outgoing-revoke-and-edit-2026-10-13)) |
@@ -60,7 +60,7 @@ operation's `x-library`.
 | Delivery confirmations for received messages | live | `listen` | [messaging-transport](protocol/messaging-transport.md) | — |
 | Read receipts (manual, automatic, batched) | acked; automatic offline | `mark-read`, `listen` | [read-receipt-batching](protocol/read-receipt-batching.md) | Handset blue ticks unconfirmed |
 | Incoming receipt facts (direct, group, aggregate) | offline (live windows saw no qualifying sample) | `receipts`, `group receipts`, `status` | [direct-receipts](protocol/direct-receipts.md), [group-receipts](protocol/group-receipts.md) | Native privacy/read-self policy |
-| Retry receipts we send | live (server-acked) | `listen` | [messaging-transport](protocol/messaging-transport.md) | — |
+| Retry receipts we send | live (server-acked); PN/LID once-only offline | `listen` | [messaging-transport](protocol/messaging-transport.md#retry-once-only-across-pn-and-lid-2026-10-13) | PN redelivery of a LID-first message without alias attributes stays separate |
 | Answering a peer's retry receipt | lab group-send window only, offline | `lab-transport` group send | [groups](protocol/groups.md) | Normal runtime does not answer; native resend policy not traced in-repo |
 
 ## Media and voice

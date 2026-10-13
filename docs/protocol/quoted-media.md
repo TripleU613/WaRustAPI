@@ -53,3 +53,14 @@ resolution still refuses quoted documents.
 
 Live receipt of a quoted media reply; quoted media sending; quoted-parent
 caption edits; verifying the quoted body against a saved parent.
+
+**Known gap (review, 2026-10-13): quotes of another chat.** `quote_reference`
+reads only `stanzaId`/`participant`; ContextInfo's `remoteJid` is never read. A
+reply to a status (or any quote whose target lives in another chat) is
+therefore projected as a reference into the current chat, under the status's
+stanza ID: it points to nothing or to an unrelated message. Text replies have
+always behaved this way; this change extends it to media. Not fixed because the
+field number is **unverified here**: field 4 comes from general protocol
+knowledge, and no committed 2.26.37.71 `BWx` dump records it. The fix, once
+traced, is to leave the quote unattributed (or attribute it to that chat) when
+`remoteJid` names a different chat.

@@ -110,6 +110,8 @@ impl<S> fmt::Debug for FramedConnection<S> {
 }
 
 impl<S: AsyncRead + AsyncWrite + Unpin> FramedConnection<S> {
+    // Only the Noise handshake splits a socket.
+    #[cfg_attr(not(feature = "experimental-noise"), allow(dead_code))]
     pub(crate) fn into_split(mut self) -> Result<SplitSocket<S>, TransportError> {
         if self.first_write {
             return Err(TransportError::Config("cannot split before handshake"));
@@ -207,6 +209,7 @@ impl<S: AsyncRead + AsyncWrite + Unpin> FramedConnection<S> {
     }
 }
 
+#[cfg_attr(not(feature = "experimental-noise"), allow(dead_code))]
 pub(crate) struct SplitSocket<S> {
     pub read: tokio::io::ReadHalf<S>,
     pub write: tokio::io::WriteHalf<S>,

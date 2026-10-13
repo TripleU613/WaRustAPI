@@ -115,7 +115,7 @@ fn key(chat: &str) -> Vec<u8> {
 }
 
 /// Test-only: store a mute projection directly, bypassing batch application.
-#[cfg(test)]
+#[cfg(all(test, feature = "comparison-client"))]
 pub(crate) fn save_for_test(tx: &mut WriteTx<'_>, chat: &Jid, mute: ChatMute) -> Result<()> {
     tx.put_json(Table::Checkpoints, &key(&chat.to_string()), 1, &mute)
 }

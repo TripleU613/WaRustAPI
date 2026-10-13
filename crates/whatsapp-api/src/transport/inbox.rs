@@ -1192,7 +1192,7 @@ struct HybridPrekey {
 /// (version and Alice base key) before any local key lookup; otherwise it loads
 /// the signed, optional ordinary and `kyber_prekeys` rows (`0kh.BTS`) and
 /// bootstraps (docs/protocol/hybrid-incoming.md). `Ok(None)` preserves the
-/// capture unacknowledged for local coverage gaps: a changed pin on a matching
+/// capture unacknowledged for local coverage gaps: a companion sender, a changed pin on a matching
 /// session, a held account/pin mismatch or a non-version-4 envelope. A missing
 /// or unusable signed, ordinary or KEM key (including an invalid local KEM row;
 /// this client has no KEM producer), nested authentication failures and a
@@ -1208,6 +1208,13 @@ async fn receive_hybrid_prekey(
     one_time: Option<&[u8]>,
     ciphertext: &[u8],
 ) -> Result<Option<HybridPrekey>> {
+    // Callers already route companions elsewhere (direct: Unsupported; group:
+    // pairwise child skipped). Refuse here too so no future caller derives a
+    // companion session through this primary-only path.
+    if peer.device != 0 {
+        tracing::warn!("hybrid prekey preserved: companion sender unsupported");
+        return Ok(None);
+    }
     let kem_id = crate::signal::direct::incoming_prekey_kem(ciphertext)?
         .ok_or_else(|| Error::invalid("inbox", "hybrid receive requires KEM metadata"))?
         .prekey_id;
@@ -5169,6 +5176,25 @@ mod tests {
             })
             .unwrap();
         assert_eq!(prekeys::summary(&store).unwrap().kem_local, 1);
+        // Defense in depth: callers route companions elsewhere, and the helper
+        // itself refuses one even with a valid envelope and KEM row. Neither
+        // call commits; the primary control shows the device is the only cause.
+        let signed_record = crate::registration::factory::registered_signed_prekey(&store).unwrap();
+        for (sender, opens) in [("123456789:3@lid", false), (peer, true)] {
+            let candidate = receive_hybrid_prekey(
+                &store,
+                &receiver,
+                &Jid::parse(sender).unwrap(),
+                (None, None, IdentityChangePolicy::ApkAuthenticated),
+                &signed_record,
+                Some(&ordinary),
+                &first.ciphertext,
+            )
+            .await
+            .unwrap();
+            assert_eq!(candidate.is_some(), opens, "{sender}");
+            assert!(row(&store, 9).is_some());
+        }
         assert_eq!(
             process(&store, &receiver, &node1, &capture1).await.unwrap(),
             IncomingResult::Decrypted

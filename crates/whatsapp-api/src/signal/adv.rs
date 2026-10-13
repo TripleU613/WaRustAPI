@@ -157,6 +157,10 @@ impl VerifiedIndexList {
 /// Test-only: a signed E2EE key-index list for the given account private key.
 /// Returns the encoded `BRD` bytes and the account public key.
 #[cfg(test)]
+#[cfg_attr(
+    not(all(feature = "experimental-noise", feature = "experimental-transport")),
+    allow(dead_code)
+)]
 pub(crate) fn test_signed_list(
     raw_id: u32,
     timestamp: u64,

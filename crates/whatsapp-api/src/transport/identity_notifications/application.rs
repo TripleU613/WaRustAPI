@@ -238,6 +238,10 @@ async fn stage(
     let held = same_identity
         .then_some(previous_session.as_deref())
         .flatten();
+    if held.is_some_and(|held| !super::held_session_consistent(&account, &identity, held)) {
+        tracing::warn!("identity refresh deferred: held session inconsistent; row kept");
+        return Ok(deferred("held_session_inconsistent"));
+    }
     let session = match &hybrid {
         Some(hybrid) => hybrid.prepare_session_refresh(&account, held.map(Vec::as_slice))?,
         None => {
@@ -1116,6 +1120,94 @@ mod tests {
             );
             assert_eq!(snapshot(&f.store), before);
             assert_eq!(f.store.journal_head().unwrap(), head);
+        }
+    }
+
+    #[tokio::test]
+    async fn damaged_held_sessions_defer_without_stopping_recovery() {
+        use crate::signal::{direct, kem};
+        use wacore_libsignal::protocol::KeyPair;
+        for pq in [false, true] {
+            for case in ["garbage", "foreign_remote", "foreign_local"] {
+                let f = fixture("222222222222222@lid").await;
+                let damaged = if case == "garbage" {
+                    vec![1u8, 2, 3]
+                } else {
+                    let other = IdentityKeyPair::generate(&mut rand::rng());
+                    let mut account = f.account.clone();
+                    let remote = if case == "foreign_remote" {
+                        &other
+                    } else {
+                        account.signal_identity = Some(SignalIdentityKey(KeyMaterial {
+                            public: other.public_key().public_key_bytes().try_into().unwrap(),
+                            private: *other.private_key().serialize(),
+                        }));
+                        &f.old
+                    };
+                    let bundle = direct::prekey_bundle_for(
+                        &reply(&f.peer, "damaged", remote, true),
+                        &f.peer,
+                    )
+                    .unwrap();
+                    direct::prepare_payload(
+                        &account,
+                        &f.peer,
+                        Some(&bundle),
+                        None,
+                        Some(&remote.identity_key().serialize()),
+                        b"damaged",
+                    )
+                    .await
+                    .unwrap()
+                    .session
+                    .to_vec()
+                };
+                f.store
+                    .write(|tx| {
+                        tx.put_json(
+                            Table::SignalSessions,
+                            format!("comparison-direct:{}", f.peer).as_bytes(),
+                            1,
+                            &damaged,
+                        )
+                    })
+                    .unwrap();
+                let mut response = if pq {
+                    let (kem_public, _) = kem::generate_key_pair().unwrap();
+                    let signed = KeyPair::generate(&mut rand::rng());
+                    pq_reply(&f.peer, &f.id, &f.old, &signed, &kem_public, true).0
+                } else {
+                    reply(&f.peer, &f.id, &f.old, true)
+                };
+                // Same-key primary admission needs the server override child.
+                metadata(&mut response, "force_override_e2ee_state");
+                settle(&f, &response);
+                let before = snapshot(&f.store);
+                let head = f.store.journal_head().unwrap();
+                let preview = super::super::preview_session(&f.store, &f.id)
+                    .await
+                    .unwrap();
+                assert_eq!(
+                    preview.outcome, "held_session_inconsistent",
+                    "{case} pq={pq}"
+                );
+                assert_eq!(
+                    apply(&f.store, &f.id, IdentityChangePolicy::ApkAuthenticated)
+                        .await
+                        .unwrap(),
+                    Application::Deferred("held_session_inconsistent"),
+                    "{case} pq={pq}"
+                );
+                // recover() runs at every connection start and must not fail.
+                assert_eq!(
+                    recover(&f.store, IdentityChangePolicy::ApkAuthenticated)
+                        .await
+                        .unwrap(),
+                    0
+                );
+                assert_eq!(snapshot(&f.store), before);
+                assert_eq!(f.store.journal_head().unwrap(), head);
+            }
         }
     }
 

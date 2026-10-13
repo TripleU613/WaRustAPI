@@ -4,6 +4,8 @@
 applies verified primary `pqkey` replies through the same guarded commit with a
 version-4 candidate; invalid PQ material defers as `pq_bundle_invalid`.
 Companion and attestation-bearing PQ remain `pq_session_unported`.
+A damaged same-key held row now defers as `held_session_inconsistent` instead of
+an error that stopped every connection start ([why](hybrid-identity-refresh.md#damaged-held-sessions-2026-10-13)).
 
 2026-10-10 follow-up: [primary attestation admission](primary-attestation-admission.md)
 supersedes blanket primary attestation presence deferrals below. Structurally
@@ -133,7 +135,9 @@ No identity-notification ACK is sent yet. A deferred application logs a fixed
 reason (pinned policy, reply unverified, original guard not matching, unsupported
 companion/same-key/metadata, own identity or changed reply/account/peer state).
 Storage/crypto corruption remains a fixed redacted error rather than silent
-success. Receive-only sessions can process identity reads and this application
+success, except a damaged same-key held session, which defers as
+`held_session_inconsistent` (2026-10-13) so startup recovery cannot stop every
+connection on one row. Receive-only sessions can process identity reads and this application
 without enabling outbox sends.
 
 ## Inspect and reproduce

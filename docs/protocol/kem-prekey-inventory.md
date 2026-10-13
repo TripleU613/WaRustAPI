@@ -128,7 +128,14 @@ encapsulations to a locally generated key:
 - a group pairwise hybrid child from a primary participant decrypts and
   consumes its ordinary and KEM rows; replay is Duplicate;
 - direct and group companion hybrid `pkmsg` are Unsupported with every table
-  unchanged;
+  unchanged. **Limit (review, 2026-10-13):** these fixtures' companions have no
+  saved device identity, so companion admission already refuses them and the
+  tests would pass without the routing guards. The property that matters, that
+  an *admitted* companion never reaches hybrid derivation, is now enforced
+  inside `receive_hybrid_prekey` itself (`device != 0` returns the preserved
+  `None`) and tested directly there: a companion address with a valid envelope
+  and KEM row is refused, the same call for the primary opens, and neither
+  commits. An admitted-companion end-to-end fixture is still missing;
 - after reopening, the three direct messages stay Duplicate with no table change.
 
 `kem_prekeys` unit tests cover row validation, counts, refusal to consume a

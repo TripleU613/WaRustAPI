@@ -353,21 +353,28 @@ pub fn queue_retry_for_incoming(
     // inside the same transaction before adding a canonical reservation. Keep
     // old unknown/refused/acknowledged rows and original wire untouched.
     use crate::model::jid::JidKind::{AgentDevice, Facebook, Interop, Plain};
-    let mut historical = Vec::with_capacity(16);
-    for chat_kind in [Plain, AgentDevice, Interop, Facebook] {
-        let mut old_chat = chat.clone();
-        old_chat.kind = chat_kind;
-        for participant_kind in [Plain, AgentDevice, Interop, Facebook] {
-            let mut old_participant = participant.clone();
-            if let Some(participant) = &mut old_participant {
-                participant.kind = participant_kind;
-            }
-            let candidate = retry_selector(&old_chat, &old_participant, id)?;
-            if !historical.contains(&candidate) {
-                historical.push(candidate);
+    let selectors = |chats: &[Jid], participants: &[Option<Jid>]| -> Result<Vec<String>> {
+        let mut historical = Vec::new();
+        for chat in chats {
+            for participant in participants {
+                for chat_kind in [Plain, AgentDevice, Interop, Facebook] {
+                    let mut old_chat = chat.clone();
+                    old_chat.kind = chat_kind;
+                    for participant_kind in [Plain, AgentDevice, Interop, Facebook] {
+                        let mut old_participant = participant.clone();
+                        if let Some(participant) = &mut old_participant {
+                            participant.kind = participant_kind;
+                        }
+                        let candidate = retry_selector(&old_chat, &old_participant, id)?;
+                        if !historical.contains(&candidate) {
+                            historical.push(candidate);
+                        }
+                    }
+                }
             }
         }
-    }
+        Ok(historical)
+    };
     let retry = super::messaging::retry_receipt(
         &chat,
         participant.as_ref(),
@@ -379,7 +386,23 @@ pub fn queue_retry_for_incoming(
     let wire = crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
         .encode(&retry)?;
     store.write(|tx| {
-        for candidate in &historical {
+        // Inbox redelivery may name the same sender by its other address
+        // (inbox::direct_record_in resolves the same pair for read receipts).
+        let chats = if chat.server == Server::Group {
+            vec![chat.clone()]
+        } else {
+            retry_aliases(tx, node, &chat, ("sender_pn", "sender_lid"))?
+        };
+        let participants = match &participant {
+            None => vec![None],
+            Some(participant) => {
+                retry_aliases(tx, node, participant, ("participant_pn", "participant_lid"))?
+                    .into_iter()
+                    .map(Some)
+                    .collect()
+            }
+        };
+        for candidate in &selectors(&chats, &participants)? {
             if tx
                 .get_json::<serde_json::Value>(Table::Checkpoints, candidate.as_bytes(), 1)?
                 .is_some()
@@ -395,6 +418,53 @@ pub fn queue_retry_for_incoming(
         )?;
         Ok(1)
     })
+}
+
+/// The address plus its other PN/LID spelling, same device and agent. Sources:
+/// the stanza alias attributes (2.26.37.71 LidMessageStanzaParser reads
+/// sender_pn/sender_lid/participant_pn/participant_lid, see
+/// docs/protocol/apk/2.26.37.71-primary-lid/metadata-parser.txt) and the
+/// `authenticated-lid:` LID-to-PN mapping written after authentication. Extra
+/// probes can only suppress a retry request, never queue another one.
+fn retry_aliases(
+    tx: &crate::store::WriteTx<'_>,
+    node: &Node,
+    address: &Jid,
+    (pn_attr, lid_attr): (&str, &str),
+) -> Result<Vec<Jid>> {
+    let mut aliases = vec![address.clone()];
+    let mut add = |alias: Jid| {
+        let mut alias = alias.to_non_ad();
+        alias.device = address.device;
+        alias.agent = address.agent;
+        if !aliases.contains(&alias) {
+            aliases.push(alias);
+        }
+    };
+    match address.server {
+        Server::Lid => {
+            if let Some(phone) = jid(node, pn_attr).filter(|j| j.server == Server::User) {
+                add(phone);
+            }
+            let mapping = format!("authenticated-lid:{}", address.to_non_ad());
+            if let Some(phone) = tx.get_json::<Jid>(Table::Checkpoints, mapping.as_bytes(), 1)? {
+                if phone.server != Server::User {
+                    return Err(Error::invalid(
+                        "receipt",
+                        "invalid authenticated LID mapping",
+                    ));
+                }
+                add(phone);
+            }
+        }
+        Server::User => {
+            if let Some(lid) = jid(node, lid_attr).filter(|j| j.server == Server::Lid) {
+                add(lid);
+            }
+        }
+        _ => {}
+    }
+    Ok(aliases)
 }
 
 /// One queued receipt's outcome, redacted for operators.
@@ -1316,6 +1386,118 @@ mod tests {
             .unwrap(),
             1
         );
+    }
+
+    #[test]
+    fn retry_queue_is_once_across_pn_and_lid_redelivery() {
+        let account = crate::session::AccountRecord {
+            signal_registration_id: Some(7),
+            ..Default::default()
+        };
+        let jid = |value: &str| Jid::parse(value).unwrap();
+        let direct = |from: &str, id: &str| {
+            Node::new("message")
+                .attr("from", jid(from))
+                .attr("id", id.to_owned())
+        };
+        let group = |participant: &str, id: &str| {
+            Node::new("message")
+                .attr("from", jid("120363000000000001@g.us"))
+                .attr("participant", jid(participant))
+                .attr("id", id.to_owned())
+        };
+        let pn = "15555550100@s.whatsapp.net";
+        let lid = "100001@lid";
+        // (first delivery, redelivery, mapping saved, requests the redelivery adds)
+        let cases = [
+            (
+                direct(pn, "A"),
+                direct(lid, "A").attr("sender_pn", jid(pn)),
+                false,
+                0,
+            ),
+            (
+                direct(lid, "B"),
+                direct(pn, "B").attr("sender_lid", jid(lid)),
+                false,
+                0,
+            ),
+            (direct(pn, "C"), direct(lid, "C"), true, 0),
+            (
+                direct("15555550100:3@s.whatsapp.net", "D"),
+                direct("100001:3@lid", "D").attr("sender_pn", jid(pn)),
+                false,
+                0,
+            ),
+            (
+                group(pn, "E"),
+                group(lid, "E").attr("participant_pn", jid(pn)),
+                false,
+                0,
+            ),
+            (
+                group(lid, "F"),
+                group(pn, "F").attr("participant_lid", jid(lid)),
+                false,
+                0,
+            ),
+            (group(pn, "G"), group(lid, "G"), true, 0),
+            // Controls: another sender or another device stays a new request.
+            (
+                direct(pn, "H"),
+                direct(lid, "H").attr("sender_pn", jid("15555550101@s.whatsapp.net")),
+                false,
+                1,
+            ),
+            (
+                direct("15555550100:3@s.whatsapp.net", "I"),
+                direct("100001:4@lid", "I").attr("sender_pn", jid(pn)),
+                false,
+                1,
+            ),
+            (direct(pn, "J"), direct(lid, "J"), false, 1),
+        ];
+        for (first, again, mapping, added) in cases {
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(&dir.path().join("alias.redb"), true);
+            if mapping {
+                store
+                    .write(|tx| {
+                        tx.put_json(
+                            Table::Checkpoints,
+                            b"authenticated-lid:100001@lid",
+                            1,
+                            &jid(pn),
+                        )
+                    })
+                    .unwrap();
+            }
+            assert_eq!(
+                queue_retry_for_incoming(&store, &account, &first).unwrap(),
+                1
+            );
+            assert_eq!(
+                queue_retry_for_incoming(&store, &account, &again).unwrap(),
+                added,
+                "{again:?}"
+            );
+            assert_eq!(reserve_pending(&store).unwrap().len(), 1 + added);
+        }
+        // A mapping that is not a phone number is a refusal, not a guess.
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("alias.redb"), true);
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"authenticated-lid:100001@lid",
+                    1,
+                    &jid(lid),
+                )
+            })
+            .unwrap();
+        assert!(queue_retry_for_incoming(&store, &account, &direct(lid, "K")).is_err());
+        assert!(reserve_pending(&store).unwrap().is_empty());
     }
 
     #[test]

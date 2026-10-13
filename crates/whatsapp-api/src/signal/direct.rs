@@ -1136,12 +1136,15 @@ mod tests {
                     .to_string()
                     .contains("post-quantum session processing is unsupported")
             );
-            let metadata = classic_bundle_metadata_for(&pq_reply, &peer).unwrap();
-            validate_bundle_signature(&metadata).unwrap();
-            assert_eq!(
-                metadata.identity_key().unwrap(),
-                bundle.identity_key().unwrap()
-            );
+            #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
+            {
+                let metadata = classic_bundle_metadata_for(&pq_reply, &peer).unwrap();
+                validate_bundle_signature(&metadata).unwrap();
+                assert_eq!(
+                    metadata.identity_key().unwrap(),
+                    bundle.identity_key().unwrap()
+                );
+            }
             let mut unselected = reply(vec![]);
             let NodeContent::Children(lists) = &mut unselected.content else {
                 panic!("fixture")
@@ -1337,6 +1340,7 @@ mod tests {
         assert!(prekey_bundle_for(&conflicting_outer_error, &peer).is_err());
     }
 
+    #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
     #[tokio::test]
     async fn held_session_refuses_forged_same_identity_bundle() {
         let mut rng = rand::rng();
