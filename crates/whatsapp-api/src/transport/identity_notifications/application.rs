@@ -150,9 +150,30 @@ async fn stage(
     if user.child("non_e2ee_attestation").is_some() && !admitted_attestation {
         return Ok(deferred("attestation_admission_unported"));
     }
-    if user.child("pqkey").is_some() {
-        return Ok(deferred("pq_session_unported"));
-    }
+    // CQc.A00 0068..00b4 verifies the selected Kyber key's signature before
+    // deriving with the hybrid label (pq-signature.md, hybrid-kdf.md); bundle_for
+    // additionally validates the ML-KEM-1024 encoding. Companion and
+    // attestation-bearing PQ replies remain local coverage gaps, not native rules.
+    let hybrid = if user.child("pqkey").is_some() {
+        if peer.device != 0 || user.child("non_e2ee_attestation").is_some() {
+            return Ok(deferred("pq_session_unported"));
+        }
+        match crate::signal::hybrid::bundle_for(&reply, &peer) {
+            Ok(bundle) => Some(bundle),
+            Err(error) => {
+                if let Error::InvalidInput { field, reason } = &error {
+                    tracing::warn!(
+                        field,
+                        reason,
+                        "identity refresh deferred: PQ bundle invalid"
+                    );
+                }
+                return Ok(deferred("pq_bundle_invalid"));
+            }
+        }
+    } else {
+        None
+    };
     // APK Bzb has NONE/LOG_ONLY only; 14J.A04 and DLx log auth after processing.
     // Preserve Bot.A03's required fields without inventing an admission gate.
     if !super::identity_auth_well_formed(user) {
@@ -177,7 +198,10 @@ async fn stage(
     // -> E2EE at 01e4, changed identity v12=1 at 00d2, then 0226 -> Bjn
     // at 0306, independent of old C0F/override/0x7497. Present CWS uses
     // the shared branch invariant above; no runtime flag/state is inferred.
-    let bundle = crate::signal::direct::prekey_bundle_for(&reply, &peer)?;
+    let bundle = match &hybrid {
+        Some(hybrid) => hybrid.classic().clone(),
+        None => crate::signal::direct::prekey_bundle_for(&reply, &peer)?,
+    };
     let identity = bundle
         .identity_key()
         .map_err(|_| invalid("invalid bundle identity"))?
@@ -214,14 +238,19 @@ async fn stage(
     let held = same_identity
         .then_some(previous_session.as_deref())
         .flatten();
-    let session = crate::signal::direct::prepare_session_refresh(
-        &account,
-        &peer,
-        &bundle,
-        held.map(Vec::as_slice),
-        &identity,
-    )
-    .await?;
+    let session = match &hybrid {
+        Some(hybrid) => hybrid.prepare_session_refresh(&account, held.map(Vec::as_slice))?,
+        None => {
+            crate::signal::direct::prepare_session_refresh(
+                &account,
+                &peer,
+                &bundle,
+                held.map(Vec::as_slice),
+                &identity,
+            )
+            .await?
+        }
+    };
     Ok(Preparation::Ready(Box::new(Staged {
         id: id.to_owned(),
         peer,
@@ -818,6 +847,272 @@ mod tests {
                 .await
                 .unwrap(),
                 Application::Deferred(reason)
+            );
+            assert_eq!(snapshot(&f.store), before);
+            assert_eq!(f.store.journal_head().unwrap(), head);
+        }
+    }
+
+    /// A directory reply with a known signed key and a signed ML-KEM-1024 key.
+    fn pq_reply(
+        peer: &Jid,
+        id: &str,
+        identity: &IdentityKeyPair,
+        signed: &wacore_libsignal::protocol::KeyPair,
+        kem_public: &[u8],
+        kem_signature_valid: bool,
+    ) -> (Node, Vec<u8>) {
+        let sign = |bytes: &[u8]| {
+            identity
+                .private_key()
+                .calculate_signature(bytes, &mut rand::rng())
+                .unwrap()
+                .to_vec()
+        };
+        let signed_signature = sign(&signed.public_key.serialize());
+        let mut kem_signature = sign(kem_public);
+        if !kem_signature_valid {
+            kem_signature[0] ^= 1;
+        }
+        let response = Node::new("iq")
+            .attr("type", "result")
+            .attr("id", id)
+            .children(vec![Node::new("list").children(vec![
+                Node::new("user").attr("jid", peer.clone()).children(vec![
+                    Node::new("registration").bytes(vec![0, 0, 0, 42]),
+                    Node::new("identity").bytes(identity.public_key().public_key_bytes().to_vec()),
+                    Node::new("skey").children(vec![
+                        Node::new("id").bytes(vec![0, 0, 7]),
+                        Node::new("value").bytes(signed.public_key.public_key_bytes().to_vec()),
+                        Node::new("signature").bytes(signed_signature.clone()),
+                    ]),
+                    Node::new("pqkey").children(vec![
+                        Node::new("id").bytes(vec![0, 0, 9]),
+                        Node::new("value").bytes(kem_public.to_vec()),
+                        Node::new("signature").bytes(kem_signature),
+                    ]),
+                ]),
+            ])]);
+        (response, signed_signature)
+    }
+
+    #[tokio::test]
+    async fn primary_pq_refresh_stages_hybrid_sessions_the_peer_can_open() {
+        use crate::signal::{direct, hybrid, kem};
+        use wacore_libsignal::protocol::{
+            GenericSignedPreKey, KeyPair, SignedPreKeyRecord, Timestamp,
+        };
+        for peer in ["15555550111@s.whatsapp.net", "222222222222222@lid"] {
+            for same in [false, true] {
+                let f = fixture(peer).await;
+                let candidate = if same { &f.old } else { &f.new };
+                let signed = KeyPair::generate(&mut rand::rng());
+                let (kem_public, kem_secret) = kem::generate_key_pair().unwrap();
+                let (mut response, signed_signature) =
+                    pq_reply(&f.peer, &f.id, candidate, &signed, &kem_public, true);
+                if same {
+                    // Existing same-key primary admission still requires it.
+                    metadata(&mut response, "force_override_e2ee_state");
+                }
+                settle(&f, &response);
+                let before = snapshot(&f.store);
+                let head = f.store.journal_head().unwrap();
+                let inspection = super::super::inspect(&f.store, &f.id).unwrap().unwrap();
+                let pq = inspection.pq_signature.as_ref().unwrap();
+                assert_eq!(pq.signature_valid, Some(true));
+                assert_eq!(pq.key_validation, "valid_ml_kem_1024");
+                let preview = super::super::preview_session(&f.store, &f.id)
+                    .await
+                    .unwrap();
+                assert_eq!(preview.outcome, "prepared", "{peer} same={same}");
+                assert_eq!(preview.archived_states, Some(usize::from(same)));
+                assert!(!preview.persisted);
+                assert_eq!(snapshot(&f.store), before);
+                assert_eq!(f.store.journal_head().unwrap(), head);
+                assert_eq!(
+                    apply(&f.store, &f.id, IdentityChangePolicy::ApkAuthenticated)
+                        .await
+                        .unwrap(),
+                    Application::Applied,
+                    "{peer} same={same}"
+                );
+                let after = snapshot(&f.store);
+                for (index, table) in Table::ALL.iter().enumerate() {
+                    if !matches!(
+                        table,
+                        Table::PeerIdentities | Table::SignalSessions | Table::Checkpoints
+                    ) {
+                        assert_eq!(after[index], before[index], "{table:?}");
+                    }
+                }
+                let peer_key = format!("comparison-direct:{}", f.peer);
+                let (pin, session): (Option<Vec<u8>>, Option<Vec<u8>>) = f
+                    .store
+                    .read(|tx| {
+                        Ok((
+                            tx.get_json(Table::PeerIdentities, peer_key.as_bytes(), 1)?,
+                            tx.get_json(Table::SignalSessions, peer_key.as_bytes(), 1)?,
+                        ))
+                    })
+                    .unwrap();
+                assert_eq!(
+                    pin.as_deref(),
+                    Some(&candidate.identity_key().serialize()[..])
+                );
+                let session = session.unwrap();
+                let record = SessionRecord::deserialize(&session).unwrap();
+                assert_eq!(record.session_version().unwrap(), 4);
+                // Changed keys never carry old state; same keys archive it.
+                assert_eq!(record.previous_session_count(), usize::from(same));
+                // The refreshed record opens a native 0x44 exchange the peer
+                // can authenticate with its signed and KEM private keys.
+                let first = hybrid::HybridSession::from_bytes(&session)
+                    .unwrap()
+                    .prepare(b"\x0a\x05hello")
+                    .unwrap();
+                assert_eq!((first.kind, first.ciphertext[0]), ("pkmsg", 0x44));
+                assert_eq!(
+                    direct::incoming_prekey_kem(&first.ciphertext)
+                        .unwrap()
+                        .unwrap()
+                        .prekey_id,
+                    9
+                );
+                let peer_account = AccountRecord {
+                    registration: crate::session::RegistrationStatus::Registered,
+                    signal_registration_id: Some(42),
+                    signal_identity: Some(SignalIdentityKey(KeyMaterial {
+                        public: candidate
+                            .public_key()
+                            .public_key_bytes()
+                            .try_into()
+                            .unwrap(),
+                        private: *candidate.private_key().serialize(),
+                    })),
+                    ..Default::default()
+                };
+                let signed_record = SignedPreKeyRecord::new(
+                    7.into(),
+                    Timestamp::from_epoch_millis(0),
+                    &signed,
+                    &signed_signature,
+                )
+                .serialize()
+                .unwrap();
+                let opened = hybrid::receive_prekey(
+                    &peer_account,
+                    f.account.own_jid.as_ref().unwrap(),
+                    (None, None, IdentityChangePolicy::Pinned),
+                    Some(&signed_record),
+                    None,
+                    Some(hybrid::LocalKemPrekey {
+                        id: 9,
+                        secret: kem_secret.as_bytes(),
+                        last_resort: false,
+                    }),
+                    &first.ciphertext,
+                )
+                .await
+                .unwrap();
+                assert_eq!(
+                    opened.incoming.received.plaintext.as_slice(),
+                    b"\x0a\x05hello"
+                );
+                assert_eq!(
+                    apply(&f.store, &f.id, IdentityChangePolicy::ApkAuthenticated)
+                        .await
+                        .unwrap(),
+                    Application::AlreadyApplied
+                );
+                assert_eq!(snapshot(&f.store), after);
+            }
+        }
+    }
+
+    #[tokio::test]
+    async fn primary_pq_refresh_keeps_invalid_and_unported_inputs_unchanged() {
+        use crate::signal::kem;
+        use wacore_libsignal::protocol::KeyPair;
+        for (case, reason, preview_reason) in [
+            (
+                "bad_kem_signature",
+                "pq_bundle_invalid",
+                "pq_bundle_invalid",
+            ),
+            ("bad_kem_encoding", "pq_bundle_invalid", "pq_bundle_invalid"),
+            ("attestation", "pq_session_unported", "pq_session_unported"),
+            (
+                "companion",
+                "pq_session_unported",
+                "missing_device_identity",
+            ),
+            (
+                "same_without_override",
+                "same_identity_admission_unported",
+                "prepared",
+            ),
+            ("pinned", "identity_policy_pinned", "prepared"),
+        ] {
+            let f = fixture(if case == "companion" {
+                "222222222222222:4@lid"
+            } else {
+                "222222222222222@lid"
+            })
+            .await;
+            let candidate = if case == "same_without_override" {
+                &f.old
+            } else {
+                &f.new
+            };
+            let (mut kem_public, _) = kem::generate_key_pair().unwrap();
+            if case == "bad_kem_encoding" {
+                // 12-bit coefficients of 0xfff exceed q = 3329.
+                kem_public = vec![0xff; kem_public.len()];
+            }
+            let (mut response, _) = pq_reply(
+                &f.peer,
+                &f.id,
+                candidate,
+                &KeyPair::generate(&mut rand::rng()),
+                &kem_public,
+                case != "bad_kem_signature",
+            );
+            if case == "attestation" {
+                attestation(&mut response, candidate, "hybrid_e2ee", true);
+            }
+            settle(&f, &response);
+            let before = snapshot(&f.store);
+            let head = f.store.journal_head().unwrap();
+            let inspection = super::super::inspect(&f.store, &f.id).unwrap().unwrap();
+            let pq = inspection.pq_signature.as_ref().unwrap();
+            assert_eq!(pq.signature_valid, Some(case != "bad_kem_signature"));
+            assert_eq!(
+                pq.key_validation,
+                if case == "bad_kem_encoding" {
+                    "invalid_ml_kem_1024"
+                } else {
+                    "valid_ml_kem_1024"
+                }
+            );
+            let preview = super::super::preview_session(&f.store, &f.id)
+                .await
+                .unwrap();
+            assert_eq!(preview.outcome, preview_reason, "{case}");
+            assert_eq!(snapshot(&f.store), before);
+            assert_eq!(
+                apply(
+                    &f.store,
+                    &f.id,
+                    if case == "pinned" {
+                        IdentityChangePolicy::Pinned
+                    } else {
+                        IdentityChangePolicy::ApkAuthenticated
+                    }
+                )
+                .await
+                .unwrap(),
+                Application::Deferred(reason),
+                "{case}"
             );
             assert_eq!(snapshot(&f.store), before);
             assert_eq!(f.store.journal_head().unwrap(), head);
@@ -2114,7 +2409,7 @@ mod tests {
             ("pinned", "identity_policy_pinned"),
             ("same", "same_identity_admission_unported"),
             ("non_e2ee_attestation", "attestation_admission_unported"),
-            ("pqkey", "pq_session_unported"),
+            ("pqkey", "pq_bundle_invalid"),
             ("untracked", "original_refresh_guard_not_matching"),
         ] {
             let f = fixture("222222222222222@lid").await;

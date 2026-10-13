@@ -1,3 +1,11 @@
+2026-10-13 — **Implemented/offline:** identity-refresh preview and application
+now stage a version-4 hybrid session from a verified primary `pqkey` reply:
+changed keys derive fresh, admitted same-key refreshes archive held state. The
+refreshed record opens a 0x44 exchange the peer authenticates. Invalid PQ defers
+as `pq_bundle_invalid`; companion/attestation PQ stays deferred. `key_validation`
+now reports ML-KEM-1024 encoding. No APK was available; no live test.
+[Behavior, reused evidence and tests](hybrid-identity-refresh.md).
+
 2026-10-13 — **Implemented/offline:** the normal direct and group inboxes now
 route primary PN/LID version-4 KEM prekeys through the hybrid receive path.
 Matching held sessions decrypt without keys; fresh bootstrap reads a local

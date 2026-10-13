@@ -107,7 +107,86 @@ impl HybridBundle {
         pinned: Option<&[u8]>,
         payload: &[u8],
     ) -> Result<direct::PreparedDirect> {
-        if !account.is_registered() || payload.is_empty() || payload.len() > 32768 {
+        if payload.is_empty() || payload.len() > 32768 {
+            return Err(invalid("invalid initial payload/account"));
+        }
+        self.stage(account, pinned)?.prepare(payload)
+    }
+
+    /// Identity-refresh candidate for this verified bundle; no message is encrypted.
+    ///
+    /// 2.26.37.71 `0jc.A0L` resets a changed-key session before `CQc.A00`
+    /// derives (docs/protocol/identity-refresh-application.md): pass no held
+    /// record and the candidate carries no old state. For an already admitted
+    /// same-key refresh, `CQc.A00` `0124..014c` archives the held current state
+    /// before deriving on both its classic and Kyber branches, so the held
+    /// record (classic or hybrid) keeps that state as an archive here. Its
+    /// remote identity must equal this bundle's and its local identity and
+    /// registration the saved account's. Admission, OCC and commit belong to
+    /// the caller; nothing is stored or sent.
+    #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
+    pub(crate) fn prepare_session_refresh(
+        &self,
+        account: &AccountRecord,
+        held: Option<&[u8]>,
+    ) -> Result<zeroize::Zeroizing<Vec<u8>>> {
+        let identity = *self
+            .classic
+            .identity_key()
+            .map_err(|_| invalid("invalid bundle identity"))?;
+        let fresh = self.stage(account, Some(&identity.serialize()))?;
+        let state = fresh
+            .0
+            .session_state()
+            .ok_or_else(|| invalid("missing fresh hybrid state"))?
+            .clone();
+        let mut record = match held {
+            None => wacore_libsignal::protocol::SessionRecord::new_fresh(),
+            Some(bytes) => {
+                if bytes.len() > 1024 * 1024 {
+                    return Err(invalid("held session exceeds local bound"));
+                }
+                let record = wacore_libsignal::protocol::SessionRecord::deserialize(bytes)
+                    .map_err(|_| invalid("invalid held session"))?;
+                let current = record
+                    .session_state()
+                    .ok_or_else(|| invalid("held session has no current state"))?;
+                if current
+                    .remote_identity_key()
+                    .map_err(|_| invalid("invalid held session identity"))?
+                    .as_ref()
+                    != Some(&identity)
+                {
+                    return Err(invalid("held session identity does not match bundle"));
+                }
+                if current
+                    .local_identity_key()
+                    .map_err(|_| invalid("invalid held local identity"))?
+                    != state
+                        .local_identity_key()
+                        .map_err(|_| invalid("invalid fresh local identity"))?
+                    || current.local_registration_id() != state.local_registration_id()
+                {
+                    return Err(invalid("held session does not match saved account"));
+                }
+                record
+            }
+        };
+        record.promote_fresh_state(state);
+        Ok(zeroize::Zeroizing::new(
+            record
+                .serialize()
+                .map_err(|_| invalid("record serialization failed"))?,
+        ))
+    }
+
+    /// Fresh version-4 Alice record; no message, store or network operation.
+    fn stage(
+        &self,
+        account: &AccountRecord,
+        pinned: Option<&[u8]>,
+    ) -> Result<super::HybridSession> {
+        if !account.is_registered() {
             return Err(invalid("invalid initial payload/account"));
         }
         direct::validate_bundle_identity(Some(&self.classic), pinned, &self.recipient)?;
@@ -158,7 +237,7 @@ impl HybridBundle {
             prekey_id: self.kem_id,
             ciphertext: &ciphertext,
         };
-        let session = initialize_alice(
+        initialize_alice(
             &parameters,
             shared.as_bytes().try_into().expect("32-byte KEM secret"),
             &KeyPair::generate(&mut rand::rng()),
@@ -180,8 +259,7 @@ impl HybridBundle {
                 ),
                 &pending,
             ),
-        )?;
-        session.prepare(payload)
+        )
     }
 }
 

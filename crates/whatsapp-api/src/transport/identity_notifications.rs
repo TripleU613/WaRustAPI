@@ -496,10 +496,22 @@ pub async fn preview_session(store: &ProtocolStore, id: &str) -> Result<SessionP
         result.outcome = "attestation_admission_unported";
         return Ok(result);
     }
-    if user.child("pqkey").is_some() {
-        result.outcome = "pq_session_unported";
-        return Ok(result);
-    }
+    // Same selected-PQ boundary as application: primary bundles must verify.
+    let hybrid = if user.child("pqkey").is_some() {
+        if peer.device != 0 || user.child("non_e2ee_attestation").is_some() {
+            result.outcome = "pq_session_unported";
+            return Ok(result);
+        }
+        match crate::signal::hybrid::bundle_for(&reply, &peer) {
+            Ok(bundle) => Some(bundle),
+            Err(_) => {
+                result.outcome = "pq_bundle_invalid";
+                return Ok(result);
+            }
+        }
+    } else {
+        None
+    };
     if !identity_auth_well_formed(user) {
         result.outcome = "malformed_identity_auth";
         return Ok(result);
@@ -516,17 +528,23 @@ pub async fn preview_session(store: &ProtocolStore, id: &str) -> Result<SessionP
         .serialize();
     let account =
         account.ok_or_else(|| Error::invalid("identity_notification", "missing saved account"))?;
-    let candidate = crate::signal::direct::prepare_session_refresh(
-        &account,
-        &peer,
-        &bundle,
-        same_identity
-            .then_some(session.as_deref())
-            .flatten()
-            .map(Vec::as_slice),
-        identity.as_ref(),
-    )
-    .await?;
+    let held = same_identity
+        .then_some(session.as_deref())
+        .flatten()
+        .map(Vec::as_slice);
+    let candidate = match &hybrid {
+        Some(hybrid) => hybrid.prepare_session_refresh(&account, held)?,
+        None => {
+            crate::signal::direct::prepare_session_refresh(
+                &account,
+                &peer,
+                &bundle,
+                held,
+                identity.as_ref(),
+            )
+            .await?
+        }
+    };
     let record = wacore_libsignal::protocol::SessionRecord::deserialize(&candidate)
         .map_err(|_| Error::invalid("identity_notification", "invalid staged session"))?;
     result.outcome = "prepared";
@@ -1075,7 +1093,7 @@ pub(super) mod tests {
                         | "changed_no_session" => "prepared",
                         "companion" => "missing_device_identity",
                         "attestation" => "attestation_admission_unported",
-                        "pq" => "pq_session_unported",
+                        "pq" => "pq_bundle_invalid",
                         "missing_pin" => "stale_refresh_guard",
                         _ => "reply_not_verified",
                     }
@@ -1343,10 +1361,21 @@ pub(super) mod tests {
                 _ => "invalid_signature",
             };
             assert_eq!(result["pq_signature"]["status"], expected, "{case}");
-            assert_eq!(result["pq_signature"]["key_validation"], "unported");
+            // None of these values is a valid ML-KEM-1024 encoding; the encoding
+            // check is independent of the signature and needs only one value.
+            assert_eq!(
+                result["pq_signature"]["key_validation"],
+                match case {
+                    "duplicate" | "nonbyte" | "large" | "missing_value" | "duplicate_value" => {
+                        "not_checked"
+                    }
+                    _ => "invalid_ml_kem_1024",
+                },
+                "{case}"
+            );
             assert_eq!(result["signature_valid"], true);
             let preview = preview_session(&store, &id).await.unwrap();
-            assert_eq!(preview.outcome, "pq_session_unported");
+            assert_eq!(preview.outcome, "pq_bundle_invalid");
             assert!(!preview.persisted && preview.archived_states.is_none());
             assert_eq!(
                 application::apply(
@@ -1356,7 +1385,7 @@ pub(super) mod tests {
                 )
                 .await
                 .unwrap(),
-                application::Application::Deferred("pq_session_unported")
+                application::Application::Deferred("pq_bundle_invalid")
             );
             let rendered = serde_json::to_string(&result).unwrap();
             assert!(

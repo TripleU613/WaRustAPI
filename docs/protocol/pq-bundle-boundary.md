@@ -1,5 +1,10 @@
 # Post-quantum key bundle boundary
 
+2026-10-13: identity preview/application no longer defer every PQ reply;
+verified primary replies derive hybrid sessions
+([hybrid identity refresh](hybrid-identity-refresh.md)). The consumable classic
+bundle parser below still refuses selected PQ input.
+
 Pinned APK **2.26.37.71**, SHA-256
 `1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
 

@@ -1,5 +1,10 @@
 # Changed primary classic identity-refresh application
 
+2026-10-13 follow-up: [hybrid identity refresh](hybrid-identity-refresh.md)
+applies verified primary `pqkey` replies through the same guarded commit with a
+version-4 candidate; invalid PQ material defers as `pq_bundle_invalid`.
+Companion and attestation-bearing PQ remain `pq_session_unported`.
+
 2026-10-10 follow-up: [primary attestation admission](primary-attestation-admission.md)
 supersedes blanket primary attestation presence deferrals below. Structurally
 valid changed-key candidates follow the native E2EE fallback; verified same-key

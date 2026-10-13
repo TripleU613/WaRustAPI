@@ -23,7 +23,9 @@ Same-key classic migration, auth/attestation and companion admission,
 KEM row lookup and atomic consumption. KEM prekey generation, ID allocation,
 signing and the inner `pq_list`/`pq_last_resort_key` upload shape are untraced,
 so no KEM key is produced or uploaded; own-device/companion KEM admission is
-unported. See [the boundary and source audit](pq-bundle-boundary.md).
+unported. [Primary identity refresh](hybrid-identity-refresh.md) now derives
+hybrid sessions from verified `pqkey` replies; companion and attestation-bearing
+PQ refresh remain deferred. See [the boundary and source audit](pq-bundle-boundary.md).
 
 Own-device ordinary text edits are now projected with loaded parent kind,
 terminal and sender-time ordering checks. Peer edits still require the effective
