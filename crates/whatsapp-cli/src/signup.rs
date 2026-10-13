@@ -640,8 +640,8 @@ fn begin_store_guard(
 
 /// The read-safe `/v2/exist` probe has no reservation, so it is refused where
 /// asking the server anything would talk over the attempt: a request in flight
-/// or of unknown outcome, a registered account, or a cooldown the server set
-/// that has not elapsed (registration safety audit, 2026-10-13).
+/// or of unknown outcome, a registered account, or a cooldown or refusal wait
+/// the server set that has not elapsed (registration safety audit, 2026-10-13).
 fn exist_allowed(
     state: &RegistrationState,
     now: whatsapp_api::model::time::Timestamp,
@@ -653,6 +653,10 @@ fn exist_allowed(
         )),
         S::Registered => Err(invalid("the account is already registered")),
         S::CoolingDown { until } if now < *until => {
+            Err(invalid("the server set a wait that has not elapsed"))
+        }
+        // A refusal's SMS/voice/email wait is a server-set wait too.
+        _ if state.refusal_not_before().is_some_and(|until| now < until) => {
             Err(invalid("the server set a wait that has not elapsed"))
         }
         _ => Ok(()),
@@ -809,18 +813,31 @@ mod tests {
         use whatsapp_api::model::time::Timestamp;
         use whatsapp_api::registration::RegistrationState as S;
         let now = Timestamp::now();
+        let refused = |not_before| S::Blocked {
+            reason: whatsapp_api::registration::BlockedReason::ServerRefused {
+                code: None,
+                http_status: Some(200),
+                reason: None,
+                not_before,
+            },
+        };
+        let later = now.saturating_add(std::time::Duration::from_secs(60));
         for state in [
             S::Preparing,
             S::Verifying { step: 1 },
             S::RegistrationOutcomeUnknown { step: 1 },
             S::Registered,
-            S::CoolingDown {
-                until: now.saturating_add(std::time::Duration::from_secs(60)),
-            },
+            S::CoolingDown { until: later },
+            refused(Some(later)),
         ] {
             assert!(exist_allowed(&state, now).is_err(), "{state:?}");
         }
-        for state in [S::Unregistered, S::CoolingDown { until: now }] {
+        for state in [
+            S::Unregistered,
+            S::CoolingDown { until: now },
+            refused(None),
+            refused(Some(now)),
+        ] {
             assert!(exist_allowed(&state, now).is_ok(), "{state:?}");
         }
     }

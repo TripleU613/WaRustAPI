@@ -14,8 +14,11 @@ store another command created, or a mismatched `--config`, cannot start a fresh
 identity. `accounts new` compares numbers canonically and is not blinded by
 one malformed profile. A first `begin` that never left now rests
 `unregistered`, not as a fake elapsed `cooling_down`, and `registration reset`
-clears a local `ProfileIncomplete` block left by an older pinned version. Open:
-not-sent failures consume bounded history. [Audit](protocol/registration-safety-audit.md#review-corrections-2026-10-13).
+clears a local `ProfileIncomplete` block left by an older pinned version. A
+refusal without `retry_after` now keeps its longest SMS/voice/email wait
+(`ServerRefused.not_before`), which the one-shots, the email-challenge resume
+and the `exist` probe enforce; before, it was dropped. Open: not-sent failures
+consume bounded history. [Audit](protocol/registration-safety-audit.md#review-corrections-2026-10-13).
 
 2026-10-13 — **Fixed/offline (registration: stores and status):** `lab-signup
 begin` no longer creates a missing store unless `--create-store` is given;

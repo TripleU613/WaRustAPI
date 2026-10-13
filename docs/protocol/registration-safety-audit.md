@@ -181,6 +181,23 @@ now corrected:
   attempt from another profile, including every lab refusal, is still refused;
   `begin` still never replaces one. Test:
   `a_local_block_from_an_older_version_can_be_reset`.
+- **A refusal that stayed blocked lost its SMS/voice/email wait** (first
+  audit, confirmed open until now; also review M3's speculative case). A refusal
+  without `retry_after` but with `sms_wait`, `voice_wait` or `email_otp_wait`
+  stayed `Blocked{ServerRefused}` with no wait, so the one-shot diagnostics and
+  corrections did not enforce it, and `resume-email-challenge` resumed a
+  `challenge` refusal of the email request with no wait. Turning it into a
+  cooldown would have made it resendable through `begin`, so `ServerRefused`
+  gained `not_before`: the longest of those waits, added to the time of the
+  answer (serde default, omitted when absent, so older records and wait-less
+  refusals keep their exact JSON). The one-shots refuse with `RateLimited`,
+  before reserving or sending, until it passes; `resume-email-challenge` copies
+  it into the handle's `retry_after`, which `request-email-code` enforces; the
+  `exist` probe refuses during it. That the longest wait is the binding one is
+  our conservative choice; it only delays. Tests:
+  `one_shots_wait_for_the_refusal_method_wait`,
+  `a_blocked_refusal_keeps_its_method_wait`,
+  `exist_probe_is_refused_mid_request_registered_or_cooling_down`.
 - **L4. The lab transport's own failures were recorded as unknown.** Adding
   configured `/v2/code` fields or encrypting the body (`DiagnosticTransport`)
   fails before anything is written; it now returns `RequestNotSent`. Test:
@@ -203,19 +220,6 @@ written; handshake failures and the overall timeout are not connect errors).
   as a preparation in the `/v2/exist` preflight's `client_metrics.attempts`,
   though nothing left; whether the APK counts such local failures is not
   traced.
-- **An email request's `challenge` refusal may lose its wait** (review M3,
-  speculative: depends on server behaviour). A refusal with `email_otp_wait` but
-  no `retry_after` becomes `Blocked`, which has no wait field, and
-  `resume-email-challenge` then resumes with no wait. Same root cause as the
-  first item below.
-
-- **A refusal that stays blocked does not keep its SMS/voice wait.** A
-  `/v2/code` refusal without `retry_after` but with `sms_wait`/`voice_wait`
-  stays `Blocked{ServerRefused}`, which has no wait field; the one-shot
-  diagnostics and `retry-corrected-token` then do not enforce it. Turning such
-  a refusal into a cooldown would make it resendable through `begin`, so the fix
-  is a wait field on `ServerRefused` (a library API and saved-state change),
-  not yet made. The diagnostics' refusal output already prints the waits.
 
 - **`code_bytes.client_metrics` is a fixed value.** The `/v2/code` request
   sends the frozen config's `{"attempts":1}` on every resend, cooldown resume,

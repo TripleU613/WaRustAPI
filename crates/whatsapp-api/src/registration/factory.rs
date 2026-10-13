@@ -814,6 +814,7 @@ mod tests {
                 code: None,
                 http_status: Some(200),
                 reason: Some(RegistrationResponseReason::BadToken),
+                not_before: None,
             },
         };
         a.transition(refusal.clone(), Timestamp::now()).unwrap();
@@ -896,6 +897,58 @@ mod tests {
         assert!(again.contains("one-shot"), "{again}");
     }
 
+    /// A code-request refusal that carried an SMS/voice wait but no
+    /// `retry_after` keeps it; the one-shot actions, each of which sends a
+    /// new code request, refuse until it has passed and send nothing.
+    #[tokio::test]
+    #[cfg(feature = "experimental-registration-https")]
+    async fn one_shots_wait_for_the_refusal_method_wait() {
+        use crate::registration::BlockedReason;
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(dir.path());
+        let factory = StoredComparisonRequestFactory::new(store.clone(), config()).unwrap();
+        let mut a = attempt(&store);
+        store.write(|tx| factory.prepare(tx, &a)).unwrap();
+        a.transition(
+            RegistrationState::Blocked {
+                reason: BlockedReason::ServerRefused {
+                    code: None,
+                    http_status: Some(200),
+                    reason: Some(RegistrationResponseReason::BadParam),
+                    not_before: Some(
+                        Timestamp::now().saturating_add(std::time::Duration::from_secs(3600)),
+                    ),
+                },
+            },
+            Timestamp::now(),
+        )
+        .unwrap();
+        assert!(a.refused_at_code_request());
+        store
+            .write(|tx| RegistrationService::save_current(tx, &a))
+            .unwrap();
+        let mut profile = crate::ProtocolProfile::android_reference().unwrap();
+        profile.id = LAB_PROFILE_ID.into();
+        let transport = Arc::new(UnsentTransport(std::sync::Mutex::new(0)));
+        let service = RegistrationService::new(
+            store.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(
+                Arc::new(factory),
+                transport.clone(),
+            )),
+        );
+        let error = service
+            .diagnose_bad_parameter_once(config().phone)
+            .await
+            .unwrap_err();
+        assert!(matches!(error, Error::RateLimited { .. }), "{error}");
+        assert_eq!(*transport.0.lock().unwrap(), 0, "nothing was sent");
+        // Not reserved either: the same action stays available afterwards.
+        let saved = service.current().await.unwrap().unwrap();
+        assert_eq!(saved, a);
+    }
+
     /// Answers every code request with HTTP 200 `bad_token`.
     #[cfg(feature = "experimental-registration-https")]
     #[derive(Debug)]
@@ -943,6 +996,7 @@ mod tests {
                         code: None,
                         http_status: Some(200),
                         reason: Some(reason),
+                        not_before: None,
                     },
                 },
                 Timestamp::now(),
@@ -1012,6 +1066,7 @@ mod tests {
                     code: None,
                     http_status: Some(200),
                     reason: Some(RegistrationResponseReason::BadToken),
+                    not_before: None,
                 },
             },
             Timestamp::now(),
@@ -1319,6 +1374,7 @@ mod tests {
                     code: None,
                     http_status: Some(200),
                     reason: Some(RegistrationResponseReason::Consent),
+                    not_before: None,
                 },
             },
             Timestamp::now(),
@@ -1605,6 +1661,7 @@ mod tests {
                         code: None,
                         http_status: bad_parameter.then_some(200),
                         reason: bad_parameter.then_some(RegistrationResponseReason::BadParam),
+                        not_before: None,
                     },
                 },
                 Timestamp::now(),
@@ -1699,6 +1756,7 @@ mod tests {
                     code: None,
                     http_status: Some(200),
                     reason: Some(RegistrationResponseReason::FormatWrong),
+                    not_before: None,
                 },
             },
             RegistrationState::Blocked {
@@ -1706,6 +1764,7 @@ mod tests {
                     code: None,
                     http_status: Some(200),
                     reason: Some(RegistrationResponseReason::Blocked),
+                    not_before: None,
                 },
             },
             RegistrationState::Blocked {
@@ -1713,6 +1772,7 @@ mod tests {
                     code: Some(403),
                     http_status: None,
                     reason: None,
+                    not_before: None,
                 },
             },
             RegistrationState::CoolingDown {

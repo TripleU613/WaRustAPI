@@ -142,6 +142,14 @@ pub enum BlockedReason {
         /// Recognized protocol reason only; arbitrary server text is never persisted.
         #[serde(default)]
         reason: Option<wire::RegistrationResponseReason>,
+        /// Earliest time another request of the refused kind may be sent: the
+        /// longest `sms_wait`/`voice_wait`/`email_otp_wait` the refusal carried
+        /// (a refusal with `retry_after` is a cooldown instead). Enforced by
+        /// the one-shot actions and the email-challenge resume (registration
+        /// safety audit, 2026-10-13). Absent in older records and when the
+        /// refusal carried no wait.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        not_before: Option<Timestamp>,
     },
     /// The server requires a step this implementation does not support.
     UnsupportedStep {
@@ -462,6 +470,17 @@ impl RegistrationState {
     /// Whether the state is terminal for an attempt.
     pub fn is_terminal(&self) -> bool {
         matches!(self, Self::Registered | Self::Blocked { .. })
+    }
+
+    /// The wait a saved server refusal carried, if any (`ServerRefused`'s
+    /// `not_before`).
+    pub fn refusal_not_before(&self) -> Option<Timestamp> {
+        match self {
+            Self::Blocked {
+                reason: BlockedReason::ServerRefused { not_before, .. },
+            } => *not_before,
+            _ => None,
+        }
     }
 }
 
@@ -945,11 +964,20 @@ impl ComparisonHttpFlow {
             .into();
         }
         if response.status == wire::RegistrationResponseStatus::Fail || status_code >= 400 {
+            // Without `retry_after` the refusal stays blocked, but any method
+            // wait it carries still binds the next request (longest wins).
+            let not_before = longest([
+                response.sms_wait,
+                response.voice_wait,
+                response.email_otp_wait,
+            ])
+            .map(|wait| Timestamp::now().saturating_add(wait));
             return RegistrationState::Blocked {
                 reason: BlockedReason::ServerRefused {
                     code: (status_code >= 400).then_some(u32::from(status_code)),
                     http_status: Some(status_code),
                     reason: response.reason,
+                    not_before,
                 },
             }
             .into();
@@ -1857,7 +1885,8 @@ impl RegistrationService {
                                 reason: BlockedReason::ServerRefused {
                                     code: None,
                                     http_status: Some(200),
-                                    reason: Some(reason)
+                                    reason: Some(reason),
+                                    ..
                                 }
                             } if reason == expected_reason
                         )
@@ -1868,7 +1897,8 @@ impl RegistrationService {
                                 reason: BlockedReason::ServerRefused {
                                     code: None,
                                     http_status: None,
-                                    reason: None
+                                    reason: None,
+                                    ..
                                 }
                             }
                         )
@@ -1893,6 +1923,19 @@ impl RegistrationService {
                             "saved refusal did not come from a code request; this action would request a new code",
                         ));
                     }
+                    // Every one of these sends a new code request, so the SMS or
+                    // voice wait the refusal carried applies.
+                    let now = Timestamp::now();
+                    if let Some(not_before) = attempt.state.refusal_not_before()
+                        && now < not_before
+                    {
+                        return Err(Error::RateLimited {
+                            retry_after: Some(std::time::Duration::from_millis(
+                                not_before.as_millis().saturating_sub(now.as_millis()) as u64,
+                            )),
+                            code: None,
+                        });
+                    }
                     if tx
                         .get(Table::RegistrationAttempts, latch, RECORD_V1)?
                         .is_some()
@@ -1902,7 +1945,6 @@ impl RegistrationService {
                             "one-shot diagnostic already reserved; no resend",
                         ));
                     }
-                    let now = Timestamp::now();
                     let prior = attempt.state.clone();
                     attempt.transition(RegistrationState::Unregistered, now)?;
                     attempt.transition(RegistrationState::Preparing, now)?;
@@ -2263,6 +2305,9 @@ impl RegistrationService {
                     )?;
                     let step = u32::try_from(attempt.history_len()).unwrap_or(u32::MAX);
                     let now = Timestamp::now();
+                    // A `challenge` refusal's `email_otp_wait` (when it came
+                    // without `retry_after`) still gates the email request.
+                    let retry_after = attempt.state.refusal_not_before();
                     attempt.transition(
                         RegistrationState::EmailChallengeRequired {
                             handle: ChallengeHandle {
@@ -2271,7 +2316,7 @@ impl RegistrationService {
                                 step,
                                 method: ChallengeMethod::Other("email_otp".into()),
                                 expires_at: None,
-                                retry_after: None,
+                                retry_after,
                             },
                         },
                         now,
@@ -2474,7 +2519,8 @@ mod tests {
                 reason: BlockedReason::ServerRefused {
                     code: None,
                     http_status: Some(200),
-                    reason: Some(wire::RegistrationResponseReason::Challenge)
+                    reason: Some(wire::RegistrationResponseReason::Challenge),
+                    not_before: None,
                 }
             }
             .can_transition(&S::EmailChallengeRequired { handle: h.clone() })
@@ -2484,7 +2530,8 @@ mod tests {
                 reason: BlockedReason::ServerRefused {
                     code: None,
                     http_status: Some(200),
-                    reason: Some(wire::RegistrationResponseReason::SecurityCode)
+                    reason: Some(wire::RegistrationResponseReason::SecurityCode),
+                    not_before: None,
                 }
             }
             .can_transition(&S::EmailChallengeRequired { handle: h.clone() })
@@ -2494,7 +2541,8 @@ mod tests {
                 reason: BlockedReason::ServerRefused {
                     code: None,
                     http_status: None,
-                    reason: None
+                    reason: None,
+                    not_before: None,
                 }
             }
             .can_transition(&S::ChallengePending { handle: h })
@@ -3028,7 +3076,8 @@ mod tests {
                 reason: BlockedReason::ServerRefused {
                     code: None,
                     http_status: Some(200),
-                    reason: Some(wire::RegistrationResponseReason::BadToken)
+                    reason: Some(wire::RegistrationResponseReason::BadToken),
+                    ..
                 }
             }
         ));
@@ -3059,7 +3108,8 @@ mod tests {
             BlockedReason::ServerRefused {
                 code: None,
                 http_status: None,
-                reason: None
+                reason: None,
+                ..
             }
         ));
         let response = wire::RegistrationHttpResponse::new(
@@ -3082,7 +3132,8 @@ mod tests {
                 reason: BlockedReason::ServerRefused {
                     code: Some(403),
                     http_status: Some(403),
-                    reason: Some(wire::RegistrationResponseReason::Other)
+                    reason: Some(wire::RegistrationResponseReason::Other),
+                    ..
                 }
             }
         ));
@@ -3331,6 +3382,73 @@ mod tests {
             RegistrationStep::Action(RequiredAction::WaitForCooldown { .. })
         ));
         assert!(transport.responses.lock().unwrap().is_empty());
+    }
+
+    /// A refusal without `retry_after` keeps the longest method wait it
+    /// carried: the resumed email step enforces it before any request, and a
+    /// refusal with no wait serialises exactly as before (no `not_before`).
+    #[tokio::test]
+    async fn a_blocked_refusal_keeps_its_method_wait() {
+        let (_d, s) = store();
+        let profile = ProtocolProfile::android_reference().unwrap();
+        let transport = Arc::new(ComparisonTransport {
+            responses: std::sync::Mutex::new(std::collections::VecDeque::from([
+                ("/v2/code", br#"{"status":"sent"}"#.as_slice()),
+                (
+                    "/v2/register",
+                    br#"{"status":"fail","reason":"challenge","second_factor_methods":["wa_old"],"email_otp_wait":900,"sms_wait":30}"#
+                        .as_slice(),
+                ),
+            ])),
+        });
+        let service = RegistrationService::new(
+            s.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(
+                Arc::new(ComparisonRequests),
+                transport.clone(),
+            )),
+        );
+        let RegistrationStep::Action(RequiredAction::EnterCode(h)) =
+            service.begin(phone(), ChallengeMethod::Sms).await.unwrap()
+        else {
+            panic!("expected code")
+        };
+        let before = Timestamp::now();
+        service
+            .submit(h, Answer::Code(Zeroizing::new("123456".into())))
+            .await
+            .unwrap();
+        let saved = service.current().await.unwrap().unwrap().state;
+        let not_before = saved.refusal_not_before().expect("the wait is kept");
+        assert!(not_before >= before.saturating_add(std::time::Duration::from_secs(900)));
+        let RegistrationStep::Action(RequiredAction::RequestEmailCode(h2)) =
+            service.resume_email_challenge().await.unwrap()
+        else {
+            panic!("expected the email challenge")
+        };
+        assert_eq!(h2.retry_after, Some(not_before));
+        assert!(matches!(
+            service.request_email_code(h2, None).await,
+            Err(Error::RateLimited { .. })
+        ));
+        assert!(
+            transport.responses.lock().unwrap().is_empty(),
+            "nothing sent"
+        );
+        // Older records and wait-less refusals keep their exact JSON shape.
+        let plain = BlockedReason::ServerRefused {
+            code: None,
+            http_status: Some(200),
+            reason: None,
+            not_before: None,
+        };
+        let json = serde_json::to_value(&plain).unwrap();
+        assert!(json["ServerRefused"].get("not_before").is_none(), "{json}");
+        assert_eq!(
+            serde_json::from_value::<BlockedReason>(json).unwrap(),
+            plain
+        );
     }
 
     /// A shorter method-specific wait never shortens a longer generic one,
@@ -3749,6 +3867,7 @@ mod tests {
                             code: Some(403),
                             http_status: Some(403),
                             reason: None,
+                            not_before: None,
                         },
                     }
                     .into()),
