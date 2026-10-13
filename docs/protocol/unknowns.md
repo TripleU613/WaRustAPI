@@ -193,9 +193,58 @@ so no sender is implemented.
 - **Inferred:** the stanza's `edit` attribute is `editVersion` in decimal text,
   absent when zero. The server's ACK echoes `edit`, and the job matches the
   ACK on exactly that value.
-- **Not retained:** who sets `editVersion` for each operation (sender revoke,
-  admin revoke, text or caption edit, unschedule), so which of the received
-  values 1/2/3/7/8 a sender uses for which; and `Civ`'s stanza writer.
+- **Not retained:** the `SendE2EMessageJob` constructor body (which argument
+  becomes `editVersion`) and `Civ`'s stanza writer. **Superseded in part the
+  same day** by the message-side trace below, which answers "which value for
+  which operation" up to those two links.
+
+**Who sets the edit value (2026-10-13, second retained pass).** The send
+runnable does not invent the value; it reads it from the message:
+
+- **Confirmed static:** `DNu.run` builds the jobAlreadyScheduled key
+  `CSP(jid, id, v15, participant)` with `v15 = iget LX/178;->A00:I` of the
+  message being sent
+  ([group-send-runnable](apk/2.26.37.71-groups/group-send-runnable.txt)
+  `27fc..2800`, `2820..2826`), the same `CSP` position the job fills with its
+  own `editVersion` (`send-job-run` `113c..114e`). `DNu` reads `178.A00` again
+  at `2eb8..2ebc` while assembling the constructor arguments, but the
+  `move/from16` operands are elided in the retained render.
+- **Inferred (strong):** the job's `editVersion` is the message's `178.A00`;
+  otherwise the dedupe lookup could never match the job it guards.
+- **Confirmed static, retained writers of `178.A00`** (every one found):
+
+  | Writer | Message | Value |
+  | --- | --- | --- |
+  | `Bpt.<init>(1gc, J)` ([sender-constructor](apk/2.26.37.71-sender-revoke-window/sender-constructor.txt) `000e..0012`; the copy constructor calls it first) | kind 15, sender revoke | **7** |
+  | `Bps.<init>(1gc, J)` ([special-message-constructor](apk/2.26.37.71-receipt-ownership/special-message-constructor.txt) `0010..0014`) | kind 64, admin revoke | **8** |
+  | `DNh.run` case at `17fe` ([call-start-worker](apk/2.26.37.71-token-issue/call-start-worker.txt) `18e6..18ec`) | copy of a kind-0x42 poll with a new name; the same case writes `poll_edit_snapshot`/`previous_poll_name` (`1938..196a`), so a **poll edit** (meaning inferred from those strings) | **1** |
+  | `11x.A01` keep action ([keep-action](apk/2.26.37.71-group-keep-outbox/keep-action.txt) `0320..0334`) | `BnF` keep add-on (kind 0x44) | **7** when the *target* message's key is `fromMe` and the keep flag `v20` is false, else **0** |
+  | `SyncDeviceAndResendMessageJob.A00` ([job-original-message](apk/2.26.37.71-sync-resend/job-original-message.txt) `00a2..00a8`) | a `BnB` message re-fetched for resend | 0 |
+  | `D7E.Byt` ([message-flag-copy](apk/2.26.37.71-receipt-ownership/message-flag-copy.txt) `00a6..00ae`) | copy constructor | copies |
+
+  `v10` in the keep action is the target message's key (`016c..0170`; every
+  path to `0320` passes that write). `v20` is also stored as `BnF.A01`
+  (`0018`, `030a..030e`) and as the target's `178.A03` (`001c..0020`), which
+  the exception handler reverts to `v20 ^ 1` (`0358..0360`), so `v20` is the
+  target's new kept state. **Inferred:** `v20` true means KEEP: receivers throw "edit version and keeptype as kept are both set"
+  when the envelope edit version is nonzero on KEEP_FOR_ALL
+  ([keep-receiver](apk/2.26.37.71-own-device-keep/keep-receiver.txt)
+  `0574..05ca`; `C2L.forNumber` maps 1 to `A01`, [keep-values](apk/2.26.37.71-control-enum/keep-values.txt)),
+  so a KEEP never carries 7 and only an undo of one's own message does.
+  Receivers do not check the value on UNDO.
+- **Inferred:** the stanza `edit` attribute is `editVersion` in decimal,
+  absent when 0 (the ACK match above). So, chaining the two inferences: a
+  sender revoke sends `edit="7"`, an admin revoke `edit="8"`, a poll edit
+  `edit="1"`, an undo-keep of one's own message `edit="7"`, a keep none.
+- **Not found in retained writers:** the value for a text or caption edit
+  (receivers mark `edit == 1` as an edit; `D9B.CF4` sets the received
+  replacement's `CoT.A00 = 1`), for pin-in-chat (receivers take the pin path
+  for 2), and for unschedule.
+- **Divergence, recorded, not changed:** this client's group `keep --undo`
+  sends no `edit` attribute, where the native sender very probably sends
+  `edit="7"` for one's own message. Peers do not check it on UNDO (above), so
+  receipt is not expected to differ; changing what a live account sends waits
+  for `Civ`'s stanza writer to confirm the attribute.
 - **What the receive side constrains (confirmed static):** `DEy.A00`
   validates the value (8, 7, 3, 2, 1, or absent/empty as 0; anything else
   throws, [edit-parser](apk/2.26.37.71-sender-revoke/edit-parser.txt)

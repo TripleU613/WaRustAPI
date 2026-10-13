@@ -324,8 +324,10 @@ request—not adding Rust code, another command or a number-specific script.**
   `pqsupport` producer (the bodies of the `Can` predicates, chiefly
   `Can.A04(jid)`; its five retained call sites are in
   `docs/protocol/pq-bundle-boundary.md`), the
-  outgoing revoke/edit `edit` attribute (who sets `SendE2EMessageJob.editVersion`
-  per operation, and `Civ`'s stanza writer; see `docs/protocol/unknowns.md`),
+  outgoing revoke/edit `edit` attribute (per-operation values are now traced
+  to the message's `178.A00` writers; still needed: the `SendE2EMessageJob`
+  constructor mapping, `Civ`'s stanza writer, and the text-edit/pin writers;
+  see `docs/protocol/unknowns.md`),
   sender-side `contextInfo.expiration` (via `Cn6`/`B35.A01`), the native retry-receipt answer policy, and the
   wrong-OTP path (the `HD6.A0A` consumer and `guess_wait` unit), and what the
   app does with a `/v2/code` `ok`/`attached` answer (`02S.A0C`/`02S.A01`), and

@@ -1,3 +1,12 @@
+2026-10-13 — **Traced/static (sender edit values, retained bundles):** the
+send runnable `DNu` keys a scheduled send on the message's own edit field
+(`178.A00`), and the retained writers of that field give sender revoke 7,
+admin revoke 8, poll edit 1, and undo-keep of one's own message 7 (keep 0).
+Text-edit and pin values are not retained. The job constructor mapping and
+the stanza writer remain inferred links. This client's `keep --undo` omits
+the value (recorded divergence; receivers do not check it on undo). No sender
+changed. [Trace](unknowns.md#outgoing-revoke-and-edit-2026-10-13).
+
 2026-10-13 — **Implemented/offline (research tooling):** `xtask
 retained-proto-fields <file>` reads protobuf-lite field numbers from committed
 research bundles, for sessions without the APK. It follows the code that builds

@@ -169,3 +169,13 @@ rendering. The first local launch overlapped an offline inspection and was refus
 by the store ownership guard; its logs were preserved. Inspection completion was
 verified before the single completed receive window. No account reset, ownership
 bypass, fresh group draft or keep/unkeep transmission was performed.
+
+## Undo-keep edit value (2026-10-13, retained evidence)
+
+The native keep action `11x.A01` stores edit value 7 on the keep add-on when
+the target message is one's own and the action is an undo, and 0 otherwise;
+receivers reject a nonzero edit value only on KEEP. This client's `keep
+--undo` sends no `edit` attribute. Peers do not check it on UNDO, so behaviour
+is not expected to differ, and the stanza attribute is still inferred; it is
+recorded as a divergence, not changed.
+[Trace](unknowns.md#outgoing-revoke-and-edit-2026-10-13).
