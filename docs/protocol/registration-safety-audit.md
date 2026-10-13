@@ -294,3 +294,12 @@ other edit, once per store; `retry-corrected-request` shares the legacy
 diagnostic's marker. Keys within a store are never regenerated. OTPs and PINs
 come only from redirected stdin, are wiped after use and checked before any
 reservation. Not audited: `ban-appeal` and `token_material` parsing.
+
+Property-tested since 2026-10-13 (`crates/whatsapp-api/tests/registration_props.rs`):
+the response parser never panics on arbitrary bytes under any HTTP status, nor
+on registration-shaped JSON with values of any type; well-typed answers
+(including waits up to `u64::MAX` seconds, as numbers or strings) always parse;
+and neither a parsed answer's `Debug` nor an error's text echoes a value
+planted in any secret field (`login`, `code`, `wipe_token`,
+`passkey_credential`, `appeal_token`, `edge_routing_info`, `email`). Waits
+saturate when added to the clock (`Timestamp::saturating_add`).
