@@ -101,7 +101,97 @@ re-verified). Nothing here changes a request's wire content.
   its waits are printed, not saved. Test:
   `exist_probe_is_refused_mid_request_registered_or_cooling_down`.
 
+## Review corrections (2026-10-13)
+
+A second read-only review of the fixes above (commits `01af56a`, `cb33e2b`,
+`2624949`, `4ab7c2c`) found no path where a code, register, security, consent
+or email-code request that may have reached the server is restored as not
+sent, and no released latch that allows a second code send. It did find these,
+now corrected:
+
+- **M1. A sent `/v2/exist` preflight was restored as "not sent".** `begin`
+  sent the preflight, then built and sent `/v2/code`; a build or connect
+  failure of the second request returned `RequestNotSent` for the whole step,
+  so the attempt was restored (and a `resume-preflight` latch released) though
+  the server had seen the preflight. A reviewer probe repeated it three times:
+  three preflights left, and the preparation counter that feeds the next
+  preflight's `client_metrics.attempts` rose 1→2→3 with no code request sent.
+  `ComparisonHttpFlow::begin` now builds both requests before sending either,
+  and a not-sent failure after a sent preflight is recorded as an unknown
+  outcome. Test: `a_failure_after_a_sent_preflight_is_not_reported_as_not_sent`.
+- **M2. A not-sent correction released a latch nobody could use.** The
+  correction actions (`retry-corrected-token`, `retry-corrected-request`) save
+  the corrected material inside their reservation. The not-sent restore put
+  the refusal back and released the latch, but kept the material, so a second
+  run refused with "corrected token must differ from the saved token". The
+  one-shot reservations (diagnostics, corrections, `resume-preflight`) now keep
+  their latch when restored. This changes nothing that can be sent; the
+  attempt stays stranded (open below). Test:
+  `a_not_sent_correction_restores_the_refusal_and_keeps_its_one_shot`.
+- **M3. The email lost-request recovery could re-send an uncertain request.**
+  It accepted any `outcome_unknown` reached from `email_challenge_required`,
+  including a timeout or reset after the request was written. An email-code
+  request whose answer arrived but could not be read (a non-JSON body, an
+  oversized body) now records a marker; only with that marker can
+  `resume-email-challenge` take the lost-request path. Any other unknown
+  outcome is never re-sent. Test:
+  `an_email_code_request_lost_after_writing_is_not_resumed`.
+- **M4. The store-creation guard only checked that the store file existed.**
+  `registration status`/`reset`/`reconcile` and `store init` open their store
+  with `create: true`, so one run without `--profile` left an empty store at
+  the default path that a later `lab-signup begin` would fill with a fresh
+  identity; `--profile a --config b.json` put number B's attempt in A's store.
+  A store now records the number it was created for (`store_owner` /
+  `claim_store`, written by `accounts new` and `begin --create-store`). `begin`
+  on a store with no attempt requires that record to name the config's number;
+  an unclaimed store needs `--create-store`, another number's is refused.
+  Tests: `begin_requires_a_store_created_for_this_number`,
+  `only_an_explicit_begin_creates_a_store` (a pure guard test; the earlier test
+  ran the real HTTPS transport with live requests allowed).
+- **L1. The `accounts new` duplicate check could miss a number.** One malformed
+  profile made the whole check pass, numbers were compared as raw strings
+  (`555-123-4567` against `5551234567`), the raw number was written to the
+  config, and configs used only with `--config` were never seen. Each profile is
+  now read on its own, numbers are compared canonically, the canonical number is
+  written, and sibling account directories' `request.json` files are checked.
+  Test: `accounts_new_refuses_a_number_another_profile_configures`.
+- **L4. The lab transport's own failures were recorded as unknown.** Adding
+  configured `/v2/code` fields or encrypting the body (`DiagnosticTransport`)
+  fails before anything is written; it now returns `RequestNotSent`. Test:
+  `diagnostic_preparation_failures_are_not_sent`.
+- **Nits.** A successful email-code answer keeps the longer of
+  `email_otp_wait` and `retry_after`, as the refusal path does; the lab guide's
+  "on transport failure, the outcome remains unknown" now describes
+  `RequestNotSent`; the `RequestNotSent` doc states the preflight caveat.
+
+Not acted on: no test pins reqwest's `is_connect` meaning (the review re-read
+reqwest 0.12.28 / hyper-util 0.1.20: connect errors arise only from the
+connector, pool checkout or a closed checkout, before any request byte is
+written; handshake failures and the overall timeout are not connect errors).
+
 ## Confirmed open
+
+- **A not-sent correction strands its refusal** (review M2). The corrected
+  material saved by the reservation is not reverted and the latch stays used,
+  so the corrected request can never be sent from that store. Before the
+  not-sent work the same failure recorded an unknown outcome, equally stranded.
+  The fix is a factory hook that snapshots and reverts corrected material on a
+  not-sent restore (or applies it only after a definite send); not made.
+- **A restored fresh `begin` reads as a server cooldown** (review L2). Restoring
+  a first `begin` saves `CoolingDown{until: now}`, shown as `cooling_down` with
+  history `preparing -> cooling_down`, indistinguishable from a server wait.
+  Each not-sent failure also uses two of the 64 history entries; after about 30,
+  the preflight and diagnostics that need complete history can no longer build.
+- **Attempts from an older pinned version cannot be cleared** (review L3). The
+  ordinary profile id is `android-primary/<version_name>`; after the pin
+  changes, a previous version's attempt can be neither replaced (`begin`
+  refuses) nor reset (`reset` refuses) in the same generation. Such attempts are
+  harmless `UnsupportedFlow` blocks.
+- **An email request's `challenge` refusal may lose its wait** (review M3,
+  speculative: depends on server behaviour). A refusal with `email_otp_wait` but
+  no `retry_after` becomes `Blocked`, which has no wait field, and
+  `resume-email-challenge` then resumes with no wait. Same root cause as the
+  first item below.
 
 - **A refusal that stays blocked does not keep its SMS/voice wait.** A
   `/v2/code` refusal without `retry_after` but with `sms_wait`/`voice_wait`

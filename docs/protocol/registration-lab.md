@@ -431,9 +431,14 @@ number after deciding to send one more request; it may trigger SMS delivery.
 It retains the same attempt, keys, configuration and transition history.
 A durable account-local latch and preparation state commit before sending.
 Known refusals, cooldowns, unknown outcomes and repeated diagnostics are rejected.
-No existing store or latch should be deleted to repeat it. On transport failure,
-the outcome remains unknown; do not resend. Reqwest protocol-level retries are
-also explicitly disabled, in addition to application-level automatic retries.
+No existing store or latch should be deleted to repeat it. A transport failure
+that may have reached the server leaves the outcome unknown; do not resend. A
+request that provably never left (it could not be built, prepared or connected:
+`RequestNotSent`) restores the saved refusal, but the one-shot latch stays used,
+because the reservation may already have saved corrected request material
+(registration safety audit review M2, 2026-10-13). Reqwest protocol-level
+retries are also explicitly disabled, in addition to application-level
+automatic retries.
 
 `lab-signup --allow-live-request diagnose-bad-parameter` is a separate,
 one-shot operator action restricted to an existing HTTP 200 / `bad_param`

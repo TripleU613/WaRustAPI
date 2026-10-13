@@ -126,9 +126,11 @@ pub enum Error {
     NotConnected,
 
     /// A registration request provably did not leave this client: it could
-    /// not be built, or the connection failed before any byte of it was
-    /// written. The attempt returns to its state before the reservation
-    /// instead of an unknown outcome. Wraps the cause for diagnosis.
+    /// not be built or prepared, or the connection failed before any byte of
+    /// it was written. The attempt returns to its state before the reservation
+    /// instead of an unknown outcome. Never returned once an earlier request of
+    /// the same step (the `/v2/exist` preflight) has been sent: the server saw
+    /// that one. Wraps the cause for diagnosis.
     #[error("request not sent: {0}")]
     RequestNotSent(Box<Error>),
 

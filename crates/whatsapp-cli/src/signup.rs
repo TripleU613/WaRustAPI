@@ -74,11 +74,13 @@ pub(super) enum Action {
     Begin {
         #[arg(long, value_enum)]
         method: Option<super::Method>,
-        /// Create the store if it does not exist. `accounts new` already
-        /// creates its profile's store, so this is only for a profile made
-        /// before it did. Without it, a forgotten `--profile` or a mistyped
-        /// path fails instead of creating a fresh identity for a number that
-        /// may already have a store.
+        /// Create the store if it does not exist, or claim an existing store
+        /// that holds no attempt, for the config's number. `accounts new`
+        /// already creates and claims its profile's store, so this is only for
+        /// a profile made before it did. Without it, a forgotten `--profile`,
+        /// a mistyped path or an empty store another command created fails
+        /// instead of starting a fresh identity; another number's store is
+        /// always refused.
         #[arg(long)]
         create_store: bool,
     },
@@ -179,21 +181,40 @@ struct DiagnosticTransport {
     extra: Option<whatsapp_api::registration::request::EndpointFields>,
 }
 
+impl DiagnosticTransport {
+    fn prepare(
+        &self,
+        request: EncodedRegistrationRequest,
+    ) -> Result<EncodedRegistrationRequest, Error> {
+        let request = if let Some(fields) = &self.extra
+            && request.url().ends_with("/v2/code")
+        {
+            request.with_additional_code_fields(fields)?
+        } else {
+            request
+        };
+        Ok(match self.body_mode {
+            RequestBodyMode::EncEmptyH => request.encrypt_comparison_without_signature()?,
+            RequestBodyMode::Enc => request.encrypt_comparison()?,
+            RequestBodyMode::ClearForm => request,
+        })
+    }
+}
+
+fn not_sent(error: Error) -> Error {
+    match error {
+        Error::RequestNotSent(_) => error,
+        other => Error::RequestNotSent(Box::new(other)),
+    }
+}
+
 impl RegistrationTransport for DiagnosticTransport {
     fn send<'a>(&'a self, request: EncodedRegistrationRequest) -> RegistrationTransportFuture<'a> {
         Box::pin(async move {
-            let request = if let Some(fields) = &self.extra
-                && request.url().ends_with("/v2/code")
-            {
-                request.with_additional_code_fields(fields)?
-            } else {
-                request
-            };
-            let request = match self.body_mode {
-                RequestBodyMode::EncEmptyH => request.encrypt_comparison_without_signature()?,
-                RequestBodyMode::Enc => request.encrypt_comparison()?,
-                RequestBodyMode::ClearForm => request,
-            };
+            // Adding fields or encrypting fails before anything is written, so
+            // the failure is "not sent", not an unknown outcome (registration
+            // safety audit L4, 2026-10-13): the attempt keeps its prior state.
+            let request = self.prepare(request).map_err(not_sent)?;
             if self.enabled {
                 eprintln!("signup request: {}", request.diagnostic_summary());
             }
@@ -324,27 +345,16 @@ pub(super) async fn run(
         body_mode: request_body_mode(config.transport.body_mode, action),
         extra,
     });
-    // Only an explicit `begin --create-store` creates a store (registration
-    // safety audit, 2026-10-13): a new store means a fresh identity, and must
-    // never happen because a profile was forgotten or a path mistyped.
-    let create = matches!(
-        action,
-        Action::Begin {
-            create_store: true,
-            ..
-        }
-    );
-    if !create && !cli.store.exists() {
-        return Err(invalid(
-            "store does not exist; select the number's profile with --profile, or pass `begin --create-store` for a profile whose store was never created",
-        ));
-    }
+    let create = store_creation(action, &cli.store)?;
     let store = Arc::new(ProtocolStore::open(OpenOptions {
         path: cli.store.clone(),
         account_id: whatsapp_api::model::ids::AccountId::new(cli.account.clone())?,
         key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
         create,
     })?);
+    if matches!(action, Action::Begin { .. }) {
+        begin_store_guard(&store, &config.phone, create)?;
+    }
     let factory = Arc::new(if matches!(action, Action::RetryCorrectedToken) {
         StoredComparisonRequestFactory::new_for_token_correction(store.clone(), config)?
     } else if matches!(action, Action::RetryCorrectedRequest) {
@@ -581,6 +591,53 @@ pub(super) async fn run(
     Ok(())
 }
 
+/// Whether this action may create its store. Only an explicit `begin
+/// --create-store` does (registration safety audit, 2026-10-13): a new store
+/// means a fresh identity, and must never come from a forgotten profile or a
+/// mistyped path. A missing store is otherwise refused before it is opened.
+fn store_creation(action: &Action, store: &Path) -> Result<bool, Error> {
+    let create = matches!(
+        action,
+        Action::Begin {
+            create_store: true,
+            ..
+        }
+    );
+    if !create && !store.exists() {
+        return Err(invalid(
+            "store does not exist; select the number's profile with --profile, or pass `begin --create-store` for a profile whose store was never created",
+        ));
+    }
+    Ok(create)
+}
+
+/// A store that holds no attempt yet must have been created for this number:
+/// by `accounts new`, or by an explicit `--create-store`, which claims it. An
+/// empty store some other command created, or another number's store selected
+/// with a mismatched `--config`, is refused: starting an attempt there is a
+/// fresh identity (registration safety audit review, 2026-10-13). A store with
+/// an attempt is left to the library, which refuses another number's attempt.
+fn begin_store_guard(
+    store: &ProtocolStore,
+    phone: &whatsapp_api::model::phone::PhoneNumber,
+    create: bool,
+) -> Result<(), Error> {
+    use whatsapp_api::registration::{claim_store, current_state_name, store_owner};
+    if current_state_name(store)?.is_some() {
+        return Ok(());
+    }
+    match store_owner(store)? {
+        Some(owner) if &owner == phone => Ok(()),
+        Some(_) => Err(invalid(
+            "this store was created for another number; select that number's profile",
+        )),
+        None if create => claim_store(store, phone),
+        None => Err(invalid(
+            "this store holds no attempt and was not created for this number; select the number's profile, or pass `begin --create-store` to claim it",
+        )),
+    }
+}
+
 /// The read-safe `/v2/exist` probe has no reservation, so it is refused where
 /// asking the server anything would talk over the attempt: a request in flight
 /// or of unknown outcome, a registered account, or a cooldown the server set
@@ -637,6 +694,36 @@ fn redact_attempt(value: &mut serde_json::Value) {
 mod tests {
     use super::*;
 
+    /// The lab wrapper's own failures (adding fields, encrypting) happen
+    /// before any write, so they must read as "not sent", which keeps the
+    /// attempt's prior state, not as an unknown outcome (audit L4).
+    #[tokio::test]
+    async fn diagnostic_preparation_failures_are_not_sent() {
+        use whatsapp_api::registration::request::EndpointFields;
+        use whatsapp_api::registration::wire::{
+            RegistrationEndpoint, RegistrationForm, WHATSAPP_2_26_37_70,
+        };
+        let mut extra = EndpointFields::default();
+        // Register-only fields are refused on the code-request patch.
+        extra
+            .register
+            .insert("refused".into(), Zeroizing::new("1".into()));
+        let transport = DiagnosticTransport {
+            inner: ExperimentalHttpsTransport::new(std::time::Duration::from_secs(30)).unwrap(),
+            enabled: false,
+            body_mode: RequestBodyMode::ClearForm,
+            extra: Some(extra),
+        };
+        let request = WHATSAPP_2_26_37_70
+            .request(RegistrationEndpoint::Code, &RegistrationForm::new())
+            .unwrap();
+        let error = transport.send(request).await.unwrap_err();
+        let Error::RequestNotSent(cause) = error else {
+            panic!("expected not sent: {error}");
+        };
+        assert!(!matches!(*cause, Error::RequestNotSent(_)), "wrapped once");
+    }
+
     /// `status --json` printed the consent context's login, pending selector
     /// and parent consent URL; only the phone was redacted.
     #[test]
@@ -672,38 +759,49 @@ mod tests {
         assert!(text.contains("\"consent_id\":7"), "non-secret fields stay");
     }
 
-    /// Without `--create-store`, `begin` refuses a store that does not exist
-    /// and creates nothing: a new store is a fresh identity.
-    #[tokio::test]
-    async fn begin_does_not_create_a_store_implicitly() {
-        use std::os::unix::fs::PermissionsExt;
+    /// Only `begin --create-store` may create a store; anything else refuses
+    /// a missing one before opening it.
+    #[test]
+    fn only_an_explicit_begin_creates_a_store() {
         let dir = tempfile::tempdir().unwrap();
-        let config = dir.path().join("request.json");
-        let mut template: serde_json::Value =
-            serde_json::from_str(whatsapp_api::registration::request::TEMPLATE_JSON).unwrap();
-        template["token"] = serde_json::json!("offline-fixture-token");
-        std::fs::write(&config, template.to_string()).unwrap();
-        std::fs::set_permissions(&config, std::fs::Permissions::from_mode(0o600)).unwrap();
-        let store = dir.path().join("mistyped.redb");
-        let cli = super::super::Cli {
-            store: store.clone(),
-            account: "signup-test".into(),
-            key_env: "WHATSAPP_API_TEST_UNSET_KEY".into(),
-            profile: None,
-            profiles_dir: dir.path().join("profiles"),
-            json: false,
-            cmd: super::super::Cmd::Accounts {
-                cmd: super::super::AccountsCmd::List,
-            },
-            loaded_profile: None,
-        };
-        let begin = Action::Begin {
+        let missing = dir.path().join("mistyped.redb");
+        let begin = |create_store| Action::Begin {
             method: None,
-            create_store: false,
+            create_store,
         };
-        let error = run(&cli, &config, true, &begin).await.unwrap_err();
+        let error = store_creation(&begin(false), &missing).unwrap_err();
         assert!(error.to_string().contains("--create-store"), "{error}");
-        assert!(!store.exists(), "no store was created");
+        assert!(store_creation(&Action::ResendCode { method: None }, &missing).is_err());
+        assert!(store_creation(&begin(true), &missing).unwrap());
+        let present = dir.path().join("present.redb");
+        std::fs::write(&present, b"").unwrap();
+        assert!(!store_creation(&begin(false), &present).unwrap());
+    }
+
+    /// A store with no attempt must have been created for this number; an
+    /// explicit `--create-store` claims an unclaimed one; another number's
+    /// store is refused.
+    #[test]
+    fn begin_requires_a_store_created_for_this_number() {
+        use whatsapp_api::model::phone::PhoneNumber;
+        use whatsapp_api::store::{MasterKey, StaticKeySource};
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("empty.redb"),
+            account_id: whatsapp_api::model::ids::AccountId::new("signup-test").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([5; 32]))),
+            create: true,
+        })
+        .unwrap();
+        let number = PhoneNumber::new(1, "5550100001").unwrap();
+        let other = PhoneNumber::new(1, "5550100002").unwrap();
+        // An empty store some other command created: refused without the flag.
+        assert!(begin_store_guard(&store, &number, false).is_err());
+        // Claimed explicitly, then accepted for that number only.
+        begin_store_guard(&store, &number, true).unwrap();
+        begin_store_guard(&store, &number, false).unwrap();
+        let error = begin_store_guard(&store, &other, true).unwrap_err();
+        assert!(error.to_string().contains("another number"), "{error}");
     }
 
     #[test]

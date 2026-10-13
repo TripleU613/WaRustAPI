@@ -478,6 +478,36 @@ fn not_built(error: Error) -> Error {
     }
 }
 
+const STORE_OWNER_KEY: &[u8] = b"store-owner";
+
+/// The number this store was created for (`accounts new`, or an explicit
+/// `lab-signup begin --create-store`), if recorded. Stores created before this
+/// record existed have none; their saved attempt names their number instead.
+pub fn store_owner(store: &ProtocolStore) -> Result<Option<PhoneNumber>> {
+    store.read(|tx| tx.get_json(Table::RegistrationAttempts, STORE_OWNER_KEY, RECORD_V1))
+}
+
+/// Record that this store belongs to `phone`. Idempotent for the same number;
+/// refuses to re-assign a store to another number, so one store never holds
+/// two numbers' identities (registration safety audit, 2026-10-13).
+pub fn claim_store(store: &ProtocolStore, phone: &PhoneNumber) -> Result<()> {
+    store.write(|tx| {
+        match tx.get_json::<PhoneNumber>(Table::RegistrationAttempts, STORE_OWNER_KEY, RECORD_V1)? {
+            Some(owner) if &owner == phone => Ok(()),
+            Some(_) => Err(Error::invalid(
+                "registration_store",
+                "this store was created for another number",
+            )),
+            None => tx.put_json(
+                Table::RegistrationAttempts,
+                STORE_OWNER_KEY,
+                RECORD_V1,
+                phone,
+            ),
+        }
+    })
+}
+
 /// The saved attempt's state name (`preparing`, `challenge_pending`,
 /// `cooling_down`, `outcome_unknown`, ...), or `None` when this store holds no
 /// attempt. Read-only, for status displays such as `accounts status`.
@@ -487,6 +517,11 @@ pub fn current_state_name(store: &ProtocolStore) -> Result<Option<&'static str>>
             .get_json::<RegistrationAttempt>(Table::RegistrationAttempts, CURRENT_KEY, RECORD_V1)?
             .map(|attempt| attempt.state.name()))
     })
+}
+
+/// Marks an email-code request whose answer arrived but could not be read.
+fn email_answered_key(attempt: AttemptId, step: u32) -> String {
+    format!("email-request-answered:{}:{step}", hex::encode(attempt.0))
 }
 
 /// The longest of the server-directed waits that are present.
@@ -1037,18 +1072,26 @@ impl RegistrationFlow for ComparisonHttpFlow {
 
     fn begin<'a>(&'a self, attempt: &'a RegistrationAttempt) -> RegistrationFuture<'a> {
         Box::pin(async move {
-            if let Some(request) = self
+            // Both requests are built before either is sent, so a build
+            // failure can only happen while nothing has left. Once the
+            // preflight has been sent, a later failure is not "not sent": the
+            // server saw the preflight (and its preparation counter).
+            let preflight = self
                 .requests
                 .preflight_request(attempt)
-                .map_err(not_built)?
-            {
-                let (status, response) = self.send(request).await?;
+                .map_err(not_built)?;
+            let request = self.requests.code_request(attempt).map_err(not_built)?;
+            let preflight_sent = preflight.is_some();
+            if let Some(preflight) = preflight {
+                let (status, response) = self.send(preflight).await?;
                 if let Some(output) = preflight_decision(status, &response, &attempt.method) {
                     return Ok(output);
                 }
             }
-            let request = self.requests.code_request(attempt).map_err(not_built)?;
-            let (status_code, response) = self.send(request).await?;
+            let (status_code, response) = match self.send(request).await {
+                Err(Error::RequestNotSent(cause)) if preflight_sent => return Err(*cause),
+                other => other?,
+            };
             if (200..300).contains(&status_code)
                 && response.status == wire::RegistrationResponseStatus::Sent
             {
@@ -1103,7 +1146,9 @@ impl RegistrationFlow for ComparisonHttpFlow {
                     wire::RegistrationResponseStatus::Sent | wire::RegistrationResponseStatus::Ok
                 )
             {
-                let wait = response.email_otp_wait.or(response.retry_after);
+                // Both are server waits; honour the longer one, as the
+                // refusal path does, rather than letting one hide the other.
+                let wait = longest([response.email_otp_wait, response.retry_after]);
                 return Ok(RegistrationState::EmailCodePending {
                     handle: ChallengeHandle {
                         attempt: attempt.id,
@@ -1810,8 +1855,11 @@ impl RegistrationService {
             .await?;
         let (attempt, prior) = attempt;
         let method = attempt.method.clone();
-        self.execute_begin(attempt, prior, method, Some(latch))
-            .await
+        // A not-sent failure restores the refusal but keeps the one-shot
+        // latch: the reservation's `prepare` may already have saved corrected
+        // request material (a corrected token, for example), which is not
+        // rolled back, so re-running the same one-shot would not repeat it.
+        self.execute_begin(attempt, prior, method, None).await
     }
 
     async fn execute_begin(
@@ -2022,17 +2070,48 @@ impl RegistrationService {
                     .await
             }
             Err(error) => {
+                // The server answered, but the answer could not be read (for
+                // example an HTTP 404 with a non-JSON body). Only this kind of
+                // unknown outcome may later be resumed: a timeout or reset
+                // after writing may have sent an email and stays unknown.
+                let answered = matches!(
+                    &error,
+                    Error::InvalidInput {
+                        field: "registration_response",
+                        ..
+                    } | Error::ResourceExhausted {
+                        resource: "registration response body bytes",
+                        ..
+                    }
+                );
                 let method = attempt.method.clone();
-                self.finish_failed(
-                    &attempt,
-                    "verifying",
-                    RegistrationState::RegistrationOutcomeUnknown { step: bound.step },
-                    prior,
-                    method,
-                    None,
-                    error,
-                )
-                .await
+                let result = self
+                    .finish_failed(
+                        &attempt,
+                        "verifying",
+                        RegistrationState::RegistrationOutcomeUnknown { step: bound.step },
+                        prior,
+                        method,
+                        None,
+                        error,
+                    )
+                    .await;
+                if answered {
+                    let key = email_answered_key(attempt.id, bound.step);
+                    self.store
+                        .run_blocking(move |s| {
+                            s.write(|tx| {
+                                tx.put_json(
+                                    Table::RegistrationAttempts,
+                                    key.as_bytes(),
+                                    RECORD_V1,
+                                    &Timestamp::now(),
+                                )
+                            })
+                        })
+                        .await?;
+                }
+                result
             }
         }
     }
@@ -2065,15 +2144,27 @@ impl RegistrationService {
                     // A lost outcome of the email-code request itself (for
                     // example an HTTP 404 with a non-JSON body) may also come
                     // back to the request step: the history must show it.
-                    let lost_email_request = matches!(
-                        attempt.state,
-                        RegistrationState::RegistrationOutcomeUnknown { .. }
-                    ) && attempt
-                        .history
-                        .iter()
-                        .rev()
-                        .nth(1)
-                        .is_some_and(|t| t.from == "email_challenge_required");
+                    // Only an email-code request the server answered with
+                    // something unreadable; a timeout or reset after writing
+                    // stays unknown and is never re-sent.
+                    let lost_email_request = match attempt.state {
+                        RegistrationState::RegistrationOutcomeUnknown { step } => {
+                            attempt
+                                .history
+                                .iter()
+                                .rev()
+                                .nth(1)
+                                .is_some_and(|t| t.from == "email_challenge_required")
+                                && tx
+                                    .get(
+                                        Table::RegistrationAttempts,
+                                        email_answered_key(attempt.id, step).as_bytes(),
+                                        RECORD_V1,
+                                    )?
+                                    .is_some()
+                        }
+                        _ => false,
+                    };
                     if !refused_with_challenge && !lost_email_request {
                         return Err(Error::invalid(
                             "challenge",
@@ -2519,6 +2610,103 @@ mod tests {
         }
     }
 
+    /// `ComparisonRequests` with the `/v2/exist` preflight enabled.
+    #[derive(Debug)]
+    struct PreflightRequests;
+
+    impl ComparisonRequestFactory for PreflightRequests {
+        fn prepare(&self, tx: &mut WriteTx<'_>, attempt: &RegistrationAttempt) -> Result<()> {
+            ComparisonRequests.prepare(tx, attempt)
+        }
+        fn preflight_request(
+            &self,
+            _attempt: &RegistrationAttempt,
+        ) -> Result<Option<wire::EncodedRegistrationRequest>> {
+            wire::WHATSAPP_2_26_37_70
+                .request(
+                    wire::RegistrationEndpoint::Exist,
+                    &wire::RegistrationForm::new(),
+                )
+                .map(Some)
+        }
+        fn code_request(
+            &self,
+            attempt: &RegistrationAttempt,
+        ) -> Result<wire::EncodedRegistrationRequest> {
+            ComparisonRequests.code_request(attempt)
+        }
+        fn complete_request(
+            &self,
+            attempt: &RegistrationAttempt,
+            code: &Zeroizing<String>,
+        ) -> Result<wire::EncodedRegistrationRequest> {
+            ComparisonRequests.complete_request(attempt, code)
+        }
+        fn security_request(
+            &self,
+            attempt: &RegistrationAttempt,
+            pin: &Zeroizing<String>,
+        ) -> Result<wire::EncodedRegistrationRequest> {
+            ComparisonRequests.security_request(attempt, pin)
+        }
+        fn challenge_request(
+            &self,
+            attempt: &RegistrationAttempt,
+            params: &wire::RegistrationChallengeParams,
+        ) -> Result<wire::EncodedRegistrationRequest> {
+            ComparisonRequests.challenge_request(attempt, params)
+        }
+        fn email_code_request(
+            &self,
+            attempt: &RegistrationAttempt,
+        ) -> Result<wire::EncodedRegistrationRequest> {
+            ComparisonRequests.email_code_request(attempt)
+        }
+    }
+
+    /// Once the preflight has left, a failed code request is not "not sent":
+    /// the attempt records an unknown outcome instead of being restored.
+    #[tokio::test]
+    async fn a_failure_after_a_sent_preflight_is_not_reported_as_not_sent() {
+        let (_d, s) = store();
+        let profile = ProtocolProfile::android_reference().unwrap();
+        let transport = Arc::new(MaybeSentTransport {
+            steps: std::sync::Mutex::new(std::collections::VecDeque::from([
+                (
+                    "/v2/exist",
+                    Some(
+                        br#"{"status":"fail","reason":"incorrect","recommended_method":["sms"]}"#
+                            .as_slice(),
+                    ),
+                ),
+                ("/v2/code", None),
+            ])),
+        });
+        let service = RegistrationService::new(
+            s.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(
+                Arc::new(PreflightRequests),
+                transport.clone(),
+            )),
+        );
+        let error = service
+            .begin(phone(), ChallengeMethod::Sms)
+            .await
+            .unwrap_err();
+        assert!(!matches!(error, Error::RequestNotSent(_)), "{error}");
+        let saved = service.current().await.unwrap().unwrap();
+        assert!(
+            matches!(
+                saved.state,
+                RegistrationState::RegistrationOutcomeUnknown { .. }
+            ),
+            "{:?}",
+            saved.state
+        );
+        assert!(transport.steps.lock().unwrap().is_empty());
+    }
+
     #[derive(Debug)]
     struct ComparisonTransport {
         responses: std::sync::Mutex<std::collections::VecDeque<(&'static str, &'static [u8])>>,
@@ -2908,7 +3096,7 @@ mod tests {
                 ),
                 (
                     "/v2/code",
-                    br#"{"status":"sent","email_otp_wait":5,"email_otp_length":6,"email":"a***@example.com"}"#.as_slice(),
+                    br#"{"status":"sent","email_otp_wait":5,"retry_after":900,"email_otp_length":6,"email":"a***@example.com"}"#.as_slice(),
                 ),
                 (
                     "/v2/register",
@@ -2953,7 +3141,9 @@ mod tests {
             panic!("expected email code entry")
         };
         // The email wait applies to re-requesting, not to entering the code.
-        assert!(h3.retry_after.is_some());
+        // The longer of the two server waits is kept, not the first present.
+        let earliest = Timestamp::now().saturating_add(std::time::Duration::from_secs(800));
+        assert!(h3.retry_after.is_some_and(|at| at >= earliest));
         assert!(
             service
                 .submit(h3.clone(), Answer::Pin(Zeroizing::new("1234".into())))
@@ -3096,6 +3286,84 @@ mod tests {
             Some(std::time::Duration::from_secs(5))
         );
         assert_eq!(longest::<2>([None, None]), None);
+    }
+
+    /// Each step answers with a body, or fails after the request may have been
+    /// written (an ordinary I/O error, not "not sent").
+    #[derive(Debug)]
+    struct LostAfterWriteTransport {
+        steps: MaybeSentSteps,
+    }
+
+    impl wire::RegistrationTransport for LostAfterWriteTransport {
+        fn send<'a>(
+            &'a self,
+            request: wire::EncodedRegistrationRequest,
+        ) -> wire::RegistrationTransportFuture<'a> {
+            Box::pin(async move {
+                let (path, body) = self.steps.lock().unwrap().pop_front().unwrap();
+                assert!(request.url().ends_with(path));
+                match body {
+                    Some(body) => {
+                        wire::RegistrationHttpResponse::new(200, Zeroizing::new(body.to_vec()))
+                    }
+                    None => Err(Error::Io(std::io::Error::other("reset after writing"))),
+                }
+            })
+        }
+    }
+
+    /// An email-code request that may have reached the server (lost after
+    /// writing) is never resumed; only an answer that arrived unreadable is.
+    #[tokio::test]
+    async fn an_email_code_request_lost_after_writing_is_not_resumed() {
+        let (_d, s) = store();
+        let profile = ProtocolProfile::android_reference().unwrap();
+        let transport = Arc::new(LostAfterWriteTransport {
+            steps: std::sync::Mutex::new(std::collections::VecDeque::from([
+                ("/v2/code", Some(br#"{"status":"sent"}"#.as_slice())),
+                (
+                    "/v2/register",
+                    Some(
+                        br#"{"status":"fail","reason":"challenge","second_factor_methods":["email_otp"]}"#
+                            .as_slice(),
+                    ),
+                ),
+                ("/v2/code", None),
+            ])),
+        });
+        let service = RegistrationService::new(
+            s.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(
+                Arc::new(ComparisonRequests),
+                transport.clone(),
+            )),
+        );
+        let RegistrationStep::Action(RequiredAction::EnterCode(h)) =
+            service.begin(phone(), ChallengeMethod::Sms).await.unwrap()
+        else {
+            panic!("expected code")
+        };
+        let RegistrationStep::Action(RequiredAction::RequestEmailCode(email)) = service
+            .submit(h, Answer::Code(Zeroizing::new("123456".into())))
+            .await
+            .unwrap()
+        else {
+            panic!("expected the email challenge")
+        };
+        assert!(service.request_email_code(email, None).await.is_err());
+        let saved = service.current().await.unwrap().unwrap();
+        assert!(matches!(
+            saved.state,
+            RegistrationState::RegistrationOutcomeUnknown { .. }
+        ));
+        let error = service.resume_email_challenge().await.unwrap_err();
+        assert!(
+            error.to_string().contains("only a `challenge` refusal"),
+            "{error}"
+        );
+        assert!(transport.steps.lock().unwrap().is_empty());
     }
 
     /// Each email-challenge recovery is allowed once per attempt: a lost

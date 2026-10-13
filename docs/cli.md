@@ -1196,7 +1196,7 @@ Usage: whatsapp-cli lab-signup begin [OPTIONS]...
 | Flag | Value | Required | Default | Env | Values | Help |
 |------|-------|----------|---------|-----|--------|------|
 | --method | METHOD | no |  |  | `sms`, `voice` |  |
-| --create-store | CREATE_STORE | no |  |  | `true`, `false` | Create the store if it does not exist. `accounts new` already creates its profile's store, so this is only for a profile made before it did. Without it, a forgotten `--profile` or a mistyped path fails instead of creating a fresh identity for a number that may already have a store |
+| --create-store | CREATE_STORE | no |  |  | `true`, `false` | Create the store if it does not exist, or claim an existing store that holds no attempt, for the config's number. `accounts new` already creates and claims its profile's store, so this is only for a profile made before it did. Without it, a forgotten `--profile`, a mistyped path or an empty store another command created fails instead of starting a fresh identity; another number's store is always refused |
 
 ## whatsapp-cli lab-signup resend-code
 

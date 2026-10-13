@@ -767,6 +767,86 @@ mod tests {
         }
     }
 
+    /// Every request fails before leaving (a connection refused before writing).
+    #[cfg(feature = "experimental-registration-https")]
+    #[derive(Debug)]
+    struct UnsentTransport(std::sync::Mutex<u32>);
+
+    #[cfg(feature = "experimental-registration-https")]
+    impl RegistrationTransport for UnsentTransport {
+        fn send<'a>(&'a self, _: EncodedRegistrationRequest) -> RegistrationTransportFuture<'a> {
+            Box::pin(async move {
+                *self.0.lock().unwrap() += 1;
+                Err(Error::RequestNotSent(Box::new(Error::Io(
+                    std::io::Error::other("connection refused before writing"),
+                ))))
+            })
+        }
+    }
+
+    /// A corrected-token retry that never left restores the `bad_token`
+    /// refusal, but its one-shot stays spent: the reservation already saved the
+    /// corrected token, so the same correction could not be repeated anyway.
+    #[tokio::test]
+    #[cfg(feature = "experimental-registration-https")]
+    async fn a_not_sent_correction_restores_the_refusal_and_keeps_its_one_shot() {
+        use crate::registration::BlockedReason;
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(dir.path());
+        let original = StoredComparisonRequestFactory::new(store.clone(), config()).unwrap();
+        let mut a = attempt(&store);
+        store.write(|tx| original.prepare(tx, &a)).unwrap();
+        let refusal = RegistrationState::Blocked {
+            reason: BlockedReason::ServerRefused {
+                code: None,
+                http_status: Some(200),
+                reason: Some(RegistrationResponseReason::BadToken),
+            },
+        };
+        a.transition(refusal.clone(), Timestamp::now()).unwrap();
+        store
+            .write(|tx| RegistrationService::save_current(tx, &a))
+            .unwrap();
+        let mut profile = crate::ProtocolProfile::android_reference().unwrap();
+        profile.id = LAB_PROFILE_ID.into();
+        let transport = Arc::new(UnsentTransport(std::sync::Mutex::new(0)));
+        let mut corrected = config();
+        corrected.token = Zeroizing::new("corrected-token".into());
+        let service = RegistrationService::new(
+            store.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(
+                Arc::new(
+                    StoredComparisonRequestFactory::new_for_token_correction(
+                        store.clone(),
+                        corrected,
+                    )
+                    .unwrap(),
+                ),
+                transport.clone(),
+            )),
+        );
+        let error = service
+            .retry_corrected_token_once(config().phone)
+            .await
+            .unwrap_err();
+        assert!(matches!(error, Error::RequestNotSent(_)), "{error}");
+        let saved = service.current().await.unwrap().unwrap();
+        assert_eq!(saved.state, refusal);
+        assert!(saved.refused_at_code_request());
+        let again = service
+            .retry_corrected_token_once(config().phone)
+            .await
+            .unwrap_err()
+            .to_string();
+        assert!(again.contains("one-shot"), "{again}");
+        assert_eq!(
+            *transport.0.lock().unwrap(),
+            1,
+            "one attempt, which never left"
+        );
+    }
+
     /// The same saved refusal shape reached from an OTP submission (`verifying
     /// -> blocked`) must not make a code-request diagnostic or the corrected
     /// token resend eligible: either would ask for a new SMS or call.

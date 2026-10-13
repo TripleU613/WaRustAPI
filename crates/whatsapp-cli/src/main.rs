@@ -1162,14 +1162,16 @@ fn accounts_new(
             format!("{} already exists", account_dir.display()),
         ));
     }
+    // Validated and canonicalised before anything is written.
+    let phone = PhoneNumber::new(country_code, national_number)?;
     // One number, one store: a second profile for a configured number would
     // start a fresh identity beside a store that may be cooling down or hold an
     // uncertain outcome (registration safety audit, 2026-10-13).
-    if let Some(existing) = profile_configuring(&cli.profiles_dir, country_code, national_number) {
+    if let Some(existing) = number_configured_by(&cli.profiles_dir, &account_dir, &phone) {
         return Err(Error::invalid(
             "accounts",
             format!(
-                "profile `{existing}` already configures this number; reuse it, a number keeps one store"
+                "{existing} already configures this number; reuse it, a number keeps one store"
             ),
         ));
     }
@@ -1208,7 +1210,6 @@ fn accounts_new(
         )
     })?;
 
-    let phone = PhoneNumber::new(country_code, national_number)?;
     let material = whatsapp_api::registration::token_material::TokenMaterial::open(material_path)?;
     let token = material.derive(&phone)?;
 
@@ -1216,8 +1217,8 @@ fn accounts_new(
         serde_json::from_str(whatsapp_api::registration::request::TEMPLATE_JSON)
             .map_err(|e| Error::invalid("accounts", format!("template JSON parse failed: {e}")))?;
 
-    config["phone"]["country_code"] = serde_json::json!(country_code);
-    config["phone"]["national_number"] = serde_json::json!(national_number);
+    config["phone"]["country_code"] = serde_json::json!(phone.country_code());
+    config["phone"]["national_number"] = serde_json::json!(phone.national_number());
     config["token"] = serde_json::json!(token.as_str());
 
     let mut reg_id_bytes = [0u8; 4];
@@ -1250,17 +1251,18 @@ fn accounts_new(
     )?;
 
     let store_path = account_dir.join("signup.redb");
-    // Create the profile's store now, so `lab-signup begin` never has to.
-    drop(whatsapp_api::store::ProtocolStore::open(
-        whatsapp_api::store::OpenOptions {
-            path: store_path.clone(),
-            account_id: AccountId::new(format!("signup-{name}"))?,
-            key_source: Arc::new(whatsapp_api::store::StaticKeySource::new(
-                MasterKey::from_bytes(key_bytes),
-            )),
-            create: true,
-        },
-    )?);
+    // Create the profile's store now, claimed for this number, so `lab-signup
+    // begin` never has to create one and refuses any other number there.
+    let store = whatsapp_api::store::ProtocolStore::open(whatsapp_api::store::OpenOptions {
+        path: store_path.clone(),
+        account_id: AccountId::new(format!("signup-{name}"))?,
+        key_source: Arc::new(whatsapp_api::store::StaticKeySource::new(
+            MasterKey::from_bytes(key_bytes),
+        )),
+        create: true,
+    })?;
+    whatsapp_api::registration::claim_store(&store, &phone)?;
+    drop(store);
     let profile_name = name;
     let key_env = format!(
         "WHATSAPP_API_MASTER_KEY_{}",
@@ -1292,23 +1294,52 @@ fn accounts_new(
     Ok(())
 }
 
-/// The saved profile whose request JSON already configures this number, if
-/// any. Profiles without a readable config are skipped; nothing is printed.
-fn profile_configuring(
-    dir: &std::path::Path,
-    country_code: u16,
-    national_number: &str,
+/// Which saved profile, or which sibling account directory's `request.json`,
+/// already configures `phone`, compared canonically (separators ignored). Each
+/// file is read on its own, so one malformed or unreadable file does not hide
+/// the others. Nothing about the number is printed.
+fn number_configured_by(
+    profiles_dir: &std::path::Path,
+    account_dir: &std::path::Path,
+    phone: &PhoneNumber,
 ) -> Option<String> {
-    profiles::list(dir)
-        .ok()?
-        .into_iter()
-        .find_map(|(name, profile)| {
-            let text = std::fs::read_to_string(profile.config.as_ref()?).ok()?;
-            let config: serde_json::Value = serde_json::from_str(&text).ok()?;
-            (config["phone"]["country_code"].as_u64() == Some(u64::from(country_code))
-                && config["phone"]["national_number"].as_str() == Some(national_number))
-            .then_some(name)
-        })
+    let configures = |path: &std::path::Path| -> Option<()> {
+        let text = std::fs::read_to_string(path).ok()?;
+        let config: serde_json::Value = serde_json::from_str(&text).ok()?;
+        let cc = u16::try_from(config["phone"]["country_code"].as_u64()?).ok()?;
+        let saved = PhoneNumber::new(cc, config["phone"]["national_number"].as_str()?).ok()?;
+        (&saved == phone).then_some(())
+    };
+    let entries = |dir: &std::path::Path| -> Vec<PathBuf> {
+        std::fs::read_dir(dir)
+            .into_iter()
+            .flatten()
+            .flatten()
+            .map(|entry| entry.path())
+            .collect()
+    };
+    for path in entries(profiles_dir) {
+        if path.extension().is_none_or(|ext| ext != "json") {
+            continue;
+        }
+        let Some(name) = path.file_stem().and_then(|stem| stem.to_str()) else {
+            continue;
+        };
+        if let Ok(profile) = profiles::load(profiles_dir, name)
+            && let Some(config) = profile.config.as_deref()
+            && configures(config).is_some()
+        {
+            return Some(format!("profile `{name}`"));
+        }
+    }
+    // Configs used with --config but not referenced by any profile.
+    for dir in account_dir.parent().map(entries).unwrap_or_default() {
+        let config = dir.join("request.json");
+        if configures(&config).is_some() {
+            return Some(config.display().to_string());
+        }
+    }
+    None
 }
 
 fn accounts_status(cli: &Cli, name: Option<&str>) -> Result<(), Error> {
@@ -2883,11 +2914,30 @@ mod accounts_tests {
             },
         )
         .unwrap();
+        // A malformed profile beside it must not hide it.
+        std::fs::write(profiles_dir.join("broken.json"), b"{not json").unwrap();
+        let accounts = temp_dir.path().join("accounts");
+        let configured = PhoneNumber::new(1, "555-123-4567").unwrap();
         assert_eq!(
-            profile_configuring(&profiles_dir, 1, "5551234567").as_deref(),
-            Some("existing")
+            number_configured_by(&profiles_dir, &accounts.join("new"), &configured).as_deref(),
+            Some("profile `existing`")
         );
-        assert_eq!(profile_configuring(&profiles_dir, 1, "5557654321"), None);
+        let other = PhoneNumber::new(1, "5557654321").unwrap();
+        assert_eq!(
+            number_configured_by(&profiles_dir, &accounts.join("new"), &other),
+            None
+        );
+        // A config used only with --config, in a sibling account directory.
+        std::fs::create_dir_all(accounts.join("old")).unwrap();
+        std::fs::write(
+            accounts.join("old/request.json"),
+            r#"{"phone":{"country_code":1,"national_number":"5557654321"}}"#,
+        )
+        .unwrap();
+        assert!(
+            number_configured_by(&profiles_dir, &accounts.join("new"), &other)
+                .is_some_and(|by| by.ends_with("request.json"))
+        );
         let cli = Cli {
             store: temp_dir.path().join("test.redb"),
             account: "test".into(),
