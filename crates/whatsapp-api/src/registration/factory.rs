@@ -78,6 +78,10 @@ fn invalid(message: &'static str) -> Error {
 /// Test-only: persist generated registration material and a matching
 /// registered account so transport tests can load the signed prekey.
 #[cfg(test)]
+#[cfg_attr(
+    not(all(feature = "experimental-noise", feature = "experimental-transport")),
+    allow(dead_code)
+)]
 pub(crate) fn install_test_material(
     store: &ProtocolStore,
     config: &LabRegistrationConfig,

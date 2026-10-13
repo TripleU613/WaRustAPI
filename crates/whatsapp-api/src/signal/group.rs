@@ -78,7 +78,12 @@ impl SenderKeyStore for SenderKeys {
 pub struct ReceivedGroup {
     /// Authenticated group message plaintext (the WhatsApp Message proto bytes).
     pub plaintext: Zeroizing<Vec<u8>>,
-    /// Updated sender key bytes, to write in the atomic inbox commit.
+    /// Updated sender key bytes, to write in the atomic inbox commit (read only
+    /// by the feature-gated transport inbox).
+    #[cfg_attr(
+        not(all(feature = "experimental-noise", feature = "experimental-transport")),
+        allow(dead_code)
+    )]
     pub(crate) updated_key: Zeroizing<Vec<u8>>,
 }
 

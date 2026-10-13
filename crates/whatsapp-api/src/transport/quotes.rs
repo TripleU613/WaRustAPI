@@ -202,6 +202,104 @@ pub fn reply_payload(text: &str, stanza_id: &str, participant: &str, quoted: Vec
     .encode_to_vec()
 }
 
+/// Add a quote to an encoded media `Message`: `contextInfo` (17) on its
+/// `imageMessage` (3) or `audioMessage` (8), the field the receive path already
+/// reads (`transport::media`; 2.26.37.71 `BZD`/`BZ0` `contextInfo_`, type
+/// `BZL`), with the same stanzaId/participant/quotedMessage as a text reply. Every other field is
+/// copied byte for byte. Anything else refuses rather than guessing where the
+/// quote belongs: the view-once wrapper (55, quote semantics untraced), not
+/// exactly one media field, or a media message that already has a context.
+pub fn media_reply_payload(
+    payload: &[u8],
+    stanza_id: &str,
+    participant: &str,
+    quoted: Vec<u8>,
+) -> crate::Result<Vec<u8>> {
+    use prost::encoding::{WireType, decode_varint, encode_key, encode_varint};
+    let invalid = |reason| crate::Error::invalid("reply", reason);
+    let context = Context {
+        stanza_id: Some(stanza_id.to_owned()),
+        participant: Some(participant.to_owned()),
+        quoted: Some(quoted),
+        expiration: None,
+    }
+    .encode_to_vec();
+    let mut out = Vec::with_capacity(payload.len() + context.len() + 8);
+    let mut media = 0;
+    let mut buf = payload;
+    while !buf.is_empty() {
+        let start = buf;
+        let (field, wire) = field_key(&mut buf).ok_or_else(|| invalid("invalid media payload"))?;
+        if field == 55 {
+            return Err(invalid("a view-once message cannot carry a quote here"));
+        }
+        if matches!(field, 3 | 8) && wire == WireType::LengthDelimited {
+            let length = decode_varint(&mut buf).map_err(|_| invalid("invalid media payload"))?;
+            let length = usize::try_from(length)
+                .ok()
+                .filter(|length| *length <= buf.len())
+                .ok_or_else(|| invalid("invalid media payload"))?;
+            let (inner, rest) = buf.split_at(length);
+            buf = rest;
+            if has_field(inner, 17).ok_or_else(|| invalid("invalid media payload"))? {
+                return Err(invalid("media message already carries a context"));
+            }
+            let mut body = Vec::with_capacity(inner.len() + context.len() + 4);
+            body.extend_from_slice(inner);
+            encode_key(17, WireType::LengthDelimited, &mut body);
+            encode_varint(context.len() as u64, &mut body);
+            body.extend_from_slice(&context);
+            encode_key(field, WireType::LengthDelimited, &mut out);
+            encode_varint(body.len() as u64, &mut out);
+            out.extend_from_slice(&body);
+            media += 1;
+        } else {
+            prost::encoding::skip_field(
+                wire,
+                field,
+                &mut buf,
+                prost::encoding::DecodeContext::default(),
+            )
+            .map_err(|_| invalid("invalid media payload"))?;
+            out.extend_from_slice(&start[..start.len() - buf.len()]);
+        }
+    }
+    if media != 1 {
+        return Err(invalid("expected exactly one image or audio message"));
+    }
+    Ok(out)
+}
+
+/// Whether `media_reply_payload` can place a quote in this payload. Checked
+/// at selection, before any network reservation, so an unsupported shape
+/// fails locally instead of after a key query.
+pub fn media_quote_supported(payload: &[u8]) -> bool {
+    media_reply_payload(payload, "", "", Vec::new()).is_ok()
+}
+
+fn field_key(buf: &mut &[u8]) -> Option<(u32, prost::encoding::WireType)> {
+    let key = prost::encoding::decode_varint(buf).ok()?;
+    let field = u32::try_from(key >> 3).ok().filter(|field| *field != 0)?;
+    Some((field, prost::encoding::WireType::try_from(key & 7).ok()?))
+}
+
+/// Whether a well-formed encoded message carries `wanted`; `None` if malformed.
+fn has_field(mut buf: &[u8], wanted: u32) -> Option<bool> {
+    let mut found = false;
+    while !buf.is_empty() {
+        let (field, wire) = field_key(&mut buf)?;
+        found |= field == wanted;
+        prost::encoding::skip_field(
+            wire,
+            field,
+            &mut buf,
+            prost::encoding::DecodeContext::default(),
+        )
+        .ok()?;
+    }
+    Some(found)
+}
+
 /// Encode a plain `Message{conversation}` for use as a `quotedMessage`.
 pub fn conversation(text: &str) -> Vec<u8> {
     Envelope {
@@ -263,6 +361,68 @@ mod tests {
         assert!(decoded.style.is_styled());
         // Alpha survives: a FIXED32 read keeps the top byte.
         assert_eq!(decoded.style.background_argb.unwrap() >> 24, 0xFF);
+    }
+
+    /// imageMessage{url="a"} and audioMessage{ptt=true}; the image fixture
+    /// also has an unrelated outer field 35 that must survive byte for byte.
+    const IMAGE: &[u8] = &[0x1a, 0x03, 0x0a, 0x01, 0x61, 0x9a, 0x02, 0x00];
+    const AUDIO: &[u8] = &[0x42, 0x02, 0x30, 0x01];
+
+    /// A media quote lands where the receive path (written from the APK
+    /// descriptors) reads it, for image and audio. The parser exists only in
+    /// the full comparison build.
+    #[cfg(all(
+        feature = "experimental-registration-https",
+        feature = "experimental-signal-crypto",
+        feature = "experimental-noise",
+        feature = "experimental-transport"
+    ))]
+    #[test]
+    fn media_reply_context_round_trips_through_the_receive_parser() {
+        use super::super::media::quote_context;
+        for payload in [IMAGE, AUDIO] {
+            let out = media_reply_payload(payload, "ABC", "1@lid", conversation("parent")).unwrap();
+            assert_eq!(
+                quote_context(&out).unwrap(),
+                Some(("ABC".to_owned(), Some("1@lid".to_owned())))
+            );
+        }
+    }
+
+    /// The original media fields stay a prefix of the rewritten body, other
+    /// outer fields survive, and shapes with no single home for the quote refuse.
+    #[test]
+    fn media_reply_payload_keeps_fields_and_refuses_ambiguous_shapes() {
+        for payload in [IMAGE, AUDIO] {
+            let out = media_reply_payload(payload, "ABC", "1@lid", conversation("")).unwrap();
+            let inner = payload[1] as usize;
+            assert_eq!(out[0], payload[0]);
+            assert_eq!(&out[2..2 + inner], &payload[2..2 + inner]);
+            // contextInfo (17, length-delimited) follows the original fields.
+            assert_eq!(&out[2 + inner..4 + inner], &[0x8a, 0x01]);
+        }
+        let out = media_reply_payload(IMAGE, "ABC", "1@lid", conversation("")).unwrap();
+        assert!(out.ends_with(&[0x9a, 0x02, 0x00]));
+
+        // Refusals: view-once wrapper, no or two media fields, existing
+        // context, malformed bytes.
+        let view_once: &[u8] = &[0xba, 0x03, 0x00];
+        let two: &[u8] = &[0x1a, 0x00, 0x42, 0x00];
+        let none: &[u8] = &[0x0a, 0x01, 0x61];
+        let existing: &[u8] = &[0x1a, 0x03, 0x8a, 0x01, 0x00];
+        let malformed: &[u8] = &[0x1a, 0x05, 0x0a];
+        for (payload, reason) in [
+            (view_once, "view-once"),
+            (two, "exactly one"),
+            (none, "exactly one"),
+            (existing, "already carries"),
+            (malformed, "invalid media payload"),
+        ] {
+            let error = media_reply_payload(payload, "ABC", "1@lid", conversation(""))
+                .unwrap_err()
+                .to_string();
+            assert!(error.contains(reason), "{error}");
+        }
     }
 
     /// An ordinary chat message carries none of the styling fields, and a plain

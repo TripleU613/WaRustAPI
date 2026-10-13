@@ -72,6 +72,13 @@ publication/upload, transactional lookup/consumption, own-device and companion
 admission, crash/reopen inbox tests and live Android/server interoperability remain
 unfinished. No existing saved identity, key, request ID or server wait changed.
 
+**Superseded 2026-10-13:** the normal direct/group inboxes now call this API for
+primary PN/LID peers, read a local KEM row and consume it atomically, with
+encrypted reopen tests. Own-device/companion admission, KEM generation/upload and
+live interoperability remain open. See [inventory and inbox routing](kem-prekey-inventory.md).
+The transport helper refuses companion senders itself (defense in depth,
+2026-10-13), so no caller can derive a companion hybrid session through it.
+
 Validation passed 978 workspace/all-feature tests, the expanded crypto-only
 hybrid exchange, strict all-target Clippy, warnings-denied Rustdoc, 26 default
 CLI/API-symbol tests, experimental CLI build and formatting. The final ownership

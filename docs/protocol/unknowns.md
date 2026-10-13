@@ -18,8 +18,16 @@ now work offline. [Held version-4 shared sending](held-hybrid-send.md) is integr
 [Fresh signed bundle staging](hybrid-bundle.md) is implemented offline;
 [Normal primary-peer hybrid outbox adoption](hybrid-outbox.md) now works offline.
 Same-key classic migration, auth/attestation and companion admission,
-[Staged incoming hybrid bootstrap](hybrid-incoming.md) now authenticates offline;
-key inventory and normal inbox support still need implementation. See
+[Staged incoming hybrid bootstrap](hybrid-incoming.md) now authenticates offline and
+[the normal direct/group inboxes use it](kem-prekey-inventory.md) with a local
+KEM row lookup and atomic consumption. KEM prekey generation, ID allocation,
+signing and the inner `pq_list`/`pq_last_resort_key` upload shape are untraced,
+so no KEM key is produced or uploaded; own-device/companion KEM admission is
+unported. [Primary identity refresh](hybrid-identity-refresh.md) now derives
+hybrid sessions from verified `pqkey` replies; companion and attestation-bearing
+PQ refresh remain deferred. [Device-key batches and group fan-out](hybrid-fanout.md)
+now derive hybrid sessions from verified PQ rows. Whether the server returns
+`pqkey` without the native `pqsupport` request attribute is unknown. See
 [the boundary and source audit](pq-bundle-boundary.md).
 
 Own-device ordinary text edits are now projected with loaded parent kind,
@@ -89,7 +97,90 @@ dated captures with a controlled test number. Do not copy web-profile
 constants into `Observed` rows. Record each observation with date, APK
 version, and whether the server accepted the reference client that day.
 
+## APK access in cloud sessions (2026-10-13)
+
+The documented comparison APK path (`~/Downloads/WhatsApp.apk`) is on
+the owner's machine. A Claude Code cloud container has no copy, and no raw APK
+is committed (by design). In such a session only the committed bundles under
+`docs/protocol/apk/` and `docs/protocol/rea/` are available, so new static
+traces (new methods, callers, builders) cannot be made; only retained evidence
+can be reused. Work in that state is limited to evidence already retained.
+Supplying the APK to a session (or running the session on the owner's machine)
+removes this blocker; no other source was used to substitute for it.
+
+**No private account state either (checked 2026-10-13).** The container has no
+ignored `lab/` directory, no account store and no profile, so no live
+validation (sends, receipts, group actions, registration) is possible from it,
+independent of authorization. Work in such a session is limited to offline
+implementation, tests, documentation and analysis of retained evidence. What
+remains of the parity goal after that is listed with its blocker in
+[feature-parity](../feature-parity.md): APK traces (KEM prekey upload,
+`pqsupport`, revoke/edit `edit` attribute, document/video `mediatype`, group
+poll stanza, privacy setters, app-state index/version for mute/pin/archive,
+retry-answer policy, calls, communities, profile picture), live checks on the
+owner's account, and owner decisions (HTTP routes that expose addresses,
+content or sends; ban appeal).
+
+## Outgoing revoke and edit (2026-10-13)
+
+`MessageContent::Edit` and `MessageContent::Revoke` exist in the model, but the
+outbox has no sender for them (`begin_selected` treats them as unsupported).
+Retained evidence covers the protobuf side: `D9M.AD7` builds the revoke
+`ProtocolMessage` with type REVOKE (`C4F.A0T`) or MESSAGE_UNSCHEDULE (`C4F.A0O`)
+and the target key ([revoke writer](apk/2.26.37.71-sender-revoke/revoke-writer.txt)),
+`D9B.A00` writes an edit's replacement Message to protocol field 14 and the
+sender timestamp to field 15, with ordinary/future-proof wrapper selection
+gated by property 8784 ([image-caption-edit.md](image-caption-edit.md)), and
+`DEy.A00` parses received stanza `edit` values 1/2/3/7/8
+([sender-revoke.md](sender-revoke.md)). The outgoing request bundle
+`1Dz.A0H` carries a caller-supplied `edit` string beside `addressing_mode` and
+`counter_abuse_token` ([retained](apk/2.26.37.71-core/group-mode-outgoing-bundle.txt)
+`00c0..00ca`). **Not retained:** the producers that choose that `edit` value
+(and any companion attributes) for a sender revoke or message edit, the effective value of property 8784, and the native send-side
+time window. Receive-side parsing does not establish what a sender must emit,
+so no sender is implemented. Next step: trace `SendE2EMessageJob`/`0y0.A00`
+for the outgoing `edit` attribute in 2.26.37.71.
+
+## Outgoing disappearing context (2026-10-13)
+
+**Negative finding (code search):** no outgoing content message this client
+builds (text, reply, media, poll, reaction, group text) sets
+`ContextInfo.expiration` (25). The receive path reads it (`BWx`, confirmed),
+and timer changes themselves are sent (`ProtocolMessage` type 3). So in a chat
+with a disappearing timer, our own messages are not marked to disappear on the
+recipient's side. **Not retained:** the native sender-side producer that copies
+the chat's timer (and any `ephemeralSettingTimestamp`) into outgoing contexts,
+and whether it applies to every message kind. Next step: trace where 2.26.37.71
+`SendE2EMessageJob` or the message builders set `BWx.expiration` for outgoing
+messages before adding it.
+
+## Document and video sending (2026-10-13)
+
+**What retained 2.26.37.71 evidence covers:** the document and video schemas
+(`BZB`, video descriptor), their key domains (`WhatsApp Document Keys`,
+`WhatsApp Video Keys`) and the `1qB` media-type table, whose constructor takes
+`("document", "DOC", key, …)`
+([document evidence](document-media-evidence.txt)). The first argument is the
+`/mms/<segment>/` upload path for image and ptt, and those two were confirmed
+live, so `/mms/document/` is a strong inference.
+
+**Not retained (blocks sending):** the stanza's `enc mediatype` value and any
+other attributes for document and video sends. The image and ptt values came
+from `LX/9QH` and live sends. No committed bundle maps document or video, and a
+code search of `docs/protocol/apk` and `rea` finds no such table. Thumbnail
+generation and upload (`thumbnailDirectPath`, `jpegThumbnail`) are also untraced.
+Sending is therefore not implemented, rather than guessing `mediatype` from
+general protocol knowledge. Next step: trace the `9QH` equivalent in 2.26.37.71
+for all media types, then reuse the existing upload, encryption and outbox paths.
+
 ## Comparison token dictionary: double-byte page 0 index 1
+
+**Resolved 2026-10-07, test completed 2026-10-13.** The checked 37.71
+`1Rl.<clinit>` evaluator replaced the heuristic 37.70 fixture; the four refuted
+page slot-1 entries are listed in [token-extraction.md](token-extraction.md).
+`every_checked_entry_decodes_from_its_wire_index_and_encodes_back` now decodes
+all 235 single and 1,024 double entries from index-constructed wire and encodes
+each back to the same bytes. The historical note follows.
 
 Observed 2026-09-20 on a block-list fetch reply: an `item` attribute name
 decoded as `B3b` where the official parser (`LX/8nc.A02`, 2.26.37.71) reads

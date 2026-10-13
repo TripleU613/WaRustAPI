@@ -15,6 +15,8 @@ use wacore_libsignal::protocol::{
 fn invalid(reason: &'static str) -> Error {
     Error::invalid("hybrid_bundle", reason)
 }
+/// Error field for a well-formed KEM signature that does not verify.
+pub(crate) const SIGNATURE_FIELD: &str = "hybrid_bundle_signature";
 fn bytes(node: &Node) -> Result<&[u8]> {
     match &node.content {
         NodeContent::Bytes(bytes) => Ok(bytes),
@@ -36,6 +38,32 @@ impl std::fmt::Debug for HybridBundle {
     }
 }
 
+/// Whether the exact recipient row of a directory reply carries a `pqkey`.
+/// Selection only, with the bundle parsers' exact-address, duplicate-row and
+/// per-user error guards; nothing is verified. Bot.A03 selects `pqkey` from the
+/// user row, so callers choose [`bundle_for`] when this is true and must never
+/// fall back to a classic bundle that drops the key.
+pub fn selects_pq_key(reply: &Node, recipient: &Jid) -> Result<bool> {
+    Ok(direct::prekey_user_for(reply, recipient)?
+        .child("pqkey")
+        .is_some())
+}
+
+/// Shared local admission boundary for a selected PQ row's metadata: refuse
+/// `non_e2ee_attestation` (attestation-bearing PQ admission is unported) and
+/// `identity_auth` without Bot.A03's required signature bytes and `certs` node
+/// (structurally valid identity_auth is NONE/LOG_ONLY, identity-auth.md).
+/// This is a coverage limit, not a claimed native refusal.
+#[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
+pub(crate) fn admissible_pq_metadata(user: &Node) -> bool {
+    user.child("non_e2ee_attestation").is_none()
+        && user.child("identity_auth").is_none_or(|auth| {
+            auth.child("signature")
+                .is_some_and(|node| matches!(node.content, NodeContent::Bytes(_)))
+                && auth.child("certs").is_some()
+        })
+}
+
 /// Validate complete ML-KEM-1024 metadata and both signatures for an exact recipient.
 /// The caller must separately establish reply correlation, freshness and key authority.
 /// Unknown/unported admission flags are not decided by this cryptographic parser.
@@ -50,14 +78,18 @@ pub fn bundle_for(reply: &Node, recipient: &Jid) -> Result<HybridBundle> {
     let kem_id = direct::number(direct::child(pq, "id")?, 3)?;
     let public = bytes(direct::child(pq, "value")?)?;
     let signature = bytes(direct::child(pq, "signature")?)?;
-    if signature.len() != 64
-        || !classic
-            .identity_key()
-            .map_err(|_| invalid("invalid bundle identity"))?
-            .public_key()
-            .verify_signature(public, signature)
+    if signature.len() != 64 {
+        return Err(invalid("invalid KEM signature width"));
+    }
+    if !classic
+        .identity_key()
+        .map_err(|_| invalid("invalid bundle identity"))?
+        .public_key()
+        .verify_signature(public, signature)
     {
-        return Err(invalid("invalid KEM signature"));
+        // Distinct field: callers classify a failed CQc.A00 0068..00b4 check
+        // apart from shape errors without matching reason text.
+        return Err(Error::invalid(SIGNATURE_FIELD, "invalid KEM signature"));
     }
     kem::public_key(public)?;
     Ok(HybridBundle {
@@ -82,8 +114,12 @@ impl HybridBundle {
         payload: &[u8],
     ) -> Result<direct::PreparedDirect> {
         if let Some(bytes) = previous_session {
-            // shortcut: same-key classic-to-hybrid archival is unported; never reset a held record to adopt PQ.
-            super::HybridSession::from_bytes(bytes)?;
+            // A held ratchet, classic or version 4, continues exactly as the
+            // classic outbox path continues one: the fetched bundle is checked
+            // against the pin but derives nothing. The native PQ session-upgrade
+            // job (pqUpgradeDevicesRequested / isPqSessionUpgrade,
+            // bulk-prekey-processing.md) that could replace a held classic
+            // session is unported, so the KEM key is not used here.
             direct::prepare_payload(
                 account,
                 &self.recipient,
@@ -107,7 +143,86 @@ impl HybridBundle {
         pinned: Option<&[u8]>,
         payload: &[u8],
     ) -> Result<direct::PreparedDirect> {
-        if !account.is_registered() || payload.is_empty() || payload.len() > 32768 {
+        if payload.is_empty() || payload.len() > 32768 {
+            return Err(invalid("invalid initial payload/account"));
+        }
+        self.stage(account, pinned)?.prepare(payload)
+    }
+
+    /// Identity-refresh candidate for this verified bundle; no message is encrypted.
+    ///
+    /// 2.26.37.71 `0jc.A0L` resets a changed-key session before `CQc.A00`
+    /// derives (docs/protocol/identity-refresh-application.md): pass no held
+    /// record and the candidate carries no old state. For an already admitted
+    /// same-key refresh, `CQc.A00` `0124..014c` archives the held current state
+    /// before deriving on both its classic and Kyber branches, so the held
+    /// record (classic or hybrid) keeps that state as an archive here. Its
+    /// remote identity must equal this bundle's and its local identity and
+    /// registration the saved account's. Admission, OCC and commit belong to
+    /// the caller; nothing is stored or sent.
+    #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
+    pub(crate) fn prepare_session_refresh(
+        &self,
+        account: &AccountRecord,
+        held: Option<&[u8]>,
+    ) -> Result<zeroize::Zeroizing<Vec<u8>>> {
+        let identity = *self
+            .classic
+            .identity_key()
+            .map_err(|_| invalid("invalid bundle identity"))?;
+        let fresh = self.stage(account, Some(&identity.serialize()))?;
+        let state = fresh
+            .0
+            .session_state()
+            .ok_or_else(|| invalid("missing fresh hybrid state"))?
+            .clone();
+        let mut record = match held {
+            None => wacore_libsignal::protocol::SessionRecord::new_fresh(),
+            Some(bytes) => {
+                if bytes.len() > 1024 * 1024 {
+                    return Err(invalid("held session exceeds local bound"));
+                }
+                let record = wacore_libsignal::protocol::SessionRecord::deserialize(bytes)
+                    .map_err(|_| invalid("invalid held session"))?;
+                let current = record
+                    .session_state()
+                    .ok_or_else(|| invalid("held session has no current state"))?;
+                if current
+                    .remote_identity_key()
+                    .map_err(|_| invalid("invalid held session identity"))?
+                    .as_ref()
+                    != Some(&identity)
+                {
+                    return Err(invalid("held session identity does not match bundle"));
+                }
+                if current
+                    .local_identity_key()
+                    .map_err(|_| invalid("invalid held local identity"))?
+                    != state
+                        .local_identity_key()
+                        .map_err(|_| invalid("invalid fresh local identity"))?
+                    || current.local_registration_id() != state.local_registration_id()
+                {
+                    return Err(invalid("held session does not match saved account"));
+                }
+                record
+            }
+        };
+        record.promote_fresh_state(state);
+        Ok(zeroize::Zeroizing::new(
+            record
+                .serialize()
+                .map_err(|_| invalid("record serialization failed"))?,
+        ))
+    }
+
+    /// Fresh version-4 Alice record; no message, store or network operation.
+    fn stage(
+        &self,
+        account: &AccountRecord,
+        pinned: Option<&[u8]>,
+    ) -> Result<super::HybridSession> {
+        if !account.is_registered() {
             return Err(invalid("invalid initial payload/account"));
         }
         direct::validate_bundle_identity(Some(&self.classic), pinned, &self.recipient)?;
@@ -158,7 +273,7 @@ impl HybridBundle {
             prekey_id: self.kem_id,
             ciphertext: &ciphertext,
         };
-        let session = initialize_alice(
+        initialize_alice(
             &parameters,
             shared.as_bytes().try_into().expect("32-byte KEM secret"),
             &KeyPair::generate(&mut rand::rng()),
@@ -180,8 +295,7 @@ impl HybridBundle {
                 ),
                 &pending,
             ),
-        )?;
-        session.prepare(payload)
+        )
     }
 }
 
@@ -246,10 +360,22 @@ mod tests {
             };
             let reply = reply_for(user.clone());
             assert!(bundle_for(&reply, &other_device).is_err());
+            // Selection shares the parsers' exact-row guards and verifies nothing.
+            assert!(selects_pq_key(&reply, &peer).unwrap());
+            assert!(selects_pq_key(&reply, &other_device).is_err());
+            let classic_row = Node::new("user").attr("jid", peer.clone()).children(
+                user.child_nodes()
+                    .iter()
+                    .filter(|n| n.description != "pqkey")
+                    .cloned()
+                    .collect(),
+            );
+            assert!(!selects_pq_key(&reply_for(classic_row), &peer).unwrap());
             let duplicate_users = Node::new("iq").attr("type", "result").children(vec![
                 Node::new("list").children(vec![user.clone(), user.clone()]),
             ]);
             assert!(bundle_for(&duplicate_users, &peer).is_err());
+            assert!(selects_pq_key(&duplicate_users, &peer).is_err());
             assert!(direct::prekey_bundle_for(&reply, &peer).is_err());
             let bundle = bundle_for(&reply, &peer).unwrap();
             assert_eq!(format!("{bundle:?}"), "HybridBundle(<redacted>)");
@@ -320,7 +446,7 @@ mod tests {
                     store::{MasterKey, OpenOptions, ProtocolStore, StaticKeySource, Table},
                     transport::{ConnectionEpoch, outgoing},
                 };
-                for scenario in 0..9 {
+                for scenario in 0..11 {
                     if scenario == 8 && peer.server != Server::Lid {
                         continue;
                     }
@@ -377,7 +503,7 @@ mod tests {
                                 )?;
                             }
                             let peer_key = format!("comparison-direct:{target}");
-                            if scenario >= 5 {
+                            if (5..=8).contains(&scenario) {
                                 let pin = if scenario == 5 {
                                     bob.identity_key()
                                 } else {
@@ -421,11 +547,33 @@ mod tests {
                         .unwrap()
                         .unwrap_or_else(|| panic!("no query scenario {scenario}"));
                     let mut fields = user.child_nodes().to_vec();
+                    if scenario == 10 {
+                        // A tampered KEM signature: unusable PQ material.
+                        let pq = fields
+                            .iter_mut()
+                            .find(|n| n.description == "pqkey")
+                            .unwrap();
+                        let mut children = pq.child_nodes().to_vec();
+                        let NodeContent::Bytes(signature) = &children[2].content else {
+                            panic!("signature")
+                        };
+                        let mut tampered = signature.to_vec();
+                        tampered[0] ^= 1;
+                        children[2] = Node::new("signature").bytes(tampered);
+                        *pq = pq.clone().children(children);
+                    }
                     if scenario == 1 {
                         fields.push(Node::new("non_e2ee_attestation"));
                     }
                     if scenario == 2 {
                         fields.push(Node::new("identity_auth"));
+                    }
+                    if scenario == 9 {
+                        // Bot.A03 shape only: signature bytes plus a certs node.
+                        fields.push(Node::new("identity_auth").children(vec![
+                            Node::new("signature").bytes(vec![1; 64]),
+                            Node::new("certs"),
+                        ]));
                     }
                     let mut returned_peer = target.clone();
                     if scenario == 4 {
@@ -462,10 +610,89 @@ mod tests {
                             },
                         )
                         .await;
-                    if (1..=5).contains(&scenario) || scenario == 8 {
+                    if scenario == 5 {
+                        // A held classic ratchet continues; the verified KEM
+                        // key derives nothing and the record stays version 3.
+                        let stanza = result.unwrap().unwrap();
+                        let NodeContent::Bytes(ciphertext) = &stanza.child("enc").unwrap().content
+                        else {
+                            panic!("missing ciphertext")
+                        };
+                        assert_eq!(ciphertext[0], 0x33);
+                        assert!(direct::incoming_prekey_kem(ciphertext).unwrap().is_none());
+                        use wacore_libsignal::protocol::GenericSignedPreKey as _;
+                        let signed_record = wacore_libsignal::protocol::SignedPreKeyRecord::new(
+                            7.into(),
+                            wacore_libsignal::protocol::Timestamp::from_epoch_millis(0),
+                            &signed,
+                            &signature,
+                        )
+                        .serialize()
+                        .unwrap();
+                        let one_record =
+                            wacore_libsignal::protocol::PreKeyRecord::new(8.into(), &one)
+                                .serialize()
+                                .unwrap();
+                        let received = direct::receive_prekey(
+                            &remote,
+                            saved.own_jid.as_ref().unwrap(),
+                            (None, None),
+                            &signed_record,
+                            Some(&one_record),
+                            ciphertext,
+                        )
+                        .await
+                        .unwrap();
+                        assert_eq!(received.received.plaintext.as_slice(), b"\x0a\x05hello");
+                        let peer_key = format!("comparison-direct:{target}");
+                        let session: Vec<u8> = store
+                            .read(|tx| tx.get_json(Table::SignalSessions, peer_key.as_bytes(), 1))
+                            .unwrap()
+                            .unwrap();
+                        assert!(hybrid::HybridSession::from_bytes(&session).is_err());
+                        let entry = store.read(|tx| outbox.get(tx, id)).unwrap().unwrap();
+                        assert_eq!(entry.progress, AttemptProgress::InFlight);
+                        assert_eq!(entry.attempts.len(), 1);
+                        continue;
+                    }
+                    if scenario == 4 {
+                        // No row for the requested device: still a reply error.
                         assert!(result.is_err(), "scenario {scenario}");
                         assert_eq!(snapshot(), before);
                         assert_eq!(store.journal_head().unwrap(), head);
+                        continue;
+                    }
+                    if matches!(scenario, 1 | 2 | 3 | 8 | 10) {
+                        // A local refusal suspends only this intent, with a
+                        // durable reason and the reply kept; nothing is sent,
+                        // no session or pin changes, and it is not resumable.
+                        assert!(result.unwrap().is_none(), "scenario {scenario}");
+                        let suspension = outgoing::identity_suspension(&store, id)
+                            .unwrap()
+                            .unwrap_or_else(|| panic!("no suspension scenario {scenario}"));
+                        assert_eq!(
+                            suspension.reason,
+                            if scenario == 10 {
+                                "invalid_hybrid_bundle"
+                            } else {
+                                "hybrid_admission_unsupported"
+                            }
+                        );
+                        let after = snapshot();
+                        for (index, table) in Table::ALL.iter().enumerate() {
+                            if *table != Table::Checkpoints {
+                                assert_eq!(after[index], before[index], "{table:?}");
+                            }
+                        }
+                        assert_eq!(store.journal_head().unwrap(), head);
+                        let entry = store.read(|tx| outbox.get(tx, id)).unwrap().unwrap();
+                        assert_eq!(entry.progress, AttemptProgress::Queued);
+                        assert!(entry.attempts.is_empty() && entry.wire_id.is_none());
+                        assert!(
+                            outgoing::begin_selected(&store, Some(id))
+                                .unwrap()
+                                .is_none()
+                        );
                         continue;
                     }
                     if scenario == 6 {
@@ -487,7 +714,9 @@ mod tests {
                         );
                         continue;
                     }
-                    let stanza = result.unwrap().unwrap();
+                    let stanza = result
+                        .unwrap()
+                        .unwrap_or_else(|| panic!("no stanza scenario {scenario}"));
                     let NodeContent::Bytes(ciphertext) = &stanza.child("enc").unwrap().content
                     else {
                         panic!("missing ciphertext")

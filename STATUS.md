@@ -1,3 +1,125 @@
+2026-10-13 — **Measured (cross-version coverage):** new `xtask apk-coverage`
+reports what the committed research bundles cover. The pinned 2.26.36.75 has no
+retained bundle; 2.26.37.70 has one (21 core topics); 2.26.37.71 has 166.
+Only those 21 transport/Noise/registration topics have evidence from two
+releases. 64 of 142 library files are cited by no bundle topic (many cite APK
+classes in comments or REA envelopes instead). [Coverage](docs/protocol/apk-coverage.md).
+
+2026-10-13 — **Corrected/offline (security review of HTTP store routes):** a
+request with no headers made the connection task panic (an empty header slice);
+it is now answered and tested. The token file is guarded before it is written and
+also removed on SIGTERM/SIGHUP; 503 is reserved for a store held by another
+command and other read failures answer 500 `store_read_failed`; the bearer
+scheme is case-insensitive. Separately, `ProtocolStore::open` without `create`
+no longer bootstraps a new store (with fresh keys) from an existing empty file
+or a database without the store schema; it refuses and leaves the file
+untouched. Docs now state the remaining caveats (killed server leaves the token
+file, per-request opens can make a starting command fail, `peer_ticket` is a
+guessable hash, use `127.0.0.1`). [API README](docs/api/README.md#store-routes-opt-in).
+
+2026-10-13 — **Implemented/offline (CLI):** `outbox-send` private JSON now
+sends direct-chat replies (text, image or voice note) as well as group replies;
+a direct quote's author must be the contact or us. The comparison path refuses
+any direct quote instead of silently dropping it (`require_comparison_support`).
+
+2026-10-13 — **Implemented/offline (HTTP):** `serve --store-routes --token-file`
+serves read-only store inspections (six after the same-day follow-up:
+receipts, prekeys, suspended sends, actions, identity conflicts, group
+preparations) over loopback with a per-start bearer token kept in a new 0600
+file, the store opened per request. Smoke-tested with
+the real binary on a temporary store (401 without the token, redacted JSON
+with it, token file removed on shutdown, token never printed). Default `serve`
+is unchanged; nothing that sends is served. [Design](docs/feature-parity.md#http-api-parity).
+
+2026-10-13 — **Docs corrected (feature-parity audit):** an independent audit
+of every row in [feature-parity](docs/feature-parity.md) against its evidence
+found stale or overstated rows; corrected after spot-checking the cited lines.
+Keep, disappearing and limit-sharing are acked (handset unconfirmed), not live;
+group info/refresh, contact sync/publish and device-list queries were live but
+listed offline; several CLI cells named the wrong command (`send` is text-only,
+`lab-pair` is not pairing); 2FA and quote rows linked the wrong evidence.
+Three missing rows added (incoming image/voice, privacy tokens, AB properties).
+
+2026-10-13 — **Corrected/offline (review of quoted media sending):** as first
+committed, group JSON image/voice-note replies were still refused by the JSON
+reader (it required `text` on every reply), so they were reachable only through
+the library despite the docs; fixed and tested through the reader. JSON
+reactions and `quoted_text` are again refused before the send-path claim.
+Direct quotes are now built at selection, so a wrong-chat parent, missing own
+identity or over-32-KiB quote fails locally instead of after the key query.
+Class names corrected to 2.26.37.71 `BZD`/`BZ0`/`BZL`. [Details](docs/protocol/quoted-media.md#sending-2026-10-13).
+
+2026-10-13 — **Implemented/offline:** an uploaded image or voice note can reply
+to a message (direct and normal group outbox): the media message carries the
+same `BWx` contextInfo a text reply does, at the field the receive path reads.
+`outbox-send` group JSON now accepts replies and, after a reader fix, group
+image/voice note JSON, which had been refused by the shared reader despite being
+documented. Our sent messages never carry `contextInfo.expiration` (recorded
+as an unknown). No live quoted media send.
+[Sending](docs/protocol/quoted-media.md#sending-2026-10-13), [expiration gap](docs/protocol/unknowns.md#outgoing-disappearing-context-2026-10-13).
+
+2026-10-13 — **Corrected/offline (second review and replay audit):** a damaged
+same-key held session no longer makes identity-refresh application error on
+every connection start; it defers as `held_session_inconsistent` (preview
+reports the same) and the row is kept. Once-only retry receipts now also probe
+the sender's other PN/LID address, so a redelivery under the other address
+cannot queue a second retry. The reconnect budget resets only after an
+activated connection stayed up for `max_delay_ms`, bounding activate-then-drop
+login loops. The hybrid receive helper refuses companion senders itself.
+Status-reply quotes (`remoteJid`) remain unread and unverified.
+[Held sessions](docs/protocol/hybrid-identity-refresh.md#damaged-held-sessions-2026-10-13), [retry aliases](docs/protocol/messaging-transport.md#retry-once-only-across-pn-and-lid-2026-10-13), [reconnect](docs/protocol/messaging-transport.md#reconnect-budget-stability-2026-10-13), [audit](docs/protocol/replay-safety-audit.md).
+
+2026-10-13 — **Corrected/offline (independent review):** hybrid receive now
+classifies missing or unusable local keys (including an unparsable KEM row)
+as Undecryptable like classic; a group companion's hybrid pairwise child is
+skipped without blocking its `skmsg`; fan-out/batches refuse attestation or
+malformed-`identity_auth` PQ rows like the direct path (`unsupported_bundle`);
+unusable outbox PQ replies suspend the intent with a reason instead of ending
+the session. [Inbox](docs/protocol/kem-prekey-inventory.md), [fan-out](docs/protocol/hybrid-fanout.md), [outbox](docs/protocol/hybrid-outbox.md).
+
+2026-10-13 — **Implemented/offline:** incoming media that quotes another
+message (BWx stanzaId/participant/quotedMessage in contextInfo 17) now projects
+as a media event with `quoted`, attributed by the same rule as text replies,
+instead of an opaque placeholder. Stanza-less quotes stay opaque; edits and
+sending are unchanged; no live sample. [Behavior and tests](docs/protocol/quoted-media.md).
+
+2026-10-13 — **Implemented/offline:** the lab group-send retry answer now
+derives a native hybrid session for a device whose fresh directory row carries
+a verified `pqkey`, via the new `signal::hybrid::selects_pq_key` selector and
+the shared fan-out derivation. Classic rows are unchanged; no live retry answer.
+[Lab retry answers](docs/protocol/hybrid-fanout.md#lab-retry-answers-follow-up-same-day).
+
+2026-10-13 — **Implemented/offline:** a verified PQ directory reply for a
+contact with a held classic session no longer errors the direct send; the held
+ratchet continues as on the classic path (no PQ upgrade, which stays unported).
+Well-formed log-only `identity_auth` no longer blocks hybrid sends. A coordinator
+test that nested `pqkey` inside `skey`, and so never reached the hybrid branch,
+is corrected. [Follow-up and correction](docs/protocol/hybrid-outbox.md).
+
+2026-10-13 — **Implemented/offline:** device-key batches now answer rows whose
+`pqkey` verifies, and group/status fan-out sends those devices native 0x44
+hybrid distributions. Previously one PQ row blocked the whole send. Primary,
+companion, cached-continuation and signed-replacement cases open with the
+device's own keys. Invalid KEM signature/encoding still blocks. `pqsupport` is
+not sent; no APK was available; no live test.
+[Behavior, evidence and tests](docs/protocol/hybrid-fanout.md).
+
+2026-10-13 — **Implemented/offline:** identity-refresh preview and application
+now stage a version-4 hybrid session from a verified primary `pqkey` reply:
+changed keys derive fresh, admitted same-key refreshes archive held state. The
+refreshed record opens a 0x44 exchange the peer authenticates. Invalid PQ defers
+as `pq_bundle_invalid`; companion/attestation PQ stays deferred. `key_validation`
+now reports ML-KEM-1024 encoding. No APK was available; no live test.
+[Behavior, reused evidence and tests](docs/protocol/hybrid-identity-refresh.md).
+
+2026-10-13 — **Implemented/offline:** the normal direct and group inboxes now
+route primary PN/LID version-4 KEM prekeys through the hybrid receive path.
+Matching held sessions decrypt without keys; fresh bootstrap reads a local
+ML-KEM-1024 row and consumes non-last-resort rows atomically. Replies decrypt as
+0x44 msg. KEM generation/upload stays untraced and absent; own-device/companion
+KEM is refused unchanged. No APK was available; no live test.
+[Inventory, routing table and encrypted tests](docs/protocol/kem-prekey-inventory.md).
+
 2026-10-12 — **Implemented/offline:** staged incoming hybrid prekeys now
 bootstrap from exact local EC/KEM keys and authenticate nested ciphertext before
 reporting consumption. Matching current/archived sessions decrypt without prekey
@@ -1710,14 +1832,16 @@ Registration uses the recipe in
 | Status: viewers (delivered/read/played) and likes received | live (`status-viewers`) | same |
 | Status: sending a like, HD dual upload, audio | not implemented | same |
 | App-state writes (contact action) incl. 409 catch-up | live | [chat-actions](docs/protocol/chat-actions.md) |
-| Block/unblock, contact check, disappearing, keep-in-chat | live | same |
-| Two-step verification set/change/disable | live (set) | [chat-actions](docs/protocol/chat-actions.md) |
+| Block/unblock, contact check | live | same |
+| Per-chat disappearing timer, keep-in-chat, limit sharing | acked 2026-09-20 (delivered; handset unconfirmed); default timer never sent | same |
+| Two-step verification set/change/disable | live (set); the first set attempt stays Sent/unknown | [registration-lab](docs/protocol/registration-lab.md#two-step-verification-and-resolving-an-unknown-outcome-2026-09-24) |
 | Display name (`presence name=…`) | written live, handset unconfirmed | [presence](docs/protocol/presence.md) |
 | Display name app-state record (`pushNameSetting`, `critical_block`) | live — accepted at version 1 | same |
 | About text (`iq xmlns=status`, `whatsapp-cli about`) | server-accepted 2026-09-28, as reported in the session export; handset unconfirmed | [presence](docs/protocol/presence.md) |
 | Typing / recording indicators (`chatstate`) | typing handset-confirmed in the session export; recording and incoming indicators unconfirmed | same |
 | Presence subscribe, incoming availability / last seen | live — server answered with the peer's presence | same |
 | Prekey upload and replenishment | live | [messaging-completion](docs/messaging-completion.md) |
+| ML-KEM-1024 hybrid (0x44) sessions: verified PQ bundles in direct, fan-out, refresh and inbox | offline; no KEM prekey upload, no live hybrid message | [hybrid-fanout](docs/protocol/hybrid-fanout.md), [kem-prekey-inventory](docs/protocol/kem-prekey-inventory.md) |
 
 A single undecryptable incoming message no longer ends a session; it degrades
 to `Undecryptable` and we send a retry receipt. Direct messages from a LID sender now decrypt with the LID
@@ -1728,6 +1852,9 @@ replay). A group payload addressed only to this device (such as a
 redelivered at every login.
 
 ## Not done
+
+The per-area matrix with exposure and blockers is [feature-parity](docs/feature-parity.md).
+
 
 - **Stickers and video notes.** Field numbers are decoded from the APK
   (`stickerMessage` 26, `ptvMessage` 66, `VideoMessage` inner fields);
@@ -1744,7 +1871,9 @@ redelivered at every login.
   [Sticker evidence](docs/protocol/stickers.md), [video evidence](docs/protocol/video-media.md),
   [apk-analysis](docs/protocol/apk-analysis.md).
 - Calls; profile picture.
-- Privacy settings IQ (namespace unknown).
+- Privacy settings mutation. The SMAX `privacy` IQ shape is confirmed for the
+  `readreceipts` category, but the MEX/SMAX selector (property 23639) and other
+  category names are unknown ([read-setting-sync](docs/protocol/read-setting-sync.md)).
 - Channels and QR/companion pairing — parked by the owner.
 - Companion-device fan-out and own-account device sync.
 - History-notice handling. APK 2.26.37.71 identifies the formerly unexplained

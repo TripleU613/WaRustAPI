@@ -111,13 +111,45 @@ pub struct IdentityAuthInspection {
     /// Always unported until the native certificate/signature policy is implemented.
     pub verification: &'static str,
 }
-fn identity_auth_well_formed(user: &Node) -> bool {
+pub(crate) fn identity_auth_well_formed(user: &Node) -> bool {
     // Bot.A03/CXs require signature bytes and a certs node, not valid certs.
     user.child("identity_auth").is_none_or(|auth| {
         auth.child("signature")
             .is_some_and(|node| matches!(node.content, crate::binary::NodeContent::Bytes(_)))
             && auth.child("certs").is_some()
     })
+}
+
+/// Local integrity of a held record that a same-key refresh would archive.
+/// CQc.A00 0124..014c archives whatever is current; these checks are ours, not
+/// native. Our commits keep pin, session and account consistent, so a failure
+/// means a damaged row. Callers defer rather than error: `application::recover`
+/// runs at every connection start and one bad row must not stop them all. The
+/// row is kept for inspection, never overwritten or deleted.
+pub(crate) fn held_session_consistent(
+    account: &AccountRecord,
+    identity: &[u8],
+    held: &[u8],
+) -> bool {
+    use wacore_libsignal::protocol::{PublicKey, SessionRecord};
+    // Same bound as HybridBundle::prepare_session_refresh.
+    if held.len() > 1024 * 1024 {
+        return false;
+    }
+    let Ok(record) = SessionRecord::deserialize(held) else {
+        return false;
+    };
+    let (Some(state), Ok(remote)) = (record.session_state(), IdentityKey::decode(identity)) else {
+        return false;
+    };
+    let local = account
+        .signal_identity
+        .as_ref()
+        .and_then(|key| PublicKey::from_djb_public_key_bytes(&key.0.public).ok())
+        .map(IdentityKey::new);
+    state.remote_identity_key().ok().flatten() == Some(remote)
+        && state.local_identity_key().ok() == local
+        && account.signal_registration_id == Some(state.local_registration_id())
 }
 
 fn identity_auth_inspection(user: &Node) -> Option<IdentityAuthInspection> {
@@ -496,10 +528,22 @@ pub async fn preview_session(store: &ProtocolStore, id: &str) -> Result<SessionP
         result.outcome = "attestation_admission_unported";
         return Ok(result);
     }
-    if user.child("pqkey").is_some() {
-        result.outcome = "pq_session_unported";
-        return Ok(result);
-    }
+    // Same selected-PQ boundary as application: primary bundles must verify.
+    let hybrid = if user.child("pqkey").is_some() {
+        if peer.device != 0 || user.child("non_e2ee_attestation").is_some() {
+            result.outcome = "pq_session_unported";
+            return Ok(result);
+        }
+        match crate::signal::hybrid::bundle_for(&reply, &peer) {
+            Ok(bundle) => Some(bundle),
+            Err(_) => {
+                result.outcome = "pq_bundle_invalid";
+                return Ok(result);
+            }
+        }
+    } else {
+        None
+    };
     if !identity_auth_well_formed(user) {
         result.outcome = "malformed_identity_auth";
         return Ok(result);
@@ -516,17 +560,27 @@ pub async fn preview_session(store: &ProtocolStore, id: &str) -> Result<SessionP
         .serialize();
     let account =
         account.ok_or_else(|| Error::invalid("identity_notification", "missing saved account"))?;
-    let candidate = crate::signal::direct::prepare_session_refresh(
-        &account,
-        &peer,
-        &bundle,
-        same_identity
-            .then_some(session.as_deref())
-            .flatten()
-            .map(Vec::as_slice),
-        identity.as_ref(),
-    )
-    .await?;
+    let held = same_identity
+        .then_some(session.as_deref())
+        .flatten()
+        .map(Vec::as_slice);
+    if held.is_some_and(|held| !held_session_consistent(&account, &identity, held)) {
+        result.outcome = "held_session_inconsistent";
+        return Ok(result);
+    }
+    let candidate = match &hybrid {
+        Some(hybrid) => hybrid.prepare_session_refresh(&account, held)?,
+        None => {
+            crate::signal::direct::prepare_session_refresh(
+                &account,
+                &peer,
+                &bundle,
+                held,
+                identity.as_ref(),
+            )
+            .await?
+        }
+    };
     let record = wacore_libsignal::protocol::SessionRecord::deserialize(&candidate)
         .map_err(|_| Error::invalid("identity_notification", "invalid staged session"))?;
     result.outcome = "prepared";
@@ -1057,41 +1111,34 @@ pub(super) mod tests {
             };
             let before = snapshot(&store);
             let head = store.journal_head().unwrap();
-            let result = preview_session(&store, &id).await;
-            if matches!(case, "bad_session" | "session_identity_mismatch") {
-                let error = result.unwrap_err().to_string();
-                assert!(error.contains(if case == "bad_session" {
-                    "Signal"
-                } else {
-                    "saved session identity does not match pin"
-                }));
-                assert!(!error.contains(&peer.user));
-            } else {
-                let result = result.unwrap();
-                assert_eq!(
-                    result.outcome,
-                    match case {
-                        "prepared" | "no_session" | "changed" | "changed_pn"
-                        | "changed_no_session" => "prepared",
-                        "companion" => "missing_device_identity",
-                        "attestation" => "attestation_admission_unported",
-                        "pq" => "pq_session_unported",
-                        "missing_pin" => "stale_refresh_guard",
-                        _ => "reply_not_verified",
-                    }
-                );
-                assert_eq!(
-                    result.archived_states,
-                    match case {
-                        "prepared" => Some(1),
-                        "no_session" | "changed" | "changed_pn" | "changed_no_session" => Some(0),
-                        _ => None,
-                    }
-                );
-                assert!(!result.persisted && !result.admission_evaluated);
-                let json = serde_json::to_string(&result).unwrap();
-                assert!(!json.contains(&peer.user) && !json.contains(&id));
-            }
+            // A damaged held row is an outcome, not an error: the same check
+            // keeps application::recover from stopping every connection.
+            let result = preview_session(&store, &id).await.unwrap();
+            assert_eq!(
+                result.outcome,
+                match case {
+                    "prepared" | "no_session" | "changed" | "changed_pn" | "changed_no_session" =>
+                        "prepared",
+                    "companion" => "missing_device_identity",
+                    "attestation" => "attestation_admission_unported",
+                    "pq" => "pq_bundle_invalid",
+                    "missing_pin" => "stale_refresh_guard",
+                    "bad_session" | "session_identity_mismatch" => "held_session_inconsistent",
+                    _ => "reply_not_verified",
+                },
+                "{case}"
+            );
+            assert_eq!(
+                result.archived_states,
+                match case {
+                    "prepared" => Some(1),
+                    "no_session" | "changed" | "changed_pn" | "changed_no_session" => Some(0),
+                    _ => None,
+                }
+            );
+            assert!(!result.persisted && !result.admission_evaluated);
+            let json = serde_json::to_string(&result).unwrap();
+            assert!(!json.contains(&peer.user) && !json.contains(&id));
             assert_eq!(snapshot(&store), before);
             assert_eq!(store.journal_head().unwrap(), head);
             drop(store);
@@ -1343,10 +1390,21 @@ pub(super) mod tests {
                 _ => "invalid_signature",
             };
             assert_eq!(result["pq_signature"]["status"], expected, "{case}");
-            assert_eq!(result["pq_signature"]["key_validation"], "unported");
+            // None of these values is a valid ML-KEM-1024 encoding; the encoding
+            // check is independent of the signature and needs only one value.
+            assert_eq!(
+                result["pq_signature"]["key_validation"],
+                match case {
+                    "duplicate" | "nonbyte" | "large" | "missing_value" | "duplicate_value" => {
+                        "not_checked"
+                    }
+                    _ => "invalid_ml_kem_1024",
+                },
+                "{case}"
+            );
             assert_eq!(result["signature_valid"], true);
             let preview = preview_session(&store, &id).await.unwrap();
-            assert_eq!(preview.outcome, "pq_session_unported");
+            assert_eq!(preview.outcome, "pq_bundle_invalid");
             assert!(!preview.persisted && preview.archived_states.is_none());
             assert_eq!(
                 application::apply(
@@ -1356,7 +1414,7 @@ pub(super) mod tests {
                 )
                 .await
                 .unwrap(),
-                application::Application::Deferred("pq_session_unported")
+                application::Application::Deferred("pq_bundle_invalid")
             );
             let rendered = serde_json::to_string(&result).unwrap();
             assert!(

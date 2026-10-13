@@ -258,12 +258,8 @@ impl MessageRequest {
             return Ok(value);
         }
         if let Some(quote) = &value.quote {
-            if value.group_chat()?.is_none() {
-                return Err(crate::Error::invalid(
-                    "message",
-                    "a quote or reaction needs the `group` it belongs to",
-                ));
-            }
+            // A direct quote is valid JSON for outbox-send replies; the
+            // comparison path refuses it (`require_comparison_support`).
             quote.sender()?;
             if quote.message_id.is_empty() || quote.message_id.len() > 128 {
                 return Err(crate::Error::invalid(
@@ -271,11 +267,22 @@ impl MessageRequest {
                     "invalid quoted message id",
                 ));
             }
-            // A reaction has no body; a reply must have one.
-            if quote.is_reaction() != value.text.is_empty() {
+            // A reaction has no body; a reply has exactly one: text, an image
+            // or a voice note (outbox-send sends media replies; the comparison
+            // group path refuses media separately).
+            let bodies = usize::from(!value.text.is_empty())
+                + usize::from(value.image.is_some())
+                + usize::from(value.voice_note.is_some());
+            if quote.is_reaction() && bodies != 0 {
                 return Err(crate::Error::invalid(
                     "message",
-                    "a reaction carries no text and a reply needs one",
+                    "a reaction carries no text, image or voice note",
+                ));
+            }
+            if !quote.is_reaction() && bodies != 1 {
+                return Err(crate::Error::invalid(
+                    "message",
+                    "a reply carries exactly one of text, image or voice_note",
                 ));
             }
         }
@@ -286,14 +293,9 @@ impl MessageRequest {
                     "set either to or group, not both",
                 ));
             }
-            Some(_) => {
-                if value.image.is_some() || value.voice_note.is_some() || value.view_once {
-                    return Err(crate::Error::invalid(
-                        "message",
-                        "a group send carries text only so far",
-                    ));
-                }
-            }
+            // Group media is valid JSON for outbox-send; the comparison path
+            // refuses it separately (`require_comparison_support`).
+            Some(_) => {}
             None => {
                 value.recipient()?;
             }
@@ -320,6 +322,27 @@ impl MessageRequest {
             ));
         }
         Ok(value)
+    }
+    /// What the comparison (`lab-transport`) path cannot send: group media
+    /// (its group path sends text, replies and reactions only) and any quote
+    /// in a direct chat (its direct path has no quote encoding). Both go
+    /// through `outbox-send`; refusing here keeps the comparison path from
+    /// sending an empty text or dropping the quote.
+    pub fn require_comparison_support(&self) -> crate::Result<()> {
+        let group = self.group_chat()?.is_some();
+        if group && (self.image.is_some() || self.voice_note.is_some() || self.view_once) {
+            return Err(crate::Error::invalid(
+                "message",
+                "a comparison group send carries text only; use outbox-send for group media",
+            ));
+        }
+        if !group && self.quote.is_some() {
+            return Err(crate::Error::invalid(
+                "message",
+                "the comparison direct path has no quotes; use outbox-send for direct replies",
+            ));
+        }
+        Ok(())
     }
     /// Whether a group send puts its distribution message in `<participants>`
     /// or delivers it as separate direct messages.
@@ -1942,7 +1965,31 @@ mod tests {
             react.quote.as_ref().unwrap().sender().unwrap(),
             Jid::parse("222222222222222@lid").unwrap()
         );
-        // Both, neither, and a quote with no group are all refused.
+        // A media reply has an image or voice note as its one body. It reads
+        // (outbox-send sends it); the comparison group path refuses media.
+        for (name, body) in [
+            ("reply-image.json", r#""image":"/tmp/reply.png""#),
+            ("reply-voice.json", r#""voice_note":"/tmp/reply.ogg""#),
+        ] {
+            let media = MessageRequest::read(&write(
+                name,
+                &format!(r#"{{{group},{body},"quote":{{{target}}},"request_id":"r6"}}"#),
+            ))
+            .unwrap();
+            assert!(!media.quote.as_ref().unwrap().is_reaction());
+            assert!(media.require_comparison_support().is_err());
+        }
+        // A direct reply reads too (outbox-send); the comparison path refuses it.
+        let direct = MessageRequest::read(&write(
+            "direct-reply.json",
+            &format!(
+                r#"{{"to":"15551234567","text":"ok","quote":{{{target}}},"request_id":"r5"}}"#
+            ),
+        ))
+        .unwrap();
+        assert!(direct.require_comparison_support().is_err());
+        assert!(reply.require_comparison_support().is_ok());
+        // Both, neither, two bodies and a reaction with media are refused.
         for (name, body) in [
             (
                 "both.json",
@@ -1955,9 +2002,15 @@ mod tests {
                 format!(r#"{{{group},"quote":{{{target}}},"request_id":"r4"}}"#),
             ),
             (
-                "nogroup.json",
+                "two-bodies.json",
                 format!(
-                    r#"{{"to":"15551234567","text":"ok","quote":{{{target}}},"request_id":"r5"}}"#
+                    r#"{{{group},"text":"ok","image":"/tmp/reply.png","quote":{{{target}}},"request_id":"r7"}}"#
+                ),
+            ),
+            (
+                "react-image.json",
+                format!(
+                    r#"{{{group},"image":"/tmp/reply.png","quote":{{{target},"emoji":"👍"}},"request_id":"r8"}}"#
                 ),
             ),
         ] {
@@ -2030,7 +2083,7 @@ mod tests {
             group.group_chat().unwrap(),
             Some(Jid::parse("120363000000000001@g.us").unwrap())
         );
-        // Both targets at once is ambiguous, and a group send is text only.
+        // Both targets at once is ambiguous.
         assert!(
             MessageRequest::read(&write(
                 "both.json",
@@ -2038,13 +2091,15 @@ mod tests {
             ))
             .is_err()
         );
-        assert!(
-            MessageRequest::read(&write(
-                "novoice.json",
-                r#"{"group":"120363000000000001@g.us","voice_note":"/dev/null","request_id":"r3"}"#,
-            ))
-            .is_err()
-        );
+        // Group media is valid JSON (outbox-send), but the comparison group
+        // path refuses it instead of sending an empty text.
+        let voice = MessageRequest::read(&write(
+            "voice.json",
+            r#"{"group":"120363000000000001@g.us","voice_note":"/dev/null","request_id":"r3"}"#,
+        ))
+        .unwrap();
+        assert!(voice.require_comparison_support().is_err());
+        assert!(group.require_comparison_support().is_ok());
         // A direct send still needs digits.
         assert!(
             MessageRequest::read(&write("none.json", r#"{"text":"hi","request_id":"r4"}"#))

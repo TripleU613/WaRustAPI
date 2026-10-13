@@ -1,5 +1,12 @@
 # Post-quantum key bundle boundary
 
+2026-10-13: identity preview/application no longer defer every PQ reply;
+verified primary replies derive hybrid sessions
+([hybrid identity refresh](hybrid-identity-refresh.md)). The consumable classic
+bundle parser below still refuses selected PQ input. Device-key batches and group
+fan-out now accept verified PQ rows ([hybrid fan-out](hybrid-fanout.md)); the
+`invalid_bundle` batch classification below now applies only to invalid PQ material.
+
 Pinned APK **2.26.37.71**, SHA-256
 `1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
 
@@ -53,7 +60,8 @@ diagnostics and `pq_session_unported` preview/application deferral remain intact
 no session derivation or pin adoption uses this projection on a PQ candidate.
 `signature_valid` continues to mean classic signed-prekey validity only.
 
-Direct preparation fails with a fixed unsupported error before crypto/session
+(Superseded 2026-10-13: a PQ reply the outbox cannot use now suspends its
+intent with a reason, see [hybrid-outbox.md](hybrid-outbox.md).) Direct preparation fails with a fixed unsupported error before crypto/session
 use or an outgoing message reservation. Device batches retain their exact reply
 and existing `invalid_bundle` terminal classification, blocking later pages
 without changing keys. This does not manufacture a server refusal or retry.

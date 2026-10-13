@@ -206,7 +206,10 @@ treated the same as a direct change; see the type-4 note above). The CLI
 command is `disappearing --chat <jid> --seconds <n>`; `disappearing-default
 --seconds <n>` durably queues the `xmlns=disappearing_mode` IQ described below
 via `chat_settings::queue_default_timer` and the shared action outbox
-(`transport::actions`). Nothing here is live-verified yet.
+(`transport::actions`). (Corrected 2026-10-13: the per-chat timer was
+server-accepted, delivered and read on 2026-09-20, see the top of this file;
+handset display is unconfirmed. The `disappearing_mode` default-timer IQ has
+never been sent live.)
 
 ### Default timer for new chats: `xmlns=disappearing_mode`
 
@@ -240,8 +243,9 @@ plain `message type=text` payload, choosing the remote identity the same way
 as reactions (`inbox::lid_for`). `transport::inbox_events::project` recognises
 field 51 and projects it as `SyncEvent::MessageUpdated` with the same
 `target_from_sender`/direction attribution as reactions. The CLI command is
-`keep --chat <jid> --id <wire-id> [--ours] [--undo]`. Nothing here is
-live-verified yet.
+`keep --chat <jid> --id <wire-id> [--ours] [--undo]`. (Corrected 2026-10-13:
+a keep was server-accepted and delivered on 2026-09-20, see the top of this
+file; handset display is unconfirmed.)
 
 ## 5. Advanced chat privacy ("limit sharing")
 
@@ -272,7 +276,9 @@ generations); `outbox::validate` and `transport::outgoing` accept it and send
 it as a plain `message type=text` payload. `transport::inbox_events::project`
 recognises field 12 and projects either generation as
 `MessageContent::ChatPrivacy`. The CLI command is `chat-privacy --chat <jid>
-(--on|--off)`. Nothing here is live-verified yet.
+(--on|--off)`. (Corrected 2026-10-13: limit-sharing on was server-accepted,
+delivered and read on 2026-09-20, see the top of this file; handset display
+is unconfirmed.)
 
 ## 6. Clear chat and app-state sync
 
@@ -542,8 +548,10 @@ written with. Applying the write-side policy there would refuse to read our own
 history the moment a key aged out. It still only ever returns a key this account
 already stored.
 
-**Remaining:** only `critical_unblock_low` is handled; the other four
-collections use the same machinery but have no queued actions yet.
+**Remaining:** `critical_unblock_low` (contacts) and, since the push-name work,
+`critical_block` (`pushNameSetting`, accepted live, see
+[presence](presence.md)) are written; the other collections use the same
+machinery but have no queued actions yet.
 
 ### Third live attempt: the refusal survives the correction
 

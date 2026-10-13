@@ -1,5 +1,13 @@
 # Identity refresh session preview
 
+2026-10-13 — **Implemented/offline:** primary `pqkey` replies whose KEM
+signature and ML-KEM-1024 encoding verify now derive a discarded version-4
+candidate (zero archives changed, one same-key); invalid PQ material reports
+`pq_bundle_invalid`. Companion and attestation-bearing PQ stay
+`pq_session_unported`. See [hybrid identity refresh](hybrid-identity-refresh.md).
+Also 2026-10-13: a damaged same-key held row reports `held_session_inconsistent`
+instead of an error ([why](hybrid-identity-refresh.md#damaged-held-sessions-2026-10-13)).
+
 2026-10-11 — **Implemented/offline:** primary changed-key preview now derives
 and discards a fresh classic session with zero old receiving archives, matching
 the existing guarded application path. Same-key candidates continue archiving

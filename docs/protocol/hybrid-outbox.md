@@ -1,5 +1,48 @@
 # Hybrid bundles in the normal outbox
 
+## Follow-up 2026-10-13: held classic continuation, identity_auth, test correction
+
+**Implemented/offline.** The normal outbox queries keys before every direct
+send (a local choice; see `outgoing::begin_selected`). Before this change a
+verified `pqkey` reply for a contact with a held classic ratchet made
+`HybridBundle::prepare_payload` fail on the classic record, so every send to
+such a contact would have errored had the server returned PQ keys. A held
+ratchet, classic or version 4, now continues exactly as the classic path
+continues one: the fetched bundle is checked against the pin and derives
+nothing; the record stays version 3 and the KEM key is unused. The native PQ
+session-upgrade job (`pqUpgradeDevicesRequested` / `isPqSessionUpgrade`,
+[bulk-prekey-processing.md](bulk-prekey-processing.md)) that could replace a
+held classic session is unported; this change does not emulate it.
+
+`identity_auth` no longer blocks the hybrid branch when it has Bot.A03's
+required shape (signature bytes and a `certs` node): it is NONE/LOG_ONLY in
+2.26.37.71 ([identity-auth.md](identity-auth.md)), the same rule refresh
+application uses. Malformed `identity_auth` still refuses. The classic outbox
+path continues to ignore `identity_auth` entirely; that pre-existing
+asymmetry is recorded, not changed.
+
+**Unusable PQ replies suspend instead of ending the session (review fix).**
+A PQ reply the hybrid branch cannot use (companion, attestation-bearing,
+malformed `identity_auth`, own identity, or `bundle_for` failure) previously
+returned an error that ended the connection actor while the intent's key-query
+reservation stayed `outcome_unknown` with no recorded reason. It now suspends
+only that intent through the existing suspension record, preserving the exact
+reply encrypted, with reason `hybrid_admission_unsupported` or
+`invalid_hybrid_bundle`; `outbox-suspended` lists it. Only the
+`identity_changed` reason is resumable, so these are never re-sent
+automatically, and nothing is ever sent classically in their place.
+
+**Correction:** the held-hybrid coordinator test described below nested
+`pqkey` inside `skey`, so it never reached the hybrid branch; its reply was
+parsed as classic and the held version-4 record continued through the classic
+path. The claim that it "supplies a real signed PQ reply" was not true of the
+test as written. The row now carries `pqkey` on the user, as Bot.A03 selects
+it, and the test exercises the hybrid branch with the same expectations.
+`exact_selected_pq_bundle_stages_a_fresh_authentic_exchange` now expects the
+held classic scenario to send a `0x33` `pkmsg` the peer opens with its signed
+and one-time keys, and adds a well-formed `identity_auth` scenario that
+derives a fresh `0x44` exchange.
+
 2026-10-12. Correlated primary-peer key replies containing a complete signed
 ML-KEM-1024 bundle can now reach the normal outgoing coordinator. Fresh peers
 use native version-4 bootstrap; held version-4 sessions continue without reset.

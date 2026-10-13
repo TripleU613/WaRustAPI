@@ -72,6 +72,8 @@ enum Reason {
     ForeignDevice,
     InvalidBundle,
     InvalidSignature,
+    /// A verified PQ row whose metadata this client cannot admit yet.
+    UnsupportedBundle,
 }
 #[derive(Serialize, Deserialize)]
 struct Page {
@@ -262,10 +264,31 @@ fn classify(node: &Node, expected: &[Jid]) -> std::result::Result<(), Reason> {
     // Establish unambiguous complete device coverage before parsing a bundle;
     // otherwise the parser's duplicate guard hides the useful batch diagnosis.
     for target in expected {
-        let bundle = crate::signal::direct::prekey_bundle_for(node, target)
+        let user = crate::signal::direct::prekey_user_for(node, target)
+            .map_err(|_| Reason::InvalidBundle)?;
+        let bundle = crate::signal::direct::classic_bundle_from_user(user, target)
             .map_err(|_| Reason::InvalidBundle)?;
         crate::signal::direct::validate_bundle_signature(&bundle)
             .map_err(|_| Reason::InvalidSignature)?;
+        // Bot.A03 reads a selected Kyber key into 0jc.A0L, and CQc.A00
+        // 0068..00b4 verifies it before hybrid derivation (pq-bundle-boundary.md).
+        // A verified, well-encoded key is usable; anything else blocks the batch.
+        if user.child("pqkey").is_some() {
+            match crate::signal::hybrid::bundle_for(node, target) {
+                Ok(_) => {}
+                Err(Error::InvalidInput { field, .. })
+                    if field == crate::signal::hybrid::SIGNATURE_FIELD =>
+                {
+                    return Err(Reason::InvalidSignature);
+                }
+                Err(_) => return Err(Reason::InvalidBundle),
+            }
+            // Same local admission boundary as the direct outbox and identity
+            // refresh: attestation-bearing or malformed identity_auth PQ rows.
+            if !crate::signal::hybrid::admissible_pq_metadata(user) {
+                return Err(Reason::UnsupportedBundle);
+            }
+        }
     }
     Ok(())
 }
@@ -457,6 +480,42 @@ mod tests {
                 Node::new("id").bytes(vec![0, 0, 7]),
                 Node::new("value").bytes(signed.public_key.public_key_bytes().to_vec()),
                 Node::new("signature").bytes(signature.to_vec()),
+            ]),
+        ])
+    }
+    /// A selected row whose identity also signs an ML-KEM-1024 key.
+    fn pq_user_template(signature_valid: bool, encoding_valid: bool) -> Node {
+        let identity = IdentityKeyPair::generate(&mut rand::rng());
+        let signed = KeyPair::generate(&mut rand::rng());
+        let sign = |bytes: &[u8]| {
+            identity
+                .private_key()
+                .calculate_signature(bytes, &mut rand::rng())
+                .unwrap()
+                .to_vec()
+        };
+        let (mut kem_public, _) = crate::signal::kem::generate_key_pair().unwrap();
+        if !encoding_valid {
+            // 12-bit coefficients of 0xfff exceed q = 3329.
+            kem_public = vec![0xff; kem_public.len()];
+        }
+        let mut kem_signature = sign(&kem_public);
+        if !signature_valid {
+            kem_signature[0] ^= 1;
+        }
+        Node::new("user").children(vec![
+            Node::new("registration").bytes(vec![0, 0, 0, 42]),
+            Node::new("type").bytes(vec![5]),
+            Node::new("identity").bytes(identity.public_key().public_key_bytes().to_vec()),
+            Node::new("skey").children(vec![
+                Node::new("id").bytes(vec![0, 0, 7]),
+                Node::new("value").bytes(signed.public_key.public_key_bytes().to_vec()),
+                Node::new("signature").bytes(sign(&signed.public_key.serialize())),
+            ]),
+            Node::new("pqkey").children(vec![
+                Node::new("id").bytes(vec![0, 0, 9]),
+                Node::new("value").bytes(kem_public),
+                Node::new("signature").bytes(kem_signature),
             ]),
         ])
     }
@@ -688,6 +747,55 @@ mod tests {
             assert!(assembled(&store, &id(), &targets).is_err());
             assert!(!settle(&store, &id(), &reply(&query, &user_template())).unwrap());
             assert_eq!(saved, state(&store));
+            assert_eq!(
+                before_crypto,
+                state(&store).into_iter().skip(1).collect::<Vec<_>>()
+            );
+            assert_eq!(head, store.journal_head().unwrap());
+        }
+    }
+    #[test]
+    fn verified_pq_rows_answer_and_invalid_pq_rows_block_without_key_mutation() {
+        for (case, expected) in [
+            ("valid", None),
+            ("signature", Some("invalid_signature")),
+            ("encoding", Some("invalid_bundle")),
+            ("attestation", Some("unsupported_bundle")),
+            ("identity_auth", Some("unsupported_bundle")),
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(&dir.path().join("pq.redb"));
+            let targets = vec![target(0), target(1)];
+            let query = reserve_next(&store, &id(), &targets).unwrap().unwrap();
+            let mut template = pq_user_template(case != "signature", case != "encoding");
+            if matches!(case, "attestation" | "identity_auth") {
+                // Shared local PQ admission boundary: attestation-bearing rows,
+                // and identity_auth lacking Bot.A03's signature/certs shape.
+                let mut children = template.child_nodes().to_vec();
+                children.push(Node::new(if case == "attestation" {
+                    "non_e2ee_attestation"
+                } else {
+                    "identity_auth"
+                }));
+                template = template.children(children);
+            }
+            let incoming = reply(&query, &template);
+            let before_crypto = state(&store).into_iter().skip(1).collect::<Vec<_>>();
+            let head = store.journal_head().unwrap();
+            assert!(settle(&store, &id(), &incoming).unwrap());
+            let progress = summary(&store, &id()).unwrap().unwrap();
+            assert_eq!(progress.blocking_reason.as_deref(), expected, "{case}");
+            assert_eq!(progress.complete, expected.is_none());
+            if expected.is_none() {
+                let full = assembled(&store, &id(), &targets).unwrap().unwrap();
+                for target in &targets {
+                    crate::signal::hybrid::bundle_for(&full, target).unwrap();
+                    // The consumable classic parser still never drops the KEM key.
+                    assert!(crate::signal::direct::prekey_bundle_for(&full, target).is_err());
+                }
+            } else {
+                assert!(assembled(&store, &id(), &targets).is_err());
+            }
             assert_eq!(
                 before_crypto,
                 state(&store).into_iter().skip(1).collect::<Vec<_>>()

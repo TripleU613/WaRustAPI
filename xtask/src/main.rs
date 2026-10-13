@@ -15,6 +15,7 @@
 //! * `apk-registration-token <apk> …` — derive the comparison build's code-request token.
 //! * `apk-token-material --from-dir <dir> --logo-from <apk> --out <zip> [--verify-config <json>]` — assemble token material archive.
 //! * `apk-research-bundle <apk> --output <dir> [--check]` — compact media-free code snapshot.
+//! * `apk-coverage [--check]` — retained-evidence coverage across releases and Rust files.
 
 // A command-line tool talks to its operator through stdout/stderr.
 #![allow(clippy::print_stdout, clippy::print_stderr)]
@@ -22,6 +23,7 @@
 mod apk_files;
 mod axml;
 mod bundle;
+mod coverage;
 mod deps;
 mod dex;
 mod jid_map;
@@ -66,6 +68,13 @@ enum Cmd {
     ApkFileDiff { old: PathBuf, new: PathBuf },
     /// Compare checksum-verified cached topic files without rescanning either APK.
     ApkResearchDiff { old: PathBuf, new: PathBuf },
+    /// Report which releases and Rust files the committed research bundles
+    /// cover (no APK needed); writes docs/protocol/apk-coverage.json.
+    ApkCoverage {
+        /// Fail if the committed report is stale instead of writing it.
+        #[arg(long)]
+        check: bool,
+    },
     /// Locate renamed topic methods by checked exact-string anchor intersection.
     ApkResearchRemap {
         apk: PathBuf,
@@ -333,6 +342,7 @@ fn main() -> ExitCode {
         Cmd::ApkFileIndex { apk } => apk_files::export(&apk),
         Cmd::ApkFileDiff { old, new } => apk_files::compare(&old, &new),
         Cmd::ApkResearchDiff { old, new } => bundle::compare(&old, &new),
+        Cmd::ApkCoverage { check } => coverage::run(&root, check),
         Cmd::ApkResearchRemap {
             apk,
             recipe,

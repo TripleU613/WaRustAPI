@@ -39,7 +39,9 @@ fn encode(node: &Node) -> Result<Vec<u8>> {
 pub enum ActionStatus {
     /// Durably queued; no socket write yet.
     Queued,
-    /// Written to a session; the reply has not arrived (outcome unknown).
+    /// Reserved for a socket write, marked before the write so a cut never
+    /// resends it; whether it reached the socket is unknown until a reply
+    /// arrives (`reserve_pending` reserves up to 16, written one at a time).
     Sent,
     /// The server answered `type=result`.
     Ok,

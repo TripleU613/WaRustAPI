@@ -253,6 +253,74 @@ fn chat_and_sender(key: &[u8], node: &Node) -> Option<(ChatId, DeviceAddress)> {
     ))
 }
 
+/// Reply target named by BWx stanzaId=1/participant=2, shared by text and media
+/// replies. `participant` names the quoted message's sender: one of our
+/// identities means it was ours; otherwise it names the author, who in a group
+/// is often a third member rather than the replier. Fall back to the stanza
+/// sender when it is absent or unparseable (in a direct chat the two agree).
+/// `None` means the target cannot be represented and the event stays opaque.
+fn quote_reference(
+    key: &[u8],
+    node: &Node,
+    stanza_id: &str,
+    participant: Option<&str>,
+    own: &[crate::model::jid::Jid],
+) -> Option<crate::model::message::MessageRef> {
+    let id = MessageId::new(stanza_id.to_owned()).ok()?;
+    let (chat, by) = chat_and_sender(key, node)?;
+    let participant = participant
+        .and_then(|p| crate::model::jid::Jid::parse(p).ok())
+        .map(|p| p.to_non_ad());
+    let ours = participant
+        .as_ref()
+        .is_some_and(|p| own.iter().any(|o| o.to_non_ad() == *p));
+    let (direction, sender) = if ours {
+        (Direction::Outgoing, None)
+    } else {
+        let author = participant
+            .as_ref()
+            .and_then(|p| DeviceAddress::from_jid(p).ok())
+            .unwrap_or(by);
+        (Direction::Incoming, Some(author))
+    };
+    Some(crate::model::message::MessageRef {
+        key: MessageKey {
+            chat,
+            sender,
+            direction,
+            id,
+        },
+    })
+}
+
+/// Media projection with its BWx quote, if any, attributed like a text reply.
+/// `seal_key` binds the media reference; `key`/`node` are the projection whose
+/// chat and sender attribute the quote. An unrepresentable quote leaves the
+/// event opaque (`Ok(None)`).
+#[cfg(feature = "experimental-registration-https")]
+fn quoted_media_content(
+    tx: &WriteTx<'_>,
+    seal_key: &[u8],
+    (key, node): (&[u8], &Node),
+    payload: &[u8],
+    own: &[crate::model::jid::Jid],
+) -> Result<Option<(MessageContent, Option<u32>)>> {
+    let Some((mut content, expiration)) = super::media::event_content(tx, seal_key, payload, true)?
+    else {
+        return Ok(None);
+    };
+    if let Some((stanza, participant)) = super::media::quote_context(payload)? {
+        let Some(reference) = quote_reference(key, node, &stanza, participant.as_deref(), own)
+        else {
+            return Ok(None);
+        };
+        if let MessageContent::Media { quoted, .. } = &mut content {
+            *quoted = Some(reference);
+        }
+    }
+    Ok(Some((content, expiration)))
+}
+
 fn direct_sender_revoke_route(node: &Node) -> bool {
     node.description == "message"
         && super::inbox::session_sender(node).is_some()
@@ -587,48 +655,14 @@ fn project(
             return unsupported();
         };
         // A quoted reply (comparison 2.26.37.71 `contextInfo` stanzaId=1,
-        // participant=2, quotedMessage=3, observed live). `participant` names the
-        // quoted message's sender: one of our identities means it was ours,
-        // anything else in a direct chat means it was the sender's own.
+        // participant=2, quotedMessage=3, observed live).
         let quoted = match (&text.stanza_id, &text.quoted) {
             (None, None) => None,
             (Some(stanza_id), _) => {
-                let Ok(id) = MessageId::new(stanza_id.clone()) else {
-                    return unsupported();
-                };
-                let Some((chat, by)) = chat_and_sender(key, node) else {
-                    return unsupported();
-                };
-                let participant = text
-                    .participant
-                    .as_deref()
-                    .and_then(|p| crate::model::jid::Jid::parse(p).ok())
-                    .map(|p| p.to_non_ad());
-                let ours = participant
-                    .as_ref()
-                    .is_some_and(|p| own.iter().any(|o| o.to_non_ad() == *p));
-                let (direction, sender) = if ours {
-                    (Direction::Outgoing, None)
-                } else {
-                    // `contextInfo.participant` names the quoted message's author,
-                    // who in a group is often a third member rather than the
-                    // sender of this reply. Prefer it; fall back to the stanza
-                    // sender when it is absent or unparseable (a direct chat's
-                    // participant is the other party, so the two agree there).
-                    let author = participant
-                        .as_ref()
-                        .and_then(|p| DeviceAddress::from_jid(p).ok())
-                        .unwrap_or(by);
-                    (Direction::Incoming, Some(author))
-                };
-                Some(crate::model::message::MessageRef {
-                    key: MessageKey {
-                        chat,
-                        sender,
-                        direction,
-                        id,
-                    },
-                })
+                match quote_reference(key, node, stanza_id, text.participant.as_deref(), own) {
+                    Some(reference) => Some(reference),
+                    None => return unsupported(),
+                }
             }
             (None, Some(_)) => return unsupported(),
         };
@@ -1051,7 +1085,7 @@ fn own_device_edit(
                     #[cfg(feature = "experimental-registration-https")]
                     {
                         let kind = super::media::caption_fields(&plain)?.map(|labels| labels.kind);
-                        super::media::event_content(tx, record.key.as_bytes(), &plain)?
+                        super::media::event_content(tx, record.key.as_bytes(), &plain, false)?
                             .filter(|(_, expiration)| expiration.is_none())
                             .map(|(content, _)| (content, kind))
                     }
@@ -1413,7 +1447,13 @@ pub(super) fn own_device_message(
     );
     #[cfg(feature = "experimental-registration-https")]
     let projected = if matches!(projected, SyncEvent::UnsupportedMessage(_)) {
-        match super::media::event_content(tx, key, payload) {
+        match quoted_media_content(
+            tx,
+            key,
+            (projection_key.as_bytes(), &projection),
+            payload,
+            own,
+        ) {
             Ok(Some(content)) => event_with_content(
                 projection_key.as_bytes(),
                 &projection,
@@ -1506,7 +1546,7 @@ pub(super) fn publish(
     };
     #[cfg(feature = "experimental-registration-https")]
     let projected = if !revoke_too_old && matches!(projected, SyncEvent::UnsupportedMessage(_)) {
-        match super::media::event_content(tx, key, payload) {
+        match quoted_media_content(tx, key, (key, node), payload, &own) {
             Ok(Some(content)) => event_with_content(key, node, payload, Some(content), &own),
             // Invalid/unsupported media stays an opaque event; it must not block
             // durable storage and acknowledgement of an authenticated message.

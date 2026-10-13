@@ -85,6 +85,47 @@ enforces that `x-library` names the Rust entry point. The document is the
 single source of truth for the API surface and is edited directly (it is JSON,
 so the CLI can embed and serve it without extra dependencies).
 
+## Store routes (opt-in)
+
+`whatsapp-cli serve --store-routes --token-file <new path>` (built with
+`experimental-transport`) adds read-only, redacted store inspections for the
+account selected by `--store`/`--account`/`--key-env`: `GET /v1/receipts`,
+`/v1/prekeys`, `/v1/outbox/suspended`, `/v1/actions` (list form only),
+`/v1/identity-conflicts`, `/v1/outbox/group-preparations` and
+`/v1/outbox/{local_id}/versions` (malformed ID 400 before the store opens,
+unknown ID 404 `unknown_local_id`). Query strings are refused with 400, so
+CLI-only options are never silently ignored. They are declared with
+`x-transport: ["cli", "http"]` and the `storeBearer` security scheme.
+
+```sh
+whatsapp-cli --store acct.redb --account me --key-env WA_KEY \
+  serve --store-routes --token-file ./serve.token
+curl -H "Authorization: Bearer $(cat ./serve.token)" http://127.0.0.1:8787/v1/prekeys
+```
+
+The server refuses non-loopback binds with store routes, writes a new 256-bit
+token to a new file (mode 0600 on unix; an existing file or symlink is refused;
+the token is never printed or logged), checks the store opens at startup, then
+opens it per request. The file is removed on Ctrl-C, SIGTERM or SIGHUP; a
+killed or crashed server can leave it behind, still unreadable to others but
+useless, and that path is then refused until you delete it. Answers: 404
+`store_routes_disabled` when not enabled, 401 with `WWW-Authenticate: Bearer`
+for a missing or wrong token (the scheme name is case-insensitive), 400 for any
+query string, 405 for other methods, 503 `store_unavailable` only while another
+command holds the store, 500 `store_read_failed` for any other read failure
+(details only in the server log).
+
+Caveats: "read-only" means no protocol data changes; each request still takes
+the store's ownership lock briefly, so a command starting during a request
+(for example `listen` or one phase of `outbox-send`) can fail to open the store
+and must be rerun; nothing is sent in that case. Use `127.0.0.1` rather than
+`localhost`, so a client does not try another address a different local user
+could listen on. Outputs are the CLI's: `peer_ticket` is an unsalted SHA-256
+of the address, so a phone number can be recovered by guessing; refused
+actions include the server's error text. Treat responses as account data.
+Before adding a route, confirm its output is no more revealing than these;
+never serve send, queue or live operations this way.
+
 ## Adding an operation
 
 1. Follow the existing path convention in the document (e.g.,

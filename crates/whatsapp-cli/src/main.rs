@@ -574,7 +574,7 @@ enum Cmd {
         #[command(subcommand)]
         action: ContactsCmd,
     },
-    /// Clear a direct chat's locally decrypted message bodies (offline, local-only:
+    /// Clear a direct or group chat's locally decrypted message bodies (offline, local-only:
     /// see docs/protocol/chat-actions.md section 6 for the deferred companion sync).
     #[cfg(feature = "experimental-transport")]
     ClearChat {
@@ -729,12 +729,24 @@ enum Cmd {
     /// Serve the local HTTP control plane.
     Serve {
         /// Address to listen on. Non-loopback addresses require an explicit
-        /// opt-in because the control plane does not implement authentication.
+        /// opt-in because the base control-plane routes are unauthenticated.
         #[arg(long, default_value = "127.0.0.1:8787", env = "WHATSAPP_API_BIND")]
         bind: SocketAddr,
         /// Permit listening on a non-loopback address.
         #[arg(long)]
         allow_non_loopback: bool,
+        /// Also serve read-only, redacted store inspections (`/v1/receipts`,
+        /// `/v1/prekeys`, `/v1/outbox/suspended`, `/v1/actions`,
+        /// `/v1/identity-conflicts`, `/v1/outbox/group-preparations`,
+        /// `/v1/outbox/{local_id}/versions`) for the selected account.
+        /// Loopback-only; requires a bearer token (see --token-file). The store
+        /// is opened per request, so a running `listen` makes them answer 503.
+        #[arg(long, requires = "token_file")]
+        store_routes: bool,
+        /// New file to receive the per-start bearer token (mode 0600 on unix,
+        /// never overwritten, removed on Ctrl-C, SIGTERM or SIGHUP).
+        #[arg(long, requires = "store_routes")]
+        token_file: Option<PathBuf>,
     },
     /// Store operations.
     Store {
@@ -1921,7 +1933,23 @@ async fn run(cli: Cli) -> Result<(), Error> {
         Cmd::Serve {
             bind,
             allow_non_loopback,
-        } => http::serve(*bind, *allow_non_loopback).await,
+            store_routes,
+            token_file,
+        } => {
+            let store = match (store_routes, token_file) {
+                (true, Some(token_file)) => Some(http::StoreServe {
+                    options: whatsapp_api::store::OpenOptions {
+                        path: cli.store.clone(),
+                        account_id: AccountId::new(cli.account.clone())?,
+                        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+                        create: false,
+                    },
+                    token_file: token_file.clone(),
+                }),
+                _ => None,
+            };
+            http::serve(*bind, *allow_non_loopback, store).await
+        }
         Cmd::Store { cmd } => match cmd {
             StoreCmd::Init => {
                 let c = open_client(&cli, true).await?;

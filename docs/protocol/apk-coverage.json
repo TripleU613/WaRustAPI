@@ -1,0 +1,331 @@
+{
+  "pinned_release": {
+    "bundles": 0,
+    "version": "2.26.36.75"
+  },
+  "releases": [
+    {
+      "apk_sha256": "b2090b0207e9b97449a5b48e98eb4d1649ae8e5e738e9b7431d6242717fee732",
+      "bundles": 1,
+      "topics": 21,
+      "version": "2.26.37.70"
+    },
+    {
+      "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+      "bundles": 166,
+      "topics": 2126,
+      "version": "2.26.37.71"
+    }
+  ],
+  "rust_files": {
+    "cited": {
+      "crates/whatsapp-api/src/binary/decoder.rs": 6,
+      "crates/whatsapp-api/src/binary/encoder.rs": 12,
+      "crates/whatsapp-api/src/binary/node.rs": 1,
+      "crates/whatsapp-api/src/binary/tokens.rs": 1,
+      "crates/whatsapp-api/src/client.rs": 9,
+      "crates/whatsapp-api/src/model/message.rs": 4,
+      "crates/whatsapp-api/src/outbox.rs": 25,
+      "crates/whatsapp-api/src/registration/envelope.rs": 2,
+      "crates/whatsapp-api/src/registration/mod.rs": 1,
+      "crates/whatsapp-api/src/registration/prerequisites.rs": 1,
+      "crates/whatsapp-api/src/registration/request.rs": 1,
+      "crates/whatsapp-api/src/registration/token.rs": 2,
+      "crates/whatsapp-api/src/registration/token_material.rs": 1,
+      "crates/whatsapp-api/src/registration/wire.rs": 3,
+      "crates/whatsapp-api/src/signal/adv.rs": 15,
+      "crates/whatsapp-api/src/signal/adv/device_identity.rs": 19,
+      "crates/whatsapp-api/src/signal/adv/device_identity_details.rs": 10,
+      "crates/whatsapp-api/src/signal/direct.rs": 63,
+      "crates/whatsapp-api/src/signal/direct/incoming.rs": 11,
+      "crates/whatsapp-api/src/signal/group.rs": 55,
+      "crates/whatsapp-api/src/signal/hybrid.rs": 9,
+      "crates/whatsapp-api/src/signal/hybrid/incoming.rs": 3,
+      "crates/whatsapp-api/src/signal/kem.rs": 6,
+      "crates/whatsapp-api/src/signal/wire.rs": 5,
+      "crates/whatsapp-api/src/transport/abprops.rs": 145,
+      "crates/whatsapp-api/src/transport/cert.rs": 2,
+      "crates/whatsapp-api/src/transport/chat_settings.rs": 135,
+      "crates/whatsapp-api/src/transport/classic.rs": 5,
+      "crates/whatsapp-api/src/transport/clock.rs": 22,
+      "crates/whatsapp-api/src/transport/companion_admission.rs": 120,
+      "crates/whatsapp-api/src/transport/comparison.rs": 1,
+      "crates/whatsapp-api/src/transport/connection.rs": 184,
+      "crates/whatsapp-api/src/transport/contacts.rs": 7,
+      "crates/whatsapp-api/src/transport/device_key_batches.rs": 5,
+      "crates/whatsapp-api/src/transport/devices.rs": 232,
+      "crates/whatsapp-api/src/transport/framing.rs": 3,
+      "crates/whatsapp-api/src/transport/group_fanout.rs": 29,
+      "crates/whatsapp-api/src/transport/group_inbox.rs": 24,
+      "crates/whatsapp-api/src/transport/group_receipts.rs": 93,
+      "crates/whatsapp-api/src/transport/group_references.rs": 60,
+      "crates/whatsapp-api/src/transport/group_send.rs": 96,
+      "crates/whatsapp-api/src/transport/groups.rs": 93,
+      "crates/whatsapp-api/src/transport/handshake.rs": 2,
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs": 152,
+      "crates/whatsapp-api/src/transport/identity_notifications.rs": 141,
+      "crates/whatsapp-api/src/transport/identity_notifications/application.rs": 85,
+      "crates/whatsapp-api/src/transport/identity_notifications/attestation.rs": 25,
+      "crates/whatsapp-api/src/transport/identity_notifications/pq.rs": 4,
+      "crates/whatsapp-api/src/transport/identity_query.rs": 47,
+      "crates/whatsapp-api/src/transport/inbox.rs": 269,
+      "crates/whatsapp-api/src/transport/inbox_events.rs": 255,
+      "crates/whatsapp-api/src/transport/jid_map.rs": 61,
+      "crates/whatsapp-api/src/transport/media.rs": 37,
+      "crates/whatsapp-api/src/transport/messaging.rs": 154,
+      "crates/whatsapp-api/src/transport/mex.rs": 40,
+      "crates/whatsapp-api/src/transport/mex/coercion.rs": 4,
+      "crates/whatsapp-api/src/transport/mex/double_string.rs": 4,
+      "crates/whatsapp-api/src/transport/mex/ordered_json.rs": 6,
+      "crates/whatsapp-api/src/transport/mex/participant_address.rs": 16,
+      "crates/whatsapp-api/src/transport/mex/participant_storage.rs": 7,
+      "crates/whatsapp-api/src/transport/mex/participants.rs": 43,
+      "crates/whatsapp-api/src/transport/noise.rs": 2,
+      "crates/whatsapp-api/src/transport/notifications.rs": 104,
+      "crates/whatsapp-api/src/transport/outgoing.rs": 135,
+      "crates/whatsapp-api/src/transport/outgoing_group.rs": 93,
+      "crates/whatsapp-api/src/transport/own_device.rs": 137,
+      "crates/whatsapp-api/src/transport/participant_hash.rs": 5,
+      "crates/whatsapp-api/src/transport/peer_keys.rs": 26,
+      "crates/whatsapp-api/src/transport/polls.rs": 41,
+      "crates/whatsapp-api/src/transport/prekeys.rs": 6,
+      "crates/whatsapp-api/src/transport/protobuf_enum.rs": 18,
+      "crates/whatsapp-api/src/transport/reactions.rs": 74,
+      "crates/whatsapp-api/src/transport/receipts.rs": 770,
+      "crates/whatsapp-api/src/transport/selector.rs": 3,
+      "crates/whatsapp-api/src/transport/send_versions.rs": 560,
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs": 62,
+      "crates/whatsapp-api/src/transport/socket.rs": 4,
+      "crates/whatsapp-api/src/transport/status_receipts.rs": 26,
+      "crates/whatsapp-cli/src/transport.rs": 6,
+      "crates/whatsapp-cli/src/transport_group_send.rs": 45,
+      "crates/whatsapp-cli/src/transport_receive.rs": 85,
+      "xtask/src/bundle.rs": 20,
+      "xtask/src/mex.rs": 18,
+      "xtask/src/xref.rs": 136
+    },
+    "missing": [],
+    "scope": "crates/whatsapp-api/src/**/*.rs excluding generated proto code",
+    "total": 142,
+    "uncited": [
+      "crates/whatsapp-api/src/binary/mod.rs",
+      "crates/whatsapp-api/src/capabilities.rs",
+      "crates/whatsapp-api/src/error.rs",
+      "crates/whatsapp-api/src/evidence.rs",
+      "crates/whatsapp-api/src/fingerprint.rs",
+      "crates/whatsapp-api/src/fingerprint/qr.rs",
+      "crates/whatsapp-api/src/fingerprint/qr/decode.rs",
+      "crates/whatsapp-api/src/fingerprint/qr/v3.rs",
+      "crates/whatsapp-api/src/lib.rs",
+      "crates/whatsapp-api/src/model/ids.rs",
+      "crates/whatsapp-api/src/model/jid.rs",
+      "crates/whatsapp-api/src/model/mod.rs",
+      "crates/whatsapp-api/src/model/phone.rs",
+      "crates/whatsapp-api/src/model/receipt.rs",
+      "crates/whatsapp-api/src/model/send.rs",
+      "crates/whatsapp-api/src/model/time.rs",
+      "crates/whatsapp-api/src/profile.rs",
+      "crates/whatsapp-api/src/registration/consent.rs",
+      "crates/whatsapp-api/src/registration/factory.rs",
+      "crates/whatsapp-api/src/registration/request_config.rs",
+      "crates/whatsapp-api/src/runtime/comparison.rs",
+      "crates/whatsapp-api/src/runtime/correlation.rs",
+      "crates/whatsapp-api/src/runtime/mod.rs",
+      "crates/whatsapp-api/src/session.rs",
+      "crates/whatsapp-api/src/signal/adv/devices.rs",
+      "crates/whatsapp-api/src/signal/app_state.rs",
+      "crates/whatsapp-api/src/signal/app_state_actions.rs",
+      "crates/whatsapp-api/src/signal/app_state_collection.rs",
+      "crates/whatsapp-api/src/signal/app_state_collection/patch.rs",
+      "crates/whatsapp-api/src/signal/app_state_collection/snapshot.rs",
+      "crates/whatsapp-api/src/signal/app_state_collection/storage.rs",
+      "crates/whatsapp-api/src/signal/app_state_collection/storage/actions.rs",
+      "crates/whatsapp-api/src/signal/app_state_collection/storage/actions/mute.rs",
+      "crates/whatsapp-api/src/signal/app_state_crypto.rs",
+      "crates/whatsapp-api/src/signal/app_state_hash.rs",
+      "crates/whatsapp-api/src/signal/crypto.rs",
+      "crates/whatsapp-api/src/signal/hybrid/bundle.rs",
+      "crates/whatsapp-api/src/signal/image.rs",
+      "crates/whatsapp-api/src/signal/mod.rs",
+      "crates/whatsapp-api/src/store/envelope.rs",
+      "crates/whatsapp-api/src/store/keys.rs",
+      "crates/whatsapp-api/src/store/mod.rs",
+      "crates/whatsapp-api/src/sync.rs",
+      "crates/whatsapp-api/src/transport/about.rs",
+      "crates/whatsapp-api/src/transport/actions.rs",
+      "crates/whatsapp-api/src/transport/app_state_sync.rs",
+      "crates/whatsapp-api/src/transport/ban_appeal.rs",
+      "crates/whatsapp-api/src/transport/blocklist.rs",
+      "crates/whatsapp-api/src/transport/chat_clear.rs",
+      "crates/whatsapp-api/src/transport/history_notice.rs",
+      "crates/whatsapp-api/src/transport/identity_notifications/guard.rs",
+      "crates/whatsapp-api/src/transport/image_download.rs",
+      "crates/whatsapp-api/src/transport/image_upload.rs",
+      "crates/whatsapp-api/src/transport/kem_prekeys.rs",
+      "crates/whatsapp-api/src/transport/login.rs",
+      "crates/whatsapp-api/src/transport/mod.rs",
+      "crates/whatsapp-api/src/transport/outgoing_media.rs",
+      "crates/whatsapp-api/src/transport/peer_verification.rs",
+      "crates/whatsapp-api/src/transport/presence.rs",
+      "crates/whatsapp-api/src/transport/quotes.rs",
+      "crates/whatsapp-api/src/transport/report.rs",
+      "crates/whatsapp-api/src/transport/send_path.rs",
+      "crates/whatsapp-api/src/transport/two_factor.rs",
+      "crates/whatsapp-api/src/transport/voice_note.rs"
+    ]
+  },
+  "source": "docs/protocol/apk/*/{manifest,targets}.json only; docs/protocol/rea envelopes are not counted; unexported APK code is outside this report",
+  "topics": {
+    "multi_release": 21,
+    "multi_release_topics": [
+      {
+        "releases": [
+          "2.26.37.70",
+          "2.26.37.71"
+        ],
+        "topic": "certificate-root"
+      },
+      {
+        "releases": [
+          "2.26.37.70",
+          "2.26.37.71"
+        ],
+        "topic": "frame-reader"
+      },
+      {
+        "releases": [
+          "2.26.37.70",
+          "2.26.37.71"
+        ],
+        "topic": "frame-writer"
+      },
+      {
+        "releases": [
+          "2.26.37.70",
+          "2.26.37.71"
+        ],
+        "topic": "http-chunk-reader"
+      },
+      {
+        "releases": [
+          "2.26.37.70",
+          "2.26.37.71"
+        ],
+        "topic": "http-chunk-writer"
+      },
+      {
+        "releases": [
+          "2.26.37.70",
+          "2.26.37.71"
+        ],
+        "topic": "integer-encoding"
+      },
+      {
+        "releases": [
+          "2.26.37.70",
+          "2.26.37.71"
+        ],
+        "topic": "node-writer"
+      },
+      {
+        "releases": [
+          "2.26.37.70",
+          "2.26.37.71"
+        ],
+        "topic": "noise-cipher"
+      },
+      {
+        "releases": [
+          "2.26.37.70",
+          "2.26.37.71"
+        ],
+        "topic": "noise-config"
+      },
+      {
+        "releases": [
+          "2.26.37.70",
+          "2.26.37.71"
+        ],
+        "topic": "noise-handshake"
+      },
+      {
+        "releases": [
+          "2.26.37.70",
+          "2.26.37.71"
+        ],
+        "topic": "noise-patterns"
+      },
+      {
+        "releases": [
+          "2.26.37.70",
+          "2.26.37.71"
+        ],
+        "topic": "noise-record-state"
+      },
+      {
+        "releases": [
+          "2.26.37.70",
+          "2.26.37.71"
+        ],
+        "topic": "record-writer"
+      },
+      {
+        "releases": [
+          "2.26.37.70",
+          "2.26.37.71"
+        ],
+        "topic": "registration-key-bundle"
+      },
+      {
+        "releases": [
+          "2.26.37.70",
+          "2.26.37.71"
+        ],
+        "topic": "registration-paths"
+      },
+      {
+        "releases": [
+          "2.26.37.70",
+          "2.26.37.71"
+        ],
+        "topic": "registration-requests"
+      },
+      {
+        "releases": [
+          "2.26.37.70",
+          "2.26.37.71"
+        ],
+        "topic": "registration-response-bridge"
+      },
+      {
+        "releases": [
+          "2.26.37.70",
+          "2.26.37.71"
+        ],
+        "topic": "registration-token"
+      },
+      {
+        "releases": [
+          "2.26.37.70",
+          "2.26.37.71"
+        ],
+        "topic": "registration-token-salt"
+      },
+      {
+        "releases": [
+          "2.26.37.70",
+          "2.26.37.71"
+        ],
+        "topic": "socket-factory"
+      },
+      {
+        "releases": [
+          "2.26.37.70",
+          "2.26.37.71"
+        ],
+        "topic": "socket-sequence"
+      }
+    ],
+    "total": 1962
+  }
+}

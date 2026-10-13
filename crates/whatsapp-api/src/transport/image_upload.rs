@@ -710,6 +710,7 @@ mod tests {
                     reference: reference.clone(),
                     caption: None,
                     file_name: None,
+                    quoted: None,
                 },
             })
             .await

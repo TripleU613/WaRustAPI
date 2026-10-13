@@ -53,6 +53,8 @@ fn start_connection(input: WorkerInput) -> tokio::task::JoinHandle<Result<()>> {
 struct Running {
     task: tokio::task::JoinHandle<Result<()>>,
     ready: Option<oneshot::Receiver<()>>,
+    /// When the server activated this connection; stability is measured from here.
+    ready_at: Option<tokio::time::Instant>,
     waiters: Vec<oneshot::Sender<Result<()>>>,
     _stop: watch::Sender<bool>,
 }
@@ -126,6 +128,7 @@ impl Launcher {
         Running {
             task,
             ready: Some(ready_rx),
+            ready_at: None,
             waiters,
             _stop: stop_tx,
         }
@@ -149,7 +152,10 @@ fn waiter_error(error: &Error) -> Error {
 /// fresh epoch and full handshake, bounded by `transport.reconnect`. Refusals,
 /// revocation, missing registration, worker panics, uncertain login outcomes
 /// and explicit disconnects never reconnect. Consecutive attempts reset only
-/// after the server activates a session; an explicit `connect` also resets them.
+/// after an activated session stayed up for at least `max_delay_ms` (our
+/// policy, not an APK value): a server that activates and then drops at once
+/// still exhausts the budget instead of driving unbounded fresh logins. An
+/// explicit `connect` also resets them.
 async fn actor(
     store: Arc<ProtocolStore>,
     config: LabRegistrationConfig,
@@ -216,6 +222,7 @@ async fn actor(
             WorkerEvent::Finished(result)=> {
                 let error=match result {Ok(Err(error))=>error,Ok(Ok(()))|Err(_)=>Error::Cancelled};
                 let Some(mut run)=running.take() else {continue};
+                if run.ready_at.is_some_and(|at| at.elapsed()>=Duration::from_millis(policy.max_delay_ms)) {attempts=0;}
                 if error.is_recoverable_by_reconnect() && attempts<policy.max_attempts {
                     attempts+=1;
                     let delay=policy.delay(attempts,jitter_byte());
@@ -232,9 +239,8 @@ async fn actor(
             }
             WorkerEvent::Ready(ready)=> {
                 if ready.is_ok() {
-                    attempts=0;
                     set(&status,ConnectionState::Ready{epoch},epoch);
-                    if let Some(run)=&mut running {run.ready=None;for waiter in run.waiters.drain(..){let _=waiter.send(Ok(()));}}
+                    if let Some(run)=&mut running {run.ready=None;run.ready_at=Some(tokio::time::Instant::now());for waiter in run.waiters.drain(..){let _=waiter.send(Ok(()));}}
                 } else if let Some(run)=&mut running {run.ready=None;}
             }
             }}
@@ -708,8 +714,10 @@ mod tests {
         })
         .await;
 
-        // A second loss after Ready restarts the count at attempt 1. Then three
-        // consecutive failures without readiness exhaust the budget.
+        // A loss after a connection stayed up for max_delay_ms restarts the
+        // count at attempt 1. Then three consecutive failures exhaust the
+        // budget even when each one is activated before it drops.
+        tokio::time::sleep(Duration::from_millis(250)).await;
         second
             .end
             .send(Err(Error::Timeout(Duration::from_secs(1))))
@@ -727,6 +735,7 @@ mod tests {
             let launch = next_launch(&mut h).await;
             assert_eq!(launch.epoch, ConnectionEpoch(expected_epoch));
             assert!(!launch.reserved_now);
+            launch.ready.send(()).unwrap();
             launch.end.send(peer_closed()).unwrap();
             let waiting = wait_state(&mut status, |s| {
                 matches!(s, ConnectionState::Backoff { .. })
@@ -904,11 +913,12 @@ mod tests {
             }
         );
 
-        // Loss after readiness, then an explicit connect: it launches now and
-        // restarts the attempt budget.
+        // A loss soon after readiness keeps counting (a brief activation is
+        // not stability); an explicit connect then launches now and restarts
+        // the attempt budget.
         second.end.send(peer_closed()).unwrap();
         wait_state(&mut status, |s| {
-            matches!(s, ConnectionState::Backoff { attempt: 1, .. })
+            matches!(s, ConnectionState::Backoff { attempt: 2, .. })
         })
         .await;
         let connect = tokio::spawn({

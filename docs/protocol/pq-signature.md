@@ -1,5 +1,9 @@
 # Directory PQ signature inspection
 
+**Superseded 2026-10-13:** primary preview/application now derives a hybrid
+session from a verified `pqkey` reply and `key_validation` reports the ML-KEM-1024
+encoding check. See [hybrid identity refresh](hybrid-identity-refresh.md).
+
 2026-10-12. Pinned APK **2.26.37.71**, SHA-256
 `1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
 
@@ -48,7 +52,8 @@ absent selected metadata or an unavailable classic candidate. Otherwise it has:
 - `status`: `malformed`, `payload_too_large`, `signature_verified` or `invalid_signature`.
 - `value_bytes`: nullable original value length, never a recognized key type.
 - `signature_valid`: null before crypto verification, otherwise its Boolean result.
-- `key_validation`: always `unported`.
+- `key_validation`: `not_checked` (value absent or above the local 64 KiB bound),
+  `valid_ml_kem_1024` or `invalid_ml_kem_1024` since 2026-10-13; formerly always `unported`.
 
 Top-level `signature_valid` continues to refer only to the classic signed prekey.
 PQ status does not prove key ID, KEM format, algorithm, encapsulation or admission.

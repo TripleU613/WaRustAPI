@@ -167,6 +167,12 @@ pub struct Summary {
     pub uploaded: usize,
     /// Reserved batches by status.
     pub batches: std::collections::BTreeMap<String, usize>,
+    /// Local ML-KEM-1024 prekey rows the inbox can use for incoming hybrid
+    /// bootstrap. No producer exists and none are ever uploaded
+    /// (docs/protocol/kem-prekey-inventory.md), so this is normally zero.
+    pub kem_local: usize,
+    /// Of those, native `last_resort_key` rows retained after successful use.
+    pub kem_last_resort: usize,
 }
 
 fn scan_prefix<T: serde::de::DeserializeOwned>(
@@ -534,7 +540,37 @@ pub fn wants_upload(store: &ProtocolStore) -> Result<bool> {
     store.read(|tx| Ok(!unsent_in(tx)?.is_empty() || record_ids(tx)?.is_empty()))
 }
 
-/// Redacted counts for operators; no key material is read.
+/// Local row state for the KEM prekey an incoming hybrid `pkmsg` names.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum KemRowState {
+    /// No row: fresh hybrid bootstrap cannot run and the message stays preserved.
+    Missing,
+    /// Ordinary row, deleted with a successful bootstrap commit.
+    Held,
+    /// Native last-resort row, retained after successful use.
+    LastResort,
+    /// Row fails local integrity checks and is never used.
+    Invalid,
+}
+
+/// Read-only classification of one local KEM row by ID. Returns no key bytes;
+/// callers that print it must not print the ID either. Matching held sessions
+/// need no row at all, so `Missing` alone does not predict refusal.
+pub fn kem_row_state(store: &ProtocolStore, id: u32) -> Result<KemRowState> {
+    match store.read(|tx| super::kem_prekeys::load(tx, id)) {
+        Ok(None) => Ok(KemRowState::Missing),
+        Ok(Some(row)) if row.last_resort => Ok(KemRowState::LastResort),
+        Ok(Some(_)) => Ok(KemRowState::Held),
+        Err(Error::InvalidInput {
+            field: "kem_prekey_inventory",
+            ..
+        }) => Ok(KemRowState::Invalid),
+        Err(error) => Err(error),
+    }
+}
+
+/// Redacted counts for operators; no key material is returned or printed.
 pub fn summary(store: &ProtocolStore) -> Result<Summary> {
     store.read(|tx| {
         let metas = meta_map(tx)?;
@@ -549,6 +585,7 @@ pub fn summary(store: &ProtocolStore) -> Result<Summary> {
         for (_, batch) in scan_prefix::<Batch>(tx, Table::Checkpoints, BATCH_PREFIX)? {
             *summary.batches.entry(batch.status).or_default() += 1;
         }
+        (summary.kem_local, summary.kem_last_resort) = super::kem_prekeys::counts(tx)?;
         Ok(summary)
     })
 }

@@ -295,12 +295,14 @@ pub fn prekey_bundle(reply: &Node, recipient: &Jid) -> Result<PreKeyBundle> {
 /// compares the complete address, including agent and device, so a reply that echoes
 /// the phone JID where we asked with a LID (or the reverse) is refused rather
 /// than silently paired with the wrong identity key.
-/// Selected `pqkey` input is unsupported until KEM session processing is available;
-/// it must not be discarded to construct a classic session.
+/// Selected `pqkey` input is refused here: this consumable parser is classic-only
+/// and must never discard a KEM key to construct a classic session. Callers that
+/// support PQ select `signal::hybrid::bundle_for` (see `hybrid::selects_pq_key`).
 pub fn prekey_bundle_for(reply: &Node, recipient: &Jid) -> Result<PreKeyBundle> {
     let user = prekey_user_for(reply, recipient)?;
     if user.child("pqkey").is_some() {
-        // shortcut: this backend has no KEM session support; never drop a selected PQ key to derive classic state.
+        // Hybrid-capable callers use signal::hybrid::bundle_for; this classic parser
+        // never drops a selected PQ key to derive classic state.
         return Err(invalid("post-quantum session processing is unsupported"));
     }
     classic_bundle_from_user(user, recipient)
@@ -308,6 +310,7 @@ pub fn prekey_bundle_for(reply: &Node, recipient: &Jid) -> Result<PreKeyBundle> 
 
 // Diagnostics validate only classic metadata. Callers must keep the existing PQ
 // deferral before deriving/applying any session; this is not a consumable PQ bundle.
+#[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
 pub(crate) fn classic_bundle_metadata_for(reply: &Node, recipient: &Jid) -> Result<PreKeyBundle> {
     classic_bundle_from_user(prekey_user_for(reply, recipient)?, recipient)
 }
@@ -571,6 +574,7 @@ pub(crate) fn validate_bundle_identity(
 
 /// Stage a classic same-identity bundle without constructing a chat ciphertext.
 /// This is a cryptographic primitive, not native CPB admission or a store write.
+#[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
 pub(crate) async fn prepare_session_refresh(
     account: &AccountRecord,
     recipient: &Jid,
@@ -1132,12 +1136,15 @@ mod tests {
                     .to_string()
                     .contains("post-quantum session processing is unsupported")
             );
-            let metadata = classic_bundle_metadata_for(&pq_reply, &peer).unwrap();
-            validate_bundle_signature(&metadata).unwrap();
-            assert_eq!(
-                metadata.identity_key().unwrap(),
-                bundle.identity_key().unwrap()
-            );
+            #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
+            {
+                let metadata = classic_bundle_metadata_for(&pq_reply, &peer).unwrap();
+                validate_bundle_signature(&metadata).unwrap();
+                assert_eq!(
+                    metadata.identity_key().unwrap(),
+                    bundle.identity_key().unwrap()
+                );
+            }
             let mut unselected = reply(vec![]);
             let NodeContent::Children(lists) = &mut unselected.content else {
                 panic!("fixture")
@@ -1333,6 +1340,7 @@ mod tests {
         assert!(prekey_bundle_for(&conflicting_outer_error, &peer).is_err());
     }
 
+    #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
     #[tokio::test]
     async fn held_session_refuses_forged_same_identity_bundle() {
         let mut rng = rand::rng();

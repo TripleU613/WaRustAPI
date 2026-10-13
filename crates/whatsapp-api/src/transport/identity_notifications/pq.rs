@@ -26,7 +26,9 @@ pub struct PqSignatureInspection {
     pub value_bytes: Option<usize>,
     /// Null until crypto verification; independent of the classic signed key.
     pub signature_valid: Option<bool>,
-    /// KEM format, algorithm and encapsulation remain unported.
+    /// `not_checked` (value absent/oversized), `valid_ml_kem_1024` or
+    /// `invalid_ml_kem_1024`: local encoding validation, independent of the
+    /// signature. A valid encoding is not trust, admission or adoption.
     pub key_validation: &'static str,
 }
 
@@ -48,7 +50,7 @@ pub(super) fn inspect(user: &Node, identity: &IdentityKey) -> Option<PqSignature
         status: PqSignatureStatus::Malformed,
         value_bytes: None,
         signature_valid: None,
-        key_validation: "unported",
+        key_validation: "not_checked",
     };
     let Some(node) = one(user, "pqkey") else {
         return Some(result);
@@ -57,6 +59,15 @@ pub(super) fn inspect(user: &Node, identity: &IdentityKey) -> Option<PqSignature
         return Some(result);
     };
     result.value_bytes = Some(value.len());
+    // Native KEMPublicKey keeps the bytes opaque; the ML-KEM encoding check is
+    // the same one hybrid::bundle_for applies before any derivation.
+    if value.len() <= 65536 {
+        result.key_validation = if crate::signal::kem::public_key(value).is_ok() {
+            "valid_ml_kem_1024"
+        } else {
+            "invalid_ml_kem_1024"
+        };
+    }
     let Some(signature) = one(node, "signature")
         .and_then(bytes)
         .filter(|s| s.len() == 64)

@@ -108,6 +108,10 @@ pub enum MessageContent {
         caption: Option<String>,
         /// Remote filename, treated strictly as a label.
         file_name: Option<String>,
+        /// Reply target named by the media's contextInfo, if any. Omitted when
+        /// absent, so existing records and intent hashes are unchanged.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        quoted: Option<MessageRef>,
     },
     /// A poll (comparison `pollCreationMessageV3`).
     Poll {

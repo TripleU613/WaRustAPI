@@ -142,6 +142,42 @@ fn prekey_pin_summary(
     Ok(format!(", prekey_pin_matches={comparisons:?}"))
 }
 
+/// Read-only paired-KEM diagnostics for the first `pkmsg`: whether the envelope
+/// carries KEM fields and the state of the local row it names. Prints neither
+/// the KEM ID nor any key bytes; does not authenticate or consume anything.
+fn prekey_kem_summary(
+    store: &ProtocolStore,
+    node: &whatsapp_api::binary::Node,
+) -> Result<String, Error> {
+    use whatsapp_api::binary::NodeContent;
+    let Some(enc) = node.child_nodes().iter().find(|n| {
+        n.description == "enc" && n.get_attr("type").and_then(|v| v.as_text()) == Some("pkmsg")
+    }) else {
+        return Ok(String::new());
+    };
+    let NodeContent::Bytes(ciphertext) = &enc.content else {
+        return Ok(String::new());
+    };
+    Ok(
+        match whatsapp_api::signal::direct::incoming_prekey_kem(ciphertext) {
+            Ok(None) => ", prekey_kem=absent".into(),
+            Ok(Some(kem)) => {
+                let state = whatsapp_api::transport::prekeys::kem_row_state(store, kem.prekey_id)?;
+                format!(
+                    ", prekey_kem=present, envelope_version={}, local_kem_row={}",
+                    ciphertext[0] >> 4,
+                    serde_json::to_value(state)
+                        .ok()
+                        .and_then(|v| v.as_str().map(str::to_owned))
+                        .unwrap_or_else(|| "unknown".into())
+                )
+            }
+            Err(Error::InvalidInput { .. }) => ", prekey_kem=invalid_input".into(),
+            Err(error) => return Err(error),
+        },
+    )
+}
+
 /// Read-only signature and matched-baseline diagnostics. No query or state admission.
 fn companion_adv_summary(
     store: &ProtocolStore,
@@ -1252,6 +1288,10 @@ pub(super) fn prekeys_status(cli: &super::Cli) -> Result<(), Error> {
         println!("  batches {status}: {count}");
     }
     println!(
+        "kem prekeys: local={} last_resort={} (no generation or upload is implemented; incoming hybrid bootstrap needs a local row)",
+        summary.kem_local, summary.kem_last_resort
+    );
+    println!(
         "prekeys: an authenticated session uploads unsent keys at start and after a server low-count notification"
     );
     Ok(())
@@ -1274,7 +1314,7 @@ pub(super) fn outbox_suspended(cli: &super::Cli) -> Result<(), Error> {
         );
     } else {
         println!(
-            "outbox-suspended: {} queued send(s) awaiting peer identity policy resolution",
+            "outbox-suspended: {} queued send(s) suspended by a fetched directory reply (identity change or unusable PQ material; see reason)",
             rows.len()
         );
         for row in rows {
@@ -2198,6 +2238,7 @@ pub(super) async fn run(
                         Err(error) => return Err(error),
                     };
                     let companion = companion_adv_summary(&store, &node)?;
+                    let kem = prekey_kem_summary(&store, &node)?;
                     let observation =
                         if matches!(node.description.as_str(), "stream:error" | "failure") {
                             match whatsapp_api::transport::inbox::terminal_observation(&store, key)?
@@ -2214,7 +2255,7 @@ pub(super) async fn run(
                         } else {
                             String::new()
                         };
-                    capture_shapes.insert(format!("inbox: capture shape tag={}, type={kind}, id={id8}, attrs={attr_names:?}{codes}{ack}{retry}{routing}{timing}{sender_tail}{pins}{companion}, children={children:?}, child_attrs={child_attrs:?}, offline_count={offline:?}{observation}",node.description));
+                    capture_shapes.insert(format!("inbox: capture shape tag={}, type={kind}, id={id8}, attrs={attr_names:?}{codes}{ack}{retry}{routing}{timing}{sender_tail}{pins}{kem}{companion}, children={children:?}, child_attrs={child_attrs:?}, offline_count={offline:?}{observation}",node.description));
                 }
             }
             if key.starts_with(b"received:") || key.starts_with(b"received-own:") {

@@ -33,6 +33,87 @@ fn receipt_summary(status: &SendStatus, group: bool) -> String {
     )
 }
 
+/// The normal-outbox reference for a JSON reply (`quote` without an emoji) in
+/// a group or direct chat. The participant names the quoted message's author;
+/// one of our own identities makes it our outgoing message. In a direct chat
+/// any other author must be the contact itself, in the same form as `to`. Reactions and a supplied
+/// `quoted_text` stay on the comparison path: the normal path copies the saved
+/// parent's text itself and never sends a caller-supplied preview.
+fn quoted(
+    store: &ProtocolStore,
+    account: &AccountRecord,
+    message: &MessageRequest,
+) -> Result<Option<whatsapp_api::model::message::MessageRef>, Error> {
+    use whatsapp_api::model::{
+        ids::{DeviceAddress, MessageId},
+        message::{Direction, MessageKey, MessageRef},
+    };
+    let Some(quote) = &message.quote else {
+        return Ok(None);
+    };
+    if quote.is_reaction() || quote.quoted_text.is_some() {
+        return Err(Error::invalid(
+            "outbox_send",
+            "normal JSON quotes are replies without quoted_text; reactions and supplied previews remain on the comparison path",
+        ));
+    }
+    let group = message.group_chat()?;
+    let chat = destination(message)?;
+    let author = quote.sender()?.to_non_ad();
+    let own_lid = whatsapp_api::transport::group_send::own_lid(store)?;
+    let ours = [account.own_jid.as_ref().map(Jid::to_non_ad), own_lid]
+        .into_iter()
+        .flatten()
+        .any(|own| own.to_non_ad() == author);
+    if group.is_none() && !ours && author != chat.to_non_ad() {
+        return Err(Error::invalid(
+            "outbox_send",
+            "a direct reply quotes the contact (in the same form as `to`) or one of our identities",
+        ));
+    }
+    Ok(Some(MessageRef {
+        key: MessageKey {
+            chat: ChatId::from_jid(&chat)?,
+            sender: if ours {
+                None
+            } else {
+                Some(DeviceAddress::from_jid(&author)?)
+            },
+            direction: if ours {
+                Direction::Outgoing
+            } else {
+                Direction::Incoming
+            },
+            id: MessageId::new(quote.message_id.clone())?,
+        },
+    }))
+}
+
+/// JSON this path does not send. Runs before the store opens and before the
+/// request ID is claimed for the outbox path, so the same JSON can still go to
+/// lab-transport unchanged.
+fn refuse_comparison_only(message: &MessageRequest) -> Result<(), Error> {
+    if message
+        .quote
+        .as_ref()
+        .is_some_and(|quote| quote.is_reaction() || quote.quoted_text.is_some())
+    {
+        return Err(Error::invalid(
+            "outbox_send",
+            "normal JSON quotes are replies without quoted_text; reactions and supplied previews remain on the comparison path",
+        ));
+    }
+    if message.group_chat()?.is_some()
+        && (message.view_once || message.fresh_sessions || message.skdm_out_of_band()?)
+    {
+        return Err(Error::invalid(
+            "outbox_send",
+            "normal group JSON supports text/uploaded media and replies with existing sessions and in-band distribution; view-once, fresh sessions and direct distribution remain on the comparison path",
+        ));
+    }
+    Ok(())
+}
+
 fn destination(message: &MessageRequest) -> Result<Jid, Error> {
     match message.group_chat()? {
         Some(group) => Ok(group),
@@ -43,7 +124,11 @@ fn destination(message: &MessageRequest) -> Result<Jid, Error> {
 // Run before media preparation: a reused text ID must never upload a new file.
 // Existing media must already have its account-bound reference; prepare then
 // checks the saved upload's file hash/view-once flag without another upload.
-fn preflight(store: &ProtocolStore, message: &MessageRequest) -> Result<(), Error> {
+fn preflight(
+    store: &ProtocolStore,
+    message: &MessageRequest,
+    quote: Option<&whatsapp_api::model::message::MessageRef>,
+) -> Result<(), Error> {
     let id = ClientRequestId::new(message.request_id.clone())?;
     let outbox = whatsapp_api::outbox::Outbox::new("default", Default::default());
     let Some(saved) = store.read(|tx| outbox.get_by_request_id(tx, &id))? else {
@@ -57,15 +142,17 @@ fn preflight(store: &ProtocolStore, message: &MessageRequest) -> Result<(), Erro
         MessageContent::Text { body, quoted, .. } => {
             message.image.is_none()
                 && message.voice_note.is_none()
-                && quoted.is_none()
+                && quoted.as_ref() == quote
                 && body == message.text.as_str()
         }
         MessageContent::Media {
             reference,
             caption,
             file_name,
+            quoted,
         } if message.image.is_some() || message.voice_note.is_some() => {
-            caption.is_none()
+            quoted.as_ref() == quote
+                && caption.is_none()
                 && file_name.is_none()
                 && *reference
                     == whatsapp_api::transport::outgoing_media::reference(store, &id, &peer)?
@@ -93,17 +180,7 @@ pub(super) async fn run(
     let config = signup::config(path)?;
     let message = MessageRequest::read(message_path)?;
     let is_group = message.group_chat()?.is_some();
-    if is_group
-        && (message.quote.is_some()
-            || message.view_once
-            || message.fresh_sessions
-            || message.skdm_out_of_band()?)
-    {
-        return Err(Error::invalid(
-            "outbox_send",
-            "normal group JSON supports text/uploaded media with existing sessions and in-band distribution; quotes, view-once, fresh sessions and direct distribution remain on the comparison path",
-        ));
-    }
+    refuse_comparison_only(&message)?;
     let account_id = AccountId::new(cli.account.clone())?;
     let options = || OpenOptions {
         path: cli.store.clone(),
@@ -137,7 +214,8 @@ pub(super) async fn run(
                 "request ID already belongs to a lab send; use its original path, no duplicate transmission",
             ));
         }
-        preflight(&store, &message)?;
+        let quote = quoted(&store, &account, &message)?;
+        preflight(&store, &message, quote.as_ref())?;
         if message.image.is_some() || message.voice_note.is_some() {
             whatsapp_api::transport::image_upload::prepare_outbox(&store, &message, &config)
                 .await?;
@@ -150,11 +228,12 @@ pub(super) async fn run(
                 reference,
                 caption: None,
                 file_name: None,
+                quoted: quote,
             }
         } else {
             MessageContent::Text {
                 body: message.text.to_string(),
-                quoted: None,
+                quoted: quote,
                 style: Default::default(),
             }
         }
@@ -315,24 +394,24 @@ mod tests {
         store.write(|tx| outbox.enqueue(tx, &request)).unwrap();
         drop(store);
         let store = ProtocolStore::open(options()).unwrap();
-        preflight(&store, &message).unwrap();
+        preflight(&store, &message, None).unwrap();
         let head = store.journal_head().unwrap();
         message.text.clear();
         message.image = Some(dir.path().join("does-not-exist.png"));
         assert!(matches!(
-            preflight(&store, &message),
+            preflight(&store, &message, None),
             Err(Error::IdempotencyConflict(_))
         ));
         message.image = None;
         message.voice_note = Some(dir.path().join("does-not-exist.ogg"));
         assert!(matches!(
-            preflight(&store, &message),
+            preflight(&store, &message, None),
             Err(Error::IdempotencyConflict(_))
         ));
         message.voice_note = None;
         message.text.push_str("changed");
         assert!(matches!(
-            preflight(&store, &message),
+            preflight(&store, &message, None),
             Err(Error::IdempotencyConflict(_))
         ));
         message.text.clear();
@@ -340,7 +419,7 @@ mod tests {
         message.to.clear();
         message.to.push_str("15550000001");
         assert!(matches!(
-            preflight(&store, &message),
+            preflight(&store, &message, None),
             Err(Error::IdempotencyConflict(_))
         ));
         assert_eq!(store.journal_head().unwrap(), head);
@@ -353,6 +432,110 @@ mod tests {
                 .intent,
             request
         );
+    }
+
+    #[test]
+    fn json_replies_map_authors_and_refuse_comparison_only_quotes() {
+        use whatsapp_api::{
+            model::message::Direction,
+            outbox::Outbox,
+            store::{MasterKey, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("group-reply.redb"),
+            account_id: AccountId::new("fixture").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([10; 32]))),
+            create: true,
+        })
+        .unwrap();
+        let account = AccountRecord {
+            own_jid: Some(Jid::parse("15550000099@s.whatsapp.net").unwrap()),
+            ..Default::default()
+        };
+        let message = |quote: serde_json::Value| -> MessageRequest {
+            serde_json::from_value(serde_json::json!({
+                "request_id": "group-reply", "group": "120363000000000001@g.us",
+                "text": "reply body", "quote": quote,
+            }))
+            .unwrap()
+        };
+        // Another member's message: incoming, attributed to that member.
+        let other = message(serde_json::json!({
+            "message_id": "PARENT", "participant": "15550000001@s.whatsapp.net"
+        }));
+        let reference = quoted(&store, &account, &other).unwrap().unwrap();
+        assert_eq!(reference.key.direction, Direction::Incoming);
+        assert_eq!(
+            reference.key.sender.as_ref().unwrap().to_jid(),
+            Jid::parse("15550000001@s.whatsapp.net").unwrap()
+        );
+        // Our own message (any device of our number): outgoing, no sender.
+        let own = message(serde_json::json!({
+            "message_id": "OWN", "participant": "15550000099:3@s.whatsapp.net"
+        }));
+        let own_reference = quoted(&store, &account, &own).unwrap().unwrap();
+        assert_eq!(own_reference.key.direction, Direction::Outgoing);
+        assert!(own_reference.key.sender.is_none());
+        // Reactions and caller-supplied previews stay on the comparison path,
+        // refused before any store access or send-path claim.
+        assert!(refuse_comparison_only(&other).is_ok());
+        for quote in [
+            serde_json::json!({"message_id": "PARENT", "participant": "15550000001@s.whatsapp.net", "emoji": "x"}),
+            serde_json::json!({"message_id": "PARENT", "participant": "15550000001@s.whatsapp.net", "quoted_text": "preview"}),
+        ] {
+            let mut request = message(quote);
+            if request.quote.as_ref().unwrap().is_reaction() {
+                request.text.clear();
+            }
+            assert!(quoted(&store, &account, &request).is_err());
+            assert!(refuse_comparison_only(&request).is_err());
+        }
+        // Direct replies: the contact or us; a third party is refused.
+        let direct = |participant: &str| -> MessageRequest {
+            serde_json::from_value(serde_json::json!({
+                "request_id": "direct-reply", "to": "15550000001@s.whatsapp.net",
+                "text": "reply body",
+                "quote": {"message_id": "PARENT", "participant": participant},
+            }))
+            .unwrap()
+        };
+        let contact = quoted(&store, &account, &direct("15550000001@s.whatsapp.net"))
+            .unwrap()
+            .unwrap();
+        assert_eq!(contact.key.direction, Direction::Incoming);
+        assert_eq!(
+            contact.key.chat.jid(),
+            &Jid::parse("15550000001@s.whatsapp.net").unwrap()
+        );
+        let mine = quoted(&store, &account, &direct("15550000099@s.whatsapp.net"))
+            .unwrap()
+            .unwrap();
+        assert_eq!(mine.key.direction, Direction::Outgoing);
+        assert!(quoted(&store, &account, &direct("15550000002@s.whatsapp.net")).is_err());
+        assert!(refuse_comparison_only(&direct("15550000001@s.whatsapp.net")).is_ok());
+        // A reused request ID must keep the same quote target.
+        let request = SendRequest {
+            client_request_id: ClientRequestId::new("group-reply").unwrap(),
+            chat: ChatId::from_jid(&destination(&other).unwrap()).unwrap(),
+            content: MessageContent::Text {
+                body: "reply body".into(),
+                quoted: Some(reference.clone()),
+                style: Default::default(),
+            },
+        };
+        store
+            .write(|tx| Outbox::new("default", Default::default()).enqueue(tx, &request))
+            .unwrap();
+        preflight(&store, &other, Some(&reference)).unwrap();
+        assert!(matches!(
+            preflight(&store, &own, Some(&own_reference)),
+            Err(Error::IdempotencyConflict(_))
+        ));
+        assert!(matches!(
+            preflight(&store, &other, None),
+            Err(Error::IdempotencyConflict(_))
+        ));
     }
 
     #[test]
@@ -382,17 +565,17 @@ mod tests {
         store
             .write(|tx| Outbox::new("default", Default::default()).enqueue(tx, &request))
             .unwrap();
-        preflight(&store, &message).unwrap();
+        preflight(&store, &message, None).unwrap();
         let head = store.journal_head().unwrap();
         message.group = Some("120363000000000002@g.us".into());
         assert!(matches!(
-            preflight(&store, &message),
+            preflight(&store, &message, None),
             Err(Error::IdempotencyConflict(_))
         ));
         message.group = Some("120363000000000001@g.us".into());
         message.text.push_str(" altered");
         assert!(matches!(
-            preflight(&store, &message),
+            preflight(&store, &message, None),
             Err(Error::IdempotencyConflict(_))
         ));
         assert_eq!(store.journal_head().unwrap(), head);

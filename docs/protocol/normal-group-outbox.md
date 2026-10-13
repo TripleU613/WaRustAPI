@@ -144,8 +144,10 @@ receive duration can be configured independently through existing commands.
 
 **Remaining first-port gaps:** group polls/settings,
 view-once JSON, explicit fresh sessions or out-of-band SKDM distribution. Group
-private-JSON quote remains on the comparison path; normal typed quotes/reactions
-are described below. Those unsupported JSON modes fail explicitly before store/upload access instead of silently losing
+private-JSON replies (no `emoji`/`quoted_text`) now use the normal outbox
+(2026-10-13, [quoted media sending](quoted-media.md#sending-2026-10-13));
+JSON reactions and caller previews remain on the comparison path; normal typed
+quotes/reactions are described below. Those unsupported JSON modes fail explicitly before store/upload access instead of silently losing
 fields; the comparison path retains its existing capabilities. Group peer pin
 replacement uses the explicit outgoing signed-bundle policy described below.
 The default remains pinned and reports `peer_identity_changed`. Companion
@@ -347,8 +349,9 @@ participant separately. See [group inbox](group-inbox.md) for atomic legacy
 handling, read selection and native-storage unknowns.
 Private MessageRequest `quote`/caller preview remains the comparison JSON path;
 this chunk exposes typed normal quotes/reactions through `reply`/`react` without
-silently dropping a supplied JSON preview. Full media quotes, historical
-own-namespace normalization and live group rendering remain unfinished.
+silently dropping a supplied JSON preview. (2026-10-13: quoted image/voice note
+replies use this guarded path, see [quoted media sending](quoted-media.md#sending-2026-10-13).)
+Historical own-namespace normalization and live group rendering remain unfinished.
 
 **Confirmed offline:** real PN/LID actor preparation decrypts SKDM and the group
 body independently for incoming/own quoted text and reaction add/removal, checks
