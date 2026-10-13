@@ -1,3 +1,13 @@
+2026-10-13 — **Corrected/offline (receive-path audit):** a read-only audit of
+the receive loop found that a receipt, `privacy_token` notification or
+`pq_count` whose content we refuse, or an own-companion message with an
+undecodable app-state key share, ended the session before its ACK. The server
+then redelivered it at every login, so every later `listen` ended on the same
+stanza. These are now logged, captured without ACK, and receive continues.
+A viewed group view-once is a duplicate on redelivery, and our own LID no
+longer queues a contact device sync. Four lower findings are recorded open.
+Not seen live. [Audit](docs/protocol/replay-safety-audit.md#receive-side-audit-2026-10-13).
+
 2026-10-13 — **Measured (cross-version coverage):** new `xtask apk-coverage`
 reports what the committed research bundles cover. The pinned 2.26.36.75 has no
 retained bundle; 2.26.37.70 has one (21 core topics); 2.26.37.71 has 166.

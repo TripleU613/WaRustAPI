@@ -659,6 +659,18 @@ pub async fn process_with_policy(
             );
             Ok(IncomingResult::Undecryptable)
         }
+        // Content refused after decryption (an own-device key share it cannot
+        // import): nothing committed, capture kept, no ACK, like the group
+        // path. Propagating would end every session on redelivery (receive
+        // audit F4).
+        Err(Error::InvalidInput { field, reason }) if field == "app_state_key_share" => {
+            tracing::warn!(
+                field,
+                reason,
+                "decrypted content refused; preserved without commit or ACK; session continues"
+            );
+            Ok(IncomingResult::Unsupported)
+        }
         other => other,
     }
 }
@@ -1412,9 +1424,11 @@ async fn process_group_inner(
     if let Some(saved) = saved {
         super::inbox_events::restore(store, key.as_bytes(), &saved)?;
         return Ok(
+            // A viewed view-once row is consumed, still a known message
+            // (the direct path accepts it too; receive audit F5).
             if matches!(
                 saved["status"].as_str(),
-                Some("decrypted" | "sender_key_distributed")
+                Some("decrypted" | "sender_key_distributed" | "consumed")
             ) {
                 IncomingResult::Duplicate
             } else {
@@ -2313,6 +2327,87 @@ mod tests {
                 .await
                 .unwrap(),
             IncomingResult::Undecryptable
+        );
+    }
+
+    /// Viewing a view-once marks its record consumed. A redelivery after a cut
+    /// delivery confirmation is still a known message (Duplicate), as on the
+    /// direct path, not Unsupported (receive audit F5).
+    #[tokio::test]
+    async fn consumed_group_record_is_a_duplicate_on_redelivery() {
+        use crate::signal::group::{
+            commit_skdm, encrypt_group_payload, extract_skdm_from_payload, prepare_own_sender_key,
+            process_skdm, sender_key_db_key,
+        };
+        use crate::{
+            model::ids::AccountId,
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("consumed-group.redb"),
+            account_id: AccountId::new("fixture").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([22; 32]))),
+            create: true,
+        })
+        .unwrap();
+        let chat = Jid::parse("120363000000000001@g.us").unwrap();
+        let account = AccountRecord {
+            own_jid: Some(Jid::parse("15555550199@s.whatsapp.net").unwrap()),
+            ..Default::default()
+        };
+        let sender = Jid::parse("15555550100:3@lid").unwrap();
+        let own = prepare_own_sender_key(&chat, &sender, None).await.unwrap();
+        let (_, bytes) = extract_skdm_from_payload(&own.distribution_message).unwrap();
+        let installed = process_skdm(
+            &chat,
+            &sender,
+            sender_key_db_key(&chat, &sender),
+            None,
+            &bytes,
+        )
+        .await
+        .unwrap();
+        assert!(store.write(|tx| commit_skdm(tx, &installed)).unwrap());
+        let plain = super::super::group_send::text_payload("view once fixture").unwrap();
+        let (cipher, _) = encrypt_group_payload(&chat, &sender, &own.updated_key, &plain)
+            .await
+            .unwrap();
+        let node = Node::new("message")
+            .attr("from", chat.clone())
+            .attr("participant", sender.clone())
+            .attr("id", "VIEWED-ONCE")
+            .children(vec![
+                Node::new("enc")
+                    .attr("v", "2")
+                    .attr("type", "skmsg")
+                    .bytes(cipher.to_vec()),
+            ]);
+        let capture = preserve(&store, &node).unwrap();
+        assert_eq!(
+            process(&store, &account, &node, &capture).await.unwrap(),
+            IncomingResult::Decrypted
+        );
+        let key = super::super::group_inbox::key(&chat, &sender, "VIEWED-ONCE").unwrap();
+        let mut saved: serde_json::Value = store
+            .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        saved["status"] = "consumed".into();
+        saved.as_object_mut().unwrap().remove("protobuf");
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &saved))
+            .unwrap();
+        let head = store.journal_head().unwrap();
+        assert_eq!(
+            process(&store, &account, &node, &capture).await.unwrap(),
+            IncomingResult::Duplicate
+        );
+        assert_eq!(store.journal_head().unwrap(), head);
+        assert!(
+            super::super::messaging::received_confirmation_for_account(&store, &account, &node)
+                .unwrap()
+                .is_some()
         );
     }
 
@@ -4962,7 +5057,7 @@ mod tests {
         assert_eq!(next.kind, "msg");
         let peer_node = Node::new("message")
             .attr("category", "peer")
-            .attr("from", peer_device)
+            .attr("from", peer_device.clone())
             .attr("id", "OWN-LID-PEER")
             .children(vec![
                 Node::new("enc")
@@ -4982,6 +5077,50 @@ mod tests {
                 .await
                 .unwrap(),
             IncomingResult::Duplicate
+        );
+        // Receive audit F4: an own-device key share that does not decode is
+        // refused content (capture kept, nothing committed, no confirmation),
+        // not an error that would end every session on redelivery.
+        let refused = direct::prepare_payload(
+            &sender,
+            receiver.own_jid.as_ref().unwrap(),
+            None,
+            Some(&next.session),
+            Some(&next.identity),
+            b"\x62\x02\x10\x06",
+        )
+        .await
+        .unwrap();
+        let refused_node = Node::new("message")
+            .attr("category", "peer")
+            .attr("from", peer_device)
+            .attr("id", "OWN-BAD-SHARE")
+            .children(vec![
+                Node::new("enc")
+                    .attr("type", refused.kind)
+                    .attr("v", "2")
+                    .bytes(refused.ciphertext.to_vec()),
+            ]);
+        let refused_capture = preserve(&store, &refused_node).unwrap();
+        let head = store.journal_head().unwrap();
+        for _ in 0..2 {
+            assert_eq!(
+                process(&store, &receiver, &refused_node, &refused_capture)
+                    .await
+                    .unwrap(),
+                IncomingResult::Unsupported
+            );
+        }
+        assert_eq!(store.journal_head().unwrap(), head);
+        let own_lid = super::super::group_send::own_lid(&store).unwrap();
+        let sender = own_peer_sender(&receiver, &refused_node, own_lid.as_ref()).unwrap();
+        let key = format!("received:{sender}:OWN-BAD-SHARE");
+        assert!(
+            store
+                .read(|tx| tx.get_json::<serde_json::Value>(Table::Checkpoints, key.as_bytes(), 1))
+                .unwrap()
+                .is_none(),
+            "nothing committed for refused content"
         );
     }
 

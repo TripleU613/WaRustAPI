@@ -81,6 +81,13 @@ Nonpositive/wrapped time can remain in the first public fact; only positive
 values update the earliest-positive device row. A duplicate kind/device adds
 no second fact or event but can lower that mutable row's positive time.
 
+A refusal ends only that receipt, not receive (2026-10-13, receive audit F1 in
+[replay-safety-audit](replay-safety-audit.md#receive-side-audit-2026-10-13)):
+the capture stays, no ACK is written, and `drive` continues. Before this, the
+`InvalidInput` ended the session without reconnecting, and because the receipt
+was never acknowledged the server redelivered it at every login, ending each
+later session on the same stanza. Storage errors still end the session.
+
 **Existing authority remains required:** direct participant observations need
 an immutable original target snapshot and matching saved chat/user/device;
 group observations use the frozen full plan or existing known legacy wire

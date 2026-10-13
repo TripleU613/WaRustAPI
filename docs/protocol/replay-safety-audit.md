@@ -65,6 +65,82 @@ Sent again by design (outside the rules): delivery confirmations for server
 redeliveries, notification/identity ACKs, the per-connection presence and
 active IQ, and `usync` device lookups re-queried after a cut.
 
+## Receive-side audit (2026-10-13)
+
+A second read-only trace, of the receive loop (`connection.rs` `drive`), the
+direct, group and own-device inbox paths, receipts and notifications, at commit
+`04445f5`. The rule checked: everything a stanza changes commits before its ACK
+or delivery confirmation, nothing is consumed twice, and no single stanza can
+stop receiving. Code trace (**traced**); none of it was seen live. Findings are
+numbered as in the audit report.
+
+### Fixed
+
+| Finding | Before | Now | Test |
+|---|---|---|---|
+| F1 receipt content refused by `receipts::record` (aggregate participant type outside the seven known, bad `t`, unknown key-aggregate root, non-`item` list child, more than 256 items, bad id; same id checks on the group path) | `?` ended the session without reconnecting; the receipt was never acknowledged, so it was redelivered and ended every later session | Logged; capture kept; no ACK; receive continues | `refused_receipt_and_notification_content_does_not_end_receive` |
+| F2 `privacy_token` notification refused by `notifications::handle` (missing `t`, token count, non-bytes or oversized token, bad `sender_lid`) | Same | Same | Same test |
+| F3 malformed `pq_count` | Same; documented as "refuses", not as ending receive | Same | `prekey_count_dispatch_bounds_uploads_and_skips_malformed_counts_without_ending_receive` |
+| F4 own-companion `category=peer` message whose app-state key share does not decode | `KeyShare::from_peer_message(..)?` ended the session; nothing committed | `Unsupported`, nothing committed, no confirmation (the group path already did this) | `primary_lid_prekey_without_alias_commits_once_after_authentication` (extended) |
+| F5 group view-once marked `consumed` after viewing, then redelivered | `Unsupported`: never confirmed, redelivered at every login | `Duplicate` and confirmed, as on the direct path | `consumed_group_record_is_a_duplicate_on_redelivery` |
+| F7 a devices notification naming our own LID | Treated as a contact's: a device sync queued for our own LID | Excluded like our own PN (devices.rs already excluded it elsewhere) | none added; one-line comparison |
+| F8 `messaging-transport.md` said `Unsupported` content "should be acknowledged" | Doc only; the code never confirmed it | Doc corrected | n/a |
+
+Each new test was checked against the old behavior: with the fix reverted, it
+fails. A refused receipt or notification is still refused again when it is
+redelivered at the next login; the fix stops it ending the session, not the
+redelivery. Storage errors and post-decryption commit failures on the direct
+path still end the session, by design: they mean a rollback the caller must see.
+
+### Open (recorded, not changed)
+
+- **F6, speculative.** A redelivery under the sender's other PN/LID address
+  (first `from=<PN>`, later `from=<LID> sender_pn=<PN>`) misses the stored
+  record, because `direct_record_in` accepts a PN row only when its original
+  route was LID-addressed. It would then fail decryption against a ratchet
+  already past it, be classed `Undecryptable` and get one retry receipt. If the
+  sender answers with the same id, a second record and event could result. The
+  group key includes the participant's server, so the same gap applies there.
+  Whether the server ever redelivers under the other address is **unknown**
+  ([messaging-transport](messaging-transport.md#retry-once-only-across-pn-and-lid-2026-10-13)).
+- **F9.** Group commit failures after decryption become `Unsupported`, which is
+  replay-safe (everything rolls back, nothing is ACKed). But a member can send a
+  group reaction whose key id is a wire ID we used in another chat
+  (`group_reaction` "saved outgoing target chat differs"); that stanza then stays
+  unconfirmed and is redelivered indefinitely. Changing it needs a decision on
+  confirming refused reactions, which the APK trace does not yet support.
+- **F10, availability only.** When a group stanza's pairwise child fails to
+  decrypt, the `skmsg` is not tried even with a held sender key; when the `skmsg`
+  fails, a correctly decrypted SKDM in the same stanza is discarded. Nothing
+  commits in either case; delivery waits for the sender's resend.
+- **F11.** Own-device `recipient` messages deliberately send no retry receipt,
+  while own-companion `category=peer` decryption failures send an ordinary one,
+  without a `category` attribute. Which the APK does for each is not traced.
+- **F7 remainder.** A devices notification for our own account (PN or LID) is
+  still acknowledged without processing ("captured and acknowledged only"),
+  which departs from acknowledging only what is processed. Own-account device
+  sync is not implemented.
+
+### Checked and sound
+
+- Raw capture commits before any processing.
+- Direct, group and own-device `recipient` paths each commit record, session,
+  identity pin, prekey or KEM consumption, LID mapping, SKDM, event and marker
+  in one transaction, before any confirmation; prekey/KEM rows, session,
+  identity and the inbox row are rechecked inside it. A cut after commit makes
+  the redelivery `Duplicate`, which confirms again; nothing is consumed twice.
+- `Undecryptable`: capture kept, no confirmation, at most one retry receipt,
+  reserved `outcome_unknown` before the write and probed across PN/LID aliases.
+- Receipt ACKs follow the recorded facts; unsupported receipt types stay
+  unacknowledged. `record_ack` and `status_receipts::record` fail only on
+  storage or our own stored rows, never on peer content, so they still propagate.
+- Notifications are durable before their ACK: identity, group dirty, privacy
+  token, contact device sync. The prekey count ACK precedes its upload, as
+  documented.
+- Dropping `drive` at any await leaves either nothing or a complete commit.
+- A server `iq get urn:xmpp:ping` gets no reply; deliberately not ported
+  ([token-clock-producers](token-clock-producers.md)).
+
 ## Validation
 
 837 all-feature, 241 default and 336 `experimental-signal-crypto`-only library

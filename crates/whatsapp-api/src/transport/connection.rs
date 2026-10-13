@@ -574,7 +574,20 @@ pub(crate) async fn drive(
                     }
                 }
                 let received = super::inbox::process_with_policy(&store, &account, &node, &capture, config.transport.identity_changes).await?;
-                super::receipts::record(&store, &node)?;
+                // A receipt, privacy-token or prekey-count stanza whose content
+                // this client refuses is already captured; it stays without ACK
+                // but must not end the session. The server redelivers it at
+                // every login, so ending here would stop all receiving for good
+                // (receive audit F1-F3, docs/protocol/replay-safety-audit.md).
+                // Storage errors still propagate.
+                let receipt_recorded = match super::receipts::record(&store, &node) {
+                    Ok(_) => true,
+                    Err(Error::InvalidInput { field, reason }) => {
+                        tracing::warn!(field, reason, "receipt refused locally; captured without ACK; session continues");
+                        false
+                    }
+                    Err(error) => return Err(error),
+                };
                 super::receipts::record_ack(&store, &node)?;
                 // Who has received or viewed a status we posted. Recording it
                 // sends nothing: this is their report about our status, not a
@@ -582,14 +595,24 @@ pub(crate) async fn drive(
                 if let Some(receipt) = super::status_receipts::parse(&node) {
                     super::status_receipts::record(&store, &receipt)?;
                 }
-                if let Some(ack)=super::notifications::handle(&store, &node)? {link.send(&ack).await?;}
+                match super::notifications::handle(&store, &node) {
+                    Ok(Some(ack)) => link.send(&ack).await?,
+                    Ok(None) => {}
+                    Err(Error::InvalidInput { field, reason }) => {
+                        tracing::warn!(field, reason, "notification refused locally; captured without ACK; session continues");
+                    }
+                    Err(error) => return Err(error),
+                }
                 if let Some(ack)=super::groups::handle_dirty_notification(&store, &node)? {link.send(&ack).await?;}
                 if let Some(change) = super::devices::notification(&node) {
                     // LX/11Q.A09 / LX/101.A02: contact notifications request a device
                     // sync. Locally persist work before ACK. Own-account changes use account sync, which is
                     // not implemented: captured and acknowledged only.
                     let own = account.own_jid.as_ref().map(|j| j.to_non_ad());
-                    if own.as_ref() != Some(&change.owner) {
+                    // Our own LID is ours too (devices.rs excludes it likewise);
+                    // never queue a contact device sync for it.
+                    let own_lid = super::group_send::own_lid(&store)?;
+                    if own.as_ref() != Some(&change.owner) && own_lid.as_ref() != Some(&change.owner) {
                         // Capture already committed above. Record pending work
                         // before ACK so a socket cut cannot silently lose it.
                         super::devices::request_sync(&store, own.as_ref(), &change.owner, change.device_hash.as_deref(), "notification")?;
@@ -626,7 +649,18 @@ pub(crate) async fn drive(
                     }
                 }
 
-                if let Some(low) = super::prekeys::low_count(&node)? {
+                let low = match super::prekeys::low_count(&node) {
+                    Ok(low) => low,
+                    Err(Error::InvalidInput { field, reason }) => {
+                        // APK 37.71 14z.A09 throws before queueing work; where that
+                        // is caught is not traced (prekey-count-notifications.md).
+                        // Continuing is local policy; no ACK means redelivery.
+                        tracing::warn!(field, reason, "prekey count refused locally; captured without ACK or upload; session continues");
+                        None
+                    }
+                    Err(error) => return Err(error),
+                };
+                if let Some(low) = low {
                     // Local ACK ordering follows durable capture; native 14z.A02 ACKs after worker processing.
                     // Its first-child legacy flag triggers upload even for an unknown count; PQ-only is inert.
                     link.send(&super::prekeys::low_count_ack(&node)?).await?;
@@ -649,7 +683,7 @@ pub(crate) async fn drive(
                     }
                 }
                 let mut confirmed = false;
-                if (node.description == "receipt" || matches!(received, super::inbox::IncomingResult::Decrypted | super::inbox::IncomingResult::Duplicate))
+                if ((node.description == "receipt" && receipt_recorded) || matches!(received, super::inbox::IncomingResult::Decrypted | super::inbox::IncomingResult::Duplicate))
                     && let Some(confirmation) = super::messaging::received_confirmation_for_account(&store, &account, &node)? {
                         // Raw capture and session/inbox commit precede this write.
                         // A reconnect may confirm a genuine server redelivery again.
@@ -1674,6 +1708,63 @@ mod tests {
         fake.stop_cleanly().await;
     }
 
+    /// Content this client refuses in a receipt or privacy-token notification
+    /// is captured without ACK, and the session keeps receiving. Ending it
+    /// would make every later session end on the same redelivered stanza.
+    #[tokio::test]
+    async fn refused_receipt_and_notification_content_does_not_end_receive() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("refused-content.redb"));
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        let head = store.journal_head().unwrap();
+        let refused = [
+            // A receipt list child that is not `item`.
+            Node::new("receipt")
+                .attr("from", peer())
+                .attr("id", "REFUSED-RECEIPT")
+                .children(vec![Node::new("list").children(vec![Node::new("bogus")])]),
+            // A privacy-token notification without its timestamp.
+            Node::new("notification")
+                .attr("from", peer())
+                .attr("id", "REFUSED-TOKEN")
+                .attr("type", "privacy_token")
+                .children(vec![Node::new("tokens").children(vec![
+                    Node::new("token")
+                        .attr("type", "trusted_contact")
+                        .bytes(vec![1, 2, 3]),
+                ])]),
+        ];
+        for node in refused {
+            let wire = encode(&node).unwrap();
+            let capture = format!(
+                "inbound:sha256:{}",
+                hex::encode(sha2::Sha256::digest(&wire))
+            );
+            fake.deliver(node).await;
+            fake.nothing_written(Duration::from_millis(100)).await;
+            assert!(
+                store
+                    .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                    .unwrap()
+                    .is_some()
+            );
+            assert_eq!(store.journal_head().unwrap(), head);
+        }
+        // Still receiving: a supported receipt is answered as before.
+        fake.deliver(
+            Node::new("receipt")
+                .attr("from", peer())
+                .attr("id", "RECEIPT-FIXTURE")
+                .attr("recipient", "120363000000000001@g.us"),
+        )
+        .await;
+        let (ack, reply) = fake.written().await;
+        assert_eq!(ack.description, "ack");
+        reply.send(Ok(())).unwrap();
+        fake.stop_cleanly().await;
+    }
+
     #[tokio::test]
     async fn delivery_confirmation_write_cut_then_redelivery_confirms_again() {
         let dir = tempfile::tempdir().unwrap();
@@ -2343,7 +2434,8 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn prekey_count_dispatch_bounds_uploads_and_keeps_malformed_capture() {
+    async fn prekey_count_dispatch_bounds_uploads_and_skips_malformed_counts_without_ending_receive()
+     {
         use super::super::prekeys::summary;
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("count-dispatch.redb");
@@ -2393,16 +2485,13 @@ mod tests {
                 ))
             })
             .unwrap();
+        // A malformed count is refused locally: captured, no ACK, no upload,
+        // and the session keeps receiving (it would otherwise be redelivered
+        // and end every later session too).
         let malformed = count_notification("malformed", "pq_count", "2147483648");
         let wire = encode(&malformed).unwrap();
         fake.deliver(malformed).await;
-        let error = fake.finished().await.unwrap_err();
-        assert!(
-            error
-                .to_string()
-                .contains("pq_count value is not a signed 32-bit Java decimal")
-        );
-        assert!(!error.is_recoverable_by_reconnect());
+        fake.nothing_written(Duration::from_millis(100)).await;
         let capture = format!(
             "inbound:sha256:{}",
             hex::encode(sha2::Sha256::digest(&wire))
@@ -2423,10 +2512,21 @@ mod tests {
                 .unwrap(),
             before
         );
+        // The session is still receiving: a later valid count is answered.
+        fake.deliver(count_notification("after", "count", "invalid"))
+            .await;
+        let (ack, write) = fake.written().await;
+        assert_eq!(ack.get_attr("id").and_then(|v| v.as_text()), Some("after"));
+        write.send(Ok(())).unwrap();
+        let (upload, write) = fake.written().await;
+        write.send(Ok(())).unwrap();
+        fake.deliver(result_for(&upload, false)).await;
+        fake.nothing_written(Duration::from_millis(100)).await;
         let head = store.journal_head().unwrap();
+        fake.stop_cleanly().await;
         drop(store);
         let store = identity_store(&path);
-        assert_eq!(summary(&store).unwrap().uploaded, 100);
+        assert_eq!(summary(&store).unwrap().uploaded, 150);
         assert!(
             store
                 .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
