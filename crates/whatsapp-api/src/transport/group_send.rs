@@ -100,12 +100,14 @@ pub(super) fn own_lid_in(tx: &WriteTx<'_>) -> Result<Option<Jid>> {
 }
 
 fn decode_own_lid(legacy: Option<Vec<u8>>, login: Option<Vec<u8>>) -> Result<Option<Jid>> {
+    // Fixed reasons only: `serve --store-routes` passes them to clients (422).
+    let refuse = |reason: &'static str| invalid(reason);
     // APK 37.71 08i.BO0 compares stored self PN/LID, never a peer-directory
     // alias. connection::login writes this identity only after authenticated success.
     // The older group checkpoint may be absent before any group preparation.
     let normalize = |jid: Jid, reason: &'static str| -> Result<Jid> {
         if jid.server != Server::Lid || jid.user.is_empty() || jid.agent != 0 {
-            return Err(invalid(reason));
+            return Err(refuse(reason));
         }
         Ok(jid.to_non_ad())
     };
@@ -113,7 +115,7 @@ fn decode_own_lid(legacy: Option<Vec<u8>>, login: Option<Vec<u8>>) -> Result<Opt
         .map(|bytes| {
             normalize(
                 serde_json::from_slice(&bytes)
-                    .map_err(|_| invalid("invalid saved own-lid authority"))?,
+                    .map_err(|_| refuse("invalid saved own-lid authority"))?,
                 "invalid saved own-lid authority",
             )
         })
@@ -121,19 +123,19 @@ fn decode_own_lid(legacy: Option<Vec<u8>>, login: Option<Vec<u8>>) -> Result<Opt
     let login = login
         .map(|bytes| -> Result<Option<Jid>> {
             let value: serde_json::Value = serde_json::from_slice(&bytes)
-                .map_err(|_| invalid("invalid saved login-identity authority"))?;
+                .map_err(|_| refuse("invalid saved login-identity authority"))?;
             if !value.is_object() {
-                return Err(invalid("invalid saved login-identity authority"));
+                return Err(refuse("invalid saved login-identity authority"));
             }
             match value.get("lid") {
                 None | Some(serde_json::Value::Null) => Ok(None),
                 Some(serde_json::Value::String(text)) => normalize(
                     Jid::parse(text)
-                        .map_err(|_| invalid("invalid saved login-identity.lid authority"))?,
+                        .map_err(|_| refuse("invalid saved login-identity.lid authority"))?,
                     "invalid saved login-identity.lid authority",
                 )
                 .map(Some),
-                Some(_) => Err(invalid("invalid saved login-identity.lid authority")),
+                Some(_) => Err(refuse("invalid saved login-identity.lid authority")),
             }
         })
         .transpose()?
@@ -143,7 +145,7 @@ fn decode_own_lid(legacy: Option<Vec<u8>>, login: Option<Vec<u8>>) -> Result<Opt
     {
         // Local consistency guard, not a WhatsApp server prerequisite or a
         // reason to repair/overwrite immutable account history automatically.
-        return Err(invalid("saved own-lid and login-identity.lid disagree"));
+        return Err(refuse("saved own-lid and login-identity.lid disagree"));
     }
     Ok(login.or(legacy))
 }

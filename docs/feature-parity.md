@@ -12,11 +12,12 @@ tested locally only; **partial** = some paths implemented; **modeled** = types
 exist but nothing sends/applies it; **absent** = not implemented;
 **parked** = deferred by the owner.
 
-**Exposure.** CLI = `whatsapp-cli` command (see [cli.md](cli.md)). HTTP: only
-the service/profile endpoints, `connect` and `registration begin` are served by
-`whatsapp-cli serve`; every other operation in [openapi.json](api/openapi.json)
-is `x-transport: cli` today. Library = public `whatsapp_api` items listed in each
-operation's `x-library`.
+**Exposure.** CLI = `whatsapp-cli` command (see [cli.md](cli.md)). HTTP: by
+default `whatsapp-cli serve` serves only the service/profile endpoints, `connect`
+and `registration begin`; with `--store-routes` it also serves eleven read-only
+store inspections ([HTTP API parity](#http-api-parity)). Every other operation in
+[openapi.json](api/openapi.json) is `x-transport: cli`. Library = public
+`whatsapp_api` items listed in each operation's `x-library`.
 
 ## Account, registration and session
 

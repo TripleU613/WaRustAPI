@@ -1,3 +1,12 @@
+2026-10-13 — **Corrected/offline (review of the new store routes):** no
+security finding. Three protocol docs and the feature-parity exposure note still
+said these inspections were not served over HTTP; corrected. The key-query
+schema lacked the `unsupported_bundle` reason the library already returns.
+A damaged saved group send now answers 422 with its fixed reason, like key
+queries and own LID, and the own-LID refusal reasons are now fixed by type.
+Tests now cover the 128-byte boundary, 405, the disabled 404, 400-before-401,
+non-null answers and the OpenAPI parameter names. [Store routes](../api/README.md#store-routes-opt-in).
+
 2026-10-13 — **Corrected/offline (review of the receive-audit fixes):** the
 first version caught every refusal from recording a receipt or token
 notification, which would also have hidden faults in our own stored rows (a

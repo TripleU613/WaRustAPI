@@ -104,9 +104,13 @@ library's ID rule (ASCII alphanumerics and `-_.:`, at most 128 bytes) and is
 not percent-decoded; a missing, renamed, repeated, empty, encoded or extra
 parameter is 400 before the store opens. Nothing saved under the ID answers
 200 `null`, as the CLI prints. A key-query record the summary cannot count (a
-legacy outcome without a frozen plan, or a damaged row), and own-LID sources
-that disagree or are malformed, answer 422 `saved_state_unsupported` with the
-library's fixed reason (never an address); other read failures stay 500.
+legacy outcome without a frozen plan, or a damaged row), a damaged saved group
+send, and own-LID sources that disagree or are malformed, answer 422
+`saved_state_unsupported` with the library's fixed reason (never an address).
+Those three libraries refuse only with `&'static str` reasons, enforced by their
+helpers' signatures; any other read failure stays a generic 500. The CLI
+parameters these operations also list (store, account, key environment,
+profile) are refused over HTTP as extra query parameters.
 
 All store routes are declared with `x-transport: ["cli", "http"]` and the
 `storeBearer` security scheme.
@@ -134,7 +138,9 @@ the store's ownership lock briefly, so a command starting during a request
 (for example `listen` or one phase of `outbox-send`) can fail to open the store
 and must be rerun; nothing is sent in that case. Use `127.0.0.1` rather than
 `localhost`, so a client does not try another address a different local user
-could listen on. Outputs are the CLI's: `peer_ticket` is an unsalted SHA-256
+could listen on. A 500 logs the full error to the serve process's own log, which
+for a damaged row can quote a stored value; the response never does. Outputs are
+the CLI's: `peer_ticket` is an unsalted SHA-256
 of the address, so a phone number can be recovered by guessing; refused
 actions include the server's error text. Treat responses as account data.
 Before adding a route, confirm its output is no more revealing than these;

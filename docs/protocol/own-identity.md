@@ -84,8 +84,10 @@ whatsapp-cli --profile l --json group own-lid
 The output is `{"lid_known":true}` when valid saved own-LID authority exists,
 or false when sources are absent/null. It prints no JID, phone, key or token,
 and refuses corrupt/conflicting source state without echo or modification.
-No action, query, receipt or message is queued. The OpenAPI path is a CLI/library
-contract only, with no served HTTP route and x-live=false.
+No action, query, receipt or message is queued. The OpenAPI path is x-live=false;
+since 2026-10-13 it is also served read-only by `serve --store-routes`
+([store routes](../api/README.md#store-routes-opt-in)), where a refusal of the
+saved sources answers 422 with the same fixed reason and no LID.
 
 Offline fixtures cover authenticated login before any group preparation,
 read/write lookup agreement, retained checkpoint fallback, normalized companion

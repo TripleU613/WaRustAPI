@@ -591,9 +591,11 @@ fn versions_id(path: &str) -> Option<&str> {
 const SAVED_STATE_REFUSED: &str = "store_routes.saved_state";
 
 /// Mark a refusal as [`SAVED_STATE_REFUSED`]. Callers: `device_key_batches`
-/// (a legacy key outcome without a frozen plan, or a damaged row) and the own
-/// LID lookup (its sources disagree or are malformed); both modules refuse
-/// with fixed strings and no address. Storage errors pass through unchanged.
+/// (a legacy key outcome without a frozen plan, or a damaged row),
+/// `group_receipts` (a damaged saved send, target list or facts) and the own
+/// LID lookup (its sources disagree or are malformed). All three refuse only
+/// with `&'static str` reasons, enforced by their helpers' signatures, and no
+/// address. Storage errors pass through unchanged.
 #[cfg(feature = "experimental-transport")]
 fn saved_state(error: Error) -> Error {
     match error {
@@ -620,10 +622,10 @@ fn read_store(
         Inspection::Versions(id) => return versions(&store, id),
         Inspection::WithId(path, id) => {
             let value = match path {
-                "/v1/groups/receipts" => serde_json::to_value(group_receipts::summary(
-                    &store,
-                    &ClientRequestId::new(id)?,
-                )?),
+                "/v1/groups/receipts" => serde_json::to_value(
+                    group_receipts::summary(&store, &ClientRequestId::new(id)?)
+                        .map_err(saved_state)?,
+                ),
                 "/v1/groups/key-queries" => serde_json::to_value(
                     device_key_batches::summary(&store, &ClientRequestId::new(id)?)
                         .map_err(saved_state)?,
@@ -1161,6 +1163,14 @@ mod tests {
             .unwrap();
         assert_eq!(response.status, 404);
         assert_eq!(body(&response)["error"]["code"], "store_routes_disabled");
+        let query = store_route(
+            &request("GET", "/v1/groups/receipts?request_id=a", None),
+            &state,
+        )
+        .await
+        .unwrap();
+        assert_eq!(query.status, 404);
+        assert_eq!(body(&query)["error"]["code"], "store_routes_disabled");
         assert!(
             store_route(&request("GET", "/v1/profile", None), &state)
                 .await
@@ -1335,6 +1345,39 @@ mod tests {
             assert_eq!(refused.status, 400, "{path}");
             assert_eq!(body(&refused)["error"]["code"], "invalid_input", "{path}");
         }
+        // The library ID rule's 128-byte bound is the boundary.
+        let longest = format!("/v1/groups/receipts?request_id={}", "a".repeat(128));
+        let longest = store_route(&request("GET", &longest, auth), &state)
+            .await
+            .unwrap();
+        assert_eq!((longest.status, body(&longest)), (200, Value::Null));
+        let too_long = format!("/v1/groups/receipts?request_id={}", "a".repeat(129));
+        let too_long = store_route(&request("GET", &too_long, auth), &state)
+            .await
+            .unwrap();
+        assert_eq!(too_long.status, 400);
+        // A query on the path-parameter route is refused even with a valid ID.
+        let versions_query = store_route(
+            &request("GET", &format!("/v1/outbox/{known}/versions?x=1"), auth),
+            &state,
+        )
+        .await
+        .unwrap();
+        assert_eq!(versions_query.status, 400);
+        let post = store_route(
+            &request("POST", "/v1/groups/receipts?request_id=a", auth),
+            &state,
+        )
+        .await
+        .unwrap();
+        assert_eq!(post.status, 405);
+        // Order: a malformed request is 400 before authentication is checked;
+        // a well-formed one without the token is 401.
+        let malformed_unauthenticated =
+            store_route(&request("GET", "/v1/groups/receipts?id=a", None), &state)
+                .await
+                .unwrap();
+        assert_eq!(malformed_unauthenticated.status, 400);
         let unauthenticated = store_route(
             &request("GET", "/v1/groups/receipts?request_id=a", None),
             &state,
@@ -1364,6 +1407,24 @@ mod tests {
                         1,
                         &json!({"status": "answered"}),
                     )?;
+                    // A saved group send: counts only, never the group.
+                    tx.put_json(
+                        whatsapp_api::store::Table::Checkpoints,
+                        b"message:group-send:send",
+                        1,
+                        &json!({
+                            "chat": "120363000000000009@g.us",
+                            "wire_id": "3EB0FIXTURE",
+                            "status": "server_acknowledged",
+                        }),
+                    )?;
+                    // A damaged one: no saved wire ID.
+                    tx.put_json(
+                        whatsapp_api::store::Table::Checkpoints,
+                        b"message:damaged-send:send",
+                        1,
+                        &json!({"chat": "120363000000000009@g.us"}),
+                    )?;
                     // Own-LID sources that disagree.
                     tx.put_json(
                         whatsapp_api::store::Table::Checkpoints,
@@ -1390,6 +1451,26 @@ mod tests {
         );
         let text = String::from_utf8_lossy(&conflict.body);
         assert!(!text.contains("111111") && !text.contains("222222"));
+        {
+            let store = ProtocolStore::open(state.store.as_ref().unwrap().options()).unwrap();
+            store
+                .write(|tx| {
+                    tx.put_json(
+                        whatsapp_api::store::Table::Checkpoints,
+                        b"login-identity",
+                        1,
+                        &json!({"lid": "111111@lid"}),
+                    )
+                })
+                .unwrap();
+        }
+        let agreed = store_route(&request("GET", "/v1/diagnostics/own-lid", auth), &state)
+            .await
+            .unwrap();
+        assert_eq!(
+            (agreed.status, body(&agreed)),
+            (200, json!({"lid_known": true}))
+        );
         let refresh = store_route(
             &request("GET", "/v1/groups/refresh-status?id=ACTION-1", auth),
             &state,
@@ -1413,6 +1494,31 @@ mod tests {
         .unwrap();
         assert_eq!(legacy.status, 422);
         assert_eq!(body(&legacy)["error"]["code"], "saved_state_unsupported");
+        assert_eq!(
+            body(&legacy)["error"]["message"],
+            "legacy key outcome has no frozen plan; counts unknown, original preserved"
+        );
+        let sent = store_route(
+            &request("GET", "/v1/groups/receipts?request_id=group-send", auth),
+            &state,
+        )
+        .await
+        .unwrap();
+        assert_eq!(sent.status, 200);
+        assert_eq!(body(&sent)["send_status"], "server_acknowledged");
+        assert_eq!(body(&sent)["receipt_devices"], 0);
+        assert!(!String::from_utf8_lossy(&sent.body).contains("120363"));
+        let damaged = store_route(
+            &request("GET", "/v1/groups/receipts?request_id=damaged-send", auth),
+            &state,
+        )
+        .await
+        .unwrap();
+        assert_eq!(damaged.status, 422);
+        assert_eq!(
+            body(&damaged)["error"]["message"],
+            "missing saved group receipt wire id"
+        );
         // While another handle holds the store (as `listen` would), the route
         // answers 503 with a fixed message instead of waiting or leaking paths.
         let held = ProtocolStore::open(state.store.as_ref().unwrap().options()).unwrap();
@@ -1580,6 +1686,19 @@ mod tests {
                 found,
                 "route {method} {path} not declared with x-transport [\"http\"]"
             );
+        }
+
+        // Each parameterized route takes exactly the required query parameter
+        // OpenAPI names for it.
+        for (path, name) in QUERY_ROUTES {
+            let required: Vec<&str> = doc["paths"][path]["get"]["parameters"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .filter(|p| p["in"] == "query" && p["required"] == true)
+                .filter_map(|p| p["name"].as_str())
+                .collect();
+            assert_eq!(required, vec![name], "{path}");
         }
 
         for (method, path) in &declared_http_paths {

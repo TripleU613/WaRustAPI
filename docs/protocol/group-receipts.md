@@ -138,8 +138,10 @@ comparison reservation and prints only `send_status`, nullable `addressed_device
 A missing/non-group reservation returns JSON `null`, not a server refusal.
 No addresses, wire IDs, contents or ciphertext are printed. Inspection does not
 queue work, connect, resend or change reservations. Normal outbox facts remain
-inspectable through the existing `status --local-id` command. The API description
-is a CLI/library contract; `/v1/groups/receipts` is **not served over HTTP**.
+inspectable through the existing `status --local-id` command. Since 2026-10-13
+`GET /v1/groups/receipts?request_id=` is also served read-only by
+`serve --store-routes` ([store routes](../api/README.md#store-routes-opt-in)),
+with the same counts-only JSON.
 
 ## Validation and remaining live boundary
 
