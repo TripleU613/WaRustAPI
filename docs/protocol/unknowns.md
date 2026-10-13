@@ -240,6 +240,20 @@ runnable does not invent the value; it reads it from the message:
   (receivers mark `edit == 1` as an edit; `D9B.CF4` sets the received
   replacement's `CoT.A00 = 1`), for pin-in-chat (receivers take the pin path
   for 2), and for unschedule.
+- **Revoke stanza ID (unknown, 2026-10-13):** the retained revoke key writer
+  `D9M.A00` ([revoke-key-writer](apk/2.26.37.71-sender-revoke/revoke-key-writer.txt))
+  fills the protobuf key's `id` from `1ii.A01` (the target ID) and, when that
+  is null, from the revoke message's *own* key ID (`0078..0084`); remoteJid
+  goes through `CSZ.A00` (`0026..003c`) and `fromMe` comes from the key
+  (`008c..0090`), forced false for a `Bpt` with a participant (`0062..0064`).
+  Both retained `Bpt` constructions are receive-side (`Bua.CF4`, an orphan
+  writer), so the send-side caller that picks the revoke's own key is not
+  retained: whether a native revoke goes out under a new stanza ID or the
+  original message's ID is **unknown**. The `CSP` dedupe key carrying
+  `editVersion` would be needed only if the same ID can be scheduled twice,
+  which fits reuse but does not prove it. A revoke sender therefore needs
+  three facts: this ID choice, the `edit` attribute (inferred 7) and the
+  sender's time window.
 - **Divergence, recorded, not changed:** this client's group `keep --undo`
   sends no `edit` attribute, where the native sender very probably sends
   `edit="7"` for one's own message. Peers do not check it on UNDO (above), so
