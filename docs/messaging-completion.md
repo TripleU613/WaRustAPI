@@ -1,3 +1,13 @@
+2026-10-13 — **Corrected/offline (review of the receive hardening):** the
+first undecodable-frame change kept receiving after any undecodable frame, so an
+undecodable `stream:error` or `failure` would have been followed by
+reconnects, retrying a session the server had ended. The reader now reads such
+a frame's name leniently: a terminal stanza stops without reconnecting, and so
+does a server close right after a stanza whose name is unreadable. The lab
+group-send window no longer answers a retry receipt whose content was refused.
+The memory-amplification note is corrected and recorded open (a burst of
+crafted server frames could exhaust memory). [Audit](protocol/replay-safety-audit.md#network-input-panic-audit-2026-10-13).
+
 2026-10-13 — **Fixed/offline (registration safety audit, first two):** a
 read-only audit of the onboarding HTTPS path found that `lab-signup status
 --json` printed the consent context's intermediate login and parent consent URL
@@ -9,8 +19,9 @@ are listed and being verified. Nothing was sent. [Audit](protocol/registration-s
 
 2026-10-13 — **Implemented/offline (lab windows):** `lab-transport` receive,
 post-send and group-send windows now capture a frame that does not decode and
-keep reading, like `listen`, instead of ending the window. Login and handshake
-replies must still decode. [Audit](protocol/replay-safety-audit.md#network-input-panic-audit-2026-10-13).
+keep reading, like `listen`, instead of ending the window. Login, handshake and
+the bounded reply waits (send ACKs, iq and key replies) still need a decodable
+frame. [Audit](protocol/replay-safety-audit.md#network-input-panic-audit-2026-10-13).
 
 2026-10-13 — **Implemented/offline (inspection):** `whatsapp-cli undecodable`
 (also `GET /v1/inbox/undecodable` under `serve --store-routes`) lists the frames

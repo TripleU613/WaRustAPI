@@ -573,16 +573,16 @@ async fn answer_retries(
             eprintln!("group-send: could not preserve a post-send frame ({error}); window ended");
             break;
         }
-        // Refused receipt content is the frame's own: preserved, not
-        // correlated, and the window still watches for retries. A failure
-        // recording valid content concerns stored rows and ends the window.
+        // Refused receipt content is the frame's own: preserved, neither
+        // correlated nor answered as a retry, and the window goes on. A
+        // failure recording valid content concerns stored rows and ends it.
         let correlated = match whatsapp_api::transport::receipts::validate(&node) {
             Ok(()) => whatsapp_api::transport::receipts::record(store, &node),
             Err(Error::InvalidInput { field, reason }) => {
                 eprintln!(
-                    "group-send: receipt content refused ({field}: {reason}); frame preserved, not correlated"
+                    "group-send: receipt content refused ({field}: {reason}); frame preserved, not correlated or answered"
                 );
-                Ok(0)
+                continue;
             }
             Err(error) => Err(error),
         };

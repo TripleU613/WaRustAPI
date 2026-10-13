@@ -188,6 +188,16 @@ classed `Duplicate`, at every login. Check that in the next live receive window
 treating these encodings as verified. Found by the
 [live-shape regression sweep](replay-safety-audit.md#live-shape-regression-sweep-2026-10-13).
 
+## Where the APK handles an undecodable stanza (2026-10-13)
+
+When a decrypted frame does not decode, `listen` now captures it as
+`inbound-undecodable`, keeps receiving, and stops only for a terminal stanza
+whose name it can read (or a close right after an unreadable one). That is
+**local policy**. Which frame catches the native reader's decode exception, and
+whether the native connection survives it, is **not traced**: the retained
+`124.A01`/`124.A02` evidence covers the readers, not their callers' exception
+handling. [Audit](replay-safety-audit.md#network-input-panic-audit-2026-10-13).
+
 ## Comparison token dictionary: double-byte page 0 index 1
 
 **Resolved 2026-10-07, test completed 2026-10-13.** The checked 37.71

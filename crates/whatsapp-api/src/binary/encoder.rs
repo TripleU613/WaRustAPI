@@ -548,7 +548,16 @@ mod tests {
             attribute.extend(string(b"iq"));
             attribute.extend(string(b"from"));
             attribute.extend_from_slice(&nested);
-            for bytes in [description, attribute] {
+            // As an attribute key (a JID there is refused as a key, after
+            // its parts are read through the guarded string reader).
+            let mut key = vec![tags::LIST_8, 3];
+            key.extend(string(b"iq"));
+            key.extend_from_slice(&nested);
+            // As content.
+            let mut content = vec![tags::LIST_8, 2];
+            content.extend(string(b"iq"));
+            content.extend_from_slice(&nested);
+            for bytes in [description, attribute, key, content] {
                 assert!(matches!(
                     Decoder::new(&bytes, dict(), &limits).decode_node(),
                     Err(CodecError::InvalidNode {

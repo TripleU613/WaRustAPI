@@ -135,7 +135,9 @@ Prompted by the status-receipt regression above, a read-only sweep compared
 every stanza shape the docs record as **observed** live with what the current
 code does to it. Git history in this clone starts at `5c45218` (2026-10-11), so
 earlier changes are dated from the docs only. **No other live shape is now
-refused, misclassified, left unacknowledged or able to end receive.**
+refused, misclassified or able to end receive**, and none that was
+acknowledged before is now left unacknowledged; the never-acknowledged kinds
+listed below are unchanged, by policy.
 
 Fixed from the sweep:
 
@@ -176,7 +178,10 @@ undecryptable messages (one retry), `groups_dirty`, identity notifications,
 ### Network-input panic audit (2026-10-13)
 
 A read-only audit looked for panics, aborts and hangs reachable from bytes or
-stanzas received from the network. It used Clippy with `arithmetic_side_effects`,
+stanzas received from the network. Its measurements (nesting depths at which
+the stack overflowed, peak memory, the fuzz count) are **observed** in scratch
+runs outside the repository, not reproducible from it; the regression tests
+reproduce the overflow itself. It used Clippy with `arithmetic_side_effects`,
 `indexing_slicing`, `unwrap_used`, `expect_used`, `panic` and `unreachable`
 (about 700 library warnings, triaged by hand), manual recursion and loop scans,
 and a scratch fuzzer that ran about 3.6 million mutated frames through decode
@@ -205,18 +210,41 @@ Fixed:
   desynchronised the stream: records are length-delimited and authenticated.
   Continuing is **local policy**; where the APK catches a decode error is not
   traced. Test: `undecodable_frame_is_captured_and_receive_continues`.
+- **Lab windows** (`lab-transport` receive and post-send windows, the
+  group-send window) ended on a decode error too. They now read with
+  `messaging::read_frame`, capture such a frame the same way (no epoch) and
+  continue. Login, handshake and the bounded reply waits (`messaging::wait_for`,
+  used for send ACKs and iq/key replies) keep `read_node`: an undecodable frame
+  there still ends that flow uncaptured, which is replay-safe because the send
+  or query stays reserved or uncertain.
+- **Review correction (same day): a terminal stanza must still stop.** The
+  first version continued after any undecodable frame, so an undecodable
+  `stream:error` or `failure` (say, a newer dictionary token in its child) was
+  followed by the server's close, which is a recoverable `PeerClosed`, and the
+  actor logged in again up to `transport.reconnect` times, retrying what the
+  server had ended. The reader now peeks the description of an undecodable
+  frame (`Decoder::peek_description`); a `stream:error` or `failure` is captured
+  and ends the session without reconnecting, like a decodable one. If even the
+  description cannot be read, a server close that follows before any decoded
+  stanza is also treated as server-ended. Test:
+  `undecodable_terminal_stanzas_end_the_session_without_reconnect`.
+- **Group-send window and refused retries.** A retry receipt whose content
+  `receipts::validate` refused could still reach `parse_retry` and be answered
+  with a fresh session; it is now preserved and neither correlated nor answered.
 
 Recorded, not changed:
 
-- The lab windows (`lab-transport` receive and send windows, the group-send
-  window) ended on a decode error too. They now read with
-  `messaging::read_frame` and capture such a frame the same way (no epoch) and
-  continue. Login and handshake keep `read_node`: their reply must decode.
 - If the reader task itself ever panicked (none found), `drive` would see the
   channel close and end with "reader ended", which is not recoverable.
-- **Bounded memory amplification:** a 4.9 KB compressed frame can decode to
-  340 × 4,096 minimal nodes, within every limit. Decode plus re-encode measured
-  about 200 MB peak RSS. This does not abort on normal hosts.
+- **Memory amplification (open).** A 4.9 KB compressed frame can decode to
+  340 × 4,096 minimal nodes, within every limit; decode plus re-encode of one
+  such frame peaked at about 200 MB in the audit's scratch run. The reader task
+  decodes ahead of `drive` into a 64-slot channel while `drive` makes a durable
+  write per stanza, so a burst of about 65 such frames (some 320 KB on the wire)
+  could hold an estimated 11 GB of decoded nodes and abort on memory
+  exhaustion. Only the server can send them. A total-node bound per frame, or a
+  bound on decoded data waiting in the channel, would close it; neither is
+  APK-derived, so none is set yet.
 - `wacore-libsignal` 0.7.0: the parse entry points check lengths before
   indexing. The ratchet and record internals were not exhaustively audited.
 - `serde_json` index assignment on stored rows (`row["status"] = …`) panics

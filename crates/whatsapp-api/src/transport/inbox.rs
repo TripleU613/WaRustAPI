@@ -541,6 +541,18 @@ pub(crate) fn decode_frame(frame: &[u8]) -> std::result::Result<Node, crate::bin
     })
 }
 
+/// The description of a frame that did not decode, if even that can be read.
+pub(crate) fn peek_frame_description(frame: &[u8]) -> Option<String> {
+    let limits = crate::profile::Limits::default();
+    let raw = crate::binary::unpack_frame_payload(frame, &limits).ok()?;
+    crate::binary::Decoder::new(
+        &raw,
+        crate::binary::TokenDictionary::comparison_2_26_37_71(),
+        &limits,
+    )
+    .peek_description()
+}
+
 const UNDECODABLE_PREFIX: &str = "inbound-undecodable:";
 
 #[derive(serde::Deserialize)]
@@ -2472,10 +2484,20 @@ mod tests {
         refused.extend([crate::binary::tags::JID_PAIR; 8]);
         let class = decode_frame(&refused).unwrap_err().class();
         let first = preserve_undecodable(&store, &refused, class, epoch).unwrap();
+        let observed = undecodable_frames(&store).unwrap()[0].observed_at;
+        // A redelivery in a later epoch keeps the first observation.
         assert_eq!(
-            preserve_undecodable(&store, &refused, class, epoch).unwrap(),
+            preserve_undecodable(
+                &store,
+                &refused,
+                class,
+                Some(super::super::ConnectionEpoch(9))
+            )
+            .unwrap(),
             first
         );
+        let kept = &undecodable_frames(&store).unwrap()[0];
+        assert_eq!((kept.observed_at, kept.epoch), (observed, epoch));
         // A frame stored as undecodable that the current decoder reads: as
         // after a dictionary update.
         let encoded =

@@ -842,7 +842,6 @@ pub(super) fn reproject(cli: &super::Cli) -> Result<(), Error> {
     Ok(())
 }
 
-/// Offline list of receipts (read/played/retry) and their outcomes.
 /// Captured frames `listen` could not decode. Prints the capture digest, the
 /// error class then and now, and the frame size; never frame bytes.
 pub(super) fn undecodable_status(cli: &super::Cli) -> Result<(), Error> {
@@ -884,6 +883,7 @@ pub(super) fn undecodable_status(cli: &super::Cli) -> Result<(), Error> {
     Ok(())
 }
 
+/// Offline list of receipts (read/played/retry) and their outcomes.
 pub(super) fn receipts_status(cli: &super::Cli) -> Result<(), Error> {
     let store = ProtocolStore::open(OpenOptions {
         path: cli.store.clone(),

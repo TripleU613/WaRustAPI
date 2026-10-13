@@ -205,11 +205,13 @@ pub(crate) struct NodeLink {
 pub(crate) enum Inbound {
     Node(Node),
     /// A frame that decrypted, so the stream is intact, but whose payload did
-    /// not unpack or decode. It carries the decrypted frame for capture and a
-    /// fixed error class; there is no stanza ID to acknowledge.
+    /// not unpack or decode. It carries the decrypted frame for capture, a
+    /// fixed error class and, when readable, the stanza's description, so a
+    /// terminal stanza still ends the session; there is no ID to acknowledge.
     Undecodable {
         frame: Vec<u8>,
         class: &'static str,
+        description: Option<String>,
     },
 }
 
@@ -220,6 +222,7 @@ fn inbound_from_frame(frame: &[u8]) -> Inbound {
         Err(error) => Inbound::Undecodable {
             frame: frame.to_vec(),
             class: error.class(),
+            description: super::inbox::peek_frame_description(frame),
         },
     }
 }
@@ -390,6 +393,10 @@ pub(crate) async fn drive(
     let mut device_cursor = super::devices::DeviceSyncCursor::default();
     let mut device_context = super::devices::SyncContext::Interactive;
     let mut outbox_tick = tokio::time::interval(Duration::from_secs(1));
+    // Set by a frame whose stanza name could not be read; cleared by the next
+    // decoded stanza. A server close right after such a frame may be the end
+    // of a session we could not read, so it is not treated as recoverable.
+    let mut unreadable_stanza = false;
     outbox_tick.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Delay);
     loop {
         if *stop.borrow() {
@@ -466,15 +473,33 @@ pub(crate) async fn drive(
                 link.send(&ping).await?; pending_ping = Some(id);
             }
             incoming = link.incoming.recv() => {
-                let node = match incoming.ok_or_else(|| Error::invalid("connection", "reader ended"))?? {
-                    Inbound::Node(node) => node,
+                let inbound = match incoming.ok_or_else(|| Error::invalid("connection", "reader ended"))? {
+                    Err(Error::Transport(super::TransportError::PeerClosed)) if unreadable_stanza => {
+                        return Err(Error::invalid("connection", "server closed the connection after a stanza this client could not read; captured; no reconnect (whatsapp-cli undecodable)"));
+                    }
+                    other => other?,
+                };
+                let node = match inbound {
+                    Inbound::Node(node) => {
+                        unreadable_stanza = false;
+                        node
+                    }
                     // A redelivered frame this decoder refuses (a newer token,
                     // say) used to end receive at every login, uncaptured.
                     // Kept for inspection and later re-decoding; nothing to ACK.
                     // Continuing is local policy: where the APK catches a
                     // decode error is not traced.
-                    Inbound::Undecodable { frame, class } => {
+                    Inbound::Undecodable { frame, class, description } => {
                         super::inbox::preserve_undecodable(&store, &frame, class, Some(epoch))?;
+                        match description.as_deref() {
+                            // The server ended the session, as with a decodable
+                            // one below: never reconnect into a refusal.
+                            Some("failure" | "stream:error") => {
+                                return Err(Error::invalid("connection", "server ended session with a stanza this client could not decode; captured; no reconnect"));
+                            }
+                            Some(_) => {}
+                            None => unreadable_stanza = true,
+                        }
                         tracing::warn!(class, "inbound frame did not decode; captured without ACK; session continues");
                         continue;
                     }
@@ -2022,6 +2047,53 @@ mod tests {
         assert_eq!(ack.description, "ack");
         reply.send(Ok(())).unwrap();
         fake.stop_cleanly().await;
+    }
+
+    /// An undecodable `stream:error` or `failure` still ends the session
+    /// without reconnecting, as a decodable one does; so does a server close
+    /// right after a stanza whose name could not be read. A close after a
+    /// decoded stanza stays an ordinary recoverable loss.
+    #[tokio::test]
+    async fn undecodable_terminal_stanzas_end_the_session_without_reconnect() {
+        use crate::binary::tags::{BINARY_8, JID_PAIR, LIST_8};
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("undecodable-terminal.redb"));
+        // `<stream:error>` whose only child has an undecodable description.
+        let mut stream_error = vec![0x00, LIST_8, 2, BINARY_8, 12];
+        stream_error.extend_from_slice(b"stream:error");
+        stream_error.extend([LIST_8, 1, LIST_8, 1, JID_PAIR, JID_PAIR]);
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        fake.deliver_frame(&stream_error).await;
+        let error = fake.finished().await.unwrap_err();
+        assert!(!error.is_recoverable_by_reconnect());
+        assert!(error.to_string().contains("could not decode"), "{error}");
+        assert_eq!(
+            super::super::inbox::undecodable_frames(&store)
+                .unwrap()
+                .len(),
+            1
+        );
+
+        // A stanza whose name itself is unreadable, then the server closes.
+        let mut unreadable = vec![0x00, LIST_8, 1];
+        unreadable.extend([JID_PAIR; 4]);
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        fake.deliver_frame(&unreadable).await;
+        fake.cut(Error::Transport(TransportError::PeerClosed)).await;
+        let error = fake.finished().await.unwrap_err();
+        assert!(!error.is_recoverable_by_reconnect(), "{error}");
+
+        // The same, but a decoded stanza arrives in between: an ordinary loss.
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        fake.deliver_frame(&unreadable).await;
+        fake.deliver(Node::new("ib").attr("from", Jid::parse("s.whatsapp.net").unwrap()))
+            .await;
+        fake.cut(Error::Transport(TransportError::PeerClosed)).await;
+        let error = fake.finished().await.unwrap_err();
+        assert!(error.is_recoverable_by_reconnect(), "{error}");
     }
 
     #[tokio::test]

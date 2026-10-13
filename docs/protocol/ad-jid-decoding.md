@@ -83,8 +83,12 @@ process abort and not a recoverable error, at 400–700 nested bytes in debug an
 2,000–5,000 in release on a 2 MiB thread. A compressed frame of about 4 KB
 (4 MB inflated, inside every limit) aborted both builds, before the frame was
 captured. The reader now refuses the four JID tags (247 AD_JID, 246 FB_JID,
-245 INTEROP_JID, 250 JID_PAIR) before reading them. The outcome is the same
-"expected string" error as before, now without recursion. Test:
+245 INTEROP_JID, 250 JID_PAIR) before reading them, with "expected string"
+(class `invalid_node`). No input that decoded before is rejected: a JID in a
+string position was always refused. For a malformed nested JID the reported
+class can differ (for example `unexpected_eof` or `invalid_jid` before,
+`invalid_node` now). The measured depths are observed in a scratch run, not
+retained. Test:
 `nested_jid_tags_are_refused_without_recursion`.
 
 **Evidence boundary.** The retained 124.A02 above reads the AD user part with

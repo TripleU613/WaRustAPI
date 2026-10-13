@@ -152,6 +152,17 @@ impl<'a> Decoder<'a> {
         Ok(out)
     }
 
+    /// The leading node's description, without validating the rest. Used to
+    /// recognise a terminal stanza (`stream:error`, `failure`) whose body does
+    /// not decode. `None` when even the description cannot be read.
+    pub fn peek_description(mut self) -> Option<String> {
+        let tag = self.byte().ok()?;
+        if self.list_size(tag).ok()? == 0 {
+            return None;
+        }
+        self.read_string_value().ok().flatten()
+    }
+
     fn read_string_value(&mut self) -> Result<Option<String>, CodecError> {
         let offset = self.pos;
         // A string position never holds a JID; a JID found here was always
