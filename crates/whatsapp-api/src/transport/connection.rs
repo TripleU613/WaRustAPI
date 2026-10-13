@@ -474,7 +474,7 @@ pub(crate) async fn drive(
                     // Continuing is local policy: where the APK catches a
                     // decode error is not traced.
                     Inbound::Undecodable { frame, class } => {
-                        super::inbox::preserve_undecodable(&store, &frame, class, epoch)?;
+                        super::inbox::preserve_undecodable(&store, &frame, class, Some(epoch))?;
                         tracing::warn!(class, "inbound frame did not decode; captured without ACK; session continues");
                         continue;
                     }

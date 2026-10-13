@@ -872,7 +872,9 @@ pub(super) fn undecodable_status(cli: &super::Cli) -> Result<(), Error> {
             frame.class,
             frame.current_class.as_deref().unwrap_or("decodes"),
             frame.bytes,
-            frame.epoch.0
+            frame
+                .epoch
+                .map_or_else(|| "lab".to_owned(), |epoch| epoch.0.to_string())
         );
     }
     println!(

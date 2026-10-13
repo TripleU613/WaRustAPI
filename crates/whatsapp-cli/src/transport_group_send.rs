@@ -19,6 +19,7 @@ use whatsapp_api::{
         groups::{self, StanzaContent},
         handshake::EncryptedConnection,
         inbox,
+        messaging::FrameRead,
         messaging::{key_request_many, new_message_id, wait_for, write_node},
     },
 };
@@ -515,7 +516,7 @@ async fn answer_retries(
             None => {
                 let next = tokio::time::timeout_at(
                     deadline,
-                    whatsapp_api::transport::messaging::read_node(channel),
+                    whatsapp_api::transport::messaging::read_frame(channel),
                 )
                 .await;
                 match next {
@@ -533,7 +534,23 @@ async fn answer_retries(
                         eprintln!("group-send: post-send window ended: {error}");
                         break;
                     }
-                    Ok(Ok(node)) => node,
+                    Ok(Ok(FrameRead::Undecodable { frame, class })) => {
+                        match inbox::preserve_undecodable(store, &frame, class, None) {
+                            Ok(key) => {
+                                eprintln!(
+                                    "group-send: a frame did not decode ({class}); captured as {key}"
+                                );
+                                continue;
+                            }
+                            Err(error) => {
+                                eprintln!(
+                                    "group-send: could not preserve an undecodable frame ({error}); window ended"
+                                );
+                                break;
+                            }
+                        }
+                    }
+                    Ok(Ok(FrameRead::Node(node))) => node,
                 }
             }
         };

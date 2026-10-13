@@ -11,6 +11,7 @@ use whatsapp_api::{
         ConnectionEpoch,
         comparison::{ComparisonEndpoint, ComparisonGateway},
         handshake::{COMPARISON_CHAIN_POLICY, EncryptedConnection, VerifiedHandshake},
+        messaging::FrameRead,
         noise::StaticKeypair,
         socket::{SocketLimits, connect_comparison},
     },
@@ -45,7 +46,7 @@ async fn after_send_window(
     for index in 0..64 {
         let next = tokio::time::timeout_at(
             deadline,
-            whatsapp_api::transport::messaging::read_node(channel),
+            whatsapp_api::transport::messaging::read_frame(channel),
         )
         .await;
         let node = match next {
@@ -62,7 +63,14 @@ async fn after_send_window(
                 eprintln!("transport: post-send window ended: {error}");
                 break;
             }
-            Ok(Ok(node)) => node,
+            Ok(Ok(FrameRead::Undecodable { frame, class })) => {
+                let key = whatsapp_api::transport::inbox::preserve_undecodable(
+                    store, &frame, class, None,
+                )?;
+                eprintln!("transport: a frame did not decode ({class}); captured as {key}");
+                continue;
+            }
+            Ok(Ok(FrameRead::Node(node))) => node,
         };
         let bytes = Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(&node)?;
         store.write(|tx| {
@@ -492,7 +500,7 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
             for index in 0..64 {
                 let next = tokio::time::timeout_at(
                     deadline,
-                    whatsapp_api::transport::messaging::read_node(&mut channel),
+                    whatsapp_api::transport::messaging::read_frame(&mut channel),
                 )
                 .await;
                 let node = match next {
@@ -504,7 +512,16 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
                         eprintln!("transport: receive ended: {error}");
                         break;
                     }
-                    Ok(Ok(node)) => node,
+                    Ok(Ok(FrameRead::Undecodable { frame, class })) => {
+                        let key = whatsapp_api::transport::inbox::preserve_undecodable(
+                            &store, &frame, class, None,
+                        )?;
+                        eprintln!(
+                            "transport: a frame did not decode ({class}); captured as {key}; receive continues"
+                        );
+                        continue;
+                    }
+                    Ok(Ok(FrameRead::Node(node))) => node,
                 };
                 let bytes =
                     whatsapp_api::binary::Encoder::new(TokenDictionary::comparison_2_26_37_71())

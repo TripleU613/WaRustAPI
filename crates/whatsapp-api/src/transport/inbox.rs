@@ -547,7 +547,7 @@ const UNDECODABLE_PREFIX: &str = "inbound-undecodable:";
 struct StoredUndecodable {
     frame: Vec<u8>,
     class: String,
-    epoch: super::ConnectionEpoch,
+    epoch: Option<super::ConnectionEpoch>,
     observed_at: crate::model::time::Timestamp,
 }
 
@@ -564,8 +564,8 @@ pub struct UndecodableFrame {
     pub bytes: usize,
     /// First local observation.
     pub observed_at: crate::model::time::Timestamp,
-    /// Actor-local connection epoch that captured it.
-    pub epoch: super::ConnectionEpoch,
+    /// Actor-local connection epoch that captured it; `None` for a lab window.
+    pub epoch: Option<super::ConnectionEpoch>,
     /// The class the current decoder reports, or `None` when it now decodes
     /// (for example after a dictionary update). Nothing is reprocessed: an
     /// unacknowledged stanza is redelivered by the server.
@@ -615,12 +615,13 @@ pub fn undecodable_frames(store: &ProtocolStore) -> Result<Vec<UndecodableFrame>
 /// Capture a decrypted frame whose payload did not unpack or decode, so it can
 /// be inspected (`store inspect` lists the `inbound-undecodable` kind) and
 /// re-decoded by a later decoder. Encrypted at rest like every capture; keyed
-/// by digest, so a redelivery is stored once. Returns the capture key.
-pub(crate) fn preserve_undecodable(
+/// by digest, so a redelivery is stored once. Returns the capture key. `epoch`
+/// is the runtime actor's connection epoch, `None` from a lab window.
+pub fn preserve_undecodable(
     store: &ProtocolStore,
     frame: &[u8],
     class: &'static str,
-    epoch: super::ConnectionEpoch,
+    epoch: Option<super::ConnectionEpoch>,
 ) -> Result<String> {
     use sha2::{Digest, Sha256};
     let key = format!(
@@ -2465,7 +2466,7 @@ mod tests {
             create: true,
         })
         .unwrap();
-        let epoch = super::super::ConnectionEpoch(4);
+        let epoch = Some(super::super::ConnectionEpoch(4));
         // Still undecodable: a description that is a nested JID tag.
         let mut refused = vec![0x00, crate::binary::tags::LIST_8, 1];
         refused.extend([crate::binary::tags::JID_PAIR; 8]);
@@ -2481,13 +2482,15 @@ mod tests {
             crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
                 .encode(&Node::new("ping"))
                 .unwrap();
-        preserve_undecodable(&store, &encoded, "unknown_token", epoch).unwrap();
+        // From a lab window: no actor epoch.
+        preserve_undecodable(&store, &encoded, "unknown_token", None).unwrap();
         let mut frames = undecodable_frames(&store).unwrap();
         frames.sort_by_key(|f| f.bytes);
         assert_eq!(frames.len(), 2);
         let decodable = frames.iter().find(|f| f.class == "unknown_token").unwrap();
         assert_eq!(decodable.current_class, None);
         assert_eq!(decodable.bytes, encoded.len());
+        assert_eq!(decodable.epoch, None);
         let still = frames.iter().find(|f| f.capture == first).unwrap();
         assert_eq!(still.class, "invalid_node");
         assert_eq!(still.current_class.as_deref(), Some("invalid_node"));

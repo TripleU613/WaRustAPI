@@ -209,8 +209,9 @@ Fixed:
 Recorded, not changed:
 
 - The lab windows (`lab-transport` receive and send windows, the group-send
-  window) still end on a decode error. They are bounded diagnostics, and after
-  the recursion fix the error no longer aborts the process.
+  window) ended on a decode error too. They now read with
+  `messaging::read_frame` and capture such a frame the same way (no epoch) and
+  continue. Login and handshake keep `read_node`: their reply must decode.
 - If the reader task itself ever panicked (none found), `drive` would see the
   channel close and end with "reader ended", which is not recoverable.
 - **Bounded memory amplification:** a 4.9 KB compressed frame can decode to

@@ -1,3 +1,8 @@
+2026-10-13 — **Implemented/offline (lab windows):** `lab-transport` receive,
+post-send and group-send windows now capture a frame that does not decode and
+keep reading, like `listen`, instead of ending the window. Login and handshake
+replies must still decode. [Audit](docs/protocol/replay-safety-audit.md#network-input-panic-audit-2026-10-13).
+
 2026-10-13 — **Implemented/offline (inspection):** `whatsapp-cli undecodable`
 (also `GET /v1/inbox/undecodable` under `serve --store-routes`) lists the frames
 `listen` captured because it could not decode them: capture digest, error class
