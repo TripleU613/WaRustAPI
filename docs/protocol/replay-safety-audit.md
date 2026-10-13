@@ -129,6 +129,50 @@ seen live.
   now requires the entry-less shape. Test:
   `an_aggregate_with_entries_is_not_a_status_view`.
 
+### Live-shape regression sweep (2026-10-13)
+
+Prompted by the status-receipt regression above, a read-only sweep compared
+every stanza shape the docs record as **observed** live with what the current
+code does to it. Git history in this clone starts at `5c45218` (2026-10-11), so
+earlier changes are dated from the docs only. **No other live shape is now
+refused, misclassified, left unacknowledged or able to end receive.**
+
+Fixed from the sweep:
+
+- `lab-transport --login --receive` and the lab group-send window still called
+  `receipts::record` directly, so refused receipt content ended those windows,
+  and the receive window recorded a status view before the receipt was
+  accepted. Both now use `receipts::validate` first, like `listen`.
+- A devices or prekey-count notification without `id` (or a devices one
+  without `from`) failed while building its ACK, which ended `listen`. The ACK
+  is now built first; if it cannot be, the notification is refused (logged, no
+  sync or upload, no ACK). No such shape was seen live. Test: extended
+  `refused_receipt_and_notification_content_does_not_end_receive`.
+- `status_receipts::parse` now also treats an empty child list as entry-less.
+  The decoder turns the `LIST_EMPTY` token into no body but a zero-length
+  `LIST_8`/`LIST_16` into an empty child list, so that form was reachable and
+  would have been taken as an empty aggregate (acknowledged, view not recorded).
+
+Recorded, not changed:
+
+- The 2026-10-11 ACK and confirmation encoding changes are unverified live
+  ([unknowns](unknowns.md#ack-and-confirmation-encodings-since-2026-10-11-live-check-pending)).
+- Stanzas seen live that are never acknowledged come back at every login: `psa`
+  notifications (about four per session), `mex`, non-dirty `w:gp2` and retry
+  receipts. They are captured and harmless today, by the "acknowledge only what
+  is processed" policy; any future handler for them must refuse content without
+  `?`, or it repeats the status-receipt failure.
+- Messages carrying an `edit` attribute are never delivery-confirmed
+  ([sender-revoke](sender-revoke.md)); no edit has been seen live.
+
+Checked and still as documented: direct and group delivery/read receipts (with
+or without `list`, LID participants), retry receipts, `ack` of our receipts and
+messages, direct `msg`/`pkmsg` from PN or LID with `sender_pn`, redelivered
+duplicates, reactions, polls and votes, quoted replies, the
+`msg`+`reporting`+`skmsg` group stanza, device-addressed group payloads,
+undecryptable messages (one retry), `groups_dirty`, identity notifications,
+`psa`/`mex`/`ib`, iq results, and `success`/`failure`/`stream:error`.
+
 ### Open (recorded, not changed)
 
 - **F6, speculative.** A redelivery under the sender's other PN/LID address

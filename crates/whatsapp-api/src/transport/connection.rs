@@ -614,7 +614,20 @@ pub(crate) async fn drive(
                     Err(error) => return Err(error),
                 }
                 if let Some(ack)=super::groups::handle_dirty_notification(&store, &node)? {link.send(&ack).await?;}
-                if let Some(change) = super::devices::notification(&node) {
+                // The ACK is built first: a devices notification without `id` or
+                // `from` cannot be acknowledged, so it is refused (logged, no
+                // sync queued, no ACK) rather than ending receive at every login.
+                let devices_change = super::devices::notification(&node).and_then(|change| {
+                    match super::devices::notification_ack(&node) {
+                        Ok(ack) => Some(Ok((change, ack))),
+                        Err(Error::InvalidInput { field, reason }) => {
+                            tracing::warn!(field, reason, "devices notification refused locally; captured without ACK; session continues");
+                            None
+                        }
+                        Err(error) => Some(Err(error)),
+                    }
+                }).transpose()?;
+                if let Some((change, devices_ack)) = devices_change {
                     // LX/11Q.A09 / LX/101.A02: contact notifications request a device
                     // sync. Locally persist work before ACK. Own-account changes use account sync, which is
                     // not implemented: captured and acknowledged only.
@@ -634,7 +647,7 @@ pub(crate) async fn drive(
                         super::devices::request_sync(&store, own.as_ref(), &change.owner, change.device_hash.as_deref(), "notification")?;
                         device_context = super::devices::SyncContext::Notification;
                     }
-                    link.send(&super::devices::notification_ack(&node)?).await?;
+                    link.send(&devices_ack).await?;
                     if device_query.is_none()
                         && group_outgoing.as_ref().is_none_or(|g| !g.devices_pending())
                         && let Some((query, sync)) = device_cursor.begin_next(&store, device_context)? {
@@ -665,7 +678,12 @@ pub(crate) async fn drive(
                     }
                 }
 
-                let low = match super::prekeys::low_count(&node) {
+                let low = match super::prekeys::low_count(&node).and_then(|low| {
+                    // Built before any upload: a count notification without
+                    // `id` is refused like a malformed count, not fatal.
+                    low.map(|low| Ok((low, super::prekeys::low_count_ack(&node)?)))
+                        .transpose()
+                }) {
                     Ok(low) => low,
                     Err(Error::InvalidInput { field, reason }) => {
                         // APK 37.71 14z.A09 throws before queueing work; where that
@@ -676,10 +694,10 @@ pub(crate) async fn drive(
                     }
                     Err(error) => return Err(error),
                 };
-                if let Some(low) = low {
+                if let Some((low, low_ack)) = low {
                     // Local ACK ordering follows durable capture; native 14z.A02 ACKs after worker processing.
                     // Its first-child legacy flag triggers upload even for an unknown count; PQ-only is inert.
-                    link.send(&super::prekeys::low_count_ack(&node)?).await?;
+                    link.send(&low_ack).await?;
                     if low.legacy_present {
                         maybe_upload(&store, &account, &link, &mut upload, &mut upload_rounds).await?;
                     }
@@ -1750,6 +1768,23 @@ mod tests {
                         .attr("type", "trusted_contact")
                         .bytes(vec![1, 2, 3]),
                 ])]),
+            // A devices notification without `id` cannot be acknowledged; no
+            // device sync is queued for it either.
+            Node::new("notification")
+                .attr("from", peer())
+                .attr("type", "devices")
+                .children(vec![Node::new("add").attr("device_hash", "2:x").children(
+                    vec![
+                        Node::new("device")
+                            .attr("jid", peer().with_device(3))
+                            .attr("key-index", "1"),
+                    ],
+                )]),
+            // A prekey count notification without `id`: no ACK, no upload.
+            Node::new("notification")
+                .attr("from", Jid::parse("s.whatsapp.net").unwrap())
+                .attr("type", "encrypt")
+                .children(vec![Node::new("count").attr("value", "5")]),
         ];
         for node in refused {
             let wire = encode(&node).unwrap();
@@ -1767,6 +1802,11 @@ mod tests {
             );
             assert_eq!(store.journal_head().unwrap(), head);
         }
+        assert!(
+            super::super::devices::pending_users(&store)
+                .unwrap()
+                .is_empty()
+        );
         // Still receiving: a supported receipt is answered as before.
         fake.deliver(
             Node::new("receipt")

@@ -173,6 +173,21 @@ Sending is therefore not implemented, rather than guessing `mediatype` from
 general protocol knowledge. Next step: trace the `9QH` equivalent in 2.26.37.71
 for all media types, then reuse the existing upload, encryption and outbox paths.
 
+## ACK and confirmation encodings since 2026-10-11 (live check pending)
+
+Three 2026-10-11 commits changed the wire form of stanzas this client had
+already sent live, from APK 2.26.37.71 evidence: `5c45218` (receipt ACKs send a
+zero-device AD JID as a plain user pair), `fb11db3` (the same for notification
+ACKs) and `1b88f56` (delivery confirmations to a LID primary are AD-encoded).
+Each is **confirmed static**, but no live window since has recorded how the
+server treated the new forms: the only later live session (2026-10-11 evening,
+sender revoke) logged nothing about confirmations. A server that silently
+ignored them would show only as the same messages and receipts arriving again,
+classed `Duplicate`, at every login. Check that in the next live receive window
+(`listen` incoming lines: `confirmed=true` followed by no redelivery) before
+treating these encodings as verified. Found by the
+[live-shape regression sweep](replay-safety-audit.md#live-shape-regression-sweep-2026-10-13).
+
 ## Comparison token dictionary: double-byte page 0 index 1
 
 **Resolved 2026-10-07, test completed 2026-10-13.** The checked 37.71

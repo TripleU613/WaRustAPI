@@ -73,7 +73,15 @@ pub fn parse(node: &Node) -> Option<StatusReceipt> {
         return None;
     }
     let participants = node.child("participants")?;
-    if !matches!(participants.content, crate::binary::NodeContent::Empty) {
+    // Entry-less: no body, or an empty child list. binary/decoder.rs decodes
+    // the LIST_EMPTY token as no body but a zero-length LIST_8/LIST_16 as an
+    // empty child list; neither may slip into the aggregate branch.
+    let entry_less = match &participants.content {
+        crate::binary::NodeContent::Empty => true,
+        crate::binary::NodeContent::Children(children) => children.is_empty(),
+        _ => false,
+    };
+    if !entry_less {
         return None;
     }
     let status_id = participants.get_attr("message_id")?.as_text()?.to_owned();
@@ -218,6 +226,16 @@ mod tests {
                     ]),
             ]);
         assert!(parse(&aggregate).is_none());
+        // An empty child list is still the entry-less status shape.
+        let empty_list = Node::new("receipt")
+            .attr("from", Jid::parse("222222222222222@lid").unwrap())
+            .attr("id", "SAGR0002")
+            .children(vec![
+                Node::new("participants")
+                    .attr("message_id", "STATUS2")
+                    .children(Vec::new()),
+            ]);
+        assert_eq!(parse(&empty_list).unwrap().status_id, "STATUS2");
     }
 
     /// A retry is not viewership, and neither is a chat receipt with no

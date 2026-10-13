@@ -617,16 +617,31 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
                         }
                     );
                 }
-                if let Some(receipt) = whatsapp_api::transport::status_receipts::parse(&node)
-                    && whatsapp_api::transport::status_receipts::record(&store, &receipt)?
-                {
-                    println!("transport: recorded a status receipt from one viewer");
-                }
+                // Same gate as `listen` (receive audit F1): a receipt whose
+                // wire content is refused stays captured without ACK and the
+                // window continues; a fault in stored rows still ends it.
+                let receipt_accepted = match whatsapp_api::transport::receipts::validate(&node) {
+                    Ok(()) => true,
+                    Err(Error::InvalidInput { field, reason }) => {
+                        eprintln!(
+                            "transport: receipt content refused ({field}: {reason}); captured without ACK"
+                        );
+                        false
+                    }
+                    Err(error) => return Err(error),
+                };
                 // Settles a read receipt this window sent (`transport.mark_read`).
                 whatsapp_api::transport::receipts::record_ack(&store, &node)?;
-                let tracked = whatsapp_api::transport::receipts::record(&store, &node)?;
-                if tracked > 0 {
-                    println!("transport: updated {tracked} outgoing receipt records");
+                if receipt_accepted {
+                    let tracked = whatsapp_api::transport::receipts::record(&store, &node)?;
+                    if tracked > 0 {
+                        println!("transport: updated {tracked} outgoing receipt records");
+                    }
+                    if let Some(receipt) = whatsapp_api::transport::status_receipts::parse(&node)
+                        && whatsapp_api::transport::status_receipts::record(&store, &receipt)?
+                    {
+                        println!("transport: recorded a status receipt from one viewer");
+                    }
                 }
                 // Share the runtime's durable one-request policy; a repeated
                 // capture or an uncertain write must never restart count=1.
@@ -655,7 +670,7 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
                         Err(error) => return Err(error),
                     }
                 }
-                let confirmation = if tag == "receipt"
+                let confirmation = if (tag == "receipt" && receipt_accepted)
                     || matches!(
                         incoming,
                         whatsapp_api::transport::inbox::IncomingResult::Decrypted

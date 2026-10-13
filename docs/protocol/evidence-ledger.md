@@ -1,3 +1,12 @@
+2026-10-13 — **Checked/offline (live-shape regression sweep):** every stanza
+shape the docs record as seen live was compared with the current receive code.
+No other regression like the status-receipt one was found. Fixed on the way:
+`lab-transport --receive` and the lab group-send window now validate receipt
+content like `listen`; a devices or prekey-count notification without `id` no
+longer ends `listen`. Open: the 2026-10-11 ACK and confirmation encoding changes
+have never been checked live; the next live receive window should confirm no
+redelivery after `confirmed=true`. [Sweep](replay-safety-audit.md#live-shape-regression-sweep-2026-10-13).
+
 2026-10-13 — **Corrected/offline (review of the new store routes):** no
 security finding. Three protocol docs and the feature-parity exposure note still
 said these inspections were not served over HTTP; corrected. The key-query
