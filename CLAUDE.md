@@ -321,5 +321,17 @@ request—not adding Rust code, another command or a number-specific script.**
   by private JSON `transport.reconnect` (default five attempts; `0` disables).
   Refusals, revocation, uncertain logins and worker panics never retry. Do not
   widen recoverability to make a refusal disappear; reservations are never replayed.
+- 2026-10-13 cloud handoff (no APK in that container; only retained bundles
+  under `docs/protocol/apk|rea` were usable). ML-KEM-1024/0x44 hybrid sessions
+  are integrated offline across inbox (local KEM rows), outbox, identity refresh,
+  device-key batches and group fan-out, but no KEM prekey is generated or
+  uploaded and `pqsupport` is never sent, so incoming hybrid bootstrap needs a
+  KEM row this client cannot yet create. Next APK traces, in order: KEM prekey
+  generation and the `pq_list`/`pq_last_resort_key` upload shape, the
+  `pqsupport` producer, the outgoing revoke/edit `edit` attribute, sender-side
+  `contextInfo.expiration`, and the native retry-receipt answer policy. Replay
+  guarantees and open observations: `docs/protocol/replay-safety-audit.md`.
+  Quoted image/voice-note sending is offline-only; per-area state is in
+  `docs/feature-parity.md`.
 - Most important lesson: **listen first, change data for data requests, explain
   genuine obstacles upfront, and deliver the requested result without detours.**
