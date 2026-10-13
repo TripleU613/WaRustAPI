@@ -9264,7 +9264,7 @@
           "Registration"
         ],
         "summary": "Discard a completed or blocked attempt (local only)",
-        "description": "Resets the registration state and discards any completed or blocked attempt. This operation is local only. Since 2026-10-13 reset refuses an attempt created under another profile, so the ordinary CLI cannot discard a lab attempt's refusal and evidence.",
+        "description": "Resets the registration state and discards any completed or blocked attempt. This operation is local only. Since 2026-10-13 reset refuses an attempt created under another profile, so the ordinary CLI cannot discard a lab attempt's refusal and evidence. Exception (2026-10-13, review correction): an attempt from another profile that is blocked with ProfileIncomplete, the local answer of a flow that sends nothing, such as an attempt left by an earlier pinned version, can be reset. Evidence docs/protocol/registration-safety-audit.md.",
         "operationId": "resetRegistration",
         "x-cli": "whatsapp-cli registration reset",
         "x-transport": [

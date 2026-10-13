@@ -2322,7 +2322,19 @@ impl RegistrationService {
                         // Only the profile that created an attempt may discard
                         // it: the ordinary CLI must not delete a lab attempt's
                         // refusal and evidence (registration safety audit).
-                        if a.profile_id != profile_id {
+                        // A `ProfileIncomplete` block is the exception: it is
+                        // the local "cannot proceed" answer of a flow that
+                        // sends nothing (`UnsupportedFlow`), so it holds no
+                        // server state. Without it, an attempt saved under a
+                        // previous pinned version (`android-primary/<version>`)
+                        // could be neither replaced nor reset (review L3).
+                        let local_block = matches!(
+                            a.state,
+                            RegistrationState::Blocked {
+                                reason: BlockedReason::ProfileIncomplete { .. }
+                            }
+                        );
+                        if a.profile_id != profile_id && !local_block {
                             return Err(Error::invalid(
                                 "registration_state",
                                 "the saved attempt belongs to another profile; it is not reset from this one",
@@ -2944,6 +2956,32 @@ mod tests {
         // The owning profile may still discard its own terminal attempt.
         service.reset().await.unwrap();
         assert!(service.current().await.unwrap().is_none());
+    }
+
+    /// An attempt blocked locally by a flow that sends nothing, saved under an
+    /// earlier pinned version, can be reset from the current one; a server
+    /// refusal saved under another profile still cannot (review L3).
+    #[tokio::test]
+    async fn a_local_block_from_an_older_version_can_be_reset() {
+        let (_d, s) = store();
+        let mut old = ProtocolProfile::android_reference().unwrap();
+        old.id = "android-primary/2.0.0.0".into();
+        let unsupported = || {
+            Arc::new(UnsupportedFlow {
+                missing: vec!["registration".into()],
+            })
+        };
+        let previous = RegistrationService::new(s.clone(), &old, unsupported());
+        assert!(matches!(
+            previous.begin(phone(), ChallengeMethod::Sms).await.unwrap(),
+            RegistrationStep::Blocked(BlockedReason::ProfileIncomplete { .. })
+        ));
+        let current_profile = ProtocolProfile::android_reference().unwrap();
+        let current = RegistrationService::new(s.clone(), &current_profile, unsupported());
+        // Not replaced implicitly by `begin`; an explicit reset clears it.
+        assert!(current.begin(phone(), ChallengeMethod::Sms).await.is_err());
+        current.reset().await.unwrap();
+        assert!(current.current().await.unwrap().is_none());
     }
 
     #[test]

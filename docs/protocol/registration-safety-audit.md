@@ -171,6 +171,16 @@ now corrected:
   Attempts already saved as an elapsed cooldown still resume. Test:
   `unsent_requests_restore_the_attempt_instead_of_an_unknown_outcome` (asserts
   the state and the last history entry). The history cost is still open below.
+- **L3. Attempts from an older pinned version could not be cleared.** The
+  ordinary profile id is `android-primary/<version_name>`; after the pin
+  changed, a previous version's attempt could be neither replaced (`begin`
+  refuses) nor reset (`reset` refused another profile's attempt) in the same
+  generation. `reset` now also clears another profile's attempt when it is
+  blocked with `ProfileIncomplete`, the local answer of a flow that sends
+  nothing (`UnsupportedFlow`), so it holds no server state. Any other
+  attempt from another profile, including every lab refusal, is still refused;
+  `begin` still never replaces one. Test:
+  `a_local_block_from_an_older_version_can_be_reset`.
 - **L4. The lab transport's own failures were recorded as unknown.** Adding
   configured `/v2/code` fields or encrypting the body (`DiagnosticTransport`)
   fails before anything is written; it now returns `RequestNotSent`. Test:
@@ -193,11 +203,6 @@ written; handshake failures and the overall timeout are not connect errors).
   as a preparation in the `/v2/exist` preflight's `client_metrics.attempts`,
   though nothing left; whether the APK counts such local failures is not
   traced.
-- **Attempts from an older pinned version cannot be cleared** (review L3). The
-  ordinary profile id is `android-primary/<version_name>`; after the pin
-  changes, a previous version's attempt can be neither replaced (`begin`
-  refuses) nor reset (`reset` refuses) in the same generation. Such attempts are
-  harmless `UnsupportedFlow` blocks.
 - **An email request's `challenge` refusal may lose its wait** (review M3,
   speculative: depends on server behaviour). A refusal with `email_otp_wait` but
   no `retry_after` becomes `Blocked`, which has no wait field, and

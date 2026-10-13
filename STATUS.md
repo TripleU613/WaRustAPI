@@ -13,8 +13,9 @@ that number (`accounts new` and `--create-store` record the owner), so an empty
 store another command created, or a mismatched `--config`, cannot start a fresh
 identity. `accounts new` compares numbers canonically and is not blinded by
 one malformed profile. A first `begin` that never left now rests
-`unregistered`, not as a fake elapsed `cooling_down`. Open: not-sent failures
-consume bounded history; attempts from an older pinned version cannot be reset. [Audit](docs/protocol/registration-safety-audit.md#review-corrections-2026-10-13).
+`unregistered`, not as a fake elapsed `cooling_down`, and `registration reset`
+clears a local `ProfileIncomplete` block left by an older pinned version. Open:
+not-sent failures consume bounded history. [Audit](docs/protocol/registration-safety-audit.md#review-corrections-2026-10-13).
 
 2026-10-13 — **Fixed/offline (registration: stores and status):** `lab-signup
 begin` no longer creates a missing store unless `--create-store` is given;
