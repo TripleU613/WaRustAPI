@@ -100,3 +100,39 @@ the locked package archive. No PQ cryptographic compatibility was verified.
 2026-10-12 follow-up: [PQ signature diagnostics](pq-signature.md) now verify the
 original value bytes separately from the classic signed prekey. KEM validation
 and session support remain unported; no guard or adoption permission is lifted.
+
+## The PQ predicate `Can.A04` (2026-10-13, retained evidence only)
+
+A cross-bundle search of the retained 2.26.37.71 evidence (no APK in the
+session) finds one Boolean predicate, `LX/Can;->A04(Jid)Z`, deciding PQ work
+for a JID at every retained call site. **Confirmed static** (each offset is in
+the named retained file):
+
+- `SyncDeviceAndResendMessageJob.A0G`
+  ([sync-resend/job-run](apk/2.26.37.71-sync-resend/job-run.txt)): `Can.A04` of
+  the job's chat JID (`018e..0194`) becomes the last constructor argument of
+  `DFC` (`029e..02a4`), whose `A04` field adds `key_fetch pqsupport="true"`
+  (`03be..03d4`). So the `pqsupport` attribute's producer *is* `Can.A04(chat)`
+  for that request ([sync-resend](sync-resend.md)).
+- `DLp` identity-notification worker
+  ([identity-worker-run](apk/2.26.37.71-identity-notifications/identity-worker-run.txt)):
+  `Can.A04(user)` (`02a8..02b4`), together with `0Fs.A0U(user)`, gates the
+  second, PQ prekey fetch ([identity-notifications](identity-notifications.md)).
+- `DNe` message worker
+  ([message-worker](apk/2.26.37.71-read-receipt-persistence/message-worker.txt)):
+  `Can.A04(jid)` (`04a2..04aa`) is passed as the last Boolean argument of the
+  prekey-fetch scheduler `14L.A08(0Cy, DeviceJid[], int, int, int, Z, Z)`
+  (`04b6..04bc`).
+- `By0` broadcast-receipt decrypt owner
+  ([decrypt-owner](apk/2.26.37.71-broadcast-receipt/decrypt-owner.txt)):
+  `Can.A04(CjN.A05)` (`01d6..01de`) guards a key-store branch (`01de..01f2`).
+- `DNu` history identity worker
+  ([history-identity-worker](apk/2.26.37.71-token-import/history-identity-worker.txt)):
+  the result is stored (`2f1c..2f24`); its use was not traced.
+
+**Unknown:** `Can.A04`'s body (feature properties, per-JID state or both) is in
+no retained bundle, so whether, when and for whom the native client asks for PQ
+keys is not established. **This is the single next trace** that resolves the
+`pqsupport` producer for all of the above. Until then this client sends no
+`pqsupport` and never claims PQ support; adding it on a guess would change live
+requests without evidence.

@@ -328,7 +328,8 @@ request—not adding Rust code, another command or a number-specific script.**
   uploaded and `pqsupport` is never sent, so incoming hybrid bootstrap needs a
   KEM row this client cannot yet create. Next APK traces, in order: KEM prekey
   generation and the `pq_list`/`pq_last_resort_key` upload shape, the
-  `pqsupport` producer, the outgoing revoke/edit `edit` attribute, sender-side
+  `pqsupport` producer (the body of the predicate `Can.A04(jid)`; its five
+  retained call sites are in `docs/protocol/pq-bundle-boundary.md`), the outgoing revoke/edit `edit` attribute, sender-side
   `contextInfo.expiration`, the native retry-receipt answer policy, and the
   wrong-OTP path (the `HD6.A0A` consumer and `guess_wait` unit), and what the
   app does with a `/v2/code` `ok`/`attached` answer (`02S.A0C`/`02S.A01`). Replay
