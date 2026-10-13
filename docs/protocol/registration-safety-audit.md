@@ -57,13 +57,14 @@ re-verified). Nothing here changes a request's wire content.
   config edited since the attempt froze it, a resend method the frozen config
   does not use, the metrics history bound) and a connection that fails before
   any byte is written. These now raise `Error::RequestNotSent` (wrapping the
-  cause), and the attempt returns to its state before the reservation through a
-  legal transition: a fresh `begin` returns to `unregistered` (until the review
-  correction below, an already elapsed cooldown), which the next `begin`
-  resumes with the same attempt and keys; a cooldown resume returns
-  to its cooldown; a resend returns to its pending challenge and original
-  method; an OTP, PIN, email-code or consent request returns to its prior state;
-  a one-shot diagnostic or consent latch taken by the reservation is released.
+  cause), and the attempt returns to its state before the reservation (since
+  the second review below, as the exact pre-reservation copy, history
+  included): a fresh `begin` returns to `unregistered` (at first an already
+  elapsed cooldown), which the next `begin` resumes with the same attempt and
+  keys; a cooldown resume returns to its cooldown; a resend returns to its
+  pending challenge and original method; an OTP, PIN, email-code or consent
+  request returns to its prior state; a consent latch is released, and a
+  code-request one-shot's latch with its restored material (review M2).
   Every other failure (timeout, a response that cannot be read, a reset after
   writing) may have reached the server and still records `outcome_unknown`.
   **Inferred:** that reqwest's `is_connect()` (DNS, TCP, TLS handshake, connect
@@ -169,11 +170,12 @@ now corrected:
 - **L2 (display). A restored first `begin` read as a server cooldown.** It was
   saved as `CoolingDown{until: now}`, shown as `cooling_down` with history
   `preparing -> cooling_down`, indistinguishable from a server wait. It now
-  returns to `unregistered` (a new legal `preparing -> unregistered` edge, used
-  only by this restore), which `begin` resumes with the same attempt and keys.
-  Attempts already saved as an elapsed cooldown still resume. Test:
-  `unsent_requests_restore_the_attempt_instead_of_an_unknown_outcome` (asserts
-  the state and the last history entry). The history cost is still open below.
+  returns to `unregistered`, which `begin` resumes with the same attempt and
+  keys. (First done through a general `preparing -> unregistered` edge; the
+  second review's L1 showed any flow could use that edge, so it was replaced
+  by the exact restore below.) Attempts already saved as an elapsed cooldown,
+  or as `unregistered` with history, still resume. Test:
+  `unsent_requests_restore_the_attempt_instead_of_an_unknown_outcome`.
 - **L3. Attempts from an older pinned version could not be cleared.** The
   ordinary profile id is `android-primary/<version_name>`; after the pin
   changed, a previous version's attempt could be neither replaced (`begin`
@@ -210,19 +212,83 @@ now corrected:
   "on transport failure, the outcome remains unknown" now describes
   `RequestNotSent`; the `RequestNotSent` doc states the preflight caveat.
 
+## Second review (2026-10-13)
+
+A read-only review of the next six commits (`72130d6` to `cf3f116`) found no
+path where a request that may have reached the server is restored as not sent,
+no latch released after a request may have left, and no implicit fresh
+identity. Its findings, all confirmed by code trace (it could not build probes:
+the container's disk was full), and what was done:
+
+- **M1. An unreadable email-code answer under HTTP 2xx counted as
+  "answered".** The marker that lets `resume-email-challenge` take the
+  lost-request path was set for any unreadable or oversized answer, including
+  HTTP 200 with a body strict parsing rejects (a negative wait, an uppercase
+  token); that request may have sent an email and set a wait, and the resume
+  then allowed it again with none. `ComparisonHttpFlow::send` now classifies an
+  unreadable body under an HTTP error status as `registration_refusal_body`,
+  and only that sets the marker (the observed case was HTTP 404 with a
+  non-JSON body). Tests: `lost_email_code_requests_resume_only_once` (now real
+  404 answers), `an_unreadable_success_answer_to_an_email_request_is_not_resumed`.
+- **L1, L4 and the open history item: a not-sent restore now writes back the
+  exact pre-reservation attempt** (state, method, history), with the material
+  and latch undo, in one transaction. The general `preparing -> unregistered`
+  edge is gone, so a flow returning `Unregistered` is again an illegal
+  transition (L1). A request that never left adds no history: it no longer
+  counts in `code_preparation_count`, which feeds the preflight's
+  `client_metrics.attempts` and the lab's `attempts == count + 1` check, so a
+  rerun after a not-sent correction no longer needs a raised counter (L4), and
+  no bounded history is consumed. A fresh `begin` restores its unregistered,
+  history-free copy. The not-sent cause is logged before the write. Tests:
+  `unsent_requests_restore_the_attempt_instead_of_an_unknown_outcome` (empty
+  history, zero preparations), `a_not_sent_correction_is_undone_and_can_be_sent_later`
+  (the saved attempt equals the one before the reservation).
+- **L2. Resuming `begin` ignored the requested method.** A resume of an
+  elapsed cooldown or an unsent first request now refuses a method other than
+  the attempt's, naming it, instead of silently sending with the saved one.
+- **L3. `ProfileIncomplete` did not prove nothing was sent.** A library caller
+  could answer a lab attempt's pending challenge through the default flow,
+  saving a local block over a server challenge, which `reset` then accepted.
+  `submit`, `request_email_code` and `resume_email_challenge` now refuse another
+  profile's attempt, and the reset exemption also requires a non-lab attempt
+  whose history never went past `unregistered`/`preparing`/`blocked`. The
+  flow trait's "not implemented" defaults for consent and the email request
+  now return `RequestNotSent` (nothing was sent), not an unknown outcome.
+  Test: `another_profile_cannot_answer_or_reset_a_pending_challenge`.
+- **L5. A failed restore hid the not-sent cause.** The error now names both
+  the cause and that the attempt stays `preparing`/`verifying`. Test:
+  `a_failed_restore_reports_the_cause_and_the_stuck_state`.
+- **L6. `claim_store` ignored existing account material.** An unclaimed store
+  holding another number's account record is no longer claimed. Test:
+  `a_store_with_another_numbers_material_is_not_claimed`.
+- **L7. `accounts new` saw only `request.json` beside the new directory.** It
+  now reads every `*.json` in the account directory's siblings and in its
+  parent's siblings (so `lab/accounts/*` and `lab/signup-json-*`, any of the
+  documented file names), bounded by the config size limit and a file count. A
+  config anywhere else is still not seen.
+- **Nits fixed:** a cooldown also keeps `email_otp_wait` when longer (as the
+  blocked branch does); the `exist` probe refuses during a consent refusal's
+  waits, as consent inspection already did; the empty-store refusal names
+  `lab-signup begin --create-store` as well as `store init`.
+- **Nits recorded, not changed:** a sent preflight followed by a code request
+  that never left is `outcome_unknown` with no reconciliation (while the
+  standalone `exist` probe sends the same request with no reservation); the
+  lab transport patches and encrypts at send time, so "built before either is
+  sent" holds for the factory, not that wrapper (its failures are not-sent,
+  which is safe); the email marker is written after `finish_failed` in its own
+  transaction (a crash in between keeps the attempt unknown, the safe
+  direction); an older binary drops `not_before` when it re-saves a record; a
+  refused store open still leaves the parent directory and `<store>.lock`; a
+  dangling-symlink store path gets the default file mode; `resend-code
+  --method <other>` never builds with the stored lab factory (its frozen method
+  is checked), now an exact no-op restore each time.
+
 Not acted on: no test pins reqwest's `is_connect` meaning (the review re-read
 reqwest 0.12.28 / hyper-util 0.1.20: connect errors arise only from the
 connector, pool checkout or a closed checkout, before any request byte is
 written; handshake failures and the overall timeout are not connect errors).
 
 ## Confirmed open
-
-- **Not-sent failures consume history** (rest of review L2). Each uses two or
-  three of the 64 history entries; after about 25, the preflight and
-  diagnostics that need complete history can no longer build. Each also counts
-  as a preparation in the `/v2/exist` preflight's `client_metrics.attempts`,
-  though nothing left; whether the APK counts such local failures is not
-  traced.
 
 - **`code_bytes.client_metrics` is a fixed value.** The `/v2/code` request
   sends the frozen config's `{"attempts":1}` on every resend, cooldown resume,

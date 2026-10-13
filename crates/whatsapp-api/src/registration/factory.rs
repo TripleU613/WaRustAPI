@@ -846,7 +846,9 @@ mod tests {
             .unwrap_err();
         assert!(matches!(error, Error::RequestNotSent(_)), "{error}");
         let saved = service.current().await.unwrap().unwrap();
-        assert_eq!(saved.state, refusal);
+        // Exactly the saved refusal: no history added, so the lab's
+        // `client_metrics.attempts` check still matches (review L4).
+        assert_eq!(saved, a);
         assert!(saved.refused_at_code_request());
         let token = store
             .read(|tx| tx.get_json::<Material>(Table::Account, MATERIAL_KEY, RECORD_VERSION))

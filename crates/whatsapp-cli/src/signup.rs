@@ -659,6 +659,23 @@ fn exist_allowed(
         _ if state.refusal_not_before().is_some_and(|until| now < until) => {
             Err(invalid("the server set a wait that has not elapsed"))
         }
+        // So are a consent refusal's waits, which consent inspection, on the
+        // same endpoint, already enforces (registration review nit).
+        S::Blocked {
+            reason:
+                whatsapp_api::registration::BlockedReason::ConsentRequired {
+                    retry_after,
+                    sms_retry_after,
+                    voice_retry_after,
+                    ..
+                },
+        } if [retry_after, sms_retry_after, voice_retry_after]
+            .into_iter()
+            .flatten()
+            .any(|until| now < *until) =>
+        {
+            Err(invalid("the server set a wait that has not elapsed"))
+        }
         _ => Ok(()),
     }
 }
@@ -821,6 +838,14 @@ mod tests {
                 not_before,
             },
         };
+        let consent = |sms_retry_after| S::Blocked {
+            reason: whatsapp_api::registration::BlockedReason::ConsentRequired {
+                details: whatsapp_api::registration::wire::RegistrationConsent::default(),
+                retry_after: None,
+                sms_retry_after,
+                voice_retry_after: None,
+            },
+        };
         let later = now.saturating_add(std::time::Duration::from_secs(60));
         for state in [
             S::Preparing,
@@ -829,6 +854,7 @@ mod tests {
             S::Registered,
             S::CoolingDown { until: later },
             refused(Some(later)),
+            consent(Some(later)),
         ] {
             assert!(exist_allowed(&state, now).is_err(), "{state:?}");
         }
@@ -837,6 +863,8 @@ mod tests {
             S::CoolingDown { until: now },
             refused(None),
             refused(Some(now)),
+            consent(None),
+            consent(Some(now)),
         ] {
             assert!(exist_allowed(&state, now).is_ok(), "{state:?}");
         }

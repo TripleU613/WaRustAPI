@@ -434,9 +434,11 @@ Known refusals, cooldowns, unknown outcomes and repeated diagnostics are rejecte
 No existing store or latch should be deleted to repeat it. A transport failure
 that may have reached the server leaves the outcome unknown; do not resend. A
 request that provably never left (it could not be built, prepared or connected:
-`RequestNotSent`) restores the saved refusal and the saved request material
-together and releases the one-shot latch, so the same action can be run again
-once the network is back (registration safety audit review M2, 2026-10-13).
+`RequestNotSent`) restores the attempt exactly as it was before the
+reservation (its refusal and history) together with the saved request material,
+and releases the one-shot latch, so the same action can be run again, with the
+same `client_metrics.attempts`, once the network is back (registration safety
+audit, reviews M2 and L4, 2026-10-13).
 Reqwest protocol-level
 retries are also explicitly disabled, in addition to application-level
 automatic retries.

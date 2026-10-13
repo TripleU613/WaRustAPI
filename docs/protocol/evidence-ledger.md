@@ -1,3 +1,18 @@
+2026-10-13 — **Corrected/offline (second registration review):** a second
+read-only review of the registration commits found no request that may have
+left being restored as not sent and no latch released after a send, but
+fixed: an email-code answer that was unreadable under HTTP 2xx could be
+re-requested with no wait (now only an HTTP error status allows the
+lost-request resume); a not-sent restore now writes back the exact attempt from
+before the reservation, history included, so a request that never left is not
+counted in `client_metrics.attempts` or consuming history (and the general
+`preparing -> unregistered` edge is gone); resuming `begin` with another method
+is refused instead of silently ignored; another profile's flow cannot answer a
+saved challenge, and `reset`'s local-block exemption excludes lab attempts and
+any that reached a challenge; a store holding another number's material is not
+claimed; `accounts new` scans every JSON beside the account directories; a
+failed restore reports its cause. [Audit](registration-safety-audit.md#second-review-2026-10-13).
+
 2026-10-13 — **Fixed/offline (registration hardening):** new store files are
 created 0600 (records were already encrypted; the file followed the umask);
 `registration status`, `reconcile` and `reset` no longer create a missing store;

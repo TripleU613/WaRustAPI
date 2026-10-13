@@ -1302,16 +1302,27 @@ fn accounts_new(
     Ok(())
 }
 
-/// Which saved profile, or which sibling account directory's `request.json`,
-/// already configures `phone`, compared canonically (separators ignored). Each
-/// file is read on its own, so one malformed or unreadable file does not hide
-/// the others. Nothing about the number is printed.
+/// Which saved profile, or which private config near the new account
+/// directory, already configures `phone`, compared canonically (separators
+/// ignored). Besides the profiles it reads every `*.json` file in the account
+/// directory's siblings and in its parent's siblings, so `lab/accounts/*` and
+/// `lab/signup-json-*` configs used only with `--config` are seen whatever
+/// their file name (`request.json`, `request-corrected.json`, `signup.json`;
+/// registration review L7). A config anywhere else is not seen. Each file is
+/// read on its own, so one malformed or unreadable file does not hide the
+/// others; files over the config size limit are skipped, and the scan stops
+/// after a fixed number of files. Nothing about the number is printed.
 fn number_configured_by(
     profiles_dir: &std::path::Path,
     account_dir: &std::path::Path,
     phone: &PhoneNumber,
 ) -> Option<String> {
+    const MAX_SCANNED_FILES: usize = 4096;
     let configures = |path: &std::path::Path| -> Option<()> {
+        let size = std::fs::metadata(path).ok()?.len();
+        if size > whatsapp_api::registration::request::MAX_CONFIG_BYTES {
+            return None;
+        }
         let text = std::fs::read_to_string(path).ok()?;
         let config: serde_json::Value = serde_json::from_str(&text).ok()?;
         let cc = u16::try_from(config["phone"]["country_code"].as_u64()?).ok()?;
@@ -1326,8 +1337,9 @@ fn number_configured_by(
             .map(|entry| entry.path())
             .collect()
     };
+    let is_json = |path: &std::path::Path| path.extension().is_some_and(|ext| ext == "json");
     for path in entries(profiles_dir) {
-        if path.extension().is_none_or(|ext| ext != "json") {
+        if !is_json(&path) {
             continue;
         }
         let Some(name) = path.file_stem().and_then(|stem| stem.to_str()) else {
@@ -1341,10 +1353,26 @@ fn number_configured_by(
         }
     }
     // Configs used with --config but not referenced by any profile.
-    for dir in account_dir.parent().map(entries).unwrap_or_default() {
-        let config = dir.join("request.json");
-        if configures(&config).is_some() {
-            return Some(config.display().to_string());
+    let parent = account_dir.parent();
+    let grandparent = parent.and_then(std::path::Path::parent);
+    let mut scanned = 0;
+    for base in [parent, grandparent].into_iter().flatten() {
+        for dir in entries(base) {
+            if !dir.is_dir() {
+                continue;
+            }
+            for file in entries(&dir) {
+                if scanned >= MAX_SCANNED_FILES {
+                    return None;
+                }
+                if !is_json(&file) || !file.is_file() {
+                    continue;
+                }
+                scanned += 1;
+                if configures(&file).is_some() {
+                    return Some(file.display().to_string());
+                }
+            }
         }
     }
     None
@@ -2957,6 +2985,22 @@ mod accounts_tests {
         assert!(
             number_configured_by(&profiles_dir, &accounts.join("new"), &other)
                 .is_some_and(|by| by.ends_with("request.json"))
+        );
+        // Any file name, and a lab directory beside `accounts` (review L7).
+        let third = PhoneNumber::new(1, "5550100003").unwrap();
+        assert_eq!(
+            number_configured_by(&profiles_dir, &accounts.join("new"), &third),
+            None
+        );
+        std::fs::create_dir_all(temp_dir.path().join("signup-json-x")).unwrap();
+        std::fs::write(
+            temp_dir.path().join("signup-json-x/request-corrected.json"),
+            r#"{"phone":{"country_code":1,"national_number":"5550100003"}}"#,
+        )
+        .unwrap();
+        assert!(
+            number_configured_by(&profiles_dir, &accounts.join("new"), &third)
+                .is_some_and(|by| by.ends_with("request-corrected.json"))
         );
         let cli = Cli {
             store: temp_dir.path().join("test.redb"),

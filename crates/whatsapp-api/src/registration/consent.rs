@@ -172,16 +172,13 @@ impl RegistrationService {
                     .await
             }
             Err(error) => {
-                // `attempt` is the pre-reservation copy: its state is the one
-                // to restore if the request provably did not leave.
-                let prior = attempt.state.clone();
-                let method = attempt.method.clone();
+                // `attempt` is the pre-reservation copy, restored exactly if
+                // the request provably did not leave.
                 self.finish_failed(
                     &attempt,
                     "verifying",
                     RegistrationState::RegistrationOutcomeUnknown { step: 0 },
-                    prior,
-                    method,
+                    attempt.clone(),
                     // Consent prepares nothing, so its latch can go alone.
                     Undo {
                         latch: Some(latch),

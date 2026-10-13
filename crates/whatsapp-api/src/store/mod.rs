@@ -345,7 +345,7 @@ impl ProtocolStore {
         {
             return Err(StoreError::Io(std::io::Error::new(
                 std::io::ErrorKind::InvalidData,
-                "store file is empty; initialize it with `store init`",
+                "store file is empty; initialize it with `store init` (a lab profile: `lab-signup begin --create-store`)",
             ))
             .into());
         }
