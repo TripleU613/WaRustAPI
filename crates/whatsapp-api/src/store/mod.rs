@@ -89,10 +89,15 @@ pub enum StoreError {
     /// A record or key exceeded the size bound.
     #[error("record too large")]
     RecordTooLarge,
-    /// The requested cursor precedes retained events.
-    #[error("cursor expired; earliest retained cursor is {floor:?}")]
+    /// The requested cursor precedes the journal floor: events through the
+    /// floor were trimmed (`trim_events` removes every cursor `<= floor`).
+    #[error(
+        "cursor expired: events through cursor {} were trimmed; reading resumes only after a cursor at or beyond it",
+        .floor.0
+    )]
     CursorExpired {
-        /// First cursor still retained.
+        /// Last trimmed cursor, the lowest cursor a read may start after; the
+        /// first retained event is `floor + 1`.
         floor: EventCursor,
     },
     /// The acknowledged cursor is beyond the journal head.

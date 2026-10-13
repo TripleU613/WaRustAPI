@@ -575,7 +575,7 @@ async fn store_route(request: &RequestLine, state: &ApiState) -> Option<Response
                 "Conflict",
                 "cursor_expired",
                 &format!(
-                    "this consumer's events before cursor {} were trimmed; the CLI refuses the same way",
+                    "events through cursor {} were trimmed and this consumer has not acknowledged that far; the CLI refuses the same way",
                     floor.0
                 ),
             )
@@ -1759,7 +1759,8 @@ mod tests {
         let after_ack = get("/v1/events/summary?consumer=cli".into()).await;
         assert_eq!(body(&after_ack)["after_cursor"], 1);
         assert_eq!(body(&after_ack)["kinds"], json!(["message_deleted"]));
-        // A consumer never used before the trim starts at 0, below the floor.
+        // A consumer never used before the trim starts at 0, below the floor
+        // (events through cursor 1 were removed; the first retained is 2).
         let expired = get("/v1/events/summary?consumer=fresh".into()).await;
         assert_eq!(expired.status, 409);
         assert_eq!(body(&expired)["error"]["code"], "cursor_expired");
@@ -1767,7 +1768,7 @@ mod tests {
             body(&expired)["error"]["message"]
                 .as_str()
                 .unwrap()
-                .contains("cursor 1")
+                .contains("events through cursor 1 were trimmed")
         );
     }
 

@@ -130,7 +130,8 @@ The name follows the same unencoded ID rule but at most 64 bytes (the library
 `ConsumerId` bound); a name using other printable characters, which the CLI
 accepts, cannot be queried here, and `limit` is refused as an extra parameter.
 A consumer whose cursor precedes trimmed events (for example a name first used
-after a trim) answers 409 `cursor_expired` naming the earliest retained cursor.
+after a trim) answers 409 `cursor_expired` naming the last trimmed cursor
+(the first retained event is the next one).
 
 All store routes are declared with `x-transport: ["cli", "http"]` and the
 `storeBearer` security scheme.

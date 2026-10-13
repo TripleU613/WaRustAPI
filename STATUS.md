@@ -19,7 +19,7 @@ MIME, key or chat) and `GET /v1/events/summary?consumer=<name>` (the
 consumer's cursors and the next 50 event kinds; no content, chat or message
 ID). The summary never acknowledges; acknowledging and full events stay
 CLI-only. A consumer whose cursor precedes trimmed events answers 409
-`cursor_expired` naming the earliest retained cursor. The CLI gained the same
+`cursor_expired` naming the last trimmed cursor. The CLI gained the same
 JSON: `media-list --json` and `events --summary --json`. Corrected: the
 OpenAPI `MediaItem` schema listed `mime`, `downloaded`, `opened` and a
 `view_once_image` kind that the list never produced.
