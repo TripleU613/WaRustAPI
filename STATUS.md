@@ -1,3 +1,12 @@
+2026-10-13 — **Corrected/offline (review of quoted media sending):** as first
+committed, group JSON image/voice-note replies were still refused by the JSON
+reader (it required `text` on every reply), so they were reachable only through
+the library despite the docs; fixed and tested through the reader. JSON
+reactions and `quoted_text` are again refused before the send-path claim.
+Direct quotes are now built at selection, so a wrong-chat parent, missing own
+identity or over-32-KiB quote fails locally instead of after the key query.
+Class names corrected to 2.26.37.71 `BZD`/`BZ0`/`BZL`. [Details](docs/protocol/quoted-media.md#sending-2026-10-13).
+
 2026-10-13 — **Implemented/offline:** an uploaded image or voice note can reply
 to a message (direct and normal group outbox): the media message carries the
 same `BWx` contextInfo a text reply does, at the field the receive path reads.

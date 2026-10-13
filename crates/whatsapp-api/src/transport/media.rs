@@ -188,8 +188,9 @@ struct ContextOnly {
     #[prost(message, optional, tag = "17")]
     context: Option<MediaContext>,
 }
-// Comparison BWp/BWZ contextInfo=17, BWx stanzaId=1, participant=2,
-// quotedMessage=3, expiration=25 (the same BWx fields text replies use).
+// contextInfo=17 (2.26.37.71 BZD/BZ0 contextInfo_, type BZL; BWp/BWZ/BWx are
+// another release's names), stanzaId=1, participant=2, quotedMessage=3,
+// expiration=25 (the same fields text replies use).
 // Keep quote detection separate from expiry enforcement.
 #[derive(Message)]
 struct MediaContext {

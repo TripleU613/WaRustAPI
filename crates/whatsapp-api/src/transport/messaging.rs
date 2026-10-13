@@ -271,11 +271,22 @@ impl MessageRequest {
                     "invalid quoted message id",
                 ));
             }
-            // A reaction has no body; a reply must have one.
-            if quote.is_reaction() != value.text.is_empty() {
+            // A reaction has no body; a reply has exactly one: text, an image
+            // or a voice note (outbox-send sends media replies; the comparison
+            // group path refuses media separately).
+            let bodies = usize::from(!value.text.is_empty())
+                + usize::from(value.image.is_some())
+                + usize::from(value.voice_note.is_some());
+            if quote.is_reaction() && bodies != 0 {
                 return Err(crate::Error::invalid(
                     "message",
-                    "a reaction carries no text and a reply needs one",
+                    "a reaction carries no text, image or voice note",
+                ));
+            }
+            if !quote.is_reaction() && bodies != 1 {
+                return Err(crate::Error::invalid(
+                    "message",
+                    "a reply carries exactly one of text, image or voice_note",
                 ));
             }
         }
@@ -1951,7 +1962,22 @@ mod tests {
             react.quote.as_ref().unwrap().sender().unwrap(),
             Jid::parse("222222222222222@lid").unwrap()
         );
-        // Both, neither, and a quote with no group are all refused.
+        // A media reply has an image or voice note as its one body. It reads
+        // (outbox-send sends it); the comparison group path refuses media.
+        for (name, body) in [
+            ("reply-image.json", r#""image":"/tmp/reply.png""#),
+            ("reply-voice.json", r#""voice_note":"/tmp/reply.ogg""#),
+        ] {
+            let media = MessageRequest::read(&write(
+                name,
+                &format!(r#"{{{group},{body},"quote":{{{target}}},"request_id":"r6"}}"#),
+            ))
+            .unwrap();
+            assert!(!media.quote.as_ref().unwrap().is_reaction());
+            assert!(media.require_comparison_group_text().is_err());
+        }
+        // Both, neither, two bodies, a reaction with media, and a quote with
+        // no group are all refused.
         for (name, body) in [
             (
                 "both.json",
@@ -1967,6 +1993,18 @@ mod tests {
                 "nogroup.json",
                 format!(
                     r#"{{"to":"15551234567","text":"ok","quote":{{{target}}},"request_id":"r5"}}"#
+                ),
+            ),
+            (
+                "two-bodies.json",
+                format!(
+                    r#"{{{group},"text":"ok","image":"/tmp/reply.png","quote":{{{target}}},"request_id":"r7"}}"#
+                ),
+            ),
+            (
+                "react-image.json",
+                format!(
+                    r#"{{{group},"image":"/tmp/reply.png","quote":{{{target},"emoji":"👍"}},"request_id":"r8"}}"#
                 ),
             ),
         ] {

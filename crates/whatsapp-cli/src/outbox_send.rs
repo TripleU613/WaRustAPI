@@ -83,6 +83,31 @@ fn quoted(
     }))
 }
 
+/// JSON this path does not send. Runs before the store opens and before the
+/// request ID is claimed for the outbox path, so the same JSON can still go to
+/// lab-transport unchanged.
+fn refuse_comparison_only(message: &MessageRequest) -> Result<(), Error> {
+    if message
+        .quote
+        .as_ref()
+        .is_some_and(|quote| quote.is_reaction() || quote.quoted_text.is_some())
+    {
+        return Err(Error::invalid(
+            "outbox_send",
+            "normal JSON quotes are replies without quoted_text; reactions and supplied previews remain on the comparison path",
+        ));
+    }
+    if message.group_chat()?.is_some()
+        && (message.view_once || message.fresh_sessions || message.skdm_out_of_band()?)
+    {
+        return Err(Error::invalid(
+            "outbox_send",
+            "normal group JSON supports text/uploaded media and replies with existing sessions and in-band distribution; view-once, fresh sessions and direct distribution remain on the comparison path",
+        ));
+    }
+    Ok(())
+}
+
 fn destination(message: &MessageRequest) -> Result<Jid, Error> {
     match message.group_chat()? {
         Some(group) => Ok(group),
@@ -149,12 +174,7 @@ pub(super) async fn run(
     let config = signup::config(path)?;
     let message = MessageRequest::read(message_path)?;
     let is_group = message.group_chat()?.is_some();
-    if is_group && (message.view_once || message.fresh_sessions || message.skdm_out_of_band()?) {
-        return Err(Error::invalid(
-            "outbox_send",
-            "normal group JSON supports text/uploaded media and replies with existing sessions and in-band distribution; view-once, fresh sessions and direct distribution remain on the comparison path",
-        ));
-    }
+    refuse_comparison_only(&message)?;
     let account_id = AccountId::new(cli.account.clone())?;
     let options = || OpenOptions {
         path: cli.store.clone(),
@@ -451,7 +471,9 @@ mod tests {
         let own_reference = quoted(&store, &account, &own).unwrap().unwrap();
         assert_eq!(own_reference.key.direction, Direction::Outgoing);
         assert!(own_reference.key.sender.is_none());
-        // Reactions and caller-supplied previews stay on the comparison path.
+        // Reactions and caller-supplied previews stay on the comparison path,
+        // refused before any store access or send-path claim.
+        assert!(refuse_comparison_only(&other).is_ok());
         for quote in [
             serde_json::json!({"message_id": "PARENT", "participant": "15550000001@s.whatsapp.net", "emoji": "x"}),
             serde_json::json!({"message_id": "PARENT", "participant": "15550000001@s.whatsapp.net", "quoted_text": "preview"}),
@@ -461,6 +483,7 @@ mod tests {
                 request.text.clear();
             }
             assert!(quoted(&store, &account, &request).is_err());
+            assert!(refuse_comparison_only(&request).is_err());
         }
         // A reused request ID must keep the same quote target.
         let request = SendRequest {

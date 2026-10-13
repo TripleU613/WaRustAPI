@@ -9,9 +9,16 @@ opaque `unsupported_message`. No live quoted media has been received since.
 
 Comparison 2.26.37.71, SHA-256
 `1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`: media
-messages carry `contextInfo` at field 17 (`BWp`/`BWZ`), whose `BWx` type has
+messages carry `contextInfo` at field 17, whose ContextInfo type has
 `stanzaId`=1, `participant`=2, `quotedMessage`=3 and `expiration`=25. The
-same `BWx` fields attribute text replies, which were observed live. The media
+same ContextInfo fields attribute text replies, which were observed live.
+**Class names (corrected 2026-10-13):** in 2.26.37.71 the image and audio
+classes are `BZD` and `BZ0`, and both retained descriptors list
+`contextInfo_` of type `BZL`
+([image](rea/2.26.37.71-own-device-media/image-descriptor.json),
+[audio](rea/2.26.37.71-own-device-media/audio-descriptor.json)). The names
+`BWp`/`BWZ`/`BWx` in older comments come from another comparison release
+([own-device media](own-device-media.md)); the field numbers are unchanged. The media
 context and expiry handling are described in
 [messaging-completion.md](../messaging-completion.md) (media context follow-up).
 No new APK trace was made; this extends the existing text rule to the same
@@ -67,8 +74,8 @@ other field byte for byte. The attribution is the existing text rule:
   blocks), and `quotedMessage` is the saved parent text only.
 
 **Evidence:** the field placement is the one the receive path already reads
-from the comparison 2.26.37.71 descriptors (`BWp`/`BWZ` contextInfo=17, `BWx`
-fields; see [Evidence](#evidence-reused)). No native sender for quoted media was
+from the 2.26.37.71 descriptors (`BZD`/`BZ0` `contextInfo_`=17 of type `BZL`;
+see [Evidence](#evidence-reused)). No native sender for quoted media was
 traced in this session (no APK in the container); the encoding mirrors the
 live-verified text reply, not a traced media-reply producer. **Not
 established:** whether the native client adds other context fields (for
@@ -78,18 +85,36 @@ carries yet) or a quoted-media `quotedMessage` with the parent's media fields.
 **Refused locally:** a view-once payload (wrapper 55; its quote semantics are
 untraced), a payload without exactly one image/audio field, a media message
 that already has a context, captions and file names (unchanged), and a quote
-of another chat (outbox validation). The payload shape is checked at
-selection, before any key query is reserved, so an unsupported shape marks the
-intent failed locally (`unsupported_quoted_media_fails_locally_before_any_query`)
-instead of failing after a network reservation.
+of another chat (outbox validation). Direct quotes (text and media) are built
+at selection exactly as preparation builds them, before any key query is
+reserved: a wrong-chat or ambiguous saved parent, a missing own identity, an
+unsupported media shape, or a payload over the 32 KiB direct bound
+(`direct::prepare_payload`; the quote copies the whole saved parent) marks the
+intent failed locally (`unbuildable_quotes_fail_locally_before_any_query`).
+Before the review fix only the shape was checked there, so the other cases
+failed after the key query and ended the session with the intent stranded. In
+groups an unsupported shape blocks the preparation as unsupported content.
 
 **Exposure:** library `send_message`; `outbox-send` group JSON replies
-(`quote` without `emoji`/`quoted_text`) with `text`, `image` or `voice_note`.
-The `reply` command stays text-only and direct private JSON still refuses
-`quote`. The same change moved the comparison path's group text-only refusal
-out of the shared JSON reader: it had also blocked the documented
+(`quote` without `emoji`/`quoted_text`) with exactly one of `text`, `image` or
+`voice_note`. The `reply` command stays text-only and direct private JSON still
+refuses `quote`. The same change moved the comparison path's group text-only
+refusal out of the shared JSON reader: it had also blocked the documented
 `outbox-send` group image/voice note path, which was therefore unreachable from
-the CLI.
+the CLI. **Correction (review, same day):** as first committed, the reader
+still required `text` on every reply, so image/voice-note replies were refused
+by `MessageRequest::read` and only reachable through the library; the CLI test
+had built the request with serde and bypassed the reader. A reply now needs
+exactly one body, tested through `read()`. JSON reactions and `quoted_text`
+are refused before the store opens and before the request ID is claimed for
+the outbox path, so the same JSON can still go to `lab-transport`.
+
+**Re-running the same JSON:** whether `participant` names our own message is
+decided from the current own PN/LID. If our LID is learned between two runs,
+the same reply JSON maps to a different target direction and `outbox-send`
+refuses with an idempotency conflict instead of reporting the saved result.
+This fails safe (nothing is resent); reuse the original saved outcome through
+`status`.
 
 **Tests:** `media_reply_context_round_trips_through_the_receive_parser`
 (image/audio placement read back by the receive parser) and
@@ -100,7 +125,9 @@ decrypted peer plaintext, incoming and outgoing parents);
 the `quoted` case of `uploaded_group_media_is_chat_bound_and_late_crypto_changes_roll_back_reservation`
 (guarded group payload, sent as `mediatype=image`);
 `group_json_replies_map_authors_and_refuse_comparison_only_quotes` (CLI
-mapping and request-ID reuse). No live quoted media was sent.
+mapping, early refusals and request-ID reuse);
+`a_group_quote_is_a_reply_or_a_reaction_but_not_both` (media replies through
+the JSON reader). No live quoted media was sent.
 
 ## Remaining
 

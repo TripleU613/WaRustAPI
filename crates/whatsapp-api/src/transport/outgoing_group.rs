@@ -1343,8 +1343,14 @@ fn payload(store: &ProtocolStore, entry: &OutboxEntry, own: Option<&Jid>) -> Res
                 entry.intent.chat.jid(),
                 &entry.intent.content,
             )?;
+            // Support check only (no own identity yet): like quoted text, an
+            // empty body, never the media without its quote.
             let Some(own) = own else {
-                return Ok((body, groups::StanzaContent::Media(media), None));
+                return Ok((
+                    Zeroizing::new(Vec::new()),
+                    groups::StanzaContent::Media(media),
+                    None,
+                ));
             };
             let (body, guard) = super::group_references::guarded_media_payload(
                 store,

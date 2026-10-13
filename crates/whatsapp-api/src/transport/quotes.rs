@@ -203,9 +203,9 @@ pub fn reply_payload(text: &str, stanza_id: &str, participant: &str, quoted: Vec
 }
 
 /// Add a quote to an encoded media `Message`: `contextInfo` (17) on its
-/// `imageMessage` (3) or `audioMessage` (8), the comparison `BWp`/`BWZ` field
-/// the receive path already reads (`transport::media`), with the same `BWx`
-/// stanzaId/participant/quotedMessage as a text reply. Every other field is
+/// `imageMessage` (3) or `audioMessage` (8), the field the receive path already
+/// reads (`transport::media`; 2.26.37.71 `BZD`/`BZ0` `contextInfo_`, type
+/// `BZL`), with the same stanzaId/participant/quotedMessage as a text reply. Every other field is
 /// copied byte for byte. Anything else refuses rather than guessing where the
 /// quote belongs: the view-once wrapper (55, quote semantics untraced), not
 /// exactly one media field, or a media message that already has a context.

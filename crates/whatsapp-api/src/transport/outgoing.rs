@@ -226,6 +226,7 @@ pub fn begin_selected(
         let supported = matches!(peer.server, Server::User | Server::Lid)
             && peer.device == 0
             && !peer.user.is_empty()
+            && quote_buildable(store, peer, &entry)?
             && match &entry.intent.content {
                 MessageContent::Text { body, quoted, .. } => {
                     !body.is_empty()
@@ -479,6 +480,63 @@ fn reply_payload_for(
         &participant.to_string(),
         quoted,
     ))
+}
+
+/// `direct::prepare_payload` and the hybrid encryptor refuse larger plaintexts.
+const DIRECT_PAYLOAD_LIMIT: usize = 32768;
+
+/// Build a direct quote's payload at selection, exactly as preparation will,
+/// before any key query is reserved. A quote that cannot be built (parent in
+/// another chat or ambiguous, no own identity, unsupported media shape) or
+/// exceeds the direct payload bound then fails locally instead of after a
+/// network reservation, where the error would end the session and strand the
+/// intent. Non-quoted content passes; storage errors still propagate.
+fn quote_buildable(
+    store: &ProtocolStore,
+    peer: &crate::model::jid::Jid,
+    entry: &OutboxEntry,
+) -> Result<bool> {
+    let built = match &entry.intent.content {
+        MessageContent::Text {
+            body,
+            quoted: Some(target),
+            ..
+        } => {
+            let Some(account) = store.read(AccountRecord::load)? else {
+                return Ok(false);
+            };
+            reply_payload_for(store, &account, peer, target, body)
+        }
+        MessageContent::Media {
+            reference,
+            caption: None,
+            file_name: None,
+            quoted: Some(target),
+        } => {
+            let Some(account) = store.read(AccountRecord::load)? else {
+                return Ok(false);
+            };
+            let Ok((payload, _)) =
+                super::outgoing_media::resolve(store, &entry.client_request_id, peer, reference)
+            else {
+                return Ok(false);
+            };
+            quote_for(store, &account, peer, target).and_then(|(participant, quoted)| {
+                super::quotes::media_reply_payload(
+                    &payload,
+                    target.key.id.as_str(),
+                    &participant.to_string(),
+                    quoted,
+                )
+            })
+        }
+        _ => return Ok(true),
+    };
+    match built {
+        Ok(payload) => Ok(payload.len() <= DIRECT_PAYLOAD_LIMIT),
+        Err(Error::InvalidInput { .. }) => Ok(false),
+        Err(error) => Err(error),
+    }
 }
 
 /// The `participant` and encoded `quotedMessage` for a quote of `target` in
@@ -2253,71 +2311,154 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn unsupported_quoted_media_fails_locally_before_any_query() {
+    async fn unbuildable_quotes_fail_locally_before_any_query() {
         use crate::model::{
             ids::{DeviceAddress, MessageId},
             message::{Direction, MessageKey, MessageRef},
         };
-        let dir = tempfile::tempdir().unwrap();
-        let store = open(&dir.path().join("quoted-view-once.redb"));
         let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
-        // A view-once wrapper (Message field 55) has no traced quote placement.
-        store
-            .write(|tx| {
-                tx.put_json(
-                    Table::Checkpoints,
-                    b"message:quoted-view-once:upload",
-                    1,
-                    &serde_json::json!({"status":"uploaded","to":peer.user,"hash":"synthetic",
-                        "protobuf":[0xba, 0x03, 0x00]}),
-                )
-            })
-            .unwrap();
-        let request_id = ClientRequestId::new("quoted-view-once").unwrap();
-        let reference =
-            super::super::outgoing_media::reference(&store, &request_id, &peer).unwrap();
-        let id = store
-            .write(|tx| {
-                Ok(outbox()
-                    .enqueue(
+        let other = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        let account = AccountRecord {
+            own_jid: Some(Jid::parse("15555550199@s.whatsapp.net").unwrap()),
+            ..Default::default()
+        };
+        let incoming = |id: &str| MessageRef {
+            key: MessageKey {
+                chat: ChatId::from_jid(&peer).unwrap(),
+                sender: Some(DeviceAddress::from_jid(&peer).unwrap()),
+                direction: Direction::Incoming,
+                id: MessageId::new(id).unwrap(),
+            },
+        };
+        // (case, upload protobuf or None for a text reply, target, sendable)
+        for (case, upload, target, sendable) in [
+            ("control", Some(vec![26u8, 0]), incoming("PARENT"), true),
+            // A view-once wrapper (Message field 55) has no traced quote placement.
+            (
+                "view_once",
+                Some(vec![0xba, 0x03, 0x00]),
+                incoming("PARENT"),
+                false,
+            ),
+            // The copied parent would push the payload past the 32 KiB bound.
+            ("oversized", Some(vec![26, 0]), incoming("LARGE"), false),
+            // Our own parent's wire ID belongs to an intent in another chat.
+            (
+                "foreign_parent",
+                None,
+                MessageRef {
+                    key: MessageKey {
+                        chat: ChatId::from_jid(&peer).unwrap(),
+                        sender: None,
+                        direction: Direction::Outgoing,
+                        id: MessageId::new("FOREIGN-WIRE").unwrap(),
+                    },
+                },
+                false,
+            ),
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(&dir.path().join("unbuildable-quote.redb"));
+            let large = super::super::quotes::conversation(&"x".repeat(33_000));
+            store
+                .write(|tx| {
+                    AccountRecord::save(&account, tx)?;
+                    tx.put_json(
+                        Table::Checkpoints,
+                        format!("received:{peer}:PARENT").as_bytes(),
+                        1,
+                        &serde_json::json!({"status":"decrypted","protobuf":b"\x0a\x01p"}),
+                    )?;
+                    tx.put_json(
+                        Table::Checkpoints,
+                        format!("received:{peer}:LARGE").as_bytes(),
+                        1,
+                        &serde_json::json!({"status":"decrypted","protobuf":large}),
+                    )?;
+                    let foreign = outbox().enqueue(
                         tx,
                         &SendRequest {
-                            client_request_id: request_id.clone(),
-                            chat: ChatId::from_jid(&peer)?,
-                            content: MessageContent::Media {
-                                reference,
-                                caption: None,
-                                file_name: None,
-                                quoted: Some(MessageRef {
-                                    key: MessageKey {
-                                        chat: ChatId::from_jid(&peer)?,
-                                        sender: Some(DeviceAddress::from_jid(&peer)?),
-                                        direction: Direction::Incoming,
-                                        id: MessageId::new("PARENT")?,
-                                    },
-                                }),
+                            client_request_id: ClientRequestId::new("foreign")?,
+                            chat: ChatId::from_jid(&other)?,
+                            content: MessageContent::Text {
+                                body: "elsewhere".into(),
+                                quoted: None,
+                                style: Default::default(),
                             },
                         },
-                    )?
-                    .0
-                    .local_id)
-            })
-            .unwrap();
-        assert!(begin_selected(&store, Some(id)).unwrap().is_none());
-        assert!(
-            store
+                    )?;
+                    let mut entry = outbox().get_mut(tx, foreign.0.local_id)?.unwrap();
+                    entry.wire_id = Some(MessageId::new("FOREIGN-WIRE")?);
+                    entry.progress = AttemptProgress::Failed;
+                    tx.put_json(Table::Outbox, &entry.local_id.0, 1, &entry)
+                })
+                .unwrap();
+            let request_id = ClientRequestId::new(format!("quote-{case}")).unwrap();
+            let content = match upload {
+                Some(protobuf) => {
+                    store
+                        .write(|tx| {
+                            tx.put_json(
+                                Table::Checkpoints,
+                                format!("message:quote-{case}:upload").as_bytes(),
+                                1,
+                                &serde_json::json!({"status":"uploaded","to":peer.user,
+                                    "hash":"synthetic","protobuf":protobuf}),
+                            )
+                        })
+                        .unwrap();
+                    MessageContent::Media {
+                        reference: super::super::outgoing_media::reference(
+                            &store,
+                            &request_id,
+                            &peer,
+                        )
+                        .unwrap(),
+                        caption: None,
+                        file_name: None,
+                        quoted: Some(target),
+                    }
+                }
+                None => MessageContent::Text {
+                    body: "reply".into(),
+                    quoted: Some(target),
+                    style: Default::default(),
+                },
+            };
+            let id = store
+                .write(|tx| {
+                    Ok(outbox()
+                        .enqueue(
+                            tx,
+                            &SendRequest {
+                                client_request_id: request_id.clone(),
+                                chat: ChatId::from_jid(&peer)?,
+                                content,
+                            },
+                        )?
+                        .0
+                        .local_id)
+                })
+                .unwrap();
+            assert_eq!(
+                begin_selected(&store, Some(id)).unwrap().is_some(),
+                sendable,
+                "{case}"
+            );
+            let reserved = store
                 .read(|tx| tx.get(Table::Checkpoints, query_key(id).as_bytes(), 1))
                 .unwrap()
-                .is_none()
-        );
-        assert_eq!(
-            store
+                .is_some();
+            assert_eq!(reserved, sendable, "{case}");
+            let progress = store
                 .read(|tx| outbox().get(tx, id))
                 .unwrap()
                 .unwrap()
-                .progress,
-            AttemptProgress::Failed
-        );
+                .progress;
+            if !sendable {
+                assert_eq!(progress, AttemptProgress::Failed, "{case}");
+            }
+        }
     }
 
     #[tokio::test]
