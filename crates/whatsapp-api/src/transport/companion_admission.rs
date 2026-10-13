@@ -1386,6 +1386,137 @@ mod tests {
         assert_ne!(before[3], after[3]); // Only the authenticated sender chain advanced.
     }
 
+    /// The routing guards matter only for a companion that would otherwise be
+    /// admitted: this fixture's classic prekey from the same companion decrypts
+    /// (`direct_companion_prekey_and_followup_keep_chat_and_device_separate`).
+    /// Its hybrid 0x44 prekey, with a valid local KEM row, must neither derive a
+    /// session, consume a key, nor admit the device, directly or in a group.
+    #[tokio::test]
+    async fn admitted_companion_hybrid_prekeys_never_derive_or_consume_keys() {
+        use crate::signal::{hybrid, kem};
+        use wacore_libsignal::protocol::{
+            AliceSignalProtocolParameters, PrivateKey, PublicKey, UsePQRatchet,
+        };
+        for (raw, in_group) in [
+            ("15555550101:3@s.whatsapp.net", false),
+            ("99990000101:3@lid", false),
+            ("15555550101:3@s.whatsapp.net", true),
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("hybrid-companion.redb");
+            let (store, receiver, peer, fixture_node, sending, _) =
+                fixture_payload(&path, raw, Some(b"\x0a\x04test")).await;
+            let material = &sending.signal_identity.as_ref().unwrap().0;
+            let companion = IdentityKeyPair::new(
+                IdentityKey::new(PublicKey::from_djb_public_key_bytes(&material.public).unwrap()),
+                PrivateKey::deserialize(&material.private).unwrap(),
+            );
+            let signed = SignedPreKeyRecord::deserialize(
+                &crate::registration::factory::registered_signed_prekey(&store).unwrap(),
+            )
+            .unwrap()
+            .public_key()
+            .unwrap();
+            let mut local_identity = vec![5];
+            local_identity.extend(receiver.signal_identity.as_ref().unwrap().0.public);
+            let (kem_public, kem_secret) = kem::generate_key_pair().unwrap();
+            store
+                .write(|tx| {
+                    super::super::kem_prekeys::install_for_test(
+                        tx,
+                        9,
+                        &kem_public,
+                        kem_secret.as_bytes(),
+                        false,
+                    )
+                    .map(drop)
+                })
+                .unwrap();
+            let parameters = AliceSignalProtocolParameters::new(
+                companion,
+                KeyPair::generate(&mut rand::rng()),
+                IdentityKey::decode(&local_identity).unwrap(),
+                signed,
+                signed,
+                UsePQRatchet::No,
+            );
+            let (kem_ciphertext, shared) = kem::encapsulate(&kem_public).unwrap();
+            let first = hybrid::initialize_alice(
+                &parameters,
+                shared.as_bytes().try_into().unwrap(),
+                &KeyPair::generate(&mut rand::rng()),
+                (31, 42),
+                (
+                    None,
+                    7,
+                    &direct::IncomingKem {
+                        prekey_id: 9,
+                        ciphertext: &kem_ciphertext,
+                    },
+                ),
+            )
+            .unwrap()
+            .prepare(b"\x0a\x04test")
+            .unwrap();
+            assert_eq!((first.kind, first.ciphertext[0]), ("pkmsg", 0x44));
+            let children = vec![
+                Node::new("enc")
+                    .attr("type", "pkmsg")
+                    .attr("v", "2")
+                    .bytes(first.ciphertext.to_vec()),
+                fixture_node.child("device-identity").unwrap().clone(),
+            ];
+            let mut node = if in_group {
+                Node::new("message")
+                    .attr("from", fixture_node.get_attr("from").unwrap().clone())
+                    .attr("participant", peer.clone())
+            } else {
+                Node::new("message").attr("from", raw)
+            }
+            .attr("id", "HYBRID-COMPANION")
+            .children(children);
+            if peer.server == Server::Lid {
+                node = node.attr("sender_pn", "15555550101@s.whatsapp.net");
+            }
+            let list_before = store
+                .read(|tx| {
+                    tx.get(
+                        Table::Checkpoints,
+                        list_key(&peer.to_non_ad()).as_bytes(),
+                        1,
+                    )
+                })
+                .unwrap();
+            let before = crypto_rows(&store);
+            let capture = super::super::inbox::preserve(&store, &node).unwrap();
+            let result = super::super::inbox::process(&store, &receiver, &node, &capture)
+                .await
+                .unwrap();
+            assert_ne!(
+                result,
+                super::super::inbox::IncomingResult::Decrypted,
+                "{raw} group={in_group}"
+            );
+            assert_eq!(crypto_rows(&store), before, "{raw} group={in_group}");
+            assert!(
+                store
+                    .read(|tx| super::super::kem_prekeys::load(tx, 9))
+                    .unwrap()
+                    .is_some()
+            );
+            assert_eq!(
+                store
+                    .read(|tx| tx.get(
+                        Table::Checkpoints,
+                        list_key(&peer.to_non_ad()).as_bytes(),
+                        1
+                    ))
+                    .unwrap(),
+                list_before
+            );
+        }
+    }
+
     #[tokio::test]
     async fn direct_companion_prekey_and_followup_keep_chat_and_device_separate() {
         for raw in ["15555550101:3@s.whatsapp.net", "99990000101:3@lid"] {

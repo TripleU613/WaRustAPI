@@ -135,7 +135,12 @@ encapsulations to a locally generated key:
   inside `receive_hybrid_prekey` itself (`device != 0` returns the preserved
   `None`) and tested directly there: a companion address with a valid envelope
   and KEM row is refused, the same call for the primary opens, and neither
-  commits. An admitted-companion end-to-end fixture is still missing;
+  commits. `admitted_companion_hybrid_prekeys_never_derive_or_consume_keys`
+  (companion admission tests) now uses a companion whose classic prekey is
+  admitted and decrypts; its hybrid 0x44 prekey with a valid local KEM row is
+  not Decrypted, directly (PN and LID) or in a group, with every crypto table,
+  the KEM row and the device list unchanged. With all three guards disabled the
+  same message decrypts, so the test discriminates;
 - after reopening, the three direct messages stay Duplicate with no table change.
 
 `kem_prekeys` unit tests cover row validation, counts, refusal to consume a
