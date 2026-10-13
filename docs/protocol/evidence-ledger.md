@@ -1,12 +1,25 @@
+2026-10-13 — **Corrected/offline (security review of HTTP store routes):** a
+request with no headers made the connection task panic (an empty header slice);
+it is now answered and tested. The token file is guarded before it is written and
+also removed on SIGTERM/SIGHUP; 503 is reserved for a store held by another
+command and other read failures answer 500 `store_read_failed`; the bearer
+scheme is case-insensitive. Separately, `ProtocolStore::open` without `create`
+no longer bootstraps a new store (with fresh keys) from an existing empty file
+or a database without the store schema; it refuses and leaves the file
+untouched. Docs now state the remaining caveats (killed server leaves the token
+file, per-request opens can make a starting command fail, `peer_ticket` is a
+guessable hash, use `127.0.0.1`). [API README](../api/README.md#store-routes-opt-in).
+
 2026-10-13 — **Implemented/offline (CLI):** `outbox-send` private JSON now
 sends direct-chat replies (text, image or voice note) as well as group replies;
 a direct quote's author must be the contact or us. The comparison path refuses
 any direct quote instead of silently dropping it (`require_comparison_support`).
 
 2026-10-13 — **Implemented/offline (HTTP):** `serve --store-routes --token-file`
-serves three read-only, redacted store inspections (`/v1/receipts`,
-`/v1/prekeys`, `/v1/outbox/suspended`) over loopback with a per-start bearer
-token kept in a new 0600 file, the store opened per request. Smoke-tested with
+serves read-only store inspections (six after the same-day follow-up:
+receipts, prekeys, suspended sends, actions, identity conflicts, group
+preparations) over loopback with a per-start bearer token kept in a new 0600
+file, the store opened per request. Smoke-tested with
 the real binary on a temporary store (401 without the token, redacted JSON
 with it, token file removed on shutdown, token never printed). Default `serve`
 is unchanged; nothing that sends is served. [Design](../feature-parity.md#http-api-parity).

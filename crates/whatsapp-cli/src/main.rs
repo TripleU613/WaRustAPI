@@ -743,8 +743,8 @@ enum Cmd {
         /// is opened per request, so a running `listen` makes them answer 503.
         #[arg(long, requires = "token_file")]
         store_routes: bool,
-        /// New file to receive the per-start bearer token (mode 0600, never
-        /// overwritten, removed on shutdown).
+        /// New file to receive the per-start bearer token (mode 0600 on unix,
+        /// never overwritten, removed on Ctrl-C, SIGTERM or SIGHUP).
         #[arg(long, requires = "store_routes")]
         token_file: Option<PathBuf>,
     },

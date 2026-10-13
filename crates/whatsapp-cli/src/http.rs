@@ -47,10 +47,12 @@ struct ApiState {
     store: Option<StoreRoutes>,
 }
 
-/// Read-only store routes, each the redacted output of an existing CLI
-/// inspection (`receipts`, `prekeys`, `outbox-suspended`, `actions` list,
-/// `identity-conflicts`, `outbox-group-preparations`). Each output carries
-/// opaque IDs, hashed peer tickets, fingerprints and fixed reasons only.
+/// Read-only store routes, each the same output as an existing CLI inspection
+/// (`receipts`, `prekeys`, `outbox-suspended`, `actions` list,
+/// `identity-conflicts`, `outbox-group-preparations`): counts, local and wire
+/// message/iq IDs, unsalted address hashes (`peer_ticket`, guessable for phone
+/// numbers), key fingerprints, fixed reasons and, for refused actions, the
+/// server's error text. No message content, key material or raw address.
 const STORE_ROUTES: [&str; 6] = [
     "/v1/receipts",
     "/v1/prekeys",
@@ -78,7 +80,11 @@ struct StoreRoutes {
 impl StoreRoutes {
     fn authorized(&self, header: Option<&str>) -> bool {
         use sha2::{Digest, Sha256};
-        let Some(presented) = header.and_then(|value| value.strip_prefix("Bearer ")) else {
+        // RFC 7235: the scheme name is case-insensitive.
+        let Some(presented) = header.and_then(|value| {
+            let (scheme, token) = value.split_once(' ')?;
+            scheme.eq_ignore_ascii_case("bearer").then_some(token)
+        }) else {
             return false;
         };
         // Equal-length digests compared without an early exit.
@@ -201,12 +207,16 @@ pub async fn serve(
     let permits = Arc::new(Semaphore::new(MAX_CONNECTIONS));
     let shutdown = tokio::signal::ctrl_c();
     tokio::pin!(shutdown);
+    // SIGTERM and SIGHUP also stop the server cleanly, so the token file guard
+    // runs; SIGKILL or a crash can still leave the (then useless) file behind.
+    let terminate = terminate_signal();
+    tokio::pin!(terminate);
 
     println!("whatsapp-api HTTP control plane listening on http://{local_addr}");
     println!("profile: {} (offline gates enforced)", state.profile.id);
     if let Some((_, guard)) = &store {
         println!(
-            "store routes enabled (read-only): bearer token written to {} (mode 0600, removed on shutdown)",
+            "store routes enabled (read-only): bearer token written to {} (mode 0600, removed on Ctrl-C/SIGTERM/SIGHUP)",
             guard.0.display()
         );
     }
@@ -216,6 +226,10 @@ pub async fn serve(
             signal = &mut shutdown => {
                 signal?;
                 println!("shutdown signal received");
+                return Ok(());
+            }
+            () = &mut terminate => {
+                println!("termination signal received");
                 return Ok(());
             }
             accepted = listener.accept() => {
@@ -237,8 +251,31 @@ pub async fn serve(
     }
 }
 
+#[cfg(unix)]
+async fn terminate_signal() {
+    use tokio::signal::unix::{SignalKind, signal};
+    match (
+        signal(SignalKind::terminate()),
+        signal(SignalKind::hangup()),
+    ) {
+        (Ok(mut term), Ok(mut hup)) => {
+            tokio::select! {
+                _ = term.recv() => {}
+                _ = hup.recv() => {}
+            }
+        }
+        _ => std::future::pending().await,
+    }
+}
+
+#[cfg(not(unix))]
+async fn terminate_signal() {
+    std::future::pending().await
+}
+
 /// Removes the token file when the server stops, so a stale token is not left
 /// readable after its server is gone.
+#[derive(Debug)]
 struct TokenFile(std::path::PathBuf);
 impl Drop for TokenFile {
     fn drop(&mut self) {
@@ -262,11 +299,11 @@ fn open_store_routes(store: StoreServe) -> Result<(StoreRoutes, TokenFile), Erro
         lock: tokio::sync::Mutex::new(()),
     };
     drop(whatsapp_api::store::ProtocolStore::open(routes.options())?);
-    let token = issue_token(&store.token_file)?;
-    Ok((StoreRoutes { token, ..routes }, TokenFile(store.token_file)))
+    let (token, guard) = issue_token(&store.token_file)?;
+    Ok((StoreRoutes { token, ..routes }, guard))
 }
 
-fn issue_token(path: &std::path::Path) -> Result<zeroize::Zeroizing<String>, Error> {
+fn issue_token(path: &std::path::Path) -> Result<(zeroize::Zeroizing<String>, TokenFile), Error> {
     use std::io::Write;
     let mut bytes = zeroize::Zeroizing::new([0u8; 32]);
     getrandom::fill(&mut *bytes)
@@ -286,9 +323,11 @@ fn issue_token(path: &std::path::Path) -> Result<zeroize::Zeroizing<String>, Err
             Error::from(error)
         }
     })?;
+    // Guard first: a failed write must not leave a partial token behind.
+    let guard = TokenFile(path.to_owned());
     file.write_all(token.as_bytes())?;
     file.sync_all()?;
-    Ok(token)
+    Ok((token, guard))
 }
 
 fn validate_bind(bind: SocketAddr, allow_non_loopback: bool) -> Result<(), Error> {
@@ -370,8 +409,11 @@ async fn read_request(stream: &mut TcpStream) -> Result<Option<RequestLine>, Err
     let Some(head_end) = bytes.windows(4).position(|window| window == b"\r\n\r\n") else {
         return Ok(None);
     };
-    let authorization = std::str::from_utf8(&bytes[line_end + 2..head_end])
-        .ok()
+    // A request with no headers has its blank line right after the request
+    // line, so the header block is empty (head_end == line_end).
+    let authorization = bytes
+        .get(line_end + 2..head_end)
+        .and_then(|headers| std::str::from_utf8(headers).ok())
         .and_then(|headers| {
             headers.split("\r\n").find_map(|header| {
                 let (name, value) = header.split_once(':')?;
@@ -438,13 +480,23 @@ async fn store_route(request: &RequestLine, state: &ApiState) -> Option<Response
     let result = tokio::task::spawn_blocking(move || read_store(options, &path)).await;
     Some(match result {
         Ok(Ok(body)) => Response::json(200, "OK", body),
-        Ok(Err(error)) => {
-            tracing::warn!(error = %error, "store route failed");
+        Ok(Err(Error::Storage(whatsapp_api::store::StoreError::AlreadyOwned { .. }))) => {
             Response::error(
                 503,
                 "Service Unavailable",
                 "store_unavailable",
-                "the account store could not be opened or read; it may be in use by another command",
+                "the account store is in use by another command; retry when it finishes",
+            )
+        }
+        Ok(Err(error)) => {
+            // Not a busy store: say so instead of suggesting a retry. Details
+            // (which may name paths) stay in the server log.
+            tracing::warn!(error = %error, "store route failed");
+            Response::error(
+                500,
+                "Internal Server Error",
+                "store_read_failed",
+                "the account store could not be read; see the serve log",
             )
         }
         Err(_) => Response::error(
@@ -981,7 +1033,12 @@ mod tests {
             token: zeroize::Zeroizing::new("secret-token".into()),
             lock: tokio::sync::Mutex::new(()),
         });
-        for authorization in [None, Some("Bearer wrong"), Some("secret-token")] {
+        for authorization in [
+            None,
+            Some("Bearer wrong"),
+            Some("secret-token"),
+            Some("Basic secret-token"),
+        ] {
             let response = store_route(&request("GET", "/v1/receipts", authorization), &state)
                 .await
                 .unwrap();
@@ -989,6 +1046,14 @@ mod tests {
             assert!(response.authenticate);
             assert!(!String::from_utf8_lossy(&response.body).contains("secret-token"));
         }
+        // The scheme name is case-insensitive (RFC 7235).
+        let lower = store_route(
+            &request("GET", "/v1/receipts", Some("bearer secret-token")),
+            &state,
+        )
+        .await
+        .unwrap();
+        assert_eq!(lower.status, 200);
         let auth = Some("Bearer secret-token");
         let post = store_route(&request("POST", "/v1/prekeys", auth), &state)
             .await
@@ -1029,14 +1094,29 @@ mod tests {
         assert_eq!(busy.status, 503);
         assert_eq!(body(&busy)["error"]["code"], "store_unavailable");
         assert!(!String::from_utf8_lossy(&busy.body).contains("served.redb"));
+        // A damaged row is not "busy": 500 with a fixed message, no retry hint.
+        held.write(|tx| {
+            tx.put_json(
+                whatsapp_api::store::Table::Checkpoints,
+                b"receipt-outbox:damaged:read",
+                1,
+                &json!({"status": "pending"}),
+            )
+        })
+        .unwrap();
         drop(held);
+        let damaged = store_route(&request("GET", "/v1/receipts", auth), &state)
+            .await
+            .unwrap();
+        assert_eq!(damaged.status, 500);
+        assert_eq!(body(&damaged)["error"]["code"], "store_read_failed");
     }
 
     #[test]
     fn token_files_are_new_private_and_never_overwritten() {
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("token");
-        let token = issue_token(&path).unwrap();
+        let (token, guard) = issue_token(&path).unwrap();
         assert_eq!(token.len(), 64);
         assert_eq!(std::fs::read_to_string(&path).unwrap(), *token);
         #[cfg(unix)]
@@ -1048,7 +1128,7 @@ mod tests {
         let error = issue_token(&path).unwrap_err().to_string();
         assert!(error.contains("already exists"));
         assert_eq!(std::fs::read_to_string(&path).unwrap(), *token);
-        drop(TokenFile(path.clone()));
+        drop(guard);
         assert!(!path.exists());
     }
 
@@ -1073,6 +1153,26 @@ mod tests {
         assert!(error.contains("loopback-only"));
         assert!(!dir.path().join("token").exists());
         assert!(!dir.path().join("never-opened.redb").exists());
+    }
+
+    #[tokio::test]
+    async fn a_request_without_headers_is_answered_not_panicked() {
+        let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let addr = listener.local_addr().unwrap();
+        let client = tokio::spawn(async move {
+            let mut stream = TcpStream::connect(addr).await.unwrap();
+            stream
+                .write_all(b"GET /healthz HTTP/1.0\r\n\r\n")
+                .await
+                .unwrap();
+            let mut answer = Vec::new();
+            stream.read_to_end(&mut answer).await.unwrap();
+            answer
+        });
+        let (server, _) = listener.accept().await.unwrap();
+        handle_connection(server, &state()).await.unwrap();
+        let answer = String::from_utf8(client.await.unwrap()).unwrap();
+        assert!(answer.starts_with("HTTP/1.1 200 OK"), "{answer}");
     }
 
     #[tokio::test]

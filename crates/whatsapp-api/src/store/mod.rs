@@ -336,6 +336,19 @@ impl ProtocolStore {
             ))
             .into());
         }
+        // An existing empty file is not a store. Without `create`, refuse it
+        // before redb writes a header, rather than silently bootstrapping a
+        // new store with fresh keys at a path the caller expected to hold one.
+        if exists
+            && !opts.create
+            && std::fs::metadata(&opts.path).map_err(StoreError::Io)?.len() == 0
+        {
+            return Err(StoreError::Io(std::io::Error::new(
+                std::io::ErrorKind::InvalidData,
+                "store file is empty; initialize it with `store init`",
+            ))
+            .into());
+        }
         if let Some(parent) = opts.path.parent()
             && !parent.as_os_str().is_empty()
         {
@@ -356,6 +369,16 @@ impl ProtocolStore {
                     .map_err(StoreError::from)?
                     .map(|g| bytes_to_u32(g.value()));
                 match schema {
+                    // A database without our schema is only bootstrapped when
+                    // the caller asked to create one; the write transaction
+                    // is dropped uncommitted.
+                    None if !opts.create => {
+                        return Err(StoreError::Io(std::io::Error::new(
+                            std::io::ErrorKind::InvalidData,
+                            "database has no store schema; initialize it with `store init`",
+                        ))
+                        .into());
+                    }
                     None => {
                         let mut salt = [0u8; 32];
                         getrandom::fill(&mut salt)
@@ -1391,6 +1414,34 @@ mod tests {
                 .unwrap(),
             b"y"
         );
+    }
+
+    #[test]
+    fn opening_without_create_never_bootstraps_an_empty_or_foreign_file() {
+        let dir = tempfile::tempdir().unwrap();
+        let options = |path: &Path, create| OpenOptions {
+            path: path.to_owned(),
+            account_id: AccountId::new("acct").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([4; 32]))),
+            create,
+        };
+        // A wrong path that happens to be an empty file stays untouched.
+        let empty = dir.path().join("empty.redb");
+        std::fs::write(&empty, b"").unwrap();
+        let error = ProtocolStore::open(options(&empty, false)).err().unwrap();
+        assert!(error.to_string().contains("empty"), "{error}");
+        assert_eq!(std::fs::metadata(&empty).unwrap().len(), 0);
+        // A database without our schema is refused and not given one.
+        let foreign = dir.path().join("foreign.redb");
+        drop(Database::create(&foreign).unwrap());
+        let error = ProtocolStore::open(options(&foreign, false)).err().unwrap();
+        assert!(error.to_string().contains("no store schema"), "{error}");
+        let error = ProtocolStore::open(options(&foreign, false)).err().unwrap();
+        assert!(error.to_string().contains("no store schema"), "{error}");
+        // Creating explicitly still works on both.
+        drop(ProtocolStore::open(options(&empty, true)).unwrap());
+        drop(ProtocolStore::open(options(&foreign, true)).unwrap());
+        drop(ProtocolStore::open(options(&foreign, false)).unwrap());
     }
 
     #[test]

@@ -129,8 +129,10 @@ inspections: `GET /v1/receipts`, `/v1/prekeys`, `/v1/outbox/suspended`,
 conservative one this page previously left open: loopback only (even with
 `--allow-non-loopback`), a fresh 256-bit bearer token written only to a new
 mode-0600 file (never overwritten, never printed or logged, removed on
-shutdown), the store opened per request so other commands can use it in
-between (a held store answers 503), and nothing that sends or mutates. Every
+Ctrl-C/SIGTERM/SIGHUP), the store opened per request so other commands can use
+it in between (a held store answers 503; a command starting during a request
+can fail to open and must be rerun), and nothing that sends or changes
+protocol data. Caveats and response codes: [API README](api/README.md#store-routes-opt-in). Every
 other store-backed operation remains CLI-only (`x-transport: cli`); in
 particular no send, queue, receipt-transmitting or live operation is served.
 Extending the routes is mechanical but each one needs its output checked for
