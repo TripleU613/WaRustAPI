@@ -97,6 +97,37 @@ dated captures with a controlled test number. Do not copy web-profile
 constants into `Observed` rows. Record each observation with date, APK
 version, and whether the server accepted the reference client that day.
 
+## APK access in cloud sessions (2026-10-13)
+
+The documented comparison APK path (`~/Downloads/WhatsApp.apk`) is on
+the owner's machine. A Claude Code cloud container has no copy, and no raw APK
+is committed (by design). In such a session only the committed bundles under
+`docs/protocol/apk/` and `docs/protocol/rea/` are available, so new static
+traces (new methods, callers, builders) cannot be made; only retained evidence
+can be reused. Work in that state is limited to evidence already retained.
+Supplying the APK to a session (or running the session on the owner's machine)
+removes this blocker; no other source was used to substitute for it.
+
+## Outgoing revoke and edit (2026-10-13)
+
+`MessageContent::Edit` and `MessageContent::Revoke` exist in the model, but the
+outbox has no sender for them (`begin_selected` treats them as unsupported).
+Retained evidence covers the protobuf side: `D9M.AD7` builds the revoke
+`ProtocolMessage` with type REVOKE (`C4F.A0T`) or MESSAGE_UNSCHEDULE (`C4F.A0O`)
+and the target key ([revoke writer](apk/2.26.37.71-sender-revoke/revoke-writer.txt)),
+`D9B.A00` writes an edit's replacement Message to protocol field 14 and the
+sender timestamp to field 15, with ordinary/future-proof wrapper selection
+gated by property 8784 ([image-caption-edit.md](image-caption-edit.md)), and
+`DEy.A00` parses received stanza `edit` values 1/2/3/7/8
+([sender-revoke.md](sender-revoke.md)). The outgoing request bundle
+`1Dz.A0H` carries a caller-supplied `edit` string beside `addressing_mode` and
+`counter_abuse_token` ([retained](apk/2.26.37.71-core/group-mode-outgoing-bundle.txt)
+`00c0..00ca`). **Not retained:** the producers that choose that `edit` value
+(and any companion attributes) for a sender revoke or message edit, the effective value of property 8784, and the native send-side
+time window. Receive-side parsing does not establish what a sender must emit,
+so no sender is implemented. Next step: trace `SendE2EMessageJob`/`0y0.A00`
+for the outgoing `edit` attribute in 2.26.37.71.
+
 ## Comparison token dictionary: double-byte page 0 index 1
 
 **Resolved 2026-10-07, test completed 2026-10-13.** The checked 37.71
