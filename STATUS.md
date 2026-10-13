@@ -1,3 +1,13 @@
+2026-10-13 — **Fixed/offline (network-input panic audit):** a read-only audit
+for panics and aborts reachable from received data found one. Nested JID tags
+made the binary decoder recurse until the stack overflowed: a 4 KB compressed
+frame from the server would abort the process, uncaptured, at every login.
+The decoder now refuses those tags before reading them. Also, a frame the
+decoder refuses (for example a newer dictionary token) no longer ends `listen`
+uncaptured: it is kept as `inbound-undecodable` with a fixed error class and
+skipped. No other reachable panic was found. Only the server can send such
+frames. [Audit](docs/protocol/replay-safety-audit.md#network-input-panic-audit-2026-10-13).
+
 2026-10-13 — **Checked/offline (live-shape regression sweep):** every stanza
 shape the docs record as seen live was compared with the current receive code.
 No other regression like the status-receipt one was found. Fixed on the way:

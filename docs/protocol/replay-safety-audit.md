@@ -173,6 +173,62 @@ duplicates, reactions, polls and votes, quoted replies, the
 undecryptable messages (one retry), `groups_dirty`, identity notifications,
 `psa`/`mex`/`ib`, iq results, and `success`/`failure`/`stream:error`.
 
+### Network-input panic audit (2026-10-13)
+
+A read-only audit looked for panics, aborts and hangs reachable from bytes or
+stanzas received from the network. It used Clippy with `arithmetic_side_effects`,
+`indexing_slicing`, `unwrap_used`, `expect_used`, `panic` and `unreachable`
+(about 700 library warnings, triaged by hand), manual recursion and loop scans,
+and a scratch fuzzer that ran about 3.6 million mutated frames through decode
+and re-encode. The reason this matters: a worker panic becomes `Cancelled`,
+which never reconnects, and an unacknowledged stanza is redelivered at every
+login, so one bad stanza could stop receive for good.
+
+Fixed:
+
+- **Unbounded recursion in the binary decoder** on nested JID tags: a stack
+  overflow aborted the process, from the reader task, before capture. Fixed
+  and measured ([AD JID decoding](ad-jid-decoding.md#nested-jid-tags-are-refused-2026-10-13)).
+  Only the certificate-verified server can send such a frame.
+- **A frame the decoder refuses ended receive, uncaptured.** A decrypted frame
+  that did not unpack or decode (an unknown token from a newer dictionary, a
+  limit, a duplicate attribute, trailing bytes) became `MalformedProtocol`,
+  which is not recoverable. The frame had not been captured, because capture
+  follows decoding, and it was not acknowledged, so a redelivered one ended
+  every session and left nothing to inspect. Now the reader passes the
+  decrypted frame through; `drive` stores it once, encrypted, under
+  `inbound-undecodable:sha256:<digest>` with a fixed error class (`store
+  inspect` counts that kind), logs the class and continues. Nothing is
+  acknowledged, since there is no ID. A frame that decrypted cannot have
+  desynchronised the stream: records are length-delimited and authenticated.
+  Continuing is **local policy**; where the APK catches a decode error is not
+  traced. Test: `undecodable_frame_is_captured_and_receive_continues`.
+
+Recorded, not changed:
+
+- The lab windows (`lab-transport` receive and send windows, the group-send
+  window) still end on a decode error. They are bounded diagnostics, and after
+  the recursion fix the error no longer aborts the process.
+- If the reader task itself ever panicked (none found), `drive` would see the
+  channel close and end with "reader ended", which is not recoverable.
+- **Bounded memory amplification:** a 4.9 KB compressed frame can decode to
+  340 × 4,096 minimal nodes, within every limit. Decode plus re-encode measured
+  about 200 MB peak RSS. This does not abort on normal hosts.
+- `wacore-libsignal` 0.7.0: the parse entry points check lengths before
+  indexing. The ratchet and record internals were not exhaustively audited.
+- `serde_json` index assignment on stored rows (`row["status"] = …`) panics
+  if a row is not an object. Every such row is written by this client, so only
+  store corruption reaches it, not the network.
+- No unbounded hang: the full Checkpoints scans per direct receipt and per
+  count notification are bounded by store size, not input.
+
+Checked and guarded, in brief: framing and Noise bounds, AES-GCM length checks,
+nonce exhaustion, padding removal, KEM ciphertext length, hand-written protobuf
+scanners (shift and depth caps), every `[0]` index (behind a length check),
+`unwrap`/`expect` call sites on the receive path (each behind an invariant),
+time arithmetic (wrapping or saturating), allocation sizes (bounded by the
+child, frame and inflate limits), and `forbid(unsafe_code)` crate-wide.
+
 ### Open (recorded, not changed)
 
 - **F6, speculative.** A redelivery under the sender's other PN/LID address

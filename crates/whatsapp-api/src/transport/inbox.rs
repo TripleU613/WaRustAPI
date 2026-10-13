@@ -527,6 +527,40 @@ pub fn preserve_in_epoch(
     )
 }
 
+/// Capture a decrypted frame whose payload did not unpack or decode, so it can
+/// be inspected (`store inspect` lists the `inbound-undecodable` kind) and
+/// re-decoded by a later decoder. Encrypted at rest like every capture; keyed
+/// by digest, so a redelivery is stored once. Returns the capture key.
+pub(crate) fn preserve_undecodable(
+    store: &ProtocolStore,
+    frame: &[u8],
+    class: &'static str,
+    epoch: super::ConnectionEpoch,
+) -> Result<String> {
+    use sha2::{Digest, Sha256};
+    let key = format!(
+        "inbound-undecodable:sha256:{}",
+        hex::encode(Sha256::digest(frame))
+    );
+    store.write(|tx| {
+        if tx.get(Table::Checkpoints, key.as_bytes(), 1)?.is_none() {
+            tx.put_json(
+                Table::Checkpoints,
+                key.as_bytes(),
+                1,
+                &serde_json::json!({
+                    "frame": frame,
+                    "class": class,
+                    "epoch": epoch,
+                    "observed_at": crate::model::time::Timestamp::now(),
+                }),
+            )?;
+        }
+        Ok(())
+    })?;
+    Ok(key)
+}
+
 const LATEST_TERMINAL: &[u8] = b"terminal-latest-capture";
 #[derive(Clone, serde::Serialize, serde::Deserialize)]
 struct StoredTerminalObservation {

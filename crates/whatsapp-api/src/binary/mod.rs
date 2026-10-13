@@ -118,3 +118,25 @@ pub enum CodecError {
     #[error("cannot encode: {0}")]
     Unencodable(&'static str),
 }
+
+impl CodecError {
+    /// A fixed label for logs and stored diagnostics. Unlike `Display`, it
+    /// never carries input text (attribute names, JID fragments) or offsets.
+    pub fn class(&self) -> &'static str {
+        match self {
+            Self::UnexpectedEof { .. } => "unexpected_eof",
+            Self::UnknownTag { .. } => "unknown_tag",
+            Self::UnknownToken { .. } => "unknown_token",
+            Self::InvalidPackedDigit { .. } => "invalid_packed_digit",
+            Self::LengthLimit { .. } => "length_limit",
+            Self::DepthLimit { .. } => "depth_limit",
+            Self::InvalidNode { .. } => "invalid_node",
+            Self::DuplicateAttribute { .. } => "duplicate_attribute",
+            Self::NonStringKey { .. } => "non_string_key",
+            Self::InvalidJid { .. } => "invalid_jid",
+            Self::Compression(_) => "compression",
+            Self::TrailingBytes(_) => "trailing_bytes",
+            Self::Unencodable(_) => "unencodable",
+        }
+    }
+}

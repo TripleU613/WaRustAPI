@@ -154,6 +154,20 @@ impl<'a> Decoder<'a> {
 
     fn read_string_value(&mut self) -> Result<Option<String>, CodecError> {
         let offset = self.pos;
+        // A string position never holds a JID; a JID found here was always
+        // refused below. Refuse its tag before reading it: JID parts are read
+        // through this function, so nested JID tags otherwise recursed without
+        // bound and a small compressed frame overflowed the stack (an abort,
+        // not an error). Found by the 2026-10-13 network-input panic audit.
+        if matches!(
+            self.data.get(self.pos),
+            Some(&(tags::JID_PAIR | tags::AD_JID | tags::FB_JID | tags::INTEROP_JID))
+        ) {
+            return Err(CodecError::InvalidNode {
+                offset,
+                reason: "expected string",
+            });
+        }
         match self.read_value(true)? {
             Value::Absent => Ok(None),
             Value::Text(s) => Ok(Some(s)),

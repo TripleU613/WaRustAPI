@@ -198,12 +198,39 @@ pub(crate) type Outbound = (Node, oneshot::Sender<Result<()>>);
 /// Node-level link for one connection epoch. Real sessions adapt the split
 /// encrypted transport; tests inject channels and cut them at chosen points.
 pub(crate) struct NodeLink {
-    incoming: mpsc::Receiver<Result<Node>>,
+    incoming: mpsc::Receiver<Result<Inbound>>,
     outgoing: mpsc::Sender<Outbound>,
 }
+
+/// One item from the reader task.
+pub(crate) enum Inbound {
+    Node(Node),
+    /// A frame that decrypted, so the stream is intact, but whose payload did
+    /// not unpack or decode. It carries the decrypted frame for capture and a
+    /// fixed error class; there is no stanza ID to acknowledge.
+    Undecodable {
+        frame: Vec<u8>,
+        class: &'static str,
+    },
+}
+
+/// Unpack and decode one decrypted frame.
+fn inbound_from_frame(frame: &[u8]) -> Inbound {
+    let limits = Limits::default();
+    match unpack_frame_payload(frame, &limits).and_then(|raw| {
+        Decoder::new(&raw, TokenDictionary::comparison_2_26_37_71(), &limits).decode_node()
+    }) {
+        Ok(node) => Inbound::Node(node),
+        Err(error) => Inbound::Undecodable {
+            frame: frame.to_vec(),
+            class: error.class(),
+        },
+    }
+}
+
 impl NodeLink {
     pub(crate) fn new(
-        incoming: mpsc::Receiver<Result<Node>>,
+        incoming: mpsc::Receiver<Result<Inbound>>,
         outgoing: mpsc::Sender<Outbound>,
     ) -> Self {
         Self { incoming, outgoing }
@@ -239,16 +266,7 @@ fn link_from(channel: EncryptedConnection<tokio::net::TcpStream>) -> Result<(Nod
     let reader_task = tokio::spawn(async move {
         loop {
             let next = match reader.read().await {
-                Ok(Some(bytes)) => {
-                    let limits = Limits::default();
-                    unpack_frame_payload(&bytes, &limits)
-                        .map_err(Error::from)
-                        .and_then(|raw| {
-                            Decoder::new(&raw, TokenDictionary::comparison_2_26_37_71(), &limits)
-                                .decode_node()
-                                .map_err(Error::from)
-                        })
-                }
+                Ok(Some(bytes)) => Ok(inbound_from_frame(&bytes)),
                 // Classified as recoverable: the actor may reconnect within its bounds.
                 Ok(None) => Err(Error::Transport(super::TransportError::PeerClosed)),
                 Err(e) => Err(e.into()),
@@ -452,7 +470,19 @@ pub(crate) async fn drive(
                 link.send(&ping).await?; pending_ping = Some(id);
             }
             incoming = link.incoming.recv() => {
-                let node = incoming.ok_or_else(|| Error::invalid("connection", "reader ended"))??;
+                let node = match incoming.ok_or_else(|| Error::invalid("connection", "reader ended"))?? {
+                    Inbound::Node(node) => node,
+                    // A redelivered frame this decoder refuses (a newer token,
+                    // say) used to end receive at every login, uncaptured.
+                    // Kept for inspection and later re-decoding; nothing to ACK.
+                    // Continuing is local policy: where the APK catches a
+                    // decode error is not traced.
+                    Inbound::Undecodable { frame, class } => {
+                        super::inbox::preserve_undecodable(&store, &frame, class, epoch)?;
+                        tracing::warn!(class, "inbound frame did not decode; captured without ACK; session continues");
+                        continue;
+                    }
+                };
                 let capture = super::inbox::preserve_in_epoch(&store, &node, epoch)?;
                 super::clock::observe(&store, &node)?;
                 if matches!(node.description.as_str(), "failure" | "stream:error") {
@@ -1045,7 +1075,7 @@ mod tests {
 
     /// The fake server side of one injected link.
     struct Fake {
-        to_worker: mpsc::Sender<Result<Node>>,
+        to_worker: mpsc::Sender<Result<Inbound>>,
         from_worker: mpsc::Receiver<Outbound>,
         stop: watch::Sender<bool>,
         ready: oneshot::Receiver<()>,
@@ -1138,7 +1168,14 @@ mod tests {
             id
         }
         async fn deliver(&self, node: Node) {
-            self.to_worker.send(Ok(node)).await.unwrap();
+            self.to_worker.send(Ok(Inbound::Node(node))).await.unwrap();
+        }
+        /// A decrypted frame, decoded exactly as the real reader task does.
+        async fn deliver_frame(&self, frame: &[u8]) {
+            self.to_worker
+                .send(Ok(inbound_from_frame(frame)))
+                .await
+                .unwrap();
         }
         async fn cut(&self, error: Error) {
             self.to_worker.send(Err(error)).await.unwrap();
@@ -1947,6 +1984,47 @@ mod tests {
         reply.send(Ok(())).unwrap();
         fake.nothing_written(Duration::from_millis(100)).await;
         assert!(pending_users(&store).unwrap().is_empty());
+        fake.stop_cleanly().await;
+    }
+
+    /// A decrypted frame the decoder refuses is captured for inspection and
+    /// skipped; receive continues. It used to end the session without a
+    /// capture, and a redelivered one ended every later session.
+    #[tokio::test]
+    async fn undecodable_frame_is_captured_and_receive_continues() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("undecodable.redb"));
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        // Uncompressed frame: a node whose description is a nested JID tag.
+        let mut frame = vec![0x00, crate::binary::tags::LIST_8, 1];
+        frame.extend(vec![crate::binary::tags::JID_PAIR; 1_000]);
+        fake.deliver_frame(&frame).await;
+        fake.nothing_written(Duration::from_millis(100)).await;
+        let key = format!(
+            "inbound-undecodable:sha256:{}",
+            hex::encode(sha2::Sha256::digest(&frame))
+        );
+        let saved: serde_json::Value = store
+            .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        assert_eq!(saved["class"], "invalid_node");
+        let stored: Vec<u8> = serde_json::from_value(saved["frame"].clone()).unwrap();
+        assert_eq!(stored, frame);
+        // Redelivery is stored once and still does not end receive.
+        fake.deliver_frame(&frame).await;
+        fake.nothing_written(Duration::from_millis(100)).await;
+        fake.deliver(
+            Node::new("receipt")
+                .attr("from", peer())
+                .attr("id", "AFTER-UNDECODABLE")
+                .attr("t", "1700000000"),
+        )
+        .await;
+        let (ack, reply) = fake.written().await;
+        assert_eq!(ack.description, "ack");
+        reply.send(Ok(())).unwrap();
         fake.stop_cleanly().await;
     }
 
