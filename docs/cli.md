@@ -1289,7 +1289,7 @@ Usage: whatsapp-cli serve [OPTIONS]...
 |------|-------|----------|---------|-----|--------|------|
 | --bind | BIND | no | `127.0.0.1:8787` | `WHATSAPP_API_BIND` |  | Address to listen on. Non-loopback addresses require an explicit opt-in because the base control-plane routes are unauthenticated |
 | --allow-non-loopback | ALLOW_NON_LOOPBACK | no |  |  | `true`, `false` | Permit listening on a non-loopback address |
-| --store-routes | STORE_ROUTES | no |  |  | `true`, `false` | Also serve read-only, redacted store inspections (`/v1/receipts`, `/v1/prekeys`, `/v1/outbox/suspended`) for the selected account. Loopback-only; requires a bearer token (see --token-file). The store is opened per request, so a running `listen` makes them answer 503 |
+| --store-routes | STORE_ROUTES | no |  |  | `true`, `false` | Also serve read-only, redacted store inspections (`/v1/receipts`, `/v1/prekeys`, `/v1/outbox/suspended`, `/v1/actions`, `/v1/identity-conflicts`, `/v1/outbox/group-preparations`) for the selected account. Loopback-only; requires a bearer token (see --token-file). The store is opened per request, so a running `listen` makes them answer 503 |
 | --token-file | TOKEN_FILE | no |  |  |  | New file to receive the per-start bearer token (mode 0600, never overwritten, removed on shutdown) |
 
 ## whatsapp-cli store

@@ -90,7 +90,9 @@ so the CLI can embed and serve it without extra dependencies).
 `whatsapp-cli serve --store-routes --token-file <new path>` (built with
 `experimental-transport`) adds read-only, redacted store inspections for the
 account selected by `--store`/`--account`/`--key-env`: `GET /v1/receipts`,
-`GET /v1/prekeys` and `GET /v1/outbox/suspended`. They are declared with
+`/v1/prekeys`, `/v1/outbox/suspended`, `/v1/actions` (list form only),
+`/v1/identity-conflicts` and `/v1/outbox/group-preparations`. Query strings
+are refused with 400, so CLI-only options are never silently ignored. They are declared with
 `x-transport: ["cli", "http"]` and the `storeBearer` security scheme.
 
 ```sh

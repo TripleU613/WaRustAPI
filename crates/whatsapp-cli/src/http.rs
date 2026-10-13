@@ -48,8 +48,17 @@ struct ApiState {
 }
 
 /// Read-only store routes, each the redacted output of an existing CLI
-/// inspection (`receipts`, `prekeys`, `outbox-suspended`).
-const STORE_ROUTES: [&str; 3] = ["/v1/receipts", "/v1/prekeys", "/v1/outbox/suspended"];
+/// inspection (`receipts`, `prekeys`, `outbox-suspended`, `actions` list,
+/// `identity-conflicts`, `outbox-group-preparations`). Each output carries
+/// opaque IDs, hashed peer tickets, fingerprints and fixed reasons only.
+const STORE_ROUTES: [&str; 6] = [
+    "/v1/receipts",
+    "/v1/prekeys",
+    "/v1/outbox/suspended",
+    "/v1/actions",
+    "/v1/identity-conflicts",
+    "/v1/outbox/group-preparations",
+];
 
 /// What `serve --store-routes` needs to open one account store.
 pub struct StoreServe {
@@ -383,15 +392,27 @@ async fn read_request(stream: &mut TcpStream) -> Result<Option<RequestLine>, Err
 /// a missing or wrong token 401, and a store that cannot be opened (for
 /// example while `listen` holds it) 503 with a fixed message.
 async fn store_route(request: &RequestLine, state: &ApiState) -> Option<Response> {
-    let path = request
+    let (path, query) = request
         .path
         .split_once('?')
-        .map_or(request.path.as_str(), |(path, _)| path);
+        .map_or((request.path.as_str(), None), |(path, query)| {
+            (path, Some(query))
+        });
     if !STORE_ROUTES.contains(&path) {
         return None;
     }
     if !matches!(request.method.as_str(), "GET" | "HEAD") {
         return Some(Response::method_not_allowed("GET, HEAD"));
+    }
+    // CLI-only options (for example `actions --show`) are not served; refuse
+    // rather than silently answering a different question.
+    if query.is_some() {
+        return Some(Response::error(
+            400,
+            "Bad Request",
+            "invalid_input",
+            "store routes take no query parameters",
+        ));
     }
     let Some(store) = &state.store else {
         return Some(Response::error(
@@ -437,12 +458,19 @@ async fn store_route(request: &RequestLine, state: &ApiState) -> Option<Response
 
 #[cfg(feature = "experimental-transport")]
 fn read_store(options: whatsapp_api::store::OpenOptions, path: &str) -> Result<Value, Error> {
-    use whatsapp_api::transport::{outgoing, prekeys, receipts};
+    use whatsapp_api::transport::{
+        actions, identity_conflicts, outgoing, outgoing_group, prekeys, receipts,
+    };
     let store = whatsapp_api::store::ProtocolStore::open(options)?;
     let value = match path {
         "/v1/receipts" => serde_json::to_value(receipts::outcomes(&store)?),
         "/v1/prekeys" => serde_json::to_value(prekeys::summary(&store)?),
         "/v1/outbox/suspended" => serde_json::to_value(outgoing::identity_suspended(&store)?),
+        "/v1/actions" => serde_json::to_value(actions::outcomes(&store)?),
+        "/v1/identity-conflicts" => serde_json::to_value(identity_conflicts::list(&store)?),
+        "/v1/outbox/group-preparations" => {
+            serde_json::to_value(outgoing_group::preparations(&store)?)
+        }
         _ => return Err(Error::invalid("store_routes", "unknown store route")),
     };
     value.map_err(|_| Error::invalid("store_routes", "inspection did not serialize"))
@@ -970,17 +998,28 @@ mod tests {
             .await
             .unwrap();
         assert_eq!((receipts.status, body(&receipts)), (200, json!([])));
-        let prekeys = store_route(&request("GET", "/v1/prekeys?x=1", auth), &state)
+        let query = store_route(&request("GET", "/v1/actions?show=id", auth), &state)
+            .await
+            .unwrap();
+        assert_eq!(query.status, 400);
+        let prekeys = store_route(&request("GET", "/v1/prekeys", auth), &state)
             .await
             .unwrap();
         assert_eq!(prekeys.status, 200);
         for field in ["unsent", "uncertain", "uploaded", "batches", "kem_local"] {
             assert!(body(&prekeys).get(field).is_some(), "{field}");
         }
-        let suspended = store_route(&request("GET", "/v1/outbox/suspended", auth), &state)
-            .await
-            .unwrap();
-        assert_eq!((suspended.status, body(&suspended)), (200, json!([])));
+        for path in [
+            "/v1/outbox/suspended",
+            "/v1/actions",
+            "/v1/identity-conflicts",
+            "/v1/outbox/group-preparations",
+        ] {
+            let listed = store_route(&request("GET", path, auth), &state)
+                .await
+                .unwrap();
+            assert_eq!((listed.status, body(&listed)), (200, json!([])), "{path}");
+        }
         // While another handle holds the store (as `listen` would), the route
         // answers 503 with a fixed message instead of waiting or leaking paths.
         let held = ProtocolStore::open(state.store.as_ref().unwrap().options()).unwrap();
@@ -1101,6 +1140,9 @@ mod tests {
             ("GET", "/v1/receipts"),
             ("GET", "/v1/prekeys"),
             ("GET", "/v1/outbox/suspended"),
+            ("GET", "/v1/actions"),
+            ("GET", "/v1/identity-conflicts"),
+            ("GET", "/v1/outbox/group-preparations"),
         ];
 
         for (method, path) in &routes {
