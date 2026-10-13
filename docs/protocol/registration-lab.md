@@ -310,7 +310,14 @@ read -rs CODE; printf '%s\n' "$CODE" | whatsapp-cli --profile a lab-signup --all
 `accounts new` creates:
 - `lab/accounts/<name>/master.key` (mode 0600): encryption key
 - `lab/accounts/<name>/request.json` (mode 0600): working recipe + derived token
+- `lab/accounts/<name>/signup.redb`: the encrypted store (since 2026-10-13)
 - `lab/profiles/<name>.json`: profile linking them together
+
+It refuses a number another saved profile already configures. `lab-signup begin`
+no longer creates a missing store: a profile made before `accounts new` created
+stores needs `begin --create-store` once. Without it, a forgotten `--profile` or
+a mistyped path fails instead of creating a fresh identity
+([registration safety audit](registration-safety-audit.md)).
 
 The profile sets `key_env` to `WHATSAPP_API_MASTER_KEY_<NAME>` (in uppercase).
 

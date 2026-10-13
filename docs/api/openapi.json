@@ -9132,7 +9132,7 @@
           "Registration"
         ],
         "summary": "Start or resume a registration attempt",
-        "description": "Initiates a WhatsApp registration flow for the given phone number. Returns 501 NotImplemented on the primary profile; use the lab flow (`/v1/signup/*`) for working registration.",
+        "description": "Initiates a WhatsApp registration flow for the given phone number. Returns 501 NotImplemented on the primary profile; use the lab flow (`/v1/signup/*`) for working registration. Since 2026-10-13 begin refuses, instead of silently replacing, a saved attempt for another number or profile in the same account generation (its waits, uncertain outcome or pending challenge would be lost); a new number uses its own store.",
         "operationId": "beginRegistration",
         "x-cli": "whatsapp-cli registration begin",
         "x-transport": [
@@ -9264,7 +9264,7 @@
           "Registration"
         ],
         "summary": "Discard a completed or blocked attempt (local only)",
-        "description": "Resets the registration state and discards any completed or blocked attempt. This operation is local only.",
+        "description": "Resets the registration state and discards any completed or blocked attempt. This operation is local only. Since 2026-10-13 reset refuses an attempt created under another profile, so the ordinary CLI cannot discard a lab attempt's refusal and evidence.",
         "operationId": "resetRegistration",
         "x-cli": "whatsapp-cli registration reset",
         "x-transport": [
@@ -9694,7 +9694,7 @@
           "Registration Lab"
         ],
         "summary": "Request a code or resume an existing attempt; no automatic retries",
-        "description": "Initiates or resumes a registration attempt. Requests a verification code via the specified method (sms or voice). Contacts WhatsApp servers. Waits (2026-10-13): on sent, the handle keeps the longer of the method's wait (sms_wait or voice_wait) and retry_after; a refusal that sets a cooldown keeps the longest SMS or voice wait it carries. Not-sent requests (2026-10-13, offline): a request that could not be built (for example a config edited since the attempt froze it) or whose connection failed before any byte was written returns error RequestNotSent and restores the attempt's state before the reservation (a fresh begin becomes an elapsed cooldown the next begin resumes with the same attempt and keys; a resend keeps its pending challenge and method; a submission returns to its challenge; a one-shot latch is released) instead of recording an unknown outcome. Any other failure may have reached the server and still records outcome_unknown. Evidence docs/protocol/registration-safety-audit.md.",
+        "description": "Initiates or resumes a registration attempt. Requests a verification code via the specified method (sms or voice). Contacts WhatsApp servers. Waits (2026-10-13): on sent, the handle keeps the longer of the method's wait (sms_wait or voice_wait) and retry_after; a refusal that sets a cooldown keeps the longest SMS or voice wait it carries. Not-sent requests (2026-10-13, offline): a request that could not be built (for example a config edited since the attempt froze it) or whose connection failed before any byte was written returns error RequestNotSent and restores the attempt's state before the reservation (a fresh begin becomes an elapsed cooldown the next begin resumes with the same attempt and keys; a resend keeps its pending challenge and method; a submission returns to its challenge; a one-shot latch is released) instead of recording an unknown outcome. Any other failure may have reached the server and still records outcome_unknown. Evidence docs/protocol/registration-safety-audit.md. Store creation (2026-10-13): begin no longer creates a missing store unless --create-store is given; the refusal names --profile and --create-store. Evidence docs/protocol/registration-safety-audit.md.",
         "operationId": "labSignupBegin",
         "x-cli": "whatsapp-cli lab-signup begin",
         "x-transport": [
@@ -9734,6 +9734,11 @@
                       "voice"
                     ],
                     "description": "Verification method (optional)"
+                  },
+                  "create_store": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Create the store if it does not exist (--create-store). accounts new creates its profile's store, so this is only for a profile made before it did. Without it, a missing store is refused, so a forgotten --profile or a mistyped path cannot create a fresh identity for a number that may already have one."
                   }
                 }
               }
@@ -10561,7 +10566,7 @@
           "Registration Lab"
         ],
         "summary": "One read-safe /v2/exist probe of method eligibility for the saved attempt",
-        "description": "Probes method eligibility (email one-time code, old-device confirmation, waits). Read-safe; changes no server or local state. Contacts WhatsApp servers.",
+        "description": "Probes method eligibility (email one-time code, old-device confirmation, waits). Read-safe; changes no server or local state. Contacts WhatsApp servers. State guard (2026-10-13): refused while a request is in flight or its outcome is unknown, once registered, and during an unexpired server cooldown; the probe has no reservation of its own.",
         "operationId": "labSignupExist",
         "x-cli": "whatsapp-cli lab-signup exist",
         "x-transport": [
@@ -11313,7 +11318,7 @@
           "Accounts"
         ],
         "summary": "Onboard a phone number: derive its token, write the private request configuration with the working recipe, generate its master key and profile",
-        "description": "Derives a registration token for the given phone number, generates the master cryptographic key, creates the account profile, and writes a private request configuration with the APK-derived recipe. The token, key and phone are never printed. Files are created with restrictive permissions: 0600 for profile and config files, 0700 for directories. Next step: lab-signup --allow-live-request begin.",
+        "description": "Derives a registration token for the given phone number, generates the master cryptographic key, creates the account profile, and writes a private request configuration with the APK-derived recipe. The token, key and phone are never printed. Files are created with restrictive permissions: 0600 for profile and config files, 0700 for directories. Next step: lab-signup --allow-live-request begin. Since 2026-10-13 it also creates the profile's encrypted store (so lab-signup begin never has to) and refuses a number another saved profile's request JSON already configures: one number keeps one store. Nothing is written when refused.",
         "operationId": "createAccount",
         "x-cli": "whatsapp-cli accounts new",
         "x-transport": [
@@ -11397,7 +11402,7 @@
           "Accounts"
         ],
         "summary": "Get status of registered accounts",
-        "description": "Returns status summary of all registered accounts or a specific account if name is provided. Shows registration state, key availability, pending messages and queued actions. outbox_pending now counts logical progress Queued, Prepared and RetryScheduled across namespaces using paged Outbox::pending_count, excluding Cancelled, Failed and InFlight history. This is pending work, not currently sendable reservations; transport guards, support and server waits remain separate. Malformed history produces the existing account error result rather than a partial count; inspection never repairs or deletes history. CLI-only, x-live=false; no HTTP route. Evidence docs/protocol/account-status-counts.md.",
+        "description": "Returns status summary of all registered accounts or a specific account if name is provided. Shows registration state, key availability, pending messages and queued actions. outbox_pending now counts logical progress Queued, Prepared and RetryScheduled across namespaces using paged Outbox::pending_count, excluding Cancelled, Failed and InFlight history. This is pending work, not currently sendable reservations; transport guards, support and server waits remain separate. Malformed history produces the existing account error result rather than a partial count; inspection never repairs or deletes history. CLI-only, x-live=false; no HTTP route. Evidence docs/protocol/account-status-counts.md. Since 2026-10-13 registration_state is the saved attempt's state name (none only without an attempt, unreadable if it cannot be read; it was always none before) and actions_queued counts only queued actions, not every recorded outcome.",
         "operationId": "getAccountsStatus",
         "x-cli": "whatsapp-cli accounts status",
         "x-transport": [

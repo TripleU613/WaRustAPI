@@ -73,6 +73,34 @@ re-verified). Nothing here changes a request's wire content.
   `unsent_requests_restore_the_attempt_instead_of_an_unknown_outcome`,
   `build_failures_are_classified_as_not_sent_once`.
 
+- **A new or mistyped store path created a fresh identity.** `lab-signup begin`
+  opened its store with `create: true`, so a forgotten `--profile` (defaults
+  `protocol.redb`, `WHATSAPP_API_MASTER_KEY`) or a mistyped path generated new
+  keys and IDs for a number whose real store might be cooling down or holding
+  an uncertain outcome. `accounts new` now creates the profile's store, and
+  `begin` creates one only with an explicit `--create-store`; otherwise a
+  missing store is refused. `accounts new` also refuses a number another saved
+  profile's request JSON configures (one number, one store), before writing
+  anything. Tests: `begin_does_not_create_a_store_implicitly`,
+  `accounts_new_refuses_a_number_another_profile_configures`. Store creation by
+  `accounts new` needs real token material and is not covered by an offline test.
+- **`begin` replaced another attempt; `reset` deleted a lab attempt.** `begin`
+  silently overwrote a saved attempt for another number or profile in the same
+  account generation, losing its waits, uncertain outcome or pending challenge
+  and stranding its key material; the ordinary `registration reset` deleted a
+  blocked lab attempt. `begin` now refuses (an attempt from an older generation
+  may still be replaced), and `reset` refuses an attempt created under another
+  profile. Test: `begin_and_reset_never_replace_another_attempt`.
+- **`accounts status` hid the registration state.** It printed
+  `registration_state: "none"` without reading the attempt, and
+  `actions_queued` counted every recorded action. It now reads the saved state
+  (`registration::current_state_name`) and counts only queued actions.
+- **The `exist` probe ran in any state.** It has no reservation; it is now
+  refused while a request is in flight or its outcome unknown, once registered,
+  and during an unexpired cooldown. Repeats in other states remain possible and
+  its waits are printed, not saved. Test:
+  `exist_probe_is_refused_mid_request_registered_or_cooling_down`.
+
 ## Confirmed open
 
 - **A refusal that stays blocked does not keep its SMS/voice wait.** A
@@ -83,22 +111,17 @@ re-verified). Nothing here changes a request's wire content.
   is a wait field on `ServerRefused` (a library API and saved-state change),
   not yet made. The diagnostics' refusal output already prints the waits.
 
-## Reported, under verification
+- **`code_bytes.client_metrics` is a fixed value.** The `/v2/code` request
+  sends the frozen config's `{"attempts":1}` on every resend, cooldown resume,
+  email-code request and diagnostic; the `/v2/exist` probe already derives
+  `attempts` from saved history. Deriving it for code requests changes live
+  request content, and the APK caller values of `I4D.A0H` are not inferred
+  ([HTTP POST analysis](http-post-analysis.md)), so it stays a documented
+  candidate, not changed here.
 
-1. A new or mistyped store path (`begin` opens with `create: true`) generates
-   fresh keys and IDs for a number whose real store may be cooling down, holding
-   an uncertain outcome or a pending challenge; `accounts new` does not check
-   whether the number already has a profile.
-2. The `exist` probe has no reservation or state check and does not save its
-   waits.
-3. `client_metrics.attempts` is copied from the frozen config onto every resend
-   rather than derived from saved history.
-4. The ordinary `registration begin`/`reset` can overwrite or delete a lab
-   attempt record.
-5. `accounts status` prints `registration_state: "none"` without reading the
-   attempt.
+## Plausible, not verified
 
-Plausible lower items from the same audit: any refusal carrying `retry_after`
+Lower items from the same audit: any refusal carrying `retry_after`
 becomes a cooldown that a later `begin` resumes with a new code request
 (`retry_after: 0` immediately); strict parsing turns some definite answers
 (negative waits, uppercase reason tokens, non-JSON error bodies, an HTTP

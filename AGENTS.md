@@ -328,6 +328,10 @@ request—not adding Rust code, another command or a number-specific script.**
   2026-10-10 to 2026-10-13), and the 2026-10-11 ACK/confirmation encodings are
   accepted (`confirmed=true` with no redelivery at the next login); see
   `docs/protocol/unknowns.md`. Refused stanza content must never end receive:
-  validate before the store, let stored-row faults propagate.
+  validate before the store, let stored-row faults propagate. Registration
+  (2026-10-13): `lab-signup begin` no longer creates a missing store (pass
+  `--create-store` once for a profile made before `accounts new` created
+  stores); a request that provably never left restores the attempt instead of
+  `outcome_unknown`; see `docs/protocol/registration-safety-audit.md`.
 - Most important lesson: **listen first, change data for data requests, explain
   genuine obstacles upfront, and deliver the requested result without detours.**

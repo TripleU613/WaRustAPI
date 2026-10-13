@@ -478,6 +478,17 @@ fn not_built(error: Error) -> Error {
     }
 }
 
+/// The saved attempt's state name (`preparing`, `challenge_pending`,
+/// `cooling_down`, `outcome_unknown`, ...), or `None` when this store holds no
+/// attempt. Read-only, for status displays such as `accounts status`.
+pub fn current_state_name(store: &ProtocolStore) -> Result<Option<&'static str>> {
+    store.read(|tx| {
+        Ok(tx
+            .get_json::<RegistrationAttempt>(Table::RegistrationAttempts, CURRENT_KEY, RECORD_V1)?
+            .map(|attempt| attempt.state.name()))
+    })
+}
+
 /// The longest of the server-directed waits that are present.
 fn longest<const N: usize>(waits: [Option<std::time::Duration>; N]) -> Option<std::time::Duration> {
     waits.into_iter().flatten().max()
@@ -1453,6 +1464,20 @@ impl RegistrationService {
                                 "an account is already registered in this store; logout/reset first",
                             ));
                         }
+                        // Another number's or profile's attempt in this account
+                        // generation was silently replaced, losing its waits,
+                        // uncertain outcome or pending challenge and stranding
+                        // its key material (registration safety audit). A new
+                        // number gets its own store; nothing is replaced.
+                        if existing.generation == tx.generation() {
+                            return Err(Error::invalid(
+                                "registration_state",
+                                format!(
+                                    "this store holds another number's or profile's attempt (state {}); use a separate store, nothing is replaced",
+                                    existing.state.name()
+                                ),
+                            ));
+                        }
                     }
                     let mut attempt = RegistrationAttempt {
                         id: AttemptId::generate()?,
@@ -2131,10 +2156,20 @@ impl RegistrationService {
     /// Explicitly discard a blocked or completed attempt. This is a local
     /// operation; it does not log out or contact the server.
     pub async fn reset(&self) -> Result<()> {
+        let profile_id = self.profile_id.clone();
         self.store
-            .run_blocking(|s| {
+            .run_blocking(move |s| {
                 s.write(|tx| {
                     if let Some(mut a) = Self::load_current(tx)? {
+                        // Only the profile that created an attempt may discard
+                        // it: the ordinary CLI must not delete a lab attempt's
+                        // refusal and evidence (registration safety audit).
+                        if a.profile_id != profile_id {
+                            return Err(Error::invalid(
+                                "registration_state",
+                                "the saved attempt belongs to another profile; it is not reset from this one",
+                            ));
+                        }
                         if !a.state.is_terminal() {
                             return Err(Error::invalid(
                                 "registration_state",
@@ -2608,6 +2643,59 @@ mod tests {
             RegistrationStep::Completed
         );
         assert!(transport.steps.lock().unwrap().is_empty());
+        // `accounts status` reads the saved state rather than assuming none.
+        assert_eq!(current_state_name(&s).unwrap(), Some("registered"));
+    }
+
+    /// Another number's `begin` and another profile's `reset` refuse instead
+    /// of replacing or deleting the saved attempt.
+    #[tokio::test]
+    async fn begin_and_reset_never_replace_another_attempt() {
+        let (_d, s) = store();
+        let profile = ProtocolProfile::android_reference().unwrap();
+        let transport = Arc::new(ComparisonTransport {
+            responses: std::sync::Mutex::new(std::collections::VecDeque::from([(
+                "/v2/code",
+                br#"{"status":"fail","reason":"blocked"}"#.as_slice(),
+            )])),
+        });
+        let service = RegistrationService::new(
+            s.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(
+                Arc::new(ComparisonRequests),
+                transport.clone(),
+            )),
+        );
+        service.begin(phone(), ChallengeMethod::Sms).await.unwrap();
+        let saved = service.current().await.unwrap().unwrap();
+        assert!(saved.state.is_terminal());
+        let other = PhoneNumber::new(1, "5557654321").unwrap();
+        let error = service
+            .begin(other, ChallengeMethod::Sms)
+            .await
+            .unwrap_err();
+        assert!(error.to_string().contains("nothing is replaced"), "{error}");
+        let mut lab = profile.clone();
+        lab.id = "another-profile".into();
+        let foreign = RegistrationService::new(
+            s.clone(),
+            &lab,
+            Arc::new(UnsupportedFlow {
+                missing: Vec::new(),
+            }),
+        );
+        assert!(foreign.reset().await.is_err());
+        assert_eq!(service.current().await.unwrap().unwrap(), saved);
+        // The owning profile may still discard its own terminal attempt.
+        service.reset().await.unwrap();
+        assert!(service.current().await.unwrap().is_none());
+    }
+
+    #[test]
+    fn a_store_without_an_attempt_has_no_state_name() {
+        let (_d, s) = store();
+        assert_eq!(current_state_name(&s).unwrap(), None);
     }
 
     #[test]

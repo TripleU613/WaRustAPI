@@ -74,6 +74,13 @@ pub(super) enum Action {
     Begin {
         #[arg(long, value_enum)]
         method: Option<super::Method>,
+        /// Create the store if it does not exist. `accounts new` already
+        /// creates its profile's store, so this is only for a profile made
+        /// before it did. Without it, a forgotten `--profile` or a mistyped
+        /// path fails instead of creating a fresh identity for a number that
+        /// may already have a store.
+        #[arg(long)]
+        create_store: bool,
     },
     /// Ask for a *new* code on the attempt already in progress, because a
     /// delivered code expires long before the attempt does. Keeps the attempt,
@@ -317,11 +324,26 @@ pub(super) async fn run(
         body_mode: request_body_mode(config.transport.body_mode, action),
         extra,
     });
+    // Only an explicit `begin --create-store` creates a store (registration
+    // safety audit, 2026-10-13): a new store means a fresh identity, and must
+    // never happen because a profile was forgotten or a path mistyped.
+    let create = matches!(
+        action,
+        Action::Begin {
+            create_store: true,
+            ..
+        }
+    );
+    if !create && !cli.store.exists() {
+        return Err(invalid(
+            "store does not exist; select the number's profile with --profile, or pass `begin --create-store` for a profile whose store was never created",
+        ));
+    }
     let store = Arc::new(ProtocolStore::open(OpenOptions {
         path: cli.store.clone(),
         account_id: whatsapp_api::model::ids::AccountId::new(cli.account.clone())?,
         key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
-        create: matches!(action, Action::Begin { .. } | Action::ResendCode { .. }),
+        create,
     })?);
     let factory = Arc::new(if matches!(action, Action::RetryCorrectedToken) {
         StoredComparisonRequestFactory::new_for_token_correction(store.clone(), config)?
@@ -405,7 +427,7 @@ pub(super) async fn run(
             }
             return Ok(());
         }
-        Action::Begin { method } => {
+        Action::Begin { method, .. } => {
             let method = match method {
                 Some(super::Method::Sms) => ChallengeMethod::Sms,
                 Some(super::Method::Voice) => ChallengeMethod::Voice,
@@ -484,6 +506,7 @@ pub(super) async fn run(
                 .current()
                 .await?
                 .ok_or_else(|| invalid("no registration attempt"))?;
+            exist_allowed(&attempt.state, whatsapp_api::model::time::Timestamp::now())?;
             let (status_code, mut response) = flow.exist_probe(&attempt).await?;
             let email = response.take_secrets().take_email();
             let summary = serde_json::json!({
@@ -558,6 +581,27 @@ pub(super) async fn run(
     Ok(())
 }
 
+/// The read-safe `/v2/exist` probe has no reservation, so it is refused where
+/// asking the server anything would talk over the attempt: a request in flight
+/// or of unknown outcome, a registered account, or a cooldown the server set
+/// that has not elapsed (registration safety audit, 2026-10-13).
+fn exist_allowed(
+    state: &RegistrationState,
+    now: whatsapp_api::model::time::Timestamp,
+) -> Result<(), Error> {
+    use whatsapp_api::registration::RegistrationState as S;
+    match state {
+        S::Preparing | S::Verifying { .. } | S::RegistrationOutcomeUnknown { .. } => Err(invalid(
+            "a request is in flight or its outcome is unknown; the probe would talk over it",
+        )),
+        S::Registered => Err(invalid("the account is already registered")),
+        S::CoolingDown { until } if now < *until => {
+            Err(invalid("the server set a wait that has not elapsed"))
+        }
+        _ => Ok(()),
+    }
+}
+
 /// Fields of a saved attempt that must never be printed: the phone number, and
 /// the consent context's intermediate login, opaque pending selector and parent
 /// consent URL (`RegistrationConsent`, kept only in encrypted storage). Matched
@@ -628,6 +672,61 @@ mod tests {
         assert!(text.contains("\"consent_id\":7"), "non-secret fields stay");
     }
 
+    /// Without `--create-store`, `begin` refuses a store that does not exist
+    /// and creates nothing: a new store is a fresh identity.
+    #[tokio::test]
+    async fn begin_does_not_create_a_store_implicitly() {
+        use std::os::unix::fs::PermissionsExt;
+        let dir = tempfile::tempdir().unwrap();
+        let config = dir.path().join("request.json");
+        let mut template: serde_json::Value =
+            serde_json::from_str(whatsapp_api::registration::request::TEMPLATE_JSON).unwrap();
+        template["token"] = serde_json::json!("offline-fixture-token");
+        std::fs::write(&config, template.to_string()).unwrap();
+        std::fs::set_permissions(&config, std::fs::Permissions::from_mode(0o600)).unwrap();
+        let store = dir.path().join("mistyped.redb");
+        let cli = super::super::Cli {
+            store: store.clone(),
+            account: "signup-test".into(),
+            key_env: "WHATSAPP_API_TEST_UNSET_KEY".into(),
+            profile: None,
+            profiles_dir: dir.path().join("profiles"),
+            json: false,
+            cmd: super::super::Cmd::Accounts {
+                cmd: super::super::AccountsCmd::List,
+            },
+            loaded_profile: None,
+        };
+        let begin = Action::Begin {
+            method: None,
+            create_store: false,
+        };
+        let error = run(&cli, &config, true, &begin).await.unwrap_err();
+        assert!(error.to_string().contains("--create-store"), "{error}");
+        assert!(!store.exists(), "no store was created");
+    }
+
+    #[test]
+    fn exist_probe_is_refused_mid_request_registered_or_cooling_down() {
+        use whatsapp_api::model::time::Timestamp;
+        use whatsapp_api::registration::RegistrationState as S;
+        let now = Timestamp::now();
+        for state in [
+            S::Preparing,
+            S::Verifying { step: 1 },
+            S::RegistrationOutcomeUnknown { step: 1 },
+            S::Registered,
+            S::CoolingDown {
+                until: now.saturating_add(std::time::Duration::from_secs(60)),
+            },
+        ] {
+            assert!(exist_allowed(&state, now).is_err(), "{state:?}");
+        }
+        for state in [S::Unregistered, S::CoolingDown { until: now }] {
+            assert!(exist_allowed(&state, now).is_ok(), "{state:?}");
+        }
+    }
+
     #[test]
     fn mutations_require_explicit_authorization() {
         assert!(authorize(&Action::Status, false).is_ok());
@@ -656,6 +755,7 @@ mod tests {
             },
             Action::Begin {
                 method: Some(super::super::Method::Sms),
+                create_store: false,
             },
             Action::VerifyCode,
             Action::VerifyPin,
@@ -687,7 +787,10 @@ fn ordinary_actions_use_json_body_mode_and_diagnostics_keep_explicit_modes() {
         RequestBodyMode::EncEmptyH,
     ] {
         for action in [
-            Action::Begin { method: None },
+            Action::Begin {
+                method: None,
+                create_store: false,
+            },
             Action::VerifyCode,
             Action::VerifyPin,
         ] {

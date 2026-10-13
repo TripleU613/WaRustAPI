@@ -1,3 +1,14 @@
+2026-10-13 — **Fixed/offline (registration: stores and status):** `lab-signup
+begin` no longer creates a missing store unless `--create-store` is given;
+`accounts new` creates the profile's store and refuses a number another profile
+configures. A forgotten `--profile` or a mistyped path can no longer mint a
+fresh identity for a number with a real store. `registration begin` no longer
+silently replaces another number's or profile's attempt, and `registration
+reset` no longer deletes a lab attempt. `accounts status` now shows the real
+registration state. The `exist` probe is refused mid-request, once registered
+and during a cooldown. Profiles made before this need `begin --create-store`
+once. [Audit](protocol/registration-safety-audit.md).
+
 2026-10-13 — **Fixed/offline (registration: requests that never left):** a
 registration request that could not be built, or whose connection failed
 before any byte was written, was recorded as an unknown outcome. The HTTPS flow

@@ -1162,6 +1162,17 @@ fn accounts_new(
             format!("{} already exists", account_dir.display()),
         ));
     }
+    // One number, one store: a second profile for a configured number would
+    // start a fresh identity beside a store that may be cooling down or hold an
+    // uncertain outcome (registration safety audit, 2026-10-13).
+    if let Some(existing) = profile_configuring(&cli.profiles_dir, country_code, national_number) {
+        return Err(Error::invalid(
+            "accounts",
+            format!(
+                "profile `{existing}` already configures this number; reuse it, a number keeps one store"
+            ),
+        ));
+    }
 
     std::fs::create_dir_all(&account_dir).map_err(|e| {
         Error::invalid(
@@ -1239,6 +1250,17 @@ fn accounts_new(
     )?;
 
     let store_path = account_dir.join("signup.redb");
+    // Create the profile's store now, so `lab-signup begin` never has to.
+    drop(whatsapp_api::store::ProtocolStore::open(
+        whatsapp_api::store::OpenOptions {
+            path: store_path.clone(),
+            account_id: AccountId::new(format!("signup-{name}"))?,
+            key_source: Arc::new(whatsapp_api::store::StaticKeySource::new(
+                MasterKey::from_bytes(key_bytes),
+            )),
+            create: true,
+        },
+    )?);
     let profile_name = name;
     let key_env = format!(
         "WHATSAPP_API_MASTER_KEY_{}",
@@ -1268,6 +1290,25 @@ fn accounts_new(
     );
 
     Ok(())
+}
+
+/// The saved profile whose request JSON already configures this number, if
+/// any. Profiles without a readable config are skipped; nothing is printed.
+fn profile_configuring(
+    dir: &std::path::Path,
+    country_code: u16,
+    national_number: &str,
+) -> Option<String> {
+    profiles::list(dir)
+        .ok()?
+        .into_iter()
+        .find_map(|(name, profile)| {
+            let text = std::fs::read_to_string(profile.config.as_ref()?).ok()?;
+            let config: serde_json::Value = serde_json::from_str(&text).ok()?;
+            (config["phone"]["country_code"].as_u64() == Some(u64::from(country_code))
+                && config["phone"]["national_number"].as_str() == Some(national_number))
+            .then_some(name)
+        })
 }
 
 fn accounts_status(cli: &Cli, name: Option<&str>) -> Result<(), Error> {
@@ -1362,7 +1403,15 @@ fn accounts_status(cli: &Cli, name: Option<&str>) -> Result<(), Error> {
                         if let Some(phone) = phone_opt {
                             entry["phone"] = serde_json::json!(phone);
                         }
-                        entry["registration_state"] = serde_json::json!("none");
+                        // The saved attempt's state, so the pre-send state check
+                        // is visible here; "none" only when there is no attempt.
+                        entry["registration_state"] = serde_json::json!(
+                            match whatsapp_api::registration::current_state_name(&store) {
+                                Ok(Some(state)) => state,
+                                Ok(None) => "none",
+                                Err(_) => "unreadable",
+                            }
+                        );
                         entry["registered"] = serde_json::json!(registered);
                         entry["last_authenticated_at"] = serde_json::json!(last_auth);
                         entry["appeal_token_saved"] =
@@ -1381,7 +1430,17 @@ fn accounts_status(cli: &Cli, name: Option<&str>) -> Result<(), Error> {
                             }
                             if let Ok(actions) = whatsapp_api::transport::actions::outcomes(&store)
                             {
-                                entry["actions_queued"] = serde_json::json!(actions.len());
+                                // Only actions still waiting for a write, not
+                                // every recorded outcome.
+                                entry["actions_queued"] = serde_json::json!(
+                                    actions
+                                        .iter()
+                                        .filter(|action| matches!(
+                                            action.status,
+                                            whatsapp_api::transport::actions::ActionStatus::Queued
+                                        ))
+                                        .count()
+                                );
                             }
                         }
 
@@ -2799,6 +2858,62 @@ async fn main() -> ExitCode {
 #[cfg(test)]
 mod accounts_tests {
     use super::*;
+
+    /// A number already configured by a saved profile is refused before any
+    /// key, config or store is written: one number keeps one store.
+    #[test]
+    fn accounts_new_refuses_a_number_another_profile_configures() {
+        let temp_dir = tempfile::TempDir::new().unwrap();
+        let profiles_dir = temp_dir.path().join("profiles");
+        std::fs::create_dir_all(&profiles_dir).unwrap();
+        let config = temp_dir.path().join("existing-request.json");
+        std::fs::write(
+            &config,
+            r#"{"phone":{"country_code":1,"national_number":"5551234567"}}"#,
+        )
+        .unwrap();
+        profiles::save(
+            &profiles_dir,
+            "existing",
+            &profiles::Profile {
+                store: temp_dir.path().join("existing.redb"),
+                account: "signup-existing".into(),
+                config: Some(config),
+                key_env: "WHATSAPP_API_MASTER_KEY_EXISTING".into(),
+            },
+        )
+        .unwrap();
+        assert_eq!(
+            profile_configuring(&profiles_dir, 1, "5551234567").as_deref(),
+            Some("existing")
+        );
+        assert_eq!(profile_configuring(&profiles_dir, 1, "5557654321"), None);
+        let cli = Cli {
+            store: temp_dir.path().join("test.redb"),
+            account: "test".into(),
+            key_env: "TEST_KEY".into(),
+            profile: None,
+            profiles_dir: profiles_dir.clone(),
+            json: false,
+            cmd: Cmd::Accounts {
+                cmd: AccountsCmd::List,
+            },
+            loaded_profile: None,
+        };
+        let account_dir = temp_dir.path().join("second");
+        let error = accounts_new(
+            &cli,
+            "second",
+            1,
+            "5551234567",
+            &temp_dir.path().join("unused.zip"),
+            Some(&account_dir),
+            &Method::Sms,
+        )
+        .unwrap_err();
+        assert!(error.to_string().contains("already configures"), "{error}");
+        assert!(!account_dir.exists(), "nothing written");
+    }
 
     #[test]
     fn accounts_new_creates_files_and_refuses_twice() {
