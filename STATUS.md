@@ -1755,6 +1755,7 @@ Registration uses the recipe in
 | Typing / recording indicators (`chatstate`) | typing handset-confirmed in the session export; recording and incoming indicators unconfirmed | same |
 | Presence subscribe, incoming availability / last seen | live — server answered with the peer's presence | same |
 | Prekey upload and replenishment | live | [messaging-completion](docs/messaging-completion.md) |
+| ML-KEM-1024 hybrid (0x44) sessions: verified PQ bundles in direct, fan-out, refresh and inbox | offline; no KEM prekey upload, no live hybrid message | [hybrid-fanout](docs/protocol/hybrid-fanout.md), [kem-prekey-inventory](docs/protocol/kem-prekey-inventory.md) |
 
 A single undecryptable incoming message no longer ends a session; it degrades
 to `Undecryptable` and we send a retry receipt. Direct messages from a LID sender now decrypt with the LID
@@ -1765,6 +1766,9 @@ replay). A group payload addressed only to this device (such as a
 redelivered at every login.
 
 ## Not done
+
+The per-area matrix with exposure and blockers is [feature-parity](docs/feature-parity.md).
+
 
 - **Stickers and video notes.** Field numbers are decoded from the APK
   (`stickerMessage` 26, `ptvMessage` 66, `VideoMessage` inner fields);

@@ -21,6 +21,7 @@ and [STATUS.md](../STATUS.md) for verified behavior and blockers.
 - [Continuous integration](ci.md): change routing, test tiers, coverage, and security scans.
 - [Design plan](design/README.md): architecture, contracts, milestones, and numbered sections.
 - [Messaging implementation checklist](messaging-completion.md): verification status and blockers.
+- [Feature parity](feature-parity.md): every feature area with state, exposure, evidence and blockers.
 - [Repository map](protocol/repository-map.md): implementation locations.
 - [Security](../SECURITY.md) and [third-party notices](../THIRD_PARTY_NOTICES.md).
 
