@@ -1,3 +1,13 @@
+2026-10-13 — **Fixed/offline (registration: requests that never left):** a
+registration request that could not be built, or whose connection failed
+before any byte was written, was recorded as an unknown outcome. The HTTPS flow
+cannot reconcile that, so a network outage on `begin` stranded the store,
+leaving a fresh identity as the only way on. Such failures now return
+`RequestNotSent` and restore the attempt's previous state (a fresh `begin`
+resumes later with the same attempt and keys). Failures that may have reached
+the server still record an unknown outcome. That connect errors occur before
+writing is inferred from the HTTP library. [Audit](protocol/registration-safety-audit.md).
+
 2026-10-13 — **Fixed/offline (registration safety audit, waits and email
 recovery):** `resume-email-challenge` is now allowed once per recovery kind per
 attempt, so an uncertain email-code request can no longer be re-sent in a

@@ -50,6 +50,29 @@ re-verified). Nothing here changes a request's wire content.
   carries. (The audit's claim that `voice_wait` is never kept was wrong for voice
   attempts.) Test: `server_waits_keep_the_longest_value`.
 
+- **Requests that never left were recorded as uncertain, stranding the
+  attempt.** Every flow error became `outcome_unknown`, which the HTTPS flow
+  cannot reconcile, so the only way on was a new store: identity rotation. Two
+  kinds of failure provably send nothing: a request that cannot be built (a
+  config edited since the attempt froze it, a resend method the frozen config
+  does not use, the metrics history bound) and a connection that fails before
+  any byte is written. These now raise `Error::RequestNotSent` (wrapping the
+  cause), and the attempt returns to its state before the reservation through a
+  legal transition: a fresh `begin` becomes an already elapsed cooldown that the
+  next `begin` resumes with the same attempt and keys; a cooldown resume returns
+  to its cooldown; a resend returns to its pending challenge and original
+  method; an OTP, PIN, email-code or consent request returns to its prior state;
+  a one-shot diagnostic or consent latch taken by the reservation is released.
+  Every other failure (timeout, a response that cannot be read, a reset after
+  writing) may have reached the server and still records `outcome_unknown`.
+  **Inferred:** that reqwest's `is_connect()` (DNS, TCP, TLS handshake, connect
+  timeout) and `is_builder()` errors occur before the request is written; this
+  follows the library's connector design, not a packet capture. A preflight sent
+  before a code request that then fails to build has been sent; it is the
+  read-safe `/v2/exist` probe. Tests:
+  `unsent_requests_restore_the_attempt_instead_of_an_unknown_outcome`,
+  `build_failures_are_classified_as_not_sent_once`.
+
 ## Confirmed open
 
 - **A refusal that stays blocked does not keep its SMS/voice wait.** A
@@ -66,16 +89,13 @@ re-verified). Nothing here changes a request's wire content.
    fresh keys and IDs for a number whose real store may be cooling down, holding
    an uncertain outcome or a pending challenge; `accounts new` does not check
    whether the number already has a profile.
-2. Failures before anything is sent (config mismatch after a JSON edit, a method
-   switch on resend, long history with metrics, DNS/TCP/TLS connect failures) are
-   saved as `outcome_unknown`, which has no way out for the HTTP flow.
-3. The `exist` probe has no reservation or state check and does not save its
+2. The `exist` probe has no reservation or state check and does not save its
    waits.
-4. `client_metrics.attempts` is copied from the frozen config onto every resend
+3. `client_metrics.attempts` is copied from the frozen config onto every resend
    rather than derived from saved history.
-5. The ordinary `registration begin`/`reset` can overwrite or delete a lab
+4. The ordinary `registration begin`/`reset` can overwrite or delete a lab
    attempt record.
-6. `accounts status` prints `registration_state: "none"` without reading the
+5. `accounts status` prints `registration_state: "none"` without reading the
    attempt.
 
 Plausible lower items from the same audit: any refusal carrying `retry_after`

@@ -1403,8 +1403,18 @@ impl RegistrationTransport for ExperimentalHttpsTransport {
                 .body(request.body().to_vec())
                 .send()
                 .await
-                .map_err(|_| {
-                    Error::Io(std::io::Error::other("registration HTTPS request failed"))
+                .map_err(|error| {
+                    // A connector failure (DNS, TCP, TLS handshake, connect
+                    // timeout) or a request reqwest could not build happens
+                    // before any byte of the request is written: provably not
+                    // sent. Anything later may have reached the server.
+                    if error.is_connect() || error.is_builder() {
+                        Error::RequestNotSent(Box::new(Error::Io(std::io::Error::other(
+                            "registration HTTPS connection failed before the request was written",
+                        ))))
+                    } else {
+                        Error::Io(std::io::Error::other("registration HTTPS request failed"))
+                    }
                 })?;
             if response
                 .content_length()

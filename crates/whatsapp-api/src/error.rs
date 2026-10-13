@@ -125,6 +125,13 @@ pub enum Error {
     #[error("runtime not connected")]
     NotConnected,
 
+    /// A registration request provably did not leave this client: it could
+    /// not be built, or the connection failed before any byte of it was
+    /// written. The attempt returns to its state before the reservation
+    /// instead of an unknown outcome. Wraps the cause for diagnosis.
+    #[error("request not sent: {0}")]
+    RequestNotSent(Box<Error>),
+
     /// No completed registration exists in this store; connecting is
     /// impossible and is never repaired by automatic re-registration.
     #[error("account is not registered")]

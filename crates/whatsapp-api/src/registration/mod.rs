@@ -468,6 +468,16 @@ struct Transition {
     to: String,
 }
 
+/// A request that could not be built was not sent (registration safety audit,
+/// 2026-10-13): for example a config edited since the attempt froze it, or a
+/// resend method the frozen config does not use. Keeps the cause.
+fn not_built(error: Error) -> Error {
+    match error {
+        Error::RequestNotSent(_) => error,
+        other => Error::RequestNotSent(Box::new(other)),
+    }
+}
+
 /// The longest of the server-directed waits that are present.
 fn longest<const N: usize>(waits: [Option<std::time::Duration>; N]) -> Option<std::time::Duration> {
     waits.into_iter().flatten().max()
@@ -950,7 +960,10 @@ impl RegistrationFlow for ComparisonHttpFlow {
         decision: Option<&'a consent::ConsentDecision>,
     ) -> RegistrationFuture<'a> {
         Box::pin(async move {
-            let request = self.requests.consent_request(attempt, decision)?;
+            let request = self
+                .requests
+                .consent_request(attempt, decision)
+                .map_err(not_built)?;
             let (http, mut response) = self.send(request).await?;
             if response.consent.login.is_none()
                 && let RegistrationState::Blocked {
@@ -1013,13 +1026,17 @@ impl RegistrationFlow for ComparisonHttpFlow {
 
     fn begin<'a>(&'a self, attempt: &'a RegistrationAttempt) -> RegistrationFuture<'a> {
         Box::pin(async move {
-            if let Some(request) = self.requests.preflight_request(attempt)? {
+            if let Some(request) = self
+                .requests
+                .preflight_request(attempt)
+                .map_err(not_built)?
+            {
                 let (status, response) = self.send(request).await?;
                 if let Some(output) = preflight_decision(status, &response, &attempt.method) {
                     return Ok(output);
                 }
             }
-            let request = self.requests.code_request(attempt)?;
+            let request = self.requests.code_request(attempt).map_err(not_built)?;
             let (status_code, response) = self.send(request).await?;
             if (200..300).contains(&status_code)
                 && response.status == wire::RegistrationResponseStatus::Sent
@@ -1064,7 +1081,10 @@ impl RegistrationFlow for ComparisonHttpFlow {
                     "the comparison client sends no address; the server uses the one on file",
                 ));
             }
-            let request = self.requests.email_code_request(attempt)?;
+            let request = self
+                .requests
+                .email_code_request(attempt)
+                .map_err(not_built)?;
             let (status_code, response) = self.send(request).await?;
             if (200..300).contains(&status_code)
                 && matches!(
@@ -1097,11 +1117,20 @@ impl RegistrationFlow for ComparisonHttpFlow {
     ) -> RegistrationFuture<'a> {
         Box::pin(async move {
             let request = match answer {
-                Answer::Code(code) => self.requests.complete_request(attempt, code)?,
-                Answer::Pin(pin) => self.requests.security_request(attempt, pin)?,
+                Answer::Code(code) => self
+                    .requests
+                    .complete_request(attempt, code)
+                    .map_err(not_built)?,
+                Answer::Pin(pin) => self
+                    .requests
+                    .security_request(attempt, pin)
+                    .map_err(not_built)?,
                 // The emailed code is verified by the same `/v2/register` call as
                 // an SMS or voice code (2.26.37.71 `KotlinRegistrationBridge.A0D`).
-                Answer::EmailCode(code) => self.requests.complete_request(attempt, code)?,
+                Answer::EmailCode(code) => self
+                    .requests
+                    .complete_request(attempt, code)
+                    .map_err(not_built)?,
             };
             let (status_code, mut response) = self.send(request).await?;
             if (200..300).contains(&status_code)
@@ -1170,7 +1199,8 @@ impl RegistrationFlow for ComparisonHttpFlow {
 
 enum BeginPlan {
     Existing(RegistrationStep),
-    Start(RegistrationAttempt),
+    /// The reserved attempt and the state to restore if nothing is sent.
+    Start(Box<(RegistrationAttempt, RegistrationState)>),
 }
 
 /// Durable registration service over the protocol store.
@@ -1231,6 +1261,68 @@ impl RegistrationService {
 
     fn save_current(tx: &mut WriteTx<'_>, attempt: &RegistrationAttempt) -> Result<()> {
         tx.put_json(Table::RegistrationAttempts, CURRENT_KEY, RECORD_V1, attempt)
+    }
+
+    /// Record a failed request. A request that provably did not leave
+    /// (`Error::RequestNotSent`) returns the attempt to `prior`, its state
+    /// before the reservation, through a legal transition, restoring `method`
+    /// (a resend may have changed it) and releasing `release`, a one-shot latch
+    /// the reservation took. Recording `outcome_unknown` for it stranded the
+    /// attempt, since the HTTPS flow has no reconciliation (registration safety
+    /// audit, 2026-10-13). Any other failure may have reached the server and is
+    /// recorded as `unknown`. The error is returned either way.
+    #[allow(clippy::too_many_arguments)]
+    async fn finish_failed(
+        &self,
+        attempt: &RegistrationAttempt,
+        expected_state: &'static str,
+        unknown: RegistrationState,
+        prior: RegistrationState,
+        method: ChallengeMethod,
+        release: Option<&'static [u8]>,
+        error: Error,
+    ) -> Result<RegistrationStep> {
+        if !matches!(error, Error::RequestNotSent(_)) {
+            self.finish_transition(
+                attempt.id,
+                attempt.generation,
+                expected_state,
+                unknown.into(),
+            )
+            .await?;
+            return Err(error);
+        }
+        let (attempt_id, generation) = (attempt.id, attempt.generation);
+        self.store
+            .run_blocking(move |s| {
+                s.write(|tx| {
+                    let mut current = Self::load_current(tx)?.ok_or_else(|| {
+                        Error::invalid("registration_state", "attempt disappeared during request")
+                    })?;
+                    if current.id != attempt_id
+                        || current.generation != generation
+                        || current.generation != tx.generation()
+                        || current.state.name() != expected_state
+                    {
+                        return Err(Error::invalid(
+                            "registration_state",
+                            "attempt changed while request was in flight",
+                        ));
+                    }
+                    current.method = method;
+                    current.transition(prior, Timestamp::now())?;
+                    if let Some(latch) = release {
+                        tx.delete(Table::RegistrationAttempts, latch)?;
+                    }
+                    Self::save_current(tx, &current)
+                })
+            })
+            .await?;
+        tracing::warn!(
+            error = %error,
+            "registration request not sent; attempt restored to its previous state"
+        );
+        Err(error)
     }
 
     async fn finish_transition(
@@ -1348,9 +1440,10 @@ impl RegistrationService {
                             if let RegistrationState::CoolingDown { until } = &existing.state
                                 && now >= *until
                             {
+                                let prior = existing.state.clone();
                                 existing.transition(RegistrationState::Preparing, now)?;
                                 Self::save_current(tx, &existing)?;
-                                return Ok(BeginPlan::Start(existing));
+                                return Ok(BeginPlan::Start(Box::new((existing, prior))));
                             }
                             return Ok(BeginPlan::Existing(step_for(&existing.state)));
                         }
@@ -1377,16 +1470,22 @@ impl RegistrationService {
                     // any request can be sent (docs/design/README.md section 7).
                     flow.prepare(tx, &attempt)?;
                     Self::save_current(tx, &attempt)?;
-                    Ok(BeginPlan::Start(attempt))
+                    // Not sent: an already elapsed cooldown, so the next
+                    // `begin` resumes this attempt with its identity and keys.
+                    Ok(BeginPlan::Start(Box::new((
+                        attempt,
+                        RegistrationState::CoolingDown { until: now },
+                    ))))
                 })
             })
             .await?;
 
-        let attempt = match plan {
+        let (attempt, prior) = match plan {
             BeginPlan::Existing(step) => return Ok(step),
-            BeginPlan::Start(attempt) => attempt,
+            BeginPlan::Start(start) => *start,
         };
-        self.execute_begin(attempt).await
+        let method = attempt.method.clone();
+        self.execute_begin(attempt, prior, method, None).await
     }
 
     /// Ask the server for a **new** code on the attempt already in progress.
@@ -1442,14 +1541,16 @@ impl RegistrationService {
                             "the server asked us to wait before requesting another code",
                         ));
                     }
+                    let prior = (existing.state.clone(), existing.method.clone());
                     existing.method = method;
                     existing.transition(RegistrationState::Preparing, now)?;
                     Self::save_current(tx, &existing)?;
-                    Ok(existing)
+                    Ok((existing, prior))
                 })
             })
             .await?;
-        self.execute_begin(attempt).await
+        let (attempt, (prior, method)) = attempt;
+        self.execute_begin(attempt, prior, method, None).await
     }
 
     /// Explicit one-shot diagnostic recovery for the lab's old, opaque refusals.
@@ -1672,19 +1773,29 @@ impl RegistrationService {
                         ));
                     }
                     let now = Timestamp::now();
+                    let prior = attempt.state.clone();
                     attempt.transition(RegistrationState::Unregistered, now)?;
                     attempt.transition(RegistrationState::Preparing, now)?;
                     flow.prepare(tx, &attempt)?;
                     tx.put_json(Table::RegistrationAttempts, latch, RECORD_V1, &attempt.id)?;
                     Self::save_current(tx, &attempt)?;
-                    Ok(attempt)
+                    Ok((attempt, prior))
                 })
             })
             .await?;
-        self.execute_begin(attempt).await
+        let (attempt, prior) = attempt;
+        let method = attempt.method.clone();
+        self.execute_begin(attempt, prior, method, Some(latch))
+            .await
     }
 
-    async fn execute_begin(&self, attempt: RegistrationAttempt) -> Result<RegistrationStep> {
+    async fn execute_begin(
+        &self,
+        attempt: RegistrationAttempt,
+        prior: RegistrationState,
+        method: ChallengeMethod,
+        release: Option<&'static [u8]>,
+    ) -> Result<RegistrationStep> {
         let result = self.flow.begin(&attempt).await;
         match result {
             Ok(next) => {
@@ -1692,14 +1803,16 @@ impl RegistrationService {
                     .await
             }
             Err(error) => {
-                self.finish_transition(
-                    attempt.id,
-                    attempt.generation,
+                self.finish_failed(
+                    &attempt,
                     "preparing",
-                    RegistrationState::RegistrationOutcomeUnknown { step: 0 }.into(),
+                    RegistrationState::RegistrationOutcomeUnknown { step: 0 },
+                    prior,
+                    method,
+                    release,
+                    error,
                 )
-                .await?;
-                Err(error)
+                .await
             }
         }
     }
@@ -1719,7 +1832,7 @@ impl RegistrationService {
                 "answer must contain 1..=16 ASCII digits",
             ));
         }
-        let (attempt, bound) = self
+        let (attempt, bound, prior) = self
             .store
             .run_blocking(move |s| {
                 s.write(|tx| {
@@ -1781,9 +1894,10 @@ impl RegistrationService {
                             code: None,
                         });
                     }
+                    let prior = attempt.state.clone();
                     attempt.transition(RegistrationState::Verifying { step: bound.step }, now)?;
                     Self::save_current(tx, &attempt)?;
-                    Ok((attempt, bound))
+                    Ok((attempt, bound, prior))
                 })
             })
             .await?;
@@ -1795,14 +1909,17 @@ impl RegistrationService {
                     .await
             }
             Err(error) => {
-                self.finish_transition(
-                    attempt.id,
-                    attempt.generation,
+                let method = attempt.method.clone();
+                self.finish_failed(
+                    &attempt,
                     "verifying",
-                    RegistrationState::RegistrationOutcomeUnknown { step: bound.step }.into(),
+                    RegistrationState::RegistrationOutcomeUnknown { step: bound.step },
+                    prior,
+                    method,
+                    None,
+                    error,
                 )
-                .await?;
-                Err(error)
+                .await
             }
         }
     }
@@ -1823,7 +1940,7 @@ impl RegistrationService {
                 "the comparison client sends no address; the server uses the one on file",
             ));
         }
-        let (attempt, bound) = self
+        let (attempt, bound, prior) = self
             .store
             .run_blocking(move |s| {
                 s.write(|tx| {
@@ -1863,9 +1980,10 @@ impl RegistrationService {
                             code: None,
                         });
                     }
+                    let prior = attempt.state.clone();
                     attempt.transition(RegistrationState::Verifying { step: bound.step }, now)?;
                     Self::save_current(tx, &attempt)?;
-                    Ok((attempt, bound))
+                    Ok((attempt, bound, prior))
                 })
             })
             .await?;
@@ -1879,14 +1997,17 @@ impl RegistrationService {
                     .await
             }
             Err(error) => {
-                self.finish_transition(
-                    attempt.id,
-                    attempt.generation,
+                let method = attempt.method.clone();
+                self.finish_failed(
+                    &attempt,
                     "verifying",
-                    RegistrationState::RegistrationOutcomeUnknown { step: bound.step }.into(),
+                    RegistrationState::RegistrationOutcomeUnknown { step: bound.step },
+                    prior,
+                    method,
+                    None,
+                    error,
                 )
-                .await?;
-                Err(error)
+                .await
             }
         }
     }
@@ -2379,6 +2500,126 @@ mod tests {
                 wire::RegistrationHttpResponse::new(200, Zeroizing::new(body.to_vec()))
             })
         }
+    }
+
+    /// Each step answers with a response, or `None` for a request that
+    /// provably did not leave (a connection failure before writing).
+    type MaybeSentSteps =
+        std::sync::Mutex<std::collections::VecDeque<(&'static str, Option<&'static [u8]>)>>;
+
+    #[derive(Debug)]
+    struct MaybeSentTransport {
+        steps: MaybeSentSteps,
+    }
+
+    impl wire::RegistrationTransport for MaybeSentTransport {
+        fn send<'a>(
+            &'a self,
+            request: wire::EncodedRegistrationRequest,
+        ) -> wire::RegistrationTransportFuture<'a> {
+            Box::pin(async move {
+                let (path, body) = self.steps.lock().unwrap().pop_front().unwrap();
+                assert!(request.url().ends_with(path));
+                match body {
+                    Some(body) => {
+                        wire::RegistrationHttpResponse::new(200, Zeroizing::new(body.to_vec()))
+                    }
+                    None => Err(Error::RequestNotSent(Box::new(Error::Io(
+                        std::io::Error::other("connection refused before writing"),
+                    )))),
+                }
+            })
+        }
+    }
+
+    /// A request that provably did not leave restores the attempt instead of
+    /// stranding it in `outcome_unknown`: a fresh attempt becomes an elapsed
+    /// cooldown that `begin` resumes with the same attempt and keys, and an
+    /// OTP submission returns to its challenge so the same code can be sent.
+    #[tokio::test]
+    async fn unsent_requests_restore_the_attempt_instead_of_an_unknown_outcome() {
+        let (_d, s) = store();
+        let profile = ProtocolProfile::android_reference().unwrap();
+        let transport = Arc::new(MaybeSentTransport {
+            steps: std::sync::Mutex::new(std::collections::VecDeque::from([
+                ("/v2/code", None),
+                ("/v2/code", Some(br#"{"status":"sent"}"#.as_slice())),
+                ("/v2/code", None),
+                ("/v2/register", None),
+                (
+                    "/v2/register",
+                    Some(br#"{"status":"ok","login":"mock-login"}"#.as_slice()),
+                ),
+            ])),
+        });
+        let service = RegistrationService::new(
+            s.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(
+                Arc::new(ComparisonRequests),
+                transport.clone(),
+            )),
+        );
+        let error = service
+            .begin(phone(), ChallengeMethod::Sms)
+            .await
+            .unwrap_err();
+        assert!(matches!(error, Error::RequestNotSent(_)), "{error}");
+        let first = service.current().await.unwrap().unwrap();
+        assert!(
+            matches!(first.state, RegistrationState::CoolingDown { .. }),
+            "{:?}",
+            first.state
+        );
+        let RegistrationStep::Action(RequiredAction::EnterCode(handle)) =
+            service.begin(phone(), ChallengeMethod::Sms).await.unwrap()
+        else {
+            panic!("the elapsed cooldown resumes the same attempt")
+        };
+        assert_eq!(service.current().await.unwrap().unwrap().id, first.id);
+        // A resend switching to voice that does not leave keeps the pending
+        // challenge and the attempt's original method.
+        let error = service
+            .resend_code(phone(), ChallengeMethod::Voice)
+            .await
+            .unwrap_err();
+        assert!(matches!(error, Error::RequestNotSent(_)), "{error}");
+        let saved = service.current().await.unwrap().unwrap();
+        assert_eq!(saved.method, ChallengeMethod::Sms);
+        assert!(matches!(
+            saved.state,
+            RegistrationState::ChallengePending { .. }
+        ));
+        let code = || Answer::Code(Zeroizing::new("123456".into()));
+        let error = service.submit(handle.clone(), code()).await.unwrap_err();
+        assert!(matches!(error, Error::RequestNotSent(_)), "{error}");
+        let saved = service.current().await.unwrap().unwrap();
+        assert!(
+            matches!(saved.state, RegistrationState::ChallengePending { .. }),
+            "{:?}",
+            saved.state
+        );
+        // The restored handle still answers the same step.
+        let RegistrationState::ChallengePending { handle: restored } = saved.state else {
+            unreachable!()
+        };
+        assert_eq!(
+            service.submit(restored, code()).await.unwrap(),
+            RegistrationStep::Completed
+        );
+        assert!(transport.steps.lock().unwrap().is_empty());
+    }
+
+    #[test]
+    fn build_failures_are_classified_as_not_sent_once() {
+        let built = not_built(Error::invalid("registration_config", "config changed"));
+        assert!(matches!(built, Error::RequestNotSent(_)));
+        assert!(built.to_string().contains("config changed"));
+        // Already classified: not wrapped twice.
+        let Error::RequestNotSent(inner) = not_built(built) else {
+            panic!()
+        };
+        assert!(!matches!(*inner, Error::RequestNotSent(_)));
     }
 
     #[tokio::test]
