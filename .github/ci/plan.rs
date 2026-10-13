@@ -391,9 +391,25 @@ mod tests {
         let mut found = 0;
         for file in files {
             let text = fs::read_to_string(&file).unwrap();
+            // A path built from a bare `"docs"` segment
+            // (`Path::new("docs").join(..)`) cannot be resolved lexically, so
+            // it always needs an explicit decision for its file.
+            for _ in text.matches("\"docs\"") {
+                found += 1;
+                let file = file.to_str().unwrap();
+                assert!(
+                    DOCS_NOT_INPUTS
+                        .iter()
+                        .any(|(source, listed, _)| *source == file && *listed == "docs"),
+                    "{file} builds a path from a bare \"docs\" segment; list the files it reads in DOCS_INPUTS and add (\"{file}\", \"docs\", reason) to DOCS_NOT_INPUTS"
+                );
+            }
             for (at, _) in text.match_indices("docs/") {
                 let before = &text[..at];
-                if !(before.ends_with('"') || before.ends_with("../")) {
+                // A literal (`"docs/`, raw `r#"docs/`), a relative path
+                // (`../docs/`) or an interpolated root (`{root}/docs/`);
+                // prose and URLs (`https://host/docs/`) are not paths here.
+                if !(before.ends_with('"') || before.ends_with("../") || before.ends_with("}/")) {
                     continue;
                 }
                 let len = text[at..]

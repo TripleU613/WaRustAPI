@@ -17,7 +17,7 @@ Superseded runs for the same event/ref are cancelled.
 | xtask Rust | xtask lint/tests; its audit/protobuf modules also trigger their corresponding checks |
 | Library Rust or embedded fixtures | Workspace lint, default/all-feature tests, package and strict rustdoc |
 | Library tests only | Workspace lint and tests; no package rebuild |
-| A `docs/` file a crate compiles in (`include_str!`/`include_bytes!`) or its tests read by relative path (`docs/cli.md`, `docs/api/openapi.json`), listed in `DOCS_INPUTS` in `.github/ci/plan.rs` | That crate's lint/tests (the library's: workspace tests); the planner test `docs_inputs_are_routed` scans the sources for `docs/` path literals, relative (`../docs/…`) or root-relative (`"docs/…"`), and fails unless each is routed or listed in `DOCS_NOT_INPUTS` for that source file with the reason it is not read |
+| A `docs/` file a crate compiles in (`include_str!`/`include_bytes!`) or its tests read by relative path (`docs/cli.md`, `docs/api/openapi.json`), listed in `DOCS_INPUTS` in `.github/ci/plan.rs` | That crate's lint/tests (the library's: workspace tests); the planner test `docs_inputs_are_routed` scans the sources for `docs/` path literals (relative `../docs/…`, root-relative or raw `"docs/…"`, interpolated `{root}/docs/…`) and bare `"docs"` path segments, and fails unless each is routed or listed in `DOCS_NOT_INPUTS` for that source file with the reason it is not read |
 | Protobuf inputs or generated protobuf | Workspace checks, regeneration check, package |
 | Cargo manifests, lockfile, toolchain, workflows, or CI tools | Full normal validation |
 | Unknown paths or unavailable Git baseline | Full normal validation, never a silent skip |
