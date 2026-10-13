@@ -1,3 +1,9 @@
+2026-10-13 — **Implemented/offline (HTTP parity: registration status):** `serve
+--store-routes` also answers `GET /v1/signup/status` with the saved
+registration attempt exactly as `lab-signup status --json` prints it (phone and
+consent secrets redacted), or JSON null, so an agent can follow onboarding
+state without the CLI. [API README](api/README.md#store-routes-opt-in).
+
 2026-10-13 — **Corrected/offline (third registration review):** a review of
 the exact-restore change with probe tests found it sound, and one gap: an
 unreadable 5xx or 429 email-code answer still allowed a second email request.

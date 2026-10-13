@@ -740,7 +740,8 @@ enum Cmd {
         #[arg(long)]
         allow_non_loopback: bool,
         /// Also serve read-only, redacted store inspections (`/v1/store`,
-        /// `/v1/receipts`, `/v1/prekeys`, `/v1/outbox/suspended`, `/v1/actions`,
+        /// `/v1/signup/status`, `/v1/receipts`, `/v1/prekeys`,
+        /// `/v1/outbox/suspended`, `/v1/actions`,
         /// `/v1/identity-conflicts`, `/v1/outbox/group-preparations`,
         /// `/v1/outbox/{local_id}/versions`, `/v1/diagnostics/own-lid`,
         /// `/v1/inbox/undecodable`, and

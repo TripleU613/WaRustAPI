@@ -92,6 +92,8 @@ so the CLI can embed and serve it without extra dependencies).
 account selected by `--store`/`--account`/`--key-env`: `GET /v1/store` (the
 `store inspect` report: table counts, generation, registration status and
 structural checkpoint kinds, any other key prefix counted as `other`),
+`/v1/signup/status` (the saved registration attempt as `lab-signup status
+--json` prints it, phone and consent secrets redacted; JSON null without one),
 `/v1/receipts`,
 `/v1/prekeys`, `/v1/outbox/suspended`, `/v1/actions` (list form only),
 `/v1/identity-conflicts`, `/v1/outbox/group-preparations`,

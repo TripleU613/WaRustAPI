@@ -51,14 +51,17 @@ struct ApiState {
 /// Read-only store routes, each the same output as an existing CLI inspection
 /// (`receipts`, `prekeys`, `outbox-suspended`, `actions` list,
 /// `identity-conflicts`, `outbox-group-preparations`, `group own-lid`,
-/// `undecodable`, `store inspect`): counts, capture digests, frame sizes and
-/// error classes, the store's account label and generation,
+/// `undecodable`, `store inspect`, `lab-signup status --json`): counts, capture
+/// digests, frame sizes and error classes, the store's account label and
+/// generation, the registration attempt with its phone and consent secrets
+/// redacted,
 /// local and wire message/iq IDs, unsalted address hashes (`peer_ticket`,
 /// guessable for phone numbers), key fingerprints, fixed reasons and, for
 /// refused actions, the server's error text. No message content, key material
 /// or raw address. These take no query parameters.
-const STORE_ROUTES: [&str; 9] = [
+const STORE_ROUTES: [&str; 10] = [
     "/v1/store",
+    "/v1/signup/status",
     "/v1/receipts",
     "/v1/prekeys",
     "/v1/outbox/suspended",
@@ -646,6 +649,16 @@ fn read_store(
     };
     let value = match path {
         "/v1/store" => Ok(crate::store_report::report(&store)?),
+        // `lab-signup status --json`: the saved attempt, redacted the same
+        // way (phone, consent login, pending selector, parent consent URL);
+        // JSON null when the store holds no attempt.
+        "/v1/signup/status" => match whatsapp_api::registration::current_attempt(&store)? {
+            Some(attempt) => serde_json::to_value(&attempt).map(|mut value| {
+                crate::signup::redact_attempt(&mut value);
+                value
+            }),
+            None => Ok(Value::Null),
+        },
         "/v1/receipts" => serde_json::to_value(receipts::outcomes(&store)?),
         "/v1/prekeys" => serde_json::to_value(prekeys::summary(&store)?),
         "/v1/outbox/suspended" => serde_json::to_value(outgoing::identity_suspended(&store)?),
@@ -1263,6 +1276,36 @@ mod tests {
             .await
             .unwrap();
         assert_eq!(query.status, 400);
+        // `lab-signup status`: JSON null without an attempt; with one, the
+        // phone (and any consent secret) never appears.
+        let none = store_route(&request("GET", "/v1/signup/status", auth), &state)
+            .await
+            .unwrap();
+        assert_eq!((none.status, body(&none)), (200, Value::Null));
+        {
+            let store =
+                Arc::new(ProtocolStore::open(state.store.as_ref().unwrap().options()).unwrap());
+            let profile = ProtocolProfile::android_reference().unwrap();
+            let flow = Arc::new(whatsapp_api::registration::UnsupportedFlow::for_profile(
+                &profile,
+            ));
+            let service =
+                whatsapp_api::registration::RegistrationService::new(store, &profile, flow);
+            service
+                .begin(
+                    whatsapp_api::model::phone::PhoneNumber::new(1, "5550109876").unwrap(),
+                    whatsapp_api::registration::ChallengeMethod::Sms,
+                )
+                .await
+                .unwrap();
+        }
+        let status = store_route(&request("GET", "/v1/signup/status", auth), &state)
+            .await
+            .unwrap();
+        assert_eq!(status.status, 200);
+        let text = String::from_utf8_lossy(&status.body).into_owned();
+        assert!(!text.contains("5550109876"), "{text}");
+        assert!(body(&status).get("state").is_some(), "{text}");
         // The `store inspect` report: counts and structural kinds only.
         let inspected = store_route(&request("GET", "/v1/store", auth), &state)
             .await

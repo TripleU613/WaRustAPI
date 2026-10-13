@@ -693,7 +693,7 @@ const REDACTED_ATTEMPT_KEYS: [&str; 4] = [
 
 /// Replace every present value of [`REDACTED_ATTEMPT_KEYS`] with a marker;
 /// `null` stays `null`, so presence remains visible without the value.
-fn redact_attempt(value: &mut serde_json::Value) {
+pub(crate) fn redact_attempt(value: &mut serde_json::Value) {
     match value {
         serde_json::Value::Object(map) => {
             for (key, field) in map.iter_mut() {

@@ -559,11 +559,15 @@ pub fn claim_store(store: &ProtocolStore, phone: &PhoneNumber) -> Result<()> {
 /// `cooling_down`, `outcome_unknown`, ...), or `None` when this store holds no
 /// attempt. Read-only, for status displays such as `accounts status`.
 pub fn current_state_name(store: &ProtocolStore) -> Result<Option<&'static str>> {
-    store.read(|tx| {
-        Ok(tx
-            .get_json::<RegistrationAttempt>(Table::RegistrationAttempts, CURRENT_KEY, RECORD_V1)?
-            .map(|attempt| attempt.state.name()))
-    })
+    Ok(current_attempt(store)?.map(|attempt| attempt.state.name()))
+}
+
+/// The saved attempt, whichever profile created it, or `None`. Read-only and
+/// needs no flow, for inspections such as the `lab-signup status` store route.
+/// Its `Debug` redacts the phone; serialised JSON does not, so a printer must
+/// redact it (and the consent secrets) itself.
+pub fn current_attempt(store: &ProtocolStore) -> Result<Option<RegistrationAttempt>> {
+    store.read(|tx| tx.get_json(Table::RegistrationAttempts, CURRENT_KEY, RECORD_V1))
 }
 
 /// Marks an email-code request whose answer arrived but could not be read.
