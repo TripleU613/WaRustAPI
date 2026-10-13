@@ -182,15 +182,29 @@ impl Snapshot {
         // CQc.A00 verifies/derives the new signed bundle session. Keep originals
         // for OCC/history; policy never clears a persisted pin to make it pass.
         let mut inputs = Vec::with_capacity(self.targets.len());
+        let mut hybrids = Vec::with_capacity(self.targets.len());
         let mut replacements = Vec::with_capacity(self.targets.len());
         for target in &self.targets {
-            let bundle = if self.fresh_sessions || target.session.is_none() {
-                Some(direct::prekey_bundle_for(
-                    reply.ok_or_else(|| invalid("a device has neither a session nor a bundle"))?,
-                    &target.device,
-                )?)
+            let (bundle, hybrid) = if self.fresh_sessions || target.session.is_none() {
+                let reply =
+                    reply.ok_or_else(|| invalid("a device has neither a session nor a bundle"))?;
+                // Batch callbacks (Bot.A03) carry a selected Kyber key into the
+                // device-agnostic CQc.A00, which verifies it and derives a
+                // hybrid session (pq-bundle-boundary.md, hybrid-bundle.md).
+                if direct::prekey_user_for(reply, &target.device)?
+                    .child("pqkey")
+                    .is_some()
+                {
+                    let hybrid = crate::signal::hybrid::bundle_for(reply, &target.device)?;
+                    (Some(hybrid.classic().clone()), Some(hybrid))
+                } else {
+                    (
+                        Some(direct::prekey_bundle_for(reply, &target.device)?),
+                        None,
+                    )
+                }
             } else {
-                None
+                (None, None)
             };
             let replacement = match direct::validate_bundle_identity(
                 bundle.as_ref(),
@@ -237,6 +251,7 @@ impl Snapshot {
             };
             replacements.push(replacement);
             inputs.push(bundle);
+            hybrids.push(hybrid);
         }
         let changed_primaries: Vec<_> = self
             .targets
@@ -262,7 +277,13 @@ impl Snapshot {
         .await?;
         let mut fanout = Vec::with_capacity(self.targets.len());
         let mut updates = Vec::with_capacity(self.targets.len());
-        for ((target, bundle), replacement) in self.targets.iter().zip(&inputs).zip(&replacements) {
+        for (((target, bundle), replacement), hybrid) in self
+            .targets
+            .iter()
+            .zip(&inputs)
+            .zip(&replacements)
+            .zip(&hybrids)
+        {
             let session = if self.fresh_sessions || *replacement {
                 None
             } else {
@@ -273,16 +294,24 @@ impl Snapshot {
             } else {
                 target.identity.as_deref()
             };
-            // Bare protobuf input: prepare_payload applies APK padding once.
-            let prepared = direct::prepare_payload(
-                account,
-                &target.device,
-                bundle.as_ref(),
-                session,
-                identity,
-                &minted.distribution_message,
-            )
-            .await?;
+            // Bare protobuf input: both preparers apply APK padding once. A
+            // fetched hybrid bundle exists only when no held ratchet is used.
+            let prepared = match hybrid {
+                Some(hybrid) if session.is_none() => {
+                    hybrid.prepare_initial(account, identity, &minted.distribution_message)?
+                }
+                _ => {
+                    direct::prepare_payload(
+                        account,
+                        &target.device,
+                        bundle.as_ref(),
+                        session,
+                        identity,
+                        &minted.distribution_message,
+                    )
+                    .await?
+                }
+            };
             fanout.push(FanoutTarget {
                 device: target.device.clone(),
                 kind: prepared.kind,
@@ -1144,6 +1173,240 @@ pub(super) mod tests {
                 && !debug.contains("120363")
                 && !debug.contains("offline group")
         );
+    }
+    #[tokio::test]
+    async fn hybrid_primary_and_companion_distributions_open_natively_and_continue_once() {
+        use crate::signal::{hybrid, kem};
+        use wacore_libsignal::protocol::{IdentityKey, PrivateKey};
+        let d = tempfile::tempdir().unwrap();
+        let path = d.path().join("hybrid-fanout.redb");
+        let store = open(&path);
+        let mut f = fixture();
+        // Pins come from the classic projection of the same rows.
+        save_routing(&store, &f);
+        let mut secrets = Vec::new();
+        let mut users = f.reply.child("list").unwrap().child_nodes().to_vec();
+        for (index, (user, (bob, _))) in users.iter_mut().zip(&f.bobs).enumerate() {
+            let key = &bob.signal_identity.as_ref().unwrap().0;
+            let identity = IdentityKeyPair::new(
+                IdentityKey::new(
+                    wacore_libsignal::protocol::PublicKey::from_djb_public_key_bytes(&key.public)
+                        .unwrap(),
+                ),
+                PrivateKey::deserialize(&key.private).unwrap(),
+            );
+            let (kem_public, kem_secret) = kem::generate_key_pair().unwrap();
+            let signature = identity
+                .private_key()
+                .calculate_signature(&kem_public, &mut rand::rng())
+                .unwrap();
+            let id = 9 + index as u32;
+            let mut children = user.child_nodes().to_vec();
+            children.push(Node::new("pqkey").children(vec![
+                Node::new("id").bytes(id.to_be_bytes()[1..].to_vec()),
+                Node::new("value").bytes(kem_public),
+                Node::new("signature").bytes(signature.to_vec()),
+            ]));
+            *user = user.clone().children(children);
+            secrets.push((id, kem_secret));
+        }
+        f.reply = Node::new("iq")
+            .attr("type", "result")
+            .children(vec![Node::new("list").children(users)]);
+        let original = state(&store);
+        let payload = super::super::group_send::text_payload("hybrid group fixture").unwrap();
+        // A tampered KEM signature refuses the whole memory-only preparation.
+        let mut forged = f.reply.clone();
+        let crate::binary::NodeContent::Children(lists) = &mut forged.content else {
+            panic!("list")
+        };
+        let crate::binary::NodeContent::Children(rows) = &mut lists[0].content else {
+            panic!("rows")
+        };
+        let crate::binary::NodeContent::Children(fields) = &mut rows[1].content else {
+            panic!("fields")
+        };
+        let crate::binary::NodeContent::Children(pq) = &mut fields.last_mut().unwrap().content
+        else {
+            panic!("pqkey")
+        };
+        let crate::binary::NodeContent::Bytes(signature) = &pq[2].content else {
+            panic!("signature")
+        };
+        let mut tampered = signature.to_vec();
+        tampered[0] ^= 1;
+        pq[2] = Node::new("signature").bytes(tampered);
+        assert!(
+            Snapshot::load(&store, &f.plan, false)
+                .unwrap()
+                .prepare(&f.alice, Some(&forged), &payload)
+                .await
+                .is_err()
+        );
+        let prepared = Snapshot::load(&store, &f.plan, false)
+            .unwrap()
+            .prepare(&f.alice, Some(&f.reply), &payload)
+            .await
+            .unwrap();
+        assert_eq!(original, state(&store));
+        let mut sessions = Vec::new();
+        for ((target, (bob, signed)), (id, secret)) in
+            prepared.targets().iter().zip(&f.bobs).zip(&secrets)
+        {
+            assert_eq!((target.kind, target.ciphertext[0]), ("pkmsg", 0x44));
+            let opened = hybrid::receive_prekey(
+                bob,
+                &f.plan.own,
+                (None, None, IdentityChangePolicy::Pinned),
+                Some(signed),
+                None,
+                Some(hybrid::LocalKemPrekey {
+                    id: *id,
+                    secret: secret.as_bytes(),
+                    last_resort: false,
+                }),
+                &target.ciphertext,
+            )
+            .await
+            .unwrap();
+            assert_eq!(opened.consumed_kem, Some(*id));
+            let (chat, skdm) =
+                group::extract_skdm_from_payload(&opened.incoming.received.plaintext).unwrap();
+            assert_eq!(chat, f.plan.chat.to_string());
+            let sk = group::process_skdm(&f.plan.chat, &f.plan.own, vec![], None, &skdm)
+                .await
+                .unwrap();
+            let body = group::receive_group(
+                &f.plan.chat,
+                &f.plan.own,
+                Some(&sk.updated_key),
+                prepared.ciphertext(),
+            )
+            .await
+            .unwrap()
+            .unwrap();
+            assert_eq!(&*body.plaintext, &payload);
+            sessions.push((
+                opened.incoming.received.session.to_vec(),
+                opened.incoming.identity,
+            ));
+        }
+        store
+            .write(|tx| prepared.reserve_in(tx, b"archive:hybrid"))
+            .unwrap();
+        let committed = state(&store);
+        drop(store);
+        let store = open(&path);
+        assert_eq!(committed, state(&store));
+        // Held version-4 records continue without another directory read;
+        // the still-pending KEM fields keep the next send a 0x44 pkmsg.
+        let cached = Snapshot::load(&store, &f.plan, false).unwrap();
+        assert!(cached.required_keys().is_empty());
+        let next = cached.prepare(&f.alice, None, &payload).await.unwrap();
+        for ((target, (bob, _)), (session, pin)) in
+            next.targets().iter().zip(&f.bobs).zip(&sessions)
+        {
+            assert_eq!((target.kind, target.ciphertext[0]), ("pkmsg", 0x44));
+            let again = hybrid::receive_prekey(
+                bob,
+                &f.plan.own,
+                (Some(session), Some(pin), IdentityChangePolicy::Pinned),
+                None,
+                None,
+                None,
+                &target.ciphertext,
+            )
+            .await
+            .unwrap();
+            assert_eq!(again.consumed_kem, None);
+        }
+        assert_eq!(committed, state(&store));
+
+        // Fresh mode with a signed primary replacement under the explicit
+        // policy: the changed device derives a fresh hybrid session, the
+        // unchanged companion re-derives against its pinned identity.
+        let replacement = IdentityKeyPair::generate(&mut rand::rng());
+        let signed_new = KeyPair::generate(&mut rand::rng());
+        let (kem_public, kem_secret) = kem::generate_key_pair().unwrap();
+        let sign = |bytes: &[u8]| {
+            replacement
+                .private_key()
+                .calculate_signature(bytes, &mut rand::rng())
+                .unwrap()
+                .to_vec()
+        };
+        let signed_signature = sign(&signed_new.public_key.serialize());
+        let changed = Node::new("user")
+            .attr("jid", f.plan.devices[0].clone())
+            .children(vec![
+                Node::new("registration").bytes(vec![0, 0, 0, 42]),
+                Node::new("type").bytes(vec![5]),
+                Node::new("identity").bytes(replacement.public_key().public_key_bytes().to_vec()),
+                Node::new("skey").children(vec![
+                    Node::new("id").bytes(vec![0, 0, 7]),
+                    Node::new("value").bytes(signed_new.public_key.public_key_bytes().to_vec()),
+                    Node::new("signature").bytes(signed_signature.clone()),
+                ]),
+                Node::new("pqkey").children(vec![
+                    Node::new("id").bytes(vec![0, 0, 11]),
+                    Node::new("value").bytes(kem_public.clone()),
+                    Node::new("signature").bytes(sign(&kem_public)),
+                ]),
+            ]);
+        let reply =
+            Node::new("iq")
+                .attr("type", "result")
+                .children(vec![Node::new("list").children(vec![
+                    changed,
+                    f.reply.child("list").unwrap().child_nodes()[1].clone(),
+                ])]);
+        let fresh = Snapshot::load(&store, &f.plan, true).unwrap();
+        assert_eq!(fresh.required_keys(), f.plan.devices);
+        assert!(matches!(
+            Snapshot::load(&store, &f.plan, true)
+                .unwrap()
+                .prepare(&f.alice, Some(&reply), &payload)
+                .await,
+            Err(Error::IdentityChanged(_))
+        ));
+        let replaced = fresh
+            .prepare_with_policy(
+                &store,
+                &f.alice,
+                Some(&reply),
+                &payload,
+                IdentityChangePolicy::ApkAuthenticated,
+            )
+            .await
+            .unwrap();
+        let new_bob = account(&replacement, &f.plan.devices[0], 42);
+        let new_signed = SignedPreKeyRecord::new(
+            7.into(),
+            wacore_libsignal::protocol::Timestamp::from_epoch_millis(0),
+            &signed_new,
+            &signed_signature,
+        )
+        .serialize()
+        .unwrap();
+        let target = &replaced.targets()[0];
+        assert_eq!((target.kind, target.ciphertext[0]), ("pkmsg", 0x44));
+        let opened = hybrid::receive_prekey(
+            &new_bob,
+            &f.plan.own,
+            (None, None, IdentityChangePolicy::Pinned),
+            Some(&new_signed),
+            None,
+            Some(hybrid::LocalKemPrekey {
+                id: 11,
+                secret: kem_secret.as_bytes(),
+                last_resort: false,
+            }),
+            &target.ciphertext,
+        )
+        .await
+        .unwrap();
+        assert!(group::extract_skdm_from_payload(&opened.incoming.received.plaintext).is_some());
+        assert_eq!(committed, state(&store));
     }
     #[tokio::test]
     async fn fresh_and_cached_staging_refuse_every_concurrent_crypto_change_and_preserve_late_writes()

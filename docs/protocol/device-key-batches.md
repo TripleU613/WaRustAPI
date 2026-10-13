@@ -1,5 +1,9 @@
 # Frozen directory-key batches — 2026-10-09
 
+2026-10-13 follow-up: rows carrying a verified `pqkey` now answer; a failed KEM
+signature is `invalid_signature` and other PQ defects `invalid_bundle`.
+See [hybrid fan-out](hybrid-fanout.md).
+
 **Confirmed local implementation:** the comparison group/status sender now
 queries every device needing a bundle in durable bounded batches and uses only
 complete validated results for [shared fanout preparation](group-fanout.md).

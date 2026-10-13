@@ -1,3 +1,11 @@
+2026-10-13 — **Implemented/offline:** device-key batches now answer rows whose
+`pqkey` verifies, and group/status fan-out sends those devices native 0x44
+hybrid distributions. Previously one PQ row blocked the whole send. Primary,
+companion, cached-continuation and signed-replacement cases open with the
+device's own keys. Invalid KEM signature/encoding still blocks. `pqsupport` is
+not sent; no APK was available; no live test.
+[Behavior, evidence and tests](protocol/hybrid-fanout.md).
+
 2026-10-13 — **Implemented/offline:** identity-refresh preview and application
 now stage a version-4 hybrid session from a verified primary `pqkey` reply:
 changed keys derive fresh, admitted same-key refreshes archive held state. The

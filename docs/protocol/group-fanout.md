@@ -1,5 +1,8 @@
 # Shared group fanout preparation — 2026-10-09
 
+2026-10-13 follow-up: devices whose directory row carries a verified `pqkey`
+now receive native `0x44` hybrid distributions. See [hybrid fan-out](hybrid-fanout.md).
+
 **Confirmed local correction:** the comparison group/status sender now uses
 `transport::group_fanout::{Snapshot, Prepared}` for staged pairwise distributions,
 sender-key encryption and atomic crypto reservation. The subsequent [ordinary normal-group outbox adapter](normal-group-outbox.md)

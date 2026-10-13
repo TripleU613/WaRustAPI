@@ -15,6 +15,8 @@ use wacore_libsignal::protocol::{
 fn invalid(reason: &'static str) -> Error {
     Error::invalid("hybrid_bundle", reason)
 }
+/// Error field for a well-formed KEM signature that does not verify.
+pub(crate) const SIGNATURE_FIELD: &str = "hybrid_bundle_signature";
 fn bytes(node: &Node) -> Result<&[u8]> {
     match &node.content {
         NodeContent::Bytes(bytes) => Ok(bytes),
@@ -50,14 +52,18 @@ pub fn bundle_for(reply: &Node, recipient: &Jid) -> Result<HybridBundle> {
     let kem_id = direct::number(direct::child(pq, "id")?, 3)?;
     let public = bytes(direct::child(pq, "value")?)?;
     let signature = bytes(direct::child(pq, "signature")?)?;
-    if signature.len() != 64
-        || !classic
-            .identity_key()
-            .map_err(|_| invalid("invalid bundle identity"))?
-            .public_key()
-            .verify_signature(public, signature)
+    if signature.len() != 64 {
+        return Err(invalid("invalid KEM signature width"));
+    }
+    if !classic
+        .identity_key()
+        .map_err(|_| invalid("invalid bundle identity"))?
+        .public_key()
+        .verify_signature(public, signature)
     {
-        return Err(invalid("invalid KEM signature"));
+        // Distinct field: callers classify a failed CQc.A00 0068..00b4 check
+        // apart from shape errors without matching reason text.
+        return Err(Error::invalid(SIGNATURE_FIELD, "invalid KEM signature"));
     }
     kem::public_key(public)?;
     Ok(HybridBundle {

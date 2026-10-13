@@ -6,6 +6,8 @@ use super::{
 use crate::{Error, Result};
 mod bundle;
 mod incoming;
+#[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
+pub(crate) use bundle::SIGNATURE_FIELD;
 pub use bundle::{HybridBundle, bundle_for};
 pub use incoming::{LocalKemPrekey, ReceivedHybridPrekey, receive_prekey};
 use wacore_libsignal::{

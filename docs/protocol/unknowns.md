@@ -25,7 +25,10 @@ signing and the inner `pq_list`/`pq_last_resort_key` upload shape are untraced,
 so no KEM key is produced or uploaded; own-device/companion KEM admission is
 unported. [Primary identity refresh](hybrid-identity-refresh.md) now derives
 hybrid sessions from verified `pqkey` replies; companion and attestation-bearing
-PQ refresh remain deferred. See [the boundary and source audit](pq-bundle-boundary.md).
+PQ refresh remain deferred. [Device-key batches and group fan-out](hybrid-fanout.md)
+now derive hybrid sessions from verified PQ rows. Whether the server returns
+`pqkey` without the native `pqsupport` request attribute is unknown. See
+[the boundary and source audit](pq-bundle-boundary.md).
 
 Own-device ordinary text edits are now projected with loaded parent kind,
 terminal and sender-time ordering checks. Peer edits still require the effective
