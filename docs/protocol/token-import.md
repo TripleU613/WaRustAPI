@@ -80,7 +80,7 @@ Numbers come from the encoded number/type/presence entries, not the array
 indices. Tag 28's presence index 25 explains the 0x2000000 mask. Tag 63's
 presence index 56 belongs to bitField1; no field-number-to-bit assumption is valid.
 
-**Negative, confirmed local:** `apk-proto-fields --class 'LX/BZK;'` refuses
+**Negative, confirmed local (before 2026-10-13):** `apk-proto-fields --class 'LX/BZK;'` refused
 with `decoded 59 fields against 58 names; not guessing`. Its method-local literal
 collector does not inline the id-array helper. Its successful descriptor decode
 is not a complete field-name extraction. Use the committed descriptor and both

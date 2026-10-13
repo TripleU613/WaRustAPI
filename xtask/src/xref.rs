@@ -2240,46 +2240,21 @@ fn access_flags_str(flags: u32) -> &'static str {
 /// The descriptor has a ten-integer header and variable-width field entries:
 /// presence-bearing scalar fields have an additional index; lists do not.
 /// Validate the entire descriptor and exact field-name count before pairing.
-pub fn run_proto_fields(apk: &Path, class_filter: &str) -> Result<(), String> {
+pub fn run_proto_fields(apk: &Path, class_filter: &str, literal_order: bool) -> Result<(), String> {
     let methods = apk_smali(apk, class_filter, Some("dynamicMethod"))?;
-    let mut printed = 0usize;
-    for method in &methods {
-        let literals: Vec<String> = method
-            .insns
-            .iter()
-            .filter_map(|insn| {
-                let annotation = if insn.annotation.is_empty() {
-                    &insn.flow_annotation
-                } else {
-                    &insn.annotation
-                };
-                quoted_literal(annotation)
-            })
-            .collect();
-        printed += usize::from(print_proto_fields(&method.class_name, &literals));
-    }
+    // Helper bodies come from the same APK, so its path names the build.
+    let build = format!("apk:{}", apk.display());
+    let mut helpers = crate::retained_descriptor::ApkHelpers::new(apk);
+    let printed = methods
+        .iter()
+        .filter(|m| m.method_name == "dynamicMethod")
+        .map(|m| crate::retained_descriptor::from_dump(m, &build))
+        .filter(|m| crate::retained_descriptor::report(m, &mut helpers, literal_order))
+        .count();
     if printed == 0 {
         eprintln!("no protobuf descriptor decoded for {class_filter}");
     }
     Ok(())
-}
-
-/// Pair one method's field-name literals with its decoded descriptor and print
-/// them; `false` (with a reason on stderr) when they do not pair exactly.
-fn print_proto_fields(class: &str, literals: &[String]) -> bool {
-    match pair_proto_fields(literals) {
-        Ok(pairs) => {
-            println!("# {class}  ({} fields)", pairs.len());
-            for (number, name) in pairs {
-                println!("{number:>4}  {name}");
-            }
-            true
-        }
-        Err(reason) => {
-            eprintln!("{class}: {reason}; not guessing");
-            false
-        }
-    }
 }
 
 pub(crate) fn pair_proto_fields(literals: &[String]) -> Result<Vec<(u32, String)>, String> {

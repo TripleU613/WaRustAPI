@@ -1,8 +1,10 @@
-//! Protobuf-lite field numbers from committed research disassembly
-//! (`docs/protocol/apk/**.txt`), for sessions without the APK.
+//! Protobuf-lite field numbers, paired exactly: from committed research
+//! disassembly (`docs/protocol/apk/**.txt`, `retained-proto-fields`) or from
+//! the APK (`apk-proto-fields`, which reads helper bodies from the same APK).
 //!
-//! `apk-proto-fields` pairs a method's field-name literals with its encoded
-//! descriptor in literal order. That is wrong whenever a shared helper writes a
+//! Pairing a method's field-name literals with its encoded descriptor in
+//! method order (what `apk-proto-fields` did before 2026-10-13) is wrong
+//! whenever a shared helper writes a
 //! name into the objects array: APK 2.26.37.71 `BZB.dynamicMethod` (document)
 //! calls `LX/Ayp;->A1K`, which stores its argument at index 3 and the literal
 //! `fileSha256_` at index 4 (retained in
@@ -17,8 +19,8 @@ use std::collections::BTreeMap;
 use std::path::Path;
 
 use crate::xref::{
-    decode_proto_field_numbers, is_presence_bookkeeping, pair_proto_fields, quoted_literal,
-    unescape,
+    MethodDump, decode_proto_field_numbers, is_presence_bookkeeping, pair_proto_fields,
+    quoted_literal, unescape,
 };
 
 /// Helper-call nesting followed before refusing.
@@ -72,12 +74,7 @@ pub(crate) fn parse_retained(text: &str) -> Vec<Method> {
             let flags = attribute(rest, "flags=")
                 .and_then(|v| u32::from_str_radix(v.trim_start_matches("0x"), 16).ok());
             let is_static = flags.is_some_and(|f| f & 0x8 != 0);
-            let param_regs = shorty.filter(|_| is_static).map(|s| {
-                s.chars()
-                    .skip(1)
-                    .map(|c| if matches!(c, 'J' | 'D') { 2 } else { 1 })
-                    .sum()
-            });
+            let param_regs = shorty.filter(|_| is_static).map(shorty_param_regs);
             let registers = attribute(rest, "registers=")
                 .and_then(|v| v.parse().ok())
                 .unwrap_or(0);
@@ -184,6 +181,24 @@ impl Helpers {
     }
 }
 
+/// Where helper bodies come from: retained files, or the APK itself.
+pub(crate) trait HelperSource {
+    /// The one static body for `class->name` with `args` parameter registers.
+    fn body(&mut self, build: &str, class: &str, name: &str, args: usize) -> Option<Method>;
+    /// How a refusal describes a call whose body is unavailable.
+    fn missing(&self) -> &'static str;
+}
+
+impl HelperSource for Helpers {
+    fn body(&mut self, build: &str, class: &str, name: &str, args: usize) -> Option<Method> {
+        self.find(build, class, name, args).cloned()
+    }
+
+    fn missing(&self) -> &'static str {
+        "whose body is not retained"
+    }
+}
+
 #[derive(Clone, Debug, PartialEq)]
 enum Val {
     Int(i64),
@@ -191,7 +206,7 @@ enum Val {
     Arr(usize),
     /// A known non-string object: a class literal or a static non-String field.
     Object,
-    /// The result of a call that was not followed (body not retained).
+    /// The result of a call that was not followed: "<call>, <why>".
     Opaque(String),
     Unknown,
 }
@@ -234,7 +249,7 @@ enum Outcome {
 }
 
 struct Ctx<'a> {
-    helpers: &'a Helpers,
+    helpers: &'a mut dyn HelperSource,
     used: Vec<String>,
 }
 
@@ -243,7 +258,10 @@ type Decoded = (Vec<(u32, String)>, Vec<String>);
 
 /// The decoded `(field number, name)` pairs of a retained `dynamicMethod`, and
 /// the helpers it went through.
-pub(crate) fn descriptor_fields(method: &Method, helpers: &Helpers) -> Result<Decoded, String> {
+pub(crate) fn descriptor_fields(
+    method: &Method,
+    helpers: &mut dyn HelperSource,
+) -> Result<Decoded, String> {
     let mut ctx = Ctx {
         helpers,
         used: Vec::new(),
@@ -259,11 +277,7 @@ pub(crate) fn descriptor_fields(method: &Method, helpers: &Helpers) -> Result<De
     };
     let id = match objects {
         Val::Arr(id) => id,
-        Val::Opaque(call) => {
-            return Err(format!(
-                "objects array comes from {call}, whose body is not retained"
-            ));
-        }
+        Val::Opaque(call) => return Err(format!("objects array comes from {call}")),
         _ => return Err("objects argument is not a followed array".into()),
     };
     if let Some(why) = &arrays.poisoned[id] {
@@ -275,9 +289,7 @@ pub(crate) fn descriptor_fields(method: &Method, helpers: &Helpers) -> Result<De
             Some(Val::Str(s)) => Slot::Name(s.clone()),
             Some(Val::Object) => Slot::Object,
             Some(Val::Opaque(call)) => {
-                return Err(format!(
-                    "objects[{index}] comes from {call}, whose body is not retained"
-                ));
+                return Err(format!("objects[{index}] comes from {call}"));
             }
             Some(_) => return Err(format!("objects[{index}] holds an unknown value")),
             None => return Err(format!("objects[{index}] is never written")),
@@ -501,9 +513,9 @@ fn follow(
                         .map_err(|_| "newMessageInfo with an unexpected argument count")?;
                     return Ok(Outcome::Descriptor { info, objects });
                 }
-                let helpers: &Helpers = ctx.helpers;
-                let helper = (m == "invoke-static" && depth < MAX_HELPER_DEPTH)
-                    .then(|| helpers.find(&method.sha256, class, name, args.len()))
+                let followable = m == "invoke-static" && depth < MAX_HELPER_DEPTH;
+                let helper = followable
+                    .then(|| ctx.helpers.body(&method.sha256, class, name, args.len()))
                     .flatten();
                 match helper {
                     Some(helper) => {
@@ -515,23 +527,22 @@ fn follow(
                         if !ctx.used.contains(&used) {
                             ctx.used.push(used);
                         }
-                        let start = first_offset(helper)?;
-                        match follow(ctx, helper, start, callee, arrays, depth + 1, None)? {
+                        let start = first_offset(&helper)?;
+                        match follow(ctx, &helper, start, callee, arrays, depth + 1, None)? {
                             Outcome::Returned(value) => result = value,
                             _ => return Err(format!("helper {class}->{name} did not return")),
                         }
                     }
                     None => {
                         // Code that is not followed may write any array it receives.
-                        let call = format!("{class}->{name}");
-                        let why = if m == "invoke-static" && depth < MAX_HELPER_DEPTH {
-                            format!("was passed to {call}, whose body is not retained")
+                        let call = if followable {
+                            format!("{class}->{name}, {}", ctx.helpers.missing())
                         } else {
-                            format!("was passed to {call}, which is not followed ({m})")
+                            format!("{class}->{name}, which is not followed ({m})")
                         };
                         for arg in &args {
                             if let Val::Arr(id) = arg {
-                                arrays.poison(*id, &why);
+                                arrays.poison(*id, &format!("was passed to {call}"));
                             }
                         }
                         result = Val::Opaque(call);
@@ -663,9 +674,9 @@ fn case_targets(ops: &str) -> Result<Vec<u32>, String> {
 /// objects array and descriptor pair exactly; helpers are looked up under
 /// `helpers` (default: the bundle directory's parent, `docs/protocol/apk`).
 /// With `literal_order`, a class the exact path refuses is paired the way
-/// `apk-proto-fields` pairs it (field-name literals in method order), under a
-/// header that says so: that pairing is wrong whenever an unfollowed helper
-/// also writes a name, which a matching count does not rule out.
+/// `apk-proto-fields` used to pair it (field-name literals in method order),
+/// under a header that says so: that pairing is wrong whenever an unfollowed
+/// helper also writes a name, which a matching count does not rule out.
 pub fn run_fields(path: &Path, helpers: Option<&Path>, literal_order: bool) -> Result<(), String> {
     let text = std::fs::read_to_string(path)
         .map_err(|e| format!("cannot read {}: {e}", path.display()))?;
@@ -677,52 +688,12 @@ pub fn run_fields(path: &Path, helpers: Option<&Path>, literal_order: bool) -> R
             .ok_or("no helper directory; pass --helpers")?
             .to_path_buf(),
     };
-    let helpers = Helpers::load(&root)?;
-    let mut printed = 0usize;
-    for method in parse_retained(&text) {
-        if method.name != "dynamicMethod" {
-            continue;
-        }
-        let reason = match descriptor_fields(&method, &helpers) {
-            Ok((pairs, used)) => {
-                println!("# {}  ({} fields)", method.class, pairs.len());
-                for helper in used {
-                    println!("#   names via retained helper {helper}");
-                }
-                print_pairs(&pairs);
-                printed += 1;
-                continue;
-            }
-            Err(reason) => reason,
-        };
-        let literals: Vec<String> = method
-            .insns
-            .iter()
-            .filter_map(|insn| quoted_literal(&insn.operands))
-            .collect();
-        match (pair_proto_fields(&literals), literal_order) {
-            (Ok(pairs), true) => {
-                println!(
-                    "# {}  ({} fields, LITERAL ORDER, unverified: {reason})",
-                    method.class,
-                    pairs.len()
-                );
-                print_pairs(&pairs);
-                printed += 1;
-            }
-            (Ok(pairs), false) => eprintln!(
-                "{}: {reason}; not guessing (--literal-order pairs {} names in method order, unverified)",
-                method.class,
-                pairs.len()
-            ),
-            (Err(literal), _) => {
-                eprintln!(
-                    "{}: {reason}; literal order: {literal}; not guessing",
-                    method.class
-                )
-            }
-        }
-    }
+    let mut helpers = Helpers::load(&root)?;
+    let printed = parse_retained(&text)
+        .iter()
+        .filter(|method| method.name == "dynamicMethod")
+        .filter(|method| report(method, &mut helpers, literal_order))
+        .count();
     if printed == 0 {
         return Err(format!(
             "no protobuf descriptor decoded in {}",
@@ -732,12 +703,131 @@ pub fn run_fields(path: &Path, helpers: Option<&Path>, literal_order: bool) -> R
     Ok(())
 }
 
+/// Decode one `dynamicMethod` and print it, or say why not; `true` if printed.
+pub(crate) fn report(method: &Method, helpers: &mut dyn HelperSource, literal_order: bool) -> bool {
+    let reason = match descriptor_fields(method, helpers) {
+        Ok((pairs, used)) => {
+            println!("# {}  ({} fields)", method.class, pairs.len());
+            for helper in used {
+                println!("#   names via helper {helper}");
+            }
+            print_pairs(&pairs);
+            return true;
+        }
+        Err(reason) => reason,
+    };
+    let literals: Vec<String> = method
+        .insns
+        .iter()
+        .filter_map(|insn| quoted_literal(&insn.operands))
+        .collect();
+    match (pair_proto_fields(&literals), literal_order) {
+        (Ok(pairs), true) => {
+            println!(
+                "# {}  ({} fields, LITERAL ORDER, unverified: {reason})",
+                method.class,
+                pairs.len()
+            );
+            print_pairs(&pairs);
+            true
+        }
+        (Ok(pairs), false) => {
+            eprintln!(
+                "{}: {reason}; not guessing (--literal-order pairs {} names in method order, unverified)",
+                method.class,
+                pairs.len()
+            );
+            false
+        }
+        (Err(literal), _) => {
+            eprintln!(
+                "{}: {reason}; literal order: {literal}; not guessing",
+                method.class
+            );
+            false
+        }
+    }
+}
+
 fn print_pairs(pairs: &[(u32, String)]) {
     for (number, name) in pairs {
         println!("{number:>4}  {name}");
     }
 }
 
+/// A method read from the APK, in the retained form the simulator follows.
+/// Register-flow operands are used, so moves and results carry registers.
+pub(crate) fn from_dump(dump: &MethodDump, build: &str) -> Method {
+    let is_static = dump.access_flags & 0x8 != 0;
+    Method {
+        class: dump.class_name.clone(),
+        sha256: build.to_owned(),
+        name: dump.method_name.clone(),
+        param_regs: is_static.then(|| shorty_param_regs(&dump.method_proto)),
+        registers: usize::from(dump.registers),
+        insns: dump
+            .insns
+            .iter()
+            .map(|insn| Insn {
+                offset: insn.byte_off as u32,
+                end: (insn.byte_off + insn.width * 2) as u32,
+                mnemonic: insn.mnemonic.to_owned(),
+                operands: crate::bundle::instruction_annotation(insn, true).to_owned(),
+            })
+            .collect(),
+    }
+}
+
+fn shorty_param_regs(shorty: &str) -> usize {
+    shorty
+        .chars()
+        .skip(1)
+        .map(|c| if matches!(c, 'J' | 'D') { 2 } else { 1 })
+        .sum()
+}
+
+/// Helper bodies read from the APK on demand (one DEX scan per helper).
+pub(crate) struct ApkHelpers {
+    apk: std::path::PathBuf,
+    cache: BTreeMap<(String, String), Vec<Method>>,
+}
+
+impl ApkHelpers {
+    pub(crate) fn new(apk: &Path) -> Self {
+        Self {
+            apk: apk.to_path_buf(),
+            cache: BTreeMap::new(),
+        }
+    }
+}
+
+impl HelperSource for ApkHelpers {
+    fn body(&mut self, build: &str, class: &str, name: &str, args: usize) -> Option<Method> {
+        let key = (class.to_owned(), name.to_owned());
+        if !self.cache.contains_key(&key) {
+            // A failed scan leaves the call unfollowed (and the class refused).
+            let found = crate::xref::apk_smali(&self.apk, class, Some(name))
+                .unwrap_or_default()
+                .iter()
+                .filter(|m| m.class_name == class && m.method_name == name)
+                .map(|m| from_dump(m, build))
+                .collect();
+            self.cache.insert(key.clone(), found);
+        }
+        let matching: Vec<_> = self.cache[&key]
+            .iter()
+            .filter(|m| m.param_regs == Some(args))
+            .collect();
+        match matching[..] {
+            [only] => Some(only.clone()),
+            _ => None,
+        }
+    }
+
+    fn missing(&self) -> &'static str {
+        "whose static body was not found in the APK"
+    }
+}
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -781,8 +871,11 @@ mod tests {
 
     #[test]
     fn document_names_written_by_a_retained_helper_are_placed_exactly() {
-        let (pairs, used) =
-            descriptor_fields(&entry(DOCUMENT), &helpers(&[BIT_FIELD, FILE_SHA_HELPER])).unwrap();
+        let (pairs, used) = descriptor_fields(
+            &entry(DOCUMENT),
+            &mut helpers(&[BIT_FIELD, FILE_SHA_HELPER]),
+        )
+        .unwrap();
         assert_eq!(pairs.len(), 21);
         assert_eq!(used, ["LX/6al;->A1W", "LX/Ayp;->A1K"]);
         // Independent of this reader: the document tags the sender already
@@ -817,8 +910,11 @@ mod tests {
     fn conversation_reproduces_the_manual_token_import_pairing() {
         // docs/protocol/token-import.md paired these by hand from the same
         // descriptor and the two helper dumps.
-        let (pairs, _) =
-            descriptor_fields(&entry(CONVERSATION), &helpers(&[PRESENCE_ARRAY, ID_ARRAY])).unwrap();
+        let (pairs, _) = descriptor_fields(
+            &entry(CONVERSATION),
+            &mut helpers(&[PRESENCE_ARRAY, ID_ARRAY]),
+        )
+        .unwrap();
         assert_eq!(pairs.len(), 59);
         for (name, tag) in [
             ("id", 1),
@@ -835,7 +931,7 @@ mod tests {
 
     #[test]
     fn a_missing_or_foreign_helper_is_named_and_refused() {
-        let error = descriptor_fields(&entry(DOCUMENT), &helpers(&[BIT_FIELD])).unwrap_err();
+        let error = descriptor_fields(&entry(DOCUMENT), &mut helpers(&[BIT_FIELD])).unwrap_err();
         assert_eq!(
             error,
             "objects array was passed to LX/Ayp;->A1K, whose body is not retained"
@@ -845,17 +941,17 @@ mod tests {
             "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
             "0000000000000000000000000000000000000000000000000000000000000000",
         );
-        assert!(descriptor_fields(&entry(DOCUMENT), &helpers(&[BIT_FIELD, &foreign])).is_err());
+        assert!(descriptor_fields(&entry(DOCUMENT), &mut helpers(&[BIT_FIELD, &foreign])).is_err());
         // Two retained copies that disagree are treated as unknown.
         let altered = FILE_SHA_HELPER.replace("fileSha256_", "otherName_");
         assert!(
             descriptor_fields(
                 &entry(DOCUMENT),
-                &helpers(&[BIT_FIELD, FILE_SHA_HELPER, &altered])
+                &mut helpers(&[BIT_FIELD, FILE_SHA_HELPER, &altered])
             )
             .is_err()
         );
-        let error = descriptor_fields(&entry(CONVERSATION), &helpers(&[ID_ARRAY])).unwrap_err();
+        let error = descriptor_fields(&entry(CONVERSATION), &mut helpers(&[ID_ARRAY])).unwrap_err();
         assert_eq!(
             error,
             "objects array comes from LX/Ayl;->A1b, whose body is not retained"
@@ -864,7 +960,7 @@ mod tests {
 
     #[test]
     fn unwritten_slots_overwrites_and_extra_call_sites_are_refused() {
-        let full = helpers(&[BIT_FIELD, FILE_SHA_HELPER]);
+        let mut full = helpers(&[BIT_FIELD, FILE_SHA_HELPER]);
         // Replace the write of objects[5] (fileLength_) with a nop.
         let gap = DOCUMENT.replace(
             "  005e..0062 op=4d aput-object v1, v2, v0\n",
@@ -872,7 +968,7 @@ mod tests {
         );
         assert_ne!(gap, DOCUMENT);
         assert_eq!(
-            descriptor_fields(&entry(&gap), &full).unwrap_err(),
+            descriptor_fields(&entry(&gap), &mut full).unwrap_err(),
             "objects[5] is never written"
         );
         // Write objects[6] twice.
@@ -880,7 +976,7 @@ mod tests {
             "  0068..006a op=4d aput-object v1, v2, v0\n  006a..006c op=4d aput-object v1, v2, v0\n");
         assert_ne!(twice, DOCUMENT);
         assert_eq!(
-            descriptor_fields(&entry(&twice), &full).unwrap_err(),
+            descriptor_fields(&entry(&twice), &mut full).unwrap_err(),
             "objects array has slot 6 written twice"
         );
         // A second newMessageInfo call site.
@@ -888,26 +984,26 @@ mod tests {
         let line = DOCUMENT.lines().find(|l| l.contains(call)).unwrap();
         let doubled = DOCUMENT.replacen(line, &format!("{line}\n{line}"), 1);
         assert_eq!(
-            descriptor_fields(&entry(&doubled), &full).unwrap_err(),
+            descriptor_fields(&entry(&doubled), &mut full).unwrap_err(),
             "2 newMessageInfo call sites"
         );
     }
 
     #[test]
     fn excerpts_gaps_and_unidentified_builds_are_not_followed() {
-        let full = helpers(&[BIT_FIELD, FILE_SHA_HELPER]);
+        let mut full = helpers(&[BIT_FIELD, FILE_SHA_HELPER]);
         // An elided instruction inside the followed path.
         let gap = DOCUMENT.replace("  0058..005c op=1a const-string v1, \"fileLength_\"\n", "");
         assert_ne!(gap, DOCUMENT);
         assert_eq!(
-            descriptor_fields(&entry(&gap), &full).unwrap_err(),
+            descriptor_fields(&entry(&gap), &mut full).unwrap_err(),
             "retained code is not contiguous at 0x5c"
         );
         // A helper retained from offset 2 onwards is an excerpt.
         let excerpt = FILE_SHA_HELPER.replace("  0000..0002 op=12 const/4 v0, #0x3\n", "");
         assert_ne!(excerpt, FILE_SHA_HELPER);
         assert!(
-            descriptor_fields(&entry(DOCUMENT), &helpers(&[BIT_FIELD, &excerpt]))
+            descriptor_fields(&entry(DOCUMENT), &mut helpers(&[BIT_FIELD, &excerpt]))
                 .unwrap_err()
                 .contains("retained only in part")
         );
@@ -921,10 +1017,95 @@ mod tests {
         assert!(
             descriptor_fields(
                 &entry(&anonymous(DOCUMENT)),
-                &helpers(&[&anonymous(BIT_FIELD), &anonymous(FILE_SHA_HELPER)])
+                &mut helpers(&[&anonymous(BIT_FIELD), &anonymous(FILE_SHA_HELPER)])
             )
             .is_err()
         );
+    }
+
+    /// A helper source that is not the retained files, as the APK mode is.
+    struct Only(Vec<Method>);
+
+    impl HelperSource for Only {
+        fn body(&mut self, _: &str, class: &str, name: &str, args: usize) -> Option<Method> {
+            self.0
+                .iter()
+                .find(|m| m.class == class && m.name == name && m.param_regs == Some(args))
+                .cloned()
+        }
+
+        fn missing(&self) -> &'static str {
+            "whose static body was not found in the APK"
+        }
+    }
+
+    #[test]
+    fn any_helper_source_is_followed_and_named_in_refusals() {
+        let mut source = Only(parse_retained(BIT_FIELD));
+        assert_eq!(
+            descriptor_fields(&entry(DOCUMENT), &mut source).unwrap_err(),
+            "objects array was passed to LX/Ayp;->A1K, whose static body was not found in the APK"
+        );
+        source.0.extend(parse_retained(FILE_SHA_HELPER));
+        let (pairs, _) = descriptor_fields(&entry(DOCUMENT), &mut source).unwrap();
+        assert_eq!(number(&pairs, "fileSha256"), 4);
+        // A non-static call is never followed, whatever the source holds.
+        let virtual_call = DOCUMENT.replace(
+            "invoke-static {v2, v0}, LX/Ayp;->A1K(",
+            "invoke-virtual {v2, v0}, LX/Ayp;->A1K(",
+        );
+        assert_ne!(virtual_call, DOCUMENT);
+        assert_eq!(
+            descriptor_fields(&entry(&virtual_call), &mut source).unwrap_err(),
+            "objects array was passed to LX/Ayp;->A1K, which is not followed (invoke-virtual)"
+        );
+    }
+
+    #[test]
+    fn apk_methods_convert_to_the_followed_form() {
+        let insn = |byte_off, width, mnemonic, annotation: &str, flow: &str| crate::xref::Insn {
+            byte_off,
+            op: 0,
+            width,
+            mnemonic,
+            annotation: annotation.to_owned(),
+            flow_annotation: flow.to_owned(),
+            signature_annotation: None,
+        };
+        let dump = MethodDump {
+            class_name: "LX/Ayp;".into(),
+            superclass: "Ljava/lang/Object;".into(),
+            method_name: "A1K".into(),
+            method_proto: "VLJL".into(),
+            method_signature: Err("not needed".into()),
+            access_flags: 0x9,
+            virtual_method: false,
+            registers: 6,
+            insns: vec![
+                insn(0, 1, "const/4", "v0, #0x3", ""),
+                insn(2, 2, "move/from16", "", "v1, v20"),
+                insn(6, 1, "return-void", "", ""),
+            ],
+            try_blocks: Vec::new(),
+        };
+        let method = from_dump(&dump, "apk:test");
+        assert_eq!(method.param_regs, Some(4), "wide J takes two registers");
+        assert_eq!(method.registers, 6);
+        assert_eq!(method.sha256, "apk:test");
+        assert_eq!(
+            method.insns[1],
+            Insn {
+                offset: 2,
+                end: 6,
+                mnemonic: "move/from16".into(),
+                operands: "v1, v20".into(),
+            }
+        );
+        let instance = MethodDump {
+            access_flags: 0x1,
+            ..dump
+        };
+        assert_eq!(from_dump(&instance, "apk:test").param_regs, None);
     }
 
     #[test]

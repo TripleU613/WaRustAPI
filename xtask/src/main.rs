@@ -285,6 +285,10 @@ enum Cmd {
         /// Substring to match against class descriptors (e.g. `LX/BZc`).
         #[arg(long = "class")]
         class_filter: String,
+        /// Also print, labelled unverified, the method-order pairing for a
+        /// class whose objects array cannot be followed exactly.
+        #[arg(long)]
+        literal_order: bool,
     },
     /// Protobuf-lite field numbers from a committed research disassembly
     /// (`docs/protocol/apk/**.txt`) that retained a `dynamicMethod`, for
@@ -442,7 +446,11 @@ fn main() -> ExitCode {
             exceptions,
             signatures,
         ),
-        Cmd::ApkProtoFields { apk, class_filter } => xref::run_proto_fields(&apk, &class_filter),
+        Cmd::ApkProtoFields {
+            apk,
+            class_filter,
+            literal_order,
+        } => xref::run_proto_fields(&apk, &class_filter, literal_order),
         Cmd::RetainedProtoFields {
             path,
             helpers,

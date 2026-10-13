@@ -1,3 +1,10 @@
+2026-10-13 — **Changed/offline (research tooling):** `xtask apk-proto-fields`
+now uses the same exact objects-array simulator as `retained-proto-fields`,
+reading static helper bodies from the APK, instead of pairing names in method
+order; `--literal-order` keeps the old pairing, labelled unverified. Not yet
+run against an APK (none in this container).
+[Notes](docs/protocol/apk-analysis.md#reading-protobuf-field-numbers-apk-proto-fields).
+
 2026-10-13 — **Traced/static (sender edit values, retained bundles):** the
 send runnable `DNu` keys a scheduled send on the message's own edit field
 (`178.A00`), and the retained writers of that field give sender revoke 7,

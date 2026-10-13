@@ -177,6 +177,15 @@ knew independently: `conversation` 1, `senderKeyDistributionMessage` 2,
 8, `videoMessage` 9, `reactionMessage` 46. It then gives `stickerMessage` **26**
 and `ptvMessage` **66**.
 
+**Changed 2026-10-13:** `apk-proto-fields` now pairs names the same exact way
+as `retained-proto-fields` (below): it follows the objects array through
+static helper bodies it reads from the same APK, instead of taking field-name
+literals in method order, and refuses a class it cannot follow, naming the
+call. `--literal-order` prints the old method-order pairing for such a class,
+labelled unverified. **Not yet run against an APK:** this session had no APK;
+the simulator is tested on retained 2.26.37.71 bodies, and the APK adapter
+(DEX method to followed form, helper lookup) on synthetic input only.
+
 **Refuted wording (2026-10-07)**: protobuf-lite classes do not universally lack
 field-number symbols. Current `DA8.AD7` at `0068..006c` reads
 `BV6.BOT_HISTORY_SHARE_SYNC_METADATA_FIELD_NUMBER`. The tool reads descriptors,
@@ -207,7 +216,8 @@ elided instruction is refused), and a file without an `APK SHA-256` header
 never matches a helper. All 2,695 retained methods met both conditions on
 2026-10-13.
 `--literal-order` additionally prints, under a header marked
-`LITERAL ORDER, unverified`, the `apk-proto-fields` pairing for a refused class.
+`LITERAL ORDER, unverified`, the method-order pairing (what `apk-proto-fields`
+did before this change) for a refused class.
 
 **Why literal order is not enough (confirmed, APK 2.26.37.71):**
 `BZB.dynamicMethod` (DocumentMessage) calls `LX/Ayp;->A1K`, retained in
