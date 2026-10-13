@@ -27,6 +27,7 @@ use zeroize::Zeroizing;
 
 use std::os::unix::fs::PermissionsExt;
 
+mod attempt_json;
 mod cli_reference;
 mod fingerprint;
 mod http;
@@ -2170,7 +2171,15 @@ async fn run(cli: Cli) -> Result<(), Error> {
                 }
                 RegCmd::Status => {
                     match c.registration().current().await? {
+                        // Same redacted JSON as `lab-signup status --json`;
+                        // `--json` used to be ignored here.
+                        Some(a) if cli.json => println!(
+                            "{}",
+                            serde_json::to_string_pretty(&attempt_json::redacted(&a)?)
+                                .map_err(|e| Error::invalid("registration", e.to_string()))?
+                        ),
                         Some(a) => println!("{a:?}"),
+                        None if cli.json => println!("null"),
                         None => println!("no registration attempt"),
                     }
                     Ok(())

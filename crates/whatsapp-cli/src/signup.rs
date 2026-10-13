@@ -425,7 +425,7 @@ pub(super) async fn run(
                     let mut value = serde_json::to_value(&attempt).map_err(|e| {
                         Error::invalid("lab_signup", format!("attempt is not serialisable: {e}"))
                     })?;
-                    redact_attempt(&mut value);
+                    crate::attempt_json::redact_attempt(&mut value);
                     println!(
                         "{}",
                         serde_json::to_string_pretty(&value)
@@ -680,40 +680,10 @@ fn exist_allowed(
     }
 }
 
-/// Fields of a saved attempt that must never be printed: the phone number, and
-/// the consent context's intermediate login, opaque pending selector and parent
-/// consent URL (`RegistrationConsent`, kept only in encrypted storage). Matched
-/// at any depth, so a field nested under a blocked reason is covered too.
-const REDACTED_ATTEMPT_KEYS: [&str; 4] = [
-    "phone",
-    "registration_login",
-    "pending",
-    "parent_consent_url",
-];
-
-/// Replace every present value of [`REDACTED_ATTEMPT_KEYS`] with a marker;
-/// `null` stays `null`, so presence remains visible without the value.
-pub(crate) fn redact_attempt(value: &mut serde_json::Value) {
-    match value {
-        serde_json::Value::Object(map) => {
-            for (key, field) in map.iter_mut() {
-                if REDACTED_ATTEMPT_KEYS.contains(&key.as_str()) {
-                    if !field.is_null() {
-                        *field = serde_json::Value::String("<redacted>".into());
-                    }
-                } else {
-                    redact_attempt(field);
-                }
-            }
-        }
-        serde_json::Value::Array(items) => items.iter_mut().for_each(redact_attempt),
-        _ => {}
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::attempt_json::redact_attempt;
 
     /// The lab wrapper's own failures (adding fields, encrypting) happen
     /// before any write, so they must read as "not sent", which keeps the

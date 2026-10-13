@@ -9216,7 +9216,7 @@
           "Registration"
         ],
         "summary": "Show the current registration attempt",
-        "description": "Retrieves the current registration attempt state. Store (2026-10-13): no longer creates a missing store; a mistyped path or forgotten --profile fails with \"store does not exist\" instead of leaving an empty store file. Only registration begin creates one.",
+        "description": "Retrieves the current registration attempt state. Store (2026-10-13): no longer creates a missing store; a mistyped path or forgotten --profile fails with \"store does not exist\" instead of leaving an empty store file. Only registration begin creates one. JSON (2026-10-13): with the global --json flag it prints the saved attempt as redacted JSON (phone and consent secrets replaced by <redacted>, the same as lab-signup status --json), or null without one; --json used to be ignored here.",
         "operationId": "getRegistrationStatus",
         "x-cli": "whatsapp-cli registration status",
         "x-transport": [

@@ -653,10 +653,7 @@ fn read_store(
         // way (phone, consent login, pending selector, parent consent URL);
         // JSON null when the store holds no attempt.
         "/v1/signup/status" => match whatsapp_api::registration::current_attempt(&store)? {
-            Some(attempt) => serde_json::to_value(&attempt).map(|mut value| {
-                crate::signup::redact_attempt(&mut value);
-                value
-            }),
+            Some(attempt) => Ok(crate::attempt_json::redacted(&attempt)?),
             None => Ok(Value::Null),
         },
         "/v1/receipts" => serde_json::to_value(receipts::outcomes(&store)?),

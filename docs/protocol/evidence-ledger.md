@@ -1,3 +1,8 @@
+2026-10-13 — **Fixed/offline (CLI parity):** `registration status --json` now
+prints the saved attempt as redacted JSON, the same as `lab-signup status
+--json` and the `GET /v1/signup/status` store route (one shared redaction);
+`--json` used to be ignored there.
+
 2026-10-13 — **Implemented/offline (HTTP parity: registration status):** `serve
 --store-routes` also answers `GET /v1/signup/status` with the saved
 registration attempt exactly as `lab-signup status --json` prints it (phone and
