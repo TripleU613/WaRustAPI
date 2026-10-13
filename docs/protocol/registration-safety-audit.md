@@ -231,6 +231,11 @@ the container's disk was full), and what was done:
   only that sets the marker (the observed case was HTTP 404 with a non-JSON
   body). Tests: `lost_email_code_requests_resume_only_once` (now real
   404 answers), `an_unreadable_success_answer_to_an_email_request_is_not_resumed`.
+  **Follow-up (Codex review on PR #4):** the marker was written in a second
+  transaction after the `RegistrationOutcomeUnknown` commit, so a crash or
+  store failure between them left an unknown state that `resume-email-challenge`
+  refuses, although the server definitely answered. Both are now committed in
+  one transaction (`finish_transition_marked`).
 - **L1, L4 and the open history item: a not-sent restore now writes back the
   exact pre-reservation attempt** (state, method, history), with the material
   and latch undo, in one transaction. The general `preparing -> unregistered`

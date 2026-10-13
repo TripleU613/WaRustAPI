@@ -1574,6 +1574,22 @@ impl RegistrationService {
         expected_state: &'static str,
         output: RegistrationFlowOutput,
     ) -> Result<RegistrationStep> {
+        self.finish_transition_marked(attempt_id, generation, expected_state, output, None)
+            .await
+    }
+
+    /// [`Self::finish_transition`], also recording `marker` (a key in
+    /// `RegistrationAttempts`) in the same transaction, so a state that a
+    /// later command recognises only together with its marker can never be
+    /// committed without it.
+    async fn finish_transition_marked(
+        &self,
+        attempt_id: AttemptId,
+        generation: AccountGeneration,
+        expected_state: &'static str,
+        output: RegistrationFlowOutput,
+        marker: Option<String>,
+    ) -> Result<RegistrationStep> {
         self.store
             .run_blocking(move |s| {
                 s.write(|tx| {
@@ -1642,6 +1658,14 @@ impl RegistrationService {
                     }
                     attempt.transition(output.state, Timestamp::now())?;
                     Self::save_current(tx, &attempt)?;
+                    if let Some(marker) = &marker {
+                        tx.put_json(
+                            Table::RegistrationAttempts,
+                            marker.as_bytes(),
+                            RECORD_V1,
+                            &Timestamp::now(),
+                        )?;
+                    }
                     Ok(step_for(&attempt.state))
                 })
             })
@@ -2302,32 +2326,31 @@ impl RegistrationService {
                         ..
                     }
                 );
-                let result = self
-                    .finish_failed(
-                        &attempt,
-                        "verifying",
-                        RegistrationState::RegistrationOutcomeUnknown { step: bound.step },
-                        before,
-                        Undo::default(),
-                        error,
-                    )
-                    .await;
+                let unknown = RegistrationState::RegistrationOutcomeUnknown { step: bound.step };
                 if answered {
-                    let key = email_answered_key(attempt.id, bound.step);
-                    self.store
-                        .run_blocking(move |s| {
-                            s.write(|tx| {
-                                tx.put_json(
-                                    Table::RegistrationAttempts,
-                                    key.as_bytes(),
-                                    RECORD_V1,
-                                    &Timestamp::now(),
-                                )
-                            })
-                        })
-                        .await?;
+                    // `resume_email_challenge` accepts this unknown state only
+                    // with its marker, so both commit together: a crash in
+                    // between would otherwise strand an attempt the server
+                    // definitely answered (Codex review on PR #4).
+                    self.finish_transition_marked(
+                        attempt.id,
+                        attempt.generation,
+                        "verifying",
+                        unknown.into(),
+                        Some(email_answered_key(attempt.id, bound.step)),
+                    )
+                    .await?;
+                    return Err(error);
                 }
-                result
+                self.finish_failed(
+                    &attempt,
+                    "verifying",
+                    unknown,
+                    before,
+                    Undo::default(),
+                    error,
+                )
+                .await
             }
         }
     }
