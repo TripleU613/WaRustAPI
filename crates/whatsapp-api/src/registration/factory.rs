@@ -767,6 +767,84 @@ mod tests {
         }
     }
 
+    /// The same saved refusal shape reached from an OTP submission (`verifying
+    /// -> blocked`) must not make a code-request diagnostic or the corrected
+    /// token resend eligible: either would ask for a new SMS or call.
+    #[tokio::test]
+    #[cfg(feature = "experimental-registration-https")]
+    async fn code_request_actions_refuse_a_refusal_from_another_request() {
+        use crate::registration::BlockedReason;
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(dir.path());
+        let factory = StoredComparisonRequestFactory::new(store.clone(), config()).unwrap();
+        let mut profile = crate::ProtocolProfile::android_reference().unwrap();
+        profile.id = LAB_PROFILE_ID.into();
+        let transport = Arc::new(MockTransport::default());
+        for reason in [
+            RegistrationResponseReason::BadToken,
+            RegistrationResponseReason::BadParam,
+        ] {
+            let mut a = attempt(&store);
+            store.write(|tx| factory.prepare(tx, &a)).unwrap();
+            a.state = RegistrationState::Verifying { step: 1 };
+            a.transition(
+                RegistrationState::Blocked {
+                    reason: BlockedReason::ServerRefused {
+                        code: None,
+                        http_status: Some(200),
+                        reason: Some(reason),
+                    },
+                },
+                Timestamp::now(),
+            )
+            .unwrap();
+            assert!(!a.refused_at_code_request());
+            store
+                .write(|tx| RegistrationService::save_current(tx, &a))
+                .unwrap();
+            let mut corrected = config();
+            corrected.token = Zeroizing::new("corrected-token".into());
+            let correction = RegistrationService::new(
+                store.clone(),
+                &profile,
+                Arc::new(ComparisonHttpFlow::new(
+                    Arc::new(
+                        StoredComparisonRequestFactory::new_for_token_correction(
+                            store.clone(),
+                            corrected,
+                        )
+                        .unwrap(),
+                    ),
+                    transport.clone(),
+                )),
+            );
+            let error = correction
+                .retry_corrected_token_once(config().phone)
+                .await
+                .unwrap_err()
+                .to_string();
+            assert!(
+                error.contains("eligible") || error.contains("did not come from a code request"),
+                "{error}"
+            );
+            let diagnostic = RegistrationService::new(
+                store.clone(),
+                &profile,
+                Arc::new(ComparisonHttpFlow::new(
+                    Arc::new(StoredComparisonRequestFactory::new(store.clone(), config()).unwrap()),
+                    transport.clone(),
+                )),
+            );
+            assert!(
+                diagnostic
+                    .diagnose_bad_parameter_once(config().phone)
+                    .await
+                    .is_err()
+            );
+        }
+        assert!(transport.0.lock().unwrap().is_empty(), "nothing was sent");
+    }
+
     #[tokio::test]
     #[cfg(feature = "experimental-registration-https")]
     async fn token_correction_is_atomic_token_only_and_once_per_account() {

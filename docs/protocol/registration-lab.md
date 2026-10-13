@@ -405,6 +405,16 @@ and a parse failure now reports the reply's field names and value types
 (never values). `wa_old` and
 passkey second factors are not implemented and leave the attempt blocked.
 
+### Diagnostic eligibility and status redaction (2026-10-13)
+
+The one-shot code-request diagnostics, `resume-preflight` and
+`retry-corrected-token` now also require the saved refusal to come from a code
+request (last transition `preparing -> blocked`). An OTP submission refused with
+`bad_param` saves the same shape, and answering it with a new code request
+would ask for another SMS. `status --json` now redacts the consent context's
+login, pending selector and parent consent URL as well as the phone number.
+[Registration safety audit](registration-safety-audit.md).
+
 ### One-shot legacy diagnostic recovery
 
 `lab-signup --allow-live-request diagnose-legacy-refusal` is an explicit lab-only

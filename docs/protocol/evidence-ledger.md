@@ -1,3 +1,12 @@
+2026-10-13 — **Fixed/offline (registration safety audit, first two):** a
+read-only audit of the onboarding HTTPS path found that `lab-signup status
+--json` printed the consent context's intermediate login and parent consent URL
+(now redacted at any depth), and that the code-request diagnostics and
+`retry-corrected-token` accepted a `bad_param`/`bad_token` refusal from an OTP
+submission or other request, where they would have asked for a new SMS (now
+they require the refusal to come from a code request). The remaining findings
+are listed and being verified. Nothing was sent. [Audit](registration-safety-audit.md).
+
 2026-10-13 — **Implemented/offline (lab windows):** `lab-transport` receive,
 post-send and group-send windows now capture a frame that does not decode and
 keep reading, like `listen`, instead of ending the window. Login and handshake

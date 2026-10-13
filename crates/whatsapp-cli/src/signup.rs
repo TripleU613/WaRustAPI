@@ -389,17 +389,11 @@ pub(super) async fn run(
         Action::Status => {
             match service.current().await? {
                 Some(attempt) if cli.json => {
-                    // Full record including the transition history; the phone
-                    // number is redacted before printing.
+                    // Full record including the transition history, redacted.
                     let mut value = serde_json::to_value(&attempt).map_err(|e| {
                         Error::invalid("lab_signup", format!("attempt is not serialisable: {e}"))
                     })?;
-                    if let Some(map) = value.as_object_mut() {
-                        map.insert(
-                            "phone".into(),
-                            serde_json::Value::String("<redacted>".into()),
-                        );
-                    }
+                    redact_attempt(&mut value);
                     println!(
                         "{}",
                         serde_json::to_string_pretty(&value)
@@ -564,9 +558,75 @@ pub(super) async fn run(
     Ok(())
 }
 
+/// Fields of a saved attempt that must never be printed: the phone number, and
+/// the consent context's intermediate login, opaque pending selector and parent
+/// consent URL (`RegistrationConsent`, kept only in encrypted storage). Matched
+/// at any depth, so a field nested under a blocked reason is covered too.
+const REDACTED_ATTEMPT_KEYS: [&str; 4] = [
+    "phone",
+    "registration_login",
+    "pending",
+    "parent_consent_url",
+];
+
+/// Replace every present value of [`REDACTED_ATTEMPT_KEYS`] with a marker;
+/// `null` stays `null`, so presence remains visible without the value.
+fn redact_attempt(value: &mut serde_json::Value) {
+    match value {
+        serde_json::Value::Object(map) => {
+            for (key, field) in map.iter_mut() {
+                if REDACTED_ATTEMPT_KEYS.contains(&key.as_str()) {
+                    if !field.is_null() {
+                        *field = serde_json::Value::String("<redacted>".into());
+                    }
+                } else {
+                    redact_attempt(field);
+                }
+            }
+        }
+        serde_json::Value::Array(items) => items.iter_mut().for_each(redact_attempt),
+        _ => {}
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// `status --json` printed the consent context's login, pending selector
+    /// and parent consent URL; only the phone was redacted.
+    #[test]
+    fn status_json_redacts_consent_secrets_at_any_depth() {
+        use whatsapp_api::registration::{BlockedReason, RegistrationState, wire};
+        let state = RegistrationState::Blocked {
+            reason: BlockedReason::ConsentRequired {
+                details: wire::RegistrationConsent {
+                    login: Some(Zeroizing::new("SECRET-LOGIN".into())),
+                    pending: Some(Zeroizing::new("SECRET-PENDING".into())),
+                    parent_consent_url: Some(Zeroizing::new("https://SECRET-URL.invalid/".into())),
+                    consent_id: Some(7),
+                    ..Default::default()
+                },
+                retry_after: None,
+                sms_retry_after: None,
+                voice_retry_after: None,
+            },
+        };
+        let mut value = serde_json::json!({
+            "phone": "+15550000000",
+            "state": serde_json::to_value(&state).unwrap(),
+        });
+        assert!(
+            value.to_string().contains("SECRET-LOGIN"),
+            "fixture holds secrets"
+        );
+        redact_attempt(&mut value);
+        let text = value.to_string();
+        for secret in ["SECRET", "15550000000"] {
+            assert!(!text.contains(secret), "{secret} leaked: {text}");
+        }
+        assert!(text.contains("\"consent_id\":7"), "non-secret fields stay");
+    }
 
     #[test]
     fn mutations_require_explicit_authorization() {

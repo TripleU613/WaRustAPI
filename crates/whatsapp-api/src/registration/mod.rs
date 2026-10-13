@@ -528,6 +528,17 @@ impl RegistrationAttempt {
         Ok(())
     }
 
+    /// Whether the current state was reached by a code request's refusal (the
+    /// preflight or `/v2/code`): the last transition is `preparing -> blocked`.
+    /// OTP submission, security, consent and email-code refusals are reached
+    /// from `verifying`. The code-request diagnostics and the corrected-token
+    /// resend send a new code request, so only this refusal makes them eligible.
+    pub fn refused_at_code_request(&self) -> bool {
+        self.history
+            .last()
+            .is_some_and(|entry| entry.from == "preparing" && entry.to == "blocked")
+    }
+
     /// Number of recorded transitions.
     pub fn history_len(&self) -> usize {
         self.history.len()
@@ -1625,6 +1636,16 @@ impl RegistrationService {
                         return Err(Error::invalid(
                             "registration_diagnostic",
                             "saved refusal is not eligible for this diagnostic action",
+                        ));
+                    }
+                    // A bad_param or bad_token from an OTP submission, consent,
+                    // security or email-code request has the same saved shape;
+                    // answering it with a new code request would ask for
+                    // another SMS or call (registration audit 2026-10-13).
+                    if !attempt.refused_at_code_request() {
+                        return Err(Error::invalid(
+                            "registration_diagnostic",
+                            "saved refusal did not come from a code request; this action would request a new code",
                         ));
                     }
                     if tx

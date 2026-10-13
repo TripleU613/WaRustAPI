@@ -9875,7 +9875,7 @@
           "Registration Lab"
         ],
         "summary": "One additive-code-field experiment from a private EndpointFields JSON file",
-        "description": "Sends an additive-code-field experiment using ENC plus empty H. Rejects replacement of saved fields. Contacts WhatsApp servers.",
+        "description": "Sends an additive-code-field experiment using ENC plus empty H. Rejects replacement of saved fields. Contacts WhatsApp servers. Eligibility (2026-10-13): the saved refusal must also have come from a code request (the attempt's last transition is preparing -> blocked); the same refusal shape from an OTP submission, security, consent or email-code request is refused, because this action sends a new code request. Evidence docs/protocol/registration-safety-audit.md.",
         "operationId": "labSignupDiagnoseAdditionalFields",
         "x-cli": "whatsapp-cli lab-signup diagnose-additional-fields",
         "x-transport": [
@@ -9952,7 +9952,7 @@
           "Registration Lab"
         ],
         "summary": "One authorized repeat of HTTP 200 / bad_param to collect field hints",
-        "description": "Repeats the request after a bad_param response to collect field hints. Same saved payload and keys. Durable latch prevents another repeat. Contacts WhatsApp servers.",
+        "description": "Repeats the request after a bad_param response to collect field hints. Same saved payload and keys. Durable latch prevents another repeat. Contacts WhatsApp servers. Eligibility (2026-10-13): the saved refusal must also have come from a code request (the attempt's last transition is preparing -> blocked); the same refusal shape from an OTP submission, security, consent or email-code request is refused, because this action sends a new code request. Evidence docs/protocol/registration-safety-audit.md.",
         "operationId": "labSignupDiagnoseBadParameter",
         "x-cli": "whatsapp-cli lab-signup diagnose-bad-parameter",
         "x-transport": [
@@ -10011,7 +10011,7 @@
           "Registration Lab"
         ],
         "summary": "One encrypted-envelope experiment after HTTP 200 / bad_param",
-        "description": "Sends an encrypted envelope after a bad_param response. Same inner fields and identity; no attestation, no automatic repeats. Contacts WhatsApp servers.",
+        "description": "Sends an encrypted envelope after a bad_param response. Same inner fields and identity; no attestation, no automatic repeats. Contacts WhatsApp servers. Eligibility (2026-10-13): the saved refusal must also have come from a code request (the attempt's last transition is preparing -> blocked); the same refusal shape from an OTP submission, security, consent or email-code request is refused, because this action sends a new code request. Evidence docs/protocol/registration-safety-audit.md.",
         "operationId": "labSignupDiagnoseEncryptedParameter",
         "x-cli": "whatsapp-cli lab-signup diagnose-encrypted-parameter",
         "x-transport": [
@@ -10070,7 +10070,7 @@
           "Registration Lab"
         ],
         "summary": "One explicit post-failure reason/metrics experiment, using ENC plus empty H",
-        "description": "Sends an explicit post-failure reason/metrics experiment using ENC plus empty H. Contacts WhatsApp servers.",
+        "description": "Sends an explicit post-failure reason/metrics experiment using ENC plus empty H. Contacts WhatsApp servers. Eligibility (2026-10-13): the saved refusal must also have come from a code request (the attempt's last transition is preparing -> blocked); the same refusal shape from an OTP submission, security, consent or email-code request is refused, because this action sends a new code request. Evidence docs/protocol/registration-safety-audit.md.",
         "operationId": "labSignupDiagnoseFlowFields",
         "x-cli": "whatsapp-cli lab-signup diagnose-flow-fields",
         "x-transport": [
@@ -10147,7 +10147,7 @@
           "Registration Lab"
         ],
         "summary": "One authorized resend of a legacy refusal whose diagnostics were lost",
-        "description": "Resends a legacy refusal whose diagnostics were lost. Known refusals and cooldowns are excluded. Durable latch prevents repeats. Contacts WhatsApp servers.",
+        "description": "Resends a legacy refusal whose diagnostics were lost. Known refusals and cooldowns are excluded. Durable latch prevents repeats. Contacts WhatsApp servers. Eligibility (2026-10-13): the saved refusal must also have come from a code request (the attempt's last transition is preparing -> blocked); the same refusal shape from an OTP submission, security, consent or email-code request is refused, because this action sends a new code request. Evidence docs/protocol/registration-safety-audit.md.",
         "operationId": "labSignupDiagnoseLegacyRefusal",
         "x-cli": "whatsapp-cli lab-signup diagnose-legacy-refusal",
         "x-transport": [
@@ -10206,7 +10206,7 @@
           "Registration Lab"
         ],
         "summary": "One APK unknown-build-properties User-Agent experiment with additive fields",
-        "description": "Sends an APK unknown-build-properties User-Agent experiment with additive fields. Contacts WhatsApp servers.",
+        "description": "Sends an APK unknown-build-properties User-Agent experiment with additive fields. Contacts WhatsApp servers. Eligibility (2026-10-13): the saved refusal must also have come from a code request (the attempt's last transition is preparing -> blocked); the same refusal shape from an OTP submission, security, consent or email-code request is refused, because this action sends a new code request. Evidence docs/protocol/registration-safety-audit.md.",
         "operationId": "labSignupDiagnoseUnknownAgent",
         "x-cli": "whatsapp-cli lab-signup diagnose-unknown-agent",
         "x-transport": [
@@ -10283,7 +10283,7 @@
           "Registration Lab"
         ],
         "summary": "One ENC plus empty-H experiment; does not fabricate attestation",
-        "description": "Sends an encrypted envelope with empty hash. Does not fabricate attestation. Contacts WhatsApp servers.",
+        "description": "Sends an encrypted envelope with empty hash. Does not fabricate attestation. Contacts WhatsApp servers. Eligibility (2026-10-13): the saved refusal must also have come from a code request (the attempt's last transition is preparing -> blocked); the same refusal shape from an OTP submission, security, consent or email-code request is refused, because this action sends a new code request. Evidence docs/protocol/registration-safety-audit.md.",
         "operationId": "labSignupDiagnoseUnsignedEnvelope",
         "x-cli": "whatsapp-cli lab-signup diagnose-unsigned-envelope",
         "x-transport": [
@@ -10669,7 +10669,7 @@
           "Registration Lab"
         ],
         "summary": "Recheck a saved preflight stopped by the old missing-recommendation guard",
-        "description": "Rechecks a preflight that was previously stopped by the missing-recommendation guard. Contacts WhatsApp servers.",
+        "description": "Rechecks a preflight that was previously stopped by the missing-recommendation guard. Contacts WhatsApp servers. Eligibility (2026-10-13): the saved refusal must also have come from a code request (the attempt's last transition is preparing -> blocked); the same refusal shape from an OTP submission, security, consent or email-code request is refused, because this action sends a new code request. Evidence docs/protocol/registration-safety-audit.md.",
         "operationId": "labSignupResumePreflight",
         "x-cli": "whatsapp-cli lab-signup resume-preflight",
         "x-transport": [
@@ -10728,7 +10728,7 @@
           "Registration Lab"
         ],
         "summary": "Migrate an opaque legacy refusal using JSON corrections; one send only",
-        "description": "Sends a corrected request after a legacy refusal whose diagnostics were lost. Preserves identity; shares the legacy diagnostic's durable reservation. Single send only. Contacts WhatsApp servers.",
+        "description": "Sends a corrected request after a legacy refusal whose diagnostics were lost. Preserves identity; shares the legacy diagnostic's durable reservation. Single send only. Contacts WhatsApp servers. Eligibility (2026-10-13): the saved refusal must also have come from a code request (the attempt's last transition is preparing -> blocked); the same refusal shape from an OTP submission, security, consent or email-code request is refused, because this action sends a new code request. Evidence docs/protocol/registration-safety-audit.md.",
         "operationId": "labSignupRetryCorrectedRequest",
         "x-cli": "whatsapp-cli lab-signup retry-corrected-request",
         "x-transport": [
@@ -10787,7 +10787,7 @@
           "Registration Lab"
         ],
         "summary": "One retry after bad_token; JSON may change only the token, never identity",
-        "description": "Single retry after a bad_token response. Configuration JSON may change only the token field; identity must remain stable. Contacts WhatsApp servers.",
+        "description": "Single retry after a bad_token response. Configuration JSON may change only the token field; identity must remain stable. Contacts WhatsApp servers. Eligibility (2026-10-13): the saved refusal must also have come from a code request (the attempt's last transition is preparing -> blocked); the same refusal shape from an OTP submission, security, consent or email-code request is refused, because this action sends a new code request. Evidence docs/protocol/registration-safety-audit.md.",
         "operationId": "labSignupRetryCorrectedToken",
         "x-cli": "whatsapp-cli lab-signup retry-corrected-token",
         "x-transport": [
@@ -10846,7 +10846,7 @@
           "Registration Lab"
         ],
         "summary": "Local status only: sends no request",
-        "description": "Shows the current registration attempt status from local state. Offline operation; does not contact WhatsApp.",
+        "description": "Shows the current registration attempt status from local state. Offline operation; does not contact WhatsApp. JSON output redaction (2026-10-13): besides the phone number, the consent context's registration_login, pending selector and parent_consent_url are replaced with <redacted> at any depth (null stays null); they were printed before. Evidence docs/protocol/registration-safety-audit.md.",
         "operationId": "labSignupStatus",
         "x-cli": "whatsapp-cli lab-signup status",
         "x-transport": [
