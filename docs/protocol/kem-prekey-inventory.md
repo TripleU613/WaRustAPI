@@ -89,6 +89,16 @@ distribution or publishes an addressed payload in the same commit as the
 session and key consumption; the test below exercises the addressed-payload
 case only.
 
+## Inspection
+
+`lab-inbox --inspect` reports `prekey_kem` for the first preserved `pkmsg`:
+`absent`, `invalid_input`, or `present` with `envelope_version` and
+`local_kem_row` (`missing`, `held`, `last_resort`, `invalid`). It prints no KEM
+ID or key bytes and changes nothing. The library classification is
+`transport::prekeys::kem_row_state`. A matching held session needs no row, so
+`missing` alone does not predict an Unsupported outcome; the inbox warning
+names the actual reason when processing defers.
+
 ## Validation
 
 `hybrid_prekeys_use_local_kem_inventory_and_continue_through_normal_inbox`

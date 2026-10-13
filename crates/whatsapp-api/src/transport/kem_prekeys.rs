@@ -201,6 +201,13 @@ mod tests {
             })
             .unwrap();
         assert_eq!(store.read(counts).unwrap(), (3, 1));
+        {
+            use super::super::prekeys::{KemRowState, kem_row_state};
+            assert_eq!(kem_row_state(&store, 5).unwrap(), KemRowState::Held);
+            assert_eq!(kem_row_state(&store, 6).unwrap(), KemRowState::LastResort);
+            assert_eq!(kem_row_state(&store, 7).unwrap(), KemRowState::Missing);
+            assert_eq!(kem_row_state(&store, 9).unwrap(), KemRowState::Invalid);
+        }
         assert!(store.read(|tx| load(tx, 9)).is_err());
         assert!(store.read(|tx| load(tx, 7)).unwrap().is_none());
         let ordinary = store.read(|tx| load(tx, 5)).unwrap().unwrap();
