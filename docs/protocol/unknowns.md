@@ -108,6 +108,19 @@ can be reused. Work in that state is limited to evidence already retained.
 Supplying the APK to a session (or running the session on the owner's machine)
 removes this blocker; no other source was used to substitute for it.
 
+**No private account state either (checked 2026-10-13).** The container has no
+ignored `lab/` directory, no account store and no profile, so no live
+validation (sends, receipts, group actions, registration) is possible from it,
+independent of authorization. Work in such a session is limited to offline
+implementation, tests, documentation and analysis of retained evidence. What
+remains of the parity goal after that is listed with its blocker in
+[feature-parity](../feature-parity.md): APK traces (KEM prekey upload,
+`pqsupport`, revoke/edit `edit` attribute, document/video `mediatype`, group
+poll stanza, privacy setters, app-state index/version for mute/pin/archive,
+retry-answer policy, calls, communities, profile picture), live checks on the
+owner's account, and owner decisions (HTTP routes that expose addresses,
+content or sends; ban appeal).
+
 ## Outgoing revoke and edit (2026-10-13)
 
 `MessageContent::Edit` and `MessageContent::Revoke` exist in the model, but the
