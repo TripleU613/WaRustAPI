@@ -54,9 +54,44 @@ one-time prekey guard.
 
 **There is no producer.** Rows exist only in tests. Generation count, ID
 allocation (no `next_kyber_prekey_id` equivalent is traced), any signature
-over the KEM public key, last-resort creation/rotation, the inner element
-shape of `pq_list`/`pq_last_resort_key` and the server's acceptance are all
-**unknown**. Because no KEM key is ever uploaded, a correctly behaving server
+over the KEM public key, last-resort creation/rotation and the server's
+acceptance are all **unknown**. The inner element shape is now read from
+retained evidence (next section); what goes into each element is not.
+
+## Upload element shape (2026-10-13, retained evidence)
+
+**Confirmed static**, from the retained upload writer `LX/0y0.A00` case 85
+([writer-dispatch](apk/2.26.37.71-identity-ack-writer/writer-dispatch.txt)).
+The IQ (`xmlns=encrypt`, `type=set`, `1634..1648`) collects its children in
+this order: an optional `op` (coexistence `mode`/`reason`/`coex_token`,
+`13ea..1474`), `identity` (`1474..148e`), `registration` (`148e..14a6`),
+`type` (`14ae..14c8`), `list` of ordinary keys (`14c8..14e0`), `skey`
+(`14e2..153c`), then:
+
+```text
+pq_list                                  only if the KEM key array is non-empty (153c..1546)
+  key            × n                     tag from v20 = "key" (1356, used at 159a)
+    id         <CIv.A01 bytes>
+    value      <CIv.A00 bytes>           v10 = "value" (135a)
+    signature  <CIv.A02 bytes>           v12 = "signature" (150e)
+pq_last_resort_key                       only if a last-resort key exists (15ca)
+  id         <CIv.A01 bytes>
+  value      <CIv.A00 bytes>
+  signature  <CIv.A02 bytes>             (no inner key wrapper; 15ce..161c)
+```
+
+The `id` tag is **inferred**: the PQ entries reuse the register (`v2`) that
+names the first child of the ordinary `list` keys, whose `<key><id/><value/>`
+shape was server-acknowledged live on 2026-09-19; the retained annotation
+does not show `v2`'s assignment inside this case. Each KEM entry is shaped
+like `skey` (id, value, signature), unlike an ordinary one-time key (id,
+value only).
+
+**Still unknown:** what `CIv.A01`/`A00`/`A02` hold for a KEM key: the ID width
+and allocation, the value encoding (the bare 1568-byte encapsulation key, or
+with a type prefix as the `pqkey` replies this client parses), and the
+signature's key and input; KEM key generation, counts and last-resort
+rotation; and the server's acceptance. So nothing is uploaded yet. Because no KEM key is ever uploaded, a correctly behaving server
 has no KEM key for this account to hand peers; in normal operation a fresh
 hybrid bootstrap should not arrive. The inbox path exists so that, once an
 evidence-backed producer and upload are implemented, receive is already

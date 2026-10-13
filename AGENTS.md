@@ -318,7 +318,9 @@ request—not adding Rust code, another command or a number-specific script.**
   device-key batches and group fan-out, but no KEM prekey is generated or
   uploaded and `pqsupport` is never sent, so incoming hybrid bootstrap needs a
   KEM row this client cannot yet create. Next APK traces, in order: KEM prekey
-  generation and the `pq_list`/`pq_last_resort_key` upload shape, the
+  generation and what each `pq_list`/`pq_last_resort_key` element holds (ID,
+  value encoding, signature input; the element shape is already read from
+  retained evidence in `docs/protocol/kem-prekey-inventory.md`), the
   `pqsupport` producer (the body of the predicate `Can.A04(jid)`; its five
   retained call sites are in `docs/protocol/pq-bundle-boundary.md`), the
   outgoing revoke/edit `edit` attribute (who sets `SendE2EMessageJob.editVersion`

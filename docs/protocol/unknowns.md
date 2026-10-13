@@ -21,7 +21,9 @@ Same-key classic migration, auth/attestation and companion admission,
 [Staged incoming hybrid bootstrap](hybrid-incoming.md) now authenticates offline and
 [the normal direct/group inboxes use it](kem-prekey-inventory.md) with a local
 KEM row lookup and atomic consumption. KEM prekey generation, ID allocation,
-signing and the inner `pq_list`/`pq_last_resort_key` upload shape are untraced,
+signing and the content of each `pq_list`/`pq_last_resort_key` element are
+untraced (the element shape itself is now read from retained evidence:
+[kem-prekey-inventory](kem-prekey-inventory.md#upload-element-shape-2026-10-13-retained-evidence)),
 so no KEM key is produced or uploaded; own-device/companion KEM admission is
 unported. [Primary identity refresh](hybrid-identity-refresh.md) now derives
 hybrid sessions from verified `pqkey` replies; companion and attestation-bearing

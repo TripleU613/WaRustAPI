@@ -12,8 +12,9 @@
 //!   `registration` (4-byte big endian, `LX/1Lz.A03`), `type` (`[0x05]`),
 //!   `list` of `key{id,value}` (3-byte big-endian id `LX/1Lz.A04`, raw public
 //!   key with the type byte stripped, `LX/0km.A02` `0070..0082`), `skey{id,
-//!   value,signature}`, then optional `pq_list`/`pq_last_resort_key` when
-//!   Kyber keys exist. `LX/13c.A03` `00d6..00e4` logs "skipping kyber prekeys
+//!   value,signature}`, then optional `pq_list` (of `key{id,value,signature}`)
+//!   and `pq_last_resort_key{id,value,signature}` when Kyber keys exist
+//!   (`153c..161c`). `LX/13c.A03` `00d6..00e4` logs "skipping kyber prekeys
 //!   upload" without them, so the post-quantum children are optional; this
 //!   client has no Kyber material and never sends them. The conditional `op`
 //!   element (`13f0..1474`, runtime flag `0x5bf2` plus coexistence reason and
