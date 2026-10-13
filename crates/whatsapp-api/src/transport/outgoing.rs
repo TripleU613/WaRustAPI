@@ -646,11 +646,13 @@ impl Pending {
         let peer = entry.intent.chat.jid();
         let user = crate::signal::direct::prekey_user_for(node, peer)?;
         let hybrid = if user.child("pqkey").is_some() {
-            // shortcut: companion/auth/attestation admission is unported; expand when the coordinator can prove that authority.
+            // shortcut: companion/attestation admission is unported; expand when the coordinator can prove that authority.
+            // identity_auth is NONE/LOG_ONLY in 37.71 (identity-auth.md); only
+            // Bot.A03's required signature/certs shape is enforced, as in refresh.
             if peer.device != 0
                 || super::group_send::own_lid(store)?.as_ref() == Some(&peer.to_non_ad())
                 || user.child("non_e2ee_attestation").is_some()
-                || user.child("identity_auth").is_some()
+                || !super::identity_notifications::identity_auth_well_formed(user)
                 || super::inbox::remote_identity_policy(
                     store,
                     account,

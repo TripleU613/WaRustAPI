@@ -945,19 +945,22 @@ mod tests {
                                                 .to_vec(),
                                         ),
                                         Node::new("signature").bytes(signature.to_vec()),
-                                        Node::new("pqkey").children(vec![
-                                            Node::new("id").bytes(vec![0, 0, 9]),
-                                            Node::new("value").bytes(kem_public.clone()),
-                                            Node::new("signature").bytes(
-                                                bob.private_key()
-                                                    .calculate_signature(
-                                                        &kem_public,
-                                                        &mut rand::rng(),
-                                                    )
-                                                    .unwrap()
-                                                    .to_vec(),
-                                            ),
-                                        ]),
+                                    ]),
+                                    // On the user row, as Bot.A03 selects it;
+                                    // a pqkey nested in skey never reached the
+                                    // hybrid branch this test exists to cover.
+                                    Node::new("pqkey").children(vec![
+                                        Node::new("id").bytes(vec![0, 0, 9]),
+                                        Node::new("value").bytes(kem_public.clone()),
+                                        Node::new("signature").bytes(
+                                            bob.private_key()
+                                                .calculate_signature(
+                                                    &kem_public,
+                                                    &mut rand::rng(),
+                                                )
+                                                .unwrap()
+                                                .to_vec(),
+                                        ),
                                     ]),
                                 ]),
                         ])]);

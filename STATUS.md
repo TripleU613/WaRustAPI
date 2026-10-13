@@ -1,3 +1,10 @@
+2026-10-13 — **Implemented/offline:** a verified PQ directory reply for a
+contact with a held classic session no longer errors the direct send; the held
+ratchet continues as on the classic path (no PQ upgrade, which stays unported).
+Well-formed log-only `identity_auth` no longer blocks hybrid sends. A coordinator
+test that nested `pqkey` inside `skey`, and so never reached the hybrid branch,
+is corrected. [Follow-up and correction](docs/protocol/hybrid-outbox.md).
+
 2026-10-13 — **Implemented/offline:** device-key batches now answer rows whose
 `pqkey` verifies, and group/status fan-out sends those devices native 0x44
 hybrid distributions. Previously one PQ row blocked the whole send. Primary,

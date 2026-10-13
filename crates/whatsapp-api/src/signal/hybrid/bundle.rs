@@ -88,8 +88,12 @@ impl HybridBundle {
         payload: &[u8],
     ) -> Result<direct::PreparedDirect> {
         if let Some(bytes) = previous_session {
-            // shortcut: same-key classic-to-hybrid archival is unported; never reset a held record to adopt PQ.
-            super::HybridSession::from_bytes(bytes)?;
+            // A held ratchet, classic or version 4, continues exactly as the
+            // classic outbox path continues one: the fetched bundle is checked
+            // against the pin but derives nothing. The native PQ session-upgrade
+            // job (pqUpgradeDevicesRequested / isPqSessionUpgrade,
+            // bulk-prekey-processing.md) that could replace a held classic
+            // session is unported, so the KEM key is not used here.
             direct::prepare_payload(
                 account,
                 &self.recipient,
@@ -404,7 +408,7 @@ mod tests {
                     store::{MasterKey, OpenOptions, ProtocolStore, StaticKeySource, Table},
                     transport::{ConnectionEpoch, outgoing},
                 };
-                for scenario in 0..9 {
+                for scenario in 0..10 {
                     if scenario == 8 && peer.server != Server::Lid {
                         continue;
                     }
@@ -461,7 +465,7 @@ mod tests {
                                 )?;
                             }
                             let peer_key = format!("comparison-direct:{target}");
-                            if scenario >= 5 {
+                            if (5..=8).contains(&scenario) {
                                 let pin = if scenario == 5 {
                                     bob.identity_key()
                                 } else {
@@ -511,6 +515,13 @@ mod tests {
                     if scenario == 2 {
                         fields.push(Node::new("identity_auth"));
                     }
+                    if scenario == 9 {
+                        // Bot.A03 shape only: signature bytes plus a certs node.
+                        fields.push(Node::new("identity_auth").children(vec![
+                            Node::new("signature").bytes(vec![1; 64]),
+                            Node::new("certs"),
+                        ]));
+                    }
                     let mut returned_peer = target.clone();
                     if scenario == 4 {
                         returned_peer.device = 2;
@@ -546,7 +557,52 @@ mod tests {
                             },
                         )
                         .await;
-                    if (1..=5).contains(&scenario) || scenario == 8 {
+                    if scenario == 5 {
+                        // A held classic ratchet continues; the verified KEM
+                        // key derives nothing and the record stays version 3.
+                        let stanza = result.unwrap().unwrap();
+                        let NodeContent::Bytes(ciphertext) = &stanza.child("enc").unwrap().content
+                        else {
+                            panic!("missing ciphertext")
+                        };
+                        assert_eq!(ciphertext[0], 0x33);
+                        assert!(direct::incoming_prekey_kem(ciphertext).unwrap().is_none());
+                        use wacore_libsignal::protocol::GenericSignedPreKey as _;
+                        let signed_record = wacore_libsignal::protocol::SignedPreKeyRecord::new(
+                            7.into(),
+                            wacore_libsignal::protocol::Timestamp::from_epoch_millis(0),
+                            &signed,
+                            &signature,
+                        )
+                        .serialize()
+                        .unwrap();
+                        let one_record =
+                            wacore_libsignal::protocol::PreKeyRecord::new(8.into(), &one)
+                                .serialize()
+                                .unwrap();
+                        let received = direct::receive_prekey(
+                            &remote,
+                            saved.own_jid.as_ref().unwrap(),
+                            (None, None),
+                            &signed_record,
+                            Some(&one_record),
+                            ciphertext,
+                        )
+                        .await
+                        .unwrap();
+                        assert_eq!(received.received.plaintext.as_slice(), b"\x0a\x05hello");
+                        let peer_key = format!("comparison-direct:{target}");
+                        let session: Vec<u8> = store
+                            .read(|tx| tx.get_json(Table::SignalSessions, peer_key.as_bytes(), 1))
+                            .unwrap()
+                            .unwrap();
+                        assert!(hybrid::HybridSession::from_bytes(&session).is_err());
+                        let entry = store.read(|tx| outbox.get(tx, id)).unwrap().unwrap();
+                        assert_eq!(entry.progress, AttemptProgress::InFlight);
+                        assert_eq!(entry.attempts.len(), 1);
+                        continue;
+                    }
+                    if (1..=4).contains(&scenario) || scenario == 8 {
                         assert!(result.is_err(), "scenario {scenario}");
                         assert_eq!(snapshot(), before);
                         assert_eq!(store.journal_head().unwrap(), head);
@@ -571,7 +627,9 @@ mod tests {
                         );
                         continue;
                     }
-                    let stanza = result.unwrap().unwrap();
+                    let stanza = result
+                        .unwrap()
+                        .unwrap_or_else(|| panic!("no stanza scenario {scenario}"));
                     let NodeContent::Bytes(ciphertext) = &stanza.child("enc").unwrap().content
                     else {
                         panic!("missing ciphertext")

@@ -111,7 +111,7 @@ pub struct IdentityAuthInspection {
     /// Always unported until the native certificate/signature policy is implemented.
     pub verification: &'static str,
 }
-fn identity_auth_well_formed(user: &Node) -> bool {
+pub(crate) fn identity_auth_well_formed(user: &Node) -> bool {
     // Bot.A03/CXs require signature bytes and a certs node, not valid certs.
     user.child("identity_auth").is_none_or(|auth| {
         auth.child("signature")
