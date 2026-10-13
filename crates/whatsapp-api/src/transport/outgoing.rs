@@ -235,6 +235,7 @@ pub fn begin_selected(
                     reference,
                     caption: None,
                     file_name: None,
+                    quoted: None,
                 } => {
                     super::outgoing_media::resolve(store, &entry.client_request_id, peer, reference)
                         .is_ok()
@@ -772,6 +773,7 @@ impl Pending {
                 reference,
                 caption: None,
                 file_name: None,
+                quoted: None,
             } => Some(super::outgoing_media::resolve(
                 store,
                 &entry.client_request_id,
@@ -1949,6 +1951,7 @@ mod tests {
                                 reference,
                                 caption: None,
                                 file_name: None,
+                                quoted: None,
                             },
                         },
                     )?

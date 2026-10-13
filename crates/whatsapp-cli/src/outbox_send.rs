@@ -64,6 +64,7 @@ fn preflight(store: &ProtocolStore, message: &MessageRequest) -> Result<(), Erro
             reference,
             caption,
             file_name,
+            quoted: None,
         } if message.image.is_some() || message.voice_note.is_some() => {
             caption.is_none()
                 && file_name.is_none()
@@ -150,6 +151,7 @@ pub(super) async fn run(
                 reference,
                 caption: None,
                 file_name: None,
+                quoted: None,
             }
         } else {
             MessageContent::Text {

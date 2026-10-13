@@ -713,6 +713,7 @@ pub(super) mod tests {
                     reference,
                     caption: None,
                     file_name: None,
+                    quoted: None,
                 }
             };
             let request = SendRequest {
@@ -1296,6 +1297,7 @@ fn payload(store: &ProtocolStore, entry: &OutboxEntry, own: Option<&Jid>) -> Res
             reference,
             caption: None,
             file_name: None,
+            quoted: None,
         } => {
             let (body, media) = super::outgoing_media::resolve(
                 store,

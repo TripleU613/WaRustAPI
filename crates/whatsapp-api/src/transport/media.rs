@@ -188,12 +188,15 @@ struct ContextOnly {
     #[prost(message, optional, tag = "17")]
     context: Option<MediaContext>,
 }
-// Comparison BWp/BWZ contextInfo=17, BWx stanzaId=1, quotedMessage=3,
-// expiration=25. Keep quote detection separate from expiry enforcement.
+// Comparison BWp/BWZ contextInfo=17, BWx stanzaId=1, participant=2,
+// quotedMessage=3, expiration=25 (the same BWx fields text replies use).
+// Keep quote detection separate from expiry enforcement.
 #[derive(Message)]
 struct MediaContext {
     #[prost(string, optional, tag = "1")]
     stanza: Option<String>,
+    #[prost(string, optional, tag = "2")]
+    participant: Option<String>,
     #[prost(bytes = "vec", optional, tag = "3")]
     quoted: Option<Vec<u8>>,
     #[prost(uint32, optional, tag = "25")]
@@ -468,12 +471,22 @@ pub(super) fn caption_fields(payload: &[u8]) -> Result<Option<MediaCaption>> {
     Ok(Some(MediaCaption { kind, caption }))
 }
 
-/// Project unwrapped ordinary media while retaining expiry and refusing quotes. The
+/// The quote a media payload names, as (stanzaId, participant), when its BWx
+/// context carries a stanza ID. Resolution and attribution belong to the caller.
+pub(super) fn quote_context(payload: &[u8]) -> Result<Option<(String, Option<String>)>> {
+    Ok(media_context(payload)?.and_then(|c| c.stanza.map(|stanza| (stanza, c.participant))))
+}
+
+/// Project unwrapped ordinary media while retaining expiry. With `allow_quote`,
+/// a context naming a stanza ID projects with `quoted: None` for the caller to
+/// attribute (see `quote_context`); otherwise any quote refuses. A quoted body
+/// without a stanza ID names no target and always refuses, as for text. The
 /// caller must atomically persist the authenticated inbox record with the event.
 pub(super) fn event_content(
     tx: &crate::store::WriteTx<'_>,
     key: &[u8],
     payload: &[u8],
+    allow_quote: bool,
 ) -> Result<Option<(crate::model::message::MessageContent, Option<u32>)>> {
     let fields = crate::signal::direct::payload_fields(payload)?;
     if fields
@@ -503,10 +516,9 @@ pub(super) fn event_content(
         .or(raw.document.as_ref())
         .ok_or_else(|| bad("missing media"))?;
     let context = media_context(payload)?;
-    if context
-        .as_ref()
-        .is_some_and(|c| c.stanza.is_some() || c.quoted.is_some())
-    {
+    if context.as_ref().is_some_and(|c| {
+        (c.stanza.is_some() || c.quoted.is_some()) && (!allow_quote || c.stanza.is_none())
+    }) {
         return Ok(None);
     }
     let expiration = context.and_then(|c| c.expiration).filter(|v| *v != 0);
@@ -567,6 +579,7 @@ pub(super) fn event_content(
             },
             caption,
             file_name,
+            quoted: None,
         },
         expiration,
     )))
@@ -1223,6 +1236,7 @@ mod tests {
                     reference,
                     caption,
                     file_name,
+                    ..
                 } = *content
                 else {
                     panic!("wrong content")
@@ -1408,7 +1422,7 @@ mod tests {
             let payload = RawImage { image: nested }.encode_to_vec();
             assert!(
                 store
-                    .write(|tx| event_content(tx, b"received:excluded", &payload))
+                    .write(|tx| event_content(tx, b"received:excluded", &payload, true))
                     .unwrap()
                     .is_none()
             );
@@ -1740,7 +1754,7 @@ mod tests {
                     1,
                     &serde_json::json!({"status":"downloaded","body":encrypted.body}),
                 )?;
-                event_content(tx, key, &payload)
+                event_content(tx, key, &payload, true)
             })
             .unwrap()
             .unwrap()
@@ -1766,11 +1780,12 @@ mod tests {
         mixed.extend_from_slice(b"\x0a\x01x");
         assert!(
             store
-                .write(|tx| event_content(tx, key, &mixed))
+                .write(|tx| event_content(tx, key, &mixed, true))
                 .unwrap()
                 .is_none()
         );
-        // BZC contextInfo=17 must obey the existing quote exclusion.
+        // BZC contextInfo=17 quotedMessage without stanzaId names no target and
+        // refuses even when quotes are allowed.
         let mut envelope = Envelope::decode(payload.as_slice()).unwrap();
         let mut nested = envelope.sticker.take().unwrap().encode_to_vec();
         nested.extend_from_slice(b"\x8a\x01\x02\x1a\x00");
@@ -1779,10 +1794,157 @@ mod tests {
         quoted.extend(nested);
         assert!(
             store
-                .write(|tx| event_content(tx, key, &quoted))
+                .write(|tx| event_content(tx, key, &quoted, true))
                 .unwrap()
                 .is_none()
         );
+    }
+
+    #[test]
+    fn quoted_media_replies_project_with_text_reply_attribution() {
+        use super::*;
+        use crate::{
+            binary::Node,
+            model::{
+                ids::{AccountId, EventCursor},
+                message::{Direction, MessageContent},
+            },
+            store::{ConsumerId, MasterKey, OpenOptions, StaticKeySource},
+            sync::SyncEvent,
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("quoted-media.redb"),
+            account_id: AccountId::new("test").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([4; 32]))),
+            create: true,
+        })
+        .unwrap();
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"login-identity",
+                    1,
+                    &serde_json::json!({"pn":"15555550999@s.whatsapp.net","lid":"99999@lid"}),
+                )
+            })
+            .unwrap();
+        #[derive(Message)]
+        struct RawImage {
+            #[prost(bytes = "vec", tag = "3")]
+            image: Vec<u8>,
+        }
+        // BWx contextInfo=17 with stanzaId=1, optional participant=2 and a
+        // quotedMessage=3 conversation, appended to an ordinary image.
+        let image = |stanza: Option<&str>, participant: Option<&str>| {
+            let mut context = Vec::new();
+            if let Some(stanza) = stanza {
+                prost::encoding::string::encode(1, &stanza.to_owned(), &mut context);
+            }
+            if let Some(participant) = participant {
+                prost::encoding::string::encode(2, &participant.to_owned(), &mut context);
+            }
+            prost::encoding::bytes::encode(3, &b"\x0a\x02hi".to_vec(), &mut context);
+            let mut nested = Image {
+                url: "https://mmg.whatsapp.net/fixture".into(),
+                mime: "image/png".into(),
+                hash: vec![1; 32],
+                length: 42,
+                key: vec![2; 32],
+                enc_hash: vec![3; 32],
+                once: false,
+            }
+            .encode_to_vec();
+            prost::encoding::bytes::encode(17, &context, &mut nested);
+            RawImage { image: nested }.encode_to_vec()
+        };
+        let direct = |id: &str| {
+            Node::new("message")
+                .attr("from", "15555550100@s.whatsapp.net")
+                .attr("id", id.to_owned())
+        };
+        let group = |id: &str| {
+            Node::new("message")
+                .attr("from", "120363000000000001@g.us")
+                .attr("participant", "15555550102@s.whatsapp.net")
+                .attr("id", id.to_owned())
+        };
+        let cases = [
+            // Direct, no participant: the quoted message is the sender's own.
+            (
+                direct("Q1"),
+                image(Some("ORIG1"), None),
+                Some((
+                    Direction::Incoming,
+                    Some("15555550100@s.whatsapp.net"),
+                    "ORIG1",
+                )),
+            ),
+            // Participant names this account: our outgoing message.
+            (
+                direct("Q2"),
+                image(Some("ORIG2"), Some("15555550999@s.whatsapp.net")),
+                Some((Direction::Outgoing, None, "ORIG2")),
+            ),
+            // Group: the quoted author is a third member, not the replier.
+            (
+                group("Q3"),
+                image(Some("ORIG3"), Some("15555550103@s.whatsapp.net")),
+                Some((
+                    Direction::Incoming,
+                    Some("15555550103@s.whatsapp.net"),
+                    "ORIG3",
+                )),
+            ),
+            // quotedMessage without stanzaId names no target: opaque.
+            (direct("Q4"), image(None, None), None),
+            // An unrepresentable stanza ID stays opaque too.
+            (direct("Q5"), image(Some(""), None), None),
+        ];
+        for (node, payload, _) in &cases {
+            let id = node.get_attr("id").unwrap().as_text().unwrap();
+            let key = format!("received:quoted:{id}");
+            store
+                .write(|tx| {
+                    tx.put_json(
+                        Table::Checkpoints,
+                        key.as_bytes(),
+                        1,
+                        &serde_json::json!({"status":"decrypted", "protobuf":payload}),
+                    )?;
+                    super::super::inbox_events::publish(tx, key.as_bytes(), node, payload)
+                })
+                .unwrap();
+        }
+        let events = store
+            .read_events(&ConsumerId::new("test").unwrap(), EventCursor::START, 10)
+            .unwrap();
+        assert_eq!(events.events.len(), cases.len());
+        for (event, (_, _, expected)) in events.events.iter().zip(&cases) {
+            match expected {
+                None => assert!(matches!(event.event, SyncEvent::UnsupportedMessage(_))),
+                Some((direction, sender, id)) => {
+                    let SyncEvent::NewMessage(message) = &event.event else {
+                        panic!("quoted media event missing")
+                    };
+                    let MessageContent::Media {
+                        quoted: Some(quoted),
+                        ..
+                    } = &message.content
+                    else {
+                        panic!("quote missing")
+                    };
+                    assert_eq!(quoted.key.direction, *direction);
+                    assert_eq!(quoted.key.id.as_str(), *id);
+                    assert_eq!(
+                        quoted.key.sender.as_ref().map(|s| s.to_jid().to_string()),
+                        sender.map(str::to_owned)
+                    );
+                    assert_eq!(quoted.key.chat, message.key.chat);
+                }
+            }
+        }
     }
 
     fn document_fixture() -> crate::signal::image::EncryptedImage {
@@ -1950,6 +2112,7 @@ mod tests {
             reference,
             caption,
             file_name,
+            ..
         } = &message.content
         else {
             panic!("missing document reference")
@@ -1983,12 +2146,21 @@ mod tests {
         let (kind, _) = open(&store, &config, &id).await.unwrap();
         assert_eq!(kind, MediaKind::Document);
         let quoted = document_payload(&fixture, b"\x8a\x01\x03\x0a\x01q");
+        // Edit-parent resolution keeps refusing quotes; projection names the
+        // stanza for the caller to attribute.
         assert!(
             store
-                .write(|tx| event_content(tx, key, &quoted))
+                .write(|tx| event_content(tx, key, &quoted, false))
                 .unwrap()
                 .is_none()
         );
+        assert!(
+            store
+                .write(|tx| event_content(tx, key, &quoted, true))
+                .unwrap()
+                .is_some()
+        );
+        assert_eq!(quote_context(&quoted).unwrap(), Some(("q".into(), None)));
     }
 
     fn video_fixture() -> crate::signal::image::EncryptedImage {

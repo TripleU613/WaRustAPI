@@ -44,7 +44,7 @@ operation's `x-library`.
 | Feature | State | CLI | Evidence | Blockers / next |
 |---|---|---|---|---|
 | Direct text (PN or LID) | live, incl. normal outbox with delivery receipt | `send`, `outbox-send` | [messaging-transport](protocol/messaging-transport.md) | Read/played receipt and handset confirmation for outbox send |
-| Replies / quotes | live | `reply` | [chat-actions](protocol/chat-actions.md) | — |
+| Replies / quotes | live (text); incoming quoted media offline | `reply` | [chat-actions](protocol/chat-actions.md), [quoted-media](protocol/quoted-media.md) | Quoted media sending |
 | Reactions | direct live; group **not rendering** (cause unknown) | `react` | [reactions](protocol/reactions.md), [groups](protocol/groups.md) | Group reaction rendering |
 | Polls and votes | direct live | `poll`, `vote` | [poll-votes](protocol/poll-votes.md) | Group polls unverified |
 | Edits | receive own-device text/caption edits offline; outgoing **modeled** only | — | [message-edit](protocol/message-edit.md), [media-caption-edit](protocol/media-caption-edit.md) | Peer edit window needs property 2983; outbox has no edit sender ([why](protocol/unknowns.md#outgoing-revoke-and-edit-2026-10-13)) |

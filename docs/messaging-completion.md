@@ -1,3 +1,9 @@
+2026-10-13 — **Implemented/offline:** incoming media that quotes another
+message (BWx stanzaId/participant/quotedMessage in contextInfo 17) now projects
+as a media event with `quoted`, attributed by the same rule as text replies,
+instead of an opaque placeholder. Stanza-less quotes stay opaque; edits and
+sending are unchanged; no live sample. [Behavior and tests](protocol/quoted-media.md).
+
 2026-10-13 — **Implemented/offline:** the lab group-send retry answer now
 derives a native hybrid session for a device whose fresh directory row carries
 a verified `pqkey`, via the new `signal::hybrid::selects_pq_key` selector and
@@ -1763,7 +1769,8 @@ captures therefore do not establish live verification of this projection branch.
 
 Media context follow-up: empty/non-quoted context and BWx expiration field 25 now
 project into normal media events with the original timer. Quoted media (a media
-message carrying a quote) remains unsupported; quoted text replies project. Expired media, or timed media without a usable authenticated route
+message carrying a quote) remained unsupported here (superseded 2026-10-13 by
+[quoted media projection](protocol/quoted-media.md)); quoted text replies project. Expired media, or timed media without a usable authenticated route
 timestamp, is excluded from listing/reference resolution/retrieval. Availability
 is rechecked after decrypt/download and before public file export; existing sealed
 references do not bypass expiry. Tests cover fresh/expired/missing timestamps and
