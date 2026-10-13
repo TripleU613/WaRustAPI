@@ -226,9 +226,10 @@ the container's disk was full), and what was done:
   HTTP 200 with a body strict parsing rejects (a negative wait, an uppercase
   token); that request may have sent an email and set a wait, and the resume
   then allowed it again with none. `ComparisonHttpFlow::send` now classifies an
-  unreadable body under an HTTP error status as `registration_refusal_body`,
-  and only that sets the marker (the observed case was HTTP 404 with a
-  non-JSON body). Tests: `lost_email_code_requests_resume_only_once` (now real
+  unreadable body under a definite client-error status (4xx except 408 and
+  429, narrowed by the third review below) as `registration_refusal_body`, and
+  only that sets the marker (the observed case was HTTP 404 with a non-JSON
+  body). Tests: `lost_email_code_requests_resume_only_once` (now real
   404 answers), `an_unreadable_success_answer_to_an_email_request_is_not_resumed`.
 - **L1, L4 and the open history item: a not-sent restore now writes back the
   exact pre-reservation attempt** (state, method, history), with the material
@@ -282,6 +283,50 @@ the container's disk was full), and what was done:
   dangling-symlink store path gets the default file mode; `resend-code
   --method <other>` never builds with the stored lab factory (its frozen method
   is checked), now an exact no-op restore each time.
+
+## Third review (2026-10-13)
+
+A review of `ddc443c` with probe tests (110 existing registration tests and six
+probes, in a scratch clone) found the exact restore sound: between reservation
+and failure the attempt sits in `preparing`/`verifying`, which every command
+refuses; the restore checks id, generation and state; the only fields a
+reservation changes (state, history, `updated_at`, a resend's method) are all
+put back; a handle made valid again is the one current when the request was
+reserved, correctly, since nothing left; nothing reads `updated_at`; records
+saved under the removed edge still load and resume. Findings and what was done:
+
+- **Medium (fixed): an unreadable 5xx or 429 email-code answer still allowed
+  a second email request.** Probed for 504, 502, 500, 429 and 404: each let
+  `resume-email-challenge` and a second `/v2/code method=email_otp` through. A
+  gateway 5xx may follow a backend that already emailed the code; 408 and 429
+  carry a wait we cannot read. Only 4xx other than 408 and 429 is now a
+  definite refusal. Tests: `an_unreadable_uncertain_answer_to_an_email_request_is_not_resumed`
+  (200, 500, 502, 504, 408, 429), `lost_email_code_requests_resume_only_once` (404).
+- **Low (fixed): the same profile id with the default flow could still write
+  a local block over a pending challenge.** A library caller reopening the
+  client without its registration flow gets `UnsupportedFlow` under the same
+  profile id, which `check_profile` does not distinguish. `UnsupportedFlow`
+  now sends nothing and returns `RequestNotSent` when answering a challenge or
+  resuming an existing attempt, so the exact restore keeps it; a fresh attempt
+  is still blocked locally with `ProfileIncomplete`. Test:
+  `the_default_flow_restores_a_challenge_it_did_not_create`.
+- **Low (recorded): preparations counted in older records stay counted.**
+  Records restored before the exact restore (as an elapsed cooldown, or as
+  `unregistered` with history) keep their never-sent `-> preparing` entry, so
+  `code_preparation_count`, and with it the preflight's
+  `client_metrics.attempts` and the lab's `attempts == count + 1` check, stay
+  one high per such restore. Rewriting saved history would fabricate records,
+  so it is left as is; such a store's operator raises `attempts` by that count.
+- **Nits fixed:** a failed restore says the attempt "stays in" its state only
+  when the store write or the material restore failed, not when the attempt
+  changed meanwhile (the restore defaults now use their own error field);
+  OpenAPI states the cooldown's `email_otp_wait` and the new classification;
+  the `accounts new` scan refuses, with a message, past its file bound instead
+  of answering "not configured", reads only regular files through a size
+  limit, and looks beside the account directory's parent only in
+  `signup-json-*` directories (never the whole parent's parent, which may be
+  `$HOME`); `reset` of an unsent `unregistered` attempt and `begin` with
+  another method now say why they refuse.
 
 Not acted on: no test pins reqwest's `is_connect` meaning (the review re-read
 reqwest 0.12.28 / hyper-util 0.1.20: connect errors arise only from the

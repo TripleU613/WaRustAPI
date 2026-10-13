@@ -1,3 +1,13 @@
+2026-10-13 — **Corrected/offline (third registration review):** a review of
+the exact-restore change with probe tests found it sound, and one gap: an
+unreadable 5xx or 429 email-code answer still allowed a second email request.
+Only a definite 4xx (not 408 or 429) now counts as a refusal. The default
+(`UnsupportedFlow`) flow now restores a challenge or existing attempt it did
+not create instead of blocking over it; the `accounts new` scan is bounded and
+refuses past its limit; failed-restore and unsent-attempt refusals say why.
+Recorded: records restored before the exact restore keep one extra counted
+preparation each. [Audit](docs/protocol/registration-safety-audit.md#third-review-2026-10-13).
+
 2026-10-13 — **Implemented/offline (HTTP parity: store inspect):** `serve
 --store-routes` now also answers `GET /v1/store` with the `store inspect`
 report (table counts, generation, registration status, checkpoint kinds), the

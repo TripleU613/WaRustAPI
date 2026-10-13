@@ -497,6 +497,12 @@ fn not_built(error: Error) -> Error {
     }
 }
 
+/// A client-error status that refuses the request outright: 4xx except 408
+/// (request timeout) and 429 (rate limited), whose waits we would lose.
+fn definite_refusal_status(status: u16) -> bool {
+    (400..500).contains(&status) && status != 408 && status != 429
+}
+
 /// What a not-sent restore undoes besides the attempt's state: the one-shot
 /// latch its reservation took, and the request material its `prepare` changed
 /// (registration safety audit review M2, 2026-10-13). A latch is released only
@@ -699,7 +705,7 @@ pub trait RegistrationFlow: Send + Sync + fmt::Debug {
     /// Put back a [`Self::prepared_snapshot`] in the restoring transaction.
     fn restore_prepared(&self, _tx: &mut WriteTx<'_>, _snapshot: Zeroizing<Vec<u8>>) -> Result<()> {
         Err(Error::invalid(
-            "registration_state",
+            "registration_material",
             "flow cannot restore prepared material",
         ))
     }
@@ -772,8 +778,16 @@ impl RegistrationFlow for UnsupportedFlow {
         Ok(())
     }
 
-    fn begin<'a>(&'a self, _attempt: &'a RegistrationAttempt) -> RegistrationFuture<'a> {
+    /// A fresh attempt (only its `unregistered -> preparing` entry) is
+    /// blocked locally. Resuming an existing attempt, which some other flow
+    /// under this profile id created (a cooldown, say), sends nothing and is
+    /// restored as it was, rather than having a local block written over it
+    /// (registration review, 2026-10-13).
+    fn begin<'a>(&'a self, attempt: &'a RegistrationAttempt) -> RegistrationFuture<'a> {
         Box::pin(async move {
+            if attempt.history_len() > 1 {
+                return Err(self.not_sent());
+            }
             Ok(RegistrationState::Blocked {
                 reason: BlockedReason::ProfileIncomplete {
                     missing: self.missing.clone(),
@@ -783,20 +797,29 @@ impl RegistrationFlow for UnsupportedFlow {
         })
     }
 
+    /// This flow never produces a challenge, so a pending one belongs to
+    /// another flow under the same profile id; nothing is sent and the
+    /// challenge is restored, not overwritten by a local block that `reset`
+    /// would then accept (registration review, 2026-10-13).
     fn submit<'a>(
         &'a self,
         _attempt: &'a RegistrationAttempt,
         _handle: &'a ChallengeHandle,
         _answer: &'a Answer,
     ) -> RegistrationFuture<'a> {
-        Box::pin(async move {
-            Ok(RegistrationState::Blocked {
-                reason: BlockedReason::ProfileIncomplete {
-                    missing: self.missing.clone(),
-                },
-            }
-            .into())
-        })
+        Box::pin(async move { Err(self.not_sent()) })
+    }
+}
+
+impl UnsupportedFlow {
+    fn not_sent(&self) -> Error {
+        Error::RequestNotSent(Box::new(Error::invalid(
+            "registration",
+            format!(
+                "this registration flow sends nothing; the profile is missing {:?}",
+                self.missing
+            ),
+        )))
     }
 }
 
@@ -858,7 +881,7 @@ pub trait ComparisonRequestFactory: Send + Sync + fmt::Debug {
     /// See [`RegistrationFlow::restore_prepared`].
     fn restore_prepared(&self, _tx: &mut WriteTx<'_>, _snapshot: Zeroizing<Vec<u8>>) -> Result<()> {
         Err(Error::invalid(
-            "registration_state",
+            "registration_material",
             "factory cannot restore prepared material",
         ))
     }
@@ -936,14 +959,16 @@ impl ComparisonHttpFlow {
         let response = self.transport.send(request).await?;
         let status_code = response.status_code();
         let parsed = response.parse_json().map_err(|error| match error {
-            // An unreadable body under an HTTP error status is a refusal we
-            // cannot read (the email `/v2/challenge` guess got HTTP 404 with a
-            // non-JSON body). Under 2xx the request may have succeeded, so it
-            // keeps the generic, uncertain classification (review M1).
+            // An unreadable body under a definite client-error status is a
+            // refusal we cannot read (the email `/v2/challenge` guess got HTTP
+            // 404 with a non-JSON body). Under 2xx the request may have
+            // succeeded; a 5xx may come from a gateway after the backend acted;
+            // 408 and 429 carry a wait we cannot read. Those keep the generic,
+            // uncertain classification (reviews M1 and its follow-up).
             Error::InvalidInput {
                 field: "registration_response",
                 ..
-            } if !(200..300).contains(&status_code) => Error::invalid(
+            } if definite_refusal_status(status_code) => Error::invalid(
                 "registration_refusal_body",
                 format!("HTTP {status_code} with a body that is not a registration answer"),
             ),
@@ -1514,13 +1539,25 @@ impl RegistrationService {
             })
             .await;
         if let Err(restore) = restored {
-            // The attempt stays `preparing`/`verifying` (refused by every
-            // command, safe); say both what happened and why it is stuck.
+            // A store or material failure leaves the attempt in
+            // `preparing`/`verifying` (refused by every command, safe); an
+            // attempt that changed or vanished meanwhile is not ours to describe.
+            let changed = matches!(
+                restore,
+                Error::InvalidInput {
+                    field: "registration_state",
+                    ..
+                }
+            );
             return Err(Error::invalid(
                 "registration_state",
-                format!(
-                    "{error}; restoring the attempt failed, so it stays in {expected_state}: {restore}"
-                ),
+                if changed {
+                    format!("{error}; the attempt was not restored: {restore}")
+                } else {
+                    format!(
+                        "{error}; restoring the attempt failed, so it stays in {expected_state}: {restore}"
+                    )
+                },
             ));
         }
         Err(error)
@@ -1650,7 +1687,7 @@ impl RegistrationService {
                                     return Err(Error::invalid(
                                         "registration",
                                         format!(
-                                            "this attempt uses {:?}; resume it with that method (the delivery method of a saved attempt is not changed by begin)",
+                                            "this attempt uses {:?}; resume it with that method (begin does not change a saved attempt's delivery method; a lab attempt's method is also frozen in its saved request material)",
                                             existing.method
                                         ),
                                     ));
@@ -2459,6 +2496,12 @@ impl RegistrationService {
                             return Err(Error::invalid(
                                 "registration_state",
                                 "the saved attempt belongs to another profile; it is not reset from this one",
+                            ));
+                        }
+                        if matches!(a.state, RegistrationState::Unregistered) {
+                            return Err(Error::invalid(
+                                "registration_state",
+                                "this attempt has sent nothing yet and keeps its keys; resume it with begin rather than resetting it",
                             ));
                         }
                         if !a.state.is_terminal() {
@@ -3921,60 +3964,114 @@ mod tests {
         }
     }
 
-    /// An email-code request answered with HTTP 200 and a body we cannot read
-    /// may have sent an email: it stays unknown and is never resumed, so the
-    /// request cannot be sent again without the wait it may have set (M1).
+    /// An email-code request answered with a body we cannot read under HTTP
+    /// 2xx, 5xx, 408 or 429 may have sent an email (or carries a wait we
+    /// cannot read): it stays unknown and is never resumed, so the request
+    /// cannot be sent again without the wait it may have set (M1 and its
+    /// follow-up). Only a definite 4xx refusal is resumable (the test above).
     #[tokio::test]
-    async fn an_unreadable_success_answer_to_an_email_request_is_not_resumed() {
+    async fn an_unreadable_uncertain_answer_to_an_email_request_is_not_resumed() {
+        for (status, body) in [
+            // A negative wait fails strict parsing under HTTP 200.
+            (200, br#"{"status":"sent","email_otp_wait":-1}"#.as_slice()),
+            (500, b"".as_slice()),
+            (502, b"<html>bad gateway</html>".as_slice()),
+            (504, b"<html>gateway timeout</html>".as_slice()),
+            (408, b"timeout".as_slice()),
+            (429, b"slow down".as_slice()),
+        ] {
+            let (_d, s) = store();
+            let profile = ProtocolProfile::android_reference().unwrap();
+            let transport = Arc::new(StatusTransport {
+                steps: std::sync::Mutex::new(std::collections::VecDeque::from([
+                    ("/v2/code", 200, br#"{"status":"sent"}"#.as_slice()),
+                    (
+                        "/v2/register",
+                        200,
+                        br#"{"status":"fail","reason":"challenge","second_factor_methods":["wa_old"]}"#
+                            .as_slice(),
+                    ),
+                    ("/v2/code", status, body),
+                ])),
+            });
+            let service = RegistrationService::new(
+                s.clone(),
+                &profile,
+                Arc::new(ComparisonHttpFlow::new(
+                    Arc::new(ComparisonRequests),
+                    transport.clone(),
+                )),
+            );
+            let RegistrationStep::Action(RequiredAction::EnterCode(h)) =
+                service.begin(phone(), ChallengeMethod::Sms).await.unwrap()
+            else {
+                panic!("expected code")
+            };
+            service
+                .submit(h, Answer::Code(Zeroizing::new("123456".into())))
+                .await
+                .unwrap();
+            let RegistrationStep::Action(RequiredAction::RequestEmailCode(handle)) =
+                service.resume_email_challenge().await.unwrap()
+            else {
+                panic!("expected the email challenge")
+            };
+            assert!(service.request_email_code(handle, None).await.is_err());
+            assert!(
+                matches!(
+                    service.current().await.unwrap().unwrap().state,
+                    RegistrationState::RegistrationOutcomeUnknown { .. }
+                ),
+                "HTTP {status}"
+            );
+            let error = service.resume_email_challenge().await.unwrap_err();
+            assert!(
+                error.to_string().contains("can resume"),
+                "HTTP {status}: {error}"
+            );
+            assert!(transport.steps.lock().unwrap().is_empty());
+        }
+    }
+
+    /// The default flow never produces a challenge; answering one that
+    /// another flow left under the same profile id sends nothing and keeps
+    /// the challenge, instead of writing a local block over it.
+    #[tokio::test]
+    async fn the_default_flow_restores_a_challenge_it_did_not_create() {
         let (_d, s) = store();
         let profile = ProtocolProfile::android_reference().unwrap();
-        let transport = Arc::new(StatusTransport {
-            steps: std::sync::Mutex::new(std::collections::VecDeque::from([
-                ("/v2/code", 200, br#"{"status":"sent"}"#.as_slice()),
-                (
-                    "/v2/register",
-                    200,
-                    br#"{"status":"fail","reason":"challenge","second_factor_methods":["wa_old"]}"#
-                        .as_slice(),
-                ),
-                // A negative wait fails strict parsing under HTTP 200.
-                (
-                    "/v2/code",
-                    200,
-                    br#"{"status":"sent","email_otp_wait":-1}"#.as_slice(),
-                ),
-            ])),
-        });
-        let service = RegistrationService::new(
+        let real = RegistrationService::new(
             s.clone(),
             &profile,
             Arc::new(ComparisonHttpFlow::new(
                 Arc::new(ComparisonRequests),
-                transport.clone(),
+                Arc::new(ComparisonTransport {
+                    responses: std::sync::Mutex::new(std::collections::VecDeque::from([(
+                        "/v2/code",
+                        br#"{"status":"sent"}"#.as_slice(),
+                    )])),
+                }),
             )),
         );
-        let RegistrationStep::Action(RequiredAction::EnterCode(h)) =
-            service.begin(phone(), ChallengeMethod::Sms).await.unwrap()
+        let RegistrationStep::Action(RequiredAction::EnterCode(handle)) =
+            real.begin(phone(), ChallengeMethod::Sms).await.unwrap()
         else {
             panic!("expected code")
         };
-        service
-            .submit(h, Answer::Code(Zeroizing::new("123456".into())))
+        let saved = real.current().await.unwrap().unwrap();
+        let default = RegistrationService::new(
+            s.clone(),
+            &profile,
+            Arc::new(UnsupportedFlow {
+                missing: vec!["registration".into()],
+            }),
+        );
+        let error = default
+            .submit(handle, Answer::Code(Zeroizing::new("123456".into())))
             .await
-            .unwrap();
-        let RegistrationStep::Action(RequiredAction::RequestEmailCode(handle)) =
-            service.resume_email_challenge().await.unwrap()
-        else {
-            panic!("expected the email challenge")
-        };
-        assert!(service.request_email_code(handle, None).await.is_err());
-        assert!(matches!(
-            service.current().await.unwrap().unwrap().state,
-            RegistrationState::RegistrationOutcomeUnknown { .. }
-        ));
-        let error = service.resume_email_challenge().await.unwrap_err();
-        assert!(error.to_string().contains("can resume"), "{error}");
-        assert!(transport.steps.lock().unwrap().is_empty());
+            .unwrap_err();
+        assert!(matches!(error, Error::RequestNotSent(_)), "{error}");
+        assert_eq!(default.current().await.unwrap().unwrap(), saved);
     }
 
     #[tokio::test]

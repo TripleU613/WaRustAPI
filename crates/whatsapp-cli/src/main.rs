@@ -1175,7 +1175,7 @@ fn accounts_new(
     // One number, one store: a second profile for a configured number would
     // start a fresh identity beside a store that may be cooling down or hold an
     // uncertain outcome (registration safety audit, 2026-10-13).
-    if let Some(existing) = number_configured_by(&cli.profiles_dir, &account_dir, &phone) {
+    if let Some(existing) = number_configured_by(&cli.profiles_dir, &account_dir, &phone)? {
         return Err(Error::invalid(
             "accounts",
             format!(
@@ -1305,41 +1305,61 @@ fn accounts_new(
 /// Which saved profile, or which private config near the new account
 /// directory, already configures `phone`, compared canonically (separators
 /// ignored). Besides the profiles it reads every `*.json` file in the account
-/// directory's siblings and in its parent's siblings, so `lab/accounts/*` and
-/// `lab/signup-json-*` configs used only with `--config` are seen whatever
-/// their file name (`request.json`, `request-corrected.json`, `signup.json`;
-/// registration review L7). A config anywhere else is not seen. Each file is
-/// read on its own, so one malformed or unreadable file does not hide the
-/// others; files over the config size limit are skipped, and the scan stops
-/// after a fixed number of files. Nothing about the number is printed.
+/// directory's siblings and in the `signup-json-*` directories beside its
+/// parent, so `lab/accounts/*` and `lab/signup-json-*` configs used only with
+/// `--config` are seen whatever their file name (`request.json`,
+/// `request-corrected.json`, `signup.json`; registration review L7). A config
+/// anywhere else is not seen. Each file is read on its own, so one malformed
+/// or unreadable file does not hide the others; only regular files are read,
+/// each at most the config size limit. More files than the scan bound is
+/// refused rather than answered "not configured". Nothing about the number is
+/// printed.
 fn number_configured_by(
     profiles_dir: &std::path::Path,
     account_dir: &std::path::Path,
     phone: &PhoneNumber,
-) -> Option<String> {
-    const MAX_SCANNED_FILES: usize = 4096;
+) -> Result<Option<String>, Error> {
+    use std::io::Read as _;
+    const MAX_SCANNED: usize = 4096;
+    let limit = whatsapp_api::registration::request::MAX_CONFIG_BYTES;
     let configures = |path: &std::path::Path| -> Option<()> {
-        let size = std::fs::metadata(path).ok()?.len();
-        if size > whatsapp_api::registration::request::MAX_CONFIG_BYTES {
+        if !std::fs::metadata(path).ok()?.is_file() {
             return None;
         }
-        let text = std::fs::read_to_string(path).ok()?;
+        let mut text = String::new();
+        std::fs::File::open(path)
+            .ok()?
+            .take(limit.saturating_add(1))
+            .read_to_string(&mut text)
+            .ok()?;
+        if text.len() as u64 > limit {
+            return None;
+        }
         let config: serde_json::Value = serde_json::from_str(&text).ok()?;
         let cc = u16::try_from(config["phone"]["country_code"].as_u64()?).ok()?;
         let saved = PhoneNumber::new(cc, config["phone"]["national_number"].as_str()?).ok()?;
         (&saved == phone).then_some(())
     };
-    let entries = |dir: &std::path::Path| -> Vec<PathBuf> {
-        std::fs::read_dir(dir)
-            .into_iter()
-            .flatten()
-            .flatten()
-            .map(|entry| entry.path())
-            .collect()
+    let mut seen = 0usize;
+    let mut entries = |dir: &std::path::Path| -> Result<Vec<PathBuf>, Error> {
+        let mut out = Vec::new();
+        for entry in std::fs::read_dir(dir).into_iter().flatten().flatten() {
+            seen += 1;
+            if seen > MAX_SCANNED {
+                return Err(Error::invalid(
+                    "accounts",
+                    format!(
+                        "more than {MAX_SCANNED} files near the account directory; cannot check that this number has no other store, so nothing is created (use a less crowded directory)"
+                    ),
+                ));
+            }
+            out.push(entry.path());
+        }
+        Ok(out)
     };
     let is_json = |path: &std::path::Path| path.extension().is_some_and(|ext| ext == "json");
-    for path in entries(profiles_dir) {
-        if !is_json(&path) {
+    for path in entries(profiles_dir)? {
+        if !is_json(&path) || !path.is_file() {
             continue;
         }
         let Some(name) = path.file_stem().and_then(|stem| stem.to_str()) else {
@@ -1349,33 +1369,34 @@ fn number_configured_by(
             && let Some(config) = profile.config.as_deref()
             && configures(config).is_some()
         {
-            return Some(format!("profile `{name}`"));
+            return Ok(Some(format!("profile `{name}`")));
         }
     }
-    // Configs used with --config but not referenced by any profile.
+    // Configs used with --config but not referenced by any profile: the
+    // account directory's siblings, and the lab's `signup-json-*` directories
+    // beside its parent (never the whole grandparent, which may be $HOME).
     let parent = account_dir.parent();
-    let grandparent = parent.and_then(std::path::Path::parent);
-    let mut scanned = 0;
-    for base in [parent, grandparent].into_iter().flatten() {
-        for dir in entries(base) {
-            if !dir.is_dir() {
-                continue;
-            }
-            for file in entries(&dir) {
-                if scanned >= MAX_SCANNED_FILES {
-                    return None;
-                }
-                if !is_json(&file) || !file.is_file() {
-                    continue;
-                }
-                scanned += 1;
-                if configures(&file).is_some() {
-                    return Some(file.display().to_string());
-                }
+    let mut dirs: Vec<PathBuf> = Vec::new();
+    if let Some(parent) = parent {
+        dirs.extend(entries(parent)?.into_iter().filter(|dir| dir.is_dir()));
+        if let Some(grandparent) = parent.parent() {
+            dirs.extend(entries(grandparent)?.into_iter().filter(|dir| {
+                dir.is_dir()
+                    && dir
+                        .file_name()
+                        .and_then(|name| name.to_str())
+                        .is_some_and(|name| name.starts_with("signup-json"))
+            }));
+        }
+    }
+    for dir in dirs {
+        for file in entries(&dir)? {
+            if is_json(&file) && configures(&file).is_some() {
+                return Ok(Some(file.display().to_string()));
             }
         }
     }
-    None
+    Ok(None)
 }
 
 fn accounts_status(cli: &Cli, name: Option<&str>) -> Result<(), Error> {
@@ -2923,12 +2944,14 @@ mod accounts_tests {
         let accounts = temp_dir.path().join("accounts");
         let configured = PhoneNumber::new(1, "555-123-4567").unwrap();
         assert_eq!(
-            number_configured_by(&profiles_dir, &accounts.join("new"), &configured).as_deref(),
+            number_configured_by(&profiles_dir, &accounts.join("new"), &configured)
+                .unwrap()
+                .as_deref(),
             Some("profile `existing`")
         );
         let other = PhoneNumber::new(1, "5557654321").unwrap();
         assert_eq!(
-            number_configured_by(&profiles_dir, &accounts.join("new"), &other),
+            number_configured_by(&profiles_dir, &accounts.join("new"), &other).unwrap(),
             None
         );
         // A config used only with --config, in a sibling account directory.
@@ -2940,12 +2963,13 @@ mod accounts_tests {
         .unwrap();
         assert!(
             number_configured_by(&profiles_dir, &accounts.join("new"), &other)
+                .unwrap()
                 .is_some_and(|by| by.ends_with("request.json"))
         );
         // Any file name, and a lab directory beside `accounts` (review L7).
         let third = PhoneNumber::new(1, "5550100003").unwrap();
         assert_eq!(
-            number_configured_by(&profiles_dir, &accounts.join("new"), &third),
+            number_configured_by(&profiles_dir, &accounts.join("new"), &third).unwrap(),
             None
         );
         std::fs::create_dir_all(temp_dir.path().join("signup-json-x")).unwrap();
@@ -2956,6 +2980,7 @@ mod accounts_tests {
         .unwrap();
         assert!(
             number_configured_by(&profiles_dir, &accounts.join("new"), &third)
+                .unwrap()
                 .is_some_and(|by| by.ends_with("request-corrected.json"))
         );
         let cli = Cli {
