@@ -91,11 +91,25 @@ so the CLI can embed and serve it without extra dependencies).
 `experimental-transport`) adds read-only, redacted store inspections for the
 account selected by `--store`/`--account`/`--key-env`: `GET /v1/receipts`,
 `/v1/prekeys`, `/v1/outbox/suspended`, `/v1/actions` (list form only),
-`/v1/identity-conflicts`, `/v1/outbox/group-preparations` and
-`/v1/outbox/{local_id}/versions` (malformed ID 400 before the store opens,
-unknown ID 404 `unknown_local_id`). Query strings are refused with 400, so
-CLI-only options are never silently ignored. They are declared with
-`x-transport: ["cli", "http"]` and the `storeBearer` security scheme.
+`/v1/identity-conflicts`, `/v1/outbox/group-preparations`,
+`/v1/diagnostics/own-lid` and `/v1/outbox/{local_id}/versions` (malformed ID
+400 before the store opens, unknown ID 404 `unknown_local_id`). These refuse any
+query string with 400, so CLI-only options are never silently ignored.
+
+Three counts-only group inspections take exactly one query parameter, as the
+OpenAPI document names it: `GET /v1/groups/receipts?request_id=<id>`,
+`/v1/groups/key-queries?request_id=<id>` and
+`/v1/groups/refresh-status?id=<action id>`. The value must satisfy the
+library's ID rule (ASCII alphanumerics and `-_.:`, at most 128 bytes) and is
+not percent-decoded; a missing, renamed, repeated, empty, encoded or extra
+parameter is 400 before the store opens. Nothing saved under the ID answers
+200 `null`, as the CLI prints. A key-query record the summary cannot count (a
+legacy outcome without a frozen plan, or a damaged row), and own-LID sources
+that disagree or are malformed, answer 422 `saved_state_unsupported` with the
+library's fixed reason (never an address); other read failures stay 500.
+
+All store routes are declared with `x-transport: ["cli", "http"]` and the
+`storeBearer` security scheme.
 
 ```sh
 whatsapp-cli --store acct.redb --account me --key-env WA_KEY \
@@ -110,8 +124,8 @@ opens it per request. The file is removed on Ctrl-C, SIGTERM or SIGHUP; a
 killed or crashed server can leave it behind, still unreadable to others but
 useless, and that path is then refused until you delete it. Answers: 404
 `store_routes_disabled` when not enabled, 401 with `WWW-Authenticate: Bearer`
-for a missing or wrong token (the scheme name is case-insensitive), 400 for any
-query string, 405 for other methods, 503 `store_unavailable` only while another
+for a missing or wrong token (the scheme name is case-insensitive), 400 for a
+query string the route does not take, 405 for other methods, 503 `store_unavailable` only while another
 command holds the store, 500 `store_read_failed` for any other read failure
 (details only in the server log).
 

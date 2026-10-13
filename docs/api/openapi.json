@@ -4452,7 +4452,7 @@
           "Service"
         ],
         "summary": "Serve the local HTTP control plane",
-        "description": "Returns the service index with available endpoints. Store routes are listed only when the server was started with --store-routes. `--store-routes` (requires `--token-file`, a new path) also serves read-only, redacted store inspections (/v1/receipts, /v1/prekeys, /v1/outbox/suspended, /v1/actions, /v1/identity-conflicts, /v1/outbox/group-preparations, /v1/outbox/{local_id}/versions) for the selected account: loopback only even with --allow-non-loopback, bearer-token authenticated, store opened per request, nothing sent. The token goes to the new mode-0600 file only, never stdout or logs, and the file is removed on Ctrl-C, SIGTERM or SIGHUP. Clients should use 127.0.0.1 rather than localhost. Default serve remains store-less.",
+        "description": "Returns the service index with available endpoints. Store routes are listed only when the server was started with --store-routes. `--store-routes` (requires `--token-file`, a new path) also serves read-only, redacted store inspections (/v1/receipts, /v1/prekeys, /v1/outbox/suspended, /v1/actions, /v1/identity-conflicts, /v1/outbox/group-preparations, /v1/outbox/{local_id}/versions, /v1/diagnostics/own-lid, and with one ID query parameter /v1/groups/receipts, /v1/groups/key-queries, /v1/groups/refresh-status; the index lists the parameterized ones as path?name={name}) for the selected account: loopback only even with --allow-non-loopback, bearer-token authenticated, store opened per request, nothing sent. The token goes to the new mode-0600 file only, never stdout or logs, and the file is removed on Ctrl-C, SIGTERM or SIGHUP. Clients should use 127.0.0.1 rather than localhost. Default serve remains store-less.",
         "operationId": "serveRoot",
         "x-cli": "whatsapp-cli serve",
         "x-transport": [
@@ -8852,7 +8852,7 @@
           "Receipts"
         ],
         "summary": "Show queued read, played and retry receipts and their outcomes (offline, redacted)",
-        "description": "Lists the durable receipt queue, including automatic decryption-failure retries. Status is pending, outcome_unknown, server_acknowledged or refused. A retry ACK confirms the request was accepted, not that a replacement message arrived or decrypted. Includes message IDs, but no recipients or message content. CLI only; no HTTP route is served. Retry reservation and receipt ACK matching now distinguish user/server/agent/device independently of JID wire-encoding kind. New canonical retry reservations first probe all historical encoding-kind selectors atomically; pending, unknown, refused and acknowledged rows keep their selectors, wire and outcomes and block another reservation. Outbound encoding and count-1 once-only policy are unchanged. ACK class/type/message ID and routing qualifiers remain enforced; foreign agent/device/server cannot settle a receipt. Historical duplicate rows are not merged or assigned guessed outcomes. This is a local guard correction; actual live encoding changes and APK internal duplicate policy remain unverified. Evidence docs/protocol/messaging-transport.md#retry-reservation-identity-across-jid-encodings-2026-10-07. New ordinary primary LID messages use their actual primary namespace for inbox/event/read lookup even without sender_pn or username. Optional valid phone metadata is saved only after authentication. Existing PN-keyed records remain in place: a bounded lookup requires their original authenticated capture to match the actual primary LID, message ID and original PN alias; ambiguity or missing legacy route evidence refuses locally. Consumed view-once rows with matching original route proof remain duplicates without plaintext restoration or new read queuing. Redelivery never reattributes an event or advances its ratchet. Historical projection and read queuing retain the selected stored key; incoming poll votes can resolve a retained PN poll without changing its original message key. Companion, group and own-peer routes retain their separate guards. No new HTTP route, command, flag, alias guessing, pin adoption or retry/reset authority is introduced. Source and live limits: docs/protocol/peer-identity.md#primary-lid-receive-and-legacy-record-stability-2026-10-09. Group read/retry ACKs now require the same participant attribute presence and valid logical participant address as the saved receipt. Incomplete success/error ACKs retain outcome_unknown across restart and never enable replay. Direct ACKs with extra participants remain refused. APK 37.71 Cb1 nullable equality and offline regression evidence: docs/protocol/receipt-ack-correlation.md. No new live validation or HTTP route. Offline inspection now rejects missing/invalid saved wire bytes, undecodable wire, non-receipt nodes and absent/non-text/empty IDs with fixed redacted local diagnostics rather than truncating/dropping bytes or showing an empty ID. A malformed row fails the list; no partial result, repair, reservation/status change or replay occurs. Successful response shape is unchanged; x-live=false and CLI-only remain accurate. Evidence docs/protocol/receipt-ack-correlation.md#saved-receipt-inspection-diagnostics-2026-10-09. Outgoing read batching (APK 37.71): reservation groups matching plain read routes into a root ID plus list/item extra IDs, up to the existing sixteen per-message reservation bound. Original per-ID selectors and saved wire bytes stay intact. All selected rows become outcome_unknown atomically before socket writing and never replay after uncertainty. A matching root ACK settles every batch member; extra-ID, wrong-route/type/participant and repeated terminal ACKs cannot settle it. Direct companion destinations and group member devices remain distinct; played/retry and other route metadata stay separate. Queue counts and offline outcomes remain per message ID. Optional encrypted batch_ack_id is ACK correlation only, not another send authority; corrupt correlation returns a fixed diagnostic and rolls back. No new read/read-self policy or route is added. Fresh live multi-ID ACK remains unverified. Evidence docs/protocol/read-receipt-batching.md. Newly queued reads also follow the native to/id/type/participant attribute order; historical saved wire is unchanged. Once-only retry reservations also probe the sender's other PN/LID spelling (same device/agent) from the stanza's sender_pn/sender_lid or participant_pn/participant_lid attributes and the authenticated LID-to-PN mapping, so a redelivery under the other address cannot queue a second retry; an unmapped address without alias attributes remains a separate request, and an invalid saved mapping refuses. Evidence docs/protocol/messaging-transport.md#retry-once-only-across-pn-and-lid-2026-10-13. HTTP (2026-10-13): served read-only by `whatsapp-cli serve --store-routes --token-file <new path>` (experimental-transport build), loopback only, with `Authorization: Bearer <token>`; the store is opened per request with the serve process's --store/--account/--key-env, so it answers 503 store_unavailable only while another command (for example listen) holds the store, and 500 store_read_failed for any other read failure; a command starting during a request can fail to open the store and must be rerun. HEAD is also served. The parameters listed here are CLI flags; over HTTP the store comes from the serve process. peer_ticket is an unsalted address hash (guessable for phone numbers); treat responses as account data. Same library call and redacted JSON as the CLI. Disabled store routes answer 404 store_routes_disabled; a missing or wrong token 401 with WWW-Authenticate: Bearer; any query string 400.",
+        "description": "Lists the durable receipt queue, including automatic decryption-failure retries. Status is pending, outcome_unknown, server_acknowledged or refused. A retry ACK confirms the request was accepted, not that a replacement message arrived or decrypted. Includes message IDs, but no recipients or message content. Retry reservation and receipt ACK matching now distinguish user/server/agent/device independently of JID wire-encoding kind. New canonical retry reservations first probe all historical encoding-kind selectors atomically; pending, unknown, refused and acknowledged rows keep their selectors, wire and outcomes and block another reservation. Outbound encoding and count-1 once-only policy are unchanged. ACK class/type/message ID and routing qualifiers remain enforced; foreign agent/device/server cannot settle a receipt. Historical duplicate rows are not merged or assigned guessed outcomes. This is a local guard correction; actual live encoding changes and APK internal duplicate policy remain unverified. Evidence docs/protocol/messaging-transport.md#retry-reservation-identity-across-jid-encodings-2026-10-07. New ordinary primary LID messages use their actual primary namespace for inbox/event/read lookup even without sender_pn or username. Optional valid phone metadata is saved only after authentication. Existing PN-keyed records remain in place: a bounded lookup requires their original authenticated capture to match the actual primary LID, message ID and original PN alias; ambiguity or missing legacy route evidence refuses locally. Consumed view-once rows with matching original route proof remain duplicates without plaintext restoration or new read queuing. Redelivery never reattributes an event or advances its ratchet. Historical projection and read queuing retain the selected stored key; incoming poll votes can resolve a retained PN poll without changing its original message key. Companion, group and own-peer routes retain their separate guards. No new HTTP route, command, flag, alias guessing, pin adoption or retry/reset authority is introduced. Source and live limits: docs/protocol/peer-identity.md#primary-lid-receive-and-legacy-record-stability-2026-10-09. Group read/retry ACKs now require the same participant attribute presence and valid logical participant address as the saved receipt. Incomplete success/error ACKs retain outcome_unknown across restart and never enable replay. Direct ACKs with extra participants remain refused. APK 37.71 Cb1 nullable equality and offline regression evidence: docs/protocol/receipt-ack-correlation.md. No new live validation or HTTP route. Offline inspection now rejects missing/invalid saved wire bytes, undecodable wire, non-receipt nodes and absent/non-text/empty IDs with fixed redacted local diagnostics rather than truncating/dropping bytes or showing an empty ID. A malformed row fails the list; no partial result, repair, reservation/status change or replay occurs. Successful response shape is unchanged; x-live=false remains accurate. Evidence docs/protocol/receipt-ack-correlation.md#saved-receipt-inspection-diagnostics-2026-10-09. Outgoing read batching (APK 37.71): reservation groups matching plain read routes into a root ID plus list/item extra IDs, up to the existing sixteen per-message reservation bound. Original per-ID selectors and saved wire bytes stay intact. All selected rows become outcome_unknown atomically before socket writing and never replay after uncertainty. A matching root ACK settles every batch member; extra-ID, wrong-route/type/participant and repeated terminal ACKs cannot settle it. Direct companion destinations and group member devices remain distinct; played/retry and other route metadata stay separate. Queue counts and offline outcomes remain per message ID. Optional encrypted batch_ack_id is ACK correlation only, not another send authority; corrupt correlation returns a fixed diagnostic and rolls back. No new read/read-self policy or route is added. Fresh live multi-ID ACK remains unverified. Evidence docs/protocol/read-receipt-batching.md. Newly queued reads also follow the native to/id/type/participant attribute order; historical saved wire is unchanged. Once-only retry reservations also probe the sender's other PN/LID spelling (same device/agent) from the stanza's sender_pn/sender_lid or participant_pn/participant_lid attributes and the authenticated LID-to-PN mapping, so a redelivery under the other address cannot queue a second retry; an unmapped address without alias attributes remains a separate request, and an invalid saved mapping refuses. Evidence docs/protocol/messaging-transport.md#retry-once-only-across-pn-and-lid-2026-10-13. HTTP (2026-10-13): served read-only by `whatsapp-cli serve --store-routes --token-file <new path>` (experimental-transport build), loopback only, with `Authorization: Bearer <token>`; the store is opened per request with the serve process's --store/--account/--key-env, so it answers 503 store_unavailable only while another command (for example listen) holds the store, and 500 store_read_failed for any other read failure; a command starting during a request can fail to open the store and must be rerun. HEAD is also served. The parameters listed here are CLI flags; over HTTP the store comes from the serve process. peer_ticket is an unsalted address hash (guessable for phone numbers); treat responses as account data. Same library call and redacted JSON as the CLI. Disabled store routes answer 404 store_routes_disabled; a missing or wrong token 401 with WWW-Authenticate: Bearer; any query string 400.",
         "operationId": "getReceipts",
         "x-cli": "whatsapp-cli receipts",
         "x-transport": [
@@ -11935,7 +11935,7 @@
           "Account Safety"
         ],
         "summary": "Inspect durable peer identity conflict observations offline",
-        "description": "Lists first-seen SHA-256 public-key fingerprint differences observed in incoming prekey envelopes. These observations are unauthenticated: they do not establish a legitimate identity change, replace a pin, advance a session, clear verification, or authorize sending. The peer address is represented by a local SHA-256 selector. Replay/redelivery of the same peer/pinned/observed combination preserves the original timestamp. CLI only; no HTTP route exists. HTTP (2026-10-13): served read-only by `whatsapp-cli serve --store-routes --token-file <new path>` (experimental-transport build), loopback only, with `Authorization: Bearer <token>`; the store is opened per request with the serve process's --store/--account/--key-env, so it answers 503 store_unavailable only while another command (for example listen) holds the store, and 500 store_read_failed for any other read failure; a command starting during a request can fail to open the store and must be rerun. HEAD is also served. The parameters listed here are CLI flags; over HTTP the store comes from the serve process. peer_ticket is an unsalted address hash (guessable for phone numbers); treat responses as account data. Same library call and redacted JSON as the CLI. Disabled store routes answer 404 store_routes_disabled; a missing or wrong token 401 with WWW-Authenticate: Bearer; any query string 400 (CLI-only options are not served).",
+        "description": "Lists first-seen SHA-256 public-key fingerprint differences observed in incoming prekey envelopes. These observations are unauthenticated: they do not establish a legitimate identity change, replace a pin, advance a session, clear verification, or authorize sending. The peer address is represented by a local SHA-256 selector. Replay/redelivery of the same peer/pinned/observed combination preserves the original timestamp. HTTP (2026-10-13): served read-only by `whatsapp-cli serve --store-routes --token-file <new path>` (experimental-transport build), loopback only, with `Authorization: Bearer <token>`; the store is opened per request with the serve process's --store/--account/--key-env, so it answers 503 store_unavailable only while another command (for example listen) holds the store, and 500 store_read_failed for any other read failure; a command starting during a request can fail to open the store and must be rerun. HEAD is also served. The parameters listed here are CLI flags; over HTTP the store comes from the serve process. peer_ticket is an unsalted address hash (guessable for phone numbers); treat responses as account data. Same library call and redacted JSON as the CLI. Disabled store routes answer 404 store_routes_disabled; a missing or wrong token 401 with WWW-Authenticate: Bearer; any query string 400 (CLI-only options are not served).",
         "operationId": "getIdentityConflicts",
         "x-cli": "whatsapp-cli identity-conflicts",
         "x-transport": [
@@ -12053,7 +12053,7 @@
           "Outbox"
         ],
         "summary": "Inspect queued sends suspended by changed peer identities (offline, redacted)",
-        "description": "Lists identity-mismatch suspensions without contacts, keys, payloads or network requests. Intents remain queued under their original local IDs; the saved key-query reply and reservation remain encrypted. The static reason distinguishes identity_changed from invalid_signed_bundle and own_identity_pinned. Inspection performs no replacement or replay; selected outbox-send can resolve a valid saved reply under the independent outgoing policy. This contract is implemented by the CLI only. Since 2026-10-13 a reply carrying PQ material the hybrid branch cannot use also suspends its intent here, with reason hybrid_admission_unsupported (companion, attestation-bearing, malformed identity_auth or own identity) or invalid_hybrid_bundle (KEM signature, encoding or shape); the exact reply is kept encrypted and only identity_changed is resumable. Evidence docs/protocol/hybrid-outbox.md. HTTP (2026-10-13): served read-only by `whatsapp-cli serve --store-routes --token-file <new path>` (experimental-transport build), loopback only, with `Authorization: Bearer <token>`; the store is opened per request with the serve process's --store/--account/--key-env, so it answers 503 store_unavailable only while another command (for example listen) holds the store, and 500 store_read_failed for any other read failure; a command starting during a request can fail to open the store and must be rerun. HEAD is also served. The parameters listed here are CLI flags; over HTTP the store comes from the serve process. peer_ticket is an unsalted address hash (guessable for phone numbers); treat responses as account data. Same library call and redacted JSON as the CLI. Disabled store routes answer 404 store_routes_disabled; a missing or wrong token 401 with WWW-Authenticate: Bearer; any query string 400.",
+        "description": "Lists identity-mismatch suspensions without contacts, keys, payloads or network requests. Intents remain queued under their original local IDs; the saved key-query reply and reservation remain encrypted. The static reason distinguishes identity_changed from invalid_signed_bundle and own_identity_pinned. Inspection performs no replacement or replay; selected outbox-send can resolve a valid saved reply under the independent outgoing policy. Since 2026-10-13 a reply carrying PQ material the hybrid branch cannot use also suspends its intent here, with reason hybrid_admission_unsupported (companion, attestation-bearing, malformed identity_auth or own identity) or invalid_hybrid_bundle (KEM signature, encoding or shape); the exact reply is kept encrypted and only identity_changed is resumable. Evidence docs/protocol/hybrid-outbox.md. HTTP (2026-10-13): served read-only by `whatsapp-cli serve --store-routes --token-file <new path>` (experimental-transport build), loopback only, with `Authorization: Bearer <token>`; the store is opened per request with the serve process's --store/--account/--key-env, so it answers 503 store_unavailable only while another command (for example listen) holds the store, and 500 store_read_failed for any other read failure; a command starting during a request can fail to open the store and must be rerun. HEAD is also served. The parameters listed here are CLI flags; over HTTP the store comes from the serve process. peer_ticket is an unsalted address hash (guessable for phone numbers); treat responses as account data. Same library call and redacted JSON as the CLI. Disabled store routes answer 404 store_routes_disabled; a missing or wrong token 401 with WWW-Authenticate: Bearer; any query string 400.",
         "operationId": "outboxSuspended",
         "x-cli": "whatsapp-cli outbox-suspended",
         "x-transport": [
@@ -12776,11 +12776,12 @@
           "Groups"
         ],
         "summary": "Inspect one saved batch projection outcome",
-        "description": "Offline counts-only inspection of the encrypted RefreshOutcome for an existing group-refresh action ID. Prints complete, truncated, forbidden, not_found counts, automatic_follow_up, round, next_action (or null), pending count and exhausted. JSON null means no report is saved; inspect actions for pending/refused/unapplied state or a historical completed batch. Does not queue a query, backfill old markers, print group IDs/sizes or claim every group is refreshed. Per-group 403/404 preserve snapshots; size-only groups remain pending; opt-in chains can stop at round 2 with exhausted=true. Inspect next_action separately for its own outcome. Historical reports lacking continuation metadata default to no automatic continuation. Mixed/outcome and continuation behavior is offline tested, not live verified. CLI-only; no HTTP route exists.",
+        "description": "Offline counts-only inspection of the encrypted RefreshOutcome for an existing group-refresh action ID. Prints complete, truncated, forbidden, not_found counts, automatic_follow_up, round, next_action (or null), pending count and exhausted. JSON null means no report is saved; inspect actions for pending/refused/unapplied state or a historical completed batch. Does not queue a query, backfill old markers, print group IDs/sizes or claim every group is refreshed. Per-group 403/404 preserve snapshots; size-only groups remain pending; opt-in chains can stop at round 2 with exhausted=true. Inspect next_action separately for its own outcome. Historical reports lacking continuation metadata default to no automatic continuation. Mixed/outcome and continuation behavior is offline tested, not live verified. HTTP (2026-10-13): served read-only by `whatsapp-cli serve --store-routes --token-file <new path>` (experimental-transport build), loopback only, with `Authorization: Bearer <token>`; the store is opened per request with the serve process's --store/--account/--key-env, so it answers 503 store_unavailable only while another command (for example listen) holds the store, and 500 store_read_failed for any other read failure; a command starting during a request can fail to open the store and must be rerun. HEAD is also served. Same library call and redacted JSON as the CLI. Disabled store routes answer 404 store_routes_disabled; a missing or wrong token 401 with WWW-Authenticate: Bearer. Over HTTP the store comes from the serve process and the only accepted query is exactly id=<action id>, unencoded, satisfying the library ID rule (ASCII alphanumerics and -_.:, at most 128 bytes); a missing, renamed, repeated, empty, percent-encoded or additional parameter answers 400 before the store opens. An unknown id answers 200 null. Group addresses and sizes are not in the response; next_action is a local action ID.",
         "operationId": "groupRefreshStatus",
         "x-cli": "whatsapp-cli group refresh-status",
         "x-transport": [
-          "cli"
+          "cli",
+          "http"
         ],
         "x-live": false,
         "parameters": [
@@ -12866,10 +12867,76 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Missing, malformed or additional query parameter (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or wrong bearer token (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Store routes not enabled on this server (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Only GET and HEAD are served (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The store could not be read for a reason other than being in use (HTTP only); details only in the server log",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Another command holds the store (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         },
         "x-library": [
-          "whatsapp_api::transport::groups::refresh_outcome"
+          "whatsapp_api::transport::groups::refresh_outcome",
+          "whatsapp_cli::http::serve"
+        ],
+        "security": [
+          {
+            "storeBearer": []
+          }
         ]
       }
     },
@@ -13304,11 +13371,12 @@
           "Groups"
         ],
         "summary": "Inspect per-device receipts for a saved comparison group send",
-        "description": "Offline, redacted counts from the original saved message request_id. Returns JSON null when no group-send reservation exists. addressed_devices is null when a historical out-of-band wire has no frozen targets. Delivery/read/played counts are independent per actual participant device and never establish every member received the message. Preserves the recognized send outcome; a recipient receipt does not fabricate a server ACK or reset uncertainty. Newly prepared comparison group sends persist recipient_devices alongside their original group wire; older in-band sends derive targets from that wire. Qualified group receipts match group chat, wire ID and an original device, allowing only an existing authenticated PN/LID association with the same device index. Current group member/device directories alone cannot attribute an older send. Foreign, missing participant, self and recipient-qualified routes remain unsupported; corrupt or ambiguous saved data rolls back. Normal-outbox group facts can use an existing original prepared group envelope, but the normal comparison adapter still prepares direct sends only. No group send, replay, mapping adoption or receipt is queued by inspection. CLI only; no HTTP route exists. Source and live limits: docs/protocol/group-receipts.md.",
+        "description": "Offline, redacted counts from the original saved message request_id. Returns JSON null when no group-send reservation exists. addressed_devices is null when a historical out-of-band wire has no frozen targets. Delivery/read/played counts are independent per actual participant device and never establish every member received the message. Preserves the recognized send outcome; a recipient receipt does not fabricate a server ACK or reset uncertainty. Newly prepared comparison group sends persist recipient_devices alongside their original group wire; older in-band sends derive targets from that wire. Qualified group receipts match group chat, wire ID and an original device, allowing only an existing authenticated PN/LID association with the same device index. Current group member/device directories alone cannot attribute an older send. Foreign, missing participant, self and recipient-qualified routes remain unsupported; corrupt or ambiguous saved data rolls back. Normal-outbox group facts can use an existing original prepared group envelope, but the normal comparison adapter still prepares direct sends only. No group send, replay, mapping adoption or receipt is queued by inspection. Source and live limits: docs/protocol/group-receipts.md. HTTP (2026-10-13): served read-only by `whatsapp-cli serve --store-routes --token-file <new path>` (experimental-transport build), loopback only, with `Authorization: Bearer <token>`; the store is opened per request with the serve process's --store/--account/--key-env, so it answers 503 store_unavailable only while another command (for example listen) holds the store, and 500 store_read_failed for any other read failure; a command starting during a request can fail to open the store and must be rerun. HEAD is also served. Same library call and redacted JSON as the CLI. Disabled store routes answer 404 store_routes_disabled; a missing or wrong token 401 with WWW-Authenticate: Bearer. Over HTTP the store comes from the serve process and the only accepted query is exactly request_id=<id>, unencoded, satisfying the library ID rule (ASCII alphanumerics and -_.:, at most 128 bytes); a missing, renamed, repeated, empty, percent-encoded or additional parameter answers 400 before the store opens. An unknown request_id answers 200 null.",
         "operationId": "groupReceiptStatus",
         "x-cli": "whatsapp-cli group receipts",
         "x-transport": [
-          "cli"
+          "cli",
+          "http"
         ],
         "x-live": false,
         "parameters": [
@@ -13355,11 +13423,77 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Missing, malformed or additional query parameter (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or wrong bearer token (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Store routes not enabled on this server (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Only GET and HEAD are served (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The store could not be read for a reason other than being in use (HTTP only); details only in the server log",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Another command holds the store (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         },
         "x-library": [
           "whatsapp_api::transport::group_receipts::summary",
-          "whatsapp_api::transport::group_receipts::record"
+          "whatsapp_api::transport::group_receipts::record",
+          "whatsapp_cli::http::serve"
+        ],
+        "security": [
+          {
+            "storeBearer": []
+          }
         ]
       }
     },
@@ -13369,11 +13503,12 @@
           "Groups"
         ],
         "summary": "Inspect frozen directory-key batch outcomes offline",
-        "description": "Read-only directory-key batch counts for an existing private message request_id. Returns null when neither a batch nor a historical key outcome was saved, not a server refusal. Frozen ordinary PN/LID device targets use local 32-device queries, with a local 4096-target bound; neither bound is a claimed WhatsApp server limit. Each next query is durably outcome_unknown before socket write. Unknown/refused/invalid outcomes block without replay; completed replies are reused only for the same normalized frozen device set. An unattributed legacy message:<request_id>:keys row cannot silently start a new batch. Matched IQ result/error replies are preserved encrypted; supported result lists require every exact device once, no foreign/duplicate/omitted targets, well-formed bundles and valid signed-key signatures. Recognized blocking_reason values are local classifications, not detailed server reasons. Raw server text, identifiers, signatures and response wire are not printed. A complete directory lookup does not establish peer trust, send reservation, server message acceptance or delivery. Existing fanout staging still enforces pins. No queries or group/status sends are queued by inspection, and no normal group-outbox adapter is claimed. CLI/library only; no HTTP route exists. Evidence docs/protocol/device-key-batches.md. When an old message:<request_id>:keys outcome exists without frozen batch provenance, inspection reports a fixed local error explaining that counts are unknown and the original is preserved; it does not present this as missing server state or invent counts. Hybrid rows (2026-10-13, offline): a selected device row carrying pqkey now answers when its KEM signature over the original value bytes and its ML-KEM-1024 encoding verify; a failed KEM signature is blocking_reason invalid_signature and other PQ defects invalid_bundle. Group/status fan-out then sends that device a native 0x44 hybrid distribution. This client sends no pqsupport attribute; whether the server returns pqkey without it is unknown. Evidence docs/protocol/hybrid-fanout.md. A verified PQ row carrying non_e2ee_attestation or identity_auth without signature bytes and certs is blocking_reason unsupported_bundle (local admission boundary shared with the direct outbox). Evidence docs/protocol/hybrid-fanout.md.",
+        "description": "Read-only directory-key batch counts for an existing private message request_id. Returns null when neither a batch nor a historical key outcome was saved, not a server refusal. Frozen ordinary PN/LID device targets use local 32-device queries, with a local 4096-target bound; neither bound is a claimed WhatsApp server limit. Each next query is durably outcome_unknown before socket write. Unknown/refused/invalid outcomes block without replay; completed replies are reused only for the same normalized frozen device set. An unattributed legacy message:<request_id>:keys row cannot silently start a new batch. Matched IQ result/error replies are preserved encrypted; supported result lists require every exact device once, no foreign/duplicate/omitted targets, well-formed bundles and valid signed-key signatures. Recognized blocking_reason values are local classifications, not detailed server reasons. Raw server text, identifiers, signatures and response wire are not printed. A complete directory lookup does not establish peer trust, send reservation, server message acceptance or delivery. Existing fanout staging still enforces pins. No queries or group/status sends are queued by inspection, and no normal group-outbox adapter is claimed. Evidence docs/protocol/device-key-batches.md. When an old message:<request_id>:keys outcome exists without frozen batch provenance, inspection reports a fixed local error explaining that counts are unknown and the original is preserved; it does not present this as missing server state or invent counts. Hybrid rows (2026-10-13, offline): a selected device row carrying pqkey now answers when its KEM signature over the original value bytes and its ML-KEM-1024 encoding verify; a failed KEM signature is blocking_reason invalid_signature and other PQ defects invalid_bundle. Group/status fan-out then sends that device a native 0x44 hybrid distribution. This client sends no pqsupport attribute; whether the server returns pqkey without it is unknown. Evidence docs/protocol/hybrid-fanout.md. A verified PQ row carrying non_e2ee_attestation or identity_auth without signature bytes and certs is blocking_reason unsupported_bundle (local admission boundary shared with the direct outbox). Evidence docs/protocol/hybrid-fanout.md. HTTP (2026-10-13): served read-only by `whatsapp-cli serve --store-routes --token-file <new path>` (experimental-transport build), loopback only, with `Authorization: Bearer <token>`; the store is opened per request with the serve process's --store/--account/--key-env, so it answers 503 store_unavailable only while another command (for example listen) holds the store, and 500 store_read_failed for any other read failure; a command starting during a request can fail to open the store and must be rerun. HEAD is also served. Same library call and redacted JSON as the CLI. Disabled store routes answer 404 store_routes_disabled; a missing or wrong token 401 with WWW-Authenticate: Bearer. Over HTTP the store comes from the serve process and the only accepted query is exactly request_id=<id>, unencoded, satisfying the library ID rule (ASCII alphanumerics and -_.:, at most 128 bytes); a missing, renamed, repeated, empty, percent-encoded or additional parameter answers 400 before the store opens. An unknown request_id answers 200 null. A saved record the summary cannot count (a legacy key outcome without a frozen plan, or a damaged batch row) answers 422 saved_state_unsupported with the library's fixed reason.",
         "operationId": "groupKeyQueries",
         "x-cli": "whatsapp-cli group key-queries",
         "x-transport": [
-          "cli"
+          "cli",
+          "http"
         ],
         "x-live": false,
         "parameters": [
@@ -13422,11 +13557,84 @@
             }
           },
           "400": {
-            "$ref": "#/components/responses/InvalidInput"
+            "description": "Invalid request_id (CLI), or a missing, malformed or additional query parameter (HTTP)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "A saved key-query record the summary cannot count; fixed reason (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or wrong bearer token (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Store routes not enabled on this server (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Only GET and HEAD are served (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The store could not be read for a reason other than being in use (HTTP only); details only in the server log",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Another command holds the store (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         },
         "x-library": [
-          "whatsapp_api::transport::device_key_batches::summary"
+          "whatsapp_api::transport::device_key_batches::summary",
+          "whatsapp_cli::http::serve"
+        ],
+        "security": [
+          {
+            "storeBearer": []
+          }
         ]
       }
     },
@@ -13436,7 +13644,7 @@
           "Outbox"
         ],
         "summary": "Inspect saved normal group preparations offline",
-        "description": "CLI-only inspection across all idempotency namespaces; no HTTP route, account mutation, query or send. Includes interrupted, blocked and original ciphertext-reserved preparations. Phase reserved is not server acceptance or delivery. Last stage alone does not establish an active worker. Original membership action, device queries and directory batches remain encrypted and unchanged. Corrupt records produce a fixed redacted error. No automatic resume/reset is supplied. Evidence docs/protocol/normal-group-outbox.md. Normal group directory checkpoints are scoped to the immutable local intent ID, so distinct idempotency namespaces cannot share a frozen key plan. Existing foreign/legacy user-request key history blocks rather than being reused or overwritten; inspect original paths. The private-JSON request ID, local intent and final wire ID are never replaced to resend. companion_authority_changed identifies a local changed-primary/old-companion-authority boundary, not a server refusal. Changing outgoing policy does not reset blocked preparations. reference_changed means local target attribution no longer validates; the original intent and answered query state remain preserved. HTTP (2026-10-13): served read-only by `whatsapp-cli serve --store-routes --token-file <new path>` (experimental-transport build), loopback only, with `Authorization: Bearer <token>`; the store is opened per request with the serve process's --store/--account/--key-env, so it answers 503 store_unavailable only while another command (for example listen) holds the store, and 500 store_read_failed for any other read failure; a command starting during a request can fail to open the store and must be rerun. HEAD is also served. The parameters listed here are CLI flags; over HTTP the store comes from the serve process. peer_ticket is an unsalted address hash (guessable for phone numbers); treat responses as account data. Same library call and redacted JSON as the CLI. Disabled store routes answer 404 store_routes_disabled; a missing or wrong token 401 with WWW-Authenticate: Bearer; any query string 400 (CLI-only options are not served).",
+        "description": "Inspection across all idempotency namespaces; no account mutation, query or send. Includes interrupted, blocked and original ciphertext-reserved preparations. Phase reserved is not server acceptance or delivery. Last stage alone does not establish an active worker. Original membership action, device queries and directory batches remain encrypted and unchanged. Corrupt records produce a fixed redacted error. No automatic resume/reset is supplied. Evidence docs/protocol/normal-group-outbox.md. Normal group directory checkpoints are scoped to the immutable local intent ID, so distinct idempotency namespaces cannot share a frozen key plan. Existing foreign/legacy user-request key history blocks rather than being reused or overwritten; inspect original paths. The private-JSON request ID, local intent and final wire ID are never replaced to resend. companion_authority_changed identifies a local changed-primary/old-companion-authority boundary, not a server refusal. Changing outgoing policy does not reset blocked preparations. reference_changed means local target attribution no longer validates; the original intent and answered query state remain preserved. HTTP (2026-10-13): served read-only by `whatsapp-cli serve --store-routes --token-file <new path>` (experimental-transport build), loopback only, with `Authorization: Bearer <token>`; the store is opened per request with the serve process's --store/--account/--key-env, so it answers 503 store_unavailable only while another command (for example listen) holds the store, and 500 store_read_failed for any other read failure; a command starting during a request can fail to open the store and must be rerun. HEAD is also served. The parameters listed here are CLI flags; over HTTP the store comes from the serve process. peer_ticket is an unsalted address hash (guessable for phone numbers); treat responses as account data. Same library call and redacted JSON as the CLI. Disabled store routes answer 404 store_routes_disabled; a missing or wrong token 401 with WWW-Authenticate: Bearer; any query string 400 (CLI-only options are not served).",
         "operationId": "outboxGroupPreparations",
         "x-cli": "whatsapp-cli outbox-group-preparations",
         "x-transport": [
@@ -13548,7 +13756,7 @@
           "Outbox"
         ],
         "summary": "Inspect original send-time primary versions (offline, redacted)",
-        "description": "Offline inspection of an existing immutable local outbox intent. Direct and group comparison adapters capture actual target users' nullable primary-device versions in the original send reservation transaction, after authenticated replacement hooks. Group capture includes every planned device, not only newly distributed sender keys. The snapshot is immutable; namespace values stay separate and duplicate device encodings are counted once. Historical/unprepared intents without a snapshot return captured=false and users=[]; captured null counters are known missing values, not missing instrumentation. Each user exports only a normalized-JID hash, device count, at_send/current signed int64-or-null and nullable matches boolean. Equality is diagnostic, never a native resend decision; effective default/hosted gates and full sync/resend runtime remain unported. Unknown local IDs and malformed snapshots/counters refuse with fixed diagnostics; inspection neither repairs history nor sends/queues anything. No HTTP route is served. See docs/protocol/send-version-snapshot.md. New captures retain exact device components; device_targets exposes only component/hash pairs. Old count-only snapshots return null for that field and are never backfilled. Group receipt attribution uses the original full frozen targets when known, requiring original envelope sender-key targets to be a subset. Current fanout still distributes to every target; primary/counterpart cleanup and cached-key distribution omission remain unported. Separate pending device rows are now seeded with original nullable versions in the same reservation transaction. Authenticated, attributed supported root receipts update exact original-device rows with earliest positive server milliseconds (root t parsed as signed ASCII seconds, wrapping multiplication by 1000). Equal/duplicate facts may improve a timestamp without a second fact/event. Historical missing rows remain null; no namespace merging or resend is inferred; authenticated companion deletion is described below. Malformed rows refuse atomically with redacted diagnostics. See docs/protocol/device-receipt-rows.md. Authenticated companion-key replacement now removes only pending exact-device row membership on ordinary direct/group intents. Output present distinguishes removed provenance from a current row; version is current-row nullable version while at_send remains the immutable original. A later supported positive root receipt reinserts a removed original companion row using the current nullable exact-namespace user version. Existing-row timestamp changes preserve version. Both authenticated incoming-message and signed-directory replacement sources share atomic cleanup/history commits. Primary cleanup, counterpart expansion, status/coexistence branches and resend remain unfinished. See docs/protocol/companion-receipt-cleanup.md. Direct supported receipt t now uses Java-compatible UTF-16 decimal-long parsing, zero fallback and wrapping seconds-to-ms conversion before positive admission. BMP decimal input no longer leaves matching device rows falsely pending for companion cleanup. Exact attribution, earliest-positive time, nullable row versions, immutable original snapshots and reservation guards remain unchanged. Offline regression covers received versus pending companion cleanup/rollback/reopen; fresh live Unicode receipt behavior is unverified. Offline aggregated receipt support (APK 37.71 Cmk.A03/DDF): the first participants child supplies message_id, and each entry supplies its actual jid, independent type (absent defaults to delivery), and required signed BMP-decimal t. Delivery/read/played observations use existing original-target authority and commit as one transaction; malformed input or late saved-state failure commits no partial facts. Inner message_id and per-entry times override root receipt id/type/t in this branch. Unsupported known own/self statuses remain unprojected; the separate key-based participants branch remains unported and cannot fall back to root-id attribution. No original snapshot is backfilled and no resend is authorized. Fresh live aggregate projection remains unverified. HTTP (2026-10-13): served read-only by `whatsapp-cli serve --store-routes --token-file <new path>` (experimental-transport build), loopback only, with `Authorization: Bearer <token>`; the store is opened per request with the serve process's --store/--account/--key-env, so it answers 503 store_unavailable only while another command (for example listen) holds the store, and 500 store_read_failed for any other read failure; a command starting during a request can fail to open the store and must be rerun. HEAD is also served. The parameters listed here are CLI flags; over HTTP the store comes from the serve process. peer_ticket is an unsalted address hash (guessable for phone numbers); treat responses as account data. Same library call and redacted JSON as the CLI. Disabled store routes answer 404 store_routes_disabled; a missing or wrong token 401 with WWW-Authenticate: Bearer; any query string 400. The local_id path segment is validated before the store opens (400 invalid_input); an ID with no outbox intent answers 404 unknown_local_id.",
+        "description": "Offline inspection of an existing immutable local outbox intent. Direct and group comparison adapters capture actual target users' nullable primary-device versions in the original send reservation transaction, after authenticated replacement hooks. Group capture includes every planned device, not only newly distributed sender keys. The snapshot is immutable; namespace values stay separate and duplicate device encodings are counted once. Historical/unprepared intents without a snapshot return captured=false and users=[]; captured null counters are known missing values, not missing instrumentation. Each user exports only a normalized-JID hash, device count, at_send/current signed int64-or-null and nullable matches boolean. Equality is diagnostic, never a native resend decision; effective default/hosted gates and full sync/resend runtime remain unported. Unknown local IDs and malformed snapshots/counters refuse with fixed diagnostics; inspection neither repairs history nor sends/queues anything. See docs/protocol/send-version-snapshot.md. New captures retain exact device components; device_targets exposes only component/hash pairs. Old count-only snapshots return null for that field and are never backfilled. Group receipt attribution uses the original full frozen targets when known, requiring original envelope sender-key targets to be a subset. Current fanout still distributes to every target; primary/counterpart cleanup and cached-key distribution omission remain unported. Separate pending device rows are now seeded with original nullable versions in the same reservation transaction. Authenticated, attributed supported root receipts update exact original-device rows with earliest positive server milliseconds (root t parsed as signed ASCII seconds, wrapping multiplication by 1000). Equal/duplicate facts may improve a timestamp without a second fact/event. Historical missing rows remain null; no namespace merging or resend is inferred; authenticated companion deletion is described below. Malformed rows refuse atomically with redacted diagnostics. See docs/protocol/device-receipt-rows.md. Authenticated companion-key replacement now removes only pending exact-device row membership on ordinary direct/group intents. Output present distinguishes removed provenance from a current row; version is current-row nullable version while at_send remains the immutable original. A later supported positive root receipt reinserts a removed original companion row using the current nullable exact-namespace user version. Existing-row timestamp changes preserve version. Both authenticated incoming-message and signed-directory replacement sources share atomic cleanup/history commits. Primary cleanup, counterpart expansion, status/coexistence branches and resend remain unfinished. See docs/protocol/companion-receipt-cleanup.md. Direct supported receipt t now uses Java-compatible UTF-16 decimal-long parsing, zero fallback and wrapping seconds-to-ms conversion before positive admission. BMP decimal input no longer leaves matching device rows falsely pending for companion cleanup. Exact attribution, earliest-positive time, nullable row versions, immutable original snapshots and reservation guards remain unchanged. Offline regression covers received versus pending companion cleanup/rollback/reopen; fresh live Unicode receipt behavior is unverified. Offline aggregated receipt support (APK 37.71 Cmk.A03/DDF): the first participants child supplies message_id, and each entry supplies its actual jid, independent type (absent defaults to delivery), and required signed BMP-decimal t. Delivery/read/played observations use existing original-target authority and commit as one transaction; malformed input or late saved-state failure commits no partial facts. Inner message_id and per-entry times override root receipt id/type/t in this branch. Unsupported known own/self statuses remain unprojected; the separate key-based participants branch remains unported and cannot fall back to root-id attribution. No original snapshot is backfilled and no resend is authorized. Fresh live aggregate projection remains unverified. HTTP (2026-10-13): served read-only by `whatsapp-cli serve --store-routes --token-file <new path>` (experimental-transport build), loopback only, with `Authorization: Bearer <token>`; the store is opened per request with the serve process's --store/--account/--key-env, so it answers 503 store_unavailable only while another command (for example listen) holds the store, and 500 store_read_failed for any other read failure; a command starting during a request can fail to open the store and must be rerun. HEAD is also served. The parameters listed here are CLI flags; over HTTP the store comes from the serve process. peer_ticket is an unsalted address hash (guessable for phone numbers); treat responses as account data. Same library call and redacted JSON as the CLI. Disabled store routes answer 404 store_routes_disabled; a missing or wrong token 401 with WWW-Authenticate: Bearer; any query string 400. The local_id path segment is validated before the store opens (400 invalid_input); an ID with no outbox intent answers 404 unknown_local_id.",
         "operationId": "outboxVersions",
         "x-cli": "whatsapp-cli outbox-versions",
         "x-transport": [
@@ -13665,11 +13873,12 @@
           "Groups"
         ],
         "summary": "Inspect whether the saved own LID is known",
-        "description": "Offline redacted own-account LID lookup from authenticated login-identity.lid and the retained own-lid group checkpoint. Missing historical sources return lid_known=false; no alias is inferred from a peer directory. Device components are normalized for user comparison, while server-only, non-LID and agent-bearing saved identities refuse. When both sources exist, disagreement refuses with named fixed redacted diagnostics; neither record is repaired or overwritten. This consistency refusal is local client policy, not a WhatsApp server prerequisite. The same lookup protects remote primary-change device refresh/version hooks and sender-key invalidation before any group preparation. This is only an own-user source lookup, not full native own-device synchronization or identity cleanup. CLI/library only; no HTTP route is served. See docs/protocol/own-identity.md.",
+        "description": "Offline redacted own-account LID lookup from authenticated login-identity.lid and the retained own-lid group checkpoint. Missing historical sources return lid_known=false; no alias is inferred from a peer directory. Device components are normalized for user comparison, while server-only, non-LID and agent-bearing saved identities refuse. When both sources exist, disagreement refuses with named fixed redacted diagnostics; neither record is repaired or overwritten. This consistency refusal is local client policy, not a WhatsApp server prerequisite. The same lookup protects remote primary-change device refresh/version hooks and sender-key invalidation before any group preparation. This is only an own-user source lookup, not full native own-device synchronization or identity cleanup. See docs/protocol/own-identity.md. HTTP (2026-10-13): served read-only by `whatsapp-cli serve --store-routes --token-file <new path>` (experimental-transport build), loopback only, with `Authorization: Bearer <token>`; the store is opened per request with the serve process's --store/--account/--key-env, so it answers 503 store_unavailable only while another command (for example listen) holds the store, and 500 store_read_failed for any other read failure; a command starting during a request can fail to open the store and must be rerun. HEAD is also served. Same library call and redacted JSON as the CLI. Disabled store routes answer 404 store_routes_disabled; a missing or wrong token 401 with WWW-Authenticate: Bearer. The parameters listed here are CLI flags; over HTTP the store comes from the serve process. Any query string 400. A refusal of the saved sources (they disagree, or one is malformed) answers 422 saved_state_unsupported with the library's fixed reason, never the LID itself.",
         "operationId": "ownLidInspection",
         "x-cli": "whatsapp-cli group own-lid",
         "x-transport": [
-          "cli"
+          "cli",
+          "http"
         ],
         "x-live": false,
         "parameters": [
@@ -13708,10 +13917,86 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Query parameters are not accepted on this store route (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or wrong bearer token (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Store routes not enabled on this server (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Only GET and HEAD are served (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The store could not be read for a reason other than being in use (HTTP only); details only in the server log",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Another command holds the store (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Saved own-LID sources disagree or are malformed; fixed reason, no LID (HTTP only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         },
         "x-library": [
-          "whatsapp_api::transport::group_send::own_lid"
+          "whatsapp_api::transport::group_send::own_lid",
+          "whatsapp_cli::http::serve"
+        ],
+        "security": [
+          {
+            "storeBearer": []
+          }
         ]
       }
     },

@@ -1,3 +1,15 @@
+2026-10-13 — **Implemented/offline (HTTP):** `serve --store-routes` now also
+serves four counts-only inspections, the same library calls and JSON as the
+CLI: `GET /v1/diagnostics/own-lid`, and `/v1/groups/receipts?request_id=`,
+`/v1/groups/key-queries?request_id=` and `/v1/groups/refresh-status?id=`.
+Each parameterized route accepts exactly that one unencoded, ID-shaped
+parameter and refuses anything else with 400 before the store opens; nothing
+saved answers `null`; a key-query record that cannot be counted, or own-LID
+sources that disagree, answer 422 with the library's fixed reason. The refresh-status JSON is now one shared function, so
+CLI and HTTP cannot drift. Five served operations still said "CLI only; no
+HTTP route" in OpenAPI; those stale sentences are removed. No route sends,
+queues or exposes an address or message content. [Store routes](docs/api/README.md#store-routes-opt-in).
+
 2026-10-13 — **Corrected/offline (receive-path audit):** a read-only audit of
 the receive loop found that a receipt, `privacy_token` notification or
 `pq_count` whose content we refuse, or an own-companion message with an

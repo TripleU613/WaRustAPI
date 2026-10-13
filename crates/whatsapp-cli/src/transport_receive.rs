@@ -2424,6 +2424,23 @@ fn fanout_inspection(
     output
 }
 
+/// Saved group-refresh projection counts for one action ID, or JSON `null`.
+/// Shared by `group refresh-status --json` and the HTTP store route, so both
+/// print the same redacted object: counts and the next action ID, no group
+/// address or member list.
+pub(crate) fn refresh_status(store: &ProtocolStore, id: &str) -> Result<serde_json::Value, Error> {
+    Ok(
+        whatsapp_api::transport::groups::refresh_outcome(store, id)?.map_or(serde_json::Value::Null, |v| {
+            serde_json::json!({
+                "complete": v.complete, "truncated": v.truncated.len(),
+                "forbidden": v.forbidden, "not_found": v.not_found,
+                "automatic_follow_up": v.automatic_follow_up, "round": v.round,
+                "next_action": v.next_action, "pending": v.pending.len(), "exhausted": v.exhausted,
+            })
+        }),
+    )
+}
+
 fn fanout_inspection_with_sessions(
     store: &ProtocolStore,
     plan: &whatsapp_api::transport::group_send::FanoutPlan,
@@ -2522,21 +2539,14 @@ pub(super) fn group(cli: &super::Cli, cmd: &super::GroupCmd) -> Result<(), Error
             })
         }
         super::GroupCmd::RefreshStatus { id } => {
-            let summary = groups::refresh_outcome(&store, id)?.map(|v| {
-                serde_json::json!({
-                    "complete": v.complete, "truncated": v.truncated.len(),
-                    "forbidden": v.forbidden, "not_found": v.not_found,
-                    "automatic_follow_up": v.automatic_follow_up, "round": v.round,
-                    "next_action": v.next_action, "pending": v.pending.len(), "exhausted": v.exhausted,
-                })
-            });
+            let summary = refresh_status(&store, id)?;
             if cli.json {
                 println!(
                     "{}",
                     serde_json::to_string_pretty(&summary)
                         .map_err(|e| Error::invalid("group", e.to_string()))?
                 );
-            } else if let Some(summary) = summary {
+            } else if !summary.is_null() {
                 println!(
                     "group refresh: complete={} truncated={} forbidden={} not_found={} pending={} round={} exhausted={} next={}",
                     summary["complete"],
