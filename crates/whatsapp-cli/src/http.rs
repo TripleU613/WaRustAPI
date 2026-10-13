@@ -51,12 +51,14 @@ struct ApiState {
 /// Read-only store routes, each the same output as an existing CLI inspection
 /// (`receipts`, `prekeys`, `outbox-suspended`, `actions` list,
 /// `identity-conflicts`, `outbox-group-preparations`, `group own-lid`,
-/// `undecodable`): counts, capture digests, frame sizes and error classes,
+/// `undecodable`, `store inspect`): counts, capture digests, frame sizes and
+/// error classes, the store's account label and generation,
 /// local and wire message/iq IDs, unsalted address hashes (`peer_ticket`,
 /// guessable for phone numbers), key fingerprints, fixed reasons and, for
 /// refused actions, the server's error text. No message content, key material
 /// or raw address. These take no query parameters.
-const STORE_ROUTES: [&str; 8] = [
+const STORE_ROUTES: [&str; 9] = [
+    "/v1/store",
     "/v1/receipts",
     "/v1/prekeys",
     "/v1/outbox/suspended",
@@ -643,6 +645,7 @@ fn read_store(
         }
     };
     let value = match path {
+        "/v1/store" => Ok(crate::store_report::report(&store)?),
         "/v1/receipts" => serde_json::to_value(receipts::outcomes(&store)?),
         "/v1/prekeys" => serde_json::to_value(prekeys::summary(&store)?),
         "/v1/outbox/suspended" => serde_json::to_value(outgoing::identity_suspended(&store)?),
@@ -1260,6 +1263,20 @@ mod tests {
             .await
             .unwrap();
         assert_eq!(query.status, 400);
+        // The `store inspect` report: counts and structural kinds only.
+        let inspected = store_route(&request("GET", "/v1/store", auth), &state)
+            .await
+            .unwrap();
+        assert_eq!(inspected.status, 200);
+        for field in [
+            "account_id",
+            "generation",
+            "registration",
+            "tables",
+            "checkpoint_kinds",
+        ] {
+            assert!(body(&inspected).get(field).is_some(), "{field}");
+        }
         let prekeys = store_route(&request("GET", "/v1/prekeys", auth), &state)
             .await
             .unwrap();

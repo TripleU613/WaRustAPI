@@ -21,8 +21,7 @@ use whatsapp_api::model::message::MessageContent;
 use whatsapp_api::model::phone::PhoneNumber;
 use whatsapp_api::model::send::SendRequest;
 use whatsapp_api::registration::{ChallengeMethod, RegistrationStep, RequiredAction};
-use whatsapp_api::session::AccountRecord;
-use whatsapp_api::store::{ConsumerId, EnvKeySource, MasterKey, Table};
+use whatsapp_api::store::{ConsumerId, EnvKeySource, MasterKey};
 use whatsapp_api::{Error, ProtocolProfile, WhatsAppClient};
 use zeroize::Zeroizing;
 
@@ -40,6 +39,7 @@ mod peer_verification;
 mod profiles;
 #[cfg(feature = "experimental-signup")]
 mod signup;
+mod store_report;
 mod token;
 #[cfg(feature = "experimental-transport")]
 mod transport;
@@ -739,8 +739,8 @@ enum Cmd {
         /// Permit listening on a non-loopback address.
         #[arg(long)]
         allow_non_loopback: bool,
-        /// Also serve read-only, redacted store inspections (`/v1/receipts`,
-        /// `/v1/prekeys`, `/v1/outbox/suspended`, `/v1/actions`,
+        /// Also serve read-only, redacted store inspections (`/v1/store`,
+        /// `/v1/receipts`, `/v1/prekeys`, `/v1/outbox/suspended`, `/v1/actions`,
         /// `/v1/identity-conflicts`, `/v1/outbox/group-preparations`,
         /// `/v1/outbox/{local_id}/versions`, `/v1/diagnostics/own-lid`,
         /// `/v1/inbox/undecodable`, and
@@ -2100,51 +2100,7 @@ async fn run(cli: Cli) -> Result<(), Error> {
             StoreCmd::Inspect => {
                 let c = open_client(&cli, false).await?;
                 let store = c.store().clone();
-                let report = store
-                    .run_blocking(|s| {
-                        s.read(|tx| {
-                            let mut counts = serde_json::Map::new();
-                            for t in Table::ALL {
-                                counts.insert(format!("{t:?}"), serde_json::json!(tx.count(t)?));
-                            }
-                            let account = AccountRecord::load(tx)?;
-                            // Checkpoints holds many unrelated record kinds under
-                            // one table, so a bare row count cannot answer "is
-                            // there an app-state key / a login identity / any
-                            // captures". Report the leading key segment only: the
-                            // kind is structural, while the rest of a key is a
-                            // JID or digest and stays unprinted.
-                            let mut kinds: std::collections::BTreeMap<String, usize> =
-                                std::collections::BTreeMap::new();
-                            let mut cursor = None;
-                            loop {
-                                let rows =
-                                    tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 512)?;
-                                let done = rows.len() < 512;
-                                cursor = rows.last().map(|(key, _)| key.clone());
-                                for (key, _) in rows {
-                                    let name = String::from_utf8_lossy(&key).into_owned();
-                                    let kind = name
-                                        .split_once(':')
-                                        .map_or(name.as_str(), |(head, _)| head)
-                                        .to_owned();
-                                    *kinds.entry(kind).or_default() += 1;
-                                }
-                                if done {
-                                    break;
-                                }
-                            }
-                            Ok(serde_json::json!({
-                                "account_id": s.account_id().as_str(),
-                                "generation": s.generation().0,
-                                "journal_head": tx.journal_head()?.0,
-                                "registration": account.as_ref().map(|a| format!("{:?}", a.registration)).unwrap_or_else(|| "no account record".into()),
-                                "tables": counts,
-                                "checkpoint_kinds": kinds,
-                            }))
-                        })
-                    })
-                    .await?;
+                let report = store.run_blocking(store_report::report).await?;
                 println!(
                     "{}",
                     serde_json::to_string_pretty(&report)

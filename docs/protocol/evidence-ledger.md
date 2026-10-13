@@ -1,3 +1,11 @@
+2026-10-13 — **Implemented/offline (HTTP parity: store inspect):** `serve
+--store-routes` now also answers `GET /v1/store` with the `store inspect`
+report (table counts, generation, registration status, checkpoint kinds), the
+same JSON as the CLI from one shared function. A checkpoint kind is printed by
+name only when it is a lowercase record name and not hex-like; any other key
+prefix (for example a key without `:` whose text is an address or digest) is
+counted as `other`, for the CLI too. [API README](../api/README.md#store-routes-opt-in).
+
 2026-10-13 — **Corrected/offline (second registration review):** a second
 read-only review of the registration commits found no request that may have
 left being restored as not sent and no latch released after a send, but
