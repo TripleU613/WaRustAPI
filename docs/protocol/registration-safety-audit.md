@@ -238,9 +238,8 @@ Lower items from the same audit: any refusal carrying `retry_after`
 becomes a cooldown that a later `begin` resumes with a new code request
 (`retry_after: 0` immediately); strict parsing turns some definite answers
 (negative waits, uppercase reason tokens, non-JSON error bodies, an HTTP
-`Retry-After` header) into `outcome_unknown`; an `ok`/`attached` code response
-discards its `login`; a save failure after a server `ok` loses the login;
-diagnostics print server JSON key names.
+`Retry-After` header) into `outcome_unknown`; a save failure after a server
+`ok` loses the login; diagnostics print server JSON key names.
 
 Since checked (2026-10-13):
 
@@ -252,6 +251,21 @@ Since checked (2026-10-13):
 - **Fixed: the CLI suggested `request-email-code [--email <address>]`,** which
   is always rejected (the comparison client sends no address). The hint now
   names the command without it.
+- **Confirmed open: a `/v2/code` answer of `ok` or `attached` is blocked as an
+  unimplemented branch and its `login` discarded.** Our code-request handling
+  (`ComparisonHttpFlow::begin`) accepts only `sent`; any other answer goes to
+  `blocked_response`, which saves `Blocked{UnsupportedStep}`, or a cooldown if
+  it carries `retry_after` (which a later `begin` would resume with another code
+  request after an `ok`; never observed). Static evidence (2.26.37.71,
+  `KotlinRegistrationBridge.A09`, the `/v2/code` parser, retained in
+  [the core bundle](apk/2.26.37.71-core/registration-response-bridge.txt)):
+  `attached` maps to `02S.A01` (`0254..0268`), `ok` to `02S.A0C`
+  (`04da..04ee`), `sent` to `02S.A00` (`04f6..0506`), and `login` is then read
+  into `IDM.A0N` for every status (`0514..0526`). **Not traced:** what the app
+  does with `02S.A0C`/`02S.A01` (whether `ok` completes registration without
+  an OTP, and what `attached` means). Completing registration from it would be
+  a guess, so the branch stays blocked; the `login` is a secret and is not
+  persisted from this path. Never observed live.
 - **Confirmed open: one wrong OTP is terminal.** A `/v2/register` answer
   `fail`/`mismatch` (or `incorrect`) goes through the generic refusal path and
   saves `Blocked{ServerRefused}` reached from `verifying`; no command returns to

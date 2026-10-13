@@ -5,6 +5,9 @@ and the CLI no longer suggests the always-rejected `request-email-code --email`.
 Recorded open: one wrong OTP (`mismatch`) leaves the attempt blocked with no way
 back to code entry; the APK's handling of `mismatch` and the unit of
 `guess_wait` are not traced, so no re-entry command is built on a guess.
+Likewise a `/v2/code` `ok`/`attached` answer is blocked and its `login`
+discarded: 2.26.37.71 `A09` maps both statuses and reads `login`, but what the
+app then does is not traced.
 [Audit](registration-safety-audit.md#plausible-not-verified).
 
 2026-10-13 — **Corrected/offline (review of the registration safety fixes):**
