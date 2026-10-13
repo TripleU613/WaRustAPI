@@ -642,19 +642,29 @@ async fn answer_one(
     .await?;
     let (reply, pending) = wait_for(channel, "iq", &id).await?;
     backlog.extend(pending);
-    let bundle = prekey_bundle_for(&reply, &retry.device)?;
     let peer_key = session_key(&retry.device);
     let identity: Option<Vec<u8>> =
         store.read(|tx| tx.get_json(Table::PeerIdentities, peer_key.as_bytes(), 1))?;
-    let prepared = whatsapp_api::signal::direct::prepare_payload(
-        account,
-        &retry.device,
-        Some(&bundle),
-        None,
-        identity.as_deref(),
-        distribution,
-    )
-    .await?;
+    // A device row carrying pqkey takes the same verified hybrid derivation as
+    // the shared fan-out (docs/protocol/hybrid-fanout.md); never drop the key.
+    let prepared = if whatsapp_api::signal::hybrid::selects_pq_key(&reply, &retry.device)? {
+        whatsapp_api::signal::hybrid::bundle_for(&reply, &retry.device)?.prepare_initial(
+            account,
+            identity.as_deref(),
+            distribution,
+        )?
+    } else {
+        let bundle = prekey_bundle_for(&reply, &retry.device)?;
+        whatsapp_api::signal::direct::prepare_payload(
+            account,
+            &retry.device,
+            Some(&bundle),
+            None,
+            identity.as_deref(),
+            distribution,
+        )
+        .await?
+    };
     let resend = groups::sender_key_stanza(
         chat,
         wire_id,

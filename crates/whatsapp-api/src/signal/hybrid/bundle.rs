@@ -38,6 +38,17 @@ impl std::fmt::Debug for HybridBundle {
     }
 }
 
+/// Whether the exact recipient row of a directory reply carries a `pqkey`.
+/// Selection only, with the bundle parsers' exact-address, duplicate-row and
+/// per-user error guards; nothing is verified. Bot.A03 selects `pqkey` from the
+/// user row, so callers choose [`bundle_for`] when this is true and must never
+/// fall back to a classic bundle that drops the key.
+pub fn selects_pq_key(reply: &Node, recipient: &Jid) -> Result<bool> {
+    Ok(direct::prekey_user_for(reply, recipient)?
+        .child("pqkey")
+        .is_some())
+}
+
 /// Validate complete ML-KEM-1024 metadata and both signatures for an exact recipient.
 /// The caller must separately establish reply correlation, freshness and key authority.
 /// Unknown/unported admission flags are not decided by this cryptographic parser.
@@ -334,10 +345,22 @@ mod tests {
             };
             let reply = reply_for(user.clone());
             assert!(bundle_for(&reply, &other_device).is_err());
+            // Selection shares the parsers' exact-row guards and verifies nothing.
+            assert!(selects_pq_key(&reply, &peer).unwrap());
+            assert!(selects_pq_key(&reply, &other_device).is_err());
+            let classic_row = Node::new("user").attr("jid", peer.clone()).children(
+                user.child_nodes()
+                    .iter()
+                    .filter(|n| n.description != "pqkey")
+                    .cloned()
+                    .collect(),
+            );
+            assert!(!selects_pq_key(&reply_for(classic_row), &peer).unwrap());
             let duplicate_users = Node::new("iq").attr("type", "result").children(vec![
                 Node::new("list").children(vec![user.clone(), user.clone()]),
             ]);
             assert!(bundle_for(&duplicate_users, &peer).is_err());
+            assert!(selects_pq_key(&duplicate_users, &peer).is_err());
             assert!(direct::prekey_bundle_for(&reply, &peer).is_err());
             let bundle = bundle_for(&reply, &peer).unwrap();
             assert_eq!(format!("{bundle:?}"), "HybridBundle(<redacted>)");

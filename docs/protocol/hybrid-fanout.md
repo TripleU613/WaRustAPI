@@ -73,9 +73,18 @@ replacement refuses under the pinned policy and, under the explicit
 APK-authenticated policy, derives a fresh hybrid session the replacement
 identity opens.
 
+## Lab retry answers (follow-up, same day)
+
+The lab group-send post-send window answers a device's retry receipt with a
+fresh directory read. It previously always used the classic parser, so a PQ
+device's retry could not be answered. It now calls
+`signal::hybrid::selects_pq_key` (exact-row selection with the parsers' guards,
+verifying nothing) and, when true, `bundle_for` plus `prepare_initial`, the same
+derivation as the shared fan-out. The helper is unit-tested for PQ, classic,
+duplicate and error rows; the CLI window itself has no offline socket test.
+
 ## Remaining
 
-`pqsupport` request semantics; the lab CLI retry answer still uses the classic
-parser for a PQ device; an end-to-end normal group outbox test with PQ rows;
+`pqsupport` request semantics; an end-to-end normal group outbox test with PQ rows;
 companion PQ in the direct outbox; live interoperability. Ban immunity is not
 established.

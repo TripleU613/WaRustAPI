@@ -1,3 +1,9 @@
+2026-10-13 — **Implemented/offline:** the lab group-send retry answer now
+derives a native hybrid session for a device whose fresh directory row carries
+a verified `pqkey`, via the new `signal::hybrid::selects_pq_key` selector and
+the shared fan-out derivation. Classic rows are unchanged; no live retry answer.
+[Lab retry answers](protocol/hybrid-fanout.md#lab-retry-answers-follow-up-same-day).
+
 2026-10-13 — **Implemented/offline:** a verified PQ directory reply for a
 contact with a held classic session no longer errors the direct send; the held
 ratchet continues as on the classic path (no PQ upgrade, which stays unported).

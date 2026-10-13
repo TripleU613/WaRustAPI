@@ -8,7 +8,7 @@ mod bundle;
 mod incoming;
 #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
 pub(crate) use bundle::SIGNATURE_FIELD;
-pub use bundle::{HybridBundle, bundle_for};
+pub use bundle::{HybridBundle, bundle_for, selects_pq_key};
 pub use incoming::{LocalKemPrekey, ReceivedHybridPrekey, receive_prekey};
 use wacore_libsignal::{
     crypto::aes_256_cbc_encrypt_into,

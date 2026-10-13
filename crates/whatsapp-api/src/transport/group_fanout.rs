@@ -191,10 +191,7 @@ impl Snapshot {
                 // Batch callbacks (Bot.A03) carry a selected Kyber key into the
                 // device-agnostic CQc.A00, which verifies it and derives a
                 // hybrid session (pq-bundle-boundary.md, hybrid-bundle.md).
-                if direct::prekey_user_for(reply, &target.device)?
-                    .child("pqkey")
-                    .is_some()
-                {
+                if crate::signal::hybrid::selects_pq_key(reply, &target.device)? {
                     let hybrid = crate::signal::hybrid::bundle_for(reply, &target.device)?;
                     (Some(hybrid.classic().clone()), Some(hybrid))
                 } else {
