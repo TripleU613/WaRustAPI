@@ -309,6 +309,15 @@ child, frame and inflate limits), and `forbid(unsafe_code)` crate-wide.
 - Dropping `drive` at any await leaves either nothing or a complete commit.
 - A server `iq get urn:xmpp:ping` gets no reply; deliberately not ported
   ([token-clock-producers](token-clock-producers.md)).
+- Since 2026-10-13 the pure validators the receive loop runs on server stanzas
+  are property-tested (`crates/whatsapp-api/tests/receive_props.rs`, 1,024
+  cases per run): `receipts::validate`, `receipts::parse_retry`,
+  `notifications::validate`, `status_receipts::parse`, `prekeys::low_count` and
+  `prekeys::low_count_ack` return for any `receipt`/`notification` stanza built
+  from the tags, attribute names and children they read, with arbitrary values,
+  JIDs, bytes and nesting, and never panic. This pins the panic audit's
+  conclusion for those functions; it does not cover the stateful `record`
+  paths, which need a store.
 
 ## Validation
 
