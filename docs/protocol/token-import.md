@@ -84,8 +84,11 @@ presence index 56 belongs to bitField1; no field-number-to-bit assumption is val
 with `decoded 59 fields against 58 names; not guessing`. Its method-local literal
 collector does not inline the id-array helper. Its successful descriptor decode
 is not a complete field-name extraction. Use the committed descriptor and both
-helper dumps to reproduce this manual pairing; no generic helper/object-array
-analysis was added and no guessed output was enabled.
+helper dumps to reproduce this manual pairing; no guessed output was enabled.
+**Since 2026-10-13** `xtask retained-proto-fields` follows the object array
+through the retained Ayl.A1b and Ayn.A1O bodies and prints all 59 pairs,
+matching this table (an `xtask` test pins it);
+[apk-analysis](apk-analysis.md#field-numbers-from-retained-bundles-retained-proto-fields-2026-10-13).
 
 ## Port boundary and validation
 

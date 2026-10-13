@@ -337,7 +337,9 @@ request—not adding Rust code, another command or a number-specific script.**
   per operation, and `Civ`'s stanza writer; see `docs/protocol/unknowns.md`),
   sender-side `contextInfo.expiration` (via `Cn6`/`B35.A01`), the native retry-receipt answer policy, and the
   wrong-OTP path (the `HD6.A0A` consumer and `guess_wait` unit), and what the
-  app does with a `/v2/code` `ok`/`attached` answer (`02S.A0C`/`02S.A01`). Replay
+  app does with a `/v2/code` `ok`/`attached` answer (`02S.A0C`/`02S.A01`), and
+  for pin-in-chat the `BVD` descriptor plus the name helpers that
+  `xtask retained-proto-fields` reports missing. Replay
   guarantees and open observations: `docs/protocol/replay-safety-audit.md`.
   Quoted image/voice-note sending is offline-only; per-area state is in
   `docs/feature-parity.md`. First checks for the next live receive window:

@@ -218,6 +218,15 @@ so no sender is implemented.
 Next step (APK): trace the `SendE2EMessageJob` constructor callers that set
 `editVersion`, and `Civ`'s consumer that writes the stanza.
 
+**Pin-in-chat sending (2026-10-13, retained bundles only):** the envelope field
+is confirmed — `xtask retained-proto-fields` decodes BZc exactly and gives
+`pinInChatMessage` = 63, type `BVD`. Sending still needs, from the APK, the
+`BVD.dynamicMethod` descriptor (the receiver `D9L.A01` reads `key_`, `type_`
+and `senderTimestampMs_`, so the names are known, not their numbers), the
+C2S pin/unpin type enum values, and the `edit` value the sender's producer sets
+(receivers take the pin path only for `edit == 2`, above). None of these is
+retained; [what the retained files can and cannot decode](apk-analysis.md#field-numbers-from-retained-bundles-retained-proto-fields-2026-10-13).
+
 ## Outgoing disappearing context (2026-10-13)
 
 **Negative finding (code search):** no outgoing content message this client

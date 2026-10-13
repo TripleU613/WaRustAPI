@@ -1,3 +1,15 @@
+2026-10-13 — **Implemented/offline (research tooling):** `xtask
+retained-proto-fields <file>` reads protobuf-lite field numbers from committed
+research bundles, for sessions without the APK. It follows the code that builds
+the descriptor's objects array, including retained helpers from the same APK,
+and refuses (naming the missing helper) rather than pairing names in method
+order. That order is refuted for DocumentMessage: helper `Ayp.A1K` writes
+`fileSha256_` at objects[4]. Twelve classes decode exactly. They include
+Message, Image/Document/Video/Audio and the history Conversation. The project's
+media, PreKeySignalMessage, ADV and poll-option encoders agree with them.
+`pinInChatMessage` is 63, but pin sending stays blocked on the unretained `BVD`
+descriptor. [Evidence](docs/protocol/apk-analysis.md#field-numbers-from-retained-bundles-retained-proto-fields-2026-10-13).
+
 2026-10-13 — **Fixed/offline (CLI parity):** `registration status --json` now
 prints the saved attempt as redacted JSON, the same as `lab-signup status
 --json` and the `GET /v1/signup/status` store route (one shared redaction);

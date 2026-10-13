@@ -31,6 +31,7 @@ mod manifest;
 mod mex;
 mod proto;
 mod registration_token;
+mod retained_descriptor;
 mod token_arrays;
 mod token_material_archive;
 mod xref;
@@ -285,6 +286,23 @@ enum Cmd {
         #[arg(long = "class")]
         class_filter: String,
     },
+    /// Protobuf-lite field numbers from a committed research disassembly
+    /// (`docs/protocol/apk/**.txt`) that retained a `dynamicMethod`, for
+    /// sessions without the APK. Follows the code that builds the objects
+    /// array, including retained helpers from the same APK; refuses a class
+    /// whose names and descriptor cannot be paired exactly.
+    RetainedProtoFields {
+        /// Retained disassembly file.
+        path: PathBuf,
+        /// Directory searched for retained helper bodies (default: the
+        /// bundle directory's parent, e.g. `docs/protocol/apk`).
+        #[arg(long)]
+        helpers: Option<PathBuf>,
+        /// Also print, labelled unverified, the method-order pairing for a
+        /// class the exact path refuses.
+        #[arg(long)]
+        literal_order: bool,
+    },
     /// Derive the comparison APK's `/v2/code` token for a phone number.
     ApkRegistrationToken {
         /// Path to the exact APK whose resources and signature are inputs.
@@ -425,6 +443,11 @@ fn main() -> ExitCode {
             signatures,
         ),
         Cmd::ApkProtoFields { apk, class_filter } => xref::run_proto_fields(&apk, &class_filter),
+        Cmd::RetainedProtoFields {
+            path,
+            helpers,
+            literal_order,
+        } => retained_descriptor::run_fields(&path, helpers.as_deref(), literal_order),
         Cmd::ApkRegistrationToken {
             apk,
             country_code,

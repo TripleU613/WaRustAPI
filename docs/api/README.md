@@ -170,7 +170,9 @@ never serve send, queue or live operations this way.
 Offline development utilities outside `whatsapp-cli` are recorded in the
 root `x-research-tools` extension with `x-cli`, `x-transport` and `x-live`.
 These entries do not create HTTP routes or add commands to the control CLI.
-The `apk-proto-fields` entry records its validated descriptor-reader capability.
+The `apk-proto-fields` entry records its validated descriptor-reader capability;
+`retained-proto-fields` reads the same descriptors from committed research
+bundles, following helper-written names exactly, for sessions without the APK.
 
 Authenticated own-device ordinary text synchronization can emit the existing
 `MessageUpdated` / `Edited` event with the parent's original key. Loaded text

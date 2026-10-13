@@ -2244,7 +2244,6 @@ pub fn run_proto_fields(apk: &Path, class_filter: &str) -> Result<(), String> {
     let methods = apk_smali(apk, class_filter, Some("dynamicMethod"))?;
     let mut printed = 0usize;
     for method in &methods {
-        let class = method.class_name.clone();
         let literals: Vec<String> = method
             .insns
             .iter()
@@ -2257,52 +2256,7 @@ pub fn run_proto_fields(apk: &Path, class_filter: &str) -> Result<(), String> {
                 quoted_literal(annotation)
             })
             .collect();
-        let names: Vec<String> = literals
-            .iter()
-            .filter(|literal| {
-                literal.ends_with('_')
-                    && literal
-                        .chars()
-                        .all(|c| c.is_ascii_alphanumeric() || c == '_')
-            })
-            .cloned()
-            .collect();
-        let candidates: Vec<_> = literals
-            .iter()
-            .filter(|literal| literal.starts_with("\\u{1}") || literal.starts_with("\\0"))
-            .map(|literal| decode_proto_field_numbers(&unescape(literal)))
-            .collect();
-        let decoded: Vec<_> = candidates.iter().filter_map(|r| r.as_ref().ok()).collect();
-        if decoded.len() != 1 {
-            let reason = candidates
-                .iter()
-                .find_map(|r| r.as_ref().err())
-                .copied()
-                .unwrap_or("missing or ambiguous descriptor");
-            eprintln!("{class}: {reason}; not guessing");
-            continue;
-        }
-        let numbers = decoded[0];
-        // The bitField bookkeeping names may be supplied by helper calls, or
-        // occur as literals. Neither is a protobuf field name. Oneof objects
-        // need distinct object-array tracing and are explicitly refused below.
-        let names: Vec<_> = names
-            .iter()
-            .filter(|name| !is_presence_bookkeeping(name))
-            .collect();
-        if numbers.len() != names.len() {
-            eprintln!(
-                "{class}: decoded {} fields against {} names; not guessing",
-                numbers.len(),
-                names.len()
-            );
-            continue;
-        }
-        println!("# {class}  ({} fields)", numbers.len());
-        for (name, number) in names.iter().zip(numbers) {
-            println!("{number:>4}  {}", name.trim_end_matches('_'));
-        }
-        printed += 1;
+        printed += usize::from(print_proto_fields(&method.class_name, &literals));
     }
     if printed == 0 {
         eprintln!("no protobuf descriptor decoded for {class_filter}");
@@ -2310,7 +2264,71 @@ pub fn run_proto_fields(apk: &Path, class_filter: &str) -> Result<(), String> {
     Ok(())
 }
 
-fn is_presence_bookkeeping(name: &str) -> bool {
+/// Pair one method's field-name literals with its decoded descriptor and print
+/// them; `false` (with a reason on stderr) when they do not pair exactly.
+fn print_proto_fields(class: &str, literals: &[String]) -> bool {
+    match pair_proto_fields(literals) {
+        Ok(pairs) => {
+            println!("# {class}  ({} fields)", pairs.len());
+            for (number, name) in pairs {
+                println!("{number:>4}  {name}");
+            }
+            true
+        }
+        Err(reason) => {
+            eprintln!("{class}: {reason}; not guessing");
+            false
+        }
+    }
+}
+
+pub(crate) fn pair_proto_fields(literals: &[String]) -> Result<Vec<(u32, String)>, String> {
+    let names: Vec<&String> = literals
+        .iter()
+        .filter(|literal| {
+            literal.ends_with('_')
+                && literal
+                    .chars()
+                    .all(|c| c.is_ascii_alphanumeric() || c == '_')
+        })
+        .collect();
+    let candidates: Vec<_> = literals
+        .iter()
+        .filter(|literal| literal.starts_with("\\u{1}") || literal.starts_with("\\0"))
+        .map(|literal| decode_proto_field_numbers(&unescape(literal)))
+        .collect();
+    let decoded: Vec<_> = candidates.iter().filter_map(|r| r.as_ref().ok()).collect();
+    if decoded.len() != 1 {
+        return Err(candidates
+            .iter()
+            .find_map(|r| r.as_ref().err())
+            .copied()
+            .unwrap_or("missing or ambiguous descriptor")
+            .to_owned());
+    }
+    let numbers = decoded[0];
+    // The bitField bookkeeping names may be supplied by helper calls, or
+    // occur as literals. Neither is a protobuf field name. Oneof objects
+    // need distinct object-array tracing and are explicitly refused below.
+    let names: Vec<_> = names
+        .into_iter()
+        .filter(|name| !is_presence_bookkeeping(name))
+        .collect();
+    if numbers.len() != names.len() {
+        return Err(format!(
+            "decoded {} fields against {} names",
+            numbers.len(),
+            names.len()
+        ));
+    }
+    Ok(numbers
+        .iter()
+        .zip(names)
+        .map(|(number, name)| (*number, name.trim_end_matches('_').to_owned()))
+        .collect())
+}
+
+pub(crate) fn is_presence_bookkeeping(name: &str) -> bool {
     name.strip_prefix("bitField")
         .and_then(|s| s.strip_suffix('_'))
         .is_some_and(|s| !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()))
@@ -2320,7 +2338,7 @@ fn is_presence_bookkeeping(name: &str) -> bool {
 /// (official Java runtime): low byte is type, HAS_HAS_BIT=0x1000 adds a presence
 /// index only for scalar types <=17. The former fixed triples silently stopped
 /// at repeated fields such as APK 2.26.37.71 BX5.dynamicMethod's type 26.
-fn decode_proto_field_numbers(info: &str) -> Result<Vec<u32>, &'static str> {
+pub(crate) fn decode_proto_field_numbers(info: &str) -> Result<Vec<u32>, &'static str> {
     fn integer(input: &mut std::str::Chars<'_>) -> Result<u32, &'static str> {
         let mut value = 0u32;
         let mut shift = 0;
@@ -2418,7 +2436,7 @@ fn decode_proto_field_numbers(info: &str) -> Result<Vec<u32>, &'static str> {
 /// protobuf descriptor does, because the field-number encoding uses the raw
 /// character for field 34, which is `"`. That truncation is silent: the walk
 /// simply stops at field 34 and a 110-field message decodes as a 34-field one.
-fn quoted_literal(annotation: &str) -> Option<String> {
+pub(crate) fn quoted_literal(annotation: &str) -> Option<String> {
     let chars: Vec<char> = annotation.chars().collect();
     let open = chars.iter().position(|c| *c == '"')?;
     let mut out = String::new();
@@ -2443,7 +2461,7 @@ fn quoted_literal(annotation: &str) -> Option<String> {
 /// Decode the disassembler's escaping, entirely in `char` positions. An earlier
 /// version mixed a byte offset from `str::find` with a char index and panicked
 /// on the first multi-byte escape it met.
-fn unescape(raw: &str) -> String {
+pub(crate) fn unescape(raw: &str) -> String {
     let chars: Vec<char> = raw.chars().collect();
     let mut out = String::new();
     let mut i = 0;
