@@ -2982,7 +2982,11 @@ DFc field layout and guest-account semantics remain unknown. Neither parser
 is evidence to adopt peer identity keys, guess aliases or rewrite cached
 contact modes merely from an authenticated message envelope.
 
-**Outgoing handoff confirmed:**
+**Outgoing handoff confirmed** (2026-10-13 correction: this is the hand-off of
+the server's ACK of an outgoing message, not of the outgoing request; its
+caller chain is `1Qy.A02` ACK parser `0572..0578` → `1Dz.A10`
+"message-received-by-server" → `1Dz.A0H`, see
+[unknowns](unknowns.md#outgoing-revoke-and-edit-2026-10-13)):
 [1Dz.A0H](apk/2.26.37.71-core/group-mode-outgoing-bundle.txt) writes its
 supplied addressing_mode string to Android Message.data at 00dc..00ee and
 refresh_lid Boolean at 00ee..0104. This closes the earlier inference that

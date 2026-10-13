@@ -132,10 +132,17 @@ and the target key ([revoke writer](apk/2.26.37.71-sender-revoke/revoke-writer.t
 sender timestamp to field 15, with ordinary/future-proof wrapper selection
 gated by property 8784 ([image-caption-edit.md](image-caption-edit.md)), and
 `DEy.A00` parses received stanza `edit` values 1/2/3/7/8
-([sender-revoke.md](sender-revoke.md)). The outgoing request bundle
-`1Dz.A0H` carries a caller-supplied `edit` string beside `addressing_mode` and
-`counter_abuse_token` ([retained](apk/2.26.37.71-core/group-mode-outgoing-bundle.txt)
-`00c0..00ca`). **Not retained:** the producers that choose that `edit` value
+([sender-revoke.md](sender-revoke.md)). **Corrected 2026-10-13 (confirmed
+static):** `1Dz.A0H`, earlier called the outgoing request bundle, is the
+server-ACK hand-off, not a send path. Its only retained caller is `1Dz.A10`
+([forwarder](apk/2.26.37.71-message-ack/ack-message-forwarder.txt), logged
+`ConnectionThreadRequestsImpl/message-received-by-server`, `00d8..00de`),
+called by the ACK wire parser `1Qy.A02`
+([parser](apk/2.26.37.71-message-ack/ack-wire-parser.txt) `0572..0578`), which
+reads `edit` from the incoming `<ack>` (`0094..00a2`). So the `edit` string in
+`1Dz.A0H` ([retained](apk/2.26.37.71-core/group-mode-outgoing-bundle.txt)
+`00c0..00ca`) is what the server's ACK of our message echoes; it says nothing
+about what a sender emits. **Not retained:** the producers that choose that `edit` value
 (and any companion attributes) for a sender revoke or message edit, the effective value of property 8784, and the native send-side
 time window. Receive-side parsing does not establish what a sender must emit,
 so no sender is implemented. Next step: trace `SendE2EMessageJob`/`0y0.A00`
