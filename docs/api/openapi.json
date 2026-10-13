@@ -8024,14 +8024,7 @@
         ],
         "responses": {
           "200": {
-            "description": "View-once image downloaded as encrypted bytes",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MediaItem"
-                }
-              }
-            }
+            "description": "View-once ciphertext downloaded, authenticated and stored privately unopened. The CLI prints one text line, `image: <n> encrypted bytes downloaded and authenticated; privately stored unopened; no plaintext export or opened receipt`; no JSON, selector, content or address. (Corrected 2026-10-13: this response previously referenced MediaItem, the media-list entry, which this command never printed.)"
           },
           "400": {
             "$ref": "#/components/responses/InvalidInput"
@@ -8138,14 +8131,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Media item opened",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MediaItem"
-                }
-              }
-            }
+            "description": "Authenticated attachment piped to the local player. The CLI prints `media: authenticated <Kind> piped to local player; no plaintext file` and, when the player exits successfully, `media: player finished successfully`; no JSON, content or plaintext file. (Corrected 2026-10-13: this response previously referenced MediaItem, the media-list entry, which this command never printed.)"
           },
           "400": {
             "$ref": "#/components/responses/InvalidInput"
