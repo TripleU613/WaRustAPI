@@ -1,3 +1,11 @@
+2026-10-13 — **Fixed/offline (registration hardening):** new store files are
+created 0600 (records were already encrypted; the file followed the umask), and
+the CLI no longer suggests the always-rejected `request-email-code --email`.
+Recorded open: one wrong OTP (`mismatch`) leaves the attempt blocked with no way
+back to code entry; the APK's handling of `mismatch` and the unit of
+`guess_wait` are not traced, so no re-entry command is built on a guess.
+[Audit](protocol/registration-safety-audit.md#plausible-not-verified).
+
 2026-10-13 — **Corrected/offline (review of the registration safety fixes):**
 a second review found gaps in the fixes below, now corrected. A `/v2/exist`
 preflight that had reached the server was restored as "not sent" when the code

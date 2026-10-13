@@ -236,10 +236,33 @@ becomes a cooldown that a later `begin` resumes with a new code request
 (`retry_after: 0` immediately); strict parsing turns some definite answers
 (negative waits, uppercase reason tokens, non-JSON error bodies, an HTTP
 `Retry-After` header) into `outcome_unknown`; an `ok`/`attached` code response
-discards its `login`; a save failure after a server `ok` loses the login; one
-wrong OTP is terminal with no lab path out; diagnostics print server JSON key
-names; store files use the default umask (contents encrypted); the CLI suggests
-`request-email-code --email`, which is always rejected.
+discards its `login`; a save failure after a server `ok` loses the login;
+diagnostics print server JSON key names.
+
+Since checked (2026-10-13):
+
+- **Fixed: store files used the default umask.** Records are encrypted, but a
+  new store file was group/world-readable under a common umask. A newly created
+  store file is now 0600 (unix), created after the owner lock so a refused open
+  leaves nothing behind; an existing file's mode is not changed. Test:
+  `a_new_store_file_is_private`.
+- **Fixed: the CLI suggested `request-email-code [--email <address>]`,** which
+  is always rejected (the comparison client sends no address). The hint now
+  names the command without it.
+- **Confirmed open: one wrong OTP is terminal.** A `/v2/register` answer
+  `fail`/`mismatch` (or `incorrect`) goes through the generic refusal path and
+  saves `Blocked{ServerRefused}` reached from `verifying`; no command returns to
+  code entry (the code-request one-shots require a refusal reached from
+  `preparing`, by design). Static evidence (2.26.37.71,
+  `KotlinRegistrationBridge.A0D`, retained in
+  [the core bundle](apk/2.26.37.71-core/registration-response-bridge.txt)):
+  `mismatch` maps to `HD6.A0A` (`0280..0294`), `incorrect` to `HD6.A09`
+  (`02ac..02c0`), `too_many_guesses` to `HD6.A0E` (`026a..027e`), and the reply's
+  `guess_wait` is read with `optString` into `HdD.A0C` (`0338..0344`).
+  **Not traced:** which screen consumes `HD6.A0A` (whether the app returns to
+  code entry, and with which wait) and the unit and format of `guess_wait`; no
+  retained bundle references either, and our wire parser ignores `guess_wait`.
+  A re-entry path must honour that wait, so it is not built on a guess.
 
 ## Checked and sound (from the audit)
 

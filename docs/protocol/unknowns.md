@@ -188,6 +188,16 @@ classed `Duplicate`, at every login. Check that in the next live receive window
 treating these encodings as verified. Found by the
 [live-shape regression sweep](replay-safety-audit.md#live-shape-regression-sweep-2026-10-13).
 
+## Wrong OTP re-entry and `guess_wait` (2026-10-13)
+
+A `/v2/register` `mismatch` answer leaves our attempt blocked with no way back
+to code entry. 2.26.37.71 `KotlinRegistrationBridge.A0D` maps `mismatch` to
+`HD6.A0A` and reads `guess_wait` as a string into `HdD.A0C` (**confirmed
+static**). The consumer of `HD6.A0A`, whether the app returns to code entry, and
+the unit and format of `guess_wait` are **not traced**. Trace those before
+building a re-entry command; it must honour `guess_wait`.
+[Audit](registration-safety-audit.md#plausible-not-verified).
+
 ## Where the APK handles an undecodable stanza (2026-10-13)
 
 When a decrypted frame does not decode, `listen` now captures it as

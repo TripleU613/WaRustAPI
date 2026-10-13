@@ -11172,7 +11172,7 @@
           "Store"
         ],
         "summary": "Create the store (idempotent) and verify the master key opens it",
-        "description": "Initializes the account protocol store if it does not exist, or verifies that the master key can open it. This operation is idempotent.",
+        "description": "Initializes the account protocol store if it does not exist, or verifies that the master key can open it. This operation is idempotent. Store file mode (2026-10-13): a newly created store file is 0600 on unix (records were already encrypted; the file followed the umask before); an existing file's mode is not changed.",
         "operationId": "initStore",
         "x-cli": "whatsapp-cli store init",
         "x-transport": [
@@ -11318,7 +11318,7 @@
           "Accounts"
         ],
         "summary": "Onboard a phone number: derive its token, write the private request configuration with the working recipe, generate its master key and profile",
-        "description": "Derives a registration token for the given phone number, generates the master cryptographic key, creates the account profile, and writes a private request configuration with the APK-derived recipe. The token, key and phone are never printed. Files are created with restrictive permissions: 0600 for profile and config files, 0700 for directories. Next step: lab-signup --allow-live-request begin. Since 2026-10-13 it also creates the profile's encrypted store (so lab-signup begin never has to) and refuses a number another saved profile's request JSON already configures: one number keeps one store. Nothing is written when refused. Duplicate check (2026-10-13, review correction): numbers are compared canonically (separators ignored), each saved profile is read on its own so a malformed one hides nothing, sibling account directories' request.json files are also checked, the canonical number is written, and the new store is claimed for that number.",
+        "description": "Derives a registration token for the given phone number, generates the master cryptographic key, creates the account profile, and writes a private request configuration with the APK-derived recipe. The token, key and phone are never printed. Files are created with restrictive permissions: 0600 for profile and config files, 0700 for directories. Next step: lab-signup --allow-live-request begin. Since 2026-10-13 it also creates the profile's encrypted store (so lab-signup begin never has to) and refuses a number another saved profile's request JSON already configures: one number keeps one store. Nothing is written when refused. Duplicate check (2026-10-13, review correction): numbers are compared canonically (separators ignored), each saved profile is read on its own so a malformed one hides nothing, sibling account directories' request.json files are also checked, the canonical number is written, and the new store is claimed for that number. Store file mode (2026-10-13): a newly created store file is 0600 on unix (records were already encrypted; the file followed the umask before); an existing file's mode is not changed.",
         "operationId": "createAccount",
         "x-cli": "whatsapp-cli accounts new",
         "x-transport": [

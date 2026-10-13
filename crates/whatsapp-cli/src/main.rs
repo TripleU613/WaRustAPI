@@ -1631,7 +1631,7 @@ fn print_step(step: &RegistrationStep, json: bool) {
         }
         RegistrationStep::Action(RequiredAction::RequestEmailCode(_)) => {
             println!(
-                "registration: the server requires the account's email second factor; run `lab-signup --allow-live-request request-email-code [--email <address>]`"
+                "registration: the server requires the account's email second factor; run `lab-signup --allow-live-request request-email-code` (the server emails the address on file; no address is sent)"
             )
         }
         RegistrationStep::Action(RequiredAction::EnterEmailCode(_)) => {
