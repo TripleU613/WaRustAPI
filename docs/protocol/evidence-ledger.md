@@ -1,3 +1,16 @@
+2026-10-13 — **Fixed/offline (PR #4 review, merged as `575d249`):** three
+Codex findings on the merged work are fixed, each with a test. A store path
+that is a dangling symlink, or appears between the existence check and the
+private create, is now refused instead of opened through (which created the
+link target with the default mode). The email-answered marker that
+`resume-email-challenge` needs is committed in the same transaction as
+`RegistrationOutcomeUnknown`, so a crash can no longer strand an attempt the
+server definitely answered. CI now routes every `docs/` file a crate compiles
+in or reads at runtime (`DOCS_INPUTS`, including `docs/cli.md` and
+`docs/api/openapi.json`) to that crate's checks; a planner test scans for
+`../docs/` paths so a new one cannot be missed.
+[Audit](registration-safety-audit.md), [CI routing](../ci.md).
+
 2026-10-13 — **Corrected/offline (independent review of the descriptor
 simulator and edit trace):** no committed decode was wrong, but the simulator
 could have printed a wrong pairing as exact in three synthetic cases. It now

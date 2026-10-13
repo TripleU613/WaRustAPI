@@ -1,12 +1,15 @@
 //! Dependency-free CI routing; compiled with rustc, never Cargo.
 use std::{env, fs, io::Write, process::Command};
 
-/// Files under `docs/` that a crate compiles in with `include_str!` or
-/// `include_bytes!`. A change to one alone must still build and test that
-/// crate, although `docs/` is otherwise a non-build input; the
-/// `embedded_docs_are_routed` test fails when an embed is missing here.
-const EMBEDDED_DOCS: &[(&str, &str)] = &[
+/// Files under `docs/` that a crate's code or tests use: compiled in with
+/// `include_str!`/`include_bytes!`, or read by a relative path such as
+/// `CARGO_MANIFEST_DIR/../../docs/cli.md`. A change to one alone must still
+/// build and test that crate, although `docs/` is otherwise a non-build input;
+/// the `docs_inputs_are_routed` test fails when one is missing here.
+const DOCS_INPUTS: &[(&str, &str)] = &[
     ("docs/api/openapi.json", "whatsapp-cli"),
+    // Compared with the generated reference by the `cli_reference` test.
+    ("docs/cli.md", "whatsapp-cli"),
     (
         "docs/protocol/fingerprint-native-comparison-cases.json",
         "whatsapp-api",
@@ -66,6 +69,23 @@ const EMBEDDED_DOCS: &[(&str, &str)] = &[
     ),
 ];
 
+/// `docs/` path literals that are not test inputs needing a `DOCS_INPUTS`
+/// entry, as (source file, literal, reason). An exemption holds only in its
+/// own file: the same literal elsewhere still needs a routing decision.
+#[cfg(test)]
+const DOCS_NOT_INPUTS: &[(&str, &str, &str)] = &[
+    (
+        "xtask/src/coverage.rs",
+        "docs/protocol/apk",
+        "directory: coverage reads only its manifest.json/targets.json, routed by their own rule",
+    ),
+    (
+        "xtask/src/coverage.rs",
+        "docs/protocol/apk/*/{manifest,targets}.json",
+        "text in the coverage report, not a path that is read",
+    ),
+];
+
 #[derive(Debug, Default, PartialEq, Eq)]
 struct Plan {
     api: bool,
@@ -117,8 +137,8 @@ impl Plan {
             self.xtask = true;
             self.dependencies |= path == "xtask/src/deps.rs";
             self.proto |= path == "xtask/src/proto.rs";
-        } else if EMBEDDED_DOCS.iter().any(|(doc, _)| *doc == path) {
-            for (_, owner) in EMBEDDED_DOCS.iter().filter(|(doc, _)| *doc == path) {
+        } else if DOCS_INPUTS.iter().any(|(doc, _)| *doc == path) {
+            for (_, owner) in DOCS_INPUTS.iter().filter(|(doc, _)| *doc == path) {
                 match *owner {
                     "whatsapp-api" => self.api = true,
                     "whatsapp-cli" => self.cli = true,
@@ -345,11 +365,15 @@ mod tests {
             Plan::default()
         );
     }
-    /// Every `include_str!`/`include_bytes!` of a `docs/` file in the crates
-    /// routes to the Rust job of the crate that embeds it (Codex review on
-    /// PR #4: changing an embedded fixture alone skipped the build).
+    /// Every `docs/` path literal in the crates, whether relative
+    /// (`../../docs/x`, from `include_str!`/`include_bytes!` or
+    /// `CARGO_MANIFEST_DIR`) or root-relative (`root.join("docs/x")`), routes
+    /// to the Rust job of the crate that uses it, or is listed in
+    /// `DOCS_NOT_INPUTS` with a reason (Codex review on PR #4 and PR #5).
+    /// Prose that merely mentions a docs file (after a space or backtick) is
+    /// not a path literal.
     #[test]
-    fn embedded_docs_are_routed() {
+    fn docs_inputs_are_routed() {
         fn sources(dir: &std::path::Path, out: &mut Vec<std::path::PathBuf>) {
             for entry in fs::read_dir(dir).unwrap() {
                 let path = entry.unwrap().path();
@@ -364,46 +388,58 @@ mod tests {
         for root in ["crates", "xtask"] {
             sources(std::path::Path::new(root), &mut files);
         }
-        let mut embedded = 0;
+        let mut found = 0;
         for file in files {
             let text = fs::read_to_string(&file).unwrap();
-            for macro_name in ["include_str!(", "include_bytes!("] {
-                for (at, _) in text.match_indices(macro_name) {
-                    let rest = text[at + macro_name.len()..].trim_start();
-                    let Some(literal) = rest.strip_prefix('"').and_then(|r| r.split('"').next())
-                    else {
-                        continue;
-                    };
-                    let mut parts: Vec<&str> = Vec::new();
-                    let dir = file.parent().unwrap().to_str().unwrap();
-                    for part in dir.split('/').chain(literal.split('/')) {
-                        match part {
-                            "" | "." => {}
-                            ".." => {
-                                parts.pop();
-                            }
-                            part => parts.push(part),
-                        }
-                    }
-                    let path = parts.join("/");
-                    if !path.starts_with("docs/") {
-                        continue;
-                    }
-                    embedded += 1;
-                    let p = route(&[path.as_str()]);
-                    let file = file.to_str().unwrap();
-                    let owned = if file.starts_with("xtask/") {
-                        p.xtask
-                    } else if file.starts_with("crates/whatsapp-cli/") {
-                        p.cli || p.api
-                    } else {
-                        p.api
-                    };
-                    assert!(owned, "{file} embeds {path}, which CI does not route to it");
+            // A path built from a bare `"docs"` segment
+            // (`Path::new("docs").join(..)`) cannot be resolved lexically, so
+            // it always needs an explicit decision for its file.
+            for _ in text.matches("\"docs\"") {
+                found += 1;
+                let file = file.to_str().unwrap();
+                assert!(
+                    DOCS_NOT_INPUTS
+                        .iter()
+                        .any(|(source, listed, _)| *source == file && *listed == "docs"),
+                    "{file} builds a path from a bare \"docs\" segment; list the files it reads in DOCS_INPUTS and add (\"{file}\", \"docs\", reason) to DOCS_NOT_INPUTS"
+                );
+            }
+            for (at, _) in text.match_indices("docs/") {
+                let before = &text[..at];
+                // A literal (`"docs/`, raw `r#"docs/`), a relative path
+                // (`../docs/`) or an interpolated root (`{root}/docs/`);
+                // prose and URLs (`https://host/docs/`) are not paths here.
+                if !(before.ends_with('"') || before.ends_with("../") || before.ends_with("}/")) {
+                    continue;
                 }
+                let len = text[at..]
+                    .find(|c: char| c == '"' || c.is_whitespace())
+                    .unwrap_or(text.len() - at);
+                let path = &text[at..at + len];
+                found += 1;
+                let file = file.to_str().unwrap();
+                if DOCS_NOT_INPUTS
+                    .iter()
+                    .any(|(source, listed, _)| *source == file && *listed == path)
+                {
+                    continue;
+                }
+                let p = route(&[path]);
+                let owned = if file.starts_with("xtask/") {
+                    // A generated report is checked by its audit job.
+                    p.xtask || p.dependencies
+                } else if file.starts_with("crates/whatsapp-cli/") {
+                    p.cli || p.api
+                } else {
+                    p.api
+                };
+                assert!(
+                    owned,
+                    "{file} uses {path}, which CI does not route to it; add it to DOCS_INPUTS, or to DOCS_NOT_INPUTS with the reason it is not read"
+                );
             }
         }
-        assert!(embedded > 0, "run from the repository root");
+        assert!(found > 0, "run from the repository root");
     }
     #[test]
     fn cli_is_scoped() {
