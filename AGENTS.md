@@ -323,6 +323,11 @@ request—not adding Rust code, another command or a number-specific script.**
   `contextInfo.expiration`, and the native retry-receipt answer policy. Replay
   guarantees and open observations: `docs/protocol/replay-safety-audit.md`.
   Quoted image/voice-note sending is offline-only; per-area state is in
-  `docs/feature-parity.md`.
+  `docs/feature-parity.md`. First checks for the next live receive window:
+  status-view receipts are recorded and ACKed again (they ended `listen` from
+  2026-10-10 to 2026-10-13), and the 2026-10-11 ACK/confirmation encodings are
+  accepted (`confirmed=true` with no redelivery at the next login); see
+  `docs/protocol/unknowns.md`. Refused stanza content must never end receive:
+  validate before the store, let stored-row faults propagate.
 - Most important lesson: **listen first, change data for data requests, explain
   genuine obstacles upfront, and deliver the requested result without detours.**
