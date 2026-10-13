@@ -21,10 +21,22 @@ starts from facts. The normal runtime (`listen`, `outbox-send`) never answers a
   (`AttemptRecord.payload`, encrypted at rest) and the model already has
   `AttemptRecord.re_encryption` for a protocol-directed re-encryption. Nothing
   sets it yet.
-- **Native evidence retained:** only `SendE2EMessageJob`'s
+- **Native evidence retained:** `SendE2EMessageJob`'s
   `forceSenderKeyDistribution` / `targetDeviceRawJids` names (groups.md). The
   related [sync-and-resend job](sync-resend.md) resends to *newly added*
   devices; it is not the retry-receipt answer.
+- **Rechecked 2026-10-13 (confirmed static, retained bundles):** the job also
+  carries `retryCount:I`, `messageSendRetrySource:Integer`,
+  `isRetryReceiptLid:Z` and `includeSenderKeysInMessage:Z`. In the retained
+  slices they are only read and forwarded: `isRetryReceiptLid` and
+  `includeSenderKeysInMessage` into the `CaB` constructor
+  ([group-send-job-hash-check](apk/2.26.37.71-groups/group-send-job-hash-check.txt)
+  `11ee..1256`), and `retryCount` into `Civ` (`0bd6..0c28`) and the job-state
+  logging of [send-job-run](apk/2.26.37.71-send-job-state/send-job-run.txt)
+  (`067c..0684` and later, with `messageSendRetrySource`). **Negative:** no
+  branch there limits or decides on the count, so the answer policy is set by
+  whoever creates the job from an incoming retry receipt, and that handler is
+  not retained.
 
 ## What a normal-runtime answer needs that is not stored
 
