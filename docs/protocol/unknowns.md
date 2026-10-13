@@ -123,6 +123,24 @@ retry-answer policy, calls, communities, profile picture), live checks on the
 owner's account, and owner decisions (HTTP routes that expose addresses,
 content or sends; ban appeal).
 
+## Retained-evidence sweep of the "needs the APK" items (2026-10-13)
+
+Before calling these blocked again, the retained bundles (`docs/protocol/apk`,
+`rea`) were searched for each one. **Gained:** the KEM upload element shape
+([kem-prekey-inventory](kem-prekey-inventory.md#upload-element-shape-2026-10-13-retained-evidence)),
+the single PQ predicate `Can.A04(jid)` behind `pqsupport`
+([pq-bundle-boundary](pq-bundle-boundary.md#the-pq-predicate-cana04-2026-10-13-retained-evidence-only)),
+`SendE2EMessageJob.editVersion` as the sender's edit value (below), the
+correction that `1Dz.A0H` is the server-ACK hand-off (below), the chat timer
+state `0Zi` (below) and the forwarding-only retry fields
+([retry-answers](retry-answers.md)). **Searched, nothing retained:** the body of
+`Can.A04`; who sets `editVersion` per operation, and `Civ`'s stanza writer;
+any `ContextInfo` (`BWx`) field write; the incoming retry-receipt handler;
+`9QH` (document/video `mediatype`); a profile-picture set (only the
+`w:profile:picture` token and received `picture` attributes in usync
+parsing); a group poll stanza producer (only `PollCreation` descriptors); and
+mute/pin/archive app-state actions (no matches). These need the APK.
+
 ## Outgoing revoke and edit (2026-10-13)
 
 `MessageContent::Edit` and `MessageContent::Revoke` exist in the model, but the
