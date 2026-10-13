@@ -117,12 +117,21 @@ operation's `x-library`.
 
 ## HTTP API parity
 
-The library and CLI cover the rows above; HTTP does not. `serve` is
-deliberately store-less and unauthenticated (loopback by default), so it only
-serves secret-free profile and capability data. Serving store-backed
-operations, even redacted read-only ones such as prekey counts, would decrypt
-the encrypted store for any local client. That requires an access-control
-design (for example a per-start bearer token and explicit store/key
-arguments) that the owner has not specified; it is recorded here as a
-decision to make, not implemented. No document may describe a CLI-only
-operation as served over HTTP.
+The library and CLI cover the rows above; HTTP covers little of it. Default
+`serve` is store-less and unauthenticated (loopback by default) and serves only
+secret-free profile and capability data.
+
+**2026-10-13, opt-in store routes:** `serve --store-routes --token-file <new
+path>` (experimental-transport build) also serves three read-only, redacted
+inspections: `GET /v1/receipts`, `/v1/prekeys` and `/v1/outbox/suspended`, the
+same library calls and JSON as the CLI. The access-control design is the
+conservative one this page previously left open: loopback only (even with
+`--allow-non-loopback`), a fresh 256-bit bearer token written only to a new
+mode-0600 file (never overwritten, never printed or logged, removed on
+shutdown), the store opened per request so other commands can use it in
+between (a held store answers 503), and nothing that sends or mutates. Every
+other store-backed operation remains CLI-only (`x-transport: cli`); in
+particular no send, queue, receipt-transmitting or live operation is served.
+Extending the routes is mechanical but each one needs its output checked for
+redaction first. No document may describe a CLI-only operation as served over
+HTTP.

@@ -1,8 +1,14 @@
 //! Minimal HTTP control plane for local operation.
 //!
-//! This intentionally exposes only secret-free, offline-safe endpoints while
-//! the Android primary-device profile is incomplete. Network mutations return
+//! By default this exposes only secret-free, offline-safe endpoints while the
+//! Android primary-device profile is incomplete. Network mutations return
 //! structured unsupported responses instead of bypassing evidence gates.
+//!
+//! `serve --store-routes` additionally serves a few read-only, redacted
+//! inspections of one encrypted account store (the same library calls and
+//! JSON as the CLI). They require a per-start bearer token that is written to
+//! a new private file, are loopback-only, open the store per request (so other
+//! CLI commands can use it in between) and never send anything.
 
 use std::net::SocketAddr;
 use std::sync::Arc;
@@ -38,11 +44,56 @@ const OPENAPI_JSON: &str = include_str!("../../../docs/api/openapi.json");
 struct ApiState {
     profile: ProtocolProfile,
     capabilities: CapabilityMatrix,
+    store: Option<StoreRoutes>,
+}
+
+/// Read-only store routes, each the redacted output of an existing CLI
+/// inspection (`receipts`, `prekeys`, `outbox-suspended`).
+const STORE_ROUTES: [&str; 3] = ["/v1/receipts", "/v1/prekeys", "/v1/outbox/suspended"];
+
+/// What `serve --store-routes` needs to open one account store.
+pub struct StoreServe {
+    /// Existing store only (`create` is forced off).
+    pub options: whatsapp_api::store::OpenOptions,
+    /// New private file that receives the bearer token; never overwritten.
+    pub token_file: std::path::PathBuf,
+}
+
+struct StoreRoutes {
+    options: whatsapp_api::store::OpenOptions,
+    token: zeroize::Zeroizing<String>,
+    /// The store file admits one open handle; requests take turns.
+    lock: tokio::sync::Mutex<()>,
+}
+
+impl StoreRoutes {
+    fn authorized(&self, header: Option<&str>) -> bool {
+        use sha2::{Digest, Sha256};
+        let Some(presented) = header.and_then(|value| value.strip_prefix("Bearer ")) else {
+            return false;
+        };
+        // Equal-length digests compared without an early exit.
+        let presented = Sha256::digest(presented.trim().as_bytes());
+        let expected = Sha256::digest(self.token.as_bytes());
+        presented
+            .iter()
+            .zip(expected.iter())
+            .fold(0u8, |acc, (a, b)| acc | (a ^ b))
+            == 0
+    }
+
+    fn options(&self) -> whatsapp_api::store::OpenOptions {
+        whatsapp_api::store::OpenOptions {
+            create: false,
+            ..self.options.clone()
+        }
+    }
 }
 
 struct RequestLine {
     method: String,
     path: String,
+    authorization: Option<String>,
 }
 
 struct Response {
@@ -50,6 +101,7 @@ struct Response {
     reason: &'static str,
     body: Vec<u8>,
     allow: Option<&'static str>,
+    authenticate: bool,
 }
 
 impl Response {
@@ -59,7 +111,16 @@ impl Response {
             reason,
             body: serde_json::to_vec(&body).unwrap_or_else(|_| b"{}".to_vec()),
             allow: None,
+            authenticate: false,
         }
+    }
+
+    fn error(status: u16, reason: &'static str, code: &str, message: &str) -> Self {
+        Self::json(
+            status,
+            reason,
+            json!({ "error": { "code": code, "message": message } }),
+        )
     }
 
     fn method_not_allowed(allow: &'static str) -> Self {
@@ -87,6 +148,9 @@ impl Response {
         if let Some(allow) = self.allow {
             headers.push_str(&format!("Allow: {allow}\r\n"));
         }
+        if self.authenticate {
+            headers.push_str("WWW-Authenticate: Bearer\r\n");
+        }
         headers.push_str("\r\n");
         let mut encoded = headers.into_bytes();
         if include_body {
@@ -96,13 +160,32 @@ impl Response {
     }
 }
 
-pub async fn serve(bind: SocketAddr, allow_non_loopback: bool) -> Result<(), Error> {
+pub async fn serve(
+    bind: SocketAddr,
+    allow_non_loopback: bool,
+    store: Option<StoreServe>,
+) -> Result<(), Error> {
     validate_bind(bind, allow_non_loopback)?;
+    if store.is_some() && !bind.ip().is_loopback() {
+        return Err(Error::invalid(
+            "bind",
+            "store routes serve decrypted account data and are loopback-only",
+        ));
+    }
+    let store = match store {
+        Some(store) => Some(open_store_routes(store)?),
+        None => None,
+    };
 
     let profile = ProtocolProfile::android_reference()?;
     let state = Arc::new(ApiState {
         capabilities: CapabilityMatrix::current(profile.id.clone()),
         profile,
+        store: store.as_ref().map(|(routes, _)| StoreRoutes {
+            options: routes.options(),
+            token: routes.token.clone(),
+            lock: tokio::sync::Mutex::new(()),
+        }),
     });
     let listener = TcpListener::bind(bind).await?;
     let local_addr = listener.local_addr()?;
@@ -112,6 +195,12 @@ pub async fn serve(bind: SocketAddr, allow_non_loopback: bool) -> Result<(), Err
 
     println!("whatsapp-api HTTP control plane listening on http://{local_addr}");
     println!("profile: {} (offline gates enforced)", state.profile.id);
+    if let Some((_, guard)) = &store {
+        println!(
+            "store routes enabled (read-only): bearer token written to {} (mode 0600, removed on shutdown)",
+            guard.0.display()
+        );
+    }
 
     loop {
         tokio::select! {
@@ -139,13 +228,67 @@ pub async fn serve(bind: SocketAddr, allow_non_loopback: bool) -> Result<(), Err
     }
 }
 
+/// Removes the token file when the server stops, so a stale token is not left
+/// readable after its server is gone.
+struct TokenFile(std::path::PathBuf);
+impl Drop for TokenFile {
+    fn drop(&mut self) {
+        let _ = std::fs::remove_file(&self.0);
+    }
+}
+
+/// Check the store opens now (a clear error at startup, not per request), then
+/// issue a fresh 256-bit token into a new private file. An existing file is
+/// refused rather than overwritten.
+fn open_store_routes(store: StoreServe) -> Result<(StoreRoutes, TokenFile), Error> {
+    if !cfg!(feature = "experimental-transport") {
+        return Err(Error::invalid(
+            "store_routes",
+            "store routes need a whatsapp-cli build with experimental-transport",
+        ));
+    }
+    let routes = StoreRoutes {
+        options: store.options,
+        token: zeroize::Zeroizing::new(String::new()),
+        lock: tokio::sync::Mutex::new(()),
+    };
+    drop(whatsapp_api::store::ProtocolStore::open(routes.options())?);
+    let token = issue_token(&store.token_file)?;
+    Ok((StoreRoutes { token, ..routes }, TokenFile(store.token_file)))
+}
+
+fn issue_token(path: &std::path::Path) -> Result<zeroize::Zeroizing<String>, Error> {
+    use std::io::Write;
+    let mut bytes = zeroize::Zeroizing::new([0u8; 32]);
+    getrandom::fill(&mut *bytes)
+        .map_err(|_| Error::invalid("store_routes", "token entropy unavailable"))?;
+    let token = zeroize::Zeroizing::new(hex::encode(*bytes));
+    let mut options = std::fs::OpenOptions::new();
+    options.write(true).create_new(true);
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::OpenOptionsExt;
+        options.mode(0o600);
+    }
+    let mut file = options.open(path).map_err(|error| {
+        if error.kind() == std::io::ErrorKind::AlreadyExists {
+            Error::invalid("token_file", "already exists; choose a new path")
+        } else {
+            Error::from(error)
+        }
+    })?;
+    file.write_all(token.as_bytes())?;
+    file.sync_all()?;
+    Ok(token)
+}
+
 fn validate_bind(bind: SocketAddr, allow_non_loopback: bool) -> Result<(), Error> {
     if bind.ip().is_loopback() || allow_non_loopback {
         return Ok(());
     }
     Err(Error::invalid(
         "bind",
-        "non-loopback listeners require --allow-non-loopback because HTTP authentication is not implemented",
+        "non-loopback listeners require --allow-non-loopback because the base routes are unauthenticated",
     ))
 }
 
@@ -154,7 +297,10 @@ async fn handle_connection(mut stream: TcpStream, state: &ApiState) -> Result<()
         .await
         .map_err(|_| Error::Timeout(REQUEST_TIMEOUT))??;
     let response = match request.as_ref() {
-        Some(request) => route(&request.method, &request.path, state),
+        Some(request) => match store_route(request, state).await {
+            Some(response) => response,
+            None => route(&request.method, &request.path, state),
+        },
         None => Response::json(
             400,
             "Bad Request",
@@ -212,11 +358,102 @@ async fn read_request(stream: &mut TcpStream) -> Result<Option<RequestLine>, Err
     if !matches!(version, "HTTP/1.0" | "HTTP/1.1") || !path.starts_with('/') {
         return Ok(None);
     }
+    let Some(head_end) = bytes.windows(4).position(|window| window == b"\r\n\r\n") else {
+        return Ok(None);
+    };
+    let authorization = std::str::from_utf8(&bytes[line_end + 2..head_end])
+        .ok()
+        .and_then(|headers| {
+            headers.split("\r\n").find_map(|header| {
+                let (name, value) = header.split_once(':')?;
+                name.trim()
+                    .eq_ignore_ascii_case("authorization")
+                    .then(|| value.trim().to_owned())
+            })
+        });
 
     Ok(Some(RequestLine {
         method: method.to_owned(),
         path: path.to_owned(),
+        authorization,
     }))
+}
+
+/// Store routes, or `None` for every other path. Disabled routes answer 404,
+/// a missing or wrong token 401, and a store that cannot be opened (for
+/// example while `listen` holds it) 503 with a fixed message.
+async fn store_route(request: &RequestLine, state: &ApiState) -> Option<Response> {
+    let path = request
+        .path
+        .split_once('?')
+        .map_or(request.path.as_str(), |(path, _)| path);
+    if !STORE_ROUTES.contains(&path) {
+        return None;
+    }
+    if !matches!(request.method.as_str(), "GET" | "HEAD") {
+        return Some(Response::method_not_allowed("GET, HEAD"));
+    }
+    let Some(store) = &state.store else {
+        return Some(Response::error(
+            404,
+            "Not Found",
+            "store_routes_disabled",
+            "start serve with --store-routes --token-file to enable store inspections",
+        ));
+    };
+    if !store.authorized(request.authorization.as_deref()) {
+        let mut response = Response::error(
+            401,
+            "Unauthorized",
+            "unauthorized",
+            "send Authorization: Bearer <token from the serve token file>",
+        );
+        response.authenticate = true;
+        return Some(response);
+    }
+    let _turn = store.lock.lock().await;
+    let options = store.options();
+    let path = path.to_owned();
+    let result = tokio::task::spawn_blocking(move || read_store(options, &path)).await;
+    Some(match result {
+        Ok(Ok(body)) => Response::json(200, "OK", body),
+        Ok(Err(error)) => {
+            tracing::warn!(error = %error, "store route failed");
+            Response::error(
+                503,
+                "Service Unavailable",
+                "store_unavailable",
+                "the account store could not be opened or read; it may be in use by another command",
+            )
+        }
+        Err(_) => Response::error(
+            500,
+            "Internal Server Error",
+            "internal",
+            "store inspection stopped unexpectedly",
+        ),
+    })
+}
+
+#[cfg(feature = "experimental-transport")]
+fn read_store(options: whatsapp_api::store::OpenOptions, path: &str) -> Result<Value, Error> {
+    use whatsapp_api::transport::{outgoing, prekeys, receipts};
+    let store = whatsapp_api::store::ProtocolStore::open(options)?;
+    let value = match path {
+        "/v1/receipts" => serde_json::to_value(receipts::outcomes(&store)?),
+        "/v1/prekeys" => serde_json::to_value(prekeys::summary(&store)?),
+        "/v1/outbox/suspended" => serde_json::to_value(outgoing::identity_suspended(&store)?),
+        _ => return Err(Error::invalid("store_routes", "unknown store route")),
+    };
+    value.map_err(|_| Error::invalid("store_routes", "inspection did not serialize"))
+}
+
+#[cfg(not(feature = "experimental-transport"))]
+fn read_store(_: whatsapp_api::store::OpenOptions, _: &str) -> Result<Value, Error> {
+    Err(Error::invalid(
+        "store_routes",
+        "store routes need a whatsapp-cli build with experimental-transport",
+    ))
 }
 
 fn route(method: &str, raw_path: &str, state: &ApiState) -> Response {
@@ -237,24 +474,31 @@ fn route(method: &str, raw_path: &str, state: &ApiState) -> Response {
         (_, "/v1/connect" | "/v1/registration") if method != "POST" => {
             Response::method_not_allowed("POST")
         }
-        ("GET" | "HEAD", "/") => Response::json(
-            200,
-            "OK",
-            json!({
-                "service": "whatsapp-api",
-                "version": env!("CARGO_PKG_VERSION"),
-                "routes": [
-                    "GET /healthz",
-                    "GET /openapi.json",
-                    "GET /v1/profile",
-                    "GET /v1/capabilities",
-                    "GET /v1/transport/wire-profile",
-                    "GET /v1/registration/wire-profile",
-                    "POST /v1/connect",
-                    "POST /v1/registration"
-                ]
-            }),
-        ),
+        ("GET" | "HEAD", "/") => {
+            let mut routes = vec![
+                "GET /healthz".to_owned(),
+                "GET /openapi.json".to_owned(),
+                "GET /v1/profile".to_owned(),
+                "GET /v1/capabilities".to_owned(),
+                "GET /v1/transport/wire-profile".to_owned(),
+                "GET /v1/registration/wire-profile".to_owned(),
+                "POST /v1/connect".to_owned(),
+                "POST /v1/registration".to_owned(),
+            ];
+            // Listed only when enabled; each needs the bearer token.
+            if state.store.is_some() {
+                routes.extend(STORE_ROUTES.iter().map(|path| format!("GET {path}")));
+            }
+            Response::json(
+                200,
+                "OK",
+                json!({
+                    "service": "whatsapp-api",
+                    "version": env!("CARGO_PKG_VERSION"),
+                    "routes": routes,
+                }),
+            )
+        }
         ("GET" | "HEAD", "/healthz") => Response::json(
             200,
             "OK",
@@ -525,6 +769,7 @@ mod tests {
         ApiState {
             capabilities: CapabilityMatrix::current(profile.id.clone()),
             profile,
+            store: None,
         }
     }
 
@@ -667,6 +912,150 @@ mod tests {
         assert!(!body["paths"].as_object().unwrap().is_empty());
     }
 
+    fn request(method: &str, path: &str, authorization: Option<&str>) -> RequestLine {
+        RequestLine {
+            method: method.into(),
+            path: path.into(),
+            authorization: authorization.map(str::to_owned),
+        }
+    }
+
+    #[tokio::test]
+    async fn store_routes_are_off_unless_enabled_and_never_touch_other_paths() {
+        let state = state();
+        let response = store_route(&request("GET", "/v1/receipts", None), &state)
+            .await
+            .unwrap();
+        assert_eq!(response.status, 404);
+        assert_eq!(body(&response)["error"]["code"], "store_routes_disabled");
+        assert!(
+            store_route(&request("GET", "/v1/profile", None), &state)
+                .await
+                .is_none()
+        );
+    }
+
+    #[cfg(feature = "experimental-transport")]
+    #[tokio::test]
+    async fn store_routes_require_the_token_and_serve_redacted_inspections() {
+        use whatsapp_api::store::{MasterKey, OpenOptions, ProtocolStore, StaticKeySource};
+        let dir = tempfile::tempdir().unwrap();
+        let options = OpenOptions {
+            path: dir.path().join("served.redb"),
+            account_id: whatsapp_api::model::ids::AccountId::new("served").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([3; 32]))),
+            create: true,
+        };
+        drop(ProtocolStore::open(options.clone()).unwrap());
+        let mut state = state();
+        state.store = Some(StoreRoutes {
+            options,
+            token: zeroize::Zeroizing::new("secret-token".into()),
+            lock: tokio::sync::Mutex::new(()),
+        });
+        for authorization in [None, Some("Bearer wrong"), Some("secret-token")] {
+            let response = store_route(&request("GET", "/v1/receipts", authorization), &state)
+                .await
+                .unwrap();
+            assert_eq!(response.status, 401, "{authorization:?}");
+            assert!(response.authenticate);
+            assert!(!String::from_utf8_lossy(&response.body).contains("secret-token"));
+        }
+        let auth = Some("Bearer secret-token");
+        let post = store_route(&request("POST", "/v1/prekeys", auth), &state)
+            .await
+            .unwrap();
+        assert_eq!(post.status, 405);
+        let receipts = store_route(&request("GET", "/v1/receipts", auth), &state)
+            .await
+            .unwrap();
+        assert_eq!((receipts.status, body(&receipts)), (200, json!([])));
+        let prekeys = store_route(&request("GET", "/v1/prekeys?x=1", auth), &state)
+            .await
+            .unwrap();
+        assert_eq!(prekeys.status, 200);
+        for field in ["unsent", "uncertain", "uploaded", "batches", "kem_local"] {
+            assert!(body(&prekeys).get(field).is_some(), "{field}");
+        }
+        let suspended = store_route(&request("GET", "/v1/outbox/suspended", auth), &state)
+            .await
+            .unwrap();
+        assert_eq!((suspended.status, body(&suspended)), (200, json!([])));
+        // While another handle holds the store (as `listen` would), the route
+        // answers 503 with a fixed message instead of waiting or leaking paths.
+        let held = ProtocolStore::open(state.store.as_ref().unwrap().options()).unwrap();
+        let busy = store_route(&request("GET", "/v1/receipts", auth), &state)
+            .await
+            .unwrap();
+        assert_eq!(busy.status, 503);
+        assert_eq!(body(&busy)["error"]["code"], "store_unavailable");
+        assert!(!String::from_utf8_lossy(&busy.body).contains("served.redb"));
+        drop(held);
+    }
+
+    #[test]
+    fn token_files_are_new_private_and_never_overwritten() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("token");
+        let token = issue_token(&path).unwrap();
+        assert_eq!(token.len(), 64);
+        assert_eq!(std::fs::read_to_string(&path).unwrap(), *token);
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::PermissionsExt;
+            let mode = std::fs::metadata(&path).unwrap().permissions().mode();
+            assert_eq!(mode & 0o777, 0o600);
+        }
+        let error = issue_token(&path).unwrap_err().to_string();
+        assert!(error.contains("already exists"));
+        assert_eq!(std::fs::read_to_string(&path).unwrap(), *token);
+        drop(TokenFile(path.clone()));
+        assert!(!path.exists());
+    }
+
+    #[tokio::test]
+    async fn store_routes_refuse_non_loopback_binds_before_opening_anything() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = StoreServe {
+            options: whatsapp_api::store::OpenOptions {
+                path: dir.path().join("never-opened.redb"),
+                account_id: whatsapp_api::model::ids::AccountId::new("served").unwrap(),
+                key_source: Arc::new(whatsapp_api::store::EnvKeySource::new(
+                    "WHATSAPP_TEST_UNSET_KEY",
+                )),
+                create: false,
+            },
+            token_file: dir.path().join("token"),
+        };
+        let error = serve("0.0.0.0:0".parse().unwrap(), true, Some(store))
+            .await
+            .unwrap_err()
+            .to_string();
+        assert!(error.contains("loopback-only"));
+        assert!(!dir.path().join("token").exists());
+        assert!(!dir.path().join("never-opened.redb").exists());
+    }
+
+    #[tokio::test]
+    async fn authorization_header_is_parsed_case_insensitively() {
+        let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let addr = listener.local_addr().unwrap();
+        let client = tokio::spawn(async move {
+            let mut stream = TcpStream::connect(addr).await.unwrap();
+            stream
+                .write_all(
+                    b"GET /v1/receipts HTTP/1.1\r\nHost: x\r\nauthorization:  Bearer abc \r\n\r\n",
+                )
+                .await
+                .unwrap();
+            stream
+        });
+        let (mut server, _) = listener.accept().await.unwrap();
+        let parsed = read_request(&mut server).await.unwrap().unwrap();
+        assert_eq!(parsed.authorization.as_deref(), Some("Bearer abc"));
+        drop(client.await.unwrap());
+    }
+
     #[test]
     fn served_routes_are_declared_http_in_openapi() {
         let doc: Value =
@@ -709,6 +1098,9 @@ mod tests {
             ("GET", "/v1/registration/wire-profile"),
             ("POST", "/v1/connect"),
             ("POST", "/v1/registration"),
+            ("GET", "/v1/receipts"),
+            ("GET", "/v1/prekeys"),
+            ("GET", "/v1/outbox/suspended"),
         ];
 
         for (method, path) in &routes {

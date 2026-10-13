@@ -1,3 +1,11 @@
+2026-10-13 — **Implemented/offline (HTTP):** `serve --store-routes --token-file`
+serves three read-only, redacted store inspections (`/v1/receipts`,
+`/v1/prekeys`, `/v1/outbox/suspended`) over loopback with a per-start bearer
+token kept in a new 0600 file, the store opened per request. Smoke-tested with
+the real binary on a temporary store (401 without the token, redacted JSON
+with it, token file removed on shutdown, token never printed). Default `serve`
+is unchanged; nothing that sends is served. [Design](docs/feature-parity.md#http-api-parity).
+
 2026-10-13 — **Docs corrected (feature-parity audit):** an independent audit
 of every row in [feature-parity](docs/feature-parity.md) against its evidence
 found stale or overstated rows; corrected after spot-checking the cited lines.

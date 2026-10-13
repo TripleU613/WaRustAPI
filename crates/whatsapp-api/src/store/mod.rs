@@ -274,8 +274,9 @@ const META_GENERATION: &str = "generation";
 const META_WRAPPED_KEYS: &str = "wrapped_keys";
 const META_JOURNAL_FLOOR: &str = "journal_floor";
 
-/// Options for opening or creating a store.
-#[derive(Debug)]
+/// Options for opening or creating a store. Cloning shares the key source, so
+/// a long-lived caller can reopen the same store later.
+#[derive(Debug, Clone)]
 pub struct OpenOptions {
     /// Database file path.
     pub path: PathBuf,

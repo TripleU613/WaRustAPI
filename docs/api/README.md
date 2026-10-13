@@ -85,6 +85,30 @@ enforces that `x-library` names the Rust entry point. The document is the
 single source of truth for the API surface and is edited directly (it is JSON,
 so the CLI can embed and serve it without extra dependencies).
 
+## Store routes (opt-in)
+
+`whatsapp-cli serve --store-routes --token-file <new path>` (built with
+`experimental-transport`) adds read-only, redacted store inspections for the
+account selected by `--store`/`--account`/`--key-env`: `GET /v1/receipts`,
+`GET /v1/prekeys` and `GET /v1/outbox/suspended`. They are declared with
+`x-transport: ["cli", "http"]` and the `storeBearer` security scheme.
+
+```sh
+whatsapp-cli --store acct.redb --account me --key-env WA_KEY \
+  serve --store-routes --token-file ./serve.token
+curl -H "Authorization: Bearer $(cat ./serve.token)" http://127.0.0.1:8787/v1/prekeys
+```
+
+The server refuses non-loopback binds with store routes, writes a new 256-bit
+token to a mode-0600 file (an existing file is refused, the token is never
+printed or logged, and the file is removed on shutdown), checks the store
+opens at startup, then opens it per request. Answers: 404
+`store_routes_disabled` when not enabled, 401 with `WWW-Authenticate: Bearer`
+for a missing or wrong token, 405 for other methods, 503 `store_unavailable`
+(fixed message, no path) when another command holds the store. Before adding a
+route, confirm its output is already redacted; never serve send, queue or live
+operations this way.
+
 ## Adding an operation
 
 1. Follow the existing path convention in the document (e.g.,
