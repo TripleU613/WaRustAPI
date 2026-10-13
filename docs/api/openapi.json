@@ -231,6 +231,12 @@
       "x-transport": "cli",
       "x-live": false,
       "description": "Offline cached whole-APK index comparison; no HTTP route. Reports sorted added/removed/changed paths with old/new bytes and SHA-256, plus unchanged count and apk_container_changed. Validates format/hash/path/size and duplicate JSON file keys. No APK rescan, extraction, execution or automatic Rust patch. Cached self-comparison measured 0.211419 seconds locally; first indexing cost was 8.107389 seconds. This compares unmodified exported evidence, does not authenticate edited indexes or establish code semantics/signature validity/compatibility. See docs/protocol/apk-file-diff.md."
+    },
+    {
+      "x-cli": "cargo run -p xtask -- apk-coverage [--check]",
+      "x-transport": "cli",
+      "x-live": false,
+      "description": "Offline development utility, separate from the whatsapp-cli control API; no HTTP route and no APK needed. Reads only the committed docs/protocol/apk/*/manifest.json and targets.json and writes docs/protocol/apk-coverage.json: retained bundles and topic counts per release (including the pinned 2.26.36.75, currently zero bundles), topics with evidence from more than one release, and whatsapp-api source files (generated proto excluded) cited or not cited by any retained topic, plus citations of files that no longer exist. --check fails if the committed report is stale. A release recorded with two APK hashes is refused. It measures retained bundle citations only: docs/protocol/rea envelopes, comments and protocol-document evidence are not counted, and unexported APK code is outside it. Evidence docs/protocol/apk-coverage.md."
     }
   ],
   "info": {

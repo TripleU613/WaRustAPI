@@ -51,6 +51,9 @@ The exporter reads DEX entries in memory. A full unpack is unnecessary for
 reproduction. Local raw extraction belongs in ignored `lab/`; the original
 APK remains outside Git. No account or live-server access is involved.
 
+After adding or regenerating a bundle, run `cargo run -p xtask -- apk-coverage`
+and commit [apk-coverage.json](../apk-coverage.json); `--check` verifies it.
+
 ## Interpretation
 
 These are APK-derived research artifacts, not first-party Rust source or

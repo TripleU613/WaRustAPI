@@ -1,3 +1,10 @@
+2026-10-13 — **Measured (cross-version coverage):** new `xtask apk-coverage`
+reports what the committed research bundles cover. The pinned 2.26.36.75 has no
+retained bundle; 2.26.37.70 has one (21 core topics); 2.26.37.71 has 166.
+Only those 21 transport/Noise/registration topics have evidence from two
+releases. 64 of 142 library files are cited by no bundle topic (many cite APK
+classes in comments or REA envelopes instead). [Coverage](docs/protocol/apk-coverage.md).
+
 2026-10-13 — **Corrected/offline (security review of HTTP store routes):** a
 request with no headers made the connection task panic (an empty header slice);
 it is now answered and tested. The token file is guarded before it is written and
