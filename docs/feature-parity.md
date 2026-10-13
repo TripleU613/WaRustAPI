@@ -22,13 +22,14 @@ operation's `x-library`.
 
 | Feature | State | CLI | Evidence | Blockers / next |
 |---|---|---|---|---|
-| Primary registration (SMS request, verify, 2FA PIN) | live (lab recipe) | `lab-signup …` | [registration-lab](protocol/registration-lab.md) | Default `registration begin` stays blocked until the pinned profile is observed |
+| Primary registration (SMS request, verify, 2FA PIN) | live (lab recipe): code request, OTP and DOB consent; account-PIN (`verify-pin`) and email-OTP branches offline | `lab-signup …` | [registration-lab](protocol/registration-lab.md), [after-otp](protocol/after-otp.md) | Default `registration begin` stays blocked until the pinned profile is observed; device_confirm_or_second_code, wa_old and passkey unimplemented |
 | Login (Noise XX, certificate, primary payload) | live | `lab-transport`, `listen` | [messaging-transport](protocol/messaging-transport.md) | Pinned 2.26.36.75 profile equivalence unobserved |
-| Prekey upload and replenishment | live | `prekeys`, `listen` | [messaging-completion](messaging-completion.md) | KEM prekey upload untraced (see PQ row) |
-| Reconnect after recoverable loss | offline | `listen` | [messaging-transport](protocol/messaging-transport.md#reconnect-budget-stability-2026-10-13) | Refusals never retry by design; budget resets only after a stable connection |
-| Two-step verification | live (set) | `two-factor` | [chat-actions](protocol/chat-actions.md) | Change/disable not live-verified |
-| Ban appeal | partial: token recovered, nothing submitted | `ban-appeal` | [ban-appeal](protocol/ban-appeal.md) | Owner's decision |
+| Prekey upload and replenishment | live | `prekeys`, `listen` | [messaging-completion](messaging-completion.md) | KEM prekey upload untraced (see PQ row); no error backoff (local deviation) |
+| Reconnect after recoverable loss | offline | `listen` | [messaging-transport](protocol/messaging-transport.md#reconnect-budget-stability-2026-10-13) | Refusals never retry by design; budget resets only after a stable connection; APK reconnect schedule untraced (local bound); no live reconnect observed |
+| Two-step verification | live (set) | `two-factor` | [registration-lab](protocol/registration-lab.md#two-step-verification-and-resolving-an-unknown-outcome-2026-09-24) | Change/disable not live-verified; the first set attempt stays Sent/unknown |
+| Ban appeal | partial: token recovered, nothing submitted | `ban-appeal` | [ban-appeal](protocol/ban-appeal.md) | Owner's decision; SubmitAnAppealForIP doc_id not recovered; named-operation acceptance unverified |
 | Account recovery / re-registration of a banned number | absent | — | — | Out of scope without owner authority |
+| Server AB properties / feature configuration | partial: one read sent live 2026-10-08, outcome unknown (stream ended); no values applied | `abprops-query` | [feature-configuration](protocol/feature-configuration.md) | A settled reply; effective values gate other rows (properties 2983, 23639) |
 
 ## Encryption and identity
 
@@ -36,40 +37,42 @@ operation's `x-library`.
 |---|---|---|---|---|
 | Classic Signal direct/group sessions | live | `lab-transport`, `listen`, `outbox-send` | [messaging-transport](protocol/messaging-transport.md), [groups](protocol/groups.md) | — |
 | ML-KEM-1024 hybrid (0x44) sessions: send to verified PQ bundles, fan-out, refresh, inbox receive | offline | via `listen`, `outbox-send`, `actions --show` | [hybrid-outbox](protocol/hybrid-outbox.md), [hybrid-fanout](protocol/hybrid-fanout.md), [hybrid-identity-refresh](protocol/hybrid-identity-refresh.md), [kem-prekey-inventory](protocol/kem-prekey-inventory.md) | No KEM prekey generation/upload (untraced); `pqsupport` producer unknown; PQ upgrade job unported; companion/attestation PQ; no live hybrid message |
-| Peer identity change (incoming, refresh, outgoing replacement) | offline; directory read live | `peer-identity`, `identity-conflicts`, `actions`, `outbox-suspended` | [peer-identity](protocol/peer-identity.md), [identity-refresh-application](protocol/identity-refresh-application.md) | Native attestation state persistence; non-E2EE routing |
+| Peer identity change (incoming, refresh, outgoing replacement) | offline; directory reads live (`peer-keys` 2026-10-07; automatic identity_refresh read 2026-10-09) | `peer-identity`, `peer-keys`, `peer-identity-query`, `identity-conflicts`, `actions`, `outbox-suspended` | [peer-identity](protocol/peer-identity.md), [identity-refresh-application](protocol/identity-refresh-application.md) | Native attestation state persistence; non-E2EE routing; no live identity change applied |
 | Safety numbers / manual verification | partial offline | `fingerprint-display`, `fingerprint-compare`, `peer-verification` | [safety-number](protocol/safety-number.md) | Active scheme and complete inventory selection unverified |
+| Trusted-contact (privacy) tokens | partial: incoming `privacy_token` stored and attached to presence subscribe, offline | — | [presence](protocol/presence.md), [token-issue](protocol/token-issue.md), [identity-token-refresh](protocol/identity-token-refresh.md) | Issuing and refreshing our own tokens traced statically only, not implemented |
 
 ## Messages
 
 | Feature | State | CLI | Evidence | Blockers / next |
 |---|---|---|---|---|
-| Direct text (PN or LID) | live, incl. normal outbox with delivery receipt | `send`, `outbox-send` | [messaging-transport](protocol/messaging-transport.md) | Read/played receipt and handset confirmation for outbox send |
-| Replies / quotes | live (text); quoted media send and receive offline | `reply`, `outbox-send` (group JSON replies) | [chat-actions](protocol/chat-actions.md), [quoted-media](protocol/quoted-media.md) | Live quoted media; direct JSON/CLI quoted media; quotes of another chat (status replies) ignore `remoteJid` |
+| Direct text (PN or LID) | live, incl. normal outbox (`send` + `listen --send-outbox`: delivery and read receipts 2026-09-19) | `send`, `outbox-send` | [messaging-transport](protocol/messaging-transport.md), [messaging-completion](messaging-completion.md) | `outbox-send` test: read receipt and handset confirmation pending |
+| Replies / quotes | live (text); quoted media send and receive offline | `reply`, `outbox-send` (group JSON replies with text, image or voice note) | [messaging-transport](protocol/messaging-transport.md#quoted-replies-comparison-2263771), [quoted-media](protocol/quoted-media.md) | Live quoted media; direct JSON quoted media; quotes of another chat (status replies) ignore `remoteJid` |
 | Reactions | direct live; group **not rendering** (cause unknown) | `react` | [reactions](protocol/reactions.md), [groups](protocol/groups.md) | Group reaction rendering |
-| Polls and votes | direct live | `poll`, `vote` | [poll-votes](protocol/poll-votes.md) | Group polls unverified |
+| Polls and votes | direct live | `poll`, `vote` | [poll-votes](protocol/poll-votes.md) | Group polls/votes not ported: the normal group outbox blocks them as unsupported content; group poll stanza untraced |
 | Edits | receive own-device text/caption edits offline; outgoing **modeled** only | — | [message-edit](protocol/message-edit.md), [media-caption-edit](protocol/media-caption-edit.md) | Peer edit window needs property 2983; outbox has no edit sender ([why](protocol/unknowns.md#outgoing-revoke-and-edit-2026-10-13)) |
-| Revokes (delete for everyone) | receive peer/own-device offline; outgoing **modeled** only | — | [sender-revoke](protocol/sender-revoke.md), [sender-revoke-window](protocol/sender-revoke-window.md) | Physical deletion; admin/status revokes; outbox has no revoke sender ([why](protocol/unknowns.md#outgoing-revoke-and-edit-2026-10-13)) |
-| Keep in chat | live (set); own-device keep sync offline | `keep` | [own-device-keep](protocol/own-device-keep.md), [group-keep](protocol/group-keep.md) | Permission/expiry application |
-| Disappearing messages | set live | `disappearing`, `disappearing-default` | [own-device-timer](protocol/own-device-timer.md) | After-read mode, full setting application; our sent messages carry no `contextInfo.expiration` (sender producer untraced) |
-| Stickers, video, video notes, documents (receive) | offline | `media-list`, `media-open`, `media-save` | [stickers](protocol/stickers.md), [video-media](protocol/video-media.md), [document-media](protocol/document-media.md) | No live sample; sending unsupported |
+| Revokes (delete for everyone) | receive direct peer/own-device offline; outgoing **modeled** only | — | [sender-revoke](protocol/sender-revoke.md), [sender-revoke-window](protocol/sender-revoke-window.md) | Physical deletion; group/admin/status revokes; native time/type policy; outbox has no revoke sender ([why](protocol/unknowns.md#outgoing-revoke-and-edit-2026-10-13)) |
+| Keep in chat | acked 2026-09-20 (delivered; handset unconfirmed); own-device keep sync and group keep send offline | `keep` | [chat-actions](protocol/chat-actions.md#4-keep-in-chat), [own-device-keep](protocol/own-device-keep.md), [group-keep](protocol/group-keep.md) | Handset display; permission/expiry application; live group keep |
+| Disappearing messages | per-chat timer acked 2026-09-20 (delivered, read receipt; handset unconfirmed); default timer offline | `disappearing`, `disappearing-default` | [chat-actions](protocol/chat-actions.md#3-disappearing-messages), [own-device-timer](protocol/own-device-timer.md) | `disappearing-default` never sent live; after-read mode, full setting application; our sent messages carry no `contextInfo.expiration` (sender producer untraced) |
+| Stickers, video, video notes, documents (receive) | offline | `media-list`, `media-open`, `media-save` | [stickers](protocol/stickers.md), [video-media](protocol/video-media.md), [document-media](protocol/document-media.md) | No live sample; sending unsupported; Lottie and directPath-only retrieval unsupported |
+| Ordinary incoming image and voice note | image live (downloaded, authenticated, shown in mpv); voice note offline (no live sample) | `media-list`, `media-open`, `media-save` | [messaging-transport](protocol/messaging-transport.md#persistent-receiving-and-ordinary-incoming-media) | Live voice-note sample and audible playback |
 
 ## Receipts and delivery
 
 | Feature | State | CLI | Evidence | Blockers / next |
 |---|---|---|---|---|
 | Delivery confirmations for received messages | live | `listen` | [messaging-transport](protocol/messaging-transport.md) | — |
-| Read receipts (manual, automatic, batched) | acked; automatic offline | `mark-read`, `listen` | [read-receipt-batching](protocol/read-receipt-batching.md) | Handset blue ticks unconfirmed |
-| Incoming receipt facts (direct, group, aggregate) | offline (live windows saw no qualifying sample) | `receipts`, `group receipts`, `status` | [direct-receipts](protocol/direct-receipts.md), [group-receipts](protocol/group-receipts.md) | Native privacy/read-self policy |
-| Retry receipts we send | live (server-acked); PN/LID once-only offline | `listen` | [messaging-transport](protocol/messaging-transport.md#retry-once-only-across-pn-and-lid-2026-10-13) | PN redelivery of a LID-first message without alias attributes stays separate |
-| Answering a peer's retry receipt | lab group-send window only, offline | `lab-transport` group send | [groups](protocol/groups.md) | Normal runtime does not answer; native resend policy not traced in-repo |
+| Read receipts (manual, automatic, batched) | acked (explicit direct 2026-09-19, group 2026-09-25); automatic and batched offline | `mark-read`, `listen`, `receipts` | [read-receipt-batching](protocol/read-receipt-batching.md), [messaging-completion](messaging-completion.md) | Handset blue ticks unconfirmed; fresh-message auto-read and multi-ID batch ACK unverified; native privacy/read-self policy unported |
+| Incoming receipt facts (direct, group, aggregate) | direct delivery/read on our sends live (2026-09-19; outbox media `delivered=true`); device-qualified, group-participant and aggregate projection offline (no qualifying live sample) | `status`, `outbox-versions`, `group receipts`, `status-viewers` | [direct-receipts](protocol/direct-receipts.md), [group-receipts](protocol/group-receipts.md) | Native privacy/read-self policy |
+| Retry receipts we send | live (server-acked); PN/LID once-only offline | `listen`, `receipts` | [messaging-transport](protocol/messaging-transport.md#retry-once-only-across-pn-and-lid-2026-10-13) | PN redelivery of a LID-first message without alias attributes stays separate |
+| Answering a peer's retry receipt | lab group-send window only, offline | `lab-transport` group send | [groups](protocol/groups.md), [retry-answers](protocol/retry-answers.md) | Normal runtime does not answer; native resend policy not traced in-repo |
 
 ## Media and voice
 
 | Feature | State | CLI | Evidence | Blockers / next |
 |---|---|---|---|---|
-| Image send | live (handset receipt) | `send`, `outbox-send` | [messaging-transport](protocol/messaging-transport.md) | — |
-| Voice note send | live (receipt; playback unconfirmed) | same | same | — |
-| View-once image send and single local opening | live send; local viewer offline | `lab-open-view-once`, `lab-download-view-once` | same | Server opened receipts |
+| Image send | live (lab path handset-confirmed); normal outbox acked with delivery receipt | `lab-transport --message` (JSON `image`), `outbox-send` | [messaging-transport](protocol/messaging-transport.md), [messaging-completion](messaging-completion.md) | PNG only; no caption/thumbnail; normal-outbox handset display unconfirmed |
+| Voice note send | live (receipt; playback unconfirmed) | `lab-transport --message` (JSON `voice_note`), `outbox-send` | same | Audible playback unconfirmed; Ogg/Opus only; waveform omitted |
+| View-once image send and single local opening | live send; incoming ciphertext download live (one GET); local viewer and opened receipt offline | `lab-transport --message` (JSON `image` + `view_once`), `lab-download-view-once`, `lab-open-view-once` | same | Opened (played) receipt after viewing implemented but never sent live; no fresh incoming sample; group view-once refused by `outbox-send` |
 | Video/document/sticker send, HD variants | absent | — | — | — |
 | Calls (voice/video) | absent | — | — | Not researched |
 
@@ -79,34 +82,36 @@ operation's `x-library`.
 |---|---|---|---|---|
 | Group receive/decrypt | live | `listen` | [groups](protocol/groups.md) | — |
 | Group send (sender-key fan-out) | live (lab); normal outbox offline | `lab-transport`, `outbox-send` | [groups](protocol/groups.md), [normal-group-outbox](protocol/normal-group-outbox.md) | Own-device inventory and feature selection |
-| Group management (create, info, add/remove, promote/demote, subject, description, invite, leave) | create observed live 2026-09-22; others implemented, not live-verified | `group …` | [groups](protocol/groups.md) | Live verification per action |
-| Communities | absent | — | [mex](protocol/mex.md) (searches found none) | Not researched |
+| Group management (create, info, refresh, add/remove, promote/demote, subject, description, invite, leave) | create reply observed 2026-09-22; info and batch refresh live (2026-10-07); add/remove/promote/demote/subject/description/invite/leave not live-verified | `group …` | [groups](protocol/groups.md), [live record](protocol/groups.md#live-record), [queued replies](protocol/groups.md#apply-queued-replies-during-receiving-2026-10-07) | Live verification per action; the first create (2026-09-20) preceded stream:error 503 and the account's 403 suspension (causal role unknown); unsolicited group notifications unverified |
+| Communities | absent (complete group replies classify parent/linked_subgroup/default_subgroup/general_chat) | — (`group list --json` shows group_type/linked_parent) | [groups](protocol/groups.md#complete-reply-group-classification-and-subject-alias-boundary-2026-10-07) | Community create/link/announcement not researched |
 | Channels (newsletters) | parked | — | — | Owner deferred |
 | Status receive, viewers, likes received | live | `status-viewers` | [status](protocol/status.md) | — |
-| Status post text | live | lab private JSON (see evidence) | same | — |
-| Status post image | acked as text earlier; media form not yet live | lab private JSON (see evidence) | same | Live check |
+| Status post text | live | `lab-transport --message` (private JSON `status`) | same | — |
+| Status post image | acked as text earlier; media form not yet live | `lab-transport --message` (private JSON `status`) | same | Live check |
 | Status like send, audio, HD dual upload | absent | — | same | — |
-| Broadcast lists | receive dispatch traced; runtime unported | — | [broadcast-dispatch](protocol/broadcast-dispatch.md), [broadcast-receipt](protocol/broadcast-receipt.md) | Effective property application |
+| Broadcast lists | partial: ordinary-list delivery confirmations offline; list send/management absent | — | [broadcast-dispatch](protocol/broadcast-dispatch.md), [broadcast-receipt](protocol/broadcast-receipt.md) | Effective status-gate property application; list send/creation not researched |
 
 ## Contacts, presence, privacy, settings, app state
 
 | Feature | State | CLI | Evidence | Blockers / next |
 |---|---|---|---|---|
-| Contacts (local book, check, status, sync, app-state publish) | check live; others offline | `contacts …` | [chat-counterparts](protocol/chat-counterparts.md) | — |
-| Presence subscribe, availability, typing | live (typing handset-confirmed) | lab private JSON (see evidence) | [presence](protocol/presence.md) | Recording/incoming indicators unconfirmed |
-| Display name, about text | written live, handset unconfirmed | `push-name`, `about` | [presence](protocol/presence.md) | — |
+| Contacts (local book, check, status, sync, app-state publish) | check (2026-09-20, 2026-10-09), full sync (2026-09-22) and app-state publish (2026-09-24) live; local book and status local-only | `contacts …` | [chat-actions](protocol/chat-actions.md#7-contacts), [status](protocol/status.md#contact-registration-the-one-remaining-lever) | In/out/invalid state parity and refresh/backoff unported; fresh post-fix replies unverified |
+| Presence subscribe, availability, typing | live (typing handset-confirmed) | `lab-transport --subscribe` / `--typing` / `--typing-state` | [presence](protocol/presence.md) | Recording/incoming indicators unconfirmed; `last="deny"` cause unestablished; group presence count unimplemented |
+| Display name, about text | name presence written (no reply); pushNameSetting app-state acked 2026-09-25; About acked 2026-09-28 (session export); handset unconfirmed | `push-name`, `about`, `lab-transport --push-name` | [presence](protocol/presence.md), [session-export-review](protocol/session-export-review.md) | Handset/companion display unconfirmed; official client's name-presence timing untraced |
 | Profile picture | absent | — | — | — |
 | Block/unblock, block list | live | `block`, `unblock`, `blocklist` | [chat-actions](protocol/chat-actions.md) | — |
-| Privacy settings (last seen, photo, groups…) | absent (no mutation command) | — | [read-setting-sync](protocol/read-setting-sync.md) | SMAX `<iq xmlns="privacy"><privacy><category name value/>` is confirmed for `readreceipts`, but property 23639 selects MEX vs SMAX (effective value unknown) and other category names are untraced |
-| Per-chat privacy, report, clear chat | implemented; live status not established in this index | `chat-privacy`, `report`, `clear-chat` | [chat-actions](protocol/chat-actions.md) | Check the evidence doc before claiming live |
-| App-state sync (contact action writes, 409 catch-up) | live | `contacts fetch-app-state`, `contacts publish-app-state` | [chat-actions](protocol/chat-actions.md) | Star/mute/pin/archive actions not exposed |
+| Privacy settings (last seen, photo, groups…) | absent (no mutation command) | — | [read-setting-sync](protocol/read-setting-sync.md) | SMAX `<iq xmlns="privacy"><privacy><category name value/>` is confirmed for `readreceipts`, but property 23639 selects MEX vs SMAX (effective value unknown); other category/value names are listed by `LX/I4X` ([status](protocol/status.md#status-privacy-the-surface-traced-but-not-wired)) but their setter callers are untraced |
+| Per-chat privacy ("limit sharing") | acked 2026-09-20 (delivered, read receipt; handset unconfirmed) | `chat-privacy` | [chat-actions](protocol/chat-actions.md#5-advanced-chat-privacy-limit-sharing) | Only v1 sent; which generation (v1/ACP2) the sender picks is unknown |
+| Spam report | offline (never sent; reply shape unknown) | `report` | [chat-actions](protocol/chat-actions.md#2-report-xmlnsspam) | Reported-message children unknown; never send against the lab contact |
+| Clear chat | offline, local-only | `clear-chat` | [chat-actions](protocol/chat-actions.md#6-clear-chat-and-app-state-sync) | clearChatAction app-state patch unimplemented (boolean semantics unknown) |
+| App-state sync (contact action writes, 409 catch-up) | live | `contacts fetch-app-state`, `contacts publish-app-state`, `push-name` | [chat-actions](protocol/chat-actions.md) | Only contactAction (critical_unblock_low) and pushNameSetting (critical_block) written; clearChat/star/mute/pin/archive not exposed; snapshot reconciliation unfinished |
 
 ## Devices, history, sync
 
 | Feature | State | CLI | Evidence | Blockers / next |
 |---|---|---|---|---|
-| Peer device lists and companion admission | offline | `devices`, `device-query` | [companion-directory-addition](protocol/companion-directory-addition.md) | First-seen companions, raw-ID changes |
-| Own companion pairing (QR) | parked | `lab-pair` | — | Owner deferred |
+| Peer device lists and companion admission | device-list query live (2026-09-19, primary-only reply); companion admission offline | `devices`, `device-query` | [companion-directory-addition](protocol/companion-directory-addition.md), [messaging-transport](protocol/messaging-transport.md#contact-device-list-synchronization-comparison-2263771) | First-seen companions, raw-ID changes |
+| Own companion pairing (QR) | parked | — | [cross-device-sync](protocol/cross-device-sync.md#primary-pairing-completion-and-identity-provenance) (static research only) | Owner deferred; `lab-pair` is a two-profile text check, not pairing |
 | Own-device message sync (held sessions) | partial offline | `listen` | [own-device-text](protocol/own-device-text.md), [cross-device-sync](protocol/cross-device-sync.md) | Own-account device sync, history transfer |
 | History sync / message history notices | partial: notice inspection and control event | `lab-inbox --inspect` | [cross-device-sync](protocol/cross-device-sync.md), [history-mode](protocol/history-mode.md) | History is not applied |
 

@@ -1,3 +1,12 @@
+2026-10-13 — **Docs corrected (feature-parity audit):** an independent audit
+of every row in [feature-parity](docs/feature-parity.md) against its evidence
+found stale or overstated rows; corrected after spot-checking the cited lines.
+Keep, disappearing and limit-sharing are acked (handset unconfirmed), not live;
+group info/refresh, contact sync/publish and device-list queries were live but
+listed offline; several CLI cells named the wrong command (`send` is text-only,
+`lab-pair` is not pairing); 2FA and quote rows linked the wrong evidence.
+Three missing rows added (incoming image/voice, privacy tokens, AB properties).
+
 2026-10-13 — **Corrected/offline (review of quoted media sending):** as first
 committed, group JSON image/voice-note replies were still refused by the JSON
 reader (it required `text` on every reply), so they were reachable only through
@@ -1790,8 +1799,9 @@ Registration uses the recipe in
 | Status: viewers (delivered/read/played) and likes received | live (`status-viewers`) | same |
 | Status: sending a like, HD dual upload, audio | not implemented | same |
 | App-state writes (contact action) incl. 409 catch-up | live | [chat-actions](docs/protocol/chat-actions.md) |
-| Block/unblock, contact check, disappearing, keep-in-chat | live | same |
-| Two-step verification set/change/disable | live (set) | [chat-actions](docs/protocol/chat-actions.md) |
+| Block/unblock, contact check | live | same |
+| Per-chat disappearing timer, keep-in-chat, limit sharing | acked 2026-09-20 (delivered; handset unconfirmed); default timer never sent | same |
+| Two-step verification set/change/disable | live (set); the first set attempt stays Sent/unknown | [registration-lab](docs/protocol/registration-lab.md#two-step-verification-and-resolving-an-unknown-outcome-2026-09-24) |
 | Display name (`presence name=…`) | written live, handset unconfirmed | [presence](docs/protocol/presence.md) |
 | Display name app-state record (`pushNameSetting`, `critical_block`) | live — accepted at version 1 | same |
 | About text (`iq xmlns=status`, `whatsapp-cli about`) | server-accepted 2026-09-28, as reported in the session export; handset unconfirmed | [presence](docs/protocol/presence.md) |

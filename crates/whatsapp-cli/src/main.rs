@@ -574,7 +574,7 @@ enum Cmd {
         #[command(subcommand)]
         action: ContactsCmd,
     },
-    /// Clear a direct chat's locally decrypted message bodies (offline, local-only:
+    /// Clear a direct or group chat's locally decrypted message bodies (offline, local-only:
     /// see docs/protocol/chat-actions.md section 6 for the deferred companion sync).
     #[cfg(feature = "experimental-transport")]
     ClearChat {

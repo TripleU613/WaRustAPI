@@ -570,7 +570,11 @@ call sites of `FCM->A00` are inside classes whose other strings show they are
 Facebook's bundled multi-`run()` shells, so the enclosing stanza was not
 readable from them. Until that is traced, this client does not send a privacy
 request: the status audience is named per post in the private JSON instead,
-which needs no server setting at all.
+which needs no server setting at all. (2026-10-13: the classic SMAX shape
+`<iq type="set" xmlns="privacy"><privacy><category name value/>` was later
+confirmed for the `readreceipts` category, with property 23639 choosing MEX vs
+SMAX; see [read-setting-sync](read-setting-sync.md). The status-privacy setter
+callers remain untraced, so this client still sends no privacy request.)
 
 ## Likes: status reactions (implemented on receive)
 

@@ -5510,8 +5510,8 @@
         "tags": [
           "Chat Actions"
         ],
-        "summary": "Clear a direct chat's locally decrypted message bodies",
-        "description": "Clear a direct chat's locally decrypted message bodies (offline, local-only).",
+        "summary": "Clear a direct or group chat's locally decrypted message bodies",
+        "description": "Clear a direct or group chat's locally decrypted message bodies (offline, local-only).",
         "operationId": "clearChat",
         "x-cli": "whatsapp-cli clear-chat",
         "x-transport": [

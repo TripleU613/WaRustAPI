@@ -340,7 +340,10 @@ with the `comparison-client` feature. Building is offline; `connect` opens the
 connection. `.comparison_outbox(true)` additionally enables queued primary direct
 texts and uploaded image/voice-note references, including previously queued eligible
 intents. Leave it off for a receive-only session. Groups, quotes, captions and
-unsupported media fail locally. Queries and sends are reserved
+unsupported media fail locally. (Superseded: groups go through the normal group
+outbox, and quoted text and quoted image/voice-note replies are sent
+([quoted media](quoted-media.md#sending-2026-10-13)); captions and other media
+kinds still fail locally.) Queries and sends are reserved
 durably before network writes, without automatic retries. Delivery/read/played
 facts reach normal `message_status` and the durable event journal.
 `client.send_receipt(receipt)` with `ReceiptKind::Read` durably queues one
@@ -535,7 +538,9 @@ parent message and drops them when the parent is not found
 `whatsapp-cli react --chat <jid> --id <msgid> --emoji <text> [--ours]` enqueues
 it (`--remove` clears). Live on 2026-09-19: a contact's 👍 on our test text was
 decrypted and projected, and our 👍 on their message was server-accepted.
-Group and companion-addressed reactions are not implemented.
+Group and companion-addressed reactions were not implemented then (2026-10-13:
+normal group reactions now exist, see [normal group outbox](normal-group-outbox.md);
+they still do not render on the handset).
 
 Current reaction-key validation, historical target stability and corrected
 status-singleton scope: [2026-10-09 evidence and limits](reactions.md).
