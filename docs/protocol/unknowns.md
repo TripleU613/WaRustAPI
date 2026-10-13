@@ -18,9 +18,12 @@ now work offline. [Held version-4 shared sending](held-hybrid-send.md) is integr
 [Fresh signed bundle staging](hybrid-bundle.md) is implemented offline;
 [Normal primary-peer hybrid outbox adoption](hybrid-outbox.md) now works offline.
 Same-key classic migration, auth/attestation and companion admission,
-[Staged incoming hybrid bootstrap](hybrid-incoming.md) now authenticates offline;
-key inventory and normal inbox support still need implementation. See
-[the boundary and source audit](pq-bundle-boundary.md).
+[Staged incoming hybrid bootstrap](hybrid-incoming.md) now authenticates offline and
+[the normal direct/group inboxes use it](kem-prekey-inventory.md) with a local
+KEM row lookup and atomic consumption. KEM prekey generation, ID allocation,
+signing and the inner `pq_list`/`pq_last_resort_key` upload shape are untraced,
+so no KEM key is produced or uploaded; own-device/companion KEM admission is
+unported. See [the boundary and source audit](pq-bundle-boundary.md).
 
 Own-device ordinary text edits are now projected with loaded parent kind,
 terminal and sender-time ordering checks. Peer edits still require the effective

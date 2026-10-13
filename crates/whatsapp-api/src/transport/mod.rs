@@ -186,6 +186,12 @@ pub mod inbox;
 ))]
 mod inbox_events;
 pub mod jid_map;
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub(crate) mod kem_prekeys;
 #[cfg(feature = "experimental-transport")]
 pub mod login;
 #[cfg(all(

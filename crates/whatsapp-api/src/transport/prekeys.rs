@@ -167,6 +167,12 @@ pub struct Summary {
     pub uploaded: usize,
     /// Reserved batches by status.
     pub batches: std::collections::BTreeMap<String, usize>,
+    /// Local ML-KEM-1024 prekey rows the inbox can use for incoming hybrid
+    /// bootstrap. No producer exists and none are ever uploaded
+    /// (docs/protocol/kem-prekey-inventory.md), so this is normally zero.
+    pub kem_local: usize,
+    /// Of those, native `last_resort_key` rows retained after successful use.
+    pub kem_last_resort: usize,
 }
 
 fn scan_prefix<T: serde::de::DeserializeOwned>(
@@ -534,7 +540,7 @@ pub fn wants_upload(store: &ProtocolStore) -> Result<bool> {
     store.read(|tx| Ok(!unsent_in(tx)?.is_empty() || record_ids(tx)?.is_empty()))
 }
 
-/// Redacted counts for operators; no key material is read.
+/// Redacted counts for operators; no key material is returned or printed.
 pub fn summary(store: &ProtocolStore) -> Result<Summary> {
     store.read(|tx| {
         let metas = meta_map(tx)?;
@@ -549,6 +555,7 @@ pub fn summary(store: &ProtocolStore) -> Result<Summary> {
         for (_, batch) in scan_prefix::<Batch>(tx, Table::Checkpoints, BATCH_PREFIX)? {
             *summary.batches.entry(batch.status).or_default() += 1;
         }
+        (summary.kem_local, summary.kem_last_resort) = super::kem_prekeys::counts(tx)?;
         Ok(summary)
     })
 }

@@ -1252,6 +1252,10 @@ pub(super) fn prekeys_status(cli: &super::Cli) -> Result<(), Error> {
         println!("  batches {status}: {count}");
     }
     println!(
+        "kem prekeys: local={} last_resort={} (no generation or upload is implemented; incoming hybrid bootstrap needs a local row)",
+        summary.kem_local, summary.kem_last_resort
+    );
+    println!(
         "prekeys: an authenticated session uploads unsent keys at start and after a server low-count notification"
     );
     Ok(())

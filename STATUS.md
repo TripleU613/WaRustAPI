@@ -1,3 +1,11 @@
+2026-10-13 — **Implemented/offline:** the normal direct and group inboxes now
+route primary PN/LID version-4 KEM prekeys through the hybrid receive path.
+Matching held sessions decrypt without keys; fresh bootstrap reads a local
+ML-KEM-1024 row and consumes non-last-resort rows atomically. Replies decrypt as
+0x44 msg. KEM generation/upload stays untraced and absent; own-device/companion
+KEM is refused unchanged. No APK was available; no live test.
+[Inventory, routing table and encrypted tests](docs/protocol/kem-prekey-inventory.md).
+
 2026-10-12 — **Implemented/offline:** staged incoming hybrid prekeys now
 bootstrap from exact local EC/KEM keys and authenticate nested ciphertext before
 reporting consumption. Matching current/archived sessions decrypt without prekey

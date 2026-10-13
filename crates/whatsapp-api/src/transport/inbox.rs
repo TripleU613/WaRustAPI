@@ -758,12 +758,11 @@ async fn process_direct(
     // session stays the fallback for a peer we only ever reached by number.
     // The inbox record itself stays keyed by `sender`.
     let is_prekey_message = encs[0].get_attr("type").and_then(|v| v.as_text()) == Some("pkmsg");
-    if !peer_category
+    // Own-device (`category=peer`) prekeys, hybrid or not, are refused below
+    // without parsing: that route accepts only `msg` on a held pinned session.
+    let hybrid_prekey = !peer_category
         && is_prekey_message
-        && crate::signal::direct::incoming_prekey_kem(ciphertext)?.is_some()
-    {
-        return Ok(IncomingResult::Unsupported);
-    }
+        && crate::signal::direct::incoming_prekey_kem(ciphertext)?.is_some();
     let lid_peer = if peer_category {
         None
     } else {
@@ -788,6 +787,12 @@ async fn process_direct(
     } else {
         direct_companion_sender(node)
     };
+    if hybrid_prekey && companion_peer.is_some() {
+        // Companion ADV admission is classic-only here; checked before it can
+        // observe or reserve anything. Local coverage limit, not native refusal.
+        tracing::warn!("companion hybrid prekey preserved: companion KEM admission is unported");
+        return Ok(IncomingResult::Unsupported);
+    }
     let companion_authority = if is_prekey_message && let Some(peer) = &companion_peer {
         match super::companion_admission::prepare(store, account, peer, node, ciphertext)? {
             super::companion_admission::Admission::Ready(authority) => Some(authority),
@@ -835,6 +840,7 @@ async fn process_direct(
     }
     let mut used_prekey = None;
     let mut original_prekey = None;
+    let mut used_kem = None;
     let (received, pinned_identity) = if encs[0].get_attr("type").and_then(|v| v.as_text())
         == Some("pkmsg")
     {
@@ -851,23 +857,42 @@ async fn process_direct(
                 })?
                 .map(Zeroizing::new);
         }
-        let incoming = crate::signal::direct::receive_prekey_with_policy(
-            account,
-            &session_peer,
-            (
-                session.as_deref().map(|v| v.as_slice()),
-                identity.as_deref(),
-                if peer_category {
-                    IdentityChangePolicy::Pinned
-                } else {
-                    remote_identity_policy(store, account, &session_peer, policy)?
-                },
-            ),
-            &signed,
-            original_prekey.as_deref().map(|v| v.as_slice()),
-            ciphertext,
-        )
-        .await?;
+        let previous = (
+            session.as_deref().map(|v| v.as_slice()),
+            identity.as_deref(),
+            if peer_category {
+                IdentityChangePolicy::Pinned
+            } else {
+                remote_identity_policy(store, account, &session_peer, policy)?
+            },
+        );
+        let incoming = if hybrid_prekey {
+            let Some(hybrid) = receive_hybrid_prekey(
+                store,
+                account,
+                &session_peer,
+                previous,
+                &signed,
+                original_prekey.as_deref().map(|v| v.as_slice()),
+                ciphertext,
+            )
+            .await?
+            else {
+                return Ok(IncomingResult::Unsupported);
+            };
+            used_kem = hybrid.consumed_kem;
+            hybrid.incoming
+        } else {
+            crate::signal::direct::receive_prekey_with_policy(
+                account,
+                &session_peer,
+                previous,
+                &signed,
+                original_prekey.as_deref().map(|v| v.as_slice()),
+                ciphertext,
+            )
+            .await?
+        };
         used_prekey = incoming.consumed_prekey;
         (incoming.received, incoming.identity)
     } else {
@@ -1003,6 +1028,9 @@ async fn process_direct(
                 ));
             }
             tx.delete(Table::Prekeys, prekey_key.as_bytes())?;
+        }
+        if let Some((id, original)) = &used_kem {
+            super::kem_prekeys::consume_in(tx, *id, original)?;
         }
         let phone_alias = authenticated_phone_alias(node, &sender);
         if let Some(from) = super::receipts::jid(node, "from")
@@ -1150,6 +1178,99 @@ fn participant_session_jid(
     })
 }
 
+/// Authenticated pairwise hybrid candidate plus the KEM row its commit consumes.
+#[cfg(feature = "experimental-signal-crypto")]
+struct HybridPrekey {
+    incoming: crate::signal::direct::ReceivedPrekey,
+    /// Non-last-resort row to delete with the commit, as read before decryption.
+    consumed_kem: Option<(u32, super::kem_prekeys::StoredKemPrekey)>,
+}
+
+/// Version-4 KEM prekey envelope from a primary PN/LID peer.
+///
+/// Native 2.26.37.71 `Cnp.A04` promotes a matching current/archived session
+/// (version and Alice base key) before any local key lookup; otherwise it loads
+/// the signed, optional ordinary and `kyber_prekeys` rows (`0kh.BTS`) and
+/// bootstraps (docs/protocol/hybrid-incoming.md). `Ok(None)` preserves the
+/// capture unacknowledged for local coverage gaps: no inventory row (this client
+/// has no KEM producer), a changed pin on a matching session, or malformed local
+/// or KEM input. Nested authentication failures keep the classic
+/// `direct_message` classification, and a pinned changed identity is reported as
+/// the classic backend's untrusted-identity failure, so both paths retry alike.
+#[cfg(feature = "experimental-signal-crypto")]
+async fn receive_hybrid_prekey(
+    store: &ProtocolStore,
+    account: &AccountRecord,
+    peer: &Jid,
+    previous: (Option<&[u8]>, Option<&[u8]>, IdentityChangePolicy),
+    signed: &[u8],
+    one_time: Option<&[u8]>,
+    ciphertext: &[u8],
+) -> Result<Option<HybridPrekey>> {
+    let kem_id = crate::signal::direct::incoming_prekey_kem(ciphertext)?
+        .ok_or_else(|| Error::invalid("inbox", "hybrid receive requires KEM metadata"))?
+        .prekey_id;
+    let local = match store.read(|tx| super::kem_prekeys::load(tx, kem_id)) {
+        Ok(local) => local,
+        Err(Error::InvalidInput {
+            field: "kem_prekey_inventory",
+            reason,
+        }) => {
+            tracing::warn!(reason, "hybrid prekey preserved: local KEM row is invalid");
+            return Ok(None);
+        }
+        Err(other) => return Err(other),
+    };
+    let result = crate::signal::hybrid::receive_prekey(
+        account,
+        peer,
+        previous,
+        Some(signed),
+        one_time,
+        local
+            .as_ref()
+            .map(super::kem_prekeys::StoredKemPrekey::local),
+        ciphertext,
+    )
+    .await;
+    match result {
+        Ok(received) => {
+            let consumed_kem = match received.consumed_kem {
+                Some(id) => Some((
+                    id,
+                    local
+                        .filter(|row| row.id == id && !row.last_resort)
+                        .ok_or_else(|| Error::invalid("inbox", "consumed KEM prekey not loaded"))?,
+                )),
+                None => None,
+            };
+            Ok(Some(HybridPrekey {
+                incoming: received.incoming,
+                consumed_kem,
+            }))
+        }
+        Err(Error::IdentityChanged(_)) => Err(Error::invalid(
+            "direct_message",
+            "Signal peer identity untrusted; saved pin preserved",
+        )),
+        Err(Error::InvalidInput { field, reason })
+            if matches!(
+                field,
+                "hybrid_session" | "kem_secret_key" | "kem_ciphertext"
+            ) =>
+        {
+            tracing::warn!(
+                field,
+                reason,
+                local_kem_row = local.is_some(),
+                "hybrid prekey preserved: not processed"
+            );
+            Ok(None)
+        }
+        Err(other) => Err(other),
+    }
+}
+
 /// A group member's direct Signal session advance, staged for the atomic commit.
 /// The SKDM that lets us read a member's group messages arrives inside their
 /// ordinary direct session, so reading it moves that session forward.
@@ -1241,11 +1362,19 @@ async fn process_group_inner(
         })
     };
     let direct_enc = enc_of(&["pkmsg", "msg"]);
-    if let Some(enc) = direct_enc
+    let hybrid_prekey = if let Some(enc) = direct_enc
         && enc.get_attr("type").and_then(|v| v.as_text()) == Some("pkmsg")
         && let Some(ciphertext) = ciphertext_bytes(enc)
-        && crate::signal::direct::incoming_prekey_kem(ciphertext)?.is_some()
     {
+        crate::signal::direct::incoming_prekey_kem(ciphertext)?.is_some()
+    } else {
+        false
+    };
+    if hybrid_prekey && sender_jid.device != 0 {
+        // Companion ADV admission is classic-only here. Local coverage limit.
+        tracing::warn!(
+            "group companion hybrid prekey preserved: companion KEM admission is unported"
+        );
         return Ok(IncomingResult::Unsupported);
     }
     let sk_enc = enc_of(&["skmsg"]);
@@ -1290,6 +1419,7 @@ async fn process_group_inner(
     let mut direct_commit: Option<MemberSession> = None;
     let mut used_prekey = None;
     let mut original_prekey: Option<Zeroizing<Vec<u8>>> = None;
+    let mut used_kem = None;
     let mut key_after_skdm: Option<Vec<u8>> = None;
     // A member payload that decrypted but is not a key distribution. In a group
     // stanza with no `skmsg`, that payload *is* the message: the sender
@@ -1355,19 +1485,38 @@ async fn process_group_inner(
                     })?
                     .map(Zeroizing::new);
             }
-            let incoming = crate::signal::direct::receive_prekey_with_policy(
-                account,
-                &peer,
-                (
-                    session.as_deref(),
-                    identity.as_deref(),
-                    remote_identity_policy(store, account, &peer, policy)?,
-                ),
-                &signed,
-                original_prekey.as_deref().map(|v| v.as_slice()),
-                ciphertext,
-            )
-            .await?;
+            let previous = (
+                session.as_deref(),
+                identity.as_deref(),
+                remote_identity_policy(store, account, &peer, policy)?,
+            );
+            let incoming = if hybrid_prekey {
+                let Some(hybrid) = receive_hybrid_prekey(
+                    store,
+                    account,
+                    &peer,
+                    previous,
+                    &signed,
+                    original_prekey.as_deref().map(|v| v.as_slice()),
+                    ciphertext,
+                )
+                .await?
+                else {
+                    return Ok(IncomingResult::Unsupported);
+                };
+                used_kem = hybrid.consumed_kem;
+                hybrid.incoming
+            } else {
+                crate::signal::direct::receive_prekey_with_policy(
+                    account,
+                    &peer,
+                    previous,
+                    &signed,
+                    original_prekey.as_deref().map(|v| v.as_slice()),
+                    ciphertext,
+                )
+                .await?
+            };
             used_prekey = incoming.consumed_prekey;
             Some((incoming.received, incoming.identity))
         } else if let (Some(s), Some(i)) = (&session, &identity) {
@@ -1543,6 +1692,9 @@ async fn process_group_inner(
                     ));
                 }
                 tx.delete(Table::Prekeys, prekey_key.as_bytes())?;
+            }
+            if let Some((id, original)) = &used_kem {
+                super::kem_prekeys::consume_in(tx, *id, original)?;
             }
         }
         // Only the skmsg plaintext is user content; an SKDM-only stanza records
@@ -4817,6 +4969,426 @@ mod tests {
                 .unwrap(),
             IncomingResult::Duplicate
         );
+    }
+
+    #[tokio::test]
+    async fn hybrid_prekeys_use_local_kem_inventory_and_continue_through_normal_inbox() {
+        use crate::{
+            model::ids::AccountId,
+            session::{KeyMaterial, RegistrationStatus, SignalIdentityKey},
+            signal::{direct, hybrid, kem},
+            store::{MasterKey, OpenOptions, StaticKeySource},
+            transport::{kem_prekeys, prekeys},
+        };
+        use wacore_libsignal::protocol::{
+            AliceSignalProtocolParameters, GenericSignedPreKey, IdentityKey, IdentityKeyPair,
+            KeyPair, PreKeyRecord, SignedPreKeyRecord, UsePQRatchet,
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("hybrid-inbox.redb");
+        let open = |create| {
+            ProtocolStore::open(OpenOptions {
+                path: path.clone(),
+                account_id: AccountId::new("hybrid-inbox-test").unwrap(),
+                key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                    [39; 32],
+                ))),
+                create,
+            })
+            .unwrap()
+        };
+        let store = open(true);
+        let mut config: crate::registration::request::LabRegistrationConfig =
+            serde_json::from_str(crate::registration::request::TEMPLATE_JSON).unwrap();
+        config.registration_id = 42;
+        config.signed_pre_key_id = 7;
+        crate::registration::factory::install_test_material(&store, &config).unwrap();
+        let receiver = store.read(AccountRecord::load).unwrap().unwrap();
+        let receiver_jid = receiver.own_jid.clone().unwrap();
+        let signed = SignedPreKeyRecord::deserialize(
+            &crate::registration::factory::registered_signed_prekey(&store).unwrap(),
+        )
+        .unwrap()
+        .public_key()
+        .unwrap();
+        let mut receiver_identity = vec![5];
+        receiver_identity.extend(receiver.signal_identity.as_ref().unwrap().0.public);
+        let receiver_identity = IdentityKey::decode(&receiver_identity).unwrap();
+        let (kem_public, kem_secret) = kem::generate_key_pair().unwrap();
+        // A peer's native first message: signed/optional ordinary EC keys plus
+        // an encapsulation to our published KEM key, pending fields retained.
+        let initial = |sender: &IdentityKeyPair, one: Option<(u32, &KeyPair)>, kem_id: u32| {
+            let mut parameters = AliceSignalProtocolParameters::new(
+                sender.clone(),
+                KeyPair::generate(&mut rand::rng()),
+                receiver_identity,
+                signed,
+                signed,
+                UsePQRatchet::No,
+            );
+            if let Some((_, one)) = one {
+                parameters.set_their_one_time_pre_key(one.public_key);
+            }
+            let (ciphertext, shared) = kem::encapsulate(&kem_public).unwrap();
+            hybrid::initialize_alice(
+                &parameters,
+                shared.as_bytes().try_into().unwrap(),
+                &KeyPair::generate(&mut rand::rng()),
+                (31, 42),
+                (
+                    one.map(|(id, _)| id),
+                    7,
+                    &direct::IncomingKem {
+                        prekey_id: kem_id,
+                        ciphertext: &ciphertext,
+                    },
+                ),
+            )
+            .unwrap()
+        };
+        let message = |from: &str, participant: Option<&str>, id: &str, kind: &str, body: &[u8]| {
+            let node = Node::new("message")
+                .attr("from", Jid::parse(from).unwrap())
+                .attr("id", id.to_owned())
+                .attr("t", "1")
+                .children(vec![
+                    Node::new("enc")
+                        .attr("type", kind.to_owned())
+                        .attr("v", "2")
+                        .bytes(body.to_vec()),
+                ]);
+            match participant {
+                Some(participant) => node.attr("participant", Jid::parse(participant).unwrap()),
+                None => node,
+            }
+        };
+        let snapshot = |store: &ProtocolStore| {
+            store
+                .read(|tx| {
+                    Table::ALL
+                        .iter()
+                        .map(|table| tx.scan(*table, 1, 500))
+                        .collect::<Result<Vec<_>>>()
+                })
+                .unwrap()
+        };
+        let row =
+            |store: &ProtocolStore, id: u32| store.read(|tx| kem_prekeys::load(tx, id)).unwrap();
+        let held = |store: &ProtocolStore, peer: &str| {
+            let key = format!("comparison-direct:{peer}");
+            store
+                .read(|tx| {
+                    Ok((
+                        tx.get_json::<Vec<u8>>(Table::SignalSessions, key.as_bytes(), 1)?,
+                        tx.get_json::<Vec<u8>>(Table::PeerIdentities, key.as_bytes(), 1)?,
+                    ))
+                })
+                .unwrap()
+        };
+
+        let peer = "123456789@lid";
+        let alice = IdentityKeyPair::generate(&mut rand::rng());
+        let one = KeyPair::generate(&mut rand::rng());
+        let a = initial(&alice, Some((11, &one)), 9);
+        let first = a.prepare(b"\x0a\x05hello").unwrap();
+        let second = hybrid::HybridSession::from_bytes(&first.session)
+            .unwrap()
+            .prepare(b"\x0a\x05again")
+            .unwrap();
+        assert_eq!((first.kind, first.ciphertext[0]), ("pkmsg", 0x44));
+        assert_eq!((second.kind, second.ciphertext[0]), ("pkmsg", 0x44));
+        let ordinary = PreKeyRecord::new(11.into(), &one).serialize().unwrap();
+        store
+            .write(|tx| tx.put_json(Table::Prekeys, b"comparison-prekey:11", 1, &ordinary))
+            .unwrap();
+        let node1 = message(peer, None, "HYBRID-1", "pkmsg", &first.ciphertext);
+        let capture1 = preserve(&store, &node1).unwrap();
+
+        // No local KEM row: preserved, unacknowledged and nothing consumed.
+        let before = snapshot(&store);
+        let head = store.journal_head().unwrap();
+        for policy in [
+            IdentityChangePolicy::Pinned,
+            IdentityChangePolicy::ApkAuthenticated,
+        ] {
+            assert_eq!(
+                process_with_policy(&store, &receiver, &node1, &capture1, policy)
+                    .await
+                    .unwrap(),
+                IncomingResult::Unsupported
+            );
+            assert_eq!(snapshot(&store), before);
+            assert_eq!(store.journal_head().unwrap(), head);
+        }
+
+        // Inventory row present: bootstrap consumes the ordinary and KEM keys
+        // in the inbox commit, pins the authenticated identity and publishes.
+        store
+            .write(|tx| {
+                kem_prekeys::install_for_test(tx, 9, &kem_public, kem_secret.as_bytes(), false)
+                    .map(drop)
+            })
+            .unwrap();
+        assert_eq!(prekeys::summary(&store).unwrap().kem_local, 1);
+        assert_eq!(
+            process(&store, &receiver, &node1, &capture1).await.unwrap(),
+            IncomingResult::Decrypted
+        );
+        assert!(row(&store, 9).is_none());
+        assert!(
+            store
+                .read(|tx| tx.get_json::<Vec<u8>>(Table::Prekeys, b"comparison-prekey:11", 1))
+                .unwrap()
+                .is_none()
+        );
+        let (session, pin) = held(&store, peer);
+        assert!(hybrid::HybridSession::from_bytes(session.as_deref().unwrap()).is_ok());
+        assert_eq!(pin.as_deref(), Some(&alice.identity_key().serialize()[..]));
+        assert_eq!(
+            store.read(|tx| tx.scan(Table::Inbox, 1, 10)).unwrap().len(),
+            1
+        );
+        assert_eq!(
+            process(&store, &receiver, &node1, &capture1).await.unwrap(),
+            IncomingResult::Duplicate
+        );
+
+        // A later pending prekey matches the held session; no key is needed.
+        let node2 = message(peer, None, "HYBRID-2", "pkmsg", &second.ciphertext);
+        let capture2 = preserve(&store, &node2).unwrap();
+        assert_eq!(
+            process(&store, &receiver, &node2, &capture2).await.unwrap(),
+            IncomingResult::Decrypted
+        );
+
+        // Our 0x44 reply clears the peer's pending KEM fields; their next
+        // 0x44 msg decrypts through the ordinary inbox msg branch.
+        let (session, pin) = held(&store, peer);
+        let reply = direct::prepare_payload(
+            &receiver,
+            &Jid::parse(peer).unwrap(),
+            None,
+            session.as_deref(),
+            pin.as_deref(),
+            b"\x0a\x05reply",
+        )
+        .await
+        .unwrap();
+        assert_eq!((reply.kind, reply.ciphertext[0]), ("msg", 0x44));
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::SignalSessions,
+                    format!("comparison-direct:{peer}").as_bytes(),
+                    1,
+                    &*reply.session,
+                )
+            })
+            .unwrap();
+        let alice_account = AccountRecord {
+            own_jid: Some(Jid::parse(peer).unwrap()),
+            registration: RegistrationStatus::Registered,
+            signal_registration_id: Some(31),
+            signal_identity: Some(SignalIdentityKey(KeyMaterial {
+                public: alice.public_key().public_key_bytes().try_into().unwrap(),
+                private: *alice.private_key().serialize(),
+            })),
+            ..Default::default()
+        };
+        let acknowledged = direct::receive(
+            &alice_account,
+            &receiver_jid,
+            &second.session,
+            &receiver_identity.serialize(),
+            &reply.ciphertext,
+        )
+        .await
+        .unwrap();
+        assert_eq!(acknowledged.plaintext.as_slice(), b"\x0a\x05reply");
+        let third = hybrid::HybridSession::from_bytes(&acknowledged.session)
+            .unwrap()
+            .prepare(b"\x0a\x05third")
+            .unwrap();
+        assert_eq!((third.kind, third.ciphertext[0]), ("msg", 0x44));
+        let node3 = message(peer, None, "HYBRID-3", "msg", &third.ciphertext);
+        let capture3 = preserve(&store, &node3).unwrap();
+        assert_eq!(
+            process(&store, &receiver, &node3, &capture3).await.unwrap(),
+            IncomingResult::Decrypted
+        );
+        assert_eq!(
+            store.read(|tx| tx.scan(Table::Inbox, 1, 10)).unwrap().len(),
+            3
+        );
+
+        // Native last-resort rows survive successful bootstrap (0kh.BWa).
+        let last_resort_peer = "15555550104@s.whatsapp.net";
+        store
+            .write(|tx| {
+                kem_prekeys::install_for_test(tx, 10, &kem_public, kem_secret.as_bytes(), true)
+                    .map(drop)
+            })
+            .unwrap();
+        let bob = IdentityKeyPair::generate(&mut rand::rng());
+        let last = initial(&bob, None, 10).prepare(b"\x0a\x04last").unwrap();
+        let node4 = message(
+            last_resort_peer,
+            None,
+            "HYBRID-LR",
+            "pkmsg",
+            &last.ciphertext,
+        );
+        let capture4 = preserve(&store, &node4).unwrap();
+        assert_eq!(
+            process(&store, &receiver, &node4, &capture4).await.unwrap(),
+            IncomingResult::Decrypted
+        );
+        assert!(row(&store, 10).is_some_and(|row| row.last_resort));
+        let summary = prekeys::summary(&store).unwrap();
+        assert_eq!((summary.kem_local, summary.kem_last_resort), (1, 1));
+
+        // A changed identity under the pinned policy fails like the classic
+        // untrusted-identity path: no session, pin or KEM row changes.
+        store
+            .write(|tx| {
+                kem_prekeys::install_for_test(tx, 12, &kem_public, kem_secret.as_bytes(), false)
+                    .map(drop)
+            })
+            .unwrap();
+        let replacement = IdentityKeyPair::generate(&mut rand::rng());
+        let changed = initial(&replacement, None, 12)
+            .prepare(b"\x0a\x03new")
+            .unwrap();
+        let node5 = message(peer, None, "HYBRID-CHANGED", "pkmsg", &changed.ciphertext);
+        let capture5 = preserve(&store, &node5).unwrap();
+        let pinned_before = held(&store, peer);
+        assert_eq!(
+            process(&store, &receiver, &node5, &capture5).await.unwrap(),
+            IncomingResult::Undecryptable
+        );
+        assert_eq!(held(&store, peer), pinned_before);
+        assert!(row(&store, 12).is_some());
+        // The explicit APK-authenticated policy archives and replaces the pin.
+        assert_eq!(
+            process_with_policy(
+                &store,
+                &receiver,
+                &node5,
+                &capture5,
+                IdentityChangePolicy::ApkAuthenticated
+            )
+            .await
+            .unwrap(),
+            IncomingResult::Decrypted
+        );
+        assert!(row(&store, 12).is_none());
+        assert_eq!(
+            held(&store, peer).1.as_deref(),
+            Some(&replacement.identity_key().serialize()[..])
+        );
+
+        // Group pairwise children use the same hybrid path and consumption.
+        let member = "15555550105@s.whatsapp.net";
+        let carol = IdentityKeyPair::generate(&mut rand::rng());
+        let carol_one = KeyPair::generate(&mut rand::rng());
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Prekeys,
+                    b"comparison-prekey:14",
+                    1,
+                    &PreKeyRecord::new(14.into(), &carol_one)
+                        .serialize()
+                        .unwrap(),
+                )?;
+                kem_prekeys::install_for_test(tx, 13, &kem_public, kem_secret.as_bytes(), false)
+                    .map(drop)
+            })
+            .unwrap();
+        let group_first = initial(&carol, Some((14, &carol_one)), 13)
+            .prepare(b"\x0a\x05group")
+            .unwrap();
+        let group_node = message(
+            "12345@g.us",
+            Some(member),
+            "HYBRID-G",
+            "pkmsg",
+            &group_first.ciphertext,
+        );
+        let group_capture = preserve(&store, &group_node).unwrap();
+        assert_eq!(
+            process(&store, &receiver, &group_node, &group_capture)
+                .await
+                .unwrap(),
+            IncomingResult::Decrypted
+        );
+        assert!(row(&store, 13).is_none());
+        assert!(
+            store
+                .read(|tx| tx.get_json::<Vec<u8>>(Table::Prekeys, b"comparison-prekey:14", 1))
+                .unwrap()
+                .is_none()
+        );
+        assert_eq!(
+            held(&store, member).1.as_deref(),
+            Some(&carol.identity_key().serialize()[..])
+        );
+        assert_eq!(
+            process(&store, &receiver, &group_node, &group_capture)
+                .await
+                .unwrap(),
+            IncomingResult::Duplicate
+        );
+
+        // Companion KEM admission is unported on both routes; nothing changes.
+        store
+            .write(|tx| {
+                kem_prekeys::install_for_test(tx, 15, &kem_public, kem_secret.as_bytes(), false)
+                    .map(drop)
+            })
+            .unwrap();
+        let companion = initial(&alice, None, 15).prepare(b"\x0a\x02hi").unwrap();
+        for node in [
+            message(
+                "123456789:3@lid",
+                None,
+                "HYBRID-COMPANION",
+                "pkmsg",
+                &companion.ciphertext,
+            ),
+            message(
+                "12345@g.us",
+                Some("15555550105:2@s.whatsapp.net"),
+                "HYBRID-GC",
+                "pkmsg",
+                &companion.ciphertext,
+            ),
+        ] {
+            let capture = preserve(&store, &node).unwrap();
+            let before = snapshot(&store);
+            assert_eq!(
+                process(&store, &receiver, &node, &capture).await.unwrap(),
+                IncomingResult::Unsupported
+            );
+            assert_eq!(snapshot(&store), before);
+        }
+
+        // Reopening keeps every commit once-only and the unused rows intact.
+        let after = snapshot(&store);
+        drop(store);
+        let store = open(false);
+        for (node, capture) in [
+            (&node1, &capture1),
+            (&node2, &capture2),
+            (&node3, &capture3),
+        ] {
+            assert_eq!(
+                process(&store, &receiver, node, capture).await.unwrap(),
+                IncomingResult::Duplicate
+            );
+        }
+        assert_eq!(snapshot(&store), after);
+        assert!(row(&store, 10).is_some() && row(&store, 15).is_some());
     }
 
     #[tokio::test]
