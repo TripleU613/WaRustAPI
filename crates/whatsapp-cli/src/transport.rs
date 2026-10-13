@@ -140,7 +140,7 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
         .map(whatsapp_api::transport::messaging::MessageRequest::read)
         .transpose()?;
     if let Some(message) = &message {
-        message.require_comparison_group_text()?;
+        message.require_comparison_support()?;
     }
     let store = ProtocolStore::open(OpenOptions {
         path: cli.store.clone(),

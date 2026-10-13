@@ -97,8 +97,10 @@ groups an unsupported shape blocks the preparation as unsupported content.
 
 **Exposure:** library `send_message`; `outbox-send` group JSON replies
 (`quote` without `emoji`/`quoted_text`) with exactly one of `text`, `image` or
-`voice_note`. The `reply` command stays text-only and direct private JSON still
-refuses `quote`. The same change moved the comparison path's group text-only
+`voice_note`. The `reply` command stays text-only. (Later the same day, direct
+private JSON replies were added to `outbox-send`: the author must be the contact,
+in the same form as `to`, or one of our identities; the comparison path refuses
+any direct quote via `require_comparison_support`.) The same change moved the comparison path's group text-only
 refusal out of the shared JSON reader: it had also blocked the documented
 `outbox-send` group image/voice note path, which was therefore unreachable from
 the CLI. **Correction (review, same day):** as first committed, the reader

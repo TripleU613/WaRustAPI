@@ -1,3 +1,8 @@
+2026-10-13 — **Implemented/offline (CLI):** `outbox-send` private JSON now
+sends direct-chat replies (text, image or voice note) as well as group replies;
+a direct quote's author must be the contact or us. The comparison path refuses
+any direct quote instead of silently dropping it (`require_comparison_support`).
+
 2026-10-13 — **Implemented/offline (HTTP):** `serve --store-routes --token-file`
 serves three read-only, redacted store inspections (`/v1/receipts`,
 `/v1/prekeys`, `/v1/outbox/suspended`) over loopback with a per-start bearer

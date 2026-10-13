@@ -258,12 +258,8 @@ impl MessageRequest {
             return Ok(value);
         }
         if let Some(quote) = &value.quote {
-            if value.group_chat()?.is_none() {
-                return Err(crate::Error::invalid(
-                    "message",
-                    "a quote or reaction needs the `group` it belongs to",
-                ));
-            }
+            // A direct quote is valid JSON for outbox-send replies; the
+            // comparison path refuses it (`require_comparison_support`).
             quote.sender()?;
             if quote.message_id.is_empty() || quote.message_id.len() > 128 {
                 return Err(crate::Error::invalid(
@@ -298,7 +294,7 @@ impl MessageRequest {
                 ));
             }
             // Group media is valid JSON for outbox-send; the comparison path
-            // refuses it separately (`require_comparison_group_text`).
+            // refuses it separately (`require_comparison_support`).
             Some(_) => {}
             None => {
                 value.recipient()?;
@@ -327,16 +323,23 @@ impl MessageRequest {
         }
         Ok(value)
     }
-    /// The comparison (`lab-transport`) group path sends text, replies and
-    /// reactions only. Group media goes through `outbox-send`; refusing here
-    /// keeps the comparison path from sending an empty text in its place.
-    pub fn require_comparison_group_text(&self) -> crate::Result<()> {
-        if self.group_chat()?.is_some()
-            && (self.image.is_some() || self.voice_note.is_some() || self.view_once)
-        {
+    /// What the comparison (`lab-transport`) path cannot send: group media
+    /// (its group path sends text, replies and reactions only) and any quote
+    /// in a direct chat (its direct path has no quote encoding). Both go
+    /// through `outbox-send`; refusing here keeps the comparison path from
+    /// sending an empty text or dropping the quote.
+    pub fn require_comparison_support(&self) -> crate::Result<()> {
+        let group = self.group_chat()?.is_some();
+        if group && (self.image.is_some() || self.voice_note.is_some() || self.view_once) {
             return Err(crate::Error::invalid(
                 "message",
                 "a comparison group send carries text only; use outbox-send for group media",
+            ));
+        }
+        if !group && self.quote.is_some() {
+            return Err(crate::Error::invalid(
+                "message",
+                "the comparison direct path has no quotes; use outbox-send for direct replies",
             ));
         }
         Ok(())
@@ -1974,10 +1977,19 @@ mod tests {
             ))
             .unwrap();
             assert!(!media.quote.as_ref().unwrap().is_reaction());
-            assert!(media.require_comparison_group_text().is_err());
+            assert!(media.require_comparison_support().is_err());
         }
-        // Both, neither, two bodies, a reaction with media, and a quote with
-        // no group are all refused.
+        // A direct reply reads too (outbox-send); the comparison path refuses it.
+        let direct = MessageRequest::read(&write(
+            "direct-reply.json",
+            &format!(
+                r#"{{"to":"15551234567","text":"ok","quote":{{{target}}},"request_id":"r5"}}"#
+            ),
+        ))
+        .unwrap();
+        assert!(direct.require_comparison_support().is_err());
+        assert!(reply.require_comparison_support().is_ok());
+        // Both, neither, two bodies and a reaction with media are refused.
         for (name, body) in [
             (
                 "both.json",
@@ -1988,12 +2000,6 @@ mod tests {
             (
                 "neither.json",
                 format!(r#"{{{group},"quote":{{{target}}},"request_id":"r4"}}"#),
-            ),
-            (
-                "nogroup.json",
-                format!(
-                    r#"{{"to":"15551234567","text":"ok","quote":{{{target}}},"request_id":"r5"}}"#
-                ),
             ),
             (
                 "two-bodies.json",
@@ -2092,8 +2098,8 @@ mod tests {
             r#"{"group":"120363000000000001@g.us","voice_note":"/dev/null","request_id":"r3"}"#,
         ))
         .unwrap();
-        assert!(voice.require_comparison_group_text().is_err());
-        assert!(group.require_comparison_group_text().is_ok());
+        assert!(voice.require_comparison_support().is_err());
+        assert!(group.require_comparison_support().is_ok());
         // A direct send still needs digits.
         assert!(
             MessageRequest::read(&write("none.json", r#"{"text":"hi","request_id":"r4"}"#))

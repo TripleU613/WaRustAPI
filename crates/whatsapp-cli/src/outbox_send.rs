@@ -33,9 +33,10 @@ fn receipt_summary(status: &SendStatus, group: bool) -> String {
     )
 }
 
-/// The normal-outbox reference for a group JSON reply (`quote` without an
-/// emoji). The participant names the quoted message's author; one of our own
-/// identities makes it our outgoing message. Reactions and a supplied
+/// The normal-outbox reference for a JSON reply (`quote` without an emoji) in
+/// a group or direct chat. The participant names the quoted message's author;
+/// one of our own identities makes it our outgoing message. In a direct chat
+/// any other author must be the contact itself, in the same form as `to`. Reactions and a supplied
 /// `quoted_text` stay on the comparison path: the normal path copies the saved
 /// parent's text itself and never sends a caller-supplied preview.
 fn quoted(
@@ -56,15 +57,20 @@ fn quoted(
             "normal JSON quotes are replies without quoted_text; reactions and supplied previews remain on the comparison path",
         ));
     }
-    let chat = message
-        .group_chat()?
-        .ok_or_else(|| Error::invalid("outbox_send", "a quote needs its group"))?;
+    let group = message.group_chat()?;
+    let chat = destination(message)?;
     let author = quote.sender()?.to_non_ad();
     let own_lid = whatsapp_api::transport::group_send::own_lid(store)?;
     let ours = [account.own_jid.as_ref().map(Jid::to_non_ad), own_lid]
         .into_iter()
         .flatten()
         .any(|own| own.to_non_ad() == author);
+    if group.is_none() && !ours && author != chat.to_non_ad() {
+        return Err(Error::invalid(
+            "outbox_send",
+            "a direct reply quotes the contact (in the same form as `to`) or one of our identities",
+        ));
+    }
     Ok(Some(MessageRef {
         key: MessageKey {
             chat: ChatId::from_jid(&chat)?,
@@ -429,7 +435,7 @@ mod tests {
     }
 
     #[test]
-    fn group_json_replies_map_authors_and_refuse_comparison_only_quotes() {
+    fn json_replies_map_authors_and_refuse_comparison_only_quotes() {
         use whatsapp_api::{
             model::message::Direction,
             outbox::Outbox,
@@ -485,6 +491,29 @@ mod tests {
             assert!(quoted(&store, &account, &request).is_err());
             assert!(refuse_comparison_only(&request).is_err());
         }
+        // Direct replies: the contact or us; a third party is refused.
+        let direct = |participant: &str| -> MessageRequest {
+            serde_json::from_value(serde_json::json!({
+                "request_id": "direct-reply", "to": "15550000001@s.whatsapp.net",
+                "text": "reply body",
+                "quote": {"message_id": "PARENT", "participant": participant},
+            }))
+            .unwrap()
+        };
+        let contact = quoted(&store, &account, &direct("15550000001@s.whatsapp.net"))
+            .unwrap()
+            .unwrap();
+        assert_eq!(contact.key.direction, Direction::Incoming);
+        assert_eq!(
+            contact.key.chat.jid(),
+            &Jid::parse("15550000001@s.whatsapp.net").unwrap()
+        );
+        let mine = quoted(&store, &account, &direct("15550000099@s.whatsapp.net"))
+            .unwrap()
+            .unwrap();
+        assert_eq!(mine.key.direction, Direction::Outgoing);
+        assert!(quoted(&store, &account, &direct("15550000002@s.whatsapp.net")).is_err());
+        assert!(refuse_comparison_only(&direct("15550000001@s.whatsapp.net")).is_ok());
         // A reused request ID must keep the same quote target.
         let request = SendRequest {
             client_request_id: ClientRequestId::new("group-reply").unwrap(),
