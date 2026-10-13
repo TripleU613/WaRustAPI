@@ -1819,7 +1819,9 @@ The per-area matrix with exposure and blockers is [feature-parity](docs/feature-
   [Sticker evidence](docs/protocol/stickers.md), [video evidence](docs/protocol/video-media.md),
   [apk-analysis](docs/protocol/apk-analysis.md).
 - Calls; profile picture.
-- Privacy settings IQ (namespace unknown).
+- Privacy settings mutation. The SMAX `privacy` IQ shape is confirmed for the
+  `readreceipts` category, but the MEX/SMAX selector (property 23639) and other
+  category names are unknown ([read-setting-sync](docs/protocol/read-setting-sync.md)).
 - Channels and QR/companion pairing — parked by the owner.
 - Companion-device fan-out and own-account device sync.
 - History-notice handling. APK 2.26.37.71 identifies the formerly unexplained

@@ -97,7 +97,7 @@ operation's `x-library`.
 | Display name, about text | written live, handset unconfirmed | `push-name`, `about` | [presence](protocol/presence.md) | — |
 | Profile picture | absent | — | — | — |
 | Block/unblock, block list | live | `block`, `unblock`, `blocklist` | [chat-actions](protocol/chat-actions.md) | — |
-| Privacy settings (last seen, photo, groups…) | absent (IQ namespace unknown) | — | — | APK trace needed |
+| Privacy settings (last seen, photo, groups…) | absent (no mutation command) | — | [read-setting-sync](protocol/read-setting-sync.md) | SMAX `<iq xmlns="privacy"><privacy><category name value/>` is confirmed for `readreceipts`, but property 23639 selects MEX vs SMAX (effective value unknown) and other category names are untraced |
 | Per-chat privacy, report, clear chat | implemented; live status not established in this index | `chat-privacy`, `report`, `clear-chat` | [chat-actions](protocol/chat-actions.md) | Check the evidence doc before claiming live |
 | App-state sync (contact action writes, 409 catch-up) | live | `contacts fetch-app-state`, `contacts publish-app-state` | [chat-actions](protocol/chat-actions.md) | Star/mute/pin/archive actions not exposed |
 
