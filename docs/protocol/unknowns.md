@@ -145,8 +145,34 @@ reads `edit` from the incoming `<ack>` (`0094..00a2`). So the `edit` string in
 about what a sender emits. **Not retained:** the producers that choose that `edit` value
 (and any companion attributes) for a sender revoke or message edit, the effective value of property 8784, and the native send-side
 time window. Receive-side parsing does not establish what a sender must emit,
-so no sender is implemented. Next step: trace `SendE2EMessageJob`/`0y0.A00`
-for the outgoing `edit` attribute in 2.26.37.71.
+so no sender is implemented.
+
+**Sender side, from retained `SendE2EMessageJob` bundles (2026-10-13):**
+
+- **Confirmed static:** the job has an integer `editVersion` field. It is part
+  of the in-flight message key `CSP(jid, id, editVersion, participant)`
+  ([send-job-run](apk/2.26.37.71-send-job-state/send-job-run.txt)
+  `113c..114e`), so an edit or revoke is tracked separately from the original
+  send under the same message ID. In `A06`
+  ([group-send-job-hash-check](apk/2.26.37.71-groups/group-send-job-hash-check.txt)),
+  a nonzero `editVersion` (`0b98..0b9c`) is turned into text with
+  `String.valueOf` (`0ba0..0ba6`) while the job builds a `CSu` expected-ACK key
+  (`0ba8..0bd4`). That is the type the ACK parser `1Qy.A02` fills (`A02` from,
+  `A01` participant, `A03` recipient, `A08` id, `A06` class, `A09` type, `A07`
+  edit). `editVersion` is also passed as an int to the request object
+  `Civ.<init>` (`0be6..0c28`), beside `retryCount`, `messageType`,
+  `originationFlags` and `broadcastListName`.
+- **Inferred:** the stanza's `edit` attribute is `editVersion` in decimal text.
+  The server's ACK echoes `edit`, and the job expects it in that key. The
+  retained annotation does not show which register receives the `valueOf`
+  result, so its placement in `CSu.A07` (edit) rather than `A06` (class) is not
+  proven.
+- **Not retained:** who sets `editVersion` for each operation (sender revoke,
+  admin revoke, text or caption edit, unschedule), so which of the received
+  values 1/2/3/7/8 a sender uses for which; and `Civ`'s stanza writer.
+
+Next step (APK): trace the `SendE2EMessageJob` constructor callers that set
+`editVersion`, and `Civ`'s consumer that writes the stanza.
 
 ## Outgoing disappearing context (2026-10-13)
 
