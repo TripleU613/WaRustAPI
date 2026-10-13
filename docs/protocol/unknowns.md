@@ -190,6 +190,18 @@ so no sender is implemented.
 - **Not retained:** who sets `editVersion` for each operation (sender revoke,
   admin revoke, text or caption edit, unschedule), so which of the received
   values 1/2/3/7/8 a sender uses for which; and `Civ`'s stanza writer.
+- **What the receive side does and does not constrain (confirmed static):**
+  `DEy.A00` only validates the value (8, 7, 3, 2, 1 or absent; anything else
+  throws, [edit-parser](apk/2.26.37.71-sender-revoke/edit-parser.txt)
+  `002a..005e`). The sender-revoke builder `Bua.CF4` accepts REVOKE or
+  UNSCHEDULE with any value except 8
+  ([sender-builder](apk/2.26.37.71-sender-revoke/sender-builder.txt)
+  `0018..0024`), and the admin builder `Bub` takes 8. So a peer interprets only
+  8 (admin revoke) differently; it never distinguishes 1, 2, 3 and 7. An admin
+  revoke must therefore carry `edit="8"` (inferred from the receiver). The
+  value a sender uses for its own revoke or an edit matters, if at all, only to
+  the server, and no client-side evidence can show it. It must come from the
+  sender's own producer.
 
 Next step (APK): trace the `SendE2EMessageJob` constructor callers that set
 `editVersion`, and `Civ`'s consumer that writes the stanza.
