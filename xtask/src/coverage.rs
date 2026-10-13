@@ -192,6 +192,19 @@ fn rust_files(dir: &Path, root: &Path) -> Result<BTreeSet<String>, String> {
 mod tests {
     use super::*;
 
+    /// CI runs xtask tests whenever library sources, bundle manifests/targets
+    /// or the report change (.github/ci/plan.rs), so a stale report fails here.
+    #[test]
+    fn committed_report_is_current() {
+        let root = Path::new(env!("CARGO_MANIFEST_DIR")).parent().unwrap();
+        let expected = serde_json::to_string_pretty(&build(root).unwrap()).unwrap() + "\n";
+        let saved = std::fs::read_to_string(root.join(REPORT)).unwrap();
+        assert!(
+            saved == expected,
+            "{REPORT} is stale; run `cargo run -p xtask -- apk-coverage` and commit it"
+        );
+    }
+
     /// A synthetic tree: two releases, one shared topic, one stale citation.
     #[test]
     fn report_counts_releases_shared_topics_and_uncited_files() {

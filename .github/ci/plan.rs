@@ -54,6 +54,13 @@ impl Plan {
             self.proto |= path == "xtask/src/proto.rs";
         } else if path == "docs/protocol/dependency-report.md" {
             self.dependencies = true;
+        } else if path == "docs/protocol/apk-coverage.json"
+            || (path.starts_with("docs/protocol/apk/")
+                && (path.ends_with("/manifest.json") || path.ends_with("/targets.json")))
+        {
+            // xtask's committed_report_is_current test keeps the coverage
+            // report in step with the bundles it summarizes.
+            self.xtask = true;
         } else if path == "rustfmt.toml" || path == ".rustfmt.toml" {
             self.api = true;
         } else if path.ends_with(".md")
@@ -247,6 +254,21 @@ mod tests {
                 "docs/protocol/apk/2.26.37.70/tokens.json",
                 "docs/design/registration.md"
             ]),
+            Plan::default()
+        );
+    }
+    #[test]
+    fn coverage_inputs_run_the_xtask_report_check() {
+        for path in [
+            "docs/protocol/apk-coverage.json",
+            "docs/protocol/apk/2.26.37.71-core/targets.json",
+            "docs/protocol/apk/2.26.37.70/manifest.json",
+        ] {
+            let p = route(&[path]);
+            assert!(p.xtask && !p.api && !p.package, "{path}");
+        }
+        assert_eq!(
+            route(&["docs/protocol/apk/2.26.37.71-core/frame-reader.txt"]),
             Plan::default()
         );
     }
