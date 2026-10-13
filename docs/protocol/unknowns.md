@@ -187,6 +187,22 @@ and whether it applies to every message kind. Next step: trace where 2.26.37.71
 `SendE2EMessageJob` or the message builders set `BWx.expiration` for outgoing
 messages before adding it.
 
+**Retained-evidence search (2026-10-13):** the chat's timer state is `LX/0Zi`
+(`expiration:I`, `ephemeralSettingTimestamp:J`), returned by
+`0Fs.A0J(UserJid)` (**confirmed static**, e.g.
+[timer-builder](apk/2.26.37.71-own-device-timer/timer-builder.txt) `D9s`
+`0092..00a2`). Its retained readers are the own-device timer builder `D9s`,
+the preprocessed-message store `0zC`
+([own-preprocessed-store](apk/2.26.37.71-own-device-echo/own-preprocessed-store.txt)
+`023c`, `0476`, `077a`, `07ee`), the ACK background worker `DMZ`
+([server-background-worker](apk/2.26.37.71-message-ack/server-background-worker.txt)
+`0a0e`) and chat-transfer import `CnI`
+([chat-transfer-import](apk/2.26.37.71-token-import/chat-transfer-import.txt)
+`0440`). **Negative:** no retained bundle accesses any `LX/BWx` field, so no
+message builder copying `0Zi.expiration` into `ContextInfo.expiration` (25)
+is retained. The next APK trace is a `0Fs.A0J` caller on the compose/send path
+that writes `BWx`.
+
 ## Document and video sending (2026-10-13)
 
 **What retained 2.26.37.71 evidence covers:** the document and video schemas
