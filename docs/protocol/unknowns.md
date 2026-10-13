@@ -141,6 +141,25 @@ and whether it applies to every message kind. Next step: trace where 2.26.37.71
 `SendE2EMessageJob` or the message builders set `BWx.expiration` for outgoing
 messages before adding it.
 
+## Document and video sending (2026-10-13)
+
+**What retained 2.26.37.71 evidence covers:** the document and video schemas
+(`BZB`, video descriptor), their key domains (`WhatsApp Document Keys`,
+`WhatsApp Video Keys`) and the `1qB` media-type table, whose constructor takes
+`("document", "DOC", key, …)`
+([document evidence](document-media-evidence.txt)). The first argument is the
+`/mms/<segment>/` upload path for image and ptt, and those two were confirmed
+live, so `/mms/document/` is a strong inference.
+
+**Not retained (blocks sending):** the stanza's `enc mediatype` value and any
+other attributes for document and video sends. The image and ptt values came
+from `LX/9QH` and live sends. No committed bundle maps document or video, and a
+code search of `docs/protocol/apk` and `rea` finds no such table. Thumbnail
+generation and upload (`thumbnailDirectPath`, `jpegThumbnail`) are also untraced.
+Sending is therefore not implemented, rather than guessing `mediatype` from
+general protocol knowledge. Next step: trace the `9QH` equivalent in 2.26.37.71
+for all media types, then reuse the existing upload, encryption and outbox paths.
+
 ## Comparison token dictionary: double-byte page 0 index 1
 
 **Resolved 2026-10-07, test completed 2026-10-13.** The checked 37.71
