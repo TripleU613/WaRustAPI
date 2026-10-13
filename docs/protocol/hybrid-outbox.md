@@ -21,6 +21,17 @@ application uses. Malformed `identity_auth` still refuses. The classic outbox
 path continues to ignore `identity_auth` entirely; that pre-existing
 asymmetry is recorded, not changed.
 
+**Unusable PQ replies suspend instead of ending the session (review fix).**
+A PQ reply the hybrid branch cannot use (companion, attestation-bearing,
+malformed `identity_auth`, own identity, or `bundle_for` failure) previously
+returned an error that ended the connection actor while the intent's key-query
+reservation stayed `outcome_unknown` with no recorded reason. It now suspends
+only that intent through the existing suspension record, preserving the exact
+reply encrypted, with reason `hybrid_admission_unsupported` or
+`invalid_hybrid_bundle`; `outbox-suspended` lists it. Only the
+`identity_changed` reason is resumable, so these are never re-sent
+automatically, and nothing is ever sent classically in their place.
+
 **Correction:** the held-hybrid coordinator test described below nested
 `pqkey` inside `skey`, so it never reached the hybrid branch; its reply was
 parsed as classic and the held version-4 record continued through the classic

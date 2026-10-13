@@ -60,7 +60,8 @@ diagnostics and `pq_session_unported` preview/application deferral remain intact
 no session derivation or pin adoption uses this projection on a PQ candidate.
 `signature_valid` continues to mean classic signed-prekey validity only.
 
-Direct preparation fails with a fixed unsupported error before crypto/session
+(Superseded 2026-10-13: a PQ reply the outbox cannot use now suspends its
+intent with a reason, see [hybrid-outbox.md](hybrid-outbox.md).) Direct preparation fails with a fixed unsupported error before crypto/session
 use or an outgoing message reservation. Device batches retain their exact reply
 and existing `invalid_bundle` terminal classification, blocking later pages
 without changing keys. This does not manufacture a server refusal or retry.

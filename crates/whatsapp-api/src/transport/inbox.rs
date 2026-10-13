@@ -1192,11 +1192,12 @@ struct HybridPrekey {
 /// (version and Alice base key) before any local key lookup; otherwise it loads
 /// the signed, optional ordinary and `kyber_prekeys` rows (`0kh.BTS`) and
 /// bootstraps (docs/protocol/hybrid-incoming.md). `Ok(None)` preserves the
-/// capture unacknowledged for local coverage gaps: no inventory row (this client
-/// has no KEM producer), a changed pin on a matching session, or malformed local
-/// or KEM input. Nested authentication failures keep the classic
-/// `direct_message` classification, and a pinned changed identity is reported as
-/// the classic backend's untrusted-identity failure, so both paths retry alike.
+/// capture unacknowledged for local coverage gaps: a changed pin on a matching
+/// session, a held account/pin mismatch or a non-version-4 envelope. A missing
+/// or unusable signed, ordinary or KEM key (including an invalid local KEM row;
+/// this client has no KEM producer), nested authentication failures and a
+/// pinned changed identity keep the classic `direct_message` classification
+/// (Undecryptable with the bounded retry), so both paths behave alike.
 #[cfg(feature = "experimental-signal-crypto")]
 async fn receive_hybrid_prekey(
     store: &ProtocolStore,
@@ -1216,8 +1217,14 @@ async fn receive_hybrid_prekey(
             field: "kem_prekey_inventory",
             reason,
         }) => {
-            tracing::warn!(reason, "hybrid prekey preserved: local KEM row is invalid");
-            return Ok(None);
+            tracing::warn!(
+                reason,
+                "hybrid prekey not processed: local KEM row is invalid"
+            );
+            return Err(Error::invalid(
+                "direct_message",
+                "Signal KEM prekey unavailable or invalid",
+            ));
         }
         Err(other) => return Err(other),
     };
@@ -1253,12 +1260,7 @@ async fn receive_hybrid_prekey(
             "direct_message",
             "Signal peer identity untrusted; saved pin preserved",
         )),
-        Err(Error::InvalidInput { field, reason })
-            if matches!(
-                field,
-                "hybrid_session" | "kem_secret_key" | "kem_ciphertext"
-            ) =>
-        {
+        Err(Error::InvalidInput { field, reason }) if field == "hybrid_session" => {
             tracing::warn!(
                 field,
                 reason,
@@ -1370,12 +1372,14 @@ async fn process_group_inner(
     } else {
         false
     };
-    if hybrid_prekey && sender_jid.device != 0 {
-        // Companion ADV admission is classic-only here. Local coverage limit.
+    // Companion ADV admission is classic-only here (local coverage limit). Skip
+    // only the pairwise child, as for a refused classic companion, so a held
+    // sender key can still decrypt this stanza's skmsg.
+    let skip_hybrid_companion = hybrid_prekey && sender_jid.device != 0;
+    if skip_hybrid_companion {
         tracing::warn!(
-            "group companion hybrid prekey preserved: companion KEM admission is unported"
+            "group companion hybrid prekey skipped: companion KEM admission is unported"
         );
-        return Ok(IncomingResult::Unsupported);
     }
     let sk_enc = enc_of(&["skmsg"]);
     if direct_enc.is_none() && sk_enc.is_none() {
@@ -1427,6 +1431,7 @@ async fn process_group_inner(
     // phone sent a `messageHistoryBundle` (Message field 70, `LX/BZc`) this way.
     let mut pairwise_plaintext = None;
     let companion_prekey = sender_jid.device != 0
+        && !skip_hybrid_companion
         && direct_enc
             .is_some_and(|enc| enc.get_attr("type").and_then(|v| v.as_text()) == Some("pkmsg"));
     let companion_authority = if companion_prekey {
@@ -1452,7 +1457,9 @@ async fn process_group_inner(
     } else {
         None
     };
-    let pairwise_peer = if companion_prekey {
+    let pairwise_peer = if skip_hybrid_companion {
+        None
+    } else if companion_prekey {
         companion_authority.as_ref().map(|_| sender_jid.clone())
     } else {
         participant_session_jid(store, node, &sender_jid)?
@@ -5104,7 +5111,8 @@ mod tests {
         let node1 = message(peer, None, "HYBRID-1", "pkmsg", &first.ciphertext);
         let capture1 = preserve(&store, &node1).unwrap();
 
-        // No local KEM row: preserved, unacknowledged and nothing consumed.
+        // No local KEM row: like a missing classic one-time key it is
+        // Undecryptable (bounded retry), and nothing is consumed or written.
         let before = snapshot(&store);
         let head = store.journal_head().unwrap();
         for policy in [
@@ -5115,11 +5123,42 @@ mod tests {
                 process_with_policy(&store, &receiver, &node1, &capture1, policy)
                     .await
                     .unwrap(),
-                IncomingResult::Unsupported
+                IncomingResult::Undecryptable
             );
             assert_eq!(snapshot(&store), before);
             assert_eq!(store.journal_head().unwrap(), head);
         }
+        // A row that does not parse is the same unavailable key, not a store
+        // failure that would end the session; counts still see it.
+        store
+            .write(|tx| {
+                tx.put(
+                    Table::Prekeys,
+                    kem_prekeys::record_key(9).as_bytes(),
+                    1,
+                    b"{",
+                )
+            })
+            .unwrap();
+        let corrupt = snapshot(&store);
+        assert_eq!(
+            process(&store, &receiver, &node1, &capture1).await.unwrap(),
+            IncomingResult::Undecryptable
+        );
+        assert_eq!(snapshot(&store), corrupt);
+        assert_eq!(
+            (
+                prekeys::summary(&store).unwrap().kem_local,
+                prekeys::kem_row_state(&store, 9).unwrap()
+            ),
+            (1, prekeys::KemRowState::Invalid)
+        );
+        store
+            .write(|tx| {
+                tx.delete(Table::Prekeys, kem_prekeys::record_key(9).as_bytes())
+                    .map(drop)
+            })
+            .unwrap();
 
         // Inventory row present: bootstrap consumes the ordinary and KEM keys
         // in the inbox commit, pins the authenticated identity and publishes.
@@ -5341,6 +5380,8 @@ mod tests {
         );
 
         // Companion KEM admission is unported on both routes; nothing changes.
+        // (These fixtures carry no device-identity, so classic admission would
+        // also refuse them; they show preservation, not the guard in isolation.)
         store
             .write(|tx| {
                 kem_prekeys::install_for_test(tx, 15, &kem_public, kem_secret.as_bytes(), false)
@@ -5371,6 +5412,54 @@ mod tests {
                 IncomingResult::Unsupported
             );
             assert_eq!(snapshot(&store), before);
+        }
+        // With a held sender key, the companion's skmsg still decrypts while
+        // its hybrid pairwise child is skipped: no session, KEM row kept.
+        {
+            use crate::signal::group::{
+                commit_skdm, encrypt_group_payload, extract_skdm_from_payload,
+                prepare_own_sender_key, process_skdm, sender_key_db_key,
+            };
+            let group = Jid::parse("12345@g.us").unwrap();
+            let device = Jid::parse("15555550105:2@s.whatsapp.net").unwrap();
+            let theirs = prepare_own_sender_key(&group, &device, None).await.unwrap();
+            let (_, skdm) = extract_skdm_from_payload(&theirs.distribution_message).unwrap();
+            let installed = process_skdm(
+                &group,
+                &device,
+                sender_key_db_key(&group, &device),
+                None,
+                &skdm,
+            )
+            .await
+            .unwrap();
+            assert!(store.write(|tx| commit_skdm(tx, &installed)).unwrap());
+            let body = super::super::group_send::text_payload("companion skmsg").unwrap();
+            let (cipher, _) = encrypt_group_payload(&group, &device, &theirs.updated_key, &body)
+                .await
+                .unwrap();
+            let node = message(
+                "12345@g.us",
+                Some("15555550105:2@s.whatsapp.net"),
+                "HYBRID-GC-SK",
+                "pkmsg",
+                &companion.ciphertext,
+            );
+            let mut children = node.child_nodes().to_vec();
+            children.push(
+                Node::new("enc")
+                    .attr("type", "skmsg")
+                    .attr("v", "2")
+                    .bytes(cipher.to_vec()),
+            );
+            let node = node.children(children);
+            let capture = preserve(&store, &node).unwrap();
+            assert_eq!(
+                process(&store, &receiver, &node, &capture).await.unwrap(),
+                IncomingResult::Decrypted
+            );
+            assert_eq!(held(&store, "15555550105:2@s.whatsapp.net"), (None, None));
+            assert!(row(&store, 15).is_some());
         }
 
         // Reopening keeps every commit once-only and the unused rows intact.

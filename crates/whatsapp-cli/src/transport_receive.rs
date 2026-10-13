@@ -1314,7 +1314,7 @@ pub(super) fn outbox_suspended(cli: &super::Cli) -> Result<(), Error> {
         );
     } else {
         println!(
-            "outbox-suspended: {} queued send(s) awaiting peer identity policy resolution",
+            "outbox-suspended: {} queued send(s) suspended by a fetched directory reply (identity change or unusable PQ material; see reason)",
             rows.len()
         );
         for row in rows {

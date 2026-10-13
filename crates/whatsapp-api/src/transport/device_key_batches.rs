@@ -72,6 +72,8 @@ enum Reason {
     ForeignDevice,
     InvalidBundle,
     InvalidSignature,
+    /// A verified PQ row whose metadata this client cannot admit yet.
+    UnsupportedBundle,
 }
 #[derive(Serialize, Deserialize)]
 struct Page {
@@ -280,6 +282,11 @@ fn classify(node: &Node, expected: &[Jid]) -> std::result::Result<(), Reason> {
                     return Err(Reason::InvalidSignature);
                 }
                 Err(_) => return Err(Reason::InvalidBundle),
+            }
+            // Same local admission boundary as the direct outbox and identity
+            // refresh: attestation-bearing or malformed identity_auth PQ rows.
+            if !crate::signal::hybrid::admissible_pq_metadata(user) {
+                return Err(Reason::UnsupportedBundle);
             }
         }
     }
@@ -753,15 +760,26 @@ mod tests {
             ("valid", None),
             ("signature", Some("invalid_signature")),
             ("encoding", Some("invalid_bundle")),
+            ("attestation", Some("unsupported_bundle")),
+            ("identity_auth", Some("unsupported_bundle")),
         ] {
             let dir = tempfile::tempdir().unwrap();
             let store = open(&dir.path().join("pq.redb"));
             let targets = vec![target(0), target(1)];
             let query = reserve_next(&store, &id(), &targets).unwrap().unwrap();
-            let incoming = reply(
-                &query,
-                &pq_user_template(case != "signature", case != "encoding"),
-            );
+            let mut template = pq_user_template(case != "signature", case != "encoding");
+            if matches!(case, "attestation" | "identity_auth") {
+                // Shared local PQ admission boundary: attestation-bearing rows,
+                // and identity_auth lacking Bot.A03's signature/certs shape.
+                let mut children = template.child_nodes().to_vec();
+                children.push(Node::new(if case == "attestation" {
+                    "non_e2ee_attestation"
+                } else {
+                    "identity_auth"
+                }));
+                template = template.children(children);
+            }
+            let incoming = reply(&query, &template);
             let before_crypto = state(&store).into_iter().skip(1).collect::<Vec<_>>();
             let head = store.journal_head().unwrap();
             assert!(settle(&store, &id(), &incoming).unwrap());

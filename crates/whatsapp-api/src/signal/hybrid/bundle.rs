@@ -49,6 +49,21 @@ pub fn selects_pq_key(reply: &Node, recipient: &Jid) -> Result<bool> {
         .is_some())
 }
 
+/// Shared local admission boundary for a selected PQ row's metadata: refuse
+/// `non_e2ee_attestation` (attestation-bearing PQ admission is unported) and
+/// `identity_auth` without Bot.A03's required signature bytes and `certs` node
+/// (structurally valid identity_auth is NONE/LOG_ONLY, identity-auth.md).
+/// This is a coverage limit, not a claimed native refusal.
+#[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
+pub(crate) fn admissible_pq_metadata(user: &Node) -> bool {
+    user.child("non_e2ee_attestation").is_none()
+        && user.child("identity_auth").is_none_or(|auth| {
+            auth.child("signature")
+                .is_some_and(|node| matches!(node.content, NodeContent::Bytes(_)))
+                && auth.child("certs").is_some()
+        })
+}
+
 /// Validate complete ML-KEM-1024 metadata and both signatures for an exact recipient.
 /// The caller must separately establish reply correlation, freshness and key authority.
 /// Unknown/unported admission flags are not decided by this cryptographic parser.
@@ -431,7 +446,7 @@ mod tests {
                     store::{MasterKey, OpenOptions, ProtocolStore, StaticKeySource, Table},
                     transport::{ConnectionEpoch, outgoing},
                 };
-                for scenario in 0..10 {
+                for scenario in 0..11 {
                     if scenario == 8 && peer.server != Server::Lid {
                         continue;
                     }
@@ -532,6 +547,21 @@ mod tests {
                         .unwrap()
                         .unwrap_or_else(|| panic!("no query scenario {scenario}"));
                     let mut fields = user.child_nodes().to_vec();
+                    if scenario == 10 {
+                        // A tampered KEM signature: unusable PQ material.
+                        let pq = fields
+                            .iter_mut()
+                            .find(|n| n.description == "pqkey")
+                            .unwrap();
+                        let mut children = pq.child_nodes().to_vec();
+                        let NodeContent::Bytes(signature) = &children[2].content else {
+                            panic!("signature")
+                        };
+                        let mut tampered = signature.to_vec();
+                        tampered[0] ^= 1;
+                        children[2] = Node::new("signature").bytes(tampered);
+                        *pq = pq.clone().children(children);
+                    }
                     if scenario == 1 {
                         fields.push(Node::new("non_e2ee_attestation"));
                     }
@@ -625,10 +655,44 @@ mod tests {
                         assert_eq!(entry.attempts.len(), 1);
                         continue;
                     }
-                    if (1..=4).contains(&scenario) || scenario == 8 {
+                    if scenario == 4 {
+                        // No row for the requested device: still a reply error.
                         assert!(result.is_err(), "scenario {scenario}");
                         assert_eq!(snapshot(), before);
                         assert_eq!(store.journal_head().unwrap(), head);
+                        continue;
+                    }
+                    if matches!(scenario, 1 | 2 | 3 | 8 | 10) {
+                        // A local refusal suspends only this intent, with a
+                        // durable reason and the reply kept; nothing is sent,
+                        // no session or pin changes, and it is not resumable.
+                        assert!(result.unwrap().is_none(), "scenario {scenario}");
+                        let suspension = outgoing::identity_suspension(&store, id)
+                            .unwrap()
+                            .unwrap_or_else(|| panic!("no suspension scenario {scenario}"));
+                        assert_eq!(
+                            suspension.reason,
+                            if scenario == 10 {
+                                "invalid_hybrid_bundle"
+                            } else {
+                                "hybrid_admission_unsupported"
+                            }
+                        );
+                        let after = snapshot();
+                        for (index, table) in Table::ALL.iter().enumerate() {
+                            if *table != Table::Checkpoints {
+                                assert_eq!(after[index], before[index], "{table:?}");
+                            }
+                        }
+                        assert_eq!(store.journal_head().unwrap(), head);
+                        let entry = store.read(|tx| outbox.get(tx, id)).unwrap().unwrap();
+                        assert_eq!(entry.progress, AttemptProgress::Queued);
+                        assert!(entry.attempts.is_empty() && entry.wire_id.is_none());
+                        assert!(
+                            outgoing::begin_selected(&store, Some(id))
+                                .unwrap()
+                                .is_none()
+                        );
                         continue;
                     }
                     if scenario == 6 {

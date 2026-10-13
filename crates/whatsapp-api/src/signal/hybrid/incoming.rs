@@ -144,45 +144,53 @@ pub async fn receive_prekey(
         }
         (None, None)
     } else {
-        let signed =
-            SignedPreKeyRecord::deserialize(signed.ok_or_else(|| invalid("missing signed key"))?)
-                .map_err(|_| invalid("invalid signed key"))?;
-        if signed.id().map_err(|_| invalid("invalid signed id"))? != message.signed_pre_key_id() {
-            return Err(invalid("signed key id mismatch"));
+        // An absent, mismatched or unusable local key is the classic backend's
+        // InvalidSignedPreKeyId/InvalidPreKeyId outcome (direct.rs `crypto`), so
+        // the inbox classifies it Undecryptable with the same bounded retry.
+        // A KEM row is the same kind of local key (0kh.BTS throws when absent).
+        let unavailable = |reason: &'static str| Error::invalid("direct_message", reason);
+        const SIGNED: &str = "Signal signed prekey unavailable or invalid";
+        const ONE_TIME: &str = "Signal one-time prekey unavailable or invalid";
+        const KEM: &str = "Signal KEM prekey unavailable or invalid";
+        let signed = SignedPreKeyRecord::deserialize(signed.ok_or_else(|| unavailable(SIGNED))?)
+            .map_err(|_| unavailable(SIGNED))?;
+        if signed.id().map_err(|_| unavailable(SIGNED))? != message.signed_pre_key_id() {
+            return Err(unavailable(SIGNED));
         }
-        let signed_pair = signed
-            .key_pair()
-            .map_err(|_| invalid("invalid signed pair"))?;
-        pair_matches(&signed_pair)?;
+        let signed_pair = signed.key_pair().map_err(|_| unavailable(SIGNED))?;
+        pair_matches(&signed_pair).map_err(|_| unavailable(SIGNED))?;
         if !local.public_key().verify_signature(
             &signed_pair.public_key.serialize(),
-            &signed
-                .signature()
-                .map_err(|_| invalid("invalid signed signature"))?,
+            &signed.signature().map_err(|_| unavailable(SIGNED))?,
         ) {
-            return Err(invalid("signed key signature invalid"));
+            return Err(unavailable(SIGNED));
         }
         let one = if let Some(id) = message.pre_key_id() {
-            let one = PreKeyRecord::deserialize(
-                one_time.ok_or_else(|| invalid("missing ordinary prekey"))?,
-            )
-            .map_err(|_| invalid("invalid ordinary prekey"))?;
-            if one.id().map_err(|_| invalid("invalid ordinary id"))? != id {
-                return Err(invalid("ordinary prekey id mismatch"));
+            let one = PreKeyRecord::deserialize(one_time.ok_or_else(|| unavailable(ONE_TIME))?)
+                .map_err(|_| unavailable(ONE_TIME))?;
+            if one.id().map_err(|_| unavailable(ONE_TIME))? != id {
+                return Err(unavailable(ONE_TIME));
             }
-            let pair = one
-                .key_pair()
-                .map_err(|_| invalid("invalid ordinary pair"))?;
-            pair_matches(&pair)?;
+            let pair = one.key_pair().map_err(|_| unavailable(ONE_TIME))?;
+            pair_matches(&pair).map_err(|_| unavailable(ONE_TIME))?;
             Some(pair)
         } else {
             None
         };
-        let kem = local_kem.ok_or_else(|| invalid("missing local KEM prekey"))?;
+        let kem = local_kem.ok_or_else(|| unavailable(KEM))?;
         if kem.id != incoming_kem.prekey_id {
-            return Err(invalid("KEM prekey id mismatch"));
+            return Err(unavailable(KEM));
         }
-        let shared = kem::decapsulate(kem.secret, incoming_kem.ciphertext)?;
+        // A wrong-length sender ciphertext is a malformed message, as the
+        // classic backend's InvalidMessage; an unusable local secret is ours.
+        let shared =
+            kem::decapsulate(kem.secret, incoming_kem.ciphertext).map_err(|error| match error {
+                Error::InvalidInput {
+                    field: "kem_ciphertext",
+                    ..
+                } => unavailable("Signal message invalid"),
+                _ => unavailable(KEM),
+            })?;
         let parameters = BobSignalProtocolParameters::new(
             local.clone(),
             signed_pair.clone(),

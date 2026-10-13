@@ -25,7 +25,10 @@ fn query_key(id: LocalMessageId) -> String {
     format!("outbox-key-query:{id}")
 }
 
-/// Redacted queued intent suspended by a fetched peer identity mismatch.
+/// Redacted queued intent suspended by a fetched directory reply: a peer
+/// identity mismatch, or PQ material this client cannot use
+/// (`hybrid_admission_unsupported`, `invalid_hybrid_bundle`). Only the
+/// `identity_changed` reason is resumable.
 #[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct IdentitySuspension {
     /// Existing local intent selector; never create another ID to retry.
@@ -646,14 +649,17 @@ impl Pending {
         }
         let peer = entry.intent.chat.jid();
         let user = crate::signal::direct::prekey_user_for(node, peer)?;
+        // A PQ reply this client cannot use is a local refusal of this one
+        // intent, not a connection failure: it is suspended below with a
+        // durable reason and its reply preserved, never sent classically.
+        let mut hybrid_refusal = None;
         let hybrid = if user.child("pqkey").is_some() {
             // shortcut: companion/attestation admission is unported; expand when the coordinator can prove that authority.
             // identity_auth is NONE/LOG_ONLY in 37.71 (identity-auth.md); only
             // Bot.A03's required signature/certs shape is enforced, as in refresh.
             if peer.device != 0
                 || super::group_send::own_lid(store)?.as_ref() == Some(&peer.to_non_ad())
-                || user.child("non_e2ee_attestation").is_some()
-                || !super::identity_notifications::identity_auth_well_formed(user)
+                || !crate::signal::hybrid::admissible_pq_metadata(user)
                 || super::inbox::remote_identity_policy(
                     store,
                     account,
@@ -661,25 +667,27 @@ impl Pending {
                     crate::registration::request::IdentityChangePolicy::ApkAuthenticated,
                 )? == crate::registration::request::IdentityChangePolicy::Pinned
             {
-                return Err(Error::invalid(
-                    "outbox",
-                    "hybrid directory admission unsupported",
-                ));
+                hybrid_refusal = Some("hybrid_admission_unsupported");
+                None
+            } else {
+                match crate::signal::hybrid::bundle_for(node, peer) {
+                    Ok(bundle) => Some(bundle),
+                    Err(Error::InvalidInput { field, reason }) => {
+                        tracing::warn!(field, reason, "outbox PQ directory reply refused");
+                        hybrid_refusal = Some("invalid_hybrid_bundle");
+                        None
+                    }
+                    Err(error) => return Err(error),
+                }
             }
-            Some(crate::signal::hybrid::bundle_for(node, peer)?)
         } else {
             None
         };
-        let classic = if hybrid.is_none() {
+        let classic = if hybrid.is_none() && hybrid_refusal.is_none() {
             Some(crate::signal::direct::prekey_bundle(node, peer)?)
         } else {
             None
         };
-        let bundle = hybrid
-            .as_ref()
-            .map(|bundle| bundle.classic())
-            .or(classic.as_ref())
-            .expect("one verified bundle kind");
         let peer_key = format!("comparison-direct:{peer}");
         let (session, identity, reservation): (
             Option<Vec<u8>>,
@@ -693,6 +701,23 @@ impl Pending {
                     .ok_or_else(|| Error::invalid("outbox", "missing key-query reservation"))?,
             ))
         })?;
+        if let Some(reason) = hybrid_refusal {
+            // Not resumable: identity_query_resumable accepts only the
+            // identity_changed reason. outbox-suspended lists it with this reason.
+            self.suspend_identity(
+                store,
+                peer,
+                (session.as_deref(), identity.as_deref()),
+                node,
+                reason,
+            )?;
+            return Ok(None);
+        }
+        let bundle = hybrid
+            .as_ref()
+            .map(|bundle| bundle.classic())
+            .or(classic.as_ref())
+            .expect("one verified bundle kind");
         if reservation["status"] == "identity_changed" {
             use sha2::{Digest, Sha256};
             let current = identity
@@ -1645,7 +1670,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn pq_key_reply_never_reserves_classic_send_or_changes_saved_state() {
+    async fn malformed_pq_key_reply_suspends_without_classic_send_or_key_changes() {
         use wacore_libsignal::protocol::{IdentityKeyPair, KeyPair};
         for populated in [false, true] {
             let dir = tempfile::tempdir().unwrap();
@@ -1710,18 +1735,27 @@ mod tests {
             };
             let before = snapshot();
             let head = store.journal_head().unwrap();
-            let error = pending
-                .prepare(
-                    &store,
-                    &AccountRecord::default(),
-                    &reply,
-                    ConnectionEpoch(1),
-                )
-                .await
-                .err()
-                .unwrap();
-            assert!(matches!(error, Error::InvalidInput { .. }));
-            assert_eq!(snapshot(), before);
+            // Unusable PQ material suspends this intent with a durable reason
+            // (no classic fallback, no session/pin/outbox change, not resumable)
+            // instead of failing the whole connection.
+            assert!(
+                pending
+                    .prepare(
+                        &store,
+                        &AccountRecord::default(),
+                        &reply,
+                        ConnectionEpoch(1),
+                    )
+                    .await
+                    .unwrap()
+                    .is_none()
+            );
+            let after = snapshot();
+            for (index, table) in Table::ALL.iter().enumerate() {
+                if *table != Table::Checkpoints {
+                    assert_eq!(after[index], before[index], "{table:?}");
+                }
+            }
             assert_eq!(store.journal_head().unwrap(), head);
             drop(store);
             let store = open(&path);
@@ -1732,7 +1766,11 @@ mod tests {
                         .map(|t| tx.scan(*t, 1, 100))
                         .collect::<Result<Vec<_>>>())
                     .unwrap(),
-                before
+                after
+            );
+            assert_eq!(
+                identity_suspension(&store, id).unwrap().unwrap().reason,
+                "invalid_hybrid_bundle"
             );
             assert!(begin_selected(&store, Some(id)).unwrap().is_none());
         }

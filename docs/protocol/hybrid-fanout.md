@@ -48,6 +48,13 @@ through the existing shared send ([held-hybrid-send.md](held-hybrid-send.md)).
 The consumable classic parser still refuses selected PQ; nothing drops a KEM
 key to derive a classic session.
 
+**Corrected 2026-10-13 after an independent review:** fan-out first admitted
+PQ rows carrying `non_e2ee_attestation` or malformed `identity_auth`, which the
+direct outbox and identity refresh refuse. Batches now classify such rows as
+`unsupported_bundle` and fan-out refuses them, through the shared
+`signal::hybrid::admissible_pq_metadata` boundary. Classic rows keep their
+existing (metadata-ignoring) fan-out behavior; that asymmetry is recorded.
+
 Companion devices go through the same derivation: their admission in fan-out
 is the existing device-list/routing authority, which this change does not
 alter. The direct outbox still refuses PQ for companions

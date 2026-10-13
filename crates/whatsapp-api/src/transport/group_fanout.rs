@@ -192,6 +192,12 @@ impl Snapshot {
                 // device-agnostic CQc.A00, which verifies it and derives a
                 // hybrid session (pq-bundle-boundary.md, hybrid-bundle.md).
                 if crate::signal::hybrid::selects_pq_key(reply, &target.device)? {
+                    if !crate::signal::hybrid::admissible_pq_metadata(direct::prekey_user_for(
+                        reply,
+                        &target.device,
+                    )?) {
+                        return Err(invalid("hybrid directory admission unsupported"));
+                    }
                     let hybrid = crate::signal::hybrid::bundle_for(reply, &target.device)?;
                     (Some(hybrid.classic().clone()), Some(hybrid))
                 } else {

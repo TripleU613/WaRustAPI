@@ -1,3 +1,11 @@
+2026-10-13 — **Corrected/offline (independent review):** hybrid receive now
+classifies missing or unusable local keys (including an unparsable KEM row)
+as Undecryptable like classic; a group companion's hybrid pairwise child is
+skipped without blocking its `skmsg`; fan-out/batches refuse attestation or
+malformed-`identity_auth` PQ rows like the direct path (`unsupported_bundle`);
+unusable outbox PQ replies suspend the intent with a reason instead of ending
+the session. [Inbox](kem-prekey-inventory.md), [fan-out](hybrid-fanout.md), [outbox](hybrid-outbox.md).
+
 2026-10-13 — **Implemented/offline:** incoming media that quotes another
 message (BWx stanzaId/participant/quotedMessage in contextInfo 17) now projects
 as a media event with `quoted`, attributed by the same rule as text replies,

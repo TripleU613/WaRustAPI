@@ -88,13 +88,17 @@ impl StoredKemPrekey {
     }
 }
 
-/// The row an incoming envelope names, validated; `None` when absent.
+/// The row an incoming envelope names, validated; `None` when absent. A row
+/// that does not parse is reported like any other invalid row, never as a
+/// store failure that would end the session.
 pub(crate) fn load(tx: &ReadTx<'_>, id: u32) -> Result<Option<StoredKemPrekey>> {
-    let row: Option<StoredKemPrekey> = tx.get_json(Table::Prekeys, record_key(id).as_bytes(), 1)?;
-    if let Some(row) = &row {
-        row.validate(id)?;
-    }
-    Ok(row)
+    let Some(bytes) = tx.get(Table::Prekeys, record_key(id).as_bytes(), 1)? else {
+        return Ok(None);
+    };
+    let row: StoredKemPrekey =
+        serde_json::from_slice(&bytes).map_err(|_| invalid("row does not parse"))?;
+    row.validate(id)?;
+    Ok(Some(row))
 }
 
 /// Delete a consumed non-last-resort key inside the inbox commit, refusing
@@ -113,7 +117,8 @@ pub(crate) fn consume_in(tx: &mut WriteTx<'_>, id: u32, original: &StoredKemPrek
     Ok(())
 }
 
-/// Redacted counts for operators: (all rows, last-resort rows).
+/// Redacted counts for operators: (all rows, last-resort rows). Every row
+/// under the prefix counts; one that does not parse is never last-resort.
 pub(crate) fn counts(tx: &ReadTx<'_>) -> Result<(usize, usize)> {
     #[derive(Deserialize)]
     struct Flag {
@@ -127,10 +132,12 @@ pub(crate) fn counts(tx: &ReadTx<'_>) -> Result<(usize, usize)> {
         cursor = rows.last().map(|(key, _)| key.clone());
         for (key, _) in rows {
             if key.starts_with(RECORD_PREFIX.as_bytes())
-                && let Some(flag) = tx.get_json::<Flag>(Table::Prekeys, &key, 1)?
+                && let Some(bytes) = tx.get(Table::Prekeys, &key, 1)?
             {
                 total += 1;
-                last_resort += usize::from(flag.last_resort);
+                last_resort += usize::from(
+                    serde_json::from_slice::<Flag>(&bytes).is_ok_and(|flag| flag.last_resort),
+                );
             }
         }
         if done {

@@ -67,20 +67,27 @@ transactional.
 | Input | Result | State |
 |---|---|---|
 | Own-device (`category=peer`) `pkmsg`, hybrid or not | Unsupported | refused by the existing own-device route before KEM parsing |
-| Direct companion or group companion participant hybrid `pkmsg` | Unsupported | unchanged; checked before companion admission |
+| Direct companion hybrid `pkmsg` | Unsupported | unchanged; checked before companion admission |
+| Group companion participant hybrid `pkmsg` | pairwise child skipped; a held sender key still decrypts the stanza's `skmsg` | no companion session, KEM row kept |
 | Primary PN/LID, envelope base key matches held/archived session, pin unchanged | Decrypted | session advanced; no key consumed |
 | Primary PN/LID, fresh bootstrap, local row present | Decrypted | session, pin, plaintext, ordinary key and non-last-resort KEM row committed atomically |
-| Fresh bootstrap with no local row, invalid row, malformed KEM ciphertext, version mismatch, or matching session with a changed pin | Unsupported | unchanged; reason logged (`hybrid prekey preserved`) |
+| Missing/mismatched/unusable signed, ordinary or KEM key (including a row that does not parse), or a wrong-length KEM ciphertext | Undecryptable (bounded retry, like classic `InvalidPreKeyId`) | unchanged |
+| Version mismatch, matching session with a changed pin, held account/pin mismatch | Unsupported | unchanged; reason logged (`hybrid prekey preserved`) |
 | Pinned policy and changed identity | Undecryptable | identity conflict observation only; session, pin and KEM row unchanged |
 | Nested MAC/padding/counter failure | Undecryptable | unchanged |
 
 The pinned changed-identity case is reported as the classic backend's
 untrusted-identity failure (`direct_message`), so the existing once-only
-retry receipt applies to both paths alike. Unsupported outcomes stay
-unacknowledged and do not queue a retry receipt, the same conservative
-behavior the earlier blanket PQ refusal had. These are **local coverage
-choices**: how the native outer caller handles a thrown `0kh.BTS` lookup
-(retry receipt, error stanza or silent drop) is **unknown**.
+retry receipt applies to both paths alike. **Corrected 2026-10-13 after an
+independent review:** missing or unusable local keys were first classified
+Unsupported (never acknowledged, no retry, redelivered at every login) while
+the classic path makes the same conditions Undecryptable. They now use the
+classic classification, which lets the sender re-fetch our (classic) bundle
+and resend. A row that does not parse no longer surfaces as a store failure
+that would end the session. Unsupported remains only for local coverage gaps.
+How the native outer caller handles a thrown `0kh.BTS` lookup (retry receipt,
+error stanza or silent drop) is still **unknown**; this mirrors the classic
+backend, not a traced native rule.
 
 A group stanza whose pairwise hybrid child is Unsupported leaves the whole
 stanza unprocessed, as the earlier refusal did. After a pairwise hybrid child
