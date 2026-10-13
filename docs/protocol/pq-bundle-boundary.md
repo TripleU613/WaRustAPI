@@ -105,34 +105,51 @@ and session support remain unported; no guard or adoption permission is lifted.
 
 A cross-bundle search of the retained 2.26.37.71 evidence (no APK in the
 session) finds one Boolean predicate, `LX/Can;->A04(Jid)Z`, deciding PQ work
-for a JID at every retained call site. **Confirmed static** (each offset is in
-the named retained file):
+for a JID at five distinct call sites. Each offset was re-checked by an
+independent verification pass the same day, which corrected the first version
+of this section (noted below).
 
-- `SyncDeviceAndResendMessageJob.A0G`
-  ([sync-resend/job-run](apk/2.26.37.71-sync-resend/job-run.txt)): `Can.A04` of
-  the job's chat JID (`018e..0194`) becomes the last constructor argument of
-  `DFC` (`029e..02a4`), whose `A04` field adds `key_fetch pqsupport="true"`
-  (`03be..03d4`). So the `pqsupport` attribute's producer *is* `Can.A04(chat)`
-  for that request ([sync-resend](sync-resend.md)).
-- `DLp` identity-notification worker
+- **`SyncDeviceAndResendMessageJob.A0G`**
+  ([sync-resend/job-run](apk/2.26.37.71-sync-resend/job-run.txt)): **confirmed
+  static**, `Can.A04` of the job's chat JID (`018e..0194`, `move-result v16`)
+  is the last argument of `DFC.<init>(…, Z)` (`029e..02a4`), and an
+  `iget-boolean DFC.A04` adds `key_fetch pqsupport="true"` (`03be..03d4`).
+  **Inferred:** the constructor stores that last argument in `A04`.
+  `DFC.<init>` is not retained, so this follows from the type order only
+  ([sync-resend](sync-resend.md)).
+- **`DLp` identity-notification worker**
   ([identity-worker-run](apk/2.26.37.71-identity-notifications/identity-worker-run.txt)):
-  `Can.A04(user)` (`02a8..02b4`), together with `0Fs.A0U(user)`, gates the
-  second, PQ prekey fetch ([identity-notifications](identity-notifications.md)).
-- `DNe` message worker
+  `Can.A04(user)` (`02a8..02b4`), together with `0Fs.A0U(user)` (`028c..0294`),
+  gates the second prekey fetch `14L.A08` (`02d0..02d6`), whose last Boolean
+  is the constant 1 ([identity-notifications](identity-notifications.md)).
+- **`DNe` message worker**
   ([message-worker](apk/2.26.37.71-read-receipt-persistence/message-worker.txt)):
-  `Can.A04(jid)` (`04a2..04aa`) is passed as the last Boolean argument of the
+  `Can.A04(jid)` (`04a2..04aa`, into `v18`) is the last Boolean argument of the
   prekey-fetch scheduler `14L.A08(0Cy, DeviceJid[], int, int, int, Z, Z)`
   (`04b6..04bc`).
-- `By0` broadcast-receipt decrypt owner
+- **`By0` broadcast-receipt decrypt owner**
   ([decrypt-owner](apk/2.26.37.71-broadcast-receipt/decrypt-owner.txt)):
   `Can.A04(CjN.A05)` (`01d6..01de`) guards a key-store branch (`01de..01f2`).
-- `DNu` history identity worker
-  ([history-identity-worker](apk/2.26.37.71-token-import/history-identity-worker.txt)):
-  the result is stored (`2f1c..2f24`); its use was not traced.
+- **`DNu` send-message runnable** (retained in
+  [history-identity-worker](apk/2.26.37.71-token-import/history-identity-worker.txt)
+  and [group-send-runnable](apk/2.26.37.71-groups/group-send-runnable.txt)):
+  after "send message runnable creating e2e message job" (`2c82`), the result
+  (`2f1c..2f24`, `v63`) is passed to `SendE2EMessageJob.<init>` (`3040..3046`)
+  as the 9th of its 10 trailing Booleans. **Corrected:** the first version
+  placed this in the history identity worker with its use "not traced". The
+  receiving field name is not retained; the job has a `fetchPqPrekey:Z` field
+  ([group-send-job-hash-check](apk/2.26.37.71-groups/group-send-job-hash-check.txt)
+  `046c..0470`), a plausible but **unconfirmed** match.
 
-**Unknown:** `Can.A04`'s body (feature properties, per-JID state or both) is in
-no retained bundle, so whether, when and for whom the native client asks for PQ
-keys is not established. **This is the single next trace** that resolves the
-`pqsupport` producer for all of the above. Until then this client sends no
-`pqsupport` and never claims PQ support; adding it on a guess would change live
-requests without evidence.
+`Can` has other PQ predicates too: `Can.A01()`/`A02()` gate the
+`remainingPqPreKeys` path of the prekey count worker
+([count-notification-worker](apk/2.26.37.71-prekey-count-notifications/count-notification-worker.txt)
+`0056..0076`), and `Can.A03()` gates the `pqSessionUpgradeManager` block of
+`SendE2EMessageJob` (group-send-job-hash-check `1750`, `178e`).
+
+**Unknown:** the bodies of `Can.A01`..`A04` (feature properties, per-JID state
+or both) are in no retained bundle, so whether, when and for whom the native
+client asks for PQ keys is not established. **The `Can` predicate bodies are
+the next trace** that resolves the `pqsupport` producer for all of the above.
+Until then this client sends no `pqsupport` and never claims PQ support;
+adding it on a guess would change live requests without evidence.

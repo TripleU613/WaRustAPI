@@ -128,14 +128,16 @@ content or sends; ban appeal).
 Before calling these blocked again, the retained bundles (`docs/protocol/apk`,
 `rea`) were searched for each one. **Gained:** the KEM upload element shape
 ([kem-prekey-inventory](kem-prekey-inventory.md#upload-element-shape-2026-10-13-retained-evidence)),
-the single PQ predicate `Can.A04(jid)` behind `pqsupport`
+the PQ predicate `Can.A04(jid)` behind `pqsupport` and its siblings
 ([pq-bundle-boundary](pq-bundle-boundary.md#the-pq-predicate-cana04-2026-10-13-retained-evidence-only)),
-`SendE2EMessageJob.editVersion` as the sender's edit value (below), the
-correction that `1Dz.A0H` is the server-ACK hand-off (below), the chat timer
-state `0Zi` (below) and the forwarding-only retry fields
-([retry-answers](retry-answers.md)). **Searched, nothing retained:** the body of
-`Can.A04`; who sets `editVersion` per operation, and `Civ`'s stanza writer;
-any `ContextInfo` (`BWx`) field write; the incoming retry-receipt handler;
+`SendE2EMessageJob.editVersion` as the sender's edit value and the receivers
+that distinguish edit values 1 and 2 (below), the correction that `1Dz.A0H` is
+the server-ACK hand-off (below), the timer state `0Zi` and its per-message
+send-path source (below), and the job's retry bound of four
+([retry-answers](retry-answers.md)). An independent verification pass the same
+day corrected several of these first readings; the sections say which. **Searched, nothing retained:** the bodies of
+`Can.A01`..`A04`; who sets `editVersion` per operation, and `Civ`'s stanza writer;
+any `ContextInfo` (`BWx`) field write (past `Cn6`); the incoming retry-receipt handler;
 `9QH` (document/video `mediatype`); a profile-picture set (only the
 `w:profile:picture` token and received `picture` attributes in usync
 parsing); a group poll stanza producer (only `PollCreation` descriptors); and
@@ -170,38 +172,48 @@ so no sender is implemented.
 **Sender side, from retained `SendE2EMessageJob` bundles (2026-10-13):**
 
 - **Confirmed static:** the job has an integer `editVersion` field. It is part
-  of the in-flight message key `CSP(jid, id, editVersion, participant)`
+  of `CSP(jid, id, editVersion, participant)`
   ([send-job-run](apk/2.26.37.71-send-job-state/send-job-run.txt)
-  `113c..114e`), so an edit or revoke is tracked separately from the original
-  send under the same message ID. In `A06`
+  `113c..114e`), the key of the static map `A1P` that the send-message
+  runnable checks as "jobAlreadyScheduled" (`DNu` `2820..283e`). It is a
+  scheduled-job dedupe key (corrected from "in-flight key"), so an edit or
+  revoke is scheduled separately from the original send under the same message
+  ID. In `A06`
   ([group-send-job-hash-check](apk/2.26.37.71-groups/group-send-job-hash-check.txt)),
-  a nonzero `editVersion` (`0b98..0b9c`) is turned into text with
-  `String.valueOf` (`0ba0..0ba6`) while the job builds a `CSu` expected-ACK key
-  (`0ba8..0bd4`). That is the type the ACK parser `1Qy.A02` fills (`A02` from,
-  `A01` participant, `A03` recipient, `A08` id, `A06` class, `A09` type, `A07`
-  edit). `editVersion` is also passed as an int to the request object
-  `Civ.<init>` (`0be6..0c28`), beside `retryCount`, `messageType`,
-  `originationFlags` and `broadcastListName`.
-- **Inferred:** the stanza's `edit` attribute is `editVersion` in decimal text.
-  The server's ACK echoes `edit`, and the job expects it in that key. The
-  retained annotation does not show which register receives the `valueOf`
-  result, so its placement in `CSu.A07` (edit) rather than `A06` (class) is not
-  proven.
+  the job builds a `CSu` expected-ACK key (`0ba8..0bd4`), the type the ACK
+  parser `1Qy.A02` fills (`A02` from, `A01` participant, `A03` recipient, `A08`
+  id, `A06` class, `A09` type, `A07` edit), with
+  `CSu.A07 = editVersion != 0 ? String.valueOf(editVersion) : null`. A
+  nonzero value (`0b98..0b9c`) is converted at `0ba0..0ba6`; a zero one
+  branches to `0d44`, sets `v6 = 0` and returns to `0ba8`, and `A07` is stored
+  from `v6` at `0bca..0bce`. (An independent verification pass upgraded this
+  from "inferred".) `editVersion` is very probably also passed to the request
+  object `Civ.<init>` (`0be6..0c28`), but the `move/from16` operands are
+  elided there, so that is **inferred**.
+- **Inferred:** the stanza's `edit` attribute is `editVersion` in decimal text,
+  absent when zero. The server's ACK echoes `edit`, and the job matches the
+  ACK on exactly that value.
 - **Not retained:** who sets `editVersion` for each operation (sender revoke,
   admin revoke, text or caption edit, unschedule), so which of the received
   values 1/2/3/7/8 a sender uses for which; and `Civ`'s stanza writer.
-- **What the receive side does and does not constrain (confirmed static):**
-  `DEy.A00` only validates the value (8, 7, 3, 2, 1 or absent; anything else
+- **What the receive side constrains (confirmed static):** `DEy.A00`
+  validates the value (8, 7, 3, 2, 1, or absent/empty as 0; anything else
   throws, [edit-parser](apk/2.26.37.71-sender-revoke/edit-parser.txt)
   `002a..005e`). The sender-revoke builder `Bua.CF4` accepts REVOKE or
   UNSCHEDULE with any value except 8
   ([sender-builder](apk/2.26.37.71-sender-revoke/sender-builder.txt)
-  `0018..0024`), and the admin builder `Bub` takes 8. So a peer interprets only
-  8 (admin revoke) differently; it never distinguishes 1, 2, 3 and 7. An admin
-  revoke must therefore carry `edit="8"` (inferred from the receiver). The
-  value a sender uses for its own revoke or an edit matters, if at all, only to
-  the server, and no client-side evidence can show it. It must come from the
-  sender's own producer.
+  `0018..0024`), and the admin builder `Bub` requires 8 (`0010..001c`).
+  Receivers **do** distinguish other values: the message factory `1hR.A00`
+  sets flag bit `0x8` when `edit == 1`
+  ([message-factory](apk/2.26.37.71-sender-revoke/message-factory.txt)
+  `033a..0348`), and the keep/pin-in-chat receiver `D9L.A01` takes its pin path
+  only when `edit == 2`
+  ([keep-receiver](apk/2.26.37.71-own-device-keep/keep-receiver.txt)
+  `00f6..0104`). **Corrected:** an earlier version of this note said peers
+  never distinguish 1/2/3/7 and that the value mattered only to the server;
+  that is refuted. **Inferred from the receivers:** an admin revoke carries
+  `edit="8"` and a pin-in-chat message `edit="2"`. Which value a sender's own
+  revoke and a message edit use (1, 3 or 7) still needs the sender's producer.
 
 Next step (APK): trace the `SendE2EMessageJob` constructor callers that set
 `editVersion`, and `Civ`'s consumer that writes the stanza.
@@ -219,21 +231,27 @@ and whether it applies to every message kind. Next step: trace where 2.26.37.71
 `SendE2EMessageJob` or the message builders set `BWx.expiration` for outgoing
 messages before adding it.
 
-**Retained-evidence search (2026-10-13):** the chat's timer state is `LX/0Zi`
-(`expiration:I`, `ephemeralSettingTimestamp:J`), returned by
+**Retained-evidence search (2026-10-13, corrected the same day by an
+independent verification pass):** the timer state is `LX/0Zi`
+(`expiration:I`, `ephemeralSettingTimestamp:J`, `disappearingMessagesInitiator:I`,
+`afterReadDuration:I`; constructor `(IIJI)`). For a chat it comes from
 `0Fs.A0J(UserJid)` (**confirmed static**, e.g.
 [timer-builder](apk/2.26.37.71-own-device-timer/timer-builder.txt) `D9s`
-`0092..00a2`). Its retained readers are the own-device timer builder `D9s`,
-the preprocessed-message store `0zC`
-([own-preprocessed-store](apk/2.26.37.71-own-device-echo/own-preprocessed-store.txt)
+`0092..00a2`), read by the timer builder `D9s`, the preprocessed-message store
+`0zC` ([own-preprocessed-store](apk/2.26.37.71-own-device-echo/own-preprocessed-store.txt)
 `023c`, `0476`, `077a`, `07ee`), the ACK background worker `DMZ`
 ([server-background-worker](apk/2.26.37.71-message-ack/server-background-worker.txt)
-`0a0e`) and chat-transfer import `CnI`
+`0a0e`), chat-transfer import `CnI`
 ([chat-transfer-import](apk/2.26.37.71-token-import/chat-transfer-import.txt)
-`0440`). **Negative:** no retained bundle accesses any `LX/BWx` field, so no
-message builder copying `0Zi.expiration` into `ContextInfo.expiration` (25)
-is retained. The next APK trace is a `0Fs.A0J` caller on the compose/send path
-that writes `BWx`.
+`0440`), and further retained readers (`ODa`, `DNy`, `DNk`, `0zO`, the `0Fs`
+chat-cache loader). **On the send path, confirmed static:** the send-message
+runnable `DNu` takes a per-message `0Zi` from `B35.A01(FMessage)`
+([history-identity-worker](apk/2.26.37.71-token-import/history-identity-worker.txt)
+`2a1a..2a20`) and passes it into `Cn6.<init>(BOG, BOB, 0Zi, …)` (`2a82..2a88`),
+then `Ayn.A1C(…, Cn6)` (`2a90..2a96`), right after "building message".
+**Negative:** no retained bundle accesses any `LX/BWx` field, so the step from
+`Cn6` to `ContextInfo.expiration` (25) is not retained. **The next APK trace is
+`Cn6`/`Ayn.A1C` and `B35.A01`** (corrected from "a `0Fs.A0J` caller").
 
 **What is established without that trace:** native senders do set it.
 **Observed** live (recorded in

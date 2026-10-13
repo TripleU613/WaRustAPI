@@ -295,10 +295,11 @@ fn key_node(id: u32, public: &[u8], signature: Option<&[u8]>) -> Node {
 /// side's confirmed rules, since peers parse and verify our `pqkey` with them
 /// (`Bot.A03`, `KEMPublicKey`, `CQc.A00` `0068..00b4`): `value` is the raw
 /// 1568-byte ML-KEM-1024 encapsulation key with no type prefix, `signature` is
-/// the identity key's signature over exactly those bytes. **Inferred:** the
-/// server relays them unchanged, as it does ordinary keys, and the `id` is
-/// three bytes big-endian like the ordinary and signed keys (the parser's
-/// local rule). Docs: kem-prekey-inventory.md.
+/// the identity key's signature over exactly those bytes. The `id` tag is
+/// confirmed (`v2` = "id", `00ec`). **Inferred:** the server relays the bytes
+/// unchanged, as it does ordinary keys, and the `id` value is three bytes
+/// big-endian like the ordinary and signed keys (the parser's local rule).
+/// Docs: kem-prekey-inventory.md.
 ///
 /// Not called by [`begin_upload`]: no KEM key is generated, and count, ID
 /// allocation and rotation are untraced, so nothing post-quantum is sent.

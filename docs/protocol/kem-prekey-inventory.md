@@ -62,7 +62,8 @@ retained evidence (next section); what goes into each element is not.
 
 **Confirmed static**, from the retained upload writer `LX/0y0.A00` case 85
 ([writer-dispatch](apk/2.26.37.71-identity-ack-writer/writer-dispatch.txt)).
-The IQ (`xmlns=encrypt`, `type=set`, `1634..1648`) collects its children in
+The IQ (`id` from `v2` at `1622..1630`, `xmlns=encrypt` at `1634..1648`,
+`type=set` at `164c..165e`, and `to`) collects its children in
 this order: an optional `op` (coexistence `mode`/`reason`/`coex_token`,
 `13ea..1474`), `identity` (`1474..148e`), `registration` (`148e..14a6`),
 `type` (`14ae..14c8`), `list` of ordinary keys (`14c8..14e0`), `skey`
@@ -80,10 +81,13 @@ pq_last_resort_key                       only if a last-resort key exists (15ca)
   signature  <CIv.A02 bytes>             (no inner key wrapper; 15ce..161c)
 ```
 
-The `id` tag is **inferred**: the PQ entries reuse the register (`v2`) that
-names the first child of the ordinary `list` keys, whose `<key><id/><value/>`
-shape was server-acknowledged live on 2026-09-19; the retained annotation
-does not show `v2`'s assignment inside this case. Each KEM entry is shaped
+The `id` tag is **confirmed static** (upgraded the same day by an independent
+verification pass): `const-string v2, "id"` at `00ec..00f0` directly precedes
+the `sparse-switch` at `00f0` whose case 85 enters `12d0`; nothing else
+branches into `12d0` or `00d0..00f6`, `v2` is not written inside
+`12d0..1634`, and the same `v2` names the IQ's own `id` attribute. It also
+matches the ordinary `<key><id/><value/>` shape acknowledged live on
+2026-09-19. Each KEM entry is shaped
 like `skey` (id, value, signature), unlike an ordinary one-time key (id,
 value only).
 
@@ -97,7 +101,7 @@ peer's identity key, through the same adapter as the classic signed key; the
 key must be a valid 1568-byte ML-KEM-1024 encapsulation key and the signature
 64 bytes. **Inferred:** the server relays the uploaded `id`/`value`/`signature`
 unchanged into peers' `pqkey` (it does so for ordinary keys, uploaded without
-their type byte), and the `id` is three bytes big-endian (the ordinary and
+their type byte), and the `id` *value* is three bytes big-endian (the ordinary and
 signed keys' `1Lz.A04` width, and this client's parser rule; the APK's `pqkey`
 ID decoding is not traced).
 

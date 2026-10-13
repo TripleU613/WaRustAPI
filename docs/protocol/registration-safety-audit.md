@@ -371,8 +371,11 @@ Since checked (2026-10-13):
   `KotlinRegistrationBridge.A09`, the `/v2/code` parser, retained in
   [the core bundle](apk/2.26.37.71-core/registration-response-bridge.txt)):
   `attached` maps to `02S.A01` (`0254..0268`), `ok` to `02S.A0C`
-  (`04da..04ee`), `sent` to `02S.A00` (`04f6..0506`), and `login` is then read
-  into `IDM.A0N` for every status (`0514..0526`). **Not traced:** what the app
+  (`04da..04ee`), `sent` to `02S.A00` (`04f6..050a`), and `login` is then read
+  into `IDM.A0N` for every status (`0514..0526`; an absent or unknown status
+  gives `02S.A0Y`). `02S` is a shared pool of boxed `Integer` constants used
+  elsewhere too, so the next trace follows `IDM`'s status-integer consumer,
+  not references to `02S`. **Not traced:** what the app
   does with `02S.A0C`/`02S.A01` (whether `ok` completes registration without
   an OTP, and what `attached` means). Completing registration from it would be
   a guess, so the branch stays blocked; the `login` is a secret and is not

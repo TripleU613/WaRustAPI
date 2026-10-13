@@ -330,11 +330,12 @@ request—not adding Rust code, another command or a number-specific script.**
   generation and what each `pq_list`/`pq_last_resort_key` element holds (ID,
   value encoding, signature input; the element shape is already read from
   retained evidence in `docs/protocol/kem-prekey-inventory.md`), the
-  `pqsupport` producer (the body of the predicate `Can.A04(jid)`; its five
-  retained call sites are in `docs/protocol/pq-bundle-boundary.md`), the
+  `pqsupport` producer (the bodies of the `Can` predicates, chiefly
+  `Can.A04(jid)`; its five retained call sites are in
+  `docs/protocol/pq-bundle-boundary.md`), the
   outgoing revoke/edit `edit` attribute (who sets `SendE2EMessageJob.editVersion`
   per operation, and `Civ`'s stanza writer; see `docs/protocol/unknowns.md`),
-  sender-side `contextInfo.expiration`, the native retry-receipt answer policy, and the
+  sender-side `contextInfo.expiration` (via `Cn6`/`B35.A01`), the native retry-receipt answer policy, and the
   wrong-OTP path (the `HD6.A0A` consumer and `guess_wait` unit), and what the
   app does with a `/v2/code` `ok`/`attached` answer (`02S.A0C`/`02S.A01`). Replay
   guarantees and open observations: `docs/protocol/replay-safety-audit.md`.
