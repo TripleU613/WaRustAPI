@@ -573,7 +573,7 @@
           "ok",
           "error"
         ],
-        "description": "Status of a queued action transmission"
+        "description": "Status of a queued action transmission. `sent` means reserved for a socket write (marked before the write so a cut never resends it); whether it reached the socket is unknown until `ok`/`error` arrives."
       },
       "DeliveryFact": {
         "type": "object",

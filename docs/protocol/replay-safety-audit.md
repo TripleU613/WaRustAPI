@@ -26,6 +26,8 @@ This is a code trace (**traced**), not live observation.
   at a time with `action_delay_ms` pauses. A cut part-way leaves unwritten ones
   labelled `sent`. Nothing is replayed (any non-pending row blocks reselection);
   only the label overstates. Receipts use `outcome_unknown` for the same case.
+  The stored value is kept for compatibility; its API documentation now says
+  "reserved, written or not" instead of "written" (2026-10-13).
 - **Key-query status after a later local failure.** If direct preparation fails
   after the key-query reply arrived and was captured, the error ends the session
   and the query row stays `outcome_unknown`. Nothing is retransmitted; the label
