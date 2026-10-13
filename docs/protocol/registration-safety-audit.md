@@ -58,8 +58,9 @@ re-verified). Nothing here changes a request's wire content.
   does not use, the metrics history bound) and a connection that fails before
   any byte is written. These now raise `Error::RequestNotSent` (wrapping the
   cause), and the attempt returns to its state before the reservation through a
-  legal transition: a fresh `begin` becomes an already elapsed cooldown that the
-  next `begin` resumes with the same attempt and keys; a cooldown resume returns
+  legal transition: a fresh `begin` returns to `unregistered` (until the review
+  correction below, an already elapsed cooldown), which the next `begin`
+  resumes with the same attempt and keys; a cooldown resume returns
   to its cooldown; a resend returns to its pending challenge and original
   method; an OTP, PIN, email-code or consent request returns to its prior state;
   a one-shot diagnostic or consent latch taken by the reservation is released.
@@ -162,6 +163,14 @@ now corrected:
   now read on its own, numbers are compared canonically, the canonical number is
   written, and sibling account directories' `request.json` files are checked.
   Test: `accounts_new_refuses_a_number_another_profile_configures`.
+- **L2 (display). A restored first `begin` read as a server cooldown.** It was
+  saved as `CoolingDown{until: now}`, shown as `cooling_down` with history
+  `preparing -> cooling_down`, indistinguishable from a server wait. It now
+  returns to `unregistered` (a new legal `preparing -> unregistered` edge, used
+  only by this restore), which `begin` resumes with the same attempt and keys.
+  Attempts already saved as an elapsed cooldown still resume. Test:
+  `unsent_requests_restore_the_attempt_instead_of_an_unknown_outcome` (asserts
+  the state and the last history entry). The history cost is still open below.
 - **L4. The lab transport's own failures were recorded as unknown.** Adding
   configured `/v2/code` fields or encrypting the body (`DiagnosticTransport`)
   fails before anything is written; it now returns `RequestNotSent`. Test:
@@ -178,14 +187,12 @@ written; handshake failures and the overall timeout are not connect errors).
 
 ## Confirmed open
 
-- **A restored fresh `begin` reads as a server cooldown** (review L2). Restoring
-  a first `begin` saves `CoolingDown{until: now}`, shown as `cooling_down` with
-  history `preparing -> cooling_down`, indistinguishable from a server wait.
-  Each not-sent failure also uses two or three of the 64 history entries; after
-  about 25, the preflight and diagnostics that need complete history can no
-  longer build. Each also counts as a preparation in the `/v2/exist`
-  preflight's `client_metrics.attempts`, though nothing left; whether the APK
-  counts such local failures is not traced.
+- **Not-sent failures consume history** (rest of review L2). Each uses two or
+  three of the 64 history entries; after about 25, the preflight and
+  diagnostics that need complete history can no longer build. Each also counts
+  as a preparation in the `/v2/exist` preflight's `client_metrics.attempts`,
+  though nothing left; whether the APK counts such local failures is not
+  traced.
 - **Attempts from an older pinned version cannot be cleared** (review L3). The
   ordinary profile id is `android-primary/<version_name>`; after the pin
   changes, a previous version's attempt can be neither replaced (`begin`

@@ -395,6 +395,10 @@ impl RegistrationState {
         matches!(
             (self, to),
             (S::Unregistered, S::Preparing)
+                // A first code request that provably never left: the server
+                // was asked nothing, so the attempt rests unregistered (a
+                // not-sent restore; registration safety audit review L2).
+                | (S::Preparing, S::Unregistered)
                 | (
                     S::Preparing,
                     S::ChallengePending { .. }
@@ -1543,8 +1547,11 @@ impl RegistrationService {
                             && *existing.phone() == phone
                             && existing.profile_id == profile_id
                         {
-                            if let RegistrationState::CoolingDown { until } = &existing.state
-                                && now >= *until
+                            // An elapsed cooldown, or a first request that
+                            // never left, resumes with the same attempt and keys.
+                            if matches!(&existing.state,
+                                RegistrationState::CoolingDown { until } if now >= *until)
+                                || matches!(existing.state, RegistrationState::Unregistered)
                             {
                                 let prior = existing.state.clone();
                                 existing.transition(RegistrationState::Preparing, now)?;
@@ -1590,11 +1597,12 @@ impl RegistrationService {
                     // any request can be sent (docs/design/README.md section 7).
                     flow.prepare(tx, &attempt)?;
                     Self::save_current(tx, &attempt)?;
-                    // Not sent: an already elapsed cooldown, so the next
-                    // `begin` resumes this attempt with its identity and keys.
+                    // Not sent: back to unregistered, which the next `begin`
+                    // resumes with this attempt's identity and keys. It was an
+                    // elapsed cooldown, which read as a server-directed wait.
                     Ok(BeginPlan::Start(Box::new((
                         attempt,
-                        RegistrationState::CoolingDown { until: now },
+                        RegistrationState::Unregistered,
                     ))))
                 })
             })
@@ -2815,8 +2823,8 @@ mod tests {
     }
 
     /// A request that provably did not leave restores the attempt instead of
-    /// stranding it in `outcome_unknown`: a fresh attempt becomes an elapsed
-    /// cooldown that `begin` resumes with the same attempt and keys, and an
+    /// stranding it in `outcome_unknown`: a fresh attempt rests `unregistered`
+    /// and `begin` resumes it with the same attempt and keys, and an
     /// OTP submission returns to its challenge so the same code can be sent.
     #[tokio::test]
     async fn unsent_requests_restore_the_attempt_instead_of_an_unknown_outcome() {
@@ -2848,15 +2856,14 @@ mod tests {
             .unwrap_err();
         assert!(matches!(error, Error::RequestNotSent(_)), "{error}");
         let first = service.current().await.unwrap().unwrap();
-        assert!(
-            matches!(first.state, RegistrationState::CoolingDown { .. }),
-            "{:?}",
-            first.state
-        );
+        // Not a cooldown: nothing was asked of the server, and status must not
+        // suggest a server-directed wait (review L2).
+        assert_eq!(first.state, RegistrationState::Unregistered);
+        assert_eq!(first.history.last().unwrap().to, "unregistered");
         let RegistrationStep::Action(RequiredAction::EnterCode(handle)) =
             service.begin(phone(), ChallengeMethod::Sms).await.unwrap()
         else {
-            panic!("the elapsed cooldown resumes the same attempt")
+            panic!("the unsent attempt resumes")
         };
         assert_eq!(service.current().await.unwrap().unwrap().id, first.id);
         // A resend switching to voice that does not leave keeps the pending
