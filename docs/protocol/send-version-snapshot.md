@@ -57,7 +57,9 @@ rows expose only user_ticket (SHA-256 of normalized JID), devices, at_send,
 current and matches. Both versions may be null; matches is nullable equality.
 It is not a native keep/drop decision, a server version, safety-number proof or
 permission to transmit. No user address, content, request key or ciphertext is
-printed. The OpenAPI route is a CLI contract; no HTTP handler was added.
+printed. When written this was a CLI contract only; since 2026-10-13
+`GET /v1/outbox/{local_id}/versions` is also served read-only by
+`serve --store-routes` ([store routes](../api/README.md#store-routes-opt-in)).
 
 ## Verification and limits
 

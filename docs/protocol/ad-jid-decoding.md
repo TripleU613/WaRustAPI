@@ -72,6 +72,31 @@ The proven zero result above is the Java 124 path, corroborating the earlier
 interop tuples, primary hosted alias normalization and complete special grammar
 remain separate work.
 
+## Nested JID tags are refused (2026-10-13)
+
+Every JID reader takes its user and server parts through one string reader
+(`read_string_value` in `binary/decoder.rs`). That reader always refused a JID
+value, but only after reading it, and a JID's own parts were read through the
+same function. Nested JID tags (for example `FA FA FA …`) therefore recursed
+once per byte. A network-input audit measured a stack overflow, which is a
+process abort and not a recoverable error, at 400–700 nested bytes in debug and
+2,000–5,000 in release on a 2 MiB thread. A compressed frame of about 4 KB
+(4 MB inflated, inside every limit) aborted both builds, before the frame was
+captured. The reader now refuses the four JID tags (247 AD_JID, 246 FB_JID,
+245 INTEROP_JID, 250 JID_PAIR) before reading them, with "expected string"
+(class `invalid_node`). No input that decoded before is rejected: a JID in a
+string position was always refused. For a malformed nested JID the reported
+class can differ (for example `unexpected_eof` or `invalid_jid` before,
+`invalid_node` now). The measured depths are observed in a scratch run, not
+retained. Test:
+`nested_jid_tags_are_refused_without_recursion`.
+
+**Evidence boundary.** The retained 124.A02 above reads the AD user part with
+`A09(stream, tag)`; A09's body is not retained, so whether the APK accepts a
+nested JID tag there is **unknown**. The refusal is our own bound. A nested JID
+in a string position has not been seen in any trace. Only the server can send
+one: peer content arrives inside `enc` bytes.
+
 ## Checks and update workflow
 
 Independent literal binary fixtures failed before implementation: noncanonical

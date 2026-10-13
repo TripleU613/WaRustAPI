@@ -765,9 +765,13 @@ the operator's messages simply vanished: the stanza was preserved, nothing was
 acknowledged, and the sender was never told to try again.
 
 `IncomingResult` gained `Undecryptable`, separate from `Unsupported`, because
-the two want opposite answers — content this client does not render has arrived
-and should be acknowledged, while a message we could not open should make us ask
-for it again. Conflating them silently drops the second kind.
+the two want opposite answers: a message we could not open should make us ask
+for it again, while one we refused should not. Conflating them silently drops
+the first kind. Content that decrypts but that this client does not render is
+`Decrypted` and is confirmed. `Unsupported` (an unsupported stanza form, or
+content refused after decryption) is captured and **not** confirmed, so the
+server redelivers it; an earlier version of this paragraph said it should be
+acknowledged, which the code never did (receive audit F8, 2026-10-13).
 
 The receipt's shape is mirrored from the handset's own
 (`<receipt to id [participant] type="retry"><retry count id t v/><registration/>`).
@@ -797,6 +801,27 @@ when the first, broader version of this change swallowed it.
 **Live 2026-09-25:** a `--receive` window on profile `l` hit one undecryptable
 `msg` and wrote the retry receipt. Nothing in that window shows whether the
 sender resent it.
+
+**Content refusals no longer end receive (2026-10-13, traced, offline tests).**
+The same poison-pill shape remained for stanza *content* the loop refused before
+its ACK: a receipt `receipts::record` refuses (unknown aggregate participant
+type, bad `t`, oversized list), a `privacy_token` notification
+`notifications::handle` refuses, a malformed `pq_count`, and an own-companion
+`category=peer` message whose app-state key share does not decode. Each
+`InvalidInput` ended the session without reconnecting; the stanza was never
+acknowledged, so the server redelivered it and every later `listen` ended on it.
+`drive` now logs these, keeps the capture, writes no ACK or confirmation, and
+continues. Only the pure wire-content stage is caught (`receipts::validate`,
+`notifications::validate`, the `pq_count` parse), as with group dirty and
+identity notifications, whose checks also run before any store access; a fault
+in our own stored rows found while recording still ends the session. The key
+share maps to `Unsupported` with nothing committed, as on the group path.
+Storage errors and post-decryption commit failures on the direct path still
+propagate. The status-receipt shape observed on 2026-09-24, which the
+2026-10-10 aggregate branch had refused, is recorded and acknowledged again.
+A redelivered receipt or notification is refused again at the next login; this
+change stops it ending the session, not the redelivery. Audit and the findings
+left open: [replay-safety-audit](replay-safety-audit.md#receive-side-audit-2026-10-13).
 
 ## Read receipts for group messages (2026-09-25)
 

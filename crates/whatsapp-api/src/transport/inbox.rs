@@ -527,6 +527,138 @@ pub fn preserve_in_epoch(
     )
 }
 
+/// Unpack and decode one decrypted frame exactly as the receive reader does,
+/// with the comparison dictionary and default limits.
+pub(crate) fn decode_frame(frame: &[u8]) -> std::result::Result<Node, crate::binary::CodecError> {
+    let limits = crate::profile::Limits::default();
+    crate::binary::unpack_frame_payload(frame, &limits).and_then(|raw| {
+        crate::binary::Decoder::new(
+            &raw,
+            crate::binary::TokenDictionary::comparison_2_26_37_71(),
+            &limits,
+        )
+        .decode_node()
+    })
+}
+
+/// The description of a frame that did not decode, if even that can be read.
+pub(crate) fn peek_frame_description(frame: &[u8]) -> Option<String> {
+    let limits = crate::profile::Limits::default();
+    let raw = crate::binary::unpack_frame_payload(frame, &limits).ok()?;
+    crate::binary::Decoder::new(
+        &raw,
+        crate::binary::TokenDictionary::comparison_2_26_37_71(),
+        &limits,
+    )
+    .peek_description()
+}
+
+const UNDECODABLE_PREFIX: &str = "inbound-undecodable:";
+
+#[derive(serde::Deserialize)]
+struct StoredUndecodable {
+    frame: Vec<u8>,
+    class: String,
+    epoch: Option<super::ConnectionEpoch>,
+    observed_at: crate::model::time::Timestamp,
+}
+
+/// One captured frame the receive loop could not decode. Redacted: the
+/// capture key is a digest of the frame; no frame bytes, stanza content or
+/// address are returned.
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+pub struct UndecodableFrame {
+    /// `inbound-undecodable:sha256:<digest of the decrypted frame>`.
+    pub capture: String,
+    /// Fixed error class when it was captured (`CodecError::class`).
+    pub class: String,
+    /// Decrypted frame length in bytes, before inflation.
+    pub bytes: usize,
+    /// First local observation.
+    pub observed_at: crate::model::time::Timestamp,
+    /// Actor-local connection epoch that captured it; `None` for a lab window.
+    pub epoch: Option<super::ConnectionEpoch>,
+    /// The class the current decoder reports, or `None` when it now decodes
+    /// (for example after a dictionary update). Nothing is reprocessed: an
+    /// unacknowledged stanza is redelivered by the server.
+    pub current_class: Option<String>,
+}
+
+/// Every captured undecodable frame, re-checked with the current decoder.
+/// Read-only; nothing is decoded into the inbox, acknowledged or sent.
+pub fn undecodable_frames(store: &ProtocolStore) -> Result<Vec<UndecodableFrame>> {
+    store.read(|tx| {
+        let mut out = Vec::new();
+        let mut cursor = None;
+        loop {
+            let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
+            let done = rows.len() < 256;
+            cursor = rows.last().map(|(key, _)| key.clone());
+            for (key, _) in rows {
+                let Ok(name) = std::str::from_utf8(&key) else {
+                    continue;
+                };
+                if !name.starts_with(UNDECODABLE_PREFIX) {
+                    continue;
+                }
+                let Some(saved): Option<StoredUndecodable> =
+                    tx.get_json(Table::Checkpoints, &key, 1)?
+                else {
+                    continue;
+                };
+                out.push(UndecodableFrame {
+                    capture: name.to_owned(),
+                    class: saved.class,
+                    bytes: saved.frame.len(),
+                    observed_at: saved.observed_at,
+                    epoch: saved.epoch,
+                    current_class: decode_frame(&saved.frame)
+                        .err()
+                        .map(|error| error.class().to_owned()),
+                });
+            }
+            if done {
+                return Ok(out);
+            }
+        }
+    })
+}
+
+/// Capture a decrypted frame whose payload did not unpack or decode, so it can
+/// be inspected (`store inspect` lists the `inbound-undecodable` kind) and
+/// re-decoded by a later decoder. Encrypted at rest like every capture; keyed
+/// by digest, so a redelivery is stored once. Returns the capture key. `epoch`
+/// is the runtime actor's connection epoch, `None` from a lab window.
+pub fn preserve_undecodable(
+    store: &ProtocolStore,
+    frame: &[u8],
+    class: &'static str,
+    epoch: Option<super::ConnectionEpoch>,
+) -> Result<String> {
+    use sha2::{Digest, Sha256};
+    let key = format!(
+        "{UNDECODABLE_PREFIX}sha256:{}",
+        hex::encode(Sha256::digest(frame))
+    );
+    store.write(|tx| {
+        if tx.get(Table::Checkpoints, key.as_bytes(), 1)?.is_none() {
+            tx.put_json(
+                Table::Checkpoints,
+                key.as_bytes(),
+                1,
+                &serde_json::json!({
+                    "frame": frame,
+                    "class": class,
+                    "epoch": epoch,
+                    "observed_at": crate::model::time::Timestamp::now(),
+                }),
+            )?;
+        }
+        Ok(())
+    })?;
+    Ok(key)
+}
+
 const LATEST_TERMINAL: &[u8] = b"terminal-latest-capture";
 #[derive(Clone, serde::Serialize, serde::Deserialize)]
 struct StoredTerminalObservation {
@@ -658,6 +790,18 @@ pub async fn process_with_policy(
                 "message preserved but not decrypted; session continues"
             );
             Ok(IncomingResult::Undecryptable)
+        }
+        // Content refused after decryption (an own-device key share it cannot
+        // import): nothing committed, capture kept, no ACK, like the group
+        // path. Propagating would end every session on redelivery (receive
+        // audit F4).
+        Err(Error::InvalidInput { field, reason }) if field == "app_state_key_share" => {
+            tracing::warn!(
+                field,
+                reason,
+                "decrypted content refused; preserved without commit or ACK; session continues"
+            );
+            Ok(IncomingResult::Unsupported)
         }
         other => other,
     }
@@ -1412,9 +1556,11 @@ async fn process_group_inner(
     if let Some(saved) = saved {
         super::inbox_events::restore(store, key.as_bytes(), &saved)?;
         return Ok(
+            // A viewed view-once row is consumed, still a known message
+            // (the direct path accepts it too; receive audit F5).
             if matches!(
                 saved["status"].as_str(),
-                Some("decrypted" | "sender_key_distributed")
+                Some("decrypted" | "sender_key_distributed" | "consumed")
             ) {
                 IncomingResult::Duplicate
             } else {
@@ -2314,6 +2460,140 @@ mod tests {
                 .unwrap(),
             IncomingResult::Undecryptable
         );
+    }
+
+    /// Undecodable frames are stored once per digest and listed redacted,
+    /// re-checked with the current decoder.
+    #[test]
+    fn undecodable_frames_are_stored_once_and_rechecked() {
+        use crate::{
+            model::ids::AccountId,
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("undecodable.redb"),
+            account_id: AccountId::new("fixture").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([23; 32]))),
+            create: true,
+        })
+        .unwrap();
+        let epoch = Some(super::super::ConnectionEpoch(4));
+        // Still undecodable: a description that is a nested JID tag.
+        let mut refused = vec![0x00, crate::binary::tags::LIST_8, 1];
+        refused.extend([crate::binary::tags::JID_PAIR; 8]);
+        let class = decode_frame(&refused).unwrap_err().class();
+        let first = preserve_undecodable(&store, &refused, class, epoch).unwrap();
+        let observed = undecodable_frames(&store).unwrap()[0].observed_at;
+        // A redelivery in a later epoch keeps the first observation.
+        assert_eq!(
+            preserve_undecodable(
+                &store,
+                &refused,
+                class,
+                Some(super::super::ConnectionEpoch(9))
+            )
+            .unwrap(),
+            first
+        );
+        let kept = &undecodable_frames(&store).unwrap()[0];
+        assert_eq!((kept.observed_at, kept.epoch), (observed, epoch));
+        // A frame stored as undecodable that the current decoder reads: as
+        // after a dictionary update.
+        let encoded =
+            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
+                .encode(&Node::new("ping"))
+                .unwrap();
+        // From a lab window: no actor epoch.
+        preserve_undecodable(&store, &encoded, "unknown_token", None).unwrap();
+        let mut frames = undecodable_frames(&store).unwrap();
+        frames.sort_by_key(|f| f.bytes);
+        assert_eq!(frames.len(), 2);
+        let decodable = frames.iter().find(|f| f.class == "unknown_token").unwrap();
+        assert_eq!(decodable.current_class, None);
+        assert_eq!(decodable.bytes, encoded.len());
+        assert_eq!(decodable.epoch, None);
+        let still = frames.iter().find(|f| f.capture == first).unwrap();
+        assert_eq!(still.class, "invalid_node");
+        assert_eq!(still.current_class.as_deref(), Some("invalid_node"));
+        assert_eq!(still.epoch, epoch);
+        assert!(!serde_json::to_string(&frames).unwrap().contains("frame"));
+    }
+
+    /// Viewing a view-once marks its record consumed. A redelivery after a cut
+    /// delivery confirmation is still a known message (Duplicate), as on the
+    /// direct path, not Unsupported (receive audit F5).
+    #[tokio::test]
+    async fn consumed_group_record_is_a_duplicate_on_redelivery() {
+        use crate::signal::group::{
+            commit_skdm, encrypt_group_payload, extract_skdm_from_payload, prepare_own_sender_key,
+            process_skdm, sender_key_db_key,
+        };
+        use crate::{
+            model::ids::AccountId,
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("consumed-group.redb"),
+            account_id: AccountId::new("fixture").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([22; 32]))),
+            create: true,
+        })
+        .unwrap();
+        let chat = Jid::parse("120363000000000001@g.us").unwrap();
+        let account = AccountRecord {
+            own_jid: Some(Jid::parse("15555550199@s.whatsapp.net").unwrap()),
+            ..Default::default()
+        };
+        let sender = Jid::parse("15555550100:3@lid").unwrap();
+        let own = prepare_own_sender_key(&chat, &sender, None).await.unwrap();
+        let (_, bytes) = extract_skdm_from_payload(&own.distribution_message).unwrap();
+        let installed = process_skdm(
+            &chat,
+            &sender,
+            sender_key_db_key(&chat, &sender),
+            None,
+            &bytes,
+        )
+        .await
+        .unwrap();
+        assert!(store.write(|tx| commit_skdm(tx, &installed)).unwrap());
+        let plain = super::super::group_send::text_payload("view once fixture").unwrap();
+        let (cipher, _) = encrypt_group_payload(&chat, &sender, &own.updated_key, &plain)
+            .await
+            .unwrap();
+        let node = Node::new("message")
+            .attr("from", chat.clone())
+            .attr("participant", sender.clone())
+            .attr("id", "VIEWED-ONCE")
+            .children(vec![
+                Node::new("enc")
+                    .attr("v", "2")
+                    .attr("type", "skmsg")
+                    .bytes(cipher.to_vec()),
+            ]);
+        let capture = preserve(&store, &node).unwrap();
+        assert_eq!(
+            process(&store, &account, &node, &capture).await.unwrap(),
+            IncomingResult::Decrypted
+        );
+        let key = super::super::group_inbox::key(&chat, &sender, "VIEWED-ONCE").unwrap();
+        let mut saved: serde_json::Value = store
+            .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        saved["status"] = "consumed".into();
+        saved.as_object_mut().unwrap().remove("protobuf");
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &saved))
+            .unwrap();
+        let head = store.journal_head().unwrap();
+        assert_eq!(
+            process(&store, &account, &node, &capture).await.unwrap(),
+            IncomingResult::Duplicate
+        );
+        assert_eq!(store.journal_head().unwrap(), head);
     }
 
     #[tokio::test]
@@ -4962,7 +5242,7 @@ mod tests {
         assert_eq!(next.kind, "msg");
         let peer_node = Node::new("message")
             .attr("category", "peer")
-            .attr("from", peer_device)
+            .attr("from", peer_device.clone())
             .attr("id", "OWN-LID-PEER")
             .children(vec![
                 Node::new("enc")
@@ -4982,6 +5262,50 @@ mod tests {
                 .await
                 .unwrap(),
             IncomingResult::Duplicate
+        );
+        // Receive audit F4: an own-device key share that does not decode is
+        // refused content (capture kept, nothing committed, no confirmation),
+        // not an error that would end every session on redelivery.
+        let refused = direct::prepare_payload(
+            &sender,
+            receiver.own_jid.as_ref().unwrap(),
+            None,
+            Some(&next.session),
+            Some(&next.identity),
+            b"\x62\x02\x10\x06",
+        )
+        .await
+        .unwrap();
+        let refused_node = Node::new("message")
+            .attr("category", "peer")
+            .attr("from", peer_device)
+            .attr("id", "OWN-BAD-SHARE")
+            .children(vec![
+                Node::new("enc")
+                    .attr("type", refused.kind)
+                    .attr("v", "2")
+                    .bytes(refused.ciphertext.to_vec()),
+            ]);
+        let refused_capture = preserve(&store, &refused_node).unwrap();
+        let head = store.journal_head().unwrap();
+        for _ in 0..2 {
+            assert_eq!(
+                process(&store, &receiver, &refused_node, &refused_capture)
+                    .await
+                    .unwrap(),
+                IncomingResult::Unsupported
+            );
+        }
+        assert_eq!(store.journal_head().unwrap(), head);
+        let own_lid = super::super::group_send::own_lid(&store).unwrap();
+        let sender = own_peer_sender(&receiver, &refused_node, own_lid.as_ref()).unwrap();
+        let key = format!("received:{sender}:OWN-BAD-SHARE");
+        assert!(
+            store
+                .read(|tx| tx.get_json::<serde_json::Value>(Table::Checkpoints, key.as_bytes(), 1))
+                .unwrap()
+                .is_none(),
+            "nothing committed for refused content"
         );
     }
 

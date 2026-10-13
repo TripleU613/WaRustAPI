@@ -21,10 +21,28 @@ starts from facts. The normal runtime (`listen`, `outbox-send`) never answers a
   (`AttemptRecord.payload`, encrypted at rest) and the model already has
   `AttemptRecord.re_encryption` for a protocol-directed re-encryption. Nothing
   sets it yet.
-- **Native evidence retained:** only `SendE2EMessageJob`'s
+- **Native evidence retained:** `SendE2EMessageJob`'s
   `forceSenderKeyDistribution` / `targetDeviceRawJids` names (groups.md). The
   related [sync-and-resend job](sync-resend.md) resends to *newly added*
   devices; it is not the retry-receipt answer.
+- **Rechecked 2026-10-13 (confirmed static, retained bundles; corrected the
+  same day by an independent verification pass):** the job also carries
+  `retryCount:I`, `messageSendRetrySource:Integer`, `isRetryReceiptLid:Z` and
+  `includeSenderKeysInMessage:Z`. **The job bounds the count:** in
+  [send-job-run](apk/2.26.37.71-send-job-state/send-job-run.txt)
+  `0c90..0c9e`, `retryCount > 4` ("SendE2EMessageJob/aborting e2e message send
+  job due to high retry count") logs a warning (`0998`) and exits, so at most
+  four retries are answered by one job. Other branches: `if-nez retryCount` at
+  `08c2..08c6`, and in
+  [group-send-job-hash-check](apk/2.26.37.71-groups/group-send-job-hash-check.txt)
+  `172a..172e`, where a retry skips the `Can.A03` PQ session-upgrade block.
+  `includeSenderKeysInMessage` sets `job.A01` (`0b70..0b88`). The values are
+  also forwarded: `isRetryReceiptLid` and `includeSenderKeysInMessage` into
+  `CaB` (`11ee..1256`), `retryCount` into `Civ` (from `0bd6`) and the
+  job-state logging (`067c..0684`), with operands elided. **Corrected:** an
+  earlier version said no branch limits the count. Who creates the job from an
+  incoming retry receipt, and with which count and flags, is still not
+  retained.
 
 ## What a normal-runtime answer needs that is not stored
 

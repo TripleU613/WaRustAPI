@@ -116,8 +116,11 @@ The offline command prints only frozen device/page counts, unreserved,
 nullable fixed `blocking_reason`. If neither a batch nor a historical outcome is saved, the command returns
 JSON null; legacy outcomes lacking a plan produce the fixed local error above.
 It never prints devices, query IDs, signatures, key bytes, raw responses or
-message content, and never queries, reserves, reconnects or sends. The OpenAPI
-entry is a CLI/library contract; `/v1/groups/key-queries` is not served over HTTP.
+message content, and never queries, reserves, reconnects or sends. Since
+2026-10-13 `GET /v1/groups/key-queries?request_id=` is also served read-only by
+`serve --store-routes` ([store routes](../api/README.md#store-routes-opt-in)),
+with the same JSON; a record the summary cannot count answers 422 with its
+fixed reason.
 
 ## Verification and remaining work
 

@@ -21,13 +21,13 @@ use whatsapp_api::model::message::MessageContent;
 use whatsapp_api::model::phone::PhoneNumber;
 use whatsapp_api::model::send::SendRequest;
 use whatsapp_api::registration::{ChallengeMethod, RegistrationStep, RequiredAction};
-use whatsapp_api::session::AccountRecord;
-use whatsapp_api::store::{ConsumerId, EnvKeySource, MasterKey, Table};
+use whatsapp_api::store::{ConsumerId, EnvKeySource, MasterKey};
 use whatsapp_api::{Error, ProtocolProfile, WhatsAppClient};
 use zeroize::Zeroizing;
 
 use std::os::unix::fs::PermissionsExt;
 
+mod attempt_json;
 mod cli_reference;
 mod fingerprint;
 mod http;
@@ -40,6 +40,7 @@ mod peer_verification;
 mod profiles;
 #[cfg(feature = "experimental-signup")]
 mod signup;
+mod store_report;
 mod token;
 #[cfg(feature = "experimental-transport")]
 mod transport;
@@ -267,6 +268,10 @@ enum Cmd {
     /// Show queued read, played and retry receipts and their outcomes (offline, redacted).
     #[cfg(feature = "experimental-transport")]
     Receipts,
+    /// List received frames `listen` could not decode, re-checked with the
+    /// current decoder (offline, redacted: digest, error class, size).
+    #[cfg(feature = "experimental-transport")]
+    Undecodable,
     /// Inspect saved peer identity conflicts (offline; unauthenticated observations).
     #[cfg(feature = "experimental-transport")]
     IdentityConflicts,
@@ -735,12 +740,17 @@ enum Cmd {
         /// Permit listening on a non-loopback address.
         #[arg(long)]
         allow_non_loopback: bool,
-        /// Also serve read-only, redacted store inspections (`/v1/receipts`,
-        /// `/v1/prekeys`, `/v1/outbox/suspended`, `/v1/actions`,
+        /// Also serve read-only, redacted store inspections (`/v1/store`,
+        /// `/v1/signup/status`, `/v1/receipts`, `/v1/prekeys`,
+        /// `/v1/outbox/suspended`, `/v1/actions`,
         /// `/v1/identity-conflicts`, `/v1/outbox/group-preparations`,
-        /// `/v1/outbox/{local_id}/versions`) for the selected account.
-        /// Loopback-only; requires a bearer token (see --token-file). The store
-        /// is opened per request, so a running `listen` makes them answer 503.
+        /// `/v1/outbox/{local_id}/versions`, `/v1/diagnostics/own-lid`,
+        /// `/v1/inbox/undecodable`, and
+        /// with one ID query parameter `/v1/groups/receipts`,
+        /// `/v1/groups/key-queries`, `/v1/groups/refresh-status`) for the
+        /// selected account. Loopback-only; requires a bearer token (see
+        /// --token-file). The store is opened per request, so a running
+        /// `listen` makes them answer 503.
         #[arg(long, requires = "token_file")]
         store_routes: bool,
         /// New file to receive the per-start bearer token (mode 0600 on unix,
@@ -1124,6 +1134,14 @@ enum Method {
     Voice,
 }
 
+/// Only `registration begin` may create its store. `status`, `reconcile` and
+/// `reset` on a missing store used to create an empty one, which a later
+/// command could take for a real store (registration safety audit review M4,
+/// 2026-10-13); now they fail with "store does not exist".
+fn registration_creates_store(cmd: &RegCmd) -> bool {
+    matches!(cmd, RegCmd::Begin { .. })
+}
+
 async fn open_client(cli: &Cli, create: bool) -> Result<WhatsAppClient, Error> {
     WhatsAppClient::builder()
         .store_path(cli.store.clone())
@@ -1152,6 +1170,19 @@ fn accounts_new(
         return Err(Error::invalid(
             "accounts",
             format!("{} already exists", account_dir.display()),
+        ));
+    }
+    // Validated and canonicalised before anything is written.
+    let phone = PhoneNumber::new(country_code, national_number)?;
+    // One number, one store: a second profile for a configured number would
+    // start a fresh identity beside a store that may be cooling down or hold an
+    // uncertain outcome (registration safety audit, 2026-10-13).
+    if let Some(existing) = number_configured_by(&cli.profiles_dir, &account_dir, &phone)? {
+        return Err(Error::invalid(
+            "accounts",
+            format!(
+                "{existing} already configures this number; reuse it, a number keeps one store"
+            ),
         ));
     }
 
@@ -1189,7 +1220,6 @@ fn accounts_new(
         )
     })?;
 
-    let phone = PhoneNumber::new(country_code, national_number)?;
     let material = whatsapp_api::registration::token_material::TokenMaterial::open(material_path)?;
     let token = material.derive(&phone)?;
 
@@ -1197,8 +1227,8 @@ fn accounts_new(
         serde_json::from_str(whatsapp_api::registration::request::TEMPLATE_JSON)
             .map_err(|e| Error::invalid("accounts", format!("template JSON parse failed: {e}")))?;
 
-    config["phone"]["country_code"] = serde_json::json!(country_code);
-    config["phone"]["national_number"] = serde_json::json!(national_number);
+    config["phone"]["country_code"] = serde_json::json!(phone.country_code());
+    config["phone"]["national_number"] = serde_json::json!(phone.national_number());
     config["token"] = serde_json::json!(token.as_str());
 
     let mut reg_id_bytes = [0u8; 4];
@@ -1231,6 +1261,18 @@ fn accounts_new(
     )?;
 
     let store_path = account_dir.join("signup.redb");
+    // Create the profile's store now, claimed for this number, so `lab-signup
+    // begin` never has to create one and refuses any other number there.
+    let store = whatsapp_api::store::ProtocolStore::open(whatsapp_api::store::OpenOptions {
+        path: store_path.clone(),
+        account_id: AccountId::new(format!("signup-{name}"))?,
+        key_source: Arc::new(whatsapp_api::store::StaticKeySource::new(
+            MasterKey::from_bytes(key_bytes),
+        )),
+        create: true,
+    })?;
+    whatsapp_api::registration::claim_store(&store, &phone)?;
+    drop(store);
     let profile_name = name;
     let key_env = format!(
         "WHATSAPP_API_MASTER_KEY_{}",
@@ -1260,6 +1302,103 @@ fn accounts_new(
     );
 
     Ok(())
+}
+
+/// Which saved profile, or which private config near the new account
+/// directory, already configures `phone`, compared canonically (separators
+/// ignored). Besides the profiles it reads every `*.json` file in the account
+/// directory's siblings and in the `signup-json-*` directories beside its
+/// parent, so `lab/accounts/*` and `lab/signup-json-*` configs used only with
+/// `--config` are seen whatever their file name (`request.json`,
+/// `request-corrected.json`, `signup.json`; registration review L7). A config
+/// anywhere else is not seen. Each file is read on its own, so one malformed
+/// or unreadable file does not hide the others; only regular files are read,
+/// each at most the config size limit. More files than the scan bound is
+/// refused rather than answered "not configured". Nothing about the number is
+/// printed.
+fn number_configured_by(
+    profiles_dir: &std::path::Path,
+    account_dir: &std::path::Path,
+    phone: &PhoneNumber,
+) -> Result<Option<String>, Error> {
+    use std::io::Read as _;
+    const MAX_SCANNED: usize = 4096;
+    let limit = whatsapp_api::registration::request::MAX_CONFIG_BYTES;
+    let configures = |path: &std::path::Path| -> Option<()> {
+        if !std::fs::metadata(path).ok()?.is_file() {
+            return None;
+        }
+        let mut text = String::new();
+        std::fs::File::open(path)
+            .ok()?
+            .take(limit.saturating_add(1))
+            .read_to_string(&mut text)
+            .ok()?;
+        if text.len() as u64 > limit {
+            return None;
+        }
+        let config: serde_json::Value = serde_json::from_str(&text).ok()?;
+        let cc = u16::try_from(config["phone"]["country_code"].as_u64()?).ok()?;
+        let saved = PhoneNumber::new(cc, config["phone"]["national_number"].as_str()?).ok()?;
+        (&saved == phone).then_some(())
+    };
+    let mut seen = 0usize;
+    let mut entries = |dir: &std::path::Path| -> Result<Vec<PathBuf>, Error> {
+        let mut out = Vec::new();
+        for entry in std::fs::read_dir(dir).into_iter().flatten().flatten() {
+            seen += 1;
+            if seen > MAX_SCANNED {
+                return Err(Error::invalid(
+                    "accounts",
+                    format!(
+                        "more than {MAX_SCANNED} files near the account directory; cannot check that this number has no other store, so nothing is created (use a less crowded directory)"
+                    ),
+                ));
+            }
+            out.push(entry.path());
+        }
+        Ok(out)
+    };
+    let is_json = |path: &std::path::Path| path.extension().is_some_and(|ext| ext == "json");
+    for path in entries(profiles_dir)? {
+        if !is_json(&path) || !path.is_file() {
+            continue;
+        }
+        let Some(name) = path.file_stem().and_then(|stem| stem.to_str()) else {
+            continue;
+        };
+        if let Ok(profile) = profiles::load(profiles_dir, name)
+            && let Some(config) = profile.config.as_deref()
+            && configures(config).is_some()
+        {
+            return Ok(Some(format!("profile `{name}`")));
+        }
+    }
+    // Configs used with --config but not referenced by any profile: the
+    // account directory's siblings, and the lab's `signup-json-*` directories
+    // beside its parent (never the whole grandparent, which may be $HOME).
+    let parent = account_dir.parent();
+    let mut dirs: Vec<PathBuf> = Vec::new();
+    if let Some(parent) = parent {
+        dirs.extend(entries(parent)?.into_iter().filter(|dir| dir.is_dir()));
+        if let Some(grandparent) = parent.parent() {
+            dirs.extend(entries(grandparent)?.into_iter().filter(|dir| {
+                dir.is_dir()
+                    && dir
+                        .file_name()
+                        .and_then(|name| name.to_str())
+                        .is_some_and(|name| name.starts_with("signup-json"))
+            }));
+        }
+    }
+    for dir in dirs {
+        for file in entries(&dir)? {
+            if is_json(&file) && configures(&file).is_some() {
+                return Ok(Some(file.display().to_string()));
+            }
+        }
+    }
+    Ok(None)
 }
 
 fn accounts_status(cli: &Cli, name: Option<&str>) -> Result<(), Error> {
@@ -1354,7 +1493,15 @@ fn accounts_status(cli: &Cli, name: Option<&str>) -> Result<(), Error> {
                         if let Some(phone) = phone_opt {
                             entry["phone"] = serde_json::json!(phone);
                         }
-                        entry["registration_state"] = serde_json::json!("none");
+                        // The saved attempt's state, so the pre-send state check
+                        // is visible here; "none" only when there is no attempt.
+                        entry["registration_state"] = serde_json::json!(
+                            match whatsapp_api::registration::current_state_name(&store) {
+                                Ok(Some(state)) => state,
+                                Ok(None) => "none",
+                                Err(_) => "unreadable",
+                            }
+                        );
                         entry["registered"] = serde_json::json!(registered);
                         entry["last_authenticated_at"] = serde_json::json!(last_auth);
                         entry["appeal_token_saved"] =
@@ -1373,7 +1520,17 @@ fn accounts_status(cli: &Cli, name: Option<&str>) -> Result<(), Error> {
                             }
                             if let Ok(actions) = whatsapp_api::transport::actions::outcomes(&store)
                             {
-                                entry["actions_queued"] = serde_json::json!(actions.len());
+                                // Only actions still waiting for a write, not
+                                // every recorded outcome.
+                                entry["actions_queued"] = serde_json::json!(
+                                    actions
+                                        .iter()
+                                        .filter(|action| matches!(
+                                            action.status,
+                                            whatsapp_api::transport::actions::ActionStatus::Queued
+                                        ))
+                                        .count()
+                                );
                             }
                         }
 
@@ -1533,7 +1690,7 @@ fn print_step(step: &RegistrationStep, json: bool) {
         }
         RegistrationStep::Action(RequiredAction::RequestEmailCode(_)) => {
             println!(
-                "registration: the server requires the account's email second factor; run `lab-signup --allow-live-request request-email-code [--email <address>]`"
+                "registration: the server requires the account's email second factor; run `lab-signup --allow-live-request request-email-code` (the server emails the address on file; no address is sent)"
             )
         }
         RegistrationStep::Action(RequiredAction::EnterEmailCode(_)) => {
@@ -1616,6 +1773,8 @@ async fn run(cli: Cli) -> Result<(), Error> {
         Cmd::Prekeys => transport_receive::prekeys_status(&cli),
         #[cfg(feature = "experimental-transport")]
         Cmd::Receipts => transport_receive::receipts_status(&cli),
+        #[cfg(feature = "experimental-transport")]
+        Cmd::Undecodable => transport_receive::undecodable_status(&cli),
         #[cfg(feature = "experimental-transport")]
         Cmd::IdentityConflicts => transport_receive::identity_conflicts(&cli),
         #[cfg(feature = "experimental-transport")]
@@ -1964,51 +2123,7 @@ async fn run(cli: Cli) -> Result<(), Error> {
             StoreCmd::Inspect => {
                 let c = open_client(&cli, false).await?;
                 let store = c.store().clone();
-                let report = store
-                    .run_blocking(|s| {
-                        s.read(|tx| {
-                            let mut counts = serde_json::Map::new();
-                            for t in Table::ALL {
-                                counts.insert(format!("{t:?}"), serde_json::json!(tx.count(t)?));
-                            }
-                            let account = AccountRecord::load(tx)?;
-                            // Checkpoints holds many unrelated record kinds under
-                            // one table, so a bare row count cannot answer "is
-                            // there an app-state key / a login identity / any
-                            // captures". Report the leading key segment only: the
-                            // kind is structural, while the rest of a key is a
-                            // JID or digest and stays unprinted.
-                            let mut kinds: std::collections::BTreeMap<String, usize> =
-                                std::collections::BTreeMap::new();
-                            let mut cursor = None;
-                            loop {
-                                let rows =
-                                    tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 512)?;
-                                let done = rows.len() < 512;
-                                cursor = rows.last().map(|(key, _)| key.clone());
-                                for (key, _) in rows {
-                                    let name = String::from_utf8_lossy(&key).into_owned();
-                                    let kind = name
-                                        .split_once(':')
-                                        .map_or(name.as_str(), |(head, _)| head)
-                                        .to_owned();
-                                    *kinds.entry(kind).or_default() += 1;
-                                }
-                                if done {
-                                    break;
-                                }
-                            }
-                            Ok(serde_json::json!({
-                                "account_id": s.account_id().as_str(),
-                                "generation": s.generation().0,
-                                "journal_head": tx.journal_head()?.0,
-                                "registration": account.as_ref().map(|a| format!("{:?}", a.registration)).unwrap_or_else(|| "no account record".into()),
-                                "tables": counts,
-                                "checkpoint_kinds": kinds,
-                            }))
-                        })
-                    })
-                    .await?;
+                let report = store.run_blocking(store_report::report).await?;
                 println!(
                     "{}",
                     serde_json::to_string_pretty(&report)
@@ -2030,7 +2145,7 @@ async fn run(cli: Cli) -> Result<(), Error> {
             }
         },
         Cmd::Registration { cmd } => {
-            let c = open_client(&cli, true).await?;
+            let c = open_client(&cli, registration_creates_store(cmd)).await?;
             let result = match cmd {
                 RegCmd::Begin {
                     country,
@@ -2056,7 +2171,15 @@ async fn run(cli: Cli) -> Result<(), Error> {
                 }
                 RegCmd::Status => {
                     match c.registration().current().await? {
+                        // Same redacted JSON as `lab-signup status --json`;
+                        // `--json` used to be ignored here.
+                        Some(a) if cli.json => println!(
+                            "{}",
+                            serde_json::to_string_pretty(&attempt_json::redacted(&a)?)
+                                .map_err(|e| Error::invalid("registration", e.to_string()))?
+                        ),
                         Some(a) => println!("{a:?}"),
+                        None if cli.json => println!("null"),
                         None => println!("no registration attempt"),
                     }
                     Ok(())
@@ -2789,6 +2912,113 @@ async fn main() -> ExitCode {
 #[cfg(test)]
 mod accounts_tests {
     use super::*;
+
+    #[test]
+    fn only_registration_begin_creates_a_store() {
+        assert!(registration_creates_store(&RegCmd::Begin {
+            country: 1,
+            phone: "5550100001".into(),
+            method: Method::Sms,
+        }));
+        for cmd in [RegCmd::Status, RegCmd::Reconcile, RegCmd::Reset] {
+            assert!(!registration_creates_store(&cmd));
+        }
+    }
+
+    /// A number already configured by a saved profile is refused before any
+    /// key, config or store is written: one number keeps one store.
+    #[test]
+    fn accounts_new_refuses_a_number_another_profile_configures() {
+        let temp_dir = tempfile::TempDir::new().unwrap();
+        let profiles_dir = temp_dir.path().join("profiles");
+        std::fs::create_dir_all(&profiles_dir).unwrap();
+        let config = temp_dir.path().join("existing-request.json");
+        std::fs::write(
+            &config,
+            r#"{"phone":{"country_code":1,"national_number":"5551234567"}}"#,
+        )
+        .unwrap();
+        profiles::save(
+            &profiles_dir,
+            "existing",
+            &profiles::Profile {
+                store: temp_dir.path().join("existing.redb"),
+                account: "signup-existing".into(),
+                config: Some(config),
+                key_env: "WHATSAPP_API_MASTER_KEY_EXISTING".into(),
+            },
+        )
+        .unwrap();
+        // A malformed profile beside it must not hide it.
+        std::fs::write(profiles_dir.join("broken.json"), b"{not json").unwrap();
+        let accounts = temp_dir.path().join("accounts");
+        let configured = PhoneNumber::new(1, "555-123-4567").unwrap();
+        assert_eq!(
+            number_configured_by(&profiles_dir, &accounts.join("new"), &configured)
+                .unwrap()
+                .as_deref(),
+            Some("profile `existing`")
+        );
+        let other = PhoneNumber::new(1, "5557654321").unwrap();
+        assert_eq!(
+            number_configured_by(&profiles_dir, &accounts.join("new"), &other).unwrap(),
+            None
+        );
+        // A config used only with --config, in a sibling account directory.
+        std::fs::create_dir_all(accounts.join("old")).unwrap();
+        std::fs::write(
+            accounts.join("old/request.json"),
+            r#"{"phone":{"country_code":1,"national_number":"5557654321"}}"#,
+        )
+        .unwrap();
+        assert!(
+            number_configured_by(&profiles_dir, &accounts.join("new"), &other)
+                .unwrap()
+                .is_some_and(|by| by.ends_with("request.json"))
+        );
+        // Any file name, and a lab directory beside `accounts` (review L7).
+        let third = PhoneNumber::new(1, "5550100003").unwrap();
+        assert_eq!(
+            number_configured_by(&profiles_dir, &accounts.join("new"), &third).unwrap(),
+            None
+        );
+        std::fs::create_dir_all(temp_dir.path().join("signup-json-x")).unwrap();
+        std::fs::write(
+            temp_dir.path().join("signup-json-x/request-corrected.json"),
+            r#"{"phone":{"country_code":1,"national_number":"5550100003"}}"#,
+        )
+        .unwrap();
+        assert!(
+            number_configured_by(&profiles_dir, &accounts.join("new"), &third)
+                .unwrap()
+                .is_some_and(|by| by.ends_with("request-corrected.json"))
+        );
+        let cli = Cli {
+            store: temp_dir.path().join("test.redb"),
+            account: "test".into(),
+            key_env: "TEST_KEY".into(),
+            profile: None,
+            profiles_dir: profiles_dir.clone(),
+            json: false,
+            cmd: Cmd::Accounts {
+                cmd: AccountsCmd::List,
+            },
+            loaded_profile: None,
+        };
+        let account_dir = temp_dir.path().join("second");
+        let error = accounts_new(
+            &cli,
+            "second",
+            1,
+            "5551234567",
+            &temp_dir.path().join("unused.zip"),
+            Some(&account_dir),
+            &Method::Sms,
+        )
+        .unwrap_err();
+        assert!(error.to_string().contains("already configures"), "{error}");
+        assert!(!account_dir.exists(), "nothing written");
+    }
 
     #[test]
     fn accounts_new_creates_files_and_refuses_twice() {

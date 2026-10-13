@@ -10,9 +10,8 @@ use super::{
 };
 use crate::{
     Error, Result,
-    binary::{Decoder, Encoder, Node, TokenDictionary, unpack_frame_payload},
+    binary::{Encoder, Node, TokenDictionary},
     model::time::Timestamp,
-    profile::Limits,
     registration::request::LabRegistrationConfig,
     session::{AccountRecord, ObservedCredential},
     store::{ProtocolStore, Table},
@@ -198,12 +197,39 @@ pub(crate) type Outbound = (Node, oneshot::Sender<Result<()>>);
 /// Node-level link for one connection epoch. Real sessions adapt the split
 /// encrypted transport; tests inject channels and cut them at chosen points.
 pub(crate) struct NodeLink {
-    incoming: mpsc::Receiver<Result<Node>>,
+    incoming: mpsc::Receiver<Result<Inbound>>,
     outgoing: mpsc::Sender<Outbound>,
 }
+
+/// One item from the reader task.
+pub(crate) enum Inbound {
+    Node(Node),
+    /// A frame that decrypted, so the stream is intact, but whose payload did
+    /// not unpack or decode. It carries the decrypted frame for capture, a
+    /// fixed error class and, when readable, the stanza's description, so a
+    /// terminal stanza still ends the session; there is no ID to acknowledge.
+    Undecodable {
+        frame: Vec<u8>,
+        class: &'static str,
+        description: Option<String>,
+    },
+}
+
+/// Unpack and decode one decrypted frame.
+fn inbound_from_frame(frame: &[u8]) -> Inbound {
+    match super::inbox::decode_frame(frame) {
+        Ok(node) => Inbound::Node(node),
+        Err(error) => Inbound::Undecodable {
+            frame: frame.to_vec(),
+            class: error.class(),
+            description: super::inbox::peek_frame_description(frame),
+        },
+    }
+}
+
 impl NodeLink {
     pub(crate) fn new(
-        incoming: mpsc::Receiver<Result<Node>>,
+        incoming: mpsc::Receiver<Result<Inbound>>,
         outgoing: mpsc::Sender<Outbound>,
     ) -> Self {
         Self { incoming, outgoing }
@@ -239,16 +265,7 @@ fn link_from(channel: EncryptedConnection<tokio::net::TcpStream>) -> Result<(Nod
     let reader_task = tokio::spawn(async move {
         loop {
             let next = match reader.read().await {
-                Ok(Some(bytes)) => {
-                    let limits = Limits::default();
-                    unpack_frame_payload(&bytes, &limits)
-                        .map_err(Error::from)
-                        .and_then(|raw| {
-                            Decoder::new(&raw, TokenDictionary::comparison_2_26_37_71(), &limits)
-                                .decode_node()
-                                .map_err(Error::from)
-                        })
-                }
+                Ok(Some(bytes)) => Ok(inbound_from_frame(&bytes)),
                 // Classified as recoverable: the actor may reconnect within its bounds.
                 Ok(None) => Err(Error::Transport(super::TransportError::PeerClosed)),
                 Err(e) => Err(e.into()),
@@ -376,6 +393,10 @@ pub(crate) async fn drive(
     let mut device_cursor = super::devices::DeviceSyncCursor::default();
     let mut device_context = super::devices::SyncContext::Interactive;
     let mut outbox_tick = tokio::time::interval(Duration::from_secs(1));
+    // Set by a frame whose stanza name could not be read; cleared by the next
+    // decoded stanza. A server close right after such a frame may be the end
+    // of a session we could not read, so it is not treated as recoverable.
+    let mut unreadable_stanza = false;
     outbox_tick.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Delay);
     loop {
         if *stop.borrow() {
@@ -452,7 +473,37 @@ pub(crate) async fn drive(
                 link.send(&ping).await?; pending_ping = Some(id);
             }
             incoming = link.incoming.recv() => {
-                let node = incoming.ok_or_else(|| Error::invalid("connection", "reader ended"))??;
+                let inbound = match incoming.ok_or_else(|| Error::invalid("connection", "reader ended"))? {
+                    Err(Error::Transport(super::TransportError::PeerClosed)) if unreadable_stanza => {
+                        return Err(Error::invalid("connection", "server closed the connection after a stanza this client could not read; captured; no reconnect (whatsapp-cli undecodable)"));
+                    }
+                    other => other?,
+                };
+                let node = match inbound {
+                    Inbound::Node(node) => {
+                        unreadable_stanza = false;
+                        node
+                    }
+                    // A redelivered frame this decoder refuses (a newer token,
+                    // say) used to end receive at every login, uncaptured.
+                    // Kept for inspection and later re-decoding; nothing to ACK.
+                    // Continuing is local policy: where the APK catches a
+                    // decode error is not traced.
+                    Inbound::Undecodable { frame, class, description } => {
+                        super::inbox::preserve_undecodable(&store, &frame, class, Some(epoch))?;
+                        match description.as_deref() {
+                            // The server ended the session, as with a decodable
+                            // one below: never reconnect into a refusal.
+                            Some("failure" | "stream:error") => {
+                                return Err(Error::invalid("connection", "server ended session with a stanza this client could not decode; captured; no reconnect"));
+                            }
+                            Some(_) => {}
+                            None => unreadable_stanza = true,
+                        }
+                        tracing::warn!(class, "inbound frame did not decode; captured without ACK; session continues");
+                        continue;
+                    }
+                };
                 let capture = super::inbox::preserve_in_epoch(&store, &node, epoch)?;
                 super::clock::observe(&store, &node)?;
                 if matches!(node.description.as_str(), "failure" | "stream:error") {
@@ -574,28 +625,80 @@ pub(crate) async fn drive(
                     }
                 }
                 let received = super::inbox::process_with_policy(&store, &account, &node, &capture, config.transport.identity_changes).await?;
-                super::receipts::record(&store, &node)?;
+                // A receipt, privacy-token or prekey-count stanza whose wire
+                // content this client refuses is already captured; it stays
+                // without ACK but must not end the session. The server
+                // redelivers it at every login, so ending here would stop all
+                // receiving for good (receive audit F1-F3,
+                // docs/protocol/replay-safety-audit.md). Only the pure
+                // validation stage is caught: once it passes, a refusal from
+                // recording concerns our stored rows (a corrupt outbox entry,
+                // an ambiguous wire ID) and ends the session visibly.
+                let receipt_recorded = match super::receipts::validate(&node) {
+                    Ok(()) => {
+                        super::receipts::record(&store, &node)?;
+                        true
+                    }
+                    Err(Error::InvalidInput { field, reason }) => {
+                        tracing::warn!(field, reason, "receipt content refused; captured without ACK; session continues");
+                        false
+                    }
+                    Err(error) => return Err(error),
+                };
                 super::receipts::record_ack(&store, &node)?;
                 // Who has received or viewed a status we posted. Recording it
                 // sends nothing: this is their report about our status, not a
-                // read receipt we emit for theirs.
-                if let Some(receipt) = super::status_receipts::parse(&node) {
+                // read receipt we emit for theirs. Only for an accepted receipt,
+                // so nothing is recorded from a stanza left unacknowledged.
+                if receipt_recorded && let Some(receipt) = super::status_receipts::parse(&node) {
                     super::status_receipts::record(&store, &receipt)?;
                 }
-                if let Some(ack)=super::notifications::handle(&store, &node)? {link.send(&ack).await?;}
+                match super::notifications::validate(&node) {
+                    Ok(()) => {
+                        if let Some(ack) = super::notifications::handle(&store, &node)? {
+                            link.send(&ack).await?;
+                        }
+                    }
+                    Err(Error::InvalidInput { field, reason }) => {
+                        tracing::warn!(field, reason, "notification content refused; captured without ACK; session continues");
+                    }
+                    Err(error) => return Err(error),
+                }
                 if let Some(ack)=super::groups::handle_dirty_notification(&store, &node)? {link.send(&ack).await?;}
-                if let Some(change) = super::devices::notification(&node) {
+                // The ACK is built first: a devices notification without `id` or
+                // `from` cannot be acknowledged, so it is refused (logged, no
+                // sync queued, no ACK) rather than ending receive at every login.
+                let devices_change = super::devices::notification(&node).and_then(|change| {
+                    match super::devices::notification_ack(&node) {
+                        Ok(ack) => Some(Ok((change, ack))),
+                        Err(Error::InvalidInput { field, reason }) => {
+                            tracing::warn!(field, reason, "devices notification refused locally; captured without ACK; session continues");
+                            None
+                        }
+                        Err(error) => Some(Err(error)),
+                    }
+                }).transpose()?;
+                if let Some((change, devices_ack)) = devices_change {
                     // LX/11Q.A09 / LX/101.A02: contact notifications request a device
                     // sync. Locally persist work before ACK. Own-account changes use account sync, which is
                     // not implemented: captured and acknowledged only.
                     let own = account.own_jid.as_ref().map(|j| j.to_non_ad());
-                    if own.as_ref() != Some(&change.owner) {
+                    // Our own LID is ours too (devices.rs excludes it likewise);
+                    // never queue a contact device sync for it. Read only for a
+                    // LID owner, as inbox.rs does: a damaged own-LID record
+                    // must not end receive on every PN devices notification.
+                    let own_lid = if change.owner.server == crate::model::jid::Server::Lid {
+                        super::group_send::own_lid(&store)?
+                    } else {
+                        None
+                    };
+                    if own.as_ref() != Some(&change.owner) && own_lid.as_ref() != Some(&change.owner) {
                         // Capture already committed above. Record pending work
                         // before ACK so a socket cut cannot silently lose it.
                         super::devices::request_sync(&store, own.as_ref(), &change.owner, change.device_hash.as_deref(), "notification")?;
                         device_context = super::devices::SyncContext::Notification;
                     }
-                    link.send(&super::devices::notification_ack(&node)?).await?;
+                    link.send(&devices_ack).await?;
                     if device_query.is_none()
                         && group_outgoing.as_ref().is_none_or(|g| !g.devices_pending())
                         && let Some((query, sync)) = device_cursor.begin_next(&store, device_context)? {
@@ -626,10 +729,26 @@ pub(crate) async fn drive(
                     }
                 }
 
-                if let Some(low) = super::prekeys::low_count(&node)? {
+                let low = match super::prekeys::low_count(&node).and_then(|low| {
+                    // Built before any upload: a count notification without
+                    // `id` is refused like a malformed count, not fatal.
+                    low.map(|low| Ok((low, super::prekeys::low_count_ack(&node)?)))
+                        .transpose()
+                }) {
+                    Ok(low) => low,
+                    Err(Error::InvalidInput { field, reason }) => {
+                        // APK 37.71 14z.A09 throws before queueing work; where that
+                        // is caught is not traced (prekey-count-notifications.md).
+                        // Continuing is local policy; no ACK means redelivery.
+                        tracing::warn!(field, reason, "prekey count refused locally; captured without ACK or upload; session continues");
+                        None
+                    }
+                    Err(error) => return Err(error),
+                };
+                if let Some((low, low_ack)) = low {
                     // Local ACK ordering follows durable capture; native 14z.A02 ACKs after worker processing.
                     // Its first-child legacy flag triggers upload even for an unknown count; PQ-only is inert.
-                    link.send(&super::prekeys::low_count_ack(&node)?).await?;
+                    link.send(&low_ack).await?;
                     if low.legacy_present {
                         maybe_upload(&store, &account, &link, &mut upload, &mut upload_rounds).await?;
                     }
@@ -649,7 +768,7 @@ pub(crate) async fn drive(
                     }
                 }
                 let mut confirmed = false;
-                if (node.description == "receipt" || matches!(received, super::inbox::IncomingResult::Decrypted | super::inbox::IncomingResult::Duplicate))
+                if ((node.description == "receipt" && receipt_recorded) || matches!(received, super::inbox::IncomingResult::Decrypted | super::inbox::IncomingResult::Duplicate))
                     && let Some(confirmation) = super::messaging::received_confirmation_for_account(&store, &account, &node)? {
                         // Raw capture and session/inbox commit precede this write.
                         // A reconnect may confirm a genuine server redelivery again.
@@ -977,7 +1096,7 @@ mod tests {
 
     /// The fake server side of one injected link.
     struct Fake {
-        to_worker: mpsc::Sender<Result<Node>>,
+        to_worker: mpsc::Sender<Result<Inbound>>,
         from_worker: mpsc::Receiver<Outbound>,
         stop: watch::Sender<bool>,
         ready: oneshot::Receiver<()>,
@@ -1070,7 +1189,14 @@ mod tests {
             id
         }
         async fn deliver(&self, node: Node) {
-            self.to_worker.send(Ok(node)).await.unwrap();
+            self.to_worker.send(Ok(Inbound::Node(node))).await.unwrap();
+        }
+        /// A decrypted frame, decoded exactly as the real reader task does.
+        async fn deliver_frame(&self, frame: &[u8]) {
+            self.to_worker
+                .send(Ok(inbound_from_frame(frame)))
+                .await
+                .unwrap();
         }
         async fn cut(&self, error: Error) {
             self.to_worker.send(Err(error)).await.unwrap();
@@ -1674,6 +1800,302 @@ mod tests {
         fake.stop_cleanly().await;
     }
 
+    /// Content this client refuses in a receipt or privacy-token notification
+    /// is captured without ACK, and the session keeps receiving. Ending it
+    /// would make every later session end on the same redelivered stanza.
+    #[tokio::test]
+    async fn refused_receipt_and_notification_content_does_not_end_receive() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("refused-content.redb"));
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        let head = store.journal_head().unwrap();
+        let refused = [
+            // A receipt list child that is not `item`.
+            Node::new("receipt")
+                .attr("from", peer())
+                .attr("id", "REFUSED-RECEIPT")
+                .children(vec![Node::new("list").children(vec![Node::new("bogus")])]),
+            // A privacy-token notification without its timestamp.
+            Node::new("notification")
+                .attr("from", peer())
+                .attr("id", "REFUSED-TOKEN")
+                .attr("type", "privacy_token")
+                .children(vec![Node::new("tokens").children(vec![
+                    Node::new("token")
+                        .attr("type", "trusted_contact")
+                        .bytes(vec![1, 2, 3]),
+                ])]),
+            // A devices notification without `id` cannot be acknowledged; no
+            // device sync is queued for it either.
+            Node::new("notification")
+                .attr("from", peer())
+                .attr("type", "devices")
+                .children(vec![Node::new("add").attr("device_hash", "2:x").children(
+                    vec![
+                        Node::new("device")
+                            .attr("jid", peer().with_device(3))
+                            .attr("key-index", "1"),
+                    ],
+                )]),
+            // A prekey count notification without `id`: no ACK, no upload.
+            Node::new("notification")
+                .attr("from", Jid::parse("s.whatsapp.net").unwrap())
+                .attr("type", "encrypt")
+                .children(vec![Node::new("count").attr("value", "5")]),
+        ];
+        for node in refused {
+            let wire = encode(&node).unwrap();
+            let capture = format!(
+                "inbound:sha256:{}",
+                hex::encode(sha2::Sha256::digest(&wire))
+            );
+            fake.deliver(node).await;
+            fake.nothing_written(Duration::from_millis(100)).await;
+            assert!(
+                store
+                    .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                    .unwrap()
+                    .is_some()
+            );
+            assert_eq!(store.journal_head().unwrap(), head);
+        }
+        assert!(
+            super::super::devices::pending_users(&store)
+                .unwrap()
+                .is_empty()
+        );
+        // Still receiving: a supported receipt is answered as before.
+        fake.deliver(
+            Node::new("receipt")
+                .attr("from", peer())
+                .attr("id", "RECEIPT-FIXTURE")
+                .attr("recipient", "120363000000000001@g.us"),
+        )
+        .await;
+        let (ack, reply) = fake.written().await;
+        assert_eq!(ack.description, "ack");
+        reply.send(Ok(())).unwrap();
+        fake.stop_cleanly().await;
+    }
+
+    /// The status-receipt shape observed live on 2026-09-24 (an empty
+    /// `<participants message_id/>`) is recorded and acknowledged. Since the
+    /// offline-aggregate branch (2026-10-10) it had been refused as an empty
+    /// aggregate, which ended receive at every status receipt. An aggregate
+    /// with a refused entry stays unacknowledged and records no status view.
+    #[tokio::test]
+    async fn observed_status_receipt_is_recorded_and_acknowledged() {
+        use super::super::status_receipts;
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("status-receipt.redb"));
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        fake.deliver(
+            Node::new("receipt")
+                .attr("from", peer())
+                .attr("id", "STATUS-RECEIPT")
+                .attr("type", "read")
+                .attr("t", "1700000000")
+                .children(vec![
+                    Node::new("participants").attr("message_id", "OUR-STATUS"),
+                ]),
+        )
+        .await;
+        let (ack, reply) = fake.written().await;
+        assert_eq!(ack.description, "ack");
+        assert_eq!(
+            ack.get_attr("id").and_then(|v| v.as_text()),
+            Some("STATUS-RECEIPT")
+        );
+        reply.send(Ok(())).unwrap();
+        let views = status_receipts::list(&store, Some("OUR-STATUS")).unwrap();
+        assert_eq!(views.len(), 1);
+        assert_eq!(views[0].kind, status_receipts::StatusReceiptKind::Read);
+
+        fake.deliver(
+            Node::new("receipt")
+                .attr("from", peer())
+                .attr("id", "BAD-AGGREGATE")
+                .children(vec![
+                    Node::new("participants")
+                        .attr("message_id", "OUR-MESSAGE")
+                        .children(vec![
+                            Node::new("user")
+                                .attr("jid", peer())
+                                .attr("type", "not-a-type")
+                                .attr("t", "1700000000"),
+                        ]),
+                ]),
+        )
+        .await;
+        fake.nothing_written(Duration::from_millis(100)).await;
+        assert!(
+            status_receipts::list(&store, Some("OUR-MESSAGE"))
+                .unwrap()
+                .is_empty()
+        );
+        fake.stop_cleanly().await;
+    }
+
+    /// Only the receipt's wire content is refused without ending receive. A
+    /// fault in our own stored rows (here a corrupt outbox entry the receipt
+    /// lookup scans) still ends the session with the error, rather than
+    /// leaving every later receipt silently unacknowledged.
+    #[tokio::test]
+    async fn corrupt_stored_rows_still_end_receive_on_a_valid_receipt() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("corrupt-outbox.redb"));
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Outbox,
+                    b"corrupt-row",
+                    1,
+                    &serde_json::json!("not an outbox entry"),
+                )
+            })
+            .unwrap();
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        fake.deliver(
+            Node::new("receipt")
+                .attr("from", peer())
+                .attr("id", "VALID-RECEIPT")
+                .attr("t", "1700000000"),
+        )
+        .await;
+        let error = fake.finished().await.unwrap_err();
+        assert!(error.to_string().contains("invalid saved outbox entry"));
+    }
+
+    /// A devices notification naming our own LID is ours, like our own PN: it
+    /// is acknowledged without queueing a contact device sync (receive audit F7).
+    #[tokio::test]
+    async fn own_lid_devices_notification_queues_no_contact_sync() {
+        use super::super::devices::pending_users;
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("own-lid-devices.redb"));
+        let own_lid = Jid::parse("99999999@lid").unwrap();
+        store
+            .write(|tx| super::super::group_send::record_own_lid(tx, &own_lid))
+            .unwrap();
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        fake.deliver(
+            Node::new("notification")
+                .attr("type", "devices")
+                .attr("id", "OWN-DEVICES")
+                .attr("from", own_lid.clone())
+                .children(vec![Node::new("add").attr("device_hash", "2:x").children(
+                    vec![
+                        Node::new("device")
+                            .attr("jid", own_lid.with_device(3))
+                            .attr("key-index", "1"),
+                    ],
+                )]),
+        )
+        .await;
+        let (ack, reply) = fake.written().await;
+        assert_eq!(ack.description, "ack");
+        assert_eq!(
+            ack.get_attr("type").and_then(|v| v.as_text()),
+            Some("devices")
+        );
+        reply.send(Ok(())).unwrap();
+        fake.nothing_written(Duration::from_millis(100)).await;
+        assert!(pending_users(&store).unwrap().is_empty());
+        fake.stop_cleanly().await;
+    }
+
+    /// A decrypted frame the decoder refuses is captured for inspection and
+    /// skipped; receive continues. It used to end the session without a
+    /// capture, and a redelivered one ended every later session.
+    #[tokio::test]
+    async fn undecodable_frame_is_captured_and_receive_continues() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("undecodable.redb"));
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        // Uncompressed frame: a node whose description is a nested JID tag.
+        let mut frame = vec![0x00, crate::binary::tags::LIST_8, 1];
+        frame.extend(vec![crate::binary::tags::JID_PAIR; 1_000]);
+        fake.deliver_frame(&frame).await;
+        fake.nothing_written(Duration::from_millis(100)).await;
+        let key = format!(
+            "inbound-undecodable:sha256:{}",
+            hex::encode(sha2::Sha256::digest(&frame))
+        );
+        let saved: serde_json::Value = store
+            .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        assert_eq!(saved["class"], "invalid_node");
+        let stored: Vec<u8> = serde_json::from_value(saved["frame"].clone()).unwrap();
+        assert_eq!(stored, frame);
+        // Redelivery is stored once and still does not end receive.
+        fake.deliver_frame(&frame).await;
+        fake.nothing_written(Duration::from_millis(100)).await;
+        fake.deliver(
+            Node::new("receipt")
+                .attr("from", peer())
+                .attr("id", "AFTER-UNDECODABLE")
+                .attr("t", "1700000000"),
+        )
+        .await;
+        let (ack, reply) = fake.written().await;
+        assert_eq!(ack.description, "ack");
+        reply.send(Ok(())).unwrap();
+        fake.stop_cleanly().await;
+    }
+
+    /// An undecodable `stream:error` or `failure` still ends the session
+    /// without reconnecting, as a decodable one does; so does a server close
+    /// right after a stanza whose name could not be read. A close after a
+    /// decoded stanza stays an ordinary recoverable loss.
+    #[tokio::test]
+    async fn undecodable_terminal_stanzas_end_the_session_without_reconnect() {
+        use crate::binary::tags::{BINARY_8, JID_PAIR, LIST_8};
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("undecodable-terminal.redb"));
+        // `<stream:error>` whose only child has an undecodable description.
+        let mut stream_error = vec![0x00, LIST_8, 2, BINARY_8, 12];
+        stream_error.extend_from_slice(b"stream:error");
+        stream_error.extend([LIST_8, 1, LIST_8, 1, JID_PAIR, JID_PAIR]);
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        fake.deliver_frame(&stream_error).await;
+        let error = fake.finished().await.unwrap_err();
+        assert!(!error.is_recoverable_by_reconnect());
+        assert!(error.to_string().contains("could not decode"), "{error}");
+        assert_eq!(
+            super::super::inbox::undecodable_frames(&store)
+                .unwrap()
+                .len(),
+            1
+        );
+
+        // A stanza whose name itself is unreadable, then the server closes.
+        let mut unreadable = vec![0x00, LIST_8, 1];
+        unreadable.extend([JID_PAIR; 4]);
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        fake.deliver_frame(&unreadable).await;
+        fake.cut(Error::Transport(TransportError::PeerClosed)).await;
+        let error = fake.finished().await.unwrap_err();
+        assert!(!error.is_recoverable_by_reconnect(), "{error}");
+
+        // The same, but a decoded stanza arrives in between: an ordinary loss.
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        fake.deliver_frame(&unreadable).await;
+        fake.deliver(Node::new("ib").attr("from", Jid::parse("s.whatsapp.net").unwrap()))
+            .await;
+        fake.cut(Error::Transport(TransportError::PeerClosed)).await;
+        let error = fake.finished().await.unwrap_err();
+        assert!(error.is_recoverable_by_reconnect(), "{error}");
+    }
+
     #[tokio::test]
     async fn delivery_confirmation_write_cut_then_redelivery_confirms_again() {
         let dir = tempfile::tempdir().unwrap();
@@ -1726,7 +2148,8 @@ mod tests {
     async fn group_outbox_socket_cuts_keep_every_query_and_ciphertext_reservation_without_replay() {
         use super::super::{group_fanout, outgoing_group};
         use outgoing_group::tests::{device_reply, enqueue, key_reply, membership};
-        let outbox = crate::outbox::Outbox::new("comparison-driver", Limits::default());
+        let outbox =
+            crate::outbox::Outbox::new("comparison-driver", crate::profile::Limits::default());
         for cut in ["membership", "devices", "keys", "send"] {
             let dir = tempfile::tempdir().unwrap();
             let store = open(&dir.path().join("normal-group-cut.redb"));
@@ -2343,7 +2766,8 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn prekey_count_dispatch_bounds_uploads_and_keeps_malformed_capture() {
+    async fn prekey_count_dispatch_bounds_uploads_and_skips_malformed_counts_without_ending_receive()
+     {
         use super::super::prekeys::summary;
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("count-dispatch.redb");
@@ -2393,16 +2817,13 @@ mod tests {
                 ))
             })
             .unwrap();
+        // A malformed count is refused locally: captured, no ACK, no upload,
+        // and the session keeps receiving (it would otherwise be redelivered
+        // and end every later session too).
         let malformed = count_notification("malformed", "pq_count", "2147483648");
         let wire = encode(&malformed).unwrap();
         fake.deliver(malformed).await;
-        let error = fake.finished().await.unwrap_err();
-        assert!(
-            error
-                .to_string()
-                .contains("pq_count value is not a signed 32-bit Java decimal")
-        );
-        assert!(!error.is_recoverable_by_reconnect());
+        fake.nothing_written(Duration::from_millis(100)).await;
         let capture = format!(
             "inbound:sha256:{}",
             hex::encode(sha2::Sha256::digest(&wire))
@@ -2423,10 +2844,21 @@ mod tests {
                 .unwrap(),
             before
         );
+        // The session is still receiving: a later valid count is answered.
+        fake.deliver(count_notification("after", "count", "invalid"))
+            .await;
+        let (ack, write) = fake.written().await;
+        assert_eq!(ack.get_attr("id").and_then(|v| v.as_text()), Some("after"));
+        write.send(Ok(())).unwrap();
+        let (upload, write) = fake.written().await;
+        write.send(Ok(())).unwrap();
+        fake.deliver(result_for(&upload, false)).await;
+        fake.nothing_written(Duration::from_millis(100)).await;
         let head = store.journal_head().unwrap();
+        fake.stop_cleanly().await;
         drop(store);
         let store = identity_store(&path);
-        assert_eq!(summary(&store).unwrap().uploaded, 100);
+        assert_eq!(summary(&store).unwrap().uploaded, 150);
         assert!(
             store
                 .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))

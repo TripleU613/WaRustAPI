@@ -53,6 +53,14 @@ The actor preserves the encrypted raw inbound capture before parsing. It uses
 the dispatch flag for legacy replenishment, rather than optional parse success.
 Malformed PQ refuses before ACK/upload, without retrying. Existing upload
 reservations, round bounds and identity/session guards remain in force.
+Since 2026-10-13 that refusal is logged and receive continues; the capture stays
+without ACK, so the server redelivers it at the next login (receive audit F3,
+[replay-safety-audit](replay-safety-audit.md#receive-side-audit-2026-10-13)).
+Before, it ended the session for good, and every later session on the same
+redelivered notification. The native throw is in `14z.A09` dispatch, before
+work is queued (above); which frame catches it, and whether the connection
+survives, is **not traced**. Ending receive was our policy, not APK evidence;
+continuing is also a local policy choice.
 [Identity-first notification handling](identity-notifications.md) remains
 **unported**; preventing
 its mistaken count classification does not implement identity notification

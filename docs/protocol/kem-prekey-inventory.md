@@ -54,9 +54,68 @@ one-time prekey guard.
 
 **There is no producer.** Rows exist only in tests. Generation count, ID
 allocation (no `next_kyber_prekey_id` equivalent is traced), any signature
-over the KEM public key, last-resort creation/rotation, the inner element
-shape of `pq_list`/`pq_last_resort_key` and the server's acceptance are all
-**unknown**. Because no KEM key is ever uploaded, a correctly behaving server
+over the KEM public key, last-resort creation/rotation and the server's
+acceptance are all **unknown**. The inner element shape is now read from
+retained evidence (next section); what goes into each element is not.
+
+## Upload element shape (2026-10-13, retained evidence)
+
+**Confirmed static**, from the retained upload writer `LX/0y0.A00` case 85
+([writer-dispatch](apk/2.26.37.71-identity-ack-writer/writer-dispatch.txt)).
+The IQ (`id` from `v2` at `1622..1630`, `xmlns=encrypt` at `1634..1648`,
+`type=set` at `164c..165e`, and `to`) collects its children in
+this order: an optional `op` (coexistence `mode`/`reason`/`coex_token`,
+`13ea..1474`), `identity` (`1474..148e`), `registration` (`148e..14a6`),
+`type` (`14ae..14c8`), `list` of ordinary keys (`14c8..14e0`), `skey`
+(`14e2..153c`), then:
+
+```text
+pq_list                                  only if the KEM key array is non-empty (153c..1546)
+  key            × n                     tag from v20 = "key" (1356, used at 159a)
+    id         <CIv.A01 bytes>
+    value      <CIv.A00 bytes>           v10 = "value" (135a)
+    signature  <CIv.A02 bytes>           v12 = "signature" (150e)
+pq_last_resort_key                       only if a last-resort key exists (15ca)
+  id         <CIv.A01 bytes>
+  value      <CIv.A00 bytes>
+  signature  <CIv.A02 bytes>             (no inner key wrapper; 15ce..161c)
+```
+
+The `id` tag is **confirmed static** (upgraded the same day by an independent
+verification pass): `const-string v2, "id"` at `00ec..00f0` directly precedes
+the `sparse-switch` at `00f0` whose case 85 enters `12d0`; nothing else
+branches into `12d0` or `00d0..00f6`, `v2` is not written inside
+`12d0..1634`, and the same `v2` names the IQ's own `id` attribute. It also
+matches the ordinary `<key><id/><value/>` shape acknowledged live on
+2026-09-19. Each KEM entry is shaped
+like `skey` (id, value, signature), unlike an ordinary one-time key (id,
+value only).
+
+**Element contents, derived from the receive side.** Peers parse and verify
+our `pqkey` with the rules this client already implements for theirs
+([pq-signature](pq-signature.md), [hybrid-bundle](hybrid-bundle.md)), so those
+rules fix what an upload element must hold. **Confirmed static:**
+`KEMPublicKey` wraps the `value` bytes unchanged (no type prefix) and `CQc.A00`
+(`0068..00b4`) verifies the `signature` over exactly those bytes with the
+peer's identity key, through the same adapter as the classic signed key; the
+key must be a valid 1568-byte ML-KEM-1024 encapsulation key and the signature
+64 bytes. **Inferred:** the server relays the uploaded `id`/`value`/`signature`
+unchanged into peers' `pqkey` (it does so for ordinary keys, uploaded without
+their type byte), and the `id` *value* is three bytes big-endian (the ordinary and
+signed keys' `1Lz.A04` width, and this client's parser rule; the APK's `pqkey`
+ID decoding is not traced).
+
+`transport::prekeys::kem_upload_children` encodes local KEM rows that way:
+`pq_list` of `key{id, value, signature}` and `pq_last_resort_key{id, value,
+signature}`, the signature computed with the account's identity key. A test
+(`kem_upload_entries_pass_the_receive_side_bundle_parser`) presents its
+entries to `hybrid::bundle_for` as a peer would receive them, and they pass the
+full receive-side check. It is **not** wired into `begin_upload`.
+
+**Still unknown:** KEM key generation and counts, ID allocation (no
+`next_kyber_prekey_id` equivalent), last-resort creation and rotation, when the
+native client uploads (`13c.A03` is not retained), whether `Can.A04` must allow
+it first, and the server's acceptance. So nothing post-quantum is uploaded. Because no KEM key is ever uploaded, a correctly behaving server
 has no KEM key for this account to hand peers; in normal operation a fresh
 hybrid bootstrap should not arrive. The inbox path exists so that, once an
 evidence-backed producer and upload are implemented, receive is already

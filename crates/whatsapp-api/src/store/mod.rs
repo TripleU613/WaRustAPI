@@ -345,7 +345,7 @@ impl ProtocolStore {
         {
             return Err(StoreError::Io(std::io::Error::new(
                 std::io::ErrorKind::InvalidData,
-                "store file is empty; initialize it with `store init`",
+                "store file is empty; initialize it with `store init` (a lab profile: `lab-signup begin --create-store`)",
             ))
             .into());
         }
@@ -355,6 +355,35 @@ impl ProtocolStore {
             std::fs::create_dir_all(parent).map_err(StoreError::Io)?;
         }
         let owner_lock = take_owner_lock(&opts.path)?;
+        // A new store file is private (0600), like every other file holding
+        // account secrets; its records are encrypted, but the default umask
+        // left it group/world-readable (registration safety audit,
+        // 2026-10-13). Created after the owner lock, so a refused open leaves
+        // no empty file behind; existing files keep their mode.
+        #[cfg(unix)]
+        if !exists {
+            use std::os::unix::fs::OpenOptionsExt;
+            match FsOpenOptions::new()
+                .write(true)
+                .create_new(true)
+                .mode(0o600)
+                .open(&opts.path)
+            {
+                Ok(_) => {}
+                // The path was absent a moment ago, so this is a dangling
+                // symlink (redb would follow it and create the target with
+                // the default mode) or a file another process created since.
+                // Neither is a store this call created privately; refuse.
+                Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => {
+                    return Err(StoreError::Io(std::io::Error::new(
+                        std::io::ErrorKind::AlreadyExists,
+                        "store path appeared while opening, or is a dangling symlink; not creating through it",
+                    ))
+                    .into());
+                }
+                Err(e) => return Err(StoreError::Io(e).into()),
+            }
+        }
         let db = Database::builder()
             .create(&opts.path)
             .map_err(StoreError::from)?;
@@ -1281,6 +1310,52 @@ mod tests {
             direction: Direction::Incoming,
             id: MessageId::new(format!("MSG{n}")).unwrap(),
         })
+    }
+
+    /// A newly created store file is private; an existing file's mode is
+    /// left as the owner set it.
+    #[cfg(unix)]
+    #[test]
+    fn a_new_store_file_is_private() {
+        use std::os::unix::fs::PermissionsExt;
+        let (dir, s) = temp_store(MasterKey::from_bytes([1u8; 32]));
+        drop(s);
+        let path = dir.path().join("protocol.redb");
+        let mode = std::fs::metadata(&path).unwrap().permissions().mode();
+        assert_eq!(mode & 0o777, 0o600, "{mode:o}");
+        std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o640)).unwrap();
+        drop(
+            ProtocolStore::open(OpenOptions {
+                path: path.clone(),
+                account_id: AccountId::new("acct-1").unwrap(),
+                key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([1u8; 32]))),
+                create: true,
+            })
+            .unwrap(),
+        );
+        let mode = std::fs::metadata(&path).unwrap().permissions().mode();
+        assert_eq!(mode & 0o777, 0o640, "existing mode kept: {mode:o}");
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn a_dangling_symlink_is_not_created_through() {
+        // Codex review on PR #4: create_new's AlreadyExists was ignored, so
+        // redb followed the link and created its target with the default mode.
+        let dir = tempfile::tempdir().unwrap();
+        let target = dir.path().join("elsewhere.redb");
+        let path = dir.path().join("protocol.redb");
+        std::os::unix::fs::symlink(&target, &path).unwrap();
+        let Err(error) = ProtocolStore::open(OpenOptions {
+            path: path.clone(),
+            account_id: AccountId::new("acct-1").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([1u8; 32]))),
+            create: true,
+        }) else {
+            panic!("a dangling symlink was opened as a store");
+        };
+        assert!(error.to_string().contains("dangling symlink"), "{error}");
+        assert!(!target.exists(), "the link target was not created");
     }
 
     #[test]

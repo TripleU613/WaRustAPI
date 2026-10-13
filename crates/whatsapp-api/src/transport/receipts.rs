@@ -862,25 +862,67 @@ pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
     if node.description != "receipt" || recipient(node).is_some() {
         return Ok(0);
     }
-    if let Some(participants) = node
+    let receipts = expand(node, || {
+        let local_ms = crate::model::time::Timestamp::now().as_millis();
+        store.read(|tx| Ok(super::clock::receipt_now(tx, local_ms)? / 1000))
+    })?;
+    store.write(|tx| {
+        receipts
+            .iter()
+            .try_fold(0, |matched, receipt| Ok(matched + record_in(tx, receipt)?))
+    })
+}
+
+/// The wire-content checks [`record`] makes, without opening the store. A
+/// refusal here is the stanza's own (receive audit F1): unknown aggregate type,
+/// bad `t`, list shape, message or device ID. Once this passes, anything
+/// [`record`] raises concerns stored rows or storage, never the stanza, because
+/// both run the same parsers (`expand`, `direct_target`,
+/// `group_receipts::target`). The receive loop catches only this stage.
+pub fn validate(node: &Node) -> Result<()> {
+    if node.description != "receipt" || recipient(node).is_some() {
+        return Ok(());
+    }
+    // The default time only fills an absent participant `t`; it never decides
+    // a refusal, so validation needs no clock.
+    for receipt in expand(node, || Ok(0))? {
+        if routes_to_group(&receipt) {
+            super::group_receipts::target(&receipt)?;
+        } else {
+            direct_target(&receipt)?;
+        }
+    }
+    Ok(())
+}
+
+/// The receipts one stanza stands for: an aggregate's per-participant
+/// receipts, none for the observed status-receipt shape, else the stanza.
+fn expand(node: &Node, key_seconds: impl FnOnce() -> Result<i64>) -> Result<Vec<Node>> {
+    let Some(participants) = node
         .child_nodes()
         .first()
         .filter(|n| n.description == "participants")
-    {
-        let receipts = if participants.get_attr("message_id").is_some() {
-            offline_aggregate(node, participants)?
-        } else {
-            let local_ms = crate::model::time::Timestamp::now().as_millis();
-            let seconds = store.read(|tx| Ok(super::clock::receipt_now(tx, local_ms)? / 1000))?;
-            key_aggregate(node, participants, seconds)?
-        };
-        return store.write(|tx| {
-            receipts
-                .iter()
-                .try_fold(0, |matched, receipt| Ok(matched + record_in(tx, receipt)?))
-        });
+    else {
+        return Ok(vec![node.clone()]);
+    };
+    if participants.get_attr("message_id").is_some() {
+        // Observed live 2026-09-24 (status.md): a viewer's receipt for our
+        // status is `<participants message_id=<status id>/>` with no entries.
+        // APK 37.71 Cmk.A03 would throw "empty participant list" on that shape
+        // in its aggregate branch, so the native status path dispatches before
+        // it (not traced). `status_receipts` records it; it is not a chat fact.
+        // Before 2026-10-13 this refusal ended receive at every status receipt.
+        if super::status_receipts::parse(node).is_some() {
+            return Ok(Vec::new());
+        }
+        return offline_aggregate(node, participants);
     }
-    store.write(|tx| record_in(tx, node))
+    key_aggregate(node, participants, key_seconds()?)
+}
+
+/// `record_in` sends a receipt from a group chat to the group path.
+fn routes_to_group(node: &Node) -> bool {
+    jid(node, "from").is_some_and(|from| from.server == Server::Group)
 }
 
 fn offline_aggregate(node: &Node, participants: &Node) -> Result<Vec<Node>> {
@@ -986,24 +1028,30 @@ fn key_aggregate(node: &Node, participants: &Node, default_seconds: i64) -> Resu
     Ok(receipts)
 }
 
-fn record_in(tx: &mut crate::store::WriteTx<'_>, node: &Node) -> Result<usize> {
-    if node.description == "receipt"
-        && jid(node, "from").is_some_and(|from| from.server == Server::Group)
-    {
-        return super::group_receipts::record_in(tx, node);
-    }
+/// A direct receipt's wire content, checked without the store.
+struct DirectTarget<'a> {
+    kind: &'a str,
+    from: Jid,
+    participant: Option<Jid>,
+    ids: Vec<String>,
+    wire_ids: Vec<crate::model::ids::MessageId>,
+    device: crate::model::ids::DeviceAddress,
+}
 
+/// `None` for a receipt the direct path skips; `Err` for content it refuses.
+/// Shared by [`record_in`] and [`validate`].
+fn direct_target(node: &Node) -> Result<Option<DirectTarget<'_>>> {
     if node.description != "receipt" || recipient(node).is_some() {
-        return Ok(0);
+        return Ok(None);
     }
     let Some(kind) = receipt_kind(node) else {
-        return Ok(0);
+        return Ok(None);
     };
     if !matches!(kind, "delivery" | "read" | "played") {
-        return Ok(0);
+        return Ok(None);
     }
     let Some(from) = jid(node, "from") else {
-        return Ok(0);
+        return Ok(None);
     };
     if from.user.is_empty()
         || from.agent != 0
@@ -1014,7 +1062,7 @@ fn record_in(tx: &mut crate::store::WriteTx<'_>, node: &Node) -> Result<usize> {
             crate::model::jid::JidKind::Plain | crate::model::jid::JidKind::AgentDevice
         )
     {
-        return Ok(0);
+        return Ok(None);
     }
     // APK 37.71 Cmk.A03 051a..05bc retains remote chat separately from
     // DeviceJid.Companion.A00(participant). Never treat a device as the chat.
@@ -1028,10 +1076,45 @@ fn record_in(tx: &mut crate::store::WriteTx<'_>, node: &Node) -> Result<usize> {
                 crate::model::jid::JidKind::Plain | crate::model::jid::JidKind::AgentDevice
             ))
     {
-        return Ok(0);
+        return Ok(None);
     }
-    let actor = participant.as_ref().unwrap_or(&from);
     let ids = ids(node)?;
+    // The authenticated actor remains in its received namespace even
+    // when it is associated with an original intent in the other one.
+    let device = crate::model::ids::DeviceAddress::from_jid(participant.as_ref().unwrap_or(&from))?;
+    let wire_ids = ids
+        .iter()
+        .map(|id| {
+            crate::model::ids::MessageId::new(id.clone())
+                .map_err(|_| Error::invalid("receipt", "invalid message id"))
+        })
+        .collect::<Result<Vec<_>>>()?;
+    Ok(Some(DirectTarget {
+        kind,
+        from,
+        participant,
+        ids,
+        wire_ids,
+        device,
+    }))
+}
+
+fn record_in(tx: &mut crate::store::WriteTx<'_>, node: &Node) -> Result<usize> {
+    if node.description == "receipt" && routes_to_group(node) {
+        return super::group_receipts::record_in(tx, node);
+    }
+    let Some(DirectTarget {
+        kind,
+        from,
+        participant,
+        ids,
+        wire_ids,
+        device,
+    }) = direct_target(node)?
+    else {
+        return Ok(0);
+    };
+    let actor = participant.as_ref().unwrap_or(&from);
     let peer = from.to_non_ad();
     let mut matched = 0;
     for id in ids.iter().filter(|_| participant.is_none()) {
@@ -1102,13 +1185,8 @@ fn record_in(tx: &mut crate::store::WriteTx<'_>, node: &Node) -> Result<usize> {
         "played" => crate::model::send::DeliveryFactKind::Played,
         _ => crate::model::send::DeliveryFactKind::Delivered,
     };
-    // The authenticated actor remains in its received namespace even
-    // when it is associated with an original intent in the other one.
-    let device = crate::model::ids::DeviceAddress::from_jid(actor)?;
-    for id in &ids {
-        let wire_id = crate::model::ids::MessageId::new(id.clone())
-            .map_err(|_| Error::invalid("receipt", "invalid message id"))?;
-        let Some(mut entry) = outbox.by_wire_id_in_write(tx, &wire_id)? else {
+    for wire_id in &wire_ids {
+        let Some(mut entry) = outbox.by_wire_id_in_write(tx, wire_id)? else {
             continue;
         };
         if !super::jid_map::authenticated_direct_chat(tx, &from, entry.intent.chat.jid())? {
@@ -2747,6 +2825,8 @@ mod tests {
                         .attr("message_id", "fixture")
                         .children(vec![good.clone(), bad]),
                 ]);
+            // The receive loop's pre-store stage refuses exactly what record does.
+            assert!(validate(&node).is_err());
             let error = record(&store, &node).unwrap_err().to_string();
             assert!(error.contains("receipt.aggregate"));
             assert!(!error.contains("SECRET") && !error.contains("15555550100"));
@@ -2761,24 +2841,49 @@ mod tests {
                     .unwrap()
             );
         }
-        for participants in [
-            Node::new("participants").attr("message_id", "fixture"),
-            Node::new("participants")
-                .attr("message_id", "")
-                .children(vec![good.clone()]),
-            Node::new("participants")
-                .attr("message_id", "fixture")
-                .children(vec![good; 4097]),
+        // APK Cmk.A03 throws on an empty aggregate list. The one exception is
+        // the status-receipt shape observed live (an empty list on a viewer's
+        // delivery/read/played receipt), which status_receipts records and
+        // which adds no chat fact here.
+        assert_eq!(
+            record(
+                &store,
+                &Node::new("receipt")
+                    .attr("from", peer.clone())
+                    .attr("type", "read")
+                    .children(vec![
+                        Node::new("participants").attr("message_id", "fixture")
+                    ])
+            )
+            .unwrap(),
+            0
+        );
+        for (kind, participants) in [
+            (
+                Some("sender"),
+                Node::new("participants").attr("message_id", "fixture"),
+            ),
+            (
+                None,
+                Node::new("participants")
+                    .attr("message_id", "")
+                    .children(vec![good.clone()]),
+            ),
+            (
+                None,
+                Node::new("participants")
+                    .attr("message_id", "fixture")
+                    .children(vec![good; 4097]),
+            ),
         ] {
-            assert!(
-                record(
-                    &store,
-                    &Node::new("receipt")
-                        .attr("from", peer.clone())
-                        .children(vec![participants])
-                )
-                .is_err()
-            );
+            let mut node = Node::new("receipt")
+                .attr("from", peer.clone())
+                .children(vec![participants]);
+            if let Some(kind) = kind {
+                node = node.attr("type", kind);
+            }
+            assert!(validate(&node).is_err());
+            assert!(record(&store, &node).is_err());
             assert_eq!(
                 before,
                 store
@@ -2834,6 +2939,9 @@ mod tests {
                 ))
             })
             .unwrap();
+        // A damaged stored mapping is ours, not the stanza's: validation
+        // passes, so the receive loop lets this error end the session.
+        assert!(validate(&node).is_ok());
         let error = record(&store, &node).unwrap_err().to_string();
         assert!(error.contains("invalid authenticated LID mapping"));
         assert!(!error.contains("SECRET"));
@@ -3001,6 +3109,8 @@ mod tests {
                     .children(vec![item.clone(), item.attr("t", "9223372036854775808")]),
             ]),
         ] {
+            // The receive loop's pre-store stage refuses exactly what record does.
+            assert!(validate(&node).is_err());
             let error = record(&store, &node).unwrap_err().to_string();
             assert!(error.contains("receipt.aggregate"));
             assert!(!error.contains("SECRET"));

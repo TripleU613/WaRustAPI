@@ -7,9 +7,12 @@
 //! Successful last-resort use therefore retains the key.
 //!
 //! This client has **no producer** for these rows. Generation, ID allocation,
-//! signing and the `pq_list`/`pq_last_resort_key` upload children named by
-//! `LX/0y0.A00` case 85 are untraced here (docs/protocol/kem-prekey-inventory.md),
-//! and the upload path never sends Kyber material. Rows exist only when a
+//! signing and what each `pq_list`/`pq_last_resort_key` element of the
+//! `LX/0y0.A00` case 85 upload holds are untraced (the element shape is read:
+//! `pq_list` of `key{id,value,signature}` and a bare
+//! `pq_last_resort_key{id,value,signature}`, `153c..161c`;
+//! docs/protocol/kem-prekey-inventory.md), and the upload path never sends
+//! Kyber material. Rows exist only when a
 //! later, evidence-backed producer writes them; until then every fresh hybrid
 //! bootstrap reports the missing key instead of guessing one.
 use serde::{Deserialize, Serialize};

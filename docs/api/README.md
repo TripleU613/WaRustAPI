@@ -89,13 +89,37 @@ so the CLI can embed and serve it without extra dependencies).
 
 `whatsapp-cli serve --store-routes --token-file <new path>` (built with
 `experimental-transport`) adds read-only, redacted store inspections for the
-account selected by `--store`/`--account`/`--key-env`: `GET /v1/receipts`,
+account selected by `--store`/`--account`/`--key-env`: `GET /v1/store` (the
+`store inspect` report: table counts, generation, registration status and
+structural checkpoint kinds, any other key prefix counted as `other`),
+`/v1/signup/status` (the saved registration attempt as `lab-signup status
+--json` prints it, phone and consent secrets redacted; JSON null without one),
+`/v1/receipts`,
 `/v1/prekeys`, `/v1/outbox/suspended`, `/v1/actions` (list form only),
-`/v1/identity-conflicts`, `/v1/outbox/group-preparations` and
-`/v1/outbox/{local_id}/versions` (malformed ID 400 before the store opens,
-unknown ID 404 `unknown_local_id`). Query strings are refused with 400, so
-CLI-only options are never silently ignored. They are declared with
-`x-transport: ["cli", "http"]` and the `storeBearer` security scheme.
+`/v1/identity-conflicts`, `/v1/outbox/group-preparations`,
+`/v1/diagnostics/own-lid`, `/v1/inbox/undecodable` and
+`/v1/outbox/{local_id}/versions` (malformed ID
+400 before the store opens, unknown ID 404 `unknown_local_id`). These refuse any
+query string with 400, so CLI-only options are never silently ignored.
+
+Three counts-only group inspections take exactly one query parameter, as the
+OpenAPI document names it: `GET /v1/groups/receipts?request_id=<id>`,
+`/v1/groups/key-queries?request_id=<id>` and
+`/v1/groups/refresh-status?id=<action id>`. The value must satisfy the
+library's ID rule (ASCII alphanumerics and `-_.:`, at most 128 bytes) and is
+not percent-decoded; a missing, renamed, repeated, empty, encoded or extra
+parameter is 400 before the store opens. Nothing saved under the ID answers
+200 `null`, as the CLI prints. A key-query record the summary cannot count (a
+legacy outcome without a frozen plan, or a damaged row), a damaged saved group
+send, and own-LID sources that disagree or are malformed, answer 422
+`saved_state_unsupported` with the library's fixed reason (never an address).
+Those three libraries refuse only with `&'static str` reasons, enforced by their
+helpers' signatures; any other read failure stays a generic 500. The CLI
+parameters these operations also list (store, account, key environment,
+profile) are refused over HTTP as extra query parameters.
+
+All store routes are declared with `x-transport: ["cli", "http"]` and the
+`storeBearer` security scheme.
 
 ```sh
 whatsapp-cli --store acct.redb --account me --key-env WA_KEY \
@@ -110,8 +134,8 @@ opens it per request. The file is removed on Ctrl-C, SIGTERM or SIGHUP; a
 killed or crashed server can leave it behind, still unreadable to others but
 useless, and that path is then refused until you delete it. Answers: 404
 `store_routes_disabled` when not enabled, 401 with `WWW-Authenticate: Bearer`
-for a missing or wrong token (the scheme name is case-insensitive), 400 for any
-query string, 405 for other methods, 503 `store_unavailable` only while another
+for a missing or wrong token (the scheme name is case-insensitive), 400 for a
+query string the route does not take, 405 for other methods, 503 `store_unavailable` only while another
 command holds the store, 500 `store_read_failed` for any other read failure
 (details only in the server log).
 
@@ -120,7 +144,9 @@ the store's ownership lock briefly, so a command starting during a request
 (for example `listen` or one phase of `outbox-send`) can fail to open the store
 and must be rerun; nothing is sent in that case. Use `127.0.0.1` rather than
 `localhost`, so a client does not try another address a different local user
-could listen on. Outputs are the CLI's: `peer_ticket` is an unsalted SHA-256
+could listen on. A 500 logs the full error to the serve process's own log, which
+for a damaged row can quote a stored value; the response never does. Outputs are
+the CLI's: `peer_ticket` is an unsalted SHA-256
 of the address, so a phone number can be recovered by guessing; refused
 actions include the server's error text. Treat responses as account data.
 Before adding a route, confirm its output is no more revealing than these;
@@ -144,7 +170,9 @@ never serve send, queue or live operations this way.
 Offline development utilities outside `whatsapp-cli` are recorded in the
 root `x-research-tools` extension with `x-cli`, `x-transport` and `x-live`.
 These entries do not create HTTP routes or add commands to the control CLI.
-The `apk-proto-fields` entry records its validated descriptor-reader capability.
+The `apk-proto-fields` entry records its validated descriptor-reader capability;
+`retained-proto-fields` reads the same descriptors from committed research
+bundles, following helper-written names exactly, for sessions without the APK.
 
 Authenticated own-device ordinary text synchronization can emit the existing
 `MessageUpdated` / `Edited` event with the parent's original key. Loaded text

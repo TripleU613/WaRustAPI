@@ -62,11 +62,28 @@ pub struct StatusReceipt {
 /// Parse a status receipt. Returns `None` for a chat receipt, a retry, or
 /// anything whose shape we have not observed — a misread here would invent a
 /// viewer.
+///
+/// The observed shape has `<participants message_id/>` with **no** entries.
+/// With entries it is APK 37.71 Cmk.A03's offline aggregate for one of our chat
+/// messages (`docs/protocol/offline-aggregated-receipts.md`), whose root `from`
+/// is the chat, not a viewer; until 2026-10-13 this parser accepted that too and
+/// would have filed a direct aggregate as a status view.
 pub fn parse(node: &Node) -> Option<StatusReceipt> {
     if node.description != "receipt" {
         return None;
     }
     let participants = node.child("participants")?;
+    // Entry-less: no body, or an empty child list. binary/decoder.rs decodes
+    // the LIST_EMPTY token as no body but a zero-length LIST_8/LIST_16 as an
+    // empty child list; neither may slip into the aggregate branch.
+    let entry_less = match &participants.content {
+        crate::binary::NodeContent::Empty => true,
+        crate::binary::NodeContent::Children(children) => children.is_empty(),
+        _ => false,
+    };
+    if !entry_less {
+        return None;
+    }
     let status_id = participants.get_attr("message_id")?.as_text()?.to_owned();
     if status_id.is_empty() || status_id.len() > 128 {
         return None;
@@ -190,6 +207,35 @@ mod tests {
             parse(&receipt(Some("played"))).unwrap().kind,
             StatusReceiptKind::Played
         );
+    }
+
+    /// With participant entries it is a chat message's offline aggregate (APK
+    /// 37.71 Cmk.A03), not a status view: the root `from` is the chat.
+    #[test]
+    fn an_aggregate_with_entries_is_not_a_status_view() {
+        let aggregate = Node::new("receipt")
+            .attr("from", Jid::parse("222222222222222@lid").unwrap())
+            .attr("id", "AGG1")
+            .children(vec![
+                Node::new("participants")
+                    .attr("message_id", "OUR-MESSAGE")
+                    .children(vec![
+                        Node::new("user")
+                            .attr("jid", Jid::parse("222222222222222:2@lid").unwrap())
+                            .attr("t", "1700000000"),
+                    ]),
+            ]);
+        assert!(parse(&aggregate).is_none());
+        // An empty child list is still the entry-less status shape.
+        let empty_list = Node::new("receipt")
+            .attr("from", Jid::parse("222222222222222@lid").unwrap())
+            .attr("id", "SAGR0002")
+            .children(vec![
+                Node::new("participants")
+                    .attr("message_id", "STATUS2")
+                    .children(Vec::new()),
+            ]);
+        assert_eq!(parse(&empty_list).unwrap().status_id, "STATUS2");
     }
 
     /// A retry is not viewership, and neither is a chat receipt with no

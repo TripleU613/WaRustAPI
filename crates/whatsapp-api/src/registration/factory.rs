@@ -440,6 +440,19 @@ impl ComparisonRequestFactory for StoredComparisonRequestFactory {
         tx.put_json(Table::Account, MATERIAL_KEY, RECORD_VERSION, &record)
     }
 
+    /// The saved material record exactly as stored: a token correction
+    /// replaces it inside the reservation, and a request that never left puts
+    /// it back (registration safety audit review M2, 2026-10-13).
+    fn prepared_snapshot(&self, tx: &WriteTx<'_>) -> Result<Option<Zeroizing<Vec<u8>>>> {
+        Ok(tx
+            .get(Table::Account, MATERIAL_KEY, RECORD_VERSION)?
+            .map(Zeroizing::new))
+    }
+
+    fn restore_prepared(&self, tx: &mut WriteTx<'_>, snapshot: Zeroizing<Vec<u8>>) -> Result<()> {
+        tx.put(Table::Account, MATERIAL_KEY, RECORD_VERSION, &snapshot)
+    }
+
     fn code_request(&self, attempt: &RegistrationAttempt) -> Result<EncodedRegistrationRequest> {
         let method = match attempt.method {
             ChallengeMethod::Sms => "sms",
@@ -767,6 +780,277 @@ mod tests {
         }
     }
 
+    /// Every request fails before leaving (a connection refused before writing).
+    #[cfg(feature = "experimental-registration-https")]
+    #[derive(Debug)]
+    struct UnsentTransport(std::sync::Mutex<u32>);
+
+    #[cfg(feature = "experimental-registration-https")]
+    impl RegistrationTransport for UnsentTransport {
+        fn send<'a>(&'a self, _: EncodedRegistrationRequest) -> RegistrationTransportFuture<'a> {
+            Box::pin(async move {
+                *self.0.lock().unwrap() += 1;
+                Err(Error::RequestNotSent(Box::new(Error::Io(
+                    std::io::Error::other("connection refused before writing"),
+                ))))
+            })
+        }
+    }
+
+    /// A corrected-token retry that never left restores the `bad_token`
+    /// refusal and the saved token together and releases its one-shot, so the
+    /// same correction can be sent once the network is back (review M2).
+    #[tokio::test]
+    #[cfg(feature = "experimental-registration-https")]
+    async fn a_not_sent_correction_is_undone_and_can_be_sent_later() {
+        use crate::registration::BlockedReason;
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(dir.path());
+        let original = StoredComparisonRequestFactory::new(store.clone(), config()).unwrap();
+        let mut a = attempt(&store);
+        store.write(|tx| original.prepare(tx, &a)).unwrap();
+        let refusal = RegistrationState::Blocked {
+            reason: BlockedReason::ServerRefused {
+                code: None,
+                http_status: Some(200),
+                reason: Some(RegistrationResponseReason::BadToken),
+                not_before: None,
+            },
+        };
+        a.transition(refusal.clone(), Timestamp::now()).unwrap();
+        store
+            .write(|tx| RegistrationService::save_current(tx, &a))
+            .unwrap();
+        let mut profile = crate::ProtocolProfile::android_reference().unwrap();
+        profile.id = LAB_PROFILE_ID.into();
+        let transport = Arc::new(UnsentTransport(std::sync::Mutex::new(0)));
+        let mut corrected = config();
+        corrected.token = Zeroizing::new("corrected-token".into());
+        let service = RegistrationService::new(
+            store.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(
+                Arc::new(
+                    StoredComparisonRequestFactory::new_for_token_correction(
+                        store.clone(),
+                        corrected,
+                    )
+                    .unwrap(),
+                ),
+                transport.clone(),
+            )),
+        );
+        let error = service
+            .retry_corrected_token_once(config().phone)
+            .await
+            .unwrap_err();
+        assert!(matches!(error, Error::RequestNotSent(_)), "{error}");
+        let saved = service.current().await.unwrap().unwrap();
+        // Exactly the saved refusal: no history added, so the lab's
+        // `client_metrics.attempts` check still matches (review L4).
+        assert_eq!(saved, a);
+        assert!(saved.refused_at_code_request());
+        let token = store
+            .read(|tx| tx.get_json::<Material>(Table::Account, MATERIAL_KEY, RECORD_VERSION))
+            .unwrap()
+            .unwrap()
+            .config
+            .token;
+        assert_eq!(token, config().token, "the saved token is the original");
+        // Released with the material: the same correction is accepted again
+        // (and again fails to connect here), still once per attempt.
+        assert!(matches!(
+            service.retry_corrected_token_once(config().phone).await,
+            Err(Error::RequestNotSent(_))
+        ));
+        assert_eq!(
+            *transport.0.lock().unwrap(),
+            2,
+            "two attempts, neither left"
+        );
+        // A correction that reached the server keeps its one-shot spent, even
+        // when the server refuses the corrected token again.
+        let sent_transport = Arc::new(BadTokenTransport);
+        let mut corrected = config();
+        corrected.token = Zeroizing::new("corrected-token".into());
+        let sent = RegistrationService::new(
+            store.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(
+                Arc::new(
+                    StoredComparisonRequestFactory::new_for_token_correction(
+                        store.clone(),
+                        corrected,
+                    )
+                    .unwrap(),
+                ),
+                sent_transport,
+            )),
+        );
+        sent.retry_corrected_token_once(config().phone)
+            .await
+            .unwrap();
+        assert_eq!(sent.current().await.unwrap().unwrap().state, refusal);
+        let again = sent
+            .retry_corrected_token_once(config().phone)
+            .await
+            .unwrap_err()
+            .to_string();
+        assert!(again.contains("one-shot"), "{again}");
+    }
+
+    /// A code-request refusal that carried an SMS/voice wait but no
+    /// `retry_after` keeps it; the one-shot actions, each of which sends a
+    /// new code request, refuse until it has passed and send nothing.
+    #[tokio::test]
+    #[cfg(feature = "experimental-registration-https")]
+    async fn one_shots_wait_for_the_refusal_method_wait() {
+        use crate::registration::BlockedReason;
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(dir.path());
+        let factory = StoredComparisonRequestFactory::new(store.clone(), config()).unwrap();
+        let mut a = attempt(&store);
+        store.write(|tx| factory.prepare(tx, &a)).unwrap();
+        a.transition(
+            RegistrationState::Blocked {
+                reason: BlockedReason::ServerRefused {
+                    code: None,
+                    http_status: Some(200),
+                    reason: Some(RegistrationResponseReason::BadParam),
+                    not_before: Some(
+                        Timestamp::now().saturating_add(std::time::Duration::from_secs(3600)),
+                    ),
+                },
+            },
+            Timestamp::now(),
+        )
+        .unwrap();
+        assert!(a.refused_at_code_request());
+        store
+            .write(|tx| RegistrationService::save_current(tx, &a))
+            .unwrap();
+        let mut profile = crate::ProtocolProfile::android_reference().unwrap();
+        profile.id = LAB_PROFILE_ID.into();
+        let transport = Arc::new(UnsentTransport(std::sync::Mutex::new(0)));
+        let service = RegistrationService::new(
+            store.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(
+                Arc::new(factory),
+                transport.clone(),
+            )),
+        );
+        let error = service
+            .diagnose_bad_parameter_once(config().phone)
+            .await
+            .unwrap_err();
+        assert!(matches!(error, Error::RateLimited { .. }), "{error}");
+        assert_eq!(*transport.0.lock().unwrap(), 0, "nothing was sent");
+        // Not reserved either: the same action stays available afterwards.
+        let saved = service.current().await.unwrap().unwrap();
+        assert_eq!(saved, a);
+    }
+
+    /// Answers every code request with HTTP 200 `bad_token`.
+    #[cfg(feature = "experimental-registration-https")]
+    #[derive(Debug)]
+    struct BadTokenTransport;
+
+    #[cfg(feature = "experimental-registration-https")]
+    impl RegistrationTransport for BadTokenTransport {
+        fn send<'a>(
+            &'a self,
+            request: EncodedRegistrationRequest,
+        ) -> RegistrationTransportFuture<'a> {
+            Box::pin(async move {
+                assert!(request.url().ends_with("/v2/code"));
+                RegistrationHttpResponse::new(
+                    200,
+                    Zeroizing::new(br#"{"status":"fail","reason":"bad_token"}"#.to_vec()),
+                )
+            })
+        }
+    }
+
+    /// The same saved refusal shape reached from an OTP submission (`verifying
+    /// -> blocked`) must not make a code-request diagnostic or the corrected
+    /// token resend eligible: either would ask for a new SMS or call.
+    #[tokio::test]
+    #[cfg(feature = "experimental-registration-https")]
+    async fn code_request_actions_refuse_a_refusal_from_another_request() {
+        use crate::registration::BlockedReason;
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(dir.path());
+        let factory = StoredComparisonRequestFactory::new(store.clone(), config()).unwrap();
+        let mut profile = crate::ProtocolProfile::android_reference().unwrap();
+        profile.id = LAB_PROFILE_ID.into();
+        let transport = Arc::new(MockTransport::default());
+        for reason in [
+            RegistrationResponseReason::BadToken,
+            RegistrationResponseReason::BadParam,
+        ] {
+            let mut a = attempt(&store);
+            store.write(|tx| factory.prepare(tx, &a)).unwrap();
+            a.state = RegistrationState::Verifying { step: 1 };
+            a.transition(
+                RegistrationState::Blocked {
+                    reason: BlockedReason::ServerRefused {
+                        code: None,
+                        http_status: Some(200),
+                        reason: Some(reason),
+                        not_before: None,
+                    },
+                },
+                Timestamp::now(),
+            )
+            .unwrap();
+            assert!(!a.refused_at_code_request());
+            store
+                .write(|tx| RegistrationService::save_current(tx, &a))
+                .unwrap();
+            let mut corrected = config();
+            corrected.token = Zeroizing::new("corrected-token".into());
+            let correction = RegistrationService::new(
+                store.clone(),
+                &profile,
+                Arc::new(ComparisonHttpFlow::new(
+                    Arc::new(
+                        StoredComparisonRequestFactory::new_for_token_correction(
+                            store.clone(),
+                            corrected,
+                        )
+                        .unwrap(),
+                    ),
+                    transport.clone(),
+                )),
+            );
+            let error = correction
+                .retry_corrected_token_once(config().phone)
+                .await
+                .unwrap_err()
+                .to_string();
+            assert!(
+                error.contains("eligible") || error.contains("did not come from a code request"),
+                "{error}"
+            );
+            let diagnostic = RegistrationService::new(
+                store.clone(),
+                &profile,
+                Arc::new(ComparisonHttpFlow::new(
+                    Arc::new(StoredComparisonRequestFactory::new(store.clone(), config()).unwrap()),
+                    transport.clone(),
+                )),
+            );
+            assert!(
+                diagnostic
+                    .diagnose_bad_parameter_once(config().phone)
+                    .await
+                    .is_err()
+            );
+        }
+        assert!(transport.0.lock().unwrap().is_empty(), "nothing was sent");
+    }
+
     #[tokio::test]
     #[cfg(feature = "experimental-registration-https")]
     async fn token_correction_is_atomic_token_only_and_once_per_account() {
@@ -784,6 +1068,7 @@ mod tests {
                     code: None,
                     http_status: Some(200),
                     reason: Some(RegistrationResponseReason::BadToken),
+                    not_before: None,
                 },
             },
             Timestamp::now(),
@@ -1091,6 +1376,7 @@ mod tests {
                     code: None,
                     http_status: Some(200),
                     reason: Some(RegistrationResponseReason::Consent),
+                    not_before: None,
                 },
             },
             Timestamp::now(),
@@ -1377,6 +1663,7 @@ mod tests {
                         code: None,
                         http_status: bad_parameter.then_some(200),
                         reason: bad_parameter.then_some(RegistrationResponseReason::BadParam),
+                        not_before: None,
                     },
                 },
                 Timestamp::now(),
@@ -1471,6 +1758,7 @@ mod tests {
                     code: None,
                     http_status: Some(200),
                     reason: Some(RegistrationResponseReason::FormatWrong),
+                    not_before: None,
                 },
             },
             RegistrationState::Blocked {
@@ -1478,6 +1766,7 @@ mod tests {
                     code: None,
                     http_status: Some(200),
                     reason: Some(RegistrationResponseReason::Blocked),
+                    not_before: None,
                 },
             },
             RegistrationState::Blocked {
@@ -1485,6 +1774,7 @@ mod tests {
                     code: Some(403),
                     http_status: None,
                     reason: None,
+                    not_before: None,
                 },
             },
             RegistrationState::CoolingDown {

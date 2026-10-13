@@ -310,7 +310,14 @@ read -rs CODE; printf '%s\n' "$CODE" | whatsapp-cli --profile a lab-signup --all
 `accounts new` creates:
 - `lab/accounts/<name>/master.key` (mode 0600): encryption key
 - `lab/accounts/<name>/request.json` (mode 0600): working recipe + derived token
+- `lab/accounts/<name>/signup.redb`: the encrypted store (since 2026-10-13)
 - `lab/profiles/<name>.json`: profile linking them together
+
+It refuses a number another saved profile already configures. `lab-signup begin`
+no longer creates a missing store: a profile made before `accounts new` created
+stores needs `begin --create-store` once. Without it, a forgotten `--profile` or
+a mistyped path fails instead of creating a fresh identity
+([registration safety audit](registration-safety-audit.md)).
 
 The profile sets `key_env` to `WHATSAPP_API_MASTER_KEY_<NAME>` (in uppercase).
 
@@ -405,6 +412,16 @@ and a parse failure now reports the reply's field names and value types
 (never values). `wa_old` and
 passkey second factors are not implemented and leave the attempt blocked.
 
+### Diagnostic eligibility and status redaction (2026-10-13)
+
+The one-shot code-request diagnostics, `resume-preflight` and
+`retry-corrected-token` now also require the saved refusal to come from a code
+request (last transition `preparing -> blocked`). An OTP submission refused with
+`bad_param` saves the same shape, and answering it with a new code request
+would ask for another SMS. `status --json` now redacts the consent context's
+login, pending selector and parent consent URL as well as the phone number.
+[Registration safety audit](registration-safety-audit.md).
+
 ### One-shot legacy diagnostic recovery
 
 `lab-signup --allow-live-request diagnose-legacy-refusal` is an explicit lab-only
@@ -414,9 +431,17 @@ number after deciding to send one more request; it may trigger SMS delivery.
 It retains the same attempt, keys, configuration and transition history.
 A durable account-local latch and preparation state commit before sending.
 Known refusals, cooldowns, unknown outcomes and repeated diagnostics are rejected.
-No existing store or latch should be deleted to repeat it. On transport failure,
-the outcome remains unknown; do not resend. Reqwest protocol-level retries are
-also explicitly disabled, in addition to application-level automatic retries.
+No existing store or latch should be deleted to repeat it. A transport failure
+that may have reached the server leaves the outcome unknown; do not resend. A
+request that provably never left (it could not be built, prepared or connected:
+`RequestNotSent`) restores the attempt exactly as it was before the
+reservation (its refusal and history) together with the saved request material,
+and releases the one-shot latch, so the same action can be run again, with the
+same `client_metrics.attempts`, once the network is back (registration safety
+audit, reviews M2 and L4, 2026-10-13).
+Reqwest protocol-level
+retries are also explicitly disabled, in addition to application-level
+automatic retries.
 
 `lab-signup --allow-live-request diagnose-bad-parameter` is a separate,
 one-shot operator action restricted to an existing HTTP 200 / `bad_param`

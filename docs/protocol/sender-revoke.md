@@ -147,3 +147,15 @@ previous timing-unported boundary. Own-device revokes retain their separate
 path; absent timestamps are not guessed. Rejected markers remain final, and
 published history is preserved. Full eligibility, outgoing revoke and physical
 body/media/receipt/cache deletion remain unfinished.
+
+## Sender edit value (2026-10-13, retained evidence)
+
+`Bpt.<init>(1gc, J)` stores edit class 7 in the message's `178.A00`, and the
+send runnable `DNu` keys the scheduled send job on that field, so a sender
+revoke very probably goes out with `edit="7"` (and an admin revoke, `Bps`,
+with 8). Two links are inferred (job constructor mapping, stanza writer), and
+the 7/8 writes are followed by unretained calls (`178.A0G`, `Bpt.A0p`) assumed
+not to rewrite the field; the
+chain and every retained writer are in
+[unknowns](unknowns.md#outgoing-revoke-and-edit-2026-10-13). No revoke sender
+is implemented.

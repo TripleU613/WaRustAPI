@@ -441,6 +441,53 @@ pub async fn read_node<S: AsyncRead + AsyncWrite + Unpin>(
         .map_err(|_| error("invalid comparison stanza"))
 }
 
+/// One frame read in a lab window.
+pub enum FrameRead {
+    /// A decoded stanza.
+    Node(Node),
+    /// A frame that decrypted, so the stream is intact, but did not unpack or
+    /// decode; for [`super::inbox::preserve_undecodable`].
+    Undecodable {
+        /// The decrypted frame.
+        frame: Vec<u8>,
+        /// Fixed error class (`CodecError::class`).
+        class: &'static str,
+    },
+}
+
+impl std::fmt::Debug for FrameRead {
+    /// Redacted: the stanza's name, or the undecodable frame's size and class.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Node(node) => f.debug_tuple("Node").field(&node.description).finish(),
+            Self::Undecodable { frame, class } => f
+                .debug_struct("Undecodable")
+                .field("bytes", &frame.len())
+                .field("class", class)
+                .finish(),
+        }
+    }
+}
+
+/// Like [`read_node`], but a frame that decrypts and does not decode is
+/// returned for capture instead of ending the caller's window, as `listen`
+/// does. Login and handshake keep [`read_node`]: their reply must decode.
+pub async fn read_frame<S: AsyncRead + AsyncWrite + Unpin>(
+    channel: &mut EncryptedConnection<S>,
+) -> Result<FrameRead, TransportError> {
+    let frame = channel
+        .read()
+        .await?
+        .ok_or_else(|| error("EOF awaiting stanza"))?;
+    Ok(match super::inbox::decode_frame(&frame) {
+        Ok(node) => FrameRead::Node(node),
+        Err(codec) => FrameRead::Undecodable {
+            frame: frame.to_vec(),
+            class: codec.class(),
+        },
+    })
+}
+
 /// Write one uncompressed encrypted stanza.
 pub async fn write_node<S: AsyncRead + AsyncWrite + Unpin>(
     channel: &mut EncryptedConnection<S>,

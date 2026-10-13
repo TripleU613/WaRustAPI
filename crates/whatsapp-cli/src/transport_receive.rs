@@ -842,6 +842,47 @@ pub(super) fn reproject(cli: &super::Cli) -> Result<(), Error> {
     Ok(())
 }
 
+/// Captured frames `listen` could not decode. Prints the capture digest, the
+/// error class then and now, and the frame size; never frame bytes.
+pub(super) fn undecodable_status(cli: &super::Cli) -> Result<(), Error> {
+    let store = ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })?;
+    let frames = whatsapp_api::transport::inbox::undecodable_frames(&store)?;
+    if cli.json {
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&frames)
+                .map_err(|e| Error::invalid("undecodable", e.to_string()))?
+        );
+        return Ok(());
+    }
+    if frames.is_empty() {
+        println!("undecodable: none captured");
+        return Ok(());
+    }
+    for frame in &frames {
+        println!(
+            "undecodable: {} class={} now={} bytes={} epoch={}",
+            frame.capture,
+            frame.class,
+            frame.current_class.as_deref().unwrap_or("decodes"),
+            frame.bytes,
+            frame
+                .epoch
+                .map_or_else(|| "lab".to_owned(), |epoch| epoch.0.to_string())
+        );
+    }
+    println!(
+        "undecodable: {} captured; not acknowledged, so the server may redeliver; nothing is reprocessed here",
+        frames.len()
+    );
+    Ok(())
+}
+
 /// Offline list of receipts (read/played/retry) and their outcomes.
 pub(super) fn receipts_status(cli: &super::Cli) -> Result<(), Error> {
     let store = ProtocolStore::open(OpenOptions {
@@ -2424,6 +2465,23 @@ fn fanout_inspection(
     output
 }
 
+/// Saved group-refresh projection counts for one action ID, or JSON `null`.
+/// Shared by `group refresh-status --json` and the HTTP store route, so both
+/// print the same redacted object: counts and the next action ID, no group
+/// address or member list.
+pub(crate) fn refresh_status(store: &ProtocolStore, id: &str) -> Result<serde_json::Value, Error> {
+    Ok(
+        whatsapp_api::transport::groups::refresh_outcome(store, id)?.map_or(serde_json::Value::Null, |v| {
+            serde_json::json!({
+                "complete": v.complete, "truncated": v.truncated.len(),
+                "forbidden": v.forbidden, "not_found": v.not_found,
+                "automatic_follow_up": v.automatic_follow_up, "round": v.round,
+                "next_action": v.next_action, "pending": v.pending.len(), "exhausted": v.exhausted,
+            })
+        }),
+    )
+}
+
 fn fanout_inspection_with_sessions(
     store: &ProtocolStore,
     plan: &whatsapp_api::transport::group_send::FanoutPlan,
@@ -2522,21 +2580,14 @@ pub(super) fn group(cli: &super::Cli, cmd: &super::GroupCmd) -> Result<(), Error
             })
         }
         super::GroupCmd::RefreshStatus { id } => {
-            let summary = groups::refresh_outcome(&store, id)?.map(|v| {
-                serde_json::json!({
-                    "complete": v.complete, "truncated": v.truncated.len(),
-                    "forbidden": v.forbidden, "not_found": v.not_found,
-                    "automatic_follow_up": v.automatic_follow_up, "round": v.round,
-                    "next_action": v.next_action, "pending": v.pending.len(), "exhausted": v.exhausted,
-                })
-            });
+            let summary = refresh_status(&store, id)?;
             if cli.json {
                 println!(
                     "{}",
                     serde_json::to_string_pretty(&summary)
                         .map_err(|e| Error::invalid("group", e.to_string()))?
                 );
-            } else if let Some(summary) = summary {
+            } else if !summary.is_null() {
                 println!(
                     "group refresh: complete={} truncated={} forbidden={} not_found={} pending={} round={} exhausted={} next={}",
                     summary["complete"],

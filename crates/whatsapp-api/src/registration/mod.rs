@@ -142,6 +142,14 @@ pub enum BlockedReason {
         /// Recognized protocol reason only; arbitrary server text is never persisted.
         #[serde(default)]
         reason: Option<wire::RegistrationResponseReason>,
+        /// Earliest time another request of the refused kind may be sent: the
+        /// longest `sms_wait`/`voice_wait`/`email_otp_wait` the refusal carried
+        /// (a refusal with `retry_after` is a cooldown instead). Enforced by
+        /// the one-shot actions and the email-challenge resume (registration
+        /// safety audit, 2026-10-13). Absent in older records and when the
+        /// refusal carried no wait.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        not_before: Option<Timestamp>,
     },
     /// The server requires a step this implementation does not support.
     UnsupportedStep {
@@ -459,6 +467,17 @@ impl RegistrationState {
     pub fn is_terminal(&self) -> bool {
         matches!(self, Self::Registered | Self::Blocked { .. })
     }
+
+    /// The wait a saved server refusal carried, if any (`ServerRefused`'s
+    /// `not_before`).
+    pub fn refusal_not_before(&self) -> Option<Timestamp> {
+        match self {
+            Self::Blocked {
+                reason: BlockedReason::ServerRefused { not_before, .. },
+            } => *not_before,
+            _ => None,
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -466,6 +485,99 @@ struct Transition {
     at: Timestamp,
     from: String,
     to: String,
+}
+
+/// A request that could not be built was not sent (registration safety audit,
+/// 2026-10-13): for example a config edited since the attempt froze it, or a
+/// resend method the frozen config does not use. Keeps the cause.
+fn not_built(error: Error) -> Error {
+    match error {
+        Error::RequestNotSent(_) => error,
+        other => Error::RequestNotSent(Box::new(other)),
+    }
+}
+
+/// A client-error status that refuses the request outright: 4xx except 408
+/// (request timeout) and 429 (rate limited), whose waits we would lose.
+fn definite_refusal_status(status: u16) -> bool {
+    (400..500).contains(&status) && status != 408 && status != 429
+}
+
+/// What a not-sent restore undoes besides the attempt's state: the one-shot
+/// latch its reservation took, and the request material its `prepare` changed
+/// (registration safety audit review M2, 2026-10-13). A latch is released only
+/// together with the material it guards, or where nothing was prepared.
+#[derive(Default)]
+struct Undo {
+    latch: Option<&'static [u8]>,
+    material: Option<Zeroizing<Vec<u8>>>,
+}
+
+const STORE_OWNER_KEY: &[u8] = b"store-owner";
+
+/// The number this store was created for (`accounts new`, or an explicit
+/// `lab-signup begin --create-store`), if recorded. Stores created before this
+/// record existed have none; their saved attempt names their number instead.
+pub fn store_owner(store: &ProtocolStore) -> Result<Option<PhoneNumber>> {
+    store.read(|tx| tx.get_json(Table::RegistrationAttempts, STORE_OWNER_KEY, RECORD_V1))
+}
+
+/// Record that this store belongs to `phone`. Idempotent for the same number;
+/// refuses to re-assign a store to another number, so one store never holds
+/// two numbers' identities (registration safety audit, 2026-10-13).
+pub fn claim_store(store: &ProtocolStore, phone: &PhoneNumber) -> Result<()> {
+    store.write(|tx| {
+        match tx.get_json::<PhoneNumber>(Table::RegistrationAttempts, STORE_OWNER_KEY, RECORD_V1)? {
+            Some(owner) if &owner == phone => Ok(()),
+            Some(_) => Err(Error::invalid(
+                "registration_store",
+                "this store was created for another number",
+            )),
+            // An older store may hold another number's account material
+            // without an owner record (its attempt reset); claiming it would
+            // record the wrong owner for good (registration review L6).
+            None if AccountRecord::load_in_write(tx)?
+                .and_then(|account| account.phone)
+                .is_some_and(|holder| &holder != phone) =>
+            {
+                Err(Error::invalid(
+                    "registration_store",
+                    "this store holds another number's account material",
+                ))
+            }
+            None => tx.put_json(
+                Table::RegistrationAttempts,
+                STORE_OWNER_KEY,
+                RECORD_V1,
+                phone,
+            ),
+        }
+    })
+}
+
+/// The saved attempt's state name (`preparing`, `challenge_pending`,
+/// `cooling_down`, `outcome_unknown`, ...), or `None` when this store holds no
+/// attempt. Read-only, for status displays such as `accounts status`.
+pub fn current_state_name(store: &ProtocolStore) -> Result<Option<&'static str>> {
+    Ok(current_attempt(store)?.map(|attempt| attempt.state.name()))
+}
+
+/// The saved attempt, whichever profile created it, or `None`. Read-only and
+/// needs no flow, for inspections such as the `lab-signup status` store route.
+/// Its `Debug` redacts the phone; serialised JSON does not, so a printer must
+/// redact it (and the consent secrets) itself.
+pub fn current_attempt(store: &ProtocolStore) -> Result<Option<RegistrationAttempt>> {
+    store.read(|tx| tx.get_json(Table::RegistrationAttempts, CURRENT_KEY, RECORD_V1))
+}
+
+/// Marks an email-code request whose answer arrived but could not be read.
+fn email_answered_key(attempt: AttemptId, step: u32) -> String {
+    format!("email-request-answered:{}:{step}", hex::encode(attempt.0))
+}
+
+/// The longest of the server-directed waits that are present.
+fn longest<const N: usize>(waits: [Option<std::time::Duration>; N]) -> Option<std::time::Duration> {
+    waits.into_iter().flatten().max()
 }
 
 /// Durable record of one attempt. `Debug` redacts the phone number.
@@ -528,6 +640,17 @@ impl RegistrationAttempt {
         Ok(())
     }
 
+    /// Whether the current state was reached by a code request's refusal (the
+    /// preflight or `/v2/code`): the last transition is `preparing -> blocked`.
+    /// OTP submission, security, consent and email-code refusals are reached
+    /// from `verifying`. The code-request diagnostics and the corrected-token
+    /// resend send a new code request, so only this refusal makes them eligible.
+    pub fn refused_at_code_request(&self) -> bool {
+        self.history
+            .last()
+            .is_some_and(|entry| entry.from == "preparing" && entry.to == "blocked")
+    }
+
     /// Number of recorded transitions.
     pub fn history_len(&self) -> usize {
         self.history.len()
@@ -561,13 +684,35 @@ pub trait RegistrationFlow: Send + Sync + fmt::Debug {
         _attempt: &'a RegistrationAttempt,
         _decision: Option<&'a consent::ConsentDecision>,
     ) -> RegistrationFuture<'a> {
-        Box::pin(async { Err(Error::invalid("consent", "flow does not implement consent")) })
+        // Nothing is sent by a flow without this step: not an unknown outcome.
+        Box::pin(async {
+            Err(Error::RequestNotSent(Box::new(Error::invalid(
+                "consent",
+                "flow does not implement consent",
+            ))))
+        })
     }
     /// Generate and persist profile prerequisites inside the same transaction
     /// as the `Preparing` transition. This method must be bounded and perform
     /// no network I/O. If it fails, neither the attempt nor its prerequisites
     /// are committed.
     fn prepare(&self, tx: &mut WriteTx<'_>, attempt: &RegistrationAttempt) -> Result<()>;
+
+    /// The saved request material a correcting `prepare` may change, read in
+    /// the reservation transaction just before it runs. Held in memory only,
+    /// so a request that provably never left can be undone exactly
+    /// ([`Self::restore_prepared`]). `None`: this flow cannot undo `prepare`.
+    fn prepared_snapshot(&self, _tx: &WriteTx<'_>) -> Result<Option<Zeroizing<Vec<u8>>>> {
+        Ok(None)
+    }
+
+    /// Put back a [`Self::prepared_snapshot`] in the restoring transaction.
+    fn restore_prepared(&self, _tx: &mut WriteTx<'_>, _snapshot: Zeroizing<Vec<u8>>) -> Result<()> {
+        Err(Error::invalid(
+            "registration_material",
+            "flow cannot restore prepared material",
+        ))
+    }
 
     /// Request the first challenge. Returns the next state (typically
     /// `ChallengePending`, `CoolingDown` or `Blocked`) and any atomic account
@@ -591,11 +736,12 @@ pub trait RegistrationFlow: Send + Sync + fmt::Debug {
         _handle: &'a ChallengeHandle,
         _email: Option<&'a str>,
     ) -> RegistrationFuture<'a> {
+        // Nothing is sent by a flow without this step: not an unknown outcome.
         Box::pin(async {
-            Err(Error::invalid(
+            Err(Error::RequestNotSent(Box::new(Error::invalid(
                 "challenge",
                 "flow does not implement the email challenge",
-            ))
+            ))))
         })
     }
 
@@ -636,8 +782,16 @@ impl RegistrationFlow for UnsupportedFlow {
         Ok(())
     }
 
-    fn begin<'a>(&'a self, _attempt: &'a RegistrationAttempt) -> RegistrationFuture<'a> {
+    /// A fresh attempt (only its `unregistered -> preparing` entry) is
+    /// blocked locally. Resuming an existing attempt, which some other flow
+    /// under this profile id created (a cooldown, say), sends nothing and is
+    /// restored as it was, rather than having a local block written over it
+    /// (registration review, 2026-10-13).
+    fn begin<'a>(&'a self, attempt: &'a RegistrationAttempt) -> RegistrationFuture<'a> {
         Box::pin(async move {
+            if attempt.history_len() > 1 {
+                return Err(self.not_sent());
+            }
             Ok(RegistrationState::Blocked {
                 reason: BlockedReason::ProfileIncomplete {
                     missing: self.missing.clone(),
@@ -647,20 +801,29 @@ impl RegistrationFlow for UnsupportedFlow {
         })
     }
 
+    /// This flow never produces a challenge, so a pending one belongs to
+    /// another flow under the same profile id; nothing is sent and the
+    /// challenge is restored, not overwritten by a local block that `reset`
+    /// would then accept (registration review, 2026-10-13).
     fn submit<'a>(
         &'a self,
         _attempt: &'a RegistrationAttempt,
         _handle: &'a ChallengeHandle,
         _answer: &'a Answer,
     ) -> RegistrationFuture<'a> {
-        Box::pin(async move {
-            Ok(RegistrationState::Blocked {
-                reason: BlockedReason::ProfileIncomplete {
-                    missing: self.missing.clone(),
-                },
-            }
-            .into())
-        })
+        Box::pin(async move { Err(self.not_sent()) })
+    }
+}
+
+impl UnsupportedFlow {
+    fn not_sent(&self) -> Error {
+        Error::RequestNotSent(Box::new(Error::invalid(
+            "registration",
+            format!(
+                "this registration flow sends nothing; the profile is missing {:?}",
+                self.missing
+            ),
+        )))
     }
 }
 
@@ -713,6 +876,19 @@ pub trait ComparisonRequestFactory: Send + Sync + fmt::Debug {
     }
     /// Persist keys and identifiers needed by later request construction.
     fn prepare(&self, tx: &mut WriteTx<'_>, attempt: &RegistrationAttempt) -> Result<()>;
+
+    /// See [`RegistrationFlow::prepared_snapshot`].
+    fn prepared_snapshot(&self, _tx: &WriteTx<'_>) -> Result<Option<Zeroizing<Vec<u8>>>> {
+        Ok(None)
+    }
+
+    /// See [`RegistrationFlow::restore_prepared`].
+    fn restore_prepared(&self, _tx: &mut WriteTx<'_>, _snapshot: Zeroizing<Vec<u8>>) -> Result<()> {
+        Err(Error::invalid(
+            "registration_material",
+            "factory cannot restore prepared material",
+        ))
+    }
 
     /// Build a `/v2/challenge` request (email second factor).
     fn challenge_request(
@@ -786,7 +962,23 @@ impl ComparisonHttpFlow {
     ) -> Result<(u16, wire::RegistrationResponse)> {
         let response = self.transport.send(request).await?;
         let status_code = response.status_code();
-        Ok((status_code, response.parse_json()?))
+        let parsed = response.parse_json().map_err(|error| match error {
+            // An unreadable body under a definite client-error status is a
+            // refusal we cannot read (the email `/v2/challenge` guess got HTTP
+            // 404 with a non-JSON body). Under 2xx the request may have
+            // succeeded; a 5xx may come from a gateway after the backend acted;
+            // 408 and 429 carry a wait we cannot read. Those keep the generic,
+            // uncertain classification (reviews M1 and its follow-up).
+            Error::InvalidInput {
+                field: "registration_response",
+                ..
+            } if definite_refusal_status(status_code) => Error::invalid(
+                "registration_refusal_body",
+                format!("HTTP {status_code} with a body that is not a registration answer"),
+            ),
+            other => other,
+        })?;
+        Ok((status_code, parsed))
     }
 
     /// Read-safe probe: the same-identity `/v2/exist` request the client sends
@@ -820,17 +1012,36 @@ impl ComparisonHttpFlow {
             .into();
         }
         if let Some(wait) = response.retry_after {
+            // A refusal that sets a cooldown also keeps the longer of any SMS,
+            // voice or email wait it carries (as the blocked branch below
+            // does): the next request uses one of them; it only delays.
+            let wait = longest([
+                Some(wait),
+                response.sms_wait,
+                response.voice_wait,
+                response.email_otp_wait,
+            ])
+            .unwrap_or(wait);
             return RegistrationState::CoolingDown {
                 until: Timestamp::now().saturating_add(wait),
             }
             .into();
         }
         if response.status == wire::RegistrationResponseStatus::Fail || status_code >= 400 {
+            // Without `retry_after` the refusal stays blocked, but any method
+            // wait it carries still binds the next request (longest wins).
+            let not_before = longest([
+                response.sms_wait,
+                response.voice_wait,
+                response.email_otp_wait,
+            ])
+            .map(|wait| Timestamp::now().saturating_add(wait));
             return RegistrationState::Blocked {
                 reason: BlockedReason::ServerRefused {
                     code: (status_code >= 400).then_some(u32::from(status_code)),
                     http_status: Some(status_code),
                     reason: response.reason,
+                    not_before,
                 },
             }
             .into();
@@ -930,7 +1141,10 @@ impl RegistrationFlow for ComparisonHttpFlow {
         decision: Option<&'a consent::ConsentDecision>,
     ) -> RegistrationFuture<'a> {
         Box::pin(async move {
-            let request = self.requests.consent_request(attempt, decision)?;
+            let request = self
+                .requests
+                .consent_request(attempt, decision)
+                .map_err(not_built)?;
             let (http, mut response) = self.send(request).await?;
             if response.consent.login.is_none()
                 && let RegistrationState::Blocked {
@@ -990,23 +1204,43 @@ impl RegistrationFlow for ComparisonHttpFlow {
     fn prepare(&self, tx: &mut WriteTx<'_>, attempt: &RegistrationAttempt) -> Result<()> {
         self.requests.prepare(tx, attempt)
     }
+    fn prepared_snapshot(&self, tx: &WriteTx<'_>) -> Result<Option<Zeroizing<Vec<u8>>>> {
+        self.requests.prepared_snapshot(tx)
+    }
+    fn restore_prepared(&self, tx: &mut WriteTx<'_>, snapshot: Zeroizing<Vec<u8>>) -> Result<()> {
+        self.requests.restore_prepared(tx, snapshot)
+    }
 
     fn begin<'a>(&'a self, attempt: &'a RegistrationAttempt) -> RegistrationFuture<'a> {
         Box::pin(async move {
-            if let Some(request) = self.requests.preflight_request(attempt)? {
-                let (status, response) = self.send(request).await?;
+            // Both requests are built before either is sent, so a build
+            // failure can only happen while nothing has left. Once the
+            // preflight has been sent, a later failure is not "not sent": the
+            // server saw the preflight (and its preparation counter).
+            let preflight = self
+                .requests
+                .preflight_request(attempt)
+                .map_err(not_built)?;
+            let request = self.requests.code_request(attempt).map_err(not_built)?;
+            let preflight_sent = preflight.is_some();
+            if let Some(preflight) = preflight {
+                let (status, response) = self.send(preflight).await?;
                 if let Some(output) = preflight_decision(status, &response, &attempt.method) {
                     return Ok(output);
                 }
             }
-            let request = self.requests.code_request(attempt)?;
-            let (status_code, response) = self.send(request).await?;
+            let (status_code, response) = match self.send(request).await {
+                Err(Error::RequestNotSent(cause)) if preflight_sent => return Err(*cause),
+                other => other?,
+            };
             if (200..300).contains(&status_code)
                 && response.status == wire::RegistrationResponseStatus::Sent
             {
+                // The longer of the method's wait and the generic one: a
+                // shorter value must never shorten a server-directed wait.
                 let retry_wait = match attempt.method {
-                    ChallengeMethod::Sms => response.sms_wait.or(response.retry_after),
-                    ChallengeMethod::Voice => response.voice_wait.or(response.retry_after),
+                    ChallengeMethod::Sms => longest([response.sms_wait, response.retry_after]),
+                    ChallengeMethod::Voice => longest([response.voice_wait, response.retry_after]),
                     ChallengeMethod::Other(_) => response.retry_after,
                 };
                 return Ok(RegistrationState::ChallengePending {
@@ -1042,7 +1276,10 @@ impl RegistrationFlow for ComparisonHttpFlow {
                     "the comparison client sends no address; the server uses the one on file",
                 ));
             }
-            let request = self.requests.email_code_request(attempt)?;
+            let request = self
+                .requests
+                .email_code_request(attempt)
+                .map_err(not_built)?;
             let (status_code, response) = self.send(request).await?;
             if (200..300).contains(&status_code)
                 && matches!(
@@ -1050,7 +1287,9 @@ impl RegistrationFlow for ComparisonHttpFlow {
                     wire::RegistrationResponseStatus::Sent | wire::RegistrationResponseStatus::Ok
                 )
             {
-                let wait = response.email_otp_wait.or(response.retry_after);
+                // Both are server waits; honour the longer one, as the
+                // refusal path does, rather than letting one hide the other.
+                let wait = longest([response.email_otp_wait, response.retry_after]);
                 return Ok(RegistrationState::EmailCodePending {
                     handle: ChallengeHandle {
                         attempt: attempt.id,
@@ -1075,11 +1314,20 @@ impl RegistrationFlow for ComparisonHttpFlow {
     ) -> RegistrationFuture<'a> {
         Box::pin(async move {
             let request = match answer {
-                Answer::Code(code) => self.requests.complete_request(attempt, code)?,
-                Answer::Pin(pin) => self.requests.security_request(attempt, pin)?,
+                Answer::Code(code) => self
+                    .requests
+                    .complete_request(attempt, code)
+                    .map_err(not_built)?,
+                Answer::Pin(pin) => self
+                    .requests
+                    .security_request(attempt, pin)
+                    .map_err(not_built)?,
                 // The emailed code is verified by the same `/v2/register` call as
                 // an SMS or voice code (2.26.37.71 `KotlinRegistrationBridge.A0D`).
-                Answer::EmailCode(code) => self.requests.complete_request(attempt, code)?,
+                Answer::EmailCode(code) => self
+                    .requests
+                    .complete_request(attempt, code)
+                    .map_err(not_built)?,
             };
             let (status_code, mut response) = self.send(request).await?;
             if (200..300).contains(&status_code)
@@ -1112,8 +1360,11 @@ impl RegistrationFlow for ComparisonHttpFlow {
                         step: handle.step.saturating_add(1),
                         method: ChallengeMethod::Other("email_otp".into()),
                         expires_at: None,
-                        retry_after: response
-                            .retry_after
+                        // **Inferred:** the refusal's `email_otp_wait` is the
+                        // wait before an email code may be requested (the
+                        // `/v2/code` answer carries the same field). Keep the
+                        // longer of it and `retry_after`; it only delays.
+                        retry_after: longest([response.retry_after, response.email_otp_wait])
                             .map(|wait| Timestamp::now().saturating_add(wait)),
                     },
                 }
@@ -1145,7 +1396,9 @@ impl RegistrationFlow for ComparisonHttpFlow {
 
 enum BeginPlan {
     Existing(RegistrationStep),
-    Start(RegistrationAttempt),
+    /// The reserved attempt and its exact copy from before the reservation,
+    /// restored if nothing is sent.
+    Start(Box<(RegistrationAttempt, RegistrationAttempt)>),
 }
 
 /// Durable registration service over the protocol store.
@@ -1208,12 +1461,134 @@ impl RegistrationService {
         tx.put_json(Table::RegistrationAttempts, CURRENT_KEY, RECORD_V1, attempt)
     }
 
+    /// An attempt is answered only through the profile (and so the flow) that
+    /// created it: another flow could save a local block over a pending server
+    /// challenge, or misclassify its own missing support (registration review
+    /// L3, 2026-10-13).
+    fn check_profile(attempt: &RegistrationAttempt, profile_id: &str) -> Result<()> {
+        if attempt.profile_id != profile_id {
+            return Err(Error::invalid(
+                "registration_state",
+                "the saved attempt belongs to another profile; continue it with that profile",
+            ));
+        }
+        Ok(())
+    }
+
+    /// Record a failed request. A request that provably did not leave
+    /// (`Error::RequestNotSent`) puts back `before`, the attempt exactly as it
+    /// was before the reservation (state, method, history), and applies `undo`
+    /// (the material the reservation's `prepare` changed and the one-shot latch
+    /// it took), all in one transaction. Restoring the copy rather than
+    /// transitioning back leaves no trace of a request that never left: it is
+    /// not counted by `code_preparation_count` (which feeds the preflight's
+    /// `client_metrics.attempts`) and uses none of the bounded history
+    /// (registration review L4, 2026-10-13). Recording `outcome_unknown` for it
+    /// stranded the attempt, since the HTTPS flow has no reconciliation. Any
+    /// other failure may have reached the server and is recorded as `unknown`.
+    /// The error is returned either way.
+    async fn finish_failed(
+        &self,
+        attempt: &RegistrationAttempt,
+        expected_state: &'static str,
+        unknown: RegistrationState,
+        before: RegistrationAttempt,
+        undo: Undo,
+        error: Error,
+    ) -> Result<RegistrationStep> {
+        if !matches!(error, Error::RequestNotSent(_)) {
+            self.finish_transition(
+                attempt.id,
+                attempt.generation,
+                expected_state,
+                unknown.into(),
+            )
+            .await?;
+            return Err(error);
+        }
+        // Logged before the write, so the cause survives a failed restore.
+        tracing::warn!(
+            error = %error,
+            "registration request not sent; restoring the attempt to its state before the reservation"
+        );
+        let (attempt_id, generation) = (attempt.id, attempt.generation);
+        let flow = self.flow.clone();
+        let restored = self
+            .store
+            .run_blocking(move |s| {
+                s.write(|tx| {
+                    let current = Self::load_current(tx)?.ok_or_else(|| {
+                        Error::invalid("registration_state", "attempt disappeared during request")
+                    })?;
+                    if current.id != attempt_id
+                        || current.generation != generation
+                        || current.generation != tx.generation()
+                        || current.state.name() != expected_state
+                        || before.id != attempt_id
+                        || before.generation != generation
+                    {
+                        return Err(Error::invalid(
+                            "registration_state",
+                            "attempt changed while request was in flight",
+                        ));
+                    }
+                    if let Some(material) = undo.material {
+                        flow.restore_prepared(tx, material)?;
+                    }
+                    if let Some(latch) = undo.latch {
+                        tx.delete(Table::RegistrationAttempts, latch)?;
+                    }
+                    Self::save_current(tx, &before)
+                })
+            })
+            .await;
+        if let Err(restore) = restored {
+            // A store or material failure leaves the attempt in
+            // `preparing`/`verifying` (refused by every command, safe); an
+            // attempt that changed or vanished meanwhile is not ours to describe.
+            let changed = matches!(
+                restore,
+                Error::InvalidInput {
+                    field: "registration_state",
+                    ..
+                }
+            );
+            return Err(Error::invalid(
+                "registration_state",
+                if changed {
+                    format!("{error}; the attempt was not restored: {restore}")
+                } else {
+                    format!(
+                        "{error}; restoring the attempt failed, so it stays in {expected_state}: {restore}"
+                    )
+                },
+            ));
+        }
+        Err(error)
+    }
+
     async fn finish_transition(
         &self,
         attempt_id: AttemptId,
         generation: AccountGeneration,
         expected_state: &'static str,
         output: RegistrationFlowOutput,
+    ) -> Result<RegistrationStep> {
+        self.finish_transition_marked(attempt_id, generation, expected_state, output, None)
+            .await
+    }
+
+    /// [`Self::finish_transition`], also recording `marker` (a key in
+    /// `RegistrationAttempts`) in the same transaction, so a state that a
+    /// later command recognises only together with its marker can never be
+    /// committed without it.
+    async fn finish_transition_marked(
+        &self,
+        attempt_id: AttemptId,
+        generation: AccountGeneration,
+        expected_state: &'static str,
+        output: RegistrationFlowOutput,
+        marker: Option<String>,
     ) -> Result<RegistrationStep> {
         self.store
             .run_blocking(move |s| {
@@ -1283,6 +1658,14 @@ impl RegistrationService {
                     }
                     attempt.transition(output.state, Timestamp::now())?;
                     Self::save_current(tx, &attempt)?;
+                    if let Some(marker) = &marker {
+                        tx.put_json(
+                            Table::RegistrationAttempts,
+                            marker.as_bytes(),
+                            RECORD_V1,
+                            &Timestamp::now(),
+                        )?;
+                    }
                     Ok(step_for(&attempt.state))
                 })
             })
@@ -1320,12 +1703,27 @@ impl RegistrationService {
                             && *existing.phone() == phone
                             && existing.profile_id == profile_id
                         {
-                            if let RegistrationState::CoolingDown { until } = &existing.state
-                                && now >= *until
+                            // An elapsed cooldown, or a first request that
+                            // never left, resumes with the same attempt and keys.
+                            if matches!(&existing.state,
+                                RegistrationState::CoolingDown { until } if now >= *until)
+                                || matches!(existing.state, RegistrationState::Unregistered)
                             {
+                                // The resume sends with the attempt's method; a
+                                // different one was silently ignored (review L2).
+                                if existing.method != method {
+                                    return Err(Error::invalid(
+                                        "registration",
+                                        format!(
+                                            "this attempt uses {:?}; resume it with that method (begin does not change a saved attempt's delivery method; a lab attempt's method is also frozen in its saved request material)",
+                                            existing.method
+                                        ),
+                                    ));
+                                }
+                                let before = existing.clone();
                                 existing.transition(RegistrationState::Preparing, now)?;
                                 Self::save_current(tx, &existing)?;
-                                return Ok(BeginPlan::Start(existing));
+                                return Ok(BeginPlan::Start(Box::new((existing, before))));
                             }
                             return Ok(BeginPlan::Existing(step_for(&existing.state)));
                         }
@@ -1333,6 +1731,20 @@ impl RegistrationService {
                             return Err(Error::invalid(
                                 "phone",
                                 "an account is already registered in this store; logout/reset first",
+                            ));
+                        }
+                        // Another number's or profile's attempt in this account
+                        // generation was silently replaced, losing its waits,
+                        // uncertain outcome or pending challenge and stranding
+                        // its key material (registration safety audit). A new
+                        // number gets its own store; nothing is replaced.
+                        if existing.generation == tx.generation() {
+                            return Err(Error::invalid(
+                                "registration_state",
+                                format!(
+                                    "this store holds another number's or profile's attempt (state {}); use a separate store, nothing is replaced",
+                                    existing.state.name()
+                                ),
                             ));
                         }
                     }
@@ -1347,21 +1759,26 @@ impl RegistrationService {
                         updated_at: now,
                         history: Vec::new(),
                     };
+                    // Not sent: this unregistered copy, with no history, is
+                    // saved back, and the next `begin` resumes it with the
+                    // attempt's identity and keys. (It used to become an
+                    // elapsed cooldown, which read as a server-directed wait.)
+                    let before = attempt.clone();
                     attempt.transition(RegistrationState::Preparing, now)?;
                     // Prerequisites and Preparing commit atomically before
                     // any request can be sent (docs/design/README.md section 7).
                     flow.prepare(tx, &attempt)?;
                     Self::save_current(tx, &attempt)?;
-                    Ok(BeginPlan::Start(attempt))
+                    Ok(BeginPlan::Start(Box::new((attempt, before))))
                 })
             })
             .await?;
 
-        let attempt = match plan {
+        let (attempt, before) = match plan {
             BeginPlan::Existing(step) => return Ok(step),
-            BeginPlan::Start(attempt) => attempt,
+            BeginPlan::Start(start) => *start,
         };
-        self.execute_begin(attempt).await
+        self.execute_begin(attempt, before, Undo::default()).await
     }
 
     /// Ask the server for a **new** code on the attempt already in progress.
@@ -1417,14 +1834,16 @@ impl RegistrationService {
                             "the server asked us to wait before requesting another code",
                         ));
                     }
+                    let before = existing.clone();
                     existing.method = method;
                     existing.transition(RegistrationState::Preparing, now)?;
                     Self::save_current(tx, &existing)?;
-                    Ok(existing)
+                    Ok((existing, before))
                 })
             })
             .await?;
-        self.execute_begin(attempt).await
+        let (attempt, before) = attempt;
+        self.execute_begin(attempt, before, Undo::default()).await
     }
 
     /// Explicit one-shot diagnostic recovery for the lab's old, opaque refusals.
@@ -1601,7 +2020,8 @@ impl RegistrationService {
                                 reason: BlockedReason::ServerRefused {
                                     code: None,
                                     http_status: Some(200),
-                                    reason: Some(reason)
+                                    reason: Some(reason),
+                                    ..
                                 }
                             } if reason == expected_reason
                         )
@@ -1612,7 +2032,8 @@ impl RegistrationService {
                                 reason: BlockedReason::ServerRefused {
                                     code: None,
                                     http_status: None,
-                                    reason: None
+                                    reason: None,
+                                    ..
                                 }
                             }
                         )
@@ -1627,6 +2048,29 @@ impl RegistrationService {
                             "saved refusal is not eligible for this diagnostic action",
                         ));
                     }
+                    // A bad_param or bad_token from an OTP submission, consent,
+                    // security or email-code request has the same saved shape;
+                    // answering it with a new code request would ask for
+                    // another SMS or call (registration audit 2026-10-13).
+                    if !attempt.refused_at_code_request() {
+                        return Err(Error::invalid(
+                            "registration_diagnostic",
+                            "saved refusal did not come from a code request; this action would request a new code",
+                        ));
+                    }
+                    // Every one of these sends a new code request, so the SMS or
+                    // voice wait the refusal carried applies.
+                    let now = Timestamp::now();
+                    if let Some(not_before) = attempt.state.refusal_not_before()
+                        && now < not_before
+                    {
+                        return Err(Error::RateLimited {
+                            retry_after: Some(std::time::Duration::from_millis(
+                                not_before.as_millis().saturating_sub(now.as_millis()) as u64,
+                            )),
+                            code: None,
+                        });
+                    }
                     if tx
                         .get(Table::RegistrationAttempts, latch, RECORD_V1)?
                         .is_some()
@@ -1636,20 +2080,37 @@ impl RegistrationService {
                             "one-shot diagnostic already reserved; no resend",
                         ));
                     }
-                    let now = Timestamp::now();
+                    let before = attempt.clone();
                     attempt.transition(RegistrationState::Unregistered, now)?;
                     attempt.transition(RegistrationState::Preparing, now)?;
+                    // A correcting `prepare` saves corrected material (a new
+                    // token, say); keep what it replaces so a request that
+                    // never left can put it back with the refusal.
+                    let material = flow.prepared_snapshot(tx)?;
                     flow.prepare(tx, &attempt)?;
                     tx.put_json(Table::RegistrationAttempts, latch, RECORD_V1, &attempt.id)?;
                     Self::save_current(tx, &attempt)?;
-                    Ok(attempt)
+                    Ok((attempt, before, material))
                 })
             })
             .await?;
-        self.execute_begin(attempt).await
+        let (attempt, before, material) = attempt;
+        // A not-sent failure releases the one-shot only when the material is
+        // restored with it: a released latch with corrected material still
+        // saved could never be used ("must differ from the saved token").
+        let undo = Undo {
+            latch: material.is_some().then_some(latch),
+            material,
+        };
+        self.execute_begin(attempt, before, undo).await
     }
 
-    async fn execute_begin(&self, attempt: RegistrationAttempt) -> Result<RegistrationStep> {
+    async fn execute_begin(
+        &self,
+        attempt: RegistrationAttempt,
+        before: RegistrationAttempt,
+        undo: Undo,
+    ) -> Result<RegistrationStep> {
         let result = self.flow.begin(&attempt).await;
         match result {
             Ok(next) => {
@@ -1657,14 +2118,15 @@ impl RegistrationService {
                     .await
             }
             Err(error) => {
-                self.finish_transition(
-                    attempt.id,
-                    attempt.generation,
+                self.finish_failed(
+                    &attempt,
                     "preparing",
-                    RegistrationState::RegistrationOutcomeUnknown { step: 0 }.into(),
+                    RegistrationState::RegistrationOutcomeUnknown { step: 0 },
+                    before,
+                    undo,
+                    error,
                 )
-                .await?;
-                Err(error)
+                .await
             }
         }
     }
@@ -1684,13 +2146,15 @@ impl RegistrationService {
                 "answer must contain 1..=16 ASCII digits",
             ));
         }
-        let (attempt, bound) = self
+        let profile_id = self.profile_id.clone();
+        let (attempt, bound, before) = self
             .store
             .run_blocking(move |s| {
                 s.write(|tx| {
                     let mut attempt = Self::load_current(tx)?.ok_or_else(|| {
                         Error::invalid("challenge", "no registration attempt in progress")
                     })?;
+                    Self::check_profile(&attempt, &profile_id)?;
                     let bound = match &attempt.state {
                         RegistrationState::ChallengePending { handle: h }
                         | RegistrationState::NeedsUserAction { handle: h }
@@ -1746,9 +2210,10 @@ impl RegistrationService {
                             code: None,
                         });
                     }
+                    let before = attempt.clone();
                     attempt.transition(RegistrationState::Verifying { step: bound.step }, now)?;
                     Self::save_current(tx, &attempt)?;
-                    Ok((attempt, bound))
+                    Ok((attempt, bound, before))
                 })
             })
             .await?;
@@ -1760,14 +2225,15 @@ impl RegistrationService {
                     .await
             }
             Err(error) => {
-                self.finish_transition(
-                    attempt.id,
-                    attempt.generation,
+                self.finish_failed(
+                    &attempt,
                     "verifying",
-                    RegistrationState::RegistrationOutcomeUnknown { step: bound.step }.into(),
+                    RegistrationState::RegistrationOutcomeUnknown { step: bound.step },
+                    before,
+                    Undo::default(),
+                    error,
                 )
-                .await?;
-                Err(error)
+                .await
             }
         }
     }
@@ -1788,13 +2254,15 @@ impl RegistrationService {
                 "the comparison client sends no address; the server uses the one on file",
             ));
         }
-        let (attempt, bound) = self
+        let profile_id = self.profile_id.clone();
+        let (attempt, bound, before) = self
             .store
             .run_blocking(move |s| {
                 s.write(|tx| {
                     let mut attempt = Self::load_current(tx)?.ok_or_else(|| {
                         Error::invalid("challenge", "no registration attempt in progress")
                     })?;
+                    Self::check_profile(&attempt, &profile_id)?;
                     let RegistrationState::EmailChallengeRequired { handle: bound } =
                         &attempt.state
                     else {
@@ -1828,9 +2296,10 @@ impl RegistrationService {
                             code: None,
                         });
                     }
+                    let before = attempt.clone();
                     attempt.transition(RegistrationState::Verifying { step: bound.step }, now)?;
                     Self::save_current(tx, &attempt)?;
-                    Ok((attempt, bound))
+                    Ok((attempt, bound, before))
                 })
             })
             .await?;
@@ -1844,14 +2313,44 @@ impl RegistrationService {
                     .await
             }
             Err(error) => {
-                self.finish_transition(
-                    attempt.id,
-                    attempt.generation,
+                // The server refused with an HTTP error status and a body we
+                // could not read (for example an HTTP 404 with a non-JSON
+                // body). Only this kind of unknown outcome may later be
+                // resumed. An unreadable 2xx answer, an oversized body, a
+                // timeout or a reset after writing may have sent an email and
+                // stays unknown (registration review M1, 2026-10-13).
+                let answered = matches!(
+                    &error,
+                    Error::InvalidInput {
+                        field: "registration_refusal_body",
+                        ..
+                    }
+                );
+                let unknown = RegistrationState::RegistrationOutcomeUnknown { step: bound.step };
+                if answered {
+                    // `resume_email_challenge` accepts this unknown state only
+                    // with its marker, so both commit together: a crash in
+                    // between would otherwise strand an attempt the server
+                    // definitely answered (Codex review on PR #4).
+                    self.finish_transition_marked(
+                        attempt.id,
+                        attempt.generation,
+                        "verifying",
+                        unknown.into(),
+                        Some(email_answered_key(attempt.id, bound.step)),
+                    )
+                    .await?;
+                    return Err(error);
+                }
+                self.finish_failed(
+                    &attempt,
                     "verifying",
-                    RegistrationState::RegistrationOutcomeUnknown { step: bound.step }.into(),
+                    unknown,
+                    before,
+                    Undo::default(),
+                    error,
                 )
-                .await?;
-                Err(error)
+                .await
             }
         }
     }
@@ -1859,13 +2358,21 @@ impl RegistrationService {
     /// Operator recovery, no network: an attempt refused with `challenge`
     /// before this branch existed moves to `EmailChallengeRequired` so the
     /// email second factor can be requested. Only that exact refusal qualifies.
+    ///
+    /// Each of the two recoveries (a `challenge` refusal, a lost email-code
+    /// request) is allowed once per attempt, recorded in the same transaction.
+    /// Without that, request, lose, resume and request again could repeat
+    /// without bound, re-sending an email request whose outcome is uncertain
+    /// (registration safety audit, 2026-10-13).
     pub async fn resume_email_challenge(&self) -> Result<RegistrationStep> {
+        let profile_id = self.profile_id.clone();
         self.store
             .run_blocking(move |s| {
                 s.write(|tx| {
                     let mut attempt = Self::load_current(tx)?.ok_or_else(|| {
                         Error::invalid("challenge", "no registration attempt in progress")
                     })?;
+                    Self::check_profile(&attempt, &profile_id)?;
                     let refused_with_challenge = matches!(
                         attempt.state,
                         RegistrationState::Blocked {
@@ -1878,15 +2385,27 @@ impl RegistrationService {
                     // A lost outcome of the email-code request itself (for
                     // example an HTTP 404 with a non-JSON body) may also come
                     // back to the request step: the history must show it.
-                    let lost_email_request = matches!(
-                        attempt.state,
-                        RegistrationState::RegistrationOutcomeUnknown { .. }
-                    ) && attempt
-                        .history
-                        .iter()
-                        .rev()
-                        .nth(1)
-                        .is_some_and(|t| t.from == "email_challenge_required");
+                    // Only an email-code request the server answered with
+                    // something unreadable; a timeout or reset after writing
+                    // stays unknown and is never re-sent.
+                    let lost_email_request = match attempt.state {
+                        RegistrationState::RegistrationOutcomeUnknown { step } => {
+                            attempt
+                                .history
+                                .iter()
+                                .rev()
+                                .nth(1)
+                                .is_some_and(|t| t.from == "email_challenge_required")
+                                && tx
+                                    .get(
+                                        Table::RegistrationAttempts,
+                                        email_answered_key(attempt.id, step).as_bytes(),
+                                        RECORD_V1,
+                                    )?
+                                    .is_some()
+                        }
+                        _ => false,
+                    };
                     if !refused_with_challenge && !lost_email_request {
                         return Err(Error::invalid(
                             "challenge",
@@ -1896,8 +2415,31 @@ impl RegistrationService {
                             ),
                         ));
                     }
+                    let latch = format!(
+                        "email-challenge-resumed:{}:{}",
+                        if refused_with_challenge { "challenge" } else { "lost-request" },
+                        hex::encode(attempt.id.0)
+                    );
+                    if tx
+                        .get(Table::RegistrationAttempts, latch.as_bytes(), RECORD_V1)?
+                        .is_some()
+                    {
+                        return Err(Error::invalid(
+                            "challenge",
+                            "this recovery was already used for this attempt; an uncertain email-code request is not re-sent again",
+                        ));
+                    }
+                    tx.put_json(
+                        Table::RegistrationAttempts,
+                        latch.as_bytes(),
+                        RECORD_V1,
+                        &Timestamp::now(),
+                    )?;
                     let step = u32::try_from(attempt.history_len()).unwrap_or(u32::MAX);
                     let now = Timestamp::now();
+                    // A `challenge` refusal's `email_otp_wait` (when it came
+                    // without `retry_after`) still gates the email request.
+                    let retry_after = attempt.state.refusal_not_before();
                     attempt.transition(
                         RegistrationState::EmailChallengeRequired {
                             handle: ChallengeHandle {
@@ -1906,7 +2448,7 @@ impl RegistrationService {
                                 step,
                                 method: ChallengeMethod::Other("email_otp".into()),
                                 expires_at: None,
-                                retry_after: None,
+                                retry_after,
                             },
                         },
                         now,
@@ -1949,10 +2491,46 @@ impl RegistrationService {
     /// Explicitly discard a blocked or completed attempt. This is a local
     /// operation; it does not log out or contact the server.
     pub async fn reset(&self) -> Result<()> {
+        let profile_id = self.profile_id.clone();
         self.store
-            .run_blocking(|s| {
+            .run_blocking(move |s| {
                 s.write(|tx| {
                     if let Some(mut a) = Self::load_current(tx)? {
+                        // Only the profile that created an attempt may discard
+                        // it: the ordinary CLI must not delete a lab attempt's
+                        // refusal and evidence (registration safety audit).
+                        // A `ProfileIncomplete` block is the exception: it is
+                        // the local "cannot proceed" answer of a flow that
+                        // sends nothing (`UnsupportedFlow`), so it holds no
+                        // server state. Without it, an attempt saved under a
+                        // previous pinned version (`android-primary/<version>`)
+                        // could be neither replaced nor reset (review L3).
+                        // Narrowed after review L3: a library caller could
+                        // save `ProfileIncomplete` over a pending server
+                        // challenge by answering it through another flow, so
+                        // the history must show the attempt never got past
+                        // its first local block, and lab attempts never qualify.
+                        let local_block = matches!(
+                            a.state,
+                            RegistrationState::Blocked {
+                                reason: BlockedReason::ProfileIncomplete { .. }
+                            }
+                        ) && a.profile_id != request::LAB_PROFILE_ID
+                            && a.history.iter().all(|t| {
+                                matches!(t.to.as_str(), "unregistered" | "preparing" | "blocked")
+                            });
+                        if a.profile_id != profile_id && !local_block {
+                            return Err(Error::invalid(
+                                "registration_state",
+                                "the saved attempt belongs to another profile; it is not reset from this one",
+                            ));
+                        }
+                        if matches!(a.state, RegistrationState::Unregistered) {
+                            return Err(Error::invalid(
+                                "registration_state",
+                                "this attempt has sent nothing yet and keeps its keys; resume it with begin rather than resetting it",
+                            ));
+                        }
                         if !a.state.is_terminal() {
                             return Err(Error::invalid(
                                 "registration_state",
@@ -2087,7 +2665,8 @@ mod tests {
                 reason: BlockedReason::ServerRefused {
                     code: None,
                     http_status: Some(200),
-                    reason: Some(wire::RegistrationResponseReason::Challenge)
+                    reason: Some(wire::RegistrationResponseReason::Challenge),
+                    not_before: None,
                 }
             }
             .can_transition(&S::EmailChallengeRequired { handle: h.clone() })
@@ -2097,7 +2676,8 @@ mod tests {
                 reason: BlockedReason::ServerRefused {
                     code: None,
                     http_status: Some(200),
-                    reason: Some(wire::RegistrationResponseReason::SecurityCode)
+                    reason: Some(wire::RegistrationResponseReason::SecurityCode),
+                    not_before: None,
                 }
             }
             .can_transition(&S::EmailChallengeRequired { handle: h.clone() })
@@ -2107,7 +2687,8 @@ mod tests {
                 reason: BlockedReason::ServerRefused {
                     code: None,
                     http_status: None,
-                    reason: None
+                    reason: None,
+                    not_before: None,
                 }
             }
             .can_transition(&S::ChallengePending { handle: h })
@@ -2302,6 +2883,103 @@ mod tests {
         }
     }
 
+    /// `ComparisonRequests` with the `/v2/exist` preflight enabled.
+    #[derive(Debug)]
+    struct PreflightRequests;
+
+    impl ComparisonRequestFactory for PreflightRequests {
+        fn prepare(&self, tx: &mut WriteTx<'_>, attempt: &RegistrationAttempt) -> Result<()> {
+            ComparisonRequests.prepare(tx, attempt)
+        }
+        fn preflight_request(
+            &self,
+            _attempt: &RegistrationAttempt,
+        ) -> Result<Option<wire::EncodedRegistrationRequest>> {
+            wire::WHATSAPP_2_26_37_70
+                .request(
+                    wire::RegistrationEndpoint::Exist,
+                    &wire::RegistrationForm::new(),
+                )
+                .map(Some)
+        }
+        fn code_request(
+            &self,
+            attempt: &RegistrationAttempt,
+        ) -> Result<wire::EncodedRegistrationRequest> {
+            ComparisonRequests.code_request(attempt)
+        }
+        fn complete_request(
+            &self,
+            attempt: &RegistrationAttempt,
+            code: &Zeroizing<String>,
+        ) -> Result<wire::EncodedRegistrationRequest> {
+            ComparisonRequests.complete_request(attempt, code)
+        }
+        fn security_request(
+            &self,
+            attempt: &RegistrationAttempt,
+            pin: &Zeroizing<String>,
+        ) -> Result<wire::EncodedRegistrationRequest> {
+            ComparisonRequests.security_request(attempt, pin)
+        }
+        fn challenge_request(
+            &self,
+            attempt: &RegistrationAttempt,
+            params: &wire::RegistrationChallengeParams,
+        ) -> Result<wire::EncodedRegistrationRequest> {
+            ComparisonRequests.challenge_request(attempt, params)
+        }
+        fn email_code_request(
+            &self,
+            attempt: &RegistrationAttempt,
+        ) -> Result<wire::EncodedRegistrationRequest> {
+            ComparisonRequests.email_code_request(attempt)
+        }
+    }
+
+    /// Once the preflight has left, a failed code request is not "not sent":
+    /// the attempt records an unknown outcome instead of being restored.
+    #[tokio::test]
+    async fn a_failure_after_a_sent_preflight_is_not_reported_as_not_sent() {
+        let (_d, s) = store();
+        let profile = ProtocolProfile::android_reference().unwrap();
+        let transport = Arc::new(MaybeSentTransport {
+            steps: std::sync::Mutex::new(std::collections::VecDeque::from([
+                (
+                    "/v2/exist",
+                    Some(
+                        br#"{"status":"fail","reason":"incorrect","recommended_method":["sms"]}"#
+                            .as_slice(),
+                    ),
+                ),
+                ("/v2/code", None),
+            ])),
+        });
+        let service = RegistrationService::new(
+            s.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(
+                Arc::new(PreflightRequests),
+                transport.clone(),
+            )),
+        );
+        let error = service
+            .begin(phone(), ChallengeMethod::Sms)
+            .await
+            .unwrap_err();
+        assert!(!matches!(error, Error::RequestNotSent(_)), "{error}");
+        let saved = service.current().await.unwrap().unwrap();
+        assert!(
+            matches!(
+                saved.state,
+                RegistrationState::RegistrationOutcomeUnknown { .. }
+            ),
+            "{:?}",
+            saved.state
+        );
+        assert!(transport.steps.lock().unwrap().is_empty());
+    }
+
     #[derive(Debug)]
     struct ComparisonTransport {
         responses: std::sync::Mutex<std::collections::VecDeque<(&'static str, &'static [u8])>>,
@@ -2318,6 +2996,381 @@ mod tests {
                 wire::RegistrationHttpResponse::new(200, Zeroizing::new(body.to_vec()))
             })
         }
+    }
+
+    /// Each step answers with a response, or `None` for a request that
+    /// provably did not leave (a connection failure before writing).
+    type MaybeSentSteps =
+        std::sync::Mutex<std::collections::VecDeque<(&'static str, Option<&'static [u8]>)>>;
+
+    #[derive(Debug)]
+    struct MaybeSentTransport {
+        steps: MaybeSentSteps,
+    }
+
+    impl wire::RegistrationTransport for MaybeSentTransport {
+        fn send<'a>(
+            &'a self,
+            request: wire::EncodedRegistrationRequest,
+        ) -> wire::RegistrationTransportFuture<'a> {
+            Box::pin(async move {
+                let (path, body) = self.steps.lock().unwrap().pop_front().unwrap();
+                assert!(request.url().ends_with(path));
+                match body {
+                    Some(body) => {
+                        wire::RegistrationHttpResponse::new(200, Zeroizing::new(body.to_vec()))
+                    }
+                    None => Err(Error::RequestNotSent(Box::new(Error::Io(
+                        std::io::Error::other("connection refused before writing"),
+                    )))),
+                }
+            })
+        }
+    }
+
+    /// Snapshots the material but cannot restore it (the trait default).
+    #[cfg(feature = "experimental-registration-https")]
+    #[derive(Debug)]
+    struct SnapshotOnlyRequests;
+
+    #[cfg(feature = "experimental-registration-https")]
+    impl ComparisonRequestFactory for SnapshotOnlyRequests {
+        fn prepare(&self, tx: &mut WriteTx<'_>, attempt: &RegistrationAttempt) -> Result<()> {
+            ComparisonRequests.prepare(tx, attempt)
+        }
+        fn prepared_snapshot(&self, _tx: &WriteTx<'_>) -> Result<Option<Zeroizing<Vec<u8>>>> {
+            Ok(Some(Zeroizing::new(vec![1])))
+        }
+        fn code_request(
+            &self,
+            attempt: &RegistrationAttempt,
+        ) -> Result<wire::EncodedRegistrationRequest> {
+            ComparisonRequests.code_request(attempt)
+        }
+        fn complete_request(
+            &self,
+            attempt: &RegistrationAttempt,
+            code: &Zeroizing<String>,
+        ) -> Result<wire::EncodedRegistrationRequest> {
+            ComparisonRequests.complete_request(attempt, code)
+        }
+        fn security_request(
+            &self,
+            attempt: &RegistrationAttempt,
+            pin: &Zeroizing<String>,
+        ) -> Result<wire::EncodedRegistrationRequest> {
+            ComparisonRequests.security_request(attempt, pin)
+        }
+    }
+
+    /// A restore that fails keeps the attempt where it was (refused by every
+    /// command, safe) and says both why the request was not sent and why the
+    /// attempt is stuck, instead of only the store error (review L5).
+    #[cfg(feature = "experimental-registration-https")]
+    #[tokio::test]
+    async fn a_failed_restore_reports_the_cause_and_the_stuck_state() {
+        let (_d, s) = store();
+        let mut profile = ProtocolProfile::android_reference().unwrap();
+        profile.id = request::LAB_PROFILE_ID.into();
+        let transport = Arc::new(MaybeSentTransport {
+            steps: std::sync::Mutex::new(std::collections::VecDeque::from([
+                (
+                    "/v2/code",
+                    Some(br#"{"status":"fail","reason":"bad_param"}"#.as_slice()),
+                ),
+                ("/v2/code", None),
+            ])),
+        });
+        let service = RegistrationService::new(
+            s.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(
+                Arc::new(SnapshotOnlyRequests),
+                transport,
+            )),
+        );
+        service.begin(phone(), ChallengeMethod::Sms).await.unwrap();
+        let error = service
+            .diagnose_bad_parameter_once(phone())
+            .await
+            .unwrap_err()
+            .to_string();
+        assert!(error.contains("request not sent"), "{error}");
+        assert!(error.contains("restoring the attempt failed"), "{error}");
+        assert_eq!(
+            service.current().await.unwrap().unwrap().state,
+            RegistrationState::Preparing
+        );
+    }
+
+    /// A request that provably did not leave restores the attempt instead of
+    /// stranding it in `outcome_unknown`: a fresh attempt rests `unregistered`
+    /// and `begin` resumes it with the same attempt and keys, and an
+    /// OTP submission returns to its challenge so the same code can be sent.
+    #[tokio::test]
+    async fn unsent_requests_restore_the_attempt_instead_of_an_unknown_outcome() {
+        let (_d, s) = store();
+        let profile = ProtocolProfile::android_reference().unwrap();
+        let transport = Arc::new(MaybeSentTransport {
+            steps: std::sync::Mutex::new(std::collections::VecDeque::from([
+                ("/v2/code", None),
+                ("/v2/code", Some(br#"{"status":"sent"}"#.as_slice())),
+                ("/v2/code", None),
+                ("/v2/register", None),
+                (
+                    "/v2/register",
+                    Some(br#"{"status":"ok","login":"mock-login"}"#.as_slice()),
+                ),
+            ])),
+        });
+        let service = RegistrationService::new(
+            s.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(
+                Arc::new(ComparisonRequests),
+                transport.clone(),
+            )),
+        );
+        let error = service
+            .begin(phone(), ChallengeMethod::Sms)
+            .await
+            .unwrap_err();
+        assert!(matches!(error, Error::RequestNotSent(_)), "{error}");
+        let first = service.current().await.unwrap().unwrap();
+        // Not a cooldown: nothing was asked of the server, and status must not
+        // suggest a server-directed wait (review L2).
+        assert_eq!(first.state, RegistrationState::Unregistered);
+        // Restored exactly: a request that never left leaves no history, so
+        // it is not counted as a preparation either (review L4).
+        assert!(first.history.is_empty(), "{:?}", first.history);
+        assert_eq!(first.code_preparation_count(), Some(0));
+        // The saved attempt keeps its method; resuming with another is
+        // refused rather than silently ignored (review L2).
+        let error = service
+            .begin(phone(), ChallengeMethod::Voice)
+            .await
+            .unwrap_err();
+        assert!(
+            error.to_string().contains("resume it with that method"),
+            "{error}"
+        );
+        let RegistrationStep::Action(RequiredAction::EnterCode(handle)) =
+            service.begin(phone(), ChallengeMethod::Sms).await.unwrap()
+        else {
+            panic!("the unsent attempt resumes")
+        };
+        assert_eq!(service.current().await.unwrap().unwrap().id, first.id);
+        // A resend switching to voice that does not leave keeps the pending
+        // challenge and the attempt's original method.
+        let error = service
+            .resend_code(phone(), ChallengeMethod::Voice)
+            .await
+            .unwrap_err();
+        assert!(matches!(error, Error::RequestNotSent(_)), "{error}");
+        let saved = service.current().await.unwrap().unwrap();
+        assert_eq!(saved.method, ChallengeMethod::Sms);
+        assert!(matches!(
+            saved.state,
+            RegistrationState::ChallengePending { .. }
+        ));
+        let code = || Answer::Code(Zeroizing::new("123456".into()));
+        let error = service.submit(handle.clone(), code()).await.unwrap_err();
+        assert!(matches!(error, Error::RequestNotSent(_)), "{error}");
+        let saved = service.current().await.unwrap().unwrap();
+        assert!(
+            matches!(saved.state, RegistrationState::ChallengePending { .. }),
+            "{:?}",
+            saved.state
+        );
+        // The restored handle still answers the same step.
+        let RegistrationState::ChallengePending { handle: restored } = saved.state else {
+            unreachable!()
+        };
+        assert_eq!(
+            service.submit(restored, code()).await.unwrap(),
+            RegistrationStep::Completed
+        );
+        assert!(transport.steps.lock().unwrap().is_empty());
+        // `accounts status` reads the saved state rather than assuming none.
+        assert_eq!(current_state_name(&s).unwrap(), Some("registered"));
+    }
+
+    /// Another number's `begin` and another profile's `reset` refuse instead
+    /// of replacing or deleting the saved attempt.
+    #[tokio::test]
+    async fn begin_and_reset_never_replace_another_attempt() {
+        let (_d, s) = store();
+        let profile = ProtocolProfile::android_reference().unwrap();
+        let transport = Arc::new(ComparisonTransport {
+            responses: std::sync::Mutex::new(std::collections::VecDeque::from([(
+                "/v2/code",
+                br#"{"status":"fail","reason":"blocked"}"#.as_slice(),
+            )])),
+        });
+        let service = RegistrationService::new(
+            s.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(
+                Arc::new(ComparisonRequests),
+                transport.clone(),
+            )),
+        );
+        service.begin(phone(), ChallengeMethod::Sms).await.unwrap();
+        let saved = service.current().await.unwrap().unwrap();
+        assert!(saved.state.is_terminal());
+        let other = PhoneNumber::new(1, "5557654321").unwrap();
+        let error = service
+            .begin(other, ChallengeMethod::Sms)
+            .await
+            .unwrap_err();
+        assert!(error.to_string().contains("nothing is replaced"), "{error}");
+        let mut lab = profile.clone();
+        lab.id = "another-profile".into();
+        let foreign = RegistrationService::new(
+            s.clone(),
+            &lab,
+            Arc::new(UnsupportedFlow {
+                missing: Vec::new(),
+            }),
+        );
+        assert!(foreign.reset().await.is_err());
+        assert_eq!(service.current().await.unwrap().unwrap(), saved);
+        // The owning profile may still discard its own terminal attempt.
+        service.reset().await.unwrap();
+        assert!(service.current().await.unwrap().is_none());
+    }
+
+    /// Another profile's flow cannot answer a saved challenge: a flow that
+    /// sends nothing would save a local block over the server's pending code,
+    /// which `reset` would then accept. The reset exemption also requires a
+    /// history that never got past the first local block (review L3).
+    #[tokio::test]
+    async fn another_profile_cannot_answer_or_reset_a_pending_challenge() {
+        let (_d, s) = store();
+        let profile = ProtocolProfile::android_reference().unwrap();
+        let transport = Arc::new(ComparisonTransport {
+            responses: std::sync::Mutex::new(std::collections::VecDeque::from([(
+                "/v2/code",
+                br#"{"status":"sent"}"#.as_slice(),
+            )])),
+        });
+        let owner = RegistrationService::new(
+            s.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(
+                Arc::new(ComparisonRequests),
+                transport,
+            )),
+        );
+        let RegistrationStep::Action(RequiredAction::EnterCode(handle)) =
+            owner.begin(phone(), ChallengeMethod::Sms).await.unwrap()
+        else {
+            panic!("expected code")
+        };
+        let mut other = profile.clone();
+        other.id = "android-primary/2.0.0.0".into();
+        let foreign = RegistrationService::new(
+            s.clone(),
+            &other,
+            Arc::new(UnsupportedFlow {
+                missing: Vec::new(),
+            }),
+        );
+        let error = foreign
+            .submit(handle, Answer::Code(Zeroizing::new("123456".into())))
+            .await
+            .unwrap_err();
+        assert!(error.to_string().contains("another profile"), "{error}");
+        assert!(matches!(
+            owner.current().await.unwrap().unwrap().state,
+            RegistrationState::ChallengePending { .. }
+        ));
+        // Even blocked locally, an attempt whose history reached a challenge
+        // is not another profile's to reset.
+        let mut saved = owner.current().await.unwrap().unwrap();
+        saved
+            .transition(RegistrationState::Verifying { step: 1 }, Timestamp::now())
+            .unwrap();
+        saved
+            .transition(
+                RegistrationState::Blocked {
+                    reason: BlockedReason::ProfileIncomplete {
+                        missing: Vec::new(),
+                    },
+                },
+                Timestamp::now(),
+            )
+            .unwrap();
+        s.write(|tx| RegistrationService::save_current(tx, &saved))
+            .unwrap();
+        assert!(foreign.reset().await.is_err());
+        assert!(owner.current().await.unwrap().is_some());
+    }
+
+    /// An attempt blocked locally by a flow that sends nothing, saved under an
+    /// earlier pinned version, can be reset from the current one; a server
+    /// refusal saved under another profile still cannot (review L3).
+    #[tokio::test]
+    async fn a_local_block_from_an_older_version_can_be_reset() {
+        let (_d, s) = store();
+        let mut old = ProtocolProfile::android_reference().unwrap();
+        old.id = "android-primary/2.0.0.0".into();
+        let unsupported = || {
+            Arc::new(UnsupportedFlow {
+                missing: vec!["registration".into()],
+            })
+        };
+        let previous = RegistrationService::new(s.clone(), &old, unsupported());
+        assert!(matches!(
+            previous.begin(phone(), ChallengeMethod::Sms).await.unwrap(),
+            RegistrationStep::Blocked(BlockedReason::ProfileIncomplete { .. })
+        ));
+        let current_profile = ProtocolProfile::android_reference().unwrap();
+        let current = RegistrationService::new(s.clone(), &current_profile, unsupported());
+        // Not replaced implicitly by `begin`; an explicit reset clears it.
+        assert!(current.begin(phone(), ChallengeMethod::Sms).await.is_err());
+        current.reset().await.unwrap();
+        assert!(current.current().await.unwrap().is_none());
+    }
+
+    /// An unclaimed store whose account material names another number is
+    /// not claimed for this one (review L6).
+    #[test]
+    fn a_store_with_another_numbers_material_is_not_claimed() {
+        let (_d, s) = store();
+        s.write(|tx| {
+            AccountRecord {
+                generation: tx.generation(),
+                phone: Some(phone()),
+                ..AccountRecord::default()
+            }
+            .save(tx)
+        })
+        .unwrap();
+        let other = PhoneNumber::new(1, "5557654321").unwrap();
+        let error = claim_store(&s, &other).unwrap_err();
+        assert!(error.to_string().contains("another number"), "{error}");
+        assert_eq!(store_owner(&s).unwrap(), None);
+        claim_store(&s, &phone()).unwrap();
+        assert_eq!(store_owner(&s).unwrap(), Some(phone()));
+    }
+
+    #[test]
+    fn a_store_without_an_attempt_has_no_state_name() {
+        let (_d, s) = store();
+        assert_eq!(current_state_name(&s).unwrap(), None);
+    }
+
+    #[test]
+    fn build_failures_are_classified_as_not_sent_once() {
+        let built = not_built(Error::invalid("registration_config", "config changed"));
+        assert!(matches!(built, Error::RequestNotSent(_)));
+        assert!(built.to_string().contains("config changed"));
+        // Already classified: not wrapped twice.
+        let Error::RequestNotSent(inner) = not_built(built) else {
+            panic!()
+        };
+        assert!(!matches!(*inner, Error::RequestNotSent(_)));
     }
 
     #[tokio::test]
@@ -2346,7 +3399,8 @@ mod tests {
                 reason: BlockedReason::ServerRefused {
                     code: None,
                     http_status: Some(200),
-                    reason: Some(wire::RegistrationResponseReason::BadToken)
+                    reason: Some(wire::RegistrationResponseReason::BadToken),
+                    ..
                 }
             }
         ));
@@ -2377,7 +3431,8 @@ mod tests {
             BlockedReason::ServerRefused {
                 code: None,
                 http_status: None,
-                reason: None
+                reason: None,
+                ..
             }
         ));
         let response = wire::RegistrationHttpResponse::new(
@@ -2400,7 +3455,8 @@ mod tests {
                 reason: BlockedReason::ServerRefused {
                     code: Some(403),
                     http_status: Some(403),
-                    reason: Some(wire::RegistrationResponseReason::Other)
+                    reason: Some(wire::RegistrationResponseReason::Other),
+                    ..
                 }
             }
         ));
@@ -2518,7 +3574,7 @@ mod tests {
                 ),
                 (
                     "/v2/code",
-                    br#"{"status":"sent","email_otp_wait":5,"email_otp_length":6,"email":"a***@example.com"}"#.as_slice(),
+                    br#"{"status":"sent","email_otp_wait":5,"retry_after":900,"email_otp_length":6,"email":"a***@example.com"}"#.as_slice(),
                 ),
                 (
                     "/v2/register",
@@ -2563,7 +3619,9 @@ mod tests {
             panic!("expected email code entry")
         };
         // The email wait applies to re-requesting, not to entering the code.
-        assert!(h3.retry_after.is_some());
+        // The longer of the two server waits is kept, not the first present.
+        let earliest = Timestamp::now().saturating_add(std::time::Duration::from_secs(800));
+        assert!(h3.retry_after.is_some_and(|at| at >= earliest));
         assert!(
             service
                 .submit(h3.clone(), Answer::Pin(Zeroizing::new("1234".into())))
@@ -2647,6 +3705,400 @@ mod tests {
             RegistrationStep::Action(RequiredAction::WaitForCooldown { .. })
         ));
         assert!(transport.responses.lock().unwrap().is_empty());
+    }
+
+    /// A refusal without `retry_after` keeps the longest method wait it
+    /// carried: the resumed email step enforces it before any request, and a
+    /// refusal with no wait serialises exactly as before (no `not_before`).
+    #[tokio::test]
+    async fn a_blocked_refusal_keeps_its_method_wait() {
+        let (_d, s) = store();
+        let profile = ProtocolProfile::android_reference().unwrap();
+        let transport = Arc::new(ComparisonTransport {
+            responses: std::sync::Mutex::new(std::collections::VecDeque::from([
+                ("/v2/code", br#"{"status":"sent"}"#.as_slice()),
+                (
+                    "/v2/register",
+                    br#"{"status":"fail","reason":"challenge","second_factor_methods":["wa_old"],"email_otp_wait":900,"sms_wait":30}"#
+                        .as_slice(),
+                ),
+            ])),
+        });
+        let service = RegistrationService::new(
+            s.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(
+                Arc::new(ComparisonRequests),
+                transport.clone(),
+            )),
+        );
+        let RegistrationStep::Action(RequiredAction::EnterCode(h)) =
+            service.begin(phone(), ChallengeMethod::Sms).await.unwrap()
+        else {
+            panic!("expected code")
+        };
+        let before = Timestamp::now();
+        service
+            .submit(h, Answer::Code(Zeroizing::new("123456".into())))
+            .await
+            .unwrap();
+        let saved = service.current().await.unwrap().unwrap().state;
+        let not_before = saved.refusal_not_before().expect("the wait is kept");
+        assert!(not_before >= before.saturating_add(std::time::Duration::from_secs(900)));
+        let RegistrationStep::Action(RequiredAction::RequestEmailCode(h2)) =
+            service.resume_email_challenge().await.unwrap()
+        else {
+            panic!("expected the email challenge")
+        };
+        assert_eq!(h2.retry_after, Some(not_before));
+        assert!(matches!(
+            service.request_email_code(h2, None).await,
+            Err(Error::RateLimited { .. })
+        ));
+        assert!(
+            transport.responses.lock().unwrap().is_empty(),
+            "nothing sent"
+        );
+        // Older records and wait-less refusals keep their exact JSON shape.
+        let plain = BlockedReason::ServerRefused {
+            code: None,
+            http_status: Some(200),
+            reason: None,
+            not_before: None,
+        };
+        let json = serde_json::to_value(&plain).unwrap();
+        assert!(json["ServerRefused"].get("not_before").is_none(), "{json}");
+        assert_eq!(
+            serde_json::from_value::<BlockedReason>(json).unwrap(),
+            plain
+        );
+    }
+
+    /// A shorter method-specific wait never shortens a longer generic one,
+    /// and a `challenge` refusal keeps its `email_otp_wait`.
+    #[tokio::test]
+    async fn server_waits_keep_the_longest_value() {
+        let (_d, s) = store();
+        let profile = ProtocolProfile::android_reference().unwrap();
+        let transport = Arc::new(ComparisonTransport {
+            responses: std::sync::Mutex::new(std::collections::VecDeque::from([
+                (
+                    "/v2/code",
+                    br#"{"status":"sent","sms_wait":30,"retry_after":600}"#.as_slice(),
+                ),
+                (
+                    "/v2/register",
+                    br#"{"status":"fail","reason":"challenge","second_factor_methods":["email_otp"],"email_otp_wait":900}"#
+                        .as_slice(),
+                ),
+            ])),
+        });
+        let service = RegistrationService::new(
+            s.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(
+                Arc::new(ComparisonRequests),
+                transport.clone(),
+            )),
+        );
+        let before = Timestamp::now();
+        let RegistrationStep::Action(RequiredAction::EnterCode(h)) =
+            service.begin(phone(), ChallengeMethod::Sms).await.unwrap()
+        else {
+            panic!("expected code")
+        };
+        let at_least = |until: Option<Timestamp>, seconds: u64| {
+            until.is_some_and(|until| {
+                until >= before.saturating_add(std::time::Duration::from_secs(seconds))
+            })
+        };
+        assert!(at_least(h.retry_after, 600), "{:?}", h.retry_after);
+        service
+            .submit(h, Answer::Code(Zeroizing::new("123456".into())))
+            .await
+            .unwrap();
+        let saved = service.current().await.unwrap().unwrap();
+        let RegistrationState::EmailChallengeRequired { handle } = saved.state else {
+            panic!("expected the email challenge, got {:?}", saved.state)
+        };
+        assert!(
+            at_least(handle.retry_after, 900),
+            "{:?}",
+            handle.retry_after
+        );
+        assert_eq!(
+            longest([None, Some(std::time::Duration::from_secs(5)), None]),
+            Some(std::time::Duration::from_secs(5))
+        );
+        assert_eq!(longest::<2>([None, None]), None);
+    }
+
+    /// Each step answers with a body, or fails after the request may have been
+    /// written (an ordinary I/O error, not "not sent").
+    #[derive(Debug)]
+    struct LostAfterWriteTransport {
+        steps: MaybeSentSteps,
+    }
+
+    impl wire::RegistrationTransport for LostAfterWriteTransport {
+        fn send<'a>(
+            &'a self,
+            request: wire::EncodedRegistrationRequest,
+        ) -> wire::RegistrationTransportFuture<'a> {
+            Box::pin(async move {
+                let (path, body) = self.steps.lock().unwrap().pop_front().unwrap();
+                assert!(request.url().ends_with(path));
+                match body {
+                    Some(body) => {
+                        wire::RegistrationHttpResponse::new(200, Zeroizing::new(body.to_vec()))
+                    }
+                    None => Err(Error::Io(std::io::Error::other("reset after writing"))),
+                }
+            })
+        }
+    }
+
+    /// An email-code request that may have reached the server (lost after
+    /// writing) is never resumed; only an answer that arrived unreadable is.
+    #[tokio::test]
+    async fn an_email_code_request_lost_after_writing_is_not_resumed() {
+        let (_d, s) = store();
+        let profile = ProtocolProfile::android_reference().unwrap();
+        let transport = Arc::new(LostAfterWriteTransport {
+            steps: std::sync::Mutex::new(std::collections::VecDeque::from([
+                ("/v2/code", Some(br#"{"status":"sent"}"#.as_slice())),
+                (
+                    "/v2/register",
+                    Some(
+                        br#"{"status":"fail","reason":"challenge","second_factor_methods":["email_otp"]}"#
+                            .as_slice(),
+                    ),
+                ),
+                ("/v2/code", None),
+            ])),
+        });
+        let service = RegistrationService::new(
+            s.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(
+                Arc::new(ComparisonRequests),
+                transport.clone(),
+            )),
+        );
+        let RegistrationStep::Action(RequiredAction::EnterCode(h)) =
+            service.begin(phone(), ChallengeMethod::Sms).await.unwrap()
+        else {
+            panic!("expected code")
+        };
+        let RegistrationStep::Action(RequiredAction::RequestEmailCode(email)) = service
+            .submit(h, Answer::Code(Zeroizing::new("123456".into())))
+            .await
+            .unwrap()
+        else {
+            panic!("expected the email challenge")
+        };
+        assert!(service.request_email_code(email, None).await.is_err());
+        let saved = service.current().await.unwrap().unwrap();
+        assert!(matches!(
+            saved.state,
+            RegistrationState::RegistrationOutcomeUnknown { .. }
+        ));
+        let error = service.resume_email_challenge().await.unwrap_err();
+        assert!(
+            error.to_string().contains("only a `challenge` refusal"),
+            "{error}"
+        );
+        assert!(transport.steps.lock().unwrap().is_empty());
+    }
+
+    /// Each email-challenge recovery is allowed once per attempt: a lost
+    /// email-code request can be resumed once, and a second loss stays
+    /// uncertain instead of being re-sent again.
+    #[tokio::test]
+    async fn lost_email_code_requests_resume_only_once() {
+        let (_d, s) = store();
+        let profile = ProtocolProfile::android_reference().unwrap();
+        let transport = Arc::new(StatusTransport {
+            steps: std::sync::Mutex::new(std::collections::VecDeque::from([
+                ("/v2/code", 200, br#"{"status":"sent"}"#.as_slice()),
+                (
+                    "/v2/register",
+                    200,
+                    br#"{"status":"fail","reason":"challenge","second_factor_methods":["wa_old"]}"#
+                        .as_slice(),
+                ),
+                // Two email-code requests refused with an HTTP error status
+                // and a body that cannot be read (the observed 404 shape).
+                ("/v2/code", 404, b"not json".as_slice()),
+                ("/v2/code", 404, b"not json".as_slice()),
+            ])),
+        });
+        let service = RegistrationService::new(
+            s.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(
+                Arc::new(ComparisonRequests),
+                transport.clone(),
+            )),
+        );
+        let RegistrationStep::Action(RequiredAction::EnterCode(h)) =
+            service.begin(phone(), ChallengeMethod::Sms).await.unwrap()
+        else {
+            panic!("expected code")
+        };
+        service
+            .submit(h, Answer::Code(Zeroizing::new("123456".into())))
+            .await
+            .unwrap();
+        for round in 0..2 {
+            let RegistrationStep::Action(RequiredAction::RequestEmailCode(handle)) =
+                service.resume_email_challenge().await.unwrap()
+            else {
+                panic!("expected the email challenge in round {round}")
+            };
+            let _ = service.request_email_code(handle, None).await;
+            let saved = service.current().await.unwrap().unwrap();
+            assert!(
+                matches!(
+                    saved.state,
+                    RegistrationState::RegistrationOutcomeUnknown { .. }
+                ),
+                "round {round}: {:?}",
+                saved.state
+            );
+        }
+        let error = service.resume_email_challenge().await.unwrap_err();
+        assert!(error.to_string().contains("already used"), "{error}");
+        assert!(transport.steps.lock().unwrap().is_empty());
+    }
+
+    /// Each step answers with an HTTP status and a body.
+    #[derive(Debug)]
+    struct StatusTransport {
+        steps: std::sync::Mutex<std::collections::VecDeque<(&'static str, u16, &'static [u8])>>,
+    }
+
+    impl wire::RegistrationTransport for StatusTransport {
+        fn send<'a>(
+            &'a self,
+            request: wire::EncodedRegistrationRequest,
+        ) -> wire::RegistrationTransportFuture<'a> {
+            Box::pin(async move {
+                let (path, status, body) = self.steps.lock().unwrap().pop_front().unwrap();
+                assert!(request.url().ends_with(path), "{}", request.url());
+                wire::RegistrationHttpResponse::new(status, Zeroizing::new(body.to_vec()))
+            })
+        }
+    }
+
+    /// An email-code request answered with a body we cannot read under HTTP
+    /// 2xx, 5xx, 408 or 429 may have sent an email (or carries a wait we
+    /// cannot read): it stays unknown and is never resumed, so the request
+    /// cannot be sent again without the wait it may have set (M1 and its
+    /// follow-up). Only a definite 4xx refusal is resumable (the test above).
+    #[tokio::test]
+    async fn an_unreadable_uncertain_answer_to_an_email_request_is_not_resumed() {
+        for (status, body) in [
+            // A negative wait fails strict parsing under HTTP 200.
+            (200, br#"{"status":"sent","email_otp_wait":-1}"#.as_slice()),
+            (500, b"".as_slice()),
+            (502, b"<html>bad gateway</html>".as_slice()),
+            (504, b"<html>gateway timeout</html>".as_slice()),
+            (408, b"timeout".as_slice()),
+            (429, b"slow down".as_slice()),
+        ] {
+            let (_d, s) = store();
+            let profile = ProtocolProfile::android_reference().unwrap();
+            let transport = Arc::new(StatusTransport {
+                steps: std::sync::Mutex::new(std::collections::VecDeque::from([
+                    ("/v2/code", 200, br#"{"status":"sent"}"#.as_slice()),
+                    (
+                        "/v2/register",
+                        200,
+                        br#"{"status":"fail","reason":"challenge","second_factor_methods":["wa_old"]}"#
+                            .as_slice(),
+                    ),
+                    ("/v2/code", status, body),
+                ])),
+            });
+            let service = RegistrationService::new(
+                s.clone(),
+                &profile,
+                Arc::new(ComparisonHttpFlow::new(
+                    Arc::new(ComparisonRequests),
+                    transport.clone(),
+                )),
+            );
+            let RegistrationStep::Action(RequiredAction::EnterCode(h)) =
+                service.begin(phone(), ChallengeMethod::Sms).await.unwrap()
+            else {
+                panic!("expected code")
+            };
+            service
+                .submit(h, Answer::Code(Zeroizing::new("123456".into())))
+                .await
+                .unwrap();
+            let RegistrationStep::Action(RequiredAction::RequestEmailCode(handle)) =
+                service.resume_email_challenge().await.unwrap()
+            else {
+                panic!("expected the email challenge")
+            };
+            assert!(service.request_email_code(handle, None).await.is_err());
+            assert!(
+                matches!(
+                    service.current().await.unwrap().unwrap().state,
+                    RegistrationState::RegistrationOutcomeUnknown { .. }
+                ),
+                "HTTP {status}"
+            );
+            let error = service.resume_email_challenge().await.unwrap_err();
+            assert!(
+                error.to_string().contains("can resume"),
+                "HTTP {status}: {error}"
+            );
+            assert!(transport.steps.lock().unwrap().is_empty());
+        }
+    }
+
+    /// The default flow never produces a challenge; answering one that
+    /// another flow left under the same profile id sends nothing and keeps
+    /// the challenge, instead of writing a local block over it.
+    #[tokio::test]
+    async fn the_default_flow_restores_a_challenge_it_did_not_create() {
+        let (_d, s) = store();
+        let profile = ProtocolProfile::android_reference().unwrap();
+        let real = RegistrationService::new(
+            s.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(
+                Arc::new(ComparisonRequests),
+                Arc::new(ComparisonTransport {
+                    responses: std::sync::Mutex::new(std::collections::VecDeque::from([(
+                        "/v2/code",
+                        br#"{"status":"sent"}"#.as_slice(),
+                    )])),
+                }),
+            )),
+        );
+        let RegistrationStep::Action(RequiredAction::EnterCode(handle)) =
+            real.begin(phone(), ChallengeMethod::Sms).await.unwrap()
+        else {
+            panic!("expected code")
+        };
+        let saved = real.current().await.unwrap().unwrap();
+        let default = RegistrationService::new(
+            s.clone(),
+            &profile,
+            Arc::new(UnsupportedFlow {
+                missing: vec!["registration".into()],
+            }),
+        );
+        let error = default
+            .submit(handle, Answer::Code(Zeroizing::new("123456".into())))
+            .await
+            .unwrap_err();
+        assert!(matches!(error, Error::RequestNotSent(_)), "{error}");
+        assert_eq!(default.current().await.unwrap().unwrap(), saved);
     }
 
     #[tokio::test]
@@ -2869,6 +4321,7 @@ mod tests {
                             code: Some(403),
                             http_status: Some(403),
                             reason: None,
+                            not_before: None,
                         },
                     }
                     .into()),

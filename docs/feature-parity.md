@@ -12,17 +12,18 @@ tested locally only; **partial** = some paths implemented; **modeled** = types
 exist but nothing sends/applies it; **absent** = not implemented;
 **parked** = deferred by the owner.
 
-**Exposure.** CLI = `whatsapp-cli` command (see [cli.md](cli.md)). HTTP: only
-the service/profile endpoints, `connect` and `registration begin` are served by
-`whatsapp-cli serve`; every other operation in [openapi.json](api/openapi.json)
-is `x-transport: cli` today. Library = public `whatsapp_api` items listed in each
-operation's `x-library`.
+**Exposure.** CLI = `whatsapp-cli` command (see [cli.md](cli.md)). HTTP: by
+default `whatsapp-cli serve` serves only the service/profile endpoints, `connect`
+and `registration begin`; with `--store-routes` it also serves fourteen read-only
+store inspections ([HTTP API parity](#http-api-parity)). Every other operation in
+[openapi.json](api/openapi.json) is `x-transport: cli`. Library = public
+`whatsapp_api` items listed in each operation's `x-library`.
 
 ## Account, registration and session
 
 | Feature | State | CLI | Evidence | Blockers / next |
 |---|---|---|---|---|
-| Primary registration (SMS request, verify, 2FA PIN) | live (lab recipe): code request, OTP and DOB consent; account-PIN (`verify-pin`) and email-OTP branches offline | `lab-signup …` | [registration-lab](protocol/registration-lab.md), [after-otp](protocol/after-otp.md) | Default `registration begin` stays blocked until the pinned profile is observed; device_confirm_or_second_code, wa_old and passkey unimplemented |
+| Primary registration (SMS request, verify, 2FA PIN) | live (lab recipe): code request, OTP and DOB consent; account-PIN (`verify-pin`) and email-OTP branches offline | `lab-signup …` | [registration-lab](protocol/registration-lab.md), [after-otp](protocol/after-otp.md) | Default `registration begin` stays blocked until the pinned profile is observed; device_confirm_or_second_code, wa_old and passkey unimplemented; a wrong OTP (`mismatch`) and a `/v2/code` `ok`/`attached` answer stay blocked because their APK consumers are untraced ([audit](protocol/registration-safety-audit.md#plausible-not-verified)) |
 | Login (Noise XX, certificate, primary payload) | live | `lab-transport`, `listen` | [messaging-transport](protocol/messaging-transport.md) | Pinned 2.26.36.75 profile equivalence unobserved |
 | Prekey upload and replenishment | live | `prekeys`, `listen` | [messaging-completion](messaging-completion.md) | KEM prekey upload untraced (see PQ row); no error backoff (local deviation) |
 | Reconnect after recoverable loss | offline | `listen` | [messaging-transport](protocol/messaging-transport.md#reconnect-budget-stability-2026-10-13) | Refusals never retry by design; budget resets only after a stable connection; APK reconnect schedule untraced (local bound); no live reconnect observed |
@@ -50,8 +51,8 @@ operation's `x-library`.
 | Reactions | direct live; group **not rendering** (cause unknown) | `react` | [reactions](protocol/reactions.md), [groups](protocol/groups.md) | Group reaction rendering |
 | Polls and votes | direct live | `poll`, `vote` | [poll-votes](protocol/poll-votes.md) | Group polls/votes not ported: the normal group outbox blocks them as unsupported content; group poll stanza untraced |
 | Edits | receive own-device text/caption edits offline; outgoing **modeled** only | — | [message-edit](protocol/message-edit.md), [media-caption-edit](protocol/media-caption-edit.md) | Peer edit window needs property 2983; outbox has no edit sender ([why](protocol/unknowns.md#outgoing-revoke-and-edit-2026-10-13)) |
-| Revokes (delete for everyone) | receive direct peer/own-device offline; outgoing **modeled** only | — | [sender-revoke](protocol/sender-revoke.md), [sender-revoke-window](protocol/sender-revoke-window.md) | Physical deletion; group/admin/status revokes; native time/type policy; outbox has no revoke sender ([why](protocol/unknowns.md#outgoing-revoke-and-edit-2026-10-13)) |
-| Keep in chat | acked 2026-09-20 (delivered; handset unconfirmed); own-device keep sync and group keep send offline | `keep` | [chat-actions](protocol/chat-actions.md#4-keep-in-chat), [own-device-keep](protocol/own-device-keep.md), [group-keep](protocol/group-keep.md) | Handset display; permission/expiry application; live group keep |
+| Revokes (delete for everyone) | receive direct peer/own-device offline; outgoing **modeled** only | — | [sender-revoke](protocol/sender-revoke.md), [sender-revoke-window](protocol/sender-revoke-window.md) | Physical deletion; group/admin/status revokes; native time/type policy; outbox has no revoke sender; native sender edit value traced to 7, two links inferred ([why](protocol/unknowns.md#outgoing-revoke-and-edit-2026-10-13)) |
+| Keep in chat | acked 2026-09-20 (delivered; handset unconfirmed); own-device keep sync and group keep send offline | `keep` | [chat-actions](protocol/chat-actions.md#4-keep-in-chat), [own-device-keep](protocol/own-device-keep.md), [group-keep](protocol/group-keep.md) | Handset display; permission/expiry application; live group keep; `--undo` omits the native `edit="7"` for one's own message (recorded divergence, [trace](protocol/unknowns.md#outgoing-revoke-and-edit-2026-10-13)) |
 | Disappearing messages | per-chat timer acked 2026-09-20 (delivered, read receipt; handset unconfirmed); default timer offline | `disappearing`, `disappearing-default` | [chat-actions](protocol/chat-actions.md#3-disappearing-messages), [own-device-timer](protocol/own-device-timer.md) | `disappearing-default` never sent live; after-read mode, full setting application; our sent messages carry no `contextInfo.expiration` (sender producer untraced) |
 | Stickers, video, video notes, documents (receive) | offline | `media-list`, `media-open`, `media-save` | [stickers](protocol/stickers.md), [video-media](protocol/video-media.md), [document-media](protocol/document-media.md) | No live sample; sending unsupported; Lottie and directPath-only retrieval unsupported |
 | Ordinary incoming image and voice note | image live (downloaded, authenticated, shown in mpv); voice note offline (no live sample) | `media-list`, `media-open`, `media-save` | [messaging-transport](protocol/messaging-transport.md#persistent-receiving-and-ordinary-incoming-media) | Live voice-note sample and audible playback |
@@ -85,7 +86,7 @@ operation's `x-library`.
 | Group management (create, info, refresh, add/remove, promote/demote, subject, description, invite, leave) | create reply observed 2026-09-22; info and batch refresh live (2026-10-07); add/remove/promote/demote/subject/description/invite/leave not live-verified | `group …` | [groups](protocol/groups.md), [live record](protocol/groups.md#live-record), [queued replies](protocol/groups.md#apply-queued-replies-during-receiving-2026-10-07) | Live verification per action; the first create (2026-09-20) preceded stream:error 503 and the account's 403 suspension (causal role unknown); unsolicited group notifications unverified |
 | Communities | absent (complete group replies classify parent/linked_subgroup/default_subgroup/general_chat) | — (`group list --json` shows group_type/linked_parent) | [groups](protocol/groups.md#complete-reply-group-classification-and-subject-alias-boundary-2026-10-07) | Community create/link/announcement not researched |
 | Channels (newsletters) | parked | — | — | Owner deferred |
-| Status receive, viewers, likes received | live | `status-viewers` | [status](protocol/status.md) | — |
+| Status receive, viewers, likes received | live (viewers observed 2026-09-24) | `status-viewers` | [status](protocol/status.md) | Viewer receipts were refused, ending `listen`, from 2026-10-10 until the 2026-10-13 offline fix ([details](protocol/status.md#views-status-receipts-observed-2026-09-24)); not re-verified live |
 | Status post text | live | `lab-transport --message` (private JSON `status`) | same | — |
 | Status post image | acked as text earlier; media form not yet live | `lab-transport --message` (private JSON `status`) | same | Live check |
 | Status like send, audio, HD dual upload | absent | — | same | — |
@@ -122,11 +123,15 @@ The library and CLI cover the rows above; HTTP covers little of it. Default
 secret-free profile and capability data.
 
 **2026-10-13, opt-in store routes:** `serve --store-routes --token-file <new
-path>` (experimental-transport build) also serves seven read-only, redacted
-inspections: `GET /v1/receipts`, `/v1/prekeys`, `/v1/outbox/suspended`,
+path>` (experimental-transport build) also serves fourteen read-only, redacted
+inspections: `GET /v1/store` (the `store inspect` report) and
+`/v1/signup/status` (the redacted `lab-signup status --json` attempt), both
+added later the same day, `/v1/receipts`, `/v1/prekeys`, `/v1/outbox/suspended`,
 `/v1/actions` (list form only), `/v1/identity-conflicts`,
-`/v1/outbox/group-preparations` and `/v1/outbox/{local_id}/versions`, the same
-library calls and JSON as the CLI. Inspections whose output carries raw
+`/v1/outbox/group-preparations`, `/v1/outbox/{local_id}/versions`,
+`/v1/diagnostics/own-lid`, `/v1/inbox/undecodable`, and the counts-only `/v1/groups/receipts`,
+`/v1/groups/key-queries` and `/v1/groups/refresh-status` (one ID query
+parameter each, added the same day), the same library calls and JSON as the CLI. Inspections whose output carries raw
 addresses (for example device queries, message status facts, contacts,
 blocklist) or message content (events) are not served. The access-control design is the
 conservative one this page previously left open: loopback only (even with

@@ -50,18 +50,81 @@ struct ApiState {
 
 /// Read-only store routes, each the same output as an existing CLI inspection
 /// (`receipts`, `prekeys`, `outbox-suspended`, `actions` list,
-/// `identity-conflicts`, `outbox-group-preparations`): counts, local and wire
-/// message/iq IDs, unsalted address hashes (`peer_ticket`, guessable for phone
-/// numbers), key fingerprints, fixed reasons and, for refused actions, the
-/// server's error text. No message content, key material or raw address.
-const STORE_ROUTES: [&str; 6] = [
+/// `identity-conflicts`, `outbox-group-preparations`, `group own-lid`,
+/// `undecodable`, `store inspect`, `lab-signup status --json`): counts, capture
+/// digests, frame sizes and error classes, the store's account label and
+/// generation, the registration attempt with its phone and consent secrets
+/// redacted,
+/// local and wire message/iq IDs, unsalted address hashes (`peer_ticket`,
+/// guessable for phone numbers), key fingerprints, fixed reasons and, for
+/// refused actions, the server's error text. No message content, key material
+/// or raw address. These take no query parameters.
+const STORE_ROUTES: [&str; 10] = [
+    "/v1/store",
+    "/v1/signup/status",
     "/v1/receipts",
     "/v1/prekeys",
     "/v1/outbox/suspended",
     "/v1/actions",
     "/v1/identity-conflicts",
     "/v1/outbox/group-preparations",
+    "/v1/diagnostics/own-lid",
+    "/v1/inbox/undecodable",
 ];
+
+/// Store routes taking exactly one required query parameter, named as the
+/// OpenAPI document names it: `group receipts`, `group key-queries` and
+/// `group refresh-status`. Their output is counts, a fixed reason and, for
+/// refresh status, the next action ID; no address. The value must already
+/// satisfy the library's ID rule (ASCII alphanumerics and `-_.:`, at most 128
+/// bytes), so no percent-decoding is done and an encoded value is refused.
+const QUERY_ROUTES: [(&str, &str); 3] = [
+    ("/v1/groups/receipts", "request_id"),
+    ("/v1/groups/key-queries", "request_id"),
+    ("/v1/groups/refresh-status", "id"),
+];
+
+/// One parsed store inspection, validated before the store opens. Without
+/// experimental-transport the request is still parsed (so malformed input is
+/// answered 400) but nothing reads the fields.
+#[cfg_attr(not(feature = "experimental-transport"), allow(dead_code))]
+enum Inspection {
+    Plain(&'static str),
+    Versions(LocalMessageId),
+    WithId(&'static str, String),
+}
+
+/// `None` for a path that is not a store route; `Err` names what is wrong with
+/// the request (answered 400 before the store opens).
+fn inspection(path: &str, query: Option<&str>) -> Option<Result<Inspection, String>> {
+    if let Some(route) = STORE_ROUTES.iter().find(|route| **route == path) {
+        // CLI-only options (for example `actions --show`) are not served;
+        // refuse rather than silently answering a different question.
+        return Some(match query {
+            None => Ok(Inspection::Plain(route)),
+            Some(_) => Err("this store route takes no query parameters".into()),
+        });
+    }
+    if let Some(&(route, name)) = QUERY_ROUTES.iter().find(|(route, _)| *route == path) {
+        let value = query
+            .and_then(|query| query.strip_prefix(name))
+            .and_then(|rest| rest.strip_prefix('='));
+        return Some(match value {
+            Some(value) if whatsapp_api::model::ids::ClientRequestId::new(value).is_ok() => {
+                Ok(Inspection::WithId(route, value.to_owned()))
+            }
+            _ => Err(format!(
+                "exactly one query parameter {name}=<id> is required (ASCII alphanumerics and -_.: only, at most 128 bytes, not percent-encoded)"
+            )),
+        });
+    }
+    let id = versions_id(path)?;
+    Some(match (query, id.parse::<LocalMessageId>()) {
+        (Some(_), _) => Err("this store route takes no query parameters".into()),
+        (None, Ok(id)) => Ok(Inspection::Versions(id)),
+        (None, Err(_)) => Err("local_id is not a valid local message ID".into()),
+    })
+}
 
 /// What `serve --store-routes` needs to open one account store.
 pub struct StoreServe {
@@ -441,31 +504,21 @@ async fn store_route(request: &RequestLine, state: &ApiState) -> Option<Response
         .map_or((request.path.as_str(), None), |(path, query)| {
             (path, Some(query))
         });
-    if !STORE_ROUTES.contains(&path) && versions_id(path).is_none() {
-        return None;
-    }
+    let parsed = inspection(path, query)?;
     if !matches!(request.method.as_str(), "GET" | "HEAD") {
         return Some(Response::method_not_allowed("GET, HEAD"));
     }
-    // CLI-only options (for example `actions --show`) are not served; refuse
-    // rather than silently answering a different question.
-    if query.is_some() {
-        return Some(Response::error(
-            400,
-            "Bad Request",
-            "invalid_input",
-            "store routes take no query parameters",
-        ));
-    }
-    // Validate a path parameter before the store opens.
-    if versions_id(path).is_some_and(|id| id.parse::<LocalMessageId>().is_err()) {
-        return Some(Response::error(
-            400,
-            "Bad Request",
-            "invalid_input",
-            "local_id is not a valid local message ID",
-        ));
-    }
+    let inspection = match parsed {
+        Ok(inspection) => inspection,
+        Err(message) => {
+            return Some(Response::error(
+                400,
+                "Bad Request",
+                "invalid_input",
+                &message,
+            ));
+        }
+    };
     let Some(store) = &state.store else {
         return Some(Response::error(
             404,
@@ -486,8 +539,7 @@ async fn store_route(request: &RequestLine, state: &ApiState) -> Option<Response
     }
     let _turn = store.lock.lock().await;
     let options = store.options();
-    let path = path.to_owned();
-    let result = tokio::task::spawn_blocking(move || read_store(options, &path)).await;
+    let result = tokio::task::spawn_blocking(move || read_store(options, inspection)).await;
     Some(match result {
         Ok(Ok(Some(body))) => Response::json(200, "OK", body),
         Ok(Ok(None)) => Response::error(
@@ -504,6 +556,15 @@ async fn store_route(request: &RequestLine, state: &ApiState) -> Option<Response
                 "the account store is in use by another command; retry when it finishes",
             )
         }
+        Ok(Err(Error::InvalidInput {
+            field: SAVED_STATE_REFUSED,
+            reason,
+        })) => Response::error(
+            422,
+            "Unprocessable Content",
+            "saved_state_unsupported",
+            &reason,
+        ),
         Ok(Err(error)) => {
             // Not a busy store: say so instead of suggesting a retry. Details
             // (which may name paths) stay in the server log.
@@ -531,29 +592,70 @@ fn versions_id(path: &str) -> Option<&str> {
         .filter(|id| !id.is_empty() && !id.contains('/'))
 }
 
-/// `Ok(None)` when a path parameter names nothing (404).
+/// A saved record an inspection refuses to interpret, answered 422 with the
+/// library's reason. Only inspections whose refusals are fixed strings are
+/// converted (see `saved_state`); any other error stays a generic 500.
+const SAVED_STATE_REFUSED: &str = "store_routes.saved_state";
+
+/// Mark a refusal as [`SAVED_STATE_REFUSED`]. Callers: `device_key_batches`
+/// (a legacy key outcome without a frozen plan, or a damaged row),
+/// `group_receipts` (a damaged saved send, target list or facts) and the own
+/// LID lookup (its sources disagree or are malformed). All three refuse only
+/// with `&'static str` reasons, enforced by their helpers' signatures, and no
+/// address. Storage errors pass through unchanged.
+#[cfg(feature = "experimental-transport")]
+fn saved_state(error: Error) -> Error {
+    match error {
+        Error::InvalidInput { reason, .. } => Error::invalid(SAVED_STATE_REFUSED, reason),
+        other => other,
+    }
+}
+
+/// `Ok(None)` when a path parameter names nothing (404). A query-parameter
+/// lookup that finds nothing answers JSON `null`, as the CLI prints.
 #[cfg(feature = "experimental-transport")]
 fn read_store(
     options: whatsapp_api::store::OpenOptions,
-    path: &str,
+    inspection: Inspection,
 ) -> Result<Option<Value>, Error> {
+    use whatsapp_api::model::ids::ClientRequestId;
     use whatsapp_api::transport::{
-        actions, identity_conflicts, outgoing, outgoing_group, prekeys, receipts, send_versions,
+        actions, device_key_batches, group_receipts, group_send, identity_conflicts, outgoing,
+        outgoing_group, prekeys, receipts,
     };
     let store = whatsapp_api::store::ProtocolStore::open(options)?;
-    if let Some(id) = versions_id(path) {
-        let id: LocalMessageId = id.parse()?;
-        let known = store.read(|tx| {
-            whatsapp_api::outbox::Outbox::new("http-inspection", Default::default()).get(tx, id)
-        })?;
-        if known.is_none() {
-            return Ok(None);
+    let path = match inspection {
+        Inspection::Plain(path) => path,
+        Inspection::Versions(id) => return versions(&store, id),
+        Inspection::WithId(path, id) => {
+            let value = match path {
+                "/v1/groups/receipts" => serde_json::to_value(
+                    group_receipts::summary(&store, &ClientRequestId::new(id)?)
+                        .map_err(saved_state)?,
+                ),
+                "/v1/groups/key-queries" => serde_json::to_value(
+                    device_key_batches::summary(&store, &ClientRequestId::new(id)?)
+                        .map_err(saved_state)?,
+                ),
+                "/v1/groups/refresh-status" => {
+                    Ok(crate::transport_receive::refresh_status(&store, &id)?)
+                }
+                _ => return Err(Error::invalid("store_routes", "unknown store route")),
+            };
+            return value
+                .map(Some)
+                .map_err(|_| Error::invalid("store_routes", "inspection did not serialize"));
         }
-        return serde_json::to_value(send_versions::inspect(&store, id)?)
-            .map(Some)
-            .map_err(|_| Error::invalid("store_routes", "inspection did not serialize"));
-    }
+    };
     let value = match path {
+        "/v1/store" => Ok(crate::store_report::report(&store)?),
+        // `lab-signup status --json`: the saved attempt, redacted the same
+        // way (phone, consent login, pending selector, parent consent URL);
+        // JSON null when the store holds no attempt.
+        "/v1/signup/status" => match whatsapp_api::registration::current_attempt(&store)? {
+            Some(attempt) => Ok(crate::attempt_json::redacted(&attempt)?),
+            None => Ok(Value::Null),
+        },
         "/v1/receipts" => serde_json::to_value(receipts::outcomes(&store)?),
         "/v1/prekeys" => serde_json::to_value(prekeys::summary(&store)?),
         "/v1/outbox/suspended" => serde_json::to_value(outgoing::identity_suspended(&store)?),
@@ -562,6 +664,12 @@ fn read_store(
         "/v1/outbox/group-preparations" => {
             serde_json::to_value(outgoing_group::preparations(&store)?)
         }
+        "/v1/inbox/undecodable" => {
+            serde_json::to_value(whatsapp_api::transport::inbox::undecodable_frames(&store)?)
+        }
+        "/v1/diagnostics/own-lid" => Ok(json!({
+            "lid_known": group_send::own_lid(&store).map_err(saved_state)?.is_some()
+        })),
         _ => return Err(Error::invalid("store_routes", "unknown store route")),
     };
     value
@@ -569,8 +677,26 @@ fn read_store(
         .map_err(|_| Error::invalid("store_routes", "inspection did not serialize"))
 }
 
+/// `/v1/outbox/{local_id}/versions`; `Ok(None)` for an unknown intent.
+#[cfg(feature = "experimental-transport")]
+fn versions(
+    store: &whatsapp_api::store::ProtocolStore,
+    id: LocalMessageId,
+) -> Result<Option<Value>, Error> {
+    use whatsapp_api::transport::send_versions;
+    let known = store.read(|tx| {
+        whatsapp_api::outbox::Outbox::new("http-inspection", Default::default()).get(tx, id)
+    })?;
+    if known.is_none() {
+        return Ok(None);
+    }
+    serde_json::to_value(send_versions::inspect(store, id)?)
+        .map(Some)
+        .map_err(|_| Error::invalid("store_routes", "inspection did not serialize"))
+}
+
 #[cfg(not(feature = "experimental-transport"))]
-fn read_store(_: whatsapp_api::store::OpenOptions, _: &str) -> Result<Option<Value>, Error> {
+fn read_store(_: whatsapp_api::store::OpenOptions, _: Inspection) -> Result<Option<Value>, Error> {
     Err(Error::invalid(
         "store_routes",
         "store routes need a whatsapp-cli build with experimental-transport",
@@ -609,6 +735,11 @@ fn route(method: &str, raw_path: &str, state: &ApiState) -> Response {
             // Listed only when enabled; each needs the bearer token.
             if state.store.is_some() {
                 routes.extend(STORE_ROUTES.iter().map(|path| format!("GET {path}")));
+                routes.extend(
+                    QUERY_ROUTES
+                        .iter()
+                        .map(|(path, name)| format!("GET {path}?{name}={{{name}}}")),
+                );
                 routes.push("GET /v1/outbox/{local_id}/versions".to_owned());
             }
             Response::json(
@@ -1050,6 +1181,14 @@ mod tests {
             .unwrap();
         assert_eq!(response.status, 404);
         assert_eq!(body(&response)["error"]["code"], "store_routes_disabled");
+        let query = store_route(
+            &request("GET", "/v1/groups/receipts?request_id=a", None),
+            &state,
+        )
+        .await
+        .unwrap();
+        assert_eq!(query.status, 404);
+        assert_eq!(body(&query)["error"]["code"], "store_routes_disabled");
         assert!(
             store_route(&request("GET", "/v1/profile", None), &state)
                 .await
@@ -1134,6 +1273,50 @@ mod tests {
             .await
             .unwrap();
         assert_eq!(query.status, 400);
+        // `lab-signup status`: JSON null without an attempt; with one, the
+        // phone (and any consent secret) never appears.
+        let none = store_route(&request("GET", "/v1/signup/status", auth), &state)
+            .await
+            .unwrap();
+        assert_eq!((none.status, body(&none)), (200, Value::Null));
+        {
+            let store =
+                Arc::new(ProtocolStore::open(state.store.as_ref().unwrap().options()).unwrap());
+            let profile = ProtocolProfile::android_reference().unwrap();
+            let flow = Arc::new(whatsapp_api::registration::UnsupportedFlow::for_profile(
+                &profile,
+            ));
+            let service =
+                whatsapp_api::registration::RegistrationService::new(store, &profile, flow);
+            service
+                .begin(
+                    whatsapp_api::model::phone::PhoneNumber::new(1, "5550109876").unwrap(),
+                    whatsapp_api::registration::ChallengeMethod::Sms,
+                )
+                .await
+                .unwrap();
+        }
+        let status = store_route(&request("GET", "/v1/signup/status", auth), &state)
+            .await
+            .unwrap();
+        assert_eq!(status.status, 200);
+        let text = String::from_utf8_lossy(&status.body).into_owned();
+        assert!(!text.contains("5550109876"), "{text}");
+        assert!(body(&status).get("state").is_some(), "{text}");
+        // The `store inspect` report: counts and structural kinds only.
+        let inspected = store_route(&request("GET", "/v1/store", auth), &state)
+            .await
+            .unwrap();
+        assert_eq!(inspected.status, 200);
+        for field in [
+            "account_id",
+            "generation",
+            "registration",
+            "tables",
+            "checkpoint_kinds",
+        ] {
+            assert!(body(&inspected).get(field).is_some(), "{field}");
+        }
         let prekeys = store_route(&request("GET", "/v1/prekeys", auth), &state)
             .await
             .unwrap();
@@ -1146,6 +1329,7 @@ mod tests {
             "/v1/actions",
             "/v1/identity-conflicts",
             "/v1/outbox/group-preparations",
+            "/v1/inbox/undecodable",
         ] {
             let listed = store_route(&request("GET", path, auth), &state)
                 .await
@@ -1185,6 +1369,219 @@ mod tests {
         )
         .await;
         assert!(nested.is_none(), "only one path segment is a local_id");
+        // Counts-only group inspections and own-LID availability. Nothing saved
+        // under an ID answers JSON null, as the CLI prints.
+        let own_lid = store_route(&request("GET", "/v1/diagnostics/own-lid", auth), &state)
+            .await
+            .unwrap();
+        assert_eq!(
+            (own_lid.status, body(&own_lid)),
+            (200, json!({"lid_known": false}))
+        );
+        for path in [
+            "/v1/groups/receipts?request_id=nothing-saved",
+            "/v1/groups/key-queries?request_id=nothing-saved",
+            "/v1/groups/refresh-status?id=NOTHING",
+        ] {
+            let empty = store_route(&request("GET", path, auth), &state)
+                .await
+                .unwrap();
+            assert_eq!((empty.status, body(&empty)), (200, Value::Null), "{path}");
+        }
+        // Exactly one parameter with the documented name and an ID-shaped
+        // value; anything else is refused before the store opens.
+        for path in [
+            "/v1/groups/receipts",
+            "/v1/groups/receipts?",
+            "/v1/groups/receipts?id=wrong-name",
+            "/v1/groups/receipts?request_id=",
+            "/v1/groups/receipts?request_id=a&request_id=b",
+            "/v1/groups/receipts?request_id=a%20b",
+            "/v1/groups/key-queries?request_idx=a",
+            "/v1/groups/refresh-status?request_id=a",
+            "/v1/diagnostics/own-lid?verbose=1",
+            "/v1/outbox/not-an-id/versions?x=1",
+        ] {
+            let refused = store_route(&request("GET", path, auth), &state)
+                .await
+                .unwrap();
+            assert_eq!(refused.status, 400, "{path}");
+            assert_eq!(body(&refused)["error"]["code"], "invalid_input", "{path}");
+        }
+        // The library ID rule's 128-byte bound is the boundary.
+        let longest = format!("/v1/groups/receipts?request_id={}", "a".repeat(128));
+        let longest = store_route(&request("GET", &longest, auth), &state)
+            .await
+            .unwrap();
+        assert_eq!((longest.status, body(&longest)), (200, Value::Null));
+        let too_long = format!("/v1/groups/receipts?request_id={}", "a".repeat(129));
+        let too_long = store_route(&request("GET", &too_long, auth), &state)
+            .await
+            .unwrap();
+        assert_eq!(too_long.status, 400);
+        // A query on the path-parameter route is refused even with a valid ID.
+        let versions_query = store_route(
+            &request("GET", &format!("/v1/outbox/{known}/versions?x=1"), auth),
+            &state,
+        )
+        .await
+        .unwrap();
+        assert_eq!(versions_query.status, 400);
+        let post = store_route(
+            &request("POST", "/v1/groups/receipts?request_id=a", auth),
+            &state,
+        )
+        .await
+        .unwrap();
+        assert_eq!(post.status, 405);
+        // Order: a malformed request is 400 before authentication is checked;
+        // a well-formed one without the token is 401.
+        let malformed_unauthenticated =
+            store_route(&request("GET", "/v1/groups/receipts?id=a", None), &state)
+                .await
+                .unwrap();
+        assert_eq!(malformed_unauthenticated.status, 400);
+        let unauthenticated = store_route(
+            &request("GET", "/v1/groups/receipts?request_id=a", None),
+            &state,
+        )
+        .await
+        .unwrap();
+        assert_eq!(unauthenticated.status, 401);
+        {
+            let store = ProtocolStore::open(state.store.as_ref().unwrap().options()).unwrap();
+            store
+                .write(|tx| {
+                    tx.put_json(
+                        whatsapp_api::store::Table::Checkpoints,
+                        b"group-refresh-result:ACTION-1",
+                        1,
+                        &json!({
+                            "complete": 2,
+                            "truncated": [{"jid": "120363000000000009@g.us", "size": 300}],
+                            "forbidden": 1,
+                            "not_found": 0,
+                        }),
+                    )?;
+                    // A legacy key outcome without a frozen plan.
+                    tx.put_json(
+                        whatsapp_api::store::Table::Checkpoints,
+                        b"message:legacy-keys:keys",
+                        1,
+                        &json!({"status": "answered"}),
+                    )?;
+                    // A saved group send: counts only, never the group.
+                    tx.put_json(
+                        whatsapp_api::store::Table::Checkpoints,
+                        b"message:group-send:send",
+                        1,
+                        &json!({
+                            "chat": "120363000000000009@g.us",
+                            "wire_id": "3EB0FIXTURE",
+                            "status": "server_acknowledged",
+                        }),
+                    )?;
+                    // A damaged one: no saved wire ID.
+                    tx.put_json(
+                        whatsapp_api::store::Table::Checkpoints,
+                        b"message:damaged-send:send",
+                        1,
+                        &json!({"chat": "120363000000000009@g.us"}),
+                    )?;
+                    // Own-LID sources that disagree.
+                    tx.put_json(
+                        whatsapp_api::store::Table::Checkpoints,
+                        b"own-lid",
+                        1,
+                        &whatsapp_api::model::jid::Jid::parse("111111@lid").unwrap(),
+                    )?;
+                    tx.put_json(
+                        whatsapp_api::store::Table::Checkpoints,
+                        b"login-identity",
+                        1,
+                        &json!({"lid": "222222@lid"}),
+                    )
+                })
+                .unwrap();
+        }
+        let conflict = store_route(&request("GET", "/v1/diagnostics/own-lid", auth), &state)
+            .await
+            .unwrap();
+        assert_eq!(conflict.status, 422);
+        assert_eq!(
+            body(&conflict)["error"]["message"],
+            "saved own-lid and login-identity.lid disagree"
+        );
+        let text = String::from_utf8_lossy(&conflict.body);
+        assert!(!text.contains("111111") && !text.contains("222222"));
+        {
+            let store = ProtocolStore::open(state.store.as_ref().unwrap().options()).unwrap();
+            store
+                .write(|tx| {
+                    tx.put_json(
+                        whatsapp_api::store::Table::Checkpoints,
+                        b"login-identity",
+                        1,
+                        &json!({"lid": "111111@lid"}),
+                    )
+                })
+                .unwrap();
+        }
+        let agreed = store_route(&request("GET", "/v1/diagnostics/own-lid", auth), &state)
+            .await
+            .unwrap();
+        assert_eq!(
+            (agreed.status, body(&agreed)),
+            (200, json!({"lid_known": true}))
+        );
+        let refresh = store_route(
+            &request("GET", "/v1/groups/refresh-status?id=ACTION-1", auth),
+            &state,
+        )
+        .await
+        .unwrap();
+        assert_eq!(refresh.status, 200);
+        assert_eq!(body(&refresh)["complete"], 2);
+        assert_eq!(body(&refresh)["truncated"], 1);
+        assert_eq!(
+            body(&refresh)["pending"],
+            1,
+            "legacy report: pending recovered"
+        );
+        assert!(!String::from_utf8_lossy(&refresh.body).contains("120363"));
+        let legacy = store_route(
+            &request("GET", "/v1/groups/key-queries?request_id=legacy-keys", auth),
+            &state,
+        )
+        .await
+        .unwrap();
+        assert_eq!(legacy.status, 422);
+        assert_eq!(body(&legacy)["error"]["code"], "saved_state_unsupported");
+        assert_eq!(
+            body(&legacy)["error"]["message"],
+            "legacy key outcome has no frozen plan; counts unknown, original preserved"
+        );
+        let sent = store_route(
+            &request("GET", "/v1/groups/receipts?request_id=group-send", auth),
+            &state,
+        )
+        .await
+        .unwrap();
+        assert_eq!(sent.status, 200);
+        assert_eq!(body(&sent)["send_status"], "server_acknowledged");
+        assert_eq!(body(&sent)["receipt_devices"], 0);
+        assert!(!String::from_utf8_lossy(&sent.body).contains("120363"));
+        let damaged = store_route(
+            &request("GET", "/v1/groups/receipts?request_id=damaged-send", auth),
+            &state,
+        )
+        .await
+        .unwrap();
+        assert_eq!(damaged.status, 422);
+        assert_eq!(
+            body(&damaged)["error"]["message"],
+            "missing saved group receipt wire id"
+        );
         // While another handle holds the store (as `listen` would), the route
         // answers 503 with a fixed message instead of waiting or leaking paths.
         let held = ProtocolStore::open(state.store.as_ref().unwrap().options()).unwrap();
@@ -1337,14 +1734,12 @@ mod tests {
             ("GET", "/v1/registration/wire-profile"),
             ("POST", "/v1/connect"),
             ("POST", "/v1/registration"),
-            ("GET", "/v1/receipts"),
-            ("GET", "/v1/prekeys"),
-            ("GET", "/v1/outbox/suspended"),
-            ("GET", "/v1/actions"),
-            ("GET", "/v1/identity-conflicts"),
-            ("GET", "/v1/outbox/group-preparations"),
             ("GET", "/v1/outbox/{local_id}/versions"),
-        ];
+        ]
+        .into_iter()
+        .chain(STORE_ROUTES.iter().map(|path| ("GET", *path)))
+        .chain(QUERY_ROUTES.iter().map(|(path, _)| ("GET", *path)))
+        .collect::<Vec<_>>();
 
         for (method, path) in &routes {
             let found = declared_http_paths
@@ -1354,6 +1749,19 @@ mod tests {
                 found,
                 "route {method} {path} not declared with x-transport [\"http\"]"
             );
+        }
+
+        // Each parameterized route takes exactly the required query parameter
+        // OpenAPI names for it.
+        for (path, name) in QUERY_ROUTES {
+            let required: Vec<&str> = doc["paths"][path]["get"]["parameters"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .filter(|p| p["in"] == "query" && p["required"] == true)
+                .filter_map(|p| p["name"].as_str())
+                .collect();
+            assert_eq!(required, vec![name], "{path}");
         }
 
         for (method, path) in &declared_http_paths {

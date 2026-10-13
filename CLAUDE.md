@@ -327,11 +327,32 @@ request—not adding Rust code, another command or a number-specific script.**
   device-key batches and group fan-out, but no KEM prekey is generated or
   uploaded and `pqsupport` is never sent, so incoming hybrid bootstrap needs a
   KEM row this client cannot yet create. Next APK traces, in order: KEM prekey
-  generation and the `pq_list`/`pq_last_resort_key` upload shape, the
-  `pqsupport` producer, the outgoing revoke/edit `edit` attribute, sender-side
-  `contextInfo.expiration`, and the native retry-receipt answer policy. Replay
+  generation and what each `pq_list`/`pq_last_resort_key` element holds (ID,
+  value encoding, signature input; the element shape is already read from
+  retained evidence in `docs/protocol/kem-prekey-inventory.md`), the
+  `pqsupport` producer (the bodies of the `Can` predicates, chiefly
+  `Can.A04(jid)`; its five retained call sites are in
+  `docs/protocol/pq-bundle-boundary.md`), the
+  outgoing revoke/edit `edit` attribute (per-operation values are now traced
+  to the message's `178.A00` writers; still needed: the `SendE2EMessageJob`
+  constructor mapping, `Civ`'s stanza writer, and the text-edit/pin writers;
+  see `docs/protocol/unknowns.md`),
+  sender-side `contextInfo.expiration` (via `Cn6`/`B35.A01`), the native retry-receipt answer policy, and the
+  wrong-OTP path (the `HD6.A0A` consumer and `guess_wait` unit), and what the
+  app does with a `/v2/code` `ok`/`attached` answer (`02S.A0C`/`02S.A01`), and
+  for pin-in-chat the `BVD` descriptor plus the name helpers that
+  `xtask retained-proto-fields` reports missing. Replay
   guarantees and open observations: `docs/protocol/replay-safety-audit.md`.
   Quoted image/voice-note sending is offline-only; per-area state is in
-  `docs/feature-parity.md`.
+  `docs/feature-parity.md`. First checks for the next live receive window:
+  status-view receipts are recorded and ACKed again (they ended `listen` from
+  2026-10-10 to 2026-10-13), and the 2026-10-11 ACK/confirmation encodings are
+  accepted (`confirmed=true` with no redelivery at the next login); see
+  `docs/protocol/unknowns.md`. Refused stanza content must never end receive:
+  validate before the store, let stored-row faults propagate. Registration
+  (2026-10-13): `lab-signup begin` no longer creates a missing store (pass
+  `--create-store` once for a profile made before `accounts new` created
+  stores); a request that provably never left restores the attempt instead of
+  `outcome_unknown`; see `docs/protocol/registration-safety-audit.md`.
 - Most important lesson: **listen first, change data for data requests, explain
   genuine obstacles upfront, and deliver the requested result without detours.**

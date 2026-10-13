@@ -12,8 +12,9 @@
 //!   `registration` (4-byte big endian, `LX/1Lz.A03`), `type` (`[0x05]`),
 //!   `list` of `key{id,value}` (3-byte big-endian id `LX/1Lz.A04`, raw public
 //!   key with the type byte stripped, `LX/0km.A02` `0070..0082`), `skey{id,
-//!   value,signature}`, then optional `pq_list`/`pq_last_resort_key` when
-//!   Kyber keys exist. `LX/13c.A03` `00d6..00e4` logs "skipping kyber prekeys
+//!   value,signature}`, then optional `pq_list` (of `key{id,value,signature}`)
+//!   and `pq_last_resort_key{id,value,signature}` when Kyber keys exist
+//!   (`153c..161c`). `LX/13c.A03` `00d6..00e4` logs "skipping kyber prekeys
 //!   upload" without them, so the post-quantum children are optional; this
 //!   client has no Kyber material and never sends them. The conditional `op`
 //!   element (`13f0..1474`, runtime flag `0x5bf2` plus coexistence reason and
@@ -284,6 +285,75 @@ fn key_node(id: u32, public: &[u8], signature: Option<&[u8]>) -> Node {
         children.push(Node::new("signature").bytes(signature.to_vec()));
     }
     Node::new("key").children(children)
+}
+
+/// The post-quantum children of the upload IQ, appended after `skey`
+/// (2.26.37.71 `LX/0y0.A00` case 85, `153c..161c`, confirmed static):
+/// `pq_list` of `key{id,value,signature}` for one-time KEM keys (only when
+/// there are any) and a bare `pq_last_resort_key{id,value,signature}` (only
+/// when a last-resort key exists). The element *contents* follow the receive
+/// side's confirmed rules, since peers parse and verify our `pqkey` with them
+/// (`Bot.A03`, `KEMPublicKey`, `CQc.A00` `0068..00b4`): `value` is the raw
+/// 1568-byte ML-KEM-1024 encapsulation key with no type prefix, `signature` is
+/// the identity key's signature over exactly those bytes. The `id` tag is
+/// confirmed (`v2` = "id", `00ec`). **Inferred:** the server relays the bytes
+/// unchanged, as it does ordinary keys, and the `id` value is three bytes
+/// big-endian like the ordinary and signed keys (the parser's local rule).
+/// Docs: kem-prekey-inventory.md.
+///
+/// Not called by [`begin_upload`]: no KEM key is generated, and count, ID
+/// allocation and rotation are untraced, so nothing post-quantum is sent.
+// Unused until an evidence-backed KEM producer exists; kept, with its
+// receive-side round-trip test, so that step only has to wire it in.
+#[cfg_attr(not(test), allow(dead_code))]
+pub(crate) fn kem_upload_children(
+    identity: &crate::session::SignalIdentityKey,
+    rows: &[super::kem_prekeys::StoredKemPrekey],
+) -> Result<Vec<Node>> {
+    use wacore_libsignal::protocol::{PrivateKey, PublicKey};
+    let private =
+        PrivateKey::deserialize(&identity.0.private).map_err(|_| invalid("invalid identity"))?;
+    let public = PublicKey::from_djb_public_key_bytes(&identity.0.public)
+        .map_err(|_| invalid("invalid identity"))?;
+    if private
+        .public_key()
+        .map_err(|_| invalid("invalid identity"))?
+        != public
+    {
+        return Err(invalid("identity key pair mismatch"));
+    }
+    let entry = |row: &super::kem_prekeys::StoredKemPrekey| -> Result<Vec<Node>> {
+        if row.id > 0x00ff_ffff {
+            return Err(invalid("KEM prekey id does not fit three bytes"));
+        }
+        crate::signal::kem::public_key(&row.public)?;
+        let signature = private
+            .calculate_signature(&row.public, &mut rand::rng())
+            .map_err(|_| invalid("cannot sign KEM prekey"))?;
+        Ok(vec![
+            Node::new("id").bytes(be3(row.id)),
+            Node::new("value").bytes(row.public.clone()),
+            Node::new("signature").bytes(signature.to_vec()),
+        ])
+    };
+    let mut one_time = Vec::new();
+    let mut last_resort = None;
+    for row in rows {
+        if row.last_resort {
+            if last_resort.is_some() {
+                return Err(invalid("more than one last-resort KEM prekey"));
+            }
+            last_resort = Some(Node::new("pq_last_resort_key").children(entry(row)?));
+        } else {
+            one_time.push(Node::new("key").children(entry(row)?));
+        }
+    }
+    let mut children = Vec::new();
+    if !one_time.is_empty() {
+        children.push(Node::new("pq_list").children(one_time));
+    }
+    children.extend(last_resort);
+    Ok(children)
 }
 
 /// A reserved upload awaiting the server's `iq` reply for this connection.
@@ -610,6 +680,89 @@ mod tests {
         session::{KeyMaterial, RegistrationStatus, SignalIdentityKey},
         store::{MasterKey, OpenOptions, StaticKeySource, WriteTx},
     };
+
+    /// Our KEM upload entries, presented to a peer under `pqkey` exactly as
+    /// uploaded (the relay assumption), pass the same receive-side parser and
+    /// signature check we apply to peers' keys (`hybrid::bundle_for`). The
+    /// element shape follows `LX/0y0.A00` case 85.
+    #[test]
+    fn kem_upload_entries_pass_the_receive_side_bundle_parser() {
+        use crate::signal::{hybrid, kem};
+        use wacore_libsignal::protocol::IdentityKeyPair;
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("kem.redb"));
+        let pair = IdentityKeyPair::generate(&mut rand::rng());
+        let mut private = [0u8; 32];
+        private.copy_from_slice(pair.private_key().serialize());
+        let mut public = [0u8; 32];
+        public.copy_from_slice(pair.public_key().public_key_bytes());
+        let identity = SignalIdentityKey(KeyMaterial { public, private });
+        let mut rows = Vec::new();
+        for (id, last_resort) in [(9, false), (10, false), (0x00ff_fffe, true)] {
+            let (kem_public, kem_secret) = kem::generate_key_pair().unwrap();
+            rows.push(
+                store
+                    .write(|tx| {
+                        super::super::kem_prekeys::install_for_test(
+                            tx,
+                            id,
+                            &kem_public,
+                            kem_secret.as_bytes(),
+                            last_resort,
+                        )
+                    })
+                    .unwrap(),
+            );
+        }
+        let children = kem_upload_children(&identity, &rows).unwrap();
+        let names: Vec<_> = children.iter().map(|n| n.description.as_str()).collect();
+        assert_eq!(names, ["pq_list", "pq_last_resort_key"]);
+        let entries: Vec<&Node> = children[0].child_nodes().iter().collect();
+        assert_eq!(entries.len(), 2);
+        assert!(entries.iter().all(|e| e.description == "key"));
+        let last = &children[1];
+        for entry in entries.iter().copied().chain([last]) {
+            let fields: Vec<_> = entry
+                .child_nodes()
+                .iter()
+                .map(|n| n.description.as_str())
+                .collect();
+            assert_eq!(fields, ["id", "value", "signature"]);
+        }
+        // A peer's directory reply carrying one of our entries as `pqkey`.
+        let peer = Jid::parse("15555550199@s.whatsapp.net").unwrap();
+        let signed = KeyPair::generate(&mut rand::rng());
+        let signed_signature = pair
+            .private_key()
+            .calculate_signature(&signed.public_key.serialize(), &mut rand::rng())
+            .unwrap();
+        for (entry, expected_id) in [(entries[0], 9), (last, 0x00ff_fffe)] {
+            let user = Node::new("user").attr("jid", peer.clone()).children(vec![
+                Node::new("registration").bytes(vec![0, 0, 0, 42]),
+                Node::new("type").bytes(vec![5]),
+                Node::new("identity").bytes(public.to_vec()),
+                Node::new("skey").children(vec![
+                    Node::new("id").bytes(vec![0, 0, 7]),
+                    Node::new("value").bytes(signed.public_key.public_key_bytes().to_vec()),
+                    Node::new("signature").bytes(signed_signature.to_vec()),
+                ]),
+                Node::new("pqkey").children(entry.child_nodes().to_vec()),
+            ]);
+            let reply = Node::new("iq")
+                .attr("type", "result")
+                .children(vec![Node::new("list").children(vec![user])]);
+            assert!(
+                hybrid::bundle_for(&reply, &peer).is_ok(),
+                "entry {expected_id} must verify as a peer's pqkey"
+            );
+        }
+        // Refusals: an ID wider than three bytes, two last-resort keys.
+        let mut wide = rows[0].clone();
+        wide.id = 0x0100_0000;
+        assert!(kem_upload_children(&identity, &[wide]).is_err());
+        assert!(kem_upload_children(&identity, &[rows[2].clone(), rows[2].clone()]).is_err());
+        assert!(kem_upload_children(&identity, &[]).unwrap().is_empty());
+    }
 
     fn open(path: &std::path::Path) -> ProtocolStore {
         ProtocolStore::open(OpenOptions {

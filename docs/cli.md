@@ -162,6 +162,14 @@ Show queued read, played and retry receipts and their outcomes (offline, redacte
 Usage: whatsapp-cli receipts [OPTIONS]...
 ```
 
+## whatsapp-cli undecodable
+
+List received frames `listen` could not decode, re-checked with the current decoder (offline, redacted: digest, error class, size)
+
+```
+Usage: whatsapp-cli undecodable [OPTIONS]...
+```
+
 ## whatsapp-cli identity-conflicts
 
 Inspect saved peer identity conflicts (offline; unauthenticated observations)
@@ -1188,6 +1196,7 @@ Usage: whatsapp-cli lab-signup begin [OPTIONS]...
 | Flag | Value | Required | Default | Env | Values | Help |
 |------|-------|----------|---------|-----|--------|------|
 | --method | METHOD | no |  |  | `sms`, `voice` |  |
+| --create-store | CREATE_STORE | no |  |  | `true`, `false` | Create the store if it does not exist, or claim an existing store that holds no attempt, for the config's number. `accounts new` already creates and claims its profile's store, so this is only for a profile made before it did. Without it, a forgotten `--profile`, a mistyped path or an empty store another command created fails instead of starting a fresh identity; another number's store is always refused |
 
 ## whatsapp-cli lab-signup resend-code
 
@@ -1289,7 +1298,7 @@ Usage: whatsapp-cli serve [OPTIONS]...
 |------|-------|----------|---------|-----|--------|------|
 | --bind | BIND | no | `127.0.0.1:8787` | `WHATSAPP_API_BIND` |  | Address to listen on. Non-loopback addresses require an explicit opt-in because the base control-plane routes are unauthenticated |
 | --allow-non-loopback | ALLOW_NON_LOOPBACK | no |  |  | `true`, `false` | Permit listening on a non-loopback address |
-| --store-routes | STORE_ROUTES | no |  |  | `true`, `false` | Also serve read-only, redacted store inspections (`/v1/receipts`, `/v1/prekeys`, `/v1/outbox/suspended`, `/v1/actions`, `/v1/identity-conflicts`, `/v1/outbox/group-preparations`, `/v1/outbox/{local_id}/versions`) for the selected account. Loopback-only; requires a bearer token (see --token-file). The store is opened per request, so a running `listen` makes them answer 503 |
+| --store-routes | STORE_ROUTES | no |  |  | `true`, `false` | Also serve read-only, redacted store inspections (`/v1/store`, `/v1/signup/status`, `/v1/receipts`, `/v1/prekeys`, `/v1/outbox/suspended`, `/v1/actions`, `/v1/identity-conflicts`, `/v1/outbox/group-preparations`, `/v1/outbox/{local_id}/versions`, `/v1/diagnostics/own-lid`, `/v1/inbox/undecodable`, and with one ID query parameter `/v1/groups/receipts`, `/v1/groups/key-queries`, `/v1/groups/refresh-status`) for the selected account. Loopback-only; requires a bearer token (see --token-file). The store is opened per request, so a running `listen` makes them answer 503 |
 | --token-file | TOKEN_FILE | no |  |  |  | New file to receive the per-start bearer token (mode 0600 on unix, never overwritten, removed on Ctrl-C, SIGTERM or SIGHUP) |
 
 ## whatsapp-cli store

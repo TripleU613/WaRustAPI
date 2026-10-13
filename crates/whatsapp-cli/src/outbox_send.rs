@@ -1,5 +1,7 @@
 //! One selected normal-outbox send, using the public client and private JSON.
 use super::*;
+use whatsapp_api::session::AccountRecord;
+use whatsapp_api::store::Table;
 use whatsapp_api::{
     model::send::{AttemptProgress, DeliveryFactKind, SendStatus},
     store::{OpenOptions, ProtocolStore},

@@ -19,6 +19,7 @@ use whatsapp_api::{
         groups::{self, StanzaContent},
         handshake::EncryptedConnection,
         inbox,
+        messaging::FrameRead,
         messaging::{key_request_many, new_message_id, wait_for, write_node},
     },
 };
@@ -515,7 +516,7 @@ async fn answer_retries(
             None => {
                 let next = tokio::time::timeout_at(
                     deadline,
-                    whatsapp_api::transport::messaging::read_node(channel),
+                    whatsapp_api::transport::messaging::read_frame(channel),
                 )
                 .await;
                 match next {
@@ -533,7 +534,23 @@ async fn answer_retries(
                         eprintln!("group-send: post-send window ended: {error}");
                         break;
                     }
-                    Ok(Ok(node)) => node,
+                    Ok(Ok(FrameRead::Undecodable { frame, class })) => {
+                        match inbox::preserve_undecodable(store, &frame, class, None) {
+                            Ok(key) => {
+                                eprintln!(
+                                    "group-send: a frame did not decode ({class}); captured as {key}"
+                                );
+                                continue;
+                            }
+                            Err(error) => {
+                                eprintln!(
+                                    "group-send: could not preserve an undecodable frame ({error}); window ended"
+                                );
+                                break;
+                            }
+                        }
+                    }
+                    Ok(Ok(FrameRead::Node(node))) => node,
                 }
             }
         };
@@ -556,7 +573,20 @@ async fn answer_retries(
             eprintln!("group-send: could not preserve a post-send frame ({error}); window ended");
             break;
         }
-        match whatsapp_api::transport::receipts::record(store, &node) {
+        // Refused receipt content is the frame's own: preserved, neither
+        // correlated nor answered as a retry, and the window goes on. A
+        // failure recording valid content concerns stored rows and ends it.
+        let correlated = match whatsapp_api::transport::receipts::validate(&node) {
+            Ok(()) => whatsapp_api::transport::receipts::record(store, &node),
+            Err(Error::InvalidInput { field, reason }) => {
+                eprintln!(
+                    "group-send: receipt content refused ({field}: {reason}); frame preserved, not correlated or answered"
+                );
+                continue;
+            }
+            Err(error) => Err(error),
+        };
+        match correlated {
             Ok(0) => {}
             Ok(receipts) => println!("group-send: recorded {receipts} device receipt update(s)"),
             Err(error) => {

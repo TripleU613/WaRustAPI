@@ -1,3 +1,204 @@
+2026-10-13 — **Fixed/offline (CLI parity):** `registration status --json` now
+prints the saved attempt as redacted JSON, the same as `lab-signup status
+--json` and the `GET /v1/signup/status` store route (one shared redaction);
+`--json` used to be ignored there.
+
+2026-10-13 — **Implemented/offline (HTTP parity: registration status):** `serve
+--store-routes` also answers `GET /v1/signup/status` with the saved
+registration attempt exactly as `lab-signup status --json` prints it (phone and
+consent secrets redacted), or JSON null, so an agent can follow onboarding
+state without the CLI. [API README](api/README.md#store-routes-opt-in).
+
+2026-10-13 — **Corrected/offline (third registration review):** a review of
+the exact-restore change with probe tests found it sound, and one gap: an
+unreadable 5xx or 429 email-code answer still allowed a second email request.
+Only a definite 4xx (not 408 or 429) now counts as a refusal. The default
+(`UnsupportedFlow`) flow now restores a challenge or existing attempt it did
+not create instead of blocking over it; the `accounts new` scan is bounded and
+refuses past its limit; failed-restore and unsent-attempt refusals say why.
+Recorded: records restored before the exact restore keep one extra counted
+preparation each. [Audit](protocol/registration-safety-audit.md#third-review-2026-10-13).
+
+2026-10-13 — **Implemented/offline (HTTP parity: store inspect):** `serve
+--store-routes` now also answers `GET /v1/store` with the `store inspect`
+report (table counts, generation, registration status, checkpoint kinds), the
+same JSON as the CLI from one shared function. A checkpoint kind is printed by
+name only when it is a lowercase record name and not hex-like; any other key
+prefix (for example a key without `:` whose text is an address or digest) is
+counted as `other`, for the CLI too. [API README](api/README.md#store-routes-opt-in).
+
+2026-10-13 — **Corrected/offline (second registration review):** a second
+read-only review of the registration commits found no request that may have
+left being restored as not sent and no latch released after a send, but
+fixed: an email-code answer that was unreadable under HTTP 2xx could be
+re-requested with no wait (now only an HTTP error status allows the
+lost-request resume); a not-sent restore now writes back the exact attempt from
+before the reservation, history included, so a request that never left is not
+counted in `client_metrics.attempts` or consuming history (and the general
+`preparing -> unregistered` edge is gone); resuming `begin` with another method
+is refused instead of silently ignored; another profile's flow cannot answer a
+saved challenge, and `reset`'s local-block exemption excludes lab attempts and
+any that reached a challenge; a store holding another number's material is not
+claimed; `accounts new` scans every JSON beside the account directories; a
+failed restore reports its cause. [Audit](protocol/registration-safety-audit.md#second-review-2026-10-13).
+
+2026-10-13 — **Fixed/offline (registration hardening):** new store files are
+created 0600 (records were already encrypted; the file followed the umask);
+`registration status`, `reconcile` and `reset` no longer create a missing store;
+and the CLI no longer suggests the always-rejected `request-email-code --email`.
+Recorded open: one wrong OTP (`mismatch`) leaves the attempt blocked with no way
+back to code entry; the APK's handling of `mismatch` and the unit of
+`guess_wait` are not traced, so no re-entry command is built on a guess.
+Likewise a `/v2/code` `ok`/`attached` answer is blocked and its `login`
+discarded: 2.26.37.71 `A09` maps both statuses and reads `login`, but what the
+app then does is not traced.
+[Audit](protocol/registration-safety-audit.md#plausible-not-verified).
+
+2026-10-13 — **Corrected/offline (review of the registration safety fixes):**
+a second review found gaps in the fixes below, now corrected. A `/v2/exist`
+preflight that had reached the server was restored as "not sent" when the code
+request after it failed to connect, so a retry sent another preflight with a
+higher attempts counter; both requests are now built before either is sent, and
+a failure after a sent preflight records an unknown outcome. A diagnostic or
+correction that never left now restores its refusal and the saved material
+together and releases its one-shot (before, the corrected token stayed saved,
+so the released one-shot refused). `resume-email-challenge` resumes a lost email-code request only when
+the server's answer arrived unreadable, never after a timeout or reset.
+`lab-signup begin` refuses a store with no attempt unless it was created for
+that number (`accounts new` and `--create-store` record the owner), so an empty
+store another command created, or a mismatched `--config`, cannot start a fresh
+identity. `accounts new` compares numbers canonically and is not blinded by
+one malformed profile. A first `begin` that never left now rests
+`unregistered`, not as a fake elapsed `cooling_down`, and `registration reset`
+clears a local `ProfileIncomplete` block left by an older pinned version. A
+refusal without `retry_after` now keeps its longest SMS/voice/email wait
+(`ServerRefused.not_before`), which the one-shots, the email-challenge resume
+and the `exist` probe enforce; before, it was dropped. Open: not-sent failures
+consume bounded history. [Audit](protocol/registration-safety-audit.md#review-corrections-2026-10-13).
+
+2026-10-13 — **Fixed/offline (registration: stores and status):** `lab-signup
+begin` no longer creates a missing store unless `--create-store` is given;
+`accounts new` creates the profile's store and refuses a number another profile
+configures. A forgotten `--profile` or a mistyped path can no longer mint a
+fresh identity for a number with a real store. `registration begin` no longer
+silently replaces another number's or profile's attempt, and `registration
+reset` no longer deletes a lab attempt. `accounts status` now shows the real
+registration state. The `exist` probe is refused mid-request, once registered
+and during a cooldown. Profiles made before this need `begin --create-store`
+once. [Audit](protocol/registration-safety-audit.md).
+
+2026-10-13 — **Fixed/offline (registration: requests that never left):** a
+registration request that could not be built, or whose connection failed
+before any byte was written, was recorded as an unknown outcome. The HTTPS flow
+cannot reconcile that, so a network outage on `begin` stranded the store,
+leaving a fresh identity as the only way on. Such failures now return
+`RequestNotSent` and restore the attempt's previous state (a fresh `begin`
+resumes later with the same attempt and keys). Failures that may have reached
+the server still record an unknown outcome. That connect errors occur before
+writing is inferred from the HTTP library. [Audit](protocol/registration-safety-audit.md).
+
+2026-10-13 — **Fixed/offline (registration safety audit, waits and email
+recovery):** `resume-email-challenge` is now allowed once per recovery kind per
+attempt, so an uncertain email-code request can no longer be re-sent in a
+loop; the `challenge` refusal's `email_otp_wait` is kept (inferred meaning,
+longer value); and a shorter SMS/voice wait no longer replaces a longer
+`retry_after`. Open: a `/v2/code` refusal that stays blocked does not keep its
+SMS/voice wait (needs a saved-state field). [Audit](protocol/registration-safety-audit.md).
+
+2026-10-13 — **Corrected/offline (review of the receive hardening):** the
+first undecodable-frame change kept receiving after any undecodable frame, so an
+undecodable `stream:error` or `failure` would have been followed by
+reconnects, retrying a session the server had ended. The reader now reads such
+a frame's name leniently: a terminal stanza stops without reconnecting, and so
+does a server close right after a stanza whose name is unreadable. The lab
+group-send window no longer answers a retry receipt whose content was refused.
+The memory-amplification note is corrected and recorded open (a burst of
+crafted server frames could exhaust memory). [Audit](protocol/replay-safety-audit.md#network-input-panic-audit-2026-10-13).
+
+2026-10-13 — **Fixed/offline (registration safety audit, first two):** a
+read-only audit of the onboarding HTTPS path found that `lab-signup status
+--json` printed the consent context's intermediate login and parent consent URL
+(now redacted at any depth), and that the code-request diagnostics and
+`retry-corrected-token` accepted a `bad_param`/`bad_token` refusal from an OTP
+submission or other request, where they would have asked for a new SMS (now
+they require the refusal to come from a code request). The remaining findings
+are listed and being verified. Nothing was sent. [Audit](protocol/registration-safety-audit.md).
+
+2026-10-13 — **Implemented/offline (lab windows):** `lab-transport` receive,
+post-send and group-send windows now capture a frame that does not decode and
+keep reading, like `listen`, instead of ending the window. Login, handshake and
+the bounded reply waits (send ACKs, iq and key replies) still need a decodable
+frame. [Audit](protocol/replay-safety-audit.md#network-input-panic-audit-2026-10-13).
+
+2026-10-13 — **Implemented/offline (inspection):** `whatsapp-cli undecodable`
+(also `GET /v1/inbox/undecodable` under `serve --store-routes`) lists the frames
+`listen` captured because it could not decode them: capture digest, error class
+then and now, size, epoch. "Now" re-runs the current decoder, so a dictionary
+update shows which captures it would read. Read-only and redacted; nothing is
+reprocessed or acknowledged. [Audit](protocol/replay-safety-audit.md#network-input-panic-audit-2026-10-13).
+
+2026-10-13 — **Fixed/offline (network-input panic audit):** a read-only audit
+for panics and aborts reachable from received data found one. Nested JID tags
+made the binary decoder recurse until the stack overflowed: a 4 KB compressed
+frame from the server would abort the process, uncaptured, at every login.
+The decoder now refuses those tags before reading them. Also, a frame the
+decoder refuses (for example a newer dictionary token) no longer ends `listen`
+uncaptured: it is kept as `inbound-undecodable` with a fixed error class and
+skipped. No other reachable panic was found. Only the server can send such
+frames. [Audit](protocol/replay-safety-audit.md#network-input-panic-audit-2026-10-13).
+
+2026-10-13 — **Checked/offline (live-shape regression sweep):** every stanza
+shape the docs record as seen live was compared with the current receive code.
+No other regression like the status-receipt one was found. Fixed on the way:
+`lab-transport --receive` and the lab group-send window now validate receipt
+content like `listen`; a devices or prekey-count notification without `id` no
+longer ends `listen`. Open: the 2026-10-11 ACK and confirmation encoding changes
+have never been checked live; the next live receive window should confirm no
+redelivery after `confirmed=true`. [Sweep](protocol/replay-safety-audit.md#live-shape-regression-sweep-2026-10-13).
+
+2026-10-13 — **Corrected/offline (review of the new store routes):** no
+security finding. Three protocol docs and the feature-parity exposure note still
+said these inspections were not served over HTTP; corrected. The key-query
+schema lacked the `unsupported_bundle` reason the library already returns.
+A damaged saved group send now answers 422 with its fixed reason, like key
+queries and own LID, and the own-LID refusal reasons are now fixed by type.
+Tests now cover the 128-byte boundary, 405, the disabled 404, 400-before-401,
+non-null answers and the OpenAPI parameter names. [Store routes](api/README.md#store-routes-opt-in).
+
+2026-10-13 — **Corrected/offline (review of the receive-audit fixes):** the
+first version caught every refusal from recording a receipt or token
+notification, which would also have hidden faults in our own stored rows (a
+corrupt outbox entry) behind silently unacknowledged receipts. Now only pure
+wire-content validation, shared with the recording code, is caught; stored-row
+faults still end the session. The review also found that status receipts had
+been ending `listen` since the 2026-10-10 aggregate branch: the shape observed
+live has an empty `participants` list, which that branch refuses. It is
+recorded and acknowledged again, and an aggregate with entries is no longer
+filed as a status view. Own-LID devices handling now has a test. Not seen live.
+[Corrections](protocol/replay-safety-audit.md#review-corrections-same-day).
+
+2026-10-13 — **Implemented/offline (HTTP):** `serve --store-routes` now also
+serves four counts-only inspections, the same library calls and JSON as the
+CLI: `GET /v1/diagnostics/own-lid`, and `/v1/groups/receipts?request_id=`,
+`/v1/groups/key-queries?request_id=` and `/v1/groups/refresh-status?id=`.
+Each parameterized route accepts exactly that one unencoded, ID-shaped
+parameter and refuses anything else with 400 before the store opens; nothing
+saved answers `null`; a key-query record that cannot be counted, or own-LID
+sources that disagree, answer 422 with the library's fixed reason. The refresh-status JSON is now one shared function, so
+CLI and HTTP cannot drift. Five served operations still said "CLI only; no
+HTTP route" in OpenAPI; those stale sentences are removed. No route sends,
+queues or exposes an address or message content. [Store routes](api/README.md#store-routes-opt-in).
+
+2026-10-13 — **Corrected/offline (receive-path audit):** a read-only audit of
+the receive loop found that a receipt, `privacy_token` notification or
+`pq_count` whose content we refuse, or an own-companion message with an
+undecodable app-state key share, ended the session before its ACK. The server
+then redelivered it at every login, so every later `listen` ended on the same
+stanza. These are now logged, captured without ACK, and receive continues.
+A viewed group view-once is a duplicate on redelivery, and our own LID no
+longer queues a contact device sync. Four lower findings are recorded open.
+Not seen live. [Audit](protocol/replay-safety-audit.md#receive-side-audit-2026-10-13).
+
 2026-10-13 — **Measured (cross-version coverage):** new `xtask apk-coverage`
 reports what the committed research bundles cover. The pinned 2.26.36.75 has no
 retained bundle; 2.26.37.70 has one (21 core topics); 2.26.37.71 has 166.

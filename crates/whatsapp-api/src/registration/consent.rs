@@ -154,7 +154,7 @@ impl RegistrationService {
             }
             // v2 captures the APK's pending selector, omitted by the first
             // inspection parser. The old reservation remains untouched.
-            let latch: &[u8] = if selected.is_some() { b"consent-submit-used" } else { b"consent-inspect-context-v2-used" };
+            let latch: &'static [u8] = if selected.is_some() { b"consent-submit-used" } else { b"consent-inspect-context-v2-used" };
             if tx.get(Table::RegistrationAttempts, latch, RECORD_V1)?.is_some() {
                 return Err(Error::invalid("consent", "operation already reserved; no resend"));
             }
@@ -163,22 +163,30 @@ impl RegistrationService {
             attempt.transition(RegistrationState::Verifying { step }, Timestamp::now())?;
             tx.put_json(Table::RegistrationAttempts, latch, RECORD_V1, &attempt.id)?;
             Self::save_current(tx, &attempt)?;
-            Ok(context)
+            Ok((context, latch))
         })).await?;
+        let (attempt, latch) = attempt;
         match self.flow.consent(&attempt, decision.as_ref()).await {
             Ok(output) => {
                 self.finish_transition(attempt.id, attempt.generation, "verifying", output)
                     .await
             }
             Err(error) => {
-                self.finish_transition(
-                    attempt.id,
-                    attempt.generation,
+                // `attempt` is the pre-reservation copy, restored exactly if
+                // the request provably did not leave.
+                self.finish_failed(
+                    &attempt,
                     "verifying",
-                    RegistrationState::RegistrationOutcomeUnknown { step: 0 }.into(),
+                    RegistrationState::RegistrationOutcomeUnknown { step: 0 },
+                    attempt.clone(),
+                    // Consent prepares nothing, so its latch can go alone.
+                    Undo {
+                        latch: Some(latch),
+                        material: None,
+                    },
+                    error,
                 )
-                .await?;
-                Err(error)
+                .await
             }
         }
     }

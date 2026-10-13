@@ -206,21 +206,62 @@ pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
     super::receipts::record(store, node)
 }
 
-pub(super) fn record_in(tx: &mut WriteTx<'_>, node: &Node) -> Result<usize> {
+/// A group receipt's wire content, checked without the store.
+pub(super) struct Target<'a> {
+    kind: &'a str,
+    chat: Jid,
+    from: Jid,
+    ids: Vec<String>,
+    wire_ids: Vec<MessageId>,
+    device: DeviceAddress,
+}
+
+/// `None` for a receipt this path skips; `Err` for content it refuses.
+/// Shared by [`record_in`] and `receipts::validate`, so content that passes
+/// validation cannot be refused inside the write transaction.
+pub(super) fn target(node: &Node) -> Result<Option<Target<'_>>> {
     if node.description != "receipt" || super::receipts::recipient(node).is_some() {
-        return Ok(0);
+        return Ok(None);
     }
     let Some(kind) = receipt_kind(node) else {
-        return Ok(0);
+        return Ok(None);
     };
     let (Some(chat), Some(from)) = (jid(node, "from"), jid(node, "participant")) else {
-        return Ok(0);
+        return Ok(None);
     };
     if !group(&chat) || !actor(&from) {
-        return Ok(0);
+        return Ok(None);
     }
     let ids = ids(node)?;
     let device = DeviceAddress::from_jid(&from)?;
+    let wire_ids = ids
+        .iter()
+        .map(|id| {
+            MessageId::new(id.clone()).map_err(|_| invalid("invalid group receipt message id"))
+        })
+        .collect::<Result<Vec<_>>>()?;
+    Ok(Some(Target {
+        kind,
+        chat,
+        from,
+        ids,
+        wire_ids,
+        device,
+    }))
+}
+
+pub(super) fn record_in(tx: &mut WriteTx<'_>, node: &Node) -> Result<usize> {
+    let Some(Target {
+        kind,
+        chat,
+        from,
+        ids,
+        wire_ids,
+        device,
+    }) = target(node)?
+    else {
+        return Ok(0);
+    };
     let outbox = Outbox::new("group-receipt-observer", Limits::default());
     let mut matched = 0;
     let fact_kind = match kind {
@@ -228,10 +269,8 @@ pub(super) fn record_in(tx: &mut WriteTx<'_>, node: &Node) -> Result<usize> {
         "played" => DeliveryFactKind::Played,
         _ => DeliveryFactKind::Delivered,
     };
-    for id in &ids {
-        let wire_id =
-            MessageId::new(id.clone()).map_err(|_| invalid("invalid group receipt message id"))?;
-        if let Some(mut entry) = outbox.by_wire_id_in_write(tx, &wire_id)? {
+    for (id, wire_id) in ids.iter().zip(&wire_ids) {
+        if let Some(mut entry) = outbox.by_wire_id_in_write(tx, wire_id)? {
             if plain(entry.intent.chat.jid()) != plain(&chat) {
                 continue;
             }

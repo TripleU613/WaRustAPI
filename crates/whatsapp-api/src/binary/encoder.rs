@@ -521,6 +521,64 @@ mod tests {
         ));
     }
 
+    /// Nested JID tags in a string position are refused at the first nested
+    /// tag. They used to recurse without bound: a few kilobytes of compressed
+    /// input overflowed the stack and aborted the whole process, which no
+    /// error handling can catch (network-input panic audit, 2026-10-13).
+    #[test]
+    fn nested_jid_tags_are_refused_without_recursion() {
+        let limits = Limits::default();
+        let string = |text: &[u8]| {
+            let mut out = vec![tags::BINARY_8, text.len() as u8];
+            out.extend_from_slice(text);
+            out
+        };
+        for tag in [
+            tags::JID_PAIR,
+            tags::AD_JID,
+            tags::FB_JID,
+            tags::INTEROP_JID,
+        ] {
+            let nested = vec![tag; 200_000];
+            // As the node description.
+            let mut description = vec![tags::LIST_8, 1];
+            description.extend_from_slice(&nested);
+            // As an attribute value whose JID user part is another JID.
+            let mut attribute = vec![tags::LIST_8, 3];
+            attribute.extend(string(b"iq"));
+            attribute.extend(string(b"from"));
+            attribute.extend_from_slice(&nested);
+            // As an attribute key (a JID there is refused as a key, after
+            // its parts are read through the guarded string reader).
+            let mut key = vec![tags::LIST_8, 3];
+            key.extend(string(b"iq"));
+            key.extend_from_slice(&nested);
+            // As content.
+            let mut content = vec![tags::LIST_8, 2];
+            content.extend(string(b"iq"));
+            content.extend_from_slice(&nested);
+            for bytes in [description, attribute, key, content] {
+                assert!(matches!(
+                    Decoder::new(&bytes, dict(), &limits).decode_node(),
+                    Err(CodecError::InvalidNode {
+                        reason: "expected string",
+                        ..
+                    })
+                ));
+            }
+        }
+        // The compressed form the audit used: ~4 KB on the wire, 4 MB inflated.
+        let mut plain = vec![tags::LIST_8, 1];
+        plain.extend(vec![tags::JID_PAIR; 4_000_000]);
+        let mut payload = vec![0x02];
+        payload.extend(miniz_oxide::deflate::compress_to_vec_zlib(&plain, 6));
+        let inflated = unpack_frame_payload(&payload, &limits).unwrap();
+        let error = Decoder::new(&inflated, dict(), &limits)
+            .decode_node()
+            .unwrap_err();
+        assert_eq!(error.class(), "invalid_node");
+    }
+
     #[test]
     fn decompression_is_bounded() {
         let limits = Limits {
