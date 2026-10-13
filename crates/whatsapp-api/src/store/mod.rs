@@ -112,6 +112,14 @@ pub enum StoreError {
     /// Internal lock poisoned.
     #[error("internal lock poisoned")]
     Poisoned,
+    /// The master-key rotation commit failed, so whether it took effect is
+    /// unknown: a failed `fsync` can leave it committed (see
+    /// [`ProtocolStore::write`]). Either key may be the one that opens the
+    /// store, so neither may be discarded yet.
+    #[error(
+        "master key rotation outcome unknown ({0}): the store may now open only with the new key; keep both keys until one of them opens it"
+    )]
+    RotationOutcomeUnknown(String),
 }
 
 impl From<StoreError> for Error {
@@ -327,6 +335,16 @@ impl fmt::Debug for ProtocolStore {
 impl ProtocolStore {
     /// Open (or create) the store and take single-writer ownership.
     pub fn open(opts: OpenOptions) -> Result<Self> {
+        Self::open_with(opts, |path| Database::builder().create(path))
+    }
+
+    /// [`Self::open`] with the redb database built by `create` from the
+    /// store path, after the owner lock and private file creation. Tests pass
+    /// a storage backend that fails like a full disk.
+    fn open_with(
+        opts: OpenOptions,
+        create: impl FnOnce(&Path) -> std::result::Result<Database, redb::DatabaseError>,
+    ) -> Result<Self> {
         let master = opts.key_source.master_key()?;
         let exists = opts.path.exists();
         if !exists && !opts.create {
@@ -384,9 +402,7 @@ impl ProtocolStore {
                 Err(e) => return Err(StoreError::Io(e).into()),
             }
         }
-        let db = Database::builder()
-            .create(&opts.path)
-            .map_err(StoreError::from)?;
+        let db = create(&opts.path).map_err(StoreError::from)?;
 
         // Bootstrap or validate meta, then unwrap (or create) the data keys.
         let (data_keys, generation) = {
@@ -488,7 +504,9 @@ impl ProtocolStore {
     /// `new_source` and a fresh salt, in one durable transaction. Records are
     /// untouched (the data key does not change), so the operation is O(1) and
     /// trivially restartable; after commit the old master key no longer opens
-    /// the store. Re-encrypting records under a new *data* key is a separate,
+    /// the store. A failed commit returns
+    /// [`StoreError::RotationOutcomeUnknown`]: either key may open the store.
+    /// Re-encrypting records under a new *data* key is a separate,
     /// not yet implemented migration.
     pub fn rotate_master_key(&self, new_source: &dyn KeySource) -> Result<()> {
         let new_master = new_source.master_key()?;
@@ -509,7 +527,10 @@ impl ProtocolStore {
             meta.insert(META_WRAPPED_KEYS, wrapped.as_slice())
                 .map_err(StoreError::from)?;
         }
-        tx.commit().map_err(StoreError::from)?;
+        // Everything above fails before the commit, leaving the old key in
+        // force; a failed commit may still have landed.
+        tx.commit()
+            .map_err(|e| StoreError::RotationOutcomeUnknown(e.to_string()))?;
         Ok(())
     }
 
@@ -586,7 +607,13 @@ impl ProtocolStore {
     }
 
     /// Run a write transaction with durable commit. If `f` fails, nothing is
-    /// committed.
+    /// committed. If the commit itself fails (a full disk, a failed `fsync`),
+    /// the outcome is unknown: the transaction may be visible after a reopen,
+    /// so callers treat the error as "maybe committed", never as "not
+    /// committed". redb then refuses every later write on this handle
+    /// (`PreviousIo`) until the store is reopened. Both observed in
+    /// `a_full_disk_commits_nothing_and_a_reopen_recovers_committed_state`
+    /// and `a_failed_fsync_leaves_the_commit_unknown`.
     pub fn write<T>(&self, f: impl FnOnce(&mut WriteTx<'_>) -> Result<T>) -> Result<T> {
         let mut tx = self.db.begin_write().map_err(StoreError::from)?;
         tx.set_durability(Durability::Immediate)
@@ -1283,6 +1310,115 @@ impl WriteTx<'_> {
     }
 }
 
+/// Test storage that fails like a full disk (`StorageFull` on writes and
+/// growth) or a failed `fsync`, for disk-full coverage in any module.
+#[cfg(test)]
+pub(crate) mod full_disk {
+    use super::*;
+
+    /// File storage that refuses writes and growth with `StorageFull` while
+    /// `full` is set, as a full disk does, and fails `fsync` while
+    /// `sync_fails` is set; reads and shrinking pass through.
+    #[derive(Debug)]
+    struct FullDisk {
+        inner: redb::backends::FileBackend,
+        full: Arc<std::sync::atomic::AtomicBool>,
+        sync_fails: Arc<std::sync::atomic::AtomicBool>,
+    }
+
+    impl FullDisk {
+        fn refuse(&self) -> std::io::Result<()> {
+            if self.full.load(std::sync::atomic::Ordering::SeqCst) {
+                return Err(std::io::Error::new(
+                    std::io::ErrorKind::StorageFull,
+                    "simulated full disk",
+                ));
+            }
+            Ok(())
+        }
+    }
+
+    macro_rules! delegate_locks {
+        ($($name:ident -> $out:ty),* $(,)?) => {$(
+            fn $name(
+                &self,
+                start: std::ops::Bound<u64>,
+                end: std::ops::Bound<u64>,
+            ) -> std::result::Result<$out, redb::BackendError> {
+                self.inner.$name(start, end)
+            }
+        )*};
+    }
+
+    impl redb::StorageBackend for FullDisk {
+        fn len(&self) -> std::io::Result<u64> {
+            self.inner.len()
+        }
+        fn read(&self, offset: u64, out: &mut [u8]) -> std::io::Result<()> {
+            self.inner.read(offset, out)
+        }
+        fn set_len(&self, len: u64) -> std::io::Result<()> {
+            if len > self.inner.len()? {
+                self.refuse()?;
+            }
+            self.inner.set_len(len)
+        }
+        fn sync_data(&self) -> std::io::Result<()> {
+            if self.sync_fails.load(std::sync::atomic::Ordering::SeqCst) {
+                return Err(std::io::Error::new(
+                    std::io::ErrorKind::StorageFull,
+                    "simulated fsync failure",
+                ));
+            }
+            self.inner.sync_data()
+        }
+        fn write(&self, offset: u64, data: &[u8]) -> std::io::Result<()> {
+            self.refuse()?;
+            self.inner.write(offset, data)
+        }
+        fn close(&self) -> std::io::Result<()> {
+            self.inner.close()
+        }
+        delegate_locks!(
+            try_lock_range -> bool,
+            try_lock_shared_range -> bool,
+            lock_range -> (),
+            lock_shared_range -> (),
+            unlock_range -> (),
+            query_lock_range -> bool,
+        );
+    }
+
+    /// Open (or create) a store at `path` whose storage fails like a full disk
+    /// while `full` is set, and fails `fsync` while `sync_fails` is set.
+    pub(crate) fn open(
+        path: &Path,
+        account: &str,
+        master: [u8; 32],
+        full: &Arc<std::sync::atomic::AtomicBool>,
+        sync_fails: &Arc<std::sync::atomic::AtomicBool>,
+    ) -> Result<ProtocolStore> {
+        let full = full.clone();
+        let sync_fails = sync_fails.clone();
+        ProtocolStore::open_with(
+            OpenOptions {
+                path: path.to_path_buf(),
+                account_id: AccountId::new(account)?,
+                key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes(master))),
+                create: true,
+            },
+            move |path| {
+                let file = FsOpenOptions::new().read(true).write(true).open(path)?;
+                Database::builder().create_with_backend(FullDisk {
+                    inner: redb::backends::FileBackend::new(file)?,
+                    full,
+                    sync_fails,
+                })
+            },
+        )
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -1301,6 +1437,144 @@ mod tests {
         })
         .unwrap();
         (dir, Arc::new(store))
+    }
+
+    /// Disk full (the crash-coverage item's uncovered case, observed against
+    /// redb 4.3 on 2026-10-13): a commit that cannot write fails and none of
+    /// it is visible; reads on the same handle still work, but redb refuses
+    /// every later write on that handle (`PreviousIo`) even after space
+    /// returns; a reopen while still full fails; a reopen after space returns
+    /// recovers exactly the state committed before the failure.
+    #[test]
+    fn a_full_disk_commits_nothing_and_a_reopen_recovers_committed_state() {
+        use std::sync::atomic::{AtomicBool, Ordering};
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("protocol.redb");
+        let full = Arc::new(AtomicBool::new(false));
+        let sync_fails = Arc::new(AtomicBool::new(false));
+        let store = full_disk::open(&path, "acct-1", [9u8; 32], &full, &sync_fails).unwrap();
+        disk_put(&store, b"kept", 16).unwrap();
+        full.store(true, Ordering::SeqCst);
+        let failed = disk_put(&store, b"lost", 256 * 1024).unwrap_err();
+        assert!(
+            failed.to_string().contains("simulated full disk"),
+            "{failed}"
+        );
+        assert!(disk_get(&store, b"kept"));
+        full.store(false, Ordering::SeqCst);
+        let later = disk_put(&store, b"later", 16).unwrap_err();
+        assert!(later.to_string().contains("Previous I/O error"), "{later}");
+        drop(store);
+        full.store(true, Ordering::SeqCst);
+        let still_full = full_disk::open(&path, "acct-1", [9u8; 32], &full, &sync_fails)
+            .err()
+            .unwrap();
+        assert!(
+            still_full.to_string().contains("simulated full disk"),
+            "{still_full}"
+        );
+        full.store(false, Ordering::SeqCst);
+        let store = full_disk::open(&path, "acct-1", [9u8; 32], &full, &sync_fails).unwrap();
+        assert!(disk_get(&store, b"kept"));
+        assert!(!disk_get(&store, b"lost"));
+        assert!(!disk_get(&store, b"later"));
+        disk_put(&store, b"after", 16).unwrap();
+        assert!(disk_get(&store, b"after"));
+    }
+
+    /// An `fsync` that fails after the pages were written (some filesystems
+    /// report a full disk only there): `write` returns the error, yet the
+    /// transaction is visible after a reopen. A failed write is therefore
+    /// "maybe committed", never "not committed" (see [`ProtocolStore::write`]).
+    #[test]
+    fn a_failed_fsync_leaves_the_commit_unknown() {
+        use std::sync::atomic::{AtomicBool, Ordering};
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("protocol.redb");
+        let full = Arc::new(AtomicBool::new(false));
+        let sync_fails = Arc::new(AtomicBool::new(false));
+        let store = full_disk::open(&path, "acct-1", [9u8; 32], &full, &sync_fails).unwrap();
+        sync_fails.store(true, Ordering::SeqCst);
+        let failed = disk_put(&store, b"unsynced", 16).unwrap_err();
+        assert!(
+            failed.to_string().contains("simulated fsync failure"),
+            "{failed}"
+        );
+        assert!(
+            disk_put(&store, b"next", 16)
+                .unwrap_err()
+                .to_string()
+                .contains("Previous I/O error")
+        );
+        sync_fails.store(false, Ordering::SeqCst);
+        drop(store);
+        let store = full_disk::open(&path, "acct-1", [9u8; 32], &full, &sync_fails).unwrap();
+        assert!(
+            disk_get(&store, b"unsynced"),
+            "the failed commit is visible"
+        );
+        assert!(!disk_get(&store, b"next"));
+    }
+
+    /// A master-key rotation whose commit fails reports an unknown outcome,
+    /// and in both failure modes exactly one of the two keys opens the store
+    /// afterwards: the old one when nothing was written, the new one when
+    /// only `fsync` failed.
+    #[test]
+    fn a_failed_rotation_commit_reports_an_unknown_outcome() {
+        use std::sync::atomic::{AtomicBool, Ordering};
+        let old = MasterKey::from_bytes([9u8; 32]);
+        let new = MasterKey::from_bytes([10u8; 32]);
+        let opens_with = |path: &Path, key: &MasterKey| {
+            ProtocolStore::open(OpenOptions {
+                path: path.to_path_buf(),
+                account_id: AccountId::new("acct-1").unwrap(),
+                key_source: Arc::new(StaticKeySource::new(key.clone())),
+                create: false,
+            })
+            .is_ok()
+        };
+        for (fault, new_key_in_force) in [("full", false), ("fsync", true)] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("protocol.redb");
+            let full = Arc::new(AtomicBool::new(false));
+            let sync_fails = Arc::new(AtomicBool::new(false));
+            let store = full_disk::open(&path, "acct-1", [9u8; 32], &full, &sync_fails).unwrap();
+            if fault == "full" {
+                full.store(true, Ordering::SeqCst);
+            } else {
+                sync_fails.store(true, Ordering::SeqCst);
+            }
+            let error = store
+                .rotate_master_key(&StaticKeySource::new(new.clone()))
+                .unwrap_err();
+            assert!(
+                matches!(error, Error::Storage(StoreError::RotationOutcomeUnknown(_))),
+                "{fault}: {error}"
+            );
+            assert!(error.to_string().contains("keep both keys"), "{error}");
+            drop(store);
+            assert_eq!(opens_with(&path, &new), new_key_in_force, "{fault}");
+            assert_eq!(opens_with(&path, &old), !new_key_in_force, "{fault}");
+        }
+    }
+
+    fn disk_put(store: &ProtocolStore, key: &[u8], bytes: usize) -> Result<()> {
+        store.write(|tx| {
+            tx.put_json(
+                Table::Checkpoints,
+                key,
+                1,
+                &serde_json::json!({ "fill": "x".repeat(bytes) }),
+            )
+        })
+    }
+
+    fn disk_get(store: &ProtocolStore, key: &[u8]) -> bool {
+        store
+            .read(|tx| tx.get(Table::Checkpoints, key, 1))
+            .unwrap()
+            .is_some()
     }
 
     fn sample_event(n: u64) -> SyncEvent {

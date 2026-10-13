@@ -1,3 +1,17 @@
+2026-10-13 — **Tested/offline (disk full):** a simulated full disk (a
+test-only redb storage backend, not a real filesystem) shows a commit that
+cannot write is all-or-nothing, after which redb refuses every write on that
+handle until the store is reopened; reopening after space returns recovers the
+committed state. On the real session loop, a receipt that cannot be stored is
+not ACKed and ends the session; its redelivery after reopen is stored and
+ACKed. A failed `fsync` can leave a commit visible even though `write`
+returned an error, so a store write error now documents as "maybe committed".
+A read of every caller found none that sends, resends or compensates on a
+failed write. `store rotate-key` now reports a failed commit as an unknown
+outcome ("keep both keys") instead of a generic error that could lead to
+discarding the key in force.
+[Audit](docs/protocol/replay-safety-audit.md#disk-full-and-failed-commits-2026-10-13).
+
 2026-10-13 — **Implemented/offline (HTTP parity: media list and event kinds):**
 `serve --store-routes` now also answers `GET /v1/media` (the `media-list`
 selectors: SHA-256 of the inbox key, snake_case kind, advertised size; no URL,

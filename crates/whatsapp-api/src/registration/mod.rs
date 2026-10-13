@@ -1544,8 +1544,10 @@ impl RegistrationService {
             .await;
         if let Err(restore) = restored {
             // A store or material failure leaves the attempt in
-            // `preparing`/`verifying` (refused by every command, safe); an
-            // attempt that changed or vanished meanwhile is not ours to describe.
+            // `preparing`/`verifying` (refused by every command, safe), unless
+            // only the commit failed and still landed (a failed `fsync`), which
+            // leaves it restored; an attempt that changed or vanished meanwhile
+            // is not ours to describe.
             let changed = matches!(
                 restore,
                 Error::InvalidInput {
@@ -1559,7 +1561,7 @@ impl RegistrationService {
                     format!("{error}; the attempt was not restored: {restore}")
                 } else {
                     format!(
-                        "{error}; restoring the attempt failed, so it stays in {expected_state}: {restore}"
+                        "{error}; restoring the attempt failed, so it stays in {expected_state} unless the failed write still reached the disk (`lab-signup status` shows which): {restore}"
                     )
                 },
             ));

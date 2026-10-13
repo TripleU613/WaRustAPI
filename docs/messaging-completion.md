@@ -1595,7 +1595,12 @@ Comparison APK evidence is 2.26.37.70, not the pinned 2.26.36.75 profile.
   `encrypt` and `devices` notifications are now handled and contact device lists
   are verified and stored; own-account sync, app-state snapshots and fan-out remain.
 - [x] Crash/reconnect coverage for receiving, consumption and uncertain sends,
-  including socket cut points on the real session loop; disk-full remains uncovered.
+  including socket cut points on the real session loop. Disk full (2026-10-13,
+  simulated storage, not a real filesystem): a commit that cannot write is
+  all-or-nothing, the handle then refuses every write, a receipt that cannot be
+  stored is not ACKed and ends the session, and a reopen recovers the committed
+  state; a failed `fsync` can leave the commit visible, so a failed write means
+  "maybe committed" ([audit](protocol/replay-safety-audit.md#disk-full-and-failed-commits-2026-10-13)).
 - [x] Integration with the normal account runtime/outbox (one live combined
   session sent a queued text with delivery and read receipts; handset display
   unconfirmed).

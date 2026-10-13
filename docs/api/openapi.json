@@ -11555,7 +11555,7 @@
           "Store"
         ],
         "summary": "Rotate the master key: re-wrap the data keys under the key found in the given environment variable",
-        "description": "Re-wraps all data encryption keys under a new master key. The old key stops working immediately.",
+        "description": "Re-wraps all data encryption keys under a new master key. The old key stops working immediately. Failed commit (2026-10-13): if the rotation's commit itself fails (for example a full disk or a failed fsync), the outcome is unknown and the error is StoreError::RotationOutcomeUnknown: the store may now open only with the new key, so keep both keys until one of them opens it. Errors before the commit (an unreadable new key, entropy failure) leave the old key in force. Evidence docs/protocol/replay-safety-audit.md#disk-full-and-failed-commits-2026-10-13.",
         "operationId": "rotateStoreKey",
         "x-cli": "whatsapp-cli store rotate-key",
         "x-transport": [

@@ -785,7 +785,7 @@ pub(crate) async fn drive(
                             for receipt in super::receipts::reserve_pending(&store)? { link.send(&receipt).await?; }
                             marked_read = true;
                         }
-                        Err(error) => tracing::warn!(%error, "automatic read receipt not queued"),
+                        Err(error) => tracing::warn!(%error, "automatic read receipt may not be queued"),
                     }
                 }
                 incoming_line(&node, received, confirmed, marked_read);
@@ -2142,6 +2142,72 @@ mod tests {
         // receipt hashes to the same capture key and its fact row is reused.
         assert_eq!(added.len(), 1, "{added:?}");
         assert!(added[0].starts_with(b"inbound:sha256:"));
+    }
+
+    /// Disk full on the real session loop: a receipt that cannot be stored is
+    /// not acknowledged and the session ends with the storage error (the
+    /// handle refuses further writes); after space returns and the store is
+    /// reopened, the server's redelivery is stored and acknowledged.
+    #[tokio::test]
+    async fn a_full_disk_ends_receive_without_an_ack_and_redelivery_confirms_after_reopen() {
+        use std::sync::atomic::{AtomicBool, Ordering};
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("full.redb");
+        let full = Arc::new(AtomicBool::new(false));
+        let sync_fails = Arc::new(AtomicBool::new(false));
+        let open_full = || {
+            let store =
+                crate::store::full_disk::open(&path, "test", [4; 32], &full, &sync_fails).unwrap();
+            Arc::new(store)
+        };
+        let store = open_full();
+        store
+            .write(|tx| {
+                AccountRecord {
+                    own_jid: Some(Jid::parse("15555550100@s.whatsapp.net").unwrap()),
+                    registration: crate::session::RegistrationStatus::Registered,
+                    ..Default::default()
+                }
+                .save(tx)
+            })
+            .unwrap();
+        let incoming = Node::new("receipt")
+            .attr("from", peer())
+            .attr("id", "OUR-MSG")
+            .attr("t", "1700000000");
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        full.store(true, Ordering::SeqCst);
+        fake.deliver(incoming.clone()).await;
+        let Fake {
+            mut from_worker,
+            task,
+            ..
+        } = fake;
+        let ended = tokio::time::timeout(Duration::from_secs(5), task)
+            .await
+            .expect("worker ends")
+            .expect("worker did not panic");
+        let error = ended.expect_err("a full disk ends the session");
+        assert!(error.to_string().contains("simulated full disk"), "{error}");
+        assert!(
+            from_worker.try_recv().is_err(),
+            "nothing written after the failure"
+        );
+        drop(store);
+        full.store(false, Ordering::SeqCst);
+        let store = open_full();
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        fake.deliver(incoming).await;
+        let (ack, reply) = fake.written().await;
+        assert_eq!(ack.description, "ack");
+        assert_eq!(
+            ack.get_attr("id").and_then(|v| v.as_text()),
+            Some("OUR-MSG")
+        );
+        reply.send(Ok(())).unwrap();
+        fake.stop_cleanly().await;
     }
 
     #[tokio::test(start_paused = true)]
