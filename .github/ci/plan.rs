@@ -69,16 +69,18 @@ const DOCS_INPUTS: &[(&str, &str)] = &[
     ),
 ];
 
-/// `docs/` path literals in crate sources that are not test inputs needing a
-/// `DOCS_INPUTS` entry, each with the reason; `docs_inputs_are_routed` accepts
-/// only these and routed paths, so a new literal forces a decision.
+/// `docs/` path literals that are not test inputs needing a `DOCS_INPUTS`
+/// entry, as (source file, literal, reason). An exemption holds only in its
+/// own file: the same literal elsewhere still needs a routing decision.
 #[cfg(test)]
-const DOCS_NOT_INPUTS: &[(&str, &str)] = &[
+const DOCS_NOT_INPUTS: &[(&str, &str, &str)] = &[
     (
+        "xtask/src/coverage.rs",
         "docs/protocol/apk",
-        "directory: xtask coverage reads only its manifest.json/targets.json, routed by their own rule",
+        "directory: coverage reads only its manifest.json/targets.json, routed by their own rule",
     ),
     (
+        "xtask/src/coverage.rs",
         "docs/protocol/apk/*/{manifest,targets}.json",
         "text in the coverage report, not a path that is read",
     ),
@@ -399,11 +401,14 @@ mod tests {
                     .unwrap_or(text.len() - at);
                 let path = &text[at..at + len];
                 found += 1;
-                if DOCS_NOT_INPUTS.iter().any(|(listed, _)| *listed == path) {
+                let file = file.to_str().unwrap();
+                if DOCS_NOT_INPUTS
+                    .iter()
+                    .any(|(source, listed, _)| *source == file && *listed == path)
+                {
                     continue;
                 }
                 let p = route(&[path]);
-                let file = file.to_str().unwrap();
                 let owned = if file.starts_with("xtask/") {
                     // A generated report is checked by its audit job.
                     p.xtask || p.dependencies
