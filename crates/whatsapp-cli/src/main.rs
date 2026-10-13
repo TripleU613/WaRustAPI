@@ -1132,6 +1132,14 @@ enum Method {
     Voice,
 }
 
+/// Only `registration begin` may create its store. `status`, `reconcile` and
+/// `reset` on a missing store used to create an empty one, which a later
+/// command could take for a real store (registration safety audit review M4,
+/// 2026-10-13); now they fail with "store does not exist".
+fn registration_creates_store(cmd: &RegCmd) -> bool {
+    matches!(cmd, RegCmd::Begin { .. })
+}
+
 async fn open_client(cli: &Cli, create: bool) -> Result<WhatsAppClient, Error> {
     WhatsAppClient::builder()
         .store_path(cli.store.clone())
@@ -2130,7 +2138,7 @@ async fn run(cli: Cli) -> Result<(), Error> {
             }
         },
         Cmd::Registration { cmd } => {
-            let c = open_client(&cli, true).await?;
+            let c = open_client(&cli, registration_creates_store(cmd)).await?;
             let result = match cmd {
                 RegCmd::Begin {
                     country,
@@ -2889,6 +2897,18 @@ async fn main() -> ExitCode {
 #[cfg(test)]
 mod accounts_tests {
     use super::*;
+
+    #[test]
+    fn only_registration_begin_creates_a_store() {
+        assert!(registration_creates_store(&RegCmd::Begin {
+            country: 1,
+            phone: "5550100001".into(),
+            method: Method::Sms,
+        }));
+        for cmd in [RegCmd::Status, RegCmd::Reconcile, RegCmd::Reset] {
+            assert!(!registration_creates_store(&cmd));
+        }
+    }
 
     /// A number already configured by a saved profile is refused before any
     /// key, config or store is written: one number keeps one store.

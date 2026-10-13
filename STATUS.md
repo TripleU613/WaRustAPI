@@ -1,6 +1,7 @@
 2026-10-13 — **Fixed/offline (registration hardening):** new store files are
-created 0600 (records were already encrypted; the file followed the umask), and
-the CLI no longer suggests the always-rejected `request-email-code --email`.
+created 0600 (records were already encrypted; the file followed the umask);
+`registration status`, `reconcile` and `reset` no longer create a missing store;
+and the CLI no longer suggests the always-rejected `request-email-code --email`.
 Recorded open: one wrong OTP (`mismatch`) leaves the attempt blocked with no way
 back to code entry; the APK's handling of `mismatch` and the unit of
 `guess_wait` are not traced, so no re-entry command is built on a guess.

@@ -155,7 +155,10 @@ now corrected:
   an unclaimed store needs `--create-store`, another number's is refused.
   Tests: `begin_requires_a_store_created_for_this_number`,
   `only_an_explicit_begin_creates_a_store` (a pure guard test; the earlier test
-  ran the real HTTPS transport with live requests allowed).
+  ran the real HTTPS transport with live requests allowed). The cause is
+  removed too: `registration status`, `reconcile` and `reset` no longer create a
+  missing store (only `registration begin` and `store init` do). Test:
+  `only_registration_begin_creates_a_store`.
 - **L1. The `accounts new` duplicate check could miss a number.** One malformed
   profile made the whole check pass, numbers were compared as raw strings
   (`555-123-4567` against `5551234567`), the raw number was written to the
