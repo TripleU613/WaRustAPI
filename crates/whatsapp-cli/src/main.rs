@@ -204,7 +204,8 @@ enum Cmd {
         #[arg(long)]
         allow_live_request: bool,
     },
-    /// List ordinary incoming attachments by opaque selector, with content redacted.
+    /// List ordinary incoming attachments by opaque selector, with content
+    /// redacted (`--json` for an array of id, kind and bytes).
     #[cfg(feature = "experimental-transport")]
     MediaList,
     /// Download/authenticate an ordinary image, voice note, WebP sticker or MP4 video/video note and open it locally.
@@ -840,13 +841,14 @@ enum Cmd {
     /// Read durable events for a consumer.
     Events {
         /// Print event kinds only, without message content or identifiers.
+        /// With `--json`, one object with the cursors and the kinds.
         #[arg(long)]
         summary: bool,
         /// Consumer name.
         #[arg(long, default_value = "cli")]
         consumer: String,
         /// Maximum events.
-        #[arg(long, default_value_t = 50)]
+        #[arg(long, default_value_t = EVENTS_LIMIT)]
         limit: u32,
         /// Acknowledge the batch after printing it.
         #[arg(long)]
@@ -2775,20 +2777,29 @@ async fn run(cli: Cli) -> Result<(), Error> {
             limit,
             ack,
         } => {
+            let consumer = ConsumerId::new(consumer.clone())?;
             let c = open_client(&cli, false).await?;
-            let engine = c.events(ConsumerId::new(consumer.clone())?);
+            let engine = c.events(consumer.clone());
             let after: EventCursor = engine.acknowledged_cursor().await?;
             let batch = engine.next_batch(after, *limit).await?;
-            for e in &batch.events {
-                if *summary {
-                    println!("event: {}", e.event.kind());
-                    continue;
-                }
+            if *summary && cli.json {
                 println!(
                     "{}",
-                    serde_json::to_string(e)
+                    serde_json::to_string_pretty(&events_summary(&consumer, after, &batch))
                         .map_err(|err| Error::invalid("event", err.to_string()))?
                 );
+            } else {
+                for e in &batch.events {
+                    if *summary {
+                        println!("event: {}", e.event.kind());
+                        continue;
+                    }
+                    println!(
+                        "{}",
+                        serde_json::to_string(e)
+                            .map_err(|err| Error::invalid("event", err.to_string()))?
+                    );
+                }
             }
             eprintln!(
                 "{} events after cursor {}; has_more={}",
@@ -2805,6 +2816,26 @@ async fn run(cli: Cli) -> Result<(), Error> {
             Ok(())
         }
     }
+}
+
+/// Default `events --limit`; `GET /v1/events/summary` always uses it.
+const EVENTS_LIMIT: u32 = 50;
+
+/// `events --summary --json` and the `GET /v1/events/summary` body: the kinds
+/// after the consumer's acknowledged cursor, in journal order. No message
+/// content, chat, sender or message ID.
+fn events_summary(
+    consumer: &ConsumerId,
+    after: EventCursor,
+    batch: &whatsapp_api::sync::EventBatch,
+) -> serde_json::Value {
+    serde_json::json!({
+        "consumer": consumer.as_str(),
+        "after_cursor": after.0,
+        "ack_cursor": batch.ack_cursor.0,
+        "has_more": batch.has_more,
+        "kinds": batch.events.iter().map(|e| e.event.kind()).collect::<Vec<_>>(),
+    })
 }
 
 fn master_key_bytes(key: &MasterKey) -> Zeroizing<Vec<u8>> {

@@ -319,6 +319,105 @@ child, frame and inflate limits), and `forbid(unsafe_code)` crate-wide.
   conclusion for those functions; it does not cover the stateful `record`
   paths, which need a store.
 
+## Disk full and failed commits (2026-10-13)
+
+Design requirement ([verification](../design/verification.md#192-required-crash-matrix)):
+during a disk-full or commit I/O failure, no further send or decrypt
+advancement occurs until durable state is resolved. Earlier crash coverage
+injected aborts inside transactions and cut sockets, but never a failing
+commit, so the completion tracker listed disk full as uncovered.
+
+**Method.** A test-only redb storage backend (`store::full_disk`) wraps the
+real file backend and fails writes and file growth with `StorageFull` while a
+flag is set, or fails `fsync` alone. This is simulated storage on redb 4.3,
+not a full filesystem or a power cut.
+
+**Observed (offline, redb 4.3):**
+
+- A commit that cannot write returns the I/O error, and none of it is visible
+  then or after a reopen.
+- Reads on the same handle keep working.
+- redb refuses every later write on that handle with `PreviousIo` ("close and
+  re-open"), even after space returns. No later transaction can commit until
+  the store is reopened, so no reservation, ratchet or inbox row can advance.
+- Reopening while the disk is still full fails with the I/O error and changes
+  nothing. Reopening after space returns recovers exactly the state committed
+  before the failure, and writes work again.
+- **A failed `fsync` leaves the commit unknown.** When the pages were written
+  but `fsync` failed, `write` returned the error, yet the transaction was
+  visible after a reopen. A store write error therefore means "maybe
+  committed", never "not committed". The `ProtocolStore::write` documentation
+  now says so. Every reservation in this client is already treated that way:
+  a reserved send without a settled outcome stays uncertain and is never
+  replayed, so a reservation that did commit despite the error blocks rather
+  than resends.
+- On the real session loop (`connection.rs`, injected link), a receipt
+  arriving while the disk is full is not acknowledged and leaves no record,
+  and the session ends with the storage error. After space returns and the
+  store is reopened, the server's redelivery is stored and acknowledged.
+- On the same loop, the outbox key-query reservation for a direct send:
+  - **Disk full at that commit:** the reservation does not persist, no query
+    is written, and after reopen the query is sent once.
+  - **Only `fsync` fails:** the reservation persists. After reopen the query
+    is never sent: it is reserved and unsettled, exactly as after a socket cut.
+
+  The fault is armed on the page that carries the reservation key, so it hits
+  that commit and no earlier one.
+
+**Test correction (same day).** The first version of the receive test set
+the fault immediately after activation. The session's post-activation
+receipt and action reservations, which commit even when nothing is pending,
+failed first, so the receipt was never processed. The test passed without
+exercising what it named. It now waits for the session's readiness signal,
+after which the worker idles until input arrives, and it asserts that the
+receipt left no record.
+
+Tests: `store::tests::a_full_disk_commits_nothing_and_a_reopen_recovers_committed_state`,
+`store::tests::a_failed_fsync_leaves_the_commit_unknown`,
+`store::tests::a_failed_rotation_commit_reports_an_unknown_outcome`,
+`transport::connection::tests::a_full_disk_ends_receive_without_an_ack_and_redelivery_confirms_after_reopen`,
+`transport::connection::tests::key_query_reservation_on_a_failing_disk_never_sends_unreserved_or_twice`.
+
+**Callers (static read, same day).** Every non-test store write in both
+crates was checked for code that catches a write error and then acts as if
+nothing committed. None sends, resends, re-reserves or compensates on that
+assumption:
+
+- Registration, outbox, group fan-out and lab sends reserve with `?` before any
+  network I/O. Enqueue is idempotent per request ID.
+- Catches of `InvalidInput` only see refusals raised inside the transaction,
+  before the commit; a commit failure is always `Error::Storage`.
+- Reconnect never treats a storage error as recoverable.
+
+Four sites assumed "not committed" only in their wording or in a local flag.
+In each, the next write on the poisoned handle ends the work before any
+network I/O:
+
+- the automatic read-receipt queue (`connection.rs` and CLI `transport.rs`);
+- the dropped `noise_appeal_token` copy, recoverable from the saved frame;
+- the registration restore message;
+- the lab group-send retry answer, which logs and moves on, then stops at its
+  next write.
+
+**Fixed in this change:**
+
+- The read-receipt logs now say "may not be queued".
+- The registration restore error now says the attempt stays in its state
+  "unless the failed write still reached the disk", and points to
+  `lab-signup status`.
+- `store rotate-key`: a failed rotation commit returns
+  `StoreError::RotationOutcomeUnknown`, whose message says the store may now
+  open only with the new key and to keep both keys. Before this, a generic
+  database error could lead someone to discard the new key while it was the
+  one in force. In `a_failed_rotation_commit_reports_an_unknown_outcome`,
+  exactly one key opens the store afterwards: the old key when nothing was
+  written, the new key when only `fsync` failed.
+
+**Not established:** behavior on a real full filesystem, and partial-page
+writes during a power cut. Of the outgoing paths, only the direct outbox
+key-query reservation has a fault-injected test. Group fan-out, media upload
+and registration under a failing commit were checked by reading the code.
+
 ## Validation
 
 837 all-feature, 241 default and 336 `experimental-signal-crypto`-only library

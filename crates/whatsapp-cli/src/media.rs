@@ -16,7 +16,16 @@ fn store(cli: &super::Cli) -> Result<ProtocolStore, Error> {
     })
 }
 pub(super) fn list(cli: &super::Cli) -> Result<(), Error> {
-    for entry in media::list(&store(cli)?)? {
+    let entries = media::list(&store(cli)?)?;
+    if cli.json {
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&entries)
+                .map_err(|e| Error::invalid("media", e.to_string()))?
+        );
+        return Ok(());
+    }
+    for entry in entries {
         println!(
             "media: id={}, kind={:?}, bytes={}",
             entry.id, entry.kind, entry.bytes

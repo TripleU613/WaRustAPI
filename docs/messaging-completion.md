@@ -1,3 +1,16 @@
+2026-10-13 — **Implemented/offline (HTTP parity: media list and event kinds):**
+`serve --store-routes` now also answers `GET /v1/media` (the `media-list`
+selectors: SHA-256 of the inbox key, snake_case kind, advertised size; no URL,
+MIME, key or chat) and `GET /v1/events/summary?consumer=<name>` (the
+consumer's cursors and the next 50 event kinds; no content, chat or message
+ID). The summary never acknowledges; acknowledging and full events stay
+CLI-only. A consumer whose cursor precedes trimmed events answers 409
+`cursor_expired` naming the last trimmed cursor. The CLI gained the same
+JSON: `media-list --json` and `events --summary --json`. Corrected: the
+OpenAPI `MediaItem` schema listed `mime`, `downloaded`, `opened` and a
+`view_once_image` kind that the list never produced.
+[API README](api/README.md#store-routes-opt-in).
+
 2026-10-13 — **Fixed/offline (CLI parity):** `registration status --json` now
 prints the saved attempt as redacted JSON, the same as `lab-signup status
 --json` and the `GET /v1/signup/status` store route (one shared redaction);
@@ -1582,7 +1595,12 @@ Comparison APK evidence is 2.26.37.70, not the pinned 2.26.36.75 profile.
   `encrypt` and `devices` notifications are now handled and contact device lists
   are verified and stored; own-account sync, app-state snapshots and fan-out remain.
 - [x] Crash/reconnect coverage for receiving, consumption and uncertain sends,
-  including socket cut points on the real session loop; disk-full remains uncovered.
+  including socket cut points on the real session loop. Disk full (2026-10-13,
+  simulated storage, not a real filesystem): a commit that cannot write is
+  all-or-nothing, the handle then refuses every write, a receipt that cannot be
+  stored is not ACKed and ends the session, and a reopen recovers the committed
+  state; a failed `fsync` can leave the commit visible, so a failed write means
+  "maybe committed" ([audit](protocol/replay-safety-audit.md#disk-full-and-failed-commits-2026-10-13)).
 - [x] Integration with the normal account runtime/outbox (one live combined
   session sent a queued text with delivery and read receipts; handset display
   unconfirmed).

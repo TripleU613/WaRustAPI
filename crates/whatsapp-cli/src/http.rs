@@ -51,15 +51,17 @@ struct ApiState {
 /// Read-only store routes, each the same output as an existing CLI inspection
 /// (`receipts`, `prekeys`, `outbox-suspended`, `actions` list,
 /// `identity-conflicts`, `outbox-group-preparations`, `group own-lid`,
-/// `undecodable`, `store inspect`, `lab-signup status --json`): counts, capture
-/// digests, frame sizes and error classes, the store's account label and
-/// generation, the registration attempt with its phone and consent secrets
-/// redacted,
+/// `undecodable`, `store inspect`, `lab-signup status --json`, `media-list
+/// --json`): counts, capture digests, frame sizes and error classes, the
+/// store's account label and generation, the registration attempt with its
+/// phone and consent secrets redacted,
 /// local and wire message/iq IDs, unsalted address hashes (`peer_ticket`,
-/// guessable for phone numbers), key fingerprints, fixed reasons and, for
-/// refused actions, the server's error text. No message content, key material
-/// or raw address. These take no query parameters.
-const STORE_ROUTES: [&str; 10] = [
+/// guessable for phone numbers), media selectors (SHA-256 of an inbox key that
+/// includes the random message ID, so not guessable from an address) with kind
+/// and size, key fingerprints, fixed reasons and, for refused actions, the
+/// server's error text. No message content, key material, media URL or raw
+/// address. These take no query parameters.
+const STORE_ROUTES: [&str; 11] = [
     "/v1/store",
     "/v1/signup/status",
     "/v1/receipts",
@@ -70,18 +72,24 @@ const STORE_ROUTES: [&str; 10] = [
     "/v1/outbox/group-preparations",
     "/v1/diagnostics/own-lid",
     "/v1/inbox/undecodable",
+    "/v1/media",
 ];
 
 /// Store routes taking exactly one required query parameter, named as the
-/// OpenAPI document names it: `group receipts`, `group key-queries` and
-/// `group refresh-status`. Their output is counts, a fixed reason and, for
-/// refresh status, the next action ID; no address. The value must already
-/// satisfy the library's ID rule (ASCII alphanumerics and `-_.:`, at most 128
-/// bytes), so no percent-decoding is done and an encoded value is refused.
-const QUERY_ROUTES: [(&str, &str); 3] = [
-    ("/v1/groups/receipts", "request_id"),
-    ("/v1/groups/key-queries", "request_id"),
-    ("/v1/groups/refresh-status", "id"),
+/// OpenAPI document names it, with its length bound: `group receipts`, `group
+/// key-queries`, `group refresh-status` and `events --summary --json`. Their
+/// output is counts, a fixed reason, for refresh status the next action ID,
+/// and for events the consumer's cursors and event kinds; no address or
+/// content. The value must already satisfy the library's ID rule (ASCII
+/// alphanumerics and `-_.:`) within the bound: 128 bytes for IDs, 64 for a
+/// consumer name (`ConsumerId`), so no percent-decoding is done and an encoded
+/// value is refused. A consumer name using other printable characters, which
+/// the CLI accepts, cannot be queried here.
+const QUERY_ROUTES: [(&str, &str, usize); 4] = [
+    ("/v1/groups/receipts", "request_id", 128),
+    ("/v1/groups/key-queries", "request_id", 128),
+    ("/v1/groups/refresh-status", "id", 128),
+    ("/v1/events/summary", "consumer", 64),
 ];
 
 /// One parsed store inspection, validated before the store opens. Without
@@ -105,16 +113,19 @@ fn inspection(path: &str, query: Option<&str>) -> Option<Result<Inspection, Stri
             Some(_) => Err("this store route takes no query parameters".into()),
         });
     }
-    if let Some(&(route, name)) = QUERY_ROUTES.iter().find(|(route, _)| *route == path) {
+    if let Some(&(route, name, max)) = QUERY_ROUTES.iter().find(|(route, ..)| *route == path) {
         let value = query
             .and_then(|query| query.strip_prefix(name))
             .and_then(|rest| rest.strip_prefix('='));
         return Some(match value {
-            Some(value) if whatsapp_api::model::ids::ClientRequestId::new(value).is_ok() => {
+            Some(value)
+                if value.len() <= max
+                    && whatsapp_api::model::ids::ClientRequestId::new(value).is_ok() =>
+            {
                 Ok(Inspection::WithId(route, value.to_owned()))
             }
             _ => Err(format!(
-                "exactly one query parameter {name}=<id> is required (ASCII alphanumerics and -_.: only, at most 128 bytes, not percent-encoded)"
+                "exactly one query parameter {name}=<value> is required (ASCII alphanumerics and -_.: only, at most {max} bytes, not percent-encoded)"
             )),
         });
     }
@@ -556,6 +567,19 @@ async fn store_route(request: &RequestLine, state: &ApiState) -> Option<Response
                 "the account store is in use by another command; retry when it finishes",
             )
         }
+        // `/v1/events/summary` for a consumer whose cursor precedes trimmed
+        // events (for example a name never used before a trim).
+        Ok(Err(Error::Storage(whatsapp_api::store::StoreError::CursorExpired { floor }))) => {
+            Response::error(
+                409,
+                "Conflict",
+                "cursor_expired",
+                &format!(
+                    "events through cursor {} were trimmed and this consumer has not acknowledged that far; the CLI refuses the same way",
+                    floor.0
+                ),
+            )
+        }
         Ok(Err(Error::InvalidInput {
             field: SAVED_STATE_REFUSED,
             reason,
@@ -640,6 +664,14 @@ fn read_store(
                 "/v1/groups/refresh-status" => {
                     Ok(crate::transport_receive::refresh_status(&store, &id)?)
                 }
+                // `events --summary --json` at the default limit; never
+                // acknowledges, so repeating it answers the same batch.
+                "/v1/events/summary" => {
+                    let consumer = whatsapp_api::store::ConsumerId::new(id)?;
+                    let after = store.consumer_cursor(&consumer)?;
+                    let batch = store.read_events(&consumer, after, crate::EVENTS_LIMIT)?;
+                    Ok(crate::events_summary(&consumer, after, &batch))
+                }
                 _ => return Err(Error::invalid("store_routes", "unknown store route")),
             };
             return value
@@ -670,6 +702,7 @@ fn read_store(
         "/v1/diagnostics/own-lid" => Ok(json!({
             "lid_known": group_send::own_lid(&store).map_err(saved_state)?.is_some()
         })),
+        "/v1/media" => serde_json::to_value(whatsapp_api::transport::media::list(&store)?),
         _ => return Err(Error::invalid("store_routes", "unknown store route")),
     };
     value
@@ -738,7 +771,7 @@ fn route(method: &str, raw_path: &str, state: &ApiState) -> Response {
                 routes.extend(
                     QUERY_ROUTES
                         .iter()
-                        .map(|(path, name)| format!("GET {path}?{name}={{{name}}}")),
+                        .map(|(path, name, _)| format!("GET {path}?{name}={{{name}}}")),
                 );
                 routes.push("GET /v1/outbox/{local_id}/versions".to_owned());
             }
@@ -1629,6 +1662,116 @@ mod tests {
         assert!(!path.exists());
     }
 
+    /// `media-list --json` and `events --summary --json`: selectors and event
+    /// kinds only, never acknowledging; an expired consumer cursor is a 409
+    /// naming the floor, not a generic failure.
+    #[cfg(feature = "experimental-transport")]
+    #[tokio::test]
+    async fn store_routes_serve_media_and_event_summaries() {
+        use whatsapp_api::model::{
+            ids::{ChatId, MessageId},
+            jid::Jid,
+            message::{Direction, MessageKey},
+        };
+        use whatsapp_api::store::{
+            ConsumerId, MasterKey, OpenOptions, ProtocolStore, StaticKeySource,
+        };
+        use whatsapp_api::sync::SyncEvent;
+        let dir = tempfile::tempdir().unwrap();
+        let options = OpenOptions {
+            path: dir.path().join("served.redb"),
+            account_id: whatsapp_api::model::ids::AccountId::new("served").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([4; 32]))),
+            create: true,
+        };
+        {
+            let store = ProtocolStore::open(options.clone()).unwrap();
+            for n in 1..=2 {
+                store
+                    .append_event(SyncEvent::MessageDeleted(MessageKey {
+                        chat: ChatId::from_jid(&Jid::parse("15550000000@s.whatsapp.net").unwrap())
+                            .unwrap(),
+                        sender: None,
+                        direction: Direction::Incoming,
+                        id: MessageId::new(format!("SECRETID{n}")).unwrap(),
+                    }))
+                    .unwrap();
+            }
+        }
+        let mut state = state();
+        state.store = Some(StoreRoutes {
+            options,
+            token: zeroize::Zeroizing::new("secret-token".into()),
+            lock: tokio::sync::Mutex::new(()),
+        });
+        let auth = Some("Bearer secret-token");
+        let get = |path: String| {
+            let state = &state;
+            async move {
+                store_route(&request("GET", &path, auth), state)
+                    .await
+                    .unwrap()
+            }
+        };
+        let media = get("/v1/media".into()).await;
+        assert_eq!((media.status, body(&media)), (200, json!([])));
+        assert_eq!(get("/v1/media?kind=image".into()).await.status, 400);
+        let expected = json!({
+            "consumer": "cli",
+            "after_cursor": 0,
+            "ack_cursor": 2,
+            "has_more": false,
+            "kinds": ["message_deleted", "message_deleted"],
+        });
+        // Reading never acknowledges: the same batch answers twice.
+        for _ in 0..2 {
+            let summary = get("/v1/events/summary?consumer=cli".into()).await;
+            assert_eq!((summary.status, body(&summary)), (200, expected.clone()));
+            let text = String::from_utf8_lossy(&summary.body).into_owned();
+            assert!(!text.contains("15550000000"), "{text}");
+            assert!(!text.contains("SECRETID"), "{text}");
+        }
+        // `ConsumerId`'s 64-byte bound, not the 128-byte ID bound, applies.
+        let longest = get(format!("/v1/events/summary?consumer={}", "c".repeat(64))).await;
+        assert_eq!(longest.status, 200);
+        for path in [
+            "/v1/events/summary".to_owned(),
+            "/v1/events/summary?consumer=".to_owned(),
+            "/v1/events/summary?consumer=a%20b".to_owned(),
+            "/v1/events/summary?consumer=cli&limit=5".to_owned(),
+            "/v1/events/summary?limit=5".to_owned(),
+            format!("/v1/events/summary?consumer={}", "c".repeat(65)),
+        ] {
+            let refused = get(path.clone()).await;
+            assert_eq!(refused.status, 400, "{path}");
+            assert_eq!(body(&refused)["error"]["code"], "invalid_input", "{path}");
+        }
+        {
+            let store = ProtocolStore::open(state.store.as_ref().unwrap().options()).unwrap();
+            let cli = ConsumerId::new("cli").unwrap();
+            store
+                .ack_events(&cli, whatsapp_api::model::ids::EventCursor(1))
+                .unwrap();
+            store
+                .write(|tx| tx.trim_events(whatsapp_api::model::ids::EventCursor(1)))
+                .unwrap();
+        }
+        let after_ack = get("/v1/events/summary?consumer=cli".into()).await;
+        assert_eq!(body(&after_ack)["after_cursor"], 1);
+        assert_eq!(body(&after_ack)["kinds"], json!(["message_deleted"]));
+        // A consumer never used before the trim starts at 0, below the floor
+        // (events through cursor 1 were removed; the first retained is 2).
+        let expired = get("/v1/events/summary?consumer=fresh".into()).await;
+        assert_eq!(expired.status, 409);
+        assert_eq!(body(&expired)["error"]["code"], "cursor_expired");
+        assert!(
+            body(&expired)["error"]["message"]
+                .as_str()
+                .unwrap()
+                .contains("events through cursor 1 were trimmed")
+        );
+    }
+
     #[tokio::test]
     async fn store_routes_refuse_non_loopback_binds_before_opening_anything() {
         let dir = tempfile::tempdir().unwrap();
@@ -1738,7 +1881,7 @@ mod tests {
         ]
         .into_iter()
         .chain(STORE_ROUTES.iter().map(|path| ("GET", *path)))
-        .chain(QUERY_ROUTES.iter().map(|(path, _)| ("GET", *path)))
+        .chain(QUERY_ROUTES.iter().map(|(path, ..)| ("GET", *path)))
         .collect::<Vec<_>>();
 
         for (method, path) in &routes {
@@ -1753,7 +1896,7 @@ mod tests {
 
         // Each parameterized route takes exactly the required query parameter
         // OpenAPI names for it.
-        for (path, name) in QUERY_ROUTES {
+        for (path, name, _) in QUERY_ROUTES {
             let required: Vec<&str> = doc["paths"][path]["get"]["parameters"]
                 .as_array()
                 .unwrap()

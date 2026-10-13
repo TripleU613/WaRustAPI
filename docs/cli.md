@@ -60,7 +60,7 @@ Usage: whatsapp-cli outbox-send [OPTIONS]...
 
 ## whatsapp-cli media-list
 
-List ordinary incoming attachments by opaque selector, with content redacted
+List ordinary incoming attachments by opaque selector, with content redacted (`--json` for an array of id, kind and bytes)
 
 ```
 Usage: whatsapp-cli media-list [OPTIONS]...
@@ -1493,7 +1493,7 @@ Usage: whatsapp-cli events [OPTIONS]...
 
 | Flag | Value | Required | Default | Env | Values | Help |
 |------|-------|----------|---------|-----|--------|------|
-| --summary | SUMMARY | no |  |  | `true`, `false` | Print event kinds only, without message content or identifiers |
+| --summary | SUMMARY | no |  |  | `true`, `false` | Print event kinds only, without message content or identifiers. With `--json`, one object with the cursors and the kinds |
 | --consumer | CONSUMER | no | `cli` |  |  | Consumer name |
 | --limit | LIMIT | no | `50` |  |  | Maximum events |
 | --ack | ACK | no |  |  | `true`, `false` | Acknowledge the batch after printing it |

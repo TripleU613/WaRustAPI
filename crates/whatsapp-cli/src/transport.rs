@@ -746,7 +746,9 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
                             }
                             marked_read = true;
                         }
-                        Err(error) => eprintln!("transport: read receipt not queued: {error}"),
+                        Err(error) => {
+                            eprintln!("transport: read receipt may not be queued: {error}")
+                        }
                     }
                 }
                 println!(

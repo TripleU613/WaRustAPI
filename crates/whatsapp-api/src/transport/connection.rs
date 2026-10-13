@@ -785,7 +785,7 @@ pub(crate) async fn drive(
                             for receipt in super::receipts::reserve_pending(&store)? { link.send(&receipt).await?; }
                             marked_read = true;
                         }
-                        Err(error) => tracing::warn!(%error, "automatic read receipt not queued"),
+                        Err(error) => tracing::warn!(%error, "automatic read receipt may not be queued"),
                     }
                 }
                 incoming_line(&node, received, confirmed, marked_read);
@@ -2144,6 +2144,80 @@ mod tests {
         assert!(added[0].starts_with(b"inbound:sha256:"));
     }
 
+    /// Disk full on the real session loop: a receipt that cannot be stored is
+    /// not acknowledged and the session ends with the storage error (the
+    /// handle refuses further writes); after space returns and the store is
+    /// reopened, the server's redelivery is stored and acknowledged.
+    #[tokio::test]
+    async fn a_full_disk_ends_receive_without_an_ack_and_redelivery_confirms_after_reopen() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("full.redb");
+        let faults = crate::store::full_disk::Faults::new();
+        let open_full =
+            || Arc::new(crate::store::full_disk::open(&path, "test", [4; 32], &faults).unwrap());
+        let store = open_full();
+        store
+            .write(|tx| {
+                AccountRecord {
+                    own_jid: Some(Jid::parse("15555550100@s.whatsapp.net").unwrap()),
+                    registration: crate::session::RegistrationStatus::Registered,
+                    ..Default::default()
+                }
+                .save(tx)
+            })
+            .unwrap();
+        let incoming = Node::new("receipt")
+            .attr("from", peer())
+            .attr("id", "OUR-MSG")
+            .attr("t", "1700000000");
+        let records = |store: &ProtocolStore| {
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 10_000))
+                .unwrap()
+                .len()
+        };
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        // Readiness is signalled after the post-activation reservations; on
+        // this single-threaded runtime the worker then runs on until it waits
+        // for input, so the fault below meets the receipt's own writes.
+        (&mut fake.ready).await.unwrap();
+        let before = records(&store);
+        faults.set_full(true);
+        fake.deliver(incoming.clone()).await;
+        let Fake {
+            mut from_worker,
+            task,
+            ..
+        } = fake;
+        let ended = tokio::time::timeout(Duration::from_secs(5), task)
+            .await
+            .expect("worker ends")
+            .expect("worker did not panic");
+        let error = ended.expect_err("a full disk ends the session");
+        assert!(error.to_string().contains("simulated full disk"), "{error}");
+        assert!(
+            from_worker.try_recv().is_err(),
+            "nothing written after the failure"
+        );
+        drop(store);
+        faults.set_full(false);
+        let store = open_full();
+        assert_eq!(records(&store), before, "the receipt left no record");
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        fake.deliver(incoming).await;
+        let (ack, reply) = fake.written().await;
+        assert_eq!(ack.description, "ack");
+        assert_eq!(
+            ack.get_attr("id").and_then(|v| v.as_text()),
+            Some("OUR-MSG")
+        );
+        reply.send(Ok(())).unwrap();
+        fake.stop_cleanly().await;
+        assert!(records(&store) > before, "the redelivery was recorded");
+    }
+
     #[tokio::test(start_paused = true)]
     async fn group_outbox_socket_cuts_keep_every_query_and_ciphertext_reservation_without_replay() {
         use super::super::{group_fanout, outgoing_group};
@@ -2360,6 +2434,102 @@ mod tests {
             reserved
         );
         fake.stop_cleanly().await;
+    }
+
+    /// Outbox key-query reservation under a failing commit. A full disk: the
+    /// reservation does not persist, nothing is written, and after reopen
+    /// the query is sent once. A failed `fsync` whose write still landed: the
+    /// reservation persists, so after reopen the query is never sent (it is
+    /// reserved and unsettled, exactly as after a socket cut).
+    #[tokio::test(start_paused = true)]
+    async fn key_query_reservation_on_a_failing_disk_never_sends_unreserved_or_twice() {
+        use crate::{
+            model::{ids::ClientRequestId, message::MessageContent, send::SendRequest},
+            outbox::Outbox,
+            profile::Limits,
+        };
+        for fsync_only in [false, true] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("reserve-fault.redb");
+            let faults = crate::store::full_disk::Faults::new();
+            let open_faulty = || {
+                Arc::new(crate::store::full_disk::open(&path, "test", [4; 32], &faults).unwrap())
+            };
+            let store = open_faulty();
+            let ticket = store
+                .write(|tx| {
+                    AccountRecord {
+                        own_jid: Some(Jid::parse("15555550100@s.whatsapp.net").unwrap()),
+                        registration: crate::session::RegistrationStatus::Registered,
+                        ..Default::default()
+                    }
+                    .save(tx)?;
+                    Ok(Outbox::new("comparison-driver", Limits::default())
+                        .enqueue(
+                            tx,
+                            &SendRequest {
+                                client_request_id: ClientRequestId::new("fault-send").unwrap(),
+                                chat: ChatId::from_jid(&peer()).unwrap(),
+                                content: MessageContent::Text {
+                                    body: "fixture".into(),
+                                    quoted: None,
+                                    style: Default::default(),
+                                },
+                            },
+                        )?
+                        .0
+                        .local_id)
+                })
+                .unwrap();
+            let key = format!("outbox-key-query:{ticket}");
+            // Fail exactly the commit that writes the reservation key; the
+            // send-path claim and the post-activation commits before it succeed.
+            faults.arm_on(key.as_bytes(), fsync_only);
+            let mut fake = start(&store, true, Some(ticket));
+            fake.activate().await;
+            let Fake {
+                mut from_worker,
+                task,
+                ..
+            } = fake;
+            let ended = tokio::time::timeout(Duration::from_secs(5), task)
+                .await
+                .expect("worker ends")
+                .expect("worker did not panic");
+            let error = ended.expect_err("the failed reservation ends the session");
+            let expected = if fsync_only {
+                "simulated fsync failure"
+            } else {
+                "simulated full disk"
+            };
+            assert!(error.to_string().contains(expected), "{error}");
+            assert!(
+                from_worker.try_recv().is_err(),
+                "no query is written without a committed reservation (fsync_only={fsync_only})"
+            );
+            drop(store);
+            faults.set_full(false);
+            faults.set_sync_fails(false);
+            let store = open_faulty();
+            let reserved = store
+                .read(|tx| tx.get(Table::Checkpoints, key.as_bytes(), 1))
+                .unwrap();
+            assert_eq!(reserved.is_some(), fsync_only, "fsync_only={fsync_only}");
+            let mut fake = start(&store, true, Some(ticket));
+            fake.activate().await;
+            if fsync_only {
+                // Reserved but never written: unsettled, so never re-sent.
+                fake.nothing_written(Duration::from_secs(5)).await;
+            } else {
+                let (query, reply) = fake.written().await;
+                assert_eq!(
+                    query.get_attr("xmlns").and_then(|v| v.as_text()),
+                    Some("encrypt")
+                );
+                reply.send(Ok(())).unwrap();
+            }
+            fake.stop_cleanly().await;
+        }
     }
 
     fn registered_store(path: &std::path::Path) -> Arc<ProtocolStore> {

@@ -1,3 +1,31 @@
+2026-10-13 — **Tested/offline (disk full):** a simulated full disk (a
+test-only redb storage backend, not a real filesystem) shows a commit that
+cannot write is all-or-nothing, after which redb refuses every write on that
+handle until the store is reopened; reopening after space returns recovers the
+committed state. On the real session loop, a receipt that cannot be stored is
+not ACKed and ends the session; its redelivery after reopen is stored and
+ACKed. A failed `fsync` can leave a commit visible even though `write`
+returned an error, so a store write error now documents as "maybe committed".
+A read of every caller found none that sends, resends or compensates on a
+failed write, and the direct outbox key-query reservation is fault-tested: a
+reservation that failed but landed is never sent after reopen. `store rotate-key` now reports a failed commit as an unknown
+outcome ("keep both keys") instead of a generic error that could lead to
+discarding the key in force.
+[Audit](docs/protocol/replay-safety-audit.md#disk-full-and-failed-commits-2026-10-13).
+
+2026-10-13 — **Implemented/offline (HTTP parity: media list and event kinds):**
+`serve --store-routes` now also answers `GET /v1/media` (the `media-list`
+selectors: SHA-256 of the inbox key, snake_case kind, advertised size; no URL,
+MIME, key or chat) and `GET /v1/events/summary?consumer=<name>` (the
+consumer's cursors and the next 50 event kinds; no content, chat or message
+ID). The summary never acknowledges; acknowledging and full events stay
+CLI-only. A consumer whose cursor precedes trimmed events answers 409
+`cursor_expired` naming the last trimmed cursor. The CLI gained the same
+JSON: `media-list --json` and `events --summary --json`. Corrected: the
+OpenAPI `MediaItem` schema listed `mime`, `downloaded`, `opened` and a
+`view_once_image` kind that the list never produced.
+[API README](docs/api/README.md#store-routes-opt-in).
+
 2026-10-13 — **Fixed/offline (PR #4 review, merged as `575d249`):** three
 Codex findings on the merged work are fixed, each with a test. A store path
 that is a dangling symlink, or appears between the existence check and the
