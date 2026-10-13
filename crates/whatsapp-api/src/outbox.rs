@@ -193,6 +193,12 @@ fn validate(req: &SendRequest, limits: &Limits) -> Result<()> {
             "content",
             "cannot send an Unsupported message form",
         )),
+        MessageContent::Media {
+            quoted: Some(quoted),
+            ..
+        } if quoted.key.chat.jid().to_non_ad() != req.chat.jid().to_non_ad() => Err(
+            Error::invalid("content.quoted", "quoted message belongs to another chat"),
+        ),
         _ => Ok(()),
     }
 }

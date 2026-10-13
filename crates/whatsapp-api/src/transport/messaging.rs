@@ -286,14 +286,9 @@ impl MessageRequest {
                     "set either to or group, not both",
                 ));
             }
-            Some(_) => {
-                if value.image.is_some() || value.voice_note.is_some() || value.view_once {
-                    return Err(crate::Error::invalid(
-                        "message",
-                        "a group send carries text only so far",
-                    ));
-                }
-            }
+            // Group media is valid JSON for outbox-send; the comparison path
+            // refuses it separately (`require_comparison_group_text`).
+            Some(_) => {}
             None => {
                 value.recipient()?;
             }
@@ -320,6 +315,20 @@ impl MessageRequest {
             ));
         }
         Ok(value)
+    }
+    /// The comparison (`lab-transport`) group path sends text, replies and
+    /// reactions only. Group media goes through `outbox-send`; refusing here
+    /// keeps the comparison path from sending an empty text in its place.
+    pub fn require_comparison_group_text(&self) -> crate::Result<()> {
+        if self.group_chat()?.is_some()
+            && (self.image.is_some() || self.voice_note.is_some() || self.view_once)
+        {
+            return Err(crate::Error::invalid(
+                "message",
+                "a comparison group send carries text only; use outbox-send for group media",
+            ));
+        }
+        Ok(())
     }
     /// Whether a group send puts its distribution message in `<participants>`
     /// or delivers it as separate direct messages.
@@ -2030,7 +2039,7 @@ mod tests {
             group.group_chat().unwrap(),
             Some(Jid::parse("120363000000000001@g.us").unwrap())
         );
-        // Both targets at once is ambiguous, and a group send is text only.
+        // Both targets at once is ambiguous.
         assert!(
             MessageRequest::read(&write(
                 "both.json",
@@ -2038,13 +2047,15 @@ mod tests {
             ))
             .is_err()
         );
-        assert!(
-            MessageRequest::read(&write(
-                "novoice.json",
-                r#"{"group":"120363000000000001@g.us","voice_note":"/dev/null","request_id":"r3"}"#,
-            ))
-            .is_err()
-        );
+        // Group media is valid JSON (outbox-send), but the comparison group
+        // path refuses it instead of sending an empty text.
+        let voice = MessageRequest::read(&write(
+            "voice.json",
+            r#"{"group":"120363000000000001@g.us","voice_note":"/dev/null","request_id":"r3"}"#,
+        ))
+        .unwrap();
+        assert!(voice.require_comparison_group_text().is_err());
+        assert!(group.require_comparison_group_text().is_ok());
         // A direct send still needs digits.
         assert!(
             MessageRequest::read(&write("none.json", r#"{"text":"hi","request_id":"r4"}"#))

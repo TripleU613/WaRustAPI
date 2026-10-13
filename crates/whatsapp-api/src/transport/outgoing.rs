@@ -238,10 +238,15 @@ pub fn begin_selected(
                     reference,
                     caption: None,
                     file_name: None,
-                    quoted: None,
+                    quoted,
                 } => {
                     super::outgoing_media::resolve(store, &entry.client_request_id, peer, reference)
-                        .is_ok()
+                        .is_ok_and(|(payload, _)| {
+                            quoted.as_ref().is_none_or(|q| {
+                                q.key.chat.jid().to_non_ad() == peer.to_non_ad()
+                                    && super::quotes::media_quote_supported(&payload)
+                            })
+                        })
                 }
                 MessageContent::Reaction { target, emoji } => {
                     super::reactions::validate(peer, target, emoji.as_deref()).is_ok()
@@ -467,6 +472,23 @@ fn reply_payload_for(
     target: &crate::model::message::MessageRef,
     body: &str,
 ) -> Result<Vec<u8>> {
+    let (participant, quoted) = quote_for(store, account, peer, target)?;
+    Ok(super::quotes::reply_payload(
+        body,
+        target.key.id.as_str(),
+        &participant.to_string(),
+        quoted,
+    ))
+}
+
+/// The `participant` and encoded `quotedMessage` for a quote of `target` in
+/// the chat with `peer`, shared by text and media replies.
+fn quote_for(
+    store: &ProtocolStore,
+    account: &AccountRecord,
+    peer: &crate::model::jid::Jid,
+    target: &crate::model::message::MessageRef,
+) -> Result<(crate::model::jid::Jid, Vec<u8>)> {
     use crate::model::message::Direction;
     if target.key.chat.jid().to_non_ad() != peer.to_non_ad() {
         return Err(Error::invalid("reply", "quoted message is in another chat"));
@@ -513,12 +535,7 @@ fn reply_payload_for(
             .ok_or_else(|| Error::invalid("reply", "own identity unknown"))?;
         (own, quoted)
     };
-    Ok(super::quotes::reply_payload(
-        body,
-        id,
-        &participant.to_string(),
-        quoted,
-    ))
+    Ok((participant, quoted))
 }
 
 /// Encode a disappearing-timer, advanced-chat-privacy or keep-in-chat E2E
@@ -798,13 +815,29 @@ impl Pending {
                 reference,
                 caption: None,
                 file_name: None,
-                quoted: None,
-            } => Some(super::outgoing_media::resolve(
-                store,
-                &entry.client_request_id,
-                peer,
-                reference,
-            )?),
+                quoted,
+            } => {
+                let (payload, kind) = super::outgoing_media::resolve(
+                    store,
+                    &entry.client_request_id,
+                    peer,
+                    reference,
+                )?;
+                let payload = match quoted {
+                    // Same attribution and quotedMessage rules as a text reply.
+                    Some(target) => {
+                        let (participant, quoted) = quote_for(store, account, peer, target)?;
+                        Zeroizing::new(super::quotes::media_reply_payload(
+                            &payload,
+                            target.key.id.as_str(),
+                            &participant.to_string(),
+                            quoted,
+                        )?)
+                    }
+                    None => payload,
+                };
+                Some((payload, kind))
+            }
             MessageContent::Text { .. }
             | MessageContent::Reaction { .. }
             | MessageContent::Poll { .. }
@@ -1999,6 +2032,292 @@ mod tests {
             .unwrap();
         assert!(begin_selected(&store, Some(media_id)).unwrap().is_some());
         assert!(begin_selected(&store, Some(media_id)).unwrap().is_none());
+    }
+
+    #[tokio::test]
+    async fn quoted_uploaded_media_carries_the_reply_context_to_the_peer() {
+        use crate::{
+            model::{
+                ids::{DeviceAddress, MessageId},
+                message::{Direction, MessageKey, MessageRef},
+            },
+            registration::request::IdentityChangePolicy,
+            session::{KeyMaterial, RegistrationStatus, SignalIdentityKey},
+        };
+        use wacore_libsignal::protocol::{
+            GenericSignedPreKey, IdentityKeyPair, KeyPair, SignedPreKeyRecord,
+        };
+        // quotedMessage decoding for the assertion only: Message.imageMessage=3,
+        // ImageMessage.contextInfo=17, ContextInfo.quotedMessage=3.
+        #[derive(Clone, PartialEq, prost::Message)]
+        struct Outer {
+            #[prost(message, optional, tag = "3")]
+            image: Option<Inner>,
+        }
+        #[derive(Clone, PartialEq, prost::Message)]
+        struct Inner {
+            #[prost(string, optional, tag = "1")]
+            url: Option<String>,
+            #[prost(message, optional, tag = "17")]
+            context: Option<Ctx>,
+        }
+        #[derive(Clone, PartialEq, prost::Message)]
+        struct Ctx {
+            #[prost(bytes = "vec", optional, tag = "3")]
+            quoted: Option<Vec<u8>>,
+        }
+        let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let own = Jid::parse("15555550199@s.whatsapp.net").unwrap();
+        for direction in [Direction::Incoming, Direction::Outgoing] {
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(&dir.path().join("quoted-media.redb"));
+            let mut rng = rand::rng();
+            let local = IdentityKeyPair::generate(&mut rng);
+            let remote = IdentityKeyPair::generate(&mut rng);
+            let signed = KeyPair::generate(&mut rng);
+            let account_for = |identity: &IdentityKeyPair, registration| AccountRecord {
+                registration: RegistrationStatus::Registered,
+                signal_registration_id: Some(registration),
+                signal_identity: Some(SignalIdentityKey(KeyMaterial {
+                    public: identity.public_key().public_key_bytes().try_into().unwrap(),
+                    private: *identity.private_key().serialize(),
+                })),
+                ..Default::default()
+            };
+            let mut account = account_for(&local, 31);
+            account.own_jid = Some(own.clone());
+            // The parent: an authenticated incoming text, or our own text intent.
+            let parent_text: &[u8] = b"\x0a\x06parent";
+            let parent = if direction == Direction::Incoming {
+                store
+                    .write(|tx| {
+                        AccountRecord::save(&account, tx)?;
+                        tx.put_json(
+                            Table::Checkpoints,
+                            format!("received:{peer}:PARENT").as_bytes(),
+                            1,
+                            &serde_json::json!({"status":"decrypted","protobuf":parent_text}),
+                        )
+                    })
+                    .unwrap();
+                MessageId::new("PARENT").unwrap()
+            } else {
+                let wire = MessageId::new("OWN-PARENT").unwrap();
+                store
+                    .write(|tx| {
+                        AccountRecord::save(&account, tx)?;
+                        let ticket = outbox().enqueue(
+                            tx,
+                            &SendRequest {
+                                client_request_id: ClientRequestId::new("own-parent")?,
+                                chat: ChatId::from_jid(&peer)?,
+                                content: MessageContent::Text {
+                                    body: "parent".into(),
+                                    quoted: None,
+                                    style: Default::default(),
+                                },
+                            },
+                        )?;
+                        let mut entry = outbox().get_mut(tx, ticket.0.local_id)?.unwrap();
+                        entry.wire_id = Some(wire.clone());
+                        entry.progress = AttemptProgress::Failed;
+                        tx.put_json(Table::Outbox, &entry.local_id.0, 1, &entry)
+                    })
+                    .unwrap();
+                wire
+            };
+            let request_id = ClientRequestId::new("quoted-media").unwrap();
+            store
+                .write(|tx| {
+                    tx.put_json(
+                        Table::Checkpoints,
+                        b"message:quoted-media:upload",
+                        1,
+                        &serde_json::json!({"status":"uploaded","to":peer.user,"hash":"synthetic",
+                            "protobuf":[26, 3, 10, 1, 97]}),
+                    )
+                })
+                .unwrap();
+            let reference =
+                super::super::outgoing_media::reference(&store, &request_id, &peer).unwrap();
+            let target = MessageRef {
+                key: MessageKey {
+                    chat: ChatId::from_jid(&peer).unwrap(),
+                    sender: (direction == Direction::Incoming)
+                        .then(|| DeviceAddress::from_jid(&peer).unwrap()),
+                    direction,
+                    id: parent.clone(),
+                },
+            };
+            let id = store
+                .write(|tx| {
+                    Ok(outbox()
+                        .enqueue(
+                            tx,
+                            &SendRequest {
+                                client_request_id: request_id.clone(),
+                                chat: ChatId::from_jid(&peer)?,
+                                content: MessageContent::Media {
+                                    reference: reference.clone(),
+                                    caption: None,
+                                    file_name: None,
+                                    quoted: Some(target.clone()),
+                                },
+                            },
+                        )?
+                        .0
+                        .local_id)
+                })
+                .unwrap();
+            let (pending, _) = begin_selected(&store, Some(id)).unwrap().unwrap();
+            let signature = remote
+                .private_key()
+                .calculate_signature(&signed.public_key.serialize(), &mut rng)
+                .unwrap();
+            let reply = Node::new("iq")
+                .attr("type", "result")
+                .attr("id", pending.query_id.as_str())
+                .children(vec![Node::new("list").children(vec![
+                    Node::new("user").attr("jid", peer.clone()).children(vec![
+                        Node::new("registration").bytes(vec![0, 0, 0, 42]),
+                        Node::new("type").bytes(vec![5]),
+                        Node::new("identity")
+                            .bytes(remote.public_key().public_key_bytes().to_vec()),
+                        Node::new("skey").children(vec![
+                            Node::new("id").bytes(vec![0, 0, 7]),
+                            Node::new("value").bytes(signed.public_key.public_key_bytes().to_vec()),
+                            Node::new("signature").bytes(signature.to_vec()),
+                        ]),
+                    ]),
+                ])]);
+            let stanza = pending
+                .prepare_with_policy(
+                    &store,
+                    &account,
+                    &reply,
+                    ConnectionEpoch(1),
+                    IdentityChangePolicy::Pinned,
+                )
+                .await
+                .unwrap()
+                .expect("quoted media is sendable");
+            let enc = stanza.child("enc").unwrap();
+            assert_eq!(
+                enc.get_attr("mediatype").and_then(|v| v.as_text()),
+                Some("image")
+            );
+            let crate::binary::NodeContent::Bytes(ciphertext) = &enc.content else {
+                panic!("ciphertext missing")
+            };
+            let signed_record = SignedPreKeyRecord::new(
+                7.into(),
+                wacore_libsignal::protocol::Timestamp::from_epoch_millis(0),
+                &signed,
+                &signature,
+            );
+            let decoded = crate::signal::direct::receive_prekey(
+                &account_for(&remote, 42),
+                &own,
+                (None, None),
+                &signed_record.serialize().unwrap(),
+                None,
+                ciphertext,
+            )
+            .await
+            .unwrap();
+            let plaintext = &decoded.received.plaintext;
+            // The receive-side parser (from the APK descriptors) finds the quote.
+            let participant = if direction == Direction::Incoming {
+                &peer
+            } else {
+                &own
+            };
+            assert_eq!(
+                super::super::media::quote_context(plaintext).unwrap(),
+                Some((parent.as_str().to_owned(), Some(participant.to_string())))
+            );
+            let image = <Outer as prost::Message>::decode(plaintext.as_slice())
+                .unwrap()
+                .image
+                .unwrap();
+            assert_eq!(image.url.as_deref(), Some("a"));
+            assert_eq!(
+                image.context.unwrap().quoted.unwrap(),
+                if direction == Direction::Incoming {
+                    parent_text.to_vec()
+                } else {
+                    super::super::quotes::conversation("parent")
+                }
+            );
+        }
+    }
+
+    #[tokio::test]
+    async fn unsupported_quoted_media_fails_locally_before_any_query() {
+        use crate::model::{
+            ids::{DeviceAddress, MessageId},
+            message::{Direction, MessageKey, MessageRef},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("quoted-view-once.redb"));
+        let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        // A view-once wrapper (Message field 55) has no traced quote placement.
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"message:quoted-view-once:upload",
+                    1,
+                    &serde_json::json!({"status":"uploaded","to":peer.user,"hash":"synthetic",
+                        "protobuf":[0xba, 0x03, 0x00]}),
+                )
+            })
+            .unwrap();
+        let request_id = ClientRequestId::new("quoted-view-once").unwrap();
+        let reference =
+            super::super::outgoing_media::reference(&store, &request_id, &peer).unwrap();
+        let id = store
+            .write(|tx| {
+                Ok(outbox()
+                    .enqueue(
+                        tx,
+                        &SendRequest {
+                            client_request_id: request_id.clone(),
+                            chat: ChatId::from_jid(&peer)?,
+                            content: MessageContent::Media {
+                                reference,
+                                caption: None,
+                                file_name: None,
+                                quoted: Some(MessageRef {
+                                    key: MessageKey {
+                                        chat: ChatId::from_jid(&peer)?,
+                                        sender: Some(DeviceAddress::from_jid(&peer)?),
+                                        direction: Direction::Incoming,
+                                        id: MessageId::new("PARENT")?,
+                                    },
+                                }),
+                            },
+                        },
+                    )?
+                    .0
+                    .local_id)
+            })
+            .unwrap();
+        assert!(begin_selected(&store, Some(id)).unwrap().is_none());
+        assert!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, query_key(id).as_bytes(), 1))
+                .unwrap()
+                .is_none()
+        );
+        assert_eq!(
+            store
+                .read(|tx| outbox().get(tx, id))
+                .unwrap()
+                .unwrap()
+                .progress,
+            AttemptProgress::Failed
+        );
     }
 
     #[tokio::test]

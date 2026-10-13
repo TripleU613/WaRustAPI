@@ -44,13 +44,13 @@ operation's `x-library`.
 | Feature | State | CLI | Evidence | Blockers / next |
 |---|---|---|---|---|
 | Direct text (PN or LID) | live, incl. normal outbox with delivery receipt | `send`, `outbox-send` | [messaging-transport](protocol/messaging-transport.md) | Read/played receipt and handset confirmation for outbox send |
-| Replies / quotes | live (text); incoming quoted media offline | `reply` | [chat-actions](protocol/chat-actions.md), [quoted-media](protocol/quoted-media.md) | Quoted media sending; quotes of another chat (status replies) ignore `remoteJid` |
+| Replies / quotes | live (text); quoted media send and receive offline | `reply`, `outbox-send` (group JSON replies) | [chat-actions](protocol/chat-actions.md), [quoted-media](protocol/quoted-media.md) | Live quoted media; direct JSON/CLI quoted media; quotes of another chat (status replies) ignore `remoteJid` |
 | Reactions | direct live; group **not rendering** (cause unknown) | `react` | [reactions](protocol/reactions.md), [groups](protocol/groups.md) | Group reaction rendering |
 | Polls and votes | direct live | `poll`, `vote` | [poll-votes](protocol/poll-votes.md) | Group polls unverified |
 | Edits | receive own-device text/caption edits offline; outgoing **modeled** only | — | [message-edit](protocol/message-edit.md), [media-caption-edit](protocol/media-caption-edit.md) | Peer edit window needs property 2983; outbox has no edit sender ([why](protocol/unknowns.md#outgoing-revoke-and-edit-2026-10-13)) |
 | Revokes (delete for everyone) | receive peer/own-device offline; outgoing **modeled** only | — | [sender-revoke](protocol/sender-revoke.md), [sender-revoke-window](protocol/sender-revoke-window.md) | Physical deletion; admin/status revokes; outbox has no revoke sender ([why](protocol/unknowns.md#outgoing-revoke-and-edit-2026-10-13)) |
 | Keep in chat | live (set); own-device keep sync offline | `keep` | [own-device-keep](protocol/own-device-keep.md), [group-keep](protocol/group-keep.md) | Permission/expiry application |
-| Disappearing messages | set live | `disappearing`, `disappearing-default` | [own-device-timer](protocol/own-device-timer.md) | After-read mode, full setting application |
+| Disappearing messages | set live | `disappearing`, `disappearing-default` | [own-device-timer](protocol/own-device-timer.md) | After-read mode, full setting application; our sent messages carry no `contextInfo.expiration` (sender producer untraced) |
 | Stickers, video, video notes, documents (receive) | offline | `media-list`, `media-open`, `media-save` | [stickers](protocol/stickers.md), [video-media](protocol/video-media.md), [document-media](protocol/document-media.md) | No live sample; sending unsupported |
 
 ## Receipts and delivery

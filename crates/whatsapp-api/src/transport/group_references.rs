@@ -23,11 +23,17 @@ fn target(content: &MessageContent) -> Result<&MessageRef> {
             style,
             ..
         } if !style.is_styled() => Ok(target),
+        MessageContent::Media {
+            quoted: Some(target),
+            caption: None,
+            file_name: None,
+            ..
+        } => Ok(target),
         MessageContent::Reaction { target, .. } | MessageContent::KeepInChat { target, .. } => {
             Ok(target)
         }
         _ => Err(invalid(
-            "expected an unstyled quoted text, reaction or keep",
+            "expected an unstyled quoted text or media, reaction or keep",
         )),
     }
 }
@@ -202,28 +208,32 @@ impl ReferenceGuard {
         Ok(())
     }
 }
-pub(crate) fn guarded_payload(
+/// Resolve and guard the referenced parent, and the participant to name for it.
+fn guarded_target<'a>(
     store: &ProtocolStore,
     chat: &Jid,
     own: &Jid,
-    content: &MessageContent,
-    accepted_at: Timestamp,
-) -> Result<(Vec<u8>, StanzaContent<'static>, ReferenceGuard)> {
+    content: &'a MessageContent,
+) -> Result<(&'a MessageRef, Parent, ReferenceGuard, Jid)> {
     let reference = target(content)?;
-    let resolved = parent(
-        store,
-        chat,
-        reference,
-        matches!(content, MessageContent::Text { .. }),
-    )?;
+    // Quotes copy the parent's retained text into quotedMessage; the guard
+    // rechecks it at reservation.
+    let include_text = matches!(
+        content,
+        MessageContent::Text { .. } | MessageContent::Media { .. }
+    );
+    let resolved = parent(store, chat, reference, include_text)?;
     let guard = ReferenceGuard {
         chat: chat.clone(),
         target: reference.clone(),
-        include_text: matches!(content, MessageContent::Text { .. }),
+        include_text,
         parent: resolved.clone(),
     };
     let participant = match reference.key.direction {
-        Direction::Incoming => resolved.sender.expect("validated incoming participant"),
+        Direction::Incoming => resolved
+            .sender
+            .clone()
+            .expect("validated incoming participant"),
         Direction::Outgoing => {
             if reference
                 .key
@@ -241,6 +251,39 @@ pub(crate) fn guarded_payload(
     if !participant.is_user_like() {
         return Err(invalid("participant must be a user identity"));
     }
+    Ok((reference, resolved, guard, participant))
+}
+
+/// A quoted media reply: `media` (the resolved upload `Message`) gains the
+/// same `BWx` context a quoted text carries (`quotes::media_reply_payload`).
+pub(crate) fn guarded_media_payload(
+    store: &ProtocolStore,
+    chat: &Jid,
+    own: &Jid,
+    content: &MessageContent,
+    media: &[u8],
+) -> Result<(Vec<u8>, ReferenceGuard)> {
+    if !matches!(content, MessageContent::Media { .. }) {
+        return Err(invalid("expected quoted media"));
+    }
+    let (reference, resolved, guard, participant) = guarded_target(store, chat, own, content)?;
+    let body = quotes::media_reply_payload(
+        media,
+        reference.key.id.as_str(),
+        &participant.to_string(),
+        quotes::conversation(resolved.text.as_deref().unwrap_or("")),
+    )?;
+    Ok((body, guard))
+}
+
+pub(crate) fn guarded_payload(
+    store: &ProtocolStore,
+    chat: &Jid,
+    own: &Jid,
+    content: &MessageContent,
+    accepted_at: Timestamp,
+) -> Result<(Vec<u8>, StanzaContent<'static>, ReferenceGuard)> {
+    let (reference, resolved, guard, participant) = guarded_target(store, chat, own, content)?;
     let encoded: Result<(Vec<u8>, StanzaContent<'static>)> = match content {
         MessageContent::Text { body, .. } => {
             let _ = super::group_send::text_payload(body)?;
@@ -277,6 +320,8 @@ pub(crate) fn guarded_payload(
             // APK 37.71 BoR.A02: bare field 51 falls through to type=text.
             StanzaContent::Text,
         )),
+        // target() admits quoted media, whose body needs the resolved upload.
+        MessageContent::Media { .. } => Err(invalid("use guarded_media_payload for media")),
         _ => unreachable!("validated content"),
     };
     let (body, kind) = encoded?;

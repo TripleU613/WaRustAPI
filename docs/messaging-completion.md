@@ -1,3 +1,12 @@
+2026-10-13 — **Implemented/offline:** an uploaded image or voice note can reply
+to a message (direct and normal group outbox): the media message carries the
+same `BWx` contextInfo a text reply does, at the field the receive path reads.
+`outbox-send` group JSON now accepts replies and, after a reader fix, group
+image/voice note JSON, which had been refused by the shared reader despite being
+documented. Our sent messages never carry `contextInfo.expiration` (recorded
+as an unknown). No live quoted media send.
+[Sending](protocol/quoted-media.md#sending-2026-10-13), [expiration gap](protocol/unknowns.md#outgoing-disappearing-context-2026-10-13).
+
 2026-10-13 — **Corrected/offline (second review and replay audit):** a damaged
 same-key held session no longer makes identity-refresh application error on
 every connection start; it defers as `held_session_inconsistent` (preview

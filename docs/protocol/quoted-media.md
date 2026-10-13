@@ -32,8 +32,8 @@ stored, verified against a saved parent, or fetched.
 Own-device synchronized media uses the same projection key as its text path
 for attribution and the original record key for sealing the media reference.
 Caption-edit parent resolution still refuses quoted parents (`allow_quote`
-false), so edit behavior is unchanged. Outgoing media intents with a quote are
-not sendable; the outbox patterns require `quoted: None`.
+false), so edit behavior is unchanged. Outgoing quoted media became sendable
+the same day ([sending](#sending-2026-10-13)).
 
 `MessageContent::Media` gains `quoted`, serialized only when present, so
 existing journal records, saved intents and outbox semantic hashes are
@@ -49,9 +49,62 @@ of a third member (incoming, that member), `quotedMessage` without stanza ID
 a stanza-less quote refuses even when quotes are allowed and that edit-parent
 resolution still refuses quoted documents.
 
+## Sending (2026-10-13)
+
+**Implemented/offline.** An uploaded image or voice note can now reply to a
+message: `MessageContent::Media { quoted: Some(..) }` in the direct and normal
+group outbox. `quotes::media_reply_payload` inserts `contextInfo` (17) into the
+encoded `imageMessage` (3) or `audioMessage` (8) with the same `BWx`
+`stanzaId`/`participant`/`quotedMessage` a text reply carries, copying every
+other field byte for byte. The attribution is the existing text rule:
+
+- direct: `participant` is the contact's LID (or phone number) for their
+  message and our LID (or phone number) for ours; `quotedMessage` is the saved
+  incoming payload with `messageContextInfo` stripped, our own text intent, or
+  an empty `conversation` (shared `quote_for`);
+- group: the guarded reference path (`group_references`), so the parent and its
+  author are re-checked in the reservation transaction (`reference_changed`
+  blocks), and `quotedMessage` is the saved parent text only.
+
+**Evidence:** the field placement is the one the receive path already reads
+from the comparison 2.26.37.71 descriptors (`BWp`/`BWZ` contextInfo=17, `BWx`
+fields; see [Evidence](#evidence-reused)). No native sender for quoted media was
+traced in this session (no APK in the container); the encoding mirrors the
+live-verified text reply, not a traced media-reply producer. **Not
+established:** whether the native client adds other context fields (for
+example `expiration` in a disappearing chat, which no outgoing message of ours
+carries yet) or a quoted-media `quotedMessage` with the parent's media fields.
+
+**Refused locally:** a view-once payload (wrapper 55; its quote semantics are
+untraced), a payload without exactly one image/audio field, a media message
+that already has a context, captions and file names (unchanged), and a quote
+of another chat (outbox validation). The payload shape is checked at
+selection, before any key query is reserved, so an unsupported shape marks the
+intent failed locally (`unsupported_quoted_media_fails_locally_before_any_query`)
+instead of failing after a network reservation.
+
+**Exposure:** library `send_message`; `outbox-send` group JSON replies
+(`quote` without `emoji`/`quoted_text`) with `text`, `image` or `voice_note`.
+The `reply` command stays text-only and direct private JSON still refuses
+`quote`. The same change moved the comparison path's group text-only refusal
+out of the shared JSON reader: it had also blocked the documented
+`outbox-send` group image/voice note path, which was therefore unreachable from
+the CLI.
+
+**Tests:** `media_reply_context_round_trips_through_the_receive_parser`
+(image/audio placement read back by the receive parser) and
+`media_reply_payload_keeps_fields_and_refuses_ambiguous_shapes` (byte layout,
+refusals);
+`quoted_uploaded_media_carries_the_reply_context_to_the_peer` (outbox to a
+decrypted peer plaintext, incoming and outgoing parents);
+the `quoted` case of `uploaded_group_media_is_chat_bound_and_late_crypto_changes_roll_back_reservation`
+(guarded group payload, sent as `mediatype=image`);
+`group_json_replies_map_authors_and_refuse_comparison_only_quotes` (CLI
+mapping and request-ID reuse). No live quoted media was sent.
+
 ## Remaining
 
-Live receipt of a quoted media reply; quoted media sending; quoted-parent
+Live receipt of a quoted media reply; a live quoted media send; quoted-parent
 caption edits; verifying the quoted body against a saved parent.
 
 **Known gap (review, 2026-10-13): quotes of another chat.** `quote_reference`

@@ -128,6 +128,19 @@ time window. Receive-side parsing does not establish what a sender must emit,
 so no sender is implemented. Next step: trace `SendE2EMessageJob`/`0y0.A00`
 for the outgoing `edit` attribute in 2.26.37.71.
 
+## Outgoing disappearing context (2026-10-13)
+
+**Negative finding (code search):** no outgoing content message this client
+builds (text, reply, media, poll, reaction, group text) sets
+`ContextInfo.expiration` (25). The receive path reads it (`BWx`, confirmed),
+and timer changes themselves are sent (`ProtocolMessage` type 3). So in a chat
+with a disappearing timer, our own messages are not marked to disappear on the
+recipient's side. **Not retained:** the native sender-side producer that copies
+the chat's timer (and any `ephemeralSettingTimestamp`) into outgoing contexts,
+and whether it applies to every message kind. Next step: trace where 2.26.37.71
+`SendE2EMessageJob` or the message builders set `BWx.expiration` for outgoing
+messages before adding it.
+
 ## Comparison token dictionary: double-byte page 0 index 1
 
 **Resolved 2026-10-07, test completed 2026-10-13.** The checked 37.71

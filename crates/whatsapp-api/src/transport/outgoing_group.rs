@@ -682,10 +682,22 @@ pub(super) mod tests {
     }
     #[tokio::test]
     async fn uploaded_group_media_is_chat_bound_and_late_crypto_changes_roll_back_reservation() {
-        for media in ["image", "ptt", "race"] {
+        for media in ["image", "ptt", "race", "quoted"] {
             let d = tempfile::tempdir().unwrap();
             let store = group_fanout::tests::open(&d.path().join("media-group.redb"));
             let f = group_fanout::tests::fixture();
+            // A quoted image replies to a member's message this store never
+            // received: the participant is kept, the preview stays empty.
+            let quoted = (media == "quoted").then(|| crate::model::message::MessageRef {
+                key: crate::model::message::MessageKey {
+                    chat: ChatId::from_jid(&f.plan.chat).unwrap(),
+                    sender: Some(
+                        crate::model::ids::DeviceAddress::from_jid(&f.plan.recipients[0]).unwrap(),
+                    ),
+                    direction: crate::model::message::Direction::Incoming,
+                    id: MessageId::new("GROUP-PARENT").unwrap(),
+                },
+            });
             let request_id = ClientRequestId::new("group-media-original").unwrap();
             let content = if media == "race" {
                 MessageContent::Text {
@@ -713,7 +725,7 @@ pub(super) mod tests {
                     reference,
                     caption: None,
                     file_name: None,
-                    quoted: None,
+                    quoted: quoted.clone(),
                 }
             };
             let request = SendRequest {
@@ -729,6 +741,19 @@ pub(super) mod tests {
                         .local_id)
                 })
                 .unwrap();
+            if media == "quoted" {
+                let entry = store.read(|tx| outbox().get(tx, id)).unwrap().unwrap();
+                let (body, kind, guard) = payload(&store, &entry, Some(&f.plan.own)).unwrap();
+                assert!(matches!(kind, groups::StanzaContent::Media("image")));
+                assert!(guard.is_some());
+                assert_eq!(
+                    super::super::media::quote_context(&body).unwrap(),
+                    Some((
+                        "GROUP-PARENT".to_owned(),
+                        Some(f.plan.recipients[0].to_non_ad().to_string())
+                    ))
+                );
+            }
             let (p, q) = begin_selected(&store, id).unwrap().unwrap();
             let mut cursor = devices::DeviceSyncCursor::default();
             let step = p
@@ -820,7 +845,7 @@ pub(super) mod tests {
                         .unwrap()
                         .get_attr("mediatype")
                         .and_then(|v| v.as_text()),
-                    Some(media)
+                    Some(if media == "quoted" { "image" } else { media })
                 );
                 assert_eq!(
                     store
@@ -1297,7 +1322,7 @@ fn payload(store: &ProtocolStore, entry: &OutboxEntry, own: Option<&Jid>) -> Res
             reference,
             caption: None,
             file_name: None,
-            quoted: None,
+            quoted,
         } => {
             let (body, media) = super::outgoing_media::resolve(
                 store,
@@ -1305,7 +1330,34 @@ fn payload(store: &ProtocolStore, entry: &OutboxEntry, own: Option<&Jid>) -> Res
                 entry.intent.chat.jid(),
                 reference,
             )?;
-            Ok((body, groups::StanzaContent::Media(media), None))
+            if quoted.is_none() {
+                return Ok((body, groups::StanzaContent::Media(media), None));
+            }
+            if !super::quotes::media_quote_supported(&body) {
+                return Err(invalid("quoted media payload shape is unsupported"));
+            }
+            // Quoted media follows the quoted-text reference path: the same
+            // parent resolution, participant and reservation-time guard.
+            super::group_references::validate(
+                store,
+                entry.intent.chat.jid(),
+                &entry.intent.content,
+            )?;
+            let Some(own) = own else {
+                return Ok((body, groups::StanzaContent::Media(media), None));
+            };
+            let (body, guard) = super::group_references::guarded_media_payload(
+                store,
+                entry.intent.chat.jid(),
+                own,
+                &entry.intent.content,
+                &body,
+            )?;
+            Ok((
+                Zeroizing::new(body),
+                groups::StanzaContent::Media(media),
+                Some(guard),
+            ))
         }
         _ => Err(invalid(
             "group content is not implemented by the normal adapter",
