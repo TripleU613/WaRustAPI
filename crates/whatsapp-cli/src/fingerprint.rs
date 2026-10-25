@@ -461,7 +461,7 @@ mod tests {
         let data = serde_json::to_vec(&value).unwrap();
         let config = parse(&data).unwrap();
         let path = std::env::temp_dir().join(format!(
-            "telewhatsapp-fingerprint-qr-{}.pb",
+            "warustapi-fingerprint-qr-{}.pb",
             std::process::id()
         ));
         let payload = qr(&config, 0, ComparisonScheme::NativeV4).unwrap();
@@ -571,7 +571,7 @@ mod tests {
     #[test]
     fn file_reader_requires_private_bounded_regular_file() {
         let path = std::env::temp_dir().join(format!(
-            "telewhatsapp-fingerprint-{}.json",
+            "warustapi-fingerprint-{}.json",
             std::process::id()
         ));
         let bytes = serde_json::to_vec(&input()).unwrap();

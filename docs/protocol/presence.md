@@ -154,7 +154,7 @@ since nobody typed during the window.
 
 ## Live: the name record was accepted (2026-09-25, profile `l`)
 
-`push-name "TeleWhatsApp"` then `listen --seconds 30`: the patch went to
+`push-name "WaRustAPI"` then `listen --seconds 30`: the patch went to
 `critical_block` with no `version` attribute (we held none), `order="1"`, and
 the server answered `iq type=result` with
 `<collection name="critical_block" version="1"/>`. First write to a second

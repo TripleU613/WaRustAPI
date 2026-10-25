@@ -157,7 +157,7 @@ mod tests {
     #[test]
     fn every_selected_bundle_refuses_hash_size_and_file_set_changes() {
         let path = std::env::temp_dir().join(format!(
-            "telewhatsapp-hygiene-{}-{}",
+            "warustapi-hygiene-{}-{}",
             std::process::id(),
             std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)

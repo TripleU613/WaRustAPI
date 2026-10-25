@@ -23,7 +23,7 @@ replacement or lifecycle.
 the root with [0Dl.A00](apk/2.26.37.71-mobileconfig-storage/unit-directory.txt).
 Unit 1 uses `sessionless.data/`, unit 2 uses `<session>.data/`, and other units
 use `u<unit>_<session>.data/` with this release's empty variant suffix. These are
-native file-layout names, not directories created in TeleWhatsApp.
+native file-layout names, not directories created in WaRustAPI.
 
 [A02](apk/2.26.37.71-mobileconfig-storage/index-selection.txt), when enabled
 by A0C, tries a trimmed integer in latest.idx and the corresponding

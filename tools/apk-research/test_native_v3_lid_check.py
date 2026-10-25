@@ -31,9 +31,9 @@ class NativeV3LidChecks(unittest.TestCase):
         self.assertEqual(result.stdout,'')
 
     def test_actual_native_parser_branches_match_observations(self):
-        configured=os.environ.get('TELEWHATSAPP_FINGERPRINT_LIBRARY')
+        configured=os.environ.get('WARUSTAPI_FINGERPRINT_LIBRARY')
         if not configured:
-            self.skipTest('set TELEWHATSAPP_FINGERPRINT_LIBRARY for actual V3 LID branches')
+            self.skipTest('set WARUSTAPI_FINGERPRINT_LIBRARY for actual V3 LID branches')
         result=self.invoke(Path(configured).resolve())
         self.assertEqual(result.returncode,0,result.stderr)
         actual=json.loads(result.stdout)
@@ -50,7 +50,7 @@ class NativeV3LidChecks(unittest.TestCase):
         self.assertTrue(cases['base-length-20']['stable_lid_succeeded'])
 
     def test_guest_fixture_string_bounds_refuse_before_execution(self):
-        configured=os.environ.get('TELEWHATSAPP_FINGERPRINT_LIBRARY')
+        configured=os.environ.get('WARUSTAPI_FINGERPRINT_LIBRARY')
         if not configured:
             self.skipTest('set library fixture for bounded modeled guest allocation')
         from native_v3_lid_check import NativeLid

@@ -73,7 +73,7 @@ pub(super) async fn open(
         "--resume-playback=no",
         "--keep-open=no",
         "--image-display-duration=30",
-        "--title=TeleWhatsApp attachment",
+        "--title=WaRustAPI attachment",
     ]);
     match kind {
         MediaKind::Image | MediaKind::Sticker => {

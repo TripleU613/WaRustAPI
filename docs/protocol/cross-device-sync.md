@@ -767,7 +767,7 @@ encoding it as a ProtocolMessage (`0030..0114`).
 **Inferred**: this envelope describes shared group history as a conversation
 notice; it is not itself an app-state key share or an instruction to treat its
 49-byte body as actual history messages. Dispatch, rendering, feature selection
-and receipt policy in TeleWhatsApp remain unfinished. It remains a preserved
+and receipt policy in WaRustAPI remain unfinished. It remains a preserved
 unsupported journal reference, with redacted structural inspection available;
 no text was invented and no history/media request was sent.
 

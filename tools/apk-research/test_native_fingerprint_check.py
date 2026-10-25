@@ -43,9 +43,9 @@ class FingerprintChecks(unittest.TestCase):
         self.assertNotIn("synthetic byte cases", result.stdout)
 
     def test_actual_pinned_byte_comparison(self):
-        configured = os.environ.get("TELEWHATSAPP_FINGERPRINT_LIBRARY")
+        configured = os.environ.get("WARUSTAPI_FINGERPRINT_LIBRARY")
         if not configured:
-            self.skipTest("set TELEWHATSAPP_FINGERPRINT_LIBRARY for native slice execution")
+            self.skipTest("set WARUSTAPI_FINGERPRINT_LIBRARY for native slice execution")
         result = self.invoke(Path(configured).resolve(), "bytes")
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("actual ARM64 XOR/OR results agree", result.stdout)
@@ -53,9 +53,9 @@ class FingerprintChecks(unittest.TestCase):
         self.assertIn("No modeled callees", result.stdout)
 
     def test_actual_pinned_hash_control_flow(self):
-        configured = os.environ.get("TELEWHATSAPP_FINGERPRINT_LIBRARY")
+        configured = os.environ.get("WARUSTAPI_FINGERPRINT_LIBRARY")
         if not configured:
-            self.skipTest("set TELEWHATSAPP_FINGERPRINT_LIBRARY for native slice execution")
+            self.skipTest("set WARUSTAPI_FINGERPRINT_LIBRARY for native slice execution")
         result = self.invoke(Path(configured).resolve())
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(result.stdout.count("rounds=5200 updates=10400"), 2)

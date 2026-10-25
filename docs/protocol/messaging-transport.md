@@ -748,7 +748,7 @@ queue persistence, sender/participant separation and ACK correlation.
 
 **Observed recovery:** the fresh checkout initially lacked `lab/`. A search
 including ignored files found the former checkout under the desktop Trash at
-`~/.local/share/Trash/files/TeleWhatsApp/lab`. It was copied back
+`~/.local/share/Trash/files/WaRustAPI/lab`. It was copied back
 with private permissions; the original was preserved and all restored files
 remain Git-ignored. Offline inspection of profile `l` opened the saved encrypted
 store: registered, last login checkpoint `success`, zero eligible outbox

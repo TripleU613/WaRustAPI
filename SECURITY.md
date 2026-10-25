@@ -6,7 +6,7 @@ Security fixes currently target the main development branch.
 ## Reporting a vulnerability
 
 Use the repository's private
-[Report a vulnerability](https://github.com/TripleU613/TeleWhatsApp/security/advisories/new)
+[Report a vulnerability](https://github.com/TripleU613/WaRustAPI/security/advisories/new)
 form if private reporting is enabled. If the form is unavailable, open a
 minimal issue asking a maintainer for a private contact method, without
 exploit details or sensitive attachments.

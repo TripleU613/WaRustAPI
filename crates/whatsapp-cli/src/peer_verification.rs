@@ -119,7 +119,7 @@ mod tests {
     #[test]
     fn decision_file_is_private_and_bounded() {
         let path =
-            std::env::temp_dir().join(format!("telewhatsapp-decision-{}.json", std::process::id()));
+            std::env::temp_dir().join(format!("warustapi-decision-{}.json", std::process::id()));
         std::fs::write(&path, b"{}").unwrap();
         std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o644)).unwrap();
         assert!(read(&path).is_err());

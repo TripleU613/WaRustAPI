@@ -55,10 +55,10 @@ fn req(id: &str) -> SendRequest {
 #[test]
 fn subprocess_crash_fixture() {
     let _guard = CRASH_TEST_LOCK.lock().unwrap();
-    let Some(path) = std::env::var_os("TELEWHATSAPP_CRASH_FIXTURE_PATH") else {
+    let Some(path) = std::env::var_os("WARUSTAPI_CRASH_FIXTURE_PATH") else {
         return;
     };
-    let mode = std::env::var("TELEWHATSAPP_CRASH_FIXTURE_MODE").unwrap();
+    let mode = std::env::var("WARUSTAPI_CRASH_FIXTURE_MODE").unwrap();
     let store = ProtocolStore::open(OpenOptions {
         path: path.into(),
         account_id: AccountId::new("crash").unwrap(),
@@ -199,10 +199,10 @@ mod view_once_crash {
             let output = std::process::Command::new(std::env::current_exe().unwrap())
                 .args(["--exact", "subprocess_crash_fixture", "--nocapture"])
                 .env(
-                    "TELEWHATSAPP_CRASH_FIXTURE_PATH",
+                    "WARUSTAPI_CRASH_FIXTURE_PATH",
                     dir.path().join("protocol.redb"),
                 )
-                .env("TELEWHATSAPP_CRASH_FIXTURE_MODE", mode)
+                .env("WARUSTAPI_CRASH_FIXTURE_MODE", mode)
                 .output()
                 .unwrap();
             assert_eq!(
@@ -273,10 +273,10 @@ fn abrupt_process_exit_preserves_atomic_intent_and_reservation() {
         let output = std::process::Command::new(std::env::current_exe().unwrap())
             .args(["--exact", "subprocess_crash_fixture", "--nocapture"])
             .env(
-                "TELEWHATSAPP_CRASH_FIXTURE_PATH",
+                "WARUSTAPI_CRASH_FIXTURE_PATH",
                 dir.path().join("protocol.redb"),
             )
-            .env("TELEWHATSAPP_CRASH_FIXTURE_MODE", mode)
+            .env("WARUSTAPI_CRASH_FIXTURE_MODE", mode)
             .output()
             .unwrap();
         assert_eq!(

@@ -35,9 +35,9 @@ class FingerprintParseChecks(unittest.TestCase):
         self.assertEqual(result.stdout, "")
 
     def test_actual_native_unpack_and_free_match_committed_corpus(self):
-        configured = os.environ.get("TELEWHATSAPP_SCHEMA_LIBRARY")
+        configured = os.environ.get("WARUSTAPI_SCHEMA_LIBRARY")
         if not configured:
-            self.skipTest("set TELEWHATSAPP_SCHEMA_LIBRARY for actual native unpacking")
+            self.skipTest("set WARUSTAPI_SCHEMA_LIBRARY for actual native unpacking")
         result = self.invoke(Path(configured).resolve())
         self.assertEqual(result.returncode, 0, result.stderr)
         corpus = HELPER.parents[1].parent / "docs/protocol/fingerprint-native-parser-cases.json"

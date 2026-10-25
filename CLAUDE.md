@@ -1,4 +1,4 @@
-# Working agreement for TeleWhatsApp
+# Working agreement for WaRustAPI
 
 These instructions capture the owner's directions from the project conversation.
 Read this file before working here. Apply it throughout the repository, subject

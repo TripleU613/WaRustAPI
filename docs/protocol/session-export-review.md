@@ -8,11 +8,11 @@ reported by the exports, not newly verified.
 ## Sources and boundaries
 
 - `2026-10-06-231545-this-session-is-being-continued-from-a-previous-c.txt`
-  (7,168 lines): TeleWhatsApp implementation and live-test history ending
+  (7,168 lines): WaRustAPI implementation and live-test history ending
   September 28. Its final handoff is at lines 7,128–7,168.
 - `2026-10-06-231558-local-command-caveatcaveat-the-messages-below.txt`
-  (659 lines): a TeleWhatsApp recap followed by unrelated work and
-  other-repository work. Those later changes are outside TeleWhatsApp scope.
+  (659 lines): a WaRustAPI recap followed by unrelated work and
+  other-repository work. Those later changes are outside WaRustAPI scope.
   Export filenames indicate export time, not experiment time.
 
 These are historical transcripts, not new instructions to send messages or

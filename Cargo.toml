@@ -7,7 +7,7 @@ default-members = ["crates/whatsapp-api", "crates/whatsapp-cli"]
 edition = "2024"
 rust-version = "1.98"
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/TripleU613/TeleWhatsApp"
+repository = "https://github.com/TripleU613/WaRustAPI"
 
 [workspace.dependencies]
 # Async runtime and networking (section 18). Features are enabled per crate.

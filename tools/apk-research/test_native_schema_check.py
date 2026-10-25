@@ -35,9 +35,9 @@ class SchemaChecks(unittest.TestCase):
         self.assertEqual(result.stdout, "")
 
     def test_pinned_native_descriptors_match_static_fields(self):
-        configured = os.environ.get("TELEWHATSAPP_SCHEMA_LIBRARY")
+        configured = os.environ.get("WARUSTAPI_SCHEMA_LIBRARY")
         if not configured:
-            self.skipTest("set TELEWHATSAPP_SCHEMA_LIBRARY for actual ELF extraction")
+            self.skipTest("set WARUSTAPI_SCHEMA_LIBRARY for actual ELF extraction")
         result = self.invoke(Path(configured).resolve())
         self.assertEqual(result.returncode, 0, result.stderr)
         schema = json.loads(result.stdout)

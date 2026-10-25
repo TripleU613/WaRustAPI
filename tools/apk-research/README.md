@@ -132,7 +132,7 @@ Regression checks (six passed locally, including genuine guest execution,
 partial-output preservation and refusal to trace an unknown decoder):
 
 ```sh
-TELEWHATSAPP_LOADER_ROOTFS=lab/apk-2.26.37.71/native/qiling-rootfs \
+WARUSTAPI_LOADER_ROOTFS=lab/apk-2.26.37.71/native/qiling-rootfs \
   lab/native-analysis-tools-py312/bin/python -m unittest discover \
   -s tools/apk-research -p test_native_loader_check.py -v
 ```
@@ -174,7 +174,7 @@ Both runners' regression checks (eight passed locally):
 
 ```sh
 PYTHONDONTWRITEBYTECODE=1 \
-  TELEWHATSAPP_LOADER_ROOTFS=lab/apk-2.26.37.71/native/qiling-rootfs \
+  WARUSTAPI_LOADER_ROOTFS=lab/apk-2.26.37.71/native/qiling-rootfs \
   lab/native-analysis-tools-py312/bin/python -m unittest discover \
   -s tools/apk-research -p 'test_native_*check.py' -v
 ```
@@ -198,14 +198,14 @@ PYTHONDONTWRITEBYTECODE=1 lab/native-analysis-tools-py312/bin/python \
   tools/apk-research/native_fingerprint_check.py \
   --library lab/apk-2.26.37.71/native/qiling-rootfs/decoded/libwhatsapp.so
 PYTHONDONTWRITEBYTECODE=1 \
-  TELEWHATSAPP_LOADER_ROOTFS=lab/apk-2.26.37.71/native/qiling-rootfs \
-  TELEWHATSAPP_FINGERPRINT_LIBRARY=lab/apk-2.26.37.71/native/qiling-rootfs/decoded/libwhatsapp.so \
+  WARUSTAPI_LOADER_ROOTFS=lab/apk-2.26.37.71/native/qiling-rootfs \
+  WARUSTAPI_FINGERPRINT_LIBRARY=lab/apk-2.26.37.71/native/qiling-rootfs/decoded/libwhatsapp.so \
   lab/native-analysis-tools-py312/bin/python -m unittest discover \
   -s tools/apk-research -p 'test_native_*check.py' -v
 ```
 
 The latter includes eleven checks. Pinned-library execution skips without
-`TELEWHATSAPP_FINGERPRINT_LIBRARY`; fingerprint preflight checks need no ELF
+`WARUSTAPI_FINGERPRINT_LIBRARY`; fingerprint preflight checks need no ELF
 or emulator dependency. Existing rootfs requirements/skips still apply.
 
 
@@ -231,15 +231,15 @@ PYTHONDONTWRITEBYTECODE=1 lab/native-analysis-tools-py312/bin/python \
   tools/apk-research/native_schema_check.py \
   --library lab/apk-2.26.37.71/native/qiling-rootfs/decoded/libwhatsappmerged.so
 PYTHONDONTWRITEBYTECODE=1 \
-  TELEWHATSAPP_LOADER_ROOTFS=lab/apk-2.26.37.71/native/qiling-rootfs \
-  TELEWHATSAPP_FINGERPRINT_LIBRARY=lab/apk-2.26.37.71/native/qiling-rootfs/decoded/libwhatsapp.so \
-  TELEWHATSAPP_SCHEMA_LIBRARY=lab/apk-2.26.37.71/native/qiling-rootfs/decoded/libwhatsappmerged.so \
+  WARUSTAPI_LOADER_ROOTFS=lab/apk-2.26.37.71/native/qiling-rootfs \
+  WARUSTAPI_FINGERPRINT_LIBRARY=lab/apk-2.26.37.71/native/qiling-rootfs/decoded/libwhatsapp.so \
+  WARUSTAPI_SCHEMA_LIBRARY=lab/apk-2.26.37.71/native/qiling-rootfs/decoded/libwhatsappmerged.so \
   lab/native-analysis-tools-py312/bin/python -m unittest discover \
   -s tools/apk-research -p 'test_native_*check.py' -v
 ```
 
 All sixteen cases passed locally with these fixtures. Schema integration skips
-without `TELEWHATSAPP_SCHEMA_LIBRARY`; its missing/wrong-build preflight cases
+without `WARUSTAPI_SCHEMA_LIBRARY`; its missing/wrong-build preflight cases
 need no library or ELF dependency. Neither schema extraction nor these tests
 executes whole QR comparison or sets a peer's verified bit.
 
@@ -283,7 +283,7 @@ PYTHONDONTWRITEBYTECODE=1 lab/native-analysis-tools-py312/bin/python \
 
 `test_native_v4_comparison_check.py` covers missing/wrong-build refusals and
 compares all observations against the committed artifact. Actual emulation skips
-unless `TELEWHATSAPP_FINGERPRINT_LIBRARY` is set. See the
+unless `WARUSTAPI_FINGERPRINT_LIBRARY` is set. See the
 [execution scope and findings](../../docs/protocol/safety-number.md#executed-native-v4-comparison-branches-2026-10-07).
 
 Optional paired flags on that checker execute actual APK merged MCFStringCompare
@@ -302,7 +302,7 @@ PYTHONDONTWRITEBYTECODE=1 lab/native-analysis-tools-py312/bin/python \
   --libc lab/apk-2.26.37.71/native/qiling-rootfs/system/lib64/libc.so
 ```
 
-Set `TELEWHATSAPP_BIONIC_LIBRARY` along with the main/merged fixture variables
+Set `WARUSTAPI_BIONIC_LIBRARY` along with the main/merged fixture variables
 for the additional actual-string regression test. Pairing/wrong-build preflight
 checks require no fixtures. See
 [scope and compact observations](../../docs/protocol/safety-number.md#actual-native-ascii-username-comparison-2026-10-07).
@@ -328,7 +328,7 @@ PYTHONDONTWRITEBYTECODE=1 lab/native-analysis-tools-py312/bin/python \
 ```
 
 `test_native_fingerprint_parse_check.py` includes actual corpus reproduction
-with `TELEWHATSAPP_SCHEMA_LIBRARY`, otherwise explicitly skipped, and always
+with `WARUSTAPI_SCHEMA_LIBRARY`, otherwise explicitly skipped, and always
 runs missing/wrong-build empty-output refusal checks. All fixture variables
 configured brings the native tooling suite to 25 tests.
 
@@ -391,7 +391,7 @@ and [scope/unknowns](../../docs/protocol/safety-number.md#executed-v3-core-and-r
 
 ```sh
 <python-env> tools/apk-research/native_v3_comparison_check.py --library <libwhatsapp.so>
-TELEWHATSAPP_FINGERPRINT_LIBRARY=<libwhatsapp.so> <python-env> -m unittest discover -s tools/apk-research -p 'test_native_v3_comparison_check.py'
+WARUSTAPI_FINGERPRINT_LIBRARY=<libwhatsapp.so> <python-env> -m unittest discover -s tools/apk-research -p 'test_native_v3_comparison_check.py'
 ```
 
 Generic MCFEqual and getters/key equality are modeled. Native JID construction,
@@ -421,7 +421,7 @@ retain the evidence and modeled dependencies.
 
 ```sh
 <python-env> tools/apk-research/native_v3_lid_check.py --library <libwhatsapp.so>
-TELEWHATSAPP_FINGERPRINT_LIBRARY=<libwhatsapp.so> <python-env> -m unittest discover -s tools/apk-research -p 'test_native_v3_lid_check.py'
+WARUSTAPI_FINGERPRINT_LIBRARY=<libwhatsapp.so> <python-env> -m unittest discover -s tools/apk-research -p 'test_native_v3_lid_check.py'
 ```
 
 MCF split/getters/copies/equality/formatting, allocation/class registration,

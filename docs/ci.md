@@ -77,7 +77,7 @@ the application or create issues. Its status is separate from `CI required`;
 do not make a path-filtered status universally required for docs-only PRs.
 The project's native-dependency audit and RustSec check answer different questions.
 
-The first [live RustSec run](https://github.com/TripleU613/TeleWhatsApp/actions/runs/35302844049)
+The first [live RustSec run](https://github.com/TripleU613/WaRustAPI/actions/runs/35302844049)
 reports existing advisories for `rsa` and the experimental HTTPS provider's
 older `rustls-webpki` line, plus an unmaintained `paste` warning. No advisories
 are suppressed by this CI change. A red advisory scan requires dependency
@@ -90,16 +90,16 @@ including the optional Signal crypto dependency, with no reported advisories.
 
 ## Local checks
 
-The initial [normal-validation run](https://github.com/TripleU613/TeleWhatsApp/actions/runs/35302927716)
+The initial [normal-validation run](https://github.com/TripleU613/WaRustAPI/actions/runs/35302927716)
 passed routing tests, hygiene, lint, both test configurations, generation and
 dependency-contract checks, packaging, strict rustdoc, and the aggregate gate.
 Extended scheduled/manual checks were intentionally not selected in that run.
 
 ```sh
-rustc --edition=2024 --test .github/ci/plan.rs -o /tmp/telewhatsapp-ci-tests
-/tmp/telewhatsapp-ci-tests
-rustc --edition=2024 .github/ci/hygiene.rs -o /tmp/telewhatsapp-ci-hygiene
-/tmp/telewhatsapp-ci-hygiene
+rustc --edition=2024 --test .github/ci/plan.rs -o /tmp/warustapi-ci-tests
+/tmp/warustapi-ci-tests
+rustc --edition=2024 .github/ci/hygiene.rs -o /tmp/warustapi-ci-hygiene
+/tmp/warustapi-ci-hygiene
 rustfmt --edition 2024 --check .github/ci/plan.rs .github/ci/hygiene.rs
 actionlint
 ```

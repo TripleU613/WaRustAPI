@@ -459,7 +459,7 @@ outgoing pin was adopted. Private evidence: `lab/accounts/l/peer-keys-live-2026-
 `peer-keys-result-2026-10-07.json` and the paired pre/post pin summaries.
 
 One new private outgoing test JSON is prepared with a stable ID and text
-"TeleWhatsApp identity recovery test.", plus an independent config enabling the
+"WaRustAPI identity recovery test.", plus an independent config enabling the
 outgoing policy. It is not queued or sent. All previously saved test sends are
 acknowledged and cannot be replayed. The new chat send awaits explicit operator
 authorization, while other protocol work may continue.
@@ -1758,7 +1758,7 @@ Valid zero, signed minimum and positive BMP-digit maximum remain guarded.
 **Local verification environment:** host packages changed during this work;
 the final CLI build initially failed to load libLLVM.so.22.1 with installed
 LLVM 23. The official Arch llvm-libs 22.1.8-2 package was unpacked only into
-`/tmp/telewhatsapp-llvm22`; LD_LIBRARY_PATH supplied its library for the
+`/tmp/warustapi-llvm22`; LD_LIBRARY_PATH supplied its library for the
 remaining checks. No host package/configuration was changed by this work.
 The repeated checks use the resulting system Rust 1.99.0; they do not establish
 the repository-pinned 1.98.1 toolchain proof. First-pass workspace/lint/docs/CLI

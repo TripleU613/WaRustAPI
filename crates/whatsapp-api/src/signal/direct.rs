@@ -921,7 +921,7 @@ mod tests {
             store::{MasterKey, OpenOptions, ProtocolStore, StaticKeySource, Table},
             transport::inbox::{self, IncomingResult},
         };
-        let Some(path) = std::env::var_os("TELEWHATSAPP_RECEIVE_CRASH_FIXTURE") else {
+        let Some(path) = std::env::var_os("WARUSTAPI_RECEIVE_CRASH_FIXTURE") else {
             return;
         };
         let store = ProtocolStore::open(OpenOptions {
@@ -952,7 +952,7 @@ mod tests {
         )
         .decode_node()
         .unwrap();
-        let stage = std::env::var("TELEWHATSAPP_RECEIVE_CRASH_STAGE").unwrap();
+        let stage = std::env::var("WARUSTAPI_RECEIVE_CRASH_STAGE").unwrap();
         if stage == "captured" {
             std::process::exit(80);
         }
@@ -1920,10 +1920,10 @@ mod tests {
                         "--test-threads=1",
                     ])
                     .env(
-                        "TELEWHATSAPP_RECEIVE_CRASH_FIXTURE",
+                        "WARUSTAPI_RECEIVE_CRASH_FIXTURE",
                         dir.path().join("ratchet.redb"),
                     )
-                    .env("TELEWHATSAPP_RECEIVE_CRASH_STAGE", stage)
+                    .env("WARUSTAPI_RECEIVE_CRASH_STAGE", stage)
                     .output()
                     .unwrap();
                 assert_eq!(

@@ -2944,8 +2944,8 @@ mod tests {
     #[test]
     fn group_receipt_cli_is_offline_and_redacts_addresses() {
         use clap::Parser;
-        const FIXTURE: &str = "TELEWHATSAPP_GROUP_RECEIPT_INSPECTION_FIXTURE";
-        const KEY: &str = "TELEWHATSAPP_GROUP_RECEIPT_INSPECTION_KEY";
+        const FIXTURE: &str = "WARUSTAPI_GROUP_RECEIPT_INSPECTION_FIXTURE";
+        const KEY: &str = "WARUSTAPI_GROUP_RECEIPT_INSPECTION_KEY";
         if let Ok(path) = std::env::var(FIXTURE) {
             for command in ["receipts", "key-queries"] {
                 for id in ["fixture", "unknown"] {
@@ -3068,8 +3068,8 @@ mod tests {
     #[tokio::test]
     async fn malformed_addon_inspection_still_explains_the_key_refusal() {
         use clap::Parser;
-        const FIXTURE: &str = "TELEWHATSAPP_REACTION_INSPECTION_FIXTURE";
-        const KEY: &str = "TELEWHATSAPP_REACTION_INSPECTION_KEY";
+        const FIXTURE: &str = "WARUSTAPI_REACTION_INSPECTION_FIXTURE";
+        const KEY: &str = "WARUSTAPI_REACTION_INSPECTION_KEY";
         if let Ok(path) = std::env::var(FIXTURE) {
             let cli = super::super::Cli::try_parse_from([
                 "cli",

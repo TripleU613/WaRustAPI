@@ -35,9 +35,9 @@ class NativeV4Checks(unittest.TestCase):
         self.assertEqual(result.stdout, "")
 
     def test_actual_native_branches_match_committed_observations(self):
-        configured = os.environ.get("TELEWHATSAPP_FINGERPRINT_LIBRARY")
+        configured = os.environ.get("WARUSTAPI_FINGERPRINT_LIBRARY")
         if not configured:
-            self.skipTest("set TELEWHATSAPP_FINGERPRINT_LIBRARY for native V4 slice execution")
+            self.skipTest("set WARUSTAPI_FINGERPRINT_LIBRARY for native V4 slice execution")
         result = self.invoke(Path(configured).resolve())
         self.assertEqual(result.returncode, 0, result.stderr)
         actual = json.loads(result.stdout)
@@ -63,9 +63,9 @@ class NativeV4Checks(unittest.TestCase):
         self.assertEqual(result.stdout, "")
 
     def test_actual_merged_and_bionic_string_comparison(self):
-        library = os.environ.get("TELEWHATSAPP_FINGERPRINT_LIBRARY")
-        merged = os.environ.get("TELEWHATSAPP_SCHEMA_LIBRARY")
-        libc = os.environ.get("TELEWHATSAPP_BIONIC_LIBRARY")
+        library = os.environ.get("WARUSTAPI_FINGERPRINT_LIBRARY")
+        merged = os.environ.get("WARUSTAPI_SCHEMA_LIBRARY")
+        libc = os.environ.get("WARUSTAPI_BIONIC_LIBRARY")
         if not (library and merged and libc):
             self.skipTest("set main/merged/Bionic library fixture variables for actual string execution")
         result = self.invoke(Path(library).resolve(), ["--string-library", str(Path(merged).resolve()), "--libc", str(Path(libc).resolve())])

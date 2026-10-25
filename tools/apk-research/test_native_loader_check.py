@@ -1,4 +1,4 @@
-"""Integration checks; set TELEWHATSAPP_LOADER_ROOTFS to the public rootfs."""
+"""Integration checks; set WARUSTAPI_LOADER_ROOTFS to the public rootfs."""
 
 import os
 from pathlib import Path
@@ -22,7 +22,7 @@ class LoaderTests(unittest.TestCase):
         )
 
     def public_root(self):
-        configured = os.environ.get("TELEWHATSAPP_LOADER_ROOTFS")
+        configured = os.environ.get("WARUSTAPI_LOADER_ROOTFS")
         if not configured:
             self.skipTest("public ARM64 rootfs not configured")
         return Path(configured).resolve()

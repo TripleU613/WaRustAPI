@@ -741,7 +741,7 @@ any `mark_as_verified` or `mark_as_verified_action_seq` update. They show
 comparison and result presentation. Delayed A0q/animation callbacks, any
 separate human confirmation action, and the complete verification-state writer
 call chain remain untraced. Do not infer that such a writer is absent from the
-APK, or update TeleWhatsApp's verified bit from these UI paths alone. Existing
+APK, or update WaRustAPI's verified bit from these UI paths alone. Existing
 identity replacement records the new identity as unverified in its history;
 the client has no editable human-verification metadata yet. See
 [peer identity evidence](peer-identity.md).
@@ -1176,8 +1176,8 @@ PYTHONDONTWRITEBYTECODE=1 lab/native-analysis-tools-py312/bin/python \
   --libc lab/apk-2.26.37.71/native/qiling-rootfs/system/lib64/libc.so
 ```
 
-Native-string regression execution requires `TELEWHATSAPP_FINGERPRINT_LIBRARY`,
-`TELEWHATSAPP_SCHEMA_LIBRARY` and new `TELEWHATSAPP_BIONIC_LIBRARY`; otherwise
+Native-string regression execution requires `WARUSTAPI_FINGERPRINT_LIBRARY`,
+`WARUSTAPI_SCHEMA_LIBRARY` and new `WARUSTAPI_BIONIC_LIBRARY`; otherwise
 that fixture-dependent case explicitly skips. Default modeled mode still
 matches its original committed artifact. This resolves the practical
 ASCII-comparison primitive for the pinned comparison fixture. **Unknown:**
@@ -1364,7 +1364,7 @@ PYTHONDONTWRITEBYTECODE=1 lab/native-analysis-tools-py312/bin/python \
 
 Three tool checks cover missing/wrong-build empty-output refusal and actual
 corpus reproduction (the latter explicitly skips without
-`TELEWHATSAPP_SCHEMA_LIBRARY`). Private scoped disassemblies
+`WARUSTAPI_SCHEMA_LIBRARY`). Private scoped disassemblies
 `fingerprint-protobuf-unpack.txt` and `fingerprint-protobuf-unpack-helpers.txt`
 retain the instruction evidence. **Unknown/unverified:** arbitrary parser edges
 outside this corpus, allocation-failure/OOM compatibility, other APK builds,

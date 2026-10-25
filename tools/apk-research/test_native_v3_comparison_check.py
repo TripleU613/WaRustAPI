@@ -32,9 +32,9 @@ class NativeV3Checks(unittest.TestCase):
         self.assertEqual(result.stdout, '')
 
     def test_actual_native_core_and_remapper(self):
-        configured = os.environ.get('TELEWHATSAPP_FINGERPRINT_LIBRARY')
+        configured = os.environ.get('WARUSTAPI_FINGERPRINT_LIBRARY')
         if not configured:
-            self.skipTest('set TELEWHATSAPP_FINGERPRINT_LIBRARY for actual V3 execution')
+            self.skipTest('set WARUSTAPI_FINGERPRINT_LIBRARY for actual V3 execution')
         result = self.invoke(Path(configured).resolve())
         self.assertEqual(result.returncode, 0, result.stderr)
         actual = json.loads(result.stdout)
