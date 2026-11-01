@@ -50,3 +50,24 @@ account keys and returned credentials, followed by a first-message send and
 server acknowledgement. Neither a registration `ok` nor saved credentials prove
 that this connection or message exchange works. See [current status](../../STATUS.md)
 and [protocol unknowns](unknowns.md).
+
+## Wrong-code results: partial trace (2026-11-01)
+
+**Confirmed static, 2.26.37.71:** `KotlinRegistrationBridge.A08` maps
+`/v2/register` reasons to result codes (`02S` boxed integers, read from
+`02S.<clinit>`): `incorrect` = 20 (`A0D`), `mismatch` = 5 (`A0j`),
+`too_many_guesses` = 6 (`A0u`), `guessed_too_fast` = 7 (`A15`), `stale` = 9
+(`A1R`), `blocked` = 11 (`A03`), `sms_required` = 23 (`A0G`).
+`VerifyPhoneNumber.A5O` switches on that value (`packed-switch` at `067c`,
+cases 0–18 only):
+
+| Code | Target | What is established |
+| --- | --- | --- |
+| 9 `stale` | `078e` | forget stored code, clear input, show error, stay on code entry (implemented) |
+| 5 `mismatch` | `08ca` | calls `A1v(Hts, method)`; `A1v` not yet read |
+| 20 `incorrect` | default `0682` | `I49.A07` (forget stored code) first; the rest of the branch (`Ho3.A00`, `BLt`, `I1b.A01(…, -1)`, a `wa_old` method check, then a jump back) is **not** followed |
+
+**Not established:** whether `incorrect` keeps the attempt on code entry
+(likely, since it forgets only the stored code) and what `A1v` does for
+`mismatch`. Until `0682`'s continuation and `A1v` are read, both stay a
+preserved refusal (no replay).
