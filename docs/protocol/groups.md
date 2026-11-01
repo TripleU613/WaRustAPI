@@ -925,6 +925,25 @@ did not appear on the handset. So a stale or expired target is ruled out. In
 the same session the operator's own reaction to our `l-reply-1` arrived, which
 confirms that group reply rendered. The reaction cause remains **unknown**.
 
+### Outgoing `add_on` meta is correct for ordinary groups (2026-11-01)
+
+**Confirmed static, 2.26.37.71:** the outgoing message `meta` builder is
+`DEZ.AR2(Cac, CaB, Civ)` (the `Civ` stanza writer). It writes
+`content_type="add_on"` at `06da..06e8` only when `!0DE.A0V(chat)` and the
+message is a `1iZ`, and again at `08be..08d0` when `!0DE.A0W(chat)` and the
+message is a `7CL`. `0DE.A0V` is `A0Y || A0W`: `A0Y` is JID type 22 or 23,
+`A0W` is type 28 (interop group). An ordinary `g.us` group is type 1
+(`1bn.getType`, [group-reaction-mapper](group-reaction-mapper.md)), so the
+official client **does** send the add-on meta there. **Negative result:** our
+group reaction's `meta content_type=add_on` is not the cause of the missing
+render; omitting it would diverge from the APK. **Not established:** that
+`1iZ` is exactly the reaction class (inferred from this branch), and the
+remaining `meta` attributes `DEZ.AR2` may add for a reaction (`thread_origin`,
+`receiver_account_kind`, …), whose conditions were not followed. The ack's
+missing `count` is still the strongest unexplained signal; a two-account
+receive test (one of our accounts reacting, the other receiving) would show
+whether the server fans the reaction out at all.
+
 ## A group payload addressed to one device (2026-09-28)
 
 **Observed:** a group stanza from the operator carried a per-device `msg` and
