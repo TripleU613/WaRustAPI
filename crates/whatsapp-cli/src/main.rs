@@ -1034,7 +1034,8 @@ enum GroupCmd {
         #[arg(long)]
         revoke: bool,
     },
-    /// Apply settled replies and list the stored group snapshots (numbers masked).
+    /// Apply settled replies and list the stored group snapshots (numbers masked;
+    /// masked ids are not valid input, the global `--json` prints full JIDs).
     List,
 }
 

@@ -135,9 +135,7 @@ fn group_server() -> Result<Jid> {
 }
 
 fn require_group(jid: &Jid) -> Result<Jid> {
-    if jid.server != Server::Group {
-        return Err(invalid("not a group JID"));
-    }
+    jid.require_group_id()?;
     Ok(jid.clone())
 }
 

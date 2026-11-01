@@ -367,12 +367,7 @@ impl MessageRequest {
             return Ok(None);
         };
         let jid = Jid::parse(raw)?;
-        if jid.server != crate::model::jid::Server::Group || jid.device != 0 {
-            return Err(crate::Error::invalid(
-                "message",
-                "group must be a `…@g.us` JID",
-            ));
-        }
+        jid.require_group_id()?;
         Ok(Some(jid))
     }
 

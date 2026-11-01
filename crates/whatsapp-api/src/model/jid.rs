@@ -205,6 +205,28 @@ impl Jid {
         }
     }
 
+    /// Require a well-formed group JID: `g.us`, no agent/device, and a user
+    /// of digits or the legacy `creator-timestamp` digits form.
+    ///
+    /// The generic parser admits any user text, so a masked display ID such as
+    /// `***…023@g.us` (what `group list` prints) parsed and was sent; the
+    /// server silently ignores a query to a group that cannot exist
+    /// (observed 2026-11-01: group info got no reply for 30–45 s).
+    pub fn require_group_id(&self) -> Result<()> {
+        let digits = |part: &str| !part.is_empty() && part.bytes().all(|b| b.is_ascii_digit());
+        let well_formed = match self.user.split_once('-') {
+            Some((creator, created)) => digits(creator) && digits(created),
+            None => digits(&self.user),
+        };
+        if self.server != Server::Group || self.agent != 0 || self.device != 0 || !well_formed {
+            return Err(Error::invalid(
+                "jid",
+                "not a group id: expected digits@g.us (or creator-timestamp@g.us); a masked id copied from display output is refused",
+            ));
+        }
+        Ok(())
+    }
+
     /// Parse the textual form `user[.agent][:device]@server`.
     pub fn parse(s: &str) -> Result<Self> {
         if s.len() > MAX_USER_LEN + MAX_SERVER_LEN + 16 {
@@ -297,6 +319,24 @@ impl fmt::Debug for Jid {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn group_ids_must_be_digits_and_masked_display_ids_are_refused() {
+        for ok in ["120363000000000001@g.us", "15551234567-1600000000@g.us"] {
+            Jid::parse(ok).unwrap().require_group_id().unwrap();
+        }
+        for bad in [
+            "***************023@g.us",
+            "12036300000000000a@g.us",
+            "1555-@g.us",
+            "-1600000000@g.us",
+            "g.us",
+            "15551234567@s.whatsapp.net",
+        ] {
+            let error = Jid::parse(bad).unwrap().require_group_id().unwrap_err();
+            assert!(error.to_string().contains("masked id"), "{bad}: {error}");
+        }
+    }
 
     #[test]
     fn roundtrip_plain_and_ad() {
