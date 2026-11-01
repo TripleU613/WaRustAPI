@@ -229,3 +229,17 @@ pending rotation still distribute to all. `recipients` keeps its conservative
 the APK; we track one chain), and the "one-time-sender-key" path in
 `SendE2EMessageJob`. The normal group outbox now blocks a reaction only when
 some device still needs the distribution.
+
+### `sent_add_on_sender_key`: partial trace (2026-11-01)
+
+**Confirmed static, 2.26.37.71:** the column is referenced only by the schema
+builder `0N8.AR4` (declared beside `sent_sender_key` and
+`sent_sender_key_bucket`) and the participant loader `0bI.A0K`, which reads
+`sent_sender_key` into one boolean (`01b2..01c8`) and `sent_add_on_sender_key`
+into a second (`01c8..01e8`, true only when the stored value is 1) before
+building the participant-device model. No `UPDATE` string writes it alone
+(the `UPDATE … sent_sender_key` statements never name it; only the `INSERT`
+does). **Next trace:** that model's constructor field mapping, then its
+getter's readers in `SendE2EMessageJob.A06`, to learn how an add-on (reaction)
+send delivers a missing distribution. Until then the normal outbox refuses a
+group reaction that would need one (`reaction_distribution_unsupported`).
