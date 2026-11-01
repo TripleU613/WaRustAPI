@@ -468,6 +468,11 @@ ACKs every notification its subclasses dispatch.
   (found by its log strings, not the bare `business` literal, which is why the
   first search missed it); it extends `0yO`, does not defer and adds no
   attribute, so `notifications::business_ack` sends the plain base ACK.
+* **`mex` (fixed 2026-11-01).** The most frequent type in our captures (82 on
+  `l`/`q`). The MEX notification router `0yP` (logs `mexnotificationrouter/…`)
+  extends `0yO`, does not defer and adds no attribute, and still reaches the
+  base ACK when no handler/operation matches; `notifications::mex_ack` sends
+  the plain base ACK. Operations are not applied (captures kept).
 * **The routers.** The newer `EGu` registry holds only `w:gp2`, `location` and
   `psa` (`Fbq`/`Fbr`/`Fbs`). The classic type router was not located
   (`0u7.C8f`, which names many types, is the usync reply parser). For an

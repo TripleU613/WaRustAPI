@@ -62,6 +62,16 @@ pub fn business_ack(node: &Node) -> Result<Option<Node>> {
     base_ack(node, "business")
 }
 
+/// Acknowledge a `mex` notification. **Confirmed, 2.26.37.71:** the MEX
+/// notification router is `0yP` (logs `mexnotificationrouter/onhandlernotfound`
+/// and `…/onoperationnotfound`); it extends `0yO`, neither defers nor adds
+/// attributes, and returns to the base ACK even when no handler or operation
+/// matches. Its operations (group push name, username, reminders, …) are not
+/// applied here; the capture keeps them. Most frequent type in our captures.
+pub fn mex_ack(node: &Node) -> Result<Option<Node>> {
+    base_ack(node, "mex")
+}
+
 /// The plain notification ACK the base handler sends (2.26.37.71 `0yO.A00`
 /// via `Cp2.A05`): id/to/class/type, plus participant when present. None
 /// for any other stanza or type; an error for a matching notification that
@@ -382,6 +392,20 @@ mod tests {
             )
             .is_err()
         );
+    }
+
+    #[test]
+    fn mex_notifications_get_the_plain_base_ack() {
+        let node = Node::new("notification")
+            .attr("from", "s.whatsapp.net")
+            .attr("type", "mex")
+            .attr("id", "99")
+            .children(vec![
+                Node::new("update").attr("op_name", "NotificationReminder"),
+            ]);
+        let ack = mex_ack(&node).unwrap().unwrap();
+        assert_eq!(ack.get_attr("type").and_then(|v| v.as_text()), Some("mex"));
+        assert!(ack.get_attr("error").is_none());
     }
 
     #[test]
