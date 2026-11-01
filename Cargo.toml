@@ -28,12 +28,17 @@ aes-gcm = { version = "0.10", default-features = false, features = ["aes", "allo
 hkdf = { version = "0.13", default-features = false }
 sha2 = { version = "0.11", default-features = false }
 # Comparison-build registration-token derivation observed in the Android APK.
-hmac = { version = "0.12", default-features = false }
-sha1 = { version = "0.10", default-features = false }
-pbkdf2 = { version = "0.12", default-features = false, features = ["hmac"] }
+hmac = { version = "0.13", default-features = false }
+sha1 = { version = "0.11", default-features = false }
+pbkdf2 = { version = "0.13", default-features = false, features = ["hmac"] }
 md-5 = { version = "0.10", default-features = false }
-# ZIP archive reading for token material extraction from APK.
-zip = { version = "0.6", default-features = false, features = ["deflate"] }
+# ZIP archive reading for token material extraction from APK. Reading only:
+# no `extract()` call exists (the 0.6 line's RUSTSEC-2026-0367/0368/0369 are all
+# extraction flaws). `deflate-flate2` plus flate2's `rust_backend` keeps the same
+# pure-Rust miniz_oxide inflater the 0.6 `deflate` feature used; zip 9's own
+# `deflate` feature would add zopfli (compression) and zlib-rs instead.
+zip = { version = "9.2", default-features = false, features = ["deflate-flate2"] }
+flate2 = { version = "1.1.10", default-features = false, features = ["rust_backend"] }
 # OS-backed CSPRNG (section 18).
 getrandom = { version = "0.4", default-features = false, features = ["std"] }
 # Noise backend candidate with the Rust crypto resolver; `std` is deliberately
@@ -54,7 +59,7 @@ webpki-roots = "1"
 wacore-libsignal = { version = "=0.7.0", default-features = false }
 rand = "0.10"
 # Pinned native ML-KEM-1024 vector comparison; experimental primitive only.
-ml-kem = { version = "=0.3.2", default-features = false, features = ["zeroize"] }
+ml-kem = { version = "=0.3.4", default-features = false, features = ["zeroize"] }
 
 [workspace.lints.rust]
 unsafe_code = "forbid"
