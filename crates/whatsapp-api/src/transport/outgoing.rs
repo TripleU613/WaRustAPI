@@ -1176,6 +1176,14 @@ pub fn acknowledge(store: &ProtocolStore, node: &Node) -> Result<bool> {
                 // A group send's distribution recipients now hold its chain
                 // (APK sent_sender_key = 1 after ack); no-op for direct sends.
                 super::sender_key_distribution::confirm_ack_in(tx, wire_id.as_str())?;
+                // 17J.BFC -> DNf -> HxT.A04: issue our trusted-contact token to
+                // the person we just messaged (token_issue; no-op for groups).
+                let now_seconds = Timestamp::now().as_millis() / 1000;
+                super::token_issue::schedule_after_ack_in(
+                    tx,
+                    entry.intent.chat.jid(),
+                    now_seconds,
+                )?;
             }
             let code = node
                 .get_attr("error")

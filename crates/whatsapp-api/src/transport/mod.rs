@@ -146,6 +146,12 @@ pub mod peer_verification;
     feature = "experimental-transport"
 ))]
 pub mod sender_key_distribution;
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub mod token_issue;
 
 #[cfg(all(
     feature = "experimental-signal-crypto",
