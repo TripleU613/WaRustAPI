@@ -30,12 +30,41 @@ use super::receipts::jid;
 /// server ended the session with `stream:error` echoing
 /// `ack class=notification type=psa`.
 pub fn psa_ack(node: &Node) -> Result<Option<Node>> {
+    let Some(ack) = base_ack(node, "psa")? else {
+        return Ok(None);
+    };
+    let from_server = jid(node, "from").is_some_and(|from| {
+        from.user == "0" && from.server == Server::User && from.agent == 0 && from.device == 0
+    });
+    let not_enabled =
+        from_server && (node.child("surfaces").is_some() || node.child("psa_wakeup").is_some());
+    Ok(Some(if not_enabled {
+        ack.attr("error", "487")
+    } else {
+        ack
+    }))
+}
+
+/// Acknowledge a `disappearing_mode` notification (a contact's default
+/// disappearing timer). **Inferred handler, confirmed ACK:** 2.26.37.71 `11O`
+/// reads its `disappearing_mode` child (`duration`, `t`) and extends `0yO`,
+/// which ACKs every notification it dispatches. The timer is not applied here;
+/// the durable capture keeps it.
+pub fn disappearing_mode_ack(node: &Node) -> Result<Option<Node>> {
+    base_ack(node, "disappearing_mode")
+}
+
+/// The plain notification ACK the base handler sends (2.26.37.71 `0yO.A00`
+/// via `Cp2.A05`): id/to/class/type, plus participant when present. None
+/// for any other stanza or type; an error for a matching notification that
+/// cannot be ACKed (missing/oversized id, invalid from/participant).
+pub(crate) fn base_ack(node: &Node, kind: &str) -> Result<Option<Node>> {
     if node.description != "notification"
-        || node.get_attr("type").and_then(|v| v.as_text()) != Some("psa")
+        || node.get_attr("type").and_then(|v| v.as_text()) != Some(kind)
     {
         return Ok(None);
     }
-    let invalid = |reason: &str| Error::invalid("psa_notification", reason.to_owned());
+    let invalid = |reason: &str| Error::invalid("notification", format!("{kind}: {reason}"));
     let id = node
         .get_attr("id")
         .and_then(|v| v.as_text())
@@ -48,21 +77,13 @@ pub fn psa_ack(node: &Node) -> Result<Option<Node>> {
             jid(node, "participant").ok_or_else(|| invalid("invalid notification participant"))
         })
         .transpose()?;
-    // `0@s.whatsapp.net`, whether it arrived as text or as a decoded JID.
-    let from_server =
-        from.user == "0" && from.server == Server::User && from.agent == 0 && from.device == 0;
-    let not_enabled =
-        from_server && (node.child("surfaces").is_some() || node.child("psa_wakeup").is_some());
     let mut ack = Node::new("ack")
         .attr("id", id)
         .attr("to", super::receipts::ack_address(from))
         .attr("class", "notification")
-        .attr("type", "psa");
+        .attr("type", kind);
     if let Some(participant) = participant {
         ack = ack.attr("participant", super::receipts::ack_address(participant));
-    }
-    if not_enabled {
-        ack = ack.attr("error", "487");
     }
     Ok(Some(ack))
 }
@@ -352,6 +373,28 @@ mod tests {
                     .attr("from", "0@s.whatsapp.net")
             )
             .is_err()
+        );
+    }
+
+    #[test]
+    fn disappearing_mode_notifications_get_the_plain_base_ack() {
+        let node = Node::new("notification")
+            .attr("from", "15551234567@s.whatsapp.net")
+            .attr("type", "disappearing_mode")
+            .attr("id", "77")
+            .children(vec![
+                Node::new("disappearing_mode").attr("duration", "86400"),
+            ]);
+        let ack = disappearing_mode_ack(&node).unwrap().unwrap();
+        let text = |k: &str| ack.get_attr(k).and_then(|v| v.as_text()).map(str::to_owned);
+        assert_eq!(text("type").as_deref(), Some("disappearing_mode"));
+        assert_eq!(text("class").as_deref(), Some("notification"));
+        assert_eq!(text("id").as_deref(), Some("77"));
+        assert!(ack.get_attr("to").is_some() && ack.get_attr("error").is_none());
+        assert!(
+            disappearing_mode_ack(&Node::new("notification").attr("type", "psa"))
+                .unwrap()
+                .is_none()
         );
     }
 

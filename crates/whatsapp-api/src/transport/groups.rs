@@ -319,6 +319,26 @@ struct DirtyNotification {
     action: String,
 }
 
+/// Acknowledge a `w:gp2` group notification other than `groups_dirty`
+/// (that one is applied and ACKed by [`handle_dirty_notification`]).
+///
+/// **Confirmed, 2.26.37.71:** `Fbq` registers `w:gp2`; its handler `0yv`
+/// extends `0yO` (`BaseNotificationHandler.handleAndAckNotification`), which
+/// ACKs every notification after `A09`, or through `AAR.A00` when `A09`
+/// deferred with `A07(true)` (32 sites in `0yv.A09`, none adding an `error`
+/// attribute). `Cp2.A05` writes id/to/class/type/participant.
+/// **Observed:** leaving these unacknowledged ended sessions with a
+/// `stream:error` echoing `ack class=notification type=w:gp2`.
+/// The membership/subject changes they carry are not applied here; the
+/// durable encrypted capture keeps them, and group sends fetch membership
+/// fresh. Malformed id/from/participant is an error (captured, no ACK).
+pub fn notification_ack(node: &Node) -> Result<Option<Node>> {
+    if node.child_nodes().len() == 1 && node.child_nodes()[0].description == "groups_dirty" {
+        return Ok(None);
+    }
+    super::notifications::base_ack(node, "w:gp2")
+}
+
 /// Apply the supported w:gp2/groups_dirty notification before acknowledging.
 /// APK 37.71 0yv.A09 2912..2990/6548..6572 queues zero-estimate truncatable
 /// refresh; 0yO.A01 dispatches before ACK. Unknown shapes receive no ACK.
@@ -1619,6 +1639,46 @@ mod tests {
 
     /// A reaction and a media status carry the same markers their direct
     /// envelopes do, on the `skmsg` that holds the content — and only there.
+    #[test]
+    fn group_notifications_other_than_dirty_are_acked_once() {
+        let text = |n: &Node, k: &str| n.get_attr(k).and_then(|v| v.as_text()).map(str::to_owned);
+        let note = |child: &str| {
+            Node::new("notification")
+                .attr("from", "120363000000000001@g.us")
+                .attr("type", "w:gp2")
+                .attr("id", "2468")
+                .attr("participant", "111111111111111@lid")
+                .children(vec![Node::new(child)])
+        };
+        for child in [
+            "create",
+            "add",
+            "remove",
+            "subject",
+            "promote",
+            "unknown_future",
+        ] {
+            let ack = notification_ack(&note(child)).unwrap().unwrap();
+            assert_eq!(ack.description, "ack");
+            assert_eq!(text(&ack, "id").as_deref(), Some("2468"));
+            assert_eq!(text(&ack, "class").as_deref(), Some("notification"));
+            assert_eq!(text(&ack, "type").as_deref(), Some("w:gp2"));
+            assert!(ack.get_attr("to").is_some() && ack.get_attr("participant").is_some());
+            assert!(ack.get_attr("error").is_none());
+        }
+        // groups_dirty has its own apply-then-ACK path; never ACKed twice.
+        assert!(notification_ack(&note("groups_dirty")).unwrap().is_none());
+        assert!(
+            notification_ack(&Node::new("notification").attr("type", "psa"))
+                .unwrap()
+                .is_none()
+        );
+        let no_id = Node::new("notification")
+            .attr("type", "w:gp2")
+            .attr("from", "120363000000000001@g.us");
+        assert!(notification_ack(&no_id).is_err());
+    }
+
     #[test]
     fn sender_key_stanza_marks_reactions_and_media() {
         let chat = Jid::parse("120363000000000001@g.us").unwrap();

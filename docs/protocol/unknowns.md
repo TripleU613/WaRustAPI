@@ -447,3 +447,29 @@ two children because this client implements neither feature. **Inferred:**
 the `campaign` (status PSA) and other children get the plain ACK; their
 feature-gated branches were not fully mapped. Live confirmation of a session
 that stays up past a PSA is recorded in STATUS.md.
+
+## Other unacknowledged notification types (2026-11-01)
+
+The PSA fix generalized: this client only ACKed notification types it had a
+dedicated handler for, while 2.26.37.71 `BaseNotificationHandler` (`0yO`)
+ACKs every notification its subclasses dispatch.
+
+* **`w:gp2` (fixed).** `Fbq` registers it; handler `0yv` extends `0yO`, defers
+  in 32 places with `A07(true)` and never adds an `error` attribute. Only
+  `groups_dirty` was ACKed before; **observed:** an unACKed `w:gp2` ended a
+  session with `stream:error` echoing `ack class=notification type=w:gp2`.
+  `groups::notification_ack` now ACKs every other `w:gp2` (plain base ACK);
+  membership changes are still not applied (capture retained).
+* **`disappearing_mode` (fixed).** `11O` (a `0yO`) reads the notification's
+  `disappearing_mode` child (`duration`, `t`); **inferred** that it is the
+  type's handler from that shape. `notifications::disappearing_mode_ack`
+  sends the plain base ACK; the timer is not applied.
+* **`business` (unknown).** Observed arriving unACKed. No `EGu` registration or
+  handler reading it was found (`apk-xref business`: 28 references, none a
+  `0yO` subclass). Not ACKed until a handler is traced.
+* **The routers.** The newer `EGu` registry holds only `w:gp2`, `location` and
+  `psa` (`Fbq`/`Fbr`/`Fbs`). The classic type router was not located
+  (`0u7.C8f`, which names many types, is the usync reply parser). For an
+  unrouted stanza `1SP.run` logs `StanzaReceiver/receiveStanza not handled`
+  and continues into an untraced `A8h` branch, so a generic ACK for unknown
+  types is **not** established and is not sent.

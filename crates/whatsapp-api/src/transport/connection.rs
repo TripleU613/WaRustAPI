@@ -665,6 +665,24 @@ pub(crate) async fn drive(
                     Err(error) => return Err(error),
                 }
                 if let Some(ack)=super::groups::handle_dirty_notification(&store, &node)? {link.send(&ack).await?;}
+                // 2.26.37.71 0yv (BaseNotificationHandler) ACKs every other
+                // w:gp2 too; unacknowledged ones ended sessions.
+                match super::notifications::disappearing_mode_ack(&node) {
+                    Ok(Some(ack)) => link.send(&ack).await?,
+                    Ok(None) => {}
+                    Err(Error::InvalidInput { field, reason }) => {
+                        tracing::warn!(field, reason, "disappearing_mode notification refused locally; captured without ACK; session continues");
+                    }
+                    Err(error) => return Err(error),
+                }
+                match super::groups::notification_ack(&node) {
+                    Ok(Some(ack)) => link.send(&ack).await?,
+                    Ok(None) => {}
+                    Err(Error::InvalidInput { field, reason }) => {
+                        tracing::warn!(field, reason, "group notification refused locally; captured without ACK; session continues");
+                    }
+                    Err(error) => return Err(error),
+                }
                 // 2.26.37.71 PSANotificationHandler (17o) ACKs every psa
                 // notification; without it the server ends the session with a
                 // stream:error echoing the ACK (observed 2026-11-01).

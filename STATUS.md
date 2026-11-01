@@ -1,3 +1,11 @@
+2026-11-01 — **Fixed/offline (notification ACKs):** `w:gp2` group notifications
+other than `groups_dirty`, and `disappearing_mode` notifications, are now ACKed
+like the APK's `BaseNotificationHandler` does; unACKed `w:gp2` had ended
+sessions. One shared base ACK builder serves `psa`, `w:gp2` and
+`disappearing_mode`. `business` notifications stay unACKed (no handler traced).
+Not yet live-verified; live checks are paused after the `l` ban.
+[unknowns](docs/protocol/unknowns.md#other-unacknowledged-notification-types-2026-11-01).
+
 2026-11-01 — **Observed live: account `l` banned (login `failure reason=403`,
 appeal token present).** It followed, within about 35 minutes on that account:
 one group creation with the new account `q`, about 12 separate fresh logins
