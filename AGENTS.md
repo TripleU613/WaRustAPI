@@ -240,6 +240,11 @@ request—not adding Rust code, another command or a number-specific script.**
 - When asked to inspect/merge a PR, inspect its diff, checks and conflicts, then
   complete the authorized merge when sound. Do not force a merge or overwrite
   user changes merely to satisfy “somehow.”
+- **Commit straight to `main` and push; do not open pull requests or feature
+  branches** (owner, 2026-11-01). With no PR gate, run the checks locally
+  first (fmt, strict Clippy, tests, hygiene), never push red work, and fix any
+  `main` CI breakage immediately. Supersede Dependabot PRs with a direct commit
+  that includes the regenerated dependency report.
 - Push every completed, tested project chunk without waiting for another request.
   Keep private state, credentials, raw APKs, bulk trees and unrelated exports out
   of those commits. Report the actual commit/push result.
