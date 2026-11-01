@@ -361,37 +361,188 @@ fn read_string_pool(d: &[u8], o: usize) -> Result<Vec<String>> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::io::Write;
+    use zip::CompressionMethod;
+    use zip::write::SimpleFileOptions;
+
+    /// Minimal Android binary XML: a UTF-8 string pool and one `<manifest
+    /// package="...">` start element, laid out at the offsets
+    /// `parse_manifest_package` reads (ResXMLTree_attrExt after a 16-byte node
+    /// header, 20-byte attributes, `TYPE_STRING` 0x03 at byte 15).
+    fn binary_manifest(package: &str) -> Vec<u8> {
+        let strings = ["manifest", "package", package];
+        let mut data = Vec::new();
+        let mut offsets = Vec::new();
+        for value in strings {
+            offsets.push(u32::try_from(data.len()).unwrap());
+            let len = u8::try_from(value.len()).unwrap();
+            data.extend([len, len]);
+            data.extend(value.as_bytes());
+            data.push(0);
+        }
+        while data.len() % 4 != 0 {
+            data.push(0);
+        }
+        let header = 28u16;
+        let strings_start = u32::from(header) + 4 * offsets.len() as u32;
+        let pool_size = strings_start + data.len() as u32;
+        let mut pool = Vec::new();
+        pool.extend(0x0001u16.to_le_bytes());
+        pool.extend(header.to_le_bytes());
+        pool.extend(pool_size.to_le_bytes());
+        pool.extend((offsets.len() as u32).to_le_bytes());
+        pool.extend(0u32.to_le_bytes()); // style count
+        pool.extend(0x100u32.to_le_bytes()); // UTF-8 flag
+        pool.extend(strings_start.to_le_bytes());
+        pool.extend(0u32.to_le_bytes()); // styles start
+        for offset in offsets {
+            pool.extend(offset.to_le_bytes());
+        }
+        pool.extend(data);
+
+        let mut element = Vec::new();
+        element.extend(0x0102u16.to_le_bytes());
+        element.extend(16u16.to_le_bytes());
+        element.extend(56u32.to_le_bytes());
+        element.extend(1u32.to_le_bytes()); // line
+        element.extend(u32::MAX.to_le_bytes()); // comment
+        element.extend(u32::MAX.to_le_bytes()); // namespace
+        element.extend(0u32.to_le_bytes()); // name: "manifest"
+        element.extend(20u16.to_le_bytes()); // attribute start
+        element.extend(20u16.to_le_bytes()); // attribute size
+        element.extend(1u16.to_le_bytes()); // attribute count
+        element.extend([0; 6]); // id, class and style indexes
+        element.extend(u32::MAX.to_le_bytes()); // attribute namespace
+        element.extend(1u32.to_le_bytes()); // attribute name: "package"
+        element.extend(2u32.to_le_bytes()); // raw value
+        element.extend(8u16.to_le_bytes());
+        element.push(0);
+        element.push(0x03); // TYPE_STRING
+        element.extend(2u32.to_le_bytes()); // data: string index 2
+
+        let mut xml = Vec::new();
+        xml.extend(0x0003u16.to_le_bytes());
+        xml.extend(8u16.to_le_bytes());
+        xml.extend(((8 + pool.len() + element.len()) as u32).to_le_bytes());
+        xml.extend(pool);
+        xml.extend(element);
+        xml
+    }
+
+    /// Smallest DER shape `find_certificate` accepts:
+    /// `SEQUENCE { SEQUENCE { [0] { INTEGER 2 }, INTEGER 1 } }`.
+    const CERTIFICATE: [u8; 12] = [
+        0x30, 0x0a, 0x30, 0x08, 0xa0, 0x03, 0x02, 0x01, 0x02, 0x02, 0x01, 0x01,
+    ];
+
+    /// A v1 signature block with the certificate nested one level down, as in
+    /// PKCS#7 SignedData.
+    fn signature_block() -> Vec<u8> {
+        let mut block = vec![0x30, 3 + CERTIFICATE.len() as u8, 0x02, 0x01, 0x00];
+        block.extend(CERTIFICATE);
+        block
+    }
+
+    fn write_archive(path: &Path, entries: &[(&str, &[u8], CompressionMethod)]) {
+        let mut zip = zip::ZipWriter::new(std::io::Cursor::new(Vec::new()));
+        for (name, bytes, method) in entries {
+            let options = SimpleFileOptions::default().compression_method(*method);
+            zip.start_file(*name, options).unwrap();
+            zip.write_all(bytes).unwrap();
+        }
+        std::fs::write(path, zip.finish().unwrap().into_inner()).unwrap();
+    }
+
+    #[test]
+    fn opens_archive_with_stored_and_deflated_entries() {
+        let temp_dir = tempfile::TempDir::new().unwrap();
+        let path = temp_dir.path().join("test.apk");
+        let manifest = binary_manifest("com.whatsapp");
+        // Repetitive enough that deflate really compresses it, so the inflater
+        // selected for `zip` is exercised rather than a stored copy.
+        let dex: Vec<u8> = (0..64 * 1024).map(|i| (i % 7) as u8).collect();
+        let signature = signature_block();
+        write_archive(
+            &path,
+            &[
+                (
+                    "AndroidManifest.xml",
+                    &manifest,
+                    CompressionMethod::Deflated,
+                ),
+                ("classes.dex", &dex, CompressionMethod::Deflated),
+                (
+                    "res/drawable-hdpi-v4/about_logo.png",
+                    b"png",
+                    CompressionMethod::Stored,
+                ),
+                ("META-INF/CERT.RSA", &signature, CompressionMethod::Stored),
+            ],
+        );
+
+        let material = TokenMaterial::open(&path).unwrap();
+        assert_eq!(material.package_name, "com.whatsapp");
+        assert_eq!(material.classes_dex, dex);
+        assert_eq!(material.about_logo, b"png");
+        assert_eq!(material.logo_entry, "res/drawable-hdpi-v4/about_logo.png");
+        assert_eq!(material.signature_entry, "META-INF/CERT.RSA");
+        assert_eq!(material.signing_certificate_der, CERTIFICATE);
+    }
 
     #[test]
     fn rejects_archive_without_classes_dex() {
         let temp_dir = tempfile::TempDir::new().unwrap();
-        let archive_path = temp_dir.path().join("test.zip");
-
-        let mut zip_data = Vec::new();
-        {
-            use std::io::Write;
-            use zip::ZipWriter;
-            let writer = std::io::Cursor::new(&mut zip_data);
-            let mut zip = ZipWriter::new(writer);
-            let options = zip::write::SimpleFileOptions::default();
-
-            zip.start_file("AndroidManifest.xml", options).ok();
-            zip.write_all(b"\x00\x00\x00\x00\x00\x00\x00\x00").ok();
-
-            zip.start_file("res/drawable-hdpi/about_logo.png", options)
-                .ok();
-            zip.write_all(b"png").ok();
-
-            zip.start_file("META-INF/CERT.RSA", options).ok();
-            zip.write_all(b"\x30\x03\x30\x01\xA0").ok();
-        }
-
-        std::fs::write(&archive_path, &zip_data).ok();
-        let result = TokenMaterial::open(&archive_path);
-        assert!(
-            result.is_err(),
-            "archive without classes.dex should fail; got: {:?}",
-            result
+        let path = temp_dir.path().join("test.apk");
+        let manifest = binary_manifest("com.whatsapp");
+        let signature = signature_block();
+        write_archive(
+            &path,
+            &[
+                (
+                    "AndroidManifest.xml",
+                    &manifest,
+                    CompressionMethod::Deflated,
+                ),
+                (
+                    "res/drawable-hdpi/about_logo.png",
+                    b"png",
+                    CompressionMethod::Stored,
+                ),
+                ("META-INF/CERT.RSA", &signature, CompressionMethod::Stored),
+            ],
         );
+
+        // The manifest parses, so the refusal is the missing entry itself.
+        let error = TokenMaterial::open(&path).unwrap_err().to_string();
+        assert!(error.contains("classes.dex"), "{error}");
+    }
+
+    #[test]
+    fn read_entry_refuses_empty_and_oversized_entries() {
+        let temp_dir = tempfile::TempDir::new().unwrap();
+        let path = temp_dir.path().join("test.zip");
+        write_archive(
+            &path,
+            &[
+                ("empty", b"", CompressionMethod::Stored),
+                ("five", b"12345", CompressionMethod::Deflated),
+            ],
+        );
+        let mut archive = zip::ZipArchive::new(File::open(&path).unwrap()).unwrap();
+
+        let empty = read_entry(&mut archive, "empty", 4)
+            .unwrap_err()
+            .to_string();
+        assert!(empty.contains("expected 1..=4 bytes, got 0"), "{empty}");
+        let oversized = read_entry(&mut archive, "five", 4).unwrap_err().to_string();
+        assert!(
+            oversized.contains("expected 1..=4 bytes, got 5"),
+            "{oversized}"
+        );
+        assert_eq!(read_entry(&mut archive, "five", 5).unwrap(), b"12345");
+        let missing = read_entry(&mut archive, "absent", 5)
+            .unwrap_err()
+            .to_string();
+        assert!(missing.contains("absent"), "{missing}");
     }
 }
