@@ -1,3 +1,18 @@
+2026-11-01 — **Observed live: account `l` banned (login `failure reason=403`,
+appeal token present).** It followed, within about 35 minutes on that account:
+one group creation with the new account `q`, about 12 separate fresh logins
+(each `lab-transport` run is a new connection), two group-info queries to a
+malformed masked id, three group texts, and seven group reactions, five of them
+deliberately varied experiments, every one carrying a rotated sender key and
+most silently dropped by the server. Earlier sessions also ended on
+`stream:error` echoing unACKed `w:gp2` group notifications. **Not
+established:** which of these triggered the ban. **Lesson recorded:** live
+experiments must be few, spaced out and on one long-lived connection; never
+iterate stanza variants against the server from a real account. No appeal was
+submitted and no re-registration attempted (owner's decision). `q` is unaffected
+(`login_checkpoint=success`). Next code bug from this run: `w:gp2`
+notifications that are not dirty refreshes are never ACKed.
+
 2026-11-01 — **Fixed and observed live (group reactions never delivered):** the
 server ACKs a group `type=reaction` stanza that carries `<participants>`
 (sender-key distributions) but delivers it to nobody; our paths always embedded
