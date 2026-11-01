@@ -141,13 +141,33 @@ request—not adding Rust code, another command or a number-specific script.**
 
 ## Research from the APK, not a device
 
-- Available comparison APK: `~/Downloads/WhatsApp.apk`. As of
-  2026-09-18 that file is build **2.26.37.71** (SHA-256 `1755111a…7d5c`), not
-  the 2.26.37.70 build most recorded evidence cites; its obfuscated class names
-  differ, so re-anchor by string constants and attribute new claims to 37.71.
-- Pinned reference version: **2.26.36.75**. Comparison versions: **2.26.37.70**
-  and **2.26.37.71**. Keep their evidence separate and identify which build
-  supports each claim.
+- **Getting an APK, including in a cloud session.** The owner publishes the
+  latest official APK as an asset of the GitHub pre-release `nothing_yet`
+  ("Not a release - Just the WA APK"). It is research input, not a project
+  release. Download it outside the checkout and verify it before use:
+
+  ```sh
+  mkdir -p /tmp/wa-apk && gh release download nothing_yet \
+    -R TripleU613/WaRustAPI -p 'WhatsApp.1.apk' -D /tmp/wa-apk
+  sha256sum /tmp/wa-apk/WhatsApp.1.apk
+  cargo run --locked -p xtask -- reference-manifest /tmp/wa-apk/WhatsApp.1.apk
+  ```
+
+  As of 2026-11-01 that asset is build **2.26.43.72** (version code
+  264307238, SHA-256 `887a6f94…0c2e`, signing certificate `39:87:D0:43:…:5D:44`,
+  the same as 2.26.37.70/71). No research has been attributed to it yet. If the
+  hash differs, the owner replaced the asset: identify the new build before
+  citing it. Never commit the APK or an unpacked tree.
+- On the owner's workstation, `~/Downloads/WhatsApp.apk` is build
+  **2.26.37.71** (SHA-256 `1755111a…7d5c`). Most recorded evidence cites
+  2.26.37.70 or 2.26.37.71; obfuscated class names differ between builds, so
+  re-anchor by string constants and attribute each claim to the build it was
+  read from.
+- Pinned reference version: **2.26.36.75**. Comparison versions: **2.26.37.70**,
+  **2.26.37.71** and (unanalysed) **2.26.43.72**. Keep their evidence separate
+  and identify which build supports each claim. Registration tokens still come
+  from the 2.26.37.70 material (see the new-numbers lesson below); a newer APK
+  does not change the working recipe until its token inputs are verified.
 - No test Android device is available. The owner explicitly wants static APK
   analysis, not traffic capture. Do not keep proposing a device or capture as
   the required next step.
@@ -206,6 +226,17 @@ request—not adding Rust code, another command or a number-specific script.**
 - Run verification proportionate to the change. For shared Rust changes, use
   formatting, workspace/all-feature tests, strict Clippy and repository hygiene
   when available. Report what actually ran; never invent passing checks.
+- **Everything goes in the OpenAPI document.** Any new or changed command, flag,
+  capability, route, field or recognized server response is documented in
+  `docs/api/openapi.json` in the same change, with `x-cli`, `x-transport` and
+  `x-live` set honestly. `docs/api/README.md` has the checklist; the CLI coverage
+  test enforces command coverage. Do not describe a capability as served over HTTP
+  until the route exists.
+- Dependabot cannot regenerate `docs/protocol/dependency-report.md`, so its Cargo
+  PRs fail the dependency contract job as opened. Supersede them with a PR that
+  runs `cargo run --locked -p xtask -- dependency-audit` and commits the report.
+  RustCrypto crates on one digest generation (hmac, pbkdf2, sha1, md-5) must move
+  together.
 - When asked to inspect/merge a PR, inspect its diff, checks and conflicts, then
   complete the authorized merge when sound. Do not force a merge or overwrite
   user changes merely to satisfy “somehow.”
@@ -290,6 +321,13 @@ request—not adding Rust code, another command or a number-specific script.**
   Standard snow XX message handling adds that payload hash and failed live
   decryption. The comparison classic adapter corrects sequencing over existing
   primitives; certificate verification must remain enabled.
+
+- New numbers: never start from `lab-signup template` defaults. Copy the working
+  recipe (body_mode `enc_empty_h`, the 2.26.37.70 User-Agent, the eight observed
+  `code_bytes` fields) and derive the token from the 2.26.37.70 material; the
+  2.26.37.71 APK on disk yields wrong tokens for that recipe. The
+  `LabRegistrationConfig` schema in `docs/api/openapi.json` records the recipe.
+  `accounts new` writes exactly this recipe; verify with `token verify`.
 
 - Read `STATUS.md`, `docs/protocol/registration-lab.md`,
   `docs/protocol/http-post-analysis.md` and `docs/protocol/evidence-ledger.md`

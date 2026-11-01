@@ -7,10 +7,14 @@ Experimental Rust workspace for a standalone WhatsApp **primary-device** client.
 The goal is phone-number registration and messaging without a paired phone or
 another running WhatsApp client.
 
-**First live message acknowledged by WhatsApp.** The experimental comparison
-flow completed registration, authenticated login and one encrypted text send.
-The recipient confirmed receipt; one text reply and one protocol sync payload were decrypted. General messaging remains incomplete. See
-[STATUS.md](STATUS.md) and [transport usage](docs/protocol/messaging-transport.md).
+**What works live (experimental lab path):** registration by SMS code with the
+APK-derived recipe, authenticated login, and end-to-end encrypted messaging:
+direct text, images, voice notes, view-once images, replies, reactions, polls,
+group send/receive, status posts and receipts. Calls, stickers/video sending,
+privacy settings and companion pairing are not done, and some features are
+server-acknowledged but not yet confirmed on a handset. The per-feature matrix
+is [feature-parity](docs/feature-parity.md); dated evidence is in
+[STATUS.md](STATUS.md).
 
 ## Get started
 
@@ -27,7 +31,8 @@ cargo run --locked -p whatsapp-cli -- capabilities
 
 These inspection commands need no account or APK. For local storage and the
 HTTP control plane, see [Getting started](docs/getting-started.md).
-Enqueueing a message currently stores an intent; it does not send it.
+Enqueueing a message stores an intent; `outbox-send` or `listen --send-outbox`
+transmits it.
 
 Onboarding a phone number is two commands (`accounts new`, then `lab-signup begin`); see [docs/accounts.md](docs/accounts.md).
 Every command is listed in [docs/cli.md](docs/cli.md) and described in [docs/api/openapi.json](docs/api/openapi.json).
@@ -54,7 +59,10 @@ cargo test --locked --workspace --all-features
 ```
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md) for setup, feature checks, generated code,
-and the full validation workflow. First-party code and automation are Rust.
+and the full validation workflow. The library, CLI and all build/CI automation
+are Rust. `tools/apk-research/` holds Python and C research harnesses that
+produced some reference fixtures; nothing in the build, tests or CI runs them.
+APK research input is described in [APK research](docs/protocol/apk-analysis.md).
 
 ## Documentation
 

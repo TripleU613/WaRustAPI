@@ -18,6 +18,7 @@ and [STATUS.md](../STATUS.md) for verified behavior and blockers.
 ## Development and design
 
 - [Contributing](../CONTRIBUTING.md): toolchain, checks, and review expectations.
+- [Agent working agreement](../AGENTS.md): the owner's directions for coding agents (CLAUDE.md imports it).
 - [Continuous integration](ci.md): change routing, test tiers, coverage, and security scans.
 - [Design plan](design/README.md): architecture, contracts, milestones, and numbered sections.
 - [Messaging implementation checklist](messaging-completion.md): verification status and blockers.

@@ -1,3 +1,25 @@
+2026-11-01 — **Observed live (registration recipe still accepted):** a new
+number prepared with `accounts new` (body mode `enc_empty_h`, 2.26.37.70
+User-Agent and token material, eight observed `code_bytes` fields) received
+HTTP 200 `status: sent` from `/v2/code` (SMS wait 125 s, voice wait 65 s). The
+code has not been entered yet, so registration of that number is unverified.
+`accounts new` also created the store, so `begin` needed no `--create-store`.
+
+2026-11-01 — **Maintenance (CI, dependencies, docs):** `main` had failed CI
+since the rename (a rustfmt diff and 10 RustSec advisories, one critical in
+`zip` 0.6). PR #8 restores it: rustfmt, patched `rustls`/`rustls-webpki`/
+`webpki-roots`/`tokio`, and `zip` 9.2 on the pure-Rust zlib-rs backend. zip 9
+collapses duplicate entry names before `by_index`, so the APK readers that
+relied on seeing duplicates now refuse them via `has_duplicate_names()`; real
+2.26.37.71 APK output (file index, token dictionary, a research bundle) is
+byte-identical. PR #9 moves hmac/sha1/pbkdf2/md-5 together to digest 0.11 and
+protox to 0.10; token derivation is unchanged (`token verify` matches).
+Both are open at this entry. The newest APK, **2.26.43.72**, is available to
+cloud sessions as a GitHub pre-release asset
+([how](docs/protocol/apk-analysis.md#obtaining-the-apk)); nothing is attributed
+to it yet. AGENTS.md is now the single agent working agreement; CLAUDE.md
+imports it.
+
 2026-10-13 — **Tested/offline (disk full):** a simulated full disk (a
 test-only redb storage backend, not a real filesystem) shows a commit that
 cannot write is all-or-nothing, after which redb refuses every write on that

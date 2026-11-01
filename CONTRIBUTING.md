@@ -25,6 +25,7 @@ cargo test --locked -p whatsapp-api --features experimental-registration-https
 cargo test --locked --workspace --all-features
 cargo run --locked -p xtask -- proto-check
 cargo run --locked -p xtask -- dependency-audit
+cargo audit --file Cargo.lock   # cargo install cargo-audit --locked
 cargo package --locked -p whatsapp-api --allow-dirty
 git diff --check
 ```
@@ -35,7 +36,9 @@ each feature independently. CLI and tooling edits use scoped tests, and docs
 edits skip Cargo builds. See [CI routing and checks](docs/ci.md).
 If new backends are mutually exclusive, update the matrix.
 Dependency audit checks the project's build contract, not vulnerability
-advisories. Review its generated report before committing it.
+advisories (`cargo audit` and the RustSec CI job cover those). Any dependency
+change must commit the regenerated `docs/protocol/dependency-report.md`; review
+it first. Dependabot PRs cannot do this, so supersede them with a PR that does.
 
 ## Changes and review
 
@@ -63,8 +66,11 @@ Original design section numbers remain stable for source references.
 ## Research and sensitive data
 
 Use [the APK procedure](docs/protocol/apk-analysis.md) and record exact hashes,
-versions, dates, and evidence labels. Keep APKs and raw research output in
-ignored `lab/` or outside the checkout. Fixtures must be sanitized.
+versions, dates, and evidence labels. The current APK is published as an asset
+of the `nothing_yet` GitHub pre-release so cloud sessions can fetch it; see
+[Obtaining the APK](docs/protocol/apk-analysis.md#obtaining-the-apk). Keep APKs
+and raw research output in ignored `lab/` or outside the checkout. Fixtures must
+be sanitized.
 
 Live registration requires a controlled test number and explicit operator
 consent. Normal CI must not contact WhatsApp, request OTPs, or mutate accounts.
