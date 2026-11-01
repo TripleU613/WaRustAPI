@@ -12,6 +12,61 @@
 //! LX/0q2.A0P replaces an incoming token only when its timestamp is newer.
 use super::receipts::jid;
 
+/// Acknowledge a `psa` (WhatsApp announcement) notification. None for any
+/// other stanza; an error only for a psa notification that cannot be ACKed.
+///
+/// **Confirmed, 2.26.37.71:** `Fbs` registers type `psa`; its handler
+/// `LX/17o` (`PSANotificationHandler`) extends the base notification handler
+/// `0yO`, whose `A01` dispatches to `A09` and then ACKs through `A00` unless
+/// the handler deferred (`A07(true)`), in which case `AAR.A00` ACKs when the
+/// work finishes. Every psa notification is therefore ACKed exactly once.
+/// `17o.A09` (0000..0104) only inspects children when `from` is
+/// `0@s.whatsapp.net`: a `surfaces` (QP surface) or `psa_wakeup` (push PSA)
+/// child whose feature is off is ACKed by `17o.A03` with the extra attribute
+/// `error="487"`. This client implements neither, which is that branch.
+/// Any other child or sender falls through to the plain base ACK.
+/// `Cp2.A05` writes id/to/class/type/participant (see
+/// identity-notification-ack.md). **Observed 2026-11-01:** without this ACK the
+/// server ended the session with `stream:error` echoing
+/// `ack class=notification type=psa`.
+pub fn psa_ack(node: &Node) -> Result<Option<Node>> {
+    if node.description != "notification"
+        || node.get_attr("type").and_then(|v| v.as_text()) != Some("psa")
+    {
+        return Ok(None);
+    }
+    let invalid = |reason: &str| Error::invalid("psa_notification", reason.to_owned());
+    let id = node
+        .get_attr("id")
+        .and_then(|v| v.as_text())
+        .filter(|id| !id.is_empty() && id.len() <= 128)
+        .ok_or_else(|| invalid("missing or excessive notification id"))?;
+    let from = jid(node, "from").ok_or_else(|| invalid("missing or invalid notification from"))?;
+    let participant = node
+        .get_attr("participant")
+        .map(|_| {
+            jid(node, "participant").ok_or_else(|| invalid("invalid notification participant"))
+        })
+        .transpose()?;
+    // `0@s.whatsapp.net`, whether it arrived as text or as a decoded JID.
+    let from_server =
+        from.user == "0" && from.server == Server::User && from.agent == 0 && from.device == 0;
+    let not_enabled =
+        from_server && (node.child("surfaces").is_some() || node.child("psa_wakeup").is_some());
+    let mut ack = Node::new("ack")
+        .attr("id", id)
+        .attr("to", super::receipts::ack_address(from))
+        .attr("class", "notification")
+        .attr("type", "psa");
+    if let Some(participant) = participant {
+        ack = ack.attr("participant", super::receipts::ack_address(participant));
+    }
+    if not_enabled {
+        ack = ack.attr("error", "487");
+    }
+    Ok(Some(ack))
+}
+
 /// Process a fully supported notification before returning its acknowledgement.
 /// APK 37.71 LX/0yO.A01 dispatches before A00 acknowledges; LX/Cp2.A05
 /// (0036..0074) serializes id/to/class/type. Unknown token kinds stay without ACK.
@@ -254,6 +309,52 @@ mod tests {
         drop(store);
         assert_eq!(snapshot(&open(false)), before);
     }
+    #[test]
+    fn psa_notifications_are_acked_with_487_only_for_unimplemented_features() {
+        let text = |n: &Node, k: &str| n.get_attr(k).and_then(|v| v.as_text()).map(str::to_owned);
+        let psa = |from: &str, child: &str| {
+            Node::new("notification")
+                .attr("from", from)
+                .attr("type", "psa")
+                .attr("id", "1234")
+                .attr("t", "1793557256")
+                .children(vec![Node::new(child)])
+        };
+        for (child, error) in [
+            ("surfaces", Some("487")),
+            ("psa_wakeup", Some("487")),
+            ("campaign", None),
+            ("other", None),
+        ] {
+            let ack = psa_ack(&psa("0@s.whatsapp.net", child)).unwrap().unwrap();
+            assert_eq!(ack.description, "ack");
+            assert_eq!(text(&ack, "id").as_deref(), Some("1234"));
+            assert_eq!(text(&ack, "class").as_deref(), Some("notification"));
+            assert_eq!(text(&ack, "type").as_deref(), Some("psa"));
+            assert!(ack.get_attr("to").is_some());
+            assert_eq!(text(&ack, "error").as_deref(), error, "{child}");
+        }
+        // 17o.A09 inspects children only for the server sender.
+        let broadcast = psa("status@broadcast", "surfaces").attr("participant", "0@s.whatsapp.net");
+        let ack = psa_ack(&broadcast).unwrap().unwrap();
+        assert!(ack.get_attr("error").is_none());
+        assert!(ack.get_attr("participant").is_some());
+        // Other stanzas are not ours; a psa without id cannot be ACKed.
+        assert!(
+            psa_ack(&Node::new("notification").attr("type", "devices"))
+                .unwrap()
+                .is_none()
+        );
+        assert!(
+            psa_ack(
+                &Node::new("notification")
+                    .attr("type", "psa")
+                    .attr("from", "0@s.whatsapp.net")
+            )
+            .is_err()
+        );
+    }
+
     #[test]
     fn empty_notification_peers_never_store_tokens_or_acknowledge() {
         use crate::{
