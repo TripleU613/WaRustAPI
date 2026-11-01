@@ -1,3 +1,12 @@
+2026-11-01 — **Fixed and observed live (PSA notification ACK):** the client never
+ACKed `psa` notifications, so the server ended sessions about 15 s after one
+arrived (`stream:error` echoing `ack class=notification type=psa`). Per
+2.26.37.71 `PSANotificationHandler` (`17o`, a `BaseNotificationHandler`) every
+psa is now ACKed, with `error="487"` for the unimplemented `surfaces`/
+`psa_wakeup` features. Live on the new account: both redelivered PSAs
+(broadcast and direct) were ACKed and a 45 s `listen` stayed up and
+`stopped cleanly`. [unknowns](docs/protocol/unknowns.md#psa-notification-ack-ends-the-session-observed-2026-11-01).
+
 2026-11-01 — **Observed live (new number fully registered):** a new US number went
 `/v2/code` sent → first OTP `stale` (entered ~2 h late) → `resend-code` sent →
 fresh OTP accepted with `fail`/`consent`, `pending=dob` → `submit-consent` (DOB,
