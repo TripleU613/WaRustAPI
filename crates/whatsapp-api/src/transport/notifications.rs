@@ -54,6 +54,14 @@ pub fn disappearing_mode_ack(node: &Node) -> Result<Option<Node>> {
     base_ack(node, "disappearing_mode")
 }
 
+/// Acknowledge a `business` notification. **Confirmed, 2.26.37.71:**
+/// `BusinessNotificationHandler` is `17Y`, which extends `0yO` and neither
+/// defers nor adds attributes, so it gets the plain base ACK. Its content
+/// (directory, campaign status, NUX) is not applied; the capture keeps it.
+pub fn business_ack(node: &Node) -> Result<Option<Node>> {
+    base_ack(node, "business")
+}
+
 /// The plain notification ACK the base handler sends (2.26.37.71 `0yO.A00`
 /// via `Cp2.A05`): id/to/class/type, plus participant when present. None
 /// for any other stanza or type; an error for a matching notification that
@@ -373,6 +381,24 @@ mod tests {
                     .attr("from", "0@s.whatsapp.net")
             )
             .is_err()
+        );
+    }
+
+    #[test]
+    fn business_notifications_get_the_plain_base_ack() {
+        let node = Node::new("notification")
+            .attr("from", "15551234567@s.whatsapp.net")
+            .attr("type", "business")
+            .attr("id", "88");
+        let ack = business_ack(&node).unwrap().unwrap();
+        assert_eq!(
+            ack.get_attr("type").and_then(|v| v.as_text()),
+            Some("business")
+        );
+        assert!(
+            business_ack(&Node::new("notification").attr("type", "psa"))
+                .unwrap()
+                .is_none()
         );
     }
 

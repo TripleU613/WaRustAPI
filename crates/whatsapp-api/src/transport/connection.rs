@@ -671,6 +671,14 @@ pub(crate) async fn drive(
                 if let Some(ack)=super::groups::handle_dirty_notification(&store, &node)? {link.send(&ack).await?;}
                 // 2.26.37.71 0yv (BaseNotificationHandler) ACKs every other
                 // w:gp2 too; unacknowledged ones ended sessions.
+                match super::notifications::business_ack(&node) {
+                    Ok(Some(ack)) => link.send(&ack).await?,
+                    Ok(None) => {}
+                    Err(Error::InvalidInput { field, reason }) => {
+                        tracing::warn!(field, reason, "business notification refused locally; captured without ACK; session continues");
+                    }
+                    Err(error) => return Err(error),
+                }
                 match super::notifications::disappearing_mode_ack(&node) {
                     Ok(Some(ack)) => link.send(&ack).await?,
                     Ok(None) => {}
