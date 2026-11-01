@@ -1,3 +1,9 @@
+2026-11-01 — **Observed live (w:gp2 ACK):** one 60 s receive-only `listen` on
+account `q` (no sends) received a `w:gp2` group notification and stayed up to
+`stopped cleanly`; before the fix an unacknowledged `w:gp2` ended sessions. The
+sender-key and reaction changes are not live-verified: `q`'s only group
+includes the banned `l`, and no second working account exists.
+
 2026-11-01 — **Fixed/offline (sender-key distribution):** group sends no longer
 re-send our sender-key distribution to every device on every message. Per
 2.26.37.71 (`group_participant_device.sent_sender_key`, set by
