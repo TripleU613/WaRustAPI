@@ -1,3 +1,11 @@
+2026-11-01 — **Fixed/offline (sender-key distribution):** group sends no longer
+re-send our sender-key distribution to every device on every message. Per
+2.26.37.71 (`group_participant_device.sent_sender_key`, set by
+`SendE2EMessageJob` only after the server ACK), devices that already received
+the current chain are skipped; rotation still redistributes to all. Normal
+outbox group reactions now go out when every device already holds the chain.
+Not yet live-verified. [group-fanout](docs/protocol/group-fanout.md#distribution-only-to-devices-that-lack-the-chain-2026-11-01).
+
 2026-11-01 — **Fixed/offline (wrong OTP):** `incorrect` and `mismatch` refusals of a
 code no longer block the attempt. Per 2.26.37.71 `VerifyPhoneNumber.A5O`
 (default branch) and `A1v`, both return to code entry; `mismatch` gates the next

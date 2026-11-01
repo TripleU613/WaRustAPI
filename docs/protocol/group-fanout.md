@@ -197,3 +197,35 @@ companion decrypt/rotation/race tests still exercise real crypto. These are
 local database/crypto tests, not a server or handset result. Full normal group
 outbox actor integration, own-device inventory and live large-group fanout
 remain unfinished.
+
+## Distribution only to devices that lack the chain (2026-11-01)
+
+**Confirmed static, 2.26.37.71:** each group member device row carries
+`group_participant_device.sent_sender_key`, `sent_sender_key_bucket` and a
+separate `sent_add_on_sender_key` (the `INSERT INTO group_participant_device`
+and `UPDATE … SET sent_sender_key = ?` strings). `SendE2EMessageJob.A06` sets
+them only **after the server ACK** (`MessageClient/sendAckableMessage` at
+`1cd2`, then `0bA.A0U/A0V/A0X` at `1faa`/`200e`/`2086`, log strings "…after
+ack" and "…after receiving the ack"), and rotation clears them
+(`UPDATE … SET sent_sender_key = 0, sent_sender_key_bucket = NULL`).
+
+**Our previous behavior:** the own sender key was reused correctly (rotation
+only on `rotation_pending` or a changed primary), but the distribution went to
+**every** device in **every** send. That is not what the client does, and a
+group reaction carrying distributions is never delivered (see groups.md).
+
+**Now:** `DistributionState` gains `chain` (random per chain) and `acked`
+(serde defaults, so older states load). `Prepared::await_ack_in` records, in
+the reservation transaction, the devices the stanza distributes to; a
+successful server ACK (`confirm_ack_in`, from the comparison send and from
+`outgoing::acknowledge`) adds them to `acked` only if the chain is unchanged
+and no rotation is pending. `Snapshot::load` leaves `acked` devices out of the
+fan-out (no session work, no directory fetch); fresh-session mode and any
+pending rotation still distribute to all. `recipients` keeps its conservative
+"exposed at reservation" meaning for rotation.
+
+**Not established / not ported:** the `sent_sender_key_bucket` and
+`sent_add_on_sender_key` semantics (add-on sends are tracked separately in
+the APK; we track one chain), and the "one-time-sender-key" path in
+`SendE2EMessageJob`. The normal group outbox now blocks a reaction only when
+some device still needs the distribution.

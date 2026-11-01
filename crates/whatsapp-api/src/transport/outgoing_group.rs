@@ -222,20 +222,6 @@ pub(super) mod tests {
                             .local_id)
                     })
                     .unwrap();
-                if reaction {
-                    // Refused before any query: this path would put the
-                    // distributions in a reaction the server drops.
-                    assert!(begin_selected(&store, id).unwrap().is_none());
-                    assert_eq!(
-                        preparation(&store, id)
-                            .unwrap()
-                            .unwrap()
-                            .blocking_reason
-                            .as_deref(),
-                        Some("reaction_distribution_unsupported")
-                    );
-                    continue;
-                }
                 let original = store.read(|tx| outbox().get(tx, id)).unwrap().unwrap();
                 let (mut pending, mut query) = begin_selected(&store, id).unwrap().unwrap();
                 let mut cursor = devices::DeviceSyncCursor::default();
@@ -271,6 +257,21 @@ pub(super) mod tests {
                     }
                 }
                 let entry = store.read(|tx| outbox().get(tx, id)).unwrap().unwrap();
+                if reaction && !kind.starts_with("changed_") {
+                    // The fresh peer device still needs the distribution, and a
+                    // group reaction carrying one is never delivered, so it is
+                    // blocked before any reservation (observed 2026-11-01).
+                    assert!(sent.is_none());
+                    assert_eq!(
+                        preparation(&store, id)
+                            .unwrap()
+                            .unwrap()
+                            .blocking_reason
+                            .as_deref(),
+                        Some("reaction_distribution_unsupported")
+                    );
+                    continue;
+                }
                 if kind.starts_with("changed_") {
                     assert!(sent.is_none());
                     assert_eq!(entry, original);
@@ -1443,13 +1444,10 @@ pub(crate) fn begin_selected(
             recipient_count: 0,
             device_count: 0,
         };
-        let reaction = matches!(entry.intent.content, MessageContent::Reaction { .. });
-        if !supported || foreign_keys || reaction {
+        if !supported || foreign_keys {
             row.phase = Phase::Blocked;
             row.reason = Some(if foreign_keys {
                 Block::ForeignKeyHistory
-            } else if reaction {
-                Block::ReactionDistributionUnsupported
             } else {
                 Block::UnsupportedContent
             });
@@ -1827,6 +1825,13 @@ impl Pending {
                     }
                     Err(error) => return Err(error),
                 };
+                // A group reaction carrying distributions is ACKed but never
+                // delivered (observed 2026-11-01). Devices already holding the
+                // chain need none; any that still do block it here, before any
+                // reservation, until out-of-band distribution exists on this path.
+                if content == groups::StanzaContent::Reaction && !prepared.targets().is_empty() {
+                    return self.block(store, Block::ReactionDistributionUnsupported);
+                }
                 let plan = self.plan.as_ref().expect("resolved plan");
                 let wire_id = super::messaging::new_message_id()?;
                 // APK 37.71 SendE2EMessageJob.A06/0y0.A00: per-device SKDM
@@ -1858,6 +1863,7 @@ impl Pending {
                         guard.validate_in(tx)?;
                     }
                     prepared.reserve_in(tx, archive.as_bytes())?;
+                    prepared.await_ack_in(tx, &wire_id)?;
                     super::send_versions::capture_in(tx, self.entry.local_id, &plan.devices)?;
                     current.wire_id = Some(MessageId::new(wire_id)?);
                     current.attempts.push(AttemptRecord {

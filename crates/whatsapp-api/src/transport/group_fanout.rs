@@ -106,9 +106,20 @@ impl Snapshot {
                     })
                 })
                 .collect::<Result<Vec<_>>>()?;
+            let distribution = sender_key_distribution::load_in(tx, &plan.chat, &plan.own)?;
+            // 2.26.37.71 sends the distribution only to devices whose
+            // `sent_sender_key` is 0 (set after the server ACK). A device that
+            // already holds this chain gets the skmsg alone, with no session
+            // work or directory fetch; fresh-session mode re-sends to all.
             let targets = plan
                 .devices
                 .iter()
+                .filter(|device| {
+                    fresh_sessions
+                        || !distribution
+                            .as_ref()
+                            .is_some_and(|state| state.delivered(device))
+                })
                 .map(|device| {
                     let key = session_key(device);
                     Ok(Target {
@@ -131,7 +142,7 @@ impl Snapshot {
                         1,
                     )?
                     .map(Zeroizing::new),
-                distribution: sender_key_distribution::load_in(tx, &plan.chat, &plan.own)?,
+                distribution,
                 fresh_sessions,
                 routing,
             })
@@ -371,6 +382,22 @@ impl Prepared {
     /// original-send retry window. Keep private; never print or log these bytes.
     pub fn distribution_message(&self) -> &[u8] {
         &self.distribution_message
+    }
+    /// Record, in the same transaction as [`Prepared::reserve_in`], which
+    /// devices this stanza (`wire_id`) distributes the chain to, so the
+    /// server's ACK can mark them (`sender_key_distribution::confirm_ack_in`).
+    pub fn await_ack_in(&self, tx: &mut WriteTx<'_>, wire_id: &str) -> Result<()> {
+        sender_key_distribution::pending_ack_in(
+            tx,
+            &self.original.chat,
+            &self.original.own,
+            wire_id,
+            &self
+                .fanout
+                .iter()
+                .map(|t| t.device.clone())
+                .collect::<Vec<_>>(),
+        )
     }
     /// Validate every captured ratchet/pin/own-key/exposure snapshot and reserve
     /// all next state in the caller's send transaction. Fresh mode has the same
@@ -1176,6 +1203,23 @@ pub(super) mod tests {
                 && !debug.contains("120363")
                 && !debug.contains("offline group")
         );
+        // Once the server ACKs a send carrying the distribution, those devices
+        // hold the chain (APK sent_sender_key = 1 after ack): the next send
+        // distributes to nobody and needs no keys, and its skmsg still opens
+        // with the sender key the devices already received.
+        store
+            .write(|tx| {
+                prepared.await_ack_in(tx, "fixture-wire")?;
+                sender_key_distribution::confirm_ack_in(tx, "fixture-wire")
+            })
+            .unwrap();
+        let delivered = Snapshot::load(&store, &f.plan, false).unwrap();
+        assert!(delivered.required_keys().is_empty());
+        let reuse = delivered.prepare(&f.alice, None, &payload).await.unwrap();
+        assert!(reuse.targets().is_empty(), "no distribution once ACKed");
+        // Fresh-session mode still re-sends to every device.
+        let fresh = Snapshot::load(&store, &f.plan, true).unwrap();
+        assert_eq!(fresh.required_keys(), f.plan.devices);
     }
     #[tokio::test]
     async fn hybrid_primary_and_companion_distributions_open_natively_and_continue_once() {

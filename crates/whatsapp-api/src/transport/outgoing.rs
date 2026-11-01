@@ -1172,6 +1172,10 @@ pub fn acknowledge(store: &ProtocolStore, node: &Node) -> Result<bool> {
             }
             if kind == DeliveryFactKind::Failed {
                 outbox().set_progress(tx, &mut entry, AttemptProgress::Failed)?;
+            } else {
+                // A group send's distribution recipients now hold its chain
+                // (APK sent_sender_key = 1 after ack); no-op for direct sends.
+                super::sender_key_distribution::confirm_ack_in(tx, wire_id.as_str())?;
             }
             let code = node
                 .get_attr("error")

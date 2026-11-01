@@ -18,6 +18,16 @@ pub struct DistributionState {
     own: Jid,
     recipients: Vec<Jid>,
     rotation_pending: bool,
+    /// Random identity of the current own chain, so a late ACK for an older
+    /// chain cannot mark devices of a newer one. 0 in pre-existing states.
+    #[serde(default)]
+    chain: u64,
+    /// Devices the server ACKed a send carrying this chain's distribution to:
+    /// 2.26.37.71 `group_participant_device.sent_sender_key = 1`, which
+    /// `SendE2EMessageJob.A06` sets only after the ACK (`0bA.A0U/A0V/A0X`,
+    /// "…after ack"). Such devices are not sent the distribution again.
+    #[serde(default)]
+    acked: Vec<Jid>,
 }
 
 impl std::fmt::Debug for DistributionState {
@@ -53,6 +63,19 @@ impl DistributionState {
     pub fn rotation_pending(&self) -> bool {
         self.rotation_pending
     }
+    /// Whether `device` already holds this chain's sender key (server-ACKed
+    /// distribution) and need not be sent it again. Never true while a
+    /// rotation is pending: a new chain must reach every device.
+    pub fn delivered(&self, device: &Jid) -> bool {
+        !self.rotation_pending && self.acked.contains(device)
+    }
+}
+
+fn new_chain_id() -> Result<u64> {
+    let mut bytes = [0u8; 8];
+    getrandom::fill(&mut bytes)
+        .map_err(|_| Error::invalid("group_send", "OS random source unavailable"))?;
+    Ok(u64::from_le_bytes(bytes))
 }
 
 fn key(chat: &Jid, own: &Jid) -> Vec<u8> {
@@ -110,6 +133,8 @@ pub fn reserve_in(
             own: own.clone(),
             recipients: Vec::new(),
             rotation_pending: false,
+            chain: new_chain_id()?,
+            acked: Vec::new(),
         },
     };
     for peer in recipients {
@@ -124,6 +149,71 @@ pub fn reserve_in(
         }
     }
     state.recipients.sort();
+    tx.put_json(Table::Checkpoints, &selector, 1, &state)
+}
+
+#[derive(Serialize, Deserialize)]
+struct PendingAck {
+    chat: Jid,
+    own: Jid,
+    chain: u64,
+    devices: Vec<Jid>,
+}
+
+fn pending_key(wire_id: &str) -> Vec<u8> {
+    format!("sender-key-distribution-ack:{wire_id}").into_bytes()
+}
+
+/// Remember, in the send's reservation transaction, which devices this stanza
+/// carries the current chain's distribution to. Call after [`reserve_in`].
+pub fn pending_ack_in(
+    tx: &mut WriteTx<'_>,
+    chat: &Jid,
+    own: &Jid,
+    wire_id: &str,
+    devices: &[Jid],
+) -> Result<()> {
+    if devices.is_empty() {
+        return Ok(());
+    }
+    let state: DistributionState = tx
+        .get_json(Table::Checkpoints, &key(chat, own), 1)?
+        .ok_or_else(|| Error::invalid("group_send", "distribution state missing after reserve"))?;
+    let record = PendingAck {
+        chat: chat.clone(),
+        own: own.clone(),
+        chain: state.chain,
+        devices: devices.to_vec(),
+    };
+    tx.put_json(Table::Checkpoints, &pending_key(wire_id), 1, &record)
+}
+
+/// On the server's successful ACK of `wire_id`, mark its distribution
+/// recipients as holding the chain (APK `sent_sender_key = 1` after ack).
+/// A rotated or replaced chain since the reservation marks nothing.
+/// No record (not a group send, or nothing distributed) is a no-op.
+pub fn confirm_ack_in(tx: &mut WriteTx<'_>, wire_id: &str) -> Result<()> {
+    let Some(record): Option<PendingAck> =
+        tx.get_json(Table::Checkpoints, &pending_key(wire_id), 1)?
+    else {
+        return Ok(());
+    };
+    tx.delete(Table::Checkpoints, &pending_key(wire_id))?;
+    let selector = key(&record.chat, &record.own);
+    let Some(mut state): Option<DistributionState> =
+        tx.get_json(Table::Checkpoints, &selector, 1)?
+    else {
+        return Ok(());
+    };
+    if state.rotation_pending || state.chain != record.chain {
+        return Ok(());
+    }
+    for device in record.devices {
+        if state.recipients.contains(&device) && !state.acked.contains(&device) {
+            state.acked.push(device);
+        }
+    }
+    state.acked.sort();
     tx.put_json(Table::Checkpoints, &selector, 1, &state)
 }
 
@@ -217,6 +307,70 @@ mod tests {
     }
     fn jid(raw: &str) -> Jid {
         Jid::parse(raw).unwrap()
+    }
+
+    #[test]
+    fn acked_distribution_is_not_resent_until_rotation_and_stale_acks_are_ignored() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("acked.redb"), true);
+        let own = jid("15555550101@s.whatsapp.net");
+        let peer = jid("15555550102:3@s.whatsapp.net");
+        let late = jid("15555550103@s.whatsapp.net");
+        let group = jid("123456@g.us");
+        let load = || store.read(|tx| load_in(tx, &group, &own)).unwrap().unwrap();
+        // Reserved but not ACKed: still needs the distribution.
+        store
+            .write(|tx| {
+                reserve_in(tx, &group, &own, None, std::slice::from_ref(&peer))?;
+                pending_ack_in(tx, &group, &own, "W1", std::slice::from_ref(&peer))
+            })
+            .unwrap();
+        assert!(!load().delivered(&peer));
+        // The ACK marks it; a repeated ACK is a no-op.
+        store.write(|tx| confirm_ack_in(tx, "W1")).unwrap();
+        assert!(load().delivered(&peer));
+        store.write(|tx| confirm_ack_in(tx, "W1")).unwrap();
+        // A reservation for a device not yet a recipient adds it unacked.
+        let before = load();
+        store
+            .write(|tx| {
+                reserve_in(tx, &group, &own, Some(&before), std::slice::from_ref(&late))?;
+                pending_ack_in(tx, &group, &own, "W2", std::slice::from_ref(&late))
+            })
+            .unwrap();
+        assert!(load().delivered(&peer) && !load().delivered(&late));
+        // A rotation (identity change) makes nobody delivered...
+        store
+            .write(|tx| {
+                let mut state = load_in_write(tx, &group, &own)?;
+                state.rotation_pending = true;
+                tx.put_json(Table::Checkpoints, &key(&group, &own), 1, &state)
+            })
+            .unwrap();
+        assert!(!load().delivered(&peer));
+        // ...and the next chain is new, so an ACK from the old one marks nothing.
+        let pending = load();
+        store
+            .write(|tx| {
+                reserve_in(
+                    tx,
+                    &group,
+                    &own,
+                    Some(&pending),
+                    std::slice::from_ref(&peer),
+                )
+            })
+            .unwrap();
+        store.write(|tx| confirm_ack_in(tx, "W2")).unwrap();
+        let fresh = load();
+        assert!(!fresh.delivered(&peer) && !fresh.delivered(&late));
+        assert_ne!(fresh.chain, before.chain);
+    }
+
+    fn load_in_write(tx: &WriteTx<'_>, chat: &Jid, own: &Jid) -> Result<DistributionState> {
+        Ok(tx
+            .get_json(Table::Checkpoints, &key(chat, own), 1)?
+            .expect("state"))
     }
 
     #[test]

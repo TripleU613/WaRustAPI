@@ -373,6 +373,7 @@ async fn transmit(
             tx,
             format!("message:{}:rotated-sender-key", message.request_id).as_bytes(),
         )?;
+        prepared.await_ack_in(tx, &wire_id)?;
         tx.put_json(Table::Checkpoints, intent_key.as_bytes(), 1, &intent)
     })?;
     eprintln!(
@@ -431,6 +432,10 @@ async fn transmit(
     result["error"] = serde_json::json!(code);
     store.write(|tx| {
         tx.put_json(Table::Checkpoints, intent_key.as_bytes(), 1, &result)?;
+        if accepted {
+            // APK: sent_sender_key = 1 only after the ACK.
+            whatsapp_api::transport::sender_key_distribution::confirm_ack_in(tx, &wire_id)?;
+        }
         for (index, node) in pending.iter().chain(std::iter::once(&ack)).enumerate() {
             let bytes = Encoder::new(dict).encode(node)?;
             tx.put_json(
