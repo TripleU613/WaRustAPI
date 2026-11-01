@@ -424,3 +424,14 @@ index 1. The comparison dictionary (`TokenDictionary::comparison_2_26_37_70`)
 therefore has at least one wrong double-byte entry; encoding still works
 because unknown names fall back to raw strings. Re-derive the double-byte
 pages from the APK and add a decode/encode round-trip test for every entry.
+
+## PSA notification ACK ends the session (observed 2026-11-01)
+
+A freshly registered account's first `listen` logged in, received two
+`notification type=psa` stanzas (one with `participant`), and ended about 2 s
+later on `stream:error` containing only `ack class=notification type=psa id=…`
+(`lab-inbox --inspect`: `terminal_ack_to_present=false`). The 2026-10-08
+terminal stream:error had the same notification-ACK shape. **Inferred:** the
+server rejects our ACK for `psa` notifications (attributes, or acking at all).
+**Unknown:** what the 2.26.37.71 client sends for `psa` — trace its
+notification ACK writer for that type before changing the encoding.
