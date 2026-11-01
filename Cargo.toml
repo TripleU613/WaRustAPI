@@ -32,8 +32,11 @@ hmac = { version = "0.12", default-features = false }
 sha1 = { version = "0.10", default-features = false }
 pbkdf2 = { version = "0.12", default-features = false, features = ["hmac"] }
 md-5 = { version = "0.10", default-features = false }
-# ZIP archive reading for token material extraction from APK.
-zip = { version = "0.6", default-features = false, features = ["deflate"] }
+# ZIP archive reading for token material extraction from APK. 9.x fixes
+# RUSTSEC-2026-0367/0368/0369 in 0.6. Deflate only, through the pure-Rust
+# zlib-rs backend: no C library and no zopfli compressor (nothing writes
+# compressed archives).
+zip = { version = "9.2", default-features = false, features = ["deflate-flate2-zlib-rs"] }
 # OS-backed CSPRNG (section 18).
 getrandom = { version = "0.4", default-features = false, features = ["std"] }
 # Noise backend candidate with the Rust crypto resolver; `std` is deliberately

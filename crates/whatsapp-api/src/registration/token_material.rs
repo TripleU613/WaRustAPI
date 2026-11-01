@@ -45,7 +45,13 @@ impl TokenMaterial {
         let manifest = read_entry(&mut archive, "AndroidManifest.xml", MAX_MANIFEST_BYTES)?;
         let package_name = parse_manifest_package(&manifest)?;
 
-        let file_names: Vec<String> = archive.file_names().map(str::to_owned).collect();
+        let file_names = archive
+            .file_names()
+            .map(|name| name.map(|name| name.into_owned()))
+            .collect::<std::result::Result<Vec<String>, _>>()
+            .map_err(|error| {
+                Error::invalid("token_material", format!("zip entry name: {error}"))
+            })?;
 
         let logo_candidates = [
             "res/drawable-hdpi/about_logo.png",
@@ -367,7 +373,7 @@ mod tests {
             use zip::ZipWriter;
             let writer = std::io::Cursor::new(&mut zip_data);
             let mut zip = ZipWriter::new(writer);
-            let options = zip::write::FileOptions::default();
+            let options = zip::write::SimpleFileOptions::default();
 
             zip.start_file("AndroidManifest.xml", options).ok();
             zip.write_all(b"\x00\x00\x00\x00\x00\x00\x00\x00").ok();

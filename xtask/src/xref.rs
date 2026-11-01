@@ -1170,11 +1170,7 @@ fn xref_one(
 pub fn apk_xref(apk: &Path, anchors: &[String]) -> Result<BTreeMap<String, Vec<XRef>>, String> {
     let f = std::fs::File::open(apk).map_err(|e| format!("{}: {e}", apk.display()))?;
     let mut zip = zip::ZipArchive::new(f).map_err(|e| format!("zip: {e}"))?;
-    let names: Vec<String> = zip
-        .file_names()
-        .filter(|n| n.starts_with("classes") && n.ends_with(".dex"))
-        .map(str::to_owned)
-        .collect();
+    let names = crate::dex::dex_entry_names(&zip)?;
 
     let mut out: BTreeMap<String, Vec<XRef>> = BTreeMap::new();
     for name in &names {
@@ -1333,11 +1329,7 @@ pub fn apk_xref_strict(
 ) -> Result<BTreeMap<String, Vec<XRef>>, String> {
     let file = std::fs::File::open(apk).map_err(|e| e.to_string())?;
     let mut zip = zip::ZipArchive::new(file).map_err(|e| e.to_string())?;
-    let names: Vec<_> = zip
-        .file_names()
-        .filter(|n| n.starts_with("classes") && n.ends_with(".dex"))
-        .map(str::to_owned)
-        .collect();
+    let names = crate::dex::dex_entry_names(&zip)?;
     if names.is_empty() {
         return Err("APK has no DEX entries".into());
     }
@@ -1546,11 +1538,7 @@ pub fn run_field_refs(
 ) -> Result<(), String> {
     let file = std::fs::File::open(apk).map_err(|error| format!("{}: {error}", apk.display()))?;
     let mut archive = zip::ZipArchive::new(file).map_err(|error| format!("zip: {error}"))?;
-    let mut names: Vec<String> = archive
-        .file_names()
-        .filter(|name| name.starts_with("classes") && name.ends_with(".dex"))
-        .map(str::to_owned)
-        .collect();
+    let mut names = crate::dex::dex_entry_names(&archive)?;
     if names.is_empty() {
         return Err("APK contains no classes*.dex files".to_owned());
     }
@@ -1596,11 +1584,7 @@ pub fn apk_callers(
 ) -> Result<Vec<XRef>, String> {
     let file = std::fs::File::open(apk).map_err(|error| format!("{}: {error}", apk.display()))?;
     let mut archive = zip::ZipArchive::new(file).map_err(|error| format!("zip: {error}"))?;
-    let names: Vec<String> = archive
-        .file_names()
-        .filter(|name| name.starts_with("classes") && name.ends_with(".dex"))
-        .map(str::to_owned)
-        .collect();
+    let names = crate::dex::dex_entry_names(&archive)?;
     let mut callers = Vec::new();
     for name in &names {
         let mut bytes = Vec::new();
@@ -1628,11 +1612,7 @@ pub struct CallerEvidence {
 pub fn apk_candidate_callers(apk: &Path, sites: &[XRef]) -> Result<Vec<CallerEvidence>, String> {
     let mut zip = zip::ZipArchive::new(std::fs::File::open(apk).map_err(|e| e.to_string())?)
         .map_err(|e| e.to_string())?;
-    let names: Vec<_> = zip
-        .file_names()
-        .filter(|n| n.starts_with("classes") && n.ends_with(".dex"))
-        .map(str::to_owned)
-        .collect();
+    let names = crate::dex::dex_entry_names(&zip)?;
     let mut blobs = BTreeMap::new();
     for name in names {
         let mut bytes = Vec::new();
@@ -1976,11 +1956,7 @@ pub fn apk_smali(
 ) -> Result<Vec<MethodDump>, String> {
     let f = std::fs::File::open(apk).map_err(|e| format!("{}: {e}", apk.display()))?;
     let mut zip = zip::ZipArchive::new(f).map_err(|e| format!("zip: {e}"))?;
-    let names: Vec<String> = zip
-        .file_names()
-        .filter(|n| n.starts_with("classes") && n.ends_with(".dex"))
-        .map(str::to_owned)
-        .collect();
+    let names = crate::dex::dex_entry_names(&zip)?;
 
     let mut out = Vec::new();
     for name in &names {
@@ -2171,11 +2147,7 @@ pub fn run_virtual_overrides(
 ) -> Result<(), String> {
     let f = std::fs::File::open(apk).map_err(|e| format!("{}: {e}", apk.display()))?;
     let mut zip = zip::ZipArchive::new(f).map_err(|e| format!("zip: {e}"))?;
-    let names: Vec<String> = zip
-        .file_names()
-        .filter(|n| n.starts_with("classes") && n.ends_with(".dex"))
-        .map(str::to_owned)
-        .collect();
+    let names = crate::dex::dex_entry_names(&zip)?;
     if names.is_empty() {
         return Err("no classes*.dex in APK".into());
     }
@@ -3512,7 +3484,7 @@ mod tests {
             let dir = tempfile::tempdir().unwrap();
             let path = dir.path().join("fixture.apk");
             let mut zip = zip::ZipWriter::new(std::fs::File::create(&path).unwrap());
-            let opts = zip::write::FileOptions::default();
+            let opts = zip::write::SimpleFileOptions::default();
             zip.start_file("classes.dex", opts).unwrap();
             zip.write_all(&catch_fixture()).unwrap();
             zip.start_file("classes2.dex", opts).unwrap();
@@ -3609,7 +3581,7 @@ mod tests {
             let dir = tempfile::tempdir().unwrap();
             let path = dir.path().join("fixture.apk");
             let mut zip = zip::ZipWriter::new(std::fs::File::create(&path).unwrap());
-            let opts = zip::write::FileOptions::default();
+            let opts = zip::write::SimpleFileOptions::default();
             zip.start_file("classes.dex", opts).unwrap();
             zip.write_all(&first).unwrap();
             zip.start_file("classes2.dex", opts).unwrap();
@@ -3838,7 +3810,7 @@ mod tests {
         let dir = tempfile::tempdir().unwrap();
         let apk = dir.path().join("calls.apk");
         let mut zip = zip::ZipWriter::new(std::fs::File::create(&apk).unwrap());
-        let opts = zip::write::FileOptions::default();
+        let opts = zip::write::SimpleFileOptions::default();
         use std::io::Write as _;
         let invoke = [0x71, 0, 0, 0, 0, 0, 0x0e, 0];
         for (name, data) in [
@@ -4011,7 +3983,7 @@ mod tests {
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("fixture.apk");
         let mut zip = zip::ZipWriter::new(std::fs::File::create(&path).unwrap());
-        let opts = zip::write::FileOptions::default();
+        let opts = zip::write::SimpleFileOptions::default();
         use std::io::Write as _;
         zip.start_file("classes.dex", opts).unwrap();
         zip.write_all(&minimal_dex_header()).unwrap();

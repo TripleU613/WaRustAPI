@@ -171,16 +171,22 @@ fn category(name: &str) -> &'static str {
 fn inventory(apk: &Path) -> Result<serde_json::Value, String> {
     let file = fs::File::open(apk).map_err(|e| e.to_string())?;
     let mut zip = zip::ZipArchive::new(file).map_err(|e| e.to_string())?;
+    // zip 9 collapses duplicate names before by_index; refuse rather than
+    // undercount the inventory.
+    if zip.has_duplicate_names() {
+        return Err("APK has duplicate ZIP entry names".into());
+    }
     let mut totals: BTreeMap<&str, Totals> = BTreeMap::new();
     let mut code = BTreeMap::new();
     for i in 0..zip.len() {
         let mut entry = zip.by_index(i).map_err(|e| e.to_string())?;
-        let kind = category(entry.name());
+        let name = entry.name().map_err(|e| e.to_string())?.into_owned();
+        let kind = category(&name);
         let total = totals.entry(kind).or_default();
         total.entries += 1;
         total.compressed_bytes += entry.compressed_size();
         total.uncompressed_bytes += entry.size();
-        if kind == "dex" || entry.name() == "AndroidManifest.xml" {
+        if kind == "dex" || name == "AndroidManifest.xml" {
             let mut digest = Sha256::new();
             let mut buffer = [0u8; 65536];
             loop {
@@ -191,7 +197,7 @@ fn inventory(apk: &Path) -> Result<serde_json::Value, String> {
                 digest.update(&buffer[..n]);
             }
             code.insert(
-                entry.name().to_owned(),
+                name,
                 serde_json::json!({
                     "bytes": entry.size(), "sha256": hex::encode(digest.finalize())
                 }),

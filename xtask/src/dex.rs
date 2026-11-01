@@ -5,10 +5,44 @@
 //! `xref.rs` which performs full structural analysis of class/method/code items.
 
 use std::collections::BTreeSet;
-use std::io::Read;
+use std::io::{Read, Seek};
 use std::path::Path;
 
 pub const DEX_MAGIC: &[u8] = b"dex\n";
+
+/// Every entry name in archive order. zip 9 decodes names fallibly (UTF-8,
+/// else CP437); an undecodable name is an error, never a silently skipped entry.
+pub fn entry_names<R: Read + Seek>(zip: &zip::ZipArchive<R>) -> Result<Vec<String>, String> {
+    zip.file_names()
+        .map(|name| {
+            name.map(|name| name.into_owned())
+                .map_err(|e| format!("zip entry name: {e}"))
+        })
+        .collect()
+}
+
+/// The `classes*.dex` entry names in archive order.
+pub fn dex_entry_names<R: Read + Seek>(zip: &zip::ZipArchive<R>) -> Result<Vec<String>, String> {
+    let mut names = entry_names(zip)?;
+    names.retain(|name| name.starts_with("classes") && name.ends_with(".dex"));
+    Ok(names)
+}
+
+/// Test helper: the zip 9 writer refuses duplicate names, so tests write a
+/// same-length twin and rename it in place in both the local and central
+/// headers (names are not covered by the CRC). Returns the rename count.
+#[cfg(test)]
+pub fn rename_entry(raw: &mut [u8], from: &str, to: &str) -> usize {
+    assert_eq!(from.len(), to.len());
+    let mut renamed = 0;
+    for i in 0..=raw.len().saturating_sub(from.len()) {
+        if raw[i..].starts_with(from.as_bytes()) {
+            raw[i..i + to.len()].copy_from_slice(to.as_bytes());
+            renamed += 1;
+        }
+    }
+    renamed
+}
 
 fn u32le(d: &[u8], o: usize) -> Result<u32, String> {
     d.get(o..o + 4)
@@ -91,11 +125,7 @@ pub fn strings(d: &[u8]) -> Result<Vec<String>, String> {
 pub fn apk_strings(apk: &Path) -> Result<BTreeSet<String>, String> {
     let f = std::fs::File::open(apk).map_err(|e| format!("{}: {e}", apk.display()))?;
     let mut zip = zip::ZipArchive::new(f).map_err(|e| format!("zip: {e}"))?;
-    let names: Vec<String> = zip
-        .file_names()
-        .filter(|n| n.starts_with("classes") && n.ends_with(".dex"))
-        .map(str::to_owned)
-        .collect();
+    let names = dex_entry_names(&zip)?;
     if names.is_empty() {
         return Err("no classes*.dex in APK".into());
     }
@@ -141,11 +171,7 @@ pub struct RecoveredDictionary {
 pub fn apk_tokens(apk: &Path) -> Result<RecoveredDictionary, String> {
     let f = std::fs::File::open(apk).map_err(|e| format!("{}: {e}", apk.display()))?;
     let mut zip = zip::ZipArchive::new(f).map_err(|e| format!("zip: {e}"))?;
-    let mut names: Vec<String> = zip
-        .file_names()
-        .filter(|n| n.starts_with("classes") && n.ends_with(".dex"))
-        .map(str::to_owned)
-        .collect();
+    let mut names = dex_entry_names(&zip)?;
     names.sort();
     if names.is_empty() {
         return Err("no classes*.dex in APK".into());
