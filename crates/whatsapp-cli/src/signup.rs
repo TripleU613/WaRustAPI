@@ -280,6 +280,10 @@ pub(super) async fn run(
         return Ok(());
     }
     let config = config(path)?;
+    if let Some(name) = &config.profile.push_name {
+        // Fail on a bad name before any request, not after registration.
+        whatsapp_api::transport::presence::push_name(name)?;
+    }
     if let Action::Preview { show_phone } = action {
         let mut preview = config.preview(*show_phone);
         preview["store"] = serde_json::json!(cli.store);
@@ -353,6 +357,10 @@ pub(super) async fn run(
         key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
         create,
     })?);
+    // Kept for the post-completion profile step; `store` and `config` are
+    // moved into the registration service below.
+    let profile_store = Arc::clone(&store);
+    let account_profile = config.profile.clone();
     if matches!(action, Action::Begin { .. }) {
         begin_store_guard(&store, &config.phone, create)?;
     }
@@ -589,6 +597,37 @@ pub(super) async fn run(
         }
     };
     super::print_step(&step, cli.json);
+    if step == whatsapp_api::registration::RegistrationStep::Completed {
+        queue_profile(&profile_store, &account_profile)?;
+    }
+    Ok(())
+}
+
+/// Queue the configured display name (app-state record plus the name
+/// presence) and About text for the first session after registration.
+fn queue_profile(
+    store: &ProtocolStore,
+    profile: &whatsapp_api::registration::request::ProfileSettings,
+) -> Result<(), Error> {
+    use whatsapp_api::transport::{about, app_state_sync, inbox, presence};
+    if let Some(name) = &profile.push_name {
+        let own = inbox::own_identities(store)?;
+        let device = own.0.as_ref().map_or(0, |jid| jid.device);
+        app_state_sync::queue_push_name_patch(
+            store,
+            device,
+            0,
+            &[u32::from(device)].into_iter().collect(),
+            whatsapp_api::model::time::Timestamp::now().0,
+            name,
+        )?;
+        presence::queue_push_name(store, name)?;
+        println!("profile: display name queued; the next `listen` sends it");
+    }
+    if let Some(text) = &profile.about {
+        about::queue_set(store, text)?;
+        println!("profile: About text queued; the next `listen` sends it");
+    }
     Ok(())
 }
 

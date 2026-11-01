@@ -46,7 +46,11 @@ contact collection's state. Both now use the collection the patch or conflict
 names, with a regression test.
 
 When the official client sends the push-name presence (on change only, or also
-on connect) was **not traced**; we send it only when asked.
+on connect) was **not traced**; we send it only when asked. **Inferred from the two separate writer cases** (plain `1Rd.A01` on every
+connect vs `0y0` case 3 carrying the name): the name presence is a change
+event. Since 2026-11-01 `push-name` queues it and `listen` sends it once right
+after its availability announcement, recorded as written under `push-name`;
+`lab-signup` does the same from the config's `profile.push_name` on completion.
 
 ## Typing and recording indicators
 

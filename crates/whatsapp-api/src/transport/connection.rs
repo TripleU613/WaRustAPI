@@ -555,6 +555,10 @@ pub(crate) async fn drive(
                         // on a peer that has already gone away, since nothing
                         // reads a reply for a fire-and-forget presence stanza.
                         link.send(&super::messaging::available_presence()).await?;
+                        // A display name queued by `push-name` (0y0 case 3).
+                        if let Some(name) = super::presence::take_push_name(&store)? {
+                            link.send(&name).await?;
+                        }
                         for receipt in super::receipts::reserve_pending(&store)? { link.send(&receipt).await?; }
                         {
                             let delay_ms = config.transport.action_delay_ms;

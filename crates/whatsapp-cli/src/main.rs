@@ -2717,8 +2717,9 @@ async fn run(cli: Cli) -> Result<(), Error> {
                 whatsapp_api::model::time::Timestamp::now().0,
                 name,
             )?;
+            whatsapp_api::transport::presence::queue_push_name(store, name)?;
             println!(
-                "push-name: pushNameSetting patch queued in critical_block (action {id}); a session transmits it"
+                "push-name: pushNameSetting patch queued in critical_block (action {id}) and the name presence queued; a session such as `listen` transmits both"
             );
             Ok(())
         }

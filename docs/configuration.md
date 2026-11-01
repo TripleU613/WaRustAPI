@@ -86,3 +86,13 @@ Set `WHATSAPP_API_TOKEN_MATERIAL` to point at it, or pass `--material` explicitl
 whatsapp-cli token derive --country-code 1 --national-number 5551234567 --material lab/whatsapp-2.26.37.70-token-material.zip
 whatsapp-cli token verify --config lab/accounts/a/request.json --material lab/whatsapp-2.26.37.70-token-material.zip
 ```
+
+## Profile after registration (`profile`)
+
+Optional. When registration completes, `lab-signup` queues these for the next
+session (`listen`); nothing is sent during registration itself.
+
+| Field | Type | Effect |
+|---|---|---|
+| `profile.push_name` | string | Display name: the `pushNameSetting` app-state record and the `<presence name=… type="available"/>` other people see (validated before any request) |
+| `profile.about` | string | Profile About text |

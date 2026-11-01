@@ -61,6 +61,47 @@ pub fn push_name(name: &str) -> Result<Node> {
         .attr("type", "available"))
 }
 
+const PENDING_NAME: &[u8] = b"push-name-pending";
+
+/// Queue the display-name presence for the next session (validated now).
+/// 2.26.37.71 writes it as its own writer case (`0y0.A00` case 3), separate
+/// from the plain availability announcement every connection sends
+/// (`1Rd.A01`), so it goes out when the name changes, not on every connect.
+pub fn queue_push_name(store: &crate::store::ProtocolStore, name: &str) -> Result<()> {
+    push_name(name)?;
+    store.write(|tx| {
+        tx.put_json(
+            crate::store::Table::Checkpoints,
+            PENDING_NAME,
+            1,
+            &name.trim().to_owned(),
+        )
+    })
+}
+
+/// Take the queued display-name presence, if any, for a session that has
+/// just announced availability. Recorded as written under `push-name` before
+/// the caller sends it: the server never acknowledges a presence, so the
+/// stanza is fire-and-forget and is not repeated by later sessions.
+pub fn take_push_name(store: &crate::store::ProtocolStore) -> Result<Option<Node>> {
+    store.write(|tx| {
+        let Some(name): Option<String> =
+            tx.get_json(crate::store::Table::Checkpoints, PENDING_NAME, 1)?
+        else {
+            return Ok(None);
+        };
+        let node = push_name(&name)?;
+        tx.delete(crate::store::Table::Checkpoints, PENDING_NAME)?;
+        tx.put_json(
+            crate::store::Table::Checkpoints,
+            b"push-name",
+            1,
+            &serde_json::json!({"status": "written", "name": name, "at": crate::model::time::Timestamp::now()}),
+        )?;
+        Ok(Some(node))
+    })
+}
+
 /// What the other side is shown.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ChatState {
@@ -282,6 +323,26 @@ mod tests {
     }
 
     /// `LX/0y0->A00` case 3: `name` then `type="available"`, nothing else.
+    #[test]
+    fn queued_push_name_is_taken_once() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = crate::store::ProtocolStore::open(crate::store::OpenOptions {
+            path: dir.path().join("name.redb"),
+            account_id: crate::model::ids::AccountId::new("name").unwrap(),
+            key_source: std::sync::Arc::new(crate::store::StaticKeySource::new(
+                crate::store::MasterKey::from_bytes([7; 32]),
+            )),
+            create: true,
+        })
+        .unwrap();
+        assert!(queue_push_name(&store, "  ").is_err());
+        assert!(take_push_name(&store).unwrap().is_none());
+        queue_push_name(&store, " Usher ").unwrap();
+        let node = take_push_name(&store).unwrap().unwrap();
+        assert_eq!(node, push_name("Usher").unwrap());
+        assert!(take_push_name(&store).unwrap().is_none(), "sent once");
+    }
+
     #[test]
     fn push_name_matches_the_traced_writer() {
         let node = push_name("  Test Name  ").unwrap();

@@ -558,6 +558,7 @@ mod tests {
             fields: Default::default(),
             diagnostics: true,
             preflight: false,
+            profile: Default::default(),
         }
     }
 

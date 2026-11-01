@@ -1299,6 +1299,25 @@
             "type": "boolean",
             "default": false,
             "description": "Perform preflight validation without sending"
+          },
+          "profile": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "Optional profile queued when registration completes (2026-11-01), the way the official setup flow asks for a name right after verification: push_name queues the pushNameSetting app-state record and the display-name presence (0y0 case 3), about queues the About text. The next session (listen) transmits them; nothing is sent during registration. The name is validated before any request.",
+            "properties": {
+              "push_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "about": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
           }
         },
         "description": "Lab registration configuration template. The default recipe (body_mode enc_empty_h, client.user_agent 'WhatsApp/2.26.37.70 Android/unknown Device/unknown-unknown', and recommended code fields) is now provided by lab-signup template (GET /v1/signup/template). The token must be derived from 2.26.37.70 APK material; see docs/protocol/registration-lab.md for details."
@@ -12283,7 +12302,7 @@
           "Lab"
         ],
         "summary": "Queue the display name as the pushNameSetting app-state record",
-        "description": "Queues an app-state patch to `critical_block` carrying one SET mutation: index `[\"setting_pushName\"]`, `SyncActionData.version` 1, value `SyncActionValue{timestamp: 1, pushNameSetting: 7 {name: 1}}` (comparison 2.26.37.71 `LX/B66`, `LX/Azq`, `LX/BZV`, `LX/BQd`, all confirmed). This is how the account's other devices learn the name; other people see it through the separate `<presence name=…>` stanza sent by `lab-transport --push-name`. Builds on the collection state the server last accepted and promotes the new state only once the server accepts it; a 409 conflict is caught up from the returned patches. Offline: a session such as `listen` transmits the queued action. Live 2026-09-25: accepted, `<collection name=\"critical_block\" version=\"1\"/>`.",
+        "description": "Queues an app-state patch to `critical_block` carrying one SET mutation: index `[\"setting_pushName\"]`, `SyncActionData.version` 1, value `SyncActionValue{timestamp: 1, pushNameSetting: 7 {name: 1}}` (comparison 2.26.37.71 `LX/B66`, `LX/Azq`, `LX/BZV`, `LX/BQd`, all confirmed). This is how the account's other devices learn the name; other people see it through the separate `<presence name=…>` stanza sent by `lab-transport --push-name`. Builds on the collection state the server last accepted and promotes the new state only once the server accepts it; a 409 conflict is caught up from the returned patches. Offline: a session such as `listen` transmits the queued action. Live 2026-09-25: accepted, `<collection name=\"critical_block\" version=\"1\"/>`. 2026-11-01: also queues the display-name presence (<presence name type=available/>, 2.26.37.71 0y0 case 3), which the next listen sends once after its availability announcement, so other people see the name without a separate lab-transport login.",
         "operationId": "queuePushName",
         "x-cli": "whatsapp-cli push-name",
         "x-transport": [

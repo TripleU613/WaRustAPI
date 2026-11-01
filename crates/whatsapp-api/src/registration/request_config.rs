@@ -69,6 +69,23 @@ pub struct LabRegistrationConfig {
     /// False preserves previously frozen lab profiles.
     #[serde(default)]
     pub preflight: bool,
+    /// Profile set automatically once registration completes; omitted fields
+    /// are left alone. Not sent during registration itself.
+    #[serde(default)]
+    pub profile: ProfileSettings,
+}
+
+/// Display name and About text queued when registration completes, the way
+/// the official setup flow asks for a name right after verification.
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields)]
+pub struct ProfileSettings {
+    /// Display name others see (`push-name`); validated before any request.
+    #[serde(default)]
+    pub push_name: Option<String>,
+    /// Profile About text (`about`).
+    #[serde(default)]
+    pub about: Option<String>,
 }
 
 fn enabled() -> bool {
