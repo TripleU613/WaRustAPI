@@ -3,6 +3,38 @@
 All tools are Rust (`xtask`). The APK never enters the repository; keep it
 under a path listed in `.gitignore` (for example `lab/`).
 
+## Obtaining the APK
+
+The owner publishes the current official APK as the asset `WhatsApp.1.apk` of
+the GitHub pre-release `nothing_yet` ("Not a release - Just the WA APK"), so a
+cloud session without the owner's workstation can fetch it. It is research
+input, not a project release:
+
+```sh
+mkdir -p /tmp/wa-apk && gh release download nothing_yet \
+  -R TripleU613/WaRustAPI -p 'WhatsApp.1.apk' -D /tmp/wa-apk
+cargo run --locked -p xtask -- reference-manifest /tmp/wa-apk/WhatsApp.1.apk
+```
+
+**Confirmed 2026-11-01** (`xtask reference-manifest` on the downloaded asset):
+
+| Field | Value |
+| --- | --- |
+| Package / version | `com.whatsapp` **2.26.43.72**, version code 264307238 |
+| APK SHA-256 | `887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e` |
+| Signing certificate SHA-256 | `39:87:D0:43:…:5D:44`, the same certificate as 2.26.37.70 and 2.26.37.71 |
+
+No protocol finding is attributed to 2.26.43.72 yet. Its token inputs are not
+verified against the working registration recipe, which still derives tokens
+from the 2.26.37.70 material. The asset can be replaced: check the hash and
+re-identify the build before citing it.
+
+Other builds with recorded evidence: 2.26.37.70 (token material; SHA-256
+`ce746890…922e9`) and 2.26.37.71 (owner workstation `~/Downloads/WhatsApp.apk`;
+SHA-256 `1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`).
+
+## Procedure
+
 ```sh
 # 1. Obtain the candidate build, then verify it before treating it as the
 #    reference. The /current/ URL is mutable.
