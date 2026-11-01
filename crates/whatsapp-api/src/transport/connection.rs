@@ -665,6 +665,17 @@ pub(crate) async fn drive(
                     Err(error) => return Err(error),
                 }
                 if let Some(ack)=super::groups::handle_dirty_notification(&store, &node)? {link.send(&ack).await?;}
+                // 2.26.37.71 PSANotificationHandler (17o) ACKs every psa
+                // notification; without it the server ends the session with a
+                // stream:error echoing the ACK (observed 2026-11-01).
+                match super::notifications::psa_ack(&node) {
+                    Ok(Some(ack)) => link.send(&ack).await?,
+                    Ok(None) => {}
+                    Err(Error::InvalidInput { field, reason }) => {
+                        tracing::warn!(field, reason, "psa notification refused locally; captured without ACK; session continues");
+                    }
+                    Err(error) => return Err(error),
+                }
                 // The ACK is built first: a devices notification without `id` or
                 // `from` cannot be acknowledged, so it is refused (logged, no
                 // sync queued, no ACK) rather than ending receive at every login.

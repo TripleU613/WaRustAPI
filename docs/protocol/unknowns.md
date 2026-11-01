@@ -431,7 +431,19 @@ A freshly registered account's first `listen` logged in, received two
 `notification type=psa` stanzas (one with `participant`), and ended about 2 s
 later on `stream:error` containing only `ack class=notification type=psa id=…`
 (`lab-inbox --inspect`: `terminal_ack_to_present=false`). The 2026-10-08
-terminal stream:error had the same notification-ACK shape. **Inferred:** the
-server rejects our ACK for `psa` notifications (attributes, or acking at all).
-**Unknown:** what the 2.26.37.71 client sends for `psa` — trace its
-notification ACK writer for that type before changing the encoding.
+terminal stream:error had the same notification-ACK shape. **Resolved 2026-11-01:** this client sent **no** ACK for `psa` at all; the
+stream:error (about 15 s after the PSA arrived, not 2 s) echoes the ACK the
+server was waiting for. **Confirmed, 2.26.37.71:** `Fbs` registers `psa`;
+its handler `17o` (`PSANotificationHandler`, log strings
+`PSANotificationHandler/...`) extends `0yO`
+(`BaseNotificationHandler/handleAndAckNotification`), which ACKs every
+notification after `A09`, or later via `AAR.A00` when `A09` deferred with
+`A07(true)`. `17o.A09` inspects children only when `from` is
+`0@s.whatsapp.net`; a `surfaces` child with feature `0xdd0` off, or
+`psa_wakeup` with `0x1068` off, is ACKed by `17o.A03` with extra attribute
+`error="487"`. `transport::notifications::psa_ack` now ACKs every psa
+(id/to/class/type/participant per `Cp2.A05`), adding `error="487"` for those
+two children because this client implements neither feature. **Inferred:**
+the `campaign` (status PSA) and other children get the plain ACK; their
+feature-gated branches were not fully mapped. Live confirmation of a session
+that stays up past a PSA is recorded in STATUS.md.
