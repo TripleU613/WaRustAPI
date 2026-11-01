@@ -464,12 +464,16 @@ ACKs every notification its subclasses dispatch.
   `disappearing_mode` child (`duration`, `t`); **inferred** that it is the
   type's handler from that shape. `notifications::disappearing_mode_ack`
   sends the plain base ACK; the timer is not applied.
-* **`business` (unknown).** Observed arriving unACKed. No `EGu` registration or
-  handler reading it was found (`apk-xref business`: 28 references, none a
-  `0yO` subclass). Not ACKed until a handler is traced.
+* **`business` (fixed 2026-11-01).** `BusinessNotificationHandler` is `17Y`
+  (found by its log strings, not the bare `business` literal, which is why the
+  first search missed it); it extends `0yO`, does not defer and adds no
+  attribute, so `notifications::business_ack` sends the plain base ACK.
 * **The routers.** The newer `EGu` registry holds only `w:gp2`, `location` and
   `psa` (`Fbq`/`Fbr`/`Fbs`). The classic type router was not located
   (`0u7.C8f`, which names many types, is the usync reply parser). For an
   unrouted stanza `1SP.run` logs `StanzaReceiver/receiveStanza not handled`
-  and continues into an untraced `A8h` branch, so a generic ACK for unknown
-  types is **not** established and is not sent.
+  and continues: it reads an integer stanza attribute (`0hs.A05`) and only when
+  it is at least 11 looks up a per-type handler in `A8h`'s map (`1Qp.A01` →
+  `0BW.CGQ`, the unhandled-stanza error path); otherwise it returns to the loop
+  with nothing sent. **Confirmed negative:** the official client does not
+  generically ACK unhandled types, so neither do we.
