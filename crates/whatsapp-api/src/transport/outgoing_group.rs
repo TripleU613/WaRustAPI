@@ -222,6 +222,20 @@ pub(super) mod tests {
                             .local_id)
                     })
                     .unwrap();
+                if reaction {
+                    // Refused before any query: this path would put the
+                    // distributions in a reaction the server drops.
+                    assert!(begin_selected(&store, id).unwrap().is_none());
+                    assert_eq!(
+                        preparation(&store, id)
+                            .unwrap()
+                            .unwrap()
+                            .blocking_reason
+                            .as_deref(),
+                        Some("reaction_distribution_unsupported")
+                    );
+                    continue;
+                }
                 let original = store.read(|tx| outbox().get(tx, id)).unwrap().unwrap();
                 let (mut pending, mut query) = begin_selected(&store, id).unwrap().unwrap();
                 let mut cursor = devices::DeviceSyncCursor::default();
@@ -1114,6 +1128,11 @@ enum Block {
     ForeignKeyHistory,
     CompanionAuthorityChanged,
     ReferenceChanged,
+    /// This path rotates the sender key and carries distributions in the
+    /// stanza; the server ACKs such a group reaction but delivers it to nobody
+    /// (observed live 2026-11-01, `groups::sender_key_stanza`). Refused before
+    /// any query until out-of-band distribution exists here.
+    ReactionDistributionUnsupported,
 }
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 struct Row {
@@ -1424,10 +1443,13 @@ pub(crate) fn begin_selected(
             recipient_count: 0,
             device_count: 0,
         };
-        if !supported || foreign_keys {
+        let reaction = matches!(entry.intent.content, MessageContent::Reaction { .. });
+        if !supported || foreign_keys || reaction {
             row.phase = Phase::Blocked;
             row.reason = Some(if foreign_keys {
                 Block::ForeignKeyHistory
+            } else if reaction {
+                Block::ReactionDistributionUnsupported
             } else {
                 Block::UnsupportedContent
             });

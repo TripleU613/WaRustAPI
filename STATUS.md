@@ -1,3 +1,15 @@
+2026-11-01 — **Fixed and observed live (group reactions never delivered):** the
+server ACKs a group `type=reaction` stanza that carries `<participants>`
+(sender-key distributions) but delivers it to nobody; our paths always embedded
+them. Proven with two own accounts and five controlled variants; with the
+distribution sent first as a direct message, the reaction was delivered and
+decrypted. `sender_key_stanza` refuses the dropped shape, the comparison group
+send distributes out of band for reactions, and the normal group outbox blocks
+reactions (`reaction_distribution_unsupported`) until it can do the same.
+Handset rendering still to be confirmed. Also fixed: a masked display group id
+(`***…@g.us`) is refused as input instead of being sent to a group that cannot
+exist. [groups](docs/protocol/groups.md#root-cause-a-group-reaction-must-not-carry-distributions-2026-11-01).
+
 2026-11-01 — **Fixed and observed live (PSA notification ACK):** the client never
 ACKed `psa` notifications, so the server ended sessions about 15 s after one
 arrived (`stream:error` echoing `ack class=notification type=psa`). Per

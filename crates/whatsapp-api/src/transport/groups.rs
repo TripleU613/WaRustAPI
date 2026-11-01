@@ -1322,6 +1322,20 @@ pub fn sender_key_stanza(
     if skmsg.is_empty() || skmsg.len() > 1_048_576 {
         return Err(Error::invalid("group_send", "invalid skmsg size"));
     }
+    // **Observed live 2026-11-01** (two own accounts, five controlled sends):
+    // the server ACKs a group `type=reaction` stanza that carries
+    // `<participants>` (sender-key distributions) but delivers it to nobody;
+    // its ACK has no `count`. The same reaction with `type=text`, or as a
+    // reaction with the distribution sent beforehand as a direct message and
+    // no `<participants>`, was delivered and decrypted. Removing `meta`,
+    // `decrypt-fail` or reordering `meta` before `enc` did not help. Refuse
+    // the dropped shape here so no caller can build it again.
+    if content == StanzaContent::Reaction && !targets.is_empty() {
+        return Err(Error::invalid(
+            "group_send",
+            "a group reaction cannot carry sender-key distributions; deliver them out of band first",
+        ));
+    }
     let mut participants = Vec::with_capacity(targets.len());
     for target in targets {
         if !matches!(target.kind, "pkmsg" | "msg") {
@@ -1614,7 +1628,9 @@ mod tests {
             ciphertext: vec![1],
         };
         let targets = std::slice::from_ref(&target);
-        let reaction = sender_key_stanza(
+        // The server drops a group reaction that carries distributions
+        // (observed live 2026-11-01), so that shape is refused.
+        let error = sender_key_stanza(
             &chat,
             "M",
             StanzaContent::Reaction,
@@ -1623,7 +1639,11 @@ mod tests {
             targets,
             &[1],
         )
-        .unwrap();
+        .unwrap_err();
+        assert!(error.to_string().contains("out of band"), "{error}");
+        let reaction =
+            sender_key_stanza(&chat, "M", StanzaContent::Reaction, None, None, &[], &[1]).unwrap();
+        assert!(reaction.child("participants").is_none());
         assert_eq!(
             reaction.get_attr("type").unwrap().as_text(),
             Some("reaction")
@@ -1642,8 +1662,6 @@ mod tests {
             meta.get_attr("content_type").unwrap().as_text(),
             Some("add_on")
         );
-        let to = &reaction.child("participants").unwrap().child_nodes()[0];
-        assert!(to.child_nodes()[0].get_attr("decrypt-fail").is_none());
 
         let media = sender_key_stanza(
             &chat,

@@ -327,7 +327,10 @@ async fn transmit(
     // Out-of-band distribution: deliver each device its sender key as an
     // ordinary direct message first, on the 1:1 path that is live-verified, and
     // leave `<participants>` off the group stanza entirely.
-    let out_of_band = message.skdm_out_of_band()?;
+    // A group reaction with `<participants>` is acknowledged but never
+    // delivered (observed 2026-11-01, groups::sender_key_stanza), so its
+    // sender-key distributions always go out of band first.
+    let out_of_band = message.skdm_out_of_band()? || stanza.content == StanzaContent::Reaction;
     if out_of_band {
         println!(
             "send: distributing the sender key out of band to {} device(s) before the group stanza",

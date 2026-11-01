@@ -925,6 +925,36 @@ did not appear on the handset. So a stale or expired target is ruled out. In
 the same session the operator's own reaction to our `l-reply-1` arrived, which
 confirms that group reply rendered. The reaction cause remains **unknown**.
 
+### Root cause: a group reaction must not carry distributions (2026-11-01)
+
+**Observed live**, two of our own accounts (`l` sends, `q` listens), one test
+group. Our comparison path rotates the sender key every send, so every group
+stanza carried `<participants>` with a `pkmsg` sender-key distribution. Group
+texts in that shape were delivered and decrypted (twice, each with a delivery
+receipt). Group reactions in that shape were ACKed and **delivered to nobody**:
+`q`'s raw captures held no reaction at all, which explains the ACK without
+`count`. Controlled variants, one change at a time:
+
+| Variant | Delivered to `q` |
+| --- | --- |
+| `type=reaction`, `decrypt-fail`, `meta` after `enc`, with `<participants>` | no |
+| same without `meta` | no |
+| same without `meta` and without `decrypt-fail` | no |
+| `meta` before `enc` | no |
+| same payload with `type=text` | yes (decrypted) |
+| `type=reaction` + markers, distribution sent first as a direct `pkmsg`, **no `<participants>`** | **yes**, `kind=reaction`, decrypted, delivery receipt |
+
+So the server drops a group `type=reaction` that carries `<participants>`.
+`sender_key_stanza` now refuses that shape; the comparison group send always
+delivers a reaction's distributions out of band first; the normal group
+outbox (which also rotates and embeds distributions) blocks reactions as
+`reaction_distribution_unsupported` before any query until it gains
+out-of-band distribution. **Not established:** how the official client
+avoids the case (it normally reuses an already distributed sender key, so a
+reaction rarely needs one) and whether the rule covers other add-ons
+(poll votes, edits). Handset rendering of a fixed reaction is still to be
+confirmed on a phone.
+
 ### Outgoing `add_on` meta is correct for ordinary groups (2026-11-01)
 
 **Confirmed static, 2.26.37.71:** the outgoing message `meta` builder is
