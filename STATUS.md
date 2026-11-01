@@ -1,3 +1,12 @@
+2026-11-01 — **Fixed (expired OTP no longer strands an attempt):** a code entered
+about two hours after `status: sent` returned HTTP 200 `fail`/`stale` (observed
+live, submitted once). Our flow had made that a terminal block with no resend
+path, which is our limitation, not WhatsApp's: in 2.26.37.71
+`VerifyPhoneNumber.A5O` case 9 only forgets the stored code, clears the input
+and stays on code entry. `stale` now returns to a pending challenge on a new
+step, and `resend-code` also accepts attempts saved as blocked by `stale`.
+[after-otp](docs/protocol/after-otp.md).
+
 2026-11-01 — **Research tooling ported to Rust (verified against the originals):**
 the two vector generators (`xtask research-vectors`), the two Java-oracle
 drivers (`xtask java-oracle`, including an exact CPython `random.Random`

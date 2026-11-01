@@ -87,7 +87,8 @@ pub(super) enum Action {
     /// Ask for a *new* code on the attempt already in progress, because a
     /// delivered code expires long before the attempt does. Keeps the attempt,
     /// its identity, its keys and its history; honours the server's
-    /// `retry_after`; refuses any state but a pending challenge.
+    /// `retry_after`; refuses any state but a pending challenge or a saved
+    /// `stale` (expired code) refusal.
     ResendCode {
         #[arg(long, value_enum)]
         method: Option<super::Method>,
