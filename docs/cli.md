@@ -1200,7 +1200,7 @@ Usage: whatsapp-cli lab-signup begin [OPTIONS]...
 
 ## whatsapp-cli lab-signup resend-code
 
-Ask for a *new* code on the attempt already in progress, because a delivered code expires long before the attempt does. Keeps the attempt, its identity, its keys and its history; honours the server's `retry_after`; refuses any state but a pending challenge
+Ask for a *new* code on the attempt already in progress, because a delivered code expires long before the attempt does. Keeps the attempt, its identity, its keys and its history; honours the server's `retry_after`; refuses any state but a pending challenge or a saved `stale` (expired code) refusal
 
 ```
 Usage: whatsapp-cli lab-signup resend-code [OPTIONS]...

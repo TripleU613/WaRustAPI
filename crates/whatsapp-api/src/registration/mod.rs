@@ -437,6 +437,18 @@ impl RegistrationState {
                     },
                     S::EmailChallengeRequired { .. }
                 )
+                // An attempt saved as blocked by an expired code before
+                // `stale` returned to a pending challenge: only `resend_code`
+                // takes this, exactly as it would from that pending challenge.
+                | (
+                    S::Blocked {
+                        reason: BlockedReason::ServerRefused {
+                            reason: Some(wire::RegistrationResponseReason::Stale),
+                            ..
+                        }
+                    },
+                    S::Preparing
+                )
                 | (
                     S::Verifying { .. },
                     S::Registered
@@ -1389,6 +1401,33 @@ impl RegistrationFlow for ComparisonHttpFlow {
                 }
                 .into());
             }
+            // 2.26.37.71: `KotlinRegistrationBridge.A08` parses reason `stale`
+            // to result 9 (`02S.A1R`), and `VerifyPhoneNumber.A5O` case 9
+            // (+0x078e) only forgets the stored SMS code (`I49.A07` removes the
+            // `...VerifyPhoneNumber.sms_code` preferences), clears the input
+            // (`A16`) and shows an error, staying on code entry with the attempt
+            // intact. `blocked` (case 11) instead leaves for the blocked flow.
+            // So an expired code returns to a pending challenge, from which
+            // `resend_code` asks for a new one; it is not a block.
+            if (200..300).contains(&status_code)
+                && response.status == wire::RegistrationResponseStatus::Fail
+                && matches!(answer, Answer::Code(_))
+                && response.reason == Some(wire::RegistrationResponseReason::Stale)
+            {
+                return Ok(RegistrationState::ChallengePending {
+                    handle: ChallengeHandle {
+                        attempt: attempt.id,
+                        generation: attempt.generation,
+                        step: handle.step.saturating_add(1),
+                        method: handle.method.clone(),
+                        expires_at: None,
+                        retry_after: response
+                            .retry_after
+                            .map(|wait| Timestamp::now().saturating_add(wait)),
+                    },
+                }
+                .into());
+            }
             Ok(Self::blocked_response(status_code, &response))
         })
     }
@@ -1796,6 +1835,8 @@ impl RegistrationService {
     /// server-directed wait is honoured rather than talked over, and it refuses
     /// any state other than `ChallengePending` — a cooldown, a block or an
     /// unknown outcome each have their own path and none of them is a resend.
+    /// The one block it accepts is a `stale` (expired code) refusal saved
+    /// before that refusal returned to a pending challenge.
     pub async fn resend_code(
         &self,
         phone: PhoneNumber,
@@ -1819,16 +1860,29 @@ impl RegistrationService {
                             "saved attempt belongs to another phone, profile or generation",
                         ));
                     }
-                    let RegistrationState::ChallengePending { handle } = &existing.state else {
-                        return Err(Error::invalid(
-                            "registration",
-                            format!(
-                                "a resend needs a pending challenge, not {}",
-                                existing.state.name()
-                            ),
-                        ));
+                    let wait = match &existing.state {
+                        RegistrationState::ChallengePending { handle } => handle.retry_after,
+                        // Saved before an expired code returned to a pending
+                        // challenge (see `submit`); same resend, same waits.
+                        RegistrationState::Blocked {
+                            reason:
+                                BlockedReason::ServerRefused {
+                                    reason: Some(wire::RegistrationResponseReason::Stale),
+                                    not_before,
+                                    ..
+                                },
+                        } => *not_before,
+                        other => {
+                            return Err(Error::invalid(
+                                "registration",
+                                format!(
+                                    "a resend needs a pending challenge or an expired-code refusal, not {}",
+                                    other.name()
+                                ),
+                            ));
+                        }
                     };
-                    if let Some(retry_after) = handle.retry_after
+                    if let Some(retry_after) = wait
                         && now < retry_after
                     {
                         return Err(Error::invalid(
@@ -2610,6 +2664,14 @@ mod tests {
             S::Blocked {
                 reason: BlockedReason::UnsupportedStep {
                     description: "x".into(),
+                },
+            },
+            S::Blocked {
+                reason: BlockedReason::ServerRefused {
+                    code: None,
+                    http_status: Some(200),
+                    reason: Some(wire::RegistrationResponseReason::Blocked),
+                    not_before: None,
                 },
             },
         ] {
@@ -3551,6 +3613,11 @@ mod tests {
             } else if body.starts_with(br#"{"status":"fail","reason":"challenge""#) {
                 // The email second factor is a supported next step, not a replay.
                 assert!(matches!(result.unwrap(), RegistrationStep::Action(RequiredAction::RequestEmailCode(_))));
+            } else if body.starts_with(br#"{"status":"fail","reason":"stale""#) {
+                // An expired code returns to code entry on a new step
+                // (2.26.37.71 `VerifyPhoneNumber.A5O` case 9); the old
+                // handle is still refused below, so nothing is replayed.
+                assert!(matches!(result.unwrap(), RegistrationStep::Action(RequiredAction::EnterCode(_))));
             } else {
                 assert!(matches!(result.unwrap(), RegistrationStep::Blocked(_) | RegistrationStep::Action(RequiredAction::WaitForCooldown { .. })));
             }
@@ -3561,6 +3628,157 @@ mod tests {
             assert!(transport.responses.lock().unwrap().is_empty());
             assert_ne!(s.read(AccountRecord::load).unwrap().unwrap().registration, RegistrationStatus::Registered);
         }
+    }
+
+    /// 2.26.37.71 `VerifyPhoneNumber.A5O` case 9: an expired code (`stale`)
+    /// keeps the attempt on code entry, so a resend and a new code finish it.
+    #[tokio::test]
+    async fn stale_code_returns_to_code_entry_and_resends_on_the_same_attempt() {
+        let (_d, s) = store();
+        let profile = ProtocolProfile::android_reference().unwrap();
+        let transport = Arc::new(ComparisonTransport {
+            responses: std::sync::Mutex::new(std::collections::VecDeque::from([
+                ("/v2/code", br#"{"status":"sent"}"#.as_slice()),
+                (
+                    "/v2/register",
+                    br#"{"status":"fail","login":"15551234567","reason":"stale"}"#.as_slice(),
+                ),
+                (
+                    "/v2/code",
+                    br#"{"status":"sent","sms_wait":125}"#.as_slice(),
+                ),
+                (
+                    "/v2/register",
+                    br#"{"status":"ok","login":"15551234567","edge_routing_info":"AQ=="}"#
+                        .as_slice(),
+                ),
+            ])),
+        });
+        let service = RegistrationService::new(
+            s.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(
+                Arc::new(ComparisonRequests),
+                transport.clone(),
+            )),
+        );
+        let RegistrationStep::Action(RequiredAction::EnterCode(h)) =
+            service.begin(phone(), ChallengeMethod::Sms).await.unwrap()
+        else {
+            panic!("expected code")
+        };
+        let id = service.current().await.unwrap().unwrap().id;
+        let RegistrationStep::Action(RequiredAction::EnterCode(h2)) = service
+            .submit(h.clone(), Answer::Code(Zeroizing::new("123456".into())))
+            .await
+            .unwrap()
+        else {
+            panic!("an expired code returns to code entry, not a block")
+        };
+        assert_eq!(h2.step, h.step + 1);
+        assert_eq!(h2.method, ChallengeMethod::Sms);
+        let RegistrationStep::Action(RequiredAction::EnterCode(h3)) = service
+            .resend_code(phone(), ChallengeMethod::Sms)
+            .await
+            .unwrap()
+        else {
+            panic!("the resend asks for a new code")
+        };
+        assert_eq!(
+            service.current().await.unwrap().unwrap().id,
+            id,
+            "same attempt"
+        );
+        assert_eq!(
+            service
+                .submit(h3, Answer::Code(Zeroizing::new("654321".into())))
+                .await
+                .unwrap(),
+            RegistrationStep::Completed
+        );
+        assert!(transport.responses.lock().unwrap().is_empty());
+    }
+
+    /// An attempt saved as blocked by `stale` before the fix resends too, and
+    /// still honours a saved wait; other server refusals stay blocked.
+    #[tokio::test]
+    async fn saved_stale_block_resends_but_other_blocks_do_not() {
+        let (_d, s) = store();
+        let profile = ProtocolProfile::android_reference().unwrap();
+        let transport = Arc::new(ComparisonTransport {
+            responses: std::sync::Mutex::new(std::collections::VecDeque::from([
+                ("/v2/code", br#"{"status":"sent"}"#.as_slice()),
+                ("/v2/code", br#"{"status":"sent"}"#.as_slice()),
+            ])),
+        });
+        let service = RegistrationService::new(
+            s.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(
+                Arc::new(ComparisonRequests),
+                transport.clone(),
+            )),
+        );
+        let RegistrationStep::Action(RequiredAction::EnterCode(_)) =
+            service.begin(phone(), ChallengeMethod::Sms).await.unwrap()
+        else {
+            panic!("expected code")
+        };
+        async fn block(
+            service: &RegistrationService,
+            s: &Arc<ProtocolStore>,
+            reason: wire::RegistrationResponseReason,
+            not_before: Option<Timestamp>,
+        ) {
+            let mut saved = service.current().await.unwrap().unwrap();
+            saved.state = RegistrationState::Blocked {
+                reason: BlockedReason::ServerRefused {
+                    code: None,
+                    http_status: Some(200),
+                    reason: Some(reason),
+                    not_before,
+                },
+            };
+            s.write(|tx| RegistrationService::save_current(tx, &saved))
+                .unwrap();
+        }
+        block(
+            &service,
+            &s,
+            wire::RegistrationResponseReason::Blocked,
+            None,
+        )
+        .await;
+        let error = service
+            .resend_code(phone(), ChallengeMethod::Sms)
+            .await
+            .unwrap_err();
+        assert!(
+            error.to_string().contains("expired-code refusal"),
+            "{error}"
+        );
+        let later = Timestamp::now().saturating_add(std::time::Duration::from_secs(3600));
+        block(
+            &service,
+            &s,
+            wire::RegistrationResponseReason::Stale,
+            Some(later),
+        )
+        .await;
+        let error = service
+            .resend_code(phone(), ChallengeMethod::Sms)
+            .await
+            .unwrap_err();
+        assert!(error.to_string().contains("wait"), "{error}");
+        block(&service, &s, wire::RegistrationResponseReason::Stale, None).await;
+        let RegistrationStep::Action(RequiredAction::EnterCode(_)) = service
+            .resend_code(phone(), ChallengeMethod::Sms)
+            .await
+            .unwrap()
+        else {
+            panic!("a saved expired-code block resends")
+        };
+        assert_eq!(transport.responses.lock().unwrap().len(), 0);
     }
 
     #[tokio::test]
