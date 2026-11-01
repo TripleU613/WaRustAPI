@@ -1,3 +1,13 @@
+2026-11-01 — **Observed live (profile on `q`):** `push-name` and `about` were
+queued and one 30 s `listen` sent them: the `pushNameSetting` app-state patch and
+the About set were both answered `Ok`, and the new queued display-name presence
+went out right after availability (fire-and-forget; handset view unconfirmed).
+The same window received the owner's delivery receipt, a `privacy_token`
+notification from the owner's phone, and the owner's text reply (decrypted).
+Earlier, `q`'s first message to the owner showed WhatsApp's Scam Alert (new
+number, not a contact, no name/photo, account-sounding text); the name is the
+first remedy, profile photo and our own trusted-contact tokens are next.
+
 2026-11-01 — **Observed live (w:gp2 ACK):** one 60 s receive-only `listen` on
 account `q` (no sends) received a `w:gp2` group notification and stayed up to
 `stopped cleanly`; before the fix an unacknowledged `w:gp2` ended sessions. The
