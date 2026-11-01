@@ -6,7 +6,11 @@ import json
 from pathlib import Path
 import struct
 
-from native_kem_trace import LIBRARIES
+# Pinned 37.71 libraries (also pinned by `xtask native-kem-trace`).
+LIBRARIES = {
+    "libwhatsapp.so": "f41f3fae89dbc18f8469c2c048df3dcf0648c193f9c7d60b878ac2014ec9551a",
+    "libwhatsappmerged.so": "565f6c0e5581fe0b9ccc564f2d807d5363b8333abd32513e1722d6880d1c70aa",
+}
 
 RETURN = 0x1003f000
 

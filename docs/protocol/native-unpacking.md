@@ -183,11 +183,11 @@ exact path-join internals remain **untraced**.
 
 **Observed/local:** the public rootfs lacks libandroid/liblog, so the initial
 load returned guest exit 2 and `dlopen failed: library "libandroid.so" not found`.
-Own-source [asset imports](../../tools/apk-research/native-android-imports.c)
-abort when called; [log imports](../../tools/apk-research/native-log-imports.c)
+Own-source [asset imports](../../tools/apk-research/native-probe/android_imports.rs)
+abort when called; [log imports](../../tools/apk-research/native-probe/log_imports.rs)
 render diagnostics using Bionic vprintf. With those imports, the unmodified
 APK decoder loads and resolves `JNI_OnLoad`. The
-[probe](../../tools/apk-research/native-probe.c) then supplies a limited local
+[probe](../../tools/apk-research/native-probe/decoder_probe.rs) then supplies a limited local
 JNI adapter: known class selectors, native registration and ASCII strings/arrays
 only. All unsupported callbacks abort. This is not a Java VM; unused adapter
 objects live until the isolated worker exits. The standard table-slot layout
@@ -340,7 +340,7 @@ only tried before this correction; its QEMU success is not claimed.
 
 A first isolated attempt failed because `/qemu` did not exist under a read-only
 root mount. Preparing an empty mount point resolved it. The checked-in
-[QEMU runner](../../tools/apk-research/native_qemu_check.py) handles these local
+[QEMU runner](../../xtask/src/native.rs) (`xtask native-qemu-check`) handles these local
 fixture prerequisites, validates the exact decoder/container hashes, and uses
 Bubblewrap with network/PID namespaces, an empty environment, a read-only
 fixture root and only `/decoded` writable for extraction. It runs the decoder
@@ -429,3 +429,16 @@ resolves the shared 5200-round hash helper, distinct create/display seeds and
 PN/LID params layout differences. It exposes a hash-pinned synthetic ARM64
 control-flow check with explicit host models; full native inputs and real
 account verification remain unfinished.
+
+## Rust probe and runner (2026-11-01)
+
+**Observed/local:** the decoder probe and both import shims are now `no_std`
+Rust ([native-probe](../../tools/apk-research/native-probe/README.md)), built
+for `aarch64-linux-android` with `rust-lld` against the same public Bionic
+fixtures; no C compiler is involved. The QEMU runner is `xtask native-qemu-check`.
+Against the C-built originals: `decoder-init` printed byte-identical output
+(`JNI_OnLoad result=0x10006 registered=19`, exit 0), and a fresh
+`decoder-full-archive` extraction with the Rust probe produced the same 79
+library files, every SHA-256 equal to the C-probe extraction. The Qiling
+loader and Unicorn checkers are still Python; there is no pure-Rust
+ARM64 emulator to port them to.

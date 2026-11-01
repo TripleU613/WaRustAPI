@@ -7,6 +7,10 @@ use std::{env, fs, io::Write, process::Command};
 /// build and test that crate, although `docs/` is otherwise a non-build input;
 /// the `docs_inputs_are_routed` test fails when one is missing here.
 const DOCS_INPUTS: &[(&str, &str)] = &[
+    // Regenerated and compared by xtask unit tests (research-vectors, native-schema).
+    ("docs/protocol/hybrid-kdf-vectors.json", "xtask"),
+    ("docs/protocol/signal-wire-vectors.json", "xtask"),
+    ("docs/protocol/fingerprint-native-schema.json", "xtask"),
     ("docs/api/openapi.json", "whatsapp-cli"),
     // Compared with the generated reference by the `cli_reference` test.
     ("docs/cli.md", "whatsapp-cli"),
@@ -74,6 +78,16 @@ const DOCS_INPUTS: &[(&str, &str)] = &[
 /// own file: the same literal elsewhere still needs a routing decision.
 #[cfg(test)]
 const DOCS_NOT_INPUTS: &[(&str, &str, &str)] = &[
+    (
+        "xtask/src/java_oracle.rs",
+        "docs/protocol/ProtocolEnumsOracle.java",
+        "provenance string written into the fixture; the oracle runs only on demand via java",
+    ),
+    (
+        "xtask/src/vectors.rs",
+        "docs/protocol",
+        "directory: research-vectors writes the two vector files, each routed by its own rule",
+    ),
     (
         "xtask/src/coverage.rs",
         "docs/protocol/apk",

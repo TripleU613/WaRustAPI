@@ -8,7 +8,8 @@ from pathlib import Path
 import struct
 
 from native_fingerprint_check import LIBRARY_HASH, RETURN
-from native_schema_check import LIBRARY_HASH as STRING_LIBRARY_HASH
+# Pinned 37.71 libwhatsappmerged.so (also pinned by `xtask native-schema`).
+STRING_LIBRARY_HASH = "565f6c0e5581fe0b9ccc564f2d807d5363b8333abd32513e1722d6880d1c70aa"
 
 BIONIC_HASH = "4e6d025f3356a3353418981e475561cfa133a0e439a20c9d9bede715ae167697"
 

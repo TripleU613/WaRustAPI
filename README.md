@@ -60,8 +60,11 @@ cargo test --locked --workspace --all-features
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md) for setup, feature checks, generated code,
 and the full validation workflow. The library, CLI and all build/CI automation
-are Rust. `tools/apk-research/` holds Python and C research harnesses that
-produced some reference fixtures; nothing in the build, tests or CI runs them.
+are Rust, and so are the research generators, ELF readers and the ARM64
+decoder probe (`xtask`, `tools/apk-research/native-probe`). What remains in
+Python under `tools/apk-research/` are the checkers that execute native ARM64
+code under the Unicorn/Qiling emulators (no pure-Rust equivalent exists) and
+one SQLite oracle; nothing in the build, tests or CI runs them.
 APK research input is described in [APK research](docs/protocol/apk-analysis.md).
 
 ## Documentation

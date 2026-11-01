@@ -6,7 +6,8 @@ import json
 from pathlib import Path
 import struct
 
-from native_schema_check import LIBRARY_HASH
+# Pinned 37.71 libwhatsappmerged.so (also pinned by `xtask native-schema`).
+LIBRARY_HASH = "565f6c0e5581fe0b9ccc564f2d807d5363b8333abd32513e1722d6880d1c70aa"
 from native_fingerprint_check import RETURN
 
 

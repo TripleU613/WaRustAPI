@@ -2680,6 +2680,7 @@ dependencies = [
  "cargo_metadata",
  "clap",
  "hex",
+ "hmac",
  "prost-build",
  "prost-reflect",
  "prost-types",

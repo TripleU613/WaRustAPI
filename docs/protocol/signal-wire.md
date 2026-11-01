@@ -63,7 +63,8 @@ into the authenticated session coordinator before normal hybrid messaging.
 
 ## Independent vectors and remaining integration
 
-The [Python standard-HMAC/protobuf reproducer](../../tools/apk-research/signal_wire_vectors.py)
+The [independent HMAC/protobuf reproducer](../../xtask/src/vectors.rs) (hand-encoded
+protobuf and `hmac`/`sha2` primitives, not the library's wire code; formerly a Python script)
 creates [24 nested and eight outer synthetic fixtures](signal-wire-vectors.json).
 They cover versions 3/4, counter zero/127/128/u32 maximum, empty/16/32-byte
 ciphertext, ordinary ID absence/zero and KEM absence/presence with a 1568-byte
@@ -80,8 +81,7 @@ Present-zero/empty KEM values are checked separately. Unsupported versions,
 noncanonical nested headers and oversized envelopes refuse with fixed errors.
 
 ```sh
-python tools/apk-research/signal_wire_vectors.py \
-  docs/protocol/signal-wire-vectors.json --check
+cargo run --locked -p xtask -- research-vectors signal-wire --check
 cargo test -p whatsapp-api --all-features \
   signal::wire::tests::exact_native_version_bytes_and_macs_match_independent_vectors
 ```

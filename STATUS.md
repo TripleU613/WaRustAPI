@@ -1,3 +1,17 @@
+2026-11-01 — **Research tooling ported to Rust (verified against the originals):**
+the two vector generators (`xtask research-vectors`), the two Java-oracle
+drivers (`xtask java-oracle`, including an exact CPython `random.Random`
+port), the native schema reader (`xtask native-schema`, std-only ELF), the
+KEM trace (`xtask native-kem-trace`), the QEMU runner (`xtask
+native-qemu-check`) and the C decoder probe with both import shims (`no_std`
+Rust, `tools/apk-research/native-probe`). Every port reproduced its committed
+output byte for byte; the Rust probe's full-archive extraction matched all 79
+library hashes. `dumpm.py`/`desc.py` were removed as duplicates of `apk-xref`/
+`apk-smali` and `apk-proto-fields --literal-order`. No C remains. Still Python:
+six Unicorn/Qiling native-execution checkers (no mature pure-Rust ARM64
+emulator) and the SQLite JID-map oracle (only C-backed SQLite exists in Rust);
+their outputs are committed and consumed by Rust tests.
+
 2026-11-01 — **Observed live (registration recipe still accepted):** a new
 number prepared with `accounts new` (body mode `enc_empty_h`, 2.26.37.70
 User-Agent and token material, eight observed `code_bytes` fields) received

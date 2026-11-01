@@ -26,14 +26,17 @@ mod bundle;
 mod coverage;
 mod deps;
 mod dex;
+mod java_oracle;
 mod jid_map;
 mod manifest;
 mod mex;
+mod native;
 mod proto;
 mod registration_token;
 mod retained_descriptor;
 mod token_arrays;
 mod token_material_archive;
+mod vectors;
 mod xref;
 
 use std::path::PathBuf;
@@ -71,6 +74,53 @@ enum Cmd {
     ApkResearchDiff { old: PathBuf, new: PathBuf },
     /// Report which releases and Rust files the committed research bundles
     /// cover (no APK needed); writes docs/protocol/apk-coverage.json.
+    /// Generate fixture vectors from the independent desktop Java protobuf
+    /// oracles (docs/protocol/*Oracle.java); needs `java` and the pinned
+    /// protobuf-javalite 4.36.1 JAR plus the compiled oracle classes.
+    JavaOracle {
+        #[arg(value_enum)]
+        oracle: java_oracle::Oracle,
+        /// JAR and compiled-class directory, joined like a Java classpath.
+        #[arg(long)]
+        classpath: String,
+        /// Output JSON path (compare with the committed fixture using cmp).
+        #[arg(long)]
+        output: PathBuf,
+    },
+    /// Print the pinned 37.71 native fingerprint protobuf-c schema (static ELF read).
+    NativeSchema {
+        /// Reconstructed libwhatsappmerged.so (kept outside the repository).
+        #[arg(long)]
+        library: PathBuf,
+    },
+    /// Write (or --check) the pinned 37.71 KEM JNI/ML-KEM llvm-objdump traces.
+    NativeKemTrace {
+        /// Directory holding reconstructed libwhatsapp.so and libwhatsappmerged.so.
+        libraries: PathBuf,
+        /// Trace directory, e.g. docs/protocol/native-kem-2.26.37.71.
+        output: PathBuf,
+        #[arg(long)]
+        check: bool,
+    },
+    /// Run the ARM64 decoder probe under QEMU in a network-isolated bwrap rootfs.
+    NativeQemuCheck {
+        #[arg(long)]
+        rootfs: PathBuf,
+        #[arg(long, value_enum, default_value = "decoder-init")]
+        check: native::QemuCheck,
+        /// Wall-clock limit, 1..=600 seconds.
+        #[arg(long, default_value_t = 30)]
+        timeout_seconds: u64,
+    },
+    /// Regenerate (or --check) the independent synthetic hybrid-KDF or Signal
+    /// wire vectors under docs/protocol from hmac/sha2 primitives.
+    ResearchVectors {
+        #[arg(value_enum)]
+        set: vectors::Set,
+        /// Fail if the committed file differs instead of writing it.
+        #[arg(long)]
+        check: bool,
+    },
     ApkCoverage {
         /// Fail if the committed report is stale instead of writing it.
         #[arg(long)]
@@ -365,6 +415,23 @@ fn main() -> ExitCode {
         Cmd::ApkFileDiff { old, new } => apk_files::compare(&old, &new),
         Cmd::ApkResearchDiff { old, new } => bundle::compare(&old, &new),
         Cmd::ApkCoverage { check } => coverage::run(&root, check),
+        Cmd::ResearchVectors { set, check } => vectors::run(&root, set, check),
+        Cmd::NativeSchema { library } => native::schema(&library),
+        Cmd::NativeKemTrace {
+            libraries,
+            output,
+            check,
+        } => native::kem_trace(&libraries, &output, check),
+        Cmd::NativeQemuCheck {
+            rootfs,
+            check,
+            timeout_seconds,
+        } => native::qemu_check(&rootfs, check, timeout_seconds),
+        Cmd::JavaOracle {
+            oracle,
+            classpath,
+            output,
+        } => java_oracle::run(oracle, &classpath, &output),
         Cmd::ApkResearchRemap {
             apk,
             recipe,

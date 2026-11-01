@@ -5,7 +5,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from native_kem_check import check
-from native_kem_trace import LIBRARIES
+from native_kem_check import LIBRARIES
 
 
 class NativeKemCheckTests(unittest.TestCase):
