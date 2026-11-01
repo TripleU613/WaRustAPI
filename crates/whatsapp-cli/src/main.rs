@@ -1189,6 +1189,12 @@ fn accounts_new(
         ));
     }
 
+    // Validate the material and derive the token before writing anything: a
+    // failure here used to leave a half-made account (directory plus
+    // master.key) that made every corrected retry refuse "already exists".
+    let material = whatsapp_api::registration::token_material::TokenMaterial::open(material_path)?;
+    let token = material.derive(&phone)?;
+
     std::fs::create_dir_all(&account_dir).map_err(|e| {
         Error::invalid(
             "accounts",
@@ -1222,9 +1228,6 @@ fn accounts_new(
             format!("cannot chmod {}: {e}", key_path.display()),
         )
     })?;
-
-    let material = whatsapp_api::registration::token_material::TokenMaterial::open(material_path)?;
-    let token = material.derive(&phone)?;
 
     let mut config: serde_json::Value =
         serde_json::from_str(whatsapp_api::registration::request::TEMPLATE_JSON)
@@ -3085,6 +3088,9 @@ mod accounts_tests {
             &Method::Sms,
         );
         assert!(result1.is_err());
+        // Bad material fails before anything is written, so a corrected
+        // retry is not refused as "already exists".
+        assert!(!account_dir.exists());
 
         let result2 = accounts_new(
             &cli,
@@ -3096,6 +3102,9 @@ mod accounts_tests {
             &Method::Sms,
         );
         assert!(result2.is_err());
+        // The default directory (relative to the working directory, the
+        // crate source tree under `cargo test`) must not be created either.
+        assert!(!std::path::Path::new("lab/accounts/test_profile").exists());
     }
 
     #[test]
