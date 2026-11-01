@@ -4,7 +4,7 @@
 //! in WhatsApp 2.26.37.70; it does not assert that another build uses the same
 //! salt, resources, certificate, or digest inputs.
 
-use hmac::{Hmac, Mac};
+use hmac::{Hmac, KeyInit, Mac};
 use md5::{Digest as _, Md5};
 use pbkdf2::pbkdf2_hmac;
 use sha1::Sha1;

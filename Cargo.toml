@@ -28,10 +28,10 @@ aes-gcm = { version = "0.10", default-features = false, features = ["aes", "allo
 hkdf = { version = "0.13", default-features = false }
 sha2 = { version = "0.11", default-features = false }
 # Comparison-build registration-token derivation observed in the Android APK.
-hmac = { version = "0.12", default-features = false }
-sha1 = { version = "0.10", default-features = false }
-pbkdf2 = { version = "0.12", default-features = false, features = ["hmac"] }
-md-5 = { version = "0.10", default-features = false }
+hmac = { version = "0.13", default-features = false }
+sha1 = { version = "0.11", default-features = false }
+pbkdf2 = { version = "0.13", default-features = false, features = ["hmac"] }
+md-5 = { version = "0.11", default-features = false }
 # ZIP archive reading for token material extraction from APK. 9.x fixes
 # RUSTSEC-2026-0367/0368/0369 in 0.6. Deflate only, through the pure-Rust
 # zlib-rs backend: no C library and no zopfli compressor (nothing writes
