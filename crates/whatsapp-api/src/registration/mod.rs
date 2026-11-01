@@ -90,6 +90,12 @@ pub struct ChallengeHandle {
     pub expires_at: Option<Timestamp>,
     /// Earliest retry time, if the server said.
     pub retry_after: Option<Timestamp>,
+    /// Earliest time another code may be submitted on this step, after a
+    /// `mismatch` (2.26.37.71 `VerifyPhoneNumber.A1v` -> `GKR.A0s` stores
+    /// `code_verification_retry_time`). Distinct from `retry_after`, which
+    /// gates requesting a new code. Absent in attempts saved before it existed.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub answer_not_before: Option<Timestamp>,
 }
 
 impl fmt::Debug for ChallengeHandle {
@@ -443,7 +449,12 @@ impl RegistrationState {
                 | (
                     S::Blocked {
                         reason: BlockedReason::ServerRefused {
-                            reason: Some(wire::RegistrationResponseReason::Stale),
+                            reason:
+                                Some(
+                                    wire::RegistrationResponseReason::Stale
+                                    | wire::RegistrationResponseReason::Incorrect
+                                    | wire::RegistrationResponseReason::Mismatch,
+                                ),
                             ..
                         }
                     },
@@ -1257,6 +1268,7 @@ impl RegistrationFlow for ComparisonHttpFlow {
                 };
                 return Ok(RegistrationState::ChallengePending {
                     handle: ChallengeHandle {
+                        answer_not_before: None,
                         attempt: attempt.id,
                         generation: attempt.generation,
                         step: 1,
@@ -1304,6 +1316,7 @@ impl RegistrationFlow for ComparisonHttpFlow {
                 let wait = longest([response.email_otp_wait, response.retry_after]);
                 return Ok(RegistrationState::EmailCodePending {
                     handle: ChallengeHandle {
+                        answer_not_before: None,
                         attempt: attempt.id,
                         generation: attempt.generation,
                         step: handle.step.saturating_add(1),
@@ -1367,6 +1380,7 @@ impl RegistrationFlow for ComparisonHttpFlow {
             {
                 return Ok(RegistrationState::EmailChallengeRequired {
                     handle: ChallengeHandle {
+                        answer_not_before: None,
                         attempt: attempt.id,
                         generation: attempt.generation,
                         step: handle.step.saturating_add(1),
@@ -1389,6 +1403,7 @@ impl RegistrationFlow for ComparisonHttpFlow {
             {
                 return Ok(RegistrationState::NeedsUserAction {
                     handle: ChallengeHandle {
+                        answer_not_before: None,
                         attempt: attempt.id,
                         generation: attempt.generation,
                         step: handle.step.saturating_add(1),
@@ -1409,13 +1424,39 @@ impl RegistrationFlow for ComparisonHttpFlow {
             // intact. `blocked` (case 11) instead leaves for the blocked flow.
             // So an expired code returns to a pending challenge, from which
             // `resend_code` asks for a new one; it is not a block.
+            //
+            // A wrong code is not terminal either (2.26.37.71): `incorrect` (20)
+            // takes `A5O`'s default branch (`0682`), which forgets the stored
+            // code (`I49.A07`) and returns to code entry; `mismatch` (5) calls
+            // `A1v`, which clears the input, forgets the code and arms
+            // `GKR.A0s(wait)` = `code_verification_retry_time`, using the
+            // server's `retry_after` or 60 000 ms when it is absent or
+            // unparsable. That wait gates the next answer, not a resend.
+            let retry_reason = matches!(
+                response.reason,
+                Some(
+                    wire::RegistrationResponseReason::Stale
+                        | wire::RegistrationResponseReason::Incorrect
+                        | wire::RegistrationResponseReason::Mismatch
+                )
+            );
             if (200..300).contains(&status_code)
                 && response.status == wire::RegistrationResponseStatus::Fail
                 && matches!(answer, Answer::Code(_))
-                && response.reason == Some(wire::RegistrationResponseReason::Stale)
+                && retry_reason
             {
+                let answer_not_before = (response.reason
+                    == Some(wire::RegistrationResponseReason::Mismatch))
+                .then(|| {
+                    let wait = response
+                        .retry_after
+                        .filter(|wait| !wait.is_zero())
+                        .unwrap_or(std::time::Duration::from_millis(60_000));
+                    Timestamp::now().saturating_add(wait)
+                });
                 return Ok(RegistrationState::ChallengePending {
                     handle: ChallengeHandle {
+                        answer_not_before,
                         attempt: attempt.id,
                         generation: attempt.generation,
                         step: handle.step.saturating_add(1),
@@ -1867,7 +1908,12 @@ impl RegistrationService {
                         RegistrationState::Blocked {
                             reason:
                                 BlockedReason::ServerRefused {
-                                    reason: Some(wire::RegistrationResponseReason::Stale),
+                                    reason:
+                                        Some(
+                                            wire::RegistrationResponseReason::Stale
+                                            | wire::RegistrationResponseReason::Incorrect
+                                            | wire::RegistrationResponseReason::Mismatch,
+                                        ),
                                     not_before,
                                     ..
                                 },
@@ -2253,6 +2299,18 @@ impl RegistrationService {
                         });
                     }
                     let now = Timestamp::now();
+                    // A `mismatch` wait gates the next code (see `ChallengeHandle`).
+                    if !is_pin
+                        && let Some(until) = bound.answer_not_before
+                        && now < until
+                    {
+                        return Err(Error::RateLimited {
+                            retry_after: Some(std::time::Duration::from_millis(
+                                until.as_millis().saturating_sub(now.as_millis()) as u64,
+                            )),
+                            code: None,
+                        });
+                    }
                     // OTP retry_after records delivery wait, not an answer wait.
                     // The PIN challenge instead carries /register's generic wait.
                     if is_pin
@@ -2499,6 +2557,7 @@ impl RegistrationService {
                     attempt.transition(
                         RegistrationState::EmailChallengeRequired {
                             handle: ChallengeHandle {
+                                answer_not_before: None,
                                 attempt: attempt.id,
                                 generation: attempt.generation,
                                 step,
@@ -2633,6 +2692,7 @@ mod tests {
     fn only_a_pending_challenge_may_reopen_for_a_resend() {
         use RegistrationState as S;
         let handle = ChallengeHandle {
+            answer_not_before: None,
             attempt: AttemptId([0; 16]),
             generation: AccountGeneration(1),
             step: 1,
@@ -2687,6 +2747,7 @@ mod tests {
     fn transitions_follow_the_table() {
         use RegistrationState as S;
         let h = ChallengeHandle {
+            answer_not_before: None,
             attempt: AttemptId([0; 16]),
             generation: AccountGeneration(1),
             step: 1,
@@ -2785,6 +2846,7 @@ mod tests {
         assert_eq!(svc.current().await.unwrap().unwrap().id, cur.id);
         // Submitting anything is rejected: nothing is awaiting an answer.
         let handle = ChallengeHandle {
+            answer_not_before: None,
             attempt: cur.id,
             generation: cur.generation,
             step: 1,
@@ -2835,6 +2897,7 @@ mod tests {
                 }
                 Ok(RegistrationState::ChallengePending {
                     handle: ChallengeHandle {
+                        answer_not_before: None,
                         attempt: attempt.id,
                         generation: attempt.generation,
                         step: 1,
@@ -3613,7 +3676,9 @@ mod tests {
             } else if body.starts_with(br#"{"status":"fail","reason":"challenge""#) {
                 // The email second factor is a supported next step, not a replay.
                 assert!(matches!(result.unwrap(), RegistrationStep::Action(RequiredAction::RequestEmailCode(_))));
-            } else if body.starts_with(br#"{"status":"fail","reason":"stale""#) {
+            } else if body.starts_with(br#"{"status":"fail","reason":"stale""#)
+                || body.starts_with(br#"{"status":"fail","reason":"incorrect""#)
+            {
                 // An expired code returns to code entry on a new step
                 // (2.26.37.71 `VerifyPhoneNumber.A5O` case 9); the old
                 // handle is still refused below, so nothing is replayed.
@@ -3697,6 +3762,62 @@ mod tests {
             RegistrationStep::Completed
         );
         assert!(transport.responses.lock().unwrap().is_empty());
+    }
+
+    /// 2.26.37.71 `VerifyPhoneNumber.A1v`: a `mismatch` returns to code entry
+    /// but gates the next answer for `retry_after`, else 60 s.
+    #[tokio::test]
+    async fn mismatch_returns_to_code_entry_with_an_answer_wait() {
+        let (_d, s) = store();
+        let profile = ProtocolProfile::android_reference().unwrap();
+        let transport = Arc::new(ComparisonTransport {
+            responses: std::sync::Mutex::new(std::collections::VecDeque::from([
+                ("/v2/code", br#"{"status":"sent"}"#.as_slice()),
+                (
+                    "/v2/register",
+                    br#"{"status":"fail","reason":"mismatch"}"#.as_slice(),
+                ),
+            ])),
+        });
+        let service = RegistrationService::new(
+            s.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(
+                Arc::new(ComparisonRequests),
+                transport.clone(),
+            )),
+        );
+        let RegistrationStep::Action(RequiredAction::EnterCode(h)) =
+            service.begin(phone(), ChallengeMethod::Sms).await.unwrap()
+        else {
+            panic!("expected code")
+        };
+        let RegistrationStep::Action(RequiredAction::EnterCode(h2)) = service
+            .submit(h, Answer::Code(Zeroizing::new("111111".into())))
+            .await
+            .unwrap()
+        else {
+            panic!("a mismatch returns to code entry")
+        };
+        let earliest = Timestamp::now().saturating_add(std::time::Duration::from_secs(55));
+        assert!(
+            h2.answer_not_before.is_some_and(|at| at >= earliest),
+            "60 s default wait"
+        );
+        // The next code inside the wait is refused without consuming the step.
+        let error = service
+            .submit(h2.clone(), Answer::Code(Zeroizing::new("222222".into())))
+            .await
+            .unwrap_err();
+        assert!(matches!(error, Error::RateLimited { .. }), "{error}");
+        assert!(matches!(
+            service.current().await.unwrap().unwrap().state,
+            RegistrationState::ChallengePending { .. }
+        ));
+        assert!(
+            transport.responses.lock().unwrap().is_empty(),
+            "nothing sent"
+        );
     }
 
     /// An attempt saved as blocked by `stale` before the fix resends too, and
@@ -4492,6 +4613,7 @@ mod tests {
             Box::pin(async move {
                 Ok(RegistrationState::ChallengePending {
                     handle: ChallengeHandle {
+                        answer_not_before: None,
                         attempt: attempt.id,
                         generation: attempt.generation,
                         step: 1,
@@ -4515,6 +4637,7 @@ mod tests {
                     Answer::Code(c) if c.as_str() == "928374" && handle.step == 1 => {
                         Ok(RegistrationState::NeedsUserAction {
                             handle: ChallengeHandle {
+                                answer_not_before: None,
                                 attempt: attempt.id,
                                 generation: attempt.generation,
                                 step: 2,
@@ -4699,6 +4822,7 @@ mod tests {
             Box::pin(async move {
                 Ok(RegistrationState::ChallengePending {
                     handle: ChallengeHandle {
+                        answer_not_before: None,
                         attempt: attempt.id,
                         generation: attempt.generation,
                         step: 1,

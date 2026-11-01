@@ -1,3 +1,9 @@
+2026-11-01 — **Fixed/offline (wrong OTP):** `incorrect` and `mismatch` refusals of a
+code no longer block the attempt. Per 2.26.37.71 `VerifyPhoneNumber.A5O`
+(default branch) and `A1v`, both return to code entry; `mismatch` gates the next
+code for `retry_after` or 60 s (new `answer_not_before` on the challenge,
+absent in older saved attempts). [after-otp](docs/protocol/after-otp.md#wrong-code-results-2026-11-01).
+
 2026-11-01 — **Fixed/offline (notification ACKs):** `w:gp2` group notifications
 other than `groups_dirty`, and `disappearing_mode` notifications, are now ACKed
 like the APK's `BaseNotificationHandler` does; unACKed `w:gp2` had ended
