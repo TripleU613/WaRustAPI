@@ -14642,6 +14642,83 @@
           }
         ]
       }
+    },
+    "/v1/account/profile-picture": {
+      "post": {
+        "tags": [
+          "Lab"
+        ],
+        "summary": "Set our profile photo",
+        "description": "Queues `<iq xmlns=\"w:profile:picture\" type=\"set\" to=\"s.whatsapp.net\"><picture type=\"image\">JPEG</picture></iq>` (2.26.37.71 SetProfilePhotoProtocolHelper IXF.A00; own photo has no target; the `to` address is inferred, the builder writes none). The file must be a JPEG (start/end markers) of at most 2 MiB (local bound); the app's crop/resize was not traced, so supply a square JPEG (the app uploads 640x640). A session such as listen transmits it; actions --show reports the reply. No HTTP route is served.",
+        "operationId": "setProfilePicture",
+        "x-cli": "whatsapp-cli profile-picture set",
+        "x-transport": [
+          "cli"
+        ],
+        "x-live": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "path"
+                ],
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "description": "JPEG file path"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Queued action id"
+          }
+        },
+        "x-library": [
+          "whatsapp_api::transport::profile_picture::queue_set",
+          "whatsapp_api::transport::profile_picture::set_request"
+        ]
+      }
+    },
+    "/v1/contacts/{jid}/profile-picture": {
+      "get": {
+        "tags": [
+          "Lab"
+        ],
+        "summary": "Look up a profile photo URL",
+        "description": "Queues `<iq xmlns=\"w:profile:picture\" type=\"get\" to=\"s.whatsapp.net\" target=JID><picture type=\"image\" query=\"url\"/></iq>` (2.26.37.71 8kn.A00; its optional common_gid and tctoken children are not sent). actions --show reports the reply with the URL; nothing is downloaded. No HTTP route is served.",
+        "operationId": "getProfilePicture",
+        "x-cli": "whatsapp-cli profile-picture get",
+        "x-transport": [
+          "cli"
+        ],
+        "x-live": false,
+        "parameters": [
+          {
+            "name": "jid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Queued action id"
+          }
+        },
+        "x-library": [
+          "whatsapp_api::transport::profile_picture::queue_get",
+          "whatsapp_api::transport::profile_picture::get_request"
+        ]
+      }
     }
   }
 }

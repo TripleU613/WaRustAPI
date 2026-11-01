@@ -1471,6 +1471,38 @@ Usage: whatsapp-cli about [OPTIONS]...
 |------|-------|----------|---------|-----|--------|------|
 |  | TEXT | yes |  |  |  | The About text; `""` clears it |
 
+## whatsapp-cli profile-picture
+
+Queue setting our profile photo from a JPEG file, or a lookup of someone's photo URL (offline; a session such as `listen` sends it)
+
+```
+Usage: whatsapp-cli profile-picture [OPTIONS]...
+```
+
+## whatsapp-cli profile-picture set
+
+Set our photo from a square JPEG (the official app uploads 640x640)
+
+```
+Usage: whatsapp-cli profile-picture set [OPTIONS]...
+```
+
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+|  | PATH | yes |  |  |  | Path to the JPEG file |
+
+## whatsapp-cli profile-picture get
+
+Look up a user's or group's photo URL; `actions --show` reports it
+
+```
+Usage: whatsapp-cli profile-picture get [OPTIONS]...
+```
+
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+|  | JID | yes |  |  |  | Phone-number, LID or group JID |
+
 ## whatsapp-cli status-viewers
 
 List who has received, viewed, played or liked the statuses we posted (offline)

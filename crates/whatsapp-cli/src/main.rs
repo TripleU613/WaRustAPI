@@ -830,6 +830,13 @@ enum Cmd {
         /// The About text; `""` clears it.
         text: String,
     },
+    /// Queue setting our profile photo from a JPEG file, or a lookup of
+    /// someone's photo URL (offline; a session such as `listen` sends it).
+    #[cfg(feature = "experimental-transport")]
+    ProfilePicture {
+        #[command(subcommand)]
+        cmd: ProfilePictureCmd,
+    },
     /// List who has received, viewed, played or liked the statuses we posted
     /// (offline).
     #[cfg(feature = "experimental-transport")]
@@ -917,6 +924,21 @@ enum ContactsCmd {
     /// so companion devices receive this address book (offline; a session
     /// transmits it). Mints this device's app-state key if it has none.
     PublishAppState,
+}
+
+#[derive(Subcommand)]
+#[cfg(feature = "experimental-transport")]
+enum ProfilePictureCmd {
+    /// Set our photo from a square JPEG (the official app uploads 640x640).
+    Set {
+        /// Path to the JPEG file.
+        path: PathBuf,
+    },
+    /// Look up a user's or group's photo URL; `actions --show` reports it.
+    Get {
+        /// Phone-number, LID or group JID.
+        jid: String,
+    },
 }
 
 #[derive(Subcommand)]
@@ -2728,6 +2750,24 @@ async fn run(cli: Cli) -> Result<(), Error> {
             let c = open_client(&cli, false).await?;
             let id = whatsapp_api::transport::about::queue_set(c.store(), text)?;
             println!("about: change queued (action {id}); a session transmits it");
+            Ok(())
+        }
+        #[cfg(feature = "experimental-transport")]
+        Cmd::ProfilePicture { cmd } => {
+            let c = open_client(&cli, false).await?;
+            use whatsapp_api::transport::profile_picture;
+            let id = match cmd {
+                ProfilePictureCmd::Set { path } => {
+                    let bytes = std::fs::read(path).map_err(|e| {
+                        Error::invalid("profile_picture", format!("{}: {e}", path.display()))
+                    })?;
+                    profile_picture::queue_set(c.store(), bytes)?
+                }
+                ProfilePictureCmd::Get { jid } => {
+                    profile_picture::queue_get(c.store(), &Jid::parse(jid)?)?
+                }
+            };
+            println!("profile-picture: queued (action {id}); a session transmits it");
             Ok(())
         }
         #[cfg(feature = "experimental-transport")]

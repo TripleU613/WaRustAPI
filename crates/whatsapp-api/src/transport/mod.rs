@@ -385,3 +385,9 @@ pub mod presence;
     feature = "experimental-transport"
 ))]
 pub mod about;
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub mod profile_picture;
