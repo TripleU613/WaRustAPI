@@ -570,10 +570,8 @@ mod tests {
 
     #[test]
     fn file_reader_requires_private_bounded_regular_file() {
-        let path = std::env::temp_dir().join(format!(
-            "warustapi-fingerprint-{}.json",
-            std::process::id()
-        ));
+        let path =
+            std::env::temp_dir().join(format!("warustapi-fingerprint-{}.json", std::process::id()));
         let bytes = serde_json::to_vec(&input()).unwrap();
         std::fs::write(&path, &bytes).unwrap();
         std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o644)).unwrap();
