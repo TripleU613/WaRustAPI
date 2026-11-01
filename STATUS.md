@@ -1,3 +1,8 @@
+2026-11-01 — **Observed live (profile photo):** on `q`, `profile-picture set` with a
+640×640 JPEG was answered `iq type=result` with a new `<picture id=…>`, and
+`profile-picture get` for the owner's number was answered `result` with the
+picture id, hash and URL. Display name, About and photo are now all set on `q`.
+
 2026-11-01 — **Observed live (profile on `q`):** `push-name` and `about` were
 queued and one 30 s `listen` sent them: the `pushNameSetting` app-state patch and
 the About set were both answered `Ok`, and the new queued display-name presence
