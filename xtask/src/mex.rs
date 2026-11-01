@@ -67,19 +67,16 @@ fn read_asset<R: Read + Seek>(
     zip: &mut zip::ZipArchive<R>,
     asset_path: &str,
 ) -> Result<Vec<u8>, String> {
-    // zip 0.6 file_names() iterates names_map keys and hides duplicate names.
-    // Inspect actual directory entries without decompressing media.
-    let mut found = None;
-    for index in 0..zip.len() {
-        let member = zip.by_index_raw(index).map_err(|e| e.to_string())?;
-        if member.name() == asset_path {
-            if found.is_some() {
-                return Err("MEX asset has duplicate ZIP names".into());
-            }
-            found = Some(index);
-        }
+    // zip 9 keys entries by name: a duplicate collapses into one entry, so
+    // len()/by_index never see it. Only the raw central-directory count does,
+    // and it is archive-wide, so refuse any duplicate rather than guess which
+    // copy is the asset.
+    if zip.has_duplicate_names() {
+        return Err("APK has duplicate ZIP entry names".into());
     }
-    let index = found.ok_or("MEX asset is missing")?;
+    let index = zip
+        .index_for_name_raw(asset_path.as_bytes())
+        .ok_or("MEX asset is missing")?;
     let member = zip.by_index(index).map_err(|e| e.to_string())?;
     if member.size() > MAX_ASSET {
         return Err("MEX asset declared size exceeds local limit".into());
@@ -603,24 +600,29 @@ mod tests {
     #[test]
     fn actual_zip_entries_refuse_hidden_duplicate_names() {
         let name = "assets/whatsapp-android-mex_client_persist_ids.json";
-        let archive = |names: &[&str]| {
+        let bytes = |names: &[&str]| {
             let mut writer = zip::ZipWriter::new(Cursor::new(Vec::new()));
             for name in names {
                 writer
-                    .start_file(*name, zip::write::FileOptions::default())
+                    .start_file(*name, zip::write::SimpleFileOptions::default())
                     .unwrap();
                 writer.write_all(asset()).unwrap();
             }
-            zip::ZipArchive::new(writer.finish().unwrap()).unwrap()
+            writer.finish().unwrap().into_inner()
         };
+        let archive = |names: &[&str]| zip::ZipArchive::new(Cursor::new(bytes(names))).unwrap();
         let mut single = archive(&[name]);
         assert_eq!(read_asset(&mut single, name).unwrap(), asset());
-        let mut duplicate = archive(&[name, name]);
-        assert_eq!(duplicate.len(), 2);
-        assert_eq!(duplicate.file_names().count(), 1);
+
+        let twin = name.replace(".json", ".jsoX");
+        let mut raw = bytes(&[name, &twin]);
+        assert_eq!(crate::dex::rename_entry(&mut raw, &twin, name), 2);
+        let mut duplicate = zip::ZipArchive::new(Cursor::new(raw)).unwrap();
+        assert_eq!(duplicate.len(), 1, "zip 9 collapses the duplicate");
+        assert!(duplicate.has_duplicate_names());
         assert_eq!(
             read_asset(&mut duplicate, name).unwrap_err(),
-            "MEX asset has duplicate ZIP names"
+            "APK has duplicate ZIP entry names"
         );
         assert_eq!(
             read_asset(&mut archive(&["other.json"]), name).unwrap_err(),

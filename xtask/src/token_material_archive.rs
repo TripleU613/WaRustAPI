@@ -6,7 +6,7 @@ use std::io::{Read, Write};
 use std::os::unix::fs::PermissionsExt;
 use std::path::Path;
 use zip::ZipWriter;
-use zip::write::FileOptions;
+use zip::write::SimpleFileOptions;
 
 pub fn run(
     from_dir: &Path,
@@ -44,7 +44,7 @@ pub fn run(
         .map_err(|e| format!("failed to set file permissions: {e}"))?;
 
     let mut zip = ZipWriter::new(output_file);
-    let options = FileOptions::default().compression_method(zip::CompressionMethod::Stored);
+    let options = SimpleFileOptions::default().compression_method(zip::CompressionMethod::Stored);
 
     zip.start_file("AndroidManifest.xml", options)
         .map_err(|e| format!("failed to write manifest: {e}"))?;
@@ -225,7 +225,7 @@ mod tests {
         let logo_zip = temp.path().join("logo.zip");
         let logo_file = File::create(&logo_zip).unwrap();
         let mut zip = ZipWriter::new(logo_file);
-        let options = FileOptions::default();
+        let options = SimpleFileOptions::default();
         zip.start_file("res/drawable-hdpi-v4/about_logo.png", options)
             .unwrap();
         zip.write_all(b"logo_data").unwrap();
@@ -245,7 +245,12 @@ mod tests {
         let mut archive = zip::ZipArchive::new(file).unwrap();
 
         let names: Vec<String> = (0..archive.len())
-            .filter_map(|i| archive.by_index(i).ok().map(|e| e.name().to_string()))
+            .filter_map(|i| {
+                archive
+                    .by_index(i)
+                    .ok()
+                    .and_then(|e| e.name().ok().map(|n| n.into_owned()))
+            })
             .collect();
 
         assert!(names.contains(&"AndroidManifest.xml".to_string()));
@@ -273,7 +278,7 @@ mod tests {
         let logo_zip = temp.path().join("logo.zip");
         let logo_file = File::create(&logo_zip).unwrap();
         let mut zip = ZipWriter::new(logo_file);
-        let options = FileOptions::default();
+        let options = SimpleFileOptions::default();
         zip.start_file("res/drawable-hdpi-v4/about_logo.png", options)
             .unwrap();
         zip.write_all(b"logo_data").unwrap();

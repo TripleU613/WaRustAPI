@@ -101,6 +101,11 @@ fn index(apk: &Path) -> Result<Index, String> {
     let artifact = hash(&mut file, MAX_APK_BYTES)?;
     file.rewind().map_err(|e| e.to_string())?;
     let mut zip = zip::ZipArchive::new(file).map_err(|e| format!("zip: {e}"))?;
+    // zip 9 collapses duplicate names before by_index, so the per-entry
+    // duplicate check below can no longer see them; the raw count can.
+    if zip.has_duplicate_names() {
+        return Err("APK has duplicate ZIP entry names".into());
+    }
     if zip.len() > MAX_FILES {
         return Err("APK exceeds entry bound".into());
     }
@@ -116,9 +121,6 @@ fn index(apk: &Path) -> Result<Index, String> {
             .to_owned();
         if !valid_name(&name) {
             return Err("unsafe APK file name".into());
-        }
-        if files.contains_key(&name) {
-            return Err(format!("duplicate APK file: {name}"));
         }
         if entry.size() > MAX_APK_BYTES || entry.size() > MAX_CONTENT_BYTES - total {
             return Err("APK expanded content exceeds byte bound".into());
@@ -224,7 +226,7 @@ mod tests {
             writer
                 .start_file(
                     *name,
-                    zip::write::FileOptions::default()
+                    zip::write::SimpleFileOptions::default()
                         .compression_method(zip::CompressionMethod::Stored),
                 )
                 .unwrap();
@@ -280,8 +282,18 @@ mod tests {
     fn archive_index_refuses_duplicate_unsafe_and_corrupt_entries() {
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("bad.apk");
-        apk(&path, &[("classes.dex", b"one"), ("classes.dex", b"two")]);
-        assert!(index(&path).unwrap_err().contains("duplicate APK file"));
+        apk(&path, &[("classes.dex", b"one"), ("classes.deX", b"two")]);
+        let mut raw = std::fs::read(&path).unwrap();
+        assert_eq!(
+            crate::dex::rename_entry(&mut raw, "classes.deX", "classes.dex"),
+            2
+        );
+        std::fs::write(&path, raw).unwrap();
+        assert!(
+            index(&path)
+                .unwrap_err()
+                .contains("duplicate ZIP entry names")
+        );
         for name in [
             "../classes.dex",
             "/classes.dex",

@@ -117,7 +117,7 @@ pub fn extract(apk: &Path) -> Result<Extracted, String> {
     let apk_sha256 = hex::encode(hasher.finalize());
     let f = File::open(apk).map_err(|e| e.to_string())?;
     let mut zip = zip::ZipArchive::new(f).map_err(|e| format!("zip: {e}"))?;
-    let names: Vec<String> = zip.file_names().map(str::to_owned).collect();
+    let names = crate::dex::entry_names(&zip)?;
     let mut manifest_bytes = Vec::new();
     zip.by_name("AndroidManifest.xml")
         .map_err(|e| format!("AndroidManifest.xml: {e}"))?
