@@ -1,3 +1,14 @@
+2026-11-01 — **Observed live (new number fully registered):** a new US number went
+`/v2/code` sent → first OTP `stale` (entered ~2 h late) → `resend-code` sent →
+fresh OTP accepted with `fail`/`consent`, `pending=dob` → `submit-consent` (DOB,
+confirmed) → HTTP 200 `ok`, registration completed with the unchanged recipe
+(`enc_empty_h`, 2.26.37.70 token material). The first `listen` authenticated
+(`success`, `offline count=0`, `login_checkpoint=success`), then about 2 s later
+ended on a terminal `stream:error` whose only child is
+`ack class=notification type=psa` (our ACK of a PSA notification; it carried no
+`to`), the same shape as the unresolved 2026-10-08 observation. That points at
+our notification-ACK encoding for `psa`, not at the account; not yet traced.
+
 2026-11-01 — **Fixed (expired OTP no longer strands an attempt):** a code entered
 about two hours after `status: sent` returned HTTP 200 `fail`/`stale` (observed
 live, submitted once). Our flow had made that a terminal block with no resend
