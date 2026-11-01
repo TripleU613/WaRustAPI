@@ -498,8 +498,9 @@ reasons. The follow-up below resolves the native result remapper `0x7152b8`; the
 action/verified-state commit remains unfinished. Do not mark a peer verified merely by implementing
 these partial checks or treating an unknown negative code as success.
 
-[`native_schema_check.py`](../../tools/apk-research/native_schema_check.py)
-requires the exact merged-library hash and pyelftools, reads descriptors without
+[`xtask native-schema`](../../xtask/src/native.rs) (formerly
+`native_schema_check.py`) requires the exact merged-library hash, reads
+descriptors with a std-only ELF64 reader without
 executing any native library, and prints the compact JSON artifact above.
 It validates ARM64 ELF layout, file-backed reads, descriptor magic, known
 optional types, bounded counts, sorted tags and structure offsets. Wrong/missing
@@ -507,8 +508,7 @@ builds refuse before producing any schema. No QR bytes, key bytes, phone/LID
 values, account state or network requests are inputs to this command.
 
 ```sh
-PYTHONDONTWRITEBYTECODE=1 lab/native-analysis-tools-py312/bin/python \
-  tools/apk-research/native_schema_check.py \
+cargo run --locked -p xtask -- native-schema \
   --library lab/apk-2.26.37.71/native/qiling-rootfs/decoded/libwhatsappmerged.so
 ```
 

@@ -56,7 +56,8 @@ return order is `(root, chain)`.
 
 ## Independent check and API scope
 
-The [Python standard-HMAC reproducer](../../tools/apk-research/hybrid_kdf_vectors.py)
+The [independent HMAC reproducer](../../xtask/src/vectors.rs) (built on the
+`hmac`/`sha2` primitives, not the library's HKDF; formerly a Python script)
 creates [16 synthetic fixtures](hybrid-kdf-vectors.json): eight distinct input
 patterns, each with and without the optional agreement. Zero/ff and distinct
 per-position byte patterns exercise the prefix, ordering, optional component,
@@ -66,8 +67,7 @@ already-computed agreements, not APK execution, actual DH results, live KEM
 samples or an end-to-end session interoperability check.
 
 ```sh
-python tools/apk-research/hybrid_kdf_vectors.py \
-  docs/protocol/hybrid-kdf-vectors.json --check
+cargo run --locked -p xtask -- research-vectors hybrid-kdf --check
 cargo test -p whatsapp-api --all-features \
   signal::kem::tests::hybrid_initial_keys_match_independent_hmac_vectors
 ```

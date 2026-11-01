@@ -13,6 +13,8 @@ clap.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 sha2.workspace = true
+# Independent HMAC for research-vectors; deliberately not whatsapp-api's HKDF.
+hmac.workspace = true
 hex.workspace = true
 # Rust-only protobuf compilation (section 2.2). Descriptor types must stay on
 # compatible versions: protox 0.10 <-> prost-build/prost-types 0.14.

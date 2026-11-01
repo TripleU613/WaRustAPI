@@ -82,7 +82,7 @@ The generator also verifies that pinned JAR before executing the oracle.
 ```sh
 javac -cp /tmp/enum-oracle/protobuf-javalite-4.36.1.jar \
   -d /tmp/enum-oracle docs/protocol/ProtocolEnumsOracle.java
-python3 docs/protocol/generate_protocol_enum_oracle.py \
+cargo run --locked -p xtask -- java-oracle protocol-enums \
   --classpath /tmp/enum-oracle/protobuf-javalite-4.36.1.jar:/tmp/enum-oracle \
   --output /tmp/control-enum-oracle.json
 cmp crates/whatsapp-api/fixtures/prekeys/2.26.37.71-control-enum-oracle.json \

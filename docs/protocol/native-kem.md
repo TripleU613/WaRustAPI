@@ -73,12 +73,13 @@ behavior still require the underlying primitive, not inference from lengths.
 From the repository root, using the retained decoded libraries and LLVM:
 
 ```sh
-python tools/apk-research/native_kem_trace.py \
+cargo run --locked -p xtask -- native-kem-trace \
   lab/apk-2.26.37.71/native/qiling-rootfs/decoded \
   docs/protocol/native-kem-2.26.37.71 --check
 ```
 
-The [checker](../../tools/apk-research/native_kem_trace.py) refuses mismatched
+The [checker](../../xtask/src/native.rs) (`native-kem-trace`, formerly a Python
+script) refuses mismatched
 library hashes, checks dispatch/size/randomness instruction anchors, and compares
 all seven retained files byte-for-byte. Generation omits `--check`. No native
 library is loaded or executed. REA identified the native image; its deep native

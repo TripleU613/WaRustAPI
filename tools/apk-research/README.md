@@ -10,17 +10,15 @@ about 570 MB for build 2.26.37.71). The DEX helpers read their supplied dump;
 the native helpers below use explicitly supplied local fixtures. Neither sends
 network requests.
 
-- `dumpm.py DUMP ANCHOR [ANCHOR...] [--max-methods N] [--max-lines N] [--full]`
-  prints every method whose body contains a `const-string` equal to an anchor,
-  in a compact view (strings, calls, constants). Use it to find the builder of a
-  stanza from an attribute or namespace string; remember that names in the
+- Anchor search (formerly `dumpm.py`): `xtask apk-xref <apk> --anchor STRING`
+  finds the class/method of every `const-string` equal to the anchor; follow
+  with `xtask apk-smali <apk> --class 'LX/Foo;' --method NAME`. Names in the
   binary token dictionary (`crates/whatsapp-api/fixtures/tokens/web-md-v3.json`)
   may still appear as string constants in builders, but not always.
-- `desc.py DUMP [CLASS...] [--anchor FIELD_NAME...]` parses protobuf-lite
-  `dynamicMethod` descriptors (RawMessageInfo strings) into `(field name, number,
-  type)` triples. Field names are consumed in declaration order; for very large
-  messages the name alignment can drift after fields whose names are not string
-  constants, so cross-check numbers against live captures or the public schema.
+- Protobuf-lite descriptors (formerly `desc.py`): `xtask apk-proto-fields <apk>
+  --class FILTER` pairs field names to numbers exactly by simulating the objects
+  array; `--literal-order` adds desc.py's declaration-order pairing, labelled
+  unverified because it drifts after fields without string-constant names.
 
 Evidence produced with these tools is written up in `docs/protocol/*.md` with
 the class names of the build it came from.
@@ -68,27 +66,17 @@ remain visible. A passing hello check does not establish decoder compatibility.
 ## ARM64 decoder probe
 
 `--check decoder-init` loads the exact 37.71 decoder and calls `JNI_OnLoad`
-through the small local JNI adapter in `native-probe.c`. It requires version
+through the small local JNI adapter in [`native-probe/decoder_probe.rs`](native-probe/decoder_probe.rs). It requires version
 `0x10006`, 19 registered methods and exit zero. This is an artifact harness,
 not a Java VM or an account client. Unsupported JNI/asset calls abort; the
-string subset is ASCII fixture paths. `native-log-imports.c` renders diagnostics
-with Bionic vprintf, without an Android logging service.
+string subset is ASCII fixture paths. `native-probe/log_imports.rs` renders
+diagnostics with Bionic vprintf, without an Android logging service.
 
-Build the adapters and probe with Clang/LLD using the pinned Bionic fixtures:
+Build the probe and import shims (no_std Rust, `rust-lld`, no C compiler) as in
+[native-probe/README.md](native-probe/README.md), then:
 
 ```bash
 native_probe_root=lab/apk-2.26.37.71/native/qiling-rootfs
-native_probe_flags=(--target=aarch64-linux-android21 -fuse-ld=lld -nostdlib
-  -Wl,-z,max-page-size=4096 -L"$native_probe_root/system/lib64")
-clang "${native_probe_flags[@]}" -fPIC -shared -Wl,-soname,libandroid.so \
-  tools/apk-research/native-android-imports.c -l:libc.so \
-  -o "$native_probe_root/system/lib64/libandroid.so"
-clang "${native_probe_flags[@]}" -fPIC -shared -Wl,-soname,liblog.so \
-  tools/apk-research/native-log-imports.c -l:libc.so \
-  -o "$native_probe_root/system/lib64/liblog.so"
-clang "${native_probe_flags[@]}" -fPIE -pie -Wl,-e,_start \
-  -Wl,--dynamic-linker=/system/bin/linker64 tools/apk-research/native-probe.c \
-  -l:libc.so -l:libdl.so -o "$native_probe_root/bin/decoder_probe"
 cp lab/apk-2.26.37.71/native/arm64-v8a-superpack.so \
   "$native_probe_root/system/lib64/libsuperpack.so"
 lab/native-analysis-tools-py312/bin/python tools/apk-research/native_loader_check.py \
@@ -144,19 +132,20 @@ records APK addresses, JNI provenance, failures and actual check results.
 
 ## Ordinary full extraction with QEMU
 
-`native_qemu_check.py --rootfs PATH [--check decoder-init|decoder-full-archive]
-[--timeout-seconds N]` uses installed `bwrap` and `qemu-aarch64-static`.
+`cargo run --locked -p xtask -- native-qemu-check --rootfs PATH [--check
+decoder-init|decoder-full-archive] [--timeout-seconds N]` (Rust port of the
+former `native_qemu_check.py`) uses installed `bwrap` and `qemu-aarch64-static`.
 The wall limit defaults to 30 seconds and accepts 1–600; there is no instruction
 counter in this runner. It validates the exact 37.71 decoder/container hashes,
 uses an empty environment, isolates network/PIDs, mounts fixtures read-only
 and permits extraction file writes only under `/decoded`. It prepares mount
 points and makes only the local probe/linker copies executable (QEMU refused
-their original non-executable mode). Build the same C probe/imports above first.
+their original non-executable mode). Build the Rust probe/imports above first.
 
 ```sh
-python tools/apk-research/native_qemu_check.py \
+cargo run --locked -p xtask -- native-qemu-check \
   --rootfs lab/apk-2.26.37.71/native/qiling-rootfs --check decoder-init
-python tools/apk-research/native_qemu_check.py \
+cargo run --locked -p xtask -- native-qemu-check \
   --rootfs lab/apk-2.26.37.71/native/qiling-rootfs \
   --check decoder-full-archive --timeout-seconds 30
 ```
@@ -218,7 +207,8 @@ it does not execute these JNI conversions, QR serializers or key constructors.
 
 ## Native fingerprint QR schema
 
-`native_schema_check.py --library PATH` requires pyelftools and the exact
+`cargo run --locked -p xtask -- native-schema --library PATH` (Rust port of the
+former `native_schema_check.py`, std-only ELF reader) requires the exact
 reconstructed 37.71 `libwhatsappmerged.so` hash. It reads the two message and
 hosted-state enum descriptors without native execution or account inputs.
 Output is protocol metadata, including tags, types, offsets and source addresses;
@@ -227,8 +217,7 @@ Output is protocol metadata, including tags, types, offsets and source addresses
 distinguish optional schema fields from required comparison inputs.
 
 ```sh
-PYTHONDONTWRITEBYTECODE=1 lab/native-analysis-tools-py312/bin/python \
-  tools/apk-research/native_schema_check.py \
+cargo run --locked -p xtask -- native-schema \
   --library lab/apk-2.26.37.71/native/qiling-rootfs/decoded/libwhatsappmerged.so
 PYTHONDONTWRITEBYTECODE=1 \
   WARUSTAPI_LOADER_ROOTFS=lab/apk-2.26.37.71/native/qiling-rootfs \
@@ -443,12 +432,13 @@ Native class/ownership/JNI and current inventories remain unverified.
 
 ## Native KEM dispatch trace
 
-`native_kem_trace.py` checks pinned ARM64 library hashes and reproduces seven
+`xtask native-kem-trace` (formerly `native_kem_trace.py`) checks pinned ARM64
+library hashes and reproduces seven
 static JNI/ML-KEM instruction trace files without executing target code. See
 [dispatch, widths, randomness and remaining limits](../../docs/protocol/native-kem.md).
 
 ```sh
-python tools/apk-research/native_kem_trace.py \
+cargo run --locked -p xtask -- native-kem-trace \
   lab/apk-2.26.37.71/native/qiling-rootfs/decoded \
   docs/protocol/native-kem-2.26.37.71 --check
 ```
@@ -462,15 +452,15 @@ See [scope, pinned NIST provenance and reproduction](../../docs/protocol/native-
 
 ## Initial hybrid KDF vectors
 
-`hybrid_kdf_vectors.py docs/protocol/hybrid-kdf-vectors.json --check` reproduces
+`cargo run --locked -p xtask -- research-vectors hybrid-kdf --check` reproduces
 16 independent synthetic HMAC fixtures for the APK's ordered hybrid premaster
 and root/chain split. It does not execute APK code or calculate DH/KEM agreements.
 See [native evidence and scope](../../docs/protocol/hybrid-kdf.md).
 
 ## Signal wire encoding vectors
 
-`signal_wire_vectors.py docs/protocol/signal-wire-vectors.json --check`
+`cargo run --locked -p xtask -- research-vectors signal-wire --check`
 reproduces 24 synthetic Signal protobuf/HMAC vectors and eight prekey wrappers
-for native version bytes 0x33/0x44. It uses Python standard HMAC and explicit
+for native version bytes 0x33/0x44. It uses the `hmac`/`sha2` primitives and explicit
 protobuf framing, not APK execution or encryption. See
 [encoder evidence and scope](../../docs/protocol/signal-wire.md).

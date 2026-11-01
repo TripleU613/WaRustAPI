@@ -65,16 +65,18 @@ serialization. Dropping unknowns with a plain prost re-encode is also incorrect.
 Reproduce after compiling Java with the verified JAR into LOCAL_CLASS_DIR:
 
 ```sh
-python3 docs/protocol/generate_adv_details_oracle.py \
+cargo run --locked -p xtask -- java-oracle adv-details \
   --classpath 'LOCAL_JAR:LOCAL_CLASS_DIR' \
   --output /tmp/adv-details-oracle.json
 cmp crates/whatsapp-api/fixtures/prekeys/2.26.37.71-adv-details-oracle.json \
   /tmp/adv-details-oracle.json
 ```
 
-The [generator](generate_adv_details_oracle.py) uses deterministic inputs and
+The [generator](../../xtask/src/java_oracle.rs) uses deterministic inputs and
 Java outputs, not expected values copied from the Rust parser. JAR/class files
-stay local. Exact regeneration of all vectors was verified.
+stay local. Exact regeneration of all vectors was verified, first with the
+original Python generator and again (2026-11-01) with its Rust port, which
+reproduces CPython's `random.Random(3771)` for the 250 random cases.
 
 ## Receiving and remaining boundaries
 
