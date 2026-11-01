@@ -16,7 +16,7 @@ sha2.workspace = true
 hex.workspace = true
 # Rust-only protobuf compilation (section 2.2). Descriptor types must stay on
 # compatible versions: protox 0.9 <-> prost-build/prost-types 0.14.
-protox = "0.9"
+protox = "0.10"
 prost-build = "0.14"
 prost-types = "0.14"
 prost-reflect = "0.16"
