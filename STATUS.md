@@ -1,3 +1,13 @@
+2026-11-02 — **Live (video send) / `p` banned:** `q` sent the owner a 3-second
+320×240 MP4 via `outbox-send` with private JSON `video` (`VideoMessage`,
+2.26.37.71 `BZE` field numbers, Video Keys domain, `/mms/video`,
+`mediatype="video"`): server-accepted, then the owner's phone sent delivery
+and read receipts. Meanwhile `q` received an undecryptable direct message
+(most likely `p`'s delayed first text) and sent a retry receipt, but `p`'s
+next login was refused `403` (banned, under an hour after registration), so
+the retry answer could not run. Media upload routes expire within minutes;
+refresh with `lab-transport --login --media-route` before an upload.
+
 2026-11-02 — **Live (document send):** `q` sent the owner a small text file via
 `outbox-send` with private JSON `document`: uploaded to `/mms/document`
 (Document Keys domain), sent as `DocumentMessage` (2.26.37.71 `BZ6` field
