@@ -155,7 +155,9 @@ request—not adding Rust code, another command or a number-specific script.**
 
   As of 2026-11-01 that asset is build **2.26.43.72** (version code
   264307238, SHA-256 `887a6f94…0c2e`, signing certificate `39:87:D0:43:…:5D:44`,
-  the same as 2.26.37.70/71). No research has been attributed to it yet. If the
+  the same as 2.26.37.70/71). Its comparison with what we rely on
+  (token dictionary identical, token key inputs unchanged except `classes.dex`)
+  is in `docs/protocol/apk-2.26.43.72-comparison.md`. If the
   hash differs, the owner replaced the asset: identify the new build before
   citing it. Never commit the APK or an unpacked tree.
 - On the owner's workstation, `~/Downloads/WhatsApp.apk` is build

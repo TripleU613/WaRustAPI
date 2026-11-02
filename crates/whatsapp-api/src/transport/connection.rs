@@ -95,12 +95,21 @@ fn record_login_reply(store: &ProtocolStore, reply: &Node) -> Result<()> {
     } else {
         "refused"
     };
+    // `<failure reason=N>`: observed 403 for a banned account (2026-11-01).
+    // 405 is the outdated-client code in public multi-device clients
+    // (reference only, not traced in the APK); keeping the number is what
+    // tells a retired app version apart from any other refusal.
+    let code = (status == "refused")
+        .then(|| reply.get_attr("reason").and_then(|v| v.as_text()))
+        .flatten()
+        .filter(|v| v.len() <= 5)
+        .and_then(|v| v.parse::<u32>().ok());
     store.write(|tx| {
         tx.put_json(
             Table::Checkpoints,
             LOGIN_KEY,
             1,
-            &serde_json::json!({"status":status,"at":Timestamp::now()}),
+            &serde_json::json!({"status":status,"code":code,"at":Timestamp::now()}),
         )?;
         if status == "success" {
             super::clock::observe_login(tx, reply)?;
@@ -115,7 +124,7 @@ fn record_login_reply(store: &ProtocolStore, reply: &Node) -> Result<()> {
         Ok(())
     })?;
     if status != "success" {
-        return Err(Error::Authentication { code: None });
+        return Err(Error::Authentication { code });
     }
     Ok(())
 }
@@ -1021,6 +1030,13 @@ mod tests {
         let saved = store
             .read(|tx| tx.get_json::<serde_json::Value>(Table::Checkpoints, b"login-identity", 1))
             .unwrap();
+        record_login_reply(&store, &Node::new("success")).unwrap();
+        // A refusal keeps its numeric reason (403 banned, observed; 405 for a
+        // retired client version in public clients) instead of dropping it.
+        for (reason, code) in [("405", Some(405)), ("x", None)] {
+            let error = record_login_reply(&store, &Node::new("failure").attr("reason", reason));
+            assert!(matches!(error, Err(Error::Authentication { code: c }) if c == code));
+        }
         record_login_reply(&store, &Node::new("success")).unwrap();
         assert_eq!(
             store

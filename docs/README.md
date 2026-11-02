@@ -36,6 +36,7 @@ and [STATUS.md](../STATUS.md) for verified behavior and blockers.
 - [Persisted registration lab](protocol/registration-lab.md)
 - [Ban appeal](protocol/ban-appeal.md)
 - [APK analysis procedure](protocol/apk-analysis.md)
+- [2.26.43.72 comparison](protocol/apk-2.26.43.72-comparison.md)
 - [Compact media-free APK code snapshot](protocol/apk/README.md)
 - [Decompilation log](protocol/decompilation-log.md)
 - [After-OTP flows](protocol/after-otp.md)

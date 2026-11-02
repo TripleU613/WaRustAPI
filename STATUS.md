@@ -1,3 +1,12 @@
+2026-11-01 — **Compared (2.26.43.72):** against what we rely on, the new build
+has the same signing certificate, an identical binary token dictionary, and
+an unchanged `about_logo.png`. `classes.dex` changed, so its registration
+tokens differ and must pair with its own User-Agent (not verified live; the
+recipe stays on 2.26.37.70). None of our wire literals was removed. A refused
+login now keeps the server's `reason` code (403 banned; 405 outdated client in
+public clients, reference only) instead of dropping it.
+[comparison](docs/protocol/apk-2.26.43.72-comparison.md).
+
 2026-11-01 — **Implemented/offline (group reactions in the outbox):** a normal
 outbox group reaction whose devices still need our sender key is no longer
 blocked. Each missing distribution goes out first as a direct message, each
