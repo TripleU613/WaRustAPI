@@ -147,10 +147,15 @@ impl Material {
     }
 
     fn check(&self, attempt: &RegistrationAttempt, config: &LabRegistrationConfig) -> Result<()> {
+        // `transport.mark_read` only steers later messaging sessions; it is not
+        // a registration input. Its default changing (false -> true,
+        // 2026-11-02) must not orphan an attempt saved under the old default.
+        let mut saved = self.config.clone();
+        saved.transport.mark_read = config.transport.mark_read;
         if self.attempt_id != attempt.id
             || self.method != attempt.method
             || self.generation != attempt.generation
-            || &self.config != config
+            || &saved != config
         {
             return Err(invalid(
                 "persisted material belongs to a different attempt or configuration",
@@ -796,6 +801,25 @@ mod tests {
                 ))))
             })
         }
+    }
+
+    /// A saved attempt survives a change of the messaging-only `mark_read`
+    /// default; any registration input change is still refused.
+    #[test]
+    fn saved_material_ignores_mark_read_but_not_registration_inputs() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(dir.path());
+        let factory = StoredComparisonRequestFactory::new(store.clone(), config()).unwrap();
+        let a = attempt(&store);
+        store.write(|tx| factory.prepare(tx, &a)).unwrap();
+        let mut flipped = config();
+        flipped.transport.mark_read = !flipped.transport.mark_read;
+        let later = StoredComparisonRequestFactory::new(store.clone(), flipped).unwrap();
+        later.load(&a).unwrap();
+        let mut changed = config();
+        changed.language = "de".into();
+        let other = StoredComparisonRequestFactory::new(store.clone(), changed).unwrap();
+        assert!(other.load(&a).is_err());
     }
 
     /// A corrected-token retry that never left restores the `bad_token`
