@@ -1980,7 +1980,7 @@ mod tests {
             sender_key_stanza(
                 &chat,
                 "M",
-                StanzaContent::Media("video"),
+                StanzaContent::Media("sticker"),
                 None,
                 None,
                 targets,
