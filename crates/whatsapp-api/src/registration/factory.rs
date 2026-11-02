@@ -152,8 +152,11 @@ impl Material {
         // 2026-11-02) must not orphan an attempt saved under the old default.
         let mut saved = self.config.clone();
         saved.transport.mark_read = config.transport.mark_read;
+        // The delivery method is the attempt's to choose: `resend_code` may
+        // switch SMS to voice (as the APK's "call me" does) and the code
+        // request reads `attempt.method`; the method saved with the material
+        // is the first request's and is not an identity input.
         if self.attempt_id != attempt.id
-            || self.method != attempt.method
             || self.generation != attempt.generation
             || &saved != config
         {
@@ -707,9 +710,11 @@ mod tests {
         let mut wrong = attempt(&store);
         wrong.generation = AccountGeneration(a.generation.0 + 1);
         assert!(factory.code_request(&wrong).is_err());
-        let mut wrong = attempt(&store);
-        wrong.method = ChallengeMethod::Voice;
-        assert!(factory.code_request(&wrong).is_err());
+        // Since 2026-11-02 a resend may switch SMS to voice: the request
+        // follows the attempt's method instead of refusing it.
+        let mut voice = attempt(&store);
+        voice.method = ChallengeMethod::Voice;
+        assert!(factory.code_request(&voice).is_ok());
         let mut changed = config();
         changed.token = Zeroizing::new("changed-token".into());
         let changed = StoredComparisonRequestFactory::new(store.clone(), changed).unwrap();
@@ -816,6 +821,10 @@ mod tests {
         flipped.transport.mark_read = !flipped.transport.mark_read;
         let later = StoredComparisonRequestFactory::new(store.clone(), flipped).unwrap();
         later.load(&a).unwrap();
+        // A resend may switch the method; the material still loads.
+        let mut voice = a.clone();
+        voice.method = ChallengeMethod::Voice;
+        later.load(&voice).unwrap();
         let mut changed = config();
         changed.language = "de".into();
         let other = StoredComparisonRequestFactory::new(store.clone(), changed).unwrap();
