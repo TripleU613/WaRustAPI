@@ -961,9 +961,7 @@ mod tests {
             )
             .unwrap();
         assert_eq!(
-            store
-                .read(|tx| super::super::kem_prekeys::counts(tx))
-                .unwrap(),
+            store.read(super::super::kem_prekeys::counts).unwrap(),
             (11, 1)
         );
         generate(&store).unwrap();
