@@ -482,3 +482,13 @@ ACKs every notification its subclasses dispatch.
   `0BW.CGQ`, the unhandled-stanza error path); otherwise it returns to the loop
   with nothing sent. **Confirmed negative:** the official client does not
   generically ACK unhandled types, so neither do we.
+
+## Retry-receipt answers (2026-11-01)
+
+Answered in `listen` only for the APK's no-fetch branch
+([retry-answers](retry-answers.md)). Still unknown or unported: whether the
+resent `enc` carries a `count` attribute (`Civ` writer untraced); the count-2
+base-key record and count > 2 comparison (`0jc.A0u`/`A17`); the fresh-bundle
+answer after a registration change; sessions built from `<keys>` in the receipt
+(`151.A01`); normal-runtime group/broadcast retries. No retry has been answered
+live.

@@ -803,6 +803,20 @@ pub(crate) async fn drive(
                     }
                 }
                 super::outgoing::acknowledge(&store, &node)?;
+                // A peer that could not decrypt our direct send asks for it
+                // again (2.26.37.71 RetryReceiptHandler; retry_answer). The
+                // answer is reserved before this write; refusals are recorded.
+                if receipt_recorded {
+                    match super::retry_answer::answer(&store, &account, &node, epoch).await {
+                        Ok(Some(resend)) => {
+                            link.send(&resend).await?;
+                            tracing::info!(target: "whatsapp_api::incoming", "retry receipt answered under the saved session; same message id");
+                        }
+                        Ok(None) => {}
+                        Err(Error::InvalidInput { field, reason }) => tracing::warn!(field, reason, "retry receipt not answered"),
+                        Err(error) => return Err(error),
+                    }
+                }
                 if received == super::inbox::IncomingResult::Undecryptable {
                     match super::receipts::queue_retry_for_incoming(&store, &account, &node) {
                         Ok(0) => tracing::info!(target: "whatsapp_api::incoming", "retry already recorded; no repeat"),

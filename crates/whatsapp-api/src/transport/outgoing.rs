@@ -18,7 +18,7 @@ use crate::{
 };
 use zeroize::Zeroizing;
 
-fn outbox() -> Outbox {
+pub(crate) fn outbox() -> Outbox {
     Outbox::new("comparison-driver", Limits::default())
 }
 fn query_key(id: LocalMessageId) -> String {
@@ -1074,6 +1074,9 @@ impl Pending {
                     }),
                 )?;
             }
+            // A peer that cannot decrypt asks for this exact message again
+            // (retry_answer); the stanza alone holds only old ciphertext.
+            super::retry_answer::keep_source_in(tx, &wire_id, payload)?;
             current.wire_id = Some(MessageId::new(wire_id)?);
             current.attempts.push(AttemptRecord {
                 index: 0,

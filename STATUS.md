@@ -1,3 +1,13 @@
+2026-11-01 — **Implemented/offline (retry receipts):** `listen` now answers a
+peer's `receipt type=retry` for our server-accepted direct sends, following the
+2.26.37.71 `RetryReceiptHandler` policy (count ≤ 4, ≤ 60 days, not already
+delivered, same session when the registration id matches): the original
+stanza re-encrypted from retained plaintext, same message id, reserved once per
+(message, device, count). Count 3–4, a changed registration id, groups and
+older sends are recorded as `retry-unanswered` with a reason. Not live-verified
+(a retry cannot be provoked without breaking a session).
+[retry-answers](docs/protocol/retry-answers.md).
+
 2026-11-01 — **Observed live (profile photo):** on `q`, `profile-picture set` with a
 640×640 JPEG was answered `iq type=result` with a new `<picture id=…>`, and
 `profile-picture get` for the owner's number was answered `result` with the

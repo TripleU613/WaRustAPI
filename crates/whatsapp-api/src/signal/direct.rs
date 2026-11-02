@@ -471,6 +471,16 @@ impl SessionStore for Sessions {
     }
 }
 
+/// The peer registration id the saved session was built against
+/// (`remoteRegistrationId_`, compared by 2.26.37.71 `151.A00`).
+pub fn session_remote_registration(session: &[u8]) -> Result<u32> {
+    let record = SessionRecord::deserialize(session).map_err(crypto)?;
+    let state = record
+        .session_state()
+        .ok_or_else(|| invalid("session has no current state"))?;
+    Ok(state.remote_registration_id())
+}
+
 /// Prepared encryption plus updated durable session and peer identity.
 pub struct PreparedDirect {
     /// Opaque encrypted Signal message, not plaintext.
