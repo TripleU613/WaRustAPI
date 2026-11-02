@@ -507,3 +507,43 @@ registration was never attempted. No live registration, identity reset, retry
 or message transmission was performed for this count. More numbers are
 unnecessary for static research/current single-account checks; a second working
 account would enable controlled two-client end-to-end tests.
+
+## Code-request metrics correction (2026-11-02)
+
+**Confirmed (static, APK 2.26.37.70):** the retained outbound trace in
+[HTTP POST analysis](http-post-analysis.md#profile-update-rule) identifies
+`I4A.A0E` reading `reg_attempts_generate_code` (0x0010–0x001c), incrementing and
+persisting it (0x001e–0x0028), then constructing `H2r` through `HcR`
+(0x0038–0x0042). The first code-request counter is 1; later requests increment it.
+
+**Confirmed (implementation/offline):** ordinary SMS/voice requests previously
+copied `fields.code_bytes.client_metrics` unchanged, so the working template sent
+`attempts: 1` on resends too. The factory now replaces that property with the
+complete saved code-preparation count, retaining other JSON properties and the
+frozen configuration, identity and keys. Invalid/non-object metrics and missing
+or truncated preparation history refuse locally with an explicit reason. An
+absent metrics field remains absent. Email-second-factor requests retain their
+existing behavior; their counter producer has not been established here.
+Existing explicit diagnostic overrides retain their separate validation.
+
+**Inferred (client mapping):** retained preparation history is our conservative
+proxy for the APK's persisted counter, not a delivery count. Reservations may
+precede I/O; historical pre-exact-restore preparations may include unsent work.
+No counter or account identity is reset to improve a response.
+
+**Observed (operator report/transcript, 2026-11-02):** voice requests returned
+`sent` while the operator reported no calls. The transcript alternately blamed
+the number range and request timing without establishing either cause. The
+saved pending profiles use the working 2.26.37.70/enc_empty_h recipe; all six
+pending profiles passed offline token verification against the matching
+2.26.37.70 token material. A bounded
+Gmail search for VoIP.ms/voicemail mail on November 1–2 returned no matches;
+that does not establish whether a call reached the provider. No provider CDR
+was available to this check.
+
+**Unknown:** why calls did not arrive, whether any other request input differs
+from the relevant APK voice branch, and whether the counter correction improves
+live dispatch/delivery. A first request already had counter 1, so this resend
+bug does not explain all failures. No live signup request was made during this
+investigation. Do not infer delivery, number blocking, or IP throttling from
+`sent` or `temporarily_unavailable` alone.

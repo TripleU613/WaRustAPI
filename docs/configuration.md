@@ -96,3 +96,9 @@ session (`listen`); nothing is sent during registration itself.
 |---|---|---|
 | `profile.push_name` | string | Display name: the `pushNameSetting` app-state record and the `<presence name=… type="available"/>` other people see (validated before any request) |
 | `profile.about` | string | Profile About text |
+
+For ordinary SMS/voice requests, configured `fields.code_bytes.client_metrics`
+must contain a JSON object. The sender derives `attempts` from complete saved
+preparation history, preserving other properties; it refuses incomplete history
+rather than inventing a count. It does not add metrics when absent. See
+[the evidence and limits](protocol/registration-lab.md#code-request-metrics-correction-2026-11-02).

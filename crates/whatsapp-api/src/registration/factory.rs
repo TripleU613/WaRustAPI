@@ -303,7 +303,28 @@ impl StoredComparisonRequestFactory {
         RegistrationCodeParams::new(record.config.token.as_str(), method)?
             .append_to_form(&mut form)?;
         super::request::append_fields(&mut form, &record.config.fields.code)?;
-        super::request::append_byte_fields(&mut form, &record.config.fields.code_bytes)?;
+        let mut fields = record.config.fields.code_bytes.clone();
+        if matches!(method, "sms" | "voice")
+            && let Some(metrics) = fields.get_mut("client_metrics")
+        {
+            // APK 2.26.37.70 I4A.A0E increments reg_attempts_generate_code;
+            // derive it from retained reservations, never the frozen template.
+            let count = attempt
+                .code_preparation_count()
+                .filter(|count| *count > 0)
+                .ok_or_else(|| invalid("incomplete code-request preparation history"))?;
+            let mut value: serde_json::Value = serde_json::from_slice(metrics)
+                .map_err(|_| invalid("invalid code-request metrics JSON"))?;
+            value
+                .as_object_mut()
+                .ok_or_else(|| invalid("code-request metrics must be an object"))?
+                .insert("attempts".into(), serde_json::json!(count));
+            *metrics = Zeroizing::new(
+                serde_json::to_vec(&value)
+                    .map_err(|_| invalid("cannot encode code-request metrics"))?,
+            );
+        }
+        super::request::append_byte_fields(&mut form, &fields)?;
         record.bundle()?.append_to_form(&mut form)?;
         WHATSAPP_2_26_37_70.request(RegistrationEndpoint::Code, &form)
     }
@@ -593,7 +614,7 @@ mod tests {
         cfg.device.facebook_device_id = Some(Zeroizing::new(fdid.into()));
         cfg.fields
             .code_bytes
-            .insert("client_metrics".into(), Zeroizing::new(b"test ~*".to_vec()));
+            .insert("reason".into(), Zeroizing::new(b"test ~*".to_vec()));
         cfg.fields
             .code
             .insert("context".into(), Zeroizing::new("code only+".into()));
@@ -610,7 +631,7 @@ mod tests {
         let body = std::str::from_utf8(code.body()).unwrap();
         assert!(body.contains(&format!("fdid={fdid}")));
         assert!(body.contains("context=code+only%2B"));
-        assert!(body.contains("client_metrics=test%20~%2A"));
+        assert!(body.contains("reason=test%20~%2A"));
         assert!(!code.diagnostic_summary().to_string().contains(fdid));
         let complete = factory
             .complete_request(&a, &Zeroizing::new("654321".into()))
@@ -1314,6 +1335,66 @@ mod tests {
             .replace("&method=sms", "&method=sms&mcc=000");
         assert_eq!(std::str::from_utf8(after.body()).unwrap(), expected);
         assert!(store.write(|tx| factory.prepare(tx, &a)).is_err());
+    }
+
+    #[test]
+    fn code_metrics_follow_saved_preparations_and_preserve_other_properties() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(dir.path());
+        let mut cfg = config();
+        cfg.fields.code_bytes.insert(
+            "client_metrics".into(),
+            Zeroizing::new(br#"{"attempts":1,"app_campaign_download_source":"test"}"#.to_vec()),
+        );
+        let factory = StoredComparisonRequestFactory::new(store.clone(), cfg).unwrap();
+        let mut a = attempt(&store);
+        a.state = RegistrationState::Unregistered;
+        a.transition(RegistrationState::Preparing, Timestamp::now())
+            .unwrap();
+        store.write(|tx| factory.prepare(tx, &a)).unwrap();
+        for count in 1..=2 {
+            let request = factory.code_request(&a).unwrap();
+            let body = std::str::from_utf8(request.body()).unwrap();
+            assert!(body.contains(&format!("%22attempts%22%3A{count}")));
+            assert!(body.contains("%22app_campaign_download_source%22%3A%22test%22"));
+            if count == 1 {
+                a.transition(
+                    RegistrationState::CoolingDown {
+                        until: Timestamp::now(),
+                    },
+                    Timestamp::now(),
+                )
+                .unwrap();
+                a.transition(RegistrationState::Preparing, Timestamp::now())
+                    .unwrap();
+                a.method = ChallengeMethod::Voice;
+            } else {
+                assert!(body.contains("method=voice"));
+            }
+        }
+        a.history
+            .resize(super::super::MAX_HISTORY, a.history[0].clone());
+        assert!(factory.code_request(&a).is_err());
+    }
+
+    #[test]
+    fn code_metrics_refuse_invalid_json_and_non_objects() {
+        for metrics in ["invalid", "[]", "null"] {
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(dir.path());
+            let mut cfg = config();
+            cfg.fields.code_bytes.insert(
+                "client_metrics".into(),
+                Zeroizing::new(metrics.as_bytes().to_vec()),
+            );
+            let factory = StoredComparisonRequestFactory::new(store.clone(), cfg).unwrap();
+            let mut a = attempt(&store);
+            a.state = RegistrationState::Unregistered;
+            a.transition(RegistrationState::Preparing, Timestamp::now())
+                .unwrap();
+            store.write(|tx| factory.prepare(tx, &a)).unwrap();
+            assert!(factory.code_request(&a).is_err());
+        }
     }
 
     #[test]

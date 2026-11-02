@@ -1,3 +1,12 @@
+2026-11-02 — **Fixed/offline (code-request metrics):** SMS/voice requests now
+refresh configured byte-path `client_metrics.attempts` from complete saved
+preparation history instead of reusing the template's 1 on every resend.
+Malformed metrics and incomplete history refuse locally; identity and frozen
+config remain unchanged. Regression tests cover a resend switching to voice,
+other metrics properties and truncated history. Missing calls after `sent`
+remain unexplained; no live request was made for this fix.
+[Evidence and limits](docs/protocol/registration-lab.md#code-request-metrics-correction-2026-11-02).
+
 2026-11-02 — **New signups refused (438-476 block):** after `q`'s ban, one SMS
 `resend-code` for `r` (9825) was answered `no_routes` (cooldown about one hour)
 and one for `s` (9826) `temporarily_unavailable` (cooldown). Both numbers are
