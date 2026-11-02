@@ -543,3 +543,19 @@ a delivery receipt; the trusted-contact token issue IQ that follows the ACK
 (`token_issue`) was then answered OK. `messaging::with_tctoken` is applied
 by the outbox whenever a token from the recipient (PN or LID) is held.
 
+### Why `q` cannot create groups: the reach-out timelock (2026-11-01)
+
+**Observed:** `q`'s captured `mex` notifications include three
+`NotificationUserReachoutTimelockUpdate` pushes (all at 2026-11-01 23:13 UTC)
+with `{"xwa2_notify_account_reachout_timelock":{"enforcement_type":"DEFAULT",
+"is_active":true,"time_enforcement_ends":<2026-11-02 05:13 UTC>}}`: a
+six-hour lock placed right around the new account's first outreach. While it
+runs, group creation is refused 463 `account_reachout_restricted`, even with
+the participant's token as `<privacy>`. 1:1 messages to a person who issued us
+a token are accepted once `<tctoken>` is attached. **Confirmed static,
+2.26.37.71:** the APK has `ReachoutTimelock*` handler, state-manager, banner
+and `FetchReachoutTimelockQuery` classes; its UI enforcement is not traced.
+`listen` now records the push (`notifications::record_reachout_timelock`,
+checkpoint `reachout-timelock`) and logs it, and `group create` refuses
+locally with the end time while it is active.
+

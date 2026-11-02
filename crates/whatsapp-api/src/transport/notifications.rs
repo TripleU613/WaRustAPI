@@ -72,6 +72,75 @@ pub fn mex_ack(node: &Node) -> Result<Option<Node>> {
     base_ack(node, "mex")
 }
 
+const REACHOUT_TIMELOCK: &[u8] = b"reachout-timelock";
+
+/// The account's reach-out timelock, as the server last pushed it.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+pub struct ReachoutTimelock {
+    /// `is_active`.
+    pub active: bool,
+    /// `time_enforcement_ends`, Unix seconds.
+    pub ends: i64,
+}
+
+/// Record a `mex` `NotificationUserReachoutTimelockUpdate`.
+///
+/// **Observed 2026-11-01** on `q`: `{"data":{"xwa2_notify_account_reachout_timelock":
+/// {"enforcement_type":"DEFAULT","is_active":true,"time_enforcement_ends":"<unix s>"}}}`,
+/// pushed when WhatsApp locked the new account's outreach for six hours; group
+/// creation was refused 463 `account_reachout_restricted` meanwhile.
+/// **Confirmed static, 2.26.37.71:** the op name and the `ReachoutTimelock*`
+/// handler/banner/query classes exist (`FetchReachoutTimelockQuery`); the
+/// APK's exact enforcement in the UI is not traced. Returns the recorded lock.
+pub fn record_reachout_timelock(
+    store: &ProtocolStore,
+    node: &Node,
+) -> Result<Option<ReachoutTimelock>> {
+    if node.description != "notification"
+        || node.get_attr("type").and_then(|v| v.as_text()) != Some("mex")
+    {
+        return Ok(None);
+    }
+    for child in node.child_nodes() {
+        if child.get_attr("op_name").and_then(|v| v.as_text())
+            != Some("NotificationUserReachoutTimelockUpdate")
+        {
+            continue;
+        }
+        let body = match &child.content {
+            NodeContent::Bytes(b) => b.to_vec(),
+            NodeContent::Text(t) => t.as_bytes().to_vec(),
+            _ => continue,
+        };
+        let Ok(json) = serde_json::from_slice::<serde_json::Value>(&body) else {
+            continue;
+        };
+        let lock = &json["data"]["xwa2_notify_account_reachout_timelock"];
+        let Some(active) = lock["is_active"].as_bool() else {
+            continue;
+        };
+        let ends = lock["time_enforcement_ends"]
+            .as_str()
+            .and_then(|v| v.parse().ok())
+            .or_else(|| lock["time_enforcement_ends"].as_i64())
+            .unwrap_or(0);
+        let lock = ReachoutTimelock { active, ends };
+        store.write(|tx| tx.put_json(Table::Checkpoints, REACHOUT_TIMELOCK, 1, &lock))?;
+        return Ok(Some(lock));
+    }
+    Ok(None)
+}
+
+/// The recorded lock if it is still in force at `now_seconds`.
+pub fn active_reachout_timelock(
+    store: &ProtocolStore,
+    now_seconds: i64,
+) -> Result<Option<ReachoutTimelock>> {
+    let lock: Option<ReachoutTimelock> =
+        store.read(|tx| tx.get_json(Table::Checkpoints, REACHOUT_TIMELOCK, 1))?;
+    Ok(lock.filter(|l| l.active && l.ends > now_seconds))
+}
+
 /// The plain notification ACK the base handler sends (2.26.37.71 `0yO.A00`
 /// via `Cp2.A05`): id/to/class/type, plus participant when present. None
 /// for any other stanza or type; an error for a matching notification that
@@ -406,6 +475,36 @@ mod tests {
         let ack = mex_ack(&node).unwrap().unwrap();
         assert_eq!(ack.get_attr("type").and_then(|v| v.as_text()), Some("mex"));
         assert!(ack.get_attr("error").is_none());
+    }
+
+    #[test]
+    fn reachout_timelock_is_recorded_and_expires() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(crate::store::OpenOptions {
+            path: dir.path().join("r.redb"),
+            account_id: crate::model::ids::AccountId::new("t").unwrap(),
+            key_source: std::sync::Arc::new(crate::store::StaticKeySource::new(
+                crate::store::MasterKey::from_bytes([2; 32]),
+            )),
+            create: true,
+        })
+        .unwrap();
+        let body = br#"{"data":{"xwa2_notify_account_reachout_timelock":{"enforcement_type":"DEFAULT","is_active":true,"time_enforcement_ends":"1000"}}}"#;
+        let node = Node::new("notification").attr("type", "mex").children(vec![
+            Node::new("update")
+                .attr("op_name", "NotificationUserReachoutTimelockUpdate")
+                .bytes(body.to_vec()),
+        ]);
+        let lock = record_reachout_timelock(&store, &node).unwrap().unwrap();
+        assert_eq!(
+            lock,
+            ReachoutTimelock {
+                active: true,
+                ends: 1000
+            }
+        );
+        assert!(active_reachout_timelock(&store, 999).unwrap().is_some());
+        assert!(active_reachout_timelock(&store, 1000).unwrap().is_none());
     }
 
     #[test]

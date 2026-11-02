@@ -1,3 +1,8 @@
+2026-11-01 — **Explained (group creation 463):** WhatsApp pushed `q` a six-hour
+reach-out timelock (`mex` `NotificationUserReachoutTimelockUpdate`, active,
+ends 2026-11-02 05:13 UTC). `listen` now records and logs it, and `group create`
+refuses locally with the end time instead of sending into a refusal.
+
 2026-11-01 — **Observed live (group on a real phone):** the owner created a
 group with `q`. Their group text decrypted on `q`. Fixes found by the test:
 the group outbox read only the group own-LID checkpoint and blocked a LID group

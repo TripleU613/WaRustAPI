@@ -181,6 +181,19 @@ pub fn queue_create(store: &ProtocolStore, subject: &str, members: &[Jid]) -> Re
     if subject.trim().is_empty() || subject.chars().count() > 100 {
         return Err(invalid("subject must be 1..=100 characters"));
     }
+    // The server refuses a create with 463 while the account's reach-out
+    // timelock runs (observed 2026-11-01); say so instead of sending blind.
+    let now = Timestamp::now().as_millis() / 1000;
+    if let Some(lock) = super::notifications::active_reachout_timelock(store, now)? {
+        return Err(Error::invalid(
+            "group",
+            format!(
+                "WhatsApp reach-out timelock active until unix {} (about {} min); group creation is refused until then",
+                lock.ends,
+                (lock.ends - now + 59) / 60
+            ),
+        ));
+    }
     let mut members = participants(members)?;
     // 2.26.37.71 AWf.A00 0112..0166: a participant whose trusted-contact
     // token we hold gets `<privacy>token</privacy>`; without it the server
