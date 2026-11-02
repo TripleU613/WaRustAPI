@@ -440,6 +440,35 @@ enum Cmd {
         #[arg(long)]
         dry_run: bool,
     },
+    /// Durably enqueue "delete for everyone" of one of our own direct messages
+    /// (stanza edit=7); `listen --send-outbox` transmits it.
+    Revoke {
+        /// Direct chat JID the message was sent to.
+        #[arg(long)]
+        chat: String,
+        /// Wire id of our message (as shown by `status` or `events`).
+        #[arg(long)]
+        id: String,
+        /// Caller idempotency key; defaults to `revoke-<id>`.
+        #[arg(long)]
+        request_id: Option<String>,
+    },
+    /// Durably enqueue an edit of one of our own direct text messages
+    /// (stanza edit=1); `listen --send-outbox` transmits it.
+    EditMessage {
+        /// Direct chat JID the message was sent to.
+        #[arg(long)]
+        chat: String,
+        /// Wire id of our message.
+        #[arg(long)]
+        id: String,
+        /// Replacement text.
+        #[arg(long)]
+        text: String,
+        /// Caller idempotency key; defaults to `edit-<id>-<sha256 prefix of text>`.
+        #[arg(long)]
+        request_id: Option<String>,
+    },
     /// Durably enqueue a poll; `listen --send-outbox` transmits it.
     Poll {
         /// Chat JID.
@@ -2264,6 +2293,73 @@ async fn run(cli: Cli) -> Result<(), Error> {
             eprintln!(
                 "note: durably queued; an outbox-enabled comparison session (`listen --send-outbox`) transmits it"
             );
+            c.shutdown().await;
+            Ok(())
+        }
+        Cmd::Revoke {
+            chat,
+            id,
+            request_id,
+        } => {
+            let peer = Jid::parse(chat)?;
+            let target = message_reference(&peer, id, true, None)?;
+            let c = open_client(&cli, false).await?;
+            let ticket = c
+                .send_message(SendRequest {
+                    client_request_id: ClientRequestId::new(
+                        request_id.clone().unwrap_or_else(|| format!("revoke-{id}")),
+                    )?,
+                    chat: ChatId::from_jid(&peer)?,
+                    content: MessageContent::Revoke { target },
+                })
+                .await?;
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&ticket)
+                    .map_err(|e| Error::invalid("ticket", e.to_string()))?
+            );
+            eprintln!(
+                "note: revoke durably queued; `listen --send-outbox` transmits it (own direct messages sent by this outbox within three days)"
+            );
+            c.shutdown().await;
+            Ok(())
+        }
+        Cmd::EditMessage {
+            chat,
+            id,
+            text,
+            request_id,
+        } => {
+            use sha2::Digest;
+            let peer = Jid::parse(chat)?;
+            let target = message_reference(&peer, id, true, None)?;
+            let c = open_client(&cli, false).await?;
+            let default_id = format!(
+                "edit-{id}-{}",
+                &hex::encode(sha2::Sha256::digest(text.as_bytes()))[..12]
+            );
+            let ticket = c
+                .send_message(SendRequest {
+                    client_request_id: ClientRequestId::new(
+                        request_id.clone().unwrap_or(default_id),
+                    )?,
+                    chat: ChatId::from_jid(&peer)?,
+                    content: MessageContent::Edit {
+                        target,
+                        replacement: Box::new(MessageContent::Text {
+                            body: text.clone(),
+                            quoted: None,
+                            style: Default::default(),
+                        }),
+                    },
+                })
+                .await?;
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&ticket)
+                    .map_err(|e| Error::invalid("ticket", e.to_string()))?
+            );
+            eprintln!("note: edit durably queued; `listen --send-outbox` transmits it");
             c.shutdown().await;
             Ok(())
         }

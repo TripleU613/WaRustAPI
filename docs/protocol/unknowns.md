@@ -143,7 +143,15 @@ any `ContextInfo` (`BWx`) field write (past `Cn6`); the incoming retry-receipt h
 parsing); a group poll stanza producer (only `PollCreation` descriptors); and
 mute/pin/archive app-state actions (no matches). These need the APK.
 
-## Outgoing revoke and edit (2026-10-13)
+## Outgoing revoke and edit (2026-10-13; sender implemented 2026-11-02)
+
+**Resolved 2026-11-02 (confirmed static, 2.26.37.71 APK on disk):** the APK's
+outgoing message schema `CpG.A0U` states the rule directly:
+`!(_context.flow == 0 && type == 0) || _context.edit_attribute in [7, 8]`
+("If type is REVOKE, edit must be SENDER_REVOKE or ADMIN_REVOKE"), with 8 only
+for a group target not from us, and `edit_attribute != 1` requires a media key,
+so 1 is the edit value. `revoke` sends `edit="7"`, `edit-message` sends
+`edit="1"` (direct, own messages, three days). Earlier text follows.
 
 `MessageContent::Edit` and `MessageContent::Revoke` exist in the model, but the
 outbox has no sender for them (`begin_selected` treats them as unsupported).

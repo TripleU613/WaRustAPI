@@ -14779,6 +14779,169 @@
           "whatsapp_api::registration::RegistrationService::diagnose_legacy_refusal_once"
         ]
       }
+    },
+    "/v1/messages/revoke": {
+      "post": {
+        "tags": [
+          "Messages"
+        ],
+        "summary": "Queue delete-for-everyone of one of our own direct messages",
+        "description": "Offline enqueue; `listen --send-outbox` transmits. Payload protocolMessage{key(fromMe, id), type REVOKE(0)} (2.26.37.71 D9M.AD7); stanza edit=\"7\" (SENDER_REVOKE), required for a REVOKE by the APK outgoing message schema CpG.A0U. Accepted only for a server-accepted direct message sent by this outbox to the same chat within three days (the receivers' sender-revoke window; the APK's sender-side limit is untraced). Group and admin revokes (edit=8) are not supported. The recipient's tctoken is attached when held.",
+        "operationId": "queueRevoke",
+        "x-cli": "whatsapp-cli revoke",
+        "x-transport": [
+          "cli"
+        ],
+        "x-live": false,
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Store"
+          },
+          {
+            "$ref": "#/components/parameters/Account"
+          },
+          {
+            "$ref": "#/components/parameters/KeyEnv"
+          },
+          {
+            "$ref": "#/components/parameters/Profile"
+          },
+          {
+            "$ref": "#/components/parameters/ProfilesDir"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "chat",
+                  "id"
+                ],
+                "properties": {
+                  "chat": {
+                    "type": "string",
+                    "description": "Direct chat JID"
+                  },
+                  "id": {
+                    "type": "string",
+                    "description": "Wire id of our message"
+                  },
+                  "request_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Reaction queued for transmission",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SendTicket"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidInput"
+          }
+        },
+        "x-library": [
+          "whatsapp_api::WhatsAppClient::send_message",
+          "whatsapp_api::transport::group_references::validate",
+          "whatsapp_api::transport::group_references::payload"
+        ]
+      }
+    },
+    "/v1/messages/edit": {
+      "post": {
+        "tags": [
+          "Messages"
+        ],
+        "summary": "Queue an edit of one of our own direct text messages",
+        "description": "Offline enqueue; `listen --send-outbox` transmits. Payload protocolMessage{key, type MESSAGE_EDIT(14), editedMessage(14)=conversation, timestampMs(15)} (2.26.37.71 D9B.A00); stanza edit=\"1\" (CpG.A0U schema; receive parser DEy.A00). Same ownership and three-day rule as revoke. Text only; media caption edits are not supported here.",
+        "operationId": "queueEdit",
+        "x-cli": "whatsapp-cli edit-message",
+        "x-transport": [
+          "cli"
+        ],
+        "x-live": false,
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Store"
+          },
+          {
+            "$ref": "#/components/parameters/Account"
+          },
+          {
+            "$ref": "#/components/parameters/KeyEnv"
+          },
+          {
+            "$ref": "#/components/parameters/Profile"
+          },
+          {
+            "$ref": "#/components/parameters/ProfilesDir"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "chat",
+                  "id",
+                  "text"
+                ],
+                "properties": {
+                  "chat": {
+                    "type": "string",
+                    "description": "Direct chat JID"
+                  },
+                  "id": {
+                    "type": "string",
+                    "description": "Wire id of our message"
+                  },
+                  "request_id": {
+                    "type": "string"
+                  },
+                  "text": {
+                    "type": "string",
+                    "description": "Replacement text"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Reaction queued for transmission",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SendTicket"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidInput"
+          }
+        },
+        "x-library": [
+          "whatsapp_api::WhatsAppClient::send_message",
+          "whatsapp_api::transport::group_references::validate",
+          "whatsapp_api::transport::group_references::payload"
+        ]
+      }
     }
   }
 }

@@ -267,6 +267,15 @@ pub fn begin_selected(
                 MessageContent::KeepInChat { target, .. } => {
                     super::chat_settings::validate_keep(peer, target).is_ok()
                 }
+                MessageContent::Revoke { target } => own_recent_target(store, peer, target)?,
+                MessageContent::Edit {
+                    target,
+                    replacement,
+                } => {
+                    matches!(&**replacement, MessageContent::Text { body, quoted: None, .. }
+                        if !body.is_empty() && body.len() <= 4096)
+                        && own_recent_target(store, peer, target)?
+                }
                 _ => false,
             };
         let reserved = store
@@ -599,6 +608,31 @@ fn quote_for(
 /// Encode a disappearing-timer, advanced-chat-privacy or keep-in-chat E2E
 /// payload for `content`; `None` for any other content kind. `KeepInChat`
 /// follows the same LID/phone-number rule as reactions for its target key.
+/// A revoke or edit names one of our own direct messages in this chat that our
+/// outbox sent within the last three days (the receivers' sender-revoke window,
+/// sender-revoke-window.md; the APK's own sender-side limit is not traced).
+fn own_recent_target(
+    store: &ProtocolStore,
+    peer: &crate::model::jid::Jid,
+    target: &crate::model::message::MessageRef,
+) -> Result<bool> {
+    const WINDOW_MS: i64 = 3 * 24 * 60 * 60 * 1000;
+    if target.key.chat.jid().to_non_ad() != peer.to_non_ad()
+        || target.key.direction != crate::model::message::Direction::Outgoing
+    {
+        return Ok(false);
+    }
+    let Some(original) = store.read(|tx| outbox().by_wire_id(tx, &target.key.id))? else {
+        return Ok(false);
+    };
+    Ok(original.intent.chat.jid().to_non_ad() == peer.to_non_ad()
+        && original
+            .facts
+            .iter()
+            .any(|f| f.kind == DeliveryFactKind::ServerAccepted)
+        && Timestamp::now().as_millis() - original.accepted_at.as_millis() <= WINDOW_MS)
+}
+
 fn chat_setting_payload_for(
     store: &ProtocolStore,
     peer: &crate::model::jid::Jid,
@@ -612,6 +646,25 @@ fn chat_setting_payload_for(
         MessageContent::ChatPrivacy { limited } => Some(
             super::chat_settings::limit_sharing_payload(*limited, Timestamp::now().as_millis()),
         ),
+        MessageContent::Revoke { target } => {
+            let remote = super::inbox::lid_for(store, peer)?.unwrap_or_else(|| peer.clone());
+            Some(super::chat_settings::revoke_payload(&remote, target))
+        }
+        MessageContent::Edit {
+            target,
+            replacement,
+        } => {
+            let MessageContent::Text { body, .. } = &**replacement else {
+                return Err(Error::invalid("outbox", "only text edits are supported"));
+            };
+            let remote = super::inbox::lid_for(store, peer)?.unwrap_or_else(|| peer.clone());
+            Some(super::chat_settings::edit_payload(
+                &remote,
+                target,
+                body,
+                Timestamp::now().as_millis(),
+            )?)
+        }
         MessageContent::KeepInChat { target, keep } => {
             super::chat_settings::validate_keep(peer, target)?;
             let remote = super::inbox::lid_for(store, peer)?.unwrap_or_else(|| peer.clone());
@@ -902,7 +955,9 @@ impl Pending {
             | MessageContent::PollVote { .. }
             | MessageContent::DisappearingTimer { .. }
             | MessageContent::ChatPrivacy { .. }
-            | MessageContent::KeepInChat { .. } => None,
+            | MessageContent::KeepInChat { .. }
+            | MessageContent::Revoke { .. }
+            | MessageContent::Edit { .. } => None,
             _ => return Err(Error::invalid("outbox", "unsupported content")),
         };
         // Poll creation keeps its fresh message secret for decrypting votes.
@@ -1013,6 +1068,14 @@ impl Pending {
             )?
         } else {
             super::messaging::direct_message(peer, &wire_id, prepared.kind, prepared.ciphertext)?
+        };
+        // CpG.A0U: a REVOKE needs edit=7, an edit carries edit=1.
+        let stanza = match &entry.intent.content {
+            MessageContent::Revoke { .. } => {
+                stanza.attr("edit", super::chat_settings::EDIT_SENDER_REVOKE)
+            }
+            MessageContent::Edit { .. } => stanza.attr("edit", super::chat_settings::EDIT_MESSAGE),
+            _ => stanza,
         };
         // The recipient's trusted-contact token, when they issued us one
         // (saved under their PN or LID): messaging::with_tctoken.

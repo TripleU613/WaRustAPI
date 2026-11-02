@@ -677,6 +677,35 @@ Usage: whatsapp-cli react [OPTIONS]...
 | --request-id | REQUEST_ID | no |  |  |  | Caller idempotency key; defaults to `react-<id>-<emoji-hex or remove>` |
 | --dry-run | DRY_RUN | no |  |  | `true`, `false` | Only report which identity the reaction key would use; enqueue nothing |
 
+## whatsapp-cli revoke
+
+Durably enqueue "delete for everyone" of one of our own direct messages (stanza edit=7); `listen --send-outbox` transmits it
+
+```
+Usage: whatsapp-cli revoke [OPTIONS]...
+```
+
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+| --chat | CHAT | yes |  |  |  | Direct chat JID the message was sent to |
+| --id | ID | yes |  |  |  | Wire id of our message (as shown by `status` or `events`) |
+| --request-id | REQUEST_ID | no |  |  |  | Caller idempotency key; defaults to `revoke-<id>` |
+
+## whatsapp-cli edit-message
+
+Durably enqueue an edit of one of our own direct text messages (stanza edit=1); `listen --send-outbox` transmits it
+
+```
+Usage: whatsapp-cli edit-message [OPTIONS]...
+```
+
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+| --chat | CHAT | yes |  |  |  | Direct chat JID the message was sent to |
+| --id | ID | yes |  |  |  | Wire id of our message |
+| --text | TEXT | yes |  |  |  | Replacement text |
+| --request-id | REQUEST_ID | no |  |  |  | Caller idempotency key; defaults to `edit-<id>-<sha256 prefix of text>` |
+
 ## whatsapp-cli poll
 
 Durably enqueue a poll; `listen --send-outbox` transmits it

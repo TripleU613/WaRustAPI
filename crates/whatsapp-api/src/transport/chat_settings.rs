@@ -480,6 +480,71 @@ pub fn limit_sharing_payload(enabled: bool, now_ms: i64) -> Vec<u8> {
     .encode_to_vec()
 }
 
+/// The outgoing stanza `edit` attribute of a sender revoke: `SENDER_REVOKE`.
+/// **Confirmed static, 2.26.37.71:** the outgoing message schema `CpG.A0U`
+/// enforces `!(_context.flow == 0 && type == 0) || _context.edit_attribute in
+/// [7, 8]` ("If type is REVOKE, edit must be SENDER_REVOKE or ADMIN_REVOKE");
+/// 8 is for a group admin revoking someone else's message.
+pub const EDIT_SENDER_REVOKE: &str = "7";
+/// The outgoing stanza `edit` attribute of a message edit. **Confirmed static,
+/// same schema:** `edit_attribute == 1` is the value exempt from the media-key
+/// rule (an edited caption carries no new media), and the receive parser
+/// `DEy.A00` maps 1 to an edit (message-edit.md).
+pub const EDIT_MESSAGE: &str = "1";
+
+fn own_key(remote: &Jid, target: &MessageRef) -> super::reactions::Key {
+    super::reactions::Key {
+        remote_jid: Some(remote.to_string()),
+        from_me: Some(true),
+        id: Some(target.key.id.as_str().to_owned()),
+        participant: None,
+    }
+}
+
+/// `protocolMessage{key, type=REVOKE(0)}` for one of our own messages
+/// (`D9M.AD7`, sender-revoke.md). `remote` follows the reaction key rule.
+pub fn revoke_payload(remote: &Jid, target: &MessageRef) -> Vec<u8> {
+    Envelope {
+        protocol: Some(ProtocolMessage {
+            key: Some(own_key(remote, target)),
+            type_: Some(0),
+            ephemeral_expiration: None,
+            ephemeral_setting_timestamp: None,
+            disappearing_mode: None,
+            limit_sharing: None,
+            after_read_duration: None,
+            acp2_setting: None,
+            timestamp_ms: None,
+        }),
+        keep_in_chat: None,
+    }
+    .encode_to_vec()
+}
+
+/// `protocolMessage{key, type=MESSAGE_EDIT(14), editedMessage(14)=replacement,
+/// timestampMs(15)}` for one of our own text messages (`D9B.A00` writes field
+/// 14 and the sender timestamp to 15; image-caption-edit.md). The replacement
+/// is an ordinary `Message` (here `conversation`).
+pub fn edit_payload(remote: &Jid, target: &MessageRef, body: &str, now_ms: i64) -> Result<Vec<u8>> {
+    let replacement = crate::signal::direct::text_payload(body)?;
+    let mut protocol = ProtocolMessage {
+        key: Some(own_key(remote, target)),
+        type_: Some(14),
+        ephemeral_expiration: None,
+        ephemeral_setting_timestamp: None,
+        disappearing_mode: None,
+        limit_sharing: None,
+        after_read_duration: None,
+        acp2_setting: None,
+        timestamp_ms: Some(now_ms),
+    }
+    .encode_to_vec();
+    prost::encoding::bytes::encode(14, &*replacement, &mut protocol);
+    let mut message = Vec::new();
+    prost::encoding::bytes::encode(12, &protocol, &mut message);
+    Ok(message)
+}
+
 /// Encode a `keepInChatMessage` payload (field 51). `remote` is the identity
 /// to place in `key.remoteJid`, following the same rule as reactions and
 /// polls (the contact's LID when their messages arrive LID-addressed).
@@ -890,6 +955,45 @@ mod tests {
             .encode_to_vec();
             assert!(decode_protocol(&bytes).is_none());
         }
+    }
+
+    /// Our sender payloads parse with the receive decoders written from the
+    /// APK's receive side (`Bua.CF4` for revoke, `D9B.CF4` for edit).
+    #[cfg(all(
+        feature = "experimental-signal-crypto",
+        feature = "experimental-noise",
+        feature = "experimental-transport"
+    ))]
+    #[test]
+    fn revoke_and_edit_payloads_parse_with_the_receive_decoders() {
+        use crate::model::{
+            ids::{ChatId, MessageId},
+            message::{Direction, MessageKey, MessageRef},
+        };
+        let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let target = MessageRef {
+            key: MessageKey {
+                chat: ChatId::from_jid(&peer).unwrap(),
+                sender: None,
+                direction: Direction::Outgoing,
+                id: MessageId::new("3EB0ABCDEF").unwrap(),
+            },
+        };
+        assert_eq!(
+            decode_sender_revoke(&revoke_payload(&peer, &target))
+                .unwrap()
+                .as_str(),
+            "3EB0ABCDEF"
+        );
+        let edit =
+            decode_edit(&edit_payload(&peer, &target, "fixed text", 1_700_000_000_000).unwrap())
+                .unwrap();
+        assert_eq!(edit.target_id.as_str(), "3EB0ABCDEF");
+        assert_eq!(edit.sender_timestamp, 1_700_000_000_000);
+        assert_eq!(
+            super::super::quotes::decode(&edit.replacement).map(|q| q.text),
+            Some("fixed text".to_owned())
+        );
     }
 
     #[test]
