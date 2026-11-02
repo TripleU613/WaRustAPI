@@ -1,3 +1,11 @@
+2026-11-02 — **New signups refused (438-476 block):** after `q`'s ban, one SMS
+`resend-code` for `r` (9825) was answered `no_routes` (cooldown about one hour)
+and one for `s` (9826) `temporarily_unavailable` (cooldown). Both numbers are
+in the 438-476 block whose other registered accounts (`l`, `m`, `p`) are
+banned. No further requests were sent. (A first `r` attempt was refused
+locally, not sent: its frozen signup config no longer matched after
+`mark_read` was edited; the edit was reverted for `r`, `s`, `t`.)
+
 2026-11-02 — **`q` banned (403):** `q`'s 16:10 UTC login was refused
 `<failure reason=403 vt=15>`; its last successful login was about 04:26 UTC.
 Its login presented 2.26.37.70 as always (it registered as 2.26.37.70), so the
