@@ -501,3 +501,12 @@ not set it. Still open: whether MobileConfig overrides that default, and the
 Kyber producer (ID allocation, counts, last resort) for an account where the
 property is true. [kem-prekey-inventory](kem-prekey-inventory.md).
 
+## Error 463 `account_reachout_restricted` (observed 2026-11-01)
+
+On account `q`, a `w:g2` group create IQ returned `error code=463
+text=account_reachout_restricted`, and a direct text to a person `q` had
+already exchanged messages with got a message ACK with `error=463`. Unknown:
+what triggered it (new account, a recipient's Scam Alert report, the group
+create attempt), how long it lasts, and how the APK presents it. Not
+investigated live; the account is left idle.
+

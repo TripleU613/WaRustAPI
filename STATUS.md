@@ -1,3 +1,15 @@
+2026-11-01 — **Observed live (account `q` restricted):** one `listen
+--send-outbox` session queued a group creation with the owner's number and one
+direct text to the owner. The server refused both with error **463**: the group
+create IQ answered `account_reachout_restricted`, and the text's message ACK
+carried `error=463` (outbox fact `Failed`, code 463). Earlier the same day `q`
+had messaged the owner successfully and the owner had replied. This is a
+WhatsApp-side restriction on the new account initiating contact, not a client
+bug. Live sends from `q` are stopped; nothing will be retried, re-identified or
+worked around. It blocks the live checks for retry answers, group sender keys,
+out-of-band group reactions and the trusted-contact token issue until the
+restriction lifts or the owner messages `q` first.
+
 2026-11-01 — **Traced + observed (post-quantum keys):** the APK uploads Kyber
 prekeys and sends `pqsupport` only when A/B property 21198
 (`PQ_KEYS_UPLOAD_CODE`) is true. Every `Can` predicate requires it, and its
