@@ -58,3 +58,12 @@ strings disappeared and 65,321 appeared. The native `libs.so` changed.
 - The Noise certificate trust root (a byte array, not a string) was not
   compared. A changed root would fail login visibly, not silently.
 - No 2.26.43.72 request was sent.
+
+## Login must match the registration build (2026-11-02)
+
+Accounts `m` and `p` registered with the 2.26.43.72 recipe and then logged in
+presenting 2.26.37.70; both were banned within an hour. Login now presents the
+build the account registered with (`login::REGISTERED_APP_VERSION`, written by
+signup). Whether the mismatch caused the bans is **inferred**, not stated by
+the server.
+

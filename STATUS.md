@@ -1,3 +1,13 @@
+2026-11-02 — **Fixed (login version matches registration):** `m` and `p` were
+registered with the 2.26.43.72 User-Agent but every login presented 2.26.37.70
+(hard-coded); both were banned (403) within an hour. A phone never registers
+as one build and logs in as another, so this is the most suspicious thing our
+client did (inferred, WhatsApp gives no reason; the accounts also messaged
+strangers immediately and their numbers had earlier `blocked` history).
+Signup now records the registered build (`registered_app_version`) and login
+presents it, falling back to the config User-Agent, then 2.26.37.70. `q`
+(registered and logging in as 2.26.37.70) is unchanged.
+
 2026-11-02 — **Live (video send) / `p` banned:** `q` sent the owner a 3-second
 320×240 MP4 via `outbox-send` with private JSON `video` (`VideoMessage`,
 2.26.37.71 `BZE` field numbers, Video Keys domain, `/mms/video`,

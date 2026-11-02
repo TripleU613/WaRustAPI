@@ -13,6 +13,47 @@ use crate::{Error, Result, registration::request::LabRegistrationConfig, session
 use prost::Message;
 use zeroize::Zeroizing;
 
+/// Observed-credential name holding the app version an account registered
+/// with (`2.26.43.72`), written by signup on completion.
+pub const REGISTERED_APP_VERSION: &str = "registered_app_version";
+
+/// `X.Y.Z.W` from a `WhatsApp/X.Y.Z.W …` User-Agent or a bare version.
+pub fn parse_app_version(text: &str) -> Option<[u32; 4]> {
+    let version = text.strip_prefix("WhatsApp/").unwrap_or(text);
+    let version = version.split_whitespace().next()?;
+    let parts: Vec<u32> = version
+        .split('.')
+        .map(|p| p.parse().ok())
+        .collect::<Option<_>>()?;
+    parts.try_into().ok()
+}
+
+/// The version login presents: the one the account registered with, else
+/// the config's User-Agent, else 2.26.37.70. Presenting another build than
+/// the registration's was the common factor of two accounts banned within an
+/// hour on 2026-11-02 (registered as 2.26.43.72, logged in as 2.26.37.70);
+/// a phone never does that. Inferred cause, not a server statement.
+fn login_app_version(account: &AccountRecord, config: &LabRegistrationConfig) -> [u32; 4] {
+    account
+        .credentials
+        .iter()
+        .rev()
+        .find(|c| c.name == REGISTERED_APP_VERSION)
+        .and_then(|c| {
+            std::str::from_utf8(&c.value)
+                .ok()
+                .and_then(parse_app_version)
+        })
+        .or_else(|| {
+            config
+                .client
+                .user_agent
+                .as_deref()
+                .and_then(|ua| parse_app_version(ua))
+        })
+        .unwrap_or([2, 26, 37, 70])
+}
+
 /// Build without inventing Android hardware, attestation or companion pairing.
 /// This is an explicitly minimal experiment, not a complete APK login payload.
 pub fn primary_login(
@@ -48,6 +89,7 @@ pub fn primary_login(
             "non-phone login needs a verified product/JID mapping",
         ));
     }
+    let [primary, secondary, tertiary, quaternary] = login_app_version(account, config);
     let payload = ClientPayload {
         username: Some(username),
         passive: Some(false),
@@ -56,10 +98,10 @@ pub fn primary_login(
         user_agent: Some(UserAgent {
             platform: Some(Platform::Android as i32),
             app_version: Some(AppVersion {
-                primary: Some(2),
-                secondary: Some(26),
-                tertiary: Some(37),
-                quaternary: Some(70),
+                primary: Some(primary),
+                secondary: Some(secondary),
+                tertiary: Some(tertiary),
+                quaternary: Some(quaternary),
                 ..Default::default()
             }),
             locale_language_iso6391: Some(config.language.clone()),
@@ -107,6 +149,23 @@ mod tests {
         assert!(ua.os_version.is_none());
         assert_eq!(ua.platform, Some(0));
         assert_eq!(ua.app_version.unwrap().quaternary, Some(70));
+        // A recorded registration build wins over the config's User-Agent.
+        account.credentials.push(ObservedCredential {
+            name: REGISTERED_APP_VERSION.into(),
+            value: Zeroizing::new(b"2.26.43.72".to_vec()),
+            observed_at: Timestamp(0),
+            source_step: None,
+        });
+        let payload =
+            ClientPayload::decode(primary_login(&account, &cfg).unwrap().as_slice()).unwrap();
+        let version = payload.user_agent.unwrap().app_version.unwrap();
+        assert_eq!((version.tertiary, version.quaternary), (Some(43), Some(72)));
+        account.credentials.pop();
+        assert_eq!(
+            parse_app_version("WhatsApp/2.26.43.72 Android/unknown"),
+            Some([2, 26, 43, 72])
+        );
+        assert_eq!(parse_app_version("WhatsApp/2.26"), None);
         account.credentials[0].value = Zeroizing::new(b"not-numeric".to_vec());
         assert!(primary_login(&account, &cfg).is_err());
         account.credentials.clear();

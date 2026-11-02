@@ -368,6 +368,7 @@ pub(super) async fn run(
     // moved into the registration service below.
     let profile_store = Arc::clone(&store);
     let account_profile = config.profile.clone();
+    let registered_agent = config.client.user_agent.clone();
     if matches!(action, Action::Begin { .. }) {
         begin_store_guard(&store, &config.phone, create)?;
     }
@@ -609,8 +610,40 @@ pub(super) async fn run(
     };
     super::print_step(&step, cli.json);
     if step == whatsapp_api::registration::RegistrationStep::Completed {
+        record_registered_version(
+            &profile_store,
+            registered_agent.as_deref().map(String::as_str),
+        )?;
         queue_profile(&profile_store, &account_profile)?;
     }
+    Ok(())
+}
+
+/// Remember the build this account registered as, so login presents the same
+/// one (`login::REGISTERED_APP_VERSION`).
+fn record_registered_version(store: &ProtocolStore, agent: Option<&str>) -> Result<(), Error> {
+    use whatsapp_api::transport::login;
+    let Some(version) = agent.and_then(login::parse_app_version) else {
+        return Ok(());
+    };
+    let text = version.map(|v| v.to_string()).join(".");
+    store.write(|tx| {
+        let mut account =
+            whatsapp_api::session::AccountRecord::load_in_write(tx)?.ok_or(Error::NotRegistered)?;
+        account
+            .credentials
+            .retain(|c| c.name != login::REGISTERED_APP_VERSION);
+        account
+            .credentials
+            .push(whatsapp_api::session::ObservedCredential {
+                name: login::REGISTERED_APP_VERSION.into(),
+                value: Zeroizing::new(text.clone().into_bytes()),
+                observed_at: whatsapp_api::model::time::Timestamp::now(),
+                source_step: Some("register".into()),
+            });
+        account.save(tx)
+    })?;
+    println!("profile: registered as WhatsApp {text}; login will present the same version");
     Ok(())
 }
 
