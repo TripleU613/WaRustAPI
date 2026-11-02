@@ -1,3 +1,16 @@
+2026-11-02 — **Observed live (two accounts, key-first group reaction; `m` banned):**
+the 2.26.43.72 recipe registered `m` (8868) and `p` (8871) after
+`retry-after-block`; four 845 numbers were still refused `blocked` at the code
+request although `/v2/exist` answered `incorrect` (exist does not reveal the
+block), and 9825–9827 got codes via `accounts new` + `begin`. Item 9's
+key-first path then worked between our own accounts: `m` created a group with
+`p`, `p` sent a group text that `m` decrypted, and `m`'s first group message,
+a reaction, went out as a direct sender-key message plus a reaction without
+`<participants>`; `p` decrypted both. Minutes later `m`'s next login was
+refused `<failure reason=403>` (banned): registration, one login, one group
+create, one reaction and a queued direct text in about five minutes. Live use
+of brand-new accounts is paused; the retry-receipt live test was not reached.
+
 2026-11-02 — **Observed live (2.26.43.72 token accepted):** lab number `m`
 (refused `blocked` in September) answered `/v2/exist` with `incorrect` and
 SMS/voice offered, so the block was gone. The new `lab-signup retry-after-block`

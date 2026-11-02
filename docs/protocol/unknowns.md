@@ -559,3 +559,11 @@ and `FetchReachoutTimelockQuery` classes; its UI enforcement is not traced.
 checkpoint `reachout-timelock`) and logs it, and `group create` refuses
 locally with the end time while it is active.
 
+### `/v2/exist` does not reveal a code-request block (2026-11-02)
+
+Four lab numbers refused `blocked` at `/v2/code` in September answered a fresh
+`/v2/exist` with `fail`/`incorrect`, SMS and voice offered, no wait, and were
+refused `blocked` again by the next code request (`retry-after-block`). Three
+other numbers with the same history answered `sent`. So `exist` is not a block
+indicator; only the code request shows it.
+
