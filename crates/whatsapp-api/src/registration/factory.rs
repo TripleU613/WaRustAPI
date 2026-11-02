@@ -900,6 +900,96 @@ mod tests {
         assert!(again.contains("one-shot"), "{again}");
     }
 
+    /// `retry_after_block_once`: only a saved code-request `blocked` refusal,
+    /// one send, identity kept, corrected token and User-Agent committed.
+    #[tokio::test]
+    #[cfg(feature = "experimental-registration-https")]
+    async fn a_blocked_refusal_is_retried_once_with_corrections_and_same_identity() {
+        use crate::registration::BlockedReason;
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(dir.path());
+        let original = StoredComparisonRequestFactory::new(store.clone(), config()).unwrap();
+        let mut a = attempt(&store);
+        store.write(|tx| original.prepare(tx, &a)).unwrap();
+        let identity = store
+            .read(|tx| tx.get_json::<Material>(Table::Account, MATERIAL_KEY, RECORD_VERSION))
+            .unwrap()
+            .unwrap()
+            .identity
+            .public;
+        a.transition(
+            RegistrationState::Blocked {
+                reason: BlockedReason::ServerRefused {
+                    code: None,
+                    http_status: Some(200),
+                    reason: Some(RegistrationResponseReason::Blocked),
+                    not_before: None,
+                },
+            },
+            Timestamp::now(),
+        )
+        .unwrap();
+        store
+            .write(|tx| RegistrationService::save_current(tx, &a))
+            .unwrap();
+        let mut profile = crate::ProtocolProfile::android_reference().unwrap();
+        profile.id = LAB_PROFILE_ID.into();
+        let mut corrected = config();
+        corrected.token = Zeroizing::new("newer-build-token".into());
+        corrected.client.user_agent = Some(Zeroizing::new(
+            "WhatsApp/2.26.43.72 Android/unknown Device/unknown-unknown".into(),
+        ));
+        let service = RegistrationService::new(
+            store.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(
+                Arc::new(
+                    StoredComparisonRequestFactory::new_for_legacy_request_correction(
+                        store.clone(),
+                        corrected,
+                    )
+                    .unwrap(),
+                ),
+                Arc::new(BadTokenTransport),
+            )),
+        );
+        // The legacy diagnostic does not accept a known `blocked` refusal.
+        assert!(
+            service
+                .diagnose_legacy_refusal_once(config().phone)
+                .await
+                .is_err()
+        );
+        service
+            .retry_after_block_once(config().phone)
+            .await
+            .unwrap();
+        let saved = store
+            .read(|tx| tx.get_json::<Material>(Table::Account, MATERIAL_KEY, RECORD_VERSION))
+            .unwrap()
+            .unwrap();
+        assert_eq!(saved.identity.public, identity, "identity preserved");
+        assert_eq!(saved.config.token.as_str(), "newer-build-token");
+        assert!(
+            saved
+                .config
+                .client
+                .user_agent
+                .as_deref()
+                .is_some_and(|ua| ua.contains("2.26.43.72"))
+        );
+        // The server's answer (bad_token here) is now the saved state; the
+        // one-shot is spent either way.
+        let again = service
+            .retry_after_block_once(config().phone)
+            .await
+            .unwrap_err();
+        assert!(
+            again.to_string().contains("not eligible") || again.to_string().contains("one-shot"),
+            "{again}"
+        );
+    }
+
     /// A code-request refusal that carried an SMS/voice wait but no
     /// `retry_after` keeps it; the one-shot actions, each of which sends a
     /// new code request, refuse until it has passed and send nothing.

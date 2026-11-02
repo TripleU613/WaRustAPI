@@ -14720,6 +14720,65 @@
           "whatsapp_api::transport::profile_picture::get_request"
         ]
       }
+    },
+    "/v1/signup/retry-after-block": {
+      "post": {
+        "tags": [
+          "Registration Lab"
+        ],
+        "summary": "Retry once a code request refused as blocked, after exist no longer reports the block",
+        "description": "One explicit live send (requires --allow-live-request). Accepts only a saved code-request refusal with HTTP 200 / reason blocked. Run `lab-signup exist` first: on 2026-11-01 four numbers refused `blocked` in September answered exist with `incorrect`, SMS/voice offered and no wait. The private JSON may correct token, User-Agent, body mode and fields (the legacy-request correction factory); identity and keys are preserved; client_metrics.attempts must equal saved preparations plus one. A durable latch allows one send; a request that provably never left restores the refusal and material. Not a way around a current block or wait.",
+        "operationId": "retryAfterBlockedRefusal",
+        "x-cli": "whatsapp-cli lab-signup retry-after-block",
+        "x-transport": [
+          "cli"
+        ],
+        "x-live": false,
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Profile"
+          },
+          {
+            "$ref": "#/components/parameters/Store"
+          },
+          {
+            "$ref": "#/components/parameters/Account"
+          },
+          {
+            "$ref": "#/components/parameters/KeyEnv"
+          },
+          {
+            "$ref": "#/components/parameters/ProfilesDir"
+          },
+          {
+            "$ref": "#/components/parameters/Config"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request sent and processed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationReply"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidInput"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "423": {
+            "$ref": "#/components/responses/Blocked"
+          }
+        },
+        "x-library": [
+          "whatsapp_api::registration::RegistrationService::diagnose_legacy_refusal_once"
+        ]
+      }
     }
   }
 }

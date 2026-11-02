@@ -2078,6 +2078,22 @@ impl RegistrationService {
             .await
     }
 
+    /// One explicit retry of a code request the server refused as `blocked`,
+    /// after a fresh read-only `/v2/exist` with the same identity no longer
+    /// reports a block (observed 2026-11-01: four numbers refused `blocked`
+    /// in September answered `incorrect` with SMS/voice offered and no wait).
+    /// The caller's factory may correct token, User-Agent, body mode and
+    /// fields; identity and keys are preserved. A durable latch allows one.
+    #[cfg(feature = "experimental-registration-https")]
+    pub async fn retry_after_block_once(&self, phone: PhoneNumber) -> Result<RegistrationStep> {
+        self.retry_refusal_with_latch(
+            phone,
+            Some(wire::RegistrationResponseReason::Blocked),
+            b"blocked-refusal-retry-used",
+        )
+        .await
+    }
+
     /// One retry of our historical missing-recommendation guard, not a server
     /// refusal. Rechecks preflight before any code request; preserves identity.
     #[cfg(feature = "experimental-registration-https")]

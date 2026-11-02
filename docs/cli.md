@@ -1093,6 +1093,14 @@ Migrate an opaque legacy refusal using JSON corrections; one send only. Preserve
 Usage: whatsapp-cli lab-signup retry-corrected-request [OPTIONS]...
 ```
 
+## whatsapp-cli lab-signup retry-after-block
+
+One retry of a code request refused as `blocked`, once a fresh `exist` probe no longer reports the block. JSON may correct token, User-Agent, body mode and fields; identity is preserved; one send only
+
+```
+Usage: whatsapp-cli lab-signup retry-after-block [OPTIONS]...
+```
+
 ## whatsapp-cli lab-signup resume-preflight
 
 Recheck a saved preflight stopped by the old missing-recommendation guard

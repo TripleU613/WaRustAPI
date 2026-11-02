@@ -34,6 +34,10 @@ pub(super) enum Action {
     /// Migrate an opaque legacy refusal using JSON corrections; one send only.
     /// Preserves identity; shares the legacy diagnostic's durable reservation.
     RetryCorrectedRequest,
+    /// One retry of a code request refused as `blocked`, once a fresh
+    /// `exist` probe no longer reports the block. JSON may correct token,
+    /// User-Agent, body mode and fields; identity is preserved; one send only.
+    RetryAfterBlock,
     /// Recheck a saved preflight stopped by the old missing-recommendation guard.
     ResumePreflight,
     /// Inspect consent selectors once using saved identity; no OTP or SMS.
@@ -302,7 +306,10 @@ pub(super) async fn run(
         ));
     }
     let configured_method = config.method;
-    let migration_metrics = if matches!(action, Action::RetryCorrectedRequest) {
+    let migration_metrics = if matches!(
+        action,
+        Action::RetryCorrectedRequest | Action::RetryAfterBlock
+    ) {
         config.fields.code_bytes.get("client_metrics").cloned()
     } else {
         None
@@ -366,7 +373,10 @@ pub(super) async fn run(
     }
     let factory = Arc::new(if matches!(action, Action::RetryCorrectedToken) {
         StoredComparisonRequestFactory::new_for_token_correction(store.clone(), config)?
-    } else if matches!(action, Action::RetryCorrectedRequest) {
+    } else if matches!(
+        action,
+        Action::RetryCorrectedRequest | Action::RetryAfterBlock
+    ) {
         StoredComparisonRequestFactory::new_for_legacy_request_correction(store.clone(), config)?
     } else {
         StoredComparisonRequestFactory::new(store.clone(), config)?
@@ -471,6 +481,7 @@ pub(super) async fn run(
         Action::DiagnoseLegacyRefusal => service.diagnose_legacy_refusal_once(phone).await?,
         Action::RetryCorrectedToken => service.retry_corrected_token_once(phone).await?,
         Action::RetryCorrectedRequest => service.diagnose_legacy_refusal_once(phone).await?,
+        Action::RetryAfterBlock => service.retry_after_block_once(phone).await?,
         Action::ResumePreflight => service.resume_preflight_once(phone).await?,
         Action::InspectConsent => {
             let attempt = service
@@ -888,6 +899,7 @@ mod tests {
         for action in [
             Action::RetryCorrectedToken,
             Action::RetryCorrectedRequest,
+            Action::RetryAfterBlock,
             Action::ResumePreflight,
             Action::InspectConsent,
             Action::SubmitConsent {
