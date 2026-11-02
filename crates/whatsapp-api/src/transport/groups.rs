@@ -181,7 +181,28 @@ pub fn queue_create(store: &ProtocolStore, subject: &str, members: &[Jid]) -> Re
     if subject.trim().is_empty() || subject.chars().count() > 100 {
         return Err(invalid("subject must be 1..=100 characters"));
     }
-    let members = participants(members)?;
+    let mut members = participants(members)?;
+    // 2.26.37.71 AWf.A00 0112..0166: a participant whose trusted-contact
+    // token we hold gets `<privacy>token</privacy>`; without it the server
+    // refused our create with 463 `account_reachout_restricted` (observed).
+    for member in &mut members {
+        let jid = member
+            .get_attr("jid")
+            .and_then(|v| v.as_jid().cloned())
+            .ok_or_else(|| invalid("participant jid"))?;
+        let token = match super::presence::saved_tctoken(store, &jid)? {
+            Some(token) => Some(token),
+            None => match super::inbox::lid_for(store, &jid)? {
+                Some(lid) => super::presence::saved_tctoken(store, &lid)?,
+                None => None,
+            },
+        };
+        if let Some(token) = token {
+            *member = member
+                .clone()
+                .children(vec![Node::new("privacy").bytes(token)]);
+        }
+    }
     let key = super::messaging::new_message_id()?;
     let subject = subject.to_owned();
     queue(store, "group-create", "create group", move |id| {
@@ -1515,6 +1536,45 @@ pub fn sender_key_stanza(
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn create_carries_held_trusted_contact_tokens_as_privacy() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("c.redb"),
+            account_id: AccountId::new("t").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([4; 32]))),
+            create: true,
+        })
+        .unwrap();
+        let (a, b) = ("15555550100@s.whatsapp.net", "15555550101@s.whatsapp.net");
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    format!("incoming-trusted-contact:{a}").as_bytes(),
+                    1,
+                    &serde_json::json!({"token": [7, 7, 7]}),
+                )
+            })
+            .unwrap();
+        let id = queue_create(
+            &store,
+            "s",
+            &[Jid::parse(a).unwrap(), Jid::parse(b).unwrap()],
+        )
+        .unwrap();
+        let request = super::super::actions::request(&store, &id)
+            .unwrap()
+            .unwrap();
+        let members = request.child("create").unwrap().child_nodes();
+        let privacy = members[0].child("privacy").unwrap();
+        assert_eq!(
+            privacy.content,
+            crate::binary::NodeContent::Bytes(vec![7, 7, 7].into())
+        );
+        assert!(members[1].child("privacy").is_none());
+    }
+
     #[test]
     fn change_notifications_update_only_a_saved_snapshot() {
         let dir = tempfile::tempdir().unwrap();

@@ -1,3 +1,11 @@
+2026-11-01 — **Group create still restricted:** group creation now adds each
+participant's held trusted-contact token as `<participant><privacy>` (2.26.37.71
+`AWf.A00 0112..0166`). One create from `q` with the owner's token was still
+refused 463 `account_reachout_restricted`, while 1:1 messages to the owner now
+work. So group creation by this new account has a separate lock; the owner
+creating the group and adding `q` is the remaining path for the group checks.
+The owner's reply in that window decrypted, and their phone sent read receipts.
+
 2026-11-01 — **Fixed + observed live (463):** direct messages now carry the
 recipient's trusted-contact token as a `<message>` child when we hold one. The
 first such text from `q` to the owner was server-accepted and the owner's
