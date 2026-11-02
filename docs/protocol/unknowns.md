@@ -532,3 +532,14 @@ with a `pkmsg`, or own-device fan-out entries). The send-path change was
 reverted; no further live attempts. Next step: trace what `Cp3.A08` adds to a
 1:1 participants stanza, offline, before one more send.
 
+**Fixed 2026-11-01 (observed live):** 479 is `SmaxInvalid`, the server's
+stanza-schema validation (Baileys `SERVER_ERROR_CODES`, reference; the 479 ACK
+carried only `class`, `id`, `t`, `error`; the APK's `17J.BFC` error handler
+special-cases only 500). The `<participants><to>` wrapping of a top-level-enc
+direct message was the invalid part. With the original stanza plus
+`<tctoken>` (the recipient's issued token) as a direct `<message>` child,
+one direct text from `q` was server-accepted and the owner's handset returned
+a delivery receipt; the trusted-contact token issue IQ that follows the ACK
+(`token_issue`) was then answered OK. `messaging::with_tctoken` is applied
+by the outbox whenever a token from the recipient (PN or LID) is held.
+

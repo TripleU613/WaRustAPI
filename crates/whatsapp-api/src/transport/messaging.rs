@@ -887,6 +887,25 @@ pub fn direct_message(
     direct_typed(recipient, id, kind, ciphertext, "text")
 }
 
+/// Add the recipient's trusted-contact token to a direct message.
+///
+/// **Observed 2026-11-01:** without it the server refused our direct texts to
+/// a person who had issued us a token with error 463, which public clients
+/// name "1:1 message missing privacy token" (Baileys `SERVER_ERROR_CODES`,
+/// reference only). Wrapping the `enc` in `<participants><to>` beside the
+/// token, as 2.26.37.71 `Cp3.A00` does for fan-out entries, was refused 479
+/// (`SmaxInvalid`, schema validation) for this top-level-`enc` direct form,
+/// so the token is a `<message>` child here, the placement public clients
+/// use for 1:1 messages. APK: `Cp3.A01` also gates on property 20605.
+pub fn with_tctoken(stanza: Node, token: &[u8]) -> Result<Node, TransportError> {
+    if !(1..=120).contains(&token.len()) {
+        return Err(error("a tctoken is 1 to 120 bytes (LX/0hp->A04)"));
+    }
+    let mut children = stanza.child_nodes().to_vec();
+    children.push(Node::new("tctoken").bytes(token.to_vec()));
+    Ok(stanza.children(children))
+}
+
 /// Direct envelope with an explicit stanza `type`. `text` is the ordinary
 /// message; `reaction` is the comparison kind for reaction payloads
 /// (`LX/0zO.A01` kind table, observed live on incoming reactions).
@@ -1029,6 +1048,23 @@ mod retry_send_tests {
     /// The shape is mirrored from the receipts the operator's handset sends us,
     /// and the registration id is the field that lets the sender decide between
     /// reusing their session and fetching a fresh bundle.
+    #[test]
+    fn a_tctoken_is_a_message_child_after_the_enc() {
+        let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let node = with_tctoken(
+            direct_message(&peer, "M1", "msg", vec![1]).unwrap(),
+            &[9; 8],
+        )
+        .unwrap();
+        let names: Vec<_> = node
+            .child_nodes()
+            .iter()
+            .map(|c| c.description.as_str())
+            .collect();
+        assert_eq!(names, ["enc", "tctoken"]);
+        assert!(with_tctoken(node, &[]).is_err());
+    }
+
     #[test]
     fn a_retry_receipt_mirrors_the_observed_shape() {
         let chat = Jid::parse("120363000000000001@g.us").unwrap();

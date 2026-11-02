@@ -1014,6 +1014,19 @@ impl Pending {
         } else {
             super::messaging::direct_message(peer, &wire_id, prepared.kind, prepared.ciphertext)?
         };
+        // The recipient's trusted-contact token, when they issued us one
+        // (saved under their PN or LID): messaging::with_tctoken.
+        let token = match super::presence::saved_tctoken(store, peer)? {
+            Some(token) => Some(token),
+            None => match super::inbox::lid_for(store, peer)? {
+                Some(lid) => super::presence::saved_tctoken(store, &lid)?,
+                None => None,
+            },
+        };
+        let stanza = match token {
+            Some(token) => super::messaging::with_tctoken(stanza, &token)?,
+            None => stanza,
+        };
         let wire = Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(&stanza)?;
         // Retain the authenticated directory reply as private evidence even
         // after successful reservation; it never authorizes replay of a send.

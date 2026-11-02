@@ -1,3 +1,12 @@
+2026-11-01 — **Fixed + observed live (463):** direct messages now carry the
+recipient's trusted-contact token as a `<message>` child when we hold one. The
+first such text from `q` to the owner was server-accepted and the owner's
+handset sent a delivery receipt; the 463 refusals were the missing token
+(Baileys: "1:1 message missing privacy token"), and the intermediate 479 was
+schema validation (`SmaxInvalid`) of a participants wrapping we tried first.
+The trusted-contact token issue after the ACK (item 3) went out and was
+answered OK.
+
 2026-11-01 — **Observed live (463 → 479):** at the owner's request one more
 plain direct text from `q` got 463 again. Our direct sends carry no
 `<tctoken>`; 2.26.37.71 `Cp3.A00/A01` place the recipient's token inside its
