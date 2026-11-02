@@ -1395,6 +1395,34 @@ fn payload(store: &ProtocolStore, entry: &OutboxEntry, own: Option<&Jid>) -> Res
                 Some(guard),
             ))
         }
+        // Our own group message: key remoteJid = the group, fromMe, no
+        // participant (the receive decoder refuses one); stanza edit=7 / edit=1
+        // is set where the stanza is built (CpG.A0U).
+        MessageContent::Revoke { target } | MessageContent::Edit { target, .. } => {
+            let chat = entry.intent.chat.jid();
+            if !super::outgoing::own_recent_target(store, chat, target)? {
+                return Err(invalid(
+                    "edit/revoke targets our own group message sent by this outbox within three days",
+                ));
+            }
+            let body = match &entry.intent.content {
+                MessageContent::Edit { replacement, .. } => match &**replacement {
+                    MessageContent::Text {
+                        body, quoted: None, ..
+                    } if !body.is_empty() && body.len() <= 4096 => {
+                        super::chat_settings::edit_payload(
+                            chat,
+                            target,
+                            body,
+                            Timestamp::now().as_millis(),
+                        )?
+                    }
+                    _ => return Err(invalid("only text edits are supported")),
+                },
+                _ => super::chat_settings::revoke_payload(chat, target),
+            };
+            Ok((Zeroizing::new(body), groups::StanzaContent::Text, None))
+        }
         _ => Err(invalid(
             "group content is not implemented by the normal adapter",
         )),
@@ -1873,6 +1901,16 @@ impl Pending {
                     if out_of_band { &[] } else { prepared.targets() },
                     prepared.ciphertext(),
                 )?;
+                // CpG.A0U: a REVOKE needs edit=7, an edit carries edit=1.
+                let node = match &self.entry.intent.content {
+                    MessageContent::Revoke { .. } => {
+                        node.attr("edit", super::chat_settings::EDIT_SENDER_REVOKE)
+                    }
+                    MessageContent::Edit { .. } => {
+                        node.attr("edit", super::chat_settings::EDIT_MESSAGE)
+                    }
+                    _ => node,
+                };
                 let distributions = if out_of_band {
                     prepared
                         .targets()

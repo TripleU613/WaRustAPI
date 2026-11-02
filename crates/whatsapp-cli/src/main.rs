@@ -440,10 +440,10 @@ enum Cmd {
         #[arg(long)]
         dry_run: bool,
     },
-    /// Durably enqueue "delete for everyone" of one of our own direct messages
-    /// (stanza edit=7); `listen --send-outbox` transmits it.
+    /// Durably enqueue "delete for everyone" of one of our own direct or group
+    /// messages (stanza edit=7); `listen --send-outbox` transmits it.
     Revoke {
-        /// Direct chat JID the message was sent to.
+        /// Chat JID the message was sent to (person or group).
         #[arg(long)]
         chat: String,
         /// Wire id of our message (as shown by `status` or `events`).
@@ -453,10 +453,10 @@ enum Cmd {
         #[arg(long)]
         request_id: Option<String>,
     },
-    /// Durably enqueue an edit of one of our own direct text messages
+    /// Durably enqueue an edit of one of our own direct or group text messages
     /// (stanza edit=1); `listen --send-outbox` transmits it.
     EditMessage {
-        /// Direct chat JID the message was sent to.
+        /// Chat JID the message was sent to (person or group).
         #[arg(long)]
         chat: String,
         /// Wire id of our message.

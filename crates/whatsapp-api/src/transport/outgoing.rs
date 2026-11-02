@@ -611,7 +611,7 @@ fn quote_for(
 /// A revoke or edit names one of our own direct messages in this chat that our
 /// outbox sent within the last three days (the receivers' sender-revoke window,
 /// sender-revoke-window.md; the APK's own sender-side limit is not traced).
-fn own_recent_target(
+pub(super) fn own_recent_target(
     store: &ProtocolStore,
     peer: &crate::model::jid::Jid,
     target: &crate::model::message::MessageRef,
