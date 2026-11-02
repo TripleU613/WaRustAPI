@@ -166,10 +166,12 @@ request—not adding Rust code, another command or a number-specific script.**
   re-anchor by string constants and attribute each claim to the build it was
   read from.
 - Pinned reference version: **2.26.36.75**. Comparison versions: **2.26.37.70**,
-  **2.26.37.71** and (unanalysed) **2.26.43.72**. Keep their evidence separate
-  and identify which build supports each claim. Registration tokens still come
-  from the 2.26.37.70 material (see the new-numbers lesson below); a newer APK
-  does not change the working recipe until its token inputs are verified.
+  **2.26.37.71** and **2.26.43.72** (compared, not re-traced). Keep their
+  evidence separate and identify which build supports each claim. The working
+  recipe uses 2.26.37.70 material (see the new-numbers lesson below). A
+  2.26.43.72 token derived from that APK, sent with the 2.26.43.72 User-Agent,
+  was answered `sent` on 2026-11-02; a token must always match its User-Agent's
+  build.
 - No test Android device is available. The owner explicitly wants static APK
   analysis, not traffic capture. Do not keep proposing a device or capture as
   the required next step.
