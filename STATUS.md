@@ -1,3 +1,11 @@
+2026-11-01 — **Observed live (463 → 479):** at the owner's request one more
+plain direct text from `q` got 463 again. Our direct sends carry no
+`<tctoken>`; 2.26.37.71 `Cp3.A00/A01` place the recipient's token inside its
+`<to>` in `<participants>` (gated by property 20605, default false; its
+MobileConfig value is unknown). One send in that form was refused with
+**479** rather than 463, so the shape is incomplete. The change was reverted
+and live attempts stopped. [unknowns](docs/protocol/unknowns.md#463-follow-up-the-trusted-contact-token-2026-11-01).
+
 2026-11-01 — **Implemented/offline (Kyber prekey upload, gated):** the upload
 IQ now carries `pq_list` (up to 10 one-time ML-KEM-1024 keys) and
 `pq_last_resort_key` whenever the server's A/B property 21198 is on, following

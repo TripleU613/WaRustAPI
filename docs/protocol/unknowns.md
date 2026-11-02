@@ -510,3 +510,25 @@ what triggered it (new account, a recipient's Scam Alert report, the group
 create attempt), how long it lasts, and how the APK presents it. Not
 investigated live; the account is left idle.
 
+### 463 follow-up: the trusted-contact token (2026-11-01)
+
+**Confirmed static, 2.26.37.71:** `Cp3.A00` builds each recipient `<to
+jid=device>` from its `<enc>` children plus the `<tctoken>` returned by
+`Cp3.A01`: the token the recipient issued to us, once per user, only when
+Boolean property 20605 (`0x507d`, default false in `07t.A0Y 0000..0016`) is
+true and fewer than int property 20606 (`0x507e`) users already carry one.
+`q`'s A/B reply (7,235 rows) sets neither, so the effective value would come
+from MobileConfig (unported). Public clients (whatsmeow #1074, Baileys #2441,
+WAHA #2050) report error 463 `NackCallerReachoutTimelocked` when the token is
+missing; reference only.
+
+**Observed:** `q` holds two incoming trusted-contact tokens. A second plain
+direct text to the owner again got 463. One send with the owner's token in
+the APK form (`<participants><to jid=AD peer><enc/><tctoken/></to>`, all
+other children unchanged) was refused with **479** instead. So the token
+changes the server's answer, but this shape is incomplete for a 1:1 send
+(candidates, untested: the message-level `device-identity` that the APK sends
+with a `pkmsg`, or own-device fan-out entries). The send-path change was
+reverted; no further live attempts. Next step: trace what `Cp3.A08` adds to a
+1:1 participants stanza, offline, before one more send.
+
