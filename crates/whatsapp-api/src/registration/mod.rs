@@ -2078,10 +2078,10 @@ impl RegistrationService {
             .await
     }
 
-    /// One explicit retry of a code request the server refused as `blocked`,
-    /// after a fresh read-only `/v2/exist` with the same identity no longer
-    /// reports a block (observed 2026-11-01: four numbers refused `blocked`
-    /// in September answered `incorrect` with SMS/voice offered and no wait).
+    /// One explicit retry of a code request the server refused as `blocked`.
+    /// Observed 2026-11-02: of seven numbers refused `blocked` in September,
+    /// three were answered `sent` and four `blocked` again; `/v2/exist`
+    /// answered `incorrect` for all seven, so it does not reveal the block.
     /// The caller's factory may correct token, User-Agent, body mode and
     /// fields; identity and keys are preserved. A durable latch allows one.
     #[cfg(feature = "experimental-registration-https")]

@@ -14727,13 +14727,13 @@
           "Registration Lab"
         ],
         "summary": "Retry once a code request refused as blocked, after exist no longer reports the block",
-        "description": "One explicit live send (requires --allow-live-request). Accepts only a saved code-request refusal with HTTP 200 / reason blocked. Run `lab-signup exist` first: on 2026-11-01 four numbers refused `blocked` in September answered exist with `incorrect`, SMS/voice offered and no wait. The private JSON may correct token, User-Agent, body mode and fields (the legacy-request correction factory); identity and keys are preserved; client_metrics.attempts must equal saved preparations plus one. A durable latch allows one send; a request that provably never left restores the refusal and material. Not a way around a current block or wait.",
+        "description": "One explicit live send (requires --allow-live-request). Accepts only a saved code-request refusal with HTTP 200 / reason blocked. Observed 2026-11-02: of seven numbers refused blocked in September, three were answered sent (one with the 2.26.43.72 recipe, then registered) and four blocked again; /v2/exist answered incorrect for all seven, so exist does not reveal a code-request block. The private JSON may correct token, User-Agent, body mode and fields (the legacy-request correction factory); identity and keys are preserved; client_metrics.attempts must equal saved preparations plus one. A durable latch allows one send; a request that provably never left restores the refusal and material.",
         "operationId": "retryAfterBlockedRefusal",
         "x-cli": "whatsapp-cli lab-signup retry-after-block",
         "x-transport": [
           "cli"
         ],
-        "x-live": false,
+        "x-live": true,
         "parameters": [
           {
             "$ref": "#/components/parameters/Profile"
