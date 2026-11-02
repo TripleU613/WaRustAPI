@@ -1,3 +1,10 @@
+2026-11-02 — **Observed live (retry test blocked):** for the item 6 live test,
+`p` (registered minutes earlier) sent `q` a first direct text: server-accepted
+(`ServerAccepted`), then the server ended `p`'s stream with `stream:error
+code=503`. `q` received nothing from `p` in two later `listen` windows, so no
+undecryptable message existed to retry. Live retry answers remain unverified;
+no further sends from `p` were made.
+
 2026-11-02 — **Observed live (two accounts, key-first group reaction; `m` banned):**
 the 2.26.43.72 recipe registered `m` (8868) and `p` (8871) after
 `retry-after-block`; four 845 numbers were still refused `blocked` at the code
