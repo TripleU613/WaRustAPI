@@ -252,3 +252,15 @@ children, and our decoder's child bound (`Limits::max_children`, a local DoS
 guard, not a WhatsApp rule) was 4,096. The bound is now 16,384, the same bound
 the A/B-property parser already applied. The captured reply was settled to its
 waiting action offline with `whatsapp-cli undecodable --settle-replies`.
+
+**Producer, partly traced (2026-11-01):** `13c.A03` (`MyPreKeysManager.sendSetPreKey`)
+checks `Can.A02()` at `00b6..00c2`. Only when it is true does it load the unsent
+last-resort Kyber key (`0jc.A0c`: `0kh.A00(…, false)`, logging "no unsent last
+resort kyber pre key found for sending" when absent) and abort the Kyber part
+without one. The batch comes from `0jc.A1C`: up to `max(1, int property 21201
+(0x52d1))` unsent rows (`0014..0032`, `00D.A0b`). Not yet traced: key generation
+(native, per "Failure loading libwhatsapp explicitly; skipping PQ rotate last
+resort kyber prekey"), `next_kyber_prekey_id` allocation (`0jc.A0f`) and the
+default of 21201. With 21198 off for `q`, none of this runs, so no producer was
+added.
+
