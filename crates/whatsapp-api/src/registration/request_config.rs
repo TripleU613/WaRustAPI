@@ -163,9 +163,10 @@ pub struct TransportSettings {
     /// group actions rather than flushing them all at once.
     pub action_delay_ms: u64,
     /// Send a read receipt for every incoming direct or group message with
-    /// readable content that a messaging session decrypts. Off by default: the
-    /// official client marks messages read when a chat is on screen, and this
-    /// client has no screen to infer that from.
+    /// readable content that a messaging session decrypts. On by default since
+    /// 2026-11-02 (owner's request): the official client marks messages read
+    /// when a chat is opened, and an account that never reads anything looks
+    /// less like a person. Set `false` for read-receipts-off behaviour.
     pub mark_read: bool,
     /// Policy for authenticated incoming remote prekey identity changes.
     pub identity_changes: IdentityChangePolicy,
@@ -182,7 +183,7 @@ impl Default for TransportSettings {
             max_response_bytes: MAX_RESPONSE_BODY_BYTES,
             reconnect: ReconnectSettings::default(),
             action_delay_ms: 0,
-            mark_read: false,
+            mark_read: true,
             identity_changes: IdentityChangePolicy::default(),
             outgoing_identity_changes: IdentityChangePolicy::default(),
         }

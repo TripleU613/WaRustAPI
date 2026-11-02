@@ -1271,8 +1271,8 @@
               },
               "mark_read": {
                 "type": "boolean",
-                "default": false,
-                "description": "During a messaging session (`listen`), send a read receipt for every incoming direct or group message with readable content (Message fields 1, 3, 6, 7, 8, 9, 26 or 66) that decrypts. Sender-key distributions, protocol messages and reactions get none. Each receipt goes through the same durable, once-only queue as `mark-read`. Applies to `listen` and to `lab-transport --receive`. Off by default: the official client marks messages read when a chat is on screen, which this client cannot infer. Applies to eligible authenticated duplicates on redelivery too, including offline recovery; durable read markers prevent repetitions after uncertain writes or ACKs."
+                "default": true,
+                "description": "During a messaging session (`listen`), send a read receipt for every incoming direct or group message with readable content (Message fields 1, 3, 6, 7, 8, 9, 26 or 66) that decrypts. Sender-key distributions, protocol messages and reactions get none. Each receipt goes through the same durable, once-only queue as `mark-read`. Applies to `listen` and to `lab-transport --receive`. Off by default: the official client marks messages read when a chat is on screen, which this client cannot infer. Applies to eligible authenticated duplicates on redelivery too, including offline recovery; durable read markers prevent repetitions after uncertain writes or ACKs. Default true since 2026-11-02 (was false)."
               },
               "identity_changes": {
                 "type": "string",

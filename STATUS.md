@@ -1,3 +1,14 @@
+2026-11-02 — **`q` banned (403):** `q`'s 16:10 UTC login was refused
+`<failure reason=403 vt=15>`; its last successful login was about 04:26 UTC.
+Its login presented 2.26.37.70 as always (it registered as 2.26.37.70), so the
+version fix is not involved. In its ~30 hours `q` had: messaged the owner
+(Scam Alert, then a six-hour reach-out timelock, many 463 refusals), joined a
+group, sent group texts and reactions, edits and revokes, a document and a
+video, and roughly 30 logins. Accumulated volume and pattern from a new number
+is the likely cause (inferred; WhatsApp gives no reason). All lab accounts that
+were registered (`l`, `m`, `p`, `q`) are now banned. Live work is stopped.
+Also: `transport.mark_read` now defaults to `true` (owner's request).
+
 2026-11-02 — **Fixed (login version matches registration):** `m` and `p` were
 registered with the 2.26.43.72 User-Agent but every login presented 2.26.37.70
 (hard-coded); both were banned (403) within an hour. A phone never registers
