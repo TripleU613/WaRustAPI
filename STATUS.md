@@ -1,3 +1,11 @@
+2026-11-01 — **Implemented/offline (group reactions in the outbox):** a normal
+outbox group reaction whose devices still need our sender key is no longer
+blocked. Each missing distribution goes out first as a direct message, each
+server ACK is awaited, then the reaction is sent without `<participants>`: the
+shape that was delivered and decrypted live through `lab-transport`. A refused
+distribution blocks as `distribution_refused` (reaction reserved, unsent,
+uncertain). Not live through the normal outbox yet.
+
 2026-11-01 — **Implemented/offline (group changes):** `listen` now applies
 `w:gp2` add/remove/promote/demote/subject notifications to an existing saved
 group snapshot before ACKing (2.26.37.71 `0yv.A09`). Not live-verified.

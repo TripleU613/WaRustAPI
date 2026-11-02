@@ -241,5 +241,11 @@ building the participant-device model. No `UPDATE` string writes it alone
 (the `UPDATE … sent_sender_key` statements never name it; only the `INSERT`
 does). **Next trace:** that model's constructor field mapping, then its
 getter's readers in `SendE2EMessageJob.A06`, to learn how an add-on (reaction)
-send delivers a missing distribution. Until then the normal outbox refuses a
-group reaction that would need one (`reaction_distribution_unsupported`).
+send delivers a missing distribution. Since 2026-11-01 (later the same day)
+the normal outbox no longer refuses such a reaction: it sends each missing
+distribution first as a direct message, waits for each server ACK, then the
+reaction without `<participants>`, the shape observed delivered live
+([groups](groups.md)). Whether the APK uses `sent_add_on_sender_key` for the
+same purpose is still untraced. `reaction_distribution_unsupported` remains
+only on preparations saved before the change; a refused distribution ACK blocks
+as `distribution_refused` with the reserved reaction left uncertain, never sent.

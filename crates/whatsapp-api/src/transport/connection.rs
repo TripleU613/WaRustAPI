@@ -530,6 +530,13 @@ pub(crate) async fn drive(
                     }
                     return Err(Error::invalid("connection", "server ended session; reason preserved encrypted; no reconnect"));
                 }
+                // A reserved group reaction waits for each out-of-band
+                // distribution's ACK; the ACK is then processed as usual.
+                if node.description == "ack" && group_outgoing.as_ref().is_some_and(|v|v.matches(&node)) {
+                    let next=group_outgoing.take().expect("matched group distribution").settle_with_policy(&store,&account,&node,epoch,&mut device_cursor,config.transport.outgoing_identity_changes).await?;
+                    group_outgoing=next.pending;
+                    if let Some(stanza)=next.node { link.send(&stanza).await?; }
+                }
                 if node.description == "iq" {
                     if group_outgoing.as_ref().is_some_and(|v|v.matches(&node)) {
                         let next=group_outgoing.take().expect("matched group preparation").settle_with_policy(&store,&account,&node,epoch,&mut device_cursor,config.transport.outgoing_identity_changes).await?;

@@ -946,10 +946,10 @@ receipt). Group reactions in that shape were ACKed and **delivered to nobody**:
 
 So the server drops a group `type=reaction` that carries `<participants>`.
 `sender_key_stanza` now refuses that shape; the comparison group send always
-delivers a reaction's distributions out of band first; the normal group
-outbox (which also rotates and embeds distributions) blocks reactions as
-`reaction_distribution_unsupported` before any query until it gains
-out-of-band distribution. **Not established:** how the official client
+delivers a reaction's distributions out of band first, and since 2026-11-01 the
+normal group outbox does the same for the devices that still lack the chain
+(each direct distribution ACKed before the reaction; offline-tested, not yet
+live through the normal outbox). **Not established:** how the official client
 avoids the case (it normally reuses an already distributed sender key, so a
 reaction rarely needs one) and whether the rule covers other add-ons
 (poll votes, edits). Handset rendering of a fixed reaction is still to be

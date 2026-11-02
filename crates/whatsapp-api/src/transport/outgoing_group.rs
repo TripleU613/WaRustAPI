@@ -226,8 +226,15 @@ pub(super) mod tests {
                 let (mut pending, mut query) = begin_selected(&store, id).unwrap().unwrap();
                 let mut cursor = devices::DeviceSyncCursor::default();
                 let mut sent = None;
-                for _ in 0..3 {
+                let mut distribution = None;
+                for _ in 0..4 {
                     let reply = match query.get_attr("xmlns").and_then(|v| v.as_text()) {
+                        // An out-of-band distribution: the server ACKs it.
+                        None if query.description == "message" => {
+                            let id = query.get_attr("id").unwrap().as_text().unwrap().to_owned();
+                            distribution = Some(query.clone());
+                            Node::new("ack").attr("class", "message").attr("id", id)
+                        }
                         Some("w:g2") => membership(&query, &own, std::slice::from_ref(&peer)),
                         Some("usync") => device_reply(&query),
                         Some("encrypt") => {
@@ -257,21 +264,6 @@ pub(super) mod tests {
                     }
                 }
                 let entry = store.read(|tx| outbox().get(tx, id)).unwrap().unwrap();
-                if reaction && !kind.starts_with("changed_") {
-                    // The fresh peer device still needs the distribution, and a
-                    // group reaction carrying one is never delivered, so it is
-                    // blocked before any reservation (observed 2026-11-01).
-                    assert!(sent.is_none());
-                    assert_eq!(
-                        preparation(&store, id)
-                            .unwrap()
-                            .unwrap()
-                            .blocking_reason
-                            .as_deref(),
-                        Some("reaction_distribution_unsupported")
-                    );
-                    continue;
-                }
                 if kind.starts_with("changed_") {
                     assert!(sent.is_none());
                     assert_eq!(entry, original);
@@ -288,9 +280,17 @@ pub(super) mod tests {
                     let skmsg = node.child("enc").unwrap();
                     assert_eq!(skmsg.get_attr("decrypt-fail").is_some(), reaction);
                     assert_eq!(node.child("meta").is_some(), reaction);
-                    let target = node.child("participants").unwrap().child_nodes()[0]
-                        .child("enc")
-                        .unwrap();
+                    // A group reaction carrying distributions is never
+                    // delivered (observed 2026-11-01): the fresh device gets
+                    // its key first as a direct message, the reaction none.
+                    assert_eq!(node.child("participants").is_none(), reaction);
+                    assert_eq!(distribution.is_some(), reaction);
+                    let target = match &distribution {
+                        Some(direct) => direct.child("enc").unwrap(),
+                        None => node.child("participants").unwrap().child_nodes()[0]
+                            .child("enc")
+                            .unwrap(),
+                    };
                     let bytes = |n: &Node| match &n.content {
                         crate::binary::NodeContent::Bytes(b) => b.to_vec(),
                         _ => panic!("ciphertext"),
@@ -1134,6 +1134,9 @@ enum Block {
     /// (observed live 2026-11-01, `groups::sender_key_stanza`). Refused before
     /// any query until out-of-band distribution exists here.
     ReactionDistributionUnsupported,
+    /// A reaction's out-of-band distribution message was refused by the
+    /// server; the reserved group stanza was not sent and stays uncertain.
+    DistributionRefused,
 }
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 struct Row {
@@ -1252,6 +1255,13 @@ enum Waiting {
     Membership(String),
     Devices(devices::DeviceQuery),
     Keys(String),
+    /// A reserved reaction's distributions go out first as direct messages,
+    /// each ACKed before the next; the group stanza follows the last.
+    Distribution {
+        id: String,
+        rest: Vec<Node>,
+        group: Box<Node>,
+    },
 }
 /// One connection's original preparation. No resume/reset/replay API is provided.
 pub(crate) struct Pending {
@@ -1502,6 +1512,10 @@ impl Pending {
                     && node.get_attr("id").and_then(|v| v.as_text()) == Some(id)
             }
             Waiting::Devices(query) => query.matches(node),
+            Waiting::Distribution { id, .. } => {
+                node.description == "ack"
+                    && node.get_attr("id").and_then(|v| v.as_text()) == Some(id)
+            }
         }
     }
     pub fn devices_pending(&self) -> bool {
@@ -1696,6 +1710,17 @@ impl Pending {
                 }
                 self.next_keys(store, account, epoch, policy).await
             }
+            Waiting::Distribution { .. } => {
+                if node.get_attr("error").is_some() {
+                    return self.block(store, Block::DistributionRefused);
+                }
+                let Waiting::Distribution { rest, group, .. } =
+                    std::mem::replace(&mut self.waiting, Waiting::Keys(String::new()))
+                else {
+                    unreachable!()
+                };
+                self.next_distribution(rest, *group)
+            }
         }
     }
     fn reserve_devices(mut self, store: &ProtocolStore) -> Result<Step> {
@@ -1826,12 +1851,11 @@ impl Pending {
                     Err(error) => return Err(error),
                 };
                 // A group reaction carrying distributions is ACKed but never
-                // delivered (observed 2026-11-01). Devices already holding the
-                // chain need none; any that still do block it here, before any
-                // reservation, until out-of-band distribution exists on this path.
-                if content == groups::StanzaContent::Reaction && !prepared.targets().is_empty() {
-                    return self.block(store, Block::ReactionDistributionUnsupported);
-                }
+                // delivered; sending each distribution first as a direct
+                // message and the reaction without `<participants>` was
+                // delivered and decrypted (observed live 2026-11-01, groups.md).
+                let out_of_band =
+                    content == groups::StanzaContent::Reaction && !prepared.targets().is_empty();
                 let plan = self.plan.as_ref().expect("resolved plan");
                 let wire_id = super::messaging::new_message_id()?;
                 // APK 37.71 SendE2EMessageJob.A06/0y0.A00: per-device SKDM
@@ -1842,9 +1866,25 @@ impl Pending {
                     content,
                     Some(plan.addressing_mode),
                     Some(&plan.participant_hash),
-                    prepared.targets(),
+                    if out_of_band { &[] } else { prepared.targets() },
                     prepared.ciphertext(),
                 )?;
+                let distributions = if out_of_band {
+                    prepared
+                        .targets()
+                        .iter()
+                        .map(|target| -> Result<Node> {
+                            Ok(super::messaging::direct_message(
+                                &target.device,
+                                &super::messaging::new_message_id()?,
+                                target.kind,
+                                target.ciphertext.clone(),
+                            )?)
+                        })
+                        .collect::<Result<Vec<_>>>()?
+                } else {
+                    Vec::new()
+                };
                 let wire = Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(&node)?;
                 let archive = format!("outbox-group-rotated:{}", self.entry.local_id);
                 let mut reserved = self.row.clone();
@@ -1905,11 +1945,33 @@ impl Pending {
                     }
                     return Err(error);
                 }
-                Ok(Step {
-                    pending: None,
-                    node: Some(node),
-                })
+                self.row = reserved;
+                self.next_distribution(distributions, node)
             }
         }
+    }
+
+    /// Send the next out-of-band distribution and wait for its ACK, or, when
+    /// none remain, the reserved group stanza itself.
+    fn next_distribution(mut self, mut rest: Vec<Node>, group: Node) -> Result<Step> {
+        if rest.is_empty() {
+            return Ok(Step {
+                pending: None,
+                node: Some(group),
+            });
+        }
+        let next = rest.remove(0);
+        let id = next
+            .get_attr("id")
+            .and_then(|v| v.as_text())
+            .ok_or_else(|| invalid("distribution message id missing"))?
+            .to_owned();
+        self.waiting = Waiting::Distribution {
+            id,
+            rest,
+            group: Box::new(group),
+        };
+        self.deadline = deadline();
+        Ok(Step::waiting(self, next))
     }
 }
