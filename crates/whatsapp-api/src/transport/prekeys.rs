@@ -156,6 +156,9 @@ pub struct Batch {
     pub count_low: Option<bool>,
     /// Reservation time.
     pub reserved_at: Timestamp,
+    /// Kyber prekey ids carried in the same IQ (`pq_list`/`pq_last_resort_key`).
+    #[serde(default)]
+    pub kem_ids: Vec<u32>,
 }
 /// Redacted local summary for operators.
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize)]
@@ -301,11 +304,7 @@ fn key_node(id: u32, public: &[u8], signature: Option<&[u8]>) -> Node {
 /// big-endian like the ordinary and signed keys (the parser's local rule).
 /// Docs: kem-prekey-inventory.md.
 ///
-/// Not called by [`begin_upload`]: no KEM key is generated, and count, ID
-/// allocation and rotation are untraced, so nothing post-quantum is sent.
-// Unused until an evidence-backed KEM producer exists; kept, with its
-// receive-side round-trip test, so that step only has to wire it in.
-#[cfg_attr(not(test), allow(dead_code))]
+/// Called by [`begin_upload`] only while property 21198 is on.
 pub(crate) fn kem_upload_children(
     identity: &crate::session::SignalIdentityKey,
     rows: &[super::kem_prekeys::StoredKemPrekey],
@@ -398,11 +397,22 @@ pub fn begin_upload(
         .signature()
         .map_err(|_| invalid("signed prekey signature"))?;
     let iq_id = super::messaging::new_message_id()?;
+    let pq_enabled = super::abprops::pq_keys_upload_enabled(store)?;
+    // 07t.A0R 0196..01a2: property 21201 defaults to 10; returned values are
+    // not applied (MobileConfig unported), so the default is used.
+    let pq_batch = 10;
     let reserved = store.write(|tx| {
         let ids: Vec<u32> = unsent_in(&*tx)?.into_iter().take(UNSENT_TARGET).collect();
         if ids.is_empty() {
             return Ok(None);
         }
+        // Kyber keys ride in the same IQ only while the server enables them
+        // (property 21198; see kem_prekeys::upload_rows_in).
+        let kem_rows = if pq_enabled {
+            super::kem_prekeys::upload_rows_in(tx, pq_batch)?
+        } else {
+            Vec::new()
+        };
         let mut keys = Vec::with_capacity(ids.len());
         for id in &ids {
             let record: Vec<u8> = tx
@@ -434,13 +444,15 @@ pub fn begin_upload(
                 code: None,
                 count_low: None,
                 reserved_at: Timestamp::now(),
+                kem_ids: kem_rows.iter().map(|r| r.id).collect(),
             },
         )?;
-        Ok(Some((ids, keys)))
+        Ok(Some((ids, keys, kem_rows)))
     })?;
-    let Some((ids, keys)) = reserved else {
+    let Some((ids, keys, kem_rows)) = reserved else {
         return Ok(None);
     };
+    let kem_children = kem_upload_children(identity, &kem_rows)?;
     let node = Node::new("iq")
         .attr("id", iq_id.as_str())
         .attr("xmlns", "encrypt")
@@ -457,6 +469,13 @@ pub fn begin_upload(
                 Node::new("signature").bytes(signed_signature.to_vec()),
             ]),
         ]);
+    let node = if kem_children.is_empty() {
+        node
+    } else {
+        let mut children = node.child_nodes().to_vec();
+        children.extend(kem_children);
+        node.children(children)
+    };
     Ok(Some((
         PendingUpload {
             iq_id,
@@ -511,6 +530,9 @@ impl PendingUpload {
             batch.code = code.clone();
             batch.count_low = Some(count_low);
             tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &batch)?;
+            if accepted {
+                super::kem_prekeys::mark_sent_in(tx, &batch.kem_ids)?;
+            }
             for id in &self.ids {
                 tx.put_json(
                     Table::Checkpoints,
@@ -867,6 +889,88 @@ mod tests {
         assert_eq!(
             PreKeyRecord::deserialize(&record).unwrap().id().unwrap(),
             1.into()
+        );
+    }
+
+    /// 13c.A03: Kyber keys ride with the upload only while property 21198 is
+    /// on, and only with an unsent last-resort key; once that is acknowledged
+    /// the next upload carries none.
+    #[test]
+    fn kyber_keys_upload_only_behind_the_server_property() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("kyber.redb"));
+        let (account, signed) = account_and_signed();
+        generate(&store).unwrap();
+        let (pending, iq) = begin_upload(&store, &account, &signed).unwrap().unwrap();
+        assert!(iq.child("pq_list").is_none() && iq.child("pq_last_resort_key").is_none());
+        let id = iq.get_attr("id").unwrap().as_text().unwrap().to_owned();
+        pending
+            .settle(
+                &store,
+                &Node::new("iq")
+                    .attr("id", id.as_str())
+                    .attr("type", "result"),
+            )
+            .unwrap();
+        // The server turns 21198 on in the A/B reply.
+        let action = super::super::abprops::queue(&store).unwrap();
+        super::super::actions::reserve_pending(&store).unwrap();
+        let props = Node::new("props").attr("hash", "h").children(vec![
+            Node::new("prop")
+                .attr("config_code", "21198")
+                .attr("config_value", "1"),
+        ]);
+        assert!(
+            super::super::actions::record_reply(
+                &store,
+                &Node::new("iq")
+                    .attr("id", action.as_str())
+                    .attr("type", "result")
+                    .children(vec![props]),
+            )
+            .unwrap()
+        );
+        assert!(super::super::abprops::pq_keys_upload_enabled(&store).unwrap());
+        generate(&store).unwrap();
+        let (pending, iq) = begin_upload(&store, &account, &signed).unwrap().unwrap();
+        let names: Vec<&str> = iq
+            .child_nodes()
+            .iter()
+            .map(|c| c.description.as_str())
+            .collect();
+        assert_eq!(
+            names,
+            [
+                "identity",
+                "registration",
+                "type",
+                "list",
+                "skey",
+                "pq_list",
+                "pq_last_resort_key"
+            ]
+        );
+        assert_eq!(iq.child("pq_list").unwrap().child_nodes().len(), 10);
+        let id = iq.get_attr("id").unwrap().as_text().unwrap().to_owned();
+        pending
+            .settle(
+                &store,
+                &Node::new("iq")
+                    .attr("id", id.as_str())
+                    .attr("type", "result"),
+            )
+            .unwrap();
+        assert_eq!(
+            store
+                .read(|tx| super::super::kem_prekeys::counts(tx))
+                .unwrap(),
+            (11, 1)
+        );
+        generate(&store).unwrap();
+        let (_, iq) = begin_upload(&store, &account, &signed).unwrap().unwrap();
+        assert!(
+            iq.child("pq_list").is_none(),
+            "last-resort key already sent"
         );
     }
 

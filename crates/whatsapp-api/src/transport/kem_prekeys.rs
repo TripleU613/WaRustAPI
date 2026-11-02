@@ -6,15 +6,10 @@
 //! `prekey_id` **and** `last_resort_key = 0` (docs/protocol/hybrid-incoming.md).
 //! Successful last-resort use therefore retains the key.
 //!
-//! This client has **no producer** for these rows. Generation, ID allocation,
-//! signing and what each `pq_list`/`pq_last_resort_key` element of the
-//! `LX/0y0.A00` case 85 upload holds are untraced (the element shape is read:
-//! `pq_list` of `key{id,value,signature}` and a bare
-//! `pq_last_resort_key{id,value,signature}`, `153c..161c`;
-//! docs/protocol/kem-prekey-inventory.md), and the upload path never sends
-//! Kyber material. Rows exist only when a
-//! later, evidence-backed producer writes them; until then every fresh hybrid
-//! bootstrap reports the missing key instead of guessing one.
+//! Rows are produced by [`upload_rows_in`] only while the server's A/B
+//! property 21198 (`PQ_KEYS_UPLOAD_CODE`) is on, as 2.26.37.71 `13c.A03` does
+//! (docs/protocol/kem-prekey-inventory.md). Native generation and the initial
+//! `next_kyber_prekey_id` are untraced; ids start at 1 locally.
 use serde::{Deserialize, Serialize};
 use zeroize::Zeroize;
 
@@ -54,6 +49,10 @@ pub(crate) struct StoredKemPrekey {
     pub secret: Vec<u8>,
     /// Native `last_resort_key`; such keys survive successful use.
     pub last_resort: bool,
+    /// Native `sent_to_server`: set once an upload batch carrying it was
+    /// acknowledged. Rows written before the producer existed default false.
+    #[serde(default)]
+    pub sent: bool,
 }
 impl Drop for StoredKemPrekey {
     fn drop(&mut self) {
@@ -149,8 +148,97 @@ pub(crate) fn counts(tx: &ReadTx<'_>) -> Result<(usize, usize)> {
     }
 }
 
-/// Test-only writer. Production rows need an evidence-backed producer and
-/// upload path; see the module documentation.
+/// Next KEM prekey id (`identities.next_kyber_prekey_id` in the APK; its
+/// initial value is untraced, so starting at 1 is local, **inferred** policy).
+const NEXT_ID: &[u8] = b"kem-next-prekey-id";
+
+fn all_rows(tx: &WriteTx<'_>) -> Result<Vec<StoredKemPrekey>> {
+    let mut out = Vec::new();
+    let mut cursor: Option<Vec<u8>> = None;
+    loop {
+        let rows = tx.scan_after(Table::Prekeys, 1, cursor.as_deref(), 512)?;
+        let done = rows.len() < 512;
+        cursor = rows.last().map(|(key, _)| key.clone());
+        for (key, bytes) in rows {
+            if key.starts_with(RECORD_PREFIX.as_bytes())
+                && let Ok(row) = serde_json::from_slice::<StoredKemPrekey>(&bytes)
+            {
+                out.push(row);
+            }
+        }
+        if done {
+            return Ok(out);
+        }
+    }
+}
+
+fn generate_in(tx: &mut WriteTx<'_>, last_resort: bool) -> Result<()> {
+    let id: u32 = tx.get_json(Table::Checkpoints, NEXT_ID, 1)?.unwrap_or(1);
+    if id > 0x00ff_ffff {
+        return Err(invalid("KEM prekey id space exhausted"));
+    }
+    let (public, secret) = crate::signal::kem::generate_key_pair()?;
+    let row = StoredKemPrekey {
+        id,
+        public,
+        secret: secret.as_bytes().to_vec(),
+        last_resort,
+        sent: false,
+    };
+    row.validate(id)?;
+    tx.put_json(Table::Prekeys, record_key(id).as_bytes(), 1, &row)?;
+    tx.put_json(Table::Checkpoints, NEXT_ID, 1, &(id + 1))
+}
+
+/// The Kyber rows for one upload, generating what is missing.
+///
+/// **Confirmed static, 2.26.37.71:** `13c.A03` (`sendSetPreKey`) adds Kyber
+/// keys only when `Can.A02()` (property 21198) is true and `0jc.A0c` finds an
+/// *unsent* last-resort key; without one it logs "skipping kyber prekeys
+/// upload". `D4s` generates a last-resort key when none exists. The one-time
+/// batch is `0jc.A1C`: up to `max(1, property 21201)` unsent rows, default 10
+/// (`07t.A0R 0196..01a2`). Generation itself is native and untraced; this uses
+/// the same ML-KEM-1024 primitive the receive path verifies against.
+/// Returns no rows once the last-resort key has been sent (nothing to upload).
+pub(crate) fn upload_rows_in(tx: &mut WriteTx<'_>, batch: usize) -> Result<Vec<StoredKemPrekey>> {
+    let rows = all_rows(tx)?;
+    if !rows.iter().any(|r| r.last_resort) {
+        generate_in(tx, true)?;
+    } else if !rows.iter().any(|r| r.last_resort && !r.sent) {
+        return Ok(Vec::new());
+    }
+    let unsent = rows.iter().filter(|r| !r.last_resort && !r.sent).count();
+    for _ in unsent..batch.max(1) {
+        generate_in(tx, false)?;
+    }
+    let rows = all_rows(tx)?;
+    let mut one_time: Vec<_> = rows
+        .iter()
+        .filter(|r| !r.last_resort && !r.sent)
+        .cloned()
+        .collect();
+    one_time.truncate(batch.max(1));
+    one_time.extend(
+        rows.into_iter()
+            .filter(|r| r.last_resort && !r.sent)
+            .take(1),
+    );
+    Ok(one_time)
+}
+
+/// `sent_to_server = 1` for the rows of an acknowledged batch.
+pub(crate) fn mark_sent_in(tx: &mut WriteTx<'_>, ids: &[u32]) -> Result<()> {
+    for id in ids {
+        let key = record_key(*id);
+        if let Some(mut row) = tx.get_json::<StoredKemPrekey>(Table::Prekeys, key.as_bytes(), 1)? {
+            row.sent = true;
+            tx.put_json(Table::Prekeys, key.as_bytes(), 1, &row)?;
+        }
+    }
+    Ok(())
+}
+
+/// Test-only writer of a chosen row.
 #[cfg(test)]
 pub(crate) fn install_for_test(
     tx: &mut WriteTx<'_>,
@@ -164,6 +252,7 @@ pub(crate) fn install_for_test(
         public: public.to_vec(),
         secret: secret.to_vec(),
         last_resort,
+        sent: false,
     };
     row.validate(id)?;
     tx.put_json(Table::Prekeys, record_key(id).as_bytes(), 1, &row)?;

@@ -228,6 +228,12 @@ fn parse(reply: &Node, view: &mut AbPropsInspection) -> std::result::Result<(), 
     Ok(())
 }
 
+/// Whether the last A/B reply turned `PQ_KEYS_UPLOAD_CODE` (21198) on. Absent
+/// or invalid means the `07t.A0L` default, false. MobileConfig is unported.
+pub fn pq_keys_upload_enabled(store: &ProtocolStore) -> Result<bool> {
+    Ok(inspect(store)?.and_then(|view| view.pq_keys_upload_value) == Some(true))
+}
+
 /// Inspect saved correlated evidence without queueing or applying feature values.
 pub fn inspect(store: &ProtocolStore) -> Result<Option<AbPropsInspection>> {
     store.read(|tx| {

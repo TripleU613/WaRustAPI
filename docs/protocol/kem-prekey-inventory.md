@@ -264,3 +264,34 @@ resort kyber prekey"), `next_kyber_prekey_id` allocation (`0jc.A0f`) and the
 default of 21201. With 21198 off for `q`, none of this runs, so no producer was
 added.
 
+## Producer and upload, gated (implemented 2026-11-01)
+
+The producer now exists and runs exactly where the APK's does. `prekeys::begin_upload`
+adds Kyber keys to the ordinary upload IQ only when
+`abprops::pq_keys_upload_enabled` (the last A/B reply set 21198 to a nonzero
+value). `kem_prekeys::upload_rows_in` then:
+
+- generates a last-resort key when none exists (`D4s`);
+- uploads nothing once the last-resort key has been sent (`0jc.A0c` finds no
+  unsent one, so `13c.A03` skips Kyber);
+- otherwise tops up and sends up to 10 unsent one-time keys (`0jc.A1C`,
+  property 21201 default 10, `07t.A0R 0196..01a2`) plus the unsent last-resort
+  key, as `pq_list` and `pq_last_resort_key`.
+
+An acknowledged batch sets `sent` (`sent_to_server`). Key generation uses the
+ML-KEM-1024 primitive the receive path already verifies (native generation is
+untraced). IDs start at 1 under `kem-next-prekey-id` (**inferred**;
+`next_kyber_prekey_id`'s initial value is untraced).
+Test: `kyber_keys_upload_only_behind_the_server_property`. For `q` the gate is
+off, so nothing post-quantum is uploaded; not live-verified.
+
+**`pqsupport`, fully resolved:** `Can.A04(jid)` = JID type (`0DE.A0l`/`A0T`)
+**and** 21198 **and** `0jc.A11` ("SELECT EXISTS … last_resort_key = 1 AND
+sent_to_server = 1") **and** property 24160 (`0x5e60`, registered false in
+`07t.A0L 0cc4..0cd6`). Its only traced wire use is `key_fetch
+pqsupport="true"` in the sync-and-resend job's IQ, which this client does not
+send ([sync-resend](sync-resend.md)); its other call sites pass it to
+fetch schedulers whose wire effect is untraced. With 21198 and 24160 at their
+false defaults for `q`, the APK would not send `pqsupport`, and there is no
+request of ours for it to ride on.
+

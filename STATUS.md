@@ -1,3 +1,12 @@
+2026-11-01 — **Implemented/offline (Kyber prekey upload, gated):** the upload
+IQ now carries `pq_list` (up to 10 one-time ML-KEM-1024 keys) and
+`pq_last_resort_key` whenever the server's A/B property 21198 is on, following
+2.26.37.71 `13c.A03`/`0jc.A1C`/`0jc.A0c`. Once the last-resort key is
+acknowledged, later uploads carry none. `pqsupport` is fully traced: it also
+needs property 24160 (default false) and is only used in a `key_fetch` request
+this client does not send. For `q` both properties are off, so nothing PQ goes
+out, exactly as with the official app.
+
 2026-11-01 — **Observed live (account `q` restricted):** one `listen
 --send-outbox` session queued a group creation with the owner's number and one
 direct text to the owner. The server refused both with error **463**: the group
