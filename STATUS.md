@@ -1,3 +1,11 @@
+2026-11-02 — **Live (edit and delete-for-everyone):** new `edit-message` and
+`revoke` commands. From `q` to the owner: an edit of a sent text (stanza
+`edit="1"`, `MESSAGE_EDIT` with the replacement) and then a revoke of the same
+message (`edit="7"`, `REVOKE`) were each server-accepted and got a delivery
+receipt from the owner's phone. The `edit` values come from the APK's
+outgoing message schema (`CpG.A0U`). Display on the handset ("edited" /
+"This message was deleted") not yet confirmed by the owner.
+
 2026-11-02 — **Observed live (retry test blocked):** for the item 6 live test,
 `p` (registered minutes earlier) sent `q` a first direct text: server-accepted
 (`ServerAccepted`), then the server ended `p`'s stream with `stream:error
