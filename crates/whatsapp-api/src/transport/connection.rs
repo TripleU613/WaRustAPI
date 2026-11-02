@@ -547,6 +547,19 @@ pub(crate) async fn drive(
                     if let Some(stanza)=next.node { link.send(&stanza).await?; }
                 }
                 if node.description == "iq" {
+                    // A retry answer waiting for the peer's fresh bundle (retry_answer).
+                    match super::retry_answer::complete_refetch(&store, &account, &node, epoch).await {
+                        Ok(Some(resend)) => {
+                            if let Some(resend) = resend {
+                                link.send(&resend).await?;
+                                tracing::info!(target: "whatsapp_api::incoming", "retry receipt answered with a fresh session; same message id");
+                            }
+                            continue;
+                        }
+                        Ok(None) => {}
+                        Err(Error::InvalidInput { field, reason }) => tracing::warn!(field, reason, "retry refetch not completed"),
+                        Err(error) => return Err(error),
+                    }
                     if group_outgoing.as_ref().is_some_and(|v|v.matches(&node)) {
                         let next=group_outgoing.take().expect("matched group preparation").settle_with_policy(&store,&account,&node,epoch,&mut device_cursor,config.transport.outgoing_identity_changes).await?;
                         group_outgoing=next.pending;
@@ -833,7 +846,7 @@ pub(crate) async fn drive(
                     match super::retry_answer::answer(&store, &account, &node, epoch).await {
                         Ok(Some(resend)) => {
                             link.send(&resend).await?;
-                            tracing::info!(target: "whatsapp_api::incoming", "retry receipt answered under the saved session; same message id");
+                            tracing::info!(target: "whatsapp_api::incoming", kind = %resend.description, "retry receipt answered (message), or its fresh-bundle query sent (iq)");
                         }
                         Ok(None) => {}
                         Err(Error::InvalidInput { field, reason }) => tracing::warn!(field, reason, "retry receipt not answered"),

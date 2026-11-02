@@ -1,3 +1,10 @@
+2026-11-01 — **Retry answers complete the APK's two branches (offline) / group
+reaction confirmed (live):** a peer's retry with a changed registration now
+fetches the device's fresh bundle and resends under a new session with the same
+message id (`151.A00`); matching registrations still resend under the saved
+session. The owner confirmed the outbox group reaction (❤️) displayed on their
+phone.
+
 2026-11-01 — **Explained (group creation 463):** WhatsApp pushed `q` a six-hour
 reach-out timelock (`mex` `NotificationUserReachoutTimelockUpdate`, active,
 ends 2026-11-02 05:13 UTC). `listen` now records and logs it, and `group create`

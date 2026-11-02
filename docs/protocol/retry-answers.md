@@ -132,3 +132,19 @@ device), never a send whose outcome is uncertain or refused; reserve the answer
 (and any key fetch) durably before the write; never change the message ID;
 keep pinned-identity rules (a changed identity is not adopted to answer a
 retry); and record the answer as a new attempt with `re_encryption: true`.
+
+## Fresh-bundle answer (2026-11-01)
+
+A retry whose `<registration>` differs from the saved session (or with no
+session) is no longer only recorded: following `151.A00` ("will wait to send …
+until a new prekey has been fetched"), `answer` reserves
+`retry-answer:<id>:<device>:<count>` as `fetching`, writes
+`retry-refetch:<query id>` and returns an `encrypt` key query for the device.
+`complete_refetch` handles that query's reply in `listen`: from the bundle it
+derives a new session (pinned identity unchanged, else `identity_changed`),
+re-encrypts the retained plaintext under the original message id, commits the
+new session and attempt, and returns the resend (a `pkmsg`). A refused query
+or unusable bundle records `refetch_refused` / `refetch_bundle_unusable`. One
+fetch per (message, device, count). Offline-tested, including the new
+session's remote registration; not live (a retry cannot be forced).
+

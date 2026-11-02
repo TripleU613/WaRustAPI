@@ -160,23 +160,56 @@ pub async fn answer(
         // Sends reserved before this module existed kept only ciphertext.
         return unanswered(store, &key, "plaintext_not_retained");
     };
-    let Some(session) = session else {
-        return unanswered(store, &key, "no_session");
-    };
     let registration = retry
         .registration
         .as_deref()
         .filter(|b| b.len() <= 4)
         .map(|b| b.iter().fold(0u32, |n, byte| (n << 8) | u32::from(*byte)));
-    if registration.is_none()
-        || registration
-            != Some(crate::signal::direct::session_remote_registration(
-                &session,
-            )?)
-    {
-        // 151.A00: the APK deletes the session and waits for a new bundle.
-        return unanswered(store, &key, "registration_changed_needs_new_session");
-    }
+    let session = match session {
+        Some(session)
+            if registration.is_some()
+                && registration
+                    == Some(crate::signal::direct::session_remote_registration(
+                        &session,
+                    )?) =>
+        {
+            session
+        }
+        // 151.A00: on a registration change (or no session) the APK drops the
+        // session and "will wait to send … until a new prekey has been
+        // fetched". Ask the directory for the device's bundle; the reply
+        // finishes the answer in `complete_refetch`.
+        _ => {
+            let query = super::messaging::new_message_id()?;
+            let reserved = store.write(|tx| {
+                if tx
+                    .get_json::<serde_json::Value>(Table::Checkpoints, answer_key.as_bytes(), 1)?
+                    .is_some()
+                {
+                    return Ok(false);
+                }
+                tx.put_json(
+                    Table::Checkpoints,
+                    answer_key.as_bytes(),
+                    1,
+                    &serde_json::json!({"status": "fetching", "query": query, "count": retry.count}),
+                )?;
+                tx.put_json(
+                    Table::Checkpoints,
+                    refetch_key(&query).as_bytes(),
+                    1,
+                    &Refetch {
+                        wire_id: retry.message_id.clone(),
+                        answer_key: answer_key.clone(),
+                        unanswered_key: key.clone(),
+                        count: retry.count,
+                    },
+                )?;
+                Ok(true)
+            })?;
+            return Ok(reserved.then(|| super::messaging::key_request(&peer, &query)));
+        }
+    };
     let prepared = match crate::signal::direct::prepare_payload(
         account,
         &peer,
@@ -225,6 +258,132 @@ pub async fn answer(
         tx.put_json(Table::Outbox, &current.local_id.0, 1, &current)
     })?;
     Ok(Some(resend))
+}
+
+fn refetch_key(query: &str) -> String {
+    format!("retry-refetch:{query}")
+}
+
+/// A retry answer waiting for the device's fresh prekey bundle.
+#[derive(serde::Serialize, serde::Deserialize)]
+struct Refetch {
+    wire_id: String,
+    answer_key: String,
+    unanswered_key: String,
+    count: u32,
+}
+
+/// Finish a retry answer from the directory reply to its key query.
+/// `Ok(None)` when the reply is not one of ours, `Ok(Some(None))` when it was
+/// ours but nothing is sent (the reason is recorded), else the resend.
+///
+/// A fresh session from the reply's bundle replaces the stale one, as the APK
+/// does after a registration change (`151.A00`). The pinned identity still
+/// holds: a bundle with a different identity is recorded `identity_changed`.
+pub async fn complete_refetch(
+    store: &ProtocolStore,
+    account: &AccountRecord,
+    node: &Node,
+    epoch: ConnectionEpoch,
+) -> Result<Option<Option<Node>>> {
+    if node.description != "iq" {
+        return Ok(None);
+    }
+    let Some(query) = node.get_attr("id").and_then(|v| v.as_text()) else {
+        return Ok(None);
+    };
+    let Some(job): Option<Refetch> =
+        store.read(|tx| tx.get_json(Table::Checkpoints, refetch_key(query).as_bytes(), 1))?
+    else {
+        return Ok(None);
+    };
+    store.write(|tx| tx.delete(Table::Checkpoints, refetch_key(query).as_bytes()))?;
+    let refuse = |reason: &str| -> Result<Option<Option<Node>>> {
+        store.write(|tx| {
+            tx.put_json(
+                Table::Checkpoints,
+                job.answer_key.as_bytes(),
+                1,
+                &serde_json::json!({"status": "unanswered", "reason": reason}),
+            )
+        })?;
+        unanswered(store, &job.unanswered_key, reason).map(|_| Some(None))
+    };
+    if node.get_attr("type").and_then(|v| v.as_text()) != Some("result") {
+        return refuse("refetch_refused");
+    }
+    let wire_id = MessageId::new(job.wire_id.clone())?;
+    let outbox = super::outgoing::outbox();
+    let Some(entry) = store.read(|tx| outbox.by_wire_id(tx, &wire_id))? else {
+        return refuse("original_send_missing");
+    };
+    let peer = entry.intent.chat.jid().clone();
+    let Some(original) = entry.attempts.first().and_then(|a| a.payload.clone()) else {
+        return refuse("original_stanza_missing");
+    };
+    let bundle = match crate::signal::direct::prekey_bundle_for(node, &peer) {
+        Ok(bundle) => bundle,
+        Err(Error::InvalidInput { .. }) => return refuse("refetch_bundle_unusable"),
+        Err(error) => return Err(error),
+    };
+    let peer_key = format!("comparison-direct:{peer}");
+    let (source, identity): (Option<Vec<u8>>, Option<Vec<u8>>) = store.read(|tx| {
+        Ok((
+            tx.get_json(
+                Table::Checkpoints,
+                source_key(wire_id.as_str()).as_bytes(),
+                1,
+            )?,
+            tx.get_json(Table::PeerIdentities, peer_key.as_bytes(), 1)?,
+        ))
+    })?;
+    let Some(source) = source else {
+        return refuse("plaintext_not_retained");
+    };
+    let prepared = match crate::signal::direct::prepare_payload(
+        account,
+        &peer,
+        Some(&bundle),
+        None,
+        identity.as_deref(),
+        &source,
+    )
+    .await
+    {
+        Ok(prepared) => prepared,
+        Err(Error::IdentityChanged(_)) => return refuse("identity_changed"),
+        Err(Error::InvalidInput { .. }) => return refuse("refetch_bundle_unusable"),
+        Err(error) => return Err(error),
+    };
+    let resend = replace_enc(&original, prepared.kind, prepared.ciphertext)?;
+    let wire = Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(&resend)?;
+    store.write(|tx| {
+        let state: Option<serde_json::Value> =
+            tx.get_json(Table::Checkpoints, job.answer_key.as_bytes(), 1)?;
+        if state.as_ref().and_then(|v| v["query"].as_str()) != Some(query) {
+            return Err(Error::invalid("retry", "answer changed before reservation"));
+        }
+        let mut current = outbox
+            .by_wire_id_in_write(tx, &wire_id)?
+            .ok_or_else(|| Error::invalid("retry", "original send vanished"))?;
+        tx.put_json(
+            Table::Checkpoints,
+            job.answer_key.as_bytes(),
+            1,
+            &serde_json::json!({"status": "reserved", "count": job.count, "fresh_session": true, "reserved_at": Timestamp::now()}),
+        )?;
+        current.attempts.push(AttemptRecord {
+            index: current.attempts.len() as u32,
+            prepared_at: Timestamp::now(),
+            epoch: Some(epoch),
+            payload: Some(wire.into()),
+            re_encryption: true,
+        });
+        tx.put_json(Table::SignalSessions, peer_key.as_bytes(), 1, &*prepared.session)?;
+        tx.put_json(Table::PeerIdentities, peer_key.as_bytes(), 1, &prepared.identity)?;
+        tx.put_json(Table::Outbox, &current.local_id.0, 1, &current)
+    })?;
+    Ok(Some(Some(resend)))
 }
 
 /// The original stanza with its `enc` re-encrypted; id and every other
@@ -394,12 +553,6 @@ mod tests {
             }
         };
 
-        assert!(ask(1, 43).await.unwrap().is_none());
-        assert_eq!(
-            reason(&store, 1, &peer).as_deref(),
-            Some("registration_changed_needs_new_session")
-        );
-
         let resend = ask(1, 42).await.unwrap().expect("answered");
         assert_eq!(resend.get_attr("id").and_then(|v| v.as_text()), Some("W1"));
         assert_eq!(
@@ -427,6 +580,75 @@ mod tests {
             Some("new_session_needed_unsupported")
         );
         assert!(ask(5, 42).await.unwrap().is_none());
+
+        // 151.A00: a changed registration asks the directory for a fresh
+        // bundle, once; its reply completes the answer with a new session.
+        let query = ask(2, 43).await.unwrap().expect("key query");
+        assert_eq!(
+            query.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("encrypt")
+        );
+        assert!(ask(2, 43).await.unwrap().is_none(), "one fetch per count");
+        let qid = query.get_attr("id").unwrap().as_text().unwrap().to_owned();
+        let signed2 = KeyPair::generate(&mut rng);
+        let signature2 = remote
+            .private_key()
+            .calculate_signature(&signed2.public_key.serialize(), &mut rng)
+            .unwrap();
+        let reply = Node::new("iq")
+            .attr("type", "result")
+            .attr("id", qid.as_str())
+            .children(vec![Node::new("list").children(vec![
+                Node::new("user").attr("jid", peer.clone()).children(vec![
+                    Node::new("registration").bytes(43u32.to_be_bytes().to_vec()),
+                    Node::new("type").bytes(vec![5]),
+                    Node::new("identity").bytes(remote.public_key().public_key_bytes().to_vec()),
+                    Node::new("skey").children(vec![
+                        Node::new("id").bytes(vec![0, 0, 8]),
+                        Node::new("value").bytes(signed2.public_key.public_key_bytes().to_vec()),
+                        Node::new("signature").bytes(signature2.to_vec()),
+                    ]),
+                ]),
+            ])]);
+        let other = Node::new("iq")
+            .attr("type", "result")
+            .attr("id", "unrelated");
+        assert!(
+            complete_refetch(&store, &account, &other, ConnectionEpoch(2))
+                .await
+                .unwrap()
+                .is_none()
+        );
+        let resend = complete_refetch(&store, &account, &reply, ConnectionEpoch(2))
+            .await
+            .unwrap()
+            .unwrap()
+            .expect("fresh-session resend");
+        assert_eq!(resend.get_attr("id").and_then(|v| v.as_text()), Some("W1"));
+        assert_eq!(
+            resend
+                .child("enc")
+                .unwrap()
+                .get_attr("type")
+                .and_then(|v| v.as_text()),
+            Some("pkmsg"),
+            "a new session starts with a prekey message"
+        );
+        let session: Vec<u8> = store
+            .read(|tx| tx.get_json(Table::SignalSessions, key.as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        assert_eq!(
+            crate::signal::direct::session_remote_registration(&session).unwrap(),
+            43
+        );
+        assert!(
+            complete_refetch(&store, &account, &reply, ConnectionEpoch(2))
+                .await
+                .unwrap()
+                .is_none(),
+            "settled once"
+        );
         assert_eq!(
             reason(&store, 5, &peer).as_deref(),
             Some("count_out_of_range")
