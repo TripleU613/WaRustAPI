@@ -190,14 +190,7 @@ pub fn queue_create(store: &ProtocolStore, subject: &str, members: &[Jid]) -> Re
             .get_attr("jid")
             .and_then(|v| v.as_jid().cloned())
             .ok_or_else(|| invalid("participant jid"))?;
-        let token = match super::presence::saved_tctoken(store, &jid)? {
-            Some(token) => Some(token),
-            None => match super::inbox::lid_for(store, &jid)? {
-                Some(lid) => super::presence::saved_tctoken(store, &lid)?,
-                None => None,
-            },
-        };
-        if let Some(token) = token {
+        if let Some(token) = super::presence::held_tctoken(store, &jid)? {
             *member = member
                 .clone()
                 .children(vec![Node::new("privacy").bytes(token)]);

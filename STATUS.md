@@ -1,3 +1,16 @@
+2026-11-01 — **Observed live (group on a real phone):** the owner created a
+group with `q`. Their group text decrypted on `q`. Fixes found by the test:
+the group outbox read only the group own-LID checkpoint and blocked a LID group
+as `own_identity_missing` though login had established the LID (now uses the
+shared resolver); and the out-of-band sender-key direct message lacked the
+recipient's `<tctoken>` and was refused 463 (now attached, shared
+`presence::held_tctoken`). Then a group text from `q` went out with embedded
+distributions: server-accepted, and the owner's phone returned delivery and
+read receipts (item 8). A group reaction from the outbox was server-accepted
+(owner to confirm display). Read receipts: the owner confirmed blue ticks on
+their "Nice" (item 7). The out-of-band distribution path with the token is not
+yet re-tested live (the owner's devices now hold the chain).
+
 2026-11-01 — **Group create still restricted:** group creation now adds each
 participant's held trusted-contact token as `<participant><privacy>` (2.26.37.71
 `AWf.A00 0112..0166`). One create from `q` with the owner's token was still

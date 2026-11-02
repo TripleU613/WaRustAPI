@@ -1016,14 +1016,7 @@ impl Pending {
         };
         // The recipient's trusted-contact token, when they issued us one
         // (saved under their PN or LID): messaging::with_tctoken.
-        let token = match super::presence::saved_tctoken(store, peer)? {
-            Some(token) => Some(token),
-            None => match super::inbox::lid_for(store, peer)? {
-                Some(lid) => super::presence::saved_tctoken(store, &lid)?,
-                None => None,
-            },
-        };
-        let stanza = match token {
+        let stanza = match super::presence::held_tctoken(store, peer)? {
             Some(token) => super::messaging::with_tctoken(stanza, &token)?,
             None => stanza,
         };

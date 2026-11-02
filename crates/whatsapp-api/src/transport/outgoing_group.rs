@@ -1635,8 +1635,11 @@ impl Pending {
                         .first()
                         .and_then(|m| Jid::parse(&m.jid).ok())
                         .is_some_and(|j| j.server == Server::Lid);
+                    // The authenticated login identity counts too (own_lid_in), as
+                    // `group own-lid` reports; reading only the group checkpoint
+                    // blocked a LID group as own_identity_missing (observed 2026-11-01).
                     let own = if lid {
-                        tx.get_json(Table::Checkpoints, group_send::OWN_LID_KEY, 1)?
+                        group_send::own_lid_read(tx)?
                     } else {
                         account.own_jid.clone()
                     };
@@ -1875,12 +1878,20 @@ impl Pending {
                         .targets()
                         .iter()
                         .map(|target| -> Result<Node> {
-                            Ok(super::messaging::direct_message(
+                            let node = super::messaging::direct_message(
                                 &target.device,
                                 &super::messaging::new_message_id()?,
                                 target.kind,
                                 target.ciphertext.clone(),
-                            )?)
+                            )?;
+                            // A direct message without the recipient's token
+                            // was refused 463 (observed 2026-11-01).
+                            Ok(
+                                match super::presence::held_tctoken(store, &target.device)? {
+                                    Some(token) => super::messaging::with_tctoken(node, &token)?,
+                                    None => node,
+                                },
+                            )
                         })
                         .collect::<Result<Vec<_>>>()?
                 } else {

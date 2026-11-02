@@ -265,6 +265,19 @@ pub fn saved_tctoken(store: &crate::store::ProtocolStore, peer: &Jid) -> Result<
     Ok(saved.and_then(|v| serde_json::from_value(v["token"].clone()).ok()))
 }
 
+/// The trusted-contact token a person issued us, looked up by their user
+/// identity (device dropped) and, for a phone-number JID, its saved LID.
+pub fn held_tctoken(store: &crate::store::ProtocolStore, peer: &Jid) -> Result<Option<Vec<u8>>> {
+    let user = peer.to_non_ad();
+    if let Some(token) = saved_tctoken(store, &user)? {
+        return Ok(Some(token));
+    }
+    match super::inbox::lid_for(store, &user)? {
+        Some(lid) => saved_tctoken(store, &lid),
+        None => Ok(None),
+    }
+}
+
 /// An incoming chat state, as `LX/1Qq->A02` reads it: the chat in `from`, the
 /// member in `participant` when the chat is a group.
 #[derive(Debug, Clone, PartialEq, Eq)]

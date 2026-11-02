@@ -92,6 +92,14 @@ pub fn own_lid(store: &ProtocolStore) -> Result<Option<Jid>> {
     })
 }
 
+/// [`own_lid`] inside an existing read transaction.
+pub(super) fn own_lid_read(tx: &ReadTx<'_>) -> Result<Option<Jid>> {
+    decode_own_lid(
+        tx.get(Table::Checkpoints, OWN_LID_KEY, 1)?,
+        tx.get(Table::Checkpoints, b"login-identity", 1)?,
+    )
+}
+
 pub(super) fn own_lid_in(tx: &WriteTx<'_>) -> Result<Option<Jid>> {
     decode_own_lid(
         tx.get(Table::Checkpoints, OWN_LID_KEY, 1)?,
