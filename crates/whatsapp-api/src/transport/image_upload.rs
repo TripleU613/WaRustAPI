@@ -71,8 +71,64 @@ fn wrap_view_once(payload: Vec<u8>) -> Vec<u8> {
 struct Envelope {
     #[prost(message, optional, tag = "3")]
     image: Option<ImageMessage>,
+    #[prost(message, optional, tag = "7")]
+    document: Option<DocumentMessage>,
     #[prost(message, optional, tag = "8")]
     audio: Option<super::voice_note::AudioMessage>,
+}
+
+/// `DocumentMessage` (`Message` field 7). **Confirmed static, 2.26.37.71**
+/// `xtask apk-proto-fields --class 'LX/BZ6;'`: mimetype 2, title 3,
+/// fileSha256 4, fileLength 5, mediaKey 7, fileName 8, fileEncSha256 9,
+/// directPath 10, mediaKeyTimestamp 11. There is no field 1 (`url`) in this
+/// build, so none is sent.
+#[derive(Clone, PartialEq, Message)]
+struct DocumentMessage {
+    #[prost(string, tag = "2")]
+    mimetype: String,
+    #[prost(string, tag = "3")]
+    title: String,
+    #[prost(bytes = "vec", tag = "4")]
+    file_sha256: Vec<u8>,
+    #[prost(uint64, tag = "5")]
+    file_length: u64,
+    #[prost(bytes = "vec", tag = "7")]
+    media_key: Vec<u8>,
+    #[prost(string, tag = "8")]
+    file_name: String,
+    #[prost(bytes = "vec", tag = "9")]
+    file_enc_sha256: Vec<u8>,
+    #[prost(string, tag = "10")]
+    direct_path: String,
+    #[prost(int64, tag = "11")]
+    media_key_timestamp: i64,
+}
+
+/// File name and MIME type of a document input; the type comes from the
+/// extension for a few common kinds, else `application/octet-stream`.
+fn document_meta(path: &Path) -> Result<(String, String)> {
+    let name = path
+        .file_name()
+        .and_then(|n| n.to_str())
+        .filter(|n| !n.is_empty() && n.len() <= 255)
+        .ok_or_else(|| invalid("document needs a UTF-8 file name"))?
+        .to_owned();
+    let mime = match path
+        .extension()
+        .and_then(|e| e.to_str())
+        .map(str::to_ascii_lowercase)
+        .as_deref()
+    {
+        Some("pdf") => "application/pdf",
+        Some("txt") => "text/plain",
+        Some("csv") => "text/csv",
+        Some("zip") => "application/zip",
+        Some("json") => "application/json",
+        Some("docx") => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        Some("xlsx") => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        _ => "application/octet-stream",
+    };
+    Ok((name, mime.to_owned()))
 }
 
 type MediaInput = (Zeroizing<Vec<u8>>, u32, u32);
@@ -90,6 +146,18 @@ fn input(message: &MessageRequest) -> Result<Option<MediaInput>> {
         let seconds = super::voice_note::seconds(&bytes)?;
         return Ok(Some((bytes, seconds, 0)));
     }
+    if let Some(path) = &message.document {
+        let file = std::fs::File::open(path)?;
+        if !file.metadata()?.is_file() || file.metadata()?.len() > 8 * 1024 * 1024 {
+            return Err(invalid("document must be a regular file of at most 8 MiB"));
+        }
+        let mut bytes = Zeroizing::new(Vec::new());
+        file.take(8 * 1024 * 1024 + 1).read_to_end(&mut bytes)?;
+        if bytes.is_empty() || bytes.len() > 8 * 1024 * 1024 {
+            return Err(invalid("document must be 1 byte to 8 MiB"));
+        }
+        return Ok(Some((bytes, 0, 0)));
+    }
     message.image.as_deref().map(read_png).transpose()
 }
 
@@ -99,6 +167,13 @@ fn input_hash(message: &MessageRequest, bytes: &[u8]) -> String {
         format!("view-once-image:{hash}")
     } else if message.voice_note.is_some() {
         format!("ptt:{hash}")
+    } else if let Some(path) = &message.document {
+        // The name and type are part of what is sent, so they bind the upload.
+        let (name, mime) = document_meta(path).unwrap_or_default();
+        format!(
+            "doc:{hash}:{}",
+            hex::encode(Sha256::digest(format!("{name}\n{mime}")))
+        )
     } else {
         hash
     }
@@ -217,7 +292,7 @@ fn upload_url_kind(
     hash: &[u8; 32],
     kind: &str,
 ) -> Result<reqwest::Url> {
-    if !matches!(kind, "image" | "ptt") {
+    if !matches!(kind, "image" | "ptt" | "document") {
         return Err(invalid("unsupported media type"));
     }
     if !approved_host(host) {
@@ -360,6 +435,7 @@ async fn prepare_bound(
             key,
             recipient,
             voice: message.voice_note.is_some(),
+            document: message.document.as_deref().map(document_meta).transpose()?,
             view_once: message.view_once,
         },
     )
@@ -375,6 +451,8 @@ struct PreparedUpload {
     key: String,
     recipient: String,
     voice: bool,
+    /// File name and MIME type when the upload is a document.
+    document: Option<(String, String)>,
     view_once: bool,
 }
 
@@ -401,6 +479,7 @@ pub(crate) async fn upload_source(
         text: Zeroizing::new(String::new()),
         image: (!voice).then(|| source.to_owned()),
         voice_note: voice.then(|| source.to_owned()),
+        document: None,
         view_once: false,
         group: None,
         fresh_sessions: false,
@@ -426,6 +505,7 @@ pub(crate) async fn upload_source(
             key: key.clone(),
             recipient: String::new(),
             voice,
+            document: None,
             view_once: false,
         },
     )
@@ -446,6 +526,7 @@ async fn upload_prepared(
         key,
         recipient,
         voice,
+        document,
         view_once,
     } = input;
     let old: Option<serde_json::Value> =
@@ -454,7 +535,9 @@ async fn upload_prepared(
         return saved_payload(&old, &hash, &recipient);
     }
     let (host, auth) = route(store)?;
-    let encrypted = if voice {
+    let encrypted = if document.is_some() {
+        image::encrypt_document(&bytes)?
+    } else if voice {
         image::encrypt_audio(&bytes)?
     } else {
         image::encrypt(&bytes)?
@@ -468,7 +551,9 @@ async fn upload_prepared(
         tx.put_json(Table::Checkpoints, b"upload-token-random-bytes", 1, &seed)?;
         Ok(seed)
     })?;
-    let url = if voice {
+    let url = if document.is_some() {
+        upload_url_kind(&host, &auth, &seed, &encrypted.encrypted_hash, "document")?
+    } else if voice {
         upload_url_kind(&host, &auth, &seed, &encrypted.encrypted_hash, "ptt")?
     } else {
         upload_url(&host, &auth, &seed, &encrypted.encrypted_hash)?
@@ -525,10 +610,31 @@ async fn upload_prepared(
     let response: serde_json::Value = serde_json::from_slice(&body)
         .map_err(|_| invalid("invalid upload JSON; no automatic retry"))?;
     let (url, direct_path) = locations(&response)?;
-    let payload = if voice {
+    let payload = if let Some((file_name, mimetype)) = document {
+        let _ = url; // DocumentMessage has no url field in 2.26.37.71.
         Zeroizing::new(
             Envelope {
                 image: None,
+                audio: None,
+                document: Some(DocumentMessage {
+                    mimetype,
+                    title: file_name.clone(),
+                    file_sha256: encrypted.plaintext_hash.to_vec(),
+                    file_length: encrypted.plaintext_len,
+                    media_key: encrypted.media_key.to_vec(),
+                    file_name,
+                    file_enc_sha256: encrypted.encrypted_hash.to_vec(),
+                    direct_path,
+                    media_key_timestamp: timestamp.as_unix_seconds(),
+                }),
+            }
+            .encode_to_vec(),
+        )
+    } else if voice {
+        Zeroizing::new(
+            Envelope {
+                image: None,
+                document: None,
                 audio: Some(super::voice_note::AudioMessage {
                     url,
                     direct_path,
@@ -548,6 +654,7 @@ async fn upload_prepared(
         Zeroizing::new(
             Envelope {
                 audio: None,
+                document: None,
                 image: Some(ImageMessage {
                     url,
                     direct_path,
@@ -785,6 +892,7 @@ mod tests {
     #[test]
     fn view_once_uses_apk_flag_and_v2_wrapper_and_distinct_intent() {
         let inner = Envelope {
+            document: None,
             image: Some(ImageMessage {
                 view_once: true,
                 ..Default::default()
@@ -806,6 +914,45 @@ mod tests {
         assert_ne!(regular, input_hash(&request, b"same image"));
     }
     #[test]
+    fn document_payload_uses_the_apk_field_numbers_and_no_url() {
+        let payload = Envelope {
+            image: None,
+            audio: None,
+            document: Some(DocumentMessage {
+                mimetype: "application/pdf".into(),
+                title: "a.pdf".into(),
+                file_sha256: vec![1; 32],
+                file_length: 10,
+                media_key: vec![2; 32],
+                file_name: "a.pdf".into(),
+                file_enc_sha256: vec![3; 32],
+                direct_path: "/v/t62/x".into(),
+                media_key_timestamp: 1,
+            }),
+        }
+        .encode_to_vec();
+        assert_eq!(
+            crate::signal::direct::payload_fields(&payload).unwrap(),
+            vec![7]
+        );
+        let inner = super::super::protobuf_enum::message_bytes(&payload, 7)
+            .unwrap()
+            .unwrap();
+        let mut fields = crate::signal::direct::payload_fields(&inner).unwrap();
+        fields.sort();
+        assert_eq!(fields, vec![2, 3, 4, 5, 7, 8, 9, 10, 11]);
+        assert_eq!(
+            document_meta(Path::new("/tmp/report.PDF")).unwrap(),
+            ("report.PDF".into(), "application/pdf".into())
+        );
+        let request: MessageRequest = serde_json::from_str(
+            r#"{"to":"15551234567","request_id":"doc-1","document":"/tmp/report.pdf"}"#,
+        )
+        .unwrap();
+        assert!(input_hash(&request, b"x").starts_with("doc:"));
+    }
+
+    #[test]
     fn upload_url_matches_apk_padded_urlsafe_hash_and_escaped_auth() {
         assert!(
             upload_url_kind("mmg.whatsapp.net", "auth", &[0; 32], &[0; 32], "ptt")
@@ -816,6 +963,7 @@ mod tests {
         assert_eq!(
             Envelope {
                 image: None,
+                document: None,
                 audio: Some(super::super::voice_note::AudioMessage {
                     seconds: 2,
                     ptt: true,
@@ -889,6 +1037,7 @@ mod tests {
             ..Default::default()
         };
         let bytes = Envelope {
+            document: None,
             image: Some(image),
             audio: None,
         }

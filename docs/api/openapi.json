@@ -859,6 +859,10 @@
           "quote": {
             "$ref": "#/components/schemas/QuotedTarget",
             "description": "Reply to, or react to, an existing message in the chat named by `group` or `to`. lab-transport handles group replies (with optional quoted_text) and group reactions, and refuses any direct-chat quote. outbox-send (normal outbox) accepts replies only, in groups and (2026-10-13) direct chats, with exactly one of text, image or voice_note, and refuses reactions and quoted_text before any store access or send-path claim: a participant naming one of our identities quotes our outgoing message; any other names the incoming author, which in a direct chat must be the contact itself in the same form as `to`. quotedMessage is built from the saved parent, never a caller preview."
+          },
+          "document": {
+            "type": "string",
+            "description": "Path to a document file (1 byte to 8 MiB) to upload and send as DocumentMessage (Message field 7; 2.26.37.71 BZ6 fields 2-11, no url). Encrypted with the WhatsApp Document Keys domain, uploaded to /mms/document, stanza enc mediatype=document. File name from the path; MIME type from the extension (pdf, txt, csv, zip, json, docx, xlsx) else application/octet-stream. Exclusive with text, image and voice_note; not for status posts or comparison group sends."
           }
         },
         "description": "Private JSON message request for outbox-send or lab-transport --message. Exactly one target: `to` (direct), `group` (sender-key fan-out) or `status` (a status post). Repeating the same request_id returns the saved outcome locally and never resends."

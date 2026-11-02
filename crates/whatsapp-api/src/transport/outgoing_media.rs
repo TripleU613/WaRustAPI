@@ -13,6 +13,35 @@ use zeroize::Zeroizing;
 
 const UPLOAD_BINDING: &[u8] = b"outgoing-ordinary-upload-v1";
 
+/// The upload's kind from its saved content hash prefix (image_upload::input_hash).
+fn media_kind(hash: &str) -> MediaKind {
+    if hash.starts_with("ptt:") {
+        MediaKind::Audio
+    } else if hash.starts_with("doc:") {
+        MediaKind::Document
+    } else {
+        MediaKind::Image
+    }
+}
+
+/// Local reference label; a document's real type travels in its payload.
+fn kind_mime(kind: MediaKind) -> &'static str {
+    match kind {
+        MediaKind::Audio => "audio/ogg; codecs=opus",
+        MediaKind::Document => "application/octet-stream",
+        _ => "image/png",
+    }
+}
+
+/// The stanza `enc mediatype` (2.26.37.71 `ADx.A0O` table).
+fn stanza_media_type(kind: MediaKind) -> &'static str {
+    match kind {
+        MediaKind::Audio => "ptt",
+        MediaKind::Document => "document",
+        _ => "image",
+    }
+}
+
 #[derive(serde::Serialize, serde::Deserialize)]
 struct UploadBinding {
     key: String,
@@ -39,11 +68,7 @@ fn public_uploaded(
     {
         return Err(bad());
     }
-    let kind = if hash.starts_with("ptt:") {
-        MediaKind::Audio
-    } else {
-        MediaKind::Image
-    };
+    let kind = media_kind(hash);
     let length = saved["plaintext_len"]
         .as_u64()
         .filter(|n| *n > 0 && *n <= 8 * 1024 * 1024)
@@ -77,12 +102,7 @@ pub(crate) fn upload_reference(store: &ProtocolStore, key: &str) -> Result<Media
         let reference = MediaReference {
             sealed: store.seal_media_reference(UPLOAD_BINDING, &binding)?.into(),
             kind,
-            mime_type: if kind == MediaKind::Audio {
-                "audio/ogg; codecs=opus"
-            } else {
-                "image/png"
-            }
-            .into(),
+            mime_type: kind_mime(kind).into(),
             length: Some(length),
         };
         tx.put_json(Table::Checkpoints, checkpoint.as_bytes(), 1, &reference)?;
@@ -103,11 +123,7 @@ fn verify_upload_binding(
         serde_json::from_slice(&store.open_media_reference(UPLOAD_BINDING, &reference.sealed)?)
             .map_err(|_| bad())?;
     let digest: [u8; 32] = Sha256::digest(payload).into();
-    let mime = if kind == MediaKind::Audio {
-        "audio/ogg; codecs=opus"
-    } else {
-        "image/png"
-    };
+    let mime = kind_mime(kind);
     if binding.key != key
         || binding.payload_hash != digest
         || reference.kind != kind
@@ -172,11 +188,7 @@ fn uploaded(
         return Err(bad());
     }
     let hash = saved["hash"].as_str().ok_or_else(bad)?;
-    let kind = if hash.starts_with("ptt:") {
-        MediaKind::Audio
-    } else {
-        MediaKind::Image
-    };
+    let kind = media_kind(hash);
     let payload = Zeroizing::new(
         serde_json::from_value::<Vec<u8>>(saved["protobuf"].clone()).map_err(|_| bad())?,
     );
@@ -220,11 +232,7 @@ pub fn reference(
             .seal_media_reference(&binding(id, peer), &payload)?
             .into(),
         kind,
-        mime_type: match kind {
-            MediaKind::Audio => "audio/ogg; codecs=opus",
-            _ => "image/png",
-        }
-        .into(),
+        mime_type: kind_mime(kind).into(),
         length: None,
     };
     store.write(|tx| {
@@ -254,21 +262,11 @@ pub(super) fn resolve(
         let binding: UploadBinding = serde_json::from_slice(&binding).map_err(|_| bad())?;
         let (payload, kind, length) = public_uploaded(store, &binding.key)?;
         verify_upload_binding(store, reference, &binding.key, &payload, kind, length)?;
-        return Ok((
-            payload,
-            if kind == MediaKind::Audio {
-                "ptt"
-            } else {
-                "image"
-            },
-        ));
+        return Ok((payload, stanza_media_type(kind)));
     }
     let (uploaded, kind) = uploaded(store, id, peer)?;
     let payload = store.open_media_reference(&binding(id, peer), &reference.sealed)?;
-    let (mime, media_type) = match kind {
-        MediaKind::Audio => ("audio/ogg; codecs=opus", "ptt"),
-        _ => ("image/png", "image"),
-    };
+    let (mime, media_type) = (kind_mime(kind), stanza_media_type(kind));
     if payload != uploaded
         || reference.kind != kind
         || reference.mime_type != mime

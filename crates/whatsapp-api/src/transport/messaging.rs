@@ -25,6 +25,9 @@ pub struct MessageRequest {
     /// Ogg/Opus voice note, mutually exclusive with text and image.
     #[serde(default)]
     pub voice_note: Option<std::path::PathBuf>,
+    /// A document file to upload and send (`DocumentMessage`, Message field 7).
+    #[serde(default)]
+    pub document: Option<std::path::PathBuf>,
     /// Send an image with WhatsApp's view-once marker and V2 wrapper.
     #[serde(default)]
     pub view_once: bool,
@@ -229,7 +232,7 @@ impl MessageRequest {
                     "a status post names no `to` and no `group`",
                 ));
             }
-            if value.voice_note.is_some() || value.view_once {
+            if value.voice_note.is_some() || value.document.is_some() || value.view_once {
                 return Err(crate::Error::invalid(
                     "message",
                     "a status post carries text or an image so far",
@@ -272,7 +275,8 @@ impl MessageRequest {
             // group path refuses media separately).
             let bodies = usize::from(!value.text.is_empty())
                 + usize::from(value.image.is_some())
-                + usize::from(value.voice_note.is_some());
+                + usize::from(value.voice_note.is_some())
+                + usize::from(value.document.is_some());
             if quote.is_reaction() && bodies != 0 {
                 return Err(crate::Error::invalid(
                     "message",
@@ -305,7 +309,8 @@ impl MessageRequest {
         let reacting = value.quote.as_ref().is_some_and(|q| q.is_reaction());
         let bodies = usize::from(!value.text.is_empty())
             + usize::from(value.image.is_some())
-            + usize::from(value.voice_note.is_some());
+            + usize::from(value.voice_note.is_some())
+            + usize::from(value.document.is_some());
         if (bodies != usize::from(!reacting))
             || (value.view_once && value.image.is_none())
             || value.text.len() > 4096
@@ -330,7 +335,12 @@ impl MessageRequest {
     /// sending an empty text or dropping the quote.
     pub fn require_comparison_support(&self) -> crate::Result<()> {
         let group = self.group_chat()?.is_some();
-        if group && (self.image.is_some() || self.voice_note.is_some() || self.view_once) {
+        if group
+            && (self.image.is_some()
+                || self.voice_note.is_some()
+                || self.document.is_some()
+                || self.view_once)
+        {
             return Err(crate::Error::invalid(
                 "message",
                 "a comparison group send carries text only; use outbox-send for group media",
@@ -995,7 +1005,8 @@ pub fn direct_media(
     ciphertext: Vec<u8>,
     media_type: &str,
 ) -> Result<Node, TransportError> {
-    if !matches!(media_type, "image" | "ptt") {
+    // ADx.A0O's mediatype table includes "document" (2.26.37.71).
+    if !matches!(media_type, "image" | "ptt" | "document") {
         return Err(error("unsupported media type"));
     }
     if !matches!(kind, "pkmsg" | "msg") || ciphertext.is_empty() || id.is_empty() {
@@ -1971,6 +1982,7 @@ mod tests {
             text: zeroize::Zeroizing::new("hi".into()),
             image: None,
             voice_note: None,
+            document: None,
             view_once: false,
             group: None,
             fresh_sessions: false,
@@ -2107,6 +2119,7 @@ mod tests {
             text: zeroize::Zeroizing::new("hi".into()),
             image: None,
             voice_note: None,
+            document: None,
             view_once: false,
             group: group.map(str::to_owned),
             fresh_sessions: false,

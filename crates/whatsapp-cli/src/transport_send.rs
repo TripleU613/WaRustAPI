@@ -77,6 +77,8 @@ pub(super) async fn send(
             prepared.ciphertext,
             if message.voice_note.is_some() {
                 "ptt"
+            } else if message.document.is_some() {
+                "document"
             } else {
                 "image"
             },

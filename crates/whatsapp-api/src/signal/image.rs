@@ -182,6 +182,12 @@ pub fn encrypt_audio(bytes: &[u8]) -> Result<EncryptedImage> {
     encrypt_kind(bytes, b"WhatsApp Audio Keys")
 }
 
+/// Documents use the document key domain (`WhatsApp Document Keys`, a
+/// 2.26.37.71 string constant beside the image and audio labels).
+pub fn encrypt_document(bytes: &[u8]) -> Result<EncryptedImage> {
+    encrypt_kind(bytes, b"WhatsApp Document Keys")
+}
+
 fn encrypt_kind(bytes: &[u8], info: &[u8]) -> Result<EncryptedImage> {
     if bytes.is_empty() || bytes.len() > 8 * 1024 * 1024 {
         return Err(invalid());
