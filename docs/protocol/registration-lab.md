@@ -547,3 +547,21 @@ live dispatch/delivery. A first request already had counter 1, so this resend
 bug does not explain all failures. No live signup request was made during this
 investigation. Do not infer delivery, number blocking, or IP throttling from
 `sent` or `temporarily_unavailable` alone.
+
+## Corrected voice resend (2026-11-02)
+
+**Observed (live):** after the owner authorized another signup attempt, the
+saved pending voice challenge had one preparation and no remaining wait. One
+`lab-signup --allow-live-request resend-code --method voice` used the rebuilt
+client, the existing 2.26.37.70/enc_empty_h profile and the existing keys. The
+counter correction therefore supplied 2 for this second preparation. The inner
+form was 1,118 bytes; the response was 334 bytes. The recognized answer was
+HTTP 200 / `sent`, no refusal reason, `retry_after=305`, `voice_wait=305`, and
+`sms_wait=65` seconds. The saved attempt retains the next-request deadline.
+No automatic retries or requests for other numbers followed.
+
+**Unknown:** whether the call arrived and whether its code can complete
+registration. `sent` does not establish either. This answer also does not
+establish that the counter correction changed server behavior: the previous
+first voice request had already returned `sent`. Enter the OTP locally without
+echo; do not put it in chat, command arguments, tracked files or logs.

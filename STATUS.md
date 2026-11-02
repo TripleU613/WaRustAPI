@@ -1,3 +1,11 @@
+2026-11-02 — **Observed live (corrected voice resend):** one authorized
+voice resend on the saved pending attempt returned HTTP 200 / `sent`, with
+`retry_after=305`, `voice_wait=305`, and `sms_wait=65` seconds. The request
+used the rebuilt client with history-derived code metrics; the same identity
+and attempt were preserved. No automatic retry followed. Call receipt and
+completed registration remain unconfirmed; the code must be entered locally.
+[Voice resend evidence](docs/protocol/registration-lab.md#corrected-voice-resend-2026-11-02).
+
 2026-11-02 — **Fixed/offline (code-request metrics):** SMS/voice requests now
 refresh configured byte-path `client_metrics.attempts` from complete saved
 preparation history instead of reusing the template's 1 on every resend.
