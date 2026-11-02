@@ -272,7 +272,12 @@ enum Cmd {
     /// List received frames `listen` could not decode, re-checked with the
     /// current decoder (offline, redacted: digest, error class, size).
     #[cfg(feature = "experimental-transport")]
-    Undecodable,
+    Undecodable {
+        /// Also settle captured IQ replies that now decode to the one-shot
+        /// action still waiting for them (offline; sends nothing).
+        #[arg(long)]
+        settle_replies: bool,
+    },
     /// Inspect saved peer identity conflicts (offline; unauthenticated observations).
     #[cfg(feature = "experimental-transport")]
     IdentityConflicts,
@@ -1802,7 +1807,9 @@ async fn run(cli: Cli) -> Result<(), Error> {
         #[cfg(feature = "experimental-transport")]
         Cmd::Receipts => transport_receive::receipts_status(&cli),
         #[cfg(feature = "experimental-transport")]
-        Cmd::Undecodable => transport_receive::undecodable_status(&cli),
+        Cmd::Undecodable { settle_replies } => {
+            transport_receive::undecodable_status(&cli, *settle_replies)
+        }
         #[cfg(feature = "experimental-transport")]
         Cmd::IdentityConflicts => transport_receive::identity_conflicts(&cli),
         #[cfg(feature = "experimental-transport")]

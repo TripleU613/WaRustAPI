@@ -59,8 +59,7 @@ fn check_wire(node: &Node, chat: &Jid, id: &str) -> Result<()> {
     Ok(())
 }
 fn validate_targets(targets: Vec<Jid>) -> Result<Vec<Jid>> {
-    if targets.len() > Limits::default().max_children as usize || targets.iter().any(|j| !actor(j))
-    {
+    if targets.len() > crate::profile::MAX_BATCH_ITEMS || targets.iter().any(|j| !actor(j)) {
         return Err(invalid("invalid saved group receipt targets"));
     }
     let mut seen = std::collections::BTreeSet::new();
@@ -183,7 +182,7 @@ fn saved_facts(saved: &serde_json::Value) -> Result<Vec<DeviceReceipt>> {
         Some(value) => {
             let rows: Vec<DeviceReceipt> = serde_json::from_value(value.clone())
                 .map_err(|_| invalid("invalid saved group receipt facts"))?;
-            if rows.len() > Limits::default().max_children as usize
+            if rows.len() > crate::profile::MAX_BATCH_ITEMS
                 || rows.iter().any(|r| !actor(&r.device.to_jid()))
             {
                 return Err(invalid("invalid saved group receipt facts"));
@@ -345,7 +344,7 @@ pub(super) fn record_in(tx: &mut WriteTx<'_>, node: &Node) -> Result<usize> {
             let index = match facts.iter().position(|r| r.device == device) {
                 Some(index) => index,
                 None => {
-                    if facts.len() >= Limits::default().max_children as usize {
+                    if facts.len() >= crate::profile::MAX_BATCH_ITEMS {
                         return Err(invalid("saved group receipt fact limit reached"));
                     }
                     facts.push(DeviceReceipt {

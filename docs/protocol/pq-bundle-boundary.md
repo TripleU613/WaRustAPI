@@ -147,7 +147,7 @@ of this section (noted below).
 `0056..0076`), and `Can.A03()` gates the `pqSessionUpgradeManager` block of
 `SendE2EMessageJob` (group-send-job-hash-check `1750`, `178e`).
 
-**Unknown:** the bodies of `Can.A01`..`A04` (feature properties, per-JID state
+**Resolved 2026-11-01** (see [kem-prekey-inventory](kem-prekey-inventory.md#when-the-apk-uploads-kyber-prekeys-and-sends-pqsupport-2026-11-01-apk-on-disk)): every `Can` predicate requires A/B property 21198 (`PQ_KEYS_UPLOAD_CODE`, default false). Earlier text: **Unknown:** the bodies of `Can.A01`..`A04` (feature properties, per-JID state
 or both) are in no retained bundle, so whether, when and for whom the native
 client asks for PQ keys is not established. **The `Can` predicate bodies are
 the next trace** that resolves the `pqsupport` producer for all of the above.

@@ -170,6 +170,10 @@ List received frames `listen` could not decode, re-checked with the current deco
 Usage: whatsapp-cli undecodable [OPTIONS]...
 ```
 
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+| --settle-replies | SETTLE_REPLIES | no |  |  | `true`, `false` | Also settle captured IQ replies that now decode to the one-shot action still waiting for them (offline; sends nothing) |
+
 ## whatsapp-cli identity-conflicts
 
 Inspect saved peer identity conflicts (offline; unauthenticated observations)

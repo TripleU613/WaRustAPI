@@ -844,13 +844,17 @@ pub(super) fn reproject(cli: &super::Cli) -> Result<(), Error> {
 
 /// Captured frames `listen` could not decode. Prints the capture digest, the
 /// error class then and now, and the frame size; never frame bytes.
-pub(super) fn undecodable_status(cli: &super::Cli) -> Result<(), Error> {
+pub(super) fn undecodable_status(cli: &super::Cli, settle_replies: bool) -> Result<(), Error> {
     let store = ProtocolStore::open(OpenOptions {
         path: cli.store.clone(),
         account_id: AccountId::new(cli.account.clone())?,
         key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
         create: false,
     })?;
+    if settle_replies {
+        let settled = whatsapp_api::transport::inbox::settle_undecodable_replies(&store)?;
+        eprintln!("undecodable: settled {settled} captured IQ reply(ies) to waiting actions");
+    }
     let frames = whatsapp_api::transport::inbox::undecodable_frames(&store)?;
     if cli.json {
         println!(

@@ -39,7 +39,10 @@ pub struct Limits {
     pub max_node_depth: u16,
     /// Maximum attributes per node.
     pub max_attributes: u16,
-    /// Maximum children per node.
+    /// Maximum children per decoded node. 16,384 since 2026-11-01: a live
+    /// `abt` A/B-property reply carried 7,235 `<prop>` children and the old
+    /// 4,096 bound refused it. Local DoS guard, not a WhatsApp rule; batch
+    /// bounds use [`MAX_BATCH_ITEMS`] instead.
     pub max_children: u32,
     /// Maximum string/bytes length inside a node.
     pub max_string_len: u32,
@@ -55,6 +58,10 @@ pub struct Limits {
     pub max_event_batch: u32,
 }
 
+/// Local bound on items in one receipt/key/participant batch we build or
+/// accept (formerly shared with the decoder's child bound; unchanged at 4,096).
+pub const MAX_BATCH_ITEMS: usize = 4096;
+
 impl Default for Limits {
     fn default() -> Self {
         Self {
@@ -62,7 +69,7 @@ impl Default for Limits {
             max_decompressed_len: 4 << 20,
             max_node_depth: 32,
             max_attributes: 64,
-            max_children: 4096,
+            max_children: 16_384,
             max_string_len: 1 << 20,
             max_text_len: 65_536,
             max_outbox_entries: 10_000,

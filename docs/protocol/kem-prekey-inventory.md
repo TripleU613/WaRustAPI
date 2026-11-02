@@ -213,3 +213,42 @@ KEM generation, signing, ID allocation, upload and server acceptance;
 own-device and companion KEM admission; native outer-caller error handling and
 retry behavior for hybrid failures; same-key classic-to-hybrid migration;
 live Android/server interoperability. Ban immunity is not established.
+
+## When the APK uploads Kyber prekeys and sends `pqsupport` (2026-11-01, APK on disk)
+
+**Confirmed static, 2.26.37.71** (`~/Downloads/WhatsApp.apk`, `1755111a…`):
+
+- `Can.A02()` returns `00D.A10(0x52ce)`, Boolean A/B property **21198**.
+  `D1G.Bat` (`PQKeysUploadABPropsObserver`) names it `PQ_KEYS_UPLOAD_CODE`
+  (`0004..000e`) and, when it turns from true to false, schedules
+  `DeleteKyberPreKeysJob` (`001c..0046`).
+- `Can.A01()` = `A02()` **and** `0jc.A11()` (a local key-store check);
+  `Can.A00()` = `A01()` **and** property 24160 (`0x5e60`);
+  `Can.A04(jid)` = (`0DE.A0l(jid)` or `0DE.A0T(jid)`) **and** `A00()`. `A04`
+  is the predicate whose retained call sites add `pqsupport="true"` and drive
+  PQ key work ([pq-bundle-boundary](pq-bundle-boundary.md)). `Can.A03()`
+  (session upgrade) also requires `A02()`.
+- **Default false:** `07t.A0L` sets `v1 = Boolean.valueOf(false)` at
+  `0000..0016`, never rewrites `v1`, and registers `0x52ce` with it at
+  `0d0e..0d20`.
+- The upload paths name the same dependency: `13c.A03` logs "failed to get last
+  resort kyber prekey; skipping kyber prekeys upload", `13c.A0B` "aborting PQ
+  prekeys upload", and `D4s.onRandomizedDailyCronNoMessageStore` generates and
+  sends PQ prekeys when no last-resort Kyber prekey exists.
+
+**Observed (account `q`, 2026-11-01):** the initial A/B-property read returned
+7,235 configuration rows and **no row for 21198**. So the static default
+(false) applies unless MobileConfig supersedes it, which is still unported
+([mobileconfig-boolean](mobileconfig-boolean.md)). With 21198 false the
+official client neither generates nor uploads Kyber prekeys nor sends
+`pqsupport`, which is exactly what this client does. Generating and uploading
+them anyway would be a deviation, not parity, so nothing was added. If a later
+read returns 21198 = 1 (`abprops-query --show` prints `pq_keys_upload_value`),
+the next work is the producer: `next_kyber_prekey_id` allocation, the count, the
+last-resort key, and `kem_upload_children` wired into `begin_upload`.
+
+That read first failed locally: the reply has more than 4,096 `<prop>`
+children, and our decoder's child bound (`Limits::max_children`, a local DoS
+guard, not a WhatsApp rule) was 4,096. The bound is now 16,384, the same bound
+the A/B-property parser already applied. The captured reply was settled to its
+waiting action offline with `whatsapp-cli undecodable --settle-replies`.

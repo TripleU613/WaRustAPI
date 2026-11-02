@@ -17,6 +17,9 @@ const REMOVAL_PROPERTY: i32 = 35661;
 const TOKEN_COUNTERPART_PROPERTY: i32 = 15491;
 // 37.71 07t.A0X 055a..056c / HxT.A00: Boolean pending-job namespace.
 const TOKEN_PENDING_NAMESPACE_PROPERTY: i32 = 14303;
+// 37.71 D1G.Bat 0004..000e (PQKeysUploadABPropsObserver): PQ_KEYS_UPLOAD_CODE.
+// Turning it off deletes every Kyber prekey (DeleteKyberPreKeysJob).
+const PQ_KEYS_UPLOAD_PROPERTY: i32 = 0x52ce;
 
 /// Queue one initial AB-property read without a fabricated cached hash.
 /// Repeats reuse the original action, including refusals and uncertain outcomes.
@@ -112,6 +115,13 @@ pub struct AbPropsInspection {
     /// Invalid last 14303 value; no fallback to an earlier duplicate/default.
     #[serde(default)]
     pub token_pending_namespace_value_invalid: bool,
+    /// Last returned 21198 (`PQ_KEYS_UPLOAD_CODE`) value; whether the server
+    /// has this account upload Kyber prekeys. Not the effective gate.
+    #[serde(default)]
+    pub pq_keys_upload_value: Option<bool>,
+    /// Invalid last 21198 value; no fallback to an earlier duplicate/default.
+    #[serde(default)]
+    pub pq_keys_upload_value_invalid: bool,
 }
 fn text<'a>(node: &'a Node, name: &str) -> Option<&'a str> {
     node.get_attr(name).and_then(|v| v.as_text())
@@ -141,6 +151,7 @@ fn parse(reply: &Node, view: &mut AbPropsInspection) -> std::result::Result<(), 
     let mut removal = None;
     let mut token_counterpart: Option<&str> = None;
     let mut token_pending_namespace: Option<&str> = None;
+    let mut pq_keys_upload: Option<&str> = None;
     for row in props
         .child_nodes()
         .iter()
@@ -163,6 +174,7 @@ fn parse(reply: &Node, view: &mut AbPropsInspection) -> std::result::Result<(), 
                 REMOVAL_PROPERTY => removal = Some(value),
                 TOKEN_COUNTERPART_PROPERTY => token_counterpart = Some(value),
                 TOKEN_PENDING_NAMESPACE_PROPERTY => token_pending_namespace = Some(value),
+                PQ_KEYS_UPLOAD_PROPERTY => pq_keys_upload = Some(value),
                 _ => {}
             }
         } else {
@@ -199,6 +211,11 @@ fn parse(reply: &Node, view: &mut AbPropsInspection) -> std::result::Result<(), 
                 token_pending_namespace,
                 &mut view.token_pending_namespace_value,
                 &mut view.token_pending_namespace_value_invalid,
+            ),
+            (
+                pq_keys_upload,
+                &mut view.pq_keys_upload_value,
+                &mut view.pq_keys_upload_value_invalid,
             ),
         ] {
             if let Some(value) = value {
@@ -245,6 +262,8 @@ pub fn inspect(store: &ProtocolStore) -> Result<Option<AbPropsInspection>> {
             token_counterpart_value_invalid: false,
             token_pending_namespace_value: None,
             token_pending_namespace_value_invalid: false,
+            pq_keys_upload_value: None,
+            pq_keys_upload_value_invalid: false,
         };
         let Some(reply) = reply else {
             return Ok(Some(view));
@@ -421,6 +440,8 @@ mod tests {
             token_counterpart_value_invalid: false,
             token_pending_namespace_value: None,
             token_pending_namespace_value_invalid: false,
+            pq_keys_upload_value: None,
+            pq_keys_upload_value_invalid: false,
         }
     }
     #[test]
@@ -443,6 +464,7 @@ mod tests {
                             token(15491, "-1"),
                             token(14303, "1"),
                             token(14303, "0"),
+                            token(21198, "1"),
                         ]),
                 ),
                 &mut evidence,
@@ -450,6 +472,7 @@ mod tests {
             .unwrap();
             assert_eq!(evidence.token_counterpart_value, Some(true));
             assert_eq!(evidence.token_pending_namespace_value, Some(false));
+            assert_eq!(evidence.pq_keys_upload_value, Some(true));
             assert!(!evidence.token_counterpart_value_invalid);
             assert!(!evidence.token_pending_namespace_value_invalid);
             let mut invalid = view();

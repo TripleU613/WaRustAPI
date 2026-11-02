@@ -492,3 +492,12 @@ base-key record and count > 2 comparison (`0jc.A0u`/`A17`); the fresh-bundle
 answer after a registration change; sessions built from `<keys>` in the receipt
 (`151.A01`); normal-runtime group/broadcast retries. No retry has been answered
 live.
+
+## `pqsupport` and Kyber upload gate (resolved 2026-11-01)
+
+`Can.A04` (the `pqsupport` producer) and the Kyber prekey upload both require
+A/B property 21198 (`PQ_KEYS_UPLOAD_CODE`), default false; `q`'s A/B read does
+not set it. Still open: whether MobileConfig overrides that default, and the
+Kyber producer (ID allocation, counts, last resort) for an account where the
+property is true. [kem-prekey-inventory](kem-prekey-inventory.md).
+

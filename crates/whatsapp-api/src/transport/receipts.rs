@@ -936,7 +936,7 @@ fn offline_aggregate(node: &Node, participants: &Node) -> Result<Vec<Node>> {
     let crate::binary::NodeContent::Children(items) = &participants.content else {
         return Err(invalid("missing participant list"));
     };
-    if items.len() > crate::profile::Limits::default().max_children as usize {
+    if items.len() > crate::profile::MAX_BATCH_ITEMS {
         return Err(invalid("participant list exceeds bound"));
     }
     let mut receipts = Vec::with_capacity(items.len());
@@ -998,7 +998,7 @@ fn key_aggregate(node: &Node, participants: &Node, default_seconds: i64) -> Resu
     let crate::binary::NodeContent::Children(items) = &participants.content else {
         return Err(invalid("missing participant list"));
     };
-    if items.len() > crate::profile::Limits::default().max_children as usize {
+    if items.len() > crate::profile::MAX_BATCH_ITEMS {
         return Err(invalid("participant list exceeds bound"));
     }
     let mut receipts = Vec::with_capacity(items.len());

@@ -27,7 +27,7 @@ fn key(id: &ClientRequestId) -> Vec<u8> {
     .into_bytes()
 }
 fn devices(input: &[Jid]) -> Result<Vec<Jid>> {
-    if input.len() > Limits::default().max_children as usize {
+    if input.len() > crate::profile::MAX_BATCH_ITEMS {
         return Err(invalid("too many key-batch devices"));
     }
     let mut result = Vec::with_capacity(input.len());

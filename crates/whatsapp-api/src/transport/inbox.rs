@@ -624,6 +624,46 @@ pub fn undecodable_frames(store: &ProtocolStore) -> Result<Vec<UndecodableFrame>
     })
 }
 
+/// Settle captured `iq` replies that the current decoder now reads to the
+/// one-shot action still waiting for them (`actions::record_reply`, the same
+/// call the live loop makes). An IQ result is never redelivered, so a reply
+/// refused by an older local decoder bound (for example the child count of a
+/// large `abt` reply, 2026-11-01) is otherwise lost. Only actions still
+/// reserved as sent accept a reply; nothing is sent or decrypted.
+pub fn settle_undecodable_replies(store: &ProtocolStore) -> Result<usize> {
+    let frames: Vec<Vec<u8>> = store.read(|tx| {
+        let mut out = Vec::new();
+        let mut cursor = None;
+        loop {
+            let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
+            let done = rows.len() < 256;
+            cursor = rows.last().map(|(key, _)| key.clone());
+            for (key, _) in rows {
+                if !key.starts_with(UNDECODABLE_PREFIX.as_bytes()) {
+                    continue;
+                }
+                if let Some(saved) =
+                    tx.get_json::<StoredUndecodable>(Table::Checkpoints, &key, 1)?
+                {
+                    out.push(saved.frame);
+                }
+            }
+            if done {
+                return Ok(out);
+            }
+        }
+    })?;
+    let mut settled = 0;
+    for frame in frames {
+        if let Ok(node) = decode_frame(&frame)
+            && super::actions::record_reply(store, &node)?
+        {
+            settled += 1;
+        }
+    }
+    Ok(settled)
+}
+
 /// Capture a decrypted frame whose payload did not unpack or decode, so it can
 /// be inspected (`store inspect` lists the `inbound-undecodable` kind) and
 /// re-decoded by a later decoder. Encrypted at rest like every capture; keyed

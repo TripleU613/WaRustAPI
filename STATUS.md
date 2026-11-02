@@ -1,3 +1,13 @@
+2026-11-01 — **Traced + observed (post-quantum keys):** the APK uploads Kyber
+prekeys and sends `pqsupport` only when A/B property 21198
+(`PQ_KEYS_UPLOAD_CODE`) is true. Every `Can` predicate requires it, and its
+built-in default is false (`07t.A0L`). `q`'s first A/B read (7,235 rows) does
+not set it, so the official client would upload no Kyber keys for this account,
+and neither do we. `abprops-query --show` now prints `pq_keys_upload_value`.
+The read had first been refused by our own 4,096-child decoder bound (now
+16,384); `undecodable --settle-replies` settled the captured reply offline.
+[kem-prekey-inventory](docs/protocol/kem-prekey-inventory.md).
+
 2026-11-01 — **Compared (2.26.43.72):** against what we rely on, the new build
 has the same signing certificate, an identical binary token dictionary, and
 an unchanged `about_logo.png`. `classes.dex` changed, so its registration
