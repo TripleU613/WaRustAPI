@@ -1,3 +1,9 @@
+2026-11-02 — **Live (document send):** `q` sent the owner a small text file via
+`outbox-send` with private JSON `document`: uploaded to `/mms/document`
+(Document Keys domain), sent as `DocumentMessage` (2.26.37.71 `BZ6` field
+numbers, no url) with `mediatype="document"`; server-accepted, and a delivery
+receipt from the owner's phone followed. Handset display not yet confirmed.
+
 2026-11-02 — **Live (group edit and delete-for-everyone):** in the owner's
 group, `q` edited its earlier group text and then revoked it through the normal
 group outbox (sender-key message, stanza `edit="1"` then `edit="7"`). Both

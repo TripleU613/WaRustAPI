@@ -74,7 +74,7 @@ store inspections ([HTTP API parity](#http-api-parity)). Every other operation i
 | Image send | live (lab path handset-confirmed); normal outbox acked with delivery receipt | `lab-transport --message` (JSON `image`), `outbox-send` | [messaging-transport](protocol/messaging-transport.md), [messaging-completion](messaging-completion.md) | PNG only; no caption/thumbnail; normal-outbox handset display unconfirmed |
 | Voice note send | live (receipt; playback unconfirmed) | `lab-transport --message` (JSON `voice_note`), `outbox-send` | same | Audible playback unconfirmed; Ogg/Opus only; waveform omitted |
 | View-once image send and single local opening | live send; incoming ciphertext download live (one GET); local viewer and opened receipt offline | `lab-transport --message` (JSON `image` + `view_once`), `lab-download-view-once`, `lab-open-view-once` | same | Opened (played) receipt after viewing implemented but never sent live; no fresh incoming sample; group view-once refused by `outbox-send` |
-| Video/document/sticker send, HD variants | absent | — | [why](protocol/unknowns.md#document-and-video-sending-2026-10-13) | Stanza `enc mediatype` for document/video untraced (key domains and schemas are known); thumbnails untraced |
+| Video/document/sticker send, HD variants | document send live 2026-11-02 (private JSON `document`); video/sticker/HD absent | — | [why](protocol/unknowns.md#document-and-video-sending-2026-10-13) | Stanza `enc mediatype` for document/video untraced (key domains and schemas are known); thumbnails untraced |
 | Calls (voice/video) | absent | — | — | Not researched |
 
 ## Groups, communities, channels, status, broadcast
