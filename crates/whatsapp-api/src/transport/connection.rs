@@ -695,6 +695,10 @@ pub(crate) async fn drive(
                     }
                     Err(error) => return Err(error),
                 }
+                // Captured already; the snapshot follows the change (0yv.A09).
+                if let Err(error) = super::groups::apply_change_notification(&store, &node) {
+                    tracing::warn!(%error, "group change notification not applied to the saved snapshot");
+                }
                 match super::groups::notification_ack(&node) {
                     Ok(Some(ack)) => link.send(&ack).await?,
                     Ok(None) => {}

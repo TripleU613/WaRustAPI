@@ -339,6 +339,82 @@ pub fn notification_ack(node: &Node) -> Result<Option<Node>> {
     super::notifications::base_ack(node, "w:gp2")
 }
 
+/// Apply a `w:gp2` membership or subject change to the saved snapshot.
+///
+/// **Confirmed static, 2.26.37.71** `0yv.A09` (`GroupNotificationHandler`):
+/// the child name selects the change: `add` (`0406`) and `remove` (`0fb4`)
+/// read their `<participant jid=…>` children through `A5V.A01`, `promote`
+/// (`0ac4`) and `demote` (`0730`) likewise, and `subject` (`102c`) reads
+/// `subject`, `s_t` and `s_o`. The APK then updates its group store (`0yw`).
+/// Here only an existing `group:<jid>` snapshot is updated; a group never
+/// fetched stays absent (group sends fetch membership fresh either way).
+/// Malformed participants are skipped; `false` means nothing was changed.
+/// Not applied: descriptions, settings, linked groups, `create`/`delete`.
+pub fn apply_change_notification(store: &ProtocolStore, node: &Node) -> Result<bool> {
+    if node.description != "notification"
+        || node.get_attr("type").and_then(|v| v.as_text()) != Some("w:gp2")
+    {
+        return Ok(false);
+    }
+    let Some(group) = super::receipts::jid(node, "from").filter(Jid::is_group) else {
+        return Ok(false);
+    };
+    let jids = |change: &Node| -> Vec<String> {
+        change
+            .child_nodes()
+            .iter()
+            .filter(|c| c.description == "participant")
+            .filter_map(|c| attr_string(c, "jid").and_then(|raw| Jid::parse(&raw).ok()))
+            .filter(|jid| jid.is_user_like() && !jid.is_ad())
+            .map(|jid| jid.to_string())
+            .collect()
+    };
+    let key = key(&group.to_string());
+    store.write(|tx| {
+        let Some(mut snapshot): Option<GroupSnapshot> =
+            tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?
+        else {
+            return Ok(false);
+        };
+        let before = snapshot.clone();
+        for change in node.child_nodes() {
+            match change.description.as_str() {
+                "add" => {
+                    for jid in jids(change) {
+                        if !snapshot.members.iter().any(|m| m.jid == jid) {
+                            snapshot.members.push(Member { jid, role: None });
+                        }
+                    }
+                }
+                "remove" => {
+                    let gone = jids(change);
+                    snapshot.members.retain(|m| !gone.contains(&m.jid));
+                }
+                "promote" | "demote" => {
+                    let role = (change.description == "promote").then(|| "admin".to_owned());
+                    for jid in jids(change) {
+                        if let Some(member) = snapshot.members.iter_mut().find(|m| m.jid == jid) {
+                            member.role = role.clone();
+                        }
+                    }
+                }
+                "subject" => {
+                    snapshot.subject = attr_string(change, "subject");
+                    snapshot.subject_time = attr_u64(change, "s_t");
+                    snapshot.subject_owner = attr_string(change, "s_o");
+                }
+                _ => {}
+            }
+        }
+        if snapshot == before {
+            return Ok(false);
+        }
+        snapshot.updated_at = Timestamp::now();
+        tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &snapshot)?;
+        Ok(true)
+    })
+}
+
 /// Apply the supported w:gp2/groups_dirty notification before acknowledging.
 /// APK 37.71 0yv.A09 2912..2990/6548..6572 queues zero-estimate truncatable
 /// refresh; 0yO.A01 dispatches before ACK. Unknown shapes receive no ACK.
@@ -1439,6 +1515,93 @@ pub fn sender_key_stanza(
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn change_notifications_update_only_a_saved_snapshot() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("g.redb"),
+            account_id: AccountId::new("t").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([3; 32]))),
+            create: true,
+        })
+        .unwrap();
+        let group = "120363000000000001@g.us";
+        let a = "111111111111111@lid";
+        let b = "222222222222222@lid";
+        let note = |children: Vec<Node>| {
+            Node::new("notification")
+                .attr("from", Jid::parse(group).unwrap())
+                .attr("type", "w:gp2")
+                .attr("id", "1")
+                .children(children)
+        };
+        let part = |jid: &str| Node::new("participant").attr("jid", jid);
+        let add_b = note(vec![Node::new("add").children(vec![part(b)])]);
+        // No saved snapshot: nothing is invented.
+        assert!(!apply_change_notification(&store, &add_b).unwrap());
+        let snapshot = GroupSnapshot {
+            jid: group.into(),
+            group_type: None,
+            linked_parent: None,
+            subject: Some("old".into()),
+            subject_time: None,
+            subject_owner: None,
+            creator: None,
+            creation: None,
+            members: vec![Member {
+                jid: a.into(),
+                role: Some("superadmin".into()),
+            }],
+            invite_code: None,
+            updated_at: Timestamp::now(),
+        };
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, key(group).as_bytes(), 1, &snapshot))
+            .unwrap();
+        assert!(apply_change_notification(&store, &add_b).unwrap());
+        assert!(!apply_change_notification(&store, &add_b).unwrap());
+        assert!(
+            apply_change_notification(
+                &store,
+                &note(vec![Node::new("promote").children(vec![part(b)])])
+            )
+            .unwrap()
+        );
+        assert!(
+            apply_change_notification(
+                &store,
+                &note(vec![
+                    Node::new("subject")
+                        .attr("subject", "new")
+                        .attr("s_t", "1700000000")
+                        .attr("s_o", b)
+                ])
+            )
+            .unwrap()
+        );
+        assert!(
+            apply_change_notification(
+                &store,
+                &note(vec![Node::new("remove").children(vec![part(a)])])
+            )
+            .unwrap()
+        );
+        let saved: GroupSnapshot = store
+            .read(|tx| tx.get_json(Table::Checkpoints, key(group).as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        assert_eq!(
+            saved.members,
+            vec![Member {
+                jid: b.into(),
+                role: Some("admin".into())
+            }]
+        );
+        assert_eq!(saved.subject.as_deref(), Some("new"));
+        assert_eq!(saved.subject_time, Some(1_700_000_000));
+        assert_eq!(saved.subject_owner.as_deref(), Some(b));
+    }
+
     /// The stanza structure confirmed from LX/Cp3: a `<participants>` wrapper
     /// of `<to jid=…>` children each carrying its own `enc`, beside a top-level
     /// `skmsg`. Also checks it survives the wire codec, since it is the shape

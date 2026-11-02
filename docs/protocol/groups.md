@@ -3198,3 +3198,20 @@ Subsequent primary LID trace resolves DEw.CF0 -> DFc's 13 constructor field
 bindings and the nonrejecting missing-alias logger join. See
 [nullable alias evidence](peer-identity.md#primary-lid-route-and-nullable-aliases-2026-10-09).
 Other guest, contact-mode and downstream consumer unknowns remain unchanged.
+
+## Change notifications applied to the saved snapshot (2026-11-01)
+
+**Confirmed static, 2.26.37.71** `0yv.A09` (`GroupNotificationHandler`): a
+`w:gp2` notification's child selects the change. `add` (`0406`), `remove`
+(`0fb4`), `promote` (`0ac4`) and `demote` (`0730`) carry `<participant jid=…>`
+children read by `A5V.A01`; `subject` (`102c`) carries `subject`, `s_t`, `s_o`
+(and `s_o_pn`). The APK then updates its group store (`0yw`).
+
+`groups::apply_change_notification` (called by `listen` before the ACK) applies
+those five to an existing `group:<jid>` snapshot: members added/removed,
+`promote` sets role `admin`, `demote` clears it, subject fields replaced. A
+group never fetched is not created from a notification. Not applied:
+description, settings (announcement, locked, ephemeral, membership modes),
+linked groups, `create`/`delete`, and the APK's role names beyond `admin`.
+Offline-tested only; no live change notification has been applied yet.
+

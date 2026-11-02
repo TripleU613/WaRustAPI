@@ -1,3 +1,14 @@
+2026-11-01 — **Implemented/offline (group changes):** `listen` now applies
+`w:gp2` add/remove/promote/demote/subject notifications to an existing saved
+group snapshot before ACKing (2.26.37.71 `0yv.A09`). Not live-verified.
+[groups](docs/protocol/groups.md#change-notifications-applied-to-the-saved-snapshot-2026-11-01).
+
+2026-11-01 — **Observed live (read receipt):** on `q`, `mark-read` of the
+owner's direct reply plus one 40 s `listen` sent the read receipt; the server
+answered `ack class=receipt type=read`. Handset blue ticks are not yet
+confirmed by the owner. The same window received a `mex` notification (now
+ACKed) and stopped cleanly.
+
 2026-11-01 — **Implemented/offline (retry receipts):** `listen` now answers a
 peer's `receipt type=retry` for our server-accepted direct sends, following the
 2.26.37.71 `RetryReceiptHandler` policy (count ≤ 4, ≤ 60 days, not already
