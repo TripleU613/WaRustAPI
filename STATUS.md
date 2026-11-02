@@ -1,3 +1,8 @@
+2026-11-02 — **Live (group edit and delete-for-everyone):** in the owner's
+group, `q` edited its earlier group text and then revoked it through the normal
+group outbox (sender-key message, stanza `edit="1"` then `edit="7"`). Both
+were server-accepted and the owner's phone returned a delivery receipt for each.
+
 2026-11-02 — **Live (edit and delete-for-everyone):** new `edit-message` and
 `revoke` commands. From `q` to the owner: an edit of a sent text (stanza
 `edit="1"`, `MESSAGE_EDIT` with the replacement) and then a revoke of the same

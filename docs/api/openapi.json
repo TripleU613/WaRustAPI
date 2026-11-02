@@ -14786,7 +14786,7 @@
           "Messages"
         ],
         "summary": "Queue delete-for-everyone of one of our own direct messages",
-        "description": "Offline enqueue; `listen --send-outbox` transmits. Payload protocolMessage{key(fromMe, id), type REVOKE(0)} (2.26.37.71 D9M.AD7); stanza edit=\"7\" (SENDER_REVOKE), required for a REVOKE by the APK outgoing message schema CpG.A0U. Accepted only for a server-accepted direct message sent by this outbox to the same chat within three days (the receivers' sender-revoke window; the APK's sender-side limit is untraced). Group and admin revokes (edit=8) are not supported. The recipient's tctoken is attached when held. Live 2026-11-02: server-accepted and delivered to a recipient handset. Groups (2026-11-02): the same intent for a group chat goes through the normal group outbox as a sender-key message with key remoteJid = the group, fromMe, no participant, and the stanza edit attribute; offline-tested.",
+        "description": "Offline enqueue; `listen --send-outbox` transmits. Payload protocolMessage{key(fromMe, id), type REVOKE(0)} (2.26.37.71 D9M.AD7); stanza edit=\"7\" (SENDER_REVOKE), required for a REVOKE by the APK outgoing message schema CpG.A0U. Accepted only for a server-accepted direct message sent by this outbox to the same chat within three days (the receivers' sender-revoke window; the APK's sender-side limit is untraced). Group and admin revokes (edit=8) are not supported. The recipient's tctoken is attached when held. Live 2026-11-02: server-accepted and delivered to a recipient handset. Groups (2026-11-02): the same intent for a group chat goes through the normal group outbox as a sender-key message with key remoteJid = the group, fromMe, no participant, and the stanza edit attribute; live 2026-11-02 (server-accepted, delivered to the recipient handset).",
         "operationId": "queueRevoke",
         "x-cli": "whatsapp-cli revoke",
         "x-transport": [
@@ -14865,7 +14865,7 @@
           "Messages"
         ],
         "summary": "Queue an edit of one of our own direct text messages",
-        "description": "Offline enqueue; `listen --send-outbox` transmits. Payload protocolMessage{key, type MESSAGE_EDIT(14), editedMessage(14)=conversation, timestampMs(15)} (2.26.37.71 D9B.A00); stanza edit=\"1\" (CpG.A0U schema; receive parser DEy.A00). Same ownership and three-day rule as revoke. Text only; media caption edits are not supported here. Live 2026-11-02: server-accepted and delivered to a recipient handset. Groups (2026-11-02): the same intent for a group chat goes through the normal group outbox as a sender-key message with key remoteJid = the group, fromMe, no participant, and the stanza edit attribute; offline-tested.",
+        "description": "Offline enqueue; `listen --send-outbox` transmits. Payload protocolMessage{key, type MESSAGE_EDIT(14), editedMessage(14)=conversation, timestampMs(15)} (2.26.37.71 D9B.A00); stanza edit=\"1\" (CpG.A0U schema; receive parser DEy.A00). Same ownership and three-day rule as revoke. Text only; media caption edits are not supported here. Live 2026-11-02: server-accepted and delivered to a recipient handset. Groups (2026-11-02): the same intent for a group chat goes through the normal group outbox as a sender-key message with key remoteJid = the group, fromMe, no participant, and the stanza edit attribute; live 2026-11-02 (server-accepted, delivered to the recipient handset).",
         "operationId": "queueEdit",
         "x-cli": "whatsapp-cli edit-message",
         "x-transport": [
