@@ -244,8 +244,10 @@ getter's readers in `SendE2EMessageJob.A06`, to learn how an add-on (reaction)
 send delivers a missing distribution. Since 2026-11-01 (later the same day)
 the normal outbox no longer refuses such a reaction: it sends each missing
 distribution first as a direct message, waits for each server ACK, then the
-reaction without `<participants>`, the shape observed delivered live
-([groups](groups.md)). Whether the APK uses `sent_add_on_sender_key` for the
+reaction without `<participants>`; that shape was decrypted by our own receiving client (account `q`), not by a handset; the only handset test of out-of-band distribution (2026-09-22) still showed a placeholder and remains unexplained ([groups](groups.md)).
+After the reaction's ACK those devices count as holding the chain, so a handset
+that silently dropped the direct distribution would also be skipped by later
+group texts. Whether the APK uses `sent_add_on_sender_key` for the
 same purpose is still untraced. `reaction_distribution_unsupported` remains
 only on preparations saved before the change; a refused distribution ACK blocks
 as `distribution_refused` with the reserved reaction left uncertain, never sent.

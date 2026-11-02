@@ -6274,3 +6274,47 @@ mod tests {
         );
     }
 }
+
+#[cfg(test)]
+mod settle_tests {
+    use super::*;
+    use crate::binary::{Encoder, TokenDictionary};
+    use crate::store::{MasterKey, OpenOptions, StaticKeySource};
+
+    /// A reply kept as undecodable settles its still-sent action once; it is
+    /// never applied twice and never to an action that was not reserved.
+    #[test]
+    fn captured_replies_settle_their_waiting_action_once() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("s.redb"),
+            account_id: crate::model::ids::AccountId::new("t").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([5; 32]))),
+            create: true,
+        })
+        .unwrap();
+        let id = super::super::actions::queue(&store, "abprops_query", "test", |id| {
+            Ok(Node::new("iq").attr("id", id).attr("type", "get"))
+        })
+        .unwrap();
+        let reply = Node::new("iq")
+            .attr("id", id.as_str())
+            .attr("type", "result");
+        let frame = Encoder::new(TokenDictionary::comparison_2_26_37_71())
+            .encode(&reply)
+            .unwrap();
+        preserve_undecodable(&store, &frame, "length_limit", None).unwrap();
+        // Queued but never sent: a reply cannot settle it.
+        assert_eq!(settle_undecodable_replies(&store).unwrap(), 0);
+        assert_eq!(
+            super::super::actions::reserve_pending(&store)
+                .unwrap()
+                .len(),
+            1
+        );
+        assert_eq!(settle_undecodable_replies(&store).unwrap(), 1);
+        assert_eq!(settle_undecodable_replies(&store).unwrap(), 0);
+        let outcome = &super::super::actions::outcomes(&store).unwrap()[0];
+        assert_eq!(outcome.status, super::super::actions::ActionStatus::Ok);
+    }
+}

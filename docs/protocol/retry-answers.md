@@ -51,7 +51,7 @@ causes a second answer. Every other case writes
 (count 3–4), `not_an_original_recipient`, `original_not_server_accepted`,
 `already_delivered`, `original_older_than_60_days`, `plaintext_not_retained`
 (sends reserved before 2026-11-01), `no_session`,
-`registration_changed_needs_new_session`. `listen` logs the reason;
+`registration_changed_needs_new_session`, `identity_changed`. `listen` logs the reason;
 `store inspect` counts both kinds.
 
 The plaintext `Message` of each direct send is now retained at reservation as

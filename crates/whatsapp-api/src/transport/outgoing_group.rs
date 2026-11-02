@@ -1851,9 +1851,10 @@ impl Pending {
                     Err(error) => return Err(error),
                 };
                 // A group reaction carrying distributions is ACKed but never
-                // delivered; sending each distribution first as a direct
-                // message and the reaction without `<participants>` was
-                // delivered and decrypted (observed live 2026-11-01, groups.md).
+                // delivered (observed 2026-11-01); each distribution goes first
+                // as a direct message and the reaction without `<participants>`.
+                // That shape decrypted on our own receiving client, not yet on
+                // a handset (the 2026-09-22 handset test failed; groups.md).
                 let out_of_band =
                     content == groups::StanzaContent::Reaction && !prepared.targets().is_empty();
                 let plan = self.plan.as_ref().expect("resolved plan");

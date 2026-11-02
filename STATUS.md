@@ -20,10 +20,12 @@ public clients, reference only) instead of dropping it.
 2026-11-01 — **Implemented/offline (group reactions in the outbox):** a normal
 outbox group reaction whose devices still need our sender key is no longer
 blocked. Each missing distribution goes out first as a direct message, each
-server ACK is awaited, then the reaction is sent without `<participants>`: the
-shape that was delivered and decrypted live through `lab-transport`. A refused
-distribution blocks as `distribution_refused` (reaction reserved, unsent,
-uncertain). Not live through the normal outbox yet.
+server ACK is awaited, then the reaction is sent without `<participants>`. That
+shape was decrypted by our own receiving client (account `q`), not by a handset; the only handset test of out-of-band distribution (2026-09-22) still showed a placeholder and remains unexplained. A refused distribution blocks as
+`distribution_refused` (reaction reserved, unsent, uncertain). Risk: after the
+reaction's ACK those devices are marked as holding the chain, so if a handset
+silently drops the direct distribution, later group texts skip it too. The
+handset check (owner's group with `q`) is what validates this.
 
 2026-11-01 — **Implemented/offline (group changes):** `listen` now applies
 `w:gp2` add/remove/promote/demote/subject notifications to an existing saved

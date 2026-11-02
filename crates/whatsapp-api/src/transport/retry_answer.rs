@@ -177,7 +177,7 @@ pub async fn answer(
         // 151.A00: the APK deletes the session and waits for a new bundle.
         return unanswered(store, &key, "registration_changed_needs_new_session");
     }
-    let prepared = crate::signal::direct::prepare_payload(
+    let prepared = match crate::signal::direct::prepare_payload(
         account,
         &peer,
         None,
@@ -185,7 +185,13 @@ pub async fn answer(
         identity.as_deref(),
         &source,
     )
-    .await?;
+    .await
+    {
+        Ok(prepared) => prepared,
+        // A peer's receipt must not end receive; the pin is never adopted here.
+        Err(Error::IdentityChanged(_)) => return unanswered(store, &key, "identity_changed"),
+        Err(error) => return Err(error),
+    };
     let resend = replace_enc(original, prepared.kind, prepared.ciphertext)?;
     let wire = Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(&resend)?;
     store.write(|tx| {
@@ -379,7 +385,13 @@ mod tests {
         let (store_ref, account_ref) = (&store, &account);
         let ask = |count: u32, registration: u32| {
             let node = receipt(&peer, count, registration);
-            async move { answer(store_ref, account_ref, &node, ConnectionEpoch(2)).await }
+            async move {
+                // The order listen uses: a retry passes validation, records
+                // no delivery fact, and only then reaches the answer.
+                super::super::receipts::validate(&node)?;
+                assert_eq!(super::super::receipts::record(store_ref, &node)?, 0);
+                answer(store_ref, account_ref, &node, ConnectionEpoch(2)).await
+            }
         };
 
         assert!(ask(1, 43).await.unwrap().is_none());

@@ -949,7 +949,8 @@ So the server drops a group `type=reaction` that carries `<participants>`.
 delivers a reaction's distributions out of band first, and since 2026-11-01 the
 normal group outbox does the same for the devices that still lack the chain
 (each direct distribution ACKed before the reaction; offline-tested, not yet
-live through the normal outbox). **Not established:** how the official client
+live through the normal outbox). Note: "delivered" in the table above means
+decrypted by our own receiving client (account `q`), not by a handset; the only handset test of out-of-band distribution (2026-09-22) still showed a placeholder and remains unexplained. **Not established:** how the official client
 avoids the case (it normally reuses an already distributed sender key, so a
 reaction rarely needs one) and whether the rule covers other add-ons
 (poll votes, edits). Handset rendering of a fixed reaction is still to be
