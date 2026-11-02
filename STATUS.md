@@ -1,3 +1,11 @@
+2026-11-02 — **Observed live (2.26.43.72 token accepted):** lab number `m`
+(refused `blocked` in September) answered `/v2/exist` with `incorrect` and
+SMS/voice offered, so the block was gone. The new `lab-signup retry-after-block`
+sent one corrected code request with the 2.26.43.72 User-Agent and a token
+derived from the 2.26.43.72 APK, keeping identity and keys: `status: sent`
+(SMS). Registration tokens from 2.26.43.72 are valid with its own User-Agent.
+The code has not been entered yet.
+
 2026-11-01 — **Retry answers complete the APK's two branches (offline) / group
 reaction confirmed (live):** a peer's retry with a changed registration now
 fetches the device's fresh bundle and resends under a new session with the same

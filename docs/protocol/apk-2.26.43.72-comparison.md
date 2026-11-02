@@ -26,9 +26,13 @@ strings disappeared and 65,321 appeared. The native `libs.so` changed.
   `about_logo.png`, signing certificate) are unchanged, but the `classes.dex`
   MD5 differs. So a 2.26.43.72 token differs from a 2.26.37.70 token for the
   same number. It belongs with the 2.26.43.72 User-Agent; mixing a token and a
-  User-Agent from different builds is the known `bad_token` failure. **Not
-  verified live**: the working recipe stays on 2.26.37.70 until a 2.26.43.72
-  token is accepted by the server.
+  User-Agent from different builds is the known `bad_token` failure.
+  **Observed live 2026-11-02:** one `/v2/code` for lab account `m`
+  (`lab-signup retry-after-block`, same identity, `enc_empty_h`, the eight
+  observed `code_bytes`) with User-Agent `WhatsApp/2.26.43.72 Android/unknown
+  Device/unknown-unknown` and a token derived by `xtask apk-registration-token`
+  from the 2.26.43.72 APK was answered `status: sent` (SMS; `sms_wait` 125 s,
+  `voice_wait` 65 s). The 2.26.43.72 token derivation is therefore accepted.
   `xtask apk-registration-token --country-code … --national-number …
   /tmp/wa-apk/WhatsApp.1.apk` derives it directly from the APK.
 - **Login and messaging.** Nothing we encode by name was removed and the token
