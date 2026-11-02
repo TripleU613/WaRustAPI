@@ -28,6 +28,9 @@ pub struct MessageRequest {
     /// A document file to upload and send (`DocumentMessage`, Message field 7).
     #[serde(default)]
     pub document: Option<std::path::PathBuf>,
+    /// An MP4 video to upload and send (`VideoMessage`, Message field 9).
+    #[serde(default)]
+    pub video: Option<std::path::PathBuf>,
     /// Send an image with WhatsApp's view-once marker and V2 wrapper.
     #[serde(default)]
     pub view_once: bool,
@@ -232,7 +235,11 @@ impl MessageRequest {
                     "a status post names no `to` and no `group`",
                 ));
             }
-            if value.voice_note.is_some() || value.document.is_some() || value.view_once {
+            if value.voice_note.is_some()
+                || value.document.is_some()
+                || value.video.is_some()
+                || value.view_once
+            {
                 return Err(crate::Error::invalid(
                     "message",
                     "a status post carries text or an image so far",
@@ -276,7 +283,8 @@ impl MessageRequest {
             let bodies = usize::from(!value.text.is_empty())
                 + usize::from(value.image.is_some())
                 + usize::from(value.voice_note.is_some())
-                + usize::from(value.document.is_some());
+                + usize::from(value.document.is_some())
+                + usize::from(value.video.is_some());
             if quote.is_reaction() && bodies != 0 {
                 return Err(crate::Error::invalid(
                     "message",
@@ -310,7 +318,8 @@ impl MessageRequest {
         let bodies = usize::from(!value.text.is_empty())
             + usize::from(value.image.is_some())
             + usize::from(value.voice_note.is_some())
-            + usize::from(value.document.is_some());
+            + usize::from(value.document.is_some())
+            + usize::from(value.video.is_some());
         if (bodies != usize::from(!reacting))
             || (value.view_once && value.image.is_none())
             || value.text.len() > 4096
@@ -339,6 +348,7 @@ impl MessageRequest {
             && (self.image.is_some()
                 || self.voice_note.is_some()
                 || self.document.is_some()
+                || self.video.is_some()
                 || self.view_once)
         {
             return Err(crate::Error::invalid(
@@ -1006,7 +1016,7 @@ pub fn direct_media(
     media_type: &str,
 ) -> Result<Node, TransportError> {
     // ADx.A0O's mediatype table includes "document" (2.26.37.71).
-    if !matches!(media_type, "image" | "ptt" | "document") {
+    if !matches!(media_type, "image" | "ptt" | "document" | "video") {
         return Err(error("unsupported media type"));
     }
     if !matches!(kind, "pkmsg" | "msg") || ciphertext.is_empty() || id.is_empty() {
@@ -1983,6 +1993,7 @@ mod tests {
             image: None,
             voice_note: None,
             document: None,
+            video: None,
             view_once: false,
             group: None,
             fresh_sessions: false,
@@ -2120,6 +2131,7 @@ mod tests {
             image: None,
             voice_note: None,
             document: None,
+            video: None,
             view_once: false,
             group: group.map(str::to_owned),
             fresh_sessions: false,

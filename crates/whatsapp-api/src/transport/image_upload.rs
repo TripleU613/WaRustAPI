@@ -75,6 +75,97 @@ struct Envelope {
     document: Option<DocumentMessage>,
     #[prost(message, optional, tag = "8")]
     audio: Option<super::voice_note::AudioMessage>,
+    #[prost(message, optional, tag = "9")]
+    video: Option<VideoMessage>,
+}
+
+/// `VideoMessage` (`Message` field 9). **Confirmed static, 2.26.37.71**
+/// `xtask apk-proto-fields --class 'LX/BZE;'`: url 1, mimetype 2,
+/// fileSha256 3, fileLength 4, seconds 5, mediaKey 6, height 9, width 10,
+/// fileEncSha256 11, directPath 13, mediaKeyTimestamp 14.
+#[derive(Clone, PartialEq, Message)]
+struct VideoMessage {
+    #[prost(string, tag = "1")]
+    url: String,
+    #[prost(string, tag = "2")]
+    mimetype: String,
+    #[prost(bytes = "vec", tag = "3")]
+    file_sha256: Vec<u8>,
+    #[prost(uint64, tag = "4")]
+    file_length: u64,
+    #[prost(uint32, tag = "5")]
+    seconds: u32,
+    #[prost(bytes = "vec", tag = "6")]
+    media_key: Vec<u8>,
+    #[prost(uint32, tag = "9")]
+    height: u32,
+    #[prost(uint32, tag = "10")]
+    width: u32,
+    #[prost(bytes = "vec", tag = "11")]
+    file_enc_sha256: Vec<u8>,
+    #[prost(string, tag = "13")]
+    direct_path: String,
+    #[prost(int64, tag = "14")]
+    media_key_timestamp: i64,
+}
+
+/// Duration (whole seconds, at least 1) and display size of an MP4, read
+/// from `moov/mvhd` and the first `trak/tkhd` with a picture. Bounded walk;
+/// anything else is refused.
+fn mp4_info(bytes: &[u8]) -> Result<(u32, u32, u32)> {
+    let bad = || invalid("expected an MP4 with moov/mvhd and a video track");
+    fn boxes(data: &[u8]) -> impl Iterator<Item = (&[u8], &[u8])> {
+        let mut at = 0usize;
+        std::iter::from_fn(move || {
+            let head = data.get(at..at + 8)?;
+            let size = u32::from_be_bytes(head[..4].try_into().ok()?) as usize;
+            if size < 8 {
+                return None;
+            }
+            let body = data.get(at + 8..at + size)?;
+            let kind = &head[4..8];
+            at += size;
+            Some((kind, body))
+        })
+    }
+    if !boxes(bytes).any(|(k, _)| k == b"ftyp") {
+        return Err(bad());
+    }
+    let moov = boxes(bytes).find(|(k, _)| *k == b"moov").ok_or_else(bad)?.1;
+    let mvhd = boxes(moov).find(|(k, _)| *k == b"mvhd").ok_or_else(bad)?.1;
+    let (scale, duration) = match mvhd.first() {
+        Some(0) => (
+            u32::from_be_bytes(mvhd.get(12..16).ok_or_else(bad)?.try_into().unwrap()) as u64,
+            u32::from_be_bytes(mvhd.get(16..20).ok_or_else(bad)?.try_into().unwrap()) as u64,
+        ),
+        Some(1) => (
+            u32::from_be_bytes(mvhd.get(20..24).ok_or_else(bad)?.try_into().unwrap()) as u64,
+            u64::from_be_bytes(mvhd.get(24..32).ok_or_else(bad)?.try_into().unwrap()),
+        ),
+        _ => return Err(bad()),
+    };
+    if scale == 0 {
+        return Err(bad());
+    }
+    let seconds = u32::try_from(duration.div_ceil(scale))
+        .map_err(|_| bad())?
+        .max(1);
+    for (kind, trak) in boxes(moov) {
+        if kind != b"trak" {
+            continue;
+        }
+        if let Some((_, tkhd)) = boxes(trak).find(|(k, _)| *k == b"tkhd")
+            && tkhd.len() >= 8
+        {
+            let tail = &tkhd[tkhd.len() - 8..];
+            let width = u32::from_be_bytes(tail[..4].try_into().unwrap()) >> 16;
+            let height = u32::from_be_bytes(tail[4..].try_into().unwrap()) >> 16;
+            if width > 0 && height > 0 {
+                return Ok((seconds, width, height));
+            }
+        }
+    }
+    Err(bad())
 }
 
 /// `DocumentMessage` (`Message` field 7). **Confirmed static, 2.26.37.71**
@@ -146,6 +237,19 @@ fn input(message: &MessageRequest) -> Result<Option<MediaInput>> {
         let seconds = super::voice_note::seconds(&bytes)?;
         return Ok(Some((bytes, seconds, 0)));
     }
+    if let Some(path) = &message.video {
+        let file = std::fs::File::open(path)?;
+        if !file.metadata()?.is_file() || file.metadata()?.len() > 8 * 1024 * 1024 {
+            return Err(invalid("video must be a regular MP4 file of at most 8 MiB"));
+        }
+        let mut bytes = Zeroizing::new(Vec::new());
+        file.take(8 * 1024 * 1024 + 1).read_to_end(&mut bytes)?;
+        if bytes.len() > 8 * 1024 * 1024 {
+            return Err(invalid("video must be a regular MP4 file of at most 8 MiB"));
+        }
+        let (_, width, height) = mp4_info(&bytes)?;
+        return Ok(Some((bytes, width, height)));
+    }
     if let Some(path) = &message.document {
         let file = std::fs::File::open(path)?;
         if !file.metadata()?.is_file() || file.metadata()?.len() > 8 * 1024 * 1024 {
@@ -167,6 +271,8 @@ fn input_hash(message: &MessageRequest, bytes: &[u8]) -> String {
         format!("view-once-image:{hash}")
     } else if message.voice_note.is_some() {
         format!("ptt:{hash}")
+    } else if message.video.is_some() {
+        format!("video:{hash}")
     } else if let Some(path) = &message.document {
         // The name and type are part of what is sent, so they bind the upload.
         let (name, mime) = document_meta(path).unwrap_or_default();
@@ -292,7 +398,7 @@ fn upload_url_kind(
     hash: &[u8; 32],
     kind: &str,
 ) -> Result<reqwest::Url> {
-    if !matches!(kind, "image" | "ptt" | "document") {
+    if !matches!(kind, "image" | "ptt" | "document" | "video") {
         return Err(invalid("unsupported media type"));
     }
     if !approved_host(host) {
@@ -436,6 +542,7 @@ async fn prepare_bound(
             recipient,
             voice: message.voice_note.is_some(),
             document: message.document.as_deref().map(document_meta).transpose()?,
+            video: message.video.as_ref().map(|_| ()),
             view_once: message.view_once,
         },
     )
@@ -453,6 +560,8 @@ struct PreparedUpload {
     voice: bool,
     /// File name and MIME type when the upload is a document.
     document: Option<(String, String)>,
+    /// Set when the upload is an MP4 video.
+    video: Option<()>,
     view_once: bool,
 }
 
@@ -480,6 +589,7 @@ pub(crate) async fn upload_source(
         image: (!voice).then(|| source.to_owned()),
         voice_note: voice.then(|| source.to_owned()),
         document: None,
+        video: None,
         view_once: false,
         group: None,
         fresh_sessions: false,
@@ -506,6 +616,7 @@ pub(crate) async fn upload_source(
             recipient: String::new(),
             voice,
             document: None,
+            video: None,
             view_once: false,
         },
     )
@@ -527,6 +638,7 @@ async fn upload_prepared(
         recipient,
         voice,
         document,
+        video,
         view_once,
     } = input;
     let old: Option<serde_json::Value> =
@@ -535,7 +647,9 @@ async fn upload_prepared(
         return saved_payload(&old, &hash, &recipient);
     }
     let (host, auth) = route(store)?;
-    let encrypted = if document.is_some() {
+    let encrypted = if video.is_some() {
+        image::encrypt_video(&bytes)?
+    } else if document.is_some() {
         image::encrypt_document(&bytes)?
     } else if voice {
         image::encrypt_audio(&bytes)?
@@ -551,7 +665,9 @@ async fn upload_prepared(
         tx.put_json(Table::Checkpoints, b"upload-token-random-bytes", 1, &seed)?;
         Ok(seed)
     })?;
-    let url = if document.is_some() {
+    let url = if video.is_some() {
+        upload_url_kind(&host, &auth, &seed, &encrypted.encrypted_hash, "video")?
+    } else if document.is_some() {
         upload_url_kind(&host, &auth, &seed, &encrypted.encrypted_hash, "document")?
     } else if voice {
         upload_url_kind(&host, &auth, &seed, &encrypted.encrypted_hash, "ptt")?
@@ -610,10 +726,34 @@ async fn upload_prepared(
     let response: serde_json::Value = serde_json::from_slice(&body)
         .map_err(|_| invalid("invalid upload JSON; no automatic retry"))?;
     let (url, direct_path) = locations(&response)?;
-    let payload = if let Some((file_name, mimetype)) = document {
+    let payload = if video.is_some() {
+        let (seconds, width, height) = mp4_info(&bytes)?;
+        Zeroizing::new(
+            Envelope {
+                image: None,
+                audio: None,
+                document: None,
+                video: Some(VideoMessage {
+                    url,
+                    mimetype: "video/mp4".into(),
+                    file_sha256: encrypted.plaintext_hash.to_vec(),
+                    file_length: encrypted.plaintext_len,
+                    seconds,
+                    media_key: encrypted.media_key.to_vec(),
+                    height,
+                    width,
+                    file_enc_sha256: encrypted.encrypted_hash.to_vec(),
+                    direct_path,
+                    media_key_timestamp: timestamp.as_unix_seconds(),
+                }),
+            }
+            .encode_to_vec(),
+        )
+    } else if let Some((file_name, mimetype)) = document {
         let _ = url; // DocumentMessage has no url field in 2.26.37.71.
         Zeroizing::new(
             Envelope {
+                video: None,
                 image: None,
                 audio: None,
                 document: Some(DocumentMessage {
@@ -635,6 +775,7 @@ async fn upload_prepared(
             Envelope {
                 image: None,
                 document: None,
+                video: None,
                 audio: Some(super::voice_note::AudioMessage {
                     url,
                     direct_path,
@@ -655,6 +796,7 @@ async fn upload_prepared(
             Envelope {
                 audio: None,
                 document: None,
+                video: None,
                 image: Some(ImageMessage {
                     url,
                     direct_path,
@@ -893,6 +1035,7 @@ mod tests {
     fn view_once_uses_apk_flag_and_v2_wrapper_and_distinct_intent() {
         let inner = Envelope {
             document: None,
+            video: None,
             image: Some(ImageMessage {
                 view_once: true,
                 ..Default::default()
@@ -914,10 +1057,61 @@ mod tests {
         assert_ne!(regular, input_hash(&request, b"same image"));
     }
     #[test]
+    fn mp4_duration_and_size_come_from_mvhd_and_tkhd() {
+        fn mp4box(kind: &[u8], body: &[u8]) -> Vec<u8> {
+            let mut out = ((body.len() + 8) as u32).to_be_bytes().to_vec();
+            out.extend_from_slice(kind);
+            out.extend_from_slice(body);
+            out
+        }
+        let mut mvhd = vec![0u8; 100];
+        mvhd[12..16].copy_from_slice(&1000u32.to_be_bytes());
+        mvhd[16..20].copy_from_slice(&2500u32.to_be_bytes());
+        let mut tkhd = vec![0u8; 84];
+        tkhd[76..80].copy_from_slice(&(320u32 << 16).to_be_bytes());
+        tkhd[80..84].copy_from_slice(&(240u32 << 16).to_be_bytes());
+        let audio_tkhd = vec![0u8; 84];
+        let moov = [
+            mp4box(b"mvhd", &mvhd),
+            mp4box(b"trak", &mp4box(b"tkhd", &audio_tkhd)),
+            mp4box(b"trak", &mp4box(b"tkhd", &tkhd)),
+        ]
+        .concat();
+        let file = [mp4box(b"ftyp", b"isom\0\0\0\0"), mp4box(b"moov", &moov)].concat();
+        assert_eq!(mp4_info(&file).unwrap(), (3, 320, 240));
+        assert!(mp4_info(&file[..20]).is_err());
+        assert!(mp4_info(b"not an mp4 at all").is_err());
+        let payload = Envelope {
+            image: None,
+            audio: None,
+            document: None,
+            video: Some(VideoMessage {
+                url: "u".into(),
+                mimetype: "video/mp4".into(),
+                file_sha256: vec![1],
+                file_length: 1,
+                seconds: 3,
+                media_key: vec![2],
+                height: 240,
+                width: 320,
+                file_enc_sha256: vec![3],
+                direct_path: "/d".into(),
+                media_key_timestamp: 1,
+            }),
+        }
+        .encode_to_vec();
+        assert_eq!(
+            crate::signal::direct::payload_fields(&payload).unwrap(),
+            vec![9]
+        );
+    }
+
+    #[test]
     fn document_payload_uses_the_apk_field_numbers_and_no_url() {
         let payload = Envelope {
             image: None,
             audio: None,
+            video: None,
             document: Some(DocumentMessage {
                 mimetype: "application/pdf".into(),
                 title: "a.pdf".into(),
@@ -964,6 +1158,7 @@ mod tests {
             Envelope {
                 image: None,
                 document: None,
+                video: None,
                 audio: Some(super::super::voice_note::AudioMessage {
                     seconds: 2,
                     ptt: true,
@@ -1038,6 +1233,7 @@ mod tests {
         };
         let bytes = Envelope {
             document: None,
+            video: None,
             image: Some(image),
             audio: None,
         }

@@ -1513,7 +1513,7 @@ pub fn sender_key_stanza(
         node = node.attr("phash", phash);
     }
     if let StanzaContent::Media(kind) = content
-        && !matches!(kind, "image" | "ptt" | "document")
+        && !matches!(kind, "image" | "ptt" | "document" | "video")
     {
         return Err(Error::invalid("group_send", "unsupported media type"));
     }

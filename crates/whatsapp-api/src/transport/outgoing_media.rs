@@ -19,6 +19,8 @@ fn media_kind(hash: &str) -> MediaKind {
         MediaKind::Audio
     } else if hash.starts_with("doc:") {
         MediaKind::Document
+    } else if hash.starts_with("video:") {
+        MediaKind::Video
     } else {
         MediaKind::Image
     }
@@ -29,6 +31,7 @@ fn kind_mime(kind: MediaKind) -> &'static str {
     match kind {
         MediaKind::Audio => "audio/ogg; codecs=opus",
         MediaKind::Document => "application/octet-stream",
+        MediaKind::Video => "video/mp4",
         _ => "image/png",
     }
 }
@@ -38,6 +41,7 @@ fn stanza_media_type(kind: MediaKind) -> &'static str {
     match kind {
         MediaKind::Audio => "ptt",
         MediaKind::Document => "document",
+        MediaKind::Video => "video",
         _ => "image",
     }
 }

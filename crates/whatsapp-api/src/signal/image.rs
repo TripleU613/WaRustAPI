@@ -182,6 +182,11 @@ pub fn encrypt_audio(bytes: &[u8]) -> Result<EncryptedImage> {
     encrypt_kind(bytes, b"WhatsApp Audio Keys")
 }
 
+/// Videos use the video key domain (`WhatsApp Video Keys`, 2.26.37.71).
+pub fn encrypt_video(bytes: &[u8]) -> Result<EncryptedImage> {
+    encrypt_kind(bytes, b"WhatsApp Video Keys")
+}
+
 /// Documents use the document key domain (`WhatsApp Document Keys`, a
 /// 2.26.37.71 string constant beside the image and audio labels).
 pub fn encrypt_document(bytes: &[u8]) -> Result<EncryptedImage> {

@@ -145,6 +145,7 @@ fn preflight(
             message.image.is_none()
                 && message.voice_note.is_none()
                 && message.document.is_none()
+                && message.video.is_none()
                 && quoted.as_ref() == quote
                 && body == message.text.as_str()
         }
@@ -222,7 +223,11 @@ pub(super) async fn run(
         }
         let quote = quoted(&store, &account, &message)?;
         preflight(&store, &message, quote.as_ref())?;
-        if message.image.is_some() || message.voice_note.is_some() || message.document.is_some() {
+        if message.image.is_some()
+            || message.voice_note.is_some()
+            || message.document.is_some()
+            || message.video.is_some()
+        {
             whatsapp_api::transport::image_upload::prepare_outbox(&store, &message, &config)
                 .await?;
             let reference = whatsapp_api::transport::outgoing_media::reference(

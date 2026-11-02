@@ -79,6 +79,8 @@ pub(super) async fn send(
                 "ptt"
             } else if message.document.is_some() {
                 "document"
+            } else if message.video.is_some() {
+                "video"
             } else {
                 "image"
             },

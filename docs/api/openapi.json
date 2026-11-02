@@ -863,6 +863,10 @@
           "document": {
             "type": "string",
             "description": "Path to a document file (1 byte to 8 MiB) to upload and send as DocumentMessage (Message field 7; 2.26.37.71 BZ6 fields 2-11, no url). Encrypted with the WhatsApp Document Keys domain, uploaded to /mms/document, stanza enc mediatype=document. File name from the path; MIME type from the extension (pdf, txt, csv, zip, json, docx, xlsx) else application/octet-stream. Exclusive with text, image and voice_note; not for status posts or comparison group sends."
+          },
+          "video": {
+            "type": "string",
+            "description": "Path to an MP4 (at most 8 MiB) to upload and send as VideoMessage (Message field 9; 2.26.37.71 BZE fields url 1, mimetype 2, fileSha256 3, fileLength 4, seconds 5, mediaKey 6, height 9, width 10, fileEncSha256 11, directPath 13, mediaKeyTimestamp 14). Duration and size are read from moov/mvhd and the first video trak/tkhd. Encrypted with the WhatsApp Video Keys domain, uploaded to /mms/video, stanza mediatype=video. No thumbnail or caption. Exclusive with text, image, voice_note and document."
           }
         },
         "description": "Private JSON message request for outbox-send or lab-transport --message. Exactly one target: `to` (direct), `group` (sender-key fan-out) or `status` (a status post). Repeating the same request_id returns the saved outcome locally and never resends."
