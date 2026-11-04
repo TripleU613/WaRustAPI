@@ -1,3 +1,10 @@
+2026-11-04 — **Confirmed Rust persistence defect/fixed offline:** upload
+HTTP status was discarded when response-body streaming failed before completion.
+It now commits before streaming under response_headers_received, retaining the
+reservation and blocking replay. Real-store tests cover header-only reopen and
+existing-outcome protection. No new APK/live evidence is claimed.
+[Transition and tests](media-network-outcomes.md#upload-response-header-persistence-follow-up).
+
 2026-11-04 — **Confirmed Rust defects/fixed offline:** view-once retrieval
 lacked ordinary-media account/config preflight and accepted unusable plaintext
 hashes before GET. Both now refuse before reservation. Async real-store and

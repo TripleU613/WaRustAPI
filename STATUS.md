@@ -1,3 +1,15 @@
+2026-11-04 — **Upload response-header persistence (offline):**
+
+Upload status is now stored before response-body streaming. A truncated or
+oversized response leaves response_headers_received plus its numeric status,
+rather than erasing an observed response behind outcome_unknown. This is not
+upload success and does not authorize replay. Tests cover reopen, bound material
+preservation, replay refusal and protection of existing settled rows.
+[Source defect and transition](docs/protocol/media-network-outcomes.md#upload-response-header-persistence-follow-up).
+Validation: **1,233 workspace/all-feature tests**, strict Clippy, CLI-reference,
+formatting, coverage freshness and repository hygiene passed.
+No live traffic or native HTTP parity claim.
+
 2026-11-04 — **View-once retrieval preflight (offline):**
 
 View-once GET now validates config and registered-account/phone agreement before

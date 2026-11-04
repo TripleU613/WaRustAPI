@@ -473,6 +473,30 @@ fn locations(response: &serde_json::Value) -> Result<(String, String)> {
     Ok((url.to_owned(), path.to_owned()))
 }
 
+// Header receipt is distinct from a complete usable upload result. Persist it
+// before streaming the bounded body; interruptions must not erase known status.
+fn retain_response_headers(
+    store: &ProtocolStore,
+    key: &str,
+    status: u16,
+) -> Result<serde_json::Value> {
+    if !(100..=599).contains(&status) {
+        return Err(invalid("invalid upload HTTP status"));
+    }
+    store.write(|tx| {
+        let mut saved: serde_json::Value = tx
+            .get_json(Table::Checkpoints, key.as_bytes(), 1)?
+            .ok_or_else(|| invalid("upload response has no reservation"))?;
+        if saved["status"] != "outcome_unknown" {
+            return Err(invalid("upload headers cannot replace an existing outcome"));
+        }
+        saved["http_status"] = status.into();
+        saved["status"] = "response_headers_received".into();
+        tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &saved)?;
+        Ok(saved)
+    })
+}
+
 fn saved_payload(
     old: &serde_json::Value,
     hash: &str,
@@ -676,7 +700,7 @@ async fn upload_prepared(
     };
     let client = client(config)?;
     let timestamp = Timestamp::now();
-    let mut saved = serde_json::json!({"status":"outcome_unknown", "hash":hash, "to":recipient,
+    let saved = serde_json::json!({"status":"outcome_unknown", "hash":hash, "to":recipient,
         "plaintext_len":encrypted.plaintext_len,
         "media_key":encrypted.media_key.as_slice(), "encrypted_hash":encrypted.encrypted_hash,
         "body":encrypted.body, "upload_url":url.as_str(), "at":timestamp});
@@ -701,6 +725,7 @@ async fn upload_prepared(
         .await
         .map_err(|_| invalid("upload transport failed; outcome unknown, no retry"))?;
     let status = response.status().as_u16();
+    let mut saved = retain_response_headers(store, &key, status)?;
     let mut body = Zeroizing::new(Vec::new());
     while let Some(chunk) = response
         .chunk()
@@ -827,6 +852,59 @@ async fn upload_prepared(
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn upload_headers_survive_incomplete_body_and_never_authorize_replay() {
+        use super::*;
+        use crate::{
+            model::ids::AccountId,
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("upload-headers.redb");
+        let open = || {
+            ProtocolStore::open(OpenOptions {
+                path: path.clone(),
+                account_id: AccountId::new("upload-headers-test").unwrap(),
+                key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([4; 32]))),
+                create: true,
+            })
+            .unwrap()
+        };
+        let store = open();
+        let key = "message:synthetic:upload";
+        assert!(retain_response_headers(&store, key, 200).is_err());
+        for status in [200, 302, 403, 429, 503] {
+            store.write(|tx| tx.put_json(Table::Checkpoints, key.as_bytes(), 1,
+                &serde_json::json!({"status":"outcome_unknown", "hash":"fixture-hash", "to":"fixture-recipient", "body":[1,2,3]}))).unwrap();
+            let saved = retain_response_headers(&store, key, status).unwrap();
+            assert_eq!(saved["http_status"], status);
+            assert_eq!(saved["status"], "response_headers_received");
+            assert_eq!(saved["body"], serde_json::json!([1, 2, 3]));
+            assert!(saved_payload(&saved, "fixture-hash", "fixture-recipient").is_err());
+            assert!(retain_response_headers(&store, key, 500).is_err());
+        }
+        drop(store);
+        let store = open();
+        let saved: serde_json::Value = store
+            .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        assert_eq!(saved["http_status"], 503);
+        assert!(saved_payload(&saved, "fixture-hash", "fixture-recipient").is_err());
+        for status in ["uploaded", "response_received", "refused"] {
+            let settled = serde_json::json!({"status":status,"http_status":403});
+            store
+                .write(|tx| tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &settled))
+                .unwrap();
+            assert!(retain_response_headers(&store, key, 200).is_err());
+            let after: serde_json::Value = store
+                .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))
+                .unwrap()
+                .unwrap();
+            assert_eq!(after, settled);
+        }
+    }
+
     use super::*;
     #[tokio::test]
     async fn legacy_group_upload_binding_is_preserved_and_normal_outbox_uses_its_explicit_chat() {
@@ -1197,7 +1275,12 @@ mod tests {
         );
         assert!(saved_payload(&value, "hash-b", "test-recipient").is_err());
         assert!(saved_payload(&value, "hash-a", "another-recipient").is_err());
-        for status in ["outcome_unknown", "response_received", "refused"] {
+        for status in [
+            "outcome_unknown",
+            "response_headers_received",
+            "response_received",
+            "refused",
+        ] {
             value["status"] = status.into();
             assert!(saved_payload(&value, "hash-a", "test-recipient").is_err());
         }

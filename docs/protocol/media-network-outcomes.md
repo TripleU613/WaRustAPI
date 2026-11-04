@@ -45,9 +45,19 @@ No live account operation, cache deletion or automatic replay is introduced.
 
 ## Upload response-header persistence follow-up
 
-**Confirmed source/open:** `image_upload::upload_prepared` obtains HTTP status
-before bounded response-body streaming, but writes `http_status` only after the
-body finishes. Interruption or a body exceeding the local 64-KiB bound therefore
-loses an already-observed response status behind outcome_unknown. Preserve the
-header observation without inferring upload success or allowing replay; retain
-this as the next upload persistence correction. No interrupted upload was run.
+**Confirmed source defect/fixed offline:** `image_upload::upload_prepared`
+previously obtained HTTP status before bounded response-body streaming but wrote
+`http_status` only after the body finished. Interruption or a body exceeding the
+local 64-KiB bound lost an already-observed status behind outcome_unknown.
+It now persists `response_headers_received` with that numeric status before
+body streaming. The transition requires the original outcome_unknown reservation
+and preserves encrypted upload material and binding fields. Existing settled
+outcomes cannot be overwritten. A body interruption or local size refusal leaves
+this header observation durable, without implying upload success or permitting
+replay. Complete bodies still move through response_received before validation;
+only a fully validated result can become uploaded.
+
+Real-store tests cover 200/302/403/429/503, missing reservation, reopen with no
+completed body, binding preservation and replay refusal after header receipt.
+They also protect completed/refused rows against overwrite. No interrupted upload
+or other live network request was run.
