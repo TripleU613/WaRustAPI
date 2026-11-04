@@ -1306,6 +1306,35 @@ fn catch_up_in(
         .ok_or_else(|| {
             crate::Error::invalid("app_state_sync", "conflict names no known collection")
         })?;
+    // APK 43.72 F2T.A00 preflights the whole selected collection before
+    // FeN/SyncResponseHandler application. Reuse that structural stage here;
+    // an accompanying external snapshot must not be silently discarded.
+    let classified = response::classify_response(reply)?;
+    if classified.collections.len() != 1 {
+        return Err(invalid_patch(
+            "conflict requires one unambiguous collection",
+        ));
+    }
+    let response::Category::Error {
+        code: 409,
+        conflict_data: Some(data),
+        ..
+    } = &classified.collections[0].category
+    else {
+        return Err(invalid_patch("conflict has no supported patch data"));
+    };
+    let headers = headers::inspect_collection_headers(data)
+        .map_err(|_| invalid_patch("conflict fails structural header preflight"))?;
+    if headers.snapshot_ref.is_some()
+        || headers
+            .patches
+            .iter()
+            .any(|patch| patch.source != headers::PatchSource::Inline)
+    {
+        return Err(invalid_patch(
+            "conflict requires unsupported authenticated external retrieval",
+        ));
+    }
     // APK 43.72 SyncResponseHandler.A07 -> 0mj.A00 commits verified state
     // inside its application transaction (server-sync-lifecycle.md). Read the
     // baseline and every key in this same transaction: a separately loaded
@@ -1843,6 +1872,53 @@ mod catch_up_atomic_tests {
         assert_eq!(ingest_action(&store, &id).unwrap(), 0);
         assert_eq!(journal(&store), retained);
         assert_eq!(held(&store).unwrap(), prepared);
+    }
+
+    #[test]
+    fn conflict_never_discards_snapshot_or_later_header_failure() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("preflight.redb"));
+        install_key(&store);
+        // Even a syntactically valid empty external-reference message is not
+        // permission to omit the snapshot and apply just the inline portion.
+        let snapshot =
+            Node::new("iq")
+                .attr("type", "result")
+                .children(vec![Node::new("sync").children(
+                    vec![Node::new("collection")
+                .attr("name", "regular").attr("type", "error").children(vec![
+                    Node::new("error").attr("code", "409"),
+                    Node::new("snapshot").bytes(vec![0x0a, 0]),
+                    Node::new("patches").children(vec![Node::new("patch").bytes(patch(false))]),
+                ])],
+                )]);
+        let duplicate = reply(vec![
+            Node::new("patch").bytes(patch(false)),
+            Node::new("patch").bytes(patch(false)),
+        ]);
+        let mut external = patch(true);
+        external.extend([0x1a, 0]);
+        let external = reply(vec![
+            Node::new("patch").bytes(patch(false)),
+            Node::new("patch").bytes(external),
+        ]);
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 1000))
+            .unwrap();
+        for response in [snapshot, duplicate, external] {
+            assert!(
+                store
+                    .write(|tx| catch_up_in(tx, &response, &test_source()))
+                    .is_err()
+            );
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 1000))
+                    .unwrap(),
+                before
+            );
+            assert!(journal(&store).is_empty());
+        }
     }
 
     #[test]

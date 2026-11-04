@@ -1,3 +1,11 @@
+2026-11-04 — **Confirmed Rust defect/fixed offline:** inline 409 catch-up
+could discard an accompanying snapshot reference. It now runs shared structural
+classification/header preflight before held/key reads and refuses unsupported
+external retrieval. Complete-checkpoint preservation tests cover snapshots,
+duplicate versions and later mixed external data. Native reference remains pinned
+2.26.43.72 F2T.A00; no new APK/live evidence is claimed.
+[Details](app-state-catchup-atomicity.md#whole-collection-preflight-before-conflict-verification-2026-11-04).
+
 2026-11-04 — **Confirmed Rust defect/fixed offline:** the existing verified
 409 chain discarded decrypted actions while advancing integrity state. It now
 retains them encrypted in the same transaction, with exact immutable stored

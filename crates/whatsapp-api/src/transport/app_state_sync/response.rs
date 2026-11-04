@@ -206,8 +206,8 @@ fn data<'a>(node: &'a Node, budget: &mut Budget) -> Result<CollectionData<'a>> {
 /// Classify an IQ success response without authenticating or applying it.
 ///
 /// Category precedence follows current native F2T. Protobuf version/exit-code/
-/// external-reference checks from F2T.A00 remain a separate, unimplemented
-/// stage: opaque data here must never be interpreted as verified app state.
+/// external-reference checks from F2T.A00 live in the separate `headers` stage:
+/// opaque data here must never be interpreted as verified app state.
 /// Requiring IQ/result and rejecting ambiguous consumed singletons are local
 /// admission policies; unknown children and collection names remain accessible
 /// through the borrowed original nodes. Outer IQ errors belong to their own

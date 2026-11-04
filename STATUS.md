@@ -1,3 +1,16 @@
+2026-11-04 — **409 whole-collection preflight (offline):**
+
+Conflict catch-up now uses the current structural classifier/header stage before
+held-state loading or key resolution. An accompanying snapshot reference can no
+longer be ignored while inline patches advance state; unsupported external data
+refuses. All selected nested patch headers are checked before verification.
+Real-store tests preserve the entire checkpoint table and empty journal for
+snapshot, duplicate-version and mixed-source refusals.
+[Defect, evidence and limits](docs/protocol/app-state-catchup-atomicity.md#whole-collection-preflight-before-conflict-verification-2026-11-04).
+Validation: **1,227 workspace/all-feature tests**, strict Clippy, CLI-reference,
+formatting, coverage freshness and repository hygiene passed.
+No live account traffic occurred; successful-fetch application remains unfinished.
+
 2026-11-04 — **409 verified-action retention (offline):**
 
 Conflict catch-up no longer discards decrypted actions after verifying and

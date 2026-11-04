@@ -35,8 +35,9 @@ supported conflict shape, not a claim that the native reader rejects every
 other server form. The caller separately owns matching the authenticated reply
 to the original request and expected collection.
 
-This function still stores verified integrity state only; complete native mutation
-action projection remains a separate, unfinished application responsibility.
+This function stores verified integrity state and retains authenticated actions
+in its encrypted journal; complete native mutation action projection remains
+a separate, unfinished application responsibility.
 No patch installs an incoming key. Patch authentication and record authentication
 now resolve their separate key IDs from the already-held account keys within the
 same transaction. **Confirmed current-build evidence:** `SyncResponseHandler.A07`
@@ -97,3 +98,23 @@ check both ordered operation batches survive reopen; late failure tests require
 no partial journal. Existing journal conflict/AAD/rollback tests still apply.
 Native reference remains the pinned 2.26.43.72 lifecycle above; this change adds
 no APK evidence or live account operation.
+
+## Whole-collection preflight before conflict verification (2026-11-04)
+
+**Confirmed Rust defect/fixed:** the 409 utility previously ignored an accompanying
+snapshot reference while applying inline patches. It now classifies the complete
+selected reply and uses the shared recursive header preflight before reading held
+state or resolving keys. The pinned 2.26.43.72 `F2T.A00` parser precedes application;
+see [the retained header audit](app-state-structural-headers.md). An external
+snapshot or external-mutation source requires authenticated retrieval and refuses
+this inline-only utility instead of being silently omitted. All selected patch
+headers are checked before cryptographic application, including duplicate versions,
+exit branches and nested protobuf syntax. Preflight errors remain static local
+refusals here; this path does not fabricate a server error or native reason code.
+
+One real-store regression covers an accompanying snapshot reference, duplicate
+patch versions and a later mixed external/inline patch. Each refusal preserves
+the complete checkpoint table and leaves no journal. Existing bad-MAC and late
+malformed-patch rollback tests continue to cover the whole-chain utility contract.
+No external download, native per-patch commit parity or successful-fetch application
+is introduced. No new live or APK observation is claimed.
