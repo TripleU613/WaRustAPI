@@ -169,3 +169,13 @@ child and lowercases op_name. Rust no longer admits arbitrary child tags or
 later matching updates, and supports ASCII case-insensitive operation names.
 [Router and JSON adapter evidence/tests](rea/2.26.43.72-reachout-state/README.md#current-mex-operation-routing-2026-11-04-offline-corrected).
 Sender authorization and full typed conversion remain open. No live traffic.
+
+## Reach-out envelope before state write (2026-11-04)
+
+**Confirmed local integrity fix:** recognized lock updates now run existing
+ACK-envelope validation before checkpoint mutation. Missing/invalid routing
+fields cannot clear a lock and only later fail mex_ack. Receive still ACKs
+after commit; malformed input preserves capture/lock and continues.
+[Base-handler evidence, test and origin limitation](rea/2.26.43.72-reachout-state/README.md#base-dispatch-and-local-envelope-before-state-guard-2026-11-04).
+Valid JID syntax does not establish account-state sender authority, which
+remains open. No live traffic or native origin-parity claim.

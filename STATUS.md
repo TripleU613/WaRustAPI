@@ -1,3 +1,13 @@
+2026-11-04 — **Reach-out envelope validation precedes state writes:**
+
+Missing/invalid ACK routing fields cannot change restriction state before
+later ACK refusal. Existing validation now precedes mutation; actual ACK
+still follows successful persistence. Sender authority remains separate/open.
+[Evidence and real-store regression](docs/protocol/rea/2.26.43.72-reachout-state/README.md#base-dispatch-and-local-envelope-before-state-guard-2026-11-04).
+Validation: **1,268 workspace/all-feature tests**, strict Clippy, CLI-reference,
+formatting, coverage freshness and repository hygiene passed.
+No live account traffic.
+
 2026-11-04 — **Reach-out MEX operation routing aligned:**
 
 Only first update can supply restriction state; supported operation matching

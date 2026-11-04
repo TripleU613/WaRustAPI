@@ -1,3 +1,9 @@
+2026-11-04 — **Source integrity fixed: reach-out envelope before mutation.**
+Existing base_ack validation now runs before lock checkpoint writes; actual
+ACK follows persistence. Real-store invalid-envelope regression retained.
+[Native base leaves and local scope](rea/2.26.43.72-reachout-state/README.md#base-dispatch-and-local-envelope-before-state-guard-2026-11-04).
+Upstream sender authority remains untraced; no live traffic.
+
 2026-11-04 — **Pinned mismatch corrected offline: MEX operation selection.**
 2.26.43.72 0v7.A09/8AF.A09 retained; Rust selects first update and supports
 ASCII case-insensitive reach-out operation names. Arbitrary tags/later updates

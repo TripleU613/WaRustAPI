@@ -68,3 +68,40 @@ apk-smali0v7.A09 and8AF.A09 with signatures/exceptions.
 
 - [mex-router.txt](mex-router.txt) — SHA-256 `0517c6e39e4707b2e412caabfd1d983af47b4a988d33be9808dfec22eabf6ea7`.
 - [json-handler-adapter.txt](json-handler-adapter.txt) — SHA-256 `856817a3ffc55eabef8b4352c3ca3284b835aca434b9bc47384b0587f5a979a2`.
+
+## Base dispatch and local envelope-before-state guard (2026-11-04)
+
+**Confirmed static**, same pinned APK:0v6.A01 owns handler dispatch,
+bookkeeping, exception handling and completion;0v6.A00 routes ACK through
+1ic/A0G for one wrapper kind or0Sf.A0O otherwise. Full base methods retained.
+Two direct A01 callers are8aj.run/8bl.run; their construction and upstream
+sender authorization remain untraced. No account-server sender allowlist is
+proved by these leaves.
+
+**Confirmed local source defect corrected offline:** reach-out state could
+commit before mex_ack rejected missing/oversized ID, invalid from or invalid
+participant. record_reachout_timelock now invokes the existing base_ack
+validation before any checkpoint write. It only constructs/discards the
+prospective ACK; actual ACK remains after successful persistence in receive.
+Malformed envelope returns InvalidInput through the existing captured/no-ACK/
+continue path. Store failures still propagate. This is an existing local
+envelope invariant moved before mutation, not a port of untraced native
+origin authentication. Valid from remains a parsed JID, not evidence it is
+authorized to set account state. That separate audit gap stays open.
+
+Real-store regression preserves an active lock across missing ID/from, empty
+ID and invalid from/participant, then permits explicit inactive update with
+a valid envelope and builds its ACK. Existing data tests now include valid
+synthetic envelopes so content tests cannot pass through malformed wrappers.
+No live notification, new sender allowlist or account operation was executed.
+
+Reproduce apk-smali0v6.A01/A00 with signatures/exceptions; apk-callers
+0v6.A01 for the bounded two-caller result. No upstream completeness claimed.
+
+- [base-notification-dispatch.txt](base-notification-dispatch.txt) — SHA-256 `9527dd697ff8e0341a263ba6fd73ffadf213f40d8b996b170663b15e3f981c7c`.
+- [base-notification-ack.txt](base-notification-ack.txt) — SHA-256 `42e84943e757ca535f95aa5b5cc6d5957a2550d12099df726335b99f3bdeb224`.
+
+Envelope test correction: the shared JID parser accepts unfamiliar server-only
+names as syntactic Server::Other. The regression uses malformed device syntax
+for invalid-address cases. This further demonstrates that this local guard
+does not establish trusted sender authority.

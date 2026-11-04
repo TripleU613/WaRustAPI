@@ -145,6 +145,9 @@ pub fn record_reachout_timelock(
                     )
                 })?
         };
+        // Local integrity boundary: an envelope we cannot acknowledge must
+        // not alter account restriction state before mex_ack rejects it.
+        base_ack(node, "mex")?;
         let lock = ReachoutTimelock { active, ends };
         store.write(|tx| tx.put_json(Table::Checkpoints, REACHOUT_TIMELOCK, 1, &lock))?;
         return Ok(Some(lock));
@@ -511,11 +514,15 @@ mod tests {
             for active in [true, false] {
                 let body = serde_json::json!({"data":{"xwa2_notify_account_reachout_timelock":{
                     "is_active":active,"time_enforcement_ends":ends}}});
-                let node = Node::new("notification").attr("type", "mex").children(vec![
-                    Node::new("update")
-                        .attr("op_name", "NotificationUserReachoutTimelockUpdate")
-                        .bytes(serde_json::to_vec(&body).unwrap()),
-                ]);
+                let node = Node::new("notification")
+                    .attr("type", "mex")
+                    .attr("id", "fixture-reachout")
+                    .attr("from", "s.whatsapp.net")
+                    .children(vec![
+                        Node::new("update")
+                            .attr("op_name", "NotificationUserReachoutTimelockUpdate")
+                            .bytes(serde_json::to_vec(&body).unwrap()),
+                    ]);
                 if active {
                     assert!(matches!(
                         record_reachout_timelock(&store, &node),
@@ -555,6 +562,8 @@ mod tests {
         let wrap = |children| {
             Node::new("notification")
                 .attr("type", "mex")
+                .attr("id", "fixture-reachout")
+                .attr("from", "s.whatsapp.net")
                 .children(children)
         };
         assert!(
@@ -585,6 +594,52 @@ mod tests {
     }
 
     #[test]
+    fn invalid_reachout_envelope_cannot_clear_existing_restriction() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = super::super::group_fanout::tests::open(&dir.path().join("envelope.redb"));
+        let prior = ReachoutTimelock {
+            active: true,
+            ends: 1000,
+        };
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, REACHOUT_TIMELOCK, 1, &prior))
+            .unwrap();
+        let base = Node::new("notification").attr("type", "mex").children(vec![
+            Node::new("update")
+                .attr("op_name", "NotificationUserReachoutTimelockUpdate")
+                .bytes(
+                    br#"{"data":{"xwa2_notify_account_reachout_timelock":{"is_active":false}}}"#
+                        .to_vec(),
+                ),
+        ]);
+        for node in [
+            base.clone(),
+            base.clone().attr("id", "id"),
+            base.clone().attr("from", "s.whatsapp.net"),
+            base.clone().attr("id", "").attr("from", "s.whatsapp.net"),
+            base.clone()
+                .attr("id", "id")
+                .attr("from", "1:invalid@s.whatsapp.net"),
+            base.clone()
+                .attr("id", "id")
+                .attr("from", "s.whatsapp.net")
+                .attr("participant", "1:invalid@s.whatsapp.net"),
+        ] {
+            assert!(record_reachout_timelock(&store, &node).is_err());
+            assert_eq!(active_reachout_timelock(&store, 999).unwrap(), Some(prior));
+        }
+        let valid = base.attr("id", "id").attr("from", "s.whatsapp.net");
+        assert_eq!(
+            record_reachout_timelock(&store, &valid).unwrap(),
+            Some(ReachoutTimelock {
+                active: false,
+                ends: 0
+            })
+        );
+        assert!(mex_ack(&valid).unwrap().is_some());
+    }
+
+    #[test]
     fn reachout_timelock_is_recorded_and_expires() {
         let dir = tempfile::tempdir().unwrap();
         let store = ProtocolStore::open(crate::store::OpenOptions {
@@ -597,11 +652,15 @@ mod tests {
         })
         .unwrap();
         let body = br#"{"data":{"xwa2_notify_account_reachout_timelock":{"enforcement_type":"DEFAULT","is_active":true,"time_enforcement_ends":"1000"}}}"#;
-        let node = Node::new("notification").attr("type", "mex").children(vec![
-            Node::new("update")
-                .attr("op_name", "NotificationUserReachoutTimelockUpdate")
-                .bytes(body.to_vec()),
-        ]);
+        let node = Node::new("notification")
+            .attr("type", "mex")
+            .attr("id", "fixture-reachout")
+            .attr("from", "s.whatsapp.net")
+            .children(vec![
+                Node::new("update")
+                    .attr("op_name", "NotificationUserReachoutTimelockUpdate")
+                    .bytes(body.to_vec()),
+            ]);
         let lock = record_reachout_timelock(&store, &node).unwrap().unwrap();
         assert_eq!(
             lock,
