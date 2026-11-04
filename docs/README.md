@@ -17,6 +17,7 @@ and [STATUS.md](../STATUS.md) for verified behavior and blockers.
 
 ## Development and design
 
+- [Project handoff review (2026-11-04)](protocol/project-handoff.md): current baseline, stale summaries, research inputs and recommended continuation.
 - [Contributing](../CONTRIBUTING.md): toolchain, checks, and review expectations.
 - [Agent working agreement](../AGENTS.md): the owner's directions for coding agents (CLAUDE.md imports it).
 - [Continuous integration](ci.md): change routing, test tiers, coverage, and security scans.

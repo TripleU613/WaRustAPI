@@ -14873,7 +14873,7 @@
           "Messages"
         ],
         "summary": "Queue an edit of one of our own direct text messages",
-        "description": "Offline enqueue; `listen --send-outbox` transmits. Payload protocolMessage{key, type MESSAGE_EDIT(14), editedMessage(14)=conversation, timestampMs(15)} (2.26.37.71 D9B.A00); stanza edit=\"1\" (CpG.A0U schema; receive parser DEy.A00). Same ownership and three-day rule as revoke. Text only; media caption edits are not supported here. Live 2026-11-02: server-accepted and delivered to a recipient handset. Groups (2026-11-02): the same intent for a group chat goes through the normal group outbox as a sender-key message with key remoteJid = the group, fromMe, no participant, and the stanza edit attribute; live 2026-11-02 (server-accepted, delivered to the recipient handset).",
+        "description": "Offline enqueue; `listen --send-outbox` transmits. The library edit_payload encoder is available with experimental-signal-crypto; the live driver still requires its transport features. Payload protocolMessage{key, type MESSAGE_EDIT(14), editedMessage(14)=conversation, timestampMs(15)} (2.26.37.71 D9B.A00); stanza edit=\"1\" (CpG.A0U schema; receive parser DEy.A00). Same ownership and three-day rule as revoke. Text only; media caption edits are not supported here. Live 2026-11-02: server-accepted and delivered to a recipient handset. Groups (2026-11-02): the same intent for a group chat goes through the normal group outbox as a sender-key message with key remoteJid = the group, fromMe, no participant, and the stanza edit attribute; live 2026-11-02 (server-accepted, delivered to the recipient handset).",
         "operationId": "queueEdit",
         "x-cli": "whatsapp-cli edit-message",
         "x-transport": [

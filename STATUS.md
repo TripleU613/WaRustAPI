@@ -1,3 +1,17 @@
+2026-11-04 — **Fixed/offline (default build):** `chat_settings::edit_payload`
+now shares its optional Signal dependency's feature gate. Its unconditional call
+broke the documented default build and xtask commands (E0433), while all-feature
+checks passed. Existing experimental callers and wire encoding are unchanged.
+[Review and validation](docs/protocol/project-handoff.md#default-build-correction-found-during-review).
+
+2026-11-04 — **Offline project handoff review:** reviewed main at `a13021b`,
+confirmed the existing comparison-driver architecture, and recorded stale summary
+claims and a prioritized continuation. Fresh workspace/all-feature tests passed
+(1,105 tests). The published 2.26.43.72 APK was downloaded outside the checkout;
+its hash, package version and signatures were verified. Historical account bans
+and unconfirmed registration remain unresolved; no live operation or account
+state change occurred. [Review and validation](docs/protocol/project-handoff.md).
+
 2026-11-02 — **Observed live (corrected voice resend):** one authorized
 voice resend on the saved pending attempt returned HTTP 200 / `sent`, with
 `retry_after=305`, `voice_wait=305`, and `sms_wait=65` seconds. The request

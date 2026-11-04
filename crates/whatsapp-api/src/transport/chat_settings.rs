@@ -525,6 +525,9 @@ pub fn revoke_payload(remote: &Jid, target: &MessageRef) -> Vec<u8> {
 /// timestampMs(15)}` for one of our own text messages (`D9B.A00` writes field
 /// 14 and the sender timestamp to 15; image-caption-edit.md). The replacement
 /// is an ordinary `Message` (here `conversation`).
+// The replacement encoder lives in the optional Signal adapter. Keep this
+// helper under the same feature so default builds do not name a disabled module.
+#[cfg(feature = "experimental-signal-crypto")]
 pub fn edit_payload(remote: &Jid, target: &MessageRef, body: &str, now_ms: i64) -> Result<Vec<u8>> {
     let replacement = crate::signal::direct::text_payload(body)?;
     let mut protocol = ProtocolMessage {
