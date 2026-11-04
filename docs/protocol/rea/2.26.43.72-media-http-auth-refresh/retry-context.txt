@@ -1,0 +1,12 @@
+
+# class: LX/LtU;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 3
+    # full signature: LX/LtU;-><init>()V
+    0000..0006  invoke-direct  {v2}, Ljava/lang/Object;-><init>()V
+    0006..000a  const-wide/16  v0, #0xffff (-1)
+    000a..000e  iput-wide  v0, v2, LX/LtU;->A01:J
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method

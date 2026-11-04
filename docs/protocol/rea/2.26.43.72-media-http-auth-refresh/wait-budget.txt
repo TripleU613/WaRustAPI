@@ -1,0 +1,30 @@
+
+# class: LX/Mtv;
+# extends: Ljava/lang/Object;
+
+.method private A04(VLJ)  # .registers 11
+    # full signature: LX/Mtv;->A04(LX/LtU;J)V
+    0000..0006  invoke-static  {}, Landroid/os/SystemClock;->uptimeMillis()J
+    0006..0008  move-result-wide  v0
+    0008..000a  sub-long/2addr  v0, v9
+    000a..000e  const-wide/16  v3, #0x0
+    000e..0012  cmp-long  v2, v0, v3
+    0012..0016  if-lez  v2, +0x20
+    0016..001a  iget-wide  v5, v8, LX/LtU;->A01:J
+    001a..001e  cmp-long  v2, v5, v3
+    001e..0022  if-gez  v2, +0x8
+    0022..0026  iget-object  v2, v7, LX/Mtv;->A0A:LX/0VM;
+    0026..002a  iget-wide  v5, v2, LX/0VM;->A0K:J
+    002a..002e  iput-wide  v5, v8, LX/LtU;->A01:J
+    002e..0030  sub-long/2addr  v5, v0
+    0030..0036  invoke-static  {v3, v4, v5, v6}, Ljava/lang/Math;->max(JJ)J
+    0036..0038  move-result-wide  v2
+    0038..003c  iput-wide  v2, v8, LX/LtU;->A01:J
+    003c..0040  const-string  v4, "Mms4RouteSupplier/auth wait "
+    0040..0046  invoke-static  {v4, v0, v1}, LX/1Xl;->A17(Ljava/lang/String;J)Ljava/lang/StringBuilder;
+    0046..0048  move-result-object  v1
+    0048..004c  const-string  v0, "ms; budget left "
+    004c..0052  invoke-static  {v0, v1, v2, v3}, LX/DBb;->A1L(Ljava/lang/String;Ljava/lang/StringBuilder;J)V
+    0052..0054  return-void
+    # exception table: 0 try range(s)
+.end method

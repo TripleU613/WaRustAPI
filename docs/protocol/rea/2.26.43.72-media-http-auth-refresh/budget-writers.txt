@@ -1,0 +1,2 @@
+classes.dex  LX/0VM;-><init>(V)
+  write opcode 0x5a, dex byte offset: 0x5beba8

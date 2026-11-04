@@ -1,0 +1,22 @@
+
+# class: LX/0VM;
+# extends: LX/07o;
+
+.method public A0C(ZLLJ)  # .registers 8
+    # full signature: LX/0VM;->A0C(LX/1t5;Ljava/lang/String;J)Z
+    0000..0004  if-eqz  v4, +0x16
+    0004..0008  iget-object  v0, v4, LX/1t5;->A09:Ljava/lang/String;
+    0008..000e  invoke-virtual  {v0, v5}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    000e..0010  move-result  v0
+    0010..0014  if-nez  v0, +0xe
+    0014..0018  iget-wide  v4, v4, LX/1t5;->A02:J
+    0018..001e  invoke-static  {}, Landroid/os/SystemClock;->elapsedRealtime()J
+    001e..0020  move-result-wide  v2
+    0020..0022  add-long/2addr  v2, v6
+    0022..0026  cmp-long  v1, v4, v2
+    0026..0028  const/4  v0, #0x1
+    0028..002c  if-gtz  v1, +0x3
+    002c..002e  const/4  v0, #0x0
+    002e..0030  return  v0
+    # exception table: 0 try range(s)
+.end method

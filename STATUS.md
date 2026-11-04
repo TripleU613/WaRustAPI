@@ -1,3 +1,13 @@
+2026-11-04 — **Conditional media HTTP auth refresh callers traced:**
+
+Retained all three direct401/403 route-reporting callers, changed-auth
+predicate, two-retry cap and elapsed wait-budget accounting. Caller loops,
+flag values and transfer loops remain untraced; no generic resend enabled.
+[Evidence](docs/protocol/rea/2.26.43.72-media-http-auth-refresh/README.md).
+Validation: JSON parsing, coverage freshness, cached diff checks and repository
+hygiene (4,235 local links) passed.
+Documentation/evidence only, no Rust change or live traffic.
+
 2026-11-04 — **Media disconnect cancellation and demand triggers traced:**
 
 Pinned APK static evidence closes message0 cancellation in1iM.A02 and

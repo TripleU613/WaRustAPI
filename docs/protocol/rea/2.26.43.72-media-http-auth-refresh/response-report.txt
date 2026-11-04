@@ -1,0 +1,21 @@
+
+# class: LX/Mtv;
+# extends: Ljava/lang/Object;
+
+.method public Bvd(VZI)  # .registers 5
+    # full signature: LX/Mtv;->Bvd(ZI)V
+    0000..0004  iget-boolean  v1, v2, LX/Mtv;->A07:Z
+    0004..0006  const/4  v0, #0x0
+    0006..000a  iput-boolean  v0, v2, LX/Mtv;->A07:Z
+    000a..000c  const/4  v0, #0xff (-1)
+    000c..0010  if-eq  v4, v0, +0x9
+    0010..0014  if-nez  v1, +0x7
+    0014..0018  iget-object  v0, v2, LX/Mtv;->A0A:LX/0VM;
+    0018..001e  invoke-virtual  {v0, v4}, LX/0VM;->A0S(I)V
+    001e..0022  iget  v0, v2, LX/Mtv;->A00:I
+    0022..0026  add-int/lit8  v0, v0, #0x1
+    0026..002a  iput  v0, v2, LX/Mtv;->A00:I
+    002a..0030  invoke-direct  {v2, v3}, LX/Mtv;->A05(Z)V
+    0030..0032  return-void
+    # exception table: 0 try range(s)
+.end method

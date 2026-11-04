@@ -345,3 +345,14 @@ removes media Handler message0 during its disconnect handling. 0VM.A0T uses
 a separate two-minute connection/auth demand threshold; 0VM.A0S routes401/403
 to the existing gated request function. These do not authorize HTTP resend.
 [Exact output, scope, hashes and remaining caller gaps](rea/2.26.43.72-media-retry-scheduling/README.md#disconnect-cancellation-and-additional-triggers-2026-11-04).
+
+### Conditional HTTP auth refresh (2026-11-04)
+
+**Confirmed static**, pinned2.26.43.72: all three direct0VM.A0S callers
+are retained. Mtv.BkV gates auth-change retry eligibility on401/403, route
+state, feature predicate, count<2 and changed auth; it accounts elapsed
+wait against a per-context budget. Mtv.Bvd suppresses repeated refresh
+reporting after auth replacement fails. MVv.A04 retains download response
+codes while reporting them to the route manager.
+[Full conditions, hashes and untraced flag producers/loops](rea/2.26.43.72-media-http-auth-refresh/README.md).
+No generic HTTP retry is implemented or justified.

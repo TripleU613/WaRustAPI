@@ -1,3 +1,9 @@
+2026-11-04 — **Confirmed static: conditional media HTTP auth refresh.**
+Pinned2.26.43.72 checked DEX closes the three direct A0S caller bodies,
+changed-auth predicate and wait-budget accounting; flag producers and
+actual transfer-loop replay remain unknown. [Evidence](rea/2.26.43.72-media-http-auth-refresh/README.md).
+No live traffic, new REA envelope, or runtime change.
+
 2026-11-04 — **Confirmed static: media disconnect and demand triggers.**
 Pinned2.26.43.72 checked DEX identifies 1iM.A02 message0 cancellation,
 0VM.A0T two-minute demand checks, and A0S401/403 gated refresh triggers.
