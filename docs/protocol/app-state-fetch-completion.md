@@ -278,3 +278,12 @@ opaque-data, numeric, ambiguity/resource and Debug boundaries. A real encrypted
 store inspector regression checks JSON/Debug redaction, category order and
 unchanged checkpoints/journal. This is a prerequisite to authenticated processing,
 not evidence that a server result was applied or that an account is safe.
+
+The inspector now also invokes the [selected-data header stage](app-state-structural-headers.md)
+after category precedence has selected data. It reports fixed header status,
+native reason metadata separately from IQ error codes, parsed wire versions and
+external-mutation counts. Fatal/local refusal leaves no partial header-version
+list. This is still structural-only; integrity remains false and no state changes.
+The [pure request binder](app-state-inline-fetch-application-spec.md#implemented-pure-binder)
+additionally checks frozen bytes, generation claims and exact baseline domains;
+durable admission capture and transactional application remain required work.

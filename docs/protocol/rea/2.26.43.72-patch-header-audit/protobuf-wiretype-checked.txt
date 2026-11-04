@@ -1,0 +1,161 @@
+
+# class: Lcom/google/protobuf/WireFormat$FieldType;
+# extends: Ljava/lang/Enum;
+
+.method public <clinit>(V)  # .registers 38
+    # full signature: Lcom/google/protobuf/WireFormat$FieldType;-><clinit>()V
+    0000..0004  sget-object  v2, Lcom/google/protobuf/WireFormat$JavaType;->DOUBLE:Lcom/google/protobuf/WireFormat$JavaType;
+    0004..0008  const-string  v1, "DOUBLE"
+    0008..000a  const/4  v5, #0x0
+    000a..000c  const/4  v8, #0x1
+    000c..0010  new-instance  v37, Lcom/google/protobuf/WireFormat$FieldType;
+    0010..0014  move-object/from16  v0, v37
+    0014..001a  invoke-direct  {v0, v1, v5, v2, v8}, Lcom/google/protobuf/WireFormat$FieldType;-><init>(Ljava/lang/String;ILcom/google/protobuf/WireFormat$JavaType;I)V
+    001a..001e  sput-object  v37, Lcom/google/protobuf/WireFormat$FieldType;->DOUBLE:Lcom/google/protobuf/WireFormat$FieldType;
+    001e..0022  sget-object  v2, Lcom/google/protobuf/WireFormat$JavaType;->FLOAT:Lcom/google/protobuf/WireFormat$JavaType;
+    0022..0026  const-string  v1, "FLOAT"
+    0026..0028  const/4  v7, #0x5
+    0028..002c  new-instance  v36, Lcom/google/protobuf/WireFormat$FieldType;
+    002c..0030  move-object/from16  v0, v36
+    0030..0036  invoke-direct  {v0, v1, v8, v2, v7}, Lcom/google/protobuf/WireFormat$FieldType;-><init>(Ljava/lang/String;ILcom/google/protobuf/WireFormat$JavaType;I)V
+    0036..003a  sput-object  v36, Lcom/google/protobuf/WireFormat$FieldType;->FLOAT:Lcom/google/protobuf/WireFormat$FieldType;
+    003a..003e  sget-object  v1, Lcom/google/protobuf/WireFormat$JavaType;->LONG:Lcom/google/protobuf/WireFormat$JavaType;
+    003e..0042  const-string  v2, "INT64"
+    0042..0044  const/4  v4, #0x2
+    0044..0048  new-instance  v35, Lcom/google/protobuf/WireFormat$FieldType;
+    0048..004c  move-object/from16  v0, v35
+    004c..0052  invoke-direct  {v0, v2, v4, v1, v5}, Lcom/google/protobuf/WireFormat$FieldType;-><init>(Ljava/lang/String;ILcom/google/protobuf/WireFormat$JavaType;I)V
+    0052..0056  sput-object  v35, Lcom/google/protobuf/WireFormat$FieldType;->INT64:Lcom/google/protobuf/WireFormat$FieldType;
+    0056..005a  const-string  v2, "UINT64"
+    005a..005c  const/4  v6, #0x3
+    005c..0060  new-instance  v34, Lcom/google/protobuf/WireFormat$FieldType;
+    0060..0064  move-object/from16  v0, v34
+    0064..006a  invoke-direct  {v0, v2, v6, v1, v5}, Lcom/google/protobuf/WireFormat$FieldType;-><init>(Ljava/lang/String;ILcom/google/protobuf/WireFormat$JavaType;I)V
+    006a..006e  sput-object  v34, Lcom/google/protobuf/WireFormat$FieldType;->UINT64:Lcom/google/protobuf/WireFormat$FieldType;
+    006e..0072  sget-object  v2, Lcom/google/protobuf/WireFormat$JavaType;->INT:Lcom/google/protobuf/WireFormat$JavaType;
+    0072..0076  const-string  v9, "INT32"
+    0076..0078  const/4  v3, #0x4
+    0078..007c  new-instance  v33, Lcom/google/protobuf/WireFormat$FieldType;
+    007c..0080  move-object/from16  v0, v33
+    0080..0086  invoke-direct  {v0, v9, v3, v2, v5}, Lcom/google/protobuf/WireFormat$FieldType;-><init>(Ljava/lang/String;ILcom/google/protobuf/WireFormat$JavaType;I)V
+    0086..008a  sput-object  v33, Lcom/google/protobuf/WireFormat$FieldType;->INT32:Lcom/google/protobuf/WireFormat$FieldType;
+    008a..008e  const-string  v3, "FIXED64"
+    008e..0092  new-instance  v32, Lcom/google/protobuf/WireFormat$FieldType;
+    0092..0096  move-object/from16  v0, v32
+    0096..009c  invoke-direct  {v0, v3, v7, v1, v8}, Lcom/google/protobuf/WireFormat$FieldType;-><init>(Ljava/lang/String;ILcom/google/protobuf/WireFormat$JavaType;I)V
+    009c..00a0  sput-object  v32, Lcom/google/protobuf/WireFormat$FieldType;->FIXED64:Lcom/google/protobuf/WireFormat$FieldType;
+    00a0..00a4  const-string  v3, "FIXED32"
+    00a4..00a6  const/4  v0, #0x6
+    00a6..00aa  new-instance  v13, Lcom/google/protobuf/WireFormat$FieldType;
+    00aa..00b0  invoke-direct  {v13, v3, v0, v2, v7}, Lcom/google/protobuf/WireFormat$FieldType;-><init>(Ljava/lang/String;ILcom/google/protobuf/WireFormat$JavaType;I)V
+    00b0..00b4  sput-object  v13, Lcom/google/protobuf/WireFormat$FieldType;->FIXED32:Lcom/google/protobuf/WireFormat$FieldType;
+    00b4..00b8  sget-object  v7, Lcom/google/protobuf/WireFormat$JavaType;->BOOLEAN:Lcom/google/protobuf/WireFormat$JavaType;
+    00b8..00bc  const/16  v31, #0x4
+    00bc..00c0  const-string  v3, "BOOL"
+    00c0..00c4  const/16  v30, #0x6
+    00c4..00c6  const/4  v0, #0x7
+    00c6..00ca  new-instance  v12, Lcom/google/protobuf/WireFormat$FieldType;
+    00ca..00d0  invoke-direct  {v12, v3, v0, v7, v5}, Lcom/google/protobuf/WireFormat$FieldType;-><init>(Ljava/lang/String;ILcom/google/protobuf/WireFormat$JavaType;I)V
+    00d0..00d4  sput-object  v12, Lcom/google/protobuf/WireFormat$FieldType;->BOOL:Lcom/google/protobuf/WireFormat$FieldType;
+    00d4..00d8  sget-object  v5, Lcom/google/protobuf/WireFormat$JavaType;->STRING:Lcom/google/protobuf/WireFormat$JavaType;
+    00d8..00dc  const/16  v29, #0x7
+    00dc..00e0  const-string  v3, "STRING"
+    00e0..00e4  const/16  v0, #0x8
+    00e4..00e8  new-instance  v11, Lcom/google/protobuf/WireFormat$FieldType$1;
+    00e8..00ee  invoke-direct  {v11, v3, v0, v5, v4}, Lcom/google/protobuf/WireFormat$FieldType$1;-><init>(Ljava/lang/String;ILcom/google/protobuf/WireFormat$JavaType;I)V
+    00ee..00f2  sput-object  v11, Lcom/google/protobuf/WireFormat$FieldType;->STRING:Lcom/google/protobuf/WireFormat$FieldType;
+    00f2..00f6  sget-object  v5, Lcom/google/protobuf/WireFormat$JavaType;->MESSAGE:Lcom/google/protobuf/WireFormat$JavaType;
+    00f6..00fa  const/16  v28, #0x8
+    00fa..00fe  const-string  v3, "GROUP"
+    00fe..0102  const/16  v0, #0x9
+    0102..0106  new-instance  v10, Lcom/google/protobuf/WireFormat$FieldType$2;
+    0106..010c  invoke-direct  {v10, v3, v0, v5, v6}, Lcom/google/protobuf/WireFormat$FieldType$2;-><init>(Ljava/lang/String;ILcom/google/protobuf/WireFormat$JavaType;I)V
+    010c..0110  sput-object  v10, Lcom/google/protobuf/WireFormat$FieldType;->GROUP:Lcom/google/protobuf/WireFormat$FieldType;
+    0110..0114  const/16  v27, #0x9
+    0114..0118  const-string  v3, "MESSAGE"
+    0118..011c  const/16  v26, #0x3
+    011c..0120  const/16  v0, #0xa
+    0120..0124  new-instance  v9, Lcom/google/protobuf/WireFormat$FieldType$3;
+    0124..012a  invoke-direct  {v9, v3, v0, v5, v4}, Lcom/google/protobuf/WireFormat$FieldType$3;-><init>(Ljava/lang/String;ILcom/google/protobuf/WireFormat$JavaType;I)V
+    012a..012e  sput-object  v9, Lcom/google/protobuf/WireFormat$FieldType;->MESSAGE:Lcom/google/protobuf/WireFormat$FieldType;
+    012e..0132  sget-object  v5, Lcom/google/protobuf/WireFormat$JavaType;->BYTE_STRING:Lcom/google/protobuf/WireFormat$JavaType;
+    0132..0136  const/16  v25, #0xa
+    0136..013a  const-string  v3, "BYTES"
+    013a..013e  const/16  v0, #0xb
+    013e..0142  new-instance  v8, Lcom/google/protobuf/WireFormat$FieldType$4;
+    0142..0148  invoke-direct  {v8, v3, v0, v5, v4}, Lcom/google/protobuf/WireFormat$FieldType$4;-><init>(Ljava/lang/String;ILcom/google/protobuf/WireFormat$JavaType;I)V
+    0148..014c  sput-object  v8, Lcom/google/protobuf/WireFormat$FieldType;->BYTES:Lcom/google/protobuf/WireFormat$FieldType;
+    014c..0150  const/16  v24, #0xb
+    0150..0154  const-string  v3, "UINT32"
+    0154..0158  const/16  v23, #0x2
+    0158..015c  const/16  v0, #0xc
+    015c..015e  const/4  v5, #0x0
+    015e..0162  new-instance  v7, Lcom/google/protobuf/WireFormat$FieldType;
+    0162..0168  invoke-direct  {v7, v3, v0, v2, v5}, Lcom/google/protobuf/WireFormat$FieldType;-><init>(Ljava/lang/String;ILcom/google/protobuf/WireFormat$JavaType;I)V
+    0168..016c  sput-object  v7, Lcom/google/protobuf/WireFormat$FieldType;->UINT32:Lcom/google/protobuf/WireFormat$FieldType;
+    016c..0170  sget-object  v0, Lcom/google/protobuf/WireFormat$JavaType;->ENUM:Lcom/google/protobuf/WireFormat$JavaType;
+    0170..0174  const/16  v22, #0xc
+    0174..0178  const-string  v4, "ENUM"
+    0178..017c  const/16  v3, #0xd
+    017c..0180  new-instance  v6, Lcom/google/protobuf/WireFormat$FieldType;
+    0180..0186  invoke-direct  {v6, v4, v3, v0, v5}, Lcom/google/protobuf/WireFormat$FieldType;-><init>(Ljava/lang/String;ILcom/google/protobuf/WireFormat$JavaType;I)V
+    0186..018a  sput-object  v6, Lcom/google/protobuf/WireFormat$FieldType;->ENUM:Lcom/google/protobuf/WireFormat$FieldType;
+    018a..018e  const-string  v0, "SFIXED32"
+    018e..0192  const/16  v21, #0xd
+    0192..0196  const/16  v4, #0xe
+    0196..0198  const/4  v3, #0x5
+    0198..019c  new-instance  v5, Lcom/google/protobuf/WireFormat$FieldType;
+    019c..01a2  invoke-direct  {v5, v0, v4, v2, v3}, Lcom/google/protobuf/WireFormat$FieldType;-><init>(Ljava/lang/String;ILcom/google/protobuf/WireFormat$JavaType;I)V
+    01a2..01a6  sput-object  v5, Lcom/google/protobuf/WireFormat$FieldType;->SFIXED32:Lcom/google/protobuf/WireFormat$FieldType;
+    01a6..01aa  const-string  v3, "SFIXED64"
+    01aa..01ae  const/16  v20, #0xe
+    01ae..01b2  const/16  v0, #0xf
+    01b2..01b4  const/4  v14, #0x1
+    01b4..01b8  new-instance  v4, Lcom/google/protobuf/WireFormat$FieldType;
+    01b8..01be  invoke-direct  {v4, v3, v0, v1, v14}, Lcom/google/protobuf/WireFormat$FieldType;-><init>(Ljava/lang/String;ILcom/google/protobuf/WireFormat$JavaType;I)V
+    01be..01c2  sput-object  v4, Lcom/google/protobuf/WireFormat$FieldType;->SFIXED64:Lcom/google/protobuf/WireFormat$FieldType;
+    01c2..01c6  const-string  v14, "SINT32"
+    01c6..01ca  const/16  v19, #0xf
+    01ca..01ce  const/16  v18, #0x0
+    01ce..01d2  const/16  v0, #0x10
+    01d2..01d6  new-instance  v3, Lcom/google/protobuf/WireFormat$FieldType;
+    01d6..01d8  move-object  v15, v14
+    01d8..01da  move  v14, v0
+    01da..01de  move/from16  v0, v18
+    01de..01e4  invoke-direct  {v3, v15, v14, v2, v0}, Lcom/google/protobuf/WireFormat$FieldType;-><init>(Ljava/lang/String;ILcom/google/protobuf/WireFormat$JavaType;I)V
+    01e4..01e8  sput-object  v3, Lcom/google/protobuf/WireFormat$FieldType;->SINT32:Lcom/google/protobuf/WireFormat$FieldType;
+    01e8..01ec  const/16  v17, #0x10
+    01ec..01f0  const-string  v0, "SINT64"
+    01f0..01f4  const/16  v16, #0x11
+    01f4..01f8  new-instance  v2, Lcom/google/protobuf/WireFormat$FieldType;
+    01f8..01fa  move-object  v15, v0
+    01fa..01fe  move/from16  v14, v16
+    01fe..0202  move/from16  v0, v18
+    0202..0208  invoke-direct  {v2, v15, v14, v1, v0}, Lcom/google/protobuf/WireFormat$FieldType;-><init>(Ljava/lang/String;ILcom/google/protobuf/WireFormat$JavaType;I)V
+    0208..020c  sput-object  v2, Lcom/google/protobuf/WireFormat$FieldType;->SINT64:Lcom/google/protobuf/WireFormat$FieldType;
+    020c..0210  const/16  v0, #0x12
+    0210..0214  new-array  v14, v0, [Lcom/google/protobuf/WireFormat$FieldType;
+    0214..0218  move-object/from16  v1, v37
+    0218..021c  move-object/from16  v0, v36
+    021c..0222  invoke-static  {v1, v0, v14}, LX/2L7;->A1T(Ljava/lang/Object;Ljava/lang/Object;[Ljava/lang/Object;)V
+    0222..0226  aput-object  v35, v14, v23
+    0226..022a  aput-object  v34, v14, v26
+    022a..022e  aput-object  v33, v14, v31
+    022e..0230  const/4  v0, #0x5
+    0230..0234  aput-object  v32, v14, v0
+    0234..0238  aput-object  v13, v14, v30
+    0238..023c  aput-object  v12, v14, v29
+    023c..0240  aput-object  v11, v14, v28
+    0240..0244  aput-object  v10, v14, v27
+    0244..0248  aput-object  v9, v14, v25
+    0248..024c  aput-object  v8, v14, v24
+    024c..0250  aput-object  v7, v14, v22
+    0250..0254  aput-object  v6, v14, v21
+    0254..0258  aput-object  v5, v14, v20
+    0258..025c  aput-object  v4, v14, v19
+    025c..0260  aput-object  v3, v14, v17
+    0260..0264  aput-object  v2, v14, v16
+    0264..0268  sput-object  v14, Lcom/google/protobuf/WireFormat$FieldType;->$VALUES:[Lcom/google/protobuf/WireFormat$FieldType;
+    0268..026a  return-void
+    # exception table: 0 try range(s)
+.end method

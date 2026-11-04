@@ -52,6 +52,15 @@ a fresh synthetic local destination: APK 2.26.43.72 refused against template
 
 ## Evidence standard and remaining risk
 
+The pure request/baseline binder and recursive selected-data header stage are
+now implemented. They preflight frozen request/domain/generation claims and
+whole collections without applying state. Native fatal reasons, local parser
+restrictions and external-data deferral remain distinct. Full store-origin,
+current-baseline/pending-owner checks and authenticated cursor/state commits are
+still obligations of the future transaction wrapper. See
+[binding specification](app-state-inline-fetch-application-spec.md#implemented-pure-binder)
+and [headers](app-state-structural-headers.md).
+
 The [current patch-header audit](app-state-patch-header-audit.md) refutes a
 suspected silent external/exit drop: existing decoders already refuse both.
 Whole-collection nested-protobuf/header validation remains required before a

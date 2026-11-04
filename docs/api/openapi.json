@@ -265,6 +265,20 @@
   ],
   "x-library-capabilities": [
     {
+      "symbol": "whatsapp_api::transport::app_state_sync::binding::bind_inline_fetch_plan",
+      "x-cli": null,
+      "x-transport": ["library"],
+      "x-live": false,
+      "description": "Pure request/admission-claim binder, not a store-origin proof or state applier. FetchBaselinePlan::new freezes exact encoded request SHA-256, local generation, action ID and supplied saved baselines. Binding decodes those same bytes, checks generation/digest/IDs, reclassifies and compares the entire public response model, enforces exact request/baseline/response domains and explicit request version equal to complete validated claimed baseline. Missing responses remain unresolved; pure-fetch version acknowledgements and already-synced categories never advance state. All consumed data headers preflight before any candidate is returned; external snapshots/mutations remain unsupported dispositions. Request-order results retain original response indices; future application must preserve native category order and recheck the full current baseline/generation in its own transaction. Historical requests without prospective admission must not get retroactive claims from present state. No reservation, store write, download, MAC verification or transmission. See docs/protocol/app-state-inline-fetch-application-spec.md and app-state-fetch-binding-review.md."
+    },
+    {
+      "symbol": "whatsapp_api::transport::app_state_sync::headers::inspect_collection_headers",
+      "x-cli": "whatsapp-cli app-state-response-inspect",
+      "x-transport": ["library", "cli"],
+      "x-live": false,
+      "description": "Pure whole-collection nested-protobuf header preflight over selected Data/409-conflict data. Snapshot reference syntax precedes parsing every selected patch; semantic loop follows all protobuf parsing. Keeps original bytes, versions, inline counts and Inline/ExternalDeferred source. Native fatal reasons 69/18/36/37/38/8/14/9 are distinct from server IQ codes; unproven wrong-wire, duplicate-singleton, unsupported encoding and resource restrictions are LocalPolicy, not invented native parity. No authenticated retrieval, keys, MACs or state changes; existing cryptographic decoder still rejects external/exit branches. See docs/protocol/app-state-structural-headers.md."
+    },
+    {
       "symbol": "whatsapp_api::transport::app_state_sync::fetch_request_at_versions",
       "x-cli": null,
       "x-transport": [
@@ -9852,7 +9866,7 @@
       "get": {
         "summary": "Classify a saved app-state result offline without applying data",
         "operationId": "inspectAppStateResponse",
-        "description": "CLI-only structural inspector over one preserved correlated app-state fetch/patch result. Reproduces current APK F2T category precedence: collection error, present version acknowledgement, already-synced, then data. Missing error code uses native -1; version -1 refuses. Snapshot bytes are opaque ExternalBlobReference bytes, not decoded snapshots. Original collection order, unknown names and opaque children remain in the borrowed parser model; JSON prints only known names, fixed categories, counts and scalar metadata, never raw error text/bodies/reference keys. Strict singleton/body/resource guards are bounded local admission policy. Does not verify protobuf exit/version/external-mutation rules, MACs, key authority, request-collection admission, freshness or native generation. integrity_verified is always false. No state write, download, fetch, reservation, ACK, key installation or missing-store creation. No HTTP route is served. See docs/protocol/app-state-fetch-completion.md.",
+        "description": "CLI-only structural inspector over one preserved correlated app-state fetch/patch result. Follows current F2T category precedence: collection error, present version acknowledgement, already-synced, then data. Missing error code uses native -1; version -1 refuses. Consumed data now gets recursive nested-protobuf header preflight: snapshot reference first, every patch parsed before semantic version/exit/mixed-source/duplicate-version checks. Snapshot bytes remain ExternalBlobReference bytes, never downloaded snapshots. JSON prints known names, fixed categories, counts, scalar versions and header outcomes; raw names/text/bodies/reference keys stay private. Native fatal reason metadata is distinct from server error_code; local guard restrictions do not claim native parser parity. Integrity_verified remains false: MACs, key authority, request admission, freshness and generation remain unchecked by this command. No state write, download, fetch, reservation, ACK, key installation or missing-store creation. No HTTP route. See docs/protocol/app-state-fetch-completion.md and app-state-structural-headers.md.",
         "x-cli": "whatsapp-cli app-state-response-inspect",
         "x-library": ["whatsapp_api::transport::app_state_sync::inspect_response", "whatsapp_api::transport::app_state_sync::response::classify_response"],
         "x-transport": ["cli"],
@@ -9869,7 +9883,7 @@
                 "integrity_verified": {"type": "boolean", "enum": [false]},
                 "collections": {"type": "array", "items": {
                   "type": "object",
-                  "required": ["known_collection", "category", "version_ack", "error_code", "has_error_text", "snapshot_ref_present", "patch_count", "has_more_patches"],
+                  "required": ["known_collection", "category", "version_ack", "error_code", "has_error_text", "snapshot_ref_present", "patch_count", "has_more_patches", "header_status", "native_header_reason", "failed_patch_index", "header_patch_versions", "external_mutation_patch_count"],
                   "properties": {
                     "known_collection": {"type": ["string", "null"], "enum": ["regular", "regular_low", "regular_high", "critical_block", "critical_unblock_low", null]},
                     "category": {"type": "string", "enum": ["error", "version_ack", "already_synced", "data"]},
@@ -9878,7 +9892,12 @@
                     "has_error_text": {"type": "boolean"},
                     "snapshot_ref_present": {"type": "boolean", "description": "Consumed opaque reference body present; not a verified snapshot"},
                     "patch_count": {"type": "integer", "minimum": 0},
-                    "has_more_patches": {"type": ["boolean", "null"], "description": "Consumed data's literal true flag, otherwise false; null outside data categories"}
+                    "has_more_patches": {"type": ["boolean", "null"], "description": "Consumed data's literal true flag, otherwise false; null outside data categories"},
+                    "header_status": {"type": ["string", "null"], "enum": ["inline_headers", "external_data_deferred", "native_fatal_header", "local_header_refusal", null], "description": "Structural-only preflight result; null when category has no consumed data. Never integrity or application eligibility."},
+                    "native_header_reason": {"type": ["integer", "null"], "description": "Native F2T fatal reason metadata when established, distinct from server error_code. Local policy failures have null."},
+                    "failed_patch_index": {"type": ["integer", "null"], "minimum": 0, "description": "Zero-based index among selected patch children for a native header failure; null for snapshot/local failures or no failure."},
+                    "header_patch_versions": {"type": "array", "items": {"type": "integer", "minimum": 0}, "description": "Parsed wire uint64 versions after successful header preflight, never adopted as held state. Empty on failure."},
+                    "external_mutation_patch_count": {"type": ["integer", "null"], "minimum": 0, "description": "Count of external-only mutation patches requiring authenticated retrieval; null before successful header preflight."}
                   }
                 }}
               }

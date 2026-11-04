@@ -3,8 +3,9 @@
 2026-11-04. **Confirmed source** refers to main `136fc38`; **confirmed native**
 refers to WhatsApp Android 2.26.43.72, SHA-256
 `887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e`.
-This is a bounded design specification, not an implemented result processor.
-No source code, new APK export, network request or account state changed.
+The pure claim-binding/header stage below is now implemented; the durable
+admission and authenticated result processor remain proposed. No network request
+or account state changed during implementation.
 
 Evidence is already retained in [fetch completion](app-state-fetch-completion.md),
 its [F2T envelopes and checked parser](rea/2.26.43.72-sync-fetch-completion/README.md),
@@ -13,6 +14,40 @@ and [lifecycle](rea/2.26.43.72-server-sync-lifecycle/README.md). The existing
 [logical-index correction](app-state-logical-index.md) are reused, not re-audited.
 
 ## Bounded supported operation
+
+### Implemented pure binder
+
+`binding::FetchBaselinePlan::new` pins the SHA-256 of supplied exact encoded
+request bytes, a local generation, action ID and supplied saved baselines.
+This object is deliberately a **claim**, not proof of authenticated store origin.
+`bind_inline_fetch_plan` takes the current transaction-generation value as an
+input, checks generation/fingerprint and decodes those same frozen bytes through
+the shared action decoder. It does not re-encode a Node to manufacture identity.
+
+The binder validates supported request grammar/attributes, explicit version equal
+to complete internally validated claimed baseline, and exact request/admission
+domains. It reclassifies the preserved original reply and compares the whole
+public model, rejecting inconsistent supplied names/categories/bodies. Response
+duplicates or names outside the request fail local binding; missing requested
+responses remain unresolved. Pure-fetch acknowledgements and already-synced
+categories never advance a baseline. Data candidates receive complete selected
+collection header preflight before a bound plan is returned; snapshots, external
+mutations and collection refusals remain distinct unsupported/deferred outcomes.
+
+The output vector follows request order for membership, with `response_index`
+and the original response retained. It is **not** an application-order directive:
+the future worker must preserve native response-category/within-category order.
+Headers alone never authorize application. The binder cannot detect a different
+internally consistent current store map without an authoritative comparison;
+the application transaction still owes full baseline/generation/pending-owner
+rechecks. Durable admission capture, cursor writes, keys/MACs and state commits
+are not implemented by this pure stage. No retrospective claims are created for
+historical `Sent` actions. Debug/errors redact raw originals and private values.
+
+Five handwritten binder regressions cover generation/changed bytes, version-zero
+without a snapshot flag masking the guard, exact domain/provenance and valid
+empty legacy state, response model tampering, response-order retention,
+no-advance acknowledgements, whole-header preflight and external deferral.
 
 **Proposed:** apply authenticated **inline incremental patches** from a saved,
 correlated patch-free fetch to the transport's authoritative plain-name held

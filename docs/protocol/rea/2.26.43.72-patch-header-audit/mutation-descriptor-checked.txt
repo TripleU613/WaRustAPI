@@ -1,0 +1,59 @@
+
+# class: LX/Dbb;
+# extends: Lcom/google/protobuf/GeneratedMessageLite;
+
+.method public dynamicMethod(LLLL)  # .registers 8
+    # full signature: LX/Dbb;->dynamicMethod(Lcom/google/protobuf/GeneratedMessageLite$MethodToInvoke;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    0000..0006  invoke-virtual  {v5}, Ljava/lang/Enum;->ordinal()I
+    0006..0008  move-result  v1
+    0008..000a  const/4  v3, #0x1
+    000a..000c  const/4  v0, #0x0
+    000c..0012  packed-switch  v1, payload@0xac, cases=[0:@0x50, 1:@0x4e, 2:@0x1c, 3:@0xa0, 4:@0x60, 5:@0x5a, 6:@0x6c], default@0x12
+    0012..0018  invoke-static  {}, LX/8t1;->A1K()Ljava/lang/UnsupportedOperationException;
+    0018..001a  move-result-object  v0
+    001a..001c  throw  v0
+    001c..0020  sget-object  v1, LX/F9a;->A00:Lcom/google/protobuf/Internal$EnumVerifier;
+    0020..0026  invoke-static  {}, LX/DBg;->A1Y()[Ljava/lang/Object;
+    0026..0028  move-result-object  v2
+    0028..002c  const-string  v0, "operation_"
+    002c..0032  invoke-static  {v0, v1, v2, v3}, LX/8t1;->A1Y(Ljava/lang/Object;Ljava/lang/Object;[Ljava/lang/Object;I)V
+    0032..0036  const-string  v1, "record_"
+    0036..0038  const/4  v0, #0x3
+    0038..003c  aput-object  v1, v2, v0
+    003c..0040  const-string  v1, "\u{1}\u{2}\0\u{1}\u{1}\u{2}\u{2}\0\0\0\u{1}\u{180c}\0\u{2}ဉ\u{1}"
+    0040..0044  sget-object  v0, LX/Dbb;->DEFAULT_INSTANCE:LX/Dbb;
+    0044..004a  invoke-static  {v0, v1, v2}, Lcom/google/protobuf/GeneratedMessageLite;->newMessageInfo(Lcom/google/protobuf/MessageLite;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/Object;
+    004a..004c  move-result-object  v0
+    004c..004e  return-object  v0
+    004e..0050  return-object  v0
+    0050..0056  invoke-static  {v3}, Ljava/lang/Byte;->valueOf(B)Ljava/lang/Byte;
+    0056..0058  move-result-object  v0
+    0058..005a  return-object  v0
+    005a..005e  sget-object  v0, LX/Dbb;->DEFAULT_INSTANCE:LX/Dbb;
+    005e..0060  return-object  v0
+    0060..0064  new-instance  v0, LX/DSq;
+    0064..006a  invoke-direct  {v0}, LX/DSq;-><init>()V
+    006a..006c  return-object  v0
+    006c..0070  sget-object  v0, LX/Dbb;->PARSER:Lcom/google/protobuf/Parser;
+    0070..0074  if-nez  v0, +0x1d
+    0074..0078  const-class  v1, LX/Dbb;
+    0078..007a  monitor-enter
+    007a..007e  sget-object  v0, LX/Dbb;->PARSER:Lcom/google/protobuf/Parser;
+    007e..0082  if-nez  v0, +0xc
+    0082..0086  sget-object  v0, Lcom/google/protobuf/AbstractParser;->EMPTY_REGISTRY:Lcom/google/protobuf/ExtensionRegistryLite;
+    0086..008a  sget-object  v0, LX/Dbb;->DEFAULT_INSTANCE:LX/Dbb;
+    008a..0090  invoke-static  {v0}, LX/8t1;->A0Y(Lcom/google/protobuf/GeneratedMessageLite;)Lcom/google/protobuf/GeneratedMessageLite$DefaultInstanceBasedParser;
+    0090..0092  move-result-object  v0
+    0092..0096  sput-object  v0, LX/Dbb;->PARSER:Lcom/google/protobuf/Parser;
+    0096..0098  monitor-exit
+    0098..009a  return-object  v0
+    009a..009c  move-exception  v0
+    009c..009e  monitor-exit
+    009e..00a0  throw  v0
+    00a0..00a4  new-instance  v0, LX/Dbb;
+    00a4..00aa  invoke-direct  {v0}, Lcom/google/protobuf/GeneratedMessageLite;-><init>()V
+    00aa..00ac  return-object  v0
+    00ac..00d0  packed-switch-payload  size=7
+    # exception table: 1 try range(s)
+    # catch <all> code_units 003d..004f -> 004d
+.end method

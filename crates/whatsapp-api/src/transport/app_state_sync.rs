@@ -18,6 +18,8 @@
 //! together; held state advances only after a verified correlated transition.
 //! Current-build evidence and unported fetch lifecycle: docs/protocol/app-state-fetch-completion.md.
 use crate::{Result, binary::Node, model::jid::Jid};
+pub mod binding;
+pub mod headers;
 pub mod response;
 
 /// The five app-state collections (`LX/0oP.A03`, **confirmed** names).
@@ -494,6 +496,16 @@ pub struct CollectionReplyInspection {
     pub patch_count: usize,
     /// Literal native continuation flag only for consumed data categories.
     pub has_more_patches: Option<bool>,
+    /// Structural header outcome only for consumed data, never MAC verification.
+    pub header_status: Option<&'static str>,
+    /// Native parser fatal reason when established; not a server error code.
+    pub native_header_reason: Option<u32>,
+    /// Zero-based selected patch index for native header failures, absent for snapshot/local failures.
+    pub failed_patch_index: Option<usize>,
+    /// Structurally parsed patch versions; never adopted as held state.
+    pub header_patch_versions: Vec<u64>,
+    /// External mutation patches requiring authenticated retrieval.
+    pub external_mutation_patch_count: Option<usize>,
 }
 
 /// Classify a saved correlated app-state result without keys, downloads or writes.
@@ -535,6 +547,11 @@ pub fn inspect_response(
                     snapshot_ref_present: false,
                     patch_count: 0,
                     has_more_patches: None,
+                    header_status: None,
+                    native_header_reason: None,
+                    failed_patch_index: None,
+                    header_patch_versions: Vec::new(),
+                    external_mutation_patch_count: None,
                 };
                 let data = match collection.category {
                     Category::Error {
@@ -562,6 +579,37 @@ pub fn inspect_response(
                     summary.snapshot_ref_present = data.snapshot_ref.is_some();
                     summary.patch_count = data.patches.len();
                     summary.has_more_patches = Some(data.has_more_patches);
+                    match headers::inspect_collection_headers(&data) {
+                        Ok(headers) => {
+                            let external = headers
+                                .patches
+                                .iter()
+                                .filter(|p| p.source == headers::PatchSource::ExternalDeferred)
+                                .count();
+                            summary.header_status =
+                                Some(if headers.snapshot_ref.is_some() || external > 0 {
+                                    "external_data_deferred"
+                                } else {
+                                    "inline_headers"
+                                });
+                            summary.header_patch_versions =
+                                headers.patches.iter().map(|p| p.version).collect();
+                            summary.external_mutation_patch_count = Some(external);
+                        }
+                        Err(failure) => {
+                            summary.native_header_reason = failure.native_reason();
+                            if let headers::HeaderFailure::NativeFatal { patch_index, .. } = failure
+                            {
+                                summary.failed_patch_index = patch_index;
+                            }
+                            summary.header_status =
+                                Some(if summary.native_header_reason.is_some() {
+                                    "native_fatal_header"
+                                } else {
+                                    "local_header_refusal"
+                                });
+                        }
+                    }
                 }
                 summary
             })
@@ -1429,12 +1477,21 @@ mod catch_up_atomic_tests {
         );
         assert_eq!(report.collections[0].version_ack, Some(3));
         assert!(!report.collections[0].snapshot_ref_present);
+        assert_eq!(
+            report.collections[0].header_status, None,
+            "ignored acknowledgement payload is not parsed"
+        );
         assert_eq!(report.collections[1].known_collection, None);
         assert_eq!(report.collections[1].error_code, Some(-1));
         assert!(report.collections[1].has_error_text);
         assert_eq!(report.collections[2].patch_count, 1);
         assert!(report.collections[2].snapshot_ref_present);
         assert_eq!(report.collections[2].has_more_patches, Some(true));
+        assert!(matches!(
+            report.collections[2].header_status,
+            Some("native_fatal_header" | "local_header_refusal")
+        ));
+        assert!(report.collections[2].header_patch_versions.is_empty());
         assert!(!serde_json::to_string(&report).unwrap().contains("private"));
         assert!(!format!("{report:?}").contains("private"));
         assert_eq!(

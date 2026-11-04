@@ -1,3 +1,27 @@
+2026-11-04 — **Bound fetch candidates and whole-collection headers:**
+
+Pure fetch binding now checks exact encoded request identity, local generation
+claims, explicit requested versions and complete validated baseline/domain
+agreement. It reclassifies and compares public response models before accepting
+their summaries. Fetch acknowledgements cannot advance held state; missing,
+snapshot, external-mutation and refusal cases stay distinct. Request-order
+membership retains original response indices for a future native-order worker.
+These are admission claims, not proof of store origin or current state equality.
+
+Recursive header inspection parses all selected patch protobufs before semantic
+checks, separates native fatal reasons from local restrictions, and defers
+external data. The existing crypto decoder is unchanged. The offline response
+inspector now exposes safe header outcomes, versions and counts with integrity
+still false. No admission record, key lookup, MAC verification, state/cursor
+commit or network operation is introduced by these pure stages.
+[Binding](docs/protocol/app-state-inline-fetch-application-spec.md#implemented-pure-binder)
+and [headers](docs/protocol/app-state-structural-headers.md).
+
+Validation: **1,205 workspace/all-feature tests**, strict all-target/all-feature
+Clippy, CLI-reference checking, formatting, coverage freshness and repository
+hygiene passed. No live account traffic occurred. Durable admission capture and
+authenticated cursor/state application remain unimplemented.
+
 2026-11-04 — **Patch header audit and inline application specification:**
 
 The suspected silent external/exit-field decoder bug is refuted: current patch

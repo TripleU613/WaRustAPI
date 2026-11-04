@@ -1,0 +1,524 @@
+
+# class: Lcom/google/protobuf/FieldType;
+# extends: Ljava/lang/Enum;
+
+.method public <clinit>(V)  # .registers 111
+    # full signature: Lcom/google/protobuf/FieldType;-><clinit>()V
+    0000..0004  sget-object  v6, Lcom/google/protobuf/FieldType$Collection;->SCALAR:Lcom/google/protobuf/FieldType$Collection;
+    0004..0008  sget-object  v7, Lcom/google/protobuf/JavaType;->DOUBLE:Lcom/google/protobuf/JavaType;
+    0008..000c  const-string  v3, "DOUBLE"
+    000c..000e  const/4  v4, #0x0
+    000e..0012  new-instance  v2, Lcom/google/protobuf/FieldType;
+    0012..0014  move  v5, v4
+    0014..001a  invoke-direct/range  {v2..v7}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    001a..001e  sput-object  v2, Lcom/google/protobuf/FieldType;->DOUBLE:Lcom/google/protobuf/FieldType;
+    001e..0022  sget-object  v13, Lcom/google/protobuf/JavaType;->FLOAT:Lcom/google/protobuf/JavaType;
+    0022..0026  const-string  v9, "FLOAT"
+    0026..0028  const/4  v10, #0x1
+    0028..002c  new-instance  v8, Lcom/google/protobuf/FieldType;
+    002c..002e  move  v11, v10
+    002e..0030  move-object  v12, v6
+    0030..0036  invoke-direct/range  {v8..v13}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    0036..003a  sput-object  v8, Lcom/google/protobuf/FieldType;->FLOAT:Lcom/google/protobuf/FieldType;
+    003a..003e  sget-object  v19, Lcom/google/protobuf/JavaType;->LONG:Lcom/google/protobuf/JavaType;
+    003e..0042  const-string  v15, "INT64"
+    0042..0046  const/16  v16, #0x2
+    0046..004a  new-instance  v14, Lcom/google/protobuf/FieldType;
+    004a..004e  move/from16  v17, v16
+    004e..0052  move-object/from16  v18, v6
+    0052..0058  invoke-direct/range  {v14..v19}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    0058..005c  sput-object  v14, Lcom/google/protobuf/FieldType;->INT64:Lcom/google/protobuf/FieldType;
+    005c..0060  const-string  v21, "UINT64"
+    0060..0064  const/16  v22, #0x3
+    0064..0068  new-instance  v20, Lcom/google/protobuf/FieldType;
+    0068..006c  move/from16  v23, v22
+    006c..0070  move-object/from16  v24, v6
+    0070..0074  move-object/from16  v25, v19
+    0074..007a  invoke-direct/range  {v20..v25}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    007a..007e  sput-object  v20, Lcom/google/protobuf/FieldType;->UINT64:Lcom/google/protobuf/FieldType;
+    007e..0082  sget-object  v26, Lcom/google/protobuf/JavaType;->INT:Lcom/google/protobuf/JavaType;
+    0082..0086  const-string  v22, "INT32"
+    0086..008a  const/16  v23, #0x4
+    008a..008e  new-instance  v21, Lcom/google/protobuf/FieldType;
+    008e..0092  move/from16  v24, v23
+    0092..0096  move-object/from16  v25, v6
+    0096..009c  invoke-direct/range  {v21..v26}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    009c..00a0  sput-object  v21, Lcom/google/protobuf/FieldType;->INT32:Lcom/google/protobuf/FieldType;
+    00a0..00a4  const-string  v28, "FIXED64"
+    00a4..00a8  const/16  v29, #0x5
+    00a8..00ac  new-instance  v27, Lcom/google/protobuf/FieldType;
+    00ac..00b0  move/from16  v30, v29
+    00b0..00b4  move-object/from16  v31, v6
+    00b4..00b8  move-object/from16  v32, v19
+    00b8..00be  invoke-direct/range  {v27..v32}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    00be..00c2  sput-object  v27, Lcom/google/protobuf/FieldType;->FIXED64:Lcom/google/protobuf/FieldType;
+    00c2..00c6  const-string  v29, "FIXED32"
+    00c6..00ca  const/16  v30, #0x6
+    00ca..00ce  new-instance  v28, Lcom/google/protobuf/FieldType;
+    00ce..00d2  move/from16  v31, v30
+    00d2..00d6  move-object/from16  v32, v6
+    00d6..00da  move-object/from16  v33, v26
+    00da..00e0  invoke-direct/range  {v28..v33}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    00e0..00e4  sput-object  v28, Lcom/google/protobuf/FieldType;->FIXED32:Lcom/google/protobuf/FieldType;
+    00e4..00e8  sget-object  v34, Lcom/google/protobuf/JavaType;->BOOLEAN:Lcom/google/protobuf/JavaType;
+    00e8..00ec  const-string  v30, "BOOL"
+    00ec..00f0  const/16  v31, #0x7
+    00f0..00f4  new-instance  v29, Lcom/google/protobuf/FieldType;
+    00f4..00f8  move/from16  v32, v31
+    00f8..00fc  move-object/from16  v33, v6
+    00fc..0102  invoke-direct/range  {v29..v34}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    0102..0106  sput-object  v29, Lcom/google/protobuf/FieldType;->BOOL:Lcom/google/protobuf/FieldType;
+    0106..010a  sget-object  v40, Lcom/google/protobuf/JavaType;->STRING:Lcom/google/protobuf/JavaType;
+    010a..010e  const-string  v36, "STRING"
+    010e..0112  const/16  v37, #0x8
+    0112..0116  new-instance  v35, Lcom/google/protobuf/FieldType;
+    0116..011a  move/from16  v38, v37
+    011a..011e  move-object/from16  v39, v6
+    011e..0124  invoke-direct/range  {v35..v40}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    0124..0128  sput-object  v35, Lcom/google/protobuf/FieldType;->STRING:Lcom/google/protobuf/FieldType;
+    0128..012c  sget-object  v46, Lcom/google/protobuf/JavaType;->MESSAGE:Lcom/google/protobuf/JavaType;
+    012c..0130  const-string  v42, "MESSAGE"
+    0130..0134  const/16  v43, #0x9
+    0134..0138  new-instance  v41, Lcom/google/protobuf/FieldType;
+    0138..013c  move/from16  v44, v43
+    013c..0140  move-object/from16  v45, v6
+    0140..0146  invoke-direct/range  {v41..v46}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    0146..014a  sput-object  v41, Lcom/google/protobuf/FieldType;->MESSAGE:Lcom/google/protobuf/FieldType;
+    014a..014e  sget-object  v52, Lcom/google/protobuf/JavaType;->BYTE_STRING:Lcom/google/protobuf/JavaType;
+    014e..0152  const-string  v48, "BYTES"
+    0152..0156  const/16  v49, #0xa
+    0156..015a  new-instance  v47, Lcom/google/protobuf/FieldType;
+    015a..015e  move/from16  v50, v49
+    015e..0162  move-object/from16  v51, v6
+    0162..0168  invoke-direct/range  {v47..v52}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    0168..016c  sput-object  v47, Lcom/google/protobuf/FieldType;->BYTES:Lcom/google/protobuf/FieldType;
+    016c..0170  const-string  v54, "UINT32"
+    0170..0174  const/16  v55, #0xb
+    0174..0178  new-instance  v53, Lcom/google/protobuf/FieldType;
+    0178..017c  move/from16  v56, v55
+    017c..0180  move-object/from16  v57, v6
+    0180..0184  move-object/from16  v58, v26
+    0184..018a  invoke-direct/range  {v53..v58}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    018a..018e  sput-object  v53, Lcom/google/protobuf/FieldType;->UINT32:Lcom/google/protobuf/FieldType;
+    018e..0192  sget-object  v59, Lcom/google/protobuf/JavaType;->ENUM:Lcom/google/protobuf/JavaType;
+    0192..0196  const-string  v55, "ENUM"
+    0196..019a  const/16  v56, #0xc
+    019a..019e  new-instance  v54, Lcom/google/protobuf/FieldType;
+    019e..01a2  move/from16  v57, v56
+    01a2..01a6  move-object/from16  v58, v6
+    01a6..01ac  invoke-direct/range  {v54..v59}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    01ac..01b0  sput-object  v54, Lcom/google/protobuf/FieldType;->ENUM:Lcom/google/protobuf/FieldType;
+    01b0..01b4  const-string  v61, "SFIXED32"
+    01b4..01b8  const/16  v62, #0xd
+    01b8..01bc  new-instance  v60, Lcom/google/protobuf/FieldType;
+    01bc..01c0  move/from16  v63, v62
+    01c0..01c4  move-object/from16  v64, v6
+    01c4..01c8  move-object/from16  v65, v26
+    01c8..01ce  invoke-direct/range  {v60..v65}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    01ce..01d2  sput-object  v60, Lcom/google/protobuf/FieldType;->SFIXED32:Lcom/google/protobuf/FieldType;
+    01d2..01d6  const-string  v62, "SFIXED64"
+    01d6..01da  const/16  v63, #0xe
+    01da..01de  new-instance  v61, Lcom/google/protobuf/FieldType;
+    01de..01e2  move/from16  v64, v63
+    01e2..01e6  move-object/from16  v65, v6
+    01e6..01ea  move-object/from16  v66, v19
+    01ea..01f0  invoke-direct/range  {v61..v66}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    01f0..01f4  sput-object  v61, Lcom/google/protobuf/FieldType;->SFIXED64:Lcom/google/protobuf/FieldType;
+    01f4..01f8  const-string  v63, "SINT32"
+    01f8..01fc  const/16  v64, #0xf
+    01fc..0200  new-instance  v62, Lcom/google/protobuf/FieldType;
+    0200..0204  move/from16  v65, v64
+    0204..0208  move-object/from16  v66, v6
+    0208..020c  move-object/from16  v67, v26
+    020c..0212  invoke-direct/range  {v62..v67}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    0212..0216  sput-object  v62, Lcom/google/protobuf/FieldType;->SINT32:Lcom/google/protobuf/FieldType;
+    0216..021a  const-string  v64, "SINT64"
+    021a..021e  const/16  v65, #0x10
+    021e..0222  new-instance  v63, Lcom/google/protobuf/FieldType;
+    0222..0226  move/from16  v66, v65
+    0226..022a  move-object/from16  v67, v6
+    022a..022e  move-object/from16  v68, v19
+    022e..0234  invoke-direct/range  {v63..v68}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    0234..0238  sput-object  v63, Lcom/google/protobuf/FieldType;->SINT64:Lcom/google/protobuf/FieldType;
+    0238..023c  const-string  v65, "GROUP"
+    023c..0240  const/16  v66, #0x11
+    0240..0244  new-instance  v64, Lcom/google/protobuf/FieldType;
+    0244..0248  move/from16  v67, v66
+    0248..024c  move-object/from16  v68, v6
+    024c..0250  move-object/from16  v69, v46
+    0250..0256  invoke-direct/range  {v64..v69}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    0256..025a  sput-object  v64, Lcom/google/protobuf/FieldType;->GROUP:Lcom/google/protobuf/FieldType;
+    025a..025e  sget-object  v69, Lcom/google/protobuf/FieldType$Collection;->VECTOR:Lcom/google/protobuf/FieldType$Collection;
+    025e..0262  const-string  v66, "DOUBLE_LIST"
+    0262..0266  const/16  v67, #0x12
+    0266..026a  new-instance  v65, Lcom/google/protobuf/FieldType;
+    026a..026e  move/from16  v68, v67
+    026e..0272  move-object/from16  v70, v7
+    0272..0278  invoke-direct/range  {v65..v70}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    0278..027c  sput-object  v65, Lcom/google/protobuf/FieldType;->DOUBLE_LIST:Lcom/google/protobuf/FieldType;
+    027c..0280  const-string  v71, "FLOAT_LIST"
+    0280..0284  const/16  v72, #0x13
+    0284..0288  new-instance  v70, Lcom/google/protobuf/FieldType;
+    0288..028c  move/from16  v73, v72
+    028c..0290  move-object/from16  v74, v69
+    0290..0294  move-object/from16  v75, v13
+    0294..029a  invoke-direct/range  {v70..v75}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    029a..029e  sput-object  v70, Lcom/google/protobuf/FieldType;->FLOAT_LIST:Lcom/google/protobuf/FieldType;
+    029e..02a2  const-string  v72, "INT64_LIST"
+    02a2..02a6  const/16  v73, #0x14
+    02a6..02aa  new-instance  v71, Lcom/google/protobuf/FieldType;
+    02aa..02ae  move/from16  v74, v73
+    02ae..02b2  move-object/from16  v75, v69
+    02b2..02b6  move-object/from16  v76, v19
+    02b6..02bc  invoke-direct/range  {v71..v76}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    02bc..02c0  sput-object  v71, Lcom/google/protobuf/FieldType;->INT64_LIST:Lcom/google/protobuf/FieldType;
+    02c0..02c4  const-string  v73, "UINT64_LIST"
+    02c4..02c8  const/16  v74, #0x15
+    02c8..02cc  new-instance  v72, Lcom/google/protobuf/FieldType;
+    02cc..02d0  move/from16  v75, v74
+    02d0..02d4  move-object/from16  v76, v69
+    02d4..02d8  move-object/from16  v77, v19
+    02d8..02de  invoke-direct/range  {v72..v77}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    02de..02e2  sput-object  v72, Lcom/google/protobuf/FieldType;->UINT64_LIST:Lcom/google/protobuf/FieldType;
+    02e2..02e6  const-string  v74, "INT32_LIST"
+    02e6..02ea  const/16  v75, #0x16
+    02ea..02ee  new-instance  v73, Lcom/google/protobuf/FieldType;
+    02ee..02f2  move/from16  v76, v75
+    02f2..02f6  move-object/from16  v77, v69
+    02f6..02fa  move-object/from16  v78, v26
+    02fa..0300  invoke-direct/range  {v73..v78}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    0300..0304  sput-object  v73, Lcom/google/protobuf/FieldType;->INT32_LIST:Lcom/google/protobuf/FieldType;
+    0304..0308  const-string  v75, "FIXED64_LIST"
+    0308..030c  const/16  v76, #0x17
+    030c..0310  new-instance  v74, Lcom/google/protobuf/FieldType;
+    0310..0314  move/from16  v77, v76
+    0314..0318  move-object/from16  v78, v69
+    0318..031c  move-object/from16  v79, v19
+    031c..0322  invoke-direct/range  {v74..v79}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    0322..0326  sput-object  v74, Lcom/google/protobuf/FieldType;->FIXED64_LIST:Lcom/google/protobuf/FieldType;
+    0326..032a  const-string  v76, "FIXED32_LIST"
+    032a..032e  const/16  v77, #0x18
+    032e..0332  new-instance  v75, Lcom/google/protobuf/FieldType;
+    0332..0336  move/from16  v78, v77
+    0336..033a  move-object/from16  v79, v69
+    033a..033e  move-object/from16  v80, v26
+    033e..0344  invoke-direct/range  {v75..v80}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    0344..0348  sput-object  v75, Lcom/google/protobuf/FieldType;->FIXED32_LIST:Lcom/google/protobuf/FieldType;
+    0348..034c  const-string  v77, "BOOL_LIST"
+    034c..0350  const/16  v78, #0x19
+    0350..0354  new-instance  v76, Lcom/google/protobuf/FieldType;
+    0354..0358  move/from16  v79, v78
+    0358..035c  move-object/from16  v80, v69
+    035c..0360  move-object/from16  v81, v34
+    0360..0366  invoke-direct/range  {v76..v81}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    0366..036a  sput-object  v76, Lcom/google/protobuf/FieldType;->BOOL_LIST:Lcom/google/protobuf/FieldType;
+    036a..036e  const-string  v78, "STRING_LIST"
+    036e..0372  const/16  v79, #0x1a
+    0372..0376  new-instance  v77, Lcom/google/protobuf/FieldType;
+    0376..037a  move/from16  v80, v79
+    037a..037e  move-object/from16  v81, v69
+    037e..0382  move-object/from16  v82, v40
+    0382..0388  invoke-direct/range  {v77..v82}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    0388..038c  sput-object  v77, Lcom/google/protobuf/FieldType;->STRING_LIST:Lcom/google/protobuf/FieldType;
+    038c..0390  const-string  v79, "MESSAGE_LIST"
+    0390..0394  const/16  v80, #0x1b
+    0394..0398  new-instance  v78, Lcom/google/protobuf/FieldType;
+    0398..039c  move/from16  v81, v80
+    039c..03a0  move-object/from16  v82, v69
+    03a0..03a4  move-object/from16  v83, v46
+    03a4..03aa  invoke-direct/range  {v78..v83}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    03aa..03ae  sput-object  v78, Lcom/google/protobuf/FieldType;->MESSAGE_LIST:Lcom/google/protobuf/FieldType;
+    03ae..03b2  const-string  v80, "BYTES_LIST"
+    03b2..03b6  const/16  v81, #0x1c
+    03b6..03ba  new-instance  v79, Lcom/google/protobuf/FieldType;
+    03ba..03be  move/from16  v82, v81
+    03be..03c2  move-object/from16  v83, v69
+    03c2..03c6  move-object/from16  v84, v52
+    03c6..03cc  invoke-direct/range  {v79..v84}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    03cc..03d0  sput-object  v79, Lcom/google/protobuf/FieldType;->BYTES_LIST:Lcom/google/protobuf/FieldType;
+    03d0..03d4  const-string  v81, "UINT32_LIST"
+    03d4..03d8  const/16  v82, #0x1d
+    03d8..03dc  new-instance  v80, Lcom/google/protobuf/FieldType;
+    03dc..03e0  move/from16  v83, v82
+    03e0..03e4  move-object/from16  v84, v69
+    03e4..03e8  move-object/from16  v85, v26
+    03e8..03ee  invoke-direct/range  {v80..v85}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    03ee..03f2  sput-object  v80, Lcom/google/protobuf/FieldType;->UINT32_LIST:Lcom/google/protobuf/FieldType;
+    03f2..03f6  const-string  v82, "ENUM_LIST"
+    03f6..03fa  const/16  v83, #0x1e
+    03fa..03fe  new-instance  v81, Lcom/google/protobuf/FieldType;
+    03fe..0402  move/from16  v84, v83
+    0402..0406  move-object/from16  v85, v69
+    0406..040a  move-object/from16  v86, v59
+    040a..0410  invoke-direct/range  {v81..v86}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    0410..0414  sput-object  v81, Lcom/google/protobuf/FieldType;->ENUM_LIST:Lcom/google/protobuf/FieldType;
+    0414..0418  const-string  v83, "SFIXED32_LIST"
+    0418..041c  const/16  v84, #0x1f
+    041c..0420  new-instance  v82, Lcom/google/protobuf/FieldType;
+    0420..0424  move/from16  v85, v84
+    0424..0428  move-object/from16  v86, v69
+    0428..042c  move-object/from16  v87, v26
+    042c..0432  invoke-direct/range  {v82..v87}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    0432..0436  sput-object  v82, Lcom/google/protobuf/FieldType;->SFIXED32_LIST:Lcom/google/protobuf/FieldType;
+    0436..043a  const-string  v84, "SFIXED64_LIST"
+    043a..043e  const/16  v85, #0x20
+    043e..0442  new-instance  v83, Lcom/google/protobuf/FieldType;
+    0442..0446  move/from16  v86, v85
+    0446..044a  move-object/from16  v87, v69
+    044a..044e  move-object/from16  v88, v19
+    044e..0454  invoke-direct/range  {v83..v88}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    0454..0458  sput-object  v83, Lcom/google/protobuf/FieldType;->SFIXED64_LIST:Lcom/google/protobuf/FieldType;
+    0458..045c  const-string  v85, "SINT32_LIST"
+    045c..0460  const/16  v86, #0x21
+    0460..0464  new-instance  v84, Lcom/google/protobuf/FieldType;
+    0464..0468  move/from16  v87, v86
+    0468..046c  move-object/from16  v88, v69
+    046c..0470  move-object/from16  v89, v26
+    0470..0476  invoke-direct/range  {v84..v89}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    0476..047a  sput-object  v84, Lcom/google/protobuf/FieldType;->SINT32_LIST:Lcom/google/protobuf/FieldType;
+    047a..047e  const-string  v86, "SINT64_LIST"
+    047e..0482  const/16  v87, #0x22
+    0482..0486  new-instance  v85, Lcom/google/protobuf/FieldType;
+    0486..048a  move/from16  v88, v87
+    048a..048e  move-object/from16  v89, v69
+    048e..0492  move-object/from16  v90, v19
+    0492..0498  invoke-direct/range  {v85..v90}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    0498..049c  sput-object  v85, Lcom/google/protobuf/FieldType;->SINT64_LIST:Lcom/google/protobuf/FieldType;
+    049c..04a0  sget-object  v90, Lcom/google/protobuf/FieldType$Collection;->PACKED_VECTOR:Lcom/google/protobuf/FieldType$Collection;
+    04a0..04a4  const-string  v87, "DOUBLE_LIST_PACKED"
+    04a4..04a8  const/16  v88, #0x23
+    04a8..04ac  new-instance  v86, Lcom/google/protobuf/FieldType;
+    04ac..04b0  move/from16  v89, v88
+    04b0..04b4  move-object/from16  v91, v7
+    04b4..04ba  invoke-direct/range  {v86..v91}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    04ba..04be  sput-object  v86, Lcom/google/protobuf/FieldType;->DOUBLE_LIST_PACKED:Lcom/google/protobuf/FieldType;
+    04be..04c2  const-string  v92, "FLOAT_LIST_PACKED"
+    04c2..04c6  const/16  v93, #0x24
+    04c6..04ca  new-instance  v91, Lcom/google/protobuf/FieldType;
+    04ca..04ce  move/from16  v94, v93
+    04ce..04d2  move-object/from16  v95, v90
+    04d2..04d6  move-object/from16  v96, v13
+    04d6..04dc  invoke-direct/range  {v91..v96}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    04dc..04e0  sput-object  v91, Lcom/google/protobuf/FieldType;->FLOAT_LIST_PACKED:Lcom/google/protobuf/FieldType;
+    04e0..04e4  const-string  v93, "INT64_LIST_PACKED"
+    04e4..04e8  const/16  v94, #0x25
+    04e8..04ec  new-instance  v92, Lcom/google/protobuf/FieldType;
+    04ec..04f0  move/from16  v95, v94
+    04f0..04f4  move-object/from16  v96, v90
+    04f4..04f8  move-object/from16  v97, v19
+    04f8..04fe  invoke-direct/range  {v92..v97}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    04fe..0502  sput-object  v92, Lcom/google/protobuf/FieldType;->INT64_LIST_PACKED:Lcom/google/protobuf/FieldType;
+    0502..0506  const-string  v94, "UINT64_LIST_PACKED"
+    0506..050a  const/16  v95, #0x26
+    050a..050e  new-instance  v93, Lcom/google/protobuf/FieldType;
+    050e..0512  move/from16  v96, v95
+    0512..0516  move-object/from16  v97, v90
+    0516..051a  move-object/from16  v98, v19
+    051a..0520  invoke-direct/range  {v93..v98}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    0520..0524  sput-object  v93, Lcom/google/protobuf/FieldType;->UINT64_LIST_PACKED:Lcom/google/protobuf/FieldType;
+    0524..0528  const-string  v95, "INT32_LIST_PACKED"
+    0528..052c  const/16  v96, #0x27
+    052c..0530  new-instance  v94, Lcom/google/protobuf/FieldType;
+    0530..0534  move/from16  v97, v96
+    0534..0538  move-object/from16  v98, v90
+    0538..053c  move-object/from16  v99, v26
+    053c..0542  invoke-direct/range  {v94..v99}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    0542..0546  sput-object  v94, Lcom/google/protobuf/FieldType;->INT32_LIST_PACKED:Lcom/google/protobuf/FieldType;
+    0546..054a  const-string  v96, "FIXED64_LIST_PACKED"
+    054a..054e  const/16  v97, #0x28
+    054e..0552  new-instance  v95, Lcom/google/protobuf/FieldType;
+    0552..0556  move/from16  v98, v97
+    0556..055a  move-object/from16  v99, v90
+    055a..055e  move-object/from16  v100, v19
+    055e..0564  invoke-direct/range  {v95..v100}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    0564..0568  sput-object  v95, Lcom/google/protobuf/FieldType;->FIXED64_LIST_PACKED:Lcom/google/protobuf/FieldType;
+    0568..056c  const-string  v97, "FIXED32_LIST_PACKED"
+    056c..0570  const/16  v98, #0x29
+    0570..0574  new-instance  v96, Lcom/google/protobuf/FieldType;
+    0574..0578  move/from16  v99, v98
+    0578..057c  move-object/from16  v100, v90
+    057c..0580  move-object/from16  v101, v26
+    0580..0586  invoke-direct/range  {v96..v101}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    0586..058a  sput-object  v96, Lcom/google/protobuf/FieldType;->FIXED32_LIST_PACKED:Lcom/google/protobuf/FieldType;
+    058a..058e  const-string  v98, "BOOL_LIST_PACKED"
+    058e..0592  const/16  v99, #0x2a
+    0592..0596  new-instance  v97, Lcom/google/protobuf/FieldType;
+    0596..059a  move/from16  v100, v99
+    059a..059e  move-object/from16  v101, v90
+    059e..05a2  move-object/from16  v102, v34
+    05a2..05a8  invoke-direct/range  {v97..v102}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    05a8..05ac  sput-object  v97, Lcom/google/protobuf/FieldType;->BOOL_LIST_PACKED:Lcom/google/protobuf/FieldType;
+    05ac..05b0  const-string  v99, "UINT32_LIST_PACKED"
+    05b0..05b4  const/16  v100, #0x2b
+    05b4..05b8  new-instance  v98, Lcom/google/protobuf/FieldType;
+    05b8..05bc  move/from16  v101, v100
+    05bc..05c0  move-object/from16  v102, v90
+    05c0..05c4  move-object/from16  v103, v26
+    05c4..05ca  invoke-direct/range  {v98..v103}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    05ca..05ce  sput-object  v98, Lcom/google/protobuf/FieldType;->UINT32_LIST_PACKED:Lcom/google/protobuf/FieldType;
+    05ce..05d2  const-string  v100, "ENUM_LIST_PACKED"
+    05d2..05d6  const/16  v101, #0x2c
+    05d6..05da  new-instance  v99, Lcom/google/protobuf/FieldType;
+    05da..05de  move/from16  v102, v101
+    05de..05e2  move-object/from16  v103, v90
+    05e2..05e6  move-object/from16  v104, v59
+    05e6..05ec  invoke-direct/range  {v99..v104}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    05ec..05f0  sput-object  v99, Lcom/google/protobuf/FieldType;->ENUM_LIST_PACKED:Lcom/google/protobuf/FieldType;
+    05f0..05f4  const-string  v101, "SFIXED32_LIST_PACKED"
+    05f4..05f8  const/16  v102, #0x2d
+    05f8..05fc  new-instance  v100, Lcom/google/protobuf/FieldType;
+    05fc..0600  move/from16  v103, v102
+    0600..0604  move-object/from16  v104, v90
+    0604..0608  move-object/from16  v105, v26
+    0608..060e  invoke-direct/range  {v100..v105}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    060e..0612  sput-object  v100, Lcom/google/protobuf/FieldType;->SFIXED32_LIST_PACKED:Lcom/google/protobuf/FieldType;
+    0612..0616  const-string  v102, "SFIXED64_LIST_PACKED"
+    0616..061a  const/16  v103, #0x2e
+    061a..061e  new-instance  v101, Lcom/google/protobuf/FieldType;
+    061e..0622  move/from16  v104, v103
+    0622..0626  move-object/from16  v105, v90
+    0626..062a  move-object/from16  v106, v19
+    062a..0630  invoke-direct/range  {v101..v106}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    0630..0634  sput-object  v101, Lcom/google/protobuf/FieldType;->SFIXED64_LIST_PACKED:Lcom/google/protobuf/FieldType;
+    0634..0638  const-string  v103, "SINT32_LIST_PACKED"
+    0638..063c  const/16  v104, #0x2f
+    063c..0640  new-instance  v102, Lcom/google/protobuf/FieldType;
+    0640..0644  move/from16  v105, v104
+    0644..0648  move-object/from16  v106, v90
+    0648..064c  move-object/from16  v107, v26
+    064c..0652  invoke-direct/range  {v102..v107}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    0652..0656  sput-object  v102, Lcom/google/protobuf/FieldType;->SINT32_LIST_PACKED:Lcom/google/protobuf/FieldType;
+    0656..065a  const-string  v104, "SINT64_LIST_PACKED"
+    065a..065e  const/16  v105, #0x30
+    065e..0662  new-instance  v103, Lcom/google/protobuf/FieldType;
+    0662..0666  move/from16  v106, v105
+    0666..066a  move-object/from16  v107, v90
+    066a..066e  move-object/from16  v108, v19
+    066e..0674  invoke-direct/range  {v103..v108}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    0674..0678  sput-object  v103, Lcom/google/protobuf/FieldType;->SINT64_LIST_PACKED:Lcom/google/protobuf/FieldType;
+    0678..067c  const-string  v105, "GROUP_LIST"
+    067c..0680  const/16  v106, #0x31
+    0680..0684  new-instance  v104, Lcom/google/protobuf/FieldType;
+    0684..0688  move/from16  v107, v106
+    0688..068c  move-object/from16  v108, v69
+    068c..0690  move-object/from16  v109, v46
+    0690..0696  invoke-direct/range  {v104..v109}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    0696..069a  sput-object  v104, Lcom/google/protobuf/FieldType;->GROUP_LIST:Lcom/google/protobuf/FieldType;
+    069a..069e  sget-object  v109, Lcom/google/protobuf/FieldType$Collection;->MAP:Lcom/google/protobuf/FieldType$Collection;
+    069e..06a2  sget-object  v110, Lcom/google/protobuf/JavaType;->VOID:Lcom/google/protobuf/JavaType;
+    06a2..06a6  const-string  v106, "MAP"
+    06a6..06aa  const/16  v107, #0x32
+    06aa..06ae  new-instance  v105, Lcom/google/protobuf/FieldType;
+    06ae..06b2  move/from16  v108, v107
+    06b2..06b8  invoke-direct/range  {v105..v110}, Lcom/google/protobuf/FieldType;-><init>(Ljava/lang/String;IILcom/google/protobuf/FieldType$Collection;Lcom/google/protobuf/JavaType;)V
+    06b8..06bc  sput-object  v105, Lcom/google/protobuf/FieldType;->MAP:Lcom/google/protobuf/FieldType;
+    06bc..06c0  const/16  v0, #0x33
+    06c0..06c4  new-array  v0, v0, [Lcom/google/protobuf/FieldType;
+    06c4..06c6  const/4  v1, #0x0
+    06c6..06ca  aput-object  v2, v0, v4
+    06ca..06ce  aput-object  v8, v0, v10
+    06ce..06d2  aput-object  v14, v0, v16
+    06d2..06d4  const/4  v2, #0x3
+    06d4..06d8  aput-object  v20, v0, v2
+    06d8..06dc  aput-object  v21, v0, v23
+    06dc..06de  const/4  v2, #0x5
+    06de..06e2  aput-object  v27, v0, v2
+    06e2..06e4  const/4  v2, #0x6
+    06e4..06e8  aput-object  v28, v0, v2
+    06e8..06ec  aput-object  v29, v0, v31
+    06ec..06f0  aput-object  v35, v0, v37
+    06f0..06f4  aput-object  v41, v0, v43
+    06f4..06f8  aput-object  v47, v0, v49
+    06f8..06fc  const/16  v2, #0xb
+    06fc..0700  aput-object  v53, v0, v2
+    0700..0704  aput-object  v54, v0, v56
+    0704..0708  const/16  v2, #0xd
+    0708..070c  aput-object  v60, v0, v2
+    070c..0710  const/16  v2, #0xe
+    0710..0714  aput-object  v61, v0, v2
+    0714..0718  const/16  v2, #0xf
+    0718..071c  aput-object  v62, v0, v2
+    071c..0720  const/16  v2, #0x10
+    0720..0724  aput-object  v63, v0, v2
+    0724..0728  const/16  v2, #0x11
+    0728..072c  aput-object  v64, v0, v2
+    072c..0730  aput-object  v65, v0, v67
+    0730..0734  const/16  v2, #0x13
+    0734..0738  aput-object  v70, v0, v2
+    0738..073c  const/16  v2, #0x14
+    073c..0740  aput-object  v71, v0, v2
+    0740..0744  const/16  v2, #0x15
+    0744..0748  aput-object  v72, v0, v2
+    0748..074c  const/16  v2, #0x16
+    074c..0750  aput-object  v73, v0, v2
+    0750..0754  const/16  v2, #0x17
+    0754..0758  aput-object  v74, v0, v2
+    0758..075c  const/16  v2, #0x18
+    075c..0760  aput-object  v75, v0, v2
+    0760..0764  const/16  v2, #0x19
+    0764..0768  aput-object  v76, v0, v2
+    0768..076c  const/16  v2, #0x1a
+    076c..0770  aput-object  v77, v0, v2
+    0770..0774  const/16  v2, #0x1b
+    0774..0778  aput-object  v78, v0, v2
+    0778..077c  const/16  v2, #0x1c
+    077c..0780  aput-object  v79, v0, v2
+    0780..0784  const/16  v2, #0x1d
+    0784..0788  aput-object  v80, v0, v2
+    0788..078c  const/16  v2, #0x1e
+    078c..0790  aput-object  v81, v0, v2
+    0790..0794  const/16  v2, #0x1f
+    0794..0798  aput-object  v82, v0, v2
+    0798..079c  const/16  v2, #0x20
+    079c..07a0  aput-object  v83, v0, v2
+    07a0..07a4  const/16  v2, #0x21
+    07a4..07a8  aput-object  v84, v0, v2
+    07a8..07ac  const/16  v2, #0x22
+    07ac..07b0  aput-object  v85, v0, v2
+    07b0..07b4  aput-object  v86, v0, v88
+    07b4..07b8  const/16  v2, #0x24
+    07b8..07bc  aput-object  v91, v0, v2
+    07bc..07c0  const/16  v2, #0x25
+    07c0..07c4  aput-object  v92, v0, v2
+    07c4..07c8  const/16  v2, #0x26
+    07c8..07cc  aput-object  v93, v0, v2
+    07cc..07d0  const/16  v2, #0x27
+    07d0..07d4  aput-object  v94, v0, v2
+    07d4..07d8  const/16  v2, #0x28
+    07d8..07dc  aput-object  v95, v0, v2
+    07dc..07e0  const/16  v2, #0x29
+    07e0..07e4  aput-object  v96, v0, v2
+    07e4..07e8  const/16  v2, #0x2a
+    07e8..07ec  aput-object  v97, v0, v2
+    07ec..07f0  const/16  v2, #0x2b
+    07f0..07f4  aput-object  v98, v0, v2
+    07f4..07f8  const/16  v2, #0x2c
+    07f8..07fc  aput-object  v99, v0, v2
+    07fc..0800  const/16  v2, #0x2d
+    0800..0804  aput-object  v100, v0, v2
+    0804..0808  const/16  v2, #0x2e
+    0808..080c  aput-object  v101, v0, v2
+    080c..0810  const/16  v2, #0x2f
+    0810..0814  aput-object  v102, v0, v2
+    0814..0818  const/16  v2, #0x30
+    0818..081c  aput-object  v103, v0, v2
+    081c..0820  const/16  v2, #0x31
+    0820..0824  aput-object  v104, v0, v2
+    0824..0828  aput-object  v105, v0, v107
+    0828..082c  sput-object  v0, Lcom/google/protobuf/FieldType;->$VALUES:[Lcom/google/protobuf/FieldType;
+    082c..0830  new-array  v0, v4, [Ljava/lang/reflect/Type;
+    0830..0834  sput-object  v0, Lcom/google/protobuf/FieldType;->EMPTY_TYPES:[Ljava/lang/reflect/Type;
+    0834..083a  invoke-static  {}, Lcom/google/protobuf/FieldType;->values()[Lcom/google/protobuf/FieldType;
+    083a..083c  move-result-object  v5
+    083c..083e  array-length  v4, v5
+    083e..0842  new-array  v3, v4, [Lcom/google/protobuf/FieldType;
+    0842..0846  sput-object  v3, Lcom/google/protobuf/FieldType;->VALUES:[Lcom/google/protobuf/FieldType;
+    0846..084a  if-ge  v1, v4, +0xb
+    084a..084e  aget-object  v2, v5, v1
+    084e..0852  iget  v0, v2, Lcom/google/protobuf/FieldType;->id:I
+    0852..0856  aput-object  v2, v3, v0
+    0856..085a  add-int/lit8  v1, v1, #0x1
+    085a..085c  goto  -0xa
+    085c..085e  return-void
+    # exception table: 0 try range(s)
+.end method

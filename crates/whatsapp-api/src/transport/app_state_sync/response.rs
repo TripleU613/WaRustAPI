@@ -16,6 +16,7 @@ const MAX_ATTRIBUTES: usize = 64;
 const MAX_TEXT_BYTES: usize = 4096;
 
 /// Borrowed response; no original content is discarded or rewritten.
+#[derive(PartialEq, Eq)]
 pub struct Response<'a> {
     /// Entire original IQ, including unknown attributes and children.
     pub original: &'a Node,
@@ -24,6 +25,7 @@ pub struct Response<'a> {
 }
 
 /// One response collection, in the original wire order. Unknown names survive.
+#[derive(PartialEq, Eq)]
 pub struct CollectionReply<'a> {
     /// Entire original collection node, without normalization.
     pub original: &'a Node,
@@ -36,6 +38,7 @@ pub struct CollectionReply<'a> {
 }
 
 /// Native category precedence, without claiming protobuf/MAC validity.
+#[derive(PartialEq, Eq)]
 pub enum Category<'a> {
     /// Collection-level refusal, which precedes version/payload classification.
     Error {
@@ -59,6 +62,7 @@ pub enum Category<'a> {
 
 /// Opaque snapshot reference and patch bodies. Snapshot reference bytes are
 /// ExternalBlobReference, not downloaded SyncdSnapshot bytes.
+#[derive(PartialEq, Eq)]
 pub struct CollectionData<'a> {
     /// Original external-reference body, not downloaded snapshot data.
     pub snapshot_ref: Option<&'a [u8]>,

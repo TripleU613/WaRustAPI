@@ -21,7 +21,8 @@ const SETTLEMENT_SEQUENCE: &[u8] = b"action-settlement-sequence";
 /// At most this many queued actions are written per reservation.
 pub(crate) const BATCH: usize = 16;
 
-fn decode(bytes: &[u8]) -> Result<Node> {
+/// Decode the stored action bytes without re-encoding their identity.
+pub(crate) fn decode(bytes: &[u8]) -> Result<Node> {
     let limits = crate::profile::Limits::default();
     let raw = crate::binary::unpack_frame_payload(bytes, &limits)?;
     Ok(

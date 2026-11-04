@@ -86,6 +86,12 @@ version sequencing, key authorization or caller/collection/role authority.
 
 ## Proposed next structural stage (not implemented by this audit)
 
+The subsequent pure implementation is now retained in
+[structural header inspection](app-state-structural-headers.md). It keeps the
+cryptographic decoder's existing strict refusal unchanged. The proposal below
+records the audit's requirements; actual support and parser-parity limits are
+documented with that implementation.
+
 Add a separate bounded header inspector over the structural classifier's
 `Data` and error409 `conflict_data` only. Version acknowledgements, already-synced
 summaries and errors whose data branch native parsing does not enter must keep
