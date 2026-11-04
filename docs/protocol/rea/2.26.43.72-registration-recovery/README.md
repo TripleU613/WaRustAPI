@@ -71,3 +71,36 @@ unknowns entry. Do not replace that timer with guess_wait based on field names.
 Tests cover numeric/string/zero/null input, invalid-value redaction, distinct
 retry and guessing fields, refusal preservation, maximum cooldown and serialized
 deadline preservation. Full workspace checks are recorded in STATUS.md.
+
+## Follow-on port: explicit PIN re-entry
+
+**Confirmed static / implemented offline, 2026-11-04:**
+[security-result-enum.json](security-result-enum.json) proves `GgZ.A0A` mismatch
+has ordinal 5 and `GgZ.A08` guessed-too-fast ordinal 7. The retained
+`IBz.run` packed switch maps them to `:pswitch_716` and `:pswitch_6d7`.
+[verification-mode-enum.json](verification-mode-enum.json) distinguishes
+`GhM.A07` `twofac_pin` from `GhM.A05` `password`: the latter selects the
+`retry_after` field in the mismatch branch; the former selects `guess_wait`.
+The independent checked DEX dumps
+[results](security-result-enum-xtask.txt) and
+[modes](verification-mode-enum-xtask.txt) corroborate those constructors and
+ordinals without relying on rendered Java. They are ordinary xtask output.
+
+Rust now returns an HTTP 2xx `fail/mismatch` or `fail/guessed_too_fast` PIN
+submission to `NeedsUserAction` for the same attempt/generation/method, advancing
+only the challenge step. The next explicit `verify-pin` uses that current handle.
+The saved `guess_wait` deadline gates PIN answers as well as ordinary-code
+answers; a waiting submission does not consume the step or make a request.
+Our existing generic PIN deadline is also preserved as a conservative additional
+wait, even though the native normal-PIN branch selects guess_wait specifically.
+There is no automatic retry, new identity or reconstruction of earlier blocked
+attempts. Zero/absent guess_wait adds no invented delay; malformed waits still
+fail through the strict existing parser. Other refusals and HTTP errors do not
+gain a new transition. Password mode and all error/UI branches remain separate.
+
+The existing CLI reports a pending PIN deadline in human output and as optional
+`answer_not_before_unix_ms` in `--json` step output. Saved status already contains
+the redacted challenge's underlying deadlines. Tests cover both traced reasons,
+zero/absent waits, same identity, stale-handle rejection, encrypted-store reopen,
+no-request early refusal, explicit later completion, and a negative status/reason
+matrix. No live PIN or registration operation was performed.

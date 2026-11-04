@@ -1,0 +1,133 @@
+{
+  "evidence_id": "ev_e1d35817cc3b9144d79a8b5db6d49bf011e19ed97ed99efafddfef4c716c75e9",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.GhM",
+    "method_name": "<clinit>",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-MeVBXg/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.GhM"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"name\":\"GhM\",\"full_name\":\"X.GhM\",\"field_count\":12,\"fields\":[{\"def_pos\":0,\"name\":\"A00\",\"type\":\"X.06B\"},{\"def_pos\":0,\"name\":\"A01\",\"type\":\"X.GhM[]\"},{\"def_pos\":0,\"name\":\"A02\",\"type\":\"X.GhM\"},{\"def_pos\":0,\"name\":\"A03\",\"type\":\"X.GhM\"},{\"def_pos\":0,\"name\":\"A04\",\"type\":\"X.GhM\"},{\"def_pos\":0,\"name\":\"A05\",\"type\":\"X.GhM\"},{\"def_pos\":0,\"name\":\"A06\",\"type\":\"X.GhM\"},{\"def_pos\":0,\"name\":\"A07\",\"type\":\"X.GhM\"},{\"def_pos\":0,\"name\":\"A08\",\"type\":\"X.GhM\"},{\"def_pos\":0,\"name\":\"A09\",\"type\":\"X.GhM\"},{\"def_pos\":0,\"name\":\"A0A\",\"type\":\"X.GhM\"},{\"def_pos\":0,\"name\":\"wireValue\",\"type\":\"java.lang.String\"}],\"methods\":[{\"name\":\"\\u003cclinit\\u003e\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"\\u003cclinit\\u003e(): void\",\"def_pos\":0},{\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"(Ljava/lang/String;ILjava/lang/String;)V\",\"signature\":\"\\u003cinit\\u003e(java.lang.String, int, java.lang.String): void\",\"def_pos\":0},{\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"()Z\",\"signature\":\"A00(): boolean\",\"def_pos\":0},{\"name\":\"valueOf\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)LX/GhM;\",\"signature\":\"valueOf(java.lang.String): X.GhM\",\"def_pos\":0},{\"name\":\"values\",\"is_constructor\":false,\"dex_descriptor\":\"()[LX/GhM;\",\"signature\":\"values(): X.GhM[]\",\"def_pos\":0}],\"method_count\":5,\"inner_class_count\":0,\"inner_classes\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.GhM",
+          "method_name": "<clinit>",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"body\":\".method public static constructor \\u003cclinit\\u003e()V\\n    .registers 12\\n\\n    .line 0\\n    const/4 v2, 0x0\\n\\n    .line 1\\n    const-string v1, \\\"twofac_pin\\\"\\n\\n    .line 2\\n    .line 3\\n    const-string v0, \\\"TWOFAC_PIN\\\"\\n\\n    .line 4\\n    .line 5\\n    new-instance v11, LX/GhM;\\n\\n    .line 6\\n    .line 7\\n    invoke-direct {v11, v0, v2, v1}, LX/GhM;-\\u003e\\u003cinit\\u003e(Ljava/lang/String;ILjava/lang/String;)V\\n\\n    .line 8\\n    .line 9\\n    .line 10\\n    sput-object v11, LX/GhM;-\\u003eA07:LX/GhM;\\n\\n    .line 11\\n    .line 12\\n    const/4 v2, 0x1\\n\\n    .line 13\\n    const-string v1, \\\"password\\\"\\n\\n    .line 14\\n    .line 15\\n    const-string v0, \\\"PASSWORD\\\"\\n\\n    .line 16\\n    .line 17\\n    new-instance v10, LX/GhM;\\n\\n    .line 18\\n    .line 19\\n    invoke-direct {v10, v0, v2, v1}, LX/GhM;-\\u003e\\u003cinit\\u003e(Ljava/lang/String;ILjava/lang/String;)V\\n\\n    .line 20\\n    .line 21\\n    .line 22\\n    sput-object v10, LX/GhM;-\\u003eA05:LX/GhM;\\n\\n    .line 23\\n    .line 24\\n    const/4 v2, 0x2\\n\\n    .line 25\\n    const-string v1, \\\"email_otp\\\"\\n\\n    .line 26\\n    .line 27\\n    const-string v0, \\\"EMAIL_OTP\\\"\\n\\n    .line 28\\n    .line 29\\n    new-instance v9, LX/GhM;\\n\\n    .line 30\\n    .line 31\\n    invoke-direct {v9, v0, v2, v1}, LX/GhM;-\\u003e\\u003cinit\\u003e(Ljava/lang/String;ILjava/lang/String;)V\\n\\n    .line 32\\n    .line 33\\n    .line 34\\n    sput-object v9, LX/GhM;-\\u003eA02:LX/GhM;\\n\\n    .line 35\\n    .line 36\\n    const/4 v2, 0x3\\n\\n    .line 37\\n    const-string v1, \\\"oauth_email\\\"\\n\\n    .line 38\\n    .line 39\\n    const-string v0, \\\"OAUTH_EMAIL\\\"\\n\\n    .line 40\\n    .line 41\\n    new-instance v8, LX/GhM;\\n\\n    .line 42\\n    .line 43\\n    invoke-direct {v8, v0, v2, v1}, LX/GhM;-\\u003e\\u003cinit\\u003e(Ljava/lang/String;ILjava/lang/String;)V\\n\\n    .line 44\\n    .line 45\\n    .line 46\\n    sput-object v8, LX/GhM;-\\u003eA04:LX/GhM;\\n\\n    .line 47\\n    .line 48\\n    const/4 v2, 0x4\\n\\n    .line 49\\n    const-string v1, \\\"sms\\\"\\n\\n    .line 50\\n    .line 51\\n    const-string v0, \\\"SMS\\\"\\n\\n    .line 52\\n    .line 53\\n    new-instance v7, LX/GhM;\\n\\n    .line 54\\n    .line 55\\n    invoke-direct {v7, v0, v2, v1}, LX/GhM;-\\u003e\\u003cinit\\u003e(Ljava/lang/String;ILjava/lang/String;)V\\n\\n    .line 56\\n    .line 57\\n    .line 58\\n    sput-object v7, LX/GhM;-\\u003eA06:LX/GhM;\\n\\n    .line 59\\n    .line 60\\n    const/4 v2, 0x5\\n\\n    .line 61\\n    const-string v1, \\\"voice\\\"\\n\\n    .line 62\\n    .line 63\\n    const-string v0, \\\"VOICE\\\"\\n\\n    .line 64\\n    .line 65\\n    new-instance v6, LX/GhM;\\n\\n    .line 66\\n    .line 67\\n    invoke-direct {v6, v0, v2, v1}, LX/GhM;-\\u003e\\u003cinit\\u003e(Ljava/lang/String;ILjava/lang/String;)V\\n\\n    .line 68\\n    .line 69\\n    .line 70\\n    sput-object v6, LX/GhM;-\\u003eA08:LX/GhM;\\n\\n    .line 71\\n    .line 72\\n    const/4 v2, 0x6\\n\\n    .line 73\\n    const-string v1, \\\"flash\\\"\\n\\n    .line 74\\n    .line 75\\n    const-string v0, \\\"FLASH\\\"\\n\\n    .line 76\\n    .line 77\\n    new-instance v5, LX/GhM;\\n\\n    .line 78\\n    .line 79\\n    invoke-direct {v5, v0, v2, v1}, LX/GhM;-\\u003e\\u003cinit\\u003e(Ljava/lang/String;ILjava/lang/String;)V\\n\\n    .line 80\\n    .line 81\\n    .line 82\\n    sput-object v5, LX/GhM;-\\u003eA03:LX/GhM;\\n\\n    .line 83\\n    .line 84\\n    const/4 v2, 0x7\\n\\n    .line 85\\n    const-string v1, \\\"wipe_full\\\"\\n\\n    .line 86\\n    .line 87\\n    const-string v0, \\\"WIPE_FULL\\\"\\n\\n    .line 88\\n    .line 89\\n    new-instance v4, LX/GhM;\\n\\n    .line 90\\n    .line 91\\n    invoke-direct {v4, v0, v2, v1}, LX/GhM;-\\u003e\\u003cinit\\u003e(Ljava/lang/String;ILjava/lang/String;)V\\n\\n    .line 92\\n    .line 93\\n    .line 94\\n    sput-object v4, LX/GhM;-\\u003eA09:LX/GhM;\\n\\n    .line 95\\n    .line 96\\n    const/16 v3, 0x8\\n\\n    .line 97\\n    .line 98\\n    const-string v2, \\\"wipe_offline\\\"\\n\\n    .line 99\\n    .line 100\\n    const-string v0, \\\"WIPE_OFFLINE\\\"\\n\\n    .line 101\\n    .line 102\\n    new-instance v1, LX/GhM;\\n\\n    .line 103\\n    .line 104\\n    invoke-direct {v1, v0, v3, v2}, LX/GhM;-\\u003e\\u003cinit\\u003e(Ljava/lang/String;ILjava/lang/String;)V\\n\\n    .line 105\\n    .line 106\\n    .line 107\\n    sput-object v1, LX/GhM;-\\u003eA0A:LX/GhM;\\n\\n    .line 108\\n    .line 109\\n    const/16 v0, 0x9\\n\\n    .line 110\\n    .line 111\\n    new-array v0, v0, [LX/GhM;\\n\\n    .line 112\\n    .line 113\\n    invoke-static {v11, v10, v9, v8, v0}, LX/2LA;-\\u003eA18(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;[Ljava/lang/Object;)V\\n\\n    .line 114\\n    .line 115\\n    .line 116\\n    invoke-static {v7, v6, v5, v4, v0}, LX/2LA;-\\u003eA19(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;[Ljava/lang/Object;)V\\n\\n    .line 117\\n    .line 118\\n    .line 119\\n    aput-object v1, v0, v3\\n\\n    .line 120\\n    .line 121\\n    sput-object v0, LX/GhM;-\\u003eA01:[LX/GhM;\\n\\n    .line 122\\n    .line 123\\n    invoke-static {v0}, LX/068;-\\u003eA00([Ljava/lang/Enum;)LX/06C;\\n\\n    .line 124\\n    .line 125\\n    .line 126\\n    move-result-object v0\\n\\n    .line 127\\n    sput-object v0, LX/GhM;-\\u003eA00:LX/06B;\\n\\n    .line 128\\n    .line 129\\n    return-void\\n.end method\",\"overload_count\":1,\"method_name\":\"\\u003cclinit\\u003e\",\"markers\":[\"static_initializer_disassembly\"],\"mode\":\"smali\",\"full_name\":\"X.GhM.\\u003cclinit\\u003e\",\"class_name\":\"X.GhM\",\"overload_index\":0,\"fell_back\":true}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.GhM",
+    "method": {
+      "name": "<clinit>",
+      "reported_signature": "<clinit>(): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "()V"
+    },
+    "overload_count": 1,
+    "representation": "smali",
+    "body_status": "available",
+    "fell_back": true,
+    "markers": [
+      "static_initializer_disassembly"
+    ],
+    "source": {
+      "status": "complete",
+      "text": ".method public static constructor <clinit>()V\n    .registers 12\n\n    .line 0\n    const/4 v2, 0x0\n\n    .line 1\n    const-string v1, \"twofac_pin\"\n\n    .line 2\n    .line 3\n    const-string v0, \"TWOFAC_PIN\"\n\n    .line 4\n    .line 5\n    new-instance v11, LX/GhM;\n\n    .line 6\n    .line 7\n    invoke-direct {v11, v0, v2, v1}, LX/GhM;-><init>(Ljava/lang/String;ILjava/lang/String;)V\n\n    .line 8\n    .line 9\n    .line 10\n    sput-object v11, LX/GhM;->A07:LX/GhM;\n\n    .line 11\n    .line 12\n    const/4 v2, 0x1\n\n    .line 13\n    const-string v1, \"password\"\n\n    .line 14\n    .line 15\n    const-string v0, \"PASSWORD\"\n\n    .line 16\n    .line 17\n    new-instance v10, LX/GhM;\n\n    .line 18\n    .line 19\n    invoke-direct {v10, v0, v2, v1}, LX/GhM;-><init>(Ljava/lang/String;ILjava/lang/String;)V\n\n    .line 20\n    .line 21\n    .line 22\n    sput-object v10, LX/GhM;->A05:LX/GhM;\n\n    .line 23\n    .line 24\n    const/4 v2, 0x2\n\n    .line 25\n    const-string v1, \"email_otp\"\n\n    .line 26\n    .line 27\n    const-string v0, \"EMAIL_OTP\"\n\n    .line 28\n    .line 29\n    new-instance v9, LX/GhM;\n\n    .line 30\n    .line 31\n    invoke-direct {v9, v0, v2, v1}, LX/GhM;-><init>(Ljava/lang/String;ILjava/lang/String;)V\n\n    .line 32\n    .line 33\n    .line 34\n    sput-object v9, LX/GhM;->A02:LX/GhM;\n\n    .line 35\n    .line 36\n    const/4 v2, 0x3\n\n    .line 37\n    const-string v1, \"oauth_email\"\n\n    .line 38\n    .line 39\n    const-string v0, \"OAUTH_EMAIL\"\n\n    .line 40\n    .line 41\n    new-instance v8, LX/GhM;\n\n    .line 42\n    .line 43\n    invoke-direct {v8, v0, v2, v1}, LX/GhM;-><init>(Ljava/lang/String;ILjava/lang/String;)V\n\n    .line 44\n    .line 45\n    .line 46\n    sput-object v8, LX/GhM;->A04:LX/GhM;\n\n    .line 47\n    .line 48\n    const/4 v2, 0x4\n\n    .line 49\n    const-string v1, \"sms\"\n\n    .line 50\n    .line 51\n    const-string v0, \"SMS\"\n\n    .line 52\n    .line 53\n    new-instance v7, LX/GhM;\n\n    .line 54\n    .line 55\n    invoke-direct {v7, v0, v2, v1}, LX/GhM;-><init>(Ljava/lang/String;ILjava/lang/String;)V\n\n    .line 56\n    .line 57\n    .line 58\n    sput-object v7, LX/GhM;->A06:LX/GhM;\n\n    .line 59\n    .line 60\n    const/4 v2, 0x5\n\n    .line 61\n    const-string v1, \"voice\"\n\n    .line 62\n    .line 63\n    const-string v0, \"VOICE\"\n\n    .line 64\n    .line 65\n    new-instance v6, LX/GhM;\n\n    .line 66\n    .line 67\n    invoke-direct {v6, v0, v2, v1}, LX/GhM;-><init>(Ljava/lang/String;ILjava/lang/String;)V\n\n    .line 68\n    .line 69\n    .line 70\n    sput-object v6, LX/GhM;->A08:LX/GhM;\n\n    .line 71\n    .line 72\n    const/4 v2, 0x6\n\n    .line 73\n    const-string v1, \"flash\"\n\n    .line 74\n    .line 75\n    const-string v0, \"FLASH\"\n\n    .line 76\n    .line 77\n    new-instance v5, LX/GhM;\n\n    .line 78\n    .line 79\n    invoke-direct {v5, v0, v2, v1}, LX/GhM;-><init>(Ljava/lang/String;ILjava/lang/String;)V\n\n    .line 80\n    .line 81\n    .line 82\n    sput-object v5, LX/GhM;->A03:LX/GhM;\n\n    .line 83\n    .line 84\n    const/4 v2, 0x7\n\n    .line 85\n    const-string v1, \"wipe_full\"\n\n    .line 86\n    .line 87\n    const-string v0, \"WIPE_FULL\"\n\n    .line 88\n    .line 89\n    new-instance v4, LX/GhM;\n\n    .line 90\n    .line 91\n    invoke-direct {v4, v0, v2, v1}, LX/GhM;-><init>(Ljava/lang/String;ILjava/lang/String;)V\n\n    .line 92\n    .line 93\n    .line 94\n    sput-object v4, LX/GhM;->A09:LX/GhM;\n\n    .line 95\n    .line 96\n    const/16 v3, 0x8\n\n    .line 97\n    .line 98\n    const-string v2, \"wipe_offline\"\n\n    .line 99\n    .line 100\n    const-string v0, \"WIPE_OFFLINE\"\n\n    .line 101\n    .line 102\n    new-instance v1, LX/GhM;\n\n    .line 103\n    .line 104\n    invoke-direct {v1, v0, v3, v2}, LX/GhM;-><init>(Ljava/lang/String;ILjava/lang/String;)V\n\n    .line 105\n    .line 106\n    .line 107\n    sput-object v1, LX/GhM;->A0A:LX/GhM;\n\n    .line 108\n    .line 109\n    const/16 v0, 0x9\n\n    .line 110\n    .line 111\n    new-array v0, v0, [LX/GhM;\n\n    .line 112\n    .line 113\n    invoke-static {v11, v10, v9, v8, v0}, LX/2LA;->A18(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;[Ljava/lang/Object;)V\n\n    .line 114\n    .line 115\n    .line 116\n    invoke-static {v7, v6, v5, v4, v0}, LX/2LA;->A19(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;[Ljava/lang/Object;)V\n\n    .line 117\n    .line 118\n    .line 119\n    aput-object v1, v0, v3\n\n    .line 120\n    .line 121\n    sput-object v0, LX/GhM;->A01:[LX/GhM;\n\n    .line 122\n    .line 123\n    invoke-static {v0}, LX/068;->A00([Ljava/lang/Enum;)LX/06C;\n\n    .line 124\n    .line 125\n    .line 126\n    move-result-object v0\n\n    .line 127\n    sput-object v0, LX/GhM;->A00:LX/06B;\n\n    .line 128\n    .line 129\n    return-void\n.end method",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

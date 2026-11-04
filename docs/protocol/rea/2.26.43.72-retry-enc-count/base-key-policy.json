@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_05a62a5a1adaf9f687ea0444e59f69206b1aac69ce601adc53d6c5a4e656c16a",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.AnonymousClass163",
+    "method_name": "A04",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-uPbsNs/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.13\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.AnonymousClass163"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_count\":7,\"methods\":[{\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\"},{\"def_pos\":0,\"signature\":\"A00(X.163, X.1dW, boolean): X.18U\",\"dex_descriptor\":\"(LX/163;LX/1dW;Z)LX/18U;\",\"is_constructor\":false,\"name\":\"A00\"},{\"def_pos\":0,\"signature\":\"A01(X.163, com.whatsapp.infra.core.jid.DeviceJid, X.1dW): void\",\"dex_descriptor\":\"(LX/163;Lcom/whatsapp/infra/core/jid/DeviceJid;LX/1dW;)V\",\"is_constructor\":false,\"name\":\"A01\"},{\"def_pos\":0,\"signature\":\"A02(X.163, X.Ejp, com.whatsapp.infra.core.jid.DeviceJid, X.1dW, X.ETs, X.ETs, X.ETs, byte[], byte[], int, boolean, boolean): boolean\",\"dex_descriptor\":\"(LX/163;LX/Ejp;Lcom/whatsapp/infra/core/jid/DeviceJid;LX/1dW;LX/ETs;LX/ETs;LX/ETs;[B[BIZZ)Z\",\"is_constructor\":false,\"name\":\"A02\"},{\"def_pos\":0,\"signature\":\"A03(X.163, com.whatsapp.infra.core.jid.DeviceJid, byte[], byte[]): boolean\",\"dex_descriptor\":\"(LX/163;Lcom/whatsapp/infra/core/jid/DeviceJid;[B[B)Z\",\"is_constructor\":false,\"name\":\"A03\"},{\"def_pos\":0,\"signature\":\"A04(X.EoY, X.1dW, int, int): byte[]\",\"dex_descriptor\":\"(LX/EoY;LX/1dW;II)[B\",\"is_constructor\":false,\"name\":\"A04\"},{\"def_pos\":0,\"signature\":\"A05(X.Ejp, com.whatsapp.infra.core.jid.DeviceJid, X.1dW, X.ETs, X.ETs, X.ETs, byte[], byte[], int, int, boolean): byte[]\",\"dex_descriptor\":\"(LX/Ejp;Lcom/whatsapp/infra/core/jid/DeviceJid;LX/1dW;LX/ETs;LX/ETs;LX/ETs;[B[BIIZ)[B\",\"is_constructor\":false,\"name\":\"A05\"}],\"fields\":[{\"type\":\"android.os.Handler\",\"name\":\"A00\",\"def_pos\":0},{\"type\":\"X.00x\",\"name\":\"A01\",\"def_pos\":0},{\"type\":\"X.00x\",\"name\":\"A02\",\"def_pos\":0},{\"type\":\"X.00x\",\"name\":\"A03\",\"def_pos\":0},{\"type\":\"X.00x\",\"name\":\"A04\",\"def_pos\":0},{\"type\":\"X.00x\",\"name\":\"A05\",\"def_pos\":0},{\"type\":\"X.00x\",\"name\":\"A06\",\"def_pos\":0},{\"type\":\"X.00x\",\"name\":\"A07\",\"def_pos\":0},{\"type\":\"X.00x\",\"name\":\"A08\",\"def_pos\":0},{\"type\":\"X.00x\",\"name\":\"A09\",\"def_pos\":0},{\"type\":\"X.00x\",\"name\":\"A0A\",\"def_pos\":0},{\"type\":\"X.00x\",\"name\":\"A0B\",\"def_pos\":0},{\"type\":\"X.00x\",\"name\":\"A0C\",\"def_pos\":0},{\"type\":\"X.00x\",\"name\":\"A0D\",\"def_pos\":0},{\"type\":\"X.00x\",\"name\":\"A0E\",\"def_pos\":0},{\"type\":\"X.00x\",\"name\":\"A0F\",\"def_pos\":0},{\"type\":\"X.00x\",\"name\":\"A0G\",\"def_pos\":0},{\"type\":\"X.00x\",\"name\":\"A0H\",\"def_pos\":0},{\"type\":\"X.00x\",\"name\":\"A0I\",\"def_pos\":0},{\"type\":\"X.00x\",\"name\":\"A0J\",\"def_pos\":0},{\"type\":\"X.00x\",\"name\":\"A0K\",\"def_pos\":0},{\"type\":\"X.00x\",\"name\":\"A0L\",\"def_pos\":0},{\"type\":\"X.00x\",\"name\":\"A0M\",\"def_pos\":0},{\"type\":\"X.00x\",\"name\":\"A0N\",\"def_pos\":0},{\"type\":\"X.00x\",\"name\":\"A0O\",\"def_pos\":0},{\"type\":\"com.google.common.base.Optional\",\"name\":\"A0P\",\"def_pos\":0},{\"type\":\"X.0jD\",\"name\":\"A0Q\",\"def_pos\":0},{\"type\":\"X.16C\",\"name\":\"A0R\",\"def_pos\":0},{\"type\":\"X.0bD\",\"name\":\"A0S\",\"def_pos\":0},{\"type\":\"X.10N\",\"name\":\"A0T\",\"def_pos\":0},{\"type\":\"X.08Y\",\"name\":\"A0U\",\"def_pos\":0},{\"type\":\"X.0i9\",\"name\":\"A0V\",\"def_pos\":0},{\"type\":\"X.0fY\",\"name\":\"A0W\",\"def_pos\":0},{\"type\":\"X.09F\",\"name\":\"A0X\",\"def_pos\":0},{\"type\":\"X.08q\",\"name\":\"A0Y\",\"def_pos\":0},{\"type\":\"X.0WJ\",\"name\":\"A0Z\",\"def_pos\":0},{\"type\":\"X.0Wk\",\"name\":\"A0a\",\"def_pos\":0},{\"type\":\"X.17r\",\"name\":\"A0b\",\"def_pos\":0},{\"type\":\"X.0fW\",\"name\":\"A0c\",\"def_pos\":0},{\"type\":\"X.17p\",\"name\":\"A0d\",\"def_pos\":0},{\"type\":\"X.17o\",\"name\":\"A0e\",\"def_pos\":0},{\"type\":\"X.14L\",\"name\":\"A0f\",\"def_pos\":0},{\"type\":\"X.0wT\",\"name\":\"A0g\",\"def_pos\":0}],\"field_count\":43,\"full_name\":\"X.AnonymousClass163\",\"name\":\"AnonymousClass163\",\"inner_classes\":[],\"inner_class_count\":0}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.AnonymousClass163",
+          "method_name": "A04",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"class_name\":\"X.AnonymousClass163\",\"full_name\":\"X.163.A04\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"A04\",\"overload_count\":1,\"body\":\"    private byte[] A04(EoY eoY, C1dW c1dW, int i, int i2) {\\n        C0WJ c0wj \\u003d this.A0Z;\\n        if (c0wj.A14(eoY)) {\\n            EZK ezk \\u003d c0wj.A0M(eoY).A01;\\n            byte[] bArrA00 \\u003d ezk.A00();\\n            if (ezk.A00.remoteRegistrationId_ !\\u003d i2) {\\n                StringBuilder sb \\u003d new StringBuilder(\\\"RetryReceiptHandler/axolotl deleting session due to registration id change for \\\");\\n                sb.append(c1dW);\\n                sb.append(\\\"; address\\u003d\\\");\\n                sb.append(eoY);\\n                Log.i(sb.toString());\\n                if (eoY.A03 \\u003d\\u003d E7N.A02) {\\n                    C0WJ.A00(c0wj, eoY);\\n                } else {\\n                    c0wj.A0q(eoY);\\n                }\\n                if (!this.A0U.A17(C32i.A02)) {\\n                    c0wj.A0p(eoY);\\n                }\\n                return bArrA00;\\n            }\\n            if (i \\u003e 2) {\\n                if (c0wj.A15(eoY, c1dW) || (eoY.A01 \\u003d\\u003d 3 \\u0026\\u0026 this.A0U.A17(C32i.A03))) {\\n                    StringBuilder sb2 \\u003d new StringBuilder(\\\"RetryReceiptHandler/axolotl will wait to send \\\");\\n                    sb2.append(c1dW);\\n                    sb2.append(\\\" until a new prekey has been fetched; address\\u003d\\\");\\n                    sb2.append(eoY);\\n                    Log.i(sb2.toString());\\n                    return bArrA00;\\n                }\\n            } else if (i \\u003d\\u003d 2) {\\n                StringBuilder sb3 \\u003d new StringBuilder(\\\"RetryReceiptHandler/axolotl will record the base key used to send \\\");\\n                sb3.append(c1dW);\\n                sb3.append(\\\"; address\\u003d\\\");\\n                sb3.append(eoY);\\n                Log.i(sb3.toString());\\n                c0wj.A0s(eoY, c1dW, bArrA00);\\n            }\\n        }\\n        return null;\\n    }\",\"fell_back\":false,\"overload_index\":0}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.AnonymousClass163",
+    "method": {
+      "name": "A04",
+      "reported_signature": "A04(X.EoY, X.1dW, int, int): byte[]",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(LX/EoY;LX/1dW;II)[B"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    private byte[] A04(EoY eoY, C1dW c1dW, int i, int i2) {\n        C0WJ c0wj = this.A0Z;\n        if (c0wj.A14(eoY)) {\n            EZK ezk = c0wj.A0M(eoY).A01;\n            byte[] bArrA00 = ezk.A00();\n            if (ezk.A00.remoteRegistrationId_ != i2) {\n                StringBuilder sb = new StringBuilder(\"RetryReceiptHandler/axolotl deleting session due to registration id change for \");\n                sb.append(c1dW);\n                sb.append(\"; address=\");\n                sb.append(eoY);\n                Log.i(sb.toString());\n                if (eoY.A03 == E7N.A02) {\n                    C0WJ.A00(c0wj, eoY);\n                } else {\n                    c0wj.A0q(eoY);\n                }\n                if (!this.A0U.A17(C32i.A02)) {\n                    c0wj.A0p(eoY);\n                }\n                return bArrA00;\n            }\n            if (i > 2) {\n                if (c0wj.A15(eoY, c1dW) || (eoY.A01 == 3 && this.A0U.A17(C32i.A03))) {\n                    StringBuilder sb2 = new StringBuilder(\"RetryReceiptHandler/axolotl will wait to send \");\n                    sb2.append(c1dW);\n                    sb2.append(\" until a new prekey has been fetched; address=\");\n                    sb2.append(eoY);\n                    Log.i(sb2.toString());\n                    return bArrA00;\n                }\n            } else if (i == 2) {\n                StringBuilder sb3 = new StringBuilder(\"RetryReceiptHandler/axolotl will record the base key used to send \");\n                sb3.append(c1dW);\n                sb3.append(\"; address=\");\n                sb3.append(eoY);\n                Log.i(sb3.toString());\n                c0wj.A0s(eoY, c1dW, bArrA00);\n            }\n        }\n        return null;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

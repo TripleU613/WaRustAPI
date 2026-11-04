@@ -70,9 +70,9 @@ the machine-readable accounting.
 
 ## REA findings (2026-11-04)
 
-The report currently retains **366 distinct REA records**: 356 attributed to
-2.26.37.71 and 10 to 2.26.43.72, with no duplicate copies. Seven current-build
-method records have explicit Rust ownership mappings. The older records still
+The report currently retains **384 distinct REA records**: 356 attributed to
+2.26.37.71 and 28 to 2.26.43.72, with no duplicate copies. Twenty-two current-build
+records have explicit Rust ownership mappings. The older records still
 have no machine-readable ownership; their linked protocol prose remains useful
 but is not silently promoted into this count. These totals cover retained
 research only, not the whole APK or completed Rust features.

@@ -34,6 +34,17 @@ Anchored by the `RetryReceiptHandler/…` strings:
   itself ("processing keys from the receipt"), refused when the registration
   does not match or no session exists.
 
+## Current correction (2026-11-04)
+
+The normal direct retry driver supports count 1/2 with the saved session or a
+reserved fresh-bundle fetch. Both paths now emit the incoming count unchanged
+on the new `enc` child; the complete current producer/writer chain is retained
+in [retry-enc-count](retry-enc-count.md). The original message stays unchanged.
+The no-fetch description below is the older baseline, not the whole runtime.
+Count-2 base-key persistence, higher-count policy, receipt keys and ordinary
+group/broadcast retry remain unported; root routing normalization has separate
+unresolved gates. No live retry is claimed for this correction.
+
 ## What `retry_answer` does
 
 Answers only the branch that needs no key fetch: a server-accepted, not
@@ -57,12 +68,12 @@ causes a second answer. Every other case writes
 The plaintext `Message` of each direct send is now retained at reservation as
 `retry-source:<wire id>` (store-encrypted at rest like the stanza).
 
-Not reproduced: the count-2 base-key record and the count > 2 comparison, the
-fresh-bundle path after a registration change, `<keys>` in the receipt, group
-and broadcast retries in the normal runtime (the comparison group-send window
-still answers its own), and any `enc count` attribute: `Civ`'s stanza writer
-has no string constants and remains untraced, so the resend carries none, like
-the comparison `answer_one`.
+Not reproduced: the count-2 base-key record and the count > 2 comparison,
+`<keys>` in the receipt, and group/broadcast retries in the normal runtime
+(the comparison group-send window still answers its own). The fresh-bundle
+path below and the later `enc count` correction supersede the older statement
+that these were absent. Counts above two remain refused until the base-key
+policy is ported.
 
 ## What is established
 

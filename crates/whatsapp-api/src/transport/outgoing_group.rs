@@ -277,6 +277,13 @@ pub(super) mod tests {
                     );
                 } else {
                     let node = sent.unwrap();
+                    // Native 11x.A01: only undo of an original fromMe
+                    // target carries edit=7. The keep protobuf below still
+                    // carries its distinct original-author/keep-type fields.
+                    assert_eq!(
+                        node.get_attr("edit").and_then(|v| v.as_text()),
+                        (kind == "own_unkeep").then_some("7")
+                    );
                     let skmsg = node.child("enc").unwrap();
                     assert_eq!(skmsg.get_attr("decrypt-fail").is_some(), reaction);
                     assert_eq!(node.child("meta").is_some(), reaction);
@@ -1901,16 +1908,7 @@ impl Pending {
                     if out_of_band { &[] } else { prepared.targets() },
                     prepared.ciphertext(),
                 )?;
-                // CpG.A0U: a REVOKE needs edit=7, an edit carries edit=1.
-                let node = match &self.entry.intent.content {
-                    MessageContent::Revoke { .. } => {
-                        node.attr("edit", super::chat_settings::EDIT_SENDER_REVOKE)
-                    }
-                    MessageContent::Edit { .. } => {
-                        node.attr("edit", super::chat_settings::EDIT_MESSAGE)
-                    }
-                    _ => node,
-                };
+                let node = super::outgoing::with_edit_attribute(node, &self.entry.intent.content);
                 let distributions = if out_of_band {
                     prepared
                         .targets()

@@ -176,8 +176,16 @@ The native keep action `11x.A01` stores edit value 7 on the keep add-on when
 the target message is one's own and its keep flag is false, and 0 otherwise.
 **Inferred:** that flag false means undo (the retained receiver `D9L.A01`
 rejects a nonzero edit value on KEEP, and the action's telemetry records 2 for
-it). This client's `keep --undo` sends no `edit` attribute. The one retained
-receiver check does not look at the value on UNDO, so behaviour is not
-expected to differ, and the stanza attribute is still inferred; it is
-recorded as a divergence, not changed.
+it). At that review this client's `keep --undo` sent no `edit` attribute;
+the final stanza mapping was not yet closed, so the divergence was recorded
+without changing code. The one retained receiver check did not establish how
+all recipients handle it.
+
+**Updated 2026-11-04:** the stored edit value's propagation to the decimal
+message `edit` attribute is now confirmed, including the current 2.26.43.72
+job/writer chain. Direct and group outbox now add `edit="7"` only for undo of
+an originally outgoing target; other keep/unkeep cases add none. Ownership,
+reference, payload and reservation guards are unchanged. Offline wire/crypto/
+restart tests cover the correction; fresh live acceptance remains unverified.
+[Closed trace and implementation](own-unkeep-edit.md).
 [Trace](unknowns.md#outgoing-revoke-and-edit-2026-10-13).

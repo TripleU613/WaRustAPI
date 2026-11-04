@@ -1,3 +1,11 @@
+2026-11-04 — **Offline implementation batch:** current-build PIN re-entry now
+preserves guessing waits and bound-step identity across restart; own-message
+undo-keep metadata is corrected in direct/group outbox; direct saved/refetched
+retry answers now carry the received count unchanged. Full checks passed
+(1,119 all-feature / 438 default tests, strict Clippy). No live operation ran.
+[PIN evidence](protocol/rea/2.26.43.72-registration-recovery/README.md#follow-on-port-explicit-pin-re-entry) ·
+[Unkeep scope](protocol/own-unkeep-edit.md) · [Retry scope and gaps](protocol/retry-enc-count.md).
+
 2026-11-04 — **Offline continuation:** the renewed whole-APK objective is tracked
 in the [A00–A19 porting queue](protocol/apk-porting.md#whole-apk-continuation-queue-2026-11-04),
 using existing Rust modules and REA/recipe evidence. The first current-build

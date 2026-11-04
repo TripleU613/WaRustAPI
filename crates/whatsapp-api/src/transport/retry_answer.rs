@@ -10,12 +10,14 @@
 //! equals the session's `remoteRegistrationId_`; a mismatch deletes the session
 //! and waits for a fresh prekey bundle, and `count > 2` may also wait for one.
 //!
-//! **Implemented here:** only the no-fetch branch: direct chat, count 1 or 2,
-//! matching registration, server-accepted original within 60 days. Every
-//! other case records `retry-unanswered:` with its reason and sends nothing.
-//! Not reproduced: the count-2 base-key record (`0jc.A0u`), receipts carrying
-//! `<keys>` (`151.A01`), group/broadcast retries, and an `enc count` attribute
-//! (Civ's stanza writer is untraced; `answer_one` omits it too).
+//! **Implemented here:** direct chat, count 1 or 2, server-accepted original
+//! within 60 days, using a matching session or a reserved fresh-bundle fetch.
+//! **Confirmed static, 2.26.43.72:** the received count reaches the send job
+//! unchanged and FTy.AK7 -> F3f.A04 -> F3f.A09 writes nonzero `enc count` as
+//! decimal (docs/protocol/retry-enc-count.md). Both answer paths preserve it.
+//! Not reproduced: the count-2 base-key record/current-key comparison
+//! (`163.A04`, `0WJ.A0s/A15` in 43.72), receipts carrying `<keys>`, and
+//! group/broadcast retries. Counts above two remain refused.
 
 use crate::{
     Error, Result,
@@ -225,7 +227,7 @@ pub async fn answer(
         Err(Error::IdentityChanged(_)) => return unanswered(store, &key, "identity_changed"),
         Err(error) => return Err(error),
     };
-    let resend = replace_enc(original, prepared.kind, prepared.ciphertext)?;
+    let resend = replace_enc(original, prepared.kind, prepared.ciphertext, retry.count)?;
     let wire = Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(&resend)?;
     store.write(|tx| {
         let mut current = outbox
@@ -355,7 +357,7 @@ pub async fn complete_refetch(
         Err(Error::InvalidInput { .. }) => return refuse("refetch_bundle_unusable"),
         Err(error) => return Err(error),
     };
-    let resend = replace_enc(&original, prepared.kind, prepared.ciphertext)?;
+    let resend = replace_enc(&original, prepared.kind, prepared.ciphertext, job.count)?;
     let wire = Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(&resend)?;
     store.write(|tx| {
         let state: Option<serde_json::Value> =
@@ -386,9 +388,17 @@ pub async fn complete_refetch(
     Ok(Some(Some(resend)))
 }
 
-/// The original stanza with its `enc` re-encrypted; id and every other
-/// attribute and child unchanged.
-fn replace_enc(original: &[u8], kind: &str, ciphertext: Vec<u8>) -> Result<Node> {
+/// The original stanza with its `enc` re-encrypted and its protocol retry
+/// count updated; message id and unrelated attributes/children stay unchanged.
+fn replace_enc(original: &[u8], kind: &str, ciphertext: Vec<u8>, count: u32) -> Result<Node> {
+    // Higher counts require the unported base-key comparison policy. Keep
+    // even restored/refetched jobs inside the same supported answer boundary.
+    if !(1..=2).contains(&count) {
+        return Err(Error::invalid(
+            "retry",
+            "only retry counts 1 and 2 can be answered",
+        ));
+    }
     let limits = crate::profile::Limits::default();
     let raw = crate::binary::unpack_frame_payload(original, &limits)?;
     let mut stanza =
@@ -399,7 +409,13 @@ fn replace_enc(original: &[u8], kind: &str, ciphertext: Vec<u8>) -> Result<Node>
     };
     let mut replaced = 0;
     for child in children.iter_mut().filter(|c| c.description == "enc") {
-        *child = child.clone().attr("type", kind).bytes(ciphertext.clone());
+        // APK 43.72 FTy.AK7 passes SendE2EMessageJob.retryCount through
+        // F3f.A04 to A09, which emits its nonzero decimal count unchanged.
+        *child = child
+            .clone()
+            .attr("type", kind)
+            .attr("count", count.to_string())
+            .bytes(ciphertext.clone());
         replaced += 1;
     }
     if replaced != 1 {
@@ -446,6 +462,67 @@ mod tests {
             .read(|tx| tx.get_json::<serde_json::Value>(Table::Checkpoints, key.as_bytes(), 1))
             .unwrap()
             .map(|v| v["reason"].as_str().unwrap().to_owned())
+    }
+
+    #[test]
+    fn retry_count_replaces_only_the_enc_count_and_preserves_original_stanza() {
+        let original = Node::new("message")
+            .attr("id", "W1")
+            .attr("type", "text")
+            .children(vec![
+                Node::new("enc")
+                    .attr("v", "2")
+                    .attr("type", "msg")
+                    .attr("mediatype", "image")
+                    .attr("count", "9")
+                    .bytes(vec![1, 2]),
+                Node::new("tctoken").bytes(vec![3, 4]),
+            ]);
+        let encoded = Encoder::new(TokenDictionary::comparison_2_26_37_71())
+            .encode(&original)
+            .unwrap();
+        for count in [1, 2] {
+            let answer = replace_enc(&encoded, "pkmsg", vec![8, 9], count).unwrap();
+            assert_eq!(answer.attributes, original.attributes);
+            assert_eq!(answer.child("tctoken"), original.child("tctoken"));
+            let enc = answer.child("enc").unwrap();
+            assert_eq!(
+                enc.get_attr("type").and_then(|v| v.as_text()),
+                Some("pkmsg")
+            );
+            assert_eq!(enc.content, NodeContent::Bytes(vec![8, 9].into()));
+            assert_eq!(
+                enc.get_attr("count").and_then(|v| v.as_text()),
+                Some(count.to_string().as_str())
+            );
+            assert_eq!(
+                enc.attributes
+                    .iter()
+                    .filter(|attr| attr.name == "count")
+                    .count(),
+                1
+            );
+            assert_eq!(
+                enc.get_attr("v"),
+                original.child("enc").unwrap().get_attr("v")
+            );
+            assert_eq!(
+                enc.get_attr("mediatype"),
+                original.child("enc").unwrap().get_attr("mediatype")
+            );
+        }
+        assert!(replace_enc(&encoded, "msg", vec![7], 0).is_err());
+        assert!(replace_enc(&encoded, "msg", vec![7], 3).is_err());
+        assert!(replace_enc(&encoded, "msg", vec![7], 4).is_err());
+        assert!(replace_enc(&encoded, "msg", vec![7], MAX_COUNT + 1).is_err());
+        assert_eq!(
+            original
+                .child("enc")
+                .unwrap()
+                .get_attr("count")
+                .and_then(|v| v.as_text()),
+            Some("9")
+        );
     }
 
     /// The APK's no-fetch branch: count 1/2 with a matching registration is
@@ -564,6 +641,8 @@ mod tests {
             enc.get_attr("type").and_then(|v| v.as_text()),
             Some("pkmsg")
         );
+        assert_eq!(enc.get_attr("count").and_then(|v| v.as_text()), Some("1"));
+        assert!(original.child("enc").unwrap().get_attr("count").is_none());
         assert_ne!(enc.content, original.child("enc").unwrap().content);
         let entry = store
             .read(|tx| outbox.by_wire_id(tx, &MessageId::new("W1")?))
@@ -633,6 +712,15 @@ mod tests {
                 .and_then(|v| v.as_text()),
             Some("pkmsg"),
             "a new session starts with a prekey message"
+        );
+        assert_eq!(
+            resend
+                .child("enc")
+                .unwrap()
+                .get_attr("count")
+                .and_then(|v| v.as_text()),
+            Some("2"),
+            "refetched-session answers preserve the received count too"
         );
         let session: Vec<u8> = store
             .read(|tx| tx.get_json(Table::SignalSessions, key.as_bytes(), 1))

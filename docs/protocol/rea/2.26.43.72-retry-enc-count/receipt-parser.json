@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_00c6eda09b45dbc8de6ec4694f52772ff7532062819913ee155e671fd7c4b222",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.F10",
+    "method_name": "A04",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-nUHdy0/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.F10"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"()V\"},{\"signature\":\"A00(java.lang.String): int\",\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)I\"},{\"signature\":\"A01(X.0DY, X.F10): X.0DY\",\"def_pos\":0,\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0DY;LX/F10;)LX/0DY;\"},{\"signature\":\"A02(X.Eoh): X.0DY\",\"def_pos\":0,\"name\":\"A02\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/Eoh;)LX/0DY;\"},{\"signature\":\"A03(X.0Tp, X.Eoh, X.E0D): X.FvR\",\"def_pos\":0,\"name\":\"A03\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0Tp;LX/Eoh;LX/E0D;)LX/FvR;\"},{\"signature\":\"A04(X.0Tp, X.Eoh): X.EYC\",\"def_pos\":0,\"name\":\"A04\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0Tp;LX/Eoh;)LX/EYC;\"}],\"method_count\":6,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"F10\",\"full_name\":\"X.F10\",\"field_count\":4,\"fields\":[{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A03\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.F10",
+          "method_name": "A04",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.F10.A04\",\"class_name\":\"X.F10\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public final EYC A04(C0Tp c0Tp, Eoh eoh) {\\n        byte[] bArr;\\n        ETs eTs;\\n        ETs eTs2;\\n        ETs eTs3;\\n        Ejp ejp;\\n        ElG elG;\\n        byte[] bArr2;\\n        C0Tp c0TpA0G \\u003d c0Tp.A0G(\\\"retry\\\");\\n        byte[] bArr3 \\u003d c0Tp.A0G(\\\"registration\\\").A01;\\n        if (bArr3 \\u003d\\u003d null || bArr3.length !\\u003d 4) {\\n            throw C6oe.A0r(\\\"invalid registration node\\\");\\n        }\\n        byte[] bArr4 \\u003d null;\\n        if (!C00l.areEqual(c0TpA0G.A0M(\\\"v\\\", \\\"1\\\"), \\\"1\\\")) {\\n            return null;\\n        }\\n        C0DY c0dyA00 \\u003d (C0DY) c0Tp.A0A(UserJid.class, \\\"recipient\\\");\\n        int iA05 \\u003d c0TpA0G.A05(\\\"count\\\", 1);\\n        long jA07 \\u003d c0TpA0G.A07(\\\"t\\\") * 1000;\\n        String strA0L \\u003d c0TpA0G.A0L(\\\"id\\\");\\n        if (c0dyA00 \\u003d\\u003d null) {\\n            c0dyA00 \\u003d C0Dn.A00(eoh.A02);\\n        }\\n        if (c0dyA00 \\u003d\\u003d null) {\\n            throw C1Xl.A0g(\\\"Required value was null.\\\");\\n        }\\n        C1dW c1dWA0g \\u003d DBb.A0g(A01(c0dyA00, this), strA0L, true);\\n        C0Tp c0TpA0F \\u003d c0Tp.A0F(\\\"keys\\\");\\n        if (c0TpA0F !\\u003d null) {\\n            C0Tp c0TpA0G2 \\u003d c0TpA0F.A0G(\\\"identity\\\");\\n            byte[] bArr5 \\u003d c0TpA0F.A0G(\\\"type\\\").A01;\\n            if (bArr5 \\u003d\\u003d null || bArr5.length !\\u003d 1) {\\n                throw C6oe.A0r(\\\"type node should contain exactly 1 byte\\\");\\n            }\\n            byte[] bArr6 \\u003d c0TpA0G2.A01;\\n            C0Tp c0TpA0F2 \\u003d c0TpA0F.A0F(\\\"key\\\");\\n            if (c0TpA0F2 !\\u003d null) {\\n                C0Tp c0TpA0G3 \\u003d c0TpA0F2.A0G(\\\"id\\\");\\n                C0Tp c0TpA0G4 \\u003d c0TpA0F2.A0G(\\\"value\\\");\\n                byte[] bArr7 \\u003d c0TpA0G3.A01;\\n                C00L.A05(bArr7);\\n                C00l.A05(bArr7);\\n                byte[] bArr8 \\u003d c0TpA0G4.A01;\\n                C00L.A05(bArr8);\\n                C00l.A05(bArr8);\\n                eTs2 \\u003d new ETs(bArr7, bArr8, null);\\n            } else {\\n                eTs2 \\u003d null;\\n            }\\n            C0Tp c0TpA0G5 \\u003d c0TpA0F.A0G(\\\"skey\\\");\\n            C0Tp c0TpA0G6 \\u003d c0TpA0G5.A0G(\\\"id\\\");\\n            C0Tp c0TpA0G7 \\u003d c0TpA0G5.A0G(\\\"value\\\");\\n            C0Tp c0TpA0G8 \\u003d c0TpA0G5.A0G(\\\"signature\\\");\\n            byte[] bArr9 \\u003d c0TpA0G6.A01;\\n            C00L.A05(bArr9);\\n            C00l.A05(bArr9);\\n            byte[] bArr10 \\u003d c0TpA0G7.A01;\\n            C00L.A05(bArr10);\\n            C00l.A05(bArr10);\\n            eTs \\u003d new ETs(bArr9, bArr10, c0TpA0G8.A01);\\n            C0Tp c0TpA0F3 \\u003d c0TpA0F.A0F(\\\"device-identity\\\");\\n            bArr \\u003d c0TpA0F3 !\\u003d null ? c0TpA0F3.A01 : null;\\n            C0Tp c0TpA0F4 \\u003d c0TpA0F.A0F(\\\"pqkey\\\");\\n            if (c0TpA0F4 \\u003d\\u003d null \\u0026\\u0026 (c0TpA0F4 \\u003d c0TpA0F.A0F(\\\"pq\\\")) \\u003d\\u003d null) {\\n                eTs3 \\u003d null;\\n            } else {\\n                C0Tp c0TpA0G9 \\u003d c0TpA0F4.A0G(\\\"id\\\");\\n                C0Tp c0TpA0G10 \\u003d c0TpA0F4.A0G(\\\"value\\\");\\n                C0Tp c0TpA0G11 \\u003d c0TpA0F4.A0G(\\\"signature\\\");\\n                byte[] bArr11 \\u003d c0TpA0G9.A01;\\n                C00L.A05(bArr11);\\n                C00l.A05(bArr11);\\n                byte[] bArr12 \\u003d c0TpA0G10.A01;\\n                C00L.A05(bArr12);\\n                C00l.A05(bArr12);\\n                eTs3 \\u003d new ETs(bArr11, bArr12, c0TpA0G11.A01);\\n            }\\n            C0Tp c0TpA0F5 \\u003d c0TpA0F.A0F(\\\"identity_auth\\\");\\n            if (c0TpA0F5 !\\u003d null) {\\n                int iA06 \\u003d c0TpA0F5.A05(\\\"version\\\", -1);\\n                C0Tp c0TpA0G12 \\u003d c0TpA0F5.A0G(\\\"signature\\\");\\n                C0Tp c0TpA0G13 \\u003d c0TpA0F5.A0G(\\\"certs\\\");\\n                ArrayList arrayListA18 \\u003d C1Xl.A18();\\n                C0Tp[] c0TpArr \\u003d c0TpA0G13.A02;\\n                C00L.A05(c0TpArr);\\n                C00l.A05(c0TpArr);\\n                for (C0Tp c0Tp2 : c0TpArr) {\\n                    if (\\\"cert\\\".equals(c0Tp2.A00) \\u0026\\u0026 (bArr2 \\u003d c0Tp2.A01) !\\u003d null) {\\n                        arrayListA18.add(bArr2);\\n                    }\\n                }\\n                byte[] bArr13 \\u003d c0TpA0G12.A01;\\n                C00L.A05(bArr13);\\n                C00l.A05(bArr13);\\n                C00L.A05(bArr6);\\n                C00l.A05(bArr6);\\n                elG \\u003d new ElG(arrayListA18, bArr13, bArr6, iA06);\\n            } else {\\n                elG \\u003d null;\\n            }\\n            ejp \\u003d EHZ.A00(c0TpA0F, DBc.A1S(C05a.A00(this.A00))).A00;\\n            bArr4 \\u003d bArr6;\\n        } else {\\n            bArr \\u003d null;\\n            eTs \\u003d null;\\n            eTs2 \\u003d null;\\n            eTs3 \\u003d null;\\n            ejp \\u003d null;\\n            elG \\u003d null;\\n        }\\n        Log.i(\\\"ReceiptStanzaHelper/on-message-retry-by-target\\\");\\n        return new EYC(ejp, c1dWA0g, elG, eTs, eTs2, eTs3, eoh, bArr3, bArr4, bArr, iA05, jA07, C2L9.A1W(c0Tp.A0M(\\\"offline\\\", null)), \\\"true\\\".equals(c0Tp.A0M(\\\"is_lid\\\", null)), C00l.areEqual(C6oe.A18(c0Tp, \\\"class\\\"), \\\"status\\\"));\\n    }\",\"overload_count\":1,\"method_name\":\"A04\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.F10",
+    "method": {
+      "name": "A04",
+      "reported_signature": "A04(X.0Tp, X.Eoh): X.EYC",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(LX/0Tp;LX/Eoh;)LX/EYC;"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public final EYC A04(C0Tp c0Tp, Eoh eoh) {\n        byte[] bArr;\n        ETs eTs;\n        ETs eTs2;\n        ETs eTs3;\n        Ejp ejp;\n        ElG elG;\n        byte[] bArr2;\n        C0Tp c0TpA0G = c0Tp.A0G(\"retry\");\n        byte[] bArr3 = c0Tp.A0G(\"registration\").A01;\n        if (bArr3 == null || bArr3.length != 4) {\n            throw C6oe.A0r(\"invalid registration node\");\n        }\n        byte[] bArr4 = null;\n        if (!C00l.areEqual(c0TpA0G.A0M(\"v\", \"1\"), \"1\")) {\n            return null;\n        }\n        C0DY c0dyA00 = (C0DY) c0Tp.A0A(UserJid.class, \"recipient\");\n        int iA05 = c0TpA0G.A05(\"count\", 1);\n        long jA07 = c0TpA0G.A07(\"t\") * 1000;\n        String strA0L = c0TpA0G.A0L(\"id\");\n        if (c0dyA00 == null) {\n            c0dyA00 = C0Dn.A00(eoh.A02);\n        }\n        if (c0dyA00 == null) {\n            throw C1Xl.A0g(\"Required value was null.\");\n        }\n        C1dW c1dWA0g = DBb.A0g(A01(c0dyA00, this), strA0L, true);\n        C0Tp c0TpA0F = c0Tp.A0F(\"keys\");\n        if (c0TpA0F != null) {\n            C0Tp c0TpA0G2 = c0TpA0F.A0G(\"identity\");\n            byte[] bArr5 = c0TpA0F.A0G(\"type\").A01;\n            if (bArr5 == null || bArr5.length != 1) {\n                throw C6oe.A0r(\"type node should contain exactly 1 byte\");\n            }\n            byte[] bArr6 = c0TpA0G2.A01;\n            C0Tp c0TpA0F2 = c0TpA0F.A0F(\"key\");\n            if (c0TpA0F2 != null) {\n                C0Tp c0TpA0G3 = c0TpA0F2.A0G(\"id\");\n                C0Tp c0TpA0G4 = c0TpA0F2.A0G(\"value\");\n                byte[] bArr7 = c0TpA0G3.A01;\n                C00L.A05(bArr7);\n                C00l.A05(bArr7);\n                byte[] bArr8 = c0TpA0G4.A01;\n                C00L.A05(bArr8);\n                C00l.A05(bArr8);\n                eTs2 = new ETs(bArr7, bArr8, null);\n            } else {\n                eTs2 = null;\n            }\n            C0Tp c0TpA0G5 = c0TpA0F.A0G(\"skey\");\n            C0Tp c0TpA0G6 = c0TpA0G5.A0G(\"id\");\n            C0Tp c0TpA0G7 = c0TpA0G5.A0G(\"value\");\n            C0Tp c0TpA0G8 = c0TpA0G5.A0G(\"signature\");\n            byte[] bArr9 = c0TpA0G6.A01;\n            C00L.A05(bArr9);\n            C00l.A05(bArr9);\n            byte[] bArr10 = c0TpA0G7.A01;\n            C00L.A05(bArr10);\n            C00l.A05(bArr10);\n            eTs = new ETs(bArr9, bArr10, c0TpA0G8.A01);\n            C0Tp c0TpA0F3 = c0TpA0F.A0F(\"device-identity\");\n            bArr = c0TpA0F3 != null ? c0TpA0F3.A01 : null;\n            C0Tp c0TpA0F4 = c0TpA0F.A0F(\"pqkey\");\n            if (c0TpA0F4 == null && (c0TpA0F4 = c0TpA0F.A0F(\"pq\")) == null) {\n                eTs3 = null;\n            } else {\n                C0Tp c0TpA0G9 = c0TpA0F4.A0G(\"id\");\n                C0Tp c0TpA0G10 = c0TpA0F4.A0G(\"value\");\n                C0Tp c0TpA0G11 = c0TpA0F4.A0G(\"signature\");\n                byte[] bArr11 = c0TpA0G9.A01;\n                C00L.A05(bArr11);\n                C00l.A05(bArr11);\n                byte[] bArr12 = c0TpA0G10.A01;\n                C00L.A05(bArr12);\n                C00l.A05(bArr12);\n                eTs3 = new ETs(bArr11, bArr12, c0TpA0G11.A01);\n            }\n            C0Tp c0TpA0F5 = c0TpA0F.A0F(\"identity_auth\");\n            if (c0TpA0F5 != null) {\n                int iA06 = c0TpA0F5.A05(\"version\", -1);\n                C0Tp c0TpA0G12 = c0TpA0F5.A0G(\"signature\");\n                C0Tp c0TpA0G13 = c0TpA0F5.A0G(\"certs\");\n                ArrayList arrayListA18 = C1Xl.A18();\n                C0Tp[] c0TpArr = c0TpA0G13.A02;\n                C00L.A05(c0TpArr);\n                C00l.A05(c0TpArr);\n                for (C0Tp c0Tp2 : c0TpArr) {\n                    if (\"cert\".equals(c0Tp2.A00) && (bArr2 = c0Tp2.A01) != null) {\n                        arrayListA18.add(bArr2);\n                    }\n                }\n                byte[] bArr13 = c0TpA0G12.A01;\n                C00L.A05(bArr13);\n                C00l.A05(bArr13);\n                C00L.A05(bArr6);\n                C00l.A05(bArr6);\n                elG = new ElG(arrayListA18, bArr13, bArr6, iA06);\n            } else {\n                elG = null;\n            }\n            ejp = EHZ.A00(c0TpA0F, DBc.A1S(C05a.A00(this.A00))).A00;\n            bArr4 = bArr6;\n        } else {\n            bArr = null;\n            eTs = null;\n            eTs2 = null;\n            eTs3 = null;\n            ejp = null;\n            elG = null;\n        }\n        Log.i(\"ReceiptStanzaHelper/on-message-retry-by-target\");\n        return new EYC(ejp, c1dWA0g, elG, eTs, eTs2, eTs3, eoh, bArr3, bArr4, bArr, iA05, jA07, C2L9.A1W(c0Tp.A0M(\"offline\", null)), \"true\".equals(c0Tp.A0M(\"is_lid\", null)), C00l.areEqual(C6oe.A18(c0Tp, \"class\"), \"status\"));\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

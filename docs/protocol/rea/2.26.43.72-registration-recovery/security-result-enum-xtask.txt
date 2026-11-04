@@ -1,0 +1,106 @@
+
+# class: LX/GgZ;
+# extends: Ljava/lang/Enum;
+
+.method public <clinit>(V)  # .registers 18
+    # full signature: LX/GgZ;-><clinit>()V
+    0000..0002  const/4  v3, #0x0
+    0002..0006  const-string  v2, "verified"
+    0006..000a  const-string  v1, "OK"
+    000a..000e  new-instance  v17, LX/GgZ;
+    000e..0012  move-object/from16  v0, v17
+    0012..0018  invoke-direct  {v0, v1, v3, v2}, LX/GgZ;-><init>(Ljava/lang/String;ILjava/lang/String;)V
+    0018..001c  sput-object  v17, LX/GgZ;->A0F:LX/GgZ;
+    001c..001e  const/4  v2, #0x1
+    001e..0022  const-string  v1, "wamsys_init_failed"
+    0022..0026  const-string  v0, "ERROR_FAIL_TO_INITIALIZE_WAMSYS"
+    0026..002a  new-instance  v13, LX/GgZ;
+    002a..0030  invoke-direct  {v13, v0, v2, v1}, LX/GgZ;-><init>(Ljava/lang/String;ILjava/lang/String;)V
+    0030..0034  sput-object  v13, LX/GgZ;->A03:LX/GgZ;
+    0034..0036  const/4  v2, #0x2
+    0036..003a  const-string  v1, "error"
+    003a..003e  const-string  v0, "ERROR_UNSPECIFIED"
+    003e..0042  new-instance  v12, LX/GgZ;
+    0042..0048  invoke-direct  {v12, v0, v2, v1}, LX/GgZ;-><init>(Ljava/lang/String;ILjava/lang/String;)V
+    0048..004c  sput-object  v12, LX/GgZ;->A04:LX/GgZ;
+    004c..004e  const/4  v2, #0x3
+    004e..0052  const-string  v1, "fail_connectivity"
+    0052..0056  const-string  v0, "ERROR_CONNECTIVITY"
+    0056..005a  new-instance  v11, LX/GgZ;
+    005a..0060  invoke-direct  {v11, v0, v2, v1}, LX/GgZ;-><init>(Ljava/lang/String;ILjava/lang/String;)V
+    0060..0064  sput-object  v11, LX/GgZ;->A02:LX/GgZ;
+    0064..0068  const-string  v1, "FAIL_INCORRECT"
+    0068..006a  const/4  v0, #0x4
+    006a..006e  const-string  v2, "fail_incorrect"
+    006e..0072  new-instance  v10, LX/GgZ;
+    0072..0078  invoke-direct  {v10, v1, v0, v2}, LX/GgZ;-><init>(Ljava/lang/String;ILjava/lang/String;)V
+    0078..007c  sput-object  v10, LX/GgZ;->A09:LX/GgZ;
+    007c..0080  const-string  v1, "FAIL_MISMATCH"
+    0080..0082  const/4  v0, #0x5
+    0082..0086  new-instance  v9, LX/GgZ;
+    0086..008c  invoke-direct  {v9, v1, v0, v2}, LX/GgZ;-><init>(Ljava/lang/String;ILjava/lang/String;)V
+    008c..0090  sput-object  v9, LX/GgZ;->A0A:LX/GgZ;
+    0090..0094  const-string  v1, "FAIL_TOO_MANY_GUESSES"
+    0094..0096  const/4  v0, #0x6
+    0096..009a  const-string  v2, "fail_too_many"
+    009a..009e  new-instance  v8, LX/GgZ;
+    009e..00a4  invoke-direct  {v8, v1, v0, v2}, LX/GgZ;-><init>(Ljava/lang/String;ILjava/lang/String;)V
+    00a4..00a8  sput-object  v8, LX/GgZ;->A0E:LX/GgZ;
+    00a8..00ac  const-string  v1, "FAIL_GUESSED_TOO_FAST"
+    00ac..00ae  const/4  v0, #0x7
+    00ae..00b2  new-instance  v7, LX/GgZ;
+    00b2..00b8  invoke-direct  {v7, v1, v0, v2}, LX/GgZ;-><init>(Ljava/lang/String;ILjava/lang/String;)V
+    00b8..00bc  sput-object  v7, LX/GgZ;->A08:LX/GgZ;
+    00bc..00c0  const/16  v2, #0x8
+    00c0..00c4  const-string  v1, "fail_reset_too_soon"
+    00c4..00c8  const-string  v0, "FAIL_RESET_TOO_SOON"
+    00c8..00cc  new-instance  v6, LX/GgZ;
+    00cc..00d2  invoke-direct  {v6, v0, v2, v1}, LX/GgZ;-><init>(Ljava/lang/String;ILjava/lang/String;)V
+    00d2..00d6  sput-object  v6, LX/GgZ;->A0B:LX/GgZ;
+    00d6..00da  const/16  v2, #0x9
+    00da..00de  const-string  v1, "fail_stale"
+    00de..00e2  const-string  v0, "FAIL_STALE"
+    00e2..00e6  new-instance  v5, LX/GgZ;
+    00e6..00ec  invoke-direct  {v5, v0, v2, v1}, LX/GgZ;-><init>(Ljava/lang/String;ILjava/lang/String;)V
+    00ec..00f0  sput-object  v5, LX/GgZ;->A0C:LX/GgZ;
+    00f0..00f4  const/16  v2, #0xa
+    00f4..00f8  const-string  v1, "fail_temporarily_unavailable"
+    00f8..00fc  const-string  v0, "FAIL_TEMPORARILY_UNAVAILABLE"
+    00fc..0100  new-instance  v4, LX/GgZ;
+    0100..0106  invoke-direct  {v4, v0, v2, v1}, LX/GgZ;-><init>(Ljava/lang/String;ILjava/lang/String;)V
+    0106..010a  sput-object  v4, LX/GgZ;->A0D:LX/GgZ;
+    010a..010e  const/16  v2, #0xb
+    010e..0112  const-string  v1, "fail_blocked"
+    0112..0116  const-string  v0, "FAIL_BLOCKED"
+    0116..011a  new-instance  v3, LX/GgZ;
+    011a..0120  invoke-direct  {v3, v0, v2, v1}, LX/GgZ;-><init>(Ljava/lang/String;ILjava/lang/String;)V
+    0120..0124  sput-object  v3, LX/GgZ;->A05:LX/GgZ;
+    0124..0128  const-string  v15, "FAIL_CONSENT_PENDING"
+    0128..012c  const/16  v14, #0xc
+    012c..0130  const-string  v1, "fail_consent"
+    0130..0134  new-instance  v2, LX/GgZ;
+    0134..013a  invoke-direct  {v2, v15, v14, v1}, LX/GgZ;-><init>(Ljava/lang/String;ILjava/lang/String;)V
+    013a..013e  sput-object  v2, LX/GgZ;->A06:LX/GgZ;
+    013e..0142  const-string  v0, "FAIL_CONSENT_PRIMARY_LINKING_ALREADY_REGISTERED"
+    0142..0146  const/16  v16, #0xd
+    0146..014a  new-instance  v14, LX/GgZ;
+    014a..014c  move-object  v15, v0
+    014c..0150  move/from16  v0, v16
+    0150..0156  invoke-direct  {v14, v15, v0, v1}, LX/GgZ;-><init>(Ljava/lang/String;ILjava/lang/String;)V
+    0156..015a  sput-object  v14, LX/GgZ;->A07:LX/GgZ;
+    015a..015e  const/16  v0, #0xe
+    015e..0162  new-array  v1, v0, [LX/GgZ;
+    0162..0166  move-object/from16  v0, v17
+    0166..016c  invoke-static  {v0, v13, v12, v11, v1}, LX/2LA;->A18(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;[Ljava/lang/Object;)V
+    016c..0172  invoke-static  {v10, v9, v8, v7, v1}, LX/2LA;->A19(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;[Ljava/lang/Object;)V
+    0172..0176  const/16  v0, #0x8
+    0176..017a  aput-object  v6, v1, v0
+    017a..0180  invoke-static  {v5, v4, v3, v2, v1}, LX/1Xm;->A0B(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;[Ljava/lang/Object;)V
+    0180..0184  aput-object  v14, v1, v16
+    0184..0188  sput-object  v1, LX/GgZ;->A01:[LX/GgZ;
+    0188..018e  invoke-static  {v1}, LX/068;->A00([Ljava/lang/Enum;)LX/06C;
+    018e..0190  move-result-object  v0
+    0190..0194  sput-object  v0, LX/GgZ;->A00:LX/06B;
+    0194..0196  return-void
+    # exception table: 0 try range(s)
+.end method

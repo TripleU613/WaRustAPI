@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_8ede4f51a5830f2b58f3f8b60607ba857d92e887665de7c417bf67a6353061f5",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.Fe5",
+    "method_name": "run",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-nUHdy0/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.Fe5"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cinit\\u003e(X.163, com.whatsapp.infra.core.jid.DeviceJid, com.whatsapp.infra.core.jid.UserJid, X.18U, X.1dW, X.ETs, X.Eoh, java.lang.Integer, byte[], int, long, boolean, boolean, boolean): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"(LX/163;Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/UserJid;LX/18U;LX/1dW;LX/ETs;LX/Eoh;Ljava/lang/Integer;[BIJZZZ)V\"},{\"signature\":\"run(): void\",\"def_pos\":0,\"name\":\"run\",\"is_constructor\":false,\"dex_descriptor\":\"()V\"}],\"method_count\":2,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"Fe5\",\"full_name\":\"X.Fe5\",\"field_count\":14,\"fields\":[{\"type\":\"int\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"long\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"X.163\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"com.whatsapp.infra.core.jid.DeviceJid\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"com.whatsapp.infra.core.jid.UserJid\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"X.18U\",\"def_pos\":0,\"name\":\"A05\"},{\"type\":\"X.1dW\",\"def_pos\":0,\"name\":\"A06\"},{\"type\":\"X.ETs\",\"def_pos\":0,\"name\":\"A07\"},{\"type\":\"X.Eoh\",\"def_pos\":0,\"name\":\"A08\"},{\"type\":\"java.lang.Integer\",\"def_pos\":0,\"name\":\"A09\"},{\"type\":\"boolean\",\"def_pos\":0,\"name\":\"A0A\"},{\"type\":\"boolean\",\"def_pos\":0,\"name\":\"A0B\"},{\"type\":\"boolean\",\"def_pos\":0,\"name\":\"A0C\"},{\"type\":\"byte[]\",\"def_pos\":0,\"name\":\"A0D\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.Fe5",
+          "method_name": "run",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.Fe5.run\",\"class_name\":\"X.Fe5\",\"overload_index\":0,\"fell_back\":false,\"body\":\"// method exists but has no decompiled body (native/abstract)\",\"overload_count\":1,\"method_name\":\"run\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.Fe5",
+    "method": {
+      "name": "run",
+      "reported_signature": "run(): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "()V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "not_available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "// method exists but has no decompiled body (native/abstract)",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

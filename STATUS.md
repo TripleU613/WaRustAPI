@@ -1,3 +1,33 @@
+2026-11-04 — **Three APK-derived ports completed offline:**
+
+- PIN `mismatch`/`guessed_too_fast` responses under HTTP 2xx now return the same
+  attempt to explicit PIN entry with a new bound handle and persisted guessing
+  deadline. The saved deadline survives reopening and cannot be erased by a
+  caller editing its handle copy; early answers neither consume the step nor
+  send. Existing generic PIN waits also bind. CLI output exposes the deadline.
+  Other responses and earlier blocked attempts gain no reset/re-entry path.
+  [Current enum/consumer proof and tests](docs/protocol/rea/2.26.43.72-registration-recovery/README.md#follow-on-port-explicit-pin-re-entry).
+- Direct/group undo-keep now emits `edit="7"` only when the original key is
+  from-me, mirroring the existing keep protobuf. Direct direction remains
+  caller-supplied, not authenticated stored ownership; group reference guards
+  remain stronger. Encryption and reservations are unchanged.
+  [Predicate, writer proof and scope](docs/protocol/own-unkeep-edit.md).
+- Both direct retry-answer paths now emit the received `enc count` unchanged
+  for counts 1/2. The current APK producer-to-writer chain is retained. Higher
+  counts, count-2 Alice-base-key storage/comparison, receipt keys and complete
+  root-routing normalization remain unported; no broader retry support is claimed.
+  [Trace, implementation and next obligation](docs/protocol/retry-enc-count.md).
+
+Validation: **1,119 workspace/all-feature tests**, **438 default-feature tests**,
+strict all-target/all-feature Clippy, CLI-reference regeneration, formatting,
+16 CI-routing tests and whitespace checks passed. Focused tests cover real
+crypto, original-target fields, store reopen, stale/forged handle deadlines,
+once-only reservations, no automatic retry and negative status/reason cases.
+The coverage report now accounts for 384 distinct REA records, 28 current-build
+records and 22 explicit Rust ownership records. Counts are not completed ports.
+No APK execution, login, registration or live message operation occurred.
+The whole-APK program remains incomplete and continues from its existing queue.
+
 2026-11-04 — **REA continuation started (offline):** reused the current Rust
 actors/store/CLI and versioned research workflow. REA loaded the exact
 2.26.43.72 APK (106,897 parsed classes); whole-file indexing scanned 15,728

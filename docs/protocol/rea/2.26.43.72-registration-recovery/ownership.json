@@ -48,6 +48,18 @@
         "crates/whatsapp-api/src/registration/wire.rs",
         "crates/whatsapp-api/src/registration/mod.rs"
       ]
+    },
+    "ev_bf713fac6b8e048a1c3b4d30c46f5cb63ff1834d5c3d5a38244e768e1aca081b": {
+      "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+      "rust_files": [
+        "crates/whatsapp-api/src/registration/mod.rs"
+      ]
+    },
+    "ev_e1d35817cc3b9144d79a8b5db6d49bf011e19ed97ed99efafddfef4c716c75e9": {
+      "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+      "rust_files": [
+        "crates/whatsapp-api/src/registration/mod.rs"
+      ]
     }
   }
 }

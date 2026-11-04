@@ -92,8 +92,9 @@ pub struct ChallengeHandle {
     pub retry_after: Option<Timestamp>,
     /// Earliest time another code may be submitted on this step, after a
     /// `mismatch` (2.26.37.71 `VerifyPhoneNumber.A1v` -> `GKR.A0s` stores
-    /// `code_verification_retry_time`). Distinct from `retry_after`, which
-    /// gates requesting a new code. Absent in attempts saved before it existed.
+    /// `code_verification_retry_time`), or a PIN `guess_wait` (2.26.43.72
+    /// `IBz.run` -> `VerifyTwoFactorAuth.A14`). Distinct from the delivery
+    /// wait in `retry_after`. Absent in attempts saved before it existed.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub answer_not_before: Option<Timestamp>,
 }
@@ -1421,6 +1422,37 @@ impl RegistrationFlow for ComparisonHttpFlow {
                 }
                 .into());
             }
+            // 2.26.43.72 KotlinRegistrationBridge.A0B maps these two PIN
+            // failures to GgZ ordinals 5/7. IBz.run :pswitch_716/:pswitch_6d7
+            // clears input and calls VerifyTwoFactorAuth.A14 with guess_wait
+            // in seconds; A14 persists the input deadline without leaving PIN
+            // entry. Preserve our existing generic PIN wait as well: it can
+            // only delay, never authorize an earlier submission.
+            if (200..300).contains(&status_code)
+                && response.status == wire::RegistrationResponseStatus::Fail
+                && matches!(answer, Answer::Pin(_))
+                && matches!(
+                    response.reason,
+                    Some(
+                        wire::RegistrationResponseReason::Mismatch
+                            | wire::RegistrationResponseReason::GuessedTooFast
+                    )
+                )
+            {
+                let now = Timestamp::now();
+                return Ok(RegistrationState::NeedsUserAction {
+                    handle: ChallengeHandle {
+                        answer_not_before: response.guess_wait.map(|wait| now.saturating_add(wait)),
+                        attempt: attempt.id,
+                        generation: attempt.generation,
+                        step: handle.step.saturating_add(1),
+                        method: handle.method.clone(),
+                        expires_at: None,
+                        retry_after: response.retry_after.map(|wait| now.saturating_add(wait)),
+                    },
+                }
+                .into());
+            }
             // 2.26.37.71: `KotlinRegistrationBridge.A08` parses reason `stale`
             // to result 9 (`02S.A1R`), and `VerifyPhoneNumber.A5O` case 9
             // (+0x078e) only forgets the stored SMS code (`I49.A07` removes the
@@ -2320,9 +2352,9 @@ impl RegistrationService {
                         });
                     }
                     let now = Timestamp::now();
-                    // A `mismatch` wait gates the next code (see `ChallengeHandle`).
-                    if !is_pin
-                        && let Some(until) = bound.answer_not_before
+                    // OTP mismatch and PIN guessing waits gate the next
+                    // answer without consuming the challenge while waiting.
+                    if let Some(until) = bound.answer_not_before
                         && now < until
                     {
                         return Err(Error::RateLimited {
@@ -4560,6 +4592,249 @@ mod tests {
             );
             assert!(matches!(
                 svc.submit(h, Answer::Code(Zeroizing::new("123456".into())))
+                    .await
+                    .unwrap(),
+                RegistrationStep::Blocked(_)
+            ));
+        }
+    }
+
+    /// APK 2.26.43.72 GgZ ordinals 5/7 select the IBz PIN re-entry
+    /// branches. Their deadline must remain enforced after reopening the store.
+    #[tokio::test]
+    async fn pin_reentry_wait_survives_restart_and_does_not_consume_the_step() {
+        for reason in ["mismatch", "guessed_too_fast"] {
+            let (dir, s) = store();
+            let profile = ProtocolProfile::android_reference().unwrap();
+            let refusal = serde_json::to_vec(&serde_json::json!({
+                "status":"fail", "reason":reason, "guess_wait":"120", "retry_after":30
+            }))
+            .unwrap();
+            // Keep response storage owned in this scope; the production
+            // transport owns its bounded response bytes in exactly this way.
+            #[derive(Debug)]
+            struct PinResponses(std::sync::Mutex<std::collections::VecDeque<Vec<u8>>>);
+            impl wire::RegistrationTransport for PinResponses {
+                fn send<'a>(
+                    &'a self,
+                    _: wire::EncodedRegistrationRequest,
+                ) -> wire::RegistrationTransportFuture<'a> {
+                    Box::pin(async move {
+                        wire::RegistrationHttpResponse::new(
+                            200,
+                            Zeroizing::new(
+                                self.0
+                                    .lock()
+                                    .unwrap()
+                                    .pop_front()
+                                    .expect("no extra request"),
+                            ),
+                        )
+                    })
+                }
+            }
+            let transport = Arc::new(PinResponses(std::sync::Mutex::new(
+                std::collections::VecDeque::from([
+                    br#"{"status":"sent"}"#.to_vec(),
+                    br#"{"status":"fail","reason":"security_code"}"#.to_vec(),
+                    refusal,
+                ]),
+            )));
+            let flow = || {
+                Arc::new(ComparisonHttpFlow::new(
+                    Arc::new(ComparisonRequests),
+                    transport.clone(),
+                ))
+            };
+            let svc = RegistrationService::new(s.clone(), &profile, flow());
+            let RegistrationStep::Action(RequiredAction::EnterCode(code)) =
+                svc.begin(phone(), ChallengeMethod::Sms).await.unwrap()
+            else {
+                panic!("code")
+            };
+            let RegistrationStep::Action(RequiredAction::EnterPin(old_pin)) = svc
+                .submit(code, Answer::Code(Zeroizing::new("123456".into())))
+                .await
+                .unwrap()
+            else {
+                panic!("PIN")
+            };
+            let before = svc.current().await.unwrap().unwrap();
+            let submitted_at = Timestamp::now();
+            let RegistrationStep::Action(RequiredAction::EnterPin(pin)) = svc
+                .submit(old_pin.clone(), Answer::Pin(Zeroizing::new("6157".into())))
+                .await
+                .unwrap()
+            else {
+                panic!("PIN re-entry")
+            };
+            assert_eq!(pin.attempt, old_pin.attempt);
+            assert_eq!(pin.generation, old_pin.generation);
+            assert_eq!(pin.step, old_pin.step + 1);
+            assert!(pin.answer_not_before.is_some_and(
+                |at| at >= submitted_at.saturating_add(std::time::Duration::from_secs(120))
+            ));
+            assert!(
+                svc.submit(old_pin, Answer::Pin(Zeroizing::new("6157".into())))
+                    .await
+                    .is_err()
+            );
+            let saved = svc.current().await.unwrap().unwrap();
+            assert_eq!(saved.id, before.id);
+            assert_eq!(saved.generation, before.generation);
+            assert_eq!(saved.phone, before.phone);
+            drop(svc);
+            drop(s);
+            let reopened = Arc::new(
+                ProtocolStore::open(OpenOptions {
+                    path: dir.path().join("p.redb"),
+                    account_id: AccountId::new("a").unwrap(),
+                    key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([1; 32]))),
+                    create: false,
+                })
+                .unwrap(),
+            );
+            let svc = RegistrationService::new(reopened, &profile, flow());
+            // A caller cannot erase the persisted deadline by editing its
+            // serialized copy of the handle; submit reads the bound record.
+            let forged = ChallengeHandle {
+                answer_not_before: None,
+                retry_after: None,
+                ..pin
+            };
+            let error = svc
+                .submit(forged, Answer::Pin(Zeroizing::new("6157".into())))
+                .await
+                .unwrap_err();
+            assert!(matches!(error, Error::RateLimited { .. }));
+            let after = svc.current().await.unwrap().unwrap();
+            assert_eq!(after.state, saved.state);
+            assert_eq!(after.history.len(), saved.history.len());
+            assert!(transport.0.lock().unwrap().is_empty());
+        }
+    }
+
+    #[tokio::test]
+    async fn zero_wait_pin_reentry_accepts_one_later_explicit_answer() {
+        for refusal in [
+            br#"{"status":"fail","reason":"mismatch","guess_wait":0}"#.as_slice(),
+            br#"{"status":"fail","reason":"guessed_too_fast"}"#.as_slice(),
+        ] {
+            let (_d, s) = store();
+            let profile = ProtocolProfile::android_reference().unwrap();
+            let transport = Arc::new(ComparisonTransport {
+                responses: std::sync::Mutex::new(std::collections::VecDeque::from([
+                    ("/v2/code", br#"{"status":"sent"}"#.as_slice()),
+                    (
+                        "/v2/register",
+                        br#"{"status":"fail","reason":"security_code"}"#.as_slice(),
+                    ),
+                    ("/v2/security", refusal),
+                    (
+                        "/v2/security",
+                        br#"{"status":"ok","login":"test-login"}"#.as_slice(),
+                    ),
+                ])),
+            });
+            let svc = RegistrationService::new(
+                s,
+                &profile,
+                Arc::new(ComparisonHttpFlow::new(
+                    Arc::new(ComparisonRequests),
+                    transport.clone(),
+                )),
+            );
+            let RegistrationStep::Action(RequiredAction::EnterCode(code)) =
+                svc.begin(phone(), ChallengeMethod::Sms).await.unwrap()
+            else {
+                panic!("code")
+            };
+            let RegistrationStep::Action(RequiredAction::EnterPin(pin)) = svc
+                .submit(code, Answer::Code(Zeroizing::new("123456".into())))
+                .await
+                .unwrap()
+            else {
+                panic!("PIN")
+            };
+            let RegistrationStep::Action(RequiredAction::EnterPin(next)) = svc
+                .submit(pin, Answer::Pin(Zeroizing::new("6157".into())))
+                .await
+                .unwrap()
+            else {
+                panic!("PIN re-entry")
+            };
+            assert_eq!(
+                transport.responses.lock().unwrap().len(),
+                1,
+                "no automatic retry"
+            );
+            assert_eq!(
+                svc.submit(next, Answer::Pin(Zeroizing::new("6157".into())))
+                    .await
+                    .unwrap(),
+                RegistrationStep::Completed
+            );
+            assert!(transport.responses.lock().unwrap().is_empty());
+        }
+    }
+
+    #[tokio::test]
+    async fn pin_reentry_does_not_reopen_other_refusals_or_http_errors() {
+        #[derive(Debug)]
+        struct Refusal(u16, &'static [u8]);
+        impl wire::RegistrationTransport for Refusal {
+            fn send<'a>(
+                &'a self,
+                _: wire::EncodedRegistrationRequest,
+            ) -> wire::RegistrationTransportFuture<'a> {
+                Box::pin(async move {
+                    wire::RegistrationHttpResponse::new(self.0, Zeroizing::new(self.1.to_vec()))
+                })
+            }
+        }
+        for (status, body) in [
+            (403, br#"{"status":"fail","reason":"mismatch"}"#.as_slice()),
+            (
+                500,
+                br#"{"status":"fail","reason":"guessed_too_fast"}"#.as_slice(),
+            ),
+            (200, br#"{"status":"fail","reason":"blocked"}"#.as_slice()),
+            (
+                200,
+                br#"{"status":"fail","reason":"too_many_guesses"}"#.as_slice(),
+            ),
+            (200, br#"{"status":"fail","reason":"incorrect"}"#.as_slice()),
+            (
+                200,
+                br#"{"status":"unknown","reason":"mismatch"}"#.as_slice(),
+            ),
+        ] {
+            let (_d, s) = store();
+            let profile = ProtocolProfile::android_reference().unwrap();
+            let initial = RegistrationService::new(s.clone(), &profile, Arc::new(ScriptedFlow));
+            let RegistrationStep::Action(RequiredAction::EnterCode(code)) =
+                initial.begin(phone(), ChallengeMethod::Sms).await.unwrap()
+            else {
+                panic!("code")
+            };
+            let RegistrationStep::Action(RequiredAction::EnterPin(pin)) = initial
+                .submit(code, Answer::Code(Zeroizing::new("928374".into())))
+                .await
+                .unwrap()
+            else {
+                panic!("PIN")
+            };
+            let service = RegistrationService::new(
+                s,
+                &profile,
+                Arc::new(ComparisonHttpFlow::new(
+                    Arc::new(ComparisonRequests),
+                    Arc::new(Refusal(status, body)),
+                )),
+            );
+            assert!(matches!(
+                service
+                    .submit(pin, Answer::Pin(Zeroizing::new("6157".into())))
                     .await
                     .unwrap(),
                 RegistrationStep::Blocked(_)

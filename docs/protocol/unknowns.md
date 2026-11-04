@@ -145,6 +145,11 @@ mute/pin/archive app-state actions (no matches). These need the APK.
 
 ## Outgoing revoke and edit (2026-10-13; sender implemented 2026-11-02)
 
+**2026-11-04 update:** the editVersion-to-message-attribute writer link is
+now confirmed; older inferred/untraced statements below describe the earlier
+scope. Own-target undo-keep now sends `edit="7"` through direct/group outbox,
+with other keep cases unchanged. [Closed chain and tests](own-unkeep-edit.md).
+
 **Resolved 2026-11-02 (confirmed static, 2.26.37.71 APK on disk):** the APK's
 outgoing message schema `CpG.A0U` states the rule directly:
 `!(_context.flow == 0 && type == 0) || _context.edit_attribute in [7, 8]`
@@ -406,8 +411,9 @@ older statement that a mismatch always leaves the attempt blocked was stale.
 **Confirmed static, 2.26.43.72 / implemented offline:** the separate
 `guess_wait` field is now traced from both response constructors through the
 PIN/password consumers and seconds-to-milliseconds parser to a persisted input
-timer. Rust parses and reports it and preserves it on refused/cooling-down
-states. This does not implement every PIN re-entry, mode-selection or malformed
+timer. Rust parses and reports it, preserves it on refused/cooling-down
+states, and now returns the two traced PIN failures (`mismatch` and
+`guessed_too_fast`) to explicit PIN entry with a persisted answer deadline. This does not implement every PIN re-entry, mode-selection or malformed
 wait branch, or establish fresh live behavior.
 [Complete evidence, Rust scope and remaining gaps](rea/2.26.43.72-registration-recovery/README.md).
 
@@ -496,15 +502,18 @@ ACKs every notification its subclasses dispatch.
   with nothing sent. **Confirmed negative:** the official client does not
   generically ACK unhandled types, so neither do we.
 
-## Retry-receipt answers (2026-11-01)
+## Retry-receipt answers (updated 2026-11-04)
 
-Answered in `listen` only for the APK's no-fetch branch
-([retry-answers](retry-answers.md)). Still unknown or unported: whether the
-resent `enc` carries a `count` attribute (`Civ` writer untraced); the count-2
-base-key record and count > 2 comparison (`0jc.A0u`/`A17`); the fresh-bundle
-answer after a registration change; sessions built from `<keys>` in the receipt
-(`151.A01`); normal-runtime group/broadcast retries. No retry has been answered
-live.
+The normal driver already supports direct count-1/2 answers using a saved session
+or a reserved fresh-bundle fetch after a registration change. The current APK
+producer-to-writer chain now confirms the incoming count reaches outgoing
+`enc count` unchanged, and both Rust paths emit it. [Evidence and implementation](retry-enc-count.md).
+The older statement that only the no-fetch path existed was stale.
+
+Still unported: the per-device/message count-2 alice-base-key record and the
+count > 2 comparison, sessions built from receipt `<keys>`, and ordinary-runtime
+group/broadcast retries. Counts above two remain refused. No retry answer was
+sent live for this correction.
 
 ## `pqsupport` and Kyber upload gate (resolved 2026-11-01)
 

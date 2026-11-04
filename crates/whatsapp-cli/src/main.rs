@@ -1735,8 +1735,18 @@ fn accounts(cli: &Cli, cmd: &AccountsCmd) -> Result<(), Error> {
 }
 
 fn print_step(step: &RegistrationStep, json: bool) {
+    let pin_deadline = match step {
+        RegistrationStep::Action(RequiredAction::EnterPin(handle)) => {
+            handle.answer_not_before.max(handle.retry_after)
+        }
+        _ => None,
+    };
     if json {
-        println!("{}", serde_json::json!({ "step": format!("{step:?}") }));
+        let mut summary = serde_json::json!({ "step": format!("{step:?}") });
+        if let Some(until) = pin_deadline {
+            summary["answer_not_before_unix_ms"] = serde_json::json!(until.as_millis());
+        }
+        println!("{summary}");
         return;
     }
     match step {
@@ -1748,7 +1758,16 @@ fn print_step(step: &RegistrationStep, json: bool) {
             )
         }
         RegistrationStep::Action(RequiredAction::EnterPin(_)) => {
-            println!("registration: enter the account PIN")
+            if let Some(until) =
+                pin_deadline.filter(|at| *at > whatsapp_api::model::time::Timestamp::now())
+            {
+                println!(
+                    "registration: PIN entry waits until unix {}",
+                    until.as_unix_seconds()
+                );
+            } else {
+                println!("registration: enter the account PIN");
+            }
         }
         RegistrationStep::Action(RequiredAction::RequestEmailCode(_)) => {
             println!(

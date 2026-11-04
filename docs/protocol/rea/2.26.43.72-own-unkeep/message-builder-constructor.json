@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_f8ff3913dff7b5a6a6bce640273cb7c5b1b821809aa79856ddc7a479ee950611",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.Ewq",
+    "method_name": "<init>",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-ijYMS3/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.Ewq"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_classes\":[],\"name\":\"Ewq\",\"full_name\":\"X.Ewq\",\"field_count\":16,\"fields\":[{\"def_pos\":0,\"name\":\"A00\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"A01\",\"type\":\"X.Eoh\"},{\"def_pos\":0,\"name\":\"A02\",\"type\":\"boolean\"},{\"def_pos\":0,\"name\":\"A03\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"A04\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"A05\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"A06\",\"type\":\"long\"},{\"def_pos\":0,\"name\":\"A07\",\"type\":\"com.whatsapp.infra.core.jid.DeviceJid\"},{\"def_pos\":0,\"name\":\"A08\",\"type\":\"com.whatsapp.infra.core.jid.Jid\"},{\"def_pos\":0,\"name\":\"A09\",\"type\":\"com.whatsapp.infra.core.jid.UserJid\"},{\"def_pos\":0,\"name\":\"A0A\",\"type\":\"X.1dW\"},{\"def_pos\":0,\"name\":\"A0B\",\"type\":\"java.lang.String\"},{\"def_pos\":0,\"name\":\"A0C\",\"type\":\"java.lang.String\"},{\"def_pos\":0,\"name\":\"A0D\",\"type\":\"java.util.List\"},{\"def_pos\":0,\"name\":\"A0E\",\"type\":\"java.util.Map\"},{\"def_pos\":0,\"name\":\"A0F\",\"type\":\"java.util.Set\"}],\"methods\":[{\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"(Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/Jid;Lcom/whatsapp/infra/core/jid/UserJid;LX/1dW;LX/Eoh;Ljava/lang/String;Ljava/lang/String;IIIJ)V\",\"signature\":\"\\u003cinit\\u003e(com.whatsapp.infra.core.jid.DeviceJid, com.whatsapp.infra.core.jid.Jid, com.whatsapp.infra.core.jid.UserJid, X.1dW, X.Eoh, java.lang.String, java.lang.String, int, int, int, long): void\",\"def_pos\":0},{\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/Ewq;Ljava/lang/Object;)V\",\"signature\":\"A00(X.Ewq, java.lang.Object): void\",\"def_pos\":0},{\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"()LX/Eng;\",\"signature\":\"A01(): X.Eng\",\"def_pos\":0},{\"name\":\"A02\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V\",\"signature\":\"A02(java.lang.String, java.lang.String, java.lang.String): void\",\"def_pos\":0},{\"name\":\"A03\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/util/List;)V\",\"signature\":\"A03(java.util.List): void\",\"def_pos\":0},{\"name\":\"A04\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/util/List;)V\",\"signature\":\"A04(java.util.List): void\",\"def_pos\":0}],\"method_count\":6,\"inner_class_count\":0}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.Ewq",
+          "method_name": "<init>",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fell_back\":false,\"body\":\"    public Ewq(DeviceJid deviceJid, com.whatsapp.infra.core.jid.Jid jid, UserJid userJid, C1dW c1dW, Eoh eoh, String str, String str2, int i, int i2, int i3, long j) {\\n        C00l.A09(jid, 2);\\n        this.A01 \\u003d eoh;\\n        this.A0A \\u003d c1dW;\\n        this.A08 \\u003d jid;\\n        this.A05 \\u003d i;\\n        this.A04 \\u003d i2;\\n        this.A06 \\u003d j;\\n        this.A07 \\u003d deviceJid;\\n        this.A09 \\u003d userJid;\\n        this.A03 \\u003d i3;\\n        this.A0B \\u003d str;\\n        this.A0C \\u003d str2;\\n        this.A0E \\u003d C1Xl.A1D();\\n        this.A0D \\u003d C1Xl.A18();\\n        this.A0F \\u003d C2L6.A1G();\\n    }\",\"overload_count\":1,\"method_name\":\"\\u003cinit\\u003e\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.Ewq.\\u003cinit\\u003e\",\"class_name\":\"X.Ewq\",\"overload_index\":0}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.Ewq",
+    "method": {
+      "name": "<init>",
+      "reported_signature": "<init>(com.whatsapp.infra.core.jid.DeviceJid, com.whatsapp.infra.core.jid.Jid, com.whatsapp.infra.core.jid.UserJid, X.1dW, X.Eoh, java.lang.String, java.lang.String, int, int, int, long): void",
+      "overload_index": 0,
+      "is_constructor": true,
+      "dex_descriptor": "(Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/Jid;Lcom/whatsapp/infra/core/jid/UserJid;LX/1dW;LX/Eoh;Ljava/lang/String;Ljava/lang/String;IIIJ)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public Ewq(DeviceJid deviceJid, com.whatsapp.infra.core.jid.Jid jid, UserJid userJid, C1dW c1dW, Eoh eoh, String str, String str2, int i, int i2, int i3, long j) {\n        C00l.A09(jid, 2);\n        this.A01 = eoh;\n        this.A0A = c1dW;\n        this.A08 = jid;\n        this.A05 = i;\n        this.A04 = i2;\n        this.A06 = j;\n        this.A07 = deviceJid;\n        this.A09 = userJid;\n        this.A03 = i3;\n        this.A0B = str;\n        this.A0C = str2;\n        this.A0E = C1Xl.A1D();\n        this.A0D = C1Xl.A18();\n        this.A0F = C2L6.A1G();\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

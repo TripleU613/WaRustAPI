@@ -25,6 +25,29 @@ fn query_key(id: LocalMessageId) -> String {
     format!("outbox-key-query:{id}")
 }
 
+/// Apply native message mutation metadata after payload encryption, shared by
+/// direct and group sends. Use the original reference's direction, as the
+/// keep protobuf's fromMe does, rather than the add-on's own sender. This
+/// does not add ownership verification to caller-supplied direct references.
+pub(super) fn with_edit_attribute(stanza: Node, content: &MessageContent) -> Node {
+    match content {
+        MessageContent::Revoke { .. } => {
+            stanza.attr("edit", super::chat_settings::EDIT_SENDER_REVOKE)
+        }
+        MessageContent::Edit { .. } => stanza.attr("edit", super::chat_settings::EDIT_MESSAGE),
+        // APK 37.71 11x.A01 0320..0334 writes 7 iff the original key is
+        // fromMe and keep=false. 43.72 SendE2EMessageJob.A06 13f6..1410
+        // emits a nonzero editVersion as the decimal message `edit` attribute.
+        MessageContent::KeepInChat {
+            target,
+            keep: false,
+        } if target.key.direction == crate::model::message::Direction::Outgoing => {
+            stanza.attr("edit", super::chat_settings::EDIT_SENDER_REVOKE)
+        }
+        _ => stanza,
+    }
+}
+
 /// Redacted queued intent suspended by a fetched directory reply: a peer
 /// identity mismatch, or PQ material this client cannot use
 /// (`hybrid_admission_unsupported`, `invalid_hybrid_bundle`). Only the
@@ -1069,14 +1092,7 @@ impl Pending {
         } else {
             super::messaging::direct_message(peer, &wire_id, prepared.kind, prepared.ciphertext)?
         };
-        // CpG.A0U: a REVOKE needs edit=7, an edit carries edit=1.
-        let stanza = match &entry.intent.content {
-            MessageContent::Revoke { .. } => {
-                stanza.attr("edit", super::chat_settings::EDIT_SENDER_REVOKE)
-            }
-            MessageContent::Edit { .. } => stanza.attr("edit", super::chat_settings::EDIT_MESSAGE),
-            _ => stanza,
-        };
+        let stanza = with_edit_attribute(stanza, &entry.intent.content);
         // The recipient's trusted-contact token, when they issued us one
         // (saved under their PN or LID): messaging::with_tctoken.
         let stanza = match super::presence::held_tctoken(store, peer)? {
@@ -1950,6 +1966,64 @@ mod tests {
             assert!(begin_selected(&store, Some(id)).unwrap().is_none());
         }
     }
+    /// The four cases are the native 37.71 11x.A01 fromMe/keep branch,
+    /// not a prediction from whether the encrypted add-on is sent by us.
+    #[test]
+    fn keep_edit_attribute_follows_original_ownership_and_preserves_envelope() {
+        use crate::model::{
+            ids::ChatId,
+            message::{Direction, MessageKey, MessageRef},
+        };
+        let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        for (direction, keep, expected_edit) in [
+            (Direction::Incoming, true, None),
+            (Direction::Incoming, false, None),
+            (Direction::Outgoing, true, None),
+            (Direction::Outgoing, false, Some("7")),
+        ] {
+            let original = Node::new("message")
+                .attr("to", peer.clone())
+                .attr("id", "KEEP-INTENT")
+                .attr("type", "text")
+                .children(vec![
+                    Node::new("enc").attr("type", "msg").bytes(vec![1, 2, 3]),
+                ]);
+            let content = MessageContent::KeepInChat {
+                target: MessageRef {
+                    key: MessageKey {
+                        chat: ChatId::from_jid(&peer).unwrap(),
+                        sender: None,
+                        direction,
+                        id: MessageId::new("ORIGINAL").unwrap(),
+                    },
+                },
+                keep,
+            };
+            let MessageContent::KeepInChat { target, .. } = &content else {
+                unreachable!()
+            };
+            let protobuf = super::super::chat_settings::keep_payload(&peer, target, keep, 0);
+            let decoded = super::super::chat_settings::decode_keep(&protobuf).unwrap();
+            // Direct references have no parent-store ownership lookup: the
+            // protobuf and metadata must share the same supplied fromMe bit.
+            assert_eq!(decoded.target_from_sender, direction == Direction::Outgoing);
+            assert_eq!(decoded.keep, keep);
+            let encoded = with_edit_attribute(original.clone(), &content);
+            assert_eq!(
+                encoded.get_attr("edit").and_then(|v| v.as_text()),
+                expected_edit
+            );
+            assert_eq!(
+                encoded.get_attr("edit").is_some(),
+                decoded.target_from_sender && !decoded.keep
+            );
+            assert_eq!(encoded.child("enc"), original.child("enc"));
+            for name in ["to", "id", "type"] {
+                assert_eq!(encoded.get_attr(name), original.get_attr(name));
+            }
+        }
+    }
+
     #[test]
     fn eligible_spans_namespaces_and_excludes_reserved_or_cancelled_intents() {
         let dir = tempfile::tempdir().unwrap();
