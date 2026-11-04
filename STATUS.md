@@ -1,3 +1,14 @@
+2026-11-04 — **Media auth callback continuation traced:**
+
+Pinned static evidence now reaches MS4.A03 through Nd8.BkV: true retry
+eligibility goes through delay, route reload and cancellation/readiness checks
+before another transfer callback. The supplier enable flag is constructor-fed.
+Operation-specific replay rules and delay/readiness policy remain untraced.
+[Evidence](docs/protocol/rea/2.26.43.72-media-http-auth-refresh/README.md#transfer-loop-continuation-2026-11-04).
+Validation: JSON parsing, coverage freshness, cached diff checks and repository
+hygiene (4,244 local links) passed. Rust source unchanged.
+Documentation/evidence only; no runtime change or live account traffic.
+
 2026-11-04 — **Conditional media HTTP auth refresh callers traced:**
 
 Retained all three direct401/403 route-reporting callers, changed-auth

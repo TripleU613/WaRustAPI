@@ -64,3 +64,45 @@ LX/MVv; A04. Each file below is the complete selected output.
 - [download-error.txt](download-error.txt) — SHA-256 `5669991138eb71c0b016c6861f129f0944b8b874c3216d89b2200674fc4525e2`.
 
 - [budget-writers.txt](budget-writers.txt) — SHA-256 `6a105ddbc1020ca79f3c5cb350184ac2433b6b90861a757b01feb7c1c68d4b4b`.
+
+## Transfer-loop continuation (2026-11-04)
+
+**Confirmed static**, same pinned APK. Concrete-call scan finds LIY.BkV
+forwarding to nonnull Mtv and returning true only for its true result. Exact
+Nd8.BkV interface-call scan finds MS4.A03. A zero concrete LIY.BkV call
+count does not establish unreachability: the caller uses the interface.
+
+In MS4.A03, initial/current routes come from Nd9.Aex. Function0 is checked
+before the transfer callback, and optional Nd8.CW7 may change route readiness.
+At0086 the supplied NYs.Cb6(route) produces Ly8. With A05 false, result
+code1 plus replacement supplier updates A00 and goes to the delay path.
+Otherwise an Nd8 supplier receives BkV(shared LtU, attempted route.A01,
+result.A00). True sets a retry marker and goes to that same delay path.
+False continues through Bvd(result.A04,result.A00); result.A03 then controls
+return versus continuation. Do not infer the meaning of every Ly8 field
+from the short obfuscated name.
+
+The delay path at0104 calls current supplier.AXk, Thread.sleep, reloads
+supplier.Aex and loops to route-presence/cancellation/preparation checks before
+calling NYs.Cb6 again. The next callback after a true retry increments the
+MS4 AtomicInteger. InterruptedException during the sleep goes to the method's
+existing terminal handling (DBd.A1N and last payload return), not an immediate
+callback replay. AXk delay policy, CW7 behavior, DBd.A1N details and concrete
+NYs operation/idempotency bindings remain untraced. This confirms an actual
+loop edge, not that every upload/download may safely use that edge.
+
+Mtv constructor takes auth-enable A0N from its final boolean argument; exact
+A0N write scan finds only this constructor. That closes the field assignment,
+not the higher-level caller's decision to enable it. Auth token A03 is the
+constructor's ninth reference argument (v18); its later update was traced in
+BkV. Constructor caller argument provenance remains open.
+
+Reproduce: apk-callers exact Mtv.BkV and Nd8.BkV; apk-smali LIY.BkV,
+MS4.A03 and Mtv.<init>; apk-field-refs exact Mtv.A0N:Z --writes-only.
+
+- [auth-wrapper.txt](auth-wrapper.txt) — SHA-256 `811c64cfa599bc290d55e121ab36a574a4c65c5ea22a845fe4222e083bf9ba28`.
+- [auth-concrete-callers.txt](auth-concrete-callers.txt) — SHA-256 `eb3027ec086ff570bc4041be67592abff4e33ddba99aef8b1043af953369b2ea`.
+- [auth-interface-callers.txt](auth-interface-callers.txt) — SHA-256 `4eb996a11b3f22a87dcfbcdd375096d70340bad4ed65db23fb892ca360661d86`.
+- [supplier-constructor.txt](supplier-constructor.txt) — SHA-256 `d20b0a26331fb4915d3b1125290720e80e7a5afbc2f52255cb86a64938ad7eb2`.
+- [auth-enable-writers.txt](auth-enable-writers.txt) — SHA-256 `4ce2bc6a5b997bc129f3b56391c86818eb13aaf8243b1bb9f34127c0bbae4ef2`.
+- [transfer-loop.txt](transfer-loop.txt) — SHA-256 `3dd7f041229181b23c79068e193abd8c22d7b9ea8576196b28d6f45d382beea2`.

@@ -356,3 +356,12 @@ reporting after auth replacement fails. MVv.A04 retains download response
 codes while reporting them to the route manager.
 [Full conditions, hashes and untraced flag producers/loops](rea/2.26.43.72-media-http-auth-refresh/README.md).
 No generic HTTP retry is implemented or justified.
+
+### Auth-refresh transfer-loop edge (2026-11-04)
+
+**Confirmed static**, pinned2.26.43.72: LIY forwards auth failure to Mtv;
+MS4.A03 invokes Nd8.BkV via the interface. A true result enters supplier
+delay/sleep, reloads route and returns through cancellation/readiness checks
+before another NYs.Cb6 invocation. Sleep interruption uses terminal handling.
+Operation-specific replay/idempotency, AXk/CW7 policies and enable-argument
+provenance remain open. [Exact branches and hashes](rea/2.26.43.72-media-http-auth-refresh/README.md#transfer-loop-continuation-2026-11-04).

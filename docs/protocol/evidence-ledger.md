@@ -1,3 +1,9 @@
+2026-11-04 — **Confirmed static: media auth retry loop edge.**
+Pinned2.26.43.72 MS4.A03 calls Nd8.BkV and, on true, delays/reloads/rechecks
+before NYs.Cb6. LIY forwarding and Mtv constructor A0N write retained.
+[Branches, limitations and hashes](rea/2.26.43.72-media-http-auth-refresh/README.md#transfer-loop-continuation-2026-11-04).
+No Rust retry policy changed; concrete operation replay remains untraced.
+
 2026-11-04 — **Confirmed static: conditional media HTTP auth refresh.**
 Pinned2.26.43.72 checked DEX closes the three direct A0S caller bodies,
 changed-auth predicate and wait-budget accounting; flag producers and
