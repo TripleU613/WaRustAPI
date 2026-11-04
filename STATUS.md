@@ -19,8 +19,8 @@
 
 Validation: **1,127 workspace/all-feature tests** and strict all-target/all-feature
 Clippy passed. CLI-reference, formatting, coverage freshness, whitespace and
-repository hygiene were checked. Retained evidence now totals 419 distinct REA
-records (63 current-build), with 34 explicit Rust ownership mappings. These are
+repository hygiene were checked. Retained evidence now totals 430 distinct REA
+records (74 current-build), with 45 explicit Rust ownership mappings. These are
 research counts, not completion or restriction-risk percentages. No live account
 traffic occurred and no zero-ban guarantee or causal ban diagnosis is established.
 First hardening batch af2f31a also passed remote CI. Continue from the

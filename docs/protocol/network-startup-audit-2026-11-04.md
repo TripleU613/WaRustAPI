@@ -150,3 +150,7 @@ Current 2.26.43.72 [checked builder/JID/callback](rea/2.26.43.72-active-iq-audit
 confirms Rust `messaging::active_request` already matches the true-branch IQ
 shape. No extra attribute was found in that builder and no wire change was needed.
 This does not establish full bootstrap order or native readiness/presence parity.
+
+[Current startup caller records](rea/2.26.43.72-startup-callers/README.md) retain
+login-sequence/active selection/writer-ready scheduling observations and explicit
+provider no-body limitations. They do not close full bootstrap equivalence.

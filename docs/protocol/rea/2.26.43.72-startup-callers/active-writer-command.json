@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_618df16710b8aa34d3804985587cc822ecda5fc1bad0c3980b616b8824ce7350",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C1i8",
+    "method_name": "A06",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-WCJOHA/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"available_processors\":24,\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C1i8"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":9,\"methods\":[{\"def_pos\":0,\"signature\":\"A00(android.os.Message): android.os.Bundle\",\"dex_descriptor\":\"(Landroid/os/Message;)Landroid/os/Bundle;\",\"is_constructor\":false,\"name\":\"A00\"},{\"def_pos\":0,\"signature\":\"A01(): android.os.Message\",\"dex_descriptor\":\"()Landroid/os/Message;\",\"is_constructor\":false,\"name\":\"A01\"},{\"def_pos\":0,\"signature\":\"A02(X.08Y, X.0B0, X.Eoh): android.os.Message\",\"dex_descriptor\":\"(LX/08Y;LX/0B0;LX/Eoh;)Landroid/os/Message;\",\"is_constructor\":false,\"name\":\"A02\"},{\"def_pos\":0,\"signature\":\"A03(X.08Y, X.0B0, X.Eoh): android.os.Message\",\"dex_descriptor\":\"(LX/08Y;LX/0B0;LX/Eoh;)Landroid/os/Message;\",\"is_constructor\":false,\"name\":\"A03\"},{\"def_pos\":0,\"signature\":\"A04(X.08Y, X.0B0, X.2CX): android.os.Message\",\"dex_descriptor\":\"(LX/08Y;LX/0B0;LX/2CX;)Landroid/os/Message;\",\"is_constructor\":false,\"name\":\"A04\"},{\"def_pos\":0,\"signature\":\"A05(java.util.List): android.os.Message\",\"dex_descriptor\":\"(Ljava/util/List;)Landroid/os/Message;\",\"is_constructor\":false,\"name\":\"A05\"},{\"def_pos\":0,\"signature\":\"A06(boolean): android.os.Message\",\"dex_descriptor\":\"(Z)Landroid/os/Message;\",\"is_constructor\":false,\"name\":\"A06\"},{\"def_pos\":0,\"signature\":\"A07(android.os.Message): X.1vZ\",\"dex_descriptor\":\"(Landroid/os/Message;)LX/1vZ;\",\"is_constructor\":false,\"name\":\"A07\"},{\"def_pos\":0,\"signature\":\"A08(X.08Y, X.0B0, java.lang.String, java.lang.String, java.lang.String, long, boolean): void\",\"dex_descriptor\":\"(LX/08Y;LX/0B0;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JZ)V\",\"is_constructor\":false,\"name\":\"A08\"}],\"fields\":[],\"field_count\":0,\"full_name\":\"X.C1i8\",\"name\":\"C1i8\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C1i8",
+          "method_name": "A06",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.C1i8\",\"full_name\":\"X.1i8.A06\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"A06\",\"overload_count\":1,\"body\":\"    public static Message A06(boolean z) {\\n        return Message.obtain(null, 0, 37, 0, Boolean.valueOf(z));\\n    }\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C1i8",
+    "method": {
+      "name": "A06",
+      "reported_signature": "A06(boolean): android.os.Message",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(Z)Landroid/os/Message;"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public static Message A06(boolean z) {\n        return Message.obtain(null, 0, 37, 0, Boolean.valueOf(z));\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

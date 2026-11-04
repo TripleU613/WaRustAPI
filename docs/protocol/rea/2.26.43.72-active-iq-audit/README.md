@@ -25,6 +25,6 @@ sequence or equivalence of Rust's readiness/presence transition. Those remain in
 the [startup audit](../../network-startup-audit-2026-11-04.md).
 
 Reproduce each complete class with `xtask apk-smali APK --class 'LX/277;'
---signatures --exceptions`, substituting `LX/0mL;` and `LX/2IT;`. The caller path
-is being retained by the separate startup continuation; this leaf does not claim
+--signatures --exceptions`, substituting `LX/0mL;` and `LX/2IT;`. The [caller path](../2.26.43.72-startup-callers/README.md)
+is retained separately with its limits; this leaf does not claim
 that every connection state unconditionally invokes the true branch.
