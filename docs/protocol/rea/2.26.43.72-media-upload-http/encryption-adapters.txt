@@ -1,0 +1,114 @@
+
+# class: LX/Mtc;
+# extends: Ljava/lang/Object;
+
+.method public AQC(LL)  # .registers 2
+    # full signature: LX/Mtc;->AQC(Ljava/io/InputStream;)Ljava/io/InputStream;
+    0000..0002  return-object  v1
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/Mtd;
+# extends: Ljava/lang/Object;
+
+.method public AQC(LL)  # .registers 5
+    # full signature: LX/Mtd;->AQC(Ljava/io/InputStream;)Ljava/io/InputStream;
+    0000..0004  iget-object  v0, v3, LX/Mtd;->A00:LX/Mte;
+    0004..0008  iget-object  v2, v3, LX/Mtd;->A01:[B
+    0008..000c  iget-object  v1, v0, LX/Mte;->A00:LX/0jS;
+    000c..0010  new-instance  v0, LX/Mta;
+    0010..0016  invoke-direct  {v0, v1}, LX/Mta;-><init>(LX/0jS;)V
+    0016..001c  invoke-virtual  {v0, v2}, LX/Mta;->AMt([B)LX/LvP;
+    001c..001e  move-result-object  v1
+    001e..0022  new-instance  v0, LX/LOv;
+    0022..0028  invoke-direct  {v0, v1, v4}, LX/LOv;-><init>(LX/LvP;Ljava/io/InputStream;)V
+    0028..002a  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/NYu;
+# extends: Ljava/lang/Object;
+
+.method public AQC(LL)  # .registers 0
+    # full signature: LX/NYu;->AQC(Ljava/io/InputStream;)Ljava/io/InputStream;
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/HyC;
+# extends: Ljava/lang/Object;
+
+.method public AQC(LL)  # .registers 14
+    # full signature: LX/HyC;->AQC(Ljava/io/InputStream;)Ljava/io/InputStream;
+    0000..0004  iget-object  v5, v12, LX/HyC;->A00:LX/HM1;
+    0004..0008  iget-object  v3, v12, LX/HyC;->A01:[B
+    0008..000a  const/4  v7, #0x0
+    000a..000c  const/4  v11, #0x1
+    000c..000e  const/4  v6, #0x2
+    000e..0014  invoke-static  {v3, v6}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0014..0016  const/4  v0, #0x4
+    0016..001c  invoke-static  {v0}, Ljava/nio/ByteBuffer;->allocate(I)Ljava/nio/ByteBuffer;
+    001c..001e  move-result-object  v0
+    001e..0024  invoke-virtual  {v0, v11}, Ljava/nio/ByteBuffer;->putInt(I)Ljava/nio/ByteBuffer;
+    0024..002a  invoke-virtual  {v0}, Ljava/nio/ByteBuffer;->array()[B
+    002a..002c  move-result-object  v4
+    002c..0030  iget-object  v1, v5, LX/HM1;->A01:[B
+    0030..0034  const-string  v2, "Required value was null."
+    0034..0038  if-eqz  v1, +0x3b
+    0038..003a  const/4  v0, #0x3
+    003a..003e  new-array  v0, v0, [[B
+    003e..0042  aput-object  v4, v0, v7
+    0042..0046  aput-object  v1, v0, v11
+    0046..004a  aput-object  v3, v0, v6
+    004a..0050  invoke-static  {v0}, LX/1nr;->A05([[B)[B
+    0050..0052  move-result-object  v1
+    0052..0056  iget-object  v6, v5, LX/HM1;->A07:[B
+    0056..005a  iget-object  v7, v5, LX/HM1;->A06:[B
+    005a..005e  iget-object  v8, v5, LX/HM1;->A01:[B
+    005e..0062  if-eqz  v8, +0x21
+    0062..0066  iget-object  v9, v5, LX/HM1;->A00:[B
+    0066..006a  if-eqz  v9, +0x18
+    006a..006e  sget-object  v10, LX/HQ7;->A01:[B
+    006e..0074  invoke-static/range  {v6..v11}, LX/Sll;->A03([B[B[B[B[BI)[B
+    0074..0076  move-result-object  v0
+    0076..007a  new-instance  v2, Ljava/io/ByteArrayInputStream;
+    007a..0080  invoke-direct  {v2, v1}, Ljava/io/ByteArrayInputStream;-><init>([B)V
+    0080..0084  new-instance  v1, LX/Rzp;
+    0084..008a  invoke-direct  {v1, v13, v0, v3}, LX/Rzp;-><init>(Ljava/io/InputStream;[B[B)V
+    008a..008e  new-instance  v0, LX/LOy;
+    008e..0094  invoke-direct  {v0, v2, v1}, LX/LOy;-><init>(Ljava/io/InputStream;Ljava/io/InputStream;)V
+    0094..0096  return-object  v0
+    0096..009c  invoke-static  {v2}, LX/1Xl;->A0g(Ljava/lang/String;)Ljava/lang/IllegalStateException;
+    009c..009e  move-result-object  v0
+    009e..00a0  throw  v0
+    00a0..00a6  invoke-static  {v2}, LX/1Xl;->A0g(Ljava/lang/String;)Ljava/lang/IllegalStateException;
+    00a6..00a8  move-result-object  v0
+    00a8..00aa  throw  v0
+    00aa..00b0  invoke-static  {v2}, LX/1Xl;->A0g(Ljava/lang/String;)Ljava/lang/IllegalStateException;
+    00b0..00b2  move-result-object  v0
+    00b2..00b4  throw  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/HyD;
+# extends: Ljava/lang/Object;
+
+.method public AQC(LL)  # .registers 5
+    # full signature: LX/HyD;->AQC(Ljava/io/InputStream;)Ljava/io/InputStream;
+    0000..0004  iget-object  v0, v3, LX/HyD;->A01:LX/HBw;
+    0004..0008  iget-object  v2, v3, LX/HyD;->A00:LX/HM9;
+    0008..000c  iget-object  v1, v3, LX/HyD;->A02:[B
+    000c..0010  iget-object  v0, v0, LX/HBw;->A09:LX/GB1;
+    0010..0016  invoke-static  {v0}, LX/00T;->A07(LX/06h;)V
+    0016..001a  new-instance  v0, LX/H88;
+    001a..0020  invoke-direct  {v0, v2}, LX/H88;-><init>(LX/HM9;)V
+    0020..0026  invoke-static  {}, LX/00T;->A06()V
+    0026..002c  invoke-virtual  {v0, v4, v1}, LX/H88;->A00(Ljava/io/InputStream;[B)LX/LOy;
+    002c..002e  move-result-object  v0
+    002e..0030  return-object  v0
+    0030..0032  move-exception  v0
+    0032..0038  invoke-static  {}, LX/00T;->A06()V
+    0038..003a  throw  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 000b..0010 -> 0018
+.end method

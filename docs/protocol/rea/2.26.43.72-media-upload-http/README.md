@@ -236,3 +236,46 @@ LOh.A00, MAw.<init>,8t2.A1D; apk-field-refs LKZ.A02/A03:Z --writes-only.
 - [hash-base64.txt](hash-base64.txt) — SHA-256 `788054ff358f1465a70d162bfdb961e00fbf8756293ceb2bc7aeac9ea201ca1d`.
 - [voice-sent-writers.txt](voice-sent-writers.txt) — SHA-256 `7562bd19d958ad42a00016133d8a96b3fddbae705ffbf5b69db3c33c0a8628e1`.
 - [voice-finished-writers.txt](voice-finished-writers.txt) — SHA-256 `2e05bf5b6cdf0f4fec92e37aa7633b5323cd8c3dd8e2924048d334a3b74f7458`.
+
+## Digest stream includes cipher MAC, excludes transport seal (2026-11-04)
+
+**Confirmed static**, same pinned APK. MWH.A03 selects raw digest when
+MvM.A08 is false; otherwise optional nonempty chunk array chooses A04,
+and absence chooses A01. A08 reads M5T.A0K/A0J under MYf.A06 media-kind
+predicate; its input producers remain untraced.
+
+MWH.A01 wraps source in SHA-256 LOh, passes it through NYu.AQC, wraps
+that transformed output in another SHA-256 LOh, then constructs Mzq.
+Mzq constructor maps the **second constructor stream** to field A00 and
+first to A01. Therefore LKZ.A09's MAw.A00 string is the transformed-output
+digest, not the plaintext digest. Prior references to "first stream" meant
+Mzq.A00 (first field accessed in its result getter), not its first constructor
+argument; the retained layout now makes this distinction explicit.
+
+Whole AQC-name scan finds identity Mtc and encryption Mtd plus two other
+HyC/HyD implementations and declaration NYu. Mtd constructs LOv with
+Mta-derived keys. LOv encrypts updates, feeds resulting ciphertext to Mac,
+then on source EOF combines Cipher.doFinal output with the first10 bytes
+of Mac.doFinal(final ciphertext). The outer LOh digests all returned bytes
+including that suffix. Its read methods update the digest for returned data.
+This closes digest composition **for the Mtd/non-chunk branch**, not every
+NYu implementation. Key algorithm parity and optional chunk A04 are not
+newly proved by this pass.
+
+K2k appends Kif EOF metadata after reading the transformed stream, outside
+these digest filters. Thus the metadata seal does not hash itself. This
+structure is consistent with Rust's encrypted_hash over encrypted.body,
+including MAC, conditional on the same supported encryption branch.
+Higher-level finished-file selection and custom processor override still
+need binding before modifying current upload bytes. No seal or resend added.
+
+Reproduce apk-smali MWH.A03/A01, whole LOh/LOv, Mzq.<init>, MvM.A08,
+and whole-name AQC scan with signatures/exceptions.
+
+- [digest-stream-selection.txt](digest-stream-selection.txt) — SHA-256 `88fe6ee2005beefb97ff9199b8d3ed91948b9bb9f3b13b41db2acf8fb980b535`.
+- [digest-chain.txt](digest-chain.txt) — SHA-256 `99fb7917f95b2b6327cc52b3f63df29423a204aef0746933709439a91a8bc175`.
+- [digest-filter.txt](digest-filter.txt) — SHA-256 `f7f13b618787cb6f7489e386b328bff5686f80446a2d67f291be14c3939770e3`.
+- [encryption-adapters.txt](encryption-adapters.txt) — SHA-256 `4eb55600ffeb4ccf2f510ed2e968cb26d11e142de098b6540710a0bee5a6ea73`.
+- [encrypting-stream.txt](encrypting-stream.txt) — SHA-256 `627789065e6166ad984fa8e50fd8ed538b214b683eb2a384a9eb5bbd3bcdf18d`.
+- [digest-wrapper-layout.txt](digest-wrapper-layout.txt) — SHA-256 `c8ae6de47e671df9e9df298da42ebf06ead32c1d52d029f3262781416d1ad94a`.
+- [encryption-eligibility.txt](encryption-eligibility.txt) — SHA-256 `3ce88094f0975995b1530d7f615f19ba8c1cfab7036721cb94bc6a85b87d30e1`.

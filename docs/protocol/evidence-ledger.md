@@ -1,3 +1,9 @@
+2026-11-04 — **Confirmed static: standard voice cipher digest boundary.**
+Pinned2.26.43.72 MWH/LOh/Mzq/Mtd/LOv chain covers cipher output+10-byte
+MAC before external seal. Constructor field mapping resolves digest order.
+[Branch-limited evidence](rea/2.26.43.72-media-upload-http/README.md#digest-stream-includes-cipher-mac-excludes-transport-seal-2026-11-04).
+Chunk/alternate adapters and operation/override binding remain open.
+
 2026-11-04 — **Confirmed static: finished voice flags and hash formatter.**
 Pinned2.26.43.72 plugin LKZ construction/writer census and Mzq/LOh/MAw
 format chain retained; Android Base64 flag2 is explicit. Stream composition

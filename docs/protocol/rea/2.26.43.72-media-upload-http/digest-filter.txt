@@ -1,0 +1,95 @@
+
+# class: LX/LOh;
+# extends: Ljava/io/FilterInputStream;
+
+.method public <init>(VLL)  # .registers 4
+    # full signature: LX/LOh;-><init>(Ljava/io/InputStream;Ljava/security/MessageDigest;)V
+    0000..0006  invoke-direct  {v1, v2}, Ljava/io/FilterInputStream;-><init>(Ljava/io/InputStream;)V
+    0006..000a  iput-object  v3, v1, LX/LOh;->A02:Ljava/security/MessageDigest;
+    000a..000e  const/16  v0, #0x2000
+    000e..0012  new-array  v0, v0, [B
+    0012..0016  iput-object  v0, v1, LX/LOh;->A03:[B
+    0016..0018  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(L)  # .registers 2
+    # full signature: LX/LOh;->A00()Ljava/lang/String;
+    0000..0004  iget-object  v0, v1, LX/LOh;->A01:[B
+    0004..0008  if-nez  v0, +0xa
+    0008..000c  iget-object  v0, v1, LX/LOh;->A02:Ljava/security/MessageDigest;
+    000c..0012  invoke-virtual  {v0}, Ljava/security/MessageDigest;->digest()[B
+    0012..0014  move-result-object  v0
+    0014..0018  iput-object  v0, v1, LX/LOh;->A01:[B
+    0018..001e  invoke-static  {v0}, LX/8t2;->A1D([B)Ljava/lang/String;
+    001e..0020  move-result-object  v0
+    0020..0022  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public close(V)  # .registers 1
+    # full signature: LX/LOh;->close()V
+    0000..0006  invoke-super  {v0}, Ljava/io/FilterInputStream;->close()V
+    0006..0008  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public read(I)  # .registers 6
+    # full signature: LX/LOh;->read()I
+    0000..0002  const/4  v4, #0x1
+    0002..0006  new-array  v3, v4, [B
+    0006..0008  const/4  v2, #0x0
+    0008..000e  invoke-virtual  {v5, v3, v2, v4}, Ljava/io/InputStream;->read([BII)I
+    000e..0010  move-result  v1
+    0010..0012  const/4  v0, #0xff (-1)
+    0012..0016  if-eq  v1, v0, +0x6
+    0016..001a  if-eqz  v1, +0x5
+    001a..001e  aget-byte  v0, v3, v2
+    001e..0020  return  v0
+    0020..0026  invoke-static  {}, Ljava/lang/Thread;->yield()V
+    0026..0028  goto  -0x10
+    # exception table: 0 try range(s)
+.end method
+
+.method public read(IL)  # .registers 4
+    # full signature: LX/LOh;->read([B)I
+    0000..0002  const/4  v1, #0x0
+    0002..0004  array-length  v0, v3
+    0004..000a  invoke-virtual  {v2, v3, v1, v0}, Ljava/io/InputStream;->read([BII)I
+    000a..000c  move-result  v0
+    000c..000e  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public read(ILII)  # .registers 9
+    # full signature: LX/LOh;->read([BII)I
+    0000..0006  invoke-super  {v5, v6, v7, v8}, Ljava/io/FilterInputStream;->read([BII)I
+    0006..0008  move-result  v4
+    0008..000c  if-lez  v4, +0x10
+    000c..000e  const/4  v0, #0x0
+    000e..0012  iput-object  v0, v5, LX/LOh;->A01:[B
+    0012..0016  iget-object  v0, v5, LX/LOh;->A02:Ljava/security/MessageDigest;
+    0016..001c  invoke-virtual  {v0, v6, v7, v4}, Ljava/security/MessageDigest;->update([BII)V
+    001c..0020  iget-wide  v2, v5, LX/LOh;->A00:J
+    0020..0022  int-to-long  v0, v4
+    0022..0024  add-long/2addr  v2, v0
+    0024..0028  iput-wide  v2, v5, LX/LOh;->A00:J
+    0028..002a  return  v4
+    # exception table: 0 try range(s)
+.end method
+
+.method public skip(JJ)  # .registers 8
+    # full signature: LX/LOh;->skip(J)J
+    0000..0004  iget-object  v4, v5, LX/LOh;->A03:[B
+    0004..0006  array-length  v0, v4
+    0006..0008  int-to-long  v0, v0
+    0008..000e  invoke-static  {v0, v1, v6, v7}, Ljava/lang/Math;->min(JJ)J
+    000e..0010  move-result-wide  v2
+    0010..0012  long-to-int  v1, v2
+    0012..0014  const/4  v0, #0x0
+    0014..001a  invoke-virtual  {v5, v4, v0, v1}, Ljava/io/InputStream;->read([BII)I
+    001a..001c  move-result  v0
+    001c..001e  int-to-long  v0, v0
+    001e..0020  return-wide  v0
+    # exception table: 0 try range(s)
+.end method

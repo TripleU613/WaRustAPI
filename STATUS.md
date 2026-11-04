@@ -1,3 +1,14 @@
+2026-11-04 — **Standard voice seal digest boundary traced:**
+
+Pinned standard non-chunk encrypted stream hashes ciphertext+10-byte MAC,
+then appends metadata outside the digest. Retained constructor field mapping,
+stream/filter implementations and branch limits. Higher-level operation and
+processor override binding remain open before changing upload bytes.
+[Evidence](docs/protocol/rea/2.26.43.72-media-upload-http/README.md#digest-stream-includes-cipher-mac-excludes-transport-seal-2026-11-04).
+Validation: JSON parsing, coverage freshness, cached diff checks and repository
+hygiene (4,332 local links) passed. Documentation/evidence only;
+no runtime change or live traffic.
+
 2026-11-04 — **Finished voice flags and seal hash formatting traced:**
 
 Retained finished plugin construction, complete boolean writer census and

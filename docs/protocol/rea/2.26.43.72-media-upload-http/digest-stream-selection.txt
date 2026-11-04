@@ -1,0 +1,36 @@
+
+# class: LX/MWH;
+# extends: Ljava/lang/Object;
+
+.method public A03(LLLLL)  # .registers 8
+    # full signature: LX/MWH;->A03(LX/NYu;LX/MvM;LX/Nbs;Ljava/io/File;)LX/Mzq;
+    0000..0002  const/4  v0, #0x1
+    0002..0008  invoke-static  {v6, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000e  invoke-virtual  {v5}, LX/MvM;->A08()Z
+    000e..0010  move-result  v0
+    0010..0014  if-nez  v0, +0x16
+    0014..001a  invoke-interface  {v6, v7}, LX/Nbs;->AKL(Ljava/io/File;)Ljava/io/InputStream;
+    001a..001c  move-result-object  v1
+    001c..0022  invoke-static  {}, LX/Kls;->A14()Ljava/security/MessageDigest;
+    0022..0024  move-result-object  v0
+    0024..0028  new-instance  v2, LX/LOh;
+    0028..002e  invoke-direct  {v2, v1, v0}, LX/LOh;-><init>(Ljava/io/InputStream;Ljava/security/MessageDigest;)V
+    002e..0030  const/4  v1, #0x0
+    0030..0034  new-instance  v0, LX/Mzq;
+    0034..003a  invoke-direct  {v0, v2, v2, v1}, LX/Mzq;-><init>(LX/LOh;LX/LOh;LX/LOh;)V
+    003a..003c  return-object  v0
+    003c..0040  iget-object  v0, v5, LX/MvM;->A07:LX/M5T;
+    0040..0044  iget-object  v1, v0, LX/M5T;->A0R:[I
+    0044..0048  if-eqz  v1, +0xa
+    0048..004a  array-length  v0, v1
+    004a..004e  if-eqz  v0, +0x7
+    004e..0054  invoke-virtual  {v3, v4, v7, v1}, LX/MWH;->A04(LX/NYu;Ljava/io/File;[I)LX/Mzq;
+    0054..0056  move-result-object  v0
+    0056..0058  return-object  v0
+    0058..005e  invoke-interface  {v6, v7}, LX/Nbs;->AKL(Ljava/io/File;)Ljava/io/InputStream;
+    005e..0060  move-result-object  v0
+    0060..0066  invoke-static  {v4, v0}, LX/MWH;->A01(LX/NYu;Ljava/io/InputStream;)LX/Mzq;
+    0066..0068  move-result-object  v0
+    0068..006a  return-object  v0
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,17 @@
+
+# class: LX/MvM;
+# extends: Ljava/lang/Object;
+
+.method public A08(Z)  # .registers 3
+    # full signature: LX/MvM;->A08()Z
+    0000..0004  iget-object  v1, v2, LX/MvM;->A07:LX/M5T;
+    0004..0008  iget-object  v0, v1, LX/M5T;->A09:LX/0jS;
+    0008..000e  invoke-static  {v0}, LX/MYf;->A06(LX/0jS;)Z
+    000e..0010  move-result  v0
+    0010..0014  if-eqz  v0, +0x5
+    0014..0018  iget-boolean  v0, v1, LX/M5T;->A0K:Z
+    0018..001a  return  v0
+    001a..001e  iget-boolean  v0, v1, LX/M5T;->A0J:Z
+    001e..0020  return  v0
+    # exception table: 0 try range(s)
+.end method

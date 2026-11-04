@@ -432,3 +432,12 @@ LKZ sent/finished true. Seal hash extraction maps first Mzq digest stream
 to MAw.A00 and formats via Android Base64 flag2; it is not inferred from
 the URL-safe path hash. Exact digest bytes and operation/override binding
 remain open. [Retained branches and writer census](rea/2.26.43.72-media-upload-http/README.md#finished-voice-construction-and-digest-formatting-2026-11-04).
+
+### Voice seal digest stream composition (2026-11-04)
+
+**Confirmed static**, pinned2.26.43.72 standard non-chunk Mtd path:
+outer SHA-256 covers encrypted stream including10-byte MAC; metadata
+seal is appended afterward outside those filters. Mzq constructor field
+order is retained explicitly to distinguish plaintext/transformed digests.
+[Stream graph and branch limits](rea/2.26.43.72-media-upload-http/README.md#digest-stream-includes-cipher-mac-excludes-transport-seal-2026-11-04).
+Higher-level path/processor binding remains open; no runtime body change.
