@@ -302,3 +302,38 @@ no action is queued on refusal. The inspection helper is informational.
 [Native chain, cache references and regression](rea/2.26.43.72-reachout-state/README.md#deadline-is-a-refresh-trigger-not-an-inactive-update-2026-11-04). Automatic refresh
 and full outreach policy remain unported; stale active state can refuse
 beyond the displayed deadline. No network request or identity reset added.
+
+## Restriction recheck at action reservation (2026-11-04)
+
+**Confirmed source defect / offline correction:** groups.queue_create
+checked the restriction at queue time, but actions.reserve_limit decoded
+and marked every queued create sent without another restriction check.
+connection's action-drain branch calls reserve_next then link.send. A
+create queued before a received active update could therefore bypass the
+existing guard. This is a local ordering defect, not evidence of a new
+server ban cause or identical native group-create policy.
+
+Both reserve_limit (bulk and actor reserve_next) and reserve_one_in now
+read the recorded active restriction in their reservation transaction
+before decoding/marking a queued group-create sent. Bulk/actor selection
+skips held creates and continues scanning other action kinds; a redacted
+log explains the deferral. Selected reservation returns an explicit error.
+The full row, ID, wire, timestamps and status remain unchanged while held.
+Store decoding errors still propagate; no missing state or clock is
+invented. Explicit inactive makes the existing queued create eligible.
+Already sent/settled rows retain their normal no-replay semantics.
+
+Real encrypted-store regression queues a create, receives active with an
+already elapsed end, queues an unrelated action, and verifies bulk selects
+only the unrelated request. Actor selection returns none; selected reserve
+refuses. The blocked row equals its original complete JSON value. After
+inactive, actor selection returns the exact original node and marks sent;
+later active/inactive changes never reserve it again. No socket is opened.
+
+Native context remains the pinned 2.26.43.72 countdown/fetch/apply chain in
+[reach-out evidence](rea/2.26.43.72-reachout-state/README.md#deadline-is-a-refresh-trigger-not-an-inactive-update-2026-11-04).
+The local guard is still group-create-only. Full native recipient/config
+policy and automatic refresh remain unported. A stale active record can
+continue deferring. The transaction is the admission boundary, not a
+cancellable network write: this does not retract already reserved/sent
+requests or claim atomicity between a future notification and socket I/O.

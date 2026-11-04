@@ -1,3 +1,14 @@
+2026-11-04 — **Previously queued group creates recheck restriction at reservation:**
+
+A create queued before an active update no longer bypasses the queue-time
+guard. Bulk/actor/selected reservation checks recorded active in the same
+store transaction before marking sent. Blocked rows retain original intent;
+unrelated actions proceed. Explicit inactive releases the same create once.
+Already-reserved uncertain actions are never reset or replayed.
+[Source audit and regression](docs/protocol/network-correctness-audit.md#restriction-recheck-at-action-reservation-2026-11-04).
+Validation: **1,272 workspace/all-feature tests**, strict Clippy, CLI reference,
+formatting, coverage and repository hygiene passed. No live traffic.
+
 2026-11-04 — **Elapsed deadline no longer releases the group-create guard:**
 
 Pinned countdown completion fetches server restriction state rather than

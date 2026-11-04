@@ -181,6 +181,14 @@ pub(super) fn recorded_active_reachout_timelock(
     Ok(lock.filter(|l| l.active))
 }
 
+/// Read restriction admission state in the same transaction as a reservation.
+pub(super) fn recorded_active_reachout_timelock_in(
+    tx: &crate::store::WriteTx<'_>,
+) -> Result<Option<ReachoutTimelock>> {
+    let lock: Option<ReachoutTimelock> = tx.get_json(Table::Checkpoints, REACHOUT_TIMELOCK, 1)?;
+    Ok(lock.filter(|l| l.active))
+}
+
 /// An active record with an unelapsed displayed deadline, for inspection only.
 /// A `None` here does not authorize an operation: authoritative active state
 /// can persist until a subsequent update, even after the displayed deadline.

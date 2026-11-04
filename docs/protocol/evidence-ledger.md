@@ -1,3 +1,10 @@
+2026-11-04 — **Confirmed source defect: stale queue admission before restriction.**
+actions.reserve_limit previously marked an earlier queued group-create sent
+without consulting the later active checkpoint. Both bulk/actor and selected
+reservations now check it transactionally; blocked intent is unchanged.
+[Source chain, native-policy limit and regression](network-correctness-audit.md#restriction-recheck-at-action-reservation-2026-11-04).
+No live traffic or universal outreach coverage claim.
+
 2026-11-04 — **Source correction: deadline does not authorize restriction release.**
 Native sheet/countdown -> 7uq -> FetchReachoutTimelockQuery -> 8dV success
 -> 7vL state application traced. Group create now checks recorded active

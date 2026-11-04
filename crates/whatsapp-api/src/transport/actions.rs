@@ -252,6 +252,16 @@ fn reserve_limit(store: &ProtocolStore, limit: usize) -> Result<Vec<Node>> {
                 if row.status != ActionStatus::Queued {
                     continue;
                 }
+                // Recheck at reservation: a restriction can arrive after queueing.
+                // Keep the original create queued, never mark it sent while held.
+                if row.kind == "group-create"
+                    && super::notifications::recorded_active_reachout_timelock_in(tx)?.is_some()
+                {
+                    tracing::info!(
+                        "group creation deferred: recorded reach-out restriction remains active"
+                    );
+                    continue;
+                }
                 let node = decode(&row.wire)?;
                 if row.kind == super::app_state_sync::HELD_FETCH_ACTION_KIND {
                     let id = node
@@ -296,6 +306,14 @@ pub(crate) fn reserve_one_in(tx: &mut crate::store::WriteTx<'_>, id: &str) -> Re
         return Err(Error::invalid(
             "action",
             "selected action already reserved; no replay",
+        ));
+    }
+    if row.kind == "group-create"
+        && super::notifications::recorded_active_reachout_timelock_in(tx)?.is_some()
+    {
+        return Err(Error::invalid(
+            "group",
+            "recorded reach-out restriction remains active; group creation stays queued until an explicit inactive update",
         ));
     }
     let node = decode(&row.wire)?;
@@ -657,6 +675,68 @@ mod inner_error_tests {
         })
         .unwrap();
         (dir, store)
+    }
+
+    #[test]
+    fn queued_create_rechecks_restriction_at_every_reservation_boundary() {
+        let (_dir, store) = store();
+        let peer = crate::model::jid::Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let create = super::super::groups::queue_create(&store, "Lab", &[peer]).unwrap();
+        let original = request(&store, &create).unwrap().unwrap();
+        let original_row: serde_json::Value = store
+            .read(|tx| tx.get_json(Table::Checkpoints, key(&create).as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        let set_active = |active: bool| {
+            let update = Node::new("notification")
+                .attr("type", "mex")
+                .attr("id", "restriction-fixture")
+                .attr("from", "s.whatsapp.net")
+                .children(vec![
+                    Node::new("update")
+                        .attr("op_name", "NotificationUserReachoutTimelockUpdate")
+                        .bytes(
+                            serde_json::to_vec(&serde_json::json!({"data": {
+                                "xwa2_notify_account_reachout_timelock": {
+                                    "is_active": active, "time_enforcement_ends": "1"
+                                }
+                            }}))
+                            .unwrap(),
+                        ),
+                ]);
+            super::super::notifications::record_reachout_timelock(&store, &update).unwrap();
+        };
+        set_active(true);
+        let other = queue(&store, "unrelated-read", "fixture", |id| {
+            Ok(Node::new("iq").attr("id", id).attr("type", "get"))
+        })
+        .unwrap();
+        let selected = reserve_pending(&store).unwrap();
+        assert_eq!(selected, vec![request(&store, &other).unwrap().unwrap()]);
+        assert!(reserve_next(&store).unwrap().is_none());
+        let error = store.write(|tx| reserve_one_in(tx, &create)).unwrap_err();
+        assert!(error.to_string().contains("stays queued"));
+        let held_row: serde_json::Value = store
+            .read(|tx| tx.get_json(Table::Checkpoints, key(&create).as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        assert_eq!(
+            held_row, original_row,
+            "no reservation or intent rewrite while held"
+        );
+        set_active(false);
+        assert_eq!(reserve_next(&store).unwrap(), Some(original));
+        let row: Row = store
+            .read(|tx| tx.get_json(Table::Checkpoints, key(&create).as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        assert_eq!(row.status, ActionStatus::Sent);
+        assert!(row.sent_at.is_some());
+        // Later restrictions/releases never replay an already-reserved request.
+        set_active(true);
+        assert!(reserve_pending(&store).unwrap().is_empty());
+        set_active(false);
+        assert!(reserve_pending(&store).unwrap().is_empty());
     }
 
     #[test]
