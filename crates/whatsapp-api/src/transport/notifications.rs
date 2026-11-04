@@ -119,17 +119,23 @@ pub fn record_reachout_timelock(
         let Some(active) = lock["is_active"].as_bool() else {
             continue;
         };
-        let ends = lock["time_enforcement_ends"]
-            .as_str()
-            .and_then(|v| v.parse().ok())
-            .or_else(|| lock["time_enforcement_ends"].as_i64())
-            .filter(|value| *value >= 0)
-            .ok_or_else(|| {
-                Error::invalid(
-                    "reachout_timelock",
-                    "missing or invalid expiry; existing restriction preserved",
-                )
-            })?;
+        // APK 43.72 7vL.A00 clears inactive state without parsing duration.
+        // Only active updates need an expiry; never fabricate zero for them.
+        let ends = if !active {
+            0
+        } else {
+            lock["time_enforcement_ends"]
+                .as_str()
+                .and_then(|v| v.parse().ok())
+                .or_else(|| lock["time_enforcement_ends"].as_i64())
+                .filter(|value| *value >= 0)
+                .ok_or_else(|| {
+                    Error::invalid(
+                        "reachout_timelock",
+                        "missing or invalid expiry; existing restriction preserved",
+                    )
+                })?
+        };
         let lock = ReachoutTimelock { active, ends };
         store.write(|tx| tx.put_json(Table::Checkpoints, REACHOUT_TIMELOCK, 1, &lock))?;
         return Ok(Some(lock));
@@ -476,7 +482,7 @@ mod tests {
     }
 
     #[test]
-    fn malformed_reachout_expiry_cannot_erase_an_active_lock() {
+    fn active_bad_expiry_preserves_lock_but_explicit_inactive_clears_without_expiry() {
         let dir = tempfile::tempdir().unwrap();
         let store = super::super::group_fanout::tests::open(&dir.path().join("lock.redb"));
         let original = ReachoutTimelock {
@@ -501,14 +507,30 @@ mod tests {
                         .attr("op_name", "NotificationUserReachoutTimelockUpdate")
                         .bytes(serde_json::to_vec(&body).unwrap()),
                 ]);
-                assert!(matches!(
-                    record_reachout_timelock(&store, &node),
-                    Err(Error::InvalidInput { .. })
-                ));
-                assert_eq!(
-                    active_reachout_timelock(&store, 999).unwrap(),
-                    Some(original)
-                );
+                if active {
+                    assert!(matches!(
+                        record_reachout_timelock(&store, &node),
+                        Err(Error::InvalidInput { .. })
+                    ));
+                    assert_eq!(
+                        active_reachout_timelock(&store, 999).unwrap(),
+                        Some(original)
+                    );
+                } else {
+                    assert_eq!(
+                        record_reachout_timelock(&store, &node).unwrap(),
+                        Some(ReachoutTimelock {
+                            active: false,
+                            ends: 0
+                        })
+                    );
+                    assert!(active_reachout_timelock(&store, 999).unwrap().is_none());
+                    store
+                        .write(|tx| {
+                            tx.put_json(Table::Checkpoints, REACHOUT_TIMELOCK, 1, &original)
+                        })
+                        .unwrap();
+                }
             }
         }
     }

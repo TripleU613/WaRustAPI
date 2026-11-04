@@ -149,3 +149,15 @@ coverage outside group preparation remains an audit obligation.
 Real-store regression checks active and inactive malformed updates cannot
 erase a known active lock. Existing valid update/expiry regression remains.
 No live account traffic was sent; no identity/cooldown reset is introduced.
+
+## Explicit inactive reach-out correction (2026-11-04)
+
+**Confirmed pinned static/refuted prior assumption:**7vL.A00 ignores expiry
+for explicit inactive updates and resets restriction preferences. Rust's previous
+strict expiry requirement incorrectly rejected a legitimate release lacking
+expiry. It now clears explicit inactive state without parsing the field while
+malformed active updates still preserve prior lock and skip ACK.
+[Native dispatch/state/parser and limitations](rea/2.26.43.72-reachout-state/README.md).
+Upstream sender authority and config/enum policy remain open; the retained
+leaf does not establish a new server-only JID requirement. Regression covers
+both active malformed preservation and inactive release. No live traffic.

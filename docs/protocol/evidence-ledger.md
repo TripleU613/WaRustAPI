@@ -1,3 +1,9 @@
+2026-11-04 — **Pinned static correction: inactive reach-out ignores expiry.**
+2.26.43.72 8AF/7MU/7vL dispatch/state plus6oe parser retained. Explicit
+inactive reset does not parse expiry; Rust now accepts it while active bad
+expiry preserves lock. [Evidence](rea/2.26.43.72-reachout-state/README.md).
+Previous requirement for inactive expiry refuted. Sender authority remains open.
+
 2026-11-04 — **Confirmed source defect fixed offline: reach-out expiry.**
 Malformed known expiry previously became0 and could replace an active local
 restriction. Parser now refuses before write; receive skips ACK and continues

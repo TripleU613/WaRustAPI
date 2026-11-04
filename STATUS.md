@@ -1,3 +1,13 @@
+2026-11-04 — **Explicit inactive reach-out update aligned with pinned handler:**
+
+Native7vL resets inactive state without reading expiry. Rust now permits
+that release; malformed active updates still preserve the prior restriction.
+Retained dispatch/state/parser and feature-policy limitations.
+[Evidence](docs/protocol/rea/2.26.43.72-reachout-state/README.md).
+Validation: **1,266 workspace/all-feature tests**, strict Clippy, CLI-reference,
+formatting, coverage freshness and repository hygiene passed.
+No live traffic; sender authority/config policy remain untraced.
+
 2026-11-04 — **Malformed reach-out expiry no longer clears local lock:**
 
 Known expiry updates now refuse missing/malformed/negative/overflow values
