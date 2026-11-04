@@ -1,3 +1,13 @@
+2026-11-04 — **Disconnect callback cleanup traced; restriction reopen test strengthened:**
+
+Native cleanup distinguishes queued callbacks from reply-map callbacks and
+conditionally resets timers. Existing encrypted-store regression now reopens
+while restriction-held and after sent reservation, proving preserved intent
+and no replay across those boundaries. Production behavior unchanged.
+[Evidence and crash/account-lifecycle limits](docs/protocol/rea/2.26.43.72-reachout-state/README.md#disconnect-callback-cleanup-and-durable-reopen-regression-2026-11-04).
+Validation: **1,272 workspace/all-feature tests**, strict Clippy, CLI reference,
+formatting, coverage freshness and repository hygiene passed. No live traffic.
+
 2026-11-04 — **Refresh pending-callback and timeout ownership traced:**
 
 Native registration precedes send handoff; 32000 delay is milliseconds.

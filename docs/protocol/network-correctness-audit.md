@@ -405,3 +405,14 @@ workers; unmatched IDs have no callback. Native 32000 delay is ms and
 includes queue handoff time. [Exact methods and limits](rea/2.26.43.72-reachout-state/README.md#pending-iq-registration-dispatch-and-timeout-ownership-2026-11-04).
 This does not establish durable account-bound settlement, lower writer
 completion, or reconnect replay policy. Rust refresh remains unported.
+
+## Disconnect cleanup and durable restriction reopen (2026-11-04)
+
+**Confirmed static:** 0ln cleanup posts handler case3, which clears the
+reply map and invokes failure callbacks while not clearing the earlier
+queued map in that IQ branch. Initial timer reset is conditional.
+**Offline verified:** existing Rust regression now reopens the encrypted
+store while held and after sent reservation; complete intent/sent rows
+remain intact, and already reserved creates never become replayable.
+[Exact sources and fault/account-scope limits](rea/2.26.43.72-reachout-state/README.md#disconnect-callback-cleanup-and-durable-reopen-regression-2026-11-04). No production
+behavior or automatic refresh changed; full lifecycle audit remains open.

@@ -1408,3 +1408,77 @@ tables so unrelated ACK/call/UI branches are not conflated.
 - [reachout-iq-timeout-worker.txt](reachout-iq-timeout-worker.txt) — SHA-256 `7dd5e2a054b2132ffcd6ef497c3c50e18e14f6689db85674fab7e7dcaac3f27e`.
 - [reachout-iq-write-start.txt](reachout-iq-write-start.txt) — SHA-256 `d29e969ad599d57283bca4f0e1a21d7c476568a4f4923e50fd94e73ec93ea769`.
 - [reachout-iq-response-entry.txt](reachout-iq-response-entry.txt) — SHA-256 `cf336112f268081e230730a572309ae72143ecfe63cab1f8c2ea120e3d9068b2`.
+
+## Disconnect callback cleanup and durable reopen regression (2026-11-04)
+
+**Confirmed static**, same pinned APK 2.26.43.72 SHA-256 above. This
+resolves the selected 0ln.A0F cleanup branch from the previous section,
+without claiming all account-switch/reset behavior is known.
+
+0ln.A0F(boolean,int) synchronizes on A0F. Only when the boolean is
+false AND both callback maps A0I/A0H are empty does it reset counter
+A00, remove handler messages 4/8 and clear the timeout tracking map.
+It then posts handler message 3 with the integer in arg2. Calling this
+a blanket timer/map reset would be wrong: nonempty maps skip that
+initial reset block, and handler work is asynchronous.
+
+The already retained 0m2.handleMessage case 3 (byte 0x55a) snapshots
+A0H entries and clears A0H under the shared lock. For each entry it
+schedules 8bj selector 21, which invokes callback.BsS(id), plus timing
+bookkeeping. It does not clear A0I in this IQ branch. Thus selected
+queued callbacks and callbacks awaiting replies have different cleanup
+behavior. This is not proof of durable queues, reconnect replay, or
+what every subsequent timer/writer does with remaining A0I entries.
+
+The same handler case separately handles ordinary-message 0Th callback
+state and schedules ACK-timeout-related work. Those callbacks are a
+different map and must not be relabeled as group-create IQ results or
+restriction release. The full merged handler was already retained.
+
+The direct A0F census has two call sites: 0YB.A05, whose literal log
+identifies handleDisconnected, and 0YU.handleMessage in a connection-
+exception branch. The former derives its boolean through the connection
+object's BNJ predicate and then invokes 0Sf.A0J; the latter has its
+own conditional path and passes integer -1. Full methods are retained
+so other connection/UI/error branches are not conflated. BNJ's semantic
+implementation and exact account lifecycle remain untraced.
+
+0Sf.A0J iterates its distinct A0E map under that map's monitor, invokes
+0Sp.AG3(null) on each value, then clears it. Despite the export filename
+client-disconnect-reset, this is that callback-map cancellation routine;
+it does not by itself prove socket reset, credential deletion, pending IQ
+replay or account teardown. Callback implementations/ordering remain open.
+
+### Rust persistence validation
+
+**Offline verified, existing behavior strengthened by regression:** native
+in-memory cleanup is not a replacement for durable action admission.
+The existing queued-create restriction test now closes/reopens the
+encrypted protocol store at two boundaries:
+
+1. While the create is held by active=true with elapsed deadline, reopen
+   with create=false still selects no action and preserves the complete
+   original queued row. An explicit inactive update then reserves the
+   exact original node once.
+2. After reservation marks the create sent with sent_at, reopen preserves
+   the complete sent row and selects nothing. Later active/inactive
+   updates cannot replay it.
+
+No production behavior, checkpoint schema, ID, wire, stored wait or
+identity changes were introduced. This tests committed-store close/
+reopen, not every possible power-loss or filesystem fault. Existing
+crash-matrix tests remain separate. Automatic refresh remains unported;
+full lower-writer/account teardown and durable refresh settlement are
+still open. No live network/account operation was performed.
+
+Reproduce apk-smali 0ln.A0F, 0YB.A05, 0YU.handleMessage, 0Sf.A0J
+with --signatures --exceptions; apk-callers 0ln.A0F. Existing handler/
+timeout-worker exports bind case 3 and BsS. TXT files are checked DEX
+text, not REA Evidence envelopes. Rust regression is
+actions::inner_error_tests::queued_create_rechecks_restriction_at_every_reservation_boundary.
+
+- [reachout-iq-disconnect-cleanup.txt](reachout-iq-disconnect-cleanup.txt) — SHA-256 `d8be3141b2b8d34efc6c1cbaa3c73819def6d02512f0e45d398fd55f641b0d3e`.
+- [reachout-iq-cleanup-callers.txt](reachout-iq-cleanup-callers.txt) — SHA-256 `1c206d46495d9e6c68733bc44397ce744a01dd9c5e8469f7a69c25c3133ab665`.
+- [reachout-iq-cleanup-trigger.txt](reachout-iq-cleanup-trigger.txt) — SHA-256 `fd46dcdf65ee927c926a377ea4aee916218b30fc5978c4c4d570982e21c661b6`.
+- [reachout-iq-cleanup-connection-handler.txt](reachout-iq-cleanup-connection-handler.txt) — SHA-256 `098d0fcc38eb07bd64d3ac1baa91fa3ea8825cf5ac0cb23d8a4bdb1c22cc30f0`.
+- [reachout-iq-client-disconnect-reset.txt](reachout-iq-client-disconnect-reset.txt) — SHA-256 `6fe22088dc9de308b80322943fd8722cf0dc6798fe19568d57103bb285e04bd5`.

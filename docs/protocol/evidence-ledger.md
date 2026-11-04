@@ -1,3 +1,9 @@
+2026-11-04 — **Pinned cleanup and offline durable reopen verification.**
+0ln.A0F/handler3 distinguishes callback maps; 0YB/0YU callers and distinct
+0Sf.A0J cancellation retained. Existing action regression now reopens while
+held and sent, preserving original rows and preventing replay.
+[Sources and exact verification boundaries](rea/2.26.43.72-reachout-state/README.md#disconnect-callback-cleanup-and-durable-reopen-regression-2026-11-04). No live traffic.
+
 2026-11-04 — **Pinned static: IQ pending maps, dispatch and timeout.**
 0Sf.A0W/A0A -> 0ln registration/map transfer/reply removal and
 0m2 case4 -> 0ln.A03 -> 8bj.BsS retained. Delay resolves to ms.

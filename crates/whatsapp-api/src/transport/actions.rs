@@ -679,7 +679,7 @@ mod inner_error_tests {
 
     #[test]
     fn queued_create_rechecks_restriction_at_every_reservation_boundary() {
-        let (_dir, store) = store();
+        let (dir, store) = store();
         let peer = crate::model::jid::Jid::parse("15555550100@s.whatsapp.net").unwrap();
         let create = super::super::groups::queue_create(&store, "Lab", &[peer]).unwrap();
         let original = request(&store, &create).unwrap().unwrap();
@@ -687,7 +687,7 @@ mod inner_error_tests {
             .read(|tx| tx.get_json(Table::Checkpoints, key(&create).as_bytes(), 1))
             .unwrap()
             .unwrap();
-        let set_active = |active: bool| {
+        let set_active = |store: &ProtocolStore, active: bool| {
             let update = Node::new("notification")
                 .attr("type", "mex")
                 .attr("id", "restriction-fixture")
@@ -704,9 +704,9 @@ mod inner_error_tests {
                             .unwrap(),
                         ),
                 ]);
-            super::super::notifications::record_reachout_timelock(&store, &update).unwrap();
+            super::super::notifications::record_reachout_timelock(store, &update).unwrap();
         };
-        set_active(true);
+        set_active(&store, true);
         let other = queue(&store, "unrelated-read", "fixture", |id| {
             Ok(Node::new("iq").attr("id", id).attr("type", "get"))
         })
@@ -724,7 +724,29 @@ mod inner_error_tests {
             held_row, original_row,
             "no reservation or intent rewrite while held"
         );
-        set_active(false);
+        let reopen = || {
+            ProtocolStore::open(OpenOptions {
+                path: dir.path().join("p.redb"),
+                account_id: AccountId::new("test").unwrap(),
+                key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                    [9; 32],
+                ))),
+                create: false,
+            })
+            .unwrap()
+        };
+        drop(store);
+        let store = reopen();
+        assert!(reserve_pending(&store).unwrap().is_empty());
+        let reopened_row: serde_json::Value = store
+            .read(|tx| tx.get_json(Table::Checkpoints, key(&create).as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        assert_eq!(
+            reopened_row, original_row,
+            "reopen preserves held intent and restriction"
+        );
+        set_active(&store, false);
         assert_eq!(reserve_next(&store).unwrap(), Some(original));
         let row: Row = store
             .read(|tx| tx.get_json(Table::Checkpoints, key(&create).as_bytes(), 1))
@@ -732,10 +754,22 @@ mod inner_error_tests {
             .unwrap();
         assert_eq!(row.status, ActionStatus::Sent);
         assert!(row.sent_at.is_some());
+        // Reopening never turns an uncertain sent action back into a queued one.
+        drop(store);
+        let store = reopen();
+        let reopened_sent: Row = store
+            .read(|tx| tx.get_json(Table::Checkpoints, key(&create).as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        assert_eq!(
+            serde_json::to_value(&reopened_sent).unwrap(),
+            serde_json::to_value(&row).unwrap()
+        );
+        assert!(reserve_next(&store).unwrap().is_none());
         // Later restrictions/releases never replay an already-reserved request.
-        set_active(true);
+        set_active(&store, true);
         assert!(reserve_pending(&store).unwrap().is_empty());
-        set_active(false);
+        set_active(&store, false);
         assert!(reserve_pending(&store).unwrap().is_empty());
     }
 
