@@ -370,9 +370,14 @@ fn route(store: &ProtocolStore) -> Result<(String, Zeroizing<String>)> {
         .and_then(super::mex::java_decimal_long)
         .ok_or_else(|| invalid("missing or invalid upload auth lifetime"))?;
     let age = Timestamp::now().0.saturating_sub(
-        latest["at"]
+        // APK 43.72 0VM.A07 records request handoff time for 1xY.CK4.
+        // Historical `at` was receipt time and cannot reconstruct that base.
+        latest["requested_at"]
             .as_i64()
-            .ok_or_else(|| invalid("missing route timestamp"))?,
+            .filter(|at| *at > 0)
+            .ok_or_else(|| {
+                invalid("saved media route lacks request time; refresh it explicitly")
+            })?,
     );
     if age < 0 || ttl.min(auth_ttl) <= 0 || age >= ttl.min(auth_ttl).saturating_mul(1000) {
         return Err(invalid("saved media route expired; refresh it explicitly"));
@@ -898,13 +903,61 @@ mod tests {
             store
                 .write(|tx| {
                     tx.put_json(Table::Checkpoints, b"media-route:synthetic", 1,
-                &serde_json::json!({"status":"result", "at":Timestamp::now().0-2000,"wire":wire}))
+                &serde_json::json!({"status":"result", "at":Timestamp::now().0,"requested_at":Timestamp::now().0-2000,"wire":wire}))
                 })
                 .unwrap();
             let before = store
                 .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
                 .unwrap();
             assert_eq!(route(&store).is_ok(), accepted, "auth_ttl={auth_ttl:?}");
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                before
+            );
+        }
+    }
+
+    #[test]
+    fn delayed_route_receipt_cannot_extend_auth_lifetime_or_rebase_legacy() {
+        use super::*;
+        use crate::{
+            binary::{Encoder, Node},
+            model::ids::AccountId,
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("route-base.redb"),
+            account_id: AccountId::new("route-base-test").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([8; 32]))),
+            create: true,
+        })
+        .unwrap();
+        let node = Node::new("iq").attr("type", "result").children(vec![
+            Node::new("media_conn")
+                .attr("ttl", "3600")
+                .attr("auth_ttl", "1")
+                .attr("auth", "synthetic-auth")
+                .children(vec![Node::new("host").attr("hostname", "mmg.whatsapp.net")]),
+        ]);
+        let wire = Encoder::new(TokenDictionary::comparison_2_26_37_71())
+            .encode(&node)
+            .unwrap();
+        let now = Timestamp::now().0;
+        for requested_at in [None, Some(now - 2000), Some(now + 60000), Some(0)] {
+            let mut saved = serde_json::json!({"status":"result", "at":now,"wire":wire});
+            if let Some(at) = requested_at {
+                saved["requested_at"] = at.into();
+            }
+            store
+                .write(|tx| tx.put_json(Table::Checkpoints, b"media-route:synthetic", 1, &saved))
+                .unwrap();
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            assert!(route(&store).is_err());
             assert_eq!(
                 store
                     .read(|tx| tx.scan(Table::Checkpoints, 1, 100))

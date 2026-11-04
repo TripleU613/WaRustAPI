@@ -1,3 +1,17 @@
+2026-11-04 — **Media route request-time expiry (static/offline):**
+
+Pinned 0VM.A07 writes the monotonic request handoff time consumed by the media
+lifetime callback. Rust's result commit previously replaced its reservation time
+with receipt time, extending cache freshness by response delay. The CLI now
+preserves requested_at and upload expiry requires it. Legacy/missing timestamps
+require explicit refresh; no response-time guess or automatic query is made.
+[REA, checked DEX and field census](docs/protocol/rea/2.26.43.72-media-route-lifetimes/README.md#request-clock-origin-follow-up).
+Delayed-receipt tests cover expired, missing, future and zero request times.
+Local wall-clock reservation is conservative; full native throttle/refresh/host
+policy remains open. Validation: **1,235 workspace/all-feature tests**, strict
+Clippy, CLI-reference, formatting, coverage freshness and repository hygiene passed.
+No live traffic.
+
 2026-11-04 — **Pinned media lifetime parser correction (static/offline):**
 
 APK 2.26.43.72 1xY.CK4 requires both route ttl and auth_ttl via the Java-long

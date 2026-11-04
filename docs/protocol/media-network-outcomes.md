@@ -90,5 +90,22 @@ leading-plus/BMP digit spellings while preserving expiry/invalid-value guards.
 `1t5.<init>` converts lifetimes to milliseconds relative to a supplied base;
 `0VM.A08` conditionally restores a cached route only while its auth deadline
 is future. [Six REA envelopes, checked DEX, hashes and exact limits](rea/2.26.43.72-media-route-lifetimes/README.md).
-Base origin, full refresh/deadline consumers, effective restore gate and host
-selection remain unknown. No automatic query/retry or live traffic is introduced.
+Base origin is closed by the request-clock follow-up below. Full refresh/deadline
+consumers, effective restore gate and host selection remain unknown. No automatic query/retry or live traffic is introduced.
+
+## Request-time route expiry (2026-11-04)
+
+**Confirmed pinned static/corrected Rust:** `0VM.A07` records the monotonic request
+handoff time in `1xY.A00`, which CK4 supplies to the lifetime model. Rust previously
+replaced its initial reservation timestamp with receipt time, extending freshness
+by response latency. The CLI now retains requested_at explicitly in both states;
+route selection requires it and measures age from request time. Legacy routes
+without request provenance refuse with explicit-refresh guidance. They are never
+rebased to now or replayed. Receipt at remains diagnostic/selection metadata.
+
+An encrypted-store delayed-receipt test proves a fresh receipt cannot rescue an
+expired request, and missing/future/zero request times cannot supply eligibility.
+[REA, checked request path and field census](rea/2.26.43.72-media-route-lifetimes/README.md#request-clock-origin-follow-up).
+The local pre-write wall-clock base is conservative, not complete native elapsed
+clock parity. Full throttle, last_id and host refresh behavior remain open.
+No live operation occurred.

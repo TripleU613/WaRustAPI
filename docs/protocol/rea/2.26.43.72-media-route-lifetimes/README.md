@@ -19,7 +19,8 @@ retain tool identity, limitations and exact DEX signatures.
   conn_ttl/auth_ttl, converts saved absolute send time to elapsedRealtime, and
   installs only if no current route and the restored auth deadline is future.
 
-**Unknown:** the origin of callback A00/base, every deadline consumer, refresh
+**Unknown at the initial trace:** the origin of callback A00/base (closed by
+the follow-up below), every deadline consumer, refresh
 ordering, overflow/recovery policy, effective property149, full host choice,
 server-side behavior and ban implications. Rust's conservative minimum-lifetime
 guard is not proven to match every native route/auth decision. Native retry
@@ -44,3 +45,31 @@ absent native callback. String references are bounded to exact literal matches.
 Reproduce checked output with `xtask apk-xref APK --anchor auth_ttl --anchor
 media_conn`, `xtask apk-smali APK --class 'LX/1xY;' --method CK4 --signatures
 --exceptions`, and the same smali command with `LX/1t5;` / `<init>`.
+
+## Request clock origin follow-up
+
+**Confirmed static:** `0VM.A07` obtains the current route's optional last ID,
+checks throttle and callback in-flight state, hands the IQ to `0Sf.A0R` with
+32000-ms timeout, then stores SystemClock.elapsedRealtime into `1xY.A00`.
+`1xY.CK4` consumes that field as the constructor base before clearing it.
+The checked field-write census identifies four direct writes across DEX: the
+request handler and callback timeout/error/result resets. The complete checked
+callback class retains those reset instructions. Native deadlines therefore use
+the request handoff clock, not callback receipt time.
+
+**Confirmed Rust defect/fixed:** the CLI media-route result overwrote its
+reservation timestamp with response time. It now retains explicit requested_at
+through reservation/result commits. Upload route expiry uses this request time;
+old caches without it refuse and require explicit refresh. No historic timestamp
+is reconstructed from receipt time. The local wall-clock reservation precedes
+socket write, conservatively earlier than native post-handoff time; this is not
+complete native monotonic-clock/lifecycle parity. No automatic route refresh.
+
+Request builder conditional last_id, full throttle policy, callback timeout/error
+side effects, host choice and all consumers of both deadlines remain unported or
+untraced. Capturing this metadata does not authorize a new request or retries.
+
+- [request-clock.json](request-clock.json) — SHA-256 `71dc8e661cc0a7988fdc616bbc40f1efae7be8b7e0f4cfb881e89b1b08c522fe`.
+- [request-clock-checked.txt](request-clock-checked.txt) — SHA-256 `13feab4c4b06c35965a573fb368b9a86f70bdd577ffa200969e7834a440bf2bb`.
+- [clock-writers.txt](clock-writers.txt) — SHA-256 `cf24d23e0c4d99095e26a9ef482caecb36f2ad7f1db46b94367e16295a98f4ee`.
+- [callback-class-checked.txt](callback-class-checked.txt) — SHA-256 `a88c3e3d59559f311c45550abc8528e7ccd83e31ad169a3db45ad99aa151fe7b`.

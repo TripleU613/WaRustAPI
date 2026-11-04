@@ -1,0 +1,8 @@
+classes.dex  LX/0VM;->A07(VL)
+  write opcode 0x5a, dex byte offset: 0x5bef38
+classes2.dex  LX/1xY;->BsS(VL)
+  write opcode 0x5a, dex byte offset: 0x290dfa
+classes2.dex  LX/1xY;->Bvj(VLL)
+  write opcode 0x5a, dex byte offset: 0x290e62
+classes2.dex  LX/1xY;->CK4(VLL)
+  write opcode 0x5a, dex byte offset: 0x2910d2

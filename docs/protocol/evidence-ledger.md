@@ -1,3 +1,11 @@
+2026-11-04 — **Confirmed static/Rust defect fixed offline:** 0VM.A07 anchors
+media deadlines at request handoff; Rust had replaced send reservation time with
+response time. Explicit requested_at now survives the CLI reply commit and is
+required for upload expiry. Historical unproven clocks refuse explicit-refresh
+rather than being reconstructed. Seven retained REA methods plus checked request,
+callback and exact field-write census close the base-origin question. No live use.
+[Evidence and limits](rea/2.26.43.72-media-route-lifetimes/README.md#request-clock-origin-follow-up).
+
 2026-11-04 — **Confirmed static/corrected:** pinned 2.26.43.72 1xY.CK4 uses
 required long readers for both media lifetimes. The local missing-auth fallback
 is refuted and removed; Java-compatible parsing replaces Rust decimal parsing.

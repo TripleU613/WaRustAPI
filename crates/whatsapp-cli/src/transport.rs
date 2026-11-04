@@ -400,12 +400,15 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
             };
             let id = new_message_id()?;
             let checkpoint = format!("media-route:{id}");
+            // APK 43.72 0VM.A07 -> 1xY.CK4 anchors lifetimes to request
+            // handoff, not receipt. Preserve this through the reply commit.
+            let requested_at = Timestamp::now();
             store.write(|tx| {
                 tx.put_json(
                     Table::Checkpoints,
                     checkpoint.as_bytes(),
                     1,
-                    &serde_json::json!({"status":"outcome_unknown", "at":Timestamp::now()}),
+                    &serde_json::json!({"status":"outcome_unknown", "at":requested_at, "requested_at":requested_at}),
                 )
             })?;
             write_node(&mut channel, &media_route_request(&id)).await?;
@@ -416,7 +419,7 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
             let wire = whatsapp_api::binary::Encoder::new(dict).encode(&reply)?;
             store.write(|tx| {
                 tx.put_json(Table::Checkpoints, checkpoint.as_bytes(), 1,
-                    &serde_json::json!({"status": if success {"result"} else {"refused"}, "wire":wire, "at":Timestamp::now()}))?;
+                    &serde_json::json!({"status": if success {"result"} else {"refused"}, "wire":wire, "at":Timestamp::now(), "requested_at":requested_at}))?;
                 for (index, node) in pending.iter().enumerate() {
                     let bytes = whatsapp_api::binary::Encoder::new(dict).encode(node)?;
                     tx.put_json(Table::Checkpoints, format!("inbound:{id}:{index:04}").as_bytes(), 1, &bytes)?;
