@@ -106,3 +106,56 @@ MS4.A03 and Mtv.<init>; apk-field-refs exact Mtv.A0N:Z --writes-only.
 - [supplier-constructor.txt](supplier-constructor.txt) — SHA-256 `d20b0a26331fb4915d3b1125290720e80e7a5afbc2f52255cb86a64938ad7eb2`.
 - [auth-enable-writers.txt](auth-enable-writers.txt) — SHA-256 `4ce2bc6a5b997bc129f3b56391c86818eb13aaf8243b1bb9f34127c0bbae4ef2`.
 - [transfer-loop.txt](transfer-loop.txt) — SHA-256 `3dd7f041229181b23c79068e193abd8c22d7b9ea8576196b28d6f45d382beea2`.
+
+## Readiness and distinct delay suppliers (2026-11-04)
+
+**Confirmed static**, same pinned APK, no runtime execution.
+
+- LIY.CW7 forwards to Mtv only when its backing supplier exists; otherwise
+  false. Mtv.CW7 requires auth-enable, stored token, current supplier route
+  and the same feature predicate as BkV. It initializes the shared negative
+  wait budget from manager A0K, samples uptime and checks manager auth.
+- If current manager auth is valid for strictly more than120000ms, it may
+  adopt it immediately when different from the stored token; a matching
+  token yields no replacement. If absent/almost expired it invokes gated
+  A07, then waits via A0B only with positive budget and missing/already
+  expired manager auth. Still-valid almost-expired auth triggers refresh
+  without waiting here. Afterward replacement requires different auth and
+  deadline strictly greater than elapsedRealtime, not the two-minute margin.
+  A04 accounts elapsed uptime; replacement updates auth and rebuilds route.
+  This readiness path does not increment LtU's auth-failure retry count.
+- Mtv.AXk returns configured A0D unless an exponential object exists and
+  supplier count A00>=A08; then it obtains 1C8.A01, with null falling back
+  to A0D. Constructor creation requires positive configured A0C and the
+  constructor's enabling boolean; it supplies max draws=A0C, cap3000ms,
+  base1000ms. 1C8 increments draws, computes base*2^min(draw,50), halves
+  it and adds abs(nextLong()%scaledBase), then clamps at cap and latches
+  capped mode. Exhausted draws return null. A02 resets draw count only,
+  not the cap latch. No uniform-distribution claim is made.
+- **LIY does not override AXk.** Its superclass Mtx.AXk returns A02, which
+  Mtx constructor receives as a long argument. Both LIY constructors pass
+  that value unchanged. Thus LIY auth forwarding does not imply that MS4's
+  sleep calls Mtv's exponential-delay method.
+- MvM.A00, on its A04-true branch with a constructed nonnull Mtv route,
+  wraps either the backing supplier (feature true) or route only (false)
+  in LIY. Both receive manager0VM.A02 as fixed delay, then MS4 with fresh
+  LtU. With no supplier route it uses Mtv directly; the other A04 branch
+  calls manager.A0M. A04 predicate, manager A02 producer and all alternative
+  construction paths remain untraced.
+
+Mtv.A05 full output is also retained because it was inspected: route selection
+uses counts, configuration and input boolean; its complete branch semantics
+are not claimed reconstructed here. Operation-specific NYs callbacks,
+request idempotency and server acceptance remain open. No Rust retry enabled.
+
+Reproduce with apk-smali class/method pairs named above, plus whole LX/1C8;.
+
+- [readiness-wrapper.txt](readiness-wrapper.txt) — SHA-256 `4a113b3ddf335e9b85bbc139c06733f545dceeb29167c6b823ec69ca3593db99`.
+- [readiness.txt](readiness.txt) — SHA-256 `c11f9b5fc9fbd449cc3c9473aafcf6d2e20b9ce4d85b2e27a282b51ee9296357`.
+- [supplier-delay.txt](supplier-delay.txt) — SHA-256 `7c07c5d887bea6b20c6a0555e934923bdc8581d691164ec662507dbd85243c79`.
+- [wrapper-delay.txt](wrapper-delay.txt) — SHA-256 `8d41b1fdfc6cef195af819dc2469d1d2eb8e0e9ab2482e0358cde0cd7659b764`.
+- [wrapper-constructor.txt](wrapper-constructor.txt) — SHA-256 `db4be57cbc8a30d23b89f1082762367de4fa3293d638d0235e754c9b32d42511`.
+- [auth-wrapper-constructors.txt](auth-wrapper-constructors.txt) — SHA-256 `b6630fa02a56200b724fe5b795babe360dcafe118cca18f64e3467dbfb52b53f`.
+- [wrapper-selection.txt](wrapper-selection.txt) — SHA-256 `bca25c511dc89cf1169c728502fa261381eb915402a6bea5bc2872c229fe6e36`.
+- [supplier-route-selection.txt](supplier-route-selection.txt) — SHA-256 `be7f4716f77fb5e7c93436c836aadc5265e210f9fd696261696f2c18960c82e1`.
+- [exponential-delay.txt](exponential-delay.txt) — SHA-256 `0594ff0b79fd5c3ee4ec8ac2c1d40b68e6ed750b96f38e1c10e385c869b2bfe0`.

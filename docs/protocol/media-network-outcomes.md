@@ -365,3 +365,12 @@ delay/sleep, reloads route and returns through cancellation/readiness checks
 before another NYs.Cb6 invocation. Sleep interruption uses terminal handling.
 Operation-specific replay/idempotency, AXk/CW7 policies and enable-argument
 provenance remain open. [Exact branches and hashes](rea/2.26.43.72-media-http-auth-refresh/README.md#transfer-loop-continuation-2026-11-04).
+
+### Pre-attempt auth readiness and supplier delays (2026-11-04)
+
+**Confirmed static**, pinned2.26.43.72: CW7 shares the bounded auth wait
+budget, refreshes almost-expired auth, and conditionally adopts a changed
+token. Mtv's exponential AXk differs from LIY's inherited fixed AXk;
+MvM.A00 selects the wrapper on one construction branch.
+[Branches, exact bytecode and limits](rea/2.26.43.72-media-http-auth-refresh/README.md#readiness-and-distinct-delay-suppliers-2026-11-04).
+No generic delay policy or automatic Rust retry is established.

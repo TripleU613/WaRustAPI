@@ -1,3 +1,9 @@
+2026-11-04 — **Confirmed static: media readiness and distinct delays.**
+Pinned2.26.43.72 CW7 auth budget/threshold branches, Mtv.AXk/1C8 delay,
+LIY inherited fixed delay and MvM wrapper construction retained.
+[Evidence and untraced branch producers](rea/2.26.43.72-media-http-auth-refresh/README.md#readiness-and-distinct-delay-suppliers-2026-11-04).
+No live execution or runtime scheduling change.
+
 2026-11-04 — **Confirmed static: media auth retry loop edge.**
 Pinned2.26.43.72 MS4.A03 calls Nd8.BkV and, on true, delays/reloads/rechecks
 before NYs.Cb6. LIY forwarding and Mtv constructor A0N write retained.

@@ -1,0 +1,25 @@
+
+# class: LX/LIY;
+# extends: LX/Mtx;
+
+.method public <init>(VLJ)  # .registers 5
+    # full signature: LX/LIY;-><init>(LX/M3d;J)V
+    0000..0006  invoke-direct  {v1, v2, v3, v4}, LX/Mtx;-><init>(LX/M3d;J)V
+    0006..0008  const/4  v0, #0x0
+    0008..000c  iput-object  v0, v1, LX/LIY;->A00:LX/Mtv;
+    000c..000e  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VLJ)  # .registers 5
+    # full signature: LX/LIY;-><init>(LX/Mtv;J)V
+    0000..0004  iget-object  v0, v2, LX/Mtv;->A01:LX/M3d;
+    0004..0008  if-eqz  v0, +0x8
+    0008..000e  invoke-direct  {v1, v0, v3, v4}, LX/Mtx;-><init>(LX/M3d;J)V
+    000e..0012  iput-object  v2, v1, LX/LIY;->A00:LX/Mtv;
+    0012..0014  return-void
+    0014..001a  invoke-static  {}, LX/2L8;->A1C()Ljava/lang/IllegalStateException;
+    001a..001c  move-result-object  v0
+    001c..001e  throw  v0
+    # exception table: 0 try range(s)
+.end method

@@ -1,3 +1,14 @@
+2026-11-04 — **Media auth readiness and distinct delay suppliers traced:**
+
+CW7 pre-attempt refresh uses the shared wait budget and separate auth
+thresholds. Mtv exponential delay and LIY inherited fixed delay are distinct;
+retained one wrapper construction branch. Operation replay and remaining
+configuration producers stay open.
+[Evidence](docs/protocol/rea/2.26.43.72-media-http-auth-refresh/README.md#readiness-and-distinct-delay-suppliers-2026-11-04).
+Validation: JSON parsing, coverage freshness, cached diff checks and repository
+hygiene (4,256 local links) passed. Documentation/evidence only;
+no Rust change or live traffic.
+
 2026-11-04 — **Media auth callback continuation traced:**
 
 Pinned static evidence now reaches MS4.A03 through Nd8.BkV: true retry

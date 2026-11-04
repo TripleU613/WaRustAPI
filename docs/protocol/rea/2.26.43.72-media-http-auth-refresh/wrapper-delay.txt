@@ -1,0 +1,10 @@
+
+# class: LX/Mtx;
+# extends: Ljava/lang/Object;
+
+.method public AXk(J)  # .registers 3
+    # full signature: LX/Mtx;->AXk()J
+    0000..0004  iget-wide  v0, v2, LX/Mtx;->A02:J
+    0004..0006  return-wide  v0
+    # exception table: 0 try range(s)
+.end method

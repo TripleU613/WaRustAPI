@@ -1,0 +1,23 @@
+
+# class: LX/Mtv;
+# extends: Ljava/lang/Object;
+
+.method public AXk(J)  # .registers 4
+    # full signature: LX/Mtv;->AXk()J
+    0000..0004  iget-object  v2, v3, LX/Mtv;->A0E:LX/1C8;
+    0004..0008  if-eqz  v2, +0x18
+    0008..000c  iget  v1, v3, LX/Mtv;->A00:I
+    000c..0010  iget  v0, v3, LX/Mtv;->A08:I
+    0010..0014  if-lt  v1, v0, +0x12
+    0014..001a  invoke-virtual  {v2}, LX/1C8;->A01()Ljava/lang/Long;
+    001a..001c  move-result-object  v0
+    001c..0020  if-eqz  v0, +0x7
+    0020..0026  invoke-virtual  {v0}, Ljava/lang/Number;->longValue()J
+    0026..0028  move-result-wide  v0
+    0028..002a  return-wide  v0
+    002a..002e  const-string  v0, "Mms4RouteSupplier/getBackoffTime unexpected exponential backoff of null"
+    002e..0034  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    0034..0038  iget-wide  v0, v3, LX/Mtv;->A0D:J
+    0038..003a  return-wide  v0
+    # exception table: 0 try range(s)
+.end method

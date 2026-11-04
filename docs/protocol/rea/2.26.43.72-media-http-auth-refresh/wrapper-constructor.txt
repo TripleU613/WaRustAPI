@@ -1,0 +1,16 @@
+
+# class: LX/Mtx;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLJ)  # .registers 5
+    # full signature: LX/Mtx;-><init>(LX/M3d;J)V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    0008..000c  iput-object  v2, v1, LX/Mtx;->A00:LX/M3d;
+    000c..0010  iput-wide  v3, v1, LX/Mtx;->A02:J
+    0010..0016  invoke-static  {v0}, LX/DBb;->A11(I)Ljava/util/concurrent/atomic/AtomicInteger;
+    0016..0018  move-result-object  v0
+    0018..001c  iput-object  v0, v1, LX/Mtx;->A01:Ljava/util/concurrent/atomic/AtomicInteger;
+    001c..001e  return-void
+    # exception table: 0 try range(s)
+.end method
