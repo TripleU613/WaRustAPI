@@ -1,0 +1,713 @@
+//! Prospective encrypted media refresh context. No implicit query, replay or retry.
+//! Native 0VM.A07/1xY.CK4/0VM.A0A evidence is linked by the parent module.
+use super::{invalid, project_media_conn};
+use crate::{
+    Result,
+    binary::{Encoder, Node, TokenDictionary},
+    model::{ids::AccountGeneration, time::Timestamp},
+    store::{ProtocolStore, Table, WriteTx},
+};
+use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha256};
+const CURRENT: &[u8] = b"media-routing-current:v1";
+const OWNER: &[u8] = b"media-routing-owner:v1";
+#[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct Current {
+    generation: AccountGeneration,
+    action_id: String,
+    requested_at: Timestamp,
+    wire: Vec<u8>,
+}
+#[derive(Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct Record {
+    context_version: u16,
+    generation: AccountGeneration,
+    action_id: String,
+    requested_at: Timestamp,
+    at: Timestamp,
+    status: String,
+    request_wire: Vec<u8>,
+    request_digest: [u8; 32],
+    prior: Option<Current>,
+    wire: Option<Vec<u8>>,
+    effective_wire: Option<Vec<u8>>,
+}
+/// Local settlement, not upload acceptance or complete native lifecycle parity.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Settlement {
+    /// Correlated result projected and installed atomically.
+    Applied,
+    /// Correlated outer server error; current route is unchanged.
+    Refused,
+    /// Correlated result outside the supported parser; raw reply is retained.
+    Unsupported,
+    /// Prior route changed since preparation; current route is unchanged.
+    Stale,
+}
+fn redact(error: crate::Error) -> crate::Error {
+    match error {
+        crate::Error::Storage(crate::store::StoreError::Serialization(_)) => crate::Error::Storage(
+            crate::store::StoreError::Serialization("invalid stored media refresh data".into()),
+        ),
+        other => other,
+    }
+}
+/// Safe applied-route counts for the existing CLI output. No IDs/auth/hosts.
+pub fn current_summary(store: &ProtocolStore) -> Result<Option<(usize, bool)>> {
+    store
+        .read(|tx| {
+            let current: Option<Current> = tx.get_json(Table::Checkpoints, CURRENT, 1)?;
+            let Some(current) = current else {
+                return Ok(None);
+            };
+            if current.generation != tx.generation() {
+                return Err(invalid("media route generation mismatch"));
+            }
+            let node = super::super::actions::decode(&current.wire)?;
+            validate_conn(&node)?;
+            Ok(Some((
+                node.child_nodes()
+                    .iter()
+                    .filter(|n| n.description == "host")
+                    .count(),
+                node.get_attr("auth").is_some(),
+            )))
+        })
+        .map_err(redact)
+}
+fn key(id: &str) -> String {
+    format!("media-route:{id}")
+}
+fn encode(node: &Node) -> Result<Vec<u8>> {
+    Ok(Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(node)?)
+}
+fn conn(node: &Node) -> Result<&Node> {
+    let mut nodes = node
+        .child_nodes()
+        .iter()
+        .filter(|n| n.description == "media_conn");
+    let value = nodes
+        .next()
+        .ok_or_else(|| invalid("missing media connection"))?;
+    if nodes.next().is_some() {
+        return Err(invalid("ambiguous media connection"));
+    }
+    Ok(value)
+}
+fn validate_conn(node: &Node) -> Result<()> {
+    super::is_new_route(node)?;
+    if node.get_attr("auth").and_then(|v| v.as_text()).is_none() {
+        return Err(invalid("missing media auth"));
+    }
+    for name in ["ttl", "auth_ttl"] {
+        if node
+            .get_attr(name)
+            .and_then(|v| v.as_text())
+            .and_then(super::super::mex::java_decimal_long)
+            .is_none()
+        {
+            return Err(invalid("missing or invalid media lifetime"));
+        }
+    }
+    for host in node
+        .child_nodes()
+        .iter()
+        .filter(|n| n.description == "host")
+    {
+        if host
+            .get_attr("hostname")
+            .and_then(|v| v.as_text())
+            .is_none()
+        {
+            return Err(invalid("missing media hostname"));
+        }
+    }
+    Ok(())
+}
+fn request(id: &str, prior: Option<&Current>) -> Result<Node> {
+    let mut node = super::super::messaging::media_route_request(id);
+    if let Some(prior) = prior {
+        let prior = super::super::actions::decode(&prior.wire)?;
+        validate_conn(&prior)?;
+        if let Some(last_id) = prior.get_attr("id") {
+            let last_id = last_id
+                .as_text()
+                .ok_or_else(|| invalid("invalid prior route ID"))?;
+            node = node.children(vec![Node::new("media_conn").attr("last_id", last_id)]);
+        }
+    }
+    Ok(node)
+}
+fn validate(record: &Record) -> Result<()> {
+    if record.context_version != 1
+        || record.action_id.is_empty()
+        || record.requested_at.0 <= 0
+        || record
+            .prior
+            .as_ref()
+            .is_some_and(|p| p.generation != record.generation)
+        || <[u8; 32]>::from(Sha256::digest(&record.request_wire)) != record.request_digest
+        || super::super::actions::decode(&record.request_wire)?
+            != request(&record.action_id, record.prior.as_ref())?
+    {
+        return Err(invalid("invalid media refresh context"));
+    }
+    Ok(())
+}
+fn has_context_rows(rows: Vec<(Vec<u8>, Vec<u8>)>, only_applied: bool) -> Result<bool> {
+    if rows.len() == 10000 {
+        return Err(invalid("media history scan limit reached"));
+    }
+    for (key, bytes) in rows {
+        if !key.starts_with(b"media-route:") {
+            continue;
+        }
+        let value: serde_json::Value = serde_json::from_slice(&bytes).map_err(|_| {
+            crate::Error::Storage(crate::store::StoreError::Serialization(
+                "invalid stored media refresh data".into(),
+            ))
+        })?;
+        if value.get("context_version").is_some() && (!only_applied || value["status"] == "result")
+        {
+            return Ok(true);
+        }
+    }
+    Ok(false)
+}
+
+/// Freeze request bytes and the coordinator's exact prior route atomically.
+/// This returns an unsent node. Only the caller's authorized operation may send it.
+/// Legacy route history does not seed this coordinator retrospectively.
+pub fn prepare(store: &ProtocolStore, id: &str) -> Result<Node> {
+    if id.is_empty()
+        || id.len() > 128
+        || !id
+            .bytes()
+            .all(|b| b.is_ascii_alphanumeric() || b == b'-' || b == b'_')
+    {
+        return Err(invalid("invalid media refresh ID"));
+    }
+    store
+        .write(|tx| {
+            if tx.get(Table::Checkpoints, key(id).as_bytes(), 1)?.is_some() {
+                return Err(invalid("media refresh already reserved"));
+            }
+            let owner: Option<bool> = tx.get_json(Table::Checkpoints, OWNER, 1)?;
+            let prior: Option<Current> = tx.get_json(Table::Checkpoints, CURRENT, 1)?;
+            if owner.is_none() && has_context_rows(tx.scan(Table::Checkpoints, 1, 10000)?, false)? {
+                return Err(invalid(
+                    "prospective media history has no coordinator owner",
+                ));
+            }
+            if owner == Some(false) || (prior.is_some() && owner != Some(true)) {
+                return Err(invalid("media route has no valid owner"));
+            }
+            if owner == Some(true)
+                && prior.is_none()
+                && has_context_rows(tx.scan(Table::Checkpoints, 1, 10000)?, true)?
+            {
+                return Err(invalid("applied media route pointer is missing"));
+            }
+            if let Some(current) = &prior {
+                let saved: serde_json::Value = tx
+                    .get_json(Table::Checkpoints, key(&current.action_id).as_bytes(), 1)?
+                    .ok_or_else(|| invalid("prior media route has no original record"))?;
+                let projected = effective_reply(&saved)?
+                    .ok_or_else(|| invalid("prior media route lacks prospective context"))?;
+                if conn(&projected)? != &super::super::actions::decode(&current.wire)?
+                    || saved["requested_at"].as_i64() != Some(current.requested_at.0)
+                    || saved["action_id"].as_str() != Some(current.action_id.as_str())
+                    || saved["generation"].as_u64() != Some(u64::from(current.generation.0))
+                {
+                    return Err(invalid("prior media route differs from applied record"));
+                }
+            }
+            tx.put_json(Table::Checkpoints, OWNER, 1, &true)?;
+            if prior
+                .as_ref()
+                .is_some_and(|p| p.generation != tx.generation())
+            {
+                return Err(invalid("media route generation mismatch"));
+            }
+            let node = request(id, prior.as_ref())?;
+            let request_wire = encode(&node)?;
+            let requested_at = Timestamp::now();
+            let record = Record {
+                context_version: 1,
+                generation: tx.generation(),
+                action_id: id.to_owned(),
+                requested_at,
+                at: requested_at,
+                status: "outcome_unknown".into(),
+                request_digest: Sha256::digest(&request_wire).into(),
+                request_wire,
+                prior,
+                wire: None,
+                effective_wire: None,
+            };
+            tx.put_json(Table::Checkpoints, key(id).as_bytes(), 1, &record)?;
+            Ok(node)
+        })
+        .map_err(redact)
+}
+fn outcome(status: &str) -> Result<Settlement> {
+    match status {
+        "result" => Ok(Settlement::Applied),
+        "refused" => Ok(Settlement::Refused),
+        "unsupported" => Ok(Settlement::Unsupported),
+        "stale" => Ok(Settlement::Stale),
+        _ => Err(invalid("media refresh is not settled")),
+    }
+}
+/// Preserve a correlated reply and merge against frozen prior hosts atomically.
+/// The caller owes an authenticated receive path; this is not network proof.
+/// Call in the same transaction as any saved unrelated inbound frames.
+pub fn settle_in(tx: &mut WriteTx<'_>, id: &str, reply: &Node) -> Result<Settlement> {
+    settle_impl_in(tx, id, reply).map_err(redact)
+}
+fn settle_impl_in(tx: &mut WriteTx<'_>, id: &str, reply: &Node) -> Result<Settlement> {
+    let mut record: Record = tx
+        .get_json(Table::Checkpoints, key(id).as_bytes(), 1)?
+        .ok_or_else(|| invalid("media reply has no prospective context"))?;
+    validate(&record)?;
+    if record.action_id != id
+        || record.generation != tx.generation()
+        || reply.description != "iq"
+        || reply.get_attr("id").and_then(|v| v.as_text()) != Some(id)
+    {
+        return Err(invalid("media reply does not match prospective context"));
+    }
+    let kind = reply.get_attr("type").and_then(|v| v.as_text());
+    if !matches!(kind, Some("result" | "error")) {
+        return Err(invalid("media reply is not result or error"));
+    }
+    let wire = encode(reply)?;
+    if record.status != "outcome_unknown" {
+        if record.wire.as_ref() != Some(&wire) {
+            return Err(invalid("conflicting media settlement"));
+        }
+        return outcome(&record.status);
+    }
+    if tx.get_json::<bool>(Table::Checkpoints, OWNER, 1)? != Some(true) {
+        return Err(invalid("media refresh lost its coordinator owner"));
+    }
+    let current: Option<Current> = tx.get_json(Table::Checkpoints, CURRENT, 1)?;
+    if current
+        .as_ref()
+        .is_some_and(|current| current.generation != tx.generation())
+    {
+        return Err(invalid("media route generation mismatch"));
+    }
+
+    if kind == Some("result")
+        && current.is_none()
+        && record.prior.is_none()
+        && has_context_rows(tx.scan(Table::Checkpoints, 1, 10000)?, true)?
+    {
+        return Err(invalid("applied media route pointer is missing"));
+    }
+    let result = if kind == Some("error") {
+        Settlement::Refused
+    } else if current != record.prior {
+        Settlement::Stale
+    } else {
+        let prior = record
+            .prior
+            .as_ref()
+            .map(|p| super::super::actions::decode(&p.wire))
+            .transpose()?;
+        let projected = (|| {
+            let incoming = conn(reply)?;
+            validate_conn(incoming)?;
+            project_media_conn(prior.as_ref(), incoming)
+        })();
+        match projected {
+            Ok(projected) => {
+                record.effective_wire =
+                    Some(encode(&reply.clone().children(vec![projected.clone()]))?);
+                tx.put_json(
+                    Table::Checkpoints,
+                    CURRENT,
+                    1,
+                    &Current {
+                        generation: tx.generation(),
+                        action_id: id.to_owned(),
+                        requested_at: record.requested_at,
+                        wire: encode(&projected)?,
+                    },
+                )?;
+                Settlement::Applied
+            }
+            Err(crate::Error::InvalidInput { .. }) => Settlement::Unsupported,
+            Err(error) => return Err(error),
+        }
+    };
+    record.status = match result {
+        Settlement::Applied => "result",
+        Settlement::Refused => "refused",
+        Settlement::Unsupported => "unsupported",
+        Settlement::Stale => "stale",
+    }
+    .into();
+    record.at = Timestamp::now();
+    record.wire = Some(wire);
+    tx.put_json(Table::Checkpoints, key(id).as_bytes(), 1, &record)?;
+    Ok(result)
+}
+/// Resolve the applied current pointer instead of ordering receipt timestamps.
+/// Once this coordinator is active, legacy history cannot resurrect a route.
+pub(crate) fn active_record(store: &ProtocolStore) -> Result<Option<serde_json::Value>> {
+    store
+        .read(|tx| {
+            let owner: Option<bool> = tx.get_json(Table::Checkpoints, OWNER, 1)?;
+            if owner.is_none() {
+                if tx.get(Table::Checkpoints, CURRENT, 1)?.is_some()
+                    || has_context_rows(tx.scan(Table::Checkpoints, 1, 10000)?, false)?
+                {
+                    return Err(invalid(
+                        "prospective media history has no coordinator owner",
+                    ));
+                }
+                return Ok(None);
+            }
+            if owner != Some(true) {
+                return Err(invalid("invalid media route owner"));
+            }
+            let current: Current = tx
+                .get_json(Table::Checkpoints, CURRENT, 1)?
+                .ok_or_else(|| invalid("media refresh has no applied current route"))?;
+            if current.generation != tx.generation() {
+                return Err(invalid("media route generation mismatch"));
+            }
+            let saved: serde_json::Value = tx
+                .get_json(Table::Checkpoints, key(&current.action_id).as_bytes(), 1)?
+                .ok_or_else(|| invalid("current media route has no original record"))?;
+            let projected = effective_reply(&saved)?
+                .ok_or_else(|| invalid("current media route lacks prospective context"))?;
+            if conn(&projected)? != &super::super::actions::decode(&current.wire)?
+                || saved["requested_at"].as_i64() != Some(current.requested_at.0)
+                || saved["action_id"].as_str() != Some(current.action_id.as_str())
+                || saved["generation"].as_u64() != Some(u64::from(current.generation.0))
+            {
+                return Err(invalid("current media route differs from applied record"));
+            }
+            Ok(Some(saved))
+        })
+        .map_err(redact)
+}
+
+/// Recompute a projected reply from sealed prospective context. None is legacy;
+/// a context-bearing malformed record is an error, never a legacy fallback.
+pub(crate) fn effective_reply(saved: &serde_json::Value) -> Result<Option<Node>> {
+    if saved.get("context_version").is_none() {
+        return Ok(None);
+    }
+    let record: Record = serde_json::from_value(saved.clone()).map_err(|_| {
+        crate::Error::Storage(crate::store::StoreError::Serialization(
+            "invalid stored media refresh data".into(),
+        ))
+    })?;
+    validate(&record)?;
+    if record.status != "result" {
+        return Err(invalid("media refresh is not usable"));
+    }
+    let reply = super::super::actions::decode(
+        record
+            .wire
+            .as_ref()
+            .ok_or_else(|| invalid("missing media reply"))?,
+    )?;
+    if reply.description != "iq"
+        || reply.get_attr("type").and_then(|v| v.as_text()) != Some("result")
+        || reply.get_attr("id").and_then(|v| v.as_text()) != Some(record.action_id.as_str())
+    {
+        return Err(invalid("invalid stored media correlation"));
+    }
+    let prior = record
+        .prior
+        .as_ref()
+        .map(|p| super::super::actions::decode(&p.wire))
+        .transpose()?;
+    let incoming = conn(&reply)?;
+    validate_conn(incoming)?;
+    let projected = reply
+        .clone()
+        .children(vec![project_media_conn(prior.as_ref(), incoming)?]);
+    let effective = super::super::actions::decode(
+        record
+            .effective_wire
+            .as_ref()
+            .ok_or_else(|| invalid("missing media projection"))?,
+    )?;
+    if projected != effective {
+        return Err(invalid("media projection differs from frozen context"));
+    }
+    Ok(Some(effective))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{
+        model::ids::AccountId,
+        store::{MasterKey, OpenOptions, StaticKeySource},
+    };
+    fn open(path: &std::path::Path) -> ProtocolStore {
+        ProtocolStore::open(OpenOptions {
+            path: path.to_owned(),
+            account_id: AccountId::new("media-refresh-test").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([2; 32]))),
+            create: true,
+        })
+        .unwrap()
+    }
+    fn reply(id: &str, flag: &str, route_id: &str, auth: &str, host: &str) -> Node {
+        Node::new("iq")
+            .attr("id", id)
+            .attr("type", "result")
+            .children(vec![
+                Node::new("media_conn")
+                    .attr("id", route_id)
+                    .attr("auth", auth)
+                    .attr("ttl", "3600")
+                    .attr("auth_ttl", "1800")
+                    .attr("is_new", flag)
+                    .children(vec![
+                        Node::new("host")
+                            .attr("hostname", host)
+                            .children(vec![Node::new("upload")]),
+                    ]),
+            ])
+    }
+    fn saved(store: &ProtocolStore, id: &str) -> serde_json::Value {
+        store
+            .read(|tx| tx.get_json(Table::Checkpoints, key(id).as_bytes(), 1))
+            .unwrap()
+            .unwrap()
+    }
+    fn settle(store: &ProtocolStore, id: &str, node: &Node) -> Settlement {
+        store.write(|tx| settle_in(tx, id, node)).unwrap()
+    }
+    #[test]
+    fn prospective_first_and_conditional_merge_survive_reopen() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("merge.redb");
+        let store = open(&path);
+        let first = prepare(&store, "first").unwrap();
+        assert!(conn(&first).unwrap().get_attr("last_id").is_none());
+        assert!(prepare(&store, "first").is_err());
+        drop(store);
+        let store = open(&path);
+        let first_reply = reply("first", "0", "route-one", "old-auth", "old.whatsapp.net");
+        assert_eq!(settle(&store, "first", &first_reply), Settlement::Applied);
+        assert_eq!(settle(&store, "first", &first_reply), Settlement::Applied);
+        let next = prepare(&store, "second").unwrap();
+        assert_eq!(
+            conn(&next).unwrap().get_attr("last_id").unwrap().as_text(),
+            Some("route-one")
+        );
+        let second = reply(
+            "second",
+            "0",
+            "route-two",
+            "new-auth",
+            "ignored.whatsapp.net",
+        );
+        assert_eq!(settle(&store, "second", &second), Settlement::Applied);
+        let raw = super::super::super::actions::decode(
+            &serde_json::from_value::<Vec<u8>>(saved(&store, "second")["wire"].clone()).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(raw, second);
+        let projected = effective_reply(&saved(&store, "second")).unwrap().unwrap();
+        assert_eq!(
+            conn(&projected)
+                .unwrap()
+                .get_attr("auth")
+                .unwrap()
+                .as_text(),
+            Some("new-auth")
+        );
+        assert_eq!(
+            conn(&projected).unwrap().child_nodes(),
+            conn(&first_reply).unwrap().child_nodes()
+        );
+        drop(store);
+        let store = open(&path);
+        assert_eq!(
+            effective_reply(&saved(&store, "second")).unwrap().unwrap(),
+            projected
+        );
+        let third = prepare(&store, "third").unwrap();
+        assert_eq!(
+            conn(&third).unwrap().get_attr("last_id").unwrap().as_text(),
+            Some("route-two")
+        );
+    }
+    #[test]
+    fn competing_reply_is_retained_stale_without_overwriting_current() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("stale.redb"));
+        prepare(&store, "a").unwrap();
+        prepare(&store, "b").unwrap();
+        assert_eq!(
+            settle(
+                &store,
+                "a",
+                &reply("a", "1", "a", "a-auth", "a.whatsapp.net")
+            ),
+            Settlement::Applied
+        );
+        assert_eq!(
+            settle(
+                &store,
+                "b",
+                &reply("b", "1", "b", "b-auth", "b.whatsapp.net")
+            ),
+            Settlement::Stale
+        );
+        assert_eq!(active_record(&store).unwrap().unwrap()["action_id"], "a");
+        assert_eq!(saved(&store, "b")["status"], "stale");
+        assert!(!saved(&store, "b")["wire"].is_null());
+        let next = prepare(&store, "c").unwrap();
+        assert_eq!(
+            conn(&next).unwrap().get_attr("last_id").unwrap().as_text(),
+            Some("a")
+        );
+    }
+    #[test]
+    fn outer_transaction_cut_rolls_back_projection_and_receipt() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("cut.redb"));
+        prepare(&store, "a").unwrap();
+        let before = saved(&store, "a");
+        let result: Result<()> = store.write(|tx| {
+            assert_eq!(
+                settle_in(tx, "a", &reply("a", "1", "a", "auth", "a.whatsapp.net"))?,
+                Settlement::Applied
+            );
+            Err(invalid("synthetic cut"))
+        });
+        assert!(result.is_err());
+        assert_eq!(saved(&store, "a"), before);
+        assert_eq!(current_summary(&store).unwrap(), None);
+    }
+    #[test]
+    fn errors_unsupported_and_conflicting_settlement_preserve_authority() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("refusal.redb"));
+        prepare(&store, "a").unwrap();
+        let err = Node::new("iq").attr("id", "a").attr("type", "error");
+        assert_eq!(settle(&store, "a", &err), Settlement::Refused);
+        assert!(
+            store
+                .write(|tx| settle_in(tx, "a", &reply("a", "1", "a", "auth", "a.whatsapp.net")))
+                .is_err()
+        );
+        prepare(&store, "b").unwrap();
+        let malformed = Node::new("iq").attr("id", "b").attr("type", "result");
+        assert_eq!(settle(&store, "b", &malformed), Settlement::Unsupported);
+        assert_eq!(current_summary(&store).unwrap(), None);
+        assert!(effective_reply(&saved(&store, "b")).is_err());
+        assert!(
+            effective_reply(&serde_json::json!({"status":"result","wire":[]}))
+                .unwrap()
+                .is_none()
+        );
+    }
+    #[test]
+    fn orphaned_current_and_missing_owner_cannot_create_new_refresh() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("orphan.redb"));
+        prepare(&store, "a").unwrap();
+        prepare(&store, "pending-first").unwrap();
+        settle(&store, "a", &reply("a", "1", "a", "auth", "a.whatsapp.net"));
+        let current: Current = store
+            .read(|tx| tx.get_json(Table::Checkpoints, CURRENT, 1))
+            .unwrap()
+            .unwrap();
+        store
+            .write(|tx| tx.delete(Table::Checkpoints, CURRENT))
+            .unwrap();
+        assert!(prepare(&store, "lost-current").is_err());
+        assert!(active_record(&store).is_err());
+        assert!(
+            store
+                .write(|tx| settle_in(
+                    tx,
+                    "pending-first",
+                    &reply("pending-first", "1", "new", "auth", "new.whatsapp.net")
+                ))
+                .is_err()
+        );
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, CURRENT, 1, &current))
+            .unwrap();
+        let original = saved(&store, "a");
+        let mut wrong_generation = original.clone();
+        wrong_generation["generation"] = 17.into();
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    key("a").as_bytes(),
+                    1,
+                    &wrong_generation,
+                )
+            })
+            .unwrap();
+        assert!(active_record(&store).is_err());
+        assert!(prepare(&store, "wrong-generation-source").is_err());
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, key("a").as_bytes(), 1, &original))
+            .unwrap();
+        store
+            .write(|tx| tx.delete(Table::Checkpoints, key("a").as_bytes()))
+            .unwrap();
+        assert!(prepare(&store, "b").is_err());
+        assert!(active_record(&store).is_err());
+        assert!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, key("b").as_bytes(), 1))
+                .unwrap()
+                .is_none()
+        );
+        store
+            .write(|tx| tx.delete(Table::Checkpoints, OWNER))
+            .unwrap();
+        assert!(prepare(&store, "c").is_err());
+        let pending = open(&dir.path().join("pending-owner.redb"));
+        prepare(&pending, "p").unwrap();
+        pending
+            .write(|tx| tx.delete(Table::Checkpoints, OWNER))
+            .unwrap();
+        assert!(prepare(&pending, "q").is_err());
+        assert!(active_record(&pending).is_err());
+        assert!(
+            pending
+                .write(|tx| settle_in(tx, "p", &reply("p", "1", "p", "auth", "p.whatsapp.net")))
+                .is_err()
+        );
+    }
+
+    #[test]
+    fn generation_and_request_digest_faults_do_not_become_legacy() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("fence.redb"));
+        prepare(&store, "a").unwrap();
+        let mut changed = saved(&store, "a");
+        changed["request_digest"] = serde_json::json!(vec![0; 32]);
+        assert!(effective_reply(&changed).is_err());
+        store.write(|tx| tx.bump_generation()).unwrap();
+        assert!(
+            store
+                .write(|tx| settle_in(tx, "a", &reply("a", "1", "a", "auth", "a.whatsapp.net")))
+                .is_err()
+        );
+        assert!(prepare(&store, "a").is_err());
+        assert!(prepare(&store, "new-generation-id").is_err());
+    }
+}

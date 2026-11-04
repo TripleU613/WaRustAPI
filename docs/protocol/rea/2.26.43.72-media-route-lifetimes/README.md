@@ -82,8 +82,10 @@ is_new is true. With a prior object and false is_new, it constructs a new object
 using prior A0C hosts and the new response's auth/lifetimes/base/IDs/metadata.
 This closes the getter/setter branch, not all refresh/deadline consumers.
 
-Rust now refuses non-new standalone cached replies until prospective prior-host
-binding and atomic merge exist. Native first-route false acceptance remains
+At this tracing stage Rust refused non-new standalone cached replies. The
+[subsequent prospective wrapper](../../media-network-outcomes.md#prospective-refresh-integration-2026-11-04)
+now supplies prior-host binding and atomic merge for new contexts; legacy
+non-new standalone cached replies remain unsupported. Native first-route false acceptance remains
 unsupported locally. No server refusal/retry requirement is inferred.
 
 - [current-route.json](current-route.json) — SHA-256 `139b8e70d071687bf8a23616ec35a398222c02fef29feaee7ff5a49b542bd258`.

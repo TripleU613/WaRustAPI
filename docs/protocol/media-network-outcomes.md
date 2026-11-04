@@ -156,3 +156,44 @@ Three handwritten tests cover all first/new/non-new branches, exact old-host/new
 metadata separation, unchanged originals and invalid/ambiguous inputs. Existing
 real-store route tests cover the public upload selection guard. Full host parser,
 permissions, expiry and cryptography remain separate obligations. No live traffic.
+
+## Prospective refresh integration (2026-11-04)
+
+**Confirmed Rust/offline:** `media_routing::refresh` now wraps the pure projector
+in prospective encrypted store context. Existing `lab-transport --media-route`
+uses it after accepted login. Preparation freezes exact request bytes/digest,
+actual generation, request time and a full copy of the coordinator's applied prior
+route in one transaction. A known prior route ID becomes the conditional last_id
+attribute traced in pinned 0VM.A07. Legacy route history never seeds this owner
+retrospectively; the first prospective request has an explicitly absent prior.
+
+A correlated result is validated and projected against that frozen copy. First
+route false replies now install incoming hosts; non-new updates retain exact prior
+host nodes with incoming auth/lifetimes/ID. Raw reply and derived effective reply
+are stored separately. The applied current pointer and request settlement commit
+atomically with CLI-saved unrelated inbound frames. If current state changed after
+preparation, the reply is saved as stale and cannot overwrite it. Exact duplicates
+are no-ops; conflicting replies refuse. Outer errors and unsupported results retain
+raw evidence without replacing the applied route. Store/authentication faults
+propagate; serialization diagnostics are static and preserve the storage error.
+
+Upload selection follows the applied pointer, not response timestamps or random
+request-ID order. It recomputes the projection from sealed prospective context
+and verifies the stored derived result. A failed later refresh does not erase
+the current object, matching the traced locked A0P getter/setter boundary; expiry
+checks still apply before upload. Once this owner exists, missing current/orphaned
+records cannot fall back to unrelated legacy history. Missing owner/source records
+refuse new preparation rather than manufacturing prior authority.
+
+Six real-store wrapper tests and one upload-selector test cover reopen, first
+false reply, conditional last_id, exact old-host/new-auth merge, original-wire
+retention, duplicate/conflicting settlement, stale CAS, transaction cuts, missing
+source/owner and generation/digest failures. No live traffic occurred.
+
+**Still incomplete:** native volatile flight/throttle/32-second timeout integration,
+property149-dependent startup cache restore policy, full host/upload/download/bucket
+selection, account logout teardown and upload select/reserve concurrency rechecks.
+The durable current object is an explicit local continuity policy, not proof that
+every native startup would restore it. Preparation alone neither sends nor replays
+a request; the existing explicit CLI operation sends one. No automatic refresh,
+key installation, identity reset, guessed historical request time or ban guarantee.

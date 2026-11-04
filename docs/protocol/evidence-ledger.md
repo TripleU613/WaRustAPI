@@ -1,3 +1,11 @@
+2026-11-04 — **Confirmed Rust/offline:** prospective media refresh context
+now binds exact request bytes, prior projection, generation and send-time clock.
+The existing explicit CLI query uses conditional last_id and atomic raw/effective
+reply/current-pointer settlement. Seven real-store tests cover merge, persistence,
+CAS/cuts/orphan/generation/digest guards and actual upload route selection. Pinned
+0VM.A07/A0A/A0P remain the native reference; no new APK/live evidence is claimed.
+[Implementation and remaining lifecycle gaps](media-network-outcomes.md#prospective-refresh-integration-2026-11-04).
+
 2026-11-04 — **Confirmed Rust/offline:** pure media host projection now
 implements pinned 0VM.A0A branch selection with exact prior hosts and incoming
 metadata, preserving inputs. Cached new-route selection uses the shared helper;

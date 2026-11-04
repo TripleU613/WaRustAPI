@@ -395,52 +395,37 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
             ));
         }
         if media_route {
-            use whatsapp_api::transport::messaging::{
-                media_route_request, new_message_id, wait_for, write_node,
-            };
+            use whatsapp_api::transport::messaging::{new_message_id, wait_for, write_node};
             let id = new_message_id()?;
-            let checkpoint = format!("media-route:{id}");
-            // APK 43.72 0VM.A07 -> 1xY.CK4 anchors lifetimes to request
-            // handoff, not receipt. Preserve this through the reply commit.
-            let requested_at = Timestamp::now();
-            store.write(|tx| {
-                tx.put_json(
-                    Table::Checkpoints,
-                    checkpoint.as_bytes(),
-                    1,
-                    &serde_json::json!({"status":"outcome_unknown", "at":requested_at, "requested_at":requested_at}),
-                )
-            })?;
-            write_node(&mut channel, &media_route_request(&id)).await?;
+            let request = whatsapp_api::transport::media_routing::refresh::prepare(&store, &id)?;
+            write_node(&mut channel, &request).await?;
             let (reply, pending) = wait_for(&mut channel, "iq", &id).await?;
-            let success = reply.get_attr("type").and_then(|v| v.as_text()) == Some("result")
-                && reply.child("media_conn").is_some();
             let dict = TokenDictionary::comparison_2_26_37_71();
-            let wire = whatsapp_api::binary::Encoder::new(dict).encode(&reply)?;
-            store.write(|tx| {
-                tx.put_json(Table::Checkpoints, checkpoint.as_bytes(), 1,
-                    &serde_json::json!({"status": if success {"result"} else {"refused"}, "wire":wire, "at":Timestamp::now(), "requested_at":requested_at}))?;
+            let settlement = store.write(|tx| {
+                let settlement =
+                    whatsapp_api::transport::media_routing::refresh::settle_in(tx, &id, &reply)?;
                 for (index, node) in pending.iter().enumerate() {
                     let bytes = whatsapp_api::binary::Encoder::new(dict).encode(node)?;
-                    tx.put_json(Table::Checkpoints, format!("inbound:{id}:{index:04}").as_bytes(), 1, &bytes)?;
+                    tx.put_json(
+                        Table::Checkpoints,
+                        format!("inbound:{id}:{index:04}").as_bytes(),
+                        1,
+                        &bytes,
+                    )?;
                 }
-                Ok(())
+                Ok(settlement)
             })?;
-            if !success {
+            if settlement != whatsapp_api::transport::media_routing::refresh::Settlement::Applied {
                 return Err(Error::invalid(
                     "media_route",
-                    "server did not return media routes; response saved encrypted",
+                    "media route reply refused, unsupported or stale; response saved encrypted",
                 ));
             }
-            let route = reply.child("media_conn").expect("checked");
-            let hosts = route
-                .child_nodes()
-                .iter()
-                .filter(|n| n.description == "host")
-                .count();
+            let (hosts, auth_present) =
+                whatsapp_api::transport::media_routing::refresh::current_summary(&store)?
+                    .ok_or_else(|| Error::invalid("media_route", "applied route missing"))?;
             println!(
-                "transport: media route result; hosts={hosts}, auth_present={}; saved encrypted; no image uploaded",
-                route.get_attr("auth").is_some()
+                "transport: media route result; hosts={hosts}, auth_present={auth_present}; saved encrypted; no image uploaded"
             );
         }
         if let Some(name) = push_name {

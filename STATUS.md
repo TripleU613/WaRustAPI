@@ -1,3 +1,17 @@
+2026-11-04 — **Prospective media refresh integration (offline):**
+
+The explicit CLI route query now freezes prior applied state/request bytes,
+conditionally sends last_id, and commits original reply, derived host merge and
+current pointer atomically. Bound non-new and first-route false replies are
+supported; legacy unbound histories are not reinterpreted. Stale/conflicting
+settlements cannot overwrite the current route. Upload selection follows the
+applied pointer with expiry checks, avoiding timestamp/random-ID ordering.
+[Tests, provenance and lifecycle limits](docs/protocol/media-network-outcomes.md#prospective-refresh-integration-2026-11-04).
+Validation: **1,246 workspace/all-feature tests**, strict Clippy, CLI-reference,
+formatting, coverage freshness and repository hygiene passed.
+No live traffic. Native flight/throttle/startup-restore and full host policy remain
+unfinished; no automatic query or retry is introduced.
+
 2026-11-04 — **Native media host projection core (offline):**
 
 A pure projector now selects first/new reply hosts or exact prior hosts for a

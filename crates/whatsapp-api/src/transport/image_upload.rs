@@ -330,21 +330,26 @@ pub(super) fn approved_host(host: &str) -> bool {
 }
 
 fn route(store: &ProtocolStore) -> Result<(String, Zeroizing<String>)> {
-    let records = store.read(|tx| tx.scan(Table::Checkpoints, 1, 10000))?;
-    if records.len() == 10000 {
-        return Err(invalid("checkpoint scan limit reached"));
-    }
-    let latest = records
-        .into_iter()
-        .filter(|(key, _)| key.starts_with(b"media-route:"))
-        .map(|(_, value)| {
-            serde_json::from_slice::<serde_json::Value>(&value)
-                .map_err(|_| invalid("invalid saved route"))
-        })
-        .collect::<Result<Vec<_>>>()?
-        .into_iter()
-        .max_by_key(|v| v["at"].as_i64().unwrap_or(0))
-        .ok_or_else(|| invalid("no saved media route; run --login --media-route first"))?;
+    let latest = match super::media_routing::refresh::active_record(store)? {
+        Some(saved) => saved,
+        None => {
+            let records = store.read(|tx| tx.scan(Table::Checkpoints, 1, 10000))?;
+            if records.len() == 10000 {
+                return Err(invalid("checkpoint scan limit reached"));
+            }
+            records
+                .into_iter()
+                .filter(|(key, _)| key.starts_with(b"media-route:"))
+                .map(|(_, value)| {
+                    serde_json::from_slice::<serde_json::Value>(&value)
+                        .map_err(|_| invalid("invalid saved route"))
+                })
+                .collect::<Result<Vec<_>>>()?
+                .into_iter()
+                .max_by_key(|v| v["at"].as_i64().unwrap_or(0))
+                .ok_or_else(|| invalid("no saved media route; run --login --media-route first"))?
+        }
+    };
     if latest["status"] != "result" {
         return Err(invalid(
             "latest media route request is refused or uncertain",
@@ -354,19 +359,25 @@ fn route(store: &ProtocolStore) -> Result<(String, Zeroizing<String>)> {
         .map_err(|_| invalid("invalid saved route wire"))?;
     let limits = Limits::default();
     let data = unpack_frame_payload(&wire, &limits)?;
-    let node =
-        Decoder::new(&data, TokenDictionary::comparison_2_26_37_71(), &limits).decode_node()?;
+    let prospective = super::media_routing::refresh::effective_reply(&latest)?;
+    let bound = prospective.is_some();
+    let node = match prospective {
+        Some(node) => node,
+        None => {
+            Decoder::new(&data, TokenDictionary::comparison_2_26_37_71(), &limits).decode_node()?
+        }
+    };
     let conn = node
         .child("media_conn")
         .ok_or_else(|| invalid("missing media connection"))?;
-    // The pure projector implements native prior-host selection, but this
-    // historical cache still has no prospective prior-route binding.
-    if !super::media_routing::is_new_route(conn)? {
+    // Prospective rows were recomputed above. Legacy standalone rows still
+    // lack prior-route binding and cannot unlock a non-new response.
+    if !bound && !super::media_routing::is_new_route(conn)? {
         return Err(invalid(
             "unchanged media route needs prior host binding; inspect saved response",
         ));
     }
-    let conn = super::media_routing::project_media_conn(None, conn)?;
+    let conn = conn.clone();
     let attr = |name| conn.get_attr(name).and_then(|v| v.as_text());
     // APK 43.72 1xY.CK4 -> 0Tp.A07/A0L/A09 requires both fields and
     // uses Java Long.parseLong. No missing-auth-TTL fallback exists there.
@@ -1026,6 +1037,73 @@ mod tests {
                 before
             );
         }
+    }
+
+    #[test]
+    fn store_bound_non_new_projection_is_used_for_upload_route_selection() {
+        use super::*;
+        use crate::{
+            binary::Node,
+            model::ids::AccountId,
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("bound-route.redb"),
+            account_id: AccountId::new("bound-route-test").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([1; 32]))),
+            create: true,
+        })
+        .unwrap();
+        let reply = |id: &str, host: &str, auth: &str| {
+            Node::new("iq")
+                .attr("id", id)
+                .attr("type", "result")
+                .children(vec![
+                    Node::new("media_conn")
+                        .attr("id", id)
+                        .attr("auth", auth)
+                        .attr("ttl", "3600")
+                        .attr("auth_ttl", "1800")
+                        .attr("is_new", "0")
+                        .children(vec![Node::new("host").attr("hostname", host)]),
+                ])
+        };
+        let coordinator = &super::super::media_routing::refresh::prepare;
+        coordinator(&store, "first").unwrap();
+        store
+            .write(|tx| {
+                super::super::media_routing::refresh::settle_in(
+                    tx,
+                    "first",
+                    &reply("first", "old.whatsapp.net", "old-auth"),
+                )
+            })
+            .unwrap();
+        coordinator(&store, "second").unwrap();
+        store
+            .write(|tx| {
+                super::super::media_routing::refresh::settle_in(
+                    tx,
+                    "second",
+                    &reply("second", "ignored.whatsapp.net", "new-auth"),
+                )
+            })
+            .unwrap();
+        let (host, auth) = route(&store).unwrap();
+        assert_eq!(host, "old.whatsapp.net");
+        assert_eq!(auth.as_str(), "new-auth");
+        coordinator(&store, "third").unwrap();
+        store
+            .write(|tx| {
+                super::super::media_routing::refresh::settle_in(
+                    tx,
+                    "third",
+                    &Node::new("iq").attr("id", "third").attr("type", "error"),
+                )
+            })
+            .unwrap();
+        assert_eq!(route(&store).unwrap().0, "old.whatsapp.net");
     }
 
     #[test]

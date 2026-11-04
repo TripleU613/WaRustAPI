@@ -7,6 +7,14 @@ use crate::{
     binary::{Node, NodeContent},
 };
 
+/// Prospective store-bound refresh preparation and atomic reply projection.
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub mod refresh;
+
 fn invalid(reason: &'static str) -> Error {
     Error::invalid("media_routing", reason)
 }
