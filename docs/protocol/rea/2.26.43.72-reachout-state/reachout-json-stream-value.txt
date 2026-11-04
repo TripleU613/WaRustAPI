@@ -1,0 +1,96 @@
+
+# class: LX/5ks;
+# extends: Ljava/lang/Object;
+
+.method private A00(LLI)  # .registers 10
+    # full signature: LX/5ks;->A00(Landroid/util/JsonReader;I)Ljava/lang/Object;
+    0000..0006  invoke-virtual  {v8}, Landroid/util/JsonReader;->peek()Landroid/util/JsonToken;
+    0006..0008  move-result-object  v0
+    0008..000c  if-eqz  v0, +0xd
+    000c..0010  sget-object  v1, LX/SFN;->A00:[I
+    0010..0016  invoke-virtual  {v0}, Ljava/lang/Enum;->ordinal()I
+    0016..0018  move-result  v0
+    0018..001c  aget  v0, v1, v0
+    001c..0022  packed-switch  v0, payload@0x144, cases=[1:@0x42, 2:@0x4c, 3:@0x56, 4:@0xa0, 5:@0x120, 6:@0x132], default@0x22
+    0022..0028  invoke-virtual  {v8}, Landroid/util/JsonReader;->peek()Landroid/util/JsonToken;
+    0028..002a  move-result-object  v1
+    002a..002e  const-string  v0, "Unexpected JSON token "
+    002e..0034  invoke-static  {v0, v1}, LX/1Xl;->A0w(Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/String;
+    0034..0036  move-result-object  v1
+    0036..003a  new-instance  v0, Lorg/json/JSONException;
+    003a..0040  invoke-direct  {v0, v1}, Lorg/json/JSONException;-><init>(Ljava/lang/String;)V
+    0040..0042  throw  v0
+    0042..0048  invoke-static  {v8, v7, v9}, LX/5ks;->A02(Landroid/util/JsonReader;LX/5ks;I)Lorg/json/JSONObject;
+    0048..004a  move-result-object  v3
+    004a..004c  goto  +0x79
+    004c..0052  invoke-direct  {v7, v8, v9}, LX/5ks;->A01(Landroid/util/JsonReader;I)Lorg/json/JSONArray;
+    0052..0054  move-result-object  v3
+    0054..0056  goto  +0x74
+    0056..005c  invoke-virtual  {v8}, Landroid/util/JsonReader;->nextString()Ljava/lang/String;
+    005c..005e  move-result-object  v3
+    005e..0064  invoke-static  {v3}, LX/00l;->A05(Ljava/lang/Object;)V
+    0064..006a  invoke-virtual  {v3}, Ljava/lang/String;->length()I
+    006a..006c  move-result  v1
+    006c..0070  const/16  v0, #0x20
+    0070..0074  if-gt  v1, v0, +0x66
+    0074..0078  iget-object  v2, v7, LX/5ks;->A01:Ljava/util/HashMap;
+    0078..007e  invoke-virtual  {v2, v3}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    007e..0080  move-result-object  v0
+    0080..0084  if-nez  v0, +0xe
+    0084..008a  invoke-virtual  {v2}, Ljava/util/AbstractMap;->size()I
+    008a..008c  move-result  v1
+    008c..0090  const/16  v0, #0x1000
+    0090..0094  if-ge  v1, v0, +0x56
+    0094..009a  invoke-virtual  {v2, v3, v3}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    009a..009c  goto  +0x51
+    009c..009e  move-object  v3, v0
+    009e..00a0  goto  +0x4f
+    00a0..00a6  invoke-virtual  {v8}, Landroid/util/JsonReader;->nextString()Ljava/lang/String;
+    00a6..00a8  move-result-object  v6
+    00a8..00ae  invoke-static  {v6}, LX/00l;->A05(Ljava/lang/Object;)V
+    00ae..00b2  const/16  v1, #0x2e
+    00b2..00b4  const/4  v0, #0x0
+    00b4..00ba  invoke-static  {v6, v1, v0, v0}, LX/0Cf;->A0L(Ljava/lang/CharSequence;CIZ)I
+    00ba..00bc  move-result  v0
+    00bc..00c0  if-gez  v0, +0x29
+    00c0..00c4  const/16  v2, #0x65
+    00c4..00c6  const/4  v1, #0x1
+    00c6..00c8  const/4  v0, #0x0
+    00c8..00ce  invoke-static  {v6, v2, v0, v1}, LX/0Cf;->A0L(Ljava/lang/CharSequence;CIZ)I
+    00ce..00d0  move-result  v0
+    00d0..00d4  if-gez  v0, +0x1f
+    00d4..00da  invoke-static  {v6}, Ljava/lang/Long;->parseLong(Ljava/lang/String;)J
+    00da..00dc  move-result-wide  v4
+    00dc..00de  long-to-int  v3, v4
+    00de..00e0  int-to-long  v1, v3
+    00e0..00e4  cmp-long  v0, v1, v4
+    00e4..00e8  if-nez  v0, +0x7
+    00e8..00ee  invoke-static  {v3}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    00ee..00f0  move-result-object  v3
+    00f0..00f2  goto  +0x26
+    00f2..00f8  invoke-static  {v4, v5}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    00f8..00fa  move-result-object  v3
+    00fa..00fc  goto  +0x21
+    00fc..0102  invoke-static  {v6}, Ljava/lang/Double;->parseDouble(Ljava/lang/String;)D
+    0102..0104  move-result-wide  v0
+    0104..010a  invoke-static  {v0, v1}, Ljava/lang/Double;->valueOf(D)Ljava/lang/Double;
+    010a..010c  move-result-object  v3
+    010c..010e  goto  +0x18
+    010e..0114  invoke-static  {v6}, Ljava/lang/Double;->parseDouble(Ljava/lang/String;)D
+    0114..0116  move-result-wide  v0
+    0116..011c  invoke-static  {v0, v1}, Ljava/lang/Double;->valueOf(D)Ljava/lang/Double;
+    011c..011e  move-result-object  v3
+    011e..0120  goto  +0xf
+    0120..0126  invoke-virtual  {v8}, Landroid/util/JsonReader;->nextBoolean()Z
+    0126..0128  move-result  v0
+    0128..012e  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    012e..0130  move-result-object  v3
+    0130..0132  goto  +0x6
+    0132..0138  invoke-virtual  {v8}, Landroid/util/JsonReader;->nextNull()V
+    0138..013c  sget-object  v3, Lorg/json/JSONObject;->NULL:Ljava/lang/Object;
+    013c..0142  invoke-static  {v3}, LX/00l;->A08(Ljava/lang/Object;)V
+    0142..0144  return-object  v3
+    0144..0164  packed-switch-payload  size=6
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/NumberFormatException; code_units 006a..007e -> 007e
+.end method

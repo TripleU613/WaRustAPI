@@ -1,0 +1,26 @@
+
+# class: LX/5ks;
+# extends: Ljava/lang/Object;
+
+.method private A01(LLI)  # .registers 5
+    # full signature: LX/5ks;->A01(Landroid/util/JsonReader;I)Lorg/json/JSONArray;
+    0000..0004  const/16  v1, #0x40
+    0004..0008  if-gt  v4, v1, +0x1e
+    0008..000c  new-instance  v1, Lorg/json/JSONArray;
+    000c..0012  invoke-direct  {v1}, Lorg/json/JSONArray;-><init>()V
+    0012..0018  invoke-virtual  {v3}, Landroid/util/JsonReader;->beginArray()V
+    0018..001e  invoke-virtual  {v3}, Landroid/util/JsonReader;->hasNext()Z
+    001e..0020  move-result  v0
+    0020..0024  if-eqz  v0, +0xc
+    0024..0028  add-int/lit8  v0, v4, #0x1
+    0028..002e  invoke-direct  {v2, v3, v0}, LX/5ks;->A00(Landroid/util/JsonReader;I)Ljava/lang/Object;
+    002e..0030  move-result-object  v0
+    0030..0036  invoke-virtual  {v1, v0}, Lorg/json/JSONArray;->put(Ljava/lang/Object;)Lorg/json/JSONArray;
+    0036..0038  goto  -0xf
+    0038..003e  invoke-virtual  {v3}, Landroid/util/JsonReader;->endArray()V
+    003e..0040  return-object  v1
+    0040..0044  new-instance  v0, LX/6f1;
+    0044..004a  invoke-direct  {v0, v1}, LX/6f1;-><init>(I)V
+    004a..004c  throw  v0
+    # exception table: 0 try range(s)
+.end method

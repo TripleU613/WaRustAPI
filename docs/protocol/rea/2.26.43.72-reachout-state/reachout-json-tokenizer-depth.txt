@@ -1,0 +1,55 @@
+
+# class: LX/1UO;
+# extends: Lorg/json/JSONTokener;
+
+.method public <init>(VLI)  # .registers 4
+    # full signature: LX/1UO;-><init>(Ljava/lang/String;I)V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000e  invoke-direct  {v1, v2}, Lorg/json/JSONTokener;-><init>(Ljava/lang/String;)V
+    000e..0012  iput  v3, v1, LX/1UO;->A01:I
+    0012..0014  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public nextValue(L)  # .registers 3
+    # full signature: LX/1UO;->nextValue()Ljava/lang/Object;
+    0000..0006  invoke-virtual  {v2}, Lorg/json/JSONTokener;->nextClean()C
+    0006..0008  move-result  v1
+    0008..000c  if-eqz  v1, +0x3b
+    000c..0012  invoke-virtual  {v2}, Lorg/json/JSONTokener;->back()V
+    0012..0016  const/16  v0, #0x5b
+    0016..001a  if-eq  v1, v0, +0xe
+    001a..001e  const/16  v0, #0x7b
+    001e..0022  if-eq  v1, v0, +0xa
+    0022..0028  invoke-super  {v2}, Lorg/json/JSONTokener;->nextValue()Ljava/lang/Object;
+    0028..002a  move-result-object  v1
+    002a..0030  invoke-static  {v1}, LX/00l;->A05(Ljava/lang/Object;)V
+    0030..0032  return-object  v1
+    0032..0036  iget  v0, v2, LX/1UO;->A00:I
+    0036..003a  add-int/lit8  v1, v0, #0x1
+    003a..003e  iput  v1, v2, LX/1UO;->A00:I
+    003e..0042  iget  v0, v2, LX/1UO;->A01:I
+    0042..0046  if-gt  v1, v0, +0x18
+    0046..004c  invoke-super  {v2}, Lorg/json/JSONTokener;->nextValue()Ljava/lang/Object;
+    004c..004e  move-result-object  v1
+    004e..0054  invoke-static  {v1}, LX/00l;->A05(Ljava/lang/Object;)V
+    0054..0058  iget  v0, v2, LX/1UO;->A00:I
+    0058..005c  add-int/lit8  v0, v0, #0xff (-1)
+    005c..0060  iput  v0, v2, LX/1UO;->A00:I
+    0060..0062  return-object  v1
+    0062..0064  move-exception  v1
+    0064..0068  iget  v0, v2, LX/1UO;->A00:I
+    0068..006c  add-int/lit8  v0, v0, #0xff (-1)
+    006c..0070  iput  v0, v2, LX/1UO;->A00:I
+    0070..0072  throw  v1
+    0072..0076  new-instance  v1, LX/6f1;
+    0076..007c  invoke-direct  {v1, v0}, LX/6f1;-><init>(I)V
+    007c..007e  throw  v1
+    007e..0082  const-string  v0, "End of input"
+    0082..0086  new-instance  v1, Lorg/json/JSONException;
+    0086..008c  invoke-direct  {v1, v0}, Lorg/json/JSONException;-><init>(Ljava/lang/String;)V
+    008c..008e  throw  v1
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0023..002a -> 0031
+.end method

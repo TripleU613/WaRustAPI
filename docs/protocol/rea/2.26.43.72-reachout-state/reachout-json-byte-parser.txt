@@ -1,0 +1,121 @@
+
+# class: LX/0iz;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 2
+    # full signature: LX/0iz;-><init>()V
+    0000..0006  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    0006..000a  const/16  v0, #0x42
+    000a..0010  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0010..0012  move-result-object  v0
+    0012..0016  iput-object  v0, v1, LX/0iz;->A00:LX/05a;
+    0016..0018  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public CtT(LL)  # .registers 8
+    # full signature: LX/0iz;->CtT(Ljava/lang/Object;)Ljava/lang/Object;
+    0000..0004  check-cast  v7, LX/7wg;
+    0004..0006  const/4  v0, #0x0
+    0006..000c  invoke-static  {v7, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    000c..0010  iget-object  v0, v6, LX/0iz;->A00:LX/05a;
+    0010..0014  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0014..001a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    001a..001c  move-result-object  v1
+    001c..0020  check-cast  v1, LX/00E;
+    0020..0024  sget-object  v0, LX/SGd;->A04:LX/00f;
+    0024..002a  invoke-static  {v0}, LX/00l;->A06(Ljava/lang/Object;)V
+    002a..0030  invoke-virtual  {v1, v0}, LX/00E;->A17(LX/00f;)Z
+    0030..0032  move-result  v0
+    0032..0036  if-eqz  v0, +0x82
+    0036..003a  iget-object  v0, v7, LX/7wg;->A00:[B
+    003a..003e  new-instance  v2, Ljava/io/ByteArrayInputStream;
+    003e..0044  invoke-direct  {v2, v0}, Ljava/io/ByteArrayInputStream;-><init>([B)V
+    0044..0048  sget-object  v1, LX/08Q;->A05:Ljava/nio/charset/Charset;
+    0048..004c  new-instance  v0, Ljava/io/InputStreamReader;
+    004c..0052  invoke-direct  {v0, v2, v1}, Ljava/io/InputStreamReader;-><init>(Ljava/io/InputStream;Ljava/nio/charset/Charset;)V
+    0052..0056  new-instance  v5, LX/5ks;
+    0056..005c  invoke-direct  {v5, v0}, LX/5ks;-><init>(Ljava/io/Reader;)V
+    005c..0060  const-string  v2, "Failed to read JSON"
+    0060..0064  iget-object  v0, v5, LX/5ks;->A00:Ljava/io/Reader;
+    0064..0068  new-instance  v4, Landroid/util/JsonReader;
+    0068..006e  invoke-direct  {v4, v0}, Landroid/util/JsonReader;-><init>(Ljava/io/Reader;)V
+    006e..0070  const/4  v3, #0x1
+    0070..0076  invoke-virtual  {v4, v3}, Landroid/util/JsonReader;->setLenient(Z)V
+    0076..007c  invoke-virtual  {v4}, Landroid/util/JsonReader;->peek()Landroid/util/JsonToken;
+    007c..007e  move-result-object  v1
+    007e..0082  sget-object  v0, Landroid/util/JsonToken;->END_DOCUMENT:Landroid/util/JsonToken;
+    0082..0086  if-ne  v1, v0, +0x8
+    0086..008a  new-instance  v3, Lorg/json/JSONObject;
+    008a..0090  invoke-direct  {v3}, Lorg/json/JSONObject;-><init>()V
+    0090..0092  goto  +0x26
+    0092..0096  sget-object  v0, Landroid/util/JsonToken;->BEGIN_OBJECT:Landroid/util/JsonToken;
+    0096..009a  if-ne  v1, v0, +0x16
+    009a..00a0  invoke-static  {v4, v5, v3}, LX/5ks;->A02(Landroid/util/JsonReader;LX/5ks;I)Lorg/json/JSONObject;
+    00a0..00a2  move-result-object  v3
+    00a2..00a8  invoke-virtual  {v4}, Landroid/util/JsonReader;->peek()Landroid/util/JsonToken;
+    00a8..00aa  move-result-object  v1
+    00aa..00ae  sget-object  v0, Landroid/util/JsonToken;->END_DOCUMENT:Landroid/util/JsonToken;
+    00ae..00b2  if-eq  v1, v0, +0x17
+    00b2..00b6  const-string  v0, "Expected end of JSON input"
+    00b6..00ba  new-instance  v1, Lorg/json/JSONException;
+    00ba..00c0  invoke-direct  {v1, v0}, Lorg/json/JSONException;-><init>(Ljava/lang/String;)V
+    00c0..00c2  throw  v1
+    00c2..00c6  const-string  v0, "Expected a JSON object"
+    00c6..00ca  new-instance  v1, Lorg/json/JSONException;
+    00ca..00d0  invoke-direct  {v1, v0}, Lorg/json/JSONException;-><init>(Ljava/lang/String;)V
+    00d0..00d2  goto  -0x8
+    00d2..00d6  new-instance  v3, Lorg/json/JSONObject;
+    00d6..00dc  invoke-direct  {v3}, Lorg/json/JSONObject;-><init>()V
+    00dc..00e2  invoke-virtual  {v4}, Landroid/util/JsonReader;->close()V
+    00e2..00e4  return-object  v3
+    00e4..00e6  move-exception  v1
+    00e6..00e8  throw  v1
+    00e8..00ea  move-exception  v0
+    00ea..00f0  invoke-static  {v4, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    00f0..00f2  throw  v0
+    00f2..00f4  move-exception  v1
+    00f4..00fa  invoke-virtual  {v1}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    00fa..00fc  move-result-object  v0
+    00fc..0100  if-eqz  v0, +0x3
+    0100..0102  move-object  v2, v0
+    0102..0106  new-instance  v0, Lorg/json/JSONException;
+    0106..010c  invoke-direct  {v0, v2}, Lorg/json/JSONException;-><init>(Ljava/lang/String;)V
+    010c..0112  invoke-virtual  {v0, v1}, Ljava/lang/Throwable;->initCause(Ljava/lang/Throwable;)Ljava/lang/Throwable;
+    0112..0114  throw  v0
+    0114..0116  move-exception  v1
+    0116..011c  invoke-virtual  {v1}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    011c..011e  move-result-object  v0
+    011e..0122  if-eqz  v0, +0x3
+    0122..0124  move-object  v2, v0
+    0124..0128  new-instance  v0, Lorg/json/JSONException;
+    0128..012e  invoke-direct  {v0, v2}, Lorg/json/JSONException;-><init>(Ljava/lang/String;)V
+    012e..0134  invoke-virtual  {v0, v1}, Ljava/lang/Throwable;->initCause(Ljava/lang/Throwable;)Ljava/lang/Throwable;
+    0134..0136  throw  v0
+    0136..013a  iget-object  v2, v7, LX/7wg;->A00:[B
+    013a..013c  array-length  v0, v2
+    013c..0140  if-nez  v0, +0x8
+    0140..0144  new-instance  v3, Lorg/json/JSONObject;
+    0144..014a  invoke-direct  {v3}, Lorg/json/JSONObject;-><init>()V
+    014a..014c  return-object  v3
+    014c..0150  sget-object  v0, LX/08Q;->A05:Ljava/nio/charset/Charset;
+    0150..0154  new-instance  v1, Ljava/lang/String;
+    0154..015a  invoke-direct  {v1, v2, v0}, Ljava/lang/String;-><init>([BLjava/nio/charset/Charset;)V
+    015a..015e  new-instance  v0, LX/BTj;
+    015e..0164  invoke-direct  {v0, v1}, LX/BTj;-><init>(Ljava/lang/String;)V
+    0164..0168  new-instance  v3, Lorg/json/JSONObject;
+    0168..016e  invoke-direct  {v3, v0}, Lorg/json/JSONObject;-><init>(Lorg/json/JSONTokener;)V
+    016e..0170  return-object  v3
+    # exception table: 7 try range(s)
+    # catch Ljava/io/IOException; code_units 0030..0037 -> 008a
+    # catch Ljava/lang/NumberFormatException; code_units 0030..0037 -> 0079
+    # catch <all> code_units 0037..003b -> 0072
+    # catch Ljava/io/EOFException; code_units 003b..003f -> 0069
+    # catch <all> code_units 003b..003f -> 0072
+    # catch <all> code_units 003f..006e -> 0072
+    # catch Ljava/io/IOException; code_units 006e..0072 -> 008a
+    # catch Ljava/lang/NumberFormatException; code_units 006e..0072 -> 0079
+    # catch <all> code_units 0073..0074 -> 0074
+    # catch Ljava/io/IOException; code_units 0075..0079 -> 008a
+    # catch Ljava/lang/NumberFormatException; code_units 0075..0079 -> 0079
+.end method

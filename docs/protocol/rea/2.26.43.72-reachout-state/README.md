@@ -1196,3 +1196,108 @@ exports are checked DEX text, not REA Evidence envelopes.
 - [reachout-response-mixin-dispatch.txt](reachout-response-mixin-dispatch.txt) — SHA-256 `298ba4c69ea2aad57d689812fbb8eef82a5575b62778d776e3a0864bfa39dee9`.
 - [reachout-response-child-count.txt](reachout-response-child-count.txt) — SHA-256 `1de527a6057ee478bd204e4e12d868e9deb1cced35502630a40817c474fd5dd9`.
 - [reachout-response-jid-attribute.txt](reachout-response-jid-attribute.txt) — SHA-256 `0e1523de412bd1c3e33fecc249ec1ed222f1656cb875b02634893a0b574fbee8`.
+
+## Pinned JSON decoder branches and extraction failures (2026-11-04)
+
+**Confirmed static**, same pinned APK 2.26.43.72 SHA-256 above. The
+older 37.71 mex-json-parser-evidence.txt was consulted only to locate
+prior research. It is not proof of the current decoder: the pinned
+provider and configuration branches below were traced independently.
+
+### Provider and byte parser
+
+0iy.<init> requests DI key 0x1141 (4417). The retained complete
+1Uw.A08 switch masks key with 0x3fff; entry 4417 targets byte 0xb12,
+constructing 0iz. This closes the DI parser identity without inferring
+from adjacent class names. Direct 0iy constructor caller and 1WU
+constructor censuses are retained as bounded call sites, not execution.
+
+0iz.CtT consumes 7wg bytes and tests SGd.A04 through 00E.A17.
+The runtime gate value is unknown. 08Q.A05 is initialized to UTF-8.
+
+- **Gate true:** ByteArrayInputStream -> InputStreamReader(UTF-8) ->
+  5ks/JsonReader, setLenient(true). Initial END_DOCUMENT returns empty
+  JSONObject. Otherwise it requires BEGIN_OBJECT, parses via 5ks.A02
+  at depth argument 1 and requires END_DOCUMENT afterward; trailing
+  tokens raise Expected end of JSON input. EOF caught around the
+  initial peek yields an empty object. Listed I/O and number errors
+  become JSONException with causes. The reader is closed.
+- **Gate false:** zero bytes return empty JSONObject. Other bytes are
+  decoded with new String(bytes,UTF-8), wrapped in BTj and passed to
+  JSONObject(JSONTokener). This branch does not add the stream branch's
+  explicit end-of-input peek. Full platform JSONTokener grammar and
+  malformed-UTF-8 behavior are not newly established by static calls.
+
+BTj extends 1UO with a 64 nesting-budget argument. 1UO.nextValue
+tracks entry into arrays/objects, throws 6f1 when its counter exceeds
+its bound, and decrements around superclass calls. BTj.nextString
+reuses strings of length <=32 in a map capped at 4096 entries. This
+is allocation reuse, not a string length acceptance limit.
+
+The streaming 5ks.A02/A01 object/array readers refuse depth arguments
+>64; object fields and array values recurse through A00. Its object
+keys and short strings also use capped reuse maps. Numeric tokens
+without a dot/exponent attempt Long.parseLong and box as Integer when
+round-trippable, otherwise Long; failed integer parsing and fractional/
+exponent paths use Double.parseDouble. Complete methods are retained.
+Exact depth equivalence across the two parser branches and full Android
+numeric/lenient syntax vectors are not claimed. No Rust serde limit is
+misrepresented as the native grammar.
+
+### Data and errors extraction
+
+0iy configures 0iv with parser 0iz, 1WU selector 1 data converter,
+selector 0 errors converter and selector 3 fallback-error converter.
+0iv.<init> retains the actual slot binding so the call order is not
+guessed from names. In 1WU.CtT:
+
+- data missing or JSONObject null -> new empty JSONObject; present
+  nonnull data -> getJSONObject, so wrong type throws.
+- errors missing or JSONObject null -> new empty JSONArray; present
+  nonnull errors -> getJSONArray, so wrong type throws.
+- fallback error -> one-entry JSONArray containing String.valueOf(input).
+
+The already retained 0iv.A00 invokes both extraction converters and
+keeps their failure values separate:
+
+| Data extraction | Errors extraction | Pipeline result |
+| --- | --- | --- |
+| succeeds | succeeds | SUg(data,errors) |
+| fails | succeeds | explicit data parsing failure |
+| fails | fails | aggregated data/errors parsing failure |
+| succeeds | fails | SUg(data,synthesized one-entry error array) |
+
+The earlier RsF/refresh callback trace completes the last row: a
+nonempty synthesized error array activates the error callback, whose
+false return suppresses restriction-state success application. Missing
+or null data itself becomes an empty object and is declined by the
+empty-data callback policy. Invalid top-level bytes first fail parsing;
+they are not treated as a successful inactive timelock. OOM has its
+separate 7MH path in 0iv; it is not ordinary empty input.
+
+**Remaining scope:** streaming syntax/platform oracle equivalence, Argo
+decoder, other generic matcher edges, pending callback/account ownership,
+alternate registry startup order, and durable refresh reservation/
+settlement/application. JSON extraction and this normal DI chain should
+not be re-investigated from old-build class names. Fetch scalar-default
+semantics remain distinct from push notification typed accessors. No
+new runtime parser, network request or synthetic release state was added;
+automatic Rust refresh and the overall audit remain unfinished.
+
+Reproduce apk-smali on 1Uw.A08, 0iz, 1WU, 08Q.<clinit>, BTj/1UO,
+5ks.A00/A01/A02 and 0iv.<init>, with --signatures --exceptions.
+Existing 0iy/0iv.A00/0is/RsF/0id exports bind surrounding stages.
+TXT exports are checked DEX text, not REA Evidence envelopes.
+
+- [reachout-json-field-converters.txt](reachout-json-field-converters.txt) — SHA-256 `80ca6521ebc10613259aa0f1cbeff7f2840bb2934c03ba773b9ddb3d0927539b`.
+- [reachout-json-pipeline-callers.txt](reachout-json-pipeline-callers.txt) — SHA-256 `3d48fa3c394da9430f8737919db8dd1e5eb03732951bfd9d943fda2893490fb9`.
+- [reachout-json-converter-callers.txt](reachout-json-converter-callers.txt) — SHA-256 `d92ef0f8170569e13b4865a6a95dd87c7fc4735057cac3d7cd55a5427d9ea8d3`.
+- [reachout-json-provider-switch.txt](reachout-json-provider-switch.txt) — SHA-256 `bd2c78ae2e506498d3299eb92f8d9bd05a03a9c1d76bce8151ea1dbdd51f82d0`.
+- [reachout-json-byte-parser.txt](reachout-json-byte-parser.txt) — SHA-256 `95de5ca15613a58eed1e75d5e2ba656097f64f0e63a119d734809cb4c6f88f10`.
+- [reachout-json-charset.txt](reachout-json-charset.txt) — SHA-256 `69ac55ea0e4e83cb125dffb15ef6c4483509af82776f34bd4de1783bc6e00c47`.
+- [reachout-json-tokenizer.txt](reachout-json-tokenizer.txt) — SHA-256 `19820a8134985d357f1d5db138acaa3d70ecf281639061038ec49b83909b1dc5`.
+- [reachout-json-stream-object.txt](reachout-json-stream-object.txt) — SHA-256 `29756ca7a4e5dc7278714ee623200ba49194b0db1c157054f410a193543cdc1e`.
+- [reachout-json-tokenizer-depth.txt](reachout-json-tokenizer-depth.txt) — SHA-256 `9f264dacf3490de3c4d5bad4b894e1262394149d2392f5e8a97cf9b8dd9d6abb`.
+- [reachout-json-stream-value.txt](reachout-json-stream-value.txt) — SHA-256 `f2552a08fadeef70687a53c91dfd5c9dab35ba3d781734b294b7ea58aea81930`.
+- [reachout-json-stream-array.txt](reachout-json-stream-array.txt) — SHA-256 `d2b0e5d24789a5c61fa0a5c66d219dd575f84bfc83003d31f065c955c3b1db74`.
+- [reachout-json-pipeline-slot-binding.txt](reachout-json-pipeline-slot-binding.txt) — SHA-256 `25dd542e1a3ff99842a1eaabd3ca7fdf33a1417ca8fd942627b558f1f8fdb7f5`.

@@ -1,3 +1,12 @@
+2026-11-04 — **Pinned JSON decoder and data/errors failure matrix traced:**
+
+DI key 4417 resolves 0iz. Configuration selects stream/JSONTokener paths;
+empty input and data/errors extraction defaults/failures are retained.
+Malformed errors with good data synthesize an error array, suppressing
+refresh application. [Evidence and remaining work](docs/protocol/rea/2.26.43.72-reachout-state/README.md#pinned-json-decoder-branches-and-extraction-failures-2026-11-04).
+Validation: JSON parsing, coverage freshness, staged diff and repository
+hygiene passed. Static research only; no runtime change/live traffic.
+
 2026-11-04 — **Refresh response ID/sender equality and JSON selection traced:**
 
 Selected success constructor compares response id/from with original id/to,

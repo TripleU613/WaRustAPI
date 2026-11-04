@@ -386,3 +386,13 @@ nonnull byte-body wrapper can reach JSON decoding despite missing/other
 format. Full decoding and callback/error gates remain required.
 [Validator and caller evidence](rea/2.26.43.72-reachout-state/README.md#request-bound-equality-and-json-alternative-error-propagation-2026-11-04). Pending-request/account ownership
 and durable application are still open; no runtime behavior changed.
+
+## Pinned refresh JSON decoding and extraction (2026-11-04)
+
+**Confirmed static:** DI resolves 0iz; a runtime gate selects lenient
+streaming object parsing with explicit end check or custom JSONTokener.
+Data/errors absence/null becomes empty containers, wrong types remain
+conversion failures. Good data plus malformed errors synthesizes an
+error array, so the refresh callback suppresses application.
+[Parser/provider chain and exact failure matrix](rea/2.26.43.72-reachout-state/README.md#pinned-json-decoder-branches-and-extraction-failures-2026-11-04). Platform/Argo
+coverage and durable account-bound application remain open; no runtime change.

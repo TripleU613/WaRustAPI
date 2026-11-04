@@ -1,0 +1,36 @@
+
+# class: LX/BTj;
+# extends: LX/1UO;
+
+.method public <init>(VL)  # .registers 3
+    # full signature: LX/BTj;-><init>(Ljava/lang/String;)V
+    0000..0004  const/16  v0, #0x40
+    0004..000a  invoke-direct  {v1, v2, v0}, LX/1UO;-><init>(Ljava/lang/String;I)V
+    000a..0010  invoke-static  {}, LX/2L6;->A1E()Ljava/util/HashMap;
+    0010..0012  move-result-object  v0
+    0012..0016  iput-object  v0, v1, LX/BTj;->A00:Ljava/util/HashMap;
+    0016..0018  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public nextString(LC)  # .registers 6
+    # full signature: LX/BTj;->nextString(C)Ljava/lang/String;
+    0000..0006  invoke-super  {v4, v5}, Lorg/json/JSONTokener;->nextString(C)Ljava/lang/String;
+    0006..0008  move-result-object  v3
+    0008..000e  invoke-virtual  {v3}, Ljava/lang/String;->length()I
+    000e..0010  move-result  v1
+    0010..0014  const/16  v0, #0x20
+    0014..0018  if-gt  v1, v0, +0x15
+    0018..001c  iget-object  v2, v4, LX/BTj;->A00:Ljava/util/HashMap;
+    001c..0022  invoke-static  {v3, v2}, LX/3q0;->A0v(Ljava/lang/Object;Ljava/util/AbstractMap;)Ljava/lang/String;
+    0022..0024  move-result-object  v0
+    0024..0028  if-nez  v0, +0xe
+    0028..002e  invoke-virtual  {v2}, Ljava/util/AbstractMap;->size()I
+    002e..0030  move-result  v1
+    0030..0034  const/16  v0, #0x1000
+    0034..0038  if-ge  v1, v0, +0x5
+    0038..003e  invoke-virtual  {v2, v3, v3}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    003e..0040  return-object  v3
+    0040..0042  return-object  v0
+    # exception table: 0 try range(s)
+.end method

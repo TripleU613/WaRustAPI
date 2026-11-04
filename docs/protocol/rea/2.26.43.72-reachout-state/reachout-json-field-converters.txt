@@ -1,0 +1,59 @@
+
+# class: LX/1WU;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VI)  # .registers 2
+    # full signature: LX/1WU;-><init>(I)V
+    0000..0004  iput  v1, v0, LX/1WU;->$t:I
+    0004..000a  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public CtT(LL)  # .registers 4
+    # full signature: LX/1WU;->CtT(Ljava/lang/Object;)Ljava/lang/Object;
+    0000..0004  iget  v0, v2, LX/1WU;->$t:I
+    0004..000a  packed-switch  v0, payload@0xa8, cases=[0:@0x6a, 1:@0x2c], default@0xa
+    000a..000e  new-instance  v1, Lorg/json/JSONArray;
+    000e..0014  invoke-direct  {v1}, Lorg/json/JSONArray;-><init>()V
+    0014..001a  invoke-static  {v3}, Ljava/lang/String;->valueOf(Ljava/lang/Object;)Ljava/lang/String;
+    001a..001c  move-result-object  v0
+    001c..0022  invoke-virtual  {v1, v0}, Lorg/json/JSONArray;->put(Ljava/lang/Object;)Lorg/json/JSONArray;
+    0022..0024  move-result-object  v0
+    0024..002a  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    002a..002c  return-object  v0
+    002c..0030  check-cast  v3, Lorg/json/JSONObject;
+    0030..0032  const/4  v0, #0x0
+    0032..0038  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0038..003c  const-string  v1, "data"
+    003c..0042  invoke-virtual  {v3, v1}, Lorg/json/JSONObject;->has(Ljava/lang/String;)Z
+    0042..0044  move-result  v0
+    0044..0048  if-eqz  v0, +0xd
+    0048..004e  invoke-virtual  {v3, v1}, Lorg/json/JSONObject;->isNull(Ljava/lang/String;)Z
+    004e..0050  move-result  v0
+    0050..0054  if-nez  v0, +0x7
+    0054..005a  invoke-virtual  {v3, v1}, Lorg/json/JSONObject;->getJSONObject(Ljava/lang/String;)Lorg/json/JSONObject;
+    005a..005c  move-result-object  v0
+    005c..005e  return-object  v0
+    005e..0062  new-instance  v0, Lorg/json/JSONObject;
+    0062..0068  invoke-direct  {v0}, Lorg/json/JSONObject;-><init>()V
+    0068..006a  return-object  v0
+    006a..006e  check-cast  v3, Lorg/json/JSONObject;
+    006e..0070  const/4  v0, #0x0
+    0070..0076  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0076..007a  const-string  v1, "errors"
+    007a..0080  invoke-virtual  {v3, v1}, Lorg/json/JSONObject;->has(Ljava/lang/String;)Z
+    0080..0082  move-result  v0
+    0082..0086  if-eqz  v0, +0xd
+    0086..008c  invoke-virtual  {v3, v1}, Lorg/json/JSONObject;->isNull(Ljava/lang/String;)Z
+    008c..008e  move-result  v0
+    008e..0092  if-nez  v0, +0x7
+    0092..0098  invoke-virtual  {v3, v1}, Lorg/json/JSONObject;->getJSONArray(Ljava/lang/String;)Lorg/json/JSONArray;
+    0098..009a  move-result-object  v0
+    009a..009c  return-object  v0
+    009c..00a0  new-instance  v0, Lorg/json/JSONArray;
+    00a0..00a6  invoke-direct  {v0}, Lorg/json/JSONArray;-><init>()V
+    00a6..00a8  return-object  v0
+    00a8..00b8  packed-switch-payload  size=2
+    # exception table: 0 try range(s)
+.end method

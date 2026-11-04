@@ -1,3 +1,9 @@
+2026-11-04 — **Pinned static: JSON DI/parser branches and extraction matrix.**
+1Uw.A08 key 4417 -> 0iz; SGd.A04-dependent branches, UTF-8, 5ks/BTj
+helpers and 1WU/0iv slot binding retained. Wrong-typed data/errors differ
+from absence/null. [Sources and failure disposition](rea/2.26.43.72-reachout-state/README.md#pinned-json-decoder-branches-and-extraction-failures-2026-11-04).
+No current-build grammar inferred solely from older evidence; no live traffic.
+
 2026-11-04 — **Pinned static/derived: response equality and format fallback.**
 8B6.A0J/A0K/A0H plus original 7Ou/8TV bind id/from to original id/to
 and explain why ignored JSON format validation does not veto a body.
