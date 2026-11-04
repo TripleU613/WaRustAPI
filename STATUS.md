@@ -1,3 +1,16 @@
+2026-11-04 — **Explicit media refusal throttle (static/offline):**
+
+Pinned 1xY.Bvj code507 positive backoff is seconds capped at 10800. Its deadline
+now commits with the refusal receipt and blocks new explicit refresh preparation.
+Duplicates cannot extend it; native-qualified 503 and applied success clear it.
+No generic delay or automatic query is invented. Read-only deadline inspection
+and cap/reopen/expiry/selection/reset tests retain the original error evidence.
+[Native source, arithmetic caveat and local policy](docs/protocol/media-network-outcomes.md#explicit-media-throttle-2026-11-04).
+Validation: **1,248 workspace/all-feature tests**, strict Clippy, CLI-reference,
+formatting, coverage freshness and repository hygiene passed.
+No live traffic. The native Fibonacci retry path and full volatile owner remain
+unfinished.
+
 2026-11-04 — **Prospective media refresh integration (offline):**
 
 The explicit CLI route query now freezes prior applied state/request bytes,

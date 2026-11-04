@@ -1,3 +1,11 @@
+2026-11-04 — **Confirmed pinned static/implemented offline:** 1xY.Bvj
+sets media throttle only for positive507 backoff (cap10800 seconds), resets it
+for qualified503 and consumes the first valid nonzero pair. Prospective refresh
+now persists/enforces that deadline atomically without automatic retry. Duplicate,
+expiry and parser/reset tests are offline. Existing checked arithmetic has an
+unsymbolized opcode; the addition remains attributed to recovered Java source.
+[Evidence and limits](rea/2.26.43.72-media-route-lifetimes/README.md#explicit-media-refusal-throttle).
+
 2026-11-04 — **Confirmed Rust/offline:** prospective media refresh context
 now binds exact request bytes, prior projection, generation and send-time clock.
 The existing explicit CLI query uses conditional last_id and atomic raw/effective

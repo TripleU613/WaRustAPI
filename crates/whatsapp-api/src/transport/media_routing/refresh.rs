@@ -11,6 +11,7 @@ use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 const CURRENT: &[u8] = b"media-routing-current:v1";
 const OWNER: &[u8] = b"media-routing-owner:v1";
+const THROTTLE: &[u8] = b"media-routing-throttle-until:v1";
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 struct Current {
@@ -78,6 +79,95 @@ pub fn current_summary(store: &ProtocolStore) -> Result<Option<(usize, bool)>> {
         })
         .map_err(redact)
 }
+#[derive(Debug, PartialEq, Eq)]
+enum ThrottleDirective {
+    Clear,
+    Wait(u32),
+}
+fn integer_attr(node: &Node, name: &str) -> Option<i32> {
+    match node.get_attr(name) {
+        None => Some(0),
+        Some(value) => value
+            .as_text()
+            .and_then(super::super::mex::java_decimal_long)
+            .and_then(|value| i32::try_from(value).ok()),
+    }
+}
+// APK 43.72 1xY.Bvj: skip malformed entries/code0, consume the first valid
+// nonzero code+backoff pair. 507 positive seconds cap at 10800; 503 resets.
+fn error_directive(reply: &Node) -> Option<ThrottleDirective> {
+    for error in reply
+        .child_nodes()
+        .iter()
+        .filter(|node| node.description == "error")
+    {
+        let Some(code) = integer_attr(error, "code") else {
+            continue;
+        };
+        if code == 0 {
+            continue;
+        }
+        let Some(backoff) = integer_attr(error, "backoff") else {
+            continue;
+        };
+        return match code {
+            503 => Some(ThrottleDirective::Clear),
+            507 if backoff > 0 => Some(ThrottleDirective::Wait(backoff.min(10800) as u32)),
+            _ => None,
+        };
+    }
+    None
+}
+fn valid_deadline(deadline: Option<Timestamp>) -> Result<Option<Timestamp>> {
+    if deadline.is_some_and(|deadline| deadline.0 <= 0) {
+        return Err(invalid("invalid stored media throttle deadline"));
+    }
+    Ok(deadline)
+}
+/// Saved server-throttle deadline, including expired observations. No wait/retry.
+pub fn throttle_until(store: &ProtocolStore) -> Result<Option<Timestamp>> {
+    store
+        .read(|tx| valid_deadline(tx.get_json(Table::Checkpoints, THROTTLE, 1)?))
+        .map_err(redact)
+}
+fn require_not_throttled_in(tx: &WriteTx<'_>, now: Timestamp) -> Result<()> {
+    if let Some(deadline) = valid_deadline(tx.get_json(Table::Checkpoints, THROTTLE, 1)?)?
+        && now <= deadline
+    {
+        return Err(crate::Error::invalid(
+            "media_routing",
+            format!(
+                "server media-route throttle until {} ms; no refresh reserved",
+                deadline.0
+            ),
+        ));
+    }
+    Ok(())
+}
+fn retain_throttle_in(
+    tx: &mut WriteTx<'_>,
+    directive: Option<ThrottleDirective>,
+    at: Timestamp,
+) -> Result<()> {
+    // Opening an existing observation must never turn an auth/schema fault into
+    // absence, even on a legitimate native reset transition.
+    valid_deadline(tx.get_json(Table::Checkpoints, THROTTLE, 1)?)?;
+    match directive {
+        Some(ThrottleDirective::Clear) => {
+            tx.delete(Table::Checkpoints, THROTTLE)?;
+        }
+        Some(ThrottleDirective::Wait(seconds)) => {
+            let deadline =
+                at.0.checked_add(i64::from(seconds) * 1000)
+                    .filter(|deadline| *deadline > 0)
+                    .ok_or_else(|| invalid("media throttle deadline overflow"))?;
+            tx.put_json(Table::Checkpoints, THROTTLE, 1, &Timestamp(deadline))?;
+        }
+        None => {}
+    }
+    Ok(())
+}
+
 fn key(id: &str) -> String {
     format!("media-route:{id}")
 }
@@ -195,6 +285,7 @@ pub fn prepare(store: &ProtocolStore, id: &str) -> Result<Node> {
             if tx.get(Table::Checkpoints, key(id).as_bytes(), 1)?.is_some() {
                 return Err(invalid("media refresh already reserved"));
             }
+            require_not_throttled_in(tx, Timestamp::now())?;
             let owner: Option<bool> = tx.get_json(Table::Checkpoints, OWNER, 1)?;
             let prior: Option<Current> = tx.get_json(Table::Checkpoints, CURRENT, 1)?;
             if owner.is_none() && has_context_rows(tx.scan(Table::Checkpoints, 1, 10000)?, false)? {
@@ -345,6 +436,15 @@ fn settle_impl_in(tx: &mut WriteTx<'_>, id: &str, reply: &Node) -> Result<Settle
             Err(error) => return Err(error),
         }
     };
+    let received_at = Timestamp::now();
+    let directive = if kind == Some("error") {
+        error_directive(reply)
+    } else if result == Settlement::Applied {
+        Some(ThrottleDirective::Clear)
+    } else {
+        None
+    };
+    retain_throttle_in(tx, directive, received_at)?;
     record.status = match result {
         Settlement::Applied => "result",
         Settlement::Refused => "refused",
@@ -352,7 +452,7 @@ fn settle_impl_in(tx: &mut WriteTx<'_>, id: &str, reply: &Node) -> Result<Settle
         Settlement::Stale => "stale",
     }
     .into();
-    record.at = Timestamp::now();
+    record.at = received_at;
     record.wire = Some(wire);
     tx.put_json(Table::Checkpoints, key(id).as_bytes(), 1, &record)?;
     Ok(result)
@@ -691,6 +791,115 @@ mod tests {
                 .write(|tx| settle_in(tx, "p", &reply("p", "1", "p", "auth", "p.whatsapp.net")))
                 .is_err()
         );
+    }
+
+    fn error(id: &str, code: &str, backoff: &str) -> Node {
+        Node::new("iq")
+            .attr("id", id)
+            .attr("type", "error")
+            .children(vec![
+                Node::new("error")
+                    .attr("code", code)
+                    .attr("backoff", backoff),
+            ])
+    }
+    #[test]
+    fn server_507_throttle_is_capped_durable_and_duplicate_receipts_do_not_extend_it() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("throttle.redb");
+        let store = open(&path);
+        prepare(&store, "a").unwrap();
+        let refusal = error("a", "+507", "2147483647");
+        assert_eq!(settle(&store, "a", &refusal), Settlement::Refused);
+        let until = throttle_until(&store).unwrap().unwrap();
+        let receipt = saved(&store, "a")["at"].as_i64().unwrap();
+        assert_eq!(until.0 - receipt, 10800 * 1000);
+        assert_eq!(settle(&store, "a", &refusal), Settlement::Refused);
+        assert_eq!(throttle_until(&store).unwrap(), Some(until));
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap();
+        assert!(prepare(&store, "b").is_err());
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap(),
+            before
+        );
+        drop(store);
+        let store = open(&path);
+        assert_eq!(throttle_until(&store).unwrap(), Some(until));
+        assert!(prepare(&store, "b").is_err());
+        store
+            .write(|tx| {
+                assert!(require_not_throttled_in(tx, until).is_err());
+                require_not_throttled_in(tx, Timestamp(until.0 + 1))
+            })
+            .unwrap();
+    }
+    #[test]
+    fn native_error_selection_and_resets_do_not_create_automatic_queries() {
+        let node = Node::new("iq").children(vec![
+            Node::new("error").attr("code", "bad"),
+            Node::new("error").attr("code", "0"),
+            Node::new("error").attr("code", "٥٠٧").attr("backoff", "٢"),
+        ]);
+        assert_eq!(error_directive(&node), Some(ThrottleDirective::Wait(2)));
+        for (code, backoff) in [("500", "60"), ("507", "0"), ("507", "-1"), ("507", "bad")] {
+            assert_eq!(error_directive(&error("a", code, backoff)), None);
+        }
+        let first_other = Node::new("iq").children(vec![
+            Node::new("error").attr("code", "500"),
+            Node::new("error").attr("code", "507").attr("backoff", "60"),
+        ]);
+        assert_eq!(error_directive(&first_other), None);
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("reset.redb"));
+        for id in ["a", "b", "c"] {
+            prepare(&store, id).unwrap();
+        }
+        settle(&store, "a", &error("a", "507", "60"));
+        assert!(throttle_until(&store).unwrap().is_some());
+        settle(&store, "b", &error("b", "503", "0"));
+        assert_eq!(throttle_until(&store).unwrap(), None);
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap();
+        assert_eq!(
+            settle(&store, "b", &error("b", "503", "0")),
+            Settlement::Refused
+        );
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap(),
+            before
+        );
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    THROTTLE,
+                    1,
+                    &Timestamp(Timestamp::now().0 + 60000),
+                )
+            })
+            .unwrap();
+        let later = throttle_until(&store).unwrap();
+        assert_eq!(
+            settle(&store, "b", &error("b", "503", "0")),
+            Settlement::Refused
+        );
+        assert_eq!(
+            throttle_until(&store).unwrap(),
+            later,
+            "old reset receipt cannot clear a newer wait"
+        );
+        assert_eq!(
+            settle(&store, "c", &reply("c", "1", "c", "auth", "c.whatsapp.net")),
+            Settlement::Applied
+        );
+        assert_eq!(throttle_until(&store).unwrap(), None);
     }
 
     #[test]

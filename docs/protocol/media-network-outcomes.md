@@ -197,3 +197,36 @@ The durable current object is an explicit local continuity policy, not proof tha
 every native startup would restore it. Preparation alone neither sends nor replays
 a request; the existing explicit CLI operation sends one. No automatic refresh,
 key installation, identity reset, guessed historical request time or ban guarantee.
+
+## Explicit media throttle (2026-11-04)
+
+**Confirmed pinned static/implemented offline:** 1xY.Bvj consumes the first
+valid nonzero error-code/backoff integer pair. Missing code defaults to zero;
+malformed entries are skipped. A positive code507 backoff is seconds, capped
+at 10800. Code503 clears this throttle and separately invokes native Fibonacci
+retry logic. A supported successful routing result also clears the throttle.
+[REA method, checked branches/constants and arithmetic limits](rea/2.26.43.72-media-route-lifetimes/README.md#explicit-media-refusal-throttle).
+
+The prospective wrapper now stores a generation-authenticated deadline atomically
+with the original refusal and its receipt timestamp. Preparation refuses while
+now <= deadline and creates no new request record. Expired observations remain
+inspectable without scheduling a query. Exact duplicate receipts do not extend
+the wait. Existing corrupt/auth-failing state propagates instead of being cleared
+as absence. Server-text strings are not printed; the CLI refusal reports only the
+numeric deadline. `throttle_until` is a read-only library inspection.
+
+Two tests cover cap/receipt anchoring, reopen, no-write preparation refusal,
+duplicate receipt stability, exact expiry boundary, Java BMP integers, malformed
+entry skipping, first-pair selection and 503/success resets without new requests.
+Native clock service parity, volatile lifetime and the separate Fibonacci retry
+owner remain unfinished. Durable persistence is a local continuity policy; no
+other error code invents a delay and no automatic retry was introduced. No live
+account operation occurred.
+
+**Open migration boundary:** earlier wrapper versions could retain raw507
+refusals without a dedicated throttle observation. This change does not replay or
+reconcile those historical callbacks. A missing throttle checkpoint is therefore
+not proof that every historical wait was processed. Durable receipt ordering and
+bounded legacy backoff reconciliation need a separate audit before complete
+startup throttle recovery can be claimed. Historical request/reply evidence is
+preserved; do not infer native retry eligibility from deadline inspection alone.

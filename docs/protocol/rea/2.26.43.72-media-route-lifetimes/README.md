@@ -92,3 +92,28 @@ unsupported locally. No server refusal/retry requirement is inferred.
 - [route-setter.json](route-setter.json) — SHA-256 `6cf815f762fd3aeb71e06152287c950e38c4b5d3ba2e92c174929099ea3e39cc`.
 - [route-setter-checked.txt](route-setter-checked.txt) — SHA-256 `6d1319f4e94450986a591b96ce315b293d91d45f080c8e5b73959c5fbe842d4f`.
 - [current-route-checked.txt](current-route-checked.txt) — SHA-256 `85ae1507488bc0133b895f1f0f931a4aa134b5ed1b7e5db1c7738b4294e2dff7`.
+
+## Explicit media refusal throttle
+
+**Confirmed static**, `1xY.Bvj`: clear in-flight request time, iterate error
+children, skip missing/zero or malformed code/backoff entries, and consume the
+first valid nonzero code/backoff pair. Both attributes use default-zero Java
+integer readers. Code507 with positive backoff sets the media throttle deadline
+to current 08q clock plus min(backoff,10800) seconds. Code503 resets that
+throttle and invokes a separate randomized Fibonacci Handler retry path. Other
+valid nonzero codes terminate without changing the throttle.
+
+Existing checked callback class offsets `00e2..0158` corroborate 503/507 branches,
+positive check, cap constant and deadline store. Its `0xcb` arithmetic opcode is
+not symbolized by the current xtask; the addition expression is recovered Java
+source rather than claimed fully symbolized DEX. The cap double literal
+0x40c5180000000000 independently decodes to 10800.0. Success CK4 resets the
+throttle before installing routing metadata, as retained in callback.json.
+
+Rust now persists the confirmed throttle/reset observations and rejects explicit
+refresh preparation while now <= deadline. This is durable local continuity; the
+native throttle is in-memory. No native Fibonacci scheduler or automatic retry
+is claimed. Parser corruption does not fabricate a wait. Existing stored auth
+faults cannot be erased by treating a reset as an absent checkpoint.
+
+- [error-throttle.json](error-throttle.json) — SHA-256 `3b67bb39b90c37240151901fe71738eef35dd19f73a34d114c481c2b345ecd52`.
