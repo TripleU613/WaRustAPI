@@ -20,6 +20,8 @@ const MAX_SIGNATURE_BYTES: usize = 8 << 20;
 pub struct TokenMaterial {
     /// Android application package name.
     pub package_name: String,
+    /// Declared APK build, if present as a manifest string. Not signature proof.
+    pub version_name: Option<String>,
     /// Exact bytes of the selected hdpi `about_logo.png` resource.
     pub about_logo: Vec<u8>,
     /// First Android signing certificate in DER form.
@@ -43,7 +45,7 @@ impl TokenMaterial {
             .map_err(|error| Error::invalid("token_material", format!("zip: {error}")))?;
 
         let manifest = read_entry(&mut archive, "AndroidManifest.xml", MAX_MANIFEST_BYTES)?;
-        let package_name = parse_manifest_package(&manifest)?;
+        let facts = parse_manifest_facts(&manifest)?;
 
         let file_names = archive
             .file_names()
@@ -107,7 +109,8 @@ impl TokenMaterial {
             .to_vec();
 
         Ok(Self {
-            package_name,
+            package_name: facts.package,
+            version_name: facts.version_name,
             about_logo,
             signing_certificate_der,
             classes_dex,
@@ -129,6 +132,42 @@ impl TokenMaterial {
     /// Derive the registration token for the given phone number.
     pub fn derive(&self, phone: &PhoneNumber) -> Result<Zeroizing<String>> {
         derive_comparison_registration_token(phone, self.as_ref())
+    }
+
+    /// Reject known token/build mismatches before account creation or token
+    /// verification. Does not change the declared client version or authenticate
+    /// the APK. Unknown legacy material needs its original versioned manifest.
+    pub fn validate_user_agent(&self, user_agent: Option<&str>) -> Result<()> {
+        let version = self.version_name.as_deref().ok_or_else(|| {
+            Error::invalid(
+                "token_material",
+                "material has no APK version; use its original versioned manifest",
+            )
+        })?;
+        let valid_version = version.split('.').count() == 4
+            && version.split('.').all(|part| {
+                !part.is_empty()
+                    && part.bytes().all(|b| b.is_ascii_digit())
+                    && part.parse::<u32>().is_ok()
+            });
+        if self.package_name != "com.whatsapp" || !valid_version {
+            return Err(Error::invalid(
+                "token_material",
+                "unsupported package or malformed APK version",
+            ));
+        }
+        let declared = user_agent
+            .and_then(|agent| agent.strip_prefix("WhatsApp/"))
+            .and_then(|agent| agent.split_whitespace().next());
+        if declared != Some(version) {
+            return Err(Error::invalid(
+                "token_material",
+                format!(
+                    "APK token build {version} does not match client.user_agent; use matching material/configuration"
+                ),
+            ));
+        }
+        Ok(())
     }
 }
 
@@ -214,13 +253,14 @@ fn find_certificate(d: &[u8], o: usize, end: usize, depth: usize) -> Option<&[u8
     None
 }
 
-/// Minimal Android binary XML reader for manifest package extraction.
+/// Minimal Android binary XML reader for manifest package/build extraction.
 struct ManifestFacts {
-    package: Option<String>,
+    package: String,
+    version_name: Option<String>,
 }
 
-/// Parse an `AndroidManifest.xml` blob and extract the package name.
-fn parse_manifest_package(d: &[u8]) -> Result<String> {
+/// Parse manifest package and literal versionName metadata.
+fn parse_manifest_facts(d: &[u8]) -> Result<ManifestFacts> {
     if d.len() < 8 {
         return Err(Error::invalid(
             "token_material",
@@ -233,7 +273,8 @@ fn parse_manifest_package(d: &[u8]) -> Result<String> {
     const TYPE_STRING: u8 = 0x03;
 
     let mut strings: Vec<String> = Vec::new();
-    let mut facts = ManifestFacts { package: None };
+    let mut package = None;
+    let mut version_name = None;
     let mut off = 8usize;
 
     while off + 8 <= d.len() {
@@ -268,7 +309,12 @@ fn parse_manifest_package(d: &[u8]) -> Result<String> {
                 if name == "manifest"
                     && let Some((TYPE_STRING, idx)) = attrs.get("package")
                 {
-                    facts.package = strings.get(*idx as usize).cloned();
+                    package = strings.get(*idx as usize).cloned();
+                }
+                if name == "manifest"
+                    && let Some((TYPE_STRING, idx)) = attrs.get("versionName")
+                {
+                    version_name = strings.get(*idx as usize).cloned();
                 }
             }
             _ => {}
@@ -276,9 +322,12 @@ fn parse_manifest_package(d: &[u8]) -> Result<String> {
         off += size;
     }
 
-    facts
-        .package
-        .ok_or_else(|| Error::invalid("token_material", "AndroidManifest.xml has no package name"))
+    Ok(ManifestFacts {
+        package: package.ok_or_else(|| {
+            Error::invalid("token_material", "AndroidManifest.xml has no package name")
+        })?,
+        version_name,
+    })
 }
 
 fn u16le(d: &[u8], o: usize) -> Result<u16> {
@@ -367,10 +416,17 @@ mod tests {
 
     /// Minimal Android binary XML: a UTF-8 string pool and one `<manifest
     /// package="...">` start element, laid out at the offsets
-    /// `parse_manifest_package` reads (ResXMLTree_attrExt after a 16-byte node
+    /// `parse_manifest_facts` reads (ResXMLTree_attrExt after a 16-byte node
     /// header, 20-byte attributes, `TYPE_STRING` 0x03 at byte 15).
     fn binary_manifest(package: &str) -> Vec<u8> {
-        let strings = ["manifest", "package", package];
+        binary_manifest_version(package, None)
+    }
+
+    fn binary_manifest_version(package: &str, version: Option<&str>) -> Vec<u8> {
+        let mut strings = vec!["manifest", "package", package];
+        if let Some(version) = version {
+            strings.extend(["versionName", version]);
+        }
         let mut data = Vec::new();
         let mut offsets = Vec::new();
         for value in strings {
@@ -403,14 +459,14 @@ mod tests {
         let mut element = Vec::new();
         element.extend(0x0102u16.to_le_bytes());
         element.extend(16u16.to_le_bytes());
-        element.extend(56u32.to_le_bytes());
+        element.extend((if version.is_some() { 76u32 } else { 56 }).to_le_bytes());
         element.extend(1u32.to_le_bytes()); // line
         element.extend(u32::MAX.to_le_bytes()); // comment
         element.extend(u32::MAX.to_le_bytes()); // namespace
         element.extend(0u32.to_le_bytes()); // name: "manifest"
         element.extend(20u16.to_le_bytes()); // attribute start
         element.extend(20u16.to_le_bytes()); // attribute size
-        element.extend(1u16.to_le_bytes()); // attribute count
+        element.extend((if version.is_some() { 2u16 } else { 1 }).to_le_bytes()); // attribute count
         element.extend([0; 6]); // id, class and style indexes
         element.extend(u32::MAX.to_le_bytes()); // attribute namespace
         element.extend(1u32.to_le_bytes()); // attribute name: "package"
@@ -419,6 +475,14 @@ mod tests {
         element.push(0);
         element.push(0x03); // TYPE_STRING
         element.extend(2u32.to_le_bytes()); // data: string index 2
+        if version.is_some() {
+            element.extend(u32::MAX.to_le_bytes()); // namespace unused by this reader
+            element.extend(3u32.to_le_bytes()); // versionName
+            element.extend(4u32.to_le_bytes());
+            element.extend(8u16.to_le_bytes());
+            element.extend([0, 0x03]);
+            element.extend(4u32.to_le_bytes());
+        }
 
         let mut xml = Vec::new();
         xml.extend(0x0003u16.to_le_bytes());
@@ -451,6 +515,60 @@ mod tests {
             zip.write_all(bytes).unwrap();
         }
         std::fs::write(path, zip.finish().unwrap().into_inner()).unwrap();
+    }
+
+    #[test]
+    fn token_build_validation_refuses_mismatch_unknown_and_foreign_material() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("material.zip");
+        for (package, version, valid) in [
+            ("com.whatsapp", Some("2.26.37.70"), true),
+            ("com.whatsapp", Some("2.26.43.72"), false),
+            ("com.whatsapp", None, false),
+            ("other.package", Some("2.26.37.70"), false),
+            ("com.whatsapp", Some("private-invalid-version"), false),
+        ] {
+            let manifest = binary_manifest_version(package, version);
+            write_archive(
+                &path,
+                &[
+                    (
+                        "AndroidManifest.xml",
+                        &manifest,
+                        CompressionMethod::Deflated,
+                    ),
+                    ("classes.dex", b"dex-input", CompressionMethod::Stored),
+                    (
+                        "res/drawable-hdpi/about_logo.png",
+                        b"png",
+                        CompressionMethod::Stored,
+                    ),
+                    (
+                        "META-INF/CERT.RSA",
+                        &signature_block(),
+                        CompressionMethod::Stored,
+                    ),
+                ],
+            );
+            let material = TokenMaterial::open(&path).unwrap();
+            assert_eq!(material.version_name.as_deref(), version);
+            let agent = Some("WhatsApp/2.26.37.70 Android/unknown Device/unknown-unknown");
+            assert_eq!(material.validate_user_agent(agent).is_ok(), valid);
+            assert!(material.validate_user_agent(None).is_err());
+            assert!(
+                material
+                    .validate_user_agent(Some("private-invalid-agent"))
+                    .is_err()
+            );
+            let error = material
+                .validate_user_agent(Some("private-invalid-agent"))
+                .unwrap_err()
+                .to_string();
+            assert!(!error.contains("private-invalid-agent"));
+            assert!(!error.contains("private-invalid-version"));
+            // Build metadata is a consistency guard, not another hash input.
+            assert_eq!(material.as_ref().classes_dex, b"dex-input");
+        }
     }
 
     #[test]

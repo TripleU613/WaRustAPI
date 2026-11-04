@@ -101,3 +101,9 @@ time (the sender with outbox transmission, the receiver without), then prints
 the sender's delivery facts and whether the receiver's journal projected the
 text. It refuses profiles that share a store or a key variable. Both master
 keys must be exported before running it.
+
+Build consistency (2026-11-04): `accounts new` requires versioned com.whatsapp
+material matching the template User-Agent before writing files. `token verify`
+also checks material against the configured User-Agent. Unknown/mismatched builds
+refuse; neither command rewrites the build or authenticates the APK signature.
+See [network audit](protocol/network-correctness-audit.md).

@@ -7,6 +7,13 @@ work queue. Existing saved identities, keys, requests and server waits remain
 preserved. APK-derived compatibility does not establish immunity from account
 restrictions, and does not authorize avoiding verification, challenges or limits.
 
+## Current priority
+
+2026-11-04: request/response correctness and account reliability take precedence
+over feature breadth. Continue the [network audit ledger](network-correctness-audit.md)
+through conditional fields, acknowledgements, ordering and persistence. The A00–A19
+queue remains a scope inventory, not the active feature delivery priority.
+
 ## Release workflow
 
 1. Keep the source APK local. Pin its SHA-256 and Android version in the generated

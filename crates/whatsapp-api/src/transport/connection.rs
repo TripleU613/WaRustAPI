@@ -27,26 +27,8 @@ pub async fn connect(
     config: &LabRegistrationConfig,
     epoch: ConnectionEpoch,
 ) -> Result<EncryptedConnection<tokio::net::TcpStream>> {
-    config.validate()?;
-    let account = store
-        .read(AccountRecord::load)?
-        .ok_or(Error::NotRegistered)?;
-    if !account.is_registered() || account.phone.as_ref() != Some(&config.phone) {
-        return Err(Error::NotRegistered);
-    }
-    let previous: Option<serde_json::Value> =
-        store.read(|tx| tx.get_json(Table::Checkpoints, LOGIN_KEY, 1))?;
-    if previous.is_some_and(|v| v["status"] != "success") {
-        return Err(Error::invalid(
-            "connection",
-            "previous login refused or uncertain; inspect before retry",
-        ));
-    }
-    let key = account
-        .noise_static
-        .as_ref()
-        .ok_or_else(|| Error::invalid("connection", "missing saved Noise identity"))?;
-    let local = StaticKeypair::from_parts(key.0.private, key.0.public);
+    // Validate every local login fact before DNS, TCP or Noise work.
+    let (local, payload) = login_material(store, config)?;
     let endpoint = ComparisonEndpoint::built_in(ComparisonGateway::Primary, 443)
         .map_err(|_| Error::invalid("connection", "invalid built-in endpoint"))?;
     let socket = connect_comparison(
@@ -68,7 +50,6 @@ pub async fn connect(
         &crate::signal::crypto::SignalSignatureVerifier,
     )
     .await?;
-    let payload = super::login::primary_login(&account, config)?;
     store.write(|tx| {
         let previous: Option<serde_json::Value> = tx.get_json(Table::Checkpoints, LOGIN_KEY, 1)?;
         if previous.is_some_and(|v| v["status"] != "success") {
@@ -86,6 +67,37 @@ pub async fn connect(
     super::inbox::preserve_in_epoch(store, &reply, epoch)?;
     record_login_reply(store, &reply)?;
     Ok(channel)
+}
+
+// This seam performs only configuration/store reads and payload construction.
+// Keep it before all socket/handshake work in `connect`; no login reservation
+// should be written for local facts that cannot form a request.
+fn login_material(
+    store: &ProtocolStore,
+    config: &LabRegistrationConfig,
+) -> Result<(StaticKeypair, zeroize::Zeroizing<Vec<u8>>)> {
+    config.validate()?;
+    let account = store
+        .read(AccountRecord::load)?
+        .ok_or(Error::NotRegistered)?;
+    if !account.is_registered() || account.phone.as_ref() != Some(&config.phone) {
+        return Err(Error::NotRegistered);
+    }
+    let previous: Option<serde_json::Value> =
+        store.read(|tx| tx.get_json(Table::Checkpoints, LOGIN_KEY, 1))?;
+    if previous.is_some_and(|v| v["status"] != "success") {
+        return Err(Error::invalid(
+            "connection",
+            "previous login refused or uncertain; inspect before retry",
+        ));
+    }
+    let payload = super::login::primary_login(&account, config)?;
+    let key = account
+        .noise_static
+        .as_ref()
+        .ok_or_else(|| Error::invalid("connection", "missing saved Noise identity"))?;
+    let local = StaticKeypair::from_parts(key.0.private, key.0.public);
+    Ok((local, payload))
 }
 
 // One transaction commits the login result, clock sample and own identity.
@@ -1011,6 +1023,55 @@ mod tests {
             create: true,
         })
         .unwrap()
+    }
+
+    #[test]
+    fn invalid_login_material_is_refused_by_offline_preflight_without_reservation() {
+        use crate::session::{KeyMaterial, NoiseStaticKey, RegistrationStatus};
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("preflight.redb");
+        let store = identity_store(&path);
+        let config = config();
+        let original = AccountRecord {
+            phone: Some(config.phone.clone()),
+            registration: RegistrationStatus::Registered,
+            noise_static: Some(NoiseStaticKey(KeyMaterial {
+                public: [5; 32],
+                private: [6; 32],
+            })),
+            credentials: vec![
+                ObservedCredential {
+                    name: "login".into(),
+                    value: zeroize::Zeroizing::new(config.phone.protocol_digits().into_bytes()),
+                    observed_at: Timestamp(0),
+                    source_step: None,
+                },
+                ObservedCredential {
+                    name: super::super::login::REGISTERED_APP_VERSION.into(),
+                    value: zeroize::Zeroizing::new(b"private-malformed-build".to_vec()),
+                    observed_at: Timestamp(0),
+                    source_step: None,
+                },
+            ],
+            ..Default::default()
+        };
+        store.write(|tx| original.save(tx)).unwrap();
+        let before = store.read(|tx| tx.scan(Table::Account, 1, 10)).unwrap();
+        let error = match login_material(&store, &config) {
+            Ok(_) => panic!("expected preflight refusal"),
+            Err(error) => error,
+        };
+        assert!(matches!(&error, Error::InvalidInput { field: "login", .. }));
+        assert!(!error.to_string().contains("private-malformed-build"));
+        assert!(last_login_status(&store).unwrap().is_none());
+        assert_eq!(
+            store.read(|tx| tx.scan(Table::Account, 1, 10)).unwrap(),
+            before
+        );
+        drop(store);
+        let store = identity_store(&path);
+        assert!(login_material(&store, &config).is_err());
+        assert!(last_login_status(&store).unwrap().is_none());
     }
 
     #[test]

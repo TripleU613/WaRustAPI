@@ -1249,6 +1249,10 @@ fn accounts_new(
     // failure here used to leave a half-made account (directory plus
     // master.key) that made every corrected retry refuse "already exists".
     let material = whatsapp_api::registration::token_material::TokenMaterial::open(material_path)?;
+    let mut config: serde_json::Value =
+        serde_json::from_str(whatsapp_api::registration::request::TEMPLATE_JSON)
+            .map_err(|e| Error::invalid("accounts", format!("template JSON parse failed: {e}")))?;
+    material.validate_user_agent(config["client"]["user_agent"].as_str())?;
     let token = material.derive(&phone)?;
 
     std::fs::create_dir_all(&account_dir).map_err(|e| {
@@ -1284,10 +1288,6 @@ fn accounts_new(
             format!("cannot chmod {}: {e}", key_path.display()),
         )
     })?;
-
-    let mut config: serde_json::Value =
-        serde_json::from_str(whatsapp_api::registration::request::TEMPLATE_JSON)
-            .map_err(|e| Error::invalid("accounts", format!("template JSON parse failed: {e}")))?;
 
     config["phone"]["country_code"] = serde_json::json!(phone.country_code());
     config["phone"]["national_number"] = serde_json::json!(phone.national_number());

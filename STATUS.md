@@ -1,3 +1,29 @@
+2026-11-04 — **Network correctness takes priority over features:**
+
+- Account creation and token verification reject unknown/malformed APK builds,
+  foreign packages and material/User-Agent mismatches. The current 2.26.43.72
+  APK was refused against the 2.26.37.70 template before creating any files.
+  This checks declared metadata, not signature authenticity.
+- Login rejects explicit malformed/non-UTF8/conflicting saved versions instead
+  of silently falling back. Read-only account/config/payload preflight now runs
+  before endpoint resolution, TCP or Noise. Genuine absent legacy fallback stays.
+- Current APK privacy-token dispatch skips unknown token kinds then ACKs.
+  Rust now preserves that ACK after supported updates commit; unknown outer
+  types and malformed supported entries retain their existing refusals.
+
+Validation: 1,124 workspace/all-feature tests passed. Default application suites
+passed; their generated coverage freshness check initially caught the newly
+retained evidence, then passed after report regeneration (439 total tests across
+those suites). Strict all-target/all-feature Clippy, CLI-reference regeneration,
+formatting, 16 CI-routing tests and whitespace checks passed. New evidence raises
+retained REA records to 387, including 31 current-build records, and explicit Rust
+ownership records to 25. These counts do not measure protocol completeness.
+No live registration, login or message request occurred. No cause of account
+restrictions or zero-ban guarantee is established. The [network audit ledger](docs/protocol/network-correctness-audit.md)
+tracks remaining request/response families, ordering, acknowledgements and durable
+state obligations; full current bootstrap and optional-traffic classification
+remain open.
+
 2026-11-04 — **Three APK-derived ports completed offline:**
 
 - PIN `mismatch`/`guessed_too_fast` responses under HTTP 2xx now return the same

@@ -58,6 +58,8 @@ pub fn run(cmd: &TokenCmd) -> Result<(), Error> {
             config.validate()?;
 
             let material = TokenMaterial::open(material)?;
+            material
+                .validate_user_agent(config.client.user_agent.as_deref().map(String::as_str))?;
             let derived_token = material.derive(&config.phone)?;
 
             if derived_token.as_str() == config.token.as_str() {

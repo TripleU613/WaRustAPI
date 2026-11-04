@@ -28,30 +28,38 @@ pub fn parse_app_version(text: &str) -> Option<[u32; 4]> {
     parts.try_into().ok()
 }
 
-/// The version login presents: the one the account registered with, else
-/// the config's User-Agent, else 2.26.37.70. Presenting another build than
-/// the registration's was the common factor of two accounts banned within an
-/// hour on 2026-11-02 (registered as 2.26.43.72, logged in as 2.26.37.70);
-/// a phone never does that. Inferred cause, not a server statement.
-fn login_app_version(account: &AccountRecord, config: &LabRegistrationConfig) -> [u32; 4] {
-    account
+/// Version selected by the comparison driver's saved recipe: a consistent
+/// recorded registration build, else the configured User-Agent's build, else
+/// the historical comparison default. This is a local selection contract, not
+/// proof that matching a registration build prevents account restrictions.
+/// Explicit malformed/conflicting facts must not silently become another build.
+fn login_app_version(account: &AccountRecord, config: &LabRegistrationConfig) -> Result<[u32; 4]> {
+    let mut saved = None;
+    for credential in account
         .credentials
         .iter()
-        .rev()
-        .find(|c| c.name == REGISTERED_APP_VERSION)
-        .and_then(|c| {
-            std::str::from_utf8(&c.value)
-                .ok()
-                .and_then(parse_app_version)
-        })
-        .or_else(|| {
-            config
-                .client
-                .user_agent
-                .as_deref()
-                .and_then(|ua| parse_app_version(ua))
-        })
-        .unwrap_or([2, 26, 37, 70])
+        .filter(|c| c.name == REGISTERED_APP_VERSION)
+    {
+        let version = std::str::from_utf8(&credential.value)
+            .ok()
+            .and_then(parse_app_version)
+            .ok_or_else(|| Error::invalid("login", "saved app version is malformed"))?;
+        if saved.is_some_and(|previous| previous != version) {
+            return Err(Error::invalid("login", "saved app versions conflict"));
+        }
+        saved = Some(version);
+    }
+    if let Some(saved) = saved {
+        return Ok(saved);
+    }
+    match config.client.user_agent.as_deref() {
+        Some(ua) => parse_app_version(ua).ok_or_else(|| {
+            Error::invalid("login", "configured User-Agent has no valid app version")
+        }),
+        // Genuine absence retains the historical comparison recipe. An
+        // explicitly invalid value is not absence and never reaches this path.
+        None => Ok([2, 26, 37, 70]),
+    }
 }
 
 /// Build without inventing Android hardware, attestation or companion pairing.
@@ -89,7 +97,7 @@ pub fn primary_login(
             "non-phone login needs a verified product/JID mapping",
         ));
     }
-    let [primary, secondary, tertiary, quaternary] = login_app_version(account, config);
+    let [primary, secondary, tertiary, quaternary] = login_app_version(account, config)?;
     let payload = ClientPayload {
         username: Some(username),
         passive: Some(false),
@@ -170,5 +178,89 @@ mod tests {
         assert!(primary_login(&account, &cfg).is_err());
         account.credentials.clear();
         assert!(primary_login(&account, &cfg).is_err());
+    }
+    fn version_fixture() -> (LabRegistrationConfig, AccountRecord) {
+        let mut config: LabRegistrationConfig =
+            serde_json::from_str(crate::registration::request::TEMPLATE_JSON).unwrap();
+        config.token = Zeroizing::new("offline-fixture".into());
+        let account = AccountRecord {
+            phone: Some(config.phone.clone()),
+            registration: RegistrationStatus::Registered,
+            credentials: vec![ObservedCredential {
+                name: "login".into(),
+                value: Zeroizing::new(config.phone.protocol_digits().into_bytes()),
+                observed_at: Timestamp(0),
+                source_step: None,
+            }],
+            ..Default::default()
+        };
+        (config, account)
+    }
+    fn version_credential(value: &[u8]) -> ObservedCredential {
+        ObservedCredential {
+            name: REGISTERED_APP_VERSION.into(),
+            value: Zeroizing::new(value.to_vec()),
+            observed_at: Timestamp(0),
+            source_step: None,
+        }
+    }
+
+    #[test]
+    fn explicit_saved_version_errors_never_fall_back_or_disclose_values() {
+        let (config, original) = version_fixture();
+        for value in [
+            b"private-malformed-version".as_slice(),
+            b"2.26.43",
+            &[0xff, 0xfe],
+        ] {
+            let mut account = original.clone();
+            account.credentials.push(version_credential(value));
+            let error = primary_login(&account, &config).unwrap_err();
+            assert_eq!(
+                error.to_string(),
+                "invalid input for `login`: saved app version is malformed"
+            );
+            assert!(!format!("{error:?}").contains("private-malformed-version"));
+        }
+        let mut account = original;
+        account.credentials.push(version_credential(b"2.26.43.72"));
+        account.credentials.push(version_credential(b"2.26.37.70"));
+        let error = primary_login(&account, &config).unwrap_err();
+        assert_eq!(
+            error.to_string(),
+            "invalid input for `login`: saved app versions conflict"
+        );
+    }
+
+    #[test]
+    fn duplicate_identical_saved_versions_and_genuine_absence_preserve_selection() {
+        let (mut config, mut account) = version_fixture();
+        account.credentials.push(version_credential(b"2.26.43.72"));
+        account.credentials.push(version_credential(b"2.26.43.72"));
+        config.client.user_agent = Some(Zeroizing::new("private-agent-without-version".into()));
+        // A valid saved fact still wins over unrelated mutable config.
+        let payload =
+            ClientPayload::decode(primary_login(&account, &config).unwrap().as_slice()).unwrap();
+        let version = payload.user_agent.unwrap().app_version.unwrap();
+        assert_eq!((version.tertiary, version.quaternary), (Some(43), Some(72)));
+        account
+            .credentials
+            .retain(|c| c.name != REGISTERED_APP_VERSION);
+        let error = primary_login(&account, &config).unwrap_err();
+        assert_eq!(
+            error.to_string(),
+            "invalid input for `login`: configured User-Agent has no valid app version"
+        );
+        config.client.user_agent = None;
+        assert_eq!(
+            login_app_version(&account, &config).unwrap(),
+            [2, 26, 37, 70]
+        );
+        config.client.user_agent =
+            Some(Zeroizing::new("WhatsApp/2.26.43.72 Android/unknown".into()));
+        assert_eq!(
+            login_app_version(&account, &config).unwrap(),
+            [2, 26, 43, 72]
+        );
     }
 }

@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_45fabd4024bc78f07158d51230407c7081599240c6f057d86e02f4a280457d7b",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C0v6",
+    "method_name": "A01",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-EZRHn8/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C0v6"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"field_count\":14,\"fields\":[{\"name\":\"A00\",\"type\":\"com.whatsapp.infra.core.jid.Jid\",\"def_pos\":0},{\"name\":\"A01\",\"type\":\"com.whatsapp.infra.core.jid.Jid\",\"def_pos\":0},{\"name\":\"A02\",\"type\":\"java.lang.Runnable\",\"def_pos\":0},{\"name\":\"A03\",\"type\":\"X.05a\",\"def_pos\":0},{\"name\":\"A04\",\"type\":\"X.05a\",\"def_pos\":0},{\"name\":\"A05\",\"type\":\"X.05a\",\"def_pos\":0},{\"name\":\"A06\",\"type\":\"X.05a\",\"def_pos\":0},{\"name\":\"A07\",\"type\":\"X.05a\",\"def_pos\":0},{\"name\":\"A08\",\"type\":\"X.05a\",\"def_pos\":0},{\"name\":\"A09\",\"type\":\"X.098\",\"def_pos\":0},{\"name\":\"A0A\",\"type\":\"java.util.Map\",\"def_pos\":0},{\"name\":\"A0B\",\"type\":\"java.util.Map\",\"def_pos\":0},{\"name\":\"A0C\",\"type\":\"java.util.concurrent.atomic.AtomicReference\",\"def_pos\":0},{\"name\":\"A0D\",\"type\":\"int[]\",\"def_pos\":0}],\"methods\":[{\"is_constructor\":true,\"dex_descriptor\":\"([IZ)V\",\"signature\":\"\\u003cinit\\u003e(int[], boolean): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\"},{\"is_constructor\":false,\"dex_descriptor\":\"(LX/0v6;LX/1k2;LX/Eoh;)V\",\"signature\":\"A00(X.0v6, X.1k2, X.Eoh): void\",\"def_pos\":0,\"name\":\"A00\"},{\"is_constructor\":false,\"dex_descriptor\":\"(LX/0v6;LX/1k2;LX/Eoh;Ljava/lang/String;I)V\",\"signature\":\"A01(X.0v6, X.1k2, X.Eoh, java.lang.String, int): void\",\"def_pos\":0,\"name\":\"A01\"},{\"is_constructor\":false,\"dex_descriptor\":\"(Z)LX/89Y;\",\"signature\":\"A07(boolean): X.89Y\",\"def_pos\":0,\"name\":\"A07\"},{\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"A08(): void\",\"def_pos\":0,\"name\":\"A08\"},{\"is_constructor\":false,\"dex_descriptor\":\"(LX/0Tp;I)V\",\"signature\":\"A09(X.0Tp, int): void\",\"def_pos\":0,\"name\":\"A09\"},{\"is_constructor\":false,\"dex_descriptor\":\"()[I\",\"signature\":\"Amf(): int[]\",\"def_pos\":0,\"name\":\"Amf\"},{\"is_constructor\":false,\"dex_descriptor\":\"(Landroid/os/Message;I)Z\",\"signature\":\"BLn(android.os.Message, int): boolean\",\"def_pos\":0,\"name\":\"BLn\"}],\"method_count\":8,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"C0v6\",\"full_name\":\"X.C0v6\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C0v6",
+          "method_name": "A01",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"body\":\"    /* JADX WARN: Multi-variable type inference failed */\\n    /* JADX WARN: Type inference failed for: r8v2, types: [int] */\\n    /* JADX WARN: Type inference failed for: r8v4, types: [X.0B0] */\\n    public static final void A01(C0v6 c0v6, C1k2 c1k2, Eoh eoh, String str, int i) {\\n        int i2;\\n        C05a c05aA00 \\u003d C09H.A00(((C00X) c0v6.A07.A00.get()).A01(), 1251);\\n        boolean zBX2 \\u003d c1k2.BX2();\\n        if (zBX2) {\\n            C1ic c1ic \\u003d (C1ic) c0v6.A06.A00.get();\\n            List listSingletonList \\u003d Collections.singletonList(c1k2);\\n            C00l.A05(listSingletonList);\\n            c1ic.A0H(listSingletonList);\\n        }\\n        E0B e0b \\u003d (E0B) C0Td.A00((C0Td) c0v6.A04.A00.get(), 2, eoh.A00);\\n        if (e0b !\\u003d null) {\\n            if (str !\\u003d null) {\\n                e0b.A00 \\u003d str;\\n            }\\n            e0b.A09(4);\\n        }\\n        C0Tp c0TpAy8 \\u003d c1k2.Ay8();\\n        if (c0TpAy8 \\u003d\\u003d null) {\\n            throw new IllegalStateException(\\\"Required value was null.\\\");\\n        }\\n        AtomicReference atomicReference \\u003d c0v6.A0C;\\n        C2DT c2dt \\u003d (C2DT) atomicReference.getAndSet(new C2DT(c1k2, eoh));\\n        Eoh eoh2 \\u003d c2dt !\\u003d null ? c2dt.A01 : null;\\n        String strA0M \\u003d c0TpAy8.A0M(\\\"offline\\\", null);\\n        if (eoh2 !\\u003d null) {\\n            i2 \\u003d (C0B0) c05aA00.A00.get();\\n            int[] iArr \\u003d c0v6.A0D;\\n            StringBuilder sb \\u003d new StringBuilder(\\\"oldStanzaKey\\u003d\\\");\\n            sb.append(eoh2);\\n            sb.append(\\\"; type\\u003d\\\");\\n            sb.append(iArr);\\n            sb.append(\\\"; offline\\u003d\\\");\\n            sb.append(strA0M);\\n            i2.A0g(\\\"BaseNotificationHandler/oldStanzaKeyNotNull\\\", sb.toString(), false);\\n        }\\n        c0v6.A01 \\u003d eoh.A02;\\n        c0v6.A00 \\u003d eoh.A01;\\n        try {\\n            i2 \\u003d i;\\n            String strA0M2 \\u003d c0TpAy8.A0M(\\\"id\\\", null);\\n            String strA0M3 \\u003d c0TpAy8.A0M(\\\"type\\\", null);\\n            String strA0M4 \\u003d c0TpAy8.A0M(\\\"t\\\", null);\\n            String strA0M5 \\u003d c0TpAy8.A0M(\\\"retry\\\", null);\\n            StringBuilder sb2 \\u003d new StringBuilder(\\\"BaseNotificationHandler/handleAndAckNotification handlerType\\u003d\\\");\\n            sb2.append((int) i2);\\n            sb2.append(\\\" id\\u003d\\\");\\n            sb2.append(strA0M2);\\n            sb2.append(\\\" type\\u003d\\\");\\n            sb2.append(strA0M3);\\n            sb2.append(\\\" t\\u003d\\\");\\n            sb2.append(strA0M4);\\n            sb2.append(\\\" retry\\u003d\\\");\\n            sb2.append(strA0M5);\\n            sb2.append(\\\" offline\\u003d\\\");\\n            sb2.append(strA0M);\\n            Log.i(sb2.toString());\\n            c0v6.A09(c0TpAy8, i2);\\n        } catch (LIL e) {\\n            String str2 \\u003d e.stanza;\\n            StringBuilder sb3 \\u003d new StringBuilder(\\\"BaseNotificationHandler/handleAndAckNotification/corrupt-stream-error/stanza \\\");\\n            sb3.append(str2);\\n            sb3.append(\\\" node\\u003d\\\");\\n            sb3.append(c0TpAy8);\\n            Log.w(sb3.toString(), e);\\n            C0B0 c0b0 \\u003d (C0B0) c05aA00.A00.get();\\n            String message \\u003d e.getMessage();\\n            StringBuilder sb4 \\u003d new StringBuilder(\\\"source\\u003dBaseNotificationHandler recvType\\u003d\\\");\\n            sb4.append(i2);\\n            sb4.append(\\\" message\\u003d\\\");\\n            sb4.append(message);\\n            c0b0.A0g(\\\"CorruptStreamException\\\", sb4.toString(), false);\\n        } catch (SQLiteDatabaseCorruptException | SQLiteFullException e2) {\\n            throw e2;\\n        } catch (Exception e3) {\\n            StringBuilder sb5 \\u003d new StringBuilder(\\\"BaseNotificationHandler/handleXmppMessage/error handling stanza\\u003d\\\");\\n            sb5.append(c1k2);\\n            Log.e(sb5.toString(), e3);\\n            if (!zBX2) {\\n                throw e3;\\n            }\\n            C1ic c1ic2 \\u003d (C1ic) c0v6.A06.A00.get();\\n            List listSingletonList2 \\u003d Collections.singletonList(new C2Dx(null, (C1k3) c1k2, null, null, Integer.valueOf(ClassLoaderConfiguration.BASE_DEX_RETRY_WAIT_MS), null, true, false));\\n            C00l.A05(listSingletonList2);\\n            c1ic2.A0G(listSingletonList2);\\n            return;\\n        }\\n        C2DT c2dt2 \\u003d (C2DT) atomicReference.getAndSet(null);\\n        if (c2dt2 !\\u003d null) {\\n            Eoh eoh3 \\u003d c2dt2.A01;\\n            if (c0v6.A0A.containsKey(eoh3)) {\\n                return;\\n            }\\n            A00(c0v6, c2dt2.A00, eoh3);\\n            c0v6.A0B.remove(eoh3.A08);\\n        }\\n    }\",\"overload_count\":1,\"method_name\":\"A01\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.0v6.A01\",\"class_name\":\"X.C0v6\",\"overload_index\":0,\"fell_back\":false}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C0v6",
+    "method": {
+      "name": "A01",
+      "reported_signature": "A01(X.0v6, X.1k2, X.Eoh, java.lang.String, int): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(LX/0v6;LX/1k2;LX/Eoh;Ljava/lang/String;I)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Multi-variable type inference failed */\n    /* JADX WARN: Type inference failed for: r8v2, types: [int] */\n    /* JADX WARN: Type inference failed for: r8v4, types: [X.0B0] */\n    public static final void A01(C0v6 c0v6, C1k2 c1k2, Eoh eoh, String str, int i) {\n        int i2;\n        C05a c05aA00 = C09H.A00(((C00X) c0v6.A07.A00.get()).A01(), 1251);\n        boolean zBX2 = c1k2.BX2();\n        if (zBX2) {\n            C1ic c1ic = (C1ic) c0v6.A06.A00.get();\n            List listSingletonList = Collections.singletonList(c1k2);\n            C00l.A05(listSingletonList);\n            c1ic.A0H(listSingletonList);\n        }\n        E0B e0b = (E0B) C0Td.A00((C0Td) c0v6.A04.A00.get(), 2, eoh.A00);\n        if (e0b != null) {\n            if (str != null) {\n                e0b.A00 = str;\n            }\n            e0b.A09(4);\n        }\n        C0Tp c0TpAy8 = c1k2.Ay8();\n        if (c0TpAy8 == null) {\n            throw new IllegalStateException(\"Required value was null.\");\n        }\n        AtomicReference atomicReference = c0v6.A0C;\n        C2DT c2dt = (C2DT) atomicReference.getAndSet(new C2DT(c1k2, eoh));\n        Eoh eoh2 = c2dt != null ? c2dt.A01 : null;\n        String strA0M = c0TpAy8.A0M(\"offline\", null);\n        if (eoh2 != null) {\n            i2 = (C0B0) c05aA00.A00.get();\n            int[] iArr = c0v6.A0D;\n            StringBuilder sb = new StringBuilder(\"oldStanzaKey=\");\n            sb.append(eoh2);\n            sb.append(\"; type=\");\n            sb.append(iArr);\n            sb.append(\"; offline=\");\n            sb.append(strA0M);\n            i2.A0g(\"BaseNotificationHandler/oldStanzaKeyNotNull\", sb.toString(), false);\n        }\n        c0v6.A01 = eoh.A02;\n        c0v6.A00 = eoh.A01;\n        try {\n            i2 = i;\n            String strA0M2 = c0TpAy8.A0M(\"id\", null);\n            String strA0M3 = c0TpAy8.A0M(\"type\", null);\n            String strA0M4 = c0TpAy8.A0M(\"t\", null);\n            String strA0M5 = c0TpAy8.A0M(\"retry\", null);\n            StringBuilder sb2 = new StringBuilder(\"BaseNotificationHandler/handleAndAckNotification handlerType=\");\n            sb2.append((int) i2);\n            sb2.append(\" id=\");\n            sb2.append(strA0M2);\n            sb2.append(\" type=\");\n            sb2.append(strA0M3);\n            sb2.append(\" t=\");\n            sb2.append(strA0M4);\n            sb2.append(\" retry=\");\n            sb2.append(strA0M5);\n            sb2.append(\" offline=\");\n            sb2.append(strA0M);\n            Log.i(sb2.toString());\n            c0v6.A09(c0TpAy8, i2);\n        } catch (LIL e) {\n            String str2 = e.stanza;\n            StringBuilder sb3 = new StringBuilder(\"BaseNotificationHandler/handleAndAckNotification/corrupt-stream-error/stanza \");\n            sb3.append(str2);\n            sb3.append(\" node=\");\n            sb3.append(c0TpAy8);\n            Log.w(sb3.toString(), e);\n            C0B0 c0b0 = (C0B0) c05aA00.A00.get();\n            String message = e.getMessage();\n            StringBuilder sb4 = new StringBuilder(\"source=BaseNotificationHandler recvType=\");\n            sb4.append(i2);\n            sb4.append(\" message=\");\n            sb4.append(message);\n            c0b0.A0g(\"CorruptStreamException\", sb4.toString(), false);\n        } catch (SQLiteDatabaseCorruptException | SQLiteFullException e2) {\n            throw e2;\n        } catch (Exception e3) {\n            StringBuilder sb5 = new StringBuilder(\"BaseNotificationHandler/handleXmppMessage/error handling stanza=\");\n            sb5.append(c1k2);\n            Log.e(sb5.toString(), e3);\n            if (!zBX2) {\n                throw e3;\n            }\n            C1ic c1ic2 = (C1ic) c0v6.A06.A00.get();\n            List listSingletonList2 = Collections.singletonList(new C2Dx(null, (C1k3) c1k2, null, null, Integer.valueOf(ClassLoaderConfiguration.BASE_DEX_RETRY_WAIT_MS), null, true, false));\n            C00l.A05(listSingletonList2);\n            c1ic2.A0G(listSingletonList2);\n            return;\n        }\n        C2DT c2dt2 = (C2DT) atomicReference.getAndSet(null);\n        if (c2dt2 != null) {\n            Eoh eoh3 = c2dt2.A01;\n            if (c0v6.A0A.containsKey(eoh3)) {\n                return;\n            }\n            A00(c0v6, c2dt2.A00, eoh3);\n            c0v6.A0B.remove(eoh3.A08);\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

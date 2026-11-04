@@ -175,9 +175,11 @@ pub(crate) fn base_ack(node: &Node, kind: &str) -> Result<Option<Node>> {
     Ok(Some(ack))
 }
 
-/// Process a fully supported notification before returning its acknowledgement.
-/// APK 37.71 LX/0yO.A01 dispatches before A00 acknowledges; LX/Cp2.A05
-/// (0036..0074) serializes id/to/class/type. Unknown token kinds stay without ACK.
+/// Apply supported tokens before acknowledging this known notification type.
+/// APK 43.72 10G.A09 skips token kinds other than trusted_contact; its
+/// 0v6.A01 base still ACKs after dispatch. Unsupported child kinds do not
+/// suppress that ACK (docs/protocol/notification-ack-audit.md). Unknown
+/// notification types and locally refused wire/store state stay separate.
 pub fn handle(store: &ProtocolStore, node: &Node) -> Result<Option<Node>> {
     if node.description != "notification"
         || node.get_attr("type").and_then(|v| v.as_text()) != Some("privacy_token")
@@ -199,16 +201,6 @@ pub fn handle(store: &ProtocolStore, node: &Node) -> Result<Option<Node>> {
         return Ok(None);
     };
     record(store, node)?;
-    if node.child_nodes().len() != 1
-        || node.child_nodes()[0].description != "tokens"
-        || node.child_nodes()[0].child_nodes().is_empty()
-        || node.child_nodes()[0].child_nodes().iter().any(|v| {
-            v.description != "token"
-                || v.get_attr("type").and_then(|v| v.as_text()) != Some("trusted_contact")
-        })
-    {
-        return Ok(None);
-    }
     Ok(Some(
         Node::new("ack")
             .attr("to", super::receipts::ack_address(from))
@@ -633,6 +625,113 @@ mod tests {
         assert_eq!(snapshot(&store), before);
         drop(store);
         assert_eq!(snapshot(&open(false)), before);
+    }
+
+    #[test]
+    fn mixed_privacy_tokens_commit_supported_entries_and_still_ack_known_type() {
+        use crate::{
+            model::ids::AccountId,
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let open = |create| {
+            ProtocolStore::open(OpenOptions {
+                path: dir.path().join("mixed.redb"),
+                account_id: AccountId::new("test").unwrap(),
+                key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                    [9; 32],
+                ))),
+                create,
+            })
+            .unwrap()
+        };
+        let store = open(true);
+        let notification = |tokens| {
+            Node::new("notification")
+                .attr("type", "privacy_token")
+                .attr("id", "MIXED")
+                .attr("from", "15555550100@s.whatsapp.net")
+                .attr("t", "20")
+                .children(vec![Node::new("tokens").children(tokens)])
+        };
+        let supported = || {
+            Node::new("token")
+                .attr("type", "trusted_contact")
+                .bytes(vec![4, 5])
+        };
+        let node = notification(vec![
+            supported(),
+            Node::new("token").attr("type", "future_kind"),
+        ]);
+        validate(&node).unwrap();
+        let ack = handle(&store, &node)
+            .unwrap()
+            .expect("known notification gets ACK after processing");
+        assert_eq!(ack.get_attr("id").and_then(|v| v.as_text()), Some("MIXED"));
+        assert_eq!(
+            ack.get_attr("type").and_then(|v| v.as_text()),
+            Some("privacy_token")
+        );
+        assert_eq!(
+            ack.get_attr("class").and_then(|v| v.as_text()),
+            Some("notification")
+        );
+        let saved = |store: &ProtocolStore| {
+            store
+                .read(|tx| {
+                    tx.get_json::<serde_json::Value>(
+                        Table::Checkpoints,
+                        b"incoming-trusted-contact:15555550100@s.whatsapp.net",
+                        1,
+                    )
+                })
+                .unwrap()
+        };
+        let expected = Some(serde_json::json!({"timestamp":20,"token":[4,5]}));
+        assert_eq!(saved(&store), expected);
+        for tokens in [vec![Node::new("token").attr("type", "future_kind")], vec![]] {
+            assert!(handle(&store, &notification(tokens)).unwrap().is_some());
+            assert_eq!(
+                saved(&store),
+                expected,
+                "unknown kinds do not create token state"
+            );
+        }
+        let mut extra = node.clone();
+        let NodeContent::Children(children) = &mut extra.content else {
+            unreachable!()
+        };
+        children.push(Node::new("future_extension"));
+        assert!(handle(&store, &extra).unwrap().is_some());
+        // A malformed supported entry still refuses before any partial commit.
+        let malformed = notification(vec![
+            supported(),
+            Node::new("token").attr("type", "trusted_contact"),
+        ]);
+        assert!(validate(&malformed).is_err());
+        assert!(handle(&store, &malformed).is_err());
+        assert_eq!(saved(&store), expected);
+        assert!(
+            handle(&store, &node.clone().attr("type", "unknown_notification"))
+                .unwrap()
+                .is_none()
+        );
+        assert!(
+            handle(&store, &node.clone().attr("id", ""))
+                .unwrap()
+                .is_none()
+        );
+        assert!(
+            handle(&store, &node.clone().attr("from", "s.whatsapp.net"))
+                .unwrap()
+                .is_none()
+        );
+        drop(store);
+        assert_eq!(
+            saved(&open(false)),
+            expected,
+            "supported update precedes ACK and survives reopening"
+        );
     }
 
     #[test]
