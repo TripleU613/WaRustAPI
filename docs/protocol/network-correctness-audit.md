@@ -250,3 +250,13 @@ Pinned8AF.A09's retained typed conversion distinguishes dispatch failure;
 the local no-ACK policy is not claimed to match every native error branch.
 [Native adapter and limitations](rea/2.26.43.72-reachout-state/README.md#current-mex-operation-routing-2026-11-04-offline-corrected).
 No live traffic or full MEX conversion/authentication parity claimed.
+
+## Reach-out Java decimal expiry (2026-11-04)
+
+**Confirmed static / offline correction:** pinned 6oe.A03 uses
+Long.parseLong. Active expiry strings now use the shared Java-style BMP
+decimal reader, with accepted plus/non-ASCII digits and invalid-input
+prior-state preservation covered in a real store. Nonnegative bounds and
+JSON integer acceptance remain local policy. Explicit inactive ignores
+expiry. JSON adapter and enforcement enum limits are retained in the
+[evidence](rea/2.26.43.72-reachout-state/README.md#json-adapter-and-java-decimal-expiry-2026-11-04); sender authority and full native policy remain open.

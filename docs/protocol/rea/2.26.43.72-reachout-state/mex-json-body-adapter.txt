@@ -1,0 +1,20 @@
+
+# class: LX/7jz;
+# extends: Ljava/lang/Object;
+
+.method public A00(LL)  # .registers 3
+    # full signature: LX/7jz;->A00(LX/0Tp;)LX/7p0;
+    0000..0004  const-string  v0, "update"
+    0004..000a  invoke-virtual  {v2, v0}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    000a..000c  move-result-object  v0
+    000c..0010  if-eqz  v0, +0xe
+    0010..0014  iget-object  v2, v0, LX/0Tp;->A01:[B
+    0014..0018  if-eqz  v2, +0xa
+    0018..001c  sget-object  v1, LX/02X;->A00:Ljava/lang/Integer;
+    001c..0020  new-instance  v0, LX/7p0;
+    0020..0026  invoke-direct  {v0, v1, v2}, LX/7p0;-><init>(Ljava/lang/Integer;[B)V
+    0026..0028  return-object  v0
+    0028..002a  const/4  v0, #0x0
+    002a..002c  return-object  v0
+    # exception table: 0 try range(s)
+.end method

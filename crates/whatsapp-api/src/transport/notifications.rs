@@ -150,7 +150,8 @@ pub fn record_reachout_timelock(
         } else {
             lock["time_enforcement_ends"]
                 .as_str()
-                .and_then(|v| v.parse().ok())
+                // APK 43.72 6oe.A03 calls Java Long.parseLong.
+                .and_then(super::mex::java_decimal_long)
                 .or_else(|| lock["time_enforcement_ends"].as_i64())
                 .filter(|value| *value >= 0)
                 .ok_or_else(|| {
@@ -696,6 +697,43 @@ mod tests {
                 .unwrap()
                 .is_none()
         );
+    }
+
+    #[test]
+    fn reachout_expiry_uses_java_decimal_string_rules() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = super::super::group_fanout::tests::open(&dir.path().join("decimal.redb"));
+        let update = |text: &str| {
+            Node::new("notification").attr("type", "mex").attr("id", "decimal").attr("from", "s.whatsapp.net").children(vec![
+            Node::new("update").attr("op_name", "NotificationUserReachoutTimelockUpdate").bytes(serde_json::to_vec(&serde_json::json!({"data":{"xwa2_notify_account_reachout_timelock":{"is_active":true,"time_enforcement_ends":text}}})).unwrap())])
+        };
+        for text in ["+1000", "١٠٠٠", "１０００", "1٠０0"] {
+            assert_eq!(
+                record_reachout_timelock(&store, &update(text)).unwrap(),
+                Some(ReachoutTimelock {
+                    active: true,
+                    ends: 1000
+                })
+            );
+        }
+        for text in [
+            " 1000",
+            "1000 ",
+            "0x3e8",
+            "1_000",
+            "𝟙𝟘𝟘𝟘",
+            "9223372036854775808",
+            "-1",
+        ] {
+            assert!(record_reachout_timelock(&store, &update(text)).is_err());
+            assert_eq!(
+                active_reachout_timelock(&store, 999).unwrap(),
+                Some(ReachoutTimelock {
+                    active: true,
+                    ends: 1000
+                })
+            );
+        }
     }
 
     #[test]

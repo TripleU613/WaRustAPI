@@ -1,3 +1,9 @@
+2026-11-04 — **Pinned static and source correction: reach-out decimal expiry.**
+6oe.A03 Long.parseLong now matched using the shared BMP decimal reader.
+7jz body adapter, 8AF data/class selection and generated constructor retained;
+7k9 enum mapping retained with unresolved meanings.
+[Evidence and limits](rea/2.26.43.72-reachout-state/README.md#json-adapter-and-java-decimal-expiry-2026-11-04). Local bounds remain; no live traffic.
+
 2026-11-04 — **Source defect fixed: malformed recognized reach-out body.**
 Missing body/bad JSON/missing or nonboolean active no longer silently return
 ignored and pass into generic ACK. Real-store regression preserves known lock.

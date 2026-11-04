@@ -1,0 +1,170 @@
+
+# class: LX/8AF;
+# extends: Ljava/lang/Object;
+
+.method public A05(L)  # .registers 2
+    # full signature: LX/8AF;->A05()Ljava/lang/Class;
+    0000..0004  instance-of  v0, v1, LX/7Mh;
+    0004..0008  if-eqz  v0, +0x5
+    0008..000c  const-class  v0, Lcom/whatsapp/infra/graphql/generated/newsletter/NotificationNewsletterWamoSubStatusChangeResponse;
+    000c..000e  return-object  v0
+    000e..0012  instance-of  v0, v1, LX/7Me;
+    0012..0016  if-eqz  v0, +0x5
+    0016..001a  const-class  v0, Lcom/whatsapp/infra/graphql/generated/lid/LidChangeNotificationResponse;
+    001a..001c  return-object  v0
+    001c..0020  instance-of  v0, v1, LX/7MV;
+    0020..0024  if-eqz  v0, +0x5
+    0024..0028  const-class  v0, Lcom/whatsapp/infra/graphql/generated/group/NotificationGroupSafetyCheckPropertyUpdateResponse;
+    0028..002a  return-object  v0
+    002a..002e  instance-of  v0, v1, LX/7MU;
+    002e..0032  if-eqz  v0, +0x5
+    0032..0036  const-class  v0, Lcom/whatsapp/infra/graphql/generated/usermetadata/NotificationUserReachoutTimelockUpdateResponse;
+    0036..0038  return-object  v0
+    0038..003c  instance-of  v0, v1, LX/7Sx;
+    003c..0040  if-eqz  v0, +0x5
+    0040..0044  const-class  v0, Lcom/whatsapp/infra/graphql/generated/newsletter/NotificationNewsletterPaidPartnershipUpdateResponse;
+    0044..0046  return-object  v0
+    0046..004a  instance-of  v0, v1, LX/7Sw;
+    004a..004e  if-eqz  v0, +0x5
+    004e..0052  const-class  v0, Lcom/whatsapp/infra/graphql/generated/newsletter/NotificationNewsletterPaidPartnershipResponse;
+    0052..0054  return-object  v0
+    0054..0058  instance-of  v0, v1, LX/7MT;
+    0058..005c  if-eqz  v0, +0x5
+    005c..0060  const-class  v0, Lcom/whatsapp/infra/graphql/generated/newsletter/NotificationNewsletterUserSettingChangeResponse;
+    0060..0062  return-object  v0
+    0062..0066  instance-of  v0, v1, LX/7Mc;
+    0066..006a  if-eqz  v0, +0x5
+    006a..006e  const-class  v0, Lcom/whatsapp/infra/graphql/generated/newsletter/NotificationNewsletterStateChangeResponse;
+    006e..0070  return-object  v0
+    0070..0074  instance-of  v0, v1, LX/7Mb;
+    0074..0078  if-eqz  v0, +0x5
+    0078..007c  const-class  v0, Lcom/whatsapp/infra/graphql/generated/newsletter/NotificationNewsletterScheduledStateChangeResponse;
+    007c..007e  return-object  v0
+    007e..0082  instance-of  v0, v1, LX/7Mn;
+    0082..0086  if-eqz  v0, +0x5
+    0086..008a  const-class  v0, Lcom/whatsapp/infra/graphql/generated/newsletter/NotificationNewsletterOwnerUpdateResponse;
+    008a..008c  return-object  v0
+    008c..0090  instance-of  v0, v1, LX/7Ml;
+    0090..0094  if-eqz  v0, +0x5
+    0094..0098  const-class  v0, Lcom/whatsapp/infra/graphql/generated/newsletter/NotificationNewsletterMilestoneResponse;
+    0098..009a  return-object  v0
+    009a..009e  instance-of  v0, v1, LX/7Mk;
+    009e..00a2  if-eqz  v0, +0x5
+    00a2..00a6  const-class  v0, Lcom/whatsapp/infra/graphql/generated/newsletter/NotificationNewsletterUpdateResponse;
+    00a6..00a8  return-object  v0
+    00a8..00ac  instance-of  v0, v1, LX/7MS;
+    00ac..00b0  if-eqz  v0, +0x5
+    00b0..00b4  const-class  v0, Lcom/whatsapp/infra/graphql/generated/newsletter/NotificationNewsletterLeaveResponse;
+    00b4..00b6  return-object  v0
+    00b6..00ba  instance-of  v0, v1, LX/7Mi;
+    00ba..00be  if-eqz  v0, +0x5
+    00be..00c2  const-class  v0, Lcom/whatsapp/infra/graphql/generated/newsletter/NotificationNewsletterJoinResponse;
+    00c2..00c4  return-object  v0
+    00c4..00c8  instance-of  v0, v1, LX/7MR;
+    00c8..00cc  if-eqz  v0, +0x5
+    00cc..00d0  const-class  v0, Lcom/whatsapp/infra/graphql/generated/newsletter/NotificationNewsletterAdminPromoteResponse;
+    00d0..00d2  return-object  v0
+    00d2..00d6  instance-of  v0, v1, LX/7Ma;
+    00d6..00da  if-eqz  v0, +0x5
+    00da..00de  const-class  v0, Lcom/whatsapp/infra/graphql/generated/newsletter/NotificationNewsletterAdminProfileUpdateResponse;
+    00de..00e0  return-object  v0
+    00e0..00e4  instance-of  v0, v1, LX/7MQ;
+    00e4..00e8  if-eqz  v0, +0x5
+    00e8..00ec  const-class  v0, Lcom/whatsapp/infra/graphql/generated/newsletter/NotificationNewsletterAdminInviteRevokeResponse;
+    00ec..00ee  return-object  v0
+    00ee..00f2  instance-of  v0, v1, LX/7MP;
+    00f2..00f6  if-eqz  v0, +0x5
+    00f6..00fa  const-class  v0, Lcom/whatsapp/infra/graphql/generated/newsletter/NotificationNewsletterAdminDemoteResponse;
+    00fa..00fc  return-object  v0
+    00fc..0100  instance-of  v0, v1, LX/7ML;
+    0100..0104  if-eqz  v0, +0x5
+    0104..0108  const-class  v0, LX/764;
+    0108..010a  return-object  v0
+    010a..010e  instance-of  v0, v1, LX/7Mf;
+    010e..0112  if-eqz  v0, +0x5
+    0112..0116  const-class  v0, Lcom/whatsapp/infra/graphql/generated/newsletter/NotificationNewsletterEnforcementUpdateResponse;
+    0116..0118  return-object  v0
+    0118..011c  instance-of  v0, v1, LX/7Mg;
+    011c..0120  if-eqz  v0, +0x5
+    0120..0124  const-class  v0, Lcom/whatsapp/infra/graphql/generated/newsletter/NotificationNewsletterAIContentUpdateResponse;
+    0124..0126  return-object  v0
+    0126..012a  instance-of  v0, v1, LX/7Mo;
+    012a..012e  if-eqz  v0, +0x5
+    012e..0132  const-class  v0, Lcom/whatsapp/infra/graphql/generated/newsletter/NotificationNewsletterAdminMetadataUpdateResponse;
+    0132..0134  return-object  v0
+    0134..0138  instance-of  v0, v1, LX/7Ms;
+    0138..013c  if-eqz  v0, +0x5
+    013c..0140  const-class  v0, Lcom/whatsapp/infra/graphql/generated/paa/NotificationPAAUpdateResponse;
+    0140..0142  return-object  v0
+    0142..0146  instance-of  v0, v1, LX/7Mm;
+    0146..014a  if-eqz  v0, +0x5
+    014a..014e  const-class  v0, Lcom/whatsapp/infra/graphql/generated/paa/NotificationPAASyncActivitiesResponse;
+    014e..0150  return-object  v0
+    0150..0154  instance-of  v0, v1, LX/7MO;
+    0154..0158  if-eqz  v0, +0x5
+    0158..015c  const-class  v0, Lcom/whatsapp/infra/graphql/generated/interop/NotificationInteropGroupPropertyUpdateResponse;
+    015c..015e  return-object  v0
+    015e..0162  instance-of  v0, v1, LX/7Mq;
+    0162..0166  if-eqz  v0, +0x5
+    0166..016a  const-class  v0, Lcom/whatsapp/infra/graphql/generated/interop/NotificationInteropGroupParticipantsUpdateResponse;
+    016a..016c  return-object  v0
+    016c..0170  instance-of  v0, v1, LX/7MY;
+    0170..0174  if-eqz  v0, +0x5
+    0174..0178  const-class  v0, Lcom/whatsapp/infra/graphql/generated/group/NotificationGroupMemberShareGroupHistoryModePropertyUpdateResponse;
+    0178..017a  return-object  v0
+    017a..017e  instance-of  v0, v1, LX/7MZ;
+    017e..0182  if-eqz  v0, +0x5
+    0182..0186  const-class  v0, Lcom/whatsapp/infra/graphql/generated/group/NotificationGroupMemberLinkPropertyUpdateResponse;
+    0186..0188  return-object  v0
+    0188..018c  instance-of  v0, v1, LX/7Mj;
+    018c..0190  if-eqz  v0, +0x5
+    0190..0194  const-class  v0, Lcom/whatsapp/infra/graphql/generated/group/NotificationGroupAppealStatusUpdateResponse;
+    0194..0196  return-object  v0
+    0196..019a  instance-of  v0, v1, LX/7MN;
+    019a..019e  if-eqz  v0, +0x5
+    019e..01a2  const-class  v0, Lcom/whatsapp/infra/graphql/generated/interop/NotificationInteropGroupCreateUpdateResponse;
+    01a2..01a4  return-object  v0
+    01a4..01a8  instance-of  v0, v1, LX/7HE;
+    01a8..01ac  if-eqz  v0, +0x5
+    01ac..01b0  const-class  v0, Lcom/whatsapp/infra/graphql/generated/events/NotificationEventUpdateResponse;
+    01b0..01b2  return-object  v0
+    01b2..01b6  instance-of  v0, v1, LX/7HD;
+    01b6..01ba  if-eqz  v0, +0x5
+    01ba..01be  const-class  v0, Lcom/whatsapp/infra/graphql/generated/events/NotificationEventRsvpResponse;
+    01be..01c0  return-object  v0
+    01c0..01c4  instance-of  v0, v1, LX/7HA;
+    01c4..01c8  if-eqz  v0, +0x5
+    01c8..01cc  const-class  v0, Lcom/whatsapp/infra/graphql/generated/events/NotificationEventReminderResponse;
+    01cc..01ce  return-object  v0
+    01ce..01d2  instance-of  v0, v1, LX/7HC;
+    01d2..01d6  if-eqz  v0, +0x5
+    01d6..01da  const-class  v0, Lcom/whatsapp/infra/graphql/generated/events/NotificationEventInviteRemoveResponse;
+    01da..01dc  return-object  v0
+    01dc..01e0  instance-of  v0, v1, LX/7HB;
+    01e0..01e4  if-eqz  v0, +0x5
+    01e4..01e8  const-class  v0, Lcom/whatsapp/infra/graphql/generated/events/NotificationEventInviteResponse;
+    01e8..01ea  return-object  v0
+    01ea..01ee  instance-of  v0, v1, LX/7HG;
+    01ee..01f2  if-eqz  v0, +0x5
+    01f2..01f6  const-class  v0, Lcom/whatsapp/infra/graphql/generated/events/NotificationEventGuestJoinedWaResponse;
+    01f6..01f8  return-object  v0
+    01f8..01fc  instance-of  v0, v1, LX/7HF;
+    01fc..0200  if-eqz  v0, +0x5
+    0200..0204  const-class  v0, Lcom/whatsapp/infra/graphql/generated/events/NotificationEventDeleteResponse;
+    0204..0206  return-object  v0
+    0206..020a  instance-of  v0, v1, LX/7MM;
+    020a..020e  if-eqz  v0, +0x5
+    020e..0212  const-class  v0, Lcom/whatsapp/infra/graphql/generated/events/NotificationEventHostPushNamePublishResponse;
+    0212..0214  return-object  v0
+    0214..0218  instance-of  v0, v1, LX/7Mp;
+    0218..021c  if-eqz  v0, +0x5
+    021c..0220  const-class  v0, Lcom/whatsapp/infra/graphql/generated/invite/NotificationNotifySenderOnReceiverJoinResponse;
+    0220..0222  return-object  v0
+    0222..0226  instance-of  v0, v1, LX/7MX;
+    0226..022a  if-eqz  v0, +0x5
+    022a..022e  const-class  v0, Lcom/whatsapp/infra/graphql/generated/group/NotificationCommunityOwnerUpdateResponse;
+    022e..0230  return-object  v0
+    0230..0234  const-class  v0, Lcom/whatsapp/infra/graphql/generated/group/NotificationGroupHiddenPropertyUpdateResponse;
+    0234..0236  return-object  v0
+    # exception table: 0 try range(s)
+.end method

@@ -1,3 +1,13 @@
+2026-11-04 — **Reach-out expiry uses Java decimal string rules:**
+
+Active expiry strings reuse the existing Java-style BMP decimal reader;
+nonnegative local bounds, JSON integer compatibility and inactive clearing
+remain. Regression verifies accepted strings and prior-lock preservation.
+[Evidence and limits](docs/protocol/rea/2.26.43.72-reachout-state/README.md#json-adapter-and-java-decimal-expiry-2026-11-04).
+Validation: **1,270 workspace/all-feature tests**, strict Clippy, CLI-reference,
+formatting, coverage freshness and repository hygiene passed.
+No live traffic or complete enforcement-policy parity claim.
+
 2026-11-04 — **Malformed recognized reach-out bodies refuse explicitly:**
 
 Missing body/bad JSON/missing or nonboolean active now refuse before storage,

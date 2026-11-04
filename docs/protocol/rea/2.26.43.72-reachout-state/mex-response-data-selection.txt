@@ -1,0 +1,14 @@
+
+# class: LX/8AF;
+# extends: Ljava/lang/Object;
+
+.method public A02(LL)  # .registers 2
+    # full signature: LX/8AF;->A02(LX/RsF;)LX/8sX;
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v1, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  iget-object  v0, v1, LX/RsF;->A00:Ljava/lang/Object;
+    000c..0010  check-cast  v0, LX/8GA;
+    0010..0014  iget-object  v0, v0, LX/8GA;->A00:LX/8sX;
+    0014..0016  return-object  v0
+    # exception table: 0 try range(s)
+.end method

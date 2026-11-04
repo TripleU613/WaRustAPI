@@ -341,3 +341,40 @@ signatures/exceptions. Existing A06/A09 and1rA exports bind the caller.
 - [device-conversion.txt](device-conversion.txt) — SHA-256 `c52a92cc1a5b7016342ea43399be0a0ece0ea1002c83c64e1cc9214905f86bef`.
 - [device-class-subtypes.txt](device-class-subtypes.txt) — SHA-256 `7597c7dd10407ea30e135478a3897158104f2eea651df1b6120f6faef7f3e730`.
 - [device-special-constant.txt](device-special-constant.txt) — SHA-256 `452365061c96023e11a6a34eadc80246ca05fc53011faa3d4814288b44e1ba1a`.
+
+## JSON adapter and Java decimal expiry (2026-11-04)
+
+**Confirmed static, APK 2.26.43.72:** 7jz.A00 selects the first update
+child and wraps its raw A01 byte body in 7p0. 8AF.A02 selects RsF.A00
+as 8GA then its 8sX data. 8AF.A05 maps 7MU to the generated
+NotificationUserReachoutTimelockUpdateResponse class; its constructor
+only delegates the nonnull 8sX to 8GA. This does not establish missing
+boolean defaults or the complete JSON decoder grammar. Rust's strict
+recognized-body refusal remains a local integrity policy.
+
+Existing 6oe.A03 evidence calls Java Long.parseLong. **Source correction,
+offline tested:** active expiry strings now reuse the existing Java-style
+BMP decimal reader, accepting leading plus and BMP decimal digits, while
+rejecting whitespace, radix prefixes, underscores, supplementary digits
+and overflow. JSON i64 input remains local compatibility; the nonnegative
+local bound remains. Explicit inactive still clears without parsing expiry.
+The shared decimal table is platform-reference material, not a newly
+recovered APK digit table or a claim across every Android version.
+A real-store regression checks accepted strings and preservation of an
+existing restriction after rejected values. No live traffic was sent.
+
+**Confirmed static / unknown semantics:** 7k9.A00 maps nullable 7gL enum
+ordinals 1..20 to 02X integer constants, defaulting null/unhandled to
+02X.A00. Human-readable variant names and numeric constant meanings
+remain unresolved; this is not a complete enforcement-policy port.
+
+Reproduce with xtask apk-smali on the pinned APK, selecting 7jz.A00,
+8AF.A02/A05, the generated response constructor and 7k9.A00 with
+--signatures --exceptions. These are checked DEX text exports, not REA
+Evidence envelopes, and do not increase the REA coverage count.
+
+- [mex-json-body-adapter.txt](mex-json-body-adapter.txt) — SHA-256 `597740bbd705e137d459346ce25bbc6814da871b434f4c497258ead8ba688580`.
+- [mex-response-data-selection.txt](mex-response-data-selection.txt) — SHA-256 `ac8cb2e8d9a10af1053ddf504aa8667384c897f164e889274101a8c729346d02`.
+- [mex-response-class-map.txt](mex-response-class-map.txt) — SHA-256 `65c5417c5936ae5b3fa6a826332981d2b83b40914a3ecf5c9e1ab27f8796e9ad`.
+- [reachout-generated-response.txt](reachout-generated-response.txt) — SHA-256 `a47a0e99db505b9f2042cd4865b24070bbd217b0590676f4f0efef2cef203bd2`.
+- [reachout-enforcement-enum-map.txt](reachout-enforcement-enum-map.txt) — SHA-256 `7c666080755e8280d1858f195a5ddfd3a8d99d41d92671b7572b0ea14fc0671e`.
