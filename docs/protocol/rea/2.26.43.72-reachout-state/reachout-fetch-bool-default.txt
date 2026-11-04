@@ -1,0 +1,17 @@
+
+# class: LX/0iM;
+# extends: Ljava/lang/Object;
+
+.method public A0G(ZL)  # .registers 5
+    # full signature: LX/0iM;->A0G(Ljava/lang/String;)Z
+    0000..0004  iget-object  v2, v3, LX/0iM;->A00:Lorg/json/JSONObject;
+    0004..000a  invoke-virtual  {v2, v4}, Lorg/json/JSONObject;->optInt(Ljava/lang/String;)I
+    000a..000c  move-result  v1
+    000c..000e  const/4  v0, #0x1
+    000e..0012  if-eq  v1, v0, +0x3
+    0012..0014  const/4  v0, #0x0
+    0014..001a  invoke-virtual  {v2, v4, v0}, Lorg/json/JSONObject;->optBoolean(Ljava/lang/String;Z)Z
+    001a..001c  move-result  v0
+    001c..001e  return  v0
+    # exception table: 0 try range(s)
+.end method

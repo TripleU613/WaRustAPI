@@ -1,0 +1,34 @@
+
+# class: LX/0iM;
+# extends: Ljava/lang/Object;
+
+.method public A04(LLL)  # .registers 9
+    # full signature: LX/0iM;->A04(Ljava/lang/Class;Ljava/lang/String;)LX/0iM;
+    0000..0002  const/4  v5, #0x0
+    0002..0004  const/4  v4, #0x1
+    0004..0008  iget-object  v0, v6, LX/0iM;->A00:Lorg/json/JSONObject;
+    0008..000e  invoke-virtual  {v0, v8}, Lorg/json/JSONObject;->optJSONObject(Ljava/lang/String;)Lorg/json/JSONObject;
+    000e..0010  move-result-object  v3
+    0010..0012  const/4  v2, #0x0
+    0012..0016  if-nez  v3, +0x3
+    0016..0018  return-object  v2
+    0018..001c  new-array  v1, v4, [Ljava/lang/Class;
+    001c..0020  const-class  v0, Lorg/json/JSONObject;
+    0020..0024  aput-object  v0, v1, v5
+    0024..002a  invoke-virtual  {v7, v1}, Ljava/lang/Class;->getConstructor([Ljava/lang/Class;)Ljava/lang/reflect/Constructor;
+    002a..002c  move-result-object  v1
+    002c..0030  new-array  v0, v4, [Ljava/lang/Object;
+    0030..0034  aput-object  v3, v0, v5
+    0034..003a  invoke-virtual  {v1, v0}, Ljava/lang/reflect/Constructor;->newInstance([Ljava/lang/Object;)Ljava/lang/Object;
+    003a..003c  move-result-object  v0
+    003c..0040  check-cast  v0, LX/0iM;
+    0040..0042  return-object  v0
+    0042..0044  move-exception  v0
+    0044..0048  sput-object  v0, LX/0iM;->A02:Ljava/lang/Exception;
+    0048..004a  return-object  v2
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/IllegalAccessException; code_units 000c..0021 -> 0021
+    # catch Ljava/lang/NoSuchMethodException; code_units 000c..0021 -> 0021
+    # catch Ljava/lang/InstantiationException; code_units 000c..0021 -> 0021
+    # catch Ljava/lang/reflect/InvocationTargetException; code_units 000c..0021 -> 0021
+.end method

@@ -1,3 +1,9 @@
+2026-11-04 — **Pinned static: fetch defaults and response-format mapping.**
+0iM accessors/74V nested model and 8TV.ABJ -> 7NM -> 7jy selectors
+resolved. Prior fetch-default unknown closed; push accessor semantics
+remain separate. [Exact methods and remaining decoder work](rea/2.26.43.72-reachout-state/README.md#fetch-field-defaults-and-body-format-selectors-2026-11-04).
+No runtime behavior or notification policy change; no live traffic.
+
 2026-11-04 — **Pinned static: refresh response shape and callback admission.**
 0mb/0md -> 0mZ/0is -> RsF -> BaseMexCallback/0id retained.
 Fetch error callback false suppresses success with partial data; default

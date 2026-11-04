@@ -1,0 +1,12 @@
+
+# class: LX/0iM;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VL)  # .registers 2
+    # full signature: LX/0iM;-><init>(Lorg/json/JSONObject;)V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v1, v0, LX/0iM;->A00:Lorg/json/JSONObject;
+    000a..000e  iput-object  v1, v0, LX/0iM;->A01:Lorg/json/JSONObject;
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method

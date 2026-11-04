@@ -1,0 +1,16 @@
+
+# class: LX/0iM;
+# extends: Ljava/lang/Object;
+
+.method public A05(LLL)  # .registers 5
+    # full signature: LX/0iM;->A05(Ljava/lang/Class;Ljava/lang/String;)LX/0iM;
+    0000..0006  invoke-virtual  {v2, v3, v4}, LX/0iM;->A04(Ljava/lang/Class;Ljava/lang/String;)LX/0iM;
+    0006..0008  move-result-object  v0
+    0008..000c  if-eqz  v0, +0x3
+    000c..000e  return-object  v0
+    000e..0012  const-string  v1, "Required value was null."
+    0012..0016  new-instance  v0, Ljava/lang/IllegalStateException;
+    0016..001c  invoke-direct  {v0, v1}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
+    001c..001e  throw  v0
+    # exception table: 0 try range(s)
+.end method

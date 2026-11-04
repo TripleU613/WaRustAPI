@@ -1013,3 +1013,90 @@ argument is 0mK. TXT exports are checked DEX text, not REA envelopes.
 - [reachout-iq-server-error-shape.txt](reachout-iq-server-error-shape.txt) — SHA-256 `b9a2725fd499957b7255b31f14161cc3322281766abdeb198fd0f4fdbbd06f71`.
 - [reachout-iq-data-error-flags.txt](reachout-iq-data-error-flags.txt) — SHA-256 `8b949e4fb1f67ec1b32c33b8e5ef72789729a63a47ddb000bd25c29ac227b50d`.
 - [reachout-iq-json-model-converter.txt](reachout-iq-json-model-converter.txt) — SHA-256 `6a739847d95514faeaa64a0b28af4fad308891c27c5b1c6760c432773a82a7fe`.
+
+## Fetch field defaults and body-format selectors (2026-11-04)
+
+**Confirmed static**, same pinned APK 2.26.43.72 SHA-256 above. This
+resolves specific fetch accessor and format-selector unknowns from the
+previous section; no notification coercion parity is inferred.
+
+### Fetch object and scalar accessors
+
+74W and nested 74V constructors delegate nonnull JSONObject to 0iM.
+0iM.<init> assigns that same object to A00/A01. A04(class,field) uses
+optJSONObject; absent/nonobject returns null. Otherwise it reflects the
+requested JSONObject constructor. Listed reflection failures are saved
+to static A02 and return null. A05 calls A04 and throws IllegalStateException
+with Required value was null when it returns null. Thus the previously
+retained refresh 8dV(18) requires the nested
+xwa2_fetch_account_reachout_timelock object before setting fetched and
+applying state. An empty object can still be constructed; object presence
+is not field-level validation.
+
+0iM.A0G(field) reads optInt(field), sets default=(value==1), and returns
+optBoolean(field,default). This confirms a coercing boolean accessor,
+not a strict required bool. In particular, a missing field follows the
+JSONObject false-default behavior; the fetch's missing is_active is not
+a required-value exception in this accessor. Full numeric/string Android
+coercion vectors are not newly established by this trace.
+
+0iM.A0E(field) returns null when JSONObject.isNull(field), otherwise
+optString(field). In the refresh callback this supplies
+time_enforcement_ends to 7vL.A00, whose active/inactive duration handling
+is already retained. Do not replace it with a mandatory numeric JSON
+field, or treat accessor success as a valid active expiry.
+
+**Scope correction:** prior fetch field defaults were open; this accessor
+chain now resolves them for the JSONObject-based fetch model. The push
+notification path uses 8sX typed B48/AwY accessors, not these 0iM methods.
+It remains invalid to silently change Rust notification strictness on the
+basis of fetch accessors. Rust has no refresh applier here. A future
+faithful fetch port must account for native defaults and clearly identify
+any stronger local preservation policy rather than claiming parity.
+
+### Argo and JSON variant mapping
+
+7Ou's request-bound success constructor supplies 8TV selectors 37 and
+38 to 8B6.A0K for its result alternative. Initial search for 8TV.invoke
+found no body; the actual interface method is ABJ, retained with its
+merged dispatch table and constructors. Unrelated cases are not evidence
+for refresh body handling.
+
+- 8TV.ABJ selector 37 at byte 0x936 inspects result with the format
+  literal argo and constructs 7NM selector 0.
+- Selector 38 at byte 0x8b6 inspects result with format literal json
+  and constructs 7NM selector 1. The helper 1Xl.A1Y returns constant
+  true after null checks, closing the latter selector value.
+- 7NM.<init> stores its selector unchanged in $t and stores byte body.
+- Previously retained 7jy.A00 maps 7NM selector 0 to 7p0 format 1
+  (Argo), and selector 1 to 7p0 format 0 (JSON). 0is.A04 selects 0iw
+  for format 1 and the JSON 0iy pipeline for format 0.
+
+These are distinct selector domains: 8TV case, 7NM variant, and 7p0
+parser format. Do not equate their integers. The JSON branch's generic
+format-validation call differs from the Argo branch (return handling/
+required flag); complete 8B6 semantics and missing-format acceptance
+remain untraced. Likewise this does not establish all raw-body limits,
+Argo decoding, JSON top-level extraction or malformed-byte handling.
+No raw JSON fallback for an unrecognized Argo body is justified.
+
+**Remaining implementation work:** complete decoder/shape validators,
+account/request correlation, native alternative-registry lifetimes and
+durable fetch/apply/settlement. Current group reservation and notification
+guards remain unchanged. No new network operation, schema change,
+synthetic server state or live request. Overall network audit unfinished.
+
+Reproduce apk-smali with --signatures --exceptions on 0iM.A04/A05/
+A0E/A0G/<init>, 74V.<init>, 8TV (ABJ/constructors), 1Xl.A1Y and
+7NM.<init>. Existing 7Ou/7jy/0is exports connect the format chain.
+TXT files are checked DEX text, not REA Evidence envelopes.
+
+- [reachout-fetch-bool-default.txt](reachout-fetch-bool-default.txt) — SHA-256 `8beafa165cbd2c38f83e7aac88c1bc064943e14c587e0f4cd36ca99f00591274`.
+- [reachout-fetch-object-accessor.txt](reachout-fetch-object-accessor.txt) — SHA-256 `e3ba61a25f584e6fe7f1063262ac70285edbc9a3fe2445205ff070ecfa631940`.
+- [reachout-result-alternative-adapters.txt](reachout-result-alternative-adapters.txt) — SHA-256 `b60c95eb04fd04651bd8cce78c37f6413d4b4ed65fa700489a118f07a45fa056`.
+- [reachout-fetch-object-converter.txt](reachout-fetch-object-converter.txt) — SHA-256 `e60a4ac371e78dfec0e83ebbcce55e197e70e25fdc798dcc5a87126185de43bc`.
+- [reachout-fetch-model-constructor.txt](reachout-fetch-model-constructor.txt) — SHA-256 `30e0b2ae7c619b1ba63856b4589e111183124a0b1ee2a32b9a0442cf964bede5`.
+- [reachout-fetch-string-default.txt](reachout-fetch-string-default.txt) — SHA-256 `ed46f34fe8ffc8e1f1e12234a6046dfd09dbff39303d4a6645f74b68ae2e8850`.
+- [reachout-alternative-selector-constant.txt](reachout-alternative-selector-constant.txt) — SHA-256 `5796b66eba71c974c1a2feb760d0a5cee2bdc24ef72a105bbc0ac014d39b1a55`.
+- [reachout-fetch-timelock-model.txt](reachout-fetch-timelock-model.txt) — SHA-256 `6386cd8e24fa1faf198e79b3720b16ef07248f07057d1d3871bf36d026b7e02e`.
+- [reachout-result-body-wrapper.txt](reachout-result-body-wrapper.txt) — SHA-256 `3e888d5e424d757b02ebe9bc5b82d6633f131fae994ad8e15bc5446aad755150`.

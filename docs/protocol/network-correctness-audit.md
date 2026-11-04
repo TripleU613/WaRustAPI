@@ -366,3 +366,13 @@ success even with partial data; empty typed data also declines.
 [Exact chain and remaining decoder/correlation work](rea/2.26.43.72-reachout-state/README.md#iq-response-conversion-and-refresh-callback-admission-2026-11-04). IQ result
 or generic action settlement alone must not become restriction release.
 No runtime behavior or notification ACK policy changed.
+
+## Fetch defaults and body-selector domains (2026-11-04)
+
+**Confirmed static:** JSONObject fetch requires its nested object but its
+is_active reader is coercing/defaulted, not strict-required. Notification
+8sX accessors are separate and unchanged. 8TV selectors 37/38 produce
+Argo/JSON 7NM variants 0/1, mapped to parser formats 1/0 respectively.
+[Exact accessor/mapping evidence and open validator semantics](rea/2.26.43.72-reachout-state/README.md#fetch-field-defaults-and-body-format-selectors-2026-11-04).
+No fetch applier or raw-JSON fallback was guessed; full correlation and
+durable application remain unported.

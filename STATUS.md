@@ -1,3 +1,12 @@
+2026-11-04 — **Fetch accessor defaults and Argo/JSON selectors resolved:**
+
+Pinned JSONObject fetch requires its nested object, uses a coercing/defaulted
+boolean, and nullable string access. Push notification accessors remain
+separate. Body selector domains mapped through 8TV/7NM/7jy to parser type.
+[Evidence and remaining decoder/correlation work](docs/protocol/rea/2.26.43.72-reachout-state/README.md#fetch-field-defaults-and-body-format-selectors-2026-11-04).
+Validation: JSON parsing, coverage freshness, staged diff and repository
+hygiene passed. Static research only; no runtime change/live traffic.
+
 2026-11-04 — **Refresh callback data/error admission traced:**
 
 Pinned request-bound success/request-error/server-error constructors and
