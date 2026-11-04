@@ -1,3 +1,9 @@
+2026-11-04 — **Source defect fixed: malformed recognized reach-out body.**
+Missing body/bad JSON/missing or nonboolean active no longer silently return
+ignored and pass into generic ACK. Real-store regression preserves known lock.
+[Scope and native-policy limitation](network-correctness-audit.md#recognized-reach-out-body-refusal-2026-11-04).
+Unknown operations unchanged; no live account traffic.
+
 2026-11-04 — **Pinned static/derived: offline device category table.**
 2FP.A07,Exz identity,EpS subtypes and0EB conversion retained; categories
 are not sender trust labels.

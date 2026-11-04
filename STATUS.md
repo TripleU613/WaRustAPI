@@ -1,3 +1,13 @@
+2026-11-04 — **Malformed recognized reach-out bodies refuse explicitly:**
+
+Missing body/bad JSON/missing or nonboolean active now refuse before storage,
+using existing capture/no-ACK/continue handling. Unknown operations remain
+separate. Real-store regression preserves prior lock across malformed bodies.
+[Scope](docs/protocol/network-correctness-audit.md#recognized-reach-out-body-refusal-2026-11-04).
+Validation: **1,269 workspace/all-feature tests**, strict Clippy, CLI-reference,
+formatting, coverage freshness and repository hygiene passed.
+No live traffic or full native error-ACK parity claim.
+
 2026-11-04 — **Offline device classifier branches resolved:**
 
 Retained exact category table and nullable/user/device conversion. Selected

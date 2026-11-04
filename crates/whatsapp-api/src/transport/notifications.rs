@@ -119,15 +119,30 @@ pub fn record_reachout_timelock(
         let body = match &child.content {
             NodeContent::Bytes(b) => b.to_vec(),
             NodeContent::Text(t) => t.as_bytes().to_vec(),
-            _ => continue,
+            _ => {
+                return Err(Error::invalid(
+                    "reachout_timelock",
+                    "recognized update missing JSON body; prior restriction preserved",
+                ));
+            }
         };
-        let Ok(json) = serde_json::from_slice::<serde_json::Value>(&body) else {
-            continue;
-        };
+        // A recognized but unusable update must not become an ignored MEX
+        // operation that receives the generic ACK. Native 8AF.A09 likewise
+        // distinguishes typed conversion failure from successful dispatch;
+        // no claim of identical native error-ACK policy is made here.
+        let json: serde_json::Value = serde_json::from_slice(&body).map_err(|_| {
+            Error::invalid(
+                "reachout_timelock",
+                "invalid update JSON; prior restriction preserved",
+            )
+        })?;
         let lock = &json["data"]["xwa2_notify_account_reachout_timelock"];
-        let Some(active) = lock["is_active"].as_bool() else {
-            continue;
-        };
+        let active = lock["is_active"].as_bool().ok_or_else(|| {
+            Error::invalid(
+                "reachout_timelock",
+                "missing or invalid active flag; prior restriction preserved",
+            )
+        })?;
         // APK 43.72 7vL.A00 clears inactive state without parsing duration.
         // Only active updates need an expiry; never fabricate zero for them.
         let ends = if !active {
@@ -637,6 +652,50 @@ mod tests {
             })
         );
         assert!(mex_ack(&valid).unwrap().is_some());
+    }
+
+    #[test]
+    fn recognized_malformed_reachout_body_refuses_without_replacing_lock() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = super::super::group_fanout::tests::open(&dir.path().join("body.redb"));
+        let prior = ReachoutTimelock {
+            active: true,
+            ends: 1000,
+        };
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, REACHOUT_TIMELOCK, 1, &prior))
+            .unwrap();
+        let op = || Node::new("update").attr("op_name", "NotificationUserReachoutTimelockUpdate");
+        let wrap = |child| {
+            Node::new("notification")
+                .attr("type", "mex")
+                .attr("id", "body-test")
+                .attr("from", "s.whatsapp.net")
+                .children(vec![child])
+        };
+        for child in [
+            op(),
+            op().bytes(b"{".to_vec()),
+            op().bytes(b"null".to_vec()),
+            op().bytes(b"{}".to_vec()),
+            op().bytes(
+                br#"{"data":{"xwa2_notify_account_reachout_timelock":{"is_active":"false"}}}"#
+                    .to_vec(),
+            ),
+        ] {
+            let err = record_reachout_timelock(&store, &wrap(child)).unwrap_err();
+            assert!(matches!(err, Error::InvalidInput { .. }));
+            assert_eq!(active_reachout_timelock(&store, 999).unwrap(), Some(prior));
+        }
+        // Unknown operations remain separate from malformed recognized ones.
+        let unknown = Node::new("update")
+            .attr("op_name", "unimplemented")
+            .bytes(b"{".to_vec());
+        assert!(
+            record_reachout_timelock(&store, &wrap(unknown))
+                .unwrap()
+                .is_none()
+        );
     }
 
     #[test]

@@ -233,3 +233,20 @@ Notification call uses final false; selected categories affect high-offline
 callback routing rather than uniformly rejecting other senders.
 [Exact branches and remaining predicate authority](rea/2.26.43.72-reachout-state/README.md#offline-device-classification-table-2026-11-04).
 No runtime trust/ACK expansion or live traffic.
+
+## Recognized reach-out body refusal (2026-11-04)
+
+**Confirmed source defect corrected offline:** recognized operation with
+missing/non-JSON content, malformed JSON or missing/nonboolean is_active
+previously returned Ok(None), then received generic MEX ACK without applying
+its state. It now returns redacted InvalidInput before any checkpoint write.
+Existing receive handling preserves capture/prior restriction, skips ACK and
+continues; storage failures remain separate. Unknown operation handling is
+unchanged. No guessed default active state or expiry is introduced.
+
+Real-store regression covers empty body, broken JSON, null, missing object
+and string-valued active flag, with an existing lock and an unknown-op control.
+Pinned8AF.A09's retained typed conversion distinguishes dispatch failure;
+the local no-ACK policy is not claimed to match every native error branch.
+[Native adapter and limitations](rea/2.26.43.72-reachout-state/README.md#current-mex-operation-routing-2026-11-04-offline-corrected).
+No live traffic or full MEX conversion/authentication parity claimed.
