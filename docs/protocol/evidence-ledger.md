@@ -1,3 +1,9 @@
+2026-11-04 — **Pinned static discovery: alternate MEX receive registry.**
+1s2/KWt maps and selected schema/type exports retained.7Ou mex overload
+is IQ-result, refuting its use as notification origin evidence.
+[Registry boundary and negative results](rea/2.26.43.72-reachout-state/README.md#receive-registry-discovery-and-schema-false-lead-2026-11-04).
+No sender-authentication completion or runtime change claimed.
+
 2026-11-04 — **Pinned static: MEX message/worker ordering boundary.**
 2.26.43.72 router0x102 registration, wrapper ingress and direct/executor
 dispatch retained;7MU reservation is inherited no-op. Upstream sender

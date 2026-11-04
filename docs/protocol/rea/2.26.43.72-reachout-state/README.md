@@ -142,3 +142,45 @@ conclusions above apply only to selector13/1, not unrelated worker cases.
 - [ordering-default.txt](ordering-default.txt) — SHA-256 `7de34f7d8b2bbc61f7e5181ef9cb33baaf3cec32534983708311973eb413be92`.
 - [base-message-ingress.txt](base-message-ingress.txt) — SHA-256 `373f7d0ef24ac4cc3a864a4f653d8a424ce4b79d36272099a87c06ee5a275b62`.
 - [router-registration.txt](router-registration.txt) — SHA-256 `9b540763ed7b01519d39a17d14cb99576b39a91f805910fbf4ca7064b851880d`.
+
+## Receive registry discovery and schema false lead (2026-11-04)
+
+**Confirmed static**, same pinned APK. Exact mex anchor census finds six
+const-string sites: KWt.invoke,1s2.run,7Ou constructor and E88/E8e/EL2
+class initializers. These are discovery candidates, not a list of required
+network requests or six equivalent entry points.
+
+1s2.run's notification branch obtains Jb9/JoW registry, lowercases type with
+Locale.ROOT and looks up a type handler. If absent and type=mex, it selects
+first update/op_name, lowercases it and queries the separate operation map.
+J9D handler kind and config4632 participate in a gated dispatch branch;
+it invokes0ZP.A05 and constructs an Eza wrapper with receive bookkeeping.
+Full gate meaning, fallback control flow, wrapper producer and authentication
+remain untraced. KWt.invoke builds the registry maps and treats mex
+registration specially. This alternate registry is not yet bound to every
+legacy0x102 route or the reach-out handler. No completeness claim follows.
+
+**Negative result:**7Ou's mex literal belongs to overloaded constructor
+(0Tp,0mK) validating an **IQ** result shape, not its notification constructor
+(0Tp,int), which serves other types. The14v caller is a companion
+side-channel notification family, not proof of MEX reach-out sender rules.
+E88's mex enum item likewise labels a type without establishing its authority.
+These full exports are retained so future traces can avoid reusing the
+wrong overload or assuming obfuscated class identity implies one schema.
+
+Exact direct-call scan0v7.BLn returns0; interface/base dispatch remains
+possible and was already observed through base BLn workers. This bounded
+negative does not prove unreachable code or absence of native handling.
+Sender authority is still open at the receive-wrapper/central dispatch
+boundary. Rust policy and network behavior remain unchanged.
+
+Reproduce apk-xref --anchor mex, apk-smali1s2.run,KWt.invoke,7Ou whole,
+E88.<clinit>,14v.A09 with signatures/exceptions; apk-callers0v7.BLn.
+Only inspected selected candidates are retained, not all six initializers.
+
+- [mex-anchor-census.txt](mex-anchor-census.txt) — SHA-256 `6d7970564e717086380f4d985b843888070ac73259b61ddffd548cea1c422012`.
+- [receive-notification-registry.txt](receive-notification-registry.txt) — SHA-256 `01cb40753a2d16b60eb82cbb32563689ddbd855f07220ad810a2c7a306ecfcd6`.
+- [shared-schema-overloads.txt](shared-schema-overloads.txt) — SHA-256 `8a2569401e9890eebe527b5d35d33c1dbe42a022ed4e75f7afe0322624f04ff0`.
+- [registry-builder.txt](registry-builder.txt) — SHA-256 `6cbd72b0cc9faab5d81d3bc34dc700ee763bf3046ba1ee5aea432cffd9e07f0c`.
+- [notification-type-enum.txt](notification-type-enum.txt) — SHA-256 `b6d076a5c48e696d2900d40af2625952b78084af021c1067dd6ca17091e91d6c`.
+- [unrelated-notification-family.txt](unrelated-notification-family.txt) — SHA-256 `97778d4062f2a02cd21c448bd5428b278d178dc4b5a08658b8366a849842fab9`.

@@ -188,3 +188,12 @@ before0v6 wrapper dispatch;7MU inherits no-op8AF.A08 reservation. Worker
 do not establish sender authority; IncomingStanza/message producer remains
 the next origin trace. [Evidence](rea/2.26.43.72-reachout-state/README.md#message-wrapper-and-reach-out-ordering-reservation-2026-11-04).
 No runtime policy change or live traffic.
+
+## Receive registry and schema separation (2026-11-04)
+
+**Confirmed pinned static discovery:** receive1s2 notification branch uses
+Jb9/JoW type/operation maps and gated wrapper dispatch. This alternate
+registry is not yet fully bound to reach-out or legacy0x102 routing.7Ou's
+mex literal is an IQ-result overload, not a notification sender validator.
+[Evidence and bounded negative results](rea/2.26.43.72-reachout-state/README.md#receive-registry-discovery-and-schema-false-lead-2026-11-04).
+Origin authentication and fallback paths remain open; no runtime change.

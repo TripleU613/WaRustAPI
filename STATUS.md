@@ -1,3 +1,13 @@
+2026-11-04 — **MEX receive registry discovery retained:**
+
+Located type/operation maps and gated receive wrapper dispatch; connection
+to every legacy route remains untraced. Refuted an IQ-result schema overload
+as notification-origin evidence. Sender authentication remains open.
+[Evidence/negative results](docs/protocol/rea/2.26.43.72-reachout-state/README.md#receive-registry-discovery-and-schema-false-lead-2026-11-04).
+Validation: JSON parsing, coverage freshness, cached diff checks and repository
+hygiene (4,409 local links) passed. Documentation/evidence only;
+no runtime change or live traffic.
+
 2026-11-04 — **MEX message/worker ordering boundary traced:**
 
 Pinned router registration and wrappers now connect to native handler worker.
