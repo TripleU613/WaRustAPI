@@ -12,6 +12,8 @@ pub struct RecoveryReport {
     pub unsequenced_receipts: usize,
     /// Older unbound route rows outside this prospective recovery contract.
     pub unbound_records: usize,
+    /// Possible active507 bound in a correlated legacy capture; reset order is unknown.
+    pub unbound_active_until: Option<Timestamp>,
     /// Latest still-active bound from unsequenced507 evidence; order is unknown.
     pub unsequenced_active_until: Option<Timestamp>,
     /// Preserved/restored saved deadline. Recovery never shortens this field.
@@ -52,6 +54,51 @@ fn deadline(at: Timestamp, seconds: u32) -> Result<Timestamp> {
         .map(Timestamp)
         .ok_or_else(|| invalid("historical media deadline is invalid"))
 }
+// Legacy producer (transport.rs before prospective integration) saved `at`
+// after wait_for(iq,id) and stored the full original response under this key.
+// This only recognizes a refusal observation: never recreate its request or
+// adopt its routes, and never apply an unsequenced reset to another deadline.
+fn legacy_wait(
+    row_key: &[u8],
+    saved: &serde_json::Value,
+    now: Timestamp,
+) -> Result<Option<Timestamp>> {
+    match saved["status"].as_str() {
+        Some("refused") => {}
+        Some("result" | "outcome_unknown") => return Ok(None),
+        _ => return Err(invalid("unrecognized legacy media capture status")),
+    }
+    let id = row_key
+        .strip_prefix(b"media-route:")
+        .and_then(|id| std::str::from_utf8(id).ok())
+        .filter(|id| !id.is_empty() && id.len() <= 128)
+        .ok_or_else(|| invalid("invalid legacy media capture key"))?;
+    let wire: Vec<u8> = serde_json::from_value(saved["wire"].clone()).map_err(|_| {
+        crate::Error::Storage(crate::store::StoreError::Serialization(
+            "invalid legacy media capture wire".into(),
+        ))
+    })?;
+    let reply = super::super::super::actions::decode(&wire)?;
+    if reply.description != "iq"
+        || reply.get_attr("id").and_then(|value| value.as_text()) != Some(id)
+    {
+        return Err(invalid("legacy media capture correlation mismatch"));
+    }
+    if reply.get_attr("type").and_then(|value| value.as_text()) != Some("error") {
+        return Ok(None);
+    }
+    let Some(ThrottleDirective::Wait(seconds)) = error_directive(&reply) else {
+        return Ok(None);
+    };
+    let at = saved["at"]
+        .as_i64()
+        .filter(|at| *at > 0)
+        .map(Timestamp)
+        .ok_or_else(|| invalid("legacy media refusal lacks receipt time"))?;
+    let until = deadline(at, seconds)?;
+    Ok((now <= until).then_some(until))
+}
+
 /// Recover receipt-anchored waits without issuing requests. Older unbound rows
 /// are counted, not reinterpreted as prospective request authority. Active
 /// unsequenced waits remain ambiguous and prevent prepare from creating a query.
@@ -70,6 +117,7 @@ fn recover_in(tx: &mut WriteTx<'_>, now: Timestamp) -> Result<RecoveryReport> {
     let mut cursor = None;
     let mut unsequenced = 0;
     let mut unbound = 0;
+    let mut unbound_active = None;
     let mut active = None;
     let mut examined = 0;
     loop {
@@ -91,6 +139,10 @@ fn recover_in(tx: &mut WriteTx<'_>, now: Timestamp) -> Result<RecoveryReport> {
             })?;
             if value.get("context_version").is_none() {
                 unbound += 1;
+                if let Some(until) = legacy_wait(&row_key, &value, now)? {
+                    unbound_active =
+                        Some(unbound_active.map_or(until, |old: Timestamp| old.max(until)));
+                }
                 continue;
             }
             let record: Record = serde_json::from_value(value).map_err(|_| {
@@ -155,6 +207,7 @@ fn recover_in(tx: &mut WriteTx<'_>, now: Timestamp) -> Result<RecoveryReport> {
         sequenced_receipts: ordered.len(),
         unsequenced_receipts: unsequenced,
         unbound_records: unbound,
+        unbound_active_until: unbound_active,
         unsequenced_active_until: active,
         preserved_until: preserved,
     })
@@ -281,6 +334,85 @@ mod tests {
             .unwrap();
         assert_eq!(expired.unsequenced_active_until, None);
     }
+    fn legacy(store: &ProtocolStore, id: &str, node: &Node, at: i64) -> serde_json::Value {
+        let saved = serde_json::json!({"status":"refused","at":at,"wire":encode(node).unwrap()});
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, key(id).as_bytes(), 1, &saved))
+            .unwrap();
+        saved
+    }
+    #[test]
+    fn legacy_correlated_wait_blocks_without_context_reconstruction_or_timer_restart() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("unbound.redb"));
+        let at = Timestamp::now().0;
+        let original = legacy(&store, "old", &error("old", "507", "60"), at);
+        let report = recover_throttle(&store).unwrap();
+        assert_eq!(report.unbound_records, 1);
+        assert_eq!(report.unbound_active_until, Some(Timestamp(at + 60000)));
+        assert_eq!(report.unsequenced_receipts, 0);
+        assert_eq!(throttle_until(&store).unwrap(), None);
+        assert!(prepare(&store, "new").is_err());
+        assert_eq!(saved(&store, "old"), original);
+        assert!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, OWNER, 1))
+                .unwrap()
+                .is_none()
+        );
+        let expired = store
+            .write(|tx| recover_in(tx, Timestamp(at + 60001)))
+            .unwrap();
+        assert_eq!(expired.unbound_active_until, None);
+        legacy(&store, "reset", &error("reset", "503", "0"), at + 1);
+        assert_eq!(
+            recover_throttle(&store).unwrap().unbound_active_until,
+            Some(Timestamp(at + 60000))
+        );
+    }
+    #[test]
+    fn malformed_legacy_capture_cannot_hide_a_wait_or_change_other_state() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("bad-legacy.redb"));
+        let at = Timestamp::now().0;
+        for (id, node, time) in [
+            ("wrong", error("foreign", "507", "60"), at),
+            ("no-time", error("no-time", "507", "60"), 0),
+        ] {
+            legacy(&store, id, &node, time);
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            assert!(recover_throttle(&store).is_err());
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                before
+            );
+            store
+                .write(|tx| tx.delete(Table::Checkpoints, key(id).as_bytes()))
+                .unwrap();
+        }
+        let mut unknown = legacy(&store, "unknown", &error("unknown", "507", "60"), at);
+        unknown["status"] = "unknown-format".into();
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, key("unknown").as_bytes(), 1, &unknown))
+            .unwrap();
+        assert!(recover_throttle(&store).is_err());
+        store
+            .write(|tx| tx.delete(Table::Checkpoints, key("unknown").as_bytes()))
+            .unwrap();
+        let result = Node::new("iq")
+            .attr("id", "result")
+            .attr("type", "result")
+            .children(vec![
+                Node::new("error").attr("code", "507").attr("backoff", "60"),
+            ]);
+        legacy(&store, "result", &result, at);
+        assert_eq!(recover_throttle(&store).unwrap().unbound_active_until, None);
+    }
+
     #[test]
     fn incomplete_duplicate_or_unauthentic_history_cannot_partly_repair() {
         let dir = tempfile::tempdir().unwrap();

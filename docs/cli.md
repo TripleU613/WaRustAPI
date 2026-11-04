@@ -275,6 +275,14 @@ Usage: whatsapp-cli app-state-inspect [OPTIONS]...
 | --reconstruct-snapshot | RECONSTRUCT_SNAPSHOT | no |  |  |  | Reconstruct missing index metadata from an authenticated same-version local snapshot |
 | --collection | COLLECTION | no |  |  |  | Existing held collection to reconstruct; no version advancement |
 
+## whatsapp-cli media-route-recover
+
+Recover known media-route waits and report ambiguity (offline; no query or retry)
+
+```
+Usage: whatsapp-cli media-route-recover [OPTIONS]...
+```
+
 ## whatsapp-cli app-state-response-inspect
 
 Classify a saved app-state result structurally (offline; no integrity verification)

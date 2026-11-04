@@ -2910,6 +2910,25 @@ pub(super) fn clock_inspect(cli: &super::Cli) -> Result<(), Error> {
     Ok(())
 }
 
+pub(super) fn media_route_recover(cli: &super::Cli) -> Result<(), Error> {
+    let store = ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })?;
+    let report = whatsapp_api::transport::media_routing::refresh::recover_throttle(&store)?;
+    if !cli.json {
+        println!("Offline recovery only; saved waits may be restored. No query or retry is sent.");
+    }
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&report)
+            .map_err(|_| Error::invalid("media_routing", "cannot encode recovery report"))?
+    );
+    Ok(())
+}
+
 pub(super) fn app_state_response_inspect(cli: &super::Cli, id: &str) -> Result<(), Error> {
     let store = ProtocolStore::open(OpenOptions {
         path: cli.store.clone(),

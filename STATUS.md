@@ -1,3 +1,16 @@
+2026-11-04 — **Legacy media refusal recovery observations (offline):**
+
+Recovery now recognizes the old producer's correlated outer-error captures and
+original receipt times without rebuilding request/prior/order context. Possible
+active507 bounds block new preparation; an unordered legacy503 cannot clear them.
+Corrupt/mismatched captures fail explicitly. The new offline media-route-recover
+command reports safe counts/deadlines and never logs in or creates a missing store.
+[Producer provenance, two real-store tests and interpretation limits](docs/protocol/media-network-outcomes.md#legacy-refusal-observations-and-offline-command-2026-11-04).
+Validation: **1,257 workspace/all-feature tests**, strict Clippy, CLI-reference,
+formatting, coverage freshness and repository hygiene passed.
+No live traffic. Historic build/clock provenance and native retry ownership remain
+unproved.
+
 2026-11-04 — **Bounded media wait recovery (offline):**
 
 Explicit refresh preparation now restores known waits from validated receipt order

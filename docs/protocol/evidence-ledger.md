@@ -1,3 +1,11 @@
+2026-11-04 — **Confirmed source/implemented local policy:** old media route
+producer stored matching IQ wire and receipt timestamp. Recovery now recognizes
+possible507 bounds under pinned rules without retroactively binding a request or
+assigning order. Offline command, correlation/time/status/expiry/reset-ambiguity
+tests preserve raw history. Historical build provenance remains unknown; no new
+APK or live observation is claimed.
+[Contract and limits](media-network-outcomes.md#legacy-refusal-observations-and-offline-command-2026-11-04).
+
 2026-11-04 — **Confirmed Rust/offline:** media throttle recovery now uses
 complete validated receipt sequence and original receipt times. Missing waits can
 be restored without restarting them; ambiguous saved/unsequenced waits cannot be

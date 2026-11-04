@@ -344,6 +344,9 @@ enum Cmd {
         #[arg(long, requires = "reconstruct_snapshot")]
         collection: Option<String>,
     },
+    /// Recover known media-route waits and report ambiguity (offline; no query or retry).
+    #[cfg(feature = "experimental-transport")]
+    MediaRouteRecover,
     /// Classify a saved app-state result structurally (offline; no integrity verification).
     #[cfg(feature = "experimental-transport")]
     AppStateResponseInspect {
@@ -1917,6 +1920,8 @@ async fn run(cli: Cli) -> Result<(), Error> {
         Cmd::AppStateResponseInspect { action_id } => {
             transport_receive::app_state_response_inspect(&cli, action_id)
         }
+        #[cfg(feature = "experimental-transport")]
+        Cmd::MediaRouteRecover => transport_receive::media_route_recover(&cli),
         #[cfg(feature = "experimental-transport")]
         Cmd::ClockInspect => transport_receive::clock_inspect(&cli),
         #[cfg(feature = "experimental-transport")]

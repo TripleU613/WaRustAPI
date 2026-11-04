@@ -365,11 +365,16 @@ pub fn prepare(store: &ProtocolStore, id: &str) -> Result<Node> {
         return Err(invalid("invalid media refresh ID"));
     }
     let recovery = recover_throttle(store)?;
-    if let Some(until) = recovery.unsequenced_active_until {
+    if let Some(until) = recovery
+        .unsequenced_active_until
+        .into_iter()
+        .chain(recovery.unbound_active_until)
+        .max()
+    {
         return Err(crate::Error::invalid(
             "media_routing",
             format!(
-                "unsequenced saved media wait requires reconciliation until {} ms; no refresh reserved",
+                "saved media wait with unproved receipt order until {} ms; no refresh reserved",
                 until.0
             ),
         ));

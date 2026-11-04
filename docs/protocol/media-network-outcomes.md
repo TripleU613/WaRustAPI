@@ -286,3 +286,36 @@ without restamping, and corrupt/incomplete history. No live traffic occurred.
 throttle marker that can prove recovery-time resets, full native volatile/Fibonacci
 retry coordination and clock-service parity. This conservative repair is local
 continuity, not a claim of complete native startup or automatic retry eligibility.
+
+## Legacy refusal observations and offline command (2026-11-04)
+
+**Confirmed Rust producer provenance:** `git show
+65d41e7:crates/whatsapp-cli/src/transport.rs` retains the old producer: reserve
+media-route:<id>, await an IQ with that ID, then store full original response and
+receipt-time at under result/refused. Those records have no prospective request
+context or receipt order. They cannot become prior-route authority.
+
+**Implemented local recovery policy:** known legacy refused captures now require
+a matching IQ/key ID and readable original wire. Only an outer error can supply a
+positive507 observation, interpreted with pinned 2.26.43.72 code/backoff rules and
+anchored to a positive original receipt timestamp. Its possible active bound is
+reported as unbound_active_until and blocks new preparation through that bound.
+It is not written as a proven ordered throttle or used to rebuild a request.
+Missing/invalid timestamp, corrupt refusal wire, foreign ID or unknown status
+refuses explicitly. Ordinary results/uncertain captures do not fabricate waits.
+Legacy503 never clears another wait because relative order remains unknown.
+
+The historical capture's APK/build/clock-service provenance remains unknown;
+this is a guarded interpretation under the pinned reference, not cross-release
+parser/expiry parity or proof that a reset never occurred. Expiry uses the
+original bound and does not restart from now. Existing raw records are unchanged.
+Two additional real-store tests cover the legacy bound, no context/owner creation,
+no restamping, expiry, reset ambiguity, correlation/time/status faults and an IQ
+result containing an unconsumed error child.
+
+`whatsapp-cli media-route-recover --json` exposes the safe report offline using
+an existing store. It may restore known local deadlines but performs no login,
+query or retry and never creates a missing store. It reports only counts and
+numeric deadlines. This closes the known legacy producer's refusal-observation
+gap; complete native retry/clock/startup ownership and reset-proof processing
+markers remain unfinished. No live account operation occurred.
