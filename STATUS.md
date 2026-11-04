@@ -1,3 +1,32 @@
+2026-11-04 — **Held-version fetch construction and request-outcome tracing:**
+
+- Added library `fetch_request_at_versions`: held verified versions are emitted
+  unchanged; absent versions are omitted; snapshots are requested only when
+  explicitly requested and version is absent/zero. Duplicate collections and
+  unsigned values above the APK signed-Long range refuse locally. Existing
+  valid explicit full-snapshot CLI requests retain their wire shape. Scheduler,
+  role/gate selection and notification ACK wiring remain unfinished.
+  [Current producer, wire and tests](docs/protocol/app-state-versioned-fetch.md).
+- Privacy MEX IDs/converters and legacy-versus-MobileConfig selection are
+  retained. A compiled default does not replace hydrated configuration. Current
+  readreceipts admission has additional false-valued forms; no receipt policy
+  changed without a durable preference owner.
+  [Configuration and MEX limits](docs/protocol/privacy-mex-config.md).
+- Rotation IQ queue acceptance, definite error, timeout and result have distinct
+  effects. The native timeout invokes delivery failure rather than definite
+  refusal bookkeeping. CAT startup traffic requires a real stored server token;
+  push-origin maintenance is conditional, not a guessed registration field.
+  [Outcome trace and pending lifecycle work](docs/protocol/authkey-outcomes.md).
+
+Validation: 1,132 workspace/all-feature tests, strict all-target/all-feature
+Clippy, CLI-reference regeneration, formatting, coverage freshness and repository
+hygiene passed. Twelve focused request-builder tests cover native snapshot
+branches, exact large-integer wire roundtrips, signed overflow and duplicate
+inputs. Evidence accounting retains 560 distinct REA records (204 current build),
+52 with explicit Rust ownership. Counts are not conversion or ban-risk metrics.
+No live account request, token fabrication or key rotation occurred. The full
+network audit remains active. Previous source commit 6de02da passed remote CI.
+
 2026-11-04 — **Noise-pair preflight and notification lifecycle audit:**
 
 - Comparison login now verifies persisted Curve25519 public/private consistency

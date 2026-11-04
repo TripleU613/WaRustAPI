@@ -149,3 +149,8 @@ supported child's processing before the existing base ACK; and test persisted
 work before ACK, redelivery deduplication, malformed/unsupported child refusal,
 correlated success/error adoption, and uncertain transmission without replay.
 Those are dependencies of this obligation, not a reduction to an ACK-only port.
+
+The [MEX/configuration continuation](privacy-mex-config.md) closes query IDs,
+feature/value conversion and compiled legacy-default selection. It also refines
+readreceipts validator admission beyond all/on_standard/none; effective config
+hydration, outer MEX dispatch and durable adoption still remain prerequisites.

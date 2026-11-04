@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_fa32b710d15f9f681708426e440b5e5a2d9e5aa244aee6579149f311b876f804",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.FUT",
+    "method_name": "CK4",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-qzUgWw/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.FUT"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cinit\\u003e(java.lang.Object, java.lang.Object, java.lang.String, int): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;I)V\"},{\"signature\":\"BsS(java.lang.String): void\",\"def_pos\":0,\"name\":\"BsS\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)V\"},{\"signature\":\"Bvj(X.0Tp, java.lang.String): void\",\"def_pos\":0,\"name\":\"Bvj\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0Tp;Ljava/lang/String;)V\"},{\"signature\":\"CK4(X.0Tp, java.lang.String): void\",\"def_pos\":0,\"name\":\"CK4\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0Tp;Ljava/lang/String;)V\"},{\"signature\":\"CmQ(java.lang.String): X.D33\",\"def_pos\":0,\"name\":\"CmQ\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)LX/D33;\"}],\"method_count\":5,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"FUT\",\"full_name\":\"X.FUT\",\"field_count\":4,\"fields\":[{\"type\":\"int\",\"def_pos\":0,\"name\":\"$t\"},{\"type\":\"java.lang.Object\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"java.lang.Object\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"java.lang.String\",\"def_pos\":0,\"name\":\"A02\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.FUT",
+          "method_name": "CK4",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.FUT.CK4\",\"class_name\":\"X.FUT\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    @Override // X.C0lG\\n    public void CK4(C0Tp c0Tp, String str) throws LIL {\\n        if (this.$t \\u003d\\u003d 0) {\\n            Log.i(\\\"PushXmppMethod/read/client_config_set\\\");\\n            Fuc fuc \\u003d (Fuc) this.A00;\\n            if (fuc !\\u003d null) {\\n                fuc.onSuccess();\\n                return;\\n            }\\n            return;\\n        }\\n        Dzb dzb \\u003d (Dzb) this.A01;\\n        C00l.A09(c0Tp, 0);\\n        C6oe.A1M(c0Tp);\\n        Object obj \\u003d dzb.A00;\\n        C8B6 c8b6 \\u003d new C8B6();\\n        EqZ eqZ \\u003d EqZ.A00;\\n        if (B1w.A17(c0Tp, c8b6, new Cgu(obj, eqZ, 12)) \\u003d\\u003d null) {\\n            throw C8B6.A00(c8b6);\\n        }\\n        BVZ bvz \\u003d (BVZ) B1w.A17(c0Tp, c8b6, new Cgr(eqZ, 5));\\n        if (bvz !\\u003d null) {\\n            C1jA c1jA \\u003d (C1jA) this.A00;\\n            C1rs c1rsA0U \\u003d c1jA.A01.A0U();\\n            C2L8.A1U(c1rsA0U.A02(), \\\"pref_client_auth_token\\\", Base64.encodeToString((byte[]) bvz.A00, 3));\\n            c1jA.A02.A00();\\n            C0Sf c0SfA0u \\u003d C6oe.A0u(c1jA.A00);\\n            C0Sf.A08(c0SfA0u, c0SfA0u.A0C.A03());\\n        }\\n    }\",\"overload_count\":1,\"method_name\":\"CK4\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.FUT",
+    "method": {
+      "name": "CK4",
+      "reported_signature": "CK4(X.0Tp, java.lang.String): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(LX/0Tp;Ljava/lang/String;)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    @Override // X.C0lG\n    public void CK4(C0Tp c0Tp, String str) throws LIL {\n        if (this.$t == 0) {\n            Log.i(\"PushXmppMethod/read/client_config_set\");\n            Fuc fuc = (Fuc) this.A00;\n            if (fuc != null) {\n                fuc.onSuccess();\n                return;\n            }\n            return;\n        }\n        Dzb dzb = (Dzb) this.A01;\n        C00l.A09(c0Tp, 0);\n        C6oe.A1M(c0Tp);\n        Object obj = dzb.A00;\n        C8B6 c8b6 = new C8B6();\n        EqZ eqZ = EqZ.A00;\n        if (B1w.A17(c0Tp, c8b6, new Cgu(obj, eqZ, 12)) == null) {\n            throw C8B6.A00(c8b6);\n        }\n        BVZ bvz = (BVZ) B1w.A17(c0Tp, c8b6, new Cgr(eqZ, 5));\n        if (bvz != null) {\n            C1jA c1jA = (C1jA) this.A00;\n            C1rs c1rsA0U = c1jA.A01.A0U();\n            C2L8.A1U(c1rsA0U.A02(), \"pref_client_auth_token\", Base64.encodeToString((byte[]) bvz.A00, 3));\n            c1jA.A02.A00();\n            C0Sf c0SfA0u = C6oe.A0u(c1jA.A00);\n            C0Sf.A08(c0SfA0u, c0SfA0u.A0C.A03());\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

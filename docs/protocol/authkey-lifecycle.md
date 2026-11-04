@@ -92,3 +92,7 @@ disabled. That helper is now gated with its inbox dependency; all production
 callers already require the same feature. It does not silently fall back to a
 PN-only lookup. Full-client wire behavior is unchanged. The compiler feature
 check and reduced-feature tests verify this boundary.
+
+[Outcome/startup continuation](authkey-outcomes.md) now distinguishes local
+queue acceptance, delivery timeout, definite error and result, and traces
+conditional CAT/pending-token triggers. Lost-result reconciliation remains open.

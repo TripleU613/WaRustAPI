@@ -1,0 +1,46 @@
+{
+  "evidence": {
+    "ev_42eab65bf0d2db1d4cb899a587ed6085680dda5c05c7907b9227f1e766a538f8": {
+      "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/app_state_sync.rs"
+      ]
+    },
+    "ev_e59a97ae6713a17ca6fe236d880bc81ee05366092ef3b16267381fffc12b9226": {
+      "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/app_state_sync.rs"
+      ]
+    },
+    "ev_391952f0f041b6e85c6f7fdc062b9e0aa2c87adb666d50795074620befd35101": {
+      "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/app_state_sync.rs"
+      ]
+    },
+    "ev_2c155894ba54d1bd225af39e2abd69fef234b90e1601355d5e783672926bc867": {
+      "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/app_state_sync.rs"
+      ]
+    },
+    "ev_223421c228f2bcb70de660d777cd1b0ee2186a342fe3983ee739e267d6705c66": {
+      "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/app_state_sync.rs"
+      ]
+    },
+    "ev_e977a40cb4962a88f9c52e8b48dfbba32e534c8752140f5b159e11584d931ae1": {
+      "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/app_state_sync.rs"
+      ]
+    },
+    "ev_7e387debc48a80dca38036ceeaca545cfeb850486d2ffe0cf500601713860c9f": {
+      "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/app_state_sync.rs"
+      ]
+    }
+  }
+}

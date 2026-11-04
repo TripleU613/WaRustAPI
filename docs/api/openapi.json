@@ -263,6 +263,24 @@
       "description": "Offline development utility, separate from the whatsapp-cli control API; no HTTP route and no APK needed. Reads committed docs/protocol/apk/*/manifest.json and targets.json plus docs/protocol/rea JSON envelopes, and writes docs/protocol/apk-coverage.json: retained bundles and topic counts per release (including the pinned 2.26.36.75, currently zero bundles), topics with evidence from more than one release, and whatsapp-api source files (generated proto excluded) cited or not cited by any retained topic, plus citations of files that no longer exist. --check fails if the committed report is stale. A release recorded with two APK hashes is refused. Bundle fields still measure retained bundle-topic citations only. The separate rea section records distinct evidence IDs per release/hash/operation, method-body export availability and explicit Rust ownership from ownership.json sidecars; summaries never count as method bodies or completed ports. Ownership entries name evidence IDs, matching apk_sha256 and existing rust_files. Conflicting duplicate identities, inconsistent release/hash labels, malformed records/ownership, dangling IDs and symlinks are refused. Prose and directory names do not infer ownership; no conversion percentage or full APK equivalence is claimed. Unexported code remains outside this report. Evidence docs/protocol/apk-coverage.md."
     }
   ],
+  "x-library-capabilities": [
+    {
+      "symbol": "whatsapp_api::transport::app_state_sync::fetch_request_at_versions",
+      "x-cli": null,
+      "x-transport": [
+        "library"
+      ],
+      "x-live": false,
+      "description": "Offline version-aware patch-free Node builder from APK 2.26.43.72 EfK/EdY producer evidence. Not an HTTP route, CLI mode or notification scheduler. Held versions must be authenticated applied state, never advertised dirty metadata. None omits version; return_snapshot is emitted only when requested and version is None or zero. Duplicate collections and versions above signed Long maximum refuse locally. Existing contacts fetch-app-state remains the explicit version-zero full snapshot path.",
+      "inputs": {
+        "id": "nonempty string, at most 128 bytes",
+        "collections": "nonempty ordered slice of unique (Collection, Option<u64>) pairs; held version 0..9223372036854775807 or None",
+        "return_snapshot": "bool from caller-established role/lifecycle policy"
+      },
+      "output": "binary::Node; no store changes, reservation, transmission or ACK",
+      "evidence": "docs/protocol/app-state-versioned-fetch.md"
+    }
+  ],
   "info": {
     "title": "WaRustAPI control API",
     "version": "0.0.1",
@@ -12028,7 +12046,7 @@
     "/v1/app-state/fetch": {
       "post": {
         "summary": "Queue a read-only app-state fetch for every collection (offline; a session transmits it)",
-        "description": "Ask the server for each app-state collection's snapshot at version 0 (CSe.A00/CSe.A01: <sync data_namespace=3><collection name order version=0 return_snapshot=\"true\"/>). Read-only: no <patch> child is emitted, since CSe.A01 adds it only when a patch argument is present. The reply carries the server's authoritative version per collection, which patch writing needs because patches must be strictly sequential. Live 2026-09-22: accepted, and the reply was an empty <sync/>, confirming this account holds no app state.",
+        "description": "Ask the server for each app-state collection's snapshot at version 0 (CSe.A00/CSe.A01: <sync data_namespace=3><collection name order version=0 return_snapshot=\"true\"/>). Read-only: no <patch> child is emitted, since CSe.A01 adds it only when a patch argument is present. The reply carries the server's authoritative version per collection, which patch writing needs because patches must be strictly sequential. Live 2026-09-22: accepted, and the reply was an empty <sync/>, confirming this account holds no app state. Current-build construction (2026-11-04, offline): the library also offers fetch_request_at_versions with explicit held versions and snapshot policy; this CLI operation still requests version-zero snapshots. Duplicate collection inputs are refused by the shared builder. Automatic server_sync scheduling, lifecycle gates, missing-key handling and pagination remain unported. See docs/protocol/app-state-versioned-fetch.md.",
         "operationId": "fetchAppState",
         "x-cli": "whatsapp-cli contacts fetch-app-state",
         "x-transport": [

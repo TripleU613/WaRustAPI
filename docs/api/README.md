@@ -249,3 +249,10 @@ owned held version-4 sessions with native wire/MAC and pending KEM metadata.
 An explicit matching peer pin and account/ratchet checks are required; supplied
 bundle signature checks still run. See
 [normal API/outbox integration and remaining PQ gates](../protocol/held-hybrid-send.md).
+
+`openapi.json` also records callable library-only primitives in
+`x-library-capabilities`, with `x-cli: null`, `x-transport: ["library"]` and
+`x-live: false` when construction is offline. These entries create no HTTP route.
+Current `transport::app_state_sync::fetch_request_at_versions` preserves held
+verified versions and conditional snapshot attributes; its input contract and
+remaining scheduler work are in [the versioned-fetch note](../protocol/app-state-versioned-fetch.md).

@@ -1,0 +1,117 @@
+
+# class: LX/EfK;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VL)  # .registers 3
+    # full signature: LX/EfK;-><init>(Ljava/lang/String;)V
+    0000..0006  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v2, v1, LX/EfK;->A02:Ljava/lang/String;
+    000a..0010  invoke-static  {}, LX/2L6;->A1F()Ljava/util/HashSet;
+    0010..0012  move-result-object  v0
+    0012..0016  iput-object  v0, v1, LX/EfK;->A05:Ljava/util/Set;
+    0016..001c  invoke-static  {}, LX/2L6;->A1E()Ljava/util/HashMap;
+    001c..001e  move-result-object  v0
+    001e..0022  iput-object  v0, v1, LX/EfK;->A04:Ljava/util/Map;
+    0022..0028  invoke-static  {}, LX/2L6;->A1E()Ljava/util/HashMap;
+    0028..002a  move-result-object  v0
+    002a..002e  iput-object  v0, v1, LX/EfK;->A03:Ljava/util/Map;
+    002e..0032  const-string  v0, "sync"
+    0032..0038  invoke-static  {v0}, LX/B1w;->A0a(Ljava/lang/String;)LX/0Tj;
+    0038..003a  move-result-object  v0
+    003a..003e  iput-object  v0, v1, LX/EfK;->A01:LX/0Tj;
+    003e..0040  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(L)  # .registers 10
+    # full signature: LX/EfK;->A00()LX/EfB;
+    0000..0006  invoke-static  {}, LX/B22;->A0K()LX/0Tj;
+    0006..0008  move-result-object  v4
+    0008..000e  const-string/jumbo  v0, "w:sync:app:state"
+    000e..0014  invoke-static  {v4, v0}, LX/DBi;->A0h(LX/0Tj;Ljava/lang/String;)V
+    0014..0018  const-string  v0, "id"
+    0018..001c  iget-object  v5, v9, LX/EfK;->A02:Ljava/lang/String;
+    001c..0022  invoke-static  {v4, v0, v5}, LX/B1y;->A1J(LX/0Tj;Ljava/lang/String;Ljava/lang/String;)V
+    0022..0026  iget-object  v3, v9, LX/EfK;->A01:LX/0Tj;
+    0026..002a  iget-object  v0, v3, LX/0Tj;->A02:Ljava/util/List;
+    002a..0030  invoke-interface  {v0}, Ljava/util/List;->clear()V
+    0030..0034  const-string  v2, "data_namespace"
+    0034..0036  const/4  v1, #0x3
+    0036..003a  new-instance  v0, LX/0Tl;
+    003a..0040  invoke-direct  {v0, v2, v1}, LX/0Tl;-><init>(Ljava/lang/String;I)V
+    0040..0046  invoke-virtual  {v3, v0}, LX/0Tj;->A02(LX/0Tl;)V
+    0046..004c  invoke-static  {v3, v4}, LX/B1x;->A1L(LX/0Tj;LX/0Tj;)V
+    004c..0050  iget-object  v2, v9, LX/EfK;->A00:LX/0Tp;
+    0050..0054  if-eqz  v2, +0x18
+    0054..0058  const-string  v0, "bot"
+    0058..005e  invoke-static  {v0}, LX/B1w;->A0a(Ljava/lang/String;)LX/0Tj;
+    005e..0060  move-result-object  v1
+    0060..0066  invoke-virtual  {v1, v2}, LX/0Tj;->A03(LX/0Tp;)V
+    0066..006a  const-string  v0, "coex"
+    006a..0070  invoke-static  {v0}, LX/B1w;->A0a(Ljava/lang/String;)LX/0Tj;
+    0070..0072  move-result-object  v0
+    0072..0078  invoke-static  {v1, v0}, LX/B21;->A0P(LX/0Tj;LX/0Tj;)LX/0Tp;
+    0078..007a  move-result-object  v0
+    007a..0080  invoke-virtual  {v4, v0}, LX/0Tj;->A03(LX/0Tp;)V
+    0080..0084  iget-object  v8, v9, LX/EfK;->A05:Ljava/util/Set;
+    0084..008a  invoke-virtual  {v4}, LX/0Tj;->A01()LX/0Tp;
+    008a..008c  move-result-object  v4
+    008c..0090  iget-object  v6, v9, LX/EfK;->A04:Ljava/util/Map;
+    0090..0094  iget-object  v7, v9, LX/EfK;->A03:Ljava/util/Map;
+    0094..0098  new-instance  v3, LX/EfB;
+    0098..009e  invoke-direct/range  {v3..v8}, LX/EfB;-><init>(LX/0Tp;Ljava/lang/String;Ljava/util/Map;Ljava/util/Map;Ljava/util/Set;)V
+    009e..00a0  return-object  v3
+    # exception table: 0 try range(s)
+.end method
+
+.method public A01(VLLLLLZ)  # .registers 14
+    # full signature: LX/EfK;->A01(LX/Dh0;Ljava/lang/Long;Ljava/lang/String;Ljava/util/List;[BZ)V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v10, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  const-string  v0, "collection"
+    000c..0012  invoke-static  {v0}, LX/B1w;->A0a(Ljava/lang/String;)LX/0Tj;
+    0012..0014  move-result-object  v2
+    0014..0018  const-string  v0, "critical_unblock_low"
+    0018..001e  invoke-virtual  {v0, v10}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    001e..0020  move-result  v0
+    0020..0024  xor-int/lit8  v3, v0, #0x1
+    0024..0028  const-string  v0, "name"
+    0028..002e  invoke-static  {v2, v0, v10}, LX/B1y;->A1J(LX/0Tj;Ljava/lang/String;Ljava/lang/String;)V
+    002e..0032  const-string  v1, "order"
+    0032..0036  new-instance  v0, LX/0Tl;
+    0036..003c  invoke-direct  {v0, v1, v3}, LX/0Tl;-><init>(Ljava/lang/String;I)V
+    003c..0042  invoke-virtual  {v2, v0}, LX/0Tj;->A02(LX/0Tl;)V
+    0042..0046  if-eqz  v9, +0xc
+    0046..004c  const-string/jumbo  v3, "version"
+    004c..0052  invoke-virtual  {v9}, Ljava/lang/Number;->longValue()J
+    0052..0054  move-result-wide  v0
+    0054..005a  invoke-static  {v2, v3, v0, v1}, LX/B1y;->A1I(LX/0Tj;Ljava/lang/String;J)V
+    005a..005e  if-eqz  v13, +0x16
+    005e..0062  if-eqz  v9, +0xc
+    0062..0066  const-wide/16  v5, #0x0
+    0066..006c  invoke-virtual  {v9}, Ljava/lang/Number;->longValue()J
+    006c..006e  move-result-wide  v3
+    006e..0072  cmp-long  v0, v3, v5
+    0072..0076  if-nez  v0, +0xa
+    0076..007a  const-string  v1, "return_snapshot"
+    007a..0080  const-string/jumbo  v0, "true"
+    0080..0086  invoke-static  {v2, v1, v0}, LX/B1y;->A1J(LX/0Tj;Ljava/lang/String;Ljava/lang/String;)V
+    0086..008a  if-eqz  v8, +0x1b
+    008a..008c  const/4  v4, #0x0
+    008c..0092  invoke-virtual  {v8}, Lcom/google/protobuf/AbstractMessageLite;->toByteArray()[B
+    0092..0094  move-result-object  v3
+    0094..0098  const-string  v1, "patch"
+    0098..009c  new-instance  v0, LX/0Tp;
+    009c..00a2  invoke-direct  {v0, v1, v3, v4}, LX/0Tp;-><init>(Ljava/lang/String;[B[LX/0Tl;)V
+    00a2..00a8  invoke-virtual  {v2, v0}, LX/0Tj;->A03(LX/0Tp;)V
+    00a8..00ac  iget-object  v0, v7, LX/EfK;->A04:Ljava/util/Map;
+    00ac..00b2  invoke-interface  {v0, v10, v11}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    00b2..00b6  iget-object  v0, v7, LX/EfK;->A03:Ljava/util/Map;
+    00b6..00bc  invoke-interface  {v0, v10, v12}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    00bc..00c0  iget-object  v0, v7, LX/EfK;->A05:Ljava/util/Set;
+    00c0..00c6  invoke-interface  {v0, v10}, Ljava/util/Set;->add(Ljava/lang/Object;)Z
+    00c6..00ca  iget-object  v0, v7, LX/EfK;->A01:LX/0Tj;
+    00ca..00d0  invoke-static  {v2, v0}, LX/B1x;->A1L(LX/0Tj;LX/0Tj;)V
+    00d0..00d2  return-void
+    # exception table: 0 try range(s)
+.end method

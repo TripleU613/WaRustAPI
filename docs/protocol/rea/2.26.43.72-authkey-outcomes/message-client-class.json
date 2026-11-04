@@ -1,0 +1,462 @@
+{
+  "evidence_id": "ev_ab1a54b64720d4669645a7581c33e73529bf6fb6584c8b6d8836e74e9990e371",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_class",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C0Sf"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-qzUgWw/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "load_apk",
+        "input": {
+          "path": "/tmp/rea-android-qzUgWw/target.apk",
+          "threads": 1,
+          "resources": "full"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-qzUgWw/target.apk\",\"class_count\":106897,\"raw_class_count\":106897,\"resource_count\":15728,\"load_duration_ms\":17171,\"decompile_timeout_ms\":90000,\"threads\":1,\"code_cache_size\":64,\"resources\":\"full\"}"
+            }
+          ]
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C0Sf"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cclinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cclinit\\u003e\",\"is_constructor\":false,\"dex_descriptor\":\"()V\"},{\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"()V\"},{\"signature\":\"A00(android.os.Message): android.os.Message\",\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"(Landroid/os/Message;)Landroid/os/Message;\"},{\"signature\":\"A01(X.0Tp, java.lang.Boolean, java.lang.String, int, boolean, boolean): android.os.Message\",\"def_pos\":0,\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0Tp;Ljava/lang/Boolean;Ljava/lang/String;IZZ)Landroid/os/Message;\"},{\"signature\":\"A02(X.Eoh): X.Eoh\",\"def_pos\":0,\"name\":\"A02\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/Eoh;)LX/Eoh;\"},{\"signature\":\"A03(X.0Sf): X.0ln\",\"def_pos\":0,\"name\":\"A03\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0Sf;)LX/0ln;\"},{\"signature\":\"A04(android.os.Message, X.1ue, X.0Sf, java.lang.String, long, boolean): void\",\"def_pos\":0,\"name\":\"A04\",\"is_constructor\":false,\"dex_descriptor\":\"(Landroid/os/Message;LX/1ue;LX/0Sf;Ljava/lang/String;JZ)V\"},{\"signature\":\"A05(android.os.Message, X.0Sf, boolean, boolean): void\",\"def_pos\":0,\"name\":\"A05\",\"is_constructor\":false,\"dex_descriptor\":\"(Landroid/os/Message;LX/0Sf;ZZ)V\"},{\"signature\":\"A06(X.0lG, X.0Tp, X.0Sf, java.lang.String, int, long, boolean): void\",\"def_pos\":0,\"name\":\"A06\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0lG;LX/0Tp;LX/0Sf;Ljava/lang/String;IJZ)V\"},{\"signature\":\"A07(X.Eoh, boolean): void\",\"def_pos\":0,\"name\":\"A07\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/Eoh;Z)V\"},{\"signature\":\"A08(X.0Sf, java.util.Map): void\",\"def_pos\":0,\"name\":\"A08\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0Sf;Ljava/util/Map;)V\"},{\"signature\":\"A09(android.os.Message, X.0Sf, boolean, boolean): boolean\",\"def_pos\":0,\"name\":\"A09\",\"is_constructor\":false,\"dex_descriptor\":\"(Landroid/os/Message;LX/0Sf;ZZ)Z\"},{\"signature\":\"A0A(X.0lG, X.0Tp, X.0Sf, java.lang.String, int, long, boolean, boolean): boolean\",\"def_pos\":0,\"name\":\"A0A\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0lG;LX/0Tp;LX/0Sf;Ljava/lang/String;IJZZ)Z\"},{\"signature\":\"A0B(android.os.Message, X.Eoh): X.FfK\",\"def_pos\":0,\"name\":\"A0B\",\"is_constructor\":false,\"dex_descriptor\":\"(Landroid/os/Message;LX/Eoh;)LX/FfK;\"},{\"signature\":\"A0C(X.0Tp, X.Eoh, int): X.FfK\",\"def_pos\":0,\"name\":\"A0C\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0Tp;LX/Eoh;I)LX/FfK;\"},{\"signature\":\"A0D(X.0Tp, X.Eoh, int): X.FfK\",\"def_pos\":0,\"name\":\"A0D\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0Tp;LX/Eoh;I)LX/FfK;\"},{\"signature\":\"A0E(X.0Tp, java.lang.String, int): X.FfK\",\"def_pos\":0,\"name\":\"A0E\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0Tp;Ljava/lang/String;I)LX/FfK;\"},{\"signature\":\"A0F(X.0Tp, java.lang.String, X.0cf, int, long, boolean): java.lang.Object\",\"def_pos\":0,\"name\":\"A0F\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0Tp;Ljava/lang/String;LX/0cf;IJZ)Ljava/lang/Object;\"},{\"signature\":\"A0G(): java.lang.String\",\"def_pos\":0,\"name\":\"A0G\",\"is_constructor\":false,\"dex_descriptor\":\"()Ljava/lang/String;\"},{\"signature\":\"A0H(): java.lang.String\",\"def_pos\":0,\"name\":\"A0H\",\"is_constructor\":false,\"dex_descriptor\":\"()Ljava/lang/String;\"},{\"signature\":\"A0I(): void\",\"def_pos\":0,\"name\":\"A0I\",\"is_constructor\":false,\"dex_descriptor\":\"()V\"},{\"signature\":\"A0J(): void\",\"def_pos\":0,\"name\":\"A0J\",\"is_constructor\":false,\"dex_descriptor\":\"()V\"},{\"signature\":\"A0K(long): void\",\"def_pos\":0,\"name\":\"A0K\",\"is_constructor\":false,\"dex_descriptor\":\"(J)V\"},{\"signature\":\"A0L(android.os.Message, java.lang.String): void\",\"def_pos\":0,\"name\":\"A0L\",\"is_constructor\":false,\"dex_descriptor\":\"(Landroid/os/Message;Ljava/lang/String;)V\"},{\"signature\":\"A0M(android.os.Message, java.lang.String): void\",\"def_pos\":0,\"name\":\"A0M\",\"is_constructor\":false,\"dex_descriptor\":\"(Landroid/os/Message;Ljava/lang/String;)V\"},{\"signature\":\"A0N(X.1C8, X.0lG, X.0Tp, java.lang.String, int, long, boolean): void\",\"def_pos\":0,\"name\":\"A0N\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/1C8;LX/0lG;LX/0Tp;Ljava/lang/String;IJZ)V\"},{\"signature\":\"A0O(X.1k2, X.Eoh): void\",\"def_pos\":0,\"name\":\"A0O\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/1k2;LX/Eoh;)V\"},{\"signature\":\"A0P(X.0lG, X.0Tp, java.lang.String): void\",\"def_pos\":0,\"name\":\"A0P\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0lG;LX/0Tp;Ljava/lang/String;)V\"},{\"signature\":\"A0Q(X.0lG, X.0Tp, java.lang.String, int, long): void\",\"def_pos\":0,\"name\":\"A0Q\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0lG;LX/0Tp;Ljava/lang/String;IJ)V\"},{\"signature\":\"A0R(X.0lG, X.0Tp, java.lang.String, int, long): void\",\"def_pos\":0,\"name\":\"A0R\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0lG;LX/0Tp;Ljava/lang/String;IJ)V\"},{\"signature\":\"A0S(X.Eoh): void\",\"def_pos\":0,\"name\":\"A0S\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/Eoh;)V\"},{\"signature\":\"A0T(X.Eoh, java.lang.Exception): void\",\"def_pos\":0,\"name\":\"A0T\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/Eoh;Ljava/lang/Exception;)V\"},{\"signature\":\"A0U(): boolean\",\"def_pos\":0,\"name\":\"A0U\",\"is_constructor\":false,\"dex_descriptor\":\"()Z\"},{\"signature\":\"A0V(android.os.Message): boolean\",\"def_pos\":0,\"name\":\"A0V\",\"is_constructor\":false,\"dex_descriptor\":\"(Landroid/os/Message;)Z\"},{\"signature\":\"A0W(X.0lG, X.0Tp, java.lang.String, int, long): boolean\",\"def_pos\":0,\"name\":\"A0W\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0lG;LX/0Tp;Ljava/lang/String;IJ)Z\"},{\"signature\":\"A0X(X.0Tp, int): boolean\",\"def_pos\":0,\"name\":\"A0X\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0Tp;I)Z\"},{\"signature\":\"A0Y(java.util.List): boolean\",\"def_pos\":0,\"name\":\"A0Y\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/util/List;)Z\"}],\"method_count\":37,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"C0Sf\",\"full_name\":\"X.C0Sf\",\"field_count\":22,\"fields\":[{\"type\":\"X.1AD\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"X.08Y\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"X.0B0\",\"def_pos\":0,\"name\":\"A05\"},{\"type\":\"X.08q\",\"def_pos\":0,\"name\":\"A06\"},{\"type\":\"X.0AI\",\"def_pos\":0,\"name\":\"A07\"},{\"type\":\"X.0BZ\",\"def_pos\":0,\"name\":\"A08\"},{\"type\":\"X.0TX\",\"def_pos\":0,\"name\":\"A09\"},{\"type\":\"X.0TT\",\"def_pos\":0,\"name\":\"A0A\"},{\"type\":\"X.0Th\",\"def_pos\":0,\"name\":\"A0B\"},{\"type\":\"X.0TV\",\"def_pos\":0,\"name\":\"A0C\"},{\"type\":\"X.0Td\",\"def_pos\":0,\"name\":\"A0D\"},{\"type\":\"java.util.Map\",\"def_pos\":0,\"name\":\"A0E\"},{\"type\":\"java.util.concurrent.atomic.AtomicInteger\",\"def_pos\":0,\"name\":\"A0F\"},{\"type\":\"X.00p\",\"def_pos\":0,\"name\":\"A0G\"},{\"type\":\"X.0TR\",\"def_pos\":0,\"name\":\"A0H\"},{\"type\":\"long\",\"def_pos\":0,\"name\":\"A0I\"},{\"type\":\"X.1A0\",\"def_pos\":0,\"name\":\"A0J\"},{\"type\":\"java.util.Set\",\"def_pos\":0,\"name\":\"A0K\"},{\"type\":\"X.0Si\",\"def_pos\":0,\"name\":\"A0L\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C0Sf",
+    "methods": [
+      {
+        "name": "<clinit>",
+        "reported_signature": "<clinit>(): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "()V"
+      },
+      {
+        "name": "<init>",
+        "reported_signature": "<init>(): void",
+        "overload_index": 0,
+        "is_constructor": true,
+        "dex_descriptor": "()V"
+      },
+      {
+        "name": "A00",
+        "reported_signature": "A00(android.os.Message): android.os.Message",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Landroid/os/Message;)Landroid/os/Message;"
+      },
+      {
+        "name": "A01",
+        "reported_signature": "A01(X.0Tp, java.lang.Boolean, java.lang.String, int, boolean, boolean): android.os.Message",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/0Tp;Ljava/lang/Boolean;Ljava/lang/String;IZZ)Landroid/os/Message;"
+      },
+      {
+        "name": "A02",
+        "reported_signature": "A02(X.Eoh): X.Eoh",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/Eoh;)LX/Eoh;"
+      },
+      {
+        "name": "A03",
+        "reported_signature": "A03(X.0Sf): X.0ln",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/0Sf;)LX/0ln;"
+      },
+      {
+        "name": "A04",
+        "reported_signature": "A04(android.os.Message, X.1ue, X.0Sf, java.lang.String, long, boolean): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Landroid/os/Message;LX/1ue;LX/0Sf;Ljava/lang/String;JZ)V"
+      },
+      {
+        "name": "A05",
+        "reported_signature": "A05(android.os.Message, X.0Sf, boolean, boolean): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Landroid/os/Message;LX/0Sf;ZZ)V"
+      },
+      {
+        "name": "A06",
+        "reported_signature": "A06(X.0lG, X.0Tp, X.0Sf, java.lang.String, int, long, boolean): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/0lG;LX/0Tp;LX/0Sf;Ljava/lang/String;IJZ)V"
+      },
+      {
+        "name": "A07",
+        "reported_signature": "A07(X.Eoh, boolean): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/Eoh;Z)V"
+      },
+      {
+        "name": "A08",
+        "reported_signature": "A08(X.0Sf, java.util.Map): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/0Sf;Ljava/util/Map;)V"
+      },
+      {
+        "name": "A09",
+        "reported_signature": "A09(android.os.Message, X.0Sf, boolean, boolean): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Landroid/os/Message;LX/0Sf;ZZ)Z"
+      },
+      {
+        "name": "A0A",
+        "reported_signature": "A0A(X.0lG, X.0Tp, X.0Sf, java.lang.String, int, long, boolean, boolean): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/0lG;LX/0Tp;LX/0Sf;Ljava/lang/String;IJZZ)Z"
+      },
+      {
+        "name": "A0B",
+        "reported_signature": "A0B(android.os.Message, X.Eoh): X.FfK",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Landroid/os/Message;LX/Eoh;)LX/FfK;"
+      },
+      {
+        "name": "A0C",
+        "reported_signature": "A0C(X.0Tp, X.Eoh, int): X.FfK",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/0Tp;LX/Eoh;I)LX/FfK;"
+      },
+      {
+        "name": "A0D",
+        "reported_signature": "A0D(X.0Tp, X.Eoh, int): X.FfK",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/0Tp;LX/Eoh;I)LX/FfK;"
+      },
+      {
+        "name": "A0E",
+        "reported_signature": "A0E(X.0Tp, java.lang.String, int): X.FfK",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/0Tp;Ljava/lang/String;I)LX/FfK;"
+      },
+      {
+        "name": "A0F",
+        "reported_signature": "A0F(X.0Tp, java.lang.String, X.0cf, int, long, boolean): java.lang.Object",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/0Tp;Ljava/lang/String;LX/0cf;IJZ)Ljava/lang/Object;"
+      },
+      {
+        "name": "A0G",
+        "reported_signature": "A0G(): java.lang.String",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "()Ljava/lang/String;"
+      },
+      {
+        "name": "A0H",
+        "reported_signature": "A0H(): java.lang.String",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "()Ljava/lang/String;"
+      },
+      {
+        "name": "A0I",
+        "reported_signature": "A0I(): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "()V"
+      },
+      {
+        "name": "A0J",
+        "reported_signature": "A0J(): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "()V"
+      },
+      {
+        "name": "A0K",
+        "reported_signature": "A0K(long): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(J)V"
+      },
+      {
+        "name": "A0L",
+        "reported_signature": "A0L(android.os.Message, java.lang.String): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Landroid/os/Message;Ljava/lang/String;)V"
+      },
+      {
+        "name": "A0M",
+        "reported_signature": "A0M(android.os.Message, java.lang.String): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Landroid/os/Message;Ljava/lang/String;)V"
+      },
+      {
+        "name": "A0N",
+        "reported_signature": "A0N(X.1C8, X.0lG, X.0Tp, java.lang.String, int, long, boolean): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/1C8;LX/0lG;LX/0Tp;Ljava/lang/String;IJZ)V"
+      },
+      {
+        "name": "A0O",
+        "reported_signature": "A0O(X.1k2, X.Eoh): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/1k2;LX/Eoh;)V"
+      },
+      {
+        "name": "A0P",
+        "reported_signature": "A0P(X.0lG, X.0Tp, java.lang.String): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/0lG;LX/0Tp;Ljava/lang/String;)V"
+      },
+      {
+        "name": "A0Q",
+        "reported_signature": "A0Q(X.0lG, X.0Tp, java.lang.String, int, long): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/0lG;LX/0Tp;Ljava/lang/String;IJ)V"
+      },
+      {
+        "name": "A0R",
+        "reported_signature": "A0R(X.0lG, X.0Tp, java.lang.String, int, long): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/0lG;LX/0Tp;Ljava/lang/String;IJ)V"
+      },
+      {
+        "name": "A0S",
+        "reported_signature": "A0S(X.Eoh): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/Eoh;)V"
+      },
+      {
+        "name": "A0T",
+        "reported_signature": "A0T(X.Eoh, java.lang.Exception): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/Eoh;Ljava/lang/Exception;)V"
+      },
+      {
+        "name": "A0U",
+        "reported_signature": "A0U(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "()Z"
+      },
+      {
+        "name": "A0V",
+        "reported_signature": "A0V(android.os.Message): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Landroid/os/Message;)Z"
+      },
+      {
+        "name": "A0W",
+        "reported_signature": "A0W(X.0lG, X.0Tp, java.lang.String, int, long): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/0lG;LX/0Tp;Ljava/lang/String;IJ)Z"
+      },
+      {
+        "name": "A0X",
+        "reported_signature": "A0X(X.0Tp, int): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/0Tp;I)Z"
+      },
+      {
+        "name": "A0Y",
+        "reported_signature": "A0Y(java.util.List): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Ljava/util/List;)Z"
+      }
+    ],
+    "fields": [
+      {
+        "name": "A00",
+        "reported_type": "X.1AD"
+      },
+      {
+        "name": "A01",
+        "reported_type": "X.05a"
+      },
+      {
+        "name": "A02",
+        "reported_type": "X.05a"
+      },
+      {
+        "name": "A03",
+        "reported_type": "com.google.common.base.Optional"
+      },
+      {
+        "name": "A04",
+        "reported_type": "X.08Y"
+      },
+      {
+        "name": "A05",
+        "reported_type": "X.0B0"
+      },
+      {
+        "name": "A06",
+        "reported_type": "X.08q"
+      },
+      {
+        "name": "A07",
+        "reported_type": "X.0AI"
+      },
+      {
+        "name": "A08",
+        "reported_type": "X.0BZ"
+      },
+      {
+        "name": "A09",
+        "reported_type": "X.0TX"
+      },
+      {
+        "name": "A0A",
+        "reported_type": "X.0TT"
+      },
+      {
+        "name": "A0B",
+        "reported_type": "X.0Th"
+      },
+      {
+        "name": "A0C",
+        "reported_type": "X.0TV"
+      },
+      {
+        "name": "A0D",
+        "reported_type": "X.0Td"
+      },
+      {
+        "name": "A0E",
+        "reported_type": "java.util.Map"
+      },
+      {
+        "name": "A0F",
+        "reported_type": "java.util.concurrent.atomic.AtomicInteger"
+      },
+      {
+        "name": "A0G",
+        "reported_type": "X.00p"
+      },
+      {
+        "name": "A0H",
+        "reported_type": "X.0TR"
+      },
+      {
+        "name": "A0I",
+        "reported_type": "long"
+      },
+      {
+        "name": "A0J",
+        "reported_type": "X.1A0"
+      },
+      {
+        "name": "A0K",
+        "reported_type": "java.util.Set"
+      },
+      {
+        "name": "A0L",
+        "reported_type": "X.0Si"
+      }
+    ],
+    "inner_classes": []
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

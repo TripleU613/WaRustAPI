@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_42eab65bf0d2db1d4cb899a587ed6085680dda5c05c7907b9227f1e766a538f8",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.EdY",
+    "method_name": "A00",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-Y5mEFV/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.EdY"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"EdY\",\"full_name\":\"X.EdY\",\"field_count\":23,\"fields\":[{\"def_pos\":0,\"name\":\"A00\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"A01\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"A02\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"A03\",\"type\":\"X.EjJ\"},{\"def_pos\":0,\"name\":\"A04\",\"type\":\"X.Ewt\"},{\"def_pos\":0,\"name\":\"A05\",\"type\":\"X.0mu\"},{\"def_pos\":0,\"name\":\"A06\",\"type\":\"X.Dg5\"},{\"def_pos\":0,\"name\":\"A07\",\"type\":\"java.lang.Integer\"},{\"def_pos\":0,\"name\":\"A08\",\"type\":\"java.lang.Long\"},{\"def_pos\":0,\"name\":\"A09\",\"type\":\"java.util.List\"},{\"def_pos\":0,\"name\":\"A0A\",\"type\":\"java.util.List\"},{\"def_pos\":0,\"name\":\"A0B\",\"type\":\"java.util.List\"},{\"def_pos\":0,\"name\":\"A0C\",\"type\":\"java.util.List\"},{\"def_pos\":0,\"name\":\"A0D\",\"type\":\"java.util.Map\"},{\"def_pos\":0,\"name\":\"A0E\",\"type\":\"boolean\"},{\"def_pos\":0,\"name\":\"A0F\",\"type\":\"boolean\"},{\"def_pos\":0,\"name\":\"A0G\",\"type\":\"byte[]\"},{\"def_pos\":0,\"name\":\"A0H\",\"type\":\"byte[]\"},{\"def_pos\":0,\"name\":\"A0I\",\"type\":\"byte[]\"},{\"def_pos\":0,\"name\":\"A0J\",\"type\":\"byte[]\"},{\"def_pos\":0,\"name\":\"A0K\",\"type\":\"java.lang.String\"},{\"def_pos\":0,\"name\":\"A0L\",\"type\":\"java.util.List\"},{\"def_pos\":0,\"name\":\"A0M\",\"type\":\"byte[]\"}],\"methods\":[{\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"(Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/List;[B)V\",\"signature\":\"\\u003cinit\\u003e(java.lang.String, java.util.List, java.util.List, java.util.List, byte[]): void\",\"def_pos\":0},{\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"()LX/EXV;\",\"signature\":\"A00(): X.EXV\",\"def_pos\":0}],\"method_count\":2}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.EdY",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"overload_index\":0,\"fell_back\":false,\"body\":\"    public EXV A00() {\\n        byte[] bArr;\\n        if (this.A0C \\u003d\\u003d null \\u0026\\u0026 this.A06 \\u003d\\u003d null) {\\n            return new EXV(null, null, this.A0K, this.A0L, null, this.A0B, this.A0D, this.A0M);\\n        }\\n        GeneratedMessageLite.Builder builderCreateBuilder \\u003d Dh0.DEFAULT_INSTANCE.createBuilder();\\n        List list \\u003d this.A0C;\\n        if (list !\\u003d null) {\\n            Dh0 dh0 \\u003d (Dh0) C8t1.A0Z(builderCreateBuilder);\\n            Internal.ProtobufList protobufList \\u003d dh0.mutations_;\\n            if (!protobufList.isModifiable()) {\\n                dh0.mutations_ \\u003d GeneratedMessageLite.mutableCopy(protobufList);\\n            }\\n            AbstractMessageLite.Builder.addAll((Iterable) list, (List) dh0.mutations_);\\n        } else {\\n            Dg5 dg5 \\u003d this.A06;\\n            if (dg5 !\\u003d null) {\\n                Dh0 dh1 \\u003d (Dh0) C8t1.A0Z(builderCreateBuilder);\\n                dh1.externalMutations_ \\u003d dg5;\\n                dh1.bitField0_ |\\u003d 2;\\n            }\\n        }\\n        if (this.A04 !\\u003d null) {\\n            GeneratedMessageLite.Builder builderCreateBuilder2 \\u003d DYH.DEFAULT_INSTANCE.createBuilder();\\n            ByteString byteStringA09 \\u003d DBg.A09(builderCreateBuilder2, this.A04.A00);\\n            DYH dyh \\u003d (DYH) builderCreateBuilder2.instance;\\n            dyh.bitField0_ |\\u003d 1;\\n            dyh.id_ \\u003d byteStringA09;\\n            Dh0 dh2 \\u003d (Dh0) C8t1.A0Z(builderCreateBuilder);\\n            DYH dyh2 \\u003d (DYH) builderCreateBuilder2.build();\\n            dyh2.getClass();\\n            dh2.keyId_ \\u003d dyh2;\\n            dh2.bitField0_ |\\u003d 16;\\n        }\\n        byte[] bArr2 \\u003d this.A0J;\\n        if (bArr2 !\\u003d null) {\\n            ByteString byteStringA010 \\u003d DBg.A09(builderCreateBuilder, bArr2);\\n            Dh0 dh3 \\u003d (Dh0) builderCreateBuilder.instance;\\n            dh3.bitField0_ |\\u003d 4;\\n            dh3.snapshotMac_ \\u003d byteStringA010;\\n        }\\n        byte[] bArr3 \\u003d this.A0I;\\n        if (bArr3 !\\u003d null) {\\n            ByteString byteStringA011 \\u003d DBg.A09(builderCreateBuilder, bArr3);\\n            Dh0 dh4 \\u003d (Dh0) builderCreateBuilder.instance;\\n            dh4.bitField0_ |\\u003d 8;\\n            dh4.patchMac_ \\u003d byteStringA011;\\n        }\\n        Integer num \\u003d this.A07;\\n        if (num !\\u003d null) {\\n            int iIntValue \\u003d num.intValue();\\n            Dh0 dh5 \\u003d (Dh0) C8t1.A0Z(builderCreateBuilder);\\n            dh5.bitField0_ |\\u003d 64;\\n            dh5.deviceIndex_ \\u003d iIntValue;\\n        }\\n        if (this.A0G !\\u003d null \\u0026\\u0026 this.A08 !\\u003d null \\u0026\\u0026 (bArr \\u003d this.A0M) !\\u003d null) {\\n            GeneratedMessageLite.Builder builderCreateBuilder3 \\u003d DhL.DEFAULT_INSTANCE.createBuilder();\\n            ByteString byteStringA0B \\u003d DBe.A0B(builderCreateBuilder3, this.A0G, 0);\\n            DhL dhL \\u003d (DhL) builderCreateBuilder3.instance;\\n            dhL.bitField0_ |\\u003d 1;\\n            dhL.currentLthash_ \\u003d byteStringA0B;\\n            ByteString byteStringA0B2 \\u003d DBe.A0B(builderCreateBuilder3, bArr, 0);\\n            DhL dhL2 \\u003d (DhL) builderCreateBuilder3.instance;\\n            dhL2.bitField0_ |\\u003d 2;\\n            dhL2.newLthash_ \\u003d byteStringA0B2;\\n            byte[] bArr4 \\u003d new byte[8];\\n            C1nr.A02(bArr4, 0, this.A08.longValue());\\n            ByteString byteStringCopyFrom \\u003d ByteString.copyFrom(bArr4, 0, 8);\\n            DhL dhL3 \\u003d (DhL) C8t1.A0Z(builderCreateBuilder3);\\n            dhL3.bitField0_ |\\u003d 4;\\n            dhL3.patchVersion_ \\u003d byteStringCopyFrom;\\n            ByteString byteStringA0B3 \\u003d DBe.A0B(builderCreateBuilder3, this.A0K.getBytes(C08u.A0E), 0);\\n            DhL dhL4 \\u003d (DhL) builderCreateBuilder3.instance;\\n            dhL4.bitField0_ |\\u003d 8;\\n            dhL4.collectionName_ \\u003d byteStringA0B3;\\n            byte[] bArr5 \\u003d this.A0H;\\n            if (bArr5 !\\u003d null) {\\n                ByteString byteStringA0B4 \\u003d DBe.A0B(builderCreateBuilder3, bArr5, 0);\\n                DhL dhL5 \\u003d (DhL) builderCreateBuilder3.instance;\\n                dhL5.bitField0_ |\\u003d 32;\\n                dhL5.newLthashSubtract_ \\u003d byteStringA0B4;\\n            }\\n            int i \\u003d this.A00;\\n            DhL dhL6 \\u003d (DhL) C8t1.A0Z(builderCreateBuilder3);\\n            dhL6.bitField0_ |\\u003d 64;\\n            dhL6.numberAdd_ \\u003d i;\\n            int i2 \\u003d this.A02;\\n            DhL dhL7 \\u003d (DhL) C8t1.A0Z(builderCreateBuilder3);\\n            dhL7.bitField0_ |\\u003d 128;\\n            dhL7.numberRemove_ \\u003d i2;\\n            int i3 \\u003d this.A01;\\n            DhL dhL8 \\u003d (DhL) C8t1.A0Z(builderCreateBuilder3);\\n            dhL8.bitField0_ |\\u003d 256;\\n            dhL8.numberOverride_ \\u003d i3;\\n            if (this.A05 \\u003d\\u003d null) {\\n                Log.w(\\\"SyncdPrepareRequestResult/getSenderPlatform protocolIdentityConfig not set; defaulting to Android\\\");\\n            }\\n            S3n s3n \\u003d S3n.A01;\\n            DhL dhL9 \\u003d (DhL) C8t1.A0Z(builderCreateBuilder3);\\n            dhL9.senderPlatform_ \\u003d s3n.getNumber();\\n            dhL9.bitField0_ |\\u003d 512;\\n            boolean z \\u003d this.A0E;\\n            DhL dhL10 \\u003d (DhL) C8t1.A0Z(builderCreateBuilder3);\\n            dhL10.bitField0_ |\\u003d 1024;\\n            dhL10.isSenderPrimary_ \\u003d z;\\n            ByteString byteStringA0A \\u003d DBe.A0A(builderCreateBuilder3);\\n            Dh0 dh6 \\u003d (Dh0) C8t1.A0Z(builderCreateBuilder);\\n            dh6.bitField0_ |\\u003d 128;\\n            dh6.clientDebugData_ \\u003d byteStringA0A;\\n        }\\n        Dh0 dh7 \\u003d (Dh0) builderCreateBuilder.build();\\n        String str \\u003d this.A0K;\\n        List list2 \\u003d this.A0L;\\n        byte[] bArr6 \\u003d this.A0M;\\n        Integer numValueOf \\u003d dh7 !\\u003d null ? Integer.valueOf(dh7.getSerializedSize()) : null;\\n        List list3 \\u003d this.A09;\\n        Enn enn \\u003d null;\\n        enn \\u003d null;\\n        if (list3 !\\u003d null \\u0026\\u0026 list3.contains(str)) {\\n            enn \\u003d new Enn(this.A03, this.A04, numValueOf !\\u003d null ? C2L9.A0w(numValueOf) : null, null, null, str, null, this.A0I, this.A0J, null, bArr6, 1, 1, this.A0F ? 0 : 4);\\n        }\\n        List list4 \\u003d this.A0A;\\n        ArrayList arrayList \\u003d null;\\n        if (list4 !\\u003d null \\u0026\\u0026 list4.contains(str) \\u0026\\u0026 !list2.isEmpty()) {\\n            ArrayList arrayListA18 \\u003d C1Xl.A18();\\n            Iterator it \\u003d list2.iterator();\\n            while (it.hasNext()) {\\n                DCL dclA0W \\u003d DBc.A0W(it);\\n                String str2 \\u003d dclA0W.A06.value;\\n                arrayListA18.add(new Ene(null, dclA0W.A05, dclA0W.A00, Boolean.valueOf(dclA0W instanceof Duc ? C0Dn.A0Z(((Duc) dclA0W).getChatJid()) : false), dclA0W.A0B() \\u003d\\u003d null ? null : C2L6.A17(dclA0W.A0B().length), str2, dclA0W.A05().value, dclA0W.A01, this.A0I, 1, 1));\\n            }\\n            arrayList \\u003d arrayListA18;\\n        }\\n        return new EXV(enn, dh7, str, list2, arrayList, this.A0B, this.A0D, bArr6);\\n    }\",\"overload_count\":1,\"method_name\":\"A00\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.EdY.A00\",\"class_name\":\"X.EdY\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.EdY",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(): X.EXV",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "()LX/EXV;"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public EXV A00() {\n        byte[] bArr;\n        if (this.A0C == null && this.A06 == null) {\n            return new EXV(null, null, this.A0K, this.A0L, null, this.A0B, this.A0D, this.A0M);\n        }\n        GeneratedMessageLite.Builder builderCreateBuilder = Dh0.DEFAULT_INSTANCE.createBuilder();\n        List list = this.A0C;\n        if (list != null) {\n            Dh0 dh0 = (Dh0) C8t1.A0Z(builderCreateBuilder);\n            Internal.ProtobufList protobufList = dh0.mutations_;\n            if (!protobufList.isModifiable()) {\n                dh0.mutations_ = GeneratedMessageLite.mutableCopy(protobufList);\n            }\n            AbstractMessageLite.Builder.addAll((Iterable) list, (List) dh0.mutations_);\n        } else {\n            Dg5 dg5 = this.A06;\n            if (dg5 != null) {\n                Dh0 dh1 = (Dh0) C8t1.A0Z(builderCreateBuilder);\n                dh1.externalMutations_ = dg5;\n                dh1.bitField0_ |= 2;\n            }\n        }\n        if (this.A04 != null) {\n            GeneratedMessageLite.Builder builderCreateBuilder2 = DYH.DEFAULT_INSTANCE.createBuilder();\n            ByteString byteStringA09 = DBg.A09(builderCreateBuilder2, this.A04.A00);\n            DYH dyh = (DYH) builderCreateBuilder2.instance;\n            dyh.bitField0_ |= 1;\n            dyh.id_ = byteStringA09;\n            Dh0 dh2 = (Dh0) C8t1.A0Z(builderCreateBuilder);\n            DYH dyh2 = (DYH) builderCreateBuilder2.build();\n            dyh2.getClass();\n            dh2.keyId_ = dyh2;\n            dh2.bitField0_ |= 16;\n        }\n        byte[] bArr2 = this.A0J;\n        if (bArr2 != null) {\n            ByteString byteStringA010 = DBg.A09(builderCreateBuilder, bArr2);\n            Dh0 dh3 = (Dh0) builderCreateBuilder.instance;\n            dh3.bitField0_ |= 4;\n            dh3.snapshotMac_ = byteStringA010;\n        }\n        byte[] bArr3 = this.A0I;\n        if (bArr3 != null) {\n            ByteString byteStringA011 = DBg.A09(builderCreateBuilder, bArr3);\n            Dh0 dh4 = (Dh0) builderCreateBuilder.instance;\n            dh4.bitField0_ |= 8;\n            dh4.patchMac_ = byteStringA011;\n        }\n        Integer num = this.A07;\n        if (num != null) {\n            int iIntValue = num.intValue();\n            Dh0 dh5 = (Dh0) C8t1.A0Z(builderCreateBuilder);\n            dh5.bitField0_ |= 64;\n            dh5.deviceIndex_ = iIntValue;\n        }\n        if (this.A0G != null && this.A08 != null && (bArr = this.A0M) != null) {\n            GeneratedMessageLite.Builder builderCreateBuilder3 = DhL.DEFAULT_INSTANCE.createBuilder();\n            ByteString byteStringA0B = DBe.A0B(builderCreateBuilder3, this.A0G, 0);\n            DhL dhL = (DhL) builderCreateBuilder3.instance;\n            dhL.bitField0_ |= 1;\n            dhL.currentLthash_ = byteStringA0B;\n            ByteString byteStringA0B2 = DBe.A0B(builderCreateBuilder3, bArr, 0);\n            DhL dhL2 = (DhL) builderCreateBuilder3.instance;\n            dhL2.bitField0_ |= 2;\n            dhL2.newLthash_ = byteStringA0B2;\n            byte[] bArr4 = new byte[8];\n            C1nr.A02(bArr4, 0, this.A08.longValue());\n            ByteString byteStringCopyFrom = ByteString.copyFrom(bArr4, 0, 8);\n            DhL dhL3 = (DhL) C8t1.A0Z(builderCreateBuilder3);\n            dhL3.bitField0_ |= 4;\n            dhL3.patchVersion_ = byteStringCopyFrom;\n            ByteString byteStringA0B3 = DBe.A0B(builderCreateBuilder3, this.A0K.getBytes(C08u.A0E), 0);\n            DhL dhL4 = (DhL) builderCreateBuilder3.instance;\n            dhL4.bitField0_ |= 8;\n            dhL4.collectionName_ = byteStringA0B3;\n            byte[] bArr5 = this.A0H;\n            if (bArr5 != null) {\n                ByteString byteStringA0B4 = DBe.A0B(builderCreateBuilder3, bArr5, 0);\n                DhL dhL5 = (DhL) builderCreateBuilder3.instance;\n                dhL5.bitField0_ |= 32;\n                dhL5.newLthashSubtract_ = byteStringA0B4;\n            }\n            int i = this.A00;\n            DhL dhL6 = (DhL) C8t1.A0Z(builderCreateBuilder3);\n            dhL6.bitField0_ |= 64;\n            dhL6.numberAdd_ = i;\n            int i2 = this.A02;\n            DhL dhL7 = (DhL) C8t1.A0Z(builderCreateBuilder3);\n            dhL7.bitField0_ |= 128;\n            dhL7.numberRemove_ = i2;\n            int i3 = this.A01;\n            DhL dhL8 = (DhL) C8t1.A0Z(builderCreateBuilder3);\n            dhL8.bitField0_ |= 256;\n            dhL8.numberOverride_ = i3;\n            if (this.A05 == null) {\n                Log.w(\"SyncdPrepareRequestResult/getSenderPlatform protocolIdentityConfig not set; defaulting to Android\");\n            }\n            S3n s3n = S3n.A01;\n            DhL dhL9 = (DhL) C8t1.A0Z(builderCreateBuilder3);\n            dhL9.senderPlatform_ = s3n.getNumber();\n            dhL9.bitField0_ |= 512;\n            boolean z = this.A0E;\n            DhL dhL10 = (DhL) C8t1.A0Z(builderCreateBuilder3);\n            dhL10.bitField0_ |= 1024;\n            dhL10.isSenderPrimary_ = z;\n            ByteString byteStringA0A = DBe.A0A(builderCreateBuilder3);\n            Dh0 dh6 = (Dh0) C8t1.A0Z(builderCreateBuilder);\n            dh6.bitField0_ |= 128;\n            dh6.clientDebugData_ = byteStringA0A;\n        }\n        Dh0 dh7 = (Dh0) builderCreateBuilder.build();\n        String str = this.A0K;\n        List list2 = this.A0L;\n        byte[] bArr6 = this.A0M;\n        Integer numValueOf = dh7 != null ? Integer.valueOf(dh7.getSerializedSize()) : null;\n        List list3 = this.A09;\n        Enn enn = null;\n        enn = null;\n        if (list3 != null && list3.contains(str)) {\n            enn = new Enn(this.A03, this.A04, numValueOf != null ? C2L9.A0w(numValueOf) : null, null, null, str, null, this.A0I, this.A0J, null, bArr6, 1, 1, this.A0F ? 0 : 4);\n        }\n        List list4 = this.A0A;\n        ArrayList arrayList = null;\n        if (list4 != null && list4.contains(str) && !list2.isEmpty()) {\n            ArrayList arrayListA18 = C1Xl.A18();\n            Iterator it = list2.iterator();\n            while (it.hasNext()) {\n                DCL dclA0W = DBc.A0W(it);\n                String str2 = dclA0W.A06.value;\n                arrayListA18.add(new Ene(null, dclA0W.A05, dclA0W.A00, Boolean.valueOf(dclA0W instanceof Duc ? C0Dn.A0Z(((Duc) dclA0W).getChatJid()) : false), dclA0W.A0B() == null ? null : C2L6.A17(dclA0W.A0B().length), str2, dclA0W.A05().value, dclA0W.A01, this.A0I, 1, 1));\n            }\n            arrayList = arrayListA18;\n        }\n        return new EXV(enn, dh7, str, list2, arrayList, this.A0B, this.A0D, bArr6);\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

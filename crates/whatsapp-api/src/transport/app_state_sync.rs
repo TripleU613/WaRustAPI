@@ -88,6 +88,24 @@ impl Collection {
 /// writing needs, since both our verifier and the server require patches to be
 /// strictly sequential from the current version.
 pub fn fetch_request(id: &str, collections: &[Collection]) -> Result<Node> {
+    let versions: Vec<_> = collections.iter().map(|c| (*c, Some(0))).collect();
+    fetch_request_at_versions(id, &versions, true)
+}
+
+/// Build a patch-free fetch from each collection's held, verified version.
+///
+/// **Confirmed, 2.26.43.72 `EfK.A01`:** `None` omits `version`; a held
+/// version is emitted unchanged. `return_snapshot` is emitted only when
+/// requested and the held version is absent or zero. See
+/// `docs/protocol/app-state-versioned-fetch.md` for current producer evidence.
+/// These are applied versions, never a `server_sync` notification's advertised
+/// dirty versions. This builder does not schedule work, reserve an IQ or ACK a
+/// notification; those require the lifecycle in `server-sync-lifecycle.md`.
+pub fn fetch_request_at_versions(
+    id: &str,
+    collections: &[(Collection, Option<u64>)],
+    return_snapshot: bool,
+) -> Result<Node> {
     if id.is_empty() || id.len() > 128 {
         return Err(crate::Error::invalid(
             "app_state_sync",
@@ -100,14 +118,41 @@ pub fn fetch_request(id: &str, collections: &[Collection]) -> Result<Node> {
             "a fetch needs at least one collection",
         ));
     }
+    // EfK.A01 passes a Java Long unchanged to 0Tl(String,long), which formats
+    // its decimal value. Do not wrap an unsigned version into a negative Long.
+    if collections
+        .iter()
+        .any(|(_, version)| version.is_some_and(|v| v > i64::MAX as u64))
+    {
+        return Err(crate::Error::invalid(
+            "app_state_sync",
+            "held collection version exceeds the APK signed-long range",
+        ));
+    }
+    // The current producer (0aS.A0Q -> Dxc.run(4) -> FJU.accept(12))
+    // prepares one result per collection-keyed map entry. EfK itself appends
+    // children; enforce that producer invariant at this slice-based boundary.
+    for (index, (collection, _)) in collections.iter().enumerate() {
+        if collections[..index].iter().any(|(c, _)| c == collection) {
+            return Err(crate::Error::invalid(
+                "app_state_sync",
+                format!("duplicate fetch collection: {}", collection.name()),
+            ));
+        }
+    }
     let children: Vec<Node> = collections
         .iter()
-        .map(|c| {
-            Node::new("collection")
+        .map(|(c, version)| {
+            let mut node = Node::new("collection")
                 .attr("name", c.name())
-                .attr("order", c.order().to_string().as_str())
-                .attr("version", "0")
-                .attr("return_snapshot", "true")
+                .attr("order", c.order().to_string().as_str());
+            if let Some(version) = version {
+                node = node.attr("version", version.to_string().as_str());
+            }
+            if return_snapshot && version.is_none_or(|v| v == 0) {
+                node = node.attr("return_snapshot", "true");
+            }
+            node
         })
         .collect();
     Ok(Node::new("iq")
@@ -746,6 +791,122 @@ mod tests {
         }
         assert!(fetch_request("F1", &[]).is_err());
         assert!(fetch_request("", &ALL_COLLECTIONS).is_err());
+    }
+
+    #[test]
+    fn incremental_fetch_preserves_held_versions_and_native_snapshot_condition() {
+        // Current 43.72 EfK.A01 has separate null/zero/positive version arms.
+        // A notification's dirty version is not an input to this fixture.
+        for snapshot in [false, true] {
+            let node = fetch_request_at_versions(
+                "F2",
+                &[
+                    (Collection::Regular, None),
+                    (Collection::CriticalUnblockLow, Some(0)),
+                    (Collection::CriticalBlock, Some(7)),
+                ],
+                snapshot,
+            )
+            .unwrap();
+            assert_eq!(node.get_attr("id").unwrap().as_text(), Some("F2"));
+            let sync = &node.child_nodes()[0];
+            assert_eq!(sync.description, "sync");
+            assert_eq!(
+                sync.get_attr("data_namespace").unwrap().as_text(),
+                Some("3")
+            );
+            let children = sync.child_nodes();
+            assert_eq!(children.len(), 3);
+            for (index, (version, order)) in [(None, "1"), (Some("0"), "0"), (Some("7"), "1")]
+                .into_iter()
+                .enumerate()
+            {
+                let c = &children[index];
+                assert_eq!(c.get_attr("version").and_then(|v| v.as_text()), version);
+                assert_eq!(c.get_attr("order").unwrap().as_text(), Some(order));
+                assert_eq!(
+                    c.get_attr("return_snapshot").and_then(|v| v.as_text()),
+                    (snapshot && index < 2).then_some("true")
+                );
+                assert!(c.child_nodes().is_empty());
+            }
+        }
+    }
+
+    #[test]
+    fn incremental_fetch_retains_large_integer_precision_through_wire_codec() {
+        use crate::binary::{Decoder, Encoder, TokenDictionary};
+        let node = fetch_request_at_versions(
+            "F3",
+            &[
+                (Collection::RegularHigh, Some(9_007_199_254_740_993)),
+                (Collection::CriticalBlock, Some(i64::MAX as u64)),
+            ],
+            true,
+        )
+        .unwrap();
+        let dict = TokenDictionary::comparison_2_26_37_71();
+        let encoded = Encoder::new(dict).encode(&node).unwrap();
+        let decoded = Decoder::new(&encoded[1..], dict, &crate::profile::Limits::default())
+            .decode_node()
+            .unwrap();
+        assert_eq!(decoded, node);
+        let children = decoded.child_nodes()[0].child_nodes();
+        assert_eq!(
+            children[0].get_attr("version").unwrap().as_text(),
+            Some("9007199254740993")
+        );
+        assert_eq!(
+            children[1].get_attr("version").unwrap().as_text(),
+            Some("9223372036854775807")
+        );
+        assert!(
+            children
+                .iter()
+                .all(|c| c.get_attr("return_snapshot").is_none())
+        );
+    }
+
+    #[test]
+    fn incremental_fetch_rejects_missing_targets_bad_ids_and_unsigned_overflow() {
+        let target = [(Collection::Regular, None)];
+        assert!(fetch_request_at_versions("F4", &[], true).is_err());
+        assert!(fetch_request_at_versions("", &target, false).is_err());
+        assert!(fetch_request_at_versions(&"x".repeat(129), &target, false).is_err());
+        assert!(
+            fetch_request_at_versions(
+                "F4",
+                &[(Collection::Regular, Some(i64::MAX as u64 + 1))],
+                false
+            )
+            .is_err()
+        );
+    }
+
+    #[test]
+    fn incremental_fetch_refuses_duplicate_collections_even_with_matching_versions() {
+        for versions in [
+            (None, None),
+            (Some(7), Some(7)),
+            (Some(7), Some(8)),
+            (None, Some(0)),
+        ] {
+            let error = fetch_request_at_versions(
+                "F5",
+                &[
+                    (Collection::Regular, versions.0),
+                    (Collection::Regular, versions.1),
+                ],
+                true,
+            )
+            .unwrap_err();
+            assert!(
+                error
+                    .to_string()
+                    .contains("duplicate fetch collection: regular")
+            );
+        }
+        assert!(fetch_request("F5", &[Collection::Regular, Collection::Regular]).is_err());
     }
 
     #[test]

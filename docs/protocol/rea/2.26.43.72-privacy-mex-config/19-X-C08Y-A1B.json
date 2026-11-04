@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_037b95880f110da13b2f0dfca3eee2f7ee4801ab5e67f716898b9a33f7fac8ed",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C08Y",
+    "method_name": "A1B",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-Rk8i98/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.13\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C08Y"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_class_count\":0,\"method_count\":27,\"methods\":[{\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\"},{\"def_pos\":0,\"signature\":\"A07(com.google.common.collect.ImmutableMap$Builder): void\",\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableMap$Builder;)V\",\"is_constructor\":false,\"name\":\"A07\"},{\"def_pos\":0,\"signature\":\"A08(com.google.common.collect.ImmutableMap$Builder): void\",\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableMap$Builder;)V\",\"is_constructor\":false,\"name\":\"A08\"},{\"def_pos\":0,\"signature\":\"A0B(com.google.common.collect.ImmutableMap$Builder): void\",\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableMap$Builder;)V\",\"is_constructor\":false,\"name\":\"A0B\"},{\"def_pos\":0,\"signature\":\"A0G(com.google.common.collect.ImmutableMap$Builder): void\",\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableMap$Builder;)V\",\"is_constructor\":false,\"name\":\"A0G\"},{\"def_pos\":0,\"signature\":\"A0H(com.google.common.collect.ImmutableMap$Builder): void\",\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableMap$Builder;)V\",\"is_constructor\":false,\"name\":\"A0H\"},{\"def_pos\":0,\"signature\":\"A0I(com.google.common.collect.ImmutableMap$Builder): void\",\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableMap$Builder;)V\",\"is_constructor\":false,\"name\":\"A0I\"},{\"def_pos\":0,\"signature\":\"A0J(com.google.common.collect.ImmutableMap$Builder): void\",\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableMap$Builder;)V\",\"is_constructor\":false,\"name\":\"A0J\"},{\"def_pos\":0,\"signature\":\"A0K(com.google.common.collect.ImmutableMap$Builder): void\",\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableMap$Builder;)V\",\"is_constructor\":false,\"name\":\"A0K\"},{\"def_pos\":0,\"signature\":\"A0L(com.google.common.collect.ImmutableMap$Builder): void\",\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableMap$Builder;)V\",\"is_constructor\":false,\"name\":\"A0L\"},{\"def_pos\":0,\"signature\":\"A0M(com.google.common.collect.ImmutableMap$Builder): void\",\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableMap$Builder;)V\",\"is_constructor\":false,\"name\":\"A0M\"},{\"def_pos\":0,\"signature\":\"A0N(com.google.common.collect.ImmutableMap$Builder): void\",\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableMap$Builder;)V\",\"is_constructor\":false,\"name\":\"A0N\"},{\"def_pos\":0,\"signature\":\"A0O(com.google.common.collect.ImmutableMap$Builder): void\",\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableMap$Builder;)V\",\"is_constructor\":false,\"name\":\"A0O\"},{\"def_pos\":0,\"signature\":\"A0P(com.google.common.collect.ImmutableMap$Builder): void\",\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableMap$Builder;)V\",\"is_constructor\":false,\"name\":\"A0P\"},{\"def_pos\":0,\"signature\":\"A0Q(com.google.common.collect.ImmutableMap$Builder): void\",\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableMap$Builder;)V\",\"is_constructor\":false,\"name\":\"A0Q\"},{\"def_pos\":0,\"signature\":\"A0R(com.google.common.collect.ImmutableMap$Builder): void\",\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableMap$Builder;)V\",\"is_constructor\":false,\"name\":\"A0R\"},{\"def_pos\":0,\"signature\":\"A0S(com.google.common.collect.ImmutableMap$Builder): void\",\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableMap$Builder;)V\",\"is_constructor\":false,\"name\":\"A0S\"},{\"def_pos\":0,\"signature\":\"A0T(com.google.common.collect.ImmutableMap$Builder): void\",\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableMap$Builder;)V\",\"is_constructor\":false,\"name\":\"A0T\"},{\"def_pos\":0,\"signature\":\"A0U(com.google.common.collect.ImmutableMap$Builder): void\",\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableMap$Builder;)V\",\"is_constructor\":false,\"name\":\"A0U\"},{\"def_pos\":0,\"signature\":\"A0V(com.google.common.collect.ImmutableMap$Builder): void\",\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableMap$Builder;)V\",\"is_constructor\":false,\"name\":\"A0V\"},{\"def_pos\":0,\"signature\":\"A0W(com.google.common.collect.ImmutableMap$Builder): void\",\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableMap$Builder;)V\",\"is_constructor\":false,\"name\":\"A0W\"},{\"def_pos\":0,\"signature\":\"A0X(com.google.common.collect.ImmutableMap$Builder): void\",\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableMap$Builder;)V\",\"is_constructor\":false,\"name\":\"A0X\"},{\"def_pos\":0,\"signature\":\"A19(): com.google.common.collect.ImmutableMap\",\"dex_descriptor\":\"()Lcom/google/common/collect/ImmutableMap;\",\"is_constructor\":false,\"name\":\"A19\"},{\"def_pos\":0,\"signature\":\"A1A(): com.google.common.collect.ImmutableMap\",\"dex_descriptor\":\"()Lcom/google/common/collect/ImmutableMap;\",\"is_constructor\":false,\"name\":\"A1A\"},{\"def_pos\":0,\"signature\":\"A1B(): com.google.common.collect.ImmutableMap\",\"dex_descriptor\":\"()Lcom/google/common/collect/ImmutableMap;\",\"is_constructor\":false,\"name\":\"A1B\"},{\"def_pos\":0,\"signature\":\"A1C(): com.google.common.collect.ImmutableMap\",\"dex_descriptor\":\"()Lcom/google/common/collect/ImmutableMap;\",\"is_constructor\":false,\"name\":\"A1C\"},{\"def_pos\":0,\"signature\":\"A1D(): com.google.common.collect.ImmutableMap\",\"dex_descriptor\":\"()Lcom/google/common/collect/ImmutableMap;\",\"is_constructor\":false,\"name\":\"A1D\"}],\"fields\":[{\"type\":\"com.google.common.collect.ImmutableMap\",\"name\":\"A00\",\"def_pos\":0},{\"type\":\"com.google.common.collect.ImmutableMap\",\"name\":\"A01\",\"def_pos\":0},{\"type\":\"com.google.common.collect.ImmutableMap\",\"name\":\"A02\",\"def_pos\":0},{\"type\":\"com.google.common.collect.ImmutableMap\",\"name\":\"A03\",\"def_pos\":0},{\"type\":\"com.google.common.collect.ImmutableMap\",\"name\":\"A04\",\"def_pos\":0}],\"field_count\":5,\"full_name\":\"X.C08Y\",\"name\":\"C08Y\",\"inner_classes\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C08Y",
+          "method_name": "A1B",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"overload_index\":0,\"class_name\":\"X.C08Y\",\"full_name\":\"X.08Y.A1B\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"A1B\",\"overload_count\":1,\"body\":\"    @Override // X.C00E\\n    public ImmutableMap A1B() {\\n        return this.A02;\\n    }\",\"fell_back\":false}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C08Y",
+    "method": {
+      "name": "A1B",
+      "reported_signature": "A1B(): com.google.common.collect.ImmutableMap",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "()Lcom/google/common/collect/ImmutableMap;"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    @Override // X.C00E\n    public ImmutableMap A1B() {\n        return this.A02;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

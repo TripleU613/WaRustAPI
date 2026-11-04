@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_83fe016473a354203bd717682a134efefda09eec029c2dbe3f9736b38c49c96b",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C1XO",
+    "method_name": "invoke",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-Rk8i98/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.13\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C1XO"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_class_count\":0,\"method_count\":2,\"methods\":[{\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(int): void\",\"dex_descriptor\":\"(I)V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\"},{\"def_pos\":0,\"signature\":\"invoke(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object): java.lang.Object\",\"dex_descriptor\":\"(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;\",\"is_constructor\":false,\"name\":\"invoke\"}],\"fields\":[{\"type\":\"int\",\"name\":\"$t\",\"def_pos\":0}],\"field_count\":1,\"full_name\":\"X.C1XO\",\"name\":\"C1XO\",\"inner_classes\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C1XO",
+          "method_name": "invoke",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"overload_index\":0,\"class_name\":\"X.C1XO\",\"full_name\":\"X.1XO.invoke\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"invoke\",\"overload_count\":1,\"body\":\"    /* JADX WARN: Not initialized variable reg: 3, insn: 0x00d6: INVOKE (r3 I:int) STATIC call: X.0Ei.A01(int):void A[MD:(int):void (m)] (LINE:214), block:B:35:0x00d6 */\\n    @Override // X.C0AE\\n    public final Object invoke(Object obj, Object obj2, Object obj3, Object obj4, Object obj5) {\\n        int iA01;\\n        int iArl;\\n        float fAh7;\\n        try {\\n            switch (this.$t) {\\n                case 0:\\n                    int iA00 \\u003d AnonymousClass000.A00(obj);\\n                    C0Ek c0Ek \\u003d (C0Ek) obj2;\\n                    MobileConfigUnsafeContext mobileConfigUnsafeContext \\u003d (MobileConfigUnsafeContext) obj3;\\n                    C0A7 c0a7 \\u003d (C0A7) obj4;\\n                    int iA02 \\u003d AnonymousClass000.A00(obj5);\\n                    C00l.A0B(c0Ek, mobileConfigUnsafeContext, c0a7);\\n                    return Boolean.valueOf(C0Ei.A00.A04(c0Ek, mobileConfigUnsafeContext, c0a7, iA00, iA02));\\n                case 1:\\n                    int iA03 \\u003d AnonymousClass000.A00(obj);\\n                    C0Ek c0Ek2 \\u003d (C0Ek) obj2;\\n                    MobileConfigUnsafeContext mobileConfigUnsafeContext2 \\u003d (MobileConfigUnsafeContext) obj3;\\n                    C0A7 c0a8 \\u003d (C0A7) obj4;\\n                    int iA04 \\u003d AnonymousClass000.A00(obj5);\\n                    C00l.A0B(c0Ek2, mobileConfigUnsafeContext2, c0a8);\\n                    long jB8Q \\u003d c0a8.B8Q(iA03);\\n                    if (jB8Q \\u003d\\u003d 0) {\\n                        iArl \\u003d 0;\\n                    } else {\\n                        int iA05 \\u003d iA04 \\u003c\\u003d 0 ? 0 : ((POm) C0Ei.A01.getValue()).A00(C02X.A01, iA04);\\n                        iArl \\u003d (int) mobileConfigUnsafeContext2.Arl(c0Ek2, jB8Q);\\n                        C0Ei.A01(iA05);\\n                    }\\n                    return Integer.valueOf(iArl);\\n                case 2:\\n                    int iA06 \\u003d AnonymousClass000.A00(obj);\\n                    C0Ek c0Ek3 \\u003d (C0Ek) obj2;\\n                    MobileConfigUnsafeContext mobileConfigUnsafeContext3 \\u003d (MobileConfigUnsafeContext) obj3;\\n                    C0A7 c0a9 \\u003d (C0A7) obj4;\\n                    int iA07 \\u003d AnonymousClass000.A00(obj5);\\n                    C00l.A0B(c0Ek3, mobileConfigUnsafeContext3, c0a9);\\n                    long jB8Q2 \\u003d c0a9.B8Q(iA06);\\n                    if (jB8Q2 \\u003d\\u003d 0) {\\n                        fAh7 \\u003d 0.0f;\\n                    } else {\\n                        int iA08 \\u003d iA07 \\u003c\\u003d 0 ? 0 : ((POm) C0Ei.A01.getValue()).A00(C02X.A0C, iA07);\\n                        fAh7 \\u003d (float) mobileConfigUnsafeContext3.Ah7(c0Ek3, jB8Q2);\\n                        C0Ei.A01(iA08);\\n                    }\\n                    return Float.valueOf(fAh7);\\n                case 3:\\n                    int iA09 \\u003d AnonymousClass000.A00(obj);\\n                    C0Ek c0Ek4 \\u003d (C0Ek) obj2;\\n                    MobileConfigUnsafeContext mobileConfigUnsafeContext4 \\u003d (MobileConfigUnsafeContext) obj3;\\n                    C0A7 c0a10 \\u003d (C0A7) obj4;\\n                    int iA010 \\u003d AnonymousClass000.A00(obj5);\\n                    C00l.A0B(c0Ek4, mobileConfigUnsafeContext4, c0a10);\\n                    return C0Ei.A00.A03(c0Ek4, mobileConfigUnsafeContext4, c0a10, iA09, iA010);\\n                default:\\n                    int iA011 \\u003d AnonymousClass000.A00(obj);\\n                    C0Ek c0Ek5 \\u003d (C0Ek) obj2;\\n                    MobileConfigUnsafeContext mobileConfigUnsafeContext5 \\u003d (MobileConfigUnsafeContext) obj3;\\n                    C0A7 c0a11 \\u003d (C0A7) obj4;\\n                    int iA012 \\u003d AnonymousClass000.A00(obj5);\\n                    C00l.A0B(c0Ek5, mobileConfigUnsafeContext5, c0a11);\\n                    String strA03 \\u003d C0Ei.A00.A03(c0Ek5, mobileConfigUnsafeContext5, c0a11, iA011, iA012);\\n                    try {\\n                        return new JSONObject(strA03);\\n                    } catch (JSONException e) {\\n                        StringBuilder sb \\u003d new StringBuilder(\\\"WAMCEvaluation/invalid json format; key\\u003d\\\");\\n                        sb.append(iA011);\\n                        sb.append(\\\"; value\\u003d\\\");\\n                        sb.append(strA03);\\n                        Log.e(sb.toString(), e);\\n                        return new JSONObject();\\n                    }\\n            }\\n        } catch (Throwable th) {\\n            C0Ei.A01(iA01);\\n            throw th;\\n        }\\n    }\",\"fell_back\":false}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C1XO",
+    "method": {
+      "name": "invoke",
+      "reported_signature": "invoke(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object): java.lang.Object",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Not initialized variable reg: 3, insn: 0x00d6: INVOKE (r3 I:int) STATIC call: X.0Ei.A01(int):void A[MD:(int):void (m)] (LINE:214), block:B:35:0x00d6 */\n    @Override // X.C0AE\n    public final Object invoke(Object obj, Object obj2, Object obj3, Object obj4, Object obj5) {\n        int iA01;\n        int iArl;\n        float fAh7;\n        try {\n            switch (this.$t) {\n                case 0:\n                    int iA00 = AnonymousClass000.A00(obj);\n                    C0Ek c0Ek = (C0Ek) obj2;\n                    MobileConfigUnsafeContext mobileConfigUnsafeContext = (MobileConfigUnsafeContext) obj3;\n                    C0A7 c0a7 = (C0A7) obj4;\n                    int iA02 = AnonymousClass000.A00(obj5);\n                    C00l.A0B(c0Ek, mobileConfigUnsafeContext, c0a7);\n                    return Boolean.valueOf(C0Ei.A00.A04(c0Ek, mobileConfigUnsafeContext, c0a7, iA00, iA02));\n                case 1:\n                    int iA03 = AnonymousClass000.A00(obj);\n                    C0Ek c0Ek2 = (C0Ek) obj2;\n                    MobileConfigUnsafeContext mobileConfigUnsafeContext2 = (MobileConfigUnsafeContext) obj3;\n                    C0A7 c0a8 = (C0A7) obj4;\n                    int iA04 = AnonymousClass000.A00(obj5);\n                    C00l.A0B(c0Ek2, mobileConfigUnsafeContext2, c0a8);\n                    long jB8Q = c0a8.B8Q(iA03);\n                    if (jB8Q == 0) {\n                        iArl = 0;\n                    } else {\n                        int iA05 = iA04 <= 0 ? 0 : ((POm) C0Ei.A01.getValue()).A00(C02X.A01, iA04);\n                        iArl = (int) mobileConfigUnsafeContext2.Arl(c0Ek2, jB8Q);\n                        C0Ei.A01(iA05);\n                    }\n                    return Integer.valueOf(iArl);\n                case 2:\n                    int iA06 = AnonymousClass000.A00(obj);\n                    C0Ek c0Ek3 = (C0Ek) obj2;\n                    MobileConfigUnsafeContext mobileConfigUnsafeContext3 = (MobileConfigUnsafeContext) obj3;\n                    C0A7 c0a9 = (C0A7) obj4;\n                    int iA07 = AnonymousClass000.A00(obj5);\n                    C00l.A0B(c0Ek3, mobileConfigUnsafeContext3, c0a9);\n                    long jB8Q2 = c0a9.B8Q(iA06);\n                    if (jB8Q2 == 0) {\n                        fAh7 = 0.0f;\n                    } else {\n                        int iA08 = iA07 <= 0 ? 0 : ((POm) C0Ei.A01.getValue()).A00(C02X.A0C, iA07);\n                        fAh7 = (float) mobileConfigUnsafeContext3.Ah7(c0Ek3, jB8Q2);\n                        C0Ei.A01(iA08);\n                    }\n                    return Float.valueOf(fAh7);\n                case 3:\n                    int iA09 = AnonymousClass000.A00(obj);\n                    C0Ek c0Ek4 = (C0Ek) obj2;\n                    MobileConfigUnsafeContext mobileConfigUnsafeContext4 = (MobileConfigUnsafeContext) obj3;\n                    C0A7 c0a10 = (C0A7) obj4;\n                    int iA010 = AnonymousClass000.A00(obj5);\n                    C00l.A0B(c0Ek4, mobileConfigUnsafeContext4, c0a10);\n                    return C0Ei.A00.A03(c0Ek4, mobileConfigUnsafeContext4, c0a10, iA09, iA010);\n                default:\n                    int iA011 = AnonymousClass000.A00(obj);\n                    C0Ek c0Ek5 = (C0Ek) obj2;\n                    MobileConfigUnsafeContext mobileConfigUnsafeContext5 = (MobileConfigUnsafeContext) obj3;\n                    C0A7 c0a11 = (C0A7) obj4;\n                    int iA012 = AnonymousClass000.A00(obj5);\n                    C00l.A0B(c0Ek5, mobileConfigUnsafeContext5, c0a11);\n                    String strA03 = C0Ei.A00.A03(c0Ek5, mobileConfigUnsafeContext5, c0a11, iA011, iA012);\n                    try {\n                        return new JSONObject(strA03);\n                    } catch (JSONException e) {\n                        StringBuilder sb = new StringBuilder(\"WAMCEvaluation/invalid json format; key=\");\n                        sb.append(iA011);\n                        sb.append(\"; value=\");\n                        sb.append(strA03);\n                        Log.e(sb.toString(), e);\n                        return new JSONObject();\n                    }\n            }\n        } catch (Throwable th) {\n            C0Ei.A01(iA01);\n            throw th;\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

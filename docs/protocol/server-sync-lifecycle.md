@@ -138,12 +138,12 @@ dispatcher. No code or API behavior changed in this audit.
 
 Next work is bounded by these concrete prerequisites:
 
-1. Trace `EfK.A01`/`EdY` request construction and `0gG.A00`, and map the
-   client role, initialized state, ready mutations and recovery/blocking state
-   to actual Rust rows. Reuse current retained evidence; do not re-decompile
-   `Dxc.run` or the full response handler merely to locate them.
-2. Add a version-aware collection fetch primitive using held verified state;
-   leave advertised dirty metadata in a separate checkpoint. Establish blocked
+1. [Current version-aware construction](app-state-versioned-fetch.md) now closes
+   `EfK.A01`/`EdY` and bounds `0gG.A00` to a provider lookup. Still map client
+   role, initialized state, ready mutations and recovery/blocking state to actual
+   Rust rows; transitive provider-initializer effects remain unknown.
+2. The version-aware library primitive is implemented; scheduler wiring is not.
+   Leave advertised dirty metadata in a separate checkpoint. Establish blocked
    missing-key behavior and a durable one-flight reservation/completion record.
 3. Connect eligible notification processing and ordinary ACK only after that
    scheduling state is durably retained. Match the APK's ACK-before-async-result

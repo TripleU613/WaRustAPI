@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_729431123694a46e013e2beb28224f351ace3f85830cdb03ae462e3ef6e2cb90",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C1XK",
+    "method_name": "invoke",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-Rk8i98/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.13\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C1XK"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_class_count\":0,\"method_count\":2,\"methods\":[{\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(java.lang.Object, java.lang.Object, int): void\",\"dex_descriptor\":\"(Ljava/lang/Object;Ljava/lang/Object;I)V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\"},{\"def_pos\":0,\"signature\":\"invoke(java.lang.Object, java.lang.Object): java.lang.Object\",\"dex_descriptor\":\"(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;\",\"is_constructor\":false,\"name\":\"invoke\"}],\"fields\":[{\"type\":\"int\",\"name\":\"$t\",\"def_pos\":0},{\"type\":\"java.lang.Object\",\"name\":\"A00\",\"def_pos\":0},{\"type\":\"java.lang.Object\",\"name\":\"A01\",\"def_pos\":0}],\"field_count\":3,\"full_name\":\"X.C1XK\",\"name\":\"C1XK\",\"inner_classes\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C1XK",
+          "method_name": "invoke",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"overload_index\":0,\"class_name\":\"X.C1XK\",\"full_name\":\"X.1XK.invoke\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"invoke\",\"overload_count\":1,\"body\":\"    @Override // X.C0AW\\n    public final Object invoke(Object obj, Object obj2) {\\n        float fFloatValue;\\n        int i \\u003d this.$t;\\n        C00E c00e \\u003d (C00E) this.A00;\\n        switch (i) {\\n            case 0:\\n                Number number \\u003d (Number) this.A01;\\n                Number number2 \\u003d (Number) obj;\\n                int iIntValue \\u003d number2.intValue();\\n                C00G c00g \\u003d (C00G) obj2;\\n                C00l.A09(c00g, 3);\\n                Number number3 \\u003d (Number) c00e.A0h(c00g, iIntValue);\\n                if (number3 !\\u003d null) {\\n                    fFloatValue \\u003d number3.floatValue();\\n                } else {\\n                    synchronized (c00e) {\\n                        Float f \\u003d (Float) c00e.A0h(c00g, iIntValue);\\n                        if (f !\\u003d null) {\\n                            fFloatValue \\u003d f.floatValue();\\n                        } else {\\n                            C00E.A09(c00g, c00e, iIntValue);\\n                            Float f2 \\u003d (Float) c00e.A1A().get(number2);\\n                            if (f2 !\\u003d null) {\\n                                number \\u003d f2;\\n                            } else if (number \\u003d\\u003d null) {\\n                                throw AnonymousClass000.A02(\\\"Unknown FloatField: \\\", iIntValue);\\n                            }\\n                            fFloatValue \\u003d c00e.A00.getFloat(String.valueOf(iIntValue), number.floatValue());\\n                            if (c00g.A01) {\\n                                c00e.A07.put(number2, Float.valueOf(fFloatValue));\\n                            } else {\\n                                c00e.A0v(iIntValue, fFloatValue);\\n                            }\\n                            C00E.A0E(c00e, iIntValue);\\n                            Boolean bool \\u003d C00M.A03;\\n                        }\\n                    }\\n                }\\n                return Float.valueOf(fFloatValue);\\n            case 1:\\n                Integer num \\u003d (Integer) this.A01;\\n                int iA00 \\u003d AnonymousClass000.A00(obj);\\n                C00G c00g2 \\u003d (C00G) obj2;\\n                C00l.A09(c00g2, 3);\\n                return Integer.valueOf(C00E.A01(c00g2, c00e, num, iA00));\\n            default:\\n                Boolean bool2 \\u003d (Boolean) this.A01;\\n                int iA01 \\u003d AnonymousClass000.A00(obj);\\n                C00G c00g3 \\u003d (C00G) obj2;\\n                C00l.A09(c00g3, 3);\\n                return Boolean.valueOf(C00E.A0C(c00g3, c00e, bool2, iA01));\\n        }\\n    }\",\"fell_back\":false}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C1XK",
+    "method": {
+      "name": "invoke",
+      "reported_signature": "invoke(java.lang.Object, java.lang.Object): java.lang.Object",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    @Override // X.C0AW\n    public final Object invoke(Object obj, Object obj2) {\n        float fFloatValue;\n        int i = this.$t;\n        C00E c00e = (C00E) this.A00;\n        switch (i) {\n            case 0:\n                Number number = (Number) this.A01;\n                Number number2 = (Number) obj;\n                int iIntValue = number2.intValue();\n                C00G c00g = (C00G) obj2;\n                C00l.A09(c00g, 3);\n                Number number3 = (Number) c00e.A0h(c00g, iIntValue);\n                if (number3 != null) {\n                    fFloatValue = number3.floatValue();\n                } else {\n                    synchronized (c00e) {\n                        Float f = (Float) c00e.A0h(c00g, iIntValue);\n                        if (f != null) {\n                            fFloatValue = f.floatValue();\n                        } else {\n                            C00E.A09(c00g, c00e, iIntValue);\n                            Float f2 = (Float) c00e.A1A().get(number2);\n                            if (f2 != null) {\n                                number = f2;\n                            } else if (number == null) {\n                                throw AnonymousClass000.A02(\"Unknown FloatField: \", iIntValue);\n                            }\n                            fFloatValue = c00e.A00.getFloat(String.valueOf(iIntValue), number.floatValue());\n                            if (c00g.A01) {\n                                c00e.A07.put(number2, Float.valueOf(fFloatValue));\n                            } else {\n                                c00e.A0v(iIntValue, fFloatValue);\n                            }\n                            C00E.A0E(c00e, iIntValue);\n                            Boolean bool = C00M.A03;\n                        }\n                    }\n                }\n                return Float.valueOf(fFloatValue);\n            case 1:\n                Integer num = (Integer) this.A01;\n                int iA00 = AnonymousClass000.A00(obj);\n                C00G c00g2 = (C00G) obj2;\n                C00l.A09(c00g2, 3);\n                return Integer.valueOf(C00E.A01(c00g2, c00e, num, iA00));\n            default:\n                Boolean bool2 = (Boolean) this.A01;\n                int iA01 = AnonymousClass000.A00(obj);\n                C00G c00g3 = (C00G) obj2;\n                C00l.A09(c00g3, 3);\n                return Boolean.valueOf(C00E.A0C(c00g3, c00e, bool2, iA01));\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}
