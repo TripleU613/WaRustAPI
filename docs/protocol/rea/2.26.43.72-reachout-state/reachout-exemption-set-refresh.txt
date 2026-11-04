@@ -1,0 +1,46 @@
+
+# class: LX/0ht;
+# extends: LX/07o;
+
+.method public A0U(V)  # .registers 6
+    # full signature: LX/0ht;->A0U()V
+    0000..0004  iget-object  v0, v5, LX/0ht;->A05:LX/0hv;
+    0004..000a  invoke-virtual  {v0}, LX/0hv;->A0P()Ljava/util/HashMap;
+    000a..000c  move-result-object  v0
+    000c..0012  invoke-virtual  {v0}, Ljava/util/AbstractMap;->keySet()Ljava/util/Set;
+    0012..0014  move-result-object  v0
+    0014..001a  invoke-interface  {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    001a..001c  move-result-object  v4
+    001c..0022  invoke-interface  {v4}, Ljava/util/Iterator;->hasNext()Z
+    0022..0024  move-result  v0
+    0024..0028  if-eqz  v0, +0x38
+    0028..002e  invoke-interface  {v4}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    002e..0030  move-result-object  v3
+    0030..0034  check-cast  v3, LX/0DY;
+    0034..003a  invoke-static  {v3}, LX/0Dn;->A0k(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    003a..003c  move-result  v0
+    003c..0040  if-eqz  v0, -0x10
+    0040..0044  iget-object  v2, v5, LX/0ht;->A09:LX/00p;
+    0044..004a  invoke-interface  {v2}, LX/00p;->getValue()Ljava/lang/Object;
+    004a..004c  move-result-object  v1
+    004c..0052  invoke-static  {v1}, LX/00l;->A05(Ljava/lang/Object;)V
+    0052..0056  check-cast  v1, Ljava/util/Set;
+    0056..005a  const-string  v0, "null cannot be cast to non-null type com.whatsapp.infra.core.jid.UserJid"
+    005a..0060  invoke-static  {v3, v0}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    0060..0064  check-cast  v3, Lcom/whatsapp/infra/core/jid/UserJid;
+    0064..006a  invoke-interface  {v1, v3}, Ljava/util/Set;->add(Ljava/lang/Object;)Z
+    006a..006e  iget-object  v0, v5, LX/0ht;->A06:LX/0Ws;
+    006e..0074  invoke-virtual  {v0, v3}, LX/0Ws;->A0K(Lcom/whatsapp/infra/core/jid/UserJid;)Lcom/whatsapp/infra/core/jid/UserJid;
+    0074..0076  move-result-object  v1
+    0076..007a  if-eqz  v1, -0x2d
+    007a..0080  invoke-interface  {v2}, LX/00p;->getValue()Ljava/lang/Object;
+    0080..0082  move-result-object  v0
+    0082..0088  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    0088..008c  check-cast  v0, Ljava/util/Set;
+    008c..0092  invoke-interface  {v0, v1}, Ljava/util/Set;->add(Ljava/lang/Object;)Z
+    0092..0094  goto  -0x3b
+    0094..0096  const/4  v0, #0x1
+    0096..009a  iput-boolean  v0, v5, LX/0ht;->A0C:Z
+    009a..009c  return-void
+    # exception table: 0 try range(s)
+.end method

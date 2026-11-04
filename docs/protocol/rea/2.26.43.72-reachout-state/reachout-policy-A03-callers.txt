@@ -1,0 +1,14 @@
+classes5.dex  LX/6pn;->A03(L)
+  invoke dex byte offset: 0x240454
+classes5.dex  LX/6pn;->A06(ZLZ)
+  invoke dex byte offset: 0x2405da
+classes5.dex  Lcom/whatsapp/calling/ui/callhistory/group/GroupCallParticipantPicker;->A0i(VL)
+  invoke dex byte offset: 0x30e774
+classes5.dex  LX/7cn;->A5k(I)
+  invoke dex byte offset: 0x39169a
+classes5.dex  LX/7vL;->A00(VZLL)
+  invoke dex byte offset: 0x3c69a6
+classes9.dex  LX/Hp6;->ClQ(Z)
+  invoke dex byte offset: 0x6ba454
+classes9.dex  LX/IBY;->run(V)
+  invoke dex byte offset: 0x75b356

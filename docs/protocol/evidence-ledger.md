@@ -1,3 +1,9 @@
+2026-11-04 — **Pinned static: native outreach predicate and set provenance.**
+6po/6pn, 0ht.A0U -> 0hv.A0P trusted-contact rows, helper branches and
+2Q4 caller retained with direct caller censuses.
+[Decision exits and unresolved native policy](rea/2.26.43.72-reachout-state/README.md#outreach-decision-chain-and-recipient-set-2026-11-04).
+No blanket restriction or exemption was inferred; no live traffic.
+
 2026-11-04 — **Pinned static/derived: reach-out enforcement mapping.**
 7gL enum names + 02X constants + 7k9 conversion + 7vL saved-type conversion
 resolved; 7lA banner reader and discarded 6pn read traced.

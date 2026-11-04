@@ -269,3 +269,14 @@ branches are retained in the [mapping](rea/2.26.43.72-reachout-state/README.md#e
 becomes saved 20, used by one banner reader. Another read discards the
 result. Remaining consumers, companion enforcement and all outbound guards
 remain open; no runtime behavior or request was changed.
+
+## Native outreach predicate coverage (2026-11-04)
+
+**Confirmed static / source comparison:** native 6pn.A06 combines cached
+active state, recipient-set membership, message/account predicates and
+optional visibility. Its set is populated from trusted-contact database
+rows and mapped JIDs. One higher decision caller short-circuits on true;
+full send semantics and other callers remain open. Rust's group-create
+active/expiry guard does not implement this chain across outbound paths.
+[Exact exits, provenance and remaining work](rea/2.26.43.72-reachout-state/README.md#outreach-decision-chain-and-recipient-set-2026-11-04).
+No new policy or network operation was introduced.

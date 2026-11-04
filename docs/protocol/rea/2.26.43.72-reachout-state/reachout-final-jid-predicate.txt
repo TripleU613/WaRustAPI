@@ -1,0 +1,18 @@
+
+# class: LX/0x9;
+# extends: Ljava/lang/Object;
+
+.method public A03(ZL)  # .registers 2
+    # full signature: LX/0x9;->A03(LX/0DY;)Z
+    0000..0004  if-nez  v1, +0x4
+    0004..0006  const/4  v0, #0x0
+    0006..0008  return  v0
+    0008..000c  instance-of  v0, v1, LX/0xC;
+    000c..0010  if-eqz  v0, +0x4
+    0010..0012  const/4  v0, #0x1
+    0012..0014  return  v0
+    0014..001a  invoke-static  {v1}, LX/0x9;->A06(LX/0DY;)Z
+    001a..001c  move-result  v0
+    001c..001e  return  v0
+    # exception table: 0 try range(s)
+.end method

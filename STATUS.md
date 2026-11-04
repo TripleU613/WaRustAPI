@@ -1,3 +1,13 @@
+2026-11-04 — **Native outreach decision and recipient-set provenance traced:**
+
+Pinned 6po cached active/visible checks, 6pn per-message decision, trusted-
+contact set population and a higher decision caller are retained. Rust's
+group-create guard is not full native outreach coverage. Cache/expiry
+lifetimes, remaining caller meanings and account predicates remain open.
+[Evidence and exact scope](docs/protocol/rea/2.26.43.72-reachout-state/README.md#outreach-decision-chain-and-recipient-set-2026-11-04).
+Validation: JSON parsing, coverage freshness, staged diff and repository
+hygiene passed. Static research only; no runtime changes or live requests.
+
 2026-11-04 — **Pinned restriction enum and stored types resolved:**
 
 Retained all 22 named enum ordinals, internal boxed values and the distinct

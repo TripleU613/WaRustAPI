@@ -1,0 +1,61 @@
+
+# class: LX/0hv;
+# extends: LX/0ai;
+
+.method public A0P(L)  # .registers 9
+    # full signature: LX/0hv;->A0P()Ljava/util/HashMap;
+    0000..0004  iget-object  v0, v8, LX/0ai;->A00:LX/0an;
+    0004..000a  invoke-virtual  {v0}, LX/0Xp;->A06()LX/0aq;
+    000a..000c  move-result-object  v5
+    000c..0010  iget-object  v3, v5, LX/0aq;->A02:LX/0KU;
+    0010..0014  const-string  v2, "SELECT jid, incoming_tc_token, incoming_tc_token_timestamp FROM wa_trusted_contacts"
+    0014..0016  const/4  v0, #0x0
+    0016..001a  new-array  v1, v0, [Ljava/lang/String;
+    001a..001e  const-string  v0, "GET_ALL_RECEIVED_TOKENS"
+    001e..0024  invoke-virtual  {v3, v2, v0, v1}, LX/0KU;->A0A(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;
+    0024..0026  move-result-object  v7
+    0026..002a  const-string  v0, "jid"
+    002a..0030  invoke-interface  {v7, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    0030..0032  move-result  v6
+    0032..0036  const-string  v0, "incoming_tc_token"
+    0036..003c  invoke-interface  {v7, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    003c..003e  move-result  v4
+    003e..0042  const-string  v0, "incoming_tc_token_timestamp"
+    0042..0048  invoke-interface  {v7, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    0048..004a  move-result  v3
+    004a..004e  new-instance  v2, Ljava/util/HashMap;
+    004e..0054  invoke-direct  {v2}, Ljava/util/HashMap;-><init>()V
+    0054..005a  invoke-interface  {v7}, Landroid/database/Cursor;->moveToNext()Z
+    005a..005c  move-result  v0
+    005c..0060  if-eqz  v0, +0x16
+    0060..0064  sget-object  v1, Lcom/whatsapp/infra/core/jid/UserJid;->Companion:LX/0Dj;
+    0064..006a  invoke-interface  {v7, v6}, Landroid/database/Cursor;->getString(I)Ljava/lang/String;
+    006a..006c  move-result-object  v0
+    006c..0072  invoke-virtual  {v1, v0}, LX/0Dj;->A02(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/UserJid;
+    0072..0074  move-result-object  v1
+    0074..0078  if-eqz  v1, -0x10
+    0078..007e  invoke-static  {v7, v4, v3}, LX/0hv;->A06(Landroid/database/Cursor;II)LX/86r;
+    007e..0080  move-result-object  v0
+    0080..0086  invoke-virtual  {v2, v1, v0}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    0086..0088  goto  -0x19
+    0088..008e  invoke-interface  {v7}, Landroid/database/Cursor;->close()V
+    008e..0094  invoke-virtual  {v5}, LX/0aq;->close()V
+    0094..0096  return-object  v2
+    0096..0098  move-exception  v1
+    0098..009a  throw  v1
+    009a..009c  move-exception  v0
+    009c..00a2  invoke-static  {v7, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    00a2..00a4  throw  v0
+    00a4..00a6  move-exception  v1
+    00a6..00a8  throw  v1
+    00a8..00aa  move-exception  v0
+    00aa..00b0  invoke-static  {v5, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    00b0..00b2  throw  v0
+    # exception table: 6 try range(s)
+    # catch <all> code_units 0006..0013 -> 0052
+    # catch <all> code_units 0013..0044 -> 004b
+    # catch <all> code_units 0044..0047 -> 0052
+    # catch <all> code_units 004c..004d -> 004d
+    # catch <all> code_units 004e..0052 -> 0052
+    # catch <all> code_units 0053..0054 -> 0054
+.end method

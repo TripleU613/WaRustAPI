@@ -447,3 +447,88 @@ Checked DEX TXT exports below are not REA Evidence envelopes.
 - [reachout-type-preference-xref.txt](reachout-type-preference-xref.txt) — SHA-256 `3c21c0af6bb58b222150a9692455d89a4b6e85bb9c95598535bc6ad3b0204ce5`.
 - [reachout-type-consumer.txt](reachout-type-consumer.txt) — SHA-256 `087b7d71fe3c08fefd6ad4f9a9e7fb169050fbbd81ee9d02dc152dd2ae6d9d22`.
 - [reachout-type-presenter.txt](reachout-type-presenter.txt) — SHA-256 `48da7c0c3cb4e87fbb6c1484360906f1c4c38d24cd7011d0b68ec112c9c7934a`.
+
+## Outreach decision chain and recipient set (2026-11-04)
+
+**Confirmed static**, pinned APK 2.26.43.72 (same SHA-256 above).
+6po.A01 caches the conjunction of TOwmL_is_active and config 0x1f48
+in an AtomicReference<Boolean>; A02 lazily initializes/reads this cache.
+Neither method reads end time. A03 is A02 AND TOwmL_is_visible. A00
+invokes 0ht.A0U only when A02 is true. This does not establish native
+expiry scheduling or authorize omitting expiry in Rust: scheduler, cache
+invalidation, account-switch and config lifetimes remain open.
+
+6pn.A05 and static A02 delegate the active predicate. A03 constructs an
+information bottom sheet, requiring active; when not visible it invokes
+7uB.A00 and emits a 7It event before constructing the sheet. Event semantics
+and runtime necessity are not established, and no synthetic telemetry was
+implemented. A04's stored-type read remains discarded.
+
+### Message predicate 6pn.A06
+
+A06(message, require_visible) returns false at each of these exits:
+
+- Message is null, or 6po.A02 is false.
+- Message.A0A JID fails 0Dn.A0k (null or getType outside 0,7,11,18,22,26).
+- Recipient belongs to 0ht.A09's set.
+- Message.A0D.A0J exists and 11w.A01 is true; this checks nonnull
+  A07 string startsWith("ent:"). Producer meaning is not yet traced.
+- Account 09F.BVC(recipient) is true, via 6oe.A1W; concrete implementation
+  and semantics remain unresolved.
+- require_visible is true but 6po.A03 is false.
+- Final 0x9.A03(recipient) is true.
+
+Otherwise it returns true. It does not read the saved enforcement type
+or expiry directly. Final 0x9.A03 tests obfuscated subtype 0xC or
+0x9.A06; A06 tests PhoneUserJid and delegates its user string to A0A.
+A0A parses through 12J.A00 and compares two fixed numeric ranges via
+12L.A00. Exact constants are retained, but full parser/comparator and
+subtype semantics remain untraced. These branches are protocol research,
+not instructions to manufacture exempt identities or message metadata.
+
+### Set provenance and bounded caller interpretation
+
+0ht.A0U iterates keys of 0hv.A0P, includes 0Dn.A0k matches, adds the
+UserJid and any nonnull 0Ws.A0K counterpart, then sets A0C=true. It
+adds to the existing set; this method does not clear it. 0hv.A0P selects
+jid, incoming_tc_token, incoming_tc_token_timestamp from wa_trusted_contacts,
+parses UserJid, calls A06 to construct each value, and returns the map.
+The A0U loop uses keys, not token bytes or timestamps. Do not conflate
+this membership with Rust held_tctoken's eligibility or invent token
+validity/expiry filtering from this trace. Row insertion/removal, A06 value
+construction, initial set and account lifecycle remain open.
+
+Caller census: 6po.A02 has 11 direct callers, A03 has seven; 6pn.A06
+has 12 call sites in 11 methods. Lists below retain exact DEX offsets.
+2Q4.A00 reaches 6pn.A06(message,false) at byte offset 0x1c6 after
+several other predicates; if true, it returns true immediately. Its
+complete method is retained. This establishes participation in a higher
+message decision, not universal send refusal: the meaning of that method's
+return and its callers remains open. Other A06 callers are not yet traced.
+
+**Rust comparison / remaining work:** notifications persists active/ends,
+and groups.queue_create checks active+unexpired before reservation. That
+guard is based on an earlier observed group-create refusal, not a port of
+6pn.A06. Other outbound paths do not yet enforce this native decision
+chain. No blanket block, feature-config value, exemption or native-cache
+lifetime was guessed here. Full outbound coverage remains unfinished.
+No Rust code changed and no live request was made.
+
+Reproduce apk-smali with --signatures --exceptions for the methods named
+by each export; apk-callers 6po.A02/A03 and 6pn.A06. Exports are checked
+DEX text, not REA Evidence envelopes or runtime observations.
+
+- [reachout-policy-manager.txt](reachout-policy-manager.txt) — SHA-256 `7f5e2393edec6563718cf199b93fa87879e29999a1c06700e30c6cba34cbe12c`.
+- [reachout-policy-A02-callers.txt](reachout-policy-A02-callers.txt) — SHA-256 `8d186d8f828c09fc0b36d456fb6460c4bfb9195fae1f6dcb2e856c465775664a`.
+- [reachout-policy-A03-callers.txt](reachout-policy-A03-callers.txt) — SHA-256 `1604f93e506c4094feb25c1a8c03147a7a55c5c4701f1d3156bc3c92a357da06`.
+- [reachout-outreach-policy.txt](reachout-outreach-policy.txt) — SHA-256 `a1ef1c12199d0615f90c3766f225703718a5e6e48a3d286931fe2d10faa3cf80`.
+- [reachout-recipient-kind.txt](reachout-recipient-kind.txt) — SHA-256 `15ac20b5755091ceb6fa5e8645b00557e528b2d7821e65e46c50130d8a622e6b`.
+- [reachout-message-exemption.txt](reachout-message-exemption.txt) — SHA-256 `579c4d6d01101ea5d84e89965fd982135005f9f8540abeb869880901c1aabd47`.
+- [reachout-final-jid-predicate.txt](reachout-final-jid-predicate.txt) — SHA-256 `d1097e16b8d95a1a2a92dde0b90c4d0a7571c9e602ced288f5be06b2306536aa`.
+- [reachout-exemption-set-refresh.txt](reachout-exemption-set-refresh.txt) — SHA-256 `ebe98f9d3006cb21eb32f72e536c93313fb27862493e6953b00f04a0124c8548`.
+- [reachout-outreach-callers.txt](reachout-outreach-callers.txt) — SHA-256 `7f0e2628a0163788af3b97adf4edb88cd8a2fa4ac9e0e610c6523781f9c688a9`.
+- [reachout-exemption-map-source.txt](reachout-exemption-map-source.txt) — SHA-256 `a226c53e8d6a9fb252d07bcedff6eba720838813729b3efde86f044797fc9f76`.
+- [reachout-final-jid-fallback.txt](reachout-final-jid-fallback.txt) — SHA-256 `b246720c1dd82b48c80c4addaba5662c9d69e8ca4916e25ace67f3b060ce68c7`.
+- [reachout-outreach-caller-2Q4.txt](reachout-outreach-caller-2Q4.txt) — SHA-256 `7d8797b3284538985dbb0e519c14a150c97638e817f14b4316c265d9ae7d007c`.
+- [reachout-final-user-predicate.txt](reachout-final-user-predicate.txt) — SHA-256 `cc8634770df9c10188211e2fc67c7d0ae5f42ad4c18a3154a5b92996a1fba998`.
+- [reachout-message-property.txt](reachout-message-property.txt) — SHA-256 `247eac8e1189ebdbd10b982161295a957d4f187443015f2c1a6e232e2127434b`.

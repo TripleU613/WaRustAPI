@@ -1,0 +1,22 @@
+classes5.dex  LX/6pn;->A02(ZL)
+  invoke dex byte offset: 0x2403f0
+classes5.dex  LX/6pn;->A03(L)
+  invoke dex byte offset: 0x24042e
+classes5.dex  LX/6pn;->A05(Z)
+  invoke dex byte offset: 0x240510
+classes5.dex  LX/6pn;->A06(ZLZ)
+  invoke dex byte offset: 0x240538
+classes5.dex  LX/6po;->A00(V)
+  invoke dex byte offset: 0x24067c
+classes5.dex  LX/6po;->A03(Z)
+  invoke dex byte offset: 0x24075c
+classes5.dex  LX/7ZB;->A02(VL)
+  invoke dex byte offset: 0x353e36
+classes5.dex  Lcom/whatsapp/calling/ui/VoipNotAllowedActivity;->onCreate(VL)
+  invoke dex byte offset: 0x374700
+classes5.dex  LX/7vL;->A00(VZLL)
+  invoke dex byte offset: 0x3c6932
+classes5.dex  LX/8E5;->onClick(VL)
+  invoke dex byte offset: 0x45c99a
+classes5.dex  LX/8Ew;->Bil(ZLL)
+  invoke dex byte offset: 0x472734

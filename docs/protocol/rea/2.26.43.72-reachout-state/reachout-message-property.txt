@@ -1,0 +1,17 @@
+
+# class: LX/11w;
+# extends: Ljava/lang/Object;
+
+.method public A01(Z)  # .registers 3
+    # full signature: LX/11w;->A01()Z
+    0000..0004  iget-object  v1, v2, LX/11w;->A07:Ljava/lang/String;
+    0004..0008  if-eqz  v1, +0xb
+    0008..000c  const-string  v0, "ent:"
+    000c..0012  invoke-virtual  {v1, v0}, Ljava/lang/String;->startsWith(Ljava/lang/String;)Z
+    0012..0014  move-result  v1
+    0014..0016  const/4  v0, #0x1
+    0016..001a  if-nez  v1, +0x3
+    001a..001c  const/4  v0, #0x0
+    001c..001e  return  v0
+    # exception table: 0 try range(s)
+.end method

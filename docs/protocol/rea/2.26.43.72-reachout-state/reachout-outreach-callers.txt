@@ -1,0 +1,24 @@
+classes2.dex  LX/1v7;->A02(LLLLL)
+  invoke dex byte offset: 0x267f3a
+classes3.dex  LX/2Pp;->A0x(V)
+  invoke dex byte offset: 0x207aec
+classes3.dex  LX/2Q4;->A00(ZLL)
+  invoke dex byte offset: 0x20b85e
+classes3.dex  LX/3Pb;->Bnu(VL)
+  invoke dex byte offset: 0x344988
+classes3.dex  LX/3V5;->Bif(V)
+  invoke dex byte offset: 0x367844
+classes3.dex  LX/3V9;->Bif(V)
+  invoke dex byte offset: 0x367f38
+classes3.dex  LX/3V9;->Bif(V)
+  invoke dex byte offset: 0x368036
+classes5.dex  LX/7Ft;->getView(LILL)
+  invoke dex byte offset: 0x2b8338
+classes5.dex  Lcom/whatsapp/calling/ui/callhistory/group/GroupCallParticipantPicker;->A6X(VLL)
+  invoke dex byte offset: 0x30f5c6
+classes5.dex  Lcom/whatsapp/contact/ui/picker/ContactPickerFragmentKt;->A3Y(VLLI)
+  invoke dex byte offset: 0x34d16c
+classes5.dex  Lcom/whatsapp/contact/ui/picker/ContactPickerFragmentKt;->A4h(ZLLI)
+  invoke dex byte offset: 0x35038a
+classes5.dex  LX/8Ds;->onClick(VL)
+  invoke dex byte offset: 0x45994e
