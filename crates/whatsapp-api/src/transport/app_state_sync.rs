@@ -772,12 +772,27 @@ fn original_patch<'a>(request: &'a Node, id: &str, collection: Collection) -> Re
     one_collection(request, collection)
 }
 
+// Legacy preparation omitted logical-index metadata. Only authenticated current
+// or rederived state may supply it; every frozen integrity field must agree.
+fn matches_frozen_state(
+    actual: &crate::signal::app_state_collection::SavedCollectionState,
+    frozen: &crate::signal::app_state_collection::SavedCollectionState,
+) -> Result<bool> {
+    use crate::signal::app_state_collection::CollectionState;
+    let mut actual = CollectionState::from_saved(actual)?.to_saved();
+    let frozen = CollectionState::from_saved(frozen)?.to_saved();
+    if frozen.logical_indexes.is_none() {
+        actual.logical_indexes = None;
+    }
+    Ok(actual == frozen)
+}
+
 fn verify_prepared_in(
     tx: &crate::store::WriteTx<'_>,
     base: &crate::signal::app_state_collection::SavedCollectionState,
     prepared: &crate::signal::app_state_collection::SavedCollectionState,
     request: &Node,
-) -> Result<()> {
+) -> Result<crate::signal::app_state_collection::SavedCollectionState> {
     use crate::signal::{
         app_state,
         app_state_collection::{CollectionPatch, CollectionState},
@@ -826,12 +841,13 @@ fn verify_prepared_in(
         keys.get(id)
             .ok_or_else(|| invalid_patch("prepared patch references an unheld key"))
     })?;
-    if verified.state.to_saved() != *prepared {
+    let verified = verified.state.to_saved();
+    if !matches_frozen_state(&verified, prepared)? {
         return Err(invalid_patch(
             "prepared state does not match its authenticated original patch",
         ));
     }
-    Ok(())
+    Ok(verified)
 }
 
 /// Recheck a queued patch in the same transaction as its socket reservation.
@@ -859,20 +875,20 @@ pub(crate) fn validate_patch_reservation_in(
         PendingState::Bound { base, .. } => base,
         PendingState::Legacy(_) => &current,
     };
-    if current != *base {
+    if !matches_frozen_state(&current, base)? {
         return Err(invalid_patch(
             "held collection changed before patch reservation",
         ));
     }
-    verify_prepared_in(tx, base, prepared, target)?;
-    if matches!(pending, PendingState::Legacy(_)) {
+    let verified = verify_prepared_in(tx, &current, prepared, target)?;
+    if matches!(pending, PendingState::Legacy(_)) || *base != current || *prepared != verified {
         tx.put_json(
             Table::Checkpoints,
             pending_key(id).as_bytes(),
             1,
             &PendingState::Bound {
                 base: current,
-                prepared: prepared.clone(),
+                prepared: verified,
             },
         )?;
     }
@@ -935,14 +951,14 @@ pub(crate) fn ingest_action(store: &crate::store::ProtocolStore, id: &str) -> Re
                 || response.get_attr("version").and_then(|v| v.as_text()).and_then(|v| v.parse::<u64>().ok()) != Some(prepared.version)
             { return Err(invalid_patch("accepted patch version/shape does not match prepared state; inspect original action")); }
             let current = held_state_in(tx, collection)?.to_saved();
-            if current == *prepared {
+            if matches_frozen_state(&current, prepared)? {
                 tx.delete(Table::Checkpoints, pending_key.as_bytes())?;
                 return Ok(0);
             }
             let base = match &pending { PendingState::Bound { base, .. } => base, PendingState::Legacy(_) => &current };
-            if current != *base { return Err(invalid_patch("held collection changed before accepted patch promotion")); }
-            verify_prepared_in(tx, base, prepared, target)?;
-            tx.put_json(Table::Checkpoints, held_key(collection).as_bytes(), 1, prepared)?;
+            if !matches_frozen_state(&current, base)? { return Err(invalid_patch("held collection changed before accepted patch promotion")); }
+            let verified = verify_prepared_in(tx, &current, prepared, target)?;
+            tx.put_json(Table::Checkpoints, held_key(collection).as_bytes(), 1, &verified)?;
             tx.delete(Table::Checkpoints, pending_key.as_bytes())?;
             Ok(1)
     })
@@ -2100,26 +2116,118 @@ mod settlement_atomic_tests {
 
     #[test]
     fn legacy_rows_are_cryptographically_reverified_with_original_wire() {
-        for already_sent in [false, true] {
+        for (already_sent, bound, existing_baseline) in
+            (0..8).map(|case| (case & 1 != 0, case & 2 != 0, case & 4 != 0))
+        {
             let dir = tempfile::tempdir().unwrap();
             let store = open(&dir.path().join("legacy.redb"));
+            if existing_baseline {
+                let first = queue(&store).unwrap();
+                super::super::actions::reserve_pending(&store).unwrap();
+                super::super::actions::record_reply(
+                    &store,
+                    &success(&first, "critical_block", "1"),
+                )
+                .unwrap();
+                assert_eq!(ingest(&store).unwrap(), 1);
+            }
             let id = queue(&store).unwrap();
             let wire = super::super::actions::request(&store, &id).unwrap();
             if already_sent {
                 super::super::actions::reserve_pending(&store).unwrap();
             }
-            let post = prepared(&store, &id);
+            let expected = prepared(&store, &id);
+            let mut post = expected.clone();
+            post.logical_indexes = None;
             store
-                .write(|tx| tx.put_json(Table::Checkpoints, pending_key(&id).as_bytes(), 1, &post))
+                .write(|tx| {
+                    let pending = if bound {
+                        let mut base = held_state_in(tx, Collection::CriticalBlock)?.to_saved();
+                        base.logical_indexes = None;
+                        PendingState::Bound {
+                            base,
+                            prepared: post.clone(),
+                        }
+                    } else {
+                        PendingState::Legacy(post.clone())
+                    };
+                    tx.put_json(Table::Checkpoints, pending_key(&id).as_bytes(), 1, &pending)
+                })
                 .unwrap();
             if !already_sent {
                 super::super::actions::reserve_pending(&store).unwrap();
             }
             assert_eq!(super::super::actions::request(&store, &id).unwrap(), wire);
-            super::super::actions::record_reply(&store, &success(&id, "critical_block", "1"))
-                .unwrap();
+            super::super::actions::record_reply(
+                &store,
+                &success(&id, "critical_block", &expected.version.to_string()),
+            )
+            .unwrap();
             assert_eq!(ingest(&store).unwrap(), 1);
+            assert_eq!(
+                store
+                    .read(|tx| tx.get_json::<SavedCollectionState>(
+                        Table::Checkpoints,
+                        held_key(Collection::CriticalBlock).as_bytes(),
+                        1
+                    ))
+                    .unwrap()
+                    .unwrap(),
+                expected
+            );
             assert_eq!(ingest(&store).unwrap(), 0);
+        }
+    }
+
+    #[test]
+    fn legacy_preparation_never_invents_baseline_or_ignores_supplied_indexes() {
+        for (sent, missing_baseline) in (0..4).map(|case| (case & 1 != 0, case & 2 != 0)) {
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(&dir.path().join("legacy-refusal.redb"));
+            let first = queue(&store).unwrap();
+            super::super::actions::reserve_pending(&store).unwrap();
+            super::super::actions::record_reply(&store, &success(&first, "critical_block", "1"))
+                .unwrap();
+            ingest(&store).unwrap();
+            let id = queue(&store).unwrap();
+            if sent {
+                super::super::actions::reserve_pending(&store).unwrap();
+            }
+            store
+                .write(|tx| {
+                    let mut post = prepared_from_tx(tx, &id)?;
+                    if missing_baseline {
+                        post.logical_indexes = None;
+                        let mut baseline = held_state_in(tx, Collection::CriticalBlock)?.to_saved();
+                        baseline.logical_indexes = None;
+                        tx.put_json(
+                            Table::Checkpoints,
+                            held_key(Collection::CriticalBlock).as_bytes(),
+                            1,
+                            &baseline,
+                        )?;
+                    } else {
+                        post.logical_indexes.as_mut().unwrap()[0].0 = br#"["wrong"]"#.to_vec();
+                    }
+                    tx.put_json(
+                        Table::Checkpoints,
+                        pending_key(&id).as_bytes(),
+                        1,
+                        &PendingState::Legacy(post),
+                    )
+                })
+                .unwrap();
+            if sent {
+                super::super::actions::record_reply(&store, &success(&id, "critical_block", "2"))
+                    .unwrap();
+            }
+            let before = snapshot(&store);
+            if sent {
+                assert!(ingest_action(&store, &id).is_err());
+            } else {
+                assert!(super::super::actions::reserve_pending(&store).is_err());
+            }
+            assert_eq!(snapshot(&store), before);
         }
     }
 

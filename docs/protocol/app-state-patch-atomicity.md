@@ -77,6 +77,23 @@ reverifies the same transition from the held state. The private
 local verification model because outgoing protobufs omit the read-only version;
 it changes no request bytes and is never an incoming-network decoder.
 
+After the [logical-index correction](app-state-logical-index.md), an older
+preparation may lack index metadata even though its original wire and frozen
+integrity fields are valid. Reservation and accepted settlement now derive the
+post-state from that exact authenticated wire using the current authenticated
+baseline. Canonical collection/version/hash/wire-MAC maps must match every frozen
+field. Only absent legacy logical-index metadata is enrichable; supplied metadata
+must match exactly too. A previously frozen baseline without metadata can use the
+current baseline's authenticated indexes only when all its frozen integrity
+fields agree. A nonempty current baseline without provenance still refuses.
+
+Reservation stores the completed baseline/preparation in the same transaction as
+the original action's first reservation. Accepted settlement stores the completed
+authenticated result in its existing atomic transaction. Neither path changes
+request bytes, identifiers, encryption randomness, keys or send status to retry
+anything. Already-held matching post-state only releases pending preparation;
+it does not overwrite metadata. Missing entire preparations remain unresolved.
+
 If an old crash already lost preparation, queued orphan actions refuse before
 reservation. Already-sent orphan outcomes remain preserved in the action log;
 this change does not invent their lost state or replay them. Reconciliation of
@@ -87,14 +104,21 @@ and automatic notification scheduling remain separate required work.
 
 ## Verification
 
-Seven settlement regressions cover concurrent publishers, queued/sent/reopen
+Eight settlement regressions cover concurrent publishers, queued/sent/reopen
 single-flight behavior, invalid-state/key rollback, wrong collection/version and
 ambiguous replies, a later real cryptographic state, legacy queued/sent rows with
-unchanged original wire, and orphan/corrupt reservation refusal. Three independent
-SET/REMOVE-vector catch-up regressions cover joined transactions, full rollback,
+unchanged original wire, and orphan/corrupt reservation refusal. Catch-up and
+independent SET/REMOVE-vector regressions cover joined transactions, full rollback,
 reopen, unknown keys, invalid MAC/protobuf/nonbytes and non409 refusal. Generic
 IQ classification and legacy privacy-setter guards have dedicated negative tests.
 No test used an external server.
+
+The legacy compatibility matrix covers queued/already-sent actions, prepared-only
+and bound formats, and empty/nonempty authenticated baselines. Frozen preparation
+metadata is actually absent in these fixtures. Positive cases retain exact
+original wire and commit the complete derived post-state. Negative cases preserve
+all checkpoints when the current nonempty baseline lacks provenance or supplied
+prepared logical indexes contradict the authenticated patch.
 
 ## Explicit server backoff
 

@@ -61,6 +61,11 @@ cross-key replacement/removal and validates saved map/hash consistency. Legacy
 nonempty states require authenticated same-version snapshot reconstruction;
 `app-state-inspect` exposes provenance and an explicit bounded local migration.
 This does not establish complete sync integrity, native scheduling or projection.
+Legacy prepared-only/bound writes additionally reconstruct missing logical-index
+metadata from their unchanged authenticated original patch when all frozen
+integrity fields match a current authenticated baseline. They do not reconstruct
+missing entire preparations or retry uncertain sends; see
+[prepared-state compatibility](app-state-patch-atomicity.md).
 
 **Confirmed** means traced source or reproducible local behavior; **inferred**
 means a compatibility implication; **observed** requires actual server evidence;

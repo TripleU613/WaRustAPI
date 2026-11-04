@@ -1,3 +1,18 @@
+2026-11-04 — **Legacy preparation compatibility without rebuilding requests:**
+
+Old prepared-only and bound patch checkpoints may now acquire missing logical
+indexes from their exact original authenticated wire. The current baseline must
+already have authenticated provenance, and every frozen integrity field must
+match. Reservation atomically stores the completed preparation; accepted
+settlement stores only the authenticated derived result. Supplied incompatible
+indexes, unknown baseline provenance, stale state and missing entire preparations
+still refuse. Original requests, IDs and keys remain unchanged; no send is reset.
+[Compatibility matrix and unresolved boundaries](docs/protocol/app-state-patch-atomicity.md).
+
+Validation: **1,167 workspace/all-feature tests**, strict all-target/all-feature
+Clippy, formatting, coverage freshness and repository hygiene passed. No live
+account traffic occurred.
+
 2026-11-04 — **Logical-index integrity across mutation keys:**
 
 - App-state SET/REMOVE now select the previous value MAC by authenticated logical
