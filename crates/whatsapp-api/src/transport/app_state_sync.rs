@@ -259,6 +259,7 @@ pub const FETCH_ACTION_KIND: &str = "app-state-fetch";
 /// Returns the action id; nothing is sent until a session drains the queue.
 /// Read-only: no patch, no mutation.
 pub fn queue_fetch(store: &crate::store::ProtocolStore) -> Result<String> {
+    ingest_fetch_backoff(store)?;
     store.write(|tx| {
         require_server_ready_in(tx)?;
         super::actions::queue_in(tx, FETCH_ACTION_KIND, "app-state fetch", |id| {
@@ -694,14 +695,14 @@ fn definite_error(node: &Node) -> Result<&Node> {
         .filter(|n| n.description == "error");
     let error = errors
         .next()
-        .ok_or_else(|| invalid_patch("patch refusal has no error detail"))?;
+        .ok_or_else(|| invalid_patch("app-state refusal has no error detail"))?;
     let code = error
         .get_attr("code")
         .and_then(|v| v.as_text())
         .and_then(super::mex::java_decimal_long)
         .and_then(|v| i32::try_from(v).ok());
     if errors.next().is_some() || code.is_none_or(|v| v == -1) {
-        return Err(invalid_patch("ambiguous or malformed patch refusal"));
+        return Err(invalid_patch("ambiguous or malformed app-state refusal"));
     }
     Ok(error)
 }
@@ -895,9 +896,11 @@ pub(crate) fn validate_patch_reservation_in(
     Ok(true)
 }
 
-/// Atomically settle supported patch replies against their frozen baselines.
+/// Recover explicit fetch waits and settle supported patch replies against
+/// their frozen baselines in per-action transactions.
 /// Malformed or stale replies preserve prepared state for inspection; no replay.
 pub fn ingest(store: &crate::store::ProtocolStore) -> Result<usize> {
+    ingest_fetch_backoff(store)?;
     let mut applied = 0;
     for (outcome, _) in super::actions::settled(store, PATCH_ACTION_KIND)? {
         applied += ingest_action(store, &outcome.id)?;
@@ -905,13 +908,96 @@ pub fn ingest(store: &crate::store::ProtocolStore) -> Result<usize> {
     Ok(applied)
 }
 
+fn ingest_fetch_backoff(store: &crate::store::ProtocolStore) -> Result<()> {
+    for (outcome, _) in super::actions::settled(store, FETCH_ACTION_KIND)? {
+        ingest_action(store, &outcome.id)?;
+    }
+    Ok(())
+}
+
+/// Recover explicit fetch waits after settlement/application cuts. Unsupported
+/// server replies remain inspectable; only durable store faults stop receiving.
+pub(crate) fn recover_fetch_backoff(store: &crate::store::ProtocolStore) -> Result<()> {
+    for (outcome, _) in super::actions::settled(store, FETCH_ACTION_KIND)? {
+        match ingest_action(store, &outcome.id) {
+            Ok(_) => {}
+            Err(crate::Error::InvalidInput { .. }) => {
+                tracing::warn!(
+                    "app-state fetch refusal retained without adopting unsupported wait"
+                );
+            }
+            Err(error) => return Err(error),
+        }
+    }
+    Ok(())
+}
+
+fn require_original_fetch(request: &Node, id: &str) -> Result<()> {
+    if request.description != "iq"
+        || request.get_attr("id").and_then(|v| v.as_text()) != Some(id)
+        || request.get_attr("type").and_then(|v| v.as_text()) != Some("set")
+        || request.get_attr("xmlns").and_then(|v| v.as_text()) != Some("w:sync:app:state")
+        || super::receipts::jid(request, "to") != Some(Jid::parse("s.whatsapp.net")?)
+    {
+        return Err(invalid_patch(
+            "original action is not a supported app-state fetch",
+        ));
+    }
+    let syncs: Vec<_> = request
+        .child_nodes()
+        .iter()
+        .filter(|n| n.description == "sync")
+        .collect();
+    if syncs.len() != 1
+        || request.child_nodes().len() != 1
+        || syncs[0].child_nodes().is_empty()
+        || syncs[0]
+            .get_attr("data_namespace")
+            .and_then(|v| v.as_text())
+            != Some("3")
+    {
+        return Err(invalid_patch(
+            "original fetch has no unique collection envelope",
+        ));
+    }
+    let mut names = std::collections::BTreeSet::new();
+    for collection in syncs[0].child_nodes() {
+        let name = collection.get_attr("name").and_then(|v| v.as_text());
+        if collection.description != "collection"
+            || !matches!(collection.content, crate::binary::NodeContent::Empty)
+            || name.and_then(Collection::from_name).is_none()
+            || !names.insert(name)
+        {
+            return Err(invalid_patch(
+                "original fetch has an unsupported collection shape",
+            ));
+        }
+    }
+    Ok(())
+}
+
 pub(crate) fn ingest_action(store: &crate::store::ProtocolStore, id: &str) -> Result<usize> {
     use crate::{signal::app_state_collection::CollectionState, store::Table};
     store.write(|tx| {
+            let view = super::actions::view_in_write(tx, id)?;
+            if let Some((actual, reply, request)) = &view
+                && actual.kind == FETCH_ACTION_KIND
+                && actual.status == super::actions::ActionStatus::Error
+            {
+                let reply = reply.as_ref().ok_or_else(|| invalid_patch("settled fetch has no preserved reply"))?;
+                if reply.get_attr("type").and_then(|v| v.as_text()) == Some("error") {
+                    require_original_fetch(request, id)?;
+                    if reply.description != "iq" || reply.get_attr("id").and_then(|v| v.as_text()) != Some(id) {
+                        return Err(invalid_patch("fetch refusal does not match original action"));
+                    }
+                    retain_backoff_in(tx, id, definite_error(reply)?)?;
+                }
+                return Ok(0);
+            }
             let pending_key = pending_key(id);
             let pending: Option<PendingState> = tx.get_json(Table::Checkpoints, pending_key.as_bytes(), 1)?;
             let Some(pending) = pending else { return Ok(0); };
-            let Some((actual, reply, request)) = super::actions::view_in_write(tx, id)? else {
+            let Some((actual, reply, request)) = view else {
                 return Err(invalid_patch("prepared patch has no original action"));
             };
             if actual.kind != PATCH_ACTION_KIND || !matches!(actual.status, super::actions::ActionStatus::Ok | super::actions::ActionStatus::Error) {
@@ -2301,6 +2387,156 @@ mod server_backoff_tests {
         store
             .read(|tx| tx.scan(Table::Checkpoints, 1, 1000))
             .unwrap()
+    }
+
+    #[test]
+    fn fetch_error_wait_recovers_after_cut_and_defers_only_app_state_work() {
+        for live in [false, true] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("fetch-wait.redb");
+            let store = open(&path);
+            let id = queue_fetch(&store).unwrap();
+            let later = queue_fetch(&store).unwrap();
+            let patch = queue(&store);
+            let other = super::super::actions::queue(&store, "fixture", "fixture", |id| {
+                Ok(Node::new("iq").attr("id", id).attr("type", "get"))
+            })
+            .unwrap();
+            let original = super::super::actions::request(&store, &id).unwrap();
+            store
+                .write(|tx| super::super::actions::reserve_one_in(tx, &id))
+                .unwrap();
+            super::super::actions::record_reply(&store, &error(&id, "3600")).unwrap();
+            if live {
+                assert_eq!(ingest_action(&store, &id).unwrap(), 0);
+            }
+            drop(store);
+            let store = open(&path);
+            recover_fetch_backoff(&store).unwrap();
+            let until: Timestamp = store
+                .read(|tx| tx.get_json(Table::Checkpoints, SERVER_BACKOFF, 1))
+                .unwrap()
+                .unwrap();
+            assert!(until > Timestamp::now());
+            let before = snapshot(&store);
+            recover_fetch_backoff(&store).unwrap();
+            assert_eq!(
+                snapshot(&store),
+                before,
+                "recovery cannot extend original receipt-time wait"
+            );
+            assert!(queue_fetch(&store).is_err());
+            let ordinary = super::super::actions::reserve_next(&store)
+                .unwrap()
+                .unwrap();
+            assert_eq!(
+                ordinary.get_attr("id").and_then(|v| v.as_text()),
+                Some(other.as_str())
+            );
+            assert!(
+                super::super::actions::reserve_next(&store)
+                    .unwrap()
+                    .is_none()
+            );
+            for id in [later, patch] {
+                assert_eq!(
+                    super::super::actions::outcomes(&store)
+                        .unwrap()
+                        .iter()
+                        .find(|a| a.id == id)
+                        .unwrap()
+                        .status,
+                    super::super::actions::ActionStatus::Queued
+                );
+            }
+            assert_eq!(
+                super::super::actions::request(&store, &id).unwrap(),
+                original
+            );
+            assert!(
+                store
+                    .read(|tx| tx.get(
+                        Table::Checkpoints,
+                        held_key(Collection::CriticalBlock).as_bytes(),
+                        1
+                    ))
+                    .unwrap()
+                    .is_none()
+            );
+        }
+    }
+
+    #[test]
+    fn malformed_fetch_wait_preserves_reply_and_refuses_new_explicit_fetch() {
+        for raw in ["private-invalid", "0.5", "-2", "9223372036854775807"] {
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(&dir.path().join("fetch-invalid.redb"));
+            let id = queue_fetch(&store).unwrap();
+            super::super::actions::reserve_next(&store)
+                .unwrap()
+                .unwrap();
+            super::super::actions::record_reply(&store, &error(&id, raw)).unwrap();
+            let before = snapshot(&store);
+            let failure = ingest_action(&store, &id).unwrap_err().to_string();
+            assert!(!failure.contains("private-invalid"));
+            recover_fetch_backoff(&store).unwrap();
+            assert!(queue_fetch(&store).is_err());
+            assert_eq!(snapshot(&store), before);
+        }
+    }
+
+    #[test]
+    fn fetch_wait_is_not_inferred_from_unrelated_or_inner_error_paths() {
+        for case in 0..3 {
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(&dir.path().join("fetch-scope.redb"));
+            let id = super::super::actions::queue(
+                &store,
+                if case == 0 {
+                    "fixture"
+                } else {
+                    FETCH_ACTION_KIND
+                },
+                "fixture",
+                |id| {
+                    if case == 2 {
+                        Ok(Node::new("iq")
+                            .attr("id", id)
+                            .attr("type", "set")
+                            .attr("xmlns", "unrelated"))
+                    } else {
+                        fetch_request(id, &ALL_COLLECTIONS)
+                    }
+                },
+            )
+            .unwrap();
+            super::super::actions::reserve_next(&store)
+                .unwrap()
+                .unwrap();
+            let reply = if case == 1 {
+                Node::new("iq")
+                    .attr("id", id.as_str())
+                    .attr("type", "result")
+                    .children(vec![Node::new("sync").children(vec![
+                        Node::new("collection").attr("type", "error").children(
+                            vec![Node::new("error").attr("code", "503").attr("backoff", "3600")],
+                        ),
+                    ])])
+            } else {
+                error(&id, "3600")
+            };
+            super::super::actions::record_reply(&store, &reply).unwrap();
+            let before = snapshot(&store);
+            let result = ingest_action(&store, &id);
+            assert_eq!(result.is_err(), case == 2);
+            assert_eq!(snapshot(&store), before);
+            assert!(
+                store
+                    .read(|tx| tx.get(Table::Checkpoints, SERVER_BACKOFF, 1))
+                    .unwrap()
+                    .is_none()
+            );
+        }
     }
 
     #[test]

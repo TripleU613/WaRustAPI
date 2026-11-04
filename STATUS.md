@@ -1,3 +1,19 @@
+2026-11-04 — **Explicit fetch refusal waits:**
+
+App-state fetch errors now preserve explicit outer-error backoff instead of
+returning early for lack of patch preparation. Startup recovers valid waits
+after a settlement/application cut; repeated processing uses the original receipt
+time and cannot extend it. Queued fetches/patches defer, while unrelated controls
+continue. Malformed hints remain preserved with static diagnostics; explicit new
+fetch preparation reports unsupported saved refusals. Inner errors and successful
+fetch contents are outside this correction. No held state, keys or request bytes
+are changed, and no retry is added.
+[Evidence, recovery and limits](docs/protocol/app-state-patch-atomicity.md#fetch-specific-recovery-correction).
+No live account operation occurred.
+
+Validation: **1,184 workspace/all-feature tests**, strict all-target/all-feature
+Clippy, formatting, coverage freshness and repository hygiene passed.
+
 2026-11-04 — **Responsive one-at-a-time action pacing:**
 
 Generic action drains now reserve one request only when its monotonic pacing

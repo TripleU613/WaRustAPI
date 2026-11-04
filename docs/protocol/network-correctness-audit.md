@@ -52,6 +52,13 @@ a fresh synthetic local destination: APK 2.26.43.72 refused against template
 
 ## Evidence standard and remaining risk
 
+**Confirmed fetch wait omission, fixed:** lack of patch preparation previously
+skipped app-state fetch refusal processing. Supported exact outer errors now use
+the existing explicit backoff handler, with receipt-time recovery after a cut.
+No duration is inferred from malformed hints or inner errors; successful fetch
+contents and native retry/error classification remain separate required work.
+See [fetch-specific recovery](app-state-patch-atomicity.md#fetch-specific-recovery-correction).
+
 **Confirmed local actor correction:** generic action pacing now uses a shared
 sixteen-write drain budget and a selected monotonic timer, reserving one eligible
 action per send opportunity. Inbound processing and stop run between paced

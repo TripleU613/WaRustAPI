@@ -420,6 +420,7 @@ pub(crate) async fn drive(
         .read(AccountRecord::load)?
         .ok_or(Error::NotRegistered)?;
     super::groups::recover_pending(&store)?;
+    super::app_state_sync::recover_fetch_backoff(&store)?;
     super::identity_notifications::application::recover(&store, config.transport.identity_changes)
         .await?;
     // Reply settlement and contact projection are separate durable commits.

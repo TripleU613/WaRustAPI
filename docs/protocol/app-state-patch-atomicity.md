@@ -124,8 +124,10 @@ prepared logical indexes contradict the authenticated patch.
 
 Current `FUc.Bvj` parses outer-error `backoff` as integral seconds; see its
 [checked instructions](rea/2.26.43.72-server-sync-lifecycle/server-sync-request-handler.txt).
-Explicit nonnegative waits now persist atomically with refusal settlement,
-anchored to the action's original durable receipt time. Repeated inspection and
+Explicit nonnegative waits persist in feature-specific refusal processing,
+anchored to the action's original durable receipt time. Generic IQ settlement is
+an earlier separate durable commit; recovery closes that application cut without
+resending the request. Repeated inspection and
 restart do not extend or erase that wait. New fetches and patches refuse with a deadline;
 never-sent queued fetches/patches defer without being marked sent. Unrelated queued
 control requests can still proceed, and expiration reserves the original patch
@@ -133,9 +135,34 @@ once without rebuilding its ID or bytes. Already-sent uncertain requests never
 return to queued state. The longest retained explicit deadline is preserved.
 
 The native -1 sentinel adds no explicit wait. Malformed, other negative or
-local-time-overflowing values retain the pending outcome rather than silently
+local-time-overflowing values retain the saved outcome and any pending preparation rather than silently
 removing a wait; these overflow/strictness bounds are local defensive policy.
 No invented default wait, error-code retry recipe, automatic request replay or
 complete native backoff scheduler is claimed. Nested conflict-specific retry
 policy remains unclosed. Two additional regressions cover restart, fixed receipt
 anchoring, expiry, unrelated traffic, invalid hints and pending-state rollback.
+
+### Fetch-specific recovery correction
+
+**Confirmed local defect, fixed:** fetch actions have no `PendingState`, so the
+old `ingest_action` returned before reaching outer-error backoff handling. The
+same current-build `FUc.Bvj` callback handles the assembled request's outer error
+whether collection children were reads or writes. The fetch path now validates
+its supported immutable request envelope, exact correlated outer error and
+definite error detail before calling the same receipt-anchored wait writer.
+Inner collection errors do not acquire this global outer-error policy.
+
+Startup reprocesses saved fetch refusals before draining queued work. Malformed
+waits remain inspectable and logged with fixed text rather than ending receiving;
+storage faults still propagate. Explicit new fetch preparation and patch ingestion
+also check saved fetch refusals strictly, so an unsupported historical refusal
+is reported rather than interpreted as permission for a new explicit fetch.
+Existing queued work has no newly inferred wait duration for an unparseable hint;
+full native unknown/error classification remains required.
+
+Successful fetch snapshots, inline patches, pagination and external blob handling
+remain unported by this correction. It does not promote held versions, install
+keys, consume a fetch result or schedule a retry. Three encrypted-store regressions
+cover live/cut/reopen wait recovery, non-extension, deferred fetch/patch reservations,
+unrelated control progress, malformed redaction/rollback and exclusion of unrelated
+or inner-error paths. Original request bytes remain unchanged.
