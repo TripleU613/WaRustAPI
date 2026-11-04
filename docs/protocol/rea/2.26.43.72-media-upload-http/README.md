@@ -156,3 +156,46 @@ and exact MvM.A06/JdX.<init>/6oi.A1U with signatures/exceptions.
 - [processor-eligibility.txt](processor-eligibility.txt) — SHA-256 `8d7db54afc43ffccfab715b84ee59776541a763fb10dafface33fbaeb727e5fa`.
 - [processor-result.txt](processor-result.txt) — SHA-256 `2e2b7ae3d4d1cc7b9b45f9fa89a32b3da9990e2560452ed762b2310563fbdd55`.
 - [single-stream-predicate.txt](single-stream-predicate.txt) — SHA-256 `f444cdca1f50630610f1d5c38d8c31c816990bf906e756eb325188b0ccbcd5a7`.
+
+## Seal owner, excluded kind and encoding helpers (2026-11-04)
+
+**Confirmed static**, same pinned APK. MOu.<init> prefers Nbs when it
+also implements Ncy; otherwise LKZ gets Mv9 and other MvM subclasses get
+Mv8 (null processor). Combined with the previously retained A06 gate, LKZ
+processing is enabled except for identity-equal0jS.A0e.3q3.A1W is reference
+inequality, and0jS.<clinit> constructs A0e with name newsletter-ptt.
+Thus this exclusion is specifically newsletter-ptt, not every voice note.
+The custom Nbs override remains significant; these defaults do not prove
+which processor every higher-level upload chooses.
+
+Klt.A0q allocates a ByteBuffer and sets LITTLE_ENDIAN.08Q.A05 is UTF-8.
+This closes those previous encoding unknowns. Selector0 seal A01 uses Java
+String.length for its XOR length field; selector1 helper A00 uses UTF-8 byte
+length. Do not silently equate them for arbitrary non-ASCII JSON.
+
+LKZ.A09 requires A03=true (recording finished), can reuse an NYu-keyed
+cached hash, otherwise reads the stream returned by MWH.A03 to EOF and
+gets Mzq.A00().MAw.A00. Its log identifies ciphertext SHA-256 computation,
+but the MAw string encoding and stream/hash construction remain untraced.
+The method closes the stream and caches the result. A logged stream-read
+exception is not automatically a validated hash: remaining extraction still
+follows the actual method and needs tracing.
+
+**Confirmed source comparison / unresolved mismatch scope:** Rust's one-shot
+voice-note upload currently POSTs encrypted.body with no separate metadata
+seal. Native LKZ's default non-newsletter processing can add a seal. Whether
+our finished-file upload corresponds to that path requires LKZ construction,
+Nbs override and hash producer tracing. Do not claim universal parity or
+append a guessed hash/seal. This is now a concrete potential omission in
+the audit queue, not dismissed as universally optional and not yet a
+fully bound construction fix. No runtime behavior or private state changed.
+
+Reproduce exact apk-smali MOu.<init>,0jS.<clinit>,LKZ.A09,08Q.<clinit>,
+3q3.A1W and Klt.A0q with signatures/exceptions.
+
+- [seal-owner.txt](seal-owner.txt) — SHA-256 `45e99ee8e0ba0140a08637b2590cf63bf1ece5be275095f6c06b329705bb2444`.
+- [media-kind-values.txt](media-kind-values.txt) — SHA-256 `2b7bb90d1caee46c3bfab201a98c101e6eeeaa2e994b31aeede4006cd036d784`.
+- [voice-seal-hash.txt](voice-seal-hash.txt) — SHA-256 `f5f906c1875be4dd3cd3219df46a0f6481556b27075607af27456b90bda8e699`.
+- [seal-charsets.txt](seal-charsets.txt) — SHA-256 `69ac55ea0e4e83cb125dffb15ef6c4483509af82776f34bd4de1783bc6e00c47`.
+- [seal-kind-inequality.txt](seal-kind-inequality.txt) — SHA-256 `212612ba33a63619d71bdf7f0e9d206d155a6d31dca36cec5c76d178af0aa3f9`.
+- [seal-byte-order.txt](seal-byte-order.txt) — SHA-256 `539a03bb41dfae5d85b6013c73a8b37ef2c6a2a3ec916ab3826e07fc0497a61f`.

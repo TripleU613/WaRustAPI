@@ -1,3 +1,10 @@
+2026-11-04 — **Confirmed static: voice seal ownership/encoding boundary.**
+Pinned2.26.43.72 MOu default LKZ processor, newsletter-ptt exclusion,
+little-endian/UTF-8 helpers and final hash leaf retained. Rust has no
+separate voice seal; concrete operation/override/hash encoding still open.
+[Evidence and potential omission](rea/2.26.43.72-media-upload-http/README.md#seal-owner-excluded-kind-and-encoding-helpers-2026-11-04).
+No runtime change or live request.
+
 2026-11-04 — **Confirmed static: optional upload EOF metadata boundary.**
 Pinned2.26.43.72 single-file predicate closed; Kif/MtQ factory/processor
 leaves retained. Null processing differs from specialised sent/canceled seals.

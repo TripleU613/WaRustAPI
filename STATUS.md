@@ -1,3 +1,14 @@
+2026-11-04 — **Voice seal owner and encoding helpers traced:**
+
+Default LKZ processor excludes newsletter-ptt and permits custom override.
+Closed UTF-8/little-endian helpers and retained final ciphertext-hash leaf.
+Rust has no separate voice seal: potential omission needs exact finished-file
+constructor/override/hash binding before a correct wire change.
+[Evidence](docs/protocol/rea/2.26.43.72-media-upload-http/README.md#seal-owner-excluded-kind-and-encoding-helpers-2026-11-04).
+Validation: JSON parsing, coverage freshness, cached diff checks and repository
+hygiene (4,311 local links) passed. Documentation/evidence only;
+no runtime change or live traffic.
+
 2026-11-04 — **Optional upload EOF processor boundary traced:**
 
 Closed single-file predicate and retained null-versus-specialised seal

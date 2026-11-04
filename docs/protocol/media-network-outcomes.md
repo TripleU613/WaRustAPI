@@ -414,3 +414,13 @@ null Kif emits no EOF bytes in the copy stage. MtQ has specialised metadata
 seal branches and distinct abort/error hooks.
 [Exact processors, bounded implementation scan and unresolved operation binding](rea/2.26.43.72-media-upload-http/README.md#optional-eof-processor-and-single-file-predicate-2026-11-04).
 No universal seal requirement or Rust body change is established.
+
+### Voice-note seal scope needs construction binding (2026-11-04)
+
+**Confirmed static**, pinned2.26.43.72: default LKZ uses Mv9 processing,
+except newsletter-ptt; custom Nbs/Ncy can override. Seal byte order is
+little-endian and charset UTF-8. Rust voice upload has no separate seal,
+so this is a concrete potential omission pending finished-file constructor,
+override and final hash-string provenance.
+[Owner/encoding/hash evidence](rea/2.26.43.72-media-upload-http/README.md#seal-owner-excluded-kind-and-encoding-helpers-2026-11-04).
+No guessed seal is added and full voice upload parity is not claimed.

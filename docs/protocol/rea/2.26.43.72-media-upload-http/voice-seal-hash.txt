@@ -1,0 +1,68 @@
+
+# class: LX/LKZ;
+# extends: LX/MvM;
+
+.method public A09(LL)  # .registers 6
+    # full signature: LX/LKZ;->A09(LX/NYu;)Ljava/lang/String;
+    0000..0004  iget-boolean  v1, v4, LX/LKZ;->A03:Z
+    0004..0008  const-string  v0, "Cannot calculate final hash before recording finished"
+    0008..000e  invoke-static  {v1, v0}, LX/00L;->A0C(ZLjava/lang/String;)V
+    000e..0012  iget-object  v1, v4, LX/LKZ;->A04:LX/08T;
+    0012..0016  if-eqz  v1, +0xb
+    0016..001a  iget-object  v0, v1, LX/08T;->first:Ljava/lang/Object;
+    001a..001e  if-ne  v0, v5, +0x7
+    001e..0022  iget-object  v0, v1, LX/08T;->second:Ljava/lang/Object;
+    0022..0026  check-cast  v0, Ljava/lang/String;
+    0026..0028  return-object  v0
+    0028..002c  const/16  v1, #0x11f4
+    002c..0030  iget-object  v0, v4, LX/LKZ;->A00:LX/05a;
+    0030..0036  invoke-static  {v0, v1}, LX/2LA;->A0l(LX/05a;I)Ljava/lang/Object;
+    0036..0038  move-result-object  v2
+    0038..003c  check-cast  v2, LX/MWH;
+    003c..0042  invoke-virtual  {v4}, LX/MvM;->A01()Ljava/io/File;
+    0042..0044  move-result-object  v1
+    0044..0048  iget-object  v0, v2, LX/MWH;->A04:LX/05a;
+    0048..004e  invoke-static  {v0}, LX/2L6;->A1X(LX/05a;)V
+    004e..0054  invoke-static  {v4}, LX/Lg0;->A00(LX/MvM;)LX/Nbs;
+    0054..0056  move-result-object  v0
+    0056..005c  invoke-virtual  {v2, v5, v4, v0, v1}, LX/MWH;->A03(LX/NYu;LX/MvM;LX/Nbs;Ljava/io/File;)LX/Mzq;
+    005c..005e  move-result-object  v3
+    005e..0062  const/16  v0, #0x4000
+    0062..0066  new-array  v1, v0, [B
+    0066..006a  iget-object  v0, v3, LX/Mzq;->A00:LX/LOh;
+    006a..0070  invoke-virtual  {v0, v1}, Ljava/io/InputStream;->read([B)I
+    0070..0072  move-result  v0
+    0072..0076  if-gez  v0, -0x6
+    0076..007a  sget-object  v0, LX/05u;->A00:LX/05u;
+    007a..007c  goto  +0x6
+    007c..007e  move-exception  v0
+    007e..0084  invoke-static  {v0}, LX/6oe;->A1D(Ljava/lang/Throwable;)LX/0Dt;
+    0084..0086  move-result-object  v0
+    0086..008c  invoke-static  {v0}, LX/0Dr;->A02(Ljava/lang/Object;)Ljava/lang/Throwable;
+    008c..008e  move-result-object  v2
+    008e..0092  if-eqz  v2, +0xf
+    0092..0098  invoke-static  {}, LX/1Xl;->A13()Ljava/lang/StringBuilder;
+    0098..009a  move-result-object  v1
+    009a..009e  const-string  v0, "VoiceNoteUpload/Error while computing ciphertext sha-256; skipping duplicate detection; request= "
+    009e..00a4  invoke-static  {v4, v0, v1}, LX/1Xl;->A0v(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    00a4..00a6  move-result-object  v0
+    00a6..00ac  invoke-static  {v0, v2}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    00ac..00b2  invoke-virtual  {v3}, LX/Mzq;->A00()LX/MAw;
+    00b2..00b4  move-result-object  v0
+    00b4..00b8  iget-object  v1, v0, LX/MAw;->A00:Ljava/lang/String;
+    00b8..00be  invoke-virtual  {v3}, LX/Mzq;->close()V
+    00be..00c4  invoke-static  {v5, v1}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    00c4..00c6  move-result-object  v0
+    00c6..00ca  iput-object  v0, v4, LX/LKZ;->A04:LX/08T;
+    00ca..00cc  return-object  v1
+    00cc..00ce  move-exception  v1
+    00ce..00d0  throw  v1
+    00d0..00d2  move-exception  v0
+    00d2..00d8  invoke-static  {v3, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    00d8..00da  throw  v0
+    # exception table: 4 try range(s)
+    # catch <all> code_units 002f..0033 -> 0066
+    # catch <all> code_units 0033..003e -> 003e
+    # catch <all> code_units 003f..005c -> 0066
+    # catch <all> code_units 0067..0068 -> 0068
+.end method
