@@ -1,0 +1,17 @@
+
+# class: LX/0VM;
+# extends: LX/07o;
+
+.method public A0P(L)  # .registers 3
+    # full signature: LX/0VM;->A0P()LX/1t5;
+    0000..0004  iget-object  v1, v2, LX/0VM;->A0H:Ljava/lang/Object;
+    0004..0006  monitor-enter
+    0006..000a  iget-object  v0, v2, LX/0VM;->A01:LX/1t5;
+    000a..000c  monitor-exit
+    000c..000e  return-object  v0
+    000e..0010  move-exception  v0
+    0010..0012  monitor-exit
+    0012..0014  throw  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0003..0009 -> 0007
+.end method

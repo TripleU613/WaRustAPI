@@ -1,3 +1,16 @@
+2026-11-04 — **Conditional media host retention (static/offline):**
+
+Pinned 0VM.A0A retains old hosts for a non-new response when a current route
+exists, while updating auth/lifetimes. Without a current route it installs the
+whole reply. Rust ignored is_new; it now explicitly refuses non-new cached
+replies pending prospective prior-host binding/merge, preserving the original
+response without selecting a potentially incorrect host list. This is a local
+support limit, including the native first-route false branch, not full parity.
+[Evidence and required merge](docs/protocol/media-network-outcomes.md#conditional-prior-host-retention-2026-11-04).
+Validation: **1,236 workspace/all-feature tests**, strict Clippy, CLI-reference,
+formatting, coverage freshness and repository hygiene passed.
+No live traffic. Full refresh coordination remains unfinished.
+
 2026-11-04 — **Media route request-time expiry (static/offline):**
 
 Pinned 0VM.A07 writes the monotonic request handoff time consumed by the media

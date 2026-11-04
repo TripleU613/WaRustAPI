@@ -1,3 +1,10 @@
+2026-11-04 — **Confirmed static/support gap guarded:** 0VM.A0A conditionally
+retains prior hosts on non-new routing responses; A0P returns the current object
+without expiry filtering. Rust previously ignored is_new. Non-new cached replies
+now refuse pending frozen prior-host context; native first-route false acceptance
+is explicitly still unsupported. Flag parsing/store-preservation tests are offline.
+[Evidence and implementation boundary](media-network-outcomes.md#conditional-prior-host-retention-2026-11-04).
+
 2026-11-04 — **Confirmed static/Rust defect fixed offline:** 0VM.A07 anchors
 media deadlines at request handoff; Rust had replaced send reservation time with
 response time. Explicit requested_at now survives the CLI reply commit and is

@@ -73,3 +73,20 @@ untraced. Capturing this metadata does not authorize a new request or retries.
 - [request-clock-checked.txt](request-clock-checked.txt) — SHA-256 `13feab4c4b06c35965a573fb368b9a86f70bdd577ffa200969e7834a440bf2bb`.
 - [clock-writers.txt](clock-writers.txt) — SHA-256 `cf24d23e0c4d99095e26a9ef482caecb36f2ad7f1db46b94367e16295a98f4ee`.
 - [callback-class-checked.txt](callback-class-checked.txt) — SHA-256 `a88c3e3d59559f311c45550abc8528e7ccd83e31ad169a3db45ad99aa151fe7b`.
+
+## Conditional merge/current-route follow-up
+
+**Confirmed static:** `0VM.A0P` returns the current route under its lock without
+filtering expiry. `0VM.A0A` installs a whole reply if no prior object exists or
+is_new is true. With a prior object and false is_new, it constructs a new object
+using prior A0C hosts and the new response's auth/lifetimes/base/IDs/metadata.
+This closes the getter/setter branch, not all refresh/deadline consumers.
+
+Rust now refuses non-new standalone cached replies until prospective prior-host
+binding and atomic merge exist. Native first-route false acceptance remains
+unsupported locally. No server refusal/retry requirement is inferred.
+
+- [current-route.json](current-route.json) — SHA-256 `139b8e70d071687bf8a23616ec35a398222c02fef29feaee7ff5a49b542bd258`.
+- [route-setter.json](route-setter.json) — SHA-256 `6cf815f762fd3aeb71e06152287c950e38c4b5d3ba2e92c174929099ea3e39cc`.
+- [route-setter-checked.txt](route-setter-checked.txt) — SHA-256 `6d1319f4e94450986a591b96ce315b293d91d45f080c8e5b73959c5fbe842d4f`.
+- [current-route-checked.txt](current-route-checked.txt) — SHA-256 `85ae1507488bc0133b895f1f0f931a4aa134b5ed1b7e5db1c7738b4294e2dff7`.

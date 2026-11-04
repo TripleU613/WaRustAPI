@@ -1,0 +1,130 @@
+{
+  "evidence_id": "ev_7f6ae90e73c9e8e73fa9ee08030f22553e789e13bc4ba83b1cd091cdc9227165",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C0VM",
+    "method_name": "A0A"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-imhsSb/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C0VM"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"()V\"},{\"signature\":\"A02(java.lang.String, java.lang.String, java.lang.String, int, boolean, boolean): X.MS4\",\"def_pos\":0,\"name\":\"A02\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZZ)LX/MS4;\"},{\"signature\":\"A03(X.0VM): X.1xY\",\"def_pos\":0,\"name\":\"A03\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0VM;)LX/1xY;\"},{\"signature\":\"A04(java.lang.String, org.json.JSONObject): java.lang.String\",\"def_pos\":0,\"name\":\"A04\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;Lorg/json/JSONObject;)Ljava/lang/String;\"},{\"signature\":\"A05(org.json.JSONArray): java.util.HashSet\",\"def_pos\":0,\"name\":\"A05\",\"is_constructor\":false,\"dex_descriptor\":\"(Lorg/json/JSONArray;)Ljava/util/HashSet;\"},{\"signature\":\"A06(): void\",\"def_pos\":0,\"name\":\"A06\",\"is_constructor\":false,\"dex_descriptor\":\"()V\"},{\"signature\":\"A07(X.0VM): void\",\"def_pos\":0,\"name\":\"A07\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0VM;)V\"},{\"signature\":\"A08(X.0VM): void\",\"def_pos\":0,\"name\":\"A08\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0VM;)V\"},{\"signature\":\"A09(X.0VM): void\",\"def_pos\":0,\"name\":\"A09\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0VM;)V\"},{\"signature\":\"A0A(X.0VM, X.1t5): void\",\"def_pos\":0,\"name\":\"A0A\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0VM;LX/1t5;)V\"},{\"signature\":\"A0B(X.0VM, java.lang.String, long, long): void\",\"def_pos\":0,\"name\":\"A0B\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0VM;Ljava/lang/String;JJ)V\"},{\"signature\":\"A0C(X.1t5, java.lang.String, long): boolean\",\"def_pos\":0,\"name\":\"A0C\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/1t5;Ljava/lang/String;J)Z\"},{\"signature\":\"A0L(X.NYv, int): X.MS4\",\"def_pos\":0,\"name\":\"A0L\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/NYv;I)LX/MS4;\"},{\"signature\":\"A0M(java.lang.String): X.MS4\",\"def_pos\":0,\"name\":\"A0M\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)LX/MS4;\"},{\"signature\":\"A0N(java.lang.String, java.lang.String): X.MS4\",\"def_pos\":0,\"name\":\"A0N\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;Ljava/lang/String;)LX/MS4;\"},{\"signature\":\"A0O(java.lang.String, java.lang.String, java.lang.String, int): X.MS4\",\"def_pos\":0,\"name\":\"A0O\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)LX/MS4;\"},{\"signature\":\"A0P(): X.1t5\",\"def_pos\":0,\"name\":\"A0P\",\"is_constructor\":false,\"dex_descriptor\":\"()LX/1t5;\"},{\"signature\":\"A0Q(java.lang.String, java.lang.String, java.lang.String, int, int): X.Mtv\",\"def_pos\":0,\"name\":\"A0Q\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;II)LX/Mtv;\"},{\"signature\":\"A0R(): void\",\"def_pos\":0,\"name\":\"A0R\",\"is_constructor\":false,\"dex_descriptor\":\"()V\"},{\"signature\":\"A0S(int): void\",\"def_pos\":0,\"name\":\"A0S\",\"is_constructor\":false,\"dex_descriptor\":\"(I)V\"},{\"signature\":\"A0T(): boolean\",\"def_pos\":0,\"name\":\"A0T\",\"is_constructor\":false,\"dex_descriptor\":\"()Z\"},{\"signature\":\"Bjs(java.lang.String): void\",\"def_pos\":0,\"name\":\"Bjs\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)V\"},{\"signature\":\"onAppBackgrounded(): void\",\"def_pos\":0,\"name\":\"onAppBackgrounded\",\"is_constructor\":false,\"dex_descriptor\":\"()V\"}],\"method_count\":23,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"C0VM\",\"full_name\":\"X.C0VM\",\"field_count\":24,\"fields\":[{\"type\":\"int\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"X.1t5\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"long\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"android.os.Handler\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A05\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A06\"},{\"type\":\"X.08Y\",\"def_pos\":0,\"name\":\"A07\"},{\"type\":\"X.00S\",\"def_pos\":0,\"name\":\"A08\"},{\"type\":\"X.08q\",\"def_pos\":0,\"name\":\"A09\"},{\"type\":\"X.0O5\",\"def_pos\":0,\"name\":\"A0A\"},{\"type\":\"X.08Z\",\"def_pos\":0,\"name\":\"A0B\"},{\"type\":\"X.0VW\",\"def_pos\":0,\"name\":\"A0C\"},{\"type\":\"X.0Vc\",\"def_pos\":0,\"name\":\"A0D\"},{\"type\":\"X.0VR\",\"def_pos\":0,\"name\":\"A0E\"},{\"type\":\"X.0VZ\",\"def_pos\":0,\"name\":\"A0F\"},{\"type\":\"X.0AI\",\"def_pos\":0,\"name\":\"A0G\"},{\"type\":\"java.lang.Object\",\"def_pos\":0,\"name\":\"A0H\"},{\"type\":\"java.lang.Object\",\"def_pos\":0,\"name\":\"A0I\"},{\"type\":\"java.util.concurrent.atomic.AtomicBoolean\",\"def_pos\":0,\"name\":\"A0J\"},{\"type\":\"long\",\"def_pos\":0,\"name\":\"A0K\"},{\"type\":\"boolean\",\"def_pos\":0,\"name\":\"A0L\"},{\"type\":\"X.1xY\",\"def_pos\":0,\"name\":\"A0M\"},{\"type\":\"boolean\",\"def_pos\":0,\"name\":\"A0N\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C0VM",
+          "method_name": "A0A",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.0VM.A0A\",\"class_name\":\"X.C0VM\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public static void A0A(C0VM c0vm, C1t5 c1t5) {\\n        StringBuilder sb \\u003d new StringBuilder(\\\"routeselector/setroutinginfo/got a RoutingResponse with \\\");\\n        sb.append(c1t5.A0C.size());\\n        sb.append(\\\" route classes\\\");\\n        Log.i(sb.toString());\\n        c0vm.A0D.A00.A02();\\n        synchronized (c0vm.A0H) {\\n            C1t5 c1t6 \\u003d c0vm.A01;\\n            if (c1t6 \\u003d\\u003d null || c1t5.A0D) {\\n                c0vm.A01 \\u003d c1t5;\\n                C07o.A00(c0vm, C0Kl.A02, new C2GW(c1t5, 0));\\n            } else {\\n                List list \\u003d c1t6.A0C;\\n                String str \\u003d c1t5.A09;\\n                long j \\u003d c1t5.A05;\\n                long j2 \\u003d c1t5.A03;\\n                long j3 \\u003d c1t5.A06;\\n                long j4 \\u003d c1t5.A07;\\n                String str2 \\u003d c1t5.A0B;\\n                int i \\u003d c1t5.A00;\\n                int i2 \\u003d c1t5.A01;\\n                c0vm.A01 \\u003d new C1t5(c1t5.A08, str, str2, c1t5.A0A, list, i, i2, j, j2, j3, j4, false);\\n                Log.i(\\\"routeselector/setroutinginfo/previous hosts retained\\\");\\n            }\\n        }\\n        Object obj \\u003d c0vm.A0I;\\n        synchronized (obj) {\\n            obj.notifyAll();\\n        }\\n        c0vm.A06();\\n    }\",\"overload_count\":1,\"method_name\":\"A0A\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C0VM",
+    "method": {
+      "name": "A0A",
+      "reported_signature": "A0A(X.0VM, X.1t5): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(LX/0VM;LX/1t5;)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public static void A0A(C0VM c0vm, C1t5 c1t5) {\n        StringBuilder sb = new StringBuilder(\"routeselector/setroutinginfo/got a RoutingResponse with \");\n        sb.append(c1t5.A0C.size());\n        sb.append(\" route classes\");\n        Log.i(sb.toString());\n        c0vm.A0D.A00.A02();\n        synchronized (c0vm.A0H) {\n            C1t5 c1t6 = c0vm.A01;\n            if (c1t6 == null || c1t5.A0D) {\n                c0vm.A01 = c1t5;\n                C07o.A00(c0vm, C0Kl.A02, new C2GW(c1t5, 0));\n            } else {\n                List list = c1t6.A0C;\n                String str = c1t5.A09;\n                long j = c1t5.A05;\n                long j2 = c1t5.A03;\n                long j3 = c1t5.A06;\n                long j4 = c1t5.A07;\n                String str2 = c1t5.A0B;\n                int i = c1t5.A00;\n                int i2 = c1t5.A01;\n                c0vm.A01 = new C1t5(c1t5.A08, str, str2, c1t5.A0A, list, i, i2, j, j2, j3, j4, false);\n                Log.i(\"routeselector/setroutinginfo/previous hosts retained\");\n            }\n        }\n        Object obj = c0vm.A0I;\n        synchronized (obj) {\n            obj.notifyAll();\n        }\n        c0vm.A06();\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

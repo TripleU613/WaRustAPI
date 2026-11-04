@@ -109,3 +109,27 @@ expired request, and missing/future/zero request times cannot supply eligibility
 The local pre-write wall-clock base is conservative, not complete native elapsed
 clock parity. Full throttle, last_id and host refresh behavior remain open.
 No live operation occurred.
+
+## Conditional prior-host retention (2026-11-04)
+
+**Confirmed pinned static:** CK4 defaults is_new to integer 1 and treats other
+integers as false. `0VM.A0A` installs the whole reply when no current route exists
+or is_new is true. Otherwise it builds a route with the **old host list** and
+new auth, IDs, lifetimes, base and other response metadata. `A0P` is a locked
+getter with no expiry filtering; the request path obtains last_id from that
+current object's A0B. This does not prove cache restore installs expired objects.
+
+**Confirmed Rust support gap/guarded offline:** cached route selection previously
+ignored is_new and selected reply hosts regardless of prior-route semantics.
+It now parses the flag with the Java-compatible integer helper/default and
+explicitly refuses non-new replies because no frozen prior-host context exists.
+This is a local unsupported boundary, including the native first-route false
+branch, not a claim that native refuses such replies. Stored wire/checkpoints
+remain unchanged and no old token/host is silently substituted.
+
+The required implementation is prospective prior-route capture, conditional
+last_id request construction, and atomic merged-route projection with reply
+generation/identity checks. Merely choosing an older saved result after a refusal
+would pair stale auth and hosts incorrectly. Full refresh/expiry/throttle/runtime
+coordination remains unfinished. Real-store flag tests cover default, 1, plus/BMP
+spellings, other integers and malformed/overflow values with no writes or traffic.

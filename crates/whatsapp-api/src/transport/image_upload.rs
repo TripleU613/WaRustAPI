@@ -360,6 +360,26 @@ fn route(store: &ProtocolStore) -> Result<(String, Zeroizing<String>)> {
         .child("media_conn")
         .ok_or_else(|| invalid("missing media connection"))?;
     let attr = |name| conn.get_attr(name).and_then(|v| v.as_text());
+    // APK 43.72 1xY.CK4 defaults is_new to 1; 0VM.A0A retains the
+    // previous host list for every other integer when a current route exists.
+    // This standalone cached reply
+    // has no frozen prior-host context, so never adopt its returned hosts.
+    let is_new = match conn.get_attr("is_new") {
+        None => true,
+        Some(value) => {
+            value
+                .as_text()
+                .and_then(super::mex::java_decimal_long)
+                .and_then(|v| i32::try_from(v).ok())
+                .ok_or_else(|| invalid("invalid media route replacement flag"))?
+                == 1
+        }
+    };
+    if !is_new {
+        return Err(invalid(
+            "unchanged media route needs prior host binding; inspect saved response",
+        ));
+    }
     // APK 43.72 1xY.CK4 -> 0Tp.A07/A0L/A09 requires both fields and
     // uses Java Long.parseLong. No missing-auth-TTL fallback exists there.
     // Evidence: docs/protocol/rea/2.26.43.72-media-route-lifetimes/README.md.
@@ -958,6 +978,59 @@ mod tests {
                 .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
                 .unwrap();
             assert!(route(&store).is_err());
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                before
+            );
+        }
+    }
+
+    #[test]
+    fn unchanged_route_reply_cannot_replace_hosts_without_prior_binding() {
+        use super::*;
+        use crate::{
+            binary::{Encoder, Node},
+            model::ids::AccountId,
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("route-replacement.redb"),
+            account_id: AccountId::new("route-replacement-test").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([7; 32]))),
+            create: true,
+        })
+        .unwrap();
+        for (flag, accepted) in [
+            (None, true),
+            (Some("1"), true),
+            (Some("+1"), true),
+            (Some("١"), true),
+            (Some("0"), false),
+            (Some("2"), false),
+            (Some("-1"), false),
+            (Some("bad"), false),
+            (Some("2147483648"), false),
+        ] {
+            let mut conn = Node::new("media_conn")
+                .attr("ttl", "3600")
+                .attr("auth_ttl", "3600")
+                .attr("auth", "synthetic-auth")
+                .children(vec![Node::new("host").attr("hostname", "mmg.whatsapp.net")]);
+            if let Some(flag) = flag {
+                conn = conn.attr("is_new", flag);
+            }
+            let wire = Encoder::new(TokenDictionary::comparison_2_26_37_71())
+                .encode(&Node::new("iq").attr("type", "result").children(vec![conn]))
+                .unwrap();
+            store.write(|tx| tx.put_json(Table::Checkpoints,b"media-route:synthetic",1,
+                &serde_json::json!({"status":"result","at":Timestamp::now(),"requested_at":Timestamp::now(),"wire":wire}))).unwrap();
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            assert_eq!(route(&store).is_ok(), accepted);
             assert_eq!(
                 store
                     .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
