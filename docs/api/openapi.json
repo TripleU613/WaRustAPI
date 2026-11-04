@@ -9866,7 +9866,7 @@
       "get": {
         "summary": "Classify a saved app-state result offline without applying data",
         "operationId": "inspectAppStateResponse",
-        "description": "CLI-only structural inspector over one preserved correlated app-state fetch/patch result. Follows current F2T category precedence: collection error, present version acknowledgement, already-synced, then data. Missing error code uses native -1; version -1 refuses. Consumed data now gets recursive nested-protobuf header preflight: snapshot reference first, every patch parsed before semantic version/exit/mixed-source/duplicate-version checks. Snapshot bytes remain ExternalBlobReference bytes, never downloaded snapshots. JSON prints known names, fixed categories, counts, scalar versions and header outcomes; raw names/text/bodies/reference keys stay private. Native fatal reason metadata is distinct from server error_code; local guard restrictions do not claim native parser parity. Integrity_verified remains false: MACs, key authority, request admission, freshness and generation remain unchecked by this command. No state write, download, fetch, reservation, ACK, key installation or missing-store creation. No HTTP route. See docs/protocol/app-state-fetch-completion.md and app-state-structural-headers.md.",
+        "description": "CLI-only structural inspector over one preserved correlated app-state fetch/patch result. Follows current F2T category precedence: collection error, present version acknowledgement, already-synced, then data. Missing error code uses native -1; version -1 refuses. Consumed data now gets recursive nested-protobuf header preflight: snapshot reference first, every patch parsed before semantic version/exit/mixed-source/duplicate-version checks. Snapshot bytes remain ExternalBlobReference bytes, never downloaded snapshots. JSON prints known names, fixed categories, counts, scalar versions and header outcomes; raw names/text/bodies/reference keys stay private. Native fatal reason metadata is distinct from server error_code; local guard restrictions do not claim native parser parity. Integrity_verified remains false. Successful prospective held fetches additionally expose admission_bound from their sealed admission and exact preserved request/reply in one store read; structural refusal yields false while missing/corrupt admission fails. MACs, key authority and current baseline freshness remain unchecked. Legacy fetches, writes and outer errors have null admission_bound. No state write, download, fetch, reservation, ACK, key installation or missing-store creation. No HTTP route. See docs/protocol/app-state-fetch-completion.md and app-state-structural-headers.md.",
         "x-cli": "whatsapp-cli app-state-response-inspect",
         "x-library": ["whatsapp_api::transport::app_state_sync::inspect_response", "whatsapp_api::transport::app_state_sync::response::classify_response"],
         "x-transport": ["cli"],
@@ -9877,10 +9877,11 @@
             "description": "Redacted structural classification; no integrity or application claim",
             "content": {"application/json": {"schema": {
               "type": "object",
-              "required": ["action_id", "integrity_verified", "collections"],
+              "required": ["action_id", "integrity_verified", "admission_bound", "collections"],
               "properties": {
                 "action_id": {"type": "string"},
                 "integrity_verified": {"type": "boolean", "enum": [false]},
+                "admission_bound": {"type": ["boolean", "null"], "description": "For successful prospective held fetches, checks sealed admission generation/phase, exact original request and preserved reply, then structural binding in one read. False is structural refusal; null is legacy/write/server-error scope. Missing or corrupt required admission fails. Never current baseline equality or MAC verification."},
                 "collections": {"type": "array", "items": {
                   "type": "object",
                   "required": ["known_collection", "category", "version_ack", "error_code", "has_error_text", "snapshot_ref_present", "patch_count", "has_more_patches", "header_status", "native_header_reason", "failed_patch_index", "header_patch_versions", "external_mutation_patch_count"],

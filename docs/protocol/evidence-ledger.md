@@ -1,3 +1,11 @@
+2026-11-04 — **Confirmed Rust/offline:** successful held-fetch response
+inspection now derives binding from sealed prospective store provenance rather
+than caller claims. Exact preserved reply comparison and one-read settlement
+checks prevent a fabricated response from borrowing another admission. Reopen,
+changed-current-state, no-advance acknowledgement, missing-record and unrequested
+collection cases are tested. No new APK claim or live account operation.
+[Implementation boundary](app-state-held-fetch-admission-design.md#preserved-response-provenance-inspection).
+
 2026-11-04 — **Confirmed Rust/offline:** prospective held-fetch admission now
 seals the exact queued request and complete existing baselines in the queue
 transaction, then rechecks them at reservation. Shared refusal backoff covers

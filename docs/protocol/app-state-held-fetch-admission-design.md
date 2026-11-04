@@ -264,3 +264,21 @@ There is no production caller yet, so this is not an implemented response applie
 or application cursor. The narrow dead-code allowance marks that integration
 boundary. Successful per-patch verification and authoritative held-state/cursor
 commits remain the next required work.
+
+## Preserved-response provenance inspection
+
+**Confirmed Rust/offline (2026-11-04):** `app-state-response-inspect` now binds
+successful new-kind held-fetch replies against their sealed prospective record
+and exact stored request in one read transaction. It requires admitted phase,
+correct action kind, successful settlement and receipt sequence, validates the
+sealed generation/domain/wire, and compares the selected reply with the preserved
+settlement before invoking the pure binder. Structural binding refusal is exposed
+as `admission_bound=false` alongside original safe structural diagnostics; corrupt
+or absent mandatory admission is an error. Other action scopes report null.
+
+This is frozen provenance, not a current-baseline comparison: a later legitimate
+held-state update does not erase the historical binding. Tests deliberately change
+held state after settlement and prove that a version acknowledgement cannot
+promote it. Forged reply input, absent admission and unrequested response
+collections are covered. Per-patch MAC verification and atomic state/cursor/journal
+application remain unimplemented. No additional APK or live evidence is claimed.

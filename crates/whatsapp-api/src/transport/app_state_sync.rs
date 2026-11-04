@@ -480,6 +480,9 @@ pub struct ResponseInspection {
     pub action_id: String,
     /// Structural classification never verifies snapshot or mutation integrity.
     pub integrity_verified: bool,
+    /// Exact prospective store provenance and structural binding, for successful
+    /// held fetches only. Never current-state equality or MAC verification.
+    pub admission_bound: Option<bool>,
     /// Redacted summaries in original collection order; unknown names are omitted.
     pub collections: Vec<CollectionReplyInspection>,
 }
@@ -543,6 +546,13 @@ pub fn inspect_response(
             ));
         }
         let classified = response::classify_response(&reply)?;
+        let admission_bound = if outcome.kind == HELD_FETCH_ACTION_KIND
+            && outcome.status == super::actions::ActionStatus::Ok
+        {
+            Some(held_fetch::binding_in(tx, id, &classified)?)
+        } else {
+            None
+        };
         let collections = classified
             .collections
             .into_iter()
@@ -627,6 +637,7 @@ pub fn inspect_response(
         Ok(ResponseInspection {
             action_id: id.to_owned(),
             integrity_verified: false,
+            admission_bound,
             collections,
         })
     })

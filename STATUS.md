@@ -1,3 +1,18 @@
+2026-11-04 — **Stored held-fetch response provenance (offline):**
+
+Response inspection now requires sealed prospective admission for successful
+held-fetch actions and checks phase, settlement order, exact original wire,
+generation and preserved reply in one consistent read before structural binding.
+`admission_bound` distinguishes binding success/refusal from legacy/write/error
+scope. Missing or corrupt required provenance fails; structural refusal preserves
+safe response diagnostics. A later changed held state does not rewrite historical
+provenance, and version acknowledgements cannot advance that state. MAC verification
+and per-patch current-state/cursor/journal commits remain unfinished.
+[Boundary and tests](docs/protocol/app-state-held-fetch-admission-design.md#preserved-response-provenance-inspection).
+Validation: **1,225 workspace/all-feature tests**, strict Clippy, CLI-reference,
+formatting, coverage freshness and repository hygiene passed.
+No live account traffic occurred.
+
 2026-11-04 — **Durable prospective held-fetch admission (offline):**
 
 Explicit `contacts fetch-app-state --held` captures existing validated collection

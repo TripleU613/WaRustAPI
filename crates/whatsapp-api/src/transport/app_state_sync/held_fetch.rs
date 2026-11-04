@@ -304,6 +304,49 @@ fn reserve_impl_in(tx: &mut WriteTx<'_>, id: &str, raw_wire: &[u8]) -> Result<bo
     Ok(true)
 }
 
+/// Bind a preserved successful reply to prospective provenance in one read.
+/// False means structural binding refused; storage/authentication faults propagate.
+/// This does not prove current baseline equality or mutation authenticity.
+pub(crate) fn binding_in(
+    tx: &crate::store::ReadTx<'_>,
+    id: &str,
+    reply: &super::response::Response<'_>,
+) -> Result<bool> {
+    (|| {
+        let record: Record = tx
+            .get_json(Table::Checkpoints, key(id).as_bytes(), 1)?
+            .ok_or_else(|| invalid("held-fetch action has no admission record"))?;
+        let collections = validate_record(&record, id, tx.generation())?;
+        let (outcome, saved_reply) = super::super::actions::view_in(tx, id)?
+            .ok_or_else(|| invalid("admission has no original action"))?;
+        if outcome.kind != super::HELD_FETCH_ACTION_KIND
+            || outcome.status != super::super::actions::ActionStatus::Ok
+            || outcome.settlement_sequence.is_none()
+            || !matches!(record.phase, Phase::Admitted { .. })
+        {
+            return Err(invalid(
+                "binding requires an admitted settled successful held fetch",
+            ));
+        }
+        if saved_reply.as_ref() != Some(reply.original) {
+            return Err(invalid(
+                "binding reply differs from the preserved settlement",
+            ));
+        }
+        let raw = super::super::actions::request_wire_in(tx, id)?
+            .ok_or_else(|| invalid("admission has no original wire"))?;
+        validate_wire(&record, &raw, &collections)?;
+        let plan = super::binding::FetchBaselinePlan::new(
+            record.generation,
+            record.action_id,
+            &raw,
+            record.baselines,
+        )?;
+        Ok(super::binding::bind_inline_fetch_plan(&raw, reply, &plan, tx.generation()).is_ok())
+    })()
+    .map_err(redact_serialization)
+}
+
 /// Inspect sealed provenance without printing raw IDs, digests, maps or keys.
 /// Legacy fetches have no record and return None; a new-kind action missing its
 /// mandatory record is an integrity error, not a retrospective migration.
@@ -728,6 +771,76 @@ mod tests {
         );
         assert!(!printed.contains("private-server-detail"));
         assert!(!printed.contains(&id));
+    }
+
+    #[test]
+    fn stored_binding_uses_prospective_baseline_and_never_promotes_ack() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("binding.redb");
+        let store = open(&path);
+        save(&store, &empty(7));
+        let id = queue(&store, &[Collection::Regular]).unwrap();
+        actions::reserve_next(&store).unwrap().unwrap();
+        let reply = Node::new("iq")
+            .attr("id", id.as_str())
+            .attr("type", "result")
+            .children(vec![Node::new("sync").children(vec![
+                Node::new("collection").attr("name", "regular").attr("version", "99"),
+            ])]);
+        assert!(actions::record_reply(&store, &reply).unwrap());
+        // Current state is deliberately different. Binding proves frozen provenance,
+        // never current eligibility and never adopts an acknowledgement's version.
+        save(&store, &empty(8));
+        drop(store);
+        let store = open(&path);
+        let report = super::super::inspect_response(&store, &id).unwrap();
+        assert_eq!(report.admission_bound, Some(true));
+        assert!(!report.integrity_verified);
+        assert_eq!(report.collections[0].version_ack, Some(99));
+        let current: SavedCollectionState = store
+            .read(|tx| {
+                tx.get_json(
+                    Table::Checkpoints,
+                    super::super::held_key(Collection::Regular).as_bytes(),
+                    1,
+                )
+            })
+            .unwrap()
+            .unwrap();
+        assert_eq!(current, empty(8));
+        let forged = Node::new("iq")
+            .attr("id", id.as_str())
+            .attr("type", "result")
+            .children(vec![Node::new("sync")]);
+        let classified = super::super::response::classify_response(&forged).unwrap();
+        assert!(store.read(|tx| binding_in(tx, &id, &classified)).is_err());
+        store
+            .write(|tx| tx.delete(Table::Checkpoints, key(&id).as_bytes()))
+            .unwrap();
+        assert!(super::super::inspect_response(&store, &id).is_err());
+    }
+
+    #[test]
+    fn stored_binding_refuses_unrequested_collection_without_losing_diagnostics() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("foreign.redb"));
+        save(&store, &empty(7));
+        let id = queue(&store, &[Collection::Regular]).unwrap();
+        actions::reserve_next(&store).unwrap().unwrap();
+        let reply = Node::new("iq")
+            .attr("id", id.as_str())
+            .attr("type", "result")
+            .children(vec![Node::new("sync").children(vec![
+                Node::new("collection").attr("name", "critical_block"),
+            ])]);
+        assert!(actions::record_reply(&store, &reply).unwrap());
+        let report = super::super::inspect_response(&store, &id).unwrap();
+        assert_eq!(report.admission_bound, Some(false));
+        assert_eq!(
+            report.collections[0].known_collection,
+            Some("critical_block")
+        );
+        assert!(!report.integrity_verified);
     }
 
     #[test]
