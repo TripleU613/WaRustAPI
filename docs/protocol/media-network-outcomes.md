@@ -424,3 +424,11 @@ so this is a concrete potential omission pending finished-file constructor,
 override and final hash-string provenance.
 [Owner/encoding/hash evidence](rea/2.26.43.72-media-upload-http/README.md#seal-owner-excluded-kind-and-encoding-helpers-2026-11-04).
 No guessed seal is added and full voice upload parity is not claimed.
+
+### Finished voice constructor and seal hash formatting (2026-11-04)
+
+**Confirmed static**, pinned2.26.43.72: plugin A09 has a branch setting
+LKZ sent/finished true. Seal hash extraction maps first Mzq digest stream
+to MAw.A00 and formats via Android Base64 flag2; it is not inferred from
+the URL-safe path hash. Exact digest bytes and operation/override binding
+remain open. [Retained branches and writer census](rea/2.26.43.72-media-upload-http/README.md#finished-voice-construction-and-digest-formatting-2026-11-04).

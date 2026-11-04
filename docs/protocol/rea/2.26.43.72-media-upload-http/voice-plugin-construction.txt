@@ -1,0 +1,454 @@
+
+# class: Lcom/whatsapp/media/upload/newinfra/plugin/BaseMediaUploadPlugin;
+# extends: Ljava/lang/Object;
+
+.method public A09(LL)  # .registers 46
+    # full signature: Lcom/whatsapp/media/upload/newinfra/plugin/BaseMediaUploadPlugin;->A09(LX/NaH;)LX/MvM;
+    0000..0004  move-object/from16  v0, v45
+    0004..0008  move-object/from16  v1, v44
+    0008..000c  instance-of  v2, v1, LX/LLl;
+    000c..0010  if-eqz  v2, +0x2d
+    0010..0012  const/4  v1, #0x0
+    0012..0018  invoke-static  {v0, v1}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0018..001c  instance-of  v1, v0, LX/MvM;
+    001c..0020  if-nez  v1, +0x19
+    0020..0024  instance-of  v1, v0, LX/MvI;
+    0024..0028  if-eqz  v1, +0x295
+    0028..002c  check-cast  v0, LX/MvI;
+    002c..0030  iget-object  v3, v0, LX/MvI;->A01:LX/Mtt;
+    0030..0034  if-eqz  v3, +0x288
+    0034..003a  invoke-virtual  {v3}, LX/Mtt;->A05()LX/M5T;
+    003a..003c  move-result-object  v2
+    003c..0040  iget-boolean  v1, v0, LX/MvI;->A04:Z
+    0040..0044  new-instance  v0, LX/LKZ;
+    0044..0048  if-eqz  v1, +0x8
+    0048..004e  invoke-direct  {v0, v3, v2}, LX/LKZ;-><init>(LX/Mtt;LX/M5T;)V
+    004e..0052  check-cast  v0, LX/MvM;
+    0052..0054  return-object  v0
+    0054..005a  invoke-direct  {v0, v3, v2}, LX/LKZ;-><init>(LX/Mtt;LX/M5T;)V
+    005a..005c  const/4  v1, #0x1
+    005c..0060  iput-boolean  v1, v0, LX/LKZ;->A02:Z
+    0060..0064  iput-boolean  v1, v0, LX/LKZ;->A03:Z
+    0064..0066  goto  -0xb
+    0066..006a  instance-of  v2, v1, Lcom/whatsapp/media/upload/newinfra/plugin/status/StatusMediaUploadPlugin;
+    006a..006e  if-eqz  v2, +0x3f
+    006e..0070  const/4  v1, #0x0
+    0070..0076  invoke-static  {v0, v1}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0076..007a  instance-of  v1, v0, LX/MvF;
+    007a..007e  if-eqz  v1, +0x27a
+    007e..0082  instance-of  v1, v0, LX/LLx;
+    0082..0086  if-eqz  v1, +0x22
+    0086..008a  check-cast  v0, LX/LLx;
+    008a..008e  iget-object  v8, v0, LX/LLx;->A02:LX/Mtt;
+    008e..0092  iget-object  v6, v8, LX/Mtt;->A0Y:LX/M3l;
+    0092..0098  invoke-virtual  {v8}, LX/Mtt;->A05()LX/M5T;
+    0098..009a  move-result-object  v9
+    009a..009e  iget-object  v0, v8, LX/Mtt;->A0b:LX/MJe;
+    009e..00a2  iget-object  v7, v0, LX/MJe;->A01:LX/MO0;
+    00a2..00a8  invoke-virtual  {v8}, LX/Mtt;->A05()LX/M5T;
+    00a8..00aa  move-result-object  v0
+    00aa..00b0  invoke-static  {v0}, LX/0jO;->A00(LX/M5T;)LX/NaC;
+    00b0..00b2  move-result-object  v5
+    00b2..00b6  sget-object  v10, LX/LS7;->A08:LX/LS7;
+    00b6..00ba  const-string  v11, "status_upload"
+    00ba..00be  new-instance  v4, LX/MvM;
+    00be..00c4  invoke-direct/range  {v4..v11}, LX/MvM;-><init>(LX/NaC;LX/M3l;LX/MO0;LX/Mtt;LX/M5T;LX/LS7;Ljava/lang/String;)V
+    00c4..00c6  return-object  v4
+    00c6..00ca  instance-of  v1, v0, LX/LLw;
+    00ca..00ce  if-eqz  v1, +0x24d
+    00ce..00d2  check-cast  v0, LX/LLw;
+    00d2..00d6  iget-object  v3, v0, LX/LLw;->A00:LX/Mtt;
+    00d6..00dc  invoke-virtual  {v3}, LX/Mtt;->A05()LX/M5T;
+    00dc..00de  move-result-object  v2
+    00de..00e2  sget-object  v1, LX/LS7;->A08:LX/LS7;
+    00e2..00e4  const/4  v0, #0x2
+    00e4..00e8  goto/16  +0x1ea
+    00e8..00ec  instance-of  v2, v1, Lcom/whatsapp/media/upload/newinfra/plugin/metaai/MetaAiMediaUploadPlugin;
+    00ec..00f0  if-eqz  v2, +0xbf
+    00f0..00f4  check-cast  v1, Lcom/whatsapp/media/upload/newinfra/plugin/metaai/MetaAiMediaUploadPlugin;
+    00f4..00f6  const/4  v3, #0x0
+    00f6..00fc  invoke-static  {v0, v3}, LX/00l;->A09(Ljava/lang/Object;I)V
+    00fc..0100  instance-of  v2, v0, LX/MvL;
+    0100..0104  if-eqz  v2, +0x250
+    0104..0108  check-cast  v0, LX/MvL;
+    0108..010c  iget-object  v2, v0, LX/MvL;->A02:Landroid/net/Uri;
+    010c..0112  invoke-virtual  {v2}, Landroid/net/Uri;->getPath()Ljava/lang/String;
+    0112..0114  move-result-object  v4
+    0114..0118  if-eqz  v4, +0x23f
+    0118..011e  invoke-static  {v4}, LX/8t1;->A1D(Ljava/lang/String;)Ljava/io/File;
+    011e..0120  move-result-object  v12
+    0120..0126  invoke-virtual  {v12}, Ljava/io/File;->exists()Z
+    0126..0128  move-result  v2
+    0128..012c  if-eqz  v2, +0x22e
+    012c..0130  iget-object  v10, v0, LX/MvL;->A03:LX/0jS;
+    0130..0136  invoke-virtual  {v12}, Ljava/io/File;->length()J
+    0136..0138  move-result-wide  v25
+    0138..013c  iget  v2, v0, LX/MvL;->A00:I
+    013c..0142  invoke-static  {v2}, LX/8tA;->A00(I)LX/8tB;
+    0142..0144  move-result-object  v9
+    0144..0148  iget  v5, v0, LX/MvL;->A01:I
+    0148..014c  iget-boolean  v4, v0, LX/MvL;->A08:Z
+    014c..0150  iget-boolean  v2, v0, LX/MvL;->A06:Z
+    0150..0152  const/4  v7, #0x0
+    0152..0156  const-string  v16, "mms"
+    0156..015a  const/16  v24, #0x1
+    015a..015e  new-instance  v6, LX/M5T;
+    015e..0160  move-object  v11, v7
+    0160..0162  move-object  v13, v7
+    0162..0164  move-object  v14, v7
+    0164..0166  move-object  v15, v7
+    0166..016a  move-object/from16  v17, v7
+    016a..016e  move-object/from16  v18, v7
+    016e..0172  move-object/from16  v19, v7
+    0172..0176  move-object/from16  v20, v7
+    0176..017a  move-object/from16  v21, v7
+    017a..017e  move/from16  v30, v3
+    017e..0182  move/from16  v31, v3
+    0182..0186  move/from16  v32, v3
+    0186..018a  move/from16  v33, v3
+    018a..018e  move/from16  v34, v3
+    018e..0190  move-object  v8, v7
+    0190..0194  move/from16  v22, v5
+    0194..0198  move/from16  v23, v3
+    0198..019c  move/from16  v27, v4
+    019c..01a0  move/from16  v28, v2
+    01a0..01a4  move/from16  v29, v24
+    01a4..01aa  invoke-direct/range  {v6..v34}, LX/M5T;-><init>(LX/0DY;LX/MUS;LX/8tB;LX/0jS;LX/M83;Ljava/io/File;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;[IIIIJZZZZZZZZ)V
+    01aa..01ae  iget-boolean  v4, v0, LX/MvL;->A09:Z
+    01ae..01b2  iget-boolean  v0, v0, LX/MvL;->A07:Z
+    01b2..01b8  invoke-static  {v3}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    01b8..01ba  move-result-object  v38
+    01ba..01be  sget-object  v36, LX/8tB;->A02:LX/8tB;
+    01be..01c2  new-instance  v34, LX/MO0;
+    01c2..01c6  move-object/from16  v37, v7
+    01c6..01ca  move-object/from16  v39, v7
+    01ca..01ce  move-object/from16  v40, v7
+    01ce..01d2  move-object/from16  v35, v7
+    01d2..01d6  move/from16  v41, v3
+    01d6..01da  move/from16  v42, v4
+    01da..01de  move/from16  v43, v0
+    01de..01e4  invoke-direct/range  {v34..v43}, LX/MO0;-><init>(Lcom/whatsapp/infra/core/jid/UserJid;LX/8tB;LX/1wm;Ljava/lang/Boolean;Ljava/lang/Integer;Ljava/lang/Integer;ZZZ)V
+    01e4..01e8  iget-object  v0, v1, Lcom/whatsapp/media/upload/newinfra/plugin/metaai/MetaAiMediaUploadPlugin;->A02:LX/05a;
+    01e8..01ee  invoke-static  {v0}, LX/2LC;->A09(LX/05a;)J
+    01ee..01f0  move-result-wide  v18
+    01f0..01f6  invoke-static  {}, LX/2L8;->A1H()Ljava/lang/String;
+    01f6..01f8  move-result-object  v12
+    01f8..01fc  const-wide/16  v24, #0x0
+    01fc..0200  const-wide/16  v20, #0xffff (-1)
+    0200..0204  new-instance  v11, LX/M3l;
+    0204..0206  move  v15, v3
+    0206..020a  move/from16  v16, v3
+    020a..020e  move/from16  v17, v3
+    020e..0212  move-wide/from16  v28, v24
+    0212..0216  move-wide/from16  v30, v24
+    0216..021a  move-wide/from16  v32, v24
+    021a..021c  move  v13, v3
+    021c..021e  move  v14, v3
+    021e..0222  move-wide/from16  v22, v18
+    0222..0226  move-wide/from16  v26, v24
+    0226..022c  invoke-direct/range  {v11..v33}, LX/M3l;-><init>(Ljava/lang/String;IIIIIJJJJJJJJ)V
+    022c..0230  if-eqz  v2, +0x19
+    0230..0234  new-instance  v0, LX/Mte;
+    0234..023a  invoke-direct  {v0, v10}, LX/Mte;-><init>(LX/0jS;)V
+    023a..023e  check-cast  v0, LX/NaC;
+    023e..0242  const-string  v15, "meta_ai_upload"
+    0242..0246  sget-object  v14, LX/LS7;->A04:LX/LS7;
+    0246..024a  new-instance  v8, LX/MvM;
+    024a..024c  move-object  v9, v0
+    024c..024e  move-object  v10, v11
+    024e..0252  move-object/from16  v11, v34
+    0252..0254  move-object  v12, v7
+    0254..0256  move-object  v13, v6
+    0256..025c  invoke-direct/range  {v8..v15}, LX/MvM;-><init>(LX/NaC;LX/M3l;LX/MO0;LX/Mtt;LX/M5T;LX/LS7;Ljava/lang/String;)V
+    025c..025e  return-object  v8
+    025e..0262  new-instance  v0, LX/Mtf;
+    0262..0268  invoke-direct  {v0, v10}, LX/Mtf;-><init>(LX/0jS;)V
+    0268..026a  goto  -0x17
+    026a..026e  instance-of  v2, v1, Lcom/whatsapp/media/upload/newinfra/plugin/chatwallpaper/ChatWallpaperMediaUploadPlugin;
+    026e..0272  if-eqz  v2, +0xb5
+    0272..0276  check-cast  v1, Lcom/whatsapp/media/upload/newinfra/plugin/chatwallpaper/ChatWallpaperMediaUploadPlugin;
+    0276..0278  const/4  v2, #0x0
+    0278..027e  invoke-static  {v0, v2}, LX/00l;->A09(Ljava/lang/Object;I)V
+    027e..0282  instance-of  v3, v0, LX/MvJ;
+    0282..0286  if-eqz  v3, +0x1a8
+    0286..028a  check-cast  v0, LX/MvJ;
+    028a..028e  iget-object  v4, v0, LX/MvJ;->A02:Landroid/net/Uri;
+    028e..0294  invoke-virtual  {v4}, Landroid/net/Uri;->getPath()Ljava/lang/String;
+    0294..0296  move-result-object  v3
+    0296..029a  if-eqz  v3, +0x197
+    029a..02a0  invoke-static  {v3}, LX/8t1;->A1D(Ljava/lang/String;)Ljava/io/File;
+    02a0..02a2  move-result-object  v12
+    02a2..02a8  invoke-virtual  {v12}, Ljava/io/File;->exists()Z
+    02a8..02aa  move-result  v3
+    02aa..02ae  if-eqz  v3, +0x186
+    02ae..02b2  iget-object  v10, v0, LX/MvJ;->A03:LX/0jS;
+    02b2..02b8  invoke-virtual  {v12}, Ljava/io/File;->length()J
+    02b8..02ba  move-result-wide  v25
+    02ba..02be  iget  v4, v0, LX/MvJ;->A00:I
+    02be..02c4  invoke-static  {v4}, LX/8tA;->A00(I)LX/8tB;
+    02c4..02c6  move-result-object  v9
+    02c6..02ca  iget  v5, v0, LX/MvJ;->A01:I
+    02ca..02ce  iget-boolean  v3, v0, LX/MvJ;->A06:Z
+    02ce..02d0  const/4  v7, #0x0
+    02d0..02d4  const-string  v16, "mms"
+    02d4..02d8  const/16  v24, #0x1
+    02d8..02dc  new-instance  v6, LX/M5T;
+    02dc..02de  move-object  v11, v7
+    02de..02e0  move-object  v13, v7
+    02e0..02e2  move-object  v14, v7
+    02e2..02e4  move-object  v15, v7
+    02e4..02e8  move-object/from16  v17, v7
+    02e8..02ec  move-object/from16  v18, v7
+    02ec..02f0  move-object/from16  v19, v7
+    02f0..02f4  move-object/from16  v20, v7
+    02f4..02f8  move-object/from16  v21, v7
+    02f8..02fc  move/from16  v29, v24
+    02fc..0300  move/from16  v30, v2
+    0300..0304  move/from16  v31, v2
+    0304..0308  move/from16  v32, v2
+    0308..030c  move/from16  v33, v2
+    030c..0310  move/from16  v34, v2
+    0310..0312  move-object  v8, v7
+    0312..0316  move/from16  v22, v5
+    0316..031a  move/from16  v23, v2
+    031a..031e  move/from16  v27, v3
+    031e..0322  move/from16  v28, v24
+    0322..0328  invoke-direct/range  {v6..v34}, LX/M5T;-><init>(LX/0DY;LX/MUS;LX/8tB;LX/0jS;LX/M83;Ljava/io/File;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;[IIIIJZZZZZZZZ)V
+    0328..032c  iget-boolean  v3, v0, LX/MvJ;->A07:Z
+    032c..0330  iget-boolean  v0, v0, LX/MvJ;->A05:Z
+    0330..0336  invoke-static  {v4}, LX/8tA;->A00(I)LX/8tB;
+    0336..0338  move-result-object  v36
+    0338..033e  invoke-static  {v2}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    033e..0340  move-result-object  v38
+    0340..0344  new-instance  v34, LX/MO0;
+    0344..0348  move-object/from16  v37, v7
+    0348..034c  move-object/from16  v39, v7
+    034c..0350  move-object/from16  v40, v7
+    0350..0354  move-object/from16  v35, v7
+    0354..0358  move/from16  v41, v24
+    0358..035c  move/from16  v42, v3
+    035c..0360  move/from16  v43, v0
+    0360..0366  invoke-direct/range  {v34..v43}, LX/MO0;-><init>(Lcom/whatsapp/infra/core/jid/UserJid;LX/8tB;LX/1wm;Ljava/lang/Boolean;Ljava/lang/Integer;Ljava/lang/Integer;ZZZ)V
+    0366..036a  iget-object  v0, v1, Lcom/whatsapp/media/upload/newinfra/plugin/chatwallpaper/ChatWallpaperMediaUploadPlugin;->A01:LX/05a;
+    036a..0370  invoke-static  {v0}, LX/2LC;->A09(LX/05a;)J
+    0370..0372  move-result-wide  v18
+    0372..0378  invoke-static  {}, LX/2L8;->A1H()Ljava/lang/String;
+    0378..037a  move-result-object  v12
+    037a..037e  const-wide/16  v24, #0x0
+    037e..0382  const-wide/16  v20, #0xffff (-1)
+    0382..0386  new-instance  v11, LX/M3l;
+    0386..0388  move  v15, v2
+    0388..038c  move/from16  v16, v2
+    038c..0390  move/from16  v17, v2
+    0390..0394  move-wide/from16  v28, v24
+    0394..0398  move-wide/from16  v30, v24
+    0398..039c  move-wide/from16  v32, v24
+    039c..039e  move  v13, v2
+    039e..03a0  move  v14, v2
+    03a0..03a4  move-wide/from16  v22, v18
+    03a4..03a8  move-wide/from16  v26, v24
+    03a8..03ae  invoke-direct/range  {v11..v33}, LX/M3l;-><init>(Ljava/lang/String;IIIIIJJJJJJJJ)V
+    03ae..03b2  new-instance  v0, LX/Mte;
+    03b2..03b8  invoke-direct  {v0, v10}, LX/Mte;-><init>(LX/0jS;)V
+    03b8..03bc  const-string  v15, "chat_wallpaper_upload"
+    03bc..03c0  sget-object  v14, LX/LS7;->A04:LX/LS7;
+    03c0..03c4  new-instance  v8, LX/MvM;
+    03c4..03c6  move-object  v9, v0
+    03c6..03c8  move-object  v10, v11
+    03c8..03cc  move-object/from16  v11, v34
+    03cc..03ce  move-object  v12, v7
+    03ce..03d0  move-object  v13, v6
+    03d0..03d6  invoke-direct/range  {v8..v15}, LX/MvM;-><init>(LX/NaC;LX/M3l;LX/MO0;LX/Mtt;LX/M5T;LX/LS7;Ljava/lang/String;)V
+    03d6..03d8  return-object  v8
+    03d8..03dc  instance-of  v2, v1, Lcom/whatsapp/media/upload/newinfra/plugin/chat/ChatMediaUploadPlugin;
+    03dc..03e0  if-eqz  v2, +0x1b
+    03e0..03e2  const/4  v1, #0x0
+    03e2..03e8  invoke-static  {v0, v1}, LX/00l;->A09(Ljava/lang/Object;I)V
+    03e8..03ec  instance-of  v1, v0, LX/MvH;
+    03ec..03f0  if-nez  v1, +0xfe
+    03f0..03f6  invoke-static  {v0}, LX/2LE;->A0a(Ljava/lang/Object;)Ljava/lang/String;
+    03f6..03f8  move-result-object  v2
+    03f8..03fc  const-string  v1, "ChatMediaUploadPlugin/toMediaUploadRequest received "
+    03fc..0402  invoke-static  {v1, v2}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0402..0404  move-result-object  v2
+    0404..0408  const-string  v1, " instead of ChatUploadRequest, returning as MediaUploadRequest"
+    0408..040e  invoke-static  {v2, v1}, LX/2L9;->A1J(Ljava/lang/StringBuilder;Ljava/lang/String;)V
+    040e..0412  goto/16  -0x1e0
+    0412..0416  check-cast  v1, Lcom/whatsapp/media/upload/newinfra/plugin/channel/ChannelMediaUploadPlugin;
+    0416..0418  const/4  v2, #0x0
+    0418..041e  invoke-static  {v0, v2}, LX/00l;->A09(Ljava/lang/Object;I)V
+    041e..0422  instance-of  v2, v0, LX/MvG;
+    0422..0426  if-eqz  v2, +0x133
+    0426..042a  instance-of  v2, v0, LX/LLr;
+    042a..042e  if-eqz  v2, +0x38
+    042e..0432  check-cast  v0, LX/LLr;
+    0432..0436  iget-object  v8, v0, LX/LLr;->A02:LX/Mtt;
+    0436..043a  iget-object  v6, v8, LX/Mtt;->A0Y:LX/M3l;
+    043a..0440  invoke-virtual  {v8}, LX/Mtt;->A05()LX/M5T;
+    0440..0442  move-result-object  v9
+    0442..0446  iget-object  v0, v8, LX/Mtt;->A0b:LX/MJe;
+    0446..044a  iget-object  v7, v0, LX/MJe;->A01:LX/MO0;
+    044a..0450  invoke-static  {v8}, LX/Mtt;->A00(LX/Mtt;)LX/0jS;
+    0450..0452  move-result-object  v0
+    0452..0456  new-instance  v5, LX/Mtf;
+    0456..045c  invoke-direct  {v5, v0}, LX/Mtf;-><init>(LX/0jS;)V
+    045c..0460  sget-object  v10, LX/LS7;->A03:LX/LS7;
+    0460..0464  const-string  v11, "channel_upload"
+    0464..0468  new-instance  v4, LX/MvM;
+    0468..046e  invoke-direct/range  {v4..v11}, LX/MvM;-><init>(LX/NaC;LX/M3l;LX/MO0;LX/Mtt;LX/M5T;LX/LS7;Ljava/lang/String;)V
+    046e..0472  iget-object  v0, v1, Lcom/whatsapp/media/upload/newinfra/plugin/channel/ChannelMediaUploadPlugin;->A00:LX/05a;
+    0472..0478  invoke-static  {v0}, LX/05a;->A00(LX/05a;)LX/00E;
+    0478..047a  move-result-object  v1
+    047a..047e  sget-object  v0, LX/LnX;->A1B:LX/00f;
+    047e..0484  invoke-static  {v1, v0}, LX/00E;->A0F(LX/00E;LX/00f;)Z
+    0484..0486  move-result  v0
+    0486..048a  if-eqz  v0, -0x1e1
+    048a..048e  iget-object  v1, v8, LX/Mtt;->A0Z:LX/MWO;
+    048e..0492  iget-object  v0, v4, LX/MvM;->A05:LX/MLd;
+    0492..0498  invoke-virtual  {v1, v0}, LX/MWO;->A0F(LX/MLd;)V
+    0498..049a  return-object  v4
+    049a..049e  instance-of  v1, v0, LX/LLq;
+    049e..04a2  if-eqz  v1, +0x13
+    04a2..04a6  check-cast  v0, LX/LLq;
+    04a6..04aa  iget-object  v3, v0, LX/LLq;->A00:LX/Mtt;
+    04aa..04b0  invoke-virtual  {v3}, LX/Mtt;->A05()LX/M5T;
+    04b0..04b2  move-result-object  v2
+    04b2..04b6  sget-object  v1, LX/LS7;->A03:LX/LS7;
+    04b6..04b8  const/4  v0, #0x0
+    04b8..04bc  new-instance  v4, LX/LKV;
+    04bc..04c2  invoke-direct  {v4, v3, v2, v1, v0}, LX/LKV;-><init>(LX/Mtt;LX/M5T;LX/LS7;I)V
+    04c2..04c4  return-object  v4
+    04c4..04c8  instance-of  v1, v0, LX/LLs;
+    04c8..04cc  if-eqz  v1, +0xdb
+    04cc..04d0  check-cast  v0, LX/LLs;
+    04d0..04d4  iget-object  v2, v0, LX/LLs;->A05:LX/0jS;
+    04d4..04d8  iget-object  v1, v0, LX/LLs;->A08:Ljava/io/File;
+    04d8..04da  const/4  v3, #0x0
+    04da..04dc  const/4  v11, #0x1
+    04dc..04e0  sget-object  v4, LX/8tB;->A02:LX/8tB;
+    04e0..04e6  invoke-static  {v4, v2, v3, v1, v11}, LX/MFB;->A01(LX/8tB;LX/0jS;LX/M83;Ljava/io/File;I)LX/M5T;
+    04e6..04e8  move-result-object  v17
+    04e8..04ec  iget-object  v0, v0, LX/LLs;->A04:LX/Mtr;
+    04ec..04f2  invoke-virtual  {v0}, LX/Mtr;->A00()Ljava/lang/String;
+    04f2..04f4  move-result-object  v19
+    04f4..04f8  iget-object  v14, v0, LX/Mtr;->A00:LX/M3l;
+    04f8..04fa  const/4  v9, #0x0
+    04fa..0500  invoke-static  {v9}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    0500..0502  move-result-object  v6
+    0502..0506  new-instance  v2, LX/MO0;
+    0506..0508  move-object  v7, v3
+    0508..050a  move-object  v8, v3
+    050a..050c  move-object  v5, v3
+    050c..050e  move  v10, v9
+    050e..0514  invoke-direct/range  {v2..v11}, LX/MO0;-><init>(Lcom/whatsapp/infra/core/jid/UserJid;LX/8tB;LX/1wm;Ljava/lang/Boolean;Ljava/lang/Integer;Ljava/lang/Integer;ZZZ)V
+    0514..051a  invoke-static/range  {v17..v17}, LX/0jO;->A00(LX/M5T;)LX/NaC;
+    051a..051c  move-result-object  v13
+    051c..0520  sget-object  v18, LX/LS7;->A04:LX/LS7;
+    0520..0524  new-instance  v4, LX/MvM;
+    0524..0526  move-object  v12, v4
+    0526..0528  move-object  v15, v2
+    0528..052c  move-object/from16  v16, v3
+    052c..0532  invoke-direct/range  {v12..v19}, LX/MvM;-><init>(LX/NaC;LX/M3l;LX/MO0;LX/Mtt;LX/M5T;LX/LS7;Ljava/lang/String;)V
+    0532..0536  iget-object  v1, v0, LX/Mtr;->A01:LX/MWO;
+    0536..0538  const/4  v0, #0xff (-1)
+    0538..053e  invoke-virtual  {v1, v0, v9, v11}, LX/MWO;->A0D(IIZ)V
+    053e..0540  goto  -0x58
+    0540..0544  const-string  v0, "mediaJob is required for voice note uploads"
+    0544..054a  invoke-static  {v0}, LX/1Xl;->A0f(Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    054a..054c  move-result-object  v0
+    054c..054e  throw  v0
+    054e..0554  invoke-static  {v0}, LX/2LE;->A0a(Ljava/lang/Object;)Ljava/lang/String;
+    0554..0556  move-result-object  v1
+    0556..055a  const-string  v0, "VoiceNoteMediaUploadPlugin only supports VoiceNoteUploadCoordinatorRequest, got "
+    055a..0560  invoke-static  {v0, v1}, LX/2LF;->A0H(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    0560..0562  move-result-object  v0
+    0562..0564  throw  v0
+    0564..056a  invoke-static  {}, LX/2L6;->A1N()LX/2K2;
+    056a..056c  move-result-object  v0
+    056c..056e  throw  v0
+    056e..0574  invoke-static  {v0}, LX/2LE;->A0a(Ljava/lang/Object;)Ljava/lang/String;
+    0574..0576  move-result-object  v1
+    0576..057a  const-string  v0, "StatusMediaUploadPlugin only supports StatusUploadRequest, got "
+    057a..0580  invoke-static  {v0, v1}, LX/2LF;->A0H(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    0580..0582  move-result-object  v0
+    0582..0584  throw  v0
+    0584..0588  const-string  v0, "MetaAiUploadRequest file does not exist: "
+    0588..058e  invoke-static  {v0, v4}, LX/2LF;->A0H(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    058e..0590  move-result-object  v0
+    0590..0592  throw  v0
+    0592..0596  const-string  v0, "MetaAiUploadRequest requires a file:// URI, got "
+    0596..059c  invoke-static  {v2, v0}, LX/DBh;->A0U(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    059c..059e  move-result-object  v0
+    059e..05a0  throw  v0
+    05a0..05a6  invoke-static  {v0}, LX/2LE;->A0a(Ljava/lang/Object;)Ljava/lang/String;
+    05a6..05a8  move-result-object  v1
+    05a8..05ac  const-string  v0, "MetaAiMediaUploadPlugin only supports MetaAiUploadRequest, got "
+    05ac..05b2  invoke-static  {v0, v1}, LX/2LF;->A0H(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    05b2..05b4  move-result-object  v0
+    05b4..05b6  throw  v0
+    05b6..05ba  const-string  v0, "ChatWallpaperUploadRequest file does not exist"
+    05ba..05c0  invoke-static  {v0}, LX/Klq;->A0c(Ljava/lang/String;)Ljava/io/FileNotFoundException;
+    05c0..05c2  move-result-object  v0
+    05c2..05c4  throw  v0
+    05c4..05c8  const-string  v0, "ChatWallpaperUploadRequest requires a file:// URI, got "
+    05c8..05ce  invoke-static  {v4, v0}, LX/DBh;->A0U(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    05ce..05d0  move-result-object  v0
+    05d0..05d2  throw  v0
+    05d2..05d8  invoke-static  {v0}, LX/2LE;->A0a(Ljava/lang/Object;)Ljava/lang/String;
+    05d8..05da  move-result-object  v1
+    05da..05de  const-string  v0, "ChatWallpaperMediaUploadPlugin only supports ChatWallpaperUploadRequest, got "
+    05de..05e4  invoke-static  {v0, v1}, LX/2LF;->A0H(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    05e4..05e6  move-result-object  v0
+    05e6..05e8  throw  v0
+    05e8..05ec  instance-of  v1, v0, LX/LLv;
+    05ec..05f0  if-eqz  v1, +0x26
+    05f0..05f4  check-cast  v0, LX/LLv;
+    05f4..05f8  iget-object  v3, v0, LX/LLv;->A02:LX/Mtt;
+    05f8..05fc  iget-object  v2, v3, LX/Mtt;->A0Y:LX/M3l;
+    05fc..0602  invoke-virtual  {v3}, LX/Mtt;->A05()LX/M5T;
+    0602..0604  move-result-object  v9
+    0604..0608  iget-object  v0, v3, LX/Mtt;->A0b:LX/MJe;
+    0608..060c  iget-object  v1, v0, LX/MJe;->A01:LX/MO0;
+    060c..0612  invoke-virtual  {v3}, LX/Mtt;->A05()LX/M5T;
+    0612..0614  move-result-object  v0
+    0614..061a  invoke-static  {v0}, LX/0jO;->A00(LX/M5T;)LX/NaC;
+    061a..061c  move-result-object  v5
+    061c..0620  sget-object  v10, LX/LS7;->A04:LX/LS7;
+    0620..0624  const-string  v11, "chat_upload"
+    0624..0628  new-instance  v0, LX/MvM;
+    0628..062a  move-object  v4, v0
+    062a..062c  move-object  v6, v2
+    062c..062e  move-object  v7, v1
+    062e..0630  move-object  v8, v3
+    0630..0636  invoke-direct/range  {v4..v11}, LX/MvM;-><init>(LX/NaC;LX/M3l;LX/MO0;LX/Mtt;LX/M5T;LX/LS7;Ljava/lang/String;)V
+    0636..0638  return-object  v0
+    0638..063c  instance-of  v1, v0, LX/LLu;
+    063c..0640  if-eqz  v1, +0x7
+    0640..0644  check-cast  v0, LX/LLu;
+    0644..0648  iget-object  v3, v0, LX/LLu;->A01:LX/Mtt;
+    0648..064a  goto  -0x28
+    064a..064e  instance-of  v1, v0, LX/LLt;
+    064e..0652  if-eqz  v1, +0x13
+    0652..0656  check-cast  v0, LX/LLt;
+    0656..065a  iget-object  v4, v0, LX/LLt;->A00:LX/Mtt;
+    065a..0660  invoke-virtual  {v4}, LX/Mtt;->A05()LX/M5T;
+    0660..0662  move-result-object  v3
+    0662..0666  sget-object  v2, LX/LS7;->A04:LX/LS7;
+    0666..0668  const/4  v1, #0x1
+    0668..066c  new-instance  v0, LX/LKV;
+    066c..0672  invoke-direct  {v0, v4, v3, v2, v1}, LX/LKV;-><init>(LX/Mtt;LX/M5T;LX/LS7;I)V
+    0672..0674  return-object  v0
+    0674..067a  invoke-static  {}, LX/2L6;->A1N()LX/2K2;
+    067a..067c  move-result-object  v0
+    067c..067e  throw  v0
+    067e..0684  invoke-static  {}, LX/2L6;->A1N()LX/2K2;
+    0684..0686  move-result-object  v0
+    0686..0688  throw  v0
+    0688..068e  invoke-static  {v0}, LX/2LE;->A0a(Ljava/lang/Object;)Ljava/lang/String;
+    068e..0690  move-result-object  v1
+    0690..0694  const-string  v0, "ChannelMediaUploadPlugin only supports ChannelUploadRequest, got "
+    0694..069a  invoke-static  {v0, v1}, LX/2LF;->A0H(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    069a..069c  move-result-object  v0
+    069c..069e  throw  v0
+    # exception table: 0 try range(s)
+.end method

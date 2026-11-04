@@ -1,0 +1,6 @@
+classes11.dex  Lcom/whatsapp/media/upload/newinfra/plugin/BaseMediaUploadPlugin;->A09(LL)
+  write opcode 0x5c, dex byte offset: 0x6d02a4
+classes11.dex  LX/NFQ;->invokeSuspend(LL)
+  write opcode 0x5c, dex byte offset: 0x786784
+classes13.dex  LX/SoZ;->A0I(VLLLLLIZ)
+  write opcode 0x5c, dex byte offset: 0x56d6b6

@@ -1,3 +1,13 @@
+2026-11-04 — **Finished voice flags and seal hash formatting traced:**
+
+Retained finished plugin construction, complete boolean writer census and
+digest-to-Base64 flag2 mapping. Exact digest stream and operation/override
+binding remain open before fixing the potential missing voice seal.
+[Evidence](docs/protocol/rea/2.26.43.72-media-upload-http/README.md#finished-voice-construction-and-digest-formatting-2026-11-04).
+Validation: JSON parsing, coverage freshness, cached diff checks and repository
+hygiene (4,322 local links) passed. Documentation/evidence only;
+no runtime change or live traffic.
+
 2026-11-04 — **Voice seal owner and encoding helpers traced:**
 
 Default LKZ processor excludes newsletter-ptt and permits custom override.

@@ -199,3 +199,40 @@ Reproduce exact apk-smali MOu.<init>,0jS.<clinit>,LKZ.A09,08Q.<clinit>,
 - [seal-charsets.txt](seal-charsets.txt) — SHA-256 `69ac55ea0e4e83cb125dffb15ef6c4483509af82776f34bd4de1783bc6e00c47`.
 - [seal-kind-inequality.txt](seal-kind-inequality.txt) — SHA-256 `212612ba33a63619d71bdf7f0e9d206d155a6d31dca36cec5c76d178af0aa3f9`.
 - [seal-byte-order.txt](seal-byte-order.txt) — SHA-256 `539a03bb41dfae5d85b6013c73a8b37ef2c6a2a3ec916ab3826e07fc0497a61f`.
+
+## Finished voice construction and digest formatting (2026-11-04)
+
+**Confirmed static**, same pinned APK. LKZ constructor delegates to MvM
+and does not set its sent/finished booleans. Exact direct-write scans find
+three A02 writers and four A03 writers. BaseMediaUploadPlugin.A09's MvI
+branch constructs LKZ; if MvI.A04 is false, it explicitly sets both LKZ.A02
+and A03 true. The other branch preserves constructor defaults. This is one
+finished-upload construction path, not proof all current Rust inputs select it.
+NFQ/SoZ and plugin.AG6 writers remain untraced.
+
+Mzq.A00 gets strings from its A00/A01 LOh streams, and MAw constructor
+maps the first stream's formatted result to MAw.A00 (the string used by
+LKZ.A09). LOh.A00 caches MessageDigest.digest bytes and calls8t2.A1D,
+which calls android.util.Base64.encodeToString(bytes,2). That closes the
+string-format helper and distinguishes this hash from the separately used
+URL-safe upload-path representation. The digest's complete stream
+composition, including encryption/MAC order, still needs MWH.A03/LOh
+construction tracing before substituting Rust encrypted_hash.
+
+The potential missing voice seal remains open, now narrowed to operation
+selection/custom Ncy override and exact digest input. No runtime change,
+new trailer or live request is introduced. Whole plugin A09 retained to
+preserve branch context rather than treating one constructor assignment
+as a universal rule.
+
+Reproduce apk-smali LKZ.<init>, BaseMediaUploadPlugin.A09, Mzq.A00,
+LOh.A00, MAw.<init>,8t2.A1D; apk-field-refs LKZ.A02/A03:Z --writes-only.
+
+- [voice-constructor.txt](voice-constructor.txt) — SHA-256 `d9e2915928cb7fa16ad91e6f4f1ab47787c70c295d0b84584f109b7943609d16`.
+- [voice-plugin-construction.txt](voice-plugin-construction.txt) — SHA-256 `11a8e6c2b8eeaa619170ee1ee58bd96488a96d2b50dd757e0dc789590c90981a`.
+- [hash-result.txt](hash-result.txt) — SHA-256 `fafba9669968f9f3c5b15a92f3ebd52dc2f3cea5da105d170e0bcff19aa595f5`.
+- [hash-stream-format.txt](hash-stream-format.txt) — SHA-256 `7e2f91001321a7c537cd91fd6892fbdd9df5406e40127de60802fb0bbd58f53d`.
+- [hash-result-layout.txt](hash-result-layout.txt) — SHA-256 `d51254fb1c18c469b0756f67045d684db57a04686f74aea0d6ea309fa8c0dbfd`.
+- [hash-base64.txt](hash-base64.txt) — SHA-256 `788054ff358f1465a70d162bfdb961e00fbf8756293ceb2bc7aeac9ea201ca1d`.
+- [voice-sent-writers.txt](voice-sent-writers.txt) — SHA-256 `7562bd19d958ad42a00016133d8a96b3fddbae705ffbf5b69db3c33c0a8628e1`.
+- [voice-finished-writers.txt](voice-finished-writers.txt) — SHA-256 `2e05bf5b6cdf0f4fec92e37aa7633b5323cd8c3dd8e2924048d334a3b74f7458`.

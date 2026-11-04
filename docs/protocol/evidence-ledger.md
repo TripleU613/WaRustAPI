@@ -1,3 +1,10 @@
+2026-11-04 — **Confirmed static: finished voice flags and hash formatter.**
+Pinned2.26.43.72 plugin LKZ construction/writer census and Mzq/LOh/MAw
+format chain retained; Android Base64 flag2 is explicit. Stream composition
+and operation override remain untraced.
+[Evidence](rea/2.26.43.72-media-upload-http/README.md#finished-voice-construction-and-digest-formatting-2026-11-04).
+No runtime byte changes or live account traffic.
+
 2026-11-04 — **Confirmed static: voice seal ownership/encoding boundary.**
 Pinned2.26.43.72 MOu default LKZ processor, newsletter-ptt exclusion,
 little-endian/UTF-8 helpers and final hash leaf retained. Rust has no

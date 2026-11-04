@@ -1,0 +1,12 @@
+
+# class: LX/8t2;
+# extends: Ljava/lang/Object;
+
+.method public A1D(LL)  # .registers 2
+    # full signature: LX/8t2;->A1D([B)Ljava/lang/String;
+    0000..0002  const/4  v0, #0x2
+    0002..0008  invoke-static  {v1, v0}, Landroid/util/Base64;->encodeToString([BI)Ljava/lang/String;
+    0008..000a  move-result-object  v0
+    000a..000c  return-object  v0
+    # exception table: 0 try range(s)
+.end method
