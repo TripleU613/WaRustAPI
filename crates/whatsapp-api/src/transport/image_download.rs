@@ -81,6 +81,7 @@ fn url(image: &Image) -> Result<reqwest::Url> {
         || image.length == 0
         || image.length > 8 * 1024 * 1024
         || image.key.len() != 32
+        || image.plaintext_hash.len() != 32
         || image.encrypted_hash.len() != 32
     {
         return Err(invalid("missing or unsupported bounded image descriptor"));
@@ -180,6 +181,15 @@ pub async fn download_view_once(
     store: &ProtocolStore,
     config: &LabRegistrationConfig,
 ) -> Result<u64> {
+    // Same pre-network account/config fence as ordinary media::open. A saved
+    // inbox descriptor cannot authorize using another account's configuration.
+    config.validate()?;
+    let account = store
+        .read(crate::session::AccountRecord::load)?
+        .ok_or(Error::NotRegistered)?;
+    if !account.is_registered() || account.phone.as_ref() != Some(&config.phone) {
+        return Err(Error::NotRegistered);
+    }
     let records = store.read(|tx| tx.scan(Table::Checkpoints, 1, 10000))?;
     if records.len() == 10000 {
         return Err(invalid("checkpoint scan limit reached"));
@@ -355,6 +365,80 @@ mod tests {
             assert!(url(&image).is_err());
         }
     }
+    #[test]
+    fn view_once_descriptor_requires_both_hashes_before_any_get() {
+        let mut image = Image {
+            url: "https://mmg.whatsapp.net/offline".into(),
+            mime: "image/png".into(),
+            plaintext_hash: vec![1; 32],
+            encrypted_hash: vec![2; 32],
+            key: vec![3; 32],
+            length: 42,
+            view_once: true,
+        };
+        assert!(url(&image).is_ok());
+        for length in [0, 31, 33] {
+            image.plaintext_hash = vec![1; length];
+            assert!(url(&image).is_err());
+        }
+    }
+
+    #[tokio::test]
+    async fn view_once_get_requires_valid_config_and_registered_matching_account() {
+        use crate::{
+            model::ids::AccountId,
+            session::{AccountRecord, RegistrationStatus},
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("account-fence.redb"),
+            account_id: AccountId::new("view-once-test").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([5; 32]))),
+            create: true,
+        })
+        .unwrap();
+        let mut config: LabRegistrationConfig =
+            serde_json::from_str(crate::registration::request::TEMPLATE_JSON).unwrap();
+        config.token = Zeroizing::new("offline-fixture".into());
+        assert!(matches!(
+            download_view_once(&store, &config).await,
+            Err(Error::NotRegistered)
+        ));
+        let other: LabRegistrationConfig = serde_json::from_str(
+            &crate::registration::request::TEMPLATE_JSON.replace("2025550100", "2025550101"),
+        )
+        .unwrap();
+        store
+            .write(|tx| {
+                AccountRecord {
+                    phone: Some(other.phone),
+                    registration: RegistrationStatus::Registered,
+                    ..Default::default()
+                }
+                .save(tx)
+            })
+            .unwrap();
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap();
+        assert!(matches!(
+            download_view_once(&store, &config).await,
+            Err(Error::NotRegistered)
+        ));
+        config.transport.timeout_ms = 0;
+        assert!(matches!(
+            download_view_once(&store, &config).await,
+            Err(Error::InvalidInput { .. })
+        ));
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap(),
+            before
+        );
+    }
+
     #[test]
     fn only_view_once_images_qualify_and_wrappers_are_bounded() {
         assert!(descriptor(&[26, 0], 0, false).unwrap().is_none());

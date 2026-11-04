@@ -1,3 +1,14 @@
+2026-11-04 — **View-once retrieval preflight (offline):**
+
+View-once GET now validates config and registered-account/phone agreement before
+selection, cache return or reservation. Its descriptor must contain both 32-byte
+hashes, avoiding a one-shot download that cannot later authenticate plaintext.
+Tests cover account/config refusal without checkpoint changes and malformed hashes.
+[Source defects and boundaries](docs/protocol/media-network-outcomes.md#view-once-preflight-2026-11-04).
+Validation: **1,232 workspace/all-feature tests**, strict Clippy, CLI-reference,
+formatting, coverage freshness and repository hygiene passed.
+No live traffic or native HTTP parity claim.
+
 2026-11-04 — **Ordinary media HTTP refusal persistence (offline):**
 
 A definite non-200 media GET no longer remains labelled only outcome unknown.

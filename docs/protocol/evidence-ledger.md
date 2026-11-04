@@ -1,3 +1,9 @@
+2026-11-04 — **Confirmed Rust defects/fixed offline:** view-once retrieval
+lacked ordinary-media account/config preflight and accepted unusable plaintext
+hashes before GET. Both now refuse before reservation. Async real-store and
+malformed-descriptor tests retain state. No APK or live observation is claimed.
+[Details](media-network-outcomes.md#view-once-preflight-2026-11-04).
+
 2026-11-04 — **Confirmed Rust defect/fixed offline:** ordinary media GET
 lost definite HTTP refusal status behind outcome_unknown. Numeric refusal
 persistence now survives reopen, reports later without a request and protects

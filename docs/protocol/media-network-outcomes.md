@@ -26,3 +26,28 @@ expiry, native retry scheduling, account-specific transport choices and complete
 2.26.43.72 download call flow remain untraced. Existing 2.26.37.71 media schema and
 crypto evidence does not establish current-build HTTP behavior. No new APK
 evidence, server acceptance or restriction-cause claim is introduced.
+
+## View-once preflight (2026-11-04)
+
+**Confirmed Rust defects/fixed offline:** `download_view_once` previously lacked
+the ordinary media path's config validation and registered-account/phone match
+check. It now performs them before inbox selection, cache return or reservation.
+A descriptor's encrypted hash was checked before GET, but an absent/malformed
+plaintext hash could still consume a one-shot download and later fail decryption.
+Both hashes must now be 32 bytes before any network reservation.
+
+Real-store async tests prove missing or mismatched account/config refuses without
+checkpoint changes; invalid timeouts refuse before selection. Descriptor tests
+cover absent, short and long plaintext hashes. These are local account and crypto
+prerequisite checks, not recovered native account predicates or evidence of a ban
+trigger. Native HTTP behavior remains in the current-build audit queue above.
+No live account operation, cache deletion or automatic replay is introduced.
+
+## Upload response-header persistence follow-up
+
+**Confirmed source/open:** `image_upload::upload_prepared` obtains HTTP status
+before bounded response-body streaming, but writes `http_status` only after the
+body finishes. Interruption or a body exceeding the local 64-KiB bound therefore
+loses an already-observed response status behind outcome_unknown. Preserve the
+header observation without inferring upload success or allowing replay; retain
+this as the next upload persistence correction. No interrupted upload was run.
