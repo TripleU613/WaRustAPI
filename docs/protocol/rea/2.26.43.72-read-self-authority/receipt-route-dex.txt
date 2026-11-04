@@ -1,0 +1,31 @@
+
+# class: LX/Exf;
+# extends: Ljava/lang/Object;
+
+.method public A05(LLLL)  # .registers 4
+    # full signature: LX/Exf;->A05(Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/Jid;Lcom/whatsapp/infra/core/jid/Jid;)Landroid/util/Pair;
+    0000..0006  invoke-static  {v2}, LX/0Dn;->A0m(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0006..0008  move-result  v0
+    0008..000c  if-nez  v0, +0x1d
+    000c..0012  invoke-static  {v2}, LX/0Dn;->A0P(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0012..0014  move-result  v0
+    0014..0018  if-nez  v0, +0x17
+    0018..001e  invoke-static  {v3}, LX/0Dn;->A0P(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    001e..0020  move-result  v0
+    0020..0024  if-eqz  v0, +0xd
+    0024..0028  if-eqz  v1, +0x3
+    0028..002a  move-object  v2, v1
+    002a..002c  move-object  v0, v3
+    002c..002e  move-object  v3, v2
+    002e..0030  move-object  v2, v0
+    0030..0036  invoke-static  {v2, v3}, LX/8t1;->A0E(Ljava/lang/Object;Ljava/lang/Object;)Landroid/util/Pair;
+    0036..0038  move-result-object  v0
+    0038..003a  return-object  v0
+    003a..003e  if-eqz  v1, -0x5
+    003e..0040  move-object  v2, v1
+    0040..0042  goto  -0x8
+    0042..0046  if-eqz  v1, -0x9
+    0046..0048  move-object  v3, v1
+    0048..004a  goto  -0xc
+    # exception table: 0 try range(s)
+.end method

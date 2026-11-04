@@ -262,6 +262,19 @@ Inspect the saved server read-receipt preference (offline; no policy change)
 Usage: whatsapp-cli account-privacy-inspect [OPTIONS]...
 ```
 
+## whatsapp-cli app-state-inspect
+
+Inspect validated app-state versions and logical-index provenance (offline)
+
+```
+Usage: whatsapp-cli app-state-inspect [OPTIONS]...
+```
+
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+| --reconstruct-snapshot | RECONSTRUCT_SNAPSHOT | no |  |  |  | Reconstruct missing index metadata from an authenticated same-version local snapshot |
+| --collection | COLLECTION | no |  |  |  | Existing held collection to reconstruct; no version advancement |
+
 ## whatsapp-cli actions
 
 Show queued one-shot actions (block list, reports, lookups) and their outcomes (offline, redacted)

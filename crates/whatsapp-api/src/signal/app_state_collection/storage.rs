@@ -6,13 +6,9 @@ use serde::{Deserialize, Serialize};
 use zeroize::{Zeroize, Zeroizing};
 pub mod actions;
 
-#[derive(Serialize, Deserialize)]
-struct SavedState {
-    collection: String,
-    version: u64,
-    hash: Vec<u8>,
-    values: Vec<([u8; 32], [u8; 32])>,
-}
+// Both persisted collection formats must retain logical provenance and use
+// the same duplicate/cardinality/hash validation, including legacy inspection.
+type SavedState = SavedCollectionState;
 
 #[derive(Clone, Serialize, Deserialize)]
 struct PendingAction {
@@ -131,21 +127,18 @@ fn load(tx: &WriteTx<'_>, collection: &str) -> Result<CollectionState> {
     let bytes = Zeroizing::new(bytes);
     let saved: SavedState =
         serde_json::from_slice(&bytes).map_err(|_| invalid("invalid stored collection"))?;
-    if saved.collection != collection || saved.hash.len() != 128 {
+    if saved.collection != collection {
         return Err(invalid("stored collection identity or hash mismatch"));
     }
-    let mut values = BTreeMap::new();
-    for (index, value) in saved.values {
-        if values.insert(index, value).is_some() {
-            return Err(invalid("duplicate stored collection index"));
-        }
-    }
-    Ok(CollectionState {
-        collection: saved.collection,
-        version: saved.version,
-        hash: StateHash::from_bytes(saved.hash.try_into().map_err(|_| invalid("invalid hash"))?),
-        values,
-    })
+    CollectionState::from_saved(&saved)
+}
+
+fn save_integrity_state(tx: &mut WriteTx<'_>, state: &CollectionState) -> Result<()> {
+    let bytes = Zeroizing::new(
+        serde_json::to_vec(&state.to_saved())
+            .map_err(|_| invalid("collection serialization failed"))?,
+    );
+    tx.put(Table::Checkpoints, &state_key(&state.collection), 1, &bytes)
 }
 
 fn save(
@@ -165,29 +158,11 @@ fn save(
         actions: pending_actions(mutations),
     };
     save_current_records(tx, &state.collection, &batch, state.version)?;
-    let saved = SavedState {
-        collection: state.collection.clone(),
-        version: state.version,
-        hash: state.hash.as_bytes().to_vec(),
-        values: state
-            .values
-            .iter()
-            .map(|(index, value)| (*index, *value))
-            .collect(),
-    };
     let batch_bytes = Zeroizing::new(
         serde_json::to_vec(&batch).map_err(|_| invalid("pending action serialization failed"))?,
     );
-    let state_bytes = Zeroizing::new(
-        serde_json::to_vec(&saved).map_err(|_| invalid("collection serialization failed"))?,
-    );
     tx.put(Table::Checkpoints, &key, 1, &batch_bytes)?;
-    tx.put(
-        Table::Checkpoints,
-        &state_key(&state.collection),
-        1,
-        &state_bytes,
-    )
+    save_integrity_state(tx, state)
 }
 
 /// Authenticate against the current account-scoped baseline and stage state and
@@ -227,7 +202,7 @@ pub fn stage_snapshot<'a>(
 ) -> Result<u64> {
     let baseline = load(tx, collection)?;
     let verified = baseline.verify_snapshot(snapshot, key)?;
-    if verified.state != baseline {
+    if verified.state.version > baseline.version {
         save(
             tx,
             &verified.state,
@@ -235,23 +210,31 @@ pub fn stage_snapshot<'a>(
             true,
             baseline.version,
         )?;
-    } else if tx
-        .get(Table::Checkpoints, &records_key(collection), 1)?
-        .is_none()
-    {
-        // Verification above authenticated every record and matched the saved
-        // integrity state. Rebuild only the missing cache, not the apply queue,
-        // applied cursor, projected settings or collection version.
-        save_current_records(
-            tx,
-            collection,
-            &PendingBatch {
-                previous_version: baseline.version,
-                snapshot: true,
-                actions: pending_actions(&verified.mutations),
-            },
-            baseline.version,
-        )?;
+    } else {
+        if verified.state != baseline {
+            // Same-version verification above required the identical existing
+            // hash and wire map. Persist only reconstructed index metadata;
+            // never enqueue already-authenticated snapshot actions again.
+            save_integrity_state(tx, &verified.state)?;
+        }
+        if tx
+            .get(Table::Checkpoints, &records_key(collection), 1)?
+            .is_none()
+        {
+            // Verification above authenticated every record and matched the saved
+            // integrity state. Rebuild only the missing cache, not the apply queue,
+            // applied cursor, projected settings or collection version.
+            save_current_records(
+                tx,
+                collection,
+                &PendingBatch {
+                    previous_version: baseline.version,
+                    snapshot: true,
+                    actions: pending_actions(&verified.mutations),
+                },
+                baseline.version,
+            )?;
+        }
     }
     Ok(verified.state.version)
 }

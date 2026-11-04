@@ -286,6 +286,7 @@ impl CollectionState {
         device_index: u32,
         mutations: &[OutgoingMutation],
     ) -> Result<BuiltPatch> {
+        self.require_logical_indexes()?;
         if mutations.is_empty() {
             return Err(invalid("a patch needs at least one mutation"));
         }
@@ -313,23 +314,20 @@ impl CollectionState {
                 mutation.version,
                 iv,
             )?;
-            if !indexes.insert(encrypted.index_mac) {
+            if !indexes.insert(mutation.index.clone()) {
                 return Err(invalid("duplicate mutation index"));
             }
             match mutation.operation {
                 MutationOperation::Set => {
                     if let Some(previous) =
-                        next.values.insert(encrypted.index_mac, encrypted.value_mac)
+                        next.set_value(&mutation.index, encrypted.index_mac, encrypted.value_mac)?
                     {
                         removed.push(previous);
                     }
                     added.push(encrypted.value_mac);
                 }
                 MutationOperation::Remove => {
-                    let previous = next
-                        .values
-                        .remove(&encrypted.index_mac)
-                        .ok_or_else(|| invalid("REMOVE has no saved index in this collection"))?;
+                    let previous = next.remove_value(&mutation.index)?;
                     removed.push(previous);
                 }
             }
@@ -476,6 +474,54 @@ mod build_tests {
             action: Some(action(1_700_000_000_000)),
             version: 7,
         }
+    }
+
+    #[test]
+    fn outgoing_key_change_replaces_and_removes_the_same_logical_index_after_restart() {
+        let a = MutationKeys::derive(&[1; 32]).unwrap();
+        let b = MutationKeys::derive(&[2; 32]).unwrap();
+        let index = r#"["fixture","same-index"]"#;
+        let first = CollectionState::empty("regular")
+            .unwrap()
+            .build_patch(&a, [0, 1, 0, 0, 0, 1], 0, &[set(index)])
+            .unwrap()
+            .state;
+        let first = CollectionState::from_saved(&first.to_saved()).unwrap();
+        let before = first.to_saved();
+        let replacement = first
+            .build_patch(&b, [0, 1, 0, 0, 0, 2], 0, &[set(index)])
+            .unwrap();
+        let wire = CollectionPatch::decode(&with_version(&replacement.bytes, replacement.version))
+            .unwrap();
+        let mac = wire.mutations[0].body[wire.mutations[0].body.len() - 32..]
+            .try_into()
+            .unwrap();
+        assert_eq!(replacement.state.len(), 1);
+        assert_eq!(
+            replacement.state.hash(),
+            &StateHash::default().updated(&[], &[mac]).unwrap()
+        );
+        assert_eq!(
+            first.verify_patch(&wire, |_| Ok(&b)).unwrap().state,
+            replacement.state
+        );
+        assert_eq!(first.to_saved(), before);
+        let remove = OutgoingMutation {
+            operation: MutationOperation::Remove,
+            index: index.as_bytes().to_vec(),
+            action: None,
+            version: 7,
+        };
+        let removed = first
+            .build_patch(&b, [0, 1, 0, 0, 0, 2], 0, &[remove])
+            .unwrap();
+        let wire = CollectionPatch::decode(&with_version(&removed.bytes, removed.version)).unwrap();
+        assert!(removed.state.is_empty());
+        assert_eq!(removed.state.hash(), &StateHash::default());
+        assert_eq!(
+            first.verify_patch(&wire, |_| Ok(&b)).unwrap().state,
+            removed.state
+        );
     }
 
     /// A built patch must satisfy the verifier it was modelled on, including the

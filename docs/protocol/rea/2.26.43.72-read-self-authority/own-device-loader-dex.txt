@@ -1,0 +1,304 @@
+
+# class: LX/1nH;
+# extends: Ljava/lang/Object;
+
+.method public A07(L)  # .registers 78
+    # full signature: LX/1nH;->A07()Lcom/google/common/collect/ImmutableMap;
+    0000..0004  move-object/from16  v1, v77
+    0004..0006  monitor-enter
+    0006..000a  iget-object  v0, v1, LX/1nH;->A01:Lcom/google/common/collect/ImmutableMap;
+    000a..000e  if-nez  v0, +0x227
+    000e..0014  invoke-static  {v1}, LX/1nH;->A03(LX/1nH;)LX/0Xp;
+    0014..0016  move-result-object  v0
+    0016..001c  invoke-virtual  {v0}, LX/0Xp;->A06()LX/0aq;
+    001c..001e  move-result-object  v40
+    001e..0022  move-object/from16  v0, v40
+    0022..0026  iget-object  v4, v0, LX/0aq;->A02:LX/0KU;
+    0026..002a  sget-object  v3, LX/1nN;->A00:Ljava/lang/String;
+    002a..002e  const-string  v2, "getDevices/QUERY_DEVICES"
+    002e..0030  const/4  v0, #0x0
+    0030..0036  invoke-virtual  {v4, v3, v2, v0}, LX/0KU;->A0A(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;
+    0036..0038  move-result-object  v0
+    0038..003c  const-string  v2, "device_id"
+    003c..0042  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    0042..0044  move-result  v39
+    0044..0048  const-string  v2, "platform_type"
+    0048..004e  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    004e..0050  move-result  v38
+    0050..0054  const-string  v2, "device_os"
+    0054..005a  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    005a..005c  move-result  v37
+    005c..0060  const-string  v2, "last_active"
+    0060..0066  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    0066..0068  move-result  v36
+    0068..006c  const-string  v2, "login_time"
+    006c..0072  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    0072..0074  move-result  v35
+    0074..0078  const-string  v2, "logout_time"
+    0078..007e  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    007e..0080  move-result  v34
+    0080..0084  const-string  v2, "adv_key_index"
+    0084..008a  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    008a..008c  move-result  v33
+    008c..0090  const-string  v2, "full_sync_required"
+    0090..0096  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    0096..0098  move-result  v32
+    0098..009c  const-string  v2, "place_name"
+    009c..00a2  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    00a2..00a4  move-result  v31
+    00a4..00a8  const-string  v2, "nickname"
+    00a8..00ae  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    00ae..00b0  move-result  v30
+    00b0..00b4  const-string  v2, "support_bot_user_agent_chat_history"
+    00b4..00ba  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    00ba..00bc  move-result  v29
+    00bc..00c0  const-string  v2, "support_cag_reactions_and_polls_history"
+    00c0..00c6  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    00c6..00c8  move-result  v28
+    00c8..00cc  const-string  v2, "support_recent_sync_chunk_message_tuning"
+    00cc..00d2  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    00d2..00d4  move-result  v27
+    00d4..00d8  const-string  v2, "support_hosted_group_msg"
+    00d8..00de  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    00de..00e0  move-result  v26
+    00e0..00e4  const-string  v2, "support_fbid_bot_chat_history"
+    00e4..00ea  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    00ea..00ec  move-result  v25
+    00ec..00f0  const-string  v2, "support_biz_hosted_msg"
+    00f0..00f6  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    00f6..00f8  move-result  v24
+    00f8..00fc  const-string  v2, "support_call_log_history"
+    00fc..0102  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    0102..0104  move-result  v23
+    0104..0108  const-string  v2, "inline_initial_hist_sync_payload_enabled"
+    0108..010e  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    010e..0110  move-result  v22
+    0110..0114  const-string  v2, "full_sync_days_limit"
+    0114..011a  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    011a..011c  move-result  v21
+    011c..0120  const-string  v2, "full_sync_size_mb_limit"
+    0120..0126  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    0126..0128  move-result  v20
+    0128..012c  const-string  v2, "storage_quota_mb"
+    012c..0132  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    0132..0134  move-result  v19
+    0134..0138  const-string  v2, "recent_sync_days_limit"
+    0138..013e  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    013e..0140  move-result  v18
+    0140..0144  const-string  v2, "companion_meta_nonce"
+    0144..014a  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    014a..014c  move-result  v17
+    014c..0150  const-string  v2, "support_add_on_history_sync_migration"
+    0150..0156  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    0156..0158  move-result  v16
+    0158..015c  const-string  v2, "support_message_association"
+    015c..0162  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    0162..0164  move-result  v15
+    0164..0168  const-string  v2, "support_group_history"
+    0168..016e  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    016e..0170  move-result  v14
+    0170..0174  const-string  v2, "instrumentation_device_id"
+    0174..017a  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    017a..017c  move-result  v13
+    017c..0180  const-string  v2, "support_guest_chat"
+    0180..0186  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    0186..0188  move-result  v12
+    0188..018c  const-string  v2, "on_demand_ready"
+    018c..0192  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    0192..0194  move-result  v11
+    0194..0198  const-string  v2, "history_sync_config_protobuf"
+    0198..019e  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    019e..01a0  move-result  v10
+    01a0..01a4  const-string  v2, "history_sync_access_type"
+    01a4..01aa  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    01aa..01ac  move-result  v9
+    01ac..01b0  const-string  v2, "support_hatch_history"
+    01b0..01b6  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    01b6..01b8  move-result  v8
+    01b8..01bc  const-string  v2, "supported_bot_channel_fbids"
+    01bc..01c2  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    01c2..01c4  move-result  v7
+    01c4..01c8  new-instance  v6, Lcom/google/common/collect/ImmutableMap$Builder;
+    01c8..01ce  invoke-direct  {v6}, Lcom/google/common/collect/ImmutableMap$Builder;-><init>()V
+    01ce..01d0  const/4  v4, #0x0
+    01d0..01d6  invoke-interface  {v0}, Landroid/database/Cursor;->moveToNext()Z
+    01d6..01d8  move-result  v2
+    01d8..01dc  if-eqz  v2, +0x116
+    01dc..01e0  add-int/lit8  v4, v4, #0x1
+    01e0..01e4  move/from16  v2, v39
+    01e4..01ea  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getString(I)Ljava/lang/String;
+    01ea..01ec  move-result-object  v3
+    01ec..01f0  sget-object  v2, Lcom/whatsapp/infra/core/jid/DeviceJid;->Companion:LX/0EB;
+    01f0..01f6  invoke-virtual  {v2, v3}, LX/0EB;->A04(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    01f6..01f8  move-result-object  v5
+    01f8..01fc  if-eqz  v5, -0x14
+    01fc..0200  move/from16  v2, v38
+    0200..0206  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getInt(I)I
+    0206..0208  move-result  v2
+    0208..020e  invoke-static  {v2}, LX/ECZ;->forNumber(I)LX/ECZ;
+    020e..0210  move-result-object  v62
+    0210..0214  move/from16  v2, v29
+    0214..021a  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getInt(I)I
+    021a..021c  move-result  v2
+    021c..021e  const/4  v3, #0x1
+    021e..0222  const/16  v48, #0x0
+    0222..0226  if-ne  v2, v3, +0x4
+    0226..022a  const/16  v48, #0x1
+    022a..022e  move/from16  v2, v28
+    022e..0234  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getInt(I)I
+    0234..0236  move-result  v2
+    0236..023a  const/16  v49, #0x0
+    023a..023e  if-ne  v2, v3, +0x4
+    023e..0242  const/16  v49, #0x1
+    0242..0246  move/from16  v2, v27
+    0246..024c  invoke-static  {v0, v2}, LX/0MQ;->A06(Landroid/database/Cursor;I)Z
+    024c..024e  move-result  v50
+    024e..0252  move/from16  v2, v26
+    0252..0258  invoke-static  {v0, v2}, LX/0MQ;->A06(Landroid/database/Cursor;I)Z
+    0258..025a  move-result  v51
+    025a..025e  move/from16  v2, v25
+    025e..0264  invoke-static  {v0, v2}, LX/0MQ;->A06(Landroid/database/Cursor;I)Z
+    0264..0266  move-result  v52
+    0266..026a  move/from16  v2, v24
+    026a..0270  invoke-static  {v0, v2}, LX/0MQ;->A06(Landroid/database/Cursor;I)Z
+    0270..0272  move-result  v53
+    0272..0276  move/from16  v2, v23
+    0276..027c  invoke-static  {v0, v2}, LX/0MQ;->A06(Landroid/database/Cursor;I)Z
+    027c..027e  move-result  v54
+    027e..0282  move/from16  v2, v22
+    0282..0288  invoke-static  {v0, v2}, LX/0MQ;->A06(Landroid/database/Cursor;I)Z
+    0288..028a  move-result  v55
+    028a..028c  const/4  v3, #0x0
+    028c..0290  move/from16  v2, v21
+    0290..0296  invoke-static  {v0, v2, v3}, LX/0MQ;->A00(Landroid/database/Cursor;II)I
+    0296..0298  move-result  v2
+    0298..029e  invoke-static  {v2}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    029e..02a0  move-result-object  v42
+    02a0..02a4  move/from16  v2, v20
+    02a4..02aa  invoke-static  {v0, v2, v3}, LX/0MQ;->A00(Landroid/database/Cursor;II)I
+    02aa..02ac  move-result  v2
+    02ac..02b2  invoke-static  {v2}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    02b2..02b4  move-result-object  v43
+    02b4..02b8  move/from16  v2, v19
+    02b8..02be  invoke-static  {v0, v2, v3}, LX/0MQ;->A00(Landroid/database/Cursor;II)I
+    02be..02c0  move-result  v2
+    02c0..02c6  invoke-static  {v2}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    02c6..02c8  move-result-object  v44
+    02c8..02cc  move/from16  v2, v18
+    02cc..02d2  invoke-static  {v0, v2, v3}, LX/0MQ;->A00(Landroid/database/Cursor;II)I
+    02d2..02d4  move-result  v2
+    02d4..02da  invoke-static  {v2}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    02da..02dc  move-result-object  v45
+    02dc..02e0  move/from16  v2, v16
+    02e0..02e6  invoke-static  {v0, v2}, LX/0MQ;->A06(Landroid/database/Cursor;I)Z
+    02e6..02e8  move-result  v56
+    02e8..02ee  invoke-static  {v0, v15}, LX/0MQ;->A06(Landroid/database/Cursor;I)Z
+    02ee..02f0  move-result  v57
+    02f0..02f6  invoke-static  {v0, v14}, LX/0MQ;->A06(Landroid/database/Cursor;I)Z
+    02f6..02f8  move-result  v58
+    02f8..02fe  invoke-static  {v0, v12}, LX/0MQ;->A06(Landroid/database/Cursor;I)Z
+    02fe..0300  move-result  v59
+    0300..0306  invoke-static  {v0, v11}, LX/0MQ;->A06(Landroid/database/Cursor;I)Z
+    0306..0308  move-result  v60
+    0308..030e  invoke-static  {v0, v8}, LX/0MQ;->A06(Landroid/database/Cursor;I)Z
+    030e..0310  move-result  v61
+    0310..0316  invoke-interface  {v0, v7}, Landroid/database/Cursor;->getString(I)Ljava/lang/String;
+    0316..0318  move-result-object  v2
+    0318..031c  if-eqz  v2, +0x45
+    031c..0322  invoke-virtual  {v2}, Ljava/lang/String;->isEmpty()Z
+    0322..0324  move-result  v3
+    0324..0328  if-nez  v3, +0x3f
+    0328..032c  const-string  v3, ","
+    032c..0332  invoke-virtual  {v2, v3}, Ljava/lang/String;->split(Ljava/lang/String;)[Ljava/lang/String;
+    0332..0334  move-result-object  v2
+    0334..033a  invoke-static  {v2}, Lcom/google/common/collect/ImmutableList;->copyOf([Ljava/lang/Object;)Lcom/google/common/collect/ImmutableList;
+    033a..033c  move-result-object  v46
+    033c..0342  invoke-interface  {v0, v10}, Landroid/database/Cursor;->getBlob(I)[B
+    0342..0344  move-result-object  v47
+    0344..0348  new-instance  v41, LX/2Eg;
+    0348..034e  invoke-direct/range  {v41..v61}, LX/2Eg;-><init>(Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/util/List;[BZZZZZZZZZZZZZZ)V
+    034e..0352  move/from16  v2, v37
+    0352..0358  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getString(I)Ljava/lang/String;
+    0358..035a  move-result-object  v63
+    035a..035e  move/from16  v2, v36
+    035e..0364  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getLong(I)J
+    0364..0366  move-result-wide  v70
+    0366..036a  move/from16  v2, v35
+    036a..0370  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getLong(I)J
+    0370..0372  move-result-wide  v72
+    0372..0376  move/from16  v2, v34
+    0376..037c  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getLong(I)J
+    037c..037e  move-result-wide  v74
+    037e..0382  move/from16  v2, v33
+    0382..0388  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getInt(I)I
+    0388..038a  move-result  v68
+    038a..038e  move/from16  v2, v32
+    038e..0394  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getInt(I)I
+    0394..0396  move-result  v3
+    0396..0398  const/4  v2, #0x1
+    0398..039c  const/16  v76, #0x0
+    039c..03a0  if-ne  v2, v3, +0xa
+    03a0..03a2  goto  +0x6
+    03a2..03a8  invoke-static  {}, Lcom/google/common/collect/ImmutableList;->of()Lcom/google/common/collect/ImmutableList;
+    03a8..03aa  move-result-object  v46
+    03aa..03ac  goto  -0x37
+    03ac..03b0  const/16  v76, #0x1
+    03b0..03b4  move/from16  v2, v31
+    03b4..03ba  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getString(I)Ljava/lang/String;
+    03ba..03bc  move-result-object  v64
+    03bc..03c0  move/from16  v2, v30
+    03c0..03c6  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getString(I)Ljava/lang/String;
+    03c6..03c8  move-result-object  v65
+    03c8..03cc  move/from16  v2, v17
+    03cc..03d2  invoke-interface  {v0, v2}, Landroid/database/Cursor;->getString(I)Ljava/lang/String;
+    03d2..03d4  move-result-object  v66
+    03d4..03da  invoke-interface  {v0, v13}, Landroid/database/Cursor;->getString(I)Ljava/lang/String;
+    03da..03dc  move-result-object  v67
+    03dc..03e2  invoke-interface  {v0, v9}, Landroid/database/Cursor;->getInt(I)I
+    03e2..03e4  move-result  v69
+    03e4..03e8  new-instance  v2, LX/F0I;
+    03e8..03ec  move-object/from16  v59, v2
+    03ec..03f0  move-object/from16  v60, v41
+    03f0..03f4  move-object/from16  v61, v5
+    03f4..03fa  invoke-direct/range  {v59..v76}, LX/F0I;-><init>(LX/2Eg;Lcom/whatsapp/infra/core/jid/DeviceJid;LX/ECZ;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IIJJJZ)V
+    03fa..0400  invoke-virtual  {v6, v5, v2}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+    0400..0404  goto/16  -0x118
+    0404..040a  invoke-virtual  {v6}, Lcom/google/common/collect/ImmutableMap$Builder;->build()Lcom/google/common/collect/ImmutableMap;
+    040a..040c  move-result-object  v2
+    040c..0410  iput-object  v2, v1, LX/1nH;->A01:Lcom/google/common/collect/ImmutableMap;
+    0410..0416  invoke-interface  {v2}, Ljava/util/Map;->size()I
+    0416..0418  move-result  v2
+    0418..041a  sub-int/2addr  v4, v2
+    041a..041e  iput  v4, v1, LX/1nH;->A00:I
+    041e..0424  invoke-interface  {v0}, Landroid/database/Cursor;->close()V
+    0424..0426  goto  +0x17
+    0426..0428  move-exception  v2
+    0428..042c  if-eqz  v0, +0xa
+    042c..0432  invoke-interface  {v0}, Landroid/database/Cursor;->close()V
+    0432..0434  goto  +0x5
+    0434..0436  move-exception  v0
+    0436..043c  invoke-static  {v2, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    043c..043e  throw  v2
+    043e..0440  move-exception  v2
+    0440..0446  invoke-virtual/range  {v40..v40}, LX/0aq;->close()V
+    0446..0448  goto  +0x5
+    0448..044a  move-exception  v0
+    044a..0450  invoke-static  {v2, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    0450..0452  throw  v2
+    0452..0458  invoke-virtual/range  {v40..v40}, LX/0aq;->close()V
+    0458..045c  iget-object  v0, v1, LX/1nH;->A01:Lcom/google/common/collect/ImmutableMap;
+    045c..045e  monitor-exit
+    045e..0460  return-object  v0
+    0460..0462  move-exception  v0
+    0462..0464  monitor-exit
+    0464..0466  throw  v0
+    # exception table: 8 try range(s)
+    # catch <all> code_units 0003..000f -> 0230
+    # catch <all> code_units 000f..001c -> 021f
+    # catch <all> code_units 001c..020f -> 0213
+    # catch <all> code_units 020f..0213 -> 021f
+    # catch <all> code_units 0216..021a -> 021a
+    # catch <all> code_units 021b..021f -> 021f
+    # catch <all> code_units 0220..0224 -> 0224
+    # catch <all> code_units 0225..0232 -> 0230
+.end method

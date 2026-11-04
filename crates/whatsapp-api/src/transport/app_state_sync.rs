@@ -462,6 +462,103 @@ const HELD_PREFIX: &str = "app-state-collection:";
 const PENDING_PREFIX: &str = "app-state-pending:";
 const SERVER_BACKOFF: &[u8] = b"app-state-server-backoff-until";
 
+/// Redacted durable collection state; this is not native scheduler eligibility.
+#[derive(Debug, serde::Serialize)]
+pub struct CollectionInspection {
+    /// Known collection name.
+    pub collection: &'static str,
+    /// Saved verified version, absent when no checkpoint exists.
+    pub held_version: Option<u64>,
+    /// Number of retained integrity entries.
+    pub mutation_count: usize,
+    /// Whether authenticated logical-index metadata covers every entry.
+    pub logical_indexes_complete: bool,
+}
+
+/// Inspect validated saved collections without fetching, reserving or migrating.
+pub fn inspect_collections(
+    store: &crate::store::ProtocolStore,
+) -> Result<Vec<CollectionInspection>> {
+    use crate::{
+        signal::app_state_collection::{CollectionState, SavedCollectionState},
+        store::Table,
+    };
+    store.read(|tx| {
+        ALL_COLLECTIONS
+            .iter()
+            .map(|collection| {
+                let saved: Option<SavedCollectionState> =
+                    tx.get_json(Table::Checkpoints, held_key(*collection).as_bytes(), 1)?;
+                let state = match &saved {
+                    Some(saved) if saved.collection == collection.name() => {
+                        CollectionState::from_saved(saved)?
+                    }
+                    Some(_) => {
+                        return Err(invalid_patch("held state names a different collection"));
+                    }
+                    None => CollectionState::empty(collection.name())?,
+                };
+                Ok(CollectionInspection {
+                    collection: collection.name(),
+                    held_version: saved.map(|s| s.version),
+                    mutation_count: state.len(),
+                    logical_indexes_complete: state.has_logical_indexes(),
+                })
+            })
+            .collect()
+    })
+}
+
+/// Reconstruct only logical-index metadata from a matching authenticated local
+/// snapshot. Never advance a collection, apply actions, fetch or clear pending work.
+pub fn reconstruct_logical_indexes(
+    store: &crate::store::ProtocolStore,
+    collection: Collection,
+    snapshot_bytes: &[u8],
+) -> Result<bool> {
+    use crate::{
+        signal::{
+            app_state,
+            app_state_collection::{CollectionSnapshot, CollectionState, SavedCollectionState},
+        },
+        store::Table,
+    };
+    let snapshot = CollectionSnapshot::decode(snapshot_bytes)?;
+    store.write(|tx| {
+        ensure_no_pending_collection_in(tx, collection)?;
+        let saved: SavedCollectionState = tx
+            .get_json(Table::Checkpoints, held_key(collection).as_bytes(), 1)?
+            .ok_or_else(|| invalid_patch("reconstruction requires an existing held checkpoint"))?;
+        if saved.collection != collection.name() {
+            return Err(invalid_patch("held state names a different collection"));
+        }
+        let baseline = CollectionState::from_saved(&saved)?;
+        let mut keys = std::collections::BTreeMap::new();
+        for id in snapshot.key_ids() {
+            if let std::collections::btree_map::Entry::Vacant(entry) = keys.entry(id) {
+                entry.insert(
+                    app_state::keys_for(tx, &id)?
+                        .ok_or_else(|| invalid_patch("snapshot names a key we do not hold"))?,
+                );
+            }
+        }
+        let restored = baseline.reconstruct_logical_indexes(&snapshot, |id| {
+            keys.get(id)
+                .ok_or_else(|| invalid_patch("snapshot references an unheld key"))
+        })?;
+        let changed = !baseline.has_logical_indexes();
+        if changed {
+            tx.put_json(
+                Table::Checkpoints,
+                held_key(collection).as_bytes(),
+                1,
+                &restored.to_saved(),
+            )?;
+        }
+        Ok(changed)
+    })
+}
+
 fn held_key(collection: Collection) -> String {
     format!("{HELD_PREFIX}{}", collection.name())
 }
@@ -1065,6 +1162,130 @@ mod catch_up_atomic_tests {
                 Node::new("patches").children(patches),
             ])
         ])])
+    }
+
+    #[test]
+    fn inspection_reports_legacy_provenance_without_changing_checkpoints() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("inspect.redb"));
+        let empty = inspect_collections(&store).unwrap();
+        assert_eq!(empty.len(), ALL_COLLECTIONS.len());
+        assert!(empty.iter().all(|s| s.held_version.is_none()
+            && s.mutation_count == 0
+            && s.logical_indexes_complete));
+        install_key(&store);
+        let response = reply(vec![Node::new("patch").bytes(patch(false))]);
+        store.write(|tx| catch_up_in(tx, &response)).unwrap();
+        let complete = inspect_collections(&store).unwrap();
+        assert!(
+            complete
+                .iter()
+                .find(|s| s.collection == "regular")
+                .unwrap()
+                .logical_indexes_complete
+        );
+        store
+            .write(|tx| {
+                let mut saved: serde_json::Value = tx
+                    .get_json(
+                        Table::Checkpoints,
+                        held_key(Collection::Regular).as_bytes(),
+                        1,
+                    )?
+                    .unwrap();
+                saved.as_object_mut().unwrap().remove("logical_indexes");
+                tx.put_json(
+                    Table::Checkpoints,
+                    held_key(Collection::Regular).as_bytes(),
+                    1,
+                    &saved,
+                )
+            })
+            .unwrap();
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap();
+        let legacy = inspect_collections(&store).unwrap();
+        let regular = legacy.iter().find(|s| s.collection == "regular").unwrap();
+        assert_eq!(regular.held_version, Some(1));
+        assert_eq!(regular.mutation_count, 1);
+        assert!(!regular.logical_indexes_complete);
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap(),
+            before
+        );
+        let patch = CollectionPatch::decode(&patch(false)).unwrap();
+        let record = &patch.mutations[0];
+        // Same independent literal record in the snapshot protobuf envelope.
+        let mut snapshot = vec![0x0a, 2, 8, 1, 0x12, 0x82, 1, 0x0a, 0x22, 0x0a, 0x20];
+        snapshot.extend(record.index_mac);
+        snapshot.extend([0x12, 0x52, 0x0a, 0x50]);
+        snapshot.extend(&record.body);
+        snapshot.extend([0x1a, 8, 0x0a, 6]);
+        snapshot.extend(record.key_id);
+        snapshot.extend([0x1a, 32]);
+        snapshot.extend(patch.snapshot_mac);
+        snapshot.extend([0x22, 8, 0x0a, 6]);
+        snapshot.extend(patch.key_id);
+        let mut corrupt = snapshot.clone();
+        corrupt[20] ^= 1;
+        assert!(reconstruct_logical_indexes(&store, Collection::Regular, &corrupt).is_err());
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap(),
+            before
+        );
+        let original = held(&store).unwrap();
+        let mut future = snapshot.clone();
+        future[3] = 2;
+        assert!(reconstruct_logical_indexes(&store, Collection::Regular, &future).is_err());
+        let mut unheld = snapshot.clone();
+        *unheld.last_mut().unwrap() ^= 1;
+        assert!(reconstruct_logical_indexes(&store, Collection::Regular, &unheld).is_err());
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    pending_key("inspect-pending").as_bytes(),
+                    1,
+                    &PendingState::Legacy(original.clone()),
+                )
+            })
+            .unwrap();
+        assert!(reconstruct_logical_indexes(&store, Collection::Regular, &snapshot).is_err());
+        assert_eq!(held(&store).unwrap(), original);
+        store
+            .write(|tx| {
+                tx.delete(
+                    Table::Checkpoints,
+                    pending_key("inspect-pending").as_bytes(),
+                )
+            })
+            .unwrap();
+        assert!(reconstruct_logical_indexes(&store, Collection::Regular, &snapshot).unwrap());
+        let restored = held(&store).unwrap();
+        assert_eq!(restored.version, original.version);
+        assert_eq!(restored.hash, original.hash);
+        assert_eq!(restored.values, original.values);
+        assert!(
+            inspect_collections(&store)
+                .unwrap()
+                .iter()
+                .all(|s| s.logical_indexes_complete)
+        );
+        let after = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap();
+        assert!(!reconstruct_logical_indexes(&store, Collection::Regular, &snapshot).unwrap());
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap(),
+            after
+        );
     }
 
     #[test]

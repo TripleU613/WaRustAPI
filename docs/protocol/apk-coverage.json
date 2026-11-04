@@ -18,8 +18,8 @@
       "Bundle-topic and REA-record counts can overlap and must not be added into a completion percentage."
     ],
     "ownership_source": "explicit ownership.json sidecars only; prose, directory names and classes do not imply Rust ownership",
-    "records": 690,
-    "records_with_explicit_ownership": 60,
+    "records": 721,
+    "records_with_explicit_ownership": 68,
     "releases": [
       {
         "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
@@ -40,20 +40,23 @@
       {
         "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
         "method_bodies": {
-          "complete_export": 303,
-          "unavailable": 8
+          "complete_export": 327,
+          "unavailable": 9
         },
         "operations": {
           "inspect_analysis_view": 1,
-          "inspect_android_class": 13,
-          "inspect_android_method": 311,
+          "inspect_android_class": 17,
+          "inspect_android_method": 336,
           "search_android_classes": 3,
-          "trace_android_references": 6
+          "trace_android_references": 8
         },
-        "records": 334,
+        "records": 365,
         "rust_files": {
           "crates/whatsapp-api/src/registration/mod.rs": 9,
           "crates/whatsapp-api/src/registration/wire.rs": 7,
+          "crates/whatsapp-api/src/signal/app_state_collection.rs": 8,
+          "crates/whatsapp-api/src/signal/app_state_collection/patch.rs": 8,
+          "crates/whatsapp-api/src/signal/app_state_collection/snapshot.rs": 8,
           "crates/whatsapp-api/src/transport/account_privacy.rs": 5,
           "crates/whatsapp-api/src/transport/app_state_sync.rs": 7,
           "crates/whatsapp-api/src/transport/connection.rs": 20,

@@ -1,1 +1,68 @@
-{"evidence": {}}
+{
+  "evidence": {
+    "ev_a49d3f467bb266b3a3e03a8d627d60216377049297a5b325843dbfd413cc51b3": {
+      "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/app_state_collection.rs",
+        "crates/whatsapp-api/src/signal/app_state_collection/patch.rs",
+        "crates/whatsapp-api/src/signal/app_state_collection/snapshot.rs"
+      ]
+    },
+    "ev_2531be23c02fc3d5e27542f305b218afe8adf840cc111bf7fa0ab32f7e02eb73": {
+      "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/app_state_collection.rs",
+        "crates/whatsapp-api/src/signal/app_state_collection/patch.rs",
+        "crates/whatsapp-api/src/signal/app_state_collection/snapshot.rs"
+      ]
+    },
+    "ev_4d5dedfe91af432085d23969ade423ba8bd97faefd52d9eb281a75f03f84f237": {
+      "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/app_state_collection.rs",
+        "crates/whatsapp-api/src/signal/app_state_collection/patch.rs",
+        "crates/whatsapp-api/src/signal/app_state_collection/snapshot.rs"
+      ]
+    },
+    "ev_26e908d49b4d4e15636806eb6964174b90643ec4541d77e964e55147cfebe8d1": {
+      "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/app_state_collection.rs",
+        "crates/whatsapp-api/src/signal/app_state_collection/patch.rs",
+        "crates/whatsapp-api/src/signal/app_state_collection/snapshot.rs"
+      ]
+    },
+    "ev_360b30ed16002dfb5d2103e0d7e6d6f53ceccd11c2422b4b5fbb8e7f6b0ff7a8": {
+      "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/app_state_collection.rs",
+        "crates/whatsapp-api/src/signal/app_state_collection/patch.rs",
+        "crates/whatsapp-api/src/signal/app_state_collection/snapshot.rs"
+      ]
+    },
+    "ev_8d8a4dec1a6f5f37e29fd7b684f770bd3e4631b7a6e644c2703d13635cd816c5": {
+      "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/app_state_collection.rs",
+        "crates/whatsapp-api/src/signal/app_state_collection/patch.rs",
+        "crates/whatsapp-api/src/signal/app_state_collection/snapshot.rs"
+      ]
+    },
+    "ev_86904acc37cf7a45ffe95afd4ccb8083b6b974e836b226ca99c6a3c8588d98ab": {
+      "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/app_state_collection.rs",
+        "crates/whatsapp-api/src/signal/app_state_collection/patch.rs",
+        "crates/whatsapp-api/src/signal/app_state_collection/snapshot.rs"
+      ]
+    },
+    "ev_7e76eadcc901802e233169f17f4db6c57be89a2543fd1f91821767a741ec3935": {
+      "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/app_state_collection.rs",
+        "crates/whatsapp-api/src/signal/app_state_collection/patch.rs",
+        "crates/whatsapp-api/src/signal/app_state_collection/snapshot.rs"
+      ]
+    }
+  }
+}

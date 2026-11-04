@@ -9840,6 +9840,43 @@
         ]
       }
     },
+    "/v1/app-state/inspect": {
+      "get": {
+        "summary": "Inspect saved app-state integrity and logical-index provenance offline",
+        "operationId": "inspectAppState",
+        "description": "CLI-only inspection of five validated collection checkpoints. Reports saved version, retained mutation count and whether authenticated logical-index metadata covers all entries. An absent checkpoint has null version and an empty complete state. Legacy nonempty integrity-only rows remain inspectable but require authenticated snapshot reconstruction before incremental verification or construction. Invalid saved maps/hashes refuse. Optional --reconstruct-snapshot PATH --collection NAME loads a bounded local protobuf and reconstructs metadata only when its authenticated version/hash/wire map exactly match an existing held checkpoint and no pending preparation exists. All snapshot keys must already be held; no key is installed. Without flags this is read-only. Neither mode fetches, reserves, resets, applies actions, exposes indexes/MACs or creates a missing store. No HTTP handler is served. See docs/protocol/app-state-logical-index.md. Completeness of logical metadata does not prove native scheduler eligibility or action projection.",
+        "x-cli": "whatsapp-cli app-state-inspect",
+        "x-library": ["whatsapp_api::transport::app_state_sync::inspect_collections", "whatsapp_api::transport::app_state_sync::reconstruct_logical_indexes"],
+        "x-transport": ["cli"],
+        "x-live": false,
+        "parameters": [
+          {"name": "reconstruct_snapshot", "in": "query", "required": false, "schema": {"type": "string"}, "description": "CLI --reconstruct-snapshot local protobuf path; requires --collection. Maximum 16 MiB. Metadata-only authenticated reconstruction; no network fetch."},
+          {"name": "collection", "in": "query", "required": false, "schema": {"type": "string", "enum": ["regular", "regular_low", "regular_high", "critical_block", "critical_unblock_low"]}, "description": "CLI --collection; requires --reconstruct-snapshot. Selects an existing held checkpoint."}
+        ],
+        "responses": {
+          "200": {
+            "description": "Redacted local collection checkpoint inspection",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["collection", "held_version", "mutation_count", "logical_indexes_complete"],
+                    "properties": {
+                      "collection": {"type": "string"},
+                      "held_version": {"type": ["integer", "null"], "minimum": 0},
+                      "mutation_count": {"type": "integer", "minimum": 0},
+                      "logical_indexes_complete": {"type": "boolean"}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/account/privacy": {
       "get": {
         "tags": [

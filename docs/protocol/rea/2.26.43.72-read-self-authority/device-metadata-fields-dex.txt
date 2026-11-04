@@ -1,0 +1,31 @@
+
+# class: LX/F0I;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLLLLLIIJJJZ)  # .registers 20
+    # full signature: LX/F0I;-><init>(LX/2Eg;Lcom/whatsapp/infra/core/jid/DeviceJid;LX/ECZ;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IIJJJZ)V
+    0000..0006  invoke-direct  {v2}, Ljava/lang/Object;-><init>()V
+    0006..000c  invoke-static  {v4}, LX/00L;->A05(Ljava/lang/Object;)V
+    000c..0010  iput-object  v4, v2, LX/F0I;->A0A:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0010..0014  iput-object  v5, v2, LX/F0I;->A0B:LX/ECZ;
+    0014..001a  invoke-static  {v6}, LX/Ldu;->A00(Ljava/lang/String;)Z
+    001a..001c  move-result  v0
+    001c..0020  if-eqz  v0, +0x3
+    0020..0022  const/4  v6, #0x0
+    0022..0026  iput-object  v6, v2, LX/F0I;->A0C:Ljava/lang/String;
+    0026..002a  iput-wide  v13, v2, LX/F0I;->A01:J
+    002a..002e  iput-wide  v15, v2, LX/F0I;->A08:J
+    002e..0032  move-wide/from16  v0, v17
+    0032..0036  iput-wide  v0, v2, LX/F0I;->A02:J
+    0036..003a  iput  v11, v2, LX/F0I;->A07:I
+    003a..003e  move/from16  v0, v19
+    003e..0042  iput-boolean  v0, v2, LX/F0I;->A0D:Z
+    0042..0046  iput-object  v7, v2, LX/F0I;->A06:Ljava/lang/String;
+    0046..004a  iput-object  v8, v2, LX/F0I;->A05:Ljava/lang/String;
+    004a..004e  iput-object  v9, v2, LX/F0I;->A03:Ljava/lang/String;
+    004e..0052  iput-object  v3, v2, LX/F0I;->A09:LX/2Eg;
+    0052..0056  iput-object  v10, v2, LX/F0I;->A04:Ljava/lang/String;
+    0056..005a  iput  v12, v2, LX/F0I;->A00:I
+    005a..005c  return-void
+    # exception table: 0 try range(s)
+.end method

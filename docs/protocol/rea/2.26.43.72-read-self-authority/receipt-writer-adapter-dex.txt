@@ -1,0 +1,30 @@
+
+# class: LX/F3e;
+# extends: Ljava/lang/Object;
+
+.method public A07(LL)  # .registers 13
+    # full signature: LX/F3e;->A07(LX/EXu;)LX/0Tp;
+    0000..0004  iget-object  v1, v12, LX/EXu;->A03:Ljava/lang/String;
+    0004..0008  if-eqz  v1, +0x24
+    0008..000a  const/4  v0, #0x1
+    000a..000e  new-array  v7, v0, [LX/0Tl;
+    000e..0012  const-string  v0, "class"
+    0012..0018  invoke-static  {v0, v1, v7}, LX/B20;->A1O(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+    0018..001c  iget-object  v0, v12, LX/EXu;->A08:LX/1dW;
+    001c..0020  iget-object  v4, v0, LX/1dW;->A01:Ljava/lang/String;
+    0020..0024  iget-object  v0, v0, LX/1dW;->A00:LX/0DY;
+    0024..0028  iget-object  v5, v12, LX/EXu;->A09:Ljava/lang/String;
+    0028..002c  iget-object  v8, v12, LX/EXu;->A04:[Ljava/lang/String;
+    002c..0030  iget-object  v1, v12, LX/EXu;->A05:LX/0DY;
+    0030..0034  iget-object  v3, v12, LX/EXu;->A07:Lcom/whatsapp/infra/core/jid/UserJid;
+    0034..0038  iget-object  v2, v12, LX/EXu;->A06:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0038..003c  iget-wide  v10, v12, LX/EXu;->A01:J
+    003c..003e  const/4  v9, #0x0
+    003e..0042  iget-object  v6, v12, LX/EXu;->A02:Ljava/lang/String;
+    0042..0048  invoke-static/range  {v0..v11}, LX/F3e;->A00(LX/0DY;LX/0DY;Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/UserJid;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[LX/0Tl;[Ljava/lang/String;IJ)LX/0Tp;
+    0048..004a  move-result-object  v0
+    004a..004c  return-object  v0
+    004c..004e  const/4  v7, #0x0
+    004e..0050  goto  -0x1b
+    # exception table: 0 try range(s)
+.end method

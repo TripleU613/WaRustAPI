@@ -56,6 +56,12 @@ impl std::fmt::Debug for CollectionSnapshot {
     }
 }
 impl CollectionSnapshot {
+    /// IDs needed by the snapshot and its individual records. This is resolver
+    /// preparation only; an advertised ID does not authorize or activate a key.
+    pub fn key_ids(&self) -> impl Iterator<Item = [u8; 6]> + '_ {
+        std::iter::once(self.key_id).chain(self.records.iter().map(|record| record.key_id))
+    }
+
     /// Decode an already acquired snapshot protobuf. Local limits precede the
     /// repeated-message allocation; no URL fetch or key lookup occurs here.
     pub fn decode(mut bytes: &[u8]) -> Result<Self> {
@@ -126,6 +132,23 @@ pub struct VerifiedCollectionSnapshot {
     pub mutations: Vec<DecryptedMutation>,
 }
 impl CollectionState {
+    /// Reconstruct legacy index metadata from an authenticated snapshot at the
+    /// exact held version. This returns a candidate only: callers must persist
+    /// it in their own account/generation transaction without replaying actions.
+    /// Sender role, snapshot freshness and key authority remain caller checks.
+    pub fn reconstruct_logical_indexes<'a>(
+        &self,
+        snapshot: &CollectionSnapshot,
+        key: impl FnMut(&[u8; 6]) -> Result<&'a MutationKeys>,
+    ) -> Result<Self> {
+        if snapshot.version != self.version {
+            return Err(invalid(
+                "logical index reconstruction requires the exact saved version",
+            ));
+        }
+        Ok(self.verify_snapshot(snapshot, key)?.state)
+    }
+
     /// Verify a full snapshot against this baseline. Reject rollback and
     /// same-version contradictions. Callers still enforce device/key authority,
     /// snapshot freshness and atomic application before committing the candidate.
@@ -138,6 +161,7 @@ impl CollectionState {
             return Err(invalid("snapshot would roll back collection version"));
         }
         let mut next = CollectionState::empty(&self.collection)?;
+        let mut indexes = BTreeSet::new();
         let mut mutations = Vec::new();
         let mut macs = Vec::new();
         for record in &snapshot.records {
@@ -150,8 +174,11 @@ impl CollectionState {
                 &record.body,
                 &record.index_mac,
             )?;
+            if !indexes.insert(decoded.index().to_vec()) {
+                return Err(invalid("duplicate logical snapshot index"));
+            }
             let mac = fixed(record.body[record.body.len() - 32..].to_vec())?;
-            next.values.insert(record.index_mac, mac);
+            next.set_value(decoded.index(), record.index_mac, mac)?;
             macs.push(mac);
             mutations.push(decoded);
         }
@@ -163,8 +190,19 @@ impl CollectionState {
             &snapshot.mac,
         )?;
         next.version = snapshot.version;
-        if next.version == self.version && next != *self {
-            return Err(invalid("snapshot contradicts saved version"));
+        if next.version == self.version {
+            // A legacy baseline has no logical provenance. Reconstruct only
+            // after every record authenticated and the existing integrity
+            // version/hash/wire map agrees exactly; never reset its baseline.
+            let matches = next.hash == self.hash
+                && next.values == self.values
+                && self
+                    .logical_indexes
+                    .as_ref()
+                    .is_none_or(|indexes| next.logical_indexes.as_ref() == Some(indexes));
+            if !matches {
+                return Err(invalid("snapshot contradicts saved version"));
+            }
         }
         Ok(VerifiedCollectionSnapshot {
             state: next,
@@ -194,6 +232,213 @@ mod tests {
         bytes.extend(hex::decode("22080a06000100000002").unwrap());
         bytes
     }
+    #[test]
+    fn legacy_snapshot_reconstruction_requires_matching_version_hash_and_wire_map() {
+        let keys = MutationKeys::derive(&(0..32).collect::<Vec<u8>>()).unwrap();
+        let snapshot = CollectionSnapshot::decode(&literal_snapshot()).unwrap();
+        let current = CollectionState::empty("regular")
+            .unwrap()
+            .verify_snapshot(&snapshot, |_| Ok(&keys))
+            .unwrap()
+            .state;
+        let mut saved = current.to_saved();
+        saved.logical_indexes = None;
+        let legacy = CollectionState::from_saved(&saved).unwrap();
+        assert!(!legacy.has_logical_indexes());
+        let recovered = legacy
+            .reconstruct_logical_indexes(&snapshot, |_| Ok(&keys))
+            .unwrap();
+        assert_eq!(recovered, current);
+        assert_eq!(
+            recovered
+                .reconstruct_logical_indexes(&snapshot, |_| Ok(&keys))
+                .unwrap(),
+            current
+        );
+        assert_eq!(legacy.to_saved(), saved);
+        let mut wire_mismatch = saved.clone();
+        wire_mismatch.values[0].0 = vec![99; 32];
+        let mismatch = CollectionState::from_saved(&wire_mismatch).unwrap();
+        assert!(
+            mismatch
+                .reconstruct_logical_indexes(&snapshot, |_| Ok(&keys))
+                .is_err()
+        );
+        assert!(
+            legacy
+                .reconstruct_logical_indexes(&snapshot, |_| Err(invalid("unauthorized key")))
+                .is_err()
+        );
+        let mut bad = CollectionSnapshot::decode(&literal_snapshot()).unwrap();
+        bad.mac[0] ^= 1;
+        assert!(
+            legacy
+                .reconstruct_logical_indexes(&bad, |_| Ok(&keys))
+                .is_err()
+        );
+        let mut newer = CollectionSnapshot::decode(&literal_snapshot()).unwrap();
+        newer.version += 1;
+        newer.mac = keys
+            .snapshot_mac(current.hash().as_bytes(), newer.version, "regular")
+            .unwrap();
+        assert!(
+            legacy
+                .reconstruct_logical_indexes(&newer, |_| Ok(&keys))
+                .is_err()
+        );
+        let mut older = CollectionSnapshot::decode(&literal_snapshot()).unwrap();
+        older.version = 0;
+        assert!(
+            legacy
+                .reconstruct_logical_indexes(&older, |_| Ok(&keys))
+                .is_err()
+        );
+    }
+
+    #[test]
+    fn snapshot_refuses_same_logical_record_under_distinct_keys() {
+        let a = MutationKeys::derive(&(0..32).collect::<Vec<u8>>()).unwrap();
+        let b = MutationKeys::derive(&[2; 32]).unwrap();
+        let mut snapshot = CollectionSnapshot::decode(&literal_snapshot()).unwrap();
+        let first = &snapshot.records[0];
+        let decoded = a
+            .decrypt_mutation(
+                MutationOperation::Set,
+                &first.key_id,
+                &first.body,
+                &first.index_mac,
+            )
+            .unwrap();
+        let id_b = [0, 1, 0, 0, 0, 3];
+        let encrypted = b
+            .encrypt_mutation(
+                MutationOperation::Set,
+                &id_b,
+                decoded.index(),
+                Some(&[8, 1]),
+                1,
+                [2; 16],
+            )
+            .unwrap();
+        let macs = [
+            fixed(first.body[first.body.len() - 32..].to_vec()).unwrap(),
+            encrypted.value_mac,
+        ];
+        snapshot.mac = a
+            .snapshot_mac(
+                StateHash::default().updated(&[], &macs).unwrap().as_bytes(),
+                1,
+                "regular",
+            )
+            .unwrap();
+        snapshot.records.push(EncryptedMutation {
+            operation: MutationOperation::Set,
+            key_id: id_b,
+            index_mac: encrypted.index_mac,
+            body: encrypted.body.to_vec(),
+        });
+        let ids: BTreeSet<_> = snapshot.key_ids().collect();
+        assert_eq!(ids, [snapshot.key_id, id_b].into_iter().collect());
+        let error = CollectionState::empty("regular")
+            .unwrap()
+            .verify_snapshot(&snapshot, |id| if *id == id_b { Ok(&b) } else { Ok(&a) })
+            .unwrap_err();
+        assert!(
+            error
+                .to_string()
+                .contains("duplicate logical snapshot index")
+        );
+    }
+
+    #[test]
+    fn same_version_storage_migration_is_atomic_and_does_not_replay_actions() {
+        use super::super::storage::stage_snapshot;
+        use crate::{
+            model::ids::AccountId,
+            store::{MasterKey, OpenOptions, ProtocolStore, StaticKeySource, Table},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let options = || OpenOptions {
+            path: dir.path().join("migration.redb"),
+            account_id: AccountId::new("test").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32]))),
+            create: true,
+        };
+        let store = ProtocolStore::open(options()).unwrap();
+        let keys = MutationKeys::derive(&(0..32).collect::<Vec<u8>>()).unwrap();
+        let snapshot = CollectionSnapshot::decode(&literal_snapshot()).unwrap();
+        store
+            .write(|tx| stage_snapshot(tx, "regular", &snapshot, |_| Ok(&keys)))
+            .unwrap();
+        let suffix = hex::encode("regular");
+        let state_key = format!("app-state-collection:{suffix}");
+        let batch_key = format!("app-state-actions:{suffix}:{:020}", 1);
+        let records_key = format!("app-state-records:{suffix}");
+        let legacy = store
+            .write(|tx| {
+                tx.delete(Table::Checkpoints, batch_key.as_bytes())?;
+                let mut saved: SavedCollectionState = tx
+                    .get_json(Table::Checkpoints, state_key.as_bytes(), 1)?
+                    .unwrap();
+                saved.logical_indexes = None;
+                tx.put_json(Table::Checkpoints, state_key.as_bytes(), 1, &saved)?;
+                Ok(saved)
+            })
+            .unwrap();
+        let records = store
+            .read(|tx| tx.get(Table::Checkpoints, records_key.as_bytes(), 1))
+            .unwrap();
+        let aborted: Result<()> = store.write(|tx| {
+            stage_snapshot(tx, "regular", &snapshot, |_| Ok(&keys))?;
+            Err(Error::Cancelled)
+        });
+        assert!(aborted.is_err());
+        assert_eq!(
+            store
+                .read(|tx| tx.get_json::<SavedCollectionState>(
+                    Table::Checkpoints,
+                    state_key.as_bytes(),
+                    1
+                ))
+                .unwrap()
+                .unwrap(),
+            legacy
+        );
+        store
+            .write(|tx| stage_snapshot(tx, "regular", &snapshot, |_| Ok(&keys)))
+            .unwrap();
+        drop(store);
+        let store = ProtocolStore::open(options()).unwrap();
+        let saved: SavedCollectionState = store
+            .read(|tx| tx.get_json(Table::Checkpoints, state_key.as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        assert!(
+            CollectionState::from_saved(&saved)
+                .unwrap()
+                .has_logical_indexes()
+        );
+        assert_eq!(saved.version, legacy.version);
+        assert_eq!(saved.hash, legacy.hash);
+        assert_eq!(saved.values, legacy.values);
+        store
+            .write(|tx| stage_snapshot(tx, "regular", &snapshot, |_| Ok(&keys)))
+            .unwrap();
+        assert!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, batch_key.as_bytes(), 1))
+                .unwrap()
+                .is_none()
+        );
+        assert_eq!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, records_key.as_bytes(), 1))
+                .unwrap(),
+            records
+        );
+        assert_eq!(store.read(|tx| tx.count(Table::Checkpoints)).unwrap(), 2);
+    }
+
     #[test]
     fn snapshot_storage_is_atomic_idempotent_and_rejects_rollback() {
         use super::super::storage::{stage_patch, stage_snapshot};

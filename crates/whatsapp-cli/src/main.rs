@@ -334,6 +334,16 @@ enum Cmd {
     /// Inspect the saved server read-receipt preference (offline; no policy change).
     #[cfg(feature = "experimental-transport")]
     AccountPrivacyInspect,
+    /// Inspect validated app-state versions and logical-index provenance (offline).
+    #[cfg(feature = "experimental-transport")]
+    AppStateInspect {
+        /// Reconstruct missing index metadata from an authenticated same-version local snapshot.
+        #[arg(long, requires = "collection")]
+        reconstruct_snapshot: Option<PathBuf>,
+        /// Existing held collection to reconstruct; no version advancement.
+        #[arg(long, requires = "reconstruct_snapshot")]
+        collection: Option<String>,
+    },
     /// Show queued one-shot actions (block list, reports, lookups) and their outcomes (offline, redacted).
     #[cfg(feature = "experimental-transport")]
     Actions {
@@ -1882,6 +1892,15 @@ async fn run(cli: Cli) -> Result<(), Error> {
         Cmd::AbpropsQuery { show } => transport_receive::abprops_query(&cli, *show),
         #[cfg(feature = "experimental-transport")]
         Cmd::AccountPrivacyInspect => transport_receive::account_privacy_inspect(&cli),
+        #[cfg(feature = "experimental-transport")]
+        Cmd::AppStateInspect {
+            reconstruct_snapshot,
+            collection,
+        } => transport_receive::app_state_inspect(
+            &cli,
+            reconstruct_snapshot.as_deref(),
+            collection.as_deref(),
+        ),
         #[cfg(feature = "experimental-transport")]
         Cmd::ClockInspect => transport_receive::clock_inspect(&cli),
         #[cfg(feature = "experimental-transport")]

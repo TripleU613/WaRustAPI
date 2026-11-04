@@ -253,6 +253,7 @@ mod tests {
                     &state_key("regular"),
                     1,
                     &SavedState {
+                        logical_indexes: Some(Vec::new()),
                         collection: "regular".into(),
                         version: 2,
                         hash: vec![0; 128],

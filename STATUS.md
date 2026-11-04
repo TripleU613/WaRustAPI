@@ -1,3 +1,35 @@
+2026-11-04 — **Logical-index integrity across mutation keys:**
+
+- App-state SET/REMOVE now select the previous value MAC by authenticated logical
+  index, so the same item under a different mutation key replaces/removes the
+  held entry. Patch and snapshot verification reject duplicate logical indexes.
+  Saved state validates duplicate/cardinality/reference checks and recomputes
+  its LT hash from retained MACs.
+- Legacy nonempty MAC maps remain inspectable but cannot authorize incremental
+  verification or construction without authenticated index provenance. A
+  matching same-version snapshot can reconstruct metadata without advancing
+  versions or replaying actions. Both storage formats retain the metadata.
+- Offline `app-state-inspect` shows versions/counts/provenance. Its optional
+  `--reconstruct-snapshot PATH --collection NAME` uses already-held keys and
+  updates only matching existing transport checkpoint metadata; pending
+  preparations block reconstruction. No automatic fetch or reset was added.
+  [Evidence, migration and limits](docs/protocol/app-state-logical-index.md).
+
+Full sync scheduling, action projection and historical orphan reconciliation
+remain open. No live account traffic occurred.
+
+Validation: **1,166 workspace/all-feature tests**, **287 API default-feature
+tests**, strict workspace/all-target/all-feature Clippy, CLI-reference
+regeneration, formatting, coverage freshness and repository hygiene passed.
+Retained research now contains 721 distinct REA records, 365 for the current
+APK, with 68 explicit Rust ownership mappings. These counts are not a port
+percentage or proof against account restrictions.
+
+Current read-self evidence now closes the Me gate, logout filtering and writer
+route, but the existing contact device list cannot supply own-companion authority.
+Own-device ingress and lifecycle remain prerequisites; no speculative read-self
+send was added. [Current authority trace](docs/protocol/read-self-authority-current.md).
+
 2026-11-04 — **Read policy and conflict-key resolution:**
 
 - Newly automatic direct-read intents retain their provenance and defer while

@@ -56,8 +56,11 @@ a fresh synthetic local destination: APK 2.26.43.72 refused against template
 separately from its patch signing key, following current-build
 `SyncResponseHandler.A07`; missing keys still roll back the whole transition.
 See [transaction and key-resolution regressions](app-state-catchup-atomicity.md).
-Logical-index tracking across key rotation remains a separately confirmed open
-defect, so this change does not establish complete sync integrity.
+The subsequent [logical-index correction](app-state-logical-index.md) fixes
+cross-key replacement/removal and validates saved map/hash consistency. Legacy
+nonempty states require authenticated same-version snapshot reconstruction;
+`app-state-inspect` exposes provenance and an explicit bounded local migration.
+This does not establish complete sync integrity, native scheduling or projection.
 
 **Confirmed** means traced source or reproducible local behavior; **inferred**
 means a compatibility implication; **observed** requires actual server evidence;

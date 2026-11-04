@@ -2872,6 +2872,44 @@ pub(super) fn clock_inspect(cli: &super::Cli) -> Result<(), Error> {
     Ok(())
 }
 
+pub(super) fn app_state_inspect(
+    cli: &super::Cli,
+    snapshot: Option<&std::path::Path>,
+    collection: Option<&str>,
+) -> Result<(), Error> {
+    let store = ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })?;
+    if let Some(path) = snapshot {
+        use std::io::Read;
+        let collection = collection
+            .and_then(whatsapp_api::transport::app_state_sync::Collection::from_name)
+            .ok_or_else(|| Error::invalid("app_state_sync", "a known collection is required"))?;
+        let mut bytes = zeroize::Zeroizing::new(Vec::new());
+        std::fs::File::open(path)?
+            .take(16 * 1024 * 1024 + 1)
+            .read_to_end(&mut bytes)?;
+        whatsapp_api::transport::app_state_sync::reconstruct_logical_indexes(
+            &store, collection, &bytes,
+        )?;
+    }
+    let report = whatsapp_api::transport::app_state_sync::inspect_collections(&store)?;
+    if !cli.json {
+        println!(
+            "Saved integrity state; incomplete logical indexes require authenticated snapshot reconstruction."
+        );
+    }
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&report)
+            .map_err(|_| Error::invalid("app_state_sync", "cannot encode inspection"))?
+    );
+    Ok(())
+}
+
 pub(super) fn account_privacy_inspect(cli: &super::Cli) -> Result<(), Error> {
     let store = ProtocolStore::open(OpenOptions {
         path: cli.store.clone(),

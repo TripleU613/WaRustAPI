@@ -1,0 +1,22 @@
+classes.dex  LX/0WB;->A0E(Z)
+  write opcode 0x5b, dex byte offset: 0x5c73f8
+classes.dex  LX/0WB;->A0F(ZZ)
+  write opcode 0x5b, dex byte offset: 0x5c7878
+classes2.dex  LX/1nG;->A00(LLLLLZ)
+  write opcode 0x5b, dex byte offset: 0x21d7dc
+classes2.dex  LX/1nG;->A0F(VL)
+  write opcode 0x5b, dex byte offset: 0x21f3a8
+classes2.dex  LX/1nH;->A01(LLLL)
+  write opcode 0x5b, dex byte offset: 0x21f758
+classes2.dex  LX/1nH;->A01(LLLL)
+  write opcode 0x5b, dex byte offset: 0x21f87c
+classes2.dex  LX/1nH;->A02(LLLL)
+  read opcode 0x54, dex byte offset: 0x21f93c
+classes2.dex  LX/1nH;->A07(L)
+  read opcode 0x54, dex byte offset: 0x21fd86
+classes2.dex  LX/1nH;->A07(L)
+  write opcode 0x5b, dex byte offset: 0x22018c
+classes2.dex  LX/1nH;->A07(L)
+  read opcode 0x54, dex byte offset: 0x2201d8
+classes9.dex  LX/G0j;->A03(VL)
+  write opcode 0x5b, dex byte offset: 0x37c244

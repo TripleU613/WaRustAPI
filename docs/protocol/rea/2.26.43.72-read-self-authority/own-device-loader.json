@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_52e917d541c6255ac6a47359c8d3455d106204f83ef36505efdaf880ebcfaa54",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C1nH",
+    "method_name": "A07",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-PY6KUd/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C1nH"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"()V\"},{\"signature\":\"A00(X.0aq, java.lang.String, java.lang.String, long): int\",\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0aq;Ljava/lang/String;Ljava/lang/String;J)I\"},{\"signature\":\"A01(com.google.common.collect.ImmutableMap, com.google.common.collect.ImmutableSet, X.1nH): com.google.common.collect.ImmutableSet\",\"def_pos\":0,\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableMap;Lcom/google/common/collect/ImmutableSet;LX/1nH;)Lcom/google/common/collect/ImmutableSet;\"},{\"signature\":\"A02(com.whatsapp.infra.core.jid.DeviceJid, X.1nH, java.lang.String[]): X.F0I\",\"def_pos\":0,\"name\":\"A02\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/whatsapp/infra/core/jid/DeviceJid;LX/1nH;[Ljava/lang/String;)LX/F0I;\"},{\"signature\":\"A03(X.1nH): X.0Xp\",\"def_pos\":0,\"name\":\"A03\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/1nH;)LX/0Xp;\"},{\"signature\":\"A04(com.whatsapp.infra.core.jid.DeviceJid, java.util.Map, long): void\",\"def_pos\":0,\"name\":\"A04\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/whatsapp/infra/core/jid/DeviceJid;Ljava/util/Map;J)V\"},{\"signature\":\"A05(com.google.common.collect.ImmutableSet, X.1nH): java.lang.String[]\",\"def_pos\":0,\"name\":\"A05\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableSet;LX/1nH;)[Ljava/lang/String;\"},{\"signature\":\"A06(): com.google.common.collect.ImmutableMap\",\"def_pos\":0,\"name\":\"A06\",\"is_constructor\":false,\"dex_descriptor\":\"()Lcom/google/common/collect/ImmutableMap;\"},{\"signature\":\"A07(): com.google.common.collect.ImmutableMap\",\"def_pos\":0,\"name\":\"A07\",\"is_constructor\":false,\"dex_descriptor\":\"()Lcom/google/common/collect/ImmutableMap;\"}],\"method_count\":9,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"C1nH\",\"full_name\":\"X.C1nH\",\"field_count\":11,\"fields\":[{\"type\":\"int\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"com.google.common.collect.ImmutableMap\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"com.google.common.collect.ImmutableMap\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A05\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A06\"},{\"type\":\"X.09F\",\"def_pos\":0,\"name\":\"A07\"},{\"type\":\"X.08q\",\"def_pos\":0,\"name\":\"A08\"},{\"type\":\"com.google.common.collect.ImmutableMap\",\"def_pos\":0,\"name\":\"A09\"},{\"type\":\"X.0Xp\",\"def_pos\":0,\"name\":\"A0A\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C1nH",
+          "method_name": "A07",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.1nH.A07\",\"class_name\":\"X.C1nH\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public ImmutableMap A07() {\\n        ImmutableMap immutableMap;\\n        synchronized (this) {\\n            if (this.A01 \\u003d\\u003d null) {\\n                C0aq c0aqBFb \\u003d A03(this).BFb();\\n                try {\\n                    Cursor cursorA0A \\u003d c0aqBFb.A02.A0A(C1nN.A00, \\\"getDevices/QUERY_DEVICES\\\", null);\\n                    try {\\n                        int columnIndexOrThrow \\u003d cursorA0A.getColumnIndexOrThrow(\\\"device_id\\\");\\n                        int columnIndexOrThrow2 \\u003d cursorA0A.getColumnIndexOrThrow(\\\"platform_type\\\");\\n                        int columnIndexOrThrow3 \\u003d cursorA0A.getColumnIndexOrThrow(\\\"device_os\\\");\\n                        int columnIndexOrThrow4 \\u003d cursorA0A.getColumnIndexOrThrow(\\\"last_active\\\");\\n                        int columnIndexOrThrow5 \\u003d cursorA0A.getColumnIndexOrThrow(\\\"login_time\\\");\\n                        int columnIndexOrThrow6 \\u003d cursorA0A.getColumnIndexOrThrow(\\\"logout_time\\\");\\n                        int columnIndexOrThrow7 \\u003d cursorA0A.getColumnIndexOrThrow(\\\"adv_key_index\\\");\\n                        int columnIndexOrThrow8 \\u003d cursorA0A.getColumnIndexOrThrow(\\\"full_sync_required\\\");\\n                        int columnIndexOrThrow9 \\u003d cursorA0A.getColumnIndexOrThrow(\\\"place_name\\\");\\n                        int columnIndexOrThrow10 \\u003d cursorA0A.getColumnIndexOrThrow(\\\"nickname\\\");\\n                        int columnIndexOrThrow11 \\u003d cursorA0A.getColumnIndexOrThrow(\\\"support_bot_user_agent_chat_history\\\");\\n                        int columnIndexOrThrow12 \\u003d cursorA0A.getColumnIndexOrThrow(\\\"support_cag_reactions_and_polls_history\\\");\\n                        int columnIndexOrThrow13 \\u003d cursorA0A.getColumnIndexOrThrow(\\\"support_recent_sync_chunk_message_tuning\\\");\\n                        int columnIndexOrThrow14 \\u003d cursorA0A.getColumnIndexOrThrow(\\\"support_hosted_group_msg\\\");\\n                        int columnIndexOrThrow15 \\u003d cursorA0A.getColumnIndexOrThrow(\\\"support_fbid_bot_chat_history\\\");\\n                        int columnIndexOrThrow16 \\u003d cursorA0A.getColumnIndexOrThrow(\\\"support_biz_hosted_msg\\\");\\n                        int columnIndexOrThrow17 \\u003d cursorA0A.getColumnIndexOrThrow(\\\"support_call_log_history\\\");\\n                        int columnIndexOrThrow18 \\u003d cursorA0A.getColumnIndexOrThrow(\\\"inline_initial_hist_sync_payload_enabled\\\");\\n                        int columnIndexOrThrow19 \\u003d cursorA0A.getColumnIndexOrThrow(\\\"full_sync_days_limit\\\");\\n                        int columnIndexOrThrow20 \\u003d cursorA0A.getColumnIndexOrThrow(\\\"full_sync_size_mb_limit\\\");\\n                        int columnIndexOrThrow21 \\u003d cursorA0A.getColumnIndexOrThrow(\\\"storage_quota_mb\\\");\\n                        int columnIndexOrThrow22 \\u003d cursorA0A.getColumnIndexOrThrow(\\\"recent_sync_days_limit\\\");\\n                        int columnIndexOrThrow23 \\u003d cursorA0A.getColumnIndexOrThrow(\\\"companion_meta_nonce\\\");\\n                        int columnIndexOrThrow24 \\u003d cursorA0A.getColumnIndexOrThrow(\\\"support_add_on_history_sync_migration\\\");\\n                        int columnIndexOrThrow25 \\u003d cursorA0A.getColumnIndexOrThrow(\\\"support_message_association\\\");\\n                        int columnIndexOrThrow26 \\u003d cursorA0A.getColumnIndexOrThrow(\\\"support_group_history\\\");\\n                        int columnIndexOrThrow27 \\u003d cursorA0A.getColumnIndexOrThrow(\\\"instrumentation_device_id\\\");\\n                        int columnIndexOrThrow28 \\u003d cursorA0A.getColumnIndexOrThrow(\\\"support_guest_chat\\\");\\n                        int columnIndexOrThrow29 \\u003d cursorA0A.getColumnIndexOrThrow(\\\"on_demand_ready\\\");\\n                        int columnIndexOrThrow30 \\u003d cursorA0A.getColumnIndexOrThrow(\\\"history_sync_config_protobuf\\\");\\n                        int columnIndexOrThrow31 \\u003d cursorA0A.getColumnIndexOrThrow(\\\"history_sync_access_type\\\");\\n                        int columnIndexOrThrow32 \\u003d cursorA0A.getColumnIndexOrThrow(\\\"support_hatch_history\\\");\\n                        int columnIndexOrThrow33 \\u003d cursorA0A.getColumnIndexOrThrow(\\\"supported_bot_channel_fbids\\\");\\n                        ImmutableMap.Builder builder \\u003d new ImmutableMap.Builder();\\n                        int i \\u003d 0;\\n                        while (cursorA0A.moveToNext()) {\\n                            i++;\\n                            DeviceJid deviceJidA04 \\u003d DeviceJid.Companion.A04(cursorA0A.getString(columnIndexOrThrow));\\n                            if (deviceJidA04 !\\u003d null) {\\n                                ECZ eczForNumber \\u003d ECZ.forNumber(cursorA0A.getInt(columnIndexOrThrow2));\\n                                boolean z \\u003d cursorA0A.getInt(columnIndexOrThrow11) \\u003d\\u003d 1;\\n                                boolean z2 \\u003d cursorA0A.getInt(columnIndexOrThrow12) \\u003d\\u003d 1;\\n                                boolean zA06 \\u003d C0MQ.A06(cursorA0A, columnIndexOrThrow13);\\n                                boolean zA07 \\u003d C0MQ.A06(cursorA0A, columnIndexOrThrow14);\\n                                boolean zA08 \\u003d C0MQ.A06(cursorA0A, columnIndexOrThrow15);\\n                                boolean zA09 \\u003d C0MQ.A06(cursorA0A, columnIndexOrThrow16);\\n                                boolean zA010 \\u003d C0MQ.A06(cursorA0A, columnIndexOrThrow17);\\n                                boolean zA011 \\u003d C0MQ.A06(cursorA0A, columnIndexOrThrow18);\\n                                Integer numValueOf \\u003d Integer.valueOf(C0MQ.A00(cursorA0A, columnIndexOrThrow19, 0));\\n                                Integer numValueOf2 \\u003d Integer.valueOf(C0MQ.A00(cursorA0A, columnIndexOrThrow20, 0));\\n                                Integer numValueOf3 \\u003d Integer.valueOf(C0MQ.A00(cursorA0A, columnIndexOrThrow21, 0));\\n                                Integer numValueOf4 \\u003d Integer.valueOf(C0MQ.A00(cursorA0A, columnIndexOrThrow22, 0));\\n                                boolean zA012 \\u003d C0MQ.A06(cursorA0A, columnIndexOrThrow24);\\n                                boolean zA013 \\u003d C0MQ.A06(cursorA0A, columnIndexOrThrow25);\\n                                boolean zA014 \\u003d C0MQ.A06(cursorA0A, columnIndexOrThrow26);\\n                                boolean zA015 \\u003d C0MQ.A06(cursorA0A, columnIndexOrThrow28);\\n                                boolean zA016 \\u003d C0MQ.A06(cursorA0A, columnIndexOrThrow29);\\n                                boolean zA017 \\u003d C0MQ.A06(cursorA0A, columnIndexOrThrow32);\\n                                String string \\u003d cursorA0A.getString(columnIndexOrThrow33);\\n                                builder.put(deviceJidA04, new F0I(new C2Eg(numValueOf, numValueOf2, numValueOf3, numValueOf4, (string \\u003d\\u003d null || string.isEmpty()) ? ImmutableList.of() : ImmutableList.copyOf(string.split(\\\",\\\")), cursorA0A.getBlob(columnIndexOrThrow30), z, z2, zA06, zA07, zA08, zA09, zA010, zA011, zA012, zA013, zA014, zA015, zA016, zA017), deviceJidA04, eczForNumber, cursorA0A.getString(columnIndexOrThrow3), cursorA0A.getString(columnIndexOrThrow9), cursorA0A.getString(columnIndexOrThrow10), cursorA0A.getString(columnIndexOrThrow23), cursorA0A.getString(columnIndexOrThrow27), cursorA0A.getInt(columnIndexOrThrow7), cursorA0A.getInt(columnIndexOrThrow31), cursorA0A.getLong(columnIndexOrThrow4), cursorA0A.getLong(columnIndexOrThrow5), cursorA0A.getLong(columnIndexOrThrow6), 1 \\u003d\\u003d cursorA0A.getInt(columnIndexOrThrow8)));\\n                            }\\n                        }\\n                        ImmutableMap immutableMapBuild \\u003d builder.build();\\n                        this.A01 \\u003d immutableMapBuild;\\n                        this.A00 \\u003d i - immutableMapBuild.size();\\n                        cursorA0A.close();\\n                        c0aqBFb.close();\\n                    } catch (Throwable th) {\\n                        if (cursorA0A !\\u003d null) {\\n                            try {\\n                                cursorA0A.close();\\n                            } catch (Throwable th2) {\\n                                NhF.A1B(th2, th);\\n                            }\\n                        }\\n                        throw th;\\n                    }\\n                } catch (Throwable th3) {\\n                    try {\\n                        c0aqBFb.close();\\n                    } catch (Throwable th4) {\\n                        NhF.A1B(th4, th3);\\n                    }\\n                    throw th3;\\n                }\\n            }\\n            immutableMap \\u003d this.A01;\\n        }\\n        return immutableMap;\\n    }\",\"overload_count\":1,\"method_name\":\"A07\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C1nH",
+    "method": {
+      "name": "A07",
+      "reported_signature": "A07(): com.google.common.collect.ImmutableMap",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "()Lcom/google/common/collect/ImmutableMap;"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public ImmutableMap A07() {\n        ImmutableMap immutableMap;\n        synchronized (this) {\n            if (this.A01 == null) {\n                C0aq c0aqBFb = A03(this).BFb();\n                try {\n                    Cursor cursorA0A = c0aqBFb.A02.A0A(C1nN.A00, \"getDevices/QUERY_DEVICES\", null);\n                    try {\n                        int columnIndexOrThrow = cursorA0A.getColumnIndexOrThrow(\"device_id\");\n                        int columnIndexOrThrow2 = cursorA0A.getColumnIndexOrThrow(\"platform_type\");\n                        int columnIndexOrThrow3 = cursorA0A.getColumnIndexOrThrow(\"device_os\");\n                        int columnIndexOrThrow4 = cursorA0A.getColumnIndexOrThrow(\"last_active\");\n                        int columnIndexOrThrow5 = cursorA0A.getColumnIndexOrThrow(\"login_time\");\n                        int columnIndexOrThrow6 = cursorA0A.getColumnIndexOrThrow(\"logout_time\");\n                        int columnIndexOrThrow7 = cursorA0A.getColumnIndexOrThrow(\"adv_key_index\");\n                        int columnIndexOrThrow8 = cursorA0A.getColumnIndexOrThrow(\"full_sync_required\");\n                        int columnIndexOrThrow9 = cursorA0A.getColumnIndexOrThrow(\"place_name\");\n                        int columnIndexOrThrow10 = cursorA0A.getColumnIndexOrThrow(\"nickname\");\n                        int columnIndexOrThrow11 = cursorA0A.getColumnIndexOrThrow(\"support_bot_user_agent_chat_history\");\n                        int columnIndexOrThrow12 = cursorA0A.getColumnIndexOrThrow(\"support_cag_reactions_and_polls_history\");\n                        int columnIndexOrThrow13 = cursorA0A.getColumnIndexOrThrow(\"support_recent_sync_chunk_message_tuning\");\n                        int columnIndexOrThrow14 = cursorA0A.getColumnIndexOrThrow(\"support_hosted_group_msg\");\n                        int columnIndexOrThrow15 = cursorA0A.getColumnIndexOrThrow(\"support_fbid_bot_chat_history\");\n                        int columnIndexOrThrow16 = cursorA0A.getColumnIndexOrThrow(\"support_biz_hosted_msg\");\n                        int columnIndexOrThrow17 = cursorA0A.getColumnIndexOrThrow(\"support_call_log_history\");\n                        int columnIndexOrThrow18 = cursorA0A.getColumnIndexOrThrow(\"inline_initial_hist_sync_payload_enabled\");\n                        int columnIndexOrThrow19 = cursorA0A.getColumnIndexOrThrow(\"full_sync_days_limit\");\n                        int columnIndexOrThrow20 = cursorA0A.getColumnIndexOrThrow(\"full_sync_size_mb_limit\");\n                        int columnIndexOrThrow21 = cursorA0A.getColumnIndexOrThrow(\"storage_quota_mb\");\n                        int columnIndexOrThrow22 = cursorA0A.getColumnIndexOrThrow(\"recent_sync_days_limit\");\n                        int columnIndexOrThrow23 = cursorA0A.getColumnIndexOrThrow(\"companion_meta_nonce\");\n                        int columnIndexOrThrow24 = cursorA0A.getColumnIndexOrThrow(\"support_add_on_history_sync_migration\");\n                        int columnIndexOrThrow25 = cursorA0A.getColumnIndexOrThrow(\"support_message_association\");\n                        int columnIndexOrThrow26 = cursorA0A.getColumnIndexOrThrow(\"support_group_history\");\n                        int columnIndexOrThrow27 = cursorA0A.getColumnIndexOrThrow(\"instrumentation_device_id\");\n                        int columnIndexOrThrow28 = cursorA0A.getColumnIndexOrThrow(\"support_guest_chat\");\n                        int columnIndexOrThrow29 = cursorA0A.getColumnIndexOrThrow(\"on_demand_ready\");\n                        int columnIndexOrThrow30 = cursorA0A.getColumnIndexOrThrow(\"history_sync_config_protobuf\");\n                        int columnIndexOrThrow31 = cursorA0A.getColumnIndexOrThrow(\"history_sync_access_type\");\n                        int columnIndexOrThrow32 = cursorA0A.getColumnIndexOrThrow(\"support_hatch_history\");\n                        int columnIndexOrThrow33 = cursorA0A.getColumnIndexOrThrow(\"supported_bot_channel_fbids\");\n                        ImmutableMap.Builder builder = new ImmutableMap.Builder();\n                        int i = 0;\n                        while (cursorA0A.moveToNext()) {\n                            i++;\n                            DeviceJid deviceJidA04 = DeviceJid.Companion.A04(cursorA0A.getString(columnIndexOrThrow));\n                            if (deviceJidA04 != null) {\n                                ECZ eczForNumber = ECZ.forNumber(cursorA0A.getInt(columnIndexOrThrow2));\n                                boolean z = cursorA0A.getInt(columnIndexOrThrow11) == 1;\n                                boolean z2 = cursorA0A.getInt(columnIndexOrThrow12) == 1;\n                                boolean zA06 = C0MQ.A06(cursorA0A, columnIndexOrThrow13);\n                                boolean zA07 = C0MQ.A06(cursorA0A, columnIndexOrThrow14);\n                                boolean zA08 = C0MQ.A06(cursorA0A, columnIndexOrThrow15);\n                                boolean zA09 = C0MQ.A06(cursorA0A, columnIndexOrThrow16);\n                                boolean zA010 = C0MQ.A06(cursorA0A, columnIndexOrThrow17);\n                                boolean zA011 = C0MQ.A06(cursorA0A, columnIndexOrThrow18);\n                                Integer numValueOf = Integer.valueOf(C0MQ.A00(cursorA0A, columnIndexOrThrow19, 0));\n                                Integer numValueOf2 = Integer.valueOf(C0MQ.A00(cursorA0A, columnIndexOrThrow20, 0));\n                                Integer numValueOf3 = Integer.valueOf(C0MQ.A00(cursorA0A, columnIndexOrThrow21, 0));\n                                Integer numValueOf4 = Integer.valueOf(C0MQ.A00(cursorA0A, columnIndexOrThrow22, 0));\n                                boolean zA012 = C0MQ.A06(cursorA0A, columnIndexOrThrow24);\n                                boolean zA013 = C0MQ.A06(cursorA0A, columnIndexOrThrow25);\n                                boolean zA014 = C0MQ.A06(cursorA0A, columnIndexOrThrow26);\n                                boolean zA015 = C0MQ.A06(cursorA0A, columnIndexOrThrow28);\n                                boolean zA016 = C0MQ.A06(cursorA0A, columnIndexOrThrow29);\n                                boolean zA017 = C0MQ.A06(cursorA0A, columnIndexOrThrow32);\n                                String string = cursorA0A.getString(columnIndexOrThrow33);\n                                builder.put(deviceJidA04, new F0I(new C2Eg(numValueOf, numValueOf2, numValueOf3, numValueOf4, (string == null || string.isEmpty()) ? ImmutableList.of() : ImmutableList.copyOf(string.split(\",\")), cursorA0A.getBlob(columnIndexOrThrow30), z, z2, zA06, zA07, zA08, zA09, zA010, zA011, zA012, zA013, zA014, zA015, zA016, zA017), deviceJidA04, eczForNumber, cursorA0A.getString(columnIndexOrThrow3), cursorA0A.getString(columnIndexOrThrow9), cursorA0A.getString(columnIndexOrThrow10), cursorA0A.getString(columnIndexOrThrow23), cursorA0A.getString(columnIndexOrThrow27), cursorA0A.getInt(columnIndexOrThrow7), cursorA0A.getInt(columnIndexOrThrow31), cursorA0A.getLong(columnIndexOrThrow4), cursorA0A.getLong(columnIndexOrThrow5), cursorA0A.getLong(columnIndexOrThrow6), 1 == cursorA0A.getInt(columnIndexOrThrow8)));\n                            }\n                        }\n                        ImmutableMap immutableMapBuild = builder.build();\n                        this.A01 = immutableMapBuild;\n                        this.A00 = i - immutableMapBuild.size();\n                        cursorA0A.close();\n                        c0aqBFb.close();\n                    } catch (Throwable th) {\n                        if (cursorA0A != null) {\n                            try {\n                                cursorA0A.close();\n                            } catch (Throwable th2) {\n                                NhF.A1B(th2, th);\n                            }\n                        }\n                        throw th;\n                    }\n                } catch (Throwable th3) {\n                    try {\n                        c0aqBFb.close();\n                    } catch (Throwable th4) {\n                        NhF.A1B(th4, th3);\n                    }\n                    throw th3;\n                }\n            }\n            immutableMap = this.A01;\n        }\n        return immutableMap;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

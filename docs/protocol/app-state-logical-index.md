@@ -1,6 +1,6 @@
 # App-state logical indexes and sync eligibility
 
-Current status: **confirmed defect; correction pending**. Static audit and an
+Current status: **corrected and tested offline; server-sync scheduling pending**. Static audit and an
 offline synthetic Rust reproduction, 2026-11-04. Native evidence is WhatsApp
 Android 2.26.43.72, APK SHA-256
 `887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e`.
@@ -24,8 +24,8 @@ adding the new SET MACs. Outgoing `Dxc.run` likewise reads previous MACs by
 logical index while preparing a patch. Current `0mj.A00` applies unsupported
 SET/REMOVE records and updates held version/hash in the same application flow.
 
-**Confirmed Rust source defect:** `CollectionState.values`,
-`verify_patch`, `build_patch` and snapshot construction currently use the wire
+**Confirmed pre-fix Rust source defect:** `CollectionState.values`,
+`verify_patch`, `build_patch` and snapshot construction used the wire
 index MAC as the stored identity. The index MAC is HMAC under a key derived
 from the mutation key. Therefore identical authenticated index bytes under a
 different mutation key can have a different wire index MAC.
@@ -92,29 +92,76 @@ including orphan/unsupported SETs. A positive held version can have no stored
 rows after its last REMOVE. An empty collection/key row does not count as a
 stored mutation. This refines the [role/recovery mapping](server-sync-role-recovery.md).
 
-## Agreed correction boundary
+## Implemented correction and migration
 
-Implementation is the next isolated chunk. Preserve the wire-indexMAC/valueMAC
-map for integrity and add a separate exact authenticated-index-to-wireMAC
-mapping. SET/REMOVE must select the old value MAC by authenticated index;
-snapshot and per-patch duplicate checks must also reject repeated logical
-indexes across different keys. No data normalization or logical-index guess is
-authorized by a wire MAC alone.
+`CollectionState` retains the wire-indexMAC/valueMAC integrity map and now
+holds a separate exact authenticated-index-to-wireMAC mapping. Incoming
+verification, outgoing construction and snapshots populate it only from
+authenticated/decrypted or locally constructed index bytes. SET removes the old
+wire/value entry selected by logical index before adding the new entry; REMOVE
+subtracts that stored SET MAC even when the removing record uses a different
+key. Duplicate logical indexes across record keys are refused in both patches
+and snapshots. Exact wire MAC inputs remain unchanged; no JSON normalization
+or provenance guess is performed.
 
-The saved-state reader must reject duplicate wire indexes, duplicate logical
-indexes, dangling or multiply referenced mappings and cardinality mismatch.
-Recompute the stored LT hash from all retained value MACs and require equality
-with the stored hash. A 128-byte field alone is not sufficient validation.
+`SavedCollectionState.logical_indexes` is an optional serialized mapping.
+New saves carry a complete bijection; older JSON without the field remains
+decodable. `from_saved` validates collection identity, MAC widths, unique wire
+indexes, unique valid logical indexes, one-to-one references and cardinality.
+It recomputes the LT hash from all saved value MACs and requires exact equality.
+The saved state's Debug output omits indexes/MACs, which can contain identifiers.
+`has_logical_indexes()` exposes a redacted completeness flag for inspection.
 
-For older nonempty integrity-only rows, retain inspection of their validated
-hash/map but refuse incremental verification and patch construction until
-authenticated index provenance is reconstructed. The agreed bounded migration
-is a verified same-version snapshot: require the exact saved version, hash and
-wireMAC/valueMAC map to agree, then add only authenticated index metadata.
-An empty legacy row can retain its existing version with its zero hash; it must
-not reset a nonempty baseline. Snapshot freshness, sender role and key authority
-remain caller obligations; this does not authorize automatic primary snapshot
-requests or unconditional resynchronization.
+A validated nonempty legacy integrity-only row remains inspectable, with its
+version/hash/map preserved and completeness false. `build_patch` and
+`verify_patch` refuse it with a matching-authenticated-snapshot diagnostic.
+There is no silent reset or partial mapping. Empty legacy maps with consistent
+zero hash retain their existing version and have no missing index provenance.
+
+`reconstruct_logical_indexes(snapshot,resolver)` is an in-memory, strict
+same-version operation. It authenticates every record and snapshot, requires
+the saved hash and complete wireMAC/valueMAC map to agree, and returns a
+candidate with authenticated indexes. Repeating the operation authenticates and
+returns the same complete state. Older/newer snapshot versions are refused by
+this migration API. `CollectionSnapshot::key_ids()` exposes the snapshot and
+record IDs for preparation of the existing-held-key resolver; those IDs are
+not authority to fetch, activate or trust a key.
+
+The storage staging API and transport publisher use distinct checkpoint keys:
+`storage.rs` uses `app-state-collection:<hex collection name>`, while transport
+`app_state_sync.rs` uses `app-state-collection:<plain collection name>`.
+Both saved formats now use the same validator and retain logical provenance.
+`storage::stage_snapshot` can persist a verified same-version metadata upgrade
+without adding a pending apply batch or replaying actions; its enclosing
+transaction governs rollback. Missing authenticated record caches can be
+rebuilt from the same verified snapshot without advancing the applied cursor.
+This staging path alone does not update a transport publisher checkpoint.
+
+The transport reconstruction API and `app-state-inspect` CLI now integrate
+the in-memory helper with the transport checkpoint separately. Use optional
+`--reconstruct-snapshot PATH --collection NAME` to supply an already acquired
+local snapshot; this performs no fetch. Reconstruction requires an existing
+held checkpoint, no pending preparation, the exact held version/hash/wire map,
+and only keys already held by the account. Repeat reconstruction authenticates
+but makes no changes. The transaction preserves the existing generation,
+held integrity state and pending-send reservation boundaries.
+Snapshot freshness, sender role and existing key authority remain caller
+obligations. This correction does not authorize automatic primary snapshot
+requests, unconditional resynchronization, or replay of an uncertain request.
+
+## Verification
+
+All 28 focused collection tests pass. Nine new regressions cover cross-key
+incoming and outgoing SET/REMOVE with persisted state; refusal of a validly
+signed snapshot MAC that incorrectly retains both old/new rows; duplicate
+logical records under different keys; saved-map corruption/bijection failures;
+legacy inspection with blocked incremental work; matching snapshot
+reconstruction and bad MAC/key/version/wire-map rejection; and atomic,
+restart-safe, idempotent storage migration without action replay.
+Existing independent encrypted SET/REMOVE and snapshot fixtures still pass.
+The pre-fix reproduction remains a historical defect artifact, not current
+behavior. Live server acceptance and a complete notification scheduler remain
+unverified.
 
 ## Eligibility model still pending
 

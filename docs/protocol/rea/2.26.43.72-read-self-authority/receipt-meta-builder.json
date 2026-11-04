@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_6c87e89acdd7cf1e0cdad04dc75c5c47c8a1ce427595aca207036cfa14810288",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.Eqi",
+    "method_name": "A00",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-yR66j6/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.Eqi"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"dex_descriptor\":\"()V\",\"signature\":\"\\u003cclinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cclinit\\u003e\",\"is_constructor\":false},{\"dex_descriptor\":\"(Ljava/lang/String;Ljava/lang/String;I)LX/0Tp;\",\"signature\":\"A00(java.lang.String, java.lang.String, int): X.0Tp\",\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false}],\"method_count\":2,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"Eqi\",\"full_name\":\"X.Eqi\",\"field_count\":2,\"fields\":[{\"type\":\"java.util.Set\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"java.util.Set\",\"def_pos\":0,\"name\":\"A01\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.Eqi",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"overload_count\":1,\"method_name\":\"A00\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.Eqi.A00\",\"class_name\":\"X.Eqi\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public static final C0Tp A00(String str, String str2, int i) {\\n        ArrayList arrayListA18 \\u003d C1Xl.A18();\\n        if (i !\\u003d 0 \\u0026\\u0026 A00.contains(str)) {\\n            C6oe.A1S(\\\"mode\\\", String.valueOf(i), arrayListA18);\\n        }\\n        if (str2 !\\u003d null \\u0026\\u0026 !C0Cf.A0q(str2) \\u0026\\u0026 !str2.equals(E8G.A0I.peripheralDeviceOrigin) \\u0026\\u0026 str2.length() \\u003c\\u003d 64 \\u0026\\u0026 A01.contains(str)) {\\n            C6oe.A1S(\\\"peripheral\\\", str2, arrayListA18);\\n        }\\n        if (arrayListA18.isEmpty()) {\\n            return null;\\n        }\\n        return B1w.A0Z(\\\"meta\\\", B1y.A1a(arrayListA18, 0));\\n    }\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.Eqi",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(java.lang.String, java.lang.String, int): X.0Tp",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(Ljava/lang/String;Ljava/lang/String;I)LX/0Tp;"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public static final C0Tp A00(String str, String str2, int i) {\n        ArrayList arrayListA18 = C1Xl.A18();\n        if (i != 0 && A00.contains(str)) {\n            C6oe.A1S(\"mode\", String.valueOf(i), arrayListA18);\n        }\n        if (str2 != null && !C0Cf.A0q(str2) && !str2.equals(E8G.A0I.peripheralDeviceOrigin) && str2.length() <= 64 && A01.contains(str)) {\n            C6oe.A1S(\"peripheral\", str2, arrayListA18);\n        }\n        if (arrayListA18.isEmpty()) {\n            return null;\n        }\n        return B1w.A0Z(\"meta\", B1y.A1a(arrayListA18, 0));\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

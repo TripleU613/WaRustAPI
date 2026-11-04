@@ -52,7 +52,7 @@ impl std::fmt::Debug for CollectionPatch {
 }
 
 /// [`CollectionState`] in a form the store can hold between sessions.
-#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct SavedCollectionState {
     /// Collection name.
     pub collection: String,
@@ -62,6 +62,19 @@ pub struct SavedCollectionState {
     pub hash: Vec<u8>,
     /// index MAC → value MAC.
     pub values: Vec<(Vec<u8>, Vec<u8>)>,
+    /// Exact authenticated index JSON → wire index MAC. Absent on legacy rows;
+    /// their integrity map remains inspectable but cannot authorize mutations.
+    #[serde(default)]
+    pub logical_indexes: Option<Vec<(Vec<u8>, Vec<u8>)>>,
+}
+impl std::fmt::Debug for SavedCollectionState {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("SavedCollectionState")
+            .field("version", &self.version)
+            .field("entries", &self.values.len())
+            .field("has_logical_indexes", &self.logical_indexes.is_some())
+            .finish_non_exhaustive()
+    }
 }
 
 /// Verified collection integrity state, not yet persisted or applied to UI data.
@@ -71,6 +84,7 @@ pub struct CollectionState {
     version: u64,
     hash: StateHash,
     values: BTreeMap<[u8; 32], [u8; 32]>,
+    logical_indexes: Option<BTreeMap<Vec<u8>, [u8; 32]>>,
 }
 impl std::fmt::Debug for CollectionState {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -100,6 +114,7 @@ impl CollectionState {
             version: 0,
             hash: StateHash::default(),
             values: BTreeMap::new(),
+            logical_indexes: Some(BTreeMap::new()),
         })
     }
     /// Current verified collection version.
@@ -123,12 +138,19 @@ impl CollectionState {
                 .iter()
                 .map(|(index, value)| (index.to_vec(), value.to_vec()))
                 .collect(),
+            logical_indexes: self.logical_indexes.as_ref().map(|indexes| {
+                indexes
+                    .iter()
+                    .map(|(index, mac)| (index.clone(), mac.to_vec()))
+                    .collect()
+            }),
         }
     }
 
     /// The inverse of [`Self::to_saved`], refusing anything mis-sized rather
     /// than silently starting from a wrong hash.
     pub fn from_saved(saved: &SavedCollectionState) -> Result<Self> {
+        Self::empty(&saved.collection)?;
         let hash: [u8; 128] = saved
             .hash
             .as_slice()
@@ -144,14 +166,111 @@ impl CollectionState {
                 .as_slice()
                 .try_into()
                 .map_err(|_| invalid("saved value MAC is not 32 bytes"))?;
-            values.insert(index, value);
+            if values.insert(index, value).is_some() {
+                return Err(invalid("duplicate saved wire index MAC"));
+            }
         }
+        let hash = StateHash::from_bytes(hash);
+        let macs: Vec<_> = values.values().copied().collect();
+        if StateHash::default().updated(&[], &macs)? != hash {
+            return Err(invalid("saved state hash disagrees with value MACs"));
+        }
+        let logical_indexes = match &saved.logical_indexes {
+            Some(saved_indexes) => {
+                if saved_indexes.len() != values.len() {
+                    return Err(invalid("saved logical index cardinality mismatch"));
+                }
+                let mut indexes = BTreeMap::new();
+                let mut referenced = BTreeSet::new();
+                for (index, mac) in saved_indexes {
+                    validate_logical_index(index)?;
+                    let mac: [u8; 32] = mac
+                        .as_slice()
+                        .try_into()
+                        .map_err(|_| invalid("saved logical index MAC is not 32 bytes"))?;
+                    if !values.contains_key(&mac) || !referenced.insert(mac) {
+                        return Err(invalid(
+                            "saved logical index has missing or repeated wire MAC",
+                        ));
+                    }
+                    if indexes.insert(index.clone(), mac).is_some() {
+                        return Err(invalid("duplicate saved logical index"));
+                    }
+                }
+                Some(indexes)
+            }
+            // An empty map has no missing provenance; retain its version/hash.
+            None if values.is_empty() => Some(BTreeMap::new()),
+            None => None,
+        };
         Ok(Self {
             collection: saved.collection.clone(),
             version: saved.version,
-            hash: StateHash::from_bytes(hash),
+            hash,
             values,
+            logical_indexes,
         })
+    }
+
+    /// Whether incremental verification/construction has authenticated index
+    /// provenance. Legacy integrity-only rows need a matching verified snapshot.
+    pub fn has_logical_indexes(&self) -> bool {
+        self.logical_indexes.is_some()
+    }
+
+    fn require_logical_indexes(&self) -> Result<()> {
+        if self.has_logical_indexes() {
+            Ok(())
+        } else {
+            Err(invalid(
+                "legacy state lacks authenticated logical indexes; matching authenticated snapshot required",
+            ))
+        }
+    }
+
+    // Current 43.72 0g1.A05/A0I store/select previous value MACs by the
+    // decrypted index, which remains stable when mutation keys change.
+    // Wire index MACs still authenticate exact bytes; they are not row identity.
+    // Evidence: docs/protocol/app-state-logical-index.md.
+    fn set_value(
+        &mut self,
+        index: &[u8],
+        wire_index: [u8; 32],
+        value: [u8; 32],
+    ) -> Result<Option<[u8; 32]>> {
+        validate_logical_index(index)?;
+        self.require_logical_indexes()?;
+        let indexes = self.logical_indexes.as_mut().expect("checked provenance");
+        let old_index = indexes.get(index).copied();
+        if self.values.contains_key(&wire_index) && old_index != Some(wire_index) {
+            return Err(invalid("wire index MAC belongs to another logical index"));
+        }
+        let previous = match old_index {
+            Some(old) => Some(
+                self.values
+                    .remove(&old)
+                    .ok_or_else(|| invalid("logical index has no stored value MAC"))?,
+            ),
+            None => None,
+        };
+        indexes.insert(index.to_vec(), wire_index);
+        self.values.insert(wire_index, value);
+        Ok(previous)
+    }
+
+    fn remove_value(&mut self, index: &[u8]) -> Result<[u8; 32]> {
+        self.require_logical_indexes()?;
+        let wire_index = self
+            .logical_indexes
+            .as_mut()
+            .expect("checked provenance")
+            .remove(index)
+            .ok_or_else(|| {
+                invalid("REMOVE has no saved logical index; resynchronization required")
+            })?;
+        self.values
+            .remove(&wire_index)
+            .ok_or_else(|| invalid("logical index has no stored value MAC"))
     }
 
     /// Current verified rolling hash.
@@ -176,6 +295,7 @@ impl CollectionState {
         patch: &CollectionPatch,
         mut key: impl FnMut(&[u8; 6]) -> Result<&'a MutationKeys>,
     ) -> Result<VerifiedCollectionPatch> {
+        self.require_logical_indexes()?;
         if self.version.checked_add(1) != Some(patch.version) {
             return Err(invalid(
                 "patch is not the next version; resynchronization required",
@@ -220,6 +340,7 @@ impl CollectionState {
         let mut mutations = Vec::new();
         let mut removed = Vec::new();
         let mut added = Vec::new();
+        let mut logical_indexes = BTreeSet::new();
         for (mutation, wire_mac) in patch.mutations.iter().zip(wire_macs) {
             let decoded = key(&mutation.key_id)?.decrypt_mutation(
                 mutation.operation,
@@ -227,17 +348,20 @@ impl CollectionState {
                 &mutation.body,
                 &mutation.index_mac,
             )?;
+            if !logical_indexes.insert(decoded.index().to_vec()) {
+                return Err(invalid("duplicate logical mutation index"));
+            }
             match decoded.operation() {
                 MutationOperation::Set => {
-                    if let Some(previous) = next.values.insert(mutation.index_mac, wire_mac) {
+                    if let Some(previous) =
+                        next.set_value(decoded.index(), mutation.index_mac, wire_mac)?
+                    {
                         removed.push(previous);
                     }
                     added.push(wire_mac);
                 }
                 MutationOperation::Remove => {
-                    let previous = next.values.remove(&mutation.index_mac).ok_or_else(|| {
-                        invalid("REMOVE has no saved index; resynchronization required")
-                    })?;
+                    let previous = next.remove_value(decoded.index())?;
                     removed.push(previous);
                 }
             }
@@ -256,6 +380,19 @@ impl CollectionState {
             mutations,
         })
     }
+}
+
+fn validate_logical_index(index: &[u8]) -> Result<()> {
+    let parts: zeroize::Zeroizing<Vec<String>> = zeroize::Zeroizing::new(
+        serde_json::from_slice(index)
+            .map_err(|_| invalid("invalid authenticated logical index"))?,
+    );
+    if parts.is_empty() || parts.iter().any(String::is_empty) {
+        return Err(invalid(
+            "logical index must contain nonempty string components",
+        ));
+    }
+    Ok(())
 }
 
 #[cfg(test)]
@@ -360,5 +497,225 @@ mod tests {
         let mut bad = patch(false);
         bad.mutations.push(patch(false).mutations.remove(0));
         assert!(initial.verify_patch(&bad, |_| Ok(&keys)).is_err());
+    }
+}
+
+#[cfg(test)]
+mod logical_index_tests {
+    use super::*;
+
+    const A: [u8; 6] = [0, 1, 0, 0, 0, 1];
+    const B: [u8; 6] = [0, 1, 0, 0, 0, 2];
+    const INDEX: &[u8] = br#"["fixture","same-index"]"#;
+
+    fn record(
+        keys: &MutationKeys,
+        id: [u8; 6],
+        operation: MutationOperation,
+        index: &[u8],
+    ) -> (EncryptedMutation, [u8; 32]) {
+        let wire = keys
+            .encrypt_mutation(operation, &id, index, Some(&[8, 1]), 1, [id[5]; 16])
+            .unwrap();
+        let mac = wire.value_mac;
+        (
+            EncryptedMutation {
+                operation,
+                key_id: id,
+                index_mac: wire.index_mac,
+                body: wire.body.to_vec(),
+            },
+            mac,
+        )
+    }
+
+    fn incoming(
+        keys: &MutationKeys,
+        id: [u8; 6],
+        version: u64,
+        mutations: Vec<EncryptedMutation>,
+        expected: &StateHash,
+    ) -> CollectionPatch {
+        let macs: Vec<[u8; 32]> = mutations
+            .iter()
+            .map(|m| m.body[m.body.len() - 32..].try_into().unwrap())
+            .collect();
+        let snapshot_mac = keys
+            .snapshot_mac(expected.as_bytes(), version, "regular")
+            .unwrap();
+        let patch_mac = keys
+            .patch_mac(&snapshot_mac, &macs, version, "regular")
+            .unwrap();
+        CollectionPatch {
+            version,
+            key_id: id,
+            snapshot_mac,
+            patch_mac,
+            mutations,
+        }
+    }
+
+    fn first(keys: &MutationKeys) -> CollectionState {
+        let (mutation, mac) = record(keys, A, MutationOperation::Set, INDEX);
+        let expected = StateHash::default().updated(&[], &[mac]).unwrap();
+        CollectionState::empty("regular")
+            .unwrap()
+            .verify_patch(&incoming(keys, A, 1, vec![mutation], &expected), |_| {
+                Ok(keys)
+            })
+            .unwrap()
+            .state
+    }
+
+    #[test]
+    fn cross_key_incoming_set_replaces_old_mac_and_remove_uses_logical_index() {
+        let a = MutationKeys::derive(&[1; 32]).unwrap();
+        let b = MutationKeys::derive(&[2; 32]).unwrap();
+        assert_ne!(a.index_mac(INDEX).unwrap(), b.index_mac(INDEX).unwrap());
+        let one = first(&a);
+        let before = one.to_saved();
+        let (set, mac) = record(&b, B, MutationOperation::Set, INDEX);
+        // Native SQL has one row for this logical index: hash only the new MAC.
+        let expected = StateHash::default().updated(&[], &[mac]).unwrap();
+        let two = one
+            .verify_patch(&incoming(&b, B, 2, vec![set], &expected), |_| Ok(&b))
+            .unwrap()
+            .state;
+        assert_eq!(two.len(), 1);
+        assert_eq!(two.hash(), &expected);
+        assert!(!two.values.contains_key(&a.index_mac(INDEX).unwrap()));
+        assert_eq!(one.to_saved(), before);
+        let two = CollectionState::from_saved(&two.to_saved()).unwrap();
+        let (remove, _) = record(&a, A, MutationOperation::Remove, INDEX);
+        let three = two
+            .verify_patch(
+                &incoming(&a, A, 3, vec![remove], &StateHash::default()),
+                |_| Ok(&a),
+            )
+            .unwrap()
+            .state;
+        assert!(three.is_empty());
+        assert_eq!(three.version(), 3);
+        assert_eq!(three.hash(), &StateHash::default());
+    }
+
+    #[test]
+    fn cross_key_snapshot_mac_covering_both_old_and_new_rows_is_refused_atomically() {
+        let a = MutationKeys::derive(&[1; 32]).unwrap();
+        let b = MutationKeys::derive(&[2; 32]).unwrap();
+        let one = first(&a);
+        let before = one.to_saved();
+        let (set, mac) = record(&b, B, MutationOperation::Set, INDEX);
+        let wrong = one.hash().updated(&[], &[mac]).unwrap();
+        assert!(
+            one.verify_patch(&incoming(&b, B, 2, vec![set], &wrong), |_| Ok(&b))
+                .is_err()
+        );
+        assert_eq!(one.to_saved(), before);
+    }
+
+    #[test]
+    fn incoming_duplicate_logical_indexes_under_distinct_keys_are_refused() {
+        let a = MutationKeys::derive(&[1; 32]).unwrap();
+        let b = MutationKeys::derive(&[2; 32]).unwrap();
+        let (one, mac_a) = record(&a, A, MutationOperation::Set, INDEX);
+        let (two, mac_b) = record(&b, B, MutationOperation::Set, INDEX);
+        let hash = StateHash::default().updated(&[], &[mac_a, mac_b]).unwrap();
+        let empty = CollectionState::empty("regular").unwrap();
+        let error = empty
+            .verify_patch(&incoming(&a, A, 1, vec![one, two], &hash), |id| {
+                if *id == A { Ok(&a) } else { Ok(&b) }
+            })
+            .unwrap_err();
+        assert!(
+            error
+                .to_string()
+                .contains("duplicate logical mutation index")
+        );
+        assert!(empty.is_empty());
+    }
+
+    #[test]
+    fn legacy_integrity_can_be_inspected_but_cannot_authorize_incremental_work() {
+        let keys = MutationKeys::derive(&[1; 32]).unwrap();
+        let mut saved = first(&keys).to_saved();
+        saved.logical_indexes = None;
+        let mut json = serde_json::to_value(&saved).unwrap();
+        json.as_object_mut().unwrap().remove("logical_indexes");
+        let legacy = CollectionState::from_saved(&serde_json::from_value(json).unwrap()).unwrap();
+        assert!(!legacy.has_logical_indexes());
+        assert_eq!(legacy.version(), saved.version);
+        assert_eq!(legacy.hash().as_bytes().as_slice(), saved.hash);
+        assert_eq!(legacy.to_saved().logical_indexes, None);
+        assert!(!format!("{saved:?}").contains("fixture"));
+        let (set, mac) = record(&keys, A, MutationOperation::Set, INDEX);
+        let hash = StateHash::default().updated(&[], &[mac]).unwrap();
+        let err = legacy
+            .verify_patch(&incoming(&keys, A, 2, vec![set], &hash), |_| Ok(&keys))
+            .unwrap_err();
+        assert!(
+            err.to_string()
+                .contains("matching authenticated snapshot required")
+        );
+        let mutation = patch::OutgoingMutation {
+            operation: MutationOperation::Set,
+            index: INDEX.to_vec(),
+            action: Some(vec![8, 1]),
+            version: 1,
+        };
+        assert!(legacy.build_patch(&keys, A, 0, &[mutation]).is_err());
+        let mut empty = CollectionState::empty("regular").unwrap().to_saved();
+        empty.version = 17;
+        empty.logical_indexes = None;
+        let empty = CollectionState::from_saved(&empty).unwrap();
+        assert!(empty.has_logical_indexes());
+        assert_eq!(empty.version(), 17);
+    }
+
+    #[test]
+    fn saved_maps_require_deduplication_bijection_and_consistent_hash() {
+        let keys = MutationKeys::derive(&[1; 32]).unwrap();
+        let (a, mac_a) = record(&keys, A, MutationOperation::Set, INDEX);
+        let (b, mac_b) = record(&keys, A, MutationOperation::Set, br#"["fixture","other"]"#);
+        let hash = StateHash::default().updated(&[], &[mac_a, mac_b]).unwrap();
+        let saved = CollectionState::empty("regular")
+            .unwrap()
+            .verify_patch(&incoming(&keys, A, 1, vec![a, b], &hash), |_| Ok(&keys))
+            .unwrap()
+            .state
+            .to_saved();
+        let mut corruptions = Vec::new();
+        let mut bad = saved.clone();
+        bad.values.push(bad.values[0].clone());
+        corruptions.push(bad);
+        let mut bad = saved.clone();
+        bad.hash[0] ^= 1;
+        corruptions.push(bad);
+        let mut bad = saved.clone();
+        bad.logical_indexes.as_mut().unwrap().pop();
+        corruptions.push(bad);
+        let mut bad = saved.clone();
+        bad.logical_indexes.as_mut().unwrap()[0].1 = vec![99; 32];
+        corruptions.push(bad);
+        let mut bad = saved.clone();
+        bad.logical_indexes.as_mut().unwrap()[0].1 =
+            bad.logical_indexes.as_ref().unwrap()[1].1.clone();
+        corruptions.push(bad);
+        let mut bad = saved.clone();
+        bad.logical_indexes.as_mut().unwrap()[0].0 =
+            bad.logical_indexes.as_ref().unwrap()[1].0.clone();
+        corruptions.push(bad);
+        for index in [b"[]".as_slice(), b"[\"\"]", b"not-json", b"[1]"] {
+            let mut bad = saved.clone();
+            bad.logical_indexes.as_mut().unwrap()[0].0 = index.to_vec();
+            corruptions.push(bad);
+        }
+        for bad in corruptions {
+            assert!(CollectionState::from_saved(&bad).is_err());
+        }
+        assert_eq!(
+            CollectionState::from_saved(&saved).unwrap().to_saved(),
+            saved
+        );
     }
 }

@@ -90,3 +90,5 @@ separate APK evidence; this probe only demonstrates Rust behavior.
 - `sync-eligibility-stored-insert-callers.txt`: `7a7e711d45be4afffc437380cd358c34b380d243c9f46c6f62b72bb6c0799828`
 - `sync-eligibility-stored-schema.txt`: `6a6fa26cacd6012e83870651eb4c686fdcdc08a55206e078767f0cee01bd8fc6`
 - `sync-eligibility-table-xrefs.txt`: `672eb735f022298c2ee330204d26237e8160deb4148d80a0cff3af009c41b3a4`
+
+Ownership now binds the bounded logical-index correction to stored-index and parsing evidence. It does not count the full native mutation store, all action handlers or the pending scheduler as ported. See the protocol note for current validation and legacy recovery boundaries.
