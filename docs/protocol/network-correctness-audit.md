@@ -206,3 +206,12 @@ authorization. Inverted result feeds wrapper construction in notification
 receive. A03 is queue-flush scheduling, not legacy dispatch.
 [Evidence and remaining lifetimes/fallback](rea/2.26.43.72-reachout-state/README.md#receive-gate-is-persistence-not-origin-validation-2026-11-04).
 No Rust runtime or live-account change.
+
+## Legacy notification MEX code binding (2026-11-04)
+
+**Confirmed pinned static:** fallback tag-map wrapper reaches shared handler;
+1rc notification branch uses EL2 literal mex->0x102 mapping, the code
+registered by0v7. JID checks in1rR belong to a separate message branch and
+are not notification origin evidence.
+[Binding and remaining map/consumer authority](rea/2.26.43.72-reachout-state/README.md#legacy-notification-to-mex-code-binding-2026-11-04).
+No runtime change or live traffic.

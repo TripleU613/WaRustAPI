@@ -218,3 +218,44 @@ No live network/account operations were performed.
 - [receive-persistence-gate.txt](receive-persistence-gate.txt) — SHA-256 `c26dc224e247484e137de52a393f6fe657863b4dfa662c4b8113cef8a2aed141`.
 - [offline-buffering-gate.txt](offline-buffering-gate.txt) — SHA-256 `d84ef20313a7bcfd61e0c665dc7b343fe3d318240935af34792a77d83b99862b`.
 - [queue-flush-scheduler.txt](queue-flush-scheduler.txt) — SHA-256 `c279994b64e063d34756f5d1c6199907f960a9b7c50c9c4b25067a5a97c81860`.
+
+## Legacy notification-to-MEX code binding (2026-11-04)
+
+**Confirmed static**, same pinned APK. In retained1s2.run fallback104a..1072,
+1rh.A01 map is indexed by stanza description, result cast1rA, original node
+wrapped1uU and passed to A03.1rh constructor preserves supplied map without
+building its entries. This closes fallback invocation, not every map producer.
+
+1rA.A03 is shared by several concrete subclasses. Its1rc branch selects
+notification handling and invokes1rN.A05 after shared offline/metrics logic.
+1rc constructor extends1rN and stores its0Ji consumer.1rN.A05's1rc branch
+reads required id, type and optional offline, obtains EL2.A00 lookup, then
+constructs Message through2Ai.A00(wrapper,loggable-id,code) and calls the
+consumer. EL2.<clinit> explicitly maps literal mex to0x102. The previously
+retained0v7 registration uses that same code. Thus legacy notification type
+mapping is now concretely bound to the MEX message code, not just inferred
+from nearby string literals. Type-map exact matching differs from lowercased
+operation lookup in the downstream MEX router.
+
+**Negative result:**1rR.A01, reached in a different1rN.A05 branch, processes
+message-style Enx/F0Q/JID/peer fields. It is not the1rc notification branch.
+Its apparent sender checks do not establish MEX notification authority. Full
+method retained to preserve this false lead and avoid mixing shared class
+branches in later audits. No JID allowlist is imported from message handling.
+
+Remaining: exact map entry producer, shared handler preflight,0Ji consumer
+selection, full alternate-registry fallback/gating and upstream sender authority.
+The0ZJ.A0z reader-construction candidate was inspected and locates the1rh
+constructor but its full assembly is not claimed reconstructed by this pass.
+No Rust runtime change, ACK expansion or live operation was performed.
+
+Reproduce apk-smali1rh.<init>,1rA.A03,1rN.A05,EL2.<clinit>,whole1rc
+and1rR.A01 with signatures/exceptions. Existing1s2 fallback export carries
+the104a call site, and router-registration.txt carries0x102 registration.
+
+- [legacy-reader-layout.txt](legacy-reader-layout.txt) — SHA-256 `da060c1a7b6fc6729d81db716ffb5da9b278d6f797ee3cd6cc4cc6247951603c`.
+- [legacy-handler-dispatch.txt](legacy-handler-dispatch.txt) — SHA-256 `28e18ba55fd1c87e6b8974285009ec71c52304bbcb3de606da8ff2259279c638`.
+- [legacy-notification-routing.txt](legacy-notification-routing.txt) — SHA-256 `de79d68032919efc6a0ee7bd3a6c2aa16b28878fa6a42af337cf6780b167b8a1`.
+- [legacy-notification-codes.txt](legacy-notification-codes.txt) — SHA-256 `0b4d28e2cc291529803ea15fcc136e0824cd05a6c01458c8627c68abc1bf467a`.
+- [legacy-notification-constructor.txt](legacy-notification-constructor.txt) — SHA-256 `4e527236b06320d8fed6565d84a7a3ae98345ab17b2b7907b46a9739138e0903`.
+- [message-parser-false-lead.txt](message-parser-false-lead.txt) — SHA-256 `4dc282b9a5112c3906f95873200911338fdb0a2031182e7e5f67a217d2d4a160`.

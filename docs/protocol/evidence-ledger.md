@@ -1,3 +1,9 @@
+2026-11-04 — **Pinned static: legacy notification-to-MEX code bound.**
+1s2 fallback/1rh layout,1rA/1rN notification branch and EL2 mex->0x102
+map retained. Message parser false lead separated from sender authority.
+[Evidence/remaining scope](rea/2.26.43.72-reachout-state/README.md#legacy-notification-to-mex-code-binding-2026-11-04).
+No runtime or live account changes.
+
 2026-11-04 — **Pinned static: receive gate classified as persistence.**
 0ZP.A04/A05 offline-count/readiness and A03 queue scheduling retained;
 none establishes sender authority.

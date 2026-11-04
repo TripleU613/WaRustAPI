@@ -1,0 +1,23 @@
+
+# class: LX/1rc;
+# extends: LX/1rN;
+
+.method public <init>(VL)  # .registers 3
+    # full signature: LX/1rc;-><init>(LX/0Ji;)V
+    0000..0006  invoke-direct  {v1}, LX/1rN;-><init>()V
+    0006..000a  iput-object  v2, v1, LX/1rc;->A00:LX/0Ji;
+    000a..000e  const/16  v0, #0xa2
+    000e..0014  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0014..0016  move-result-object  v0
+    0016..001a  iput-object  v0, v1, LX/1rc;->A03:LX/05a;
+    001a..001e  const/16  v0, #0xed
+    001e..0024  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0024..0026  move-result-object  v0
+    0026..002a  iput-object  v0, v1, LX/1rc;->A02:LX/05a;
+    002a..002e  const/16  v0, #0x895
+    002e..0034  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0034..0036  move-result-object  v0
+    0036..003a  iput-object  v0, v1, LX/1rc;->A01:LX/05a;
+    003a..003c  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,3 +1,13 @@
+2026-11-04 — **Legacy notification-to-MEX code bound:**
+
+Fallback tag-map wrapper and1rc notification branch connect literal mex
+to0x102, matching router registration. Separated message-only JID checks
+from notification authority; map/consumer and sender details remain open.
+[Evidence](docs/protocol/rea/2.26.43.72-reachout-state/README.md#legacy-notification-to-mex-code-binding-2026-11-04).
+Validation: JSON parsing, coverage freshness, cached diff checks and repository
+hygiene (4,424 local links) passed. Documentation/evidence only;
+no runtime change or live traffic.
+
 2026-11-04 — **Receive gate classified as persistence policy:**
 
 Pinned offline-count/buffering and consumer-readiness helpers feed wrapper
