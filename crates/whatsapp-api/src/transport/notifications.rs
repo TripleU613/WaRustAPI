@@ -101,9 +101,18 @@ pub fn record_reachout_timelock(
     {
         return Ok(None);
     }
-    for child in node.child_nodes() {
-        if child.get_attr("op_name").and_then(|v| v.as_text())
-            != Some("NotificationUserReachoutTimelockUpdate")
+    // APK 43.72 0v7.A09 routes only the first update and lowercases op_name
+    // with Locale.US. This supported operation name is ASCII.
+    for child in node
+        .child_nodes()
+        .iter()
+        .filter(|child| child.description == "update")
+        .take(1)
+    {
+        if !child
+            .get_attr("op_name")
+            .and_then(|v| v.as_text())
+            .is_some_and(|op| op.eq_ignore_ascii_case("NotificationUserReachoutTimelockUpdate"))
         {
             continue;
         }
@@ -533,6 +542,46 @@ mod tests {
                 }
             }
         }
+    }
+
+    #[test]
+    fn reachout_dispatch_uses_first_update_and_ascii_case_matching() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = super::super::group_fanout::tests::open(&dir.path().join("dispatch.redb"));
+        let update = |tag| {
+            Node::new(tag).attr("op_name", "notificationuserreachouttimelockupdate")
+            .bytes(br#"{"data":{"xwa2_notify_account_reachout_timelock":{"is_active":true,"time_enforcement_ends":"1000"}}}"#.to_vec())
+        };
+        let wrap = |children| {
+            Node::new("notification")
+                .attr("type", "mex")
+                .children(children)
+        };
+        assert!(
+            record_reachout_timelock(&store, &wrap(vec![update("other")]))
+                .unwrap()
+                .is_none()
+        );
+        assert!(
+            record_reachout_timelock(
+                &store,
+                &wrap(vec![
+                    Node::new("update").attr("op_name", "unhandled"),
+                    update("update")
+                ])
+            )
+            .unwrap()
+            .is_none()
+        );
+        assert!(active_reachout_timelock(&store, 999).unwrap().is_none());
+        assert_eq!(
+            record_reachout_timelock(&store, &wrap(vec![update("other"), update("update")]))
+                .unwrap(),
+            Some(ReachoutTimelock {
+                active: true,
+                ends: 1000
+            })
+        );
     }
 
     #[test]

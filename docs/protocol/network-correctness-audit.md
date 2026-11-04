@@ -161,3 +161,11 @@ malformed active updates still preserve prior lock and skip ACK.
 Upstream sender authority and config/enum policy remain open; the retained
 leaf does not establish a new server-only JID requirement. Regression covers
 both active malformed preservation and inactive release. No live traffic.
+
+## MEX reach-out dispatch correction (2026-11-04)
+
+**Confirmed pinned mismatch fixed:**0v7.A09 dispatches only first update
+child and lowercases op_name. Rust no longer admits arbitrary child tags or
+later matching updates, and supports ASCII case-insensitive operation names.
+[Router and JSON adapter evidence/tests](rea/2.26.43.72-reachout-state/README.md#current-mex-operation-routing-2026-11-04-offline-corrected).
+Sender authorization and full typed conversion remain open. No live traffic.

@@ -1,3 +1,9 @@
+2026-11-04 — **Pinned mismatch corrected offline: MEX operation selection.**
+2.26.43.72 0v7.A09/8AF.A09 retained; Rust selects first update and supports
+ASCII case-insensitive reach-out operation names. Arbitrary tags/later updates
+no longer mutate restriction. [Evidence/tests](rea/2.26.43.72-reachout-state/README.md#current-mex-operation-routing-2026-11-04-offline-corrected).
+Sender authority untraced; no live account traffic.
+
 2026-11-04 — **Pinned static correction: inactive reach-out ignores expiry.**
 2.26.43.72 8AF/7MU/7vL dispatch/state plus6oe parser retained. Explicit
 inactive reset does not parse expiry; Rust now accepts it while active bad

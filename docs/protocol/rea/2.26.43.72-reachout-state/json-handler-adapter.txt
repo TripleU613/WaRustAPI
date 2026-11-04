@@ -1,0 +1,66 @@
+
+# class: LX/8AF;
+# extends: Ljava/lang/Object;
+
+.method public A09(VLL)  # .registers 10
+    # full signature: LX/8AF;->A09(LX/0Tp;Ljava/lang/Long;)V
+    0000..0006  invoke-static  {v8}, LX/7jz;->A00(LX/0Tp;)LX/7p0;
+    0006..0008  move-result-object  v2
+    0008..000c  if-eqz  v2, +0x4a
+    000c..0010  iget-object  v0, v7, LX/8AF;->A01:LX/05a;
+    0010..0016  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0016..0018  move-result-object  v1
+    0018..001c  check-cast  v1, LX/0is;
+    001c..0022  invoke-virtual  {v7}, LX/8AF;->A05()Ljava/lang/Class;
+    0022..0024  move-result-object  v3
+    0024..002a  invoke-virtual  {v7}, LX/8AF;->A06()Ljava/lang/String;
+    002a..002c  move-result-object  v4
+    002c..002e  const/4  v5, #0x0
+    002e..0030  move-object  v6, v5
+    0030..0036  invoke-virtual/range  {v1..v6}, LX/0is;->A03(LX/7p0;Ljava/lang/Class;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+    0036..0038  move-result-object  v2
+    0038..003c  instance-of  v0, v2, LX/0Dt;
+    003c..0040  xor-int/lit8  v0, v0, #0x1
+    0040..0044  if-eqz  v0, +0x12
+    0044..0046  move-object  v1, v2
+    0046..004a  check-cast  v1, LX/RsF;
+    004a..004e  const-string  v0, "BaseMexNotificationHandler/handleNotification: "
+    004e..0054  invoke-static  {v0, v4}, LX/2LA;->A1N(Ljava/lang/String;Ljava/lang/String;)V
+    0054..0058  const-string  v0, "null cannot be cast to non-null type com.whatsapp.infra.graphql.pando.MexResponse<T of com.whatsapp.infra.graphql.pando.network.BaseMexNotificationHandler>"
+    0058..005e  invoke-static  {v1, v0}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    005e..0064  invoke-virtual  {v7, v1, v9}, LX/8AF;->A07(LX/RsF;Ljava/lang/Long;)V
+    0064..006a  invoke-static  {v2}, LX/0Dr;->A02(Ljava/lang/Object;)Ljava/lang/Throwable;
+    006a..006c  move-result-object  v0
+    006c..0070  if-nez  v0, +0x3
+    0070..0072  return-void
+    0072..0076  const-string  v2, ""
+    0076..007c  invoke-virtual  {v3}, Ljava/lang/Class;->getName()Ljava/lang/String;
+    007c..007e  move-result-object  v1
+    007e..0082  const-string  v0, "basemexnotificationhandler/handlenotificationjson failed to transform notification into expected type "
+    0082..0088  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0088..008a  move-result-object  v0
+    008a..0090  invoke-static  {v1, v2, v0}, LX/1Xl;->A0x(Ljava/lang/String;Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    0090..0092  move-result-object  v0
+    0092..0098  invoke-static  {v0}, LX/6oe;->A0r(Ljava/lang/String;)LX/LIL;
+    0098..009a  move-result-object  v0
+    009a..009c  throw  v0
+    009c..00a0  new-instance  v0, LX/7MG;
+    00a0..00a6  invoke-direct  {v0}, LX/7MG;-><init>()V
+    00a6..00a8  throw  v0
+    00a8..00ac  const-string  v2, ""
+    00ac..00b2  invoke-virtual  {v7}, LX/8AF;->A05()Ljava/lang/Class;
+    00b2..00b4  move-result-object  v0
+    00b4..00ba  invoke-virtual  {v0}, Ljava/lang/Class;->getName()Ljava/lang/String;
+    00ba..00bc  move-result-object  v1
+    00bc..00c0  const-string  v0, "basemexnotificationhandler/handlenotificationjson failed to transform notification into expected type "
+    00c0..00c6  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00c6..00c8  move-result-object  v0
+    00c8..00ce  invoke-static  {v1, v2, v0}, LX/1Xl;->A0x(Ljava/lang/String;Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    00ce..00d0  move-result-object  v0
+    00d0..00d6  invoke-static  {v0}, LX/6oe;->A0r(Ljava/lang/String;)LX/LIL;
+    00d6..00d8  move-result-object  v0
+    00d8..00da  throw  v0
+    # exception table: 2 try range(s)
+    # catch LX/7MG; code_units 0000..0006 -> 0054
+    # catch LX/7MG; code_units 004e..0054 -> 0054
+.end method

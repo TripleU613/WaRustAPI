@@ -39,3 +39,32 @@ reset/feature branches can be checked without excerpt truncation.
 - [dispatch.txt](dispatch.txt) — SHA-256 `0e98b666ff2af77b1419ad7295f1f8156e6cb143ba3eaa07a687ff566a20df83`.
 - [state-manager.txt](state-manager.txt) — SHA-256 `3fd80e8c1a011eb4ff77fea251c28dd17646d83ed39de1529d0bfa3035e13d07`.
 - [expiry-parser.txt](expiry-parser.txt) — SHA-256 `b4301282d7f2533ca007e17512aedadaeda2bb1f5f1cc6056275fd8a56fb37f4`.
+
+## Current MEX operation routing (2026-11-04, offline corrected)
+
+**Confirmed static/source mismatch fixed:**0v7.A09 gets first update child
+via0Tp.A0F, requires nonempty op_name, lowercases with Locale.US and looks
+up the registered handler. It parses optional outer t and passes original
+node plus timestamp to8AF.A09.8AF invokes7jz JSON adapter and typed0is
+conversion before state dispatch, throwing on conversion failure. Full
+upstream sender authority and conversion semantics remain untraced.
+No from-JID check appears in the retained operation-router leaf; absence
+there does not prove it is absent upstream.
+
+Rust previously scanned every child by op_name and exact case, so unrelated
+child tags or a later update could change restriction state. It now selects
+only the first update, and matches the supported ASCII operation name
+case-insensitively. Non-ASCII Locale.US case conversion equivalence is not
+claimed. Malformed/unknown first update does not fall through to later ones.
+Known JSON/expiry validation and commit-before-ACK ordering remain unchanged.
+Regression verifies wrong tag and later-update refusal plus lowercase routing.
+No live operation, generic handler expansion or sender allowlist is introduced.
+
+Discovery limitation: short exact log prefixes had no xrefs; filtered strings
+revealed full log literals and anchored0v7.A09. Its error text mentions
+operation_name, but actual instruction reads op_name; follow the instruction.
+Reproduce apk-strings --contains mexnotificationrouter, apk-xref full literal,
+apk-smali0v7.A09 and8AF.A09 with signatures/exceptions.
+
+- [mex-router.txt](mex-router.txt) — SHA-256 `0517c6e39e4707b2e412caabfd1d983af47b4a988d33be9808dfec22eabf6ea7`.
+- [json-handler-adapter.txt](json-handler-adapter.txt) — SHA-256 `856817a3ffc55eabef8b4352c3ca3284b835aca434b9bc47384b0587f5a979a2`.

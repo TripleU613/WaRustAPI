@@ -1,3 +1,13 @@
+2026-11-04 — **Reach-out MEX operation routing aligned:**
+
+Only first update can supply restriction state; supported operation matching
+is ASCII case-insensitive, following pinned router behavior. Wrong tags and
+later matching updates no longer mutate state. Sender authority remains open.
+[Evidence/tests](docs/protocol/rea/2.26.43.72-reachout-state/README.md#current-mex-operation-routing-2026-11-04-offline-corrected).
+Validation: **1,267 workspace/all-feature tests**, strict Clippy, CLI-reference,
+formatting, coverage freshness and repository hygiene passed.
+No live account traffic.
+
 2026-11-04 — **Explicit inactive reach-out update aligned with pinned handler:**
 
 Native7vL resets inactive state without reading expiry. Rust now permits
