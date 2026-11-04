@@ -1,3 +1,31 @@
+2026-11-04 — **REA continuation started (offline):** reused the current Rust
+actors/store/CLI and versioned research workflow. REA loaded the exact
+2.26.43.72 APK (106,897 parsed classes); whole-file indexing scanned 15,728
+members, 13 DEX entries and 12 native libraries. A resumable A00–A19 queue
+covers the complete feature objective, including previously deferred systems.
+The existing `xtask apk-coverage` now reports retained REA records separately
+from bundle topics, validates identities and explicit Rust ownership, and is
+selected by CI when REA JSON inputs change. Current totals: 366 distinct REA
+records, including 10 current-build records and 7 explicit ownership mappings.
+Neither inventory nor a complete method export counts as a completed port.
+[Queue](docs/protocol/apk-porting.md#whole-apk-continuation-queue-2026-11-04) ·
+[Coverage](docs/protocol/apk-coverage.md).
+
+**First port:** traced `guess_wait` from current OTP/security-code response
+constructors to password/PIN consumers, seconds parsing and the persisted input
+timer. Rust now parses it, reports `guess_wait_seconds` and retains its deadline
+on refused/cooling-down states without enabling unsupported retries. Ordinary
+wrong-OTP re-entry was already implemented; the old blocker note was corrected.
+[Evidence, interpretation and residual gaps](docs/protocol/rea/2.26.43.72-registration-recovery/README.md).
+No account operation or APK execution occurred. Full APK conversion remains
+unfinished; per-subsystem evidence/port/offline/live gates are explicit.
+
+Validation for this continuation: **435 default-feature tests** and **1,114
+workspace/all-feature tests** passed; strict all-target/all-feature Clippy,
+formatting, CLI-reference regeneration, nine focused coverage tests and all 16
+CI-routing tests passed. Repository hygiene checked 3,778 local links and 167
+checksum bundles (32,149,347 bytes). No live validation is claimed.
+
 2026-11-04 — **Fixed/offline (default build):** `chat_settings::edit_payload`
 now shares its optional Signal dependency's feature gate. Its unconditional call
 broke the documented default build and xtask commands (E0433), while all-feature

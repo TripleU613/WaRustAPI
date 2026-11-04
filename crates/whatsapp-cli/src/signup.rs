@@ -550,6 +550,7 @@ pub(super) async fn run(
                 "fallback_methods": response.fallback_methods.as_ref().map(|m| format!("{m:?}")),
                 "recommended_method": response.recommended_method.as_ref().map(|m| format!("{m:?}")),
                 "retry_after_seconds": response.retry_after.map(|d| d.as_secs()),
+                "guess_wait_seconds": response.guess_wait.map(|d| d.as_secs()),
                 "sms_wait_seconds": response.sms_wait.map(|d| d.as_secs()),
                 "voice_wait_seconds": response.voice_wait.map(|d| d.as_secs()),
                 "email_otp_wait_seconds": response.email_otp_wait.map(|d| d.as_secs()),

@@ -1,0 +1,5 @@
+["guess_wait"]  (2 reference(s))
+  classes9.dex  Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;->A07(LLLLLLLLLLLLLLLLLLLLLL)
+    dex byte offset: 0x662370
+  classes9.dex  Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;->A0B(LLLLLLLLLLLLLLLLLLL)
+    dex byte offset: 0x663f9e

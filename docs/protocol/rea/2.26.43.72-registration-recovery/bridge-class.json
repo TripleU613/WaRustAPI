@@ -1,0 +1,328 @@
+{
+  "evidence_id": "ev_5c69888652ca3f22cc2449e012aa53bdf0752cb790fd68448ab81ea30f6104ef",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_class",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "com.whatsapp.registration.core.http.KotlinRegistrationBridge"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-NYiLZR/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "com.whatsapp.registration.core.http.KotlinRegistrationBridge"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"()V\"},{\"signature\":\"A00(org.json.JSONObject): int\",\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"(Lorg/json/JSONObject;)I\"},{\"signature\":\"A01(java.lang.Object, java.lang.Object, java.lang.String, java.lang.String): X.HYB\",\"def_pos\":0,\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)LX/HYB;\"},{\"signature\":\"A02(java.lang.String, java.lang.String, java.lang.String): X.HYB\",\"def_pos\":0,\"name\":\"A02\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)LX/HYB;\"},{\"signature\":\"A03(com.whatsapp.registration.core.http.KotlinRegistrationBridge, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, X.0cf, byte[], byte[]): java.lang.Enum\",\"def_pos\":0,\"name\":\"A03\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;LX/0cf;[B[B)Ljava/lang/Enum;\"},{\"signature\":\"A04(com.whatsapp.registration.core.http.KotlinRegistrationBridge, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, X.0cf): java.lang.Enum\",\"def_pos\":0,\"name\":\"A04\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;LX/0cf;)Ljava/lang/Enum;\"},{\"signature\":\"A05(java.lang.String): java.lang.Integer\",\"def_pos\":0,\"name\":\"A05\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)Ljava/lang/Integer;\"},{\"signature\":\"A06(com.whatsapp.registration.core.http.KotlinRegistrationBridge, X.GfR, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, X.0cf, byte[], byte[], boolean): java.lang.Object\",\"def_pos\":0,\"name\":\"A06\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;LX/GfR;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;LX/0cf;[B[BZ)Ljava/lang/Object;\"},{\"signature\":\"A07(com.whatsapp.registration.core.http.KotlinRegistrationBridge, X.GfR, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, X.0cf, byte[], byte[], byte[]): java.lang.Object\",\"def_pos\":0,\"name\":\"A07\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;LX/GfR;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;LX/0cf;[B[B[B)Ljava/lang/Object;\"},{\"signature\":\"A08(com.whatsapp.registration.core.http.KotlinRegistrationBridge, X.GfR, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, X.0cf, byte[], byte[], byte[], int, int, int): java.lang.Object\",\"def_pos\":0,\"name\":\"A08\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;LX/GfR;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;LX/0cf;[B[B[BIII)Ljava/lang/Object;\"},{\"signature\":\"A09(com.whatsapp.registration.core.http.KotlinRegistrationBridge, X.GfR, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, X.0cf, byte[], byte[], int, int, int): java.lang.Object\",\"def_pos\":0,\"name\":\"A09\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;LX/GfR;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;LX/0cf;[B[BIII)Ljava/lang/Object;\"},{\"signature\":\"A0A(com.whatsapp.registration.core.http.KotlinRegistrationBridge, X.GfR, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, X.0cf, byte[], byte[], byte[], byte[]): java.lang.Object\",\"def_pos\":0,\"name\":\"A0A\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;LX/GfR;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;LX/0cf;[B[B[B[B)Ljava/lang/Object;\"},{\"signature\":\"A0B(com.whatsapp.registration.core.http.KotlinRegistrationBridge, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, X.0cf, byte[], byte[], byte[]): java.lang.Object\",\"def_pos\":0,\"name\":\"A0B\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;LX/0cf;[B[B[B)Ljava/lang/Object;\"},{\"signature\":\"A0C(com.whatsapp.registration.core.http.KotlinRegistrationBridge, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, X.0cf, byte[], byte[]): java.lang.Object\",\"def_pos\":0,\"name\":\"A0C\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;LX/0cf;[B[B)Ljava/lang/Object;\"},{\"signature\":\"A0D(com.whatsapp.registration.core.http.KotlinRegistrationBridge, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, X.0cf, byte[], byte[]): java.lang.Object\",\"def_pos\":0,\"name\":\"A0D\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;LX/0cf;[B[B)Ljava/lang/Object;\"},{\"signature\":\"A0E(com.whatsapp.registration.core.http.KotlinRegistrationBridge, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, X.0cf, byte[], byte[], byte[]): java.lang.Object\",\"def_pos\":0,\"name\":\"A0E\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;LX/0cf;[B[B[B)Ljava/lang/Object;\"},{\"signature\":\"A0F(com.whatsapp.registration.core.http.KotlinRegistrationBridge, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, X.0cf): java.lang.Object\",\"def_pos\":0,\"name\":\"A0F\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;LX/0cf;)Ljava/lang/Object;\"},{\"signature\":\"A0G(com.whatsapp.registration.core.http.KotlinRegistrationBridge, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, X.0cf): java.lang.Object\",\"def_pos\":0,\"name\":\"A0G\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;LX/0cf;)Ljava/lang/Object;\"},{\"signature\":\"A0H(com.whatsapp.registration.core.http.KotlinRegistrationBridge, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, X.0cf, byte[], byte[]): java.lang.Object\",\"def_pos\":0,\"name\":\"A0H\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;LX/0cf;[B[B)Ljava/lang/Object;\"},{\"signature\":\"A0I(com.whatsapp.registration.core.http.KotlinRegistrationBridge, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, X.0cf, byte[], byte[], byte[]): java.lang.Object\",\"def_pos\":0,\"name\":\"A0I\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;LX/0cf;[B[B[B)Ljava/lang/Object;\"},{\"signature\":\"A0J(com.whatsapp.registration.core.http.KotlinRegistrationBridge, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, X.0cf): java.lang.Object\",\"def_pos\":0,\"name\":\"A0J\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;LX/0cf;)Ljava/lang/Object;\"},{\"signature\":\"A0K(java.lang.String, org.json.JSONObject): java.lang.String\",\"def_pos\":0,\"name\":\"A0K\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;Lorg/json/JSONObject;)Ljava/lang/String;\"},{\"signature\":\"A0L(org.json.JSONObject): java.lang.String\",\"def_pos\":0,\"name\":\"A0L\",\"is_constructor\":false,\"dex_descriptor\":\"(Lorg/json/JSONObject;)Ljava/lang/String;\"},{\"signature\":\"A0M(org.json.JSONObject): java.util.LinkedHashMap\",\"def_pos\":0,\"name\":\"A0M\",\"is_constructor\":false,\"dex_descriptor\":\"(Lorg/json/JSONObject;)Ljava/util/LinkedHashMap;\"},{\"signature\":\"A0N(org.json.JSONObject): java.util.LinkedHashMap\",\"def_pos\":0,\"name\":\"A0N\",\"is_constructor\":false,\"dex_descriptor\":\"(Lorg/json/JSONObject;)Ljava/util/LinkedHashMap;\"},{\"signature\":\"A0O(com.whatsapp.registration.core.http.KotlinRegistrationBridge): X.023\",\"def_pos\":0,\"name\":\"A0O\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;)LX/023;\"},{\"signature\":\"A0P(X.HYB, X.GfR, java.lang.String): void\",\"def_pos\":0,\"name\":\"A0P\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/HYB;LX/GfR;Ljava/lang/String;)V\"},{\"signature\":\"A0Q(X.HYB, java.lang.String, java.lang.String, java.lang.String, java.lang.String): void\",\"def_pos\":0,\"name\":\"A0Q\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/HYB;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V\"},{\"signature\":\"A0R(X.HYB, byte[], byte[]): void\",\"def_pos\":0,\"name\":\"A0R\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/HYB;[B[B)V\"},{\"signature\":\"A0S(X.ILI): void\",\"def_pos\":0,\"name\":\"A0S\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/ILI;)V\"},{\"signature\":\"A0T(X.HKd, boolean): X.C6v\",\"def_pos\":0,\"name\":\"A0T\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/HKd;Z)LX/C6v;\"}],\"method_count\":31,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"KotlinRegistrationBridge\",\"full_name\":\"com.whatsapp.registration.core.http.KotlinRegistrationBridge\",\"field_count\":3,\"fields\":[{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"com.whatsapp.registration.core.http.retry.RetryingHttpClient\",\"def_pos\":0,\"name\":\"A02\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "com.whatsapp.registration.core.http.KotlinRegistrationBridge",
+    "methods": [
+      {
+        "name": "<init>",
+        "reported_signature": "<init>(): void",
+        "overload_index": 0,
+        "is_constructor": true,
+        "dex_descriptor": "()V"
+      },
+      {
+        "name": "A00",
+        "reported_signature": "A00(org.json.JSONObject): int",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lorg/json/JSONObject;)I"
+      },
+      {
+        "name": "A01",
+        "reported_signature": "A01(java.lang.Object, java.lang.Object, java.lang.String, java.lang.String): X.HYB",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)LX/HYB;"
+      },
+      {
+        "name": "A02",
+        "reported_signature": "A02(java.lang.String, java.lang.String, java.lang.String): X.HYB",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)LX/HYB;"
+      },
+      {
+        "name": "A03",
+        "reported_signature": "A03(com.whatsapp.registration.core.http.KotlinRegistrationBridge, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, X.0cf, byte[], byte[]): java.lang.Enum",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;LX/0cf;[B[B)Ljava/lang/Enum;"
+      },
+      {
+        "name": "A04",
+        "reported_signature": "A04(com.whatsapp.registration.core.http.KotlinRegistrationBridge, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, X.0cf): java.lang.Enum",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;LX/0cf;)Ljava/lang/Enum;"
+      },
+      {
+        "name": "A05",
+        "reported_signature": "A05(java.lang.String): java.lang.Integer",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Ljava/lang/String;)Ljava/lang/Integer;"
+      },
+      {
+        "name": "A06",
+        "reported_signature": "A06(com.whatsapp.registration.core.http.KotlinRegistrationBridge, X.GfR, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, X.0cf, byte[], byte[], boolean): java.lang.Object",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;LX/GfR;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;LX/0cf;[B[BZ)Ljava/lang/Object;"
+      },
+      {
+        "name": "A07",
+        "reported_signature": "A07(com.whatsapp.registration.core.http.KotlinRegistrationBridge, X.GfR, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, X.0cf, byte[], byte[], byte[]): java.lang.Object",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;LX/GfR;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;LX/0cf;[B[B[B)Ljava/lang/Object;"
+      },
+      {
+        "name": "A08",
+        "reported_signature": "A08(com.whatsapp.registration.core.http.KotlinRegistrationBridge, X.GfR, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, X.0cf, byte[], byte[], byte[], int, int, int): java.lang.Object",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;LX/GfR;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;LX/0cf;[B[B[BIII)Ljava/lang/Object;"
+      },
+      {
+        "name": "A09",
+        "reported_signature": "A09(com.whatsapp.registration.core.http.KotlinRegistrationBridge, X.GfR, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, X.0cf, byte[], byte[], int, int, int): java.lang.Object",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;LX/GfR;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;LX/0cf;[B[BIII)Ljava/lang/Object;"
+      },
+      {
+        "name": "A0A",
+        "reported_signature": "A0A(com.whatsapp.registration.core.http.KotlinRegistrationBridge, X.GfR, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, X.0cf, byte[], byte[], byte[], byte[]): java.lang.Object",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;LX/GfR;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;LX/0cf;[B[B[B[B)Ljava/lang/Object;"
+      },
+      {
+        "name": "A0B",
+        "reported_signature": "A0B(com.whatsapp.registration.core.http.KotlinRegistrationBridge, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, X.0cf, byte[], byte[], byte[]): java.lang.Object",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;LX/0cf;[B[B[B)Ljava/lang/Object;"
+      },
+      {
+        "name": "A0C",
+        "reported_signature": "A0C(com.whatsapp.registration.core.http.KotlinRegistrationBridge, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, X.0cf, byte[], byte[]): java.lang.Object",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;LX/0cf;[B[B)Ljava/lang/Object;"
+      },
+      {
+        "name": "A0D",
+        "reported_signature": "A0D(com.whatsapp.registration.core.http.KotlinRegistrationBridge, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, X.0cf, byte[], byte[]): java.lang.Object",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;LX/0cf;[B[B)Ljava/lang/Object;"
+      },
+      {
+        "name": "A0E",
+        "reported_signature": "A0E(com.whatsapp.registration.core.http.KotlinRegistrationBridge, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, X.0cf, byte[], byte[], byte[]): java.lang.Object",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;LX/0cf;[B[B[B)Ljava/lang/Object;"
+      },
+      {
+        "name": "A0F",
+        "reported_signature": "A0F(com.whatsapp.registration.core.http.KotlinRegistrationBridge, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, X.0cf): java.lang.Object",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;LX/0cf;)Ljava/lang/Object;"
+      },
+      {
+        "name": "A0G",
+        "reported_signature": "A0G(com.whatsapp.registration.core.http.KotlinRegistrationBridge, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, X.0cf): java.lang.Object",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;LX/0cf;)Ljava/lang/Object;"
+      },
+      {
+        "name": "A0H",
+        "reported_signature": "A0H(com.whatsapp.registration.core.http.KotlinRegistrationBridge, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, X.0cf, byte[], byte[]): java.lang.Object",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;LX/0cf;[B[B)Ljava/lang/Object;"
+      },
+      {
+        "name": "A0I",
+        "reported_signature": "A0I(com.whatsapp.registration.core.http.KotlinRegistrationBridge, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, X.0cf, byte[], byte[], byte[]): java.lang.Object",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;LX/0cf;[B[B[B)Ljava/lang/Object;"
+      },
+      {
+        "name": "A0J",
+        "reported_signature": "A0J(com.whatsapp.registration.core.http.KotlinRegistrationBridge, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.Map, X.0cf): java.lang.Object",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;LX/0cf;)Ljava/lang/Object;"
+      },
+      {
+        "name": "A0K",
+        "reported_signature": "A0K(java.lang.String, org.json.JSONObject): java.lang.String",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Ljava/lang/String;Lorg/json/JSONObject;)Ljava/lang/String;"
+      },
+      {
+        "name": "A0L",
+        "reported_signature": "A0L(org.json.JSONObject): java.lang.String",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lorg/json/JSONObject;)Ljava/lang/String;"
+      },
+      {
+        "name": "A0M",
+        "reported_signature": "A0M(org.json.JSONObject): java.util.LinkedHashMap",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lorg/json/JSONObject;)Ljava/util/LinkedHashMap;"
+      },
+      {
+        "name": "A0N",
+        "reported_signature": "A0N(org.json.JSONObject): java.util.LinkedHashMap",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lorg/json/JSONObject;)Ljava/util/LinkedHashMap;"
+      },
+      {
+        "name": "A0O",
+        "reported_signature": "A0O(com.whatsapp.registration.core.http.KotlinRegistrationBridge): X.023",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;)LX/023;"
+      },
+      {
+        "name": "A0P",
+        "reported_signature": "A0P(X.HYB, X.GfR, java.lang.String): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/HYB;LX/GfR;Ljava/lang/String;)V"
+      },
+      {
+        "name": "A0Q",
+        "reported_signature": "A0Q(X.HYB, java.lang.String, java.lang.String, java.lang.String, java.lang.String): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/HYB;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V"
+      },
+      {
+        "name": "A0R",
+        "reported_signature": "A0R(X.HYB, byte[], byte[]): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/HYB;[B[B)V"
+      },
+      {
+        "name": "A0S",
+        "reported_signature": "A0S(X.ILI): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/ILI;)V"
+      },
+      {
+        "name": "A0T",
+        "reported_signature": "A0T(X.HKd, boolean): X.C6v",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/HKd;Z)LX/C6v;"
+      }
+    ],
+    "fields": [
+      {
+        "name": "A00",
+        "reported_type": "X.05a"
+      },
+      {
+        "name": "A01",
+        "reported_type": "com.google.common.base.Optional"
+      },
+      {
+        "name": "A02",
+        "reported_type": "com.whatsapp.registration.core.http.retry.RetryingHttpClient"
+      }
+    ],
+    "inner_classes": []
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

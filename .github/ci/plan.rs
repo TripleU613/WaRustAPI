@@ -94,6 +94,11 @@ const DOCS_NOT_INPUTS: &[(&str, &str, &str)] = &[
         "directory: coverage reads only its manifest.json/targets.json, routed by their own rule",
     ),
     (
+        "xtask/src/coverage_rea.rs",
+        "docs/protocol/rea",
+        "directory: REA coverage reads its JSON records/ownership, routed by their own rule",
+    ),
+    (
         "xtask/src/coverage.rs",
         "docs/protocol/apk/*/{manifest,targets}.json",
         "text in the coverage report, not a path that is read",
@@ -162,11 +167,12 @@ impl Plan {
         } else if path == "docs/protocol/dependency-report.md" {
             self.dependencies = true;
         } else if path == "docs/protocol/apk-coverage.json"
+            || (path.starts_with("docs/protocol/rea/") && path.ends_with(".json"))
             || (path.starts_with("docs/protocol/apk/")
                 && (path.ends_with("/manifest.json") || path.ends_with("/targets.json")))
         {
             // xtask's committed_report_is_current test keeps the coverage
-            // report in step with the bundles it summarizes.
+            // report in step with its bundle and REA evidence inputs.
             self.xtask = true;
         } else if path == "rustfmt.toml" || path == ".rustfmt.toml" {
             self.api = true;
@@ -370,6 +376,8 @@ mod tests {
             "docs/protocol/apk-coverage.json",
             "docs/protocol/apk/2.26.37.71-core/targets.json",
             "docs/protocol/apk/2.26.37.70/manifest.json",
+            "docs/protocol/rea/2.26.43.72-registration-recovery/register-phone-number.json",
+            "docs/protocol/rea/2.26.43.72-registration-recovery/ownership.json",
         ] {
             let p = route(&[path]);
             assert!(p.xtask && !p.api && !p.package, "{path}");

@@ -2,14 +2,16 @@
 //! releases the committed research bundles cover, which topics have evidence
 //! from more than one release, and which Rust files no retained topic cites.
 //!
-//! Reads only `docs/protocol/apk/*/manifest.json` and `targets.json`; it needs
-//! no APK and proves nothing about unexported code. `docs/protocol/rea`
-//! envelopes are not counted here.
+//! Bundle-topic coverage and retained REA record accounting are separate.
+//! Neither requires the APK or establishes implementation/interoperability parity.
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};
 
 use serde_json::{Value, json};
+
+#[path = "coverage_rea.rs"]
+mod rea;
 
 /// The release the default profile is pinned to (docs/design/README.md).
 const PINNED_RELEASE: &str = "2.26.36.75";
@@ -36,6 +38,12 @@ pub fn run(root: &Path, check: bool) -> Result<(), String> {
 }
 
 fn print_summary(report: &Value) {
+    println!(
+        "REA: {} distinct retained records, {} duplicate copies, {} explicitly mapped to Rust",
+        report["rea"]["records"],
+        report["rea"]["duplicate_copies"],
+        report["rea"]["records_with_explicit_ownership"]
+    );
     for release in report["releases"].as_array().into_iter().flatten() {
         println!(
             "{}: {} bundles, {} topics",
@@ -136,8 +144,15 @@ fn build(root: &Path) -> Result<Value, String> {
         .map(|(topic, releases)| json!({"topic": topic, "releases": releases}))
         .collect();
 
+    let bundle_hashes = releases
+        .iter()
+        .map(|(version, (hash, _, _))| (version.clone(), hash.clone()))
+        .collect();
+    let rea = rea::build(root, &bundle_hashes)?;
+
     Ok(json!({
-        "source": "docs/protocol/apk/*/{manifest,targets}.json only; docs/protocol/rea envelopes are not counted; unexported APK code is outside this report",
+        "rea": rea,
+        "source": "docs/protocol/apk/*/{manifest,targets}.json only; REA records are accounted separately in rea; unexported APK code is outside this report",
         "pinned_release": {
             "version": PINNED_RELEASE,
             "bundles": releases.get(PINNED_RELEASE).map_or(0, |r| r.1),

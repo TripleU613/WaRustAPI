@@ -1,3 +1,10 @@
+2026-11-04 — **Offline continuation:** the renewed whole-APK objective is tracked
+in the [A00–A19 porting queue](protocol/apk-porting.md#whole-apk-continuation-queue-2026-11-04),
+using existing Rust modules and REA/recipe evidence. The first current-build
+continuation preserves the separate security-code guessing wait; it does not
+repeat already implemented OTP re-entry or establish live parity. See
+[trace and limits](protocol/rea/2.26.43.72-registration-recovery/README.md).
+
 2026-10-13 — **Implemented/offline (HTTP parity: media list and event kinds):**
 `serve --store-routes` now also answers `GET /v1/media` (the `media-list`
 selectors: SHA-256 of the inbox key, snake_case kind, advertised size; no URL,

@@ -83,6 +83,127 @@ and native-code change attribution. UI/media payload extraction is unnecessary
 for protocol reproduction. Bulk analysis trees and native binaries stay local;
 compact attributable evidence and interpreted code stay in Git.
 
+## Whole-APK continuation queue (2026-11-04)
+
+The existing `xtask apk-file-index` also scanned all **15,728 archive members**,
+including **13 DEX entries** and **12 native libraries** across arm64-v8a,
+armeabi-v7a, x86 and x86_64. Its full hashed file inventory stays local outside
+the checkout. These are inventory counts, not semantic/port coverage.
+
+The owner's renewed objective is the whole APK's behavior represented through
+this existing Rust system. The earlier v0.1 boundaries and parked features remain
+historical milestones, not a reason to drop calls, channels, backups or other
+unported systems from the end-state queue. Continue the current actors, store,
+CLI, recipes, evidence and tests; do not create a second client or replace working
+ports with generated approximations.
+
+**Observed static inventory:** REA inspected `com.whatsapp` **2.26.43.72**,
+version code **264307238**, APK SHA-256
+`887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e`.
+Its JADX metadata contains **106,897 classes** and **15,728 resources**
+([retained package summary](rea/2.26.43.72-registration-recovery/package-summary.json), Evidence `ev_6fb00cc767d6b36a2539c5ba9319de05fa4c7cc95d3bb6c034a118c4a5468581`,
+parent `ev_59f5d29110e9a43c336fef62c574a9dd0e0e60d7a58c05caee041460e5cf06b3`).
+These are inventory counts, not classes understood, methods reproduced, or a
+conversion percentage. Manifest/resource decoding does not trace their consumers.
+Native methods, reflection, callbacks, configured branches and external services
+remain separate coverage obligations.
+
+The **2.26.36.75 default profile**, **2.26.37.70 comparison recipe**, extensive
+**2.26.37.71 method evidence**, and **2.26.43.72** input remain separate identities.
+Do not relabel old evidence as current merely because a string or class name
+matches. Existing [coverage accounting](apk-coverage.md),
+[release comparison](apk-2.26.43.72-comparison.md),
+[handoff review](project-handoff.md) and the dated [status](../../STATUS.md)
+are inputs to this queue. Some older feature-matrix blockers are superseded by
+November changes; the linked source/evidence must be checked before restarting
+an allegedly missing port.
+
+### Resume record and per-boundary gates
+
+Each row below is an enduring task ID, not a claim that a subsystem is one atomic
+patch. For each next boundary, retain: **task ID; exact APK/hash; entry point and
+caller/producer; REA Evidence IDs and/or reproducible recipe; affected Rust files;
+traced branches and explicit unknowns; fixtures; CLI/API exposure; last test;
+next unresolved question**. Keep the latest record in its linked protocol document
+and update this queue when a boundary closes. Raw APKs and bulk analysis stay local.
+
+Use five distinct states: **inventoried**, **traced**, **ported**, **offline-verified**,
+and **live-observed**. A row can contain different states for different branches;
+none promotes the entire subsystem. A prior live ACK does not establish rendering,
+playback, restart behavior or another release's equivalence. For an absent system,
+first locate entry points and persistence/callback boundaries; create Rust modules
+only when there is an evidenced behavior to implement.
+
+Every port must pass these gates:
+
+1. **Evidence:** request/response construction, defaults, gates, producers,
+   errors, timing/units and durable state changes have attributable source.
+   JNI/native dependencies and Android-only behavior are followed or left unknown.
+2. **Implementation:** patch the existing owner, preserve identity, ratchet,
+   journal and reservation invariants, and refuse unsupported branches honestly.
+3. **Offline verification:** independent APK-derived bytes or another attributed
+   oracle cover success and refusal/partial cases, restart/rollback and duplicate
+   behavior where applicable. Passing Rust round trips alone is insufficient.
+4. **Exposure:** the existing CLI/library/API surface and OpenAPI describe actual
+   capability and transport; regenerate CLI docs when commands change.
+5. **Interoperability:** record a separately authorized, bounded live observation
+   only when available. Otherwise leave that gate open and continue static work.
+
+### Ordered system map
+
+Rust owners below are relative to `crates/whatsapp-api/src/` unless stated
+otherwise. **Historical live** means the repository records a past experiment;
+this queue does not revalidate accounts or repeat requests. **Unknown** means
+not established by this review, not proof that code is absent from the APK.
+
+| ID / system | Reuse and current boundary | Next REA question → existing Rust owner | Acceptance boundary |
+| --- | --- | --- | --- |
+| A00 — Release, DEX, resources and native inventory | Current APK inventoried; most retained semantic evidence belongs to 37.71. Existing `xtask` recipes/remap/diff and REA envelopes are retained. | Map current class/method identities and native dependencies to existing topic/Rust ownership; distinguish changed, unchanged, ambiguous and untraced. Owners: `xtask/src/`, [APK coverage](apk-coverage.md), [file diff](apk-file-diff.md). | Every selected code/config/native topic has an exact release/hash and owner. Unassigned inventory remains visible; inventories and decompilation are never counted as ports. |
+| A01 — Onboarding and account verification | Partial trace/port; historical SMS/OTP/DOB success. PIN/email branches offline. Source already returns `stale`/`incorrect`/`mismatch` OTP answers to code entry with the evidenced `retry_after`/60-second answer gate; the older missing-reentry recommendation is stale. Distinct `guess_wait`/PIN semantics, `ok`/`attached`, old-device and passkey branches still require review. | Trace each current response field through its specific consumer, timer and next permitted action; do not substitute PIN wait for OTP wait. Owners: `registration/`, CLI `signup.rs` / `main.rs`. [Existing registration evidence](registration-lab.md). | Preserve saved identity, challenge and waits across every branch/restart; invalid/wrong/repeated codes have evidenced transitions and no generic refusal reset. |
+| A02 — Authentication, transport and connection lifecycle | Comparison Noise/certificates/login historically live; default profile remains gated; bounded recoverable reconnect is local policy with offline tests. | Re-anchor current handshake/login/version and terminal/recoverable paths, request startup order, framing limits and reconnect producers. Owners: `transport/{classic,handshake,noise,cert,socket,framing,login,connection}.rs`, `runtime/`. [Transport evidence](messaging-transport.md). | Attributed bytes and certificate checks; stable app-version identity; recoverable loss preserves uncertainty; refusals do not reconnect. |
+| A03 — Classic Signal, PQ and key inventory | Classic sessions historically live; hybrid/KEM primitives and selected bootstrap/fan-out paths offline. KEM upload now exists behind property 21198; native generation/initial ID selection is still untraced, rather than upload being wholly absent. | Follow current bundle/key-generation/rotation/last-resort producers, effective PQ gate and malformed-key paths. Owners: `signal/{direct,group,hybrid,kem}.rs`, `transport/{prekeys,kem_prekeys,device_key_batches}.rs`. [KEM inventory](kem-prekey-inventory.md), [native vectors](native-kem-vectors.md). | Independent vectors plus transactional session/inventory fixtures; upload gate, counts, IDs and consumption match traced producers; no fabricated key provenance. |
+| A04 — Identity, PN/LID and device lifecycle | Partial trace/port, directory-query historical live, identity/companion changes largely offline. Own pairing was previously parked, not implemented. | Close admission, authenticated namespace mapping, identity-change cleanup, initial companion bootstrap and pairing completion. Owners: `signal/adv/`, `transport/{devices,jid_map,identity_notifications,companion_admission,own_device}.rs`. [Cross-device research](cross-device-sync.md). | Verify identity authority, device membership and old-key cleanup atomically; device replacement never silently adopts unauthenticated state. Pairing has its own evidenced completion before being advertised. |
+| A05 — Direct messages and message mutations | Historical live text, reply, reaction, poll, edit/revoke; selective receive/own-device/mutation paths offline. Existing outbox/journal are authoritative. | Trace remaining content combinations, peer edit/revoke policy, quote attribution, expiration and keep/unkeep writers. Owners: `outbox.rs`, `transport/{outgoing,messaging,quotes,reactions,polls,chat_settings}.rs`, `transport/inbox.rs`. [Mutation gaps](unknowns.md), [polls](poll-votes.md). | Wire fixtures, immutable original-target/ownership guards, duplicate suppression and durable events cover each supported combination; no broad claim from one plain-text send. |
+| A06 — Receipts, retries and send status | Historical delivery/read results; many device/group/aggregate projections offline. Normal-driver retry answer and fresh-bundle refetch are implemented, superseding the older matrix's absent-runtime statement. | Close count/base-key policy, receipt-carried keys, group/broadcast retry, primary cleanup and remaining privacy/read-self gates. Owners: `transport/{receipts,retry_answer,send_versions}.rs`, `transport/connection.rs`, `model/receipt.rs`. [Retry evidence](retry-answers.md), [receipt roles](receipt-user.md). | One original-recipient reservation per answer; no duplicate ratchet/send after restart; refused or unknown branches remain inspectable; each device/time fact retains actual authority. |
+| A07 — Groups and communities | Historical group messaging and selected create/info operations; offline normal-outbox and metadata branches. Group reactions require distribution-shape review; community classification exists but management is absent. | Trace membership/version changes, sender-key exposure/distribution, subject recovery/MEX callbacks and community create/link/announcement. Owners: `transport/{groups,group_fanout,outgoing_group,group_inbox,sender_key_distribution}.rs`, `transport/mex/`. [Groups](groups.md), [normal outbox](normal-group-outbox.md). | Membership changes and retries cannot leak to removed devices or reuse stale sender-key exposure; management callbacks durably apply only validated complete replies. |
+| A08 — Media, view-once, stickers and richer payloads | Historical image/voice/view-once and November document/video results; receive forms and quoted media have offline gaps. Sticker send, HD variants, thumbnails and several caption/format paths remain incomplete. | Follow descriptor/key-domain/upload/download producers, thumbnail/HD paths, view-once consumption/opened synchronization and richer media envelopes. Owners: `signal/image.rs`, `transport/{media,image_upload,image_download,outgoing_media,voice_note}.rs`. [Media](video-media.md), [documents](document-media.md), [stickers](stickers.md). | Bounded streaming/authentication, correct metadata and durable upload/send uncertainty; view-once cannot reopen after consumption/crash; per-format playback/display remains a separate live gate. |
+| A09 — Contacts, presence, profiles and local chat actions | Historical contacts/typing/block/profile-picture results; contact-state/backoff, avatar transformations and several chat actions partial. | Trace current sync types, visibility/typing timing, profile image removal/preview/crop and local-vs-synchronized actions. Owners: `transport/{contacts,presence,profile_picture,about,blocklist,chat_clear,actions}.rs`. [Chat actions](chat-actions.md), [presence](presence.md). | Correct address/state transitions and bounded cache updates; local-only changes do not claim remote synchronization or imply a setter was accepted. |
+| A10 — Feature configuration, privacy and account settings | ABProps parsing/storage and MobileConfig traces exist; effective values and complete application remain partial. Several features depend on unresolved selection gates. | Follow effective getter precedence, defaults, snapshots/deltas, account/build binding, refresh and setters before activating gated branches. Owners: `transport/{abprops,selector,two_factor}.rs`, `registration/request_config.rs`. [Feature configuration](feature-configuration.md), [MobileConfig](mobileconfig-table.md), [read policy](read-setting-sync.md). | Typed effective values retain source/version/freshness, actual gates feed callers, unknown values do not become invented defaults or automatic mutations. |
+| A11 — Status and broadcasts | Historical text status/viewer/like receive results; image/audio/HD/reshares/privacy and ordinary broadcast send/list management incomplete. | Trace status audience/visibility selection, reshare/like/media producers, broadcast list membership and ordinary-list stanza/receipt differences. Owners: `transport/{groups,group_send,status_receipts,outgoing_group}.rs`. [Status](status.md), [broadcast](broadcast-dispatch.md). | Separate status from ordinary broadcast admission; audience/membership and original attribution survive restart; text success does not claim media/audience parity. |
+| A12 — App-state, history and own-device synchronization | Cryptographic/action/snapshot primitives and selected contact/name writes exist; history notices/queue admission partial; full history application and own-device bootstrap incomplete. | Follow snapshot reconciliation, ordering/version gaps, complete action mutation set, authenticated history transfer and native store admission. Owners: `signal/app_state*`, `transport/{app_state_sync,history_notice,own_device}.rs`, `store/`, `sync.rs`. [Cross-device](cross-device-sync.md), [history queue](history-queue.md). | No unauthenticated or partial state becomes authority; replay/order/version and rollback cases have fixtures; missing history stays an explicit gap. |
+| A13 — Channels / newsletters | Namespace modeled; previously parked; no full subscribe/publish/admin client port established. | Locate channel creation/discovery/subscription, message/receipt, signature/identity and moderation entry points and storage, then map onto existing client/events. Owners start with `model/jid.rs`, `model/message.rs`, `sync.rs`; no empty transport module. [Feature matrix](../feature-parity.md). | Separate namespace trust and permission semantics; an evidenced vertical slice precedes support claims. Ordinary group support does not establish channel support. |
+| A14 — Voice/video calls | Absent from the current client feature matrix; protocol/native/media dependencies unresearched here. | Inventory actual call signaling/state machine, key material, media transport/codec JNI boundaries, permissions and teardown before choosing Rust adapters. Owners start at `transport/connection.rs`, `runtime/`, `sync.rs`; dedicated implementation only after trace. | Evidenced setup/accept/reject/end and error lifecycle, resource bounds and key cleanup; signaling decode alone is not an interoperable call or audible/video media proof. |
+| A15 — Business, commerce, payments and optional APK services | No complete client feature ports established by this review. Presence of generated protobuf types or notification ACKs is not commerce/payment support. | Identify account/region/feature gates, actual request/response/state owners, message forms and external-service boundaries from current APK. Map evidenced messaging behavior into existing models/actions; keep external-service requirements explicit. | No guessed credentials, eligibility or transaction fields; each operation has permission/error/state fixtures and separate interoperability evidence. No live financial transaction is implied by static research. |
+| A16 — Persistence, migrations, backup/restore and data lifecycle | Encrypted redb transactions, key rotation, outbox/inbox journal and crash tests exist; full consistent backup/restore and APK backup/history import equivalence remain unfinished. | Trace relevant backup/export/import admission, schema/version migration, retention/deletion and lifecycle behavior; distinguish local Rust format from APK format. Owners: `store/`, `session.rs`, `sync.rs`, CLI store commands. [Persistence design](../design/persistence.md), [replay audit](replay-safety-audit.md). | Consistent crypto+pending-work+idempotency snapshot, rollback detection and restart tests; never resume old Noise counters or claim a key-only dump is full restore. |
+| A17 — Android UI, resources and platform adaptation | UI/Android services are not a Rust API port. Current resource count is inventory only; user-visible behavior, prompts, timers, defaults and platform callbacks can still affect protocol semantics. | Classify each discovered UI/platform dependency as behavior to preserve, platform adapter needed, reusable third party or presentation-only adaptation, with reason and caller. Owners: existing CLI/API and `model/`, `runtime/`; no wholesale Android UI clone assumed. | The Rust system exposes equivalent actionable states/errors and required inputs; presentation adaptation is explicit, never counted as protocol code reproduced. Asset payloads stay out of research bundles. |
+| A18 — Native libraries and bundled dependencies | Selected 37.71 loader reconstruction/JNI KEM and independent vectors exist, not complete current-native coverage. Other libraries/dependencies remain to classify. | Inventory each current ELF/JNI export/dependency and Java caller, identify relevant unresolved algorithms/state owners, compare versions, then use Ghidra/REA on exact native targets. Reuse `xtask` native tools and `signal/kem.rs`. [Unpacking](native-unpacking.md), [native KEM](native-kem.md). | Correct artifact/address binding and caller-to-export chain; distinguish reconstructed native instructions, emulator execution and Rust equivalence. Reuse approved maintained components where appropriate; no needless rewrite of bundled runtimes. |
+| A19 — Library/CLI/HTTP integration and release | Existing actor/event architecture, CLI and selective HTTP inspection routes exist; OpenAPI also describes CLI-only contracts. No production-complete client established. | For each closed boundary, wire existing facade/actor/CLI, error and event contracts; align actual HTTP routes, features, licensing and package graph. Owners: `client.rs`, `runtime/`, `sync.rs`, CLI, `docs/api/openapi.json`. [API contract](../api/README.md). | Default and supported-feature builds, meaningful tests, strict Clippy, docs/hygiene and honest capability matrix pass; advertised operation has actual transport and evidence, with live gaps retained. |
+
+### Execution order and resumption
+
+Start with A00 plus the shared A01/A02/A03/A04/A06/A10 boundaries that can change
+all later behavior. The current focused investigation begins with A01 response/wait
+parity, reusing the existing wrong-OTP recovery; it does **not** replace this whole-system scope. Continue A05/A07/A08/
+A09/A11/A12 using the existing ports and fixtures, while A18 follows any native
+dependency exposed by those traces. A13/A14/A15/A16/A17 remain in the queue even
+where an earlier milestone deferred them. Apply A19 to each completed chunk,
+not once after a speculative full rewrite.
+
+Before resuming any row, read its linked latest findings, recipe/REA evidence
+and actual Rust call sites. Pick the first unresolved branch, export only the
+needed attributed methods/callers/config, implement and test it, then record the
+next boundary. Do not turn all 106,897 class names into implementation tickets:
+class names are locators, while behavior and state transitions are port units.
+Unknown/unassigned classes and relevant resources/native code still remain in
+inventory accounting until classified; no class is silently declared complete.
+
+No background conversion service or unattended account test is asserted by this
+queue. Research/porting progresses through recorded, reviewed chunks. The latest
+historical status records banned lab accounts and a pending verification; static
+work is independent of those accounts. Future live work must inspect selected
+private saved state and have the required authorization, without replacing keys,
+resetting refusals or replaying acknowledged/uncertain sends.
+
 ## Anchor-assisted relocation
 
 Recipe targets now accept `anchors`: exact string constants chosen from the

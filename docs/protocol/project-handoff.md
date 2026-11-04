@@ -89,11 +89,11 @@ or bulk decompilation. No Android device is required for static work.
 
 1. Reconcile the current feature/blocker matrix against source and dated results,
    preserving the default/comparison distinction. Avoid repeating completed traces.
-2. First bounded protocol task: resolve wrong-OTP recovery and `guess_wait` units
-   from the selected APK. Trace the response producer, consumer, timer and next
-   allowed action before changing state transitions. Preserve identity, cooldowns
-   and uncertain outcomes; never add a generic refusal reset.
-   [Existing evidence and exact unknown](unknowns.md#wrong-otp-re-entry-and-guess_wait-2026-10-13).
+2. Source-audit correction (2026-11-04): wrong-OTP recovery already exists in
+   commit `c7ff30d`; the older unknowns entry and this review's initial next-task
+   recommendation were stale. The current REA continuation traces the separate
+   PIN/password `guess_wait` and ports its preservation without enabling retries.
+   [Evidence and remaining work](rea/2.26.43.72-registration-recovery/README.md).
 3. Add offline fixtures and state/restart tests for that evidenced behavior; expose
    diagnostics through the existing CLI and update OpenAPI/status in the same chunk.
 4. Continue one protocol boundary at a time, with explicit acceptance criteria.

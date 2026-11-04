@@ -3,6 +3,61 @@
     "bundles": 0,
     "version": "2.26.36.75"
   },
+  "rea": {
+    "duplicate_copies": 0,
+    "excluded": [
+      {
+        "path": "docs/protocol/rea/2.26.37.71-identity-auth/root-summary.json",
+        "reason": "certificate note, not an REA Evidence record"
+      }
+    ],
+    "limitations": [
+      "An exported method body is not a proven Rust port; fallback and partial source do not establish semantic completeness.",
+      "Package summaries, class inventories and reference searches are evidence records, not method or implementation coverage.",
+      "Evidence IDs are deduplicated by exact retained record equality; this accounting does not cryptographically reauthenticate REA evidence IDs or execute the APK.",
+      "Bundle-topic and REA-record counts can overlap and must not be added into a completion percentage."
+    ],
+    "ownership_source": "explicit ownership.json sidecars only; prose, directory names and classes do not imply Rust ownership",
+    "records": 366,
+    "records_with_explicit_ownership": 7,
+    "releases": [
+      {
+        "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+        "method_bodies": {
+          "complete_export": 323,
+          "unavailable": 10
+        },
+        "operations": {
+          "inspect_android_class": 20,
+          "inspect_android_method": 333,
+          "inspect_android_package": 1,
+          "trace_android_references": 2
+        },
+        "records": 356,
+        "rust_files": {},
+        "version": "2.26.37.71"
+      },
+      {
+        "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+        "method_bodies": {
+          "complete_export": 8
+        },
+        "operations": {
+          "inspect_analysis_view": 1,
+          "inspect_android_class": 1,
+          "inspect_android_method": 8
+        },
+        "records": 10,
+        "rust_files": {
+          "crates/whatsapp-api/src/registration/mod.rs": 7,
+          "crates/whatsapp-api/src/registration/wire.rs": 7
+        },
+        "version": "2.26.43.72"
+      }
+    ],
+    "scope": "retained REA APK Evidence records only; distinct from bundle topics and Rust implementation or interoperability coverage",
+    "version_source": "release-directory label, checked against package declarations when present and bundle manifests when available"
+  },
   "releases": [
     {
       "apk_sha256": "b2090b0207e9b97449a5b48e98eb4d1649ae8e5e738e9b7431d6242717fee732",
@@ -177,7 +232,7 @@
       "crates/whatsapp-api/src/transport/voice_note.rs"
     ]
   },
-  "source": "docs/protocol/apk/*/{manifest,targets}.json only; docs/protocol/rea envelopes are not counted; unexported APK code is outside this report",
+  "source": "docs/protocol/apk/*/{manifest,targets}.json only; REA records are accounted separately in rea; unexported APK code is outside this report",
   "topics": {
     "multi_release": 21,
     "multi_release_topics": [

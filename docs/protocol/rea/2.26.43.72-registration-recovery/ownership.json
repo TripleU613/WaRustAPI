@@ -1,0 +1,53 @@
+{
+  "evidence": {
+    "ev_8c1eea0b425ce35ed1cb5d00c442525bfe4e24582b33e23a04eb937a7b1153d4": {
+      "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+      "rust_files": [
+        "crates/whatsapp-api/src/registration/wire.rs",
+        "crates/whatsapp-api/src/registration/mod.rs"
+      ]
+    },
+    "ev_e20c10d983bb29b1505d9b6a18ddc7076f68166f39d1e0f70fdc9bf759db2840": {
+      "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+      "rust_files": [
+        "crates/whatsapp-api/src/registration/wire.rs",
+        "crates/whatsapp-api/src/registration/mod.rs"
+      ]
+    },
+    "ev_51cee9b81d82a731e5a90f9e442503a6c51cdcd36cdf130aa3f0ab7a1ee40cf2": {
+      "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+      "rust_files": [
+        "crates/whatsapp-api/src/registration/wire.rs",
+        "crates/whatsapp-api/src/registration/mod.rs"
+      ]
+    },
+    "ev_6b874ccfc4d5c27ba9f99486df3cf889009e1dca861d153e0d58f4d137819b65": {
+      "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+      "rust_files": [
+        "crates/whatsapp-api/src/registration/wire.rs",
+        "crates/whatsapp-api/src/registration/mod.rs"
+      ]
+    },
+    "ev_79b7d42ae577da370b5ce8d24703fa6b1af7b0d88cbe221b07ea713b96b63c79": {
+      "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+      "rust_files": [
+        "crates/whatsapp-api/src/registration/wire.rs",
+        "crates/whatsapp-api/src/registration/mod.rs"
+      ]
+    },
+    "ev_58f4275b4addcbf8622b43e4449bc2d7d6cfab072588fef4edde2710fff761d4": {
+      "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+      "rust_files": [
+        "crates/whatsapp-api/src/registration/wire.rs",
+        "crates/whatsapp-api/src/registration/mod.rs"
+      ]
+    },
+    "ev_2c5dcf1b2858bb1fa902c36c71e1a7307916a6bde73e4b4f9ce6653e0706cbd9": {
+      "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+      "rust_files": [
+        "crates/whatsapp-api/src/registration/wire.rs",
+        "crates/whatsapp-api/src/registration/mod.rs"
+      ]
+    }
+  }
+}

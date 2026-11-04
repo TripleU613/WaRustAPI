@@ -1,0 +1,14 @@
+classes9.dex  LX/Gc8;->A0C(VLLLLLLLLLLLLLLLLLIIIIIIJJJZZZZZ)
+  write opcode 0x5b, dex byte offset: 0x500e10
+classes9.dex  Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;->A0B(LLLLLLLLLLLLLLLLLLL)
+  write opcode 0x5b, dex byte offset: 0x663faa
+classes9.dex  LX/Hfq;->A06(LL)
+  write opcode 0x5b, dex byte offset: 0x6681e8
+classes9.dex  LX/IBz;->run(V)
+  read opcode 0x54, dex byte offset: 0x776640
+classes9.dex  LX/IBz;->run(V)
+  read opcode 0x54, dex byte offset: 0x7766c4
+classes9.dex  LX/IBz;->run(V)
+  read opcode 0x54, dex byte offset: 0x7766f2
+classes9.dex  LX/IBz;->run(V)
+  read opcode 0x54, dex byte offset: 0x77686c

@@ -1509,6 +1509,8 @@ impl RegistrationHttpResponse {
                 }
                 summary["retry_after_seconds"] =
                     serde_json::json!(parsed.retry_after.map(|v| v.as_secs()));
+                summary["guess_wait_seconds"] =
+                    serde_json::json!(parsed.guess_wait.map(|v| v.as_secs()));
                 summary["sms_wait_seconds"] =
                     serde_json::json!(parsed.sms_wait.map(|v| v.as_secs()));
                 summary["voice_wait_seconds"] =
@@ -1935,6 +1937,10 @@ pub struct RegistrationResponse {
     pub invalid_parameter: Option<&'static str>,
     /// General retry delay.
     pub retry_after: Option<Duration>,
+    /// Security-code guessing delay, distinct from requesting another OTP.
+    /// APK 2.26.43.72 KotlinRegistrationBridge.A07/A0B retain `guess_wait`;
+    /// VerifyPhoneNumber.A11 and IBz.run interpret it in seconds.
+    pub guess_wait: Option<Duration>,
     /// SMS retry delay.
     pub sms_wait: Option<Duration>,
     /// Voice-call retry delay.
@@ -1980,6 +1986,7 @@ impl fmt::Debug for RegistrationResponse {
             .field("reason", &self.reason)
             .field("invalid_parameter", &self.invalid_parameter)
             .field("retry_after", &self.retry_after)
+            .field("guess_wait", &self.guess_wait)
             .field("sms_wait", &self.sms_wait)
             .field("voice_wait", &self.voice_wait)
             .field("flash_wait", &self.flash_wait)
@@ -2062,6 +2069,7 @@ impl RegistrationResponse {
                 _ => None,
             },
             retry_after: parse_seconds("retry_after", raw.retry_after)?,
+            guess_wait: parse_seconds("guess_wait", raw.guess_wait)?,
             sms_wait: parse_seconds("sms_wait", raw.sms_wait)?,
             voice_wait: parse_seconds("voice_wait", raw.voice_wait)?,
             flash_wait: parse_seconds("flash_wait", raw.flash_wait)?,
@@ -2124,6 +2132,7 @@ struct RawRegistrationResponse {
     reason: Option<String>,
     param: Option<RawDiagnosticParameter>,
     retry_after: Option<SecondsValue>,
+    guess_wait: Option<SecondsValue>,
     sms_wait: Option<SecondsValue>,
     voice_wait: Option<SecondsValue>,
     flash_wait: Option<SecondsValue>,
@@ -3117,6 +3126,51 @@ mod tests {
         assert!(bundle.append_to_form(&mut form).is_err());
         assert_eq!(form.len(), 1, "failed batch append must not add fields");
         assert_eq!(form.encode().unwrap().as_slice(), b"e_ident=existing");
+    }
+
+    /// APK 2.26.43.72 KotlinRegistrationBridge.A07/A0B copy guess_wait,
+    /// and VerifyPhoneNumber.A11 converts a positive seconds value to ms.
+    #[test]
+    fn guess_wait_is_preserved_without_guessing_a_missing_value() {
+        for (value, expected) in [
+            (serde_json::json!("120"), Some(Duration::from_secs(120))),
+            (serde_json::json!(120), Some(Duration::from_secs(120))),
+            (serde_json::json!(0), Some(Duration::ZERO)),
+            (Value::Null, None),
+        ] {
+            let body = serde_json::to_vec(&serde_json::json!({
+                "status": "fail", "reason": "guessed_too_fast", "guess_wait": value
+            }))
+            .unwrap();
+            let response = RegistrationHttpResponse::new(200, Zeroizing::new(body))
+                .unwrap()
+                .parse_json()
+                .unwrap();
+            assert_eq!(response.guess_wait, expected);
+            assert_eq!(
+                response.retry_after, None,
+                "guessing and resend waits differ"
+            );
+        }
+        for value in [
+            "private-malformed-value",
+            "-1",
+            "1.5",
+            "18446744073709551616",
+        ] {
+            let body = serde_json::to_vec(&serde_json::json!({
+                "status": "fail", "guess_wait": value
+            }))
+            .unwrap();
+            let error = RegistrationHttpResponse::new(200, Zeroizing::new(body))
+                .unwrap()
+                .parse_json()
+                .unwrap_err();
+            assert!(
+                !format!("{error:?}").contains(value),
+                "invalid input is not logged"
+            );
+        }
     }
 
     #[test]

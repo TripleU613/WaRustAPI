@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_2c5dcf1b2858bb1fa902c36c71e1a7307916a6bde73e4b4f9ce6653e0706cbd9",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "com.whatsapp.registration.app.VerifyTwoFactorAuth",
+    "method_name": "A14",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-myOwzq/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "com.whatsapp.registration.app.VerifyTwoFactorAuth"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"name\":\"A00\",\"def_pos\":0,\"type\":\"int\"},{\"name\":\"A01\",\"def_pos\":0,\"type\":\"int\"},{\"name\":\"A02\",\"def_pos\":0,\"type\":\"int\"},{\"name\":\"A03\",\"def_pos\":0,\"type\":\"long\"},{\"name\":\"A04\",\"def_pos\":0,\"type\":\"long\"},{\"name\":\"A05\",\"def_pos\":0,\"type\":\"long\"},{\"name\":\"A06\",\"def_pos\":0,\"type\":\"long\"},{\"name\":\"A07\",\"def_pos\":0,\"type\":\"android.app.ProgressDialog\"},{\"name\":\"A08\",\"def_pos\":0,\"type\":\"android.os.CountDownTimer\"},{\"name\":\"A09\",\"def_pos\":0,\"type\":\"android.view.View\"},{\"name\":\"A0A\",\"def_pos\":0,\"type\":\"android.view.View\"},{\"name\":\"A0B\",\"def_pos\":0,\"type\":\"android.widget.EditText\"},{\"name\":\"A0C\",\"def_pos\":0,\"type\":\"android.widget.ProgressBar\"},{\"name\":\"A0D\",\"def_pos\":0,\"type\":\"android.widget.TextView\"},{\"name\":\"A0E\",\"def_pos\":0,\"type\":\"X.Ij0\"},{\"name\":\"A0F\",\"def_pos\":0,\"type\":\"X.0DD\"},{\"name\":\"A0G\",\"def_pos\":0,\"type\":\"X.12Q\"},{\"name\":\"A0H\",\"def_pos\":0,\"type\":\"X.BMe\"},{\"name\":\"A0I\",\"def_pos\":0,\"type\":\"X.GMO\"},{\"name\":\"A0J\",\"def_pos\":0,\"type\":\"X.GhM\"},{\"name\":\"A0K\",\"def_pos\":0,\"type\":\"X.GhM\"},{\"name\":\"A0L\",\"def_pos\":0,\"type\":\"X.13N\"},{\"name\":\"A0M\",\"def_pos\":0,\"type\":\"X.HNY\"},{\"name\":\"A0N\",\"def_pos\":0,\"type\":\"X.GMl\"},{\"name\":\"A0O\",\"def_pos\":0,\"type\":\"com.whatsapp.ui.coreui.CodeInputField\"},{\"name\":\"A0P\",\"def_pos\":0,\"type\":\"com.whatsapp.ui.wds.components.checkbox.WDSCheckbox\"},{\"name\":\"A0Q\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"A0R\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"A0S\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"A0T\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A0U\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A0V\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A0W\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A0X\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A0Y\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A0Z\",\"def_pos\":0,\"type\":\"android.widget.TextView\"},{\"name\":\"A0a\",\"def_pos\":0,\"type\":\"com.google.common.base.Optional\"},{\"name\":\"A0b\",\"def_pos\":0,\"type\":\"X.0bT\"},{\"name\":\"A0c\",\"def_pos\":0,\"type\":\"X.0Yy\"},{\"name\":\"A0d\",\"def_pos\":0,\"type\":\"X.HFg\"},{\"name\":\"A0e\",\"def_pos\":0,\"type\":\"X.0yY\"},{\"name\":\"A0f\",\"def_pos\":0,\"type\":\"X.Gog\"},{\"name\":\"A0g\",\"def_pos\":0,\"type\":\"X.14W\"},{\"name\":\"A0h\",\"def_pos\":0,\"type\":\"X.Goi\"},{\"name\":\"A0i\",\"def_pos\":0,\"type\":\"X.HXj\"},{\"name\":\"A0j\",\"def_pos\":0,\"type\":\"X.1HL\"},{\"name\":\"A0k\",\"def_pos\":0,\"type\":\"com.whatsapp.ui.coreui.base.WaTextView\"},{\"name\":\"A0l\",\"def_pos\":0,\"type\":\"com.whatsapp.ui.wds.components.button.WDSButton\"},{\"name\":\"A0m\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A0n\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A0o\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A0p\",\"def_pos\":0,\"type\":\"android.content.Context\"},{\"name\":\"A0q\",\"def_pos\":0,\"type\":\"android.os.Handler\"},{\"name\":\"A0r\",\"def_pos\":0,\"type\":\"X.0MG\"},{\"name\":\"A0s\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0t\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0u\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0v\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0w\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0x\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0y\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0z\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A10\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A11\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A12\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A13\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A14\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A15\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A16\",\"def_pos\":0,\"type\":\"X.07w\"},{\"name\":\"A17\",\"def_pos\":0,\"type\":\"X.0DS\"},{\"name\":\"A18\",\"def_pos\":0,\"type\":\"X.0GQ\"},{\"name\":\"A19\",\"def_pos\":0,\"type\":\"X.BMd\"},{\"name\":\"A1A\",\"def_pos\":0,\"type\":\"X.BMf\"},{\"name\":\"A1B\",\"def_pos\":0,\"type\":\"X.CDl\"},{\"name\":\"A1C\",\"def_pos\":0,\"type\":\"X.Hfq\"},{\"name\":\"A1D\",\"def_pos\":0,\"type\":\"java.lang.Runnable\"},{\"name\":\"A1E\",\"def_pos\":0,\"type\":\"X.00p\"},{\"name\":\"A1F\",\"def_pos\":0,\"type\":\"X.00p\"},{\"name\":\"A1G\",\"def_pos\":0,\"type\":\"X.14E\"},{\"name\":\"A1H\",\"def_pos\":0,\"type\":\"X.HUV\"},{\"name\":\"A1I\",\"def_pos\":0,\"type\":\"X.HBK\"},{\"name\":\"A1J\",\"def_pos\":0,\"type\":\"X.HU8\"}],\"field_count\":82,\"full_name\":\"com.whatsapp.registration.app.VerifyTwoFactorAuth\",\"name\":\"VerifyTwoFactorAuth\",\"inner_classes\":[\"com.whatsapp.registration.app.VerifyTwoFactorAuth.ForgotPinDialog\",\"com.whatsapp.registration.app.VerifyTwoFactorAuth.ResetAccountDialog\"],\"inner_class_count\":2,\"method_count\":44,\"methods\":[{\"signature\":\"\\u003cinit\\u003e(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0},{\"signature\":\"A03(com.whatsapp.registration.app.VerifyTwoFactorAuth): int\",\"dex_descriptor\":\"(Lcom/whatsapp/registration/app/VerifyTwoFactorAuth;)I\",\"is_constructor\":false,\"name\":\"A03\",\"def_pos\":0},{\"signature\":\"A0X(com.whatsapp.registration.app.VerifyTwoFactorAuth): long\",\"dex_descriptor\":\"(Lcom/whatsapp/registration/app/VerifyTwoFactorAuth;)J\",\"is_constructor\":false,\"name\":\"A0X\",\"def_pos\":0},{\"signature\":\"A0Y(com.whatsapp.registration.app.VerifyTwoFactorAuth): X.HN3\",\"dex_descriptor\":\"(Lcom/whatsapp/registration/app/VerifyTwoFactorAuth;)LX/HN3;\",\"is_constructor\":false,\"name\":\"A0Y\",\"def_pos\":0},{\"signature\":\"A0Z(com.whatsapp.registration.app.VerifyTwoFactorAuth): X.HFg\",\"dex_descriptor\":\"(Lcom/whatsapp/registration/app/VerifyTwoFactorAuth;)LX/HFg;\",\"is_constructor\":false,\"name\":\"A0Z\",\"def_pos\":0},{\"signature\":\"A0a(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"A0a\",\"def_pos\":0},{\"signature\":\"A0c(android.widget.EditText, com.whatsapp.registration.app.VerifyTwoFactorAuth): void\",\"dex_descriptor\":\"(Landroid/widget/EditText;Lcom/whatsapp/registration/app/VerifyTwoFactorAuth;)V\",\"is_constructor\":false,\"name\":\"A0c\",\"def_pos\":0},{\"signature\":\"A0i(com.whatsapp.registration.app.VerifyTwoFactorAuth): void\",\"dex_descriptor\":\"(Lcom/whatsapp/registration/app/VerifyTwoFactorAuth;)V\",\"is_constructor\":false,\"name\":\"A0i\",\"def_pos\":0},{\"signature\":\"A0k(com.whatsapp.registration.app.VerifyTwoFactorAuth): void\",\"dex_descriptor\":\"(Lcom/whatsapp/registration/app/VerifyTwoFactorAuth;)V\",\"is_constructor\":false,\"name\":\"A0k\",\"def_pos\":0},{\"signature\":\"A0y(com.whatsapp.registration.app.VerifyTwoFactorAuth): void\",\"dex_descriptor\":\"(Lcom/whatsapp/registration/app/VerifyTwoFactorAuth;)V\",\"is_constructor\":false,\"name\":\"A0y\",\"def_pos\":0},{\"signature\":\"A0z(com.whatsapp.registration.app.VerifyTwoFactorAuth): void\",\"dex_descriptor\":\"(Lcom/whatsapp/registration/app/VerifyTwoFactorAuth;)V\",\"is_constructor\":false,\"name\":\"A0z\",\"def_pos\":0},{\"signature\":\"A10(com.whatsapp.registration.app.VerifyTwoFactorAuth): void\",\"dex_descriptor\":\"(Lcom/whatsapp/registration/app/VerifyTwoFactorAuth;)V\",\"is_constructor\":false,\"name\":\"A10\",\"def_pos\":0},{\"signature\":\"A11(com.whatsapp.registration.app.VerifyTwoFactorAuth): void\",\"dex_descriptor\":\"(Lcom/whatsapp/registration/app/VerifyTwoFactorAuth;)V\",\"is_constructor\":false,\"name\":\"A11\",\"def_pos\":0},{\"signature\":\"A12(com.whatsapp.registration.app.VerifyTwoFactorAuth): void\",\"dex_descriptor\":\"(Lcom/whatsapp/registration/app/VerifyTwoFactorAuth;)V\",\"is_constructor\":false,\"name\":\"A12\",\"def_pos\":0},{\"signature\":\"A13(com.whatsapp.registration.app.VerifyTwoFactorAuth, long): void\",\"dex_descriptor\":\"(Lcom/whatsapp/registration/app/VerifyTwoFactorAuth;J)V\",\"is_constructor\":false,\"name\":\"A13\",\"def_pos\":0},{\"signature\":\"A14(com.whatsapp.registration.app.VerifyTwoFactorAuth, long): void\",\"dex_descriptor\":\"(Lcom/whatsapp/registration/app/VerifyTwoFactorAuth;J)V\",\"is_constructor\":false,\"name\":\"A14\",\"def_pos\":0},{\"signature\":\"A15(com.whatsapp.registration.app.VerifyTwoFactorAuth, long, long, boolean): void\",\"dex_descriptor\":\"(Lcom/whatsapp/registration/app/VerifyTwoFactorAuth;JJZ)V\",\"is_constructor\":false,\"name\":\"A15\",\"def_pos\":0},{\"signature\":\"A16(com.whatsapp.registration.app.VerifyTwoFactorAuth, java.lang.String): void\",\"dex_descriptor\":\"(Lcom/whatsapp/registration/app/VerifyTwoFactorAuth;Ljava/lang/String;)V\",\"is_constructor\":false,\"name\":\"A16\",\"def_pos\":0},{\"signature\":\"A17(com.whatsapp.registration.app.VerifyTwoFactorAuth, java.lang.String): void\",\"dex_descriptor\":\"(Lcom/whatsapp/registration/app/VerifyTwoFactorAuth;Ljava/lang/String;)V\",\"is_constructor\":false,\"name\":\"A17\",\"def_pos\":0},{\"signature\":\"A18(com.whatsapp.registration.app.VerifyTwoFactorAuth, java.lang.String, int, boolean): void\",\"dex_descriptor\":\"(Lcom/whatsapp/registration/app/VerifyTwoFactorAuth;Ljava/lang/String;IZ)V\",\"is_constructor\":false,\"name\":\"A18\",\"def_pos\":0},{\"signature\":\"A4Z(int): void\",\"dex_descriptor\":\"(I)V\",\"is_constructor\":false,\"name\":\"A4Z\",\"def_pos\":0},{\"signature\":\"A5f(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"A5f\",\"def_pos\":0},{\"signature\":\"A5g(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"A5g\",\"def_pos\":0},{\"signature\":\"A5h(X.H6x): void\",\"dex_descriptor\":\"(LX/H6x;)V\",\"is_constructor\":false,\"name\":\"A5h\",\"def_pos\":0},{\"signature\":\"A5i(java.lang.String, java.lang.String, java.lang.String, java.util.List): void\",\"dex_descriptor\":\"(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V\",\"is_constructor\":false,\"name\":\"A5i\",\"def_pos\":0},{\"signature\":\"A5j(boolean): void\",\"dex_descriptor\":\"(Z)V\",\"is_constructor\":false,\"name\":\"A5j\",\"def_pos\":0},{\"signature\":\"A5k(boolean): void\",\"dex_descriptor\":\"(Z)V\",\"is_constructor\":false,\"name\":\"A5k\",\"def_pos\":0},{\"signature\":\"BhH(java.lang.String): void\",\"dex_descriptor\":\"(Ljava/lang/String;)V\",\"is_constructor\":false,\"name\":\"BhH\",\"def_pos\":0},{\"signature\":\"Bwz(X.CKi): void\",\"dex_descriptor\":\"(LX/CKi;)V\",\"is_constructor\":false,\"name\":\"Bwz\",\"def_pos\":0},{\"signature\":\"CTU(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"CTU\",\"def_pos\":0},{\"signature\":\"Cen(boolean): void\",\"dex_descriptor\":\"(Z)V\",\"is_constructor\":false,\"name\":\"Cen\",\"def_pos\":0},{\"signature\":\"CqT(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"CqT\",\"def_pos\":0},{\"signature\":\"onActivityResult(int, int, android.content.Intent): void\",\"dex_descriptor\":\"(IILandroid/content/Intent;)V\",\"is_constructor\":false,\"name\":\"onActivityResult\",\"def_pos\":0},{\"signature\":\"onBackPressed(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"onBackPressed\",\"def_pos\":0},{\"signature\":\"onCreate(android.os.Bundle): void\",\"dex_descriptor\":\"(Landroid/os/Bundle;)V\",\"is_constructor\":false,\"name\":\"onCreate\",\"def_pos\":0},{\"signature\":\"onCreateDialog(int): android.app.Dialog\",\"dex_descriptor\":\"(I)Landroid/app/Dialog;\",\"is_constructor\":false,\"name\":\"onCreateDialog\",\"def_pos\":0},{\"signature\":\"onCreateOptionsMenu(android.view.Menu): boolean\",\"dex_descriptor\":\"(Landroid/view/Menu;)Z\",\"is_constructor\":false,\"name\":\"onCreateOptionsMenu\",\"def_pos\":0},{\"signature\":\"onDestroy(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"onDestroy\",\"def_pos\":0},{\"signature\":\"onOptionsItemSelected(android.view.MenuItem): boolean\",\"dex_descriptor\":\"(Landroid/view/MenuItem;)Z\",\"is_constructor\":false,\"name\":\"onOptionsItemSelected\",\"def_pos\":0},{\"signature\":\"onResume(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"onResume\",\"def_pos\":0},{\"signature\":\"onSaveInstanceState(android.os.Bundle): void\",\"dex_descriptor\":\"(Landroid/os/Bundle;)V\",\"is_constructor\":false,\"name\":\"onSaveInstanceState\",\"def_pos\":0},{\"signature\":\"onStart(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"onStart\",\"def_pos\":0},{\"signature\":\"onStop(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"onStop\",\"def_pos\":0},{\"signature\":\"onSuccess(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"onSuccess\",\"def_pos\":0}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "com.whatsapp.registration.app.VerifyTwoFactorAuth",
+          "method_name": "A14",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"method_name\":\"A14\",\"overload_count\":1,\"body\":\"    public static final void A14(VerifyTwoFactorAuth verifyTwoFactorAuth, long j) {\\n        CountDownTimer countDownTimerStart;\\n        if (j \\u003c TimeUnit.SECONDS.toMillis(1L)) {\\n            C6og.A1L(verifyTwoFactorAuth.getPreferences(0).edit().remove(\\\"code_retry_time\\\"), \\\"cooldown_message_is_too_many\\\");\\n            CountDownTimer countDownTimer \\u003d verifyTwoFactorAuth.A08;\\n            if (countDownTimer !\\u003d null) {\\n                countDownTimer.cancel();\\n            }\\n            countDownTimerStart \\u003d null;\\n        } else {\\n            C2LB.A1K(verifyTwoFactorAuth.getPreferences(0).edit(), \\\"code_retry_time\\\", B1w.A02(verifyTwoFactorAuth) + j);\\n            boolean zA1Y \\u003d C2L9.A1Y(verifyTwoFactorAuth.A0J, GhM.A05);\\n            if (zA1Y) {\\n                C2L7.A1S(verifyTwoFactorAuth.getPreferences(0).edit(), \\\"cooldown_message_is_too_many\\\", C2L9.A1O(verifyTwoFactorAuth.A00, R.string._name_removed__res_0x7f124c8b));\\n                EditText editText \\u003d verifyTwoFactorAuth.A0B;\\n                if (editText !\\u003d null) {\\n                    ((C0Ir) verifyTwoFactorAuth).A09.A00(editText);\\n                }\\n            } else {\\n                C2L7.A1S(verifyTwoFactorAuth.getPreferences(0).edit(), \\\"cooldown_message_is_too_many\\\", false);\\n                C0K2 c0k2 \\u003d ((C0Ir) verifyTwoFactorAuth).A09;\\n                CodeInputField codeInputField \\u003d verifyTwoFactorAuth.A0O;\\n                if (codeInputField \\u003d\\u003d null) {\\n                    C00l.A0H(\\\"codeInputField\\\");\\n                    throw null;\\n                }\\n                c0k2.A00(codeInputField);\\n            }\\n            verifyTwoFactorAuth.Cen(false);\\n            if (zA1Y) {\\n                C2LD.A0v(verifyTwoFactorAuth.A09);\\n                A13(verifyTwoFactorAuth, j);\\n            } else {\\n                A15(verifyTwoFactorAuth, j, j, verifyTwoFactorAuth.A0X);\\n            }\\n            countDownTimerStart \\u003d new G1J(verifyTwoFactorAuth, j, TimeUnit.SECONDS.toMillis(1L)).start();\\n        }\\n        verifyTwoFactorAuth.A08 \\u003d countDownTimerStart;\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"com.whatsapp.registration.app.VerifyTwoFactorAuth\",\"full_name\":\"com.whatsapp.registration.app.VerifyTwoFactorAuth.A14\",\"mode\":\"java\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "com.whatsapp.registration.app.VerifyTwoFactorAuth",
+    "method": {
+      "name": "A14",
+      "reported_signature": "A14(com.whatsapp.registration.app.VerifyTwoFactorAuth, long): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(Lcom/whatsapp/registration/app/VerifyTwoFactorAuth;J)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public static final void A14(VerifyTwoFactorAuth verifyTwoFactorAuth, long j) {\n        CountDownTimer countDownTimerStart;\n        if (j < TimeUnit.SECONDS.toMillis(1L)) {\n            C6og.A1L(verifyTwoFactorAuth.getPreferences(0).edit().remove(\"code_retry_time\"), \"cooldown_message_is_too_many\");\n            CountDownTimer countDownTimer = verifyTwoFactorAuth.A08;\n            if (countDownTimer != null) {\n                countDownTimer.cancel();\n            }\n            countDownTimerStart = null;\n        } else {\n            C2LB.A1K(verifyTwoFactorAuth.getPreferences(0).edit(), \"code_retry_time\", B1w.A02(verifyTwoFactorAuth) + j);\n            boolean zA1Y = C2L9.A1Y(verifyTwoFactorAuth.A0J, GhM.A05);\n            if (zA1Y) {\n                C2L7.A1S(verifyTwoFactorAuth.getPreferences(0).edit(), \"cooldown_message_is_too_many\", C2L9.A1O(verifyTwoFactorAuth.A00, R.string._name_removed__res_0x7f124c8b));\n                EditText editText = verifyTwoFactorAuth.A0B;\n                if (editText != null) {\n                    ((C0Ir) verifyTwoFactorAuth).A09.A00(editText);\n                }\n            } else {\n                C2L7.A1S(verifyTwoFactorAuth.getPreferences(0).edit(), \"cooldown_message_is_too_many\", false);\n                C0K2 c0k2 = ((C0Ir) verifyTwoFactorAuth).A09;\n                CodeInputField codeInputField = verifyTwoFactorAuth.A0O;\n                if (codeInputField == null) {\n                    C00l.A0H(\"codeInputField\");\n                    throw null;\n                }\n                c0k2.A00(codeInputField);\n            }\n            verifyTwoFactorAuth.Cen(false);\n            if (zA1Y) {\n                C2LD.A0v(verifyTwoFactorAuth.A09);\n                A13(verifyTwoFactorAuth, j);\n            } else {\n                A15(verifyTwoFactorAuth, j, j, verifyTwoFactorAuth.A0X);\n            }\n            countDownTimerStart = new G1J(verifyTwoFactorAuth, j, TimeUnit.SECONDS.toMillis(1L)).start();\n        }\n        verifyTwoFactorAuth.A08 = countDownTimerStart;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

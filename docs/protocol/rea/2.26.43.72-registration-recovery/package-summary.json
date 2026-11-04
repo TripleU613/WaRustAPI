@@ -1,0 +1,196 @@
+{
+  "evidence_id": "ev_6fb00cc767d6b36a2539c5ba9319de05fa4c7cc95d3bb6c034a118c4a5468581",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "rea-analysis-view",
+    "name": "REA analysis view projection",
+    "version": "1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis-view",
+  "operation": "inspect_analysis_view",
+  "parameters": {
+    "parent_evidence_id": "ev_59f5d29110e9a43c336fef62c574a9dd0e0e60d7a58c05caee041460e5cf06b3",
+    "view": {
+      "kind": "summary"
+    }
+  },
+  "raw_result": null,
+  "normalized_result": {
+    "kind": "summary",
+    "view": {
+      "kind": "summary"
+    },
+    "parent_evidence_id": "ev_59f5d29110e9a43c336fef62c574a9dd0e0e60d7a58c05caee041460e5cf06b3",
+    "parent_operation": "inspect_android_package",
+    "parent_digest": "59f5d29110e9a43c336fef62c574a9dd0e0e60d7a58c05caee041460e5cf06b3",
+    "view_digest": "4caabdb159793bc746448dacb6f90d8396934d73739b7f3c8f50d720bb592d18",
+    "artifact": {
+      "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "coverage": {
+      "status": "complete-within-view",
+      "examined": 1,
+      "total": 1,
+      "next_offset": null,
+      "exhausted": true
+    },
+    "limitations": [
+      "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+      "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+      "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+      "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+      "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+    ],
+    "unknowns": [
+      "APK signatures were not verified; package declarations do not establish authenticity or runtime behavior."
+    ],
+    "summary": {
+      "engine": {
+        "name": "jadx-headless-mcp",
+        "version": "0.7.1",
+        "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+        "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+        "worker_count": 1,
+        "heap_limit_mib": 15912
+      },
+      "package_name": "com.whatsapp",
+      "version_name": "2.26.43.72",
+      "version_code": "264307238",
+      "min_sdk": "23",
+      "target_sdk": "36",
+      "permissions": [
+        "android.permission.RECEIVE_SMS",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.AUTHENTICATE_ACCOUNTS",
+        "android.permission.GET_ACCOUNTS",
+        "android.permission.FOREGROUND_SERVICE_DATA_SYNC",
+        "android.permission.VIBRATE",
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.DETECT_SCREEN_CAPTURE",
+        "android.permission.INTERNET",
+        "com.google.android.apps.aicore.service.BIND_SERVICE",
+        "android.permission.BLUETOOTH_CONNECT",
+        "android.permission.BLUETOOTH",
+        "com.whatsapp.permission.RECEIVE_ADM_MESSAGE",
+        "com.amazon.device.messaging.permission.RECEIVE",
+        "android.permission.ACCESS_WIFI_STATE",
+        "android.permission.CHANGE_WIFI_STATE",
+        "android.permission.NEARBY_WIFI_DEVICES",
+        "android.permission.ACCESS_LOCAL_NETWORK",
+        "android.permission.READ_PHONE_STATE",
+        "android.permission.READ_PHONE_NUMBERS",
+        "android.permission.FOREGROUND_SERVICE_MICROPHONE",
+        "android.permission.FOREGROUND_SERVICE_CAMERA",
+        "android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION",
+        "android.permission.FOREGROUND_SERVICE_PHONE_CALL",
+        "android.permission.HIDE_OVERLAY_WINDOWS",
+        "com.android.vending.BILLING",
+        "android.permission.SCHEDULE_EXACT_ALARM",
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.USE_FINGERPRINT",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.MANAGE_OWN_CALLS",
+        "android.permission.CALL_PHONE",
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE",
+        "android.permission.DETECT_SCREEN_RECORDING",
+        "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK",
+        "android.permission.ACCESS_MEDIA_LOCATION",
+        "android.permission.BROADCAST_STICKY",
+        "android.permission.CHANGE_NETWORK_STATE",
+        "android.permission.FOREGROUND_SERVICE_LOCATION",
+        "android.permission.GET_TASKS",
+        "android.permission.INSTALL_SHORTCUT",
+        "android.permission.MANAGE_ACCOUNTS",
+        "android.permission.NFC",
+        "android.permission.READ_CONTACTS",
+        "android.permission.READ_BASIC_PHONE_STATE",
+        "android.permission.READ_PROFILE",
+        "android.permission.READ_SYNC_SETTINGS",
+        "android.permission.READ_SYNC_STATS",
+        "android.permission.SEND_SMS",
+        "android.permission.USE_CREDENTIALS",
+        "android.permission.WAKE_LOCK",
+        "android.permission.WRITE_CONTACTS",
+        "android.permission.READ_MEDIA_AUDIO",
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.READ_MEDIA_VIDEO",
+        "android.permission.READ_MEDIA_VISUAL_USER_SELECTED",
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.WRITE_SYNC_SETTINGS",
+        "android.permission.REQUEST_INSTALL_PACKAGES",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.USE_FULL_SCREEN_INTENT",
+        "com.android.launcher.permission.INSTALL_SHORTCUT",
+        "com.android.launcher.permission.UNINSTALL_SHORTCUT",
+        "com.google.android.c2dm.permission.RECEIVE",
+        "com.google.android.gms.permission.AD_ID",
+        "com.google.android.providers.gsf.permission.READ_GSERVICES",
+        "com.sec.android.provider.badge.permission.READ",
+        "com.sec.android.provider.badge.permission.WRITE",
+        "com.htc.launcher.permission.READ_SETTINGS",
+        "com.htc.launcher.permission.UPDATE_SHORTCUT",
+        "com.sonyericsson.home.permission.BROADCAST_BADGE",
+        "com.sonymobile.home.permission.PROVIDER_INSERT_BADGE",
+        "com.huawei.android.launcher.permission.READ_SETTINGS",
+        "com.huawei.android.launcher.permission.WRITE_SETTINGS",
+        "com.huawei.android.launcher.permission.CHANGE_BADGE",
+        "com.motorola.launcher3.permission.UNREAD_BADGE",
+        "com.whatsapp.permission.BROADCAST",
+        "com.whatsapp.permission.MAPS_RECEIVE",
+        "com.whatsapp.permission.REGISTRATION",
+        "com.whatsapp.sticker.READ",
+        "android.permission.ANSWER_PHONE_CALLS",
+        "android.permission.READ_CALL_LOG",
+        "android.permission.RUN_USER_INITIATED_JOBS",
+        "com.facebook.services.identity.FEO2",
+        "com.facebook.appmanager.KNOWN_SIGNED_API_ACCESS",
+        "com.whatsapp.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+      ],
+      "manifest": {
+        "status": "complete",
+        "reported_total_bytes": null,
+        "text_code_units": 387741,
+        "text_included": false
+      },
+      "class_count": 106897,
+      "resource_count": 15728,
+      "signature_verification": "not_performed"
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [
+    {
+      "kind": "artifact-path",
+      "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk"
+    }
+  ],
+  "evidence_links": [
+    "ev_59f5d29110e9a43c336fef62c574a9dd0e0e60d7a58c05caee041460e5cf06b3"
+  ]
+}

@@ -1043,6 +1043,7 @@ impl ComparisonHttpFlow {
                 response.sms_wait,
                 response.voice_wait,
                 response.email_otp_wait,
+                response.guess_wait,
             ])
             .unwrap_or(wait);
             return RegistrationState::CoolingDown {
@@ -1057,6 +1058,10 @@ impl ComparisonHttpFlow {
                 response.sms_wait,
                 response.voice_wait,
                 response.email_otp_wait,
+                // APK 2.26.43.72 IBz.run -> VerifyTwoFactorAuth.A14 persists
+                // the guessing timer. Retain its wait even while this branch
+                // remains refused; an inspection/correction must not lose it.
+                response.guess_wait,
             ])
             .map(|wait| Timestamp::now().saturating_add(wait));
             return RegistrationState::Blocked {
@@ -4062,6 +4067,57 @@ mod tests {
             RegistrationStep::Action(RequiredAction::WaitForCooldown { .. })
         ));
         assert!(transport.responses.lock().unwrap().is_empty());
+    }
+
+    /// A PIN guessing timer cannot disappear across serialized saved state,
+    /// or shorten when the response also contains a shorter resend timer.
+    #[test]
+    fn security_guess_wait_survives_refusal_and_cooldown_projection() {
+        for retry_after in [None, Some(10), Some(180)] {
+            let response = wire::RegistrationHttpResponse::new(
+                200,
+                Zeroizing::new(
+                    serde_json::to_vec(&serde_json::json!({
+                        "status": "fail", "reason": "guessed_too_fast",
+                        "guess_wait": "120", "retry_after": retry_after
+                    }))
+                    .unwrap(),
+                ),
+            )
+            .unwrap()
+            .parse_json()
+            .unwrap();
+            let before = Timestamp::now();
+            let output = ComparisonHttpFlow::blocked_response(200, &response);
+            let saved: RegistrationState =
+                serde_json::from_value(serde_json::to_value(&output.state).unwrap()).unwrap();
+            let expected = before.saturating_add(std::time::Duration::from_secs(
+                retry_after.unwrap_or(0).max(120),
+            ));
+            match saved {
+                RegistrationState::Blocked {
+                    reason:
+                        BlockedReason::ServerRefused {
+                            reason, not_before, ..
+                        },
+                } => {
+                    assert_eq!(
+                        reason,
+                        Some(wire::RegistrationResponseReason::GuessedTooFast)
+                    );
+                    assert!(not_before.is_some_and(|at| at >= expected));
+                    assert!(
+                        retry_after.is_none(),
+                        "only the existing cooldown path changes state"
+                    );
+                }
+                RegistrationState::CoolingDown { until } => {
+                    assert!(retry_after.is_some());
+                    assert!(until >= expected);
+                }
+                other => panic!("unexpected state {other:?}"),
+            }
+        }
     }
 
     /// A refusal without `retry_after` keeps the longest method wait it
