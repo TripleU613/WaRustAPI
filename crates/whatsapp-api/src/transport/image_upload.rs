@@ -23,6 +23,34 @@ fn b64(bytes: &[u8]) -> String {
         .replace('/', "_")
 }
 
+// APK 2.26.43.72 MtQ.A01, default finished/non-newsletter LKZ path.
+// Cipher hash excludes this transport seal. Android JSONStringer escapes '/',
+// unlike serde_json, so serialize this fixed ASCII schema explicitly in order.
+// Evidence: docs/protocol/rea/2.26.43.72-media-upload-http/README.md.
+fn finished_voice_seal(hash: &[u8; 32]) -> Option<Vec<u8>> {
+    let hash = crate::registration::token::standard_base64_padded(hash).replace('/', "\\/");
+    let json = format!("{{\"status\":\"sent\",\"hash\":\"{hash}\"}}");
+    // MtQ.A01 catches its >100-byte metadata exception and returns null;
+    // K2k still completes with no EOF bytes. Never print the hash/JSON.
+    if json.len() + 12 > 100 {
+        return None;
+    }
+    let mut seal = Vec::with_capacity(json.len() + 12);
+    seal.extend_from_slice(b"RIFF");
+    seal.extend_from_slice(json.as_bytes());
+    seal.extend_from_slice(&((json.len() as u32) ^ 0x5614_050b).to_le_bytes());
+    seal.extend_from_slice(b"META");
+    Some(seal)
+}
+
+fn upload_wire_body(encrypted: &image::EncryptedImage, voice: bool) -> Vec<u8> {
+    let mut body = encrypted.body.clone();
+    if voice && let Some(seal) = finished_voice_seal(&encrypted.encrypted_hash) {
+        body.extend_from_slice(&seal);
+    }
+    body
+}
+
 // Comparison LX/BWp.dynamicMethod; outer LX/BXF imageMessage=3.
 #[derive(Clone, PartialEq, Message)]
 struct ImageMessage {
@@ -726,11 +754,14 @@ async fn upload_prepared(
         upload_url(&host, &auth, &seed, &encrypted.encrypted_hash)?
     };
     let client = client(config)?;
+    let wire_body = upload_wire_body(&encrypted, voice);
     let timestamp = Timestamp::now();
     let saved = serde_json::json!({"status":"outcome_unknown", "hash":hash, "to":recipient,
         "plaintext_len":encrypted.plaintext_len,
         "media_key":encrypted.media_key.as_slice(), "encrypted_hash":encrypted.encrypted_hash,
-        "body":encrypted.body, "upload_url":url.as_str(), "at":timestamp});
+        "body":wire_body, "encrypted_body_len":encrypted.body.len(),
+        "upload_body_format":if voice { "finished_voice_seal_v1" } else { "encrypted_file_v1" },
+        "upload_url":url.as_str(), "at":timestamp});
     store.write(|tx| {
         let previous: Option<serde_json::Value> =
             tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?;
@@ -740,14 +771,14 @@ async fn upload_prepared(
         tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &saved)
     })?;
     tracing::info!(
-        bytes = encrypted.body.len(),
+        bytes = wire_body.len(),
         kind = if voice { "ptt" } else { "image" },
         "media upload reserved; sending one POST"
     );
     let mut response = client
         .post(url)
         .header("Accept-Encoding", "identity")
-        .body(encrypted.body)
+        .body(wire_body)
         .send()
         .await
         .map_err(|_| invalid("upload transport failed; outcome unknown, no retry"))?;
@@ -879,6 +910,54 @@ async fn upload_prepared(
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn finished_voice_seal_has_android_json_order_slash_escaping_and_length() {
+        let seal = finished_voice_seal(&[0; 32]).unwrap();
+        let json =
+            b"{\"status\":\"sent\",\"hash\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\"}";
+        assert_eq!(&seal[..4], b"RIFF");
+        assert_eq!(&seal[4..seal.len() - 8], json);
+        assert_eq!(
+            &seal[seal.len() - 8..seal.len() - 4],
+            &((json.len() as u32) ^ 0x5614_050b).to_le_bytes()
+        );
+        assert_eq!(&seal[seal.len() - 4..], b"META");
+        let mut hash = [0; 32];
+        hash[0] = 0xff;
+        let escaped = finished_voice_seal(&hash).unwrap();
+        assert!(escaped.windows(3).any(|w| w == b"\\/w"));
+        assert!(finished_voice_seal(&[0xff; 32]).is_none());
+    }
+
+    #[test]
+    fn voice_wire_seal_preserves_cipher_hash_and_other_media_bytes() {
+        // Deterministic opaque cipher+MAC fixture; encryption itself has separate
+        // known-vector tests in signal::image.
+        let body: Vec<u8> = (0..74).collect();
+        let encrypted = image::EncryptedImage {
+            encrypted_hash: Sha256::digest(&body).into(),
+            body,
+            media_key: Zeroizing::new([0; 32]),
+            plaintext_hash: [0; 32],
+            plaintext_len: 48,
+        };
+        let wire = upload_wire_body(&encrypted, true);
+        assert_eq!(&wire[..encrypted.body.len()], encrypted.body);
+        assert_eq!(
+            &wire[encrypted.body.len()..],
+            finished_voice_seal(&encrypted.encrypted_hash).unwrap()
+        );
+        assert_eq!(
+            <[u8; 32]>::from(Sha256::digest(&encrypted.body)),
+            encrypted.encrypted_hash
+        );
+        assert_ne!(
+            <[u8; 32]>::from(Sha256::digest(&wire)),
+            encrypted.encrypted_hash
+        );
+        assert_eq!(upload_wire_body(&encrypted, false), encrypted.body);
+    }
+
     #[test]
     fn required_java_auth_lifetime_never_falls_back_to_route_ttl() {
         use super::*;

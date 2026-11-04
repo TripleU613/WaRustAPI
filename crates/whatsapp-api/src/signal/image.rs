@@ -14,7 +14,7 @@ pub struct EncryptedImage {
     pub body: Vec<u8>,
     /// SHA-256 of the original file.
     pub plaintext_hash: [u8; 32],
-    /// SHA-256 of the complete uploaded encrypted body.
+    /// SHA-256 of ciphertext plus MAC, excluding any upload transport metadata seal.
     pub encrypted_hash: [u8; 32],
     /// Original byte length.
     pub plaintext_len: u64,

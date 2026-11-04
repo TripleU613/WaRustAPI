@@ -1,3 +1,14 @@
+2026-11-04 — **Finished voice upload seal corrected (offline):**
+
+New primary one-shot voice uploads append native sent/hash metadata with
+Android slash escaping, pinned framing/size limit and separate cipher hash.
+New reservations retain exact wire bytes/version/size; old reservations are
+neither rewritten nor replayed. Other media wire bytes stay unchanged.
+[Evidence and regression scope](docs/protocol/rea/2.26.43.72-media-upload-http/README.md#finished-voice-seal-integration-2026-11-04-offline-validated).
+Validation: **1,263 workspace/all-feature tests**, strict Clippy, CLI-reference,
+formatting, coverage freshness and repository hygiene passed.
+No live upload or server acceptance test.
+
 2026-11-04 — **Standard finished voice seal path bound:**
 
 Factory/interface evidence closes custom processor override for standard

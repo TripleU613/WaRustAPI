@@ -319,3 +319,35 @@ python3 interface-probe.py APK for the exact interface identity check.
 - [streaming-uploader-constructor.txt](streaming-uploader-constructor.txt) — SHA-256 `2b0e334a816c4b539c9b9b8c61320c5a8ad4a890d2a51ebbc9f3005b6473f819`.
 - [interface-probe.py](interface-probe.py) — SHA-256 `5c8650aa1d9d50ef0027d9567cf8002e371e09c1432879ab04e24d89abc0ac0c`.
 - [voice-source-interfaces.txt](voice-source-interfaces.txt) — SHA-256 `49d939d7b844b80738e1164d902d08013f4f5cd0453eba54c4f54505185df248`.
+
+## Finished voice seal integration (2026-11-04, offline validated)
+
+**Confirmed source mismatch corrected:** new one-shot finished primary voice
+uploads now append the native sent/hash metadata after cipher+MAC. Hash
+uses standard padded Base64, fixed status/hash insertion order, and escaped
+forward slashes. Native fixed-schema values are ASCII, so Java String.length
+and UTF-8 byte length agree. Trailer is RIFF + compact JSON + little-endian
+(JSON length XOR0x5614050b) + META. If total metadata exceeds100 bytes,
+MtQ.A01's caught-exception/null behavior is mirrored by omitting EOF bytes.
+The hash and JSON are never logged.
+
+Android platform reference: [JSONStringer Android35](https://android.googlesource.com/platform/prebuilts/fullsdk/sources/+/dc3f885ebe8ddc75bd9cf2d567eef4d1ed433a09/android-35/org/json/JSONStringer.java)
+confirms string slash escaping. This is platform reference, not APK execution;
+the pinned MtQ method supplies the actual field order/framing/length limit.
+
+`image_upload::upload_wire_body` selects this framing only for the existing
+finished voice path. Other media bytes are unchanged. The encrypted hash,
+URL hash, message file hash and encryption keys still refer to ciphertext
+plus MAC, excluding seal. New encrypted checkpoints keep the exact wire body
+and numeric encrypted_body_len plus upload_body_format version. The version
+indicates the selected framing policy even if the native size limit omits
+metadata. Existing reservations are checked first and are never rewritten or
+resent; no attempt ID is changed. Completed legacy payloads remain reusable.
+No migration is necessary to use an already acknowledged upload.
+
+Two regressions check a fixed exact JSON/framing vector, slash escaping,
+oversize omission and deterministic body-prefix/hash separation/other-media
+bytes. Existing real-store refusal/header persistence tests continue to guard
+uncertain reservations. No live upload or server acceptance was tested.
+Streaming/unfinished/newsletter/seal-cancellation paths remain unimplemented;
+this does not enable retries or claim full native media parity.

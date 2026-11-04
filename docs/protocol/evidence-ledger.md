@@ -1,3 +1,10 @@
+2026-11-04 — **Confirmed mismatch corrected offline: finished voice seal.**
+Pinned2.26.43.72 finished sent/hash seal is appended only to new voice
+wire bodies, retaining cipher hash and exact new reservation bytes/version.
+Historical reservation handling precedes construction and stays non-replaying.
+[Encoding reference, regressions and limits](rea/2.26.43.72-media-upload-http/README.md#finished-voice-seal-integration-2026-11-04-offline-validated).
+No live account operations or server acceptance validation.
+
 2026-11-04 — **Confirmed static: standard finished voice seal path.**
 Pinned2.26.43.72 MFE/Lg0/Mvc factory chain plus exact interface definitions
 close custom Ncy override for standard LKZ. Rust's missing separate seal

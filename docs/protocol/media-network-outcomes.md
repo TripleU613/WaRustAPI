@@ -450,3 +450,14 @@ MOu selects the default voice processor. Finished non-newsletter branch
 therefore appends a sent/hash seal. Rust currently lacks this equivalent;
 exact serialization and historical reservation compatibility remain to fix.
 [Factory/interface evidence and implementation boundary](rea/2.26.43.72-media-upload-http/README.md#standard-finished-voice-processor-binding-2026-11-04).
+
+### Finished voice seal correction (2026-11-04, offline)
+
+**Confirmed source mismatch fixed:** new one-shot primary voice upload body
+now appends the pinned finished sent/hash seal. Cipher+MAC hash excludes
+seal; other media bytes remain unchanged. Exact wire body/version/size is
+retained in new private reservations. Existing acknowledged or uncertain
+reservations are not rewritten/replayed.
+[Encoding, native oversize behavior, tests and limits](rea/2.26.43.72-media-upload-http/README.md#finished-voice-seal-integration-2026-11-04-offline-validated).
+No live upload; streaming/newsletter/unfinished processing remains outside
+the existing one-shot operation.
