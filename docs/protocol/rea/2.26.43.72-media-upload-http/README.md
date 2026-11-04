@@ -67,3 +67,46 @@ JAS.A04, JAT.A04 and MvM.A02. The map/stream entry is in the previously
 - [urlconnection-execute.txt](urlconnection-execute.txt) — SHA-256 `a2a64d41bc36f847219185cdc15c67433c24332c83558b321d8a094b683ffe37`.
 - [tigon-execute.txt](tigon-execute.txt) — SHA-256 `207e8f9ee14715ec1b1abb142a76f16551d5919de1231bb7f4eab111f2964f86`.
 - [upload-header-inputs.txt](upload-header-inputs.txt) — SHA-256 `01c56c94172e7d86ae8c7ae3bce07053ef61b8369e8834865c7c0b5c12594849`.
+
+## Raw-stream versus multipart body writer (2026-11-04)
+
+**Confirmed static**, same pinned APK. K2k.A08 registers JiH(type2) with
+input stream/name/filename/offset/length. JiH constructor maps the first long
+to A02 (offset) and second to A01 (length). The retained MtZ producer passes
+LzO.A00/A01 in that order; LzO constructor preserves those long arguments.
+
+K2k.A06 takes the **raw single-stream** branch only when supplied M3d is
+nonnull and registered streams are nonempty. It checks the count with6oi.A1U
+and an assertion describing single-file support, then copies first stream
+via A01 and returns before multipart field emission. The predicate helper
+is not independently traced here. Null route or empty stream list enters
+the separate multipart writer: boundary/disposition, type-dependent part
+headers, registered fields and late fields. Their literal header strings
+are not proof they are emitted on the raw branch.
+
+A01 uses JiH.A02 as positive skip amount, repeatedly calling InputStream.skip
+until the remainder is nonpositive. It reads16KiB chunks, writes each, reports
+progress starting at the offset and checks thread interruption and an atomic
+abort flag between chunks. This is not an endorsement of copying its skip
+loop without considering streams whose skip returns0. On EOF it consults
+optional Kif processing and may emit additional bytes described by JdX.
+The Kif implementations/producers and trailer semantics are still untraced.
+No claim is made that every stream is simply copied byte-for-byte to EOF.
+
+JAS.A04 selects this writer after connecting and obtaining its output stream.
+Thus the APK demonstrably supports a route-bound raw upload; adding multipart
+to every Rust request would be unjustified. Rust's one-shot encrypted-body
+POST uses no resume offset. Full source binding for stream creation, optional
+processing and server resume negotiation remains open; raw shape alone is
+not a proof of complete upload parity. No runtime behavior was changed.
+
+Negative lookup: JAS.A01 and JiH.A00 have no matching method bodies under
+exact class/name filters; body copying resides in K2k.A01/A06 instead.
+Reproduce apk-smali K2k.A08/A06/A01, JiH.<init>, LzO.<init> with
+--signatures --exceptions. All selected outputs are retained below.
+
+- [body-writer.txt](body-writer.txt) — SHA-256 `7f9276261e2c16bc0ba9b140e4d3557b68256f27bb5655658972d5770314e4dc`.
+- [stream-copy.txt](stream-copy.txt) — SHA-256 `bc4de42fb3f1114746756b1d648f944e810c503eb1b9802823aafdc4f7b9b558`.
+- [stream-input-descriptor.txt](stream-input-descriptor.txt) — SHA-256 `9d37f7e5bfa4fe04a54528641b24bf49033b992c166ae84b2ba23553762096ee`.
+- [register-stream.txt](register-stream.txt) — SHA-256 `84ccc4e7d5c17ded08392220b602021663fc37c9083080e60ddb36647160e760`.
+- [stream-fields.txt](stream-fields.txt) — SHA-256 `9c3ead53e2619ae27e7327bbdcf34516731793b3e5db99e68beb722f61b008c2`.

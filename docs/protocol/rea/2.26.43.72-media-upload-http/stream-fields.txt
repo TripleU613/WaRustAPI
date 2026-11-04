@@ -1,0 +1,17 @@
+
+# class: LX/JiH;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLIJJ)  # .registers 10
+    # full signature: LX/JiH;-><init>(LX/K2k;Ljava/io/InputStream;Ljava/lang/String;Ljava/lang/String;IJJ)V
+    0000..0004  iput-object  v1, v0, LX/JiH;->A06:LX/K2k;
+    0004..000a  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    000a..000e  iput-object  v2, v0, LX/JiH;->A03:Ljava/io/InputStream;
+    000e..0012  iput-object  v3, v0, LX/JiH;->A05:Ljava/lang/String;
+    0012..0016  iput-object  v4, v0, LX/JiH;->A04:Ljava/lang/String;
+    0016..001a  iput-wide  v6, v0, LX/JiH;->A02:J
+    001a..001e  iput  v5, v0, LX/JiH;->A00:I
+    001e..0022  iput-wide  v8, v0, LX/JiH;->A01:J
+    0022..0024  return-void
+    # exception table: 0 try range(s)
+.end method

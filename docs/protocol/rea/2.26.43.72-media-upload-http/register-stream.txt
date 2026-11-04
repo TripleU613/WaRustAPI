@@ -1,0 +1,20 @@
+
+# class: LX/K2k;
+# extends: Ljava/lang/Object;
+
+.method public A08(VLLLJJ)  # .registers 19
+    # full signature: LX/K2k;->A08(Ljava/io/InputStream;Ljava/lang/String;Ljava/lang/String;JJ)V
+    0000..0002  move-object  v2, v11
+    0002..0006  iget-object  v0, v11, LX/K2k;->A0C:Ljava/util/List;
+    0006..0008  const/4  v6, #0x2
+    0008..000c  new-instance  v1, LX/JiH;
+    000c..000e  move-object  v3, v12
+    000e..0010  move-object  v4, v13
+    0010..0012  move-object  v5, v14
+    0012..0014  move-wide  v7, v15
+    0014..0018  move-wide/from16  v9, v17
+    0018..001e  invoke-direct/range  {v1..v10}, LX/JiH;-><init>(LX/K2k;Ljava/io/InputStream;Ljava/lang/String;Ljava/lang/String;IJJ)V
+    001e..0024  invoke-interface  {v0, v1}, Ljava/util/List;->add(Ljava/lang/Object;)Z
+    0024..0026  return-void
+    # exception table: 0 try range(s)
+.end method

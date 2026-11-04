@@ -1,0 +1,267 @@
+
+# class: LX/K2k;
+# extends: Ljava/lang/Object;
+
+.method public A06(VLLLL)  # .registers 24
+    # full signature: LX/K2k;->A06(LX/M3d;Ljava/io/OutputStream;Ljava/lang/Integer;Ljava/lang/String;)V
+    0000..0004  move-object/from16  v8, v19
+    0004..0008  move-object/from16  v10, v21
+    0008..000c  move-object/from16  v9, v22
+    000c..0010  if-eqz  v20, +0x43
+    0010..0014  iget-object  v4, v8, LX/K2k;->A0C:Ljava/util/List;
+    0014..001a  invoke-interface  {v4}, Ljava/util/List;->size()I
+    001a..001c  move-result  v0
+    001c..0020  if-eqz  v0, +0x3a
+    0020..0026  invoke-interface  {v4}, Ljava/util/List;->size()I
+    0026..0028  move-result  v0
+    0028..002a  const/4  v3, #0x0
+    002a..0030  invoke-static  {v0}, LX/6oi;->A1U(I)Z
+    0030..0032  move-result  v2
+    0032..0036  const-string  v0, "MMS4 upload only supports a single file; we have been given "
+    0036..003c  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    003c..003e  move-result-object  v1
+    003e..0044  invoke-interface  {v4}, Ljava/util/List;->size()I
+    0044..0046  move-result  v0
+    0046..004c  invoke-static  {v1, v0}, LX/B1x;->A10(Ljava/lang/StringBuilder;I)Ljava/lang/String;
+    004c..004e  move-result-object  v0
+    004e..0054  invoke-static  {v2, v0}, LX/00L;->A0C(ZLjava/lang/String;)V
+    0054..005a  invoke-interface  {v4, v3}, Ljava/util/List;->get(I)Ljava/lang/Object;
+    005a..005c  move-result-object  v1
+    005c..0060  check-cast  v1, LX/JiH;
+    0060..0064  new-instance  v0, Ljava/util/concurrent/atomic/AtomicLong;
+    0064..006a  invoke-direct  {v0}, Ljava/util/concurrent/atomic/AtomicLong;-><init>()V
+    006a..0070  invoke-direct  {v8, v1, v10, v9, v0}, LX/K2k;->A01(LX/JiH;Ljava/io/OutputStream;Ljava/lang/Integer;Ljava/util/concurrent/atomic/AtomicLong;)V
+    0070..0074  if-eqz  v22, +0x10
+    0074..0078  iget-object  v3, v8, LX/K2k;->A08:LX/0BZ;
+    0078..007e  invoke-virtual  {v9}, Ljava/lang/Number;->intValue()I
+    007e..0080  move-result  v2
+    0080..0084  const-string  v1, "request_body_last_byte_flushed"
+    0084..008a  const  v0, #0x37390569
+    008a..0090  invoke-virtual  {v3, v0, v2, v1}, LX/0BZ;->markerPoint(IILjava/lang/String;)V
+    0090..0092  return-void
+    0092..0094  const/4  v0, #0x2
+    0094..0098  new-array  v13, v0, [B
+    0098..009e  fill-array-data  v13, payload@0x408, element_width=1, size=2, data=[0d 0a]
+    009e..00a2  iget-object  v0, v8, LX/K2k;->A0C:Ljava/util/List;
+    00a2..00a8  invoke-interface  {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    00a8..00aa  move-result-object  v18
+    00aa..00ae  const/16  v17, #0x0
+    00ae..00b2  const/16  v16, #0x0
+    00b2..00b8  invoke-interface/range  {v18..v18}, Ljava/util/Iterator;->hasNext()Z
+    00b8..00ba  move-result  v0
+    00ba..00be  const-string  v12, "\r\n"
+    00be..00c2  const-string  v11, "Content-Disposition: form-data; name=\""
+    00c2..00c6  const-string  v7, "\\\""
+    00c6..00ca  const-string  v6, "\""
+    00ca..00ce  const-string  v5, "\\\\"
+    00ce..00d2  const-string  v4, "\\"
+    00d2..00d6  const-string  v2, "--"
+    00d6..00d8  const/4  v15, #0x1
+    00d8..00dc  move-object/from16  v14, v23
+    00dc..00e0  if-eqz  v0, +0xd0
+    00e0..00e6  invoke-interface/range  {v18..v18}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    00e6..00e8  move-result-object  v3
+    00e8..00ec  check-cast  v3, LX/JiH;
+    00ec..00f0  if-eqz  v17, +0x5
+    00f0..00f6  invoke-virtual  {v10, v13}, Ljava/io/OutputStream;->write([B)V
+    00f6..00fc  invoke-static  {v2, v14, v12}, LX/DBh;->A0d(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    00fc..00fe  move-result-object  v0
+    00fe..0104  invoke-static  {v0, v10}, LX/K2k;->A02(Ljava/lang/String;Ljava/io/OutputStream;)V
+    0104..0108  if-eqz  v22, +0x14
+    0108..010c  if-nez  v16, +0x12
+    010c..0110  iget-object  v12, v8, LX/K2k;->A08:LX/0BZ;
+    0110..0116  invoke-virtual  {v9}, Ljava/lang/Number;->intValue()I
+    0116..0118  move-result  v2
+    0118..011c  const-string  v1, "request_body_first_byte_flushed"
+    011c..0122  const  v0, #0x37390569
+    0122..0128  invoke-virtual  {v12, v0, v2, v1}, LX/0BZ;->markerPoint(IILjava/lang/String;)V
+    0128..012c  const/16  v16, #0x1
+    012c..0130  iget-object  v0, v3, LX/JiH;->A05:Ljava/lang/String;
+    0130..0136  invoke-virtual  {v0, v4, v5}, Ljava/lang/String;->replace(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;
+    0136..0138  move-result-object  v0
+    0138..013e  invoke-virtual  {v0, v6, v7}, Ljava/lang/String;->replace(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;
+    013e..0140  move-result-object  v1
+    0140..0144  iget-object  v2, v3, LX/JiH;->A04:Ljava/lang/String;
+    0144..014a  invoke-static  {v2}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+    014a..014c  move-result  v0
+    014c..0150  const-string  v12, "\"\r\n"
+    0150..0154  if-nez  v0, +0x91
+    0154..015a  invoke-virtual  {v2, v4, v5}, Ljava/lang/String;->replace(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;
+    015a..015c  move-result-object  v0
+    015c..0162  invoke-virtual  {v0, v6, v7}, Ljava/lang/String;->replace(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;
+    0162..0164  move-result-object  v2
+    0164..016a  invoke-static  {v11, v1}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    016a..016c  move-result-object  v1
+    016c..0170  const-string  v0, "\"; filename=\""
+    0170..0176  invoke-static  {v0, v2, v12, v1}, LX/3q4;->A1J(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    0176..017c  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    017c..017e  move-result-object  v0
+    017e..0184  invoke-static  {v0, v10}, LX/K2k;->A02(Ljava/lang/String;Ljava/io/OutputStream;)V
+    0184..0188  iget  v1, v3, LX/JiH;->A00:I
+    0188..018c  if-nez  v1, +0x33
+    018c..0190  const-string  v0, "Content-Type: application/x-gzip\r\n"
+    0190..0196  invoke-static  {v0, v10}, LX/K2k;->A02(Ljava/lang/String;Ljava/io/OutputStream;)V
+    0196..019a  const-string  v0, "Content-Encoding: gzip\r\n"
+    019a..01a0  invoke-static  {v0, v10}, LX/K2k;->A02(Ljava/lang/String;Ljava/io/OutputStream;)V
+    01a0..01a4  iget-wide  v0, v3, LX/JiH;->A02:J
+    01a4..01a8  const-wide/16  v4, #0x0
+    01a8..01ac  cmp-long  v2, v0, v4
+    01ac..01b0  if-lez  v2, +0x11
+    01b0..01b4  const-string  v2, "Content-Range: bytes "
+    01b4..01ba  invoke-static  {v2, v0, v1}, LX/1Xl;->A17(Ljava/lang/String;J)Ljava/lang/StringBuilder;
+    01ba..01bc  move-result-object  v1
+    01bc..01c0  const-string  v0, "-*/*\r\n"
+    01c0..01c6  invoke-static  {v0, v1}, LX/1Xl;->A0z(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    01c6..01c8  move-result-object  v0
+    01c8..01ce  invoke-static  {v0, v10}, LX/K2k;->A02(Ljava/lang/String;Ljava/io/OutputStream;)V
+    01ce..01d4  invoke-virtual  {v10, v13}, Ljava/io/OutputStream;->write([B)V
+    01d4..01d8  new-instance  v1, Ljava/util/concurrent/atomic/AtomicLong;
+    01d8..01de  invoke-direct  {v1}, Ljava/util/concurrent/atomic/AtomicLong;-><init>()V
+    01de..01e0  const/4  v0, #0x0
+    01e0..01e6  invoke-direct  {v8, v3, v10, v0, v1}, LX/K2k;->A01(LX/JiH;Ljava/io/OutputStream;Ljava/lang/Integer;Ljava/util/concurrent/atomic/AtomicLong;)V
+    01e6..01ea  const/16  v17, #0x1
+    01ea..01ee  goto/16  -0x9c
+    01ee..01f2  if-ne  v1, v15, +0x5
+    01f2..01f6  const-string  v0, "Content-Type: application/zip\r\n"
+    01f6..01f8  goto  -0x2e
+    01f8..01fa  const/4  v0, #0x3
+    01fa..01fe  if-ne  v1, v0, +0x5
+    01fe..0202  const-string  v0, "Content-Type: image/jpeg\r\n"
+    0202..0204  goto  -0x34
+    0204..0206  const/4  v0, #0x6
+    0206..020a  if-ne  v1, v0, +0x5
+    020a..020e  const-string  v0, "Content-Type: image/png\r\n"
+    020e..0210  goto  -0x3a
+    0210..0212  const/4  v0, #0x7
+    0212..0216  if-ne  v1, v0, +0x5
+    0216..021a  const-string  v0, "Content-Type: image/tiff\r\n"
+    021a..021c  goto  -0x40
+    021c..021e  const/4  v0, #0x4
+    021e..0222  if-ne  v1, v0, +0x5
+    0222..0226  const-string  v0, "Content-Type: image/gif\r\n"
+    0226..0228  goto  -0x46
+    0228..022a  const/4  v0, #0x5
+    022a..022e  if-ne  v1, v0, +0x5
+    022e..0232  const-string  v0, "Content-Type: image/bmp\r\n"
+    0232..0234  goto  -0x4c
+    0234..0238  const/16  v0, #0x8
+    0238..023c  if-ne  v1, v0, +0x5
+    023c..0240  const-string  v0, "Content-Type: image/webp\r\n"
+    0240..0242  goto  -0x53
+    0242..0246  const/16  v0, #0x9
+    0246..024a  if-ne  v1, v0, +0x5
+    024a..024e  const-string  v0, "Content-Type: image/heic\r\n"
+    024e..0250  goto  -0x5a
+    0250..0254  const/16  v0, #0xa
+    0254..0258  if-ne  v1, v0, +0x5
+    0258..025c  const-string  v0, "Content-Type: application/pdf\r\n"
+    025c..025e  goto  -0x61
+    025e..0262  const/16  v0, #0xb
+    0262..0266  if-ne  v1, v0, +0x5
+    0266..026a  const-string  v0, "Content-Type: video/mp4\r\n"
+    026a..026c  goto  -0x68
+    026c..0270  const-string  v0, "Content-Type: application/octet-stream\r\n"
+    0270..0272  goto  -0x6b
+    0272..0278  invoke-static  {v11, v1, v12}, LX/DBh;->A0d(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0278..027a  move-result-object  v0
+    027a..027c  goto  -0x7e
+    027c..0280  iget-object  v0, v8, LX/K2k;->A0E:Ljava/util/List;
+    0280..0286  invoke-interface  {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0286..0288  move-result-object  v16
+    0288..028e  invoke-interface/range  {v16..v16}, Ljava/util/Iterator;->hasNext()Z
+    028e..0290  move-result  v0
+    0290..0294  const-string  v1, "\"\r\n\r\n"
+    0294..0298  if-eqz  v0, +0x31
+    0298..029e  invoke-interface/range  {v16..v16}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    029e..02a0  move-result-object  v3
+    02a0..02a4  check-cast  v3, Landroid/util/Pair;
+    02a4..02a8  iget-object  v0, v3, Landroid/util/Pair;->first:Ljava/lang/Object;
+    02a8..02ac  check-cast  v0, Ljava/lang/String;
+    02ac..02b2  invoke-virtual  {v0, v4, v5}, Ljava/lang/String;->replace(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;
+    02b2..02b4  move-result-object  v0
+    02b4..02ba  invoke-virtual  {v0, v6, v7}, Ljava/lang/String;->replace(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;
+    02ba..02bc  move-result-object  v15
+    02bc..02c0  if-eqz  v17, +0x5
+    02c0..02c6  invoke-virtual  {v10, v13}, Ljava/io/OutputStream;->write([B)V
+    02c6..02cc  invoke-static  {v2, v14, v12}, LX/DBh;->A0d(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    02cc..02ce  move-result-object  v0
+    02ce..02d4  invoke-static  {v0, v10}, LX/K2k;->A02(Ljava/lang/String;Ljava/io/OutputStream;)V
+    02d4..02da  invoke-static  {v11, v15, v1}, LX/DBh;->A0d(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    02da..02dc  move-result-object  v0
+    02dc..02e2  invoke-static  {v0, v10}, LX/K2k;->A02(Ljava/lang/String;Ljava/io/OutputStream;)V
+    02e2..02e6  iget-object  v0, v3, Landroid/util/Pair;->second:Ljava/lang/Object;
+    02e6..02ea  check-cast  v0, Ljava/lang/String;
+    02ea..02f0  invoke-static  {v0, v10}, LX/K2k;->A02(Ljava/lang/String;Ljava/io/OutputStream;)V
+    02f0..02f4  const/16  v17, #0x1
+    02f4..02f6  goto  -0x36
+    02f6..02fa  iget-object  v0, v8, LX/K2k;->A0D:Ljava/util/List;
+    02fa..0300  invoke-interface  {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0300..0302  move-result-object  v16
+    0302..0308  invoke-interface/range  {v16..v16}, Ljava/util/Iterator;->hasNext()Z
+    0308..030a  move-result  v0
+    030a..030e  if-eqz  v0, +0x39
+    030e..0314  invoke-interface/range  {v16..v16}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0314..0316  move-result-object  v3
+    0316..031a  check-cast  v3, Landroid/util/Pair;
+    031a..031e  iget-object  v0, v3, Landroid/util/Pair;->first:Ljava/lang/Object;
+    031e..0322  check-cast  v0, Ljava/lang/String;
+    0322..0328  invoke-virtual  {v0, v4, v5}, Ljava/lang/String;->replace(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;
+    0328..032a  move-result-object  v0
+    032a..0330  invoke-virtual  {v0, v6, v7}, Ljava/lang/String;->replace(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;
+    0330..0332  move-result-object  v15
+    0332..0336  if-eqz  v17, +0x5
+    0336..033c  invoke-virtual  {v10, v13}, Ljava/io/OutputStream;->write([B)V
+    033c..0342  invoke-static  {v2, v14, v12}, LX/DBh;->A0d(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0342..0344  move-result-object  v0
+    0344..034a  invoke-static  {v0, v10}, LX/K2k;->A02(Ljava/lang/String;Ljava/io/OutputStream;)V
+    034a..0350  invoke-static  {v11, v15, v1}, LX/DBh;->A0d(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0350..0352  move-result-object  v0
+    0352..0358  invoke-static  {v0, v10}, LX/K2k;->A02(Ljava/lang/String;Ljava/io/OutputStream;)V
+    0358..035c  iget-object  v0, v3, Landroid/util/Pair;->second:Ljava/lang/Object;
+    035c..0360  check-cast  v0, Ljava/util/concurrent/Callable;
+    0360..0366  invoke-interface  {v0}, Ljava/util/concurrent/Callable;->call()Ljava/lang/Object;
+    0366..0368  move-result-object  v0
+    0368..036c  check-cast  v0, Ljava/lang/String;
+    036c..0370  if-eqz  v0, +0x1c
+    0370..0376  invoke-static  {v0, v10}, LX/K2k;->A02(Ljava/lang/String;Ljava/io/OutputStream;)V
+    0376..037a  const/16  v17, #0x1
+    037a..037c  goto  -0x3c
+    037c..0380  if-eqz  v17, +0x5
+    0380..0386  invoke-virtual  {v10, v13}, Ljava/io/OutputStream;->write([B)V
+    0386..038c  invoke-static  {v2, v14}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    038c..038e  move-result-object  v1
+    038e..0392  const-string  v0, "--\r\n"
+    0392..0398  invoke-static  {v0, v1}, LX/1Xl;->A0z(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    0398..039a  move-result-object  v0
+    039a..03a0  invoke-static  {v0, v10}, LX/K2k;->A02(Ljava/lang/String;Ljava/io/OutputStream;)V
+    03a0..03a4  goto/16  -0x198
+    03a4..03a8  const-string  v0, "UploadRequest/write postParam null value; name="
+    03a8..03ae  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    03ae..03b0  move-result-object  v1
+    03b0..03b4  iget-object  v0, v3, Landroid/util/Pair;->first:Ljava/lang/Object;
+    03b4..03b8  check-cast  v0, Ljava/lang/String;
+    03b8..03be  invoke-static  {v1, v0}, LX/2L9;->A1J(Ljava/lang/StringBuilder;Ljava/lang/String;)V
+    03be..03c2  const-string  v0, "latePostParam call returned null; name="
+    03c2..03c8  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    03c8..03ca  move-result-object  v1
+    03ca..03ce  iget-object  v0, v3, Landroid/util/Pair;->first:Ljava/lang/Object;
+    03ce..03d2  check-cast  v0, Ljava/lang/String;
+    03d2..03d8  invoke-static  {v0, v1}, LX/IWU;->A0j(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/io/IOException;
+    03d8..03da  move-result-object  v0
+    03da..03dc  throw  v0
+    03dc..03de  move-exception  v2
+    03de..03e2  const-string  v0, "failure during latePostParam call; name="
+    03e2..03e8  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    03e8..03ea  move-result-object  v1
+    03ea..03ee  iget-object  v0, v3, Landroid/util/Pair;->first:Ljava/lang/Object;
+    03ee..03f2  check-cast  v0, Ljava/lang/String;
+    03f2..03f8  invoke-static  {v0, v1}, LX/1Xl;->A0z(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    03f8..03fa  move-result-object  v1
+    03fa..03fe  new-instance  v0, Ljava/io/IOException;
+    03fe..0404  invoke-direct  {v0, v1, v2}, Ljava/io/IOException;-><init>(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0404..0406  throw  v0
+    0406..0408  nop
+    0408..0412  fill-array-data-payload  element_width=1, size=2, data=[0d 0a]
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/Exception; code_units 01ac..01b8 -> 01ee
+.end method

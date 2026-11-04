@@ -396,3 +396,12 @@ UA, conditional analytics/companion/map headers and conditional range/raw/
 multipart behavior. Annotation names are not automatically HTTP headers.
 [Retained concrete implementations and unresolved input producers](rea/2.26.43.72-media-upload-http/README.md).
 No mandatory-header mismatch for the supported Rust upload is proven yet.
+
+### Route-bound raw body and stream offsets (2026-11-04)
+
+**Confirmed static**, pinned2.26.43.72: K2k.A06 uses a raw first-stream
+branch for nonnull route plus registered file; other inputs use multipart.
+A08/JiH preserve offset/length; A01 skips positive offset, copies chunks
+and handles optional end processing. This supports raw upload shape but
+does not establish Rust parity for optional trailers or resume negotiation.
+[Exact outputs and limits](rea/2.26.43.72-media-upload-http/README.md#raw-stream-versus-multipart-body-writer-2026-11-04).

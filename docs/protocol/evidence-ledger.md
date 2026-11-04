@@ -1,3 +1,9 @@
+2026-11-04 — **Confirmed static: route-bound raw upload body branch.**
+Pinned2.26.43.72 K2k.A06/A01/A08 and JiH/LzO field mappings retain raw
+versus multipart branch, stream offset and optional EOF processing boundary.
+[Evidence](rea/2.26.43.72-media-upload-http/README.md#raw-stream-versus-multipart-body-writer-2026-11-04).
+Kif/trailer and complete resume producers remain untraced; no runtime change.
+
 2026-11-04 — **Confirmed static: upload HTTP transport/header boundary.**
 Pinned2.26.43.72 JAS/JAT selection, route auth pair and JAS conditional
 headers/framing retained; map producers/active branch binding remain open.

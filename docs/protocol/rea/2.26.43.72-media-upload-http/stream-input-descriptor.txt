@@ -1,0 +1,28 @@
+
+# class: LX/LzO;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLLLLLLLJJZZZ)  # .registers 19
+    # full signature: LX/LzO;-><init>(LX/Kif;LX/M3d;LX/K1R;LX/LvP;LX/Mzq;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/util/Map;JJZZZ)V
+    0000..0006  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v8, v1, LX/LzO;->A09:Ljava/lang/String;
+    000a..000e  iput-wide  v12, v1, LX/LzO;->A00:J
+    000e..0012  iput-object  v5, v1, LX/LzO;->A05:LX/LvP;
+    0012..0016  move/from16  v0, v16
+    0016..001a  iput-boolean  v0, v1, LX/LzO;->A0D:Z
+    001a..001e  iput-object  v6, v1, LX/LzO;->A06:LX/Mzq;
+    001e..0022  iput-object  v3, v1, LX/LzO;->A03:LX/M3d;
+    0022..0026  iput-wide  v14, v1, LX/LzO;->A01:J
+    0026..002a  iput-object  v9, v1, LX/LzO;->A08:Ljava/lang/String;
+    002a..002e  move/from16  v0, v18
+    002e..0032  iput-boolean  v0, v1, LX/LzO;->A0C:Z
+    0032..0036  iput-object  v4, v1, LX/LzO;->A04:LX/K1R;
+    0036..003a  iput-object  v7, v1, LX/LzO;->A07:Ljava/lang/Integer;
+    003a..003e  iput-object  v10, v1, LX/LzO;->A0A:Ljava/util/Map;
+    003e..0042  iput-object  v11, v1, LX/LzO;->A0B:Ljava/util/Map;
+    0042..0046  move/from16  v0, v17
+    0046..004a  iput-boolean  v0, v1, LX/LzO;->A0E:Z
+    004a..004e  iput-object  v2, v1, LX/LzO;->A02:LX/Kif;
+    004e..0050  return-void
+    # exception table: 0 try range(s)
+.end method

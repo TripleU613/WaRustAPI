@@ -1,0 +1,120 @@
+
+# class: LX/K2k;
+# extends: Ljava/lang/Object;
+
+.method private A01(VLLLL)  # .registers 14
+    # full signature: LX/K2k;->A01(LX/JiH;Ljava/io/OutputStream;Ljava/lang/Integer;Ljava/util/concurrent/atomic/AtomicLong;)V
+    0000..0004  iget-wide  v2, v10, LX/JiH;->A02:J
+    0004..0006  move-wide  v0, v2
+    0006..000a  const-wide/16  v5, #0x0
+    000a..000e  cmp-long  v4, v2, v5
+    000e..0012  if-lez  v4, +0xa
+    0012..0016  iget-object  v4, v10, LX/JiH;->A03:Ljava/io/InputStream;
+    0016..001c  invoke-virtual  {v4, v2, v3}, Ljava/io/InputStream;->skip(J)J
+    001c..001e  move-result-wide  v4
+    001e..0020  sub-long/2addr  v2, v4
+    0020..0022  goto  -0xd
+    0022..0026  const/16  v2, #0x4000
+    0026..002a  new-array  v5, v2, [B
+    002a..002c  const/4  v4, #0x0
+    002c..002e  const/4  v6, #0x0
+    002e..0032  iget-object  v2, v10, LX/JiH;->A03:Ljava/io/InputStream;
+    0032..0038  invoke-virtual  {v2, v5}, Ljava/io/InputStream;->read([B)I
+    0038..003a  move-result  v8
+    003a..003c  const/4  v2, #0xff (-1)
+    003c..0040  if-ne  v8, v2, +0x3
+    0040..0042  goto  +0x38
+    0042..0048  invoke-virtual  {v11, v5, v4, v8}, Ljava/io/OutputStream;->write([BII)V
+    0048..004c  if-eqz  v12, +0x13
+    004c..0050  if-nez  v6, +0x11
+    0050..0054  iget-object  v7, v9, LX/K2k;->A08:LX/0BZ;
+    0054..005a  invoke-virtual  {v12}, Ljava/lang/Number;->intValue()I
+    005a..005c  move-result  v6
+    005c..0060  const-string  v3, "request_body_first_byte_flushed"
+    0060..0066  const  v2, #0x37390569
+    0066..006c  invoke-virtual  {v7, v2, v6, v3}, LX/0BZ;->markerPoint(IILjava/lang/String;)V
+    006c..006e  const/4  v6, #0x1
+    006e..0070  int-to-long  v2, v8
+    0070..0072  add-long/2addr  v0, v2
+    0072..0076  iget-object  v2, v9, LX/K2k;->A07:LX/KjC;
+    0076..007a  if-eqz  v2, +0x5
+    007a..0080  invoke-interface  {v2, v0, v1}, LX/KjC;->Brx(J)V
+    0080..0086  invoke-static  {}, Ljava/lang/Thread;->currentThread()Ljava/lang/Thread;
+    0086..0088  move-result-object  v2
+    0088..008e  invoke-virtual  {v2}, Ljava/lang/Thread;->isInterrupted()Z
+    008e..0090  move-result  v2
+    0090..0094  if-nez  v2, +0x4c
+    0094..0098  iget-object  v2, v9, LX/K2k;->A0F:Ljava/util/concurrent/atomic/AtomicBoolean;
+    0098..009e  invoke-virtual  {v2, v4}, Ljava/util/concurrent/atomic/AtomicBoolean;->getAndSet(Z)Z
+    009e..00a0  move-result  v2
+    00a0..00a4  if-eqz  v2, -0x39
+    00a4..00a8  new-instance  v4, LX/JOM;
+    00a8..00ae  invoke-direct  {v4}, LX/JOM;-><init>()V
+    00ae..00b0  goto  +0x29
+    00b0..00b4  iget-object  v2, v9, LX/K2k;->A06:LX/Kif;
+    00b4..00b8  if-nez  v2, +0x1b
+    00b8..00ba  const/4  v3, #0x0
+    00ba..00bc  const/4  v2, #0x1
+    00bc..00c0  new-instance  v4, LX/JdX;
+    00c0..00c6  invoke-direct  {v4, v3, v2}, LX/JdX;-><init>([BZ)V
+    00c6..00ca  iget-object  v2, v4, LX/JdX;->A01:[B
+    00ca..00ce  if-eqz  v2, +0x8
+    00ce..00d4  invoke-virtual  {v11, v2}, Ljava/io/OutputStream;->write([B)V
+    00d4..00d6  array-length  v2, v2
+    00d6..00d8  int-to-long  v2, v2
+    00d8..00da  add-long/2addr  v0, v2
+    00da..00e0  invoke-virtual  {v13, v0, v1}, Ljava/util/concurrent/atomic/AtomicLong;->set(J)V
+    00e0..00e4  iget-boolean  v0, v4, LX/JdX;->A00:Z
+    00e4..00e8  if-eqz  v0, +0x8
+    00e8..00ea  return-void
+    00ea..00f0  invoke-interface  {v2}, LX/Kif;->B5p()LX/JdX;
+    00f0..00f2  move-result-object  v4
+    00f2..00f4  goto  -0x16
+    00f4..00f8  new-instance  v4, LX/JOK;
+    00f8..00fe  invoke-direct  {v4}, LX/JOK;-><init>()V
+    00fe..0100  throw  v4
+    0100..0104  iget-object  v2, v9, LX/K2k;->A06:LX/Kif;
+    0104..0108  if-eqz  v2, +0x36
+    0108..010e  invoke-interface  {v2}, LX/Kif;->B5o()[B
+    010e..0110  move-result-object  v2
+    0110..0114  if-eqz  v2, +0x30
+    0114..0116  array-length  v3, v2
+    0116..011c  invoke-virtual  {v11, v2}, Ljava/io/OutputStream;->write([B)V
+    011c..011e  goto  +0x31
+    011e..0120  move-exception  v2
+    0120..0126  invoke-static  {v4, v2}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    0126..0128  goto  +0x2e
+    0128..012c  new-instance  v4, Ljava/io/InterruptedIOException;
+    012c..0132  invoke-direct  {v4}, Ljava/io/InterruptedIOException;-><init>()V
+    0132..0136  iget-object  v2, v9, LX/K2k;->A06:LX/Kif;
+    0136..013a  if-eqz  v2, +0x1d
+    013a..0140  invoke-interface  {v2}, LX/Kif;->B5q()[B
+    0140..0142  move-result-object  v2
+    0142..0146  if-eqz  v2, +0x17
+    0146..0148  array-length  v3, v2
+    0148..014e  invoke-virtual  {v11, v2}, Ljava/io/OutputStream;->write([B)V
+    014e..0150  goto  +0x18
+    0150..0152  move-exception  v4
+    0152..0156  iget-object  v2, v9, LX/K2k;->A06:LX/Kif;
+    0156..015a  if-eqz  v2, +0xd
+    015a..0160  invoke-interface  {v2}, LX/Kif;->B5q()[B
+    0160..0162  move-result-object  v2
+    0162..0166  if-eqz  v2, +0x7
+    0166..0168  array-length  v3, v2
+    0168..016e  invoke-virtual  {v11, v2}, Ljava/io/OutputStream;->write([B)V
+    016e..0170  goto  +0x8
+    0170..0172  const/4  v3, #0x0
+    0172..0174  goto  +0x6
+    0174..0176  move-exception  v2
+    0176..017c  invoke-static  {v4, v2}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    017c..017e  const/4  v3, #0x0
+    017e..0180  int-to-long  v2, v3
+    0180..0182  add-long/2addr  v0, v2
+    0182..0188  invoke-virtual  {v13, v0, v1}, Ljava/util/concurrent/atomic/AtomicLong;->set(J)V
+    0188..018a  throw  v4
+    # exception table: 4 try range(s)
+    # catch Ljava/io/IOException; code_units 0017..0021 -> 00a8
+    # catch Ljava/io/IOException; code_units 0080..008f -> 008f
+    # catch Ljava/io/IOException; code_units 009d..00a8 -> 00ba
+    # catch Ljava/io/IOException; code_units 00ad..00ba -> 00ba
+.end method

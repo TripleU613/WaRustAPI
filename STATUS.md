@@ -1,3 +1,13 @@
+2026-11-04 — **Route-bound raw upload body branch traced:**
+
+Pinned body writer confirms raw single-stream versus multipart conditions,
+stream offset/length mappings, chunk copy and optional EOF processing.
+Supports raw request shape; trailer/resume provenance remains open.
+[Evidence](docs/protocol/rea/2.26.43.72-media-upload-http/README.md#raw-stream-versus-multipart-body-writer-2026-11-04).
+Validation: JSON parsing, coverage freshness, cached diff checks and repository
+hygiene (4,293 local links) passed. Documentation/evidence only;
+no runtime change or live traffic.
+
 2026-11-04 — **Upload HTTP transport/header boundary traced:**
 
 Retained pinned transport selection, route-auth construction and concrete
