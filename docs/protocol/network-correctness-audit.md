@@ -356,3 +356,13 @@ This resolves the prior normal-registration unknown. Global alternative
 registrants, concurrent/startup order and teardown remain open.
 [Exact chain and limits](rea/2.26.43.72-reachout-state/README.md#executor-registration-and-asset-backed-server-id-lookup-2026-11-04). Response conversion, correlated durable
 application and automatic refresh remain unfinished; no runtime change.
+
+## Refresh response callback admission (2026-11-04)
+
+**Confirmed static:** XMPP response adaptation tries request-bound success,
+request error, then server error. Typed conversion precedes callback
+admission. The refresh GraphQL-error callback returns false and suppresses
+success even with partial data; empty typed data also declines.
+[Exact chain and remaining decoder/correlation work](rea/2.26.43.72-reachout-state/README.md#iq-response-conversion-and-refresh-callback-admission-2026-11-04). IQ result
+or generic action settlement alone must not become restriction release.
+No runtime behavior or notification ACK policy changed.

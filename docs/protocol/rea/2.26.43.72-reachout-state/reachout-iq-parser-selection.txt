@@ -1,0 +1,24 @@
+
+# class: LX/0is;
+# extends: Ljava/lang/Object;
+
+.method public A04(LLLL)  # .registers 7
+    # full signature: LX/0is;->A04(LX/7p0;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;
+    0000..0002  const/4  v1, #0x1
+    0002..0006  iget-object  v0, v4, LX/7p0;->A00:Ljava/lang/Integer;
+    0006..000c  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    000c..000e  move-result  v0
+    000e..0012  if-eq  v0, v1, +0x10
+    0012..0016  iget-object  v2, v4, LX/7p0;->A01:[B
+    0016..001a  iget-object  v1, v3, LX/0is;->A04:LX/0iy;
+    001a..001e  new-instance  v0, LX/7wg;
+    001e..0024  invoke-direct  {v0, v2}, LX/7wg;-><init>([B)V
+    0024..002a  invoke-virtual  {v1, v0}, LX/0iv;->A00(Ljava/lang/Object;)Ljava/lang/Object;
+    002a..002c  move-result-object  v0
+    002c..002e  return-object  v0
+    002e..0032  iget-object  v0, v3, LX/0is;->A03:LX/0iw;
+    0032..0038  invoke-direct  {v3, v0, v4, v5, v6}, LX/0is;->A00(LX/0it;LX/7p0;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;
+    0038..003a  move-result-object  v0
+    003a..003c  return-object  v0
+    # exception table: 0 try range(s)
+.end method

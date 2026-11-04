@@ -1,0 +1,50 @@
+
+# class: LX/0is;
+# extends: Ljava/lang/Object;
+
+.method public A03(LLLLLL)  # .registers 8
+    # full signature: LX/0is;->A03(LX/7p0;Ljava/lang/Class;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+    0000..0002  const/4  v0, #0x1
+    0002..0008  invoke-static  {v4, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000a  const/4  v0, #0x2
+    000a..0010  invoke-static  {v5, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0010..0014  iget-object  v1, v3, LX/7p0;->A00:Ljava/lang/Integer;
+    0014..0018  sget-object  v0, LX/02X;->A01:Ljava/lang/Integer;
+    0018..001c  if-ne  v1, v0, +0x31
+    001c..0020  if-eqz  v7, +0x2f
+    0020..0024  iget-object  v0, v2, LX/0is;->A01:LX/05a;
+    0024..0028  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0028..002e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    002e..0030  move-result-object  v1
+    0030..0034  check-cast  v1, LX/08Y;
+    0034..0038  sget-object  v0, LX/SGd;->A03:LX/00f;
+    0038..003e  invoke-static  {v0}, LX/00l;->A06(Ljava/lang/Object;)V
+    003e..0044  invoke-virtual  {v1, v0}, LX/00E;->A17(LX/00f;)Z
+    0044..0046  move-result  v0
+    0046..004a  if-eqz  v0, +0x1a
+    004a..004e  iget-object  v0, v2, LX/0is;->A02:LX/05a;
+    004e..0052  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0052..0058  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0058..005a  move-result-object  v0
+    005a..005e  check-cast  v0, LX/RsI;
+    005e..0064  invoke-direct  {v2, v0, v3, v5, v6}, LX/0is;->A00(LX/0it;LX/7p0;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;
+    0064..0066  move-result-object  v1
+    0066..006a  new-instance  v0, LX/T4g;
+    006a..0070  invoke-direct  {v0, v7}, LX/T4g;-><init>(Lkotlin/jvm/functions/Function1;)V
+    0070..0076  invoke-direct  {v2, v0, v4, v1, v5}, LX/0is;->A01(LX/TXW;Ljava/lang/Class;Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
+    0076..0078  move-result-object  v1
+    0078..007a  return-object  v1
+    007a..0080  invoke-virtual  {v2, v3, v5, v6}, LX/0is;->A04(LX/7p0;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;
+    0080..0082  move-result-object  v1
+    0082..0086  new-instance  v0, LX/T4f;
+    0086..008c  invoke-direct  {v0, v4}, LX/T4f;-><init>(Ljava/lang/Class;)V
+    008c..0092  invoke-direct  {v2, v0, v4, v1, v5}, LX/0is;->A01(LX/TXW;Ljava/lang/Class;Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
+    0092..0094  move-result-object  v1
+    0094..0096  return-object  v1
+    0096..0098  move-exception  v0
+    0098..009c  new-instance  v1, LX/0Dt;
+    009c..00a2  invoke-direct  {v1, v0}, LX/0Dt;-><init>(Ljava/lang/Throwable;)V
+    00a2..00a4  return-object  v1
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0008..004b -> 004b
+.end method

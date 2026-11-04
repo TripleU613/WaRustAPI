@@ -1,0 +1,57 @@
+
+# class: LX/T4f;
+# extends: Ljava/lang/Object;
+
+.method public CtW(LL)  # .registers 8
+    # full signature: LX/T4f;->CtW(Ljava/lang/Object;)Ljava/lang/Object;
+    0000..0004  check-cast  v7, Lorg/json/JSONObject;
+    0004..0006  const/4  v4, #0x0
+    0006..000c  invoke-static  {v7, v4}, LX/00l;->A09(Ljava/lang/Object;I)V
+    000c..0010  const-class  v0, LX/8GA;
+    0010..0014  iget-object  v5, v6, LX/T4f;->A00:Ljava/lang/Class;
+    0014..001a  invoke-virtual  {v0, v5}, Ljava/lang/Class;->isAssignableFrom(Ljava/lang/Class;)Z
+    001a..001c  move-result  v0
+    001c..0020  if-eqz  v0, +0x2c
+    0020..0024  new-instance  v3, LX/Sv7;
+    0024..002a  invoke-direct  {v3, v7}, LX/Sv7;-><init>(Lorg/json/JSONObject;)V
+    002a..002c  goto  +0x6
+    002c..002e  move-exception  v0
+    002e..0034  invoke-static  {v0}, LX/6oe;->A1D(Ljava/lang/Throwable;)LX/0Dt;
+    0034..0036  move-result-object  v3
+    0036..003c  invoke-static  {v3}, LX/0Dr;->A02(Ljava/lang/Object;)Ljava/lang/Throwable;
+    003c..003e  move-result-object  v0
+    003e..0042  if-nez  v0, +0x16
+    0042..0044  const/4  v2, #0x1
+    0044..0048  new-array  v1, v2, [Ljava/lang/Class;
+    0048..004c  const-class  v0, LX/8sX;
+    004c..0050  aput-object  v0, v1, v4
+    0050..0056  invoke-virtual  {v5, v1}, Ljava/lang/Class;->getConstructor([Ljava/lang/Class;)Ljava/lang/reflect/Constructor;
+    0056..0058  move-result-object  v1
+    0058..005c  new-array  v0, v2, [Ljava/lang/Object;
+    005c..0060  aput-object  v3, v0, v4
+    0060..0066  invoke-virtual  {v1, v0}, Ljava/lang/reflect/Constructor;->newInstance([Ljava/lang/Object;)Ljava/lang/Object;
+    0066..0068  move-result-object  v0
+    0068..006a  return-object  v0
+    006a..0070  invoke-static  {v0}, LX/6oe;->A1D(Ljava/lang/Throwable;)LX/0Dt;
+    0070..0072  move-result-object  v0
+    0072..0074  return-object  v0
+    0074..0076  const/4  v2, #0x1
+    0076..007a  new-array  v1, v2, [Ljava/lang/Class;
+    007a..007e  const-class  v0, Lorg/json/JSONObject;
+    007e..0082  aput-object  v0, v1, v4
+    0082..0088  invoke-virtual  {v5, v1}, Ljava/lang/Class;->getConstructor([Ljava/lang/Class;)Ljava/lang/reflect/Constructor;
+    0088..008a  move-result-object  v1
+    008a..008e  new-array  v0, v2, [Ljava/lang/Object;
+    008e..0092  aput-object  v7, v0, v4
+    0092..0098  invoke-virtual  {v1, v0}, Ljava/lang/reflect/Constructor;->newInstance([Ljava/lang/Object;)Ljava/lang/Object;
+    0098..009a  move-result-object  v0
+    009a..009c  return-object  v0
+    009c..009e  move-exception  v0
+    009e..00a4  invoke-static  {v0}, LX/6oe;->A1D(Ljava/lang/Throwable;)LX/0Dt;
+    00a4..00a6  move-result-object  v0
+    00a6..00a8  return-object  v0
+    # exception table: 3 try range(s)
+    # catch <all> code_units 0010..0016 -> 0016
+    # catch <all> code_units 0021..0035 -> 004e
+    # catch <all> code_units 003a..004e -> 004e
+.end method

@@ -901,3 +901,115 @@ bounded APK/asset query-ID export remains the reference data artifact.
 - [reachout-registry-asset-read.txt](reachout-registry-asset-read.txt) — SHA-256 `004fb18eed85c30206fbddf5cdc68e041e57858deff6a5c745881c800247781d`.
 - [reachout-registry-lookup-owner.txt](reachout-registry-lookup-owner.txt) — SHA-256 `c9de850401cd2390c8b5e75aca89d5e44d3e62ec31c492d42e262c3f348d522a`.
 - [reachout-registry-alternate-owner.txt](reachout-registry-alternate-owner.txt) — SHA-256 `853572a45d8698420461c507670d222c5fc92f6d6916b0c0ed923141bc76ae95`.
+
+## IQ response conversion and refresh callback admission (2026-11-04)
+
+**Confirmed static**, pinned APK 2.26.43.72 with the same SHA-256 above.
+This traces the refresh's selected XMPP response conversion and callback
+admission; no Rust fetch/response application is implemented here.
+
+0mb delegates incoming success/error entry points to 0md; timeout BsS
+delegates to 0md.BsS -> 0mY.BL6. 0md.A00 tries three request-bound
+constructors in order: 7Ou(node,original0mK) success -> BKn; on LIL,
+7Ow(node,original0mK) request error -> BKl; on LIL, 7Ol(node,original0mK)
+server error -> BKo. If all fail, it throws LIL with the accumulated
+shape errors. Complete constructors are retained; merged class overloads
+for unrelated notification/media shapes are not refresh response evidence.
+
+The success overload names iq, result, id, to, Argo|Json and result
+body paths and passes fields from original 0mK into 8B6 validators.
+This establishes request-bound shape validation, not a completed proof
+of every 8B6 argument/default/equality rule or upstream sender authority.
+In particular, the literal mex in a validator argument must not be
+misread as an asserted iq type=mex requirement. The generic matcher,
+pending-request lookup, socket/account correlation and sender ownership
+remain obligations to trace before porting.
+
+### Body conversion before typed callback
+
+7jy.A00 extracts success A02's 7NM byte body. Its selector 0 maps to
+7p0 format integer 1; the other branch maps 0; absent wrapper throws.
+Which wire alternative supplies each selector still needs its constructor
+trace; do not assume all MEX results are raw JSON or all are Argo.
+
+0mZ.BKn obtains that wrapper, then invokes 0is.A03 using the request's
+tree class/call name/build namespace and optional converter. This refresh
+spec's optional function is null, so A03 takes A04 plus T4f typed
+conversion, not the optional custom converter branch. A04 selects 0iw
+for format 1 and 0iy/7wg byte input for other values. 0iy labels its
+pipeline JSON; it composes 0iv with a DI-provided 0it parser and three
+1WU converters. 0iv distinguishes parse failures (including OOM),
+data/error conversion and composite results. These exports preserve the
+remaining decoder boundary; exact bytes/UTF-8/top-level field grammar
+are not yet reconstructed from these shared methods alone.
+
+0is.A01/A02 convert a successful SUg data/errors pair using TXW and
+construct RsF; conversion exceptions become explicit 7MI failure values.
+T4f uses the requested model's JSONObject constructor for the 0iM
+branch, while other model classes can use an 8sX wrapper. The already
+retained 74W JSONObject constructor is the refresh model. RsF.A02 for
+a 0iM is true only when its backing JSONObject length is positive;
+RsF.A03 is true when the error JSONArray length is positive. This is
+not field-level validation that the timelock object is present/valid.
+
+0mZ.BKn forwards a successfully converted RsF through CDQ even when
+its error flag is set; its metrics calls are not state application. A
+conversion failure takes explicit failure handling instead. BKl/BKo
+construct distinct request/server error wrappers, and BL6 handles timeout.
+No automatic replay or new identity is justified by these error branches.
+
+### The refresh error callback prevents applying partial data
+
+BaseMexCallback.CDQ -> A04 implements admission after conversion:
+
+- With errors, it calls A08(Hbw(errors)). A false return ends without
+  A05, even if the converted data object is nonempty.
+- With no errors, A02 data-present permits A05. Without data, default
+  A07=false declines A05. 0id does not override A07.
+- A05 exceptions are wrapped/reported and rethrown, not rewritten into
+  successful inactive state.
+
+0id.A05 invokes its configured success function; A08 invokes its error
+function and unboxes the boolean. In the previously retained refresh
+8dV selectors 17/18/19, selector 17 binds those callbacks, selector 19
+logs/reports and returns false, and selector 18 obtains the timelock
+object and calls 7vL.A00. Therefore this refresh's GraphQL errors
+prevent partial data reaching that state-manager callback. An empty
+converted data object also does not reach it. Nonempty data still
+requires the already noted field accessor/default behavior; a JSON
+wrapper is not proof that missing is_active must mean inactive.
+
+**Port obligations retained:** do not clear restrictions merely from IQ
+type=result, generic action settlement, parse success, errors plus data,
+empty model or elapsed deadline. A future durable port must bind the
+original request/account, validate the selected body and supported fields,
+retain refusal/failure reasons, and compose accepted state application
+with its action settlement. Native preference writes are not proof of
+a Rust transaction or replay-safe scheduler. Current notification ACK
+policy is separate and is not silently changed from fetch evidence.
+Full decoder grammar, field defaults, request correlation, lifecycle and
+automatic refresh remain unfinished. No runtime change/live traffic.
+
+Reproduce apk-smali on the named class/method in each export with
+--signatures --exceptions. Select the 7Ou/7Ow/7Ol overload whose second
+argument is 0mK. TXT exports are checked DEX text, not REA envelopes.
+
+- [reachout-iq-response-adapter.txt](reachout-iq-response-adapter.txt) — SHA-256 `0257321e14266bc9770ecbf6efe63c5091f7fac0bbf804d131ec1ddc22360af8`.
+- [reachout-iq-json-conversion.txt](reachout-iq-json-conversion.txt) — SHA-256 `52dbdc3c3107b3f47b5f070245e85fdedf386f9ec26d189ce9103de97125b810`.
+- [reachout-iq-result-wrapper.txt](reachout-iq-result-wrapper.txt) — SHA-256 `29c7c21c5fbb6f9df0b9e413939f77b110852ffa3f963a04a392929cd0d2b81d`.
+- [reachout-iq-body-selection.txt](reachout-iq-body-selection.txt) — SHA-256 `692416847360959e79c1fce4c548549f065001e6223ea0fd511c0890837cad33`.
+- [reachout-iq-json-parser.txt](reachout-iq-json-parser.txt) — SHA-256 `47f223d01a043dab13fb19a82c35dbf3b23d9f59d499fbca9f6f35d0594ab6f6`.
+- [reachout-iq-success-shape.txt](reachout-iq-success-shape.txt) — SHA-256 `8a2569401e9890eebe527b5d35d33c1dbe42a022ed4e75f7afe0322624f04ff0`.
+- [reachout-iq-parser-selection.txt](reachout-iq-parser-selection.txt) — SHA-256 `cf9a916db313b0babc7ebdc18696d13edba8c36d863e2aa802bb3b1e4166908d`.
+- [reachout-iq-json-decoder.txt](reachout-iq-json-decoder.txt) — SHA-256 `5beab4841f477cb29b37d844731fbb682f35234a96f447f769da1c24440f18aa`.
+- [reachout-iq-decoder-failures.txt](reachout-iq-decoder-failures.txt) — SHA-256 `5b974ace178794c01c2eac5104795ecfbf21c0b0704a4b7c1f2893ad0bbf73dd`.
+- [reachout-iq-callback-disposition.txt](reachout-iq-callback-disposition.txt) — SHA-256 `91150a717f000f46ce6b63d1fa1c7ea9c2570089263809dd4fdf78b96c4f54d2`.
+- [reachout-iq-base-callback.txt](reachout-iq-base-callback.txt) — SHA-256 `07eaa3df9e7339dc4b1e8ae02258447b2cc02e7bd587b588a7e0c6a0f1fa63d6`.
+- [reachout-iq-callback-data-gate.txt](reachout-iq-callback-data-gate.txt) — SHA-256 `bf39447aec03ecad37bbca3000685380ce7af3520e36965c2901c92462f63a04`.
+- [reachout-iq-typed-result.txt](reachout-iq-typed-result.txt) — SHA-256 `e04c18a9d9290b57335336d3cdb852574e270d228e6c0ad4ba586c2394fa7d28`.
+- [reachout-iq-empty-data-policy.txt](reachout-iq-empty-data-policy.txt) — SHA-256 `acd2384892c873df24b2bd40de0a4644690911b977ba0e11b4061c387af4b138`.
+- [reachout-iq-typed-data-construction.txt](reachout-iq-typed-data-construction.txt) — SHA-256 `427a9c8615bbf18d2e6fc4c7b84c2f2f947fe9bd2d7117a66d4186baac5cf8a3`.
+- [reachout-iq-request-error-shape.txt](reachout-iq-request-error-shape.txt) — SHA-256 `d3311ff90469721ff21e1ce3a6a7a777af9b4513e9d5e8d49928b0c04458744b`.
+- [reachout-iq-server-error-shape.txt](reachout-iq-server-error-shape.txt) — SHA-256 `b9a2725fd499957b7255b31f14161cc3322281766abdeb198fd0f4fdbbd06f71`.
+- [reachout-iq-data-error-flags.txt](reachout-iq-data-error-flags.txt) — SHA-256 `8b949e4fb1f67ec1b32c33b8e5ef72789729a63a47ddb000bd25c29ac227b50d`.
+- [reachout-iq-json-model-converter.txt](reachout-iq-json-model-converter.txt) — SHA-256 `6a739847d95514faeaa64a0b28af4fad308891c27c5b1c6760c432773a82a7fe`.

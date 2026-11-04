@@ -1,0 +1,10 @@
+
+# class: Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;
+# extends: Ljava/lang/Object;
+
+.method public CDQ(VL)  # .registers 2
+    # full signature: Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;->CDQ(LX/RsF;)V
+    0000..0006  invoke-virtual  {v0, v1}, Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;->A04(LX/RsF;)V
+    0006..0008  return-void
+    # exception table: 0 try range(s)
+.end method

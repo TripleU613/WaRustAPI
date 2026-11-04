@@ -1,0 +1,26 @@
+
+# class: LX/0iy;
+# extends: LX/0iv;
+
+.method public <init>(V)  # .registers 8
+    # full signature: LX/0iy;-><init>()V
+    0000..0004  const/16  v0, #0x1141
+    0004..000a  invoke-static  {v0}, LX/00T;->A03(I)Ljava/lang/Object;
+    000a..000c  move-result-object  v2
+    000c..0010  check-cast  v2, LX/0it;
+    0010..0012  const/4  v1, #0x0
+    0012..0018  invoke-static  {v2, v1}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0018..001a  const/4  v0, #0x1
+    001a..001e  new-instance  v3, LX/1WU;
+    001e..0024  invoke-direct  {v3, v0}, LX/1WU;-><init>(I)V
+    0024..0028  new-instance  v4, LX/1WU;
+    0028..002e  invoke-direct  {v4, v1}, LX/1WU;-><init>(I)V
+    002e..0030  const/4  v0, #0x3
+    0030..0034  new-instance  v5, LX/1WU;
+    0034..003a  invoke-direct  {v5, v0}, LX/1WU;-><init>(I)V
+    003a..003e  const-string  v6, "JSON"
+    003e..0040  move-object  v1, v7
+    0040..0046  invoke-direct/range  {v1..v6}, LX/0iv;-><init>(LX/0it;LX/0it;LX/0it;LX/0it;Ljava/lang/String;)V
+    0046..0048  return-void
+    # exception table: 0 try range(s)
+.end method

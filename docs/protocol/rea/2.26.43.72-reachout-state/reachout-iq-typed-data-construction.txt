@@ -1,0 +1,36 @@
+
+# class: LX/0is;
+# extends: Ljava/lang/Object;
+
+.method public A02(LLLL)  # .registers 7
+    # full signature: LX/0is;->A02(LX/SUg;LX/TXW;Ljava/lang/Class;)Ljava/lang/Object;
+    0000..0002  const/4  v0, #0x1
+    0002..0008  invoke-static  {v4, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000e  invoke-virtual  {v4}, LX/SUg;->A00()Ljava/lang/Object;
+    000e..0010  move-result-object  v0
+    0010..0016  invoke-interface  {v5, v0}, LX/TXW;->CtW(Ljava/lang/Object;)Ljava/lang/Object;
+    0016..0018  move-result-object  v2
+    0018..001a  goto  +0x7
+    001a..001c  move-exception  v0
+    001c..0020  new-instance  v2, LX/0Dt;
+    0020..0026  invoke-direct  {v2, v0}, LX/0Dt;-><init>(Ljava/lang/Throwable;)V
+    0026..002a  instance-of  v0, v2, LX/0Dt;
+    002a..002e  xor-int/lit8  v0, v0, #0x1
+    002e..0032  if-eqz  v0, +0x11
+    0032..0038  invoke-static  {v2}, LX/0dg;->A01(Ljava/lang/Object;)V
+    0038..003e  invoke-virtual  {v4}, LX/SUg;->A01()Ljava/lang/Object;
+    003e..0040  move-result-object  v1
+    0040..0044  check-cast  v1, Lorg/json/JSONArray;
+    0044..0048  new-instance  v0, LX/RsF;
+    0048..004e  invoke-direct  {v0, v2, v1}, LX/RsF;-><init>(Ljava/lang/Object;Lorg/json/JSONArray;)V
+    004e..0050  return-object  v0
+    0050..0056  invoke-static  {v2}, LX/0Dr;->A02(Ljava/lang/Object;)Ljava/lang/Throwable;
+    0056..0058  move-result-object  v1
+    0058..005c  new-instance  v0, LX/7MI;
+    005c..0062  invoke-direct  {v0, v6, v1}, LX/7MI;-><init>(Ljava/lang/Class;Ljava/lang/Throwable;)V
+    0062..0068  invoke-static  {v0}, LX/0dg;->A00(Ljava/lang/Throwable;)LX/0Dt;
+    0068..006a  move-result-object  v0
+    006a..006c  return-object  v0
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/Exception; code_units 0004..000d -> 000d
+.end method

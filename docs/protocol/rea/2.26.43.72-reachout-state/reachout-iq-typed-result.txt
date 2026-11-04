@@ -1,0 +1,32 @@
+
+# class: LX/0is;
+# extends: Ljava/lang/Object;
+
+.method private A01(LLLLL)  # .registers 8
+    # full signature: LX/0is;->A01(LX/TXW;Ljava/lang/Class;Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
+    0000..0004  instance-of  v0, v6, LX/0Dt;
+    0004..0008  xor-int/lit8  v0, v0, #0x1
+    0008..000c  if-eqz  v0, +0xc
+    000c..0012  invoke-static  {v6}, LX/0dg;->A01(Ljava/lang/Object;)V
+    0012..0016  check-cast  v6, LX/SUg;
+    0016..001c  invoke-virtual  {v3, v6, v4, v5}, LX/0is;->A02(LX/SUg;LX/TXW;Ljava/lang/Class;)Ljava/lang/Object;
+    001c..001e  move-result-object  v0
+    001e..0020  return-object  v0
+    0020..0026  invoke-static  {v6}, LX/0Dr;->A02(Ljava/lang/Object;)Ljava/lang/Throwable;
+    0026..0028  move-result-object  v2
+    0028..002c  if-nez  v2, +0x1a
+    002c..0030  const-string  v1, "Unknown error during parseInput for: "
+    0030..0034  new-instance  v0, Ljava/lang/StringBuilder;
+    0034..003a  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    003a..0040  invoke-virtual  {v0, v7}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0040..0046  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0046..0048  move-result-object  v1
+    0048..004c  new-instance  v0, Ljava/lang/UnknownError;
+    004c..0052  invoke-direct  {v0}, Ljava/lang/UnknownError;-><init>()V
+    0052..0056  new-instance  v2, LX/7MJ;
+    0056..005c  invoke-direct  {v2, v1, v0}, LX/7MJ;-><init>(Ljava/lang/String;Ljava/lang/Throwable;)V
+    005c..0060  new-instance  v0, LX/0Dt;
+    0060..0066  invoke-direct  {v0, v2}, LX/0Dt;-><init>(Ljava/lang/Throwable;)V
+    0066..0068  return-object  v0
+    # exception table: 0 try range(s)
+.end method

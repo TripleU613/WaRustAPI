@@ -1,3 +1,9 @@
+2026-11-04 — **Pinned static: refresh response shape and callback admission.**
+0mb/0md -> 0mZ/0is -> RsF -> BaseMexCallback/0id retained.
+Fetch error callback false suppresses success with partial data; default
+empty-data policy declines success. Full wire decoding/correlation open.
+[Sources and future durable application obligations](rea/2.26.43.72-reachout-state/README.md#iq-response-conversion-and-refresh-callback-admission-2026-11-04). No live traffic.
+
 2026-11-04 — **Pinned static: normal MEX registry initialization resolved.**
 0ig.<init> -> 0ik.A01 -> 1Wy(22) -> 0ii -> 0im -> 0in asset loader;
 CRh reads doc_id while AHH separately gates client IDs. Global alternative

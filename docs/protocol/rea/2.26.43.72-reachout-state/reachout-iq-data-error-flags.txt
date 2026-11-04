@@ -1,0 +1,77 @@
+
+# class: LX/RsF;
+# extends: LX/SUg;
+
+.method public <init>(VLL)  # .registers 6
+    # full signature: LX/RsF;-><init>(Ljava/lang/Object;Lorg/json/JSONArray;)V
+    0000..0002  const/4  v0, #0x1
+    0002..0008  invoke-static  {v5, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000e  invoke-direct  {v3, v4, v5}, LX/SUg;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V
+    000e..0012  iput-object  v4, v3, LX/RsF;->A00:Ljava/lang/Object;
+    0012..0016  iput-object  v5, v3, LX/RsF;->A01:Lorg/json/JSONArray;
+    0016..001a  instance-of  v0, v4, LX/0iM;
+    001a..001c  const/4  v2, #0x0
+    001c..0020  if-eqz  v0, +0x1b
+    0020..0024  check-cast  v4, LX/0iM;
+    0024..0028  iget-object  v0, v4, LX/0iM;->A01:Lorg/json/JSONObject;
+    0028..002e  invoke-virtual  {v0}, Lorg/json/JSONObject;->length()I
+    002e..0030  move-result  v0
+    0030..0034  if-lez  v0, +0x4f
+    0034..0036  const/4  v0, #0x1
+    0036..003a  iput-boolean  v0, v3, LX/RsF;->A02:Z
+    003a..003e  iget-object  v0, v3, LX/RsF;->A01:Lorg/json/JSONArray;
+    003e..0044  invoke-virtual  {v0}, Lorg/json/JSONArray;->length()I
+    0044..0046  move-result  v0
+    0046..004a  if-lez  v0, +0x3
+    004a..004c  const/4  v2, #0x1
+    004c..0050  iput-boolean  v2, v3, LX/RsF;->A03:Z
+    0050..0052  return-void
+    0052..0056  instance-of  v0, v4, LX/8GA;
+    0056..005a  if-eqz  v0, +0x3e
+    005a..005e  check-cast  v4, LX/0iN;
+    005e..0064  invoke-static  {v4}, LX/Lbp;->A00(LX/0iN;)LX/8sX;
+    0064..0066  move-result-object  v1
+    0066..006a  instance-of  v0, v1, LX/Sv7;
+    006a..006e  if-eqz  v0, +0x7
+    006e..0072  check-cast  v1, LX/Sv7;
+    0072..0076  iget-object  v0, v1, LX/Sv7;->A01:Lorg/json/JSONObject;
+    0076..0078  goto  -0x27
+    0078..007c  instance-of  v0, v1, LX/Sv8;
+    007c..0080  if-eqz  v0, -0x24
+    0080..0084  check-cast  v1, LX/Sv8;
+    0084..0088  iget-object  v0, v1, LX/Sv8;->A00:LX/SfO;
+    0088..008c  iget-object  v0, v0, LX/SfO;->A00:LX/N3a;
+    008c..0092  invoke-virtual  {v0}, LX/N3a;->values()Ljava/util/Collection;
+    0092..0094  move-result-object  v1
+    0094..009a  invoke-interface  {v1}, Ljava/util/Collection;->isEmpty()Z
+    009a..009c  move-result  v0
+    009c..00a0  if-nez  v0, +0x19
+    00a0..00a6  invoke-interface  {v1}, Ljava/util/Collection;->iterator()Ljava/util/Iterator;
+    00a6..00a8  move-result-object  v1
+    00a8..00ae  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    00ae..00b0  move-result  v0
+    00b0..00b4  if-eqz  v0, +0xf
+    00b4..00ba  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    00ba..00bc  move-result-object  v0
+    00bc..00c0  check-cast  v0, LX/S6g;
+    00c0..00c6  invoke-virtual  {v0}, LX/S6g;->A00()LX/S5d;
+    00c6..00c8  move-result-object  v0
+    00c8..00cc  if-eqz  v0, -0x10
+    00cc..00ce  goto  -0x4c
+    00ce..00d0  const/4  v0, #0x0
+    00d0..00d2  goto  -0x4d
+    00d2..00d6  if-eqz  v4, +0x12
+    00d6..00dc  invoke-virtual  {v4}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+    00dc..00de  move-result-object  v0
+    00de..00e4  invoke-static  {v0}, LX/3q3;->A0i(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    00e4..00e6  move-result-object  v1
+    00e6..00ea  const-string  v0, " is neither MinimalFragmentModel nor BaseGraphQLModel"
+    00ea..00f0  invoke-static  {v0, v1}, LX/1Xl;->A0z(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    00f0..00f2  move-result-object  v1
+    00f2..00f6  if-nez  v1, +0x4
+    00f6..00fa  const-string  v1, "Null type supplied to MexResponse"
+    00fa..00fe  new-instance  v0, Ljava/lang/ClassCastException;
+    00fe..0104  invoke-direct  {v0, v1}, Ljava/lang/ClassCastException;-><init>(Ljava/lang/String;)V
+    0104..0106  throw  v0
+    # exception table: 0 try range(s)
+.end method

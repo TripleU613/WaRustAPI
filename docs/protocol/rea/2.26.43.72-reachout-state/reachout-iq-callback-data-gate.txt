@@ -1,0 +1,53 @@
+
+# class: Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;
+# extends: Ljava/lang/Object;
+
+.method public A04(VL)  # .registers 7
+    # full signature: Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;->A04(LX/RsF;)V
+    0000..0004  iget-boolean  v4, v6, LX/RsF;->A03:Z
+    0004..0006  const/4  v3, #0x0
+    0006..000a  if-eqz  v4, +0x29
+    000a..000e  iget-object  v2, v6, LX/RsF;->A01:Lorg/json/JSONArray;
+    000e..0012  new-instance  v0, LX/Hbw;
+    0012..0018  invoke-direct  {v0, v3, v2}, LX/Hbw;-><init>(Ljava/lang/Throwable;Lorg/json/JSONArray;)V
+    0018..001a  move-object  v3, v0
+    001a..0020  invoke-virtual  {v5, v0}, Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;->A08(LX/Hbw;)Z
+    0020..0022  move-result  v1
+    0022..0026  iget-boolean  v0, v6, LX/RsF;->A02:Z
+    0026..002c  invoke-virtual  {v5, v3, v0}, Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;->A03(LX/Hbw;Z)V
+    002c..002e  goto  +0x14
+    002e..0030  move-exception  v1
+    0030..0034  iget-object  v0, v5, Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;->A00:LX/0mE;
+    0034..0038  new-instance  v3, LX/LIA;
+    0038..003e  invoke-direct  {v3, v0, v1}, LX/LIA;-><init>(LX/0mE;Ljava/lang/Throwable;)V
+    003e..0042  iget-boolean  v1, v6, LX/RsF;->A02:Z
+    0042..0046  new-instance  v0, LX/Hbw;
+    0046..004c  invoke-direct  {v0, v3, v2}, LX/Hbw;-><init>(Ljava/lang/Throwable;Lorg/json/JSONArray;)V
+    004c..0052  invoke-virtual  {v5, v0, v1}, Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;->A03(LX/Hbw;Z)V
+    0052..0054  throw  v3
+    0054..0058  if-eqz  v1, +0x2b
+    0058..005c  iget-boolean  v2, v6, LX/RsF;->A02:Z
+    005c..0060  if-nez  v2, +0xb
+    0060..0064  if-nez  v4, +0x25
+    0064..006a  invoke-virtual  {v5}, Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;->A07()Z
+    006a..006c  move-result  v0
+    006c..0070  if-nez  v0, +0x8
+    0070..0072  return-void
+    0072..0076  iget-object  v0, v6, LX/RsF;->A00:Ljava/lang/Object;
+    0076..007c  invoke-virtual  {v5, v0}, Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;->A05(Ljava/lang/Object;)V
+    007c..0082  invoke-virtual  {v5, v3, v2}, Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;->A03(LX/Hbw;Z)V
+    0082..0084  return-void
+    0084..0086  move-exception  v1
+    0086..008a  iget-object  v0, v5, Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;->A00:LX/0mE;
+    008a..008e  new-instance  v3, LX/LI9;
+    008e..0094  invoke-direct  {v3, v0, v1}, LX/LI9;-><init>(LX/0mE;Ljava/lang/Throwable;)V
+    0094..0098  iget-object  v1, v6, LX/RsF;->A01:Lorg/json/JSONArray;
+    0098..009c  new-instance  v0, LX/Hbw;
+    009c..00a2  invoke-direct  {v0, v3, v1}, LX/Hbw;-><init>(Ljava/lang/Throwable;Lorg/json/JSONArray;)V
+    00a2..00a8  invoke-virtual  {v5, v0, v2}, Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;->A03(LX/Hbw;Z)V
+    00a8..00aa  throw  v3
+    00aa..00ac  return-void
+    # exception table: 2 try range(s)
+    # catch <all> code_units 000d..0017 -> 0017
+    # catch <all> code_units 0032..0042 -> 0042
+.end method

@@ -1,3 +1,12 @@
+2026-11-04 — **Refresh callback data/error admission traced:**
+
+Pinned request-bound success/request-error/server-error constructors and
+typed callback chain retained. Refresh error callback returns false,
+suppressing partial data application; empty typed data also declines.
+[Evidence and remaining body/correlation/default semantics](docs/protocol/rea/2.26.43.72-reachout-state/README.md#iq-response-conversion-and-refresh-callback-admission-2026-11-04).
+Validation: JSON parsing, coverage freshness, staged diff and repository
+hygiene passed. Static research only; no runtime change/live traffic.
+
 2026-11-04 — **Normal refresh executor registry-to-asset chain resolved:**
 
 0ig registers MEX through 1Wy/0ii/0im; CRh reads the asset's server doc_id.

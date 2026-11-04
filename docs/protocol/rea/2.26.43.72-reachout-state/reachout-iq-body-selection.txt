@@ -1,0 +1,25 @@
+
+# class: LX/7jy;
+# extends: Ljava/lang/Object;
+
+.method public A00(LL)  # .registers 3
+    # full signature: LX/7jy;->A00(LX/7Ou;)LX/7p0;
+    0000..0004  iget-object  v2, v2, LX/7Ou;->A02:Ljava/lang/Object;
+    0004..0008  check-cast  v2, LX/7NM;
+    0008..000a  const/4  v1, #0x0
+    000a..000e  if-eqz  v2, +0x15
+    000e..0012  iget  v0, v2, LX/7NM;->$t:I
+    0012..0016  iget-object  v2, v2, LX/7NM;->A00:Ljava/lang/Object;
+    0016..001a  check-cast  v2, [B
+    001a..001e  if-ne  v0, v1, +0xa
+    001e..0022  sget-object  v1, LX/02X;->A01:Ljava/lang/Integer;
+    0022..0026  new-instance  v0, LX/7p0;
+    0026..002c  invoke-direct  {v0, v1, v2}, LX/7p0;-><init>(Ljava/lang/Integer;[B)V
+    002c..002e  return-object  v0
+    002e..0032  sget-object  v1, LX/02X;->A00:Ljava/lang/Integer;
+    0032..0034  goto  -0x8
+    0034..003a  invoke-static  {}, LX/2L6;->A1N()LX/2K2;
+    003a..003c  move-result-object  v0
+    003c..003e  throw  v0
+    # exception table: 0 try range(s)
+.end method
