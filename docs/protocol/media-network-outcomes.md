@@ -133,3 +133,26 @@ generation/identity checks. Merely choosing an older saved result after a refusa
 would pair stale auth and hosts incorrectly. Full refresh/expiry/throttle/runtime
 coordination remains unfinished. Real-store flag tests cover default, 1, plus/BMP
 spellings, other integers and malformed/overflow values with no writes or traffic.
+
+## Pure host projection implemented (2026-11-04)
+
+**Confirmed Rust/offline:** `media_routing::project_media_conn` implements the
+traced 0VM.A0A host-selection operation: first route or new update selects
+incoming hosts; non-new update with a prior object selects its exact host nodes.
+Every resulting attribute remains from the incoming object, including auth,
+TTL and ID. Host order and nested upload/download metadata remain intact.
+Inputs are unchanged. Unknown incoming non-host children remain in the caller's
+original response; the projection contains only interpreted host-list children.
+Duplicate attributes and local structure/count bounds are explicit local policy.
+
+`is_new_route` centralizes the native default/integer parsing. Cached upload
+selection now uses these helpers for its supported new-route branch. Its existing
+non-new refusal remains: a caller-supplied prior node is not proof of prospective
+store origin. No durable prior capture, conditional last_id, merged-cache commit
+or native refresh owner is claimed. This is the merge operation for that later
+transaction wrapper, not a retrospective way to unlock old cached replies.
+
+Three handwritten tests cover all first/new/non-new branches, exact old-host/new-
+metadata separation, unchanged originals and invalid/ambiguous inputs. Existing
+real-store route tests cover the public upload selection guard. Full host parser,
+permissions, expiry and cryptography remain separate obligations. No live traffic.

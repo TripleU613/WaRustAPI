@@ -1,3 +1,16 @@
+2026-11-04 — **Native media host projection core (offline):**
+
+A pure projector now selects first/new reply hosts or exact prior hosts for a
+non-new update, always using the incoming auth/lifetime/ID attributes. Cached
+upload selection uses the shared parsing/projection for its supported branch.
+Three branch/metadata/immutability tests exercise the merge operation. Durable
+prospective prior-context capture and atomic refresh projection remain unfinished;
+non-new cached replies still refuse rather than borrowing arbitrary prior state.
+[Implemented core and limits](docs/protocol/media-network-outcomes.md#pure-host-projection-implemented-2026-11-04).
+Validation: **1,239 workspace/all-feature tests**, strict Clippy, CLI-reference,
+formatting, coverage freshness and repository hygiene passed.
+No live traffic.
+
 2026-11-04 — **Conditional media host retention (static/offline):**
 
 Pinned 0VM.A0A retains old hosts for a non-new response when a current route

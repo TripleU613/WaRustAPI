@@ -219,6 +219,8 @@ pub mod login;
     feature = "experimental-transport"
 ))]
 pub mod media;
+/// Pure native media host-list projection; durable refresh binding remains separate.
+pub mod media_routing;
 #[cfg(all(
     feature = "experimental-signal-crypto",
     feature = "experimental-noise",

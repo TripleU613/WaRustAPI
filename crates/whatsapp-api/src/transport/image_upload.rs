@@ -359,27 +359,15 @@ fn route(store: &ProtocolStore) -> Result<(String, Zeroizing<String>)> {
     let conn = node
         .child("media_conn")
         .ok_or_else(|| invalid("missing media connection"))?;
-    let attr = |name| conn.get_attr(name).and_then(|v| v.as_text());
-    // APK 43.72 1xY.CK4 defaults is_new to 1; 0VM.A0A retains the
-    // previous host list for every other integer when a current route exists.
-    // This standalone cached reply
-    // has no frozen prior-host context, so never adopt its returned hosts.
-    let is_new = match conn.get_attr("is_new") {
-        None => true,
-        Some(value) => {
-            value
-                .as_text()
-                .and_then(super::mex::java_decimal_long)
-                .and_then(|v| i32::try_from(v).ok())
-                .ok_or_else(|| invalid("invalid media route replacement flag"))?
-                == 1
-        }
-    };
-    if !is_new {
+    // The pure projector implements native prior-host selection, but this
+    // historical cache still has no prospective prior-route binding.
+    if !super::media_routing::is_new_route(conn)? {
         return Err(invalid(
             "unchanged media route needs prior host binding; inspect saved response",
         ));
     }
+    let conn = super::media_routing::project_media_conn(None, conn)?;
+    let attr = |name| conn.get_attr(name).and_then(|v| v.as_text());
     // APK 43.72 1xY.CK4 -> 0Tp.A07/A0L/A09 requires both fields and
     // uses Java Long.parseLong. No missing-auth-TTL fallback exists there.
     // Evidence: docs/protocol/rea/2.26.43.72-media-route-lifetimes/README.md.

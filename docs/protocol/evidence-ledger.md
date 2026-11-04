@@ -1,3 +1,10 @@
+2026-11-04 — **Confirmed Rust/offline:** pure media host projection now
+implements pinned 0VM.A0A branch selection with exact prior hosts and incoming
+metadata, preserving inputs. Cached new-route selection uses the shared helper;
+caller claims do not establish durable prior authority. Three tests cover merge,
+first/new branches and ambiguity refusal. No new APK/live evidence is claimed.
+[Implementation and remaining wrapper](media-network-outcomes.md#pure-host-projection-implemented-2026-11-04).
+
 2026-11-04 — **Confirmed static/support gap guarded:** 0VM.A0A conditionally
 retains prior hosts on non-new routing responses; A0P returns the current object
 without expiry filtering. Rust previously ignored is_new. Non-new cached replies
