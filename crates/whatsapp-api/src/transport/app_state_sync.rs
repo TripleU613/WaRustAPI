@@ -1221,9 +1221,12 @@ pub(crate) fn ingest_action(store: &crate::store::ProtocolStore, id: &str) -> Re
                 tx.delete(Table::Checkpoints, pending_key.as_bytes())?;
                 return Ok(changed);
             }
+            // APK 43.72 F2T version acknowledgements use signed Java decimal
+            // parsing (app-state-fetch-completion.md). Accept its spelling only;
+            // the value still must equal the authenticated prepared version.
             if actual.status != super::actions::ActionStatus::Ok
                 || response.get_attr("type").is_some_and(|v| v.as_text() != Some("result"))
-                || response.get_attr("version").and_then(|v| v.as_text()).and_then(|v| v.parse::<u64>().ok()) != Some(prepared.version)
+                || response.get_attr("version").and_then(|v| v.as_text()).and_then(super::mex::java_decimal_long).and_then(|v| u64::try_from(v).ok()) != Some(prepared.version)
             { return Err(invalid_patch("accepted patch version/shape does not match prepared state; inspect original action")); }
             let current = held_state_in(tx, collection)?.to_saved();
             if matches_frozen_state(&current, prepared)? {
@@ -1291,7 +1294,8 @@ fn catch_up_in(
         .next()
         .and_then(|error| error.get_attr("code"))
         .and_then(|code| code.as_text())
-        != Some("409")
+        .and_then(super::mex::java_decimal_long)
+        != Some(409)
         || errors.next().is_some()
     {
         return Err(crate::Error::invalid(
@@ -1922,6 +1926,33 @@ mod catch_up_atomic_tests {
     }
 
     #[test]
+    fn conflict_code_uses_java_integer_spelling() {
+        for code in ["+409", "٠٤٠٩", "４０９"] {
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(&dir.path().join("java-code.redb"));
+            install_key(&store);
+            let response =
+                Node::new("iq")
+                    .attr("type", "result")
+                    .children(vec![Node::new("sync").children(
+                        vec![Node::new("collection")
+                    .attr("name", "regular").attr("type", "error").children(vec![
+                        Node::new("error").attr("code", code),
+                        Node::new("patches").children(vec![Node::new("patch").bytes(patch(false))]),
+                    ])],
+                    )]);
+            assert_eq!(
+                store
+                    .write(|tx| catch_up_in(tx, &response, &test_source()))
+                    .unwrap(),
+                1
+            );
+            assert_eq!(held(&store).unwrap().version, 1);
+            assert_eq!(journal(&store).len(), 1);
+        }
+    }
+
+    #[test]
     fn conflict_chain_commits_together_and_survives_reopen() {
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("chain.redb");
@@ -2503,6 +2534,59 @@ mod settlement_atomic_tests {
             .children(vec![Node::new("sync").children(
                 vec![Node::new("collection").attr("name", name).attr("version", version)],
             )])
+    }
+
+    #[test]
+    fn accepted_versions_follow_java_decimal_without_weakening_prepared_authority() {
+        // Handwritten oracle cases for Java Long.parseLong's signed BMP digits;
+        // no whitespace, separators, surrogate pairs or out-of-range numbers.
+        for (version, accepted) in [
+            ("+1", true),
+            ("٠١", true),
+            ("００１", true),
+            ("-0", false),
+            (" 1", false),
+            ("1 ", false),
+            ("-1", false),
+            ("2", false),
+            ("9223372036854775808", false),
+            ("𝟙", false),
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(&dir.path().join("java-version.redb"));
+            let id = queue(&store).unwrap();
+            let expected = prepared(&store, &id);
+            super::super::actions::reserve_next(&store)
+                .unwrap()
+                .unwrap();
+            assert!(
+                super::super::actions::record_reply(
+                    &store,
+                    &success(&id, "critical_block", version)
+                )
+                .unwrap()
+            );
+            let before = snapshot(&store);
+            let result = ingest_action(&store, &id);
+            if accepted {
+                assert_eq!(result.unwrap(), 1);
+                let held: SavedCollectionState = store
+                    .read(|tx| {
+                        tx.get_json(
+                            Table::Checkpoints,
+                            held_key(Collection::CriticalBlock).as_bytes(),
+                            1,
+                        )
+                    })
+                    .unwrap()
+                    .unwrap();
+                assert_eq!(held, expected);
+                assert_eq!(ingest_action(&store, &id).unwrap(), 0);
+            } else {
+                assert!(result.is_err());
+                assert_eq!(snapshot(&store), before);
+            }
+        }
     }
 
     #[test]

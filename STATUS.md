@@ -1,3 +1,15 @@
+2026-11-04 — **Java decimal settlement parity (offline):**
+
+Accepted-write acknowledgements and conflict codes now reuse the APK-compatible
+signed-decimal helper rather than Rust unsigned parsing/literal ASCII comparison.
+Prepared-state, exact-version, baseline and authentication checks remain required.
+Tests cover alternate BMP digit spellings plus malformed/mismatched values,
+checkpoint preservation, authenticated promotion and no replay.
+[Evidence and limits](docs/protocol/app-state-patch-atomicity.md#java-decimal-acknowledgement-and-conflict-spelling-2026-11-04).
+Validation: **1,229 workspace/all-feature tests**, strict Clippy, CLI-reference,
+formatting, coverage freshness and repository hygiene passed.
+No live account traffic occurred; full fetch application remains unfinished.
+
 2026-11-04 — **409 whole-collection preflight (offline):**
 
 Conflict catch-up now uses the current structural classifier/header stage before

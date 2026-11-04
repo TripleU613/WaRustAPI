@@ -1,3 +1,10 @@
+2026-11-04 — **Confirmed Rust parsing mismatch/fixed offline:** write version
+acknowledgements and 409 codes now use the existing Java-compatible signed-decimal
+helper. Alternate BMP spellings cannot change prepared-state authority. Real-store
+acceptance/refusal tests preserve exact transactional invariants. Native reference
+is the retained pinned 2.26.43.72 F2T/0Tp reader, not fresh live traffic.
+[Details and tests](app-state-patch-atomicity.md#java-decimal-acknowledgement-and-conflict-spelling-2026-11-04).
+
 2026-11-04 — **Confirmed Rust defect/fixed offline:** inline 409 catch-up
 could discard an accompanying snapshot reference. It now runs shared structural
 classification/header preflight before held/key reads and refuses unsupported

@@ -166,3 +166,24 @@ keys, consume a fetch result or schedule a retry. Three encrypted-store regressi
 cover live/cut/reopen wait recovery, non-extension, deferred fetch/patch reservations,
 unrelated control progress, malformed redaction/rollback and exclusion of unrelated
 or inner-error paths. Original request bytes remain unchanged.
+
+## Java decimal acknowledgement and conflict spelling (2026-11-04)
+
+**Confirmed Rust mismatch/fixed offline:** accepted patch settlement used Rust
+`parse::<u64>` while conflict catch-up compared the error code to literal `409`.
+The pinned 2.26.43.72 F2T/0Tp readers use Java decimal parsing, as retained in
+[fetch classification](app-state-fetch-completion.md#structural-classifier-api).
+Both settlement checks now reuse the existing UTF-16/BMP Java signed-long helper.
+The acknowledged value must still be nonnegative and exactly equal to the
+validated prepared version, bounded by signed-long range. Conflict classification
+still independently requires the native integer value 409. No alternate spelling
+can supply a new hash or bypass original-request/key/MAC/baseline checks.
+
+Handwritten cases cover leading plus, Arabic-Indic and fullwidth digits, leading
+zeros, negative/mismatched values, whitespace, signed overflow and supplementary
+mathematical digits. Successful settlement promotes only the authenticated frozen
+prepared state and repeats do nothing; refused cases preserve all checkpoints.
+Conflict spelling tests use independent literal authenticated patch vectors and
+check retained actions. These are offline source tests, not observed server
+spellings or a claim about Android Unicode-version differences. No live traffic
+or new APK evidence was introduced.
