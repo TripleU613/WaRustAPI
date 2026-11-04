@@ -1,0 +1,121 @@
+
+# class: LX/MXe;
+# extends: Ljava/lang/Object;
+
+.method public A00(LLZ)  # .registers 7
+    # full signature: LX/MXe;->A00(LX/Nd9;Z)LX/Ly8;
+    0000..0002  const/4  v4, #0x0
+    0002..0004  const/4  v3, #0x1
+    0004..0006  const/4  v2, #0x0
+    0006..000a  new-instance  v0, LX/Ly8;
+    000a..000c  move-object  v1, v5
+    000c..000e  move  v5, v6
+    000e..0010  move  v6, v3
+    0010..0016  invoke-direct/range  {v0..v6}, LX/Ly8;-><init>(LX/Nd9;Ljava/lang/Object;IZZZ)V
+    0016..0018  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A01(LL)  # .registers 8
+    # full signature: LX/MXe;->A01(Ljava/lang/Object;)LX/Ly8;
+    0000..0002  const/4  v1, #0x0
+    0002..0004  const/4  v4, #0x0
+    0004..0006  const/4  v3, #0xff (-1)
+    0006..0008  const/4  v6, #0x1
+    0008..000c  new-instance  v0, LX/Ly8;
+    000c..000e  move-object  v2, v7
+    000e..0010  move  v5, v4
+    0010..0016  invoke-direct/range  {v0..v6}, LX/Ly8;-><init>(LX/Nd9;Ljava/lang/Object;IZZZ)V
+    0016..0018  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A02(LL)  # .registers 7
+    # full signature: LX/MXe;->A02(Ljava/lang/Object;)LX/Ly8;
+    0000..0002  const/4  v1, #0x0
+    0002..0004  const/4  v4, #0x0
+    0004..0006  const/4  v3, #0xff (-1)
+    0006..000a  new-instance  v0, LX/Ly8;
+    000a..000c  move-object  v2, v6
+    000c..000e  move  v5, v4
+    000e..0010  move  v6, v4
+    0010..0016  invoke-direct/range  {v0..v6}, LX/Ly8;-><init>(LX/Nd9;Ljava/lang/Object;IZZZ)V
+    0016..0018  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A03(LL)  # .registers 8
+    # full signature: LX/MXe;->A03(Ljava/lang/Object;)LX/Ly8;
+    0000..0002  const/4  v1, #0x0
+    0002..0004  const/4  v4, #0x1
+    0004..0006  const/4  v3, #0xff (-1)
+    0006..0008  const/4  v6, #0x0
+    0008..000c  new-instance  v0, LX/Ly8;
+    000c..000e  move-object  v2, v7
+    000e..0010  move  v5, v4
+    0010..0016  invoke-direct/range  {v0..v6}, LX/Ly8;-><init>(LX/Nd9;Ljava/lang/Object;IZZZ)V
+    0016..0018  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A04(LLZZ)  # .registers 8
+    # full signature: LX/MXe;->A04(Ljava/lang/Object;ZZ)LX/Ly8;
+    0000..0002  const/4  v1, #0x0
+    0002..0004  const/4  v4, #0x0
+    0004..0006  const/4  v3, #0xff (-1)
+    0006..000a  new-instance  v0, LX/Ly8;
+    000a..000c  move-object  v2, v5
+    000c..000e  move  v5, v6
+    000e..0010  move  v6, v7
+    0010..0016  invoke-direct/range  {v0..v6}, LX/Ly8;-><init>(LX/Nd9;Ljava/lang/Object;IZZZ)V
+    0016..0018  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A05(LL)  # .registers 3
+    # full signature: LX/MXe;->A05(Ljava/lang/String;)LX/Ly8;
+    0000..0004  const/16  v1, #0x8
+    0004..000a  invoke-static  {v2}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    000a..000e  new-instance  v0, LX/MXt;
+    000e..0014  invoke-direct  {v0, v1}, LX/MXt;-><init>(I)V
+    0014..001a  invoke-static  {v0}, LX/MXe;->A01(Ljava/lang/Object;)LX/Ly8;
+    001a..001c  move-result-object  v0
+    001c..001e  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A06(LL)  # .registers 3
+    # full signature: LX/MXe;->A06(Ljava/lang/String;)LX/Ly8;
+    0000..0004  const/16  v1, #0x8
+    0004..000a  invoke-static  {v2}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    000a..000e  new-instance  v0, LX/MXt;
+    000e..0014  invoke-direct  {v0, v1}, LX/MXt;-><init>(I)V
+    0014..001a  invoke-static  {v0}, LX/MXe;->A02(Ljava/lang/Object;)LX/Ly8;
+    001a..001c  move-result-object  v0
+    001c..001e  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A07(ZLI)  # .registers 3
+    # full signature: LX/MXe;->A07(LX/08Y;I)Z
+    0000..0004  const/16  v0, #0x190
+    0004..0008  if-gt  v0, v2, +0x14
+    0008..000c  const/16  v0, #0x1f4
+    000c..0010  if-ge  v2, v0, +0x12
+    0010..0014  const/16  v0, #0x198
+    0014..0018  if-ne  v2, v0, +0x16
+    0018..001c  if-eqz  v1, +0x14
+    001c..0020  const/16  v0, #0x35b4
+    0020..0026  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    0026..0028  move-result  v0
+    0028..002c  if-eqz  v0, +0xc
+    002c..002e  const/4  v0, #0x1
+    002e..0030  return  v0
+    0030..0034  const/16  v0, #0x1f9
+    0034..0038  if-eq  v2, v0, +0x6
+    0038..003c  const/16  v0, #0x1fb
+    003c..0040  if-ne  v2, v0, -0x8
+    0040..0042  const/4  v0, #0x0
+    0042..0044  return  v0
+    # exception table: 0 try range(s)
+.end method

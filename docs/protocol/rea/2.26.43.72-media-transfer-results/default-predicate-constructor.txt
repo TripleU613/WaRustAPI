@@ -1,0 +1,11 @@
+
+# class: LX/N5N;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VI)  # .registers 2
+    # full signature: LX/N5N;-><init>(I)V
+    0000..0004  iput  v1, v0, LX/N5N;->$t:I
+    0004..000a  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,16 @@
+
+# class: LX/Ly8;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLIZZZ)  # .registers 7
+    # full signature: LX/Ly8;-><init>(LX/Nd9;Ljava/lang/Object;IZZZ)V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v2, v0, LX/Ly8;->A02:Ljava/lang/Object;
+    000a..000e  iput-boolean  v4, v0, LX/Ly8;->A05:Z
+    000e..0012  iput-boolean  v5, v0, LX/Ly8;->A04:Z
+    0012..0016  iput  v3, v0, LX/Ly8;->A00:I
+    0016..001a  iput-boolean  v6, v0, LX/Ly8;->A03:Z
+    001a..001e  iput-object  v1, v0, LX/Ly8;->A01:LX/Nd9;
+    001e..0020  return-void
+    # exception table: 0 try range(s)
+.end method

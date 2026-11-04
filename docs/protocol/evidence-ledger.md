@@ -1,3 +1,9 @@
+2026-11-04 — **Confirmed static: media result flags and cancellation.**
+Pinned2.26.43.72 Ly8 layout, MXe factory matrix, MS4 entry predicates and
+MtZ upload producer retained. Auth retry precedes terminal-flag handling.
+[Evidence and exact bounded HTTP predicate](rea/2.26.43.72-media-transfer-results/README.md).
+Full producer/idempotency reconstruction remains open; no runtime change.
+
 2026-11-04 — **Confirmed static: media readiness and distinct delays.**
 Pinned2.26.43.72 CW7 auth budget/threshold branches, Mtv.AXk/1C8 delay,
 LIY inherited fixed delay and MvM wrapper construction retained.

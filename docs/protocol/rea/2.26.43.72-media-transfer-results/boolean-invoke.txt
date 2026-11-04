@@ -1,0 +1,14 @@
+
+# class: LX/2LD;
+# extends: Ljava/lang/Object;
+
+.method public A1V(ZL)  # .registers 1
+    # full signature: LX/2LD;->A1V(Lkotlin/jvm/functions/Function0;)Z
+    0000..0006  invoke-interface  {v0}, Lkotlin/jvm/functions/Function0;->invoke()Ljava/lang/Object;
+    0006..0008  move-result-object  v0
+    0008..000c  check-cast  v0, Ljava/lang/Boolean;
+    000c..0012  invoke-virtual  {v0}, Ljava/lang/Boolean;->booleanValue()Z
+    0012..0014  move-result  v0
+    0014..0016  return  v0
+    # exception table: 0 try range(s)
+.end method

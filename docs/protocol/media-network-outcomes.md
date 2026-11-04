@@ -374,3 +374,12 @@ token. Mtv's exponential AXk differs from LIY's inherited fixed AXk;
 MvM.A00 selects the wrapper on one construction branch.
 [Branches, exact bytecode and limits](rea/2.26.43.72-media-http-auth-refresh/README.md#readiness-and-distinct-delay-suppliers-2026-11-04).
 No generic delay policy or automatic Rust retry is established.
+
+### Transfer result flags and cancellation entry points (2026-11-04)
+
+**Confirmed static**, pinned2.26.43.72: Ly8 constructor/factory flags and
+MS4 ordering distinguish immediate recheck, supplier switch, auth recovery
+and terminal handling. MS4.A02 supplies a false cancellation predicate;
+MvO.ARB supplies a different predicate with MtZ upload callback.
+[Matrix, HTTP leaf truth table, source hashes and limits](rea/2.26.43.72-media-transfer-results/README.md).
+No generic retry rule is inferred from HTTP ranges.

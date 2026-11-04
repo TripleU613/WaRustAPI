@@ -1,3 +1,13 @@
+2026-11-04 — **Media result flags and cancellation entry points traced:**
+
+Retained result factory matrix and distinguished MS4 default false predicate
+from upload's caller-supplied predicate. Auth retry precedes terminal result
+handling; exact HTTP leaf values are documented without a generic retry rule.
+[Evidence](docs/protocol/rea/2.26.43.72-media-transfer-results/README.md).
+Validation: JSON parsing, coverage freshness, cached diff checks and repository
+hygiene (4,271 local links) passed. Documentation/evidence only;
+no Rust change or live traffic.
+
 2026-11-04 — **Media auth readiness and distinct delay suppliers traced:**
 
 CW7 pre-attempt refresh uses the shared wait budget and separate auth

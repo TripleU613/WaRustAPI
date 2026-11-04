@@ -1,0 +1,14 @@
+
+# class: LX/MS4;
+# extends: Ljava/lang/Object;
+
+.method public A02(LL)  # .registers 4
+    # full signature: LX/MS4;->A02(LX/NYs;)Ljava/lang/Object;
+    0000..0002  const/4  v1, #0x5
+    0002..0006  new-instance  v0, LX/N5N;
+    0006..000c  invoke-direct  {v0, v1}, LX/N5N;-><init>(I)V
+    000c..0012  invoke-virtual  {v2, v3, v0}, LX/MS4;->A03(LX/NYs;Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;
+    0012..0014  move-result-object  v0
+    0014..0016  return-object  v0
+    # exception table: 0 try range(s)
+.end method
