@@ -1186,6 +1186,70 @@ mod tests {
     }
 
     #[test]
+    fn sealed_voice_reservation_survives_reopen_without_replay_or_legacy_rewrite() {
+        use crate::{
+            model::ids::AccountId,
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("sealed-voice.redb");
+        let open = || {
+            ProtocolStore::open(OpenOptions {
+                path: path.clone(),
+                account_id: AccountId::new("sealed-voice-test").unwrap(),
+                key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([6; 32]))),
+                create: true,
+            })
+            .unwrap()
+        };
+        let mut wire = vec![1, 2, 3];
+        wire.extend_from_slice(&finished_voice_seal(&[0; 32]).unwrap());
+        let reservation = serde_json::json!({"status":"outcome_unknown",
+            "hash":"voice-fixture", "to":"recipient-fixture", "body":wire,
+            "encrypted_hash":vec![0;32], "encrypted_body_len":3,
+            "upload_body_format":"finished_voice_seal_v1"});
+        let key = "message:sealed-voice:upload";
+        let store = open();
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &reservation))
+            .unwrap();
+        let observed = retain_response_headers(&store, key, 200).unwrap();
+        for field in [
+            "body",
+            "encrypted_hash",
+            "encrypted_body_len",
+            "upload_body_format",
+        ] {
+            assert_eq!(observed[field], reservation[field]);
+        }
+        drop(store);
+        let store = open();
+        let restored: serde_json::Value = store
+            .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        assert_eq!(restored, observed);
+        assert!(saved_payload(&restored, "voice-fixture", "recipient-fixture").is_err());
+        assert!(retain_response_headers(&store, key, 503).is_err());
+        // Historical completed rows need no seal/version backfill to reuse the
+        // already-created payload. Calling the resolver must not mutate storage.
+        let legacy = serde_json::json!({"status":"uploaded", "hash":"voice-fixture",
+            "to":"recipient-fixture", "body":[1,2,3], "protobuf":[10,0]});
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &legacy))
+            .unwrap();
+        assert_eq!(
+            &*saved_payload(&legacy, "voice-fixture", "recipient-fixture").unwrap(),
+            &[10, 0]
+        );
+        let after: serde_json::Value = store
+            .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        assert_eq!(after, legacy);
+    }
+
+    #[test]
     fn upload_headers_survive_incomplete_body_and_never_authorize_replay() {
         use super::*;
         use crate::{

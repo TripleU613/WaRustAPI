@@ -1,3 +1,13 @@
+2026-11-04 — **Sealed voice checkpoint continuity verified offline:**
+
+Real-store regression checks exact sealed request fields after header receipt
+and reopen, refusal of replay and legacy completed payload reuse without
+rewriting storage. No additional runtime mismatch found in this checkpoint pass.
+[Scope](docs/protocol/media-network-outcomes.md#sealed-voice-checkpoint-reopen-regression-2026-11-04).
+Validation: **1,264 workspace/all-feature tests**, strict Clippy, CLI-reference,
+formatting, coverage freshness and repository hygiene passed.
+No runtime behavior change or live traffic.
+
 2026-11-04 — **Finished voice upload seal corrected (offline):**
 
 New primary one-shot voice uploads append native sent/hash metadata with

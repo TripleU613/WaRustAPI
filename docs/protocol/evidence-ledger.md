@@ -1,3 +1,9 @@
+2026-11-04 — **Confirmed offline: sealed voice checkpoint continuity.**
+Real encrypted-store regression covers header receipt/reopen, exact framing
+fields, no replay and unchanged completed legacy rows.
+[Scope](media-network-outcomes.md#sealed-voice-checkpoint-reopen-regression-2026-11-04).
+No new runtime behavior or live traffic.
+
 2026-11-04 — **Confirmed mismatch corrected offline: finished voice seal.**
 Pinned2.26.43.72 finished sent/hash seal is appended only to new voice
 wire bodies, retaining cipher hash and exact new reservation bytes/version.

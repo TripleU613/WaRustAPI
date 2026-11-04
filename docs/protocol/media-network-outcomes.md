@@ -461,3 +461,14 @@ reservations are not rewritten/replayed.
 [Encoding, native oversize behavior, tests and limits](rea/2.26.43.72-media-upload-http/README.md#finished-voice-seal-integration-2026-11-04-offline-validated).
 No live upload; streaming/newsletter/unfinished processing remains outside
 the existing one-shot operation.
+
+### Sealed voice checkpoint reopen regression (2026-11-04)
+
+**Confirmed offline test:** a sealed voice wire reservation retains body,
+cipher hash, cipher length and framing version across HTTP200 header receipt
+and encrypted-store reopen. It remains non-replayable without a complete
+payload; repeated header replacement fails. A completed unversioned legacy
+row still resolves its saved protobuf without changing the stored row or
+backfilling a seal. No live request is made by this regression.
+Test: image_upload::tests::sealed_voice_reservation_survives_reopen_without_replay_or_legacy_rewrite.
+No new runtime behavior or native claim is introduced.
