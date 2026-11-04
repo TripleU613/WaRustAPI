@@ -52,6 +52,15 @@ a fresh synthetic local destination: APK 2.26.43.72 refused against template
 
 ## Evidence standard and remaining risk
 
+**Confirmed local actor correction:** generic action pacing now uses a shared
+sixteen-write drain budget and a selected monotonic timer, reserving one eligible
+action per send opportunity. Inbound processing and stop run between paced
+writes; later actions stay queued across a failed write. This does not establish
+native app-state flight ownership, send-cancellation responsiveness or a global
+rate limit. [Design and implemented scope](app-state-connection-flight-design.md).
+Current [pairing authentication traces](primary-pairing-auth-current.md) close
+input/callback gates while leaving upstream source/account authority explicit.
+
 **Confirmed local replay defect, corrected for new sequenced settlements:** new
 correlated terminal replies acquire durable monotonic order in their settlement
 transaction. Contacts/groups/blocklist replay supported kinds oldest-first;

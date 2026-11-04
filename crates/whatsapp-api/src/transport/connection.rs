@@ -358,6 +358,34 @@ pub async fn run(
     .await
 }
 
+#[derive(Default)]
+// Keep manual action pacing outside select handlers: a whole reserved batch
+// previously blocked inbound processing during each inter-action sleep.
+struct ActionDrain {
+    remaining: usize,
+    due: Option<tokio::time::Instant>,
+}
+impl ActionDrain {
+    fn trigger(&mut self) {
+        if self.remaining == 0 {
+            self.remaining = super::actions::BATCH;
+            self.due = Some(tokio::time::Instant::now());
+        }
+    }
+    fn deadline(&self) -> tokio::time::Instant {
+        self.due.unwrap_or_else(tokio::time::Instant::now)
+    }
+    fn sent(&mut self, delay_ms: u64) {
+        self.remaining -= 1;
+        self.due = (self.remaining > 0)
+            .then(|| tokio::time::Instant::now() + Duration::from_millis(delay_ms));
+    }
+    fn finish(&mut self) {
+        self.remaining = 0;
+        self.due = None;
+    }
+}
+
 /// Read the login checkpoint status string, if any checkpoint is saved.
 pub fn last_login_status(store: &ProtocolStore) -> Result<Option<String>> {
     store.read(|tx| {
@@ -414,6 +442,7 @@ pub(crate) async fn drive(
     let mut device_query: Option<super::devices::DeviceQuery> = None;
     let mut device_cursor = super::devices::DeviceSyncCursor::default();
     let mut device_context = super::devices::SyncContext::Interactive;
+    let mut action_drain = ActionDrain::default();
     let mut outbox_tick = tokio::time::interval(Duration::from_secs(1));
     // Set by a frame whose stanza name could not be read; cleared by the next
     // decoded stanza. A server close right after such a frame may be the end
@@ -425,6 +454,14 @@ pub(crate) async fn drive(
             return Ok(());
         }
         tokio::select! {
+            _ = tokio::time::sleep_until(action_drain.deadline()), if ready.is_none() && action_drain.remaining > 0 => {
+                if let Some(action) = super::actions::reserve_next(&store)? {
+                    link.send(&action).await?;
+                    action_drain.sent(config.transport.action_delay_ms);
+                } else {
+                    action_drain.finish();
+                }
+            }
             _ = outbox_tick.tick(), if send_outbox && ready.is_none() => {
                 if group_outgoing.as_ref().is_some_and(|v|tokio::time::Instant::now()>=v.deadline) {
                     group_outgoing.take().expect("expired group preparation").expire(&store, &mut device_cursor)?;
@@ -476,16 +513,7 @@ pub(crate) async fn drive(
                     link.send(&node).await?;
                 }
                 for receipt in super::receipts::reserve_pending(&store)? { link.send(&receipt).await?; }
-                {
-                    let delay_ms = config.transport.action_delay_ms;
-                    let actions = super::actions::reserve_pending(&store)?;
-                    for (i, action) in actions.into_iter().enumerate() {
-                        if i > 0 && delay_ms > 0 {
-                            tokio::time::sleep(Duration::from_millis(delay_ms)).await;
-                        }
-                        link.send(&action).await?;
-                    }
-                }
+                action_drain.trigger();
                 // Unanswered keepalive: classified recoverable; the actor decides on reconnect.
                 if pending_ping.is_some() { return Err(Error::Timeout(ping_period)); }
                 let id = super::messaging::new_message_id()?;
@@ -615,16 +643,7 @@ pub(crate) async fn drive(
                             link.send(&name).await?;
                         }
                         for receipt in super::receipts::reserve_pending(&store)? { link.send(&receipt).await?; }
-                        {
-                            let delay_ms = config.transport.action_delay_ms;
-                            let actions = super::actions::reserve_pending(&store)?;
-                            for (i, action) in actions.into_iter().enumerate() {
-                                if i > 0 && delay_ms > 0 {
-                                    tokio::time::sleep(Duration::from_millis(delay_ms)).await;
-                                }
-                                link.send(&action).await?;
-                            }
-                        }
+                        action_drain.trigger();
                         if let Some(ready) = ready.take() { let _ = ready.send(()); }
                         // LX/DNq.run: unsent prekeys (or a store that never generated any) upload at start.
                         if super::prekeys::wants_upload(&store)? {
@@ -1476,8 +1495,169 @@ mod tests {
             assert!(self.finished().await.is_ok());
         }
     }
-    /// Native 43.72 0v0.A00 command 0 has no id/xmlns/child. Capture and
-    /// clock work must commit before this stateless protocol response is written.
+    #[tokio::test]
+    async fn paced_actions_keep_receive_and_stop_responsive_and_reserve_only_one() {
+        use super::super::actions::{self, ActionStatus};
+        for fail in [false, true] {
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(&dir.path().join("paced-actions.redb"));
+            for _ in 0..17 {
+                actions::queue(&store, "pace-fixture", "fixture", |id| {
+                    Ok(Node::new("iq").attr("id", id).attr("type", "get"))
+                })
+                .unwrap();
+            }
+            let mut config = config();
+            config.transport.action_delay_ms = 300_000;
+            let mut fake = start_with_config(&store, false, None, config.clone());
+            fake.activate().await;
+            (&mut fake.ready).await.unwrap();
+            let (first, written) = fake.written().await;
+            let first_id = first
+                .get_attr("id")
+                .and_then(|v| v.as_text())
+                .unwrap()
+                .to_owned();
+            let outcomes = actions::outcomes(&store).unwrap();
+            assert_eq!(
+                outcomes
+                    .iter()
+                    .filter(|a| a.status == ActionStatus::Sent)
+                    .count(),
+                1
+            );
+            assert_eq!(
+                outcomes
+                    .iter()
+                    .filter(|a| a.status == ActionStatus::Queued)
+                    .count(),
+                16
+            );
+            if fail {
+                written
+                    .send(Err(Error::Transport(TransportError::PeerClosed)))
+                    .unwrap();
+                assert!(fake.finished().await.is_err());
+                let mut next = start_with_config(&store, false, None, config);
+                next.activate().await;
+                let (second, written) = next.written().await;
+                assert_ne!(
+                    second.get_attr("id").and_then(|v| v.as_text()),
+                    Some(first_id.as_str())
+                );
+                written.send(Ok(())).unwrap();
+                next.stop_cleanly().await;
+            } else {
+                written.send(Ok(())).unwrap();
+                fake.deliver(
+                    Node::new("iq")
+                        .attr("id", first_id.as_str())
+                        .attr("type", "result"),
+                )
+                .await;
+                tokio::time::timeout(Duration::from_secs(1), async {
+                    while actions::outcomes(&store)
+                        .unwrap()
+                        .iter()
+                        .find(|a| a.id == first_id)
+                        .unwrap()
+                        .status
+                        != ActionStatus::Ok
+                    {
+                        tokio::task::yield_now().await;
+                    }
+                })
+                .await
+                .unwrap();
+                assert_eq!(
+                    actions::outcomes(&store)
+                        .unwrap()
+                        .iter()
+                        .filter(|a| a.status == ActionStatus::Queued)
+                        .count(),
+                    16
+                );
+                fake.stop.send(true).unwrap();
+                assert!(fake.finished_within(Duration::from_secs(1)).await.is_ok());
+            }
+        }
+    }
+
+    #[test]
+    fn action_drain_triggers_do_not_stack_or_reset_an_active_pacing_deadline() {
+        let mut drain = ActionDrain::default();
+        drain.trigger();
+        drain.sent(300_000);
+        let due = drain.deadline();
+        drain.trigger();
+        assert_eq!(drain.remaining, super::super::actions::BATCH - 1);
+        assert_eq!(drain.deadline(), due);
+        for _ in 1..super::super::actions::BATCH {
+            drain.sent(0);
+        }
+        assert_eq!(drain.remaining, 0);
+        assert!(drain.due.is_none());
+        drain.trigger();
+        assert_eq!(drain.remaining, super::super::actions::BATCH);
+        drain.finish();
+        assert_eq!(drain.remaining, 0);
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn zero_delay_drain_keeps_the_sixteen_action_trigger_budget() {
+        use super::super::actions::{self, ActionStatus};
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("zero-delay-actions.redb"));
+        for _ in 0..17 {
+            actions::queue(&store, "pace-fixture", "fixture", |id| {
+                Ok(Node::new("iq").attr("id", id).attr("type", "get"))
+            })
+            .unwrap();
+        }
+        let mut config = config();
+        config.transport.action_delay_ms = 0;
+        config.transport.timeout_ms = 40_000;
+        let mut fake = start_with_config(&store, false, None, config);
+        fake.activate().await;
+        for _ in 0..16 {
+            let (_, written) = fake.written().await;
+            written.send(Ok(())).unwrap();
+        }
+        fake.nothing_written(Duration::from_millis(5)).await;
+        assert_eq!(
+            actions::outcomes(&store)
+                .unwrap()
+                .iter()
+                .filter(|a| a.status == ActionStatus::Sent)
+                .count(),
+            16
+        );
+        assert_eq!(
+            actions::outcomes(&store)
+                .unwrap()
+                .iter()
+                .filter(|a| a.status == ActionStatus::Queued)
+                .count(),
+            1
+        );
+        tokio::time::advance(Duration::from_secs(20)).await;
+        let (ping, written) = fake.written().await;
+        assert_eq!(
+            ping.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("w:p")
+        );
+        written.send(Ok(())).unwrap();
+        let (_, written) = fake.written().await;
+        written.send(Ok(())).unwrap();
+        assert!(
+            actions::outcomes(&store)
+                .unwrap()
+                .iter()
+                .all(|a| a.status == ActionStatus::Sent)
+        );
+        fake.stop_cleanly().await;
+    }
+
     #[tokio::test]
     async fn account_privacy_commits_before_ack_and_failed_write_survives_reopen() {
         use super::super::account_privacy::{ReadReceiptValue, read_receipts};

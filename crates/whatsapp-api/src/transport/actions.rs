@@ -19,7 +19,7 @@ use serde::{Deserialize, Serialize};
 const PREFIX: &str = "action-outbox:";
 const SETTLEMENT_SEQUENCE: &[u8] = b"action-settlement-sequence";
 /// At most this many queued actions are written per reservation.
-const BATCH: usize = 16;
+pub(crate) const BATCH: usize = 16;
 
 fn decode(bytes: &[u8]) -> Result<Node> {
     let limits = crate::profile::Limits::default();
@@ -219,10 +219,20 @@ pub(crate) fn view_in(
 /// Reserve at most sixteen queued actions for one socket write, marking them
 /// `sent` before the write so a crash never resends them.
 pub fn reserve_pending(store: &ProtocolStore) -> Result<Vec<Node>> {
+    reserve_limit(store, BATCH)
+}
+
+/// Reserve only the next eligible action for the connection actor. All bulk
+/// admission guards remain shared; later actions stay queued until their turn.
+pub(crate) fn reserve_next(store: &ProtocolStore) -> Result<Option<Node>> {
+    Ok(reserve_limit(store, 1)?.pop())
+}
+
+fn reserve_limit(store: &ProtocolStore, limit: usize) -> Result<Vec<Node>> {
     store.write(|tx| {
         let mut out = Vec::new();
         let mut cursor = None;
-        while out.len() < BATCH {
+        while out.len() < limit {
             let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
             if rows.is_empty() {
                 break;
@@ -232,7 +242,7 @@ pub fn reserve_pending(store: &ProtocolStore) -> Result<Vec<Node>> {
                 .iter()
                 .filter(|(key, _)| key.starts_with(PREFIX.as_bytes()))
             {
-                if out.len() == BATCH {
+                if out.len() == limit {
                     break;
                 }
                 let Some(mut row): Option<Row> = tx.get_json(Table::Checkpoints, key, 1)? else {

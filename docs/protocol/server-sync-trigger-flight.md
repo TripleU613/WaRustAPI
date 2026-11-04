@@ -171,3 +171,8 @@ retention, response verification/pagination and completion rescan. Existing
 version-aware fetch construction and MAC-map correction do not by themselves
 complete that receive path. No generic ACK-only shortcut or invented eligibility
 default was added here.
+
+The follow-up [connection integration design](app-state-connection-flight-design.md)
+maps the actual activation/heartbeat reservations, distinguishes generic action
+pacing from collection-flight admission, and lists result-processing and
+recovery prerequisites. It is a design audit, not scheduler completion.

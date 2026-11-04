@@ -1311,7 +1311,7 @@
                 "minimum": 0,
                 "maximum": 300000,
                 "default": 0,
-                "description": "Pause between consecutive queued-action sends in one session"
+                "description": "Monotonic pacing gap after each successful generic queued-action write within a drain. The connection reserves one eligible action only when due and waits in select, allowing incoming replies/stop/deadlines between sends; no batch sleep. Existing activation/heartbeat triggers keep a maximum sixteen-action drain budget, and repeated triggers do not stack/reset an active drain. A new drain's first action is immediate; this is not a global rate limit across all stanza families. Readiness means authenticated activation, not actionqueue flush. Startup/heartbeat IQs may precede queued generic actions. Socket-write completion itself still awaits; full app-state flight ownership remains unported. See docs/protocol/app-state-connection-flight-design.md."
               },
               "mark_read": {
                 "type": "boolean",

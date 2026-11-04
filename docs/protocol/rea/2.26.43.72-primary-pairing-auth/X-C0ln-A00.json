@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_e2e32c3b1973d5557cc70f08593e4d6aa6dca6a772c09fe927fa05a1baac93d8",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C0ln",
+    "method_name": "A00",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-KE2c1X/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C0ln"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"name\":\"A00\",\"def_pos\":0,\"type\":\"int\"},{\"name\":\"A01\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A02\",\"def_pos\":0,\"type\":\"android.util.SparseIntArray\"},{\"name\":\"A03\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A04\",\"def_pos\":0,\"type\":\"com.google.common.base.Optional\"},{\"name\":\"A05\",\"def_pos\":0,\"type\":\"com.google.common.base.Optional\"},{\"name\":\"A06\",\"def_pos\":0,\"type\":\"X.08Y\"},{\"name\":\"A07\",\"def_pos\":0,\"type\":\"X.0B0\"},{\"name\":\"A08\",\"def_pos\":0,\"type\":\"X.098\"},{\"name\":\"A09\",\"def_pos\":0,\"type\":\"X.0lG\"},{\"name\":\"A0A\",\"def_pos\":0,\"type\":\"X.0TX\"},{\"name\":\"A0B\",\"def_pos\":0,\"type\":\"X.0TT\"},{\"name\":\"A0C\",\"def_pos\":0,\"type\":\"X.0Th\"},{\"name\":\"A0D\",\"def_pos\":0,\"type\":\"X.0TV\"},{\"name\":\"A0E\",\"def_pos\":0,\"type\":\"X.0m2\"},{\"name\":\"A0F\",\"def_pos\":0,\"type\":\"java.lang.Object\"},{\"name\":\"A0G\",\"def_pos\":0,\"type\":\"java.util.List\"},{\"name\":\"A0H\",\"def_pos\":0,\"type\":\"java.util.Map\"},{\"name\":\"A0I\",\"def_pos\":0,\"type\":\"java.util.Map\"},{\"name\":\"A0J\",\"def_pos\":0,\"type\":\"android.os.HandlerThread\"},{\"name\":\"A0K\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A0L\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A0M\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A0N\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A0O\",\"def_pos\":0,\"type\":\"X.08q\"},{\"name\":\"A0P\",\"def_pos\":0,\"type\":\"java.lang.Object\"},{\"name\":\"A0Q\",\"def_pos\":0,\"type\":\"boolean\"}],\"field_count\":27,\"full_name\":\"X.C0ln\",\"name\":\"C0ln\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":20,\"methods\":[{\"dex_descriptor\":\"()V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(): void\"},{\"dex_descriptor\":\"(Landroid/os/Message;LX/0ln;I)V\",\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0,\"signature\":\"A00(android.os.Message, X.0ln, int): void\"},{\"dex_descriptor\":\"(LX/0lG;LX/0Tp;LX/0ln;Ljava/lang/String;)V\",\"is_constructor\":false,\"name\":\"A01\",\"def_pos\":0,\"signature\":\"A01(X.0lG, X.0Tp, X.0ln, java.lang.String): void\"},{\"dex_descriptor\":\"(LX/0Tp;LX/0ln;Ljava/lang/String;Z)V\",\"is_constructor\":false,\"name\":\"A02\",\"def_pos\":0,\"signature\":\"A02(X.0Tp, X.0ln, java.lang.String, boolean): void\"},{\"dex_descriptor\":\"(LX/0ln;Ljava/lang/String;Z)V\",\"is_constructor\":false,\"name\":\"A03\",\"def_pos\":0,\"signature\":\"A03(X.0ln, java.lang.String, boolean): void\"},{\"dex_descriptor\":\"(LX/0ln;Ljava/lang/Throwable;I)V\",\"is_constructor\":false,\"name\":\"A04\",\"def_pos\":0,\"signature\":\"A04(X.0ln, java.lang.Throwable, int): void\"},{\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"A05\",\"def_pos\":0,\"signature\":\"A05(): void\"},{\"dex_descriptor\":\"(JLjava/lang/String;Z)V\",\"is_constructor\":false,\"name\":\"A06\",\"def_pos\":0,\"signature\":\"A06(long, java.lang.String, boolean): void\"},{\"dex_descriptor\":\"(Landroid/os/Message;I)V\",\"is_constructor\":false,\"name\":\"A07\",\"def_pos\":0,\"signature\":\"A07(android.os.Message, int): void\"},{\"dex_descriptor\":\"(LX/0lG;Ljava/lang/String;IJZ)V\",\"is_constructor\":false,\"name\":\"A08\",\"def_pos\":0,\"signature\":\"A08(X.0lG, java.lang.String, int, long, boolean): void\"},{\"dex_descriptor\":\"(LX/0Tp;LX/Eoh;)V\",\"is_constructor\":false,\"name\":\"A09\",\"def_pos\":0,\"signature\":\"A09(X.0Tp, X.Eoh): void\"},{\"dex_descriptor\":\"(LX/Eoh;)V\",\"is_constructor\":false,\"name\":\"A0A\",\"def_pos\":0,\"signature\":\"A0A(X.Eoh): void\"},{\"dex_descriptor\":\"(LX/Eoh;Ljava/lang/Exception;)V\",\"is_constructor\":false,\"name\":\"A0B\",\"def_pos\":0,\"signature\":\"A0B(X.Eoh, java.lang.Exception): void\"},{\"dex_descriptor\":\"(Ljava/lang/String;)V\",\"is_constructor\":false,\"name\":\"A0C\",\"def_pos\":0,\"signature\":\"A0C(java.lang.String): void\"},{\"dex_descriptor\":\"(Ljava/lang/String;)V\",\"is_constructor\":false,\"name\":\"A0D\",\"def_pos\":0,\"signature\":\"A0D(java.lang.String): void\"},{\"dex_descriptor\":\"(Ljava/lang/String;)V\",\"is_constructor\":false,\"name\":\"A0E\",\"def_pos\":0,\"signature\":\"A0E(java.lang.String): void\"},{\"dex_descriptor\":\"(ZI)V\",\"is_constructor\":false,\"name\":\"A0F\",\"def_pos\":0,\"signature\":\"A0F(boolean, int): void\"},{\"dex_descriptor\":\"(I)Z\",\"is_constructor\":false,\"name\":\"A0G\",\"def_pos\":0,\"signature\":\"A0G(int): boolean\"},{\"dex_descriptor\":\"(LX/0Tp;Ljava/lang/String;)Z\",\"is_constructor\":false,\"name\":\"A0H\",\"def_pos\":0,\"signature\":\"A0H(X.0Tp, java.lang.String): boolean\"},{\"dex_descriptor\":\"(Ljava/lang/String;)Z\",\"is_constructor\":false,\"name\":\"A0I\",\"def_pos\":0,\"signature\":\"A0I(java.lang.String): boolean\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C0ln",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_name\":\"A00\",\"overload_count\":1,\"body\":\"    /* JADX WARN: Code duplicated, block: B:266:0x02a3  */\\n    public static void A00(Message message, C0ln c0ln, int i) {\\n        boolean z;\\n        C00x c00x;\\n        if (!c0ln.A0Q) {\\n            int i2 \\u003d c0ln.A02.get(i, -1);\\n            if (i2 \\u003e\\u003d 0) {\\n                z \\u003d i2 \\u003c c0ln.A0G.size();\\n            }\\n            StringBuilder sb \\u003d new StringBuilder(\\\"No handler for recv message type:\\\");\\n            sb.append(i);\\n            C00L.A0E(z, sb.toString());\\n            List list \\u003d c0ln.A0G;\\n            if (((C0Vw) list.get(i2)).BLn(message, i)) {\\n                return;\\n            }\\n            StringBuilder sb2 \\u003d new StringBuilder(\\\"Registered handler:\\\");\\n            sb2.append(list.get(i2));\\n            sb2.append(\\\" can\\u0027t handle message of type:\\\");\\n            sb2.append(i);\\n            throw new IllegalArgumentException(sb2.toString());\\n        }\\n        SQ0 sq0 \\u003d ((SJf) c0ln.A0N.BFb()).A00;\\n        if (i \\u003d\\u003d 203) {\\n            c00x \\u003d sq0.A01;\\n        } else if (i \\u003d\\u003d 283) {\\n            c00x \\u003d sq0.A02;\\n        } else if (i \\u003d\\u003d 202) {\\n            c00x \\u003d sq0.A05;\\n        } else if (i \\u003d\\u003d 279) {\\n            c00x \\u003d sq0.A0q;\\n        } else if (i \\u003d\\u003d 285) {\\n            c00x \\u003d sq0.A0K;\\n        } else if (i \\u003d\\u003d 150 || i \\u003d\\u003d 192 || i \\u003d\\u003d 193 || i \\u003d\\u003d 197) {\\n            c00x \\u003d sq0.A13;\\n        } else if (i \\u003d\\u003d 265) {\\n            c00x \\u003d sq0.A06;\\n        } else if (i \\u003d\\u003d 252) {\\n            c00x \\u003d sq0.A0S;\\n        } else if (i \\u003d\\u003d 290) {\\n            c00x \\u003d sq0.A0j;\\n        } else if (i \\u003d\\u003d 213) {\\n            c00x \\u003d sq0.A07;\\n        } else if (i \\u003d\\u003d 221) {\\n            c00x \\u003d sq0.A0n;\\n        } else if (i \\u003d\\u003d 242 || i \\u003d\\u003d 243 || i \\u003d\\u003d 244 || i \\u003d\\u003d 245 || i \\u003d\\u003d 278) {\\n            c00x \\u003d sq0.A08;\\n        } else if (i \\u003d\\u003d 212) {\\n            c00x \\u003d sq0.A0X;\\n        } else if (i \\u003d\\u003d 210) {\\n            c00x \\u003d sq0.A11;\\n        } else if (i \\u003d\\u003d 25) {\\n            c00x \\u003d sq0.A09;\\n        } else if (i \\u003d\\u003d 229) {\\n            c00x \\u003d sq0.A0G;\\n        } else if (i \\u003d\\u003d 209) {\\n            c00x \\u003d sq0.A0O;\\n        } else if (i \\u003d\\u003d 248) {\\n            c00x \\u003d sq0.A04;\\n        } else if (i \\u003d\\u003d 228) {\\n            c00x \\u003d sq0.A0I;\\n        } else if (i \\u003d\\u003d 258) {\\n            c00x \\u003d sq0.A0e;\\n        } else if (i \\u003d\\u003d 0) {\\n            c00x \\u003d sq0.A0W;\\n        } else if (i \\u003d\\u003d 101) {\\n            c00x \\u003d sq0.A0C;\\n        } else if (i \\u003d\\u003d 257) {\\n            c00x \\u003d sq0.A0h;\\n        } else if (i \\u003d\\u003d 179) {\\n            c00x \\u003d sq0.A0v;\\n        } else if (i \\u003d\\u003d 254) {\\n            c00x \\u003d sq0.A0N;\\n        } else if (i \\u003d\\u003d 270) {\\n            c00x \\u003d sq0.A0R;\\n        } else if (i \\u003d\\u003d 240) {\\n            c00x \\u003d sq0.A0U;\\n        } else if (i \\u003d\\u003d 117 || i \\u003d\\u003d 206) {\\n            c00x \\u003d sq0.A0T;\\n        } else if (i \\u003d\\u003d 284) {\\n            c00x \\u003d sq0.A0P;\\n        } else if (i \\u003d\\u003d 97) {\\n            c00x \\u003d sq0.A0V;\\n        } else if (i \\u003d\\u003d 74 || i \\u003d\\u003d 75 || i \\u003d\\u003d 76 || i \\u003d\\u003d 77 || i \\u003d\\u003d 78 || i \\u003d\\u003d 82 || i \\u003d\\u003d 83 || i \\u003d\\u003d 84) {\\n            c00x \\u003d sq0.A0s;\\n        } else if (i \\u003d\\u003d 256) {\\n            c00x \\u003d sq0.A0g;\\n        } else if (i \\u003d\\u003d 204) {\\n            c00x \\u003d sq0.A0D;\\n        } else if (i \\u003d\\u003d 261) {\\n            c00x \\u003d sq0.A0E;\\n        } else if (i \\u003d\\u003d 294) {\\n            c00x \\u003d sq0.A0k;\\n        } else if (i \\u003d\\u003d 287) {\\n            c00x \\u003d sq0.A0l;\\n        } else if (i \\u003d\\u003d 247) {\\n            c00x \\u003d sq0.A0m;\\n        } else if (i \\u003d\\u003d 234) {\\n            c00x \\u003d sq0.A0o;\\n        } else if (i \\u003d\\u003d 216) {\\n            c00x \\u003d sq0.A0H;\\n        } else if (i \\u003d\\u003d 189) {\\n            c00x \\u003d sq0.A0p;\\n        } else if (i \\u003d\\u003d 104) {\\n            c00x \\u003d sq0.A0i;\\n        } else if (i \\u003d\\u003d 276) {\\n            c00x \\u003d sq0.A00;\\n        } else if (i \\u003d\\u003d 289) {\\n            c00x \\u003d sq0.A0r;\\n        } else if (i \\u003d\\u003d 251) {\\n            c00x \\u003d sq0.A0t;\\n        } else if (i \\u003d\\u003d 198 || i \\u003d\\u003d 199 || i \\u003d\\u003d 200 || i \\u003d\\u003d 201) {\\n            c00x \\u003d sq0.A0u;\\n        } else if (i \\u003d\\u003d 238) {\\n            c00x \\u003d sq0.A0L;\\n        } else if (i \\u003d\\u003d 275) {\\n            c00x \\u003d sq0.A0Q;\\n        } else if (i \\u003d\\u003d 236) {\\n            c00x \\u003d sq0.A0y;\\n        } else if (i \\u003d\\u003d 277) {\\n            c00x \\u003d sq0.A0x;\\n        } else if (i \\u003d\\u003d 274) {\\n            c00x \\u003d sq0.A10;\\n        } else if (i \\u003d\\u003d 249) {\\n            c00x \\u003d sq0.A12;\\n        } else if (i \\u003d\\u003d 246) {\\n            c00x \\u003d sq0.A14;\\n        } else if (i \\u003d\\u003d 282) {\\n            c00x \\u003d sq0.A0A;\\n        } else if (i \\u003d\\u003d 291) {\\n            c00x \\u003d sq0.A0B;\\n        } else if (i \\u003d\\u003d 286) {\\n            c00x \\u003d sq0.A0M;\\n        } else if (i \\u003d\\u003d 6 || i \\u003d\\u003d 27 || i \\u003d\\u003d 250 || i \\u003d\\u003d 159 || i \\u003d\\u003d 18) {\\n            c00x \\u003d sq0.A03;\\n        } else if (i \\u003d\\u003d 8) {\\n            c00x \\u003d sq0.A0F;\\n        } else if (i \\u003d\\u003d 241) {\\n            c00x \\u003d sq0.A0J;\\n        } else if (i \\u003d\\u003d 235) {\\n            c00x \\u003d sq0.A0w;\\n        } else if (i \\u003d\\u003d 263) {\\n            c00x \\u003d sq0.A0Y;\\n        } else if (i \\u003d\\u003d 262 || i \\u003d\\u003d 19 || i \\u003d\\u003d 16) {\\n            c00x \\u003d sq0.A0Z;\\n        } else if (i \\u003d\\u003d 2) {\\n            c00x \\u003d sq0.A0a;\\n        } else if (i \\u003d\\u003d 69) {\\n            c00x \\u003d sq0.A0b;\\n        } else if (i \\u003d\\u003d 1) {\\n            c00x \\u003d sq0.A0c;\\n        } else if (i \\u003d\\u003d 86 || i \\u003d\\u003d 15 || i \\u003d\\u003d 215 || i \\u003d\\u003d 227 || i \\u003d\\u003d 259) {\\n            c00x \\u003d sq0.A0d;\\n        } else if (i \\u003d\\u003d 280) {\\n            c00x \\u003d sq0.A0f;\\n        } else {\\n            if (i !\\u003d 281) {\\n                throw new IllegalStateException(\\\"No IncomingXmppMessageHandler registered for $recvType\\\");\\n            }\\n            c00x \\u003d sq0.A0z;\\n        }\\n        C0Vw c0Vw \\u003d (C0Vw) c00x.BFb();\\n        C00l.A05(c0Vw);\\n        c0Vw.BLn(message, i);\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.C0ln\",\"full_name\":\"X.0ln.A00\",\"mode\":\"java\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C0ln",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(android.os.Message, X.0ln, int): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(Landroid/os/Message;LX/0ln;I)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Code duplicated, block: B:266:0x02a3  */\n    public static void A00(Message message, C0ln c0ln, int i) {\n        boolean z;\n        C00x c00x;\n        if (!c0ln.A0Q) {\n            int i2 = c0ln.A02.get(i, -1);\n            if (i2 >= 0) {\n                z = i2 < c0ln.A0G.size();\n            }\n            StringBuilder sb = new StringBuilder(\"No handler for recv message type:\");\n            sb.append(i);\n            C00L.A0E(z, sb.toString());\n            List list = c0ln.A0G;\n            if (((C0Vw) list.get(i2)).BLn(message, i)) {\n                return;\n            }\n            StringBuilder sb2 = new StringBuilder(\"Registered handler:\");\n            sb2.append(list.get(i2));\n            sb2.append(\" can't handle message of type:\");\n            sb2.append(i);\n            throw new IllegalArgumentException(sb2.toString());\n        }\n        SQ0 sq0 = ((SJf) c0ln.A0N.BFb()).A00;\n        if (i == 203) {\n            c00x = sq0.A01;\n        } else if (i == 283) {\n            c00x = sq0.A02;\n        } else if (i == 202) {\n            c00x = sq0.A05;\n        } else if (i == 279) {\n            c00x = sq0.A0q;\n        } else if (i == 285) {\n            c00x = sq0.A0K;\n        } else if (i == 150 || i == 192 || i == 193 || i == 197) {\n            c00x = sq0.A13;\n        } else if (i == 265) {\n            c00x = sq0.A06;\n        } else if (i == 252) {\n            c00x = sq0.A0S;\n        } else if (i == 290) {\n            c00x = sq0.A0j;\n        } else if (i == 213) {\n            c00x = sq0.A07;\n        } else if (i == 221) {\n            c00x = sq0.A0n;\n        } else if (i == 242 || i == 243 || i == 244 || i == 245 || i == 278) {\n            c00x = sq0.A08;\n        } else if (i == 212) {\n            c00x = sq0.A0X;\n        } else if (i == 210) {\n            c00x = sq0.A11;\n        } else if (i == 25) {\n            c00x = sq0.A09;\n        } else if (i == 229) {\n            c00x = sq0.A0G;\n        } else if (i == 209) {\n            c00x = sq0.A0O;\n        } else if (i == 248) {\n            c00x = sq0.A04;\n        } else if (i == 228) {\n            c00x = sq0.A0I;\n        } else if (i == 258) {\n            c00x = sq0.A0e;\n        } else if (i == 0) {\n            c00x = sq0.A0W;\n        } else if (i == 101) {\n            c00x = sq0.A0C;\n        } else if (i == 257) {\n            c00x = sq0.A0h;\n        } else if (i == 179) {\n            c00x = sq0.A0v;\n        } else if (i == 254) {\n            c00x = sq0.A0N;\n        } else if (i == 270) {\n            c00x = sq0.A0R;\n        } else if (i == 240) {\n            c00x = sq0.A0U;\n        } else if (i == 117 || i == 206) {\n            c00x = sq0.A0T;\n        } else if (i == 284) {\n            c00x = sq0.A0P;\n        } else if (i == 97) {\n            c00x = sq0.A0V;\n        } else if (i == 74 || i == 75 || i == 76 || i == 77 || i == 78 || i == 82 || i == 83 || i == 84) {\n            c00x = sq0.A0s;\n        } else if (i == 256) {\n            c00x = sq0.A0g;\n        } else if (i == 204) {\n            c00x = sq0.A0D;\n        } else if (i == 261) {\n            c00x = sq0.A0E;\n        } else if (i == 294) {\n            c00x = sq0.A0k;\n        } else if (i == 287) {\n            c00x = sq0.A0l;\n        } else if (i == 247) {\n            c00x = sq0.A0m;\n        } else if (i == 234) {\n            c00x = sq0.A0o;\n        } else if (i == 216) {\n            c00x = sq0.A0H;\n        } else if (i == 189) {\n            c00x = sq0.A0p;\n        } else if (i == 104) {\n            c00x = sq0.A0i;\n        } else if (i == 276) {\n            c00x = sq0.A00;\n        } else if (i == 289) {\n            c00x = sq0.A0r;\n        } else if (i == 251) {\n            c00x = sq0.A0t;\n        } else if (i == 198 || i == 199 || i == 200 || i == 201) {\n            c00x = sq0.A0u;\n        } else if (i == 238) {\n            c00x = sq0.A0L;\n        } else if (i == 275) {\n            c00x = sq0.A0Q;\n        } else if (i == 236) {\n            c00x = sq0.A0y;\n        } else if (i == 277) {\n            c00x = sq0.A0x;\n        } else if (i == 274) {\n            c00x = sq0.A10;\n        } else if (i == 249) {\n            c00x = sq0.A12;\n        } else if (i == 246) {\n            c00x = sq0.A14;\n        } else if (i == 282) {\n            c00x = sq0.A0A;\n        } else if (i == 291) {\n            c00x = sq0.A0B;\n        } else if (i == 286) {\n            c00x = sq0.A0M;\n        } else if (i == 6 || i == 27 || i == 250 || i == 159 || i == 18) {\n            c00x = sq0.A03;\n        } else if (i == 8) {\n            c00x = sq0.A0F;\n        } else if (i == 241) {\n            c00x = sq0.A0J;\n        } else if (i == 235) {\n            c00x = sq0.A0w;\n        } else if (i == 263) {\n            c00x = sq0.A0Y;\n        } else if (i == 262 || i == 19 || i == 16) {\n            c00x = sq0.A0Z;\n        } else if (i == 2) {\n            c00x = sq0.A0a;\n        } else if (i == 69) {\n            c00x = sq0.A0b;\n        } else if (i == 1) {\n            c00x = sq0.A0c;\n        } else if (i == 86 || i == 15 || i == 215 || i == 227 || i == 259) {\n            c00x = sq0.A0d;\n        } else if (i == 280) {\n            c00x = sq0.A0f;\n        } else {\n            if (i != 281) {\n                throw new IllegalStateException(\"No IncomingXmppMessageHandler registered for $recvType\");\n            }\n            c00x = sq0.A0z;\n        }\n        C0Vw c0Vw = (C0Vw) c00x.BFb();\n        C00l.A05(c0Vw);\n        c0Vw.BLn(message, i);\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

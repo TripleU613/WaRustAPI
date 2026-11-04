@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_a9344a502f9557c62d927c23efac8e2498df0f1288cdd4bfde51efd467ae776c",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.F1G",
+    "method_name": "A04",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-KE2c1X/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.F1G"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"name\":\"A00\",\"def_pos\":0,\"type\":\"X.FUY\"},{\"name\":\"A01\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A02\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A03\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A04\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A05\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A06\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A07\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A08\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A09\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0A\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0B\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0C\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0D\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0E\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0F\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0G\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0H\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0I\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0J\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0K\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0L\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0M\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0N\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0O\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0P\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0Q\",\"def_pos\":0,\"type\":\"X.EdJ\"},{\"name\":\"A0R\",\"def_pos\":0,\"type\":\"X.EeE\"},{\"name\":\"A0S\",\"def_pos\":0,\"type\":\"com.google.common.base.Optional\"},{\"name\":\"A0T\",\"def_pos\":0,\"type\":\"com.google.common.base.Optional\"},{\"name\":\"A0U\",\"def_pos\":0,\"type\":\"X.Eo9\"}],\"field_count\":31,\"full_name\":\"X.F1G\",\"name\":\"F1G\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":7,\"methods\":[{\"dex_descriptor\":\"(LX/FvS;)V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(X.FvS): void\"},{\"dex_descriptor\":\"(LX/EXq;LX/EE3;LX/EA7;LX/F1G;IJ)V\",\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0,\"signature\":\"A00(X.EXq, X.EE3, X.EA7, X.F1G, int, long): void\"},{\"dex_descriptor\":\"(LX/Esd;LX/F1G;Ljava/lang/Integer;Ljava/lang/String;IZ)V\",\"is_constructor\":false,\"name\":\"A01\",\"def_pos\":0,\"signature\":\"A01(X.Esd, X.F1G, java.lang.Integer, java.lang.String, int, boolean): void\"},{\"dex_descriptor\":\"(LX/F1G;)V\",\"is_constructor\":false,\"name\":\"A02\",\"def_pos\":0,\"signature\":\"A02(X.F1G): void\"},{\"dex_descriptor\":\"(LX/EXq;LX/EE3;LX/EA7;I)V\",\"is_constructor\":false,\"name\":\"A03\",\"def_pos\":0,\"signature\":\"A03(X.EXq, X.EE3, X.EA7, int): void\"},{\"dex_descriptor\":\"(LX/EXq;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;I)V\",\"is_constructor\":false,\"name\":\"A04\",\"def_pos\":0,\"signature\":\"A04(X.EXq, java.lang.Integer, java.lang.Integer, java.lang.String, java.lang.String, int): void\"},{\"dex_descriptor\":\"(Z)V\",\"is_constructor\":false,\"name\":\"A05\",\"def_pos\":0,\"signature\":\"A05(boolean): void\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.F1G",
+          "method_name": "A04",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_name\":\"A04\",\"overload_count\":1,\"body\":\"    public void A04(EXq eXq, Integer num, Integer num2, String str, String str2, int i) {\\n        boolean zA1W;\\n        boolean zA1W2;\\n        C0B0 c0b0 \\u003d (C0B0) C8t6.A0Q(this.A0O, 1251);\\n        FUY fuy \\u003d this.A00;\\n        if (fuy \\u003d\\u003d null || !fuy.A0N) {\\n            C0Vy c0VyA0V \\u003d DBb.A0V(this.A05);\\n            synchronized (c0VyA0V.A0R) {\\n                zA1W \\u003d C2L9.A1W(c0VyA0V.A00);\\n            }\\n            if (!zA1W) {\\n                if (((C10V) C05a.A03(this.A04)).A01() \\u003d\\u003d -1) {\\n                    Log.e(\\\"CompanionDeviceQrHandler/startPairDevice invalid local ts\\\");\\n                    EdJ edJ \\u003d this.A0Q;\\n                    edJ.A00.BcH(1, -8);\\n                    edJ.A03.C0Y(-8);\\n                    return;\\n                }\\n                if (eXq.A02 \\u003d\\u003d EA7.A02) {\\n                    this.A0Q.A00(-10);\\n                    return;\\n                }\\n                EdJ edJ2 \\u003d this.A0Q;\\n                edJ2.A06 \\u003d eXq;\\n                edJ2.A05 \\u003d i;\\n                edJ2.A08 \\u003d num;\\n                edJ2.A0A \\u003d str;\\n                edJ2.A09 \\u003d str2;\\n                edJ2.A07 \\u003d num2;\\n                A05(false);\\n                C2L8.A10(this.A0P).CbD(new FdE(eXq, this, num, str, str2, i, 0));\\n                return;\\n            }\\n        }\\n        Log.e(\\\"CompanionDeviceQrHandler/startPairDevice/request already in progress\\\");\\n        C0Vy c0VyA0V2 \\u003d DBb.A0V(this.A05);\\n        synchronized (c0VyA0V2.A0R) {\\n            zA1W2 \\u003d C2L9.A1W(c0VyA0V2.A00);\\n        }\\n        c0b0.A0g(\\\"CompanionDeviceQrHandler/request already in progress\\\", String.valueOf(zA1W2), false);\\n        EdJ edJ3 \\u003d this.A0Q;\\n        edJ3.A00.BcH(1, -17);\\n        edJ3.A03.C7A(-17);\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.F1G\",\"full_name\":\"X.F1G.A04\",\"mode\":\"java\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.F1G",
+    "method": {
+      "name": "A04",
+      "reported_signature": "A04(X.EXq, java.lang.Integer, java.lang.Integer, java.lang.String, java.lang.String, int): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(LX/EXq;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;I)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public void A04(EXq eXq, Integer num, Integer num2, String str, String str2, int i) {\n        boolean zA1W;\n        boolean zA1W2;\n        C0B0 c0b0 = (C0B0) C8t6.A0Q(this.A0O, 1251);\n        FUY fuy = this.A00;\n        if (fuy == null || !fuy.A0N) {\n            C0Vy c0VyA0V = DBb.A0V(this.A05);\n            synchronized (c0VyA0V.A0R) {\n                zA1W = C2L9.A1W(c0VyA0V.A00);\n            }\n            if (!zA1W) {\n                if (((C10V) C05a.A03(this.A04)).A01() == -1) {\n                    Log.e(\"CompanionDeviceQrHandler/startPairDevice invalid local ts\");\n                    EdJ edJ = this.A0Q;\n                    edJ.A00.BcH(1, -8);\n                    edJ.A03.C0Y(-8);\n                    return;\n                }\n                if (eXq.A02 == EA7.A02) {\n                    this.A0Q.A00(-10);\n                    return;\n                }\n                EdJ edJ2 = this.A0Q;\n                edJ2.A06 = eXq;\n                edJ2.A05 = i;\n                edJ2.A08 = num;\n                edJ2.A0A = str;\n                edJ2.A09 = str2;\n                edJ2.A07 = num2;\n                A05(false);\n                C2L8.A10(this.A0P).CbD(new FdE(eXq, this, num, str, str2, i, 0));\n                return;\n            }\n        }\n        Log.e(\"CompanionDeviceQrHandler/startPairDevice/request already in progress\");\n        C0Vy c0VyA0V2 = DBb.A0V(this.A05);\n        synchronized (c0VyA0V2.A0R) {\n            zA1W2 = C2L9.A1W(c0VyA0V2.A00);\n        }\n        c0b0.A0g(\"CompanionDeviceQrHandler/request already in progress\", String.valueOf(zA1W2), false);\n        EdJ edJ3 = this.A0Q;\n        edJ3.A00.BcH(1, -17);\n        edJ3.A03.C7A(-17);\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

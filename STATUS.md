@@ -1,3 +1,25 @@
+2026-11-04 — **Responsive one-at-a-time action pacing:**
+
+Generic action drains now reserve one request only when its monotonic pacing
+deadline is due. Activation/heartbeat retain a sixteen-action drain budget;
+repeated triggers do not stack or reset an active drain. Inbound replies, stop
+and other deadlines can run between writes instead of waiting inside a batch
+sleep. Failed/uncertain writes retain their reservation while later actions stay
+queued; zero-delay sends still return through the actor loop. Readiness denotes
+authenticated activation, not a drained queue. Socket-write completion itself
+still awaits; full app-state job ownership is a separate unported lifecycle.
+[Implementation and limits](docs/protocol/app-state-connection-flight-design.md).
+
+Pairing research additionally traces current input/generation gates and request
+callback correlation; authenticated account/source authority and primary Me
+creation remain unresolved. [Evidence](docs/protocol/primary-pairing-auth-current.md).
+
+Validation: **1,181 workspace/all-feature tests**, strict all-target/all-feature
+Clippy, CLI-reference checking, formatting, coverage freshness and repository
+hygiene passed. Research accounting is 817 REA records, 461 for the current APK,
+68 ownership mappings; these are not completeness or account-safety percentages.
+No live account operation occurred.
+
 2026-11-04 — **Session group recovery ordering follow-up:**
 
 The session-specific pending group recovery path now uses sequenced settlement
