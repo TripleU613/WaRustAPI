@@ -464,14 +464,14 @@ information bottom sheet, requiring active; when not visible it invokes
 and runtime necessity are not established, and no synthetic telemetry was
 implemented. A04's stored-type read remains discarded.
 
-### Message predicate 6pn.A06
+### JID-record predicate 6pn.A06
 
-A06(message, require_visible) returns false at each of these exits:
+A06(record, require_visible) returns false at each of these exits:
 
-- Message is null, or 6po.A02 is false.
-- Message.A0A JID fails 0Dn.A0k (null or getType outside 0,7,11,18,22,26).
+- Record is null, or 6po.A02 is false.
+- Record.A0A JID fails 0Dn.A0k (null or getType outside 0,7,11,18,22,26).
 - Recipient belongs to 0ht.A09's set.
-- Message.A0D.A0J exists and 11w.A01 is true; this checks nonnull
+- Record.A0D.A0J exists and 11w.A01 is true; this checks nonnull
   A07 string startsWith("ent:"). Producer meaning is not yet traced.
 - Account 09F.BVC(recipient) is true, via 6oe.A1W; concrete implementation
   and semantics remain unresolved.
@@ -500,10 +500,10 @@ construction, initial set and account lifecycle remain open.
 
 Caller census: 6po.A02 has 11 direct callers, A03 has seven; 6pn.A06
 has 12 call sites in 11 methods. Lists below retain exact DEX offsets.
-2Q4.A00 reaches 6pn.A06(message,false) at byte offset 0x1c6 after
+2Q4.A00 reaches 6pn.A06(record,false) at byte offset 0x1c6 after
 several other predicates; if true, it returns true immediately. Its
 complete method is retained. This establishes participation in a higher
-message decision, not universal send refusal: the meaning of that method's
+JID eligibility decision, not universal send refusal: the meaning of that method's
 return and its callers remains open. Other A06 callers are not yet traced.
 
 **Rust comparison / remaining work:** notifications persists active/ends,
@@ -532,3 +532,89 @@ DEX text, not REA Evidence envelopes or runtime observations.
 - [reachout-outreach-caller-2Q4.txt](reachout-outreach-caller-2Q4.txt) — SHA-256 `7d8797b3284538985dbb0e519c14a150c97638e817f14b4316c265d9ae7d007c`.
 - [reachout-final-user-predicate.txt](reachout-final-user-predicate.txt) — SHA-256 `cc8634770df9c10188211e2fc67c7d0ae5f42ad4c18a3154a5b92996a1fba998`.
 - [reachout-message-property.txt](reachout-message-property.txt) — SHA-256 `247eac8e1189ebdbd10b982161295a957d4f187443015f2c1a6e232e2127434b`.
+
+## Caller semantics: call gate and sticker refusal (2026-11-04)
+
+**Confirmed static**, same pinned APK 2.26.43.72 SHA-256 above. This
+resolves part of the previous higher-caller uncertainty and corrects an
+overstatement about input semantics.
+
+**Refuted prior shorthand:** 6pn.A06's 0wj argument was described as a
+message, and its nested ent: field as message metadata. That was stronger
+than the evidence. 2Q4.A01 accepts a JID, obtains 0wj via 0cR.A02, and
+calls A00(record,JID). 0cR.A02 delegates to 0bD.A0C and A07; 0bD.A0C
+looks up A09(JID), otherwise constructs new 0wj(JID), loads it through
+0wc, inserts/binds it and returns it. 0wj.A0A returns its 11T.A0K JID.
+This is a JID-bound cached record, not a decoded outbound message payload.
+The nested ent: property's producer remains open; it must not be treated
+as an outbound serialization instruction. Existing predicate exits remain
+valid with the corrected record interpretation.
+
+### Confirmed caller behavior
+
+- **Outgoing-call preflight, 1v7.A02:** when group argument is null and
+  6pn.A05 active is true, a list with more than one record enters the
+  restriction branch. A single record enters it if A06(record,false) is
+  true; an empty list skips it. When a UI delegate exists, the branch
+  opens the information sheet, records reachout_timelock_bottom_sheet,
+  returns 29x.A06, and skips later app/startOutgoingCall processing. If
+  the delegate is absent, it logs through 1ey then falls through. Thus
+  even this leaf is not a universal unconditional wire-send refusal.
+- **Sticker sending, ShareMediaViewModel.A01:** its sendSticker branch
+  invokes 2Q4.A01(destination). True logs cannot-share/read-only-chat,
+  calls A03 with reason read-only chat, and routes to completion instead
+  of the normal path beginning at byte 0x138. This establishes a native
+  sticker send refusal that can be reached through 2Q4.A00 -> 6pn.A06.
+  Other predicates in 2Q4.A00 can also cause true; read-only chat is the
+  caller's aggregate description, not proof of which restriction fired.
+- **Eligibility inversion, Jmt.A00:** for its selected user-JID branch,
+  a missing cached record returns false; otherwise it returns NOT
+  2Q4.A00(record,JID). Group handling uses separate checks. The two
+  Jmt callers KI9.A00 and KIB.A01 are listed, not yet interpreted.
+- **2Q4.A01 null JID:** returns true without lookup; nonnull goes through
+  the JID-record lookup above. It is not a network fetch.
+- **2Pp.A0y:** requires A00 false plus additional account/JID/config
+  conditions before true. **2TX.A00:** A01 true sets A02=false and
+  returns for either selected group/recipient path. These booleans are
+  not independently proven wire obligations.
+- **UI consumers:** IbM.A2d uses A00/A01 to select action branches and
+  schedules forward_button_visibility_check. 3e5.run selector 37 uses
+  A00 in the 2Mz UI branch; true takes an earlier UI path. Full methods
+  are retained because merged classes have unrelated cases. No inference
+  that every case sends messages was made.
+
+The direct 2Q4.A00 census has five call sites in five methods; A01 has
+16 sites in 13 methods (IbM has two, 2TX two, MediaViewMenu two). These
+are static direct call sites, not runtime frequencies or proof that no
+indirect calls exist. This pass traced the named methods above; other
+A01 consumers and the send execution boundary remain open.
+
+**Rust implication:** native policy demonstrably affects calls and sticker
+sending as well as UI eligibility. Rust's existing group-create-only guard
+is incomplete coverage, but blindly blocking every send on active state
+would discard native recipient/config branches. Before porting, resolve
+the account predicate 09F.BVC, record-property producer, set/cache/expiry
+lifetimes, representation/account binding, and applicable send callers.
+No invented feature config, token exception or wire field was added.
+No runtime behavior changed, no live account traffic was sent, and full
+protocol correctness remains unfinished.
+
+Reproduce apk-callers 2Q4.A00/A01 and Jmt.A00, plus apk-smali for the
+class/method in each export with --signatures --exceptions. The full
+checked DEX exports below are not REA Evidence envelopes.
+
+- [reachout-decision-2Q4-callers.txt](reachout-decision-2Q4-callers.txt) — SHA-256 `dc4903684243db46e9ac79885674cbfcebfa5955a9811fc3dd72d9ecb802c478`.
+- [reachout-caller-1v7.txt](reachout-caller-1v7.txt) — SHA-256 `6d850155f6b3cbe253e8e6793b3c7b2d7d780f60d7248083c55cc6af9694935d`.
+- [reachout-decision-message-wrapper.txt](reachout-decision-message-wrapper.txt) — SHA-256 `22bf5ea144616a49a2ce60815f8e07019e1669b5d2784bc506261c05dd39af01`.
+- [reachout-decision-Jmt.txt](reachout-decision-Jmt.txt) — SHA-256 `d41734b7365e4afb056c7f4842c58eca844fcffdcc814aa2f1d43aed6f829f51`.
+- [reachout-decision-3e5.txt](reachout-decision-3e5.txt) — SHA-256 `8fbb57adb6f14c138e312fb39221b2df17f58ab10c4e5fd182a0ecd9e1a72abb`.
+- [reachout-decision-2Pp.txt](reachout-decision-2Pp.txt) — SHA-256 `a5a485584174b43b1563cf44365bdb8dcd1da00cf65d7ddf5c9ec67de43ffc6c`.
+- [reachout-decision-IbM.txt](reachout-decision-IbM.txt) — SHA-256 `be0f999095fa2df66b88fafec3d929ffa6961b57f10d7ae4bf7f1654ea6fdd47`.
+- [reachout-decision-A01-callers.txt](reachout-decision-A01-callers.txt) — SHA-256 `bcfed9c363fbc6acb9aa3544e79e5b90bb7cd8ee08cd65323077622c602f0532`.
+- [reachout-decision-Jmt-callers.txt](reachout-decision-Jmt-callers.txt) — SHA-256 `35d82bec660739b8dd4e381a01381b9e4c068aae1638a5a7890583ebf443c1fd`.
+- [reachout-media-share-decision.txt](reachout-media-share-decision.txt) — SHA-256 `f28702d7f25bdcdca08aef4f97af357f3b7a332398bf03730edfd7ff9336be1e`.
+- [reachout-decision-2TX.txt](reachout-decision-2TX.txt) — SHA-256 `50556dd4bfb2107f4a454794bf10ac2341078df85ff0f6fbb7cccddffd55fa88`.
+- [reachout-decision-record-lookup.txt](reachout-decision-record-lookup.txt) — SHA-256 `3b74afed50ad658cfc3d65d76c56ffbf93657e9fd486d4d710f1d15d9fd59cb0`.
+- [reachout-decision-record-jid.txt](reachout-decision-record-jid.txt) — SHA-256 `c8e8a7128a6d865a44fcfba19d3d61031934d66fa7ba328cd06ba0da40702581`.
+- [reachout-decision-record-cache.txt](reachout-decision-record-cache.txt) — SHA-256 `6d2ec4026c031f6319143e3f5a3a4d23c49e3128d75506005ba97a04194205ac`.
+- [reachout-decision-record-binding.txt](reachout-decision-record-binding.txt) — SHA-256 `a2961a4cfe3df8af733528e68a9b4aefbb645dd6fd43f4b55e292b2ba856c4ed`.

@@ -1,3 +1,12 @@
+2026-11-04 — **Outreach caller semantics: call preflight and sticker refusal:**
+
+Pinned 1v7 call branch and ShareMediaViewModel sticker refusal are traced;
+Jmt inverts aggregate eligibility. Corrected earlier message shorthand:
+0wj is obtained as a JID-bound cached record, not a wire message payload.
+[Evidence, branches and remaining port obligations](docs/protocol/rea/2.26.43.72-reachout-state/README.md#caller-semantics-call-gate-and-sticker-refusal-2026-11-04).
+Validation: JSON parsing, coverage freshness, staged diff and repository
+hygiene passed. Static evidence only; no runtime changes or live traffic.
+
 2026-11-04 — **Native outreach decision and recipient-set provenance traced:**
 
 Pinned 6po cached active/visible checks, 6pn per-message decision, trusted-

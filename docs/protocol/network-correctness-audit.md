@@ -273,10 +273,20 @@ remain open; no runtime behavior or request was changed.
 ## Native outreach predicate coverage (2026-11-04)
 
 **Confirmed static / source comparison:** native 6pn.A06 combines cached
-active state, recipient-set membership, message/account predicates and
+active state, recipient-set membership, record/account predicates and
 optional visibility. Its set is populated from trusted-contact database
 rows and mapped JIDs. One higher decision caller short-circuits on true;
 full send semantics and other callers remain open. Rust's group-create
 active/expiry guard does not implement this chain across outbound paths.
 [Exact exits, provenance and remaining work](rea/2.26.43.72-reachout-state/README.md#outreach-decision-chain-and-recipient-set-2026-11-04).
 No new policy or network operation was introduced.
+
+## Outreach call and sticker caller semantics (2026-11-04)
+
+**Confirmed static:** the higher predicate prevents normal sticker-send
+processing in ShareMediaViewModel.A01; 1v7.A02 has a conditional pre-call
+restriction branch. Jmt inverts the higher predicate for selected user-JIDs.
+[Exact branches and record correction](rea/2.26.43.72-reachout-state/README.md#caller-semantics-call-gate-and-sticker-refusal-2026-11-04). Prior per-message wording
+was too strong: the argument is a JID-bound cached record. Account/cache/
+expiry lifetimes and full execution boundaries remain open; no runtime
+policy or wire fields were guessed from UI consumers.

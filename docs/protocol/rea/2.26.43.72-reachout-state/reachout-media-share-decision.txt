@@ -1,0 +1,352 @@
+
+# class: Lcom/whatsapp/media/share/ShareMediaViewModel;
+# extends: LX/0LW;
+
+.method public A01(LLLLLLLLLLIZZ)  # .registers 34
+    # full signature: Lcom/whatsapp/media/share/ShareMediaViewModel;->A01(LX/0DY;LX/18U;LX/18U;LX/A6j;LX/AHF;Lcom/whatsapp/media/share/ShareMediaViewModel;LX/Kgi;Ljava/lang/Integer;LX/0cf;IZZ)Ljava/lang/Object;
+    0000..0004  move-object/from16  v11, v22
+    0004..0008  move-object/from16  v10, v26
+    0008..000c  move-object/from16  v7, v29
+    000c..0010  move-object/from16  v8, v28
+    0010..0014  move/from16  v6, v31
+    0014..0018  move/from16  v5, v32
+    0018..001c  move/from16  v4, v33
+    001c..001e  const/4  v3, #0x0
+    001e..0022  move-object/from16  v13, v30
+    0022..0026  instance-of  v0, v13, LX/KZT;
+    0026..002a  if-eqz  v0, +0xa
+    002a..002c  move-object  v0, v13
+    002c..0030  check-cast  v0, LX/KZT;
+    0030..0034  iget  v1, v0, LX/KZT;->$t:I
+    0034..0036  const/4  v0, #0x1
+    0036..003a  if-eq  v1, v3, +0x3
+    003a..003c  const/4  v0, #0x0
+    003c..0040  move-object/from16  v9, v27
+    0040..0044  if-eqz  v0, +0x1e
+    0044..0046  move-object  v2, v13
+    0046..004a  check-cast  v2, LX/KZT;
+    004a..004e  iget  v12, v2, LX/KZT;->A01:I
+    004e..0052  const/high16  v1, #0x80000000
+    0052..0056  and-int  v0, v12, v1
+    0056..005a  if-eqz  v0, +0x13
+    005a..005c  sub-int/2addr  v12, v1
+    005c..0060  iput  v12, v2, LX/KZT;->A01:I
+    0060..0064  iget-object  v12, v2, LX/KZT;->A06:Ljava/lang/Object;
+    0064..0068  sget-object  v1, LX/0dd;->A02:LX/0dd;
+    0068..006c  iget  v0, v2, LX/KZT;->A01:I
+    006c..0072  packed-switch  v0, payload@0x534, cases=[0:@0x88, 1:@0x522, 2:@0x522, 3:@0x522, 4:@0x32c, 5:@0x48e, 6:@0x522], default@0x72
+    0072..0078  invoke-static  {}, LX/000;->A03()Ljava/lang/IllegalStateException;
+    0078..007a  move-result-object  v0
+    007a..007c  throw  v0
+    007c..0080  new-instance  v2, LX/KZT;
+    0080..0086  invoke-direct  {v2, v9, v13, v3}, LX/KZT;-><init>(Ljava/lang/Object;LX/0cf;I)V
+    0086..0088  goto  -0x13
+    0088..008e  invoke-static  {v12}, LX/0dg;->A01(Ljava/lang/Object;)V
+    008e..0092  const/16  v12, #0x4e3
+    0092..0096  iget-object  v0, v9, Lcom/whatsapp/media/share/ShareMediaViewModel;->A0A:LX/05a;
+    0096..009c  invoke-static  {v0, v12}, LX/2LA;->A0G(LX/05a;I)LX/05a;
+    009c..009e  move-result-object  v22
+    009e..00a2  const-string  v0, "ShareMediaViewModel/sendSticker/origin = "
+    00a2..00a8  invoke-static  {v7, v0}, LX/1Xl;->A15(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00a8..00aa  move-result-object  v12
+    00aa..00ae  const-string  v0, " / address = "
+    00ae..00b4  invoke-static  {v9, v0, v12}, LX/2LA;->A1J(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    00b4..00b8  iget-object  v0, v9, Lcom/whatsapp/media/share/ShareMediaViewModel;->A0F:LX/00x;
+    00b8..00be  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    00be..00c0  move-result-object  v0
+    00c0..00c4  check-cast  v0, LX/2Q4;
+    00c4..00ca  invoke-virtual  {v0, v11}, LX/2Q4;->A01(LX/0DY;)Z
+    00ca..00cc  move-result  v0
+    00cc..00d0  const-string  v12, "ShareMediaViewModel/Invalid send sticker"
+    00d0..00d4  if-eqz  v0, +0x34
+    00d4..00d8  const-string  v0, "ShareMediaViewModel/sendSticker/cannot share a sticker in a read only chat."
+    00d8..00de  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    00de..00e4  invoke-static/range  {v22..v22}, LX/2L9;->A0V(LX/05a;)LX/0B0;
+    00e4..00e6  move-result-object  v10
+    00e6..00ea  const-string  v0, "Cannot share sticker into a read only chat "
+    00ea..00f0  invoke-static  {v11, v0}, LX/1Xl;->A15(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00f0..00f2  move-result-object  v7
+    00f2..00f6  const-string  v0, "."
+    00f6..00fc  invoke-static  {v0, v7}, LX/1Xl;->A0z(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    00fc..00fe  move-result-object  v0
+    00fe..0100  const/4  v7, #0x1
+    0100..0106  invoke-virtual  {v10, v12, v0, v7}, LX/0B0;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+    0106..010c  invoke-static  {v2}, Lcom/whatsapp/media/share/ShareMediaViewModel;->A04(LX/KZT;)Ljava/lang/Object;
+    010c..010e  move-result-object  v0
+    010e..0112  iput-object  v0, v2, LX/KZT;->A0B:Ljava/lang/Object;
+    0112..0116  iput-object  v0, v2, LX/KZT;->A0C:Ljava/lang/Object;
+    0116..011a  iput  v6, v2, LX/KZT;->A00:I
+    011a..011e  iput-boolean  v5, v2, LX/KZT;->A0D:Z
+    011e..0122  iput-boolean  v4, v2, LX/KZT;->A0E:Z
+    0122..0126  iput  v7, v2, LX/KZT;->A01:I
+    0126..012a  const-string  v0, "read-only chat"
+    012a..0130  invoke-static  {v9, v8, v0, v2, v3}, Lcom/whatsapp/media/share/ShareMediaViewModel;->A03(Lcom/whatsapp/media/share/ShareMediaViewModel;LX/Kgi;Ljava/lang/String;LX/0cf;Z)Ljava/lang/Object;
+    0130..0132  move-result-object  v0
+    0132..0136  if-ne  v0, v1, +0x1fb
+    0136..0138  return-object  v1
+    0138..013c  iget-object  v0, v9, Lcom/whatsapp/media/share/ShareMediaViewModel;->A07:LX/00x;
+    013c..0142  invoke-static  {v0}, LX/2L7;->A01(LX/00x;)J
+    0142..0144  move-result-wide  v20
+    0144..0148  sget-wide  v18, LX/JTN;->A00:J
+    0148..014c  const-wide/16  v13, #0x0
+    014c..0150  cmp-long  v0, v18, v13
+    0150..0154  if-eqz  v0, +0xb
+    0154..0158  sub-long  v16, v20, v18
+    0158..015c  const-wide/16  v14, #0x12c
+    015c..0160  cmp-long  v13, v16, v14
+    0160..0162  const/4  v0, #0x0
+    0162..0166  if-lez  v13, +0x3
+    0166..0168  const/4  v0, #0x1
+    0168..016c  sput-wide  v20, LX/JTN;->A00:J
+    016c..0170  if-nez  v0, +0x39
+    0170..0174  const-string  v0, "ShareMediaViewModel/sendSticker/can't send stickers too fast"
+    0174..017a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    017a..017e  iget-object  v0, v9, Lcom/whatsapp/media/share/ShareMediaViewModel;->A00:LX/0DY;
+    017e..0184  invoke-static  {v11, v0}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    0184..0186  move-result  v0
+    0186..018a  if-nez  v0, +0x18
+    018a..0190  invoke-static/range  {v22..v22}, LX/2L9;->A0V(LX/05a;)LX/0B0;
+    0190..0192  move-result-object  v10
+    0192..0196  iget-object  v7, v9, Lcom/whatsapp/media/share/ShareMediaViewModel;->A00:LX/0DY;
+    0196..019a  const-string  v0, "Fast. Sent to "
+    019a..01a0  invoke-static  {v7, v0}, LX/1Xl;->A15(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    01a0..01a2  move-result-object  v7
+    01a2..01a6  const-string  v0, " now to "
+    01a6..01ac  invoke-static  {v11, v0, v7}, LX/1Xl;->A0v(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    01ac..01ae  move-result-object  v7
+    01ae..01b0  const/4  v0, #0x1
+    01b0..01b6  invoke-virtual  {v10, v12, v7, v0}, LX/0B0;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+    01b6..01bc  invoke-static  {v2}, Lcom/whatsapp/media/share/ShareMediaViewModel;->A04(LX/KZT;)Ljava/lang/Object;
+    01bc..01be  move-result-object  v0
+    01be..01c2  iput-object  v0, v2, LX/KZT;->A0B:Ljava/lang/Object;
+    01c2..01c6  iput-object  v0, v2, LX/KZT;->A0C:Ljava/lang/Object;
+    01c6..01ca  iput  v6, v2, LX/KZT;->A00:I
+    01ca..01ce  iput-boolean  v5, v2, LX/KZT;->A0D:Z
+    01ce..01d2  iput-boolean  v4, v2, LX/KZT;->A0E:Z
+    01d2..01d4  const/4  v0, #0x2
+    01d4..01d8  iput  v0, v2, LX/KZT;->A01:I
+    01d8..01dc  const-string  v0, "rate limited: sticker sent too fast"
+    01dc..01de  goto  -0x59
+    01de..01e2  iget-object  v0, v9, Lcom/whatsapp/media/share/ShareMediaViewModel;->A06:LX/00x;
+    01e2..01e8  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    01e8..01ea  move-result-object  v0
+    01ea..01ee  check-cast  v0, LX/8un;
+    01ee..01f4  invoke-virtual  {v0, v10}, LX/8un;->A06(LX/AHF;)V
+    01f4..01f8  iget-object  v0, v9, Lcom/whatsapp/media/share/ShareMediaViewModel;->A08:LX/00x;
+    01f8..01fe  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    01fe..0200  move-result-object  v0
+    0200..0204  check-cast  v0, LX/11o;
+    0204..0208  iget-object  v0, v0, LX/11o;->A0B:LX/00x;
+    0208..020e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    020e..0210  move-result-object  v13
+    0210..0214  check-cast  v13, LX/AD3;
+    0214..021a  invoke-static  {v10, v3, v11}, LX/2L9;->A1B(Ljava/lang/Object;ILjava/lang/Object;)V
+    021a..0220  invoke-static  {v11}, LX/2L7;->A1M(Ljava/lang/Object;)Ljava/util/List;
+    0220..0222  move-result-object  v12
+    0222..0224  const/4  v0, #0x0
+    0224..022a  invoke-static  {v0, v10, v13, v12}, LX/AD3;->A01(LX/AQb;LX/AHF;LX/AD3;Ljava/util/List;)LX/9nm;
+    022a..022c  move-result-object  v12
+    022c..0230  if-eqz  v12, +0x15f
+    0230..0234  iget-object  v0, v12, LX/9nm;->A01:Ljava/util/Set;
+    0234..023a  invoke-interface  {v0, v11}, Ljava/util/Set;->contains(Ljava/lang/Object;)Z
+    023a..023c  move-result  v0
+    023c..0240  if-nez  v0, +0x157
+    0240..0244  iget-object  v0, v12, LX/9nm;->A00:LX/AQb;
+    0244..0248  move-object/from16  v22, v23
+    0248..024a  move-object  v14, v11
+    024a..024e  move-object/from16  v15, v22
+    024e..0252  move-object/from16  v16, v0
+    0252..0256  move-object/from16  v17, v10
+    0256..025a  move-object/from16  v18, v13
+    025a..025e  move-object/from16  v19, v7
+    025e..0262  move/from16  v20, v5
+    0262..0266  move/from16  v21, v4
+    0266..026c  invoke-static/range  {v14..v21}, LX/AD3;->A00(LX/0DY;LX/18U;LX/AQb;LX/AHF;LX/AD3;Ljava/lang/Integer;ZZ)LX/9JS;
+    026c..026e  move-result-object  v0
+    026e..0272  if-eqz  v0, +0x13e
+    0272..0276  move-object/from16  v14, v24
+    0276..027a  if-eqz  v24, +0x33
+    027a..027e  iget-object  v12, v9, Lcom/whatsapp/media/share/ShareMediaViewModel;->A05:LX/00x;
+    027e..0284  invoke-interface  {v12}, LX/00x;->get()Ljava/lang/Object;
+    0284..0286  move-result-object  v13
+    0286..028a  check-cast  v13, LX/1dJ;
+    028a..0290  invoke-static  {v14, v0}, LX/1dJ;->A00(LX/18U;LX/18U;)Z
+    0290..0292  move-result  v12
+    0292..0296  if-eqz  v12, +0x25
+    0296..029a  iget-object  v12, v13, LX/1dJ;->A06:LX/05a;
+    029a..02a0  invoke-static  {v12}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    02a0..02a2  move-result-object  v12
+    02a2..02a6  check-cast  v12, LX/34l;
+    02a6..02ac  invoke-static  {v0}, LX/8t1;->A0i(LX/18U;)LX/1dW;
+    02ac..02ae  move-result-object  v14
+    02ae..02b2  iget-object  v13, v12, LX/34l;->A00:Ljava/util/LinkedHashSet;
+    02b2..02b4  monitor-enter
+    02b4..02ba  invoke-virtual  {v13}, Ljava/util/AbstractCollection;->size()I
+    02ba..02bc  move-result  v15
+    02bc..02c0  const/16  v12, #0x8
+    02c0..02c4  if-lt  v15, v12, +0xa
+    02c4..02ca  invoke-static  {v13}, LX/07Z;->A0m(Ljava/lang/Iterable;)Ljava/lang/Object;
+    02ca..02cc  move-result-object  v12
+    02cc..02d2  invoke-virtual  {v13, v12}, Ljava/util/AbstractCollection;->remove(Ljava/lang/Object;)Z
+    02d2..02d4  goto  -0xf
+    02d4..02da  invoke-virtual  {v13, v14}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    02da..02dc  monitor-exit
+    02dc..02de  const/4  v14, #0x0
+    02de..02e2  new-instance  v13, LX/3am;
+    02e2..02e6  move-object/from16  v12, v25
+    02e6..02ec  invoke-direct  {v13, v12, v0, v7, v6}, LX/3am;-><init>(LX/A6j;LX/9JS;Ljava/lang/Integer;I)V
+    02ec..02f0  iput-object  v11, v2, LX/KZT;->A02:Ljava/lang/Object;
+    02f0..02f4  iput-object  v10, v2, LX/KZT;->A03:Ljava/lang/Object;
+    02f4..02f8  move-object/from16  v12, v22
+    02f8..02fc  iput-object  v12, v2, LX/KZT;->A09:Ljava/lang/Object;
+    02fc..0300  iput-object  v7, v2, LX/KZT;->A0A:Ljava/lang/Object;
+    0300..0304  iput-object  v8, v2, LX/KZT;->A0B:Ljava/lang/Object;
+    0304..0308  iput-object  v14, v2, LX/KZT;->A0C:Ljava/lang/Object;
+    0308..030c  iput-object  v0, v2, LX/KZT;->A04:Ljava/lang/Object;
+    030c..0310  iput  v6, v2, LX/KZT;->A00:I
+    0310..0314  iput-boolean  v5, v2, LX/KZT;->A0D:Z
+    0314..0318  iput-boolean  v4, v2, LX/KZT;->A0E:Z
+    0318..031a  const/4  v12, #0x4
+    031a..031e  iput  v12, v2, LX/KZT;->A01:I
+    031e..0324  invoke-static  {v13, v9, v2}, Lcom/whatsapp/media/share/ShareMediaViewModel;->A02(LX/KeF;Lcom/whatsapp/media/share/ShareMediaViewModel;LX/0cf;)Ljava/lang/Object;
+    0324..0326  move-result-object  v12
+    0326..032a  if-ne  v12, v1, +0x1e
+    032a..032c  return-object  v1
+    032c..0330  iget-boolean  v4, v2, LX/KZT;->A0E:Z
+    0330..0334  iget-boolean  v5, v2, LX/KZT;->A0D:Z
+    0334..0338  iget  v6, v2, LX/KZT;->A00:I
+    0338..033c  iget-object  v0, v2, LX/KZT;->A04:Ljava/lang/Object;
+    033c..0340  iget-object  v8, v2, LX/KZT;->A0B:Ljava/lang/Object;
+    0340..0344  check-cast  v8, LX/Kgi;
+    0344..0348  iget-object  v7, v2, LX/KZT;->A0A:Ljava/lang/Object;
+    0348..034c  check-cast  v7, Ljava/lang/Integer;
+    034c..0350  iget-object  v10, v2, LX/KZT;->A03:Ljava/lang/Object;
+    0350..0354  check-cast  v10, LX/AHF;
+    0354..0358  iget-object  v11, v2, LX/KZT;->A02:Ljava/lang/Object;
+    0358..035c  check-cast  v11, LX/0DY;
+    035c..0362  invoke-static  {v12}, LX/0dg;->A01(Ljava/lang/Object;)V
+    0362..0366  iget-object  v12, v9, Lcom/whatsapp/media/share/ShareMediaViewModel;->A08:LX/00x;
+    0366..036c  invoke-interface  {v12}, LX/00x;->get()Ljava/lang/Object;
+    036c..036e  move-result-object  v12
+    036e..0372  check-cast  v12, LX/11o;
+    0372..0376  iget-object  v12, v12, LX/11o;->A0B:LX/00x;
+    0376..037c  invoke-interface  {v12}, LX/00x;->get()Ljava/lang/Object;
+    037c..037e  move-result-object  v12
+    037e..0382  check-cast  v12, LX/AD3;
+    0382..0386  if-eqz  v0, +0x33
+    0386..038a  iget-object  v12, v12, LX/AD3;->A0B:LX/05a;
+    038a..0390  invoke-static  {v12}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0390..0392  move-result-object  v13
+    0392..0396  check-cast  v13, LX/ABO;
+    0396..0398  const/4  v14, #0x0
+    0398..039c  const-wide/16  v24, #0x0
+    039c..03a2  invoke-static  {v0}, Ljava/util/Collections;->singletonList(Ljava/lang/Object;)Ljava/util/List;
+    03a2..03a4  move-result-object  v0
+    03a4..03aa  invoke-static  {v0, v3}, LX/00l;->A09(Ljava/lang/Object;I)V
+    03aa..03ae  new-instance  v12, LX/AhC;
+    03ae..03b4  invoke-direct  {v12, v14, v0}, LX/AhC;-><init>(Ljava/lang/Long;Ljava/util/List;)V
+    03b4..03b8  move-object/from16  v16, v14
+    03b8..03bc  move-object/from16  v17, v14
+    03bc..03c0  move-object/from16  v19, v14
+    03c0..03c4  move-object/from16  v20, v14
+    03c4..03c8  move-object/from16  v21, v14
+    03c8..03cc  move-object/from16  v22, v14
+    03cc..03d0  move-object/from16  v23, v14
+    03d0..03d4  move/from16  v27, v3
+    03d4..03d8  move/from16  v28, v3
+    03d8..03da  move-object  v15, v14
+    03da..03de  move/from16  v26, v3
+    03de..03e2  move-object/from16  v18, v12
+    03e2..03e8  invoke-virtual/range  {v13..v28}, LX/ABO;->A02(LX/AwY;LX/1eP;LX/1wm;LX/NZ3;LX/AhC;Ljava/lang/Integer;Ljava/lang/Long;Ljava/util/Map;Ljava/util/Map;[BJZZZ)LX/A7c;
+    03e8..03ec  instance-of  v0, v8, LX/KOe;
+    03ec..03f0  if-eqz  v0, +0xa
+    03f0..03f2  move-object  v3, v8
+    03f2..03f6  check-cast  v3, LX/KOe;
+    03f6..03fa  if-eqz  v3, +0x5
+    03fa..03fc  const/4  v0, #0x1
+    03fc..0400  iput-boolean  v0, v3, LX/KOe;->A02:Z
+    0400..0404  iput-object  v11, v9, Lcom/whatsapp/media/share/ShareMediaViewModel;->A00:LX/0DY;
+    0404..0408  iget-object  v11, v10, LX/AHF;->A0E:Ljava/lang/String;
+    0408..040c  iget-object  v10, v10, LX/AHF;->A0H:Ljava/lang/String;
+    040c..0410  if-eqz  v11, +0x3f
+    0410..0414  if-eqz  v10, +0x3d
+    0414..0418  iget-object  v0, v9, Lcom/whatsapp/media/share/ShareMediaViewModel;->A0G:LX/00x;
+    0418..041e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    041e..0420  move-result-object  v3
+    0420..0424  check-cast  v3, LX/1wO;
+    0424..042a  invoke-static  {v11}, LX/8t1;->A1D(Ljava/lang/String;)Ljava/io/File;
+    042a..042c  move-result-object  v0
+    042c..0432  invoke-virtual  {v3, v0, v10}, LX/1wO;->A00(Ljava/io/File;Ljava/lang/String;)LX/A2b;
+    0432..0434  move-result-object  v0
+    0434..0438  if-eqz  v0, +0x2b
+    0438..043e  invoke-virtual  {v0}, LX/A2b;->A02()Landroid/graphics/Bitmap;
+    043e..0440  move-result-object  v0
+    0440..0444  new-instance  v3, LX/3al;
+    0444..044a  invoke-direct  {v3, v0, v7, v6}, LX/3al;-><init>(Landroid/graphics/Bitmap;Ljava/lang/Integer;I)V
+    044a..0450  invoke-static  {v2}, Lcom/whatsapp/media/share/ShareMediaViewModel;->A04(LX/KZT;)Ljava/lang/Object;
+    0450..0452  move-result-object  v0
+    0452..0456  iput-object  v8, v2, LX/KZT;->A0B:Ljava/lang/Object;
+    0456..045a  iput-object  v0, v2, LX/KZT;->A0C:Ljava/lang/Object;
+    045a..045e  iput-object  v0, v2, LX/KZT;->A04:Ljava/lang/Object;
+    045e..0462  iput-object  v0, v2, LX/KZT;->A05:Ljava/lang/Object;
+    0462..0466  iput-object  v0, v2, LX/KZT;->A07:Ljava/lang/Object;
+    0466..046a  iput-object  v0, v2, LX/KZT;->A08:Ljava/lang/Object;
+    046a..046e  iput  v6, v2, LX/KZT;->A00:I
+    046e..0472  iput-boolean  v5, v2, LX/KZT;->A0D:Z
+    0472..0476  iput-boolean  v4, v2, LX/KZT;->A0E:Z
+    0476..0478  const/4  v0, #0x5
+    0478..047c  iput  v0, v2, LX/KZT;->A01:I
+    047c..0482  invoke-static  {v3, v9, v2}, Lcom/whatsapp/media/share/ShareMediaViewModel;->A02(LX/KeF;Lcom/whatsapp/media/share/ShareMediaViewModel;LX/0cf;)Ljava/lang/Object;
+    0482..0484  move-result-object  v0
+    0484..0488  if-ne  v0, v1, +0x12
+    0488..048a  return-object  v1
+    048a..048c  const/4  v0, #0x0
+    048c..048e  goto  -0x26
+    048e..0492  iget-boolean  v4, v2, LX/KZT;->A0E:Z
+    0492..0496  iget-boolean  v5, v2, LX/KZT;->A0D:Z
+    0496..049a  iget  v6, v2, LX/KZT;->A00:I
+    049a..049e  iget-object  v8, v2, LX/KZT;->A0B:Ljava/lang/Object;
+    049e..04a2  check-cast  v8, LX/Kgi;
+    04a2..04a8  invoke-static  {v12}, LX/0dg;->A01(Ljava/lang/Object;)V
+    04a8..04ae  invoke-static  {v2}, Lcom/whatsapp/media/share/ShareMediaViewModel;->A04(LX/KZT;)Ljava/lang/Object;
+    04ae..04b0  move-result-object  v0
+    04b0..04b4  iput-object  v0, v2, LX/KZT;->A0B:Ljava/lang/Object;
+    04b4..04b8  iput-object  v0, v2, LX/KZT;->A0C:Ljava/lang/Object;
+    04b8..04bc  iput-object  v0, v2, LX/KZT;->A04:Ljava/lang/Object;
+    04bc..04c0  iput-object  v0, v2, LX/KZT;->A05:Ljava/lang/Object;
+    04c0..04c4  iput-object  v0, v2, LX/KZT;->A07:Ljava/lang/Object;
+    04c4..04c6  const/4  v3, #0x0
+    04c6..04ca  iput-object  v0, v2, LX/KZT;->A08:Ljava/lang/Object;
+    04ca..04ce  iput  v6, v2, LX/KZT;->A00:I
+    04ce..04d2  iput-boolean  v5, v2, LX/KZT;->A0D:Z
+    04d2..04d6  iput-boolean  v4, v2, LX/KZT;->A0E:Z
+    04d6..04d8  const/4  v0, #0x6
+    04d8..04dc  iput  v0, v2, LX/KZT;->A01:I
+    04dc..04de  const/4  v0, #0x1
+    04de..04e4  invoke-static  {v9, v8, v3, v2, v0}, Lcom/whatsapp/media/share/ShareMediaViewModel;->A03(Lcom/whatsapp/media/share/ShareMediaViewModel;LX/Kgi;Ljava/lang/String;LX/0cf;Z)Ljava/lang/Object;
+    04e4..04e6  move-result-object  v0
+    04e6..04ea  goto/16  -0x1da
+    04ea..04ee  const-string  v0, "ShareMediaViewModel/sendSticker/failed to create sticker message"
+    04ee..04f4  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    04f4..04fa  invoke-static  {v2}, Lcom/whatsapp/media/share/ShareMediaViewModel;->A04(LX/KZT;)Ljava/lang/Object;
+    04fa..04fc  move-result-object  v0
+    04fc..0500  iput-object  v0, v2, LX/KZT;->A0B:Ljava/lang/Object;
+    0500..0504  iput-object  v0, v2, LX/KZT;->A0C:Ljava/lang/Object;
+    0504..0508  iput-object  v0, v2, LX/KZT;->A04:Ljava/lang/Object;
+    0508..050c  iput  v6, v2, LX/KZT;->A00:I
+    050c..0510  iput-boolean  v5, v2, LX/KZT;->A0D:Z
+    0510..0514  iput-boolean  v4, v2, LX/KZT;->A0E:Z
+    0514..0516  const/4  v0, #0x3
+    0516..051a  iput  v0, v2, LX/KZT;->A01:I
+    051a..051e  const-string  v0, "failed to create sticker message"
+    051e..0522  goto/16  -0x1fa
+    0522..0528  invoke-static  {v12}, LX/0dg;->A01(Ljava/lang/Object;)V
+    0528..052c  sget-object  v0, LX/05u;->A00:LX/05u;
+    052c..052e  return-object  v0
+    052e..0530  move-exception  v0
+    0530..0532  monitor-exit
+    0532..0534  throw  v0
+    0534..0558  packed-switch-payload  size=7
+    # exception table: 1 try range(s)
+    # catch <all> code_units 015a..016d -> 0297
+.end method

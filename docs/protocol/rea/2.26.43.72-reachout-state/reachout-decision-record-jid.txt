@@ -1,0 +1,11 @@
+
+# class: LX/0wj;
+# extends: Ljava/lang/Object;
+
+.method public A0A(L)  # .registers 2
+    # full signature: LX/0wj;->A0A()LX/0DY;
+    0000..0004  iget-object  v0, v1, LX/0wj;->A0D:LX/11T;
+    0004..0008  iget-object  v0, v0, LX/11T;->A0K:LX/0DY;
+    0008..000a  return-object  v0
+    # exception table: 0 try range(s)
+.end method

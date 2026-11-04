@@ -1,0 +1,96 @@
+
+# class: LX/2TX;
+# extends: Ljava/lang/Object;
+
+.method public A00(VL)  # .registers 8
+    # full signature: LX/2TX;->A00(LX/DDq;)V
+    0000..0004  iget-object  v0, v6, LX/2TX;->A01:LX/DDq;
+    0004..000a  invoke-static  {v0, v7}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    000a..000c  move-result  v0
+    000c..0010  if-nez  v0, +0x1e
+    0010..0014  iput-object  v7, v6, LX/2TX;->A01:LX/DDq;
+    0014..0018  if-eqz  v7, +0x1a
+    0018..001c  iget-object  v3, v7, LX/DDq;->A00:LX/1bc;
+    001c..001e  const/4  v5, #0x1
+    001e..0020  const/4  v1, #0x0
+    0020..0022  const/4  v4, #0x0
+    0022..0026  if-eqz  v3, +0x14
+    0026..0028  const/4  v4, #0x1
+    0028..002c  iget-object  v0, v6, LX/2TX;->A06:LX/05a;
+    002c..0032  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0032..0034  move-result-object  v0
+    0034..0038  check-cast  v0, LX/2Q4;
+    0038..003e  invoke-virtual  {v0, v3}, LX/2Q4;->A01(LX/0DY;)Z
+    003e..0040  move-result  v0
+    0040..0044  if-eqz  v0, +0x5
+    0044..0048  iput-boolean  v1, v6, LX/2TX;->A02:Z
+    0048..004a  return-void
+    004a..004e  iget-object  v2, v7, LX/DDq;->A01:Lcom/whatsapp/infra/core/jid/UserJid;
+    004e..0052  if-eqz  v2, +0x27
+    0052..0056  iget-object  v0, v6, LX/2TX;->A09:LX/05a;
+    0056..005c  invoke-static  {v0, v2}, LX/2LA;->A1Y(LX/05a;LX/0DY;)Z
+    005c..005e  move-result  v0
+    005e..0062  if-nez  v0, -0xd
+    0062..0066  iget-object  v0, v6, LX/2TX;->A06:LX/05a;
+    0066..006c  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    006c..006e  move-result-object  v0
+    006e..0072  check-cast  v0, LX/2Q4;
+    0072..0078  invoke-virtual  {v0, v2}, LX/2Q4;->A01(LX/0DY;)Z
+    0078..007a  move-result  v0
+    007a..007e  if-nez  v0, -0x1b
+    007e..0082  iget-object  v0, v6, LX/2TX;->A08:LX/05a;
+    0082..0088  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0088..008a  move-result-object  v0
+    008a..008e  check-cast  v0, LX/6q3;
+    008e..0094  invoke-virtual  {v0, v2}, LX/6q3;->A00(LX/0DY;)Z
+    0094..0096  move-result  v0
+    0096..009a  if-eqz  v0, +0x3
+    009a..009c  goto  -0x2b
+    009c..00a0  if-eqz  v3, +0x20
+    00a0..00a4  iget-object  v0, v6, LX/2TX;->A04:LX/05a;
+    00a4..00aa  invoke-static  {v0}, LX/05a;->A00(LX/05a;)LX/00E;
+    00aa..00ac  move-result-object  v2
+    00ac..00b0  iget-object  v0, v6, LX/2TX;->A07:LX/05a;
+    00b0..00b6  invoke-static  {v0}, LX/2L8;->A0q(LX/05a;)LX/0i9;
+    00b6..00b8  move-result-object  v0
+    00b8..00be  invoke-static  {v0, v3}, LX/F3o;->A02(LX/0i9;Lcom/whatsapp/infra/core/jid/GroupJid;)I
+    00be..00c0  move-result  v1
+    00c0..00c2  const/4  v0, #0x2
+    00c2..00c6  if-gt  v1, v0, +0xc
+    00c6..00ca  if-ne  v1, v0, +0x3d
+    00ca..00ce  const/16  v0, #0x5e73
+    00ce..00d4  invoke-virtual  {v2, v0}, LX/00E;->A14(I)Z
+    00d4..00d6  move-result  v0
+    00d6..00da  if-eqz  v0, +0x35
+    00da..00dc  const/4  v1, #0x1
+    00dc..00e0  iget-object  v0, v6, LX/2TX;->A04:LX/05a;
+    00e0..00e6  invoke-static  {v0}, LX/05a;->A00(LX/05a;)LX/00E;
+    00e6..00e8  move-result-object  v2
+    00e8..00ec  iget-object  v0, v6, LX/2TX;->A09:LX/05a;
+    00ec..00f2  invoke-static  {v0}, LX/2L9;->A0b(LX/05a;)LX/09F;
+    00f2..00f4  move-result-object  v0
+    00f4..00f8  if-eqz  v4, +0x3
+    00f8..00fa  move  v5, v1
+    00fa..0100  invoke-interface  {v0}, LX/09F;->BU7()Z
+    0100..0102  move-result  v0
+    0102..0106  if-nez  v0, +0x1b
+    0106..010a  if-nez  v4, +0xa
+    010a..010e  const/16  v0, #0x38d1
+    010e..0114  invoke-virtual  {v2, v0}, LX/00E;->A14(I)Z
+    0114..0116  move-result  v0
+    0116..011a  if-eqz  v0, +0x11
+    011a..011e  if-eqz  v5, +0xf
+    011e..0122  const/16  v1, #0x263c
+    0122..0126  sget-object  v0, LX/00G;->A02:LX/00G;
+    0126..012c  invoke-virtual  {v2, v0, v1}, LX/00E;->A0b(LX/00G;I)I
+    012c..012e  move-result  v0
+    012e..0132  and-int/lit8  v1, v0, #0x1
+    0132..0134  const/4  v0, #0x1
+    0134..0138  if-nez  v1, +0x3
+    0138..013a  const/4  v0, #0x0
+    013a..013e  iput-boolean  v0, v6, LX/2TX;->A02:Z
+    013e..0140  return-void
+    0140..0142  const/4  v1, #0x0
+    0142..0144  goto  -0x33
+    # exception table: 0 try range(s)
+.end method

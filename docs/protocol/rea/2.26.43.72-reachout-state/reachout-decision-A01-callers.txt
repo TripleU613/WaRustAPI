@@ -1,0 +1,32 @@
+classes10.dex  Lcom/whatsapp/media/share/ShareMediaViewModel;->A01(LLLLLLLLLLIZZ)
+  invoke dex byte offset: 0x2a5074
+classes10.dex  LX/Iax;->A2C(Z)
+  invoke dex byte offset: 0x2c3176
+classes10.dex  LX/IbM;->A2d(V)
+  invoke dex byte offset: 0x2d262a
+classes10.dex  LX/IbM;->A2d(V)
+  invoke dex byte offset: 0x2d277e
+classes3.dex  LX/2TX;->A00(VL)
+  invoke dex byte offset: 0x224420
+classes3.dex  LX/2TX;->A00(VL)
+  invoke dex byte offset: 0x22445a
+classes6.dex  LX/8u7;->A04(ZL)
+  invoke dex byte offset: 0x2748fe
+classes6.dex  LX/90W;->A00(VLL)
+  invoke dex byte offset: 0x2c6044
+classes6.dex  Lcom/whatsapp/mediaview/menu/MediaViewMenu;->A0C(VLLLLLIZ)
+  invoke dex byte offset: 0x4dfbe4
+classes6.dex  Lcom/whatsapp/mediaview/menu/MediaViewMenu;->A0C(VLLLLLIZ)
+  invoke dex byte offset: 0x4e0124
+classes6.dex  LX/AnW;->emit(LLL)
+  invoke dex byte offset: 0x61d4aa
+classes8.dex  LX/E0z;->A02(LLLL)
+  invoke dex byte offset: 0x524908
+classes9.dex  LX/GFv;->A04(VL)
+  invoke dex byte offset: 0x3e55b8
+classes9.dex  LX/HAo;->A00(LL)
+  invoke dex byte offset: 0x53e6ae
+classes9.dex  LX/HXs;->A02(V)
+  invoke dex byte offset: 0x5ce03c
+classes9.dex  LX/IOD;->invokeSuspend(LL)
+  invoke dex byte offset: 0x834422

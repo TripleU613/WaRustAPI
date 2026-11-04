@@ -1,3 +1,9 @@
+2026-11-04 — **Pinned static: call gate, sticker refusal and record correction.**
+1v7.A02 pre-call branch, ShareMediaViewModel.A01 read-only refusal and
+2Q4 wrapper/lookup chain resolve caller semantics. Prior per-message/ent:
+metadata interpretation is corrected to JID-bound record with unknown producer.
+[Sources and bounded remaining obligations](rea/2.26.43.72-reachout-state/README.md#caller-semantics-call-gate-and-sticker-refusal-2026-11-04). No live traffic.
+
 2026-11-04 — **Pinned static: native outreach predicate and set provenance.**
 6po/6pn, 0ht.A0U -> 0hv.A0P trusted-contact rows, helper branches and
 2Q4 caller retained with direct caller censuses.
