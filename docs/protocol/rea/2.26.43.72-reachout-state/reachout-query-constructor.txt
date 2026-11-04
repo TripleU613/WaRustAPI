@@ -1,0 +1,18 @@
+
+# class: LX/6oh;
+# extends: Ljava/lang/Object;
+
+.method public A0D(LLLLZ)  # .registers 10
+    # full signature: LX/6oh;->A0D(LX/0i1;Ljava/lang/Class;Ljava/lang/String;Z)LX/0iT;
+    0000..0004  const-string  v5, "whatsapp-android-mex"
+    0004..0006  const/4  v3, #0x0
+    0006..000a  new-instance  v0, LX/0iT;
+    000a..000c  move-object  v1, v6
+    000c..000e  move-object  v2, v7
+    000e..0010  move-object  v4, v8
+    0010..0012  move  v7, v9
+    0012..0014  move-object  v6, v3
+    0014..001a  invoke-direct/range  {v0..v7}, LX/0iT;-><init>(LX/0i1;Ljava/lang/Class;Ljava/lang/Class;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Z)V
+    001a..001c  return-object  v0
+    # exception table: 0 try range(s)
+.end method

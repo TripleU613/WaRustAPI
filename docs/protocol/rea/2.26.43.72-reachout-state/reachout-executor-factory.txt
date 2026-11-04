@@ -1,0 +1,13 @@
+
+# class: LX/6oj;
+# extends: Ljava/lang/Object;
+
+.method public A0Y(L)  # .registers 1
+    # full signature: LX/6oj;->A0Y()LX/0if;
+    0000..0004  const/16  v0, #0x1138
+    0004..000a  invoke-static  {v0}, LX/00T;->A03(I)Ljava/lang/Object;
+    000a..000c  move-result-object  v0
+    000c..0010  check-cast  v0, LX/0if;
+    0010..0012  return-object  v0
+    # exception table: 0 try range(s)
+.end method

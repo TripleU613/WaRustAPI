@@ -689,3 +689,131 @@ and apk-smali for class/method named by each export with --signatures
 - [reachout-countdown-finish.txt](reachout-countdown-finish.txt) — SHA-256 `8e33aa059e552e36a2ca9122257479ef627b7222c7dde6c47e34dd433e8a09de`.
 - [reachout-fetch-callback.txt](reachout-fetch-callback.txt) — SHA-256 `dc633fc12677ac1de29ad32c9cb37e90fea09b8027b9398ae9c7f526e699f732`.
 - [reachout-active-picker-reader.txt](reachout-active-picker-reader.txt) — SHA-256 `bb8b8b7e1477475b44ac59012323bbfb1b6b6b76a695f5464e43897dc7d5b8ab`.
+
+## Refresh request construction and runtime document lookup (2026-11-04)
+
+**Confirmed static**, same pinned APK 2.26.43.72 SHA-256 above. This
+extends the countdown/fetch chain, without adding a Rust dispatcher.
+
+8bO.run selector 19 constructs a fresh 0i1 via 3q0.A0X and calls
+6oh.A0D(params,74W.class,"FetchReachoutTimelockQuery",false). The helper
+constructs 0iT with call name, namespace whatsapp-android-mex, null Pando
+model class and null optional function. 74W is a JSONObject-backed 0iM
+response wrapper, with no field grammar in its constructor. The operation
+name has one direct string reference in this APK; this is not a count
+of all runtime invocations.
+
+Fresh 0i1 constructs GraphQlCallInput through 0iG. The input has null Nha
+content; Axc -> GraphQlCallInput.A03 creates a TreeMap, and private A01
+returns immediately for null content. The traced caller adds no variables,
+so this request's variables map is empty. 0iT initializes its extra map
+as empty, returns false for hasAcsToken/hasOhaiConfig, and throws for
+setNetworkTimeoutSeconds/setUseSafeStack. Those are this spec's methods,
+not universal authentication requirements for all GraphQL.
+
+### Start, transport selection and XMPP structure
+
+2LA.A0Y casts the supplied executor to 0ig and calls A01, which creates
+0iq with the spec/dependencies. 6oj.A0Y obtains it via DI key 0x1138;
+full DI registration remains open. A search for 0if.<init> found no method
+body; this is a bounded negative, not a diagnosis of a missing runtime.
+
+0iq's constructor sets its long timeout argument to 0x7d00 (32000); no
+unit conclusion is needed here. AQY builds 0id, invokes callback setup,
+then AQV -> static A00 -> returned 0j2.A04. The fresh 0iq has default
+A03=false, selecting 0j3 rather than RsH at this first layer. 0j3 has
+no declared A04 body in the search; its constructor shows superclass 0j2,
+whose A04 is retained. A04 checks the resolved document identity, invokes
+callback failure with LI6 if absent, and only otherwise calls A06.
+
+0j3.A06 performs another selector through 0io.A02. This caller's 0iT
+has null A03 model class, so it returns 0mO.A0B, whose initializer names
+REJECTED_MEX_NOT_PANDO_CAPABLE and passes false for isPando. This is a
+transport-selection rejection, not a server account refusal. Therefore
+the selected branch builds 0mb response handling and calls 0Sf.A0W
+with message code 0x155 and the retained timeout argument. No Pando
+configuration/allowlist value was invented to reach the branch.
+
+0mF constructs JSON with queryId and variables from Axc, then 0mK builds
+iq to the singleton 0mL (empty user, getServer s.whatsapp.net), xmlns
+w:mex, type get, id, optional trace and query. 0mI creates trace/flow_id
+from the document ID. query_id uses that same document ID; JSON is the
+query body. Constructor validation conditions and order are retained in
+full. Semantic shape for a nonnull ID resolved to the asset reference:
+
+```xml
+<iq to="s.whatsapp.net" xmlns="w:mex" type="get" id="{fresh-id}">
+  <trace><flow_id>25627902213558773</flow_id></trace>
+  <query query_id="25627902213558773">{"queryId":"25627902213558773","variables":{}}</query>
+</iq>
+```
+
+This is a derived semantic illustration, not captured traffic or proof of
+JSON byte ordering, wire encoding, current registry availability or server
+acceptance. No input/operation-name field was added to variables by guess.
+
+### Asset reference versus runtime registry
+
+The bounded apk-mex-queries export records server doc_id 25627902213558773,
+client_doc_id 289769408314545818597242103356, schema whatsapp_mex, namespace
+whatsapp-android-mex, and provenance of the exact persisted-ID asset. They
+are distinct identifiers. The export was reproduced with --check including
+APK/asset hashes. It supplies release-specific reference data, not a
+completed port of runtime registry resolution.
+
+0j2.A03 calls 0ih.A00(callName,namespace), which asks 0ik.A00 for a
+0il and invokes CRh. 0ik looks in a ConcurrentHashMap and otherwise
+returns 5vM(namespace); 5vM.CRh returns null. 0ih catches exceptions and
+also returns null. Thus the fallback does not automatically turn an asset
+entry into a request. Runtime map population/implementation/teardown is
+not traced in this pass; no claim that this exact asset record is always
+the live registry result follows. Treating the asset ID as unconditional
+dispatch authority would skip a native availability boundary.
+
+**Remaining obligations:** registry initialization/provenance, full IQ
+response/error conversion and sender/correlation checks, current account
+request ownership, atomic restriction application with action settlement,
+overlap and retry/wait behavior, and teardown. The existing notification
+handler cannot simply be reused by relabeling an IQ result. Automatic
+refresh remains unported; existing guards and uncertain outcomes stay
+unchanged. No Rust runtime change, no live account traffic, and no claim
+of mandatory startup polling or completed network audit.
+
+Reproduce apk-mex-queries --operation FetchReachoutTimelockQuery and --check
+against the JSON below. Reproduce apk-smali for each named class/method
+with --signatures --exceptions; apk-xref --anchor FetchReachoutTimelockQuery.
+TXT exports are checked DEX text, not REA Evidence envelopes.
+
+- [reachout-fetch-response-class.txt](reachout-fetch-response-class.txt) — SHA-256 `a81c09214e5d3ac6e1806637a4300b65ded9eebc426d62db0de292f9bb02e6e8`.
+- [reachout-query-constructor.txt](reachout-query-constructor.txt) — SHA-256 `ae3a0321a7f031c468ca1696bf4f2e629f96ce1d163e0523ba97b5c9176f11cd`.
+- [reachout-fetch-query-anchors.txt](reachout-fetch-query-anchors.txt) — SHA-256 `11addb2f8c53f4097f6f877500c86ae7af5eda8ce34f0c7ffbf5baab55271b6a`.
+- [reachout-query-spec.txt](reachout-query-spec.txt) — SHA-256 `81d971c079924305485f324099c4428ec2643eafe68f82e31996f1969787734f`.
+- [reachout-query-params-factory.txt](reachout-query-params-factory.txt) — SHA-256 `9bd75a2416023f14a1c54f234d1a89d2af7a90a0bcb63d691e588ca93e6198bc`.
+- [reachout-query-params-constructor.txt](reachout-query-params-constructor.txt) — SHA-256 `8251f43760df49b815b86f40c32b1892dd1ca7924dc12fa6a521f88bd3147ea4`.
+- [reachout-query-execution-adapter.txt](reachout-query-execution-adapter.txt) — SHA-256 `e225e5f8cb5a763ce389c9b9224f30d4ee43d6806efe6a1f3c6cc552d161fa3b`.
+- [reachout-executor-factory.txt](reachout-executor-factory.txt) — SHA-256 `d8fddd1fc83f2a8a165b287d8b7989b85451957346a2a636934e4cb955375042`.
+- [reachout-query-submit.txt](reachout-query-submit.txt) — SHA-256 `f07dc9882fd13038aef5f91410eb523869bcff8ccab7bc8b142f5fa21808018a`.
+- [reachout-query-start.txt](reachout-query-start.txt) — SHA-256 `b8989017d166942cf0fcddb3cb16cf627297dfaade6283e290a9265dd027b352`.
+- [reachout-query-operation-constructor.txt](reachout-query-operation-constructor.txt) — SHA-256 `e4193e9c56bf0c15a9b5f50a59a8d9c5ff07fe28909f9a752bfff27f2fca9e78`.
+- [reachout-query-transport-selection.txt](reachout-query-transport-selection.txt) — SHA-256 `343aef400cc13a14887ff37c5b43ad671f7c07c39ff64735630841da46d504d4`.
+- [reachout-query-transport-plan.txt](reachout-query-transport-plan.txt) — SHA-256 `958e3a9fba47f9e858f85d5d27baa86e969cd25bdb9b293e6de28fc445087784`.
+- [reachout-query-base-start.txt](reachout-query-base-start.txt) — SHA-256 `ab26206db889ef779ca3ac255b83e3732c1489a90445d4e25528520ff8544e49`.
+- [reachout-query-default-constructor.txt](reachout-query-default-constructor.txt) — SHA-256 `ffec9d98af676e2b9d089390f9fa1e542bc3c50fa713d2e99fa238bc7de8890b`.
+- [reachout-query-xmpp-send.txt](reachout-query-xmpp-send.txt) — SHA-256 `acd3dcf6e75f3d93df7222d2764718ab85e463b2ab5569a8558b658421564d7b`.
+- [reachout-query-variables.txt](reachout-query-variables.txt) — SHA-256 `5a16a1796f4014d588b5e360ffb050a7bd4dccef26f88c251dbfbed530989d00`.
+- [reachout-query-xmpp-plan.txt](reachout-query-xmpp-plan.txt) — SHA-256 `62d7f02952d398737fe575d321b6ca7fae7ac225264bb81832196471e92ac02e`.
+- [reachout-query-xmpp-node.txt](reachout-query-xmpp-node.txt) — SHA-256 `2d592b6269ef1ed6dc3c931428388f83c66e2260f89c0b5e835cb75550b1f74f`.
+- [reachout-query-variable-map.txt](reachout-query-variable-map.txt) — SHA-256 `e36dd5752da39ee4d5da5d1c0c991c96711e363966648b00bfbab03874e2ccc0`.
+- [reachout-query-pando-selection.txt](reachout-query-pando-selection.txt) — SHA-256 `7c3b9e07c0976b0e86a9a2a68e8f43e3643fef5ad494aea62fbfc67fb66eebaa`.
+- [reachout-query-transport-enum.txt](reachout-query-transport-enum.txt) — SHA-256 `df0c9017baeec3907cfdb4eaf7b8fb0367b7d35d8d2b244786f5c1cf2c99d515`.
+- [reachout-empty-input-constructor.txt](reachout-empty-input-constructor.txt) — SHA-256 `c62ca3cb1c1a5fcc7ce6dd67d62cb3cc1c8a719b160c5dc6054690b976221154`.
+- [reachout-query-empty-map.txt](reachout-query-empty-map.txt) — SHA-256 `be7f352006e7b4f0f1031e4ded586a17e32011c0d6dce4362f4af2f5ad21689d`.
+- [reachout-query-trace-node.txt](reachout-query-trace-node.txt) — SHA-256 `02916dbb651271097c9d487edc9af7885ba6b238789325776f4c174af895d508`.
+- [reachout-query-server-jid.txt](reachout-query-server-jid.txt) — SHA-256 `980fe80b7482094daa3b7da1b6664efd2789018c46a6792ce436d99c8beaf33f`.
+- [reachout-query-server-constructor.txt](reachout-query-server-constructor.txt) — SHA-256 `89b8f6102b053f434f2e2ff2111f82788ae0cd649ac1d5657bbbea01cce38851`.
+- [reachout-empty-map-walk.txt](reachout-empty-map-walk.txt) — SHA-256 `d988264b82ccb34f3ff854f28d43fae26aa46cf74a66d4b73e3d7c2a2c0322be`.
+- [reachout-query-server-domain.txt](reachout-query-server-domain.txt) — SHA-256 `2876e9fac7544fdd0191992747d9102c7a7ff4f014dd24ff4bca793fa0bec523`.
+- [reachout-query-document-lookup.txt](reachout-query-document-lookup.txt) — SHA-256 `1f8e0b493b537ed2598f966dc687ddaff2f3e9fada601ac96863f3aefe5e7673`.
+- [reachout-query-build-registry.txt](reachout-query-build-registry.txt) — SHA-256 `c93d83f50b7007138ea3728caca6303b987d24be1aa1292979b92911b5d6bd85`.
+- [reachout-query-persisted-id-reader.txt](reachout-query-persisted-id-reader.txt) — SHA-256 `bf880f036691c5b9a3681d405feff3803576d652464c2f903fa8f68ee713f307`.
+- [2.26.43.72-reachout-query-ids.json](../../apk/2.26.43.72-reachout-query-ids.json) — SHA-256 `180be85a07a6b6288aec031480aee82baeb94565cf0bffa98de866124907db8b`.

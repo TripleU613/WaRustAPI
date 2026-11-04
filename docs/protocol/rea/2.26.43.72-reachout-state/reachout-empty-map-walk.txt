@@ -1,0 +1,22 @@
+
+# class: Lcom/facebook/graphql/calls/GraphQlCallInput;
+# extends: Ljava/lang/Object;
+
+.method private A01(VLL)  # .registers 6
+    # full signature: Lcom/facebook/graphql/calls/GraphQlCallInput;->A01(Ljava/util/Map;LX/Nha;)V
+    0000..0004  if-eqz  v5, +0x19
+    0004..0006  const/4  v2, #0x0
+    0006..000a  iget  v0, v5, LX/Nha;->A00:I
+    000a..000e  if-ge  v2, v0, +0x14
+    000e..0014  invoke-virtual  {v5, v2}, LX/Nha;->A09(I)Ljava/lang/String;
+    0014..0016  move-result-object  v1
+    0016..001c  invoke-virtual  {v5, v2}, LX/Nha;->A08(I)Ljava/lang/Object;
+    001c..001e  move-result-object  v0
+    001e..0024  invoke-direct  {v3, v0}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A00(Ljava/lang/Object;)Ljava/lang/Object;
+    0024..0026  move-result-object  v0
+    0026..002c  invoke-interface  {v4, v1, v0}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    002c..0030  add-int/lit8  v2, v2, #0x1
+    0030..0032  goto  -0x15
+    0032..0034  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,3 +1,13 @@
+2026-11-04 — **Restriction refresh request traced through XMPP selection:**
+
+Pinned empty variables/spec, non-Pando selection, XMPP construction and
+bounded persisted-ID asset export retained. Runtime registry fallback is
+null: asset presence alone does not establish a dispatchable native query.
+[Construction and remaining persistence/response obligations](docs/protocol/rea/2.26.43.72-reachout-state/README.md#refresh-request-construction-and-runtime-document-lookup-2026-11-04).
+Validation: persisted-ID provenance --check, JSON parsing, coverage
+freshness, staged diff and repository hygiene passed. Static research only;
+automatic refresh remains unported and no live traffic was sent.
+
 2026-11-04 — **Previously queued group creates recheck restriction at reservation:**
 
 A create queued before an active update no longer bypasses the queue-time

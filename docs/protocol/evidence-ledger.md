@@ -1,3 +1,9 @@
+2026-11-04 — **Pinned static: refresh spec, transport and runtime-ID boundary.**
+6oh/0iT empty-variable request -> 0ig/0iq -> 0j3 XMPP branch retained.
+Asset server/client document IDs exported separately. 0ih/0ik fallback
+5vM.CRh returns null; runtime map population remains untraced.
+[Sources and implementation obligations](rea/2.26.43.72-reachout-state/README.md#refresh-request-construction-and-runtime-document-lookup-2026-11-04). No runtime/live change.
+
 2026-11-04 — **Confirmed source defect: stale queue admission before restriction.**
 actions.reserve_limit previously marked an earlier queued group-create sent
 without consulting the later active checkpoint. Both bulk/actor and selected

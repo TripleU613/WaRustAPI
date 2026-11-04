@@ -1,0 +1,18 @@
+{
+  "format_version": 1,
+  "apk_version": "2.26.43.72",
+  "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+  "namespace": "whatsapp-android-mex",
+  "asset_path": "assets/whatsapp-android-mex_client_persist_ids.json",
+  "asset_sha256": "a30a4b3ce55150747820bbf353e5d2e742fde19e2a11dd3e43b094d7088ae797",
+  "operations": {
+    "FetchReachoutTimelockQuery": {
+      "operation_name": "FetchReachoutTimelockQuery",
+      "operation_name_hash": "2897694083",
+      "operation_text_hash": "14545818597242103356",
+      "client_doc_id": "289769408314545818597242103356",
+      "doc_id": "25627902213558773",
+      "schema": "whatsapp_mex"
+    }
+  }
+}

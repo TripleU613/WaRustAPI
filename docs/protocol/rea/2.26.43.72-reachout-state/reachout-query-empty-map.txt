@@ -1,0 +1,13 @@
+
+# class: Lcom/facebook/graphql/calls/GraphQlCallInput;
+# extends: Ljava/lang/Object;
+
+.method public A03(L)  # .registers 3
+    # full signature: Lcom/facebook/graphql/calls/GraphQlCallInput;->A03()Ljava/util/TreeMap;
+    0000..0004  new-instance  v1, Ljava/util/TreeMap;
+    0004..000a  invoke-direct  {v1}, Ljava/util/TreeMap;-><init>()V
+    000a..000e  iget-object  v0, v2, Lcom/facebook/graphql/calls/GraphQlCallInput;->A00:LX/Nha;
+    000e..0014  invoke-direct  {v2, v1, v0}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A01(Ljava/util/Map;LX/Nha;)V
+    0014..0016  return-object  v1
+    # exception table: 0 try range(s)
+.end method

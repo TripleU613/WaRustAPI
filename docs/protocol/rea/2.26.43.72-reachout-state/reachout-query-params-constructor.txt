@@ -1,0 +1,13 @@
+
+# class: LX/0i1;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 2
+    # full signature: LX/0i1;-><init>()V
+    0000..0006  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    0006..000a  new-instance  v0, LX/0iG;
+    000a..0010  invoke-direct  {v0}, Lcom/facebook/graphql/calls/GraphQlCallInput;-><init>()V
+    0010..0014  iput-object  v0, v1, LX/0i1;->A00:LX/0iG;
+    0014..0016  return-void
+    # exception table: 0 try range(s)
+.end method

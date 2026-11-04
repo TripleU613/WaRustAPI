@@ -1,0 +1,40 @@
+
+# class: LX/0mF;
+# extends: LX/0mE;
+
+.method public <init>(VLLL)  # .registers 8
+    # full signature: LX/0mF;-><init>(LX/0iQ;Ljava/lang/String;Ljava/lang/String;)V
+    0000..0002  const/4  v3, #0x0
+    0002..0008  invoke-direct  {v4}, Ljava/lang/Object;-><init>()V
+    0008..000c  iput-object  v5, v4, LX/0mF;->A00:LX/0iQ;
+    000c..0010  iput-object  v6, v4, LX/0mF;->A04:Ljava/lang/String;
+    0010..0014  iput-object  v7, v4, LX/0mF;->A03:Ljava/lang/String;
+    0014..001a  invoke-interface  {v5}, LX/0iQ;->getQueryParams()LX/0i0;
+    001a..001c  move-result-object  v0
+    001c..0022  invoke-interface  {v0}, LX/0i0;->Axc()Ljava/util/Map;
+    0022..0024  move-result-object  v0
+    0024..0028  new-instance  v2, Lorg/json/JSONObject;
+    0028..002e  invoke-direct  {v2, v0}, Lorg/json/JSONObject;-><init>(Ljava/util/Map;)V
+    002e..0032  new-instance  v1, Lorg/json/JSONObject;
+    0032..0038  invoke-direct  {v1}, Lorg/json/JSONObject;-><init>()V
+    0038..003c  if-nez  v6, +0x4
+    003c..0040  const-string  v6, ""
+    0040..0044  const-string  v0, "queryId"
+    0044..004a  invoke-virtual  {v1, v0, v6}, Lorg/json/JSONObject;->put(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+    004a..0050  const-string/jumbo  v0, "variables"
+    0050..0056  invoke-virtual  {v1, v0, v2}, Lorg/json/JSONObject;->put(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+    0056..005c  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    005c..005e  move-result-object  v2
+    005e..0064  invoke-static  {v2}, LX/00l;->A05(Ljava/lang/Object;)V
+    0064..0068  iget-object  v1, v4, LX/0mF;->A04:Ljava/lang/String;
+    0068..006c  if-eqz  v1, +0x7
+    006c..0070  new-instance  v3, LX/0mI;
+    0070..0076  invoke-direct  {v3, v1}, LX/0mI;-><init>(Ljava/lang/String;)V
+    0076..007a  new-instance  v0, LX/0mK;
+    007a..0080  invoke-direct  {v0, v3, v7, v1, v2}, LX/0mK;-><init>(LX/0mI;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+    0080..0084  iput-object  v0, v4, LX/0mF;->A02:LX/0mK;
+    0084..0088  iget-object  v0, v0, LX/0mK;->A00:LX/0Tp;
+    0088..008c  iput-object  v0, v4, LX/0mF;->A01:LX/0Tp;
+    008c..008e  return-void
+    # exception table: 0 try range(s)
+.end method

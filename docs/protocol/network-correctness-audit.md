@@ -337,3 +337,13 @@ policy and automatic refresh remain unported. A stale active record can
 continue deferring. The transaction is the admission boundary, not a
 cancellable network write: this does not retract already reserved/sent
 requests or claim atomicity between a future notification and socket I/O.
+
+## Restriction refresh construction and document availability (2026-11-04)
+
+**Confirmed static:** pinned FetchReachoutTimelockQuery uses empty variables
+and a non-Pando spec, selecting XMPP MEX after shared transport checks.
+The bounded asset server ID differs from its client ID. Native runtime
+registry lookup can yield null and fail before send; its population is
+still untraced. [Wire construction, asset export and limits](rea/2.26.43.72-reachout-state/README.md#refresh-request-construction-and-runtime-document-lookup-2026-11-04).
+Response/correlation/atomic state application and request ownership remain
+open; automatic refresh and startup polling are not introduced.

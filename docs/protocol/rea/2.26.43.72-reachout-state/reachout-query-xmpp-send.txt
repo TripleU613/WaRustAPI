@@ -1,0 +1,97 @@
+
+# class: LX/0j3;
+# extends: LX/0j2;
+
+.method public A06(V)  # .registers 12
+    # full signature: LX/0j3;->A06()V
+    0000..0004  iget-object  v7, v11, LX/0j2;->A05:LX/0io;
+    0004..0008  iget-object  v5, v11, LX/0j2;->A00:LX/0iQ;
+    0008..000a  const/4  v2, #0x0
+    000a..0010  invoke-virtual  {v7, v5, v2}, LX/0io;->A02(LX/0iQ;LX/12m;)LX/0mO;
+    0010..0012  move-result-object  v1
+    0012..0016  iget-boolean  v0, v1, LX/0mO;->isPando:Z
+    0016..001a  if-eqz  v0, +0xa
+    001a..0020  invoke-virtual  {v7, v5}, LX/0io;->A01(LX/0iQ;)Lcom/facebook/pando/PandoGraphQLRequest;
+    0020..0022  move-result-object  v2
+    0022..0026  if-nez  v2, +0x4
+    0026..002a  sget-object  v1, LX/0mO;->A07:LX/0mO;
+    002a..002e  new-instance  v0, LX/08T;
+    002e..0034  invoke-direct  {v0, v1, v2}, LX/08T;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V
+    0034..0038  iget-object  v4, v0, LX/08T;->first:Ljava/lang/Object;
+    0038..003c  check-cast  v4, LX/0mO;
+    003c..0040  iget-object  v6, v0, LX/08T;->second:Ljava/lang/Object;
+    0040..0044  check-cast  v6, LX/0iQ;
+    0044..0048  iget-boolean  v0, v4, LX/0mO;->isPando:Z
+    0048..004c  if-eqz  v0, +0x53
+    004c..0050  if-eqz  v6, +0x51
+    0050..0054  iget-object  v3, v11, LX/0j3;->A01:LX/0mF;
+    0054..0056  const/4  v2, #0x1
+    0056..005a  iget-object  v1, v11, LX/0j2;->A03:LX/0ia;
+    005a..0060  invoke-interface  {v5}, LX/0iQ;->getCallName()Ljava/lang/String;
+    0060..0062  move-result-object  v0
+    0062..0068  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    0068..006c  new-instance  v5, LX/T4e;
+    006c..0072  invoke-direct  {v5, v1, v0}, LX/T4e;-><init>(LX/0ia;Ljava/lang/String;)V
+    0072..0078  invoke-static  {v3, v4, v2}, LX/0j3;->A00(LX/0mF;LX/0mO;Z)LX/0mU;
+    0078..007a  move-result-object  v4
+    007a..007e  instance-of  v0, v6, Lcom/facebook/pando/PandoGraphQLRequest;
+    007e..0082  if-eqz  v0, +0x11
+    0082..0084  move-object  v2, v6
+    0084..0088  check-cast  v2, Lcom/facebook/pando/PandoGraphQLRequest;
+    0088..008c  if-eqz  v2, +0xc
+    008c..0090  iget  v1, v4, LX/0mT;->A00:I
+    0090..0094  new-instance  v0, LX/7wh;
+    0094..009a  invoke-direct  {v0, v1}, LX/7wh;-><init>(I)V
+    009a..00a0  invoke-virtual  {v2, v0}, Lcom/facebook/pando/PandoGraphQLRequest;->setPlatformRequestContext(Ljava/lang/Object;)Lcom/facebook/pando/PandoGraphQLRequest;
+    00a0..00a4  iget-object  v0, v7, LX/0io;->A00:LX/05a;
+    00a4..00a8  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    00a8..00ae  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    00ae..00b0  move-result-object  v3
+    00b0..00b4  check-cast  v3, LX/Mja;
+    00b4..00b6  const/4  v0, #0x0
+    00b6..00ba  new-instance  v2, LX/SvB;
+    00ba..00c0  invoke-direct  {v2, v11, v5, v4, v0}, LX/SvB;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
+    00c0..00c4  new-instance  v1, LX/SvA;
+    00c4..00ca  invoke-direct  {v1, v11, v5, v4, v0}, LX/SvA;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
+    00ca..00ce  sget-object  v0, LX/Oco;->A01:LX/Oco;
+    00ce..00d4  invoke-virtual  {v3, v1, v2, v6, v0}, LX/Mja;->ARN(LX/NXm;LX/NXn;LX/0iQ;Ljava/util/concurrent/Executor;)LX/NXp;
+    00d4..00d6  return-void
+    00d6..00d8  move-exception  v2
+    00d8..00da  const/4  v0, #0x0
+    00da..00de  new-instance  v1, LX/Hbw;
+    00de..00e4  invoke-direct  {v1, v2, v0}, LX/Hbw;-><init>(Ljava/lang/Throwable;Lorg/json/JSONArray;)V
+    00e4..00e6  const/4  v0, #0x0
+    00e6..00ec  invoke-virtual  {v4, v1, v0}, LX/0mT;->A03(LX/Hbw;Z)V
+    00ec..00ee  throw  v2
+    00ee..00f2  iget-object  v7, v11, LX/0j3;->A01:LX/0mF;
+    00f2..00f4  const/4  v0, #0x0
+    00f4..00fa  invoke-static  {v7, v4, v0}, LX/0j3;->A00(LX/0mF;LX/0mO;Z)LX/0mU;
+    00fa..00fc  move-result-object  v10
+    00fc..0102  invoke-virtual  {v10}, LX/0mT;->A01()V
+    0102..0106  iget-object  v8, v11, LX/0j2;->A03:LX/0ia;
+    0106..010a  iget-object  v9, v11, LX/0j2;->A04:LX/0is;
+    010a..010e  iget-object  v6, v11, LX/0j2;->A02:LX/08Y;
+    010e..0112  new-instance  v4, LX/0mZ;
+    0112..0118  invoke-direct/range  {v4..v10}, LX/0mZ;-><init>(LX/0iQ;LX/08Y;LX/0mF;LX/0ia;LX/0is;LX/0mU;)V
+    0118..011c  iget-object  v2, v7, LX/0mF;->A02:LX/0mK;
+    011c..0122  invoke-virtual  {v7}, LX/0mE;->A01()Ljava/lang/String;
+    0122..0124  move-result-object  v1
+    0124..0128  new-instance  v3, LX/0mb;
+    0128..012e  invoke-direct  {v3, v4, v2, v1}, LX/0mb;-><init>(LX/0mY;LX/0mK;Ljava/lang/String;)V
+    012e..0132  iget-object  v2, v11, LX/0j3;->A02:LX/0Sf;
+    0132..0136  iget-object  v5, v7, LX/0mF;->A03:Ljava/lang/String;
+    0136..013a  iget-object  v4, v7, LX/0mF;->A01:LX/0Tp;
+    013a..013e  iget-wide  v7, v11, LX/0j3;->A00:J
+    013e..0142  const/16  v6, #0x155
+    0142..0148  invoke-virtual/range  {v2..v8}, LX/0Sf;->A0W(LX/0lG;LX/0Tp;Ljava/lang/String;IJ)Z
+    0148..014a  return-void
+    014a..014c  move-exception  v3
+    014c..014e  const/4  v2, #0x0
+    014e..0152  new-instance  v1, LX/Hbw;
+    0152..0158  invoke-direct  {v1, v3, v2}, LX/Hbw;-><init>(Ljava/lang/Throwable;Lorg/json/JSONArray;)V
+    0158..015e  invoke-virtual  {v10, v1, v0}, LX/0mT;->A03(LX/Hbw;Z)V
+    015e..0160  throw  v3
+    # exception table: 2 try range(s)
+    # catch Ljava/lang/Exception; code_units 0050..006b -> 006b
+    # catch Ljava/lang/Exception; code_units 0097..00a5 -> 00a5
+.end method

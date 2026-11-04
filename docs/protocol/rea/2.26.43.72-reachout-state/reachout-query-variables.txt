@@ -1,0 +1,24 @@
+
+# class: LX/0j2;
+# extends: Ljava/lang/Object;
+
+.method public A03(L)  # .registers 4
+    # full signature: LX/0j2;->A03()Ljava/lang/String;
+    0000..0004  iget-object  v0, v3, LX/0j2;->A00:LX/0iQ;
+    0004..000a  invoke-interface  {v0}, LX/0iQ;->getCallName()Ljava/lang/String;
+    000a..000c  move-result-object  v1
+    000c..0012  invoke-static  {v1}, LX/00l;->A05(Ljava/lang/Object;)V
+    0012..0018  invoke-interface  {v0}, LX/0iQ;->getResolvedBuildConfigName()Ljava/lang/String;
+    0018..001a  move-result-object  v0
+    001a..0020  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    0020..0026  invoke-static  {v1, v0}, LX/0ih;->A00(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0026..0028  move-result-object  v2
+    0028..002a  const/4  v1, #0x0
+    002a..002e  if-eqz  v2, +0x9
+    002e..0034  invoke-virtual  {v2}, Ljava/lang/String;->length()I
+    0034..0036  move-result  v0
+    0036..003a  if-eqz  v0, +0x3
+    003a..003c  return-object  v2
+    003c..003e  return-object  v1
+    # exception table: 0 try range(s)
+.end method

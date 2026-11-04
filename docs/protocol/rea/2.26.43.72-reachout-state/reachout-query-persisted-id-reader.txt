@@ -1,0 +1,10 @@
+
+# class: LX/5vM;
+# extends: Ljava/lang/Object;
+
+.method public CRh(LL)  # .registers 3
+    # full signature: LX/5vM;->CRh(Ljava/lang/String;)Ljava/lang/String;
+    0000..0002  const/4  v0, #0x0
+    0002..0004  return-object  v0
+    # exception table: 0 try range(s)
+.end method

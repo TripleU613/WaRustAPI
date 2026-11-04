@@ -1,0 +1,13 @@
+
+# class: LX/0iq;
+# extends: Ljava/lang/Object;
+
+.method public AQY(VL)  # .registers 3
+    # full signature: LX/0iq;->AQY(Lkotlin/jvm/functions/Function1;)V
+    0000..0004  new-instance  v0, LX/0id;
+    0004..000a  invoke-direct  {v0}, LX/0id;-><init>()V
+    000a..0010  invoke-interface  {v2, v0}, Lkotlin/jvm/functions/Function1;->invoke(Ljava/lang/Object;)Ljava/lang/Object;
+    0010..0016  invoke-virtual  {v1, v0}, LX/0iq;->AQV(Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;)LX/0j2;
+    0016..0018  return-void
+    # exception table: 0 try range(s)
+.end method

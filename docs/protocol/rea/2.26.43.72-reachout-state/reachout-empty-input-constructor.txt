@@ -1,0 +1,14 @@
+
+# class: Lcom/facebook/graphql/calls/GraphQlCallInput;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 2
+    # full signature: Lcom/facebook/graphql/calls/GraphQlCallInput;-><init>()V
+    0000..0006  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    0006..000a  sget-object  v0, Lcom/facebook/graphql/calls/GraphQlCallInput;->A02:LX/0iH;
+    000a..000e  iput-object  v0, v1, Lcom/facebook/graphql/calls/GraphQlCallInput;->A01:LX/0iH;
+    000e..0010  const/4  v0, #0x0
+    0010..0014  iput-object  v0, v1, Lcom/facebook/graphql/calls/GraphQlCallInput;->A00:LX/Nha;
+    0014..0016  return-void
+    # exception table: 0 try range(s)
+.end method
