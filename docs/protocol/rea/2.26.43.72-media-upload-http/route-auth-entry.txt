@@ -1,0 +1,73 @@
+
+# class: LX/K2k;
+# extends: Ljava/lang/Object;
+
+.method public A03(IL)  # .registers 12
+    # full signature: LX/K2k;->A03(LX/M3d;)I
+    0000..0004  sget-object  v0, Lcom/facebook/tigon/observers/QPLIdGenerator;->INSTANCE:Lcom/facebook/tigon/observers/QPLIdGenerator;
+    0004..000a  invoke-virtual  {v0}, Lcom/facebook/tigon/observers/QPLIdGenerator;->generateId()I
+    000a..000c  move-result  v6
+    000c..0010  if-eqz  v11, +0xf
+    0010..0014  iget-object  v2, v10, LX/K2k;->A0J:Ljava/util/List;
+    0014..0018  const-string  v1, "auth"
+    0018..001c  iget-object  v0, v11, LX/M3d;->A01:Ljava/lang/String;
+    001c..0022  invoke-static  {v1, v0}, Landroid/util/Pair;->create(Ljava/lang/Object;Ljava/lang/Object;)Landroid/util/Pair;
+    0022..0024  move-result-object  v0
+    0024..002a  invoke-interface  {v2, v0}, Ljava/util/List;->add(Ljava/lang/Object;)Z
+    002a..0030  invoke-static  {}, LX/2L8;->A1H()Ljava/lang/String;
+    0030..0032  move-result-object  v2
+    0032..0036  iget-object  v3, v10, LX/K2k;->A08:LX/0BZ;
+    0036..003c  invoke-virtual  {v3}, LX/0BZ;->currentMonotonicTimestampNanos()J
+    003c..003e  move-result-wide  v7
+    003e..0042  sget-object  v9, Ljava/util/concurrent/TimeUnit;->NANOSECONDS:Ljava/util/concurrent/TimeUnit;
+    0042..0048  const  v4, #0x37390569
+    0048..004a  const/4  v5, #0x0
+    004a..0050  invoke-virtual/range  {v3..v9}, LX/0BZ;->markerStartWithCancelPolicy(IZIJLjava/util/concurrent/TimeUnit;)V
+    0050..0054  if-eqz  v11, +0x1b
+    0054..0058  const-string  v1, "select_route_host"
+    0058..005c  iget-object  v0, v11, LX/M3d;->A07:Ljava/lang/String;
+    005c..0062  invoke-virtual  {v3, v4, v6, v1, v0}, LX/0BZ;->markerAnnotate(IILjava/lang/String;Ljava/lang/String;)V
+    0062..0066  const-string  v1, "ip_address"
+    0066..006a  iget-object  v0, v11, LX/M3d;->A08:Ljava/lang/String;
+    006a..0070  invoke-virtual  {v3, v4, v6, v1, v0}, LX/0BZ;->markerAnnotate(IILjava/lang/String;Ljava/lang/String;)V
+    0070..0074  iget  v0, v11, LX/M3d;->A00:I
+    0074..007a  invoke-static  {v0}, LX/2L9;->A1M(I)Z
+    007a..007c  move-result  v1
+    007c..0080  const-string  v0, "is_meta_ip"
+    0080..0086  invoke-virtual  {v3, v4, v6, v0, v1}, LX/0BZ;->markerAnnotate(IILjava/lang/String;Z)V
+    0086..008c  invoke-virtual  {v10, v11, v2, v6}, LX/K2k;->A04(LX/M3d;Ljava/lang/String;I)I
+    008c..008e  move-result  v2
+    008e..0092  iget-object  v0, v10, LX/K2k;->A0C:Ljava/util/List;
+    0092..0098  invoke-static  {v0, v5}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0098..009e  invoke-interface  {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    009e..00a0  move-result-object  v1
+    00a0..00a6  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    00a6..00a8  move-result  v0
+    00a8..00ac  if-eqz  v0, +0xe
+    00ac..00b2  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    00b2..00b4  move-result-object  v0
+    00b4..00b8  check-cast  v0, LX/JiH;
+    00b8..00bc  iget-object  v0, v0, LX/JiH;->A03:Ljava/io/InputStream;
+    00bc..00c2  invoke-static  {v0}, LX/0Q4;->A05(Ljava/io/Closeable;)V
+    00c2..00c4  goto  -0x11
+    00c4..00c6  return  v2
+    00c6..00c8  move-exception  v2
+    00c8..00cc  iget-object  v1, v10, LX/K2k;->A0C:Ljava/util/List;
+    00cc..00ce  const/4  v0, #0x0
+    00ce..00d4  invoke-static  {v1, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    00d4..00da  invoke-interface  {v1}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    00da..00dc  move-result-object  v1
+    00dc..00e2  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    00e2..00e4  move-result  v0
+    00e4..00e8  if-eqz  v0, +0xe
+    00e8..00ee  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    00ee..00f0  move-result-object  v0
+    00f0..00f4  check-cast  v0, LX/JiH;
+    00f4..00f8  iget-object  v0, v0, LX/JiH;->A03:Ljava/io/InputStream;
+    00f8..00fe  invoke-static  {v0}, LX/0Q4;->A05(Ljava/io/Closeable;)V
+    00fe..0100  goto  -0x11
+    0100..0102  throw  v2
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0015..003a -> 0063
+    # catch <all> code_units 003e..0047 -> 0063
+.end method

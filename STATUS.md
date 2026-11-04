@@ -1,3 +1,14 @@
+2026-11-04 — **Upload HTTP transport/header boundary traced:**
+
+Retained pinned transport selection, route-auth construction and concrete
+JAS/JAT implementations. JAS conditional headers/body modes distinguish
+annotations from HTTP fields. Active-path/input provenance remains open;
+no mandatory-header mismatch is established for Rust's supported upload.
+[Evidence](docs/protocol/rea/2.26.43.72-media-upload-http/README.md).
+Validation: JSON parsing, coverage freshness, cached diff checks and repository
+hygiene (4,285 local links) passed. Documentation/evidence only;
+no runtime change or live traffic.
+
 2026-11-04 — **Upload bytecode mnemonic gaps closed:**
 
 Developer disassembler now names sget-boolean and mul-float/2addr. Two

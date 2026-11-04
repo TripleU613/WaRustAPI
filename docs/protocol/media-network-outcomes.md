@@ -387,3 +387,12 @@ No generic retry rule is inferred from HTTP ranges.
 The upload entry's two unnamed bytecode instructions are now decoded with
 operand/boundary/truncation regressions; [regenerated evidence](rea/2.26.43.72-media-transfer-results/README.md#checked-upload-mnemonic-correction-2026-11-04)
 closes that tooling limitation without claiming full transfer parity.
+
+### Pinned upload HTTP construction boundary (2026-11-04)
+
+**Confirmed static**, pinned2.26.43.72:15Q selects JAS/JAT transports;
+K2k appends route auth before virtual execution. JAS uses identity, configured
+UA, conditional analytics/companion/map headers and conditional range/raw/
+multipart behavior. Annotation names are not automatically HTTP headers.
+[Retained concrete implementations and unresolved input producers](rea/2.26.43.72-media-upload-http/README.md).
+No mandatory-header mismatch for the supported Rust upload is proven yet.

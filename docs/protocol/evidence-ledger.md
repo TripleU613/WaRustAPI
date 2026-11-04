@@ -1,3 +1,9 @@
+2026-11-04 — **Confirmed static: upload HTTP transport/header boundary.**
+Pinned2.26.43.72 JAS/JAT selection, route auth pair and JAS conditional
+headers/framing retained; map producers/active branch binding remain open.
+[Evidence and source-versus-native comparison limits](rea/2.26.43.72-media-upload-http/README.md).
+No generic header additions, secret fabrication, runtime change or live traffic.
+
 2026-11-04 — **Confirmed static: upload bytecode mnemonic gaps closed.**
 Pinned2.26.43.72 MvO.ARB now decodes static boolean load63 and float
 multiplyc8; literal arithmetic bytes verified against classes11.dex.

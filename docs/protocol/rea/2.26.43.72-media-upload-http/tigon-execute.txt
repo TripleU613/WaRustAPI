@@ -1,0 +1,406 @@
+
+# class: LX/JAT;
+# extends: LX/K2k;
+
+.method public A04(ILLI)  # .registers 27
+    # full signature: LX/JAT;->A04(LX/M3d;Ljava/lang/String;I)I
+    0000..0002  const/4  v4, #0x1
+    0002..0006  move-object/from16  v10, v25
+    0006..000c  invoke-static  {v10, v4}, LX/00l;->A09(Ljava/lang/Object;I)V
+    000c..0010  move-object/from16  v3, v23
+    0010..0016  invoke-virtual  {v3}, LX/K2k;->A05()Ljava/net/URL;
+    0016..0018  move-result-object  v7
+    0018..001e  invoke-virtual  {v7}, Ljava/net/URL;->getProtocol()Ljava/lang/String;
+    001e..0020  move-result-object  v1
+    0020..0024  const-string  v0, "https"
+    0024..002a  invoke-static  {v1, v0}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    002a..002c  move-result  v0
+    002c..0030  if-eqz  v0, +0x30c
+    0030..0034  move-object/from16  v5, v24
+    0034..0038  if-eqz  v24, +0x5c
+    0038..003c  iget-boolean  v0, v5, LX/M3d;->A0A:Z
+    003c..0040  if-nez  v0, +0x6
+    0040..0044  iget  v0, v5, LX/M3d;->A00:I
+    0044..0048  if-eqz  v0, +0x54
+    0048..004e  invoke-virtual  {v7}, Ljava/net/URL;->getProtocol()Ljava/lang/String;
+    004e..0050  move-result-object  v6
+    0050..0054  iget-object  v2, v5, LX/M3d;->A07:Ljava/lang/String;
+    0054..005a  invoke-virtual  {v7}, Ljava/net/URL;->getPort()I
+    005a..005c  move-result  v1
+    005c..0062  invoke-virtual  {v7}, Ljava/net/URL;->getFile()Ljava/lang/String;
+    0062..0064  move-result-object  v0
+    0064..0068  new-instance  v13, Ljava/net/URL;
+    0068..006e  invoke-direct  {v13, v6, v2, v1, v0}, Ljava/net/URL;-><init>(Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;)V
+    006e..0074  invoke-virtual  {v7}, Ljava/net/URL;->getHost()Ljava/lang/String;
+    0074..0076  move-result-object  v9
+    0076..007c  invoke-static  {v9}, LX/00l;->A05(Ljava/lang/Object;)V
+    007c..0082  invoke-static  {v13}, LX/2L7;->A1L(Ljava/lang/Object;)Ljava/lang/String;
+    0082..0084  move-result-object  v1
+    0084..0088  const-string  v0, "POST"
+    0088..008c  new-instance  v6, Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    008c..0092  invoke-direct  {v6, v0, v1}, Lcom/facebook/tigon/iface/TigonRequestBuilder;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    0092..0096  if-eqz  v24, +0x2b
+    0096..009a  iget-object  v1, v5, LX/M3d;->A07:Ljava/lang/String;
+    009a..009e  const-string  v0, "Host"
+    009e..00a4  invoke-virtual  {v6, v0, v1}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->addHeader(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    00a4..00a8  const-string  v1, "Accept-Encoding"
+    00a8..00ac  const-string  v0, "identity"
+    00ac..00b2  invoke-virtual  {v6, v1, v0}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->addHeader(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    00b2..00b6  iget-object  v1, v3, LX/JAT;->A0C:Ljava/lang/String;
+    00b6..00ba  if-eqz  v1, +0x7
+    00ba..00be  const-string  v0, "Companion_User_Secret"
+    00be..00c4  invoke-virtual  {v6, v0, v1}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->addHeader(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    00c4..00c8  iget-object  v0, v3, LX/JAT;->A0E:Ljava/util/Map;
+    00c8..00cc  if-eqz  v0, +0x14
+    00cc..00d2  invoke-static  {v0}, LX/2LC;->A18(Ljava/util/Map;)Ljava/util/Iterator;
+    00d2..00d4  move-result-object  v1
+    00d4..00da  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    00da..00dc  move-result  v0
+    00dc..00e0  if-eqz  v0, +0xa
+    00e0..00e6  invoke-static  {v6, v1}, LX/IWV;->A0b(Lcom/facebook/tigon/iface/TigonRequestBuilder;Ljava/util/Iterator;)V
+    00e6..00e8  goto  -0x9
+    00e8..00ea  const/4  v1, #0x0
+    00ea..00ec  goto  -0x28
+    00ec..00ee  move-object  v13, v7
+    00ee..00f0  goto  -0x40
+    00f0..00f2  const/4  v2, #0x0
+    00f2..00f6  const-wide/16  v16, #0x0
+    00f6..00fa  if-eqz  v24, +0x12e
+    00fa..00fe  iget-object  v7, v3, LX/K2k;->A0C:Ljava/util/List;
+    00fe..0104  invoke-static  {v7}, LX/00l;->A04(Ljava/lang/Object;)V
+    0104..010a  invoke-interface  {v7}, Ljava/util/List;->isEmpty()Z
+    010a..010c  move-result  v0
+    010c..0110  if-nez  v0, +0x12e
+    0110..0116  invoke-interface  {v7, v2}, Ljava/util/List;->get(I)Ljava/lang/Object;
+    0116..0118  move-result-object  v0
+    0118..011c  check-cast  v0, LX/JiH;
+    011c..0120  iget-wide  v0, v0, LX/JiH;->A02:J
+    0120..0126  invoke-interface  {v7, v2}, Ljava/util/List;->get(I)Ljava/lang/Object;
+    0126..0128  move-result-object  v7
+    0128..012c  check-cast  v7, LX/JiH;
+    012c..0130  iget-wide  v7, v7, LX/JiH;->A01:J
+    0130..0134  cmp-long  v11, v0, v16
+    0134..0138  if-lez  v11, +0xfc
+    0138..013c  const-string  v11, "bytes "
+    013c..0142  invoke-static  {v11, v0, v1}, LX/1Xl;->A17(Ljava/lang/String;J)Ljava/lang/StringBuilder;
+    0142..0144  move-result-object  v12
+    0144..0148  const-string  v11, "-*/*"
+    0148..014e  invoke-static  {v11, v12}, LX/1Xl;->A0z(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    014e..0150  move-result-object  v12
+    0150..0154  const-string  v11, "Content-Range"
+    0154..015a  invoke-virtual  {v6, v11, v12}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->addHeader(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    015a..015e  move-wide/from16  v16, v0
+    015e..0162  const-wide/16  v0, #0x3a98
+    0162..0166  iput-wide  v0, v6, Lcom/facebook/tigon/iface/TigonRequestBuilder;->connectionTimeoutMS:J
+    0166..016c  const-wide/32  v0, #0xea60
+    016c..0170  iput-wide  v0, v6, Lcom/facebook/tigon/iface/TigonRequestBuilder;->idleTimeoutMS:J
+    0170..0174  iget-wide  v0, v3, LX/JAT;->A01:J
+    0174..017a  invoke-virtual  {v6, v0, v1}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->setRequestTimeoutMS(J)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    017a..017e  iput-boolean  v2, v6, Lcom/facebook/tigon/iface/TigonRequestBuilder;->retryable:Z
+    017e..0182  sget-object  v0, LX/1FJ;->A05:LX/1FK;
+    0182..0188  invoke-virtual  {v6, v0, v4}, Lcom/facebook/tigon/iface/TigonPropertyContainer;->setProperty(LX/1FK;Z)V
+    0188..018c  sget-object  v0, LX/1FJ;->A0C:LX/1FK;
+    018c..0192  invoke-virtual  {v6, v0, v4}, Lcom/facebook/tigon/iface/TigonPropertyContainer;->setProperty(LX/1FK;Z)V
+    0192..0196  iget-boolean  v0, v3, LX/JAT;->A0J:Z
+    0196..019a  if-eqz  v0, +0x15
+    019a..019e  iget-object  v0, v3, LX/JAT;->A02:LX/05a;
+    019e..01a4  invoke-static  {v0}, LX/05a;->A00(LX/05a;)LX/00E;
+    01a4..01a6  move-result-object  v1
+    01a6..01aa  sget-object  v0, LX/0jX;->A01:LX/00f;
+    01aa..01b0  invoke-static  {v1, v0}, LX/00E;->A0F(LX/00E;LX/00f;)Z
+    01b0..01b2  move-result  v0
+    01b2..01b6  if-nez  v0, +0x7
+    01b6..01ba  sget-object  v0, LX/1FJ;->A07:LX/1FK;
+    01ba..01c0  invoke-virtual  {v6, v0, v4}, Lcom/facebook/tigon/iface/TigonPropertyContainer;->setProperty(LX/1FK;Z)V
+    01c0..01c4  sget-object  v12, LX/1FJ;->A09:LX/1FK;
+    01c4..01c8  move/from16  v11, v26
+    01c8..01ca  int-to-long  v0, v11
+    01ca..01d0  invoke-virtual  {v6, v12, v0, v1}, Lcom/facebook/tigon/iface/TigonPropertyContainer;->setProperty(LX/1FK;J)V
+    01d0..01d4  if-eqz  v24, +0x1a
+    01d4..01d8  iget-boolean  v0, v5, LX/M3d;->A0A:Z
+    01d8..01dc  if-eqz  v0, +0x9b
+    01dc..01e2  invoke-static  {v9}, LX/Pk5;->A00(Ljava/lang/String;)Z
+    01e2..01e4  move-result  v0
+    01e4..01e8  sget-object  v1, LX/1FJ;->A04:LX/1FK;
+    01e8..01ec  if-nez  v0, +0xb
+    01ec..01f0  iget-object  v0, v3, LX/JAT;->A03:LX/05a;
+    01f0..01f6  invoke-static  {v0}, LX/2L6;->A1X(LX/05a;)V
+    01f6..01fc  invoke-static  {v9}, LX/2E9;->A00(Ljava/lang/String;)Ljava/lang/String;
+    01fc..01fe  move-result-object  v9
+    01fe..0204  invoke-virtual  {v6, v1, v9}, Lcom/facebook/tigon/iface/TigonPropertyContainer;->setProperty(LX/1FK;Ljava/lang/String;)V
+    0204..0208  iget-object  v1, v3, LX/JAT;->A09:LX/K1R;
+    0208..020c  if-eqz  v1, +0x80
+    020c..0212  invoke-virtual  {v1}, LX/K1R;->A02()LX/1FF;
+    0212..0214  move-result-object  v0
+    0214..021a  invoke-virtual  {v6, v0}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->setRequestCategory(LX/1FF;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    021a..0220  invoke-virtual  {v1}, LX/K1R;->A03()LX/1FH;
+    0220..0222  move-result-object  v0
+    0222..0228  invoke-virtual  {v6, v0}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->setPurpose(LX/1FH;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0228..022c  sget-object  v0, LX/1FJ;->A02:LX/1FK;
+    022c..0232  invoke-virtual  {v6, v0, v2}, Lcom/facebook/tigon/iface/TigonPropertyContainer;->setProperty(LX/1FK;Z)V
+    0232..0236  sget-object  v0, LX/1FJ;->A0E:LX/1FK;
+    0236..023a  iget-object  v14, v1, LX/K1R;->A04:Ljava/lang/String;
+    023a..0240  invoke-virtual  {v6, v0, v14}, Lcom/facebook/tigon/iface/TigonPropertyContainer;->setProperty(LX/1FK;Ljava/lang/String;)V
+    0240..0246  invoke-virtual  {v1}, LX/K1R;->A05()Lorg/json/JSONObject;
+    0246..0248  move-result-object  v0
+    0248..024e  invoke-static  {v0}, LX/2L7;->A1L(Ljava/lang/Object;)Ljava/lang/String;
+    024e..0250  move-result-object  v9
+    0250..0254  iget-object  v15, v1, LX/K1R;->A02:Ljava/lang/String;
+    0254..025a  const  v12, #0x37390569
+    025a..025e  if-eqz  v15, +0x9
+    025e..0262  iget-object  v2, v3, LX/K2k;->A08:LX/0BZ;
+    0262..0266  const-string  v0, "upload_media_type"
+    0266..026c  invoke-virtual  {v2, v12, v11, v0, v15}, LX/0BZ;->markerAnnotate(IILjava/lang/String;Ljava/lang/String;)V
+    026c..0270  iget-object  v2, v3, LX/K2k;->A08:LX/0BZ;
+    0270..0274  const-string  v0, "upload_media_origin"
+    0274..027a  invoke-virtual  {v2, v12, v11, v0, v14}, LX/0BZ;->markerAnnotate(IILjava/lang/String;Ljava/lang/String;)V
+    027a..027e  iget-object  v1, v1, LX/K1R;->A03:Ljava/lang/String;
+    027e..0282  if-eqz  v1, +0x7
+    0282..0286  const-string  v0, "paired_media_type"
+    0286..028c  invoke-virtual  {v2, v12, v11, v0, v1}, LX/0BZ;->markerAnnotate(IILjava/lang/String;Ljava/lang/String;)V
+    028c..0290  iget-object  v1, v3, LX/JAT;->A0D:Ljava/lang/String;
+    0290..0294  const-string  v0, "TigonUploadRequest"
+    0294..029a  invoke-virtual  {v6, v1, v9, v0}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->setFriendlyNameAndTags(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    029a..02a0  invoke-static/range  {v16..v17}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    02a0..02a2  move-result-object  v1
+    02a2..02a8  invoke-static  {v7, v8}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    02a8..02aa  move-result-object  v0
+    02aa..02ae  new-instance  v2, LX/0SU;
+    02ae..02b4  invoke-direct  {v2, v6, v1, v0}, LX/0SU;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+    02b4..02b8  iget-object  v11, v2, LX/0SU;->first:Ljava/lang/Object;
+    02b8..02bc  check-cast  v11, Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    02bc..02c0  iget-object  v0, v2, LX/0SU;->second:Ljava/lang/Object;
+    02c0..02c6  invoke-static  {v0}, LX/1Xl;->A0H(Ljava/lang/Object;)J
+    02c6..02c8  move-result-wide  v0
+    02c8..02cc  iget-object  v2, v2, LX/0SU;->third:Ljava/lang/Object;
+    02cc..02d2  invoke-static  {v2}, LX/1Xl;->A0H(Ljava/lang/Object;)J
+    02d2..02d4  move-result-wide  v19
+    02d4..02d8  iget-object  v8, v3, LX/JAT;->A0A:Ljava/lang/Integer;
+    02d8..02dc  if-eqz  v8, +0xe
+    02dc..02e2  invoke-virtual  {v8}, Ljava/lang/Number;->intValue()I
+    02e2..02e4  move-result  v6
+    02e4..02e6  const/4  v2, #0x2
+    02e6..02ea  if-ne  v6, v2, +0x7
+    02ea..02ee  sget-object  v2, LX/1FJ;->A00:LX/1FK;
+    02ee..02f4  invoke-virtual  {v11, v2, v4}, Lcom/facebook/tigon/iface/TigonPropertyContainer;->setProperty(LX/1FK;Z)V
+    02f4..02f8  iget-object  v7, v3, LX/JAT;->A08:LX/KjC;
+    02f8..02fc  if-eqz  v7, +0x3c
+    02fc..0300  new-instance  v9, LX/IxC;
+    0300..0306  invoke-direct  {v9, v7, v3, v0, v1}, LX/IxC;-><init>(LX/KjC;LX/JAT;J)V
+    0306..0308  goto  +0x36
+    0308..030c  const-string  v9, "uploadImpl"
+    030c..030e  goto  -0x40
+    030e..0312  iget  v0, v5, LX/M3d;->A00:I
+    0312..0316  if-eqz  v0, -0x87
+    0316..031a  iget-object  v1, v5, LX/M3d;->A08:Ljava/lang/String;
+    031a..031e  if-eqz  v1, -0x8b
+    031e..0322  sget-object  v0, LX/1FJ;->A04:LX/1FK;
+    0322..0328  invoke-virtual  {v6, v0, v1}, Lcom/facebook/tigon/iface/TigonPropertyContainer;->setProperty(LX/1FK;Ljava/lang/String;)V
+    0328..032c  goto/16  -0x92
+    032c..0330  iget-boolean  v11, v3, LX/JAT;->A0G:Z
+    0330..0334  if-eqz  v11, -0xeb
+    0334..0338  cmp-long  v11, v7, v16
+    0338..033c  if-lez  v11, -0xef
+    033c..0340  const-string  v12, "Content-Length"
+    0340..0346  invoke-static  {v7, v8}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+    0346..0348  move-result-object  v11
+    0348..034e  invoke-virtual  {v6, v12, v11}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->addHeader(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    034e..0352  goto/16  -0xfa
+    0352..0356  const-string  v0, "multipart/form-data; boundary="
+    0356..035c  invoke-static  {v0, v10}, LX/000;->A04(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    035c..035e  move-result-object  v1
+    035e..0362  const-string  v0, "Content-Type"
+    0362..0368  invoke-virtual  {v6, v0, v1}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->addHeader(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0368..036c  const-wide/16  v7, #0xffff (-1)
+    036c..0370  goto/16  -0x107
+    0370..0372  const/4  v9, #0x0
+    0372..0376  sget-object  v0, Lcom/facebook/tigon/TigonXplatBodyProvider;->$redex_init_class:Lcom/facebook/tigon/TigonXplatBodyProvider;
+    0376..0378  const/4  v6, #0x1
+    0378..037c  new-instance  v0, LX/KXB;
+    037c..0382  invoke-direct  {v0, v3, v5, v10, v4}, LX/KXB;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;I)V
+    0382..0386  iget-object  v12, v3, LX/JAT;->A07:LX/0Ze;
+    0386..038a  iget-object  v10, v3, LX/JAT;->A0B:Ljava/lang/Integer;
+    038a..038e  iget  v5, v3, LX/JAT;->A00:I
+    038e..0390  const/4  v4, #0x0
+    0390..0392  const/4  v2, #0x0
+    0392..0396  new-instance  v14, LX/IxI;
+    0396..039a  move/from16  v22, v4
+    039a..039e  move/from16  v18, v5
+    039e..03a2  move/from16  v21, v4
+    03a2..03a4  move-object  v15, v12
+    03a4..03a8  move-object/from16  v16, v10
+    03a8..03ac  move-object/from16  v17, v0
+    03ac..03b2  invoke-direct/range  {v14..v22}, LX/IxI;-><init>(LX/0Ze;Ljava/lang/Integer;Lkotlin/jvm/functions/Function1;IJZZ)V
+    03b2..03b6  iget-object  v0, v3, LX/JAT;->A05:LX/05a;
+    03b6..03ba  iget-object  v1, v0, LX/05a;->A00:LX/00x;
+    03ba..03c0  invoke-static  {v1}, LX/1Xl;->A0G(LX/00x;)J
+    03c0..03c2  move-result-wide  v15
+    03c2..03c8  invoke-static  {v13}, LX/K2k;->A00(Ljava/net/URL;)Ljava/lang/String;
+    03c8..03ca  move-result-object  v0
+    03ca..03ce  iput-object  v0, v3, LX/K2k;->A04:Ljava/lang/String;
+    03ce..03d2  if-eqz  v7, +0x5
+    03d2..03d8  invoke-interface  {v7}, LX/KjC;->BqR()V
+    03d8..03dc  iget-object  v0, v3, LX/JAT;->A0F:LX/00p;
+    03dc..03e2  invoke-static  {v0}, LX/2L7;->A1J(LX/00p;)Ljava/lang/Object;
+    03e2..03e4  move-result-object  v13
+    03e4..03e8  check-cast  v13, LX/0eA;
+    03e8..03ee  invoke-virtual  {v11}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->build()Lcom/facebook/tigon/iface/TigonRequest;
+    03ee..03f0  move-result-object  v0
+    03f0..03f6  invoke-virtual  {v13, v14, v9, v0, v4}, LX/0eA;->A01(Lcom/facebook/tigon/TigonBodyProvider;Lcom/facebook/tigon/TigonCallbacks;Lcom/facebook/tigon/iface/TigonRequest;Z)Lcom/crossapp/tigonhttp/TigonResult;
+    03f6..03f8  move-result-object  v11
+    03f8..03fc  iget-object  v14, v11, Lcom/crossapp/tigonhttp/TigonResult;->summary:LX/1Gf;
+    03fc..0400  if-eqz  v14, +0x80
+    0400..0404  sget-object  v13, LX/1FJ;->A06:LX/1FK;
+    0404..0408  sget-object  v9, LX/JY4;->A00:LX/1FK;
+    0408..040c  const-class  v0, Ljava/util/Map;
+    040c..0412  invoke-static  {v0}, LX/2LA;->A0u(Ljava/lang/Class;)LX/0Ae;
+    0412..0414  move-result-object  v0
+    0414..041a  invoke-virtual  {v14, v13, v9, v0}, Lcom/facebook/tigon/iface/TigonPropertyContainer;->getProperty(LX/1FK;LX/1FK;LX/0Ac;)Ljava/lang/Object;
+    041a..041c  move-result-object  v9
+    041c..0420  check-cast  v9, Ljava/util/Map;
+    0420..0424  if-eqz  v9, +0x6e
+    0424..0428  const-string  v0, "is_first_request_on_connection"
+    0428..042e  invoke-interface  {v9, v0}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    042e..0430  move-result-object  v0
+    0430..0434  check-cast  v0, Ljava/lang/Boolean;
+    0434..0438  if-eqz  v0, +0x64
+    0438..043e  invoke-virtual  {v0}, Ljava/lang/Boolean;->booleanValue()Z
+    043e..0440  move-result  v0
+    0440..0446  invoke-static  {v0}, LX/2L6;->A16(Z)Ljava/lang/Boolean;
+    0446..0448  move-result-object  v0
+    0448..044c  iput-object  v0, v3, LX/K2k;->A02:Ljava/lang/Boolean;
+    044c..0452  invoke-static  {v1}, LX/1Xl;->A0G(LX/00x;)J
+    0452..0454  move-result-wide  v0
+    0454..0456  sub-long/2addr  v0, v15
+    0456..045a  iput-wide  v0, v3, LX/K2k;->A01:J
+    045a..045e  iget-object  v9, v11, Lcom/crossapp/tigonhttp/TigonResult;->error:Lcom/facebook/tigon/TigonError;
+    045e..0462  if-nez  v9, +0x77
+    0462..0466  iget-object  v1, v11, Lcom/crossapp/tigonhttp/TigonResult;->body:Ljava/io/InputStream;
+    0466..046a  if-nez  v1, +0x9
+    046a..046e  new-array  v0, v4, [B
+    046e..0472  new-instance  v1, Ljava/io/ByteArrayInputStream;
+    0472..0478  invoke-direct  {v1, v0}, Ljava/io/ByteArrayInputStream;-><init>([B)V
+    0478..047c  new-instance  v4, LX/1ga;
+    047c..047e  move-object  v13, v4
+    047e..0480  move-object  v14, v12
+    0480..0482  move-object  v15, v1
+    0482..0486  move-object/from16  v16, v10
+    0486..048a  move/from16  v17, v5
+    048a..048e  move/from16  v18, v2
+    048e..0494  invoke-direct/range  {v13..v18}, LX/1ga;-><init>(LX/0Ze;Ljava/io/InputStream;Ljava/lang/Integer;IZ)V
+    0494..049a  const-wide/32  v0, #0x100000
+    049a..04a0  invoke-static  {v4, v0, v1}, LX/0Q4;->A02(Ljava/io/InputStream;J)Ljava/lang/String;
+    04a0..04a2  move-result-object  v6
+    04a2..04a6  iget-object  v0, v11, Lcom/crossapp/tigonhttp/TigonResult;->response:LX/1gK;
+    04a6..04aa  if-eqz  v0, +0xbd
+    04aa..04ae  iget  v5, v0, LX/1gK;->A00:I
+    04ae..04b2  new-instance  v8, LX/IK3;
+    04b2..04b8  invoke-direct  {v8}, Ljava/util/HashMap;-><init>()V
+    04b8..04bc  iget-object  v0, v0, LX/1gK;->A01:Ljava/util/Map;
+    04bc..04c0  if-eqz  v0, +0x22
+    04c0..04c6  invoke-static  {v0}, LX/2LC;->A18(Ljava/util/Map;)Ljava/util/Iterator;
+    04c6..04c8  move-result-object  v4
+    04c8..04ce  invoke-interface  {v4}, Ljava/util/Iterator;->hasNext()Z
+    04ce..04d0  move-result  v0
+    04d0..04d4  if-eqz  v0, +0x18
+    04d4..04da  invoke-static  {v4}, LX/1Xl;->A1E(Ljava/util/Iterator;)Ljava/util/Map$Entry;
+    04da..04dc  move-result-object  v0
+    04dc..04e2  invoke-static  {v0}, LX/2LB;->A1B(Ljava/util/Map$Entry;)Ljava/lang/String;
+    04e2..04e4  move-result-object  v1
+    04e4..04ea  invoke-interface  {v0}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+    04ea..04ec  move-result-object  v0
+    04ec..04f2  invoke-static  {v0}, LX/2L7;->A1M(Ljava/lang/Object;)Ljava/util/List;
+    04f2..04f4  move-result-object  v0
+    04f4..04fa  invoke-virtual  {v8, v0, v1}, LX/IK3;->A00(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
+    04fa..04fc  goto  -0x19
+    04fc..04fe  const/4  v0, #0x1
+    04fe..0500  goto  -0x5f
+    0500..0504  const-string  v0, "x-fb-application-protocol"
+    0504..050a  invoke-static  {v0, v8}, LX/2LA;->A0s(Ljava/lang/Object;Ljava/util/AbstractMap;)Ljava/util/List;
+    050a..050c  move-result-object  v0
+    050c..0510  if-eqz  v0, +0x9
+    0510..0516  invoke-static  {v0, v2}, LX/3q1;->A12(Ljava/util/List;I)Ljava/lang/String;
+    0516..0518  move-result-object  v0
+    0518..051c  iput-object  v0, v3, LX/K2k;->A03:Ljava/lang/String;
+    051c..051e  goto  +0x3
+    051e..0520  const/4  v0, #0x0
+    0520..0522  goto  -0x4
+    0522..0526  const/16  v0, #0x190
+    0526..052a  if-lt  v5, v0, +0xd
+    052a..052e  const-string  v0, "TigonUploadRequest/received error response code = "
+    052e..0534  invoke-static  {v0, v5}, LX/6ol;->A1L(Ljava/lang/String;I)V
+    0534..0538  if-eqz  v7, +0xb
+    0538..053e  invoke-interface  {v7, v6}, LX/KjC;->BvX(Ljava/lang/String;)V
+    053e..0540  return  v5
+    0540..0544  if-eqz  v7, +0x5
+    0544..054a  invoke-interface  {v7, v6, v8}, LX/KjC;->CDR(Ljava/lang/String;Ljava/util/Map;)V
+    054a..054c  return  v5
+    054c..0550  const/16  v1, #0x4e3
+    0550..0554  iget-object  v0, v3, LX/JAT;->A06:LX/05a;
+    0554..0558  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0558..055e  invoke-static  {v0, v1}, LX/2LA;->A0E(LX/00x;I)LX/05a;
+    055e..0560  move-result-object  v10
+    0560..0564  iget-object  v1, v9, Lcom/facebook/tigon/TigonError;->A02:Ljava/lang/String;
+    0564..0568  const-string  v0, "WATigonBodyProvider"
+    0568..056e  invoke-static  {v1, v0}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    056e..0570  move-result  v0
+    0570..0574  if-nez  v0, +0x53
+    0574..0578  iget-object  v1, v9, Lcom/facebook/tigon/TigonError;->A01:Ljava/lang/String;
+    0578..057c  const-string  v0, "body size exceeds content-length"
+    057c..0582  invoke-static  {v1, v0, v4}, LX/0Cf;->A0z(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Z)Z
+    0582..0584  move-result  v0
+    0584..0588  if-eqz  v0, +0x42
+    0588..058c  iget-object  v7, v3, LX/K2k;->A0C:Ljava/util/List;
+    058c..0592  invoke-static  {v7}, LX/00l;->A04(Ljava/lang/Object;)V
+    0592..0598  invoke-interface  {v7}, Ljava/util/List;->isEmpty()Z
+    0598..059a  move-result  v0
+    059a..059e  const-wide/16  v2, #0xffff (-1)
+    059e..05a2  if-nez  v0, +0x39
+    05a2..05a8  invoke-interface  {v7, v4}, Ljava/util/List;->get(I)Ljava/lang/Object;
+    05a8..05aa  move-result-object  v0
+    05aa..05ae  check-cast  v0, LX/JiH;
+    05ae..05b2  iget-wide  v0, v0, LX/JiH;->A01:J
+    05b2..05b8  invoke-interface  {v7}, Ljava/util/List;->isEmpty()Z
+    05b8..05ba  move-result  v5
+    05ba..05be  if-nez  v5, +0xa
+    05be..05c4  invoke-interface  {v7, v4}, Ljava/util/List;->get(I)Ljava/lang/Object;
+    05c4..05c6  move-result-object  v2
+    05c6..05ca  check-cast  v2, LX/JiH;
+    05ca..05ce  iget-wide  v2, v2, LX/JiH;->A02:J
+    05ce..05d4  invoke-static  {v10}, LX/8t3;->A0N(LX/05a;)LX/0GO;
+    05d4..05d6  move-result-object  v5
+    05d6..05da  const-string  v4, "fileSize="
+    05da..05e0  invoke-static  {v4, v0, v1}, LX/1Xl;->A17(Ljava/lang/String;J)Ljava/lang/StringBuilder;
+    05e0..05e2  move-result-object  v1
+    05e2..05e6  const-string  v0, " startPos="
+    05e6..05ec  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    05ec..05f2  invoke-virtual  {v1, v2, v3}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    05f2..05f6  const-string  v0, " mediaUploadType="
+    05f6..05fc  invoke-static  {v8, v0, v1}, LX/1Xl;->A0v(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    05fc..05fe  move-result-object  v1
+    05fe..0602  const-string  v0, "tigon_upload_body_exceeds_content_length"
+    0602..0608  invoke-virtual  {v5, v0, v1, v6, v6}, LX/0B0;->A0h(Ljava/lang/String;Ljava/lang/String;ZI)V
+    0608..060e  invoke-static  {v9}, LX/0eB;->A02(Lcom/facebook/tigon/TigonError;)V
+    060e..0610  goto  +0x7
+    0610..0614  const-wide/16  v0, #0xffff (-1)
+    0614..0616  goto  -0x31
+    0616..061c  invoke-static  {v9}, LX/JWK;->A00(Lcom/facebook/tigon/TigonError;)V
+    061c..061e  const/4  v0, #0x0
+    061e..0620  goto  +0x7
+    0620..0624  const-string  v0, "No response received from Tigon"
+    0624..062a  invoke-static  {v0}, LX/8t1;->A1G(Ljava/lang/String;)Ljava/io/IOException;
+    062a..062c  move-result-object  v0
+    062c..062e  throw  v0
+    062e..0630  move-exception  v2
+    0630..0636  invoke-virtual  {v2}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    0636..0638  move-result-object  v1
+    0638..063c  const-string  v0, "TigonUploadRequest/upload failed with exception: "
+    063c..0642  invoke-static  {v0, v1}, LX/2LA;->A1M(Ljava/lang/String;Ljava/lang/String;)V
+    0642..0644  throw  v2
+    0644..0648  const-string  v1, "Only https is supported"
+    0648..064c  new-instance  v0, Ljava/net/MalformedURLException;
+    064c..0652  invoke-direct  {v0, v1}, Ljava/net/MalformedURLException;-><init>(Ljava/lang/String;)V
+    0652..0654  throw  v0
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/Exception; code_units 01b9..0317 -> 0317
+.end method
