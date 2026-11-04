@@ -1,3 +1,16 @@
+2026-11-04 — **Pinned media lifetime parser correction (static/offline):**
+
+APK 2.26.43.72 1xY.CK4 requires both route ttl and auth_ttl via the Java-long
+reader. This refutes the prior local missing-auth fallback, now removed. Both
+Rust lifetimes use the existing Java-compatible helper. Encoded-route tests
+refuse missing/invalid/expired values and accept supported BMP digit spellings.
+[Six retained REA methods, checked DEX and limits](docs/protocol/rea/2.26.43.72-media-route-lifetimes/README.md).
+The native constructor confirms millisecond deadline arithmetic; conditional
+cache restore checks auth expiry. Base origin and complete refresh/host policy
+remain open. Validation: **1,234 workspace/all-feature tests**, strict Clippy,
+CLI-reference, formatting, coverage freshness and repository hygiene passed.
+No live traffic or automatic retry/query.
+
 2026-11-04 — **Explicit media auth lifetime validation (offline):**
 
 Upload route selection no longer treats a present malformed/overflowing auth_ttl

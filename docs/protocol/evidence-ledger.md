@@ -1,3 +1,10 @@
+2026-11-04 — **Confirmed static/corrected:** pinned 2.26.43.72 1xY.CK4 uses
+required long readers for both media lifetimes. The local missing-auth fallback
+is refuted and removed; Java-compatible parsing replaces Rust decimal parsing.
+Six complete REA method envelopes and checked DEX retain parsing, constructor and
+conditional cache-restore boundaries. No live observation or full refresh claim.
+[Evidence, hashes and unknowns](rea/2.26.43.72-media-route-lifetimes/README.md).
+
 2026-11-04 — **Confirmed Rust defect/fixed offline:** invalid explicit media
 auth lifetimes could inherit route TTL. Missing-only fallback now distinguishes
 absent from malformed/overflowing values. Encoded-route encrypted-store tests

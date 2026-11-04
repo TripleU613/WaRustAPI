@@ -1,0 +1,130 @@
+{
+  "evidence_id": "ev_2745516d2cbfa0231012b060c356f646de719dd8b48fcba2c37d9cd9a1e01d6a",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C1xY",
+    "method_name": "CK4"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-8Sdozw/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C1xY"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"name\":\"A00\",\"def_pos\":0,\"type\":\"long\"},{\"name\":\"A01\",\"def_pos\":0,\"type\":\"X.0Sf\"},{\"name\":\"A02\",\"def_pos\":0,\"type\":\"X.08q\"},{\"name\":\"A03\",\"def_pos\":0,\"type\":\"X.0VM\"}],\"field_count\":4,\"full_name\":\"X.C1xY\",\"name\":\"C1xY\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":6,\"methods\":[{\"dex_descriptor\":\"(LX/08q;LX/0VM;LX/0Sf;)V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(X.08q, X.0VM, X.0Sf): void\"},{\"dex_descriptor\":\"(Ljava/util/Set;)Lorg/json/JSONArray;\",\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0,\"signature\":\"A00(java.util.Set): org.json.JSONArray\"},{\"dex_descriptor\":\"(Ljava/lang/String;)V\",\"is_constructor\":false,\"name\":\"BsS\",\"def_pos\":0,\"signature\":\"BsS(java.lang.String): void\"},{\"dex_descriptor\":\"(LX/0Tp;Ljava/lang/String;)V\",\"is_constructor\":false,\"name\":\"Bvj\",\"def_pos\":0,\"signature\":\"Bvj(X.0Tp, java.lang.String): void\"},{\"dex_descriptor\":\"(LX/0Tp;Ljava/lang/String;)V\",\"is_constructor\":false,\"name\":\"CK4\",\"def_pos\":0,\"signature\":\"CK4(X.0Tp, java.lang.String): void\"},{\"dex_descriptor\":\"(Ljava/lang/String;)LX/D33;\",\"is_constructor\":false,\"name\":\"CmQ\",\"def_pos\":0,\"signature\":\"CmQ(java.lang.String): X.D33\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C1xY",
+          "method_name": "CK4",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_name\":\"CK4\",\"overload_count\":1,\"body\":\"    @Override // X.C0lG\\n    public void CK4(C0Tp c0Tp, String str) throws LIL {\\n        long j;\\n        C00l.A09(c0Tp, 1);\\n        synchronized (this) {\\n            j \\u003d this.A00;\\n            this.A00 \\u003d 0L;\\n        }\\n        C0VM c0vm \\u003d this.A03;\\n        java.util.Set set \\u003d C1xc.A00;\\n        C0Tp c0TpA0G \\u003d c0Tp.A0G(\\\"media_conn\\\");\\n        String strA0M \\u003d c0TpA0G.A0M(\\\"id\\\", null);\\n        String strA0L \\u003d c0TpA0G.A0L(\\\"auth\\\");\\n        long jA07 \\u003d c0TpA0G.A07(\\\"ttl\\\");\\n        long jA08 \\u003d c0TpA0G.A07(\\\"auth_ttl\\\");\\n        long jA09 \\u003d c0TpA0G.A08(\\\"max_buckets\\\", 0L);\\n        int iA05 \\u003d c0TpA0G.A05(\\\"is_new\\\", 1);\\n        int iA06 \\u003d c0TpA0G.A05(\\\"max_auto_download_retry\\\", 3);\\n        int iA07 \\u003d c0TpA0G.A05(\\\"max_manual_retry\\\", 3);\\n        String strA0M2 \\u003d c0TpA0G.A0M(\\\"ip_token\\\", null);\\n        String strA0M3 \\u003d c0TpA0G.A0M(\\\"set_ip_token\\\", null);\\n        Boolean boolValueOf \\u003d null;\\n        if (strA0M3 !\\u003d null) {\\n            try {\\n                boolValueOf \\u003d Boolean.valueOf(Integer.parseInt(strA0M3) !\\u003d 0);\\n            } catch (NumberFormatException unused) {\\n            }\\n        }\\n        C0Tp[] c0TpArr \\u003d c0TpA0G.A02;\\n        ArrayList arrayList \\u003d new ArrayList();\\n        if (c0TpArr !\\u003d null) {\\n            for (C0Tp c0Tp2 : c0TpArr) {\\n                if (\\\"host\\\".equals(c0Tp2.A00)) {\\n                    String strA0L2 \\u003d c0Tp2.A0L(\\\"hostname\\\");\\n                    String strA0M4 \\u003d c0Tp2.A0M(\\\"ip4\\\", null);\\n                    String strA0M5 \\u003d c0Tp2.A0M(\\\"ip6\\\", null);\\n                    String strA0M6 \\u003d c0Tp2.A0M(\\\"class\\\", null);\\n                    String strA0M7 \\u003d c0Tp2.A0M(\\\"fallback_hostname\\\", null);\\n                    String strA0M8 \\u003d c0Tp2.A0M(\\\"fallback_ip4\\\", null);\\n                    String strA0M9 \\u003d c0Tp2.A0M(\\\"fallback_ip6\\\", null);\\n                    String strA0M10 \\u003d c0Tp2.A0M(\\\"fallback_class\\\", null);\\n                    C0Tp c0TpA0F \\u003d c0Tp2.A0F(\\\"upload\\\");\\n                    java.util.Set set2 \\u003d C1xc.A00;\\n                    arrayList.add(new C1t1(strA0L2, strA0M4, strA0M5, strA0M6, strA0M7, strA0M8, strA0M9, strA0M10, c0Tp2.A0M(\\\"type\\\", null), C1xc.A00(c0TpA0F, set2), C1xc.A00(c0Tp2.A0F(\\\"download\\\"), set2), C1xc.A00(c0Tp2.A0F(\\\"download_buckets\\\"), null), \\\"true\\\".equals(c0Tp2.A0M(\\\"force_ip\\\", null))));\\n                }\\n            }\\n        }\\n        C1t5 c1t5 \\u003d new C1t5(boolValueOf, strA0L, strA0M, strA0M2, arrayList, iA06, iA07, jA07, jA08, jA09, j, iA05 \\u003d\\u003d 1);\\n        C0VZ c0vz \\u003d c0vm.A0F;\\n        synchronized (c0vz) {\\n            c0vz.A00 \\u003d 0L;\\n            Log.i(\\\"ChatdMediaThrottleManager/resetThrottle\\\");\\n        }\\n        C0VM.A0A(c0vm, c1t5);\\n        if (c0vm.A07.A14(149)) {\\n            C08q c08q \\u003d c0vm.A09;\\n            C1t5 c1t5A0P \\u003d c0vm.A0P();\\n            String string \\u003d null;\\n            if (c1t5A0P !\\u003d null) {\\n                try {\\n                    JSONObject jSONObject \\u003d new JSONObject();\\n                    jSONObject.put(\\\"auth_token\\\", c1t5A0P.A09);\\n                    jSONObject.put(\\\"conn_ttl\\\", c1t5A0P.A05);\\n                    jSONObject.put(\\\"auth_ttl\\\", c1t5A0P.A03);\\n                    jSONObject.put(\\\"max_buckets\\\", c1t5A0P.A06);\\n                    List\\u003cC1t1\\u003e list \\u003d c1t5A0P.A0C;\\n                    JSONArray jSONArray \\u003d new JSONArray();\\n                    for (C1t1 c1t1 : list) {\\n                        JSONObject jSONObject2 \\u003d new JSONObject();\\n                        jSONObject2.put(\\\"hostname\\\", c1t1.A04);\\n                        jSONObject2.put(\\\"ip4\\\", c1t1.A05);\\n                        jSONObject2.put(\\\"ip6\\\", c1t1.A06);\\n                        jSONObject2.put(\\\"class\\\", c1t1.A07);\\n                        jSONObject2.put(\\\"fallback_hostname\\\", c1t1.A00);\\n                        jSONObject2.put(\\\"fallback_ip4\\\", c1t1.A01);\\n                        jSONObject2.put(\\\"fallback_ip6\\\", c1t1.A02);\\n                        jSONObject2.put(\\\"fallback_class\\\", c1t1.A03);\\n                        jSONObject2.put(\\\"upload\\\", A00(c1t1.A0B));\\n                        jSONObject2.put(\\\"download\\\", A00(c1t1.A09));\\n                        jSONObject2.put(\\\"download_buckets\\\", A00(c1t1.A0A));\\n                        jSONObject2.put(\\\"type\\\", c1t1.A08);\\n                        jSONObject2.put(\\\"force_ip\\\", c1t1.A0C);\\n                        jSONArray.put(jSONObject2);\\n                    }\\n                    jSONObject.put(\\\"hosts\\\", jSONArray);\\n                    jSONObject.put(\\\"send_time_abs_ms\\\", (c1t5A0P.A07 - SystemClock.elapsedRealtime()) + C08q.A00(c08q));\\n                    jSONObject.put(\\\"last_id\\\", c1t5A0P.A0B);\\n                    jSONObject.put(\\\"is_new\\\", c1t5A0P.A0D);\\n                    jSONObject.put(\\\"max_autodownload_retry\\\", c1t5A0P.A00);\\n                    jSONObject.put(\\\"max_manual_retry\\\", c1t5A0P.A01);\\n                    jSONObject.put(\\\"ip_token\\\", c1t5A0P.A0A);\\n                    jSONObject.put(\\\"set_ip_token\\\", c1t5A0P.A08);\\n                    string \\u003d jSONObject.toString();\\n                } catch (JSONException e) {\\n                    Log.e(\\\"routingresponse/can\\u0027t serialize json\\\", e);\\n                }\\n            }\\n            c0vm.A08.A04(\\\"route_selector_prefs\\\").edit().putString(\\\"media_conn\\\", string).apply();\\n        }\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.C1xY\",\"full_name\":\"X.1xY.CK4\",\"mode\":\"java\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C1xY",
+    "method": {
+      "name": "CK4",
+      "reported_signature": "CK4(X.0Tp, java.lang.String): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(LX/0Tp;Ljava/lang/String;)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    @Override // X.C0lG\n    public void CK4(C0Tp c0Tp, String str) throws LIL {\n        long j;\n        C00l.A09(c0Tp, 1);\n        synchronized (this) {\n            j = this.A00;\n            this.A00 = 0L;\n        }\n        C0VM c0vm = this.A03;\n        java.util.Set set = C1xc.A00;\n        C0Tp c0TpA0G = c0Tp.A0G(\"media_conn\");\n        String strA0M = c0TpA0G.A0M(\"id\", null);\n        String strA0L = c0TpA0G.A0L(\"auth\");\n        long jA07 = c0TpA0G.A07(\"ttl\");\n        long jA08 = c0TpA0G.A07(\"auth_ttl\");\n        long jA09 = c0TpA0G.A08(\"max_buckets\", 0L);\n        int iA05 = c0TpA0G.A05(\"is_new\", 1);\n        int iA06 = c0TpA0G.A05(\"max_auto_download_retry\", 3);\n        int iA07 = c0TpA0G.A05(\"max_manual_retry\", 3);\n        String strA0M2 = c0TpA0G.A0M(\"ip_token\", null);\n        String strA0M3 = c0TpA0G.A0M(\"set_ip_token\", null);\n        Boolean boolValueOf = null;\n        if (strA0M3 != null) {\n            try {\n                boolValueOf = Boolean.valueOf(Integer.parseInt(strA0M3) != 0);\n            } catch (NumberFormatException unused) {\n            }\n        }\n        C0Tp[] c0TpArr = c0TpA0G.A02;\n        ArrayList arrayList = new ArrayList();\n        if (c0TpArr != null) {\n            for (C0Tp c0Tp2 : c0TpArr) {\n                if (\"host\".equals(c0Tp2.A00)) {\n                    String strA0L2 = c0Tp2.A0L(\"hostname\");\n                    String strA0M4 = c0Tp2.A0M(\"ip4\", null);\n                    String strA0M5 = c0Tp2.A0M(\"ip6\", null);\n                    String strA0M6 = c0Tp2.A0M(\"class\", null);\n                    String strA0M7 = c0Tp2.A0M(\"fallback_hostname\", null);\n                    String strA0M8 = c0Tp2.A0M(\"fallback_ip4\", null);\n                    String strA0M9 = c0Tp2.A0M(\"fallback_ip6\", null);\n                    String strA0M10 = c0Tp2.A0M(\"fallback_class\", null);\n                    C0Tp c0TpA0F = c0Tp2.A0F(\"upload\");\n                    java.util.Set set2 = C1xc.A00;\n                    arrayList.add(new C1t1(strA0L2, strA0M4, strA0M5, strA0M6, strA0M7, strA0M8, strA0M9, strA0M10, c0Tp2.A0M(\"type\", null), C1xc.A00(c0TpA0F, set2), C1xc.A00(c0Tp2.A0F(\"download\"), set2), C1xc.A00(c0Tp2.A0F(\"download_buckets\"), null), \"true\".equals(c0Tp2.A0M(\"force_ip\", null))));\n                }\n            }\n        }\n        C1t5 c1t5 = new C1t5(boolValueOf, strA0L, strA0M, strA0M2, arrayList, iA06, iA07, jA07, jA08, jA09, j, iA05 == 1);\n        C0VZ c0vz = c0vm.A0F;\n        synchronized (c0vz) {\n            c0vz.A00 = 0L;\n            Log.i(\"ChatdMediaThrottleManager/resetThrottle\");\n        }\n        C0VM.A0A(c0vm, c1t5);\n        if (c0vm.A07.A14(149)) {\n            C08q c08q = c0vm.A09;\n            C1t5 c1t5A0P = c0vm.A0P();\n            String string = null;\n            if (c1t5A0P != null) {\n                try {\n                    JSONObject jSONObject = new JSONObject();\n                    jSONObject.put(\"auth_token\", c1t5A0P.A09);\n                    jSONObject.put(\"conn_ttl\", c1t5A0P.A05);\n                    jSONObject.put(\"auth_ttl\", c1t5A0P.A03);\n                    jSONObject.put(\"max_buckets\", c1t5A0P.A06);\n                    List<C1t1> list = c1t5A0P.A0C;\n                    JSONArray jSONArray = new JSONArray();\n                    for (C1t1 c1t1 : list) {\n                        JSONObject jSONObject2 = new JSONObject();\n                        jSONObject2.put(\"hostname\", c1t1.A04);\n                        jSONObject2.put(\"ip4\", c1t1.A05);\n                        jSONObject2.put(\"ip6\", c1t1.A06);\n                        jSONObject2.put(\"class\", c1t1.A07);\n                        jSONObject2.put(\"fallback_hostname\", c1t1.A00);\n                        jSONObject2.put(\"fallback_ip4\", c1t1.A01);\n                        jSONObject2.put(\"fallback_ip6\", c1t1.A02);\n                        jSONObject2.put(\"fallback_class\", c1t1.A03);\n                        jSONObject2.put(\"upload\", A00(c1t1.A0B));\n                        jSONObject2.put(\"download\", A00(c1t1.A09));\n                        jSONObject2.put(\"download_buckets\", A00(c1t1.A0A));\n                        jSONObject2.put(\"type\", c1t1.A08);\n                        jSONObject2.put(\"force_ip\", c1t1.A0C);\n                        jSONArray.put(jSONObject2);\n                    }\n                    jSONObject.put(\"hosts\", jSONArray);\n                    jSONObject.put(\"send_time_abs_ms\", (c1t5A0P.A07 - SystemClock.elapsedRealtime()) + C08q.A00(c08q));\n                    jSONObject.put(\"last_id\", c1t5A0P.A0B);\n                    jSONObject.put(\"is_new\", c1t5A0P.A0D);\n                    jSONObject.put(\"max_autodownload_retry\", c1t5A0P.A00);\n                    jSONObject.put(\"max_manual_retry\", c1t5A0P.A01);\n                    jSONObject.put(\"ip_token\", c1t5A0P.A0A);\n                    jSONObject.put(\"set_ip_token\", c1t5A0P.A08);\n                    string = jSONObject.toString();\n                } catch (JSONException e) {\n                    Log.e(\"routingresponse/can't serialize json\", e);\n                }\n            }\n            c0vm.A08.A04(\"route_selector_prefs\").edit().putString(\"media_conn\", string).apply();\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

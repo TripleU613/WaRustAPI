@@ -73,7 +73,22 @@ lifetimes continue to refuse through the existing age/minimum-lifetime guard.
 A real-store encoded-route test covers absent and valid lifetimes, empty/malformed/
 overflow values, zero/negative values and auth expiry shorter than route expiry.
 Route inspection leaves every checkpoint unchanged and performs no refresh or
-upload reservation. The absence fallback and TTL units are existing local
-contracts; this correction does not claim a newly recovered 2.26.43.72 media
-lifetime parser or server restriction cause. Native expiry parsing/refresh policy
+upload reservation. This was the then-existing local fallback, not a native-parity claim. The
+subsequent pinned callback trace below **refutes** that absence fallback; the
+current implementation now requires both lifetimes. Native expiry parsing/refresh policy
 remains in the current-build audit queue. No live traffic occurred.
+
+## Pinned native lifetime correction (2026-11-04)
+
+**Confirmed static and corrected:** current `1xY.CK4 -> 0Tp.A07/A0L/A09`
+requires both ttl and auth_ttl and parses each with Java Long.parseLong.
+The previous missing-only fallback was a local assumption and is now removed.
+Rust reuses the existing Java-compatible signed-decimal helper for both fields.
+The encoded-route regression now refuses missing auth_ttl and admits supported
+leading-plus/BMP digit spellings while preserving expiry/invalid-value guards.
+
+`1t5.<init>` converts lifetimes to milliseconds relative to a supplied base;
+`0VM.A08` conditionally restores a cached route only while its auth deadline
+is future. [Six REA envelopes, checked DEX, hashes and exact limits](rea/2.26.43.72-media-route-lifetimes/README.md).
+Base origin, full refresh/deadline consumers, effective restore gate and host
+selection remain unknown. No automatic query/retry or live traffic is introduced.

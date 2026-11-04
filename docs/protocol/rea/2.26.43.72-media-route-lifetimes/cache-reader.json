@@ -1,0 +1,130 @@
+{
+  "evidence_id": "ev_244873608125eb9fa59a38f3582433d47dee39bf53c0efcab390c0f393cf7f02",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C0VM",
+    "method_name": "A08"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-8Sdozw/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C0VM"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"name\":\"A00\",\"def_pos\":0,\"type\":\"int\"},{\"name\":\"A01\",\"def_pos\":0,\"type\":\"X.1t5\"},{\"name\":\"A02\",\"def_pos\":0,\"type\":\"long\"},{\"name\":\"A03\",\"def_pos\":0,\"type\":\"android.os.Handler\"},{\"name\":\"A04\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A05\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A06\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A07\",\"def_pos\":0,\"type\":\"X.08Y\"},{\"name\":\"A08\",\"def_pos\":0,\"type\":\"X.00S\"},{\"name\":\"A09\",\"def_pos\":0,\"type\":\"X.08q\"},{\"name\":\"A0A\",\"def_pos\":0,\"type\":\"X.0O5\"},{\"name\":\"A0B\",\"def_pos\":0,\"type\":\"X.08Z\"},{\"name\":\"A0C\",\"def_pos\":0,\"type\":\"X.0VW\"},{\"name\":\"A0D\",\"def_pos\":0,\"type\":\"X.0Vc\"},{\"name\":\"A0E\",\"def_pos\":0,\"type\":\"X.0VR\"},{\"name\":\"A0F\",\"def_pos\":0,\"type\":\"X.0VZ\"},{\"name\":\"A0G\",\"def_pos\":0,\"type\":\"X.0AI\"},{\"name\":\"A0H\",\"def_pos\":0,\"type\":\"java.lang.Object\"},{\"name\":\"A0I\",\"def_pos\":0,\"type\":\"java.lang.Object\"},{\"name\":\"A0J\",\"def_pos\":0,\"type\":\"java.util.concurrent.atomic.AtomicBoolean\"},{\"name\":\"A0K\",\"def_pos\":0,\"type\":\"long\"},{\"name\":\"A0L\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A0M\",\"def_pos\":0,\"type\":\"X.1xY\"},{\"name\":\"A0N\",\"def_pos\":0,\"type\":\"boolean\"}],\"field_count\":24,\"full_name\":\"X.C0VM\",\"name\":\"C0VM\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":23,\"methods\":[{\"dex_descriptor\":\"()V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(): void\"},{\"dex_descriptor\":\"(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZZ)LX/MS4;\",\"is_constructor\":false,\"name\":\"A02\",\"def_pos\":0,\"signature\":\"A02(java.lang.String, java.lang.String, java.lang.String, int, boolean, boolean): X.MS4\"},{\"dex_descriptor\":\"(LX/0VM;)LX/1xY;\",\"is_constructor\":false,\"name\":\"A03\",\"def_pos\":0,\"signature\":\"A03(X.0VM): X.1xY\"},{\"dex_descriptor\":\"(Ljava/lang/String;Lorg/json/JSONObject;)Ljava/lang/String;\",\"is_constructor\":false,\"name\":\"A04\",\"def_pos\":0,\"signature\":\"A04(java.lang.String, org.json.JSONObject): java.lang.String\"},{\"dex_descriptor\":\"(Lorg/json/JSONArray;)Ljava/util/HashSet;\",\"is_constructor\":false,\"name\":\"A05\",\"def_pos\":0,\"signature\":\"A05(org.json.JSONArray): java.util.HashSet\"},{\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"A06\",\"def_pos\":0,\"signature\":\"A06(): void\"},{\"dex_descriptor\":\"(LX/0VM;)V\",\"is_constructor\":false,\"name\":\"A07\",\"def_pos\":0,\"signature\":\"A07(X.0VM): void\"},{\"dex_descriptor\":\"(LX/0VM;)V\",\"is_constructor\":false,\"name\":\"A08\",\"def_pos\":0,\"signature\":\"A08(X.0VM): void\"},{\"dex_descriptor\":\"(LX/0VM;)V\",\"is_constructor\":false,\"name\":\"A09\",\"def_pos\":0,\"signature\":\"A09(X.0VM): void\"},{\"dex_descriptor\":\"(LX/0VM;LX/1t5;)V\",\"is_constructor\":false,\"name\":\"A0A\",\"def_pos\":0,\"signature\":\"A0A(X.0VM, X.1t5): void\"},{\"dex_descriptor\":\"(LX/0VM;Ljava/lang/String;JJ)V\",\"is_constructor\":false,\"name\":\"A0B\",\"def_pos\":0,\"signature\":\"A0B(X.0VM, java.lang.String, long, long): void\"},{\"dex_descriptor\":\"(LX/1t5;Ljava/lang/String;J)Z\",\"is_constructor\":false,\"name\":\"A0C\",\"def_pos\":0,\"signature\":\"A0C(X.1t5, java.lang.String, long): boolean\"},{\"dex_descriptor\":\"(LX/NYv;I)LX/MS4;\",\"is_constructor\":false,\"name\":\"A0L\",\"def_pos\":0,\"signature\":\"A0L(X.NYv, int): X.MS4\"},{\"dex_descriptor\":\"(Ljava/lang/String;)LX/MS4;\",\"is_constructor\":false,\"name\":\"A0M\",\"def_pos\":0,\"signature\":\"A0M(java.lang.String): X.MS4\"},{\"dex_descriptor\":\"(Ljava/lang/String;Ljava/lang/String;)LX/MS4;\",\"is_constructor\":false,\"name\":\"A0N\",\"def_pos\":0,\"signature\":\"A0N(java.lang.String, java.lang.String): X.MS4\"},{\"dex_descriptor\":\"(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)LX/MS4;\",\"is_constructor\":false,\"name\":\"A0O\",\"def_pos\":0,\"signature\":\"A0O(java.lang.String, java.lang.String, java.lang.String, int): X.MS4\"},{\"dex_descriptor\":\"()LX/1t5;\",\"is_constructor\":false,\"name\":\"A0P\",\"def_pos\":0,\"signature\":\"A0P(): X.1t5\"},{\"dex_descriptor\":\"(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;II)LX/Mtv;\",\"is_constructor\":false,\"name\":\"A0Q\",\"def_pos\":0,\"signature\":\"A0Q(java.lang.String, java.lang.String, java.lang.String, int, int): X.Mtv\"},{\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"A0R\",\"def_pos\":0,\"signature\":\"A0R(): void\"},{\"dex_descriptor\":\"(I)V\",\"is_constructor\":false,\"name\":\"A0S\",\"def_pos\":0,\"signature\":\"A0S(int): void\"},{\"dex_descriptor\":\"()Z\",\"is_constructor\":false,\"name\":\"A0T\",\"def_pos\":0,\"signature\":\"A0T(): boolean\"},{\"dex_descriptor\":\"(Ljava/lang/String;)V\",\"is_constructor\":false,\"name\":\"Bjs\",\"def_pos\":0,\"signature\":\"Bjs(java.lang.String): void\"},{\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"onAppBackgrounded\",\"def_pos\":0,\"signature\":\"onAppBackgrounded(): void\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C0VM",
+          "method_name": "A08",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_name\":\"A08\",\"overload_count\":1,\"body\":\"    public static void A08(C0VM c0vm) {\\n        if (c0vm.A07.A14(149) \\u0026\\u0026 c0vm.A0J.compareAndSet(false, true)) {\\n            String string \\u003d c0vm.A08.A04(\\\"route_selector_prefs\\\").getString(\\\"media_conn\\\", null);\\n            C08q c08q \\u003d c0vm.A09;\\n            C1t5 c1t5 \\u003d null;\\n            if (string !\\u003d null) {\\n                try {\\n                    JSONObject jSONObjectA07 \\u003d C1sp.A07(string);\\n                    String string2 \\u003d jSONObjectA07.getString(\\\"auth_token\\\");\\n                    long j \\u003d jSONObjectA07.getLong(\\\"conn_ttl\\\");\\n                    long j2 \\u003d jSONObjectA07.getLong(\\\"auth_ttl\\\");\\n                    long j3 \\u003d jSONObjectA07.getLong(\\\"max_buckets\\\");\\n                    JSONArray jSONArray \\u003d jSONObjectA07.getJSONArray(\\\"hosts\\\");\\n                    int length \\u003d jSONArray.length();\\n                    ArrayList arrayList \\u003d new ArrayList(length);\\n                    for (int i \\u003d 0; i \\u003c length; i++) {\\n                        JSONObject jSONObject \\u003d jSONArray.getJSONObject(i);\\n                        arrayList.add(new C1t1(jSONObject.getString(\\\"hostname\\\"), A04(\\\"ip4\\\", jSONObject), A04(\\\"ip6\\\", jSONObject), A04(\\\"class\\\", jSONObject), A04(\\\"fallback_hostname\\\", jSONObject), A04(\\\"fallback_ip4\\\", jSONObject), A04(\\\"fallback_ip6\\\", jSONObject), A04(\\\"fallback_class\\\", jSONObject), A04(\\\"type\\\", jSONObject), A05(jSONObject.optJSONArray(\\\"upload\\\")), A05(jSONObject.optJSONArray(\\\"download\\\")), A05(jSONObject.optJSONArray(\\\"download_buckets\\\")), jSONObject.optBoolean(\\\"force_ip\\\")));\\n                    }\\n                    long j4 \\u003d (jSONObjectA07.getLong(\\\"send_time_abs_ms\\\") - C08q.A00(c08q)) + SystemClock.elapsedRealtime();\\n                    String strA04 \\u003d A04(\\\"last_id\\\", jSONObjectA07);\\n                    boolean z \\u003d jSONObjectA07.getBoolean(\\\"is_new\\\");\\n                    int i2 \\u003d jSONObjectA07.getInt(\\\"max_autodownload_retry\\\");\\n                    int i3 \\u003d jSONObjectA07.getInt(\\\"max_manual_retry\\\");\\n                    c1t5 \\u003d new C1t5(jSONObjectA07.has(\\\"set_ip_token\\\") ? Boolean.valueOf(jSONObjectA07.optBoolean(\\\"set_ip_token\\\")) : null, string2, strA04, jSONObjectA07.optString(\\\"ip_token\\\", null), arrayList, i2, i3, j, j2, j3, j4, z);\\n                } catch (JSONException e) {\\n                    Log.e(\\\"routingresponse/can\\u0027t parse json\\\", e);\\n                }\\n            }\\n            synchronized (c0vm.A0H) {\\n                if (c0vm.A01 \\u003d\\u003d null \\u0026\\u0026 c1t5 !\\u003d null \\u0026\\u0026 c1t5.A02 \\u003e SystemClock.elapsedRealtime()) {\\n                    A0A(c0vm, c1t5);\\n                }\\n            }\\n        }\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.C0VM\",\"full_name\":\"X.0VM.A08\",\"mode\":\"java\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C0VM",
+    "method": {
+      "name": "A08",
+      "reported_signature": "A08(X.0VM): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(LX/0VM;)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public static void A08(C0VM c0vm) {\n        if (c0vm.A07.A14(149) && c0vm.A0J.compareAndSet(false, true)) {\n            String string = c0vm.A08.A04(\"route_selector_prefs\").getString(\"media_conn\", null);\n            C08q c08q = c0vm.A09;\n            C1t5 c1t5 = null;\n            if (string != null) {\n                try {\n                    JSONObject jSONObjectA07 = C1sp.A07(string);\n                    String string2 = jSONObjectA07.getString(\"auth_token\");\n                    long j = jSONObjectA07.getLong(\"conn_ttl\");\n                    long j2 = jSONObjectA07.getLong(\"auth_ttl\");\n                    long j3 = jSONObjectA07.getLong(\"max_buckets\");\n                    JSONArray jSONArray = jSONObjectA07.getJSONArray(\"hosts\");\n                    int length = jSONArray.length();\n                    ArrayList arrayList = new ArrayList(length);\n                    for (int i = 0; i < length; i++) {\n                        JSONObject jSONObject = jSONArray.getJSONObject(i);\n                        arrayList.add(new C1t1(jSONObject.getString(\"hostname\"), A04(\"ip4\", jSONObject), A04(\"ip6\", jSONObject), A04(\"class\", jSONObject), A04(\"fallback_hostname\", jSONObject), A04(\"fallback_ip4\", jSONObject), A04(\"fallback_ip6\", jSONObject), A04(\"fallback_class\", jSONObject), A04(\"type\", jSONObject), A05(jSONObject.optJSONArray(\"upload\")), A05(jSONObject.optJSONArray(\"download\")), A05(jSONObject.optJSONArray(\"download_buckets\")), jSONObject.optBoolean(\"force_ip\")));\n                    }\n                    long j4 = (jSONObjectA07.getLong(\"send_time_abs_ms\") - C08q.A00(c08q)) + SystemClock.elapsedRealtime();\n                    String strA04 = A04(\"last_id\", jSONObjectA07);\n                    boolean z = jSONObjectA07.getBoolean(\"is_new\");\n                    int i2 = jSONObjectA07.getInt(\"max_autodownload_retry\");\n                    int i3 = jSONObjectA07.getInt(\"max_manual_retry\");\n                    c1t5 = new C1t5(jSONObjectA07.has(\"set_ip_token\") ? Boolean.valueOf(jSONObjectA07.optBoolean(\"set_ip_token\")) : null, string2, strA04, jSONObjectA07.optString(\"ip_token\", null), arrayList, i2, i3, j, j2, j3, j4, z);\n                } catch (JSONException e) {\n                    Log.e(\"routingresponse/can't parse json\", e);\n                }\n            }\n            synchronized (c0vm.A0H) {\n                if (c0vm.A01 == null && c1t5 != null && c1t5.A02 > SystemClock.elapsedRealtime()) {\n                    A0A(c0vm, c1t5);\n                }\n            }\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

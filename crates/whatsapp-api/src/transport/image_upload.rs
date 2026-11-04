@@ -360,18 +360,15 @@ fn route(store: &ProtocolStore) -> Result<(String, Zeroizing<String>)> {
         .child("media_conn")
         .ok_or_else(|| invalid("missing media connection"))?;
     let attr = |name| conn.get_attr(name).and_then(|v| v.as_text());
+    // APK 43.72 1xY.CK4 -> 0Tp.A07/A0L/A09 requires both fields and
+    // uses Java Long.parseLong. No missing-auth-TTL fallback exists there.
+    // Evidence: docs/protocol/rea/2.26.43.72-media-route-lifetimes/README.md.
     let ttl = attr("ttl")
-        .and_then(|v| v.parse::<i64>().ok())
-        .ok_or_else(|| invalid("missing route lifetime"))?;
-    // Absence keeps the existing fallback; an explicit malformed lifetime is
-    // not evidence that authentication remains valid for the route's full TTL.
-    let auth_ttl = match conn.get_attr("auth_ttl") {
-        None => ttl,
-        Some(value) => value
-            .as_text()
-            .and_then(|v| v.parse::<i64>().ok())
-            .ok_or_else(|| invalid("invalid upload auth lifetime"))?,
-    };
+        .and_then(super::mex::java_decimal_long)
+        .ok_or_else(|| invalid("missing or invalid route lifetime"))?;
+    let auth_ttl = attr("auth_ttl")
+        .and_then(super::mex::java_decimal_long)
+        .ok_or_else(|| invalid("missing or invalid upload auth lifetime"))?;
     let age = Timestamp::now().0.saturating_sub(
         latest["at"]
             .as_i64()
@@ -859,7 +856,7 @@ async fn upload_prepared(
 #[cfg(test)]
 mod tests {
     #[test]
-    fn malformed_auth_lifetime_never_falls_back_to_route_ttl() {
+    fn required_java_auth_lifetime_never_falls_back_to_route_ttl() {
         use super::*;
         use crate::{
             binary::{Encoder, Node},
@@ -875,8 +872,11 @@ mod tests {
         })
         .unwrap();
         for (auth_ttl, accepted) in [
-            (None, true),
+            (None, false),
             (Some("3600"), true),
+            (Some("+3600"), true),
+            (Some("٣٦٠٠"), true),
+            (Some("３６００"), true),
             (Some(""), false),
             (Some("invalid"), false),
             (Some("9223372036854775808"), false),
