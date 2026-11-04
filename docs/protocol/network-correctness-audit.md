@@ -416,3 +416,13 @@ store while held and after sent reservation; complete intent/sent rows
 remain intact, and already reserved creates never become replayable.
 [Exact sources and fault/account-scope limits](rea/2.26.43.72-reachout-state/README.md#disconnect-callback-cleanup-and-durable-reopen-regression-2026-11-04). No production
 behavior or automatic refresh changed; full lifecycle audit remains open.
+
+## Timed-IQ lower writer admission and uncertainty (2026-11-04)
+
+**Confirmed static:** timed requests carry a callback guard checked against
+the queued map. Concrete observer binding transfers it to the reply map
+before raw-node write, serialization/counter advance and output flush.
+Native local I/O requeue is qualified by later admission; it is not proof
+of universal replay permission or delivery. [Exact path and limits](rea/2.26.43.72-reachout-state/README.md#writer-callback-admission-before-output-stream-write-2026-11-04).
+Durable account/request settlement and refresh scheduling remain unfinished;
+no production behavior or network operation changed.

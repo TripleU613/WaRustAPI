@@ -1482,3 +1482,127 @@ actions::inner_error_tests::queued_create_rechecks_restriction_at_every_reservat
 - [reachout-iq-cleanup-trigger.txt](reachout-iq-cleanup-trigger.txt) — SHA-256 `fd46dcdf65ee927c926a377ea4aee916218b30fc5978c4c4d570982e21c661b6`.
 - [reachout-iq-cleanup-connection-handler.txt](reachout-iq-cleanup-connection-handler.txt) — SHA-256 `098d0fcc38eb07bd64d3ac1baa91fa3ea8825cf5ac0cb23d8a4bdb1c22cc30f0`.
 - [reachout-iq-client-disconnect-reset.txt](reachout-iq-client-disconnect-reset.txt) — SHA-256 `6fe22088dc9de308b80322943fd8722cf0dc6798fe19568d57103bb285e04bd5`.
+
+## Writer callback admission before output-stream write (2026-11-04)
+
+**Confirmed static / selected-path derivation**, same pinned APK
+2.26.43.72 SHA-256 above. This resolves the ordinary timed-IQ lower
+writer path; it is not runtime delivery observation or full replay policy.
+
+### Handoff metadata and concrete observer binding
+
+0Sf.A01 builds an Android Message with node payload, IQ ID in bundle
+messageClient:iqId and dropIfOffline from the supplied boolean. With
+nonnull ID and its selected boolean false it uses arg1 marker 0xe9;
+the logical IQ code is placed in arg2. Message.what is zero. When a
+checkCallback Boolean is supplied, its value is copied to that bundle
+field. The refresh's positive 32000-ms delay supplies true. Its final
+booleans are false, so no dropIfOffline setting is invented. 1i7.A00
+reads logical code from arg2 for marker 0xe9 (and other named markers),
+otherwise arg1; marker and logical code must not be conflated.
+
+0Sf.A05 checks channel readiness, optionally acquires 1AD, and hands
+a copied/rewritten message to 1A0.CdY. For this route its final boolean
+is false, so private A00 is consulted first. A00 concerns 1vZ/loggable
+ACK/receipt processing; no fresh raw-IQ rewrite was established from
+that branch. The full method is retained rather than claiming all
+ACK/receipt cache behavior is understood. A05 can drop/log or throw
+when readiness changes, so an earlier A0W true remains handoff/admission
+rather than proof of delivery.
+
+Direct caller search for concrete 0uw.C0e returned zero; that was not
+absence of calls. 0ZJ.onLooperPrepared constructs 0uw and passes it
+as 0uv into new 0v0. The writer stores that observer as A02. Thus
+0v0's interface BNI/C0e/C6j calls reach the retained 0uw methods in
+this constructed path. 0uw.handleMessage handles separate readiness/
+writer events; those event branches do not themselves prove a write
+completed. Call-site and exact bundle-anchor censuses are retained.
+
+### Timed-IQ callback guard and transition
+
+At entry, 0v0.A00 reads iqId/checkCallback. When checking is enabled,
+it invokes observer.BNI(id). 0uw.BNI -> 0ln.A0I checks membership in
+A0I, the earlier queued-callback map, not A0H awaiting replies. Missing
+queued callback sets the refusal flag. The relevant path reaches observer
+C6j(id) and returns before the ordinary node branch. C6j -> 0ln.A0D
+removes tracked timeout message 4 and posts handler message 5, whose
+previously retained route invokes failure cleanup.
+
+The writer also has A01-state/offline handling, a code whitelist,
+dropIfOffline and a local ArrayDeque. The selected raw timed-IQ can
+remain in that local queue when applicable; it is not a durable outbox.
+If its callback has expired before later writer admission, the same
+check remains relevant. Runtime connection-state choices and all queue
+flush scheduling are not established here.
+
+With admission satisfied and a nonnull IQ ID, 0v0 calls observer.C0e
+before its ordinary write branch. 0uw.C0e -> 0ln.A0C moves A0I to
+A0H with elapsedRealtime, as already retained. The later marker 0xe9
+branch (byte 0x344) obtains the raw node and calls 1rj.A03. This
+closes the meaning of that transition: it precedes the lower write,
+so it cannot mean socket completion or server acceptance.
+
+### Ordinary node serialization and uncertain I/O
+
+1rj.A03 delegates to 1r2.Cyu(node,1). Cyu tests flag bit 2; it is
+clear for this call, so this selected path prefixes zero before node
+serialization rather than entering the optional deflate branch. Buffer
+provider/default allocation capacity 0x2000 is not by itself a proven
+network maximum. Full encoder/size-provider policy remains separate.
+
+After serialization, Cyu obtains the connection's AtomicLong counter
+with getAndIncrement, calls 1oU.A01 with the bytes/counter, then invokes
+OutputStream.write and flush. The complete method is retained; this
+pass does not re-derive encryption/nonce/framing algorithms from names.
+An exception after reservation/counter advance is not proof that no
+bytes were transmitted.
+
+0v0.A00's IOException handler logs, sets A01=true, posts a copy of
+the current message at the target queue's front, and notifies CGH with
+the writer object. Too-large-buffer/OOM-related branches have distinct
+handling. The local requeue is not a universal network retry guarantee:
+a later pass still checks callback admission, and the earlier transition
+may already have removed this ID from A0I. Do not infer unconditional
+replay from sendMessageAtFrontOfQueue or port it into Rust.
+
+The alternative 0v2.A01 -> 1rj.A04 path was also inspected and retained:
+it handles loggable stanza metadata and is not the selected fresh raw-IQ
+branch described above. Its wider replay/cache semantics remain open.
+
+**Rust implication / remaining work:** sent-before-write reservations and
+uncertain outcomes must remain durable even when a native callback is
+removed or a local message is requeued. A future refresh implementation
+needs account-bound request identity, queued-deadline admission, durable
+settlement/application and explicit error preservation. No native map
+transition justifies resetting a saved Rust sent row. Full send-channel
+ownership/connection lifetime, queue flush and all alternate operations
+remain unfinished. No production code or live request changed here.
+
+Reproduce apk-callers 0ln.A0C, 0uw.C0e, 0v0.<init>; exact bundle
+anchor apk-xref; apk-smali on named class/method exports with
+--signatures --exceptions. Full 0v0.A00 is retained with dispatch and
+exception tables because its admission/requeue/write paths share one
+method; unrelated cases are not refresh evidence. TXT files are checked
+DEX text, not REA Evidence envelopes.
+
+- [reachout-iq-write-transfer-callers.txt](reachout-iq-write-transfer-callers.txt) — SHA-256 `6681c1c7a422ea7ac614632fce0e06142a7f99bc3d471fc0e5e4ea5f35bd9773`.
+- [reachout-iq-message-handoff.txt](reachout-iq-message-handoff.txt) — SHA-256 `e195fd133b5cd248d2b1c933a4e80979026779b34e4672b2bb70dd2e8bc5087c`.
+- [reachout-iq-send-notification.txt](reachout-iq-send-notification.txt) — SHA-256 `20d45e6ce0ba6b1fc81bb5d06fd5d70c0ea5dd2c232c43477bce9e3b613f4d4a`.
+- [reachout-iq-send-notification-callers.txt](reachout-iq-send-notification-callers.txt) — SHA-256 `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`.
+- [reachout-iq-message-construction.txt](reachout-iq-message-construction.txt) — SHA-256 `99775e583e92969cc9a79bf2e3fce66aa13388798f58f50d116053441e943ce8`.
+- [reachout-iq-check-callback-uses.txt](reachout-iq-check-callback-uses.txt) — SHA-256 `186a16d2ccb695cffeb0401e9437d37df782af2a06626acdcdf600459fda1c43`.
+- [reachout-iq-send-id-uses.txt](reachout-iq-send-id-uses.txt) — SHA-256 `f52ce8ab54ef97c943a4449a780734279b2ff633cae435d9386da1ba9cf1cc08`.
+- [reachout-iq-write-handler.txt](reachout-iq-write-handler.txt) — SHA-256 `5ed074bff9332c4f917d4699ec94d2e1288ac736227a6e8c013fda11619917d5`.
+- [reachout-iq-write-admission.txt](reachout-iq-write-admission.txt) — SHA-256 `6ec286521e703b2e16b3ff057c27e744fe5835683b8edd815cfeefec12c32d3d`.
+- [reachout-iq-queued-callback-check.txt](reachout-iq-queued-callback-check.txt) — SHA-256 `cc3a1843d60e1b50cc4e2a794c5b3e1c8efef0301660d761b808b06e76374244`.
+- [reachout-iq-message-code.txt](reachout-iq-message-code.txt) — SHA-256 `ecb66e7eb17c60a5cd71bfd34b7fa3797197af6f2142436f84b1b17eca915914`.
+- [reachout-iq-handoff-rewrite.txt](reachout-iq-handoff-rewrite.txt) — SHA-256 `6bf3bbd4a8cda9691971e0a5003066c0c2e41086e8451c72acad294f06571bb0`.
+- [reachout-iq-queued-map-membership.txt](reachout-iq-queued-map-membership.txt) — SHA-256 `4ce1571029835cc1747dc5375efa28ed3b7b9a9604e5c01561ba30923647b250`.
+- [reachout-iq-callback-missing-disposition.txt](reachout-iq-callback-missing-disposition.txt) — SHA-256 `d0127103afd4410efd232f387b8e8dddc9e8ce6a3bfa33862f7ddb4826cb1403`.
+- [reachout-iq-direct-node-write.txt](reachout-iq-direct-node-write.txt) — SHA-256 `ce5e593015b01265120626826bbe3d673c3629317f967ba0ffbf05921c96c54f`.
+- [reachout-iq-lower-node-writer.txt](reachout-iq-lower-node-writer.txt) — SHA-256 `2a6d993bd4da16a463587872e941b6f03102b5db887fadd1ff8c92abebd709a9`.
+- [reachout-iq-write-refusal-cleanup.txt](reachout-iq-write-refusal-cleanup.txt) — SHA-256 `ffbf5ed926aad8f4eb1282e669db449991baa6df59a329b5f65af8ed10764ec0`.
+- [reachout-iq-node-framing-write.txt](reachout-iq-node-framing-write.txt) — SHA-256 `d636f5b939a99fba6eaf8d34fb6aad41c70d5f12be8be9ee2b46974b04f451b5`.
+- [reachout-iq-writer-constructor-callers.txt](reachout-iq-writer-constructor-callers.txt) — SHA-256 `2621327bb8590d2e68cb21ab083765f34638c0037672a795c594a39d96cbd6c3`.
+- [reachout-iq-writer-constructor.txt](reachout-iq-writer-constructor.txt) — SHA-256 `41e154a145e837dcdd3009be3fca214e76a694f729ffea6284269bb6222189e3`.
+- [reachout-iq-writer-observer-binding.txt](reachout-iq-writer-observer-binding.txt) — SHA-256 `72ae356f4478cdfe0a5d276a6921549c115f9747c456d31737786f5c114eab03`.

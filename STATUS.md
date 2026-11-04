@@ -1,3 +1,12 @@
+2026-11-04 — **Timed-IQ writer admission and pre-write callback transfer traced:**
+
+Concrete observer binding closes queued-callback check -> reply-map transfer
+-> raw-node serialization -> output write/flush. Transfer precedes write;
+local I/O requeue is not universal resend authority.
+[Evidence and remaining queue/account lifetime](docs/protocol/rea/2.26.43.72-reachout-state/README.md#writer-callback-admission-before-output-stream-write-2026-11-04).
+Validation: JSON parsing, coverage freshness, staged diff and repository
+hygiene passed. Static research only; no runtime change/live traffic.
+
 2026-11-04 — **Disconnect callback cleanup traced; restriction reopen test strengthened:**
 
 Native cleanup distinguishes queued callbacks from reply-map callbacks and

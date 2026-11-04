@@ -1,3 +1,9 @@
+2026-11-04 — **Pinned static: writer callback guard and output boundary.**
+0Sf message metadata -> 0v0/0uw -> queued membership and pre-write
+0ln.A0C -> 1rj/1r2 output write retained, with I/O requeue qualification.
+[Observer binding, exact sequence and uncertainty](rea/2.26.43.72-reachout-state/README.md#writer-callback-admission-before-output-stream-write-2026-11-04).
+No sent-state reset, new retry policy or live traffic.
+
 2026-11-04 — **Pinned cleanup and offline durable reopen verification.**
 0ln.A0F/handler3 distinguishes callback maps; 0YB/0YU callers and distinct
 0Sf.A0J cancellation retained. Existing action regression now reopens while

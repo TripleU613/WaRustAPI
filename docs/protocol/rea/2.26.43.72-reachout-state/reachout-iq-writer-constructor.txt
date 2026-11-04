@@ -1,0 +1,21 @@
+
+# class: LX/0v0;
+# extends: Landroid/os/HandlerThread;
+
+.method public <init>(VLL)  # .registers 5
+    # full signature: LX/0v0;-><init>(LX/0uv;LX/0uz;)V
+    0000..0004  const-string  v0, "WriterThread"
+    0004..0006  const/4  v1, #0x1
+    0006..000c  invoke-direct  {v2, v0, v1}, Landroid/os/HandlerThread;-><init>(Ljava/lang/String;I)V
+    000c..0010  new-instance  v0, Ljava/util/ArrayDeque;
+    0010..0016  invoke-direct  {v0}, Ljava/util/ArrayDeque;-><init>()V
+    0016..001a  iput-object  v0, v2, LX/0v0;->A04:Ljava/util/ArrayDeque;
+    001a..001e  new-instance  v0, LX/0v2;
+    001e..0024  invoke-direct  {v0, v2}, LX/0v2;-><init>(LX/0v0;)V
+    0024..0028  iput-object  v0, v2, LX/0v0;->A05:LX/0v2;
+    0028..002c  iput-boolean  v1, v2, LX/0v0;->A01:Z
+    002c..0030  iput-object  v3, v2, LX/0v0;->A02:LX/0uv;
+    0030..0034  iput-object  v4, v2, LX/0v0;->A03:LX/0uz;
+    0034..0036  return-void
+    # exception table: 0 try range(s)
+.end method
