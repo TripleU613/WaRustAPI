@@ -1,3 +1,9 @@
+2026-11-04 — **Pinned static/derived: offline device category table.**
+2FP.A07,Exz identity,EpS subtypes and0EB conversion retained; categories
+are not sender trust labels.
+[Table and caller limits](rea/2.26.43.72-reachout-state/README.md#offline-device-classification-table-2026-11-04).
+Account predicate/identity authority remains open; no runtime change.
+
 2026-11-04 — **Pinned static: conditional offline preflight/map mechanics.**
 1rA notification branch,2FP classification-result gate and0ZJ map factory/
 insertion retained. Offline>=11 is conditional, not sender authority proof.

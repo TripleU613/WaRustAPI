@@ -295,3 +295,49 @@ signatures/exceptions. Earlier1rA.A03 export carries offline>=11 call gate.
 - [handler-map-construction.txt](handler-map-construction.txt) — SHA-256 `96e64014c4f4238bedb03128387ba114741e636618245ba4c95d343a974e73bb`.
 - [handler-map-insertion.txt](handler-map-insertion.txt) — SHA-256 `5acde23d6f188328557a56d9593cfc9bfa191da4960a5f2f1fe2a6012b3bca89`.
 - [handler-tag-declaration.txt](handler-tag-declaration.txt) — SHA-256 `f1a9e0f0cfd210e978f8fc8f86167bf812a5196456de4c30939a2065a3954648`.
+
+## Offline device classification table (2026-11-04)
+
+**Confirmed static**, same pinned APK.2FP.A07 takes nullable DeviceJid,
+09F account source and two booleans. The following is **derived from the
+retained branch instructions**, not observed traffic or trust labels.
+
+| Condition in order | Result |
+| --- | --- |
+| first boolean true, second true | 7 |
+| first boolean true, second false | 8 |
+| first false, DeviceJid null | null |
+| BRq(device) true and EpS.A00 true | 5 |
+| BRq(device) true and EpS.A00 false | 3 |
+| BRq false, device number0, BVC(user) true | 1 |
+| BRq false, device number0, BVC(user) false | 2 |
+| BRq false, device number nonzero, EpS.A00 true | 6 |
+| BRq false, device number nonzero, EpS.A00 false | 4 |
+
+A06 supplies first boolean from Exz.A01 and passes its final boolean
+argument. The notification preflight supplies final false, so result7
+is not selected by that specific call. Exz.A01 compares device.userJid
+to Exz.A00 constant; its initializer constructs a fixed platform identity
+and primary device. This is static protocol identity, not a user credential
+or a value Rust should invent for account identity. Semantic authority of
+that constant and account BRq/BVC implementations remain untraced.
+
+EpS.A00 is exactly instance-of Dv4 or Dv6. No human-readable trust
+category is inferred from obfuscated subtype names.0EB.A00 preserves
+DeviceJid, otherwise converts recognized UserJid to primary device,
+otherwise null. A server-only/non-user JID can therefore fall outside
+this classifier; null classification is not itself a native rejection.
+
+Combined with existing2FP.A09, only results5..8 choose the noted callback
+path when offline>=11. Other cases continue through different branches
+in1rA.A03. This is classification/routing evidence, not a universal
+MEX sender-authorization requirement. No Rust policy or live traffic changed.
+
+Reproduce apk-smali2FP.A07,Exz.A01/<clinit>,EpS.A00,0EB.A00 with
+signatures/exceptions. Existing A06/A09 and1rA exports bind the caller.
+
+- [device-classifier.txt](device-classifier.txt) — SHA-256 `726f9c8a002ec0c1857450c4fdf01cb905f704eb655341331177c72bc56359d8`.
+- [device-special-identity.txt](device-special-identity.txt) — SHA-256 `12428568891cb7100533cb13285a67a4e310d436c9c03195645642756cd922fa`.
+- [device-conversion.txt](device-conversion.txt) — SHA-256 `c52a92cc1a5b7016342ea43399be0a0ece0ea1002c83c64e1cc9214905f86bef`.
+- [device-class-subtypes.txt](device-class-subtypes.txt) — SHA-256 `7597c7dd10407ea30e135478a3897158104f2eea651df1b6120f6faef7f3e730`.
+- [device-special-constant.txt](device-special-constant.txt) — SHA-256 `452365061c96023e11a6a34eadc80246ca05fc53011faa3d4814288b44e1ba1a`.

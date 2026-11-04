@@ -224,3 +224,12 @@ not proof of universal MEX sender authority. Handler map factories declare
 tags and duplicate registrations throw;1rc declares notification.
 [Methods and remaining classifier/origin gaps](rea/2.26.43.72-reachout-state/README.md#high-offline-preflight-and-handler-map-construction-2026-11-04).
 No runtime validation policy or live-account change.
+
+## Offline classifier result table (2026-11-04)
+
+**Confirmed pinned static/derived table:** nullable device, special identity,
+BRq/BVC, device0 and concrete subtype predicates yield categories1..8/null.
+Notification call uses final false; selected categories affect high-offline
+callback routing rather than uniformly rejecting other senders.
+[Exact branches and remaining predicate authority](rea/2.26.43.72-reachout-state/README.md#offline-device-classification-table-2026-11-04).
+No runtime trust/ACK expansion or live traffic.

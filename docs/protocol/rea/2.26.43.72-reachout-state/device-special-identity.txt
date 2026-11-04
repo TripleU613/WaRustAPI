@@ -1,0 +1,16 @@
+
+# class: LX/Exz;
+# extends: Ljava/lang/Object;
+
+.method public A01(ZL)  # .registers 2
+    # full signature: LX/Exz;->A01(Lcom/whatsapp/infra/core/jid/DeviceJid;)Z
+    0000..0004  if-eqz  v1, +0xb
+    0004..0008  iget-object  v1, v1, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+    0008..000c  sget-object  v0, LX/Exz;->A00:LX/0xC;
+    000c..0012  invoke-static  {v1, v0}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    0012..0014  move-result  v0
+    0014..0016  return  v0
+    0016..0018  const/4  v1, #0x0
+    0018..001a  goto  -0x8
+    # exception table: 0 try range(s)
+.end method

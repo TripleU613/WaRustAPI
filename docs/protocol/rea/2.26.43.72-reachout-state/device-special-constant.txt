@@ -1,0 +1,18 @@
+
+# class: LX/Exz;
+# extends: Ljava/lang/Object;
+
+.method public <clinit>(V)  # .registers 3
+    # full signature: LX/Exz;-><clinit>()V
+    0000..0004  sget-object  v0, LX/0xC;->CREATOR:Landroid/os/Parcelable$Creator;
+    0004..0008  const-string  v0, "1807055946647699"
+    0008..000e  invoke-static  {v0}, LX/0xE;->A01(Ljava/lang/String;)LX/0xC;
+    000e..0010  move-result-object  v2
+    0010..0014  sput-object  v2, LX/Exz;->A00:LX/0xC;
+    0014..0016  const/4  v1, #0x0
+    0016..001a  new-instance  v0, LX/Dv2;
+    001a..0020  invoke-direct  {v0, v2, v1}, LX/Dv2;-><init>(LX/0xC;I)V
+    0020..0024  sput-object  v0, LX/Exz;->A01:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0024..0026  return-void
+    # exception table: 0 try range(s)
+.end method

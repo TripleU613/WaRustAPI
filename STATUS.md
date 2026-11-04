@@ -1,3 +1,13 @@
+2026-11-04 — **Offline device classifier branches resolved:**
+
+Retained exact category table and nullable/user/device conversion. Selected
+values route high-offline callbacks; they do not establish universal sender
+trust. Account predicate semantics and sender authority remain open.
+[Evidence/table](docs/protocol/rea/2.26.43.72-reachout-state/README.md#offline-device-classification-table-2026-11-04).
+Validation: JSON parsing, coverage freshness, cached diff checks and repository
+hygiene (4,441 local links) passed. Documentation/evidence only;
+no runtime change or live traffic.
+
 2026-11-04 — **Notification offline preflight/map construction traced:**
 
 Retained conditional offline>=11 JID classification and duplicate-checked

@@ -1,0 +1,17 @@
+
+# class: LX/EpS;
+# extends: Ljava/lang/Object;
+
+.method public A00(ZL)  # .registers 3
+    # full signature: LX/EpS;->A00(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0000..0002  const/4  v1, #0x0
+    0002..0008  invoke-static  {v2, v1}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  instance-of  v0, v2, LX/Dv4;
+    000c..0010  if-nez  v0, +0x7
+    0010..0014  instance-of  v0, v2, LX/Dv6;
+    0014..0018  if-nez  v0, +0x3
+    0018..001a  return  v1
+    001a..001c  const/4  v0, #0x1
+    001c..001e  return  v0
+    # exception table: 0 try range(s)
+.end method
