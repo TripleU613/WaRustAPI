@@ -260,3 +260,12 @@ prior-state preservation covered in a real store. Nonnegative bounds and
 JSON integer acceptance remain local policy. Explicit inactive ignores
 expiry. JSON adapter and enforcement enum limits are retained in the
 [evidence](rea/2.26.43.72-reachout-state/README.md#json-adapter-and-java-decimal-expiry-2026-11-04); sender authority and full native policy remain open.
+
+## Reach-out enforcement representation (2026-11-04)
+
+**Confirmed static/derived:** enum ordinals, internal integers and stored
+TOwmL_type are distinct representations. All named variants and conversion
+branches are retained in the [mapping](rea/2.26.43.72-reachout-state/README.md#enforcement-names-and-stored-type-mapping-2026-11-04). Restrict-all-companions
+becomes saved 20, used by one banner reader. Another read discards the
+result. Remaining consumers, companion enforcement and all outbound guards
+remain open; no runtime behavior or request was changed.

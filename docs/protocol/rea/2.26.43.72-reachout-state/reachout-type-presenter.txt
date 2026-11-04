@@ -1,0 +1,41 @@
+
+# class: LX/7lA;
+# extends: Ljava/lang/Object;
+
+.method public A00(VLLLLL)  # .registers 16
+    # full signature: LX/7lA;->A00(Landroid/content/Context;Landroid/view/View;Lcom/google/common/base/Optional;LX/09S;LX/0Ij;)V
+    0000..0002  const/4  v8, #0x0
+    0002..0008  invoke-static  {v12, v11, v8}, LX/1Xl;->A1Y(Ljava/lang/Object;Ljava/lang/Object;I)Z
+    0008..000a  move-result  v10
+    000a..000c  const/4  v0, #0x2
+    000c..0012  invoke-static  {v15, v14, v13, v0}, LX/2LE;->A17(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
+    0012..0018  const  v0, #0x7f0b2fdc
+    0018..001e  invoke-virtual  {v12, v0}, Landroid/view/View;->findViewById(I)Landroid/view/View;
+    001e..0020  move-result-object  v2
+    0020..0024  check-cast  v2, Lcom/whatsapp/ui/wds/components/banners/WDSBanner;
+    0024..002a  invoke-static  {v14}, LX/6oh;->A0A(LX/09S;)Landroid/content/SharedPreferences;
+    002a..002c  move-result-object  v1
+    002c..0030  const-string  v0, "TOwmL_type"
+    0030..0036  invoke-interface  {v1, v0, v8}, Landroid/content/SharedPreferences;->getInt(Ljava/lang/String;I)I
+    0036..0038  move-result  v1
+    0038..003c  const/16  v0, #0x14
+    003c..0042  const  v7, #0x7f123cae
+    0042..0046  if-ne  v1, v0, +0x5
+    0046..004c  const  v7, #0x7f123caf
+    004c..004e  const/4  v5, #0x0
+    004e..0052  sget-object  v4, LX/GY2;->A00:LX/GY2;
+    0052..0058  const  v0, #0x7f123cad
+    0058..005e  invoke-static  {v11, v0}, LX/HcW;->A00(Landroid/content/Context;I)Landroid/text/Spanned;
+    005e..0060  move-result-object  v6
+    0060..0064  new-instance  v3, LX/H5l;
+    0064..0066  move  v9, v8
+    0066..006c  invoke-direct/range  {v3..v10}, LX/H5l;-><init>(LX/HRW;Ljava/lang/CharSequence;Ljava/lang/CharSequence;IIZZ)V
+    006c..0072  invoke-virtual  {v2, v3}, Lcom/whatsapp/ui/wds/components/banners/WDSBanner;->setState(LX/H5l;)V
+    0072..0076  const/16  v0, #0x1c
+    0076..007a  new-instance  v1, LX/8EG;
+    007a..0080  invoke-direct  {v1, v13, v15, v14, v0}, LX/8EG;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
+    0080..0086  const  v0, #0x77029848
+    0086..008c  invoke-static  {v2, v1, v0}, Lcom/whatsapp/infra/logging/UXLog;->setOnClickListener(Ljava/lang/Object;Landroid/view/View$OnClickListener;I)V
+    008c..008e  return-void
+    # exception table: 0 try range(s)
+.end method

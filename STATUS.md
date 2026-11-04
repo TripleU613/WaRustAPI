@@ -1,3 +1,12 @@
+2026-11-04 — **Pinned restriction enum and stored types resolved:**
+
+Retained all 22 named enum ordinals, internal boxed values and the distinct
+saved-type mapping. Banner consumer traced; another reader discards its
+result. Complete send/companion policy remains open; no runtime changes.
+[Table and bounded consumer evidence](docs/protocol/rea/2.26.43.72-reachout-state/README.md#enforcement-names-and-stored-type-mapping-2026-11-04).
+Validation: APK checksum, JSON parsing, coverage freshness, staged diff and
+repository hygiene passed. No live account operations.
+
 2026-11-04 — **Reach-out expiry uses Java decimal string rules:**
 
 Active expiry strings reuse the existing Java-style BMP decimal reader;

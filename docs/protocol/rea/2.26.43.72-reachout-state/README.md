@@ -378,3 +378,72 @@ Evidence envelopes, and do not increase the REA coverage count.
 - [mex-response-class-map.txt](mex-response-class-map.txt) — SHA-256 `65c5417c5936ae5b3fa6a826332981d2b83b40914a3ecf5c9e1ab27f8796e9ad`.
 - [reachout-generated-response.txt](reachout-generated-response.txt) — SHA-256 `a47a0e99db505b9f2042cd4865b24070bbd217b0590676f4f0efef2cef203bd2`.
 - [reachout-enforcement-enum-map.txt](reachout-enforcement-enum-map.txt) — SHA-256 `7c666080755e8280d1858f195a5ddfd3a8d99d41d92671b7572b0ea14fc0671e`.
+
+## Enforcement names and stored type mapping (2026-11-04)
+
+**Confirmed static / derived table**, same pinned APK SHA-256 above.
+This resolves the previous section's unknown enum names and integer values,
+without establishing complete enforcement behavior. 7gL.<clinit> supplies
+the names/ordinals; its constructor sets serverValue to that name and
+toString returns serverValue. 7k9.A00 maps ordinals to boxed 02X fields;
+02X.<clinit> resolves their integer values. The already retained 7vL.A00
+then separately maps internal 0..18 identically, all other values to 20,
+before writing TOwmL_type. Do not use the enum ordinal as a saved type.
+
+| Server enum name | Ordinal | Internal integer | Saved TOwmL_type |
+| --- | ---: | ---: | ---: |
+| `UNSET_OR_UNRECOGNIZED_ENUM_VALUE` | 0 | 0 | 0 |
+| `BIZ_COMMERCE_VIOLATION_ADULT` | 1 | 3 | 3 |
+| `BIZ_COMMERCE_VIOLATION_ALCOHOL` | 2 | 4 | 4 |
+| `BIZ_COMMERCE_VIOLATION_ANIMALS` | 3 | 5 | 5 |
+| `BIZ_COMMERCE_VIOLATION_BODY_PARTS_FLUIDS` | 4 | 6 | 6 |
+| `BIZ_COMMERCE_VIOLATION_DATING` | 5 | 7 | 7 |
+| `BIZ_COMMERCE_VIOLATION_DIGITAL_SERVICES_PRODUCTS` | 6 | 8 | 8 |
+| `BIZ_COMMERCE_VIOLATION_DRUGS` | 7 | 9 | 9 |
+| `BIZ_COMMERCE_VIOLATION_DRUGS_ONLY_OTC` | 8 | 10 | 10 |
+| `BIZ_COMMERCE_VIOLATION_GAMBLING` | 9 | 11 | 11 |
+| `BIZ_COMMERCE_VIOLATION_HEALTHCARE` | 10 | 12 | 12 |
+| `BIZ_COMMERCE_VIOLATION_REAL_FAKE_CURRENCY` | 11 | 13 | 13 |
+| `BIZ_COMMERCE_VIOLATION_SUPPLEMENTS` | 12 | 14 | 14 |
+| `BIZ_COMMERCE_VIOLATION_TOBACCO` | 13 | 15 | 15 |
+| `BIZ_COMMERCE_VIOLATION_VIOLENT_CONTENT` | 14 | 16 | 16 |
+| `BIZ_COMMERCE_VIOLATION_WEAPONS` | 15 | 17 | 17 |
+| `BIZ_QUALITY` | 16 | 1 | 1 |
+| `BULK_MESSAGING` | 17 | 2 | 2 |
+| `DEFAULT` | 18 | 0 | 0 |
+| `RESTRICT_ALL_COMPANIONS` | 19 | 19 | 20 |
+| `SCAM` | 20 | 18 | 18 |
+| `WEB_COMPANION_ONLY` | 21 | 0 | 0 |
+
+Null and unhandled enum ordinals use internal 0 in 7k9.A00. In particular,
+WEB_COMPANION_ONLY exists in 7gL but ordinal 21 falls through the mapping
+to 0; its name is not evidence of a separate implemented policy here.
+RESTRICT_ALL_COMPANIONS maps 19 -> saved 20. The saved integer is a local
+APK representation, not proven to be a numeric wire field.
+
+**Bounded consumer trace:** exact TOwmL_type xref returns seven references
+in six methods. 7vL.A00 accounts for two writes (active/reset). 7lA.A00
+reads with default 0, selects string resource 0x7f123caf for saved 20
+versus 0x7f123cae otherwise, then configures a WDSBanner. Resource wording
+was not resolved. 6pn.A04 reads with default 0 and discards the result:
+this method alone establishes no send gate. The other xref methods
+(2Ne.A0G, ReachoutTimelockInfoBottomSheet.A2A, 8EG.onClick) remain untraced.
+No complete sender, companion, or outreach policy follows from this table.
+Rust still retains active/expiry only, and its group-create guard does not
+cover every outbound operation. No request or runtime behavior changed.
+
+**Negative search retained:** exact guessed anchor
+reachout_timelock_enforcement_type had no references; actual preference
+anchor TOwmL_type supplied the bounded result above. This is not an
+exhaustive proof of absence through indirect preference access.
+
+Reproduce xtask apk-smali 7gL (whole class), 02X.<clinit>, 6pn.A04 and
+7lA.A00 with --signatures --exceptions; apk-xref --anchor TOwmL_type.
+The full existing state-manager.txt retains 7vL.A00 and its switch.
+Checked DEX TXT exports below are not REA Evidence envelopes.
+
+- [reachout-enforcement-enum-values.txt](reachout-enforcement-enum-values.txt) — SHA-256 `2fe756cf89a0f2d1d26a24092d17c47649d9866ff50608d100bcb949285b6c56`.
+- [boxed-integer-constants.txt](boxed-integer-constants.txt) — SHA-256 `502b9ccb95499cf04ed2cb7b8b0fc6aab932ab042bdcb035a85e5abe9032658f`.
+- [reachout-type-preference-xref.txt](reachout-type-preference-xref.txt) — SHA-256 `3c21c0af6bb58b222150a9692455d89a4b6e85bb9c95598535bc6ad3b0204ce5`.
+- [reachout-type-consumer.txt](reachout-type-consumer.txt) — SHA-256 `087b7d71fe3c08fefd6ad4f9a9e7fb169050fbbd81ee9d02dc152dd2ae6d9d22`.
+- [reachout-type-presenter.txt](reachout-type-presenter.txt) — SHA-256 `48da7c0c3cb4e87fbb6c1484360906f1c4c38d24cd7011d0b68ec112c9c7934a`.

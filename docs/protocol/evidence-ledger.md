@@ -1,3 +1,9 @@
+2026-11-04 — **Pinned static/derived: reach-out enforcement mapping.**
+7gL enum names + 02X constants + 7k9 conversion + 7vL saved-type conversion
+resolved; 7lA banner reader and discarded 6pn read traced.
+[Table, negative search and open consumer policy](rea/2.26.43.72-reachout-state/README.md#enforcement-names-and-stored-type-mapping-2026-11-04).
+No Rust runtime change or live traffic.
+
 2026-11-04 — **Pinned static and source correction: reach-out decimal expiry.**
 6oe.A03 Long.parseLong now matched using the shared BMP decimal reader.
 7jz body adapter, 8AF data/class selection and generated constructor retained;
