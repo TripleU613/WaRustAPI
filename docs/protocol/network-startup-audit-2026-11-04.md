@@ -143,3 +143,10 @@ identical duplicate saved versions, saved-vs-config priority, malformed explicit
 configured version, and genuine absent fallback. The second verifies offline
 preflight and preserved encrypted-store state across reopen. Integration-wide
 checks belong to the root audit chunk's status; no live validation is claimed.
+
+## Current activation builder leaf
+
+Current 2.26.43.72 [checked builder/JID/callback](rea/2.26.43.72-active-iq-audit/README.md)
+confirms Rust `messaging::active_request` already matches the true-branch IQ
+shape. No extra attribute was found in that builder and no wire change was needed.
+This does not establish full bootstrap order or native readiness/presence parity.

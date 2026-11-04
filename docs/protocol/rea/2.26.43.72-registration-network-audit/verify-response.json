@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_944da373960f4ef48ff5aaab40618640d8e956e06eb50977fea466c7d8f2103c",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "com.whatsapp.registration.app.usecase.AutoconfUseCase",
+    "method_name": "A00",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-PrERU1/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "com.whatsapp.registration.app.usecase.AutoconfUseCase"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"field_count\":5,\"fields\":[{\"name\":\"A00\",\"type\":\"X.05a\",\"def_pos\":0},{\"name\":\"A01\",\"type\":\"X.0DS\",\"def_pos\":0},{\"name\":\"A02\",\"type\":\"X.09S\",\"def_pos\":0},{\"name\":\"A03\",\"type\":\"com.whatsapp.registration.ui.task.RequestCodeRepository\",\"def_pos\":0},{\"name\":\"A04\",\"type\":\"com.whatsapp.registration.ui.task.VerifyCodeRepository\",\"def_pos\":0}],\"methods\":[{\"is_constructor\":true,\"dex_descriptor\":\"()V\",\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\"},{\"is_constructor\":false,\"dex_descriptor\":\"(LX/HIW;Lcom/whatsapp/registration/app/usecase/AutoconfUseCase;Ljava/lang/String;LX/0cf;)Ljava/lang/Object;\",\"signature\":\"A00(X.HIW, com.whatsapp.registration.app.usecase.AutoconfUseCase, java.lang.String, X.0cf): java.lang.Object\",\"def_pos\":0,\"name\":\"A00\"}],\"method_count\":2,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"AutoconfUseCase\",\"full_name\":\"com.whatsapp.registration.app.usecase.AutoconfUseCase\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "com.whatsapp.registration.app.usecase.AutoconfUseCase",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"body\":\"    /* JADX WARN: Code duplicated, block: B:24:0x0068  */\\n    /* JADX WARN: Code duplicated, block: B:26:0x006c  */\\n    /* JADX WARN: Code duplicated, block: B:28:0x0070  */\\n    /* JADX WARN: Code duplicated, block: B:30:0x0074 A[DONT_INVERT] */\\n    /* JADX WARN: Code duplicated, block: B:31:0x0076  */\\n    /* JADX WARN: Code duplicated, block: B:34:0x0090 A[RETURN] */\\n    /* JADX WARN: Code duplicated, block: B:35:0x0091  */\\n    /* JADX WARN: Code duplicated, block: B:36:0x0094  */\\n    /* JADX WARN: Code duplicated, block: B:37:0x009a  */\\n    /* JADX WARN: Code duplicated, block: B:38:0x00a5  */\\n    /* JADX WARN: Code duplicated, block: B:39:0x00b0  */\\n    /* JADX WARN: Code duplicated, block: B:41:0x00ba  */\\n    /* JADX WARN: Code duplicated, block: B:43:0x00c4  */\\n    /* JADX WARN: Code duplicated, block: B:49:0x00f2  */\\n    /* JADX WARN: Code duplicated, block: B:6:0x000f  */\\n    public static final Object A00(HIW hiw, AutoconfUseCase autoconfUseCase, String str, C0cf c0cf) throws Throwable {\\n        boolean z;\\n        ILM ilm;\\n        int i;\\n        HS3 hs3A00;\\n        int iIntValue;\\n        Object i20;\\n        Object objA08;\\n        Object obj;\\n        if (c0cf instanceof ILM) {\\n            z \\u003d ((ILM) c0cf).$t \\u003d\\u003d 5;\\n        }\\n        if (z) {\\n            ilm \\u003d (ILM) c0cf;\\n            int i2 \\u003d ilm.A00;\\n            if ((i2 \\u0026 Integer.MIN_VALUE) !\\u003d 0) {\\n                ilm.A00 \\u003d i2 - Integer.MIN_VALUE;\\n            } else {\\n                ilm \\u003d new ILM(autoconfUseCase, c0cf, 5);\\n            }\\n        } else {\\n            ilm \\u003d new ILM(autoconfUseCase, c0cf, 5);\\n        }\\n        Object objA03 \\u003d ilm.A05;\\n        Object obj2 \\u003d C0dd.COROUTINE_SUSPENDED;\\n        int i3 \\u003d ilm.A00;\\n        if (i3 !\\u003d 0) {\\n            if (i3 \\u003d\\u003d 1) {\\n                C0dg.A01(objA03);\\n                i \\u003d 2;\\n            } else {\\n                if (i3 !\\u003d 2) {\\n                    throw AnonymousClass000.A03();\\n                }\\n                C0dg.A01(objA03);\\n            }\\n            return C05u.A00;\\n        }\\n        C0dg.A01(objA03);\\n        Log.i(\\\"AutoconfUseCase/onAutoconfCodeSent/attempt to verify authResponse\\\");\\n        HFg hFgA0K \\u003d B21.A0K(autoconfUseCase.A00);\\n        if (hFgA0K \\u003d\\u003d null) {\\n            hs3A00 \\u003d HS3.A00(\\\"AutoconfUseCase/verifyAutoconf/no contact point\\\");\\n            i \\u003d 2;\\n        } else {\\n            VerifyCodeRepository verifyCodeRepository \\u003d autoconfUseCase.A04;\\n            GQh gQh \\u003d hiw.A01;\\n            ilm.A01 \\u003d null;\\n            ilm.A02 \\u003d null;\\n            ilm.A03 \\u003d null;\\n            ilm.A00 \\u003d 1;\\n            i \\u003d 2;\\n            objA03 \\u003d verifyCodeRepository.A03(hFgA0K, null, gQh, \\\"autoconf\\\", \\\"autoconf\\\", null, str, null, \\\"unknown\\\", ilm, 2, 0);\\n            if (objA03 \\u003d\\u003d obj2) {\\n                return obj2;\\n            }\\n        }\\n        ILM.A01(ilm, i);\\n        C2L9.A1K(C2L6.A1B(\\\"AutoconfUseCase/onRegisterEntrypointResponse/status\\u003d\\\"), GpP.A00(hs3A00.A0F));\\n        iIntValue \\u003d hs3A00.A0F.intValue();\\n        if (iIntValue !\\u003d 0) {\\n            Gpa.A00(autoconfUseCase.A02, 1);\\n            i20 \\u003d new I20(hs3A00);\\n        } else if (iIntValue !\\u003d 11) {\\n            Gpa.A00(autoconfUseCase.A02, 1);\\n            i20 \\u003d new I1w(hs3A00);\\n        } else {\\n            if (iIntValue !\\u003d 16) {\\n                if (iIntValue !\\u003d 18) {\\n                    if (iIntValue !\\u003d 1) {\\n                        Gpa.A00(autoconfUseCase.A02, 0);\\n                        C0DS c0ds \\u003d autoconfUseCase.A01;\\n                        String strA00 \\u003d GpP.A00(hs3A00.A0F);\\n                        Hfo.A00 \\u003d strA00;\\n                        c0ds.A0a(strA00);\\n                        obj \\u003d I23.A00;\\n                    } else {\\n                        obj \\u003d I22.A00;\\n                    }\\n                    objA08 \\u003d autoconfUseCase.A08(obj, ilm);\\n                } else {\\n                    i20 \\u003d new I1y(hs3A00);\\n                }\\n                if (objA08 \\u003d\\u003d obj2) {\\n                    return obj2;\\n                }\\n                return C05u.A00;\\n            }\\n            if (\\\"app_store_age\\\".equals(hs3A00.A0T)) {\\n                i20 \\u003d new I1x(hs3A00);\\n            } else {\\n                i20 \\u003d new I1z(hs3A00);\\n            }\\n        }\\n        objA08 \\u003d autoconfUseCase.A08(i20, ilm);\\n        if (objA08 \\u003d\\u003d obj2) {\\n            return obj2;\\n        }\\n        return C05u.A00;\\n        hs3A00 \\u003d (HS3) objA03;\\n        ILM.A01(ilm, i);\\n        C2L9.A1K(C2L6.A1B(\\\"AutoconfUseCase/onRegisterEntrypointResponse/status\\u003d\\\"), GpP.A00(hs3A00.A0F));\\n        iIntValue \\u003d hs3A00.A0F.intValue();\\n        if (iIntValue !\\u003d 0) {\\n            Gpa.A00(autoconfUseCase.A02, 1);\\n            i20 \\u003d new I20(hs3A00);\\n        } else if (iIntValue !\\u003d 11) {\\n            Gpa.A00(autoconfUseCase.A02, 1);\\n            i20 \\u003d new I1w(hs3A00);\\n        } else {\\n            if (iIntValue !\\u003d 16) {\\n                if (iIntValue !\\u003d 18) {\\n                    if (iIntValue !\\u003d 1) {\\n                        Gpa.A00(autoconfUseCase.A02, 0);\\n                        C0DS c0ds2 \\u003d autoconfUseCase.A01;\\n                        String strA01 \\u003d GpP.A00(hs3A00.A0F);\\n                        Hfo.A00 \\u003d strA01;\\n                        c0ds2.A0a(strA01);\\n                        obj \\u003d I23.A00;\\n                    } else {\\n                        obj \\u003d I22.A00;\\n                    }\\n                    objA08 \\u003d autoconfUseCase.A08(obj, ilm);\\n                } else {\\n                    i20 \\u003d new I1y(hs3A00);\\n                }\\n                if (objA08 \\u003d\\u003d obj2) {\\n                    return obj2;\\n                }\\n                return C05u.A00;\\n            }\\n            if (\\\"app_store_age\\\".equals(hs3A00.A0T)) {\\n                i20 \\u003d new I1x(hs3A00);\\n            } else {\\n                i20 \\u003d new I1z(hs3A00);\\n            }\\n        }\\n        objA08 \\u003d autoconfUseCase.A08(i20, ilm);\\n        if (objA08 \\u003d\\u003d obj2) {\\n            return obj2;\\n        }\\n        return C05u.A00;\\n    }\",\"overload_count\":1,\"method_name\":\"A00\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"com.whatsapp.registration.app.usecase.AutoconfUseCase.A00\",\"class_name\":\"com.whatsapp.registration.app.usecase.AutoconfUseCase\",\"overload_index\":0,\"fell_back\":false}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "com.whatsapp.registration.app.usecase.AutoconfUseCase",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(X.HIW, com.whatsapp.registration.app.usecase.AutoconfUseCase, java.lang.String, X.0cf): java.lang.Object",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(LX/HIW;Lcom/whatsapp/registration/app/usecase/AutoconfUseCase;Ljava/lang/String;LX/0cf;)Ljava/lang/Object;"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Code duplicated, block: B:24:0x0068  */\n    /* JADX WARN: Code duplicated, block: B:26:0x006c  */\n    /* JADX WARN: Code duplicated, block: B:28:0x0070  */\n    /* JADX WARN: Code duplicated, block: B:30:0x0074 A[DONT_INVERT] */\n    /* JADX WARN: Code duplicated, block: B:31:0x0076  */\n    /* JADX WARN: Code duplicated, block: B:34:0x0090 A[RETURN] */\n    /* JADX WARN: Code duplicated, block: B:35:0x0091  */\n    /* JADX WARN: Code duplicated, block: B:36:0x0094  */\n    /* JADX WARN: Code duplicated, block: B:37:0x009a  */\n    /* JADX WARN: Code duplicated, block: B:38:0x00a5  */\n    /* JADX WARN: Code duplicated, block: B:39:0x00b0  */\n    /* JADX WARN: Code duplicated, block: B:41:0x00ba  */\n    /* JADX WARN: Code duplicated, block: B:43:0x00c4  */\n    /* JADX WARN: Code duplicated, block: B:49:0x00f2  */\n    /* JADX WARN: Code duplicated, block: B:6:0x000f  */\n    public static final Object A00(HIW hiw, AutoconfUseCase autoconfUseCase, String str, C0cf c0cf) throws Throwable {\n        boolean z;\n        ILM ilm;\n        int i;\n        HS3 hs3A00;\n        int iIntValue;\n        Object i20;\n        Object objA08;\n        Object obj;\n        if (c0cf instanceof ILM) {\n            z = ((ILM) c0cf).$t == 5;\n        }\n        if (z) {\n            ilm = (ILM) c0cf;\n            int i2 = ilm.A00;\n            if ((i2 & Integer.MIN_VALUE) != 0) {\n                ilm.A00 = i2 - Integer.MIN_VALUE;\n            } else {\n                ilm = new ILM(autoconfUseCase, c0cf, 5);\n            }\n        } else {\n            ilm = new ILM(autoconfUseCase, c0cf, 5);\n        }\n        Object objA03 = ilm.A05;\n        Object obj2 = C0dd.COROUTINE_SUSPENDED;\n        int i3 = ilm.A00;\n        if (i3 != 0) {\n            if (i3 == 1) {\n                C0dg.A01(objA03);\n                i = 2;\n            } else {\n                if (i3 != 2) {\n                    throw AnonymousClass000.A03();\n                }\n                C0dg.A01(objA03);\n            }\n            return C05u.A00;\n        }\n        C0dg.A01(objA03);\n        Log.i(\"AutoconfUseCase/onAutoconfCodeSent/attempt to verify authResponse\");\n        HFg hFgA0K = B21.A0K(autoconfUseCase.A00);\n        if (hFgA0K == null) {\n            hs3A00 = HS3.A00(\"AutoconfUseCase/verifyAutoconf/no contact point\");\n            i = 2;\n        } else {\n            VerifyCodeRepository verifyCodeRepository = autoconfUseCase.A04;\n            GQh gQh = hiw.A01;\n            ilm.A01 = null;\n            ilm.A02 = null;\n            ilm.A03 = null;\n            ilm.A00 = 1;\n            i = 2;\n            objA03 = verifyCodeRepository.A03(hFgA0K, null, gQh, \"autoconf\", \"autoconf\", null, str, null, \"unknown\", ilm, 2, 0);\n            if (objA03 == obj2) {\n                return obj2;\n            }\n        }\n        ILM.A01(ilm, i);\n        C2L9.A1K(C2L6.A1B(\"AutoconfUseCase/onRegisterEntrypointResponse/status=\"), GpP.A00(hs3A00.A0F));\n        iIntValue = hs3A00.A0F.intValue();\n        if (iIntValue != 0) {\n            Gpa.A00(autoconfUseCase.A02, 1);\n            i20 = new I20(hs3A00);\n        } else if (iIntValue != 11) {\n            Gpa.A00(autoconfUseCase.A02, 1);\n            i20 = new I1w(hs3A00);\n        } else {\n            if (iIntValue != 16) {\n                if (iIntValue != 18) {\n                    if (iIntValue != 1) {\n                        Gpa.A00(autoconfUseCase.A02, 0);\n                        C0DS c0ds = autoconfUseCase.A01;\n                        String strA00 = GpP.A00(hs3A00.A0F);\n                        Hfo.A00 = strA00;\n                        c0ds.A0a(strA00);\n                        obj = I23.A00;\n                    } else {\n                        obj = I22.A00;\n                    }\n                    objA08 = autoconfUseCase.A08(obj, ilm);\n                } else {\n                    i20 = new I1y(hs3A00);\n                }\n                if (objA08 == obj2) {\n                    return obj2;\n                }\n                return C05u.A00;\n            }\n            if (\"app_store_age\".equals(hs3A00.A0T)) {\n                i20 = new I1x(hs3A00);\n            } else {\n                i20 = new I1z(hs3A00);\n            }\n        }\n        objA08 = autoconfUseCase.A08(i20, ilm);\n        if (objA08 == obj2) {\n            return obj2;\n        }\n        return C05u.A00;\n        hs3A00 = (HS3) objA03;\n        ILM.A01(ilm, i);\n        C2L9.A1K(C2L6.A1B(\"AutoconfUseCase/onRegisterEntrypointResponse/status=\"), GpP.A00(hs3A00.A0F));\n        iIntValue = hs3A00.A0F.intValue();\n        if (iIntValue != 0) {\n            Gpa.A00(autoconfUseCase.A02, 1);\n            i20 = new I20(hs3A00);\n        } else if (iIntValue != 11) {\n            Gpa.A00(autoconfUseCase.A02, 1);\n            i20 = new I1w(hs3A00);\n        } else {\n            if (iIntValue != 16) {\n                if (iIntValue != 18) {\n                    if (iIntValue != 1) {\n                        Gpa.A00(autoconfUseCase.A02, 0);\n                        C0DS c0ds2 = autoconfUseCase.A01;\n                        String strA01 = GpP.A00(hs3A00.A0F);\n                        Hfo.A00 = strA01;\n                        c0ds2.A0a(strA01);\n                        obj = I23.A00;\n                    } else {\n                        obj = I22.A00;\n                    }\n                    objA08 = autoconfUseCase.A08(obj, ilm);\n                } else {\n                    i20 = new I1y(hs3A00);\n                }\n                if (objA08 == obj2) {\n                    return obj2;\n                }\n                return C05u.A00;\n            }\n            if (\"app_store_age\".equals(hs3A00.A0T)) {\n                i20 = new I1x(hs3A00);\n            } else {\n                i20 = new I1z(hs3A00);\n            }\n        }\n        objA08 = autoconfUseCase.A08(i20, ilm);\n        if (objA08 == obj2) {\n            return obj2;\n        }\n        return C05u.A00;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

@@ -1,0 +1,33 @@
+["account_sync"]  (9 reference(s))
+  classes.dex  LX/17v;->BLn(ZLI)
+    dex byte offset: 0x82841c
+  classes2.dex  LX/1rJ;->A03(VL)
+    dex byte offset: 0x241b38
+  classes2.dex  LX/1ro;-><clinit>(V)
+    dex byte offset: 0x15f7ae
+  classes2.dex  LX/1sv;->A01(VLZZZ)
+    dex byte offset: 0x24e60c
+  classes2.dex  LX/278;->A00(VI)
+    dex byte offset: 0x2ac35e
+  classes5.dex  LX/7Or;-><init>(VL)
+    dex byte offset: 0x2fb4ca
+  classes8.dex  LX/Dyx;-><init>(VLL)
+    dex byte offset: 0x5165ce
+  classes8.dex  LX/E8e;-><clinit>(V)
+    dex byte offset: 0x3bac30
+  classes8.dex  LX/EL2;-><clinit>(V)
+    dex byte offset: 0x3cadd0
+["authkey_rotation"]  (2 reference(s))
+  classes8.dex  LX/E8e;-><clinit>(V)
+    dex byte offset: 0x3bad98
+  classes8.dex  LX/EL2;-><clinit>(V)
+    dex byte offset: 0x3caf46
+["server_sync"]  (4 reference(s))
+  classes.dex  LX/14l;->A09(VLI)
+    dex byte offset: 0x7f7f86
+  classes2.dex  LX/1ro;-><clinit>(V)
+    dex byte offset: 0x15fc0a
+  classes8.dex  LX/E8e;-><clinit>(V)
+    dex byte offset: 0x3bac60
+  classes8.dex  LX/EL2;-><clinit>(V)
+    dex byte offset: 0x3cadfc

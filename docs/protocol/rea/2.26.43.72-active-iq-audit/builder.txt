@@ -1,0 +1,43 @@
+
+# class: LX/277;
+# extends: Ljava/lang/Object;
+
+.method public A00(LLZ)  # .registers 7
+    # full signature: LX/277;->A00(Ljava/lang/String;Z)LX/0Tp;
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v5, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  const-string  v2, "passive"
+    000c..0010  if-eqz  v6, +0x45
+    0010..0014  const-string  v1, "active"
+    0014..0016  const/4  v0, #0x0
+    0016..001a  new-instance  v4, LX/0Tp;
+    001a..0020  invoke-direct  {v4, v1, v0}, LX/0Tp;-><init>(Ljava/lang/String;[LX/0Tl;)V
+    0020..0024  const-string  v0, "iq"
+    0024..0028  new-instance  v3, LX/0Tj;
+    0028..002e  invoke-direct  {v3, v0}, LX/0Tj;-><init>(Ljava/lang/String;)V
+    002e..0032  const-string  v1, "id"
+    0032..0036  new-instance  v0, LX/0Tl;
+    0036..003c  invoke-direct  {v0, v1, v5}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    003c..0042  invoke-virtual  {v3, v0}, LX/0Tj;->A02(LX/0Tl;)V
+    0042..0046  const-string  v1, "xmlns"
+    0046..004a  new-instance  v0, LX/0Tl;
+    004a..0050  invoke-direct  {v0, v1, v2}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    0050..0056  invoke-virtual  {v3, v0}, LX/0Tj;->A02(LX/0Tl;)V
+    0056..005a  const-string  v2, "type"
+    005a..005e  const-string  v1, "set"
+    005e..0062  new-instance  v0, LX/0Tl;
+    0062..0068  invoke-direct  {v0, v2, v1}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    0068..006e  invoke-virtual  {v3, v0}, LX/0Tj;->A02(LX/0Tl;)V
+    006e..0072  sget-object  v2, LX/0mL;->A00:LX/0mL;
+    0072..0076  const-string  v1, "to"
+    0076..007a  new-instance  v0, LX/0Tl;
+    007a..0080  invoke-direct  {v0, v2, v1}, LX/0Tl;-><init>(Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;)V
+    0080..0086  invoke-virtual  {v3, v0}, LX/0Tj;->A02(LX/0Tl;)V
+    0086..008c  invoke-virtual  {v3, v4}, LX/0Tj;->A03(LX/0Tp;)V
+    008c..0092  invoke-virtual  {v3}, LX/0Tj;->A01()LX/0Tp;
+    0092..0094  move-result-object  v0
+    0094..0096  return-object  v0
+    0096..0098  move-object  v1, v2
+    0098..009a  goto  -0x42
+    # exception table: 0 try range(s)
+.end method

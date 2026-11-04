@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_9d05fd3c5eea398377b007f241a91cc9a67d6ec7e63ecffa33d6987e6b451551",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.Hfq",
+    "method_name": "A0b",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-g4TDwn/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.Hfq"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"type\":\"X.HRh\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"java.lang.String\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"java.lang.String\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"android.app.Application\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A05\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A06\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A07\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A08\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A09\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0A\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0B\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0C\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0D\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0E\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0F\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0G\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0H\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0I\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0J\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0K\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0L\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0M\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0N\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0O\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0P\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0Q\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0R\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0S\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0T\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0U\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0V\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A0W\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0X\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0Y\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0Z\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0a\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0b\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0c\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0d\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0e\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0f\"},{\"type\":\"boolean\",\"def_pos\":0,\"name\":\"A0g\"}],\"methods\":[{\"dex_descriptor\":\"()V\",\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true},{\"dex_descriptor\":\"(LX/Hfq;)Landroid/content/SharedPreferences;\",\"signature\":\"A00(X.Hfq): android.content.SharedPreferences\",\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;)LX/0Fc;\",\"signature\":\"A01(X.Hfq): X.0Fc\",\"def_pos\":0,\"name\":\"A01\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;)LX/0DS;\",\"signature\":\"A02(X.Hfq): X.0DS\",\"def_pos\":0,\"name\":\"A02\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;)LX/09S;\",\"signature\":\"A03(X.Hfq): X.09S\",\"def_pos\":0,\"name\":\"A03\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;)LX/0sz;\",\"signature\":\"A04(X.Hfq): X.0sz\",\"def_pos\":0,\"name\":\"A04\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;)LX/1mm;\",\"signature\":\"A05(X.Hfq): X.1mm\",\"def_pos\":0,\"name\":\"A05\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/HS3;)LX/H6x;\",\"signature\":\"A06(X.HS3): X.H6x\",\"def_pos\":0,\"name\":\"A06\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;[B[B[B)LX/H6x;\",\"signature\":\"A07(X.Hfq, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.Map, byte[], byte[], byte[]): X.H6x\",\"def_pos\":0,\"name\":\"A07\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;)Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;\",\"signature\":\"A08(X.Hfq): com.whatsapp.registration.core.http.KotlinRegistrationBridge\",\"def_pos\":0,\"name\":\"A08\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;Ljava/lang/String;)Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;\",\"signature\":\"A09(X.Hfq, java.lang.String): com.whatsapp.registration.core.http.KotlinRegistrationBridge\",\"def_pos\":0,\"name\":\"A09\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;)LX/HIZ;\",\"signature\":\"A0A(X.Hfq): X.HIZ\",\"def_pos\":0,\"name\":\"A0A\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;)LX/Hc1;\",\"signature\":\"A0B(X.Hfq): X.Hc1\",\"def_pos\":0,\"name\":\"A0B\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;Ljava/lang/String;)LX/Hc1;\",\"signature\":\"A0C(X.Hfq, java.lang.String): X.Hc1\",\"def_pos\":0,\"name\":\"A0C\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;)LX/Gxv;\",\"signature\":\"A0D(X.Hfq): X.Gxv\",\"def_pos\":0,\"name\":\"A0D\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;)Ljava/lang/String;\",\"signature\":\"A0E(X.Hfq): java.lang.String\",\"def_pos\":0,\"name\":\"A0E\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;)Ljava/lang/String;\",\"signature\":\"A0F(X.Hfq): java.lang.String\",\"def_pos\":0,\"name\":\"A0F\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;)Ljava/lang/String;\",\"signature\":\"A0G(X.Hfq): java.lang.String\",\"def_pos\":0,\"name\":\"A0G\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;)Ljava/lang/String;\",\"signature\":\"A0H(X.Hfq): java.lang.String\",\"def_pos\":0,\"name\":\"A0H\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;Ljava/lang/Object;)Ljava/lang/String;\",\"signature\":\"A0I(X.Hfq, java.lang.Object): java.lang.String\",\"def_pos\":0,\"name\":\"A0I\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;Ljava/lang/String;)Ljava/lang/String;\",\"signature\":\"A0J(X.Hfq, java.lang.String): java.lang.String\",\"def_pos\":0,\"name\":\"A0J\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;)Ljava/util/List;\",\"signature\":\"A0K(X.Hfq): java.util.List\",\"def_pos\":0,\"name\":\"A0K\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;Ljava/lang/String;)V\",\"signature\":\"A0L(X.Hfq, java.lang.String): void\",\"def_pos\":0,\"name\":\"A0L\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;)V\",\"signature\":\"A0M(X.Hfq, java.lang.String, java.lang.String, java.util.Map): void\",\"def_pos\":0,\"name\":\"A0M\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;Ljava/lang/String;Ljava/lang/String;Z)V\",\"signature\":\"A0N(X.Hfq, java.lang.String, java.lang.String, boolean): void\",\"def_pos\":0,\"name\":\"A0N\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;Ljava/util/Map;)V\",\"signature\":\"A0O(X.Hfq, java.util.Map): void\",\"def_pos\":0,\"name\":\"A0O\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;Ljava/util/Map;)V\",\"signature\":\"A0P(X.Hfq, java.util.Map): void\",\"def_pos\":0,\"name\":\"A0P\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;Ljava/util/Map;)V\",\"signature\":\"A0Q(X.Hfq, java.util.Map): void\",\"def_pos\":0,\"name\":\"A0Q\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;Ljava/util/Map;)V\",\"signature\":\"A0R(X.Hfq, java.util.Map): void\",\"def_pos\":0,\"name\":\"A0R\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;Ljava/util/Map;)V\",\"signature\":\"A0S(X.Hfq, java.util.Map): void\",\"def_pos\":0,\"name\":\"A0S\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;Ljava/util/Map;)V\",\"signature\":\"A0T(X.Hfq, java.util.Map): void\",\"def_pos\":0,\"name\":\"A0T\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;Ljava/util/Map;)V\",\"signature\":\"A0U(X.Hfq, java.util.Map): void\",\"def_pos\":0,\"name\":\"A0U\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;Ljava/util/Map;)V\",\"signature\":\"A0V(X.Hfq, java.util.Map): void\",\"def_pos\":0,\"name\":\"A0V\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;Ljava/util/Map;)V\",\"signature\":\"A0W(X.Hfq, java.util.Map): void\",\"def_pos\":0,\"name\":\"A0W\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;Ljava/util/Map;)V\",\"signature\":\"A0X(X.Hfq, java.util.Map): void\",\"def_pos\":0,\"name\":\"A0X\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;Ljava/util/Map;)V\",\"signature\":\"A0Y(X.Hfq, java.util.Map): void\",\"def_pos\":0,\"name\":\"A0Y\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;Ljava/util/Map;)V\",\"signature\":\"A0Z(X.Hfq, java.util.Map): void\",\"def_pos\":0,\"name\":\"A0Z\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;Ljava/util/Map;Z)V\",\"signature\":\"A0a(X.Hfq, java.util.Map, boolean): void\",\"def_pos\":0,\"name\":\"A0a\",\"is_constructor\":false},{\"dex_descriptor\":\"(Ljava/lang/String;Ljava/util/Map;)V\",\"signature\":\"A0b(java.lang.String, java.util.Map): void\",\"def_pos\":0,\"name\":\"A0b\",\"is_constructor\":false},{\"dex_descriptor\":\"(Ljava/util/Map;)V\",\"signature\":\"A0c(java.util.Map): void\",\"def_pos\":0,\"name\":\"A0c\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;)Z\",\"signature\":\"A0d(X.Hfq): boolean\",\"def_pos\":0,\"name\":\"A0d\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/Hfq;Ljava/lang/String;)Z\",\"signature\":\"A0e(X.Hfq, java.lang.String): boolean\",\"def_pos\":0,\"name\":\"A0e\",\"is_constructor\":false},{\"dex_descriptor\":\"([Ljava/lang/Integer;II)[Ljava/lang/Integer;\",\"signature\":\"A0f(java.lang.Integer[], int, int): java.lang.Integer[]\",\"def_pos\":0,\"name\":\"A0f\",\"is_constructor\":false},{\"dex_descriptor\":\"([Ljava/lang/Object;[Ljava/lang/Object;I)[Ljava/lang/Integer;\",\"signature\":\"A0g(java.lang.Object[], java.lang.Object[], int): java.lang.Integer[]\",\"def_pos\":0,\"name\":\"A0g\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/0Si;[Ljava/lang/Object;)[Ljava/lang/Object;\",\"signature\":\"A0h(X.0Si, java.lang.Object[]): java.lang.Object[]\",\"def_pos\":0,\"name\":\"A0h\",\"is_constructor\":false},{\"dex_descriptor\":\"([Ljava/lang/Integer;I)[Ljava/lang/Object;\",\"signature\":\"A0i(java.lang.Integer[], int): java.lang.Object[]\",\"def_pos\":0,\"name\":\"A0i\",\"is_constructor\":false},{\"dex_descriptor\":\"([Ljava/lang/Object;)[Ljava/lang/Object;\",\"signature\":\"A0j(java.lang.Object[]): java.lang.Object[]\",\"def_pos\":0,\"name\":\"A0j\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/HFg;LX/08T;LX/08T;LX/08T;LX/08T;)LX/CIi;\",\"signature\":\"A0k(X.HFg, X.08T, X.08T, X.08T, X.08T): X.CIi\",\"def_pos\":0,\"name\":\"A0k\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/HFg;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;)LX/C6v;\",\"signature\":\"A0l(X.HFg, java.lang.Integer, java.lang.String, java.lang.String): X.C6v\",\"def_pos\":0,\"name\":\"A0l\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/HFg;LX/HSg;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lorg/json/JSONObject;[BZZ)LX/HS4;\",\"signature\":\"A0m(X.HFg, X.HSg, java.lang.Integer, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, org.json.JSONObject, byte[], boolean, boolean): X.HS4\",\"def_pos\":0,\"name\":\"A0m\",\"is_constructor\":false},{\"dex_descriptor\":\"(Ljava/lang/String;Ljava/lang/String;)LX/H4M;\",\"signature\":\"A0n(java.lang.String, java.lang.String): X.H4M\",\"def_pos\":0,\"name\":\"A0n\",\"is_constructor\":false},{\"dex_descriptor\":\"(Ljava/lang/String;Ljava/lang/String;)LX/HRg;\",\"signature\":\"A0o(java.lang.String, java.lang.String): X.HRg\",\"def_pos\":0,\"name\":\"A0o\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/HFg;LX/HSg;Ljava/lang/String;Ljava/lang/String;)LX/H6x;\",\"signature\":\"A0p(X.HFg, X.HSg, java.lang.String, java.lang.String): X.H6x\",\"def_pos\":0,\"name\":\"A0p\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/HFg;LX/HSg;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;LX/08T;LX/08T;LX/08T;LX/08T;)LX/H6x;\",\"signature\":\"A0q(X.HFg, X.HSg, java.lang.String, java.lang.String, java.lang.String, X.08T, X.08T, X.08T, X.08T): X.H6x\",\"def_pos\":0,\"name\":\"A0q\",\"is_constructor\":false},{\"dex_descriptor\":\"(LX/HFg;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;)LX/GeH;\",\"signature\":\"A0r(X.HFg, java.lang.String, java.lang.String, java.lang.String, java.util.Map): X.GeH\",\"def_pos\":0,\"name\":\"A0r\",\"is_constructor\":false},{\"dex_descriptor\":\"(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;\",\"signature\":\"A0s(java.lang.String, java.lang.String): java.lang.String\",\"def_pos\":0,\"name\":\"A0s\",\"is_constructor\":false},{\"dex_descriptor\":\"(Z)V\",\"signature\":\"A0t(boolean): void\",\"def_pos\":0,\"name\":\"A0t\",\"is_constructor\":false},{\"dex_descriptor\":\"()Z\",\"signature\":\"A0u(): boolean\",\"def_pos\":0,\"name\":\"A0u\",\"is_constructor\":false},{\"dex_descriptor\":\"(Ljava/lang/String;)[B\",\"signature\":\"A0v(java.lang.String): byte[]\",\"def_pos\":0,\"name\":\"A0v\",\"is_constructor\":false},{\"dex_descriptor\":\"(Ljava/lang/String;Ljava/lang/String;)[B\",\"signature\":\"A0w(java.lang.String, java.lang.String): byte[]\",\"def_pos\":0,\"name\":\"A0w\",\"is_constructor\":false}],\"method_count\":60,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"Hfq\",\"full_name\":\"X.Hfq\",\"field_count\":43}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.Hfq",
+          "method_name": "A0b",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"overload_count\":1,\"method_name\":\"A0b\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.Hfq.A0b\",\"class_name\":\"X.Hfq\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public static final void A0b(String str, java.util.Map map) {\\n        if (str \\u003d\\u003d null || str.length() \\u003d\\u003d 0) {\\n            return;\\n        }\\n        map.put(\\\"recaptcha\\\", C2LD.A1X(str));\\n    }\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.Hfq",
+    "method": {
+      "name": "A0b",
+      "reported_signature": "A0b(java.lang.String, java.util.Map): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(Ljava/lang/String;Ljava/util/Map;)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public static final void A0b(String str, java.util.Map map) {\n        if (str == null || str.length() == 0) {\n            return;\n        }\n        map.put(\"recaptcha\", C2LD.A1X(str));\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

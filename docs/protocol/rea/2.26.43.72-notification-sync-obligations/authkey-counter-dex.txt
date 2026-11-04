@@ -1,0 +1,26 @@
+
+# class: LX/144;
+# extends: Ljava/lang/Object;
+
+.method public A0G(VI)  # .registers 4
+    # full signature: LX/144;->A0G(I)V
+    0000..0004  iget-object  v1, v2, LX/144;->A0B:LX/00S;
+    0004..0008  const-string  v0, "keystore"
+    0008..000e  invoke-virtual  {v1, v0}, LX/00S;->A04(Ljava/lang/String;)Landroid/content/SharedPreferences;
+    000e..0010  move-result-object  v1
+    0010..0016  invoke-static  {v1}, LX/00l;->A05(Ljava/lang/Object;)V
+    0016..0018  const/4  v0, #0x5
+    0018..001c  if-le  v3, v0, +0x11
+    001c..001e  const/4  v3, #0x5
+    001e..0024  invoke-interface  {v1}, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
+    0024..0026  move-result-object  v1
+    0026..002a  const-string  v0, "remaining_auth_key_rotation_attempts"
+    002a..0030  invoke-interface  {v1, v0, v3}, Landroid/content/SharedPreferences$Editor;->putInt(Ljava/lang/String;I)Landroid/content/SharedPreferences$Editor;
+    0030..0032  move-result-object  v0
+    0032..0038  invoke-interface  {v0}, Landroid/content/SharedPreferences$Editor;->apply()V
+    0038..003a  return-void
+    003a..003e  if-gez  v3, -0xe
+    003e..0040  const/4  v3, #0x0
+    0040..0042  goto  -0x11
+    # exception table: 0 try range(s)
+.end method

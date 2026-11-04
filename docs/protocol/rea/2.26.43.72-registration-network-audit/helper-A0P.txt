@@ -1,0 +1,78 @@
+
+# class: LX/Hfq;
+# extends: Ljava/lang/Object;
+
+.method public A0P(VLL)  # .registers 8
+    # full signature: LX/Hfq;->A0P(LX/Hfq;Ljava/util/Map;)V
+    0000..0006  invoke-interface  {v7}, Ljava/util/Map;->size()I
+    0006..000a  iget-object  v0, v6, LX/Hfq;->A07:LX/05a;
+    000a..0010  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0010..0012  move-result-object  v1
+    0012..0016  check-cast  v1, LX/07p;
+    0016..0018  const/4  v0, #0x0
+    0018..001e  invoke-static  {v1, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    001e..0024  invoke-virtual  {v1}, LX/07p;->A0N()LX/0c9;
+    0024..0026  move-result-object  v0
+    0026..002c  invoke-static  {v0}, LX/1Bc;->A00(LX/0c9;)Ljava/lang/Integer;
+    002c..002e  move-result-object  v0
+    002e..0034  invoke-static  {v0}, LX/3q5;->A0I(Ljava/lang/Number;)I
+    0034..0036  move-result  v0
+    0036..003c  invoke-static  {v0}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+    003c..003e  move-result-object  v0
+    003e..0042  sget-object  v3, LX/08Q;->A05:Ljava/nio/charset/Charset;
+    0042..0048  invoke-static  {v0, v3}, LX/6og;->A1a(Ljava/lang/String;Ljava/nio/charset/Charset;)[B
+    0048..004a  move-result-object  v1
+    004a..004e  const-string  v0, "network_radio_type"
+    004e..0054  invoke-interface  {v7, v0, v1}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    0054..0058  iget-object  v5, v6, LX/Hfq;->A03:Landroid/app/Application;
+    0058..005c  iget-object  v0, v6, LX/Hfq;->A0M:LX/05a;
+    005c..0062  invoke-static  {v0}, LX/2L8;->A0z(LX/05a;)LX/0B8;
+    0062..0064  move-result-object  v1
+    0064..0068  iget-object  v0, v6, LX/Hfq;->A0R:LX/05a;
+    0068..006e  invoke-static  {v0}, LX/Fwu;->A0a(LX/05a;)LX/0Yy;
+    006e..0070  move-result-object  v0
+    0070..0076  invoke-static  {v5, v0, v1}, LX/Hby;->A00(Landroid/content/Context;LX/0Yy;LX/0B8;)Ljava/lang/String;
+    0076..0078  move-result-object  v0
+    0078..007c  if-eqz  v0, +0xa
+    007c..0082  invoke-virtual  {v0}, Ljava/lang/String;->length()I
+    0082..0084  move-result  v2
+    0084..0086  const/4  v0, #0x6
+    0086..0088  const/4  v1, #0x1
+    0088..008c  if-ge  v2, v0, +0x3
+    008c..008e  const/4  v1, #0x0
+    008e..0092  const-string  v4, "1"
+    0092..0096  const-string  v2, "0"
+    0096..0098  move-object  v0, v2
+    0098..009c  if-eqz  v1, +0x3
+    009c..009e  move-object  v0, v4
+    009e..00a4  invoke-static  {v0, v3}, LX/6og;->A1a(Ljava/lang/String;Ljava/nio/charset/Charset;)[B
+    00a4..00a6  move-result-object  v1
+    00a6..00aa  const-string  v0, "simnum"
+    00aa..00b0  invoke-interface  {v7, v0, v1}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    00b0..00b4  sget-object  v0, LX/00M;->A01:Ljava/lang/Boolean;
+    00b4..00ba  invoke-virtual  {v5}, Landroid/content/Context;->getFilesDir()Ljava/io/File;
+    00ba..00bc  move-result-object  v1
+    00bc..00c0  const-string  v0, "rc2"
+    00c0..00c6  invoke-static  {v1, v0}, LX/3q0;->A0n(Ljava/io/File;Ljava/lang/String;)Ljava/io/File;
+    00c6..00c8  move-result-object  v0
+    00c8..00ce  invoke-virtual  {v0}, Ljava/io/File;->exists()Z
+    00ce..00d0  move-result  v0
+    00d0..00d4  if-nez  v0, +0x3
+    00d4..00d6  move-object  v4, v2
+    00d6..00dc  invoke-static  {v4, v3}, LX/6og;->A1a(Ljava/lang/String;Ljava/nio/charset/Charset;)[B
+    00dc..00de  move-result-object  v1
+    00de..00e2  const-string  v0, "hasinrc"
+    00e2..00e8  invoke-interface  {v7, v0, v1}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    00e8..00ee  invoke-static  {}, Landroid/os/Process;->myPid()I
+    00ee..00f0  move-result  v0
+    00f0..00f6  invoke-static  {v0}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+    00f6..00f8  move-result-object  v0
+    00f8..00fe  invoke-static  {v0, v3}, LX/6og;->A1a(Ljava/lang/String;Ljava/nio/charset/Charset;)[B
+    00fe..0100  move-result-object  v1
+    0100..0104  const-string  v0, "pid"
+    0104..010a  invoke-interface  {v7, v0, v1}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    010a..0110  invoke-static  {v7}, LX/Hfq;->A0c(Ljava/util/Map;)V
+    0110..0116  invoke-interface  {v7}, Ljava/util/Map;->size()I
+    0116..0118  return-void
+    # exception table: 0 try range(s)
+.end method

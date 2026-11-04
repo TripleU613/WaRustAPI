@@ -1,0 +1,66 @@
+
+# class: LX/2IT;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLI)  # .registers 3
+    # full signature: LX/2IT;-><init>(LX/0ZJ;I)V
+    0000..0004  iput  v2, v0, LX/2IT;->A00:I
+    0004..0008  iput-object  v1, v0, LX/2IT;->A01:LX/0ZJ;
+    0008..000e  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(L)  # .registers 1
+    # full signature: LX/2IT;->A00()LX/KNW;
+    0000..0004  sget-object  v0, LX/KNW;->A00:LX/KNW;
+    0004..0006  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public BVv(Z)  # .registers 2
+    # full signature: LX/2IT;->BVv()Z
+    0000..0002  const/4  v0, #0x1
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public BsS(VL)  # .registers 3
+    # full signature: LX/2IT;->BsS(Ljava/lang/String;)V
+    0000..0004  const-string  v0, "ConnectionThread/sendActiveModeIqThroughMessageClient onDeliveryFailure"
+    0004..000a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public Bvj(VLL)  # .registers 4
+    # full signature: LX/2IT;->Bvj(LX/0Tp;Ljava/lang/String;)V
+    0000..0004  const-string  v0, "ConnectionThread/sendActiveModeIqThroughMessageClient onError"
+    0004..000a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public CK4(VLL)  # .registers 7
+    # full signature: LX/2IT;->CK4(LX/0Tp;Ljava/lang/String;)V
+    0000..0004  iget-object  v0, v4, LX/2IT;->A01:LX/0ZJ;
+    0004..000a  invoke-static  {v0}, LX/0ZJ;->A0N(LX/0ZJ;)LX/1lY;
+    000a..000c  move-result-object  v3
+    000c..0010  if-eqz  v3, +0xe
+    0010..0014  iget  v2, v4, LX/2IT;->A00:I
+    0014..0016  const/4  v1, #0x0
+    0016..001a  const/16  v0, #0x8
+    001a..0020  invoke-virtual  {v3, v0, v2, v1}, Landroid/os/Handler;->obtainMessage(III)Landroid/os/Message;
+    0020..0022  move-result-object  v0
+    0022..0028  invoke-virtual  {v0}, Landroid/os/Message;->sendToTarget()V
+    0028..002a  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public CmQ(LL)  # .registers 3
+    # full signature: LX/2IT;->CmQ(Ljava/lang/String;)LX/D33;
+    0000..0006  invoke-static  {}, LX/2IT;->A00()LX/KNW;
+    0006..0008  move-result-object  v0
+    0008..000a  return-object  v0
+    # exception table: 0 try range(s)
+.end method

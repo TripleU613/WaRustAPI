@@ -1,3 +1,32 @@
+2026-11-04 — **Current server-ping response fixed; deeper network gaps retained:**
+
+- The 2.26.43.72 reader-to-writer trace establishes a no-ID IQ result for an
+  incoming server ping. Rust now sends that exact response after capture and
+  clock observation. It neither activates the session nor replays historical
+  captures; write failures remain visible. Three regressions cover shape,
+  negative routing, persistence/reopen and failed writes.
+  [Evidence and bounded correction](docs/protocol/server-pong.md).
+- Current activation IQ construction already matches Rust; no extra fields
+  were needed. Registration review identifies six constructed endpoint families
+  versus 17 cataloged paths and traces 16 parameter helpers. Conditional fields
+  and existing defaults are distinguished from unported runtime/native data.
+  The native JNI-produced request map remains a high-priority unknown.
+  [Registration audit](docs/protocol/registration-network-audit.md).
+- `account_sync`, `server_sync` and `authkey_rotation` require stateful handling,
+  version/callback policy and durable key lifecycle, not an ACK-only addition.
+  Exact prerequisite traces are retained; those ports remain open.
+  [Notification obligations](docs/protocol/notification-sync-obligations.md).
+
+Validation: **1,127 workspace/all-feature tests** and strict all-target/all-feature
+Clippy passed. CLI-reference, formatting, coverage freshness, whitespace and
+repository hygiene were checked. Retained evidence now totals 419 distinct REA
+records (63 current-build), with 34 explicit Rust ownership mappings. These are
+research counts, not completion or restriction-risk percentages. No live account
+traffic occurred and no zero-ban guarantee or causal ban diagnosis is established.
+First hardening batch af2f31a also passed remote CI. Continue from the
+[network ledger](docs/protocol/network-correctness-audit.md), prioritizing protocol
+obligations over feature breadth.
+
 2026-11-04 — **Network correctness takes priority over features:**
 
 - Account creation and token verification reject unknown/malformed APK builds,

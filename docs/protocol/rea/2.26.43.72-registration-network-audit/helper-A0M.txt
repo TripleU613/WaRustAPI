@@ -1,0 +1,34 @@
+
+# class: LX/Hfq;
+# extends: Ljava/lang/Object;
+
+.method public A0M(VLLLL)  # .registers 6
+    # full signature: LX/Hfq;->A0M(LX/Hfq;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;)V
+    0000..0004  iget-object  v0, v2, LX/Hfq;->A05:LX/05a;
+    0004..000a  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    000a..000c  move-result-object  v1
+    000c..0010  check-cast  v1, LX/0DD;
+    0010..0014  const/16  v0, #0x63dd
+    0014..001a  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    001a..001c  move-result  v0
+    001c..0020  if-eqz  v0, +0x25
+    0020..0024  iget-object  v0, v2, LX/Hfq;->A0J:LX/05a;
+    0024..002a  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    002a..002c  move-result-object  v2
+    002c..0030  check-cast  v2, LX/Hbq;
+    0030..0036  invoke-static  {v3, v4}, LX/3q6;->A0i(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0036..0038  move-result-object  v1
+    0038..003a  const/4  v0, #0x0
+    003a..0040  invoke-static  {v1, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0040..0046  invoke-static  {v2}, LX/Hbq;->A01(LX/Hbq;)Ljava/util/Map;
+    0046..0048  move-result-object  v0
+    0048..004e  invoke-static  {v1, v0}, LX/2LB;->A18(Ljava/lang/Object;Ljava/util/Map;)Ljava/lang/String;
+    004e..0050  move-result-object  v0
+    0050..0054  if-eqz  v0, +0xb
+    0054..005a  invoke-static  {v0}, LX/2LD;->A1X(Ljava/lang/String;)[B
+    005a..005c  move-result-object  v1
+    005c..0060  const-string  v0, "cred_token"
+    0060..0066  invoke-interface  {v5, v0, v1}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    0066..0068  return-void
+    # exception table: 0 try range(s)
+.end method

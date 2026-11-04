@@ -1,0 +1,98 @@
+
+# class: LX/Hfq;
+# extends: Ljava/lang/Object;
+
+.method public A0S(VLL)  # .registers 7
+    # full signature: LX/Hfq;->A0S(LX/Hfq;Ljava/util/Map;)V
+    0000..0004  iget-object  v0, v5, LX/Hfq;->A05:LX/05a;
+    0004..000a  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    000a..000c  move-result-object  v1
+    000c..0010  check-cast  v1, LX/0DD;
+    0010..0014  const/16  v0, #0x1153
+    0014..001a  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    001a..001c  move-result  v0
+    001c..0020  if-eqz  v0, +0x92
+    0020..0024  iget-object  v0, v5, LX/Hfq;->A0M:LX/05a;
+    0024..0028  iget-object  v3, v0, LX/05a;->A00:LX/00x;
+    0028..002e  invoke-static  {v3}, LX/DBc;->A0h(LX/00x;)LX/0B8;
+    002e..0030  move-result-object  v0
+    0030..0036  invoke-virtual  {v0}, LX/0B8;->A0K()Landroid/telephony/TelephonyManager;
+    0036..0038  move-result-object  v0
+    0038..003c  if-nez  v0, +0x89
+    003c..003e  const/4  v1, #0x2
+    003e..0044  invoke-static  {v1}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+    0044..0046  move-result-object  v0
+    0046..004a  sget-object  v2, LX/08Q;->A05:Ljava/nio/charset/Charset;
+    004a..0050  invoke-static  {v0, v2}, LX/6og;->A1a(Ljava/lang/String;Ljava/nio/charset/Charset;)[B
+    0050..0052  move-result-object  v1
+    0052..0056  const-string  v0, "sim_type"
+    0056..005c  invoke-interface  {v6, v0, v1}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    005c..0060  iget-object  v0, v5, LX/Hfq;->A03:Landroid/app/Application;
+    0060..0066  invoke-virtual  {v0}, Landroid/content/Context;->getContentResolver()Landroid/content/ContentResolver;
+    0066..0068  move-result-object  v4
+    0068..006c  const-string  v1, "airplane_mode_on"
+    006c..006e  const/4  v0, #0x0
+    006e..0074  invoke-static  {v4, v1, v0}, Landroid/provider/Settings$Global;->getInt(Landroid/content/ContentResolver;Ljava/lang/String;I)I
+    0074..0076  move-result  v0
+    0076..007c  invoke-static  {v0}, LX/2L9;->A1M(I)Z
+    007c..007e  move-result  v0
+    007e..0084  invoke-static  {v0}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+    0084..0086  move-result-object  v0
+    0086..008c  invoke-static  {v0, v2}, LX/6og;->A1a(Ljava/lang/String;Ljava/nio/charset/Charset;)[B
+    008c..008e  move-result-object  v1
+    008e..0092  const-string  v0, "airplane_mode_type"
+    0092..0098  invoke-interface  {v6, v0, v1}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    0098..009e  invoke-static  {v3}, LX/DBc;->A0h(LX/00x;)LX/0B8;
+    009e..00a0  move-result-object  v4
+    00a0..00a4  sget  v1, Landroid/os/Build$VERSION;->SDK_INT:I
+    00a4..00a8  const/16  v0, #0x1c
+    00a8..00ac  if-lt  v1, v0, +0x4f
+    00ac..00b2  invoke-virtual  {v4}, LX/0B8;->A0K()Landroid/telephony/TelephonyManager;
+    00b2..00b4  move-result-object  v1
+    00b4..00b8  if-eqz  v1, +0x49
+    00b8..00be  invoke-virtual  {v1}, Landroid/telephony/TelephonyManager;->getSignalStrength()Landroid/telephony/SignalStrength;
+    00be..00c0  move-result-object  v0
+    00c0..00c4  if-eqz  v0, +0x43
+    00c4..00ca  invoke-virtual  {v1}, Landroid/telephony/TelephonyManager;->getSignalStrength()Landroid/telephony/SignalStrength;
+    00ca..00cc  move-result-object  v0
+    00cc..00d2  invoke-virtual  {v0}, Landroid/telephony/SignalStrength;->getLevel()I
+    00d2..00d4  move-result  v0
+    00d4..00da  invoke-static  {v0}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+    00da..00dc  move-result-object  v0
+    00dc..00e2  invoke-static  {v0, v2}, LX/6og;->A1a(Ljava/lang/String;Ljava/nio/charset/Charset;)[B
+    00e2..00e4  move-result-object  v1
+    00e4..00e8  const-string  v0, "cellular_strength"
+    00e8..00ee  invoke-interface  {v6, v0, v1}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    00ee..00f2  iget-object  v0, v5, LX/Hfq;->A07:LX/05a;
+    00f2..00f8  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    00f8..00fa  move-result-object  v0
+    00fa..00fe  check-cast  v0, LX/07p;
+    00fe..0104  invoke-virtual  {v0}, LX/07p;->A0N()LX/0c9;
+    0104..0106  move-result-object  v0
+    0106..010a  if-eqz  v0, +0x1d
+    010a..0110  invoke-static  {v3}, LX/DBc;->A0h(LX/00x;)LX/0B8;
+    0110..0112  move-result-object  v0
+    0112..0118  invoke-virtual  {v0}, LX/0B8;->A0K()Landroid/telephony/TelephonyManager;
+    0118..011a  move-result-object  v0
+    011a..011e  if-eqz  v0, +0x14
+    011e..0124  invoke-virtual  {v0}, Landroid/telephony/TelephonyManager;->isNetworkRoaming()Z
+    0124..0126  move-result  v0
+    0126..012c  invoke-static  {v0}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+    012c..012e  move-result-object  v0
+    012e..0134  invoke-static  {v0, v2}, LX/6og;->A1a(Ljava/lang/String;Ljava/nio/charset/Charset;)[B
+    0134..0136  move-result-object  v1
+    0136..013a  const-string  v0, "roaming_type"
+    013a..0140  invoke-interface  {v6, v0, v1}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    0140..0142  return-void
+    0142..0144  const/4  v0, #0x2
+    0144..0146  goto  -0xf
+    0146..0148  const/4  v0, #0x5
+    0148..014a  goto  -0x3a
+    014a..0150  invoke-virtual  {v0}, Landroid/telephony/TelephonyManager;->getSimState()I
+    0150..0152  move-result  v0
+    0152..0154  const/4  v1, #0x1
+    0154..0158  if-ne  v0, v1, -0x8b
+    0158..015a  const/4  v1, #0x0
+    015a..015e  goto/16  -0x8e
+    # exception table: 0 try range(s)
+.end method

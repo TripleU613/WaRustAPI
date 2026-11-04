@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_2db151d4a0eb936afafb6726d4e358ed6ed5181c9f6481c07d3a9245b6fd20ee",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C14l",
+    "method_name": "A09",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-aEhSMA/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C14l"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"name\":\"A00\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A01\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A02\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A03\",\"def_pos\":0,\"type\":\"java.util.Map\"}],\"field_count\":4,\"full_name\":\"X.C14l\",\"name\":\"C14l\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":5,\"methods\":[{\"signature\":\"\\u003cinit\\u003e(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0},{\"signature\":\"A09(X.0Tp, int): void\",\"dex_descriptor\":\"(LX/0Tp;I)V\",\"is_constructor\":false,\"name\":\"A09\",\"def_pos\":0},{\"signature\":\"C6L(int): void\",\"dex_descriptor\":\"(I)V\",\"is_constructor\":false,\"name\":\"C6L\",\"def_pos\":0},{\"signature\":\"C6M(java.lang.Integer, java.lang.Integer): void\",\"dex_descriptor\":\"(Ljava/lang/Integer;Ljava/lang/Integer;)V\",\"is_constructor\":false,\"name\":\"C6M\",\"def_pos\":0},{\"signature\":\"C6N(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"C6N\",\"def_pos\":0}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C14l",
+          "method_name": "A09",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_name\":\"A09\",\"overload_count\":1,\"body\":\"    @Override // X.C0v6\\n    public void A09(C0Tp c0Tp, int i) throws LIL {\\n        C00l.A09(c0Tp, 1);\\n        if (i \\u003d\\u003d 210) {\\n            C0mL c0mL \\u003d C0mL.A00;\\n            C0Tp.A01(c0Tp, \\\"notification\\\");\\n            C8B6 c8b6 \\u003d new C8B6();\\n            if (c8b6.A0J(c0Tp, C0mL.class, -9007199254740991L, 9007199254740991L, c0mL, new String[]{\\\"from\\\"}, false) \\u003d\\u003d null) {\\n                throw new LIL(c8b6.A00);\\n            }\\n            if (c8b6.A0J(c0Tp, String.class, -9007199254740991L, 9007199254740991L, \\\"server_sync\\\", new String[]{\\\"type\\\"}, false) \\u003d\\u003d null) {\\n                throw new LIL(c8b6.A00);\\n            }\\n            C88L c88l \\u003d C88L.A00;\\n            C7Nb c7Nb \\u003d (C7Nb) c8b6.A0H(c0Tp, new C8RO(c88l, 5), new String[0]);\\n            if (c7Nb \\u003d\\u003d null) {\\n                throw new LIL(c8b6.A00);\\n            }\\n            c8b6.A0G(c0Tp, new C8RO(c88l, 6), new String[]{\\\"delete_all_data\\\"});\\n            ArrayList\\u003cC7NX\\u003e arrayListA0M \\u003d c8b6.A0M(c0Tp, new C8RO(c88l, 7), new String[]{\\\"collection\\\"}, 0L, 20L);\\n            if (arrayListA0M \\u003d\\u003d null) {\\n                throw new LIL(c8b6.A00);\\n            }\\n            C00x c00x \\u003d C09H.A00(((C00X) this.A02.A00.get()).A01(), 3364).A00;\\n            C1iC c1iC \\u003d (C1iC) c00x.get();\\n            if (c1iC.A00.get()) {\\n                AtomicInteger atomicInteger \\u003d c1iC.A07;\\n                atomicInteger.set(c1iC.A06.getAndIncrement());\\n                C0BX c0bxA00 \\u003d C1iC.A00(c1iC);\\n                int i2 \\u003d atomicInteger.get();\\n                StringBuilder sb \\u003d new StringBuilder(\\\"on_sync_d_\\\");\\n                sb.append(i2);\\n                sb.append(\\\"_start\\\");\\n                c0bxA00.markerPoint(282071404, sb.toString());\\n            }\\n            LinkedHashMap linkedHashMap \\u003d new LinkedHashMap();\\n            for (C7NX c7nx : arrayListA0M) {\\n                String str \\u003d c7nx.A02;\\n                long j \\u003d c7nx.A00;\\n                if (str.length() !\\u003d 0) {\\n                    linkedHashMap.put(str, Long.valueOf(j));\\n                    if (c7Nb.A02 !\\u003d null) {\\n                        java.util.Map map \\u003d this.A03;\\n                        Number number \\u003d (Number) map.get(str);\\n                        map.put(str, Long.valueOf((number !\\u003d null ? number.longValue() : 0L) + 1));\\n                    }\\n                }\\n            }\\n            C1iC c1iC2 \\u003d (C1iC) c00x.get();\\n            if (c1iC2.A00.get()) {\\n                C0BX c0bxA01 \\u003d C1iC.A00(c1iC2);\\n                int i3 \\u003d c1iC2.A07.get();\\n                StringBuilder sb2 \\u003d new StringBuilder(\\\"on_sync_d_update_\\\");\\n                sb2.append(i3);\\n                sb2.append(\\\"_start\\\");\\n                c0bxA01.markerPoint(282071404, sb2.toString());\\n            }\\n            C0aS c0aS \\u003d (C0aS) ((C1wf) this.A00.A00.get()).A00.A00.get();\\n            if (c0aS.A0c() || C09Z.A00(c0aS.A0Y).getInt(\\\"companion_syncd_critical_bootstrap_state\\\", 0) \\u003d\\u003d 1) {\\n                for (java.util.Map.Entry entry : linkedHashMap.entrySet()) {\\n                    c0aS.A0J.A07((String) entry.getKey(), ((Number) entry.getValue()).longValue());\\n                }\\n                c0aS.A0P();\\n            }\\n            C1iC c1iC3 \\u003d (C1iC) c00x.get();\\n            if (c1iC3.A00.get()) {\\n                C0BX c0bxA02 \\u003d C1iC.A00(c1iC3);\\n                AtomicInteger atomicInteger2 \\u003d c1iC3.A07;\\n                int i4 \\u003d atomicInteger2.get();\\n                StringBuilder sb3 \\u003d new StringBuilder(\\\"on_sync_d_update_\\\");\\n                sb3.append(i4);\\n                sb3.append(\\\"_end\\\");\\n                c0bxA02.markerPoint(282071404, sb3.toString());\\n                C0BX c0bxA03 \\u003d C1iC.A00(c1iC3);\\n                int i5 \\u003d atomicInteger2.get();\\n                StringBuilder sb4 \\u003d new StringBuilder(\\\"on_sync_d_\\\");\\n                sb4.append(i5);\\n                sb4.append(\\\"_end\\\");\\n                c0bxA03.markerPoint(282071404, sb4.toString());\\n            }\\n        }\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.C14l\",\"full_name\":\"X.14l.A09\",\"mode\":\"java\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C14l",
+    "method": {
+      "name": "A09",
+      "reported_signature": "A09(X.0Tp, int): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(LX/0Tp;I)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    @Override // X.C0v6\n    public void A09(C0Tp c0Tp, int i) throws LIL {\n        C00l.A09(c0Tp, 1);\n        if (i == 210) {\n            C0mL c0mL = C0mL.A00;\n            C0Tp.A01(c0Tp, \"notification\");\n            C8B6 c8b6 = new C8B6();\n            if (c8b6.A0J(c0Tp, C0mL.class, -9007199254740991L, 9007199254740991L, c0mL, new String[]{\"from\"}, false) == null) {\n                throw new LIL(c8b6.A00);\n            }\n            if (c8b6.A0J(c0Tp, String.class, -9007199254740991L, 9007199254740991L, \"server_sync\", new String[]{\"type\"}, false) == null) {\n                throw new LIL(c8b6.A00);\n            }\n            C88L c88l = C88L.A00;\n            C7Nb c7Nb = (C7Nb) c8b6.A0H(c0Tp, new C8RO(c88l, 5), new String[0]);\n            if (c7Nb == null) {\n                throw new LIL(c8b6.A00);\n            }\n            c8b6.A0G(c0Tp, new C8RO(c88l, 6), new String[]{\"delete_all_data\"});\n            ArrayList<C7NX> arrayListA0M = c8b6.A0M(c0Tp, new C8RO(c88l, 7), new String[]{\"collection\"}, 0L, 20L);\n            if (arrayListA0M == null) {\n                throw new LIL(c8b6.A00);\n            }\n            C00x c00x = C09H.A00(((C00X) this.A02.A00.get()).A01(), 3364).A00;\n            C1iC c1iC = (C1iC) c00x.get();\n            if (c1iC.A00.get()) {\n                AtomicInteger atomicInteger = c1iC.A07;\n                atomicInteger.set(c1iC.A06.getAndIncrement());\n                C0BX c0bxA00 = C1iC.A00(c1iC);\n                int i2 = atomicInteger.get();\n                StringBuilder sb = new StringBuilder(\"on_sync_d_\");\n                sb.append(i2);\n                sb.append(\"_start\");\n                c0bxA00.markerPoint(282071404, sb.toString());\n            }\n            LinkedHashMap linkedHashMap = new LinkedHashMap();\n            for (C7NX c7nx : arrayListA0M) {\n                String str = c7nx.A02;\n                long j = c7nx.A00;\n                if (str.length() != 0) {\n                    linkedHashMap.put(str, Long.valueOf(j));\n                    if (c7Nb.A02 != null) {\n                        java.util.Map map = this.A03;\n                        Number number = (Number) map.get(str);\n                        map.put(str, Long.valueOf((number != null ? number.longValue() : 0L) + 1));\n                    }\n                }\n            }\n            C1iC c1iC2 = (C1iC) c00x.get();\n            if (c1iC2.A00.get()) {\n                C0BX c0bxA01 = C1iC.A00(c1iC2);\n                int i3 = c1iC2.A07.get();\n                StringBuilder sb2 = new StringBuilder(\"on_sync_d_update_\");\n                sb2.append(i3);\n                sb2.append(\"_start\");\n                c0bxA01.markerPoint(282071404, sb2.toString());\n            }\n            C0aS c0aS = (C0aS) ((C1wf) this.A00.A00.get()).A00.A00.get();\n            if (c0aS.A0c() || C09Z.A00(c0aS.A0Y).getInt(\"companion_syncd_critical_bootstrap_state\", 0) == 1) {\n                for (java.util.Map.Entry entry : linkedHashMap.entrySet()) {\n                    c0aS.A0J.A07((String) entry.getKey(), ((Number) entry.getValue()).longValue());\n                }\n                c0aS.A0P();\n            }\n            C1iC c1iC3 = (C1iC) c00x.get();\n            if (c1iC3.A00.get()) {\n                C0BX c0bxA02 = C1iC.A00(c1iC3);\n                AtomicInteger atomicInteger2 = c1iC3.A07;\n                int i4 = atomicInteger2.get();\n                StringBuilder sb3 = new StringBuilder(\"on_sync_d_update_\");\n                sb3.append(i4);\n                sb3.append(\"_end\");\n                c0bxA02.markerPoint(282071404, sb3.toString());\n                C0BX c0bxA03 = C1iC.A00(c1iC3);\n                int i5 = atomicInteger2.get();\n                StringBuilder sb4 = new StringBuilder(\"on_sync_d_\");\n                sb4.append(i5);\n                sb4.append(\"_end\");\n                c0bxA03.markerPoint(282071404, sb4.toString());\n            }\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

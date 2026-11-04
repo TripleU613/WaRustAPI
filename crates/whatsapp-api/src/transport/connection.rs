@@ -527,6 +527,19 @@ pub(crate) async fn drive(
                 };
                 let capture = super::inbox::preserve_in_epoch(&store, &node, epoch)?;
                 super::clock::observe(&store, &node)?;
+                // APK 43.72 1rA.A03 -> 1lZ.A0t -> 0ZJ.A0q handles
+                // get/urn:xmpp:ping even without an id or usable timestamp.
+                // 0ZJ.A07 selects writer command 0; 0v0.A00 emits only
+                // iq/type=result/to=s.whatsapp.net (no echoed id/namespace).
+                if node.description == "iq"
+                    && node.get_attr("type").and_then(|v| v.as_text()) == Some("get")
+                    && node.get_attr("xmlns").and_then(|v| v.as_text()) == Some("urn:xmpp:ping")
+                {
+                    let pong = Node::new("iq").attr("type", "result")
+                        .attr("to", crate::model::jid::Jid::parse("s.whatsapp.net")?);
+                    link.send(&pong).await?;
+                    continue;
+                }
                 if matches!(node.description.as_str(), "failure" | "stream:error") {
                     if node.description == "failure"
                         && let Some(token) = node.get_attr("appeal_token").and_then(|v| v.as_text())
@@ -1382,6 +1395,166 @@ mod tests {
             assert!(self.finished().await.is_ok());
         }
     }
+    /// Native 43.72 0v0.A00 command 0 has no id/xmlns/child. Capture and
+    /// clock work must commit before this stateless protocol response is written.
+    #[tokio::test]
+    async fn native_server_ping_is_answered_before_activation_and_after_capture() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("server-ping.redb");
+        let store = open(&path);
+        let journal = store.journal_head().unwrap();
+        let account = store.read(|tx| tx.scan(Table::Account, 1, 10)).unwrap();
+        let mut fake = start(&store, false, None);
+        let (active, written) = fake.written().await;
+        let active_id = active.get_attr("id").unwrap().clone();
+        written.send(Ok(())).unwrap();
+        let ping = Node::new("iq")
+            .attr("type", "get")
+            .attr("xmlns", "urn:xmpp:ping")
+            .attr("id", "DO-NOT-ECHO")
+            .attr("from", peer())
+            .attr("t", "1700000000");
+        let capture = format!(
+            "inbound:sha256:{}",
+            hex::encode(sha2::Sha256::digest(encode(&ping).unwrap()))
+        );
+        let expected = Node::new("iq")
+            .attr("type", "result")
+            .attr("to", Jid::parse("s.whatsapp.net").unwrap());
+        for incoming in [
+            ping.clone(),
+            ping.clone(),
+            // Native routing forwards timestamp default 0 but still pongs:
+            // neither id nor a parsed positive t is a response prerequisite.
+            Node::new("iq")
+                .attr("type", "get")
+                .attr("xmlns", "urn:xmpp:ping")
+                .attr("t", "not-a-time"),
+        ] {
+            fake.deliver(incoming).await;
+            let (pong, written) = fake.written().await;
+            assert_eq!(pong, expected);
+            assert!(
+                fake.ready.try_recv().is_err(),
+                "pong does not activate a connection"
+            );
+            assert!(
+                store
+                    .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                    .unwrap()
+                    .is_some()
+            );
+            assert_eq!(
+                super::super::clock::inspect(&store)
+                    .unwrap()
+                    .confirmed_source,
+                Some(super::super::clock::ConfirmedSource::ServerPing)
+            );
+            written.send(Ok(())).unwrap();
+        }
+        fake.deliver(Node::new("iq").attr("id", active_id).attr("type", "result"))
+            .await;
+        let (presence, written) = fake.written().await;
+        assert_eq!(presence.description, "presence");
+        written.send(Ok(())).unwrap();
+        (&mut fake.ready).await.unwrap();
+        fake.stop_cleanly().await;
+        assert_eq!(store.journal_head().unwrap(), journal);
+        assert_eq!(
+            store.read(|tx| tx.scan(Table::Account, 1, 10)).unwrap(),
+            account
+        );
+        drop(store);
+        let store = identity_store(&path);
+        assert!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                .unwrap()
+                .is_some()
+        );
+        assert_eq!(
+            super::super::clock::inspect(&store)
+                .unwrap()
+                .confirmed_source,
+            Some(super::super::clock::ConfirmedSource::ServerPing)
+        );
+    }
+
+    #[tokio::test]
+    async fn failed_server_pong_write_keeps_capture_and_is_not_queued_for_reconnect() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("server-pong-cut.redb");
+        let store = open(&path);
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        (&mut fake.ready).await.unwrap();
+        let ping = Node::new("iq")
+            .attr("type", "get")
+            .attr("xmlns", "urn:xmpp:ping")
+            .attr("id", "PONG-CUT")
+            .attr("t", "1700000000");
+        let capture = format!(
+            "inbound:sha256:{}",
+            hex::encode(sha2::Sha256::digest(encode(&ping).unwrap()))
+        );
+        fake.deliver(ping).await;
+        let (pong, written) = fake.written().await;
+        assert_eq!(pong.description, "iq");
+        assert_eq!(
+            pong.get_attr("type").and_then(|v| v.as_text()),
+            Some("result")
+        );
+        written
+            .send(Err(Error::Io(std::io::Error::new(
+                std::io::ErrorKind::BrokenPipe,
+                "pong write cut",
+            ))))
+            .unwrap();
+        assert!(matches!(fake.finished().await, Err(Error::Io(_))));
+        assert!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                .unwrap()
+                .is_some()
+        );
+        drop(store);
+        let store = Arc::new(identity_store(&path));
+        let mut fresh = start(&store, false, None);
+        fresh.activate().await;
+        (&mut fresh.ready).await.unwrap();
+        // Historical captures are evidence, not a queue of protocol pongs.
+        fresh.nothing_written(Duration::from_millis(30)).await;
+        fresh.stop_cleanly().await;
+    }
+
+    #[tokio::test]
+    async fn server_pong_does_not_answer_other_iq_types_or_namespaces() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("no-server-pong.redb"));
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        (&mut fake.ready).await.unwrap();
+        for node in [
+            Node::new("iq").attr("type", "get").attr("xmlns", "w:p"),
+            Node::new("iq")
+                .attr("type", "result")
+                .attr("xmlns", "urn:xmpp:ping"),
+            Node::new("iq")
+                .attr("type", "set")
+                .attr("xmlns", "urn:xmpp:ping"),
+            Node::new("iq").attr("xmlns", "urn:xmpp:ping"),
+            Node::new("iq").attr("type", "get"),
+            Node::new("message")
+                .attr("type", "get")
+                .attr("xmlns", "urn:xmpp:ping"),
+        ] {
+            fake.deliver(node).await;
+            fake.nothing_written(Duration::from_millis(20)).await;
+            assert!(!fake.task.is_finished());
+        }
+        fake.stop_cleanly().await;
+    }
+
     #[tokio::test]
     async fn dirty_notification_ack_cut_preserves_one_query_for_next_session() {
         use super::super::{actions, groups};

@@ -1,0 +1,30 @@
+# APK-derived structural disassembly: LX/14l;
+# APK SHA-256: 887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(V) flags=0x10001 registers=3
+  # full signature: LX/14l;-><init>()V
+  0000..0004 op=13 const/16 v0, #0xd2
+  0004..000a op=24 filled-new-array {v0}, [I
+  000a..000c op=0c move-result-object v1
+  000c..000e op=12 const/4 v0, #0x1
+  000e..0014 op=70 invoke-direct {v2, v1, v0}, LX/0v6;-><init>([IZ)V
+  0014..0016 op=12 const/4 v0, #0x5
+  0016..001c op=71 invoke-static {v0}, LX/05d;->A00(I)LX/05a;
+  001c..001e op=0c move-result-object v0
+  001e..0022 op=5b iput-object v0, v2, LX/14l;->A02:LX/05a;
+  0022..0026 op=13 const/16 v0, #0xd37
+  0026..002c op=71 invoke-static {v0}, LX/05W;->A00(I)LX/05a;
+  002c..002e op=0c move-result-object v0
+  002e..0032 op=5b iput-object v0, v2, LX/14l;->A00:LX/05a;
+  0032..0036 op=13 const/16 v0, #0xa28
+  0036..003c op=71 invoke-static {v0}, LX/05d;->A00(I)LX/05a;
+  003c..003e op=0c move-result-object v0
+  003e..0042 op=5b iput-object v0, v2, LX/14l;->A01:LX/05a;
+  0042..0046 op=22 new-instance v0, Ljava/util/LinkedHashMap;
+  0046..004c op=70 invoke-direct {v0}, Ljava/util/LinkedHashMap;-><init>()V
+  004c..0050 op=5b iput-object v0, v2, LX/14l;->A03:Ljava/util/Map;
+  0050..0052 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

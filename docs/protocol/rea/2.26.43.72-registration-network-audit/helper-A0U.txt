@@ -1,0 +1,36 @@
+
+# class: LX/Hfq;
+# extends: Ljava/lang/Object;
+
+.method public A0U(VLL)  # .registers 5
+    # full signature: LX/Hfq;->A0U(LX/Hfq;Ljava/util/Map;)V
+    0000..0004  iget-object  v0, v3, LX/Hfq;->A0C:LX/05a;
+    0004..0008  iget-object  v3, v0, LX/05a;->A00:LX/00x;
+    0008..000e  invoke-interface  {v3}, LX/00x;->get()Ljava/lang/Object;
+    000e..0010  move-result-object  v1
+    0010..0014  check-cast  v1, LX/Gzx;
+    0014..0018  iget-object  v0, v1, LX/Gzx;->A01:Lcom/whatsapp/wamsys/JniBridge;
+    0018..001c  iget-object  v2, v1, LX/Gzx;->A00:Landroid/app/Application;
+    001c..0022  invoke-static  {}, LX/Fws;->A1G()V
+    0022..0024  const/4  v1, #0x7
+    0024..002a  invoke-virtual  {v0}, Lcom/whatsapp/wamsys/JniBridge;->getWajContext()Lcom/facebook/simplejni/NativeHolder;
+    002a..002c  move-result-object  v0
+    002c..0032  invoke-static  {v1, v2, v0}, Lcom/whatsapp/wamsys/JniBridge;->jvidispatchIOO(ILjava/lang/Object;Ljava/lang/Object;)J
+    0032..0038  invoke-interface  {v3}, LX/00x;->get()Ljava/lang/Object;
+    0038..003a  move-result-object  v1
+    003a..003e  check-cast  v1, LX/Gzx;
+    003e..0042  iget-object  v0, v1, LX/Gzx;->A01:Lcom/whatsapp/wamsys/JniBridge;
+    0042..0046  iget-object  v2, v1, LX/Gzx;->A00:Landroid/app/Application;
+    0046..004c  invoke-static  {}, LX/Fws;->A1G()V
+    004c..0050  const/16  v1, #0x10
+    0050..0056  invoke-virtual  {v0}, Lcom/whatsapp/wamsys/JniBridge;->getWajContext()Lcom/facebook/simplejni/NativeHolder;
+    0056..0058  move-result-object  v0
+    0058..005e  invoke-static  {v1, v2, v0}, Lcom/whatsapp/wamsys/JniBridge;->jvidispatchOOO(ILjava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    005e..0060  move-result-object  v1
+    0060..0064  check-cast  v1, Ljava/util/Map;
+    0064..0068  const-string  v0, "null cannot be cast to non-null type kotlin.collections.Map<kotlin.String, kotlin.ByteArray>"
+    0068..006e  invoke-static  {v1, v0}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    006e..0074  invoke-interface  {v4, v1}, Ljava/util/Map;->putAll(Ljava/util/Map;)V
+    0074..0076  return-void
+    # exception table: 0 try range(s)
+.end method

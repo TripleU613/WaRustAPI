@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_b4a90bdf8a14b885e6b75515bf3d94969c7b44e03498c18dea71f9812f1df56c",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C1lY",
+    "method_name": "handleMessage",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-xHVrqf/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C1lY"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cinit\\u003e(X.0ZJ): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"(LX/0ZJ;)V\"},{\"signature\":\"A00(): void\",\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"()V\"},{\"signature\":\"A01(): void\",\"def_pos\":0,\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"()V\"},{\"signature\":\"Big(X.0Tp, X.Eoh): void\",\"def_pos\":0,\"name\":\"Big\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0Tp;LX/Eoh;)V\"},{\"signature\":\"BkU(X.Eoh): void\",\"def_pos\":0,\"name\":\"BkU\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/Eoh;)V\"},{\"signature\":\"C0g(X.0Tp, java.lang.String): void\",\"def_pos\":0,\"name\":\"C0g\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0Tp;Ljava/lang/String;)V\"},{\"signature\":\"C2o(int): void\",\"def_pos\":0,\"name\":\"C2o\",\"is_constructor\":false,\"dex_descriptor\":\"(I)V\"},{\"signature\":\"CPm(android.os.Message): void\",\"def_pos\":0,\"name\":\"CPm\",\"is_constructor\":false,\"dex_descriptor\":\"(Landroid/os/Message;)V\"},{\"signature\":\"handleMessage(android.os.Message): void\",\"def_pos\":0,\"name\":\"handleMessage\",\"is_constructor\":false,\"dex_descriptor\":\"(Landroid/os/Message;)V\"},{\"signature\":\"onError(int): void\",\"def_pos\":0,\"name\":\"onError\",\"is_constructor\":false,\"dex_descriptor\":\"(I)V\"}],\"method_count\":10,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"C1lY\",\"full_name\":\"X.C1lY\",\"field_count\":2,\"fields\":[{\"type\":\"boolean\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"X.0ZJ\",\"def_pos\":0,\"name\":\"A01\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C1lY",
+          "method_name": "handleMessage",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.1lY.handleMessage\",\"class_name\":\"X.C1lY\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    @Override // android.os.Handler\\n    public void handleMessage(Message message) {\\n        C0ZJ c0zj;\\n        int i;\\n        String str;\\n        switch (message.what) {\\n            case 0:\\n                this.A01.A0q(message);\\n                break;\\n            case 1:\\n                boolean z \\u003d this.A00;\\n                c0zj \\u003d this.A01;\\n                if (!z) {\\n                    i \\u003d message.arg1;\\n                    c0zj.A0j(i);\\n                } else {\\n                    str \\u003d \\\"ConnectionThread/ReaderThreadHandler/quit if logout is finished\\\";\\n                    c0zj.A1X(str);\\n                }\\n                break;\\n            case 2:\\n                boolean z2 \\u003d this.A00;\\n                c0zj \\u003d this.A01;\\n                if (z2) {\\n                    str \\u003d \\\"ConnectionThread/ReaderThreadHandler/quit if error and finished\\\";\\n                    c0zj.A1X(str);\\n                } else if (!c0zj.A1T()) {\\n                    c0zj.A0m(message.arg1);\\n                } else {\\n                    i \\u003d -1;\\n                    c0zj.A0j(i);\\n                }\\n                break;\\n            case 4:\\n                String string \\u003d message.getData().getString(\\\"iqId\\\");\\n                C00L.A05(string);\\n                this.A01.A1B.C0f(string);\\n                break;\\n            case 5:\\n                Object obj \\u003d message.obj;\\n                C00L.A05(obj);\\n                C2E3 c2e3 \\u003d (C2E3) obj;\\n                ((C0ln) this.A01.A0p.get()).A09(c2e3.A00(), c2e3.A01());\\n                break;\\n            case 6:\\n                C0ln c0ln \\u003d (C0ln) this.A01.A0p.get();\\n                Object obj2 \\u003d message.obj;\\n                C00L.A05(obj2);\\n                c0ln.A0A((Eoh) obj2);\\n                break;\\n            case 7:\\n                this.A01.A1e(message.arg1);\\n                break;\\n            case 8:\\n                this.A01.A1S(true, message.arg1);\\n                break;\\n            case 9:\\n                C0ZJ c0zj2 \\u003d this.A01;\\n                if (this \\u003d\\u003d c0zj2.A1M) {\\n                    c0zj2.A1b();\\n                } else {\\n                    Log.i(\\\"ConnectionThread/ReaderThreadHandler/passive_exit superseded by a reconnect\\\");\\n                }\\n                break;\\n        }\\n    }\",\"overload_count\":1,\"method_name\":\"handleMessage\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C1lY",
+    "method": {
+      "name": "handleMessage",
+      "reported_signature": "handleMessage(android.os.Message): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(Landroid/os/Message;)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    @Override // android.os.Handler\n    public void handleMessage(Message message) {\n        C0ZJ c0zj;\n        int i;\n        String str;\n        switch (message.what) {\n            case 0:\n                this.A01.A0q(message);\n                break;\n            case 1:\n                boolean z = this.A00;\n                c0zj = this.A01;\n                if (!z) {\n                    i = message.arg1;\n                    c0zj.A0j(i);\n                } else {\n                    str = \"ConnectionThread/ReaderThreadHandler/quit if logout is finished\";\n                    c0zj.A1X(str);\n                }\n                break;\n            case 2:\n                boolean z2 = this.A00;\n                c0zj = this.A01;\n                if (z2) {\n                    str = \"ConnectionThread/ReaderThreadHandler/quit if error and finished\";\n                    c0zj.A1X(str);\n                } else if (!c0zj.A1T()) {\n                    c0zj.A0m(message.arg1);\n                } else {\n                    i = -1;\n                    c0zj.A0j(i);\n                }\n                break;\n            case 4:\n                String string = message.getData().getString(\"iqId\");\n                C00L.A05(string);\n                this.A01.A1B.C0f(string);\n                break;\n            case 5:\n                Object obj = message.obj;\n                C00L.A05(obj);\n                C2E3 c2e3 = (C2E3) obj;\n                ((C0ln) this.A01.A0p.get()).A09(c2e3.A00(), c2e3.A01());\n                break;\n            case 6:\n                C0ln c0ln = (C0ln) this.A01.A0p.get();\n                Object obj2 = message.obj;\n                C00L.A05(obj2);\n                c0ln.A0A((Eoh) obj2);\n                break;\n            case 7:\n                this.A01.A1e(message.arg1);\n                break;\n            case 8:\n                this.A01.A1S(true, message.arg1);\n                break;\n            case 9:\n                C0ZJ c0zj2 = this.A01;\n                if (this == c0zj2.A1M) {\n                    c0zj2.A1b();\n                } else {\n                    Log.i(\"ConnectionThread/ReaderThreadHandler/passive_exit superseded by a reconnect\");\n                }\n                break;\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

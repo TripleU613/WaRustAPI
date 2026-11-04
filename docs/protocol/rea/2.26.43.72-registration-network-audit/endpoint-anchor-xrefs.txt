@@ -1,0 +1,17 @@
+["autoconf"]  (8 reference(s))
+  classes9.dex  Lcom/whatsapp/registration/app/usecase/AutoconfUseCase;->A00(LLLLL)
+    dex byte offset: 0x43de14
+  classes9.dex  Lcom/whatsapp/registration/app/verifyphone/VerifyPhoneNumber;->A2U(VLLZ)
+    dex byte offset: 0x4efaf2
+  classes9.dex  Lcom/whatsapp/registration/app/verifyphone/VerifyPhoneNumber;->onResume(V)
+    dex byte offset: 0x4f6578
+  classes9.dex  Lcom/whatsapp/registration/ui/task/RequestCodeRepository;->A00(LLLLLLLLLLIIIIZ)
+    dex byte offset: 0x5e4344
+  classes9.dex  Lcom/whatsapp/registration/ui/task/VerifyCodeRepository;->A00(LLLLLLLLLLLLII)
+    dex byte offset: 0x601c1c
+  classes9.dex  LX/Hfo;->A01(ILZ)
+    dex byte offset: 0x665dbe
+  classes9.dex  LX/HmH;->Bnu(VL)
+    dex byte offset: 0x6a1eda
+  classes9.dex  LX/IOC;->invokeSuspend(LL)
+    dex byte offset: 0x830334
