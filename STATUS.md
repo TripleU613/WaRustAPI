@@ -1,3 +1,16 @@
+2026-11-04 — **Bounded media wait recovery (offline):**
+
+Explicit refresh preparation now restores known waits from validated receipt order
+and original timestamps before reserving another query. Missing/duplicate receipt
+history refuses partial repair. Active unsequenced waits remain ambiguous and
+block preparation through their original bound; records are never restamped.
+Existing uncertain deadlines are preserved rather than shortened. Safe recovery
+counts expose remaining unbound legacy history without raw response data.
+[Contract, four real-store tests and remaining gaps](docs/protocol/media-network-outcomes.md#bounded-historical-wait-recovery-2026-11-04).
+Validation: **1,255 workspace/all-feature tests**, strict Clippy, CLI-reference,
+formatting, coverage freshness and repository hygiene passed.
+No live traffic. Unbound legacy recovery and native retry coordination remain open.
+
 2026-11-04 — **Durable media refresh receipt order (offline):**
 
 New settlements now receive an atomic positive sequence across result, refusal,

@@ -253,3 +253,36 @@ IDs, duplicate/reopen stability, missing/zero/exhausted counters, transaction
 rollback and unchanged legacy records. This is the ordering prerequisite for
 recovery; historical throttle reconciliation itself is still unimplemented. No
 query, replay, clock guess or live account operation is introduced.
+
+## Bounded historical wait recovery (2026-11-04)
+
+**Confirmed Rust/offline:** `recover_throttle` validates prospective saved
+receipts, request/reply correlation, generation and a complete contiguous local
+sequence against the persisted counter before deriving any throttle effect. It
+uses receipt order rather than request IDs or wall-clock order. A missing507
+checkpoint can be restored from the original receipt timestamp plus its bounded
+backoff; it is never restarted from now. Preparation calls this local recovery
+before its separate reservation transaction, then rechecks the stored deadline.
+The repair therefore survives a refusal to reserve a still-throttled query.
+
+Recovery never erases or shortens an existing saved deadline whose origin is not
+proved by a dedicated processing marker. Fresh qualified live reset transitions
+still work as before. Unsequenced prospective507 receipts with an active original
+bound are reported separately and prevent preparation; no reset order is guessed
+and no historical sequence is stamped. Once those original bounds expire they
+cease to block, without issuing requests or altering their evidence. Older unbound
+route rows are counted and remain outside this recovery contract. A missing
+checkpoint is not proof that such unbound history has been reconciled.
+
+The safe RecoveryReport exposes sequenced/unsequenced/unbound counts, the active
+unsequenced bound and preserved deadline. It contains no raw identifiers, hosts,
+auth or server text. Incomplete/duplicate sequences, invalid source metadata,
+authentication failures and the local 10000-route-history bound refuse before
+partial repair. Four encrypted-store tests cover lost-wait/reopen restoration,
+clock/ID ordering, preservation of ambiguous saved deadlines, unsequenced expiry
+without restamping, and corrupt/incomplete history. No live traffic occurred.
+
+**Still open:** unbound legacy refusal analysis, an authenticated last-processed
+throttle marker that can prove recovery-time resets, full native volatile/Fibonacci
+retry coordination and clock-service parity. This conservative repair is local
+continuity, not a claim of complete native startup or automatic retry eligibility.

@@ -1,3 +1,10 @@
+2026-11-04 — **Confirmed Rust/offline:** media throttle recovery now uses
+complete validated receipt sequence and original receipt times. Missing waits can
+be restored without restarting them; ambiguous saved/unsequenced waits cannot be
+silently erased. Four encrypted-store tests cover restoration, ordering, ambiguity
+and partial/corrupt history refusal. No new APK or live observation is claimed.
+[Implementation and boundaries](media-network-outcomes.md#bounded-historical-wait-recovery-2026-11-04).
+
 2026-11-04 — **Confirmed Rust/offline:** media refresh settlement now
 atomically records local receipt order alongside projection/throttle effects.
 Mixed-outcome, duplicate/reopen, counter-fault/cut and unchanged legacy-history

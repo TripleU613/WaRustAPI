@@ -9,6 +9,15 @@ use crate::{
 };
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
+mod recovery;
+pub use recovery::RecoveryReport;
+
+/// Restore known receipt-anchored waits without sending or replaying a request.
+/// Unsequenced observations remain ambiguous; this is not retry authorization.
+pub fn recover_throttle(store: &ProtocolStore) -> Result<RecoveryReport> {
+    recovery::recover_throttle(store)
+}
+
 const CURRENT: &[u8] = b"media-routing-current:v1";
 const OWNER: &[u8] = b"media-routing-owner:v1";
 const THROTTLE: &[u8] = b"media-routing-throttle-until:v1";
@@ -354,6 +363,16 @@ pub fn prepare(store: &ProtocolStore, id: &str) -> Result<Node> {
             .all(|b| b.is_ascii_alphanumeric() || b == b'-' || b == b'_')
     {
         return Err(invalid("invalid media refresh ID"));
+    }
+    let recovery = recover_throttle(store)?;
+    if let Some(until) = recovery.unsequenced_active_until {
+        return Err(crate::Error::invalid(
+            "media_routing",
+            format!(
+                "unsequenced saved media wait requires reconciliation until {} ms; no refresh reserved",
+                until.0
+            ),
+        ));
     }
     store
         .write(|tx| {
