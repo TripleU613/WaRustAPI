@@ -1,3 +1,9 @@
+2026-11-04 — **Pinned static: IQ pending maps, dispatch and timeout.**
+0Sf.A0W/A0A -> 0ln registration/map transfer/reply removal and
+0m2 case4 -> 0ln.A03 -> 8bj.BsS retained. Delay resolves to ms.
+[Sources, in-memory limits and durable port obligations](rea/2.26.43.72-reachout-state/README.md#pending-iq-registration-dispatch-and-timeout-ownership-2026-11-04).
+Account/lower-writer teardown remains open; no live traffic.
+
 2026-11-04 — **Pinned static: JSON DI/parser branches and extraction matrix.**
 1Uw.A08 key 4417 -> 0iz; SGd.A04-dependent branches, UTF-8, 5ks/BTj
 helpers and 1WU/0iv slot binding retained. Wrong-typed data/errors differ

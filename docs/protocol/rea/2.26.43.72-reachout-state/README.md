@@ -1301,3 +1301,110 @@ TXT exports are checked DEX text, not REA Evidence envelopes.
 - [reachout-json-stream-value.txt](reachout-json-stream-value.txt) — SHA-256 `f2552a08fadeef70687a53c91dfd5c9dab35ba3d781734b294b7ea58aea81930`.
 - [reachout-json-stream-array.txt](reachout-json-stream-array.txt) — SHA-256 `d2b0e5d24789a5c61fa0a5c66d219dd575f84bfc83003d31f065c955c3b1db74`.
 - [reachout-json-pipeline-slot-binding.txt](reachout-json-pipeline-slot-binding.txt) — SHA-256 `25dd542e1a3ff99842a1eaabd3ca7fdf33a1417ca8fd942627b558f1f8fdb7f5`.
+
+## Pending IQ registration, dispatch and timeout ownership (2026-11-04)
+
+**Confirmed static**, same pinned APK 2.26.43.72 SHA-256 above. This
+connects selected refresh request/response adapters to native in-memory
+callback ownership. It does not establish account teardown or a durable
+Rust request implementation.
+
+### Registration before send handoff
+
+0Sf.A0W delegates to static A0A with its final booleans false. A0A
+requires 0AI.A06 and nonnull 0Sf.A0J before entering the pending path.
+It calls 0AI.A0O for logged connection state, not as an additional
+branch condition. Do not equate the logged flag with a required caller
+gate. Under the pending path it calls 0ln.A08(callback,id,type,delay,false)
+before building a message and handing it to 0Sf.A05; it then returns true.
+This is queue/handoff success, not proof that bytes reached a socket or
+a server accepted the IQ. Internal A05/writer completion remains open.
+
+0ln.A08 synchronizes on A0F, checks A0H doesn't already contain the ID,
+inserts the callback in A0I, and checks any replaced callback against its
+sentinel. Exact assertion throw/log behavior is not reconstructed here.
+For delay>0 it posts handler message 4 with the ID via sendMessageDelayed
+and stores the ID in 0m2.A00. This confirms the argument's milliseconds:
+the refresh's 0iq default 0x7d00 is 32000 ms. That scheduling starts at
+callback registration before send handoff, not after server receipt. No
+new Rust timer or reconnect retry is inferred from it.
+
+On the not-ready path, 0Sf.A0A calls 0ln.A0E(id), logs and returns
+false. A0E removes A0I under the same lock and checks a removed value
+is its sentinel; this method does not call the feature's success handler.
+Native cleanup is not authority to erase a Rust uncertain-send record.
+
+### Transfer to the reply map and response entry
+
+0ln.A0C(id) moves an A0I callback into A0H as 1bW(callback,
+elapsedRealtime) under A0F, with duplicate-ID checks and timing updates.
+Its exact lower-writer call site/meaning is not established by the method
+name alone. The A0H field-reference census has eight accesses, including
+A0C, response/timeout helpers and A0F lifecycle method. A0F and account
+switch/teardown semantics are not yet traced.
+
+0ln.A0H(node,id) removes tracked handler message 4 under A0F before
+reading A0H by the supplied ID. Missing callback logs and returns false.
+For an existing callback it selects a worker/handler route according to
+interfaces 1xZ/1xa and a feature gate. Full route conditions are retained;
+no runtime configuration was guessed. The method updates metrics for
+result/error, but does not prove other node types are refused before
+callback lookup or timeout cancellation.
+
+0ln.A02 removes the matching A0H pair under A0F before scheduling its
+response worker. Missing pair logs and invokes no response callback.
+Normal 1xb.run and FcV's selected branch both invoke static 0ln.A01
+with the held callback, node and ID. Direct worker census is retained.
+A01 calls CK4 for type=result and Bvj for type=error; other types are
+reported/asserted rather than passed as success. It has explicit LV5
+error handling. This is dispatch classification, not sender validation:
+request-bound 7Ou validation remains downstream as previously traced.
+
+### Timeout removes pending ownership before notification
+
+0m2.handleMessage case 4 calls 0ln.A03 with the ID and a boolean
+from message.arg1, then removes its timer-map entry. The refresh's
+registered boolean is false. A03 locks A0F, removes A0I first and
+otherwise A0H, obtains any callback, unlocks, and schedules 8bj selector
+21. That worker invokes callback.BsS(id). 0mb delegates BsS to
+0md -> 0mZ.BL6 as already retained. Missing callbacks are logged and
+not reconstructed. Case 5 also calls A03(id,false). Other merged handler
+cases include ordinary message ACKs and are not refresh evidence.
+
+Thus callback removal is serialized across selected reply/timeout paths,
+but a worker already holding a callback is not a cancellable database
+transaction. No universal network exactly-once property, account binding
+or post-crash callback reconstruction follows from these maps.
+
+**Rust comparison / remaining work:** existing actions mark sent before
+write and preserve uncertain outcomes. A refresh port must keep durable
+request/account ownership, original ID/wire and single-settlement state;
+it must compose accepted restriction application with settlement and
+preserve failure/timeout without inventing an inactive response or
+automatically requeueing an uncertain request. Native callback maps do
+not supply that persistence. Lower writer handoff, A0F/account teardown,
+interface routing and durable refresh scheduler remain open. No Rust
+code or request changed here; no live traffic. Overall audit unfinished.
+
+Reproduce apk-smali for methods named by each export with --signatures
+--exceptions; apk-callers 0ln.A01 and 1xb.<init>; apk-field-refs
+0ln.A0H:Ljava/util/Map;. TXT exports are checked DEX text, not REA
+Evidence envelopes. Complete merged workers/handlers retain their case
+tables so unrelated ACK/call/UI branches are not conflated.
+
+- [reachout-iq-registration-send.txt](reachout-iq-registration-send.txt) — SHA-256 `fce6204f1d5114db614a7a56b807b661947730fe6ebdcdec66cb2aac612c2e77`.
+- [reachout-iq-register-and-write.txt](reachout-iq-register-and-write.txt) — SHA-256 `efd03cb38cefe4ce4d1e78af6e10a40adc84c52a864e091253b669da7d901893`.
+- [reachout-iq-reply-dispatch.txt](reachout-iq-reply-dispatch.txt) — SHA-256 `8b29f6e3bf5c91e05c350ec6cfa5c1bd6e21261dc2ed5b4f0a31c1bf16018f2b`.
+- [reachout-iq-pending-registration.txt](reachout-iq-pending-registration.txt) — SHA-256 `99acfbec072ba7b3e3cd1818627a04fa3664293655cc0a429564b416f57dfee8`.
+- [reachout-iq-not-ready-cleanup.txt](reachout-iq-not-ready-cleanup.txt) — SHA-256 `4e4a2f3bf409c4277b2a0998685087145a9367952e05239d32e13ce9d29d58c3`.
+- [reachout-iq-pending-dispatch-callers.txt](reachout-iq-pending-dispatch-callers.txt) — SHA-256 `92b75134b884308e4de5e49a008ce038bc3470dc93746ce24c96b4fb8e74755f`.
+- [reachout-iq-timeout-handler.txt](reachout-iq-timeout-handler.txt) — SHA-256 `4c8a65dfb8084a0e069c95bf190c90cf19c93a0dd6c6c362f198bacae16bc94f`.
+- [reachout-iq-response-worker.txt](reachout-iq-response-worker.txt) — SHA-256 `35da237be4736bf87b37caf665e7a0abe3580af9203c42ebdde2d144f24b6022`.
+- [reachout-iq-response-alternate-worker.txt](reachout-iq-response-alternate-worker.txt) — SHA-256 `3087fc04ae0f021f7991ac1352a700e33cb286a9f2b33e23479f143e4d22b07d`.
+- [reachout-iq-worker-callers.txt](reachout-iq-worker-callers.txt) — SHA-256 `f5ddaf28e9384f27ed41736547653311519fca70e135db3cf6210e698ea26d0b`.
+- [reachout-iq-timeout-disposition.txt](reachout-iq-timeout-disposition.txt) — SHA-256 `9ae3b22f41df5bcf12c7bda72207a35ae662f1dc77113a5df87ff2acd380d706`.
+- [reachout-iq-pending-lookup.txt](reachout-iq-pending-lookup.txt) — SHA-256 `52e86f754cd653f6f03952166a59f4fb200d4c0e837d0f9b71966eeac7bd5c55`.
+- [reachout-iq-flight-map-accesses.txt](reachout-iq-flight-map-accesses.txt) — SHA-256 `e3e0fbab040879fcad092f18dfe2ab3c2e2a50b6e672723a1d97cd29c066a566`.
+- [reachout-iq-timeout-worker.txt](reachout-iq-timeout-worker.txt) — SHA-256 `7dd5e2a054b2132ffcd6ef497c3c50e18e14f6689db85674fab7e7dcaac3f27e`.
+- [reachout-iq-write-start.txt](reachout-iq-write-start.txt) — SHA-256 `d29e969ad599d57283bca4f0e1a21d7c476568a4f4923e50fd94e73ec93ea769`.
+- [reachout-iq-response-entry.txt](reachout-iq-response-entry.txt) — SHA-256 `cf336112f268081e230730a572309ae72143ecfe63cab1f8c2ea120e3d9068b2`.

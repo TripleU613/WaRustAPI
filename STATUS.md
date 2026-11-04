@@ -1,3 +1,12 @@
+2026-11-04 — **Refresh pending-callback and timeout ownership traced:**
+
+Native registration precedes send handoff; 32000 delay is milliseconds.
+Locked pending/reply map removals and timeout callback route retained.
+These are in-memory lifetimes, not durable request/account ownership.
+[Evidence and remaining writer/teardown work](docs/protocol/rea/2.26.43.72-reachout-state/README.md#pending-iq-registration-dispatch-and-timeout-ownership-2026-11-04).
+Validation: JSON parsing, coverage freshness, staged diff and repository
+hygiene passed. Static research only; no runtime change/live traffic.
+
 2026-11-04 — **Pinned JSON decoder and data/errors failure matrix traced:**
 
 DI key 4417 resolves 0iz. Configuration selects stream/JSONTokener paths;

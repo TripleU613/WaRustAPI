@@ -1,0 +1,535 @@
+
+# class: LX/0m2;
+# extends: Landroid/os/Handler;
+
+.method public handleMessage(VL)  # .registers 16
+    # full signature: LX/0m2;->handleMessage(Landroid/os/Message;)V
+    0000..0004  iget  v0, v15, Landroid/os/Message;->what:I
+    0004..0006  const/4  v2, #0x1
+    0006..000c  packed-switch  v0, payload@0x80c, cases=[1:@0x21c, 2:@0x530, 3:@0x55a, 4:@0x7a2, 5:@0x7ca, 6:@0xe, 7:@0x1ea, 8:@0x454], default@0xc
+    000c..000e  return-void
+    000e..0012  iget-object  v9, v15, Landroid/os/Message;->obj:Ljava/lang/Object;
+    0012..0016  check-cast  v9, LX/2E3;
+    0016..001a  iget-object  v4, v9, LX/2E3;->A01:LX/Eoh;
+    001a..001e  iget-object  v2, v14, LX/0m2;->A01:LX/0ln;
+    001e..0022  iget-object  v6, v2, LX/0ln;->A0C:LX/0Th;
+    0022..0026  const-string  v10, "MessageCallbacksManager/handleAck matched nack to edited message: "
+    0026..002a  const-string  v1, "MessageCallbacksManager/received ack="
+    002a..002e  new-instance  v0, Ljava/lang/StringBuilder;
+    002e..0034  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0034..003a  invoke-virtual  {v0, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    003a..0040  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0040..0042  move-result-object  v0
+    0042..0048  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0048..004c  iget-object  v8, v9, LX/2E3;->A01:LX/Eoh;
+    004c..0050  iget-object  v7, v6, LX/0Th;->A04:Ljava/util/Map;
+    0050..0052  monitor-enter
+    0052..0058  invoke-interface  {v7, v8}, Ljava/util/Map;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+    0058..005a  move-result-object  v5
+    005a..005e  check-cast  v5, LX/1ue;
+    005e..0062  if-nez  v5, +0x67
+    0062..0066  const-string  v1, "message"
+    0066..006a  iget-object  v0, v8, LX/Eoh;->A06:Ljava/lang/String;
+    006a..0070  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0070..0072  move-result  v0
+    0072..0074  const/4  v11, #0x0
+    0074..0078  if-eqz  v0, +0x5c
+    0078..007c  iget-object  v0, v8, LX/Eoh;->A07:Ljava/lang/String;
+    007c..0082  invoke-static  {v0}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+    0082..0084  move-result  v0
+    0084..0088  if-eqz  v0, +0x54
+    0088..008c  iget-object  v1, v9, LX/2E3;->A00:LX/0Tp;
+    008c..0090  const-string  v0, "error"
+    0090..0096  invoke-virtual  {v1, v0, v11}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0096..0098  move-result-object  v0
+    0098..009c  if-eqz  v0, +0x4a
+    009c..00a2  invoke-interface  {v7}, Ljava/util/Map;->keySet()Ljava/util/Set;
+    00a2..00a4  move-result-object  v0
+    00a4..00aa  invoke-interface  {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    00aa..00ac  move-result-object  v12
+    00ac..00ae  move-object  v3, v11
+    00ae..00b4  invoke-interface  {v12}, Ljava/util/Iterator;->hasNext()Z
+    00b4..00b6  move-result  v0
+    00b6..00ba  if-eqz  v0, +0x24
+    00ba..00c0  invoke-interface  {v12}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    00c0..00c2  move-result-object  v1
+    00c2..00c6  check-cast  v1, LX/Eoh;
+    00c6..00ca  iget-object  v0, v1, LX/Eoh;->A07:Ljava/lang/String;
+    00ca..00d0  invoke-static  {v0}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+    00d0..00d2  move-result  v0
+    00d2..00d6  if-nez  v0, -0x12
+    00d6..00dc  invoke-virtual  {v1}, LX/Eoh;->A00()LX/Efa;
+    00dc..00de  move-result-object  v0
+    00de..00e2  iput-object  v11, v0, LX/Efa;->A07:Ljava/lang/String;
+    00e2..00e8  invoke-virtual  {v0}, LX/Efa;->A00()LX/Eoh;
+    00e8..00ea  move-result-object  v0
+    00ea..00f0  invoke-virtual  {v8, v0}, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z
+    00f0..00f2  move-result  v0
+    00f2..00f6  if-eqz  v0, -0x22
+    00f6..00fa  if-nez  v3, +0x1b
+    00fa..00fc  move-object  v3, v1
+    00fc..00fe  goto  -0x27
+    00fe..0102  if-eqz  v3, +0x17
+    0102..0106  new-instance  v0, Ljava/lang/StringBuilder;
+    0106..010c  invoke-direct  {v0, v10}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    010c..0112  invoke-virtual  {v0, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    0112..0118  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0118..011a  move-result-object  v0
+    011a..0120  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0120..0126  invoke-interface  {v7, v3}, Ljava/util/Map;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+    0126..0128  move-result-object  v5
+    0128..012c  check-cast  v5, LX/1ue;
+    012c..012e  monitor-exit
+    012e..0132  if-eqz  v5, +0x1a
+    0132..0136  iget-object  v0, v9, LX/2E3;->A00:LX/0Tp;
+    0136..013c  invoke-interface  {v5, v0}, LX/1ue;->BsT(Ljava/lang/Object;)V
+    013c..0140  iget-object  v0, v8, LX/Eoh;->A06:Ljava/lang/String;
+    0140..0146  invoke-static  {v0}, LX/0Th;->A00(Ljava/lang/String;)Z
+    0146..0148  move-result  v0
+    0148..014c  if-eqz  v0, +0xd
+    014c..0150  iget-object  v0, v6, LX/0Th;->A02:LX/00x;
+    0150..0156  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0156..0158  move-result-object  v0
+    0158..015c  check-cast  v0, LX/0V4;
+    015c..0162  invoke-virtual  {v0}, LX/0V4;->A07()V
+    0162..0166  iget-object  v3, v4, LX/Eoh;->A08:Ljava/lang/String;
+    0166..0168  const/4  v0, #0x0
+    0168..016c  if-eqz  v3, +0x3
+    016c..016e  const/4  v0, #0x1
+    016e..0174  invoke-static  {v0}, LX/00L;->A0A(Z)V
+    0174..0178  iget-object  v0, v14, LX/0m2;->A00:Ljava/util/concurrent/ConcurrentMap;
+    0178..017e  invoke-interface  {v0, v3}, Ljava/util/Map;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+    017e..0180  move-result-object  v1
+    0180..0184  if-eqz  v1, +0x7
+    0184..0188  const/16  v0, #0x8
+    0188..018e  invoke-virtual  {v14, v0, v1}, Landroid/os/Handler;->removeMessages(ILjava/lang/Object;)V
+    018e..0192  iget-object  v2, v2, LX/0ln;->A0D:LX/0TV;
+    0192..0196  const-string  v0, "message acked with null id"
+    0196..019c  invoke-static  {v3, v0}, LX/00L;->A06(Ljava/lang/Object;Ljava/lang/String;)V
+    019c..019e  const/4  v0, #0x0
+    019e..01a4  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    01a4..01aa  invoke-virtual  {v2, v3}, LX/0TV;->A02(Ljava/lang/String;)LX/Eo7;
+    01aa..01ac  move-result-object  v1
+    01ac..01b0  if-eqz  v1, +0xf
+    01b0..01b4  iget-object  v0, v2, LX/0TV;->A05:Ljava/util/LinkedHashMap;
+    01b4..01ba  invoke-virtual  {v0}, Ljava/util/AbstractMap;->size()I
+    01ba..01be  iget-object  v0, v1, LX/Eo7;->A02:LX/1ue;
+    01be..01c2  if-eqz  v0, -0xd9
+    01c2..01c8  invoke-interface  {v0, v3}, LX/1ue;->BsT(Ljava/lang/Object;)V
+    01c8..01ca  return-void
+    01ca..01ce  iget-object  v1, v2, LX/0TV;->A04:Ljava/util/LinkedHashMap;
+    01ce..01d0  monitor-enter
+    01d0..01d6  invoke-virtual  {v1, v3}, Ljava/util/AbstractMap;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+    01d6..01d8  move-result-object  v0
+    01d8..01dc  check-cast  v0, LX/Eo7;
+    01dc..01de  monitor-exit
+    01de..01e2  if-eqz  v0, -0xe9
+    01e2..01e8  invoke-virtual  {v1}, Ljava/util/AbstractMap;->size()I
+    01e8..01ea  return-void
+    01ea..01ee  iget-object  v2, v15, Landroid/os/Message;->obj:Ljava/lang/Object;
+    01ee..01f2  check-cast  v2, LX/Eoh;
+    01f2..01f6  iget-object  v0, v14, LX/0m2;->A01:LX/0ln;
+    01f6..01fa  iget-object  v1, v0, LX/0ln;->A0D:LX/0TV;
+    01fa..01fe  iget-object  v2, v2, LX/Eoh;->A08:Ljava/lang/String;
+    01fe..0200  const/4  v0, #0x0
+    0200..0206  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0206..020c  invoke-virtual  {v1, v2}, LX/0TV;->A01(Ljava/lang/String;)LX/Eo7;
+    020c..020e  move-result-object  v0
+    020e..0212  if-eqz  v0, -0x101
+    0212..0216  iget-object  v1, v1, LX/0TV;->A04:Ljava/util/LinkedHashMap;
+    0216..0218  monitor-enter
+    0218..021c  goto/16  +0x2e7
+    021c..0220  iget-object  v5, v14, LX/0m2;->A01:LX/0ln;
+    0220..0224  iget  v4, v15, Landroid/os/Message;->arg1:I
+    0224..0228  iget-object  v0, v5, LX/0ln;->A03:LX/00x;
+    0228..022e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    022e..0230  move-result-object  v0
+    0230..0234  check-cast  v0, LX/00X;
+    0234..023a  invoke-virtual  {v0}, LX/00X;->A01()LX/00Y;
+    023a..023c  move-result-object  v1
+    023c..0240  const/16  v0, #0xd24
+    0240..0246  invoke-static  {v1, v0}, LX/09H;->A00(LX/00Y;I)LX/05a;
+    0246..0248  move-result-object  v0
+    0248..024c  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    024c..0252  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0252..0254  move-result-object  v1
+    0254..0258  check-cast  v1, LX/1iC;
+    0258..025c  iget-object  v0, v1, LX/1iC;->A00:Ljava/util/concurrent/atomic/AtomicBoolean;
+    025c..0262  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicBoolean;->get()Z
+    0262..0264  move-result  v0
+    0264..0268  if-eqz  v0, +0x3e
+    0268..026e  invoke-static  {v1}, LX/1iC;->A00(LX/1iC;)LX/0BX;
+    026e..0270  move-result-object  v6
+    0270..0274  if-eqz  v4, +0xc5
+    0274..0278  if-eq  v4, v2, +0xbf
+    0278..027e  sparse-switch  v4, payload@0x834, cases=[8:@0x38e, 15:@0x394, 19:@0x39a, 27:@0x3a2, 74:@0x3aa, 77:@0x3b2, 203:@0x3ba, 210:@0x3c2, 221:@0x3ca, 234:@0x3d2, 257:@0x3da, 259:@0x3e2, 265:@0x3ea], default@0x27e
+    027e..0284  packed-switch  v4, payload@0x8a0, cases=[241:@0x370, 242:@0x376, 243:@0x37c, 244:@0x382, 245:@0x388], default@0x284
+    0284..0288  new-instance  v0, Ljava/lang/StringBuilder;
+    0288..028e  invoke-direct  {v0}, Ljava/lang/StringBuilder;-><init>()V
+    028e..0294  invoke-virtual  {v0, v4}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0294..029a  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    029a..029c  move-result-object  v3
+    029c..02a0  iget-object  v0, v1, LX/1iC;->A06:Ljava/util/concurrent/atomic/AtomicInteger;
+    02a0..02a6  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicInteger;->getAndIncrement()I
+    02a6..02a8  move-result  v2
+    02a8..02ac  const-string  v0, "in_"
+    02ac..02b0  new-instance  v1, Ljava/lang/StringBuilder;
+    02b0..02b6  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    02b6..02bc  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    02bc..02c0  const-string  v0, "_"
+    02c0..02c6  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    02c6..02cc  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    02cc..02d2  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    02d2..02d4  move-result-object  v1
+    02d4..02da  const  v0, #0x10d0116c
+    02da..02e0  invoke-interface  {v6, v0, v1}, LX/0BX;->markerPoint(ILjava/lang/String;)V
+    02e0..02e4  iget-object  v1, v5, LX/0ln;->A05:Lcom/google/common/base/Optional;
+    02e4..02ea  invoke-virtual  {v1}, Lcom/google/common/base/Optional;->isPresent()Z
+    02ea..02ec  move-result  v0
+    02ec..02f0  if-eqz  v0, +0x2e
+    02f0..02f6  invoke-virtual  {v1}, Lcom/google/common/base/Optional;->get()Ljava/lang/Object;
+    02f6..02f8  move-result-object  v1
+    02f8..02fc  check-cast  v1, LX/1uX;
+    02fc..0300  iget-object  v0, v1, LX/1uX;->A01:Ljava/util/concurrent/atomic/AtomicBoolean;
+    0300..0306  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicBoolean;->get()Z
+    0306..0308  move-result  v0
+    0308..030c  if-eqz  v0, +0x20
+    030c..0310  iget-object  v3, v1, LX/1uX;->A00:Ljava/util/concurrent/ConcurrentHashMap;
+    0310..0316  invoke-static  {v4}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0316..0318  move-result-object  v2
+    0318..031e  invoke-virtual  {v3, v2}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    031e..0320  move-result-object  v1
+    0320..0324  if-nez  v1, +0xf
+    0324..0326  const/4  v0, #0x0
+    0326..032a  new-instance  v1, Ljava/util/concurrent/atomic/AtomicInteger;
+    032a..0330  invoke-direct  {v1, v0}, Ljava/util/concurrent/atomic/AtomicInteger;-><init>(I)V
+    0330..0336  invoke-virtual  {v3, v2, v1}, Ljava/util/concurrent/ConcurrentHashMap;->putIfAbsent(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    0336..0338  move-result-object  v0
+    0338..033c  if-eqz  v0, +0x3
+    033c..033e  move-object  v1, v0
+    033e..0342  check-cast  v1, Ljava/util/concurrent/atomic/AtomicInteger;
+    0342..0348  invoke-virtual  {v1}, Ljava/util/concurrent/atomic/AtomicInteger;->incrementAndGet()I
+    0348..034c  iget-object  v1, v5, LX/0ln;->A04:Lcom/google/common/base/Optional;
+    034c..0352  invoke-virtual  {v1}, Lcom/google/common/base/Optional;->isPresent()Z
+    0352..0354  move-result  v0
+    0354..0358  if-eqz  v0, +0x252
+    0358..035e  invoke-virtual  {v1}, Lcom/google/common/base/Optional;->get()Ljava/lang/Object;
+    035e..0364  invoke-static  {v15}, LX/0m2;->A00(Landroid/os/Message;)LX/1k2;
+    0364..0366  move-result-object  v0
+    0366..036a  instance-of  v0, v0, LX/1k3;
+    036a..036e  if-eqz  v0, +0x247
+    036e..0370  goto  +0x4a
+    0370..0374  const-string  v3, "ENCRYPT_NOTIFICATION"
+    0374..0376  goto  -0x6c
+    0376..037a  const-string  v3, "COMPANION_REG_REFS"
+    037a..037c  goto  -0x6f
+    037c..0380  const-string  v3, "COMPANION_PAIR_SUCCESS"
+    0380..0382  goto  -0x72
+    0382..0386  const-string  v3, "COMPANION_STREAM_ERROR_SUCCESS"
+    0386..0388  goto  -0x75
+    0388..038c  const-string  v3, "COMPANION_STREAM_ERROR_FAILURE"
+    038c..038e  goto  -0x78
+    038e..0392  const-string  v3, "ON_DIRTY"
+    0392..0394  goto  -0x7b
+    0394..0398  const-string  v3, "OFFLINE_COMPLETE"
+    0398..039a  goto  -0x7e
+    039a..039e  const-string  v3, "MESSAGE_RECEIVED_BY_SERVER"
+    039e..03a2  goto/16  -0x81
+    03a2..03a6  const-string  v3, "CLIENT_CONFIG_ERROR"
+    03a6..03aa  goto/16  -0x85
+    03aa..03ae  const-string  v3, "GET_PRE_KEY_SUCCESS"
+    03ae..03b2  goto/16  -0x89
+    03b2..03b6  const-string  v3, "SET_PRE_KEY_SUCCESS"
+    03b6..03ba  goto/16  -0x8d
+    03ba..03be  const-string  v3, "ACCOUNT_SYNC_NOTIFICATION"
+    03be..03c2  goto/16  -0x91
+    03c2..03c6  const-string  v3, "SYNCD_NOTIFICATION"
+    03c6..03ca  goto/16  -0x95
+    03ca..03ce  const-string  v3, "PEER_MESSAGE_RECEIPT"
+    03ce..03d2  goto/16  -0x99
+    03d2..03d6  const-string  v3, "PRIVACY_TOKEN"
+    03d6..03da  goto/16  -0x9d
+    03da..03de  const-string  v3, "OFFLINE_THREAD_METADATA"
+    03de..03e2  goto/16  -0xa1
+    03e2..03e6  const-string  v3, "OFFLINE_PREVIEW"
+    03e6..03ea  goto/16  -0xa5
+    03ea..03ee  const-string  v3, "CRSC_CONTINUATION"
+    03ee..03f2  goto/16  -0xa9
+    03f2..03f6  const-string  v3, "MESSAGE_STATE_UPDATE_RECEIPT"
+    03f6..03fa  goto/16  -0xad
+    03fa..03fe  const-string  v3, "MESSAGE_FOR_ME"
+    03fe..0402  goto/16  -0xb1
+    0402..0408  invoke-static  {v15, v5, v4}, LX/0ln;->A00(Landroid/os/Message;LX/0ln;I)V
+    0408..040c  goto/16  +0x1f7
+    040c..040e  move-exception  v3
+    040e..0414  invoke-static  {v5, v3, v4}, LX/0ln;->A04(LX/0ln;Ljava/lang/Throwable;I)V
+    0414..041a  invoke-virtual  {v1}, Lcom/google/common/base/Optional;->get()Ljava/lang/Object;
+    041a..041c  move-result-object  v2
+    041c..0420  check-cast  v2, LX/1uZ;
+    0420..0426  invoke-static  {v15}, LX/0m2;->A00(Landroid/os/Message;)LX/1k2;
+    0426..0428  move-result-object  v1
+    0428..042c  instance-of  v0, v1, LX/1k3;
+    042c..0430  if-eqz  v0, -0x210
+    0430..0434  check-cast  v1, LX/1k3;
+    0434..0438  if-eqz  v1, -0x214
+    0438..043c  iget-object  v0, v2, LX/1uZ;->A00:LX/05a;
+    043c..0440  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0440..0446  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0446..0448  move-result-object  v0
+    0448..044c  check-cast  v0, LX/1ic;
+    044c..0452  invoke-virtual  {v0, v1, v3}, LX/1ic;->A0E(LX/1k3;Ljava/lang/Throwable;)V
+    0452..0454  return-void
+    0454..0458  iget  v0, v15, Landroid/os/Message;->arg1:I
+    0458..045c  if-eq  v0, v2, +0x3
+    045c..045e  const/4  v2, #0x0
+    045e..0462  iget-object  v3, v15, Landroid/os/Message;->obj:Ljava/lang/Object;
+    0462..0468  invoke-static  {v3}, LX/00L;->A05(Ljava/lang/Object;)V
+    0468..046c  check-cast  v3, Ljava/lang/String;
+    046c..0470  iget-object  v0, v14, LX/0m2;->A00:Ljava/util/concurrent/ConcurrentMap;
+    0470..0476  invoke-interface  {v0, v3}, Ljava/util/Map;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+    0476..047a  if-eqz  v2, +0x30
+    047a..047e  iget-object  v0, v14, LX/0m2;->A01:LX/0ln;
+    047e..0482  iget-object  v1, v0, LX/0ln;->A0A:LX/0TX;
+    0482..0484  const/4  v0, #0x0
+    0484..0488  if-eqz  v3, +0x3
+    0488..048a  const/4  v0, #0x1
+    048a..0490  invoke-static  {v0}, LX/00L;->A0A(Z)V
+    0490..0496  invoke-virtual  {v1, v3}, LX/0TX;->A00(Ljava/lang/String;)LX/EVD;
+    0496..0498  move-result-object  v2
+    0498..049c  if-eqz  v2, +0x1f
+    049c..04a0  const-string  v1, "in-flight-messages/on-pending-message-request-timeout: id = "
+    04a0..04a4  new-instance  v0, Ljava/lang/StringBuilder;
+    04a4..04aa  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    04aa..04b0  invoke-virtual  {v0, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    04b0..04b6  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    04b6..04b8  move-result-object  v0
+    04b8..04be  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    04be..04c2  iget-object  v1, v2, LX/EVD;->A01:LX/1ue;
+    04c2..04c6  if-eqz  v1, +0xa
+    04c6..04ca  new-instance  v0, LX/EDB;
+    04ca..04d0  invoke-direct  {v0, v3}, LX/EDB;-><init>(Ljava/lang/String;)V
+    04d0..04d6  invoke-interface  {v1, v0}, LX/1ue;->BsR(Ljava/lang/Exception;)V
+    04d6..04da  iget-object  v0, v14, LX/0m2;->A01:LX/0ln;
+    04da..04de  iget-object  v1, v0, LX/0ln;->A0D:LX/0TV;
+    04de..04e0  const/4  v0, #0x0
+    04e0..04e6  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    04e6..04ec  invoke-virtual  {v1, v3}, LX/0TV;->A02(Ljava/lang/String;)LX/Eo7;
+    04ec..04ee  move-result-object  v2
+    04ee..04f2  if-eqz  v2, -0x271
+    04f2..04f8  const-string/jumbo  v1, "unacked-messages/on-message-timeout: id = "
+    04f8..04fc  new-instance  v0, Ljava/lang/StringBuilder;
+    04fc..0502  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0502..0508  invoke-virtual  {v0, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0508..050e  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    050e..0510  move-result-object  v0
+    0510..0516  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0516..051a  iget-object  v1, v2, LX/Eo7;->A02:LX/1ue;
+    051a..051e  if-eqz  v1, -0x287
+    051e..0522  new-instance  v0, LX/EDB;
+    0522..0528  invoke-direct  {v0, v3}, LX/EDB;-><init>(Ljava/lang/String;)V
+    0528..052e  invoke-interface  {v1, v0}, LX/1ue;->BsR(Ljava/lang/Exception;)V
+    052e..0530  return-void
+    0530..0536  invoke-virtual  {v15}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    0536..0538  move-result-object  v1
+    0538..053c  const-string  v0, "iqId"
+    053c..0542  invoke-virtual  {v1, v0}, Landroid/os/BaseBundle;->getString(Ljava/lang/String;)Ljava/lang/String;
+    0542..0544  move-result-object  v3
+    0544..0548  iget-object  v2, v14, LX/0m2;->A01:LX/0ln;
+    0548..054c  iget-object  v1, v15, Landroid/os/Message;->obj:Ljava/lang/Object;
+    054c..0550  check-cast  v1, LX/0Tp;
+    0550..0552  const/4  v0, #0x0
+    0552..0558  invoke-static  {v1, v2, v3, v0}, LX/0ln;->A02(LX/0Tp;LX/0ln;Ljava/lang/String;Z)V
+    0558..055a  return-void
+    055a..055e  iget-object  v8, v14, LX/0m2;->A01:LX/0ln;
+    055e..0562  iget  v12, v15, Landroid/os/Message;->arg2:I
+    0562..0566  iget-object  v3, v8, LX/0ln;->A0F:Ljava/lang/Object;
+    0566..0568  monitor-enter
+    0568..056c  iget-object  v2, v8, LX/0ln;->A0H:Ljava/util/Map;
+    056c..0572  invoke-interface  {v2}, Ljava/util/Map;->entrySet()Ljava/util/Set;
+    0572..0574  move-result-object  v1
+    0574..0578  new-instance  v0, Ljava/util/ArrayList;
+    0578..057e  invoke-direct  {v0, v1}, Ljava/util/ArrayList;-><init>(Ljava/util/Collection;)V
+    057e..0584  invoke-interface  {v2}, Ljava/util/Map;->clear()V
+    0584..0586  monitor-exit
+    0586..058c  invoke-virtual  {v0}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+    058c..058e  move-result-object  v7
+    058e..0594  invoke-interface  {v7}, Ljava/util/Iterator;->hasNext()Z
+    0594..0596  move-result  v0
+    0596..059a  if-eqz  v0, +0x31
+    059a..05a0  invoke-interface  {v7}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    05a0..05a2  move-result-object  v1
+    05a2..05a6  check-cast  v1, Ljava/util/Map$Entry;
+    05a6..05ac  invoke-interface  {v1}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+    05ac..05ae  move-result-object  v6
+    05ae..05b2  check-cast  v6, Ljava/lang/String;
+    05b2..05b6  iget-object  v5, v8, LX/0ln;->A0B:LX/0TT;
+    05b6..05ba  sget-object  v0, LX/02X;->A0N:Ljava/lang/Integer;
+    05ba..05bc  const/4  v4, #0x0
+    05bc..05c2  invoke-virtual  {v5, v0, v4, v6}, LX/0TT;->A01(Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;)V
+    05c2..05c8  invoke-virtual  {v5, v6}, LX/0TT;->A02(Ljava/lang/String;)V
+    05c8..05ce  invoke-interface  {v1}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+    05ce..05d0  move-result-object  v0
+    05d0..05d4  check-cast  v0, LX/1bW;
+    05d4..05d8  iget-object  v3, v0, LX/1bW;->A00:Ljava/lang/Object;
+    05d8..05dc  iget-object  v2, v8, LX/0ln;->A08:LX/098;
+    05dc..05e0  const/16  v1, #0x15
+    05e0..05e4  new-instance  v0, LX/8bj;
+    05e4..05ea  invoke-direct  {v0, v6, v1, v3}, LX/8bj;-><init>(Ljava/lang/String;ILjava/lang/Object;)V
+    05ea..05f0  invoke-virtual  {v2, v0}, LX/098;->execute(Ljava/lang/Runnable;)V
+    05f0..05f6  invoke-virtual  {v5, v6, v4}, LX/0TT;->A03(Ljava/lang/String;Ljava/lang/Integer;)V
+    05f6..05f8  goto  -0x34
+    05f8..05fc  iget-object  v3, v8, LX/0ln;->A0C:LX/0Th;
+    05fc..0600  new-instance  v9, Ljava/util/ArrayList;
+    0600..0606  invoke-direct  {v9}, Ljava/util/ArrayList;-><init>()V
+    0606..060a  iget-object  v6, v3, LX/0Th;->A04:Ljava/util/Map;
+    060a..060c  monitor-enter
+    060c..0612  invoke-interface  {v6}, Ljava/util/Map;->values()Ljava/util/Collection;
+    0612..0614  move-result-object  v0
+    0614..0618  new-instance  v4, Ljava/util/ArrayList;
+    0618..061e  invoke-direct  {v4, v0}, Ljava/util/ArrayList;-><init>(Ljava/util/Collection;)V
+    061e..0624  invoke-interface  {v6}, Ljava/util/Map;->keySet()Ljava/util/Set;
+    0624..0626  move-result-object  v0
+    0626..062c  invoke-interface  {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    062c..062e  move-result-object  v8
+    062e..0634  invoke-interface  {v8}, Ljava/util/Iterator;->hasNext()Z
+    0634..0636  move-result  v0
+    0636..063a  if-eqz  v0, +0x3b
+    063a..0640  invoke-interface  {v8}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0640..0642  move-result-object  v7
+    0642..0646  check-cast  v7, LX/Eoh;
+    0646..064a  const-string  v1, "message"
+    064a..064e  iget-object  v0, v7, LX/Eoh;->A06:Ljava/lang/String;
+    064e..0654  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0654..0656  move-result  v0
+    0656..065a  if-eqz  v0, -0x14
+    065a..065e  iget-object  v1, v7, LX/Eoh;->A07:Ljava/lang/String;
+    065e..0664  invoke-static  {v1}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+    0664..0666  move-result  v0
+    0666..0668  const/4  v5, #0x0
+    0668..066c  if-eqz  v0, +0x4
+    066c..066e  const/4  v1, #0x0
+    066e..0670  goto  +0x5
+    0670..0676  invoke-static  {v1}, Ljava/lang/Integer;->parseInt(Ljava/lang/String;)I
+    0676..0678  move-result  v1
+    0678..067c  iget-object  v0, v7, LX/Eoh;->A02:Lcom/whatsapp/infra/core/jid/Jid;
+    067c..0682  invoke-static  {v0}, LX/0Dn;->A00(Lcom/whatsapp/infra/core/jid/Jid;)LX/0DY;
+    0682..0684  move-result-object  v2
+    0684..0688  const/16  v0, #0x8
+    0688..068c  if-eq  v1, v0, +0x3
+    068c..068e  const/4  v5, #0x1
+    068e..0692  iget-object  v1, v7, LX/Eoh;->A08:Ljava/lang/String;
+    0692..0696  new-instance  v0, LX/1dW;
+    0696..069c  invoke-direct  {v0, v2, v1, v5}, LX/1dW;-><init>(LX/0DY;Ljava/lang/String;Z)V
+    069c..06a2  invoke-static  {v7, v0}, Landroid/util/Pair;->create(Ljava/lang/Object;Ljava/lang/Object;)Landroid/util/Pair;
+    06a2..06a4  move-result-object  v0
+    06a4..06aa  invoke-virtual  {v9, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    06aa..06ac  goto  -0x3e
+    06ac..06b2  invoke-interface  {v6}, Ljava/util/Map;->clear()V
+    06b2..06b4  monitor-exit
+    06b4..06b8  iget-object  v11, v3, LX/0Th;->A00:LX/1iM;
+    06b8..06be  invoke-static  {v11}, LX/00L;->A05(Ljava/lang/Object;)V
+    06be..06c2  iget-object  v0, v11, LX/1iM;->A0h:LX/00x;
+    06c2..06c8  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    06c8..06ca  move-result-object  v0
+    06ca..06ce  check-cast  v0, LX/00X;
+    06ce..06d4  invoke-virtual  {v0}, LX/00X;->A01()LX/00Y;
+    06d4..06d6  move-result-object  v1
+    06d6..06da  const/16  v0, #0x4e3
+    06da..06e0  invoke-static  {v1, v0}, LX/09H;->A03(LX/00Y;I)Ljava/lang/Object;
+    06e0..06e2  move-result-object  v10
+    06e2..06e6  const-string  v1, "MessageHandlerCallback/onMessageHandlerAckTimeout/keys:"
+    06e6..06ea  new-instance  v0, Ljava/lang/StringBuilder;
+    06ea..06f0  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    06f0..06f6  invoke-virtual  {v0, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    06f6..06fc  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    06fc..06fe  move-result-object  v0
+    06fe..0704  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0704..0708  iget-object  v0, v11, LX/1iM;->A0p:LX/08Z;
+    0708..070c  const/16  v13, #0xd
+    070c..0710  new-instance  v8, LX/FcN;
+    0710..0716  invoke-direct/range  {v8..v13}, LX/FcN;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;II)V
+    0716..071c  invoke-interface  {v0, v8}, LX/08Z;->CbD(Ljava/lang/Runnable;)V
+    071c..0720  new-instance  v2, LX/E5V;
+    0720..0726  invoke-direct  {v2}, LX/E5V;-><init>()V
+    0726..072c  invoke-virtual  {v4}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+    072c..072e  move-result-object  v1
+    072e..0734  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    0734..0736  move-result  v0
+    0736..073a  if-eqz  v0, +0xc
+    073a..0740  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0740..0742  move-result-object  v0
+    0742..0746  check-cast  v0, LX/1ue;
+    0746..074c  invoke-interface  {v0, v2}, LX/1ue;->BsR(Ljava/lang/Exception;)V
+    074c..074e  goto  -0xf
+    074e..0752  iget-object  v0, v3, LX/0Th;->A02:LX/00x;
+    0752..0758  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0758..075a  move-result-object  v0
+    075a..075e  check-cast  v0, LX/0V4;
+    075e..0762  iget-object  v1, v0, LX/0V4;->A0P:Ljava/util/concurrent/atomic/AtomicInteger;
+    0762..0764  const/4  v0, #0x0
+    0764..076a  invoke-virtual  {v1, v0}, Ljava/util/concurrent/atomic/AtomicInteger;->set(I)V
+    076a..0770  invoke-virtual  {v1}, Ljava/util/concurrent/atomic/AtomicInteger;->get()I
+    0770..0772  move-result  v2
+    0772..0776  const-string  v1, "XmppConnectionMetrics all outgoing stanza processing finished counter:"
+    0776..077a  new-instance  v0, Ljava/lang/StringBuilder;
+    077a..0780  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0780..0786  invoke-virtual  {v0, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0786..078c  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    078c..078e  move-result-object  v0
+    078e..0794  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0794..0796  return-void
+    0796..0798  move-exception  v0
+    0798..079a  monitor-exit
+    079a..079c  throw  v0
+    079c..079e  move-exception  v0
+    079e..07a0  monitor-exit
+    07a0..07a2  throw  v0
+    07a2..07a6  iget-object  v3, v15, Landroid/os/Message;->obj:Ljava/lang/Object;
+    07a6..07aa  check-cast  v3, Ljava/lang/String;
+    07aa..07ae  iget-object  v1, v14, LX/0m2;->A01:LX/0ln;
+    07ae..07b2  iget  v0, v15, Landroid/os/Message;->arg1:I
+    07b2..07b6  if-eq  v0, v2, +0x3
+    07b6..07b8  const/4  v2, #0x0
+    07b8..07be  invoke-static  {v1, v3, v2}, LX/0ln;->A03(LX/0ln;Ljava/lang/String;Z)V
+    07be..07c2  iget-object  v0, v14, LX/0m2;->A00:Ljava/util/concurrent/ConcurrentMap;
+    07c2..07c8  invoke-interface  {v0, v3}, Ljava/util/Map;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+    07c8..07ca  return-void
+    07ca..07ce  iget-object  v2, v15, Landroid/os/Message;->obj:Ljava/lang/Object;
+    07ce..07d2  check-cast  v2, Ljava/lang/String;
+    07d2..07d6  iget-object  v1, v14, LX/0m2;->A01:LX/0ln;
+    07d6..07d8  const/4  v0, #0x0
+    07d8..07de  invoke-static  {v1, v2, v0}, LX/0ln;->A03(LX/0ln;Ljava/lang/String;Z)V
+    07de..07e0  return-void
+    07e0..07e2  move-exception  v0
+    07e2..07e4  monitor-exit
+    07e4..07e6  throw  v0
+    07e6..07ec  invoke-virtual  {v1, v2, v0}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    07ec..07ee  monitor-exit
+    07ee..07f0  return-void
+    07f0..07f2  move-exception  v0
+    07f2..07f4  monitor-exit
+    07f4..07f6  throw  v0
+    07f6..07f8  return-void
+    07f8..07fe  invoke-static  {v15, v5, v4}, LX/0ln;->A00(Landroid/os/Message;LX/0ln;I)V
+    07fe..0800  return-void
+    0800..0802  move-exception  v0
+    0802..0808  invoke-static  {v5, v0, v4}, LX/0ln;->A04(LX/0ln;Ljava/lang/Throwable;I)V
+    0808..080a  return-void
+    080a..080c  nop
+    080c..0834  packed-switch-payload  size=8
+    0834..08a0  sparse-switch-payload  size=13
+    08a0..08bc  packed-switch-payload  size=5
+    # exception table: 10 try range(s)
+    # catch <all> code_units 0029..0099 -> 03f0
+    # catch <all> code_units 00e8..00ee -> 03f8
+    # catch LX/LV5; code_units 0201..0206 -> 0206
+    # catch Ljava/lang/RuntimeException; code_units 0201..0206 -> 0206
+    # catch Ljava/lang/StackOverflowError; code_units 0201..0206 -> 0206
+    # catch <all> code_units 02b4..02c3 -> 03ce
+    # catch <all> code_units 0306..035a -> 03cb
+    # catch <all> code_units 03cc..03cd -> 03cb
+    # catch <all> code_units 03cf..03d0 -> 03ce
+    # catch <all> code_units 03f1..03f2 -> 03f0
+    # catch <all> code_units 03f3..03f6 -> 03f8
+    # catch LX/LV5; code_units 03fc..0400 -> 0400
+.end method
