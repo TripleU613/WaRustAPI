@@ -1,0 +1,3 @@
+same logical index, distinct mutation keys: wire index MAC differs=true
+first SET rows=1, replacement SET rows=2
+cross-key REMOVE result=invalid input for `app_state_collection`: REMOVE has no saved index in this collection

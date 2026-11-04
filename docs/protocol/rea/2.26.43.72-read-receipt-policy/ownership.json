@@ -1,0 +1,22 @@
+{
+  "evidence": {
+    "ev_f3b239e806e675bd63a031c1b03485eded385338b348d5fb0e2a23904f98924f": {
+      "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "ev_c5f70c13404de64cc1a4529a8dc484d5d461d5968b11fdc4586d3f579fb94ffc": {
+      "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "ev_9b636e8b8b1cdfacb77aa5ae6306f5d845bf18921938fb71e53603b9bc305159": {
+      "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    }
+  }
+}

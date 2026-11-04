@@ -1,0 +1,35 @@
+
+# class: LX/0xW;
+# extends: Ljava/lang/Object;
+
+.method public A05(LLZ)  # .registers 5
+    # full signature: LX/0xW;->A05(LX/0DY;Z)Ljava/lang/String;
+    0000..0004  const-string  v1, "read-self"
+    0004..0008  if-nez  v4, +0x31
+    0008..000e  invoke-static  {v3}, LX/0Dn;->A0l(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    000e..0010  move-result  v0
+    0010..0014  if-nez  v0, +0x10
+    0014..0018  iget-object  v0, v2, LX/0xW;->A01:LX/00x;
+    0018..001e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    001e..0020  move-result-object  v0
+    0020..0024  check-cast  v0, LX/09S;
+    0024..002a  invoke-virtual  {v0}, LX/09S;->A1H()Z
+    002a..002c  move-result  v0
+    002c..0030  if-eqz  v0, +0x1d
+    0030..0036  invoke-static  {v3}, LX/0Dn;->A0a(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0036..0038  move-result  v0
+    0038..003c  if-nez  v0, +0x17
+    003c..0042  invoke-static  {v3}, LX/0Dn;->A0g(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0042..0044  move-result  v0
+    0044..0048  if-nez  v0, +0x11
+    0048..004e  invoke-direct  {v2, v3}, LX/0xW;->A00(LX/0DY;)Z
+    004e..0050  move-result  v0
+    0050..0054  if-eqz  v0, +0xb
+    0054..005a  invoke-direct  {v2, v3}, LX/0xW;->A01(LX/0DY;)Z
+    005a..005c  move-result  v0
+    005c..0060  if-eqz  v0, +0x5
+    0060..0064  const-string  v0, "read"
+    0064..0066  return-object  v0
+    0066..0068  return-object  v1
+    # exception table: 0 try range(s)
+.end method

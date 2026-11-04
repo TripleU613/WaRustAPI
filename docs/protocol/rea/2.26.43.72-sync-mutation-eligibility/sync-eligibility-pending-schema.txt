@@ -1,0 +1,143 @@
+
+# class: LX/1tY;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 1
+    # full signature: LX/1tY;-><init>()V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..0008  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public ATY(VLL)  # .registers 3
+    # full signature: LX/1tY;->ATY(LX/0MT;LX/0MZ;)V
+    0000..0002  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public ATc(VLL)  # .registers 13
+    # full signature: LX/1tY;->ATc(LX/0MT;LX/0MY;)V
+    0000..0002  const/4  v1, #0x0
+    0002..0008  invoke-static  {v12, v1}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  new-instance  v4, LX/0Me;
+    000c..0012  invoke-direct  {v4}, Ljava/lang/Object;-><init>()V
+    0012..0016  const/16  v0, #0xc
+    0016..001a  new-array  v2, v0, [LX/0Mf;
+    001a..001e  const-string  v0, "_id"
+    001e..0022  iput-object  v0, v4, LX/0Me;->A02:Ljava/lang/String;
+    0022..0026  sget-object  v8, LX/0Mg;->A07:LX/0Mg;
+    0026..002a  iput-object  v8, v4, LX/0Me;->A00:LX/0Mg;
+    002a..0030  invoke-virtual  {v4}, LX/0Me;->A02()V
+    0030..0036  invoke-virtual  {v4}, LX/0Me;->A01()V
+    0036..0038  const/4  v6, #0x1
+    0038..003c  iput-boolean  v6, v4, LX/0Me;->A06:Z
+    003c..0040  const-string  v7, "0"
+    0040..0044  iput-object  v7, v4, LX/0Me;->A01:Ljava/lang/String;
+    0044..004a  invoke-virtual  {v4}, LX/0Me;->A00()LX/0Mf;
+    004a..004c  move-result-object  v0
+    004c..0050  aput-object  v0, v2, v1
+    0050..0054  const-string  v0, "mutation_index"
+    0054..0058  iput-object  v0, v4, LX/0Me;->A02:Ljava/lang/String;
+    0058..005c  sget-object  v3, LX/0Mg;->A0B:LX/0Mg;
+    005c..0060  iput-object  v3, v4, LX/0Me;->A00:LX/0Mg;
+    0060..0064  iput-boolean  v6, v4, LX/0Me;->A06:Z
+    0064..0068  iput-boolean  v6, v4, LX/0Me;->A09:Z
+    0068..006c  const-string  v5, "''"
+    006c..0070  iput-object  v5, v4, LX/0Me;->A01:Ljava/lang/String;
+    0070..0076  invoke-virtual  {v4}, LX/0Me;->A00()LX/0Mf;
+    0076..0078  move-result-object  v0
+    0078..007c  aput-object  v0, v2, v6
+    007c..0080  const-string  v0, "mutation_value"
+    0080..0084  iput-object  v0, v4, LX/0Me;->A02:Ljava/lang/String;
+    0084..0088  sget-object  v9, LX/0Mg;->A02:LX/0Mg;
+    0088..008c  iput-object  v9, v4, LX/0Me;->A00:LX/0Mg;
+    008c..0092  invoke-virtual  {v4}, LX/0Me;->A00()LX/0Mf;
+    0092..0094  move-result-object  v1
+    0094..0096  const/4  v0, #0x2
+    0096..009a  aput-object  v1, v2, v0
+    009a..009e  const-string  v0, "mutation_version"
+    009e..00a2  iput-object  v0, v4, LX/0Me;->A02:Ljava/lang/String;
+    00a2..00a6  iput-object  v8, v4, LX/0Me;->A00:LX/0Mg;
+    00a6..00aa  iput-boolean  v6, v4, LX/0Me;->A06:Z
+    00aa..00ae  iput-object  v7, v4, LX/0Me;->A01:Ljava/lang/String;
+    00ae..00b4  invoke-virtual  {v4}, LX/0Me;->A00()LX/0Mf;
+    00b4..00b6  move-result-object  v1
+    00b6..00b8  const/4  v0, #0x3
+    00b8..00bc  aput-object  v1, v2, v0
+    00bc..00c0  const-string  v0, "operation"
+    00c0..00c4  iput-object  v0, v4, LX/0Me;->A02:Ljava/lang/String;
+    00c4..00c8  iput-object  v9, v4, LX/0Me;->A00:LX/0Mg;
+    00c8..00cc  iput-boolean  v6, v4, LX/0Me;->A06:Z
+    00cc..00d0  const-string  v0, "X''"
+    00d0..00d4  iput-object  v0, v4, LX/0Me;->A01:Ljava/lang/String;
+    00d4..00da  invoke-virtual  {v4}, LX/0Me;->A00()LX/0Mf;
+    00da..00dc  move-result-object  v1
+    00dc..00de  const/4  v0, #0x4
+    00de..00e2  aput-object  v1, v2, v0
+    00e2..00e6  const-string  v0, "is_ready_to_sync"
+    00e6..00ea  iput-object  v0, v4, LX/0Me;->A02:Ljava/lang/String;
+    00ea..00ee  iput-object  v8, v4, LX/0Me;->A00:LX/0Mg;
+    00ee..00f2  iput-boolean  v6, v4, LX/0Me;->A06:Z
+    00f2..00f6  const-string  v0, "1"
+    00f6..00fa  iput-object  v0, v4, LX/0Me;->A01:Ljava/lang/String;
+    00fa..0100  invoke-virtual  {v4}, LX/0Me;->A00()LX/0Mf;
+    0100..0102  move-result-object  v1
+    0102..0104  const/4  v0, #0x5
+    0104..0108  aput-object  v1, v2, v0
+    0108..010c  const-string  v0, "collection_name"
+    010c..0110  iput-object  v0, v4, LX/0Me;->A02:Ljava/lang/String;
+    0110..0114  iput-object  v3, v4, LX/0Me;->A00:LX/0Mg;
+    0114..011a  invoke-virtual  {v4}, LX/0Me;->A00()LX/0Mf;
+    011a..011c  move-result-object  v1
+    011c..011e  const/4  v0, #0x6
+    011e..0122  aput-object  v1, v2, v0
+    0122..0126  const-string  v0, "device_id"
+    0126..012a  iput-object  v0, v4, LX/0Me;->A02:Ljava/lang/String;
+    012a..012e  iput-object  v8, v4, LX/0Me;->A00:LX/0Mg;
+    012e..0134  invoke-virtual  {v4}, LX/0Me;->A00()LX/0Mf;
+    0134..0136  move-result-object  v1
+    0136..0138  const/4  v0, #0x7
+    0138..013c  aput-object  v1, v2, v0
+    013c..0140  const-string  v0, "epoch"
+    0140..0144  iput-object  v0, v4, LX/0Me;->A02:Ljava/lang/String;
+    0144..0148  iput-object  v8, v4, LX/0Me;->A00:LX/0Mg;
+    0148..014e  invoke-virtual  {v4}, LX/0Me;->A00()LX/0Mf;
+    014e..0150  move-result-object  v1
+    0150..0154  const/16  v0, #0x8
+    0154..0158  aput-object  v1, v2, v0
+    0158..015c  const-string  v0, "are_dependencies_missing"
+    015c..0160  iput-object  v0, v4, LX/0Me;->A02:Ljava/lang/String;
+    0160..0164  iput-object  v8, v4, LX/0Me;->A00:LX/0Mg;
+    0164..0168  iput-boolean  v6, v4, LX/0Me;->A06:Z
+    0168..016c  iput-object  v7, v4, LX/0Me;->A01:Ljava/lang/String;
+    016c..0172  invoke-virtual  {v4}, LX/0Me;->A00()LX/0Mf;
+    0172..0174  move-result-object  v1
+    0174..0178  const/16  v0, #0x9
+    0178..017c  aput-object  v1, v2, v0
+    017c..0180  const-string  v0, "mutation_name"
+    0180..0184  iput-object  v0, v4, LX/0Me;->A02:Ljava/lang/String;
+    0184..0188  iput-object  v3, v4, LX/0Me;->A00:LX/0Mg;
+    0188..018c  iput-boolean  v6, v4, LX/0Me;->A06:Z
+    018c..0190  iput-object  v5, v4, LX/0Me;->A01:Ljava/lang/String;
+    0190..0196  invoke-virtual  {v4}, LX/0Me;->A00()LX/0Mf;
+    0196..0198  move-result-object  v1
+    0198..019c  const/16  v0, #0xa
+    019c..01a0  aput-object  v1, v2, v0
+    01a0..01a4  const-string  v0, "chat_jid"
+    01a4..01a8  iput-object  v0, v4, LX/0Me;->A02:Ljava/lang/String;
+    01a8..01ac  iput-object  v3, v4, LX/0Me;->A00:LX/0Mg;
+    01ac..01b2  invoke-virtual  {v4}, LX/0Me;->A00()LX/0Mf;
+    01b2..01b4  move-result-object  v1
+    01b4..01b8  const/16  v0, #0xb
+    01b8..01bc  aput-object  v1, v2, v0
+    01bc..01c0  const-string  v0, "pending_mutations"
+    01c0..01c6  invoke-interface  {v12, v0, v2}, LX/0MY;->CWk(Ljava/lang/String;[LX/0Mf;)V
+    01c6..01c8  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public ATe(VL)  # .registers 2
+    # full signature: LX/1tY;->ATe(LX/0Ma;)V
+    0000..0002  return-void
+    # exception table: 0 try range(s)
+.end method

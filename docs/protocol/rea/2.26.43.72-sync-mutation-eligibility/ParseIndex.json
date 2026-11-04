@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_7e76eadcc901802e233169f17f4db6c57be89a2543fd1f91821767a741ec3935",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.F0k",
+    "method_name": "A02",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-2zGxC0/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.F0k"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"()V\"},{\"signature\":\"A00(java.lang.String): java.lang.String\",\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)Ljava/lang/String;\"},{\"signature\":\"A01(android.database.Cursor, X.0g1, java.lang.String, java.util.AbstractCollection): void\",\"def_pos\":0,\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"(Landroid/database/Cursor;LX/0g1;Ljava/lang/String;Ljava/util/AbstractCollection;)V\"},{\"signature\":\"A02(java.lang.String): java.lang.String[]\",\"def_pos\":0,\"name\":\"A02\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)[Ljava/lang/String;\"},{\"signature\":\"A03(X.Evu, X.Ewt, byte[], byte[]): X.F1N\",\"def_pos\":0,\"name\":\"A03\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/Evu;LX/Ewt;[B[B)LX/F1N;\"}],\"method_count\":5,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"F0k\",\"full_name\":\"X.F0k\",\"field_count\":0,\"fields\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.F0k",
+          "method_name": "A02",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.F0k.A02\",\"class_name\":\"X.F0k\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public static final String[] A02(String str) {\\n        String str2;\\n        JSONArray jSONArray \\u003d new JSONArray(str);\\n        int length \\u003d jSONArray.length();\\n        String[] strArr \\u003d new String[length];\\n        int i \\u003d 0;\\n        while (true) {\\n            str2 \\u003d Voip.REJECT_REASON_DECLINED;\\n            if (i \\u003e\\u003d length) {\\n                break;\\n            }\\n            strArr[i] \\u003d Voip.REJECT_REASON_DECLINED;\\n            i++;\\n        }\\n        int length2 \\u003d jSONArray.length();\\n        for (int i2 \\u003d 0; i2 \\u003c length2; i2++) {\\n            String string \\u003d jSONArray.getString(i2);\\n            if (string \\u003d\\u003d null || string.length() \\u003d\\u003d 0) {\\n                StringBuilder sbA14 \\u003d C1Xl.A14(i2, \\\"SyncMutationData/getValidKeyArrayIndex: The key is empty in the keyArray at position: \\\");\\n                sbA14.append(\\\" for mutation: \\\");\\n                throw C3q6.A0X(str2, sbA14);\\n            }\\n            strArr[i2] \\u003d string;\\n            if (i2 \\u003d\\u003d 0) {\\n                str2 \\u003d string;\\n            }\\n        }\\n        if (length \\u003e 0) {\\n            return strArr;\\n        }\\n        throw C1Xl.A0f(\\\"SyncMutationData/getValidKeyArrayIndex: keyArray length should have action name\\\");\\n    }\",\"overload_count\":1,\"method_name\":\"A02\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.F0k",
+    "method": {
+      "name": "A02",
+      "reported_signature": "A02(java.lang.String): java.lang.String[]",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(Ljava/lang/String;)[Ljava/lang/String;"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public static final String[] A02(String str) {\n        String str2;\n        JSONArray jSONArray = new JSONArray(str);\n        int length = jSONArray.length();\n        String[] strArr = new String[length];\n        int i = 0;\n        while (true) {\n            str2 = Voip.REJECT_REASON_DECLINED;\n            if (i >= length) {\n                break;\n            }\n            strArr[i] = Voip.REJECT_REASON_DECLINED;\n            i++;\n        }\n        int length2 = jSONArray.length();\n        for (int i2 = 0; i2 < length2; i2++) {\n            String string = jSONArray.getString(i2);\n            if (string == null || string.length() == 0) {\n                StringBuilder sbA14 = C1Xl.A14(i2, \"SyncMutationData/getValidKeyArrayIndex: The key is empty in the keyArray at position: \");\n                sbA14.append(\" for mutation: \");\n                throw C3q6.A0X(str2, sbA14);\n            }\n            strArr[i2] = string;\n            if (i2 == 0) {\n                str2 = string;\n            }\n        }\n        if (length > 0) {\n            return strArr;\n        }\n        throw C1Xl.A0f(\"SyncMutationData/getValidKeyArrayIndex: keyArray length should have action name\");\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

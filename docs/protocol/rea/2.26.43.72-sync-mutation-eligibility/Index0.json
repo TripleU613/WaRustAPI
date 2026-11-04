@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_360b30ed16002dfb5d2103e0d7e6d6f53ceccd11c2422b4b5fbb8e7f6b0ff7a8",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.F1N",
+    "method_name": "<init>",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-2zGxC0/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.F1N"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cclinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cclinit\\u003e\",\"is_constructor\":false,\"dex_descriptor\":\"()V\"},{\"signature\":\"\\u003cinit\\u003e(X.DCL): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"(LX/DCL;)V\"},{\"signature\":\"\\u003cinit\\u003e(X.Evu, X.Ewt, X.DiO, java.lang.String, byte[], java.lang.String[], int): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"(LX/Evu;LX/Ewt;LX/DiO;Ljava/lang/String;[B[Ljava/lang/String;I)V\"},{\"signature\":\"\\u003cinit\\u003e(X.Evu, X.Ewt, java.lang.String, byte[], byte[], int): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"(LX/Evu;LX/Ewt;Ljava/lang/String;[B[BI)V\"},{\"signature\":\"A00(byte[]): X.Df5\",\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"([B)LX/Df5;\"},{\"signature\":\"equals(java.lang.Object): boolean\",\"def_pos\":0,\"name\":\"equals\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/Object;)Z\"},{\"signature\":\"hashCode(): int\",\"def_pos\":0,\"name\":\"hashCode\",\"is_constructor\":false,\"dex_descriptor\":\"()I\"},{\"signature\":\"toString(): java.lang.String\",\"def_pos\":0,\"name\":\"toString\",\"is_constructor\":false,\"dex_descriptor\":\"()Ljava/lang/String;\"}],\"method_count\":8,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"F1N\",\"full_name\":\"X.F1N\",\"field_count\":8,\"fields\":[{\"type\":\"int\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"X.Evu\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"X.Ewt\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"X.DiO\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"java.lang.String\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"byte[]\",\"def_pos\":0,\"name\":\"A05\"},{\"type\":\"java.lang.String[]\",\"def_pos\":0,\"name\":\"A06\"},{\"type\":\"X.F0k\",\"def_pos\":0,\"name\":\"A07\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.F1N",
+          "method_name": "<init>",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.F1N.\\u003cinit\\u003e\",\"class_name\":\"X.F1N\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    /* JADX WARN: Illegal instructions before constructor call */\\n    public F1N(DCL dcl) {\\n        String strA08 \\u003d dcl.A08();\\n        int i \\u003d dcl.A03;\\n        this(dcl.A05, dcl.A00, dcl.A07(), strA08, dcl.A01, dcl.A0C(), i);\\n    }\",\"overload_count\":3,\"method_name\":\"\\u003cinit\\u003e\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.F1N",
+    "method": {
+      "name": "<init>",
+      "reported_signature": "<init>(X.DCL): void",
+      "overload_index": 0,
+      "is_constructor": true,
+      "dex_descriptor": "(LX/DCL;)V"
+    },
+    "overload_count": 3,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Illegal instructions before constructor call */\n    public F1N(DCL dcl) {\n        String strA08 = dcl.A08();\n        int i = dcl.A03;\n        this(dcl.A05, dcl.A00, dcl.A07(), strA08, dcl.A01, dcl.A0C(), i);\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

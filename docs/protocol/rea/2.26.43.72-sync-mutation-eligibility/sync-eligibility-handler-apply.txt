@@ -1,0 +1,15 @@
+
+# class: LX/F3j;
+# extends: Ljava/lang/Object;
+
+.method public A0X(VLL)  # .registers 5
+    # full signature: LX/F3j;->A0X(LX/DCL;LX/DCL;)V
+    0000..0004  if-eqz  v4, +0x5
+    0004..000a  invoke-static  {v2, v4}, LX/F3j;->A0G(LX/F3j;LX/DCL;)V
+    000a..000e  iget-object  v1, v2, LX/F3j;->A00:LX/0g1;
+    000e..0014  invoke-static  {v3}, LX/2L7;->A1O(Ljava/lang/Object;)Ljava/util/Set;
+    0014..0016  move-result-object  v0
+    0016..001c  invoke-virtual  {v1, v0}, LX/0g1;->A0O(Ljava/util/Collection;)V
+    001c..001e  return-void
+    # exception table: 0 try range(s)
+.end method

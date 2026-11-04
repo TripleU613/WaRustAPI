@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_d3e92290483c280a12e5e05c6a9073293b2a8f533094883798e7cb8759bf8189",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C0x0",
+    "method_name": "A0E",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-wXd2Z4/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C0x0"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"name\":\"A00\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A01\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A02\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A03\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A04\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A05\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A06\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A07\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A08\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A09\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0A\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0B\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0C\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0D\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0E\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0F\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0G\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0H\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0I\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A0J\",\"def_pos\":0,\"type\":\"java.util.concurrent.atomic.AtomicInteger\"}],\"field_count\":20,\"full_name\":\"X.C0x0\",\"name\":\"C0x0\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":44,\"methods\":[{\"dex_descriptor\":\"()V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(): void\"},{\"dex_descriptor\":\"(LX/18U;)J\",\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0,\"signature\":\"A00(X.18U): long\"},{\"dex_descriptor\":\"(LX/08Y;LX/0B0;LX/18U;I)Landroid/os/Message;\",\"is_constructor\":false,\"name\":\"A01\",\"def_pos\":0,\"signature\":\"A01(X.08Y, X.0B0, X.18U, int): android.os.Message\"},{\"dex_descriptor\":\"(LX/18U;I)Landroid/os/Message;\",\"is_constructor\":false,\"name\":\"A02\",\"def_pos\":0,\"signature\":\"A02(X.18U, int): android.os.Message\"},{\"dex_descriptor\":\"(LX/0x0;)LX/08Y;\",\"is_constructor\":false,\"name\":\"A03\",\"def_pos\":0,\"signature\":\"A03(X.0x0): X.08Y\"},{\"dex_descriptor\":\"(LX/18U;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;)LX/Eoh;\",\"is_constructor\":false,\"name\":\"A04\",\"def_pos\":0,\"signature\":\"A04(X.18U, java.lang.Integer, java.lang.String, java.lang.String): X.Eoh\"},{\"dex_descriptor\":\"(LX/1bX;)LX/Eoh;\",\"is_constructor\":false,\"name\":\"A05\",\"def_pos\":0,\"signature\":\"A05(X.1bX): X.Eoh\"},{\"dex_descriptor\":\"(LX/0x0;)LX/00X;\",\"is_constructor\":false,\"name\":\"A06\",\"def_pos\":0,\"signature\":\"A06(X.0x0): X.00X\"},{\"dex_descriptor\":\"(LX/Dxr;Ljava/lang/String;)LX/1vZ;\",\"is_constructor\":false,\"name\":\"A07\",\"def_pos\":0,\"signature\":\"A07(X.Dxr, java.lang.String): X.1vZ\"},{\"dex_descriptor\":\"(LX/18U;)Ljava/lang/Integer;\",\"is_constructor\":false,\"name\":\"A08\",\"def_pos\":0,\"signature\":\"A08(X.18U): java.lang.Integer\"},{\"dex_descriptor\":\"(Landroid/os/Message;LX/0x0;)V\",\"is_constructor\":false,\"name\":\"A09\",\"def_pos\":0,\"signature\":\"A09(android.os.Message, X.0x0): void\"},{\"dex_descriptor\":\"(LX/18U;)V\",\"is_constructor\":false,\"name\":\"A0A\",\"def_pos\":0,\"signature\":\"A0A(X.18U): void\"},{\"dex_descriptor\":\"(LX/18U;)V\",\"is_constructor\":false,\"name\":\"A0B\",\"def_pos\":0,\"signature\":\"A0B(X.18U): void\"},{\"dex_descriptor\":\"(LX/18U;)V\",\"is_constructor\":false,\"name\":\"A0C\",\"def_pos\":0,\"signature\":\"A0C(X.18U): void\"},{\"dex_descriptor\":\"(LX/18U;Ljava/lang/Integer;I)V\",\"is_constructor\":false,\"name\":\"A0D\",\"def_pos\":0,\"signature\":\"A0D(X.18U, java.lang.Integer, int): void\"},{\"dex_descriptor\":\"(LX/0x0;Ljava/util/Collection;Ljava/util/Collection;ZZ)V\",\"is_constructor\":false,\"name\":\"A0E\",\"def_pos\":0,\"signature\":\"A0E(X.0x0, java.util.Collection, java.util.Collection, boolean, boolean): void\"},{\"dex_descriptor\":\"(LX/18U;)Z\",\"is_constructor\":false,\"name\":\"A0F\",\"def_pos\":0,\"signature\":\"A0F(X.18U): boolean\"},{\"dex_descriptor\":\"(LX/18U;)Z\",\"is_constructor\":false,\"name\":\"A0G\",\"def_pos\":0,\"signature\":\"A0G(X.18U): boolean\"},{\"dex_descriptor\":\"(LX/18U;)Z\",\"is_constructor\":false,\"name\":\"A0H\",\"def_pos\":0,\"signature\":\"A0H(X.18U): boolean\"},{\"dex_descriptor\":\"(LX/18U;)Z\",\"is_constructor\":false,\"name\":\"A0I\",\"def_pos\":0,\"signature\":\"A0I(X.18U): boolean\"},{\"dex_descriptor\":\"(LX/18U;)Z\",\"is_constructor\":false,\"name\":\"A0J\",\"def_pos\":0,\"signature\":\"A0J(X.18U): boolean\"},{\"dex_descriptor\":\"(LX/18U;)Z\",\"is_constructor\":false,\"name\":\"A0K\",\"def_pos\":0,\"signature\":\"A0K(X.18U): boolean\"},{\"dex_descriptor\":\"(LX/18U;LX/0x0;)Z\",\"is_constructor\":false,\"name\":\"A0L\",\"def_pos\":0,\"signature\":\"A0L(X.18U, X.0x0): boolean\"},{\"dex_descriptor\":\"(LX/18U;LX/Fs7;)LX/1vZ;\",\"is_constructor\":false,\"name\":\"A0M\",\"def_pos\":0,\"signature\":\"A0M(X.18U, X.Fs7): X.1vZ\"},{\"dex_descriptor\":\"(LX/Frp;LX/Dxr;)LX/1vZ;\",\"is_constructor\":false,\"name\":\"A0N\",\"def_pos\":0,\"signature\":\"A0N(X.Frp, X.Dxr): X.1vZ\"},{\"dex_descriptor\":\"(Ljava/lang/String;Ljava/util/Collection;)Ljava/util/HashMap;\",\"is_constructor\":false,\"name\":\"A0O\",\"def_pos\":0,\"signature\":\"A0O(java.lang.String, java.util.Collection): java.util.HashMap\"},{\"dex_descriptor\":\"(Lcom/whatsapp/infra/core/jid/UserJid;LX/AQ5;)V\",\"is_constructor\":false,\"name\":\"A0P\",\"def_pos\":0,\"signature\":\"A0P(com.whatsapp.infra.core.jid.UserJid, X.AQ5): void\"},{\"dex_descriptor\":\"(LX/18U;)V\",\"is_constructor\":false,\"name\":\"A0Q\",\"def_pos\":0,\"signature\":\"A0Q(X.18U): void\"},{\"dex_descriptor\":\"(LX/18U;I)V\",\"is_constructor\":false,\"name\":\"A0R\",\"def_pos\":0,\"signature\":\"A0R(X.18U, int): void\"},{\"dex_descriptor\":\"(LX/18U;Ljava/lang/Integer;I)V\",\"is_constructor\":false,\"name\":\"A0S\",\"def_pos\":0,\"signature\":\"A0S(X.18U, java.lang.Integer, int): void\"},{\"dex_descriptor\":\"(LX/18U;Ljava/lang/String;)V\",\"is_constructor\":false,\"name\":\"A0T\",\"def_pos\":0,\"signature\":\"A0T(X.18U, java.lang.String): void\"},{\"dex_descriptor\":\"(LX/18U;Z)V\",\"is_constructor\":false,\"name\":\"A0U\",\"def_pos\":0,\"signature\":\"A0U(X.18U, boolean): void\"},{\"dex_descriptor\":\"(LX/18U;Z)V\",\"is_constructor\":false,\"name\":\"A0V\",\"def_pos\":0,\"signature\":\"A0V(X.18U, boolean): void\"},{\"dex_descriptor\":\"(LX/18U;Z)V\",\"is_constructor\":false,\"name\":\"A0W\",\"def_pos\":0,\"signature\":\"A0W(X.18U, boolean): void\"},{\"dex_descriptor\":\"(LX/Dxs;)V\",\"is_constructor\":false,\"name\":\"A0X\",\"def_pos\":0,\"signature\":\"A0X(X.Dxs): void\"},{\"dex_descriptor\":\"(LX/1k2;LX/Fuy;LX/F1Z;I)V\",\"is_constructor\":false,\"name\":\"A0Y\",\"def_pos\":0,\"signature\":\"A0Y(X.1k2, X.Fuy, X.F1Z, int): void\"},{\"dex_descriptor\":\"(LX/1k2;LX/F1Z;)V\",\"is_constructor\":false,\"name\":\"A0Z\",\"def_pos\":0,\"signature\":\"A0Z(X.1k2, X.F1Z): void\"},{\"dex_descriptor\":\"(LX/1k2;LX/F1Z;I)V\",\"is_constructor\":false,\"name\":\"A0a\",\"def_pos\":0,\"signature\":\"A0a(X.1k2, X.F1Z, int): void\"},{\"dex_descriptor\":\"(LX/1k2;LX/F1Z;Ljava/lang/Integer;I)V\",\"is_constructor\":false,\"name\":\"A0b\",\"def_pos\":0,\"signature\":\"A0b(X.1k2, X.F1Z, java.lang.Integer, int): void\"},{\"dex_descriptor\":\"(Ljava/util/Collection;Z)V\",\"is_constructor\":false,\"name\":\"A0c\",\"def_pos\":0,\"signature\":\"A0c(java.util.Collection, boolean): void\"},{\"dex_descriptor\":\"(Ljava/util/HashMap;)V\",\"is_constructor\":false,\"name\":\"A0d\",\"def_pos\":0,\"signature\":\"A0d(java.util.HashMap): void\"},{\"dex_descriptor\":\"(LX/0DY;Lcom/whatsapp/infra/core/jid/UserJid;)Z\",\"is_constructor\":false,\"name\":\"A0e\",\"def_pos\":0,\"signature\":\"A0e(X.0DY, com.whatsapp.infra.core.jid.UserJid): boolean\"},{\"dex_descriptor\":\"(LX/18U;)Z\",\"is_constructor\":false,\"name\":\"A0f\",\"def_pos\":0,\"signature\":\"A0f(X.18U): boolean\"},{\"dex_descriptor\":\"(LX/18U;)Z\",\"is_constructor\":false,\"name\":\"A0g\",\"def_pos\":0,\"signature\":\"A0g(X.18U): boolean\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C0x0",
+          "method_name": "A0E",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_name\":\"A0E\",\"overload_count\":1,\"body\":\"    public static final void A0E(C0x0 c0x0, Collection collection, Collection collection2, boolean z, boolean z2) {\\n        C0fW c0fW;\\n        SendReadReceiptJob sendReadReceiptJob;\\n        F0A f0a \\u003d (F0A) c0x0.A0G.A00.BFb();\\n        C3ei c3ei \\u003d new C3ei(c0x0, collection2, 18);\\n        if (f0a.A06() \\u0026\\u0026 z) {\\n            java.util.Map map \\u003d (java.util.Map) c3ei.invoke();\\n            if (!map.isEmpty()) {\\n                HashMap map2 \\u003d new HashMap();\\n                Iterator it \\u003d collection.iterator();\\n                while (it.hasNext()) {\\n                    C18U c18u \\u003d (C18U) it.next();\\n                    C0DY c0dy \\u003d c18u.A0j.A00;\\n                    long j \\u003d c18u.A0D;\\n                    if (c18u.A0i \\u003d\\u003d 11 \\u0026\\u0026 c0dy !\\u003d null \\u0026\\u0026 j \\u003e 0) {\\n                        Object arrayList \\u003d map2.get(c0dy);\\n                        if (arrayList \\u003d\\u003d null) {\\n                            arrayList \\u003d new ArrayList();\\n                            map2.put(c0dy, arrayList);\\n                        }\\n                        ((List) arrayList).add(Long.valueOf(j));\\n                    }\\n                }\\n                for (java.util.Map.Entry entry : map2.entrySet()) {\\n                    Object key \\u003d entry.getKey();\\n                    Object value \\u003d entry.getValue();\\n                    Number number \\u003d (Number) map.get(key);\\n                    if (number !\\u003d null) {\\n                        long jLongValue \\u003d number.longValue();\\n                        if (jLongValue \\u003e 0) {\\n                            F0A.A01(f0a, new Ffl(F0A.A00(f0a), key, f0a, value, 0, jLongValue), 94);\\n                        }\\n                    }\\n                }\\n                for (java.util.Map.Entry entry2 : map.entrySet()) {\\n                    f0a.A03((C0DY) entry2.getKey(), ((Number) entry2.getValue()).longValue());\\n                }\\n                for (java.util.Map.Entry entry3 : map.entrySet()) {\\n                    f0a.A04((C0DY) entry3.getKey(), ((Number) entry3.getValue()).longValue());\\n                }\\n            }\\n        }\\n        HashMap map3 \\u003d new HashMap();\\n        Iterator it2 \\u003d collection.iterator();\\n        while (it2.hasNext()) {\\n            C18U c18u2 \\u003d (C18U) it2.next();\\n            if (((C0xW) c0x0.A08.A00.BFb()).A0A(c18u2)) {\\n                if (c18u2.B96() \\u003d\\u003d 17) {\\n                    c0x0.A0Q(c18u2);\\n                } else {\\n                    if (!c0x0.A0G(c18u2) \\u0026\\u0026 !c0x0.A0g(c18u2) \\u0026\\u0026 c18u2.B96() !\\u003d 16) {\\n                        if (C0x9.A03(c18u2.B6v())) {\\n                            C1dW c1dW \\u003d c18u2.A0j;\\n                            C0DY c0dy2 \\u003d c1dW.A00;\\n                            if (!C0x9.A03(c0dy2)) {\\n                                long jA00 \\u003d A00(c18u2);\\n                                if (C0Dn.A0l(c0dy2)) {\\n                                    c0fW \\u003d (C0fW) c0x0.A0E.A00.BFb();\\n                                    C00L.A05(c0dy2);\\n                                    sendReadReceiptJob \\u003d new SendReadReceiptJob(c0dy2, c18u2.B6q(), null, null, null, null, new String[]{c1dW.A01}, c18u2.A0F, c18u2.A0n, jA00, true);\\n                                } else if (!C0x9.A03(c0dy2) \\u0026\\u0026 C0Dn.A0k(c0dy2)) {\\n                                    c0fW \\u003d (C0fW) c0x0.A0E.A00.BFb();\\n                                    C0DY c0dyB6q \\u003d c18u2.B6q();\\n                                    C00L.A05(c0dyB6q);\\n                                    sendReadReceiptJob \\u003d new SendReadReceiptJob(c0dyB6q, null, c0dy2, null, null, null, new String[]{c1dW.A01}, c18u2.A0F, c18u2.A0n, jA00, true);\\n                                }\\n                                c0fW.A01(sendReadReceiptJob);\\n                            }\\n                        }\\n                        c0x0.A0Q(c18u2);\\n                    }\\n                    C0DY c0dy3 \\u003d c18u2.A0j.A00;\\n                    if (!C0Dn.A0h(c0dy3)) {\\n                        C00L.A05(c0dy3);\\n                        C00l.A05(c0dy3);\\n                        C18U c18u3 \\u003d (C18U) map3.get(c0dy3);\\n                        if (c18u3 !\\u003d null \\u0026\\u0026 c18u3.A0l \\u003e c18u2.A0l) {\\n                            c18u2 \\u003d c18u3;\\n                        }\\n                        map3.put(c0dy3, c18u2);\\n                    }\\n                }\\n            }\\n        }\\n        Fef fef \\u003d new Fef(c0x0, map3, 48);\\n        if (z2) {\\n            fef.run();\\n        } else {\\n            ((C1vV) c0x0.A00.A00.BFb()).A02(fef, 43);\\n        }\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.C0x0\",\"full_name\":\"X.0x0.A0E\",\"mode\":\"java\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C0x0",
+    "method": {
+      "name": "A0E",
+      "reported_signature": "A0E(X.0x0, java.util.Collection, java.util.Collection, boolean, boolean): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(LX/0x0;Ljava/util/Collection;Ljava/util/Collection;ZZ)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public static final void A0E(C0x0 c0x0, Collection collection, Collection collection2, boolean z, boolean z2) {\n        C0fW c0fW;\n        SendReadReceiptJob sendReadReceiptJob;\n        F0A f0a = (F0A) c0x0.A0G.A00.BFb();\n        C3ei c3ei = new C3ei(c0x0, collection2, 18);\n        if (f0a.A06() && z) {\n            java.util.Map map = (java.util.Map) c3ei.invoke();\n            if (!map.isEmpty()) {\n                HashMap map2 = new HashMap();\n                Iterator it = collection.iterator();\n                while (it.hasNext()) {\n                    C18U c18u = (C18U) it.next();\n                    C0DY c0dy = c18u.A0j.A00;\n                    long j = c18u.A0D;\n                    if (c18u.A0i == 11 && c0dy != null && j > 0) {\n                        Object arrayList = map2.get(c0dy);\n                        if (arrayList == null) {\n                            arrayList = new ArrayList();\n                            map2.put(c0dy, arrayList);\n                        }\n                        ((List) arrayList).add(Long.valueOf(j));\n                    }\n                }\n                for (java.util.Map.Entry entry : map2.entrySet()) {\n                    Object key = entry.getKey();\n                    Object value = entry.getValue();\n                    Number number = (Number) map.get(key);\n                    if (number != null) {\n                        long jLongValue = number.longValue();\n                        if (jLongValue > 0) {\n                            F0A.A01(f0a, new Ffl(F0A.A00(f0a), key, f0a, value, 0, jLongValue), 94);\n                        }\n                    }\n                }\n                for (java.util.Map.Entry entry2 : map.entrySet()) {\n                    f0a.A03((C0DY) entry2.getKey(), ((Number) entry2.getValue()).longValue());\n                }\n                for (java.util.Map.Entry entry3 : map.entrySet()) {\n                    f0a.A04((C0DY) entry3.getKey(), ((Number) entry3.getValue()).longValue());\n                }\n            }\n        }\n        HashMap map3 = new HashMap();\n        Iterator it2 = collection.iterator();\n        while (it2.hasNext()) {\n            C18U c18u2 = (C18U) it2.next();\n            if (((C0xW) c0x0.A08.A00.BFb()).A0A(c18u2)) {\n                if (c18u2.B96() == 17) {\n                    c0x0.A0Q(c18u2);\n                } else {\n                    if (!c0x0.A0G(c18u2) && !c0x0.A0g(c18u2) && c18u2.B96() != 16) {\n                        if (C0x9.A03(c18u2.B6v())) {\n                            C1dW c1dW = c18u2.A0j;\n                            C0DY c0dy2 = c1dW.A00;\n                            if (!C0x9.A03(c0dy2)) {\n                                long jA00 = A00(c18u2);\n                                if (C0Dn.A0l(c0dy2)) {\n                                    c0fW = (C0fW) c0x0.A0E.A00.BFb();\n                                    C00L.A05(c0dy2);\n                                    sendReadReceiptJob = new SendReadReceiptJob(c0dy2, c18u2.B6q(), null, null, null, null, new String[]{c1dW.A01}, c18u2.A0F, c18u2.A0n, jA00, true);\n                                } else if (!C0x9.A03(c0dy2) && C0Dn.A0k(c0dy2)) {\n                                    c0fW = (C0fW) c0x0.A0E.A00.BFb();\n                                    C0DY c0dyB6q = c18u2.B6q();\n                                    C00L.A05(c0dyB6q);\n                                    sendReadReceiptJob = new SendReadReceiptJob(c0dyB6q, null, c0dy2, null, null, null, new String[]{c1dW.A01}, c18u2.A0F, c18u2.A0n, jA00, true);\n                                }\n                                c0fW.A01(sendReadReceiptJob);\n                            }\n                        }\n                        c0x0.A0Q(c18u2);\n                    }\n                    C0DY c0dy3 = c18u2.A0j.A00;\n                    if (!C0Dn.A0h(c0dy3)) {\n                        C00L.A05(c0dy3);\n                        C00l.A05(c0dy3);\n                        C18U c18u3 = (C18U) map3.get(c0dy3);\n                        if (c18u3 != null && c18u3.A0l > c18u2.A0l) {\n                            c18u2 = c18u3;\n                        }\n                        map3.put(c0dy3, c18u2);\n                    }\n                }\n            }\n        }\n        Fef fef = new Fef(c0x0, map3, 48);\n        if (z2) {\n            fef.run();\n        } else {\n            ((C1vV) c0x0.A00.A00.BFb()).A02(fef, 43);\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

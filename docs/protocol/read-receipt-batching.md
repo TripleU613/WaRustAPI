@@ -75,7 +75,11 @@ Existing CLI `mark-read --chat CHAT --id ID --id OTHER` and library `send_receip
 queue offline; `listen` sends pending receipts under the existing authorization.
 `receipts` reports one outcome per original ID. There is no new switch, HTTP
 route, response field or automatic read policy. Opt-in `mark_read` retains its
-existing readable-content and authenticated-record checks.
+existing readable-content and authenticated-record checks. The current
+[automatic-read privacy guard](read-receipt-policy-current.md) additionally
+holds newly automatic direct intents when a known server preference is disabled,
+rechecks at reservation and exposes nullable provenance/deferral in `receipts`.
+Historical claims above that there is no new response field predate this guard.
 
 ## Checks and remaining scope
 

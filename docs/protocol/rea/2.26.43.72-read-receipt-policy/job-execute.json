@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_10fe01200659e5d6ca1d179134c7bfc63004be079abc8a8e8d3a48b14502e419",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "com.whatsapp.messaging.receipts.jobqueue.job.SendReadReceiptJob",
+    "method_name": "A0L",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-wXd2Z4/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "com.whatsapp.messaging.receipts.jobqueue.job.SendReadReceiptJob"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"name\":\"A00\",\"def_pos\":0,\"type\":\"X.0Sf\"},{\"name\":\"A01\",\"def_pos\":0,\"type\":\"X.0xW\"},{\"name\":\"A02\",\"def_pos\":0,\"type\":\"java.lang.Throwable\"},{\"name\":\"jid\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"loggableStanzaId\",\"def_pos\":0,\"type\":\"long\"},{\"name\":\"messageIds\",\"def_pos\":0,\"type\":\"java.lang.String[]\"},{\"name\":\"messageServerStoreTimeMicros\",\"def_pos\":0,\"type\":\"long\"},{\"name\":\"originalMessageTimestamp\",\"def_pos\":0,\"type\":\"long\"},{\"name\":\"participant\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"peripheralDeviceOrigin\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"receiptClass\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"recipient\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"remoteSender\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"serialVersionUID\",\"def_pos\":0,\"type\":\"long\"},{\"name\":\"shouldForceReadSelfReceipt\",\"def_pos\":0,\"type\":\"boolean\"}],\"field_count\":15,\"full_name\":\"com.whatsapp.messaging.receipts.jobqueue.job.SendReadReceiptJob\",\"name\":\"SendReadReceiptJob\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":8,\"methods\":[{\"dex_descriptor\":\"(LX/0DY;LX/0DY;LX/0DY;Lcom/whatsapp/infra/core/jid/DeviceJid;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;JJJZ)V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(X.0DY, X.0DY, X.0DY, com.whatsapp.infra.core.jid.DeviceJid, java.lang.String, java.lang.String, java.lang.String[], long, long, long, boolean): void\"},{\"dex_descriptor\":\"()Ljava/lang/String;\",\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0,\"signature\":\"A00(): java.lang.String\"},{\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"A0J\",\"def_pos\":0,\"signature\":\"A0J(): void\"},{\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"A0K\",\"def_pos\":0,\"signature\":\"A0K(): void\"},{\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"A0L\",\"def_pos\":0,\"signature\":\"A0L(): void\"},{\"dex_descriptor\":\"(Ljava/lang/Exception;)Z\",\"is_constructor\":false,\"name\":\"A0N\",\"def_pos\":0,\"signature\":\"A0N(java.lang.Exception): boolean\"},{\"dex_descriptor\":\"(Landroid/content/Context;)V\",\"is_constructor\":false,\"name\":\"Cf0\",\"def_pos\":0,\"signature\":\"Cf0(android.content.Context): void\"},{\"dex_descriptor\":\"(Ljava/io/ObjectInputStream;)V\",\"is_constructor\":false,\"name\":\"readObject\",\"def_pos\":0,\"signature\":\"readObject(java.io.ObjectInputStream): void\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "com.whatsapp.messaging.receipts.jobqueue.job.SendReadReceiptJob",
+          "method_name": "A0L",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_name\":\"A0L\",\"overload_count\":1,\"body\":\"    /* JADX WARN: Code duplicated, block: B:6:0x001f  */\\n    @Override // org.whispersystems.jobqueue.Job\\n    public void A0L() throws ExecutionException, InterruptedException {\\n        boolean z;\\n        A00();\\n        String str \\u003d this.jid;\\n        C0Di c0Di \\u003d C0DY.A00;\\n        C0DY c0dyA02 \\u003d c0Di.A02(str);\\n        if (C0Dn.A0a(c0dyA02)) {\\n            z \\u003d \\\"status\\\".equals(this.receiptClass);\\n        }\\n        C0DY c0dyA03 \\u003d (C0Dn.A0g(c0dyA02) || z) ? null : c0Di.A02(this.participant);\\n        DeviceJid deviceJidA0a \\u003d DBc.A0a(this.remoteSender);\\n        UserJid userJidA0d \\u003d C6of.A0d(this.recipient);\\n        if (this.A01.A09(c0dyA02, userJidA0d, this.A02, this.messageIds, this.originalMessageTimestamp, this.shouldForceReadSelfReceipt)) {\\n            EXu eXuA04 \\u003d this.A01.A04(c0dyA02, c0dyA03, deviceJidA0a, userJidA0d, this.receiptClass, this.peripheralDeviceOrigin, this.messageIds, this.loggableStanzaId, this.messageServerStoreTimeMicros, this.shouldForceReadSelfReceipt);\\n            Pair pairA05 \\u003d Exf.A05(deviceJidA0a, c0dyA02, c0dyA03);\\n            Efa efa \\u003d new Efa();\\n            efa.A02 \\u003d (Jid) pairA05.first;\\n            efa.A06 \\u003d \\\"receipt\\\";\\n            efa.A09 \\u003d eXuA04.A09;\\n            efa.A08 \\u003d this.messageIds[0];\\n            efa.A01 \\u003d (Jid) pairA05.second;\\n            efa.A03 \\u003d userJidA0d;\\n            efa.A00 \\u003d this.loggableStanzaId;\\n            this.A00.A0B(Message.obtain(null, 0, 89, 0, eXuA04), efa.A00()).get();\\n            A00();\\n        }\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"com.whatsapp.messaging.receipts.jobqueue.job.SendReadReceiptJob\",\"full_name\":\"com.whatsapp.messaging.receipts.jobqueue.job.SendReadReceiptJob.A0L\",\"mode\":\"java\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "com.whatsapp.messaging.receipts.jobqueue.job.SendReadReceiptJob",
+    "method": {
+      "name": "A0L",
+      "reported_signature": "A0L(): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "()V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Code duplicated, block: B:6:0x001f  */\n    @Override // org.whispersystems.jobqueue.Job\n    public void A0L() throws ExecutionException, InterruptedException {\n        boolean z;\n        A00();\n        String str = this.jid;\n        C0Di c0Di = C0DY.A00;\n        C0DY c0dyA02 = c0Di.A02(str);\n        if (C0Dn.A0a(c0dyA02)) {\n            z = \"status\".equals(this.receiptClass);\n        }\n        C0DY c0dyA03 = (C0Dn.A0g(c0dyA02) || z) ? null : c0Di.A02(this.participant);\n        DeviceJid deviceJidA0a = DBc.A0a(this.remoteSender);\n        UserJid userJidA0d = C6of.A0d(this.recipient);\n        if (this.A01.A09(c0dyA02, userJidA0d, this.A02, this.messageIds, this.originalMessageTimestamp, this.shouldForceReadSelfReceipt)) {\n            EXu eXuA04 = this.A01.A04(c0dyA02, c0dyA03, deviceJidA0a, userJidA0d, this.receiptClass, this.peripheralDeviceOrigin, this.messageIds, this.loggableStanzaId, this.messageServerStoreTimeMicros, this.shouldForceReadSelfReceipt);\n            Pair pairA05 = Exf.A05(deviceJidA0a, c0dyA02, c0dyA03);\n            Efa efa = new Efa();\n            efa.A02 = (Jid) pairA05.first;\n            efa.A06 = \"receipt\";\n            efa.A09 = eXuA04.A09;\n            efa.A08 = this.messageIds[0];\n            efa.A01 = (Jid) pairA05.second;\n            efa.A03 = userJidA0d;\n            efa.A00 = this.loggableStanzaId;\n            this.A00.A0B(Message.obtain(null, 0, 89, 0, eXuA04), efa.A00()).get();\n            A00();\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_b841a5c20d4a946da5464db0d68abf9062227bc53b3fad3a0326dc39d54ad1c5",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C1nH",
+    "method_name": "A06",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-Z8gsR9/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C1nH"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"()V\"},{\"signature\":\"A00(X.0aq, java.lang.String, java.lang.String, long): int\",\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0aq;Ljava/lang/String;Ljava/lang/String;J)I\"},{\"signature\":\"A01(com.google.common.collect.ImmutableMap, com.google.common.collect.ImmutableSet, X.1nH): com.google.common.collect.ImmutableSet\",\"def_pos\":0,\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableMap;Lcom/google/common/collect/ImmutableSet;LX/1nH;)Lcom/google/common/collect/ImmutableSet;\"},{\"signature\":\"A02(com.whatsapp.infra.core.jid.DeviceJid, X.1nH, java.lang.String[]): X.F0I\",\"def_pos\":0,\"name\":\"A02\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/whatsapp/infra/core/jid/DeviceJid;LX/1nH;[Ljava/lang/String;)LX/F0I;\"},{\"signature\":\"A03(X.1nH): X.0Xp\",\"def_pos\":0,\"name\":\"A03\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/1nH;)LX/0Xp;\"},{\"signature\":\"A04(com.whatsapp.infra.core.jid.DeviceJid, java.util.Map, long): void\",\"def_pos\":0,\"name\":\"A04\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/whatsapp/infra/core/jid/DeviceJid;Ljava/util/Map;J)V\"},{\"signature\":\"A05(com.google.common.collect.ImmutableSet, X.1nH): java.lang.String[]\",\"def_pos\":0,\"name\":\"A05\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableSet;LX/1nH;)[Ljava/lang/String;\"},{\"signature\":\"A06(): com.google.common.collect.ImmutableMap\",\"def_pos\":0,\"name\":\"A06\",\"is_constructor\":false,\"dex_descriptor\":\"()Lcom/google/common/collect/ImmutableMap;\"},{\"signature\":\"A07(): com.google.common.collect.ImmutableMap\",\"def_pos\":0,\"name\":\"A07\",\"is_constructor\":false,\"dex_descriptor\":\"()Lcom/google/common/collect/ImmutableMap;\"}],\"method_count\":9,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"C1nH\",\"full_name\":\"X.C1nH\",\"field_count\":11,\"fields\":[{\"type\":\"int\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"com.google.common.collect.ImmutableMap\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"com.google.common.collect.ImmutableMap\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A05\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A06\"},{\"type\":\"X.09F\",\"def_pos\":0,\"name\":\"A07\"},{\"type\":\"X.08q\",\"def_pos\":0,\"name\":\"A08\"},{\"type\":\"com.google.common.collect.ImmutableMap\",\"def_pos\":0,\"name\":\"A09\"},{\"type\":\"X.0Xp\",\"def_pos\":0,\"name\":\"A0A\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C1nH",
+          "method_name": "A06",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.1nH.A06\",\"class_name\":\"X.C1nH\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    @Deprecated\\n    public ImmutableMap A06() {\\n        ImmutableMap immutableMapA07;\\n        ImmutableMap immutableMapA08;\\n        int i;\\n        synchronized (this) {\\n            immutableMapA07 \\u003d this.A02;\\n            if (immutableMapA07 \\u003d\\u003d null) {\\n                immutableMapA07 \\u003d A07();\\n                C09F c09f \\u003d this.A07;\\n                PhoneUserJid phoneUserJidAum \\u003d c09f.Aum();\\n                if (phoneUserJidAum !\\u003d null) {\\n                    LinkedHashMap linkedHashMap \\u003d new LinkedHashMap();\\n                    C0LD it \\u003d immutableMapA07.entrySet().iterator();\\n                    while (it.hasNext()) {\\n                        java.util.Map.Entry entry \\u003d (java.util.Map.Entry) it.next();\\n                        DeviceJid deviceJid \\u003d (DeviceJid) entry.getKey();\\n                        if (!C0Dn.A0Y(deviceJid) || !c09f.BVC(deviceJid.userJid)) {\\n                            linkedHashMap.put(deviceJid, (F0I) entry.getValue());\\n                        }\\n                    }\\n                    C0LD it2 \\u003d immutableMapA07.entrySet().iterator();\\n                    while (it2.hasNext()) {\\n                        java.util.Map.Entry entry2 \\u003d (java.util.Map.Entry) it2.next();\\n                        DeviceJid deviceJid2 \\u003d (DeviceJid) entry2.getKey();\\n                        if (C0Dn.A0Y(deviceJid2) \\u0026\\u0026 c09f.BVC(deviceJid2.userJid)) {\\n                            DeviceJid deviceJidA02 \\u003d DeviceJid.Companion.A02(phoneUserJidAum, deviceJid2.getDevice());\\n                            if (deviceJidA02 \\u003d\\u003d null) {\\n                                linkedHashMap.put(deviceJid2, (F0I) entry2.getValue());\\n                            } else if (!linkedHashMap.containsKey(deviceJidA02)) {\\n                                linkedHashMap.put(deviceJidA02, ((F0I) entry2.getValue()).A02(deviceJidA02));\\n                            }\\n                        }\\n                    }\\n                    immutableMapA07 \\u003d ImmutableMap.copyOf((java.util.Map) linkedHashMap);\\n                }\\n                this.A02 \\u003d immutableMapA07;\\n            }\\n        }\\n        synchronized (this) {\\n            immutableMapA08 \\u003d A07();\\n            i \\u003d this.A00;\\n        }\\n        if (immutableMapA08 !\\u003d this.A09) {\\n            this.A09 \\u003d immutableMapA08;\\n            C1nR c1nR \\u003d (C1nR) this.A05.BFb();\\n            C0LD it3 \\u003d immutableMapA08.keySet().iterator();\\n            int i2 \\u003d 0;\\n            while (it3.hasNext()) {\\n                if (!C0Dn.A0Y((com.whatsapp.infra.core.jid.Jid) it3.next())) {\\n                    i2++;\\n                }\\n            }\\n            int i3 \\u003d i2 + i;\\n            int size \\u003d immutableMapA08.size() + i;\\n            if (i3 !\\u003d 0 \\u0026\\u0026 i3 !\\u003d size \\u0026\\u0026 ((C00E) c1nR.A00.BFb()).A17(C0HA.A04)) {\\n                StringBuilder sb \\u003d new StringBuilder(\\\"nonLid: \\\");\\n                sb.append(i3);\\n                sb.append(\\\" of \\\");\\n                sb.append(size);\\n                sb.append(\\\", unparseable: \\\");\\n                sb.append(i);\\n                C1nR.A00(c1nR, \\\"CompanionDeviceStore/read_mixed_device_jid_forms\\\", sb.toString());\\n            }\\n        }\\n        return immutableMapA07;\\n    }\",\"overload_count\":1,\"method_name\":\"A06\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C1nH",
+    "method": {
+      "name": "A06",
+      "reported_signature": "A06(): com.google.common.collect.ImmutableMap",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "()Lcom/google/common/collect/ImmutableMap;"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    @Deprecated\n    public ImmutableMap A06() {\n        ImmutableMap immutableMapA07;\n        ImmutableMap immutableMapA08;\n        int i;\n        synchronized (this) {\n            immutableMapA07 = this.A02;\n            if (immutableMapA07 == null) {\n                immutableMapA07 = A07();\n                C09F c09f = this.A07;\n                PhoneUserJid phoneUserJidAum = c09f.Aum();\n                if (phoneUserJidAum != null) {\n                    LinkedHashMap linkedHashMap = new LinkedHashMap();\n                    C0LD it = immutableMapA07.entrySet().iterator();\n                    while (it.hasNext()) {\n                        java.util.Map.Entry entry = (java.util.Map.Entry) it.next();\n                        DeviceJid deviceJid = (DeviceJid) entry.getKey();\n                        if (!C0Dn.A0Y(deviceJid) || !c09f.BVC(deviceJid.userJid)) {\n                            linkedHashMap.put(deviceJid, (F0I) entry.getValue());\n                        }\n                    }\n                    C0LD it2 = immutableMapA07.entrySet().iterator();\n                    while (it2.hasNext()) {\n                        java.util.Map.Entry entry2 = (java.util.Map.Entry) it2.next();\n                        DeviceJid deviceJid2 = (DeviceJid) entry2.getKey();\n                        if (C0Dn.A0Y(deviceJid2) && c09f.BVC(deviceJid2.userJid)) {\n                            DeviceJid deviceJidA02 = DeviceJid.Companion.A02(phoneUserJidAum, deviceJid2.getDevice());\n                            if (deviceJidA02 == null) {\n                                linkedHashMap.put(deviceJid2, (F0I) entry2.getValue());\n                            } else if (!linkedHashMap.containsKey(deviceJidA02)) {\n                                linkedHashMap.put(deviceJidA02, ((F0I) entry2.getValue()).A02(deviceJidA02));\n                            }\n                        }\n                    }\n                    immutableMapA07 = ImmutableMap.copyOf((java.util.Map) linkedHashMap);\n                }\n                this.A02 = immutableMapA07;\n            }\n        }\n        synchronized (this) {\n            immutableMapA08 = A07();\n            i = this.A00;\n        }\n        if (immutableMapA08 != this.A09) {\n            this.A09 = immutableMapA08;\n            C1nR c1nR = (C1nR) this.A05.BFb();\n            C0LD it3 = immutableMapA08.keySet().iterator();\n            int i2 = 0;\n            while (it3.hasNext()) {\n                if (!C0Dn.A0Y((com.whatsapp.infra.core.jid.Jid) it3.next())) {\n                    i2++;\n                }\n            }\n            int i3 = i2 + i;\n            int size = immutableMapA08.size() + i;\n            if (i3 != 0 && i3 != size && ((C00E) c1nR.A00.BFb()).A17(C0HA.A04)) {\n                StringBuilder sb = new StringBuilder(\"nonLid: \");\n                sb.append(i3);\n                sb.append(\" of \");\n                sb.append(size);\n                sb.append(\", unparseable: \");\n                sb.append(i);\n                C1nR.A00(c1nR, \"CompanionDeviceStore/read_mixed_device_jid_forms\", sb.toString());\n            }\n        }\n        return immutableMapA07;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

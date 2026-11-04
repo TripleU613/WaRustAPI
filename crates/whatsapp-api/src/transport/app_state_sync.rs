@@ -925,15 +925,24 @@ fn catch_up_in(tx: &mut crate::store::WriteTx<'_>, reply: &Node) -> Result<usize
             ));
         };
         let decoded = CollectionPatch::decode(bytes)?;
-        let keys = app_state::keys_for(tx, &decoded.key_id)?.ok_or_else(|| {
-            crate::Error::invalid("app_state_sync", "conflict names a key we do not hold")
-        })?;
-        let verified = state.verify_patch(&decoded, |id| {
-            if id == &decoded.key_id {
-                Ok(&keys)
-            } else {
-                Err(crate::Error::invalid("app_state_sync", "unexpected key id"))
+        // APK 43.72 SyncResponseHandler.A07 collects record IDs separately from
+        // its patch/snapshot ID before 0fI.A08 resolves the combined set. See
+        // app-state-catchup-atomicity.md. Resolve only held keys in this tx.
+        let mut keys = std::collections::BTreeMap::new();
+        for id in std::iter::once(&decoded.key_id)
+            .chain(decoded.mutations.iter().map(|mutation| &mutation.key_id))
+        {
+            if !keys.contains_key(id) {
+                keys.insert(
+                    *id,
+                    app_state::keys_for(tx, id)?
+                        .ok_or_else(|| invalid_patch("conflict names a key we do not hold"))?,
+                );
             }
+        }
+        let verified = state.verify_patch(&decoded, |id| {
+            keys.get(id)
+                .ok_or_else(|| invalid_patch("conflict references an unheld key"))
         })?;
         state = verified.state;
         applied += 1;
@@ -1056,6 +1065,61 @@ mod catch_up_atomic_tests {
                 Node::new("patches").children(patches),
             ])
         ])])
+    }
+
+    #[test]
+    fn conflict_resolves_record_key_separately_from_patch_key() {
+        use crate::signal::app_state_crypto::MutationKeys;
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("mixed-keys.redb"));
+        install_key(&store);
+        let mut bytes = patch(false);
+        let decoded = CollectionPatch::decode(&bytes).unwrap();
+        let original_keys = MutationKeys::derive(&(0u8..32).collect::<Vec<_>>()).unwrap();
+        let expected = CollectionState::empty("regular")
+            .unwrap()
+            .verify_patch(&decoded, |_| Ok(&original_keys))
+            .unwrap()
+            .state;
+        // Keep the independent literal record untouched. Only its enclosing
+        // patch/snapshot MACs are signed by a different, synthetic held key.
+        let signing_keys = MutationKeys::derive(&[42; 32]).unwrap();
+        let snapshot = signing_keys
+            .snapshot_mac(expected.hash().as_bytes(), 1, "regular")
+            .unwrap();
+        let value_mac = decoded.mutations[0].body[decoded.mutations[0].body.len() - 32..]
+            .try_into()
+            .unwrap();
+        let mac = signing_keys
+            .patch_mac(&snapshot, &[value_mac], 1, "regular")
+            .unwrap();
+        bytes.truncate(bytes.len() - 78);
+        bytes.extend([0x22, 32]);
+        bytes.extend(snapshot);
+        bytes.extend([0x2a, 32]);
+        bytes.extend(mac);
+        bytes.extend([0x32, 8, 0x0a, 6]);
+        bytes.extend([0, 1, 0, 0, 0, 3]);
+        let response = reply(vec![Node::new("patch").bytes(bytes)]);
+        assert!(store.write(|tx| catch_up_in(tx, &response)).is_err());
+        assert!(
+            held(&store).is_none(),
+            "missing signing key cannot advance state"
+        );
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"app-state-key:000100000003",
+                    1,
+                    &serde_json::json!({"data":vec![42u8;32],
+                "fingerprint":{"raw_id":7,"current_index":1,"device_indexes":[1]},
+                "timestamp":1}),
+                )
+            })
+            .unwrap();
+        assert_eq!(store.write(|tx| catch_up_in(tx, &response)).unwrap(), 1);
+        assert_eq!(held(&store).unwrap(), expected.to_saved());
     }
 
     #[test]

@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_605f6b433b6120ded750410cb52cb55aa287f9a9d4bef69c5fa0d043bae714a0",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C0xW",
+    "method_name": "A04",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-wXd2Z4/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C0xW"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"name\":\"A00\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A01\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A02\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A03\",\"def_pos\":0,\"type\":\"X.09F\"},{\"name\":\"A04\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A05\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A06\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A07\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A08\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A09\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A0A\",\"def_pos\":0,\"type\":\"X.08q\"}],\"field_count\":11,\"full_name\":\"X.C0xW\",\"name\":\"C0xW\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":13,\"methods\":[{\"dex_descriptor\":\"()V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(): void\"},{\"dex_descriptor\":\"(LX/0DY;)Z\",\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0,\"signature\":\"A00(X.0DY): boolean\"},{\"dex_descriptor\":\"(LX/0DY;)Z\",\"is_constructor\":false,\"name\":\"A01\",\"def_pos\":0,\"signature\":\"A01(X.0DY): boolean\"},{\"dex_descriptor\":\"(Lcom/whatsapp/infra/core/jid/Jid;)Z\",\"is_constructor\":false,\"name\":\"A02\",\"def_pos\":0,\"signature\":\"A02(com.whatsapp.infra.core.jid.Jid): boolean\"},{\"dex_descriptor\":\"(LX/Eoh;)LX/0Tp;\",\"is_constructor\":false,\"name\":\"A03\",\"def_pos\":0,\"signature\":\"A03(X.Eoh): X.0Tp\"},{\"dex_descriptor\":\"(LX/0DY;LX/0DY;Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/UserJid;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;JJZ)LX/EXu;\",\"is_constructor\":false,\"name\":\"A04\",\"def_pos\":0,\"signature\":\"A04(X.0DY, X.0DY, com.whatsapp.infra.core.jid.DeviceJid, com.whatsapp.infra.core.jid.UserJid, java.lang.String, java.lang.String, java.lang.String[], long, long, boolean): X.EXu\"},{\"dex_descriptor\":\"(LX/0DY;Z)Ljava/lang/String;\",\"is_constructor\":false,\"name\":\"A05\",\"def_pos\":0,\"signature\":\"A05(X.0DY, boolean): java.lang.String\"},{\"dex_descriptor\":\"()Z\",\"is_constructor\":false,\"name\":\"A06\",\"def_pos\":0,\"signature\":\"A06(): boolean\"},{\"dex_descriptor\":\"(LX/0DY;)Z\",\"is_constructor\":false,\"name\":\"A07\",\"def_pos\":0,\"signature\":\"A07(X.0DY): boolean\"},{\"dex_descriptor\":\"(LX/0DY;)Z\",\"is_constructor\":false,\"name\":\"A08\",\"def_pos\":0,\"signature\":\"A08(X.0DY): boolean\"},{\"dex_descriptor\":\"(LX/0DY;Lcom/whatsapp/infra/core/jid/UserJid;Ljava/lang/Throwable;[Ljava/lang/String;JZ)Z\",\"is_constructor\":false,\"name\":\"A09\",\"def_pos\":0,\"signature\":\"A09(X.0DY, com.whatsapp.infra.core.jid.UserJid, java.lang.Throwable, java.lang.String[], long, boolean): boolean\"},{\"dex_descriptor\":\"(LX/18U;)Z\",\"is_constructor\":false,\"name\":\"A0A\",\"def_pos\":0,\"signature\":\"A0A(X.18U): boolean\"},{\"dex_descriptor\":\"(LX/18U;)Z\",\"is_constructor\":false,\"name\":\"A0B\",\"def_pos\":0,\"signature\":\"A0B(X.18U): boolean\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C0xW",
+          "method_name": "A04",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_name\":\"A04\",\"overload_count\":1,\"body\":\"    /* JADX WARN: Code duplicated, block: B:6:0x0012  */\\n    public EXu A04(C0DY c0dy, C0DY c0dy2, DeviceJid deviceJid, UserJid userJid, String str, String str2, String[] strArr, long j, long j2, boolean z) {\\n        C0DY c0dy3;\\n        EXu eXu;\\n        String str3;\\n        boolean z2;\\n        C0DY c0dy4 \\u003d c0dy2;\\n        if (userJid \\u003d\\u003d null) {\\n            c0dy3 \\u003d c0dy;\\n        } else {\\n            c0dy3 \\u003d userJid;\\n            if (!C00l.areEqual(c0dy, Exz.A00)) {\\n                c0dy3 \\u003d c0dy;\\n            }\\n        }\\n        String strA05 \\u003d A05(c0dy3, z);\\n        if (C0Dn.A0h(c0dy4)) {\\n            Log.w(\\\"ReadReceiptUtils/buildReadReceiptHandler malformed participant flipping\\\");\\n            eXu \\u003d new EXu(c0dy, deviceJid, userJid, new C1dW(C2p4.A00, strArr[0], false), strA05);\\n        } else {\\n            if (C0Dn.A0g(c0dy)) {\\n                c0dy4 \\u003d null;\\n            }\\n            eXu \\u003d new EXu(c0dy4, deviceJid, userJid, new C1dW(c0dy, strArr[0], false), strA05);\\n        }\\n        eXu.A00 \\u003d j;\\n        eXu.A01 \\u003d j2;\\n        eXu.A03 \\u003d str;\\n        eXu.A02 \\u003d str2;\\n        int length \\u003d strArr.length;\\n        if (length \\u003e 1) {\\n            int i \\u003d length - 1;\\n            String[] strArr2 \\u003d new String[i];\\n            eXu.A04 \\u003d strArr2;\\n            System.arraycopy(strArr, 1, strArr2, 0, i);\\n        }\\n        try {\\n            C0DY c0dy5 \\u003d eXu.A08.A00;\\n            if (!C0x9.A03(c0dy5)) {\\n                C0DY c0dy6 \\u003d eXu.A05;\\n                DeviceJid deviceJid2 \\u003d eXu.A06;\\n                Pair pairA05 \\u003d Exf.A05(deviceJid2, c0dy5, c0dy6);\\n                com.whatsapp.infra.core.jid.Jid jid \\u003d (com.whatsapp.infra.core.jid.Jid) pairA05.first;\\n                Object obj \\u003d pairA05.second;\\n                com.whatsapp.infra.core.jid.Jid jid2 \\u003d (obj \\u003d\\u003d null || !((com.whatsapp.infra.core.jid.Jid) obj).equals(jid)) ? (com.whatsapp.infra.core.jid.Jid) pairA05.second : null;\\n                boolean zA02 \\u003d A02(jid);\\n                boolean zA03 \\u003d A02(jid2);\\n                if ((zA02 || zA03) \\u0026\\u0026 ((C08Y) this.A00.BFb()).A17(AnonymousClass323.A00)) {\\n                    C0GO c0go \\u003d (C0GO) C09H.A03((C00Z) ((C00X) this.A02.BFb()).A01(), 1251);\\n                    StringBuilder sb \\u003d new StringBuilder(\\\"chatType: \\\");\\n                    if (C0Dn.A0h(c0dy5)) {\\n                        str3 \\u003d \\\"status\\\";\\n                    } else if (C0Dn.A0k(c0dy5)) {\\n                        str3 \\u003d \\\"oneToOne\\\";\\n                    } else if (C0Dn.A0m(c0dy5)) {\\n                        str3 \\u003d \\\"group\\\";\\n                    } else {\\n                        str3 \\u003d C0Dn.A0Q(c0dy5) ? \\\"broadcast\\\" : null;\\n                    }\\n                    sb.append(str3);\\n                    sb.append(\\\"; receiptType: \\\");\\n                    sb.append(eXu.A09);\\n                    sb.append(\\\"; receiptClass: \\\");\\n                    sb.append(eXu.A03);\\n                    sb.append(\\\"; pnTo: \\\");\\n                    sb.append(zA02);\\n                    sb.append(\\\"; pnParticipant: \\\");\\n                    sb.append(zA03);\\n                    sb.append(\\\"; toIsDevice: \\\");\\n                    sb.append(C0Dn.A0S(jid));\\n                    sb.append(\\\"; hasMe: \\\");\\n                    C09F c09f \\u003d this.A03;\\n                    if (!c09f.BVD(jid)) {\\n                        z2 \\u003d c09f.BVD(jid2);\\n                    }\\n                    sb.append(z2);\\n                    sb.append(\\\"; hasParticipant: \\\");\\n                    sb.append(jid2 !\\u003d null);\\n                    sb.append(\\\"; hasRemoteSender: \\\");\\n                    sb.append(deviceJid2 !\\u003d null);\\n                    sb.append(\\\"; hasRecipient: \\\");\\n                    UserJid userJid2 \\u003d eXu.A07;\\n                    sb.append(userJid2 !\\u003d null);\\n                    sb.append(\\\"; isBulk: \\\");\\n                    sb.append(length \\u003e 1);\\n                    String string \\u003d sb.toString();\\n                    StringBuilder sb2 \\u003d new StringBuilder(\\\"to: \\\");\\n                    sb2.append(jid);\\n                    sb2.append(\\\"; participant: \\\");\\n                    sb2.append(jid2);\\n                    sb2.append(\\\"; chatJid: \\\");\\n                    sb2.append(c0dy5);\\n                    sb2.append(\\\"; remoteSender: \\\");\\n                    sb2.append(deviceJid2);\\n                    sb2.append(\\\"; recipient: \\\");\\n                    sb2.append(userJid2);\\n                    sb2.append(\\\"; messageIdCount: \\\");\\n                    sb2.append(length);\\n                    c0go.A0b(\\\"pn_addressed_receipt_sent\\\", string, sb2.toString(), 1, false);\\n                    return eXu;\\n                }\\n            }\\n            return eXu;\\n        } catch (Exception e) {\\n            Log.e(\\\"ReadReceiptUtils/reportIfPnAddressedReceipt failed; receipt send continues\\\", e);\\n            return eXu;\\n        }\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.C0xW\",\"full_name\":\"X.0xW.A04\",\"mode\":\"java\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C0xW",
+    "method": {
+      "name": "A04",
+      "reported_signature": "A04(X.0DY, X.0DY, com.whatsapp.infra.core.jid.DeviceJid, com.whatsapp.infra.core.jid.UserJid, java.lang.String, java.lang.String, java.lang.String[], long, long, boolean): X.EXu",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(LX/0DY;LX/0DY;Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/UserJid;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;JJZ)LX/EXu;"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Code duplicated, block: B:6:0x0012  */\n    public EXu A04(C0DY c0dy, C0DY c0dy2, DeviceJid deviceJid, UserJid userJid, String str, String str2, String[] strArr, long j, long j2, boolean z) {\n        C0DY c0dy3;\n        EXu eXu;\n        String str3;\n        boolean z2;\n        C0DY c0dy4 = c0dy2;\n        if (userJid == null) {\n            c0dy3 = c0dy;\n        } else {\n            c0dy3 = userJid;\n            if (!C00l.areEqual(c0dy, Exz.A00)) {\n                c0dy3 = c0dy;\n            }\n        }\n        String strA05 = A05(c0dy3, z);\n        if (C0Dn.A0h(c0dy4)) {\n            Log.w(\"ReadReceiptUtils/buildReadReceiptHandler malformed participant flipping\");\n            eXu = new EXu(c0dy, deviceJid, userJid, new C1dW(C2p4.A00, strArr[0], false), strA05);\n        } else {\n            if (C0Dn.A0g(c0dy)) {\n                c0dy4 = null;\n            }\n            eXu = new EXu(c0dy4, deviceJid, userJid, new C1dW(c0dy, strArr[0], false), strA05);\n        }\n        eXu.A00 = j;\n        eXu.A01 = j2;\n        eXu.A03 = str;\n        eXu.A02 = str2;\n        int length = strArr.length;\n        if (length > 1) {\n            int i = length - 1;\n            String[] strArr2 = new String[i];\n            eXu.A04 = strArr2;\n            System.arraycopy(strArr, 1, strArr2, 0, i);\n        }\n        try {\n            C0DY c0dy5 = eXu.A08.A00;\n            if (!C0x9.A03(c0dy5)) {\n                C0DY c0dy6 = eXu.A05;\n                DeviceJid deviceJid2 = eXu.A06;\n                Pair pairA05 = Exf.A05(deviceJid2, c0dy5, c0dy6);\n                com.whatsapp.infra.core.jid.Jid jid = (com.whatsapp.infra.core.jid.Jid) pairA05.first;\n                Object obj = pairA05.second;\n                com.whatsapp.infra.core.jid.Jid jid2 = (obj == null || !((com.whatsapp.infra.core.jid.Jid) obj).equals(jid)) ? (com.whatsapp.infra.core.jid.Jid) pairA05.second : null;\n                boolean zA02 = A02(jid);\n                boolean zA03 = A02(jid2);\n                if ((zA02 || zA03) && ((C08Y) this.A00.BFb()).A17(AnonymousClass323.A00)) {\n                    C0GO c0go = (C0GO) C09H.A03((C00Z) ((C00X) this.A02.BFb()).A01(), 1251);\n                    StringBuilder sb = new StringBuilder(\"chatType: \");\n                    if (C0Dn.A0h(c0dy5)) {\n                        str3 = \"status\";\n                    } else if (C0Dn.A0k(c0dy5)) {\n                        str3 = \"oneToOne\";\n                    } else if (C0Dn.A0m(c0dy5)) {\n                        str3 = \"group\";\n                    } else {\n                        str3 = C0Dn.A0Q(c0dy5) ? \"broadcast\" : null;\n                    }\n                    sb.append(str3);\n                    sb.append(\"; receiptType: \");\n                    sb.append(eXu.A09);\n                    sb.append(\"; receiptClass: \");\n                    sb.append(eXu.A03);\n                    sb.append(\"; pnTo: \");\n                    sb.append(zA02);\n                    sb.append(\"; pnParticipant: \");\n                    sb.append(zA03);\n                    sb.append(\"; toIsDevice: \");\n                    sb.append(C0Dn.A0S(jid));\n                    sb.append(\"; hasMe: \");\n                    C09F c09f = this.A03;\n                    if (!c09f.BVD(jid)) {\n                        z2 = c09f.BVD(jid2);\n                    }\n                    sb.append(z2);\n                    sb.append(\"; hasParticipant: \");\n                    sb.append(jid2 != null);\n                    sb.append(\"; hasRemoteSender: \");\n                    sb.append(deviceJid2 != null);\n                    sb.append(\"; hasRecipient: \");\n                    UserJid userJid2 = eXu.A07;\n                    sb.append(userJid2 != null);\n                    sb.append(\"; isBulk: \");\n                    sb.append(length > 1);\n                    String string = sb.toString();\n                    StringBuilder sb2 = new StringBuilder(\"to: \");\n                    sb2.append(jid);\n                    sb2.append(\"; participant: \");\n                    sb2.append(jid2);\n                    sb2.append(\"; chatJid: \");\n                    sb2.append(c0dy5);\n                    sb2.append(\"; remoteSender: \");\n                    sb2.append(deviceJid2);\n                    sb2.append(\"; recipient: \");\n                    sb2.append(userJid2);\n                    sb2.append(\"; messageIdCount: \");\n                    sb2.append(length);\n                    c0go.A0b(\"pn_addressed_receipt_sent\", string, sb2.toString(), 1, false);\n                    return eXu;\n                }\n            }\n            return eXu;\n        } catch (Exception e) {\n            Log.e(\"ReadReceiptUtils/reportIfPnAddressedReceipt failed; receipt send continues\", e);\n            return eXu;\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

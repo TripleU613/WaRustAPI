@@ -910,6 +910,15 @@ pub(super) fn receipts_status(cli: &super::Cli) -> Result<(), Error> {
             "  kind={} status={} message_id={}",
             r.kind, r.status, r.message_id
         );
+        println!(
+            "  origin={} deferred={}",
+            match r.automatic {
+                Some(true) => "automatic",
+                Some(false) => "explicit",
+                None => "unknown",
+            },
+            r.deferred_reason.unwrap_or("none")
+        );
     }
     Ok(())
 }

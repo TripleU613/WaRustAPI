@@ -1,0 +1,234 @@
+{
+  "evidence_id": "ev_9b0ff679e9ce79ad7cd2b0fa4d7d12774b61b232156519c0db1a698bc0d2404b",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_class",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C0xW"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-wXd2Z4/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C0xW"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"name\":\"A00\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A01\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A02\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A03\",\"def_pos\":0,\"type\":\"X.09F\"},{\"name\":\"A04\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A05\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A06\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A07\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A08\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A09\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A0A\",\"def_pos\":0,\"type\":\"X.08q\"}],\"field_count\":11,\"full_name\":\"X.C0xW\",\"name\":\"C0xW\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":13,\"methods\":[{\"dex_descriptor\":\"()V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(): void\"},{\"dex_descriptor\":\"(LX/0DY;)Z\",\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0,\"signature\":\"A00(X.0DY): boolean\"},{\"dex_descriptor\":\"(LX/0DY;)Z\",\"is_constructor\":false,\"name\":\"A01\",\"def_pos\":0,\"signature\":\"A01(X.0DY): boolean\"},{\"dex_descriptor\":\"(Lcom/whatsapp/infra/core/jid/Jid;)Z\",\"is_constructor\":false,\"name\":\"A02\",\"def_pos\":0,\"signature\":\"A02(com.whatsapp.infra.core.jid.Jid): boolean\"},{\"dex_descriptor\":\"(LX/Eoh;)LX/0Tp;\",\"is_constructor\":false,\"name\":\"A03\",\"def_pos\":0,\"signature\":\"A03(X.Eoh): X.0Tp\"},{\"dex_descriptor\":\"(LX/0DY;LX/0DY;Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/UserJid;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;JJZ)LX/EXu;\",\"is_constructor\":false,\"name\":\"A04\",\"def_pos\":0,\"signature\":\"A04(X.0DY, X.0DY, com.whatsapp.infra.core.jid.DeviceJid, com.whatsapp.infra.core.jid.UserJid, java.lang.String, java.lang.String, java.lang.String[], long, long, boolean): X.EXu\"},{\"dex_descriptor\":\"(LX/0DY;Z)Ljava/lang/String;\",\"is_constructor\":false,\"name\":\"A05\",\"def_pos\":0,\"signature\":\"A05(X.0DY, boolean): java.lang.String\"},{\"dex_descriptor\":\"()Z\",\"is_constructor\":false,\"name\":\"A06\",\"def_pos\":0,\"signature\":\"A06(): boolean\"},{\"dex_descriptor\":\"(LX/0DY;)Z\",\"is_constructor\":false,\"name\":\"A07\",\"def_pos\":0,\"signature\":\"A07(X.0DY): boolean\"},{\"dex_descriptor\":\"(LX/0DY;)Z\",\"is_constructor\":false,\"name\":\"A08\",\"def_pos\":0,\"signature\":\"A08(X.0DY): boolean\"},{\"dex_descriptor\":\"(LX/0DY;Lcom/whatsapp/infra/core/jid/UserJid;Ljava/lang/Throwable;[Ljava/lang/String;JZ)Z\",\"is_constructor\":false,\"name\":\"A09\",\"def_pos\":0,\"signature\":\"A09(X.0DY, com.whatsapp.infra.core.jid.UserJid, java.lang.Throwable, java.lang.String[], long, boolean): boolean\"},{\"dex_descriptor\":\"(LX/18U;)Z\",\"is_constructor\":false,\"name\":\"A0A\",\"def_pos\":0,\"signature\":\"A0A(X.18U): boolean\"},{\"dex_descriptor\":\"(LX/18U;)Z\",\"is_constructor\":false,\"name\":\"A0B\",\"def_pos\":0,\"signature\":\"A0B(X.18U): boolean\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C0xW",
+    "methods": [
+      {
+        "name": "<init>",
+        "reported_signature": "<init>(): void",
+        "overload_index": 0,
+        "is_constructor": true,
+        "dex_descriptor": "()V"
+      },
+      {
+        "name": "A00",
+        "reported_signature": "A00(X.0DY): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/0DY;)Z"
+      },
+      {
+        "name": "A01",
+        "reported_signature": "A01(X.0DY): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/0DY;)Z"
+      },
+      {
+        "name": "A02",
+        "reported_signature": "A02(com.whatsapp.infra.core.jid.Jid): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lcom/whatsapp/infra/core/jid/Jid;)Z"
+      },
+      {
+        "name": "A03",
+        "reported_signature": "A03(X.Eoh): X.0Tp",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/Eoh;)LX/0Tp;"
+      },
+      {
+        "name": "A04",
+        "reported_signature": "A04(X.0DY, X.0DY, com.whatsapp.infra.core.jid.DeviceJid, com.whatsapp.infra.core.jid.UserJid, java.lang.String, java.lang.String, java.lang.String[], long, long, boolean): X.EXu",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/0DY;LX/0DY;Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/UserJid;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;JJZ)LX/EXu;"
+      },
+      {
+        "name": "A05",
+        "reported_signature": "A05(X.0DY, boolean): java.lang.String",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/0DY;Z)Ljava/lang/String;"
+      },
+      {
+        "name": "A06",
+        "reported_signature": "A06(): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "()Z"
+      },
+      {
+        "name": "A07",
+        "reported_signature": "A07(X.0DY): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/0DY;)Z"
+      },
+      {
+        "name": "A08",
+        "reported_signature": "A08(X.0DY): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/0DY;)Z"
+      },
+      {
+        "name": "A09",
+        "reported_signature": "A09(X.0DY, com.whatsapp.infra.core.jid.UserJid, java.lang.Throwable, java.lang.String[], long, boolean): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/0DY;Lcom/whatsapp/infra/core/jid/UserJid;Ljava/lang/Throwable;[Ljava/lang/String;JZ)Z"
+      },
+      {
+        "name": "A0A",
+        "reported_signature": "A0A(X.18U): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/18U;)Z"
+      },
+      {
+        "name": "A0B",
+        "reported_signature": "A0B(X.18U): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/18U;)Z"
+      }
+    ],
+    "fields": [
+      {
+        "name": "A00",
+        "reported_type": "X.00x"
+      },
+      {
+        "name": "A01",
+        "reported_type": "X.00x"
+      },
+      {
+        "name": "A02",
+        "reported_type": "X.00x"
+      },
+      {
+        "name": "A03",
+        "reported_type": "X.09F"
+      },
+      {
+        "name": "A04",
+        "reported_type": "X.00x"
+      },
+      {
+        "name": "A05",
+        "reported_type": "X.00x"
+      },
+      {
+        "name": "A06",
+        "reported_type": "X.00x"
+      },
+      {
+        "name": "A07",
+        "reported_type": "X.00x"
+      },
+      {
+        "name": "A08",
+        "reported_type": "X.00x"
+      },
+      {
+        "name": "A09",
+        "reported_type": "X.00x"
+      },
+      {
+        "name": "A0A",
+        "reported_type": "X.08q"
+      }
+    ],
+    "inner_classes": []
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_0d8367494f571d8733f9dc639bcac204958980f49bed7428d881730c81c57a19",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C0gE",
+    "method_name": "A04",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-2zGxC0/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C0gE"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"()V\"},{\"signature\":\"A00(java.util.Collection): java.util.ArrayList\",\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/util/Collection;)Ljava/util/ArrayList;\"},{\"signature\":\"A01(X.F1N): X.EE7\",\"def_pos\":0,\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/F1N;)LX/EE7;\"},{\"signature\":\"A02(): void\",\"def_pos\":0,\"name\":\"A02\",\"is_constructor\":false,\"dex_descriptor\":\"()V\"},{\"signature\":\"A03(): void\",\"def_pos\":0,\"name\":\"A03\",\"is_constructor\":false,\"dex_descriptor\":\"()V\"},{\"signature\":\"A04(X.DCL): void\",\"def_pos\":0,\"name\":\"A04\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/DCL;)V\"},{\"signature\":\"A05(X.DCL): void\",\"def_pos\":0,\"name\":\"A05\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/DCL;)V\"},{\"signature\":\"A06(java.lang.String): void\",\"def_pos\":0,\"name\":\"A06\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)V\"},{\"signature\":\"A07(java.lang.String): void\",\"def_pos\":0,\"name\":\"A07\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)V\"},{\"signature\":\"A08(java.util.Collection): void\",\"def_pos\":0,\"name\":\"A08\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/util/Collection;)V\"},{\"signature\":\"A09(java.util.List): void\",\"def_pos\":0,\"name\":\"A09\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/util/List;)V\"},{\"signature\":\"Byw(): void\",\"def_pos\":0,\"name\":\"Byw\",\"is_constructor\":false,\"dex_descriptor\":\"()V\"}],\"method_count\":12,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"C0gE\",\"full_name\":\"X.C0gE\",\"field_count\":8,\"fields\":[{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"X.0Yz\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"X.0g1\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"X.0gG\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"X.0fz\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"X.0g2\",\"def_pos\":0,\"name\":\"A05\"},{\"type\":\"X.0gU\",\"def_pos\":0,\"name\":\"A06\"},{\"type\":\"X.08Z\",\"def_pos\":0,\"name\":\"A07\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C0gE",
+          "method_name": "A04",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.0gE.A04\",\"class_name\":\"X.C0gE\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    /* JADX WARN: Multi-variable type inference failed */\\n    public final void A04(DCL dcl) {\\n        if (dcl.A0A() \\u0026\\u0026 (dcl instanceof FtE) \\u0026\\u0026 C0gV.A00(dcl.A05().value)) {\\n            C0gU c0gU \\u003d this.A06;\\n            C0DY chatJid \\u003d ((FtE) dcl).getChatJid();\\n            synchronized (c0gU) {\\n                C00l.A09(chatJid, 0);\\n                java.util.Set set \\u003d c0gU.A00;\\n                if (set !\\u003d null) {\\n                    set.add(chatJid);\\n                }\\n            }\\n        }\\n    }\",\"overload_count\":1,\"method_name\":\"A04\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C0gE",
+    "method": {
+      "name": "A04",
+      "reported_signature": "A04(X.DCL): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(LX/DCL;)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Multi-variable type inference failed */\n    public final void A04(DCL dcl) {\n        if (dcl.A0A() && (dcl instanceof FtE) && C0gV.A00(dcl.A05().value)) {\n            C0gU c0gU = this.A06;\n            C0DY chatJid = ((FtE) dcl).getChatJid();\n            synchronized (c0gU) {\n                C00l.A09(chatJid, 0);\n                java.util.Set set = c0gU.A00;\n                if (set != null) {\n                    set.add(chatJid);\n                }\n            }\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

@@ -1,0 +1,231 @@
+{
+  "evidence_id": "ev_7f8a576c8a8942a7fd32e7fa857db1c26598f72a69fd402b7112d80ef7834fa5",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_class",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "com.whatsapp.messaging.receipts.jobqueue.job.SendReadReceiptJob"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-wXd2Z4/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "load_apk",
+        "input": {
+          "path": "/tmp/rea-android-wXd2Z4/target.apk",
+          "threads": 1,
+          "resources": "full"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-wXd2Z4/target.apk\",\"class_count\":106897,\"raw_class_count\":106897,\"resource_count\":15728,\"load_duration_ms\":15582,\"decompile_timeout_ms\":90000,\"threads\":1,\"code_cache_size\":64,\"resources\":\"full\"}"
+            }
+          ]
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "com.whatsapp.messaging.receipts.jobqueue.job.SendReadReceiptJob"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"name\":\"A00\",\"def_pos\":0,\"type\":\"X.0Sf\"},{\"name\":\"A01\",\"def_pos\":0,\"type\":\"X.0xW\"},{\"name\":\"A02\",\"def_pos\":0,\"type\":\"java.lang.Throwable\"},{\"name\":\"jid\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"loggableStanzaId\",\"def_pos\":0,\"type\":\"long\"},{\"name\":\"messageIds\",\"def_pos\":0,\"type\":\"java.lang.String[]\"},{\"name\":\"messageServerStoreTimeMicros\",\"def_pos\":0,\"type\":\"long\"},{\"name\":\"originalMessageTimestamp\",\"def_pos\":0,\"type\":\"long\"},{\"name\":\"participant\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"peripheralDeviceOrigin\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"receiptClass\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"recipient\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"remoteSender\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"serialVersionUID\",\"def_pos\":0,\"type\":\"long\"},{\"name\":\"shouldForceReadSelfReceipt\",\"def_pos\":0,\"type\":\"boolean\"}],\"field_count\":15,\"full_name\":\"com.whatsapp.messaging.receipts.jobqueue.job.SendReadReceiptJob\",\"name\":\"SendReadReceiptJob\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":8,\"methods\":[{\"dex_descriptor\":\"(LX/0DY;LX/0DY;LX/0DY;Lcom/whatsapp/infra/core/jid/DeviceJid;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;JJJZ)V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(X.0DY, X.0DY, X.0DY, com.whatsapp.infra.core.jid.DeviceJid, java.lang.String, java.lang.String, java.lang.String[], long, long, long, boolean): void\"},{\"dex_descriptor\":\"()Ljava/lang/String;\",\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0,\"signature\":\"A00(): java.lang.String\"},{\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"A0J\",\"def_pos\":0,\"signature\":\"A0J(): void\"},{\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"A0K\",\"def_pos\":0,\"signature\":\"A0K(): void\"},{\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"A0L\",\"def_pos\":0,\"signature\":\"A0L(): void\"},{\"dex_descriptor\":\"(Ljava/lang/Exception;)Z\",\"is_constructor\":false,\"name\":\"A0N\",\"def_pos\":0,\"signature\":\"A0N(java.lang.Exception): boolean\"},{\"dex_descriptor\":\"(Landroid/content/Context;)V\",\"is_constructor\":false,\"name\":\"Cf0\",\"def_pos\":0,\"signature\":\"Cf0(android.content.Context): void\"},{\"dex_descriptor\":\"(Ljava/io/ObjectInputStream;)V\",\"is_constructor\":false,\"name\":\"readObject\",\"def_pos\":0,\"signature\":\"readObject(java.io.ObjectInputStream): void\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "com.whatsapp.messaging.receipts.jobqueue.job.SendReadReceiptJob",
+    "methods": [
+      {
+        "name": "<init>",
+        "reported_signature": "<init>(X.0DY, X.0DY, X.0DY, com.whatsapp.infra.core.jid.DeviceJid, java.lang.String, java.lang.String, java.lang.String[], long, long, long, boolean): void",
+        "overload_index": 0,
+        "is_constructor": true,
+        "dex_descriptor": "(LX/0DY;LX/0DY;LX/0DY;Lcom/whatsapp/infra/core/jid/DeviceJid;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;JJJZ)V"
+      },
+      {
+        "name": "A00",
+        "reported_signature": "A00(): java.lang.String",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "()Ljava/lang/String;"
+      },
+      {
+        "name": "A0J",
+        "reported_signature": "A0J(): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "()V"
+      },
+      {
+        "name": "A0K",
+        "reported_signature": "A0K(): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "()V"
+      },
+      {
+        "name": "A0L",
+        "reported_signature": "A0L(): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "()V"
+      },
+      {
+        "name": "A0N",
+        "reported_signature": "A0N(java.lang.Exception): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Ljava/lang/Exception;)Z"
+      },
+      {
+        "name": "Cf0",
+        "reported_signature": "Cf0(android.content.Context): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Landroid/content/Context;)V"
+      },
+      {
+        "name": "readObject",
+        "reported_signature": "readObject(java.io.ObjectInputStream): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Ljava/io/ObjectInputStream;)V"
+      }
+    ],
+    "fields": [
+      {
+        "name": "A00",
+        "reported_type": "X.0Sf"
+      },
+      {
+        "name": "A01",
+        "reported_type": "X.0xW"
+      },
+      {
+        "name": "A02",
+        "reported_type": "java.lang.Throwable"
+      },
+      {
+        "name": "jid",
+        "reported_type": "java.lang.String"
+      },
+      {
+        "name": "loggableStanzaId",
+        "reported_type": "long"
+      },
+      {
+        "name": "messageIds",
+        "reported_type": "java.lang.String[]"
+      },
+      {
+        "name": "messageServerStoreTimeMicros",
+        "reported_type": "long"
+      },
+      {
+        "name": "originalMessageTimestamp",
+        "reported_type": "long"
+      },
+      {
+        "name": "participant",
+        "reported_type": "java.lang.String"
+      },
+      {
+        "name": "peripheralDeviceOrigin",
+        "reported_type": "java.lang.String"
+      },
+      {
+        "name": "receiptClass",
+        "reported_type": "java.lang.String"
+      },
+      {
+        "name": "recipient",
+        "reported_type": "java.lang.String"
+      },
+      {
+        "name": "remoteSender",
+        "reported_type": "java.lang.String"
+      },
+      {
+        "name": "serialVersionUID",
+        "reported_type": "long"
+      },
+      {
+        "name": "shouldForceReadSelfReceipt",
+        "reported_type": "boolean"
+      }
+    ],
+    "inner_classes": []
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

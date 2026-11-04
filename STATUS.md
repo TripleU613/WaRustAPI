@@ -1,3 +1,31 @@
+2026-11-04 — **Read policy and conflict-key resolution:**
+
+- Newly automatic direct-read intents retain their provenance and defer while
+  the durable server read-receipt preference is known disabled, checked both
+  during queueing and immediately before reservation. Deferred work remains
+  inspectable without a send reservation. Explicit reads, groups and legacy
+  intents with unknown provenance retain their existing behavior. This closes a
+  proven negative gate; native read-self routing remains unported.
+- Conflict catch-up resolves each record's key independently of its patch's
+  signing key, using already-held keys in the same transaction. A missing key
+  refuses the whole transition. The enclosing patch key need not equal record
+  keys, as confirmed in current-build `SyncResponseHandler.A07`.
+  [Evidence and regression](docs/protocol/app-state-catchup-atomicity.md).
+- A separate confirmed defect remains under correction: native mutation state
+  is keyed by authenticated logical index; Rust's wire-index-MAC map can count
+  a cross-key replacement twice or refuse a removal. This chunk does not claim
+  to fix logical-index tracking or complete server-sync scheduling.
+
+Validation: **1,156 workspace/all-feature tests**, strict all-target/all-feature
+Clippy, CLI-reference regeneration, formatting, coverage freshness and repository
+hygiene passed. Research accounting is 690 distinct REA records, 334 from the
+current build, with 60 explicit Rust ownership mappings; these are not completion
+percentages. [Current read-policy evidence](docs/protocol/read-receipt-policy-current.md)
+and [logical-index defect](docs/protocol/app-state-logical-index.md).
+
+No live account traffic occurred. These are protocol-correctness improvements,
+not evidence of server acceptance or a guarantee against restrictions.
+
 2026-11-04 — **Atomic patch lifecycle, explicit server waits and privacy adoption:**
 
 - App-state key selection, baseline, original action wire and prepared state now

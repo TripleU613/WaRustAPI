@@ -1,0 +1,286 @@
+{
+  "evidence_id": "ev_e14a119d662c04138586667fce7eab29d93365cac6d6f79dc80449af6069b648",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_class",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C1nG"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-Z8gsR9/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "load_apk",
+        "input": {
+          "path": "/tmp/rea-android-Z8gsR9/target.apk",
+          "threads": 1,
+          "resources": "full"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-Z8gsR9/target.apk\",\"class_count\":106897,\"raw_class_count\":106897,\"resource_count\":15728,\"load_duration_ms\":27721,\"decompile_timeout_ms\":90000,\"threads\":1,\"code_cache_size\":64,\"resources\":\"full\"}"
+            }
+          ]
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C1nG"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"()V\"},{\"signature\":\"A00(com.google.common.collect.ImmutableMap, com.google.common.collect.ImmutableSet, X.1nG, com.whatsapp.infra.core.jid.UserJid, boolean): com.google.common.collect.ImmutableSet\",\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableMap;Lcom/google/common/collect/ImmutableSet;LX/1nG;Lcom/whatsapp/infra/core/jid/UserJid;Z)Lcom/google/common/collect/ImmutableSet;\"},{\"signature\":\"A01(com.google.common.collect.ImmutableSet): com.google.common.collect.ImmutableSet\",\"def_pos\":0,\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableSet;)Lcom/google/common/collect/ImmutableSet;\"},{\"signature\":\"A02(com.google.common.collect.ImmutableSet, com.whatsapp.infra.core.jid.UserJid): com.google.common.collect.ImmutableSet\",\"def_pos\":0,\"name\":\"A02\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableSet;Lcom/whatsapp/infra/core/jid/UserJid;)Lcom/google/common/collect/ImmutableSet;\"},{\"signature\":\"A03(X.1nG, com.whatsapp.infra.core.jid.UserJid): java.util.Set\",\"def_pos\":0,\"name\":\"A03\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/1nG;Lcom/whatsapp/infra/core/jid/UserJid;)Ljava/util/Set;\"},{\"signature\":\"A04(com.google.common.collect.ImmutableSet): void\",\"def_pos\":0,\"name\":\"A04\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableSet;)V\"},{\"signature\":\"A05(com.google.common.collect.ImmutableSet, com.google.common.collect.ImmutableSet, com.google.common.collect.ImmutableSet, X.1nG, com.whatsapp.infra.core.jid.UserJid): void\",\"def_pos\":0,\"name\":\"A05\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableSet;Lcom/google/common/collect/ImmutableSet;Lcom/google/common/collect/ImmutableSet;LX/1nG;Lcom/whatsapp/infra/core/jid/UserJid;)V\"},{\"signature\":\"A06(com.google.common.collect.ImmutableSet, com.google.common.collect.ImmutableSet, com.google.common.collect.ImmutableSet, X.1nG, com.whatsapp.infra.core.jid.UserJid, boolean, boolean): void\",\"def_pos\":0,\"name\":\"A06\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableSet;Lcom/google/common/collect/ImmutableSet;Lcom/google/common/collect/ImmutableSet;LX/1nG;Lcom/whatsapp/infra/core/jid/UserJid;ZZ)V\"},{\"signature\":\"A07(X.1nG, com.whatsapp.infra.core.jid.UserJid, X.0aq, X.2Eu, X.2Eu): boolean\",\"def_pos\":0,\"name\":\"A07\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/1nG;Lcom/whatsapp/infra/core/jid/UserJid;LX/0aq;LX/2Eu;LX/2Eu;)Z\"},{\"signature\":\"A08(): com.google.common.collect.ImmutableMap\",\"def_pos\":0,\"name\":\"A08\",\"is_constructor\":false,\"dex_descriptor\":\"()Lcom/google/common/collect/ImmutableMap;\"},{\"signature\":\"A09(com.whatsapp.infra.core.jid.UserJid): com.google.common.collect.ImmutableMap\",\"def_pos\":0,\"name\":\"A09\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/whatsapp/infra/core/jid/UserJid;)Lcom/google/common/collect/ImmutableMap;\"},{\"signature\":\"A0A(java.util.Set): java.util.Map\",\"def_pos\":0,\"name\":\"A0A\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/util/Set;)Ljava/util/Map;\"},{\"signature\":\"A0B(): void\",\"def_pos\":0,\"name\":\"A0B\",\"is_constructor\":false,\"dex_descriptor\":\"()V\"},{\"signature\":\"A0C(): void\",\"def_pos\":0,\"name\":\"A0C\",\"is_constructor\":false,\"dex_descriptor\":\"()V\"},{\"signature\":\"A0D(com.google.common.collect.ImmutableSet): void\",\"def_pos\":0,\"name\":\"A0D\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableSet;)V\"},{\"signature\":\"A0E(com.google.common.collect.ImmutableSet, com.whatsapp.infra.core.jid.UserJid, java.lang.String): void\",\"def_pos\":0,\"name\":\"A0E\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableSet;Lcom/whatsapp/infra/core/jid/UserJid;Ljava/lang/String;)V\"},{\"signature\":\"A0F(X.F0I): void\",\"def_pos\":0,\"name\":\"A0F\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/F0I;)V\"}],\"method_count\":17,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"C1nG\",\"full_name\":\"X.C1nG\",\"field_count\":13,\"fields\":[{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"X.08Y\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"X.09F\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"X.0Gs\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"X.0jI\",\"def_pos\":0,\"name\":\"A05\"},{\"type\":\"X.0Ws\",\"def_pos\":0,\"name\":\"A06\"},{\"type\":\"X.1nH\",\"def_pos\":0,\"name\":\"A07\"},{\"type\":\"X.0aj\",\"def_pos\":0,\"name\":\"A08\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A09\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0A\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0B\"},{\"type\":\"java.lang.String\",\"def_pos\":0,\"name\":\"A0C\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C1nG",
+    "methods": [
+      {
+        "name": "<init>",
+        "reported_signature": "<init>(): void",
+        "overload_index": 0,
+        "is_constructor": true,
+        "dex_descriptor": "()V"
+      },
+      {
+        "name": "A00",
+        "reported_signature": "A00(com.google.common.collect.ImmutableMap, com.google.common.collect.ImmutableSet, X.1nG, com.whatsapp.infra.core.jid.UserJid, boolean): com.google.common.collect.ImmutableSet",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lcom/google/common/collect/ImmutableMap;Lcom/google/common/collect/ImmutableSet;LX/1nG;Lcom/whatsapp/infra/core/jid/UserJid;Z)Lcom/google/common/collect/ImmutableSet;"
+      },
+      {
+        "name": "A01",
+        "reported_signature": "A01(com.google.common.collect.ImmutableSet): com.google.common.collect.ImmutableSet",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lcom/google/common/collect/ImmutableSet;)Lcom/google/common/collect/ImmutableSet;"
+      },
+      {
+        "name": "A02",
+        "reported_signature": "A02(com.google.common.collect.ImmutableSet, com.whatsapp.infra.core.jid.UserJid): com.google.common.collect.ImmutableSet",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lcom/google/common/collect/ImmutableSet;Lcom/whatsapp/infra/core/jid/UserJid;)Lcom/google/common/collect/ImmutableSet;"
+      },
+      {
+        "name": "A03",
+        "reported_signature": "A03(X.1nG, com.whatsapp.infra.core.jid.UserJid): java.util.Set",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/1nG;Lcom/whatsapp/infra/core/jid/UserJid;)Ljava/util/Set;"
+      },
+      {
+        "name": "A04",
+        "reported_signature": "A04(com.google.common.collect.ImmutableSet): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lcom/google/common/collect/ImmutableSet;)V"
+      },
+      {
+        "name": "A05",
+        "reported_signature": "A05(com.google.common.collect.ImmutableSet, com.google.common.collect.ImmutableSet, com.google.common.collect.ImmutableSet, X.1nG, com.whatsapp.infra.core.jid.UserJid): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lcom/google/common/collect/ImmutableSet;Lcom/google/common/collect/ImmutableSet;Lcom/google/common/collect/ImmutableSet;LX/1nG;Lcom/whatsapp/infra/core/jid/UserJid;)V"
+      },
+      {
+        "name": "A06",
+        "reported_signature": "A06(com.google.common.collect.ImmutableSet, com.google.common.collect.ImmutableSet, com.google.common.collect.ImmutableSet, X.1nG, com.whatsapp.infra.core.jid.UserJid, boolean, boolean): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lcom/google/common/collect/ImmutableSet;Lcom/google/common/collect/ImmutableSet;Lcom/google/common/collect/ImmutableSet;LX/1nG;Lcom/whatsapp/infra/core/jid/UserJid;ZZ)V"
+      },
+      {
+        "name": "A07",
+        "reported_signature": "A07(X.1nG, com.whatsapp.infra.core.jid.UserJid, X.0aq, X.2Eu, X.2Eu): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/1nG;Lcom/whatsapp/infra/core/jid/UserJid;LX/0aq;LX/2Eu;LX/2Eu;)Z"
+      },
+      {
+        "name": "A08",
+        "reported_signature": "A08(): com.google.common.collect.ImmutableMap",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "()Lcom/google/common/collect/ImmutableMap;"
+      },
+      {
+        "name": "A09",
+        "reported_signature": "A09(com.whatsapp.infra.core.jid.UserJid): com.google.common.collect.ImmutableMap",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lcom/whatsapp/infra/core/jid/UserJid;)Lcom/google/common/collect/ImmutableMap;"
+      },
+      {
+        "name": "A0A",
+        "reported_signature": "A0A(java.util.Set): java.util.Map",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Ljava/util/Set;)Ljava/util/Map;"
+      },
+      {
+        "name": "A0B",
+        "reported_signature": "A0B(): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "()V"
+      },
+      {
+        "name": "A0C",
+        "reported_signature": "A0C(): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "()V"
+      },
+      {
+        "name": "A0D",
+        "reported_signature": "A0D(com.google.common.collect.ImmutableSet): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lcom/google/common/collect/ImmutableSet;)V"
+      },
+      {
+        "name": "A0E",
+        "reported_signature": "A0E(com.google.common.collect.ImmutableSet, com.whatsapp.infra.core.jid.UserJid, java.lang.String): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lcom/google/common/collect/ImmutableSet;Lcom/whatsapp/infra/core/jid/UserJid;Ljava/lang/String;)V"
+      },
+      {
+        "name": "A0F",
+        "reported_signature": "A0F(X.F0I): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/F0I;)V"
+      }
+    ],
+    "fields": [
+      {
+        "name": "A00",
+        "reported_type": "X.00x"
+      },
+      {
+        "name": "A01",
+        "reported_type": "X.00x"
+      },
+      {
+        "name": "A02",
+        "reported_type": "X.08Y"
+      },
+      {
+        "name": "A03",
+        "reported_type": "X.09F"
+      },
+      {
+        "name": "A04",
+        "reported_type": "X.0Gs"
+      },
+      {
+        "name": "A05",
+        "reported_type": "X.0jI"
+      },
+      {
+        "name": "A06",
+        "reported_type": "X.0Ws"
+      },
+      {
+        "name": "A07",
+        "reported_type": "X.1nH"
+      },
+      {
+        "name": "A08",
+        "reported_type": "X.0aj"
+      },
+      {
+        "name": "A09",
+        "reported_type": "X.00x"
+      },
+      {
+        "name": "A0A",
+        "reported_type": "X.00x"
+      },
+      {
+        "name": "A0B",
+        "reported_type": "X.00x"
+      },
+      {
+        "name": "A0C",
+        "reported_type": "java.lang.String"
+      }
+    ],
+    "inner_classes": []
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

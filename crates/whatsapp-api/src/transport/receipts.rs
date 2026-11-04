@@ -118,6 +118,14 @@ pub fn queue_read(
     store: &ProtocolStore,
     receipt: &crate::model::receipt::Receipt,
 ) -> Result<usize> {
+    queue_read_with_origin(store, receipt, false)
+}
+
+fn queue_read_with_origin(
+    store: &ProtocolStore,
+    receipt: &crate::model::receipt::Receipt,
+    automatic: bool,
+) -> Result<usize> {
     use crate::model::receipt::ReceiptKind;
     if receipt.kind != ReceiptKind::Read {
         return Err(Error::invalid(
@@ -181,10 +189,25 @@ pub fn queue_read(
                 "receipt-outbox:{}:read",
                 hex::encode(Sha256::digest(key.as_bytes()))
             );
-            if tx
-                .get_json::<serde_json::Value>(Table::Checkpoints, receipt_key.as_bytes(), 1)?
-                .is_some()
+            if let Some(mut existing) =
+                tx.get_json::<serde_json::Value>(Table::Checkpoints, receipt_key.as_bytes(), 1)?
             {
+                // An explicit user action may release an unsent automatic intent,
+                // preserving its selector/wire. Never reset a reserved outcome.
+                if !automatic
+                    && existing["status"] == "pending"
+                    && automatic_origin(&existing)? == Some(true)
+                {
+                    existing["automatic"] = serde_json::json!(false);
+                    existing
+                        .as_object_mut()
+                        .ok_or_else(|| Error::invalid("receipt", "invalid saved receipt intent"))?
+                        .remove("deferred_reason");
+                    tx.put_json(Table::Checkpoints, receipt_key.as_bytes(), 1, &existing)?;
+                    saved["read_receipt"] = serde_json::json!("queued");
+                    tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &saved)?;
+                    queued += 1;
+                }
                 continue;
             }
             let incoming = decode(&saved_route(tx, &saved)?)?;
@@ -204,22 +227,24 @@ pub fn queue_read(
                 crate::binary::TokenDictionary::comparison_2_26_37_71(),
             )
             .encode(&node)?;
-            tx.put_json(
-                Table::Checkpoints,
-                receipt_key.as_bytes(),
-                1,
-                &serde_json::json!({"status":"pending","wire":wire}),
-            )?;
+            let deferred = automatic && automatic_direct_read_disabled(tx, &node)?;
+            let mut row = serde_json::json!({"status":"pending","wire":wire,"automatic":automatic});
+            if deferred {
+                row["deferred_reason"] = serde_json::json!(READ_DISABLED);
+            }
+            tx.put_json(Table::Checkpoints, receipt_key.as_bytes(), 1, &row)?;
+            // This marker means a durable intent exists, not that a wire was sent.
+            // The outbox's fixed deferral reason reports blocked automatic work.
             saved["read_receipt"] = serde_json::json!("queued");
             tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &saved)?;
-            queued += 1;
+            queued += usize::from(!deferred);
         }
         Ok(queued)
     })
 }
 
 /// `Message` fields that are something a person reads. A payload carrying any
-/// of them earns a read receipt when `transport.mark_read` is on; one carrying
+/// of them qualifies for an automatic intent when `transport.mark_read` is on; one carrying
 /// only a sender-key distribution (2), a protocol message (12), a reaction
 /// (46) or anything else does not, because nobody "reads" those. Numbers are
 /// the ones validated against the APK descriptor (`xtask apk-proto-fields`):
@@ -228,8 +253,9 @@ pub fn queue_read(
 const READABLE_FIELDS: [u32; 8] = [1, 3, 6, 7, 8, 9, 26, 66];
 
 /// Queue a read receipt for one authenticated incoming message, including a
-/// duplicate recovered offline, when its content is something a person reads. Returns how many
-/// were queued (0 or 1).
+/// duplicate recovered offline, when its content is something a person reads.
+/// Returns newly eligible intents (0 or 1); a known-disabled direct preference
+/// retains a pending automatic intent with a fixed deferral reason and returns0.
 ///
 /// This is the automatic form of [`queue_read`], for a session whose operator
 /// asked for everything to be marked read (`transport.mark_read`). The official
@@ -288,7 +314,7 @@ pub fn queue_read_for_incoming(store: &ProtocolStore, node: &Node) -> Result<usi
     {
         return Ok(0);
     }
-    queue_read(
+    queue_read_with_origin(
         store,
         &Receipt {
             chat: ChatId::from_jid(&chat)?,
@@ -304,7 +330,40 @@ pub fn queue_read_for_incoming(store: &ProtocolStore, node: &Node) -> Result<usi
             server_timestamp: None,
             code: None,
         },
+        true,
     )
+}
+
+const READ_DISABLED: &str = "server_read_receipts_disabled";
+
+fn automatic_origin(row: &serde_json::Value) -> Result<Option<bool>> {
+    row.get("automatic")
+        .map(|v| {
+            v.as_bool()
+                .ok_or_else(|| Error::invalid("receipt", "invalid saved automatic provenance"))
+        })
+        .transpose()
+}
+
+fn deferred_reason(row: &serde_json::Value) -> Result<Option<&'static str>> {
+    match row.get("deferred_reason") {
+        None => Ok(None),
+        Some(value) if value.as_str() == Some(READ_DISABLED) => Ok(Some(READ_DISABLED)),
+        Some(_) => Err(Error::invalid("receipt", "invalid saved receipt deferral")),
+    }
+}
+
+fn automatic_direct_read_disabled(tx: &crate::store::WriteTx<'_>, node: &Node) -> Result<bool> {
+    // Current 43.72 0xW.A05: a non-group normal read requires A1H true.
+    // Read-self needs the own companion set/route, still unported; retain work.
+    // This is only a proven negative gate, not the complete native classifier.
+    if node.description != "receipt"
+        || node.get_attr("type").and_then(|v| v.as_text()) != Some("read")
+        || jid(node, "to").is_none_or(|j| !matches!(j.server, Server::User | Server::Lid))
+    {
+        return Ok(false);
+    }
+    Ok(super::account_privacy::read_receipts_in_write(tx)?.is_some_and(|p| !p.value.enabled()))
 }
 
 /// Queue at most one resend request for a failed incoming message. Call only
@@ -476,6 +535,10 @@ pub struct ReceiptOutcome {
     pub status: String,
     /// Wire message id the receipt refers to.
     pub message_id: String,
+    /// True for an automatic intent, false for explicit; None for legacy unknown provenance.
+    pub automatic: Option<bool>,
+    /// Fixed reason a pending automatic receipt is retained without reservation.
+    pub deferred_reason: Option<&'static str>,
 }
 fn batch_ack_id(row: &serde_json::Value) -> Result<Option<&str>> {
     row.get("batch_ack_id")
@@ -542,6 +605,8 @@ pub fn outcomes(store: &ProtocolStore) -> Result<Vec<ReceiptOutcome>> {
                     kind,
                     status: row["status"].as_str().unwrap_or("").to_owned(),
                     message_id,
+                    automatic: automatic_origin(&row)?,
+                    deferred_reason: deferred_reason(&row)?,
                 });
             }
             if done {
@@ -570,7 +635,7 @@ pub fn reserve_pending(store: &ProtocolStore) -> Result<Vec<Node>> {
                 if pending.len() == 16 {
                     break;
                 }
-                let Some(row): Option<serde_json::Value> =
+                let Some(mut row): Option<serde_json::Value> =
                     tx.get_json(Table::Checkpoints, key, 1)?
                 else {
                     continue;
@@ -586,7 +651,20 @@ pub fn reserve_pending(store: &ProtocolStore) -> Result<Vec<Node>> {
                 }
                 let wire: Vec<u8> = serde_json::from_value(row["wire"].clone())
                     .map_err(|_| Error::invalid("receipt", "invalid receipt intent"))?;
-                pending.push((key.clone(), row, decode(&wire)?));
+                let node = decode(&wire)?;
+                let origin = automatic_origin(&row)?;
+                let _ = deferred_reason(&row)?;
+                if origin == Some(true) && automatic_direct_read_disabled(tx, &node)? {
+                    if row.get("deferred_reason").is_none() {
+                        row["deferred_reason"] = serde_json::json!(READ_DISABLED);
+                        tx.put_json(Table::Checkpoints, key, 1, &row)?;
+                    }
+                    continue;
+                }
+                row.as_object_mut()
+                    .ok_or_else(|| Error::invalid("receipt", "invalid saved receipt intent"))?
+                    .remove("deferred_reason");
+                pending.push((key.clone(), row, node));
             }
         }
         let batchable = |node: &Node| {
@@ -2371,6 +2449,232 @@ mod tests {
 
     /// Automatic read receipts go only to content a person reads, in direct
     /// chats and groups, and only once.
+    fn automatic_text_fixture(store: &ProtocolStore, id: &str, group: bool) -> Node {
+        let chat = Jid::parse(if group {
+            "120363000000000001@g.us"
+        } else {
+            "15555550101@s.whatsapp.net"
+        })
+        .unwrap();
+        let mut node = Node::new("message")
+            .attr("from", chat.clone())
+            .attr("id", id);
+        if group {
+            node = node.attr("participant", "15555550100:1@s.whatsapp.net");
+        }
+        let route =
+            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
+                .encode(&node)
+                .unwrap();
+        store
+            .write(|tx| {
+                tx.put_json(Table::Checkpoints, format!("received:{chat}:{id}").as_bytes(), 1,
+            &serde_json::json!({"status":"decrypted","route":route,"protobuf":[10,2,104,105]}))
+            })
+            .unwrap();
+        node
+    }
+    fn server_read_preference(store: &ProtocolStore, id: &str, value: &str) {
+        let node = Node::new("notification")
+            .attr("from", "s.whatsapp.net")
+            .attr("type", "account_sync")
+            .attr("id", id)
+            .attr("t", "1700000000")
+            .children(vec![Node::new("privacy").children(
+                vec![
+                Node::new("category").attr("name", "readreceipts").attr("value", value)],
+            )]);
+        assert!(
+            super::super::account_privacy::handle(store, &node)
+                .unwrap()
+                .is_some()
+        );
+    }
+    fn explicit_read_for(node: &Node) -> crate::model::receipt::Receipt {
+        use crate::model::{
+            ids::{ChatId, MessageId},
+            receipt::{Receipt, ReceiptKind},
+        };
+        Receipt {
+            chat: ChatId::from_jid(&jid(node, "from").unwrap()).unwrap(),
+            message_ids: vec![
+                MessageId::new(node.get_attr("id").unwrap().as_text().unwrap()).unwrap(),
+            ],
+            from: None,
+            kind: ReceiptKind::Read,
+            server_timestamp: None,
+            code: None,
+        }
+    }
+
+    #[test]
+    fn automatic_direct_read_deferral_is_durable_and_explicit_user_read_still_works() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("privacy-auto.redb");
+        let store = open(&path, true);
+        let automatic = automatic_text_fixture(&store, "auto", false);
+        server_read_preference(&store, "off", "none");
+        assert_eq!(queue_read_for_incoming(&store, &automatic).unwrap(), 0);
+        let outcome = outcomes(&store).unwrap().remove(0);
+        assert_eq!(outcome.status, "pending");
+        assert_eq!(outcome.automatic, Some(true));
+        assert_eq!(outcome.deferred_reason, Some(READ_DISABLED));
+        assert!(reserve_pending(&store).unwrap().is_empty());
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap();
+        drop(store);
+        let store = open(&path, false);
+        assert!(reserve_pending(&store).unwrap().is_empty());
+        assert_eq!(queue_read_for_incoming(&store, &automatic).unwrap(), 0);
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap(),
+            before
+        );
+        // Explicit user action promotes the very same unsent intent, no new ID.
+        assert_eq!(
+            queue_read(&store, &explicit_read_for(&automatic)).unwrap(),
+            1
+        );
+        let outcome = outcomes(&store).unwrap().remove(0);
+        assert_eq!(outcome.automatic, Some(false));
+        assert_eq!(outcome.deferred_reason, None);
+        let wire = reserve_pending(&store).unwrap();
+        assert_eq!(wire.len(), 1);
+        assert_eq!(
+            wire[0].get_attr("type").and_then(|v| v.as_text()),
+            Some("read")
+        );
+        assert_eq!(
+            wire[0].get_attr("id").and_then(|v| v.as_text()),
+            Some("auto")
+        );
+        assert_eq!(
+            queue_read(&store, &explicit_read_for(&automatic)).unwrap(),
+            0
+        );
+        assert!(reserve_pending(&store).unwrap().is_empty());
+    }
+
+    #[test]
+    fn automatic_read_rechecks_preference_at_reservation_without_losing_other_work() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("privacy-before-write.redb");
+        let store = open(&path, true);
+        let automatic = automatic_text_fixture(&store, "auto", false);
+        let explicit = automatic_text_fixture(&store, "explicit", false);
+        let group = automatic_text_fixture(&store, "group", true);
+        server_read_preference(&store, "enabled", "all");
+        assert_eq!(queue_read_for_incoming(&store, &automatic).unwrap(), 1);
+        assert_eq!(
+            queue_read(&store, &explicit_read_for(&explicit)).unwrap(),
+            1
+        );
+        assert_eq!(queue_read_for_incoming(&store, &group).unwrap(), 1);
+        let before = outcomes(&store)
+            .unwrap()
+            .into_iter()
+            .find(|o| o.message_id == "auto")
+            .unwrap();
+        assert_eq!(before.deferred_reason, None);
+        server_read_preference(&store, "disabled", "none");
+        drop(store);
+        let store = open(&path, false);
+        let wires = reserve_pending(&store).unwrap();
+        assert_eq!(wires.len(), 2);
+        assert!(
+            wires
+                .iter()
+                .all(|n| n.get_attr("id").and_then(|v| v.as_text()) != Some("auto"))
+        );
+        let held = outcomes(&store)
+            .unwrap()
+            .into_iter()
+            .find(|o| o.message_id == "auto")
+            .unwrap();
+        assert_eq!(held.status, "pending");
+        assert_eq!(held.deferred_reason, Some(READ_DISABLED));
+        server_read_preference(&store, "enabled-again", "on_standard");
+        let wire = reserve_pending(&store).unwrap();
+        assert_eq!(wire.len(), 1);
+        assert_eq!(
+            wire[0].get_attr("id").and_then(|v| v.as_text()),
+            Some("auto")
+        );
+        assert!(reserve_pending(&store).unwrap().is_empty());
+        server_read_preference(&store, "disabled-again", "off");
+        assert!(
+            reserve_pending(&store).unwrap().is_empty(),
+            "uncertain sends never reset"
+        );
+    }
+
+    #[test]
+    fn automatic_read_does_not_guess_legacy_provenance_and_malformed_flags_roll_back() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("privacy-legacy.redb"), true);
+        let legacy = automatic_text_fixture(&store, "legacy", false);
+        queue_read(&store, &explicit_read_for(&legacy)).unwrap();
+        let key = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap()
+            .into_iter()
+            .map(|(k, _)| k)
+            .find(|k| k.starts_with(b"receipt-outbox:"))
+            .unwrap();
+        store
+            .write(|tx| {
+                let mut row: serde_json::Value = tx.get_json(Table::Checkpoints, &key, 1)?.unwrap();
+                row.as_object_mut().unwrap().remove("automatic");
+                tx.put_json(Table::Checkpoints, &key, 1, &row)
+            })
+            .unwrap();
+        server_read_preference(&store, "disabled", "none");
+        assert_eq!(outcomes(&store).unwrap()[0].automatic, None);
+        assert_eq!(
+            reserve_pending(&store).unwrap().len(),
+            1,
+            "legacy unknown remains unchanged"
+        );
+        let bad = automatic_text_fixture(&store, "bad", false);
+        queue_read_for_incoming(&store, &bad).unwrap();
+        let key = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap()
+            .into_iter()
+            .map(|(k, _)| k)
+            .find(|k| {
+                k.starts_with(b"receipt-outbox:")
+                    && store
+                        .read(|tx| tx.get_json::<serde_json::Value>(Table::Checkpoints, k, 1))
+                        .unwrap()
+                        .unwrap()["status"]
+                        == "pending"
+            })
+            .unwrap();
+        store
+            .write(|tx| {
+                let mut row: serde_json::Value = tx.get_json(Table::Checkpoints, &key, 1)?.unwrap();
+                row["automatic"] = serde_json::json!("secret-invalid-provenance");
+                tx.put_json(Table::Checkpoints, &key, 1, &row)
+            })
+            .unwrap();
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap();
+        let error = reserve_pending(&store).unwrap_err();
+        assert!(!error.to_string().contains("secret-invalid"));
+        assert!(outcomes(&store).is_err());
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap(),
+            before
+        );
+    }
+
     #[test]
     fn automatic_read_receipts_skip_what_nobody_reads() {
         let dir = tempfile::tempdir().unwrap();

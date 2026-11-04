@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_a44b6d54e36f5f2f9a0636122bcbc9330e77f3b8e46bea023f57158125d94b0a",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.F3j",
+    "method_name": "A0Y",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-2zGxC0/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.F3j"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cinit\\u003e(X.0g1): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"(LX/0g1;)V\"},{\"signature\":\"A09(X.Dnr, java.lang.Object): android.content.SharedPreferences$Editor\",\"def_pos\":0,\"name\":\"A09\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/Dnr;Ljava/lang/Object;)Landroid/content/SharedPreferences$Editor;\"},{\"signature\":\"A0A(): X.0g1\",\"def_pos\":0,\"name\":\"A0A\",\"is_constructor\":false,\"dex_descriptor\":\"()LX/0g1;\"},{\"signature\":\"A0B(X.Duc, X.Dnv): X.EmS\",\"def_pos\":0,\"name\":\"A0B\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/Duc;LX/Dnv;)LX/EmS;\"},{\"signature\":\"A0C(java.lang.String[]): X.0DY\",\"def_pos\":0,\"name\":\"A0C\",\"is_constructor\":false,\"dex_descriptor\":\"([Ljava/lang/String;)LX/0DY;\"},{\"signature\":\"A0D(X.EFA, int): X.DCN\",\"def_pos\":0,\"name\":\"A0D\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/EFA;I)LX/DCN;\"},{\"signature\":\"A0E(X.DoG, X.0DY, long): java.lang.String\",\"def_pos\":0,\"name\":\"A0E\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/DoG;LX/0DY;J)Ljava/lang/String;\"},{\"signature\":\"A0F(X.F3j, X.DCL): void\",\"def_pos\":0,\"name\":\"A0F\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/F3j;LX/DCL;)V\"},{\"signature\":\"A0G(X.F3j, X.DCL): void\",\"def_pos\":0,\"name\":\"A0G\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/F3j;LX/DCL;)V\"},{\"signature\":\"A0H(X.0g1, java.lang.Object): void\",\"def_pos\":0,\"name\":\"A0H\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0g1;Ljava/lang/Object;)V\"},{\"signature\":\"A0I(X.F1N): boolean\",\"def_pos\":0,\"name\":\"A0I\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/F1N;)Z\"},{\"signature\":\"A0J(X.DCK, java.lang.String[]): boolean\",\"def_pos\":0,\"name\":\"A0J\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/DCK;[Ljava/lang/String;)Z\"},{\"signature\":\"A0K(boolean): X.FrY\",\"def_pos\":0,\"name\":\"A0K\",\"is_constructor\":false,\"dex_descriptor\":\"(Z)LX/FrY;\"},{\"signature\":\"A0L(X.F1N, java.lang.String, boolean): X.DCL\",\"def_pos\":0,\"name\":\"A0L\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/F1N;Ljava/lang/String;Z)LX/DCL;\"},{\"signature\":\"A0M(): X.DCN\",\"def_pos\":0,\"name\":\"A0M\",\"is_constructor\":false,\"dex_descriptor\":\"()LX/DCN;\"},{\"signature\":\"A0N(): X.DCK\",\"def_pos\":0,\"name\":\"A0N\",\"is_constructor\":false,\"dex_descriptor\":\"()LX/DCK;\"},{\"signature\":\"A0O(boolean): java.util.List\",\"def_pos\":0,\"name\":\"A0O\",\"is_constructor\":false,\"dex_descriptor\":\"(Z)Ljava/util/List;\"},{\"signature\":\"A0P(): void\",\"def_pos\":0,\"name\":\"A0P\",\"is_constructor\":false,\"dex_descriptor\":\"()V\"},{\"signature\":\"A0Q(X.DCL): void\",\"def_pos\":0,\"name\":\"A0Q\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/DCL;)V\"},{\"signature\":\"A0R(X.DCL): void\",\"def_pos\":0,\"name\":\"A0R\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/DCL;)V\"},{\"signature\":\"A0S(X.DCL): void\",\"def_pos\":0,\"name\":\"A0S\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/DCL;)V\"},{\"signature\":\"A0T(X.DCL): void\",\"def_pos\":0,\"name\":\"A0T\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/DCL;)V\"},{\"signature\":\"A0U(X.DCL): void\",\"def_pos\":0,\"name\":\"A0U\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/DCL;)V\"},{\"signature\":\"A0V(X.DCL): void\",\"def_pos\":0,\"name\":\"A0V\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/DCL;)V\"},{\"signature\":\"A0W(X.DCL, X.DCL): void\",\"def_pos\":0,\"name\":\"A0W\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/DCL;LX/DCL;)V\"},{\"signature\":\"A0X(X.DCL, X.DCL): void\",\"def_pos\":0,\"name\":\"A0X\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/DCL;LX/DCL;)V\"},{\"signature\":\"A0Y(): boolean\",\"def_pos\":0,\"name\":\"A0Y\",\"is_constructor\":false,\"dex_descriptor\":\"()Z\"},{\"signature\":\"A0Z(X.DCL): boolean\",\"def_pos\":0,\"name\":\"A0Z\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/DCL;)Z\"}],\"method_count\":28,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"F3j\",\"full_name\":\"X.F3j\",\"field_count\":1,\"fields\":[{\"type\":\"X.0g1\",\"def_pos\":0,\"name\":\"A00\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.F3j",
+          "method_name": "A0Y",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.F3j.A0Y\",\"class_name\":\"X.F3j\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public boolean A0Y() {\\n        C00E c00eA0P;\\n        int i;\\n        if (this instanceof Do9) {\\n            return true;\\n        }\\n        if (this instanceof Do6) {\\n            c00eA0P \\u003d C2L9.A0P(((Do6) this).A00);\\n            i \\u003d 25508;\\n        } else {\\n            if (this instanceof DoN) {\\n                return ((C0eC) C05a.A03(((DoN) this).A0E)).A01();\\n            }\\n            if (this instanceof DoP) {\\n                return C2L9.A1M(((DoP) this).A03.A14(2775) ? 1 : 0);\\n            }\\n            if ((this instanceof DoU) || (this instanceof DoK) || (this instanceof Do2) || (this instanceof Dnk) || (this instanceof Do8) || (this instanceof DoI) || (this instanceof Dny) || (this instanceof DoL)) {\\n                return true;\\n            }\\n            if (this instanceof DoF) {\\n                DoF doF \\u003d (DoF) this;\\n                return C2LE.A1T(doF.A02) || ((C1q0) C05a.A03(doF.A04)).A02(true);\\n            }\\n            if (this instanceof DoH) {\\n                c00eA0P \\u003d C2L9.A0P(((DoH) this).A00);\\n                i \\u003d 4905;\\n            } else {\\n                if (this instanceof Dnj) {\\n                    return true;\\n                }\\n                if (this instanceof Dni) {\\n                    return ((Efu) C05a.A03(((Dni) this).A01)).A01();\\n                }\\n                if (this instanceof Dns) {\\n                    c00eA0P \\u003d ((Dns) this).A00;\\n                    i \\u003d 3070;\\n                } else {\\n                    if ((this instanceof Dnr) || (this instanceof DoA) || (this instanceof Dnn) || (this instanceof Do4) || (this instanceof Do5) || (this instanceof DoQ)) {\\n                        return true;\\n                    }\\n                    if (this instanceof Do3) {\\n                        return ((C0MX) C05a.A03(((Do3) this).A00)).A0H();\\n                    }\\n                    if (this instanceof Do1) {\\n                        A6P a6p \\u003d (A6P) C05a.A03(((Do1) this).A00);\\n                        java.util.Set\\u003cC9aT\\u003e set \\u003d a6p.A05;\\n                        if ((set instanceof Collection) \\u0026\\u0026 set.isEmpty()) {\\n                            return false;\\n                        }\\n                        for (C9aT c9aT : set) {\\n                            ADc aDc \\u003d (ADc) C05a.A03(a6p.A00);\\n                            C00l.A09(c9aT, 0);\\n                            if (ADc.A02(C00G.A03.A00(), c9aT, aDc)) {\\n                                return true;\\n                            }\\n                        }\\n                        return false;\\n                    }\\n                    if ((this instanceof DoO) || (this instanceof DoT) || (this instanceof Dnx)) {\\n                        return true;\\n                    }\\n                    if (this instanceof Dnm) {\\n                        return false;\\n                    }\\n                    if ((this instanceof Dnt) || (this instanceof DoG) || (this instanceof DoJ)) {\\n                        return true;\\n                    }\\n                    if (this instanceof Dok) {\\n                        c00eA0P \\u003d ((Dok) this).A00;\\n                        i \\u003d 12206;\\n                    } else {\\n                        if ((this instanceof Dol) || (this instanceof Doo)) {\\n                            return true;\\n                        }\\n                        if (this instanceof Don) {\\n                            c00eA0P \\u003d C2L9.A0P(((Don) this).A00);\\n                            i \\u003d 20497;\\n                        } else {\\n                            if (this instanceof Dnw) {\\n                                C0jq c0jq \\u003d ((Dnw) this).A01;\\n                                if (!c0jq.A02()) {\\n                                    return false;\\n                                }\\n                                C08Y c08y \\u003d c0jq.A00;\\n                                C00G c00g \\u003d C00G.A02;\\n                                if (!c08y.A15(c00g, 8929)) {\\n                                    return false;\\n                                }\\n                                C09F c09f \\u003d c0jq.A01;\\n                                if (c09f.BU7()) {\\n                                    return c09f.BU7() \\u0026\\u0026 c08y.A15(c00g, 8928);\\n                                }\\n                                return true;\\n                            }\\n                            if (this instanceof DoS) {\\n                                DoS doS \\u003d (DoS) this;\\n                                if (doS instanceof Dom) {\\n                                    return C00E.A0F(C2L9.A0P(doS.A00), EN4.A0E);\\n                                }\\n                                return true;\\n                            }\\n                            if ((this instanceof DoE) || (this instanceof DoD)) {\\n                                return true;\\n                            }\\n                            if (this instanceof Dnl) {\\n                                return ((C0aY) C05a.A03(((Dnl) this).A00)).A00();\\n                            }\\n                            if ((this instanceof DoC) || (this instanceof Do0) || (this instanceof Dox)) {\\n                                return true;\\n                            }\\n                            if (this instanceof Doy) {\\n                                c00eA0P \\u003d C2L9.A0P(((Doy) this).A00);\\n                                i \\u003d 4873;\\n                            } else {\\n                                if ((this instanceof Dov) || (this instanceof Dou)) {\\n                                    return true;\\n                                }\\n                                if (this instanceof Doz) {\\n                                    c00eA0P \\u003d ((C86p) C05a.A03(((Doz) this).A00)).A00;\\n                                    i \\u003d 36501;\\n                                } else if (this instanceof Dow) {\\n                                    c00eA0P \\u003d C2L9.A0P(((Dow) this).A00);\\n                                    i \\u003d 3530;\\n                                } else {\\n                                    if ((this instanceof Dot) || (this instanceof Dos)) {\\n                                        return true;\\n                                    }\\n                                    if (this instanceof DoM) {\\n                                        C08Y c08y2 \\u003d ((DoM) this).A05;\\n                                        return c08y2.A0a(5417) \\u003e\\u003d 1 || c08y2.A0a(6646) \\u003e\\u003d 1;\\n                                    }\\n                                    if ((this instanceof Dnq) || (this instanceof DoR) || (this instanceof Dnp) || (this instanceof DoB) || (this instanceof Dnu)) {\\n                                        return true;\\n                                    }\\n                                    if (this instanceof Dnh) {\\n                                        c00eA0P \\u003d C2L9.A0P(((Dnh) this).A00);\\n                                        i \\u003d 14490;\\n                                    } else {\\n                                        if ((this instanceof Dng) || !(this instanceof Dno)) {\\n                                            return true;\\n                                        }\\n                                        c00eA0P \\u003d C2L9.A0P(((Dno) this).A00);\\n                                        i \\u003d 25253;\\n                                    }\\n                                }\\n                            }\\n                        }\\n                    }\\n                }\\n            }\\n        }\\n        return c00eA0P.A14(i);\\n    }\",\"overload_count\":1,\"method_name\":\"A0Y\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.F3j",
+    "method": {
+      "name": "A0Y",
+      "reported_signature": "A0Y(): boolean",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "()Z"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public boolean A0Y() {\n        C00E c00eA0P;\n        int i;\n        if (this instanceof Do9) {\n            return true;\n        }\n        if (this instanceof Do6) {\n            c00eA0P = C2L9.A0P(((Do6) this).A00);\n            i = 25508;\n        } else {\n            if (this instanceof DoN) {\n                return ((C0eC) C05a.A03(((DoN) this).A0E)).A01();\n            }\n            if (this instanceof DoP) {\n                return C2L9.A1M(((DoP) this).A03.A14(2775) ? 1 : 0);\n            }\n            if ((this instanceof DoU) || (this instanceof DoK) || (this instanceof Do2) || (this instanceof Dnk) || (this instanceof Do8) || (this instanceof DoI) || (this instanceof Dny) || (this instanceof DoL)) {\n                return true;\n            }\n            if (this instanceof DoF) {\n                DoF doF = (DoF) this;\n                return C2LE.A1T(doF.A02) || ((C1q0) C05a.A03(doF.A04)).A02(true);\n            }\n            if (this instanceof DoH) {\n                c00eA0P = C2L9.A0P(((DoH) this).A00);\n                i = 4905;\n            } else {\n                if (this instanceof Dnj) {\n                    return true;\n                }\n                if (this instanceof Dni) {\n                    return ((Efu) C05a.A03(((Dni) this).A01)).A01();\n                }\n                if (this instanceof Dns) {\n                    c00eA0P = ((Dns) this).A00;\n                    i = 3070;\n                } else {\n                    if ((this instanceof Dnr) || (this instanceof DoA) || (this instanceof Dnn) || (this instanceof Do4) || (this instanceof Do5) || (this instanceof DoQ)) {\n                        return true;\n                    }\n                    if (this instanceof Do3) {\n                        return ((C0MX) C05a.A03(((Do3) this).A00)).A0H();\n                    }\n                    if (this instanceof Do1) {\n                        A6P a6p = (A6P) C05a.A03(((Do1) this).A00);\n                        java.util.Set<C9aT> set = a6p.A05;\n                        if ((set instanceof Collection) && set.isEmpty()) {\n                            return false;\n                        }\n                        for (C9aT c9aT : set) {\n                            ADc aDc = (ADc) C05a.A03(a6p.A00);\n                            C00l.A09(c9aT, 0);\n                            if (ADc.A02(C00G.A03.A00(), c9aT, aDc)) {\n                                return true;\n                            }\n                        }\n                        return false;\n                    }\n                    if ((this instanceof DoO) || (this instanceof DoT) || (this instanceof Dnx)) {\n                        return true;\n                    }\n                    if (this instanceof Dnm) {\n                        return false;\n                    }\n                    if ((this instanceof Dnt) || (this instanceof DoG) || (this instanceof DoJ)) {\n                        return true;\n                    }\n                    if (this instanceof Dok) {\n                        c00eA0P = ((Dok) this).A00;\n                        i = 12206;\n                    } else {\n                        if ((this instanceof Dol) || (this instanceof Doo)) {\n                            return true;\n                        }\n                        if (this instanceof Don) {\n                            c00eA0P = C2L9.A0P(((Don) this).A00);\n                            i = 20497;\n                        } else {\n                            if (this instanceof Dnw) {\n                                C0jq c0jq = ((Dnw) this).A01;\n                                if (!c0jq.A02()) {\n                                    return false;\n                                }\n                                C08Y c08y = c0jq.A00;\n                                C00G c00g = C00G.A02;\n                                if (!c08y.A15(c00g, 8929)) {\n                                    return false;\n                                }\n                                C09F c09f = c0jq.A01;\n                                if (c09f.BU7()) {\n                                    return c09f.BU7() && c08y.A15(c00g, 8928);\n                                }\n                                return true;\n                            }\n                            if (this instanceof DoS) {\n                                DoS doS = (DoS) this;\n                                if (doS instanceof Dom) {\n                                    return C00E.A0F(C2L9.A0P(doS.A00), EN4.A0E);\n                                }\n                                return true;\n                            }\n                            if ((this instanceof DoE) || (this instanceof DoD)) {\n                                return true;\n                            }\n                            if (this instanceof Dnl) {\n                                return ((C0aY) C05a.A03(((Dnl) this).A00)).A00();\n                            }\n                            if ((this instanceof DoC) || (this instanceof Do0) || (this instanceof Dox)) {\n                                return true;\n                            }\n                            if (this instanceof Doy) {\n                                c00eA0P = C2L9.A0P(((Doy) this).A00);\n                                i = 4873;\n                            } else {\n                                if ((this instanceof Dov) || (this instanceof Dou)) {\n                                    return true;\n                                }\n                                if (this instanceof Doz) {\n                                    c00eA0P = ((C86p) C05a.A03(((Doz) this).A00)).A00;\n                                    i = 36501;\n                                } else if (this instanceof Dow) {\n                                    c00eA0P = C2L9.A0P(((Dow) this).A00);\n                                    i = 3530;\n                                } else {\n                                    if ((this instanceof Dot) || (this instanceof Dos)) {\n                                        return true;\n                                    }\n                                    if (this instanceof DoM) {\n                                        C08Y c08y2 = ((DoM) this).A05;\n                                        return c08y2.A0a(5417) >= 1 || c08y2.A0a(6646) >= 1;\n                                    }\n                                    if ((this instanceof Dnq) || (this instanceof DoR) || (this instanceof Dnp) || (this instanceof DoB) || (this instanceof Dnu)) {\n                                        return true;\n                                    }\n                                    if (this instanceof Dnh) {\n                                        c00eA0P = C2L9.A0P(((Dnh) this).A00);\n                                        i = 14490;\n                                    } else {\n                                        if ((this instanceof Dng) || !(this instanceof Dno)) {\n                                            return true;\n                                        }\n                                        c00eA0P = C2L9.A0P(((Dno) this).A00);\n                                        i = 25253;\n                                    }\n                                }\n                            }\n                        }\n                    }\n                }\n            }\n        }\n        return c00eA0P.A14(i);\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

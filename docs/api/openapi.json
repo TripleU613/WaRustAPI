@@ -976,7 +976,9 @@
         "required": [
           "message_id",
           "kind",
-          "status"
+          "status",
+          "automatic",
+          "deferred_reason"
         ],
         "properties": {
           "kind": {
@@ -1001,9 +1003,21 @@
           "message_id": {
             "type": "string",
             "description": "Wire message ID referenced by the queued receipt; no recipient or message content is included."
+          },
+          "automatic": {
+            "type": ["boolean", "null"],
+            "description": "True for a newly automatic read intent, false for an explicit read, null for legacy/other unknown provenance. No provenance is fabricated for historical rows."
+          },
+          "deferred_reason": {
+            "type": ["string", "null"],
+            "enum": ["server_read_receipts_disabled", null],
+            "description": "Fixed reason a pending automatic direct read is retained without reservation after a known disabled server preference. Read-self remains unported. Cleared on eligible reservation or explicit promotion; no automatic reset of an uncertain send."
           }
         },
-        "description": "Outcome of a queued read, played or automatic once-only retry receipt transmission."
+        "description": "Outcome of a queued read, played or automatic once-only retry receipt transmission. Native-derived negative privacy guard applies only to newly automatic direct reads at queue and reservation; explicit reads and existing group behavior remain unchanged. Pending deferred work is retained under its original selector. Full read-self/companion/contact policy remains unported; no fresh live validation. Evidence docs/protocol/read-receipt-policy-current.md.",
+        "x-cli": "whatsapp-cli receipts",
+        "x-transport": ["cli", "http"],
+        "x-live": false
       },
       "RegistrationStep": {
         "type": "object",
@@ -2591,8 +2605,9 @@
       },
       "AppStatePatchRequest": {
         "type": "object",
-        "description": "Outgoing w:sync:app:state patch request (comparison 2.26.37.71 CSe.A00/CSe.A01). Library-level only: built and offline-verified, not yet queued by any command and never sent. x-transport is deliberately empty until a CLI or route exposes it.",
-        "x-transport": [],
+        "description": "Outgoing w:sync:app:state patch request, exposed through durable contact/name publication. Native producer shape is reanchored to APK 2.26.43.72 EfK/EdY in docs/protocol/app-state-versioned-fetch.md; historical 400/409 observations are documented separately. Preparation, original wire and frozen baseline commit atomically; reservation revalidates preparation and explicit server backoff. Accepted replies promote only their authenticated sequential transition. Conflict catch-up resolves patch and record key IDs separately from already-held account keys in one transaction; absent keys or invalid MACs refuse without partial state. Full native action projection, scheduling and recovery remain incomplete. See docs/protocol/app-state-catchup-atomicity.md. No HTTP route is served.",
+        "x-cli": "whatsapp-cli contacts publish-app-state; whatsapp-cli push-name",
+        "x-transport": ["cli"],
         "x-live": false,
         "properties": {
           "collection": {
@@ -2604,7 +2619,7 @@
               "critical_block",
               "critical_unblock_low"
             ],
-            "description": "Collection name (LX/0oP.A03, confirmed). Which collection a given action belongs to is NOT decided here and is currently unknown; the caller supplies it."
+            "description": "Collection name (LX/0oP.A03, confirmed). This low-level builder takes the collection from its caller; supported contact/name publication selects its evidence-backed action collection."
           },
           "order": {
             "type": "integer",
@@ -2612,21 +2627,22 @@
           },
           "version": {
             "type": "integer",
-            "description": "The version this patch claims: the collection's current version plus one. Both our verifier and the server require patches to be strictly sequential."
+            "minimum": 0,
+            "maximum": 9223372036854775807,
+            "description": "Held collection version on the outer collection element, not the patch's post-update version. Omitted when absent. The authenticated patch transition advances the held version by one; outgoing SyncdPatch omits its internal version field."
           },
           "return_snapshot": {
             "type": "boolean",
-            "description": "Emitted only when true. When the server sets it is untraced."
+            "description": "Emitted only when requested and the held version is absent or zero, matching the pinned native producer."
           },
           "patch": {
             "type": "string",
             "format": "byte",
-            "description": "SyncdPatch wire bytes from CollectionState::build_patch: version, mutations, snapshotMac, patchMac and a nested Blob keyId."
+            "description": "SyncdPatch wire bytes from CollectionState::build_patch: mutations, snapshotMac, patchMac and nested keyId; no internal version on the outgoing write."
           }
         },
         "required": [
           "collection",
-          "version",
           "patch"
         ]
       },

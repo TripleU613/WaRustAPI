@@ -37,14 +37,21 @@ to the original request and expected collection.
 
 This function still stores verified integrity state only; complete native mutation
 action projection remains a separate, unfinished application responsibility.
-No patch installs an incoming key. The existing narrower key policy is preserved:
-all mutations in a supported conflict patch must use its held patch key; mixed
-key-ID mutation history requires a separate port. No advertised dirty version,
+No patch installs an incoming key. Patch authentication and record authentication
+now resolve their separate key IDs from the already-held account keys within the
+same transaction. **Confirmed current-build evidence:** `SyncResponseHandler.A07`
+collects record IDs at DEX offsets `021e..0228` and `029c..02a6`, separately adds
+the patch/snapshot ID at `0446..045a`, and resolves the combined set through
+`0fI.A08` at `045e..0464`. See the retained
+[response trace](rea/2.26.43.72-server-sync-lifecycle/server-sync-response.txt)
+and envelope `ev_bdbbe822dbf9e326660455eea6fe36900bd682985f5b122054c44c507ecb7b73`.
+Record IDs need not equal the enclosing patch ID. Any unheld key still refuses
+the entire chain. No advertised dirty version,
 unauthenticated action, privacy setting or automatic network request is introduced.
 
 ## Offline verification
 
-Three focused tests exercise the real encrypted store and collection verifier:
+Four focused tests exercise the real encrypted store and collection verifier:
 
 - Independent Python/OpenSSL SET/REMOVE vectors (also used by the literal-wire
   collection tests) commit a two-patch chain to version two and empty LT state,
@@ -55,6 +62,11 @@ Three focused tests exercise the real encrypted store and collection verifier:
 - A version-one baseline staged in the caller's still-open transaction is used
   by version-two catch-up. A non409 response containing patches cannot advance
   the saved state.
+- An unchanged independent literal record, enclosed by snapshot/patch MACs made
+  with a second synthetic key, refuses while that key is absent and commits only
+  after it is held. This regression tests separate key resolution, not native
+  mutation semantics across key rotation; logical-index tracking is separately
+  audited.
 
 These are local transactional/cryptographic regressions, not live acceptance or
 proof that an account cannot be restricted. Root settlement/queue changes are

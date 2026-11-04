@@ -61,6 +61,13 @@ pub fn read_receipts(store: &ProtocolStore) -> Result<Option<ReadReceiptPreferen
     store.read(|tx| tx.get_json(Table::Checkpoints, STATE, 1))
 }
 
+/// Keep automatic receipt reservation and its preference gate atomic.
+pub(crate) fn read_receipts_in_write(
+    tx: &crate::store::WriteTx<'_>,
+) -> Result<Option<ReadReceiptPreference>> {
+    tx.get_json(Table::Checkpoints, STATE, 1)
+}
+
 fn invalid(reason: &'static str) -> Error {
     Error::invalid("account_privacy", reason)
 }
