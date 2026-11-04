@@ -1,3 +1,13 @@
+2026-11-04 — **Upload bytecode mnemonic gaps closed:**
+
+Developer disassembler now names sget-boolean and mul-float/2addr. Two
+regressions check operand decoding, boundaries and truncated prefixes.
+Regenerated pinned upload method has no unnamed instructions.
+[Evidence](docs/protocol/rea/2.26.43.72-media-transfer-results/README.md#checked-upload-mnemonic-correction-2026-11-04).
+Validation: **1,261 workspace/all-feature tests**, strict Clippy, CLI-reference,
+formatting, coverage freshness and repository hygiene passed.
+No WhatsApp runtime behavior changed or live traffic sent.
+
 2026-11-04 — **Media result flags and cancellation entry points traced:**
 
 Retained result factory matrix and distinguished MS4 default false predicate

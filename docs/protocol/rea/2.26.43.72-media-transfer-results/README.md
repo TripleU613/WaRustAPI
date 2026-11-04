@@ -59,9 +59,9 @@ values until full caller context is traced rather than guessing from code ranges
 
 ## Limits and reproduction
 
-Upload entry contains unnamed opcodes c8 and63; no conclusions here depend
-on their value semantics. Existing checked widths permit locating the named
-call site, but no complete upload algorithm parity is claimed. No Rust
+The original upload entry retained unnamed opcodes c8 and63. The decoded
+follow-up below closes those mnemonic gaps; no complete upload algorithm
+parity is claimed. No Rust
 retry loop, resend or live operation is enabled. Higher-level cancellation,
 all result producers and operation-specific idempotency remain open.
 
@@ -80,3 +80,19 @@ so selector5 can be checked against its actual switch and helper.
 - [default-predicate.txt](default-predicate.txt) — SHA-256 `0edd585061e944c2e78905dfaeda7ea22bdcada8a16b508abe4be3458f3e713a`.
 - [upload-loop-entry.txt](upload-loop-entry.txt) — SHA-256 `ac1fb6a5758886d6ed260223fa6a356a1f6bf2c72a2f35992293ecef89e81beb`.
 - [upload-result-producer.txt](upload-result-producer.txt) — SHA-256 `4104a8ea7c39e7992c93cbadc1c43bb0927223b2d697f26d516b30d86dce4e77`.
+
+## Checked upload mnemonic correction (2026-11-04)
+
+The disassembler now names63 as sget-boolean (21c), and c8 as
+mul-float/2addr (12x), matching the
+[AOSP bytecode table](https://source.android.com/docs/core/runtime/dalvik-bytecode).
+MvO.ARB+00a8 reads ACk.A01:Z; +000c multiplies float v0 by v1 before
+float-to-int. The literal multiplication/conversion bytes c810870a were
+checked in classes11.dex at0x6ceb3c. The original export remains unchanged.
+Two regressions cover register operands, instruction boundaries and truncated
+prefixes; the boolean fixture deliberately uses an unresolved synthetic
+field index and high register254 to exercise the full21c register byte.
+The regenerated method contains no unnamed instructions. No actual upload
+or request replay was executed.
+
+- [upload-loop-entry-decoded.txt](upload-loop-entry-decoded.txt) — SHA-256 `e69c75ab378b9a8c1867f15831fa19a5184f0b4435e48de388194d8256f428a1`.

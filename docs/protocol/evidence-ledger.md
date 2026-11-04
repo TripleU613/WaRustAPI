@@ -1,3 +1,9 @@
+2026-11-04 — **Confirmed static: upload bytecode mnemonic gaps closed.**
+Pinned2.26.43.72 MvO.ARB now decodes static boolean load63 and float
+multiplyc8; literal arithmetic bytes verified against classes11.dex.
+[Regenerated method, source, hashes and two regressions](rea/2.26.43.72-media-transfer-results/README.md#checked-upload-mnemonic-correction-2026-11-04).
+Developer tooling only; no runtime transfer/retry change.
+
 2026-11-04 — **Confirmed static: media result flags and cancellation.**
 Pinned2.26.43.72 Ly8 layout, MXe factory matrix, MS4 entry predicates and
 MtZ upload producer retained. Auth retry precedes terminal-flag handling.

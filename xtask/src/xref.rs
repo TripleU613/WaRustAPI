@@ -358,6 +358,9 @@ fn opcode_name(op: u8) -> &'static str {
         // before scheduling arithmetic. See docs/protocol/scheduled-deadline.md.
         0x61 => "sget-wide",
         0x62 => "sget-object",
+        // APK 43.72 MvO.ARB+00a8: upload file guard reads ACk.A01:Z.
+        // AOSP Dalvik table: 63 is the existing 21c static boolean load.
+        0x63 => "sget-boolean",
         0x67 => "sput",
         // Paired 21c write: CBc.<clinit> stores the 30-day scheduling constant.
         0x68 => "sput-wide",
@@ -467,6 +470,9 @@ fn opcode_name(op: u8) -> &'static str {
         // APK 43.72 1xY.Bvj+0150 adds the bounded media wait to its clock.
         // AOSP Dalvik bytecode table: cb is the existing-width 12x operation.
         // https://source.android.com/docs/core/runtime/dalvik-bytecode
+        // APK 43.72 MvO.ARB+000c: upload progress float arithmetic.
+        // https://source.android.com/docs/core/runtime/dalvik-bytecode (c8, 12x)
+        0xc8 => "mul-float/2addr",
         0xcb => "add-double/2addr",
         0xcd => "mul-double/2addr",
         0xce => "div-double/2addr",
@@ -3239,6 +3245,49 @@ mod tests {
         assert_eq!(decoded[1].width, 1);
         assert_eq!(decoded[2].mnemonic, "return-wide");
         assert_eq!(decoded[2].byte_off, 6);
+        for end in 0..bytes.len() {
+            let _ = decode_insns(&bytes[..end], &dex);
+        }
+    }
+
+    #[test]
+    fn decodes_upload_static_boolean_with_full_register_and_following_branch() {
+        let data = minimal_dex_header();
+        let dex = DexFile::parse(&data).unwrap();
+        // Synthetic 21c field index: fixture has no field pool. Keep the full
+        // register byte and the following branch/return instruction boundaries.
+        let bytes = [0x63, 0xfe, 0x34, 0x12, 0x38, 0xfe, 0x02, 0x00, 0x0e, 0x00];
+        let decoded = decode_insns(&bytes, &dex);
+        assert_eq!(decoded.len(), 3);
+        assert_eq!(decoded[0].mnemonic, "sget-boolean");
+        assert_eq!(decoded[0].annotation, "v254, ?4660");
+        assert_eq!(decoded[0].width, 2);
+        assert_eq!(decoded[1].mnemonic, "if-eqz");
+        assert_eq!(decoded[1].byte_off, 4);
+        assert_eq!(decoded[2].byte_off, 8);
+        assert_eq!(decoded[2].mnemonic, "return-void");
+        for end in 0..bytes.len() {
+            let _ = decode_insns(&bytes[..end], &dex);
+        }
+    }
+
+    #[test]
+    fn decodes_upload_float_multiply_and_conversion_boundaries() {
+        let data = minimal_dex_header();
+        let dex = DexFile::parse(&data).unwrap();
+        // Literal MvO.ARB+000c..0010 multiply/convert followed by a test return.
+        let bytes = [0xc8, 0x10, 0x87, 0x0a, 0x0e, 0x00];
+        let decoded = decode_insns(&bytes, &dex);
+        assert_eq!(decoded.len(), 3);
+        assert_eq!(decoded[0].mnemonic, "mul-float/2addr");
+        assert_eq!(decoded[0].annotation, "v0, v1");
+        assert_eq!(decoded[1].mnemonic, "float-to-int");
+        assert_eq!(decoded[1].annotation, "v10, v0");
+        assert_eq!(
+            decoded.iter().map(|i| i.byte_off).collect::<Vec<_>>(),
+            [0, 2, 4]
+        );
+        assert!(decoded.iter().all(|i| i.width == 1));
         for end in 0..bytes.len() {
             let _ = decode_insns(&bytes[..end], &dex);
         }
