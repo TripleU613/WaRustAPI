@@ -1,0 +1,45 @@
+
+# class: LX/Kif;
+# extends: Ljava/lang/Object;
+
+.method public B5p(L)  # .registers 0
+    # full signature: LX/Kif;->B5p()LX/JdX;
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/MtQ;
+# extends: Ljava/lang/Object;
+
+.method public B5p(L)  # .registers 4
+    # full signature: LX/MtQ;->B5p()LX/JdX;
+    0000..0004  iget  v0, v3, LX/MtQ;->$t:I
+    0004..0008  if-eqz  v0, +0x2b
+    0008..000c  iget-object  v0, v3, LX/MtQ;->A01:Ljava/lang/Object;
+    000c..0010  check-cast  v0, LX/MSm;
+    0010..0014  iget-object  v2, v3, LX/MtQ;->A00:Ljava/lang/Object;
+    0014..0018  check-cast  v2, Lkotlin/jvm/functions/Function0;
+    0018..001e  invoke-virtual  {v0}, LX/MSm;->A05()Z
+    001e..0020  move-result  v0
+    0020..0024  if-nez  v0, +0x10
+    0024..0028  sget-object  v1, LX/02X;->A01:Ljava/lang/Integer;
+    0028..002a  const/4  v0, #0x0
+    002a..0030  invoke-static  {v1, v0}, LX/MtQ;->A00(Ljava/lang/Integer;Ljava/lang/String;)[B
+    0030..0032  move-result-object  v2
+    0032..0034  const/4  v1, #0x0
+    0034..0038  new-instance  v0, LX/JdX;
+    0038..003e  invoke-direct  {v0, v2, v1}, LX/JdX;-><init>([BZ)V
+    003e..0040  return-object  v0
+    0040..0044  sget-object  v1, LX/02X;->A00:Ljava/lang/Integer;
+    0044..004a  invoke-interface  {v2}, Lkotlin/jvm/functions/Function0;->invoke()Ljava/lang/Object;
+    004a..004c  move-result-object  v0
+    004c..0050  check-cast  v0, Ljava/lang/String;
+    0050..0056  invoke-static  {v1, v0}, LX/MtQ;->A00(Ljava/lang/Integer;Ljava/lang/String;)[B
+    0056..0058  move-result-object  v2
+    0058..005a  goto  +0x5
+    005a..0060  invoke-virtual  {v3}, LX/MtQ;->A01()[B
+    0060..0062  move-result-object  v2
+    0062..0064  const/4  v1, #0x1
+    0064..0066  goto  -0x18
+    # exception table: 0 try range(s)
+.end method

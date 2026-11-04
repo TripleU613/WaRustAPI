@@ -1,3 +1,9 @@
+2026-11-04 — **Confirmed static: optional upload EOF metadata boundary.**
+Pinned2.26.43.72 single-file predicate closed; Kif/MtQ factory/processor
+leaves retained. Null processing differs from specialised sent/canceled seals.
+[Evidence and operation-binding gaps](rea/2.26.43.72-media-upload-http/README.md#optional-eof-processor-and-single-file-predicate-2026-11-04).
+No universal metadata requirement, runtime body change or live traffic.
+
 2026-11-04 — **Confirmed static: route-bound raw upload body branch.**
 Pinned2.26.43.72 K2k.A06/A01/A08 and JiH/LzO field mappings retain raw
 versus multipart branch, stream offset and optional EOF processing boundary.

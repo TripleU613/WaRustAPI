@@ -1,0 +1,12 @@
+
+# class: LX/6oi;
+# extends: Ljava/lang/Object;
+
+.method public A1U(ZI)  # .registers 2
+    # full signature: LX/6oi;->A1U(I)Z
+    0000..0002  const/4  v0, #0x1
+    0002..0006  if-eq  v1, v0, +0x3
+    0006..0008  const/4  v0, #0x0
+    0008..000a  return  v0
+    # exception table: 0 try range(s)
+.end method

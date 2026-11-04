@@ -405,3 +405,12 @@ A08/JiH preserve offset/length; A01 skips positive offset, copies chunks
 and handles optional end processing. This supports raw upload shape but
 does not establish Rust parity for optional trailers or resume negotiation.
 [Exact outputs and limits](rea/2.26.43.72-media-upload-http/README.md#raw-stream-versus-multipart-body-writer-2026-11-04).
+
+### Optional EOF sealing boundary (2026-11-04)
+
+**Confirmed static**, pinned2.26.43.72: raw single-file helper is count==1.
+Optional Kif processing is gated by MvM.A06 and AL2 factory selection;
+null Kif emits no EOF bytes in the copy stage. MtQ has specialised metadata
+seal branches and distinct abort/error hooks.
+[Exact processors, bounded implementation scan and unresolved operation binding](rea/2.26.43.72-media-upload-http/README.md#optional-eof-processor-and-single-file-predicate-2026-11-04).
+No universal seal requirement or Rust body change is established.

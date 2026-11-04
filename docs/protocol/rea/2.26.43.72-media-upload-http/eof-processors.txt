@@ -1,0 +1,214 @@
+
+# class: LX/MtQ;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLI)  # .registers 4
+    # full signature: LX/MtQ;-><init>(Ljava/lang/Object;Ljava/lang/Object;I)V
+    0000..0004  iput  v3, v0, LX/MtQ;->$t:I
+    0004..0008  iput-object  v2, v0, LX/MtQ;->A01:Ljava/lang/Object;
+    0008..000c  iput-object  v1, v0, LX/MtQ;->A00:Ljava/lang/Object;
+    000c..0012  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0012..0014  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(LLL)  # .registers 7
+    # full signature: LX/MtQ;->A00(Ljava/lang/Integer;Ljava/lang/String;)[B
+    0000..0004  const-string  v2, "status"
+    0004..000a  invoke-static  {}, LX/2L6;->A1V()Lorg/json/JSONObject;
+    000a..000c  move-result-object  v1
+    000c..0012  invoke-virtual  {v5}, Ljava/lang/Number;->intValue()I
+    0012..0014  move-result  v0
+    0014..0018  if-eqz  v0, +0x58
+    0018..001c  const-string  v0, "canceled"
+    001c..0022  invoke-virtual  {v1, v2, v0}, Lorg/json/JSONObject;->put(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+    0022..0026  sget-object  v0, LX/02X;->A00:Ljava/lang/Integer;
+    0026..002a  if-ne  v5, v0, +0x9
+    002a..002e  if-eqz  v6, +0x56
+    002e..0032  const-string  v0, "hash"
+    0032..0038  invoke-virtual  {v1, v0, v6}, Lorg/json/JSONObject;->put(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+    0038..003e  invoke-static  {v1}, LX/2L7;->A1L(Ljava/lang/Object;)Ljava/lang/String;
+    003e..0040  move-result-object  v0
+    0040..0044  sget-object  v2, LX/08Q;->A05:Ljava/nio/charset/Charset;
+    0044..004a  invoke-static  {v0, v2}, LX/6og;->A1a(Ljava/lang/String;Ljava/nio/charset/Charset;)[B
+    004a..004c  move-result-object  v6
+    004c..0050  const-string  v0, "RIFF"
+    0050..0056  invoke-static  {v0, v2}, LX/6og;->A1a(Ljava/lang/String;Ljava/nio/charset/Charset;)[B
+    0056..0058  move-result-object  v5
+    0058..005a  const/4  v0, #0x4
+    005a..0060  invoke-static  {v0}, LX/Klt;->A0q(I)Ljava/nio/ByteBuffer;
+    0060..0062  move-result-object  v1
+    0062..0064  array-length  v4, v6
+    0064..006a  const  v0, #0x5614050b
+    006a..006c  xor-int/2addr  v0, v4
+    006c..0072  invoke-virtual  {v1, v0}, Ljava/nio/ByteBuffer;->putInt(I)Ljava/nio/ByteBuffer;
+    0072..0078  invoke-virtual  {v1}, Ljava/nio/ByteBuffer;->array()[B
+    0078..007a  move-result-object  v3
+    007a..007e  const-string  v0, "META"
+    007e..0084  invoke-static  {v0, v2}, LX/6og;->A1a(Ljava/lang/String;Ljava/nio/charset/Charset;)[B
+    0084..0086  move-result-object  v2
+    0086..0088  array-length  v1, v5
+    0088..008a  add-int/2addr  v1, v4
+    008a..008c  array-length  v0, v3
+    008c..008e  add-int/2addr  v1, v0
+    008e..0090  array-length  v0, v2
+    0090..0092  add-int/2addr  v1, v0
+    0092..0096  const/16  v0, #0x64
+    0096..009a  if-gt  v1, v0, +0x1a
+    009a..00a0  invoke-static  {v1}, Ljava/nio/ByteBuffer;->allocate(I)Ljava/nio/ByteBuffer;
+    00a0..00a2  move-result-object  v0
+    00a2..00a8  invoke-virtual  {v0, v5}, Ljava/nio/ByteBuffer;->put([B)Ljava/nio/ByteBuffer;
+    00a8..00ae  invoke-virtual  {v0, v6}, Ljava/nio/ByteBuffer;->put([B)Ljava/nio/ByteBuffer;
+    00ae..00b4  invoke-virtual  {v0, v3}, Ljava/nio/ByteBuffer;->put([B)Ljava/nio/ByteBuffer;
+    00b4..00ba  invoke-virtual  {v0, v2}, Ljava/nio/ByteBuffer;->put([B)Ljava/nio/ByteBuffer;
+    00ba..00c0  invoke-static  {v0}, LX/Klr;->A1Z(Ljava/nio/ByteBuffer;)[B
+    00c0..00c2  move-result-object  v0
+    00c2..00c4  return-object  v0
+    00c4..00c8  const-string  v0, "sent"
+    00c8..00ca  goto  -0x56
+    00ca..00ce  new-instance  v0, LX/JOJ;
+    00ce..00d4  invoke-direct  {v0}, LX/JOJ;-><init>()V
+    00d4..00d6  throw  v0
+    00d6..00da  const-string  v0, "A sent seal needs a hash"
+    00da..00e0  invoke-static  {v0}, LX/1Xl;->A0f(Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    00e0..00e2  move-result-object  v0
+    00e2..00e4  throw  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A01(L)  # .registers 7
+    # full signature: LX/MtQ;->A01()[B
+    0000..0004  iget-object  v4, v6, LX/MtQ;->A01:Ljava/lang/Object;
+    0004..0008  check-cast  v4, LX/LKZ;
+    0008..000c  iget-object  v2, v6, LX/MtQ;->A00:Ljava/lang/Object;
+    000c..0010  check-cast  v2, LX/NYu;
+    0010..0016  invoke-static  {}, LX/2L6;->A1V()Lorg/json/JSONObject;
+    0016..0018  move-result-object  v3
+    0018..001c  iget-boolean  v0, v4, LX/LKZ;->A02:Z
+    001c..0020  if-eqz  v0, +0x52
+    0020..0024  const-string  v1, "sent"
+    0024..0028  const-string  v0, "status"
+    0028..002e  invoke-virtual  {v3, v0, v1}, Lorg/json/JSONObject;->put(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+    002e..0032  iget-boolean  v0, v4, LX/LKZ;->A02:Z
+    0032..0036  if-eqz  v0, +0xb
+    0036..003c  invoke-virtual  {v4, v2}, LX/LKZ;->A09(LX/NYu;)Ljava/lang/String;
+    003c..003e  move-result-object  v1
+    003e..0042  const-string  v0, "hash"
+    0042..0048  invoke-virtual  {v3, v0, v1}, Lorg/json/JSONObject;->put(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+    0048..004e  invoke-static  {v3}, LX/2L7;->A1L(Ljava/lang/Object;)Ljava/lang/String;
+    004e..0050  move-result-object  v1
+    0050..0056  const  v0, #0x5614050b
+    0056..005c  invoke-virtual  {v1}, Ljava/lang/String;->length()I
+    005c..005e  move-result  v2
+    005e..0060  xor-int/2addr  v2, v0
+    0060..0064  const-string  v0, "RIFF"
+    0064..006a  invoke-static  {v0, v3}, LX/1Xl;->A0w(Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/String;
+    006a..006c  move-result-object  v0
+    006c..0070  sget-object  v1, LX/08Q;->A05:Ljava/nio/charset/Charset;
+    0070..0076  invoke-static  {v0, v1}, LX/6og;->A1a(Ljava/lang/String;Ljava/nio/charset/Charset;)[B
+    0076..0078  move-result-object  v5
+    0078..007a  const/4  v0, #0x4
+    007a..0080  invoke-static  {v0}, LX/Klt;->A0q(I)Ljava/nio/ByteBuffer;
+    0080..0082  move-result-object  v0
+    0082..0088  invoke-static  {v0, v2}, LX/Klt;->A1a(Ljava/nio/ByteBuffer;I)[B
+    0088..008a  move-result-object  v4
+    008a..008e  const-string  v0, "META"
+    008e..0094  invoke-static  {v0, v1}, LX/6og;->A1a(Ljava/lang/String;Ljava/nio/charset/Charset;)[B
+    0094..0096  move-result-object  v3
+    0096..0098  array-length  v1, v5
+    0098..009a  array-length  v0, v4
+    009a..009c  add-int/2addr  v1, v0
+    009c..009e  array-length  v0, v3
+    009e..00a0  add-int/2addr  v1, v0
+    00a0..00a4  new-array  v0, v1, [B
+    00a4..00aa  invoke-static  {v0}, Ljava/nio/ByteBuffer;->wrap([B)Ljava/nio/ByteBuffer;
+    00aa..00ac  move-result-object  v2
+    00ac..00b2  invoke-virtual  {v2, v5}, Ljava/nio/ByteBuffer;->put([B)Ljava/nio/ByteBuffer;
+    00b2..00b8  invoke-virtual  {v2, v4}, Ljava/nio/ByteBuffer;->put([B)Ljava/nio/ByteBuffer;
+    00b8..00be  invoke-virtual  {v2, v3}, Ljava/nio/ByteBuffer;->put([B)Ljava/nio/ByteBuffer;
+    00be..00c0  goto  +0x4
+    00c0..00c4  const-string  v1, "canceled"
+    00c4..00c6  goto  -0x50
+    00c6..00ca  const/16  v0, #0x64
+    00ca..00ce  if-gt  v1, v0, +0x7
+    00ce..00d4  invoke-virtual  {v2}, Ljava/nio/ByteBuffer;->array()[B
+    00d4..00d6  move-result-object  v0
+    00d6..00d8  return-object  v0
+    00d8..00dc  const-string  v0, "VoiceNoteUpload/preparePttMetadata Metadata length unusual: "
+    00dc..00e2  invoke-static  {v1, v0}, LX/1Xl;->A14(ILjava/lang/String;)Ljava/lang/StringBuilder;
+    00e2..00e4  move-result-object  v1
+    00e4..00e8  const-string  v0, " ,metadata content: "
+    00e8..00ee  invoke-static  {v2, v0, v1}, LX/6ok;->A16(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    00ee..00f2  new-instance  v0, LX/JOL;
+    00f2..00f8  invoke-direct  {v0}, LX/JOL;-><init>()V
+    00f8..00fa  throw  v0
+    00fa..00fc  move-exception  v1
+    00fc..0100  const-string  v0, "VoiceNoteUploadRequest/Error when prepare seal padding"
+    0100..0106  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0106..0108  const/4  v0, #0x0
+    0108..010a  return-object  v0
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/Exception; code_units 0000..007d -> 007d
+.end method
+
+.method public B5o(L)  # .registers 3
+    # full signature: LX/MtQ;->B5o()[B
+    0000..0004  iget  v0, v2, LX/MtQ;->$t:I
+    0004..0008  if-eqz  v0, +0xa
+    0008..000c  sget-object  v1, LX/02X;->A01:Ljava/lang/Integer;
+    000c..000e  const/4  v0, #0x0
+    000e..0014  invoke-static  {v1, v0}, LX/MtQ;->A00(Ljava/lang/Integer;Ljava/lang/String;)[B
+    0014..0016  move-result-object  v0
+    0016..0018  return-object  v0
+    0018..001e  invoke-virtual  {v2}, LX/MtQ;->A01()[B
+    001e..0020  move-result-object  v0
+    0020..0022  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public B5p(L)  # .registers 4
+    # full signature: LX/MtQ;->B5p()LX/JdX;
+    0000..0004  iget  v0, v3, LX/MtQ;->$t:I
+    0004..0008  if-eqz  v0, +0x2b
+    0008..000c  iget-object  v0, v3, LX/MtQ;->A01:Ljava/lang/Object;
+    000c..0010  check-cast  v0, LX/MSm;
+    0010..0014  iget-object  v2, v3, LX/MtQ;->A00:Ljava/lang/Object;
+    0014..0018  check-cast  v2, Lkotlin/jvm/functions/Function0;
+    0018..001e  invoke-virtual  {v0}, LX/MSm;->A05()Z
+    001e..0020  move-result  v0
+    0020..0024  if-nez  v0, +0x10
+    0024..0028  sget-object  v1, LX/02X;->A01:Ljava/lang/Integer;
+    0028..002a  const/4  v0, #0x0
+    002a..0030  invoke-static  {v1, v0}, LX/MtQ;->A00(Ljava/lang/Integer;Ljava/lang/String;)[B
+    0030..0032  move-result-object  v2
+    0032..0034  const/4  v1, #0x0
+    0034..0038  new-instance  v0, LX/JdX;
+    0038..003e  invoke-direct  {v0, v2, v1}, LX/JdX;-><init>([BZ)V
+    003e..0040  return-object  v0
+    0040..0044  sget-object  v1, LX/02X;->A00:Ljava/lang/Integer;
+    0044..004a  invoke-interface  {v2}, Lkotlin/jvm/functions/Function0;->invoke()Ljava/lang/Object;
+    004a..004c  move-result-object  v0
+    004c..0050  check-cast  v0, Ljava/lang/String;
+    0050..0056  invoke-static  {v1, v0}, LX/MtQ;->A00(Ljava/lang/Integer;Ljava/lang/String;)[B
+    0056..0058  move-result-object  v2
+    0058..005a  goto  +0x5
+    005a..0060  invoke-virtual  {v3}, LX/MtQ;->A01()[B
+    0060..0062  move-result-object  v2
+    0062..0064  const/4  v1, #0x1
+    0064..0066  goto  -0x18
+    # exception table: 0 try range(s)
+.end method
+
+.method public B5q(L)  # .registers 3
+    # full signature: LX/MtQ;->B5q()[B
+    0000..0004  iget  v0, v2, LX/MtQ;->$t:I
+    0004..0008  if-eqz  v0, +0xa
+    0008..000c  sget-object  v1, LX/02X;->A01:Ljava/lang/Integer;
+    000c..000e  const/4  v0, #0x0
+    000e..0014  invoke-static  {v1, v0}, LX/MtQ;->A00(Ljava/lang/Integer;Ljava/lang/String;)[B
+    0014..0016  move-result-object  v0
+    0016..0018  return-object  v0
+    0018..001a  const/4  v0, #0x0
+    001a..001c  return-object  v0
+    # exception table: 0 try range(s)
+.end method

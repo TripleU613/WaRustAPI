@@ -1,0 +1,22 @@
+
+# class: LX/MvM;
+# extends: Ljava/lang/Object;
+
+.method public A06(Z)  # .registers 3
+    # full signature: LX/MvM;->A06()Z
+    0000..0004  instance-of  v0, v2, LX/LKZ;
+    0004..0008  if-eqz  v0, +0xd
+    0008..000c  iget-object  v0, v2, LX/MvM;->A07:LX/M5T;
+    000c..0010  iget-object  v1, v0, LX/M5T;->A09:LX/0jS;
+    0010..0014  sget-object  v0, LX/0jS;->A0e:LX/0jS;
+    0014..001a  invoke-static  {v1, v0}, LX/3q3;->A1W(Ljava/lang/Object;Ljava/lang/Object;)Z
+    001a..001c  move-result  v0
+    001c..001e  return  v0
+    001e..0022  instance-of  v0, v2, LX/LKY;
+    0022..0026  if-eqz  v0, +0x4
+    0026..0028  const/4  v0, #0x1
+    0028..002a  return  v0
+    002a..002c  const/4  v0, #0x0
+    002c..002e  return  v0
+    # exception table: 0 try range(s)
+.end method

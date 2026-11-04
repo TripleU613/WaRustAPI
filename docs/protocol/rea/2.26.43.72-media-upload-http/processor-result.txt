@@ -1,0 +1,12 @@
+
+# class: LX/JdX;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLZ)  # .registers 3
+    # full signature: LX/JdX;-><init>([BZ)V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v1, v0, LX/JdX;->A01:[B
+    000a..000e  iput-boolean  v2, v0, LX/JdX;->A00:Z
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method
