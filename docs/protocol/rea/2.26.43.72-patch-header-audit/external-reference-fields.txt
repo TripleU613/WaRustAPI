@@ -1,0 +1,8 @@
+# LX/Dg5;  (6 fields)
+#   followed helper LX/DBg;->A1a
+   1  mediaKey
+   2  directPath
+   3  handle
+   4  fileSizeBytes
+   5  fileSha256
+   6  fileEncSha256

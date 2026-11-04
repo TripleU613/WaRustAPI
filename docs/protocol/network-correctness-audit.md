@@ -52,6 +52,15 @@ a fresh synthetic local destination: APK 2.26.43.72 refused against template
 
 ## Evidence standard and remaining risk
 
+The [current patch-header audit](app-state-patch-header-audit.md) refutes a
+suspected silent external/exit drop: existing decoders already refuse both.
+Whole-collection nested-protobuf/header validation remains required before a
+future per-patch fetch worker commits. The
+[inline application specification](app-state-inline-fetch-application-spec.md)
+binds prospective requests/baselines and real local generation fencing; it does
+not reinterpret frozen version-zero requests or invent prepared hash authority
+for pure-fetch version acknowledgements.
+
 The [fetch-completion trace](app-state-fetch-completion.md) now has a pure ordered
 structural classifier and offline response inspector. Categories are not integrity
 or application verdicts; external references, protobuf semantics, request binding,

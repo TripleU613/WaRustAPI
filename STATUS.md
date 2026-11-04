@@ -1,3 +1,20 @@
+2026-11-04 — **Patch header audit and inline application specification:**
+
+The suspected silent external/exit-field decoder bug is refuted: current patch
+and prepared-wire decoders reject those fields before crypto. Seven checked
+current-build exports independently pin the field tags. A future fetch worker
+still needs whole-collection protobuf/header preflight before per-patch commits;
+numeric exit outcomes, external-only deferral and duplicate-version handling
+must remain separate from MAC verification.
+[Audit and next structural stage](docs/protocol/app-state-patch-header-audit.md).
+
+The prospective inline-application contract now pins original request/version
+and admitted held baseline, real store-generation fencing, per-patch atomic
+cursor/state commits, restart behavior and unported external/continuation gates.
+A pure fetch version acknowledgement cannot create an authenticated held hash.
+[Implementation specification](docs/protocol/app-state-inline-fetch-application-spec.md).
+This chunk changes evidence/design only; no account state or network activity.
+
 2026-11-04 — **Structural app-state result classification:**
 
 The current-build response category model now distinguishes collection errors,
