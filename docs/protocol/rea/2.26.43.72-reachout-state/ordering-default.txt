@@ -1,0 +1,9 @@
+
+# class: LX/8AF;
+# extends: Ljava/lang/Object;
+
+.method public A08(VL)  # .registers 2
+    # full signature: LX/8AF;->A08(LX/0Tp;)V
+    0000..0002  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,3 +1,13 @@
+2026-11-04 — **MEX message/worker ordering boundary traced:**
+
+Pinned router registration and wrappers now connect to native handler worker.
+Reach-out inherits a no-op ordering reservation; direct/executor dispatch is
+retained separately from origin checks. Upstream sender authority remains open.
+[Evidence](docs/protocol/rea/2.26.43.72-reachout-state/README.md#message-wrapper-and-reach-out-ordering-reservation-2026-11-04).
+Validation: JSON parsing, coverage freshness, cached diff checks and repository
+hygiene (4,400 local links) passed. Documentation/evidence only;
+no runtime change or live traffic.
+
 2026-11-04 — **Reach-out envelope validation precedes state writes:**
 
 Missing/invalid ACK routing fields cannot change restriction state before

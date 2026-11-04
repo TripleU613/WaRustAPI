@@ -179,3 +179,12 @@ after commit; malformed input preserves capture/lock and continues.
 [Base-handler evidence, test and origin limitation](rea/2.26.43.72-reachout-state/README.md#base-dispatch-and-local-envelope-before-state-guard-2026-11-04).
 Valid JID syntax does not establish account-state sender authority, which
 remains open. No live traffic or native origin-parity claim.
+
+## MEX wrapper/ordering boundary (2026-11-04)
+
+**Confirmed pinned static:**0v7 registers0x102, reserves handler ordering
+before0v6 wrapper dispatch;7MU inherits no-op8AF.A08 reservation. Worker
+13 records bookkeeping and dispatches directly or via executor. These leaves
+do not establish sender authority; IncomingStanza/message producer remains
+the next origin trace. [Evidence](rea/2.26.43.72-reachout-state/README.md#message-wrapper-and-reach-out-ordering-reservation-2026-11-04).
+No runtime policy change or live traffic.

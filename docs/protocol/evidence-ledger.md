@@ -1,3 +1,9 @@
+2026-11-04 — **Pinned static: MEX message/worker ordering boundary.**
+2.26.43.72 router0x102 registration, wrapper ingress and direct/executor
+dispatch retained;7MU reservation is inherited no-op. Upstream sender
+authority still open. [Evidence](rea/2.26.43.72-reachout-state/README.md#message-wrapper-and-reach-out-ordering-reservation-2026-11-04).
+No runtime policy or live-account change.
+
 2026-11-04 — **Source integrity fixed: reach-out envelope before mutation.**
 Existing base_ack validation now runs before lock checkpoint writes; actual
 ACK follows persistence. Real-store invalid-envelope regression retained.

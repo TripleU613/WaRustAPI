@@ -105,3 +105,40 @@ Envelope test correction: the shared JID parser accepts unfamiliar server-only
 names as syntactic Server::Other. The regression uses malformed device syntax
 for invalid-address cases. This further demonstrates that this local guard
 does not establish trusted sender authority.
+
+## Message wrapper and reach-out ordering reservation (2026-11-04)
+
+**Confirmed static**, same pinned APK.0v7 constructor registers message
+code0x102 with0v6.0v7.BLn reads IncomingStanza node, selects first update,
+lowercases supported op and invokes handler.A08 before superclass dispatch.
+It catches pre-reservation exceptions and still delegates to0v6.BLn.
+8AF.A08 default is return-void; the retained7MU class declares only its
+constructor, therefore inherits this no-op reservation for reach-out. This
+closes a specific ordering-reservation question without inventing a durable
+queue requirement for that handler. Other subclasses may override it.
+
+0v6.BLn first checks message code membership, casts Message.obj to1k2,
+requires nonnull Ay8 node, creates Eoh using loggableStanzaId and invokes
+8bl selector13. That branch records first child tag plus offline presence
+under stanza key, then dispatches0v6.A01 directly if A09 executor is null
+or schedules8aj(selector1) otherwise.8aj forwards wrapper/stanza metadata
+to0v6.A01. These are exact local worker facts, not server-origin validation.
+The first-child tag used for bookkeeping must not be confused with the
+first-update child used for operation routing.
+
+No sender-JID check is established in these wrapper leaves; upstream1k2
+construction, type0x102 producer and central handler selection remain open.
+No claim is made that every sender is accepted by the native network stack.
+Rust keeps its current local envelope-before-state guard. No new allowlist,
+automatic ACK policy, runtime ordering change or live traffic is introduced.
+
+Reproduce apk-smali0v7.BLn/<init>,0v6.BLn,8bl.run,8aj.run,8AF.A08
+with signatures/exceptions. Full shared-selector worker methods retained;
+conclusions above apply only to selector13/1, not unrelated worker cases.
+
+- [worker-dispatch.txt](worker-dispatch.txt) — SHA-256 `833b7aee149ebd574a2679fe14e0e510fc597d5f98f0cfa1976a55d046a0e817`.
+- [worker-ingress.txt](worker-ingress.txt) — SHA-256 `e772370b831918d13e9b020e2d44203fb55abf2c178117f136c04a62ddb67164`.
+- [router-ingress.txt](router-ingress.txt) — SHA-256 `7e73960546ed2e3c7d9b51d1a487c00b4ff1f43b6ef7df8b0c52f8a6dd3283d0`.
+- [ordering-default.txt](ordering-default.txt) — SHA-256 `7de34f7d8b2bbc61f7e5181ef9cb33baaf3cec32534983708311973eb413be92`.
+- [base-message-ingress.txt](base-message-ingress.txt) — SHA-256 `373f7d0ef24ac4cc3a864a4f653d8a424ce4b79d36272099a87c06ee5a275b62`.
+- [router-registration.txt](router-registration.txt) — SHA-256 `9b540763ed7b01519d39a17d14cb99576b39a91f805910fbf4ca7064b851880d`.

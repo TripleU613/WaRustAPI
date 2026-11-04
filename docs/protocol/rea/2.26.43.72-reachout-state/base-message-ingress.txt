@@ -1,0 +1,42 @@
+
+# class: LX/0v6;
+# extends: Ljava/lang/Object;
+
+.method public BLn(ZLI)  # .registers 14
+    # full signature: LX/0v6;->BLn(Landroid/os/Message;I)Z
+    0000..0002  const/4  v4, #0x1
+    0002..0008  invoke-static  {v12, v4}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000a  move-object  v8, v11
+    000a..000e  iget-object  v0, v11, LX/0v6;->A0D:[I
+    000e..0010  move  v9, v13
+    0010..0016  invoke-static  {v0, v13}, LX/08w;->A0l([II)Z
+    0016..0018  move-result  v0
+    0018..001c  if-nez  v0, +0x4
+    001c..001e  const/4  v0, #0x0
+    001e..0020  return  v0
+    0020..0024  iget-object  v6, v12, Landroid/os/Message;->obj:Ljava/lang/Object;
+    0024..0028  const-string  v0, "null cannot be cast to non-null type com.whatsapp.infra.protocol.IncomingStanza"
+    0028..002e  invoke-static  {v6, v0}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    002e..0032  check-cast  v6, LX/1k2;
+    0032..0038  invoke-interface  {v6}, LX/1k2;->Ay8()LX/0Tp;
+    0038..003a  move-result-object  v3
+    003a..003e  if-eqz  v3, +0x1c
+    003e..0044  invoke-virtual  {v12}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    0044..0046  move-result-object  v1
+    0046..004a  const-string  v0, "loggableStanzaId"
+    004a..0050  invoke-virtual  {v1, v0}, Landroid/os/BaseBundle;->getLong(Ljava/lang/String;)J
+    0050..0052  move-result-wide  v1
+    0052..0054  const/4  v0, #0x0
+    0054..005a  invoke-static  {v3, v0, v1, v2}, LX/F0R;->A02(LX/0Tp;Ljava/lang/Integer;J)LX/Eoh;
+    005a..005c  move-result-object  v7
+    005c..0060  const/16  v10, #0xd
+    0060..0064  new-instance  v5, LX/8bl;
+    0064..006a  invoke-direct/range  {v5..v10}, LX/8bl;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;II)V
+    006a..0070  invoke-virtual  {v5}, LX/8bl;->run()V
+    0070..0072  return  v4
+    0072..0076  const-string  v1, "Required value was null."
+    0076..007a  new-instance  v0, Ljava/lang/IllegalStateException;
+    007a..0080  invoke-direct  {v0, v1}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
+    0080..0082  throw  v0
+    # exception table: 0 try range(s)
+.end method
