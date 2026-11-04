@@ -1,3 +1,9 @@
+2026-11-04 — **Confirmed source defect fixed: prekey IQ type admission.**
+PendingUpload.matches previously checked tag/id only; settle treated every
+non-result as refusal and released keys. Pinned 43.72 0ln.A01 dispatches
+only result/error to IQ callbacks. [Correction and regression](network-correctness-audit.md#prekey-upload-reply-type-admission-2026-11-04).
+No retry, key rotation or live request introduced.
+
 2026-11-04 — **Pinned static: writer callback guard and output boundary.**
 0Sf message metadata -> 0v0/0uw -> queued membership and pre-write
 0ln.A0C -> 1rj/1r2 output write retained, with I/O requeue qualification.

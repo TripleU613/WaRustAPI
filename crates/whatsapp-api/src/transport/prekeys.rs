@@ -487,17 +487,22 @@ pub fn begin_upload(
 }
 
 impl PendingUpload {
-    /// Only the exact `iq` reply for this batch settles it.
+    /// Only the exact `iq` result/error for this batch can settle it.
     pub fn matches(&self, node: &Node) -> bool {
         node.description == "iq"
             && node.get_attr("id").and_then(|v| v.as_text()) == Some(self.iq_id.as_str())
+            // APK 43.72 0ln.A01 dispatches only result/error to IQ callbacks.
+            // An incoming get/set with this ID is not a refusal or key release.
+            && matches!(node.get_attr("type").and_then(|v| v.as_text()), Some("result" | "error"))
     }
     /// Apply the server reply durably: acknowledged keys become `Uploaded`;
     /// a refusal returns the keys to `Unsent` (APK keeps `sent_to_server = 0`)
     /// and records the sanitized code. Nothing is retried here.
     pub fn settle(&self, store: &ProtocolStore, node: &Node) -> Result<UploadOutcome> {
         if !self.matches(node) {
-            return Err(invalid("reply does not belong to this upload"));
+            return Err(invalid(
+                "requires a matching IQ result/error for this upload",
+            ));
         }
         let accepted = node.get_attr("type").and_then(|v| v.as_text()) == Some("result");
         let count_low = node
@@ -970,6 +975,56 @@ mod tests {
             iq.child("pq_list").is_none(),
             "last-resort key already sent"
         );
+    }
+
+    #[test]
+    fn non_reply_iqs_preserve_reserved_prekey_upload() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("non-reply.redb");
+        let store = open(&path);
+        let (account, signed) = account_and_signed();
+        assert_eq!(generate(&store).unwrap(), 50);
+        let (pending, _) = begin_upload(&store, &account, &signed).unwrap().unwrap();
+        let original: serde_json::Value = store
+            .read(|tx| tx.get_json(Table::Checkpoints, batch_key(&pending.iq_id).as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        for kind in [
+            None,
+            Some("get"),
+            Some("set"),
+            Some("RESULT"),
+            Some("unexpected"),
+        ] {
+            let node = Node::new("iq")
+                .attr("id", pending.iq_id.as_str())
+                .children(vec![Node::new("error").attr("code", "500")]);
+            let node = if let Some(kind) = kind {
+                node.attr("type", kind)
+            } else {
+                node
+            };
+            assert!(!pending.matches(&node));
+            assert!(pending.settle(&store, &node).is_err());
+            let held: serde_json::Value = store
+                .read(|tx| tx.get_json(Table::Checkpoints, batch_key(&pending.iq_id).as_bytes(), 1))
+                .unwrap()
+                .unwrap();
+            assert_eq!(held, original);
+            let state = summary(&store).unwrap();
+            assert_eq!((state.unsent, state.uncertain, state.uploaded), (0, 50, 0));
+            assert!(begin_upload(&store, &account, &signed).unwrap().is_none());
+        }
+        drop(store);
+        let store = open(&path);
+        let state = summary(&store).unwrap();
+        assert_eq!((state.unsent, state.uncertain, state.uploaded), (0, 50, 0));
+        let result = Node::new("iq")
+            .attr("id", pending.iq_id.as_str())
+            .attr("type", "result");
+        assert!(pending.settle(&store, &result).unwrap().accepted);
+        assert!(pending.settle(&store, &result).is_err());
+        assert_eq!(summary(&store).unwrap().uploaded, 50);
     }
 
     #[test]

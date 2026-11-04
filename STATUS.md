@@ -1,3 +1,13 @@
+2026-11-04 — **Prekey upload no longer treats non-reply IQs as refusal:**
+
+PendingUpload now requires matching iq/id and exact result/error before
+settlement. Missing/get/set/uppercase/unknown types preserve the uncertain
+batch and reserved keys instead of returning them to Unsent. Regression
+checks complete batch preservation, reopen and one valid settlement.
+[Native dispatch and source scope](docs/protocol/network-correctness-audit.md#prekey-upload-reply-type-admission-2026-11-04).
+Validation: **1,273 workspace/all-feature tests**, strict Clippy, CLI reference,
+formatting, coverage freshness and repository hygiene passed. No live traffic.
+
 2026-11-04 — **Timed-IQ writer admission and pre-write callback transfer traced:**
 
 Concrete observer binding closes queued-callback check -> reply-map transfer

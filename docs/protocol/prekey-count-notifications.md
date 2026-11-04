@@ -101,3 +101,15 @@ reproducibility only; it is not a comparison with a newly released APK.
 Operators already have `listen` for bounded receiving and `prekeys` for offline
 redacted upload/reservation inspection. No new HTTP route or CLI command is
 introduced by this library correction.
+
+## Upload reply-type correction (2026-11-04)
+
+**Offline source correction, pinned 2.26.43.72 shared IQ boundary:**
+prekeys::PendingUpload now matches only same-ID iq/result or iq/error.
+Other types no longer become a refusal that returns reserved keys to
+Unsent. The full uncertain batch and key reservation survive those non-reply inputs
+and reopen until a valid matching reply; no automatic retry is added.
+[Source finding, native dispatcher and regression](network-correctness-audit.md#prekey-upload-reply-type-admission-2026-11-04).
+Older build-specific count/upload layout evidence above is not silently
+re-attributed to the current APK. Sender and full current response matrix
+remain open; no live behavior is verified.

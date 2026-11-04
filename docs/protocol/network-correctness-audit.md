@@ -426,3 +426,45 @@ Native local I/O requeue is qualified by later admission; it is not proof
 of universal replay permission or delivery. [Exact path and limits](rea/2.26.43.72-reachout-state/README.md#writer-callback-admission-before-output-stream-write-2026-11-04).
 Durable account/request settlement and refresh scheduling remain unfinished;
 no production behavior or network operation changed.
+
+## Prekey upload reply type admission (2026-11-04)
+
+**Confirmed source defect / fixed offline:** PendingUpload.matches in
+transport/prekeys.rs only checked iq tag and ID. settle treated anything
+except exact type=result as a refusal, wrote batch=refused and reset
+legacy key metadata to Unsent. connection's matching branch took the
+pending upload out before invoking settle. Thus a same-ID get/set,
+missing type or unknown type could turn an uncertain upload into keys
+available for another upload without any server refusal. This was not
+observed live and is not proven to cause restrictions.
+
+**Pinned static boundary:** APK 2.26.43.72, SHA-256
+887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e,
+0ln.A01 invokes IQ callback CK4 only for exact result, Bvj only for
+exact error, and reports other types without passing them as a refusal
+callback. The shared dispatcher evidence is retained in
+[full method](rea/2.26.43.72-reachout-state/reachout-iq-reply-dispatch.txt).
+This class is a shared IQ dispatcher despite the research filename prefix.
+No current-build prekey payload/retry policy is inferred from the MEX leaf.
+
+PendingUpload.matches now requires exact result/error as well as iq/id.
+Direct settle also checks it before reading/writing batch state, with an
+explicit redacted error. The connection retains its pending upload for
+non-reply IQs; its existing receive/capture paths and timeout continue.
+Supported result/error settlement, count_low behavior and existing
+refusal policy remain unchanged. Sender/from, full upload response grammar,
+current-build conditional fields and error waits are still separate
+audit obligations. No generic sender allowlist was guessed.
+
+A real encrypted-store regression submits same-ID IQs with missing, get,
+set, RESULT and unknown types, each carrying an error child, and checks
+no match/settlement, complete unchanged batch JSON, 50 uncertain/0 unsent/
+0 uploaded keys and no second upload reservation. Reopen retains those
+counts; the original matching result settles once and a duplicate refuses.
+Existing result/error fixture remains the control for actual refusal.
+No network write, key replacement, new registration or automatic retry.
+
+Bounded source review of identity_query and peer_keys also found existing
+ID/envelope/type and selected-user validation; this pass makes no new
+claim of their full native parity or changes their behavior. The broader
+devices/identity/prekeys audit remains unfinished.
