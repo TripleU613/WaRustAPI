@@ -1,0 +1,152 @@
+
+# class: LX/1xY;
+# extends: Ljava/lang/Object;
+
+.method public Bvj(VLL)  # .registers 12
+    # full signature: LX/1xY;->Bvj(LX/0Tp;Ljava/lang/String;)V
+    0000..0002  const/4  v0, #0x1
+    0002..0008  invoke-static  {v10, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000a  monitor-enter
+    000a..000e  const-wide/16  v0, #0x0
+    000e..0012  iput-wide  v0, v9, LX/1xY;->A00:J
+    0012..0014  monitor-exit
+    0014..0018  sget-object  v0, LX/1xc;->A00:Ljava/util/Set;
+    0018..001c  const-string  v0, "error"
+    001c..0022  invoke-virtual  {v10, v0}, LX/0Tp;->A0N(Ljava/lang/String;)Ljava/util/List;
+    0022..0024  move-result-object  v0
+    0024..002a  invoke-interface  {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    002a..002c  move-result-object  v4
+    002c..0032  invoke-interface  {v4}, Ljava/util/Iterator;->hasNext()Z
+    0032..0034  move-result  v0
+    0034..0038  if-eqz  v0, +0xe9
+    0038..003e  invoke-interface  {v4}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    003e..0040  move-result-object  v3
+    0040..0044  check-cast  v3, LX/0Tp;
+    0044..0048  if-eqz  v3, -0xc
+    0048..004c  const-string  v0, "code"
+    004c..004e  const/4  v2, #0x0
+    004e..0054  invoke-virtual  {v3, v0, v2}, LX/0Tp;->A05(Ljava/lang/String;I)I
+    0054..0056  move-result  v1
+    0056..005a  if-eqz  v1, -0x15
+    005a..005e  const-string  v0, "backoff"
+    005e..0064  invoke-virtual  {v3, v0, v2}, LX/0Tp;->A05(Ljava/lang/String;I)I
+    0064..0066  move-result  v0
+    0066..006c  invoke-static  {v1}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    006c..006e  move-result-object  v2
+    006e..0074  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0074..0076  move-result-object  v0
+    0076..007a  new-instance  v1, Landroid/util/Pair;
+    007a..0080  invoke-direct  {v1, v2, v0}, Landroid/util/Pair;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V
+    0080..0082  goto  +0x8
+    0082..0084  move-exception  v1
+    0084..0088  const-string  v0, "MediaConnFactory/getErrorCodeAndBackoffFromIqResponse CorruptStreamException "
+    0088..008e  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    008e..0090  goto  -0x31
+    0090..0094  iget-object  v4, v9, LX/1xY;->A03:LX/0VM;
+    0094..0098  iget-object  v0, v1, Landroid/util/Pair;->first:Ljava/lang/Object;
+    0098..009e  invoke-static  {v0}, LX/00l;->A04(Ljava/lang/Object;)V
+    009e..00a2  check-cast  v0, Ljava/lang/Number;
+    00a2..00a8  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    00a8..00aa  move-result  v3
+    00aa..00ae  iget-object  v0, v1, Landroid/util/Pair;->second:Ljava/lang/Object;
+    00ae..00b4  invoke-static  {v0}, LX/00l;->A04(Ljava/lang/Object;)V
+    00b4..00b8  check-cast  v0, Ljava/lang/Number;
+    00b8..00be  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    00be..00c0  move-result  v2
+    00c0..00c4  const-string  v1, "routeselector/onmediaroutingrequesterror/code "
+    00c4..00c8  new-instance  v0, Ljava/lang/StringBuilder;
+    00c8..00ce  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00ce..00d4  invoke-virtual  {v0, v3}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    00d4..00da  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00da..00dc  move-result-object  v0
+    00dc..00e2  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    00e2..00e6  const/16  v0, #0x1f7
+    00e6..00ea  if-ne  v0, v3, +0x12
+    00ea..00ee  iget-object  v2, v4, LX/0VM;->A0F:LX/0VZ;
+    00ee..00f0  monitor-enter
+    00f0..00f4  const-wide/16  v0, #0x0
+    00f4..00f8  iput-wide  v0, v2, LX/0VZ;->A00:J
+    00f8..00fc  const-string  v0, "ChatdMediaThrottleManager/resetThrottle"
+    00fc..0102  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0102..0104  goto  +0x3f
+    0104..0106  move-exception  v0
+    0106..0108  monitor-exit
+    0108..010a  throw  v0
+    010a..010e  const/16  v0, #0x1fb
+    010e..0112  if-ne  v0, v3, +0x7c
+    0112..0116  if-lez  v2, +0x7a
+    0116..011a  iget-object  v6, v4, LX/0VM;->A0F:LX/0VZ;
+    011a..011c  int-to-long  v0, v2
+    011c..0120  const-string  v7, "ChatdMediaThrottleManager/setThrottle until "
+    0120..0122  monitor-enter
+    0122..0126  iget-object  v2, v6, LX/0VZ;->A01:LX/08q;
+    0126..012c  invoke-static  {v2}, LX/08q;->A00(LX/08q;)J
+    012c..012e  move-result-wide  v2
+    012e..0130  long-to-double  v4, v2
+    0130..0132  long-to-double  v2, v0
+    0132..013c  const-wide  v0, #0x40c5180000000000 (4667162977118453760)
+    013c..0142  invoke-static  {v2, v3, v0, v1}, Ljava/lang/Math;->min(DD)D
+    0142..0144  move-result-wide  v2
+    0144..014e  const-wide  v0, #0x408f400000000000 (4652007308841189376)
+    014e..0150  mul-double/2addr  v2, v0
+    0150..0152  add-double/2addr  v4, v2
+    0152..0154  double-to-long  v1, v4
+    0154..0158  iput-wide  v1, v6, LX/0VZ;->A00:J
+    0158..015c  new-instance  v0, Ljava/lang/StringBuilder;
+    015c..0162  invoke-direct  {v0, v7}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0162..0168  invoke-virtual  {v0, v1, v2}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    0168..016e  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    016e..0170  move-result-object  v0
+    0170..0176  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0176..0178  monitor-exit
+    0178..017a  return-void
+    017a..017c  move-exception  v0
+    017c..017e  monitor-exit
+    017e..0180  throw  v0
+    0180..0182  monitor-exit
+    0182..0186  iget-object  v6, v4, LX/0VM;->A03:Landroid/os/Handler;
+    0186..018a  iget-object  v4, v4, LX/0VM;->A0D:LX/0Vc;
+    018a..018e  iget-object  v0, v4, LX/0Vc;->A00:LX/0Vf;
+    018e..0194  invoke-virtual  {v0}, LX/0Vf;->A01()J
+    0194..0196  move-result-wide  v7
+    0196..019a  const-wide/16  v2, #0x0
+    019a..019e  cmp-long  v0, v7, v2
+    019e..01a2  if-eqz  v0, +0x30
+    01a2..01a6  const-wide/16  v0, #0x3e8
+    01a6..01a8  mul-long/2addr  v7, v0
+    01a8..01ac  const-wide/16  v2, #0x3
+    01ac..01ae  mul-long/2addr  v2, v7
+    01ae..01b2  const-wide/16  v0, #0x4
+    01b2..01b4  div-long/2addr  v2, v0
+    01b4..01b8  iget-object  v0, v4, LX/0Vc;->A01:Ljava/util/Random;
+    01b8..01be  invoke-virtual  {v0}, Ljava/util/Random;->nextLong()J
+    01be..01c0  move-result-wide  v4
+    01c0..01c4  const-wide/16  v0, #0x2
+    01c4..01c6  div-long/2addr  v7, v0
+    01c6..01c8  rem-long/2addr  v4, v7
+    01c8..01ce  invoke-static  {v4, v5}, Ljava/lang/Math;->abs(J)J
+    01ce..01d0  move-result-wide  v0
+    01d0..01d2  add-long/2addr  v2, v0
+    01d2..01d6  const-string  v0, "fibonaccibackoffhandler/sleep/"
+    01d6..01da  new-instance  v1, Ljava/lang/StringBuilder;
+    01da..01e0  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    01e0..01e6  invoke-virtual  {v1, v2, v3}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    01e6..01ea  const-string  v0, " milliseconds"
+    01ea..01f0  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    01f0..01f6  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    01f6..01f8  move-result-object  v0
+    01f8..01fe  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    01fe..0200  const/4  v0, #0x0
+    0200..0206  invoke-virtual  {v6, v0, v2, v3}, Landroid/os/Handler;->sendEmptyMessageDelayed(IJ)Z
+    0206..0208  return-void
+    0208..020a  move-exception  v0
+    020a..020c  monitor-exit
+    020c..020e  throw  v0
+    # exception table: 6 try range(s)
+    # catch <all> code_units 0007..0009 -> 0104
+    # catch LX/LIL; code_units 0024..0041 -> 0041
+    # catch <all> code_units 007a..0082 -> 0082
+    # catch <all> code_units 0083..0084 -> 0082
+    # catch <all> code_units 0091..00bb -> 00bd
+    # catch <all> code_units 00be..00bf -> 00bd
+.end method

@@ -319,3 +319,21 @@ query or retry and never creates a missing store. It reports only counts and
 numeric deadlines. This closes the known legacy producer's refusal-observation
 gap; complete native retry/clock/startup ownership and reset-proof processing
 markers remain unfinished. No live account operation occurred.
+
+## Native retry/timer owner trace (2026-11-04)
+
+**Confirmed static/derived:** checked 0Vc/0Vf state shows seed1/cap987 and base
+0,1,1,2,...,987 seconds. The first advancement after fresh/reset state requests zero delay without drawing
+Random; positive bases use the retained signed-remainder jitter expression, with
+derived millisecond bounds [750*s,1250*s-1]. The base cap is not a final-delay cap.
+1VI selector2/what0 dispatches back to the gated A07 request path. With a current route, A06 replaces
+message0 with an auth-deadline-minus60s timer; successful route installation/merge
+resets the Fibonacci state before that timer setup.
+[Full checked files, hashes, model and limitations](rea/2.26.43.72-media-retry-scheduling/README.md).
+
+The xtask decoder now recognizes cb/add-double/2addr and be/div-long/2addr,
+closing the previously noted arithmetic-symbolization gap. REA's configured Java
+executable was unavailable for new method decompilation in this pass; the new
+evidence is explicitly checked DEX, not a fabricated REA record. Session/DI and
+disconnect cancellation, other timer producers and full automatic retry ownership
+remain untraced. Runtime scheduling behavior is unchanged; no queries were sent.

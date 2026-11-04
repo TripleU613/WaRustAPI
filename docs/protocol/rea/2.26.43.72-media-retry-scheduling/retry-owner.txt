@@ -1,0 +1,18 @@
+
+# class: LX/0Vc;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 6
+    # full signature: LX/0Vc;-><init>()V
+    0000..0006  invoke-direct  {v5}, Ljava/lang/Object;-><init>()V
+    0006..000a  new-instance  v0, Ljava/util/Random;
+    000a..0010  invoke-direct  {v0}, Ljava/util/Random;-><init>()V
+    0010..0014  iput-object  v0, v5, LX/0Vc;->A01:Ljava/util/Random;
+    0014..0018  const-wide/16  v3, #0x3db
+    0018..001c  const-wide/16  v1, #0x1
+    001c..0020  new-instance  v0, LX/0Vf;
+    0020..0026  invoke-direct  {v0, v1, v2, v3, v4}, LX/0Vf;-><init>(JJ)V
+    0026..002a  iput-object  v0, v5, LX/0Vc;->A00:LX/0Vf;
+    002a..002c  return-void
+    # exception table: 0 try range(s)
+.end method

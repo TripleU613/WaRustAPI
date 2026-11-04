@@ -1,3 +1,17 @@
+2026-11-04 — **Native media retry/timer trace and checked arithmetic:**
+
+Checked DEX closes the Fibonacci leaf and Handler dispatch: base0,1,1,2,... caps
+at987 seconds; positive-base jitter may exceed that base cap. The same message0
+request gate serves error retry and auth-expiry-minus60s scheduling. Successful
+route installation/merge resets the Fibonacci state. Full lifetime/cancellation
+and other trigger producers remain untraced; no automatic runtime loop is added.
+The disassembler now names both missing arithmetic opcodes, with two literal-byte
+width/register/boundary regressions. [Files, hashes and provider limits](docs/protocol/rea/2.26.43.72-media-retry-scheduling/README.md).
+Validation: **1,259 workspace/all-feature tests**, strict Clippy, CLI-reference,
+formatting, coverage freshness and repository hygiene passed.
+No live traffic. Remote CI passed the two preceding recovery chunks; latest run
+was still in progress at this pass's check.
+
 2026-11-04 — **Legacy media refusal recovery observations (offline):**
 
 Recovery now recognizes the old producer's correlated outer-error captures and

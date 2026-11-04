@@ -1,0 +1,63 @@
+
+# class: LX/1VI;
+# extends: Landroid/os/Handler;
+
+.method public handleMessage(VL)  # .registers 6
+    # full signature: LX/1VI;->handleMessage(Landroid/os/Message;)V
+    0000..0004  iget  v0, v4, LX/1VI;->$t:I
+    0004..000a  packed-switch  v0, payload@0xd8, cases=[0:@0x28, 1:@0xa4], default@0xa
+    000a..0010  invoke-super  {v4, v5}, Landroid/os/Handler;->handleMessage(Landroid/os/Message;)V
+    0010..0014  iget  v0, v5, Landroid/os/Message;->what:I
+    0014..0018  if-nez  v0, +0x9
+    0018..001c  iget-object  v0, v4, LX/1VI;->A00:Ljava/lang/Object;
+    001c..0020  check-cast  v0, LX/0VM;
+    0020..0026  invoke-static  {v0}, LX/0VM;->A07(LX/0VM;)V
+    0026..0028  return-void
+    0028..002c  iget  v1, v5, Landroid/os/Message;->what:I
+    002c..002e  const/4  v0, #0x1
+    002e..0032  if-ne  v1, v0, -0x4
+    0032..0036  const-string  v0, "AndroidContactsContentObserver/handleMessage/CONTACTS_CHANGED"
+    0036..003c  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    003c..0040  iget-object  v0, v4, LX/1VI;->A00:Ljava/lang/Object;
+    0040..0044  check-cast  v0, LX/0tx;
+    0044..0048  iget-object  v1, v0, LX/0tx;->A05:LX/09F;
+    0048..004e  invoke-interface  {v1}, LX/09F;->BUx()Z
+    004e..0050  move-result  v0
+    0050..0054  if-eqz  v0, -0x15
+    0054..005a  invoke-interface  {v1}, LX/09F;->BU7()Z
+    005a..005c  move-result  v0
+    005c..0060  if-nez  v0, -0x1b
+    0060..0064  const/16  v0, #0x149f
+    0064..006a  invoke-static  {v0}, LX/00T;->A03(I)Ljava/lang/Object;
+    006a..006c  move-result-object  v3
+    006c..0070  check-cast  v3, LX/0ob;
+    0070..0074  const-string  v0, "ContactSyncMethods/requestOnChangeDeltaSyncForDeviceContactChange"
+    0074..007a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    007a..007e  iget-object  v0, v3, LX/0ob;->A0D:LX/09F;
+    007e..0084  invoke-interface  {v0}, LX/09F;->BU7()Z
+    0084..0086  move-result  v0
+    0086..0088  const/4  v2, #0x1
+    0088..008c  xor-int/lit8  v1, v0, #0x1
+    008c..0090  const-string  v0, "ContactSyncMethods/requestOnChangeDeltaSyncForDeviceContactChange/companions should not perform delta sync"
+    0090..0096  invoke-static  {v1, v0}, LX/00L;->A0E(ZLjava/lang/String;)V
+    0096..0098  const/4  v1, #0x0
+    0098..009c  sget-object  v0, LX/0vJ;->A0V:LX/0vJ;
+    009c..00a2  invoke-static  {v3, v0, v1, v2}, LX/0ob;->A02(LX/0ob;LX/0vJ;ZZ)V
+    00a2..00a4  return-void
+    00a4..00a6  const/4  v3, #0x0
+    00a6..00ac  invoke-static  {v5, v3}, LX/00l;->A09(Ljava/lang/Object;I)V
+    00ac..00b0  iget  v0, v5, Landroid/os/Message;->what:I
+    00b0..00b4  if-nez  v0, +0xb
+    00b4..00b8  iget-object  v2, v4, LX/1VI;->A00:Ljava/lang/Object;
+    00b8..00bc  check-cast  v2, Lcom/whatsapp/conversation/ConversationListViewImpl;
+    00bc..00be  const/4  v1, #0x1
+    00be..00c0  const/4  v0, #0x0
+    00c0..00c6  invoke-virtual  {v2, v0, v1}, Lcom/whatsapp/conversation/ConversationListViewImpl;->A0Q(LX/2yG;Z)V
+    00c6..00ca  iget-object  v0, v4, LX/1VI;->A00:Ljava/lang/Object;
+    00ca..00ce  check-cast  v0, Lcom/whatsapp/conversation/ConversationListViewImpl;
+    00ce..00d4  invoke-virtual  {v0, v3}, Lcom/whatsapp/conversation/ConversationListViewImpl;->setAutoScrollToBottom(Z)V
+    00d4..00d6  return-void
+    00d6..00d8  nop
+    00d8..00e8  packed-switch-payload  size=2
+    # exception table: 0 try range(s)
+.end method

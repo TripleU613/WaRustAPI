@@ -1,0 +1,31 @@
+
+# class: LX/0VM;
+# extends: LX/07o;
+
+.method private A06(V)  # .registers 7
+    # full signature: LX/0VM;->A06()V
+    0000..0004  const-string  v0, "routeselector/setuprouterequesttimer"
+    0004..000a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    000a..0010  invoke-virtual  {v6}, LX/0VM;->A0P()LX/1t5;
+    0010..0012  move-result-object  v0
+    0012..0016  if-eqz  v0, +0x27
+    0016..001a  iget-object  v5, v6, LX/0VM;->A03:Landroid/os/Handler;
+    001a..001c  const/4  v4, #0x0
+    001c..0022  invoke-virtual  {v5, v4}, Landroid/os/Handler;->removeMessages(I)V
+    0022..0026  iget-wide  v2, v0, LX/1t5;->A02:J
+    0026..002c  invoke-static  {}, Landroid/os/SystemClock;->elapsedRealtime()J
+    002c..002e  move-result-wide  v0
+    002e..0030  sub-long/2addr  v2, v0
+    0030..0036  const-wide/32  v0, #0xea60
+    0036..0038  sub-long/2addr  v2, v0
+    0038..003c  const-string  v1, "routeselector/settimerorupdateroutes/creating timer task with delay "
+    003c..0040  new-instance  v0, Ljava/lang/StringBuilder;
+    0040..0046  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0046..004c  invoke-virtual  {v0, v2, v3}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    004c..0052  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0052..0054  move-result-object  v0
+    0054..005a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    005a..0060  invoke-virtual  {v5, v4, v2, v3}, Landroid/os/Handler;->sendEmptyMessageDelayed(IJ)Z
+    0060..0062  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,8 @@
+Observed tool/provider limitation in this session (2026-11-04):
+REA inspect_android_method for X.C0Vf A01/A02/<init> returned
+capability_unavailable / unsupported_provider. Its configured JAVA_HOME executable
+/usr/lib/jvm/java-21-openjdk/bin/java was reported ENOENT.
+No new REA Evidence record was returned; no provider/client configuration was
+changed. The retained .txt disassemblies are direct xtask checked-DEX output,
+not REA envelopes or target execution. Existing retained Bvj REA source remains
+a separately attributed cross-check from the same pinned APK.

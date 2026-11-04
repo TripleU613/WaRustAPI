@@ -446,6 +446,10 @@ fn opcode_name(op: u8) -> &'static str {
         // APK 37.71 8kY.A0B+0010: parsed group time multiplied by 1000.
         // AOSP Dalvik bytecode table: bd is the existing-width 12x operation.
         0xbd => "mul-long/2addr",
+        // APK 43.72 1xY.Bvj+01b2/+01c4: media retry jitter divides
+        // the scaled base by 4 and 2. AOSP opcode be is the 12x long form.
+        // https://source.android.com/docs/core/runtime/dalvik-bytecode
+        0xbe => "div-long/2addr",
         // CjU.A01: five unsigned bytes form a 40-bit value modulo 100000.
         // https://source.android.com/docs/core/runtime/dalvik-bytecode
         0xbf => "rem-long/2addr",
@@ -460,6 +464,10 @@ fn opcode_name(op: u8) -> &'static str {
         0xc5 => "ushr-long/2addr",
         // APK 37.71 FetchTruncatedGroupsJob.A0G 003c/0042: memory budget.
         // AOSP Dalvik bytecode table: cd/ce are 12x double binary operations.
+        // APK 43.72 1xY.Bvj+0150 adds the bounded media wait to its clock.
+        // AOSP Dalvik bytecode table: cb is the existing-width 12x operation.
+        // https://source.android.com/docs/core/runtime/dalvik-bytecode
+        0xcb => "add-double/2addr",
         0xcd => "mul-double/2addr",
         0xce => "div-double/2addr",
         0xd0 => "add-int/lit16",
@@ -3231,6 +3239,61 @@ mod tests {
         assert_eq!(decoded[1].width, 1);
         assert_eq!(decoded[2].mnemonic, "return-wide");
         assert_eq!(decoded[2].byte_off, 6);
+        for end in 0..bytes.len() {
+            let _ = decode_insns(&bytes[..end], &dex);
+        }
+    }
+
+    #[test]
+    fn decodes_media_retry_jitter_long_divisions_and_literal_boundaries() {
+        let data = minimal_dex_header();
+        let dex = DexFile::parse(&data).unwrap();
+        // Literal division instruction bytes from APK 43.72 Bvj 01b2/01c4,
+        // paired with their actual preceding constants and a return boundary.
+        let bytes = [
+            0x16, 0x00, 0x04, 0x00, 0xbe, 0x02, 0x16, 0x00, 0x02, 0x00, 0xbe, 0x07, 0x0e, 0x00,
+        ];
+        let decoded = decode_insns(&bytes, &dex);
+        assert_eq!(decoded.len(), 5);
+        assert_eq!(decoded[1].mnemonic, "div-long/2addr");
+        assert_eq!(decoded[1].annotation, "v2, v0");
+        assert_eq!(decoded[3].mnemonic, "div-long/2addr");
+        assert_eq!(decoded[3].annotation, "v7, v0");
+        assert_eq!(
+            decoded.iter().map(|item| item.byte_off).collect::<Vec<_>>(),
+            [0, 4, 6, 10, 12]
+        );
+        assert_eq!(
+            decoded.iter().map(|item| item.width).collect::<Vec<_>>(),
+            [2, 1, 2, 1, 1]
+        );
+        for end in 0..bytes.len() {
+            let _ = decode_insns(&bytes[..end], &dex);
+        }
+    }
+
+    #[test]
+    fn decodes_media_throttle_double_add_without_shifting_later_instructions() {
+        let data = minimal_dex_header();
+        let dex = DexFile::parse(&data).unwrap();
+        // APK 43.72 1xY.Bvj byte offsets 0150..0154, followed by a literal
+        // return-void boundary: add into v4/v5 then convert into v1/v2.
+        let bytes = [0xcb, 0x24, 0x8b, 0x41, 0x0e, 0x00];
+        let decoded = decode_insns(&bytes, &dex);
+        assert_eq!(decoded.len(), 3);
+        assert_eq!(decoded[0].mnemonic, "add-double/2addr");
+        assert_eq!(decoded[0].annotation, "v4, v2");
+        assert_eq!(decoded[1].mnemonic, "double-to-long");
+        assert_eq!(decoded[1].annotation, "v1, v4");
+        assert_eq!(decoded[2].mnemonic, "return-void");
+        assert_eq!(
+            decoded.iter().map(|item| item.byte_off).collect::<Vec<_>>(),
+            [0, 2, 4]
+        );
+        assert_eq!(
+            decoded.iter().map(|item| item.width).collect::<Vec<_>>(),
+            [1, 1, 1]
+        );
         for end in 0..bytes.len() {
             let _ = decode_insns(&bytes[..end], &dex);
         }

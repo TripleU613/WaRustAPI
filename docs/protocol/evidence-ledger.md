@@ -1,3 +1,11 @@
+2026-11-04 — **Confirmed checked DEX/derived:** media Fibonacci seed/cap,
+zero initial delay, positive jitter range, Handler selector2/what0 dispatch,
+success reset and auth-expiry-minus60s timer are retained with hashes. cb/be
+mnemonic omissions are fixed with literal-byte regression tests; existing
+retained arithmetic limitations are superseded without rewriting old output.
+JADX provider Java was unavailable; these files are not new REA envelopes.
+[Evidence and open lifetime/cancellation scope](rea/2.26.43.72-media-retry-scheduling/README.md).
+
 2026-11-04 — **Confirmed source/implemented local policy:** old media route
 producer stored matching IQ wire and receipt timestamp. Recovery now recognizes
 possible507 bounds under pinned rules without retroactively binding a request or
