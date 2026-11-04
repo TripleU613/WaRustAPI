@@ -20,6 +20,11 @@
 use crate::{Result, binary::Node, model::jid::Jid};
 pub mod binding;
 pub mod headers;
+pub mod held_fetch;
+// Retention primitive is exercised offline until the following cursor/state
+// applier integrates it into production transactions.
+#[allow(dead_code)]
+pub(crate) mod action_journal;
 pub mod response;
 
 /// The five app-state collections (`LX/0oP.A03`, **confirmed** names).
@@ -257,6 +262,8 @@ pub fn patch_request(
 
 /// Durable action kind for an app-state fetch.
 pub const FETCH_ACTION_KIND: &str = "app-state-fetch";
+/// Prospective held-version fetch with a sealed preparation/admission record.
+pub const HELD_FETCH_ACTION_KIND: &str = "app-state-held-fetch";
 
 /// Queue a full app-state fetch through the durable one-shot action queue.
 /// Returns the action id; nothing is sent until a session drains the queue.
@@ -516,7 +523,10 @@ pub fn inspect_response(
     store.read(|tx| {
         let (outcome, reply) = super::actions::view_in(tx, id)?
             .ok_or_else(|| invalid_patch("missing saved app-state action"))?;
-        if !matches!(outcome.kind.as_str(), FETCH_ACTION_KIND | PATCH_ACTION_KIND) {
+        if !matches!(
+            outcome.kind.as_str(),
+            FETCH_ACTION_KIND | HELD_FETCH_ACTION_KIND | PATCH_ACTION_KIND
+        ) {
             return Err(invalid_patch("selected action is not app-state sync"));
         }
         let request = super::actions::request_in(tx, id)?
@@ -1068,8 +1078,10 @@ pub fn ingest(store: &crate::store::ProtocolStore) -> Result<usize> {
 }
 
 fn ingest_fetch_backoff(store: &crate::store::ProtocolStore) -> Result<()> {
-    for (outcome, _) in super::actions::settled(store, FETCH_ACTION_KIND)? {
-        ingest_action(store, &outcome.id)?;
+    for kind in [FETCH_ACTION_KIND, HELD_FETCH_ACTION_KIND] {
+        for (outcome, _) in super::actions::settled(store, kind)? {
+            ingest_action(store, &outcome.id)?;
+        }
     }
     Ok(())
 }
@@ -1077,15 +1089,17 @@ fn ingest_fetch_backoff(store: &crate::store::ProtocolStore) -> Result<()> {
 /// Recover explicit fetch waits after settlement/application cuts. Unsupported
 /// server replies remain inspectable; only durable store faults stop receiving.
 pub(crate) fn recover_fetch_backoff(store: &crate::store::ProtocolStore) -> Result<()> {
-    for (outcome, _) in super::actions::settled(store, FETCH_ACTION_KIND)? {
-        match ingest_action(store, &outcome.id) {
-            Ok(_) => {}
-            Err(crate::Error::InvalidInput { .. }) => {
-                tracing::warn!(
-                    "app-state fetch refusal retained without adopting unsupported wait"
-                );
+    for kind in [FETCH_ACTION_KIND, HELD_FETCH_ACTION_KIND] {
+        for (outcome, _) in super::actions::settled(store, kind)? {
+            match ingest_action(store, &outcome.id) {
+                Ok(_) => {}
+                Err(crate::Error::InvalidInput { .. }) => {
+                    tracing::warn!(
+                        "app-state fetch refusal retained without adopting unsupported wait"
+                    );
+                }
+                Err(error) => return Err(error),
             }
-            Err(error) => return Err(error),
         }
     }
     Ok(())
@@ -1140,7 +1154,7 @@ pub(crate) fn ingest_action(store: &crate::store::ProtocolStore, id: &str) -> Re
     store.write(|tx| {
             let view = super::actions::view_in_write(tx, id)?;
             if let Some((actual, reply, request)) = &view
-                && actual.kind == FETCH_ACTION_KIND
+                && matches!(actual.kind.as_str(), FETCH_ACTION_KIND | HELD_FETCH_ACTION_KIND)
                 && actual.status == super::actions::ActionStatus::Error
             {
                 let reply = reply.as_ref().ok_or_else(|| invalid_patch("settled fetch has no preserved reply"))?;
@@ -2624,6 +2638,54 @@ mod server_backoff_tests {
         store
             .read(|tx| tx.scan(Table::Checkpoints, 1, 1000))
             .unwrap()
+    }
+
+    #[test]
+    fn prospective_held_fetch_keeps_shared_refusal_backoff_and_safe_inspection() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("held-fetch-wait.redb"));
+        let mut baseline = crate::signal::app_state_collection::CollectionState::empty("regular")
+            .unwrap()
+            .to_saved();
+        baseline.version = 7;
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    held_key(Collection::Regular).as_bytes(),
+                    1,
+                    &baseline,
+                )
+            })
+            .unwrap();
+        let id = held_fetch::queue(&store, &[Collection::Regular]).unwrap();
+        let original = super::super::actions::request(&store, &id).unwrap();
+        super::super::actions::reserve_next(&store)
+            .unwrap()
+            .unwrap();
+        super::super::actions::record_reply(&store, &error(&id, "3600")).unwrap();
+        assert_eq!(ingest_action(&store, &id).unwrap(), 0);
+        let info = held_fetch::inspect(&store, &id).unwrap().unwrap();
+        assert_eq!(info.phase, "admitted");
+        assert_eq!(info.status, super::super::actions::ActionStatus::Error);
+        assert_eq!(info.error_code, Some(503));
+        assert!(held_fetch::queue(&store, &[Collection::Regular]).is_err());
+        assert!(queue_fetch(&store).is_err());
+        assert_eq!(
+            super::super::actions::request(&store, &id).unwrap(),
+            original
+        );
+        let current: crate::signal::app_state_collection::SavedCollectionState = store
+            .read(|tx| {
+                tx.get_json(
+                    Table::Checkpoints,
+                    held_key(Collection::Regular).as_bytes(),
+                    1,
+                )
+            })
+            .unwrap()
+            .unwrap();
+        assert_eq!(current, baseline);
     }
 
     #[test]

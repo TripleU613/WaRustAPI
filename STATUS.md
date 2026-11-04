@@ -1,3 +1,20 @@
+2026-11-04 — **Durable prospective held-fetch admission (offline):**
+
+Explicit `contacts fetch-app-state --held` captures existing validated collection
+checkpoints, exact queued request bytes and account generation atomically.
+Reservation rechecks the complete baseline, pending-write ownership and known
+server backoff before marking the action sent. Baseline drift causes a durable
+local refusal; corrupt admission data remains an error. Legacy fetches receive
+no retrospective baseline. `actions --show` exposes safe admission/status fields
+from one store read. [Design and limits](docs/protocol/app-state-held-fetch-admission-design.md).
+
+An encrypted, transaction-scoped authenticated-mutation journal primitive now
+has offline tests for retention, conflicts, rollback and generation fencing.
+It has no production caller yet: response verification, per-patch cursor/state
+application, external downloads and native flight ownership remain unfinished.
+Validation: **1,223 workspace/all-feature tests**, strict all-target/all-feature
+Clippy and CLI-reference checking passed. No live account traffic occurred.
+
 2026-11-04 — **Bound fetch candidates and whole-collection headers:**
 
 Pure fetch binding now checks exact encoded request identity, local generation

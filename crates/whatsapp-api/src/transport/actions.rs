@@ -253,6 +253,15 @@ fn reserve_limit(store: &ProtocolStore, limit: usize) -> Result<Vec<Node>> {
                     continue;
                 }
                 let node = decode(&row.wire)?;
+                if row.kind == super::app_state_sync::HELD_FETCH_ACTION_KIND {
+                    let id = node
+                        .get_attr("id")
+                        .and_then(|v| v.as_text())
+                        .ok_or_else(|| Error::invalid("action", "held fetch action has no id"))?;
+                    if !super::app_state_sync::held_fetch::reserve_in(tx, id, &row.wire)? {
+                        continue;
+                    }
+                }
                 if row.kind == super::app_state_sync::FETCH_ACTION_KIND
                     && super::app_state_sync::server_waiting_in(tx)?
                 {
@@ -290,6 +299,14 @@ pub(crate) fn reserve_one_in(tx: &mut crate::store::WriteTx<'_>, id: &str) -> Re
         ));
     }
     let node = decode(&row.wire)?;
+    if row.kind == super::app_state_sync::HELD_FETCH_ACTION_KIND
+        && !super::app_state_sync::held_fetch::reserve_in(tx, id, &row.wire)?
+    {
+        return Err(Error::invalid(
+            "app_state_sync",
+            "selected held fetch is deferred or locally refused; no request reserved",
+        ));
+    }
     if row.kind == super::app_state_sync::FETCH_ACTION_KIND
         && super::app_state_sync::server_waiting_in(tx)?
     {
@@ -502,6 +519,21 @@ pub fn request(store: &ProtocolStore, id: &str) -> Result<Option<Node>> {
 pub(crate) fn request_in(tx: &crate::store::ReadTx<'_>, id: &str) -> Result<Option<Node>> {
     let row: Option<Row> = tx.get_json(Table::Checkpoints, key(id).as_bytes(), 1)?;
     row.map(|r| decode(&r.wire)).transpose()
+}
+
+/// Exact stored encoded request for fingerprinting; never a fresh Node encoding.
+pub(crate) fn request_wire_in(tx: &crate::store::ReadTx<'_>, id: &str) -> Result<Option<Vec<u8>>> {
+    let row: Option<Row> = tx.get_json(Table::Checkpoints, key(id).as_bytes(), 1)?;
+    Ok(row.map(|row| row.wire))
+}
+
+/// Same exact request-byte read inside preparation/reservation transactions.
+pub(crate) fn request_wire_in_write(
+    tx: &crate::store::WriteTx<'_>,
+    id: &str,
+) -> Result<Option<Vec<u8>>> {
+    let row: Option<Row> = tx.get_json(Table::Checkpoints, key(id).as_bytes(), 1)?;
+    Ok(row.map(|row| row.wire))
 }
 
 /// Original request in an atomic feature-state update.

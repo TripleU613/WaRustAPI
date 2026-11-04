@@ -969,10 +969,16 @@ enum ContactsCmd {
     /// Unlike `check`, which is a one-number existence query, this uses the
     /// APK's `full`/`interactive` mode pair.
     Sync,
-    /// Queue a read-only app-state fetch for every collection at version 0
-    /// (offline; a session transmits it). Carries no patch and mutates nothing;
-    /// the reply gives the server's authoritative collection versions.
-    FetchAppState,
+    /// Queue a patch-free app-state fetch (offline; a session transmits it).
+    /// Defaults to all version-zero snapshots; successful data application remains incomplete.
+    FetchAppState {
+        /// Freeze existing validated held versions with reservation-time baseline checks.
+        #[arg(long)]
+        held: bool,
+        /// Held-mode collection (repeatable); defaults to all, each requiring an existing checkpoint.
+        #[arg(long = "collection", requires = "held", value_parser = ["regular", "regular_low", "regular_high", "critical_block", "critical_unblock_low"])]
+        collections: Vec<String>,
+    },
     /// Queue an app-state `contactAction` patch publishing every saved contact,
     /// so companion devices receive this address book (offline; a session
     /// transmits it). Mints this device's app-state key if it has none.

@@ -9906,6 +9906,38 @@
         }
       }
     },
+    "/v1/app-state/held-fetch/{action_id}": {
+      "get": {
+        "summary": "Inspect sealed held-fetch admission and action status offline",
+        "operationId": "inspectHeldFetchAdmission",
+        "description": "CLI actions --show for the new app-state-held-fetch kind reports admission and numeric action metadata in one consistent read. Phase queued means prepared but never reserved; admitted means reservation provenance exists, not successful result application; locally_refused with baseline_changed leaves the action Queued and unsent. request_digest_matches compares exact stored encoded bytes, not a regenerated Node. Inspection does not recompute current baseline, pending-write or backoff eligibility. Known names/versions only: no raw request/reply, digests, hash/maps, arbitrary server error text or key material. Missing new-kind record, corrupt schema, generation/auth faults are errors, never legacy migration. Legacy version-zero fetch returns no admission record and keeps existing inspection behavior. No state write or HTTP route. See docs/protocol/app-state-held-fetch-admission-design.md.",
+        "x-cli": "whatsapp-cli actions",
+        "x-cli-variant": "--show ACTION_ID",
+        "x-library": ["whatsapp_api::transport::app_state_sync::held_fetch::inspect"],
+        "x-transport": ["cli"],
+        "x-live": false,
+        "parameters": [{"name": "action_id", "in": "path", "required": true, "schema": {"type": "string"}}],
+        "responses": {"200": {"description": "Redacted local provenance, not current eligibility or authenticated fetch completion", "content": {"application/json": {"schema": {
+          "type": "object",
+          "required": ["schema_version", "generation", "phase", "status", "error_code", "settlement_sequence", "local_reason", "request_digest_matches", "collections"],
+          "properties": {
+            "schema_version": {"type": "integer", "enum": [1]},
+            "generation": {"type": "integer", "minimum": 0},
+            "phase": {"type": "string", "enum": ["queued", "admitted", "locally_refused"]},
+            "status": {"$ref": "#/components/schemas/ActionStatus"},
+            "error_code": {"type": ["integer", "null"]},
+            "settlement_sequence": {"type": ["integer", "null"], "minimum": 1},
+            "local_reason": {"type": ["string", "null"], "enum": ["baseline_changed", null]},
+            "request_digest_matches": {"type": "boolean"},
+            "collections": {"type": "array", "items": {"type": "object", "required": ["collection", "version"], "properties": {
+              "collection": {"type": "string", "enum": ["regular", "regular_low", "regular_high", "critical_block", "critical_unblock_low"]},
+              "version": {"type": "integer", "minimum": 0, "maximum": 9223372036854775807}
+            }}}
+          }
+        }}}}},
+        "x-local-limitations": "No successful fetch application, cursor, snapshot bootstrap, external retrieval or native owner-flight lifecycle is claimed."
+      }
+    },
     "/v1/app-state/inspect": {
       "get": {
         "summary": "Inspect saved app-state integrity and logical-index provenance offline",
@@ -12221,8 +12253,8 @@
     },
     "/v1/app-state/fetch": {
       "post": {
-        "summary": "Queue a read-only app-state fetch for every collection (offline; a session transmits it)",
-        "description": "Queue a patch-free version-zero snapshot request for every collection: sync data_namespace=3 with collection name/order/version=0/return_snapshot=true. Current construction is reanchored to APK 2.26.43.72 EfK/EdY; fetch_request_at_versions also offers explicit held versions and snapshot policy at library level. Duplicate collection inputs refuse. Historical live 2026-09-22 returned an empty sync; that observation does not establish the account's complete server-side app-state contents. Successful fetch data application, external snapshots, pagination, automatic server_sync scheduling and lifecycle gates remain incomplete. Explicit outer-error fetch backoff now uses the same preserved receipt-time deadline as patch refusals, with startup recovery after a settlement/application cut. New full fetches refuse during a known wait; never-sent queued fetches/patches defer while unrelated controls proceed. Explicit new fetch preparation reports unsupported saved refusals strictly; runtime recovery retains malformed hints without ending receive or inventing a duration. Inner errors do not acquire outer-error backoff policy. No held-state promotion, retry or sent-action replay is introduced. See docs/protocol/app-state-versioned-fetch.md and docs/protocol/app-state-patch-atomicity.md.",
+        "summary": "Queue a patch-free app-state fetch offline",
+        "description": "Default queues all five version-zero snapshot requests unchanged. Optional CLI --held freezes existing validated collection checkpoints into a distinct app-state-held-fetch action and sealed preparation in one transaction; repeatable --collection selects a subset, otherwise every collection must exist. No missing checkpoint is inferred empty. Held mode requests actual held versions with no snapshot flag, installs no keys and enforces known explicit backoff/pending-write guards. Reservation rechecks generation, exact stored wire SHA-256, full canonical baseline and ownership before atomically marking admission plus Sent. A changed baseline becomes a permanent local refusal with action still Queued; no request rebuild, nonce/key rotation or fake server error. Pending writes/backoff defer without changing the phase; unrelated actions can proceed. actions --show ID prints atomic redacted admission/status metadata; inspection does not recompute current eligibility. Legacy fetches receive no retrospective admission. Successful fetch application, authenticated mutation cursor/held-state commits, external downloads, native scheduler ownership and continuation remain incomplete. Historical empty sync does not prove an account has no app state. Both fetch kinds use preserved receipt-time outer-error backoff; no sent action is retried. No HTTP route. See docs/protocol/app-state-held-fetch-admission-design.md.",
         "operationId": "fetchAppState",
         "x-cli": "whatsapp-cli contacts fetch-app-state",
         "x-transport": [
@@ -12246,12 +12278,18 @@
             "$ref": "#/components/parameters/ProfilesDir"
           },
           {
-            "name": "phone",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/PhoneNumber"
-            }
+            "name": "held",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "boolean", "default": false},
+            "description": "CLI --held: prospective held-version intent with sealed preparation and reservation-time admission; no snapshot bootstrap or result application."
+          },
+          {
+            "name": "collection",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "array", "items": {"type": "string", "enum": ["regular", "regular_low", "regular_high", "critical_block", "critical_unblock_low"]}},
+            "description": "Repeatable CLI --collection; requires --held. Defaults to all five; each selected collection needs an existing complete validated held checkpoint."
           }
         ],
         "responses": {
@@ -12273,7 +12311,8 @@
           }
         },
         "x-library": [
-          "whatsapp_api::transport::app_state_sync::queue_fetch"
+          "whatsapp_api::transport::app_state_sync::queue_fetch",
+          "whatsapp_api::transport::app_state_sync::held_fetch::queue"
         ]
       }
     },

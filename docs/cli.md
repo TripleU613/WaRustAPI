@@ -982,11 +982,16 @@ Usage: whatsapp-cli contacts sync [OPTIONS]...
 
 ## whatsapp-cli contacts fetch-app-state
 
-Queue a read-only app-state fetch for every collection at version 0 (offline; a session transmits it). Carries no patch and mutates nothing; the reply gives the server's authoritative collection versions
+Queue a patch-free app-state fetch (offline; a session transmits it). Defaults to all version-zero snapshots; successful data application remains incomplete
 
 ```
 Usage: whatsapp-cli contacts fetch-app-state [OPTIONS]...
 ```
+
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+| --held | HELD | no |  |  | `true`, `false` | Freeze existing validated held versions with reservation-time baseline checks |
+| --collection | COLLECTIONS | no |  |  | `regular`, `regular_low`, `regular_high`, `critical_block`, `critical_unblock_low` | Held-mode collection (repeatable); defaults to all, each requiring an existing checkpoint |
 
 ## whatsapp-cli contacts publish-app-state
 

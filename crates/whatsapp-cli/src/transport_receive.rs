@@ -701,8 +701,25 @@ pub(super) fn contacts(cli: &super::Cli, action: &super::ContactsCmd) -> Result<
             );
             Ok(())
         }
-        super::ContactsCmd::FetchAppState => {
-            let id = whatsapp_api::transport::app_state_sync::queue_fetch(&store)?;
+        super::ContactsCmd::FetchAppState { held, collections } => {
+            use whatsapp_api::transport::app_state_sync::{self, Collection};
+            let id = if *held {
+                let selected = if collections.is_empty() {
+                    app_state_sync::ALL_COLLECTIONS.to_vec()
+                } else {
+                    collections
+                        .iter()
+                        .map(|name| {
+                            Collection::from_name(name).ok_or_else(|| {
+                                Error::invalid("app_state_sync", "unknown held-fetch collection")
+                            })
+                        })
+                        .collect::<Result<Vec<_>, _>>()?
+                };
+                app_state_sync::held_fetch::queue(&store, &selected)?
+            } else {
+                app_state_sync::queue_fetch(&store)?
+            };
             if cli.json {
                 println!(
                     "{}",
@@ -712,7 +729,12 @@ pub(super) fn contacts(cli: &super::Cli, action: &super::ContactsCmd) -> Result<
                 return Ok(());
             }
             println!(
-                "app-state: read-only fetch of all collections queued; a session transmits it (action id {id})"
+                "app-state: {} fetch queued; a session transmits it (action id {id}); successful data application remains incomplete",
+                if *held {
+                    "frozen held-version"
+                } else {
+                    "version-zero snapshot"
+                }
             );
             Ok(())
         }
@@ -1080,6 +1102,19 @@ pub(super) async fn actions_status(
         create: false,
     })?;
     if let Some(id) = show {
+        if !preview_session
+            && let Some(admission) =
+                whatsapp_api::transport::app_state_sync::held_fetch::inspect(&store, id)?
+        {
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&admission).map_err(|_| Error::invalid(
+                    "app_state_sync",
+                    "cannot encode fetch admission inspection"
+                ))?
+            );
+            return Ok(());
+        }
         if preview_session {
             let summary =
                 whatsapp_api::transport::identity_notifications::preview_session(&store, id)

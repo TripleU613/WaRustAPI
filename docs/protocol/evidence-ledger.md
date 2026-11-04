@@ -1,3 +1,12 @@
+2026-11-04 — **Confirmed Rust/offline:** prospective held-fetch admission now
+seals the exact queued request and complete existing baselines in the queue
+transaction, then rechecks them at reservation. Shared refusal backoff covers
+both fetch kinds. Safe inspection reads admission and settlement status together.
+The encrypted action-journal primitive is staged without a production caller;
+it does not establish authenticated response application. No fresh APK evidence
+or live account operation is claimed. **1,223 workspace/all-feature tests** and
+strict Clippy passed. [Implementation and remaining boundaries](app-state-held-fetch-admission-design.md).
+
 2026-10-13 — **Fixed/offline (PR #4 review, merged as `575d249`):** three
 Codex findings on the merged work are fixed, each with a test. A store path
 that is a dangling symlink, or appears between the existence check and the
