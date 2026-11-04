@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_d164aa47078ec5785786a5ace95c73a7cceff009e5b5db28fa4c3a6036ffda5b",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C0D0",
+    "method_name": "A01",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-JWePeP/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C0D0"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)LX/0Dx;\",\"signature\":\"A00(java.lang.String): X.0Dx\"},{\"def_pos\":0,\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/io/File;Ljava/lang/String;)LX/0E2;\",\"signature\":\"A01(java.io.File, java.lang.String): X.0E2\"}],\"method_count\":2,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"C0D0\",\"full_name\":\"X.C0D0\",\"field_count\":0,\"fields\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C0D0",
+          "method_name": "A01",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.0D0.A01\",\"class_name\":\"X.C0D0\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public static final C0E2 A01(File file, String str) {\\n        C0E2 c0e2;\\n        File file2 \\u003d new File(file, str);\\n        if (!file2.exists()) {\\n            StringBuilder sb \\u003d new StringBuilder(\\\"mepersistencestore/read/file_not_found \\\");\\n            sb.append(str);\\n            Log.i(sb.toString());\\n            return null;\\n        }\\n        try {\\n            final FileInputStream fileInputStream \\u003d new FileInputStream(file2);\\n            try {\\n                ObjectInputStream objectInputStream \\u003d new ObjectInputStream(fileInputStream) { // from class: X.0D4\\n                    @Override // java.io.ObjectInputStream\\n                    public ObjectStreamClass readClassDescriptor() throws ClassNotFoundException, IOException {\\n                        ObjectStreamClass classDescriptor \\u003d super.readClassDescriptor();\\n                        if (C00l.areEqual(classDescriptor.getName(), \\\"com.whatsapp.App$Me\\\")) {\\n                            classDescriptor \\u003d ObjectStreamClass.lookup(MeOldFormat.class);\\n                        }\\n                        C00l.A08(classDescriptor);\\n                        return classDescriptor;\\n                    }\\n                };\\n                try {\\n                    Object object \\u003d objectInputStream.readObject();\\n                    boolean z \\u003d object instanceof MeOldFormat;\\n                    if (z) {\\n                        StringBuilder sb2 \\u003d new StringBuilder(\\\"mepersistencestore/read/reading_legacy_format \\\");\\n                        sb2.append(str);\\n                        Log.w(sb2.toString());\\n                    }\\n                    if (object instanceof Me) {\\n                        Me me \\u003d (Me) object;\\n                        String str2 \\u003d me.cc;\\n                        C00l.A04(str2);\\n                        String str3 \\u003d me.number;\\n                        C00l.A04(str3);\\n                        String str4 \\u003d me.jabber_id;\\n                        c0e2 \\u003d new C0E2(A00(me.lid), str4 !\\u003d null ? PhoneUserJid.Companion.A03(str4) : null, str2, str3);\\n                    } else {\\n                        if (!z) {\\n                            StringBuilder sb3 \\u003d new StringBuilder(\\\"mepersistencestore/read/unexpected_type \\\");\\n                            sb3.append(str);\\n                            Log.w(sb3.toString());\\n                            objectInputStream.close();\\n                            fileInputStream.close();\\n                            return null;\\n                        }\\n                        MeOldFormat meOldFormat \\u003d (MeOldFormat) object;\\n                        String str5 \\u003d meOldFormat.cc;\\n                        C00l.A04(str5);\\n                        String str6 \\u003d meOldFormat.number;\\n                        C00l.A04(str6);\\n                        String str7 \\u003d meOldFormat.jabber_id;\\n                        c0e2 \\u003d new C0E2(null, str7 !\\u003d null ? PhoneUserJid.Companion.A03(str7) : null, str5, str6);\\n                    }\\n                    objectInputStream.close();\\n                    fileInputStream.close();\\n                    return c0e2;\\n                } catch (Throwable th) {\\n                    try {\\n                        throw th;\\n                    } catch (Throwable th2) {\\n                        C08N.A00(objectInputStream, th);\\n                        throw th2;\\n                    }\\n                }\\n            } catch (Throwable th3) {\\n                try {\\n                    throw th3;\\n                } catch (Throwable th4) {\\n                    C08N.A00(fileInputStream, th3);\\n                    throw th4;\\n                }\\n            }\\n        } catch (IOException e) {\\n            StringBuilder sb4 \\u003d new StringBuilder(\\\"mepersistencestore/read/io_error \\\");\\n            sb4.append(str);\\n            Log.e(sb4.toString(), e);\\n            return null;\\n        } catch (ClassNotFoundException e2) {\\n            StringBuilder sb5 \\u003d new StringBuilder(\\\"mepersistencestore/read/serialization_error \\\");\\n            sb5.append(str);\\n            Log.w(sb5.toString(), e2);\\n            return null;\\n        }\\n    }\",\"overload_count\":1,\"method_name\":\"A01\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C0D0",
+    "method": {
+      "name": "A01",
+      "reported_signature": "A01(java.io.File, java.lang.String): X.0E2",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(Ljava/io/File;Ljava/lang/String;)LX/0E2;"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public static final C0E2 A01(File file, String str) {\n        C0E2 c0e2;\n        File file2 = new File(file, str);\n        if (!file2.exists()) {\n            StringBuilder sb = new StringBuilder(\"mepersistencestore/read/file_not_found \");\n            sb.append(str);\n            Log.i(sb.toString());\n            return null;\n        }\n        try {\n            final FileInputStream fileInputStream = new FileInputStream(file2);\n            try {\n                ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream) { // from class: X.0D4\n                    @Override // java.io.ObjectInputStream\n                    public ObjectStreamClass readClassDescriptor() throws ClassNotFoundException, IOException {\n                        ObjectStreamClass classDescriptor = super.readClassDescriptor();\n                        if (C00l.areEqual(classDescriptor.getName(), \"com.whatsapp.App$Me\")) {\n                            classDescriptor = ObjectStreamClass.lookup(MeOldFormat.class);\n                        }\n                        C00l.A08(classDescriptor);\n                        return classDescriptor;\n                    }\n                };\n                try {\n                    Object object = objectInputStream.readObject();\n                    boolean z = object instanceof MeOldFormat;\n                    if (z) {\n                        StringBuilder sb2 = new StringBuilder(\"mepersistencestore/read/reading_legacy_format \");\n                        sb2.append(str);\n                        Log.w(sb2.toString());\n                    }\n                    if (object instanceof Me) {\n                        Me me = (Me) object;\n                        String str2 = me.cc;\n                        C00l.A04(str2);\n                        String str3 = me.number;\n                        C00l.A04(str3);\n                        String str4 = me.jabber_id;\n                        c0e2 = new C0E2(A00(me.lid), str4 != null ? PhoneUserJid.Companion.A03(str4) : null, str2, str3);\n                    } else {\n                        if (!z) {\n                            StringBuilder sb3 = new StringBuilder(\"mepersistencestore/read/unexpected_type \");\n                            sb3.append(str);\n                            Log.w(sb3.toString());\n                            objectInputStream.close();\n                            fileInputStream.close();\n                            return null;\n                        }\n                        MeOldFormat meOldFormat = (MeOldFormat) object;\n                        String str5 = meOldFormat.cc;\n                        C00l.A04(str5);\n                        String str6 = meOldFormat.number;\n                        C00l.A04(str6);\n                        String str7 = meOldFormat.jabber_id;\n                        c0e2 = new C0E2(null, str7 != null ? PhoneUserJid.Companion.A03(str7) : null, str5, str6);\n                    }\n                    objectInputStream.close();\n                    fileInputStream.close();\n                    return c0e2;\n                } catch (Throwable th) {\n                    try {\n                        throw th;\n                    } catch (Throwable th2) {\n                        C08N.A00(objectInputStream, th);\n                        throw th2;\n                    }\n                }\n            } catch (Throwable th3) {\n                try {\n                    throw th3;\n                } catch (Throwable th4) {\n                    C08N.A00(fileInputStream, th3);\n                    throw th4;\n                }\n            }\n        } catch (IOException e) {\n            StringBuilder sb4 = new StringBuilder(\"mepersistencestore/read/io_error \");\n            sb4.append(str);\n            Log.e(sb4.toString(), e);\n            return null;\n        } catch (ClassNotFoundException e2) {\n            StringBuilder sb5 = new StringBuilder(\"mepersistencestore/read/serialization_error \");\n            sb5.append(str);\n            Log.w(sb5.toString(), e2);\n            return null;\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

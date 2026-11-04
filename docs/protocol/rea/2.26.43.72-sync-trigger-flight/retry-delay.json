@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_ff4a8c90e27ea8b7f8b840b572aae5c11d258a7b5a9ce9ec9306b4d7afa7c1cb",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C1C8",
+    "method_name": "A01",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-KoUKZa/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C1C8"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cinit\\u003e(java.util.Random, long, long, long): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"(Ljava/util/Random;JJJ)V\"},{\"signature\":\"A00(): int\",\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"()I\"},{\"signature\":\"A01(): java.lang.Long\",\"def_pos\":0,\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"()Ljava/lang/Long;\"},{\"signature\":\"A02(): void\",\"def_pos\":0,\"name\":\"A02\",\"is_constructor\":false,\"dex_descriptor\":\"()V\"}],\"method_count\":4,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"C1C8\",\"full_name\":\"X.C1C8\",\"field_count\":6,\"fields\":[{\"type\":\"int\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"boolean\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"long\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"long\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"long\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"java.util.Random\",\"def_pos\":0,\"name\":\"A05\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C1C8",
+          "method_name": "A01",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.1C8.A01\",\"class_name\":\"X.C1C8\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public final synchronized Long A01() {\\n        Long lValueOf;\\n        int i \\u003d this.A00;\\n        if (i \\u003e\\u003d this.A03) {\\n            return null;\\n        }\\n        int i2 \\u003d i + 1;\\n        this.A00 \\u003d i2;\\n        if (this.A01) {\\n            lValueOf \\u003d Long.valueOf(this.A04);\\n        } else {\\n            long j \\u003d this.A02;\\n            if (i2 \\u003e 50) {\\n                i2 \\u003d 50;\\n            }\\n            long j2 \\u003d j * (1 \\u003c\\u003c i2);\\n            long jAbs \\u003d (j2 / 2) + Math.abs(this.A05.nextLong() % j2);\\n            long j3 \\u003d this.A04;\\n            if (jAbs \\u003e\\u003d j3) {\\n                this.A01 \\u003d true;\\n                jAbs \\u003d j3;\\n            }\\n            lValueOf \\u003d Long.valueOf(jAbs);\\n        }\\n        return lValueOf;\\n    }\",\"overload_count\":1,\"method_name\":\"A01\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C1C8",
+    "method": {
+      "name": "A01",
+      "reported_signature": "A01(): java.lang.Long",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "()Ljava/lang/Long;"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public final synchronized Long A01() {\n        Long lValueOf;\n        int i = this.A00;\n        if (i >= this.A03) {\n            return null;\n        }\n        int i2 = i + 1;\n        this.A00 = i2;\n        if (this.A01) {\n            lValueOf = Long.valueOf(this.A04);\n        } else {\n            long j = this.A02;\n            if (i2 > 50) {\n                i2 = 50;\n            }\n            long j2 = j * (1 << i2);\n            long jAbs = (j2 / 2) + Math.abs(this.A05.nextLong() % j2);\n            long j3 = this.A04;\n            if (jAbs >= j3) {\n                this.A01 = true;\n                jAbs = j3;\n            }\n            lValueOf = Long.valueOf(jAbs);\n        }\n        return lValueOf;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

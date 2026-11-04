@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_b09ce97ec985a96870fd12967aa10a68828582e882cbdc75bfb9fe6e0b6a0bc2",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.FcO",
+    "method_name": "run",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-JWePeP/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.FcO"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;IZ)V\",\"signature\":\"\\u003cinit\\u003e(java.lang.Object, java.lang.Object, java.lang.Object, int, boolean): void\"},{\"def_pos\":0,\"name\":\"run\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"run(): void\"}],\"method_count\":2,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"FcO\",\"full_name\":\"X.FcO\",\"field_count\":5,\"fields\":[{\"type\":\"int\",\"def_pos\":0,\"name\":\"$t\"},{\"type\":\"java.lang.Object\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"java.lang.Object\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"java.lang.Object\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"boolean\",\"def_pos\":0,\"name\":\"A03\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.FcO",
+          "method_name": "run",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.FcO.run\",\"class_name\":\"X.FcO\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    /* JADX WARN: Code duplicated, block: B:77:0x02ab  */\\n    @Override // java.lang.Runnable\\n    public final void run() {\\n        boolean z;\\n        Object obj;\\n        boolean z2;\\n        F2r f2r;\\n        FfH ffH;\\n        ENi eNi;\\n        C05a c05aA0G;\\n        int i;\\n        Object obj2;\\n        Object obj3;\\n        C18U c18u;\\n        F2U f2u;\\n        C0DY c0dy;\\n        boolean z3;\\n        Se8 se8;\\n        DsM dsMA01;\\n        int i2;\\n        C0NX c0nx;\\n        switch (this.$t) {\\n            case 0:\\n                C1v7 c1v7 \\u003d (C1v7) this.A00;\\n                Runnable runnable \\u003d (Runnable) this.A01;\\n                boolean z4 \\u003d this.A03;\\n                DxN dxN \\u003d (DxN) this.A02;\\n                C00x c00x \\u003d c1v7.A0k;\\n                ((Ewp) c00x.BFb()).A02(\\\"join\\\");\\n                if (((Ewp) c00x.BFb()).A03()) {\\n                    int iA00 \\u003d C2LB.A00(C8t5.A0K(c1v7.A0g), \\\"voice_chat_v2_education_seen_count\\\");\\n                    if (C00E.A0F(DBh.A0G(c1v7.A06), EN5.A13)) {\\n                        if (z4) {\\n                            z \\u003d iA00 \\u003c 1;\\n                        }\\n                        C2L6.A0r(c1v7.A0j).CbD(new Fd9(F5R.A00(runnable, 6), c1v7, runnable, (z4 \\u0026\\u0026 z) ? new Fen(c1v7, 19) : new Fbs(0), 0, !z, C2L9.A1X(dxN.A0C)));\\n                    } else if (C1v7.A0O(c1v7)) {\\n                        Feo.A02(C2L6.A0r(c1v7.A0j), runnable, c1v7, 23);\\n                    }\\n                }\\n                runnable.run();\\n                break;\\n            case 1:\\n                C1v7.A0H((View.OnClickListener) this.A02, (View) this.A01, (C1v7) this.A00, this.A03);\\n                break;\\n            case 2:\\n                FBG fbg \\u003d (FBG) this.A00;\\n                boolean z5 \\u003d this.A03;\\n                C0DY c0dy2 \\u003d (C0DY) this.A01;\\n                C0DY c0dy3 \\u003d (C0DY) this.A02;\\n                if (z5) {\\n                    if (c0dy2 !\\u003d null) {\\n                        DBc.A0P(fbg.A2E).A0V(c0dy2);\\n                    }\\n                    CallInfo callInfoA0B \\u003d DBg.A0B(fbg);\\n                    if (callInfoA0B !\\u003d null) {\\n                        Iterator itA0l \\u003d C3q3.A0l(callInfoA0B.participantsMap);\\n                        while (itA0l.hasNext()) {\\n                            C0DY c0dyA0h \\u003d C2LB.A0h(itA0l);\\n                            if (!C6oj.A1W(fbg.A2Y, c0dyA0h)) {\\n                                DBc.A0P(fbg.A2E).A0V(c0dyA0h);\\n                            }\\n                        }\\n                    }\\n                } else {\\n                    DBc.A0P(fbg.A2E).A0V(c0dy3);\\n                }\\n                break;\\n            case 3:\\n                FBG fbg2 \\u003d (FBG) this.A00;\\n                Object obj4 \\u003d this.A01;\\n                obj \\u003d this.A02;\\n                z2 \\u003d this.A03;\\n                EdF edF \\u003d (EdF) fbg2.A2Q.BFb();\\n                f2r \\u003d fbg2.A0X;\\n                ScheduledThreadPoolExecutor scheduledThreadPoolExecutor \\u003d fbg2.A1D;\\n                scheduledThreadPoolExecutor.getClass();\\n                ffH \\u003d new FfH(scheduledThreadPoolExecutor, 1);\\n                eNi \\u003d new ENi(fbg2);\\n                C3q5.A1E(obj4, f2r);\\n                c05aA0G \\u003d C2LA.A0G(edF.A09, 1251);\\n                i \\u003d 0;\\n                obj3 \\u003d obj4;\\n                obj2 \\u003d edF;\\n                ffH.execute(new FdQ(obj, f2r, obj3, obj2, c05aA0G, eNi, i, z2));\\n                break;\\n            case 4:\\n                FBG fbg3 \\u003d (FBG) this.A00;\\n                List list \\u003d (List) this.A01;\\n                obj \\u003d this.A02;\\n                z2 \\u003d this.A03;\\n                EdF edF2 \\u003d (EdF) fbg3.A2Q.BFb();\\n                f2r \\u003d fbg3.A0X;\\n                ScheduledThreadPoolExecutor scheduledThreadPoolExecutor2 \\u003d fbg3.A1D;\\n                scheduledThreadPoolExecutor2.getClass();\\n                i \\u003d 1;\\n                ffH \\u003d new FfH(scheduledThreadPoolExecutor2, 1);\\n                eNi \\u003d new ENi(fbg3);\\n                C00l.A09(f2r, 3);\\n                c05aA0G \\u003d C2LA.A0G(edF2.A09, 1251);\\n                C00L.A0C(C3q1.A1Z(list), \\\"voip/invite: Empty list of peers to invite\\\");\\n                obj3 \\u003d edF2;\\n                obj2 \\u003d list;\\n                ffH.execute(new FdQ(obj, f2r, obj3, obj2, c05aA0G, eNi, i, z2));\\n                break;\\n            case 5:\\n                ((FBa) this.A00).A01.AFC((CallInfo) this.A02, (CallState) this.A01, this.A03);\\n                break;\\n            case 6:\\n                ((FBa) this.A00).A01.BzK((CallInfo) this.A01, (UserJid) this.A02, this.A03);\\n                break;\\n            case 7:\\n                C0Vy c0Vy \\u003d (C0Vy) this.A00;\\n                C1nG c1nG \\u003d (C1nG) this.A01;\\n                ImmutableSet immutableSet \\u003d (ImmutableSet) this.A02;\\n                C1nG.A00(null, immutableSet, c1nG, c1nG.A03.Aum(), this.A03);\\n                C0Vy.A09(immutableSet, c0Vy);\\n                break;\\n            case 8:\\n                f2u \\u003d (F2U) this.A00;\\n                c0dy \\u003d (C0DY) this.A01;\\n                z3 \\u003d this.A03;\\n                se8 \\u003d (Se8) this.A02;\\n                dsMA01 \\u003d F2U.A01(f2u, \\\"onContactDeselected\\\");\\n                if (dsMA01 !\\u003d null) {\\n                    i2 \\u003d 2;\\n                    dsMA01.A00 \\u003d Integer.valueOf(i2);\\n                    F2U.A03(se8, f2u, dsMA01, c0dy, z3);\\n                    c0nx \\u003d f2u.A04;\\n                    c0nx.CSW(dsMA01);\\n                }\\n                break;\\n            case 9:\\n                C0DY c0dy4 \\u003d (C0DY) this.A00;\\n                F2U f2u2 \\u003d (F2U) this.A01;\\n                boolean z6 \\u003d this.A03;\\n                Se8 se9 \\u003d (Se8) this.A02;\\n                if (c0dy4 !\\u003d null \\u0026\\u0026 (dsMA01 \\u003d F2U.A01(f2u2, \\\"onContactPicked\\\")) !\\u003d null) {\\n                    dsMA01.A00 \\u003d C2L7.A16();\\n                    F2U.A03(se9, f2u2, dsMA01, c0dy4, z6);\\n                    c0nx \\u003d f2u2.A04;\\n                    c0nx.CSW(dsMA01);\\n                    break;\\n                }\\n                break;\\n            case 10:\\n                f2u \\u003d (F2U) this.A00;\\n                c0dy \\u003d (C0DY) this.A01;\\n                z3 \\u003d this.A03;\\n                se8 \\u003d (Se8) this.A02;\\n                dsMA01 \\u003d F2U.A01(f2u, \\\"onInviteConfirmed\\\");\\n                if (dsMA01 !\\u003d null) {\\n                    i2 \\u003d 1;\\n                    dsMA01.A00 \\u003d Integer.valueOf(i2);\\n                    F2U.A03(se8, f2u, dsMA01, c0dy, z3);\\n                    c0nx \\u003d f2u.A04;\\n                    c0nx.CSW(dsMA01);\\n                }\\n                break;\\n            case 11:\\n                C18U c18u2 \\u003d (C18U) this.A00;\\n                FZp fZp \\u003d (FZp) this.A01;\\n                C18c c18c \\u003d (C18c) this.A02;\\n                boolean z7 \\u003d this.A03;\\n                if (c18u2 !\\u003d null) {\\n                    C0he c0he \\u003d (C0he) C05a.A03(fZp.A09);\\n                    C1dW c1dWA0i \\u003d C8t1.A0i(c18u2);\\n                    c0he.A04(c1dWA0i);\\n                    ((C0UG) C05a.A03(fZp.A0B)).A0S(C2L7.A1M(c18u2), null);\\n                    Ecv ecv \\u003d (Ecv) C05a.A03(fZp.A03);\\n                    C0DY c0dy5 \\u003d c1dWA0i.A00;\\n                    if (c0dy5 !\\u003d null) {\\n                        ((C0fO) C05a.A03(ecv.A01)).A0O(c0dy5, false);\\n                    }\\n                }\\n                ArrayList\\u003cC18c\\u003e arrayListA18 \\u003d C1Xl.A18();\\n                ((C0he) C05a.A03(fZp.A09)).A00(new FIZ(arrayListA18, c18c, 2));\\n                for (C18c c18c2 : arrayListA18) {\\n                    ((C16P) C05a.A03(fZp.A0G)).A08(c18c2);\\n                    if (z7) {\\n                        c18c2.A0y(DBh.A0h(fZp.A08, c18c2));\\n                    }\\n                }\\n                Iterator it \\u003d arrayListA18.iterator();\\n                while (it.hasNext()) {\\n                    ((C0UG) C05a.A03(fZp.A0B)).A0P(C2L6.A0v(it), 45);\\n                }\\n                C18U c18u3 \\u003d (C18U) C07Z.A0v(arrayListA18);\\n                if (c18u3 \\u003d\\u003d null) {\\n                    ((C16P) C05a.A03(fZp.A0G)).A08(c18c);\\n                    c18u \\u003d c18c;\\n                } else {\\n                    c18u \\u003d c18u3;\\n                }\\n                ((C0ao) C05a.A03(fZp.A02)).A0Q(c18u);\\n                break;\\n            default:\\n                AnonymousClass181 anonymousClass181 \\u003d (AnonymousClass181) this.A00;\\n                Dwv dwv \\u003d (Dwv) this.A01;\\n                DeviceJid deviceJid \\u003d (DeviceJid) this.A02;\\n                boolean z8 \\u003d this.A03;\\n                C0jK c0jK \\u003d anonymousClass181.A0A;\\n                String str \\u003d dwv.A0N;\\n                String str2 \\u003d dwv.A0L;\\n                c0jK.A0D((str \\u003d\\u003d null || str2 \\u003d\\u003d null) ? null : new EjL(str, str2, dwv.A0M), deviceJid, dwv.A0j.A01, dwv.A02 + 1, z8);\\n                break;\\n        }\\n    }\",\"overload_count\":1,\"method_name\":\"run\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.FcO",
+    "method": {
+      "name": "run",
+      "reported_signature": "run(): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "()V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Code duplicated, block: B:77:0x02ab  */\n    @Override // java.lang.Runnable\n    public final void run() {\n        boolean z;\n        Object obj;\n        boolean z2;\n        F2r f2r;\n        FfH ffH;\n        ENi eNi;\n        C05a c05aA0G;\n        int i;\n        Object obj2;\n        Object obj3;\n        C18U c18u;\n        F2U f2u;\n        C0DY c0dy;\n        boolean z3;\n        Se8 se8;\n        DsM dsMA01;\n        int i2;\n        C0NX c0nx;\n        switch (this.$t) {\n            case 0:\n                C1v7 c1v7 = (C1v7) this.A00;\n                Runnable runnable = (Runnable) this.A01;\n                boolean z4 = this.A03;\n                DxN dxN = (DxN) this.A02;\n                C00x c00x = c1v7.A0k;\n                ((Ewp) c00x.BFb()).A02(\"join\");\n                if (((Ewp) c00x.BFb()).A03()) {\n                    int iA00 = C2LB.A00(C8t5.A0K(c1v7.A0g), \"voice_chat_v2_education_seen_count\");\n                    if (C00E.A0F(DBh.A0G(c1v7.A06), EN5.A13)) {\n                        if (z4) {\n                            z = iA00 < 1;\n                        }\n                        C2L6.A0r(c1v7.A0j).CbD(new Fd9(F5R.A00(runnable, 6), c1v7, runnable, (z4 && z) ? new Fen(c1v7, 19) : new Fbs(0), 0, !z, C2L9.A1X(dxN.A0C)));\n                    } else if (C1v7.A0O(c1v7)) {\n                        Feo.A02(C2L6.A0r(c1v7.A0j), runnable, c1v7, 23);\n                    }\n                }\n                runnable.run();\n                break;\n            case 1:\n                C1v7.A0H((View.OnClickListener) this.A02, (View) this.A01, (C1v7) this.A00, this.A03);\n                break;\n            case 2:\n                FBG fbg = (FBG) this.A00;\n                boolean z5 = this.A03;\n                C0DY c0dy2 = (C0DY) this.A01;\n                C0DY c0dy3 = (C0DY) this.A02;\n                if (z5) {\n                    if (c0dy2 != null) {\n                        DBc.A0P(fbg.A2E).A0V(c0dy2);\n                    }\n                    CallInfo callInfoA0B = DBg.A0B(fbg);\n                    if (callInfoA0B != null) {\n                        Iterator itA0l = C3q3.A0l(callInfoA0B.participantsMap);\n                        while (itA0l.hasNext()) {\n                            C0DY c0dyA0h = C2LB.A0h(itA0l);\n                            if (!C6oj.A1W(fbg.A2Y, c0dyA0h)) {\n                                DBc.A0P(fbg.A2E).A0V(c0dyA0h);\n                            }\n                        }\n                    }\n                } else {\n                    DBc.A0P(fbg.A2E).A0V(c0dy3);\n                }\n                break;\n            case 3:\n                FBG fbg2 = (FBG) this.A00;\n                Object obj4 = this.A01;\n                obj = this.A02;\n                z2 = this.A03;\n                EdF edF = (EdF) fbg2.A2Q.BFb();\n                f2r = fbg2.A0X;\n                ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = fbg2.A1D;\n                scheduledThreadPoolExecutor.getClass();\n                ffH = new FfH(scheduledThreadPoolExecutor, 1);\n                eNi = new ENi(fbg2);\n                C3q5.A1E(obj4, f2r);\n                c05aA0G = C2LA.A0G(edF.A09, 1251);\n                i = 0;\n                obj3 = obj4;\n                obj2 = edF;\n                ffH.execute(new FdQ(obj, f2r, obj3, obj2, c05aA0G, eNi, i, z2));\n                break;\n            case 4:\n                FBG fbg3 = (FBG) this.A00;\n                List list = (List) this.A01;\n                obj = this.A02;\n                z2 = this.A03;\n                EdF edF2 = (EdF) fbg3.A2Q.BFb();\n                f2r = fbg3.A0X;\n                ScheduledThreadPoolExecutor scheduledThreadPoolExecutor2 = fbg3.A1D;\n                scheduledThreadPoolExecutor2.getClass();\n                i = 1;\n                ffH = new FfH(scheduledThreadPoolExecutor2, 1);\n                eNi = new ENi(fbg3);\n                C00l.A09(f2r, 3);\n                c05aA0G = C2LA.A0G(edF2.A09, 1251);\n                C00L.A0C(C3q1.A1Z(list), \"voip/invite: Empty list of peers to invite\");\n                obj3 = edF2;\n                obj2 = list;\n                ffH.execute(new FdQ(obj, f2r, obj3, obj2, c05aA0G, eNi, i, z2));\n                break;\n            case 5:\n                ((FBa) this.A00).A01.AFC((CallInfo) this.A02, (CallState) this.A01, this.A03);\n                break;\n            case 6:\n                ((FBa) this.A00).A01.BzK((CallInfo) this.A01, (UserJid) this.A02, this.A03);\n                break;\n            case 7:\n                C0Vy c0Vy = (C0Vy) this.A00;\n                C1nG c1nG = (C1nG) this.A01;\n                ImmutableSet immutableSet = (ImmutableSet) this.A02;\n                C1nG.A00(null, immutableSet, c1nG, c1nG.A03.Aum(), this.A03);\n                C0Vy.A09(immutableSet, c0Vy);\n                break;\n            case 8:\n                f2u = (F2U) this.A00;\n                c0dy = (C0DY) this.A01;\n                z3 = this.A03;\n                se8 = (Se8) this.A02;\n                dsMA01 = F2U.A01(f2u, \"onContactDeselected\");\n                if (dsMA01 != null) {\n                    i2 = 2;\n                    dsMA01.A00 = Integer.valueOf(i2);\n                    F2U.A03(se8, f2u, dsMA01, c0dy, z3);\n                    c0nx = f2u.A04;\n                    c0nx.CSW(dsMA01);\n                }\n                break;\n            case 9:\n                C0DY c0dy4 = (C0DY) this.A00;\n                F2U f2u2 = (F2U) this.A01;\n                boolean z6 = this.A03;\n                Se8 se9 = (Se8) this.A02;\n                if (c0dy4 != null && (dsMA01 = F2U.A01(f2u2, \"onContactPicked\")) != null) {\n                    dsMA01.A00 = C2L7.A16();\n                    F2U.A03(se9, f2u2, dsMA01, c0dy4, z6);\n                    c0nx = f2u2.A04;\n                    c0nx.CSW(dsMA01);\n                    break;\n                }\n                break;\n            case 10:\n                f2u = (F2U) this.A00;\n                c0dy = (C0DY) this.A01;\n                z3 = this.A03;\n                se8 = (Se8) this.A02;\n                dsMA01 = F2U.A01(f2u, \"onInviteConfirmed\");\n                if (dsMA01 != null) {\n                    i2 = 1;\n                    dsMA01.A00 = Integer.valueOf(i2);\n                    F2U.A03(se8, f2u, dsMA01, c0dy, z3);\n                    c0nx = f2u.A04;\n                    c0nx.CSW(dsMA01);\n                }\n                break;\n            case 11:\n                C18U c18u2 = (C18U) this.A00;\n                FZp fZp = (FZp) this.A01;\n                C18c c18c = (C18c) this.A02;\n                boolean z7 = this.A03;\n                if (c18u2 != null) {\n                    C0he c0he = (C0he) C05a.A03(fZp.A09);\n                    C1dW c1dWA0i = C8t1.A0i(c18u2);\n                    c0he.A04(c1dWA0i);\n                    ((C0UG) C05a.A03(fZp.A0B)).A0S(C2L7.A1M(c18u2), null);\n                    Ecv ecv = (Ecv) C05a.A03(fZp.A03);\n                    C0DY c0dy5 = c1dWA0i.A00;\n                    if (c0dy5 != null) {\n                        ((C0fO) C05a.A03(ecv.A01)).A0O(c0dy5, false);\n                    }\n                }\n                ArrayList<C18c> arrayListA18 = C1Xl.A18();\n                ((C0he) C05a.A03(fZp.A09)).A00(new FIZ(arrayListA18, c18c, 2));\n                for (C18c c18c2 : arrayListA18) {\n                    ((C16P) C05a.A03(fZp.A0G)).A08(c18c2);\n                    if (z7) {\n                        c18c2.A0y(DBh.A0h(fZp.A08, c18c2));\n                    }\n                }\n                Iterator it = arrayListA18.iterator();\n                while (it.hasNext()) {\n                    ((C0UG) C05a.A03(fZp.A0B)).A0P(C2L6.A0v(it), 45);\n                }\n                C18U c18u3 = (C18U) C07Z.A0v(arrayListA18);\n                if (c18u3 == null) {\n                    ((C16P) C05a.A03(fZp.A0G)).A08(c18c);\n                    c18u = c18c;\n                } else {\n                    c18u = c18u3;\n                }\n                ((C0ao) C05a.A03(fZp.A02)).A0Q(c18u);\n                break;\n            default:\n                AnonymousClass181 anonymousClass181 = (AnonymousClass181) this.A00;\n                Dwv dwv = (Dwv) this.A01;\n                DeviceJid deviceJid = (DeviceJid) this.A02;\n                boolean z8 = this.A03;\n                C0jK c0jK = anonymousClass181.A0A;\n                String str = dwv.A0N;\n                String str2 = dwv.A0L;\n                c0jK.A0D((str == null || str2 == null) ? null : new EjL(str, str2, dwv.A0M), deviceJid, dwv.A0j.A01, dwv.A02 + 1, z8);\n                break;\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

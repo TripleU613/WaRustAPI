@@ -17,6 +17,7 @@ use crate::{
 use serde::{Deserialize, Serialize};
 
 const PREFIX: &str = "action-outbox:";
+const SETTLEMENT_SEQUENCE: &[u8] = b"action-settlement-sequence";
 /// At most this many queued actions are written per reservation.
 const BATCH: usize = 16;
 
@@ -62,6 +63,8 @@ struct Row {
     #[serde(default)]
     settled_at: Option<Timestamp>,
     #[serde(default)]
+    settlement_sequence: Option<u64>,
+    #[serde(default)]
     reply: Option<Vec<u8>>,
     #[serde(default)]
     error_code: Option<u16>,
@@ -72,6 +75,8 @@ struct Row {
 /// Redacted operator view of one action.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 pub struct ActionOutcome {
+    /// Durable receipt order; absent on legacy/unsettled actions. Never inferred.
+    pub settlement_sequence: Option<u64>,
     /// The `iq` id, which is also the row id.
     pub id: String,
     /// Feature-defined kind, e.g. `block`, `unblock`, `blocklist`, `report`.
@@ -134,6 +139,7 @@ fn queue_prepared_in(
         created_at: Timestamp::now(),
         sent_at: None,
         settled_at: None,
+        settlement_sequence: None,
         reply: None,
         error_code: None,
         error_text: None,
@@ -168,6 +174,7 @@ pub(crate) fn view_in_write(
     let reply = row.reply.map(|wire| decode(&wire)).transpose()?;
     Ok(Some((
         ActionOutcome {
+            settlement_sequence: row.settlement_sequence,
             id: id.to_owned(),
             kind: row.kind,
             label: row.label,
@@ -197,6 +204,7 @@ pub(crate) fn view_in(
     let reply = row.reply.map(|wire| decode(&wire)).transpose()?;
     Ok(Some((
         ActionOutcome {
+            settlement_sequence: row.settlement_sequence,
             id: id.to_owned(),
             kind: row.kind,
             label: row.label,
@@ -354,12 +362,54 @@ pub fn record_reply(store: &ProtocolStore, node: &Node) -> Result<bool> {
                     .map(str::to_owned);
             }
         }
+        row.settlement_sequence = Some(next_settlement_sequence_in(tx)?);
         row.settled_at = Some(Timestamp::now());
         row.reply = Some(encode(node)?);
         super::groups::mark_pending_in(tx, &row.kind, id)?;
         tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &row)?;
         Ok(true)
     })
+}
+
+fn next_settlement_sequence_in(tx: &mut crate::store::WriteTx<'_>) -> Result<u64> {
+    let current: Option<u64> = tx.get_json(Table::Checkpoints, SETTLEMENT_SEQUENCE, 1)?;
+    if current == Some(0) {
+        return Err(Error::invalid(
+            "action",
+            "invalid settlement sequence counter",
+        ));
+    }
+    if current.is_none() {
+        let mut cursor = None;
+        loop {
+            let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
+            let done = rows.len() < 256;
+            cursor = rows.last().map(|(key, _)| key.clone());
+            for (key, _) in rows
+                .iter()
+                .filter(|(key, _)| key.starts_with(PREFIX.as_bytes()))
+            {
+                let row: Row = tx.get_json(Table::Checkpoints, key, 1)?.ok_or_else(|| {
+                    Error::invalid("action", "missing action during sequence check")
+                })?;
+                if row.settlement_sequence.is_some() {
+                    return Err(Error::invalid(
+                        "action",
+                        "settlement sequence counter missing; no order reset",
+                    ));
+                }
+            }
+            if done {
+                break;
+            }
+        }
+    }
+    let next = current
+        .unwrap_or(0)
+        .checked_add(1)
+        .ok_or_else(|| Error::invalid("action", "settlement sequence exhausted"))?;
+    tx.put_json(Table::Checkpoints, SETTLEMENT_SEQUENCE, 1, &next)?;
+    Ok(next)
 }
 
 /// Every action ever queued, in key order, redacted.
@@ -382,6 +432,7 @@ pub fn outcomes(store: &ProtocolStore) -> Result<Vec<ActionOutcome>> {
                     continue;
                 };
                 out.push(ActionOutcome {
+                    settlement_sequence: row.settlement_sequence,
                     id: id.to_owned(),
                     kind: row.kind,
                     label: row.label,
@@ -416,6 +467,7 @@ pub(crate) fn outcomes_in_write(tx: &crate::store::WriteTx<'_>) -> Result<Vec<Ac
                 continue;
             };
             out.push(ActionOutcome {
+                settlement_sequence: row.settlement_sequence,
                 id: id.to_owned(),
                 kind: row.kind,
                 label: row.label,
@@ -456,7 +508,71 @@ pub fn reply(store: &ProtocolStore, id: &str) -> Result<Option<Node>> {
         .transpose()
 }
 
-/// The settled actions of one kind, newest first, with their decoded replies.
+/// Sequenced settlements across kinds in durable receive order (oldest first),
+/// read with their replies in one snapshot. Legacy unknown-order rows remain
+/// inspectable through outcomes/settled, but cannot establish projection order.
+pub fn settled_for_kinds(
+    store: &ProtocolStore,
+    kinds: &[&str],
+) -> Result<Vec<(ActionOutcome, Option<Node>)>> {
+    store.read(|tx| {
+        let mut ordered = std::collections::BTreeMap::new();
+        let mut cursor = None;
+        loop {
+            let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
+            let done = rows.len() < 256;
+            cursor = rows.last().map(|(key, _)| key.clone());
+            for (key, _) in rows {
+                let Some(id) = std::str::from_utf8(&key)
+                    .ok()
+                    .and_then(|key| key.strip_prefix(PREFIX))
+                else {
+                    continue;
+                };
+                let Some(row): Option<Row> = tx.get_json(Table::Checkpoints, &key, 1)? else {
+                    continue;
+                };
+                if !kinds.contains(&row.kind.as_str())
+                    || !matches!(row.status, ActionStatus::Ok | ActionStatus::Error)
+                {
+                    continue;
+                }
+                let Some(sequence) = row.settlement_sequence else {
+                    continue;
+                };
+                if sequence == 0 {
+                    return Err(Error::invalid(
+                        "action",
+                        "invalid saved settlement sequence",
+                    ));
+                }
+                let reply = row.reply.map(|wire| decode(&wire)).transpose()?;
+                let outcome = ActionOutcome {
+                    settlement_sequence: Some(sequence),
+                    id: id.to_owned(),
+                    kind: row.kind,
+                    label: row.label,
+                    status: row.status,
+                    error_code: row.error_code,
+                    error_text: row.error_text,
+                };
+                if ordered.insert(sequence, (outcome, reply)).is_some() {
+                    return Err(Error::invalid(
+                        "action",
+                        "duplicate saved settlement sequence",
+                    ));
+                }
+            }
+            if done {
+                return Ok(ordered.into_values().collect());
+            }
+        }
+    })
+}
+
+/// Settled actions of one kind in reverse identifier order, with replies.
+/// This legacy enumeration is not chronological; projection replay must use
+/// [`settled_for_kinds`] rather than treating random identifiers as time.
 pub fn settled(store: &ProtocolStore, kind: &str) -> Result<Vec<(ActionOutcome, Option<Node>)>> {
     let mut out = Vec::new();
     for outcome in outcomes(store)? {
@@ -489,6 +605,125 @@ mod inner_error_tests {
         })
         .unwrap();
         (dir, store)
+    }
+
+    #[test]
+    fn settlement_sequence_is_receive_order_not_identifier_or_clock_order() {
+        let (_dir, store) = store();
+        let mut ids: Vec<_> = ["first-kind", "second-kind"]
+            .into_iter()
+            .map(|kind| {
+                queue(&store, kind, "fixture", |id| {
+                    Ok(Node::new("iq").attr("id", id))
+                })
+                .unwrap()
+            })
+            .collect();
+        ids.sort();
+        reserve_pending(&store).unwrap();
+        for (index, id) in ids.iter().enumerate() {
+            let response = Node::new("iq")
+                .attr("id", id.as_str())
+                .attr("type", "result");
+            assert!(record_reply(&store, &response).unwrap());
+            assert!(!record_reply(&store, &response).unwrap());
+            store
+                .write(|tx| {
+                    let mut row: Row = tx
+                        .get_json(Table::Checkpoints, key(id).as_bytes(), 1)?
+                        .unwrap();
+                    row.settled_at = Some(Timestamp(100 - index as i64));
+                    tx.put_json(Table::Checkpoints, key(id).as_bytes(), 1, &row)
+                })
+                .unwrap();
+        }
+        let ordered = settled_for_kinds(&store, &["first-kind", "second-kind"]).unwrap();
+        assert_eq!(
+            ordered
+                .iter()
+                .map(|(o, _)| o.id.clone())
+                .collect::<Vec<_>>(),
+            ids
+        );
+        assert_eq!(
+            ordered
+                .iter()
+                .map(|(o, _)| o.settlement_sequence.unwrap())
+                .collect::<Vec<_>>(),
+            vec![1, 2]
+        );
+        store
+            .write(|tx| {
+                let mut legacy: Row = tx
+                    .get_json(Table::Checkpoints, key(&ids[0]).as_bytes(), 1)?
+                    .unwrap();
+                legacy.settlement_sequence = None;
+                tx.put_json(Table::Checkpoints, key(&ids[0]).as_bytes(), 1, &legacy)
+            })
+            .unwrap();
+        assert_eq!(
+            settled_for_kinds(&store, &["first-kind", "second-kind"])
+                .unwrap()
+                .len(),
+            1
+        );
+        assert_eq!(
+            outcomes(&store).unwrap().len(),
+            2,
+            "unknown-order legacy row remains inspectable"
+        );
+    }
+
+    #[test]
+    fn missing_or_exhausted_sequence_counter_cannot_reset_order_or_settle() {
+        for missing in [false, true] {
+            let (_dir, store) = store();
+            let first = queue(&store, "fixture", "fixture", |id| {
+                Ok(Node::new("iq").attr("id", id))
+            })
+            .unwrap();
+            reserve_pending(&store).unwrap();
+            record_reply(
+                &store,
+                &Node::new("iq")
+                    .attr("id", first.as_str())
+                    .attr("type", "result"),
+            )
+            .unwrap();
+            let second = queue(&store, "fixture", "fixture", |id| {
+                Ok(Node::new("iq").attr("id", id))
+            })
+            .unwrap();
+            reserve_pending(&store).unwrap();
+            store
+                .write(|tx| {
+                    if missing {
+                        tx.delete(Table::Checkpoints, SETTLEMENT_SEQUENCE)
+                            .map(|_| ())
+                    } else {
+                        tx.put_json(Table::Checkpoints, SETTLEMENT_SEQUENCE, 1, &u64::MAX)
+                    }
+                })
+                .unwrap();
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            assert!(
+                record_reply(
+                    &store,
+                    &Node::new("iq")
+                        .attr("id", second.as_str())
+                        .attr("type", "result")
+                )
+                .is_err()
+            );
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                before
+            );
+        }
     }
 
     #[test]

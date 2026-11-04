@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_ec804696964f04d2effd516b1cd73fb778946276d6efd95094b89ffbd39d2f63",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.F1G",
+    "method_name": "A00",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-JWePeP/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.F1G"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"(LX/FvS;)V\",\"signature\":\"\\u003cinit\\u003e(X.FvS): void\"},{\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/EXq;LX/EE3;LX/EA7;LX/F1G;IJ)V\",\"signature\":\"A00(X.EXq, X.EE3, X.EA7, X.F1G, int, long): void\"},{\"def_pos\":0,\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/Esd;LX/F1G;Ljava/lang/Integer;Ljava/lang/String;IZ)V\",\"signature\":\"A01(X.Esd, X.F1G, java.lang.Integer, java.lang.String, int, boolean): void\"},{\"def_pos\":0,\"name\":\"A02\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/F1G;)V\",\"signature\":\"A02(X.F1G): void\"},{\"def_pos\":0,\"name\":\"A03\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/EXq;LX/EE3;LX/EA7;I)V\",\"signature\":\"A03(X.EXq, X.EE3, X.EA7, int): void\"},{\"def_pos\":0,\"name\":\"A04\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/EXq;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;I)V\",\"signature\":\"A04(X.EXq, java.lang.Integer, java.lang.Integer, java.lang.String, java.lang.String, int): void\"},{\"def_pos\":0,\"name\":\"A05\",\"is_constructor\":false,\"dex_descriptor\":\"(Z)V\",\"signature\":\"A05(boolean): void\"}],\"method_count\":7,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"F1G\",\"full_name\":\"X.F1G\",\"field_count\":31,\"fields\":[{\"type\":\"X.FUY\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A05\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A06\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A07\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A08\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A09\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0A\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0B\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0C\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0D\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0E\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0F\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0G\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0H\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0I\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0J\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0K\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0L\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0M\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0N\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0O\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0P\"},{\"type\":\"X.EdJ\",\"def_pos\":0,\"name\":\"A0Q\"},{\"type\":\"X.EeE\",\"def_pos\":0,\"name\":\"A0R\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A0S\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A0T\"},{\"type\":\"X.Eo9\",\"def_pos\":0,\"name\":\"A0U\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.F1G",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.F1G.A00\",\"class_name\":\"X.F1G\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public static final void A00(EXq eXq, EE3 ee3, EA7 ea7, F1G f1g, int i, long j) {\\n        Object objA1D;\\n        String strA0z;\\n        HI0 hi0A00;\\n        C00x c00x \\u003d f1g.A0M.A00;\\n        int iA03 \\u003d C2L6.A0q(c00x).A03();\\n        int iA02 \\u003d C2L6.A0q(c00x).A02();\\n        C05a c05a \\u003d f1g.A04;\\n        C05a.A03(c05a);\\n        EA7 ea8 \\u003d eXq.A02;\\n        GeneratedMessageLite.Builder builderA0R \\u003d DBd.A0R(DfH.DEFAULT_INSTANCE);\\n        DfH dfH \\u003d (DfH) builderA0R.instance;\\n        dfH.bitField0_ |\\u003d 1;\\n        dfH.rawId_ \\u003d iA03;\\n        DfH dfH2 \\u003d (DfH) C8t1.A0Z(builderA0R);\\n        dfH2.bitField0_ |\\u003d 4;\\n        dfH2.keyIndex_ \\u003d iA02;\\n        DfH dfH3 \\u003d (DfH) C8t1.A0Z(builderA0R);\\n        dfH3.bitField0_ |\\u003d 2;\\n        dfH3.timestamp_ \\u003d j;\\n        EA7 ea9 \\u003d EA7.A02;\\n        if (ea8 \\u003d\\u003d ea9 \\u0026\\u0026 ea7 \\u003d\\u003d EA7.A01) {\\n            throw C1Xl.A0f(\\\"me.account_type is e2ee when device is hosted\\\");\\n        }\\n        DfH dfH4 \\u003d (DfH) C8t1.A0Z(builderA0R);\\n        dfH4.deviceType_ \\u003d ea8.getNumber();\\n        dfH4.bitField0_ |\\u003d 16;\\n        DfH dfH5 \\u003d (DfH) C8t1.A0Z(builderA0R);\\n        dfH5.accountType_ \\u003d ea7.getNumber();\\n        dfH5.bitField0_ |\\u003d 8;\\n        DfH dfH6 \\u003d (DfH) builderA0R.build();\\n        C00l.A05(dfH6);\\n        try {\\n            try {\\n                byte[] bArr \\u003d eXq.A07;\\n                if (bArr \\u003d\\u003d null) {\\n                    throw C3q2.A0l();\\n                }\\n                C10V c10v \\u003d (C10V) C05a.A03(c05a);\\n                Ee1 ee1 \\u003d eXq.A01;\\n                C00L.A05(ee1);\\n                byte[] bArr2 \\u003d ee1.A00.A01;\\n                ERa eRaA00 \\u003d C10V.A00(c10v);\\n                C00L.A05(eRaA00);\\n                Ee0 ee0 \\u003d eRaA00.A00;\\n                Ehd ehd \\u003d eRaA00.A01.A00;\\n                byte[] bArr3 \\u003d C08u.A0G;\\n                if (ea8 \\u003d\\u003d ea9) {\\n                    bArr3 \\u003d C08u.A0H;\\n                } else {\\n                    EA7 ea7ForNumber \\u003d EA7.forNumber(dfH6.deviceType_);\\n                    if (ea7ForNumber !\\u003d null \\u0026\\u0026 ea7ForNumber \\u003d\\u003d ea9) {\\n                        throw C1Xl.A0f(\\\"doesn\\u0027t support pairing hosted device with e2ee account\\\");\\n                    }\\n                }\\n                byte[][] bArr4 \\u003d new byte[3][];\\n                C1Xm.A0C(bArr3, dfH6.toByteArray(), bArr2, bArr4);\\n                byte[] bArrA05 \\u003d C1nr.A05(bArr4);\\n                DN5 dn5 \\u003d (DN5) DeB.DEFAULT_INSTANCE.createBuilder();\\n                ByteString byteString \\u003d dfH6.toByteString();\\n                DeB deB \\u003d (DeB) C8t1.A0Z(dn5);\\n                deB.bitField0_ |\\u003d 1;\\n                deB.details_ \\u003d byteString;\\n                byte[] bArr5 \\u003d ehd.A01;\\n                ByteString byteString2 \\u003d ByteString.EMPTY;\\n                ByteString byteStringA0B \\u003d DBe.A0B(dn5, bArr5, 0);\\n                DeB deB2 \\u003d (DeB) dn5.instance;\\n                deB2.bitField0_ |\\u003d 2;\\n                deB2.accountSignatureKey_ \\u003d byteStringA0B;\\n                ByteString byteStringA0B2 \\u003d DBe.A0B(dn5, F3k.A0C(ee0, bArrA05), 0);\\n                DeB deB3 \\u003d (DeB) dn5.instance;\\n                deB3.bitField0_ |\\u003d 4;\\n                deB3.accountSignature_ \\u003d byteStringA0B2;\\n                DeB deB4 \\u003d (DeB) dn5.build();\\n                C00l.A05(deB4);\\n                C05a.A03(c05a);\\n                byte[] byteArray \\u003d deB4.toByteArray();\\n                if (ea7 \\u003d\\u003d ea9) {\\n                    byte[][] bArr6 \\u003d new byte[2][];\\n                    C2L7.A1T(C08u.A0H, byteArray, bArr6);\\n                    byteArray \\u003d C1nr.A05(bArr6);\\n                }\\n                try {\\n                    byte[] bArrA00 \\u003d C1oP.A00(byteArray, bArr);\\n                    DN6 dn6 \\u003d (DN6) Dce.DEFAULT_INSTANCE.createBuilder();\\n                    ByteString byteString3 \\u003d deB4.toByteString();\\n                    Dce dce \\u003d (Dce) C8t1.A0Z(dn6);\\n                    dce.bitField0_ |\\u003d 1;\\n                    dce.details_ \\u003d byteString3;\\n                    ByteString byteStringA0B3 \\u003d DBe.A0B(dn6, bArrA00, 0);\\n                    Dce dce2 \\u003d (Dce) dn6.instance;\\n                    dce2.bitField0_ |\\u003d 2;\\n                    dce2.hmac_ \\u003d byteStringA0B3;\\n                    Dce dce3 \\u003d (Dce) C8t1.A0Z(dn6);\\n                    dce3.accountType_ \\u003d ea7.getNumber();\\n                    dce3.bitField0_ |\\u003d 4;\\n                    Dce dce4 \\u003d (Dce) dn6.build();\\n                    C00l.A05(dce4);\\n                    Dfj dfjA02 \\u003d ((C10V) C05a.A03(c05a)).A02(ea7, iA03, iA02, j);\\n                    C00l.A05(dfjA02);\\n                    Dcf dcfA03 \\u003d ((C10V) C05a.A03(c05a)).A03(dfjA02);\\n                    C00l.A05(dcfA03);\\n                    SecretKeySpec secretKeySpecA01 \\u003d F1g.A01(bArr, eXq.A08, F1g.A00);\\n                    HUS hus \\u003d (HUS) C05a.A03(f1g.A02);\\n                    C05a c05aA0E \\u003d C2LA.A0E(hus.A06.A00, 1251);\\n                    try {\\n                        objA1D \\u003d ((C0vm) C05a.A03(hus.A03)).A00(C12m.A03);\\n                    } catch (Throwable th) {\\n                        objA1D \\u003d C6oe.A1D(th);\\n                    }\\n                    H3J h3jA02 \\u003d null;\\n                    if (objA1D instanceof C0Dt) {\\n                        objA1D \\u003d null;\\n                    }\\n                    C1Js c1Js \\u003d (C1Js) objA1D;\\n                    if (c1Js !\\u003d null \\u0026\\u0026 (hi0A00 \\u003d HUS.A00(hus)) !\\u003d null) {\\n                        PublicKey publicKey \\u003d hi0A00.A01;\\n                        try {\\n                            h3jA02 \\u003d hus.A02(c1Js, hi0A00.A00, publicKey !\\u003d null ? MTh.A01(publicKey) : null, hi0A00.A02);\\n                        } catch (GeneralSecurityException e) {\\n                            C8t3.A0N(c05aA0E).A0b(\\\"AuthProofHelper/password-encryption-failed\\\", e.getMessage(), null, 1, false);\\n                            ((HBC) C05a.A03(hus.A00)).A00(C02X.A00, null, e.getMessage(), null);\\n                        }\\n                    }\\n                    byte[] byteArray2 \\u003d null;\\n                    if (((C1q0) C05a.A03(f1g.A0F)).A02(true)) {\\n                        try {\\n                            MKP mkp \\u003d DoF.A07;\\n                            C1Ut c1Ut \\u003d (C1Ut) C05a.A03(f1g.A0N);\\n                            C19w c19w \\u003d (C19w) C05a.A03(f1g.A0E);\\n                            C2L9.A1B(c1Ut, 0, c19w);\\n                            LDK ldkA01 \\u003d mkp.A01(c1Ut, c19w);\\n                            if (ldkA01 !\\u003d null) {\\n                                byteArray2 \\u003d ldkA01.toByteArray();\\n                                strA0z \\u003d C1Xl.A0z(\\\" bytes)\\\", C1Xl.A14(byteArray2.length, \\\"payload(\\\"));\\n                            }\\n                        } catch (Exception e2) {\\n                            Log.e(\\\"CompanionDeviceQrHandler/buildSubscriptionSyncPayload failed\\\", e2);\\n                        }\\n                        C2LA.A1N(\\\"CompanionDeviceQrHandler/buildSubscriptionSyncPayload result\\u003d\\\", strA0z);\\n                        C2L9.A0l(f1g.A09).CbP(new Fdy(eXq, ee3, h3jA02, ea7, dfjA02, dce4, dcfA03, f1g, secretKeySpecA01, byteArray2, i, 1));\\n                    }\\n                    Log.i(\\\"CompanionDeviceQrHandler/buildSubscriptionSyncPayload skipped, md sync not enabled\\\");\\n                    strA0z \\u003d \\\"null\\\";\\n                    C2LA.A1N(\\\"CompanionDeviceQrHandler/buildSubscriptionSyncPayload result\\u003d\\\", strA0z);\\n                    C2L9.A0l(f1g.A09).CbP(new Fdy(eXq, ee3, h3jA02, ea7, dfjA02, dce4, dcfA03, f1g, secretKeySpecA01, byteArray2, i, 1));\\n                } catch (Exception e3) {\\n                }\\n            } catch (IllegalArgumentException | InterruptedException | ExecutionException e4) {\\n                Log.e(\\\"CompanionDeviceQrHandler/handleQrCode\\\", e4);\\n                Fel.A00(C2L9.A0l(f1g.A09), f1g, 2);\\n            }\\n        } catch (Exception e5) {\\n            Log.e(\\\"CompanionDeviceQrHandler/handleQrCode\\\", e5);\\n            throw new RuntimeException(\\\"Failed to generate adv protobufs\\\", e5);\\n        }\\n    }\",\"overload_count\":1,\"method_name\":\"A00\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.F1G",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(X.EXq, X.EE3, X.EA7, X.F1G, int, long): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(LX/EXq;LX/EE3;LX/EA7;LX/F1G;IJ)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public static final void A00(EXq eXq, EE3 ee3, EA7 ea7, F1G f1g, int i, long j) {\n        Object objA1D;\n        String strA0z;\n        HI0 hi0A00;\n        C00x c00x = f1g.A0M.A00;\n        int iA03 = C2L6.A0q(c00x).A03();\n        int iA02 = C2L6.A0q(c00x).A02();\n        C05a c05a = f1g.A04;\n        C05a.A03(c05a);\n        EA7 ea8 = eXq.A02;\n        GeneratedMessageLite.Builder builderA0R = DBd.A0R(DfH.DEFAULT_INSTANCE);\n        DfH dfH = (DfH) builderA0R.instance;\n        dfH.bitField0_ |= 1;\n        dfH.rawId_ = iA03;\n        DfH dfH2 = (DfH) C8t1.A0Z(builderA0R);\n        dfH2.bitField0_ |= 4;\n        dfH2.keyIndex_ = iA02;\n        DfH dfH3 = (DfH) C8t1.A0Z(builderA0R);\n        dfH3.bitField0_ |= 2;\n        dfH3.timestamp_ = j;\n        EA7 ea9 = EA7.A02;\n        if (ea8 == ea9 && ea7 == EA7.A01) {\n            throw C1Xl.A0f(\"me.account_type is e2ee when device is hosted\");\n        }\n        DfH dfH4 = (DfH) C8t1.A0Z(builderA0R);\n        dfH4.deviceType_ = ea8.getNumber();\n        dfH4.bitField0_ |= 16;\n        DfH dfH5 = (DfH) C8t1.A0Z(builderA0R);\n        dfH5.accountType_ = ea7.getNumber();\n        dfH5.bitField0_ |= 8;\n        DfH dfH6 = (DfH) builderA0R.build();\n        C00l.A05(dfH6);\n        try {\n            try {\n                byte[] bArr = eXq.A07;\n                if (bArr == null) {\n                    throw C3q2.A0l();\n                }\n                C10V c10v = (C10V) C05a.A03(c05a);\n                Ee1 ee1 = eXq.A01;\n                C00L.A05(ee1);\n                byte[] bArr2 = ee1.A00.A01;\n                ERa eRaA00 = C10V.A00(c10v);\n                C00L.A05(eRaA00);\n                Ee0 ee0 = eRaA00.A00;\n                Ehd ehd = eRaA00.A01.A00;\n                byte[] bArr3 = C08u.A0G;\n                if (ea8 == ea9) {\n                    bArr3 = C08u.A0H;\n                } else {\n                    EA7 ea7ForNumber = EA7.forNumber(dfH6.deviceType_);\n                    if (ea7ForNumber != null && ea7ForNumber == ea9) {\n                        throw C1Xl.A0f(\"doesn't support pairing hosted device with e2ee account\");\n                    }\n                }\n                byte[][] bArr4 = new byte[3][];\n                C1Xm.A0C(bArr3, dfH6.toByteArray(), bArr2, bArr4);\n                byte[] bArrA05 = C1nr.A05(bArr4);\n                DN5 dn5 = (DN5) DeB.DEFAULT_INSTANCE.createBuilder();\n                ByteString byteString = dfH6.toByteString();\n                DeB deB = (DeB) C8t1.A0Z(dn5);\n                deB.bitField0_ |= 1;\n                deB.details_ = byteString;\n                byte[] bArr5 = ehd.A01;\n                ByteString byteString2 = ByteString.EMPTY;\n                ByteString byteStringA0B = DBe.A0B(dn5, bArr5, 0);\n                DeB deB2 = (DeB) dn5.instance;\n                deB2.bitField0_ |= 2;\n                deB2.accountSignatureKey_ = byteStringA0B;\n                ByteString byteStringA0B2 = DBe.A0B(dn5, F3k.A0C(ee0, bArrA05), 0);\n                DeB deB3 = (DeB) dn5.instance;\n                deB3.bitField0_ |= 4;\n                deB3.accountSignature_ = byteStringA0B2;\n                DeB deB4 = (DeB) dn5.build();\n                C00l.A05(deB4);\n                C05a.A03(c05a);\n                byte[] byteArray = deB4.toByteArray();\n                if (ea7 == ea9) {\n                    byte[][] bArr6 = new byte[2][];\n                    C2L7.A1T(C08u.A0H, byteArray, bArr6);\n                    byteArray = C1nr.A05(bArr6);\n                }\n                try {\n                    byte[] bArrA00 = C1oP.A00(byteArray, bArr);\n                    DN6 dn6 = (DN6) Dce.DEFAULT_INSTANCE.createBuilder();\n                    ByteString byteString3 = deB4.toByteString();\n                    Dce dce = (Dce) C8t1.A0Z(dn6);\n                    dce.bitField0_ |= 1;\n                    dce.details_ = byteString3;\n                    ByteString byteStringA0B3 = DBe.A0B(dn6, bArrA00, 0);\n                    Dce dce2 = (Dce) dn6.instance;\n                    dce2.bitField0_ |= 2;\n                    dce2.hmac_ = byteStringA0B3;\n                    Dce dce3 = (Dce) C8t1.A0Z(dn6);\n                    dce3.accountType_ = ea7.getNumber();\n                    dce3.bitField0_ |= 4;\n                    Dce dce4 = (Dce) dn6.build();\n                    C00l.A05(dce4);\n                    Dfj dfjA02 = ((C10V) C05a.A03(c05a)).A02(ea7, iA03, iA02, j);\n                    C00l.A05(dfjA02);\n                    Dcf dcfA03 = ((C10V) C05a.A03(c05a)).A03(dfjA02);\n                    C00l.A05(dcfA03);\n                    SecretKeySpec secretKeySpecA01 = F1g.A01(bArr, eXq.A08, F1g.A00);\n                    HUS hus = (HUS) C05a.A03(f1g.A02);\n                    C05a c05aA0E = C2LA.A0E(hus.A06.A00, 1251);\n                    try {\n                        objA1D = ((C0vm) C05a.A03(hus.A03)).A00(C12m.A03);\n                    } catch (Throwable th) {\n                        objA1D = C6oe.A1D(th);\n                    }\n                    H3J h3jA02 = null;\n                    if (objA1D instanceof C0Dt) {\n                        objA1D = null;\n                    }\n                    C1Js c1Js = (C1Js) objA1D;\n                    if (c1Js != null && (hi0A00 = HUS.A00(hus)) != null) {\n                        PublicKey publicKey = hi0A00.A01;\n                        try {\n                            h3jA02 = hus.A02(c1Js, hi0A00.A00, publicKey != null ? MTh.A01(publicKey) : null, hi0A00.A02);\n                        } catch (GeneralSecurityException e) {\n                            C8t3.A0N(c05aA0E).A0b(\"AuthProofHelper/password-encryption-failed\", e.getMessage(), null, 1, false);\n                            ((HBC) C05a.A03(hus.A00)).A00(C02X.A00, null, e.getMessage(), null);\n                        }\n                    }\n                    byte[] byteArray2 = null;\n                    if (((C1q0) C05a.A03(f1g.A0F)).A02(true)) {\n                        try {\n                            MKP mkp = DoF.A07;\n                            C1Ut c1Ut = (C1Ut) C05a.A03(f1g.A0N);\n                            C19w c19w = (C19w) C05a.A03(f1g.A0E);\n                            C2L9.A1B(c1Ut, 0, c19w);\n                            LDK ldkA01 = mkp.A01(c1Ut, c19w);\n                            if (ldkA01 != null) {\n                                byteArray2 = ldkA01.toByteArray();\n                                strA0z = C1Xl.A0z(\" bytes)\", C1Xl.A14(byteArray2.length, \"payload(\"));\n                            }\n                        } catch (Exception e2) {\n                            Log.e(\"CompanionDeviceQrHandler/buildSubscriptionSyncPayload failed\", e2);\n                        }\n                        C2LA.A1N(\"CompanionDeviceQrHandler/buildSubscriptionSyncPayload result=\", strA0z);\n                        C2L9.A0l(f1g.A09).CbP(new Fdy(eXq, ee3, h3jA02, ea7, dfjA02, dce4, dcfA03, f1g, secretKeySpecA01, byteArray2, i, 1));\n                    }\n                    Log.i(\"CompanionDeviceQrHandler/buildSubscriptionSyncPayload skipped, md sync not enabled\");\n                    strA0z = \"null\";\n                    C2LA.A1N(\"CompanionDeviceQrHandler/buildSubscriptionSyncPayload result=\", strA0z);\n                    C2L9.A0l(f1g.A09).CbP(new Fdy(eXq, ee3, h3jA02, ea7, dfjA02, dce4, dcfA03, f1g, secretKeySpecA01, byteArray2, i, 1));\n                } catch (Exception e3) {\n                }\n            } catch (IllegalArgumentException | InterruptedException | ExecutionException e4) {\n                Log.e(\"CompanionDeviceQrHandler/handleQrCode\", e4);\n                Fel.A00(C2L9.A0l(f1g.A09), f1g, 2);\n            }\n        } catch (Exception e5) {\n            Log.e(\"CompanionDeviceQrHandler/handleQrCode\", e5);\n            throw new RuntimeException(\"Failed to generate adv protobufs\", e5);\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

@@ -52,6 +52,20 @@ a fresh synthetic local destination: APK 2.26.43.72 refused against template
 
 ## Evidence standard and remaining risk
 
+**Confirmed local replay defect, corrected for new sequenced settlements:** new
+correlated terminal replies acquire durable monotonic order in their settlement
+transaction. Contacts/groups/blocklist replay supported kinds oldest-first;
+blocklist state/hash/markers commit atomically. Legacy missing order and native
+generation/fetch freshness remain unresolved. See
+[settlement ordering audit](action-settlement-ordering.md).
+
+The [current scheduler flight trace](server-sync-trigger-flight.md) distinguishes
+one live multi-collection IQ job from durable historical `Sent` rows: a blanket
+permanent block would not port native timeout/completion ownership. The
+[own-companion ingress trace](own-companion-ingress-current.md) distinguishes
+primary authenticated pairing from companion metadata reconciliation; a device
+list or temporary Me presence alone does not establish read-self authority.
+
 2026-11-04 follow-up: conflict catch-up now resolves already-held record keys
 separately from its patch signing key, following current-build
 `SyncResponseHandler.A07`; missing keys still roll back the whole transition.

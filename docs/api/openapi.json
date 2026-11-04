@@ -939,6 +939,11 @@
           "status"
         ],
         "properties": {
+          "settlement_sequence": {
+            "type": ["integer", "null"],
+            "minimum": 1,
+            "description": "Local durable monotonic receive order, assigned atomically with a newly correlated terminal IQ reply. Null for unsettled or legacy unknown-order rows; never derived from random IDs or timestamps. Sequenced contact/group/blocklist projection replay uses oldest-first order across relevant kinds. Legacy unsequenced replies remain inspectable and are excluded from that automatic projection path without changing markers or send reservations. This local order does not prove server snapshot freshness or native generation admission."
+          },
           "id": {
             "type": "string",
             "description": "Action identifier"
@@ -969,7 +974,10 @@
             "description": "Server error message if action failed"
           }
         },
-        "description": "Outcome of a one-shot queued action"
+        "description": "Outcome of a one-shot queued action. Settlement receive order is a local journal property, not a server field. Evidence and legacy limitations: docs/protocol/action-settlement-ordering.md.",
+        "x-cli": "whatsapp-cli actions",
+        "x-transport": ["cli", "http"],
+        "x-live": false
       },
       "ReceiptOutcome": {
         "type": "object",

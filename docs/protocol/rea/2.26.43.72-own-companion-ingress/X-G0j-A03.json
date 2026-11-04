@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_9db9310ea554a9a2c190e543bf0f12b94ae7da9a727a6eca5c4c279c314f88cc",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.G0j",
+    "method_name": "A03",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-A72puM/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.G0j"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cclinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cclinit\\u003e\",\"is_constructor\":false,\"dex_descriptor\":\"()V\"},{\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"()V\"},{\"signature\":\"A02(android.content.Context, java.lang.Runnable, boolean): void\",\"def_pos\":0,\"name\":\"A02\",\"is_constructor\":false,\"dex_descriptor\":\"(Landroid/content/Context;Ljava/lang/Runnable;Z)V\"},{\"signature\":\"A03(X.G0j): void\",\"def_pos\":0,\"name\":\"A03\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/G0j;)V\"},{\"signature\":\"A0L(): void\",\"def_pos\":0,\"name\":\"A0L\",\"is_constructor\":false,\"dex_descriptor\":\"()V\"},{\"signature\":\"A0M(boolean, boolean): void\",\"def_pos\":0,\"name\":\"A0M\",\"is_constructor\":false,\"dex_descriptor\":\"(ZZ)V\"}],\"method_count\":6,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"G0j\",\"full_name\":\"X.G0j\",\"field_count\":91,\"fields\":[{\"type\":\"android.content.Context\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A05\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A06\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A07\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A08\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A09\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0A\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0B\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0C\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0D\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0E\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0F\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0G\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0H\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0I\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0J\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0K\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0L\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0M\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0N\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0O\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0P\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0Q\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0R\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0S\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0T\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0U\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0V\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0W\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0X\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0Y\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0Z\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0a\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0b\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0c\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0d\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0e\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A0f\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A0g\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A0h\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A0i\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A0j\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A0k\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A0l\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A0m\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A0n\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A0o\"},{\"type\":\"X.IZI\",\"def_pos\":0,\"name\":\"A0p\"},{\"type\":\"X.12p\",\"def_pos\":0,\"name\":\"A0q\"},{\"type\":\"X.08Y\",\"def_pos\":0,\"name\":\"A0r\"},{\"type\":\"X.0D5\",\"def_pos\":0,\"name\":\"A0s\"},{\"type\":\"X.09F\",\"def_pos\":0,\"name\":\"A0t\"},{\"type\":\"X.0Yy\",\"def_pos\":0,\"name\":\"A0u\"},{\"type\":\"X.09S\",\"def_pos\":0,\"name\":\"A0v\"},{\"type\":\"X.0B8\",\"def_pos\":0,\"name\":\"A0w\"},{\"type\":\"X.08Z\",\"def_pos\":0,\"name\":\"A0x\"},{\"type\":\"X.14G\",\"def_pos\":0,\"name\":\"A0y\"},{\"type\":\"X.13N\",\"def_pos\":0,\"name\":\"A0z\"},{\"type\":\"X.1HL\",\"def_pos\":0,\"name\":\"A10\"},{\"type\":\"X.0Js\",\"def_pos\":0,\"name\":\"A11\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A12\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A13\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A14\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A15\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A16\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A17\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A18\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A19\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A1A\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A1B\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A1C\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A1D\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A1E\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A1F\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A1G\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A1H\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A1I\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A1J\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A1K\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A1L\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A1M\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A1N\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A1O\"},{\"type\":\"X.13e\",\"def_pos\":0,\"name\":\"A1P\"},{\"type\":\"X.13Q\",\"def_pos\":0,\"name\":\"A1Q\"},{\"type\":\"X.09U\",\"def_pos\":0,\"name\":\"A1R\"},{\"type\":\"X.12m\",\"def_pos\":0,\"name\":\"A1S\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.G0j",
+          "method_name": "A03",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.G0j.A03\",\"class_name\":\"X.G0j\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public static void A03(G0j g0j) {\\n        ((M7k) g0j.A0C.BFb()).A02();\\n        g0j.A0t.CXz();\\n        ((C0zB) g0j.A0J.BFb()).A0Y();\\n        ((M2A) g0j.A0L.BFb()).A00();\\n        ((C0G4) g0j.A1D.BFb()).A02();\\n        ((ABM) g0j.A0T.BFb()).A06();\\n        C8tO c8tO \\u003d (C8tO) g0j.A18.BFb();\\n        Log.i(\\\"emojidictionarystore/deletedatabase\\\");\\n        ((C0Xp) C05a.A03(c8tO.A01)).A0E();\\n        GwV gwV \\u003d (GwV) g0j.A1A.BFb();\\n        Log.i(\\\"language-pack-store/deletedatabase\\\");\\n        ((C0Xp) gwV.A00.BFb()).A0E();\\n        ((C0Hf) g0j.A0P.BFb()).A0I();\\n        C1nH c1nH \\u003d (C1nH) g0j.A14.BFb();\\n        synchronized (c1nH) {\\n            C1nH.A03(c1nH).A0E();\\n            c1nH.A01 \\u003d null;\\n            c1nH.A02 \\u003d null;\\n        }\\n        DBt dBt \\u003d (DBt) c1nH.A03.BFb();\\n        SharedPreferences.Editor editorA00 \\u003d DBt.A00(dBt);\\n        Iterator itA0l \\u003d C3q3.A0l(dBt.A07().getAll());\\n        while (itA0l.hasNext()) {\\n            String strA1A \\u003d C2LB.A1A(itA0l);\\n            C00l.A08(strA1A);\\n            if (C2LB.A1b(strA1A, \\\"logged_out_companion_display_name/\\\")) {\\n                editorA00.remove(strA1A);\\n            }\\n        }\\n        editorA00.apply();\\n        C0jp c0jp \\u003d (C0jp) g0j.A0K.BFb();\\n        Log.i(\\\"MediaJobDataStore/deletedatabases\\\");\\n        c0jp.A02.A0E();\\n        CoroutineUtilsKt.A02(new C8ic(g0j.A0E.BFb(), null, 49));\\n        Optional optional \\u003d g0j.A0i;\\n        if (optional.isPresent()) {\\n            H54 h54 \\u003d (H54) optional.get();\\n            Log.i(\\\"FaAccountDataCleanerImpl/deleteAccountData\\\");\\n            C2Cs c2Cs \\u003d (C2Cs) C05a.A03(h54.A04);\\n            synchronized (c2Cs.A01) {\\n                c2Cs.A00 \\u003d true;\\n            }\\n            C0Sp c0Sp \\u003d (C0Sp) ((FaReportRunner) C05a.A03(h54.A02)).A09.getAndSet(null);\\n            if (c0Sp !\\u003d null) {\\n                c0Sp.AG3(new CancellationException(\\\"FA data deleted\\\"));\\n            }\\n            ((EfH) C05a.A03(h54.A00)).A00();\\n            try {\\n                C00x c00x \\u003d h54.A01.A00;\\n                if (!((C7Ln) c00x.BFb()).A0B()) {\\n                    Log.w(\\\"FaAccountDataCleanerImpl/database files remain, deleting every row instead\\\");\\n                    C0aq c0aqA07 \\u003d ((C7Ln) c00x.BFb()).A07();\\n                    try {\\n                        C1hk c1hkA00 \\u003d c0aqA07.A00();\\n                        try {\\n                            C0KU c0ku \\u003d c0aqA07.A02;\\n                            Cursor cursorA06 \\u003d DBb.A06(c0ku, \\\"SELECT name FROM sqlite_master WHERE type \\u003d \\u0027table\\u0027 AND name NOT LIKE \\u0027sqlite_%\\u0027 AND name NOT IN (\\u0027android_metadata\\u0027, \\u0027props\\u0027)\\\", \\\"FaAccountDataCleaner/TABLE_NAMES\\\");\\n                            try {\\n                                int columnIndexOrThrow \\u003d cursorA06.getColumnIndexOrThrow(\\\"name\\\");\\n                                C16f c16fA02 \\u003d C01h.A02();\\n                                while (cursorA06.moveToNext()) {\\n                                    c16fA02.add(C6of.A0y(cursorA06, columnIndexOrThrow));\\n                                }\\n                                C16f c16fA03 \\u003d C01h.A03(c16fA02);\\n                                cursorA06.close();\\n                                Iterator\\u003cE\\u003e it \\u003d c16fA03.iterator();\\n                                while (it.hasNext()) {\\n                                    c0ku.A04(C2LB.A1A(it), null, \\\"FaAccountDataCleaner/DELETE_ALL\\\", null);\\n                                }\\n                                c1hkA00.A00();\\n                                c1hkA00.close();\\n                                c0aqA07.close();\\n                            } catch (Throwable th) {\\n                                try {\\n                                    throw th;\\n                                } catch (Throwable th2) {\\n                                    C08N.A00(cursorA06, th);\\n                                    throw th2;\\n                                }\\n                            }\\n                        } catch (Throwable th3) {\\n                            try {\\n                                throw th3;\\n                            } catch (Throwable th4) {\\n                                C08N.A00(c1hkA00, th3);\\n                                throw th4;\\n                            }\\n                        }\\n                    } catch (Throwable th5) {\\n                        try {\\n                            throw th5;\\n                        } catch (Throwable th6) {\\n                            C08N.A00(c0aqA07, th5);\\n                            throw th6;\\n                        }\\n                    }\\n                }\\n                SharedPreferences.Editor editorA0F \\u003d C2LD.A0F(new ETe().A02);\\n                editorA0F.clear();\\n                editorA0F.commit();\\n                Ey4 ey4 \\u003d (Ey4) C05a.A03(h54.A03);\\n                Ey4.A01(ey4, \\\"fa_report_scheduler_onetime\\\");\\n                Ey4.A01(ey4, \\\"fa_report_scheduler\\\");\\n            } catch (Throwable th7) {\\n                SharedPreferences.Editor editorA0F2 \\u003d C2LD.A0F(new ETe().A02);\\n                editorA0F2.clear();\\n                editorA0F2.commit();\\n                Ey4 ey5 \\u003d (Ey4) C05a.A03(h54.A03);\\n                Ey4.A01(ey5, \\\"fa_report_scheduler_onetime\\\");\\n                Ey4.A01(ey5, \\\"fa_report_scheduler\\\");\\n                throw th7;\\n            }\\n        }\\n        ((KM0) g0j.A19.BFb()).A0E();\\n        C0aS c0aS \\u003d (C0aS) g0j.A1G.BFb();\\n        C0gU c0gU \\u003d c0aS.A0R;\\n        synchronized (c0gU) {\\n            java.util.Set set \\u003d c0gU.A00;\\n            if (set !\\u003d null) {\\n                set.clear();\\n            }\\n        }\\n        C0l2 c0l2 \\u003d c0aS.A0U;\\n        Log.i(\\\"HistorySyncWorkManager/stopHistorySync\\\");\\n        ((MDJ) c0l2.A00.BFb()).A0B(\\\"HISTORY_SYNC_WORK_UNIQUE_NAME\\\");\\n        c0aS.A0c.A00().A0E();\\n        C0Yz.A00(c0aS.A0N).edit().clear().apply();\\n        ((H9r) g0j.A17.BFb()).A00();\\n        if (((C1So) g0j.A0H.BFb()).A01()) {\\n            Fww.A0w(C0nJ.A00((C0nJ) g0j.A0I.BFb()));\\n        }\\n        H8y h8y \\u003d (H8y) C00D.A02(16990);\\n        Log.i(\\\"BusinessDirectoryStorageManager/onAccountDeleted\\\");\\n        H8z h8z \\u003d (H8z) C05a.A03(h8y.A01);\\n        Log.i(\\\"BusinessDirectorySharedPrefManager/clear\\\");\\n        h8z.A00().edit().clear().apply();\\n        h8y.A00().delete();\\n        File fileA0n \\u003d C3q0.A0n(h8y.A00.getFilesDir(), \\\"biz_directory\\\");\\n        if (!fileA0n.exists()) {\\n            fileA0n.mkdirs();\\n        }\\n        fileA0n.delete();\\n        if (K45.A0U.A04(g0j.A0r)) {\\n            ((K0r) g0j.A09.BFb()).A02();\\n        }\\n        ((HBj) g0j.A0S.BFb()).A00(true);\\n    }\",\"overload_count\":1,\"method_name\":\"A03\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.G0j",
+    "method": {
+      "name": "A03",
+      "reported_signature": "A03(X.G0j): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(LX/G0j;)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public static void A03(G0j g0j) {\n        ((M7k) g0j.A0C.BFb()).A02();\n        g0j.A0t.CXz();\n        ((C0zB) g0j.A0J.BFb()).A0Y();\n        ((M2A) g0j.A0L.BFb()).A00();\n        ((C0G4) g0j.A1D.BFb()).A02();\n        ((ABM) g0j.A0T.BFb()).A06();\n        C8tO c8tO = (C8tO) g0j.A18.BFb();\n        Log.i(\"emojidictionarystore/deletedatabase\");\n        ((C0Xp) C05a.A03(c8tO.A01)).A0E();\n        GwV gwV = (GwV) g0j.A1A.BFb();\n        Log.i(\"language-pack-store/deletedatabase\");\n        ((C0Xp) gwV.A00.BFb()).A0E();\n        ((C0Hf) g0j.A0P.BFb()).A0I();\n        C1nH c1nH = (C1nH) g0j.A14.BFb();\n        synchronized (c1nH) {\n            C1nH.A03(c1nH).A0E();\n            c1nH.A01 = null;\n            c1nH.A02 = null;\n        }\n        DBt dBt = (DBt) c1nH.A03.BFb();\n        SharedPreferences.Editor editorA00 = DBt.A00(dBt);\n        Iterator itA0l = C3q3.A0l(dBt.A07().getAll());\n        while (itA0l.hasNext()) {\n            String strA1A = C2LB.A1A(itA0l);\n            C00l.A08(strA1A);\n            if (C2LB.A1b(strA1A, \"logged_out_companion_display_name/\")) {\n                editorA00.remove(strA1A);\n            }\n        }\n        editorA00.apply();\n        C0jp c0jp = (C0jp) g0j.A0K.BFb();\n        Log.i(\"MediaJobDataStore/deletedatabases\");\n        c0jp.A02.A0E();\n        CoroutineUtilsKt.A02(new C8ic(g0j.A0E.BFb(), null, 49));\n        Optional optional = g0j.A0i;\n        if (optional.isPresent()) {\n            H54 h54 = (H54) optional.get();\n            Log.i(\"FaAccountDataCleanerImpl/deleteAccountData\");\n            C2Cs c2Cs = (C2Cs) C05a.A03(h54.A04);\n            synchronized (c2Cs.A01) {\n                c2Cs.A00 = true;\n            }\n            C0Sp c0Sp = (C0Sp) ((FaReportRunner) C05a.A03(h54.A02)).A09.getAndSet(null);\n            if (c0Sp != null) {\n                c0Sp.AG3(new CancellationException(\"FA data deleted\"));\n            }\n            ((EfH) C05a.A03(h54.A00)).A00();\n            try {\n                C00x c00x = h54.A01.A00;\n                if (!((C7Ln) c00x.BFb()).A0B()) {\n                    Log.w(\"FaAccountDataCleanerImpl/database files remain, deleting every row instead\");\n                    C0aq c0aqA07 = ((C7Ln) c00x.BFb()).A07();\n                    try {\n                        C1hk c1hkA00 = c0aqA07.A00();\n                        try {\n                            C0KU c0ku = c0aqA07.A02;\n                            Cursor cursorA06 = DBb.A06(c0ku, \"SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%' AND name NOT IN ('android_metadata', 'props')\", \"FaAccountDataCleaner/TABLE_NAMES\");\n                            try {\n                                int columnIndexOrThrow = cursorA06.getColumnIndexOrThrow(\"name\");\n                                C16f c16fA02 = C01h.A02();\n                                while (cursorA06.moveToNext()) {\n                                    c16fA02.add(C6of.A0y(cursorA06, columnIndexOrThrow));\n                                }\n                                C16f c16fA03 = C01h.A03(c16fA02);\n                                cursorA06.close();\n                                Iterator<E> it = c16fA03.iterator();\n                                while (it.hasNext()) {\n                                    c0ku.A04(C2LB.A1A(it), null, \"FaAccountDataCleaner/DELETE_ALL\", null);\n                                }\n                                c1hkA00.A00();\n                                c1hkA00.close();\n                                c0aqA07.close();\n                            } catch (Throwable th) {\n                                try {\n                                    throw th;\n                                } catch (Throwable th2) {\n                                    C08N.A00(cursorA06, th);\n                                    throw th2;\n                                }\n                            }\n                        } catch (Throwable th3) {\n                            try {\n                                throw th3;\n                            } catch (Throwable th4) {\n                                C08N.A00(c1hkA00, th3);\n                                throw th4;\n                            }\n                        }\n                    } catch (Throwable th5) {\n                        try {\n                            throw th5;\n                        } catch (Throwable th6) {\n                            C08N.A00(c0aqA07, th5);\n                            throw th6;\n                        }\n                    }\n                }\n                SharedPreferences.Editor editorA0F = C2LD.A0F(new ETe().A02);\n                editorA0F.clear();\n                editorA0F.commit();\n                Ey4 ey4 = (Ey4) C05a.A03(h54.A03);\n                Ey4.A01(ey4, \"fa_report_scheduler_onetime\");\n                Ey4.A01(ey4, \"fa_report_scheduler\");\n            } catch (Throwable th7) {\n                SharedPreferences.Editor editorA0F2 = C2LD.A0F(new ETe().A02);\n                editorA0F2.clear();\n                editorA0F2.commit();\n                Ey4 ey5 = (Ey4) C05a.A03(h54.A03);\n                Ey4.A01(ey5, \"fa_report_scheduler_onetime\");\n                Ey4.A01(ey5, \"fa_report_scheduler\");\n                throw th7;\n            }\n        }\n        ((KM0) g0j.A19.BFb()).A0E();\n        C0aS c0aS = (C0aS) g0j.A1G.BFb();\n        C0gU c0gU = c0aS.A0R;\n        synchronized (c0gU) {\n            java.util.Set set = c0gU.A00;\n            if (set != null) {\n                set.clear();\n            }\n        }\n        C0l2 c0l2 = c0aS.A0U;\n        Log.i(\"HistorySyncWorkManager/stopHistorySync\");\n        ((MDJ) c0l2.A00.BFb()).A0B(\"HISTORY_SYNC_WORK_UNIQUE_NAME\");\n        c0aS.A0c.A00().A0E();\n        C0Yz.A00(c0aS.A0N).edit().clear().apply();\n        ((H9r) g0j.A17.BFb()).A00();\n        if (((C1So) g0j.A0H.BFb()).A01()) {\n            Fww.A0w(C0nJ.A00((C0nJ) g0j.A0I.BFb()));\n        }\n        H8y h8y = (H8y) C00D.A02(16990);\n        Log.i(\"BusinessDirectoryStorageManager/onAccountDeleted\");\n        H8z h8z = (H8z) C05a.A03(h8y.A01);\n        Log.i(\"BusinessDirectorySharedPrefManager/clear\");\n        h8z.A00().edit().clear().apply();\n        h8y.A00().delete();\n        File fileA0n = C3q0.A0n(h8y.A00.getFilesDir(), \"biz_directory\");\n        if (!fileA0n.exists()) {\n            fileA0n.mkdirs();\n        }\n        fileA0n.delete();\n        if (K45.A0U.A04(g0j.A0r)) {\n            ((K0r) g0j.A09.BFb()).A02();\n        }\n        ((HBj) g0j.A0S.BFb()).A00(true);\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

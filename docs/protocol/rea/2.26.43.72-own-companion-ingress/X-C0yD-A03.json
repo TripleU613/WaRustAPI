@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_938fd9b8e0e370208534def93e157b0bfc83f84833f97320701860b5e5235083",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C0yD",
+    "method_name": "A03",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-JWePeP/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C0yD"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"()V\",\"signature\":\"\\u003cinit\\u003e(): void\"},{\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"()Ljava/util/HashSet;\",\"signature\":\"A00(): java.util.HashSet\"},{\"def_pos\":0,\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"A01(): void\"},{\"def_pos\":0,\"name\":\"A02\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0yD;Ljava/util/Set;)V\",\"signature\":\"A02(X.0yD, java.util.Set): void\"},{\"def_pos\":0,\"name\":\"A03\",\"is_constructor\":false,\"dex_descriptor\":\"([Lcom/whatsapp/infra/core/jid/UserJid;I)V\",\"signature\":\"A03(com.whatsapp.infra.core.jid.UserJid[], int): void\"},{\"def_pos\":0,\"name\":\"C6L\",\"is_constructor\":false,\"dex_descriptor\":\"(I)V\",\"signature\":\"C6L(int): void\"},{\"def_pos\":0,\"name\":\"C6M\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/Integer;Ljava/lang/Integer;)V\",\"signature\":\"C6M(java.lang.Integer, java.lang.Integer): void\"},{\"def_pos\":0,\"name\":\"C6N\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"C6N(): void\"}],\"method_count\":8,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"C0yD\",\"full_name\":\"X.C0yD\",\"field_count\":8,\"fields\":[{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A05\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A06\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A07\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C0yD",
+          "method_name": "A03",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.0yD.A03\",\"class_name\":\"X.C0yD\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public void A03(UserJid[] userJidArr, int i) {\\n        boolean z;\\n        C00l.A09(userJidArr, 0);\\n        int length \\u003d userJidArr.length;\\n        StringBuilder sb \\u003d new StringBuilder(\\\"DeviceSyncManager/scheduleSyncDevicesJob size\\u003d\\\");\\n        sb.append(length);\\n        sb.append(\\\" type\\u003d\\\");\\n        sb.append(i);\\n        Log.i(sb.toString());\\n        String[] strArrA0q \\u003d C0Dn.A0q(Arrays.asList(userJidArr));\\n        boolean z2 \\u003d C00L.A00;\\n        if (strArrA0q \\u003d\\u003d null || strArrA0q.length \\u003d\\u003d 0) {\\n            throw new IllegalArgumentException(\\\"invalid jid list\\\");\\n        }\\n        ArrayList arrayList \\u003d new ArrayList();\\n        for (UserJid userJid : userJidArr) {\\n            DCC dcc \\u003d (DCC) this.A03.A00.BFb();\\n            java.util.Set set \\u003d dcc.A03;\\n            synchronized (set) {\\n                if (set.contains(userJid)) {\\n                    z \\u003d false;\\n                } else {\\n                    dcc.A01.put(userJid, Long.valueOf(C08q.A00(dcc.A00)));\\n                    set.add(userJid);\\n                    z \\u003d true;\\n                }\\n            }\\n            if (z) {\\n                arrayList.add(userJid);\\n            }\\n        }\\n        if (arrayList.isEmpty()) {\\n            return;\\n        }\\n        this.A05.A00.BFb();\\n        new FeQ(this, i, 13, arrayList).run();\\n    }\",\"overload_count\":1,\"method_name\":\"A03\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C0yD",
+    "method": {
+      "name": "A03",
+      "reported_signature": "A03(com.whatsapp.infra.core.jid.UserJid[], int): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "([Lcom/whatsapp/infra/core/jid/UserJid;I)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public void A03(UserJid[] userJidArr, int i) {\n        boolean z;\n        C00l.A09(userJidArr, 0);\n        int length = userJidArr.length;\n        StringBuilder sb = new StringBuilder(\"DeviceSyncManager/scheduleSyncDevicesJob size=\");\n        sb.append(length);\n        sb.append(\" type=\");\n        sb.append(i);\n        Log.i(sb.toString());\n        String[] strArrA0q = C0Dn.A0q(Arrays.asList(userJidArr));\n        boolean z2 = C00L.A00;\n        if (strArrA0q == null || strArrA0q.length == 0) {\n            throw new IllegalArgumentException(\"invalid jid list\");\n        }\n        ArrayList arrayList = new ArrayList();\n        for (UserJid userJid : userJidArr) {\n            DCC dcc = (DCC) this.A03.A00.BFb();\n            java.util.Set set = dcc.A03;\n            synchronized (set) {\n                if (set.contains(userJid)) {\n                    z = false;\n                } else {\n                    dcc.A01.put(userJid, Long.valueOf(C08q.A00(dcc.A00)));\n                    set.add(userJid);\n                    z = true;\n                }\n            }\n            if (z) {\n                arrayList.add(userJid);\n            }\n        }\n        if (arrayList.isEmpty()) {\n            return;\n        }\n        this.A05.A00.BFb();\n        new FeQ(this, i, 13, arrayList).run();\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

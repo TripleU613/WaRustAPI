@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_bf04e790bf2b9075cf0e71527d8f568bdb0c25382a12d59552871453a48623c0",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.F1G",
+    "method_name": "A05",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-JWePeP/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.F1G"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"(LX/FvS;)V\",\"signature\":\"\\u003cinit\\u003e(X.FvS): void\"},{\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/EXq;LX/EE3;LX/EA7;LX/F1G;IJ)V\",\"signature\":\"A00(X.EXq, X.EE3, X.EA7, X.F1G, int, long): void\"},{\"def_pos\":0,\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/Esd;LX/F1G;Ljava/lang/Integer;Ljava/lang/String;IZ)V\",\"signature\":\"A01(X.Esd, X.F1G, java.lang.Integer, java.lang.String, int, boolean): void\"},{\"def_pos\":0,\"name\":\"A02\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/F1G;)V\",\"signature\":\"A02(X.F1G): void\"},{\"def_pos\":0,\"name\":\"A03\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/EXq;LX/EE3;LX/EA7;I)V\",\"signature\":\"A03(X.EXq, X.EE3, X.EA7, int): void\"},{\"def_pos\":0,\"name\":\"A04\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/EXq;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;I)V\",\"signature\":\"A04(X.EXq, java.lang.Integer, java.lang.Integer, java.lang.String, java.lang.String, int): void\"},{\"def_pos\":0,\"name\":\"A05\",\"is_constructor\":false,\"dex_descriptor\":\"(Z)V\",\"signature\":\"A05(boolean): void\"}],\"method_count\":7,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"F1G\",\"full_name\":\"X.F1G\",\"field_count\":31,\"fields\":[{\"type\":\"X.FUY\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A05\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A06\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A07\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A08\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A09\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0A\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0B\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0C\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0D\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0E\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0F\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0G\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0H\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0I\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0J\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0K\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0L\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0M\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0N\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0O\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0P\"},{\"type\":\"X.EdJ\",\"def_pos\":0,\"name\":\"A0Q\"},{\"type\":\"X.EeE\",\"def_pos\":0,\"name\":\"A0R\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A0S\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A0T\"},{\"type\":\"X.Eo9\",\"def_pos\":0,\"name\":\"A0U\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.F1G",
+          "method_name": "A05",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.F1G.A05\",\"class_name\":\"X.F1G\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public void A05(boolean z) {\\n        String strA00;\\n        boolean z2;\\n        AtomicInteger atomicInteger;\\n        int i;\\n        int i2;\\n        EdJ edJ \\u003d this.A0Q;\\n        edJ.A03.Bsm();\\n        if (edJ.A06 !\\u003d null) {\\n            FuQ fuQ \\u003d edJ.A00;\\n            EXq eXq \\u003d edJ.A06;\\n            C00L.A05(eXq);\\n            C00l.A05(eXq);\\n            int i3 \\u003d edJ.A05;\\n            Integer num \\u003d edJ.A08;\\n            String str \\u003d edJ.A0A;\\n            String str2 \\u003d edJ.A09;\\n            FDq fDq \\u003d (FDq) fuQ;\\n            String strA04 \\u003d null;\\n            String strA05 \\u003d null;\\n            boolean zA1V \\u003d B20.A1V(eXq.A03);\\n            fDq.A01 \\u003d B21.A02(fDq.A09);\\n            fDq.A02 \\u003d eXq;\\n            fDq.A00 \\u003d i3;\\n            fDq.A03 \\u003d num;\\n            fDq.A05 \\u003d str;\\n            fDq.A04 \\u003d str2;\\n            fDq.A06 \\u003d zA1V;\\n            if (i3 \\u003d\\u003d 1 || i3 \\u003d\\u003d 3 || i3 \\u003d\\u003d 5) {\\n                try {\\n                    strA00 \\u003d HeE.A00(eXq.A06);\\n                } catch (NoSuchAlgorithmException e) {\\n                    Log.e(e);\\n                    strA00 \\u003d null;\\n                }\\n            } else {\\n                strA00 \\u003d null;\\n            }\\n            C0fz c0fz \\u003d fDq.A07;\\n            String str3 \\u003d eXq.A06;\\n            boolean zA18 \\u003d c0fz.A02.A18(C0mi.A0A);\\n            C09F c09f \\u003d c0fz.A04;\\n            PhoneUserJid phoneUserJidAum \\u003d c09f.Aum();\\n            C0Dx c0DxAuj \\u003d zA18 ? c09f.Auj() : phoneUserJidAum;\\n            if (c0DxAuj \\u003d\\u003d null) {\\n                Log.e(\\\"sync-stats-manager/createMDRegAttemptIds registrationUserJid is null\\\");\\n                z2 \\u003d false;\\n            } else {\\n                try {\\n                    MessageDigest messageDigestA0x \\u003d DBb.A0x();\\n                    strA04 \\u003d C0fz.A04(c0DxAuj, str3, messageDigestA0x);\\n                    strA05 \\u003d phoneUserJidAum !\\u003d null ? C0fz.A04(phoneUserJidAum, str3, messageDigestA0x) : null;\\n                    z2 \\u003d true;\\n                } catch (NoSuchAlgorithmException e2) {\\n                    Log.e(\\\"sync-stats-manager/createMDRegAttemptIds unable to create id because sha256 instance could not created.\\\", e2);\\n                    z2 \\u003d false;\\n                }\\n            }\\n            C0Z6 c0z6 \\u003d fDq.A0A;\\n            if (!z2) {\\n                strA04 \\u003d null;\\n                strA05 \\u003d null;\\n            }\\n            String strA0x \\u003d num !\\u003d null ? B1y.A0x(num) : null;\\n            String strA0s \\u003d C1Xl.A0s(Integer.valueOf(C6og.A05(eXq.A04, 1)));\\n            String strValueOf \\u003d String.valueOf(1);\\n            if (C0Z6.A01(c0z6)) {\\n                c0z6.A01.A01();\\n                AtomicReference atomicReference \\u003d c0z6.A03;\\n                Number number \\u003d (Number) atomicReference.getAndSet(null);\\n                if (number !\\u003d null) {\\n                    int iIntValue \\u003d number.intValue();\\n                    C0Z6.A00(c0z6).markerAnnotate(106889217, iIntValue, \\\"cancellation_reason\\\", \\\"superseded_by_new_funnel\\\");\\n                    C0Z6.A00(c0z6).markerEnd(106889217, iIntValue, (short) 4);\\n                }\\n                do {\\n                    atomicInteger \\u003d c0z6.A02;\\n                    i \\u003d atomicInteger.get();\\n                    i2 \\u003d i + 1;\\n                    if (i \\u003d\\u003d Integer.MAX_VALUE) {\\n                        i2 \\u003d 1;\\n                    }\\n                } while (!atomicInteger.compareAndSet(i, i2));\\n                C0Z6.A00(c0z6).markerStart(106889217, i);\\n                C0Z6.A00(c0z6).markerAnnotate(106889217, i, \\\"is_rereg\\\", zA1V);\\n                if (strA04 !\\u003d null) {\\n                    C0Z6.A00(c0z6).markerAnnotate(106889217, i, \\\"registration_attempt_id\\\", strA04);\\n                }\\n                if (strA05 !\\u003d null) {\\n                    C0Z6.A00(c0z6).markerAnnotate(106889217, i, \\\"registration_attempt_id_pn\\\", strA05);\\n                }\\n                if (strA00 !\\u003d null) {\\n                    C0Z6.A00(c0z6).markerAnnotate(106889217, i, \\\"companion_ref_hash\\\", strA00);\\n                }\\n                if (strA0x !\\u003d null) {\\n                    C0Z6.A00(c0z6).markerAnnotate(106889217, i, \\\"pairing_entry_point\\\", strA0x);\\n                }\\n                if (strA0s !\\u003d null) {\\n                    C0Z6.A00(c0z6).markerAnnotate(106889217, i, \\\"companion_platform_type\\\", strA0s);\\n                }\\n                if (strValueOf !\\u003d null) {\\n                    C0Z6.A00(c0z6).markerAnnotate(106889217, i, \\\"account_type\\\", strValueOf);\\n                }\\n                if (str2 !\\u003d null) {\\n                    C0Z6.A00(c0z6).markerAnnotate(106889217, i, \\\"companion_product_id\\\", str2);\\n                }\\n                atomicReference.set(Integer.valueOf(i));\\n            }\\n            FDq.A00(fDq, null, strA00, 1, 0L);\\n        } else {\\n            edJ.A01.A0g(C8t5.A0v(\\\"companion-pairing/missing_pairing_log: \\\", z), null, false);\\n            Log.e(C8t5.A0v(\\\"CompanionDeviceQrHandler/notifyOnDevicePairingRequested/missing pairing data: \\\", z));\\n        }\\n        FUY fuy \\u003d this.A00;\\n        if (fuy !\\u003d null) {\\n            fuy.A0N \\u003d false;\\n            Runnable runnable \\u003d fuy.A0M;\\n            if (runnable !\\u003d null) {\\n                fuy.A0B.CYL(runnable);\\n                fuy.A0M \\u003d null;\\n            }\\n        }\\n        C00x c00x \\u003d this.A01.A00;\\n        boolean zA14 \\u003d C2L6.A0d(c00x).A14(16329);\\n        boolean zA15 \\u003d C2L6.A0d(c00x).A14(21216);\\n        boolean zA0F \\u003d C00E.A0F(C2L6.A0d(c00x), GuV.A01);\\n        this.A00 \\u003d new FUY((C0g2) C05a.A03(this.A0B), C8t4.A0U(this.A0L), C2L8.A10(this.A0P), (C0Z6) C05a.A03(this.A0C), B1z.A0E(this.A03), B1y.A0N(this.A0D), this.A0R, C2L9.A0l(this.A09), Boolean.valueOf(zA14), Boolean.valueOf(zA15), zA0F);\\n    }\",\"overload_count\":1,\"method_name\":\"A05\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.F1G",
+    "method": {
+      "name": "A05",
+      "reported_signature": "A05(boolean): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(Z)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public void A05(boolean z) {\n        String strA00;\n        boolean z2;\n        AtomicInteger atomicInteger;\n        int i;\n        int i2;\n        EdJ edJ = this.A0Q;\n        edJ.A03.Bsm();\n        if (edJ.A06 != null) {\n            FuQ fuQ = edJ.A00;\n            EXq eXq = edJ.A06;\n            C00L.A05(eXq);\n            C00l.A05(eXq);\n            int i3 = edJ.A05;\n            Integer num = edJ.A08;\n            String str = edJ.A0A;\n            String str2 = edJ.A09;\n            FDq fDq = (FDq) fuQ;\n            String strA04 = null;\n            String strA05 = null;\n            boolean zA1V = B20.A1V(eXq.A03);\n            fDq.A01 = B21.A02(fDq.A09);\n            fDq.A02 = eXq;\n            fDq.A00 = i3;\n            fDq.A03 = num;\n            fDq.A05 = str;\n            fDq.A04 = str2;\n            fDq.A06 = zA1V;\n            if (i3 == 1 || i3 == 3 || i3 == 5) {\n                try {\n                    strA00 = HeE.A00(eXq.A06);\n                } catch (NoSuchAlgorithmException e) {\n                    Log.e(e);\n                    strA00 = null;\n                }\n            } else {\n                strA00 = null;\n            }\n            C0fz c0fz = fDq.A07;\n            String str3 = eXq.A06;\n            boolean zA18 = c0fz.A02.A18(C0mi.A0A);\n            C09F c09f = c0fz.A04;\n            PhoneUserJid phoneUserJidAum = c09f.Aum();\n            C0Dx c0DxAuj = zA18 ? c09f.Auj() : phoneUserJidAum;\n            if (c0DxAuj == null) {\n                Log.e(\"sync-stats-manager/createMDRegAttemptIds registrationUserJid is null\");\n                z2 = false;\n            } else {\n                try {\n                    MessageDigest messageDigestA0x = DBb.A0x();\n                    strA04 = C0fz.A04(c0DxAuj, str3, messageDigestA0x);\n                    strA05 = phoneUserJidAum != null ? C0fz.A04(phoneUserJidAum, str3, messageDigestA0x) : null;\n                    z2 = true;\n                } catch (NoSuchAlgorithmException e2) {\n                    Log.e(\"sync-stats-manager/createMDRegAttemptIds unable to create id because sha256 instance could not created.\", e2);\n                    z2 = false;\n                }\n            }\n            C0Z6 c0z6 = fDq.A0A;\n            if (!z2) {\n                strA04 = null;\n                strA05 = null;\n            }\n            String strA0x = num != null ? B1y.A0x(num) : null;\n            String strA0s = C1Xl.A0s(Integer.valueOf(C6og.A05(eXq.A04, 1)));\n            String strValueOf = String.valueOf(1);\n            if (C0Z6.A01(c0z6)) {\n                c0z6.A01.A01();\n                AtomicReference atomicReference = c0z6.A03;\n                Number number = (Number) atomicReference.getAndSet(null);\n                if (number != null) {\n                    int iIntValue = number.intValue();\n                    C0Z6.A00(c0z6).markerAnnotate(106889217, iIntValue, \"cancellation_reason\", \"superseded_by_new_funnel\");\n                    C0Z6.A00(c0z6).markerEnd(106889217, iIntValue, (short) 4);\n                }\n                do {\n                    atomicInteger = c0z6.A02;\n                    i = atomicInteger.get();\n                    i2 = i + 1;\n                    if (i == Integer.MAX_VALUE) {\n                        i2 = 1;\n                    }\n                } while (!atomicInteger.compareAndSet(i, i2));\n                C0Z6.A00(c0z6).markerStart(106889217, i);\n                C0Z6.A00(c0z6).markerAnnotate(106889217, i, \"is_rereg\", zA1V);\n                if (strA04 != null) {\n                    C0Z6.A00(c0z6).markerAnnotate(106889217, i, \"registration_attempt_id\", strA04);\n                }\n                if (strA05 != null) {\n                    C0Z6.A00(c0z6).markerAnnotate(106889217, i, \"registration_attempt_id_pn\", strA05);\n                }\n                if (strA00 != null) {\n                    C0Z6.A00(c0z6).markerAnnotate(106889217, i, \"companion_ref_hash\", strA00);\n                }\n                if (strA0x != null) {\n                    C0Z6.A00(c0z6).markerAnnotate(106889217, i, \"pairing_entry_point\", strA0x);\n                }\n                if (strA0s != null) {\n                    C0Z6.A00(c0z6).markerAnnotate(106889217, i, \"companion_platform_type\", strA0s);\n                }\n                if (strValueOf != null) {\n                    C0Z6.A00(c0z6).markerAnnotate(106889217, i, \"account_type\", strValueOf);\n                }\n                if (str2 != null) {\n                    C0Z6.A00(c0z6).markerAnnotate(106889217, i, \"companion_product_id\", str2);\n                }\n                atomicReference.set(Integer.valueOf(i));\n            }\n            FDq.A00(fDq, null, strA00, 1, 0L);\n        } else {\n            edJ.A01.A0g(C8t5.A0v(\"companion-pairing/missing_pairing_log: \", z), null, false);\n            Log.e(C8t5.A0v(\"CompanionDeviceQrHandler/notifyOnDevicePairingRequested/missing pairing data: \", z));\n        }\n        FUY fuy = this.A00;\n        if (fuy != null) {\n            fuy.A0N = false;\n            Runnable runnable = fuy.A0M;\n            if (runnable != null) {\n                fuy.A0B.CYL(runnable);\n                fuy.A0M = null;\n            }\n        }\n        C00x c00x = this.A01.A00;\n        boolean zA14 = C2L6.A0d(c00x).A14(16329);\n        boolean zA15 = C2L6.A0d(c00x).A14(21216);\n        boolean zA0F = C00E.A0F(C2L6.A0d(c00x), GuV.A01);\n        this.A00 = new FUY((C0g2) C05a.A03(this.A0B), C8t4.A0U(this.A0L), C2L8.A10(this.A0P), (C0Z6) C05a.A03(this.A0C), B1z.A0E(this.A03), B1y.A0N(this.A0D), this.A0R, C2L9.A0l(this.A09), Boolean.valueOf(zA14), Boolean.valueOf(zA15), zA0F);\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

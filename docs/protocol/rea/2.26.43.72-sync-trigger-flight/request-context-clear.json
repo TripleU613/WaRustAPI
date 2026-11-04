@@ -1,0 +1,147 @@
+{
+  "evidence_id": "ev_9a1e5d210c9f94f809c347b999794cd5aadec2d8fe5609ae032200873f29dea2",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.FUc",
+    "method_name": "A00",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-KoUKZa/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "load_apk",
+        "input": {
+          "path": "/tmp/rea-android-KoUKZa/target.apk",
+          "threads": 1,
+          "resources": "full"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-KoUKZa/target.apk\",\"class_count\":106897,\"raw_class_count\":106897,\"resource_count\":15728,\"load_duration_ms\":22212,\"decompile_timeout_ms\":90000,\"threads\":1,\"code_cache_size\":64,\"resources\":\"full\"}"
+            }
+          ]
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.FUc"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cinit\\u003e(X.00x, X.0aY, X.0ac, X.0l8, X.0fz, X.0fI, com.whatsapp.consumer.companiondevice.iq.SyncResponseHandler, X.0me, X.FDW, X.09F, X.08Z, X.0Sf, com.whatsapp.kmp.syncd.syncdengine.OutgoingProcessor): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"(LX/00x;LX/0aY;LX/0ac;LX/0l8;LX/0fz;LX/0fI;Lcom/whatsapp/consumer/companiondevice/iq/SyncResponseHandler;LX/0me;LX/FDW;LX/09F;LX/08Z;LX/0Sf;Lcom/whatsapp/kmp/syncd/syncdengine/OutgoingProcessor;)V\"},{\"signature\":\"A00(X.FUc): X.EfB\",\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/FUc;)LX/EfB;\"},{\"signature\":\"A01(X.EfK, X.FUc, java.util.Map): void\",\"def_pos\":0,\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/EfK;LX/FUc;Ljava/util/Map;)V\"},{\"signature\":\"BsS(java.lang.String): void\",\"def_pos\":0,\"name\":\"BsS\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)V\"},{\"signature\":\"Bvj(X.0Tp, java.lang.String): void\",\"def_pos\":0,\"name\":\"Bvj\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0Tp;Ljava/lang/String;)V\"},{\"signature\":\"CK4(X.0Tp, java.lang.String): void\",\"def_pos\":0,\"name\":\"CK4\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0Tp;Ljava/lang/String;)V\"},{\"signature\":\"CmQ(java.lang.String): X.D33\",\"def_pos\":0,\"name\":\"CmQ\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)LX/D33;\"}],\"method_count\":7,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"FUc\",\"full_name\":\"X.FUc\",\"field_count\":18,\"fields\":[{\"type\":\"X.EfB\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"java.util.List\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"java.util.List\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"X.00x\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"X.0aY\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"X.0ac\",\"def_pos\":0,\"name\":\"A05\"},{\"type\":\"X.0l8\",\"def_pos\":0,\"name\":\"A06\"},{\"type\":\"X.0fz\",\"def_pos\":0,\"name\":\"A07\"},{\"type\":\"X.0fI\",\"def_pos\":0,\"name\":\"A08\"},{\"type\":\"com.whatsapp.consumer.companiondevice.iq.SyncResponseHandler\",\"def_pos\":0,\"name\":\"A09\"},{\"type\":\"X.0me\",\"def_pos\":0,\"name\":\"A0A\"},{\"type\":\"X.FDW\",\"def_pos\":0,\"name\":\"A0B\"},{\"type\":\"X.09F\",\"def_pos\":0,\"name\":\"A0C\"},{\"type\":\"X.0Sf\",\"def_pos\":0,\"name\":\"A0D\"},{\"type\":\"com.whatsapp.kmp.syncd.syncdengine.OutgoingProcessor\",\"def_pos\":0,\"name\":\"A0E\"},{\"type\":\"X.023\",\"def_pos\":0,\"name\":\"A0F\"},{\"type\":\"X.0TR\",\"def_pos\":0,\"name\":\"A0G\"},{\"type\":\"X.08Z\",\"def_pos\":0,\"name\":\"A0H\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.FUc",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.FUc.A00\",\"class_name\":\"X.FUc\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    /* JADX WARN: In static synchronized method top region not synchronized by class const: (r2v0 X.FUc) */\\n    public static final synchronized EfB A00(FUc fUc) {\\n        EfB efB;\\n        synchronized (fUc) {\\n            efB \\u003d fUc.A00;\\n            if (efB \\u003d\\u003d null) {\\n                throw C2L8.A1C();\\n            }\\n            fUc.A00 \\u003d null;\\n            fUc.A01 \\u003d null;\\n            fUc.A02 \\u003d null;\\n        }\\n        return efB;\\n    }\",\"overload_count\":1,\"method_name\":\"A00\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.FUc",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(X.FUc): X.EfB",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(LX/FUc;)LX/EfB;"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: In static synchronized method top region not synchronized by class const: (r2v0 X.FUc) */\n    public static final synchronized EfB A00(FUc fUc) {\n        EfB efB;\n        synchronized (fUc) {\n            efB = fUc.A00;\n            if (efB == null) {\n                throw C2L8.A1C();\n            }\n            fUc.A00 = null;\n            fUc.A01 = null;\n            fUc.A02 = null;\n        }\n        return efB;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

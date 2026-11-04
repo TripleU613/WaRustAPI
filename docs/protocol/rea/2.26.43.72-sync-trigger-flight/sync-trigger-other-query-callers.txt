@@ -1,0 +1,74 @@
+classes.dex  Lcom/whatsapp/infra/smax/generated/md/outgoing/MdRPCManager;->A01(LLLLI)
+  invoke dex byte offset: 0x5c434e
+classes.dex  LX/1A7;->A0A(VLJ)
+  invoke dex byte offset: 0x83e040
+classes.dex  LX/1A7;->A0B(VL)
+  invoke dex byte offset: 0x83e0ac
+classes.dex  LX/1Oc;->A05(VLLLI)
+  invoke dex byte offset: 0x8c45f6
+classes13.dex  Lcom/whatsapp/infra/smax/generated/spam/outgoing/SpamRPCManager;->A01(LLLLLLLLLI)
+  invoke dex byte offset: 0x4c14c0
+classes13.dex  Lcom/whatsapp/infra/smax/generated/spam/outgoing/SpamRPCManager;->A02(LLLLLLIJJ)
+  invoke dex byte offset: 0x4c1662
+classes13.dex  Lcom/whatsapp/infra/smax/generated/spam/outgoing/SpamRPCManager;->A03(LLLLLLI)
+  invoke dex byte offset: 0x4c1800
+classes13.dex  Lcom/whatsapp/infra/smax/generated/spam/outgoing/SpamRPCManager;->A04(LLLLLLLLLI)
+  invoke dex byte offset: 0x4c19a6
+classes13.dex  Lcom/whatsapp/infra/smax/generated/spam/outgoing/SpamRPCManager;->A05(LLLLLLLI)
+  invoke dex byte offset: 0x4c1b42
+classes13.dex  Lcom/whatsapp/infra/smax/generated/spam/outgoing/SpamRPCManager;->A06(LLLLI)
+  invoke dex byte offset: 0x4c1cbc
+classes2.dex  LX/1jA;->A01(VL)
+  invoke dex byte offset: 0x1f76cc
+classes2.dex  LX/1jU;->BzO(V)
+  invoke dex byte offset: 0x1fa7a6
+classes5.dex  Lcom/whatsapp/newsletter/status/job/GetStatusMyAddOnsJob;->A0L(V)
+  invoke dex byte offset: 0x316964
+classes5.dex  Lcom/whatsapp/newsletter/messages/job/GetNewsletterMyAddOnMessagesJob;->A0L(V)
+  invoke dex byte offset: 0x316a74
+classes5.dex  Lcom/whatsapp/newsletter/status/job/GetNewsletterStatusUpdatesJob;->A0L(V)
+  invoke dex byte offset: 0x316c20
+classes5.dex  Lcom/whatsapp/newsletter/status/job/GetNewsletterStatusesJob;->A0L(V)
+  invoke dex byte offset: 0x316eb8
+classes5.dex  Lcom/whatsapp/response/fetch/GetNewsletterStatusResponsesJob;->A0L(V)
+  invoke dex byte offset: 0x3170e6
+classes5.dex  Lcom/whatsapp/newsletter/messages/job/GetNewsletterMessagesUpdatesJob;->A0L(V)
+  invoke dex byte offset: 0x3172c2
+classes5.dex  Lcom/whatsapp/response/fetch/GetNewsletterQuestionResponsesJob;->A0L(V)
+  invoke dex byte offset: 0x31754a
+classes5.dex  Lcom/whatsapp/newsletter/messages/job/GetNewsletterMessagesJob;->A0L(V)
+  invoke dex byte offset: 0x318474
+classes5.dex  Lcom/whatsapp/community/iq/SubgroupSuggestionActionProtocolHelper;->A00(LLLLLL)
+  invoke dex byte offset: 0x3b98f4
+classes5.dex  Lcom/whatsapp/group/premiumbroadcast/protocol/BroadcastListQuotaProtocol;->A01(LL)
+  invoke dex byte offset: 0x3fc118
+classes5.dex  Lcom/whatsapp/reporttoadmin/xmpp/RtaXmppClient;->A01(LLLL)
+  invoke dex byte offset: 0x408c70
+classes5.dex  Lcom/whatsapp/reporttoadmin/xmpp/RtaXmppClient;->A03(VLLZ)
+  invoke dex byte offset: 0x408e18
+classes5.dex  Lcom/whatsapp/reporttoadmin/xmpp/RtaXmppClient;->A03(VLLZ)
+  invoke dex byte offset: 0x408e72
+classes5.dex  LX/8bf;->run(V)
+  invoke dex byte offset: 0x4fa9b8
+classes5.dex  LX/8ct;->invoke(L)
+  invoke dex byte offset: 0x51d95a
+classes7.dex  Lcom/whatsapp/group/community/AllowNonAdminSubGroupCreationProtocolHelper;->A00(LLLZ)
+  invoke dex byte offset: 0x41edb0
+classes7.dex  Lcom/whatsapp/group/community/AllowNonAdminSubGroupCreationProtocolHelper;->A00(LLLZ)
+  invoke dex byte offset: 0x41ee1c
+classes8.dex  Lcom/whatsapp/infra/smax/generated/newsletters/outgoing/NewslettersRPCManager;->A00(LLLLIJ)
+  invoke dex byte offset: 0x5945ba
+classes8.dex  Lcom/whatsapp/infra/smax/generated/newsletters/outgoing/NewslettersRPCManager;->A01(LLLIJ)
+  invoke dex byte offset: 0x594780
+classes8.dex  Lcom/whatsapp/productinfra/status/sendflow/SendNewsletterStatusJob;->A0L(V)
+  invoke dex byte offset: 0x8d43c0
+classes8.dex  Lcom/whatsapp/productinfra/status/sendflow/SendNewsletterStatusJob;->A0L(V)
+  invoke dex byte offset: 0x8d44b2
+classes8.dex  Lcom/whatsapp/productinfra/status/sendflow/SendNewsletterStatusJob;->A0L(V)
+  invoke dex byte offset: 0x8d452e
+classes8.dex  Lcom/whatsapp/productinfra/status/sendflow/SendNewsletterStatusJob;->A0L(V)
+  invoke dex byte offset: 0x8d4594
+classes8.dex  Lcom/whatsapp/productinfra/status/sendflow/SendE2eStatusJob;->A0L(V)
+  invoke dex byte offset: 0x8e2d3c
+classes8.dex  Lcom/whatsapp/productinfra/status/sendflow/SendE2eStatusJob;->A0L(V)
+  invoke dex byte offset: 0x8e3438

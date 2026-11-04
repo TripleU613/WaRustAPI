@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_6cf1faca6169c8f0ab43ebc51230735a898c21b2bed27fb6ac8926f5a9171f5d",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C13N",
+    "method_name": "A0K",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-JWePeP/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C13N"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"()V\",\"signature\":\"\\u003cinit\\u003e(): void\"},{\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/13N;)LX/0DS;\",\"signature\":\"A00(X.13N): X.0DS\"},{\"def_pos\":0,\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/13N;)LX/00X;\",\"signature\":\"A01(X.13N): X.00X\"},{\"def_pos\":0,\"name\":\"A02\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/13N;)LX/0YB;\",\"signature\":\"A02(X.13N): X.0YB\"},{\"def_pos\":0,\"name\":\"A03\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/13N;Ljava/lang/String;Ljava/lang/String;Z)V\",\"signature\":\"A03(X.13N, java.lang.String, java.lang.String, boolean): void\"},{\"def_pos\":0,\"name\":\"A04\",\"is_constructor\":false,\"dex_descriptor\":\"()I\",\"signature\":\"A04(): int\"},{\"def_pos\":0,\"name\":\"A05\",\"is_constructor\":false,\"dex_descriptor\":\"(I)Landroid/content/Intent;\",\"signature\":\"A05(int): android.content.Intent\"},{\"def_pos\":0,\"name\":\"A06\",\"is_constructor\":false,\"dex_descriptor\":\"()LX/0E2;\",\"signature\":\"A06(): X.0E2\"},{\"def_pos\":0,\"name\":\"A07\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"A07(): void\"},{\"def_pos\":0,\"name\":\"A08\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"A08(): void\"},{\"def_pos\":0,\"name\":\"A09\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"A09(): void\"},{\"def_pos\":0,\"name\":\"A0A\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"A0A(): void\"},{\"def_pos\":0,\"name\":\"A0B\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"A0B(): void\"},{\"def_pos\":0,\"name\":\"A0C\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"A0C(): void\"},{\"def_pos\":0,\"name\":\"A0D\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"A0D(): void\"},{\"def_pos\":0,\"name\":\"A0E\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"A0E(): void\"},{\"def_pos\":0,\"name\":\"A0F\",\"is_constructor\":false,\"dex_descriptor\":\"(I)V\",\"signature\":\"A0F(int): void\"},{\"def_pos\":0,\"name\":\"A0G\",\"is_constructor\":false,\"dex_descriptor\":\"(JLjava/lang/String;)V\",\"signature\":\"A0G(long, java.lang.String): void\"},{\"def_pos\":0,\"name\":\"A0H\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/Integer;)V\",\"signature\":\"A0H(java.lang.Integer): void\"},{\"def_pos\":0,\"name\":\"A0I\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V\",\"signature\":\"A0I(java.lang.Integer, java.lang.String, java.lang.String, java.lang.String, java.lang.String): void\"},{\"def_pos\":0,\"name\":\"A0J\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)V\",\"signature\":\"A0J(java.lang.String): void\"},{\"def_pos\":0,\"name\":\"A0K\",\"is_constructor\":false,\"dex_descriptor\":\"()Z\",\"signature\":\"A0K(): boolean\"},{\"def_pos\":0,\"name\":\"A0L\",\"is_constructor\":false,\"dex_descriptor\":\"()Z\",\"signature\":\"A0L(): boolean\"},{\"def_pos\":0,\"name\":\"A0M\",\"is_constructor\":false,\"dex_descriptor\":\"()Z\",\"signature\":\"A0M(): boolean\"},{\"def_pos\":0,\"name\":\"A0N\",\"is_constructor\":false,\"dex_descriptor\":\"()Z\",\"signature\":\"A0N(): boolean\"}],\"method_count\":25,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"C13N\",\"full_name\":\"X.C13N\",\"field_count\":83,\"fields\":[{\"type\":\"android.os.Handler\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A05\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A06\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A07\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A08\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A09\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0A\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0B\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0C\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0D\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0E\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0F\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0G\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0H\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0I\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0J\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0K\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0L\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0M\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0N\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0O\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0P\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0Q\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0R\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0S\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A0T\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A0U\"},{\"type\":\"X.14E\",\"def_pos\":0,\"name\":\"A0V\"},{\"type\":\"X.0Vy\",\"def_pos\":0,\"name\":\"A0W\"},{\"type\":\"X.13a\",\"def_pos\":0,\"name\":\"A0X\"},{\"type\":\"X.13e\",\"def_pos\":0,\"name\":\"A0Y\"},{\"type\":\"X.0aS\",\"def_pos\":0,\"name\":\"A0Z\"},{\"type\":\"X.0G2\",\"def_pos\":0,\"name\":\"A0a\"},{\"type\":\"X.13v\",\"def_pos\":0,\"name\":\"A0b\"},{\"type\":\"X.13d\",\"def_pos\":0,\"name\":\"A0c\"},{\"type\":\"X.13t\",\"def_pos\":0,\"name\":\"A0d\"},{\"type\":\"X.0ob\",\"def_pos\":0,\"name\":\"A0e\"},{\"type\":\"X.08Y\",\"def_pos\":0,\"name\":\"A0f\"},{\"type\":\"X.12Q\",\"def_pos\":0,\"name\":\"A0g\"},{\"type\":\"X.0vB\",\"def_pos\":0,\"name\":\"A0h\"},{\"type\":\"X.0m6\",\"def_pos\":0,\"name\":\"A0i\"},{\"type\":\"X.0Fc\",\"def_pos\":0,\"name\":\"A0j\"},{\"type\":\"X.0BD\",\"def_pos\":0,\"name\":\"A0k\"},{\"type\":\"X.09U\",\"def_pos\":0,\"name\":\"A0l\"},{\"type\":\"X.09S\",\"def_pos\":0,\"name\":\"A0m\"},{\"type\":\"X.08q\",\"def_pos\":0,\"name\":\"A0n\"},{\"type\":\"X.08Z\",\"def_pos\":0,\"name\":\"A0o\"},{\"type\":\"X.13z\",\"def_pos\":0,\"name\":\"A0p\"},{\"type\":\"X.0G4\",\"def_pos\":0,\"name\":\"A0q\"},{\"type\":\"X.0Js\",\"def_pos\":0,\"name\":\"A0r\"},{\"type\":\"java.util.concurrent.atomic.AtomicBoolean\",\"def_pos\":0,\"name\":\"A0s\"},{\"type\":\"X.023\",\"def_pos\":0,\"name\":\"A0t\"},{\"type\":\"X.0TR\",\"def_pos\":0,\"name\":\"A0u\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0v\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0w\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0x\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A0y\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A0z\"},{\"type\":\"X.0mD\",\"def_pos\":0,\"name\":\"A10\"},{\"type\":\"X.14N\",\"def_pos\":0,\"name\":\"A11\"},{\"type\":\"X.0yl\",\"def_pos\":0,\"name\":\"A12\"},{\"type\":\"X.0fx\",\"def_pos\":0,\"name\":\"A13\"},{\"type\":\"X.0D5\",\"def_pos\":0,\"name\":\"A14\"},{\"type\":\"X.0wE\",\"def_pos\":0,\"name\":\"A15\"},{\"type\":\"X.0W4\",\"def_pos\":0,\"name\":\"A16\"},{\"type\":\"X.00S\",\"def_pos\":0,\"name\":\"A17\"},{\"type\":\"X.0B8\",\"def_pos\":0,\"name\":\"A18\"},{\"type\":\"X.0WJ\",\"def_pos\":0,\"name\":\"A19\"},{\"type\":\"X.0Gs\",\"def_pos\":0,\"name\":\"A1A\"},{\"type\":\"X.144\",\"def_pos\":0,\"name\":\"A1B\"},{\"type\":\"X.14D\",\"def_pos\":0,\"name\":\"A1C\"},{\"type\":\"X.14W\",\"def_pos\":0,\"name\":\"A1D\"},{\"type\":\"X.14K\",\"def_pos\":0,\"name\":\"A1E\"},{\"type\":\"X.13P\",\"def_pos\":0,\"name\":\"A1F\"},{\"type\":\"X.0qx\",\"def_pos\":0,\"name\":\"A1G\"},{\"type\":\"X.14G\",\"def_pos\":0,\"name\":\"A1H\"},{\"type\":\"X.110\",\"def_pos\":0,\"name\":\"A1I\"},{\"type\":\"java.util.Set\",\"def_pos\":0,\"name\":\"A1J\"},{\"type\":\"X.023\",\"def_pos\":0,\"name\":\"A1K\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C13N",
+          "method_name": "A0K",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.13N.A0K\",\"class_name\":\"X.C13N\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public final boolean A0K() {\\n        AtomicReference atomicReference;\\n        Object obj;\\n        AtomicBoolean atomicBoolean \\u003d this.A0s;\\n        if (!atomicBoolean.compareAndSet(false, true)) {\\n            Log.w(\\\"RegistrationManager/completeChangeNumber/already-in-progress; skipping\\\");\\n            return false;\\n        }\\n        this.A10.A00();\\n        C00x c00x \\u003d this.A09.A00;\\n        ((HBc) c00x.BFb()).A00();\\n        A02(this).A0E(false, 16);\\n        this.A14.A04();\\n        ((C0sz) this.A02.A00.BFb()).A02();\\n        this.A0m.A0X().A02().putLong(\\\"registration_success_time_ms\\\", C08q.A00(this.A0n)).apply();\\n        this.A1G.A00();\\n        Log.i(\\\"RegistrationManager/completeChangeNumber\\\");\\n        HBc hBc \\u003d (HBc) c00x.BFb();\\n        C05a c05aA00 \\u003d C09H.A00(((C00X) hBc.A07.A00.BFb()).A01(), 238);\\n        C0E2 c0e2A06 \\u003d ((C13N) hBc.A02.A00.BFb()).A06();\\n        if (c0e2A06 \\u003d\\u003d null) {\\n            Log.e(\\\"ChangeNumberStateResetter/resetMeObject/no identity\\\");\\n        } else {\\n            Log.a(c0e2A06.A01 !\\u003d null);\\n            if (((C09O) c05aA00.A00.BFb()).CrQ(c0e2A06)) {\\n                boolean zA0D \\u003d this.A1A.A0D();\\n                if (!zA0D) {\\n                    C0G4 c0g4 \\u003d this.A0q;\\n                    if (c0g4.A04()) {\\n                        Log.i(\\\"RegistrationManager/completeChangeNumber/msgstoredb/healthy\\\");\\n                        C0G2.A05(this.A0a, false);\\n                        c0g4.A01();\\n                    }\\n                }\\n                A02(this).A09();\\n                A02(this).A1D \\u003d false;\\n                A00(this).A0i(false);\\n                Log.i(\\\"RegistrationManager/completeChangeNumber/cleared-passive-mode\\\");\\n                if (!zA0D) {\\n                    this.A0e.A0M(false);\\n                }\\n                A0F(3);\\n                C08Z c08z \\u003d this.A0o;\\n                c08z.CbD(new IBy(this, 16));\\n                ((MT6) C0m6.A00(this.A0i).A09.A00.BFb()).A00 \\u003d true;\\n                C1sf.A01(C00J.A00());\\n                Log.i(\\\"RegistrationManager/completeChangeNumber/changenumber/setregverified\\\");\\n                this.A0e.A0E(C0vJ.REGISTRATION_FULL);\\n                this.A1H.A01(true, false);\\n                Log.i(\\\"RegistrationManager/completeChangeNumber/reinitialized-payments\\\");\\n                c08z.CbD(new Fel(this, 8));\\n                C89U c89u \\u003d (C89U) this.A0z.A01();\\n                if (c89u !\\u003d null) {\\n                    c89u.A02();\\n                }\\n                C00x c00x2 \\u003d this.A05.A00;\\n                ((CMn) c00x2.BFb()).A02(1, 3);\\n                ((CMn) c00x2.BFb()).A02(2, 3);\\n                HBc hBc2 \\u003d (HBc) c00x.BFb();\\n                ((C0mD) hBc2.A03.A00.BFb()).A00();\\n                ((C1dH) hBc2.A00.A00.BFb()).A0F();\\n                C00x c00x3 \\u003d hBc2.A06.A00;\\n                ((C09S) c00x3.BFb()).A0M().A05(3);\\n                C09S.A00((C09S) c00x3.BFb()).putBoolean(\\\"newsletter_subscriptions_fetched\\\", false).apply();\\n                ((C0YB) hBc2.A01.A00.BFb()).A0C(0, true, false, false, false);\\n                C07o.A00((C07o) this.A08.A00.BFb(), C0Kl.A02, new C3XN(21));\\n                Integer num \\u003d C02X.A05;\\n                C2St c2St \\u003d C2St.A08;\\n                C1Kw c1Kw \\u003d C1Kw.CHANGE_NUMBER_SUCCESS;\\n                AtomicReference atomicReference2 \\u003d C0hP.A07;\\n                C0hQ c0hQ \\u003d (C0hQ) atomicReference2.get();\\n                if (c0hQ \\u003d\\u003d null) {\\n                    return true;\\n                }\\n                c0hQ.A02.incrementAndGet();\\n                try {\\n                    if (atomicReference2.get() \\u003d\\u003d c0hQ) {\\n                        C0Mx c0Mx \\u003d c0hQ.A01;\\n                        long j \\u003d c0hQ.A00;\\n                        String str \\u003d c2St.wireString;\\n                        C00l.A09(str, 3);\\n                        C0Mx.A08(c0Mx);\\n                        H3t h3t \\u003d new H3t(c1Kw, num, str, j, System.currentTimeMillis());\\n                        do {\\n                            atomicReference \\u003d c0Mx.A18;\\n                            obj \\u003d atomicReference.get();\\n                            if (j \\u003d\\u003d c0Mx.A1R) {\\n                            }\\n                        } while (!AnonymousClass012.A00(obj, h3t, atomicReference));\\n                        ((C0O5) c0Mx.A0U.A00.BFb()).CbP(new IBj(c0Mx, 12));\\n                    }\\n                    return true;\\n                } finally {\\n                    C0hP.A03(c0hQ);\\n                }\\n            }\\n        }\\n        Log.i(\\\"RegistrationManager/completeChangeNumber/error-saving\\\");\\n        atomicBoolean.set(false);\\n        return false;\\n    }\",\"overload_count\":1,\"method_name\":\"A0K\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C13N",
+    "method": {
+      "name": "A0K",
+      "reported_signature": "A0K(): boolean",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "()Z"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public final boolean A0K() {\n        AtomicReference atomicReference;\n        Object obj;\n        AtomicBoolean atomicBoolean = this.A0s;\n        if (!atomicBoolean.compareAndSet(false, true)) {\n            Log.w(\"RegistrationManager/completeChangeNumber/already-in-progress; skipping\");\n            return false;\n        }\n        this.A10.A00();\n        C00x c00x = this.A09.A00;\n        ((HBc) c00x.BFb()).A00();\n        A02(this).A0E(false, 16);\n        this.A14.A04();\n        ((C0sz) this.A02.A00.BFb()).A02();\n        this.A0m.A0X().A02().putLong(\"registration_success_time_ms\", C08q.A00(this.A0n)).apply();\n        this.A1G.A00();\n        Log.i(\"RegistrationManager/completeChangeNumber\");\n        HBc hBc = (HBc) c00x.BFb();\n        C05a c05aA00 = C09H.A00(((C00X) hBc.A07.A00.BFb()).A01(), 238);\n        C0E2 c0e2A06 = ((C13N) hBc.A02.A00.BFb()).A06();\n        if (c0e2A06 == null) {\n            Log.e(\"ChangeNumberStateResetter/resetMeObject/no identity\");\n        } else {\n            Log.a(c0e2A06.A01 != null);\n            if (((C09O) c05aA00.A00.BFb()).CrQ(c0e2A06)) {\n                boolean zA0D = this.A1A.A0D();\n                if (!zA0D) {\n                    C0G4 c0g4 = this.A0q;\n                    if (c0g4.A04()) {\n                        Log.i(\"RegistrationManager/completeChangeNumber/msgstoredb/healthy\");\n                        C0G2.A05(this.A0a, false);\n                        c0g4.A01();\n                    }\n                }\n                A02(this).A09();\n                A02(this).A1D = false;\n                A00(this).A0i(false);\n                Log.i(\"RegistrationManager/completeChangeNumber/cleared-passive-mode\");\n                if (!zA0D) {\n                    this.A0e.A0M(false);\n                }\n                A0F(3);\n                C08Z c08z = this.A0o;\n                c08z.CbD(new IBy(this, 16));\n                ((MT6) C0m6.A00(this.A0i).A09.A00.BFb()).A00 = true;\n                C1sf.A01(C00J.A00());\n                Log.i(\"RegistrationManager/completeChangeNumber/changenumber/setregverified\");\n                this.A0e.A0E(C0vJ.REGISTRATION_FULL);\n                this.A1H.A01(true, false);\n                Log.i(\"RegistrationManager/completeChangeNumber/reinitialized-payments\");\n                c08z.CbD(new Fel(this, 8));\n                C89U c89u = (C89U) this.A0z.A01();\n                if (c89u != null) {\n                    c89u.A02();\n                }\n                C00x c00x2 = this.A05.A00;\n                ((CMn) c00x2.BFb()).A02(1, 3);\n                ((CMn) c00x2.BFb()).A02(2, 3);\n                HBc hBc2 = (HBc) c00x.BFb();\n                ((C0mD) hBc2.A03.A00.BFb()).A00();\n                ((C1dH) hBc2.A00.A00.BFb()).A0F();\n                C00x c00x3 = hBc2.A06.A00;\n                ((C09S) c00x3.BFb()).A0M().A05(3);\n                C09S.A00((C09S) c00x3.BFb()).putBoolean(\"newsletter_subscriptions_fetched\", false).apply();\n                ((C0YB) hBc2.A01.A00.BFb()).A0C(0, true, false, false, false);\n                C07o.A00((C07o) this.A08.A00.BFb(), C0Kl.A02, new C3XN(21));\n                Integer num = C02X.A05;\n                C2St c2St = C2St.A08;\n                C1Kw c1Kw = C1Kw.CHANGE_NUMBER_SUCCESS;\n                AtomicReference atomicReference2 = C0hP.A07;\n                C0hQ c0hQ = (C0hQ) atomicReference2.get();\n                if (c0hQ == null) {\n                    return true;\n                }\n                c0hQ.A02.incrementAndGet();\n                try {\n                    if (atomicReference2.get() == c0hQ) {\n                        C0Mx c0Mx = c0hQ.A01;\n                        long j = c0hQ.A00;\n                        String str = c2St.wireString;\n                        C00l.A09(str, 3);\n                        C0Mx.A08(c0Mx);\n                        H3t h3t = new H3t(c1Kw, num, str, j, System.currentTimeMillis());\n                        do {\n                            atomicReference = c0Mx.A18;\n                            obj = atomicReference.get();\n                            if (j == c0Mx.A1R) {\n                            }\n                        } while (!AnonymousClass012.A00(obj, h3t, atomicReference));\n                        ((C0O5) c0Mx.A0U.A00.BFb()).CbP(new IBj(c0Mx, 12));\n                    }\n                    return true;\n                } finally {\n                    C0hP.A03(c0hQ);\n                }\n            }\n        }\n        Log.i(\"RegistrationManager/completeChangeNumber/error-saving\");\n        atomicBoolean.set(false);\n        return false;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

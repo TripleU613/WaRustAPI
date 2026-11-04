@@ -98,7 +98,7 @@ extra-ID list or class attributes.
 ## Own-store mutations and remaining ingress authority
 
 The exact1nH.A01 cache-field inventory contains11 physical references: loader,
-two0WB cleanup paths,1nG removal/addition,1nH removal, andG0j.A03. These are
+two0WB migration paths,1nG removal/addition,1nH removal, andG0j.A03. These are
 structural references, not a proof of every dynamic write.
 
 Current1nG.A0F replaces a row in devices fromF0I, including logout_time,
@@ -134,7 +134,10 @@ active-own-device eligibility. This does not prove the private account has zero
 companions; **unknown** is retained. The [automatic normal-read negative guard](read-receipt-policy-current.md)
 therefore keeps disabled-preference work pending rather than guessing read-self.
 
-Next exact work: authenticated creation/reconciliation of the own devices map
+The [own-companion ingress continuation](own-companion-ingress-current.md) now
+traces the primary/companion split, saved pairing generation, identity source,
+Me provenance and namespace-migration cache writers. Required remaining work:
+authenticated creation/reconciliation of the own devices map
 from19N devices ->0Vy workers and their request callbacks; FeN14 pairing-context
 validation; Fei43 input-map authority; remaining0WB/G0j cleanup writers; Me file
 parser/creation and account isolation. Only after that authority is represented

@@ -1,0 +1,1099 @@
+{
+  "evidence_id": "ev_cb6c4152162dcccf73c717f961d5e31732852de730ee9ba262e64d52505fc913",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "trace_android_references",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C0E2"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-JWePeP/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C0E2"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"(LX/0Dx;Lcom/whatsapp/infra/core/jid/PhoneUserJid;Ljava/lang/String;Ljava/lang/String;)V\",\"signature\":\"\\u003cinit\\u003e(X.0Dx, com.whatsapp.infra.core.jid.PhoneUserJid, java.lang.String, java.lang.String): void\"},{\"def_pos\":0,\"name\":\"equals\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/Object;)Z\",\"signature\":\"equals(java.lang.Object): boolean\"},{\"def_pos\":0,\"name\":\"hashCode\",\"is_constructor\":false,\"dex_descriptor\":\"()I\",\"signature\":\"hashCode(): int\"},{\"def_pos\":0,\"name\":\"toString\",\"is_constructor\":false,\"dex_descriptor\":\"()Ljava/lang/String;\",\"signature\":\"toString(): java.lang.String\"}],\"method_count\":4,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"C0E2\",\"full_name\":\"X.C0E2\",\"field_count\":4,\"fields\":[{\"type\":\"X.0Dx\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"com.whatsapp.infra.core.jid.PhoneUserJid\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"java.lang.String\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"java.lang.String\",\"def_pos\":0,\"name\":\"A03\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_xrefs_to_class",
+        "input": {
+          "class_name": "X.C0E2",
+          "limit": 2147483647,
+          "resolve_line": false
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"target\":\"X.C0E2\",\"resolve_line\":false,\"total\":89,\"items\":[{\"kind\":\"class\",\"name\":\"C09F\",\"full_name\":\"X.C09F\",\"containing_class\":\"\",\"top_class\":\"X.C09F\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"C09G\",\"full_name\":\"X.C09G\",\"containing_class\":\"\",\"top_class\":\"X.C1Uw\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"C09O\",\"full_name\":\"X.C09O\",\"containing_class\":\"\",\"top_class\":\"X.C09O\",\"def_pos\":805},{\"kind\":\"class\",\"name\":\"C09f\",\"full_name\":\"X.C09f\",\"containing_class\":\"\",\"top_class\":\"X.C09f\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"C09g\",\"full_name\":\"X.C09g\",\"containing_class\":\"\",\"top_class\":\"X.C09C\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"C0B2\",\"full_name\":\"X.C0B2\",\"containing_class\":\"\",\"top_class\":\"X.C0B2\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"C0B6\",\"full_name\":\"X.C0B6\",\"containing_class\":\"\",\"top_class\":\"X.C0B6\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"C0Cz\",\"full_name\":\"X.C0Cz\",\"containing_class\":\"\",\"top_class\":\"X.C0Cz\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"C0D0\",\"full_name\":\"X.C0D0\",\"containing_class\":\"\",\"top_class\":\"X.C0D0\",\"def_pos\":496},{\"kind\":\"class\",\"name\":\"C0Qq\",\"full_name\":\"X.C0Qq\",\"containing_class\":\"\",\"top_class\":\"X.C0Qq\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"C0Ri\",\"full_name\":\"X.C0Ri\",\"containing_class\":\"\",\"top_class\":\"com.whatsapp.Main\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"C0Zf\",\"full_name\":\"X.C0Zf\",\"containing_class\":\"\",\"top_class\":\"com.whatsapp.Main\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"C0m6\",\"full_name\":\"X.C0m6\",\"containing_class\":\"\",\"top_class\":\"X.C0m6\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"C0sk\",\"full_name\":\"X.C0sk\",\"containing_class\":\"\",\"top_class\":\"X.C1Uw\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"AnonymousClass107\",\"full_name\":\"X.AnonymousClass107\",\"containing_class\":\"\",\"top_class\":\"X.C1Uw\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"C10h\",\"full_name\":\"X.C10h\",\"containing_class\":\"\",\"top_class\":\"X.C10h\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"C10q\",\"full_name\":\"X.C10q\",\"containing_class\":\"\",\"top_class\":\"X.C10q\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"C11u\",\"full_name\":\"X.C11u\",\"containing_class\":\"\",\"top_class\":\"X.C11u\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"C13M\",\"full_name\":\"X.C13M\",\"containing_class\":\"\",\"top_class\":\"X.C1Uw\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"C13N\",\"full_name\":\"X.C13N\",\"containing_class\":\"\",\"top_class\":\"X.C13N\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"C13f\",\"full_name\":\"X.C13f\",\"containing_class\":\"\",\"top_class\":\"X.C13f\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"C14E\",\"full_name\":\"X.C14E\",\"containing_class\":\"\",\"top_class\":\"X.C14E\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"C15K\",\"full_name\":\"X.C15K\",\"containing_class\":\"\",\"top_class\":\"X.C15K\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"C15P\",\"full_name\":\"X.C15P\",\"containing_class\":\"\",\"top_class\":\"X.C15P\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"C1JD\",\"full_name\":\"X.C1JD\",\"containing_class\":\"\",\"top_class\":\"X.C1JD\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"C1WM\",\"full_name\":\"X.C1WM\",\"containing_class\":\"\",\"top_class\":\"X.C1WM\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"C1Wk\",\"full_name\":\"X.C1Wk\",\"containing_class\":\"\",\"top_class\":\"X.C1Wk\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"C1Wy\",\"full_name\":\"X.C1Wy\",\"containing_class\":\"\",\"top_class\":\"X.C1Wy\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"C6KM\",\"full_name\":\"X.C6KM\",\"containing_class\":\"\",\"top_class\":\"X.C6KM\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"C8O2\",\"full_name\":\"X.C8O2\",\"containing_class\":\"\",\"top_class\":\"X.C8Mt\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"Arc\",\"full_name\":\"X.Arc\",\"containing_class\":\"\",\"top_class\":\"X.Arc\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"CPu\",\"full_name\":\"X.CPu\",\"containing_class\":\"\",\"top_class\":\"X.CPu\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"EnY\",\"full_name\":\"X.EnY\",\"containing_class\":\"\",\"top_class\":\"X.EnY\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"G4b\",\"full_name\":\"X.G4b\",\"containing_class\":\"\",\"top_class\":\"X.G4b\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"GWK\",\"full_name\":\"X.GWK\",\"containing_class\":\"\",\"top_class\":\"X.GWK\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"HAC\",\"full_name\":\"X.HAC\",\"containing_class\":\"\",\"top_class\":\"X.HAC\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"HAY\",\"full_name\":\"X.HAY\",\"containing_class\":\"\",\"top_class\":\"X.HAY\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"HAq\",\"full_name\":\"X.HAq\",\"containing_class\":\"\",\"top_class\":\"X.HAq\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"HAw\",\"full_name\":\"X.HAw\",\"containing_class\":\"\",\"top_class\":\"X.HAw\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"HCP\",\"full_name\":\"X.HCP\",\"containing_class\":\"\",\"top_class\":\"X.HCP\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"HUE\",\"full_name\":\"X.HUE\",\"containing_class\":\"\",\"top_class\":\"X.HUE\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"Hfq\",\"full_name\":\"X.Hfq\",\"containing_class\":\"\",\"top_class\":\"X.Hfq\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"HkA\",\"full_name\":\"X.HkA\",\"containing_class\":\"\",\"top_class\":\"X.HkA\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"Hva\",\"full_name\":\"X.Hva\",\"containing_class\":\"\",\"top_class\":\"X.Hva\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"Hxd\",\"full_name\":\"X.Hxd\",\"containing_class\":\"\",\"top_class\":\"X.Hxd\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"I9F\",\"full_name\":\"X.I9F\",\"containing_class\":\"\",\"top_class\":\"X.I9F\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"IBg\",\"full_name\":\"X.IBg\",\"containing_class\":\"\",\"top_class\":\"X.IBg\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"IBj\",\"full_name\":\"X.IBj\",\"containing_class\":\"\",\"top_class\":\"X.IBj\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"IBm\",\"full_name\":\"X.IBm\",\"containing_class\":\"\",\"top_class\":\"X.IBm\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"IBn\",\"full_name\":\"X.IBn\",\"containing_class\":\"\",\"top_class\":\"X.IBn\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"IBq\",\"full_name\":\"X.IBq\",\"containing_class\":\"\",\"top_class\":\"X.IBq\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"IC0\",\"full_name\":\"X.IC0\",\"containing_class\":\"\",\"top_class\":\"X.IC0\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"IEv\",\"full_name\":\"X.IEv\",\"containing_class\":\"\",\"top_class\":\"X.He2\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"INh\",\"full_name\":\"X.INh\",\"containing_class\":\"\",\"top_class\":\"X.INh\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"IOH\",\"full_name\":\"X.IOH\",\"containing_class\":\"\",\"top_class\":\"X.IOH\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"J0J\",\"full_name\":\"X.J0J\",\"containing_class\":\"\",\"top_class\":\"X.J0J\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"KDq\",\"full_name\":\"X.KDq\",\"containing_class\":\"\",\"top_class\":\"X.KDq\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"KLB\",\"full_name\":\"X.KLB\",\"containing_class\":\"\",\"top_class\":\"X.KKy\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"KV4\",\"full_name\":\"X.KV4\",\"containing_class\":\"\",\"top_class\":\"X.KV4\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"Lek\",\"full_name\":\"X.Lek\",\"containing_class\":\"\",\"top_class\":\"X.Lek\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"MLb\",\"full_name\":\"X.MLb\",\"containing_class\":\"\",\"top_class\":\"X.MLb\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"MSs\",\"full_name\":\"X.MSs\",\"containing_class\":\"\",\"top_class\":\"X.MSs\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"MW4\",\"full_name\":\"X.MW4\",\"containing_class\":\"\",\"top_class\":\"X.MW4\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"MX0\",\"full_name\":\"X.MX0\",\"containing_class\":\"\",\"top_class\":\"X.MX0\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"Mrw\",\"full_name\":\"X.Mrw\",\"containing_class\":\"\",\"top_class\":\"X.Mrw\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"N28\",\"full_name\":\"X.N28\",\"containing_class\":\"\",\"top_class\":\"X.N28\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"RUD\",\"full_name\":\"X.RUD\",\"containing_class\":\"\",\"top_class\":\"X.RUD\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"TKp\",\"full_name\":\"X.TKp\",\"containing_class\":\"\",\"top_class\":\"X.TKp\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"Main\",\"full_name\":\"com.whatsapp.Main\",\"containing_class\":\"\",\"top_class\":\"com.whatsapp.Main\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"AccountSwitchingContentProvider\",\"full_name\":\"com.whatsapp.accountswitching.AccountSwitchingContentProvider\",\"containing_class\":\"\",\"top_class\":\"com.whatsapp.accountswitching.AccountSwitchingContentProvider\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"GoogleBackupWorker\",\"full_name\":\"com.whatsapp.backup.googlemanager.workers.GoogleBackupWorker\",\"containing_class\":\"\",\"top_class\":\"com.whatsapp.backup.googlemanager.workers.GoogleBackupWorker\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"GoogleEncryptedReUploadWorker\",\"full_name\":\"com.whatsapp.backup.googlemanager.workers.GoogleEncryptedReUploadWorker\",\"containing_class\":\"\",\"top_class\":\"com.whatsapp.backup.googlemanager.workers.GoogleEncryptedReUploadWorker\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"DisplayExceptionDialogFactory$LoginFailedDialogFragment\",\"full_name\":\"com.whatsapp.consumer.DisplayExceptionDialogFactory$LoginFailedDialogFragment\",\"containing_class\":\"\",\"top_class\":\"com.whatsapp.consumer.DisplayExceptionDialogFactory$LoginFailedDialogFragment\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"LogoutMessageActivity\",\"full_name\":\"com.whatsapp.loginfailure.LogoutMessageActivity\",\"containing_class\":\"\",\"top_class\":\"com.whatsapp.loginfailure.LogoutMessageActivity\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"LogoutManager\",\"full_name\":\"com.whatsapp.logout.core.LogoutManager\",\"containing_class\":\"\",\"top_class\":\"com.whatsapp.logout.core.LogoutManager\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"PrimaryLoginBackActivity\",\"full_name\":\"com.whatsapp.logout.ui.PrimaryLoginBackActivity\",\"containing_class\":\"\",\"top_class\":\"com.whatsapp.logout.ui.PrimaryLoginBackActivity\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"ChatTransferActivity\",\"full_name\":\"com.whatsapp.migration.transfer.ui.ChatTransferActivity\",\"containing_class\":\"\",\"top_class\":\"com.whatsapp.migration.transfer.ui.ChatTransferActivity\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"IndiaUpiMapperConfirmationActivity\",\"full_name\":\"com.whatsapp.payments.indiaupi.ui.mapper.register.IndiaUpiMapperConfirmationActivity\",\"containing_class\":\"\",\"top_class\":\"com.whatsapp.payments.indiaupi.ui.mapper.register.IndiaUpiMapperConfirmationActivity\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"IndiaUpiMapperValuePropsActivity\",\"full_name\":\"com.whatsapp.payments.indiaupi.ui.mapper.register.IndiaUpiMapperValuePropsActivity\",\"containing_class\":\"\",\"top_class\":\"com.whatsapp.payments.indiaupi.ui.mapper.register.IndiaUpiMapperValuePropsActivity\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"DeviceConfirmationRegAlertDialogFragment\",\"full_name\":\"com.whatsapp.registration.accountdefence.ui.DeviceConfirmationRegAlertDialogFragment\",\"containing_class\":\"\",\"top_class\":\"com.whatsapp.registration.accountdefence.ui.DeviceConfirmationRegAlertDialogFragment\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"RegisterName\",\"full_name\":\"com.whatsapp.registration.app.RegisterName\",\"containing_class\":\"\",\"top_class\":\"com.whatsapp.registration.app.RegisterName\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"RegisterNameManager\",\"full_name\":\"com.whatsapp.registration.app.RegisterNameManager\",\"containing_class\":\"\",\"top_class\":\"com.whatsapp.registration.app.RegisterNameManager\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"OldDeviceSecureAccountActivity\",\"full_name\":\"com.whatsapp.registration.app.accountdefence.ui.OldDeviceSecureAccountActivity\",\"containing_class\":\"\",\"top_class\":\"com.whatsapp.registration.app.accountdefence.ui.OldDeviceSecureAccountActivity\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"DirectMigrationContentProvider\",\"full_name\":\"com.whatsapp.registration.directmigration.DirectMigrationContentProvider\",\"containing_class\":\"\",\"top_class\":\"com.whatsapp.registration.directmigration.DirectMigrationContentProvider\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"MigrationContentProvider\",\"full_name\":\"com.whatsapp.registration.directmigration.MigrationContentProvider\",\"containing_class\":\"\",\"top_class\":\"com.whatsapp.registration.directmigration.MigrationContentProvider\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"MigrationProviderOrderedBroadcastReceiver\",\"full_name\":\"com.whatsapp.registration.directmigration.MigrationProviderOrderedBroadcastReceiver\",\"containing_class\":\"\",\"top_class\":\"com.whatsapp.registration.directmigration.MigrationProviderOrderedBroadcastReceiver\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"VerifyCodeRepository\",\"full_name\":\"com.whatsapp.registration.ui.task.VerifyCodeRepository\",\"containing_class\":\"\",\"top_class\":\"com.whatsapp.registration.ui.task.VerifyCodeRepository\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"WamoRequestManager\",\"full_name\":\"com.whatsapp.wamo.request.WamoRequestManager\",\"containing_class\":\"\",\"top_class\":\"com.whatsapp.wamo.request.WamoRequestManager\",\"def_pos\":0},{\"kind\":\"class\",\"name\":\"WamoRequestManager$createUser$2\",\"full_name\":\"com.whatsapp.wamo.request.WamoRequestManager$createUser$2\",\"containing_class\":\"\",\"top_class\":\"com.whatsapp.wamo.request.WamoRequestManager$createUser$2\",\"def_pos\":0}],\"count\":89}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C0E2",
+    "method_name": null,
+    "overload_index": null,
+    "reported_signature": null,
+    "dex_descriptor": null,
+    "total": 89,
+    "references": [
+      {
+        "kind": "class",
+        "name": "C09F",
+        "reported_full_name": "X.C09F",
+        "containing_class": "",
+        "top_class": "X.C09F",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "C09G",
+        "reported_full_name": "X.C09G",
+        "containing_class": "",
+        "top_class": "X.C1Uw",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "C09O",
+        "reported_full_name": "X.C09O",
+        "containing_class": "",
+        "top_class": "X.C09O",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "C09f",
+        "reported_full_name": "X.C09f",
+        "containing_class": "",
+        "top_class": "X.C09f",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "C09g",
+        "reported_full_name": "X.C09g",
+        "containing_class": "",
+        "top_class": "X.C09C",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "C0B2",
+        "reported_full_name": "X.C0B2",
+        "containing_class": "",
+        "top_class": "X.C0B2",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "C0B6",
+        "reported_full_name": "X.C0B6",
+        "containing_class": "",
+        "top_class": "X.C0B6",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "C0Cz",
+        "reported_full_name": "X.C0Cz",
+        "containing_class": "",
+        "top_class": "X.C0Cz",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "C0D0",
+        "reported_full_name": "X.C0D0",
+        "containing_class": "",
+        "top_class": "X.C0D0",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "C0Qq",
+        "reported_full_name": "X.C0Qq",
+        "containing_class": "",
+        "top_class": "X.C0Qq",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "C0Ri",
+        "reported_full_name": "X.C0Ri",
+        "containing_class": "",
+        "top_class": "com.whatsapp.Main",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "C0Zf",
+        "reported_full_name": "X.C0Zf",
+        "containing_class": "",
+        "top_class": "com.whatsapp.Main",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "C0m6",
+        "reported_full_name": "X.C0m6",
+        "containing_class": "",
+        "top_class": "X.C0m6",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "C0sk",
+        "reported_full_name": "X.C0sk",
+        "containing_class": "",
+        "top_class": "X.C1Uw",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "AnonymousClass107",
+        "reported_full_name": "X.AnonymousClass107",
+        "containing_class": "",
+        "top_class": "X.C1Uw",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "C10h",
+        "reported_full_name": "X.C10h",
+        "containing_class": "",
+        "top_class": "X.C10h",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "C10q",
+        "reported_full_name": "X.C10q",
+        "containing_class": "",
+        "top_class": "X.C10q",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "C11u",
+        "reported_full_name": "X.C11u",
+        "containing_class": "",
+        "top_class": "X.C11u",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "C13M",
+        "reported_full_name": "X.C13M",
+        "containing_class": "",
+        "top_class": "X.C1Uw",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "C13N",
+        "reported_full_name": "X.C13N",
+        "containing_class": "",
+        "top_class": "X.C13N",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "C13f",
+        "reported_full_name": "X.C13f",
+        "containing_class": "",
+        "top_class": "X.C13f",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "C14E",
+        "reported_full_name": "X.C14E",
+        "containing_class": "",
+        "top_class": "X.C14E",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "C15K",
+        "reported_full_name": "X.C15K",
+        "containing_class": "",
+        "top_class": "X.C15K",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "C15P",
+        "reported_full_name": "X.C15P",
+        "containing_class": "",
+        "top_class": "X.C15P",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "C1JD",
+        "reported_full_name": "X.C1JD",
+        "containing_class": "",
+        "top_class": "X.C1JD",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "C1WM",
+        "reported_full_name": "X.C1WM",
+        "containing_class": "",
+        "top_class": "X.C1WM",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "C1Wk",
+        "reported_full_name": "X.C1Wk",
+        "containing_class": "",
+        "top_class": "X.C1Wk",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "C1Wy",
+        "reported_full_name": "X.C1Wy",
+        "containing_class": "",
+        "top_class": "X.C1Wy",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "C6KM",
+        "reported_full_name": "X.C6KM",
+        "containing_class": "",
+        "top_class": "X.C6KM",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "C8O2",
+        "reported_full_name": "X.C8O2",
+        "containing_class": "",
+        "top_class": "X.C8Mt",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "Arc",
+        "reported_full_name": "X.Arc",
+        "containing_class": "",
+        "top_class": "X.Arc",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "CPu",
+        "reported_full_name": "X.CPu",
+        "containing_class": "",
+        "top_class": "X.CPu",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "EnY",
+        "reported_full_name": "X.EnY",
+        "containing_class": "",
+        "top_class": "X.EnY",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "G4b",
+        "reported_full_name": "X.G4b",
+        "containing_class": "",
+        "top_class": "X.G4b",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "GWK",
+        "reported_full_name": "X.GWK",
+        "containing_class": "",
+        "top_class": "X.GWK",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "HAC",
+        "reported_full_name": "X.HAC",
+        "containing_class": "",
+        "top_class": "X.HAC",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "HAY",
+        "reported_full_name": "X.HAY",
+        "containing_class": "",
+        "top_class": "X.HAY",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "HAq",
+        "reported_full_name": "X.HAq",
+        "containing_class": "",
+        "top_class": "X.HAq",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "HAw",
+        "reported_full_name": "X.HAw",
+        "containing_class": "",
+        "top_class": "X.HAw",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "HCP",
+        "reported_full_name": "X.HCP",
+        "containing_class": "",
+        "top_class": "X.HCP",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "HUE",
+        "reported_full_name": "X.HUE",
+        "containing_class": "",
+        "top_class": "X.HUE",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "Hfq",
+        "reported_full_name": "X.Hfq",
+        "containing_class": "",
+        "top_class": "X.Hfq",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "HkA",
+        "reported_full_name": "X.HkA",
+        "containing_class": "",
+        "top_class": "X.HkA",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "Hva",
+        "reported_full_name": "X.Hva",
+        "containing_class": "",
+        "top_class": "X.Hva",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "Hxd",
+        "reported_full_name": "X.Hxd",
+        "containing_class": "",
+        "top_class": "X.Hxd",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "I9F",
+        "reported_full_name": "X.I9F",
+        "containing_class": "",
+        "top_class": "X.I9F",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "IBg",
+        "reported_full_name": "X.IBg",
+        "containing_class": "",
+        "top_class": "X.IBg",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "IBj",
+        "reported_full_name": "X.IBj",
+        "containing_class": "",
+        "top_class": "X.IBj",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "IBm",
+        "reported_full_name": "X.IBm",
+        "containing_class": "",
+        "top_class": "X.IBm",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "IBn",
+        "reported_full_name": "X.IBn",
+        "containing_class": "",
+        "top_class": "X.IBn",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "IBq",
+        "reported_full_name": "X.IBq",
+        "containing_class": "",
+        "top_class": "X.IBq",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "IC0",
+        "reported_full_name": "X.IC0",
+        "containing_class": "",
+        "top_class": "X.IC0",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "IEv",
+        "reported_full_name": "X.IEv",
+        "containing_class": "",
+        "top_class": "X.He2",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "INh",
+        "reported_full_name": "X.INh",
+        "containing_class": "",
+        "top_class": "X.INh",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "IOH",
+        "reported_full_name": "X.IOH",
+        "containing_class": "",
+        "top_class": "X.IOH",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "J0J",
+        "reported_full_name": "X.J0J",
+        "containing_class": "",
+        "top_class": "X.J0J",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "KDq",
+        "reported_full_name": "X.KDq",
+        "containing_class": "",
+        "top_class": "X.KDq",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "KLB",
+        "reported_full_name": "X.KLB",
+        "containing_class": "",
+        "top_class": "X.KKy",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "KV4",
+        "reported_full_name": "X.KV4",
+        "containing_class": "",
+        "top_class": "X.KV4",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "Lek",
+        "reported_full_name": "X.Lek",
+        "containing_class": "",
+        "top_class": "X.Lek",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "MLb",
+        "reported_full_name": "X.MLb",
+        "containing_class": "",
+        "top_class": "X.MLb",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "MSs",
+        "reported_full_name": "X.MSs",
+        "containing_class": "",
+        "top_class": "X.MSs",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "MW4",
+        "reported_full_name": "X.MW4",
+        "containing_class": "",
+        "top_class": "X.MW4",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "MX0",
+        "reported_full_name": "X.MX0",
+        "containing_class": "",
+        "top_class": "X.MX0",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "Mrw",
+        "reported_full_name": "X.Mrw",
+        "containing_class": "",
+        "top_class": "X.Mrw",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "N28",
+        "reported_full_name": "X.N28",
+        "containing_class": "",
+        "top_class": "X.N28",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "RUD",
+        "reported_full_name": "X.RUD",
+        "containing_class": "",
+        "top_class": "X.RUD",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "TKp",
+        "reported_full_name": "X.TKp",
+        "containing_class": "",
+        "top_class": "X.TKp",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "Main",
+        "reported_full_name": "com.whatsapp.Main",
+        "containing_class": "",
+        "top_class": "com.whatsapp.Main",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "AccountSwitchingContentProvider",
+        "reported_full_name": "com.whatsapp.accountswitching.AccountSwitchingContentProvider",
+        "containing_class": "",
+        "top_class": "com.whatsapp.accountswitching.AccountSwitchingContentProvider",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "GoogleBackupWorker",
+        "reported_full_name": "com.whatsapp.backup.googlemanager.workers.GoogleBackupWorker",
+        "containing_class": "",
+        "top_class": "com.whatsapp.backup.googlemanager.workers.GoogleBackupWorker",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "GoogleEncryptedReUploadWorker",
+        "reported_full_name": "com.whatsapp.backup.googlemanager.workers.GoogleEncryptedReUploadWorker",
+        "containing_class": "",
+        "top_class": "com.whatsapp.backup.googlemanager.workers.GoogleEncryptedReUploadWorker",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "DisplayExceptionDialogFactory$LoginFailedDialogFragment",
+        "reported_full_name": "com.whatsapp.consumer.DisplayExceptionDialogFactory$LoginFailedDialogFragment",
+        "containing_class": "",
+        "top_class": "com.whatsapp.consumer.DisplayExceptionDialogFactory$LoginFailedDialogFragment",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "LogoutMessageActivity",
+        "reported_full_name": "com.whatsapp.loginfailure.LogoutMessageActivity",
+        "containing_class": "",
+        "top_class": "com.whatsapp.loginfailure.LogoutMessageActivity",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "LogoutManager",
+        "reported_full_name": "com.whatsapp.logout.core.LogoutManager",
+        "containing_class": "",
+        "top_class": "com.whatsapp.logout.core.LogoutManager",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "PrimaryLoginBackActivity",
+        "reported_full_name": "com.whatsapp.logout.ui.PrimaryLoginBackActivity",
+        "containing_class": "",
+        "top_class": "com.whatsapp.logout.ui.PrimaryLoginBackActivity",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "ChatTransferActivity",
+        "reported_full_name": "com.whatsapp.migration.transfer.ui.ChatTransferActivity",
+        "containing_class": "",
+        "top_class": "com.whatsapp.migration.transfer.ui.ChatTransferActivity",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "IndiaUpiMapperConfirmationActivity",
+        "reported_full_name": "com.whatsapp.payments.indiaupi.ui.mapper.register.IndiaUpiMapperConfirmationActivity",
+        "containing_class": "",
+        "top_class": "com.whatsapp.payments.indiaupi.ui.mapper.register.IndiaUpiMapperConfirmationActivity",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "IndiaUpiMapperValuePropsActivity",
+        "reported_full_name": "com.whatsapp.payments.indiaupi.ui.mapper.register.IndiaUpiMapperValuePropsActivity",
+        "containing_class": "",
+        "top_class": "com.whatsapp.payments.indiaupi.ui.mapper.register.IndiaUpiMapperValuePropsActivity",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "DeviceConfirmationRegAlertDialogFragment",
+        "reported_full_name": "com.whatsapp.registration.accountdefence.ui.DeviceConfirmationRegAlertDialogFragment",
+        "containing_class": "",
+        "top_class": "com.whatsapp.registration.accountdefence.ui.DeviceConfirmationRegAlertDialogFragment",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "RegisterName",
+        "reported_full_name": "com.whatsapp.registration.app.RegisterName",
+        "containing_class": "",
+        "top_class": "com.whatsapp.registration.app.RegisterName",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "RegisterNameManager",
+        "reported_full_name": "com.whatsapp.registration.app.RegisterNameManager",
+        "containing_class": "",
+        "top_class": "com.whatsapp.registration.app.RegisterNameManager",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "OldDeviceSecureAccountActivity",
+        "reported_full_name": "com.whatsapp.registration.app.accountdefence.ui.OldDeviceSecureAccountActivity",
+        "containing_class": "",
+        "top_class": "com.whatsapp.registration.app.accountdefence.ui.OldDeviceSecureAccountActivity",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "DirectMigrationContentProvider",
+        "reported_full_name": "com.whatsapp.registration.directmigration.DirectMigrationContentProvider",
+        "containing_class": "",
+        "top_class": "com.whatsapp.registration.directmigration.DirectMigrationContentProvider",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "MigrationContentProvider",
+        "reported_full_name": "com.whatsapp.registration.directmigration.MigrationContentProvider",
+        "containing_class": "",
+        "top_class": "com.whatsapp.registration.directmigration.MigrationContentProvider",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "MigrationProviderOrderedBroadcastReceiver",
+        "reported_full_name": "com.whatsapp.registration.directmigration.MigrationProviderOrderedBroadcastReceiver",
+        "containing_class": "",
+        "top_class": "com.whatsapp.registration.directmigration.MigrationProviderOrderedBroadcastReceiver",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "VerifyCodeRepository",
+        "reported_full_name": "com.whatsapp.registration.ui.task.VerifyCodeRepository",
+        "containing_class": "",
+        "top_class": "com.whatsapp.registration.ui.task.VerifyCodeRepository",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "WamoRequestManager",
+        "reported_full_name": "com.whatsapp.wamo.request.WamoRequestManager",
+        "containing_class": "",
+        "top_class": "com.whatsapp.wamo.request.WamoRequestManager",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      },
+      {
+        "kind": "class",
+        "name": "WamoRequestManager$createUser$2",
+        "reported_full_name": "com.whatsapp.wamo.request.WamoRequestManager$createUser$2",
+        "containing_class": "",
+        "top_class": "com.whatsapp.wamo.request.WamoRequestManager$createUser$2",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": null,
+        "direct_invokes": null
+      }
+    ],
+    "coverage": "complete",
+    "reference_unit": "using_node"
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

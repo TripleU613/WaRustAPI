@@ -1,0 +1,257 @@
+{
+  "evidence_id": "ev_85da6da3b012b48f22e4711cadb0eaada03afac85e02b651887c203b4287e376",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "trace_android_references",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C13N",
+    "method_name": "A06",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-JWePeP/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C13N"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"()V\",\"signature\":\"\\u003cinit\\u003e(): void\"},{\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/13N;)LX/0DS;\",\"signature\":\"A00(X.13N): X.0DS\"},{\"def_pos\":0,\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/13N;)LX/00X;\",\"signature\":\"A01(X.13N): X.00X\"},{\"def_pos\":0,\"name\":\"A02\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/13N;)LX/0YB;\",\"signature\":\"A02(X.13N): X.0YB\"},{\"def_pos\":0,\"name\":\"A03\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/13N;Ljava/lang/String;Ljava/lang/String;Z)V\",\"signature\":\"A03(X.13N, java.lang.String, java.lang.String, boolean): void\"},{\"def_pos\":0,\"name\":\"A04\",\"is_constructor\":false,\"dex_descriptor\":\"()I\",\"signature\":\"A04(): int\"},{\"def_pos\":0,\"name\":\"A05\",\"is_constructor\":false,\"dex_descriptor\":\"(I)Landroid/content/Intent;\",\"signature\":\"A05(int): android.content.Intent\"},{\"def_pos\":0,\"name\":\"A06\",\"is_constructor\":false,\"dex_descriptor\":\"()LX/0E2;\",\"signature\":\"A06(): X.0E2\"},{\"def_pos\":0,\"name\":\"A07\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"A07(): void\"},{\"def_pos\":0,\"name\":\"A08\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"A08(): void\"},{\"def_pos\":0,\"name\":\"A09\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"A09(): void\"},{\"def_pos\":0,\"name\":\"A0A\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"A0A(): void\"},{\"def_pos\":0,\"name\":\"A0B\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"A0B(): void\"},{\"def_pos\":0,\"name\":\"A0C\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"A0C(): void\"},{\"def_pos\":0,\"name\":\"A0D\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"A0D(): void\"},{\"def_pos\":0,\"name\":\"A0E\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"A0E(): void\"},{\"def_pos\":0,\"name\":\"A0F\",\"is_constructor\":false,\"dex_descriptor\":\"(I)V\",\"signature\":\"A0F(int): void\"},{\"def_pos\":0,\"name\":\"A0G\",\"is_constructor\":false,\"dex_descriptor\":\"(JLjava/lang/String;)V\",\"signature\":\"A0G(long, java.lang.String): void\"},{\"def_pos\":0,\"name\":\"A0H\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/Integer;)V\",\"signature\":\"A0H(java.lang.Integer): void\"},{\"def_pos\":0,\"name\":\"A0I\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V\",\"signature\":\"A0I(java.lang.Integer, java.lang.String, java.lang.String, java.lang.String, java.lang.String): void\"},{\"def_pos\":0,\"name\":\"A0J\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)V\",\"signature\":\"A0J(java.lang.String): void\"},{\"def_pos\":0,\"name\":\"A0K\",\"is_constructor\":false,\"dex_descriptor\":\"()Z\",\"signature\":\"A0K(): boolean\"},{\"def_pos\":0,\"name\":\"A0L\",\"is_constructor\":false,\"dex_descriptor\":\"()Z\",\"signature\":\"A0L(): boolean\"},{\"def_pos\":0,\"name\":\"A0M\",\"is_constructor\":false,\"dex_descriptor\":\"()Z\",\"signature\":\"A0M(): boolean\"},{\"def_pos\":0,\"name\":\"A0N\",\"is_constructor\":false,\"dex_descriptor\":\"()Z\",\"signature\":\"A0N(): boolean\"}],\"method_count\":25,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"C13N\",\"full_name\":\"X.C13N\",\"field_count\":83,\"fields\":[{\"type\":\"android.os.Handler\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A05\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A06\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A07\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A08\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A09\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0A\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0B\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0C\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0D\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0E\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0F\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0G\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0H\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0I\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0J\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0K\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0L\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0M\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0N\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0O\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0P\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0Q\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0R\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0S\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A0T\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A0U\"},{\"type\":\"X.14E\",\"def_pos\":0,\"name\":\"A0V\"},{\"type\":\"X.0Vy\",\"def_pos\":0,\"name\":\"A0W\"},{\"type\":\"X.13a\",\"def_pos\":0,\"name\":\"A0X\"},{\"type\":\"X.13e\",\"def_pos\":0,\"name\":\"A0Y\"},{\"type\":\"X.0aS\",\"def_pos\":0,\"name\":\"A0Z\"},{\"type\":\"X.0G2\",\"def_pos\":0,\"name\":\"A0a\"},{\"type\":\"X.13v\",\"def_pos\":0,\"name\":\"A0b\"},{\"type\":\"X.13d\",\"def_pos\":0,\"name\":\"A0c\"},{\"type\":\"X.13t\",\"def_pos\":0,\"name\":\"A0d\"},{\"type\":\"X.0ob\",\"def_pos\":0,\"name\":\"A0e\"},{\"type\":\"X.08Y\",\"def_pos\":0,\"name\":\"A0f\"},{\"type\":\"X.12Q\",\"def_pos\":0,\"name\":\"A0g\"},{\"type\":\"X.0vB\",\"def_pos\":0,\"name\":\"A0h\"},{\"type\":\"X.0m6\",\"def_pos\":0,\"name\":\"A0i\"},{\"type\":\"X.0Fc\",\"def_pos\":0,\"name\":\"A0j\"},{\"type\":\"X.0BD\",\"def_pos\":0,\"name\":\"A0k\"},{\"type\":\"X.09U\",\"def_pos\":0,\"name\":\"A0l\"},{\"type\":\"X.09S\",\"def_pos\":0,\"name\":\"A0m\"},{\"type\":\"X.08q\",\"def_pos\":0,\"name\":\"A0n\"},{\"type\":\"X.08Z\",\"def_pos\":0,\"name\":\"A0o\"},{\"type\":\"X.13z\",\"def_pos\":0,\"name\":\"A0p\"},{\"type\":\"X.0G4\",\"def_pos\":0,\"name\":\"A0q\"},{\"type\":\"X.0Js\",\"def_pos\":0,\"name\":\"A0r\"},{\"type\":\"java.util.concurrent.atomic.AtomicBoolean\",\"def_pos\":0,\"name\":\"A0s\"},{\"type\":\"X.023\",\"def_pos\":0,\"name\":\"A0t\"},{\"type\":\"X.0TR\",\"def_pos\":0,\"name\":\"A0u\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0v\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0w\"},{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A0x\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A0y\"},{\"type\":\"com.google.common.base.Optional\",\"def_pos\":0,\"name\":\"A0z\"},{\"type\":\"X.0mD\",\"def_pos\":0,\"name\":\"A10\"},{\"type\":\"X.14N\",\"def_pos\":0,\"name\":\"A11\"},{\"type\":\"X.0yl\",\"def_pos\":0,\"name\":\"A12\"},{\"type\":\"X.0fx\",\"def_pos\":0,\"name\":\"A13\"},{\"type\":\"X.0D5\",\"def_pos\":0,\"name\":\"A14\"},{\"type\":\"X.0wE\",\"def_pos\":0,\"name\":\"A15\"},{\"type\":\"X.0W4\",\"def_pos\":0,\"name\":\"A16\"},{\"type\":\"X.00S\",\"def_pos\":0,\"name\":\"A17\"},{\"type\":\"X.0B8\",\"def_pos\":0,\"name\":\"A18\"},{\"type\":\"X.0WJ\",\"def_pos\":0,\"name\":\"A19\"},{\"type\":\"X.0Gs\",\"def_pos\":0,\"name\":\"A1A\"},{\"type\":\"X.144\",\"def_pos\":0,\"name\":\"A1B\"},{\"type\":\"X.14D\",\"def_pos\":0,\"name\":\"A1C\"},{\"type\":\"X.14W\",\"def_pos\":0,\"name\":\"A1D\"},{\"type\":\"X.14K\",\"def_pos\":0,\"name\":\"A1E\"},{\"type\":\"X.13P\",\"def_pos\":0,\"name\":\"A1F\"},{\"type\":\"X.0qx\",\"def_pos\":0,\"name\":\"A1G\"},{\"type\":\"X.14G\",\"def_pos\":0,\"name\":\"A1H\"},{\"type\":\"X.110\",\"def_pos\":0,\"name\":\"A1I\"},{\"type\":\"java.util.Set\",\"def_pos\":0,\"name\":\"A1J\"},{\"type\":\"X.023\",\"def_pos\":0,\"name\":\"A1K\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_xrefs_to_method",
+        "input": {
+          "class_name": "X.C13N",
+          "method_name": "A06",
+          "overload_index": 0,
+          "limit": 2147483647,
+          "resolve_line": false
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"target\":\"X.C13N.A06\",\"resolve_line\":false,\"total\":7,\"items\":[{\"kind\":\"method\",\"name\":\"A0C\",\"full_name\":\"X.13N.A0C\",\"containing_class\":\"X.C13N\",\"top_class\":\"X.C13N\",\"def_pos\":19279,\"direct_invokes\":[{\"opcode\":\"INVOKE_VIRTUAL\",\"dex_entry\":\"classes.dex\",\"source_raw_method_id\":\"X.13N.A0C()V\",\"dex_method_index\":24510,\"dex_code_unit_offset\":36}],\"direct_invokes_exhaustive\":true},{\"kind\":\"method\",\"name\":\"A0K\",\"full_name\":\"X.13N.A0K\",\"containing_class\":\"X.C13N\",\"top_class\":\"X.C13N\",\"def_pos\":21159,\"direct_invokes\":[{\"opcode\":\"INVOKE_VIRTUAL\",\"dex_entry\":\"classes.dex\",\"source_raw_method_id\":\"X.13N.A0K()Z\",\"dex_method_index\":24510,\"dex_code_unit_offset\":134}],\"direct_invokes_exhaustive\":true},{\"kind\":\"method\",\"name\":\"A0M\",\"full_name\":\"X.13N.A0M\",\"containing_class\":\"X.C13N\",\"top_class\":\"X.C13N\",\"def_pos\":27364,\"direct_invokes\":[{\"opcode\":\"INVOKE_VIRTUAL\",\"dex_entry\":\"classes.dex\",\"source_raw_method_id\":\"X.13N.A0M()Z\",\"dex_method_index\":24510,\"dex_code_unit_offset\":17}],\"direct_invokes_exhaustive\":true},{\"kind\":\"method\",\"name\":\"A00\",\"full_name\":\"X.G4b.A00\",\"containing_class\":\"X.G4b\",\"top_class\":\"X.G4b\",\"def_pos\":0,\"direct_invokes\":[{\"opcode\":\"INVOKE_VIRTUAL\",\"dex_entry\":\"classes9.dex\",\"source_raw_method_id\":\"X.G4b.A00(LX/G4b;)LX/HG4;\",\"dex_method_index\":2750,\"dex_code_unit_offset\":64}],\"direct_invokes_exhaustive\":true},{\"kind\":\"method\",\"name\":\"run\",\"full_name\":\"X.IBn.run\",\"containing_class\":\"X.IBn\",\"top_class\":\"X.IBn\",\"def_pos\":0,\"direct_invokes\":[{\"opcode\":\"INVOKE_VIRTUAL\",\"dex_entry\":\"classes9.dex\",\"source_raw_method_id\":\"X.IBn.run()V\",\"dex_method_index\":2750,\"dex_code_unit_offset\":778}],\"direct_invokes_exhaustive\":true},{\"kind\":\"method\",\"name\":\"onCreate\",\"full_name\":\"com.whatsapp.registration.app.RegisterName.onCreate\",\"containing_class\":\"com.whatsapp.registration.app.RegisterName\",\"top_class\":\"com.whatsapp.registration.app.RegisterName\",\"def_pos\":0,\"direct_invokes\":[{\"opcode\":\"INVOKE_VIRTUAL\",\"dex_entry\":\"classes9.dex\",\"source_raw_method_id\":\"com.whatsapp.registration.app.RegisterName.onCreate(Landroid/os/Bundle;)V\",\"dex_method_index\":2750,\"dex_code_unit_offset\":1294}],\"direct_invokes_exhaustive\":true},{\"kind\":\"method\",\"name\":\"A05\",\"full_name\":\"com.whatsapp.registration.app.RegisterNameManager.A05\",\"containing_class\":\"com.whatsapp.registration.app.RegisterNameManager\",\"top_class\":\"com.whatsapp.registration.app.RegisterNameManager\",\"def_pos\":0,\"direct_invokes\":[{\"opcode\":\"INVOKE_VIRTUAL\",\"dex_entry\":\"classes9.dex\",\"source_raw_method_id\":\"com.whatsapp.registration.app.RegisterNameManager.A05(LX/0Ir;)V\",\"dex_method_index\":2750,\"dex_code_unit_offset\":59}],\"direct_invokes_exhaustive\":true}],\"count\":7,\"overload_index\":0,\"reported_signature\":\"A06(): X.0E2\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C13N",
+    "method_name": "A06",
+    "overload_index": 0,
+    "reported_signature": "A06(): X.0E2",
+    "dex_descriptor": "()LX/0E2;",
+    "total": 7,
+    "references": [
+      {
+        "kind": "method",
+        "name": "A0C",
+        "reported_full_name": "X.13N.A0C",
+        "containing_class": "X.C13N",
+        "top_class": "X.C13N",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": true,
+        "direct_invokes": [
+          {
+            "dex_entry": "classes.dex",
+            "source_raw_method_id": "X.13N.A0C()V",
+            "dex_code_unit_offset": 36,
+            "dex_method_index": 24510,
+            "opcode": "INVOKE_VIRTUAL"
+          }
+        ]
+      },
+      {
+        "kind": "method",
+        "name": "A0K",
+        "reported_full_name": "X.13N.A0K",
+        "containing_class": "X.C13N",
+        "top_class": "X.C13N",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": true,
+        "direct_invokes": [
+          {
+            "dex_entry": "classes.dex",
+            "source_raw_method_id": "X.13N.A0K()Z",
+            "dex_code_unit_offset": 134,
+            "dex_method_index": 24510,
+            "opcode": "INVOKE_VIRTUAL"
+          }
+        ]
+      },
+      {
+        "kind": "method",
+        "name": "A0M",
+        "reported_full_name": "X.13N.A0M",
+        "containing_class": "X.C13N",
+        "top_class": "X.C13N",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": true,
+        "direct_invokes": [
+          {
+            "dex_entry": "classes.dex",
+            "source_raw_method_id": "X.13N.A0M()Z",
+            "dex_code_unit_offset": 17,
+            "dex_method_index": 24510,
+            "opcode": "INVOKE_VIRTUAL"
+          }
+        ]
+      },
+      {
+        "kind": "method",
+        "name": "A00",
+        "reported_full_name": "X.G4b.A00",
+        "containing_class": "X.G4b",
+        "top_class": "X.G4b",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": true,
+        "direct_invokes": [
+          {
+            "dex_entry": "classes9.dex",
+            "source_raw_method_id": "X.G4b.A00(LX/G4b;)LX/HG4;",
+            "dex_code_unit_offset": 64,
+            "dex_method_index": 2750,
+            "opcode": "INVOKE_VIRTUAL"
+          }
+        ]
+      },
+      {
+        "kind": "method",
+        "name": "run",
+        "reported_full_name": "X.IBn.run",
+        "containing_class": "X.IBn",
+        "top_class": "X.IBn",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": true,
+        "direct_invokes": [
+          {
+            "dex_entry": "classes9.dex",
+            "source_raw_method_id": "X.IBn.run()V",
+            "dex_code_unit_offset": 778,
+            "dex_method_index": 2750,
+            "opcode": "INVOKE_VIRTUAL"
+          }
+        ]
+      },
+      {
+        "kind": "method",
+        "name": "onCreate",
+        "reported_full_name": "com.whatsapp.registration.app.RegisterName.onCreate",
+        "containing_class": "com.whatsapp.registration.app.RegisterName",
+        "top_class": "com.whatsapp.registration.app.RegisterName",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": true,
+        "direct_invokes": [
+          {
+            "dex_entry": "classes9.dex",
+            "source_raw_method_id": "com.whatsapp.registration.app.RegisterName.onCreate(Landroid/os/Bundle;)V",
+            "dex_code_unit_offset": 1294,
+            "dex_method_index": 2750,
+            "opcode": "INVOKE_VIRTUAL"
+          }
+        ]
+      },
+      {
+        "kind": "method",
+        "name": "A05",
+        "reported_full_name": "com.whatsapp.registration.app.RegisterNameManager.A05",
+        "containing_class": "com.whatsapp.registration.app.RegisterNameManager",
+        "top_class": "com.whatsapp.registration.app.RegisterNameManager",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": true,
+        "direct_invokes": [
+          {
+            "dex_entry": "classes9.dex",
+            "source_raw_method_id": "com.whatsapp.registration.app.RegisterNameManager.A05(LX/0Ir;)V",
+            "dex_code_unit_offset": 59,
+            "dex_method_index": 2750,
+            "opcode": "INVOKE_VIRTUAL"
+          }
+        ]
+      }
+    ],
+    "coverage": "complete",
+    "reference_unit": "using_node"
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

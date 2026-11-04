@@ -923,16 +923,15 @@ fn to_model(snapshot: &GroupSnapshot) -> Option<Group> {
 /// actions are only marked seen. State, events and the marker commit atomically.
 pub fn ingest(store: &ProtocolStore) -> Result<usize> {
     let mut applied = 0usize;
-    for kind in ACTION_KINDS {
-        for (outcome, reply) in super::actions::settled(store, kind)? {
-            // The stored request is immutable. Load it before the write lock;
-            // invite/leave application must not nest a store transaction.
-            let request = super::actions::request(store, &outcome.id)?;
-            if store
-                .write(|tx| ingest_reply_in(tx, kind, &outcome, request.as_ref(), reply.as_ref()))?
-            {
-                applied += 1;
-            }
+    for (outcome, reply) in super::actions::settled_for_kinds(store, &ACTION_KINDS)? {
+        let kind = outcome.kind.as_str();
+        // The stored request is immutable. Load it before the write lock;
+        // invite/leave application must not nest a store transaction.
+        let request = super::actions::request(store, &outcome.id)?;
+        if store
+            .write(|tx| ingest_reply_in(tx, kind, &outcome, request.as_ref(), reply.as_ref()))?
+        {
+            applied += 1;
         }
     }
     Ok(applied)

@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_c9ece38c9e081855de67437cc68213945ca07869f780ae7805e721eebd169655",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.FDV",
+    "method_name": "onSuccess",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-JWePeP/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.FDV"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"(LX/0Vy;LX/Eo9;)V\",\"signature\":\"\\u003cinit\\u003e(X.0Vy, X.Eo9): void\"},{\"def_pos\":0,\"name\":\"Bju\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"Bju(): void\"},{\"def_pos\":0,\"name\":\"Bwp\",\"is_constructor\":false,\"dex_descriptor\":\"(ILjava/lang/String;)V\",\"signature\":\"Bwp(int, java.lang.String): void\"},{\"def_pos\":0,\"name\":\"Bzj\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"Bzj(): void\"},{\"def_pos\":0,\"name\":\"onSuccess\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"onSuccess(): void\"}],\"method_count\":5,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"FDV\",\"full_name\":\"X.FDV\",\"field_count\":2,\"fields\":[{\"type\":\"X.0Vy\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"X.Eo9\",\"def_pos\":0,\"name\":\"A01\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.FDV",
+          "method_name": "onSuccess",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.FDV.onSuccess\",\"class_name\":\"X.FDV\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    @Override // X.FwY\\n    public void onSuccess() {\\n        Integer num;\\n        C0Vy c0Vy \\u003d this.A00;\\n        List list \\u003d C07o.A0A;\\n        synchronized (c0Vy.A0R) {\\n            StringBuilder sbA1B \\u003d C2L6.A1B(\\\"companion-device-manager/critical sync successful. DeviceJid: \\\");\\n            Eo9 eo9 \\u003d this.A01;\\n            F0I f0i \\u003d eo9.A01;\\n            DeviceJid deviceJid \\u003d f0i.A0A;\\n            DBb.A1I(deviceJid, sbA1B);\\n            Eo9 eo10 \\u003d c0Vy.A00;\\n            if (eo10 !\\u003d null) {\\n                DBb.A1I(eo10.A01.A0A, C2L6.A1B(\\\"companion-device-manager/device critical data synced: \\\"));\\n            }\\n            C0Kl c0Kl \\u003d C0Kl.A02;\\n            FJF.A00(c0Vy, c0Kl, eo9, 32);\\n            FJF.A00(c0Vy, c0Kl, eo9, 33);\\n            Location locationA04 \\u003d c0Vy.A0P.A04(\\\"CompanionDevice\\\", 2);\\n            if (locationA04 \\u003d\\u003d null || locationA04.getTime() + 120000 \\u003c\\u003d System.currentTimeMillis()) {\\n                F4Y f4y \\u003d new F4Y(c0Vy, f0i);\\n                Handler handler \\u003d c0Vy.A06;\\n                handler.post(new C1Wa(f4y, c0Vy, 13));\\n                handler.postDelayed(new FeN(f4y, c0Vy, 13), 60000L);\\n            } else {\\n                StringBuilder sbA1B2 \\u003d C2L6.A1B(\\\"CompanionDevice/location/last \\\");\\n                sbA1B2.append(locationA04.getTime());\\n                C1Xl.A1N(sbA1B2);\\n                C0Vy.A08(locationA04, c0Vy, f0i);\\n            }\\n            C09S c09s \\u003d c0Vy.A0J;\\n            String rawString \\u003d deviceJid.getRawString();\\n            C00L.A05(rawString);\\n            String string \\u003d DBc.A06(c09s.A19).getString(\\\"companion_device_verification_ids\\\", null);\\n            if (string !\\u003d null) {\\n                rawString \\u003d C1Xl.A0x(\\\",\\\", rawString, C1Xl.A16(string));\\n            }\\n            C2L8.A1U(C09S.A00(c09s), \\\"companion_device_verification_ids\\\", rawString);\\n            Context context \\u003d c0Vy.A05;\\n            if (PendingIntent.getBroadcast(context, 0, C3q0.A0E(context, CompanionDeviceVerificationReceiver.class), 603979776) \\u003d\\u003d null) {\\n                if (!c0Vy.A0H.A00.A01(C1At.A00(context, 0, C3q0.A0E(context, CompanionDeviceVerificationReceiver.class), 134217728), 0, System.currentTimeMillis() + ((long) (new Random().nextDouble() * 1.08E7d)) + 3600000)) {\\n                    Log.w(\\\"CompanionDevice/scheduleCompanionDeviceVerificationAlarm AlarmManager is null\\\");\\n                }\\n            }\\n            c0Vy.A00 \\u003d null;\\n            C0Z6 c0z6 \\u003d c0Vy.A0Q;\\n            if (C0Z6.A01(c0z6) \\u0026\\u0026 (num \\u003d (Integer) c0z6.A03.getAndSet(null)) !\\u003d null) {\\n                C0Z6.A00(c0z6).markerEnd(106889217, num.intValue(), (short) 2);\\n            }\\n            c0Vy.A01 \\u003d null;\\n            ((Dv9) c0Vy.A0D.A03.BFb()).A0H(this);\\n        }\\n    }\",\"overload_count\":1,\"method_name\":\"onSuccess\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.FDV",
+    "method": {
+      "name": "onSuccess",
+      "reported_signature": "onSuccess(): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "()V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    @Override // X.FwY\n    public void onSuccess() {\n        Integer num;\n        C0Vy c0Vy = this.A00;\n        List list = C07o.A0A;\n        synchronized (c0Vy.A0R) {\n            StringBuilder sbA1B = C2L6.A1B(\"companion-device-manager/critical sync successful. DeviceJid: \");\n            Eo9 eo9 = this.A01;\n            F0I f0i = eo9.A01;\n            DeviceJid deviceJid = f0i.A0A;\n            DBb.A1I(deviceJid, sbA1B);\n            Eo9 eo10 = c0Vy.A00;\n            if (eo10 != null) {\n                DBb.A1I(eo10.A01.A0A, C2L6.A1B(\"companion-device-manager/device critical data synced: \"));\n            }\n            C0Kl c0Kl = C0Kl.A02;\n            FJF.A00(c0Vy, c0Kl, eo9, 32);\n            FJF.A00(c0Vy, c0Kl, eo9, 33);\n            Location locationA04 = c0Vy.A0P.A04(\"CompanionDevice\", 2);\n            if (locationA04 == null || locationA04.getTime() + 120000 <= System.currentTimeMillis()) {\n                F4Y f4y = new F4Y(c0Vy, f0i);\n                Handler handler = c0Vy.A06;\n                handler.post(new C1Wa(f4y, c0Vy, 13));\n                handler.postDelayed(new FeN(f4y, c0Vy, 13), 60000L);\n            } else {\n                StringBuilder sbA1B2 = C2L6.A1B(\"CompanionDevice/location/last \");\n                sbA1B2.append(locationA04.getTime());\n                C1Xl.A1N(sbA1B2);\n                C0Vy.A08(locationA04, c0Vy, f0i);\n            }\n            C09S c09s = c0Vy.A0J;\n            String rawString = deviceJid.getRawString();\n            C00L.A05(rawString);\n            String string = DBc.A06(c09s.A19).getString(\"companion_device_verification_ids\", null);\n            if (string != null) {\n                rawString = C1Xl.A0x(\",\", rawString, C1Xl.A16(string));\n            }\n            C2L8.A1U(C09S.A00(c09s), \"companion_device_verification_ids\", rawString);\n            Context context = c0Vy.A05;\n            if (PendingIntent.getBroadcast(context, 0, C3q0.A0E(context, CompanionDeviceVerificationReceiver.class), 603979776) == null) {\n                if (!c0Vy.A0H.A00.A01(C1At.A00(context, 0, C3q0.A0E(context, CompanionDeviceVerificationReceiver.class), 134217728), 0, System.currentTimeMillis() + ((long) (new Random().nextDouble() * 1.08E7d)) + 3600000)) {\n                    Log.w(\"CompanionDevice/scheduleCompanionDeviceVerificationAlarm AlarmManager is null\");\n                }\n            }\n            c0Vy.A00 = null;\n            C0Z6 c0z6 = c0Vy.A0Q;\n            if (C0Z6.A01(c0z6) && (num = (Integer) c0z6.A03.getAndSet(null)) != null) {\n                C0Z6.A00(c0z6).markerEnd(106889217, num.intValue(), (short) 2);\n            }\n            c0Vy.A01 = null;\n            ((Dv9) c0Vy.A0D.A03.BFb()).A0H(this);\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

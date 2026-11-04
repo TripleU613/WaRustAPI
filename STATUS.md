@@ -1,3 +1,26 @@
+2026-11-04 — **Durable settlement order and atomic blocklist replay:**
+
+New correlated terminal IQ replies now atomically acquire monotonic settlement
+order. Contacts/groups/blocklist replay uses that order across relevant kinds;
+blocklist projection, hash and once-only marker share one transaction. Original
+requests supply block/unblock targets. New counter damage refuses without reset.
+Legacy missing order remains inspectable and is excluded from those automatic
+projection paths; it cannot be manufactured from IDs or timestamps. Native
+generation/fetch freshness admission remains open.
+[Correction and legacy boundaries](docs/protocol/action-settlement-ordering.md).
+
+New current-build evidence distinguishes live manager-flight timeout ownership
+from durable `Sent` history and traces own-device primary pairing separately
+from companion metadata ingestion. No speculative flight guard or read-self
+sender was added. [Scheduler](docs/protocol/server-sync-trigger-flight.md) and
+[own-companion ingress](docs/protocol/own-companion-ingress-current.md).
+No live network request or state reset occurred.
+
+Validation: **1,177 workspace/all-feature tests**, strict all-target/all-feature
+Clippy, CLI-reference regeneration, formatting, coverage freshness and repository
+hygiene passed. Research accounting: 777 distinct REA records, 421 for the current
+APK, 68 explicit ownership mappings. Counts are not a completion percentage.
+
 2026-11-04 — **Legacy preparation compatibility without rebuilding requests:**
 
 Old prepared-only and bound patch checkpoints may now acquire missing logical

@@ -35,17 +35,22 @@ use std::collections::BTreeSet;
 const BLOCKED_PREFIX: &str = "blocked:";
 const DHASH_KEY: &str = "blocklist-dhash";
 const INGESTED_PREFIX: &str = "blocklist-ingested:";
-const TARGET_PREFIX: &str = "blocklist-target:";
 
 fn invalid(reason: &'static str) -> Error {
     Error::invalid("blocklist", reason)
 }
 
+fn redact_projection_error(error: Error) -> Error {
+    match error {
+        Error::Storage(crate::store::StoreError::Serialization(_)) => {
+            invalid("invalid saved blocklist projection data")
+        }
+        other => other,
+    }
+}
+
 fn blocked_key(jid: &str) -> String {
     format!("{BLOCKED_PREFIX}{jid}")
-}
-fn target_key(id: &str) -> String {
-    format!("{TARGET_PREFIX}{id}")
 }
 fn ingested_key(id: &str) -> String {
     format!("{INGESTED_PREFIX}{id}")
@@ -62,14 +67,6 @@ pub fn forget_dhash(store: &ProtocolStore) -> Result<()> {
 
 fn saved_dhash(store: &ProtocolStore) -> Result<Option<String>> {
     store.read(|tx| tx.get_json(Table::Checkpoints, DHASH_KEY.as_bytes(), 1))
-}
-
-fn save_target(store: &ProtocolStore, id: &str, jid: &Jid) -> Result<()> {
-    store.write(|tx| tx.put_json(Table::Checkpoints, target_key(id).as_bytes(), 1, jid))
-}
-
-fn read_target(store: &ProtocolStore, id: &str) -> Result<Option<Jid>> {
-    store.read(|tx| tx.get_json(Table::Checkpoints, target_key(id).as_bytes(), 1))
 }
 
 /// Persisted row for one blocked contact.
@@ -139,7 +136,6 @@ fn queue_set(
     let id = super::actions::queue(store, action, label, move |id| {
         build_iq(id, "set", children)
     })?;
-    save_target(store, &id, &wire_jid)?;
     Ok(id)
 }
 
@@ -176,149 +172,262 @@ fn attr_as_string(node: &Node, name: &str) -> Option<String> {
     value.as_jid().map(ToString::to_string)
 }
 
-fn extract_dhash(node: &Node) -> Option<String> {
-    if let Some(v) = node.get_attr("dhash").and_then(|v| v.as_text()) {
-        return Some(v.to_owned());
-    }
-    node.child_nodes().iter().find_map(|c| {
-        c.get_attr("dhash")
-            .and_then(|v| v.as_text())
-            .map(str::to_owned)
-    })
+fn text_attr<'a>(node: &'a Node, name: &str) -> Result<Option<&'a str>> {
+    node.get_attr(name)
+        .map(|value| {
+            value
+                .as_text()
+                .ok_or_else(|| invalid("nontext blocklist metadata"))
+        })
+        .transpose()
 }
 
-fn apply_fetch(store: &ProtocolStore, reply: &Node) -> Result<()> {
-    let list = reply.child("list");
-    // Live 2026-09-20: a fetch that carried the saved `dhash` was answered with
-    // an empty `iq type=result` (no `list` child) — "unchanged", not "empty".
-    // Only a reply that carries a `list` replaces the saved list.
-    if list.is_none() {
-        return Ok(());
+fn user_attr(node: &Node, name: &str) -> Result<Option<Jid>> {
+    let Some(value) = node.get_attr(name) else {
+        return Ok(None);
+    };
+    let jid = match value.as_jid() {
+        Some(jid) => jid.clone(),
+        None => Jid::parse(
+            value
+                .as_text()
+                .ok_or_else(|| invalid("invalid blocklist identity"))?,
+        )
+        .map_err(|_| invalid("invalid blocklist identity"))?,
+    };
+    if !jid.is_user_like() || jid.is_ad() {
+        return Err(invalid(
+            "blocklist projection requires a primary user identity",
+        ));
     }
-    let mut current = BTreeSet::new();
-    let mut new_rows: Vec<(String, BlockedRow)> = Vec::new();
-    let mut dhash = None;
-    if let Some(list) = list {
-        dhash = list
-            .get_attr("dhash")
-            .and_then(|v| v.as_text())
-            .map(str::to_owned);
-        for item in list
-            .child_nodes()
-            .iter()
-            .filter(|c| c.description == "item")
-        {
-            let Some(jid) = attr_as_string(item, "jid").or_else(|| attr_as_string(item, "pn_jid"))
-            else {
-                continue;
-            };
-            let action = item
-                .get_attr("action")
-                .and_then(|v| v.as_text())
-                .unwrap_or("block");
-            if action != "block" {
-                continue;
-            }
-            current.insert(jid.clone());
-            new_rows.push((
-                jid.clone(),
-                BlockedRow {
-                    jid,
-                    display_name: item
-                        .get_attr("display_name")
-                        .and_then(|v| v.as_text())
-                        .map(str::to_owned),
-                    username: item
-                        .get_attr("username")
-                        .and_then(|v| v.as_text())
-                        .map(str::to_owned),
-                    since: Timestamp::now(),
-                },
-            ));
-        }
-    }
-    store.write(|tx| {
-        if let Some(dhash) = &dhash {
-            tx.put_json(Table::Checkpoints, DHASH_KEY.as_bytes(), 1, dhash)?;
-        }
-        for (jid, row) in &new_rows {
-            tx.put_json(Table::Checkpoints, blocked_key(jid).as_bytes(), 1, row)?;
-        }
-        let mut cursor = None;
-        let mut stale = Vec::new();
-        loop {
-            let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
-            let done = rows.len() < 256;
-            cursor = rows.last().map(|(key, _)| key.clone());
-            for (key, _) in rows {
-                if let Ok(name) = std::str::from_utf8(&key)
-                    && let Some(jid) = name.strip_prefix(BLOCKED_PREFIX)
-                    && !current.contains(jid)
-                {
-                    stale.push(key);
-                }
-            }
-            if done {
-                break;
-            }
-        }
-        for key in stale {
-            tx.delete(Table::Checkpoints, &key)?;
-        }
-        Ok(())
-    })
+    Ok(Some(jid))
 }
 
-fn apply_block_result(store: &ProtocolStore, id: &str, action: &str, reply: &Node) -> Result<()> {
-    let Some(target) = read_target(store, id)? else {
+fn extract_dhash(node: &Node) -> Result<Option<String>> {
+    // Set-result placement is still untraced. Preserve the existing root/child
+    // allowance, but never select arbitrarily among contradictory hashes.
+    let mut result: Option<String> = None;
+    for candidate in std::iter::once(node).chain(node.child_nodes().iter()) {
+        if let Some(value) = text_attr(candidate, "dhash")? {
+            if result.as_deref().is_some_and(|held| held != value) {
+                return Err(invalid("conflicting blocklist hashes"));
+            }
+            result = Some(value.to_owned());
+        }
+    }
+    Ok(result)
+}
+
+fn require_request(request: &Node, id: &str, kind: &str) -> Result<()> {
+    let request_type = if kind == "blocklist" { "get" } else { "set" };
+    let recipient = request.get_attr("to").and_then(|value| {
+        value
+            .as_jid()
+            .cloned()
+            .or_else(|| value.as_text().and_then(|text| Jid::parse(text).ok()))
+    });
+    if request.description != "iq"
+        || text_attr(request, "id")? != Some(id)
+        || text_attr(request, "xmlns")? != Some("blocklist")
+        || text_attr(request, "type")? != Some(request_type)
+        || recipient != Some(Jid::parse("s.whatsapp.net")?)
+    {
+        return Err(invalid("saved blocklist request does not match its action"));
+    }
+    Ok(())
+}
+
+fn apply_fetch_in(tx: &mut crate::store::WriteTx<'_>, reply: &Node) -> Result<()> {
+    let mut lists = reply
+        .child_nodes()
+        .iter()
+        .filter(|node| node.description == "list");
+    // Existing observed no-list response means unchanged, never an empty list.
+    let Some(list) = lists.next() else {
         return Ok(());
     };
-    let key = blocked_key(&target.to_string());
-    let dhash = extract_dhash(reply);
-    store.write(|tx| {
-        if action == "block" {
-            let existing: Option<BlockedRow> =
-                tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?;
-            let row = existing.unwrap_or_else(|| BlockedRow {
-                jid: target.to_string(),
-                display_name: None,
-                username: None,
+    if lists.next().is_some()
+        || !matches!(
+            list.content,
+            crate::binary::NodeContent::Empty | crate::binary::NodeContent::Children(_)
+        )
+    {
+        return Err(invalid("ambiguous or malformed blocklist snapshot"));
+    }
+    let dhash = text_attr(list, "dhash")?;
+    let mut current = BTreeSet::new();
+    let mut new_rows = Vec::new();
+    for item in list
+        .child_nodes()
+        .iter()
+        .filter(|item| item.description == "item")
+    {
+        let action = text_attr(item, "action")?.unwrap_or("block");
+        if action != "block" {
+            continue;
+        }
+        let jid = match user_attr(item, "jid")? {
+            Some(jid) => jid,
+            None => user_attr(item, "pn_jid")?
+                .ok_or_else(|| invalid("blocked snapshot item has no identity"))?,
+        }
+        .to_string();
+        if !current.insert(jid.clone()) {
+            return Err(invalid("duplicate identity in blocklist snapshot"));
+        }
+        let metadata = |name| -> Result<Option<String>> {
+            if item.get_attr(name).is_none() {
+                return Ok(None);
+            }
+            attr_as_string(item, name)
+                .map(Some)
+                .ok_or_else(|| invalid("invalid blocklist contact metadata"))
+        };
+        new_rows.push((
+            jid.clone(),
+            BlockedRow {
+                jid,
+                display_name: metadata("display_name")?,
+                username: metadata("username")?,
                 since: Timestamp::now(),
-            });
-            tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &row)?;
-        } else {
-            tx.delete(Table::Checkpoints, key.as_bytes())?;
+            },
+        ));
+    }
+    if let Some(dhash) = dhash {
+        tx.put_json(Table::Checkpoints, DHASH_KEY.as_bytes(), 1, &dhash)?;
+    }
+    for (jid, row) in new_rows {
+        tx.put_json(Table::Checkpoints, blocked_key(&jid).as_bytes(), 1, &row)?;
+    }
+    let mut cursor = None;
+    let mut stale = Vec::new();
+    loop {
+        let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
+        let done = rows.len() < 256;
+        cursor = rows.last().map(|(key, _)| key.clone());
+        for (key, _) in rows {
+            if let Ok(name) = std::str::from_utf8(&key)
+                && let Some(jid) = name.strip_prefix(BLOCKED_PREFIX)
+                && !current.contains(jid)
+            {
+                stale.push(key);
+            }
         }
-        if let Some(dhash) = &dhash {
-            tx.put_json(Table::Checkpoints, DHASH_KEY.as_bytes(), 1, dhash)?;
+        if done {
+            break;
         }
-        Ok(())
-    })
+    }
+    for key in stale {
+        tx.delete(Table::Checkpoints, &key)?;
+    }
+    Ok(())
 }
 
-/// Apply every settled fetch/block/unblock action not yet ingested. Returns
-/// how many were applied. Idempotent: a settled action is applied at most once.
-pub fn ingest(store: &ProtocolStore) -> Result<usize> {
-    let mut applied = 0usize;
-    for kind in ["blocklist", "block", "unblock"] {
-        for (outcome, reply) in super::actions::settled(store, kind)? {
-            let marker = ingested_key(&outcome.id);
-            let done: Option<bool> =
-                store.read(|tx| tx.get_json(Table::Checkpoints, marker.as_bytes(), 1))?;
-            if done.unwrap_or(false) {
-                continue;
-            }
-            if outcome.status == super::actions::ActionStatus::Ok
-                && let Some(reply) = &reply
-            {
-                match kind {
-                    "blocklist" => apply_fetch(store, reply)?,
-                    _ => apply_block_result(store, &outcome.id, kind, reply)?,
-                }
-                applied += 1;
-            }
-            store.write(|tx| tx.put_json(Table::Checkpoints, marker.as_bytes(), 1, &true))?;
+fn apply_block_result_in(
+    tx: &mut crate::store::WriteTx<'_>,
+    request: &Node,
+    action: &str,
+    reply: &Node,
+) -> Result<()> {
+    let mut items = request
+        .child_nodes()
+        .iter()
+        .filter(|node| node.description == "item");
+    let item = items
+        .next()
+        .ok_or_else(|| invalid("saved block request has no item"))?;
+    if items.next().is_some() || text_attr(item, "action")? != Some(action) {
+        return Err(invalid("saved block request has an ambiguous action"));
+    }
+    let target =
+        user_attr(item, "jid")?.ok_or_else(|| invalid("saved block request has no target"))?;
+    let key = blocked_key(&target.to_string());
+    let dhash = extract_dhash(reply)?;
+    if action == "block" {
+        let existing: Option<BlockedRow> = tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?;
+        if existing
+            .as_ref()
+            .is_some_and(|row| row.jid != target.to_string())
+        {
+            return Err(invalid("saved blocked row names another identity"));
         }
+        let row = existing.unwrap_or_else(|| BlockedRow {
+            jid: target.to_string(),
+            display_name: None,
+            username: None,
+            since: Timestamp::now(),
+        });
+        tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &row)?;
+    } else {
+        tx.delete(Table::Checkpoints, key.as_bytes())?;
+    }
+    if let Some(dhash) = dhash {
+        tx.put_json(Table::Checkpoints, DHASH_KEY.as_bytes(), 1, &dhash)?;
+    }
+    Ok(())
+}
+
+fn ingest_action_in(tx: &mut crate::store::WriteTx<'_>, id: &str, sequence: u64) -> Result<usize> {
+    let marker = ingested_key(id);
+    if tx
+        .get_json::<bool>(Table::Checkpoints, marker.as_bytes(), 1)?
+        .unwrap_or(false)
+    {
+        return Ok(0);
+    }
+    let (outcome, reply, request) = super::actions::view_in_write(tx, id)?
+        .ok_or_else(|| invalid("settled blocklist action disappeared"))?;
+    if outcome.settlement_sequence.is_none() {
+        return Ok(0);
+    }
+    if outcome.settlement_sequence != Some(sequence)
+        || sequence == 0
+        || !matches!(outcome.kind.as_str(), "blocklist" | "block" | "unblock")
+        || !matches!(
+            outcome.status,
+            super::actions::ActionStatus::Ok | super::actions::ActionStatus::Error
+        )
+    {
+        return Err(invalid(
+            "settled blocklist action changed during projection",
+        ));
+    }
+    require_request(&request, id, &outcome.kind)?;
+    let reply = reply.ok_or_else(|| invalid("settled blocklist action has no saved reply"))?;
+    if reply.description != "iq" || text_attr(&reply, "id")? != Some(id) {
+        return Err(invalid("saved blocklist reply does not match its action"));
+    }
+    let applied = if outcome.status == super::actions::ActionStatus::Ok {
+        if text_attr(&reply, "type")? != Some("result") {
+            return Err(invalid("saved successful blocklist reply is not a result"));
+        }
+        if outcome.kind == "blocklist" {
+            apply_fetch_in(tx, &reply)?;
+        } else {
+            apply_block_result_in(tx, &request, &outcome.kind, &reply)?;
+        }
+        1
+    } else {
+        0
+    };
+    tx.put_json(Table::Checkpoints, marker.as_bytes(), 1, &true)?;
+    Ok(applied)
+}
+
+/// Apply newly sequenced settled fetch/block/unblock replies in receive order.
+/// Projection and once-only marker commit together. Legacy unsequenced replies
+/// remain inspectable but are not replayed or marked; chronology is unknown.
+pub fn ingest(store: &ProtocolStore) -> Result<usize> {
+    let mut applied = 0;
+    for (outcome, _) in super::actions::settled_for_kinds(store, &["blocklist", "block", "unblock"])
+        .map_err(redact_projection_error)?
+    {
+        let Some(sequence) = outcome.settlement_sequence else {
+            continue;
+        };
+        applied += store
+            .write(|tx| ingest_action_in(tx, &outcome.id, sequence))
+            .map_err(redact_projection_error)?;
     }
     Ok(applied)
 }
@@ -589,5 +698,321 @@ mod tests {
         );
         forget_dhash(&s).unwrap();
         assert!(saved_dhash(&s).unwrap().is_none());
+    }
+
+    fn fixed_id(store: &ProtocolStore, id: &str, desired: &str) -> String {
+        use crate::binary::{Encoder, TokenDictionary};
+        let request = super::super::actions::request(store, id)
+            .unwrap()
+            .unwrap()
+            .attr("id", desired);
+        let wire = Encoder::new(TokenDictionary::comparison_2_26_37_71())
+            .encode(&request)
+            .unwrap();
+        store
+            .write(|tx| {
+                let old = format!("action-outbox:{id}");
+                let mut row: serde_json::Value =
+                    tx.get_json(Table::Checkpoints, old.as_bytes(), 1)?.unwrap();
+                row["wire"] = serde_json::json!(wire);
+                tx.delete(Table::Checkpoints, old.as_bytes())?;
+                tx.put_json(
+                    Table::Checkpoints,
+                    format!("action-outbox:{desired}").as_bytes(),
+                    1,
+                    &row,
+                )
+            })
+            .unwrap();
+        desired.to_owned()
+    }
+
+    fn reopen(dir: &std::path::Path) -> ProtocolStore {
+        ProtocolStore::open(OpenOptions {
+            path: dir.join("p.redb"),
+            account_id: AccountId::new("a").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32]))),
+            create: false,
+        })
+        .unwrap()
+    }
+
+    #[test]
+    fn cross_kind_projection_follows_receive_order_after_reopen() {
+        let (dir, s) = store();
+        let block = fixed_id(&s, &queue_block(&s, &phone()).unwrap(), &"f".repeat(32));
+        let unblock = fixed_id(&s, &queue_unblock(&s, &phone()).unwrap(), &"e".repeat(32));
+        let fetch = fixed_id(&s, &queue_fetch(&s).unwrap(), &"0".repeat(32));
+        super::super::actions::reserve_pending(&s).unwrap();
+        // IDs sort in the opposite order to receipt order; kind partitioning
+        // would replay this authoritative final fetch before the older unblock.
+        for reply in [
+            Node::new("iq")
+                .attr("type", "result")
+                .attr("id", block.as_str()),
+            Node::new("iq")
+                .attr("type", "result")
+                .attr("id", unblock.as_str()),
+            fetch_reply(
+                &fetch,
+                "latest",
+                vec![Node::new("item").attr("jid", phone())],
+            ),
+        ] {
+            assert!(super::super::actions::record_reply(&s, &reply).unwrap());
+        }
+        // A stale target sidecar must never override the immutable wire target.
+        s.write(|tx| {
+            tx.put_json(
+                Table::Checkpoints,
+                format!("blocklist-target:{block}").as_bytes(),
+                1,
+                &Jid::parse("15555550999@s.whatsapp.net").unwrap(),
+            )
+        })
+        .unwrap();
+        drop(s);
+        let s = reopen(dir.path());
+        assert_eq!(ingest(&s).unwrap(), 3);
+        assert_eq!(
+            blocked(&s)
+                .unwrap()
+                .iter()
+                .map(|row| row.jid.clone())
+                .collect::<Vec<_>>(),
+            vec![phone().to_string()]
+        );
+        assert_eq!(saved_dhash(&s).unwrap().as_deref(), Some("latest"));
+        assert_eq!(ingest(&s).unwrap(), 0);
+        assert!(
+            super::super::actions::reserve_pending(&s)
+                .unwrap()
+                .is_empty()
+        );
+    }
+
+    #[test]
+    fn snapshot_replay_is_independent_of_id_sort_direction() {
+        for (old_id, new_id) in [
+            ("0".repeat(32), "f".repeat(32)),
+            ("f".repeat(32), "0".repeat(32)),
+        ] {
+            let (dir, s) = store();
+            let old = fixed_id(&s, &queue_fetch(&s).unwrap(), &old_id);
+            let new = fixed_id(&s, &queue_fetch(&s).unwrap(), &new_id);
+            super::super::actions::reserve_pending(&s).unwrap();
+            let stale = Jid::parse("15555550199@s.whatsapp.net").unwrap();
+            super::super::actions::record_reply(
+                &s,
+                &fetch_reply(&old, "old", vec![Node::new("item").attr("jid", stale)]),
+            )
+            .unwrap();
+            super::super::actions::record_reply(
+                &s,
+                &fetch_reply(&new, "new", vec![Node::new("item").attr("jid", phone())]),
+            )
+            .unwrap();
+            drop(s);
+            let s = reopen(dir.path());
+            assert_eq!(ingest(&s).unwrap(), 2);
+            assert_eq!(blocked(&s).unwrap()[0].jid, phone().to_string());
+            assert_eq!(saved_dhash(&s).unwrap().as_deref(), Some("new"));
+            assert_eq!(ingest(&s).unwrap(), 0);
+        }
+    }
+
+    #[test]
+    fn projection_and_marker_roll_back_together_before_commit() {
+        let (dir, s) = store();
+        let id = queue_fetch(&s).unwrap();
+        super::super::actions::reserve_pending(&s).unwrap();
+        super::super::actions::record_reply(
+            &s,
+            &fetch_reply(&id, "hash", vec![Node::new("item").attr("jid", phone())]),
+        )
+        .unwrap();
+        let outcome = super::super::actions::outcomes(&s).unwrap().pop().unwrap();
+        let result: Result<()> = s.write(|tx| {
+            assert_eq!(
+                ingest_action_in(tx, &id, outcome.settlement_sequence.unwrap())?,
+                1
+            );
+            // Simulate a cut after projection and marker writes but before the
+            // parent store transaction commits. No nested commit can survive.
+            Err(Error::Cancelled)
+        });
+        assert!(result.is_err());
+        assert!(blocked(&s).unwrap().is_empty());
+        assert!(saved_dhash(&s).unwrap().is_none());
+        assert!(
+            s.read(|tx| tx.get(Table::Checkpoints, ingested_key(&id).as_bytes(), 1))
+                .unwrap()
+                .is_none()
+        );
+        drop(s);
+        let s = reopen(dir.path());
+        assert!(blocked(&s).unwrap().is_empty());
+        assert!(saved_dhash(&s).unwrap().is_none());
+        assert_eq!(ingest(&s).unwrap(), 1);
+        assert_eq!(ingest(&s).unwrap(), 0);
+    }
+
+    #[test]
+    fn malformed_snapshot_is_refused_without_partial_list_hash_or_marker() {
+        let (_dir, s) = store();
+        let original = queue_block(&s, &phone()).unwrap();
+        super::super::actions::reserve_pending(&s).unwrap();
+        super::super::actions::record_reply(
+            &s,
+            &Node::new("iq")
+                .attr("id", original)
+                .attr("type", "result")
+                .attr("dhash", "before"),
+        )
+        .unwrap();
+        ingest(&s).unwrap();
+        let before = blocked(&s).unwrap();
+        let id = queue_fetch(&s).unwrap();
+        super::super::actions::reserve_pending(&s).unwrap();
+        let reply = fetch_reply(
+            &id,
+            "after",
+            vec![
+                Node::new("item").attr("jid", "15555550998@s.whatsapp.net"),
+                Node::new("item").attr("jid", "private-invalid-target"),
+            ],
+        );
+        super::super::actions::record_reply(&s, &reply).unwrap();
+        let error = ingest(&s).unwrap_err().to_string();
+        assert!(!error.contains("private-invalid-target"));
+        assert!(!error.contains("15555550998"));
+        assert_eq!(blocked(&s).unwrap(), before);
+        assert_eq!(saved_dhash(&s).unwrap().as_deref(), Some("before"));
+        assert!(
+            s.read(|tx| tx.get(Table::Checkpoints, ingested_key(&id).as_bytes(), 1))
+                .unwrap()
+                .is_none()
+        );
+    }
+
+    #[test]
+    fn duplicate_snapshot_identity_is_refused_before_projection() {
+        let (_dir, s) = store();
+        let id = queue_fetch(&s).unwrap();
+        super::super::actions::reserve_pending(&s).unwrap();
+        super::super::actions::record_reply(
+            &s,
+            &fetch_reply(
+                &id,
+                "duplicate",
+                vec![
+                    Node::new("item")
+                        .attr("jid", phone())
+                        .attr("display_name", "first"),
+                    Node::new("item")
+                        .attr("jid", phone().to_string())
+                        .attr("display_name", "last"),
+                ],
+            ),
+        )
+        .unwrap();
+        assert!(
+            ingest(&s)
+                .unwrap_err()
+                .to_string()
+                .contains("duplicate identity")
+        );
+        assert!(blocked(&s).unwrap().is_empty());
+        assert!(saved_dhash(&s).unwrap().is_none());
+        assert!(
+            s.read(|tx| tx.get(Table::Checkpoints, ingested_key(&id).as_bytes(), 1))
+                .unwrap()
+                .is_none()
+        );
+    }
+
+    #[test]
+    fn stored_projection_decode_errors_do_not_echo_private_values() {
+        let (_dir, s) = store();
+        let id = queue_block(&s, &phone()).unwrap();
+        super::super::actions::reserve_pending(&s).unwrap();
+        super::super::actions::record_reply(
+            &s,
+            &Node::new("iq")
+                .attr("type", "result")
+                .attr("id", id.as_str()),
+        )
+        .unwrap();
+        s.write(|tx| {
+            tx.put_json(
+                Table::Checkpoints,
+                blocked_key(&phone().to_string()).as_bytes(),
+                1,
+                &serde_json::json!({"jid":phone().to_string(),"since":"private-stored-value"}),
+            )
+        })
+        .unwrap();
+        let before = s
+            .read(|tx| {
+                tx.get(
+                    Table::Checkpoints,
+                    blocked_key(&phone().to_string()).as_bytes(),
+                    1,
+                )
+            })
+            .unwrap();
+        let error = ingest(&s).unwrap_err().to_string();
+        assert!(error.contains("invalid saved blocklist projection data"));
+        assert!(!error.contains("private-stored-value"));
+        assert_eq!(
+            s.read(|tx| tx.get(
+                Table::Checkpoints,
+                blocked_key(&phone().to_string()).as_bytes(),
+                1
+            ))
+            .unwrap(),
+            before
+        );
+        assert!(
+            s.read(|tx| tx.get(Table::Checkpoints, ingested_key(&id).as_bytes(), 1))
+                .unwrap()
+                .is_none()
+        );
+    }
+
+    #[test]
+    fn legacy_unsequenced_reply_is_not_projected_marked_or_resent() {
+        let (dir, s) = store();
+        let id = queue_fetch(&s).unwrap();
+        super::super::actions::reserve_pending(&s).unwrap();
+        super::super::actions::record_reply(
+            &s,
+            &fetch_reply(&id, "legacy", vec![Node::new("item").attr("jid", phone())]),
+        )
+        .unwrap();
+        s.write(|tx| {
+            let key = format!("action-outbox:{id}");
+            let mut row: serde_json::Value =
+                tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?.unwrap();
+            row.as_object_mut().unwrap().remove("settlement_sequence");
+            tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &row)
+        })
+        .unwrap();
+        drop(s);
+        let s = reopen(dir.path());
+        assert_eq!(ingest(&s).unwrap(), 0);
+        assert!(blocked(&s).unwrap().is_empty());
+        assert!(saved_dhash(&s).unwrap().is_none());
+        assert!(
+            s.read(|tx| tx.get(Table::Checkpoints, ingested_key(&id).as_bytes(), 1))
+                .unwrap()
+                .is_none()
+        );
+        assert!(super::super::actions::reply(&s, &id).unwrap().is_some());
+        assert!(
+            super::super::actions::reserve_pending(&s)
+                .unwrap()
+                .is_empty()
+        );
     }
 }

@@ -1,0 +1,10 @@
+classes8.dex  Lcom/whatsapp/consumer/companiondevice/iq/SyncResponseHandler;->A00(LLLLLL)
+  invoke dex byte offset: 0x6a9264
+classes8.dex  Lcom/whatsapp/consumer/companiondevice/iq/SyncResponseHandler;->A01(VLLLZZ)
+  invoke dex byte offset: 0x6a9332
+classes8.dex  Lcom/whatsapp/consumer/companiondevice/iq/SyncResponseHandler;->A02(VLL)
+  invoke dex byte offset: 0x6a9412
+classes8.dex  Lcom/whatsapp/consumer/companiondevice/iq/SyncResponseHandler;->A08(VLL)
+  invoke dex byte offset: 0x6ab5bc
+classes8.dex  LX/FeN;->run(V)
+  invoke dex byte offset: 0x81ee76

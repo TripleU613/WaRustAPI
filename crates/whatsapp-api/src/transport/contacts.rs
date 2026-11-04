@@ -441,7 +441,7 @@ fn parse_user(user: &Node, lid_succeeded: bool) -> Option<(String, ContactStatus
 /// Returns the number of status rows newly recorded.
 pub fn ingest(store: &ProtocolStore) -> Result<usize> {
     let mut recorded = 0usize;
-    for (outcome, reply) in super::actions::settled(store, ACTION_KIND)? {
+    for (outcome, reply) in super::actions::settled_for_kinds(store, &[ACTION_KIND])? {
         let marker = ingested_key(&outcome.id);
         let newly = store.write(|tx| {
             if tx
@@ -762,6 +762,45 @@ mod tests {
             contact.content,
             NodeContent::Bytes(bytes::Bytes::from_static(b"+15551234567"))
         );
+    }
+
+    #[test]
+    fn replay_after_restart_preserves_receive_order_over_random_identifier_order() {
+        let (dir, store) = store();
+        let mut ids = [
+            queue_check(&store, "+15551234567").unwrap(),
+            queue_check(&store, "+15551234567").unwrap(),
+        ];
+        ids.sort();
+        super::super::actions::reserve_pending(&store).unwrap();
+        for (index, id) in ids.iter().enumerate() {
+            let reply = Node::new("iq")
+                .attr("id", id.as_str())
+                .attr("type", "result")
+                .children(vec![Node::new("usync").children(vec![
+                    Node::new("list").children(vec![user_node(
+                        "+15551234567",
+                        if index == 0 {
+                            Some("15551234567@s.whatsapp.net")
+                        } else {
+                            None
+                        },
+                        None,
+                    )]),
+                ])]);
+            super::super::actions::record_reply(&store, &reply).unwrap();
+        }
+        drop(store);
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("c.redb"),
+            account_id: AccountId::new("a").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([11u8; 32]))),
+            create: false,
+        })
+        .unwrap();
+        assert_eq!(ingest(&store).unwrap(), 2);
+        assert!(!status(&store, "+15551234567").unwrap().unwrap().on_whatsapp);
+        assert_eq!(ingest(&store).unwrap(), 0);
     }
 
     #[test]

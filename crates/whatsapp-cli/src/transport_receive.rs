@@ -1148,11 +1148,14 @@ pub(super) async fn actions_status(
     println!("actions: {} queued so far", outcomes.len());
     for a in &outcomes {
         println!(
-            "  id={} kind={} label={} status={:?}{}",
+            "  id={} kind={} label={} status={:?} settlement_sequence={}{}",
             a.id,
             a.kind,
             a.label,
             a.status,
+            a.settlement_sequence
+                .map(|v| v.to_string())
+                .unwrap_or_else(|| "unknown".to_owned()),
             match (a.error_code, a.error_text.as_deref()) {
                 (None, None) => String::new(),
                 (code, text) => format!(" error={:?}/{}", code, text.unwrap_or("")),
