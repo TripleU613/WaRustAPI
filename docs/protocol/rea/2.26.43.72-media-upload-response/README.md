@@ -86,3 +86,35 @@ Existing MtZ/LzO exports carry the constructor/flag dataflow above.
 - [mode-helper.txt](mode-helper.txt) — SHA-256 `072506169f0fa7d0be8c5f8664936dffe942d418cd5d1d5ece9ba7851bf72023`.
 - [opaque-mode-writers.txt](opaque-mode-writers.txt) — SHA-256 `ca1a1df2da4c5b94072237341e4e7239ba2d172882c29a7d179dcb1179962af0`.
 - [required-path-mode-writers.txt](required-path-mode-writers.txt) — SHA-256 `6cab8100fe1282c1f43875a507dd2c9db70193ff22258ed87bd9ac08d5c0125a`.
+
+## Ordinary path query-presence correction (2026-11-04, offline)
+
+**Confirmed static/source mismatch fixed:** M0g.A00 returns null for empty
+path and for Uri query lacking either oe or oh; both nonnull query values
+return the exact original string. Empty values count as present. The boolean
+argument changes empty-path diagnostics, not this query requirement. MDL.A0B
+then stores the supplied string directly under its monitor. This leaf does
+not check signature cryptography or parse expiry time.
+
+Rust locations() now applies the same presence requirement to its existing
+slash-path subset after HTTPS/host/path guards. It compares exact encoded
+query keys (case-sensitive), excludes fragment text, and retains the entire
+original accepted path without rewriting query order/values. Android platform
+[Uri.getQueryParameter](https://android.googlesource.com/platform/frameworks/base/+/b10b48f62d3cac684424e4181d4e8ec61f227e95/core/java/android/net/Uri.java)
+confirms raw encoded-key matching and empty-value presence. Percent-encoded
+key aliases do not count as oe/oh; ampersand, not semicolon, separates pairs.
+
+The complete HTTP response is already stored encrypted as response_received
+before locations() runs. Missing required query fields therefore refuse
+payload construction without erasing evidence or authorizing another upload.
+No expiration value is invented and no retry is enabled. Previously uploaded
+legacy payloads remain reusable; this changes only new response acceptance.
+
+A regression covers ordinary/reordered/empty parameters, fragment-only fake
+parameters, missing keys, encoded aliases, case mismatches, value-embedded
+keys and semicolon separation. Existing untrusted URL/path tests remain.
+No live upload or server acceptance was tested; other native modes remain open.
+Reproduce apk-smali M0g.A00 and MDL.A0B with signatures/exceptions.
+
+- [ordinary-path-verifier.txt](ordinary-path-verifier.txt) — SHA-256 `1ea7c004396e5e05e590be545de0591f1a6af2855c43dce7a97debc3100170a9`.
+- [ordinary-path-setter.txt](ordinary-path-setter.txt) — SHA-256 `7ad02ee18ee37a7f3c0939d066a5863ccdc67664364e5c6fd408cf63e8b83f5d`.

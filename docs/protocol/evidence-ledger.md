@@ -1,3 +1,9 @@
+2026-11-04 — **Confirmed mismatch corrected offline: ordinary path query fields.**
+Pinned2.26.43.72 M0g.A00 requires nonnull oe/oh query values; Rust now
+requires exact encoded keys with native empty/fragment semantics, preserving
+raw reply before refusal. [Evidence/tests](rea/2.26.43.72-media-upload-response/README.md#ordinary-path-query-presence-correction-2026-11-04-offline).
+No signature/expiry interpretation, automatic replay or live operation.
+
 2026-11-04 — **Confirmed static: scheduled cross-reference response mode.**
 Pinned2.26.43.72 mode writer dataflow, MOu/KmQ consumer and whole-string
 regex semantics close opaque UUID meaning; ordinary normalization remains open.

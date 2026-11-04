@@ -1,3 +1,13 @@
+2026-11-04 — **Upload ordinary path query fields corrected (offline):**
+
+New reply acceptance now requires native oe/oh query presence without
+rewriting accepted paths or interpreting expiry/signature. Missing fields
+refuse payload construction after encrypted reply retention; no upload replay.
+[Evidence and regression cases](docs/protocol/rea/2.26.43.72-media-upload-response/README.md#ordinary-path-query-presence-correction-2026-11-04-offline).
+Validation: **1,265 workspace/all-feature tests**, strict Clippy, CLI-reference,
+formatting, coverage freshness and repository hygiene passed.
+No live upload or server acceptance test.
+
 2026-11-04 — **Upload scheduled-cross-reference mode identified:**
 
 Pinned writer/consumer evidence binds UUID handling to scheduled cross-reference

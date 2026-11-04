@@ -525,6 +525,23 @@ fn locations(response: &serde_json::Value) -> Result<(String, String)> {
                 && !s.contains(['\r', '\n'])
         })
         .ok_or_else(|| invalid("upload response missing valid direct_path"))?;
+    // APK 43.72 M0g.A00 accepts ordinary direct_path only when Uri has
+    // both oe and oh. Match encoded query keys exactly; empty values count.
+    // Android Uri.getQueryParameter compares raw encoded keys, not decoded
+    // aliases, and excludes the fragment. No signature/expiry verification.
+    let query = path
+        .split('#')
+        .next()
+        .unwrap_or(path)
+        .split_once('?')
+        .map(|(_, q)| q);
+    let has =
+        |key| query.is_some_and(|q| q.split('&').any(|pair| pair.split('=').next() == Some(key)));
+    if !has("oe") || !has("oh") {
+        return Err(invalid(
+            "upload direct_path missing signature or expiry parameters",
+        ));
+    }
     Ok((url.to_owned(), path.to_owned()))
 }
 
@@ -1683,9 +1700,36 @@ mod tests {
         }
     }
     #[test]
+    fn upload_direct_path_requires_native_query_presence_without_rewriting() {
+        let mut reply = serde_json::json!({"url":"https://mmg.whatsapp.net/file"});
+        for path in [
+            "/file?oe=1&oh=s",
+            "/file?oh&oe",
+            "/file?oe=&oh=",
+            "/file?x=1&oh=s&oe=1#tail",
+        ] {
+            reply["direct_path"] = path.into();
+            assert_eq!(locations(&reply).unwrap().1, path);
+        }
+        for path in [
+            "/file",
+            "/file?oe=1",
+            "/file?oh=s",
+            "/file#?oe=1&oh=s",
+            "/file?%6fe=1&oh=s",
+            "/file?oe=1&%6fh=s",
+            "/file?OE=1&oh=s",
+            "/file?x=oe=1&oh=s",
+            "/file?oe=1;oh=s",
+        ] {
+            reply["direct_path"] = path.into();
+            assert!(locations(&reply).is_err(), "{path}");
+        }
+    }
+
+    #[test]
     fn response_locations_reject_untrusted_urls_and_absolute_paths() {
-        let good =
-            serde_json::json!({"url":"https://mmg.whatsapp.net/file", "direct_path":"/file"});
+        let good = serde_json::json!({"url":"https://mmg.whatsapp.net/file", "direct_path":"/file?oe=expiry&oh=signature"});
         assert!(locations(&good).is_ok());
         for url in [
             "http://mmg.whatsapp.net/file",

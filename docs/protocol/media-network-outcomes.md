@@ -491,3 +491,12 @@ scheduled-cross-reference verifier, separately clearing ordinary path.
 Whole-string regex matching is confirmed; ordinary path instead goes
 through M0g normalization. [Mode/consumer evidence and remaining inputs](rea/2.26.43.72-media-upload-response/README.md#mode-producers-and-scheduled-cross-reference-consumer-2026-11-04).
 No acceptance change or live request.
+
+### Ordinary path signature/expiry parameter presence (2026-11-04)
+
+**Confirmed source mismatch corrected offline:** new upload reply paths now
+require oe and oh query keys as M0g.A00 does. Empty values count, encoded
+key aliases/fragment-only parameters do not; accepted bytes are not rewritten.
+This is presence, not signature authentication or expiry-time verification.
+Original complete response is stored before refusal, and no replay is enabled.
+[Native helper, platform semantics and regressions](rea/2.26.43.72-media-upload-response/README.md#ordinary-path-query-presence-correction-2026-11-04-offline).

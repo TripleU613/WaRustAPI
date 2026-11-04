@@ -1,0 +1,17 @@
+
+# class: LX/MDL;
+# extends: Ljava/lang/Object;
+
+.method public A0B(VL)  # .registers 3
+    # full signature: LX/MDL;->A0B(Ljava/lang/String;)V
+    0000..0002  monitor-enter
+    0002..0006  iput-object  v2, v1, LX/MDL;->A07:Ljava/lang/String;
+    0006..0008  monitor-exit
+    0008..000a  return-void
+    000a..000c  move-exception  v0
+    000c..000e  monitor-exit
+    000e..0010  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0001..0003 -> 0005
+    # catch <all> code_units 0006..0007 -> 0005
+.end method
