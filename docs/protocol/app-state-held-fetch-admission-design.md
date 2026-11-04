@@ -260,9 +260,9 @@ transaction-scoped retention primitive for ordered decrypted mutations. The
 caller must first authenticate them and establish request/reply provenance.
 Exact repeats are idempotent; conflicting identities and generation/authentication
 faults refuse. Tests cover reopen, rollback and absence of plaintext at rest.
-There is no production caller yet, so this is not an implemented response applier
-or application cursor. The narrow dead-code allowance marks that integration
-boundary. Successful per-patch verification and authoritative held-state/cursor
+The existing 409 settlement utility now retains verified actions with this
+primitive; see [conflict retention](app-state-catchup-atomicity.md#authenticated-action-retention-2026-11-04).
+Successful held-fetch application and its cursor remain unimplemented. Successful per-patch verification and authoritative held-state/cursor
 commits remain the next required work.
 
 ## Preserved-response provenance inspection

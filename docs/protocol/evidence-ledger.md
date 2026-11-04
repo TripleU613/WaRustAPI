@@ -1,3 +1,11 @@
+2026-11-04 — **Confirmed Rust defect/fixed offline:** the existing verified
+409 chain discarded decrypted actions while advancing integrity state. It now
+retains them encrypted in the same transaction, with exact immutable stored
+request/reply digests. Independent literal SET/REMOVE tests cover journal reopen
+and rollback; actual durable action ingestion checks digest provenance, pending
+release and no replay. No new APK evidence or live observation is claimed.
+[Correction and bounded contract](app-state-catchup-atomicity.md#authenticated-action-retention-2026-11-04).
+
 2026-11-04 — **Confirmed Rust/offline:** successful held-fetch response
 inspection now derives binding from sealed prospective store provenance rather
 than caller claims. Exact preserved reply comparison and one-read settlement

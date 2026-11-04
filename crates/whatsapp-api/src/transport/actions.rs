@@ -536,6 +536,15 @@ pub(crate) fn request_wire_in_write(
     Ok(row.map(|row| row.wire))
 }
 
+/// Exact immutable wire pair for a feature's settlement journal; never re-encoded.
+pub(crate) fn wire_pair_in_write(
+    tx: &crate::store::WriteTx<'_>,
+    id: &str,
+) -> Result<Option<(Vec<u8>, Vec<u8>)>> {
+    let row: Option<Row> = tx.get_json(Table::Checkpoints, key(id).as_bytes(), 1)?;
+    Ok(row.and_then(|row| row.reply.map(|reply| (row.wire, reply))))
+}
+
 /// Original request in an atomic feature-state update.
 pub(crate) fn request_in_write(tx: &crate::store::WriteTx<'_>, id: &str) -> Result<Option<Node>> {
     let row: Option<Row> = tx.get_json(Table::Checkpoints, key(id).as_bytes(), 1)?;

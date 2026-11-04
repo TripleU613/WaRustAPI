@@ -1,3 +1,18 @@
+2026-11-04 — **409 verified-action retention (offline):**
+
+Conflict catch-up no longer discards decrypted actions after verifying and
+advancing integrity state. Ordered SET/REMOVE actions are retained encrypted,
+bound to the action, collection, version, generation and exact stored wire-pair
+fingerprints. Journal, held checkpoint and pending-write release commit together;
+a later bad patch rolls them all back. Reopen and repeat ingestion preserve the
+original journal without replay. [Evidence, tests and limits](docs/protocol/app-state-catchup-atomicity.md#authenticated-action-retention-2026-11-04).
+
+This preserves the existing whole-chain utility contract. Native per-patch commit
+parity, successful held-fetch processing and action projection remain unfinished.
+Validation: **1,226 workspace/all-feature tests**, strict Clippy, CLI-reference,
+formatting, coverage freshness and repository hygiene passed.
+No live account traffic occurred.
+
 2026-11-04 — **Stored held-fetch response provenance (offline):**
 
 Response inspection now requires sealed prospective admission for successful

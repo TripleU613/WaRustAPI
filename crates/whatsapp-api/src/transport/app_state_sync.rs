@@ -18,13 +18,10 @@
 //! together; held state advances only after a verified correlated transition.
 //! Current-build evidence and unported fetch lifecycle: docs/protocol/app-state-fetch-completion.md.
 use crate::{Result, binary::Node, model::jid::Jid};
+pub(crate) mod action_journal;
 pub mod binding;
 pub mod headers;
 pub mod held_fetch;
-// Retention primitive is exercised offline until the following cursor/state
-// applier integrates it into production transactions.
-#[allow(dead_code)]
-pub(crate) mod action_journal;
 pub mod response;
 
 /// The five app-state collections (`LX/0oP.A03`, **confirmed** names).
@@ -1212,7 +1209,15 @@ pub(crate) fn ingest_action(store: &crate::store::ProtocolStore, id: &str) -> Re
                 }
                 definite_error(response)?;
                 // Conflict catch-up and pending release commit/roll back together.
-                let changed = catch_up_in(tx, &reply)?;
+                let (request_wire, reply_wire) = super::actions::wire_pair_in_write(tx, &actual.id)?
+                    .ok_or_else(|| invalid_patch("conflict has no preserved wire pair"))?;
+                use sha2::{Digest, Sha256};
+                let source = CatchUpSource {
+                    action_id: &actual.id,
+                    request_digest: Sha256::digest(&request_wire).into(),
+                    reply_digest: Sha256::digest(&reply_wire).into(),
+                };
+                let changed = catch_up_in(tx, &reply, &source)?;
                 tx.delete(Table::Checkpoints, pending_key.as_bytes())?;
                 return Ok(changed);
             }
@@ -1244,7 +1249,17 @@ pub(crate) fn ingest_action(store: &crate::store::ProtocolStore, id: &str) -> Re
 /// from a fetch does. Nothing is applied that does not verify: a conflict is not
 /// permission to trust bytes, and the key a patch names must be one this account
 /// already holds.
-fn catch_up_in(tx: &mut crate::store::WriteTx<'_>, reply: &Node) -> Result<usize> {
+struct CatchUpSource<'a> {
+    action_id: &'a str,
+    request_digest: [u8; 32],
+    reply_digest: [u8; 32],
+}
+
+fn catch_up_in(
+    tx: &mut crate::store::WriteTx<'_>,
+    reply: &Node,
+    source: &CatchUpSource<'_>,
+) -> Result<usize> {
     use crate::binary::NodeContent;
     use crate::signal::{app_state, app_state_collection::CollectionPatch};
     use crate::store::Table;
@@ -1327,6 +1342,21 @@ fn catch_up_in(tx: &mut crate::store::WriteTx<'_>, reply: &Node) -> Result<usize
             keys.get(id)
                 .ok_or_else(|| invalid_patch("conflict references an unheld key"))
         })?;
+        // Retain authenticated action plaintext before committing its integrity
+        // checkpoint. This closes data loss in the existing whole-chain 409
+        // utility; it does not claim native per-patch commit/projection parity.
+        action_journal::retain_authenticated_mutations_in(
+            tx,
+            &action_journal::JournalContext {
+                action_id: source.action_id,
+                collection,
+                patch_version: decoded.version,
+                generation: tx.generation(),
+                request_digest: source.request_digest,
+                reply_digest: source.reply_digest,
+            },
+            &verified.mutations,
+        )?;
         state = verified.state;
         applied += 1;
     }
@@ -1350,6 +1380,14 @@ mod catch_up_atomic_tests {
         store::{MasterKey, OpenOptions, ProtocolStore, StaticKeySource, Table},
     };
 
+    fn test_source() -> CatchUpSource<'static> {
+        CatchUpSource {
+            action_id: "synthetic-conflict-test",
+            request_digest: [1; 32],
+            reply_digest: [2; 32],
+        }
+    }
+
     fn open(path: &std::path::Path) -> ProtocolStore {
         ProtocolStore::open(OpenOptions {
             path: path.to_owned(),
@@ -1368,6 +1406,21 @@ mod catch_up_atomic_tests {
                     held_key(Collection::Regular).as_bytes(),
                     1,
                 )
+            })
+            .unwrap()
+    }
+
+    fn journal(store: &ProtocolStore) -> Vec<serde_json::Value> {
+        store
+            .read(|tx| {
+                tx.scan(Table::Checkpoints, 1, 1000)?
+                    .into_iter()
+                    .filter(|(key, _)| key.starts_with(b"app-state-fetch-action-journal:v1:"))
+                    .map(|(_, bytes)| {
+                        serde_json::from_slice(&bytes)
+                            .map_err(|_| invalid_patch("invalid test journal"))
+                    })
+                    .collect()
             })
             .unwrap()
     }
@@ -1539,7 +1592,9 @@ mod catch_up_atomic_tests {
             && s.logical_indexes_complete));
         install_key(&store);
         let response = reply(vec![Node::new("patch").bytes(patch(false))]);
-        store.write(|tx| catch_up_in(tx, &response)).unwrap();
+        store
+            .write(|tx| catch_up_in(tx, &response, &test_source()))
+            .unwrap();
         let complete = inspect_collections(&store).unwrap();
         assert!(
             complete
@@ -1686,7 +1741,11 @@ mod catch_up_atomic_tests {
         bytes.extend([0x32, 8, 0x0a, 6]);
         bytes.extend([0, 1, 0, 0, 0, 3]);
         let response = reply(vec![Node::new("patch").bytes(bytes)]);
-        assert!(store.write(|tx| catch_up_in(tx, &response)).is_err());
+        assert!(
+            store
+                .write(|tx| catch_up_in(tx, &response, &test_source()))
+                .is_err()
+        );
         assert!(
             held(&store).is_none(),
             "missing signing key cannot advance state"
@@ -1703,8 +1762,87 @@ mod catch_up_atomic_tests {
                 )
             })
             .unwrap();
-        assert_eq!(store.write(|tx| catch_up_in(tx, &response)).unwrap(), 1);
+        assert_eq!(
+            store
+                .write(|tx| catch_up_in(tx, &response, &test_source()))
+                .unwrap(),
+            1
+        );
         assert_eq!(held(&store).unwrap(), expected.to_saved());
+    }
+
+    #[test]
+    fn settled_conflict_journals_exact_wire_context_and_releases_pending_atomically() {
+        use sha2::{Digest, Sha256};
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("settled-conflict.redb");
+        let store = open(&path);
+        install_key(&store);
+        let base = CollectionState::empty("regular").unwrap();
+        let keys =
+            crate::signal::app_state_crypto::MutationKeys::derive(&(0u8..32).collect::<Vec<_>>())
+                .unwrap();
+        let prepared = base
+            .verify_patch(&CollectionPatch::decode(&patch(false)).unwrap(), |_| {
+                Ok(&keys)
+            })
+            .unwrap()
+            .state
+            .to_saved();
+        let id = store
+            .write(|tx| {
+                let id = super::super::actions::queue_in(
+                    tx,
+                    PATCH_ACTION_KIND,
+                    "synthetic conflict",
+                    |id| patch_request(id, Collection::Regular, Some(0), &patch(false)[4..], false),
+                )?;
+                tx.put_json(
+                    Table::Checkpoints,
+                    pending_key(&id).as_bytes(),
+                    1,
+                    &PendingState::Bound {
+                        base: base.to_saved(),
+                        prepared: prepared.clone(),
+                    },
+                )?;
+                Ok(id)
+            })
+            .unwrap();
+        super::super::actions::reserve_next(&store)
+            .unwrap()
+            .unwrap();
+        let mut response = reply(vec![Node::new("patch").bytes(patch(false))]);
+        response = response.attr("id", id.as_str());
+        assert!(super::super::actions::record_reply(&store, &response).unwrap());
+        let (request_wire, reply_wire) = store
+            .write(|tx| super::super::actions::wire_pair_in_write(tx, &id))
+            .unwrap()
+            .unwrap();
+        assert_eq!(ingest_action(&store, &id).unwrap(), 1);
+        let retained = journal(&store);
+        assert_eq!(retained.len(), 1);
+        assert_eq!(retained[0]["action_id"], id);
+        assert_eq!(
+            retained[0]["request_digest"],
+            serde_json::json!(Sha256::digest(&request_wire).to_vec())
+        );
+        assert_eq!(
+            retained[0]["reply_digest"],
+            serde_json::json!(Sha256::digest(&reply_wire).to_vec())
+        );
+        assert_eq!(held(&store).unwrap(), prepared);
+        assert!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, pending_key(&id).as_bytes(), 1))
+                .unwrap()
+                .is_none()
+        );
+        drop(store);
+        let store = open(&path);
+        assert_eq!(ingest_action(&store, &id).unwrap(), 0);
+        assert_eq!(journal(&store), retained);
+        assert_eq!(held(&store).unwrap(), prepared);
     }
 
     #[test]
@@ -1717,16 +1855,44 @@ mod catch_up_atomic_tests {
             Node::new("patch").bytes(patch(false)),
             Node::new("patch").bytes(patch(true)),
         ]);
-        assert_eq!(store.write(|tx| catch_up_in(tx, &response)).unwrap(), 2);
+        assert_eq!(
+            store
+                .write(|tx| catch_up_in(tx, &response, &test_source()))
+                .unwrap(),
+            2
+        );
         let expected = held(&store).unwrap();
         assert_eq!(expected.version, 2);
         assert!(expected.values.is_empty());
         assert_eq!(expected.hash, vec![0; 128]);
+        let retained = journal(&store);
+        assert_eq!(retained.len(), 2);
+        for row in &retained {
+            assert_eq!(row["action_id"], "synthetic-conflict-test");
+            assert_eq!(row["request_digest"], serde_json::json!([1; 32].to_vec()));
+            assert_eq!(row["reply_digest"], serde_json::json!([2; 32].to_vec()));
+            assert_eq!(row["actions"].as_array().unwrap().len(), 1);
+        }
+        assert!(
+            retained
+                .iter()
+                .any(|row| row["actions"][0]["operation"] == 1)
+        );
+        assert!(
+            retained
+                .iter()
+                .any(|row| row["actions"][0]["operation"] == 2)
+        );
         drop(store);
         let store = open(&path);
         assert_eq!(held(&store).unwrap(), expected);
+        assert_eq!(journal(&store), retained);
         let before = held(&store);
-        assert!(store.write(|tx| catch_up_in(tx, &response)).is_err());
+        assert!(
+            store
+                .write(|tx| catch_up_in(tx, &response, &test_source()))
+                .is_err()
+        );
         assert_eq!(
             held(&store),
             before,
@@ -1756,11 +1922,15 @@ mod catch_up_atomic_tests {
                 store
                     .write(|tx| {
                         tx.put_json(Table::Checkpoints, b"catchup-parent-write", 1, &true)?;
-                        catch_up_in(tx, &response)
+                        catch_up_in(tx, &response, &test_source())
                     })
                     .is_err()
             );
             assert!(held(&store).is_none());
+            assert!(
+                journal(&store).is_empty(),
+                "failed chain must retain no partial actions"
+            );
             assert!(
                 store
                     .read(|tx| tx.get(Table::Checkpoints, b"catchup-parent-write", 1))
@@ -1809,7 +1979,7 @@ mod catch_up_atomic_tests {
                         1,
                         &staged,
                     )?;
-                    catch_up_in(tx, &response)
+                    catch_up_in(tx, &response, &test_source())
                 })
                 .unwrap(),
             1
@@ -1822,7 +1992,11 @@ mod catch_up_atomic_tests {
             ])
         ])]);
         let before = held(&store);
-        assert!(store.write(|tx| catch_up_in(tx, &untrusted_route)).is_err());
+        assert!(
+            store
+                .write(|tx| catch_up_in(tx, &untrusted_route, &test_source()))
+                .is_err()
+        );
         assert_eq!(held(&store), before);
     }
 }

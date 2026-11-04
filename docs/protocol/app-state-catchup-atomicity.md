@@ -71,3 +71,29 @@ Four focused tests exercise the real encrypted store and collection verifier:
 These are local transactional/cryptographic regressions, not live acceptance or
 proof that an account cannot be restricted. Root settlement/queue changes are
 documented separately with their own invariants.
+
+## Authenticated action retention (2026-11-04)
+
+**Confirmed Rust defect and correction:** the supported 409 utility previously
+dropped `VerifiedCollectionPatch::mutations` after advancing its integrity map.
+It now writes those ordered decrypted actions into the encrypted action journal
+inside the same transaction as the held checkpoint and pending-write release.
+The production settlement caller derives request/reply SHA-256 fingerprints from
+the exact immutable stored wire pair, not from re-encoding decoded nodes. The
+journal binds action, collection, patch version and actual transaction generation.
+All patch/record keys still come from the already-held key resolver in that
+transaction. No response-provided key is installed.
+
+This keeps the utility's existing **whole-chain atomic** contract. A malformed
+or bad-MAC later patch rolls back all earlier journal writes, caller writes,
+held-state changes and pending release. This is not native per-patch commit
+parity, a successful-fetch applier, or contact/settings projection. The retained
+actions remain available for a future projector instead of being irretrievably
+discarded. Old already-applied conflicts are not retrospectively reconstructed.
+
+Tests exercise real settled-action ingestion with exact stored digest checks,
+pending release, reopen and no replay. Independent literal SET/REMOVE vectors
+check both ordered operation batches survive reopen; late failure tests require
+no partial journal. Existing journal conflict/AAD/rollback tests still apply.
+Native reference remains the pinned 2.26.43.72 lifecycle above; this change adds
+no APK evidence or live account operation.
