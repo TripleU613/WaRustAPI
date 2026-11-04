@@ -1,0 +1,201 @@
+
+# class: LX/LEs;
+# extends: LX/LHx;
+
+.method public A0m(L)  # .registers 22
+    # full signature: LX/LEs;->A0m()LX/MLo;
+    0000..0004  move-object/from16  v6, v21
+    0004..0008  iget-object  v4, v6, LX/LEs;->A02:LX/LEw;
+    0008..000c  iget-object  v0, v4, LX/LEw;->A0A:LX/00x;
+    000c..0012  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0012..0014  move-result-object  v0
+    0014..0018  check-cast  v0, LX/14K;
+    0018..001a  const/4  v1, #0x0
+    001a..0020  invoke-virtual  {v0, v1}, LX/14K;->A01(Z)V
+    0020..0024  iget-boolean  v3, v6, LX/LHx;->A02:Z
+    0024..002a  invoke-static  {}, LX/1Xl;->A13()Ljava/lang/StringBuilder;
+    002a..002c  move-result-object  v2
+    002c..0030  const-string  v0, "restore>PrepareMessageStoreTask/"
+    0030..0034  if-eqz  v3, +0x158
+    0034..003a  invoke-virtual  {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    003a..003e  const-string  v0, "initialize msgstore from backup"
+    003e..0044  invoke-static  {v2, v0}, LX/2L9;->A1K(Ljava/lang/StringBuilder;Ljava/lang/String;)V
+    0044..0048  iget-object  v2, v4, LX/M5L;->A06:LX/0m6;
+    0048..004c  iget-boolean  v0, v6, LX/LHx;->A01:Z
+    004c..0050  move/from16  v17, v0
+    0050..0054  iget-object  v8, v6, LX/LEs;->A00:LX/NYl;
+    0054..0056  const/4  v10, #0x1
+    0056..005c  invoke-static  {v8, v10}, LX/00l;->A09(Ljava/lang/Object;I)V
+    005c..0062  invoke-static  {v2}, LX/0m6;->A00(LX/0m6;)LX/Jj8;
+    0062..0064  move-result-object  v0
+    0064..0068  iget-object  v0, v0, LX/Jj8;->A0C:LX/05a;
+    0068..006c  iget-object  v2, v0, LX/05a;->A00:LX/00x;
+    006c..0072  invoke-interface  {v2}, LX/00x;->get()Ljava/lang/Object;
+    0072..0074  move-result-object  v0
+    0074..0078  check-cast  v0, LX/M5S;
+    0078..007e  invoke-interface  {v2}, LX/00x;->get()Ljava/lang/Object;
+    007e..0080  move-result-object  v11
+    0080..0084  check-cast  v11, LX/M5S;
+    0084..0088  iget-object  v5, v0, LX/M5S;->A0D:LX/MR7;
+    0088..008a  const/4  v9, #0x0
+    008a..008e  iget-object  v3, v5, LX/MR7;->A06:LX/0Gs;
+    008e..0094  invoke-virtual  {v3}, LX/0Gs;->A09()V
+    0094..0098  iget-object  v2, v3, LX/0Gs;->A0A:Ljava/util/concurrent/locks/ReentrantReadWriteLock$WriteLock;
+    0098..009e  invoke-static  {v2}, LX/00l;->A05(Ljava/lang/Object;)V
+    009e..00a4  invoke-virtual  {v2}, Ljava/util/concurrent/locks/ReentrantReadWriteLock$WriteLock;->lock()V
+    00a4..00a8  const-string  v0, "MessageStoreBackupUtils/initializeWithExistingMsgStore"
+    00a8..00ae  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    00ae..00b2  iget-object  v0, v5, LX/MR7;->A02:LX/05a;
+    00b2..00b6  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    00b6..00ba  move-object/from16  v20, v0
+    00ba..00c0  invoke-interface/range  {v20..v20}, LX/00x;->get()Ljava/lang/Object;
+    00c0..00c2  move-result-object  v12
+    00c2..00c6  check-cast  v12, LX/1Iz;
+    00c6..00ca  iget-object  v0, v5, LX/MR7;->A00:LX/05a;
+    00ca..00d0  invoke-static  {v0}, LX/2L8;->A0o(LX/05a;)LX/08Y;
+    00d0..00d2  move-result-object  v7
+    00d2..00d6  sget-object  v0, LX/0tP;->A01:LX/00f;
+    00d6..00dc  invoke-static  {v7, v0}, LX/00E;->A0F(LX/00E;LX/00f;)Z
+    00dc..00de  move-result  v0
+    00de..00e4  invoke-virtual  {v12, v0}, LX/1Iv;->A08(Z)V
+    00e4..00e8  iget-object  v7, v5, LX/MR7;->A07:Ljava/lang/Object;
+    00e8..00ea  monitor-enter
+    00ea..00f0  invoke-virtual  {v3}, LX/0Gs;->A0D()Z
+    00f0..00f2  move-result  v0
+    00f2..00f6  if-nez  v0, +0xbd
+    00f6..00fc  invoke-virtual  {v3}, LX/0Gs;->A09()V
+    00fc..0100  iget-object  v0, v3, LX/0Gs;->A04:LX/0HI;
+    0100..0104  move-object/from16  v19, v0
+    0104..010a  invoke-static/range  {v19..v19}, LX/00l;->A05(Ljava/lang/Object;)V
+    010a..010e  iget-object  v0, v0, LX/0HI;->A0G:LX/0HB;
+    010e..0114  invoke-virtual  {v0, v10}, LX/0HB;->A00(Z)V
+    0114..0118  iget-object  v0, v11, LX/M5S;->A0I:LX/14K;
+    0118..011e  invoke-virtual  {v0, v10}, LX/14K;->A01(Z)V
+    011e..0122  iget-object  v0, v11, LX/M5S;->A0F:LX/M2A;
+    0122..0128  invoke-virtual  {v0}, LX/M2A;->A00()V
+    0128..012c  iget-object  v0, v11, LX/M5S;->A0G:LX/0G4;
+    012c..0132  invoke-virtual  {v0}, LX/0G4;->A02()V
+    0132..0136  iget-object  v12, v11, LX/M5S;->A05:LX/F0t;
+    0136..013a  const/16  v11, #0x46
+    013a..013e  iget-object  v0, v12, LX/F0t;->A00:LX/05a;
+    013e..0142  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0142..0146  move-object/from16  v18, v0
+    0146..014c  invoke-interface/range  {v18..v18}, LX/00x;->get()Ljava/lang/Object;
+    014c..014e  move-result-object  v0
+    014e..0152  check-cast  v0, LX/MOt;
+    0152..0158  invoke-virtual  {v0}, LX/MOt;->A09()Ljava/util/ArrayList;
+    0158..015a  move-result-object  v13
+    015a..0160  invoke-virtual  {v13}, Ljava/util/AbstractCollection;->isEmpty()Z
+    0160..0162  move-result  v0
+    0162..0166  if-eqz  v0, +0x16
+    0166..016a  const-string  v0, "MessageStoreBackupUtils/restore/backupfiles/none-found"
+    016a..0170  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0170..0174  new-instance  v8, LX/MLo;
+    0174..017a  invoke-direct  {v8, v1}, LX/MLo;-><init>(I)V
+    017a..017e  const-string  v0, "MessageStoreBackupUtils/initializeWithExistingMsgStore/restoring-from-backup-or-direct-transfer/"
+    017e..0184  invoke-static  {v0, v8}, LX/2LA;->A1L(Ljava/lang/String;Ljava/lang/Object;)V
+    0184..0188  iget  v11, v8, LX/MLo;->A00:I
+    0188..018c  if-eq  v11, v10, +0x48
+    018c..018e  goto  +0x41
+    018e..0194  invoke-static  {v13}, LX/6og;->A1H(Ljava/util/AbstractCollection;)Ljava/util/Iterator;
+    0194..0196  move-result-object  v16
+    0196..019c  invoke-interface/range  {v16..v16}, Ljava/util/Iterator;->hasNext()Z
+    019c..019e  move-result  v0
+    019e..01a2  if-eqz  v0, +0x20
+    01a2..01a8  invoke-static/range  {v16..v16}, LX/6og;->A1C(Ljava/util/Iterator;)Ljava/lang/Object;
+    01a8..01aa  move-result-object  v0
+    01aa..01ae  check-cast  v0, Ljava/io/File;
+    01ae..01b4  invoke-virtual  {v0}, Ljava/io/File;->getName()Ljava/lang/String;
+    01b4..01b6  move-result-object  v15
+    01b6..01bc  invoke-virtual  {v0}, Ljava/io/File;->length()J
+    01bc..01be  move-result-wide  v0
+    01be..01c2  const-string  v14, "MessageStoreBackupUtils/restore/backupfiles "
+    01c2..01c8  invoke-static  {v14, v15}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    01c8..01ca  move-result-object  v15
+    01ca..01ce  const-string  v14, " ("
+    01ce..01d4  invoke-static  {v14, v15, v0, v1}, LX/1Xm;->A07(Ljava/lang/String;Ljava/lang/StringBuilder;J)Ljava/lang/String;
+    01d4..01d6  move-result-object  v0
+    01d6..01dc  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    01dc..01de  goto  -0x23
+    01de..01e4  invoke-static/range  {v18..v18}, LX/DBf;->A0b(LX/00x;)Ljava/io/File;
+    01e4..01e6  move-result-object  v1
+    01e6..01ea  const-string  v0, "restore"
+    01ea..01f0  invoke-static  {v1, v0}, LX/EG2;->A00(Ljava/io/File;Ljava/lang/String;)Z
+    01f0..01f2  move-result  v0
+    01f2..01f6  if-eqz  v0, +0x9
+    01f6..01fc  invoke-static/range  {v18..v18}, LX/DBf;->A0b(LX/00x;)Ljava/io/File;
+    01fc..01fe  move-result-object  v0
+    01fe..0204  invoke-static  {v0}, LX/KmE;->A0S(Ljava/io/File;)Z
+    0204..020a  invoke-virtual  {v12, v8, v13, v11}, LX/F0t;->A03(LX/NYl;Ljava/util/List;I)LX/MLo;
+    020a..020c  move-result-object  v8
+    020c..020e  goto  -0x49
+    020e..0212  const/16  v0, #0x15
+    0212..0214  const/4  v1, #0x0
+    0214..0218  if-ne  v11, v0, +0x3
+    0218..021a  const/4  v1, #0x1
+    021a..0220  invoke-virtual  {v3}, LX/0Gs;->A09()V
+    0220..0226  invoke-virtual/range  {v19..v19}, LX/0HI;->BIC()LX/0KU;
+    0226..0228  move-result-object  v0
+    0228..022e  invoke-static  {v0}, LX/00l;->A08(Ljava/lang/Object;)V
+    022e..0232  if-eqz  v1, +0x6
+    0232..0238  invoke-static  {v5, v8, v9, v9}, LX/MR7;->A01(LX/MR7;LX/MLo;ZZ)V
+    0238..023a  goto  +0x25
+    023a..023e  if-eqz  v17, +0x24
+    023e..0242  const-string  v0, "MessageStoreBackupUtils/initializeWithExistingMsgStore/re-creating db"
+    0242..0248  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0248..024e  invoke-virtual  {v3}, LX/0Gs;->A09()V
+    024e..0254  invoke-static  {v3}, LX/0Gs;->A03(LX/0Gs;)V
+    0254..0258  const-string  v0, "MessageStoreBackupUtils/initializeWithExistingMsgStore/db recreated"
+    0258..025e  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    025e..0260  const/4  v0, #0x2
+    0260..0264  new-instance  v8, LX/MLo;
+    0264..026a  invoke-direct  {v8, v0}, LX/MLo;-><init>(I)V
+    026a..026c  goto  +0xc
+    026c..0270  const-string  v0, "MessageStoreBackupUtils/initializeWithExistingMsgStore/restoring-from-backup/6"
+    0270..0276  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0276..0278  const/4  v0, #0x6
+    0278..027c  new-instance  v8, LX/MLo;
+    027c..0282  invoke-direct  {v8, v0}, LX/MLo;-><init>(I)V
+    0282..0284  monitor-exit
+    0284..0288  move-object/from16  v0, v20
+    0288..028e  invoke-static  {v0, v3, v2}, LX/LHx;->A01(LX/00x;LX/0Gs;Ljava/util/concurrent/locks/ReentrantReadWriteLock$WriteLock;)V
+    028e..0292  iget-boolean  v0, v6, LX/LHx;->A00:Z
+    0292..0296  if-nez  v0, +0x1a
+    0296..029a  iget-object  v1, v4, LX/LEw;->A0D:LX/00x;
+    029a..02a0  invoke-interface  {v1}, LX/00x;->get()Ljava/lang/Object;
+    02a0..02a2  move-result-object  v0
+    02a2..02a6  check-cast  v0, LX/0aS;
+    02a6..02ac  invoke-virtual  {v0}, LX/0aS;->A0c()Z
+    02ac..02ae  move-result  v0
+    02ae..02b2  if-eqz  v0, +0xc
+    02b2..02b8  invoke-interface  {v1}, LX/00x;->get()Ljava/lang/Object;
+    02b8..02ba  move-result-object  v1
+    02ba..02be  check-cast  v1, LX/0aS;
+    02be..02c0  const/4  v0, #0x5
+    02c0..02c6  invoke-virtual  {v1, v0}, LX/0aS;->A0R(I)V
+    02c6..02c8  return-object  v8
+    02c8..02ca  move-exception  v0
+    02ca..02cc  monitor-exit
+    02cc..02ce  throw  v0
+    02ce..02d0  move-exception  v1
+    02d0..02d4  iget-object  v0, v5, LX/MR7;->A02:LX/05a;
+    02d4..02d8  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    02d8..02de  invoke-static  {v0, v3, v2}, LX/LHx;->A01(LX/00x;LX/0Gs;Ljava/util/concurrent/locks/ReentrantReadWriteLock$WriteLock;)V
+    02de..02e0  throw  v1
+    02e0..02e6  invoke-virtual  {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    02e6..02ea  const-string  v0, "initializeMessageStore/newstore"
+    02ea..02f0  invoke-static  {v2, v0}, LX/2L9;->A1K(Ljava/lang/StringBuilder;Ljava/lang/String;)V
+    02f0..02f4  iget-object  v0, v4, LX/LEw;->A0J:LX/0G4;
+    02f4..02fa  invoke-virtual  {v0}, LX/0G4;->A00()LX/MLo;
+    02fa..02fc  move-result-object  v8
+    02fc..02fe  return-object  v8
+    # exception table: 7 try range(s)
+    # catch <all> code_units 0052..0075 -> 0167
+    # catch <all> code_units 0075..010d -> 0164
+    # catch Landroid/database/sqlite/SQLiteException; code_units 010d..0119 -> 011d
+    # catch <all> code_units 010d..0119 -> 0164
+    # catch <all> code_units 0119..011d -> 0164
+    # catch <all> code_units 011f..0141 -> 0164
+    # catch <all> code_units 0141..0142 -> 0167
+    # catch <all> code_units 0165..0167 -> 0167
+.end method

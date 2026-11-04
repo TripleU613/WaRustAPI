@@ -206,6 +206,12 @@ pub fn patch_request(
     patch: &[u8],
     return_snapshot: bool,
 ) -> Result<Node> {
+    if version.is_some_and(|v| v > i64::MAX as u64) {
+        return Err(crate::Error::invalid(
+            "app_state_sync",
+            "held collection version exceeds the APK signed-long range",
+        ));
+    }
     if id.is_empty() || id.len() > 128 {
         return Err(crate::Error::invalid(
             "app_state_sync",
@@ -253,8 +259,11 @@ pub const FETCH_ACTION_KIND: &str = "app-state-fetch";
 /// Returns the action id; nothing is sent until a session drains the queue.
 /// Read-only: no patch, no mutation.
 pub fn queue_fetch(store: &crate::store::ProtocolStore) -> Result<String> {
-    super::actions::queue(store, FETCH_ACTION_KIND, "app-state fetch", |id| {
-        fetch_request(id, &ALL_COLLECTIONS)
+    store.write(|tx| {
+        require_server_ready_in(tx)?;
+        super::actions::queue_in(tx, FETCH_ACTION_KIND, "app-state fetch", |id| {
+            fetch_request(id, &ALL_COLLECTIONS)
+        })
     })
 }
 
@@ -388,66 +397,70 @@ fn queue_patch(
     label: &str,
 ) -> Result<String> {
     use crate::signal::app_state;
-    // Mint on demand: a primary with no companions still mints its own key
-    // (LX/0oK->A05, empty-device-collection branch), purely locally.
-    let key_id = store.write(|tx| {
-        match app_state::select_active_key(
-            tx,
-            raw_id,
-            device_index.into(),
-            registered,
-            now_ms,
-            i64::MAX,
-        ) {
-            Ok(Some(selected)) => Ok(*selected.id()),
-            _ => app_state::mint_key(tx, device_index, raw_id, registered, now_ms),
-        }
-    })?;
-    let keys = store.write(|tx| {
-        app_state::select_active_key(
-            tx,
-            raw_id,
-            device_index.into(),
-            registered,
-            now_ms,
-            i64::MAX,
-        )?
-        .ok_or_else(|| crate::Error::invalid("app_state_sync", "minted key is not selectable"))
-    })?;
-    // Build on whatever the server last accepted. Starting from `empty` every
-    // time would claim version 1 for ever and hash over nothing.
-    let state = held_state(store, collection)?;
-    let held = state.version();
-    let built = state.build_patch(keys.keys(), key_id, device_index.into(), mutations)?;
-    let saved = built.state.to_saved();
-    let id = super::actions::queue(store, PATCH_ACTION_KIND, label, |id| {
-        // The attribute is the version we *hold*, omitted when we hold none
-        // (confirmed, both `CSe.A01` call sites). The patch's own claimed
-        // version is never on the wire — `SyncdPatch.version` is read-only in
-        // the APK and sending it is what three refusals had in common.
-        patch_request(
-            id,
-            collection,
-            (held > 0).then_some(held),
-            &built.bytes,
-            false,
-        )
-    })?;
-    // Stashed against the action, promoted only once the server accepts it: a
-    // refused patch must not advance the version we claim to hold.
     store.write(|tx| {
+        // Native sync is single-flight; the explicit Rust action queue must at
+        // least prevent two writes from claiming the same held collection state.
+        ensure_collection_idle(tx, collection)?;
+        let keys = match app_state::select_active_key(
+            tx,
+            raw_id,
+            device_index.into(),
+            registered,
+            now_ms,
+            i64::MAX,
+        )? {
+            Some(keys) => keys,
+            None => {
+                // APK 0oK.A05 permits local generation when no eligible key exists.
+                // A malformed stored key is an error, never a reason to mint.
+                app_state::mint_key(tx, device_index, raw_id, registered, now_ms)?;
+                app_state::select_active_key(
+                    tx,
+                    raw_id,
+                    device_index.into(),
+                    registered,
+                    now_ms,
+                    i64::MAX,
+                )?
+                .ok_or_else(|| {
+                    crate::Error::invalid("app_state_sync", "minted key is not selectable")
+                })?
+            }
+        };
+        let state = held_state_in(tx, collection)?;
+        let held = state.version();
+        let built = state.build_patch(keys.keys(), *keys.id(), device_index.into(), mutations)?;
+        if built.state.version() > i64::MAX as u64 {
+            return Err(invalid_patch(
+                "prepared collection version exceeds the APK signed-long range",
+            ));
+        }
+        let id = super::actions::queue_in(tx, PATCH_ACTION_KIND, label, |id| {
+            patch_request(
+                id,
+                collection,
+                (held > 0).then_some(held),
+                &built.bytes,
+                false,
+            )
+        })?;
+        // One commit binds the sendable wire to its exact baseline and result.
         tx.put_json(
             crate::store::Table::Checkpoints,
             pending_key(&id).as_bytes(),
             1,
-            &saved,
-        )
-    })?;
-    Ok(id)
+            &PendingState::Bound {
+                base: state.to_saved(),
+                prepared: built.state.to_saved(),
+            },
+        )?;
+        Ok(id)
+    })
 }
 
 const HELD_PREFIX: &str = "app-state-collection:";
 const PENDING_PREFIX: &str = "app-state-pending:";
+const SERVER_BACKOFF: &[u8] = b"app-state-server-backoff-until";
 
 fn held_key(collection: Collection) -> String {
     format!("{HELD_PREFIX}{}", collection.name())
@@ -456,82 +469,386 @@ fn pending_key(action_id: &str) -> String {
     format!("{PENDING_PREFIX}{action_id}")
 }
 
-/// The state the server last accepted for a collection, or an empty one.
-fn held_state(
-    store: &crate::store::ProtocolStore,
+#[derive(serde::Serialize, serde::Deserialize)]
+#[serde(untagged)]
+enum PendingState {
+    Bound {
+        base: crate::signal::app_state_collection::SavedCollectionState,
+        prepared: crate::signal::app_state_collection::SavedCollectionState,
+    },
+    // Existing encrypted stores retain their original prepared-state format.
+    Legacy(crate::signal::app_state_collection::SavedCollectionState),
+}
+impl PendingState {
+    fn prepared(&self) -> &crate::signal::app_state_collection::SavedCollectionState {
+        match self {
+            Self::Bound { prepared, .. } | Self::Legacy(prepared) => prepared,
+        }
+    }
+}
+
+fn ensure_collection_idle(tx: &crate::store::WriteTx<'_>, collection: Collection) -> Result<()> {
+    require_server_ready_in(tx)?;
+    ensure_no_pending_collection_in(tx, collection)
+}
+
+fn require_server_ready_in(tx: &crate::store::WriteTx<'_>) -> Result<()> {
+    if let Some(until) = active_backoff_in(tx)? {
+        return Err(crate::Error::invalid(
+            "app_state_sync",
+            format!(
+                "server app-state backoff is active until {} ms since Unix epoch",
+                until.0
+            ),
+        ));
+    }
+    Ok(())
+}
+
+pub(crate) fn server_waiting_in(tx: &crate::store::WriteTx<'_>) -> Result<bool> {
+    Ok(active_backoff_in(tx)?.is_some())
+}
+
+fn ensure_no_pending_collection_in(
+    tx: &crate::store::WriteTx<'_>,
+    collection: Collection,
+) -> Result<()> {
+    let mut cursor = None;
+    loop {
+        let rows = tx.scan_after(crate::store::Table::Checkpoints, 1, cursor.as_deref(), 256)?;
+        let done = rows.len() < 256;
+        cursor = rows.last().map(|(key, _)| key.clone());
+        for (key, _) in rows {
+            if !key.starts_with(PENDING_PREFIX.as_bytes()) {
+                continue;
+            }
+            let pending: PendingState = tx
+                .get_json(crate::store::Table::Checkpoints, &key, 1)?
+                .ok_or_else(|| {
+                    crate::Error::invalid("app_state_sync", "pending patch disappeared")
+                })?;
+            if pending.prepared().collection == collection.name() {
+                return Err(crate::Error::invalid(
+                    "app_state_sync",
+                    "collection has an unsettled patch; inspect its original action",
+                ));
+            }
+        }
+        if done {
+            return Ok(());
+        }
+    }
+}
+
+fn active_backoff_in(
+    tx: &crate::store::WriteTx<'_>,
+) -> Result<Option<crate::model::time::Timestamp>> {
+    let until: Option<crate::model::time::Timestamp> =
+        tx.get_json(crate::store::Table::Checkpoints, SERVER_BACKOFF, 1)?;
+    if until.is_some_and(|v| v.0 < 0) {
+        return Err(invalid_patch("invalid stored app-state backoff"));
+    }
+    Ok(until.filter(|until| *until > crate::model::time::Timestamp::now()))
+}
+
+fn retain_backoff_in(tx: &mut crate::store::WriteTx<'_>, id: &str, error: &Node) -> Result<()> {
+    // APK 43.72 FUc.Bvj reads integral seconds from the outer error. Anchor
+    // at its preserved receipt time, never a later repeated inspection.
+    let Some(raw) = error.get_attr("backoff") else {
+        return Ok(());
+    };
+    let seconds = raw
+        .as_text()
+        .and_then(super::mex::java_decimal_long)
+        .ok_or_else(|| invalid_patch("invalid server app-state backoff"))?;
+    if seconds == -1 {
+        return Ok(());
+    }
+    if seconds < 0 {
+        return Err(invalid_patch("negative server app-state backoff"));
+    }
+    let received = super::actions::settled_at_in(tx, id)?
+        .ok_or_else(|| invalid_patch("server backoff has no preserved receipt time"))?;
+    if received.0 < 0 {
+        return Err(invalid_patch("invalid preserved backoff receipt time"));
+    }
+    let deadline = seconds
+        .checked_mul(1000)
+        .and_then(|ms| received.0.checked_add(ms))
+        .map(crate::model::time::Timestamp)
+        .ok_or_else(|| invalid_patch("server app-state backoff overflows local time"))?;
+    let prior: Option<crate::model::time::Timestamp> =
+        tx.get_json(crate::store::Table::Checkpoints, SERVER_BACKOFF, 1)?;
+    if prior.is_some_and(|p| p.0 < 0) {
+        return Err(invalid_patch("invalid stored app-state backoff"));
+    }
+    tx.put_json(
+        crate::store::Table::Checkpoints,
+        SERVER_BACKOFF,
+        1,
+        &prior.map_or(deadline, |p| p.max(deadline)),
+    )
+}
+
+fn definite_error(node: &Node) -> Result<&Node> {
+    let mut errors = node
+        .child_nodes()
+        .iter()
+        .filter(|n| n.description == "error");
+    let error = errors
+        .next()
+        .ok_or_else(|| invalid_patch("patch refusal has no error detail"))?;
+    let code = error
+        .get_attr("code")
+        .and_then(|v| v.as_text())
+        .and_then(super::mex::java_decimal_long)
+        .and_then(|v| i32::try_from(v).ok());
+    if errors.next().is_some() || code.is_none_or(|v| v == -1) {
+        return Err(invalid_patch("ambiguous or malformed patch refusal"));
+    }
+    Ok(error)
+}
+
+/// Read and validate the verified state inside the same transaction as its use.
+fn held_state_in(
+    tx: &crate::store::WriteTx<'_>,
     collection: Collection,
 ) -> Result<crate::signal::app_state_collection::CollectionState> {
     use crate::signal::app_state_collection::{CollectionState, SavedCollectionState};
-    let saved: Option<SavedCollectionState> = store.read(|tx| {
-        tx.get_json(
-            crate::store::Table::Checkpoints,
-            held_key(collection).as_bytes(),
-            1,
-        )
-    })?;
+    let saved: Option<SavedCollectionState> = tx.get_json(
+        crate::store::Table::Checkpoints,
+        held_key(collection).as_bytes(),
+        1,
+    )?;
     match saved {
-        Some(saved) => CollectionState::from_saved(&saved),
+        Some(saved) if saved.collection == collection.name() => CollectionState::from_saved(&saved),
+        Some(_) => Err(crate::Error::invalid(
+            "app_state_sync",
+            "held state names a different collection",
+        )),
         None => CollectionState::empty(collection.name()),
     }
 }
 
-/// Promote the stashed state of every accepted patch, so the next one builds on
-/// it. Returns how many were applied.
-///
-/// The server's `result` names the version it now holds
-/// (`<collection name=… version=…/>`); that is compared with what our patch
-/// claimed, and a mismatch leaves the state unpromoted rather than recording a
-/// version the server does not agree with.
-pub fn ingest(store: &crate::store::ProtocolStore) -> Result<usize> {
-    use crate::signal::app_state_collection::SavedCollectionState;
-    use crate::store::Table;
-    let mut applied = 0;
-    for (outcome, reply) in super::actions::settled(store, PATCH_ACTION_KIND)? {
-        let pending = pending_key(&outcome.id);
-        let Some(saved): Option<SavedCollectionState> =
-            store.read(|tx| tx.get_json(Table::Checkpoints, pending.as_bytes(), 1))?
-        else {
-            continue;
-        };
-        let accepted = outcome.status == super::actions::ActionStatus::Ok;
-        let server_version = reply
-            .as_ref()
-            .and_then(|r| r.child("sync"))
-            .and_then(|s| s.child("collection"))
-            .and_then(|c| c.get_attr("version"))
-            .and_then(|v| v.as_text())
-            .and_then(|v| v.parse::<u64>().ok());
-        // Each stash names its own collection. Promoting into a fixed one would
-        // overwrite, say, `critical_unblock_low` with `critical_block`'s state
-        // the first time a second collection is written.
-        let collection = Collection::from_name(&saved.collection).ok_or_else(|| {
-            crate::Error::invalid("app_state_sync", "stashed state names no known collection")
-        })?;
-        if accepted && server_version == Some(saved.version) {
-            store.write(|tx| {
-                tx.put_json(
-                    Table::Checkpoints,
-                    held_key(collection).as_bytes(),
-                    1,
-                    &saved,
-                )?;
-                tx.delete(Table::Checkpoints, pending.as_bytes())
-            })?;
-            applied += 1;
-        } else {
-            // Refused, or accepted at a version we did not claim. Either way the
-            // stash is dropped rather than promoted; the next patch rebuilds
-            // from the last state the server and we agreed on.
-            store.write(|tx| tx.delete(Table::Checkpoints, pending.as_bytes()))?;
-            // A conflict is not a dead end: the server returns the patches we
-            // are behind on so a client can catch up. Applying them is what
-            // turns a repeat conflict into a successful next write.
-            if let Some(reply) = &reply {
-                applied += catch_up(store, reply)?;
-            }
+fn invalid_patch(reason: &'static str) -> crate::Error {
+    crate::Error::invalid("app_state_sync", reason)
+}
+
+fn one_collection(node: &Node, collection: Collection) -> Result<&Node> {
+    let mut syncs = node
+        .child_nodes()
+        .iter()
+        .filter(|n| n.description == "sync");
+    let sync = syncs
+        .next()
+        .ok_or_else(|| invalid_patch("patch reply/request has no sync"))?;
+    if syncs.next().is_some() {
+        return Err(invalid_patch("ambiguous sync envelope"));
+    }
+    let mut collections = sync
+        .child_nodes()
+        .iter()
+        .filter(|n| n.description == "collection");
+    let target = collections
+        .next()
+        .ok_or_else(|| invalid_patch("missing patch collection"))?;
+    if collections.next().is_some()
+        || target.get_attr("name").and_then(|v| v.as_text()) != Some(collection.name())
+    {
+        return Err(invalid_patch(
+            "patch collection does not match original action",
+        ));
+    }
+    Ok(target)
+}
+
+fn original_patch<'a>(request: &'a Node, id: &str, collection: Collection) -> Result<&'a Node> {
+    if request.description != "iq"
+        || request.get_attr("id").and_then(|v| v.as_text()) != Some(id)
+        || request.get_attr("type").and_then(|v| v.as_text()) != Some("set")
+        || request.get_attr("xmlns").and_then(|v| v.as_text()) != Some("w:sync:app:state")
+    {
+        return Err(invalid_patch(
+            "original action is not the prepared app-state write",
+        ));
+    }
+    one_collection(request, collection)
+}
+
+fn verify_prepared_in(
+    tx: &crate::store::WriteTx<'_>,
+    base: &crate::signal::app_state_collection::SavedCollectionState,
+    prepared: &crate::signal::app_state_collection::SavedCollectionState,
+    request: &Node,
+) -> Result<()> {
+    use crate::signal::{
+        app_state,
+        app_state_collection::{CollectionPatch, CollectionState},
+    };
+    if base.collection != prepared.collection
+        || base.version.checked_add(1) != Some(prepared.version)
+    {
+        return Err(invalid_patch("prepared patch has no sequential baseline"));
+    }
+    let held_version = request.get_attr("version").and_then(|v| v.as_text());
+    if match held_version {
+        Some(v) => v.parse::<u64>().ok() != Some(base.version),
+        None => base.version != 0,
+    } {
+        return Err(invalid_patch(
+            "original request version differs from its baseline",
+        ));
+    }
+    let mut patches = request
+        .child_nodes()
+        .iter()
+        .filter(|n| n.description == "patch");
+    let patch = patches
+        .next()
+        .ok_or_else(|| invalid_patch("original request has no patch"))?;
+    if patches.next().is_some() {
+        return Err(invalid_patch("original request has multiple patches"));
+    }
+    let crate::binary::NodeContent::Bytes(bytes) = &patch.content else {
+        return Err(invalid_patch("original patch has no binary payload"));
+    };
+    // An old pending row held only the result. Reverify its immutable original
+    // request against the actual baseline instead of guessing or resetting it.
+    let patch = CollectionPatch::decode_prepared(bytes, prepared.version)?;
+    let mut keys = std::collections::BTreeMap::new();
+    for id in std::iter::once(&patch.key_id).chain(patch.mutations.iter().map(|m| &m.key_id)) {
+        if !keys.contains_key(id) {
+            keys.insert(
+                *id,
+                app_state::keys_for(tx, id)?
+                    .ok_or_else(|| invalid_patch("prepared patch key is not held"))?,
+            );
         }
     }
+    let verified = CollectionState::from_saved(base)?.verify_patch(&patch, |id| {
+        keys.get(id)
+            .ok_or_else(|| invalid_patch("prepared patch references an unheld key"))
+    })?;
+    if verified.state.to_saved() != *prepared {
+        return Err(invalid_patch(
+            "prepared state does not match its authenticated original patch",
+        ));
+    }
+    Ok(())
+}
+
+/// Recheck a queued patch in the same transaction as its socket reservation.
+/// Orphaned legacy actions cannot leave without their frozen/reverified state.
+pub(crate) fn validate_patch_reservation_in(
+    tx: &mut crate::store::WriteTx<'_>,
+    id: &str,
+) -> Result<bool> {
+    use crate::store::Table;
+    if active_backoff_in(tx)?.is_some() {
+        return Ok(false);
+    }
+    let pending: PendingState = tx
+        .get_json(Table::Checkpoints, pending_key(id).as_bytes(), 1)?
+        .ok_or_else(|| invalid_patch("patch action has no prepared state; no request reserved"))?;
+    let prepared = pending.prepared();
+    let collection = Collection::from_name(&prepared.collection)
+        .ok_or_else(|| invalid_patch("prepared state names no known collection"))?;
+    crate::signal::app_state_collection::CollectionState::from_saved(prepared)?;
+    let current = held_state_in(tx, collection)?.to_saved();
+    let request = super::actions::request_in_write(tx, id)?
+        .ok_or_else(|| invalid_patch("missing original patch action"))?;
+    let target = original_patch(&request, id, collection)?;
+    let base = match &pending {
+        PendingState::Bound { base, .. } => base,
+        PendingState::Legacy(_) => &current,
+    };
+    if current != *base {
+        return Err(invalid_patch(
+            "held collection changed before patch reservation",
+        ));
+    }
+    verify_prepared_in(tx, base, prepared, target)?;
+    if matches!(pending, PendingState::Legacy(_)) {
+        tx.put_json(
+            Table::Checkpoints,
+            pending_key(id).as_bytes(),
+            1,
+            &PendingState::Bound {
+                base: current,
+                prepared: prepared.clone(),
+            },
+        )?;
+    }
+    Ok(true)
+}
+
+/// Atomically settle supported patch replies against their frozen baselines.
+/// Malformed or stale replies preserve prepared state for inspection; no replay.
+pub fn ingest(store: &crate::store::ProtocolStore) -> Result<usize> {
+    let mut applied = 0;
+    for (outcome, _) in super::actions::settled(store, PATCH_ACTION_KIND)? {
+        applied += ingest_action(store, &outcome.id)?;
+    }
     Ok(applied)
+}
+
+pub(crate) fn ingest_action(store: &crate::store::ProtocolStore, id: &str) -> Result<usize> {
+    use crate::{signal::app_state_collection::CollectionState, store::Table};
+    store.write(|tx| {
+            let pending_key = pending_key(id);
+            let pending: Option<PendingState> = tx.get_json(Table::Checkpoints, pending_key.as_bytes(), 1)?;
+            let Some(pending) = pending else { return Ok(0); };
+            let Some((actual, reply, request)) = super::actions::view_in_write(tx, id)? else {
+                return Err(invalid_patch("prepared patch has no original action"));
+            };
+            if actual.kind != PATCH_ACTION_KIND || !matches!(actual.status, super::actions::ActionStatus::Ok | super::actions::ActionStatus::Error) {
+                return Err(invalid_patch("patch action is not settled"));
+            }
+            let prepared = pending.prepared();
+            if prepared.version > i64::MAX as u64 { return Err(invalid_patch("prepared version exceeds the APK signed-long range")); }
+            let collection = Collection::from_name(&prepared.collection).ok_or_else(|| invalid_patch("stashed state names no known collection"))?;
+            CollectionState::from_saved(prepared)?;
+            let target = original_patch(&request, &actual.id, collection)?;
+            let reply = reply.ok_or_else(|| invalid_patch("settled patch has no preserved reply"))?;
+            if reply.description != "iq" || reply.get_attr("id").and_then(|v| v.as_text()) != Some(actual.id.as_str()) {
+                return Err(invalid_patch("patch reply does not match original action"));
+            }
+            let kind = reply.get_attr("type").and_then(|v| v.as_text());
+            if kind == Some("error") {
+                // A definite outer refusal cannot promote any prepared state.
+                let error = definite_error(&reply)?;
+                retain_backoff_in(tx, &actual.id, error)?;
+                tx.delete(Table::Checkpoints, pending_key.as_bytes())?;
+                return Ok(0);
+            }
+            if kind != Some("result") { return Err(invalid_patch("patch response is not result or error")); }
+            let response = one_collection(&reply, collection)?;
+            if response.get_attr("type").and_then(|v| v.as_text()) == Some("error") || response.child("error").is_some() {
+                if response.get_attr("type").and_then(|v| v.as_text()) != Some("error") {
+                    return Err(invalid_patch("unsupported collection error shape"));
+                }
+                definite_error(response)?;
+                // Conflict catch-up and pending release commit/roll back together.
+                let changed = catch_up_in(tx, &reply)?;
+                tx.delete(Table::Checkpoints, pending_key.as_bytes())?;
+                return Ok(changed);
+            }
+            if actual.status != super::actions::ActionStatus::Ok
+                || response.get_attr("type").is_some_and(|v| v.as_text() != Some("result"))
+                || response.get_attr("version").and_then(|v| v.as_text()).and_then(|v| v.parse::<u64>().ok()) != Some(prepared.version)
+            { return Err(invalid_patch("accepted patch version/shape does not match prepared state; inspect original action")); }
+            let current = held_state_in(tx, collection)?.to_saved();
+            if current == *prepared {
+                tx.delete(Table::Checkpoints, pending_key.as_bytes())?;
+                return Ok(0);
+            }
+            let base = match &pending { PendingState::Bound { base, .. } => base, PendingState::Legacy(_) => &current };
+            if current != *base { return Err(invalid_patch("held collection changed before accepted patch promotion")); }
+            verify_prepared_in(tx, base, prepared, target)?;
+            tx.put_json(Table::Checkpoints, held_key(collection).as_bytes(), 1, prepared)?;
+            tx.delete(Table::Checkpoints, pending_key.as_bytes())?;
+            Ok(1)
+    })
 }
 
 /// Apply the `<patches>` a `409 conflict` returns, advancing our held state to
@@ -544,7 +861,7 @@ pub fn ingest(store: &crate::store::ProtocolStore) -> Result<usize> {
 /// from a fetch does. Nothing is applied that does not verify: a conflict is not
 /// permission to trust bytes, and the key a patch names must be one this account
 /// already holds.
-fn catch_up(store: &crate::store::ProtocolStore, reply: &Node) -> Result<usize> {
+fn catch_up_in(tx: &mut crate::store::WriteTx<'_>, reply: &Node) -> Result<usize> {
     use crate::binary::NodeContent;
     use crate::signal::{app_state, app_state_collection::CollectionPatch};
     use crate::store::Table;
@@ -555,62 +872,310 @@ fn catch_up(store: &crate::store::ProtocolStore, reply: &Node) -> Result<usize> 
     else {
         return Ok(0);
     };
-    let Some(patches) = conflicted.child("patches") else {
+    let mut patch_lists = conflicted
+        .child_nodes()
+        .iter()
+        .filter(|node| node.description == "patches");
+    let Some(patches) = patch_lists.next() else {
         return Ok(0);
     };
-    // The collection the conflict is about, as the server names it.
-    let Some(collection) = conflicted
+    if patch_lists.next().is_some() {
+        return Err(crate::Error::invalid(
+            "app_state_sync",
+            "ambiguous conflict patch lists",
+        ));
+    }
+    let mut errors = conflicted
+        .child_nodes()
+        .iter()
+        .filter(|node| node.description == "error");
+    if errors
+        .next()
+        .and_then(|error| error.get_attr("code"))
+        .and_then(|code| code.as_text())
+        != Some("409")
+        || errors.next().is_some()
+    {
+        return Err(crate::Error::invalid(
+            "app_state_sync",
+            "patch catch-up requires an explicit conflict",
+        ));
+    }
+    let collection = conflicted
         .get_attr("name")
         .and_then(|v| v.as_text())
         .and_then(Collection::from_name)
-    else {
-        return Err(crate::Error::invalid(
-            "app_state_sync",
-            "conflict names no known collection",
-        ));
-    };
-    let mut state = held_state(store, collection)?;
+        .ok_or_else(|| {
+            crate::Error::invalid("app_state_sync", "conflict names no known collection")
+        })?;
+    // APK 43.72 SyncResponseHandler.A07 -> 0mj.A00 commits verified state
+    // inside its application transaction (server-sync-lifecycle.md). Read the
+    // baseline and every key in this same transaction: a separately loaded
+    // baseline could otherwise overwrite a concurrent accepted patch.
+    let mut state = held_state_in(tx, collection)?;
     let mut applied = 0;
     for node in patches.child_nodes() {
         if node.description != "patch" {
             continue;
         }
         let NodeContent::Bytes(bytes) = &node.content else {
-            continue;
+            return Err(crate::Error::invalid(
+                "app_state_sync",
+                "conflict patch has no byte payload",
+            ));
         };
         let decoded = CollectionPatch::decode(bytes)?;
-        let verified = store.write(|tx| {
-            let keys = app_state::keys_for(tx, &decoded.key_id)?.ok_or_else(|| {
-                crate::Error::invalid("app_state_sync", "conflict names a key we do not hold")
-            })?;
-            state.verify_patch(&decoded, |id| {
-                if id == &decoded.key_id {
-                    Ok(&keys)
-                } else {
-                    Err(crate::Error::invalid("app_state_sync", "unexpected key id"))
-                }
-            })
+        let keys = app_state::keys_for(tx, &decoded.key_id)?.ok_or_else(|| {
+            crate::Error::invalid("app_state_sync", "conflict names a key we do not hold")
+        })?;
+        let verified = state.verify_patch(&decoded, |id| {
+            if id == &decoded.key_id {
+                Ok(&keys)
+            } else {
+                Err(crate::Error::invalid("app_state_sync", "unexpected key id"))
+            }
         })?;
         state = verified.state;
         applied += 1;
     }
     if applied > 0 {
-        let saved = state.to_saved();
-        store.write(|tx| {
-            tx.put_json(
-                Table::Checkpoints,
-                held_key(collection).as_bytes(),
-                1,
-                &saved,
-            )
-        })?;
-        tracing::info!(
-            patches = applied,
-            version = state.version(),
-            "app state: caught up from a conflict"
-        );
+        tx.put_json(
+            Table::Checkpoints,
+            held_key(collection).as_bytes(),
+            1,
+            &state.to_saved(),
+        )?;
     }
     Ok(applied)
+}
+
+#[cfg(test)]
+mod catch_up_atomic_tests {
+    use super::*;
+    use crate::{
+        model::ids::AccountId,
+        signal::app_state_collection::{CollectionPatch, CollectionState, SavedCollectionState},
+        store::{MasterKey, OpenOptions, ProtocolStore, StaticKeySource, Table},
+    };
+
+    fn open(path: &std::path::Path) -> ProtocolStore {
+        ProtocolStore::open(OpenOptions {
+            path: path.to_owned(),
+            account_id: AccountId::new("catchup-test").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32]))),
+            create: true,
+        })
+        .unwrap()
+    }
+
+    fn held(store: &ProtocolStore) -> Option<SavedCollectionState> {
+        store
+            .read(|tx| {
+                tx.get_json(
+                    Table::Checkpoints,
+                    held_key(Collection::Regular).as_bytes(),
+                    1,
+                )
+            })
+            .unwrap()
+    }
+
+    fn install_key(store: &ProtocolStore) {
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"app-state-key:000100000002",
+                    1,
+                    &serde_json::json!({"data":(0u8..32).collect::<Vec<_>>(),
+                "fingerprint":{"raw_id":7,"current_index":1,"device_indexes":[1]},
+                "timestamp":1}),
+                )
+            })
+            .unwrap();
+    }
+
+    fn patch(remove: bool) -> Vec<u8> {
+        // Independent Python/OpenSSL SET/REMOVE vectors already exercised in
+        // signal::app_state_collection's literal-wire tests; handwritten tags.
+        let (body, snapshot, mac) = if remove {
+            (
+                "000102030405060708090a0b0c0d0e0f2192b6a9dde3b0f3712d6c99dc98976b3a3b4d03d17330a34a3211156d7360a31dc6482aacb38b0e0be76016dc6f7b7673e949ff5098ce118e05a12e44b8fa67",
+                "372fa102e3b780fd0fac7ca9f521ebf00480b92e1e812fc867a6b751fde6f168",
+                "81f911830690a8c2f52881a8eae26e8de2875da64ffece1cab25db631fff648f",
+            )
+        } else {
+            (
+                "000102030405060708090a0b0c0d0e0f2192b6a9dde3b0f3712d6c99dc98976b69e1b9f25155fa8ca9e9f0e206925fcc5f5fd8469f020699365e4750632c893bc24096315f6739aaeba497a176823909",
+                "0e326b26aa4969d98e2fcf482d2790bf9933a9e11f093b7c18a17f0da491775d",
+                "0960e911ee5e9d0e27b9e9e10b665dee186429aae47f0ed7bd0ade5c00081e8e",
+            )
+        };
+        let id = [0, 1, 0, 0, 0, 2];
+        let mut bytes = vec![
+            0x0a,
+            2,
+            8,
+            if remove { 2 } else { 1 },
+            0x12,
+            0x87,
+            1,
+            8,
+            u8::from(remove),
+            0x12,
+            0x82,
+            1,
+            0x0a,
+            0x22,
+            0x0a,
+            0x20,
+        ];
+        bytes.extend(
+            hex::decode("3d47311df4bc7aa8bd5ef2c16cbe7fc1ea07f18c86a2fb34078d1d416edb22d8")
+                .unwrap(),
+        );
+        bytes.extend([0x12, 0x52, 0x0a, 0x50]);
+        bytes.extend(hex::decode(body).unwrap());
+        bytes.extend([0x1a, 8, 0x0a, 6]);
+        bytes.extend(id);
+        bytes.extend([0x22, 32]);
+        bytes.extend(hex::decode(snapshot).unwrap());
+        bytes.extend([0x2a, 32]);
+        bytes.extend(hex::decode(mac).unwrap());
+        bytes.extend([0x32, 8, 0x0a, 6]);
+        bytes.extend(id);
+        bytes
+    }
+
+    fn reply(patches: Vec<Node>) -> Node {
+        Node::new("iq")
+            .attr("type", "result")
+            .children(vec![Node::new("sync").children(vec![
+            Node::new("collection").attr("name", "regular").attr("type", "error").children(vec![
+                Node::new("error").attr("code", "409"),
+                Node::new("patches").children(patches),
+            ])
+        ])])
+    }
+
+    #[test]
+    fn conflict_chain_commits_together_and_survives_reopen() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("chain.redb");
+        let store = open(&path);
+        install_key(&store);
+        let response = reply(vec![
+            Node::new("patch").bytes(patch(false)),
+            Node::new("patch").bytes(patch(true)),
+        ]);
+        assert_eq!(store.write(|tx| catch_up_in(tx, &response)).unwrap(), 2);
+        let expected = held(&store).unwrap();
+        assert_eq!(expected.version, 2);
+        assert!(expected.values.is_empty());
+        assert_eq!(expected.hash, vec![0; 128]);
+        drop(store);
+        let store = open(&path);
+        assert_eq!(held(&store).unwrap(), expected);
+        let before = held(&store);
+        assert!(store.write(|tx| catch_up_in(tx, &response)).is_err());
+        assert_eq!(
+            held(&store),
+            before,
+            "old conflict cannot regress verified state"
+        );
+    }
+
+    #[test]
+    fn bad_later_patch_rolls_back_caller_writes_and_never_adopts_keys() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("rollback.redb");
+        let store = open(&path);
+        install_key(&store);
+        let mut wrong_key = patch(true);
+        *wrong_key.last_mut().unwrap() ^= 1;
+        let mut bad_mac = patch(true);
+        let mac_tail = bad_mac.len() - 12;
+        bad_mac[mac_tail] ^= 1;
+        for late in [
+            Node::new("patch").bytes(wrong_key),
+            Node::new("patch").bytes(bad_mac),
+            Node::new("patch").bytes(vec![]),
+            Node::new("patch"),
+        ] {
+            let response = reply(vec![Node::new("patch").bytes(patch(false)), late]);
+            assert!(
+                store
+                    .write(|tx| {
+                        tx.put_json(Table::Checkpoints, b"catchup-parent-write", 1, &true)?;
+                        catch_up_in(tx, &response)
+                    })
+                    .is_err()
+            );
+            assert!(held(&store).is_none());
+            assert!(
+                store
+                    .read(|tx| tx.get(Table::Checkpoints, b"catchup-parent-write", 1))
+                    .unwrap()
+                    .is_none()
+            );
+            assert!(
+                store
+                    .write(|tx| crate::signal::app_state::keys_for(tx, &[0, 1, 0, 0, 0, 3]))
+                    .unwrap()
+                    .is_none()
+            );
+        }
+        drop(store);
+        let store = open(&path);
+        assert!(held(&store).is_none());
+        assert!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, b"catchup-parent-write", 1))
+                .unwrap()
+                .is_none()
+        );
+    }
+
+    #[test]
+    fn conflict_reads_the_callers_transaction_baseline_and_requires_409() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("baseline.redb"));
+        install_key(&store);
+        let initial = CollectionState::empty("regular").unwrap();
+        let set = CollectionPatch::decode(&patch(false)).unwrap();
+        let staged = store
+            .write(|tx| {
+                let keys = crate::signal::app_state::keys_for(tx, &set.key_id)?.unwrap();
+                Ok(initial.verify_patch(&set, |_| Ok(&keys))?.state.to_saved())
+            })
+            .unwrap();
+        let response = reply(vec![Node::new("patch").bytes(patch(true))]);
+        assert_eq!(
+            store
+                .write(|tx| {
+                    // This state is not visible to an independent read transaction yet.
+                    tx.put_json(
+                        Table::Checkpoints,
+                        held_key(Collection::Regular).as_bytes(),
+                        1,
+                        &staged,
+                    )?;
+                    catch_up_in(tx, &response)
+                })
+                .unwrap(),
+            1
+        );
+        assert_eq!(held(&store).unwrap().version, 2);
+        let untrusted_route = Node::new("iq").children(vec![Node::new("sync").children(vec![
+            Node::new("collection").attr("type", "error").attr("name", "regular").children(vec![
+                Node::new("error").attr("code", "500"),
+                Node::new("patches").children(vec![Node::new("patch").bytes(patch(false))]),
+            ])
+        ])]);
+        let before = held(&store);
+        assert!(store.write(|tx| catch_up_in(tx, &untrusted_route)).is_err());
+        assert_eq!(held(&store), before);
+    }
 }
 
 #[cfg(test)]
@@ -912,6 +1477,16 @@ mod tests {
     #[test]
     fn patch_request_refuses_invalid_inputs() {
         assert!(patch_request("", Collection::Regular, Some(1), &[1], false).is_err());
+        assert!(
+            patch_request(
+                "P",
+                Collection::Regular,
+                Some(i64::MAX as u64 + 1),
+                &[1],
+                false
+            )
+            .is_err()
+        );
         assert!(patch_request("A", Collection::Regular, Some(1), &[], false).is_err());
     }
 
@@ -982,5 +1557,477 @@ mod per_collection_tests {
         assert_eq!(block.version, 1);
         assert_eq!(block.collection, "critical_block");
         assert!(held(Collection::CriticalUnblockLow).is_none());
+    }
+}
+
+#[cfg(test)]
+mod settlement_atomic_tests {
+    use super::*;
+    use crate::{
+        model::ids::AccountId,
+        signal::app_state_collection::SavedCollectionState,
+        store::{MasterKey, OpenOptions, ProtocolStore, StaticKeySource, Table},
+    };
+    use std::{path::Path, sync::Arc};
+
+    fn open(path: &Path) -> ProtocolStore {
+        ProtocolStore::open(OpenOptions {
+            path: path.to_owned(),
+            account_id: AccountId::new("settlement-test").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([7; 32]))),
+            create: true,
+        })
+        .unwrap()
+    }
+    fn queue(store: &ProtocolStore) -> Result<String> {
+        queue_push_name_patch(store, 0, 0, &[0].into_iter().collect(), 1_000, "Fixture")
+    }
+    fn snapshot(store: &ProtocolStore) -> Vec<(Vec<u8>, Vec<u8>)> {
+        store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 1000))
+            .unwrap()
+    }
+    fn prepared(store: &ProtocolStore, id: &str) -> SavedCollectionState {
+        store
+            .read(|tx| {
+                tx.get_json::<PendingState>(Table::Checkpoints, pending_key(id).as_bytes(), 1)
+            })
+            .unwrap()
+            .unwrap()
+            .prepared()
+            .clone()
+    }
+    fn success(id: &str, name: &str, version: &str) -> Node {
+        Node::new("iq")
+            .attr("id", id)
+            .attr("type", "result")
+            .children(vec![Node::new("sync").children(
+                vec![Node::new("collection").attr("name", name).attr("version", version)],
+            )])
+    }
+
+    #[test]
+    fn queue_and_prepared_state_are_atomic_single_flight_and_reopen_safe() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("one.redb");
+        let store = open(&path);
+        let id = queue(&store).unwrap();
+        let pending = store
+            .read(|tx| {
+                tx.get_json::<PendingState>(Table::Checkpoints, pending_key(&id).as_bytes(), 1)
+            })
+            .unwrap()
+            .unwrap();
+        assert!(
+            matches!(pending, PendingState::Bound { base, prepared } if base.version == 0 && prepared.version == 1)
+        );
+        let before = snapshot(&store);
+        assert!(queue(&store).is_err());
+        assert_eq!(snapshot(&store), before);
+        assert_eq!(
+            super::super::actions::reserve_pending(&store)
+                .unwrap()
+                .len(),
+            1
+        );
+        let sent = snapshot(&store);
+        assert!(queue(&store).is_err());
+        assert_eq!(snapshot(&store), sent);
+        drop(store);
+        let store = open(&path);
+        assert!(
+            super::super::actions::reserve_pending(&store)
+                .unwrap()
+                .is_empty()
+        );
+        assert!(
+            super::super::actions::record_reply(&store, &success(&id, "critical_block", "1"))
+                .unwrap()
+        );
+        assert_eq!(ingest(&store).unwrap(), 1);
+        assert_eq!(ingest(&store).unwrap(), 0);
+        assert!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, pending_key(&id).as_bytes(), 1))
+                .unwrap()
+                .is_none()
+        );
+        let next = queue(&store).unwrap();
+        assert_ne!(id, next);
+        assert_eq!(prepared(&store, &next).version, 2);
+    }
+
+    #[test]
+    fn concurrent_publishers_cannot_claim_the_same_collection_baseline() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = Arc::new(open(&dir.path().join("concurrent.redb")));
+        let barrier = Arc::new(std::sync::Barrier::new(2));
+        let jobs: Vec<_> = (0..2)
+            .map(|_| {
+                let store = store.clone();
+                let barrier = barrier.clone();
+                std::thread::spawn(move || {
+                    barrier.wait();
+                    queue(&store)
+                })
+            })
+            .collect();
+        let results: Vec<_> = jobs.into_iter().map(|j| j.join().unwrap()).collect();
+        assert_eq!(results.iter().filter(|r| r.is_ok()).count(), 1);
+        assert_eq!(super::super::actions::outcomes(&store).unwrap().len(), 1);
+        assert_eq!(
+            super::super::actions::reserve_pending(&store)
+                .unwrap()
+                .len(),
+            1
+        );
+    }
+
+    #[test]
+    fn queue_errors_roll_back_key_generation_and_do_not_mask_corrupt_keys() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("rollback.redb"));
+        let mut bad = crate::signal::app_state_collection::CollectionState::empty("critical_block")
+            .unwrap()
+            .to_saved();
+        bad.hash.pop();
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    held_key(Collection::CriticalBlock).as_bytes(),
+                    1,
+                    &bad,
+                )
+            })
+            .unwrap();
+        let before = snapshot(&store);
+        assert!(queue(&store).is_err());
+        assert_eq!(snapshot(&store), before);
+        store
+            .write(|tx| {
+                tx.delete(
+                    Table::Checkpoints,
+                    held_key(Collection::CriticalBlock).as_bytes(),
+                )?;
+                tx.put(
+                    Table::Checkpoints,
+                    b"app-state-key:000000000001",
+                    1,
+                    b"not-json",
+                )
+            })
+            .unwrap();
+        let before = snapshot(&store);
+        assert!(queue(&store).is_err());
+        assert_eq!(snapshot(&store), before);
+    }
+
+    #[test]
+    fn mismatched_or_ambiguous_patch_results_keep_the_original_pending_state() {
+        for case in 0..4 {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("mismatch.redb");
+            let store = open(&path);
+            let id = queue(&store).unwrap();
+            super::super::actions::reserve_pending(&store).unwrap();
+            let reply = match case {
+                0 => success(&id, "regular", "1"),
+                1 => success(&id, "critical_block", "2"),
+                2 => Node::new("iq")
+                    .attr("id", id.as_str())
+                    .attr("type", "result"),
+                _ => Node::new("iq")
+                    .attr("id", id.as_str())
+                    .attr("type", "result")
+                    .children(vec![Node::new("sync").children(vec![
+                    Node::new("collection").attr("name","critical_block").attr("version","1"),
+                    Node::new("collection").attr("name","regular").attr("version","1")])]),
+            };
+            super::super::actions::record_reply(&store, &reply).unwrap();
+            let before = snapshot(&store);
+            assert!(ingest_action(&store, &id).is_err());
+            assert_eq!(snapshot(&store), before);
+            drop(store);
+            let store = open(&path);
+            assert_eq!(snapshot(&store), before);
+            assert!(
+                store
+                    .read(|tx| tx.get(
+                        Table::Checkpoints,
+                        held_key(Collection::CriticalBlock).as_bytes(),
+                        1
+                    ))
+                    .unwrap()
+                    .is_none()
+            );
+        }
+    }
+
+    #[test]
+    fn accepted_response_cannot_regress_a_later_crypto_state() {
+        use crate::signal::{
+            app_state, app_state_actions,
+            app_state_collection::{CollectionState, patch::OutgoingMutation},
+            app_state_crypto::MutationOperation,
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("stale.redb"));
+        let id = queue(&store).unwrap();
+        super::super::actions::reserve_pending(&store).unwrap();
+        let old = prepared(&store, &id);
+        let action = app_state_actions::push_name_mutation("Later", 2_000).unwrap();
+        let mutation = OutgoingMutation {
+            operation: MutationOperation::Set,
+            index: action.index,
+            action: Some(action.value),
+            version: action.version,
+        };
+        store
+            .write(|tx| {
+                let key = app_state::select_active_key(
+                    tx,
+                    0,
+                    0,
+                    &[0].into_iter().collect(),
+                    2_000,
+                    i64::MAX,
+                )?
+                .unwrap();
+                let next = CollectionState::from_saved(&old)?
+                    .build_patch(key.keys(), *key.id(), 0, &[mutation])?
+                    .state
+                    .to_saved();
+                assert_eq!(next.version, 2);
+                tx.put_json(
+                    Table::Checkpoints,
+                    held_key(Collection::CriticalBlock).as_bytes(),
+                    1,
+                    &next,
+                )
+            })
+            .unwrap();
+        super::super::actions::record_reply(&store, &success(&id, "critical_block", "1")).unwrap();
+        let before = snapshot(&store);
+        assert!(ingest(&store).is_err());
+        assert_eq!(snapshot(&store), before);
+    }
+
+    #[test]
+    fn legacy_rows_are_cryptographically_reverified_with_original_wire() {
+        for already_sent in [false, true] {
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(&dir.path().join("legacy.redb"));
+            let id = queue(&store).unwrap();
+            let wire = super::super::actions::request(&store, &id).unwrap();
+            if already_sent {
+                super::super::actions::reserve_pending(&store).unwrap();
+            }
+            let post = prepared(&store, &id);
+            store
+                .write(|tx| tx.put_json(Table::Checkpoints, pending_key(&id).as_bytes(), 1, &post))
+                .unwrap();
+            if !already_sent {
+                super::super::actions::reserve_pending(&store).unwrap();
+            }
+            assert_eq!(super::super::actions::request(&store, &id).unwrap(), wire);
+            super::super::actions::record_reply(&store, &success(&id, "critical_block", "1"))
+                .unwrap();
+            assert_eq!(ingest(&store).unwrap(), 1);
+            assert_eq!(ingest(&store).unwrap(), 0);
+        }
+    }
+
+    #[test]
+    fn orphaned_or_corrupt_prepared_actions_refuse_before_reservation() {
+        for orphan in [false, true] {
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(&dir.path().join("orphan.redb"));
+            let id = queue(&store).unwrap();
+            store
+                .write(|tx| {
+                    if orphan {
+                        tx.delete(Table::Checkpoints, pending_key(&id).as_bytes())?;
+                        Ok(())
+                    } else {
+                        let mut post = prepared_from_tx(tx, &id)?;
+                        post.hash[0] ^= 1;
+                        tx.put_json(Table::Checkpoints, pending_key(&id).as_bytes(), 1, &post)
+                    }
+                })
+                .unwrap();
+            let before = snapshot(&store);
+            assert!(super::super::actions::reserve_pending(&store).is_err());
+            assert_eq!(snapshot(&store), before);
+            assert_eq!(
+                super::super::actions::outcomes(&store).unwrap()[0].status,
+                super::super::actions::ActionStatus::Queued
+            );
+        }
+    }
+    fn prepared_from_tx(tx: &crate::store::WriteTx<'_>, id: &str) -> Result<SavedCollectionState> {
+        Ok(tx
+            .get_json::<PendingState>(Table::Checkpoints, pending_key(id).as_bytes(), 1)?
+            .unwrap()
+            .prepared()
+            .clone())
+    }
+}
+
+#[cfg(test)]
+mod server_backoff_tests {
+    use super::*;
+    use crate::{
+        model::{ids::AccountId, time::Timestamp},
+        store::{MasterKey, OpenOptions, ProtocolStore, StaticKeySource, Table},
+    };
+    use std::{path::Path, sync::Arc};
+    fn open(path: &Path) -> ProtocolStore {
+        ProtocolStore::open(OpenOptions {
+            path: path.to_owned(),
+            account_id: AccountId::new("backoff").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([8; 32]))),
+            create: true,
+        })
+        .unwrap()
+    }
+    fn queue(store: &ProtocolStore) -> String {
+        queue_push_name_patch(store, 0, 0, &[0].into_iter().collect(), 1_000, "Backoff").unwrap()
+    }
+    fn error(id: &str, backoff: &str) -> Node {
+        Node::new("iq")
+            .attr("id", id)
+            .attr("type", "error")
+            .children(vec![
+                Node::new("error")
+                    .attr("code", "503")
+                    .attr("backoff", backoff),
+            ])
+    }
+    fn snapshot(store: &ProtocolStore) -> Vec<(Vec<u8>, Vec<u8>)> {
+        store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 1000))
+            .unwrap()
+    }
+
+    #[test]
+    fn server_backoff_survives_reopen_and_defers_only_never_sent_patches() {
+        use crate::signal::{
+            app_state_actions, app_state_collection::patch::OutgoingMutation,
+            app_state_crypto::MutationOperation,
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("wait.redb");
+        let store = open(&path);
+        let id = queue(&store);
+        let contact = app_state_actions::contact_mutation(
+            &Jid::parse("15555550100@s.whatsapp.net").unwrap(),
+            "Fixture",
+            None,
+            true,
+            1_000,
+        )
+        .unwrap();
+        let other = queue_patch(
+            &store,
+            0,
+            0,
+            &[0].into_iter().collect(),
+            1_000,
+            Collection::CriticalUnblockLow,
+            &[OutgoingMutation {
+                operation: MutationOperation::Set,
+                index: contact.index,
+                action: Some(contact.value),
+                version: contact.version,
+            }],
+            "contact fixture",
+        )
+        .unwrap();
+        let fetch = queue_fetch(&store).unwrap();
+        store
+            .write(|tx| super::super::actions::reserve_one_in(tx, &id).map(|_| ()))
+            .unwrap();
+        super::super::actions::record_reply(&store, &error(&id, "60")).unwrap();
+        let received = store
+            .write(|tx| super::super::actions::settled_at_in(tx, &id))
+            .unwrap()
+            .unwrap();
+        assert_eq!(ingest_action(&store, &id).unwrap(), 0);
+        let until: Timestamp = store
+            .read(|tx| tx.get_json(Table::Checkpoints, SERVER_BACKOFF, 1))
+            .unwrap()
+            .unwrap();
+        assert_eq!(until.0, received.0 + 60_000);
+        let before = snapshot(&store);
+        assert_eq!(ingest_action(&store, &id).unwrap(), 0);
+        assert_eq!(snapshot(&store), before);
+        assert!(
+            queue_push_name_patch(&store, 0, 0, &[0].into_iter().collect(), 2_000, "Too early")
+                .is_err()
+        );
+        assert!(queue_fetch(&store).is_err());
+        assert_eq!(snapshot(&store), before);
+        drop(store);
+        let store = open(&path);
+        assert!(
+            super::super::actions::reserve_pending(&store)
+                .unwrap()
+                .is_empty()
+        );
+        assert_eq!(snapshot(&store), before);
+        let control = super::super::actions::queue(&store, "fixture", "control", |id| {
+            Ok(Node::new("iq").attr("id", id).attr("type", "get"))
+        })
+        .unwrap();
+        let writes = super::super::actions::reserve_pending(&store).unwrap();
+        assert_eq!(writes.len(), 1);
+        assert_eq!(
+            writes[0].get_attr("id").and_then(|v| v.as_text()),
+            Some(control.as_str())
+        );
+        let outcomes = super::super::actions::outcomes(&store).unwrap();
+        assert_eq!(
+            outcomes.iter().find(|o| o.id == other).unwrap().status,
+            super::super::actions::ActionStatus::Queued
+        );
+        // Simulate expiration without a wall-clock sleep or replaying sent work.
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    SERVER_BACKOFF,
+                    1,
+                    &Timestamp(Timestamp::now().0 - 1),
+                )
+            })
+            .unwrap();
+        let writes = super::super::actions::reserve_pending(&store).unwrap();
+        assert_eq!(writes.len(), 2);
+        let ids: std::collections::BTreeSet<_> = writes
+            .iter()
+            .map(|n| n.get_attr("id").unwrap().as_text().unwrap())
+            .collect();
+        assert_eq!(ids, [other.as_str(), fetch.as_str()].into_iter().collect());
+        assert!(
+            super::super::actions::reserve_pending(&store)
+                .unwrap()
+                .is_empty()
+        );
+    }
+
+    #[test]
+    fn malformed_or_overflowing_backoff_preserves_pending_preparation() {
+        for raw in ["private-invalid", "0.5", "-2", "9223372036854775807"] {
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(&dir.path().join("invalid.redb"));
+            let id = queue(&store);
+            super::super::actions::reserve_pending(&store).unwrap();
+            super::super::actions::record_reply(&store, &error(&id, raw)).unwrap();
+            let before = snapshot(&store);
+            let failure = ingest_action(&store, &id).unwrap_err().to_string();
+            assert!(!failure.contains("private-invalid"));
+            assert_eq!(snapshot(&store), before);
+        }
     }
 }

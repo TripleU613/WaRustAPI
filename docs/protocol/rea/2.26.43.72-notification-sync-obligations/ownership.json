@@ -1,1 +1,10 @@
-{"evidence": {}}
+{
+  "evidence": {
+    "ev_11b5bb4eecdff25153029ea4e75ebc35d4f15fd010d1f5b2af80ac8ab84ee1d4": {
+      "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/account_privacy.rs"
+      ]
+    }
+  }
+}

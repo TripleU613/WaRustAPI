@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_846b6856f03596d2403c97de7d5ee91705791d216188b157e98ed5320068e5c7",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C0iq",
+    "method_name": "A00",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-f5EMXx/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C0iq"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"name\":\"A00\",\"def_pos\":0,\"type\":\"long\"},{\"name\":\"A01\",\"def_pos\":0,\"type\":\"X.STx\"},{\"name\":\"A02\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A03\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A04\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A05\",\"def_pos\":0,\"type\":\"X.12m\"},{\"name\":\"A06\",\"def_pos\":0,\"type\":\"X.0iQ\"},{\"name\":\"A07\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A08\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A09\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A0A\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A0B\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A0C\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A0D\",\"def_pos\":0,\"type\":\"X.07p\"},{\"name\":\"A0E\",\"def_pos\":0,\"type\":\"X.08Z\"},{\"name\":\"A0F\",\"def_pos\":0,\"type\":\"X.0io\"},{\"name\":\"A0G\",\"def_pos\":0,\"type\":\"X.0ih\"}],\"field_count\":17,\"full_name\":\"X.C0iq\",\"name\":\"C0iq\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":8,\"methods\":[{\"dex_descriptor\":\"(LX/0iQ;LX/00x;LX/00x;LX/00x;LX/00x;LX/00x;LX/00x;LX/07p;LX/08Z;LX/0io;LX/0ih;)V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(X.0iQ, X.00x, X.00x, X.00x, X.00x, X.00x, X.00x, X.07p, X.08Z, X.0io, X.0ih): void\"},{\"dex_descriptor\":\"(Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;LX/0iq;)LX/0j2;\",\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0,\"signature\":\"A00(com.whatsapp.infra.graphql.pando.BaseMexCallback, X.0iq): X.0j2\"},{\"dex_descriptor\":\"()LX/GO0;\",\"is_constructor\":false,\"name\":\"A01\",\"def_pos\":0,\"signature\":\"A01(): X.GO0\"},{\"dex_descriptor\":\"(Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;)LX/0j2;\",\"is_constructor\":false,\"name\":\"AQV\",\"def_pos\":0,\"signature\":\"AQV(com.whatsapp.infra.graphql.pando.BaseMexCallback): X.0j2\"},{\"dex_descriptor\":\"(Lkotlin/jvm/functions/Function1;)V\",\"is_constructor\":false,\"name\":\"AQY\",\"def_pos\":0,\"signature\":\"AQY(kotlin.jvm.functions.Function1): void\"},{\"dex_descriptor\":\"(Lkotlin/jvm/functions/Function1;LX/0cf;)Ljava/lang/Object;\",\"is_constructor\":false,\"name\":\"ARv\",\"def_pos\":0,\"signature\":\"ARv(kotlin.jvm.functions.Function1, X.0cf): java.lang.Object\"},{\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"BZr\",\"def_pos\":0,\"signature\":\"BZr(): void\"},{\"dex_descriptor\":\"(LX/12m;)V\",\"is_constructor\":false,\"name\":\"Cyi\",\"def_pos\":0,\"signature\":\"Cyi(X.12m): void\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C0iq",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_name\":\"A00\",\"overload_count\":1,\"body\":\"    public static final C0j2 A00(BaseMexCallback baseMexCallback, C0iq c0iq) {\\n        if (!c0iq.A03) {\\n            C0iQ c0iQ \\u003d c0iq.A06;\\n            Object objBFb \\u003d c0iq.A0B.BFb();\\n            C00l.A05(objBFb);\\n            C0ih c0ih \\u003d c0iq.A0G;\\n            Object objBFb2 \\u003d c0iq.A09.BFb();\\n            C00l.A05(objBFb2);\\n            C00x c00x \\u003d c0iq.A0C;\\n            Object objBFb3 \\u003d c0iq.A07.BFb();\\n            C00l.A05(objBFb3);\\n            C08Y c08y \\u003d (C08Y) objBFb3;\\n            C0io c0io \\u003d c0iq.A0F;\\n            Object objBFb4 \\u003d c0iq.A08.BFb();\\n            C00l.A05(objBFb4);\\n            return new C0j3(c0iQ, c00x, c08y, baseMexCallback, (C0is) objBFb, c0io, (C0j1) objBFb2, c0ih, (C0Sf) objBFb4, c0iq.A00);\\n        }\\n        C0iQ c0iQ2 \\u003d c0iq.A06;\\n        Object objBFb5 \\u003d c0iq.A0B.BFb();\\n        C00l.A05(objBFb5);\\n        C0ih c0ih2 \\u003d c0iq.A0G;\\n        Object objBFb6 \\u003d c0iq.A09.BFb();\\n        C00l.A05(objBFb6);\\n        C00x c00x2 \\u003d c0iq.A0C;\\n        Object objBFb7 \\u003d c0iq.A07.BFb();\\n        C00l.A05(objBFb7);\\n        C08Y c08y2 \\u003d (C08Y) objBFb7;\\n        C0io c0io2 \\u003d c0iq.A0F;\\n        Object objBFb8 \\u003d c0iq.A0A.BFb();\\n        C00l.A05(objBFb8);\\n        SKu sKu \\u003d (SKu) objBFb8;\\n        boolean z \\u003d c0iq.A02;\\n        C12m c12m \\u003d c0iq.A05;\\n        STx sTx \\u003d c0iq.A01;\\n        long j \\u003d c0iq.A00;\\n        return new RsH(c0iQ2, c00x2, c12m, sKu, c08y2, c0iq.A0D, c0iq.A0E, sTx, baseMexCallback, (C0is) objBFb5, c0io2, (C0j1) objBFb6, c0ih2, j, z, c0iq.A04);\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.C0iq\",\"full_name\":\"X.0iq.A00\",\"mode\":\"java\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C0iq",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(com.whatsapp.infra.graphql.pando.BaseMexCallback, X.0iq): X.0j2",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;LX/0iq;)LX/0j2;"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public static final C0j2 A00(BaseMexCallback baseMexCallback, C0iq c0iq) {\n        if (!c0iq.A03) {\n            C0iQ c0iQ = c0iq.A06;\n            Object objBFb = c0iq.A0B.BFb();\n            C00l.A05(objBFb);\n            C0ih c0ih = c0iq.A0G;\n            Object objBFb2 = c0iq.A09.BFb();\n            C00l.A05(objBFb2);\n            C00x c00x = c0iq.A0C;\n            Object objBFb3 = c0iq.A07.BFb();\n            C00l.A05(objBFb3);\n            C08Y c08y = (C08Y) objBFb3;\n            C0io c0io = c0iq.A0F;\n            Object objBFb4 = c0iq.A08.BFb();\n            C00l.A05(objBFb4);\n            return new C0j3(c0iQ, c00x, c08y, baseMexCallback, (C0is) objBFb, c0io, (C0j1) objBFb2, c0ih, (C0Sf) objBFb4, c0iq.A00);\n        }\n        C0iQ c0iQ2 = c0iq.A06;\n        Object objBFb5 = c0iq.A0B.BFb();\n        C00l.A05(objBFb5);\n        C0ih c0ih2 = c0iq.A0G;\n        Object objBFb6 = c0iq.A09.BFb();\n        C00l.A05(objBFb6);\n        C00x c00x2 = c0iq.A0C;\n        Object objBFb7 = c0iq.A07.BFb();\n        C00l.A05(objBFb7);\n        C08Y c08y2 = (C08Y) objBFb7;\n        C0io c0io2 = c0iq.A0F;\n        Object objBFb8 = c0iq.A0A.BFb();\n        C00l.A05(objBFb8);\n        SKu sKu = (SKu) objBFb8;\n        boolean z = c0iq.A02;\n        C12m c12m = c0iq.A05;\n        STx sTx = c0iq.A01;\n        long j = c0iq.A00;\n        return new RsH(c0iQ2, c00x2, c12m, sKu, c08y2, c0iq.A0D, c0iq.A0E, sTx, baseMexCallback, (C0is) objBFb5, c0io2, (C0j1) objBFb6, c0ih2, j, z, c0iq.A04);\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

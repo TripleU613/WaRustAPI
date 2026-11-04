@@ -1,0 +1,6 @@
+classes.dex  LX/0Yz;-><clinit>(V)
+  write opcode 0x69, dex byte offset: 0x39e52a
+classes.dex  LX/0Yz;-><clinit>(V)
+  read opcode 0x62, dex byte offset: 0x39e53e
+classes8.dex  LX/FDp;->CKt(V)
+  read opcode 0x62, dex byte offset: 0x72c71c

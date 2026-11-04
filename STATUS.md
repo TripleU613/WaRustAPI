@@ -1,3 +1,38 @@
+2026-11-04 — **Atomic patch lifecycle, explicit server waits and privacy adoption:**
+
+- App-state key selection, baseline, original action wire and prepared state now
+  commit together. Single-flight checks and reservation-time MAC/baseline checks
+  prevent duplicate/stale writes. Existing prepared-only rows reverify their
+  original wire; missing/corrupt preparations refuse before sending.
+- Exact collection/version matching and baseline checks prevent an accepted
+  response from overwriting later state. Conflict keys, complete patch-chain
+  verification and pending release share one transaction. Malformed later
+  patches roll back the entire application. Historic already-sent orphan state
+  still needs reconciliation; no identity/history reset or replay was added.
+- Integral explicit outer-error backoff persists from the original receipt
+  time. New app-state requests respect its deadline; never-sent queued fetches/patches defer while
+  unrelated control work can continue. Unknown IQ types remain sent/uncertain
+  rather than becoming false refusals.
+  [Corrections, tests and remaining boundaries](docs/protocol/app-state-patch-atomicity.md).
+- A fully supported non-modify readreceipts-only account_sync notification now
+  commits validated preference/deduplication before ACK. Unsupported/mixed/modify
+  branches and unowned setter outcomes remain unACKed. Offline
+  `account-privacy-inspect` shows the saved preference; read/read-self policy is
+  unchanged. [Port and current MEX binding](docs/protocol/account-privacy-notifications.md).
+- Native server-sync role/recovery gates are traced further. Primary/companion
+  and re-registration/reset distinctions are now concrete; native mutation-row
+  eligibility still requires a faithful Rust mapping before automatic scheduling.
+  [Role and recovery](docs/protocol/server-sync-role-recovery.md).
+
+Validation: **1,152 workspace/all-feature tests**, **439 default-feature tests**,
+strict all-target/all-feature Clippy, CLI-reference regeneration, formatting,
+coverage freshness and repository hygiene passed. New tests use real encrypted
+stores, concurrent publishers, independent crypto vectors, rollback/reopen,
+legacy rows, malformed replies, explicit waits and failed ACK writes. Retained
+research totals 625 distinct REA records (269 current build), 57 explicitly
+mapped to Rust. These counts do not establish completeness or account safety.
+No live account operation occurred. The full network goal remains active.
+
 2026-11-04 — **Held-version fetch construction and request-outcome tracing:**
 
 - Added library `fetch_request_at_versions`: held verified versions are emitted

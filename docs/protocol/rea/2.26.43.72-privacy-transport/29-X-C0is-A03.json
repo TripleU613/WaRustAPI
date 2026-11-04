@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_a1a39d27d71ac4f8f67508e64d9f56c9f4b7a8e3c719e422d928a716db6254c8",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C0is",
+    "method_name": "A03",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-SQ37Uv/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\",\"available_processors\":24}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C0is"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_class_count\":0,\"method_count\":6,\"methods\":[{\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\"},{\"def_pos\":0,\"signature\":\"A00(X.0it, X.7p0, java.lang.String, java.lang.String): java.lang.Object\",\"dex_descriptor\":\"(LX/0it;LX/7p0;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;\",\"is_constructor\":false,\"name\":\"A00\"},{\"def_pos\":0,\"signature\":\"A01(X.TXW, java.lang.Class, java.lang.Object, java.lang.String): java.lang.Object\",\"dex_descriptor\":\"(LX/TXW;Ljava/lang/Class;Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;\",\"is_constructor\":false,\"name\":\"A01\"},{\"def_pos\":0,\"signature\":\"A02(X.SUg, X.TXW, java.lang.Class): java.lang.Object\",\"dex_descriptor\":\"(LX/SUg;LX/TXW;Ljava/lang/Class;)Ljava/lang/Object;\",\"is_constructor\":false,\"name\":\"A02\"},{\"def_pos\":0,\"signature\":\"A03(X.7p0, java.lang.Class, java.lang.String, java.lang.String, kotlin.jvm.functions.Function1): java.lang.Object\",\"dex_descriptor\":\"(LX/7p0;Ljava/lang/Class;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;\",\"is_constructor\":false,\"name\":\"A03\"},{\"def_pos\":0,\"signature\":\"A04(X.7p0, java.lang.String, java.lang.String): java.lang.Object\",\"dex_descriptor\":\"(LX/7p0;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;\",\"is_constructor\":false,\"name\":\"A04\"}],\"fields\":[{\"type\":\"X.00x\",\"name\":\"A00\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A01\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A02\",\"def_pos\":0},{\"type\":\"X.0iw\",\"name\":\"A03\",\"def_pos\":0},{\"type\":\"X.0iy\",\"name\":\"A04\",\"def_pos\":0},{\"type\":\"X.0j0\",\"name\":\"A05\",\"def_pos\":0}],\"field_count\":6,\"full_name\":\"X.C0is\",\"name\":\"C0is\",\"inner_classes\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C0is",
+          "method_name": "A03",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"overload_index\":0,\"class_name\":\"X.C0is\",\"full_name\":\"X.0is.A03\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"A03\",\"overload_count\":1,\"body\":\"    public Object A03(C7p0 c7p0, Class cls, String str, String str2, Function1 function1) {\\n        C00l.A09(cls, 1);\\n        C00l.A09(str, 2);\\n        try {\\n            if (c7p0.A00 \\u003d\\u003d C02X.A01 \\u0026\\u0026 function1 !\\u003d null) {\\n                C08Y c08y \\u003d (C08Y) this.A01.A00.get();\\n                C00f c00f \\u003d SGd.A03;\\n                C00l.A06(c00f);\\n                if (c08y.A17(c00f)) {\\n                    return A01(new T4g(function1), cls, A00((RsI) this.A02.A00.get(), c7p0, str, str2), str);\\n                }\\n            }\\n            return A01(new T4f(cls), cls, A04(c7p0, str, str2), str);\\n        } catch (Throwable th) {\\n            return new C0Dt(th);\\n        }\\n    }\",\"fell_back\":false}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C0is",
+    "method": {
+      "name": "A03",
+      "reported_signature": "A03(X.7p0, java.lang.Class, java.lang.String, java.lang.String, kotlin.jvm.functions.Function1): java.lang.Object",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(LX/7p0;Ljava/lang/Class;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public Object A03(C7p0 c7p0, Class cls, String str, String str2, Function1 function1) {\n        C00l.A09(cls, 1);\n        C00l.A09(str, 2);\n        try {\n            if (c7p0.A00 == C02X.A01 && function1 != null) {\n                C08Y c08y = (C08Y) this.A01.A00.get();\n                C00f c00f = SGd.A03;\n                C00l.A06(c00f);\n                if (c08y.A17(c00f)) {\n                    return A01(new T4g(function1), cls, A00((RsI) this.A02.A00.get(), c7p0, str, str2), str);\n                }\n            }\n            return A01(new T4f(cls), cls, A04(c7p0, str, str2), str);\n        } catch (Throwable th) {\n            return new C0Dt(th);\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

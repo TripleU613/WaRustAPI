@@ -639,6 +639,13 @@ pub(crate) async fn drive(
                     }
                     // Queued one-shot actions (block list, reports, lookups) settle by iq id.
                     if super::actions::record_reply(&store, &node)? {
+                        if let Some(id) = node.get_attr("id").and_then(|v| v.as_text()) {
+                            match super::app_state_sync::ingest_action(&store, id) {
+                                Ok(_) => {}
+                                Err(Error::InvalidInput { field, reason }) => tracing::warn!(field, reason, "app-state reply retained without promotion"),
+                                Err(error) => return Err(error),
+                            }
+                        }
                         super::contacts::ingest(&store)?;
                         if let Some(id) = node.get_attr("id").and_then(|v| v.as_text()) {
                             // APK 37.71 8lQ.A01 separates truncated/full results;
@@ -711,6 +718,17 @@ pub(crate) async fn drive(
                 // so nothing is recorded from a stanza left unacknowledged.
                 if receipt_recorded && let Some(receipt) = super::status_receipts::parse(&node) {
                     super::status_receipts::record(&store, &receipt)?;
+                }
+                match super::account_privacy::validate(&node) {
+                    Ok(()) => {
+                        if let Some(ack) = super::account_privacy::handle(&store, &node)? {
+                            link.send(&ack).await?;
+                        }
+                    }
+                    Err(Error::InvalidInput { field, reason }) => {
+                        tracing::warn!(field, reason, "account privacy refused; captured without ACK; session continues");
+                    }
+                    Err(error) => return Err(error),
                 }
                 match super::notifications::validate(&node) {
                     Ok(()) => {
@@ -1460,6 +1478,133 @@ mod tests {
     }
     /// Native 43.72 0v0.A00 command 0 has no id/xmlns/child. Capture and
     /// clock work must commit before this stateless protocol response is written.
+    #[tokio::test]
+    async fn account_privacy_commits_before_ack_and_failed_write_survives_reopen() {
+        use super::super::account_privacy::{ReadReceiptValue, read_receipts};
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("privacy-cut.redb");
+        let store = open(&path);
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        (&mut fake.ready).await.unwrap();
+        let notification = Node::new("notification")
+            .attr("type", "account_sync")
+            .attr("from", "s.whatsapp.net")
+            .attr("id", "PRIVACY-CUT")
+            .attr("t", "1700000000")
+            .children(vec![Node::new("privacy").children(vec![
+                Node::new("category").attr("name", "readreceipts").attr("value", "none")
+            ])]);
+        let capture = format!(
+            "inbound:sha256:{}",
+            hex::encode(sha2::Sha256::digest(encode(&notification).unwrap()))
+        );
+        fake.deliver(notification.clone()).await;
+        let (ack, written) = fake.written().await;
+        assert_eq!(
+            ack,
+            Node::new("ack")
+                .attr("id", "PRIVACY-CUT")
+                .attr("to", Jid::parse("s.whatsapp.net").unwrap())
+                .attr("class", "notification")
+                .attr("type", "account_sync")
+        );
+        assert_eq!(
+            read_receipts(&store).unwrap().unwrap().value,
+            ReadReceiptValue::None
+        );
+        assert!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                .unwrap()
+                .is_some()
+        );
+        let account = store.read(|tx| tx.scan(Table::Account, 1, 10)).unwrap();
+        let journal = store.journal_head().unwrap();
+        written
+            .send(Err(Error::Io(std::io::Error::new(
+                std::io::ErrorKind::BrokenPipe,
+                "privacy ACK write cut",
+            ))))
+            .unwrap();
+        assert!(matches!(fake.finished().await, Err(Error::Io(_))));
+        drop(store);
+        let store = Arc::new(identity_store(&path));
+        assert_eq!(
+            read_receipts(&store).unwrap().unwrap().value,
+            ReadReceiptValue::None
+        );
+        let before = store
+            .read(|tx| tx.get(Table::Checkpoints, b"account-privacy:readreceipts", 1))
+            .unwrap();
+        let mut fresh = start(&store, false, None);
+        fresh.activate().await;
+        (&mut fresh.ready).await.unwrap();
+        fresh.nothing_written(Duration::from_millis(30)).await;
+        fresh.deliver(notification).await;
+        let (again, written) = fresh.written().await;
+        assert_eq!(again, ack);
+        assert_eq!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, b"account-privacy:readreceipts", 1))
+                .unwrap(),
+            before
+        );
+        written.send(Ok(())).unwrap();
+        fresh.stop_cleanly().await;
+        assert_eq!(
+            store.read(|tx| tx.scan(Table::Account, 1, 10)).unwrap(),
+            account
+        );
+        assert_eq!(store.journal_head().unwrap(), journal);
+    }
+
+    #[tokio::test]
+    async fn unsupported_account_privacy_is_captured_without_ack_or_session_loss() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("privacy-unsupported.redb"));
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        (&mut fake.ready).await.unwrap();
+        for child in [
+            Node::new("privacy").attr("action", "modify"),
+            Node::new("privacy").children(vec![
+                Node::new("category")
+                    .attr("name", "readreceipts")
+                    .attr("value", "all"),
+                Node::new("category")
+                    .attr("name", "profile")
+                    .attr("value", "none"),
+            ]),
+            Node::new("devices"),
+        ] {
+            let notification = Node::new("notification")
+                .attr("type", "account_sync")
+                .attr("from", "s.whatsapp.net")
+                .attr("id", "UNSUPPORTED")
+                .attr("t", "1700000000")
+                .children(vec![child]);
+            let capture = format!(
+                "inbound:sha256:{}",
+                hex::encode(sha2::Sha256::digest(encode(&notification).unwrap()))
+            );
+            fake.deliver(notification).await;
+            fake.nothing_written(Duration::from_millis(30)).await;
+            assert!(
+                store
+                    .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                    .unwrap()
+                    .is_some()
+            );
+            assert!(
+                super::super::account_privacy::read_receipts(&store)
+                    .unwrap()
+                    .is_none()
+            );
+        }
+        fake.stop_cleanly().await;
+    }
+
     #[tokio::test]
     async fn native_server_ping_is_answered_before_activation_and_after_capture() {
         let dir = tempfile::tempdir().unwrap();

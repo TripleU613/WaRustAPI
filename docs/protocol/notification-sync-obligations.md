@@ -111,9 +111,11 @@ protocol maintenance, never an identity-rotation mechanism for avoiding a refusa
 
 ## Rust outcome
 
-**Confirmed source audit:** the current receive dispatcher does not process
-these three outer types; they remain durable captured unknown notifications,
-without generic ACK. Relevant API is session listen (`POST /v1/session/listen`,
+**Initial source audit:** these three outer types were captured without
+generic ACK. The follow-on [privacy notification port](account-privacy-notifications.md)
+now processes the fully supported non-modify readreceipts-only account_sync
+branch. Other account_sync forms, server_sync and authkey_rotation still require
+their stateful lifecycle ports; no generic ACK was added. Relevant API is session listen (`POST /v1/session/listen`,
 operation `listen`, CLI `whatsapp-cli listen`). No API or code behavior changed
 in this audit. The missing network obligations above remain actionable gaps;
 retained source/constructor inventories are research coverage, not completed

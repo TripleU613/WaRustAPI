@@ -1,0 +1,18 @@
+
+# class: LX/Dp8;
+# extends: LX/EZB;
+
+.method public <init>(VLI)  # .registers 4
+    # full signature: LX/Dp8;-><init>(LX/0aS;I)V
+    0000..0004  iput-object  v2, v1, LX/Dp8;->A00:LX/0aS;
+    0004..000a  invoke-direct  {v1, v2}, LX/EZB;-><init>(LX/0aS;)V
+    000a..000e  iget-object  v0, v2, LX/0aS;->A0Z:LX/09F;
+    000e..0014  invoke-interface  {v0}, LX/09F;->BU7()Z
+    0014..0016  move-result  v0
+    0016..001a  xor-int/lit8  v0, v0, #0x1
+    001a..0020  invoke-static  {v0}, LX/00L;->A0A(Z)V
+    0020..0024  iget-object  v0, v2, LX/0aS;->A0L:LX/0lJ;
+    0024..002a  invoke-virtual  {v0, v3}, LX/0lJ;->A01(I)V
+    002a..002c  return-void
+    # exception table: 0 try range(s)
+.end method

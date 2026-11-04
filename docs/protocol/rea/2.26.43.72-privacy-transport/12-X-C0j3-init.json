@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_73ebd33dac4a441e2e2cfd72db4733afd0fbb03c6719121983571d5aaa1dfe66",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C0j3",
+    "method_name": "<init>",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-Kbikcf/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C0j3"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"name\":\"C0j3\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":4,\"methods\":[{\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(X.0iQ, X.00x, X.08Y, X.0ia, X.0is, X.0io, X.0j1, X.0ih, X.0Sf, long): void\",\"dex_descriptor\":\"(LX/0iQ;LX/00x;LX/08Y;LX/0ia;LX/0is;LX/0io;LX/0j1;LX/0ih;LX/0Sf;J)V\",\"is_constructor\":true},{\"name\":\"A00\",\"def_pos\":0,\"signature\":\"A00(X.0mF, X.0mO, boolean): X.0mU\",\"dex_descriptor\":\"(LX/0mF;LX/0mO;Z)LX/0mU;\",\"is_constructor\":false},{\"name\":\"A05\",\"def_pos\":0,\"signature\":\"A05(): X.0mE\",\"dex_descriptor\":\"()LX/0mE;\",\"is_constructor\":false},{\"name\":\"A06\",\"def_pos\":0,\"signature\":\"A06(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":false}],\"fields\":[{\"type\":\"long\",\"name\":\"A00\",\"def_pos\":0},{\"type\":\"X.0mF\",\"name\":\"A01\",\"def_pos\":0},{\"type\":\"X.0Sf\",\"name\":\"A02\",\"def_pos\":0}],\"field_count\":3,\"full_name\":\"X.C0j3\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C0j3",
+          "method_name": "<init>",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.C0j3\",\"full_name\":\"X.0j3.\\u003cinit\\u003e\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"\\u003cinit\\u003e\",\"overload_count\":1,\"body\":\"    /* JADX WARN: \\u0027super\\u0027 call moved to the top of the method (can break code semantics) */\\n    public C0j3(C0iQ c0iQ, C00x c00x, C08Y c08y, C0ia c0ia, C0is c0is, C0io c0io, C0j1 c0j1, C0ih c0ih, C0Sf c0Sf, long j) {\\n        super(c0iQ, c00x, c08y, c0ia, c0is, c0io, c0j1, c0ih);\\n        C00l.A09(c0is, 2);\\n        C00l.A09(c0j1, 4);\\n        C00l.A09(c00x, 5);\\n        C00l.A09(c08y, 6);\\n        C00l.A09(c0io, 7);\\n        C00l.A09(c0Sf, 8);\\n        this.A02 \\u003d c0Sf;\\n        this.A00 \\u003d j;\\n        this.A01 \\u003d new C0mF(c0iQ, A03(), c0Sf.A0G());\\n    }\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C0j3",
+    "method": {
+      "name": "<init>",
+      "reported_signature": "<init>(X.0iQ, X.00x, X.08Y, X.0ia, X.0is, X.0io, X.0j1, X.0ih, X.0Sf, long): void",
+      "overload_index": 0,
+      "is_constructor": true,
+      "dex_descriptor": "(LX/0iQ;LX/00x;LX/08Y;LX/0ia;LX/0is;LX/0io;LX/0j1;LX/0ih;LX/0Sf;J)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */\n    public C0j3(C0iQ c0iQ, C00x c00x, C08Y c08y, C0ia c0ia, C0is c0is, C0io c0io, C0j1 c0j1, C0ih c0ih, C0Sf c0Sf, long j) {\n        super(c0iQ, c00x, c08y, c0ia, c0is, c0io, c0j1, c0ih);\n        C00l.A09(c0is, 2);\n        C00l.A09(c0j1, 4);\n        C00l.A09(c00x, 5);\n        C00l.A09(c08y, 6);\n        C00l.A09(c0io, 7);\n        C00l.A09(c0Sf, 8);\n        this.A02 = c0Sf;\n        this.A00 = j;\n        this.A01 = new C0mF(c0iQ, A03(), c0Sf.A0G());\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

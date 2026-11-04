@@ -8,6 +8,11 @@ This continues [notification dispatch](notification-sync-obligations.md), rather
 than treating an `account_sync` envelope as permission for a generic ACK.
 Earlier [37.71 read-setting evidence](read-setting-sync.md) remains separate.
 
+The repository-negative findings below describe this initial refresh trace.
+The later [supported notification port](account-privacy-notifications.md) owns
+a readreceipts-only checkpoint; complete modify-refresh/category adoption remains
+unimplemented.
+
 ## Modify means refresh, with a protocol choice
 
 `19N.A09` reads the first child. For child `privacy` and exact

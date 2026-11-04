@@ -256,3 +256,8 @@ bundle signature checks still run. See
 Current `transport::app_state_sync::fetch_request_at_versions` preserves held
 verified versions and conditional snapshot attributes; its input contract and
 remaining scheduler work are in [the versioned-fetch note](../protocol/app-state-versioned-fetch.md).
+
+`account-privacy-inspect` reads the supported server preference without changing
+read/read-self policy or transmitting traffic. [Notification adoption and bounds](../protocol/account-privacy-notifications.md).
+App-state patches now bind their original wire, prepared result and baseline in
+one transaction, with [atomic settlement and persisted explicit backoff](../protocol/app-state-patch-atomicity.md).

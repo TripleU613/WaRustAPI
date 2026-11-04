@@ -2863,6 +2863,29 @@ pub(super) fn clock_inspect(cli: &super::Cli) -> Result<(), Error> {
     Ok(())
 }
 
+pub(super) fn account_privacy_inspect(cli: &super::Cli) -> Result<(), Error> {
+    let store = ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })?;
+    let preference = whatsapp_api::transport::account_privacy::read_receipts(&store)?;
+    if !cli.json {
+        println!("Saved server privacy preference; explicit read policy unchanged.");
+    }
+    let report = serde_json::json!({
+        "server_read_receipts": preference.map(|p| p.value),
+        "server_read_receipts_enabled": preference.map(|p| p.value.enabled()),
+    });
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&report)
+            .map_err(|_| Error::invalid("account_privacy", "cannot encode inspection"))?
+    );
+    Ok(())
+}
+
 pub(super) fn abprops_query(cli: &super::Cli, show: bool) -> Result<(), Error> {
     let store = ProtocolStore::open(OpenOptions {
         path: cli.store.clone(),

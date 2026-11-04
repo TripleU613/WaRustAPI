@@ -37,7 +37,19 @@ impl CollectionPatch {
     /// External mutation references and exit-code branches are not yet supported
     /// and fail explicitly, even if inline mutations are also present. Bounds
     /// and duplicate-singleton refusal are local defensive parser policy.
-    pub fn decode(mut bytes: &[u8]) -> Result<Self> {
+    pub fn decode(bytes: &[u8]) -> Result<Self> {
+        Self::decode_versioned(bytes, None)
+    }
+
+    /// Verify an original locally prepared request, whose protobuf omits the
+    /// read-only version field. The claimed version comes from its frozen state,
+    /// never from an incoming uncorrelated notification. No wire is modified.
+    #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
+    pub(crate) fn decode_prepared(bytes: &[u8], claimed_version: u64) -> Result<Self> {
+        Self::decode_versioned(bytes, Some(claimed_version))
+    }
+
+    fn decode_versioned(mut bytes: &[u8], prepared_version: Option<u64>) -> Result<Self> {
         use prost::encoding::{DecodeContext, decode_key, skip_field};
         if bytes.len() > 16 * 1024 * 1024 {
             return Err(invalid("patch exceeds local byte bound"));
@@ -72,10 +84,16 @@ impl CollectionPatch {
                 .map_err(|_| invalid("invalid patch protobuf"))?;
         }
         let patch = WirePatch::decode(original).map_err(|_| invalid("invalid patch protobuf"))?;
-        let version = patch
-            .version
-            .and_then(|v| v.value)
-            .ok_or_else(|| invalid("missing patch version"))?;
+        let version = match (patch.version, prepared_version) {
+            (Some(version), None) => version
+                .value
+                .ok_or_else(|| invalid("missing patch version"))?,
+            (None, Some(version)) => version,
+            (None, None) => return Err(invalid("missing patch version")),
+            (Some(_), Some(_)) => {
+                return Err(invalid("prepared patch carries a read-only version"));
+            }
+        };
         let key_id = fixed(blob(patch.key_id)?)?;
         let snapshot_mac = fixed(
             patch

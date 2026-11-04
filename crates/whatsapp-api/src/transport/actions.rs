@@ -155,6 +155,36 @@ pub(crate) fn completed_reply_in(tx: &crate::store::WriteTx<'_>, id: &str) -> Re
         .transpose()
 }
 
+/// Original action plus reply within a feature's atomic settlement transaction.
+pub(crate) fn view_in_write(
+    tx: &crate::store::WriteTx<'_>,
+    id: &str,
+) -> Result<Option<(ActionOutcome, Option<Node>, Node)>> {
+    let row: Option<Row> = tx.get_json(Table::Checkpoints, key(id).as_bytes(), 1)?;
+    let Some(row) = row else {
+        return Ok(None);
+    };
+    let request = decode(&row.wire)?;
+    let reply = row.reply.map(|wire| decode(&wire)).transpose()?;
+    Ok(Some((
+        ActionOutcome {
+            id: id.to_owned(),
+            kind: row.kind,
+            label: row.label,
+            status: row.status,
+            error_code: row.error_code,
+            error_text: row.error_text,
+        },
+        reply,
+        request,
+    )))
+}
+
+pub(crate) fn settled_at_in(tx: &crate::store::WriteTx<'_>, id: &str) -> Result<Option<Timestamp>> {
+    let row: Option<Row> = tx.get_json(Table::Checkpoints, key(id).as_bytes(), 1)?;
+    Ok(row.and_then(|row| row.settled_at))
+}
+
 /// One immutable view of an action and its authenticated saved response.
 pub(crate) fn view_in(
     tx: &crate::store::ReadTx<'_>,
@@ -203,7 +233,22 @@ pub fn reserve_pending(store: &ProtocolStore) -> Result<Vec<Node>> {
                 if row.status != ActionStatus::Queued {
                     continue;
                 }
-                out.push(decode(&row.wire)?);
+                let node = decode(&row.wire)?;
+                if row.kind == super::app_state_sync::FETCH_ACTION_KIND
+                    && super::app_state_sync::server_waiting_in(tx)?
+                {
+                    continue;
+                }
+                if row.kind == super::app_state_sync::PATCH_ACTION_KIND {
+                    let id = node
+                        .get_attr("id")
+                        .and_then(|v| v.as_text())
+                        .ok_or_else(|| Error::invalid("action", "patch action has no id"))?;
+                    if !super::app_state_sync::validate_patch_reservation_in(tx, id)? {
+                        continue;
+                    }
+                }
+                out.push(node);
                 row.status = ActionStatus::Sent;
                 row.sent_at = Some(Timestamp::now());
                 tx.put_json(Table::Checkpoints, key, 1, &row)?;
@@ -226,6 +271,22 @@ pub(crate) fn reserve_one_in(tx: &mut crate::store::WriteTx<'_>, id: &str) -> Re
         ));
     }
     let node = decode(&row.wire)?;
+    if row.kind == super::app_state_sync::FETCH_ACTION_KIND
+        && super::app_state_sync::server_waiting_in(tx)?
+    {
+        return Err(Error::invalid(
+            "app_state_sync",
+            "server app-state backoff is active; no fetch reserved",
+        ));
+    }
+    if row.kind == super::app_state_sync::PATCH_ACTION_KIND
+        && !super::app_state_sync::validate_patch_reservation_in(tx, id)?
+    {
+        return Err(Error::invalid(
+            "app_state_sync",
+            "server app-state backoff is active; no action reserved",
+        ));
+    }
     row.status = ActionStatus::Sent;
     row.sent_at = Some(Timestamp::now());
     tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &row)?;
@@ -235,7 +296,14 @@ pub(crate) fn reserve_one_in(tx: &mut crate::store::WriteTx<'_>, id: &str) -> Re
 /// Settle a `sent` action from its `iq` reply. Returns `true` when the node
 /// matched a queued action (the caller then treats it as consumed).
 pub fn record_reply(store: &ProtocolStore, node: &Node) -> Result<bool> {
-    if node.description != "iq" {
+    // Current APK 0ln.A01 dispatches only result/error; another IQ carrying
+    // the same ID is not a definite refusal of the original request.
+    if node.description != "iq"
+        || !matches!(
+            node.get_attr("type").and_then(|v| v.as_text()),
+            Some("result" | "error")
+        )
+    {
         return Ok(false);
     }
     let Some(id) = node.get_attr("id").and_then(|v| v.as_text()) else {
@@ -373,6 +441,12 @@ pub(crate) fn request_in(tx: &crate::store::ReadTx<'_>, id: &str) -> Result<Opti
     row.map(|r| decode(&r.wire)).transpose()
 }
 
+/// Original request in an atomic feature-state update.
+pub(crate) fn request_in_write(tx: &crate::store::WriteTx<'_>, id: &str) -> Result<Option<Node>> {
+    let row: Option<Row> = tx.get_json(Table::Checkpoints, key(id).as_bytes(), 1)?;
+    row.map(|r| decode(&r.wire)).transpose()
+}
+
 /// The saved reply of a settled action, decoded, for feature-specific parsing.
 pub fn reply(store: &ProtocolStore, id: &str) -> Result<Option<Node>> {
     let row: Option<Row> =
@@ -417,13 +491,42 @@ mod inner_error_tests {
         (dir, store)
     }
 
+    #[test]
+    fn matching_id_without_result_or_error_does_not_settle_a_sent_request() {
+        let (_dir, store) = store();
+        let id = queue(&store, "fixture", "fixture", |id| {
+            Ok(Node::new("iq").attr("id", id).attr("type", "get"))
+        })
+        .unwrap();
+        reserve_pending(&store).unwrap();
+        for kind in [None, Some("get"), Some("set"), Some("future")] {
+            let mut node = Node::new("iq").attr("id", id.as_str());
+            if let Some(kind) = kind {
+                node = node.attr("type", kind);
+            }
+            assert!(!record_reply(&store, &node).unwrap());
+            assert_eq!(outcomes(&store).unwrap()[0].status, ActionStatus::Sent);
+            assert!(reply(&store, &id).unwrap().is_none());
+        }
+        assert!(
+            record_reply(
+                &store,
+                &Node::new("iq")
+                    .attr("id", id.as_str())
+                    .attr("type", "result")
+            )
+            .unwrap()
+        );
+        assert_eq!(outcomes(&store).unwrap()[0].status, ActionStatus::Ok);
+    }
+
     /// App-state answers per collection, so an `iq type=result` can still carry
     /// a refusal. Recording that as success is worse than recording an error,
     /// because the caller is told the write landed when it did not.
     #[test]
     fn a_collection_level_error_is_not_a_success() {
         let (_d, store) = store();
-        let id = queue(&store, "app-state-patch", "patch", |id| {
+        let id = queue(&store, "classifier-fixture", "patch", |id| {
             Ok(Node::new("iq").attr("id", id))
         })
         .unwrap();
@@ -455,7 +558,7 @@ mod inner_error_tests {
     #[test]
     fn a_clean_result_is_still_ok() {
         let (_d, store) = store();
-        let id = queue(&store, "app-state-patch", "patch", |id| {
+        let id = queue(&store, "classifier-fixture", "patch", |id| {
             Ok(Node::new("iq").attr("id", id))
         })
         .unwrap();

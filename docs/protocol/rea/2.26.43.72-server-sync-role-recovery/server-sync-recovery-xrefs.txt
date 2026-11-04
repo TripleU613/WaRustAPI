@@ -1,0 +1,24 @@
+["companion_syncd_dirty"]  (3 reference(s))
+  classes.dex  LX/0aS;->A0d(Z)
+    dex byte offset: 0x5fc60c
+  classes8.dex  Lcom/whatsapp/consumer/companiondevice/iq/SyncResponseHandler;->A08(VLL)
+    dex byte offset: 0x6ab5f2
+  classes8.dex  Lcom/whatsapp/consumer/companiondevice/iq/SyncResponseHandler;->A08(VLL)
+    dex byte offset: 0x6ab65c
+["syncd_dirty"]  (8 reference(s))
+  classes.dex  LX/0Yz;-><clinit>(V)
+    dex byte offset: 0x39e538
+  classes.dex  LX/0Yz;->A05(VI)
+    dex byte offset: 0x5ea472
+  classes.dex  LX/0Yz;->A09(Z)
+    dex byte offset: 0x5ea5cc
+  classes.dex  LX/0lJ;->A03(VZ)
+    dex byte offset: 0x6d5078
+  classes.dex  LX/0lJ;->A03(VZ)
+    dex byte offset: 0x6d50b4
+  classes.dex  LX/0lJ;->A04(Z)
+    dex byte offset: 0x6d5248
+  classes.dex  LX/0lJ;->Bsp(VL)
+    dex byte offset: 0x6d5472
+  classes.dex  LX/0lJ;->CK4(VLL)
+    dex byte offset: 0x6d5646

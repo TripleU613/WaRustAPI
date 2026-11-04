@@ -331,6 +331,9 @@ enum Cmd {
     /// Inspect saved clock source and resolution (offline; no timestamps or replay).
     #[cfg(feature = "experimental-transport")]
     ClockInspect,
+    /// Inspect the saved server read-receipt preference (offline; no policy change).
+    #[cfg(feature = "experimental-transport")]
+    AccountPrivacyInspect,
     /// Show queued one-shot actions (block list, reports, lookups) and their outcomes (offline, redacted).
     #[cfg(feature = "experimental-transport")]
     Actions {
@@ -1877,6 +1880,8 @@ async fn run(cli: Cli) -> Result<(), Error> {
         }
         #[cfg(feature = "experimental-transport")]
         Cmd::AbpropsQuery { show } => transport_receive::abprops_query(&cli, *show),
+        #[cfg(feature = "experimental-transport")]
+        Cmd::AccountPrivacyInspect => transport_receive::account_privacy_inspect(&cli),
         #[cfg(feature = "experimental-transport")]
         Cmd::ClockInspect => transport_receive::clock_inspect(&cli),
         #[cfg(feature = "experimental-transport")]

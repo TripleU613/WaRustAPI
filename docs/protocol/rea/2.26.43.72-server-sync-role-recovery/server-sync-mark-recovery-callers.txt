@@ -1,0 +1,8 @@
+classes8.dex  LX/Dp8;-><init>(VLI)
+  invoke dex byte offset: 0x4c3bc8
+classes8.dex  LX/Dp9;-><init>(VLL)
+  invoke dex byte offset: 0x4c3c00
+classes8.dex  Lcom/whatsapp/consumer/companiondevice/iq/SyncResponseHandler;->A08(VLL)
+  invoke dex byte offset: 0x6ab586
+classes8.dex  LX/FdE;->run(V)
+  invoke dex byte offset: 0x80b498

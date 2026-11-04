@@ -1,0 +1,16 @@
+# Declared overrides: LX/09G;->BU7()Z
+# Coverage: 114178 APK classes; superclass ancestry only; external/runtime/interface dispatch unverified
+# ancestry: LX/09G; -> Ljava/lang/Object;
+
+# class: LX/09G;
+# extends: Ljava/lang/Object;
+
+.method public BU7(Z)  # .registers 3
+    # full signature: LX/09G;->BU7()Z
+    0000..0004  iget-object  v1, v2, LX/09G;->A00:LX/09O;
+    0004..0006  const/4  v0, #0x0
+    0006..000c  invoke-virtual  {v1, v0}, LX/09O;->BU8(Z)Z
+    000c..000e  move-result  v0
+    000e..0010  return  v0
+    # exception table: 0 try range(s)
+.end method

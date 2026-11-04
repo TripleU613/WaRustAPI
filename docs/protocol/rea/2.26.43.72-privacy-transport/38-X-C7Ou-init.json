@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_710042cea3e19746612d592ef773e2be4213b7a9bd76e4c46a0dc2b9490641b5",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C7Ou",
+    "method_name": "<init>",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-SQ37Uv/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\",\"available_processors\":24}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C7Ou"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_class_count\":0,\"method_count\":3,\"methods\":[{\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(X.0Tp, int): void\",\"dex_descriptor\":\"(LX/0Tp;I)V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\"},{\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(X.0Tp, X.0mK): void\",\"dex_descriptor\":\"(LX/0Tp;LX/0mK;)V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\"},{\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(X.0Tp, X.Dzb): void\",\"dex_descriptor\":\"(LX/0Tp;LX/Dzb;)V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\"}],\"fields\":[{\"type\":\"int\",\"name\":\"$t\",\"def_pos\":0},{\"type\":\"java.lang.Object\",\"name\":\"A00\",\"def_pos\":0},{\"type\":\"java.lang.Object\",\"name\":\"A01\",\"def_pos\":0},{\"type\":\"java.lang.Object\",\"name\":\"A02\",\"def_pos\":0}],\"field_count\":4,\"full_name\":\"X.C7Ou\",\"name\":\"C7Ou\",\"inner_classes\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C7Ou",
+          "method_name": "<init>",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"overload_index\":0,\"class_name\":\"X.C7Ou\",\"full_name\":\"X.7Ou.\\u003cinit\\u003e\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"\\u003cinit\\u003e\",\"overload_count\":3,\"body\":\"    public C7Ou(C0Tp c0Tp, int i) throws LIL {\\n        this.$t \\u003d i;\\n        if (i !\\u003d 0) {\\n            C0Tp.A01(c0Tp, \\\"notification\\\");\\n            C8B6 c8b6A01 \\u003d C8B6.A01();\\n            String[] strArrA1W \\u003d C6of.A1W(1);\\n            Long lA0r \\u003d C6oi.A0r();\\n            Long lA0s \\u003d C6oi.A0s();\\n            Object objA0J \\u003d c8b6A01.A0J(c0Tp, UserJid.class, lA0r, lA0s, null, strArrA1W, false);\\n            if (objA0J !\\u003d null) {\\n                this.A00 \\u003d objA0J;\\n                if (c8b6A01.A0J(c0Tp, String.class, lA0r, lA0s, \\\"psa\\\", C6of.A1Y(1), false) !\\u003d null) {\\n                    String[] strArr \\u003d new String[1];\\n                    C0Tp c0TpA0h \\u003d C6oh.A0h(c0Tp, \\\"surfaces\\\", strArr);\\n                    if (c0TpA0h \\u003d\\u003d null) {\\n                        C8B6.A0A(c0Tp, c8b6A01, strArr, 0);\\n                    } else {\\n                        C7Nk c7NkA00 \\u003d C88K.A00(c0TpA0h, c8b6A01);\\n                        if (c7NkA00 !\\u003d null) {\\n                            this.A02 \\u003d c7NkA00;\\n                            if (c8b6A01.A0N(c0Tp, \\\"notification\\\")) {\\n                                Class cls \\u003d Long.TYPE;\\n                                Long lA0d \\u003d C3q4.A0d();\\n                                Number number \\u003d (Number) c8b6A01.A0J(c0Tp, cls, lA0d, lA0s, null, new String[]{\\\"t\\\"}, false);\\n                                if (number !\\u003d null) {\\n                                    long jLongValue \\u003d number.longValue();\\n                                    String str \\u003d (String) c8b6A01.A0J(c0Tp, String.class, lA0r, lA0s, null, C6of.A1U(1), false);\\n                                    if (str !\\u003d null) {\\n                                        String[] strArr2 \\u003d new String[1];\\n                                        this.A01 \\u003d new C7Nb(c0Tp, (Long) c8b6A01.A0J(c0Tp, cls, lA0d, C6ol.A0X(strArr2), null, strArr2, false), str, 8, jLongValue);\\n                                    }\\n                                }\\n                            }\\n                            throw C8B6.A00(c8b6A01);\\n                        }\\n                    }\\n                    throw C8B6.A00(c8b6A01);\\n                }\\n                throw C8B6.A00(c8b6A01);\\n            }\\n            throw C8B6.A00(c8b6A01);\\n        }\\n        C0mL c0mL \\u003d C0mL.A00;\\n        this.A01 \\u003d c0mL;\\n        C0Tp.A01(c0Tp, \\\"notification\\\");\\n        C8B6 c8b6A02 \\u003d C8B6.A01();\\n        String[] strArrA1b \\u003d C2LA.A1b();\\n        strArrA1b[0] \\u003d \\\"encrypted_pairing_request\\\";\\n        Long lA0v \\u003d C6oj.A0v(\\\"#elementValue\\\", strArrA1b, 1);\\n        Long lA0s2 \\u003d C6oi.A0s();\\n        Object objA0I \\u003d c8b6A02.A0I(c0Tp, byte[].class, lA0v, lA0s2, null, strArrA1b);\\n        if (objA0I !\\u003d null) {\\n            this.A00 \\u003d objA0I;\\n            if (c8b6A02.A0J(c0Tp, String.class, lA0v, lA0s2, \\\"crsc_continuation\\\", C6of.A1Y(1), false) !\\u003d null) {\\n                if (c8b6A02.A0J(c0Tp, C0mL.class, lA0v, lA0s2, c0mL, C6of.A1W(1), false) !\\u003d null) {\\n                    C7Nb c7NbA00 \\u003d C8AJ.A00(c0Tp, c8b6A02);\\n                    if (c7NbA00 !\\u003d null) {\\n                        this.A02 \\u003d c7NbA00;\\n                    } else {\\n                        throw C8B6.A00(c8b6A02);\\n                    }\\n                } else {\\n                    throw C8B6.A00(c8b6A02);\\n                }\\n            } else {\\n                throw C8B6.A00(c8b6A02);\\n            }\\n        } else {\\n            throw C8B6.A00(c8b6A02);\\n        }\\n        super.A00 \\u003d c0Tp;\\n    }\",\"fell_back\":false}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C7Ou",
+    "method": {
+      "name": "<init>",
+      "reported_signature": "<init>(X.0Tp, int): void",
+      "overload_index": 0,
+      "is_constructor": true,
+      "dex_descriptor": "(LX/0Tp;I)V"
+    },
+    "overload_count": 3,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public C7Ou(C0Tp c0Tp, int i) throws LIL {\n        this.$t = i;\n        if (i != 0) {\n            C0Tp.A01(c0Tp, \"notification\");\n            C8B6 c8b6A01 = C8B6.A01();\n            String[] strArrA1W = C6of.A1W(1);\n            Long lA0r = C6oi.A0r();\n            Long lA0s = C6oi.A0s();\n            Object objA0J = c8b6A01.A0J(c0Tp, UserJid.class, lA0r, lA0s, null, strArrA1W, false);\n            if (objA0J != null) {\n                this.A00 = objA0J;\n                if (c8b6A01.A0J(c0Tp, String.class, lA0r, lA0s, \"psa\", C6of.A1Y(1), false) != null) {\n                    String[] strArr = new String[1];\n                    C0Tp c0TpA0h = C6oh.A0h(c0Tp, \"surfaces\", strArr);\n                    if (c0TpA0h == null) {\n                        C8B6.A0A(c0Tp, c8b6A01, strArr, 0);\n                    } else {\n                        C7Nk c7NkA00 = C88K.A00(c0TpA0h, c8b6A01);\n                        if (c7NkA00 != null) {\n                            this.A02 = c7NkA00;\n                            if (c8b6A01.A0N(c0Tp, \"notification\")) {\n                                Class cls = Long.TYPE;\n                                Long lA0d = C3q4.A0d();\n                                Number number = (Number) c8b6A01.A0J(c0Tp, cls, lA0d, lA0s, null, new String[]{\"t\"}, false);\n                                if (number != null) {\n                                    long jLongValue = number.longValue();\n                                    String str = (String) c8b6A01.A0J(c0Tp, String.class, lA0r, lA0s, null, C6of.A1U(1), false);\n                                    if (str != null) {\n                                        String[] strArr2 = new String[1];\n                                        this.A01 = new C7Nb(c0Tp, (Long) c8b6A01.A0J(c0Tp, cls, lA0d, C6ol.A0X(strArr2), null, strArr2, false), str, 8, jLongValue);\n                                    }\n                                }\n                            }\n                            throw C8B6.A00(c8b6A01);\n                        }\n                    }\n                    throw C8B6.A00(c8b6A01);\n                }\n                throw C8B6.A00(c8b6A01);\n            }\n            throw C8B6.A00(c8b6A01);\n        }\n        C0mL c0mL = C0mL.A00;\n        this.A01 = c0mL;\n        C0Tp.A01(c0Tp, \"notification\");\n        C8B6 c8b6A02 = C8B6.A01();\n        String[] strArrA1b = C2LA.A1b();\n        strArrA1b[0] = \"encrypted_pairing_request\";\n        Long lA0v = C6oj.A0v(\"#elementValue\", strArrA1b, 1);\n        Long lA0s2 = C6oi.A0s();\n        Object objA0I = c8b6A02.A0I(c0Tp, byte[].class, lA0v, lA0s2, null, strArrA1b);\n        if (objA0I != null) {\n            this.A00 = objA0I;\n            if (c8b6A02.A0J(c0Tp, String.class, lA0v, lA0s2, \"crsc_continuation\", C6of.A1Y(1), false) != null) {\n                if (c8b6A02.A0J(c0Tp, C0mL.class, lA0v, lA0s2, c0mL, C6of.A1W(1), false) != null) {\n                    C7Nb c7NbA00 = C8AJ.A00(c0Tp, c8b6A02);\n                    if (c7NbA00 != null) {\n                        this.A02 = c7NbA00;\n                    } else {\n                        throw C8B6.A00(c8b6A02);\n                    }\n                } else {\n                    throw C8B6.A00(c8b6A02);\n                }\n            } else {\n                throw C8B6.A00(c8b6A02);\n            }\n        } else {\n            throw C8B6.A00(c8b6A02);\n        }\n        super.A00 = c0Tp;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

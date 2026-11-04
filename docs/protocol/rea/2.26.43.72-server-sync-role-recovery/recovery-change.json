@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_ece13378ca849e4fbd7b1bd4ae2cbd5598f39ec7612aa64f742c433405847d6a",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C0lJ",
+    "method_name": "A03",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-PoSIgT/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C0lJ"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_classes\":[],\"name\":\"C0lJ\",\"full_name\":\"X.C0lJ\",\"field_count\":11,\"fields\":[{\"def_pos\":0,\"name\":\"A00\",\"type\":\"java.lang.Runnable\"},{\"def_pos\":0,\"name\":\"A01\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A02\",\"type\":\"com.google.common.base.Optional\"},{\"def_pos\":0,\"name\":\"A03\",\"type\":\"X.0Vy\"},{\"def_pos\":0,\"name\":\"A04\",\"type\":\"X.0lK\"},{\"def_pos\":0,\"name\":\"A05\",\"type\":\"X.0Yz\"},{\"def_pos\":0,\"name\":\"A06\",\"type\":\"X.08Y\"},{\"def_pos\":0,\"name\":\"A07\",\"type\":\"X.09F\"},{\"def_pos\":0,\"name\":\"A08\",\"type\":\"X.08q\"},{\"def_pos\":0,\"name\":\"A09\",\"type\":\"X.08Z\"},{\"def_pos\":0,\"name\":\"A0A\",\"type\":\"X.0fz\"}],\"methods\":[{\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"()V\",\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0},{\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0lJ;)Z\",\"signature\":\"A00(X.0lJ): boolean\",\"def_pos\":0},{\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"(I)V\",\"signature\":\"A01(int): void\",\"def_pos\":0},{\"name\":\"A02\",\"is_constructor\":false,\"dex_descriptor\":\"(Landroid/util/Pair;)V\",\"signature\":\"A02(android.util.Pair): void\",\"def_pos\":0},{\"name\":\"A03\",\"is_constructor\":false,\"dex_descriptor\":\"(Z)V\",\"signature\":\"A03(boolean): void\",\"def_pos\":0},{\"name\":\"A04\",\"is_constructor\":false,\"dex_descriptor\":\"()Z\",\"signature\":\"A04(): boolean\",\"def_pos\":0},{\"name\":\"Brd\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/Eo9;Z)V\",\"signature\":\"Brd(X.Eo9, boolean): void\",\"def_pos\":0},{\"name\":\"Bre\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"Bre(): void\",\"def_pos\":0},{\"name\":\"BsS\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)V\",\"signature\":\"BsS(java.lang.String): void\",\"def_pos\":0},{\"name\":\"Bsf\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/Eo9;)V\",\"signature\":\"Bsf(X.Eo9): void\",\"def_pos\":0},{\"name\":\"Bsj\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/Eo9;)V\",\"signature\":\"Bsj(X.Eo9): void\",\"def_pos\":0},{\"name\":\"Bsk\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableSet;Ljava/lang/String;I)V\",\"signature\":\"Bsk(com.google.common.collect.ImmutableSet, java.lang.String, int): void\",\"def_pos\":0},{\"name\":\"Bsn\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/Eo9;)V\",\"signature\":\"Bsn(X.Eo9): void\",\"def_pos\":0},{\"name\":\"Bso\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"Bso(): void\",\"def_pos\":0},{\"name\":\"Bsp\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/google/common/collect/ImmutableSet;)V\",\"signature\":\"Bsp(com.google.common.collect.ImmutableSet): void\",\"def_pos\":0},{\"name\":\"Bsr\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"Bsr(): void\",\"def_pos\":0},{\"name\":\"Bvj\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0Tp;Ljava/lang/String;)V\",\"signature\":\"Bvj(X.0Tp, java.lang.String): void\",\"def_pos\":0},{\"name\":\"CK4\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0Tp;Ljava/lang/String;)V\",\"signature\":\"CK4(X.0Tp, java.lang.String): void\",\"def_pos\":0},{\"name\":\"CmQ\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)LX/D33;\",\"signature\":\"CmQ(java.lang.String): X.D33\",\"def_pos\":0}],\"method_count\":19,\"inner_class_count\":0}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C0lJ",
+          "method_name": "A03",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fell_back\":false,\"body\":\"    /* JADX WARN: Code duplicated, block: B:46:0x010e  */\\n    public final void A03(boolean z) {\\n        String str;\\n        String string;\\n        C09F c09f \\u003d this.A07;\\n        C00L.A0E(!c09f.BU7(), \\\"Companion device should not call SyncdDeleteAllDataHandler.handleDirtyState\\\");\\n        synchronized (this) {\\n            Runnable runnable \\u003d this.A00;\\n            if (runnable !\\u003d null) {\\n                this.A09.CYL(runnable);\\n                this.A00 \\u003d null;\\n                Log.i(\\\"SyncdDeleteAllDataHandler/resetSchedule removed scheduled sync\\\");\\n            }\\n        }\\n        C00x c00x \\u003d this.A01.A00;\\n        if (((C0Sf) c00x.get()).A0U()) {\\n            C0Yz c0Yz \\u003d this.A05;\\n            if (!c0Yz.A09()) {\\n                string \\u003d \\\"SyncdDeleteAllDataApiHandler/handleDirtyState clean in progress\\\";\\n            } else {\\n                if (z || C0Yz.A00(c0Yz).getInt(\\\"syncd_dirty\\\", -1) \\u003c 4) {\\n                    c0Yz.A05(C0Yz.A00(c0Yz).getInt(\\\"syncd_dirty\\\", -1) + 1);\\n                    C0Vy c0Vy \\u003d this.A03;\\n                    if (!(!c0Vy.A0P().isEmpty())) {\\n                        Log.i(\\\"SyncdDeleteAllDataApiHandler/handleDirtyState: sendDeleteAllDataIq\\\");\\n                        if (c09f.BUx()) {\\n                            String strA0G \\u003d ((C0Sf) c00x.get()).A0G();\\n                            StringBuilder sb \\u003d new StringBuilder(\\\"SyncdDeleteAllDataApiHandler/sendIqWithCallback \\\");\\n                            sb.append(strA0G);\\n                            Log.i(sb.toString());\\n                            ((C0Sf) c00x.get()).A0W(this, (C0Tp) new BVw(strA0G).A00, strA0G, 250, 32000L);\\n                            return;\\n                        }\\n                        return;\\n                    }\\n                    Optional optional \\u003d this.A02;\\n                    if (optional.isPresent()) {\\n                        optional.get();\\n                        throw new NullPointerException(\\\"getHostedDegradedModeStartTime\\\");\\n                    }\\n                    int i \\u003d C0Yz.A00(c0Yz).getInt(\\\"syncd_dirty_reason\\\", 0);\\n                    Integer numValueOf \\u003d i !\\u003d 0 ? Integer.valueOf(i) : null;\\n                    if (numValueOf \\u003d\\u003d null) {\\n                        str \\u003d \\\"syncd_failure\\\";\\n                    } else {\\n                        int iIntValue \\u003d numValueOf.intValue();\\n                        if (iIntValue \\u003d\\u003d 8) {\\n                            str \\u003d \\\"hosted_device_pairing\\\";\\n                        } else if (iIntValue \\u003d\\u003d 6) {\\n                            str \\u003d \\\"change_number\\\";\\n                        } else if (iIntValue \\u003d\\u003d 11) {\\n                            str \\u003d \\\"register\\\";\\n                        } else {\\n                            str \\u003d \\\"syncd_failure\\\";\\n                        }\\n                    }\\n                    Log.i(\\\"SyncdDeleteAllDataApiHandler/handleDirtyState: logoutAllCompanionDevices reason\\u003d\\\".concat(str));\\n                    c0Vy.A0Z(str, false, str.equals(\\\"hosted_device_pairing\\\"));\\n                    return;\\n                }\\n                StringBuilder sb2 \\u003d new StringBuilder(\\\"SyncdDeleteAllDataApiHandler/handleDirtyState shouldn\\u0027t retry force\\u003d\\\");\\n                sb2.append(z);\\n                string \\u003d sb2.toString();\\n            }\\n        } else {\\n            string \\u003d \\\"SyncdDeleteAllDataApiHandler/handleDirtyState disconnected\\\";\\n        }\\n        Log.w(string);\\n    }\",\"overload_count\":1,\"method_name\":\"A03\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.0lJ.A03\",\"class_name\":\"X.C0lJ\",\"overload_index\":0}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C0lJ",
+    "method": {
+      "name": "A03",
+      "reported_signature": "A03(boolean): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(Z)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Code duplicated, block: B:46:0x010e  */\n    public final void A03(boolean z) {\n        String str;\n        String string;\n        C09F c09f = this.A07;\n        C00L.A0E(!c09f.BU7(), \"Companion device should not call SyncdDeleteAllDataHandler.handleDirtyState\");\n        synchronized (this) {\n            Runnable runnable = this.A00;\n            if (runnable != null) {\n                this.A09.CYL(runnable);\n                this.A00 = null;\n                Log.i(\"SyncdDeleteAllDataHandler/resetSchedule removed scheduled sync\");\n            }\n        }\n        C00x c00x = this.A01.A00;\n        if (((C0Sf) c00x.get()).A0U()) {\n            C0Yz c0Yz = this.A05;\n            if (!c0Yz.A09()) {\n                string = \"SyncdDeleteAllDataApiHandler/handleDirtyState clean in progress\";\n            } else {\n                if (z || C0Yz.A00(c0Yz).getInt(\"syncd_dirty\", -1) < 4) {\n                    c0Yz.A05(C0Yz.A00(c0Yz).getInt(\"syncd_dirty\", -1) + 1);\n                    C0Vy c0Vy = this.A03;\n                    if (!(!c0Vy.A0P().isEmpty())) {\n                        Log.i(\"SyncdDeleteAllDataApiHandler/handleDirtyState: sendDeleteAllDataIq\");\n                        if (c09f.BUx()) {\n                            String strA0G = ((C0Sf) c00x.get()).A0G();\n                            StringBuilder sb = new StringBuilder(\"SyncdDeleteAllDataApiHandler/sendIqWithCallback \");\n                            sb.append(strA0G);\n                            Log.i(sb.toString());\n                            ((C0Sf) c00x.get()).A0W(this, (C0Tp) new BVw(strA0G).A00, strA0G, 250, 32000L);\n                            return;\n                        }\n                        return;\n                    }\n                    Optional optional = this.A02;\n                    if (optional.isPresent()) {\n                        optional.get();\n                        throw new NullPointerException(\"getHostedDegradedModeStartTime\");\n                    }\n                    int i = C0Yz.A00(c0Yz).getInt(\"syncd_dirty_reason\", 0);\n                    Integer numValueOf = i != 0 ? Integer.valueOf(i) : null;\n                    if (numValueOf == null) {\n                        str = \"syncd_failure\";\n                    } else {\n                        int iIntValue = numValueOf.intValue();\n                        if (iIntValue == 8) {\n                            str = \"hosted_device_pairing\";\n                        } else if (iIntValue == 6) {\n                            str = \"change_number\";\n                        } else if (iIntValue == 11) {\n                            str = \"register\";\n                        } else {\n                            str = \"syncd_failure\";\n                        }\n                    }\n                    Log.i(\"SyncdDeleteAllDataApiHandler/handleDirtyState: logoutAllCompanionDevices reason=\".concat(str));\n                    c0Vy.A0Z(str, false, str.equals(\"hosted_device_pairing\"));\n                    return;\n                }\n                StringBuilder sb2 = new StringBuilder(\"SyncdDeleteAllDataApiHandler/handleDirtyState shouldn't retry force=\");\n                sb2.append(z);\n                string = sb2.toString();\n            }\n        } else {\n            string = \"SyncdDeleteAllDataApiHandler/handleDirtyState disconnected\";\n        }\n        Log.w(string);\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

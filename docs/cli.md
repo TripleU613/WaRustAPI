@@ -254,6 +254,14 @@ Inspect saved clock source and resolution (offline; no timestamps or replay)
 Usage: whatsapp-cli clock-inspect [OPTIONS]...
 ```
 
+## whatsapp-cli account-privacy-inspect
+
+Inspect the saved server read-receipt preference (offline; no policy change)
+
+```
+Usage: whatsapp-cli account-privacy-inspect [OPTIONS]...
+```
+
 ## whatsapp-cli actions
 
 Show queued one-shot actions (block list, reports, lookups) and their outcomes (offline, redacted)

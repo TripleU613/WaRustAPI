@@ -14,7 +14,7 @@ Canonical REA envelopes retain complete original records and limitations:
 
 Type-name-to-integer binding and base dispatch/ACK envelopes are already retained
 under `../2.26.43.72-notification-ack-audit/`. No duplicate REA IDs copied.
-The ownership sidecar is deliberately empty: these are unported obligations.
+The ownership sidecar maps the account handler to the bounded non-modify readreceipts port only. Other account children, refresh, server sync and authkey rotation remain unported obligations.
 
 Checked DEX text (partial annotated instruction streams, not compilable smali):
 

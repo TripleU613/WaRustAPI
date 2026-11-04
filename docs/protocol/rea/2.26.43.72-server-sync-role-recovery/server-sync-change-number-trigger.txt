@@ -1,0 +1,268 @@
+
+# class: LX/13N;
+# extends: Ljava/lang/Object;
+
+.method public A0K(Z)  # .registers 18
+    # full signature: LX/13N;->A0K()Z
+    0000..0004  move-object/from16  v2, v17
+    0004..0008  iget-object  v5, v2, LX/13N;->A0s:Ljava/util/concurrent/atomic/AtomicBoolean;
+    0008..000a  const/4  v7, #0x0
+    000a..000c  const/4  v8, #0x1
+    000c..0012  invoke-virtual  {v5, v7, v8}, Ljava/util/concurrent/atomic/AtomicBoolean;->compareAndSet(ZZ)Z
+    0012..0014  move-result  v0
+    0014..0018  if-nez  v0, +0x8
+    0018..001c  const-string  v0, "RegistrationManager/completeChangeNumber/already-in-progress; skipping"
+    001c..0022  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0022..0024  return  v7
+    0024..0028  iget-object  v0, v2, LX/13N;->A10:LX/0mD;
+    0028..002e  invoke-virtual  {v0}, LX/0mD;->A00()V
+    002e..0032  iget-object  v0, v2, LX/13N;->A09:LX/05a;
+    0032..0036  iget-object  v3, v0, LX/05a;->A00:LX/00x;
+    0036..003c  invoke-interface  {v3}, LX/00x;->get()Ljava/lang/Object;
+    003c..003e  move-result-object  v0
+    003e..0042  check-cast  v0, LX/HBc;
+    0042..0048  invoke-virtual  {v0}, LX/HBc;->A00()V
+    0048..004e  invoke-static  {v2}, LX/13N;->A02(LX/13N;)LX/0YB;
+    004e..0050  move-result-object  v1
+    0050..0054  const/16  v0, #0x10
+    0054..005a  invoke-virtual  {v1, v7, v0}, LX/0YB;->A0E(ZI)V
+    005a..005e  iget-object  v0, v2, LX/13N;->A14:LX/0D5;
+    005e..0064  invoke-virtual  {v0}, LX/0D5;->A04()V
+    0064..0068  iget-object  v0, v2, LX/13N;->A02:LX/05a;
+    0068..006c  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    006c..0072  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0072..0074  move-result-object  v0
+    0074..0078  check-cast  v0, LX/0sz;
+    0078..007e  invoke-virtual  {v0}, LX/0sz;->A02()V
+    007e..0082  iget-object  v4, v2, LX/13N;->A0m:LX/09S;
+    0082..0086  iget-object  v0, v2, LX/13N;->A0n:LX/08q;
+    0086..008c  invoke-static  {v0}, LX/08q;->A00(LX/08q;)J
+    008c..008e  move-result-wide  v0
+    008e..0094  invoke-virtual  {v4}, LX/09S;->A0X()LX/1H8;
+    0094..0096  move-result-object  v4
+    0096..009c  invoke-virtual  {v4}, LX/0FZ;->A02()Landroid/content/SharedPreferences$Editor;
+    009c..009e  move-result-object  v6
+    009e..00a2  const-string  v4, "registration_success_time_ms"
+    00a2..00a8  invoke-interface  {v6, v4, v0, v1}, Landroid/content/SharedPreferences$Editor;->putLong(Ljava/lang/String;J)Landroid/content/SharedPreferences$Editor;
+    00a8..00aa  move-result-object  v0
+    00aa..00b0  invoke-interface  {v0}, Landroid/content/SharedPreferences$Editor;->apply()V
+    00b0..00b4  iget-object  v0, v2, LX/13N;->A1G:LX/0qx;
+    00b4..00ba  invoke-virtual  {v0}, LX/0qx;->A00()V
+    00ba..00be  const-string  v0, "RegistrationManager/completeChangeNumber"
+    00be..00c4  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    00c4..00ca  invoke-interface  {v3}, LX/00x;->get()Ljava/lang/Object;
+    00ca..00cc  move-result-object  v4
+    00cc..00d0  check-cast  v4, LX/HBc;
+    00d0..00d4  const/16  v1, #0xee
+    00d4..00d8  iget-object  v0, v4, LX/HBc;->A07:LX/05a;
+    00d8..00dc  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    00dc..00e2  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    00e2..00e4  move-result-object  v0
+    00e4..00e8  check-cast  v0, LX/00X;
+    00e8..00ee  invoke-virtual  {v0}, LX/00X;->A01()LX/00Y;
+    00ee..00f0  move-result-object  v0
+    00f0..00f6  invoke-static  {v0, v1}, LX/09H;->A00(LX/00Y;I)LX/05a;
+    00f6..00f8  move-result-object  v6
+    00f8..00fc  iget-object  v0, v4, LX/HBc;->A02:LX/05a;
+    00fc..0100  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0100..0106  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0106..0108  move-result-object  v0
+    0108..010c  check-cast  v0, LX/13N;
+    010c..0112  invoke-virtual  {v0}, LX/13N;->A06()LX/0E2;
+    0112..0114  move-result-object  v4
+    0114..0118  if-nez  v4, +0x10
+    0118..011c  const-string  v0, "ChangeNumberStateResetter/resetMeObject/no identity"
+    011c..0122  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    0122..0126  const-string  v0, "RegistrationManager/completeChangeNumber/error-saving"
+    0126..012c  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    012c..0132  invoke-virtual  {v5, v7}, Ljava/util/concurrent/atomic/AtomicBoolean;->set(Z)V
+    0132..0134  return  v7
+    0134..0138  iget-object  v1, v4, LX/0E2;->A01:Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+    0138..013a  const/4  v0, #0x0
+    013a..013e  if-eqz  v1, +0x3
+    013e..0140  const/4  v0, #0x1
+    0140..0146  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->a(Z)V
+    0146..014a  iget-object  v0, v6, LX/05a;->A00:LX/00x;
+    014a..0150  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0150..0152  move-result-object  v0
+    0152..0156  check-cast  v0, LX/09O;
+    0156..015c  invoke-virtual  {v0, v4}, LX/09O;->CrQ(LX/0E2;)Z
+    015c..015e  move-result  v0
+    015e..0162  if-eqz  v0, -0x1e
+    0162..0166  iget-object  v0, v2, LX/13N;->A1A:LX/0Gs;
+    0166..016c  invoke-virtual  {v0}, LX/0Gs;->A0D()Z
+    016c..016e  move-result  v4
+    016e..0172  if-nez  v4, +0x17
+    0172..0176  iget-object  v1, v2, LX/13N;->A0q:LX/0G4;
+    0176..017c  invoke-virtual  {v1}, LX/0G4;->A04()Z
+    017c..017e  move-result  v0
+    017e..0182  if-eqz  v0, +0xf
+    0182..0186  const-string  v0, "RegistrationManager/completeChangeNumber/msgstoredb/healthy"
+    0186..018c  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    018c..0190  iget-object  v0, v2, LX/13N;->A0a:LX/0G2;
+    0190..0196  invoke-static  {v0, v7}, LX/0G2;->A05(LX/0G2;Z)V
+    0196..019c  invoke-virtual  {v1}, LX/0G4;->A01()V
+    019c..01a2  invoke-static  {v2}, LX/13N;->A02(LX/13N;)LX/0YB;
+    01a2..01a4  move-result-object  v0
+    01a4..01aa  invoke-virtual  {v0}, LX/0YB;->A09()V
+    01aa..01b0  invoke-static  {v2}, LX/13N;->A02(LX/13N;)LX/0YB;
+    01b0..01b2  move-result-object  v0
+    01b2..01b6  iput-boolean  v7, v0, LX/0YB;->A1D:Z
+    01b6..01bc  invoke-static  {v2}, LX/13N;->A00(LX/13N;)LX/0DS;
+    01bc..01be  move-result-object  v0
+    01be..01c4  invoke-virtual  {v0, v7}, LX/0DS;->A0i(Z)V
+    01c4..01c8  const-string  v0, "RegistrationManager/completeChangeNumber/cleared-passive-mode"
+    01c8..01ce  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    01ce..01d2  if-nez  v4, +0x7
+    01d2..01d6  iget-object  v0, v2, LX/13N;->A0e:LX/0ob;
+    01d6..01dc  invoke-virtual  {v0, v7}, LX/0ob;->A0M(Z)V
+    01dc..01de  const/4  v4, #0x3
+    01de..01e4  invoke-virtual  {v2, v4}, LX/13N;->A0F(I)V
+    01e4..01e8  iget-object  v5, v2, LX/13N;->A0o:LX/08Z;
+    01e8..01ec  const/16  v1, #0x10
+    01ec..01f0  new-instance  v0, LX/IBy;
+    01f0..01f6  invoke-direct  {v0, v2, v1}, LX/IBy;-><init>(Ljava/lang/Object;I)V
+    01f6..01fc  invoke-interface  {v5, v0}, LX/08Z;->CbD(Ljava/lang/Runnable;)V
+    01fc..0200  iget-object  v0, v2, LX/13N;->A0i:LX/0m6;
+    0200..0206  invoke-static  {v0}, LX/0m6;->A00(LX/0m6;)LX/Jj8;
+    0206..0208  move-result-object  v0
+    0208..020c  iget-object  v0, v0, LX/Jj8;->A09:LX/05a;
+    020c..0210  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0210..0216  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0216..0218  move-result-object  v0
+    0218..021c  check-cast  v0, LX/MT6;
+    021c..0220  iput-boolean  v8, v0, LX/MT6;->A00:Z
+    0220..0226  invoke-static  {}, LX/00J;->A00()Landroid/app/Application;
+    0226..0228  move-result-object  v0
+    0228..022e  invoke-static  {v0}, LX/1sf;->A01(Landroid/content/Context;)V
+    022e..0232  const-string  v0, "RegistrationManager/completeChangeNumber/changenumber/setregverified"
+    0232..0238  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0238..023c  iget-object  v1, v2, LX/13N;->A0e:LX/0ob;
+    023c..0240  sget-object  v0, LX/0vJ;->A12:LX/0vJ;
+    0240..0246  invoke-virtual  {v1, v0}, LX/0ob;->A0E(LX/0vJ;)V
+    0246..024a  iget-object  v0, v2, LX/13N;->A1H:LX/14G;
+    024a..0250  invoke-virtual  {v0, v8, v7}, LX/14G;->A01(ZZ)V
+    0250..0254  const-string  v0, "RegistrationManager/completeChangeNumber/reinitialized-payments"
+    0254..025a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    025a..025e  const/16  v1, #0x8
+    025e..0262  new-instance  v0, LX/Fel;
+    0262..0268  invoke-direct  {v0, v2, v1}, LX/Fel;-><init>(Ljava/lang/Object;I)V
+    0268..026e  invoke-interface  {v5, v0}, LX/08Z;->CbD(Ljava/lang/Runnable;)V
+    026e..0272  iget-object  v0, v2, LX/13N;->A0z:Lcom/google/common/base/Optional;
+    0272..0278  invoke-virtual  {v0}, Lcom/google/common/base/Optional;->A01()Ljava/lang/Object;
+    0278..027a  move-result-object  v0
+    027a..027e  check-cast  v0, LX/89U;
+    027e..0282  if-eqz  v0, +0x5
+    0282..0288  invoke-virtual  {v0}, LX/89U;->A02()V
+    0288..028c  iget-object  v0, v2, LX/13N;->A05:LX/05a;
+    028c..0290  iget-object  v1, v0, LX/05a;->A00:LX/00x;
+    0290..0296  invoke-interface  {v1}, LX/00x;->get()Ljava/lang/Object;
+    0296..0298  move-result-object  v0
+    0298..029c  check-cast  v0, LX/CMn;
+    029c..02a2  invoke-virtual  {v0, v8, v4}, LX/CMn;->A02(II)V
+    02a2..02a8  invoke-interface  {v1}, LX/00x;->get()Ljava/lang/Object;
+    02a8..02aa  move-result-object  v1
+    02aa..02ae  check-cast  v1, LX/CMn;
+    02ae..02b0  const/4  v0, #0x2
+    02b0..02b6  invoke-virtual  {v1, v0, v4}, LX/CMn;->A02(II)V
+    02b6..02bc  invoke-interface  {v3}, LX/00x;->get()Ljava/lang/Object;
+    02bc..02be  move-result-object  v3
+    02be..02c2  check-cast  v3, LX/HBc;
+    02c2..02c6  iget-object  v0, v3, LX/HBc;->A03:LX/05a;
+    02c6..02ca  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    02ca..02d0  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    02d0..02d2  move-result-object  v0
+    02d2..02d6  check-cast  v0, LX/0mD;
+    02d6..02dc  invoke-virtual  {v0}, LX/0mD;->A00()V
+    02dc..02e0  iget-object  v0, v3, LX/HBc;->A00:LX/05a;
+    02e0..02e4  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    02e4..02ea  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    02ea..02ec  move-result-object  v0
+    02ec..02f0  check-cast  v0, LX/1dH;
+    02f0..02f6  invoke-virtual  {v0}, LX/1dH;->A0F()V
+    02f6..02fa  iget-object  v0, v3, LX/HBc;->A06:LX/05a;
+    02fa..02fe  iget-object  v1, v0, LX/05a;->A00:LX/00x;
+    02fe..0304  invoke-interface  {v1}, LX/00x;->get()Ljava/lang/Object;
+    0304..0306  move-result-object  v0
+    0306..030a  check-cast  v0, LX/09S;
+    030a..0310  invoke-virtual  {v0}, LX/09S;->A0M()LX/1s3;
+    0310..0312  move-result-object  v0
+    0312..0318  invoke-virtual  {v0, v4}, LX/1s3;->A05(I)V
+    0318..031e  invoke-interface  {v1}, LX/00x;->get()Ljava/lang/Object;
+    031e..0320  move-result-object  v0
+    0320..0324  check-cast  v0, LX/09S;
+    0324..032a  invoke-static  {v0}, LX/09S;->A00(LX/09S;)Landroid/content/SharedPreferences$Editor;
+    032a..032c  move-result-object  v1
+    032c..0330  const-string  v0, "newsletter_subscriptions_fetched"
+    0330..0336  invoke-interface  {v1, v0, v7}, Landroid/content/SharedPreferences$Editor;->putBoolean(Ljava/lang/String;Z)Landroid/content/SharedPreferences$Editor;
+    0336..0338  move-result-object  v0
+    0338..033e  invoke-interface  {v0}, Landroid/content/SharedPreferences$Editor;->apply()V
+    033e..0342  iget-object  v0, v3, LX/HBc;->A01:LX/05a;
+    0342..0346  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0346..034c  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    034c..034e  move-result-object  v6
+    034e..0352  check-cast  v6, LX/0YB;
+    0352..0354  move  v10, v7
+    0354..0356  move  v11, v7
+    0356..0358  move  v9, v7
+    0358..035e  invoke-virtual/range  {v6..v11}, LX/0YB;->A0C(IZZZZ)V
+    035e..0362  iget-object  v0, v2, LX/13N;->A08:LX/05a;
+    0362..0366  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0366..036c  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    036c..036e  move-result-object  v3
+    036e..0372  check-cast  v3, LX/07o;
+    0372..0376  sget-object  v2, LX/0Kl;->A02:LX/0Kl;
+    0376..037a  const/16  v1, #0x15
+    037a..037e  new-instance  v0, LX/3XN;
+    037e..0384  invoke-direct  {v0, v1}, LX/3XN;-><init>(I)V
+    0384..038a  invoke-static  {v3, v2, v0}, LX/07o;->A00(LX/07o;LX/0Kl;LX/0Km;)V
+    038a..038e  sget-object  v11, LX/02X;->A05:Ljava/lang/Integer;
+    038e..0392  sget-object  v2, LX/2St;->A08:LX/2St;
+    0392..0396  sget-object  v10, LX/1Kw;->A08:LX/1Kw;
+    0396..039a  sget-object  v1, LX/0hP;->A07:Ljava/util/concurrent/atomic/AtomicReference;
+    039a..03a0  invoke-virtual  {v1}, Ljava/util/concurrent/atomic/AtomicReference;->get()Ljava/lang/Object;
+    03a0..03a2  move-result-object  v3
+    03a2..03a6  check-cast  v3, LX/0hQ;
+    03a6..03aa  if-eqz  v3, +0x52
+    03aa..03ae  iget-object  v0, v3, LX/0hQ;->A02:Ljava/util/concurrent/atomic/AtomicInteger;
+    03ae..03b4  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicInteger;->incrementAndGet()I
+    03b4..03ba  invoke-virtual  {v1}, Ljava/util/concurrent/atomic/AtomicReference;->get()Ljava/lang/Object;
+    03ba..03bc  move-result-object  v0
+    03bc..03c0  if-ne  v0, v3, +0x3e
+    03c0..03c4  iget-object  v4, v3, LX/0hQ;->A01:LX/0Mx;
+    03c4..03c8  iget-wide  v13, v3, LX/0hQ;->A00:J
+    03c8..03cc  iget-object  v12, v2, LX/2St;->wireString:Ljava/lang/String;
+    03cc..03ce  const/4  v0, #0x3
+    03ce..03d4  invoke-static  {v12, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    03d4..03da  invoke-static  {v4}, LX/0Mx;->A08(LX/0Mx;)LX/08q;
+    03da..03e0  invoke-static  {}, Ljava/lang/System;->currentTimeMillis()J
+    03e0..03e2  move-result-wide  v15
+    03e2..03e6  new-instance  v9, LX/H3t;
+    03e6..03ec  invoke-direct/range  {v9..v16}, LX/H3t;-><init>(LX/1Kw;Ljava/lang/Integer;Ljava/lang/String;JJ)V
+    03ec..03f0  iget-object  v6, v4, LX/0Mx;->A18:Ljava/util/concurrent/atomic/AtomicReference;
+    03f0..03f6  invoke-virtual  {v6}, Ljava/util/concurrent/atomic/AtomicReference;->get()Ljava/lang/Object;
+    03f6..03f8  move-result-object  v5
+    03f8..03fc  iget-wide  v0, v4, LX/0Mx;->A1R:J
+    03fc..0400  cmp-long  v2, v13, v0
+    0400..0404  if-nez  v2, +0x1c
+    0404..040a  invoke-static  {v5, v9, v6}, LX/012;->A00(Ljava/lang/Object;Ljava/lang/Object;Ljava/util/concurrent/atomic/AtomicReference;)Z
+    040a..040c  move-result  v0
+    040c..0410  if-eqz  v0, -0x10
+    0410..0414  iget-object  v0, v4, LX/0Mx;->A0U:LX/05a;
+    0414..0418  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0418..041e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    041e..0420  move-result-object  v2
+    0420..0424  check-cast  v2, LX/0O5;
+    0424..0428  const/16  v1, #0xc
+    0428..042c  new-instance  v0, LX/IBj;
+    042c..0432  invoke-direct  {v0, v4, v1}, LX/IBj;-><init>(Ljava/lang/Object;I)V
+    0432..0438  invoke-virtual  {v2, v0}, LX/0O5;->CbP(Ljava/lang/Runnable;)V
+    0438..043e  invoke-static  {v3}, LX/0hP;->A03(LX/0hQ;)V
+    043e..0440  return  v8
+    0440..0442  move-exception  v0
+    0442..0448  invoke-static  {v3}, LX/0hP;->A03(LX/0hQ;)V
+    0448..044a  throw  v0
+    044a..044c  return  v8
+    # exception table: 1 try range(s)
+    # catch <all> code_units 01da..021c -> 0220
+.end method

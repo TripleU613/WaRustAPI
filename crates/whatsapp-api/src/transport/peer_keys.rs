@@ -700,7 +700,7 @@ mod tests {
                 if kind < 2 {
                     DirectoryStatus::ServerRefused
                 } else {
-                    DirectoryStatus::InvalidReply
+                    DirectoryStatus::OutcomeUnknown
                 }
             );
             assert_eq!(

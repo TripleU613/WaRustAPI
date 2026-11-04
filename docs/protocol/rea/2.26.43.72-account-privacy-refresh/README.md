@@ -16,7 +16,7 @@ provider identity, engine markers and limitations. A complete source record
 is not proof of every runtime branch or semantic correctness of Java recovery.
 Two large synthetic dispatchers fall back to complete smali; only the documented
 privacy discriminators were interpreted. Unrelated branches remain untraced.
-The ownership sidecar is empty because this obligation is not implemented.
+The ownership sidecar maps only category admission/adoption records to the bounded readreceipts notification port. Refresh selection, other categories and the full manager remain unported.
 
 - `category-validator.json`: `ev_f94bd3345710b2912f69fd153bd1c22b5e8b99b357ce11d853dc051d269b6a01`; `X.C8AX.A04`; `(Ljava/lang/String;IZZ)Z`; java source complete.
 - `consumer-members.json`: `ev_9fe41160e7aaf3dae916adc6d86d7dae10ac41ac559384ab4da0877816f9f456`; `X.C6pB`.

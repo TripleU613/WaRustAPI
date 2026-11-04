@@ -1,0 +1,16 @@
+
+# class: LX/09O;
+# extends: Ljava/lang/Object;
+
+.method public Auf(I)  # .registers 4
+    # full signature: LX/09O;->Auf()I
+    0000..0004  iget-object  v0, v3, LX/09O;->A09:LX/09T;
+    0004..0008  iget-object  v0, v0, LX/09T;->A01:LX/09U;
+    0008..000c  iget-object  v2, v0, LX/09U;->A00:Landroid/content/SharedPreferences;
+    000c..0010  const-string  v1, "registration_device_id"
+    0010..0012  const/4  v0, #0x0
+    0012..0018  invoke-interface  {v2, v1, v0}, Landroid/content/SharedPreferences;->getInt(Ljava/lang/String;I)I
+    0018..001a  move-result  v0
+    001a..001c  return  v0
+    # exception table: 0 try range(s)
+.end method

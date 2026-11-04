@@ -2055,7 +2055,10 @@ pub(super) mod tests {
                     .attr("type", "result")
                     .attr("id", id.as_str()),
             };
-            assert!(actions::record_reply(&store, &response).unwrap());
+            assert_eq!(
+                actions::record_reply(&store, &response).unwrap(),
+                outcome != "unknown_type"
+            );
             use super::super::peer_keys::DirectoryStatus;
             let inspection = inspect(&store, &id).unwrap().unwrap();
             assert_eq!(inspection.device, 4);
@@ -2065,6 +2068,7 @@ pub(super) mod tests {
                     "valid" => DirectoryStatus::VerifiedBundle,
                     "forged" => DirectoryStatus::InvalidSignature,
                     "refused" => DirectoryStatus::ServerRefused,
+                    "unknown_type" => DirectoryStatus::OutcomeUnknown,
                     _ => DirectoryStatus::InvalidReply,
                 }
             );

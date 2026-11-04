@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_eebf91228c29bc7318c98bec5a2ed49e8edf137d30b670ad3ce6c34b7d0a23a7",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C0md",
+    "method_name": "A00",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-SQ37Uv/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\",\"available_processors\":24}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C0md"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_class_count\":0,\"method_count\":6,\"methods\":[{\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(X.0mY, X.0mK): void\",\"dex_descriptor\":\"(LX/0mY;LX/0mK;)V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\"},{\"def_pos\":0,\"signature\":\"A00(X.0Tp, X.0mY, X.0mK): void\",\"dex_descriptor\":\"(LX/0Tp;LX/0mY;LX/0mK;)V\",\"is_constructor\":false,\"name\":\"A00\"},{\"def_pos\":0,\"signature\":\"BsS(java.lang.String): void\",\"dex_descriptor\":\"(Ljava/lang/String;)V\",\"is_constructor\":false,\"name\":\"BsS\"},{\"def_pos\":0,\"signature\":\"Bvj(X.0Tp, java.lang.String): void\",\"dex_descriptor\":\"(LX/0Tp;Ljava/lang/String;)V\",\"is_constructor\":false,\"name\":\"Bvj\"},{\"def_pos\":0,\"signature\":\"CK4(X.0Tp, java.lang.String): void\",\"dex_descriptor\":\"(LX/0Tp;Ljava/lang/String;)V\",\"is_constructor\":false,\"name\":\"CK4\"},{\"def_pos\":0,\"signature\":\"CmQ(java.lang.String): X.D33\",\"dex_descriptor\":\"(Ljava/lang/String;)LX/D33;\",\"is_constructor\":false,\"name\":\"CmQ\"}],\"fields\":[{\"type\":\"X.0mY\",\"name\":\"A00\",\"def_pos\":0}],\"field_count\":1,\"full_name\":\"X.C0md\",\"name\":\"C0md\",\"inner_classes\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C0md",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"overload_index\":0,\"class_name\":\"X.C0md\",\"full_name\":\"X.0md.A00\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"A00\",\"overload_count\":1,\"body\":\"    public static final void A00(C0Tp c0Tp, C0mY c0mY, C0mK c0mK) throws LIL {\\n        C00l.A09(c0mK, 1);\\n        ArrayList arrayList \\u003d new ArrayList();\\n        try {\\n            c0mY.BKn(new C7Ou(c0Tp, c0mK));\\n        } catch (LIL e) {\\n            String message \\u003d e.getMessage();\\n            StringBuilder sb \\u003d new StringBuilder(\\\"QueryResponseSuccess: \\\");\\n            sb.append(message);\\n            arrayList.add(sb.toString());\\n            try {\\n                c0mY.BKl(new C7Ow(c0Tp, c0mK));\\n            } catch (LIL e2) {\\n                String message2 \\u003d e2.getMessage();\\n                StringBuilder sb2 \\u003d new StringBuilder(\\\"QueryResponseRequestError: \\\");\\n                sb2.append(message2);\\n                arrayList.add(sb2.toString());\\n                try {\\n                    c0mY.BKo(new C7Ol(c0Tp, c0mK));\\n                } catch (LIL e3) {\\n                    String message3 \\u003d e3.getMessage();\\n                    StringBuilder sb3 \\u003d new StringBuilder(\\\"QueryResponseServerError: \\\");\\n                    sb3.append(message3);\\n                    arrayList.add(sb3.toString());\\n                    String strA11 \\u003d C07Z.A11(\\\"\\\\n\\\", Voip.REJECT_REASON_DECLINED, Voip.REJECT_REASON_DECLINED, arrayList, null);\\n                    StringBuilder sb4 \\u003d new StringBuilder(\\\"Could not parse stanza into valid response class. Encountered the following errors for each possible response:\\\\n\\\");\\n                    sb4.append(strA11);\\n                    throw new LIL(sb4.toString());\\n                }\\n            }\\n        }\\n    }\",\"fell_back\":false}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C0md",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(X.0Tp, X.0mY, X.0mK): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(LX/0Tp;LX/0mY;LX/0mK;)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public static final void A00(C0Tp c0Tp, C0mY c0mY, C0mK c0mK) throws LIL {\n        C00l.A09(c0mK, 1);\n        ArrayList arrayList = new ArrayList();\n        try {\n            c0mY.BKn(new C7Ou(c0Tp, c0mK));\n        } catch (LIL e) {\n            String message = e.getMessage();\n            StringBuilder sb = new StringBuilder(\"QueryResponseSuccess: \");\n            sb.append(message);\n            arrayList.add(sb.toString());\n            try {\n                c0mY.BKl(new C7Ow(c0Tp, c0mK));\n            } catch (LIL e2) {\n                String message2 = e2.getMessage();\n                StringBuilder sb2 = new StringBuilder(\"QueryResponseRequestError: \");\n                sb2.append(message2);\n                arrayList.add(sb2.toString());\n                try {\n                    c0mY.BKo(new C7Ol(c0Tp, c0mK));\n                } catch (LIL e3) {\n                    String message3 = e3.getMessage();\n                    StringBuilder sb3 = new StringBuilder(\"QueryResponseServerError: \");\n                    sb3.append(message3);\n                    arrayList.add(sb3.toString());\n                    String strA11 = C07Z.A11(\"\\n\", Voip.REJECT_REASON_DECLINED, Voip.REJECT_REASON_DECLINED, arrayList, null);\n                    StringBuilder sb4 = new StringBuilder(\"Could not parse stanza into valid response class. Encountered the following errors for each possible response:\\n\");\n                    sb4.append(strA11);\n                    throw new LIL(sb4.toString());\n                }\n            }\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

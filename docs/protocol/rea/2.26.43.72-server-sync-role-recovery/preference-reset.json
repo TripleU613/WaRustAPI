@@ -1,0 +1,133 @@
+{
+  "evidence_id": "ev_701f092ba3e58a00837e42b14943065bc0c31f95a3b73b8d28fdcaf4b644171a",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C0Yz",
+    "method_name": "<clinit>",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-PoSIgT/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C0Yz"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_classes\":[],\"name\":\"C0Yz\",\"full_name\":\"X.C0Yz\",\"field_count\":4,\"fields\":[{\"def_pos\":0,\"name\":\"A00\",\"type\":\"android.content.SharedPreferences\"},{\"def_pos\":0,\"name\":\"A01\",\"type\":\"X.09F\"},{\"def_pos\":0,\"name\":\"A02\",\"type\":\"X.00S\"},{\"def_pos\":0,\"name\":\"A03\",\"type\":\"java.util.Set\"}],\"methods\":[{\"name\":\"\\u003cclinit\\u003e\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"\\u003cclinit\\u003e(): void\",\"def_pos\":0},{\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"()V\",\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0},{\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0Yz;)Landroid/content/SharedPreferences;\",\"signature\":\"A00(X.0Yz): android.content.SharedPreferences\",\"def_pos\":0},{\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)J\",\"signature\":\"A01(java.lang.String): long\",\"def_pos\":0},{\"name\":\"A02\",\"is_constructor\":false,\"dex_descriptor\":\"()Ljava/util/Set;\",\"signature\":\"A02(): java.util.Set\",\"def_pos\":0},{\"name\":\"A03\",\"is_constructor\":false,\"dex_descriptor\":\"(I)V\",\"signature\":\"A03(int): void\",\"def_pos\":0},{\"name\":\"A04\",\"is_constructor\":false,\"dex_descriptor\":\"(I)V\",\"signature\":\"A04(int): void\",\"def_pos\":0},{\"name\":\"A05\",\"is_constructor\":false,\"dex_descriptor\":\"(I)V\",\"signature\":\"A05(int): void\",\"def_pos\":0},{\"name\":\"A06\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)V\",\"signature\":\"A06(java.lang.String): void\",\"def_pos\":0},{\"name\":\"A07\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;J)V\",\"signature\":\"A07(java.lang.String, long): void\",\"def_pos\":0},{\"name\":\"A08\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/util/Set;)V\",\"signature\":\"A08(java.util.Set): void\",\"def_pos\":0},{\"name\":\"A09\",\"is_constructor\":false,\"dex_descriptor\":\"()Z\",\"signature\":\"A09(): boolean\",\"def_pos\":0}],\"method_count\":12,\"inner_class_count\":0}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C0Yz",
+          "method_name": "<clinit>",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fell_back\":true,\"body\":\".method public static constructor \\u003cclinit\\u003e()V\\n    .registers 2\\n\\n    .line 0\\n    new-instance v1, Ljava/util/HashSet;\\n\\n    .line 1\\n    .line 2\\n    invoke-direct {v1}, Ljava/util/HashSet;-\\u003e\\u003cinit\\u003e()V\\n\\n    .line 3\\n    .line 4\\n    .line 5\\n    sput-object v1, LX/0Yz;-\\u003eA03:Ljava/util/Set;\\n\\n    .line 6\\n    .line 7\\n    const-string v0, \\\"first_transient_server_failure_timestamp\\\"\\n\\n    .line 8\\n    .line 9\\n    invoke-virtual {v1, v0}, Ljava/util/AbstractCollection;-\\u003eadd(Ljava/lang/Object;)Z\\n\\n    .line 10\\n    .line 11\\n    .line 12\\n    const-string/jumbo v0, \\\"syncd_dirty\\\"\\n\\n    .line 13\\n    .line 14\\n    .line 15\\n    sget-object v1, LX/0Yz;-\\u003eA03:Ljava/util/Set;\\n\\n    .line 16\\n    .line 17\\n    invoke-interface {v1, v0}, Ljava/util/Set;-\\u003eadd(Ljava/lang/Object;)Z\\n\\n    .line 18\\n    .line 19\\n    .line 20\\n    const-string/jumbo v0, \\\"syncd_dirty_reason\\\"\\n\\n    .line 21\\n    .line 22\\n    .line 23\\n    invoke-interface {v1, v0}, Ljava/util/Set;-\\u003eadd(Ljava/lang/Object;)Z\\n\\n    .line 24\\n    .line 25\\n    .line 26\\n    const-string/jumbo v0, \\\"syncd_last_companion_dereg_time\\\"\\n\\n    .line 27\\n    .line 28\\n    .line 29\\n    invoke-interface {v1, v0}, Ljava/util/Set;-\\u003eadd(Ljava/lang/Object;)Z\\n\\n    .line 30\\n    .line 31\\n    .line 32\\n    const-string/jumbo v0, \\\"syncd_last_companion_dereg_logging_time\\\"\\n\\n    .line 33\\n    .line 34\\n    .line 35\\n    invoke-interface {v1, v0}, Ljava/util/Set;-\\u003eadd(Ljava/lang/Object;)Z\\n\\n    .line 36\\n    .line 37\\n    .line 38\\n    const-string/jumbo v0, \\\"syncd_first_companion_reg_logging_time\\\"\\n\\n    .line 39\\n    .line 40\\n    .line 41\\n    invoke-interface {v1, v0}, Ljava/util/Set;-\\u003eadd(Ljava/lang/Object;)Z\\n\\n    .line 42\\n    .line 43\\n    .line 44\\n    const-string/jumbo v0, \\\"syncd_bootstrap_state\\\"\\n\\n    .line 45\\n    .line 46\\n    .line 47\\n    invoke-interface {v1, v0}, Ljava/util/Set;-\\u003eadd(Ljava/lang/Object;)Z\\n\\n    .line 48\\n    .line 49\\n    .line 50\\n    const-string/jumbo v0, \\\"syncd_bootstrapped_mutations\\\"\\n\\n    .line 51\\n    .line 52\\n    .line 53\\n    invoke-interface {v1, v0}, Ljava/util/Set;-\\u003eadd(Ljava/lang/Object;)Z\\n\\n    .line 54\\n    .line 55\\n    .line 56\\n    const-string/jumbo v0, \\\"syncd_last_lthash_consistency_check_time\\\"\\n\\n    .line 57\\n    .line 58\\n    .line 59\\n    invoke-interface {v1, v0}, Ljava/util/Set;-\\u003eadd(Ljava/lang/Object;)Z\\n\\n    .line 60\\n    .line 61\\n    .line 62\\n    const-string/jumbo v0, \\\"syncd_has_logged_snapshot_mac_mismatch_in_patch\\\"\\n\\n    .line 63\\n    .line 64\\n    .line 65\\n    invoke-interface {v1, v0}, Ljava/util/Set;-\\u003eadd(Ljava/lang/Object;)Z\\n\\n    .line 66\\n    .line 67\\n    .line 68\\n    const-string v0, \\\"pref_lid_migration_post_processing_complete\\\"\\n\\n    .line 69\\n    .line 70\\n    invoke-interface {v1, v0}, Ljava/util/Set;-\\u003eadd(Ljava/lang/Object;)Z\\n\\n    .line 71\\n    .line 72\\n    .line 73\\n    return-void\\n.end method\",\"overload_count\":1,\"method_name\":\"\\u003cclinit\\u003e\",\"markers\":[\"static_initializer_disassembly\"],\"mode\":\"smali\",\"full_name\":\"X.0Yz.\\u003cclinit\\u003e\",\"class_name\":\"X.C0Yz\",\"overload_index\":0}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C0Yz",
+    "method": {
+      "name": "<clinit>",
+      "reported_signature": "<clinit>(): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "()V"
+    },
+    "overload_count": 1,
+    "representation": "smali",
+    "body_status": "available",
+    "fell_back": true,
+    "markers": [
+      "static_initializer_disassembly"
+    ],
+    "source": {
+      "status": "complete",
+      "text": ".method public static constructor <clinit>()V\n    .registers 2\n\n    .line 0\n    new-instance v1, Ljava/util/HashSet;\n\n    .line 1\n    .line 2\n    invoke-direct {v1}, Ljava/util/HashSet;-><init>()V\n\n    .line 3\n    .line 4\n    .line 5\n    sput-object v1, LX/0Yz;->A03:Ljava/util/Set;\n\n    .line 6\n    .line 7\n    const-string v0, \"first_transient_server_failure_timestamp\"\n\n    .line 8\n    .line 9\n    invoke-virtual {v1, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z\n\n    .line 10\n    .line 11\n    .line 12\n    const-string/jumbo v0, \"syncd_dirty\"\n\n    .line 13\n    .line 14\n    .line 15\n    sget-object v1, LX/0Yz;->A03:Ljava/util/Set;\n\n    .line 16\n    .line 17\n    invoke-interface {v1, v0}, Ljava/util/Set;->add(Ljava/lang/Object;)Z\n\n    .line 18\n    .line 19\n    .line 20\n    const-string/jumbo v0, \"syncd_dirty_reason\"\n\n    .line 21\n    .line 22\n    .line 23\n    invoke-interface {v1, v0}, Ljava/util/Set;->add(Ljava/lang/Object;)Z\n\n    .line 24\n    .line 25\n    .line 26\n    const-string/jumbo v0, \"syncd_last_companion_dereg_time\"\n\n    .line 27\n    .line 28\n    .line 29\n    invoke-interface {v1, v0}, Ljava/util/Set;->add(Ljava/lang/Object;)Z\n\n    .line 30\n    .line 31\n    .line 32\n    const-string/jumbo v0, \"syncd_last_companion_dereg_logging_time\"\n\n    .line 33\n    .line 34\n    .line 35\n    invoke-interface {v1, v0}, Ljava/util/Set;->add(Ljava/lang/Object;)Z\n\n    .line 36\n    .line 37\n    .line 38\n    const-string/jumbo v0, \"syncd_first_companion_reg_logging_time\"\n\n    .line 39\n    .line 40\n    .line 41\n    invoke-interface {v1, v0}, Ljava/util/Set;->add(Ljava/lang/Object;)Z\n\n    .line 42\n    .line 43\n    .line 44\n    const-string/jumbo v0, \"syncd_bootstrap_state\"\n\n    .line 45\n    .line 46\n    .line 47\n    invoke-interface {v1, v0}, Ljava/util/Set;->add(Ljava/lang/Object;)Z\n\n    .line 48\n    .line 49\n    .line 50\n    const-string/jumbo v0, \"syncd_bootstrapped_mutations\"\n\n    .line 51\n    .line 52\n    .line 53\n    invoke-interface {v1, v0}, Ljava/util/Set;->add(Ljava/lang/Object;)Z\n\n    .line 54\n    .line 55\n    .line 56\n    const-string/jumbo v0, \"syncd_last_lthash_consistency_check_time\"\n\n    .line 57\n    .line 58\n    .line 59\n    invoke-interface {v1, v0}, Ljava/util/Set;->add(Ljava/lang/Object;)Z\n\n    .line 60\n    .line 61\n    .line 62\n    const-string/jumbo v0, \"syncd_has_logged_snapshot_mac_mismatch_in_patch\"\n\n    .line 63\n    .line 64\n    .line 65\n    invoke-interface {v1, v0}, Ljava/util/Set;->add(Ljava/lang/Object;)Z\n\n    .line 66\n    .line 67\n    .line 68\n    const-string v0, \"pref_lid_migration_post_processing_complete\"\n\n    .line 69\n    .line 70\n    invoke-interface {v1, v0}, Ljava/util/Set;->add(Ljava/lang/Object;)Z\n\n    .line 71\n    .line 72\n    .line 73\n    return-void\n.end method",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

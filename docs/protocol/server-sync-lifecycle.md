@@ -158,3 +158,9 @@ These are required network-state obligations, not grounds for adding fake
 telemetry or broad automatic fetches. The affected operation remains session
 listen (`POST /v1/session/listen`, CLI `whatsapp-cli listen`). No live acceptance
 or account outcome is established.
+
+[Role/recovery tracing](server-sync-role-recovery.md) now closes the registered
+device-index predicate and bounds recovery transitions. Mutation-row eligibility
+and generation-bound initialization still need a faithful Rust mapping. Existing
+explicit patch actions now have [atomic queue/settlement](app-state-patch-atomicity.md);
+that correction is not an automatic notification scheduler.

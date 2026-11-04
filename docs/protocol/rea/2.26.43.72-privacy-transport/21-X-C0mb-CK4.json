@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_a28483c7d9798d74e84195337cdc9965674907ab691026c5a90defc11c36eb9e",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C0mb",
+    "method_name": "CK4",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-Kbikcf/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C0mb"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"name\":\"C0mb\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":6,\"methods\":[{\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(X.0mY, X.0mK, java.lang.String): void\",\"dex_descriptor\":\"(LX/0mY;LX/0mK;Ljava/lang/String;)V\",\"is_constructor\":true},{\"name\":\"BsS\",\"def_pos\":0,\"signature\":\"BsS(java.lang.String): void\",\"dex_descriptor\":\"(Ljava/lang/String;)V\",\"is_constructor\":false},{\"name\":\"Bvj\",\"def_pos\":0,\"signature\":\"Bvj(X.0Tp, java.lang.String): void\",\"dex_descriptor\":\"(LX/0Tp;Ljava/lang/String;)V\",\"is_constructor\":false},{\"name\":\"CK4\",\"def_pos\":0,\"signature\":\"CK4(X.0Tp, java.lang.String): void\",\"dex_descriptor\":\"(LX/0Tp;Ljava/lang/String;)V\",\"is_constructor\":false},{\"name\":\"CmQ\",\"def_pos\":0,\"signature\":\"CmQ(java.lang.String): X.D33\",\"dex_descriptor\":\"(Ljava/lang/String;)LX/D33;\",\"is_constructor\":false},{\"name\":\"getName\",\"def_pos\":0,\"signature\":\"getName(): java.lang.String\",\"dex_descriptor\":\"()Ljava/lang/String;\",\"is_constructor\":false}],\"fields\":[{\"type\":\"java.lang.String\",\"name\":\"A00\",\"def_pos\":0},{\"type\":\"X.0md\",\"name\":\"A01\",\"def_pos\":0}],\"field_count\":2,\"full_name\":\"X.C0mb\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C0mb",
+          "method_name": "CK4",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.C0mb\",\"full_name\":\"X.0mb.CK4\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"CK4\",\"overload_count\":1,\"body\":\"    @Override // X.C0lG\\n    public void CK4(C0Tp c0Tp, String str) {\\n        C00l.A09(str, 0);\\n        C00l.A09(c0Tp, 1);\\n        this.A01.CK4(c0Tp, str);\\n    }\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C0mb",
+    "method": {
+      "name": "CK4",
+      "reported_signature": "CK4(X.0Tp, java.lang.String): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(LX/0Tp;Ljava/lang/String;)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    @Override // X.C0lG\n    public void CK4(C0Tp c0Tp, String str) {\n        C00l.A09(str, 0);\n        C00l.A09(c0Tp, 1);\n        this.A01.CK4(c0Tp, str);\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

@@ -1,0 +1,45 @@
+
+# class: LX/FDp;
+# extends: Ljava/lang/Object;
+
+.method public CKt(V)  # .registers 5
+    # full signature: LX/FDp;->CKt()V
+    0000..0004  iget-object  v3, v4, LX/FDp;->A00:LX/0aS;
+    0004..0008  iget-object  v1, v3, LX/0aS;->A0R:LX/0gU;
+    0008..000a  monitor-enter
+    000a..000e  iget-object  v0, v1, LX/0gU;->A00:Ljava/util/Set;
+    000e..0012  if-eqz  v0, +0x5
+    0012..0018  invoke-interface  {v0}, Ljava/util/Set;->clear()V
+    0018..001a  monitor-exit
+    001a..001e  iget-object  v0, v3, LX/0aS;->A0c:LX/0af;
+    001e..0024  invoke-virtual  {v0}, LX/0af;->A00()LX/0Xp;
+    0024..0026  move-result-object  v0
+    0026..002c  invoke-virtual  {v0}, LX/0Xp;->A0E()V
+    002c..0030  iget-object  v0, v3, LX/0aS;->A0N:LX/0Yz;
+    0030..0036  invoke-static  {v0}, LX/DBd;->A03(LX/0Yz;)Landroid/content/SharedPreferences$Editor;
+    0036..0038  move-result-object  v2
+    0038..003c  sget-object  v0, LX/0Yz;->A03:Ljava/util/Set;
+    003c..0042  invoke-interface  {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    0042..0044  move-result-object  v1
+    0044..004a  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    004a..004c  move-result  v0
+    004c..0050  if-eqz  v0, +0xa
+    0050..0056  invoke-static  {v1}, LX/2LB;->A1A(Ljava/util/Iterator;)Ljava/lang/String;
+    0056..0058  move-result-object  v0
+    0058..005e  invoke-interface  {v2, v0}, Landroid/content/SharedPreferences$Editor;->remove(Ljava/lang/String;)Landroid/content/SharedPreferences$Editor;
+    005e..0060  goto  -0xd
+    0060..0066  invoke-interface  {v2}, Landroid/content/SharedPreferences$Editor;->apply()V
+    0066..006a  iget-object  v2, v3, LX/0aS;->A0e:LX/0aj;
+    006a..006e  const-string  v0, "SYNC_MANAGER_CONTACTS_JID_ADDED"
+    006e..0070  const/4  v1, #0x0
+    0070..0076  invoke-static  {v2, v0, v1}, LX/0aj;->A09(LX/0aj;Ljava/lang/String;Ljava/lang/String;)V
+    0076..007a  const-string  v0, "SYNC_MANAGER_CONTACTS_JID_REMOVED"
+    007a..0080  invoke-static  {v2, v0, v1}, LX/0aj;->A09(LX/0aj;Ljava/lang/String;Ljava/lang/String;)V
+    0080..0082  return-void
+    0082..0084  move-exception  v0
+    0084..0086  monitor-exit
+    0086..0088  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0005..000c -> 0041
+    # catch <all> code_units 0042..0043 -> 0041
+.end method

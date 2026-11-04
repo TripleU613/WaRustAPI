@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_9950beb89a04b967a9ed4746c7528b7e3a1a46ad8bb565811eacccc1286bb36b",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C0is",
+    "method_name": "A00",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-SQ37Uv/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\",\"available_processors\":24}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C0is"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_class_count\":0,\"method_count\":6,\"methods\":[{\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\"},{\"def_pos\":0,\"signature\":\"A00(X.0it, X.7p0, java.lang.String, java.lang.String): java.lang.Object\",\"dex_descriptor\":\"(LX/0it;LX/7p0;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;\",\"is_constructor\":false,\"name\":\"A00\"},{\"def_pos\":0,\"signature\":\"A01(X.TXW, java.lang.Class, java.lang.Object, java.lang.String): java.lang.Object\",\"dex_descriptor\":\"(LX/TXW;Ljava/lang/Class;Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;\",\"is_constructor\":false,\"name\":\"A01\"},{\"def_pos\":0,\"signature\":\"A02(X.SUg, X.TXW, java.lang.Class): java.lang.Object\",\"dex_descriptor\":\"(LX/SUg;LX/TXW;Ljava/lang/Class;)Ljava/lang/Object;\",\"is_constructor\":false,\"name\":\"A02\"},{\"def_pos\":0,\"signature\":\"A03(X.7p0, java.lang.Class, java.lang.String, java.lang.String, kotlin.jvm.functions.Function1): java.lang.Object\",\"dex_descriptor\":\"(LX/7p0;Ljava/lang/Class;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;\",\"is_constructor\":false,\"name\":\"A03\"},{\"def_pos\":0,\"signature\":\"A04(X.7p0, java.lang.String, java.lang.String): java.lang.Object\",\"dex_descriptor\":\"(LX/7p0;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;\",\"is_constructor\":false,\"name\":\"A04\"}],\"fields\":[{\"type\":\"X.00x\",\"name\":\"A00\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A01\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A02\",\"def_pos\":0},{\"type\":\"X.0iw\",\"name\":\"A03\",\"def_pos\":0},{\"type\":\"X.0iy\",\"name\":\"A04\",\"def_pos\":0},{\"type\":\"X.0j0\",\"name\":\"A05\",\"def_pos\":0}],\"field_count\":6,\"full_name\":\"X.C0is\",\"name\":\"C0is\",\"inner_classes\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C0is",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"overload_index\":0,\"class_name\":\"X.C0is\",\"full_name\":\"X.0is.A00\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"A00\",\"overload_count\":1,\"body\":\"    private final Object A00(C0it c0it, C7p0 c7p0, final String str, String str2) {\\n        Object c0Dt;\\n        Scs scs \\u003d (Scs) this.A00.get();\\n        try {\\n            SUm sUm \\u003d (SUm) ((SfP) (C00l.areEqual(str2, \\\"whatsapp-android-mex\\\") ? scs.A02 : scs.A01).getValue()).A00.get(str);\\n            if (sUm \\u003d\\u003d null) {\\n                StringBuilder sb \\u003d new StringBuilder(\\\"ArgoWireType not found for \\\");\\n                sb.append(str);\\n                sb.append(\\\" in build config \\\");\\n                sb.append(str2);\\n                throw new IllegalArgumentException(sb.toString());\\n            }\\n            c0Dt \\u003d sUm.A00;\\n            Throwable thA02 \\u003d C0Dr.A02(c0Dt);\\n            if (thA02 !\\u003d null) {\\n                try {\\n                    C0GO c0go \\u003d (C0GO) C09H.A03((C00Z) ((C00X) scs.A00.A00.get()).A01(), 1251);\\n                    String string \\u003d new StringBuilder(\\\"Unable to get ArgoWireType\\\").toString();\\n                    C00l.A05(string);\\n                    c0go.A0g(\\\"ArgoWireTypeStoreProvider\\\", string, false);\\n                    C0dg.A01(C05u.A00);\\n                    throw thA02;\\n                } catch (Throwable th) {\\n                    c0Dt \\u003d new C0Dt(th);\\n                }\\n            }\\n            if (!(c0Dt instanceof C0Dt)) {\\n                byte[] bArr \\u003d c7p0.A01;\\n                C0dg.A01(c0Dt);\\n                return ((C0Dr) c0it.CtT(new SUf((TUv) c0Dt, bArr))).value;\\n            }\\n            final Throwable thA03 \\u003d C0Dr.A02(c0Dt);\\n            if (thA03 \\u003d\\u003d null) {\\n                StringBuilder sb2 \\u003d new StringBuilder(\\\"Unexpected null exception while getting wire type for \\\");\\n                sb2.append(str);\\n                thA03 \\u003d new C7MJ(sb2.toString(), null);\\n            }\\n            return C0dg.A00(new C7MK(str, thA03) { // from class: X.7MF\\n                {\\n                    new Throwable[1][0] \\u003d thA03;\\n                }\\n            });\\n        } catch (Throwable th2) {\\n            c0Dt \\u003d new C0Dt(th2);\\n        }\\n    }\",\"fell_back\":false}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C0is",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(X.0it, X.7p0, java.lang.String, java.lang.String): java.lang.Object",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(LX/0it;LX/7p0;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    private final Object A00(C0it c0it, C7p0 c7p0, final String str, String str2) {\n        Object c0Dt;\n        Scs scs = (Scs) this.A00.get();\n        try {\n            SUm sUm = (SUm) ((SfP) (C00l.areEqual(str2, \"whatsapp-android-mex\") ? scs.A02 : scs.A01).getValue()).A00.get(str);\n            if (sUm == null) {\n                StringBuilder sb = new StringBuilder(\"ArgoWireType not found for \");\n                sb.append(str);\n                sb.append(\" in build config \");\n                sb.append(str2);\n                throw new IllegalArgumentException(sb.toString());\n            }\n            c0Dt = sUm.A00;\n            Throwable thA02 = C0Dr.A02(c0Dt);\n            if (thA02 != null) {\n                try {\n                    C0GO c0go = (C0GO) C09H.A03((C00Z) ((C00X) scs.A00.A00.get()).A01(), 1251);\n                    String string = new StringBuilder(\"Unable to get ArgoWireType\").toString();\n                    C00l.A05(string);\n                    c0go.A0g(\"ArgoWireTypeStoreProvider\", string, false);\n                    C0dg.A01(C05u.A00);\n                    throw thA02;\n                } catch (Throwable th) {\n                    c0Dt = new C0Dt(th);\n                }\n            }\n            if (!(c0Dt instanceof C0Dt)) {\n                byte[] bArr = c7p0.A01;\n                C0dg.A01(c0Dt);\n                return ((C0Dr) c0it.CtT(new SUf((TUv) c0Dt, bArr))).value;\n            }\n            final Throwable thA03 = C0Dr.A02(c0Dt);\n            if (thA03 == null) {\n                StringBuilder sb2 = new StringBuilder(\"Unexpected null exception while getting wire type for \");\n                sb2.append(str);\n                thA03 = new C7MJ(sb2.toString(), null);\n            }\n            return C0dg.A00(new C7MK(str, thA03) { // from class: X.7MF\n                {\n                    new Throwable[1][0] = thA03;\n                }\n            });\n        } catch (Throwable th2) {\n            c0Dt = new C0Dt(th2);\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}
