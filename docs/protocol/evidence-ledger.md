@@ -1,3 +1,9 @@
+2026-11-04 — **Confirmed static: upload response mode distinction.**
+Pinned2.26.43.72 MtR.CDR/KmR/Lkh retain opaque-handle versus original
+direct-path fields conditionally. UUID pattern is not a universal path rule.
+[Evidence and untraced producers/consumers](rea/2.26.43.72-media-upload-response/README.md).
+No runtime acceptance change or live account traffic.
+
 2026-11-04 — **Confirmed offline: sealed voice checkpoint continuity.**
 Real encrypted-store regression covers header receipt/reopen, exact framing
 fields, no replay and unchanged completed legacy rows.

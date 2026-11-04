@@ -1,0 +1,199 @@
+["direct_path"]  (99 reference(s))
+  classes.dex  LX/0Md;->ATc(VLL)
+    dex byte offset: 0x5802be
+  classes.dex  LX/0Ot;->ATc(VLL)
+    dex byte offset: 0x59725c
+  classes.dex  LX/0Qs;->ATc(VLL)
+    dex byte offset: 0x5a2d0a
+  classes.dex  LX/0Qt;->ATc(VLL)
+    dex byte offset: 0x5a3318
+  classes.dex  LX/0RJ;->ATc(VLL)
+    dex byte offset: 0x5a5d48
+  classes.dex  LX/0Sa;->A00(L)
+    dex byte offset: 0x5ab62a
+  classes.dex  LX/0Sc;->ATc(VLL)
+    dex byte offset: 0x5abb20
+  classes.dex  LX/0Tm;->ATc(VLL)
+    dex byte offset: 0x5b4d4e
+  classes.dex  LX/0Vr;->ATc(VLL)
+    dex byte offset: 0x5c3f96
+  classes.dex  LX/0pD;->CK4(VLL)
+    dex byte offset: 0x70c4f2
+  classes.dex  LX/0xu;->A0B(VLJ)
+    dex byte offset: 0x787eee
+  classes.dex  LX/12a;->A00(LLL)
+    dex byte offset: 0x7d4076
+  classes.dex  LX/12a;->A02(VLLLL)
+    dex byte offset: 0x7d42b2
+  classes.dex  LX/17X;->A01(VLJ)
+    dex byte offset: 0x8220fc
+  classes.dex  LX/17X;->A01(VLJ)
+    dex byte offset: 0x822230
+  classes.dex  LX/19R;->A09(VLI)
+    dex byte offset: 0x834ce4
+  classes10.dex  LX/JA7;->A04(VLJ)
+    dex byte offset: 0x432fb6
+  classes10.dex  LX/KNY;->CK4(VLL)
+    dex byte offset: 0x5f525a
+  classes11.dex  LX/MtR;->CDR(VLL)
+    dex byte offset: 0x6b4d08
+  classes11.dex  LX/MtU;->CDR(VLL)
+    dex byte offset: 0x6b5210
+  classes11.dex  LX/NF2;->invokeSuspend(LL)
+    dex byte offset: 0x776bc0
+  classes13.dex  LX/Rbb;->Agl(L)
+    dex byte offset: 0x3a7d68
+  classes13.dex  LX/Rbn;->Agl(L)
+    dex byte offset: 0x3a8228
+  classes13.dex  LX/RcS;->Agl(L)
+    dex byte offset: 0x3a96f4
+  classes13.dex  LX/RcX;->Agl(L)
+    dex byte offset: 0x3a99fc
+  classes13.dex  LX/Rcb;->Agl(L)
+    dex byte offset: 0x3a9d00
+  classes13.dex  Lcom/whatsapp/bot/wass/WassAccountRemoteDataSource;->A02(LLLLLL)
+    dex byte offset: 0x518ee8
+  classes13.dex  Lcom/whatsapp/bot/wass/WassAccountRemoteDataSource;->A05(LLLLLL)
+    dex byte offset: 0x519368
+  classes13.dex  Lcom/whatsapp/wamo/request/WamoRequestManager;->A0q(LLL)
+    dex byte offset: 0x56ae72
+  classes2.dex  LX/1ei;->CTX(VLL)
+    dex byte offset: 0x1ceb12
+  classes2.dex  LX/1fA;->CTX(VLL)
+    dex byte offset: 0x1d19f2
+  classes2.dex  LX/1fs;->A00(VL)
+    dex byte offset: 0x1d9094
+  classes2.dex  LX/1ro;-><clinit>(V)
+    dex byte offset: 0x15f15e
+  classes2.dex  LX/1rp;-><clinit>(V)
+    dex byte offset: 0x1622ec
+  classes2.dex  LX/1tU;->ATc(VLL)
+    dex byte offset: 0x252904
+  classes2.dex  LX/1u2;->ATc(VLL)
+    dex byte offset: 0x25af50
+  classes2.dex  LX/1vQ;->A00(LLJZ)
+    dex byte offset: 0x26face
+  classes2.dex  LX/1vQ;->A01(VLLL)
+    dex byte offset: 0x26fc46
+  classes2.dex  LX/1wM;->A00(VL)
+    dex byte offset: 0x27de86
+  classes2.dex  LX/27G;->A00(VLLL)
+    dex byte offset: 0x2ac84e
+  classes2.dex  LX/27G;->A01(VLLLZ)
+    dex byte offset: 0x2ac9b6
+  classes2.dex  LX/2BR;-><clinit>(V)
+    dex byte offset: 0x1771e6
+  classes2.dex  LX/2D4;->A00(LLJ)
+    dex byte offset: 0x2c3142
+  classes2.dex  LX/2Gq;->BbA(VL)
+    dex byte offset: 0x2da69e
+  classes4.dex  Lcom/meta/metaai/imagine/service/ImagineCanvasNetworkService;->A02(LLLL)
+    dex byte offset: 0x56e276
+  classes4.dex  Lcom/meta/metaai/imagine/service/ImagineCanvasNetworkService;->A03(LLLL)
+    dex byte offset: 0x56e538
+  classes4.dex  LX/5ln;->A00(LL)
+    dex byte offset: 0x58816c
+  classes4.dex  Lcom/meta/metaai/imagine/service/ImagineEditCanvasNetworkService;->A00(LL)
+    dex byte offset: 0x597e72
+  classes4.dex  LX/5mw;->A06(VLIZ)
+    dex byte offset: 0x5a77fc
+  classes4.dex  LX/6Md;->ATW(LL)
+    dex byte offset: 0x6d8f1e
+  classes4.dex  LX/6Mt;->ATW(LL)
+    dex byte offset: 0x6db1ea
+  classes4.dex  LX/6NO;->A00(LLLL)
+    dex byte offset: 0x6de7f8
+  classes4.dex  Lcom/meta/metaai/imagine/canvas/repository/ImagineCanvasDataRepository$generateImagesForRequest$1$1;->invokeSuspend(LL)
+    dex byte offset: 0x6fb2f6
+  classes4.dex  Lcom/meta/metaai/imagine/canvas/repository/ImagineCanvasDataRepository$generateImagesForRequest$1$1;->invokeSuspend(LL)
+    dex byte offset: 0x6fb5d8
+  classes5.dex  LX/6p1;->CK4(VLL)
+    dex byte offset: 0x2359fe
+  classes5.dex  LX/757;->Agl(L)
+    dex byte offset: 0x28d934
+  classes5.dex  LX/75Y;->Agl(L)
+    dex byte offset: 0x28e200
+  classes5.dex  LX/75t;->Agl(L)
+    dex byte offset: 0x28e9e4
+  classes5.dex  LX/75v;->Agl(L)
+    dex byte offset: 0x28eae0
+  classes5.dex  LX/8B9;->A0Q(LLL)
+    dex byte offset: 0x44c540
+  classes5.dex  LX/8Qx;->A00(LL)
+    dex byte offset: 0x4af8f0
+  classes5.dex  LX/8RA;->CK4(VLL)
+    dex byte offset: 0x4b1a92
+  classes5.dex  LX/8RN;->ABJ(LLL)
+    dex byte offset: 0x4b82bc
+  classes5.dex  LX/8Rv;->ABJ(LLL)
+    dex byte offset: 0x4bb234
+  classes6.dex  LX/8t7;->A0G(VLL)
+    dex byte offset: 0x266d8c
+  classes6.dex  LX/8uo;->A00(LLL)
+    dex byte offset: 0x27ca28
+  classes6.dex  LX/8up;->A0D(L)
+    dex byte offset: 0x27d79a
+  classes6.dex  LX/8uq;->BP2(L)
+    dex byte offset: 0x27e21a
+  classes6.dex  LX/8vP;->A00(JLL)
+    dex byte offset: 0x288ede
+  classes6.dex  LX/8vP;->A01(LL)
+    dex byte offset: 0x2890d2
+  classes6.dex  Lcom/whatsapp/metaai/expressions/repository/ImagineAnimateRepositoryV2;->A00(LLL)
+    dex byte offset: 0x417d1a
+  classes6.dex  Lcom/whatsapp/metaai/expressions/repository/ImagineExpandRepositoryV2;->A00(LLL)
+    dex byte offset: 0x418546
+  classes6.dex  LX/A2A;->A00(LI)
+    dex byte offset: 0x441a0c
+  classes6.dex  LX/A2A;->A01(VL)
+    dex byte offset: 0x441c5e
+  classes6.dex  LX/A5l;->A00(LL)
+    dex byte offset: 0x452350
+  classes6.dex  LX/A8F;->A00(VLL)
+    dex byte offset: 0x465ec8
+  classes6.dex  LX/A8a;->A02(JLL)
+    dex byte offset: 0x46a6e2
+  classes6.dex  LX/A8a;->A03(LL)
+    dex byte offset: 0x46a87c
+  classes6.dex  LX/ABI;->A02(LL)
+    dex byte offset: 0x48db16
+  classes6.dex  LX/APg;->accept(VL)
+    dex byte offset: 0x5408ce
+  classes6.dex  LX/AQb;->A00(LL)
+    dex byte offset: 0x547118
+  classes6.dex  LX/AQg;->BbA(VL)
+    dex byte offset: 0x54806c
+  classes6.dex  LX/Ak9;->call(L)
+    dex byte offset: 0x5d93fc
+  classes6.dex  LX/Ald;->invoke(LL)
+    dex byte offset: 0x5f8fe8
+  classes7.dex  LX/BDc;->Agl(L)
+    dex byte offset: 0x2c22d8
+  classes7.dex  LX/CLb;->A02(LL)
+    dex byte offset: 0x46bcfc
+  classes7.dex  LX/Cx8;->invoke(LL)
+    dex byte offset: 0x5db18a
+  classes8.dex  LX/Dvq;->onUpgrade(VLII)
+    dex byte offset: 0x502626
+  classes8.dex  LX/Dwv;->A0w(VL)
+    dex byte offset: 0x505036
+  classes8.dex  LX/Dwy;->A0v(L)
+    dex byte offset: 0x5061c2
+  classes8.dex  LX/EzF;->A00(LL)
+    dex byte offset: 0x625050
+  classes8.dex  LX/F44;->A0X(LLL)
+    dex byte offset: 0x6dbc2a
+  classes8.dex  LX/FLO;->ATc(VLL)
+    dex byte offset: 0x768876
+  classes8.dex  LX/FLP;->ATc(VLL)
+    dex byte offset: 0x768a78
+  classes8.dex  LX/FLS;->ATc(VLL)
+    dex byte offset: 0x768e7a
+  classes9.dex  LX/HJI;-><init>(VL)
+    dex byte offset: 0x566cea
+  classes9.dex  LX/IDz;->invoke(LL)
+    dex byte offset: 0x7a9628
+  classes9.dex  LX/IE6;->invoke(LL)
+    dex byte offset: 0x7b2120
+  classes9.dex  LX/IHc;-><clinit>(V)
+    dex byte offset: 0x33d0c4

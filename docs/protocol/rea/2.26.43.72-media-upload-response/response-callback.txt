@@ -1,0 +1,171 @@
+
+# class: LX/MtR;
+# extends: Ljava/lang/Object;
+
+.method public CDR(VLL)  # .registers 10
+    # full signature: LX/MtR;->CDR(Ljava/lang/String;Ljava/util/Map;)V
+    0000..0004  iget  v0, v7, LX/MtR;->$t:I
+    0004..000a  packed-switch  v0, payload@0x270, cases=[0:@0x1e6, 1:@0x240], default@0xa
+    000a..000e  const-string  v6, "mcs_request_id"
+    000e..0012  iget-object  v2, v7, LX/MtR;->A01:Ljava/lang/Object;
+    0012..0016  check-cast  v2, LX/MKA;
+    0016..001a  new-instance  v0, LX/LzN;
+    001a..0020  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0020..0024  iput-object  v0, v2, LX/MKA;->A00:LX/LzN;
+    0024..0028  if-eqz  v8, +0xdd
+    0028..002e  invoke-static  {v8}, LX/3q0;->A1B(Ljava/lang/String;)Lorg/json/JSONObject;
+    002e..0030  move-result-object  v5
+    0030..0034  iget-object  v1, v2, LX/MKA;->A00:LX/LzN;
+    0034..0038  if-eqz  v1, +0xa
+    0038..003c  const-string  v0, "url"
+    003c..0042  invoke-virtual  {v5, v0}, Lorg/json/JSONObject;->optString(Ljava/lang/String;)Ljava/lang/String;
+    0042..0044  move-result-object  v0
+    0044..0048  iput-object  v0, v1, LX/LzN;->A0D:Ljava/lang/String;
+    0048..004c  iget-object  v1, v2, LX/MKA;->A00:LX/LzN;
+    004c..0050  if-eqz  v1, +0xa
+    0050..0054  const-string  v0, "handle"
+    0054..005a  invoke-virtual  {v5, v0}, Lorg/json/JSONObject;->optString(Ljava/lang/String;)Ljava/lang/String;
+    005a..005c  move-result-object  v0
+    005c..0060  iput-object  v0, v1, LX/LzN;->A05:Ljava/lang/String;
+    0060..0064  iget-object  v1, v2, LX/MKA;->A00:LX/LzN;
+    0064..0068  if-eqz  v1, +0xa
+    0068..006c  const-string  v0, "enc_handle"
+    006c..0072  invoke-virtual  {v5, v0}, Lorg/json/JSONObject;->optString(Ljava/lang/String;)Ljava/lang/String;
+    0072..0074  move-result-object  v0
+    0074..0078  iput-object  v0, v1, LX/LzN;->A03:Ljava/lang/String;
+    0078..007c  iget-object  v4, v2, LX/MKA;->A00:LX/LzN;
+    007c..0080  if-eqz  v4, +0x1a
+    0080..0086  invoke-virtual  {v5, v6}, Lorg/json/JSONObject;->isNull(Ljava/lang/String;)Z
+    0086..0088  move-result  v0
+    0088..008a  const/4  v3, #0x0
+    008a..008e  if-nez  v0, +0x11
+    008e..0094  invoke-virtual  {v5, v6}, Lorg/json/JSONObject;->optString(Ljava/lang/String;)Ljava/lang/String;
+    0094..0096  move-result-object  v1
+    0096..009a  if-eqz  v1, +0xb
+    009a..009e  sget-object  v0, LX/MKA;->A0D:LX/06K;
+    009e..00a4  invoke-virtual  {v0, v1}, LX/06K;->A07(Ljava/lang/CharSequence;)Z
+    00a4..00a6  move-result  v0
+    00a6..00aa  if-eqz  v0, +0x3
+    00aa..00ac  move-object  v3, v1
+    00ac..00b0  iput-object  v3, v4, LX/LzN;->A06:Ljava/lang/String;
+    00b0..00b4  const-string  v0, "direct_path"
+    00b4..00ba  invoke-virtual  {v5, v0}, Lorg/json/JSONObject;->optString(Ljava/lang/String;)Ljava/lang/String;
+    00ba..00bc  move-result-object  v3
+    00bc..00c0  iget-boolean  v0, v2, LX/MKA;->A01:Z
+    00c0..00c6  invoke-static  {v3, v0}, LX/KmR;->A00(Ljava/lang/String;Z)Ljava/lang/String;
+    00c6..00c8  move-result-object  v0
+    00c8..00cc  if-eqz  v0, +0x7e
+    00cc..00d0  iget-object  v1, v2, LX/MKA;->A00:LX/LzN;
+    00d0..00d4  if-eqz  v1, +0xc
+    00d4..00d8  iput-object  v0, v1, LX/LzN;->A00:Ljava/lang/String;
+    00d8..00dc  const-string  v0, "meta_hmac"
+    00dc..00e2  invoke-virtual  {v5, v0}, Lorg/json/JSONObject;->optString(Ljava/lang/String;)Ljava/lang/String;
+    00e2..00e4  move-result-object  v0
+    00e4..00e8  iput-object  v0, v1, LX/LzN;->A08:Ljava/lang/String;
+    00e8..00ec  iget-object  v1, v2, LX/MKA;->A00:LX/LzN;
+    00ec..00f0  if-eqz  v1, +0xa
+    00f0..00f4  const-string  v0, "fbid"
+    00f4..00fa  invoke-virtual  {v5, v0}, Lorg/json/JSONObject;->optString(Ljava/lang/String;)Ljava/lang/String;
+    00fa..00fc  move-result-object  v0
+    00fc..0100  iput-object  v0, v1, LX/LzN;->A04:Ljava/lang/String;
+    0100..0104  iget-object  v1, v2, LX/MKA;->A00:LX/LzN;
+    0104..0108  if-eqz  v1, +0xa
+    0108..010c  const-string  v0, "ts"
+    010c..0112  invoke-virtual  {v5, v0}, Lorg/json/JSONObject;->optString(Ljava/lang/String;)Ljava/lang/String;
+    0112..0114  move-result-object  v0
+    0114..0118  iput-object  v0, v1, LX/LzN;->A0C:Ljava/lang/String;
+    0118..011c  iget-object  v1, v2, LX/MKA;->A00:LX/LzN;
+    011c..0120  if-eqz  v1, +0x8
+    0120..0126  invoke-static  {v5}, LX/EIF;->A00(Lorg/json/JSONObject;)Ljava/util/List;
+    0126..0128  move-result-object  v0
+    0128..012c  iput-object  v0, v1, LX/LzN;->A0E:Ljava/util/List;
+    012c..0130  const-string  v0, "thumbnail_info"
+    0130..0136  invoke-virtual  {v5, v0}, Lorg/json/JSONObject;->optString(Ljava/lang/String;)Ljava/lang/String;
+    0136..0138  move-result-object  v1
+    0138..013e  invoke-static  {v1}, LX/1cp;->A08(Ljava/lang/CharSequence;)Z
+    013e..0140  move-result  v0
+    0140..0144  if-eqz  v0, +0x22
+    0144..014a  invoke-static  {v1}, LX/3q0;->A1B(Ljava/lang/String;)Lorg/json/JSONObject;
+    014a..014c  move-result-object  v4
+    014c..0150  const-string  v0, "thumbnail_direct_path"
+    0150..0156  invoke-virtual  {v4, v0}, Lorg/json/JSONObject;->optString(Ljava/lang/String;)Ljava/lang/String;
+    0156..0158  move-result-object  v3
+    0158..015c  iget-boolean  v0, v2, LX/MKA;->A01:Z
+    015c..0162  invoke-static  {v3, v0}, LX/KmR;->A00(Ljava/lang/String;Z)Ljava/lang/String;
+    0162..0164  move-result-object  v0
+    0164..0168  if-eqz  v0, +0x29
+    0168..016c  iget-object  v1, v2, LX/MKA;->A00:LX/LzN;
+    016c..0170  if-eqz  v1, +0xc
+    0170..0174  iput-object  v0, v1, LX/LzN;->A09:Ljava/lang/String;
+    0174..0178  const-string  v0, "thumbnail_sha256"
+    0178..017e  invoke-virtual  {v4, v0}, Lorg/json/JSONObject;->optString(Ljava/lang/String;)Ljava/lang/String;
+    017e..0180  move-result-object  v0
+    0180..0184  iput-object  v0, v1, LX/LzN;->A0B:Ljava/lang/String;
+    0184..0188  iget-object  v1, v2, LX/MKA;->A00:LX/LzN;
+    0188..018c  if-eqz  v1, +0xa
+    018c..0190  const-string  v0, "metadata_url"
+    0190..0196  invoke-virtual  {v5, v0}, Lorg/json/JSONObject;->optString(Ljava/lang/String;)Ljava/lang/String;
+    0196..0198  move-result-object  v0
+    0198..019c  iput-object  v0, v1, LX/LzN;->A07:Ljava/lang/String;
+    019c..01a0  iget-object  v1, v2, LX/MKA;->A00:LX/LzN;
+    01a0..01a4  if-eqz  v1, +0x1f
+    01a4..01a8  const-string  v0, "dash_manifest_url"
+    01a8..01ae  invoke-virtual  {v5, v0}, Lorg/json/JSONObject;->optString(Ljava/lang/String;)Ljava/lang/String;
+    01ae..01b0  move-result-object  v0
+    01b0..01b4  iput-object  v0, v1, LX/LzN;->A01:Ljava/lang/String;
+    01b4..01b6  goto  +0x15
+    01b6..01ba  iget-object  v1, v2, LX/MKA;->A00:LX/LzN;
+    01ba..01be  if-eqz  v1, -0x1b
+    01be..01c2  iput-object  v3, v1, LX/LzN;->A0A:Ljava/lang/String;
+    01c2..01c4  goto  -0x27
+    01c4..01c8  iget-object  v1, v2, LX/MKA;->A00:LX/LzN;
+    01c8..01cc  if-eqz  v1, -0x70
+    01cc..01d0  iput-object  v3, v1, LX/LzN;->A02:Ljava/lang/String;
+    01d0..01d2  goto  -0x7c
+    01d2..01d4  move-exception  v1
+    01d4..01d8  const-string  v0, "MediaUploadTransfer/JsonException"
+    01d8..01de  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    01de..01e0  const/4  v0, #0x1
+    01e0..01e4  iput-boolean  v0, v2, LX/MKA;->A03:Z
+    01e4..01e6  return-void
+    01e6..01ea  const-string  v4, "exception_and_logs"
+    01ea..01f0  invoke-static  {v8}, LX/1sp;->A07(Ljava/lang/String;)Lorg/json/JSONObject;
+    01f0..01f2  move-result-object  v3
+    01f2..01f6  const-string  v2, "only_exception"
+    01f6..01fa  const-string  v1, "upload"
+    01fa..01fe  const-string  v0, ""
+    01fe..0204  invoke-virtual  {v3, v1, v0}, Lorg/json/JSONObject;->optString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0204..0206  move-result-object  v0
+    0206..020c  invoke-virtual  {v2, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    020c..020e  move-result  v0
+    020e..0212  if-eqz  v0, +0xb
+    0212..0216  iget-object  v1, v7, LX/MtR;->A01:Ljava/lang/Object;
+    0216..021a  check-cast  v1, LX/LqD;
+    021a..021e  const-string  v0, "exception_only"
+    021e..0222  iput-object  v0, v1, LX/LqD;->A00:Ljava/lang/String;
+    0222..0224  return-void
+    0224..0228  iget-object  v0, v7, LX/MtR;->A01:Ljava/lang/Object;
+    0228..022c  check-cast  v0, LX/LqD;
+    022c..0230  iput-object  v4, v0, LX/LqD;->A00:Ljava/lang/String;
+    0230..0232  return-void
+    0232..0236  iget-object  v0, v7, LX/MtR;->A01:Ljava/lang/Object;
+    0236..023a  check-cast  v0, LX/LqD;
+    023a..023e  iput-object  v4, v0, LX/LqD;->A00:Ljava/lang/String;
+    023e..0240  return-void
+    0240..0244  const-string  v0, "ProfiloUploadService/Response: "
+    0244..024a  invoke-static  {v0, v8}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    024a..024c  move-result-object  v1
+    024c..0250  const-string  v0, "; traceFile="
+    0250..0256  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0256..025a  iget-object  v0, v7, LX/MtR;->A01:Ljava/lang/Object;
+    025a..025e  check-cast  v0, Ljava/io/File;
+    025e..0264  invoke-virtual  {v0}, Ljava/io/File;->getName()Ljava/lang/String;
+    0264..0266  move-result-object  v0
+    0266..026c  invoke-static  {v1, v0}, LX/2L9;->A1K(Ljava/lang/StringBuilder;Ljava/lang/String;)V
+    026c..026e  return-void
+    026e..0270  nop
+    0270..0280  packed-switch-payload  size=2
+    # exception table: 2 try range(s)
+    # catch Lorg/json/JSONException; code_units 0014..00e9 -> 00e9
+    # catch Lorg/json/JSONException; code_units 00f5..0119 -> 0119
+.end method

@@ -472,3 +472,13 @@ row still resolves its saved protobuf without changing the stored row or
 backfilling a seal. No live request is made by this regression.
 Test: image_upload::tests::sealed_voice_reservation_survives_reopen_without_replay_or_legacy_rewrite.
 No new runtime behavior or native claim is introduced.
+
+### Upload reply mode boundary (2026-11-04)
+
+**Confirmed static**, pinned2.26.43.72: known MtZ callback MtR parses
+reply into mode-specific LzN fields. direct_path UUID-v4 retention is
+conditional on MKA.A01; unmatched originals use a separate field. It is
+not a slash-path validation regex. Optional field reads alone do not prove
+required fields or success. Rust's HTTP200+URL/slash-path acceptance remains
+a local subset pending mode producers/downstream consumers.
+[Exact callback/pattern and scope](rea/2.26.43.72-media-upload-response/README.md).

@@ -1,0 +1,17 @@
+
+# class: LX/KmR;
+# extends: Ljava/lang/Object;
+
+.method public A00(LLZ)  # .registers 4
+    # full signature: LX/KmR;->A00(Ljava/lang/String;Z)Ljava/lang/String;
+    0000..0002  const/4  v1, #0x0
+    0002..0006  if-eqz  v2, +0xd
+    0006..000a  if-eqz  v3, +0xb
+    000a..000e  sget-object  v0, LX/Lkh;->A00:LX/06K;
+    000e..0014  invoke-virtual  {v0, v2}, LX/06K;->A07(Ljava/lang/CharSequence;)Z
+    0014..0016  move-result  v0
+    0016..001a  if-eqz  v0, +0x3
+    001a..001c  return-object  v2
+    001c..001e  return-object  v1
+    # exception table: 0 try range(s)
+.end method

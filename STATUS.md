@@ -1,3 +1,14 @@
+2026-11-04 — **Upload reply mode boundary traced:**
+
+Retained native callback's optional fields, error flag and mode-dependent
+opaque-handle/direct-path split. UUID pattern must not be imposed on slash
+paths. Runtime remains the local HTTP200+URL/path subset; native mode
+producers and downstream field requirements remain open.
+[Evidence](docs/protocol/rea/2.26.43.72-media-upload-response/README.md).
+Validation: JSON parsing, coverage freshness, cached diff checks and repository
+hygiene (4,356 local links) passed. Documentation/evidence only;
+no runtime change or live traffic.
+
 2026-11-04 — **Sealed voice checkpoint continuity verified offline:**
 
 Real-store regression checks exact sealed request fields after header receipt
