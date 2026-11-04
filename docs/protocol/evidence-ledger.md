@@ -1,3 +1,10 @@
+2026-11-04 — **Confirmed source defect fixed offline: reach-out expiry.**
+Malformed known expiry previously became0 and could replace an active local
+restriction. Parser now refuses before write; receive skips ACK and continues
+while storage failures remain fatal.
+[Scope and regression](network-correctness-audit.md#malformed-reach-out-expiry-preservation-2026-11-04).
+No new native grammar/ban-cause claim or live account traffic.
+
 2026-11-04 — **Confirmed mismatch corrected offline: ordinary path query fields.**
 Pinned2.26.43.72 M0g.A00 requires nonnull oe/oh query values; Rust now
 requires exact encoded keys with native empty/fragment semantics, preserving

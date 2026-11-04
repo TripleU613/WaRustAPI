@@ -123,7 +123,13 @@ pub fn record_reachout_timelock(
             .as_str()
             .and_then(|v| v.parse().ok())
             .or_else(|| lock["time_enforcement_ends"].as_i64())
-            .unwrap_or(0);
+            .filter(|value| *value >= 0)
+            .ok_or_else(|| {
+                Error::invalid(
+                    "reachout_timelock",
+                    "missing or invalid expiry; existing restriction preserved",
+                )
+            })?;
         let lock = ReachoutTimelock { active, ends };
         store.write(|tx| tx.put_json(Table::Checkpoints, REACHOUT_TIMELOCK, 1, &lock))?;
         return Ok(Some(lock));
@@ -467,6 +473,44 @@ mod tests {
         let ack = mex_ack(&node).unwrap().unwrap();
         assert_eq!(ack.get_attr("type").and_then(|v| v.as_text()), Some("mex"));
         assert!(ack.get_attr("error").is_none());
+    }
+
+    #[test]
+    fn malformed_reachout_expiry_cannot_erase_an_active_lock() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = super::super::group_fanout::tests::open(&dir.path().join("lock.redb"));
+        let original = ReachoutTimelock {
+            active: true,
+            ends: 1000,
+        };
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, REACHOUT_TIMELOCK, 1, &original))
+            .unwrap();
+        for ends in [
+            serde_json::Value::Null,
+            serde_json::json!("bad"),
+            serde_json::json!(-1),
+            serde_json::json!(1.5),
+            serde_json::json!("9223372036854775808"),
+        ] {
+            for active in [true, false] {
+                let body = serde_json::json!({"data":{"xwa2_notify_account_reachout_timelock":{
+                    "is_active":active,"time_enforcement_ends":ends}}});
+                let node = Node::new("notification").attr("type", "mex").children(vec![
+                    Node::new("update")
+                        .attr("op_name", "NotificationUserReachoutTimelockUpdate")
+                        .bytes(serde_json::to_vec(&body).unwrap()),
+                ]);
+                assert!(matches!(
+                    record_reachout_timelock(&store, &node),
+                    Err(Error::InvalidInput { .. })
+                ));
+                assert_eq!(
+                    active_reachout_timelock(&store, 999).unwrap(),
+                    Some(original)
+                );
+            }
+        }
     }
 
     #[test]

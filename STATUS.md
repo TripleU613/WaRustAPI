@@ -1,3 +1,13 @@
+2026-11-04 — **Malformed reach-out expiry no longer clears local lock:**
+
+Known expiry updates now refuse missing/malformed/negative/overflow values
+before write. Receive preserves capture/prior lock, skips ACK and continues;
+storage failures still propagate. Valid expiry behavior stays covered.
+[Source defect and real-store regression](docs/protocol/network-correctness-audit.md#malformed-reach-out-expiry-preservation-2026-11-04).
+Validation: **1,266 workspace/all-feature tests**, strict Clippy, CLI-reference,
+formatting, coverage freshness and repository hygiene passed.
+No live account traffic or native timestamp grammar claim.
+
 2026-11-04 — **Upload ordinary path query fields corrected (offline):**
 
 New reply acceptance now requires native oe/oh query presence without

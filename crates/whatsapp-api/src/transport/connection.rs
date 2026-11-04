@@ -764,10 +764,20 @@ pub(crate) async fn drive(
                 if let Some(ack)=super::groups::handle_dirty_notification(&store, &node)? {link.send(&ack).await?;}
                 // 2.26.37.71 0yv (BaseNotificationHandler) ACKs every other
                 // w:gp2 too; unacknowledged ones ended sessions.
-                if let Some(lock) = super::notifications::record_reachout_timelock(&store, &node)? {
-                    tracing::warn!(active = lock.active, ends_unix = lock.ends, "WhatsApp reach-out timelock: starting new chats and creating groups is refused until it ends");
-                }
-                match super::notifications::mex_ack(&node) {
+                let mex_ready = match super::notifications::record_reachout_timelock(&store, &node) {
+                    Ok(lock) => {
+                        if let Some(lock) = lock {
+                            tracing::warn!(active = lock.active, ends_unix = lock.ends, "WhatsApp reach-out timelock updated");
+                        }
+                        true
+                    }
+                    Err(Error::InvalidInput { field, reason }) => {
+                        tracing::warn!(field, reason, "reach-out update refused; prior restriction preserved; captured without ACK; session continues");
+                        false
+                    }
+                    Err(error) => return Err(error),
+                };
+                match if mex_ready { super::notifications::mex_ack(&node) } else { Ok(None) } {
                     Ok(Some(ack)) => link.send(&ack).await?,
                     Ok(None) => {}
                     Err(Error::InvalidInput { field, reason }) => {

@@ -128,3 +128,24 @@ means a compatibility implication; **observed** requires actual server evidence;
 or quantify restriction risk. No unsolicited replay, identity reset, fabricated
 telemetry or ignored cooldown is authorized by this queue. Existing histories,
 keys, uncertain outcomes and challenge requirements remain authoritative.
+
+## Malformed reach-out expiry preservation (2026-11-04)
+
+**Confirmed source defect corrected offline:** record_reachout_timelock used
+unwrap_or(0) for missing/malformed time_enforcement_ends. A recognized
+update with valid is_active could overwrite an active saved restriction with
+zero, making active_reachout_timelock return none. This could remove our
+existing local group/outreach gate without a valid expiry update.
+
+The parser now requires nonnegative i64 expiry (JSON integer or decimal
+string); missing/null/malformed/negative/overflow/fractional input refuses
+before storage. The connection catches this InvalidInput, preserves capture
+and prior restriction, skips that MEX ACK and continues receiving. Storage
+errors still propagate; valid updates keep commit-before-ACK ordering. This
+is a local integrity correction, not a newly proven native timestamp grammar,
+ban cause or full restriction-policy implementation. Existing enforcement
+coverage outside group preparation remains an audit obligation.
+
+Real-store regression checks active and inactive malformed updates cannot
+erase a known active lock. Existing valid update/expiry regression remains.
+No live account traffic was sent; no identity/cooldown reset is introduced.
