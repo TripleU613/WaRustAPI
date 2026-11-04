@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_1630d62d666186ad9389b9f20d167fc16ac42770294388eb2ae0beb4a4daf5c7",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.AnonymousClass145",
+    "method_name": "A04",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-Yp8Okt/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.AnonymousClass145"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"full_name\":\"X.AnonymousClass145\",\"field_count\":7,\"fields\":[{\"name\":\"A00\",\"type\":\"X.0DD\",\"def_pos\":0},{\"name\":\"A01\",\"type\":\"X.08Y\",\"def_pos\":0},{\"name\":\"A02\",\"type\":\"X.09S\",\"def_pos\":0},{\"name\":\"A03\",\"type\":\"X.00X\",\"def_pos\":0},{\"name\":\"A04\",\"type\":\"X.0NX\",\"def_pos\":0},{\"name\":\"A05\",\"type\":\"X.08q\",\"def_pos\":0},{\"name\":\"A06\",\"type\":\"X.147\",\"def_pos\":0}],\"methods\":[{\"is_constructor\":true,\"dex_descriptor\":\"()V\",\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\"},{\"is_constructor\":false,\"dex_descriptor\":\"()Ljava/lang/String;\",\"signature\":\"A00(): java.lang.String\",\"def_pos\":0,\"name\":\"A00\"},{\"is_constructor\":false,\"dex_descriptor\":\"()Ljava/lang/String;\",\"signature\":\"A01(): java.lang.String\",\"def_pos\":0,\"name\":\"A01\"},{\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/Integer;[B)V\",\"signature\":\"A02(java.lang.Integer, byte[]): void\",\"def_pos\":0,\"name\":\"A02\"},{\"is_constructor\":false,\"dex_descriptor\":\"(LX/145;Ljava/lang/Integer;[B)[B\",\"signature\":\"A03(X.145, java.lang.Integer, byte[]): byte[]\",\"def_pos\":0,\"name\":\"A03\"},{\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"A04(): void\",\"def_pos\":0,\"name\":\"A04\"},{\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/Integer;)V\",\"signature\":\"A05(java.lang.Integer): void\",\"def_pos\":0,\"name\":\"A05\"},{\"is_constructor\":false,\"dex_descriptor\":\"()Z\",\"signature\":\"A06(): boolean\",\"def_pos\":0,\"name\":\"A06\"},{\"is_constructor\":false,\"dex_descriptor\":\"([B[B)[B\",\"signature\":\"A07(byte[], byte[]): byte[]\",\"def_pos\":0,\"name\":\"A07\"}],\"method_count\":9,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"AnonymousClass145\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.AnonymousClass145",
+          "method_name": "A04",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"body\":\"    public void A04() {\\n        C00x c00x;\\n        C0FZ c0fz;\\n        SharedPreferences.Editor editorA02;\\n        String str;\\n        SharedPreferences.Editor editorPutLong;\\n        Object obj;\\n        C0FZ c0fz2;\\n        long j;\\n        SharedPreferences.Editor editorA03;\\n        String str2;\\n        SharedPreferences.Editor editorPutLong2;\\n        Object obj2;\\n        C0FZ c0fz3;\\n        SharedPreferences.Editor editorA04;\\n        String str3;\\n        SharedPreferences.Editor editorPutString;\\n        Object obj3;\\n        C0FZ c0fz4;\\n        SharedPreferences.Editor editorA05;\\n        String str4;\\n        SharedPreferences.Editor editorPutString2;\\n        if (A06()) {\\n            try {\\n                KeyStore keyStore \\u003d KeyStore.getInstance(\\\"AndroidKeyStore\\\");\\n                keyStore.load(null);\\n                keyStore.deleteEntry(A00());\\n                keyStore.deleteEntry(A01());\\n                c00x \\u003d this.A02.A0m;\\n                ((C0FZ) c00x.get()).A02().putLong(\\\"ka_retried_ts\\\", 0L).apply();\\n                c0fz \\u003d (C0FZ) c00x.get();\\n            } catch (Exception e) {\\n                Log.e(\\\"blacknoise/exception on certificate wipe\\\", e);\\n                c00x \\u003d this.A02.A0m;\\n                ((C0FZ) c00x.get()).A02().putLong(\\\"ka_retried_ts\\\", 0L).apply();\\n                c0fz \\u003d (C0FZ) c00x.get();\\n            } finally {\\n                c00x \\u003d this.A02.A0m;\\n                ((C0FZ) c00x.get()).A02().putLong(\\\"ka_retried_ts\\\", 0L).apply();\\n                ((C0FZ) c00x.get()).A02().putLong(\\\"ka_static_refresh_ts\\\", 0L).apply();\\n                ((C0FZ) c00x.get()).A02().putLong(\\\"ka_refresh_ts\\\", 0L).apply();\\n                ((C0FZ) c00x.get()).A02().putString(\\\"ka_key_store_static_alias_suffix\\\", null).apply();\\n                ((C0FZ) c00x.get()).A02().putString(\\\"ka_key_store_dynamic_alias_suffix\\\", null).apply();\\n            }\\n        }\\n    }\",\"overload_count\":1,\"method_name\":\"A04\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.145.A04\",\"class_name\":\"X.AnonymousClass145\",\"overload_index\":0,\"fell_back\":false}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.AnonymousClass145",
+    "method": {
+      "name": "A04",
+      "reported_signature": "A04(): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "()V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public void A04() {\n        C00x c00x;\n        C0FZ c0fz;\n        SharedPreferences.Editor editorA02;\n        String str;\n        SharedPreferences.Editor editorPutLong;\n        Object obj;\n        C0FZ c0fz2;\n        long j;\n        SharedPreferences.Editor editorA03;\n        String str2;\n        SharedPreferences.Editor editorPutLong2;\n        Object obj2;\n        C0FZ c0fz3;\n        SharedPreferences.Editor editorA04;\n        String str3;\n        SharedPreferences.Editor editorPutString;\n        Object obj3;\n        C0FZ c0fz4;\n        SharedPreferences.Editor editorA05;\n        String str4;\n        SharedPreferences.Editor editorPutString2;\n        if (A06()) {\n            try {\n                KeyStore keyStore = KeyStore.getInstance(\"AndroidKeyStore\");\n                keyStore.load(null);\n                keyStore.deleteEntry(A00());\n                keyStore.deleteEntry(A01());\n                c00x = this.A02.A0m;\n                ((C0FZ) c00x.get()).A02().putLong(\"ka_retried_ts\", 0L).apply();\n                c0fz = (C0FZ) c00x.get();\n            } catch (Exception e) {\n                Log.e(\"blacknoise/exception on certificate wipe\", e);\n                c00x = this.A02.A0m;\n                ((C0FZ) c00x.get()).A02().putLong(\"ka_retried_ts\", 0L).apply();\n                c0fz = (C0FZ) c00x.get();\n            } finally {\n                c00x = this.A02.A0m;\n                ((C0FZ) c00x.get()).A02().putLong(\"ka_retried_ts\", 0L).apply();\n                ((C0FZ) c00x.get()).A02().putLong(\"ka_static_refresh_ts\", 0L).apply();\n                ((C0FZ) c00x.get()).A02().putLong(\"ka_refresh_ts\", 0L).apply();\n                ((C0FZ) c00x.get()).A02().putString(\"ka_key_store_static_alias_suffix\", null).apply();\n                ((C0FZ) c00x.get()).A02().putString(\"ka_key_store_dynamic_alias_suffix\", null).apply();\n            }\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

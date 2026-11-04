@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_902e18261f738e382bd5fde11cf897fcc83998cbc6d3b87e1ef78edfc041b06f",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.AnonymousClass278",
+    "method_name": "A00",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-zWhIO6/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.AnonymousClass278"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"AnonymousClass278\",\"full_name\":\"X.AnonymousClass278\",\"field_count\":4,\"fields\":[{\"def_pos\":0,\"name\":\"A00\",\"type\":\"int\"},{\"def_pos\":0,\"name\":\"A01\",\"type\":\"X.09S\"},{\"def_pos\":0,\"name\":\"A02\",\"type\":\"boolean\"},{\"def_pos\":0,\"name\":\"A03\",\"type\":\"X.1sv\"}],\"methods\":[{\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"(LX/1sv;LX/09S;IZ)V\",\"signature\":\"\\u003cinit\\u003e(X.1sv, X.09S, int, boolean): void\",\"def_pos\":0},{\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"(I)V\",\"signature\":\"A00(int): void\",\"def_pos\":0}],\"method_count\":2}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.AnonymousClass278",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"class_name\":\"X.AnonymousClass278\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public synchronized void A00(int i) {\\n        SharedPreferences.Editor editorRemove;\\n        int i2 \\u003d this.A00 - 1;\\n        this.A00 \\u003d i2;\\n        if (this.A02 \\u0026\\u0026 i2 \\u003d\\u003d 0) {\\n            ((C0mD) C05a.A03(this.A03.A06)).A02(\\\"account_sync\\\", null);\\n        }\\n        if (i \\u003d\\u003d 1) {\\n            editorRemove \\u003d this.A01.A0B().A02().remove(\\\"account_sync_status_num_retries\\\");\\n        } else if (i \\u003d\\u003d 2) {\\n            editorRemove \\u003d this.A01.A0B().A02().remove(\\\"account_sync_picture_num_retries\\\");\\n        } else if (i \\u003d\\u003d 3) {\\n            editorRemove \\u003d this.A01.A0B().A02().remove(\\\"account_sync_privacy_num_retries\\\");\\n        } else if (i \\u003d\\u003d 4) {\\n            editorRemove \\u003d this.A01.A0B().A02().remove(\\\"account_sync_blocklist_num_retries\\\");\\n        } else if (i \\u003d\\u003d 7) {\\n            editorRemove \\u003d this.A01.A0B().A02().remove(\\\"account_sync_text_status_num_retries\\\");\\n        } else if (i \\u003d\\u003d 8) {\\n            editorRemove \\u003d FxD.A00((FxD) C05a.A03(this.A03.A02)).edit();\\n            editorRemove.remove(\\\"account_sync_opt_out_list_num_retries\\\");\\n        }\\n        editorRemove.apply();\\n    }\",\"overload_count\":1,\"method_name\":\"A00\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.278.A00\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.AnonymousClass278",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(int): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(I)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public synchronized void A00(int i) {\n        SharedPreferences.Editor editorRemove;\n        int i2 = this.A00 - 1;\n        this.A00 = i2;\n        if (this.A02 && i2 == 0) {\n            ((C0mD) C05a.A03(this.A03.A06)).A02(\"account_sync\", null);\n        }\n        if (i == 1) {\n            editorRemove = this.A01.A0B().A02().remove(\"account_sync_status_num_retries\");\n        } else if (i == 2) {\n            editorRemove = this.A01.A0B().A02().remove(\"account_sync_picture_num_retries\");\n        } else if (i == 3) {\n            editorRemove = this.A01.A0B().A02().remove(\"account_sync_privacy_num_retries\");\n        } else if (i == 4) {\n            editorRemove = this.A01.A0B().A02().remove(\"account_sync_blocklist_num_retries\");\n        } else if (i == 7) {\n            editorRemove = this.A01.A0B().A02().remove(\"account_sync_text_status_num_retries\");\n        } else if (i == 8) {\n            editorRemove = FxD.A00((FxD) C05a.A03(this.A03.A02)).edit();\n            editorRemove.remove(\"account_sync_opt_out_list_num_retries\");\n        }\n        editorRemove.apply();\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

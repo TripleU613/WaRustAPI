@@ -1,0 +1,335 @@
+{
+  "evidence_id": "ev_b1ec97aa9b0c85db1a6ed607deeddced9726891689204482c4fa3c2d612de372",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_class",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.AnonymousClass144"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-Yp8Okt/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.AnonymousClass144"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"full_name\":\"X.AnonymousClass144\",\"field_count\":17,\"fields\":[{\"name\":\"A00\",\"type\":\"X.1ny\",\"def_pos\":0},{\"name\":\"A01\",\"type\":\"X.149\",\"def_pos\":0},{\"name\":\"A02\",\"type\":\"X.1nk\",\"def_pos\":0},{\"name\":\"A03\",\"type\":\"org.whispersystems.libsignal.kem.KEMPublicKey\",\"def_pos\":0},{\"name\":\"A04\",\"type\":\"boolean\",\"def_pos\":0},{\"name\":\"A05\",\"type\":\"boolean\",\"def_pos\":0},{\"name\":\"A06\",\"type\":\"X.00x\",\"def_pos\":0},{\"name\":\"A07\",\"type\":\"X.05a\",\"def_pos\":0},{\"name\":\"A08\",\"type\":\"X.08Y\",\"def_pos\":0},{\"name\":\"A09\",\"type\":\"X.0NX\",\"def_pos\":0},{\"name\":\"A0A\",\"type\":\"X.0B0\",\"def_pos\":0},{\"name\":\"A0B\",\"type\":\"X.00S\",\"def_pos\":0},{\"name\":\"A0C\",\"type\":\"X.09S\",\"def_pos\":0},{\"name\":\"A0D\",\"type\":\"X.08q\",\"def_pos\":0},{\"name\":\"A0E\",\"type\":\"X.145\",\"def_pos\":0},{\"name\":\"A0F\",\"type\":\"X.149\",\"def_pos\":0},{\"name\":\"A0G\",\"type\":\"java.lang.Object\",\"def_pos\":0}],\"methods\":[{\"is_constructor\":true,\"dex_descriptor\":\"()V\",\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\"},{\"is_constructor\":false,\"dex_descriptor\":\"()LX/1ny;\",\"signature\":\"A00(): X.1ny\",\"def_pos\":0,\"name\":\"A00\"},{\"is_constructor\":false,\"dex_descriptor\":\"(Landroid/content/SharedPreferences;)LX/1nq;\",\"signature\":\"A01(android.content.SharedPreferences): X.1nq\",\"def_pos\":0,\"name\":\"A01\"},{\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/Integer;)LX/1nq;\",\"signature\":\"A02(java.lang.Integer): X.1nq\",\"def_pos\":0,\"name\":\"A02\"},{\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/Integer;)LX/1nq;\",\"signature\":\"A03(java.lang.Integer): X.1nq\",\"def_pos\":0,\"name\":\"A03\"},{\"is_constructor\":false,\"dex_descriptor\":\"(Z)LX/1nq;\",\"signature\":\"A04(boolean): X.1nq\",\"def_pos\":0,\"name\":\"A04\"},{\"is_constructor\":false,\"dex_descriptor\":\"(Landroid/content/SharedPreferences;)V\",\"signature\":\"A05(android.content.SharedPreferences): void\",\"def_pos\":0,\"name\":\"A05\"},{\"is_constructor\":false,\"dex_descriptor\":\"(Landroid/content/SharedPreferences;LX/144;[B)V\",\"signature\":\"A06(android.content.SharedPreferences, X.144, byte[]): void\",\"def_pos\":0,\"name\":\"A06\"},{\"is_constructor\":false,\"dex_descriptor\":\"(LX/144;)V\",\"signature\":\"A07(X.144): void\",\"def_pos\":0,\"name\":\"A07\"},{\"is_constructor\":false,\"dex_descriptor\":\"(Landroid/content/SharedPreferences;LX/149;[B)Z\",\"signature\":\"A08(android.content.SharedPreferences, X.149, byte[]): boolean\",\"def_pos\":0,\"name\":\"A08\"},{\"is_constructor\":false,\"dex_descriptor\":\"(Landroid/content/SharedPreferences;[B)Z\",\"signature\":\"A09(android.content.SharedPreferences, byte[]): boolean\",\"def_pos\":0,\"name\":\"A09\"},{\"is_constructor\":false,\"dex_descriptor\":\"(LX/1np;Ljava/lang/String;)Z\",\"signature\":\"A0A(X.1np, java.lang.String): boolean\",\"def_pos\":0,\"name\":\"A0A\"},{\"is_constructor\":false,\"dex_descriptor\":\"(LX/144;LX/1nq;)Z\",\"signature\":\"A0B(X.144, X.1nq): boolean\",\"def_pos\":0,\"name\":\"A0B\"},{\"is_constructor\":false,\"dex_descriptor\":\"(LX/144;[B)Z\",\"signature\":\"A0C(X.144, byte[]): boolean\",\"def_pos\":0,\"name\":\"A0C\"},{\"is_constructor\":false,\"dex_descriptor\":\"()LX/1ny;\",\"signature\":\"A0D(): X.1ny\",\"def_pos\":0,\"name\":\"A0D\"},{\"is_constructor\":false,\"dex_descriptor\":\"()LX/1nq;\",\"signature\":\"A0E(): X.1nq\",\"def_pos\":0,\"name\":\"A0E\"},{\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"A0F(): void\",\"def_pos\":0,\"name\":\"A0F\"},{\"is_constructor\":false,\"dex_descriptor\":\"(I)V\",\"signature\":\"A0G(int): void\",\"def_pos\":0,\"name\":\"A0G\"},{\"is_constructor\":false,\"dex_descriptor\":\"()[B\",\"signature\":\"A0H(): byte[]\",\"def_pos\":0,\"name\":\"A0H\"},{\"is_constructor\":false,\"dex_descriptor\":\"()Lorg/whispersystems/libsignal/kem/KEMPublicKey;\",\"signature\":\"B75(): org.whispersystems.libsignal.kem.KEMPublicKey\",\"def_pos\":0,\"name\":\"B75\"},{\"is_constructor\":false,\"dex_descriptor\":\"()LX/1nk;\",\"signature\":\"B76(): X.1nk\",\"def_pos\":0,\"name\":\"B76\"},{\"is_constructor\":false,\"dex_descriptor\":\"(Lorg/whispersystems/libsignal/kem/KEMPublicKey;)V\",\"signature\":\"CjR(org.whispersystems.libsignal.kem.KEMPublicKey): void\",\"def_pos\":0,\"name\":\"CjR\"},{\"is_constructor\":false,\"dex_descriptor\":\"(LX/1nk;)V\",\"signature\":\"CjS(X.1nk): void\",\"def_pos\":0,\"name\":\"CjS\"},{\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"Ctx(): void\",\"def_pos\":0,\"name\":\"Ctx\"}],\"method_count\":24,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"AnonymousClass144\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.AnonymousClass144",
+    "methods": [
+      {
+        "name": "<init>",
+        "reported_signature": "<init>(): void",
+        "overload_index": 0,
+        "is_constructor": true,
+        "dex_descriptor": "()V"
+      },
+      {
+        "name": "A00",
+        "reported_signature": "A00(): X.1ny",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "()LX/1ny;"
+      },
+      {
+        "name": "A01",
+        "reported_signature": "A01(android.content.SharedPreferences): X.1nq",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Landroid/content/SharedPreferences;)LX/1nq;"
+      },
+      {
+        "name": "A02",
+        "reported_signature": "A02(java.lang.Integer): X.1nq",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Ljava/lang/Integer;)LX/1nq;"
+      },
+      {
+        "name": "A03",
+        "reported_signature": "A03(java.lang.Integer): X.1nq",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Ljava/lang/Integer;)LX/1nq;"
+      },
+      {
+        "name": "A04",
+        "reported_signature": "A04(boolean): X.1nq",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Z)LX/1nq;"
+      },
+      {
+        "name": "A05",
+        "reported_signature": "A05(android.content.SharedPreferences): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Landroid/content/SharedPreferences;)V"
+      },
+      {
+        "name": "A06",
+        "reported_signature": "A06(android.content.SharedPreferences, X.144, byte[]): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Landroid/content/SharedPreferences;LX/144;[B)V"
+      },
+      {
+        "name": "A07",
+        "reported_signature": "A07(X.144): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/144;)V"
+      },
+      {
+        "name": "A08",
+        "reported_signature": "A08(android.content.SharedPreferences, X.149, byte[]): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Landroid/content/SharedPreferences;LX/149;[B)Z"
+      },
+      {
+        "name": "A09",
+        "reported_signature": "A09(android.content.SharedPreferences, byte[]): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Landroid/content/SharedPreferences;[B)Z"
+      },
+      {
+        "name": "A0A",
+        "reported_signature": "A0A(X.1np, java.lang.String): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/1np;Ljava/lang/String;)Z"
+      },
+      {
+        "name": "A0B",
+        "reported_signature": "A0B(X.144, X.1nq): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/144;LX/1nq;)Z"
+      },
+      {
+        "name": "A0C",
+        "reported_signature": "A0C(X.144, byte[]): boolean",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/144;[B)Z"
+      },
+      {
+        "name": "A0D",
+        "reported_signature": "A0D(): X.1ny",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "()LX/1ny;"
+      },
+      {
+        "name": "A0E",
+        "reported_signature": "A0E(): X.1nq",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "()LX/1nq;"
+      },
+      {
+        "name": "A0F",
+        "reported_signature": "A0F(): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "()V"
+      },
+      {
+        "name": "A0G",
+        "reported_signature": "A0G(int): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(I)V"
+      },
+      {
+        "name": "A0H",
+        "reported_signature": "A0H(): byte[]",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "()[B"
+      },
+      {
+        "name": "B75",
+        "reported_signature": "B75(): org.whispersystems.libsignal.kem.KEMPublicKey",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "()Lorg/whispersystems/libsignal/kem/KEMPublicKey;"
+      },
+      {
+        "name": "B76",
+        "reported_signature": "B76(): X.1nk",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "()LX/1nk;"
+      },
+      {
+        "name": "CjR",
+        "reported_signature": "CjR(org.whispersystems.libsignal.kem.KEMPublicKey): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lorg/whispersystems/libsignal/kem/KEMPublicKey;)V"
+      },
+      {
+        "name": "CjS",
+        "reported_signature": "CjS(X.1nk): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/1nk;)V"
+      },
+      {
+        "name": "Ctx",
+        "reported_signature": "Ctx(): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "()V"
+      }
+    ],
+    "fields": [
+      {
+        "name": "A00",
+        "reported_type": "X.1ny"
+      },
+      {
+        "name": "A01",
+        "reported_type": "X.149"
+      },
+      {
+        "name": "A02",
+        "reported_type": "X.1nk"
+      },
+      {
+        "name": "A03",
+        "reported_type": "org.whispersystems.libsignal.kem.KEMPublicKey"
+      },
+      {
+        "name": "A04",
+        "reported_type": "boolean"
+      },
+      {
+        "name": "A05",
+        "reported_type": "boolean"
+      },
+      {
+        "name": "A06",
+        "reported_type": "X.00x"
+      },
+      {
+        "name": "A07",
+        "reported_type": "X.05a"
+      },
+      {
+        "name": "A08",
+        "reported_type": "X.08Y"
+      },
+      {
+        "name": "A09",
+        "reported_type": "X.0NX"
+      },
+      {
+        "name": "A0A",
+        "reported_type": "X.0B0"
+      },
+      {
+        "name": "A0B",
+        "reported_type": "X.00S"
+      },
+      {
+        "name": "A0C",
+        "reported_type": "X.09S"
+      },
+      {
+        "name": "A0D",
+        "reported_type": "X.08q"
+      },
+      {
+        "name": "A0E",
+        "reported_type": "X.145"
+      },
+      {
+        "name": "A0F",
+        "reported_type": "X.149"
+      },
+      {
+        "name": "A0G",
+        "reported_type": "java.lang.Object"
+      }
+    ],
+    "inner_classes": []
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

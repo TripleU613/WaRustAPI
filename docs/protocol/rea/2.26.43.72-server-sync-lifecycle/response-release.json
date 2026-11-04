@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_d0cdba69495efbdf4c124e40d8a35641063ffd019679d1b17a51e7bfb0be2d9e",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "com.whatsapp.consumer.companiondevice.iq.SyncResponseHandler",
+    "method_name": "A05",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-kcC4Rk/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "com.whatsapp.consumer.companiondevice.iq.SyncResponseHandler"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_classes\":[],\"name\":\"SyncResponseHandler\",\"full_name\":\"com.whatsapp.consumer.companiondevice.iq.SyncResponseHandler\",\"field_count\":25,\"fields\":[{\"def_pos\":0,\"name\":\"A00\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A01\",\"type\":\"X.0Vy\"},{\"def_pos\":0,\"name\":\"A02\",\"type\":\"X.0l8\"},{\"def_pos\":0,\"name\":\"A03\",\"type\":\"X.0lE\"},{\"def_pos\":0,\"name\":\"A04\",\"type\":\"X.0lF\"},{\"def_pos\":0,\"name\":\"A05\",\"type\":\"X.0lN\"},{\"def_pos\":0,\"name\":\"A06\",\"type\":\"X.0fz\"},{\"def_pos\":0,\"name\":\"A07\",\"type\":\"X.0lB\"},{\"def_pos\":0,\"name\":\"A08\",\"type\":\"X.0Yz\"},{\"def_pos\":0,\"name\":\"A09\",\"type\":\"X.0g1\"},{\"def_pos\":0,\"name\":\"A0A\",\"type\":\"X.0gE\"},{\"def_pos\":0,\"name\":\"A0B\",\"type\":\"X.0l6\"},{\"def_pos\":0,\"name\":\"A0C\",\"type\":\"X.0fI\"},{\"def_pos\":0,\"name\":\"A0D\",\"type\":\"X.EOG\"},{\"def_pos\":0,\"name\":\"A0E\",\"type\":\"X.08Y\"},{\"def_pos\":0,\"name\":\"A0F\",\"type\":\"X.09Z\"},{\"def_pos\":0,\"name\":\"A0G\",\"type\":\"X.09F\"},{\"def_pos\":0,\"name\":\"A0H\",\"type\":\"X.08q\"},{\"def_pos\":0,\"name\":\"A0I\",\"type\":\"X.1C8\"},{\"def_pos\":0,\"name\":\"A0J\",\"type\":\"X.0af\"},{\"def_pos\":0,\"name\":\"A0K\",\"type\":\"X.0g3\"},{\"def_pos\":0,\"name\":\"A0L\",\"type\":\"X.0mj\"},{\"def_pos\":0,\"name\":\"A0M\",\"type\":\"com.whatsapp.kmp.syncd.syncdengine.IncomingProcessor\"},{\"def_pos\":0,\"name\":\"A0N\",\"type\":\"java.util.Set\"},{\"def_pos\":0,\"name\":\"A0O\",\"type\":\"java.util.Map\"}],\"methods\":[{\"name\":\"\\u003cclinit\\u003e\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"\\u003cclinit\\u003e(): void\",\"def_pos\":0},{\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"(LX/0Vy;LX/0l8;LX/0g3;LX/0lE;LX/0lF;LX/0lN;LX/0fz;LX/0lB;LX/0Yz;LX/0g1;LX/0gE;LX/0l6;LX/0fI;LX/0mj;LX/EOG;LX/08Y;LX/09Z;LX/09F;LX/08q;LX/1C8;LX/0af;Lcom/whatsapp/kmp/syncd/syncdengine/IncomingProcessor;Ljava/util/Set;)V\",\"signature\":\"\\u003cinit\\u003e(X.0Vy, X.0l8, X.0g3, X.0lE, X.0lF, X.0lN, X.0fz, X.0lB, X.0Yz, X.0g1, X.0gE, X.0l6, X.0fI, X.0mj, X.EOG, X.08Y, X.09Z, X.09F, X.08q, X.1C8, X.0af, com.whatsapp.kmp.syncd.syncdengine.IncomingProcessor, java.util.Set): void\",\"def_pos\":0},{\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/whatsapp/consumer/companiondevice/iq/SyncResponseHandler;LX/ES5;LX/EVJ;LX/EiF;LX/0cf;)Ljava/lang/Object;\",\"signature\":\"A00(com.whatsapp.consumer.companiondevice.iq.SyncResponseHandler, X.ES5, X.EVJ, X.EiF, X.0cf): java.lang.Object\",\"def_pos\":0},{\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/whatsapp/consumer/companiondevice/iq/SyncResponseHandler;Ljava/lang/Long;Ljava/lang/String;ZZ)V\",\"signature\":\"A01(com.whatsapp.consumer.companiondevice.iq.SyncResponseHandler, java.lang.Long, java.lang.String, boolean, boolean): void\",\"def_pos\":0},{\"name\":\"A02\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/whatsapp/consumer/companiondevice/iq/SyncResponseHandler;Ljava/lang/String;)V\",\"signature\":\"A02(com.whatsapp.consumer.companiondevice.iq.SyncResponseHandler, java.lang.String): void\",\"def_pos\":0},{\"name\":\"A03\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/whatsapp/consumer/companiondevice/iq/SyncResponseHandler;Ljava/lang/String;Lkotlin/jvm/functions/Function0;J)V\",\"signature\":\"A03(com.whatsapp.consumer.companiondevice.iq.SyncResponseHandler, java.lang.String, kotlin.jvm.functions.Function0, long): void\",\"def_pos\":0},{\"name\":\"A04\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/whatsapp/consumer/companiondevice/iq/SyncResponseHandler;Ljava/util/List;)V\",\"signature\":\"A04(com.whatsapp.consumer.companiondevice.iq.SyncResponseHandler, java.util.List): void\",\"def_pos\":0},{\"name\":\"A05\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)V\",\"signature\":\"A05(java.lang.String): void\",\"def_pos\":0},{\"name\":\"A06\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V\",\"signature\":\"A06(java.lang.String, kotlin.jvm.functions.Function0): void\",\"def_pos\":0},{\"name\":\"A07\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/Dh0;LX/Dem;Ljava/lang/String;Ljava/util/List;IJZZZ)Z\",\"signature\":\"A07(X.Dh0, X.Dem, java.lang.String, java.util.List, int, long, boolean, boolean, boolean): boolean\",\"def_pos\":0},{\"name\":\"A08\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/Integer;Ljava/lang/String;)V\",\"signature\":\"A08(java.lang.Integer, java.lang.String): void\",\"def_pos\":0},{\"name\":\"A09\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/Throwable;)V\",\"signature\":\"A09(java.lang.Throwable): void\",\"def_pos\":0}],\"method_count\":12,\"inner_class_count\":0}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "com.whatsapp.consumer.companiondevice.iq.SyncResponseHandler",
+          "method_name": "A05",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fell_back\":false,\"body\":\"    private final void A05(String str) {\\n        Iterator it \\u003d this.A0N.iterator();\\n        while (it.hasNext()) {\\n            A06(\\\"onIncomingPatchesHandled\\\", new Ffz(str, 3, it.next()));\\n        }\\n    }\",\"overload_count\":1,\"method_name\":\"A05\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"com.whatsapp.consumer.companiondevice.iq.SyncResponseHandler.A05\",\"class_name\":\"com.whatsapp.consumer.companiondevice.iq.SyncResponseHandler\",\"overload_index\":0}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "com.whatsapp.consumer.companiondevice.iq.SyncResponseHandler",
+    "method": {
+      "name": "A05",
+      "reported_signature": "A05(java.lang.String): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(Ljava/lang/String;)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    private final void A05(String str) {\n        Iterator it = this.A0N.iterator();\n        while (it.hasNext()) {\n            A06(\"onIncomingPatchesHandled\", new Ffz(str, 3, it.next()));\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

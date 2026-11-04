@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_c6873dbbef21370f6112fd73625b116699b0884216c5f7efc7bfbc22add23ee5",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C0oe",
+    "method_name": "A02",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-z8hGR1/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C0oe"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_count\":11,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"C0oe\",\"full_name\":\"X.C0oe\",\"field_count\":17,\"fields\":[{\"def_pos\":0,\"name\":\"A00\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A01\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A02\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A03\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A04\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A05\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A06\",\"type\":\"X.07p\"},{\"def_pos\":0,\"name\":\"A07\",\"type\":\"X.09S\"},{\"def_pos\":0,\"name\":\"A08\",\"type\":\"X.0Gg\"},{\"def_pos\":0,\"name\":\"A09\",\"type\":\"X.0No\"},{\"def_pos\":0,\"name\":\"A0A\",\"type\":\"X.0Nl\"},{\"def_pos\":0,\"name\":\"A0B\",\"type\":\"X.0m9\"},{\"def_pos\":0,\"name\":\"A0C\",\"type\":\"X.0of\"},{\"def_pos\":0,\"name\":\"A0D\",\"type\":\"X.0Js\"},{\"def_pos\":0,\"name\":\"A0E\",\"type\":\"java.util.Map\"},{\"def_pos\":0,\"name\":\"A0F\",\"type\":\"X.00p\"},{\"def_pos\":0,\"name\":\"A0G\",\"type\":\"java.util.List\"}],\"methods\":[{\"def_pos\":0,\"name\":\"\\u003cclinit\\u003e\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"\\u003cclinit\\u003e(): void\"},{\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"()V\",\"signature\":\"\\u003cinit\\u003e(): void\"},{\"def_pos\":0,\"name\":\"A02\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/278;LX/0iX;Z)V\",\"signature\":\"A02(X.278, X.0iX, boolean): void\"},{\"def_pos\":0,\"name\":\"A0L\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)I\",\"signature\":\"A0L(java.lang.String): int\"},{\"def_pos\":0,\"name\":\"A0M\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/278;)V\",\"signature\":\"A0M(X.278): void\"},{\"def_pos\":0,\"name\":\"A0N\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;I)V\",\"signature\":\"A0N(java.lang.String, int): void\"},{\"def_pos\":0,\"name\":\"A0O\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;I)V\",\"signature\":\"A0O(java.lang.String, int): void\"},{\"def_pos\":0,\"name\":\"A0P\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;Ljava/lang/String;)V\",\"signature\":\"A0P(java.lang.String, java.lang.String): void\"},{\"def_pos\":0,\"name\":\"A0Q\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/util/List;)V\",\"signature\":\"A0Q(java.util.List): void\"},{\"def_pos\":0,\"name\":\"A0R\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/util/Map;)V\",\"signature\":\"A0R(java.util.Map): void\"},{\"def_pos\":0,\"name\":\"A0S\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;Ljava/lang/String;)Z\",\"signature\":\"A0S(java.lang.String, java.lang.String): boolean\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C0oe",
+          "method_name": "A02",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"full_name\":\"X.0oe.A02\",\"class_name\":\"X.C0oe\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    private final void A02(AnonymousClass278 anonymousClass278, C0iX c0iX, boolean z) {\\n        C0of c0of \\u003d this.A0C;\\n        C6pB c6pB \\u003d new C6pB(anonymousClass278, this, c0iX, z);\\n        C00T.A07(c0of);\\n        try {\\n            C8R5 c8r5 \\u003d new C8R5(c6pB);\\n            C00T.A06();\\n            Log.i(\\\"PrivacySettingsProtocolHelper/sendGetPrivacySettingsRequest\\\");\\n            C0Sf c0Sf \\u003d c8r5.A00;\\n            String strA0G \\u003d c0Sf.A0G();\\n            c0Sf.A0W(c8r5, new C0Tp(new C0Tp(\\\"privacy\\\", null), \\\"iq\\\", new C0Tl[]{new C0Tl(C0mL.A00, \\\"to\\\"), new C0Tl(\\\"id\\\", strA0G), new C0Tl(\\\"xmlns\\\", \\\"privacy\\\"), new C0Tl(\\\"type\\\", \\\"get\\\")}), strA0G, 70, 0L);\\n        } catch (Throwable th) {\\n            C00T.A06();\\n            throw th;\\n        }\\n    }\",\"overload_count\":1,\"method_name\":\"A02\",\"markers\":[],\"mode\":\"java\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C0oe",
+    "method": {
+      "name": "A02",
+      "reported_signature": "A02(X.278, X.0iX, boolean): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(LX/278;LX/0iX;Z)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    private final void A02(AnonymousClass278 anonymousClass278, C0iX c0iX, boolean z) {\n        C0of c0of = this.A0C;\n        C6pB c6pB = new C6pB(anonymousClass278, this, c0iX, z);\n        C00T.A07(c0of);\n        try {\n            C8R5 c8r5 = new C8R5(c6pB);\n            C00T.A06();\n            Log.i(\"PrivacySettingsProtocolHelper/sendGetPrivacySettingsRequest\");\n            C0Sf c0Sf = c8r5.A00;\n            String strA0G = c0Sf.A0G();\n            c0Sf.A0W(c8r5, new C0Tp(new C0Tp(\"privacy\", null), \"iq\", new C0Tl[]{new C0Tl(C0mL.A00, \"to\"), new C0Tl(\"id\", strA0G), new C0Tl(\"xmlns\", \"privacy\"), new C0Tl(\"type\", \"get\")}), strA0G, 70, 0L);\n        } catch (Throwable th) {\n            C00T.A06();\n            throw th;\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

@@ -61,6 +61,31 @@ impl StaticKeypair {
         }
     }
 
+    /// Check persisted halves before a comparison login opens a socket.
+    /// `classic::ClassicFinish::finish` transmits the stored public half but
+    /// computes DH with the private half; silently accepting unrelated halves
+    /// creates a handshake that cannot authenticate the declared identity.
+    #[cfg(all(
+        feature = "experimental-signal-crypto",
+        feature = "experimental-transport"
+    ))]
+    pub(crate) fn validate_curve25519(&self) -> Result<(), TransportError> {
+        use snow::{
+            params::DHChoice,
+            resolvers::{CryptoResolver, DefaultResolver},
+        };
+        let mut dh = DefaultResolver
+            .resolve_dh(&DHChoice::Curve25519)
+            .ok_or(TransportError::Config("Curve25519 backend unavailable"))?;
+        dh.set(self.private());
+        if dh.pubkey() != self.public() {
+            return Err(TransportError::Config(
+                "saved Noise keypair is inconsistent",
+            ));
+        }
+        Ok(())
+    }
+
     /// Public key bytes.
     pub fn public(&self) -> &[u8; 32] {
         &self.public

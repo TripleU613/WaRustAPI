@@ -1,0 +1,37 @@
+
+# class: LX/1jv;
+# extends: Ljava/lang/Object;
+
+.method public A0C(L)  # .registers 6
+    # full signature: LX/1jv;->A0C()LX/1o0;
+    0000..0004  iget-boolean  v0, v5, LX/1jv;->A0b:Z
+    0004..0006  const/4  v4, #0x0
+    0006..000a  if-nez  v0, +0x27
+    000a..000e  iget-object  v0, v5, LX/1jv;->A0X:LX/143;
+    000e..0014  invoke-interface  {v0}, LX/143;->B76()LX/1nk;
+    0014..0016  move-result-object  v3
+    0016..001c  invoke-interface  {v0}, LX/143;->B75()Lorg/whispersystems/libsignal/kem/KEMPublicKey;
+    001c..001e  move-result-object  v2
+    001e..0022  iget-object  v0, v5, LX/1jv;->A0W:LX/144;
+    0022..0028  invoke-virtual  {v0}, LX/144;->A0D()LX/1ny;
+    0028..002a  move-result-object  v1
+    002a..002e  iget  v0, v1, LX/1ny;->A00:I
+    002e..0032  iput  v0, v5, LX/1jv;->A07:I
+    0032..0036  iget-object  v1, v1, LX/1ny;->A01:LX/1nq;
+    0036..003a  if-eqz  v1, +0x12
+    003a..003e  if-eqz  v3, +0x7
+    003e..0042  new-instance  v4, LX/1nz;
+    0042..0048  invoke-direct  {v4, v3, v2}, LX/1nz;-><init>(LX/1nk;Lorg/whispersystems/libsignal/kem/KEMPublicKey;)V
+    0048..004c  new-instance  v0, LX/1o0;
+    004c..0052  invoke-direct  {v0, v4, v1}, LX/1o0;-><init>(LX/1nz;LX/1nq;)V
+    0052..0054  return-object  v0
+    0054..0056  move-object  v3, v4
+    0056..0058  move-object  v2, v4
+    0058..005a  goto  -0x1d
+    005a..005e  const-string  v0, "ConnectionThread/connect/failed to load auth key, postponing login"
+    005e..0064  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    0064..0068  new-instance  v0, LX/29f;
+    0068..006e  invoke-direct  {v0}, LX/29f;-><init>()V
+    006e..0070  throw  v0
+    # exception table: 0 try range(s)
+.end method

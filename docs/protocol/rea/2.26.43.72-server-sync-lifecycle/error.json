@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_ba97e05f6134ed980c4dedec8e2038a59edcc7dfcf94962fc36b8839c55e9922",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.FUc",
+    "method_name": "Bvj",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-kcC4Rk/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.FUc"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_classes\":[],\"name\":\"FUc\",\"full_name\":\"X.FUc\",\"field_count\":18,\"fields\":[{\"def_pos\":0,\"name\":\"A00\",\"type\":\"X.EfB\"},{\"def_pos\":0,\"name\":\"A01\",\"type\":\"java.util.List\"},{\"def_pos\":0,\"name\":\"A02\",\"type\":\"java.util.List\"},{\"def_pos\":0,\"name\":\"A03\",\"type\":\"X.00x\"},{\"def_pos\":0,\"name\":\"A04\",\"type\":\"X.0aY\"},{\"def_pos\":0,\"name\":\"A05\",\"type\":\"X.0ac\"},{\"def_pos\":0,\"name\":\"A06\",\"type\":\"X.0l8\"},{\"def_pos\":0,\"name\":\"A07\",\"type\":\"X.0fz\"},{\"def_pos\":0,\"name\":\"A08\",\"type\":\"X.0fI\"},{\"def_pos\":0,\"name\":\"A09\",\"type\":\"com.whatsapp.consumer.companiondevice.iq.SyncResponseHandler\"},{\"def_pos\":0,\"name\":\"A0A\",\"type\":\"X.0me\"},{\"def_pos\":0,\"name\":\"A0B\",\"type\":\"X.FDW\"},{\"def_pos\":0,\"name\":\"A0C\",\"type\":\"X.09F\"},{\"def_pos\":0,\"name\":\"A0D\",\"type\":\"X.0Sf\"},{\"def_pos\":0,\"name\":\"A0E\",\"type\":\"com.whatsapp.kmp.syncd.syncdengine.OutgoingProcessor\"},{\"def_pos\":0,\"name\":\"A0F\",\"type\":\"X.023\"},{\"def_pos\":0,\"name\":\"A0G\",\"type\":\"X.0TR\"},{\"def_pos\":0,\"name\":\"A0H\",\"type\":\"X.08Z\"}],\"methods\":[{\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"(LX/00x;LX/0aY;LX/0ac;LX/0l8;LX/0fz;LX/0fI;Lcom/whatsapp/consumer/companiondevice/iq/SyncResponseHandler;LX/0me;LX/FDW;LX/09F;LX/08Z;LX/0Sf;Lcom/whatsapp/kmp/syncd/syncdengine/OutgoingProcessor;)V\",\"signature\":\"\\u003cinit\\u003e(X.00x, X.0aY, X.0ac, X.0l8, X.0fz, X.0fI, com.whatsapp.consumer.companiondevice.iq.SyncResponseHandler, X.0me, X.FDW, X.09F, X.08Z, X.0Sf, com.whatsapp.kmp.syncd.syncdengine.OutgoingProcessor): void\",\"def_pos\":0},{\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/FUc;)LX/EfB;\",\"signature\":\"A00(X.FUc): X.EfB\",\"def_pos\":0},{\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/EfK;LX/FUc;Ljava/util/Map;)V\",\"signature\":\"A01(X.EfK, X.FUc, java.util.Map): void\",\"def_pos\":0},{\"name\":\"BsS\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)V\",\"signature\":\"BsS(java.lang.String): void\",\"def_pos\":0},{\"name\":\"Bvj\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0Tp;Ljava/lang/String;)V\",\"signature\":\"Bvj(X.0Tp, java.lang.String): void\",\"def_pos\":0},{\"name\":\"CK4\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0Tp;Ljava/lang/String;)V\",\"signature\":\"CK4(X.0Tp, java.lang.String): void\",\"def_pos\":0},{\"name\":\"CmQ\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)LX/D33;\",\"signature\":\"CmQ(java.lang.String): X.D33\",\"def_pos\":0}],\"method_count\":7,\"inner_class_count\":0}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.FUc",
+          "method_name": "Bvj",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fell_back\":false,\"body\":\"    @Override // X.C0lG\\n    public void Bvj(C0Tp c0Tp, String str) throws LIL {\\n        C00l.A0A(str, c0Tp);\\n        C2LA.A1M(\\\"sync-request-handler/onError iqId:\\\", str);\\n        C0Tp c0TpA0F \\u003d c0Tp.A0F(\\\"error\\\");\\n        if (c0TpA0F \\u003d\\u003d null) {\\n            throw C6oe.A0r(C1Xl.A0w(\\\"Expected child error in \\\", c0Tp));\\n        }\\n        int iA05 \\u003d c0TpA0F.A05(\\\"code\\\", -1);\\n        if (iA05 \\u003d\\u003d -1) {\\n            throw C6oe.A0r(C1Xl.A0w(\\\"Expected attribute code in \\\", c0Tp));\\n        }\\n        Long lValueOf \\u003d null;\\n        String strA0M \\u003d c0TpA0F.A0M(\\\"text\\\", null);\\n        try {\\n            long jA08 \\u003d c0TpA0F.A08(\\\"backoff\\\", -1L);\\n            if (jA08 !\\u003d -1) {\\n                lValueOf \\u003d Long.valueOf(jA08 * 1000);\\n            }\\n        } catch (LIL e) {\\n            Log.e(\\\"SyncRequestHandler/getServerProvidedBackoffInMs the provided backoff is not an integral value.\\\", e);\\n        }\\n        this.A0H.CbD(new FcT(this, lValueOf, strA0M, iA05, 3));\\n    }\",\"overload_count\":1,\"method_name\":\"Bvj\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.FUc.Bvj\",\"class_name\":\"X.FUc\",\"overload_index\":0}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.FUc",
+    "method": {
+      "name": "Bvj",
+      "reported_signature": "Bvj(X.0Tp, java.lang.String): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(LX/0Tp;Ljava/lang/String;)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    @Override // X.C0lG\n    public void Bvj(C0Tp c0Tp, String str) throws LIL {\n        C00l.A0A(str, c0Tp);\n        C2LA.A1M(\"sync-request-handler/onError iqId:\", str);\n        C0Tp c0TpA0F = c0Tp.A0F(\"error\");\n        if (c0TpA0F == null) {\n            throw C6oe.A0r(C1Xl.A0w(\"Expected child error in \", c0Tp));\n        }\n        int iA05 = c0TpA0F.A05(\"code\", -1);\n        if (iA05 == -1) {\n            throw C6oe.A0r(C1Xl.A0w(\"Expected attribute code in \", c0Tp));\n        }\n        Long lValueOf = null;\n        String strA0M = c0TpA0F.A0M(\"text\", null);\n        try {\n            long jA08 = c0TpA0F.A08(\"backoff\", -1L);\n            if (jA08 != -1) {\n                lValueOf = Long.valueOf(jA08 * 1000);\n            }\n        } catch (LIL e) {\n            Log.e(\"SyncRequestHandler/getServerProvidedBackoffInMs the provided backoff is not an integral value.\", e);\n        }\n        this.A0H.CbD(new FcT(this, lValueOf, strA0M, iA05, 3));\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

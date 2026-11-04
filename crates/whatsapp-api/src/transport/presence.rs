@@ -267,6 +267,8 @@ pub fn saved_tctoken(store: &crate::store::ProtocolStore, peer: &Jid) -> Result<
 
 /// The trusted-contact token a person issued us, looked up by their user
 /// identity (device dropped) and, for a phone-number JID, its saved LID.
+/// Requires the encrypted inbox's authenticated PN/LID mapping support.
+#[cfg(feature = "experimental-signal-crypto")]
 pub fn held_tctoken(store: &crate::store::ProtocolStore, peer: &Jid) -> Result<Option<Vec<u8>>> {
     let user = peer.to_non_ad();
     if let Some(token) = saved_tctoken(store, &user)? {

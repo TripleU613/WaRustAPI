@@ -1,0 +1,251 @@
+
+# class: LX/FUc;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLLLLLLLLLL)  # .registers 16
+    # full signature: LX/FUc;-><init>(LX/00x;LX/0aY;LX/0ac;LX/0l8;LX/0fz;LX/0fI;Lcom/whatsapp/consumer/companiondevice/iq/SyncResponseHandler;LX/0me;LX/FDW;LX/09F;LX/08Z;LX/0Sf;Lcom/whatsapp/kmp/syncd/syncdengine/OutgoingProcessor;)V
+    0000..0002  const/4  v1, #0x0
+    0002..0008  invoke-static  {v12, v13, v14, v7}, LX/3q0;->A1R(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+    0008..000e  invoke-static  {v11, v6}, LX/3q5;->A1F(Ljava/lang/Object;Ljava/lang/Object;)V
+    000e..0010  const/4  v0, #0x6
+    0010..0016  invoke-static  {v10, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0016..001c  invoke-static  {v15, v3}, LX/3q5;->A1G(Ljava/lang/Object;Ljava/lang/Object;)V
+    001c..0020  const/16  v0, #0xa
+    0020..0026  invoke-static  {v4, v0, v5}, LX/3q3;->A1G(Ljava/lang/Object;ILjava/lang/Object;)V
+    0026..002a  const/16  v0, #0xc
+    002a..0030  invoke-static  {v8, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0030..0036  invoke-direct  {v2}, Ljava/lang/Object;-><init>()V
+    0036..003a  iput-object  v12, v2, LX/FUc;->A0C:LX/09F;
+    003a..003e  iput-object  v13, v2, LX/FUc;->A0H:LX/08Z;
+    003e..0042  iput-object  v14, v2, LX/FUc;->A0D:LX/0Sf;
+    0042..0046  iput-object  v7, v2, LX/FUc;->A07:LX/0fz;
+    0046..004a  iput-object  v11, v2, LX/FUc;->A0B:LX/FDW;
+    004a..004e  iput-object  v6, v2, LX/FUc;->A06:LX/0l8;
+    004e..0052  iput-object  v10, v2, LX/FUc;->A0A:LX/0me;
+    0052..0056  iput-object  v9, v2, LX/FUc;->A09:Lcom/whatsapp/consumer/companiondevice/iq/SyncResponseHandler;
+    0056..005a  iput-object  v15, v2, LX/FUc;->A0E:Lcom/whatsapp/kmp/syncd/syncdengine/OutgoingProcessor;
+    005a..005e  iput-object  v3, v2, LX/FUc;->A03:LX/00x;
+    005e..0062  iput-object  v4, v2, LX/FUc;->A04:LX/0aY;
+    0062..0066  iput-object  v5, v2, LX/FUc;->A05:LX/0ac;
+    0066..006a  iput-object  v8, v2, LX/FUc;->A08:LX/0fI;
+    006a..006e  iput-object  v1, v2, LX/FUc;->A00:LX/EfB;
+    006e..0072  iput-object  v1, v2, LX/FUc;->A01:Ljava/util/List;
+    0072..0076  iput-object  v1, v2, LX/FUc;->A02:Ljava/util/List;
+    0076..007a  const/16  v0, #0x88f
+    007a..0080  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0080..0082  move-result-object  v0
+    0082..0086  check-cast  v0, LX/023;
+    0086..008a  iput-object  v0, v2, LX/FUc;->A0F:LX/023;
+    008a..0090  invoke-static  {}, LX/2L9;->A14()LX/0TR;
+    0090..0092  move-result-object  v0
+    0092..0096  iput-object  v0, v2, LX/FUc;->A0G:LX/0TR;
+    0096..0098  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(LL)  # .registers 3
+    # full signature: LX/FUc;->A00(LX/FUc;)LX/EfB;
+    0000..0002  monitor-enter
+    0002..0006  iget-object  v1, v2, LX/FUc;->A00:LX/EfB;
+    0006..000a  if-eqz  v1, +0xb
+    000a..000c  const/4  v0, #0x0
+    000c..0010  iput-object  v0, v2, LX/FUc;->A00:LX/EfB;
+    0010..0014  iput-object  v0, v2, LX/FUc;->A01:Ljava/util/List;
+    0014..0018  iput-object  v0, v2, LX/FUc;->A02:Ljava/util/List;
+    0018..001a  monitor-exit
+    001a..001c  return-object  v1
+    001c..0022  invoke-static  {}, LX/2L8;->A1C()Ljava/lang/IllegalStateException;
+    0022..0024  move-result-object  v0
+    0024..0026  throw  v0
+    0026..0028  move-exception  v0
+    0028..002a  monitor-exit
+    002a..002c  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0001..000c -> 0013
+    # catch <all> code_units 000e..0015 -> 0013
+.end method
+
+.method public A01(VLLL)  # .registers 19
+    # full signature: LX/FUc;->A01(LX/EfK;LX/FUc;Ljava/util/Map;)V
+    0000..0004  const-string  v6, "sync-request-handler/coexv2 out-of-band key share not scheduled"
+    0004..0008  move-object/from16  v3, v17
+    0008..000c  move-object/from16  v2, v18
+    000c..0012  invoke-interface  {v2}, Ljava/util/Map;->isEmpty()Z
+    0012..0014  move-result  v0
+    0014..0018  if-eqz  v0, +0x8
+    0018..001c  const-string  v0, "sync-request-handler/coexv2 no keys referenced by patch; skipping bot envelope"
+    001c..0022  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0022..0024  return-void
+    0024..002a  invoke-static  {v2}, LX/Dwt;->A00(Ljava/util/Map;)LX/98P;
+    002a..002c  move-result-object  v0
+    002c..0032  invoke-virtual  {v0}, Lcom/google/protobuf/AbstractMessageLite;->toByteArray()[B
+    0032..0034  move-result-object  v5
+    0034..0038  iget-object  v4, v3, LX/FUc;->A05:LX/0ac;
+    0038..003e  invoke-static  {v5}, LX/00l;->A08(Ljava/lang/Object;)V
+    003e..0040  const/4  v13, #0x0
+    0040..0044  sget-object  v0, LX/Exz;->A00:LX/0xC;
+    0044..004a  invoke-virtual  {v0}, Lcom/whatsapp/infra/core/jid/UserJid;->getPrimaryDevice()Lcom/whatsapp/infra/core/jid/DeviceJid;
+    004a..004c  move-result-object  v0
+    004c..004e  const/4  v8, #0x0
+    004e..0054  invoke-static  {v0}, LX/F3k;->A04(Lcom/whatsapp/infra/core/jid/DeviceJid;)LX/EoY;
+    0054..0056  move-result-object  v1
+    0056..005a  iget-object  v0, v4, LX/0ac;->A00:LX/05a;
+    005a..0060  invoke-static  {v0}, LX/DBe;->A0g(LX/05a;)LX/0WJ;
+    0060..0062  move-result-object  v0
+    0062..0068  invoke-virtual  {v0, v1, v5}, LX/0WJ;->A0Q(LX/EoY;[B)LX/Es6;
+    0068..006a  move-result-object  v0
+    006a..006e  iget-object  v10, v0, LX/Es6;->A04:[B
+    006e..0072  iget  v1, v0, LX/Es6;->A01:I
+    0072..0076  if-nez  v1, +0x24
+    0076..007a  if-eqz  v10, +0x22
+    007a..007e  iget  v0, v0, LX/Es6;->A00:I
+    007e..0084  invoke-static  {v0}, LX/EHn;->A00(I)I
+    0084..0086  move-result  v12
+    0086..008a  const-string  v9, ""
+    008a..008c  const/4  v11, #0x2
+    008c..0090  new-instance  v7, LX/Ezj;
+    0090..0092  move  v15, v13
+    0092..0094  move  v14, v13
+    0094..009a  invoke-direct/range  {v7..v15}, LX/Ezj;-><init>(LX/EOt;Ljava/lang/String;[BIIZZZ)V
+    009a..009c  move-object  v10, v8
+    009c..009e  move  v12, v13
+    009e..00a0  move-object  v9, v8
+    00a0..00a2  move  v11, v13
+    00a2..00a8  invoke-static/range  {v7..v12}, LX/F3f;->A04(LX/Ezj;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;IZ)LX/0Tp;
+    00a8..00aa  move-result-object  v0
+    00aa..00ae  move-object/from16  v1, v16
+    00ae..00b2  iput-object  v0, v1, LX/EfK;->A00:LX/0Tp;
+    00b2..00b8  invoke-interface  {v2}, Ljava/util/Map;->size()I
+    00b8..00ba  return-void
+    00ba..00be  const-string  v0, "CoexV2BotIqEncryptor/encryptToBotEncNode encryption failed status="
+    00be..00c4  invoke-static  {v0, v1}, LX/6ol;->A1L(Ljava/lang/String;I)V
+    00c4..00c8  const-string  v0, "sync-request-handler/coexv2 failed to build bot enc node; sending IQ WITHOUT envelope"
+    00c8..00ce  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    00ce..00d2  iget-object  v0, v3, LX/FUc;->A08:LX/0fI;
+    00d2..00d8  invoke-virtual  {v0, v2}, LX/0fI;->A0E(Ljava/util/Map;)Z
+    00d8..00da  move-result  v0
+    00da..00de  if-nez  v0, +0x1e
+    00de..00e4  invoke-static  {v6}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    00e4..00e6  return-void
+    00e6..00e8  move-exception  v1
+    00e8..00ec  const-string  v0, "sync-request-handler/coexv2 error building bot envelope; sending IQ WITHOUT it"
+    00ec..00f2  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    00f2..00f6  iget-object  v0, v3, LX/FUc;->A08:LX/0fI;
+    00f6..00fc  invoke-virtual  {v0, v2}, LX/0fI;->A0E(Ljava/util/Map;)Z
+    00fc..00fe  move-result  v0
+    00fe..0102  if-nez  v0, +0xc
+    0102..0108  invoke-static  {v6}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0108..010a  return-void
+    010a..010c  move-exception  v1
+    010c..0110  const-string  v0, "sync-request-handler/coexv2 out-of-band key share failed"
+    0110..0116  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0116..0118  return-void
+    0118..011a  move-exception  v0
+    011a..011c  throw  v0
+    # exception table: 2 try range(s)
+    # catch Ljava/util/concurrent/CancellationException; code_units 0002..0073 -> 008c
+    # catch <all> code_units 0002..0073 -> 0073
+    # catch <all> code_units 0079..0085 -> 0085
+.end method
+
+.method public BsS(VL)  # .registers 4
+    # full signature: LX/FUc;->BsS(Ljava/lang/String;)V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  const-string  v0, "sync-request-handler/onDeliveryFailure iqId:"
+    000c..0012  invoke-static  {v0, v3}, LX/2LA;->A1M(Ljava/lang/String;Ljava/lang/String;)V
+    0012..0016  iget-object  v1, v2, LX/FUc;->A0H:LX/08Z;
+    0016..0018  const/4  v0, #0x4
+    0018..001e  invoke-static  {v1, v2, v0}, LX/Feb;->A00(LX/08Z;Ljava/lang/Object;I)V
+    001e..0020  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public Bvj(VLL)  # .registers 12
+    # full signature: LX/FUc;->Bvj(LX/0Tp;Ljava/lang/String;)V
+    0000..0006  invoke-static  {v11, v10}, LX/00l;->A0A(Ljava/lang/Object;Ljava/lang/Object;)V
+    0006..000a  const-string  v0, "sync-request-handler/onError iqId:"
+    000a..0010  invoke-static  {v0, v11}, LX/2LA;->A1M(Ljava/lang/String;Ljava/lang/String;)V
+    0010..0014  const-string  v0, "error"
+    0014..001a  invoke-virtual  {v10, v0}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    001a..001c  move-result-object  v3
+    001c..0020  if-eqz  v3, +0x44
+    0020..0024  const-string  v1, "code"
+    0024..0026  const/4  v0, #0xff (-1)
+    0026..002c  invoke-virtual  {v3, v1, v0}, LX/0Tp;->A05(Ljava/lang/String;I)I
+    002c..002e  move-result  v7
+    002e..0032  if-eq  v7, v0, +0x30
+    0032..0036  const-string  v0, "text"
+    0036..0038  const/4  v5, #0x0
+    0038..003e  invoke-virtual  {v3, v0, v5}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    003e..0040  move-result-object  v6
+    0040..0044  const-string  v0, "backoff"
+    0044..0048  const-wide/16  v1, #0xffff (-1)
+    0048..004e  invoke-virtual  {v3, v0, v1, v2}, LX/0Tp;->A08(Ljava/lang/String;J)J
+    004e..0050  move-result-wide  v3
+    0050..0054  cmp-long  v0, v3, v1
+    0054..0058  if-eqz  v0, +0x10
+    0058..005c  const-wide/16  v0, #0x3e8
+    005c..005e  mul-long/2addr  v3, v0
+    005e..0064  invoke-static  {v3, v4}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0064..0066  move-result-object  v5
+    0066..0068  goto  +0x7
+    0068..006a  move-exception  v1
+    006a..006e  const-string  v0, "SyncRequestHandler/getServerProvidedBackoffInMs the provided backoff is not an integral value."
+    006e..0074  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0074..0076  move-object  v4, v9
+    0076..007a  iget-object  v0, v9, LX/FUc;->A0H:LX/08Z;
+    007a..007c  const/4  v8, #0x3
+    007c..0080  new-instance  v3, LX/FcT;
+    0080..0086  invoke-direct/range  {v3..v8}, LX/FcT;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;II)V
+    0086..008c  invoke-interface  {v0, v3}, LX/08Z;->CbD(Ljava/lang/Runnable;)V
+    008c..008e  return-void
+    008e..0092  const-string  v0, "Expected attribute code in "
+    0092..0098  invoke-static  {v0, v10}, LX/1Xl;->A0w(Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/String;
+    0098..009a  move-result-object  v0
+    009a..00a0  invoke-static  {v0}, LX/6oe;->A0r(Ljava/lang/String;)LX/LIL;
+    00a0..00a2  move-result-object  v0
+    00a2..00a4  throw  v0
+    00a4..00a8  const-string  v0, "Expected child error in "
+    00a8..00ae  invoke-static  {v0, v10}, LX/1Xl;->A0w(Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/String;
+    00ae..00b0  move-result-object  v0
+    00b0..00b6  invoke-static  {v0}, LX/6oe;->A0r(Ljava/lang/String;)LX/LIL;
+    00b6..00b8  move-result-object  v0
+    00b8..00ba  throw  v0
+    # exception table: 1 try range(s)
+    # catch LX/LIL; code_units 0020..0034 -> 0034
+.end method
+
+.method public CK4(VLL)  # .registers 6
+    # full signature: LX/FUc;->CK4(LX/0Tp;Ljava/lang/String;)V
+    0000..0006  invoke-static  {v5, v4}, LX/00l;->A0A(Ljava/lang/Object;Ljava/lang/Object;)V
+    0006..000a  const-string  v0, "sync-request-handler/onSuccess iqId:"
+    000a..0010  invoke-static  {v0, v5}, LX/2LA;->A1N(Ljava/lang/String;Ljava/lang/String;)V
+    0010..0014  new-instance  v2, LX/F2T;
+    0014..001a  invoke-direct  {v2, v4}, LX/F2T;-><init>(LX/0Tp;)V
+    001a..001e  iget-object  v1, v3, LX/FUc;->A0H:LX/08Z;
+    001e..0022  const/16  v0, #0x28
+    0022..0028  invoke-static  {v1, v2, v3, v0}, LX/FeN;->A00(LX/08Z;Ljava/lang/Object;Ljava/lang/Object;I)V
+    0028..002a  return-void
+    002a..002c  move-exception  v2
+    002c..0032  invoke-static  {v3}, LX/FUc;->A00(LX/FUc;)LX/EfB;
+    0032..0036  iget-object  v1, v3, LX/FUc;->A0H:LX/08Z;
+    0036..003a  const/16  v0, #0x29
+    003a..003c  goto  +0x9
+    003c..003e  move-exception  v2
+    003e..0044  invoke-static  {v3}, LX/FUc;->A00(LX/FUc;)LX/EfB;
+    0044..0048  iget-object  v1, v3, LX/FUc;->A0H:LX/08Z;
+    0048..004c  const/16  v0, #0x2a
+    004c..0052  invoke-static  {v1, v2, v3, v0}, LX/FeN;->A00(LX/08Z;Ljava/lang/Object;Ljava/lang/Object;I)V
+    0052..0054  return-void
+    # exception table: 1 try range(s)
+    # catch LX/Dug; code_units 0008..0015 -> 0015
+    # catch LX/Duh; code_units 0008..0015 -> 001e
+.end method
+
+.method public CmQ(LL)  # .registers 3
+    # full signature: LX/FUc;->CmQ(Ljava/lang/String;)LX/D33;
+    0000..0004  sget-object  v0, LX/KNW;->A00:LX/KNW;
+    0004..0006  return-object  v0
+    # exception table: 0 try range(s)
+.end method

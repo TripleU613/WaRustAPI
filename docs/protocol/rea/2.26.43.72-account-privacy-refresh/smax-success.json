@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_0a3f44335e51f3311f34ca3fd77c36d8a5c92ccd1e4e73b7d634e69e08d9541a",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C8R5",
+    "method_name": "CK4",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-z8hGR1/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C8R5"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_count\":5,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"C8R5\",\"full_name\":\"X.C8R5\",\"field_count\":2,\"fields\":[{\"def_pos\":0,\"name\":\"A00\",\"type\":\"X.0Sf\"},{\"def_pos\":0,\"name\":\"A01\",\"type\":\"X.6pB\"}],\"methods\":[{\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"(LX/6pB;)V\",\"signature\":\"\\u003cinit\\u003e(X.6pB): void\"},{\"def_pos\":0,\"name\":\"BsS\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)V\",\"signature\":\"BsS(java.lang.String): void\"},{\"def_pos\":0,\"name\":\"Bvj\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0Tp;Ljava/lang/String;)V\",\"signature\":\"Bvj(X.0Tp, java.lang.String): void\"},{\"def_pos\":0,\"name\":\"CK4\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0Tp;Ljava/lang/String;)V\",\"signature\":\"CK4(X.0Tp, java.lang.String): void\"},{\"def_pos\":0,\"name\":\"CmQ\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)LX/D33;\",\"signature\":\"CmQ(java.lang.String): X.D33\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C8R5",
+          "method_name": "CK4",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"full_name\":\"X.8R5.CK4\",\"class_name\":\"X.C8R5\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    @Override // X.C0lG\\n    public void CK4(C0Tp c0Tp, String str) throws LIL {\\n        java.util.Map mapA0K;\\n        C00l.A09(c0Tp, 1);\\n        C0Tp c0TpA0D \\u003d c0Tp.A0D();\\n        C00l.A05(c0TpA0D);\\n        C0Tp.A01(c0TpA0D, \\\"privacy\\\");\\n        C0Tp[] c0TpArr \\u003d c0TpA0D.A02;\\n        if (c0TpArr !\\u003d null) {\\n            mapA0K \\u003d C05p.A0H(C0Cl.A0H(C8db.A00(17), C0Cl.A0H(C8dV.A00(c0TpA0D, 16), new C1XP(new C0Si(0, c0TpArr.length - 1), 0))));\\n        } else {\\n            mapA0K \\u003d C05p.A0K();\\n        }\\n        this.A01.A01(mapA0K);\\n    }\",\"overload_count\":1,\"method_name\":\"CK4\",\"markers\":[],\"mode\":\"java\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C8R5",
+    "method": {
+      "name": "CK4",
+      "reported_signature": "CK4(X.0Tp, java.lang.String): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(LX/0Tp;Ljava/lang/String;)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    @Override // X.C0lG\n    public void CK4(C0Tp c0Tp, String str) throws LIL {\n        java.util.Map mapA0K;\n        C00l.A09(c0Tp, 1);\n        C0Tp c0TpA0D = c0Tp.A0D();\n        C00l.A05(c0TpA0D);\n        C0Tp.A01(c0TpA0D, \"privacy\");\n        C0Tp[] c0TpArr = c0TpA0D.A02;\n        if (c0TpArr != null) {\n            mapA0K = C05p.A0H(C0Cl.A0H(C8db.A00(17), C0Cl.A0H(C8dV.A00(c0TpA0D, 16), new C1XP(new C0Si(0, c0TpArr.length - 1), 0))));\n        } else {\n            mapA0K = C05p.A0K();\n        }\n        this.A01.A01(mapA0K);\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

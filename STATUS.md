@@ -1,3 +1,31 @@
+2026-11-04 — **Noise-pair preflight and notification lifecycle audit:**
+
+- Comparison login now verifies persisted Curve25519 public/private consistency
+  before endpoint/DNS/TCP/Noise. A mismatch refuses with a redacted error; no
+  repair, key replacement or login reservation occurs. Regression inputs use
+  the independent registration key producer and survive encrypted-store reopen.
+- Auth-key storage/replacement and the connection getter are traced; candidate
+  encoding, request-manager outcomes and lost-result recovery remain open.
+  [Lifecycle and local correction](docs/protocol/authkey-lifecycle.md).
+- Server-sync dirty versions are distinct from verified versions/LT hashes;
+  incremental scheduling cannot reuse the existing all-version-zero snapshot
+  fetch. Privacy refresh selects SMAX/MEX/shadow through an effective property,
+  then applies guarded values. These are required remaining stateful ports; no
+  ACK-only shortcut or invented effective configuration was added.
+  [Server lifecycle](docs/protocol/server-sync-lifecycle.md),
+  [privacy refresh](docs/protocol/account-privacy-refresh.md).
+- Reduced Noise/transport compilation exposed an inbox-dependent presence helper
+  missing its Signal feature gate. Its callers already require that feature;
+  the gate now matches the dependency without changing full-client traffic.
+
+Validation: 1,128 workspace/all-feature tests and strict all-target/all-feature
+Clippy passed; standalone Noise tests, reduced Noise/transport checks/tests,
+CLI-reference regeneration, formatting, coverage freshness and repository hygiene
+were checked. The research report retains 500 distinct REA records (144 current
+build) and 45 explicit Rust ownership mappings. Counts do not establish completed
+ports or ban protection. No live account request or key rotation occurred.
+The full network audit remains active and incomplete.
+
 2026-11-04 — **Current server-ping response fixed; deeper network gaps retained:**
 
 - The 2.26.43.72 reader-to-writer trace establishes a no-ID IQ result for an

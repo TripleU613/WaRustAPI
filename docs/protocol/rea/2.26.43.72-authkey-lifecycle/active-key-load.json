@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_de095770980f1066f93c1714921389b456a7aa8e5538a83438ee1826c5c8d7c0",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.AnonymousClass144",
+    "method_name": "A00",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-3u3msY/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.AnonymousClass144"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"name\":\"A00\",\"def_pos\":0,\"type\":\"X.1ny\"},{\"name\":\"A01\",\"def_pos\":0,\"type\":\"X.149\"},{\"name\":\"A02\",\"def_pos\":0,\"type\":\"X.1nk\"},{\"name\":\"A03\",\"def_pos\":0,\"type\":\"org.whispersystems.libsignal.kem.KEMPublicKey\"},{\"name\":\"A04\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A05\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"A06\",\"def_pos\":0,\"type\":\"X.00x\"},{\"name\":\"A07\",\"def_pos\":0,\"type\":\"X.05a\"},{\"name\":\"A08\",\"def_pos\":0,\"type\":\"X.08Y\"},{\"name\":\"A09\",\"def_pos\":0,\"type\":\"X.0NX\"},{\"name\":\"A0A\",\"def_pos\":0,\"type\":\"X.0B0\"},{\"name\":\"A0B\",\"def_pos\":0,\"type\":\"X.00S\"},{\"name\":\"A0C\",\"def_pos\":0,\"type\":\"X.09S\"},{\"name\":\"A0D\",\"def_pos\":0,\"type\":\"X.08q\"},{\"name\":\"A0E\",\"def_pos\":0,\"type\":\"X.145\"},{\"name\":\"A0F\",\"def_pos\":0,\"type\":\"X.149\"},{\"name\":\"A0G\",\"def_pos\":0,\"type\":\"java.lang.Object\"}],\"field_count\":17,\"full_name\":\"X.AnonymousClass144\",\"name\":\"AnonymousClass144\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":24,\"methods\":[{\"dex_descriptor\":\"()V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(): void\"},{\"dex_descriptor\":\"()LX/1ny;\",\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0,\"signature\":\"A00(): X.1ny\"},{\"dex_descriptor\":\"(Landroid/content/SharedPreferences;)LX/1nq;\",\"is_constructor\":false,\"name\":\"A01\",\"def_pos\":0,\"signature\":\"A01(android.content.SharedPreferences): X.1nq\"},{\"dex_descriptor\":\"(Ljava/lang/Integer;)LX/1nq;\",\"is_constructor\":false,\"name\":\"A02\",\"def_pos\":0,\"signature\":\"A02(java.lang.Integer): X.1nq\"},{\"dex_descriptor\":\"(Ljava/lang/Integer;)LX/1nq;\",\"is_constructor\":false,\"name\":\"A03\",\"def_pos\":0,\"signature\":\"A03(java.lang.Integer): X.1nq\"},{\"dex_descriptor\":\"(Z)LX/1nq;\",\"is_constructor\":false,\"name\":\"A04\",\"def_pos\":0,\"signature\":\"A04(boolean): X.1nq\"},{\"dex_descriptor\":\"(Landroid/content/SharedPreferences;)V\",\"is_constructor\":false,\"name\":\"A05\",\"def_pos\":0,\"signature\":\"A05(android.content.SharedPreferences): void\"},{\"dex_descriptor\":\"(Landroid/content/SharedPreferences;LX/144;[B)V\",\"is_constructor\":false,\"name\":\"A06\",\"def_pos\":0,\"signature\":\"A06(android.content.SharedPreferences, X.144, byte[]): void\"},{\"dex_descriptor\":\"(LX/144;)V\",\"is_constructor\":false,\"name\":\"A07\",\"def_pos\":0,\"signature\":\"A07(X.144): void\"},{\"dex_descriptor\":\"(Landroid/content/SharedPreferences;LX/149;[B)Z\",\"is_constructor\":false,\"name\":\"A08\",\"def_pos\":0,\"signature\":\"A08(android.content.SharedPreferences, X.149, byte[]): boolean\"},{\"dex_descriptor\":\"(Landroid/content/SharedPreferences;[B)Z\",\"is_constructor\":false,\"name\":\"A09\",\"def_pos\":0,\"signature\":\"A09(android.content.SharedPreferences, byte[]): boolean\"},{\"dex_descriptor\":\"(LX/1np;Ljava/lang/String;)Z\",\"is_constructor\":false,\"name\":\"A0A\",\"def_pos\":0,\"signature\":\"A0A(X.1np, java.lang.String): boolean\"},{\"dex_descriptor\":\"(LX/144;LX/1nq;)Z\",\"is_constructor\":false,\"name\":\"A0B\",\"def_pos\":0,\"signature\":\"A0B(X.144, X.1nq): boolean\"},{\"dex_descriptor\":\"(LX/144;[B)Z\",\"is_constructor\":false,\"name\":\"A0C\",\"def_pos\":0,\"signature\":\"A0C(X.144, byte[]): boolean\"},{\"dex_descriptor\":\"()LX/1ny;\",\"is_constructor\":false,\"name\":\"A0D\",\"def_pos\":0,\"signature\":\"A0D(): X.1ny\"},{\"dex_descriptor\":\"()LX/1nq;\",\"is_constructor\":false,\"name\":\"A0E\",\"def_pos\":0,\"signature\":\"A0E(): X.1nq\"},{\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"A0F\",\"def_pos\":0,\"signature\":\"A0F(): void\"},{\"dex_descriptor\":\"(I)V\",\"is_constructor\":false,\"name\":\"A0G\",\"def_pos\":0,\"signature\":\"A0G(int): void\"},{\"dex_descriptor\":\"()[B\",\"is_constructor\":false,\"name\":\"A0H\",\"def_pos\":0,\"signature\":\"A0H(): byte[]\"},{\"dex_descriptor\":\"()Lorg/whispersystems/libsignal/kem/KEMPublicKey;\",\"is_constructor\":false,\"name\":\"B75\",\"def_pos\":0,\"signature\":\"B75(): org.whispersystems.libsignal.kem.KEMPublicKey\"},{\"dex_descriptor\":\"()LX/1nk;\",\"is_constructor\":false,\"name\":\"B76\",\"def_pos\":0,\"signature\":\"B76(): X.1nk\"},{\"dex_descriptor\":\"(Lorg/whispersystems/libsignal/kem/KEMPublicKey;)V\",\"is_constructor\":false,\"name\":\"CjR\",\"def_pos\":0,\"signature\":\"CjR(org.whispersystems.libsignal.kem.KEMPublicKey): void\"},{\"dex_descriptor\":\"(LX/1nk;)V\",\"is_constructor\":false,\"name\":\"CjS\",\"def_pos\":0,\"signature\":\"CjS(X.1nk): void\"},{\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"Ctx\",\"def_pos\":0,\"signature\":\"Ctx(): void\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.AnonymousClass144",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_name\":\"A00\",\"overload_count\":1,\"body\":\"    /* JADX WARN: Code duplicated, block: B:70:0x01e1  */\\n    private final C1ny A00() {\\n        C1ny c1ny;\\n        boolean z;\\n        String str;\\n        synchronized (this.A0G) {\\n            A07(this);\\n            c1ny \\u003d this.A00;\\n            if (c1ny \\u003d\\u003d null || c1ny.A01 \\u003d\\u003d null) {\\n                SharedPreferences sharedPreferencesA04 \\u003d this.A0B.A04(\\\"keystore\\\");\\n                C00l.A05(sharedPreferencesA04);\\n                C1nq c1nqA01 \\u003d A01(sharedPreferencesA04);\\n                int i \\u003d 0;\\n                C1nq c1nqA03 \\u003d null;\\n                if (!sharedPreferencesA04.contains(\\\"can_user_android_key_store\\\")) {\\n                    sharedPreferencesA04.edit().putBoolean(\\\"can_user_android_key_store\\\", true).commit();\\n                }\\n                if (this.A01 !\\u003d null \\u0026\\u0026 sharedPreferencesA04.getBoolean(\\\"can_user_android_key_store\\\", false)) {\\n                    C08Y c08y \\u003d this.A08;\\n                    int iA0a \\u003d c08y.A0a(375);\\n                    int iA0a2 \\u003d c08y.A0a(384);\\n                    boolean zA14 \\u003d c08y.A14(378);\\n                    if (!sharedPreferencesA04.contains(\\\"client_static_keypair_enc\\\") \\u0026\\u0026 c1nqA01 !\\u003d null) {\\n                        Log.i(\\\"AuthKeyStore/storing AndroidKeyStore key\\\");\\n                        byte[] bArrA02 \\u003d c1nqA01.A02();\\n                        C00l.A05(bArrA02);\\n                        if (!A0C(this, bArrA02)) {\\n                            i \\u003d 1;\\n                        }\\n                    }\\n                    c1nqA03 \\u003d A03(C02X.A01);\\n                    long j \\u003d sharedPreferencesA04.getLong(\\\"client_static_keypair_enc_success\\\", 0L);\\n                    long j2 \\u003d sharedPreferencesA04.getLong(\\\"client_static_keypair_enc_failed\\\", 0L);\\n                    if (!c08y.A14(831)) {\\n                        if (c1nqA01 !\\u003d null) {\\n                            StringBuilder sb \\u003d new StringBuilder(\\\"AuthKeyStore/AndroidKeyStore in verifying stage/accessed \\u003d \\\");\\n                            sb.append(j);\\n                            Log.i(sb.toString());\\n                            if (c1nqA03 \\u003d\\u003d null) {\\n                                str \\u003d \\\"AuthKeyStore/AndroidKeyStore in verifying stage/read failed\\\";\\n                            } else if (Arrays.equals(c1nqA01.A02(), c1nqA03.A02())) {\\n                                i \\u003d 3;\\n                                long j3 \\u003d j + 1;\\n                                if (j3 \\u003e iA0a \\u0026\\u0026 j2 \\u003c\\u003d iA0a2) {\\n                                    Log.i(\\\"AuthKeyStore/AndroidKeyStore verified\\\");\\n                                    if (zA14) {\\n                                        i \\u003d 4;\\n                                        sharedPreferencesA04.edit().remove(\\\"client_static_keypair_pwd_enc\\\").apply();\\n                                    }\\n                                }\\n                                sharedPreferencesA04.edit().putLong(\\\"client_static_keypair_enc_success\\\", j3).apply();\\n                                C1nx c1nx \\u003d new C1nx();\\n                                c1nx.A01 \\u003d Long.valueOf(j2);\\n                                c1nx.A02 \\u003d Long.valueOf(j3);\\n                                c1nx.A00 \\u003d Integer.valueOf(i !\\u003d 3 ? 5 : 4);\\n                                this.A09.CSW(c1nx);\\n                            } else {\\n                                str \\u003d \\\"AuthKeyStore/AndroidKeyStore in verifying stage/read wrong key\\\";\\n                            }\\n                            Log.w(str);\\n                            if (i !\\u003d 1) {\\n                                i \\u003d 2;\\n                            }\\n                            long j4 \\u003d j2 + 1;\\n                            sharedPreferencesA04.edit().putLong(\\\"client_static_keypair_enc_failed\\\", j4).apply();\\n                            c1nqA03 \\u003d null;\\n                            C28T c28t \\u003d new C28T();\\n                            c28t.A01 \\u003d Long.valueOf(j4);\\n                            c28t.A02 \\u003d Long.valueOf(j);\\n                            c28t.A00 \\u003d Integer.valueOf(i !\\u003d 1 ? 3 : 2);\\n                            this.A09.CSW(c28t);\\n                        } else if (c1nqA03 !\\u003d null) {\\n                            i \\u003d 4;\\n                        } else if (sharedPreferencesA04.contains(\\\"client_static_keypair_enc\\\")) {\\n                            i \\u003d 2;\\n                            long j5 \\u003d sharedPreferencesA04.getLong(\\\"android_key_store_verified_failures\\\", 0L) + 1;\\n                            StringBuilder sb2 \\u003d new StringBuilder(\\\"AuthKeyStore/failed to load auth key in \\\\\\\"verified\\\\\\\" AndroidKeyStore state/ failedCount \\u003d \\\");\\n                            sb2.append(j5);\\n                            Log.e(sb2.toString());\\n                            int iA0a3 \\u003d c08y.A0a(376);\\n                            if (iA0a3 !\\u003d -1) {\\n                                if (j5 \\u003c\\u003d iA0a3 || !zA14) {\\n                                    sharedPreferencesA04.edit().putLong(\\\"android_key_store_verified_failures\\\", j5).apply();\\n                                } else {\\n                                    Log.e(\\\"AuthKeyStore/failed too much must recover\\\");\\n                                    A0F();\\n                                    sharedPreferencesA04.edit().remove(\\\"client_static_keypair_enc_success\\\").remove(\\\"client_static_keypair_enc_failed\\\").remove(\\\"android_key_store_verified_failures\\\").putBoolean(\\\"can_user_android_key_store\\\", false).apply();\\n                                    c1nqA01 \\u003d A04(false);\\n                                }\\n                            }\\n                        } else {\\n                            Log.i(\\\"AuthKeyStore/AndroidKeyStore enabled, but have no keys, need to generate one\\\");\\n                            if (j \\u003e iA0a \\u0026\\u0026 j2 \\u003c\\u003d iA0a2) {\\n                                z \\u003d zA14;\\n                            }\\n                            c1nqA01 \\u003d A04(z);\\n                            i \\u003d 2;\\n                            if (sharedPreferencesA04.contains(\\\"client_static_keypair_enc\\\")) {\\n                                i \\u003d 4;\\n                            }\\n                        }\\n                        if (sharedPreferencesA04.contains(\\\"android_key_store_verified_failures\\\")) {\\n                            sharedPreferencesA04.edit().remove(\\\"android_key_store_verified_failures\\\").apply();\\n                        }\\n                    } else if (c1nqA01 !\\u003d null) {\\n                        sharedPreferencesA04.edit().putBoolean(\\\"can_user_android_key_store\\\", false).apply();\\n                        i \\u003d 6;\\n                    } else {\\n                        Log.w(\\\"AuthKeyStore/stopUsingAndroidKeyStore/cant stop using AndroidKeyStore\\\");\\n                    }\\n                } else if (c1nqA01 \\u003d\\u003d null) {\\n                    c1nqA01 \\u003d A04(false);\\n                }\\n                StringBuilder sb3 \\u003d new StringBuilder(\\\"AuthKeyStore/current AES state \\u003d \\\");\\n                sb3.append(i);\\n                Log.i(sb3.toString());\\n                if (c1nqA01 \\u003d\\u003d null) {\\n                    c1nqA01 \\u003d c1nqA03;\\n                }\\n                c1ny \\u003d new C1ny(c1nqA01, i);\\n                this.A00 \\u003d c1ny;\\n            }\\n        }\\n        return c1ny;\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.AnonymousClass144\",\"full_name\":\"X.144.A00\",\"mode\":\"java\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.AnonymousClass144",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(): X.1ny",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "()LX/1ny;"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Code duplicated, block: B:70:0x01e1  */\n    private final C1ny A00() {\n        C1ny c1ny;\n        boolean z;\n        String str;\n        synchronized (this.A0G) {\n            A07(this);\n            c1ny = this.A00;\n            if (c1ny == null || c1ny.A01 == null) {\n                SharedPreferences sharedPreferencesA04 = this.A0B.A04(\"keystore\");\n                C00l.A05(sharedPreferencesA04);\n                C1nq c1nqA01 = A01(sharedPreferencesA04);\n                int i = 0;\n                C1nq c1nqA03 = null;\n                if (!sharedPreferencesA04.contains(\"can_user_android_key_store\")) {\n                    sharedPreferencesA04.edit().putBoolean(\"can_user_android_key_store\", true).commit();\n                }\n                if (this.A01 != null && sharedPreferencesA04.getBoolean(\"can_user_android_key_store\", false)) {\n                    C08Y c08y = this.A08;\n                    int iA0a = c08y.A0a(375);\n                    int iA0a2 = c08y.A0a(384);\n                    boolean zA14 = c08y.A14(378);\n                    if (!sharedPreferencesA04.contains(\"client_static_keypair_enc\") && c1nqA01 != null) {\n                        Log.i(\"AuthKeyStore/storing AndroidKeyStore key\");\n                        byte[] bArrA02 = c1nqA01.A02();\n                        C00l.A05(bArrA02);\n                        if (!A0C(this, bArrA02)) {\n                            i = 1;\n                        }\n                    }\n                    c1nqA03 = A03(C02X.A01);\n                    long j = sharedPreferencesA04.getLong(\"client_static_keypair_enc_success\", 0L);\n                    long j2 = sharedPreferencesA04.getLong(\"client_static_keypair_enc_failed\", 0L);\n                    if (!c08y.A14(831)) {\n                        if (c1nqA01 != null) {\n                            StringBuilder sb = new StringBuilder(\"AuthKeyStore/AndroidKeyStore in verifying stage/accessed = \");\n                            sb.append(j);\n                            Log.i(sb.toString());\n                            if (c1nqA03 == null) {\n                                str = \"AuthKeyStore/AndroidKeyStore in verifying stage/read failed\";\n                            } else if (Arrays.equals(c1nqA01.A02(), c1nqA03.A02())) {\n                                i = 3;\n                                long j3 = j + 1;\n                                if (j3 > iA0a && j2 <= iA0a2) {\n                                    Log.i(\"AuthKeyStore/AndroidKeyStore verified\");\n                                    if (zA14) {\n                                        i = 4;\n                                        sharedPreferencesA04.edit().remove(\"client_static_keypair_pwd_enc\").apply();\n                                    }\n                                }\n                                sharedPreferencesA04.edit().putLong(\"client_static_keypair_enc_success\", j3).apply();\n                                C1nx c1nx = new C1nx();\n                                c1nx.A01 = Long.valueOf(j2);\n                                c1nx.A02 = Long.valueOf(j3);\n                                c1nx.A00 = Integer.valueOf(i != 3 ? 5 : 4);\n                                this.A09.CSW(c1nx);\n                            } else {\n                                str = \"AuthKeyStore/AndroidKeyStore in verifying stage/read wrong key\";\n                            }\n                            Log.w(str);\n                            if (i != 1) {\n                                i = 2;\n                            }\n                            long j4 = j2 + 1;\n                            sharedPreferencesA04.edit().putLong(\"client_static_keypair_enc_failed\", j4).apply();\n                            c1nqA03 = null;\n                            C28T c28t = new C28T();\n                            c28t.A01 = Long.valueOf(j4);\n                            c28t.A02 = Long.valueOf(j);\n                            c28t.A00 = Integer.valueOf(i != 1 ? 3 : 2);\n                            this.A09.CSW(c28t);\n                        } else if (c1nqA03 != null) {\n                            i = 4;\n                        } else if (sharedPreferencesA04.contains(\"client_static_keypair_enc\")) {\n                            i = 2;\n                            long j5 = sharedPreferencesA04.getLong(\"android_key_store_verified_failures\", 0L) + 1;\n                            StringBuilder sb2 = new StringBuilder(\"AuthKeyStore/failed to load auth key in \\\"verified\\\" AndroidKeyStore state/ failedCount = \");\n                            sb2.append(j5);\n                            Log.e(sb2.toString());\n                            int iA0a3 = c08y.A0a(376);\n                            if (iA0a3 != -1) {\n                                if (j5 <= iA0a3 || !zA14) {\n                                    sharedPreferencesA04.edit().putLong(\"android_key_store_verified_failures\", j5).apply();\n                                } else {\n                                    Log.e(\"AuthKeyStore/failed too much must recover\");\n                                    A0F();\n                                    sharedPreferencesA04.edit().remove(\"client_static_keypair_enc_success\").remove(\"client_static_keypair_enc_failed\").remove(\"android_key_store_verified_failures\").putBoolean(\"can_user_android_key_store\", false).apply();\n                                    c1nqA01 = A04(false);\n                                }\n                            }\n                        } else {\n                            Log.i(\"AuthKeyStore/AndroidKeyStore enabled, but have no keys, need to generate one\");\n                            if (j > iA0a && j2 <= iA0a2) {\n                                z = zA14;\n                            }\n                            c1nqA01 = A04(z);\n                            i = 2;\n                            if (sharedPreferencesA04.contains(\"client_static_keypair_enc\")) {\n                                i = 4;\n                            }\n                        }\n                        if (sharedPreferencesA04.contains(\"android_key_store_verified_failures\")) {\n                            sharedPreferencesA04.edit().remove(\"android_key_store_verified_failures\").apply();\n                        }\n                    } else if (c1nqA01 != null) {\n                        sharedPreferencesA04.edit().putBoolean(\"can_user_android_key_store\", false).apply();\n                        i = 6;\n                    } else {\n                        Log.w(\"AuthKeyStore/stopUsingAndroidKeyStore/cant stop using AndroidKeyStore\");\n                    }\n                } else if (c1nqA01 == null) {\n                    c1nqA01 = A04(false);\n                }\n                StringBuilder sb3 = new StringBuilder(\"AuthKeyStore/current AES state = \");\n                sb3.append(i);\n                Log.i(sb3.toString());\n                if (c1nqA01 == null) {\n                    c1nqA01 = c1nqA03;\n                }\n                c1ny = new C1ny(c1nqA01, i);\n                this.A00 = c1ny;\n            }\n        }\n        return c1ny;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

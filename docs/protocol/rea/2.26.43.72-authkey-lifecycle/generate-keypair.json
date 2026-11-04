@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_c95afa240d0debb66b4fac17ae7790e100fbe664dc3cf737f5f79a5d48f1d361",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C1nq",
+    "method_name": "A00",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-Yp8Okt/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C1nq"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"full_name\":\"X.C1nq\",\"field_count\":3,\"fields\":[{\"name\":\"A00\",\"type\":\"boolean\",\"def_pos\":0},{\"name\":\"A01\",\"type\":\"X.1ns\",\"def_pos\":0},{\"name\":\"A02\",\"type\":\"X.1nk\",\"def_pos\":0}],\"methods\":[{\"is_constructor\":true,\"dex_descriptor\":\"(LX/1ns;LX/1nk;)V\",\"signature\":\"\\u003cinit\\u003e(X.1ns, X.1nk): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\"},{\"is_constructor\":false,\"dex_descriptor\":\"()LX/1nq;\",\"signature\":\"A00(): X.1nq\",\"def_pos\":0,\"name\":\"A00\"},{\"is_constructor\":false,\"dex_descriptor\":\"([B)LX/1nq;\",\"signature\":\"A01(byte[]): X.1nq\",\"def_pos\":0,\"name\":\"A01\"},{\"is_constructor\":false,\"dex_descriptor\":\"()[B\",\"signature\":\"A02(): byte[]\",\"def_pos\":0,\"name\":\"A02\"},{\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"destroy(): void\",\"def_pos\":0,\"name\":\"destroy\"},{\"is_constructor\":false,\"dex_descriptor\":\"()Z\",\"signature\":\"isDestroyed(): boolean\",\"def_pos\":0,\"name\":\"isDestroyed\"}],\"method_count\":6,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"C1nq\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C1nq",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"body\":\"    public static C1nq A00() {\\n        C1oB c1oB \\u003d C1oA.A00(\\\"best\\\").A00;\\n        byte[] bArrGeneratePrivateKey \\u003d c1oB.generatePrivateKey();\\n        return new C1nq(new C1ns(bArrGeneratePrivateKey), new C1nk(c1oB.generatePublicKey(bArrGeneratePrivateKey)));\\n    }\",\"overload_count\":1,\"method_name\":\"A00\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.1nq.A00\",\"class_name\":\"X.C1nq\",\"overload_index\":0,\"fell_back\":false}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C1nq",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(): X.1nq",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "()LX/1nq;"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public static C1nq A00() {\n        C1oB c1oB = C1oA.A00(\"best\").A00;\n        byte[] bArrGeneratePrivateKey = c1oB.generatePrivateKey();\n        return new C1nq(new C1ns(bArrGeneratePrivateKey), new C1nk(c1oB.generatePublicKey(bArrGeneratePrivateKey)));\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

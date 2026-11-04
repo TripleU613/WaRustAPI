@@ -97,6 +97,7 @@ fn login_material(
         .as_ref()
         .ok_or_else(|| Error::invalid("connection", "missing saved Noise identity"))?;
     let local = StaticKeypair::from_parts(key.0.private, key.0.public);
+    local.validate_curve25519()?;
     Ok((local, payload))
 }
 
@@ -1081,6 +1082,68 @@ mod tests {
             store.read(|tx| tx.scan(Table::Account, 1, 10)).unwrap(),
             before
         );
+        drop(store);
+        let store = identity_store(&path);
+        assert!(login_material(&store, &config).is_err());
+        assert!(last_login_status(&store).unwrap().is_none());
+    }
+
+    #[test]
+    fn inconsistent_noise_halves_refuse_preflight_without_repair_or_reservation() {
+        use crate::session::{KeyMaterial, NoiseStaticKey, RegistrationStatus};
+        use wacore_libsignal::core::curve::KeyPair;
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("noise-halves.redb");
+        let store = identity_store(&path);
+        let config = config();
+        // Independent registration key producer, not the Noise backend under test.
+        let pair = KeyPair::generate(&mut rand::rng());
+        let public: [u8; 32] = pair.public_key.public_key_bytes().try_into().unwrap();
+        let private = *pair.private_key.serialize();
+        let mut original = AccountRecord {
+            phone: Some(config.phone.clone()),
+            registration: RegistrationStatus::Registered,
+            noise_static: Some(NoiseStaticKey(KeyMaterial { public, private })),
+            credentials: vec![ObservedCredential {
+                name: "login".into(),
+                value: zeroize::Zeroizing::new(config.phone.protocol_digits().into_bytes()),
+                observed_at: Timestamp(0),
+                source_step: None,
+            }],
+            ..Default::default()
+        };
+        store.write(|tx| original.save(tx)).unwrap();
+        assert!(login_material(&store, &config).is_ok());
+        let journal = store.journal_head().unwrap();
+        let mut changed_public = public;
+        changed_public[10] ^= 1;
+        let other = KeyPair::generate(&mut rand::rng());
+        for (public, private) in [
+            (changed_public, private),
+            (public, *other.private_key.serialize()),
+            ([0; 32], private),
+        ] {
+            original.noise_static = Some(NoiseStaticKey(KeyMaterial { public, private }));
+            store.write(|tx| original.save(tx)).unwrap();
+            let before = store.read(|tx| tx.scan(Table::Account, 1, 10)).unwrap();
+            let error = match login_material(&store, &config) {
+                Ok(_) => panic!("inconsistent pair passed preflight"),
+                Err(error) => error,
+            };
+            assert!(
+                error
+                    .to_string()
+                    .contains("saved Noise keypair is inconsistent")
+            );
+            assert!(!error.to_string().contains(&hex::encode(private)));
+            assert!(!error.to_string().contains(&hex::encode(public)));
+            assert!(last_login_status(&store).unwrap().is_none());
+            assert_eq!(store.journal_head().unwrap(), journal);
+            assert_eq!(
+                store.read(|tx| tx.scan(Table::Account, 1, 10)).unwrap(),
+                before
+            );
+        }
         drop(store);
         let store = identity_store(&path);
         assert!(login_material(&store, &config).is_err());

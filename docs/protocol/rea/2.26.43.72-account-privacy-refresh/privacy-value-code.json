@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_1331422a765ac3ca85950a0bac2f996de3009a95affe137a0b4476406fd41d5f",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C8AX",
+    "method_name": "A00",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-zWhIO6/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C8AX"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"C8AX\",\"full_name\":\"X.C8AX\",\"field_count\":2,\"fields\":[{\"def_pos\":0,\"name\":\"A00\",\"type\":\"java.util.Map\"},{\"def_pos\":0,\"name\":\"A01\",\"type\":\"int[]\"}],\"methods\":[{\"name\":\"\\u003cclinit\\u003e\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"\\u003cclinit\\u003e(): void\",\"def_pos\":0},{\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)I\",\"signature\":\"A00(java.lang.String): int\",\"def_pos\":0},{\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)Ljava/lang/String;\",\"signature\":\"A01(java.lang.String): java.lang.String\",\"def_pos\":0},{\"name\":\"A02\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;I)Ljava/lang/String;\",\"signature\":\"A02(java.lang.String, int): java.lang.String\",\"def_pos\":0},{\"name\":\"A03\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)Z\",\"signature\":\"A03(java.lang.String): boolean\",\"def_pos\":0},{\"name\":\"A04\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;IZZ)Z\",\"signature\":\"A04(java.lang.String, int, boolean, boolean): boolean\",\"def_pos\":0}],\"method_count\":6}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C8AX",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"class_name\":\"X.C8AX\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public static final int A00(String str) {\\n        C00l.A09(str, 0);\\n        if (psi.Psi.CrashTracebackLevelAll.equals(str)) {\\n            return 0;\\n        }\\n        if (\\\"contacts\\\".equals(str)) {\\n            return 1;\\n        }\\n        if (\\\"none\\\".equals(str)) {\\n            return 2;\\n        }\\n        if (\\\"contact_blacklist\\\".equals(str)) {\\n            return 3;\\n        }\\n        if (\\\"match_last_seen\\\".equals(str)) {\\n            return 4;\\n        }\\n        if (\\\"known\\\".equals(str)) {\\n            return 5;\\n        }\\n        if (\\\"contact_allowlist\\\".equals(str)) {\\n            return 6;\\n        }\\n        if (\\\"off\\\".equals(str)) {\\n            return 7;\\n        }\\n        if (\\\"on_standard\\\".equals(str)) {\\n            return 8;\\n        }\\n        return \\\"with_pin\\\".equals(str) ? 9 : -1;\\n    }\",\"overload_count\":1,\"method_name\":\"A00\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.8AX.A00\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C8AX",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(java.lang.String): int",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(Ljava/lang/String;)I"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public static final int A00(String str) {\n        C00l.A09(str, 0);\n        if (psi.Psi.CrashTracebackLevelAll.equals(str)) {\n            return 0;\n        }\n        if (\"contacts\".equals(str)) {\n            return 1;\n        }\n        if (\"none\".equals(str)) {\n            return 2;\n        }\n        if (\"contact_blacklist\".equals(str)) {\n            return 3;\n        }\n        if (\"match_last_seen\".equals(str)) {\n            return 4;\n        }\n        if (\"known\".equals(str)) {\n            return 5;\n        }\n        if (\"contact_allowlist\".equals(str)) {\n            return 6;\n        }\n        if (\"off\".equals(str)) {\n            return 7;\n        }\n        if (\"on_standard\".equals(str)) {\n            return 8;\n        }\n        return \"with_pin\".equals(str) ? 9 : -1;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

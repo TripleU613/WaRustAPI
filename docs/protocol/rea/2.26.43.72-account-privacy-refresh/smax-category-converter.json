@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_ebccf574cc6b934cc36133f8eede570c1a56f9ea2f888df66e4c400c45223f4a",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C8db",
+    "method_name": "invoke",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-zWhIO6/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C8db"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"C8db\",\"full_name\":\"X.C8db\",\"field_count\":1,\"fields\":[{\"def_pos\":0,\"name\":\"$t\",\"type\":\"int\"}],\"methods\":[{\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"(I)V\",\"signature\":\"\\u003cinit\\u003e(int): void\",\"def_pos\":0},{\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"(I)LX/8db;\",\"signature\":\"A00(int): X.8db\",\"def_pos\":0},{\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/CharSequence;Ljava/lang/Iterable;I)Ljava/lang/String;\",\"signature\":\"A01(java.lang.CharSequence, java.lang.Iterable, int): java.lang.String\",\"def_pos\":0},{\"name\":\"invoke\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/Object;)Ljava/lang/Object;\",\"signature\":\"invoke(java.lang.Object): java.lang.Object\",\"def_pos\":0}],\"method_count\":4}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C8db",
+          "method_name": "invoke",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"class_name\":\"X.C8db\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    /* JADX WARN: Can\\u0027t fix incorrect switch cases order, some code will duplicate */\\n    /* JADX WARN: Code duplicated, block: B:26:0x0081  */\\n    /* JADX WARN: Code duplicated, block: B:40:0x00be  */\\n    /* JADX WARN: Code duplicated, block: B:61:0x0137 A[RETURN] */\\n    /* JADX WARN: Code duplicated, block: B:62:0x0138 A[ORIG_RETURN, RETURN] */\\n    /* JADX WARN: Code duplicated, block: B:89:? A[RETURN, SYNTHETIC] */\\n    @Override // kotlin.jvm.functions.Function1\\n    public final Object invoke(Object obj) throws LIL {\\n        boolean z;\\n        C0wj c0wjA0c;\\n        boolean zA0q;\\n        C0wj c0wjA0c2;\\n        C0wj c0wjA0c3;\\n        UserJid userJidA0X;\\n        int iIntValue;\\n        int i;\\n        boolean z2;\\n        String strA0M;\\n        switch (this.$t) {\\n            case 0:\\n                return C6og.A1G(C2LC.A10(obj));\\n            case 1:\\n                java.util.Map.Entry entry \\u003d (java.util.Map.Entry) obj;\\n                C00l.A09(entry, 0);\\n                Object key \\u003d entry.getKey();\\n                C00l.A05(key);\\n                Object value \\u003d entry.getValue();\\n                C00l.A05(value);\\n                return C1Xl.A0x(\\\"\\u003dv_\\\", (String) value, AnonymousClass000.A05(\\\"k_\\\", (String) key));\\n            case 2:\\n                Throwable th \\u003d (Throwable) obj;\\n                if (th !\\u003d null \\u0026\\u0026 !(th instanceof CancellationException)) {\\n                    Log.e(\\\"ManagedAccountAgeExperienceHandler/canAutoGraduate: PAA migration failed\\\", th);\\n                }\\n                return C05u.A00;\\n            case 3:\\n                C2LA.A1P(\\\"ManagedAccountGraduationManager/completeGraduation: clearPasscode result\\u003d\\\", C2L6.A1b(obj));\\n                return C05u.A00;\\n            case 4:\\n            case 5:\\n                C7ke.A00();\\n                return C05u.A00;\\n            case 6:\\n                return ((C0j4) obj).A06;\\n            case 7:\\n                C7yI c7yI \\u003d (C7yI) obj;\\n                C00l.A09(c7yI, 0);\\n                return c7yI.A01;\\n            case 8:\\n                C7yI c7yI2 \\u003d (C7yI) obj;\\n                C00l.A09(c7yI2, 0);\\n                return c7yI2.A00;\\n            case 9:\\n                View view \\u003d (View) obj;\\n                C00l.A09(view, 0);\\n                obj \\u003d view.getParent();\\n                z \\u003d obj instanceof View;\\n                if (z) {\\n                    return obj;\\n                }\\n                return null;\\n            case 10:\\n            case 12:\\n            case 13:\\n            case 14:\\n            default:\\n                return \\\"?\\\";\\n            case 11:\\n            case 15:\\n                return C05u.A00;\\n            case 16:\\n                AnonymousClass805 anonymousClass805 \\u003d (AnonymousClass805) obj;\\n                return new AnonymousClass805(anonymousClass805.A01, null, anonymousClass805.A02);\\n            case 17:\\n                C0Tp c0Tp \\u003d (C0Tp) obj;\\n                C00l.A09(c0Tp, 0);\\n                C0Tp.A01(c0Tp, \\\"category\\\");\\n                String strA0M2 \\u003d c0Tp.A0M(\\\"name\\\", null);\\n                if (strA0M2 \\u003d\\u003d null || (strA0M \\u003d c0Tp.A0M(\\\"value\\\", null)) \\u003d\\u003d null) {\\n                    return null;\\n                }\\n                if (\\\"error\\\".equals(strA0M)) {\\n                    C0Tp c0TpA0D \\u003d c0Tp.A0D();\\n                    C00l.A05(c0TpA0D);\\n                    C0Tp.A01(c0TpA0D, \\\"error\\\");\\n                    strA0M \\u003d c0TpA0D.A0M(\\\"code\\\", null);\\n                    if (strA0M \\u003d\\u003d null) {\\n                        return null;\\n                    }\\n                }\\n                return C08T.A00(strA0M2, strA0M);\\n            case 18:\\n                return C1Xl.A0z(\\\"*\\\", AnonymousClass000.A05(\\\"search_content:\\\", C2LC.A10(obj)));\\n            case 19:\\n                c0wjA0c \\u003d C2LC.A0c(obj);\\n                return c0wjA0c.A07().A00.A0b;\\n            case 20:\\n                zA0q \\u003d C0Cf.A0q(C2LC.A10(obj));\\n                return C2L6.A16(zA0q);\\n            case 21:\\n                C80x c80x \\u003d (C80x) obj;\\n                List list \\u003d Collections.EMPTY_LIST;\\n                C00l.A09(list, 0);\\n                return new C80x(new OLp(list), c80x.A02, c80x.A03, c80x.A00);\\n            case 22:\\n                z \\u003d obj instanceof UserJid;\\n                if (z) {\\n                    return obj;\\n                }\\n                return null;\\n            case 23:\\n            case 28:\\n                c0wjA0c2 \\u003d C2LC.A0c(obj);\\n                zA0q \\u003d AnonymousClass192.A01(c0wjA0c2);\\n                return C2L6.A16(zA0q);\\n            case 24:\\n                return C2LC.A0c(obj).A0A();\\n            case 25:\\n                c0wjA0c3 \\u003d C2LC.A0c(obj);\\n                userJidA0X \\u003d C6oh.A0X(c0wjA0c3);\\n                if (userJidA0X !\\u003d null) {\\n                    return C08T.A00(userJidA0X, c0wjA0c3);\\n                }\\n                return null;\\n            case 26:\\n                c0wjA0c2 \\u003d (C0wj) obj;\\n                C00l.A08(c0wjA0c2);\\n                zA0q \\u003d AnonymousClass192.A01(c0wjA0c2);\\n                return C2L6.A16(zA0q);\\n            case 27:\\n                c0wjA0c3 \\u003d (C0wj) obj;\\n                userJidA0X \\u003d C6oh.A0X(c0wjA0c3);\\n                if (userJidA0X !\\u003d null) {\\n                    return C08T.A00(userJidA0X, c0wjA0c3);\\n                }\\n                return null;\\n            case 29:\\n                return C0Dx.A01.A03(C2LC.A10(obj));\\n            case 30:\\n                TextView textView \\u003d (TextView) obj;\\n                C00l.A09(textView, 0);\\n                CharSequence text \\u003d textView.getText();\\n                C00l.A05(text);\\n                return text;\\n            case 31:\\n                com.whatsapp.infra.core.jid.Jid jid \\u003d (com.whatsapp.infra.core.jid.Jid) obj;\\n                C00l.A09(jid, 0);\\n                return jid.getRawString();\\n            case 32:\\n                Number number \\u003d (Number) obj;\\n                if (number !\\u003d null) {\\n                    iIntValue \\u003d number.intValue();\\n                    i \\u003d 4;\\n                    z2 \\u003d iIntValue !\\u003d i;\\n                }\\n                return Boolean.valueOf(z2);\\n            case 33:\\n                C7VQ c7vq \\u003d (C7VQ) obj;\\n                C00l.A09(c7vq, 0);\\n                return c7vq.A01;\\n            case 34:\\n            case 35:\\n            case 36:\\n                GV6 gv6 \\u003d (GV6) obj;\\n                C00l.A09(gv6, 0);\\n                c0wjA0c \\u003d gv6.A00;\\n                return c0wjA0c.A07().A00.A0b;\\n            case 37:\\n            case 38:\\n            case 40:\\n                GV7 gv7 \\u003d (GV7) obj;\\n                C00l.A09(gv7, 0);\\n                c0wjA0c \\u003d gv7.A00;\\n                return c0wjA0c.A07().A00.A0b;\\n            case 39:\\n                HKo hKo \\u003d (HKo) obj;\\n                C00l.A09(hKo, 0);\\n                c0wjA0c \\u003d hKo.A00;\\n                return c0wjA0c.A07().A00.A0b;\\n            case 41:\\n            case 42:\\n            case 43:\\n                View view2 \\u003d (View) obj;\\n                C00l.A09(view2, 0);\\n                iIntValue \\u003d view2.getVisibility();\\n                i \\u003d 8;\\n                if (iIntValue !\\u003d i) {\\n                }\\n                return Boolean.valueOf(z2);\\n        }\\n    }\",\"overload_count\":1,\"method_name\":\"invoke\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.8db.invoke\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C8db",
+    "method": {
+      "name": "invoke",
+      "reported_signature": "invoke(java.lang.Object): java.lang.Object",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(Ljava/lang/Object;)Ljava/lang/Object;"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */\n    /* JADX WARN: Code duplicated, block: B:26:0x0081  */\n    /* JADX WARN: Code duplicated, block: B:40:0x00be  */\n    /* JADX WARN: Code duplicated, block: B:61:0x0137 A[RETURN] */\n    /* JADX WARN: Code duplicated, block: B:62:0x0138 A[ORIG_RETURN, RETURN] */\n    /* JADX WARN: Code duplicated, block: B:89:? A[RETURN, SYNTHETIC] */\n    @Override // kotlin.jvm.functions.Function1\n    public final Object invoke(Object obj) throws LIL {\n        boolean z;\n        C0wj c0wjA0c;\n        boolean zA0q;\n        C0wj c0wjA0c2;\n        C0wj c0wjA0c3;\n        UserJid userJidA0X;\n        int iIntValue;\n        int i;\n        boolean z2;\n        String strA0M;\n        switch (this.$t) {\n            case 0:\n                return C6og.A1G(C2LC.A10(obj));\n            case 1:\n                java.util.Map.Entry entry = (java.util.Map.Entry) obj;\n                C00l.A09(entry, 0);\n                Object key = entry.getKey();\n                C00l.A05(key);\n                Object value = entry.getValue();\n                C00l.A05(value);\n                return C1Xl.A0x(\"=v_\", (String) value, AnonymousClass000.A05(\"k_\", (String) key));\n            case 2:\n                Throwable th = (Throwable) obj;\n                if (th != null && !(th instanceof CancellationException)) {\n                    Log.e(\"ManagedAccountAgeExperienceHandler/canAutoGraduate: PAA migration failed\", th);\n                }\n                return C05u.A00;\n            case 3:\n                C2LA.A1P(\"ManagedAccountGraduationManager/completeGraduation: clearPasscode result=\", C2L6.A1b(obj));\n                return C05u.A00;\n            case 4:\n            case 5:\n                C7ke.A00();\n                return C05u.A00;\n            case 6:\n                return ((C0j4) obj).A06;\n            case 7:\n                C7yI c7yI = (C7yI) obj;\n                C00l.A09(c7yI, 0);\n                return c7yI.A01;\n            case 8:\n                C7yI c7yI2 = (C7yI) obj;\n                C00l.A09(c7yI2, 0);\n                return c7yI2.A00;\n            case 9:\n                View view = (View) obj;\n                C00l.A09(view, 0);\n                obj = view.getParent();\n                z = obj instanceof View;\n                if (z) {\n                    return obj;\n                }\n                return null;\n            case 10:\n            case 12:\n            case 13:\n            case 14:\n            default:\n                return \"?\";\n            case 11:\n            case 15:\n                return C05u.A00;\n            case 16:\n                AnonymousClass805 anonymousClass805 = (AnonymousClass805) obj;\n                return new AnonymousClass805(anonymousClass805.A01, null, anonymousClass805.A02);\n            case 17:\n                C0Tp c0Tp = (C0Tp) obj;\n                C00l.A09(c0Tp, 0);\n                C0Tp.A01(c0Tp, \"category\");\n                String strA0M2 = c0Tp.A0M(\"name\", null);\n                if (strA0M2 == null || (strA0M = c0Tp.A0M(\"value\", null)) == null) {\n                    return null;\n                }\n                if (\"error\".equals(strA0M)) {\n                    C0Tp c0TpA0D = c0Tp.A0D();\n                    C00l.A05(c0TpA0D);\n                    C0Tp.A01(c0TpA0D, \"error\");\n                    strA0M = c0TpA0D.A0M(\"code\", null);\n                    if (strA0M == null) {\n                        return null;\n                    }\n                }\n                return C08T.A00(strA0M2, strA0M);\n            case 18:\n                return C1Xl.A0z(\"*\", AnonymousClass000.A05(\"search_content:\", C2LC.A10(obj)));\n            case 19:\n                c0wjA0c = C2LC.A0c(obj);\n                return c0wjA0c.A07().A00.A0b;\n            case 20:\n                zA0q = C0Cf.A0q(C2LC.A10(obj));\n                return C2L6.A16(zA0q);\n            case 21:\n                C80x c80x = (C80x) obj;\n                List list = Collections.EMPTY_LIST;\n                C00l.A09(list, 0);\n                return new C80x(new OLp(list), c80x.A02, c80x.A03, c80x.A00);\n            case 22:\n                z = obj instanceof UserJid;\n                if (z) {\n                    return obj;\n                }\n                return null;\n            case 23:\n            case 28:\n                c0wjA0c2 = C2LC.A0c(obj);\n                zA0q = AnonymousClass192.A01(c0wjA0c2);\n                return C2L6.A16(zA0q);\n            case 24:\n                return C2LC.A0c(obj).A0A();\n            case 25:\n                c0wjA0c3 = C2LC.A0c(obj);\n                userJidA0X = C6oh.A0X(c0wjA0c3);\n                if (userJidA0X != null) {\n                    return C08T.A00(userJidA0X, c0wjA0c3);\n                }\n                return null;\n            case 26:\n                c0wjA0c2 = (C0wj) obj;\n                C00l.A08(c0wjA0c2);\n                zA0q = AnonymousClass192.A01(c0wjA0c2);\n                return C2L6.A16(zA0q);\n            case 27:\n                c0wjA0c3 = (C0wj) obj;\n                userJidA0X = C6oh.A0X(c0wjA0c3);\n                if (userJidA0X != null) {\n                    return C08T.A00(userJidA0X, c0wjA0c3);\n                }\n                return null;\n            case 29:\n                return C0Dx.A01.A03(C2LC.A10(obj));\n            case 30:\n                TextView textView = (TextView) obj;\n                C00l.A09(textView, 0);\n                CharSequence text = textView.getText();\n                C00l.A05(text);\n                return text;\n            case 31:\n                com.whatsapp.infra.core.jid.Jid jid = (com.whatsapp.infra.core.jid.Jid) obj;\n                C00l.A09(jid, 0);\n                return jid.getRawString();\n            case 32:\n                Number number = (Number) obj;\n                if (number != null) {\n                    iIntValue = number.intValue();\n                    i = 4;\n                    z2 = iIntValue != i;\n                }\n                return Boolean.valueOf(z2);\n            case 33:\n                C7VQ c7vq = (C7VQ) obj;\n                C00l.A09(c7vq, 0);\n                return c7vq.A01;\n            case 34:\n            case 35:\n            case 36:\n                GV6 gv6 = (GV6) obj;\n                C00l.A09(gv6, 0);\n                c0wjA0c = gv6.A00;\n                return c0wjA0c.A07().A00.A0b;\n            case 37:\n            case 38:\n            case 40:\n                GV7 gv7 = (GV7) obj;\n                C00l.A09(gv7, 0);\n                c0wjA0c = gv7.A00;\n                return c0wjA0c.A07().A00.A0b;\n            case 39:\n                HKo hKo = (HKo) obj;\n                C00l.A09(hKo, 0);\n                c0wjA0c = hKo.A00;\n                return c0wjA0c.A07().A00.A0b;\n            case 41:\n            case 42:\n            case 43:\n                View view2 = (View) obj;\n                C00l.A09(view2, 0);\n                iIntValue = view2.getVisibility();\n                i = 8;\n                if (iIntValue != i) {\n                }\n                return Boolean.valueOf(z2);\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

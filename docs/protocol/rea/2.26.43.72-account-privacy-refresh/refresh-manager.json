@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_02b7acf93f40485579545932d69c0ad3f264bb17412c940795359bcd66380ccc",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C1sv",
+    "method_name": "A01",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-z8hGR1/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C1sv"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_count\":3,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"C1sv\",\"full_name\":\"X.C1sv\",\"field_count\":15,\"fields\":[{\"def_pos\":0,\"name\":\"A00\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A01\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A02\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A03\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A04\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A05\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A06\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A07\",\"type\":\"X.0yO\"},{\"def_pos\":0,\"name\":\"A08\",\"type\":\"X.09F\"},{\"def_pos\":0,\"name\":\"A09\",\"type\":\"X.09S\"},{\"def_pos\":0,\"name\":\"A0A\",\"type\":\"X.08q\"},{\"def_pos\":0,\"name\":\"A0B\",\"type\":\"X.0oe\"},{\"def_pos\":0,\"name\":\"A0C\",\"type\":\"X.10t\"},{\"def_pos\":0,\"name\":\"A0D\",\"type\":\"X.0Js\"},{\"def_pos\":0,\"name\":\"A0E\",\"type\":\"java.util.Map\"}],\"methods\":[{\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"()V\",\"signature\":\"\\u003cinit\\u003e(): void\"},{\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/1sv;IJZ)Z\",\"signature\":\"A00(X.1sv, int, long, boolean): boolean\"},{\"def_pos\":0,\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/1sx;ZZZ)V\",\"signature\":\"A01(X.1sx, boolean, boolean, boolean): void\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C1sv",
+          "method_name": "A01",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"full_name\":\"X.1sv.A01\",\"class_name\":\"X.C1sv\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    /* JADX WARN: Code duplicated, block: B:40:0x009b  */\\n    /* JADX WARN: Code duplicated, block: B:45:0x00a8  */\\n    /* JADX WARN: Code duplicated, block: B:50:0x00b5  */\\n    /* JADX WARN: Code duplicated, block: B:55:0x00c2  */\\n    /* JADX WARN: Code duplicated, block: B:60:0x00cf  */\\n    /* JADX WARN: Code duplicated, block: B:65:0x00dd  */\\n    /* JADX WARN: Code duplicated, block: B:75:0x0106  */\\n    /* JADX WARN: Code duplicated, block: B:82:0x011a  */\\n    public synchronized void A01(C1sx c1sx, boolean z, boolean z2, boolean z3) {\\n        int i;\\n        int i2;\\n        int i3;\\n        int i4;\\n        int i5;\\n        int i6;\\n        int i7;\\n        int i8;\\n        int i9;\\n        boolean z4 \\u003d c1sx.A07;\\n        String str \\u003d Voip.REJECT_REASON_DECLINED;\\n        String str2 \\u003d z4 ? \\\"S\\\" : Voip.REJECT_REASON_DECLINED;\\n        boolean z5 \\u003d c1sx.A05;\\n        String str3 \\u003d z5 ? \\\"Pi\\\" : Voip.REJECT_REASON_DECLINED;\\n        boolean z6 \\u003d c1sx.A06;\\n        String str4 \\u003d z6 ? \\\"Pr\\\" : Voip.REJECT_REASON_DECLINED;\\n        boolean z7 \\u003d c1sx.A02;\\n        String str5 \\u003d z7 ? \\\"D\\\" : Voip.REJECT_REASON_DECLINED;\\n        boolean z8 \\u003d c1sx.A01;\\n        String str6 \\u003d z8 ? \\\"B\\\" : Voip.REJECT_REASON_DECLINED;\\n        boolean z9 \\u003d c1sx.A03;\\n        String str7 \\u003d z9 ? \\\"N\\\" : Voip.REJECT_REASON_DECLINED;\\n        boolean z10 \\u003d c1sx.A08;\\n        String str8 \\u003d z10 ? \\\"T\\\" : Voip.REJECT_REASON_DECLINED;\\n        boolean z11 \\u003d c1sx.A04;\\n        if (z11) {\\n            str \\u003d \\\"O\\\";\\n        }\\n        StringBuilder sb \\u003d new StringBuilder(\\\"AccountSyncRequest:\\\");\\n        sb.append(str2);\\n        sb.append(str3);\\n        sb.append(str4);\\n        sb.append(str5);\\n        sb.append(str6);\\n        sb.append(str7);\\n        sb.append(str8);\\n        sb.append(str);\\n        String string \\u003d sb.toString();\\n        StringBuilder sb2 \\u003d new StringBuilder(\\\"AccountSyncManager/fetchAllAccountInfo/fetch account info: \\\");\\n        sb2.append(string);\\n        Log.i(sb2.toString());\\n        long jA00 \\u003d C08q.A00(this.A0A);\\n        if (z4) {\\n            i \\u003d A00(this, 1, jA00, z3) ? 1 : 0;\\n        }\\n        if (z5) {\\n            i2 \\u003d A00(this, 2, jA00, z3) ? 1 : 0;\\n        }\\n        if (z6) {\\n            i3 \\u003d A00(this, 3, jA00, z3) ? 1 : 0;\\n        }\\n        if (z8) {\\n            i4 \\u003d A00(this, 4, jA00, z3) ? 1 : 0;\\n        }\\n        if (z7) {\\n            i5 \\u003d A00(this, 5, jA00, z3) ? 1 : 0;\\n        }\\n        if (z10) {\\n            i6 \\u003d A00(this, 7, jA00, z3) ? 1 : 0;\\n        }\\n        if (z9) {\\n            java.util.Map map \\u003d this.A0E;\\n            if (map.containsKey(6)) {\\n                Long l \\u003d (Long) map.get(6);\\n                i7 \\u003d jA00 - (l !\\u003d null ? l.longValue() : 0L) \\u003c\\u003d 14400000 ? 0 : 1;\\n            }\\n        }\\n        if (z11) {\\n            i8 \\u003d A00(this, 8, jA00, z3) ? 1 : 0;\\n        }\\n        int i10 \\u003d i + i2 + i3 + i4 + i5 + i7 + i6 + i8;\\n        if (i10 !\\u003d 0) {\\n            C09S c09s \\u003d this.A09;\\n            final AnonymousClass278 anonymousClass278 \\u003d new AnonymousClass278(this, c09s, i10, z);\\n            if (z2) {\\n                boolean z12 \\u003d c1sx.A00;\\n                i9 \\u003d 5;\\n                C0cX c0cXA0B \\u003d c09s.A0B();\\n                if (i !\\u003d 0) {\\n                    int iMax \\u003d z12 ? Math.max(c0cXA0B.A03().getInt(\\\"account_sync_status_num_retries\\\", 0) - 1, 0) : 3;\\n                    SharedPreferences.Editor editorA02 \\u003d c0cXA0B.A02();\\n                    (iMax \\u003d\\u003d 0 ? editorA02.remove(\\\"account_sync_status_num_retries\\\") : editorA02.putInt(\\\"account_sync_status_num_retries\\\", iMax)).apply();\\n                }\\n                if (i2 !\\u003d 0) {\\n                    int iMax2 \\u003d z12 ? Math.max(c0cXA0B.A03().getInt(\\\"account_sync_picture_num_retries\\\", 0) - 1, 0) : 3;\\n                    SharedPreferences.Editor editorA03 \\u003d c0cXA0B.A02();\\n                    (iMax2 \\u003d\\u003d 0 ? editorA03.remove(\\\"account_sync_picture_num_retries\\\") : editorA03.putInt(\\\"account_sync_picture_num_retries\\\", iMax2)).apply();\\n                }\\n                if (i3 !\\u003d 0) {\\n                    int iMax3 \\u003d z12 ? Math.max(c0cXA0B.A03().getInt(\\\"account_sync_privacy_num_retries\\\", 0) - 1, 0) : 3;\\n                    SharedPreferences.Editor editorA04 \\u003d c0cXA0B.A02();\\n                    (iMax3 \\u003d\\u003d 0 ? editorA04.remove(\\\"account_sync_privacy_num_retries\\\") : editorA04.putInt(\\\"account_sync_privacy_num_retries\\\", iMax3)).apply();\\n                }\\n                if (i4 !\\u003d 0) {\\n                    int iMax4 \\u003d z12 ? Math.max(c0cXA0B.A03().getInt(\\\"account_sync_blocklist_num_retries\\\", 0) - 1, 0) : 3;\\n                    SharedPreferences.Editor editorA05 \\u003d c0cXA0B.A02();\\n                    (iMax4 \\u003d\\u003d 0 ? editorA05.remove(\\\"account_sync_blocklist_num_retries\\\") : editorA05.putInt(\\\"account_sync_blocklist_num_retries\\\", iMax4)).apply();\\n                }\\n                if (i6 !\\u003d 0) {\\n                    int iMax5 \\u003d z12 ? Math.max(c0cXA0B.A03().getInt(\\\"account_sync_text_status_num_retries\\\", 0) - 1, 0) : 3;\\n                    SharedPreferences.Editor editorA06 \\u003d c0cXA0B.A02();\\n                    (iMax5 \\u003d\\u003d 0 ? editorA06.remove(\\\"account_sync_text_status_num_retries\\\") : editorA06.putInt(\\\"account_sync_text_status_num_retries\\\", iMax5)).apply();\\n                }\\n                FxD fxD \\u003d (FxD) this.A02.A00.get();\\n                if (i8 !\\u003d 0) {\\n                    int iMax6 \\u003d z12 ? Math.max(FxD.A00(fxD).getInt(\\\"account_sync_opt_out_list_num_retries\\\", 0) - 1, 0) : 3;\\n                    SharedPreferences.Editor editorEdit \\u003d FxD.A00(fxD).edit();\\n                    if (iMax6 \\u003d\\u003d 0) {\\n                        editorEdit.remove(\\\"account_sync_opt_out_list_num_retries\\\");\\n                    } else {\\n                        editorEdit.putInt(\\\"account_sync_opt_out_list_num_retries\\\", iMax6);\\n                    }\\n                    editorEdit.apply();\\n                }\\n            } else {\\n                i9 \\u003d 5;\\n            }\\n            if (i !\\u003d 0) {\\n                this.A0E.put(1, Long.valueOf(jA00));\\n                ((FxR) this.A00.A00.get()).A02(new IUh() { // from class: X.27B\\n                    @Override // X.IUh\\n                    public void BsG(UserJid userJid) {\\n                        anonymousClass278.A00(1);\\n                    }\\n\\n                    @Override // X.IUh\\n                    public void C61(UserJid userJid) {\\n                        anonymousClass278.A00(1);\\n                    }\\n\\n                    @Override // X.IUh\\n                    public void CIJ(UserJid userJid, String str9, long j) {\\n                        anonymousClass278.A00(1);\\n                    }\\n\\n                    @Override // X.IUh\\n                    public void BvI(UserJid userJid, int i11) {\\n                    }\\n                });\\n            }\\n            if (i6 !\\u003d 0) {\\n                this.A0E.put(7, Long.valueOf(jA00));\\n                ((C3GT) this.A05.A00.get()).A04(anonymousClass278);\\n            }\\n            if (i2 !\\u003d 0) {\\n                this.A0E.put(2, Long.valueOf(jA00));\\n                this.A07.A01(anonymousClass278, null, this.A08.Auj(), \\\"AccountSyncManager.fetchAccountInfoWithIqs\\\", 0, 1, false);\\n            }\\n            if (i3 !\\u003d 0) {\\n                this.A0E.put(3, Long.valueOf(jA00));\\n                this.A0B.A0M(anonymousClass278);\\n            }\\n            if (i4 !\\u003d 0) {\\n                this.A0E.put(4, Long.valueOf(jA00));\\n                C1dH c1dH \\u003d (C1dH) this.A03.A00.get();\\n                java.util.Set set \\u003d C1dH.A0c;\\n                c1dH.A0M(anonymousClass278, null);\\n            }\\n            if (i5 !\\u003d 0) {\\n                this.A0E.put(Integer.valueOf(i9), Long.valueOf(jA00));\\n                C0yD c0yD \\u003d (C0yD) this.A04.A00.get();\\n                C0Dx c0DxCZN \\u003d this.A08.CZN();\\n                C00l.A05(c0DxCZN);\\n                c0yD.A03(new UserJid[]{c0DxCZN}, 2);\\n                anonymousClass278.A00(i9);\\n            }\\n            if (i7 !\\u003d 0) {\\n                this.A0E.put(6, Long.valueOf(jA00));\\n                C10t c10t \\u003d this.A0C;\\n                C08Y c08y \\u003d c10t.A04;\\n                C00l.A09(c08y, 0);\\n                if (c08y.A14(4779)) {\\n                    c10t.A06.CbD(new CvQ(c10t, 38));\\n                }\\n                anonymousClass278.A00(6);\\n            }\\n            if (i8 !\\u003d 0) {\\n                this.A0E.put(8, Long.valueOf(jA00));\\n                ((FxE) this.A01.A00.get()).A05();\\n                anonymousClass278.A00(8);\\n            }\\n        } else if (z) {\\n            ((C0mD) this.A06.A00.get()).A02(\\\"account_sync\\\", null);\\n        }\\n    }\",\"overload_count\":1,\"method_name\":\"A01\",\"markers\":[],\"mode\":\"java\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C1sv",
+    "method": {
+      "name": "A01",
+      "reported_signature": "A01(X.1sx, boolean, boolean, boolean): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(LX/1sx;ZZZ)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Code duplicated, block: B:40:0x009b  */\n    /* JADX WARN: Code duplicated, block: B:45:0x00a8  */\n    /* JADX WARN: Code duplicated, block: B:50:0x00b5  */\n    /* JADX WARN: Code duplicated, block: B:55:0x00c2  */\n    /* JADX WARN: Code duplicated, block: B:60:0x00cf  */\n    /* JADX WARN: Code duplicated, block: B:65:0x00dd  */\n    /* JADX WARN: Code duplicated, block: B:75:0x0106  */\n    /* JADX WARN: Code duplicated, block: B:82:0x011a  */\n    public synchronized void A01(C1sx c1sx, boolean z, boolean z2, boolean z3) {\n        int i;\n        int i2;\n        int i3;\n        int i4;\n        int i5;\n        int i6;\n        int i7;\n        int i8;\n        int i9;\n        boolean z4 = c1sx.A07;\n        String str = Voip.REJECT_REASON_DECLINED;\n        String str2 = z4 ? \"S\" : Voip.REJECT_REASON_DECLINED;\n        boolean z5 = c1sx.A05;\n        String str3 = z5 ? \"Pi\" : Voip.REJECT_REASON_DECLINED;\n        boolean z6 = c1sx.A06;\n        String str4 = z6 ? \"Pr\" : Voip.REJECT_REASON_DECLINED;\n        boolean z7 = c1sx.A02;\n        String str5 = z7 ? \"D\" : Voip.REJECT_REASON_DECLINED;\n        boolean z8 = c1sx.A01;\n        String str6 = z8 ? \"B\" : Voip.REJECT_REASON_DECLINED;\n        boolean z9 = c1sx.A03;\n        String str7 = z9 ? \"N\" : Voip.REJECT_REASON_DECLINED;\n        boolean z10 = c1sx.A08;\n        String str8 = z10 ? \"T\" : Voip.REJECT_REASON_DECLINED;\n        boolean z11 = c1sx.A04;\n        if (z11) {\n            str = \"O\";\n        }\n        StringBuilder sb = new StringBuilder(\"AccountSyncRequest:\");\n        sb.append(str2);\n        sb.append(str3);\n        sb.append(str4);\n        sb.append(str5);\n        sb.append(str6);\n        sb.append(str7);\n        sb.append(str8);\n        sb.append(str);\n        String string = sb.toString();\n        StringBuilder sb2 = new StringBuilder(\"AccountSyncManager/fetchAllAccountInfo/fetch account info: \");\n        sb2.append(string);\n        Log.i(sb2.toString());\n        long jA00 = C08q.A00(this.A0A);\n        if (z4) {\n            i = A00(this, 1, jA00, z3) ? 1 : 0;\n        }\n        if (z5) {\n            i2 = A00(this, 2, jA00, z3) ? 1 : 0;\n        }\n        if (z6) {\n            i3 = A00(this, 3, jA00, z3) ? 1 : 0;\n        }\n        if (z8) {\n            i4 = A00(this, 4, jA00, z3) ? 1 : 0;\n        }\n        if (z7) {\n            i5 = A00(this, 5, jA00, z3) ? 1 : 0;\n        }\n        if (z10) {\n            i6 = A00(this, 7, jA00, z3) ? 1 : 0;\n        }\n        if (z9) {\n            java.util.Map map = this.A0E;\n            if (map.containsKey(6)) {\n                Long l = (Long) map.get(6);\n                i7 = jA00 - (l != null ? l.longValue() : 0L) <= 14400000 ? 0 : 1;\n            }\n        }\n        if (z11) {\n            i8 = A00(this, 8, jA00, z3) ? 1 : 0;\n        }\n        int i10 = i + i2 + i3 + i4 + i5 + i7 + i6 + i8;\n        if (i10 != 0) {\n            C09S c09s = this.A09;\n            final AnonymousClass278 anonymousClass278 = new AnonymousClass278(this, c09s, i10, z);\n            if (z2) {\n                boolean z12 = c1sx.A00;\n                i9 = 5;\n                C0cX c0cXA0B = c09s.A0B();\n                if (i != 0) {\n                    int iMax = z12 ? Math.max(c0cXA0B.A03().getInt(\"account_sync_status_num_retries\", 0) - 1, 0) : 3;\n                    SharedPreferences.Editor editorA02 = c0cXA0B.A02();\n                    (iMax == 0 ? editorA02.remove(\"account_sync_status_num_retries\") : editorA02.putInt(\"account_sync_status_num_retries\", iMax)).apply();\n                }\n                if (i2 != 0) {\n                    int iMax2 = z12 ? Math.max(c0cXA0B.A03().getInt(\"account_sync_picture_num_retries\", 0) - 1, 0) : 3;\n                    SharedPreferences.Editor editorA03 = c0cXA0B.A02();\n                    (iMax2 == 0 ? editorA03.remove(\"account_sync_picture_num_retries\") : editorA03.putInt(\"account_sync_picture_num_retries\", iMax2)).apply();\n                }\n                if (i3 != 0) {\n                    int iMax3 = z12 ? Math.max(c0cXA0B.A03().getInt(\"account_sync_privacy_num_retries\", 0) - 1, 0) : 3;\n                    SharedPreferences.Editor editorA04 = c0cXA0B.A02();\n                    (iMax3 == 0 ? editorA04.remove(\"account_sync_privacy_num_retries\") : editorA04.putInt(\"account_sync_privacy_num_retries\", iMax3)).apply();\n                }\n                if (i4 != 0) {\n                    int iMax4 = z12 ? Math.max(c0cXA0B.A03().getInt(\"account_sync_blocklist_num_retries\", 0) - 1, 0) : 3;\n                    SharedPreferences.Editor editorA05 = c0cXA0B.A02();\n                    (iMax4 == 0 ? editorA05.remove(\"account_sync_blocklist_num_retries\") : editorA05.putInt(\"account_sync_blocklist_num_retries\", iMax4)).apply();\n                }\n                if (i6 != 0) {\n                    int iMax5 = z12 ? Math.max(c0cXA0B.A03().getInt(\"account_sync_text_status_num_retries\", 0) - 1, 0) : 3;\n                    SharedPreferences.Editor editorA06 = c0cXA0B.A02();\n                    (iMax5 == 0 ? editorA06.remove(\"account_sync_text_status_num_retries\") : editorA06.putInt(\"account_sync_text_status_num_retries\", iMax5)).apply();\n                }\n                FxD fxD = (FxD) this.A02.A00.get();\n                if (i8 != 0) {\n                    int iMax6 = z12 ? Math.max(FxD.A00(fxD).getInt(\"account_sync_opt_out_list_num_retries\", 0) - 1, 0) : 3;\n                    SharedPreferences.Editor editorEdit = FxD.A00(fxD).edit();\n                    if (iMax6 == 0) {\n                        editorEdit.remove(\"account_sync_opt_out_list_num_retries\");\n                    } else {\n                        editorEdit.putInt(\"account_sync_opt_out_list_num_retries\", iMax6);\n                    }\n                    editorEdit.apply();\n                }\n            } else {\n                i9 = 5;\n            }\n            if (i != 0) {\n                this.A0E.put(1, Long.valueOf(jA00));\n                ((FxR) this.A00.A00.get()).A02(new IUh() { // from class: X.27B\n                    @Override // X.IUh\n                    public void BsG(UserJid userJid) {\n                        anonymousClass278.A00(1);\n                    }\n\n                    @Override // X.IUh\n                    public void C61(UserJid userJid) {\n                        anonymousClass278.A00(1);\n                    }\n\n                    @Override // X.IUh\n                    public void CIJ(UserJid userJid, String str9, long j) {\n                        anonymousClass278.A00(1);\n                    }\n\n                    @Override // X.IUh\n                    public void BvI(UserJid userJid, int i11) {\n                    }\n                });\n            }\n            if (i6 != 0) {\n                this.A0E.put(7, Long.valueOf(jA00));\n                ((C3GT) this.A05.A00.get()).A04(anonymousClass278);\n            }\n            if (i2 != 0) {\n                this.A0E.put(2, Long.valueOf(jA00));\n                this.A07.A01(anonymousClass278, null, this.A08.Auj(), \"AccountSyncManager.fetchAccountInfoWithIqs\", 0, 1, false);\n            }\n            if (i3 != 0) {\n                this.A0E.put(3, Long.valueOf(jA00));\n                this.A0B.A0M(anonymousClass278);\n            }\n            if (i4 != 0) {\n                this.A0E.put(4, Long.valueOf(jA00));\n                C1dH c1dH = (C1dH) this.A03.A00.get();\n                java.util.Set set = C1dH.A0c;\n                c1dH.A0M(anonymousClass278, null);\n            }\n            if (i5 != 0) {\n                this.A0E.put(Integer.valueOf(i9), Long.valueOf(jA00));\n                C0yD c0yD = (C0yD) this.A04.A00.get();\n                C0Dx c0DxCZN = this.A08.CZN();\n                C00l.A05(c0DxCZN);\n                c0yD.A03(new UserJid[]{c0DxCZN}, 2);\n                anonymousClass278.A00(i9);\n            }\n            if (i7 != 0) {\n                this.A0E.put(6, Long.valueOf(jA00));\n                C10t c10t = this.A0C;\n                C08Y c08y = c10t.A04;\n                C00l.A09(c08y, 0);\n                if (c08y.A14(4779)) {\n                    c10t.A06.CbD(new CvQ(c10t, 38));\n                }\n                anonymousClass278.A00(6);\n            }\n            if (i8 != 0) {\n                this.A0E.put(8, Long.valueOf(jA00));\n                ((FxE) this.A01.A00.get()).A05();\n                anonymousClass278.A00(8);\n            }\n        } else if (z) {\n            ((C0mD) this.A06.A00.get()).A02(\"account_sync\", null);\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

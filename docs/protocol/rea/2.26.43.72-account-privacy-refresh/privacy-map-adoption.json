@@ -1,0 +1,147 @@
+{
+  "evidence_id": "ev_31b02933f04201b47e2debccb4de7c4e4c6ae9bfccfa5a8eff03d73b65285e5c",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C0oe",
+    "method_name": "A0R",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-zWhIO6/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "load_apk",
+        "input": {
+          "path": "/tmp/rea-android-zWhIO6/target.apk",
+          "threads": 1,
+          "resources": "full"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-zWhIO6/target.apk\",\"class_count\":106897,\"raw_class_count\":106897,\"resource_count\":15728,\"load_duration_ms\":18059,\"decompile_timeout_ms\":90000,\"threads\":1,\"code_cache_size\":64,\"resources\":\"full\"}"
+            }
+          ]
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C0oe"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"C0oe\",\"full_name\":\"X.C0oe\",\"field_count\":17,\"fields\":[{\"def_pos\":0,\"name\":\"A00\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A01\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A02\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A03\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A04\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A05\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A06\",\"type\":\"X.07p\"},{\"def_pos\":0,\"name\":\"A07\",\"type\":\"X.09S\"},{\"def_pos\":0,\"name\":\"A08\",\"type\":\"X.0Gg\"},{\"def_pos\":0,\"name\":\"A09\",\"type\":\"X.0No\"},{\"def_pos\":0,\"name\":\"A0A\",\"type\":\"X.0Nl\"},{\"def_pos\":0,\"name\":\"A0B\",\"type\":\"X.0m9\"},{\"def_pos\":0,\"name\":\"A0C\",\"type\":\"X.0of\"},{\"def_pos\":0,\"name\":\"A0D\",\"type\":\"X.0Js\"},{\"def_pos\":0,\"name\":\"A0E\",\"type\":\"java.util.Map\"},{\"def_pos\":0,\"name\":\"A0F\",\"type\":\"X.00p\"},{\"def_pos\":0,\"name\":\"A0G\",\"type\":\"java.util.List\"}],\"methods\":[{\"name\":\"\\u003cclinit\\u003e\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"\\u003cclinit\\u003e(): void\",\"def_pos\":0},{\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"()V\",\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0},{\"name\":\"A02\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/278;LX/0iX;Z)V\",\"signature\":\"A02(X.278, X.0iX, boolean): void\",\"def_pos\":0},{\"name\":\"A0L\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)I\",\"signature\":\"A0L(java.lang.String): int\",\"def_pos\":0},{\"name\":\"A0M\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/278;)V\",\"signature\":\"A0M(X.278): void\",\"def_pos\":0},{\"name\":\"A0N\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;I)V\",\"signature\":\"A0N(java.lang.String, int): void\",\"def_pos\":0},{\"name\":\"A0O\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;I)V\",\"signature\":\"A0O(java.lang.String, int): void\",\"def_pos\":0},{\"name\":\"A0P\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;Ljava/lang/String;)V\",\"signature\":\"A0P(java.lang.String, java.lang.String): void\",\"def_pos\":0},{\"name\":\"A0Q\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/util/List;)V\",\"signature\":\"A0Q(java.util.List): void\",\"def_pos\":0},{\"name\":\"A0R\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/util/Map;)V\",\"signature\":\"A0R(java.util.Map): void\",\"def_pos\":0},{\"name\":\"A0S\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;Ljava/lang/String;)Z\",\"signature\":\"A0S(java.lang.String, java.lang.String): boolean\",\"def_pos\":0}],\"method_count\":11}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C0oe",
+          "method_name": "A0R",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"class_name\":\"X.C0oe\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    /* JADX WARN: Can\\u0027t fix incorrect switch cases order, some code will duplicate */\\n    /* JADX WARN: Code duplicated, block: B:30:0x00e7  */\\n    /* JADX WARN: Code duplicated, block: B:55:0x014a A[EXC_TOP_SPLITTER, SYNTHETIC] */\\n    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue */\\n    public final void A0R(java.util.Map map) {\\n        boolean z;\\n        boolean zA03;\\n        SharedPreferences.Editor editorA02;\\n        String str;\\n        C09S c09s;\\n        SharedPreferences sharedPreferencesA03;\\n        String str2;\\n        SharedPreferences.Editor editorPutBoolean;\\n        int i;\\n        boolean z2 \\u003d false;\\n        for (java.util.Map.Entry entry : map.entrySet()) {\\n            String str3 \\u003d (String) entry.getKey();\\n            String str4 \\u003d (String) entry.getValue();\\n            StringBuilder sb \\u003d new StringBuilder(\\\"settingsprivacy/received \\\");\\n            sb.append(str3);\\n            sb.append(\\\":\\\");\\n            sb.append(str4);\\n            Log.i(sb.toString());\\n            int iA00 \\u003d C8AX.A00(str4);\\n            java.util.Map map2 \\u003d this.A0E;\\n            C7wp c7wp \\u003d (C7wp) map2.get(str3);\\n            if (iA00 \\u003e\\u003d 0) {\\n                C0No c0No \\u003d this.A09;\\n                if (C8AX.A04(str3, iA00, c0No.A03(), c0No.A03())) {\\n                    if (c7wp \\u003d\\u003d null) {\\n                        z \\u003d false;\\n                    } else if (C00l.areEqual(c7wp.A00, str4)) {\\n                        z \\u003d true;\\n                    }\\n                    map2.remove(str3);\\n                    switch (str3.hashCode()) {\\n                        case -1012222381:\\n                            if (str3.equals(\\\"online\\\")) {\\n                                c09s \\u003d this.A07;\\n                                sharedPreferencesA03 \\u003d c09s.A0R().A03();\\n                                str2 \\u003d \\\"privacy_online\\\";\\n                                i \\u003d sharedPreferencesA03.getInt(str2, 0);\\n                                c09s.A0R().A02().putInt(str2, iA00).apply();\\n                                if (i !\\u003d iA00) {\\n                                    z2 \\u003d true;\\n                                }\\n                            } else {\\n                                try {\\n                                    this.A07.A0z(C8AX.A01(str3), iA00);\\n                                } catch (IllegalArgumentException e) {\\n                                    Log.i(\\\"Received unexpected privacy category from the server\\\", e);\\n                                }\\n                            }\\n                            break;\\n                        case -487963238:\\n                            if (str3.equals(\\\"dependentaccountmessages\\\")) {\\n                                editorPutBoolean \\u003d C0Nl.A00(this.A0A).A00.edit().putInt(\\\"privacy_dependent_account_messages\\\", iA00);\\n                                editorPutBoolean.apply();\\n                            } else {\\n                                this.A07.A0z(C8AX.A01(str3), iA00);\\n                            }\\n                            break;\\n                        case -486574498:\\n                            if (str3.equals(\\\"groupcreation\\\")) {\\n                                C0Nl c0Nl \\u003d this.A0A;\\n                                zA03 \\u003d C8AX.A03(str4);\\n                                editorA02 \\u003d C0Nl.A00(c0Nl).A00.edit();\\n                                str \\u003d \\\"privacy_group_creation_enabled\\\";\\n                                editorPutBoolean \\u003d editorA02.putBoolean(str, zA03);\\n                                editorPutBoolean.apply();\\n                            } else {\\n                                this.A07.A0z(C8AX.A01(str3), iA00);\\n                            }\\n                            break;\\n                        case 3314326:\\n                            if (str3.equals(\\\"last\\\")) {\\n                                c09s \\u003d this.A07;\\n                                sharedPreferencesA03 \\u003d c09s.A0R().A03();\\n                                str2 \\u003d \\\"privacy_last_seen\\\";\\n                                i \\u003d sharedPreferencesA03.getInt(str2, 0);\\n                                c09s.A0R().A02().putInt(str2, iA00).apply();\\n                                if (i !\\u003d iA00) {\\n                                    z2 \\u003d true;\\n                                }\\n                            } else {\\n                                this.A07.A0z(C8AX.A01(str3), iA00);\\n                            }\\n                            break;\\n                        case 1544916544:\\n                            if (str3.equals(\\\"defense\\\")) {\\n                                C1iG c1iG \\u003d (C1iG) this.A00.A00.BFb();\\n                                boolean z3 \\u003d iA00 !\\u003d 7;\\n                                C1iG.A02(c1iG).A01(C02X.A0C, z3);\\n                                if (((C09F) c1iG.A00.A00.BFb()).BU7()) {\\n                                    C1iG.A03(c1iG, z3);\\n                                }\\n                            } else {\\n                                this.A07.A0z(C8AX.A01(str3), iA00);\\n                            }\\n                            break;\\n                        case 1974548689:\\n                            if (str3.equals(\\\"readreceipts\\\")) {\\n                                C09S c09s2 \\u003d this.A07;\\n                                zA03 \\u003d C8AX.A03(str4);\\n                                editorA02 \\u003d c09s2.A0R().A02();\\n                                str \\u003d \\\"read_receipts_enabled\\\";\\n                                editorPutBoolean \\u003d editorA02.putBoolean(str, zA03);\\n                                editorPutBoolean.apply();\\n                            } else {\\n                                this.A07.A0z(C8AX.A01(str3), iA00);\\n                            }\\n                            break;\\n                        default:\\n                            this.A07.A0z(C8AX.A01(str3), iA00);\\n                            break;\\n                    }\\n                    if (z) {\\n                        C07o.A00(this, C0Kl.A02, new C8OE(str3, str4, 0));\\n                    }\\n                }\\n            }\\n            StringBuilder sb2 \\u003d new StringBuilder(\\\"settingsprivacy/unsupported \\\");\\n            sb2.append(str3);\\n            sb2.append(\\\":\\\");\\n            sb2.append(str4);\\n            Log.i(sb2.toString());\\n            map2.remove(str3);\\n        }\\n        if (z2) {\\n            this.A0B.A0E();\\n        }\\n        A0Q(C07Z.A1H(map.keySet()));\\n    }\",\"overload_count\":1,\"method_name\":\"A0R\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.0oe.A0R\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C0oe",
+    "method": {
+      "name": "A0R",
+      "reported_signature": "A0R(java.util.Map): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(Ljava/util/Map;)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */\n    /* JADX WARN: Code duplicated, block: B:30:0x00e7  */\n    /* JADX WARN: Code duplicated, block: B:55:0x014a A[EXC_TOP_SPLITTER, SYNTHETIC] */\n    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue */\n    public final void A0R(java.util.Map map) {\n        boolean z;\n        boolean zA03;\n        SharedPreferences.Editor editorA02;\n        String str;\n        C09S c09s;\n        SharedPreferences sharedPreferencesA03;\n        String str2;\n        SharedPreferences.Editor editorPutBoolean;\n        int i;\n        boolean z2 = false;\n        for (java.util.Map.Entry entry : map.entrySet()) {\n            String str3 = (String) entry.getKey();\n            String str4 = (String) entry.getValue();\n            StringBuilder sb = new StringBuilder(\"settingsprivacy/received \");\n            sb.append(str3);\n            sb.append(\":\");\n            sb.append(str4);\n            Log.i(sb.toString());\n            int iA00 = C8AX.A00(str4);\n            java.util.Map map2 = this.A0E;\n            C7wp c7wp = (C7wp) map2.get(str3);\n            if (iA00 >= 0) {\n                C0No c0No = this.A09;\n                if (C8AX.A04(str3, iA00, c0No.A03(), c0No.A03())) {\n                    if (c7wp == null) {\n                        z = false;\n                    } else if (C00l.areEqual(c7wp.A00, str4)) {\n                        z = true;\n                    }\n                    map2.remove(str3);\n                    switch (str3.hashCode()) {\n                        case -1012222381:\n                            if (str3.equals(\"online\")) {\n                                c09s = this.A07;\n                                sharedPreferencesA03 = c09s.A0R().A03();\n                                str2 = \"privacy_online\";\n                                i = sharedPreferencesA03.getInt(str2, 0);\n                                c09s.A0R().A02().putInt(str2, iA00).apply();\n                                if (i != iA00) {\n                                    z2 = true;\n                                }\n                            } else {\n                                try {\n                                    this.A07.A0z(C8AX.A01(str3), iA00);\n                                } catch (IllegalArgumentException e) {\n                                    Log.i(\"Received unexpected privacy category from the server\", e);\n                                }\n                            }\n                            break;\n                        case -487963238:\n                            if (str3.equals(\"dependentaccountmessages\")) {\n                                editorPutBoolean = C0Nl.A00(this.A0A).A00.edit().putInt(\"privacy_dependent_account_messages\", iA00);\n                                editorPutBoolean.apply();\n                            } else {\n                                this.A07.A0z(C8AX.A01(str3), iA00);\n                            }\n                            break;\n                        case -486574498:\n                            if (str3.equals(\"groupcreation\")) {\n                                C0Nl c0Nl = this.A0A;\n                                zA03 = C8AX.A03(str4);\n                                editorA02 = C0Nl.A00(c0Nl).A00.edit();\n                                str = \"privacy_group_creation_enabled\";\n                                editorPutBoolean = editorA02.putBoolean(str, zA03);\n                                editorPutBoolean.apply();\n                            } else {\n                                this.A07.A0z(C8AX.A01(str3), iA00);\n                            }\n                            break;\n                        case 3314326:\n                            if (str3.equals(\"last\")) {\n                                c09s = this.A07;\n                                sharedPreferencesA03 = c09s.A0R().A03();\n                                str2 = \"privacy_last_seen\";\n                                i = sharedPreferencesA03.getInt(str2, 0);\n                                c09s.A0R().A02().putInt(str2, iA00).apply();\n                                if (i != iA00) {\n                                    z2 = true;\n                                }\n                            } else {\n                                this.A07.A0z(C8AX.A01(str3), iA00);\n                            }\n                            break;\n                        case 1544916544:\n                            if (str3.equals(\"defense\")) {\n                                C1iG c1iG = (C1iG) this.A00.A00.BFb();\n                                boolean z3 = iA00 != 7;\n                                C1iG.A02(c1iG).A01(C02X.A0C, z3);\n                                if (((C09F) c1iG.A00.A00.BFb()).BU7()) {\n                                    C1iG.A03(c1iG, z3);\n                                }\n                            } else {\n                                this.A07.A0z(C8AX.A01(str3), iA00);\n                            }\n                            break;\n                        case 1974548689:\n                            if (str3.equals(\"readreceipts\")) {\n                                C09S c09s2 = this.A07;\n                                zA03 = C8AX.A03(str4);\n                                editorA02 = c09s2.A0R().A02();\n                                str = \"read_receipts_enabled\";\n                                editorPutBoolean = editorA02.putBoolean(str, zA03);\n                                editorPutBoolean.apply();\n                            } else {\n                                this.A07.A0z(C8AX.A01(str3), iA00);\n                            }\n                            break;\n                        default:\n                            this.A07.A0z(C8AX.A01(str3), iA00);\n                            break;\n                    }\n                    if (z) {\n                        C07o.A00(this, C0Kl.A02, new C8OE(str3, str4, 0));\n                    }\n                }\n            }\n            StringBuilder sb2 = new StringBuilder(\"settingsprivacy/unsupported \");\n            sb2.append(str3);\n            sb2.append(\":\");\n            sb2.append(str4);\n            Log.i(sb2.toString());\n            map2.remove(str3);\n        }\n        if (z2) {\n            this.A0B.A0E();\n        }\n        A0Q(C07Z.A1H(map.keySet()));\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_1a86f51e732c133862e59287d1db430d82f7922bbf681e5b94bbc9b15ec24992",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C0l8",
+    "method_name": "A03",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-EGzZJl/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C0l8"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"C0l8\",\"full_name\":\"X.C0l8\",\"field_count\":1,\"fields\":[{\"def_pos\":0,\"name\":\"A00\",\"type\":\"X.05a\"}],\"methods\":[{\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"()V\",\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0},{\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0l8;)LX/0af;\",\"signature\":\"A00(X.0l8): X.0af\",\"def_pos\":0},{\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)V\",\"signature\":\"A01(java.lang.String): void\",\"def_pos\":0},{\"name\":\"A02\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)Ljava/lang/Long;\",\"signature\":\"A02(java.lang.String): java.lang.Long\",\"def_pos\":0},{\"name\":\"A03\",\"is_constructor\":false,\"dex_descriptor\":\"()Ljava/util/HashSet;\",\"signature\":\"A03(): java.util.HashSet\",\"def_pos\":0},{\"name\":\"A04\",\"is_constructor\":false,\"dex_descriptor\":\"()Ljava/util/LinkedHashMap;\",\"signature\":\"A04(): java.util.LinkedHashMap\",\"def_pos\":0},{\"name\":\"A05\",\"is_constructor\":false,\"dex_descriptor\":\"()Ljava/util/LinkedHashMap;\",\"signature\":\"A05(): java.util.LinkedHashMap\",\"def_pos\":0},{\"name\":\"A06\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)V\",\"signature\":\"A06(java.lang.String): void\",\"def_pos\":0},{\"name\":\"A07\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;J)V\",\"signature\":\"A07(java.lang.String, long): void\",\"def_pos\":0},{\"name\":\"A08\",\"is_constructor\":false,\"dex_descriptor\":\"([BLjava/lang/String;J)V\",\"signature\":\"A08(byte[], java.lang.String, long): void\",\"def_pos\":0},{\"name\":\"A09\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)Z\",\"signature\":\"A09(java.lang.String): boolean\",\"def_pos\":0},{\"name\":\"A0A\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/lang/String;)[B\",\"signature\":\"A0A(java.lang.String): byte[]\",\"def_pos\":0}],\"method_count\":12}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C0l8",
+          "method_name": "A03",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"class_name\":\"X.C0l8\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public final HashSet A03() {\\n        C0aq c0aqBFb \\u003d A00(this).A00().BFb();\\n        try {\\n            Cursor cursorA0A \\u003d c0aqBFb.A02.A0A(\\\"\\\\n          SELECT collection_name FROM collection_versions\\\\n          WHERE dirty_version \\u003d 0\\\\n            OR dirty_version \\u003e version\\\\n        \\\", \\\"CollectionVersionsTable.SELECT_DIRTY_COLLECTIONS\\\", null);\\n            try {\\n                HashSet hashSet \\u003d new HashSet();\\n                while (cursorA0A.moveToNext()) {\\n                    String string \\u003d cursorA0A.getString(cursorA0A.getColumnIndexOrThrow(\\\"collection_name\\\"));\\n                    C00l.A05(string);\\n                    hashSet.add(string);\\n                }\\n                cursorA0A.close();\\n                c0aqBFb.close();\\n                return hashSet;\\n            } catch (Throwable th) {\\n                try {\\n                    throw th;\\n                } catch (Throwable th2) {\\n                    C08N.A00(cursorA0A, th);\\n                    throw th2;\\n                }\\n            }\\n        } catch (Throwable th3) {\\n            try {\\n                throw th3;\\n            } catch (Throwable th4) {\\n                C08N.A00(c0aqBFb, th3);\\n                throw th4;\\n            }\\n        }\\n    }\",\"overload_count\":1,\"method_name\":\"A03\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.0l8.A03\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C0l8",
+    "method": {
+      "name": "A03",
+      "reported_signature": "A03(): java.util.HashSet",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "()Ljava/util/HashSet;"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public final HashSet A03() {\n        C0aq c0aqBFb = A00(this).A00().BFb();\n        try {\n            Cursor cursorA0A = c0aqBFb.A02.A0A(\"\\n          SELECT collection_name FROM collection_versions\\n          WHERE dirty_version = 0\\n            OR dirty_version > version\\n        \", \"CollectionVersionsTable.SELECT_DIRTY_COLLECTIONS\", null);\n            try {\n                HashSet hashSet = new HashSet();\n                while (cursorA0A.moveToNext()) {\n                    String string = cursorA0A.getString(cursorA0A.getColumnIndexOrThrow(\"collection_name\"));\n                    C00l.A05(string);\n                    hashSet.add(string);\n                }\n                cursorA0A.close();\n                c0aqBFb.close();\n                return hashSet;\n            } catch (Throwable th) {\n                try {\n                    throw th;\n                } catch (Throwable th2) {\n                    C08N.A00(cursorA0A, th);\n                    throw th2;\n                }\n            }\n        } catch (Throwable th3) {\n            try {\n                throw th3;\n            } catch (Throwable th4) {\n                C08N.A00(c0aqBFb, th3);\n                throw th4;\n            }\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

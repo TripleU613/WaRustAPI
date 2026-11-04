@@ -1,0 +1,547 @@
+{
+  "evidence_id": "ev_f5367b77bbcc2d4a16bb92772f45cd436206308da26e88a11438757812ecafab",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "search_android_classes",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "query": "144"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-Yp8Okt/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "list_classes",
+        "input": {
+          "offset": 0,
+          "limit": 4096
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"limit\":4096,\"total\":106897,\"offset\":0,\"items_omitted\":4096}"
+            }
+          ],
+          "isError": false
+        },
+        "inventory_elided": true
+      },
+      {
+        "operation": "list_classes",
+        "input": {
+          "offset": 4096,
+          "limit": 4096
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"limit\":4096,\"total\":106897,\"offset\":4096,\"items_omitted\":4096}"
+            }
+          ],
+          "isError": false
+        },
+        "inventory_elided": true
+      },
+      {
+        "operation": "list_classes",
+        "input": {
+          "offset": 8192,
+          "limit": 4096
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"limit\":4096,\"total\":106897,\"offset\":8192,\"items_omitted\":4096}"
+            }
+          ],
+          "isError": false
+        },
+        "inventory_elided": true
+      },
+      {
+        "operation": "list_classes",
+        "input": {
+          "offset": 12288,
+          "limit": 4096
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"limit\":4096,\"total\":106897,\"offset\":12288,\"items_omitted\":4096}"
+            }
+          ],
+          "isError": false
+        },
+        "inventory_elided": true
+      },
+      {
+        "operation": "list_classes",
+        "input": {
+          "offset": 16384,
+          "limit": 4096
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"limit\":4096,\"total\":106897,\"offset\":16384,\"items_omitted\":4096}"
+            }
+          ],
+          "isError": false
+        },
+        "inventory_elided": true
+      },
+      {
+        "operation": "list_classes",
+        "input": {
+          "offset": 20480,
+          "limit": 4096
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"limit\":4096,\"total\":106897,\"offset\":20480,\"items_omitted\":4096}"
+            }
+          ],
+          "isError": false
+        },
+        "inventory_elided": true
+      },
+      {
+        "operation": "list_classes",
+        "input": {
+          "offset": 24576,
+          "limit": 4096
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"limit\":4096,\"total\":106897,\"offset\":24576,\"items_omitted\":4096}"
+            }
+          ],
+          "isError": false
+        },
+        "inventory_elided": true
+      },
+      {
+        "operation": "list_classes",
+        "input": {
+          "offset": 28672,
+          "limit": 4096
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"limit\":4096,\"total\":106897,\"offset\":28672,\"items_omitted\":4096}"
+            }
+          ],
+          "isError": false
+        },
+        "inventory_elided": true
+      },
+      {
+        "operation": "list_classes",
+        "input": {
+          "offset": 32768,
+          "limit": 4096
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"limit\":4096,\"total\":106897,\"offset\":32768,\"items_omitted\":4096}"
+            }
+          ],
+          "isError": false
+        },
+        "inventory_elided": true
+      },
+      {
+        "operation": "list_classes",
+        "input": {
+          "offset": 36864,
+          "limit": 4096
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"limit\":4096,\"total\":106897,\"offset\":36864,\"items_omitted\":4096}"
+            }
+          ],
+          "isError": false
+        },
+        "inventory_elided": true
+      },
+      {
+        "operation": "list_classes",
+        "input": {
+          "offset": 40960,
+          "limit": 4096
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"limit\":4096,\"total\":106897,\"offset\":40960,\"items_omitted\":4096}"
+            }
+          ],
+          "isError": false
+        },
+        "inventory_elided": true
+      },
+      {
+        "operation": "list_classes",
+        "input": {
+          "offset": 45056,
+          "limit": 4096
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"limit\":4096,\"total\":106897,\"offset\":45056,\"items_omitted\":4096}"
+            }
+          ],
+          "isError": false
+        },
+        "inventory_elided": true
+      },
+      {
+        "operation": "list_classes",
+        "input": {
+          "offset": 49152,
+          "limit": 4096
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"limit\":4096,\"total\":106897,\"offset\":49152,\"items_omitted\":4096}"
+            }
+          ],
+          "isError": false
+        },
+        "inventory_elided": true
+      },
+      {
+        "operation": "list_classes",
+        "input": {
+          "offset": 53248,
+          "limit": 4096
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"limit\":4096,\"total\":106897,\"offset\":53248,\"items_omitted\":4096}"
+            }
+          ],
+          "isError": false
+        },
+        "inventory_elided": true
+      },
+      {
+        "operation": "list_classes",
+        "input": {
+          "offset": 57344,
+          "limit": 4096
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"limit\":4096,\"total\":106897,\"offset\":57344,\"items_omitted\":4096}"
+            }
+          ],
+          "isError": false
+        },
+        "inventory_elided": true
+      },
+      {
+        "operation": "list_classes",
+        "input": {
+          "offset": 61440,
+          "limit": 4096
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"limit\":4096,\"total\":106897,\"offset\":61440,\"items_omitted\":4096}"
+            }
+          ],
+          "isError": false
+        },
+        "inventory_elided": true
+      },
+      {
+        "operation": "list_classes",
+        "input": {
+          "offset": 65536,
+          "limit": 4096
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"limit\":4096,\"total\":106897,\"offset\":65536,\"items_omitted\":4096}"
+            }
+          ],
+          "isError": false
+        },
+        "inventory_elided": true
+      },
+      {
+        "operation": "list_classes",
+        "input": {
+          "offset": 69632,
+          "limit": 4096
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"limit\":4096,\"total\":106897,\"offset\":69632,\"items_omitted\":4096}"
+            }
+          ],
+          "isError": false
+        },
+        "inventory_elided": true
+      },
+      {
+        "operation": "list_classes",
+        "input": {
+          "offset": 73728,
+          "limit": 4096
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"limit\":4096,\"total\":106897,\"offset\":73728,\"items_omitted\":4096}"
+            }
+          ],
+          "isError": false
+        },
+        "inventory_elided": true
+      },
+      {
+        "operation": "list_classes",
+        "input": {
+          "offset": 77824,
+          "limit": 4096
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"limit\":4096,\"total\":106897,\"offset\":77824,\"items_omitted\":4096}"
+            }
+          ],
+          "isError": false
+        },
+        "inventory_elided": true
+      },
+      {
+        "operation": "list_classes",
+        "input": {
+          "offset": 81920,
+          "limit": 4096
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"limit\":4096,\"total\":106897,\"offset\":81920,\"items_omitted\":4096}"
+            }
+          ],
+          "isError": false
+        },
+        "inventory_elided": true
+      },
+      {
+        "operation": "list_classes",
+        "input": {
+          "offset": 86016,
+          "limit": 4096
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"limit\":4096,\"total\":106897,\"offset\":86016,\"items_omitted\":4096}"
+            }
+          ],
+          "isError": false
+        },
+        "inventory_elided": true
+      },
+      {
+        "operation": "list_classes",
+        "input": {
+          "offset": 90112,
+          "limit": 4096
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"limit\":4096,\"total\":106897,\"offset\":90112,\"items_omitted\":4096}"
+            }
+          ],
+          "isError": false
+        },
+        "inventory_elided": true
+      },
+      {
+        "operation": "list_classes",
+        "input": {
+          "offset": 94208,
+          "limit": 4096
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"limit\":4096,\"total\":106897,\"offset\":94208,\"items_omitted\":4096}"
+            }
+          ],
+          "isError": false
+        },
+        "inventory_elided": true
+      },
+      {
+        "operation": "list_classes",
+        "input": {
+          "offset": 98304,
+          "limit": 4096
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"limit\":4096,\"total\":106897,\"offset\":98304,\"items_omitted\":4096}"
+            }
+          ],
+          "isError": false
+        },
+        "inventory_elided": true
+      },
+      {
+        "operation": "list_classes",
+        "input": {
+          "offset": 102400,
+          "limit": 4096
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"limit\":4096,\"total\":106897,\"offset\":102400,\"items_omitted\":4096}"
+            }
+          ],
+          "isError": false
+        },
+        "inventory_elided": true
+      },
+      {
+        "operation": "list_classes",
+        "input": {
+          "offset": 106496,
+          "limit": 4096
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"limit\":4096,\"total\":106897,\"offset\":106496,\"items_omitted\":401}"
+            }
+          ],
+          "isError": false
+        },
+        "inventory_elided": true
+      }
+    ],
+    "complete_evidence_id": "ev_77de5dc799ccc25bf84f9dc8f216d51e7b9455f57200c12413b15cf229e904a1"
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "query": "144",
+    "total_classes": 106897,
+    "matches": [
+      "X.AnonymousClass144"
+    ],
+    "duplicate_names": [],
+    "coverage": "complete"
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": [
+    "ev_77de5dc799ccc25bf84f9dc8f216d51e7b9455f57200c12413b15cf229e904a1"
+  ]
+}

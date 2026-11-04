@@ -154,3 +154,7 @@ This does not establish full bootstrap order or native readiness/presence parity
 [Current startup caller records](rea/2.26.43.72-startup-callers/README.md) retain
 login-sequence/active selection/writer-ready scheduling observations and explicit
 provider no-body limitations. They do not close full bootstrap equivalence.
+
+The follow-on [Noise/auth-key audit](authkey-lifecycle.md) adds persisted
+Curve25519 public/private consistency checking to preflight, without replacing
+keys or implementing the still-unclosed server rotation lifecycle.

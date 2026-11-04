@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_0b150ace0d5e5181730b1722d655e8ae19177fd15c3d82e310c02bb9ef82d5b2",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C1sv",
+    "method_name": "A00",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-z8hGR1/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C1sv"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_count\":3,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"C1sv\",\"full_name\":\"X.C1sv\",\"field_count\":15,\"fields\":[{\"def_pos\":0,\"name\":\"A00\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A01\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A02\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A03\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A04\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A05\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A06\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A07\",\"type\":\"X.0yO\"},{\"def_pos\":0,\"name\":\"A08\",\"type\":\"X.09F\"},{\"def_pos\":0,\"name\":\"A09\",\"type\":\"X.09S\"},{\"def_pos\":0,\"name\":\"A0A\",\"type\":\"X.08q\"},{\"def_pos\":0,\"name\":\"A0B\",\"type\":\"X.0oe\"},{\"def_pos\":0,\"name\":\"A0C\",\"type\":\"X.10t\"},{\"def_pos\":0,\"name\":\"A0D\",\"type\":\"X.0Js\"},{\"def_pos\":0,\"name\":\"A0E\",\"type\":\"java.util.Map\"}],\"methods\":[{\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"()V\",\"signature\":\"\\u003cinit\\u003e(): void\"},{\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/1sv;IJZ)Z\",\"signature\":\"A00(X.1sv, int, long, boolean): boolean\"},{\"def_pos\":0,\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/1sx;ZZZ)V\",\"signature\":\"A01(X.1sx, boolean, boolean, boolean): void\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C1sv",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"full_name\":\"X.1sv.A00\",\"class_name\":\"X.C1sv\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public static final boolean A00(C1sv c1sv, int i, long j, boolean z) {\\n        if (z) {\\n            java.util.Map map \\u003d c1sv.A0E;\\n            Integer numValueOf \\u003d Integer.valueOf(i);\\n            if (map.containsKey(numValueOf)) {\\n                Number number \\u003d (Number) map.get(numValueOf);\\n                if (j - (number !\\u003d null ? number.longValue() : 0L) \\u003c\\u003d 60000) {\\n                    return false;\\n                }\\n            }\\n        }\\n        return true;\\n    }\",\"overload_count\":1,\"method_name\":\"A00\",\"markers\":[],\"mode\":\"java\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C1sv",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(X.1sv, int, long, boolean): boolean",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(LX/1sv;IJZ)Z"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public static final boolean A00(C1sv c1sv, int i, long j, boolean z) {\n        if (z) {\n            java.util.Map map = c1sv.A0E;\n            Integer numValueOf = Integer.valueOf(i);\n            if (map.containsKey(numValueOf)) {\n                Number number = (Number) map.get(numValueOf);\n                if (j - (number != null ? number.longValue() : 0L) <= 60000) {\n                    return false;\n                }\n            }\n        }\n        return true;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

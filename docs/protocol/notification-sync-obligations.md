@@ -43,9 +43,10 @@ it. Its apparent Java fallthrough and uninitialized-local tail are not a
 specification. No fake marker/analytics calls are needed to establish the
 processing obligation.
 
-**Next bounded port:** trace `19N` privacy modify -> `2D6.A05` ->
-`1sv.A01` request builder, exact reply consumer, and existing Rust privacy
-checkpoint ownership. Then implement validated refresh scheduling plus ACK
+**Continuation:** [privacy refresh routing](account-privacy-refresh.md) now
+traces the `2D6.A05` field through `1sv.A01`, conditional SMAX/MEX selection
+and reply adoption. Effective mode selection, complete MEX wire construction
+and durable privacy state remain prerequisites to refresh scheduling plus ACK
 ordering for that child. Device/blocklist paths require their own reconciliation
 and callback traces; an outer `account_sync` ACK-only shortcut loses them.
 
@@ -62,10 +63,10 @@ When `0aS.A0c()` is true **or**
 to `0aS.A0J` (`0l8.A07(String,long)`), then calls `0aS.A0P()`.
 The gates must not be silently dropped or invented for a different client role.
 
-**Unknown/next prerequisite:** trace `0aS.A0c`, `0l8.A07`, `0aS.A0P`,
-and their sync completion/error callbacks. Establish which announced version is
-metadata and which version is an authenticated applied state before persisting
-anything. Rust already has `transport/app_state_sync.rs` fetch requests,
+**Continuation:** [the server-sync lifecycle trace](server-sync-lifecycle.md)
+now distinguishes dirty-version metadata, eligibility, verified commit and
+completion. Incremental wire construction, effective role/recovery mapping and
+full scheduling/error policy remain open. Rust already has `transport/app_state_sync.rs` fetch requests,
 collection verification/application and durable action queue helpers; these do
 not establish the missing notification-driven version/gate/scheduling policy.
 Use those primitives after tracing the policy, with deduplication, crash recovery,
@@ -96,8 +97,10 @@ successful replacement clears attempts and records success time. Local replaceme
 failure follows the failure path. Android keystore/password fallback internals
 are not fully traced; decompiler warnings make the retained callback DEX essential.
 
-**Next prerequisite:** trace candidate generation `1nq.A00`, portable
-key replacement `144.A0B`, and `145.A04`/connection use of the active key.
+**Continuation:** [auth-key lifecycle tracing](authkey-lifecycle.md) now
+establishes candidate generation, password-backed replacement, conditional
+certificate invalidation and the connection getter. Pair encoding, request
+manager outcome/lifetime and lost-result reconciliation remain open.
 Implement a durable pending candidate and server-accepted commit boundary that
 can reconcile a lost result/restart without discarding the usable old key or
 replaying an uncertain rotation. Persist native cooldown/attempt semantics;

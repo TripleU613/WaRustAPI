@@ -1,0 +1,88 @@
+
+# class: LX/0oe;
+# extends: LX/07o;
+
+.method public A0M(VL)  # .registers 9
+    # full signature: LX/0oe;->A0M(LX/278;)V
+    0000..0004  const/16  v0, #0x42
+    0004..000a  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    000a..000c  move-result-object  v1
+    000c..0010  check-cast  v1, LX/00E;
+    0010..0014  const/16  v0, #0x5ba7
+    0014..001a  invoke-virtual  {v1, v0}, LX/00E;->A0a(I)I
+    001a..001c  move-result  v3
+    001c..0020  const-string  v2, ")"
+    0020..0022  const/4  v6, #0x1
+    0022..0026  if-eq  v3, v6, +0x5c
+    0026..0028  const/4  v0, #0x2
+    0028..002c  if-eq  v3, v0, +0x1c
+    002c..0030  const-string  v1, "PrivacySettingManager/sendGetPrivacySettings: Using SMAX protocol (mode="
+    0030..0034  new-instance  v0, Ljava/lang/StringBuilder;
+    0034..003a  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    003a..0040  invoke-virtual  {v0, v3}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0040..0046  invoke-virtual  {v0, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0046..004c  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    004c..004e  move-result-object  v0
+    004e..0054  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0054..0056  const/4  v1, #0x0
+    0056..0058  const/4  v0, #0x0
+    0058..005e  invoke-direct  {v7, v8, v1, v0}, LX/0oe;->A02(LX/278;LX/0iX;Z)V
+    005e..0060  return-void
+    0060..0064  const-string  v1, "PrivacySettingManager/sendGetPrivacySettings: Using shadow mode (mode="
+    0064..0068  new-instance  v0, Ljava/lang/StringBuilder;
+    0068..006e  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    006e..0074  invoke-virtual  {v0, v3}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0074..007a  invoke-virtual  {v0, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    007a..0080  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0080..0082  move-result-object  v0
+    0082..0088  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0088..008a  const/4  v5, #0x0
+    008a..008e  new-instance  v4, LX/0iY;
+    008e..0094  invoke-direct  {v4, v5}, LX/0iY;-><init>(LX/0Sp;)V
+    0094..0098  iget-object  v0, v7, LX/0oe;->A01:LX/05a;
+    0098..009c  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    009c..00a2  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    00a2..00a4  move-result-object  v3
+    00a4..00a8  check-cast  v3, LX/0TR;
+    00a8..00ac  iget-object  v0, v7, LX/0oe;->A02:LX/05a;
+    00ac..00b0  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    00b0..00b6  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    00b6..00b8  move-result-object  v2
+    00b8..00bc  check-cast  v2, LX/021;
+    00bc..00be  const/4  v0, #0x7
+    00be..00c2  new-instance  v1, LX/8ir;
+    00c2..00c8  invoke-direct  {v1, v4, v7, v5, v0}, LX/8ir;-><init>(Ljava/lang/Object;Ljava/lang/Object;LX/0cf;I)V
+    00c8..00cc  sget-object  v0, LX/02X;->A00:Ljava/lang/Integer;
+    00cc..00d2  invoke-static  {v0, v2, v1, v3}, LX/0cl;->A02(Ljava/lang/Integer;LX/01z;LX/0AW;LX/0TR;)LX/0dB;
+    00d2..00d8  invoke-direct  {v7, v8, v4, v6}, LX/0oe;->A02(LX/278;LX/0iX;Z)V
+    00d8..00da  return-void
+    00da..00de  const-string  v1, "PrivacySettingManager/sendGetPrivacySettings: Using MEX protocol (mode="
+    00de..00e2  new-instance  v0, Ljava/lang/StringBuilder;
+    00e2..00e8  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00e8..00ee  invoke-virtual  {v0, v3}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    00ee..00f4  invoke-virtual  {v0, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00f4..00fa  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00fa..00fc  move-result-object  v0
+    00fc..0102  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0102..0104  const/4  v5, #0x0
+    0104..0106  const/4  v0, #0x0
+    0106..010a  new-instance  v4, LX/6pB;
+    010a..0110  invoke-direct  {v4, v8, v7, v5, v0}, LX/6pB;-><init>(LX/278;LX/0oe;LX/0iX;Z)V
+    0110..0114  iget-object  v0, v7, LX/0oe;->A01:LX/05a;
+    0114..0118  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0118..011e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    011e..0120  move-result-object  v3
+    0120..0124  check-cast  v3, LX/0TR;
+    0124..0128  iget-object  v0, v7, LX/0oe;->A02:LX/05a;
+    0128..012c  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    012c..0132  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0132..0134  move-result-object  v2
+    0134..0138  check-cast  v2, LX/021;
+    0138..013c  const/16  v0, #0x12
+    013c..0140  new-instance  v1, LX/8io;
+    0140..0146  invoke-direct  {v1, v4, v7, v5, v0}, LX/8io;-><init>(Ljava/lang/Object;Ljava/lang/Object;LX/0cf;I)V
+    0146..014a  sget-object  v0, LX/02X;->A00:Ljava/lang/Integer;
+    014a..0150  invoke-static  {v0, v2, v1, v3}, LX/0cl;->A02(Ljava/lang/Integer;LX/01z;LX/0AW;LX/0TR;)LX/0dB;
+    0150..0152  return-void
+    # exception table: 0 try range(s)
+.end method

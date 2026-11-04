@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_11c6a8fc3afa7cd86f6c92fb0ba5e1c70f572d9f35e24d0dc1462b1d92ea9659",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "com.whatsapp.privacy.MexPrivacySettingsHandler",
+    "method_name": "A01",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-zWhIO6/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "com.whatsapp.privacy.MexPrivacySettingsHandler"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"MexPrivacySettingsHandler\",\"full_name\":\"com.whatsapp.privacy.MexPrivacySettingsHandler\",\"field_count\":6,\"fields\":[{\"def_pos\":0,\"name\":\"A00\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A01\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A02\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A03\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A04\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A05\",\"type\":\"java.util.List\"}],\"methods\":[{\"name\":\"\\u003cclinit\\u003e\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"\\u003cclinit\\u003e(): void\",\"def_pos\":0},{\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"()V\",\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0},{\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/whatsapp/privacy/MexPrivacySettingsHandler;Ljava/util/List;LX/0cf;)Ljava/lang/Object;\",\"signature\":\"A00(com.whatsapp.privacy.MexPrivacySettingsHandler, java.util.List, X.0cf): java.lang.Object\",\"def_pos\":0},{\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/6pB;LX/0cf;)Ljava/lang/Object;\",\"signature\":\"A01(X.6pB, X.0cf): java.lang.Object\",\"def_pos\":0},{\"name\":\"A02\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0cf;)Ljava/lang/Object;\",\"signature\":\"A02(X.0cf): java.lang.Object\",\"def_pos\":0},{\"name\":\"A03\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/7yi;Ljava/lang/Integer;)V\",\"signature\":\"A03(X.7yi, java.lang.Integer): void\",\"def_pos\":0}],\"method_count\":6}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "com.whatsapp.privacy.MexPrivacySettingsHandler",
+          "method_name": "A01",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"class_name\":\"com.whatsapp.privacy.MexPrivacySettingsHandler\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    /* JADX WARN: Code duplicated, block: B:24:0x0055  */\\n    public final Object A01(C6pB c6pB, C0cf c0cf) {\\n        C8ft c8ftA01;\\n        if (c0cf instanceof C8ft) {\\n            c8ftA01 \\u003d (C8ft) c0cf;\\n            if (c8ftA01.$t \\u003d\\u003d 29) {\\n                int i \\u003d c8ftA01.A00;\\n                if ((i \\u0026 Integer.MIN_VALUE) !\\u003d 0) {\\n                    c8ftA01.A00 \\u003d i - Integer.MIN_VALUE;\\n                } else {\\n                    c8ftA01 \\u003d C8ft.A01(this, c0cf, 29);\\n                }\\n            } else {\\n                c8ftA01 \\u003d C8ft.A01(this, c0cf, 29);\\n            }\\n        } else {\\n            c8ftA01 \\u003d C8ft.A01(this, c0cf, 29);\\n        }\\n        Object objA02 \\u003d c8ftA01.A02;\\n        Object obj \\u003d C0dd.COROUTINE_SUSPENDED;\\n        int i2 \\u003d c8ftA01.A00;\\n        if (i2 \\u003d\\u003d 0) {\\n            C0dg.A01(objA02);\\n            c8ftA01.A01 \\u003d c6pB;\\n            c8ftA01.A00 \\u003d 1;\\n            objA02 \\u003d A02(c8ftA01);\\n            if (objA02 \\u003d\\u003d obj) {\\n                return obj;\\n            }\\n        } else {\\n            if (i2 !\\u003d 1) {\\n                throw AnonymousClass000.A03();\\n            }\\n            c6pB \\u003d (C6pB) c8ftA01.A01;\\n            C0dg.A01(objA02);\\n        }\\n        Object obj2 \\u003d ((C7yi) objA02).A00;\\n        if (!(obj2 instanceof C0Dt)) {\\n            c6pB.A01((Map) obj2);\\n        }\\n        if (C0Dr.A02(obj2) !\\u003d null) {\\n            c6pB.A00(null);\\n        }\\n        return C05u.A00;\\n    }\",\"overload_count\":1,\"method_name\":\"A01\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"com.whatsapp.privacy.MexPrivacySettingsHandler.A01\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "com.whatsapp.privacy.MexPrivacySettingsHandler",
+    "method": {
+      "name": "A01",
+      "reported_signature": "A01(X.6pB, X.0cf): java.lang.Object",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(LX/6pB;LX/0cf;)Ljava/lang/Object;"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Code duplicated, block: B:24:0x0055  */\n    public final Object A01(C6pB c6pB, C0cf c0cf) {\n        C8ft c8ftA01;\n        if (c0cf instanceof C8ft) {\n            c8ftA01 = (C8ft) c0cf;\n            if (c8ftA01.$t == 29) {\n                int i = c8ftA01.A00;\n                if ((i & Integer.MIN_VALUE) != 0) {\n                    c8ftA01.A00 = i - Integer.MIN_VALUE;\n                } else {\n                    c8ftA01 = C8ft.A01(this, c0cf, 29);\n                }\n            } else {\n                c8ftA01 = C8ft.A01(this, c0cf, 29);\n            }\n        } else {\n            c8ftA01 = C8ft.A01(this, c0cf, 29);\n        }\n        Object objA02 = c8ftA01.A02;\n        Object obj = C0dd.COROUTINE_SUSPENDED;\n        int i2 = c8ftA01.A00;\n        if (i2 == 0) {\n            C0dg.A01(objA02);\n            c8ftA01.A01 = c6pB;\n            c8ftA01.A00 = 1;\n            objA02 = A02(c8ftA01);\n            if (objA02 == obj) {\n                return obj;\n            }\n        } else {\n            if (i2 != 1) {\n                throw AnonymousClass000.A03();\n            }\n            c6pB = (C6pB) c8ftA01.A01;\n            C0dg.A01(objA02);\n        }\n        Object obj2 = ((C7yi) objA02).A00;\n        if (!(obj2 instanceof C0Dt)) {\n            c6pB.A01((Map) obj2);\n        }\n        if (C0Dr.A02(obj2) != null) {\n            c6pB.A00(null);\n        }\n        return C05u.A00;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

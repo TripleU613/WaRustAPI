@@ -1,0 +1,133 @@
+{
+  "evidence_id": "ev_056b8ef6e30bbee6bd99aaed1a558b382bdde0c5f0e80739cbae994f804d22ab",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "com.whatsapp.privacy.MexPrivacySettingsHandler",
+    "method_name": "<clinit>",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-zWhIO6/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "com.whatsapp.privacy.MexPrivacySettingsHandler"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"MexPrivacySettingsHandler\",\"full_name\":\"com.whatsapp.privacy.MexPrivacySettingsHandler\",\"field_count\":6,\"fields\":[{\"def_pos\":0,\"name\":\"A00\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A01\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A02\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A03\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A04\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A05\",\"type\":\"java.util.List\"}],\"methods\":[{\"name\":\"\\u003cclinit\\u003e\",\"is_constructor\":false,\"dex_descriptor\":\"()V\",\"signature\":\"\\u003cclinit\\u003e(): void\",\"def_pos\":0},{\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"()V\",\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0},{\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/whatsapp/privacy/MexPrivacySettingsHandler;Ljava/util/List;LX/0cf;)Ljava/lang/Object;\",\"signature\":\"A00(com.whatsapp.privacy.MexPrivacySettingsHandler, java.util.List, X.0cf): java.lang.Object\",\"def_pos\":0},{\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/6pB;LX/0cf;)Ljava/lang/Object;\",\"signature\":\"A01(X.6pB, X.0cf): java.lang.Object\",\"def_pos\":0},{\"name\":\"A02\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0cf;)Ljava/lang/Object;\",\"signature\":\"A02(X.0cf): java.lang.Object\",\"def_pos\":0},{\"name\":\"A03\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/7yi;Ljava/lang/Integer;)V\",\"signature\":\"A03(X.7yi, java.lang.Integer): void\",\"def_pos\":0}],\"method_count\":6}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "com.whatsapp.privacy.MexPrivacySettingsHandler",
+          "method_name": "<clinit>",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"class_name\":\"com.whatsapp.privacy.MexPrivacySettingsHandler\",\"overload_index\":0,\"fell_back\":true,\"body\":\".method public static constructor \\u003cclinit\\u003e()V\\n    .registers 10\\n\\n    .line 0\\n    const/4 v9, 0x7\\n\\n    .line 1\\n    const/4 v8, 0x0\\n\\n    .line 2\\n    const/4 v7, 0x1\\n\\n    .line 3\\n    const/4 v6, 0x2\\n\\n    .line 4\\n    const/4 v5, 0x3\\n\\n    .line 5\\n    const/4 v4, 0x4\\n\\n    .line 6\\n    const/4 v3, 0x5\\n\\n    .line 7\\n    const/4 v1, 0x6\\n\\n    .line 8\\n    const/16 v0, 0x11\\n\\n    .line 9\\n    .line 10\\n    new-array v2, v0, [Ljava/lang/String;\\n\\n    .line 11\\n    .line 12\\n    const-string v0, \\\"LAST\\\"\\n\\n    .line 13\\n    .line 14\\n    aput-object v0, v2, v8\\n\\n    .line 15\\n    .line 16\\n    const-string v0, \\\"ONLINE\\\"\\n\\n    .line 17\\n    .line 18\\n    aput-object v0, v2, v7\\n\\n    .line 19\\n    .line 20\\n    const-string v0, \\\"PROFILE\\\"\\n\\n    .line 21\\n    .line 22\\n    aput-object v0, v2, v6\\n\\n    .line 23\\n    .line 24\\n    const-string v0, \\\"ABOUT\\\"\\n\\n    .line 25\\n    .line 26\\n    aput-object v0, v2, v5\\n\\n    .line 27\\n    .line 28\\n    const-string v0, \\\"READRECEIPTS\\\"\\n\\n    .line 29\\n    .line 30\\n    aput-object v0, v2, v4\\n\\n    .line 31\\n    .line 32\\n    const-string v0, \\\"GROUPADD\\\"\\n\\n    .line 33\\n    .line 34\\n    aput-object v0, v2, v3\\n\\n    .line 35\\n    .line 36\\n    const-string v0, \\\"CALLADD\\\"\\n\\n    .line 37\\n    .line 38\\n    aput-object v0, v2, v1\\n\\n    .line 39\\n    .line 40\\n    const-string v0, \\\"STICKERS\\\"\\n\\n    .line 41\\n    .line 42\\n    aput-object v0, v2, v9\\n\\n    .line 43\\n    .line 44\\n    const-string v1, \\\"MESSAGES\\\"\\n\\n    .line 45\\n    .line 46\\n    const/16 v0, 0x8\\n\\n    .line 47\\n    .line 48\\n    aput-object v1, v2, v0\\n\\n    .line 49\\n    .line 50\\n    const-string v1, \\\"PIX\\\"\\n\\n    .line 51\\n    .line 52\\n    const/16 v0, 0x9\\n\\n    .line 53\\n    .line 54\\n    aput-object v1, v2, v0\\n\\n    .line 55\\n    .line 56\\n    const-string v1, \\\"DEFENSE\\\"\\n\\n    .line 57\\n    .line 58\\n    const/16 v0, 0xa\\n\\n    .line 59\\n    .line 60\\n    aput-object v1, v2, v0\\n\\n    .line 61\\n    .line 62\\n    const-string v1, \\\"DEPENDENT_ACCOUNT_MESSAGES\\\"\\n\\n    .line 63\\n    .line 64\\n    const/16 v0, 0xb\\n\\n    .line 65\\n    .line 66\\n    aput-object v1, v2, v0\\n\\n    .line 67\\n    .line 68\\n    const-string v1, \\\"GROUPCREATION\\\"\\n\\n    .line 69\\n    .line 70\\n    const/16 v0, 0xc\\n\\n    .line 71\\n    .line 72\\n    aput-object v1, v2, v0\\n\\n    .line 73\\n    .line 74\\n    const-string v1, \\\"LINKED_PROFILES\\\"\\n\\n    .line 75\\n    .line 76\\n    const/16 v0, 0xd\\n\\n    .line 77\\n    .line 78\\n    aput-object v1, v2, v0\\n\\n    .line 79\\n    .line 80\\n    const-string v1, \\\"COVER_PHOTO\\\"\\n\\n    .line 81\\n    .line 82\\n    const/16 v0, 0xe\\n\\n    .line 83\\n    .line 84\\n    aput-object v1, v2, v0\\n\\n    .line 85\\n    .line 86\\n    const-string v1, \\\"CHANNELVIEW\\\"\\n\\n    .line 87\\n    .line 88\\n    const/16 v0, 0xf\\n\\n    .line 89\\n    .line 90\\n    aput-object v1, v2, v0\\n\\n    .line 91\\n    .line 92\\n    const-string v1, \\\"CHANNELCREATION\\\"\\n\\n    .line 93\\n    .line 94\\n    const/16 v0, 0x10\\n\\n    .line 95\\n    .line 96\\n    invoke-static {v1, v2, v0}, LX/2L6;-\\u003eA1H(Ljava/lang/Object;[Ljava/lang/Object;I)Ljava/util/List;\\n\\n    .line 97\\n    .line 98\\n    .line 99\\n    move-result-object v0\\n\\n    .line 100\\n    sput-object v0, Lcom/whatsapp/privacy/MexPrivacySettingsHandler;-\\u003eA05:Ljava/util/List;\\n\\n    .line 101\\n    .line 102\\n    return-void\\n.end method\",\"overload_count\":1,\"method_name\":\"\\u003cclinit\\u003e\",\"markers\":[\"static_initializer_disassembly\"],\"mode\":\"smali\",\"full_name\":\"com.whatsapp.privacy.MexPrivacySettingsHandler.\\u003cclinit\\u003e\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "com.whatsapp.privacy.MexPrivacySettingsHandler",
+    "method": {
+      "name": "<clinit>",
+      "reported_signature": "<clinit>(): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "()V"
+    },
+    "overload_count": 1,
+    "representation": "smali",
+    "body_status": "available",
+    "fell_back": true,
+    "markers": [
+      "static_initializer_disassembly"
+    ],
+    "source": {
+      "status": "complete",
+      "text": ".method public static constructor <clinit>()V\n    .registers 10\n\n    .line 0\n    const/4 v9, 0x7\n\n    .line 1\n    const/4 v8, 0x0\n\n    .line 2\n    const/4 v7, 0x1\n\n    .line 3\n    const/4 v6, 0x2\n\n    .line 4\n    const/4 v5, 0x3\n\n    .line 5\n    const/4 v4, 0x4\n\n    .line 6\n    const/4 v3, 0x5\n\n    .line 7\n    const/4 v1, 0x6\n\n    .line 8\n    const/16 v0, 0x11\n\n    .line 9\n    .line 10\n    new-array v2, v0, [Ljava/lang/String;\n\n    .line 11\n    .line 12\n    const-string v0, \"LAST\"\n\n    .line 13\n    .line 14\n    aput-object v0, v2, v8\n\n    .line 15\n    .line 16\n    const-string v0, \"ONLINE\"\n\n    .line 17\n    .line 18\n    aput-object v0, v2, v7\n\n    .line 19\n    .line 20\n    const-string v0, \"PROFILE\"\n\n    .line 21\n    .line 22\n    aput-object v0, v2, v6\n\n    .line 23\n    .line 24\n    const-string v0, \"ABOUT\"\n\n    .line 25\n    .line 26\n    aput-object v0, v2, v5\n\n    .line 27\n    .line 28\n    const-string v0, \"READRECEIPTS\"\n\n    .line 29\n    .line 30\n    aput-object v0, v2, v4\n\n    .line 31\n    .line 32\n    const-string v0, \"GROUPADD\"\n\n    .line 33\n    .line 34\n    aput-object v0, v2, v3\n\n    .line 35\n    .line 36\n    const-string v0, \"CALLADD\"\n\n    .line 37\n    .line 38\n    aput-object v0, v2, v1\n\n    .line 39\n    .line 40\n    const-string v0, \"STICKERS\"\n\n    .line 41\n    .line 42\n    aput-object v0, v2, v9\n\n    .line 43\n    .line 44\n    const-string v1, \"MESSAGES\"\n\n    .line 45\n    .line 46\n    const/16 v0, 0x8\n\n    .line 47\n    .line 48\n    aput-object v1, v2, v0\n\n    .line 49\n    .line 50\n    const-string v1, \"PIX\"\n\n    .line 51\n    .line 52\n    const/16 v0, 0x9\n\n    .line 53\n    .line 54\n    aput-object v1, v2, v0\n\n    .line 55\n    .line 56\n    const-string v1, \"DEFENSE\"\n\n    .line 57\n    .line 58\n    const/16 v0, 0xa\n\n    .line 59\n    .line 60\n    aput-object v1, v2, v0\n\n    .line 61\n    .line 62\n    const-string v1, \"DEPENDENT_ACCOUNT_MESSAGES\"\n\n    .line 63\n    .line 64\n    const/16 v0, 0xb\n\n    .line 65\n    .line 66\n    aput-object v1, v2, v0\n\n    .line 67\n    .line 68\n    const-string v1, \"GROUPCREATION\"\n\n    .line 69\n    .line 70\n    const/16 v0, 0xc\n\n    .line 71\n    .line 72\n    aput-object v1, v2, v0\n\n    .line 73\n    .line 74\n    const-string v1, \"LINKED_PROFILES\"\n\n    .line 75\n    .line 76\n    const/16 v0, 0xd\n\n    .line 77\n    .line 78\n    aput-object v1, v2, v0\n\n    .line 79\n    .line 80\n    const-string v1, \"COVER_PHOTO\"\n\n    .line 81\n    .line 82\n    const/16 v0, 0xe\n\n    .line 83\n    .line 84\n    aput-object v1, v2, v0\n\n    .line 85\n    .line 86\n    const-string v1, \"CHANNELVIEW\"\n\n    .line 87\n    .line 88\n    const/16 v0, 0xf\n\n    .line 89\n    .line 90\n    aput-object v1, v2, v0\n\n    .line 91\n    .line 92\n    const-string v1, \"CHANNELCREATION\"\n\n    .line 93\n    .line 94\n    const/16 v0, 0x10\n\n    .line 95\n    .line 96\n    invoke-static {v1, v2, v0}, LX/2L6;->A1H(Ljava/lang/Object;[Ljava/lang/Object;I)Ljava/util/List;\n\n    .line 97\n    .line 98\n    .line 99\n    move-result-object v0\n\n    .line 100\n    sput-object v0, Lcom/whatsapp/privacy/MexPrivacySettingsHandler;->A05:Ljava/util/List;\n\n    .line 101\n    .line 102\n    return-void\n.end method",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}
