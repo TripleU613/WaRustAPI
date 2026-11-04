@@ -1,3 +1,10 @@
+2026-11-04 — **Confirmed Rust/offline:** media refresh settlement now
+atomically records local receipt order alongside projection/throttle effects.
+Mixed-outcome, duplicate/reopen, counter-fault/cut and unchanged legacy-history
+cases are tested. The number is local metadata, not a native wire attribute or
+proof that historical waits were recovered. No new APK/live evidence is claimed.
+[Implementation and limits](media-network-outcomes.md#durable-refresh-receipt-order-2026-11-04).
+
 2026-11-04 — **Confirmed pinned static/implemented offline:** 1xY.Bvj
 sets media throttle only for positive507 backoff (cap10800 seconds), resets it
 for qualified503 and consumes the first valid nonzero pair. Prospective refresh

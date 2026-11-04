@@ -1,3 +1,15 @@
+2026-11-04 — **Durable media refresh receipt order (offline):**
+
+New settlements now receive an atomic positive sequence across result, refusal,
+unsupported and stale outcomes. It commits with raw/effective reply, current
+pointer and throttle effects. Duplicates cannot restamp; lost/zero/exhausted
+counters refuse and transaction cuts roll everything back. Legacy records remain
+unsequenced. The existing CLI reports receipt_order without private response data.
+[Tests and recovery boundary](docs/protocol/media-network-outcomes.md#durable-refresh-receipt-order-2026-11-04).
+Validation: **1,251 workspace/all-feature tests**, strict Clippy, CLI-reference,
+formatting, coverage freshness and repository hygiene passed.
+No live traffic. Historical throttle reconciliation remains unfinished.
+
 2026-11-04 — **Explicit media refusal throttle (static/offline):**
 
 Pinned 1xY.Bvj code507 positive backoff is seconds capped at 10800. Its deadline

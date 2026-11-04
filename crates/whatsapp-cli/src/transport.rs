@@ -415,17 +415,24 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
                 }
                 Ok(settlement)
             })?;
+            let receipt_order =
+                whatsapp_api::transport::media_routing::refresh::settlement_sequence(&store, &id)?
+                    .ok_or_else(|| {
+                        Error::invalid("media_route", "settled route has no receipt order")
+                    })?;
             if settlement != whatsapp_api::transport::media_routing::refresh::Settlement::Applied {
                 return Err(Error::invalid(
                     "media_route",
-                    "media route reply refused, unsupported or stale; response saved encrypted",
+                    format!(
+                        "media route reply {settlement:?}; receipt_order={receipt_order}; response saved encrypted"
+                    ),
                 ));
             }
             let (hosts, auth_present) =
                 whatsapp_api::transport::media_routing::refresh::current_summary(&store)?
                     .ok_or_else(|| Error::invalid("media_route", "applied route missing"))?;
             println!(
-                "transport: media route result; hosts={hosts}, auth_present={auth_present}; saved encrypted; no image uploaded"
+                "transport: media route result; hosts={hosts}, auth_present={auth_present}, receipt_order={receipt_order}; saved encrypted; no image uploaded"
             );
         }
         if let Some(name) = push_name {

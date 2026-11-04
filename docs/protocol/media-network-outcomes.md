@@ -230,3 +230,26 @@ not proof that every historical wait was processed. Durable receipt ordering and
 bounded legacy backoff reconciliation need a separate audit before complete
 startup throttle recovery can be claimed. Historical request/reply evidence is
 preserved; do not infer native retry eligibility from deadline inspection alone.
+
+## Durable refresh receipt order (2026-11-04)
+
+**Confirmed Rust/offline:** every newly settled prospective refresh now receives
+a positive local settlement_sequence in the same transaction as raw/effective
+reply, current projection and throttle effects. This orders refused, unsupported,
+stale and applied receipts together; wall-clock timestamps and request IDs are
+not receipt order. Exact duplicates retain their original sequence. The local
+counter cannot restart if sequenced records exist, accept zero, or overflow.
+Preparation checks counter capacity/integrity before reserving another request.
+A transaction cut rolls back the counter and every associated effect.
+
+Missing sequence on older records remains explicitly unknown. Duplicate receipt
+handling does not stamp them retroactively. `settlement_sequence(store,id)` is
+a safe numeric-only inspection; the existing CLI reports receipt_order alongside
+its applied-route counts or fixed local outcome. No auth, host, server-text or
+raw wire is printed. The sequence is private local metadata, never a wire field.
+
+Three real-store tests cover order across mixed outcomes with nonchronological
+IDs, duplicate/reopen stability, missing/zero/exhausted counters, transaction
+rollback and unchanged legacy records. This is the ordering prerequisite for
+recovery; historical throttle reconciliation itself is still unimplemented. No
+query, replay, clock guess or live account operation is introduced.

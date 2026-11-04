@@ -12,6 +12,7 @@ use sha2::{Digest, Sha256};
 const CURRENT: &[u8] = b"media-routing-current:v1";
 const OWNER: &[u8] = b"media-routing-owner:v1";
 const THROTTLE: &[u8] = b"media-routing-throttle-until:v1";
+const RECEIPT_SEQUENCE: &[u8] = b"media-routing-receipt-sequence:v1";
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 struct Current {
@@ -29,6 +30,8 @@ struct Record {
     requested_at: Timestamp,
     at: Timestamp,
     status: String,
+    #[serde(default)]
+    settlement_sequence: Option<u64>,
     request_wire: Vec<u8>,
     request_digest: [u8; 32],
     prior: Option<Current>,
@@ -168,6 +171,76 @@ fn retain_throttle_in(
     Ok(())
 }
 
+/// Durable local receipt order for one prospective action. None means missing,
+/// pending or legacy-unsequenced; it never invents historical receipt order.
+pub fn settlement_sequence(store: &ProtocolStore, id: &str) -> Result<Option<u64>> {
+    store
+        .read(|tx| {
+            let record: Option<Record> = tx.get_json(Table::Checkpoints, key(id).as_bytes(), 1)?;
+            let Some(record) = record else {
+                return Ok(None);
+            };
+            validate(&record)?;
+            if record.action_id != id || record.generation != tx.generation() {
+                return Err(invalid("media receipt context mismatch"));
+            }
+            Ok(record.settlement_sequence)
+        })
+        .map_err(redact)
+}
+fn checked_receipt_counter_in(tx: &WriteTx<'_>) -> Result<Option<u64>> {
+    let prior: Option<u64> = tx.get_json(Table::Checkpoints, RECEIPT_SEQUENCE, 1)?;
+    if prior == Some(0) {
+        return Err(invalid("invalid media receipt counter"));
+    }
+    if prior == Some(u64::MAX) {
+        return Err(invalid("media receipt counter exhausted"));
+    }
+    if prior.is_none() {
+        let mut cursor = None;
+        loop {
+            let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
+            let done = rows.len() < 256;
+            cursor = rows.last().map(|(key, _)| key.clone());
+            for (key, bytes) in rows {
+                if !key.starts_with(b"media-route:") {
+                    continue;
+                }
+                let value: serde_json::Value = serde_json::from_slice(&bytes).map_err(|_| {
+                    crate::Error::Storage(crate::store::StoreError::Serialization(
+                        "invalid stored media refresh data".into(),
+                    ))
+                })?;
+                if value.get("context_version").is_none() {
+                    continue;
+                }
+                let record: Record = serde_json::from_value(value).map_err(|_| {
+                    crate::Error::Storage(crate::store::StoreError::Serialization(
+                        "invalid stored media refresh data".into(),
+                    ))
+                })?;
+                validate(&record)?;
+                if record.settlement_sequence.is_some() {
+                    return Err(invalid("media receipt counter missing; no order reset"));
+                }
+            }
+            if done {
+                break;
+            }
+        }
+    }
+    Ok(prior)
+}
+fn next_receipt_sequence_in(tx: &mut WriteTx<'_>) -> Result<u64> {
+    let prior = checked_receipt_counter_in(tx)?;
+    let next = prior
+        .unwrap_or(0)
+        .checked_add(1)
+        .ok_or_else(|| invalid("media receipt counter exhausted"))?;
+    tx.put_json(Table::Checkpoints, RECEIPT_SEQUENCE, 1, &next)?;
+    Ok(next)
+}
+
 fn key(id: &str) -> String {
     format!("media-route:{id}")
 }
@@ -232,7 +305,9 @@ fn request(id: &str, prior: Option<&Current>) -> Result<Node> {
     Ok(node)
 }
 fn validate(record: &Record) -> Result<()> {
-    if record.context_version != 1
+    if record.settlement_sequence == Some(0)
+        || (record.status == "outcome_unknown" && record.settlement_sequence.is_some())
+        || record.context_version != 1
         || record.action_id.is_empty()
         || record.requested_at.0 <= 0
         || record
@@ -286,6 +361,7 @@ pub fn prepare(store: &ProtocolStore, id: &str) -> Result<Node> {
                 return Err(invalid("media refresh already reserved"));
             }
             require_not_throttled_in(tx, Timestamp::now())?;
+            checked_receipt_counter_in(tx)?;
             let owner: Option<bool> = tx.get_json(Table::Checkpoints, OWNER, 1)?;
             let prior: Option<Current> = tx.get_json(Table::Checkpoints, CURRENT, 1)?;
             if owner.is_none() && has_context_rows(tx.scan(Table::Checkpoints, 1, 10000)?, false)? {
@@ -333,6 +409,7 @@ pub fn prepare(store: &ProtocolStore, id: &str) -> Result<Node> {
                 requested_at,
                 at: requested_at,
                 status: "outcome_unknown".into(),
+                settlement_sequence: None,
                 request_digest: Sha256::digest(&request_wire).into(),
                 request_wire,
                 prior,
@@ -452,6 +529,7 @@ fn settle_impl_in(tx: &mut WriteTx<'_>, id: &str, reply: &Node) -> Result<Settle
         Settlement::Stale => "stale",
     }
     .into();
+    record.settlement_sequence = Some(next_receipt_sequence_in(tx)?);
     record.at = received_at;
     record.wire = Some(wire);
     tx.put_json(Table::Checkpoints, key(id).as_bytes(), 1, &record)?;
@@ -900,6 +978,107 @@ mod tests {
             Settlement::Applied
         );
         assert_eq!(throttle_until(&store).unwrap(), None);
+    }
+
+    #[test]
+    fn receipt_order_is_durable_across_outcomes_and_exact_duplicates() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("order.redb");
+        let store = open(&path);
+        for id in ["z", "a", "m"] {
+            prepare(&store, id).unwrap();
+            assert_eq!(settlement_sequence(&store, id).unwrap(), None);
+        }
+        let refused = error("z", "500", "0");
+        settle(&store, "z", &refused);
+        assert_eq!(settlement_sequence(&store, "z").unwrap(), Some(1));
+        let applied = reply("a", "1", "a", "auth", "a.whatsapp.net");
+        settle(&store, "a", &applied);
+        assert_eq!(settlement_sequence(&store, "a").unwrap(), Some(2));
+        settle(&store, "m", &reply("m", "1", "m", "auth", "m.whatsapp.net"));
+        assert_eq!(settlement_sequence(&store, "m").unwrap(), Some(3));
+        settle(&store, "z", &refused);
+        settle(&store, "a", &applied);
+        assert_eq!(settlement_sequence(&store, "z").unwrap(), Some(1));
+        drop(store);
+        let store = open(&path);
+        assert_eq!(settlement_sequence(&store, "m").unwrap(), Some(3));
+        let counter: u64 = store
+            .read(|tx| tx.get_json(Table::Checkpoints, RECEIPT_SEQUENCE, 1))
+            .unwrap()
+            .unwrap();
+        assert_eq!(counter, 3);
+    }
+    #[test]
+    fn receipt_counter_loss_overflow_and_transaction_cut_never_partly_settle() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("counter.redb"));
+        prepare(&store, "a").unwrap();
+        let node = reply("a", "1", "a", "auth", "a.whatsapp.net");
+        let cut: Result<()> = store.write(|tx| {
+            settle_in(tx, "a", &node)?;
+            Err(invalid("synthetic cut"))
+        });
+        assert!(cut.is_err());
+        assert_eq!(settlement_sequence(&store, "a").unwrap(), None);
+        assert!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, RECEIPT_SEQUENCE, 1))
+                .unwrap()
+                .is_none()
+        );
+        settle(&store, "a", &node);
+        prepare(&store, "b").unwrap();
+        for counter in [None, Some(0), Some(u64::MAX)] {
+            store
+                .write(|tx| match counter {
+                    None => {
+                        tx.delete(Table::Checkpoints, RECEIPT_SEQUENCE)?;
+                        Ok(())
+                    }
+                    Some(counter) => tx.put_json(Table::Checkpoints, RECEIPT_SEQUENCE, 1, &counter),
+                })
+                .unwrap();
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            assert!(prepare(&store, "cannot-reserve").is_err());
+            assert!(
+                store
+                    .write(|tx| settle_in(
+                        tx,
+                        "b",
+                        &reply("b", "1", "b", "new-auth", "b.whatsapp.net")
+                    ))
+                    .is_err()
+            );
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                before
+            );
+        }
+    }
+    #[test]
+    fn legacy_settled_records_are_not_retroactively_stamped() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("legacy-order.redb"));
+        prepare(&store, "a").unwrap();
+        let node = error("a", "500", "0");
+        settle(&store, "a", &node);
+        let mut legacy = saved(&store, "a");
+        legacy
+            .as_object_mut()
+            .unwrap()
+            .remove("settlement_sequence");
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, key("a").as_bytes(), 1, &legacy))
+            .unwrap();
+        assert_eq!(settlement_sequence(&store, "a").unwrap(), None);
+        settle(&store, "a", &node);
+        assert_eq!(settlement_sequence(&store, "a").unwrap(), None);
+        assert_eq!(saved(&store, "a"), legacy);
     }
 
     #[test]
