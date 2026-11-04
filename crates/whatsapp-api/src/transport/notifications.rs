@@ -171,14 +171,24 @@ pub fn record_reachout_timelock(
     Ok(None)
 }
 
-/// The recorded lock if it is still in force at `now_seconds`.
+/// The recorded active lock, including one whose displayed deadline elapsed.
+/// APK 43.72 6qK.onFinish -> 7uq.A00 fetches state; expiry alone does not clear it.
+pub(super) fn recorded_active_reachout_timelock(
+    store: &ProtocolStore,
+) -> Result<Option<ReachoutTimelock>> {
+    let lock: Option<ReachoutTimelock> =
+        store.read(|tx| tx.get_json(Table::Checkpoints, REACHOUT_TIMELOCK, 1))?;
+    Ok(lock.filter(|l| l.active))
+}
+
+/// An active record with an unelapsed displayed deadline, for inspection only.
+/// A `None` here does not authorize an operation: authoritative active state
+/// can persist until a subsequent update, even after the displayed deadline.
 pub fn active_reachout_timelock(
     store: &ProtocolStore,
     now_seconds: i64,
 ) -> Result<Option<ReachoutTimelock>> {
-    let lock: Option<ReachoutTimelock> =
-        store.read(|tx| tx.get_json(Table::Checkpoints, REACHOUT_TIMELOCK, 1))?;
-    Ok(lock.filter(|l| l.active && l.ends > now_seconds))
+    Ok(recorded_active_reachout_timelock(store)?.filter(|l| l.ends > now_seconds))
 }
 
 /// The plain notification ACK the base handler sends (2.26.37.71 `0yO.A00`

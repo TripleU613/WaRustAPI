@@ -1,3 +1,10 @@
+2026-11-04 — **Source correction: deadline does not authorize restriction release.**
+Native sheet/countdown -> 7uq -> FetchReachoutTimelockQuery -> 8dV success
+-> 7vL state application traced. Group create now checks recorded active
+state instead of elapsed inspection. Explicit inactive still releases it.
+[Evidence, cache limits and missing automatic refresh](rea/2.26.43.72-reachout-state/README.md#deadline-is-a-refresh-trigger-not-an-inactive-update-2026-11-04).
+Real-store regression; no live traffic or complete native policy claim.
+
 2026-11-04 — **Pinned static: call gate, sticker refusal and record correction.**
 1v7.A02 pre-call branch, ShareMediaViewModel.A01 read-only refusal and
 2Q4 wrapper/lookup chain resolve caller semantics. Prior per-message/ent:

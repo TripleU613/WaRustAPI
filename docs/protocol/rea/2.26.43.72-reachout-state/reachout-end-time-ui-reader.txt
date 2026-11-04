@@ -1,0 +1,412 @@
+
+# class: Lcom/whatsapp/reachouttimelock/ReachoutTimelockInfoBottomSheet;
+# extends: Lcom/whatsapp/ui/wds/components/bottomsheet/WDSBottomSheetDialogFragment;
+
+.method public A2A(VLL)  # .registers 20
+    # full signature: Lcom/whatsapp/reachouttimelock/ReachoutTimelockInfoBottomSheet;->A2A(Landroid/os/Bundle;Landroid/view/View;)V
+    0000..0002  const/4  v1, #0x0
+    0002..0006  move-object/from16  v7, v19
+    0006..000c  invoke-static  {v7, v1}, LX/00l;->A09(Ljava/lang/Object;I)V
+    000c..0010  move-object/from16  v0, v17
+    0010..0014  move-object/from16  v2, v18
+    0014..001a  invoke-super  {v0, v2, v7}, Lcom/whatsapp/ui/wds/components/bottomsheet/WDSBottomSheetDialogFragment;->A2A(Landroid/os/Bundle;Landroid/view/View;)V
+    001a..001e  iget-object  v5, v0, Lcom/whatsapp/reachouttimelock/ReachoutTimelockInfoBottomSheet;->A07:LX/6pn;
+    001e..0024  invoke-static  {v5}, LX/6pn;->A00(LX/6pn;)LX/6po;
+    0024..002a  invoke-static  {v0}, LX/2LC;->A0D(Landroidx/fragment/app/Fragment;)Landroid/content/res/Resources;
+    002a..002c  move-result-object  v2
+    002c..0032  invoke-virtual  {v2}, Landroid/content/res/Resources;->getDisplayMetrics()Landroid/util/DisplayMetrics;
+    0032..0034  move-result-object  v2
+    0034..0038  iget  v6, v2, Landroid/util/DisplayMetrics;->heightPixels:I
+    0038..003c  const-string  v2, "ReachoutTimelockInfoBottomSheet/creating sheet with height: "
+    003c..0042  invoke-static  {v2, v6}, LX/2LA;->A1K(Ljava/lang/String;I)V
+    0042..0046  iget-object  v2, v0, Lcom/whatsapp/reachouttimelock/ReachoutTimelockInfoBottomSheet;->A03:LX/09S;
+    0046..004c  invoke-static  {v2}, LX/6oh;->A0A(LX/09S;)Landroid/content/SharedPreferences;
+    004c..004e  move-result-object  v2
+    004e..0052  const-string  v4, "TOwmL_type"
+    0052..0058  invoke-interface  {v2, v4, v1}, Landroid/content/SharedPreferences;->getInt(Ljava/lang/String;I)I
+    0058..005a  move-result  v2
+    005a..0060  invoke-static  {v0, v2}, Lcom/whatsapp/reachouttimelock/ReachoutTimelockInfoBottomSheet;->A03(Lcom/whatsapp/reachouttimelock/ReachoutTimelockInfoBottomSheet;I)Z
+    0060..0062  move-result  v3
+    0062..0066  if-eqz  v3, +0x243
+    0066..0068  const/4  v3, #0x3
+    0068..006c  if-ne  v2, v3, +0x1d4
+    006c..0072  const  v9, #0x7f123cb0
+    0072..0078  invoke-static  {v7}, LX/2L8;->A05(Landroid/view/View;)Landroid/content/Context;
+    0078..007a  move-result-object  v12
+    007a..007c  const/4  v3, #0x1
+    007c..0080  if-eq  v2, v3, +0xe
+    0080..0086  invoke-static  {v0, v2}, Lcom/whatsapp/reachouttimelock/ReachoutTimelockInfoBottomSheet;->A03(Lcom/whatsapp/reachouttimelock/ReachoutTimelockInfoBottomSheet;I)Z
+    0086..0088  move-result  v11
+    0088..008e  const  v10, #0x7f0409c0
+    008e..0094  const  v8, #0x7f060023
+    0094..0098  if-eqz  v11, +0x8
+    0098..009e  const  v10, #0x7f0409c4
+    009e..00a4  const  v8, #0x7f06035b
+    00a4..00aa  invoke-static  {v12, v10, v8}, Lcom/whatsapp/ui/wds/utils/WDSColorsUtils;->A05(Landroid/content/Context;II)I
+    00aa..00ac  move-result  v16
+    00ac..00b0  iget-object  v11, v0, Lcom/whatsapp/reachouttimelock/ReachoutTimelockInfoBottomSheet;->A08:LX/CP1;
+    00b0..00b6  invoke-static  {v7}, LX/2L8;->A05(Landroid/view/View;)Landroid/content/Context;
+    00b6..00b8  move-result-object  v12
+    00b8..00ba  const/4  v10, #0x1
+    00ba..00be  new-array  v8, v3, [Ljava/lang/Object;
+    00be..00c2  const-string  v15, "learn-more"
+    00c2..00c8  invoke-static  {v0, v15, v8, v1, v9}, LX/6oi;->A0w(Landroidx/fragment/app/Fragment;Ljava/lang/Object;[Ljava/lang/Object;II)Ljava/lang/String;
+    00c8..00ca  move-result-object  v14
+    00ca..00ce  const/16  v8, #0x17
+    00ce..00d2  new-instance  v13, LX/8bP;
+    00d2..00d8  invoke-direct  {v13, v0, v2, v8}, LX/8bP;-><init>(Ljava/lang/Object;II)V
+    00d8..00de  invoke-virtual/range  {v11..v16}, LX/CP1;->A06(Landroid/content/Context;Ljava/lang/Runnable;Ljava/lang/String;Ljava/lang/String;I)Landroid/text/SpannableStringBuilder;
+    00de..00e0  move-result-object  v11
+    00e0..00e6  invoke-static  {v5}, LX/6pn;->A00(LX/6pn;)LX/6po;
+    00e6..00e8  move-result-object  v8
+    00e8..00ec  iget-object  v5, v8, LX/6po;->A04:LX/05a;
+    00ec..00f2  invoke-static  {v5}, LX/2L8;->A0y(LX/05a;)LX/09S;
+    00f2..00f4  move-result-object  v5
+    00f4..00fa  invoke-static  {v5}, LX/6oh;->A0A(LX/09S;)Landroid/content/SharedPreferences;
+    00fa..00fc  move-result-object  v5
+    00fc..0102  invoke-interface  {v5, v4, v1}, Landroid/content/SharedPreferences;->getInt(Ljava/lang/String;I)I
+    0102..0104  move-result  v4
+    0104..0108  if-ne  v4, v3, +0x11
+    0108..010c  iget-object  v4, v8, LX/6po;->A00:LX/05a;
+    010c..0112  invoke-static  {v4}, LX/05a;->A00(LX/05a;)LX/00E;
+    0112..0114  move-result-object  v5
+    0114..0118  const/16  v4, #0x53a4
+    0118..011e  invoke-virtual  {v5, v4}, LX/00E;->A14(I)Z
+    011e..0120  move-result  v4
+    0120..0122  const/4  v5, #0x1
+    0122..0126  if-nez  v4, +0x3
+    0126..0128  const/4  v5, #0x0
+    0128..012e  const  v4, #0x7f0b36f4
+    012e..0134  invoke-static  {v7, v4}, LX/2L7;->A02(Landroid/view/View;I)Landroid/view/View;
+    0134..0136  move-result-object  v4
+    0136..013a  check-cast  v4, Lcom/whatsapp/ui/wds/components/textlayout/WDSTextLayout;
+    013a..0140  const  v8, #0x7f0b1179
+    0140..0146  invoke-static  {v7, v8}, LX/6of;->A0u(Landroid/view/View;I)Lcom/whatsapp/ui/coreui/base/WaTextView;
+    0146..0148  move-result-object  v12
+    0148..014c  mul-int/lit8  v6, v6, #0x3
+    014c..0150  div-int/lit8  v6, v6, #0x4
+    0150..0156  invoke-virtual  {v4, v6}, Landroid/view/View;->setMinimumHeight(I)V
+    0156..015a  const/16  v6, #0x14
+    015a..0160  const  v8, #0x7f123cc6
+    0160..0164  if-ne  v2, v6, +0x5
+    0164..016a  const  v8, #0x7f123cc7
+    016a..0170  invoke-static  {v0, v4, v8}, LX/6og;->A1S(Landroidx/fragment/app/Fragment;Lcom/whatsapp/ui/wds/components/textlayout/WDSTextLayout;I)V
+    0170..0174  if-eqz  v12, +0xf
+    0174..0178  iget-object  v9, v0, Lcom/whatsapp/reachouttimelock/ReachoutTimelockInfoBottomSheet;->A02:LX/08Y;
+    0178..017e  invoke-static  {v12, v9}, LX/2L8;->A1W(Landroid/widget/TextView;LX/08Y;)V
+    017e..0184  invoke-virtual  {v12, v3}, Landroid/view/View;->setFocusable(Z)V
+    0184..0188  iget-object  v8, v0, Lcom/whatsapp/reachouttimelock/ReachoutTimelockInfoBottomSheet;->A04:LX/0B8;
+    0188..018e  invoke-static  {v9, v8, v12}, LX/1CX;->A0Q(LX/08Y;LX/0B8;Lcom/whatsapp/ui/coreui/base/WaTextView;)V
+    018e..0194  invoke-virtual  {v4, v11}, Lcom/whatsapp/ui/wds/components/textlayout/WDSTextLayout;->setDescriptionText(Ljava/lang/CharSequence;)V
+    0194..019a  const  v8, #0x7f125733
+    019a..019e  if-eqz  v5, +0x5
+    019e..01a4  const  v8, #0x7f123cc9
+    01a4..01aa  invoke-virtual  {v0, v8}, Landroidx/fragment/app/Fragment;->A1N(I)Ljava/lang/String;
+    01aa..01ac  move-result-object  v8
+    01ac..01b2  invoke-virtual  {v4, v8}, Lcom/whatsapp/ui/wds/components/textlayout/WDSTextLayout;->setSecondaryButtonText(Ljava/lang/String;)V
+    01b2..01b6  new-instance  v8, LX/7Z5;
+    01b6..01bc  invoke-direct  {v8, v3, v0, v5}, LX/7Z5;-><init>(ILjava/lang/Object;Z)V
+    01bc..01c2  invoke-virtual  {v4, v8}, Lcom/whatsapp/ui/wds/components/textlayout/WDSTextLayout;->setSecondaryButtonClickListener(Landroid/view/View$OnClickListener;)V
+    01c2..01c8  const  v3, #0x100d3
+    01c8..01ce  invoke-static  {v0, v3}, LX/6of;->A1K(Lcom/whatsapp/ui/wds/components/bottomsheet/WDSBottomSheetDialogFragment;I)V
+    01ce..01d4  invoke-virtual  {v7}, Landroid/view/View;->getContext()Landroid/content/Context;
+    01d4..01d6  move-result-object  v8
+    01d6..01da  if-eqz  v5, +0xd6
+    01da..01e0  invoke-static  {v8}, LX/00l;->A05(Ljava/lang/Object;)V
+    01e0..01e6  invoke-static  {v8}, LX/88h;->A01(Landroid/content/Context;)Ljava/util/ArrayList;
+    01e6..01e8  move-result-object  v8
+    01e8..01ec  new-instance  v2, LX/GZH;
+    01ec..01f2  invoke-direct  {v2, v8}, LX/GZH;-><init>(Ljava/util/List;)V
+    01f2..01f8  invoke-virtual  {v4, v2}, Lcom/whatsapp/ui/wds/components/textlayout/WDSTextLayout;->setContent(LX/GkO;)V
+    01f8..01fe  const  v2, #0x7f0b3499
+    01fe..0204  invoke-static  {v4, v2}, LX/2L7;->A02(Landroid/view/View;I)Landroid/view/View;
+    0204..0206  move-result-object  v8
+    0206..020a  check-cast  v8, Lcom/whatsapp/ui/wds/components/button/WDSButton;
+    020a..020e  if-eqz  v5, +0xb8
+    020e..0212  sget-object  v2, LX/11K;->A03:LX/11K;
+    0212..0218  invoke-virtual  {v8, v2}, Lcom/whatsapp/ui/wds/components/button/WDSButton;->setVariant(LX/11K;)V
+    0218..021e  invoke-static  {v0, v3}, LX/6oh;->A17(Lcom/whatsapp/ui/wds/components/bottomsheet/WDSBottomSheetDialogFragment;I)Ljava/lang/Object;
+    021e..0220  move-result-object  v9
+    0220..0224  check-cast  v9, LX/88h;
+    0224..022a  invoke-static  {v7}, LX/2L8;->A05(Landroid/view/View;)Landroid/content/Context;
+    022a..022c  move-result-object  v8
+    022c..0232  const  v2, #0x7f0b0e8f
+    0232..0238  invoke-static  {v4, v2}, LX/2L7;->A02(Landroid/view/View;I)Landroid/view/View;
+    0238..023a  move-result-object  v2
+    023a..0240  invoke-static  {v2}, LX/3q4;->A0q(Ljava/lang/Object;)Ljava/util/Iterator;
+    0240..0242  move-result-object  v14
+    0242..0248  invoke-interface  {v14}, Ljava/util/Iterator;->hasNext()Z
+    0248..024a  move-result  v2
+    024a..024e  if-eqz  v2, +0x175
+    024e..0254  invoke-static  {v14}, LX/3q1;->A0K(Ljava/util/Iterator;)Landroid/view/View;
+    0254..0256  move-result-object  v11
+    0256..025c  invoke-virtual  {v8}, Landroid/content/Context;->getResources()Landroid/content/res/Resources;
+    025c..025e  move-result-object  v4
+    025e..0264  const  v2, #0x7f0712f2
+    0264..026a  invoke-virtual  {v4, v2}, Landroid/content/res/Resources;->getDimension(I)F
+    026a..026c  move-result  v2
+    026c..026e  float-to-int  v12, v2
+    026e..0274  invoke-virtual  {v11, v12, v12, v12, v12}, Landroid/view/View;->setPadding(IIII)V
+    0274..027a  const  v2, #0x7f0b088f
+    027a..0280  invoke-static  {v11, v2}, LX/0RN;->A06(Landroid/view/View;I)Landroid/view/View;
+    0280..0282  move-result-object  v4
+    0282..0286  const-string  v2, "null cannot be cast to non-null type com.whatsapp.ui.coreui.base.WaImageView"
+    0286..028c  invoke-static  {v4, v2}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    028c..0290  check-cast  v4, Landroid/widget/ImageView;
+    0290..0296  const  v2, #0x7f0409c1
+    0296..029c  invoke-static  {v8, v2}, Lcom/whatsapp/ui/wds/utils/WDSColorsUtils;->A02(Landroid/content/Context;I)I
+    029c..029e  move-result  v2
+    029e..02a4  invoke-static  {v8, v2}, LX/DBk;->A00(Landroid/content/Context;I)I
+    02a4..02a6  move-result  v2
+    02a6..02ac  invoke-virtual  {v4, v2}, Landroid/widget/ImageView;->setColorFilter(I)V
+    02ac..02b2  invoke-virtual  {v4}, Landroid/widget/ImageView;->getDrawable()Landroid/graphics/drawable/Drawable;
+    02b2..02b4  move-result-object  v2
+    02b4..02b8  if-nez  v2, +0x20
+    02b8..02bc  const/16  v2, #0x8
+    02bc..02c2  invoke-virtual  {v4, v2}, Landroid/view/View;->setVisibility(I)V
+    02c2..02c8  const  v2, #0x7f0b0897
+    02c8..02ce  invoke-static  {v11, v2}, LX/2L7;->A02(Landroid/view/View;I)Landroid/view/View;
+    02ce..02d0  move-result-object  v5
+    02d0..02d6  invoke-virtual  {v5}, Landroid/view/View;->getLayoutParams()Landroid/view/ViewGroup$LayoutParams;
+    02d6..02d8  move-result-object  v4
+    02d8..02dc  instance-of  v2, v4, Landroid/view/ViewGroup$MarginLayoutParams;
+    02dc..02e0  if-eqz  v2, +0xc
+    02e0..02e4  check-cast  v4, Landroid/view/ViewGroup$MarginLayoutParams;
+    02e4..02e8  if-eqz  v4, +0x8
+    02e8..02ee  invoke-virtual  {v4, v12}, Landroid/view/ViewGroup$MarginLayoutParams;->setMarginStart(I)V
+    02ee..02f4  invoke-virtual  {v5, v4}, Landroid/view/View;->setLayoutParams(Landroid/view/ViewGroup$LayoutParams;)V
+    02f4..02fa  const  v2, #0x7f0b0896
+    02fa..0300  invoke-static  {v11, v2}, LX/6oi;->A0j(Landroid/view/View;I)Lcom/whatsapp/ui/coreui/base/WaTextView;
+    0300..0302  move-result-object  v11
+    0302..0308  invoke-virtual  {v11}, Landroid/widget/TextView;->getText()Ljava/lang/CharSequence;
+    0308..030a  move-result-object  v2
+    030a..030e  instance-of  v2, v2, Landroid/text/Spannable;
+    030e..0312  if-eqz  v2, -0x66
+    0312..0318  invoke-virtual  {v11}, Landroid/widget/TextView;->getText()Ljava/lang/CharSequence;
+    0318..031a  move-result-object  v13
+    031a..031e  const-string  v2, "null cannot be cast to non-null type android.text.Spannable"
+    031e..0324  invoke-static  {v13, v2}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    0324..0328  check-cast  v13, Landroid/text/Spannable;
+    0328..032e  invoke-interface  {v13}, Ljava/lang/CharSequence;->length()I
+    032e..0330  move-result  v4
+    0330..0334  const-class  v2, Landroid/text/style/URLSpan;
+    0334..0336  const/4  v12, #0x0
+    0336..033c  invoke-static  {v13, v2, v1, v4}, LX/6of;->A1S(Landroid/text/Spanned;Ljava/lang/Class;II)[Ljava/lang/Object;
+    033c..033e  move-result-object  v2
+    033e..0340  array-length  v2, v2
+    0340..0342  const/4  v5, #0x1
+    0342..0346  if-nez  v2, +0x3
+    0346..0348  const/4  v5, #0x0
+    0348..034e  invoke-interface  {v13}, Ljava/lang/CharSequence;->length()I
+    034e..0350  move-result  v4
+    0350..0354  const-class  v2, LX/KiM;
+    0354..035a  invoke-static  {v13, v2, v1, v4}, LX/6of;->A1S(Landroid/text/Spanned;Ljava/lang/Class;II)[Ljava/lang/Object;
+    035a..035c  move-result-object  v2
+    035c..035e  array-length  v2, v2
+    035e..0362  if-nez  v2, +0x3
+    0362..0364  const/4  v12, #0x1
+    0364..0368  if-nez  v5, +0x4
+    0368..036c  if-nez  v12, -0x93
+    036c..0370  iget-object  v2, v9, LX/88h;->A00:LX/05a;
+    0370..0376  invoke-static  {v11, v2}, LX/2LA;->A0z(Landroid/widget/TextView;LX/05a;)V
+    0376..037a  goto/16  -0x9a
+    037a..037e  sget-object  v2, LX/11K;->A04:LX/11K;
+    037e..0382  goto/16  -0xb6
+    0382..0388  invoke-static  {v8}, LX/00l;->A05(Ljava/lang/Object;)V
+    0388..038e  const  v9, #0x7f123cbf
+    038e..0392  if-ne  v2, v6, +0x5
+    0392..0398  const  v9, #0x7f123cbe
+    0398..039a  const/4  v2, #0x3
+    039a..039e  new-array  v2, v2, [LX/81S;
+    039e..03a4  invoke-static  {v8, v9}, LX/1Xl;->A0r(Landroid/content/Context;I)Ljava/lang/String;
+    03a4..03a6  move-result-object  v13
+    03a6..03a8  const/4  v12, #0x0
+    03a8..03ae  const  v15, #0x7f080f19
+    03ae..03b2  new-instance  v11, LX/81S;
+    03b2..03b4  move-object  v14, v12
+    03b4..03b8  move/from16  v16, v1
+    03b8..03be  invoke-direct/range  {v11..v16}, LX/81S;-><init>(Landroid/view/View$OnClickListener;Ljava/lang/CharSequence;Ljava/lang/CharSequence;IZ)V
+    03be..03c2  aput-object  v11, v2, v1
+    03c2..03c8  const  v9, #0x7f123cc1
+    03c8..03ce  invoke-static  {v8, v9}, LX/1Xl;->A0r(Landroid/content/Context;I)Ljava/lang/String;
+    03ce..03d0  move-result-object  v13
+    03d0..03d6  const  v15, #0x7f080509
+    03d6..03da  new-instance  v11, LX/81S;
+    03da..03e0  invoke-direct/range  {v11..v16}, LX/81S;-><init>(Landroid/view/View$OnClickListener;Ljava/lang/CharSequence;Ljava/lang/CharSequence;IZ)V
+    03e0..03e4  aput-object  v11, v2, v10
+    03e4..03ea  const  v9, #0x7f123cc0
+    03ea..03f0  invoke-static  {v8, v9}, LX/1Xl;->A0r(Landroid/content/Context;I)Ljava/lang/String;
+    03f0..03f2  move-result-object  v13
+    03f2..03f8  const  v15, #0x7f080f3c
+    03f8..03fc  new-instance  v11, LX/81S;
+    03fc..0402  invoke-direct/range  {v11..v16}, LX/81S;-><init>(Landroid/view/View$OnClickListener;Ljava/lang/CharSequence;Ljava/lang/CharSequence;IZ)V
+    0402..0404  const/4  v8, #0x2
+    0404..040a  invoke-static  {v11, v2, v8}, LX/6of;->A13(Ljava/lang/Object;[Ljava/lang/Object;I)Ljava/util/ArrayList;
+    040a..040c  move-result-object  v8
+    040c..0410  goto/16  -0x112
+    0410..0412  const/4  v3, #0x4
+    0412..0416  if-ne  v2, v3, +0x7
+    0416..041c  const  v9, #0x7f123cb1
+    041c..0420  goto/16  -0x1d5
+    0420..0422  const/4  v3, #0x5
+    0422..0426  if-ne  v2, v3, +0x7
+    0426..042c  const  v9, #0x7f123cb2
+    042c..0430  goto/16  -0x1dd
+    0430..0432  const/4  v3, #0x6
+    0432..0436  if-ne  v2, v3, +0x7
+    0436..043c  const  v9, #0x7f123cb3
+    043c..0440  goto/16  -0x1e5
+    0440..0442  const/4  v3, #0x7
+    0442..0446  if-ne  v2, v3, +0x7
+    0446..044c  const  v9, #0x7f123cb4
+    044c..0450  goto/16  -0x1ed
+    0450..0454  const/16  v3, #0x8
+    0454..0458  if-ne  v2, v3, +0x7
+    0458..045e  const  v9, #0x7f123cb5
+    045e..0462  goto/16  -0x1f6
+    0462..0466  const/16  v3, #0x9
+    0466..046a  if-eq  v2, v3, +0x3c
+    046a..046e  const/16  v3, #0xa
+    046e..0472  if-eq  v2, v3, +0x38
+    0472..0476  const/16  v3, #0xb
+    0476..047a  if-ne  v2, v3, +0x7
+    047a..0480  const  v9, #0x7f123cb7
+    0480..0484  goto/16  -0x207
+    0484..0488  const/16  v3, #0xc
+    0488..048c  if-ne  v2, v3, +0x7
+    048c..0492  const  v9, #0x7f123cb8
+    0492..0496  goto/16  -0x210
+    0496..049a  const/16  v3, #0xd
+    049a..049e  if-ne  v2, v3, +0x7
+    049e..04a4  const  v9, #0x7f123cb9
+    04a4..04a8  goto/16  -0x219
+    04a8..04ac  const/16  v3, #0xe
+    04ac..04b0  if-ne  v2, v3, +0x7
+    04b0..04b6  const  v9, #0x7f123cba
+    04b6..04ba  goto/16  -0x222
+    04ba..04be  const/16  v3, #0xf
+    04be..04c2  if-ne  v2, v3, +0x7
+    04c2..04c8  const  v9, #0x7f123cbb
+    04c8..04cc  goto/16  -0x22b
+    04cc..04d0  const/16  v3, #0x10
+    04d0..04d4  if-ne  v2, v3, +0x26
+    04d4..04da  const  v9, #0x7f123cbc
+    04da..04de  goto/16  -0x234
+    04de..04e4  const  v9, #0x7f123cb6
+    04e4..04e8  goto/16  -0x239
+    04e8..04ec  const/16  v3, #0x12
+    04ec..04f0  if-ne  v2, v3, +0xa
+    04f0..04f4  iget-object  v8, v0, Lcom/whatsapp/reachouttimelock/ReachoutTimelockInfoBottomSheet;->A02:LX/08Y;
+    04f4..04f8  const/16  v3, #0x61d2
+    04f8..04fe  invoke-virtual  {v8, v3}, LX/00E;->A14(I)Z
+    04fe..0500  goto  +0x16
+    0500..0502  const/4  v3, #0x1
+    0502..0506  if-ne  v2, v3, +0x7
+    0506..050c  const  v9, #0x7f123cc3
+    050c..0510  goto/16  -0x24d
+    0510..0514  const/16  v3, #0x14
+    0514..051a  const  v9, #0x7f123cc4
+    051a..051c  goto  +0x6
+    051c..0520  const/16  v3, #0x11
+    0520..0526  const  v9, #0x7f123cbd
+    0526..052a  if-eq  v2, v3, -0x25a
+    052a..0530  const  v9, #0x7f123cc2
+    0530..0534  goto/16  -0x25f
+    0534..053a  invoke-static  {v0, v3}, LX/6oh;->A17(Lcom/whatsapp/ui/wds/components/bottomsheet/WDSBottomSheetDialogFragment;I)Ljava/lang/Object;
+    053a..053c  move-result-object  v11
+    053c..0540  check-cast  v11, LX/88h;
+    0540..0542  const/4  v2, #0x4
+    0542..0546  new-instance  v13, LX/8l1;
+    0546..054c  invoke-direct  {v13, v0, v2}, LX/8l1;-><init>(Ljava/lang/Object;I)V
+    054c..0552  const  v0, #0x7f0b3cd5
+    0552..0558  invoke-static  {v7, v0}, LX/2L7;->A02(Landroid/view/View;I)Landroid/view/View;
+    0558..055a  move-result-object  v12
+    055a..055e  check-cast  v12, Lcom/whatsapp/ui/coreui/CircularProgressBar;
+    055e..0562  iget-object  v0, v11, LX/88h;->A02:LX/05a;
+    0562..0566  iget-object  v3, v0, LX/05a;->A00:LX/00x;
+    0566..056c  invoke-static  {v3}, LX/2L6;->A0q(LX/00x;)LX/09S;
+    056c..056e  move-result-object  v0
+    056e..0574  invoke-static  {v0}, LX/6oh;->A0A(LX/09S;)Landroid/content/SharedPreferences;
+    0574..0576  move-result-object  v2
+    0576..057a  const-string  v0, "TOwmL_end_time_in_ms"
+    057a..0580  invoke-static  {v2, v0}, LX/1Xl;->A0D(Landroid/content/SharedPreferences;Ljava/lang/String;)J
+    0580..0582  move-result-wide  v4
+    0582..0588  invoke-static  {v3}, LX/2L6;->A0q(LX/00x;)LX/09S;
+    0588..058a  move-result-object  v0
+    058a..0590  invoke-static  {v0}, LX/6oh;->A0A(LX/09S;)Landroid/content/SharedPreferences;
+    0590..0592  move-result-object  v2
+    0592..0596  const-string  v0, "TOwmL_start_time_in_ms"
+    0596..059c  invoke-static  {v2, v0}, LX/1Xl;->A0D(Landroid/content/SharedPreferences;Ljava/lang/String;)J
+    059c..059e  move-result-wide  v8
+    059e..05a2  sub-long  v2, v4, v8
+    05a2..05a6  const-wide/16  v14, #0x3e8
+    05a6..05aa  div-long  v8, v2, v14
+    05aa..05b0  invoke-static  {v12}, LX/2L8;->A05(Landroid/view/View;)Landroid/content/Context;
+    05b0..05b2  move-result-object  v0
+    05b2..05b8  invoke-static  {v0, v11, v4, v5}, LX/88h;->A00(Landroid/content/Context;LX/88h;J)Ljava/lang/String;
+    05b8..05ba  move-result-object  v0
+    05ba..05c0  invoke-static  {v12, v0}, LX/0RN;->A0l(Landroid/view/View;Ljava/lang/CharSequence;)V
+    05c0..05c4  new-instance  v0, LX/6rp;
+    05c4..05ca  invoke-direct  {v0, v11, v4, v5}, LX/6rp;-><init>(LX/88h;J)V
+    05ca..05d0  invoke-static  {v12, v0}, LX/0RN;->A0c(Landroid/view/View;LX/0yV;)V
+    05d0..05d4  iput-boolean  v10, v12, Lcom/whatsapp/ui/coreui/CircularProgressBar;->A0F:Z
+    05d4..05d6  long-to-int  v0, v8
+    05d6..05dc  invoke-virtual  {v12, v0}, Landroid/widget/ProgressBar;->setMax(I)V
+    05dc..05e2  invoke-static  {v7}, LX/1d1;->A06(Landroid/view/View;)Landroid/graphics/Typeface;
+    05e2..05e4  move-result-object  v0
+    05e4..05e8  iput-object  v0, v12, Lcom/whatsapp/ui/coreui/CircularProgressBar;->A0D:Landroid/graphics/Typeface;
+    05e8..05ec  iput  v6, v12, Lcom/whatsapp/ui/coreui/CircularProgressBar;->A08:I
+    05ec..05f2  const  v0, #0x3daaaaab
+    05f2..05f6  iput  v0, v12, Lcom/whatsapp/ui/coreui/CircularProgressBar;->A05:F
+    05f6..05fa  iget-object  v0, v11, LX/88h;->A05:LX/08q;
+    05fa..0600  invoke-static  {v0}, LX/08q;->A00(LX/08q;)J
+    0600..0602  move-result-wide  v8
+    0602..0606  sub-long  v6, v4, v8
+    0606..060a  const-string  v0, "ReachoutTimelockInfoSharedUIHelper/creating timer - endTime: "
+    060a..0610  invoke-static  {v0, v4, v5}, LX/1Xl;->A17(Ljava/lang/String;J)Ljava/lang/StringBuilder;
+    0610..0612  move-result-object  v8
+    0612..0616  const-string  v0, " - length: "
+    0616..061c  invoke-virtual  {v8, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    061c..0622  invoke-virtual  {v8, v2, v3}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    0622..0626  const-string  v0, " - timeTillEnd: "
+    0626..062c  invoke-static  {v0, v8, v6, v7}, LX/2L9;->A10(Ljava/lang/String;Ljava/lang/StringBuilder;J)Ljava/lang/String;
+    062c..062e  move-result-object  v0
+    062e..0634  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0634..0638  cmp-long  v0, v6, v14
+    0638..063c  if-lez  v0, +0xe
+    063c..0642  invoke-static  {v6, v7}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0642..0644  move-result-object  v1
+    0644..064a  invoke-static  {v4, v5}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    064a..064c  move-result-object  v0
+    064c..0652  invoke-virtual  {v13, v1, v0, v12}, LX/8l1;->invoke(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    0652..0654  return-void
+    0654..065a  invoke-virtual  {v12, v1}, Landroid/widget/ProgressBar;->setProgress(I)V
+    065a..065e  iget-object  v0, v11, LX/88h;->A04:LX/05a;
+    065e..0664  invoke-static  {v0}, LX/2L9;->A0Y(LX/05a;)LX/0Fc;
+    0664..0666  move-result-object  v4
+    0666..066a  const-wide/16  v2, #0x0
+    066a..066e  const/16  v0, #0xdd
+    066e..0674  invoke-virtual  {v4, v0}, LX/0Fc;->A0I(I)Ljava/lang/String;
+    0674..0676  move-result-object  v0
+    0676..067c  invoke-static  {v4, v0, v2, v3, v1}, LX/6qC;->A0M(LX/0Fc;Ljava/lang/String;JZ)Ljava/lang/String;
+    067c..067e  move-result-object  v1
+    067e..0684  const  v0, #0x7f07017a
+    0684..068a  invoke-virtual  {v12, v1, v0}, Lcom/whatsapp/ui/coreui/CircularProgressBar;->A01(Ljava/lang/String;I)V
+    068a..068e  iget-object  v0, v11, LX/88h;->A01:LX/05a;
+    068e..0694  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0694..0696  move-result-object  v0
+    0696..069a  check-cast  v0, LX/7uq;
+    069a..06a0  invoke-virtual  {v0}, LX/7uq;->A00()V
+    06a0..06a4  new-instance  v2, LX/7It;
+    06a4..06aa  invoke-direct  {v2}, LX/7It;-><init>()V
+    06aa..06b0  invoke-static  {v6, v7}, Ljava/lang/Math;->abs(J)J
+    06b0..06b2  move-result-wide  v0
+    06b2..06b8  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    06b8..06ba  move-result-object  v0
+    06ba..06be  iput-object  v0, v2, LX/7It;->A01:Ljava/lang/Long;
+    06be..06c2  iget-object  v0, v11, LX/88h;->A03:LX/05a;
+    06c2..06c8  invoke-static  {v0, v2}, LX/2LA;->A11(LX/05a;LX/0FP;)V
+    06c8..06ca  return-void
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/Exception; code_units 017d..01bd -> 0121
+.end method

@@ -1,0 +1,47 @@
+
+# class: LX/7uB;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 2
+    # full signature: LX/7uB;-><init>()V
+    0000..0006  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    0006..000c  const  v0, #0x100d6
+    000c..0012  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0012..0014  move-result-object  v0
+    0014..0018  check-cast  v0, LX/7Ky;
+    0018..001c  iput-object  v0, v1, LX/7uB;->A00:LX/7Ky;
+    001c..0022  invoke-static  {}, LX/2LD;->A0U()LX/09S;
+    0022..0024  move-result-object  v0
+    0024..0028  iput-object  v0, v1, LX/7uB;->A01:LX/09S;
+    0028..002e  invoke-static  {}, LX/2L9;->A0j()LX/0Js;
+    002e..0030  move-result-object  v0
+    0030..0034  iput-object  v0, v1, LX/7uB;->A02:LX/0Js;
+    0034..0036  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(V)  # .registers 4
+    # full signature: LX/7uB;->A00()V
+    0000..0004  iget-object  v0, v3, LX/7uB;->A01:LX/09S;
+    0004..000a  invoke-virtual  {v0}, LX/09S;->A0T()LX/7Kp;
+    000a..000c  move-result-object  v2
+    000c..0012  invoke-virtual  {v2}, LX/0FZ;->A03()Landroid/content/SharedPreferences;
+    0012..0014  move-result-object  v1
+    0014..0018  const-string  v0, "TOwmL_is_active"
+    0018..001e  invoke-static  {v1, v0}, LX/2L7;->A1X(Landroid/content/SharedPreferences;Ljava/lang/String;)Z
+    001e..0020  move-result  v1
+    0020..0024  const-string  v0, "Making visible despite not being active"
+    0024..002a  invoke-static  {v1, v0}, LX/00L;->A0C(ZLjava/lang/String;)V
+    002a..0030  invoke-virtual  {v2}, LX/0FZ;->A02()Landroid/content/SharedPreferences$Editor;
+    0030..0032  move-result-object  v2
+    0032..0036  const-string  v1, "TOwmL_is_visible"
+    0036..0038  const/4  v0, #0x1
+    0038..003e  invoke-static  {v2, v1, v0}, LX/2L7;->A1S(Landroid/content/SharedPreferences$Editor;Ljava/lang/String;Z)V
+    003e..0042  iget-object  v1, v3, LX/7uB;->A02:LX/0Js;
+    0042..0046  const/16  v0, #0x12
+    0046..004c  invoke-static  {v3, v0}, LX/8bO;->A00(Ljava/lang/Object;I)LX/8bO;
+    004c..004e  move-result-object  v0
+    004e..0054  invoke-virtual  {v1, v0}, LX/0Js;->CbP(Ljava/lang/Runnable;)V
+    0054..0056  return-void
+    # exception table: 0 try range(s)
+.end method

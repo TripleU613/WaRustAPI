@@ -1,0 +1,17 @@
+
+# class: LX/8Mp;
+# extends: Ljava/lang/Object;
+
+.method public BjM(V)  # .registers 3
+    # full signature: LX/8Mp;->BjM()V
+    0000..0004  iget-object  v1, v2, LX/8Mp;->A01:LX/08Y;
+    0004..0008  const/16  v0, #0x1f48
+    0008..000e  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    000e..0010  move-result  v1
+    0010..0014  iget-boolean  v0, v2, LX/8Mp;->A00:Z
+    0014..0018  if-eq  v0, v1, +0x7
+    0018..001c  iget-object  v0, v2, LX/8Mp;->A02:LX/6po;
+    001c..0022  invoke-virtual  {v0}, LX/6po;->A01()V
+    0022..0024  return-void
+    # exception table: 0 try range(s)
+.end method

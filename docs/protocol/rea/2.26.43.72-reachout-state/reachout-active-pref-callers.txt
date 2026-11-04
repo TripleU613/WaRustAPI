@@ -1,0 +1,11 @@
+["TOwmL_is_active"]  (5 reference(s))
+  classes5.dex  LX/6po;->A01(V)
+    dex byte offset: 0x2406c8
+  classes5.dex  Lcom/whatsapp/contact/ui/picker/ContactPickerFragmentKt;->A3B(V)
+    dex byte offset: 0x34aa74
+  classes5.dex  LX/7uB;->A00(V)
+    dex byte offset: 0x3bfe7c
+  classes5.dex  LX/7vL;->A00(VZLL)
+    dex byte offset: 0x3c6906
+  classes5.dex  LX/7vL;->A00(VZLL)
+    dex byte offset: 0x3c69d8

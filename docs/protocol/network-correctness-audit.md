@@ -290,3 +290,15 @@ restriction branch. Jmt inverts the higher predicate for selected user-JIDs.
 was too strong: the argument is a JID-bound cached record. Account/cache/
 expiry lifetimes and full execution boundaries remain open; no runtime
 policy or wire fields were guessed from UI consumers.
+
+## Restriction deadline release correction (2026-11-04)
+
+**Confirmed static / fixed offline:** native visible countdown expiry
+fetches current restriction state, then applies success through 7vL.A00.
+It does not locally write inactive. Rust group creation previously used
+the deadline-filtered inspection helper and could bypass its guard with
+time alone. It now checks recorded active state until explicit inactive;
+no action is queued on refusal. The inspection helper is informational.
+[Native chain, cache references and regression](rea/2.26.43.72-reachout-state/README.md#deadline-is-a-refresh-trigger-not-an-inactive-update-2026-11-04). Automatic refresh
+and full outreach policy remain unported; stale active state can refuse
+beyond the displayed deadline. No network request or identity reset added.

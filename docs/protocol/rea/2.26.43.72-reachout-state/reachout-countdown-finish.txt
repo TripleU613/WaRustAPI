@@ -1,0 +1,30 @@
+
+# class: LX/6qK;
+# extends: Landroid/os/CountDownTimer;
+
+.method public onFinish(V)  # .registers 8
+    # full signature: LX/6qK;->onFinish()V
+    0000..0004  iget-object  v6, v7, LX/6qK;->A03:Lcom/whatsapp/ui/coreui/CircularProgressBar;
+    0004..0006  const/4  v0, #0x0
+    0006..000c  invoke-virtual  {v6, v0}, Landroid/widget/ProgressBar;->setProgress(I)V
+    000c..0010  iget-object  v5, v7, LX/6qK;->A02:LX/88h;
+    0010..0014  iget-object  v0, v5, LX/88h;->A04:LX/05a;
+    0014..001a  invoke-static  {v0}, LX/2L9;->A0Y(LX/05a;)LX/0Fc;
+    001a..001c  move-result-object  v4
+    001c..0020  const-wide/16  v2, #0x0
+    0020..0024  const/16  v0, #0xdd
+    0024..002a  invoke-virtual  {v4, v0}, LX/0Fc;->A0I(I)Ljava/lang/String;
+    002a..002c  move-result-object  v1
+    002c..002e  const/4  v0, #0x0
+    002e..0034  invoke-static  {v4, v1, v2, v3, v0}, LX/6qC;->A0M(LX/0Fc;Ljava/lang/String;JZ)Ljava/lang/String;
+    0034..0036  move-result-object  v1
+    0036..003c  const  v0, #0x7f07017a
+    003c..0042  invoke-virtual  {v6, v1, v0}, Lcom/whatsapp/ui/coreui/CircularProgressBar;->A01(Ljava/lang/String;I)V
+    0042..0046  iget-object  v0, v5, LX/88h;->A01:LX/05a;
+    0046..004c  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    004c..004e  move-result-object  v0
+    004e..0052  check-cast  v0, LX/7uq;
+    0052..0058  invoke-virtual  {v0}, LX/7uq;->A00()V
+    0058..005a  return-void
+    # exception table: 0 try range(s)
+.end method

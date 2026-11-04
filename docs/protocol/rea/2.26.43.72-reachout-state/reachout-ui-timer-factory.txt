@@ -1,0 +1,99 @@
+
+# class: LX/8l1;
+# extends: LX/0Ls;
+
+.method public invoke(LLLL)  # .registers 15
+    # full signature: LX/8l1;->invoke(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    0000..0002  move-object  v5, v14
+    0002..0006  iget  v0, v11, LX/8l1;->$t:I
+    0006..000c  packed-switch  v0, payload@0x16c, cases=[0:@0x34, 1:@0x52, 2:@0x76, 3:@0xde, 4:@0x112], default@0xc
+    000c..0010  check-cast  v12, Landroid/content/Context;
+    0010..0014  check-cast  v13, LX/HXr;
+    0014..001a  invoke-static  {v14}, LX/000;->A00(Ljava/lang/Object;)I
+    001a..001c  move-result  v1
+    001c..0022  invoke-static  {v12, v13}, LX/00l;->A0A(Ljava/lang/Object;Ljava/lang/Object;)V
+    0022..0026  iget-object  v0, v11, LX/0Lp;->receiver:Ljava/lang/Object;
+    0026..002a  check-cast  v0, Lcom/whatsapp/settings/ui/aiagents/SettingsAiAgentsActivity;
+    002a..0030  invoke-static  {v12, v13, v0, v1}, Lcom/whatsapp/settings/ui/aiagents/SettingsAiAgentsActivity;->A03(Landroid/content/Context;LX/HXr;Lcom/whatsapp/settings/ui/aiagents/SettingsAiAgentsActivity;I)Landroid/graphics/Bitmap;
+    0030..0032  move-result-object  v0
+    0032..0034  return-object  v0
+    0034..003a  invoke-static  {v12}, LX/000;->A00(Ljava/lang/Object;)I
+    003a..003c  move-result  v2
+    003c..0040  check-cast  v13, LX/Fsj;
+    0040..0044  check-cast  v5, LX/Fsl;
+    0044..0048  iget-object  v1, v11, LX/0Lp;->receiver:Ljava/lang/Object;
+    0048..004c  check-cast  v1, LX/F2m;
+    004c..0050  sget-object  v0, Lcom/whatsapp/bot/infra/core/tos/BotInteractionType;->A08:Lcom/whatsapp/bot/infra/core/tos/BotInteractionType;
+    0050..0052  goto  +0xf
+    0052..0058  invoke-static  {v12}, LX/000;->A00(Ljava/lang/Object;)I
+    0058..005a  move-result  v2
+    005a..005e  check-cast  v13, LX/Fsj;
+    005e..0062  check-cast  v5, LX/Fsl;
+    0062..0066  iget-object  v1, v11, LX/0Lp;->receiver:Ljava/lang/Object;
+    0066..006a  check-cast  v1, LX/F2m;
+    006a..006e  sget-object  v0, Lcom/whatsapp/bot/infra/core/tos/BotInteractionType;->A0B:Lcom/whatsapp/bot/infra/core/tos/BotInteractionType;
+    006e..0074  invoke-static  {v13, v5, v0, v1, v2}, LX/F2m;->A01(LX/Fsj;LX/Fsl;Lcom/whatsapp/bot/infra/core/tos/BotInteractionType;LX/F2m;I)V
+    0074..0076  goto  +0x79
+    0076..007c  invoke-static  {v12}, LX/000;->A00(Ljava/lang/Object;)I
+    007c..007e  move-result  v6
+    007e..0084  invoke-static  {v13}, LX/000;->A00(Ljava/lang/Object;)I
+    0084..0086  move-result  v7
+    0086..008c  invoke-static  {v14}, LX/000;->A00(Ljava/lang/Object;)I
+    008c..008e  move-result  v8
+    008e..0092  iget-object  v2, v11, LX/0Lp;->receiver:Ljava/lang/Object;
+    0092..0096  check-cast  v2, LX/6uT;
+    0096..009c  invoke-static  {v2}, LX/6uT;->A00(LX/6uT;)LX/87k;
+    009c..009e  move-result-object  v0
+    009e..00a2  iget-object  v0, v0, LX/87k;->A05:LX/7zR;
+    00a2..00a6  iget-object  v0, v0, LX/7zR;->A00:LX/87T;
+    00a6..00aa  iget  v9, v0, LX/87T;->A01:I
+    00aa..00ae  iget  v10, v0, LX/87T;->A02:I
+    00ae..00b2  new-instance  v5, LX/87T;
+    00b2..00b8  invoke-direct/range  {v5..v10}, LX/87T;-><init>(IIIII)V
+    00b8..00ba  const/4  v0, #0x0
+    00ba..00c0  invoke-static  {v5, v2, v0}, LX/8dY;->A00(Ljava/lang/Object;Ljava/lang/Object;I)LX/8dY;
+    00c0..00c2  move-result-object  v0
+    00c2..00c8  invoke-static  {v2, v0}, LX/6uT;->A01(LX/6uT;Lkotlin/jvm/functions/Function1;)LX/87k;
+    00c8..00ce  invoke-static  {v5}, LX/7jT;->A00(LX/87T;)J
+    00ce..00d0  move-result-wide  v0
+    00d0..00d6  invoke-static  {v2, v0, v1}, LX/6uT;->A09(LX/6uT;J)V
+    00d6..00dc  invoke-static  {v2}, LX/6uT;->A07(LX/6uT;)V
+    00dc..00de  goto  +0x45
+    00de..00e4  invoke-static  {v12}, LX/000;->A00(Ljava/lang/Object;)I
+    00e4..00e6  move-result  v2
+    00e6..00ec  invoke-static  {v13}, LX/000;->A00(Ljava/lang/Object;)I
+    00ec..00ee  move-result  v3
+    00ee..00f4  invoke-static  {v14}, LX/000;->A00(Ljava/lang/Object;)I
+    00f4..00f6  move-result  v4
+    00f6..00fa  iget-object  v1, v11, LX/0Lp;->receiver:Ljava/lang/Object;
+    00fa..00fe  check-cast  v1, LX/6uT;
+    00fe..0100  const/4  v5, #0x1
+    0100..0104  new-instance  v0, LX/8dF;
+    0104..010a  invoke-direct/range  {v0..v5}, LX/8dF;-><init>(Ljava/lang/Object;IIII)V
+    010a..0110  invoke-static  {v1, v0}, LX/6uT;->A01(LX/6uT;Lkotlin/jvm/functions/Function1;)LX/87k;
+    0110..0112  goto  +0x2b
+    0112..0118  invoke-static  {v12}, LX/1Xl;->A0H(Ljava/lang/Object;)J
+    0118..011a  move-result-wide  v6
+    011a..0120  invoke-static  {v13}, LX/1Xl;->A0H(Ljava/lang/Object;)J
+    0120..0122  move-result-wide  v8
+    0122..0126  check-cast  v5, Lcom/whatsapp/ui/coreui/CircularProgressBar;
+    0126..0128  const/4  v0, #0x2
+    0128..012e  invoke-static  {v5, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    012e..0132  iget-object  v1, v11, LX/0Lp;->receiver:Ljava/lang/Object;
+    0132..0136  check-cast  v1, Lcom/whatsapp/reachouttimelock/ReachoutTimelockInfoBottomSheet;
+    0136..013c  const  v0, #0x100d3
+    013c..0142  invoke-static  {v1, v0}, LX/6oh;->A17(Lcom/whatsapp/ui/wds/components/bottomsheet/WDSBottomSheetDialogFragment;I)Ljava/lang/Object;
+    0142..0144  move-result-object  v4
+    0144..0148  check-cast  v4, LX/88h;
+    0148..014e  invoke-virtual  {v1}, Landroidx/fragment/app/Fragment;->A19()Landroid/content/Context;
+    014e..0150  move-result-object  v3
+    0150..0154  new-instance  v2, LX/6qK;
+    0154..015a  invoke-direct/range  {v2..v9}, LX/6qK;-><init>(Landroid/content/Context;LX/88h;Lcom/whatsapp/ui/coreui/CircularProgressBar;JJ)V
+    015a..0160  invoke-virtual  {v2}, Landroid/os/CountDownTimer;->start()Landroid/os/CountDownTimer;
+    0160..0162  move-result-object  v0
+    0162..0166  iput-object  v0, v1, Lcom/whatsapp/reachouttimelock/ReachoutTimelockInfoBottomSheet;->A00:Landroid/os/CountDownTimer;
+    0166..016a  sget-object  v0, LX/05u;->A00:LX/05u;
+    016a..016c  return-object  v0
+    016c..0188  packed-switch-payload  size=5
+    # exception table: 0 try range(s)
+.end method

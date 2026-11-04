@@ -618,3 +618,74 @@ checked DEX exports below are not REA Evidence envelopes.
 - [reachout-decision-record-jid.txt](reachout-decision-record-jid.txt) — SHA-256 `c8e8a7128a6d865a44fcfba19d3d61031934d66fa7ba328cd06ba0da40702581`.
 - [reachout-decision-record-cache.txt](reachout-decision-record-cache.txt) — SHA-256 `6d2ec4026c031f6319143e3f5a3a4d23c49e3128d75506005ba97a04194205ac`.
 - [reachout-decision-record-binding.txt](reachout-decision-record-binding.txt) — SHA-256 `a2961a4cfe3df8af733528e68a9b4aefbb645dd6fd43f4b55e292b2ba856c4ed`.
+
+## Deadline is a refresh trigger, not an inactive update (2026-11-04)
+
+**Confirmed static**, pinned APK 2.26.43.72, SHA-256
+887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e.
+This closes the specific visible countdown path, not every lifecycle.
+
+Exact TOwmL_end_time_in_ms xref has three direct references: two writes
+in 7vL.A00 and one read in ReachoutTimelockInfoBottomSheet.A2A. The
+sheet computes end minus 08q time, builds a 6qK CountDownTimer through
+8l1.invoke when positive, and invokes 7uq.A00 when already elapsed.
+6qK.onFinish sets the UI progress to zero and invokes the same 7uq.A00.
+Neither expiry path writes inactive state.
+
+7uq.A00 schedules 8bO selector 19 (literal 0x13). In 8bO.run that
+selector constructs FetchReachoutTimelockQuery, response class 74W,
+using 6oh.A0D(...,false), binds 0if, and registers 8dV selector 17.
+That callback binds selector 18 success and 19 failure. Success reads
+xwa2_fetch_account_reachout_timelock, marks is_reachout_data_fetched,
+extracts is_active/time_enforcement_ends/enforcement_type and invokes
+7vL.A00. Failure logs/reports and returns false without the success
+manager call. Complete merged methods are retained to distinguish selectors.
+Transport/query serialization, scheduler overlap/retry policy and default
+GraphQL accessor semantics remain open; no Rust query was guessed.
+
+**Cache refresh:** exact 6po.A01 direct caller list contains lazy A02,
+two 7vL.A00 sites, and 8Mp.BjM. BjM compares current config 0x1f48
+with its saved boolean and invokes A01 when unequal. Configuration
+observer registration/lifetime and account teardown remain unresolved.
+Exact TOwmL_is_active xref has five sites: 6po.A01 reader, picker A3B
+reader, 7uB.A00 assertion reader, and two 7vL.A00 writes. Picker A3B
+reads active with default false under config 0x1f48. 7uB.A00 is a
+visibility operation, not expiry: it asserts active, writes visible=true,
+and schedules 8bO selector 18 to notify 7Ky listeners. Exact-string xrefs
+do not exclude indirect accesses or establish all deletion/reset paths.
+
+**Confirmed Rust defect / offline correction:** queue_create used the
+inspection helper active_reachout_timelock(now), which filters out elapsed
+deadlines. That let local time alone bypass an existing active group-create
+guard. It now uses a separate recorded-active helper; the displayed end
+is diagnostic and does not release the guard. The public deadline-filtered
+inspection helper retains its behavior and now explicitly documents that
+None is not operation authorization. No checkpoint schema or data changes.
+
+A real encrypted-store regression saves active=true with end=1, verifies
+create refuses without any queued/reserved action and preserves active,
+then applies an explicit inactive notification and verifies one create
+can be queued. Existing notification validation-before-write remains.
+This is a correction to the existing local group guard, not proof that
+native group creation has identical checks or that all outreach is ported.
+Rust has no automatic FetchReachoutTimelockQuery refresh in this change:
+a stale active record can continue refusing until an explicit inactive
+update is received. Do not delete/reset it or fabricate release state.
+No live traffic or server acceptance was observed.
+
+Reproduce apk-xref with each preference anchor, apk-callers 6po.A01,
+and apk-smali for class/method named by each export with --signatures
+--exceptions. These checked DEX TXT exports are not REA Evidence envelopes.
+
+- [reachout-expiry-lifecycle.txt](reachout-expiry-lifecycle.txt) — SHA-256 `a75afeb70b0f375275b697898d586d366e35daf72a8c4f19ea8d3bc9f048f5b6`.
+- [reachout-end-time-callers.txt](reachout-end-time-callers.txt) — SHA-256 `26d41a70a16e5d0c0a3700c21596736af81e6c70b54d0f1bb41d03e1b23ed783`.
+- [reachout-active-pref-callers.txt](reachout-active-pref-callers.txt) — SHA-256 `f8f737dd76acd15db5ba5e6498c2480ddc60331dc9bb0195b3ef12f62d271229`.
+- [reachout-cache-refresh-callers.txt](reachout-cache-refresh-callers.txt) — SHA-256 `00f4b4806408c68cd53a9020f8b35a632a5d01ad8fa0f9a7d8026d424285b285`.
+- [reachout-end-time-ui-reader.txt](reachout-end-time-ui-reader.txt) — SHA-256 `23602a0f1d2111da9687cfce3b4955711005108d0ae07b8ee3a4b8f18faca452`.
+- [reachout-expired-ui-action.txt](reachout-expired-ui-action.txt) — SHA-256 `d47683aae8ef29782ac188f6c37546a592c0dd5883ee08fca934786fe4ba0a6b`.
+- [reachout-cache-refresh-observer.txt](reachout-cache-refresh-observer.txt) — SHA-256 `d8ab739f576df26d411fa02745ea7dec89530a2f406901270b51d6e821008719`.
+- [reachout-ui-timer-factory.txt](reachout-ui-timer-factory.txt) — SHA-256 `040a5b91b92d6f2f9e469da69a5568feaf211e49988f1325ca81c41cdf568b62`.
+- [reachout-expiry-worker.txt](reachout-expiry-worker.txt) — SHA-256 `457401d1d15073eaea91e84ab5142660adf7cedb3a21c1a1e3eadecc57560e49`.
+- [reachout-countdown-finish.txt](reachout-countdown-finish.txt) — SHA-256 `8e33aa059e552e36a2ca9122257479ef627b7222c7dde6c47e34dd433e8a09de`.
+- [reachout-fetch-callback.txt](reachout-fetch-callback.txt) — SHA-256 `dc633fc12677ac1de29ad32c9cb37e90fea09b8027b9398ae9c7f526e699f732`.
+- [reachout-active-picker-reader.txt](reachout-active-picker-reader.txt) — SHA-256 `bb8b8b7e1477475b44ac59012323bbfb1b6b6b76a695f5464e43897dc7d5b8ab`.

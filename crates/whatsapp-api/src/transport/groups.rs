@@ -167,16 +167,15 @@ pub fn queue_create(store: &ProtocolStore, subject: &str, members: &[Jid]) -> Re
     if subject.trim().is_empty() || subject.chars().count() > 100 {
         return Err(invalid("subject must be 1..=100 characters"));
     }
-    // The server refuses a create with 463 while the account's reach-out
-    // timelock runs (observed 2026-11-01); say so instead of sending blind.
-    let now = Timestamp::now().as_millis() / 1000;
-    if let Some(lock) = super::notifications::active_reachout_timelock(store, now)? {
+    // APK 43.72 6qK.onFinish -> 7uq.A00 fetches fresh state; the displayed
+    // deadline is not a local release. Preserve the existing group-create
+    // guard until an explicit inactive update, including after that deadline.
+    if let Some(lock) = super::notifications::recorded_active_reachout_timelock(store)? {
         return Err(Error::invalid(
             "group",
             format!(
-                "WhatsApp reach-out timelock active until unix {} (about {} min); group creation is refused until then",
+                "WhatsApp reach-out timelock remains active (reported end unix {}); group creation requires an explicit inactive update",
                 lock.ends,
-                (lock.ends - now + 59) / 60
             ),
         ));
     }
@@ -1527,6 +1526,54 @@ pub fn sender_key_stanza(
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn elapsed_reachout_deadline_does_not_release_group_create() {
+        let (_dir, store) = store();
+        let update = |active: bool| {
+            Node::new("notification")
+                .attr("type", "mex")
+                .attr("id", "restriction-fixture")
+                .attr("from", "s.whatsapp.net")
+                .children(vec![
+                    Node::new("update")
+                        .attr("op_name", "NotificationUserReachoutTimelockUpdate")
+                        .bytes(
+                            serde_json::to_vec(&serde_json::json!({"data": {
+                                "xwa2_notify_account_reachout_timelock": {
+                                    "is_active": active, "time_enforcement_ends": "1"
+                                }
+                            }}))
+                            .unwrap(),
+                        ),
+                ])
+        };
+        super::super::notifications::record_reachout_timelock(&store, &update(true)).unwrap();
+        let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let error = queue_create(&store, "Lab", std::slice::from_ref(&peer)).unwrap_err();
+        assert!(error.to_string().contains("explicit inactive update"));
+        assert!(super::super::actions::outcomes(&store).unwrap().is_empty());
+        assert!(
+            super::super::actions::reserve_pending(&store)
+                .unwrap()
+                .is_empty()
+        );
+        // The same active record remains after refusal; inspection's elapsed
+        // deadline must not turn into permission at the operation boundary.
+        assert!(
+            super::super::notifications::recorded_active_reachout_timelock(&store)
+                .unwrap()
+                .is_some()
+        );
+        super::super::notifications::record_reachout_timelock(&store, &update(false)).unwrap();
+        queue_create(&store, "Lab", &[peer]).unwrap();
+        assert_eq!(
+            super::super::actions::reserve_pending(&store)
+                .unwrap()
+                .len(),
+            1
+        );
+    }
+
     #[test]
     fn create_carries_held_trusted_contact_tokens_as_privacy() {
         let dir = tempfile::tempdir().unwrap();

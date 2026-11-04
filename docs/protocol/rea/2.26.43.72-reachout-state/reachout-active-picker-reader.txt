@@ -1,0 +1,55 @@
+
+# class: Lcom/whatsapp/contact/ui/picker/ContactPickerFragmentKt;
+# extends: Lcom/whatsapp/ui/coreui/fragments/WaFragment;
+
+.method public A3B(V)  # .registers 8
+    # full signature: Lcom/whatsapp/contact/ui/picker/ContactPickerFragmentKt;->A3B()V
+    0000..0006  invoke-virtual  {v7}, Lcom/whatsapp/contact/ui/picker/ContactPickerFragmentKt;->A4K()Z
+    0006..0008  move-result  v0
+    0008..000c  if-eqz  v0, +0x54
+    000c..0010  iget-object  v1, v7, Lcom/whatsapp/contact/ui/picker/ContactPickerFragmentKt;->A17:LX/08Y;
+    0010..0014  const/16  v0, #0x1f48
+    0014..001a  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    001a..001c  move-result  v0
+    001c..0020  if-eqz  v0, +0x4a
+    0020..0024  iget-object  v6, v7, Lcom/whatsapp/contact/ui/picker/ContactPickerFragmentKt;->A6J:LX/09S;
+    0024..002a  invoke-static  {v6}, LX/6oh;->A0A(LX/09S;)Landroid/content/SharedPreferences;
+    002a..002c  move-result-object  v1
+    002c..0030  const-string  v0, "TOwmL_is_active"
+    0030..0032  const/4  v5, #0x0
+    0032..0038  invoke-interface  {v1, v0, v5}, Landroid/content/SharedPreferences;->getBoolean(Ljava/lang/String;Z)Z
+    0038..003a  move-result  v0
+    003a..003e  if-eqz  v0, +0x3b
+    003e..0044  invoke-static  {v6}, LX/6oh;->A0A(LX/09S;)Landroid/content/SharedPreferences;
+    0044..0046  move-result-object  v1
+    0046..004a  const-string  v0, "TOwmL_is_visible"
+    004a..0050  invoke-interface  {v1, v0, v5}, Landroid/content/SharedPreferences;->getBoolean(Ljava/lang/String;Z)Z
+    0050..0052  move-result  v0
+    0052..0056  if-eqz  v0, +0x2f
+    0056..005a  iget-object  v0, v7, Lcom/whatsapp/contact/ui/picker/ContactPickerFragmentKt;->A3c:LX/15i;
+    005a..005e  if-nez  v0, +0x25
+    005e..0062  iget-object  v1, v7, Lcom/whatsapp/contact/ui/picker/ContactPickerFragmentKt;->A0N:Landroid/view/View;
+    0062..0066  if-eqz  v1, +0x22
+    0066..006c  const  v0, #0x7f0b2fdd
+    006c..0072  invoke-static  {v1, v0}, LX/2L9;->A0o(Landroid/view/View;I)LX/15i;
+    0072..0074  move-result-object  v4
+    0074..0078  iput-object  v4, v7, Lcom/whatsapp/contact/ui/picker/ContactPickerFragmentKt;->A3c:LX/15i;
+    0078..007e  invoke-static  {v4}, LX/6of;->A07(LX/15i;)Landroid/view/View;
+    007e..0080  move-result-object  v3
+    0080..0086  invoke-virtual  {v7}, Landroidx/fragment/app/Fragment;->A19()Landroid/content/Context;
+    0086..0088  move-result-object  v2
+    0088..008e  invoke-static  {v7}, LX/2LD;->A0M(Landroidx/fragment/app/Fragment;)LX/0IW;
+    008e..0090  move-result-object  v1
+    0090..0094  check-cast  v1, LX/0Ij;
+    0094..0098  iget-object  v0, v7, Lcom/whatsapp/contact/ui/picker/ContactPickerFragmentKt;->A5c:Lcom/google/common/base/Optional;
+    0098..009e  invoke-static  {v2, v3, v0, v6, v1}, LX/7lA;->A00(Landroid/content/Context;Landroid/view/View;Lcom/google/common/base/Optional;LX/09S;LX/0Ij;)V
+    009e..00a4  invoke-virtual  {v4, v5}, LX/15i;->A06(I)V
+    00a4..00a6  return-void
+    00a6..00ac  invoke-static  {}, LX/2L8;->A1C()Ljava/lang/IllegalStateException;
+    00ac..00ae  move-result-object  v0
+    00ae..00b0  throw  v0
+    00b0..00b4  iget-object  v0, v7, Lcom/whatsapp/contact/ui/picker/ContactPickerFragmentKt;->A3c:LX/15i;
+    00b4..00ba  invoke-static  {v0}, LX/2LC;->A1Q(LX/15i;)V
+    00ba..00bc  return-void
+    # exception table: 0 try range(s)
+.end method

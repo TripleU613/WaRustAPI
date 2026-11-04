@@ -1,3 +1,15 @@
+2026-11-04 — **Elapsed deadline no longer releases the group-create guard:**
+
+Pinned countdown completion fetches server restriction state rather than
+clearing active locally. Group creation now honors the recorded active flag
+until an explicit inactive update; the displayed deadline is diagnostic.
+Real-store regression checks no action is queued/refused state is retained,
+then verifies explicit inactive allows queueing. Automatic fetch remains
+unported; a stale active record can continue refusing.
+[Evidence and limits](docs/protocol/rea/2.26.43.72-reachout-state/README.md#deadline-is-a-refresh-trigger-not-an-inactive-update-2026-11-04).
+Validation: **1,271 workspace/all-feature tests**, strict Clippy, CLI reference,
+formatting, coverage and repository hygiene passed. No live traffic.
+
 2026-11-04 — **Outreach caller semantics: call preflight and sticker refusal:**
 
 Pinned 1v7 call branch and ShareMediaViewModel sticker refusal are traced;
