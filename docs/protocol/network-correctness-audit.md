@@ -347,3 +347,12 @@ registry lookup can yield null and fail before send; its population is
 still untraced. [Wire construction, asset export and limits](rea/2.26.43.72-reachout-state/README.md#refresh-request-construction-and-runtime-document-lookup-2026-11-04).
 Response/correlation/atomic state application and request ownership remain
 open; automatic refresh and startup polling are not introduced.
+
+## Refresh registry initialization resolved for normal executor (2026-11-04)
+
+**Confirmed static:** normal 0ig construction registers the MEX asset-backed
+provider. 0im.CRh reads doc_id; client-ID gating is a separate method.
+This resolves the prior normal-registration unknown. Global alternative
+registrants, concurrent/startup order and teardown remain open.
+[Exact chain and limits](rea/2.26.43.72-reachout-state/README.md#executor-registration-and-asset-backed-server-id-lookup-2026-11-04). Response conversion, correlated durable
+application and automatic refresh remain unfinished; no runtime change.

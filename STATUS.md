@@ -1,3 +1,12 @@
+2026-11-04 — **Normal refresh executor registry-to-asset chain resolved:**
+
+0ig registers MEX through 1Wy/0ii/0im; CRh reads the asset's server doc_id.
+Separate client-ID gates do not select that method's result. Alternate
+registrants and startup ordering remain open. Automatic refresh unported.
+[Registration and exact remaining scope](docs/protocol/rea/2.26.43.72-reachout-state/README.md#executor-registration-and-asset-backed-server-id-lookup-2026-11-04).
+Validation: JSON parsing, persisted-ID provenance check, coverage freshness,
+staged diff and repository hygiene passed. No runtime change/live traffic.
+
 2026-11-04 — **Restriction refresh request traced through XMPP selection:**
 
 Pinned empty variables/spec, non-Pando selection, XMPP construction and

@@ -1,3 +1,9 @@
+2026-11-04 — **Pinned static: normal MEX registry initialization resolved.**
+0ig.<init> -> 0ik.A01 -> 1Wy(22) -> 0ii -> 0im -> 0in asset loader;
+CRh reads doc_id while AHH separately gates client IDs. Global alternative
+registrants retained as unresolved, not sole-owner proof.
+[Sources and remaining response/persistence work](rea/2.26.43.72-reachout-state/README.md#executor-registration-and-asset-backed-server-id-lookup-2026-11-04). No live traffic.
+
 2026-11-04 — **Pinned static: refresh spec, transport and runtime-ID boundary.**
 6oh/0iT empty-variable request -> 0ig/0iq -> 0j3 XMPP branch retained.
 Asset server/client document IDs exported separately. 0ih/0ik fallback

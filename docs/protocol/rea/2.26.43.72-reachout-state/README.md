@@ -817,3 +817,87 @@ TXT exports are checked DEX text, not REA Evidence envelopes.
 - [reachout-query-build-registry.txt](reachout-query-build-registry.txt) — SHA-256 `c93d83f50b7007138ea3728caca6303b987d24be1aa1292979b92911b5d6bd85`.
 - [reachout-query-persisted-id-reader.txt](reachout-query-persisted-id-reader.txt) — SHA-256 `bf880f036691c5b9a3681d405feff3803576d652464c2f903fa8f68ee713f307`.
 - [2.26.43.72-reachout-query-ids.json](../../apk/2.26.43.72-reachout-query-ids.json) — SHA-256 `180be85a07a6b6288aec031480aee82baeb94565cf0bffa98de866124907db8b`.
+
+## Executor registration and asset-backed server-ID lookup (2026-11-04)
+
+**Confirmed static**, same pinned APK 2.26.43.72 SHA-256 above. This
+resolves the previous section's missing normal executor-registration
+chain; runtime execution and every alternative registrant remain unproven.
+
+0ig.<init> obtains 0ih under DI key 0x1139, stores it as A09, obtains
+0ii under 0x113a, and registers three build namespaces through 0ik.A01.
+The MEX registration uses 0ij.A03.buildConfigName and 1Wy selector 22
+(literal 0x16). 1Wy.invoke selector 22 calls 0ii.A00(0ij.A03).
+0ij.A03 is WHATSAPP_ANDROID_MEX, namespace whatsapp-android-mex and
+jsonPath whatsapp-android-mex_client_persist_ids.json. The export named
+asset-loader.txt is the full 0ij enum declaration, not the I/O implementation.
+
+0ii.A00 first checks a ConcurrentHashMap keyed by 0ij. If absent, it
+constructs 0im with application context, namespace, jsonPath and two
+client-ID gating flags, then uses putIfAbsent and returns the winning
+existing/new provider. 0im initializes a lazy JSON value through 0in.
+0in.invoke opens that named asset through AssetManager, allocates using
+available(), reads into it, closes the stream, decodes UTF-8 and builds
+JSONObject. This is static asset input, not an HTTP endpoint.
+
+0im.CRh(operation) gets that JSONObject, obtains the operation object,
+and returns getString("doc_id"). JSONException/IOException return an
+empty string. Thus in this registered provider the reference server ID
+25627902213558773 is connected to the native runtime lookup, without
+substituting client_doc_id 289769408314545818597242103356. As already
+retained, 0j2.A03 rejects empty results and 0j2.A04 takes local failure
+before send when document identity is absent. Successful asset loading
+is not proof of request acceptance.
+
+**Client IDs remain separate:** 0im.AHH applies its client-ID gate flag
+and config 0x5cae, optionally a flatbuffer flag/config 0x6285 and Mjc
+reader, otherwise reads client_doc_id from the JSON operation. CRh does
+not call AHH or inspect those flags. No config value is invented; the
+full method is retained without claiming all client-ID use sites traced.
+
+### Global registration scope and unresolved alternatives
+
+0ik.<clinit> initializes its global ConcurrentHashMap. A01 checks
+containsKey(namespace); only if absent does it invoke the supplier and
+put the returned provider. The pair is not an atomic putIfAbsent, unlike
+0ii's provider cache. Sequential registrations preserve an existing key;
+concurrent ordering is not established. The exact A00 field census has
+three accesses: initialization, lookup and registration. This does not
+prove there are no indirect mutations or runtime resets.
+
+The A01 direct caller census has 12 sites in five methods: 0ig.<init>
+(three), MjY.<init> (three), Mja.<init> (one), MrW.Bk4 (four), N5D.invoke
+(one). Mja.<init> also registers literal whatsapp-android-mex with N5J
+selector 42 and the same DI key 0x113a. Its constructor is retained,
+but that alternate supplier and other registrant lifetimes remain
+untraced. Do not claim 0ig is the sole global registrant or that this
+pass determines which one wins every startup sequence. The exact A09
+write census has one write in 0ig.<init>, tying its lookup dependency.
+
+**Implementation consequence:** the normal executor's static registration
+and asset-backed CRh chain is now established, so that specific research
+gap should not be repeated. Remaining work is alternative registration/
+teardown and full correlated IQ result/error handling, durable request
+ownership/settlement with restriction application, and refresh timing.
+Rust automatic refresh remains unported. No feature config, extra query,
+wire field, or new dispatch policy was guessed. No Rust runtime changes
+or live traffic were made.
+
+Reproduce apk-field-refs 0ik.A00 ConcurrentHashMap and 0ig.A09 0ih
+(writes-only), apk-callers 0ik.A01, exact asset-name apk-xref, and
+apk-smali on named class/method exports with --signatures --exceptions.
+These are checked DEX TXT exports, not REA Evidence envelopes. Existing
+bounded APK/asset query-ID export remains the reference data artifact.
+
+- [reachout-registry-field-refs.txt](reachout-registry-field-refs.txt) — SHA-256 `4a39f305c3bf51e398254388f6f58de8a55a683af50025ca8a51f0ec6ec00036`.
+- [reachout-registry-asset-anchor.txt](reachout-registry-asset-anchor.txt) — SHA-256 `e24dabcdd8d8e3c92e1b4d4b738456c41ee7c77502585d5eb60b2765d6b53078`.
+- [reachout-registry-registration-callers.txt](reachout-registry-registration-callers.txt) — SHA-256 `6eeeaae8726466e3b027a8278817349c2e8a55d77383f77f3ae647289de8fe52`.
+- [reachout-registry-full.txt](reachout-registry-full.txt) — SHA-256 `808f15a34a25c21b1c6d9f16fee12d1191e7527152a1971f693210a971c35813`.
+- [reachout-registry-asset-loader.txt](reachout-registry-asset-loader.txt) — SHA-256 `60bc2fe9f51acf94c647993e8b32e5e5a136aa7e37237790f29c0ca670fab964`.
+- [reachout-executor-registry-init.txt](reachout-executor-registry-init.txt) — SHA-256 `d925846a0de7919d503cc4d60eedad4c22925957879f163fc48d4ec1d71ca8d0`.
+- [reachout-registry-supplier.txt](reachout-registry-supplier.txt) — SHA-256 `6be11a728048c9d454fddfe65aa1aaa473674a0e5e2222c01907b2e1fbc1ec63`.
+- [reachout-registry-load-plan.txt](reachout-registry-load-plan.txt) — SHA-256 `9d93cb0042df94b7a2d00afd36479beb4efdb13ee5c366e382474311e5e87485`.
+- [reachout-registry-json-reader.txt](reachout-registry-json-reader.txt) — SHA-256 `6430bae3b54bdd82335bb1d242f1292d3fe931540eccb5acdbb0f0e96322e088`.
+- [reachout-registry-asset-read.txt](reachout-registry-asset-read.txt) — SHA-256 `004fb18eed85c30206fbddf5cdc68e041e57858deff6a5c745881c800247781d`.
+- [reachout-registry-lookup-owner.txt](reachout-registry-lookup-owner.txt) — SHA-256 `c9de850401cd2390c8b5e75aca89d5e44d3e62ec31c492d42e262c3f348d522a`.
+- [reachout-registry-alternate-owner.txt](reachout-registry-alternate-owner.txt) — SHA-256 `853572a45d8698420461c507670d222c5fc92f6d6916b0c0ed923141bc76ae95`.
