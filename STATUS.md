@@ -1,3 +1,15 @@
+2026-11-04 — **Ordinary media HTTP refusal persistence (offline):**
+
+A definite non-200 media GET no longer remains labelled only outcome unknown.
+Its numeric status is committed under server_refused and reported on later
+invocations without another request. The transition requires the original
+reservation and cannot overwrite settled/downloaded state. Transport and
+verification uncertainty retain their existing reservations.
+[Source evidence, tests and current-build gaps](docs/protocol/media-network-outcomes.md).
+Validation: **1,230 workspace/all-feature tests**, strict Clippy, CLI-reference,
+formatting, coverage freshness and repository hygiene passed.
+No live account traffic occurred; native media header/timing parity remains open.
+
 2026-11-04 — **Java decimal settlement parity (offline):**
 
 Accepted-write acknowledgements and conflict codes now reuse the APK-compatible

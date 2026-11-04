@@ -780,6 +780,16 @@ pub async fn open(
     let saved: Option<serde_json::Value> =
         store.read(|tx| tx.get_json(Table::Checkpoints, state_key.as_bytes(), 1))?;
     if let Some(mut saved) = saved {
+        if saved["status"] == "server_refused" {
+            let status = saved["http_status"]
+                .as_u64()
+                .filter(|status| (100..=599).contains(status) && *status != 200)
+                .ok_or_else(|| bad("invalid saved media refusal status"))?;
+            return Err(Error::invalid(
+                "media",
+                format!("media GET HTTP {status}; refusal retained; no retry"),
+            ));
+        }
         if saved["status"] != "downloaded" {
             return Err(bad("previous download uncertain/refused; no retry"));
         }
@@ -811,8 +821,13 @@ pub async fn open(
         .send()
         .await
         .map_err(|_| bad("media GET failed; reservation retained"))?;
-    if response.status().as_u16() != 200 {
-        return Err(bad("media GET refused; reservation retained"));
+    let http_status = response.status().as_u16();
+    if http_status != 200 {
+        retain_download_refusal(store, &state_key, http_status)?;
+        return Err(Error::invalid(
+            "media",
+            format!("media GET HTTP {http_status}; refusal retained; no retry"),
+        ));
     }
     let expected = (d.length / 16 + 1) * 16 + 10;
     if response.content_length().is_some_and(|n| n != expected) {
@@ -842,6 +857,28 @@ pub async fn open(
     Ok((d.kind, plain))
 }
 
+// A received HTTP refusal is a known outcome, unlike a transport interruption.
+// Preserve only its numeric status; response bodies/headers can contain secrets.
+fn retain_download_refusal(store: &ProtocolStore, state_key: &str, status: u16) -> Result<()> {
+    if !(100..=599).contains(&status) || status == 200 {
+        return Err(bad("invalid media refusal status"));
+    }
+    store.write(|tx| {
+        let prior: serde_json::Value = tx
+            .get_json(Table::Checkpoints, state_key.as_bytes(), 1)?
+            .ok_or_else(|| bad("media refusal has no reserved download"))?;
+        if prior["status"] != "outcome_unknown" {
+            return Err(bad("media refusal cannot replace a settled download"));
+        }
+        tx.put_json(
+            Table::Checkpoints,
+            state_key.as_bytes(),
+            1,
+            &serde_json::json!({"status":"server_refused", "http_status":status}),
+        )
+    })
+}
+
 pub(crate) fn ensure_available(store: &ProtocolStore, id: &str) -> Result<()> {
     if !candidates(store)?
         .iter()
@@ -854,6 +891,79 @@ pub(crate) fn ensure_available(store: &ProtocolStore, id: &str) -> Result<()> {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn definite_http_refusal_survives_reopen_without_overwriting_other_outcomes() {
+        use super::*;
+        use crate::{
+            model::ids::AccountId,
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("refusal.redb");
+        let open = || {
+            ProtocolStore::open(OpenOptions {
+                path: path.clone(),
+                account_id: AccountId::new("media-refusal-test").unwrap(),
+                key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                    [3; 32],
+                ))),
+                create: true,
+            })
+            .unwrap()
+        };
+        let store = open();
+        let key = "media-download:synthetic-selector";
+        assert!(retain_download_refusal(&store, key, 503).is_err());
+        for status in [302, 403, 404, 429, 503] {
+            store
+                .write(|tx| {
+                    tx.put_json(
+                        Table::Checkpoints,
+                        key.as_bytes(),
+                        1,
+                        &serde_json::json!({"status":"outcome_unknown"}),
+                    )
+                })
+                .unwrap();
+            retain_download_refusal(&store, key, status).unwrap();
+            assert!(retain_download_refusal(&store, key, 500).is_err());
+            let saved: serde_json::Value = store
+                .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))
+                .unwrap()
+                .unwrap();
+            assert_eq!(
+                saved,
+                serde_json::json!({"status":"server_refused", "http_status":status})
+            );
+        }
+        drop(store);
+        let store = open();
+        let saved: serde_json::Value = store
+            .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        assert_eq!(saved["http_status"], 503);
+        for prior in ["downloaded", "consumed", "server_refused"] {
+            store
+                .write(|tx| {
+                    tx.put_json(
+                        Table::Checkpoints,
+                        key.as_bytes(),
+                        1,
+                        &serde_json::json!({"status":prior,"sentinel":"preserve"}),
+                    )
+                })
+                .unwrap();
+            assert!(retain_download_refusal(&store, key, 429).is_err());
+            let saved: serde_json::Value = store
+                .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))
+                .unwrap()
+                .unwrap();
+            assert_eq!(saved["sentinel"], "preserve");
+        }
+        assert!(retain_download_refusal(&store, key, 200).is_err());
+    }
+
     #[test]
     fn own_device_media_references_use_original_wrapper_and_clear_with_chat() {
         use super::*;

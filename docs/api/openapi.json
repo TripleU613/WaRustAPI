@@ -8211,7 +8211,7 @@
           "Media"
         ],
         "summary": "Download and open an ordinary image, voice note, WebP sticker or MP4 video/video note locally",
-        "description": "Download/authenticate an ordinary image, voice note, WebP sticker or MP4 video/video note and open it locally. Documents refuse before download and name media-save --output; MIME and filename are never used to launch a document viewer.",
+        "description": "Download/authenticate an ordinary image, voice note, WebP sticker or MP4 video/video note and open it locally. Definite non-200 media GET outcomes now persist server_refused and numeric http_status; later attempts report that status without another request. Transport/verification uncertainty keeps its existing reservation. No raw body/header logging or retry. See docs/protocol/media-network-outcomes.md. Documents refuse before download and name media-save --output; MIME and filename are never used to launch a document viewer.",
         "operationId": "openMedia",
         "x-cli": "whatsapp-cli media-open",
         "x-transport": [

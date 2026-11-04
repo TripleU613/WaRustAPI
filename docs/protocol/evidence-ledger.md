@@ -1,3 +1,10 @@
+2026-11-04 — **Confirmed Rust defect/fixed offline:** ordinary media GET
+lost definite HTTP refusal status behind outcome_unknown. Numeric refusal
+persistence now survives reopen, reports later without a request and protects
+other states. Real encrypted-store tests cover 302/403/404/429/503 and missing or
+already-settled reservations. No fresh APK or live observation is claimed.
+[Local evidence and untraced native boundaries](media-network-outcomes.md).
+
 2026-11-04 — **Confirmed Rust parsing mismatch/fixed offline:** write version
 acknowledgements and 409 codes now use the existing Java-compatible signed-decimal
 helper. Alternate BMP spellings cannot change prepared-state authority. Real-store
