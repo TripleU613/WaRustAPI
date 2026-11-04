@@ -1,0 +1,203 @@
+{
+  "evidence_id": "ev_91e9ef04414ae87bfedaa86bfcf4f57cecfc2650333f55650e64004353447e7b",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_class",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C1pQ"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-QeXIwM/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"available_processors\":24,\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C1pQ"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":8,\"methods\":[{\"def_pos\":0,\"signature\":\"\\u003cclinit\\u003e(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"\\u003cclinit\\u003e\"},{\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\"},{\"def_pos\":0,\"signature\":\"A00(int): int\",\"dex_descriptor\":\"(I)I\",\"is_constructor\":false,\"name\":\"A00\"},{\"def_pos\":0,\"signature\":\"AVy(): java.lang.String\",\"dex_descriptor\":\"()Ljava/lang/String;\",\"is_constructor\":false,\"name\":\"AVy\"},{\"def_pos\":0,\"signature\":\"AYe(): int\",\"dex_descriptor\":\"()I\",\"is_constructor\":false,\"name\":\"AYe\"},{\"def_pos\":0,\"signature\":\"BPF(X.1pV, boolean): void\",\"dex_descriptor\":\"(LX/1pV;Z)V\",\"is_constructor\":false,\"name\":\"BPF\"},{\"def_pos\":0,\"signature\":\"CTj(byte[], int, int, byte[]): int\",\"dex_descriptor\":\"([BII[B)I\",\"is_constructor\":false,\"name\":\"CTj\"},{\"def_pos\":0,\"signature\":\"reset(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"reset\"}],\"fields\":[{\"type\":\"int\",\"name\":\"A00\",\"def_pos\":0},{\"type\":\"int\",\"name\":\"A01\",\"def_pos\":0},{\"type\":\"int\",\"name\":\"A02\",\"def_pos\":0},{\"type\":\"int\",\"name\":\"A03\",\"def_pos\":0},{\"type\":\"int\",\"name\":\"A04\",\"def_pos\":0},{\"type\":\"boolean\",\"name\":\"A05\",\"def_pos\":0},{\"type\":\"int[][]\",\"name\":\"A06\",\"def_pos\":0},{\"type\":\"byte[]\",\"name\":\"A07\",\"def_pos\":0},{\"type\":\"byte[]\",\"name\":\"A08\",\"def_pos\":0},{\"type\":\"int[]\",\"name\":\"A09\",\"def_pos\":0},{\"type\":\"int[]\",\"name\":\"A0A\",\"def_pos\":0},{\"type\":\"int[]\",\"name\":\"A0B\",\"def_pos\":0}],\"field_count\":12,\"full_name\":\"X.C1pQ\",\"name\":\"C1pQ\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C1pQ",
+    "methods": [
+      {
+        "name": "<clinit>",
+        "reported_signature": "<clinit>(): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "()V"
+      },
+      {
+        "name": "<init>",
+        "reported_signature": "<init>(): void",
+        "overload_index": 0,
+        "is_constructor": true,
+        "dex_descriptor": "()V"
+      },
+      {
+        "name": "A00",
+        "reported_signature": "A00(int): int",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(I)I"
+      },
+      {
+        "name": "AVy",
+        "reported_signature": "AVy(): java.lang.String",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "()Ljava/lang/String;"
+      },
+      {
+        "name": "AYe",
+        "reported_signature": "AYe(): int",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "()I"
+      },
+      {
+        "name": "BPF",
+        "reported_signature": "BPF(X.1pV, boolean): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/1pV;Z)V"
+      },
+      {
+        "name": "CTj",
+        "reported_signature": "CTj(byte[], int, int, byte[]): int",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "([BII[B)I"
+      },
+      {
+        "name": "reset",
+        "reported_signature": "reset(): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "()V"
+      }
+    ],
+    "fields": [
+      {
+        "name": "A00",
+        "reported_type": "int"
+      },
+      {
+        "name": "A01",
+        "reported_type": "int"
+      },
+      {
+        "name": "A02",
+        "reported_type": "int"
+      },
+      {
+        "name": "A03",
+        "reported_type": "int"
+      },
+      {
+        "name": "A04",
+        "reported_type": "int"
+      },
+      {
+        "name": "A05",
+        "reported_type": "boolean"
+      },
+      {
+        "name": "A06",
+        "reported_type": "int[][]"
+      },
+      {
+        "name": "A07",
+        "reported_type": "byte[]"
+      },
+      {
+        "name": "A08",
+        "reported_type": "byte[]"
+      },
+      {
+        "name": "A09",
+        "reported_type": "int[]"
+      },
+      {
+        "name": "A0A",
+        "reported_type": "int[]"
+      },
+      {
+        "name": "A0B",
+        "reported_type": "int[]"
+      }
+    ],
+    "inner_classes": []
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

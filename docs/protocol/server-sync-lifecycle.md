@@ -164,3 +164,8 @@ device-index predicate and bounds recovery transitions. Mutation-row eligibility
 and generation-bound initialization still need a faithful Rust mapping. Existing
 explicit patch actions now have [atomic queue/settlement](app-state-patch-atomicity.md);
 that correction is not an automatic notification scheduler.
+
+The follow-up [fetch completion audit](app-state-fetch-completion.md) traces
+response categories, authenticated external data, error classification and
+per-collection commit/release boundaries. It retains the remaining downloader
+and recovery gaps without treating a captured result as completed sync.

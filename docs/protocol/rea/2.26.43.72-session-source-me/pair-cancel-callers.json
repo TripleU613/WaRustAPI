@@ -1,0 +1,321 @@
+{
+  "evidence_id": "ev_babad393c5b5acea70b0c33f3b1cdd0fccfda3f592d58d636818df599049098e",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "trace_android_references",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.F1G",
+    "method_name": "A02",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-QeXIwM/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"available_processors\":24,\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.F1G"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":7,\"methods\":[{\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(X.FvS): void\",\"dex_descriptor\":\"(LX/FvS;)V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\"},{\"def_pos\":0,\"signature\":\"A00(X.EXq, X.EE3, X.EA7, X.F1G, int, long): void\",\"dex_descriptor\":\"(LX/EXq;LX/EE3;LX/EA7;LX/F1G;IJ)V\",\"is_constructor\":false,\"name\":\"A00\"},{\"def_pos\":0,\"signature\":\"A01(X.Esd, X.F1G, java.lang.Integer, java.lang.String, int, boolean): void\",\"dex_descriptor\":\"(LX/Esd;LX/F1G;Ljava/lang/Integer;Ljava/lang/String;IZ)V\",\"is_constructor\":false,\"name\":\"A01\"},{\"def_pos\":0,\"signature\":\"A02(X.F1G): void\",\"dex_descriptor\":\"(LX/F1G;)V\",\"is_constructor\":false,\"name\":\"A02\"},{\"def_pos\":0,\"signature\":\"A03(X.EXq, X.EE3, X.EA7, int): void\",\"dex_descriptor\":\"(LX/EXq;LX/EE3;LX/EA7;I)V\",\"is_constructor\":false,\"name\":\"A03\"},{\"def_pos\":0,\"signature\":\"A04(X.EXq, java.lang.Integer, java.lang.Integer, java.lang.String, java.lang.String, int): void\",\"dex_descriptor\":\"(LX/EXq;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;I)V\",\"is_constructor\":false,\"name\":\"A04\"},{\"def_pos\":0,\"signature\":\"A05(boolean): void\",\"dex_descriptor\":\"(Z)V\",\"is_constructor\":false,\"name\":\"A05\"}],\"fields\":[{\"type\":\"X.FUY\",\"name\":\"A00\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A01\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A02\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A03\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A04\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A05\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A06\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A07\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A08\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A09\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0A\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0B\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0C\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0D\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0E\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0F\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0G\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0H\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0I\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0J\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0K\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0L\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0M\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0N\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0O\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0P\",\"def_pos\":0},{\"type\":\"X.EdJ\",\"name\":\"A0Q\",\"def_pos\":0},{\"type\":\"X.EeE\",\"name\":\"A0R\",\"def_pos\":0},{\"type\":\"com.google.common.base.Optional\",\"name\":\"A0S\",\"def_pos\":0},{\"type\":\"com.google.common.base.Optional\",\"name\":\"A0T\",\"def_pos\":0},{\"type\":\"X.Eo9\",\"name\":\"A0U\",\"def_pos\":0}],\"field_count\":31,\"full_name\":\"X.F1G\",\"name\":\"F1G\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_xrefs_to_method",
+        "input": {
+          "class_name": "X.F1G",
+          "method_name": "A02",
+          "overload_index": 0,
+          "limit": 2147483647,
+          "resolve_line": false
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"total\":10,\"resolve_line\":false,\"target\":\"X.F1G.A02\",\"count\":10,\"items\":[{\"kind\":\"method\",\"name\":\"A00\",\"full_name\":\"X.EeE.A00\",\"containing_class\":\"X.EeE\",\"top_class\":\"X.EeE\",\"def_pos\":0,\"direct_invokes\":[{\"dex_entry\":\"classes8.dex\",\"opcode\":\"INVOKE_STATIC\",\"dex_code_unit_offset\":14,\"dex_method_index\":29479,\"source_raw_method_id\":\"X.EeE.A00(LX/EXq;LX/EE1;LX/EA7;I)V\"}],\"direct_invokes_exhaustive\":true},{\"kind\":\"method\",\"name\":\"A01\",\"full_name\":\"X.EeE.A01\",\"containing_class\":\"X.EeE\",\"top_class\":\"X.EeE\",\"def_pos\":0,\"direct_invokes\":[{\"dex_entry\":\"classes8.dex\",\"opcode\":\"INVOKE_STATIC\",\"dex_code_unit_offset\":27,\"dex_method_index\":29479,\"source_raw_method_id\":\"X.EeE.A01(LX/EXq;Ljava/lang/String;I)V\"}],\"direct_invokes_exhaustive\":true},{\"kind\":\"method\",\"name\":\"onKey\",\"full_name\":\"X.F4O.onKey\",\"containing_class\":\"X.F4O\",\"top_class\":\"X.F4O\",\"def_pos\":0,\"direct_invokes\":[{\"dex_entry\":\"classes8.dex\",\"opcode\":\"INVOKE_STATIC\",\"dex_code_unit_offset\":49,\"dex_method_index\":29479,\"source_raw_method_id\":\"X.F4O.onKey(Landroid/content/DialogInterface;ILandroid/view/KeyEvent;)Z\"}],\"direct_invokes_exhaustive\":true},{\"kind\":\"method\",\"name\":\"run\",\"full_name\":\"X.Fbz.run\",\"containing_class\":\"X.Fbz\",\"top_class\":\"X.Fbz\",\"def_pos\":0,\"direct_invokes\":[{\"dex_entry\":\"classes8.dex\",\"opcode\":\"INVOKE_STATIC\",\"dex_code_unit_offset\":44,\"dex_method_index\":29479,\"source_raw_method_id\":\"X.Fbz.run()V\"}],\"direct_invokes_exhaustive\":true},{\"kind\":\"method\",\"name\":\"run\",\"full_name\":\"X.FdE.run\",\"containing_class\":\"X.FdE\",\"top_class\":\"X.FdE\",\"def_pos\":0,\"direct_invokes\":[{\"dex_entry\":\"classes8.dex\",\"opcode\":\"INVOKE_STATIC\",\"dex_code_unit_offset\":24,\"dex_method_index\":29479,\"source_raw_method_id\":\"X.FdE.run()V\"}],\"direct_invokes_exhaustive\":true},{\"kind\":\"method\",\"name\":\"run\",\"full_name\":\"X.FeN.run\",\"containing_class\":\"X.FeN\",\"top_class\":\"X.FeN\",\"def_pos\":0,\"direct_invokes\":[{\"dex_entry\":\"classes8.dex\",\"opcode\":\"INVOKE_STATIC\",\"dex_code_unit_offset\":1052,\"dex_method_index\":29479,\"source_raw_method_id\":\"X.FeN.run()V\"}],\"direct_invokes_exhaustive\":true},{\"kind\":\"method\",\"name\":\"run\",\"full_name\":\"X.Fei.run\",\"containing_class\":\"X.Fei\",\"top_class\":\"X.Fei\",\"def_pos\":0,\"direct_invokes\":[{\"dex_entry\":\"classes8.dex\",\"opcode\":\"INVOKE_STATIC\",\"dex_code_unit_offset\":284,\"dex_method_index\":29479,\"source_raw_method_id\":\"X.Fei.run()V\"}],\"direct_invokes_exhaustive\":true},{\"kind\":\"method\",\"name\":\"run\",\"full_name\":\"X.Fel.run\",\"containing_class\":\"X.Fel\",\"top_class\":\"X.Fel\",\"def_pos\":0,\"direct_invokes\":[{\"dex_entry\":\"classes8.dex\",\"opcode\":\"INVOKE_STATIC\",\"dex_code_unit_offset\":630,\"dex_method_index\":29479,\"source_raw_method_id\":\"X.Fel.run()V\"},{\"dex_entry\":\"classes8.dex\",\"opcode\":\"INVOKE_STATIC\",\"dex_code_unit_offset\":664,\"dex_method_index\":29479,\"source_raw_method_id\":\"X.Fel.run()V\"}],\"direct_invokes_exhaustive\":true},{\"kind\":\"method\",\"name\":\"run\",\"full_name\":\"X.TA6.run\",\"containing_class\":\"X.TA6\",\"top_class\":\"X.TA6\",\"def_pos\":0,\"direct_invokes\":[{\"dex_entry\":\"classes13.dex\",\"opcode\":\"INVOKE_STATIC\",\"dex_code_unit_offset\":218,\"dex_method_index\":4236,\"source_raw_method_id\":\"X.TA6.run()V\"}],\"direct_invokes_exhaustive\":true},{\"kind\":\"method\",\"name\":\"run\",\"full_name\":\"X.TAw.run\",\"containing_class\":\"X.TAw\",\"top_class\":\"X.TAw\",\"def_pos\":0,\"direct_invokes\":[{\"dex_entry\":\"classes13.dex\",\"opcode\":\"INVOKE_STATIC\",\"dex_code_unit_offset\":1075,\"dex_method_index\":4236,\"source_raw_method_id\":\"X.TAw.run()V\"}],\"direct_invokes_exhaustive\":true}],\"overload_index\":0,\"reported_signature\":\"A02(X.F1G): void\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.F1G",
+    "method_name": "A02",
+    "overload_index": 0,
+    "reported_signature": "A02(X.F1G): void",
+    "dex_descriptor": "(LX/F1G;)V",
+    "total": 10,
+    "references": [
+      {
+        "kind": "method",
+        "name": "A00",
+        "reported_full_name": "X.EeE.A00",
+        "containing_class": "X.EeE",
+        "top_class": "X.EeE",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": true,
+        "direct_invokes": [
+          {
+            "dex_entry": "classes8.dex",
+            "source_raw_method_id": "X.EeE.A00(LX/EXq;LX/EE1;LX/EA7;I)V",
+            "dex_code_unit_offset": 14,
+            "dex_method_index": 29479,
+            "opcode": "INVOKE_STATIC"
+          }
+        ]
+      },
+      {
+        "kind": "method",
+        "name": "A01",
+        "reported_full_name": "X.EeE.A01",
+        "containing_class": "X.EeE",
+        "top_class": "X.EeE",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": true,
+        "direct_invokes": [
+          {
+            "dex_entry": "classes8.dex",
+            "source_raw_method_id": "X.EeE.A01(LX/EXq;Ljava/lang/String;I)V",
+            "dex_code_unit_offset": 27,
+            "dex_method_index": 29479,
+            "opcode": "INVOKE_STATIC"
+          }
+        ]
+      },
+      {
+        "kind": "method",
+        "name": "onKey",
+        "reported_full_name": "X.F4O.onKey",
+        "containing_class": "X.F4O",
+        "top_class": "X.F4O",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": true,
+        "direct_invokes": [
+          {
+            "dex_entry": "classes8.dex",
+            "source_raw_method_id": "X.F4O.onKey(Landroid/content/DialogInterface;ILandroid/view/KeyEvent;)Z",
+            "dex_code_unit_offset": 49,
+            "dex_method_index": 29479,
+            "opcode": "INVOKE_STATIC"
+          }
+        ]
+      },
+      {
+        "kind": "method",
+        "name": "run",
+        "reported_full_name": "X.Fbz.run",
+        "containing_class": "X.Fbz",
+        "top_class": "X.Fbz",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": true,
+        "direct_invokes": [
+          {
+            "dex_entry": "classes8.dex",
+            "source_raw_method_id": "X.Fbz.run()V",
+            "dex_code_unit_offset": 44,
+            "dex_method_index": 29479,
+            "opcode": "INVOKE_STATIC"
+          }
+        ]
+      },
+      {
+        "kind": "method",
+        "name": "run",
+        "reported_full_name": "X.FdE.run",
+        "containing_class": "X.FdE",
+        "top_class": "X.FdE",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": true,
+        "direct_invokes": [
+          {
+            "dex_entry": "classes8.dex",
+            "source_raw_method_id": "X.FdE.run()V",
+            "dex_code_unit_offset": 24,
+            "dex_method_index": 29479,
+            "opcode": "INVOKE_STATIC"
+          }
+        ]
+      },
+      {
+        "kind": "method",
+        "name": "run",
+        "reported_full_name": "X.FeN.run",
+        "containing_class": "X.FeN",
+        "top_class": "X.FeN",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": true,
+        "direct_invokes": [
+          {
+            "dex_entry": "classes8.dex",
+            "source_raw_method_id": "X.FeN.run()V",
+            "dex_code_unit_offset": 1052,
+            "dex_method_index": 29479,
+            "opcode": "INVOKE_STATIC"
+          }
+        ]
+      },
+      {
+        "kind": "method",
+        "name": "run",
+        "reported_full_name": "X.Fei.run",
+        "containing_class": "X.Fei",
+        "top_class": "X.Fei",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": true,
+        "direct_invokes": [
+          {
+            "dex_entry": "classes8.dex",
+            "source_raw_method_id": "X.Fei.run()V",
+            "dex_code_unit_offset": 284,
+            "dex_method_index": 29479,
+            "opcode": "INVOKE_STATIC"
+          }
+        ]
+      },
+      {
+        "kind": "method",
+        "name": "run",
+        "reported_full_name": "X.Fel.run",
+        "containing_class": "X.Fel",
+        "top_class": "X.Fel",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": true,
+        "direct_invokes": [
+          {
+            "dex_entry": "classes8.dex",
+            "source_raw_method_id": "X.Fel.run()V",
+            "dex_code_unit_offset": 630,
+            "dex_method_index": 29479,
+            "opcode": "INVOKE_STATIC"
+          },
+          {
+            "dex_entry": "classes8.dex",
+            "source_raw_method_id": "X.Fel.run()V",
+            "dex_code_unit_offset": 664,
+            "dex_method_index": 29479,
+            "opcode": "INVOKE_STATIC"
+          }
+        ]
+      },
+      {
+        "kind": "method",
+        "name": "run",
+        "reported_full_name": "X.TA6.run",
+        "containing_class": "X.TA6",
+        "top_class": "X.TA6",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": true,
+        "direct_invokes": [
+          {
+            "dex_entry": "classes13.dex",
+            "source_raw_method_id": "X.TA6.run()V",
+            "dex_code_unit_offset": 218,
+            "dex_method_index": 4236,
+            "opcode": "INVOKE_STATIC"
+          }
+        ]
+      },
+      {
+        "kind": "method",
+        "name": "run",
+        "reported_full_name": "X.TAw.run",
+        "containing_class": "X.TAw",
+        "top_class": "X.TAw",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": true,
+        "direct_invokes": [
+          {
+            "dex_entry": "classes13.dex",
+            "source_raw_method_id": "X.TAw.run()V",
+            "dex_code_unit_offset": 1075,
+            "dex_method_index": 4236,
+            "opcode": "INVOKE_STATIC"
+          }
+        ]
+      }
+    ],
+    "coverage": "complete",
+    "reference_unit": "using_node"
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

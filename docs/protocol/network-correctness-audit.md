@@ -52,6 +52,13 @@ a fresh synthetic local destination: APK 2.26.43.72 refused against template
 
 ## Evidence standard and remaining risk
 
+The [fetch-completion trace](app-state-fetch-completion.md) now has a pure ordered
+structural classifier and offline response inspector. Categories are not integrity
+or application verdicts; external references, protobuf semantics, request binding,
+keys/MACs and generation remain separate admission stages. The
+[session/source trace](session-source-me-current.md) closes selected reader and
+primary-Me origins while retaining logout/switch fencing as unknown.
+
 **Confirmed fetch wait omission, fixed:** lack of patch preparation previously
 skipped app-state fetch refusal processing. Supported exact outer errors now use
 the existing explicit backoff handler, with receipt-time recovery after a cut.

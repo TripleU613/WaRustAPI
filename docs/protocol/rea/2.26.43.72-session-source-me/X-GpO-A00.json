@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_b2fe121a4c7f62ba9ca07d5c9e7688d1d03403be08f14e4a94868212beed7c8b",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.GpO",
+    "method_name": "A00",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-QeXIwM/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"available_processors\":24,\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.GpO"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":1,\"methods\":[{\"def_pos\":0,\"signature\":\"A00(java.lang.Integer): java.lang.String\",\"dex_descriptor\":\"(Ljava/lang/Integer;)Ljava/lang/String;\",\"is_constructor\":false,\"name\":\"A00\"}],\"fields\":[],\"field_count\":0,\"full_name\":\"X.GpO\",\"name\":\"GpO\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.GpO",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.GpO\",\"full_name\":\"X.GpO.A00\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"A00\",\"overload_count\":1,\"body\":\"/* JADX INFO: loaded from: classes9.dex */\\npublic abstract class GpO {\\n    public static String A00(Integer num) {\\n        switch (num.intValue()) {\\n            case 1:\\n                return \\\"YES_WITH_CODE\\\";\\n            case 2:\\n                return \\\"OK\\\";\\n            case 3:\\n                return \\\"ERROR_FAIL_TO_INITIALIZE_WAMSYS\\\";\\n            case 4:\\n                return \\\"ERROR_UNSPECIFIED\\\";\\n            case 5:\\n                return \\\"ERROR_CONNECTIVITY\\\";\\n            case 6:\\n                return \\\"ERROR_TOO_RECENT\\\";\\n            case 7:\\n                return \\\"ERROR_TOO_MANY\\\";\\n            case 8:\\n                return \\\"ERROR_OLD_VERSION\\\";\\n            case 9:\\n                return \\\"ERROR_TEMPORARILY_UNAVAILABLE\\\";\\n            case 10:\\n                return \\\"ERROR_NEXT_METHOD\\\";\\n            case 11:\\n                return \\\"ERROR_TOO_MANY_GUESSES\\\";\\n            case 12:\\n                return \\\"ERROR_BLOCKED\\\";\\n            case 13:\\n                return \\\"ERROR_BAD_PARAMETER\\\";\\n            case 14:\\n                return \\\"ERROR_MISSING_PARAMETER\\\";\\n            case 15:\\n                return \\\"ERROR_PROVIDER_TIMEOUT\\\";\\n            case 16:\\n                return \\\"ERROR_PROVIDER_UNROUTABLE\\\";\\n            case 17:\\n                return \\\"ERROR_BAD_TOKEN\\\";\\n            case 18:\\n                return \\\"ERROR_TOO_MANY_ALL_METHODS\\\";\\n            case 19:\\n                return \\\"ERROR_NO_ROUTES\\\";\\n            case 20:\\n                return \\\"ERROR_INVALID_SKEY_SIGNATURE\\\";\\n            case 21:\\n                return \\\"SECURITY_CODE\\\";\\n            case 22:\\n                return \\\"ERROR_LIMITED_RELEASE\\\";\\n            case 23:\\n                return \\\"ERROR_FLASH_CALL_DISABLED\\\";\\n            case 24:\\n                return \\\"ERROR_DEVICE_CONFIRM_OR_SECOND_OTP\\\";\\n            case 25:\\n                return \\\"ERROR_SECOND_OTP\\\";\\n            case 26:\\n                return \\\"ERROR_NOT_ALLOWED\\\";\\n            case 27:\\n                return \\\"ERROR_SEND_SMS_TO_WA\\\";\\n            case 28:\\n                return \\\"ERROR_WAITING_FOR_SMS\\\";\\n            case 29:\\n                return \\\"ERROR_FORMAT_WRONG\\\";\\n            case 30:\\n                return \\\"ERROR_CHALLENGE\\\";\\n            default:\\n                return \\\"YES\\\";\\n        }\\n    }\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.GpO",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(java.lang.Integer): java.lang.String",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(Ljava/lang/Integer;)Ljava/lang/String;"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "/* JADX INFO: loaded from: classes9.dex */\npublic abstract class GpO {\n    public static String A00(Integer num) {\n        switch (num.intValue()) {\n            case 1:\n                return \"YES_WITH_CODE\";\n            case 2:\n                return \"OK\";\n            case 3:\n                return \"ERROR_FAIL_TO_INITIALIZE_WAMSYS\";\n            case 4:\n                return \"ERROR_UNSPECIFIED\";\n            case 5:\n                return \"ERROR_CONNECTIVITY\";\n            case 6:\n                return \"ERROR_TOO_RECENT\";\n            case 7:\n                return \"ERROR_TOO_MANY\";\n            case 8:\n                return \"ERROR_OLD_VERSION\";\n            case 9:\n                return \"ERROR_TEMPORARILY_UNAVAILABLE\";\n            case 10:\n                return \"ERROR_NEXT_METHOD\";\n            case 11:\n                return \"ERROR_TOO_MANY_GUESSES\";\n            case 12:\n                return \"ERROR_BLOCKED\";\n            case 13:\n                return \"ERROR_BAD_PARAMETER\";\n            case 14:\n                return \"ERROR_MISSING_PARAMETER\";\n            case 15:\n                return \"ERROR_PROVIDER_TIMEOUT\";\n            case 16:\n                return \"ERROR_PROVIDER_UNROUTABLE\";\n            case 17:\n                return \"ERROR_BAD_TOKEN\";\n            case 18:\n                return \"ERROR_TOO_MANY_ALL_METHODS\";\n            case 19:\n                return \"ERROR_NO_ROUTES\";\n            case 20:\n                return \"ERROR_INVALID_SKEY_SIGNATURE\";\n            case 21:\n                return \"SECURITY_CODE\";\n            case 22:\n                return \"ERROR_LIMITED_RELEASE\";\n            case 23:\n                return \"ERROR_FLASH_CALL_DISABLED\";\n            case 24:\n                return \"ERROR_DEVICE_CONFIRM_OR_SECOND_OTP\";\n            case 25:\n                return \"ERROR_SECOND_OTP\";\n            case 26:\n                return \"ERROR_NOT_ALLOWED\";\n            case 27:\n                return \"ERROR_SEND_SMS_TO_WA\";\n            case 28:\n                return \"ERROR_WAITING_FOR_SMS\";\n            case 29:\n                return \"ERROR_FORMAT_WRONG\";\n            case 30:\n                return \"ERROR_CHALLENGE\";\n            default:\n                return \"YES\";\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

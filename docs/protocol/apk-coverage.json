@@ -18,8 +18,8 @@
       "Bundle-topic and REA-record counts can overlap and must not be added into a completion percentage."
     ],
     "ownership_source": "explicit ownership.json sidecars only; prose, directory names and classes do not imply Rust ownership",
-    "records": 817,
-    "records_with_explicit_ownership": 68,
+    "records": 932,
+    "records_with_explicit_ownership": 72,
     "releases": [
       {
         "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
@@ -40,17 +40,17 @@
       {
         "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
         "method_bodies": {
-          "complete_export": 396,
-          "unavailable": 12
+          "complete_export": 475,
+          "unavailable": 14
         },
         "operations": {
           "inspect_analysis_view": 1,
-          "inspect_android_class": 27,
-          "inspect_android_method": 408,
+          "inspect_android_class": 45,
+          "inspect_android_method": 489,
           "search_android_classes": 3,
-          "trace_android_references": 22
+          "trace_android_references": 38
         },
-        "records": 461,
+        "records": 576,
         "rust_files": {
           "crates/whatsapp-api/src/registration/mod.rs": 9,
           "crates/whatsapp-api/src/registration/wire.rs": 7,
@@ -59,6 +59,7 @@
           "crates/whatsapp-api/src/signal/app_state_collection/snapshot.rs": 8,
           "crates/whatsapp-api/src/transport/account_privacy.rs": 5,
           "crates/whatsapp-api/src/transport/app_state_sync.rs": 7,
+          "crates/whatsapp-api/src/transport/app_state_sync/response.rs": 4,
           "crates/whatsapp-api/src/transport/connection.rs": 20,
           "crates/whatsapp-api/src/transport/notifications.rs": 3,
           "crates/whatsapp-api/src/transport/outgoing.rs": 3,
@@ -175,7 +176,7 @@
     },
     "missing": [],
     "scope": "crates/whatsapp-api/src/**/*.rs excluding generated proto code",
-    "total": 146,
+    "total": 147,
     "uncited": [
       "crates/whatsapp-api/src/binary/mod.rs",
       "crates/whatsapp-api/src/capabilities.rs",
@@ -224,6 +225,7 @@
       "crates/whatsapp-api/src/transport/account_privacy.rs",
       "crates/whatsapp-api/src/transport/actions.rs",
       "crates/whatsapp-api/src/transport/app_state_sync.rs",
+      "crates/whatsapp-api/src/transport/app_state_sync/response.rs",
       "crates/whatsapp-api/src/transport/ban_appeal.rs",
       "crates/whatsapp-api/src/transport/blocklist.rs",
       "crates/whatsapp-api/src/transport/chat_clear.rs",

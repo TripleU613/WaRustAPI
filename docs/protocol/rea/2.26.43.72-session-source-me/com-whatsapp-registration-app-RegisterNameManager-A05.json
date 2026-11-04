@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_eb5c0f504f4164993fb15db2de2303df96445beb42f01e79efafb135370555c0",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "com.whatsapp.registration.app.RegisterNameManager",
+    "method_name": "A05",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-QeXIwM/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"available_processors\":24,\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "com.whatsapp.registration.app.RegisterNameManager"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":11,\"methods\":[{\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(X.00Z): void\",\"dex_descriptor\":\"(LX/00Z;)V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\"},{\"def_pos\":0,\"signature\":\"A00(com.whatsapp.registration.app.RegisterNameManager, X.0cf): java.lang.Object\",\"dex_descriptor\":\"(Lcom/whatsapp/registration/app/RegisterNameManager;LX/0cf;)Ljava/lang/Object;\",\"is_constructor\":false,\"name\":\"A00\"},{\"def_pos\":0,\"signature\":\"A01(android.app.Activity): X.GWK\",\"dex_descriptor\":\"(Landroid/app/Activity;)LX/GWK;\",\"is_constructor\":false,\"name\":\"A01\"},{\"def_pos\":0,\"signature\":\"A02(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"A02\"},{\"def_pos\":0,\"signature\":\"A03(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"A03\"},{\"def_pos\":0,\"signature\":\"A04(X.G4b, X.CDl): void\",\"dex_descriptor\":\"(LX/G4b;LX/CDl;)V\",\"is_constructor\":false,\"name\":\"A04\"},{\"def_pos\":0,\"signature\":\"A05(X.0Ir): void\",\"dex_descriptor\":\"(LX/0Ir;)V\",\"is_constructor\":false,\"name\":\"A05\"},{\"def_pos\":0,\"signature\":\"A06(X.0Ir): void\",\"dex_descriptor\":\"(LX/0Ir;)V\",\"is_constructor\":false,\"name\":\"A06\"},{\"def_pos\":0,\"signature\":\"A07(X.0Ir, int, boolean): void\",\"dex_descriptor\":\"(LX/0Ir;IZ)V\",\"is_constructor\":false,\"name\":\"A07\"},{\"def_pos\":0,\"signature\":\"A08(java.lang.String): void\",\"dex_descriptor\":\"(Ljava/lang/String;)V\",\"is_constructor\":false,\"name\":\"A08\"},{\"def_pos\":0,\"signature\":\"Bqb(int): void\",\"dex_descriptor\":\"(I)V\",\"is_constructor\":false,\"name\":\"Bqb\"}],\"fields\":[{\"type\":\"int\",\"name\":\"A00\",\"def_pos\":0},{\"type\":\"long\",\"name\":\"A01\",\"def_pos\":0},{\"type\":\"X.GWJ\",\"name\":\"A02\",\"def_pos\":0},{\"type\":\"X.IUq\",\"name\":\"A03\",\"def_pos\":0},{\"type\":\"X.G4b\",\"name\":\"A04\",\"def_pos\":0},{\"type\":\"X.GWK\",\"name\":\"A05\",\"def_pos\":0},{\"type\":\"java.lang.Integer\",\"name\":\"A06\",\"def_pos\":0},{\"type\":\"boolean\",\"name\":\"A07\",\"def_pos\":0},{\"type\":\"boolean\",\"name\":\"A08\",\"def_pos\":0},{\"type\":\"boolean\",\"name\":\"A09\",\"def_pos\":0},{\"type\":\"android.app.Application\",\"name\":\"A0A\",\"def_pos\":0},{\"type\":\"android.os.Handler\",\"name\":\"A0B\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0C\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0D\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0E\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0F\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0G\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0H\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0I\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0J\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0K\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0L\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0M\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0N\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0O\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0P\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0Q\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0R\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0S\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0T\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0U\",\"def_pos\":0},{\"type\":\"com.google.common.base.Optional\",\"name\":\"A0V\",\"def_pos\":0},{\"type\":\"com.google.common.base.Optional\",\"name\":\"A0W\",\"def_pos\":0},{\"type\":\"X.09S\",\"name\":\"A0X\",\"def_pos\":0},{\"type\":\"X.08q\",\"name\":\"A0Y\",\"def_pos\":0},{\"type\":\"X.13N\",\"name\":\"A0Z\",\"def_pos\":0},{\"type\":\"com.google.common.base.Optional\",\"name\":\"A0a\",\"def_pos\":0},{\"type\":\"com.google.common.base.Optional\",\"name\":\"A0b\",\"def_pos\":0},{\"type\":\"com.google.common.base.Optional\",\"name\":\"A0c\",\"def_pos\":0},{\"type\":\"X.HUc\",\"name\":\"A0d\",\"def_pos\":0},{\"type\":\"X.0G2\",\"name\":\"A0e\",\"def_pos\":0},{\"type\":\"X.0ob\",\"name\":\"A0f\",\"def_pos\":0},{\"type\":\"X.0DD\",\"name\":\"A0g\",\"def_pos\":0},{\"type\":\"X.0wE\",\"name\":\"A0h\",\"def_pos\":0},{\"type\":\"X.0Fc\",\"name\":\"A0i\",\"def_pos\":0},{\"type\":\"X.0Yy\",\"name\":\"A0j\",\"def_pos\":0},{\"type\":\"X.0B8\",\"name\":\"A0k\",\"def_pos\":0},{\"type\":\"X.08Z\",\"name\":\"A0l\",\"def_pos\":0},{\"type\":\"X.0G4\",\"name\":\"A0m\",\"def_pos\":0},{\"type\":\"X.0Gs\",\"name\":\"A0n\",\"def_pos\":0},{\"type\":\"X.GwW\",\"name\":\"A0o\",\"def_pos\":0},{\"type\":\"X.00Z\",\"name\":\"A0p\",\"def_pos\":0},{\"type\":\"X.HcV\",\"name\":\"A0q\",\"def_pos\":0},{\"type\":\"X.Gwp\",\"name\":\"A0r\",\"def_pos\":0},{\"type\":\"X.BLu\",\"name\":\"A0s\",\"def_pos\":0},{\"type\":\"X.0YB\",\"name\":\"A0t\",\"def_pos\":0},{\"type\":\"X.IC6\",\"name\":\"A0u\",\"def_pos\":0}],\"field_count\":57,\"full_name\":\"com.whatsapp.registration.app.RegisterNameManager\",\"name\":\"RegisterNameManager\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "com.whatsapp.registration.app.RegisterNameManager",
+          "method_name": "A05",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fell_back\":false,\"overload_index\":0,\"class_name\":\"com.whatsapp.registration.app.RegisterNameManager\",\"full_name\":\"com.whatsapp.registration.app.RegisterNameManager.A05\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"A05\",\"overload_count\":1,\"body\":\"    public final void A05(C0Ir c0Ir) {\\n        C7Kk c7KkAsW;\\n        int iA02;\\n        Integer numValueOf;\\n        C07f c07f;\\n        GeG geG;\\n        C00x c00x \\u003d this.A0U.A00;\\n        C05a c05aA0F \\u003d C2LA.A0F(c00x, 131962);\\n        C09O c09o \\u003d (C09O) C09H.A03(C2LA.A0I(c00x), 238);\\n        A02();\\n        IUq iUq \\u003d this.A03;\\n        if (iUq !\\u003d null) {\\n            G4b g4b \\u003d ((RegisterName) iUq).A0A;\\n            if (g4b \\u003d\\u003d null) {\\n                C00l.A0H(\\\"registerProfileViewModel\\\");\\n                throw null;\\n            }\\n            C05a c05aA0G \\u003d C2LA.A0G(g4b.A0V, 238);\\n            C00x c00x2 \\u003d g4b.A0M.A00;\\n            C0E2 c0e2A06 \\u003d ((C13N) c00x2.BFb()).A06();\\n            if (c0e2A06 \\u003d\\u003d null || c0e2A06.A01 \\u003d\\u003d null) {\\n                Log.e(\\\"RegisterProfileViewModel/setupMeObject/missing-params\\\");\\n                ((C13N) c00x2.BFb()).A0F(1);\\n                c07f \\u003d g4b.A09;\\n                geG \\u003d GeG.A02;\\n            } else {\\n                C00x c00x3 \\u003d c05aA0G.A00;\\n                if (((C09O) c00x3.BFb()).CrQ(c0e2A06)) {\\n                    c00x3.BFb();\\n                    c07f \\u003d g4b.A09;\\n                    geG \\u003d GeG.A04;\\n                } else {\\n                    c07f \\u003d g4b.A09;\\n                    geG \\u003d GeG.A03;\\n                }\\n            }\\n            c07f.A0D(geG);\\n        }\\n        C0oo c0oo \\u003d (C0oo) C05a.A03(this.A0D);\\n        Application application \\u003d this.A0A;\\n        c0oo.A06();\\n        IUq iUq2 \\u003d this.A03;\\n        if (iUq2 !\\u003d null) {\\n            RegisterName registerName \\u003d (RegisterName) iUq2;\\n            HPV.A00(registerName.A1R, ((C0Ij) registerName).A08);\\n        } else {\\n            C2L9.A0V(this.A0G).A0g(\\\"RegisterNameManager/messageStoreVerified/callback activity is null\\\", null, true);\\n        }\\n        Log.i(\\\"RegisterNameManager/set_dirty\\\");\\n        C0YB c0yb \\u003d this.A0t;\\n        c0yb.A1D \\u003d true;\\n        c0yb.A09();\\n        Log.i(\\\"RegisterNameManager/msgstoreverified/group_sync_required\\\");\\n        this.A0h.A13(true, true, 3);\\n        H6t h6t \\u003d (H6t) C05a.A03(c05aA0F);\\n        C00l.A09(c09o, 0);\\n        C0Dx c0DxAuj \\u003d c09o.Auj();\\n        if (c0DxAuj \\u003d\\u003d null) {\\n            Log.w(\\\"RegisterProfileRepository/requestProfilePhotoDownloadFromServer/no-lid\\\");\\n        } else if (!C00E.A0F(C05a.A00(h6t.A02), Gv2.A0S) || !C2L8.A0y(h6t.A0B).A1G() || (c7KkAsW \\u003d c09o.AsW()) \\u003d\\u003d null || (numValueOf \\u003d Integer.valueOf((iA02 \\u003d C6oh.A02(c7KkAsW)))) \\u003d\\u003d null || iA02 \\u003e 0 || ((C0yS) C05a.A03(h6t.A0A)).A0T(c0DxAuj)) {\\n            ((C0yO) C05a.A03(h6t.A09)).A05(c0DxAuj, \\\"RegisterName.messageStoreVerified\\\", 0, 2, false);\\n        } else {\\n            C2LA.A1L(\\\"RegisterProfileRepository/requestProfilePhotoDownloadFromServer/new-account-no-photo photoFullId\\u003d\\\", numValueOf);\\n            if (iA02 \\u003d\\u003d 0) {\\n                ((C0yl) C05a.A03(((C0yO) C05a.A03(h6t.A09)).A04)).A03(c0DxAuj);\\n            }\\n        }\\n        C00x c00x4 \\u003d this.A0T.A00;\\n        if (B1w.A0T(c00x4).A07() \\u003d\\u003d 0) {\\n            C0DS c0dsA0T \\u003d B1w.A0T(c00x4);\\n            long jCurrentTimeMillis \\u003d System.currentTimeMillis();\\n            synchronized (C0DS.A04) {\\n                if (c0dsA0T.Au0() \\u003c 6) {\\n                    C2LB.A1K(C2LD.A0F(c0dsA0T.A03), \\\"message_store_verified_time\\\", jCurrentTimeMillis);\\n                } else {\\n                    C2LB.A1K(B1y.A02(c0dsA0T), \\\"message_store_verified_time\\\", jCurrentTimeMillis);\\n                }\\n            }\\n        }\\n        IUq iUq3 \\u003d this.A03;\\n        if (iUq3 !\\u003d null) {\\n            iUq3.CwG();\\n        } else {\\n            C2L9.A0V(this.A0G).A0g(\\\"RegisterNameManager/messageStoreVerified/callback activity is null\\\", null, true);\\n        }\\n        if (this.A02 !\\u003d null) {\\n            if (this.A0n.A05() !\\u003d 0) {\\n                Log.i(\\\"RegisterNameManager/restoredialog/congrats\\\");\\n                GWJ gwj \\u003d this.A02;\\n                if (gwj !\\u003d null) {\\n                    gwj.A00(2);\\n                }\\n            } else {\\n                Log.i(\\\"RegisterNameManager/restoredialog/empty-msg-restore\\\");\\n                if (!this.A09 \\u0026\\u0026 this.A0d.A01() \\u0026\\u0026 !((C1YS) C05a.A03(this.A0E)).A03()) {\\n                    Intent intentA09 \\u003d C6oh.A09(application, 0);\\n                    intentA09.setClassName(application.getPackageName(), \\\"com.whatsapp.backup.google.GoogleDriveNewUserSetupActivity\\\");\\n                    intentA09.putExtra(\\\"journey_source\\\", 10);\\n                    c0Ir.Cpg(intentA09, 15);\\n                    this.A09 \\u003d true;\\n                }\\n                COw.A00(c0Ir, DiW.GROUP_STATUS_MESSAGE_V2_FIELD_NUMBER);\\n            }\\n        } else if (this.A0j.A02(\\\"android.permission.GET_ACCOUNTS\\\") !\\u003d 0) {\\n            Log.i(\\\"RegisterNameManager/delay google drive setup due to lack of permissions\\\");\\n            G4b g4b2 \\u003d this.A04;\\n            if (g4b2 \\u003d\\u003d null) {\\n                C00l.A0H(\\\"registerProfileViewModel\\\");\\n                throw null;\\n            }\\n            g4b2.A0w();\\n        }\\n        HxT hxT \\u003d (HxT) ((C0UM) ((Gx0) C05a.A03(this.A0H)).A00.BFb()).A00(HxT.class);\\n        Log.e(\\\"ConsumerBridge/onScheduleGenerateEncryptionKeys()\\\");\\n        ((MSs) C05a.A03(hxT.A00)).A03();\\n        IBn.A00(this.A0l, this, 26);\\n    }\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "com.whatsapp.registration.app.RegisterNameManager",
+    "method": {
+      "name": "A05",
+      "reported_signature": "A05(X.0Ir): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(LX/0Ir;)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public final void A05(C0Ir c0Ir) {\n        C7Kk c7KkAsW;\n        int iA02;\n        Integer numValueOf;\n        C07f c07f;\n        GeG geG;\n        C00x c00x = this.A0U.A00;\n        C05a c05aA0F = C2LA.A0F(c00x, 131962);\n        C09O c09o = (C09O) C09H.A03(C2LA.A0I(c00x), 238);\n        A02();\n        IUq iUq = this.A03;\n        if (iUq != null) {\n            G4b g4b = ((RegisterName) iUq).A0A;\n            if (g4b == null) {\n                C00l.A0H(\"registerProfileViewModel\");\n                throw null;\n            }\n            C05a c05aA0G = C2LA.A0G(g4b.A0V, 238);\n            C00x c00x2 = g4b.A0M.A00;\n            C0E2 c0e2A06 = ((C13N) c00x2.BFb()).A06();\n            if (c0e2A06 == null || c0e2A06.A01 == null) {\n                Log.e(\"RegisterProfileViewModel/setupMeObject/missing-params\");\n                ((C13N) c00x2.BFb()).A0F(1);\n                c07f = g4b.A09;\n                geG = GeG.A02;\n            } else {\n                C00x c00x3 = c05aA0G.A00;\n                if (((C09O) c00x3.BFb()).CrQ(c0e2A06)) {\n                    c00x3.BFb();\n                    c07f = g4b.A09;\n                    geG = GeG.A04;\n                } else {\n                    c07f = g4b.A09;\n                    geG = GeG.A03;\n                }\n            }\n            c07f.A0D(geG);\n        }\n        C0oo c0oo = (C0oo) C05a.A03(this.A0D);\n        Application application = this.A0A;\n        c0oo.A06();\n        IUq iUq2 = this.A03;\n        if (iUq2 != null) {\n            RegisterName registerName = (RegisterName) iUq2;\n            HPV.A00(registerName.A1R, ((C0Ij) registerName).A08);\n        } else {\n            C2L9.A0V(this.A0G).A0g(\"RegisterNameManager/messageStoreVerified/callback activity is null\", null, true);\n        }\n        Log.i(\"RegisterNameManager/set_dirty\");\n        C0YB c0yb = this.A0t;\n        c0yb.A1D = true;\n        c0yb.A09();\n        Log.i(\"RegisterNameManager/msgstoreverified/group_sync_required\");\n        this.A0h.A13(true, true, 3);\n        H6t h6t = (H6t) C05a.A03(c05aA0F);\n        C00l.A09(c09o, 0);\n        C0Dx c0DxAuj = c09o.Auj();\n        if (c0DxAuj == null) {\n            Log.w(\"RegisterProfileRepository/requestProfilePhotoDownloadFromServer/no-lid\");\n        } else if (!C00E.A0F(C05a.A00(h6t.A02), Gv2.A0S) || !C2L8.A0y(h6t.A0B).A1G() || (c7KkAsW = c09o.AsW()) == null || (numValueOf = Integer.valueOf((iA02 = C6oh.A02(c7KkAsW)))) == null || iA02 > 0 || ((C0yS) C05a.A03(h6t.A0A)).A0T(c0DxAuj)) {\n            ((C0yO) C05a.A03(h6t.A09)).A05(c0DxAuj, \"RegisterName.messageStoreVerified\", 0, 2, false);\n        } else {\n            C2LA.A1L(\"RegisterProfileRepository/requestProfilePhotoDownloadFromServer/new-account-no-photo photoFullId=\", numValueOf);\n            if (iA02 == 0) {\n                ((C0yl) C05a.A03(((C0yO) C05a.A03(h6t.A09)).A04)).A03(c0DxAuj);\n            }\n        }\n        C00x c00x4 = this.A0T.A00;\n        if (B1w.A0T(c00x4).A07() == 0) {\n            C0DS c0dsA0T = B1w.A0T(c00x4);\n            long jCurrentTimeMillis = System.currentTimeMillis();\n            synchronized (C0DS.A04) {\n                if (c0dsA0T.Au0() < 6) {\n                    C2LB.A1K(C2LD.A0F(c0dsA0T.A03), \"message_store_verified_time\", jCurrentTimeMillis);\n                } else {\n                    C2LB.A1K(B1y.A02(c0dsA0T), \"message_store_verified_time\", jCurrentTimeMillis);\n                }\n            }\n        }\n        IUq iUq3 = this.A03;\n        if (iUq3 != null) {\n            iUq3.CwG();\n        } else {\n            C2L9.A0V(this.A0G).A0g(\"RegisterNameManager/messageStoreVerified/callback activity is null\", null, true);\n        }\n        if (this.A02 != null) {\n            if (this.A0n.A05() != 0) {\n                Log.i(\"RegisterNameManager/restoredialog/congrats\");\n                GWJ gwj = this.A02;\n                if (gwj != null) {\n                    gwj.A00(2);\n                }\n            } else {\n                Log.i(\"RegisterNameManager/restoredialog/empty-msg-restore\");\n                if (!this.A09 && this.A0d.A01() && !((C1YS) C05a.A03(this.A0E)).A03()) {\n                    Intent intentA09 = C6oh.A09(application, 0);\n                    intentA09.setClassName(application.getPackageName(), \"com.whatsapp.backup.google.GoogleDriveNewUserSetupActivity\");\n                    intentA09.putExtra(\"journey_source\", 10);\n                    c0Ir.Cpg(intentA09, 15);\n                    this.A09 = true;\n                }\n                COw.A00(c0Ir, DiW.GROUP_STATUS_MESSAGE_V2_FIELD_NUMBER);\n            }\n        } else if (this.A0j.A02(\"android.permission.GET_ACCOUNTS\") != 0) {\n            Log.i(\"RegisterNameManager/delay google drive setup due to lack of permissions\");\n            G4b g4b2 = this.A04;\n            if (g4b2 == null) {\n                C00l.A0H(\"registerProfileViewModel\");\n                throw null;\n            }\n            g4b2.A0w();\n        }\n        HxT hxT = (HxT) ((C0UM) ((Gx0) C05a.A03(this.A0H)).A00.BFb()).A00(HxT.class);\n        Log.e(\"ConsumerBridge/onScheduleGenerateEncryptionKeys()\");\n        ((MSs) C05a.A03(hxT.A00)).A03();\n        IBn.A00(this.A0l, this, 26);\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

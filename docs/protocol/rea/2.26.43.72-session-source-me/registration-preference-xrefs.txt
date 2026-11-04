@@ -1,0 +1,14 @@
+["registration_jid"]  (3 reference(s))
+  classes.dex  LX/09S;->A0j(L)
+    dex byte offset: 0x4708d8
+  classes.dex  LX/09S;->A11(VLLL)
+    dex byte offset: 0x470f2e
+  classes.dex  LX/13N;->A0H(VL)
+    dex byte offset: 0x7e4eec
+["registration_lid"]  (3 reference(s))
+  classes.dex  LX/09S;->A0k(L)
+    dex byte offset: 0x470908
+  classes.dex  LX/09S;->A11(VLLL)
+    dex byte offset: 0x470f3a
+  classes.dex  LX/13N;->A0H(VL)
+    dex byte offset: 0x7e4ef8

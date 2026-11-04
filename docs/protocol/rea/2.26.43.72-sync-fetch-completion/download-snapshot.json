@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_e11a68281b26c1d87e9f21d804f35c167c7b64e12d3237420353561fa2fc6f10",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C0lN",
+    "method_name": "A02",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-98RgML/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C0lN"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"()V\"},{\"signature\":\"A00(X.Dxd, java.lang.String, boolean): void\",\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/Dxd;Ljava/lang/String;Z)V\"},{\"signature\":\"A01(X.Dg5, java.lang.String): X.DXE\",\"def_pos\":0,\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/Dg5;Ljava/lang/String;)LX/DXE;\"},{\"signature\":\"A02(X.Dg5, java.lang.String): X.Dem\",\"def_pos\":0,\"name\":\"A02\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/Dg5;Ljava/lang/String;)LX/Dem;\"}],\"method_count\":4,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"C0lN\",\"full_name\":\"X.C0lN\",\"field_count\":7,\"fields\":[{\"type\":\"X.08Y\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"X.0ky\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"X.0aa\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"X.08q\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"X.0Ze\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"X.0lO\",\"def_pos\":0,\"name\":\"A05\"},{\"type\":\"X.0VM\",\"def_pos\":0,\"name\":\"A06\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C0lN",
+          "method_name": "A02",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.0lN.A02\",\"class_name\":\"X.C0lN\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public Dem A02(Dg5 dg5, String str) throws Dn8, Dn9, Dn6, Dn4 {\\n        Dxd dxd \\u003d new Dxd(this, dg5, str);\\n        A00(dxd, str, true);\\n        try {\\n            File file \\u003d dxd.A00;\\n            Dem dem \\u003d (Dem) GeneratedMessageLite.parseFrom(Dem.DEFAULT_INSTANCE, C1Am.A00(file));\\n            if (dxd.A01.delete()) {\\n                file.delete();\\n            }\\n            StringBuilder sb \\u003d new StringBuilder(\\\"external-mutations-downloader: downloaded snapshot\\u003d \\\");\\n            sb.append(dem);\\n            Log.i(sb.toString());\\n            return dem;\\n        } catch (InvalidProtocolBufferException e) {\\n            Log.e(\\\"external-mutations-downloader/failed to parse snapshot into ProtoBuf\\\", e);\\n            StringBuilder sb2 \\u003d new StringBuilder(\\\"Failed to parse snapshot into ProtoBuf for collection: \\\");\\n            sb2.append(str);\\n            throw new Dn8(true, sb2.toString());\\n        } catch (IOException e2) {\\n            Log.e(\\\"external-mutations-downloader/failed to read snapshot\\\", e2);\\n            throw new Dn4(\\\"Failed to read snapshot from file\\\", e2);\\n        }\\n    }\",\"overload_count\":1,\"method_name\":\"A02\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C0lN",
+    "method": {
+      "name": "A02",
+      "reported_signature": "A02(X.Dg5, java.lang.String): X.Dem",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(LX/Dg5;Ljava/lang/String;)LX/Dem;"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public Dem A02(Dg5 dg5, String str) throws Dn8, Dn9, Dn6, Dn4 {\n        Dxd dxd = new Dxd(this, dg5, str);\n        A00(dxd, str, true);\n        try {\n            File file = dxd.A00;\n            Dem dem = (Dem) GeneratedMessageLite.parseFrom(Dem.DEFAULT_INSTANCE, C1Am.A00(file));\n            if (dxd.A01.delete()) {\n                file.delete();\n            }\n            StringBuilder sb = new StringBuilder(\"external-mutations-downloader: downloaded snapshot= \");\n            sb.append(dem);\n            Log.i(sb.toString());\n            return dem;\n        } catch (InvalidProtocolBufferException e) {\n            Log.e(\"external-mutations-downloader/failed to parse snapshot into ProtoBuf\", e);\n            StringBuilder sb2 = new StringBuilder(\"Failed to parse snapshot into ProtoBuf for collection: \");\n            sb2.append(str);\n            throw new Dn8(true, sb2.toString());\n        } catch (IOException e2) {\n            Log.e(\"external-mutations-downloader/failed to read snapshot\", e2);\n            throw new Dn4(\"Failed to read snapshot from file\", e2);\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

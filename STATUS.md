@@ -1,3 +1,27 @@
+2026-11-04 — **Structural app-state result classification:**
+
+The current-build response category model now distinguishes collection errors,
+version acknowledgements, already-synced names and opaque snapshot/patch data in
+original order. Snapshot bodies are external blob references, not snapshots.
+Unknown names/children remain in borrowed originals, with redacted Debug output.
+Offline `app-state-response-inspect ACTION_ID` reports categories/counts/scalars
+from one preserved correlated result without changing state or downloading data.
+Its `integrity_verified` value is always false. Protobuf semantic checks, keys,
+MACs, requested-collection admission, generation and result application remain
+required work. [Implementation and limits](docs/protocol/app-state-fetch-completion.md).
+
+New evidence traces external download authentication precisely (without claiming
+every downstream encrypted-hash check) and authenticated reader/certificate gates
+plus primary Me creation/persistence. Logout/switch generation fencing remains
+open. [Session/source evidence](docs/protocol/session-source-me-current.md).
+No live account operation occurred.
+
+Validation: **1,195 workspace/all-feature tests**, strict all-target/all-feature
+Clippy, CLI-reference regeneration and built-command help, formatting, coverage
+freshness and repository hygiene passed. Retained accounting is 932 REA records,
+576 for the current APK, 72 explicit ownership mappings; no completion percentage
+or account-safety claim follows from those counts.
+
 2026-11-04 — **Explicit fetch refusal waits:**
 
 App-state fetch errors now preserve explicit outer-error backoff instead of

@@ -1,0 +1,40 @@
+
+# class: LX/LIp;
+# extends: LX/N2E;
+
+.method public <init>(VLLLLLLL)  # .registers 9
+    # full signature: LX/LIp;-><init>(LX/08Y;LX/0aa;LX/08q;LX/0Ze;LX/0lO;LX/0VM;Ljava/util/concurrent/Executor;)V
+    0000..0006  invoke-static  {v4, v2, v5, v3}, LX/3q0;->A1R(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+    0006..000c  invoke-static  {v7, v6}, LX/3q5;->A1F(Ljava/lang/Object;Ljava/lang/Object;)V
+    000c..0012  invoke-direct  {v1, v4, v8}, LX/N2E;-><init>(LX/08q;Ljava/util/concurrent/Executor;)V
+    0012..0016  iput-object  v4, v1, LX/LIp;->A04:LX/08q;
+    0016..001a  iput-object  v2, v1, LX/LIp;->A02:LX/08Y;
+    001a..001e  iput-object  v5, v1, LX/LIp;->A05:LX/0Ze;
+    001e..0022  iput-object  v3, v1, LX/LIp;->A03:LX/0aa;
+    0022..0026  iput-object  v7, v1, LX/LIp;->A07:LX/0VM;
+    0026..002a  iput-object  v6, v1, LX/LIp;->A06:LX/0lO;
+    002a..002e  const/16  v0, #0x988
+    002e..0034  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0034..0036  move-result-object  v0
+    0036..003a  iput-object  v0, v1, LX/LIp;->A00:LX/05a;
+    003a..003e  const/16  v0, #0x953
+    003e..0044  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0044..0046  move-result-object  v0
+    0046..004a  iput-object  v0, v1, LX/LIp;->A01:LX/05a;
+    004a..004c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A06(LL)  # .registers 3
+    # full signature: LX/LIp;->A06(Ljava/io/File;)Ljava/lang/Integer;
+    0000..0002  const/4  v0, #0x0
+    0002..0004  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A07(Z)  # .registers 2
+    # full signature: LX/LIp;->A07()Z
+    0000..0002  const/4  v0, #0x1
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method

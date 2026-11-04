@@ -344,6 +344,12 @@ enum Cmd {
         #[arg(long, requires = "reconstruct_snapshot")]
         collection: Option<String>,
     },
+    /// Classify a saved app-state result structurally (offline; no integrity verification).
+    #[cfg(feature = "experimental-transport")]
+    AppStateResponseInspect {
+        /// Original app-state action ID with a preserved result reply.
+        action_id: String,
+    },
     /// Show queued one-shot actions (block list, reports, lookups) and their outcomes (offline, redacted).
     #[cfg(feature = "experimental-transport")]
     Actions {
@@ -1901,6 +1907,10 @@ async fn run(cli: Cli) -> Result<(), Error> {
             reconstruct_snapshot.as_deref(),
             collection.as_deref(),
         ),
+        #[cfg(feature = "experimental-transport")]
+        Cmd::AppStateResponseInspect { action_id } => {
+            transport_receive::app_state_response_inspect(&cli, action_id)
+        }
         #[cfg(feature = "experimental-transport")]
         Cmd::ClockInspect => transport_receive::clock_inspect(&cli),
         #[cfg(feature = "experimental-transport")]

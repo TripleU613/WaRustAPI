@@ -1,0 +1,177 @@
+
+# class: LX/Dxd;
+# extends: LX/LIp;
+
+.method public <init>(VLLL)  # .registers 17
+    # full signature: LX/Dxd;-><init>(LX/0lN;LX/Dg5;Ljava/lang/String;)V
+    0000..0002  move-object  v5, v13
+    0002..0006  iput-object  v14, v13, LX/Dxd;->A06:LX/0lN;
+    0006..000a  iget-object  v8, v14, LX/0lN;->A03:LX/08q;
+    000a..000e  iget-object  v6, v14, LX/0lN;->A00:LX/08Y;
+    000e..0012  iget-object  v9, v14, LX/0lN;->A04:LX/0Ze;
+    0012..0016  iget-object  v7, v14, LX/0lN;->A02:LX/0aa;
+    0016..001a  iget-object  v11, v14, LX/0lN;->A06:LX/0VM;
+    001a..001e  iget-object  v10, v14, LX/0lN;->A05:LX/0lO;
+    001e..0020  const/4  v12, #0x0
+    0020..0026  invoke-direct/range  {v5..v12}, LX/LIp;-><init>(LX/08Y;LX/0aa;LX/08q;LX/0Ze;LX/0lO;LX/0VM;Ljava/util/concurrent/Executor;)V
+    0026..002a  iget-object  v0, v14, LX/0lN;->A01:LX/0ky;
+    002a..002e  iget-object  v2, v0, LX/0ky;->A00:LX/0kz;
+    002e..0032  const-string  v1, ""
+    0032..0038  invoke-virtual  {v2, v1}, LX/0kz;->A02(Ljava/lang/String;)Ljava/io/File;
+    0038..003a  move-result-object  v0
+    003a..003e  iput-object  v0, v13, LX/Dxd;->A01:Ljava/io/File;
+    003e..0044  invoke-virtual  {v2, v1}, LX/0kz;->A02(Ljava/lang/String;)Ljava/io/File;
+    0044..0046  move-result-object  v0
+    0046..004a  iput-object  v0, v13, LX/Dxd;->A00:Ljava/io/File;
+    004a..004e  iget  v1, v15, LX/Dg5;->bitField0_:I
+    004e..0052  and-int/lit8  v0, v1, #0x1
+    0052..0056  move-object/from16  v3, v16
+    0056..005a  if-eqz  v0, +0x62
+    005a..005e  and-int/lit8  v0, v1, #0x2
+    005e..0062  if-eqz  v0, +0x50
+    0062..0066  and-int/lit8  v0, v1, #0x10
+    0066..006a  if-eqz  v0, +0x3e
+    006a..006e  and-int/lit8  v0, v1, #0x20
+    006e..0072  if-eqz  v0, +0x2c
+    0072..0076  iget-object  v0, v15, LX/Dg5;->mediaKey_:Lcom/google/protobuf/ByteString;
+    0076..007c  invoke-virtual  {v0}, Lcom/google/protobuf/ByteString;->toByteArray()[B
+    007c..007e  move-result-object  v4
+    007e..0082  iget-object  v0, v15, LX/Dg5;->fileSha256_:Lcom/google/protobuf/ByteString;
+    0082..0088  invoke-virtual  {v0}, Lcom/google/protobuf/ByteString;->toByteArray()[B
+    0088..008a  move-result-object  v3
+    008a..008e  iget-object  v0, v15, LX/Dg5;->fileEncSha256_:Lcom/google/protobuf/ByteString;
+    008e..0094  invoke-virtual  {v0}, Lcom/google/protobuf/ByteString;->toByteArray()[B
+    0094..0096  move-result-object  v2
+    0096..009a  iget-object  v0, v15, LX/Dg5;->directPath_:Ljava/lang/String;
+    009a..009e  iput-object  v0, v13, LX/Dxd;->A03:Ljava/lang/String;
+    009e..00a0  const/4  v1, #0x0
+    00a0..00a6  invoke-static  {v4, v1}, Landroid/util/Base64;->encodeToString([BI)Ljava/lang/String;
+    00a6..00a8  move-result-object  v0
+    00a8..00ac  iput-object  v0, v13, LX/Dxd;->A02:Ljava/lang/String;
+    00ac..00b2  invoke-static  {v3, v1}, Landroid/util/Base64;->encodeToString([BI)Ljava/lang/String;
+    00b2..00b4  move-result-object  v0
+    00b4..00b8  iput-object  v0, v13, LX/Dxd;->A05:Ljava/lang/String;
+    00b8..00be  invoke-static  {v2, v1}, Landroid/util/Base64;->encodeToString([BI)Ljava/lang/String;
+    00be..00c0  move-result-object  v0
+    00c0..00c4  iput-object  v0, v13, LX/Dxd;->A04:Ljava/lang/String;
+    00c4..00c6  return-void
+    00c6..00ca  sget-object  v2, LX/E6Q;->A03:LX/E6Q;
+    00ca..00ce  const-string  v0, "Missing file enc sha256 for collection: "
+    00ce..00d4  invoke-static  {v0, v3}, LX/000;->A04(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    00d4..00d6  move-result-object  v1
+    00d6..00da  new-instance  v0, LX/Dn7;
+    00da..00e0  invoke-direct  {v0, v2, v1}, LX/Dn7;-><init>(LX/E6Q;Ljava/lang/String;)V
+    00e0..00e2  throw  v0
+    00e2..00e6  sget-object  v2, LX/E6Q;->A04:LX/E6Q;
+    00e6..00ea  const-string  v0, "Missing file sha256 for collection: "
+    00ea..00f0  invoke-static  {v0, v3}, LX/000;->A04(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    00f0..00f2  move-result-object  v1
+    00f2..00f6  new-instance  v0, LX/Dn7;
+    00f6..00fc  invoke-direct  {v0, v2, v1}, LX/Dn7;-><init>(LX/E6Q;Ljava/lang/String;)V
+    00fc..00fe  throw  v0
+    00fe..0102  sget-object  v2, LX/E6Q;->A02:LX/E6Q;
+    0102..0106  const-string  v0, "Missing direct path for collection: "
+    0106..010c  invoke-static  {v0, v3}, LX/000;->A04(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    010c..010e  move-result-object  v1
+    010e..0112  new-instance  v0, LX/Dn7;
+    0112..0118  invoke-direct  {v0, v2, v1}, LX/Dn7;-><init>(LX/E6Q;Ljava/lang/String;)V
+    0118..011a  throw  v0
+    011a..011e  sget-object  v2, LX/E6Q;->A05:LX/E6Q;
+    011e..0122  const-string  v0, "Missing media key for collection: "
+    0122..0128  invoke-static  {v0, v3}, LX/000;->A04(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0128..012a  move-result-object  v1
+    012a..012e  new-instance  v0, LX/Dn7;
+    012e..0134  invoke-direct  {v0, v2, v1}, LX/Dn7;-><init>(LX/E6Q;Ljava/lang/String;)V
+    0134..0136  throw  v0
+    0136..0138  move-exception  v2
+    0138..013c  const-string  v0, "external-mutations-downloader: Failed to prepare location for encryptedFile/destinationFile"
+    013c..0142  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    0142..0146  const-string  v1, "Failed to prepare location for encryptedFile/destinationFile"
+    0146..014a  new-instance  v0, LX/Dn4;
+    014a..0150  invoke-direct  {v0, v1, v2}, LX/Dn4;-><init>(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0150..0152  throw  v0
+    # exception table: 1 try range(s)
+    # catch Ljava/io/IOException; code_units 0013..0025 -> 009b
+.end method
+
+.method public A03(LL)  # .registers 4
+    # full signature: LX/Dxd;->A03(LX/MXt;)LX/MWP;
+    0000..0004  new-instance  v1, LX/MWP;
+    0004..000a  invoke-direct  {v1}, LX/MWP;-><init>()V
+    000a..0010  invoke-virtual  {v3}, LX/MXt;->A06()Z
+    0010..0012  move-result  v0
+    0012..0014  monitor-enter
+    0014..001a  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    001a..001c  move-result-object  v0
+    001c..0020  iput-object  v0, v1, LX/MWP;->A01:Ljava/lang/Boolean;
+    0020..0022  monitor-exit
+    0022..0024  const/4  v0, #0x0
+    0024..0026  monitor-enter
+    0026..002c  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    002c..002e  move-result-object  v0
+    002e..0032  iput-object  v0, v1, LX/MWP;->A02:Ljava/lang/Boolean;
+    0032..0034  monitor-exit
+    0034..0036  return-object  v1
+    0036..0038  move-exception  v0
+    0038..003a  monitor-exit
+    003a..003c  throw  v0
+    003c..003e  move-exception  v0
+    003e..0040  monitor-exit
+    0040..0042  throw  v0
+    # exception table: 4 try range(s)
+    # catch <all> code_units 000a..0010 -> 001e
+    # catch <all> code_units 0013..0019 -> 001b
+    # catch <all> code_units 001c..001d -> 001b
+    # catch <all> code_units 001f..0020 -> 001e
+.end method
+
+.method public A05(L)  # .registers 14
+    # full signature: LX/Dxd;->A05()Ljava/lang/Object;
+    0000..0004  sget-object  v3, LX/0jS;->A0R:LX/0jS;
+    0004..0008  const-string  v8, "md-app-state"
+    0008..000a  const/4  v5, #0x0
+    000a..000e  const-string  v9, "mms"
+    000e..0012  iget-object  v0, v13, LX/Dxd;->A06:LX/0lN;
+    0012..0016  iget-object  v6, v0, LX/0lN;->A00:LX/08Y;
+    0016..001a  iget-object  v7, v13, LX/Dxd;->A04:Ljava/lang/String;
+    001a..001e  iget-object  v1, v13, LX/Dxd;->A03:Ljava/lang/String;
+    001e..0020  const/4  v10, #0x0
+    0020..0024  if-eqz  v1, +0x9
+    0024..002a  invoke-virtual  {v1}, Ljava/lang/String;->length()I
+    002a..002c  move-result  v0
+    002c..0030  if-eqz  v0, +0x3
+    0030..0032  move-object  v10, v1
+    0032..0036  if-nez  v7, +0x9
+    0036..003a  const-string  v0, "mediaHash is required for download URL generation unless a crossReference is present"
+    003a..0040  invoke-static  {v0}, LX/1Xl;->A0g(Ljava/lang/String;)Ljava/lang/IllegalStateException;
+    0040..0042  move-result-object  v0
+    0042..0044  throw  v0
+    0044..0048  new-instance  v4, LX/JAd;
+    0048..004a  move-object  v12, v5
+    004a..004c  move-object  v11, v5
+    004c..0052  invoke-direct/range  {v4..v12}, LX/JAd;-><init>(LX/08Y;LX/08Y;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+    0052..0056  iget-object  v6, v13, LX/Dxd;->A01:Ljava/io/File;
+    0056..005c  invoke-static  {v6}, LX/00L;->A05(Ljava/lang/Object;)V
+    005c..0060  iget-object  v7, v13, LX/Dxd;->A00:Ljava/io/File;
+    0060..0066  invoke-static  {v7}, LX/00L;->A05(Ljava/lang/Object;)V
+    0066..006a  iget-object  v8, v13, LX/Dxd;->A02:Ljava/lang/String;
+    006a..006e  iget-object  v9, v13, LX/Dxd;->A05:Ljava/lang/String;
+    006e..0070  const/4  v11, #0x1
+    0070..0076  invoke-static  {v6, v11}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0076..0078  const/4  v0, #0x2
+    0078..007e  invoke-static  {v7, v8, v9, v0}, LX/2LE;->A17(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
+    007e..0080  const/4  v0, #0x5
+    0080..0086  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0086..008a  new-instance  v2, LX/Lz6;
+    008a..008c  move-object  v10, v5
+    008c..0092  invoke-direct/range  {v2..v11}, LX/Lz6;-><init>(LX/0jS;LX/NYv;LX/MKa;Ljava/io/File;Ljava/io/File;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)V
+    0092..0094  return-object  v2
+    # exception table: 0 try range(s)
+.end method
+
+.method public A07(Z)  # .registers 2
+    # full signature: LX/Dxd;->A07()Z
+    0000..0002  const/4  v0, #0x0
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method

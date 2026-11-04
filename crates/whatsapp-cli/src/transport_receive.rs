@@ -2875,6 +2875,27 @@ pub(super) fn clock_inspect(cli: &super::Cli) -> Result<(), Error> {
     Ok(())
 }
 
+pub(super) fn app_state_response_inspect(cli: &super::Cli, id: &str) -> Result<(), Error> {
+    let store = ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })?;
+    let report = whatsapp_api::transport::app_state_sync::inspect_response(&store, id)?;
+    if !cli.json {
+        println!(
+            "Structural categories only; integrity and collection/request admission are unverified."
+        );
+    }
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&report)
+            .map_err(|_| Error::invalid("app_state_sync", "cannot encode response inspection"))?
+    );
+    Ok(())
+}
+
 pub(super) fn app_state_inspect(
     cli: &super::Cli,
     snapshot: Option<&std::path::Path>,

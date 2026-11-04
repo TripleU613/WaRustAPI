@@ -1,0 +1,192 @@
+{
+  "evidence_id": "ev_6d67dd9c719fc4c934dffd23f532c554a5318dbecb595d892bc3d2265d75f961",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_class",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.N2E"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-98RgML/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.N2E"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cinit\\u003e(X.08q, java.util.concurrent.Executor): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"(LX/08q;Ljava/util/concurrent/Executor;)V\"},{\"signature\":\"A01(X.N2E, boolean): void\",\"def_pos\":0,\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/N2E;Z)V\"},{\"signature\":\"A02(): X.Nar\",\"def_pos\":0,\"name\":\"A02\",\"is_constructor\":false,\"dex_descriptor\":\"()LX/Nar;\"},{\"signature\":\"A03(X.MXt): X.MWP\",\"def_pos\":0,\"name\":\"A03\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/MXt;)LX/MWP;\"},{\"signature\":\"A04(): X.LqJ\",\"def_pos\":0,\"name\":\"A04\",\"is_constructor\":false,\"dex_descriptor\":\"()LX/LqJ;\"},{\"signature\":\"A05(): java.lang.Object\",\"def_pos\":0,\"name\":\"A05\",\"is_constructor\":false,\"dex_descriptor\":\"()Ljava/lang/Object;\"},{\"signature\":\"A91(X.Nar): void\",\"def_pos\":0,\"name\":\"A91\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/Nar;)V\"},{\"signature\":\"AGM(boolean): void\",\"def_pos\":0,\"name\":\"AGM\",\"is_constructor\":false,\"dex_descriptor\":\"(Z)V\"},{\"signature\":\"Btp(long): void\",\"def_pos\":0,\"name\":\"Btp\",\"is_constructor\":false,\"dex_descriptor\":\"(J)V\"},{\"signature\":\"Bty(int): void\",\"def_pos\":0,\"name\":\"Bty\",\"is_constructor\":false,\"dex_descriptor\":\"(I)V\"},{\"signature\":\"run(): void\",\"def_pos\":0,\"name\":\"run\",\"is_constructor\":false,\"dex_descriptor\":\"()V\"}],\"method_count\":11,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"N2E\",\"full_name\":\"X.N2E\",\"field_count\":4,\"fields\":[{\"type\":\"X.NbA\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"X.08q\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"X.Mtk\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"long\",\"def_pos\":0,\"name\":\"A03\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.N2E",
+    "methods": [
+      {
+        "name": "<init>",
+        "reported_signature": "<init>(X.08q, java.util.concurrent.Executor): void",
+        "overload_index": 0,
+        "is_constructor": true,
+        "dex_descriptor": "(LX/08q;Ljava/util/concurrent/Executor;)V"
+      },
+      {
+        "name": "A01",
+        "reported_signature": "A01(X.N2E, boolean): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/N2E;Z)V"
+      },
+      {
+        "name": "A02",
+        "reported_signature": "A02(): X.Nar",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "()LX/Nar;"
+      },
+      {
+        "name": "A03",
+        "reported_signature": "A03(X.MXt): X.MWP",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/MXt;)LX/MWP;"
+      },
+      {
+        "name": "A04",
+        "reported_signature": "A04(): X.LqJ",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "()LX/LqJ;"
+      },
+      {
+        "name": "A05",
+        "reported_signature": "A05(): java.lang.Object",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "()Ljava/lang/Object;"
+      },
+      {
+        "name": "A91",
+        "reported_signature": "A91(X.Nar): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/Nar;)V"
+      },
+      {
+        "name": "AGM",
+        "reported_signature": "AGM(boolean): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Z)V"
+      },
+      {
+        "name": "Btp",
+        "reported_signature": "Btp(long): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(J)V"
+      },
+      {
+        "name": "Bty",
+        "reported_signature": "Bty(int): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(I)V"
+      },
+      {
+        "name": "run",
+        "reported_signature": "run(): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "()V"
+      }
+    ],
+    "fields": [
+      {
+        "name": "A00",
+        "reported_type": "X.NbA"
+      },
+      {
+        "name": "A01",
+        "reported_type": "X.08q"
+      },
+      {
+        "name": "A02",
+        "reported_type": "X.Mtk"
+      },
+      {
+        "name": "A03",
+        "reported_type": "long"
+      }
+    ],
+    "inner_classes": []
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

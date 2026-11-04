@@ -1,0 +1,162 @@
+{
+  "evidence_id": "ev_86eb78b97822288307facb37ea7335547b5121382a193bf359853df4bc9bf954",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "trace_android_references",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C1oK",
+    "method_name": "A01",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-QeXIwM/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"available_processors\":24,\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C1oK"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":10,\"methods\":[{\"def_pos\":0,\"signature\":\"\\u003cclinit\\u003e(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"\\u003cclinit\\u003e\"},{\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(X.1o9, byte[], byte[]): void\",\"dex_descriptor\":\"(LX/1o9;[B[B)V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\"},{\"def_pos\":0,\"signature\":\"A00(X.1oK, byte[]): void\",\"dex_descriptor\":\"(LX/1oK;[B)V\",\"is_constructor\":false,\"name\":\"A00\"},{\"def_pos\":0,\"signature\":\"A01(X.1nk, org.whispersystems.libsignal.kem.KEMPublicKey): X.1qw\",\"dex_descriptor\":\"(LX/1nk;Lorg/whispersystems/libsignal/kem/KEMPublicKey;)LX/1qw;\",\"is_constructor\":false,\"name\":\"A01\"},{\"def_pos\":0,\"signature\":\"A02(byte[]): X.1nk\",\"dex_descriptor\":\"([B)LX/1nk;\",\"is_constructor\":false,\"name\":\"A02\"},{\"def_pos\":0,\"signature\":\"A03(java.lang.Integer, X.1nq, X.1nk): void\",\"dex_descriptor\":\"(Ljava/lang/Integer;LX/1nq;LX/1nk;)V\",\"is_constructor\":false,\"name\":\"A03\"},{\"def_pos\":0,\"signature\":\"A04(java.lang.Integer, byte[]): byte[]\",\"dex_descriptor\":\"(Ljava/lang/Integer;[B)[B\",\"is_constructor\":false,\"name\":\"A04\"},{\"def_pos\":0,\"signature\":\"A05(java.lang.Integer, byte[]): byte[]\",\"dex_descriptor\":\"(Ljava/lang/Integer;[B)[B\",\"is_constructor\":false,\"name\":\"A05\"},{\"def_pos\":0,\"signature\":\"A06(X.1nk): byte[]\",\"dex_descriptor\":\"(LX/1nk;)[B\",\"is_constructor\":false,\"name\":\"A06\"},{\"def_pos\":0,\"signature\":\"A07(org.whispersystems.libsignal.kem.KEMPublicKey): byte[]\",\"dex_descriptor\":\"(Lorg/whispersystems/libsignal/kem/KEMPublicKey;)[B\",\"is_constructor\":false,\"name\":\"A07\"}],\"fields\":[{\"type\":\"long\",\"name\":\"A00\",\"def_pos\":0},{\"type\":\"X.1oU\",\"name\":\"A01\",\"def_pos\":0},{\"type\":\"byte[]\",\"name\":\"A02\",\"def_pos\":0},{\"type\":\"X.1o9\",\"name\":\"A03\",\"def_pos\":0},{\"type\":\"X.1oL\",\"name\":\"A04\",\"def_pos\":0},{\"type\":\"byte[]\",\"name\":\"A05\",\"def_pos\":0},{\"type\":\"byte[]\",\"name\":\"A06\",\"def_pos\":0},{\"type\":\"byte[]\",\"name\":\"A07\",\"def_pos\":0},{\"type\":\"byte[]\",\"name\":\"A08\",\"def_pos\":0},{\"type\":\"byte[]\",\"name\":\"A09\",\"def_pos\":0},{\"type\":\"byte[]\",\"name\":\"A0A\",\"def_pos\":0},{\"type\":\"byte[]\",\"name\":\"A0B\",\"def_pos\":0},{\"type\":\"byte[]\",\"name\":\"A0C\",\"def_pos\":0},{\"type\":\"byte[]\",\"name\":\"A0D\",\"def_pos\":0},{\"type\":\"byte[]\",\"name\":\"A0E\",\"def_pos\":0},{\"type\":\"byte[]\",\"name\":\"A0F\",\"def_pos\":0},{\"type\":\"byte[]\",\"name\":\"A0G\",\"def_pos\":0},{\"type\":\"byte[]\",\"name\":\"A0H\",\"def_pos\":0}],\"field_count\":18,\"full_name\":\"X.C1oK\",\"name\":\"C1oK\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_xrefs_to_method",
+        "input": {
+          "class_name": "X.C1oK",
+          "method_name": "A01",
+          "overload_index": 0,
+          "limit": 2147483647,
+          "resolve_line": false
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"total\":2,\"resolve_line\":false,\"target\":\"X.C1oK.A01\",\"count\":2,\"items\":[{\"kind\":\"method\",\"name\":\"\\u003cinit\\u003e\",\"full_name\":\"X.1o3.\\u003cinit\\u003e\",\"containing_class\":\"X.C1o3\",\"top_class\":\"X.C1o3\",\"def_pos\":0,\"direct_invokes\":[{\"dex_entry\":\"classes2.dex\",\"opcode\":\"INVOKE_VIRTUAL\",\"dex_code_unit_offset\":1178,\"dex_method_index\":6475,\"source_raw_method_id\":\"X.1o3.\\u003cinit\\u003e(LX/1o5;LX/1o4;LX/08q;LX/1lh;Ljava/io/InputStream;Ljava/io/OutputStream;LX/1o0;LX/1o6;Z)V\"}],\"direct_invokes_exhaustive\":true},{\"kind\":\"method\",\"name\":\"A03\",\"full_name\":\"X.1o3.A03\",\"containing_class\":\"X.C1o3\",\"top_class\":\"X.C1o3\",\"def_pos\":0,\"direct_invokes\":[{\"dex_entry\":\"classes2.dex\",\"opcode\":\"INVOKE_VIRTUAL\",\"dex_code_unit_offset\":853,\"dex_method_index\":6475,\"source_raw_method_id\":\"X.1o3.A03(LX/1pp;LX/1nq;LX/1nq;LX/1oK;)LX/1qw;\"}],\"direct_invokes_exhaustive\":true}],\"overload_index\":0,\"reported_signature\":\"A01(X.1nk, org.whispersystems.libsignal.kem.KEMPublicKey): X.1qw\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C1oK",
+    "method_name": "A01",
+    "overload_index": 0,
+    "reported_signature": "A01(X.1nk, org.whispersystems.libsignal.kem.KEMPublicKey): X.1qw",
+    "dex_descriptor": "(LX/1nk;Lorg/whispersystems/libsignal/kem/KEMPublicKey;)LX/1qw;",
+    "total": 2,
+    "references": [
+      {
+        "kind": "method",
+        "name": "<init>",
+        "reported_full_name": "X.1o3.<init>",
+        "containing_class": "X.C1o3",
+        "top_class": "X.C1o3",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": true,
+        "direct_invokes": [
+          {
+            "dex_entry": "classes2.dex",
+            "source_raw_method_id": "X.1o3.<init>(LX/1o5;LX/1o4;LX/08q;LX/1lh;Ljava/io/InputStream;Ljava/io/OutputStream;LX/1o0;LX/1o6;Z)V",
+            "dex_code_unit_offset": 1178,
+            "dex_method_index": 6475,
+            "opcode": "INVOKE_VIRTUAL"
+          }
+        ]
+      },
+      {
+        "kind": "method",
+        "name": "A03",
+        "reported_full_name": "X.1o3.A03",
+        "containing_class": "X.C1o3",
+        "top_class": "X.C1o3",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": true,
+        "direct_invokes": [
+          {
+            "dex_entry": "classes2.dex",
+            "source_raw_method_id": "X.1o3.A03(LX/1pp;LX/1nq;LX/1nq;LX/1oK;)LX/1qw;",
+            "dex_code_unit_offset": 853,
+            "dex_method_index": 6475,
+            "opcode": "INVOKE_VIRTUAL"
+          }
+        ]
+      }
+    ],
+    "coverage": "complete",
+    "reference_unit": "using_node"
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

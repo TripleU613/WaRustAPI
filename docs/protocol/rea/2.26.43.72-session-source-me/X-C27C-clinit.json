@@ -1,0 +1,133 @@
+{
+  "evidence_id": "ev_a4574094a641027c6f5e179398c49476b9669dee5eff4e1d07f15b422b13c390",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C27C",
+    "method_name": "<clinit>",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-QeXIwM/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"available_processors\":24,\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C27C"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":1,\"methods\":[{\"def_pos\":0,\"signature\":\"\\u003cclinit\\u003e(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"\\u003cclinit\\u003e\"}],\"fields\":[{\"type\":\"java.util.Map\",\"name\":\"A00\",\"def_pos\":0},{\"type\":\"byte[]\",\"name\":\"A01\",\"def_pos\":0}],\"field_count\":2,\"full_name\":\"X.C27C\",\"name\":\"C27C\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C27C",
+          "method_name": "<clinit>",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fell_back\":true,\"overload_index\":0,\"class_name\":\"X.C27C\",\"full_name\":\"X.27C.\\u003cclinit\\u003e\",\"mode\":\"smali\",\"markers\":[\"static_initializer_disassembly\"],\"method_name\":\"\\u003cclinit\\u003e\",\"overload_count\":1,\"body\":\".method public static constructor \\u003cclinit\\u003e()V\\n    .registers 3\\n\\n    .line 0\\n    const/16 v0, 0x20\\n\\n    .line 1\\n    .line 2\\n    new-array v0, v0, [B\\n\\n    .line 3\\n    .line 4\\n    fill-array-data v0, :array_20\\n\\n    .line 5\\n    .line 6\\n    .line 7\\n    sput-object v0, LX/27C;-\\u003eA01:[B\\n\\n    .line 8\\n    .line 9\\n    new-instance v2, Ljava/util/HashMap;\\n\\n    .line 10\\n    .line 11\\n    invoke-direct {v2}, Ljava/util/HashMap;-\\u003e\\u003cinit\\u003e()V\\n\\n    .line 12\\n    .line 13\\n    .line 14\\n    new-instance v1, LX/1nk;\\n\\n    .line 15\\n    .line 16\\n    invoke-direct {v1, v0}, LX/1nk;-\\u003e\\u003cinit\\u003e([B)V\\n\\n    .line 17\\n    .line 18\\n    .line 19\\n    const-string v0, \\\"WhatsAppLongTerm1\\\"\\n\\n    .line 20\\n    .line 21\\n    invoke-virtual {v2, v0, v1}, Ljava/util/AbstractMap;-\\u003eput(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;\\n\\n    .line 22\\n    .line 23\\n    .line 24\\n    invoke-static {v2}, Ljava/util/Collections;-\\u003eunmodifiableMap(Ljava/util/Map;)Ljava/util/Map;\\n\\n    .line 25\\n    .line 26\\n    .line 27\\n    move-result-object v0\\n\\n    .line 28\\n    sput-object v0, LX/27C;-\\u003eA00:Ljava/util/Map;\\n\\n    .line 29\\n    .line 30\\n    return-void\\n\\n    .line 31\\n    nop\\n\\n    .line 32\\n    :array_20\\n    .array-data 1\\n        0x14t\\n        0x23t\\n        0x75t\\n        0x57t\\n        0x4dt\\n        0xat\\n        0x58t\\n        0x71t\\n        0x66t\\n        -0x56t\\n        -0x19t\\n        0x1et\\n        -0x42t\\n        0x51t\\n        0x64t\\n        0x37t\\n        -0x3ct\\n        -0x5et\\n        -0x75t\\n        0x73t\\n        -0x1dt\\n        0x69t\\n        0x5ct\\n        0x6ct\\n        -0x1ft\\n        -0x9t\\n        -0x7t\\n        0x54t\\n        0x5dt\\n        -0x58t\\n        -0x12t\\n        0x6bt\\n    .end array-data\\n.end method\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C27C",
+    "method": {
+      "name": "<clinit>",
+      "reported_signature": "<clinit>(): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "()V"
+    },
+    "overload_count": 1,
+    "representation": "smali",
+    "body_status": "available",
+    "fell_back": true,
+    "markers": [
+      "static_initializer_disassembly"
+    ],
+    "source": {
+      "status": "complete",
+      "text": ".method public static constructor <clinit>()V\n    .registers 3\n\n    .line 0\n    const/16 v0, 0x20\n\n    .line 1\n    .line 2\n    new-array v0, v0, [B\n\n    .line 3\n    .line 4\n    fill-array-data v0, :array_20\n\n    .line 5\n    .line 6\n    .line 7\n    sput-object v0, LX/27C;->A01:[B\n\n    .line 8\n    .line 9\n    new-instance v2, Ljava/util/HashMap;\n\n    .line 10\n    .line 11\n    invoke-direct {v2}, Ljava/util/HashMap;-><init>()V\n\n    .line 12\n    .line 13\n    .line 14\n    new-instance v1, LX/1nk;\n\n    .line 15\n    .line 16\n    invoke-direct {v1, v0}, LX/1nk;-><init>([B)V\n\n    .line 17\n    .line 18\n    .line 19\n    const-string v0, \"WhatsAppLongTerm1\"\n\n    .line 20\n    .line 21\n    invoke-virtual {v2, v0, v1}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;\n\n    .line 22\n    .line 23\n    .line 24\n    invoke-static {v2}, Ljava/util/Collections;->unmodifiableMap(Ljava/util/Map;)Ljava/util/Map;\n\n    .line 25\n    .line 26\n    .line 27\n    move-result-object v0\n\n    .line 28\n    sput-object v0, LX/27C;->A00:Ljava/util/Map;\n\n    .line 29\n    .line 30\n    return-void\n\n    .line 31\n    nop\n\n    .line 32\n    :array_20\n    .array-data 1\n        0x14t\n        0x23t\n        0x75t\n        0x57t\n        0x4dt\n        0xat\n        0x58t\n        0x71t\n        0x66t\n        -0x56t\n        -0x19t\n        0x1et\n        -0x42t\n        0x51t\n        0x64t\n        0x37t\n        -0x3ct\n        -0x5et\n        -0x75t\n        0x73t\n        -0x1dt\n        0x69t\n        0x5ct\n        0x6ct\n        -0x1ft\n        -0x9t\n        -0x7t\n        0x54t\n        0x5dt\n        -0x58t\n        -0x12t\n        0x6bt\n    .end array-data\n.end method",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

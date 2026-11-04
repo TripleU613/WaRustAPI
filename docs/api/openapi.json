@@ -9848,6 +9848,45 @@
         ]
       }
     },
+    "/v1/app-state/responses/{action_id}": {
+      "get": {
+        "summary": "Classify a saved app-state result offline without applying data",
+        "operationId": "inspectAppStateResponse",
+        "description": "CLI-only structural inspector over one preserved correlated app-state fetch/patch result. Reproduces current APK F2T category precedence: collection error, present version acknowledgement, already-synced, then data. Missing error code uses native -1; version -1 refuses. Snapshot bytes are opaque ExternalBlobReference bytes, not decoded snapshots. Original collection order, unknown names and opaque children remain in the borrowed parser model; JSON prints only known names, fixed categories, counts and scalar metadata, never raw error text/bodies/reference keys. Strict singleton/body/resource guards are bounded local admission policy. Does not verify protobuf exit/version/external-mutation rules, MACs, key authority, request-collection admission, freshness or native generation. integrity_verified is always false. No state write, download, fetch, reservation, ACK, key installation or missing-store creation. No HTTP route is served. See docs/protocol/app-state-fetch-completion.md.",
+        "x-cli": "whatsapp-cli app-state-response-inspect",
+        "x-library": ["whatsapp_api::transport::app_state_sync::inspect_response", "whatsapp_api::transport::app_state_sync::response::classify_response"],
+        "x-transport": ["cli"],
+        "x-live": false,
+        "parameters": [{"name": "action_id", "in": "path", "required": true, "schema": {"type": "string"}, "description": "Original saved app-state action identifier"}],
+        "responses": {
+          "200": {
+            "description": "Redacted structural classification; no integrity or application claim",
+            "content": {"application/json": {"schema": {
+              "type": "object",
+              "required": ["action_id", "integrity_verified", "collections"],
+              "properties": {
+                "action_id": {"type": "string"},
+                "integrity_verified": {"type": "boolean", "enum": [false]},
+                "collections": {"type": "array", "items": {
+                  "type": "object",
+                  "required": ["known_collection", "category", "version_ack", "error_code", "has_error_text", "snapshot_ref_present", "patch_count", "has_more_patches"],
+                  "properties": {
+                    "known_collection": {"type": ["string", "null"], "enum": ["regular", "regular_low", "regular_high", "critical_block", "critical_unblock_low", null]},
+                    "category": {"type": "string", "enum": ["error", "version_ack", "already_synced", "data"]},
+                    "version_ack": {"type": ["integer", "null"], "description": "Native signed acknowledgement scalar; not an applied version"},
+                    "error_code": {"type": ["integer", "null"], "description": "-1 is the absent-code sentinel; no raw server text"},
+                    "has_error_text": {"type": "boolean"},
+                    "snapshot_ref_present": {"type": "boolean", "description": "Consumed opaque reference body present; not a verified snapshot"},
+                    "patch_count": {"type": "integer", "minimum": 0},
+                    "has_more_patches": {"type": ["boolean", "null"], "description": "Consumed data's literal true flag, otherwise false; null outside data categories"}
+                  }
+                }}
+              }
+            }}}
+          }
+        }
+      }
+    },
     "/v1/app-state/inspect": {
       "get": {
         "summary": "Inspect saved app-state integrity and logical-index provenance offline",

@@ -1,0 +1,178 @@
+{
+  "evidence_id": "ev_5dacd9ae5f3aa2d67d9acbcdcf6b4696bfea402189acf69e2fa6ab971a9c3f0f",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "trace_android_references",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C1rA",
+    "method_name": "A03",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-QeXIwM/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"available_processors\":24,\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "load_apk",
+        "input": {
+          "path": "/tmp/rea-android-QeXIwM/target.apk",
+          "threads": 1,
+          "resources": "full"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-QeXIwM/target.apk\",\"class_count\":106897,\"raw_class_count\":106897,\"resource_count\":15728,\"load_duration_ms\":15787,\"decompile_timeout_ms\":90000,\"threads\":1,\"code_cache_size\":64,\"resources\":\"full\"}"
+            }
+          ]
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C1rA"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":4,\"methods\":[{\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\"},{\"def_pos\":0,\"signature\":\"A01(X.0Tp, int): X.DqS\",\"dex_descriptor\":\"(LX/0Tp;I)LX/DqS;\",\"is_constructor\":false,\"name\":\"A01\"},{\"def_pos\":0,\"signature\":\"A02(): java.lang.String[]\",\"dex_descriptor\":\"()[Ljava/lang/String;\",\"is_constructor\":false,\"name\":\"A02\"},{\"def_pos\":0,\"signature\":\"A03(X.1k2): void\",\"dex_descriptor\":\"(LX/1k2;)V\",\"is_constructor\":false,\"name\":\"A03\"}],\"fields\":[{\"type\":\"X.08Y\",\"name\":\"A00\",\"def_pos\":0},{\"type\":\"X.0NX\",\"name\":\"A01\",\"def_pos\":0},{\"type\":\"X.0B0\",\"name\":\"A02\",\"def_pos\":0}],\"field_count\":3,\"full_name\":\"X.C1rA\",\"name\":\"C1rA\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_xrefs_to_method",
+        "input": {
+          "class_name": "X.C1rA",
+          "method_name": "A03",
+          "overload_index": 0,
+          "limit": 2147483647,
+          "resolve_line": false
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"total\":2,\"resolve_line\":false,\"target\":\"X.C1rA.A03\",\"count\":2,\"items\":[{\"kind\":\"method\",\"name\":\"run\",\"full_name\":\"X.1s2.run\",\"containing_class\":\"X.C1s2\",\"top_class\":\"X.C0ZJ\",\"def_pos\":0,\"direct_invokes\":[{\"dex_entry\":\"classes2.dex\",\"opcode\":\"INVOKE_VIRTUAL\",\"dex_code_unit_offset\":2102,\"dex_method_index\":7023,\"source_raw_method_id\":\"X.1s2.run()V\"}],\"direct_invokes_exhaustive\":true},{\"kind\":\"method\",\"name\":\"A01\",\"full_name\":\"X.2Ek.A01\",\"containing_class\":\"X.C2Ek\",\"top_class\":\"X.C2Ek\",\"def_pos\":0,\"direct_invokes\":[{\"dex_entry\":\"classes2.dex\",\"opcode\":\"INVOKE_VIRTUAL\",\"dex_code_unit_offset\":60,\"dex_method_index\":7023,\"source_raw_method_id\":\"X.2Ek.A01(LX/1k3;)V\"}],\"direct_invokes_exhaustive\":true}],\"overload_index\":0,\"reported_signature\":\"A03(X.1k2): void\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C1rA",
+    "method_name": "A03",
+    "overload_index": 0,
+    "reported_signature": "A03(X.1k2): void",
+    "dex_descriptor": "(LX/1k2;)V",
+    "total": 2,
+    "references": [
+      {
+        "kind": "method",
+        "name": "run",
+        "reported_full_name": "X.1s2.run",
+        "containing_class": "X.C1s2",
+        "top_class": "X.C0ZJ",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": true,
+        "direct_invokes": [
+          {
+            "dex_entry": "classes2.dex",
+            "source_raw_method_id": "X.1s2.run()V",
+            "dex_code_unit_offset": 2102,
+            "dex_method_index": 7023,
+            "opcode": "INVOKE_VIRTUAL"
+          }
+        ]
+      },
+      {
+        "kind": "method",
+        "name": "A01",
+        "reported_full_name": "X.2Ek.A01",
+        "containing_class": "X.C2Ek",
+        "top_class": "X.C2Ek",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": true,
+        "direct_invokes": [
+          {
+            "dex_entry": "classes2.dex",
+            "source_raw_method_id": "X.2Ek.A01(LX/1k3;)V",
+            "dex_code_unit_offset": 60,
+            "dex_method_index": 7023,
+            "opcode": "INVOKE_VIRTUAL"
+          }
+        ]
+      }
+    ],
+    "coverage": "complete",
+    "reference_unit": "using_node"
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

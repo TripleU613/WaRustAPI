@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_6288280ad86e07664fc0b73b95c16d7e67f089e05b25738b3ab06940e6aa081d",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.HYT",
+    "method_name": "A01",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-QeXIwM/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"available_processors\":24,\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.HYT"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":3,\"methods\":[{\"def_pos\":0,\"signature\":\"A00(android.content.Context, X.HUV, X.0B0, X.0DS, X.HFg, X.09S, X.08q, X.08Z, X.Hfq, X.HXF, int, boolean): void\",\"dex_descriptor\":\"(Landroid/content/Context;LX/HUV;LX/0B0;LX/0DS;LX/HFg;LX/09S;LX/08q;LX/08Z;LX/Hfq;LX/HXF;IZ)V\",\"is_constructor\":false,\"name\":\"A00\"},{\"def_pos\":0,\"signature\":\"A01(com.google.common.base.Optional, X.HFg, X.09S, X.M1g, X.0GU, X.13N, java.lang.String, java.lang.String, java.util.List, boolean, boolean, boolean): void\",\"dex_descriptor\":\"(Lcom/google/common/base/Optional;LX/HFg;LX/09S;LX/M1g;LX/0GU;LX/13N;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;ZZZ)V\",\"is_constructor\":false,\"name\":\"A01\"},{\"def_pos\":0,\"signature\":\"A02(X.09S, X.HeY): void\",\"dex_descriptor\":\"(LX/09S;LX/HeY;)V\",\"is_constructor\":false,\"name\":\"A02\"}],\"fields\":[],\"field_count\":0,\"full_name\":\"X.HYT\",\"name\":\"HYT\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.HYT",
+          "method_name": "A01",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.HYT\",\"full_name\":\"X.HYT.A01\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"A01\",\"overload_count\":1,\"body\":\"    public static final void A01(Optional optional, HFg hFg, C09S c09s, M1g m1g, C0GU c0gu, C13N c13n, String str, String str2, List list, boolean z, boolean z2, boolean z3) {\\n        C00l.A09(hFg, 1);\\n        C00l.A09(c0gu, 2);\\n        C00l.A09(c13n, 7);\\n        DBc.A1M(c09s, m1g, optional, 8);\\n        C00l.A09(list, 11);\\n        c09s.A16(z);\\n        m1g.A00(z2, z3);\\n        if (optional.isPresent()) {\\n            optional.get();\\n            throw C2L6.A18(\\\"setVNameCertSetInRegistration\\\");\\n        }\\n        Integer num \\u003d C02X.A00;\\n        boolean zA1X \\u003d C2L9.A1X(str);\\n        int length \\u003d -1;\\n        int length2 \\u003d str !\\u003d null ? str.length() : -1;\\n        boolean z4 \\u003d true;\\n        if (str2 !\\u003d null) {\\n            z4 \\u003d false;\\n            length \\u003d str2.length();\\n        }\\n        StringBuilder sbA05 \\u003d AnonymousClass000.A05(\\\"SuccessfulRegistrationStateUtils/lid-lifecycle source\\u003d\\\", \\\"verify\\\");\\n        sbA05.append(\\\" isNewJid\\u003d\\\");\\n        sbA05.append(z);\\n        sbA05.append(\\\" jidNull\\u003d\\\");\\n        sbA05.append(zA1X);\\n        sbA05.append(\\\" jidLen\\u003d\\\");\\n        sbA05.append(length2);\\n        sbA05.append(\\\" lidNull\\u003d\\\");\\n        sbA05.append(z4);\\n        C1Xl.A1U(\\\" lidLen\\u003d\\\", sbA05, length);\\n        c13n.A0I(num, hFg.A00, hFg.A01, str, str2);\\n        c13n.A0D();\\n        c13n.A0J(\\\"com.whatsapp.alarm.REGISTRATION_RETRY\\\");\\n        c13n.A0F(C0cH.A00(list));\\n        c09s.A0K().A04();\\n        c0gu.A0L(false, 0);\\n    }\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.HYT",
+    "method": {
+      "name": "A01",
+      "reported_signature": "A01(com.google.common.base.Optional, X.HFg, X.09S, X.M1g, X.0GU, X.13N, java.lang.String, java.lang.String, java.util.List, boolean, boolean, boolean): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(Lcom/google/common/base/Optional;LX/HFg;LX/09S;LX/M1g;LX/0GU;LX/13N;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;ZZZ)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public static final void A01(Optional optional, HFg hFg, C09S c09s, M1g m1g, C0GU c0gu, C13N c13n, String str, String str2, List list, boolean z, boolean z2, boolean z3) {\n        C00l.A09(hFg, 1);\n        C00l.A09(c0gu, 2);\n        C00l.A09(c13n, 7);\n        DBc.A1M(c09s, m1g, optional, 8);\n        C00l.A09(list, 11);\n        c09s.A16(z);\n        m1g.A00(z2, z3);\n        if (optional.isPresent()) {\n            optional.get();\n            throw C2L6.A18(\"setVNameCertSetInRegistration\");\n        }\n        Integer num = C02X.A00;\n        boolean zA1X = C2L9.A1X(str);\n        int length = -1;\n        int length2 = str != null ? str.length() : -1;\n        boolean z4 = true;\n        if (str2 != null) {\n            z4 = false;\n            length = str2.length();\n        }\n        StringBuilder sbA05 = AnonymousClass000.A05(\"SuccessfulRegistrationStateUtils/lid-lifecycle source=\", \"verify\");\n        sbA05.append(\" isNewJid=\");\n        sbA05.append(z);\n        sbA05.append(\" jidNull=\");\n        sbA05.append(zA1X);\n        sbA05.append(\" jidLen=\");\n        sbA05.append(length2);\n        sbA05.append(\" lidNull=\");\n        sbA05.append(z4);\n        C1Xl.A1U(\" lidLen=\", sbA05, length);\n        c13n.A0I(num, hFg.A00, hFg.A01, str, str2);\n        c13n.A0D();\n        c13n.A0J(\"com.whatsapp.alarm.REGISTRATION_RETRY\");\n        c13n.A0F(C0cH.A00(list));\n        c09s.A0K().A04();\n        c0gu.A0L(false, 0);\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

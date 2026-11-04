@@ -1,0 +1,162 @@
+{
+  "evidence_id": "ev_531a92557f7c23e79488e99b9e0fa2e758fcf502a6d772b76be10959dbc0d167",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "trace_android_references",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C0ln",
+    "method_name": "A0F",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-QeXIwM/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"available_processors\":24,\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C0ln"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":20,\"methods\":[{\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\"},{\"def_pos\":0,\"signature\":\"A00(android.os.Message, X.0ln, int): void\",\"dex_descriptor\":\"(Landroid/os/Message;LX/0ln;I)V\",\"is_constructor\":false,\"name\":\"A00\"},{\"def_pos\":0,\"signature\":\"A01(X.0lG, X.0Tp, X.0ln, java.lang.String): void\",\"dex_descriptor\":\"(LX/0lG;LX/0Tp;LX/0ln;Ljava/lang/String;)V\",\"is_constructor\":false,\"name\":\"A01\"},{\"def_pos\":0,\"signature\":\"A02(X.0Tp, X.0ln, java.lang.String, boolean): void\",\"dex_descriptor\":\"(LX/0Tp;LX/0ln;Ljava/lang/String;Z)V\",\"is_constructor\":false,\"name\":\"A02\"},{\"def_pos\":0,\"signature\":\"A03(X.0ln, java.lang.String, boolean): void\",\"dex_descriptor\":\"(LX/0ln;Ljava/lang/String;Z)V\",\"is_constructor\":false,\"name\":\"A03\"},{\"def_pos\":0,\"signature\":\"A04(X.0ln, java.lang.Throwable, int): void\",\"dex_descriptor\":\"(LX/0ln;Ljava/lang/Throwable;I)V\",\"is_constructor\":false,\"name\":\"A04\"},{\"def_pos\":0,\"signature\":\"A05(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"A05\"},{\"def_pos\":0,\"signature\":\"A06(long, java.lang.String, boolean): void\",\"dex_descriptor\":\"(JLjava/lang/String;Z)V\",\"is_constructor\":false,\"name\":\"A06\"},{\"def_pos\":0,\"signature\":\"A07(android.os.Message, int): void\",\"dex_descriptor\":\"(Landroid/os/Message;I)V\",\"is_constructor\":false,\"name\":\"A07\"},{\"def_pos\":0,\"signature\":\"A08(X.0lG, java.lang.String, int, long, boolean): void\",\"dex_descriptor\":\"(LX/0lG;Ljava/lang/String;IJZ)V\",\"is_constructor\":false,\"name\":\"A08\"},{\"def_pos\":0,\"signature\":\"A09(X.0Tp, X.Eoh): void\",\"dex_descriptor\":\"(LX/0Tp;LX/Eoh;)V\",\"is_constructor\":false,\"name\":\"A09\"},{\"def_pos\":0,\"signature\":\"A0A(X.Eoh): void\",\"dex_descriptor\":\"(LX/Eoh;)V\",\"is_constructor\":false,\"name\":\"A0A\"},{\"def_pos\":0,\"signature\":\"A0B(X.Eoh, java.lang.Exception): void\",\"dex_descriptor\":\"(LX/Eoh;Ljava/lang/Exception;)V\",\"is_constructor\":false,\"name\":\"A0B\"},{\"def_pos\":0,\"signature\":\"A0C(java.lang.String): void\",\"dex_descriptor\":\"(Ljava/lang/String;)V\",\"is_constructor\":false,\"name\":\"A0C\"},{\"def_pos\":0,\"signature\":\"A0D(java.lang.String): void\",\"dex_descriptor\":\"(Ljava/lang/String;)V\",\"is_constructor\":false,\"name\":\"A0D\"},{\"def_pos\":0,\"signature\":\"A0E(java.lang.String): void\",\"dex_descriptor\":\"(Ljava/lang/String;)V\",\"is_constructor\":false,\"name\":\"A0E\"},{\"def_pos\":0,\"signature\":\"A0F(boolean, int): void\",\"dex_descriptor\":\"(ZI)V\",\"is_constructor\":false,\"name\":\"A0F\"},{\"def_pos\":0,\"signature\":\"A0G(int): boolean\",\"dex_descriptor\":\"(I)Z\",\"is_constructor\":false,\"name\":\"A0G\"},{\"def_pos\":0,\"signature\":\"A0H(X.0Tp, java.lang.String): boolean\",\"dex_descriptor\":\"(LX/0Tp;Ljava/lang/String;)Z\",\"is_constructor\":false,\"name\":\"A0H\"},{\"def_pos\":0,\"signature\":\"A0I(java.lang.String): boolean\",\"dex_descriptor\":\"(Ljava/lang/String;)Z\",\"is_constructor\":false,\"name\":\"A0I\"}],\"fields\":[{\"type\":\"int\",\"name\":\"A00\",\"def_pos\":0},{\"type\":\"boolean\",\"name\":\"A01\",\"def_pos\":0},{\"type\":\"android.util.SparseIntArray\",\"name\":\"A02\",\"def_pos\":0},{\"type\":\"X.00x\",\"name\":\"A03\",\"def_pos\":0},{\"type\":\"com.google.common.base.Optional\",\"name\":\"A04\",\"def_pos\":0},{\"type\":\"com.google.common.base.Optional\",\"name\":\"A05\",\"def_pos\":0},{\"type\":\"X.08Y\",\"name\":\"A06\",\"def_pos\":0},{\"type\":\"X.0B0\",\"name\":\"A07\",\"def_pos\":0},{\"type\":\"X.098\",\"name\":\"A08\",\"def_pos\":0},{\"type\":\"X.0lG\",\"name\":\"A09\",\"def_pos\":0},{\"type\":\"X.0TX\",\"name\":\"A0A\",\"def_pos\":0},{\"type\":\"X.0TT\",\"name\":\"A0B\",\"def_pos\":0},{\"type\":\"X.0Th\",\"name\":\"A0C\",\"def_pos\":0},{\"type\":\"X.0TV\",\"name\":\"A0D\",\"def_pos\":0},{\"type\":\"X.0m2\",\"name\":\"A0E\",\"def_pos\":0},{\"type\":\"java.lang.Object\",\"name\":\"A0F\",\"def_pos\":0},{\"type\":\"java.util.List\",\"name\":\"A0G\",\"def_pos\":0},{\"type\":\"java.util.Map\",\"name\":\"A0H\",\"def_pos\":0},{\"type\":\"java.util.Map\",\"name\":\"A0I\",\"def_pos\":0},{\"type\":\"android.os.HandlerThread\",\"name\":\"A0J\",\"def_pos\":0},{\"type\":\"X.00x\",\"name\":\"A0K\",\"def_pos\":0},{\"type\":\"X.00x\",\"name\":\"A0L\",\"def_pos\":0},{\"type\":\"X.00x\",\"name\":\"A0M\",\"def_pos\":0},{\"type\":\"X.00x\",\"name\":\"A0N\",\"def_pos\":0},{\"type\":\"X.08q\",\"name\":\"A0O\",\"def_pos\":0},{\"type\":\"java.lang.Object\",\"name\":\"A0P\",\"def_pos\":0},{\"type\":\"boolean\",\"name\":\"A0Q\",\"def_pos\":0}],\"field_count\":27,\"full_name\":\"X.C0ln\",\"name\":\"C0ln\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_xrefs_to_method",
+        "input": {
+          "class_name": "X.C0ln",
+          "method_name": "A0F",
+          "overload_index": 0,
+          "limit": 2147483647,
+          "resolve_line": false
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"total\":2,\"resolve_line\":false,\"target\":\"X.C0ln.A0F\",\"count\":2,\"items\":[{\"kind\":\"method\",\"name\":\"A05\",\"full_name\":\"X.0YB.A05\",\"containing_class\":\"X.C0YB\",\"top_class\":\"X.C0YB\",\"def_pos\":0,\"direct_invokes\":[{\"dex_entry\":\"classes.dex\",\"opcode\":\"INVOKE_VIRTUAL\",\"dex_code_unit_offset\":276,\"dex_method_index\":17806,\"source_raw_method_id\":\"X.0YB.A05(LX/0YB;IZ)V\"}],\"direct_invokes_exhaustive\":true},{\"kind\":\"method\",\"name\":\"handleMessage\",\"full_name\":\"X.0YU.handleMessage\",\"containing_class\":\"X.C0YU\",\"top_class\":\"X.C0YU\",\"def_pos\":0,\"direct_invokes\":[{\"dex_entry\":\"classes.dex\",\"opcode\":\"INVOKE_VIRTUAL\",\"dex_code_unit_offset\":838,\"dex_method_index\":17806,\"source_raw_method_id\":\"X.0YU.handleMessage(Landroid/os/Message;)V\"}],\"direct_invokes_exhaustive\":true}],\"overload_index\":0,\"reported_signature\":\"A0F(boolean, int): void\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C0ln",
+    "method_name": "A0F",
+    "overload_index": 0,
+    "reported_signature": "A0F(boolean, int): void",
+    "dex_descriptor": "(ZI)V",
+    "total": 2,
+    "references": [
+      {
+        "kind": "method",
+        "name": "A05",
+        "reported_full_name": "X.0YB.A05",
+        "containing_class": "X.C0YB",
+        "top_class": "X.C0YB",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": true,
+        "direct_invokes": [
+          {
+            "dex_entry": "classes.dex",
+            "source_raw_method_id": "X.0YB.A05(LX/0YB;IZ)V",
+            "dex_code_unit_offset": 276,
+            "dex_method_index": 17806,
+            "opcode": "INVOKE_VIRTUAL"
+          }
+        ]
+      },
+      {
+        "kind": "method",
+        "name": "handleMessage",
+        "reported_full_name": "X.0YU.handleMessage",
+        "containing_class": "X.C0YU",
+        "top_class": "X.C0YU",
+        "source_line": null,
+        "dex_offset": null,
+        "direct_invokes_exhaustive": true,
+        "direct_invokes": [
+          {
+            "dex_entry": "classes.dex",
+            "source_raw_method_id": "X.0YU.handleMessage(Landroid/os/Message;)V",
+            "dex_code_unit_offset": 838,
+            "dex_method_index": 17806,
+            "opcode": "INVOKE_VIRTUAL"
+          }
+        ]
+      }
+    ],
+    "coverage": "complete",
+    "reference_unit": "using_node"
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

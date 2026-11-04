@@ -1,0 +1,241 @@
+{
+  "evidence_id": "ev_0a0889d276c3afadecd35fa8046729732062f95f8ea61eabd29fb82298c5bf98",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_class",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C1oK"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-QeXIwM/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"available_processors\":24,\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C1oK"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":10,\"methods\":[{\"def_pos\":0,\"signature\":\"\\u003cclinit\\u003e(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"\\u003cclinit\\u003e\"},{\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(X.1o9, byte[], byte[]): void\",\"dex_descriptor\":\"(LX/1o9;[B[B)V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\"},{\"def_pos\":0,\"signature\":\"A00(X.1oK, byte[]): void\",\"dex_descriptor\":\"(LX/1oK;[B)V\",\"is_constructor\":false,\"name\":\"A00\"},{\"def_pos\":0,\"signature\":\"A01(X.1nk, org.whispersystems.libsignal.kem.KEMPublicKey): X.1qw\",\"dex_descriptor\":\"(LX/1nk;Lorg/whispersystems/libsignal/kem/KEMPublicKey;)LX/1qw;\",\"is_constructor\":false,\"name\":\"A01\"},{\"def_pos\":0,\"signature\":\"A02(byte[]): X.1nk\",\"dex_descriptor\":\"([B)LX/1nk;\",\"is_constructor\":false,\"name\":\"A02\"},{\"def_pos\":0,\"signature\":\"A03(java.lang.Integer, X.1nq, X.1nk): void\",\"dex_descriptor\":\"(Ljava/lang/Integer;LX/1nq;LX/1nk;)V\",\"is_constructor\":false,\"name\":\"A03\"},{\"def_pos\":0,\"signature\":\"A04(java.lang.Integer, byte[]): byte[]\",\"dex_descriptor\":\"(Ljava/lang/Integer;[B)[B\",\"is_constructor\":false,\"name\":\"A04\"},{\"def_pos\":0,\"signature\":\"A05(java.lang.Integer, byte[]): byte[]\",\"dex_descriptor\":\"(Ljava/lang/Integer;[B)[B\",\"is_constructor\":false,\"name\":\"A05\"},{\"def_pos\":0,\"signature\":\"A06(X.1nk): byte[]\",\"dex_descriptor\":\"(LX/1nk;)[B\",\"is_constructor\":false,\"name\":\"A06\"},{\"def_pos\":0,\"signature\":\"A07(org.whispersystems.libsignal.kem.KEMPublicKey): byte[]\",\"dex_descriptor\":\"(Lorg/whispersystems/libsignal/kem/KEMPublicKey;)[B\",\"is_constructor\":false,\"name\":\"A07\"}],\"fields\":[{\"type\":\"long\",\"name\":\"A00\",\"def_pos\":0},{\"type\":\"X.1oU\",\"name\":\"A01\",\"def_pos\":0},{\"type\":\"byte[]\",\"name\":\"A02\",\"def_pos\":0},{\"type\":\"X.1o9\",\"name\":\"A03\",\"def_pos\":0},{\"type\":\"X.1oL\",\"name\":\"A04\",\"def_pos\":0},{\"type\":\"byte[]\",\"name\":\"A05\",\"def_pos\":0},{\"type\":\"byte[]\",\"name\":\"A06\",\"def_pos\":0},{\"type\":\"byte[]\",\"name\":\"A07\",\"def_pos\":0},{\"type\":\"byte[]\",\"name\":\"A08\",\"def_pos\":0},{\"type\":\"byte[]\",\"name\":\"A09\",\"def_pos\":0},{\"type\":\"byte[]\",\"name\":\"A0A\",\"def_pos\":0},{\"type\":\"byte[]\",\"name\":\"A0B\",\"def_pos\":0},{\"type\":\"byte[]\",\"name\":\"A0C\",\"def_pos\":0},{\"type\":\"byte[]\",\"name\":\"A0D\",\"def_pos\":0},{\"type\":\"byte[]\",\"name\":\"A0E\",\"def_pos\":0},{\"type\":\"byte[]\",\"name\":\"A0F\",\"def_pos\":0},{\"type\":\"byte[]\",\"name\":\"A0G\",\"def_pos\":0},{\"type\":\"byte[]\",\"name\":\"A0H\",\"def_pos\":0}],\"field_count\":18,\"full_name\":\"X.C1oK\",\"name\":\"C1oK\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C1oK",
+    "methods": [
+      {
+        "name": "<clinit>",
+        "reported_signature": "<clinit>(): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "()V"
+      },
+      {
+        "name": "<init>",
+        "reported_signature": "<init>(X.1o9, byte[], byte[]): void",
+        "overload_index": 0,
+        "is_constructor": true,
+        "dex_descriptor": "(LX/1o9;[B[B)V"
+      },
+      {
+        "name": "A00",
+        "reported_signature": "A00(X.1oK, byte[]): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/1oK;[B)V"
+      },
+      {
+        "name": "A01",
+        "reported_signature": "A01(X.1nk, org.whispersystems.libsignal.kem.KEMPublicKey): X.1qw",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/1nk;Lorg/whispersystems/libsignal/kem/KEMPublicKey;)LX/1qw;"
+      },
+      {
+        "name": "A02",
+        "reported_signature": "A02(byte[]): X.1nk",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "([B)LX/1nk;"
+      },
+      {
+        "name": "A03",
+        "reported_signature": "A03(java.lang.Integer, X.1nq, X.1nk): void",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Ljava/lang/Integer;LX/1nq;LX/1nk;)V"
+      },
+      {
+        "name": "A04",
+        "reported_signature": "A04(java.lang.Integer, byte[]): byte[]",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Ljava/lang/Integer;[B)[B"
+      },
+      {
+        "name": "A05",
+        "reported_signature": "A05(java.lang.Integer, byte[]): byte[]",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Ljava/lang/Integer;[B)[B"
+      },
+      {
+        "name": "A06",
+        "reported_signature": "A06(X.1nk): byte[]",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(LX/1nk;)[B"
+      },
+      {
+        "name": "A07",
+        "reported_signature": "A07(org.whispersystems.libsignal.kem.KEMPublicKey): byte[]",
+        "overload_index": 0,
+        "is_constructor": false,
+        "dex_descriptor": "(Lorg/whispersystems/libsignal/kem/KEMPublicKey;)[B"
+      }
+    ],
+    "fields": [
+      {
+        "name": "A00",
+        "reported_type": "long"
+      },
+      {
+        "name": "A01",
+        "reported_type": "X.1oU"
+      },
+      {
+        "name": "A02",
+        "reported_type": "byte[]"
+      },
+      {
+        "name": "A03",
+        "reported_type": "X.1o9"
+      },
+      {
+        "name": "A04",
+        "reported_type": "X.1oL"
+      },
+      {
+        "name": "A05",
+        "reported_type": "byte[]"
+      },
+      {
+        "name": "A06",
+        "reported_type": "byte[]"
+      },
+      {
+        "name": "A07",
+        "reported_type": "byte[]"
+      },
+      {
+        "name": "A08",
+        "reported_type": "byte[]"
+      },
+      {
+        "name": "A09",
+        "reported_type": "byte[]"
+      },
+      {
+        "name": "A0A",
+        "reported_type": "byte[]"
+      },
+      {
+        "name": "A0B",
+        "reported_type": "byte[]"
+      },
+      {
+        "name": "A0C",
+        "reported_type": "byte[]"
+      },
+      {
+        "name": "A0D",
+        "reported_type": "byte[]"
+      },
+      {
+        "name": "A0E",
+        "reported_type": "byte[]"
+      },
+      {
+        "name": "A0F",
+        "reported_type": "byte[]"
+      },
+      {
+        "name": "A0G",
+        "reported_type": "byte[]"
+      },
+      {
+        "name": "A0H",
+        "reported_type": "byte[]"
+      }
+    ],
+    "inner_classes": []
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

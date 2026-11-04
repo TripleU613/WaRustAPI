@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_21d14960bc3635a7eac94e512953dbe00fcc7aea61287e1f461566411299e316",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.AnonymousClass123",
+    "method_name": "A08",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-QeXIwM/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"available_processors\":24,\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.AnonymousClass123"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":13,\"methods\":[{\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(X.122): void\",\"dex_descriptor\":\"(LX/122;)V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\"},{\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(X.122, X.1qz, boolean): void\",\"dex_descriptor\":\"(LX/122;LX/1qz;Z)V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\"},{\"def_pos\":0,\"signature\":\"A00(int, java.io.InputStream): int\",\"dex_descriptor\":\"(ILjava/io/InputStream;)I\",\"is_constructor\":false,\"name\":\"A00\"},{\"def_pos\":0,\"signature\":\"A01(X.123, java.io.InputStream): X.0Tp\",\"dex_descriptor\":\"(LX/123;Ljava/io/InputStream;)LX/0Tp;\",\"is_constructor\":false,\"name\":\"A01\"},{\"def_pos\":0,\"signature\":\"A02(java.io.InputStream): java.lang.String\",\"dex_descriptor\":\"(Ljava/io/InputStream;)Ljava/lang/String;\",\"is_constructor\":false,\"name\":\"A02\"},{\"def_pos\":0,\"signature\":\"A03(java.io.InputStream): java.lang.String\",\"dex_descriptor\":\"(Ljava/io/InputStream;)Ljava/lang/String;\",\"is_constructor\":false,\"name\":\"A03\"},{\"def_pos\":0,\"signature\":\"A04(java.lang.String, java.lang.String, int): java.lang.String\",\"dex_descriptor\":\"(Ljava/lang/String;Ljava/lang/String;I)Ljava/lang/String;\",\"is_constructor\":false,\"name\":\"A04\"},{\"def_pos\":0,\"signature\":\"A05(com.whatsapp.infra.core.jid.Jid, java.lang.String): void\",\"dex_descriptor\":\"(Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;)V\",\"is_constructor\":false,\"name\":\"A05\"},{\"def_pos\":0,\"signature\":\"A06(java.io.InputStream, byte[]): void\",\"dex_descriptor\":\"(Ljava/io/InputStream;[B)V\",\"is_constructor\":false,\"name\":\"A06\"},{\"def_pos\":0,\"signature\":\"A07(java.io.InputStream, int): byte[]\",\"dex_descriptor\":\"(Ljava/io/InputStream;I)[B\",\"is_constructor\":false,\"name\":\"A07\"},{\"def_pos\":0,\"signature\":\"A08(): X.0Tp\",\"dex_descriptor\":\"()LX/0Tp;\",\"is_constructor\":false,\"name\":\"A08\"},{\"def_pos\":0,\"signature\":\"A09(): java.lang.String\",\"dex_descriptor\":\"()Ljava/lang/String;\",\"is_constructor\":false,\"name\":\"A09\"},{\"def_pos\":0,\"signature\":\"A0A(java.io.InputStream, int): java.lang.String\",\"dex_descriptor\":\"(Ljava/io/InputStream;I)Ljava/lang/String;\",\"is_constructor\":false,\"name\":\"A0A\"}],\"fields\":[{\"type\":\"byte[]\",\"name\":\"A00\",\"def_pos\":0},{\"type\":\"X.00x\",\"name\":\"A01\",\"def_pos\":0},{\"type\":\"X.1qz\",\"name\":\"A02\",\"def_pos\":0},{\"type\":\"X.122\",\"name\":\"A03\",\"def_pos\":0},{\"type\":\"boolean\",\"name\":\"A04\",\"def_pos\":0}],\"field_count\":5,\"full_name\":\"X.AnonymousClass123\",\"name\":\"AnonymousClass123\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.AnonymousClass123",
+          "method_name": "A08",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.AnonymousClass123\",\"full_name\":\"X.123.A08\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"A08\",\"overload_count\":1,\"body\":\"    /* JADX WARN: Code duplicated, block: B:47:0x00c4  */\\n    /* JADX WARN: Code duplicated, block: B:51:0x00e8  */\\n    public C0Tp A08() throws Exception {\\n        byte[] bArrA00;\\n        int length;\\n        C0Tp c0TpA01;\\n        C1qz c1qz \\u003d this.A02;\\n        C00L.A06(c1qz, \\\"frameInputStream is null\\\");\\n        do {\\n            try {\\n                C1oG c1oG \\u003d c1qz.A00;\\n                byte[] bArr \\u003d new byte[3];\\n                C1oG.A00(c1oG, bArr);\\n                byte[] bArr2 \\u003d new byte[C1nr.A00(bArr)];\\n                C1oG.A00(c1oG, bArr2);\\n                C1qw c1qw \\u003d c1qz.A01;\\n                bArrA00 \\u003d c1qw.A03.A00(new byte[0], c1qw.A00.getAndIncrement(), bArr2);\\n                length \\u003d bArrA00.length;\\n            } catch (C2AD e) {\\n                throw new C29k(e);\\n            }\\n        } while (length \\u003d\\u003d 0);\\n        if (length \\u003d\\u003d 1) {\\n            throw new LIL(\\\"header only frame received\\\");\\n        }\\n        byte b \\u003d bArrA00[0];\\n        if ((b \\u0026 2) \\u003d\\u003d 0) {\\n            this.A00 \\u003d bArrA00;\\n            if ((b \\u0026 1) \\u003d\\u003d 0) {\\n                throw new LIL(\\\"server to client stanza fragmentation not supported\\\");\\n            }\\n            c0TpA01 \\u003d A01(this, new ByteArrayInputStream(bArrA00, 1, bArrA00.length - 1));\\n        } else if (this.A04) {\\n            this.A00 \\u003d bArrA00;\\n            if ((b \\u0026 1) !\\u003d 0) {\\n                throw new LIL(\\\"server to client stanza fragmentation not supported\\\");\\n            }\\n            BufferedInputStream bufferedInputStream \\u003d new BufferedInputStream(new InflaterInputStream(new ByteArrayInputStream(bArrA00, 1, length - 1)), 8192);\\n            try {\\n                c0TpA01 \\u003d A01(this, bufferedInputStream);\\n                do {\\n                } while (bufferedInputStream.read(new byte[256]) !\\u003d -1);\\n                bufferedInputStream.close();\\n            } catch (Throwable th) {\\n                try {\\n                    bufferedInputStream.close();\\n                    throw th;\\n                } catch (Throwable th2) {\\n                    NhF.A1B(th2, th);\\n                    throw th;\\n                }\\n            }\\n        } else {\\n            byte[] bArr3 \\u003d {b};\\n            InflaterInputStream inflaterInputStream \\u003d new InflaterInputStream(new ByteArrayInputStream(bArrA00, 1, length - 1));\\n            try {\\n                ByteArrayOutputStream byteArrayOutputStream \\u003d new ByteArrayOutputStream(8192);\\n                try {\\n                    byteArrayOutputStream.write(bArr3);\\n                    byte[] bArr4 \\u003d new byte[8192];\\n                    for (int i \\u003d inflaterInputStream.read(bArr4); i \\u003e\\u003d 0; i \\u003d inflaterInputStream.read(bArr4)) {\\n                        byteArrayOutputStream.write(bArr4, 0, i);\\n                    }\\n                    inflaterInputStream.close();\\n                    byteArrayOutputStream.close();\\n                    bArrA00 \\u003d byteArrayOutputStream.toByteArray();\\n                    C00l.A05(bArrA00);\\n                    byteArrayOutputStream.close();\\n                    inflaterInputStream.close();\\n                    this.A00 \\u003d bArrA00;\\n                    if ((b \\u0026 1) \\u003d\\u003d 0) {\\n                        throw new LIL(\\\"server to client stanza fragmentation not supported\\\");\\n                    }\\n                    c0TpA01 \\u003d A01(this, new ByteArrayInputStream(bArrA00, 1, bArrA00.length - 1));\\n                } catch (Throwable th3) {\\n                    try {\\n                        throw th3;\\n                    } catch (Throwable th4) {\\n                        C08N.A00(byteArrayOutputStream, th3);\\n                        throw th4;\\n                    }\\n                }\\n            } catch (Throwable th5) {\\n                try {\\n                    throw th5;\\n                } catch (Throwable th6) {\\n                    C08N.A00(inflaterInputStream, th5);\\n                    throw th6;\\n                }\\n            }\\n        }\\n        this.A00 \\u003d null;\\n        C09H.A03(((C00X) this.A01.BFb()).A01(), 1251);\\n        return c0TpA01;\\n    }\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.AnonymousClass123",
+    "method": {
+      "name": "A08",
+      "reported_signature": "A08(): X.0Tp",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "()LX/0Tp;"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Code duplicated, block: B:47:0x00c4  */\n    /* JADX WARN: Code duplicated, block: B:51:0x00e8  */\n    public C0Tp A08() throws Exception {\n        byte[] bArrA00;\n        int length;\n        C0Tp c0TpA01;\n        C1qz c1qz = this.A02;\n        C00L.A06(c1qz, \"frameInputStream is null\");\n        do {\n            try {\n                C1oG c1oG = c1qz.A00;\n                byte[] bArr = new byte[3];\n                C1oG.A00(c1oG, bArr);\n                byte[] bArr2 = new byte[C1nr.A00(bArr)];\n                C1oG.A00(c1oG, bArr2);\n                C1qw c1qw = c1qz.A01;\n                bArrA00 = c1qw.A03.A00(new byte[0], c1qw.A00.getAndIncrement(), bArr2);\n                length = bArrA00.length;\n            } catch (C2AD e) {\n                throw new C29k(e);\n            }\n        } while (length == 0);\n        if (length == 1) {\n            throw new LIL(\"header only frame received\");\n        }\n        byte b = bArrA00[0];\n        if ((b & 2) == 0) {\n            this.A00 = bArrA00;\n            if ((b & 1) == 0) {\n                throw new LIL(\"server to client stanza fragmentation not supported\");\n            }\n            c0TpA01 = A01(this, new ByteArrayInputStream(bArrA00, 1, bArrA00.length - 1));\n        } else if (this.A04) {\n            this.A00 = bArrA00;\n            if ((b & 1) != 0) {\n                throw new LIL(\"server to client stanza fragmentation not supported\");\n            }\n            BufferedInputStream bufferedInputStream = new BufferedInputStream(new InflaterInputStream(new ByteArrayInputStream(bArrA00, 1, length - 1)), 8192);\n            try {\n                c0TpA01 = A01(this, bufferedInputStream);\n                do {\n                } while (bufferedInputStream.read(new byte[256]) != -1);\n                bufferedInputStream.close();\n            } catch (Throwable th) {\n                try {\n                    bufferedInputStream.close();\n                    throw th;\n                } catch (Throwable th2) {\n                    NhF.A1B(th2, th);\n                    throw th;\n                }\n            }\n        } else {\n            byte[] bArr3 = {b};\n            InflaterInputStream inflaterInputStream = new InflaterInputStream(new ByteArrayInputStream(bArrA00, 1, length - 1));\n            try {\n                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(8192);\n                try {\n                    byteArrayOutputStream.write(bArr3);\n                    byte[] bArr4 = new byte[8192];\n                    for (int i = inflaterInputStream.read(bArr4); i >= 0; i = inflaterInputStream.read(bArr4)) {\n                        byteArrayOutputStream.write(bArr4, 0, i);\n                    }\n                    inflaterInputStream.close();\n                    byteArrayOutputStream.close();\n                    bArrA00 = byteArrayOutputStream.toByteArray();\n                    C00l.A05(bArrA00);\n                    byteArrayOutputStream.close();\n                    inflaterInputStream.close();\n                    this.A00 = bArrA00;\n                    if ((b & 1) == 0) {\n                        throw new LIL(\"server to client stanza fragmentation not supported\");\n                    }\n                    c0TpA01 = A01(this, new ByteArrayInputStream(bArrA00, 1, bArrA00.length - 1));\n                } catch (Throwable th3) {\n                    try {\n                        throw th3;\n                    } catch (Throwable th4) {\n                        C08N.A00(byteArrayOutputStream, th3);\n                        throw th4;\n                    }\n                }\n            } catch (Throwable th5) {\n                try {\n                    throw th5;\n                } catch (Throwable th6) {\n                    C08N.A00(inflaterInputStream, th5);\n                    throw th6;\n                }\n            }\n        }\n        this.A00 = null;\n        C09H.A03(((C00X) this.A01.BFb()).A01(), 1251);\n        return c0TpA01;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

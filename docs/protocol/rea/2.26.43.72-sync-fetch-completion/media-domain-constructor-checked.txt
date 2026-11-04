@@ -1,0 +1,14 @@
+
+# class: LX/0jS;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLIL)  # .registers 5
+    # full signature: LX/0jS;-><init>(Ljava/lang/String;[BILjava/lang/String;)V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput  v3, v0, LX/0jS;->A00:I
+    000a..000e  iput-object  v2, v0, LX/0jS;->A03:[B
+    000e..0012  iput-object  v1, v0, LX/0jS;->A02:Ljava/lang/String;
+    0012..0016  iput-object  v4, v0, LX/0jS;->A01:Ljava/lang/String;
+    0016..0018  return-void
+    # exception table: 0 try range(s)
+.end method

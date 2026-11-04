@@ -275,6 +275,18 @@ Usage: whatsapp-cli app-state-inspect [OPTIONS]...
 | --reconstruct-snapshot | RECONSTRUCT_SNAPSHOT | no |  |  |  | Reconstruct missing index metadata from an authenticated same-version local snapshot |
 | --collection | COLLECTION | no |  |  |  | Existing held collection to reconstruct; no version advancement |
 
+## whatsapp-cli app-state-response-inspect
+
+Classify a saved app-state result structurally (offline; no integrity verification)
+
+```
+Usage: whatsapp-cli app-state-response-inspect [OPTIONS]...
+```
+
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+|  | ACTION_ID | yes |  |  |  | Original app-state action ID with a preserved result reply |
+
 ## whatsapp-cli actions
 
 Show queued one-shot actions (block list, reports, lookups) and their outcomes (offline, redacted)

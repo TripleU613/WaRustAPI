@@ -1,0 +1,130 @@
+{
+  "evidence_id": "ev_106d1c40d41167eeb8fa42af97764ff7c7c3fa85d102acb931677da6f07da875",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.Dxd",
+    "method_name": "<init>"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-98RgML/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.Dxd"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cinit\\u003e(X.0lN, X.Dg5, java.lang.String): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"(LX/0lN;LX/Dg5;Ljava/lang/String;)V\"},{\"signature\":\"A03(X.MXt): X.MWP\",\"def_pos\":0,\"name\":\"A03\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/MXt;)LX/MWP;\"},{\"signature\":\"A05(): java.lang.Object\",\"def_pos\":0,\"name\":\"A05\",\"is_constructor\":false,\"dex_descriptor\":\"()Ljava/lang/Object;\"},{\"signature\":\"A07(): boolean\",\"def_pos\":0,\"name\":\"A07\",\"is_constructor\":false,\"dex_descriptor\":\"()Z\"}],\"method_count\":4,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"Dxd\",\"full_name\":\"X.Dxd\",\"field_count\":7,\"fields\":[{\"type\":\"java.io.File\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"java.io.File\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"java.lang.String\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"java.lang.String\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"java.lang.String\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"java.lang.String\",\"def_pos\":0,\"name\":\"A05\"},{\"type\":\"X.0lN\",\"def_pos\":0,\"name\":\"A06\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.Dxd",
+          "method_name": "<init>",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.Dxd.\\u003cinit\\u003e\",\"class_name\":\"X.Dxd\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    /* JADX WARN: Illegal instructions before constructor call */\\n    public Dxd(C0lN c0lN, Dg5 dg5, String str) throws Dn7, Dn4 {\\n        this.A06 \\u003d c0lN;\\n        C08q c08q \\u003d c0lN.A03;\\n        C08Y c08y \\u003d c0lN.A00;\\n        C0Ze c0Ze \\u003d c0lN.A04;\\n        super(c08y, c0lN.A02, c08q, c0Ze, c0lN.A05, c0lN.A06, null);\\n        try {\\n            C0kz c0kz \\u003d c0lN.A01.A00;\\n            this.A01 \\u003d c0kz.A02(Voip.REJECT_REASON_DECLINED);\\n            this.A00 \\u003d c0kz.A02(Voip.REJECT_REASON_DECLINED);\\n            int i \\u003d dg5.bitField0_;\\n            if ((i \\u0026 1) \\u003d\\u003d 0) {\\n                throw new Dn7(E6Q.A05, AnonymousClass000.A04(\\\"Missing media key for collection: \\\", str));\\n            }\\n            if ((i \\u0026 2) \\u003d\\u003d 0) {\\n                throw new Dn7(E6Q.A02, AnonymousClass000.A04(\\\"Missing direct path for collection: \\\", str));\\n            }\\n            if ((i \\u0026 16) \\u003d\\u003d 0) {\\n                throw new Dn7(E6Q.A04, AnonymousClass000.A04(\\\"Missing file sha256 for collection: \\\", str));\\n            }\\n            if ((i \\u0026 32) \\u003d\\u003d 0) {\\n                throw new Dn7(E6Q.A03, AnonymousClass000.A04(\\\"Missing file enc sha256 for collection: \\\", str));\\n            }\\n            byte[] byteArray \\u003d dg5.mediaKey_.toByteArray();\\n            byte[] byteArray2 \\u003d dg5.fileSha256_.toByteArray();\\n            byte[] byteArray3 \\u003d dg5.fileEncSha256_.toByteArray();\\n            this.A03 \\u003d dg5.directPath_;\\n            this.A02 \\u003d Base64.encodeToString(byteArray, 0);\\n            this.A05 \\u003d Base64.encodeToString(byteArray2, 0);\\n            this.A04 \\u003d Base64.encodeToString(byteArray3, 0);\\n        } catch (IOException e) {\\n            Log.e(\\\"external-mutations-downloader: Failed to prepare location for encryptedFile/destinationFile\\\");\\n            throw new Dn4(\\\"Failed to prepare location for encryptedFile/destinationFile\\\", e);\\n        }\\n    }\",\"overload_count\":1,\"method_name\":\"\\u003cinit\\u003e\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.Dxd",
+    "method": {
+      "name": "<init>",
+      "reported_signature": "<init>(X.0lN, X.Dg5, java.lang.String): void",
+      "overload_index": 0,
+      "is_constructor": true,
+      "dex_descriptor": "(LX/0lN;LX/Dg5;Ljava/lang/String;)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Illegal instructions before constructor call */\n    public Dxd(C0lN c0lN, Dg5 dg5, String str) throws Dn7, Dn4 {\n        this.A06 = c0lN;\n        C08q c08q = c0lN.A03;\n        C08Y c08y = c0lN.A00;\n        C0Ze c0Ze = c0lN.A04;\n        super(c08y, c0lN.A02, c08q, c0Ze, c0lN.A05, c0lN.A06, null);\n        try {\n            C0kz c0kz = c0lN.A01.A00;\n            this.A01 = c0kz.A02(Voip.REJECT_REASON_DECLINED);\n            this.A00 = c0kz.A02(Voip.REJECT_REASON_DECLINED);\n            int i = dg5.bitField0_;\n            if ((i & 1) == 0) {\n                throw new Dn7(E6Q.A05, AnonymousClass000.A04(\"Missing media key for collection: \", str));\n            }\n            if ((i & 2) == 0) {\n                throw new Dn7(E6Q.A02, AnonymousClass000.A04(\"Missing direct path for collection: \", str));\n            }\n            if ((i & 16) == 0) {\n                throw new Dn7(E6Q.A04, AnonymousClass000.A04(\"Missing file sha256 for collection: \", str));\n            }\n            if ((i & 32) == 0) {\n                throw new Dn7(E6Q.A03, AnonymousClass000.A04(\"Missing file enc sha256 for collection: \", str));\n            }\n            byte[] byteArray = dg5.mediaKey_.toByteArray();\n            byte[] byteArray2 = dg5.fileSha256_.toByteArray();\n            byte[] byteArray3 = dg5.fileEncSha256_.toByteArray();\n            this.A03 = dg5.directPath_;\n            this.A02 = Base64.encodeToString(byteArray, 0);\n            this.A05 = Base64.encodeToString(byteArray2, 0);\n            this.A04 = Base64.encodeToString(byteArray3, 0);\n        } catch (IOException e) {\n            Log.e(\"external-mutations-downloader: Failed to prepare location for encryptedFile/destinationFile\");\n            throw new Dn4(\"Failed to prepare location for encryptedFile/destinationFile\", e);\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

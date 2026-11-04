@@ -1,0 +1,130 @@
+{
+  "evidence_id": "ev_924b6c5fdb2eff7bda9848066e47f76908fe5d3c5b152f8f04ee10d06fed0ded",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.N2E",
+    "method_name": "A04"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-98RgML/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.N2E"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cinit\\u003e(X.08q, java.util.concurrent.Executor): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"(LX/08q;Ljava/util/concurrent/Executor;)V\"},{\"signature\":\"A01(X.N2E, boolean): void\",\"def_pos\":0,\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/N2E;Z)V\"},{\"signature\":\"A02(): X.Nar\",\"def_pos\":0,\"name\":\"A02\",\"is_constructor\":false,\"dex_descriptor\":\"()LX/Nar;\"},{\"signature\":\"A03(X.MXt): X.MWP\",\"def_pos\":0,\"name\":\"A03\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/MXt;)LX/MWP;\"},{\"signature\":\"A04(): X.LqJ\",\"def_pos\":0,\"name\":\"A04\",\"is_constructor\":false,\"dex_descriptor\":\"()LX/LqJ;\"},{\"signature\":\"A05(): java.lang.Object\",\"def_pos\":0,\"name\":\"A05\",\"is_constructor\":false,\"dex_descriptor\":\"()Ljava/lang/Object;\"},{\"signature\":\"A91(X.Nar): void\",\"def_pos\":0,\"name\":\"A91\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/Nar;)V\"},{\"signature\":\"AGM(boolean): void\",\"def_pos\":0,\"name\":\"AGM\",\"is_constructor\":false,\"dex_descriptor\":\"(Z)V\"},{\"signature\":\"Btp(long): void\",\"def_pos\":0,\"name\":\"Btp\",\"is_constructor\":false,\"dex_descriptor\":\"(J)V\"},{\"signature\":\"Bty(int): void\",\"def_pos\":0,\"name\":\"Bty\",\"is_constructor\":false,\"dex_descriptor\":\"(I)V\"},{\"signature\":\"run(): void\",\"def_pos\":0,\"name\":\"run\",\"is_constructor\":false,\"dex_descriptor\":\"()V\"}],\"method_count\":11,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"N2E\",\"full_name\":\"X.N2E\",\"field_count\":4,\"fields\":[{\"type\":\"X.NbA\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"X.08q\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"X.Mtk\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"long\",\"def_pos\":0,\"name\":\"A03\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.N2E",
+          "method_name": "A04",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.N2E.A04\",\"class_name\":\"X.N2E\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    /* JADX WARN: Code duplicated, block: B:26:0x00f0  */\\n    public LqJ A04() {\\n        LqJ lqJ;\\n        boolean z;\\n        File fileA00;\\n        File file;\\n        NbA muC;\\n        MuG muG;\\n        try {\\n            Object objA05 \\u003d A05();\\n            if (this instanceof LIo) {\\n                LIo lIo \\u003d (LIo) this;\\n                Lz7 lz7 \\u003d (Lz7) objA05;\\n                C00l.A09(lz7, 0);\\n                C08Y c08y \\u003d lIo.A00;\\n                C0aa c0aa \\u003d lIo.A01;\\n                File file2 \\u003d lz7.A04;\\n                C0jS c0jS \\u003d lz7.A01;\\n                MuH muH \\u003d new MuH(c08y, c0aa, file2, C00l.areEqual(c0jS, C0jS.A1A), true);\\n                String str \\u003d lz7.A06;\\n                if (str \\u003d\\u003d null || lz7.A09 || (lz7.A02 instanceof Mtw)) {\\n                    muG \\u003d null;\\n                } else {\\n                    try {\\n                        Base64.decode(str, 0);\\n                        if (C00E.A0F(c08y, C0tF.A07)) {\\n                            muG \\u003d new MuG(muH, str);\\n                        } else {\\n                            muG \\u003d null;\\n                        }\\n                    } catch (IllegalArgumentException unused) {\\n                    }\\n                }\\n                NYv nYv \\u003d lz7.A02;\\n                NbB nbB \\u003d muH;\\n                if (muG !\\u003d null) {\\n                    nbB \\u003d muG;\\n                }\\n                Lyw lyw \\u003d new Lyw(nYv, nbB, lz7.A05, null, lz7.A07, muG !\\u003d null ? Klq.A0z(muG, 23) : null, N5q.A00(42), lz7.A08, lz7.A09);\\n                MOv mOv \\u003d lz7.A03;\\n                if (mOv \\u003d\\u003d null) {\\n                    mOv \\u003d new MOv(c0jS, 0);\\n                }\\n                muC \\u003d new N41(c08y, lIo.A02, lIo.A03, lz7.A00, lIo.A04, lIo.A05, lIo.A06, mOv, lyw, this, false);\\n            } else {\\n                LIp lIp \\u003d (LIp) this;\\n                Lz6 lz6 \\u003d (Lz6) objA05;\\n                C00l.A09(lz6, 0);\\n                boolean zA1R \\u003d C8t5.A1R(lIp.A00);\\n                if (zA1R \\u0026\\u0026 lIp.A07()) {\\n                    z \\u003d true;\\n                    file \\u003d lz6.A04;\\n                    fileA00 \\u003d MHo.A00(file, System.currentTimeMillis());\\n                } else {\\n                    z \\u003d false;\\n                    fileA00 \\u003d lz6.A04;\\n                    file \\u003d fileA00;\\n                }\\n                C08Y c08y2 \\u003d lIp.A02;\\n                MuH muH2 \\u003d new MuH(c08y2, lIp.A03, fileA00, false, !zA1R);\\n                NYv nYv2 \\u003d lz6.A01;\\n                String str2 \\u003d lz6.A05;\\n                String str3 \\u003d lz6.A07;\\n                C0jS c0jS2 \\u003d lz6.A00;\\n                String str4 \\u003d lz6.A06;\\n                MuB muB \\u003d new MuB(c08y2, lIp.A04, lIp.A05, null, lIp.A06, lIp.A07, null, new LzD(c0jS2, nYv2, muH2, lz6.A03, null, str2, str3, str4, N5q.A00(40), C2L9.A1W(str4), lz6.A08), lz6.A02, this, false);\\n                muC \\u003d z ? new MuC((C9ss) C05a.A03(lIp.A01), muB, fileA00, file, new NG3(lIp, 11)) : muB;\\n            }\\n            synchronized (this) {\\n                if (this.A00 !\\u003d null) {\\n                    Log.e(\\\"Attempt to run same download multiple times\\\");\\n                    lqJ \\u003d new LqJ(MXt.A01(24));\\n                } else {\\n                    this.A00 \\u003d muC;\\n                    lqJ \\u003d muC.AOW();\\n                }\\n            }\\n        } catch (LUq e) {\\n            lqJ \\u003d new LqJ(MXt.A01(e.downloadStatus));\\n        }\\n        MXt mXt \\u003d lqJ.A00;\\n        int i \\u003d mXt.A05;\\n        if (i \\u003d\\u003d 13 || i \\u003d\\u003d 24) {\\n            this.A02.Btr(mXt.A09);\\n            return lqJ;\\n        }\\n        this.A02.Btt(mXt, A03(mXt));\\n        return lqJ;\\n    }\",\"overload_count\":1,\"method_name\":\"A04\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.N2E",
+    "method": {
+      "name": "A04",
+      "reported_signature": "A04(): X.LqJ",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "()LX/LqJ;"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Code duplicated, block: B:26:0x00f0  */\n    public LqJ A04() {\n        LqJ lqJ;\n        boolean z;\n        File fileA00;\n        File file;\n        NbA muC;\n        MuG muG;\n        try {\n            Object objA05 = A05();\n            if (this instanceof LIo) {\n                LIo lIo = (LIo) this;\n                Lz7 lz7 = (Lz7) objA05;\n                C00l.A09(lz7, 0);\n                C08Y c08y = lIo.A00;\n                C0aa c0aa = lIo.A01;\n                File file2 = lz7.A04;\n                C0jS c0jS = lz7.A01;\n                MuH muH = new MuH(c08y, c0aa, file2, C00l.areEqual(c0jS, C0jS.A1A), true);\n                String str = lz7.A06;\n                if (str == null || lz7.A09 || (lz7.A02 instanceof Mtw)) {\n                    muG = null;\n                } else {\n                    try {\n                        Base64.decode(str, 0);\n                        if (C00E.A0F(c08y, C0tF.A07)) {\n                            muG = new MuG(muH, str);\n                        } else {\n                            muG = null;\n                        }\n                    } catch (IllegalArgumentException unused) {\n                    }\n                }\n                NYv nYv = lz7.A02;\n                NbB nbB = muH;\n                if (muG != null) {\n                    nbB = muG;\n                }\n                Lyw lyw = new Lyw(nYv, nbB, lz7.A05, null, lz7.A07, muG != null ? Klq.A0z(muG, 23) : null, N5q.A00(42), lz7.A08, lz7.A09);\n                MOv mOv = lz7.A03;\n                if (mOv == null) {\n                    mOv = new MOv(c0jS, 0);\n                }\n                muC = new N41(c08y, lIo.A02, lIo.A03, lz7.A00, lIo.A04, lIo.A05, lIo.A06, mOv, lyw, this, false);\n            } else {\n                LIp lIp = (LIp) this;\n                Lz6 lz6 = (Lz6) objA05;\n                C00l.A09(lz6, 0);\n                boolean zA1R = C8t5.A1R(lIp.A00);\n                if (zA1R && lIp.A07()) {\n                    z = true;\n                    file = lz6.A04;\n                    fileA00 = MHo.A00(file, System.currentTimeMillis());\n                } else {\n                    z = false;\n                    fileA00 = lz6.A04;\n                    file = fileA00;\n                }\n                C08Y c08y2 = lIp.A02;\n                MuH muH2 = new MuH(c08y2, lIp.A03, fileA00, false, !zA1R);\n                NYv nYv2 = lz6.A01;\n                String str2 = lz6.A05;\n                String str3 = lz6.A07;\n                C0jS c0jS2 = lz6.A00;\n                String str4 = lz6.A06;\n                MuB muB = new MuB(c08y2, lIp.A04, lIp.A05, null, lIp.A06, lIp.A07, null, new LzD(c0jS2, nYv2, muH2, lz6.A03, null, str2, str3, str4, N5q.A00(40), C2L9.A1W(str4), lz6.A08), lz6.A02, this, false);\n                muC = z ? new MuC((C9ss) C05a.A03(lIp.A01), muB, fileA00, file, new NG3(lIp, 11)) : muB;\n            }\n            synchronized (this) {\n                if (this.A00 != null) {\n                    Log.e(\"Attempt to run same download multiple times\");\n                    lqJ = new LqJ(MXt.A01(24));\n                } else {\n                    this.A00 = muC;\n                    lqJ = muC.AOW();\n                }\n            }\n        } catch (LUq e) {\n            lqJ = new LqJ(MXt.A01(e.downloadStatus));\n        }\n        MXt mXt = lqJ.A00;\n        int i = mXt.A05;\n        if (i == 13 || i == 24) {\n            this.A02.Btr(mXt.A09);\n            return lqJ;\n        }\n        this.A02.Btt(mXt, A03(mXt));\n        return lqJ;\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

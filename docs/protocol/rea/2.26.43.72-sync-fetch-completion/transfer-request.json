@@ -1,0 +1,130 @@
+{
+  "evidence_id": "ev_f39ee3579c178ca6c7e3a4b0a440ec850e3e156eed29059dab944be6a210fab7",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.LzD",
+    "method_name": "<init>"
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-98RgML/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.LzD"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cinit\\u003e(X.0jS, X.NYv, X.NbB, X.MKa, java.lang.Long, java.lang.String, java.lang.String, java.lang.String, kotlin.jvm.functions.Function1, boolean, boolean): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"(LX/0jS;LX/NYv;LX/NbB;LX/MKa;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ZZ)V\"}],\"method_count\":1,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"LzD\",\"full_name\":\"X.LzD\",\"field_count\":11,\"fields\":[{\"type\":\"X.0jS\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"X.NYv\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"X.NbB\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"X.MKa\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"java.lang.Long\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"java.lang.String\",\"def_pos\":0,\"name\":\"A05\"},{\"type\":\"java.lang.String\",\"def_pos\":0,\"name\":\"A06\"},{\"type\":\"java.lang.String\",\"def_pos\":0,\"name\":\"A07\"},{\"type\":\"kotlin.jvm.functions.Function1\",\"def_pos\":0,\"name\":\"A08\"},{\"type\":\"boolean\",\"def_pos\":0,\"name\":\"A09\"},{\"type\":\"boolean\",\"def_pos\":0,\"name\":\"A0A\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.LzD",
+          "method_name": "<init>",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.LzD.\\u003cinit\\u003e\",\"class_name\":\"X.LzD\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public LzD(C0jS c0jS, NYv nYv, NbB nbB, MKa mKa, Long l, String str, String str2, String str3, Function1 function1, boolean z, boolean z2) {\\n        C00l.A09(str, 2);\\n        this.A01 \\u003d nYv;\\n        this.A02 \\u003d nbB;\\n        this.A05 \\u003d str;\\n        this.A07 \\u003d str2;\\n        this.A00 \\u003d c0jS;\\n        this.A06 \\u003d str3;\\n        this.A09 \\u003d z;\\n        this.A08 \\u003d function1;\\n        this.A0A \\u003d z2;\\n        this.A03 \\u003d mKa;\\n        this.A04 \\u003d l;\\n        if (z2) {\\n            return;\\n        }\\n        if (str3 \\u003d\\u003d null || !z) {\\n            throw C1Xl.A0f(\\\"EncryptedDownloadTransfer/Request skipping the plaintext hash requires encrypted hash verification inside the retry boundary\\\");\\n        }\\n    }\",\"overload_count\":1,\"method_name\":\"\\u003cinit\\u003e\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.LzD",
+    "method": {
+      "name": "<init>",
+      "reported_signature": "<init>(X.0jS, X.NYv, X.NbB, X.MKa, java.lang.Long, java.lang.String, java.lang.String, java.lang.String, kotlin.jvm.functions.Function1, boolean, boolean): void",
+      "overload_index": 0,
+      "is_constructor": true,
+      "dex_descriptor": "(LX/0jS;LX/NYv;LX/NbB;LX/MKa;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ZZ)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public LzD(C0jS c0jS, NYv nYv, NbB nbB, MKa mKa, Long l, String str, String str2, String str3, Function1 function1, boolean z, boolean z2) {\n        C00l.A09(str, 2);\n        this.A01 = nYv;\n        this.A02 = nbB;\n        this.A05 = str;\n        this.A07 = str2;\n        this.A00 = c0jS;\n        this.A06 = str3;\n        this.A09 = z;\n        this.A08 = function1;\n        this.A0A = z2;\n        this.A03 = mKa;\n        this.A04 = l;\n        if (z2) {\n            return;\n        }\n        if (str3 == null || !z) {\n            throw C1Xl.A0f(\"EncryptedDownloadTransfer/Request skipping the plaintext hash requires encrypted hash verification inside the retry boundary\");\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_bbc43da49f3d5cdc92483bf46e45a67ad423b47bb2d8f43ac02eacf2c1e7d53d",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C13N",
+    "method_name": "A0I",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-QeXIwM/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"available_processors\":24,\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C13N"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":25,\"methods\":[{\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\"},{\"def_pos\":0,\"signature\":\"A00(X.13N): X.0DS\",\"dex_descriptor\":\"(LX/13N;)LX/0DS;\",\"is_constructor\":false,\"name\":\"A00\"},{\"def_pos\":0,\"signature\":\"A01(X.13N): X.00X\",\"dex_descriptor\":\"(LX/13N;)LX/00X;\",\"is_constructor\":false,\"name\":\"A01\"},{\"def_pos\":0,\"signature\":\"A02(X.13N): X.0YB\",\"dex_descriptor\":\"(LX/13N;)LX/0YB;\",\"is_constructor\":false,\"name\":\"A02\"},{\"def_pos\":0,\"signature\":\"A03(X.13N, java.lang.String, java.lang.String, boolean): void\",\"dex_descriptor\":\"(LX/13N;Ljava/lang/String;Ljava/lang/String;Z)V\",\"is_constructor\":false,\"name\":\"A03\"},{\"def_pos\":0,\"signature\":\"A04(): int\",\"dex_descriptor\":\"()I\",\"is_constructor\":false,\"name\":\"A04\"},{\"def_pos\":0,\"signature\":\"A05(int): android.content.Intent\",\"dex_descriptor\":\"(I)Landroid/content/Intent;\",\"is_constructor\":false,\"name\":\"A05\"},{\"def_pos\":0,\"signature\":\"A06(): X.0E2\",\"dex_descriptor\":\"()LX/0E2;\",\"is_constructor\":false,\"name\":\"A06\"},{\"def_pos\":0,\"signature\":\"A07(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"A07\"},{\"def_pos\":0,\"signature\":\"A08(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"A08\"},{\"def_pos\":0,\"signature\":\"A09(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"A09\"},{\"def_pos\":0,\"signature\":\"A0A(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"A0A\"},{\"def_pos\":0,\"signature\":\"A0B(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"A0B\"},{\"def_pos\":0,\"signature\":\"A0C(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"A0C\"},{\"def_pos\":0,\"signature\":\"A0D(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"A0D\"},{\"def_pos\":0,\"signature\":\"A0E(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"A0E\"},{\"def_pos\":0,\"signature\":\"A0F(int): void\",\"dex_descriptor\":\"(I)V\",\"is_constructor\":false,\"name\":\"A0F\"},{\"def_pos\":0,\"signature\":\"A0G(long, java.lang.String): void\",\"dex_descriptor\":\"(JLjava/lang/String;)V\",\"is_constructor\":false,\"name\":\"A0G\"},{\"def_pos\":0,\"signature\":\"A0H(java.lang.Integer): void\",\"dex_descriptor\":\"(Ljava/lang/Integer;)V\",\"is_constructor\":false,\"name\":\"A0H\"},{\"def_pos\":0,\"signature\":\"A0I(java.lang.Integer, java.lang.String, java.lang.String, java.lang.String, java.lang.String): void\",\"dex_descriptor\":\"(Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V\",\"is_constructor\":false,\"name\":\"A0I\"},{\"def_pos\":0,\"signature\":\"A0J(java.lang.String): void\",\"dex_descriptor\":\"(Ljava/lang/String;)V\",\"is_constructor\":false,\"name\":\"A0J\"},{\"def_pos\":0,\"signature\":\"A0K(): boolean\",\"dex_descriptor\":\"()Z\",\"is_constructor\":false,\"name\":\"A0K\"},{\"def_pos\":0,\"signature\":\"A0L(): boolean\",\"dex_descriptor\":\"()Z\",\"is_constructor\":false,\"name\":\"A0L\"},{\"def_pos\":0,\"signature\":\"A0M(): boolean\",\"dex_descriptor\":\"()Z\",\"is_constructor\":false,\"name\":\"A0M\"},{\"def_pos\":0,\"signature\":\"A0N(): boolean\",\"dex_descriptor\":\"()Z\",\"is_constructor\":false,\"name\":\"A0N\"}],\"fields\":[{\"type\":\"android.os.Handler\",\"name\":\"A00\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A01\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A02\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A03\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A04\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A05\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A06\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A07\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A08\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A09\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0A\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0B\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0C\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0D\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0E\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0F\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0G\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0H\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0I\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0J\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0K\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0L\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0M\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0N\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0O\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0P\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0Q\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0R\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0S\",\"def_pos\":0},{\"type\":\"com.google.common.base.Optional\",\"name\":\"A0T\",\"def_pos\":0},{\"type\":\"com.google.common.base.Optional\",\"name\":\"A0U\",\"def_pos\":0},{\"type\":\"X.14E\",\"name\":\"A0V\",\"def_pos\":0},{\"type\":\"X.0Vy\",\"name\":\"A0W\",\"def_pos\":0},{\"type\":\"X.13a\",\"name\":\"A0X\",\"def_pos\":0},{\"type\":\"X.13e\",\"name\":\"A0Y\",\"def_pos\":0},{\"type\":\"X.0aS\",\"name\":\"A0Z\",\"def_pos\":0},{\"type\":\"X.0G2\",\"name\":\"A0a\",\"def_pos\":0},{\"type\":\"X.13v\",\"name\":\"A0b\",\"def_pos\":0},{\"type\":\"X.13d\",\"name\":\"A0c\",\"def_pos\":0},{\"type\":\"X.13t\",\"name\":\"A0d\",\"def_pos\":0},{\"type\":\"X.0ob\",\"name\":\"A0e\",\"def_pos\":0},{\"type\":\"X.08Y\",\"name\":\"A0f\",\"def_pos\":0},{\"type\":\"X.12Q\",\"name\":\"A0g\",\"def_pos\":0},{\"type\":\"X.0vB\",\"name\":\"A0h\",\"def_pos\":0},{\"type\":\"X.0m6\",\"name\":\"A0i\",\"def_pos\":0},{\"type\":\"X.0Fc\",\"name\":\"A0j\",\"def_pos\":0},{\"type\":\"X.0BD\",\"name\":\"A0k\",\"def_pos\":0},{\"type\":\"X.09U\",\"name\":\"A0l\",\"def_pos\":0},{\"type\":\"X.09S\",\"name\":\"A0m\",\"def_pos\":0},{\"type\":\"X.08q\",\"name\":\"A0n\",\"def_pos\":0},{\"type\":\"X.08Z\",\"name\":\"A0o\",\"def_pos\":0},{\"type\":\"X.13z\",\"name\":\"A0p\",\"def_pos\":0},{\"type\":\"X.0G4\",\"name\":\"A0q\",\"def_pos\":0},{\"type\":\"X.0Js\",\"name\":\"A0r\",\"def_pos\":0},{\"type\":\"java.util.concurrent.atomic.AtomicBoolean\",\"name\":\"A0s\",\"def_pos\":0},{\"type\":\"X.023\",\"name\":\"A0t\",\"def_pos\":0},{\"type\":\"X.0TR\",\"name\":\"A0u\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0v\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0w\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A0x\",\"def_pos\":0},{\"type\":\"com.google.common.base.Optional\",\"name\":\"A0y\",\"def_pos\":0},{\"type\":\"com.google.common.base.Optional\",\"name\":\"A0z\",\"def_pos\":0},{\"type\":\"X.0mD\",\"name\":\"A10\",\"def_pos\":0},{\"type\":\"X.14N\",\"name\":\"A11\",\"def_pos\":0},{\"type\":\"X.0yl\",\"name\":\"A12\",\"def_pos\":0},{\"type\":\"X.0fx\",\"name\":\"A13\",\"def_pos\":0},{\"type\":\"X.0D5\",\"name\":\"A14\",\"def_pos\":0},{\"type\":\"X.0wE\",\"name\":\"A15\",\"def_pos\":0},{\"type\":\"X.0W4\",\"name\":\"A16\",\"def_pos\":0},{\"type\":\"X.00S\",\"name\":\"A17\",\"def_pos\":0},{\"type\":\"X.0B8\",\"name\":\"A18\",\"def_pos\":0},{\"type\":\"X.0WJ\",\"name\":\"A19\",\"def_pos\":0},{\"type\":\"X.0Gs\",\"name\":\"A1A\",\"def_pos\":0},{\"type\":\"X.144\",\"name\":\"A1B\",\"def_pos\":0},{\"type\":\"X.14D\",\"name\":\"A1C\",\"def_pos\":0},{\"type\":\"X.14W\",\"name\":\"A1D\",\"def_pos\":0},{\"type\":\"X.14K\",\"name\":\"A1E\",\"def_pos\":0},{\"type\":\"X.13P\",\"name\":\"A1F\",\"def_pos\":0},{\"type\":\"X.0qx\",\"name\":\"A1G\",\"def_pos\":0},{\"type\":\"X.14G\",\"name\":\"A1H\",\"def_pos\":0},{\"type\":\"X.110\",\"name\":\"A1I\",\"def_pos\":0},{\"type\":\"java.util.Set\",\"name\":\"A1J\",\"def_pos\":0},{\"type\":\"X.023\",\"name\":\"A1K\",\"def_pos\":0}],\"field_count\":83,\"full_name\":\"X.C13N\",\"name\":\"C13N\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C13N",
+          "method_name": "A0I",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.C13N\",\"full_name\":\"X.13N.A0I\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"A0I\",\"overload_count\":1,\"body\":\"    /* JADX WARN: Code duplicated, block: B:11:0x0013  */\\n    public final void A0I(Integer num, String str, String str2, String str3, String str4) {\\n        boolean z;\\n        String str5 \\u003d str3;\\n        if (str3 !\\u003d null \\u0026\\u0026 C0Cf.A0r(str3, \\u0027@\\u0027)) {\\n            str5 \\u003d null;\\n        }\\n        boolean z2 \\u003d true;\\n        if (str3 !\\u003d null) {\\n            z \\u003d str5 \\u003d\\u003d null;\\n        }\\n        String strA00 \\u003d GoA.A00(num);\\n        boolean z3 \\u003d str5 \\u003d\\u003d null;\\n        int length \\u003d -1;\\n        int length2 \\u003d str5 !\\u003d null ? str5.length() : -1;\\n        if (str4 !\\u003d null) {\\n            z2 \\u003d false;\\n            length \\u003d str4.length();\\n        }\\n        StringBuilder sb \\u003d new StringBuilder(\\\"RegistrationManager/lid-lifecycle/setRegistrationJidAndLid(withPhone) source\\u003d\\\");\\n        sb.append(strA00);\\n        sb.append(\\\" jidNull\\u003d\\\");\\n        sb.append(z3);\\n        sb.append(\\\" jidLen\\u003d\\\");\\n        sb.append(length2);\\n        sb.append(\\\" jidDropped\\u003d\\\");\\n        sb.append(z);\\n        sb.append(\\\" lidNull\\u003d\\\");\\n        sb.append(z2);\\n        sb.append(\\\" lidLen\\u003d\\\");\\n        sb.append(length);\\n        Log.i(sb.toString());\\n        if (z \\u0026\\u0026 str2 !\\u003d null \\u0026\\u0026 str2.length() !\\u003d 0) {\\n            StringBuilder sb2 \\u003d new StringBuilder(\\\"RegistrationManager/lid-lifecycle/setRegistrationJidAndLid(withPhone)/contact-point login dropped while a phone number is persisted source\\u003d\\\");\\n            sb2.append(strA00);\\n            Log.e(sb2.toString());\\n        }\\n        C09S c09s \\u003d this.A0m;\\n        c09s.A11(str5, num, str4);\\n        c09s.A12(str, str2);\\n        A03(this, str5, str4, z);\\n    }\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C13N",
+    "method": {
+      "name": "A0I",
+      "reported_signature": "A0I(java.lang.Integer, java.lang.String, java.lang.String, java.lang.String, java.lang.String): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Code duplicated, block: B:11:0x0013  */\n    public final void A0I(Integer num, String str, String str2, String str3, String str4) {\n        boolean z;\n        String str5 = str3;\n        if (str3 != null && C0Cf.A0r(str3, '@')) {\n            str5 = null;\n        }\n        boolean z2 = true;\n        if (str3 != null) {\n            z = str5 == null;\n        }\n        String strA00 = GoA.A00(num);\n        boolean z3 = str5 == null;\n        int length = -1;\n        int length2 = str5 != null ? str5.length() : -1;\n        if (str4 != null) {\n            z2 = false;\n            length = str4.length();\n        }\n        StringBuilder sb = new StringBuilder(\"RegistrationManager/lid-lifecycle/setRegistrationJidAndLid(withPhone) source=\");\n        sb.append(strA00);\n        sb.append(\" jidNull=\");\n        sb.append(z3);\n        sb.append(\" jidLen=\");\n        sb.append(length2);\n        sb.append(\" jidDropped=\");\n        sb.append(z);\n        sb.append(\" lidNull=\");\n        sb.append(z2);\n        sb.append(\" lidLen=\");\n        sb.append(length);\n        Log.i(sb.toString());\n        if (z && str2 != null && str2.length() != 0) {\n            StringBuilder sb2 = new StringBuilder(\"RegistrationManager/lid-lifecycle/setRegistrationJidAndLid(withPhone)/contact-point login dropped while a phone number is persisted source=\");\n            sb2.append(strA00);\n            Log.e(sb2.toString());\n        }\n        C09S c09s = this.A0m;\n        c09s.A11(str5, num, str4);\n        c09s.A12(str, str2);\n        A03(this, str5, str4, z);\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

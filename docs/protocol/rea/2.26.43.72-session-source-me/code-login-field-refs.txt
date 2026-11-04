@@ -1,0 +1,14 @@
+classes9.dex  Lcom/whatsapp/registration/app/verifyphone/VerifyPhoneNumber;->A2M(VLL)
+  read opcode 0x54, dex byte offset: 0x4ef310
+classes9.dex  LX/Gc8;->A0A(VLLLLLLLLLLLLLLLLLLLLLLLLLLLLIIIIIIIJJJJJJJJJJJZZZZZ)
+  write opcode 0x5b, dex byte offset: 0x5005fc
+classes9.dex  Lcom/whatsapp/registration/ui/task/RequestCodeRepository;->A00(LLLLLLLLLLIIIIZ)
+  write opcode 0x5b, dex byte offset: 0x5e40b4
+classes9.dex  Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;->A08(LLLLLLLLLLLLLLLLLLLLLLIII)
+  write opcode 0x5b, dex byte offset: 0x662d1e
+classes9.dex  LX/Hhc;->createFromParcel(LL)
+  write opcode 0x5b, dex byte offset: 0x672ae6
+classes9.dex  LX/HiP;-><init>(VL)
+  write opcode 0x5b, dex byte offset: 0x674e22
+classes9.dex  LX/HiP;->writeToParcel(VLI)
+  read opcode 0x54, dex byte offset: 0x674ef2

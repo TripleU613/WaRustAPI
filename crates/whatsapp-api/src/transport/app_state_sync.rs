@@ -13,11 +13,12 @@
 //! </iq>
 //! ```
 //!
-//! This module builds the request only. It never mints keys, never chooses a
-//! collection for an action, and never persists the post-patch state — the
-//! caller owns all three, because the post-patch state must not be saved until
-//! the server accepts the patch.
+//! Low-level builders coexist with durable publication, held-key selection and
+//! authenticated patch settlement. Preparation and original wire are frozen
+//! together; held state advances only after a verified correlated transition.
+//! Current-build evidence and unported fetch lifecycle: docs/protocol/app-state-fetch-completion.md.
 use crate::{Result, binary::Node, model::jid::Jid};
+pub mod response;
 
 /// The five app-state collections (`LX/0oP.A03`, **confirmed** names).
 ///
@@ -462,6 +463,116 @@ fn queue_patch(
 const HELD_PREFIX: &str = "app-state-collection:";
 const PENDING_PREFIX: &str = "app-state-pending:";
 const SERVER_BACKOFF: &[u8] = b"app-state-server-backoff-until";
+
+/// Redacted structural classification; this does not authorize state application.
+#[derive(Debug, serde::Serialize)]
+pub struct ResponseInspection {
+    /// Original immutable action identifier.
+    pub action_id: String,
+    /// Structural classification never verifies snapshot or mutation integrity.
+    pub integrity_verified: bool,
+    /// Redacted summaries in original collection order; unknown names are omitted.
+    pub collections: Vec<CollectionReplyInspection>,
+}
+
+/// Structural summary with no raw names, bodies, reference keys or error text.
+#[derive(Debug, serde::Serialize)]
+pub struct CollectionReplyInspection {
+    /// Known static collection name, absent for an unknown server-provided name.
+    pub known_collection: Option<&'static str>,
+    /// Fixed structural category.
+    pub category: &'static str,
+    /// Native signed version acknowledgement, separate from applied state.
+    pub version_ack: Option<i64>,
+    /// Parsed error code; -1 is the native absent-code sentinel.
+    pub error_code: Option<i32>,
+    /// Whether opaque error text was present; its content is not printed.
+    pub has_error_text: bool,
+    /// Whether opaque external-reference bytes were present, not validated.
+    pub snapshot_ref_present: bool,
+    /// Selected inline patch bodies, not protobuf/MAC verified.
+    pub patch_count: usize,
+    /// Literal native continuation flag only for consumed data categories.
+    pub has_more_patches: Option<bool>,
+}
+
+/// Classify a saved correlated app-state result without keys, downloads or writes.
+pub fn inspect_response(
+    store: &crate::store::ProtocolStore,
+    id: &str,
+) -> Result<ResponseInspection> {
+    store.read(|tx| {
+        let (outcome, reply) = super::actions::view_in(tx, id)?
+            .ok_or_else(|| invalid_patch("missing saved app-state action"))?;
+        if !matches!(outcome.kind.as_str(), FETCH_ACTION_KIND | PATCH_ACTION_KIND) {
+            return Err(invalid_patch("selected action is not app-state sync"));
+        }
+        let request = super::actions::request_in(tx, id)?
+            .ok_or_else(|| invalid_patch("missing original app-state request"))?;
+        let reply = reply.ok_or_else(|| invalid_patch("selected action has no preserved reply"))?;
+        if request.description != "iq"
+            || request.get_attr("type").and_then(|v| v.as_text()) != Some("set")
+            || request.get_attr("xmlns").and_then(|v| v.as_text()) != Some("w:sync:app:state")
+            || request.get_attr("id").and_then(|v| v.as_text()) != Some(id)
+            || reply.get_attr("id").and_then(|v| v.as_text()) != Some(id)
+        {
+            return Err(invalid_patch(
+                "saved result is not correlated with its app-state request",
+            ));
+        }
+        let classified = response::classify_response(&reply)?;
+        let collections = classified
+            .collections
+            .into_iter()
+            .map(|collection| {
+                use response::Category;
+                let mut summary = CollectionReplyInspection {
+                    known_collection: collection.known_collection.map(Collection::name),
+                    category: "already_synced",
+                    version_ack: None,
+                    error_code: None,
+                    has_error_text: false,
+                    snapshot_ref_present: false,
+                    patch_count: 0,
+                    has_more_patches: None,
+                };
+                let data = match collection.category {
+                    Category::Error {
+                        code,
+                        text,
+                        conflict_data,
+                    } => {
+                        summary.category = "error";
+                        summary.error_code = Some(code);
+                        summary.has_error_text = text.is_some();
+                        conflict_data
+                    }
+                    Category::VersionAck { version } => {
+                        summary.category = "version_ack";
+                        summary.version_ack = Some(version);
+                        None
+                    }
+                    Category::AlreadySynced => None,
+                    Category::Data(data) => {
+                        summary.category = "data";
+                        Some(data)
+                    }
+                };
+                if let Some(data) = data {
+                    summary.snapshot_ref_present = data.snapshot_ref.is_some();
+                    summary.patch_count = data.patches.len();
+                    summary.has_more_patches = Some(data.has_more_patches);
+                }
+                summary
+            })
+            .collect();
+        Ok(ResponseInspection {
+            action_id: id.to_owned(),
+            integrity_verified: false,
+            collections,
+        })
+    })
+}
 
 /// Redacted durable collection state; this is not native scheduler eligibility.
 #[derive(Debug, serde::Serialize)]
@@ -1264,6 +1375,75 @@ mod catch_up_atomic_tests {
                 Node::new("patches").children(patches),
             ])
         ])])
+    }
+
+    #[test]
+    fn saved_response_inspection_redacts_payloads_and_never_changes_state() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("response-inspection.redb"));
+        let id = queue_fetch(&store).unwrap();
+        assert!(inspect_response(&store, &id).is_err());
+        super::super::actions::reserve_next(&store)
+            .unwrap()
+            .unwrap();
+        let response = Node::new("iq")
+            .attr("id", id.as_str())
+            .attr("type", "result")
+            .children(vec![Node::new("sync").children(vec![
+                    Node::new("collection")
+                        .attr("name", "regular")
+                        .attr("version", "3")
+                        .children(vec![
+                            Node::new("snapshot").bytes(b"private-ignored-snapshot".to_vec()),
+                        ]),
+                    Node::new("collection")
+                        .attr("name", "private-unknown-name")
+                        .attr("type", "error")
+                        .children(vec![Node::new("error").attr("text", "private-error-text")]),
+                    Node::new("collection")
+                        .attr("name", "regular_high")
+                        .attr("has_more_patches", "true")
+                        .children(vec![
+                            Node::new("snapshot").bytes(b"private-external-reference".to_vec()),
+                            Node::new("patches").children(vec![
+                                Node::new("patch").bytes(b"private-patch".to_vec()),
+                                Node::new("future").bytes(b"private-opaque".to_vec()),
+                            ]),
+                        ]),
+                    Node::new("collection").attr("name", "regular"),
+                ])]);
+        super::super::actions::record_reply(&store, &response).unwrap();
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 1000))
+            .unwrap();
+        let head = store.journal_head().unwrap();
+        let report = inspect_response(&store, &id).unwrap();
+        assert!(!report.integrity_verified);
+        assert_eq!(
+            report
+                .collections
+                .iter()
+                .map(|c| c.category)
+                .collect::<Vec<_>>(),
+            vec!["version_ack", "error", "data", "already_synced"]
+        );
+        assert_eq!(report.collections[0].version_ack, Some(3));
+        assert!(!report.collections[0].snapshot_ref_present);
+        assert_eq!(report.collections[1].known_collection, None);
+        assert_eq!(report.collections[1].error_code, Some(-1));
+        assert!(report.collections[1].has_error_text);
+        assert_eq!(report.collections[2].patch_count, 1);
+        assert!(report.collections[2].snapshot_ref_present);
+        assert_eq!(report.collections[2].has_more_patches, Some(true));
+        assert!(!serde_json::to_string(&report).unwrap().contains("private"));
+        assert!(!format!("{report:?}").contains("private"));
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 1000))
+                .unwrap(),
+            before
+        );
+        assert_eq!(store.journal_head().unwrap(), head);
     }
 
     #[test]

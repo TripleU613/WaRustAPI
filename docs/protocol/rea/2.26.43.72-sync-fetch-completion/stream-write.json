@@ -1,0 +1,131 @@
+{
+  "evidence_id": "ev_31e10d73369b94d32f1d951d1fcd11fe9beea6198739df5851394d4ff16139da",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.LP2",
+    "method_name": "write",
+    "overload_index": 2
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-98RgML/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.LP2"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cinit\\u003e(X.LvP, java.io.OutputStream, long): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"(LX/LvP;Ljava/io/OutputStream;J)V\"},{\"signature\":\"close(): void\",\"def_pos\":0,\"name\":\"close\",\"is_constructor\":false,\"dex_descriptor\":\"()V\"},{\"signature\":\"write(int): void\",\"def_pos\":0,\"name\":\"write\",\"is_constructor\":false,\"dex_descriptor\":\"(I)V\"},{\"signature\":\"write(byte[]): void\",\"def_pos\":0,\"name\":\"write\",\"is_constructor\":false,\"dex_descriptor\":\"([B)V\"},{\"signature\":\"write(byte[], int, int): void\",\"def_pos\":0,\"name\":\"write\",\"is_constructor\":false,\"dex_descriptor\":\"([BII)V\"}],\"method_count\":5,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"LP2\",\"full_name\":\"X.LP2\",\"field_count\":9,\"fields\":[{\"type\":\"int\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"boolean\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"boolean\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"X.LtP\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"java.io.OutputStream\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"javax.crypto.Cipher\",\"def_pos\":0,\"name\":\"A05\"},{\"type\":\"javax.crypto.Mac\",\"def_pos\":0,\"name\":\"A06\"},{\"type\":\"byte[]\",\"def_pos\":0,\"name\":\"A07\"},{\"type\":\"byte[]\",\"def_pos\":0,\"name\":\"A08\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.LP2",
+          "method_name": "write",
+          "overload_index": 2,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.LP2.write\",\"class_name\":\"X.LP2\",\"overload_index\":2,\"fell_back\":false,\"body\":\"    @Override // java.io.OutputStream\\n    public void write(byte[] bArr, int i, int i2) throws IOException {\\n        C00l.A09(bArr, 0);\\n        if (i2 \\u003e 0) {\\n            long j \\u003d i + i2;\\n            LtP ltP \\u003d this.A03;\\n            long j2 \\u003d ltP.A01;\\n            if (j \\u003c\\u003d j2) {\\n                long j3 \\u003d ltP.A00;\\n                long j4 \\u003d j2 - 10;\\n                if (j3 \\u003c j4) {\\n                    int iMin \\u003d (int) Math.min(j3 \\u003e j4 ? 0L : j4 - j3, i2);\\n                    ltP.A00 \\u003d j3 + ((long) iMin);\\n                    this.A06.update(bArr, i, iMin);\\n                    byte[] bArrUpdate \\u003d this.A05.update(bArr, i, iMin);\\n                    if (bArrUpdate !\\u003d null \\u0026\\u0026 bArrUpdate.length \\u003e 0) {\\n                        this.A04.write(bArrUpdate);\\n                    }\\n                    if (i2 \\u003c\\u003d iMin) {\\n                        return;\\n                    }\\n                    i +\\u003d iMin;\\n                    i2 -\\u003d iMin;\\n                } else if (j3 \\u003e\\u003d j2) {\\n                    throw C8t1.A1G(\\\"Passed in total length is already read\\\");\\n                }\\n                int i3 \\u003d this.A00;\\n                int i4 \\u003d i2 - (10 - i3);\\n                if (i4 \\u003e 0) {\\n                    i2 -\\u003d i4;\\n                }\\n                ltP.A00 +\\u003d (long) i2;\\n                byte[] bArr2 \\u003d this.A07;\\n                System.arraycopy(bArr, i, bArr2, i3, i2);\\n                int i5 \\u003d this.A00 + i2;\\n                this.A00 \\u003d i5;\\n                if (i5 \\u003e\\u003d 10) {\\n                    System.arraycopy(bArr2, 0, new byte[10], 0, 10);\\n                    byte[] bArr3 \\u003d new byte[10];\\n                    System.arraycopy(this.A06.doFinal(), 0, bArr3, 0, 10);\\n                    try {\\n                        if (!MessageDigest.isEqual(bArr2, bArr3)) {\\n                            this.A02 \\u003d true;\\n                            return;\\n                        } else {\\n                            this.A04.write(this.A05.doFinal());\\n                            this.A01 \\u003d true;\\n                            return;\\n                        }\\n                    } catch (BadPaddingException e) {\\n                        Log.w(e);\\n                        throw C8t1.A1G(\\\"Bad padding!\\\");\\n                    } catch (IllegalBlockSizeException e2) {\\n                        Log.w(e2);\\n                        throw C8t1.A1G(\\\"Bad block size!\\\");\\n                    }\\n                }\\n                return;\\n            }\\n        }\\n        throw C8t1.A1G(\\\"Incorrect parameters passed in to read from\\\");\\n    }\",\"overload_count\":3,\"method_name\":\"write\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.LP2",
+    "method": {
+      "name": "write",
+      "reported_signature": "write(byte[], int, int): void",
+      "overload_index": 2,
+      "is_constructor": false,
+      "dex_descriptor": "([BII)V"
+    },
+    "overload_count": 3,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    @Override // java.io.OutputStream\n    public void write(byte[] bArr, int i, int i2) throws IOException {\n        C00l.A09(bArr, 0);\n        if (i2 > 0) {\n            long j = i + i2;\n            LtP ltP = this.A03;\n            long j2 = ltP.A01;\n            if (j <= j2) {\n                long j3 = ltP.A00;\n                long j4 = j2 - 10;\n                if (j3 < j4) {\n                    int iMin = (int) Math.min(j3 > j4 ? 0L : j4 - j3, i2);\n                    ltP.A00 = j3 + ((long) iMin);\n                    this.A06.update(bArr, i, iMin);\n                    byte[] bArrUpdate = this.A05.update(bArr, i, iMin);\n                    if (bArrUpdate != null && bArrUpdate.length > 0) {\n                        this.A04.write(bArrUpdate);\n                    }\n                    if (i2 <= iMin) {\n                        return;\n                    }\n                    i += iMin;\n                    i2 -= iMin;\n                } else if (j3 >= j2) {\n                    throw C8t1.A1G(\"Passed in total length is already read\");\n                }\n                int i3 = this.A00;\n                int i4 = i2 - (10 - i3);\n                if (i4 > 0) {\n                    i2 -= i4;\n                }\n                ltP.A00 += (long) i2;\n                byte[] bArr2 = this.A07;\n                System.arraycopy(bArr, i, bArr2, i3, i2);\n                int i5 = this.A00 + i2;\n                this.A00 = i5;\n                if (i5 >= 10) {\n                    System.arraycopy(bArr2, 0, new byte[10], 0, 10);\n                    byte[] bArr3 = new byte[10];\n                    System.arraycopy(this.A06.doFinal(), 0, bArr3, 0, 10);\n                    try {\n                        if (!MessageDigest.isEqual(bArr2, bArr3)) {\n                            this.A02 = true;\n                            return;\n                        } else {\n                            this.A04.write(this.A05.doFinal());\n                            this.A01 = true;\n                            return;\n                        }\n                    } catch (BadPaddingException e) {\n                        Log.w(e);\n                        throw C8t1.A1G(\"Bad padding!\");\n                    } catch (IllegalBlockSizeException e2) {\n                        Log.w(e2);\n                        throw C8t1.A1G(\"Bad block size!\");\n                    }\n                }\n                return;\n            }\n        }\n        throw C8t1.A1G(\"Incorrect parameters passed in to read from\");\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}
