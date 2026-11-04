@@ -482,3 +482,12 @@ not a slash-path validation regex. Optional field reads alone do not prove
 required fields or success. Rust's HTTP200+URL/slash-path acceptance remains
 a local subset pending mode producers/downstream consumers.
 [Exact callback/pattern and scope](rea/2.26.43.72-media-upload-response/README.md).
+
+### Scheduled cross-reference versus ordinary path (2026-11-04)
+
+**Confirmed static**, pinned2.26.43.72: descriptor flags map to metadata
+presence and inverse MvM.A06. MOu.A07 adopts UUID handle through KmQ's
+scheduled-cross-reference verifier, separately clearing ordinary path.
+Whole-string regex matching is confirmed; ordinary path instead goes
+through M0g normalization. [Mode/consumer evidence and remaining inputs](rea/2.26.43.72-media-upload-response/README.md#mode-producers-and-scheduled-cross-reference-consumer-2026-11-04).
+No acceptance change or live request.

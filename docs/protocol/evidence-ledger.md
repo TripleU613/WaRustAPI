@@ -1,3 +1,9 @@
+2026-11-04 — **Confirmed static: scheduled cross-reference response mode.**
+Pinned2.26.43.72 mode writer dataflow, MOu/KmQ consumer and whole-string
+regex semantics close opaque UUID meaning; ordinary normalization remains open.
+[Evidence](rea/2.26.43.72-media-upload-response/README.md#mode-producers-and-scheduled-cross-reference-consumer-2026-11-04).
+No Rust runtime or live-account change.
+
 2026-11-04 — **Confirmed static: upload response mode distinction.**
 Pinned2.26.43.72 MtR.CDR/KmR/Lkh retain opaque-handle versus original
 direct-path fields conditionally. UUID pattern is not a universal path rule.

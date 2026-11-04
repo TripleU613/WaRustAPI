@@ -1,0 +1,33 @@
+
+# class: LX/KmQ;
+# extends: Ljava/lang/Object;
+
+.method public A00(LL)  # .registers 7
+    # full signature: LX/KmQ;->A00(Ljava/lang/String;)Ljava/lang/String;
+    0000..0002  const/4  v4, #0x0
+    0002..0006  if-eqz  v6, +0x29
+    0006..000c  invoke-virtual  {v6}, Ljava/lang/String;->length()I
+    000c..000e  move-result  v0
+    000e..0012  if-eqz  v0, +0x23
+    0012..0016  sget-object  v0, LX/Lkh;->A00:LX/06K;
+    0016..001c  invoke-virtual  {v0, v6}, LX/06K;->A07(Ljava/lang/CharSequence;)Z
+    001c..001e  move-result  v0
+    001e..0022  if-nez  v0, +0x1a
+    0022..0026  const-string  v0, "CrossReferenceUtils/verifyScheduledCrossReference received a malformed cross_reference"
+    0026..002c  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    002c..0030  const/16  v1, #0x4e3
+    0030..0034  iget-object  v0, v5, LX/KmQ;->A00:LX/05a;
+    0034..003a  invoke-static  {v0, v1}, LX/2LA;->A0l(LX/05a;I)Ljava/lang/Object;
+    003a..003c  move-result-object  v3
+    003c..0040  check-cast  v3, LX/0B0;
+    0040..0044  const-string  v2, "CrossReferenceUtils/verifyScheduledCrossReference"
+    0044..0048  const-string  v1, "malformed cross_reference"
+    0048..004a  const/4  v0, #0x1
+    004a..0050  invoke-virtual  {v3, v2, v1, v0, v0}, LX/0B0;->A0h(Ljava/lang/String;Ljava/lang/String;ZI)V
+    0050..0052  return-object  v4
+    0052..0054  return-object  v6
+    0054..0058  const-string  v0, "CrossReferenceUtils/verifyScheduledCrossReference received an empty cross_reference"
+    0058..005e  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    005e..0060  return-object  v4
+    # exception table: 0 try range(s)
+.end method

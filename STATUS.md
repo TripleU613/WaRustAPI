@@ -1,3 +1,13 @@
+2026-11-04 — **Upload scheduled-cross-reference mode identified:**
+
+Pinned writer/consumer evidence binds UUID handling to scheduled cross-reference
+adoption, separately from ordinary path. Mode flags and whole-string match
+semantics are traced; ordinary normalization and higher metadata input remain open.
+[Evidence](docs/protocol/rea/2.26.43.72-media-upload-response/README.md#mode-producers-and-scheduled-cross-reference-consumer-2026-11-04).
+Validation: JSON parsing, coverage freshness, cached diff checks and repository
+hygiene (4,366 local links) passed. Documentation/evidence only;
+no runtime change or live traffic.
+
 2026-11-04 — **Upload reply mode boundary traced:**
 
 Retained native callback's optional fields, error flag and mode-dependent

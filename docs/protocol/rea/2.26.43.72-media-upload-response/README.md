@@ -44,3 +44,45 @@ with signatures/exceptions. Outputs below are complete selections.
 - [response-callback.txt](response-callback.txt) — SHA-256 `4dcdc74000ec5e07629e6af6e6b6578fc937f6c9148957b9425b7fa62cf74cb7`.
 - [direct-path-mode.txt](direct-path-mode.txt) — SHA-256 `81c83f1c5d9dc144740daa35669c297d1d47fcfc5d01c535aebd9bd27a051f17`.
 - [opaque-handle-pattern.txt](opaque-handle-pattern.txt) — SHA-256 `94ca81e108f5cb76a52b8069cd33fdf43d1d067a74338717bb52e3e0822be44b`.
+
+## Mode producers and scheduled cross-reference consumer (2026-11-04)
+
+**Confirmed static**, same pinned APK. Exact write scans find one writer
+each for MKA.A01/A02, both in retained MtZ.Cb6. LzO constructor preserves
+the three trailing boolean parameters as A0D/A0E/A0C; MtZ forwards A0C
+to MKA.A01, A0E to MKA.A02. At descriptor construction, A0C is true iff
+LIX.A04 is nonnull, and A0E is the inverse of MvM.A06. LIX.A04's higher
+producer remains untraced; naming this input by field identity avoids
+assuming its full semantic type. The earlier M0p.A00 contributes another
+boolean, not these two mode flags; full helper retained to preserve that
+negative distinction.
+
+MOu.A07 adoption reads LzN.A00 and, when Lyh.A04 permits and nonempty,
+passes it to KmQ.A00. KmQ's log explicitly identifies verification of
+"scheduled cross_reference". It validates using Lkh's UUID-v4 pattern
+and returns original or null, with diagnostic logging on malformed/empty
+input.06K.A07 invokes Pattern.matcher(...).matches(), confirming whole
+string matching, not substring search. The adopted value goes through
+MDL.A0A and clears the alternate path via MDL.A0B(null). Otherwise
+LzN.A02 passes through M0g.A00(value,false) into MDL.A0B. Thumbnail
+values take analogous branches. No names are inferred for remaining
+MDL storage fields without their producers/consumers.
+
+Direct LzN.A02 reference scan finds only callback write, MtZ validation
+and MOu adoption. This bounds exact direct accesses, not reflection or
+transitive object consumers. The scheduled cross-reference is therefore
+not a slash-path validator and should not be accepted as an ordinary
+Rust media direct_path. M0g normalization, LIX.A04 producer and complete
+post-adoption status handling remain open. Rust acceptance remains unchanged.
+
+Reproduce apk-field-refs MKA.A01/A02:Z --writes-only, LzN.A02:String;
+apk-smali MOu.A07,KmQ.A00,06K.A07,M0p.A00 with signatures/exceptions.
+Existing MtZ/LzO exports carry the constructor/flag dataflow above.
+
+- [ordinary-path-consumers.txt](ordinary-path-consumers.txt) — SHA-256 `f7a1504e957c89ac988b9d7d657e7adb1def3c112b44d893afd4eb80b286e054`.
+- [result-adoption.txt](result-adoption.txt) — SHA-256 `bb61ae0b269829016ec3ec32f400376f65c69b5c0eee53a8831760626adbe4ef`.
+- [cross-reference-verifier.txt](cross-reference-verifier.txt) — SHA-256 `88445b59c5331695728c769532ecca515efce30079bec350636e522b8bb8a786`.
+- [regex-match-semantics.txt](regex-match-semantics.txt) — SHA-256 `e4eb216de6fa46a789777e86ef23d63dfd213a7c3b5fcd0981619930f8011f0d`.
+- [mode-helper.txt](mode-helper.txt) — SHA-256 `072506169f0fa7d0be8c5f8664936dffe942d418cd5d1d5ece9ba7851bf72023`.
+- [opaque-mode-writers.txt](opaque-mode-writers.txt) — SHA-256 `ca1a1df2da4c5b94072237341e4e7239ba2d172882c29a7d179dcb1179962af0`.
+- [required-path-mode-writers.txt](required-path-mode-writers.txt) — SHA-256 `6cab8100fe1282c1f43875a507dd2c9db70193ff22258ed87bd9ac08d5c0125a`.

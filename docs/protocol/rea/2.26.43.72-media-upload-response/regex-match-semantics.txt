@@ -1,0 +1,16 @@
+
+# class: LX/06K;
+# extends: Ljava/lang/Object;
+
+.method public A07(ZL)  # .registers 3
+    # full signature: LX/06K;->A07(Ljava/lang/CharSequence;)Z
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  iget-object  v0, v1, LX/06K;->nativePattern:Ljava/util/regex/Pattern;
+    000c..0012  invoke-virtual  {v0, v2}, Ljava/util/regex/Pattern;->matcher(Ljava/lang/CharSequence;)Ljava/util/regex/Matcher;
+    0012..0014  move-result-object  v0
+    0014..001a  invoke-virtual  {v0}, Ljava/util/regex/Matcher;->matches()Z
+    001a..001c  move-result  v0
+    001c..001e  return  v0
+    # exception table: 0 try range(s)
+.end method
