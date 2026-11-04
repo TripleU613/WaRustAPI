@@ -215,3 +215,12 @@ registered by0v7. JID checks in1rR belong to a separate message branch and
 are not notification origin evidence.
 [Binding and remaining map/consumer authority](rea/2.26.43.72-reachout-state/README.md#legacy-notification-to-mex-code-binding-2026-11-04).
 No runtime change or live traffic.
+
+## Conditional offline notification preflight (2026-11-04)
+
+**Confirmed pinned static:** shared notification JID classification is behind
+offline>=11; classification codes5..8 select one callback branch. That is
+not proof of universal MEX sender authority. Handler map factories declare
+tags and duplicate registrations throw;1rc declares notification.
+[Methods and remaining classifier/origin gaps](rea/2.26.43.72-reachout-state/README.md#high-offline-preflight-and-handler-map-construction-2026-11-04).
+No runtime validation policy or live-account change.

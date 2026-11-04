@@ -259,3 +259,39 @@ the104a call site, and router-registration.txt carries0x102 registration.
 - [legacy-notification-codes.txt](legacy-notification-codes.txt) — SHA-256 `0b4d28e2cc291529803ea15fcc136e0824cd05a6c01458c8627c68abc1bf467a`.
 - [legacy-notification-constructor.txt](legacy-notification-constructor.txt) — SHA-256 `4e527236b06320d8fed6565d84a7a3ae98345ab17b2b7907b46a9739138e0903`.
 - [message-parser-false-lead.txt](message-parser-false-lead.txt) — SHA-256 `4dc282b9a5112c3906f95873200911338fdb0a2031182e7e5f67a217d2d4a160`.
+
+## High-offline preflight and handler-map construction (2026-11-04)
+
+**Confirmed static**, same pinned APK.1rA.A03 invokes its A01 preflight
+only when parsed offline count>=11, then uses2FP.A09(classification) to
+select a callback path.2FP.A09 returns true for integer5/6/7/8 only.
+The notification1rc branch of A01 records offline count/type and reads
+optional from/participant as Jid, prefers participant when nonnull, obtains
+DeviceJid via0EB.A00, and delegates2FP.A06 with final false. A06 forwards
+Exz.A01 result into2FP.A07. Full classifier/helper semantics remain open.
+This is not a universal check on every MEX sender: its high-offline gate
+must be preserved and classification values must not be guessed as trusted
+server identities. Missing native optional JID reads also do not authorize
+Rust to accept malformed ACK routing fields.
+
+0ZJ.A0S builds a new map, constructs1r7 factory context, iterates configured
+1r8 factories calling AL1, and inserts each handler through A19. Optional
+295 handler is conditional. A19 enumerates1rA.A02 declared tags and throws
+on duplicate map entries;1rc's A02 branch declares exactly notification.
+This closes tag registration/insertion mechanics, not all configured factory
+implementations or consumer origin authority.
+
+Negative lookup:1rc.A01 has no own bytecode body; the shared1rA method's
+instance branch supplies this behavior. Do not infer lack of validation
+from an exact subclass-method search alone. No Rust policy changes or
+live requests were made. Sender authority remains upstream/unproven.
+
+Reproduce apk-smali1rA.A01/A02,2FP.A06/A09 and0ZJ.A0S/A19 with
+signatures/exceptions. Earlier1rA.A03 export carries offline>=11 call gate.
+
+- [shared-offline-preflight.txt](shared-offline-preflight.txt) — SHA-256 `513741f4230527d4ea1fdb7f151610961c962bb737e0d66c61742dfebd966d19`.
+- [offline-device-classification.txt](offline-device-classification.txt) — SHA-256 `48798dc44ff0ae7162ad90fea7c54cfa0498c6dfb2d2390bb6fc4b02f012f354`.
+- [offline-class-result.txt](offline-class-result.txt) — SHA-256 `ea259733126a6084de5e78521c48f9a2412bbda191e65a0163a89371b73975eb`.
+- [handler-map-construction.txt](handler-map-construction.txt) — SHA-256 `96e64014c4f4238bedb03128387ba114741e636618245ba4c95d343a974e73bb`.
+- [handler-map-insertion.txt](handler-map-insertion.txt) — SHA-256 `5acde23d6f188328557a56d9593cfc9bfa191da4960a5f2f1fe2a6012b3bca89`.
+- [handler-tag-declaration.txt](handler-tag-declaration.txt) — SHA-256 `f1a9e0f0cfd210e978f8fc8f86167bf812a5196456de4c30939a2065a3954648`.

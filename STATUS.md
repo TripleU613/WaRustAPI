@@ -1,3 +1,13 @@
+2026-11-04 — **Notification offline preflight/map construction traced:**
+
+Retained conditional offline>=11 JID classification and duplicate-checked
+tag registration mechanics. Neither establishes universal MEX origin authority;
+classifier details/configured factory ownership remain open.
+[Evidence](docs/protocol/rea/2.26.43.72-reachout-state/README.md#high-offline-preflight-and-handler-map-construction-2026-11-04).
+Validation: JSON parsing, coverage freshness, cached diff checks and repository
+hygiene (4,433 local links) passed. Documentation/evidence only;
+no runtime change or live traffic.
+
 2026-11-04 — **Legacy notification-to-MEX code bound:**
 
 Fallback tag-map wrapper and1rc notification branch connect literal mex

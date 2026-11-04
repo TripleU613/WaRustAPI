@@ -1,3 +1,9 @@
+2026-11-04 — **Pinned static: conditional offline preflight/map mechanics.**
+1rA notification branch,2FP classification-result gate and0ZJ map factory/
+insertion retained. Offline>=11 is conditional, not sender authority proof.
+[Evidence and unknowns](rea/2.26.43.72-reachout-state/README.md#high-offline-preflight-and-handler-map-construction-2026-11-04).
+No Rust runtime or live-account change.
+
 2026-11-04 — **Pinned static: legacy notification-to-MEX code bound.**
 1s2 fallback/1rh layout,1rA/1rN notification branch and EL2 mex->0x102
 map retained. Message parser false lead separated from sender authority.

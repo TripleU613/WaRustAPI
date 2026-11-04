@@ -1,0 +1,25 @@
+
+# class: LX/0ZJ;
+# extends: Landroid/os/HandlerThread;
+
+.method public A19(VLL)  # .registers 7
+    # full signature: LX/0ZJ;->A19(LX/1rA;Ljava/util/Map;)V
+    0000..0006  invoke-virtual  {v5}, LX/1rA;->A02()[Ljava/lang/String;
+    0006..0008  move-result-object  v4
+    0008..000a  array-length  v3, v4
+    000a..000c  const/4  v2, #0x0
+    000c..0010  if-ge  v2, v3, +0x18
+    0010..0014  aget-object  v1, v4, v2
+    0014..001a  invoke-interface  {v6, v1}, Ljava/util/Map;->containsKey(Ljava/lang/Object;)Z
+    001a..001c  move-result  v0
+    001c..0020  if-nez  v0, +0x8
+    0020..0026  invoke-interface  {v6, v1, v5}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    0026..002a  add-int/lit8  v2, v2, #0x1
+    002a..002c  goto  -0xf
+    002c..0030  const-string  v1, "ConnectionReader/addStanzaHandler this stanza is already handled"
+    0030..0034  new-instance  v0, Ljava/lang/IllegalStateException;
+    0034..003a  invoke-direct  {v0, v1}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
+    003a..003c  throw  v0
+    003c..003e  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,15 @@
+
+# class: LX/2FP;
+# extends: Ljava/lang/Object;
+
+.method public A06(LLLZ)  # .registers 4
+    # full signature: LX/2FP;->A06(Lcom/whatsapp/infra/core/jid/DeviceJid;LX/09F;Z)Ljava/lang/Integer;
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000e  invoke-static  {v1}, LX/Exz;->A01(Lcom/whatsapp/infra/core/jid/DeviceJid;)Z
+    000e..0010  move-result  v0
+    0010..0016  invoke-static  {v1, v2, v0, v3}, LX/2FP;->A07(Lcom/whatsapp/infra/core/jid/DeviceJid;LX/09F;ZZ)Ljava/lang/Integer;
+    0016..0018  move-result-object  v0
+    0018..001a  return-object  v0
+    # exception table: 0 try range(s)
+.end method

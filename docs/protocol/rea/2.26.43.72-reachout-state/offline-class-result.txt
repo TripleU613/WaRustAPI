@@ -1,0 +1,23 @@
+
+# class: LX/2FP;
+# extends: Ljava/lang/Object;
+
+.method public A09(ZL)  # .registers 2
+    # full signature: LX/2FP;->A09(Ljava/lang/Integer;)Z
+    0000..0004  if-eqz  v1, +0x15
+    0004..0006  const/4  v0, #0x5
+    0006..000c  invoke-virtual  {v1}, Ljava/lang/Number;->intValue()I
+    000c..000e  move-result  v1
+    000e..0012  if-eq  v1, v0, +0xc
+    0012..0014  const/4  v0, #0x6
+    0014..0018  if-eq  v1, v0, +0x9
+    0018..001a  const/4  v0, #0x7
+    001a..001e  if-eq  v1, v0, +0x6
+    001e..0022  const/16  v0, #0x8
+    0022..0026  if-ne  v1, v0, +0x4
+    0026..0028  const/4  v0, #0x1
+    0028..002a  return  v0
+    002a..002c  const/4  v0, #0x0
+    002c..002e  return  v0
+    # exception table: 0 try range(s)
+.end method
