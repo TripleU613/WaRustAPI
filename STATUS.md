@@ -1,3 +1,14 @@
+2026-11-04 — **Explicit media auth lifetime validation (offline):**
+
+Upload route selection no longer treats a present malformed/overflowing auth_ttl
+as absent. Only absence falls back to route TTL. Validity/expiry refusals remain
+read-only and issue no refresh or upload request. Real-store encoded-route tests
+cover valid, absent, malformed, overflow, zero, negative and expired auth TTLs.
+[Source defect and current-build limits](docs/protocol/media-network-outcomes.md#explicit-auth-lifetime-validation-2026-11-04).
+Validation: **1,234 workspace/all-feature tests**, strict Clippy, CLI-reference,
+formatting, coverage freshness and repository hygiene passed.
+No live traffic or native expiry-policy parity claim.
+
 2026-11-04 — **Upload response-header persistence (offline):**
 
 Upload status is now stored before response-body streaming. A truncated or

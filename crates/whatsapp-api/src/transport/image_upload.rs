@@ -363,9 +363,15 @@ fn route(store: &ProtocolStore) -> Result<(String, Zeroizing<String>)> {
     let ttl = attr("ttl")
         .and_then(|v| v.parse::<i64>().ok())
         .ok_or_else(|| invalid("missing route lifetime"))?;
-    let auth_ttl = attr("auth_ttl")
-        .and_then(|v| v.parse::<i64>().ok())
-        .unwrap_or(ttl);
+    // Absence keeps the existing fallback; an explicit malformed lifetime is
+    // not evidence that authentication remains valid for the route's full TTL.
+    let auth_ttl = match conn.get_attr("auth_ttl") {
+        None => ttl,
+        Some(value) => value
+            .as_text()
+            .and_then(|v| v.parse::<i64>().ok())
+            .ok_or_else(|| invalid("invalid upload auth lifetime"))?,
+    };
     let age = Timestamp::now().0.saturating_sub(
         latest["at"]
             .as_i64()
@@ -852,6 +858,62 @@ async fn upload_prepared(
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn malformed_auth_lifetime_never_falls_back_to_route_ttl() {
+        use super::*;
+        use crate::{
+            binary::{Encoder, Node},
+            model::ids::AccountId,
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("route-ttl.redb"),
+            account_id: AccountId::new("route-ttl-test").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([6; 32]))),
+            create: true,
+        })
+        .unwrap();
+        for (auth_ttl, accepted) in [
+            (None, true),
+            (Some("3600"), true),
+            (Some(""), false),
+            (Some("invalid"), false),
+            (Some("9223372036854775808"), false),
+            (Some("0"), false),
+            (Some("-1"), false),
+            (Some("1"), false),
+        ] {
+            let mut conn = Node::new("media_conn")
+                .attr("ttl", "3600")
+                .attr("auth", "synthetic-auth")
+                .children(vec![Node::new("host").attr("hostname", "mmg.whatsapp.net")]);
+            if let Some(ttl) = auth_ttl {
+                conn = conn.attr("auth_ttl", ttl);
+            }
+            let node = Node::new("iq").attr("type", "result").children(vec![conn]);
+            let wire = Encoder::new(TokenDictionary::comparison_2_26_37_71())
+                .encode(&node)
+                .unwrap();
+            store
+                .write(|tx| {
+                    tx.put_json(Table::Checkpoints, b"media-route:synthetic", 1,
+                &serde_json::json!({"status":"result", "at":Timestamp::now().0-2000,"wire":wire}))
+                })
+                .unwrap();
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            assert_eq!(route(&store).is_ok(), accepted, "auth_ttl={auth_ttl:?}");
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                before
+            );
+        }
+    }
+
     #[test]
     fn upload_headers_survive_incomplete_body_and_never_authorize_replay() {
         use super::*;

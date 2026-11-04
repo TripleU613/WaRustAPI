@@ -61,3 +61,19 @@ Real-store tests cover 200/302/403/429/503, missing reservation, reopen with no
 completed body, binding preservation and replay refusal after header receipt.
 They also protect completed/refused rows against overwrite. No interrupted upload
 or other live network request was run.
+
+## Explicit auth lifetime validation (2026-11-04)
+
+**Confirmed Rust defect/fixed offline:** upload route selection parsed `auth_ttl`
+with `and_then(...).unwrap_or(ttl)`, treating present invalid or overflowing
+auth lifetimes as absent. It now falls back to route TTL only when the attribute
+is absent. Present malformed/non-text auth TTL refuses. Zero, negative and expired
+lifetimes continue to refuse through the existing age/minimum-lifetime guard.
+
+A real-store encoded-route test covers absent and valid lifetimes, empty/malformed/
+overflow values, zero/negative values and auth expiry shorter than route expiry.
+Route inspection leaves every checkpoint unchanged and performs no refresh or
+upload reservation. The absence fallback and TTL units are existing local
+contracts; this correction does not claim a newly recovered 2.26.43.72 media
+lifetime parser or server restriction cause. Native expiry parsing/refresh policy
+remains in the current-build audit queue. No live traffic occurred.

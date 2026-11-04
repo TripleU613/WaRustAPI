@@ -1,3 +1,9 @@
+2026-11-04 — **Confirmed Rust defect/fixed offline:** invalid explicit media
+auth lifetimes could inherit route TTL. Missing-only fallback now distinguishes
+absent from malformed/overflowing values. Encoded-route encrypted-store tests
+preserve all checkpoints and cover shorter auth expiry. No new APK/live evidence.
+[Details](media-network-outcomes.md#explicit-auth-lifetime-validation-2026-11-04).
+
 2026-11-04 — **Confirmed Rust persistence defect/fixed offline:** upload
 HTTP status was discarded when response-body streaming failed before completion.
 It now commits before streaming under response_headers_received, retaining the
