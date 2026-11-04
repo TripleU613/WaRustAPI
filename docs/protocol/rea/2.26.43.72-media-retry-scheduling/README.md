@@ -30,8 +30,9 @@
 
 The error callback does not itself remove every prior timer. A future scheduler
 must preserve shared Handler triggers and dispatch gates rather than treating503
-jitter as a universal server-provided minimum wait. Session ownership, cancellation
-on disconnect/account switch, shared DI lifetime and attempt limits remain open.
+jitter as a universal server-provided minimum wait. Session ownership, full cancellation/account-switch coverage, shared DI lifetime
+and attempt limits remain open; the follow-up below establishes one disconnect
+handler cancellation path.
 Rust automatic retries/proactive refresh remain disabled; this does not authorize
 changing the existing explicit one-query CLI operation into a retry loop.
 
@@ -62,3 +63,39 @@ trace or independent native execution oracle. Provider limitations are separate.
 - [provider-limitations.txt](provider-limitations.txt) — SHA-256 `0ceb2f1cbdd54b8e871d57a70a058a81b58ce543d39ee6c9ffd39e566ae74c9e`.
 - [retry-model-reference.txt](retry-model-reference.txt) — SHA-256 `a0a1647693d34b1e6e7c64c0497a00df094c9e21116ca5ef18de753f0bdb6e39`.
 - [retry-owner.txt](retry-owner.txt) — SHA-256 `fb0f9bdac9e44857e1b4209ad3013a0cd13742928d09c999ddc4e06d8a9e6cf5`.
+
+## Disconnect cancellation and additional triggers (2026-11-04)
+
+**Confirmed static**, same pinned APK; no execution. Exact field-reference scan
+finds five direct references to `0VM.A03` across the APK: constructor, A06,
+A0T, 1xY.Bvj and 1iM.A02. This bounds direct field accesses only; it does
+not prove absence of reflection, aliases or other request producers.
+
+`1iM.A02` logs "server disconnected", then at0176 clears `0VM.A0L` and
+at0188 removes Handler message0. The intervening spam-warning branch rejoins
+at0166; cancellation does not depend on that warning being present. Two direct
+callers were found (0YB.A05 and0YV.handleMessage), but their surrounding
+conditions and account-switch coverage remain untraced. This closes the
+previous unknown for cancellation at this disconnect handler, not every teardown.
+
+`0VM.A0T` first invokes A08 (not traced here), then reads the current route.
+Absent route, connection deadline <= elapsedRealtime+120000, or auth deadline
+<= elapsedRealtime+120000 invokes A07 and returns true. With both deadlines
+further away it ensures message0 exists (A06 only if hasMessages(0) is false)
+and returns false. These are separate elapsedRealtime reads, not one frozen time.
+This two-minute demand check differs from A06's one-minute auth timer; neither
+is a server-mandated wait. The boolean alone is not proof a request was sent:
+A07 retains its own throttle/in-flight gates.
+
+`0VM.A0S` invokes A07 only for input401 or403; other codes return. Caller
+provenance and which HTTP operations pass their results here remain unknown.
+No Rust automatic retries, HTTP resend, or new account operations are enabled.
+
+Reproduce with the existing apk-field-refs exact A03/Handler signature,
+apk-smali class/method pairs above, and apk-callers for 1iM.A02.
+
+- [handler-field-references.txt](handler-field-references.txt) — SHA-256 `068072766e23a49ba182e6f3185b8ef0037eb242bdd3374ffa8fd60a48ed8019`.
+- [disconnect-cancellation.txt](disconnect-cancellation.txt) — SHA-256 `becfc888cdc5e749a4932933016fa63a1755a3629f054b26ddd3eb58716ca60e`.
+- [disconnect-callers.txt](disconnect-callers.txt) — SHA-256 `9960ffdb951c7a609dc58405b8b5e8f9fd075140f6c9f52230bca4cba7caeef8`.
+- [almost-expired-trigger.txt](almost-expired-trigger.txt) — SHA-256 `de085bb075a2b38460548a54b5a90aec957a67be193f837c63e29d8503812ef1`.
+- [http-response-trigger.txt](http-response-trigger.txt) — SHA-256 `8f9396d56d4e69ffe1f759da09dd59977f4050332b38b83e01b0ddd59df2d2f0`.

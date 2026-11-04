@@ -1,3 +1,13 @@
+2026-11-04 — **Media disconnect cancellation and demand triggers traced:**
+
+Pinned APK static evidence closes message0 cancellation in1iM.A02 and
+distinguishes two-minute demand checks from the one-minute auth timer.
+HTTP401/403 invoke the existing request gate; caller provenance remains open.
+[Retained output and scope](docs/protocol/rea/2.26.43.72-media-retry-scheduling/README.md#disconnect-cancellation-and-additional-triggers-2026-11-04).
+Validation: JSON parsing, coverage freshness, cached diff checks and repository
+hygiene (4,223 local links) passed. Documentation/evidence only; Rust unchanged.
+No live traffic or automatic scheduling enabled.
+
 2026-11-04 — **Native media retry/timer trace and checked arithmetic:**
 
 Checked DEX closes the Fibonacci leaf and Handler dispatch: base0,1,1,2,... caps

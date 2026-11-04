@@ -337,3 +337,11 @@ executable was unavailable for new method decompilation in this pass; the new
 evidence is explicitly checked DEX, not a fabricated REA record. Session/DI and
 disconnect cancellation, other timer producers and full automatic retry ownership
 remain untraced. Runtime scheduling behavior is unchanged; no queries were sent.
+
+### Native disconnect cancellation and demand triggers (2026-11-04)
+
+**Confirmed static**, pinned2.26.43.72: 1iM.A02 clears the manager flag and
+removes media Handler message0 during its disconnect handling. 0VM.A0T uses
+a separate two-minute connection/auth demand threshold; 0VM.A0S routes401/403
+to the existing gated request function. These do not authorize HTTP resend.
+[Exact output, scope, hashes and remaining caller gaps](rea/2.26.43.72-media-retry-scheduling/README.md#disconnect-cancellation-and-additional-triggers-2026-11-04).

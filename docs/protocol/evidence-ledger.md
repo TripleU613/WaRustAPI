@@ -1,3 +1,9 @@
+2026-11-04 — **Confirmed static: media disconnect and demand triggers.**
+Pinned2.26.43.72 checked DEX identifies 1iM.A02 message0 cancellation,
+0VM.A0T two-minute demand checks, and A0S401/403 gated refresh triggers.
+[Evidence and bounded direct-reference scan](rea/2.26.43.72-media-retry-scheduling/README.md#disconnect-cancellation-and-additional-triggers-2026-11-04).
+Caller conditions/account-switch teardown remain unknown. No runtime change.
+
 2026-11-04 — **Confirmed checked DEX/derived:** media Fibonacci seed/cap,
 zero initial delay, positive jitter range, Handler selector2/what0 dispatch,
 success reset and auth-expiry-minus60s timer are retained with hashes. cb/be
