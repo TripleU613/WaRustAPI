@@ -441,3 +441,12 @@ seal is appended afterward outside those filters. Mzq constructor field
 order is retained explicitly to distinguish plaintext/transformed digests.
 [Stream graph and branch limits](rea/2.26.43.72-media-upload-http/README.md#digest-stream-includes-cipher-mac-excludes-transport-seal-2026-11-04).
 Higher-level path/processor binding remains open; no runtime body change.
+
+### Standard finished voice seal binding (2026-11-04)
+
+**Confirmed static**, pinned2.26.43.72: MFE creates standard MOu with
+Lg0-selected Mvc for LKZ; Mvc implements Nbs without Ncy override, so
+MOu selects the default voice processor. Finished non-newsletter branch
+therefore appends a sent/hash seal. Rust currently lacks this equivalent;
+exact serialization and historical reservation compatibility remain to fix.
+[Factory/interface evidence and implementation boundary](rea/2.26.43.72-media-upload-http/README.md#standard-finished-voice-processor-binding-2026-11-04).

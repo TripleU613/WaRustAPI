@@ -1,0 +1,28 @@
+
+# class: LX/Lg0;
+# extends: Ljava/lang/Object;
+
+.method public A00(LL)  # .registers 5
+    # full signature: LX/Lg0;->A00(LX/MvM;)LX/Nbs;
+    0000..0004  instance-of  v0, v4, LX/LKY;
+    0004..0008  if-eqz  v0, +0x13
+    0008..000a  move-object  v0, v4
+    000a..000e  check-cast  v0, LX/LKY;
+    000e..0012  iget-object  v3, v0, LX/LKY;->A02:LX/MSm;
+    0012..0016  iget-object  v0, v4, LX/MvM;->A07:LX/M5T;
+    0016..001a  iget-wide  v1, v0, LX/M5T;->A05:J
+    001a..001e  new-instance  v0, LX/Mve;
+    001e..0024  invoke-direct  {v0, v3, v1, v2}, LX/Mve;-><init>(LX/MSm;J)V
+    0024..0028  check-cast  v0, LX/Nbs;
+    0028..002a  return-object  v0
+    002a..002e  instance-of  v0, v4, LX/LKZ;
+    002e..0032  if-eqz  v0, +0xa
+    0032..0036  check-cast  v4, LX/LKZ;
+    0036..003a  new-instance  v0, LX/Mvc;
+    003a..0040  invoke-direct  {v0, v4}, LX/Mvc;-><init>(LX/LKZ;)V
+    0040..0042  goto  -0xe
+    0042..0046  new-instance  v0, LX/Mvd;
+    0046..004c  invoke-direct  {v0, v4}, LX/Mvd;-><init>(LX/MvM;)V
+    004c..004e  goto  -0x14
+    # exception table: 0 try range(s)
+.end method

@@ -1,3 +1,10 @@
+2026-11-04 — **Confirmed static: standard finished voice seal path.**
+Pinned2.26.43.72 MFE/Lg0/Mvc factory chain plus exact interface definitions
+close custom Ncy override for standard LKZ. Rust's missing separate seal
+now has a bound native finished path; exact serialization/migration pending.
+[Evidence](rea/2.26.43.72-media-upload-http/README.md#standard-finished-voice-processor-binding-2026-11-04).
+No runtime byte change or live account request.
+
 2026-11-04 — **Confirmed static: standard voice cipher digest boundary.**
 Pinned2.26.43.72 MWH/LOh/Mzq/Mtd/LOv chain covers cipher output+10-byte
 MAC before external seal. Constructor field mapping resolves digest order.

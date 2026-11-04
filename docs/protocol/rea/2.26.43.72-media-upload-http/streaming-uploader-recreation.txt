@@ -1,0 +1,50 @@
+
+# class: LX/MvN;
+# extends: Ljava/lang/Object;
+
+.method private A02(L)  # .registers 7
+    # full signature: LX/MvN;->A02()LX/NcE;
+    0000..0004  iget-object  v5, v6, LX/MvN;->A03:LX/MSm;
+    0004..0008  iget-object  v4, v5, LX/MSm;->A0G:Ljava/io/File;
+    0008..000a  const/4  v3, #0x0
+    000a..000e  if-eqz  v4, +0x4f
+    000e..0012  iget-object  v0, v5, LX/MSm;->A0I:Ljava/lang/Long;
+    0012..0016  if-eqz  v0, +0x4b
+    0016..001c  invoke-virtual  {v0}, Ljava/lang/Number;->longValue()J
+    001c..001e  move-result-wide  v1
+    001e..0024  invoke-virtual  {v5}, LX/MSm;->A05()Z
+    0024..0026  move-result  v0
+    0026..002a  if-eqz  v0, +0x41
+    002a..002e  iget-object  v3, v6, LX/MvN;->A02:LX/LKY;
+    002e..0032  iget-object  v0, v6, LX/MvN;->A0D:Ljava/util/concurrent/atomic/AtomicReference;
+    0032..0038  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicReference;->get()Ljava/lang/Object;
+    0038..003a  move-result-object  v0
+    003a..003e  check-cast  v0, LX/M83;
+    003e..0042  if-nez  v0, +0x6
+    0042..0046  iget-object  v0, v3, LX/MvM;->A07:LX/M5T;
+    0046..004a  iget-object  v0, v0, LX/M5T;->A0A:LX/M83;
+    004a..0050  invoke-virtual  {v3, v0, v4, v1, v2}, LX/LKY;->A09(LX/M83;Ljava/io/File;J)LX/LKW;
+    0050..0052  move-result-object  v3
+    0052..0056  iget-object  v2, v6, LX/MvN;->A0F:LX/0AW;
+    0056..005c  invoke-static  {v3}, LX/Lg0;->A00(LX/MvM;)LX/Nbs;
+    005c..005e  move-result-object  v1
+    005e..0062  new-instance  v0, LX/Mvb;
+    0062..0068  invoke-direct  {v0, v5, v1}, LX/Mvb;-><init>(LX/MSm;LX/Nbs;)V
+    0068..006c  new-instance  v1, LX/MOu;
+    006c..0072  invoke-direct  {v1, v3, v0}, LX/MOu;-><init>(LX/MvM;LX/Nbs;)V
+    0072..0076  iget-object  v0, v6, LX/MvN;->A05:LX/Lqi;
+    0076..007c  invoke-interface  {v2, v1, v0}, LX/0AW;->invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    007c..007e  move-result-object  v2
+    007e..0082  check-cast  v2, LX/NcE;
+    0082..0086  iget-object  v0, v6, LX/MvN;->A0C:Ljava/util/concurrent/atomic/AtomicReference;
+    0086..008c  invoke-virtual  {v0, v2}, Ljava/util/concurrent/atomic/AtomicReference;->set(Ljava/lang/Object;)V
+    008c..0090  iget-object  v0, v6, LX/MvN;->A0E:Ljava/util/concurrent/atomic/AtomicReference;
+    0090..0096  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicReference;->get()Ljava/lang/Object;
+    0096..0098  move-result-object  v1
+    0098..009c  sget-object  v0, LX/LQO;->A03:LX/LQO;
+    009c..00a0  if-ne  v1, v0, +0x5
+    00a0..00a6  invoke-interface  {v2}, LX/NcE;->cancel()V
+    00a6..00a8  return-object  v2
+    00a8..00aa  return-object  v3
+    # exception table: 0 try range(s)
+.end method

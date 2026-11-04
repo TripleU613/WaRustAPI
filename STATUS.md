@@ -1,3 +1,14 @@
+2026-11-04 — **Standard finished voice seal path bound:**
+
+Factory/interface evidence closes custom processor override for standard
+LKZ. Native finished non-newsletter voice appends a seal absent in Rust;
+exact JSON/wire serialization and saved-reservation compatibility remain
+the implementation work.
+[Evidence](docs/protocol/rea/2.26.43.72-media-upload-http/README.md#standard-finished-voice-processor-binding-2026-11-04).
+Validation: JSON parsing, coverage freshness, cached diff checks and repository
+hygiene (4,343 local links) passed. Documentation/evidence only;
+no runtime change or live traffic.
+
 2026-11-04 — **Standard voice seal digest boundary traced:**
 
 Pinned standard non-chunk encrypted stream hashes ciphertext+10-byte MAC,

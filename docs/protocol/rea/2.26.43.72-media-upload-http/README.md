@@ -279,3 +279,43 @@ and whole-name AQC scan with signatures/exceptions.
 - [encrypting-stream.txt](encrypting-stream.txt) — SHA-256 `627789065e6166ad984fa8e50fd8ed538b214b683eb2a384a9eb5bbd3bcdf18d`.
 - [digest-wrapper-layout.txt](digest-wrapper-layout.txt) — SHA-256 `c8ae6de47e671df9e9df298da42ebf06ead32c1d52d029f3262781416d1ad94a`.
 - [encryption-eligibility.txt](encryption-eligibility.txt) — SHA-256 `3ce88094f0975995b1530d7f615f19ba8c1cfab7036721cb94bc6a85b87d30e1`.
+
+## Standard finished voice processor binding (2026-11-04)
+
+**Confirmed static**, same pinned APK. MFE.A00 sends LKY to streaming
+MvN, but for other MvM types creates MOu with Lg0.A00(request), then MvO.
+Lg0 selects Mvc for LKZ. Mvc stores that exact LKZ and opens LOb over
+the request file; its stream lifecycle is retained but not fully reconstructed.
+
+Direct class-definition probe of classes11.dex shows Mvc extends Object and
+implements only Nbs; Nbs has no superinterfaces. It therefore does not
+implement Ncy through this hierarchy. This closes MOu's custom-processor
+override for this standard LKZ factory path: MOu falls back to Mv9, which
+constructs selector0 MtQ. The probe script is a small read-only parser for
+these exact class definitions, not a generic hardened DEX validator. Its
+output is not a REA envelope.
+
+Combined with the previously retained plugin branch setting A02/A03 true,
+non-newsletter LKZ eligibility, and transformed-stream digest, a native
+finished-voice path does append the sent/hash seal. Rust's current voice
+body has no equivalent. Remaining exact-wire work includes JSONObject string
+escaping/serialization, operation metadata binding and preserving existing
+saved body/hash/replay invariants when introducing this change. Do not use
+a new request ID or rewrite historical upload reservations to add a trailer.
+
+Streaming MvN constructor/recreation are retained separately: they select
+Mve/Mvb-capable machinery, not the same standard LKZ path. No claim of
+streaming upload implementation follows from the finished-file evidence.
+No Rust runtime change or live request was made in this research chunk.
+
+Reproduce apk-smali MFE.A00, Lg0.A00, whole Mvc/Mv9, MvN.<init>/A02;
+python3 interface-probe.py APK for the exact interface identity check.
+
+- [voice-source.txt](voice-source.txt) — SHA-256 `190af160d7d9dd3f28a1fe028f5f4a292b0a9cffa71f1b29e1ff41801ca0e9a9`.
+- [uploader-factory.txt](uploader-factory.txt) — SHA-256 `c3288956a31b4f9c375e76a665feafbc318d0a59adce5e358816847a158cd2b4`.
+- [streaming-uploader-recreation.txt](streaming-uploader-recreation.txt) — SHA-256 `d152d55d515f42cc58f85c004269bb12c05fa0f7aff8ff9e26d7646621716787`.
+- [stream-source-selector.txt](stream-source-selector.txt) — SHA-256 `7fb0ff3816c09044d601092bb2819d8372b5d3c2767c47a293fc40fbaa14a25d`.
+- [default-voice-processor.txt](default-voice-processor.txt) — SHA-256 `cedce2b91dab5deb6eea1fa834d5ff1b5217f551e066c98c22c2bd2f5e1b5fc0`.
+- [streaming-uploader-constructor.txt](streaming-uploader-constructor.txt) — SHA-256 `2b0e334a816c4b539c9b9b8c61320c5a8ad4a890d2a51ebbc9f3005b6473f819`.
+- [interface-probe.py](interface-probe.py) — SHA-256 `5c8650aa1d9d50ef0027d9567cf8002e371e09c1432879ab04e24d89abc0ac0c`.
+- [voice-source-interfaces.txt](voice-source-interfaces.txt) — SHA-256 `49d939d7b844b80738e1164d902d08013f4f5cd0453eba54c4f54505185df248`.

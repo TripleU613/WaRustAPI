@@ -1,0 +1,111 @@
+
+# class: LX/MvN;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VL)  # .registers 10
+    # full signature: LX/MvN;-><init>(LX/LKY;)V
+    0000..0002  const/4  v3, #0x0
+    0002..0008  invoke-static  {v9, v3}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000a  const/4  v0, #0x1
+    000a..000e  new-instance  v4, LX/N5t;
+    000e..0014  invoke-direct  {v4, v0}, LX/N5t;-><init>(I)V
+    0014..001a  invoke-direct  {v8}, Ljava/lang/Object;-><init>()V
+    001a..001e  iput-object  v9, v8, LX/MvN;->A02:LX/LKY;
+    001e..0022  iput-object  v4, v8, LX/MvN;->A0F:LX/0AW;
+    0022..0026  iget-object  v5, v9, LX/LKY;->A02:LX/MSm;
+    0026..002a  iput-object  v5, v8, LX/MvN;->A03:LX/MSm;
+    002a..002e  sget-object  v0, LX/LLe;->A00:LX/LLe;
+    002e..0034  invoke-static  {v0}, LX/0J0;->A00(Ljava/lang/Object;)LX/0JA;
+    0034..0036  move-result-object  v0
+    0036..003a  iput-object  v0, v8, LX/MvN;->A0I:LX/0J8;
+    003a..003c  const/4  v2, #0x0
+    003c..0042  invoke-static  {v2, v0}, LX/2L6;->A1T(LX/0Sp;LX/0J5;)LX/0nP;
+    0042..0044  move-result-object  v0
+    0044..0048  iput-object  v0, v8, LX/MvN;->A0L:LX/0J5;
+    0048..004a  const/4  v7, #0x0
+    004a..004c  const/4  v0, #0x4
+    004c..0050  sget-object  v6, LX/02X;->A00:Ljava/lang/Integer;
+    0050..0056  invoke-static  {v6, v3, v0}, LX/0ot;->A00(Ljava/lang/Integer;II)LX/0ou;
+    0056..0058  move-result-object  v1
+    0058..005c  iput-object  v1, v8, LX/MvN;->A0G:LX/0J7;
+    005c..0060  new-instance  v0, LX/0ov;
+    0060..0066  invoke-direct  {v0, v2, v1}, LX/0ov;-><init>(LX/0Sp;LX/0J4;)V
+    0066..006a  iput-object  v0, v8, LX/MvN;->A0J:LX/0J4;
+    006a..006c  const/4  v2, #0x0
+    006c..0070  const/high16  v0, #0x42c80000
+    0070..0072  mul-float/2addr  v0, v2
+    0072..0074  float-to-int  v1, v0
+    0074..0078  new-instance  v0, LX/MNN;
+    0078..007e  invoke-direct  {v0, v6, v2, v1}, LX/MNN;-><init>(Ljava/lang/Integer;FI)V
+    007e..0084  invoke-static  {v0}, LX/2L6;->A1U(Ljava/lang/Object;)LX/0JA;
+    0084..0086  move-result-object  v0
+    0086..008a  iput-object  v0, v8, LX/MvN;->A0H:LX/0J8;
+    008a..0090  invoke-static  {v7, v0}, LX/2L6;->A1T(LX/0Sp;LX/0J5;)LX/0nP;
+    0090..0092  move-result-object  v0
+    0092..0096  iput-object  v0, v8, LX/MvN;->A0K:LX/0J5;
+    0096..009a  new-instance  v0, Ljava/util/concurrent/atomic/AtomicReference;
+    009a..00a0  invoke-direct  {v0}, Ljava/util/concurrent/atomic/AtomicReference;-><init>()V
+    00a0..00a4  iput-object  v0, v8, LX/MvN;->A0D:Ljava/util/concurrent/atomic/AtomicReference;
+    00a4..00aa  invoke-static  {v3}, LX/DBb;->A10(Z)Ljava/util/concurrent/atomic/AtomicBoolean;
+    00aa..00ac  move-result-object  v0
+    00ac..00b0  iput-object  v0, v8, LX/MvN;->A09:Ljava/util/concurrent/atomic/AtomicBoolean;
+    00b0..00b6  invoke-static  {v3}, LX/DBb;->A10(Z)Ljava/util/concurrent/atomic/AtomicBoolean;
+    00b6..00b8  move-result-object  v0
+    00b8..00bc  iput-object  v0, v8, LX/MvN;->A0A:Ljava/util/concurrent/atomic/AtomicBoolean;
+    00bc..00c2  invoke-static  {v3}, LX/DBb;->A10(Z)Ljava/util/concurrent/atomic/AtomicBoolean;
+    00c2..00c4  move-result-object  v0
+    00c4..00c8  iput-object  v0, v8, LX/MvN;->A0B:Ljava/util/concurrent/atomic/AtomicBoolean;
+    00c8..00ce  invoke-static  {}, LX/2L6;->A19()Ljava/lang/Object;
+    00ce..00d0  move-result-object  v0
+    00d0..00d4  iput-object  v0, v8, LX/MvN;->A07:Ljava/lang/Object;
+    00d4..00da  invoke-static  {}, LX/2L6;->A19()Ljava/lang/Object;
+    00da..00dc  move-result-object  v0
+    00dc..00e0  iput-object  v0, v8, LX/MvN;->A06:Ljava/lang/Object;
+    00e0..00e4  new-instance  v0, Ljava/util/concurrent/CopyOnWriteArrayList;
+    00e4..00ea  invoke-direct  {v0}, Ljava/util/concurrent/CopyOnWriteArrayList;-><init>()V
+    00ea..00ee  iput-object  v0, v8, LX/MvN;->A08:Ljava/util/concurrent/CopyOnWriteArrayList;
+    00ee..00f2  const/16  v0, #0x20
+    00f2..00f8  invoke-static  {v8, v0}, LX/Klq;->A0z(Ljava/lang/Object;I)LX/NFx;
+    00f8..00fa  move-result-object  v3
+    00fa..00fe  iget-object  v2, v5, LX/MSm;->A0C:Ljava/lang/Object;
+    00fe..0100  monitor-enter
+    0100..0104  iget-object  v1, v5, LX/MSm;->A0H:Ljava/lang/Integer;
+    0104..0108  sget-object  v0, LX/02X;->A0C:Ljava/lang/Integer;
+    0108..010c  if-ne  v1, v0, +0x3
+    010c..010e  goto  +0xd
+    010e..0112  iget-object  v0, v5, LX/MSm;->A0H:Ljava/lang/Integer;
+    0112..0118  invoke-static  {v0}, LX/MSm;->A01(Ljava/lang/Integer;)Z
+    0118..011a  move-result  v0
+    011a..011e  if-nez  v0, +0x4
+    011e..0122  iput-object  v3, v5, LX/MSm;->A05:Lkotlin/jvm/functions/Function0;
+    0122..0124  const/4  v0, #0x0
+    0124..0126  goto  +0x2
+    0126..0128  const/4  v0, #0x1
+    0128..012a  monitor-exit
+    012a..012e  if-eqz  v0, +0x5
+    012e..0134  invoke-virtual  {v3}, LX/NFx;->invoke()Ljava/lang/Object;
+    0134..0138  new-instance  v2, LX/Lqi;
+    0138..013e  invoke-direct  {v2, v8}, LX/Lqi;-><init>(LX/MvN;)V
+    013e..0142  iput-object  v2, v8, LX/MvN;->A05:LX/Lqi;
+    0142..0148  invoke-static  {v9}, LX/Lg0;->A00(LX/MvM;)LX/Nbs;
+    0148..014a  move-result-object  v1
+    014a..014e  new-instance  v0, LX/MOu;
+    014e..0154  invoke-direct  {v0, v9, v1}, LX/MOu;-><init>(LX/MvM;LX/Nbs;)V
+    0154..015a  invoke-virtual  {v4, v0, v2}, LX/N5t;->invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    015a..015c  move-result-object  v0
+    015c..0160  check-cast  v0, LX/NcE;
+    0160..0164  iput-object  v0, v8, LX/MvN;->A04:LX/NcE;
+    0164..016a  invoke-static  {v0}, LX/Klq;->A0x(Ljava/lang/Object;)Ljava/util/concurrent/atomic/AtomicReference;
+    016a..016c  move-result-object  v0
+    016c..0170  iput-object  v0, v8, LX/MvN;->A0C:Ljava/util/concurrent/atomic/AtomicReference;
+    0170..0174  sget-object  v0, LX/LQO;->A02:LX/LQO;
+    0174..017a  invoke-static  {v0}, LX/Klq;->A0x(Ljava/lang/Object;)Ljava/util/concurrent/atomic/AtomicReference;
+    017a..017c  move-result-object  v0
+    017c..0180  iput-object  v0, v8, LX/MvN;->A0E:Ljava/util/concurrent/atomic/AtomicReference;
+    0180..0182  return-void
+    0182..0184  move-exception  v0
+    0184..0186  monitor-exit
+    0186..0188  throw  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0080..0094 -> 00c1
+.end method
