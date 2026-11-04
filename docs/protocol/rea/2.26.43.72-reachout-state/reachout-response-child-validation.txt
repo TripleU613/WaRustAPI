@@ -1,0 +1,21 @@
+
+# class: LX/8B6;
+# extends: Ljava/lang/Object;
+
+.method public A0A(VLLLI)  # .registers 8
+    # full signature: LX/8B6;->A0A(LX/0Tp;LX/8B6;[Ljava/lang/String;I)V
+    0000..0004  aget-object  v3, v6, v7
+    0004..0008  iget-object  v2, v4, LX/0Tp;->A00:Ljava/lang/String;
+    0008..000c  const-string  v0, "required child "
+    000c..0010  new-instance  v1, Ljava/lang/StringBuilder;
+    0010..0016  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0016..001c  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    001c..0020  const-string  v0, " missing for tag "
+    0020..0026  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0026..002c  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    002c..0032  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0032..0034  move-result-object  v0
+    0034..0038  iput-object  v0, v5, LX/8B6;->A00:Ljava/lang/String;
+    0038..003a  return-void
+    # exception table: 0 try range(s)
+.end method

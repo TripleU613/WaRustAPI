@@ -1,3 +1,9 @@
+2026-11-04 — **Pinned static/derived: response equality and format fallback.**
+8B6.A0J/A0K/A0H plus original 7Ou/8TV bind id/from to original id/to
+and explain why ignored JSON format validation does not veto a body.
+[Exact constraints and remaining account/decoder boundaries](rea/2.26.43.72-reachout-state/README.md#request-bound-equality-and-json-alternative-error-propagation-2026-11-04).
+No universal sender policy or runtime change; no live traffic.
+
 2026-11-04 — **Pinned static: fetch defaults and response-format mapping.**
 0iM accessors/74V nested model and 8TV.ABJ -> 7NM -> 7jy selectors
 resolved. Prior fetch-default unknown closed; push accessor semantics

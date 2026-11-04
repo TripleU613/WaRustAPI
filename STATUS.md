@@ -1,3 +1,12 @@
+2026-11-04 — **Refresh response ID/sender equality and JSON selection traced:**
+
+Selected success constructor compares response id/from with original id/to,
+requires one result, and checks parent result type. JSON alternative can
+return its body despite a discarded format-check failure; decoding and
+callback admission still apply. [Evidence and limits](docs/protocol/rea/2.26.43.72-reachout-state/README.md#request-bound-equality-and-json-alternative-error-propagation-2026-11-04).
+Validation: JSON parsing, coverage freshness, staged diff and repository
+hygiene passed. Static research only; no runtime change/live traffic.
+
 2026-11-04 — **Fetch accessor defaults and Argo/JSON selectors resolved:**
 
 Pinned JSONObject fetch requires its nested object, uses a coercing/defaulted

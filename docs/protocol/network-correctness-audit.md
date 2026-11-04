@@ -376,3 +376,13 @@ Argo/JSON 7NM variants 0/1, mapped to parser formats 1/0 respectively.
 [Exact accessor/mapping evidence and open validator semantics](rea/2.26.43.72-reachout-state/README.md#fetch-field-defaults-and-body-format-selectors-2026-11-04).
 No fetch applier or raw-JSON fallback was guessed; full correlation and
 durable application remain unported.
+
+## Refresh request-bound shape and JSON selection (2026-11-04)
+
+**Confirmed static/derived:** selected native refresh success shape binds
+response id/from to original id/to, requires parent type=result and one
+result child. JSON alternative ignores its format-validator return, so a
+nonnull byte-body wrapper can reach JSON decoding despite missing/other
+format. Full decoding and callback/error gates remain required.
+[Validator and caller evidence](rea/2.26.43.72-reachout-state/README.md#request-bound-equality-and-json-alternative-error-propagation-2026-11-04). Pending-request/account ownership
+and durable application are still open; no runtime behavior changed.

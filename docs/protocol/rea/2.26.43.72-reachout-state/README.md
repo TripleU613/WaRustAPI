@@ -1100,3 +1100,99 @@ TXT files are checked DEX text, not REA Evidence envelopes.
 - [reachout-alternative-selector-constant.txt](reachout-alternative-selector-constant.txt) — SHA-256 `5796b66eba71c974c1a2feb760d0a5cee2bdc24ef72a105bbc0ac014d39b1a55`.
 - [reachout-fetch-timelock-model.txt](reachout-fetch-timelock-model.txt) — SHA-256 `6386cd8e24fa1faf198e79b3720b16ef07248f07057d1d3871bf36d026b7e02e`.
 - [reachout-result-body-wrapper.txt](reachout-result-body-wrapper.txt) — SHA-256 `3e888d5e424d757b02ebe9bc5b82d6633f131fae994ad8e15bc5446aad755150`.
+
+## Request-bound equality and JSON alternative error propagation (2026-11-04)
+
+**Confirmed static / derived control flow**, same pinned APK 2.26.43.72
+SHA-256 above. This resolves selected 8B6 validator semantics, not the
+full generic schema library or all request dispatch/account lifetimes.
+
+8B6.A0J receives a node, value class, bounds, expected object, field path
+and flag. Its String branch reads the selected attribute via
+0Tp.A0M(field,null); missing attributes return null. With the flag true,
+it uses 09W.A00(actual,expected) and returns null/records an error on
+inequality. 09W implements null-aware equality. With flag false, String
+requires a nonnull value, checks supplied length bounds and equality
+when an expected string exists. This flag is not simply optional versus
+required. JID handling similarly reads through 0Tp.A0A and compares with
+the expected JID object, with null-aware equality in the flagged branch.
+The JID reader accepts typed attributes or parses text, checks protocol
+compliance and performs class conversion; full parser/canonicalization
+semantics are not newly reconstructed here.
+
+### Selected refresh IQ success constraints
+
+In the already retained 7Ou(node,original0mK) constructor:
+
+- It requires iq and parent type=result. Its checked parent-type call
+  uses expected result and requires the returned String.
+- It reads the original request id, passes it as expected value when
+  reading response id with flag=true, and requires a nonnull return.
+  Thus a missing or unequal response id cannot satisfy this branch.
+- 6of.A1W returns the path [from]. The constructor reads original
+  request to, passes that JID as expected when reading response from
+  with flag=true, and requires nonnull. The expected sender is the
+  original request destination (the traced refresh uses s.whatsapp.net).
+  This is an exact request-bound comparison, not a universal notification
+  sender allowlist or proof of upstream socket/account ownership.
+- After selecting a body alternative it checks the number of result
+  children equals one. 6oe.A04 is collection.size widened to long,
+  closing the count helper. Duplicate result children therefore fail
+  this success shape even if one child had a valid body.
+
+These constraints are still inside response adaptation, after pending
+callback selection; the pending-request dispatcher itself remains open.
+A later unsolicited node must not be accepted merely because it meets
+this standalone shape.
+
+### JSON format validation result is discarded
+
+8B6.A0H walks the requested child path and directly returns
+8oe.ABJ(child,validator). A0K iterates alternatives and returns the
+first nonnull object. It only collects A00 diagnostic strings when an
+alternative returns null. It does not veto a nonnull object because
+a validator diagnostic was recorded.
+
+In 8TV.ABJ selector 37, the Argo branch requires the format-validation
+return to be nonnull before constructing its 7NM wrapper. Selector 38
+(JSON) calls A0J with expected json, flag=false, but does not consume
+the return. Once its required byte body is available, it constructs
+the JSON wrapper regardless of that format-check result. The enclosing
+7Ou success path does not subsequently throw A00 after accepting that
+body and satisfying its remaining child-count constraint.
+
+**Derived result:** with the other success constraints satisfied, a byte
+result not selected as Argo can reach JSON decoding even when format
+is absent or different from json. This is a shape-selection fallback,
+not permission to accept arbitrary bytes: the selected JSON decoding,
+GraphQL data/errors conversion and refresh callback gates still apply.
+The earlier bounded statement that a raw-JSON fallback was not yet
+justified is superseded for this selected constructor/control flow.
+Do not generalize this behavior to other MEX schemas, Argo decoding
+failures after a successful Argo selection, or notification parsing.
+
+The constructor also has a discarded result/type=mex validation call;
+its literal is not the parent IQ type, and an ignored validation result
+must not be promoted into a required wire attribute without following
+its caller. No Rust validator or fetch dispatcher was invented here.
+
+**Remaining work:** decoder bytes/top-level extraction, generic matcher
+edges not used above, account-bound pending callback lookup, durable
+request settlement with restriction application, scheduler/teardown and
+alternate registry owners. Automatic Rust refresh remains unported.
+No runtime behavior changed and no live account request was made.
+
+Reproduce apk-smali 8B6.A0J/A0K/A0H/A0A, 09W.A00, 0Tp.A0M/A0A,
+6of.A1W and 6oe.A04 with --signatures --exceptions. Existing 7Ou and
+8TV exports bind caller arguments and branch return handling. TXT
+exports are checked DEX text, not REA Evidence envelopes.
+
+- [reachout-response-attribute-validator.txt](reachout-response-attribute-validator.txt) — SHA-256 `42989269b621c6c4fcc3c4aec860fd5cf05bcd3d8832e069c0e2bc2d708acd86`.
+- [reachout-response-origin-field.txt](reachout-response-origin-field.txt) — SHA-256 `cee93223d3065581e322515c00aeafd24b1c307388d273e5f59f1b0326276cc9`.
+- [reachout-response-null-equality.txt](reachout-response-null-equality.txt) — SHA-256 `8be8f552e79d63c23f38a38309a950088bb57d78f9fa186e558b5a62024b48bf`.
+- [reachout-response-attribute-read.txt](reachout-response-attribute-read.txt) — SHA-256 `0f7f8b6e917bc82de76f519fa589a46762a7e89e1f0fa76acd7754a75c48a7b8`.
+- [reachout-response-alternative-validation.txt](reachout-response-alternative-validation.txt) — SHA-256 `f1db05029727a9838d1ae025889ae5dcc0daa01455256175b2d9d732dcee2960`.
+- [reachout-response-child-validation.txt](reachout-response-child-validation.txt) — SHA-256 `19f04e4c67069268bf18e16880353723f2e4052124d8224e205ff539509a32a0`.
+- [reachout-response-mixin-dispatch.txt](reachout-response-mixin-dispatch.txt) — SHA-256 `298ba4c69ea2aad57d689812fbb8eef82a5575b62778d776e3a0864bfa39dee9`.
+- [reachout-response-child-count.txt](reachout-response-child-count.txt) — SHA-256 `1de527a6057ee478bd204e4e12d868e9deb1cced35502630a40817c474fd5dd9`.
+- [reachout-response-jid-attribute.txt](reachout-response-jid-attribute.txt) — SHA-256 `0e1523de412bd1c3e33fecc249ec1ed222f1656cb875b02634893a0b574fbee8`.
