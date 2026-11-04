@@ -50,6 +50,20 @@ kind set together. The legacy `settled` enumeration remains available for
 inspectors and stronger feature-specific state verification, with its real
 reverse-identifier ordering documented instead of calling it chronology.
 
+Follow-up: the session-specific `groups::recover_pending` path previously still
+enumerated pending marker keys in random-ID order, bypassing the generic
+ingestor's ordering correction. It now selects sequenced settlements across
+group kinds before checking their pending markers. Direct `apply_pending` also
+retains an unsequenced legacy reply without projecting or marking it. The
+restart regression uses descending IDs in ascending receive order to make the
+old pending-key scan finish on the wrong snapshot; it also verifies unchanged
+legacy checkpoints, once-only recovery and no new reservation.
+
+This does not establish a per-group projection watermark or native generation
+admission against earlier unsupported results that become interpretable after a
+future decoder update. Nor does it order action replies against notifications
+that lack this local sequence. Those source/generation boundaries remain open.
+
 Old unsequenced action replies remain visible with nullable
 `ActionOutcome.settlement_sequence`; `actions` text prints `unknown`. They are
 excluded from automatic contact/group/blocklist projection replay without

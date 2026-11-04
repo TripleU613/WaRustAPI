@@ -1,3 +1,17 @@
+2026-11-04 — **Session group recovery ordering follow-up:**
+
+The session-specific pending group recovery path now uses sequenced settlement
+order across group action kinds rather than random pending IDs. Unsequenced
+legacy pending replies remain untouched and inspectable. The restart regression
+covers reversed IDs, latest projection, once-only replay and unchanged legacy
+checkpoints/reservations. Native generation admission and ordering against
+unsequenced notifications remain open.
+[Correction and remaining boundaries](docs/protocol/action-settlement-ordering.md).
+No live account operation occurred.
+
+Validation: **1,178 workspace/all-feature tests**, strict all-target/all-feature
+Clippy, formatting, coverage freshness and repository hygiene passed.
+
 2026-11-04 — **Durable settlement order and atomic blocklist replay:**
 
 New correlated terminal IQ replies now atomically acquire monotonic settlement

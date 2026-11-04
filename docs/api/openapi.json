@@ -974,7 +974,7 @@
             "description": "Server error message if action failed"
           }
         },
-        "description": "Outcome of a one-shot queued action. Settlement receive order is a local journal property, not a server field. Evidence and legacy limitations: docs/protocol/action-settlement-ordering.md.",
+        "description": "Outcome of a one-shot queued action. Settlement receive order is a local journal property, not a server field. Session-specific pending group recovery also uses the sequenced order across group action kinds; unknown-order legacy pending replies remain preserved without projection, marker consumption or resend. Evidence and legacy limitations: docs/protocol/action-settlement-ordering.md.",
         "x-cli": "whatsapp-cli actions",
         "x-transport": ["cli", "http"],
         "x-live": false

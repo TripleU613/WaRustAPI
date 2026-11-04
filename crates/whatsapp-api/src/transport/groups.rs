@@ -75,6 +75,12 @@ pub(crate) fn apply_pending(store: &ProtocolStore, id: &str) -> Result<bool> {
     {
         return Err(invalid("pending group action is not settled"));
     }
+    if outcome.settlement_sequence.is_none() {
+        tracing::warn!(
+            "pending group reply has unknown legacy settlement order; saved response preserved"
+        );
+        return Ok(false);
+    }
     let request = super::actions::request(store, id)?;
     match store.write(|tx| {
         ingest_reply_in(
@@ -99,29 +105,9 @@ pub(crate) fn apply_pending(store: &ProtocolStore, id: &str) -> Result<bool> {
 /// Recover only replies marked during session settlement, without transmitting
 /// their requests again or replaying already consumed historical action rows.
 pub(crate) fn recover_pending(store: &ProtocolStore) -> Result<usize> {
-    let ids = store.read(|tx| {
-        let mut ids = Vec::new();
-        let mut cursor = None;
-        loop {
-            let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
-            if rows.is_empty() {
-                break;
-            }
-            cursor = rows.last().map(|(key, _)| key.clone());
-            for (key, _) in rows {
-                if let Some(id) = std::str::from_utf8(&key)
-                    .ok()
-                    .and_then(|k| k.strip_prefix(PENDING_PREFIX))
-                {
-                    ids.push(id.to_owned());
-                }
-            }
-        }
-        Ok(ids)
-    })?;
     let mut applied = 0;
-    for id in ids {
-        applied += usize::from(apply_pending(store, &id)?);
+    for (outcome, _) in super::actions::settled_for_kinds(store, &ACTION_KINDS)? {
+        applied += usize::from(apply_pending(store, &outcome.id)?);
     }
     Ok(applied)
 }
@@ -2823,6 +2809,74 @@ mod tests {
                 events.events.len(),
                 if case == "complete" { 4 } else { 2 },
                 "{case}"
+            );
+        }
+    }
+
+    #[test]
+    fn startup_recovery_uses_sequence_across_pending_ids_and_preserves_unknown_order() {
+        for legacy in [false, true] {
+            let (dir, s) = store();
+            let group = Jid::parse("12345-67890@g.us").unwrap();
+            let mut ids = [
+                queue_info(&s, &group).unwrap(),
+                queue_info(&s, &group).unwrap(),
+            ];
+            ids.sort();
+            ids.reverse();
+            super::super::actions::reserve_pending(&s).unwrap();
+            for (id, subject) in ids.iter().zip(["Earlier", "Latest"]) {
+                super::super::actions::record_reply(
+                    &s,
+                    &Node::new("iq")
+                        .attr("id", id.as_str())
+                        .attr("type", "result")
+                        .children(vec![
+                            Node::new("group")
+                                .attr("id", group.clone())
+                                .attr("subject", subject),
+                        ]),
+                )
+                .unwrap();
+                if legacy {
+                    s.write(|tx| {
+                        let key = format!("action-outbox:{id}");
+                        let mut row: serde_json::Value =
+                            tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?.unwrap();
+                        row.as_object_mut().unwrap().remove("settlement_sequence");
+                        tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &row)
+                    })
+                    .unwrap();
+                }
+            }
+            drop(s);
+            let s = ProtocolStore::open(OpenOptions {
+                path: dir.path().join("p.redb"),
+                account_id: AccountId::new("a").unwrap(),
+                key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32]))),
+                create: false,
+            })
+            .unwrap();
+            let before = s.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap();
+            assert_eq!(recover_pending(&s).unwrap(), if legacy { 0 } else { 2 });
+            if legacy {
+                assert!(!apply_pending(&s, &ids[0]).unwrap());
+                assert!(get(&s, &group).unwrap().is_none());
+                assert_eq!(
+                    s.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap(),
+                    before
+                );
+            } else {
+                assert_eq!(
+                    get(&s, &group).unwrap().unwrap().subject.as_deref(),
+                    Some("Latest")
+                );
+                assert_eq!(recover_pending(&s).unwrap(), 0);
+            }
+            assert!(
+                super::super::actions::reserve_pending(&s)
+                    .unwrap()
+                    .is_empty()
             );
         }
     }
