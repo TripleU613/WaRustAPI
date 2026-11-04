@@ -1,0 +1,43 @@
+
+# class: LX/0ZP;
+# extends: Ljava/lang/Object;
+
+.method public A05(ZLLZ)  # .registers 5
+    # full signature: LX/0ZP;->A05(LX/0ZP;LX/0Tp;Z)Z
+    0000..0002  const/4  v1, #0x1
+    0002..0008  invoke-static  {v2}, LX/0ZP;->A01(LX/0ZP;)LX/1ic;
+    0008..000a  move-result-object  v0
+    000a..000e  if-eqz  v4, +0x2e
+    000e..0014  invoke-static  {v0}, LX/1ic;->A04(LX/1ic;)LX/1if;
+    0014..0016  move-result-object  v0
+    0016..001a  iget-object  v0, v0, LX/1id;->A0B:LX/1ih;
+    001a..001e  if-eqz  v0, +0x30
+    001e..0022  iget-object  v0, v2, LX/0ZP;->A04:LX/05a;
+    0022..0026  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0026..002c  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    002c..002e  move-result-object  v0
+    002e..0032  check-cast  v0, LX/0av;
+    0032..0036  iget-boolean  v0, v0, LX/0av;->A0J:Z
+    0036..003a  if-nez  v0, +0x1d
+    003a..0040  invoke-static  {v2}, LX/0ZP;->A01(LX/0ZP;)LX/1ic;
+    0040..0042  move-result-object  v0
+    0042..0046  if-eqz  v4, +0xd
+    0046..004c  invoke-static  {v0}, LX/1ic;->A04(LX/1ic;)LX/1if;
+    004c..004e  move-result-object  v0
+    004e..0054  invoke-virtual  {v0}, LX/1id;->A0N()Z
+    0054..0056  move-result  v0
+    0056..005a  if-eqz  v0, +0xd
+    005a..005c  return  v1
+    005c..0062  invoke-static  {v0}, LX/1ic;->A02(LX/1ic;)LX/1iu;
+    0062..0064  move-result-object  v0
+    0064..0066  goto  -0xb
+    0066..006c  invoke-static  {v0}, LX/1ic;->A02(LX/1ic;)LX/1iu;
+    006c..006e  move-result-object  v0
+    006e..0070  goto  -0x2c
+    0070..0076  invoke-static  {v2, v3}, LX/0ZP;->A04(LX/0ZP;LX/0Tp;)Z
+    0076..0078  move-result  v0
+    0078..007a  return  v0
+    007a..007c  const/4  v0, #0x0
+    007c..007e  return  v0
+    # exception table: 0 try range(s)
+.end method

@@ -1,3 +1,9 @@
+2026-11-04 — **Pinned static: receive gate classified as persistence.**
+0ZP.A04/A05 offline-count/readiness and A03 queue scheduling retained;
+none establishes sender authority.
+[Evidence/negative result](rea/2.26.43.72-reachout-state/README.md#receive-gate-is-persistence-not-origin-validation-2026-11-04).
+Origin/fallback trace remains open; no runtime or live traffic change.
+
 2026-11-04 — **Pinned static discovery: alternate MEX receive registry.**
 1s2/KWt maps and selected schema/type exports retained.7Ou mex overload
 is IQ-result, refuting its use as notification origin evidence.

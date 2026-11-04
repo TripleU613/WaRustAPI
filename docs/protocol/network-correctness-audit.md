@@ -197,3 +197,12 @@ registry is not yet fully bound to reach-out or legacy0x102 routing.7Ou's
 mex literal is an IQ-result overload, not a notification sender validator.
 [Evidence and bounded negative results](rea/2.26.43.72-reachout-state/README.md#receive-registry-discovery-and-schema-false-lead-2026-11-04).
 Origin authentication and fallback paths remain open; no runtime change.
+
+## Receive persistence gate classification (2026-11-04)
+
+**Confirmed pinned static:**0ZP.A04 is offline buffering/persistence policy,
+A05 combines consumer readiness before that gate; neither leaf proves sender
+authorization. Inverted result feeds wrapper construction in notification
+receive. A03 is queue-flush scheduling, not legacy dispatch.
+[Evidence and remaining lifetimes/fallback](rea/2.26.43.72-reachout-state/README.md#receive-gate-is-persistence-not-origin-validation-2026-11-04).
+No Rust runtime or live-account change.

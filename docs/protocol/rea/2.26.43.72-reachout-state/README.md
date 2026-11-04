@@ -184,3 +184,37 @@ Only inspected selected candidates are retained, not all six initializers.
 - [registry-builder.txt](registry-builder.txt) — SHA-256 `6cbd72b0cc9faab5d81d3bc34dc700ee763bf3046ba1ee5aea432cffd9e07f0c`.
 - [notification-type-enum.txt](notification-type-enum.txt) — SHA-256 `b6d076a5c48e696d2900d40af2625952b78084af021c1067dd6ca17091e91d6c`.
 - [unrelated-notification-family.txt](unrelated-notification-family.txt) — SHA-256 `97778d4062f2a02cd21c448bd5428b278d178dc4b5a08658b8366a849842fab9`.
+
+## Receive gate is persistence, not origin validation (2026-11-04)
+
+**Confirmed static**, same pinned APK.0ZP.A04 reads numeric offline with
+default-1, obtains configurable threshold through A00(config3cd4,-1,100),
+and can latch A01 buffering when offline count reaches threshold. Its log
+explicitly calls this shouldPersistStanza/offline buffering. The latch can
+affect later stanzas; this leaf does not establish reset lifetime.
+Absent offline returns true if configured threshold is-1, otherwise follows
+current buffering state. A00 config helper/rollout semantics are untraced.
+
+0ZP.A05 combines consumer readiness (1ic-selected consumer/A0N), special
+consumer-presence and0av.A0J checks, falling back to A04 in a branch. It
+contains no from-JID read. In the retained1s2 notification paths its boolean
+is inverted and passed to Eza wrapper construction. That proves a wrapper
+flag dataflow, not that the flag is an authentication verdict. Exact wrapper
+flag semantics and full fallback binding remain open.
+
+**Negative result:**0ZP.A03 is scheduleQueueFlush, not the guessed legacy
+notification forwarding method. Full output retained; scheduler lifetime,
+actual queue worker and fallback consumer are not reconstructed here.
+Searches based on short obfuscated method names must not turn these leaves
+into origin requirements. No sender allowlist or persist/ACK behavior in Rust
+is changed. Native buffering configuration is not copied as a universal
+request quota or cooldown.
+
+Reproduce apk-smali0ZP.A04/A05/A03 with signatures/exceptions. Native
+1s2 registry output already retained provides call sites and inverted flag.
+Upstream authenticated input and specific message0x102 producer remain open.
+No live network/account operations were performed.
+
+- [receive-persistence-gate.txt](receive-persistence-gate.txt) — SHA-256 `c26dc224e247484e137de52a393f6fe657863b4dfa662c4b8113cef8a2aed141`.
+- [offline-buffering-gate.txt](offline-buffering-gate.txt) — SHA-256 `d84ef20313a7bcfd61e0c665dc7b343fe3d318240935af34792a77d83b99862b`.
+- [queue-flush-scheduler.txt](queue-flush-scheduler.txt) — SHA-256 `c279994b64e063d34756f5d1c6199907f960a9b7c50c9c4b25067a5a97c81860`.
