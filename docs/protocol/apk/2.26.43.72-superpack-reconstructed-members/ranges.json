@@ -1,0 +1,23 @@
+[
+  {
+    "file": "member-parser-assembly.txt",
+    "virtual_address": "0x1a30c",
+    "file_offset": "0x1a30c",
+    "bytes": 2732,
+    "sha256": "e28f54d5d5b9a7c39241b579ce19109c2d54fb66b039fbadf0c5e1dd0c1d9767"
+  },
+  {
+    "file": "stream-state-assembly.txt",
+    "virtual_address": "0x2dd3c",
+    "file_offset": "0x2dd3c",
+    "bytes": 508,
+    "sha256": "75ee3ca86666735ec7896b6b0e96db130f6d865e237227f3c5cc7f795055f04f"
+  },
+  {
+    "file": "stream-buffer-assembly.txt",
+    "virtual_address": "0x2dbd0",
+    "file_offset": "0x2dbd0",
+    "bytes": 72,
+    "sha256": "6fb15327a07a8ce64d0675dbd250142b9cf95ae94ef50342f528a292ad8de256"
+  }
+]

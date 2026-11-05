@@ -1,3 +1,12 @@
+2026-11-05 — **All 83 packed ARM64 libraries reconstructed and metadata-checked.**
+
+65766648 recovered bytes match metadata lengths/XXH64 and pass ELF layout checks.
+The recovered WhatsApp libraries now unblock static native JNI/metrics analysis.
+[Harness, verification and limits](docs/protocol/apk/2.26.43.72-superpack-reconstructed-members/README.md).
+Bounded decoder/rebuilder emulation only; no reconstructed library execution,
+Rust runtime change or live traffic. Validation: full output reproduction,
+83 metadata/hash/layout checks, sort fixtures, coverage and bundle/link hygiene.
+
 2026-11-05 — **All 213 framed blocks decoded; so-driver reconstruction next.**
 
 140 bounded XZ decodes and 73 constrained emulations produced 81747344 bytes.

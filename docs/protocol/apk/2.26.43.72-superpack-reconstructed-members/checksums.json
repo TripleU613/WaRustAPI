@@ -1,0 +1,78 @@
+{
+  "README.md": {
+    "bytes": 6087,
+    "sha256": "2a5a47b0b8da868cf9c8c1a6c703fa66ac38a6f39d65afe95d5588afc0cc33ea"
+  },
+  "check-sort-helper.py": {
+    "bytes": 2621,
+    "sha256": "0f0b29fe300fd1a411c530fad31ced389b14202bf19378a95fc43007c4ae8be9"
+  },
+  "earlier-bounded-stop.json": {
+    "bytes": 497,
+    "sha256": "86d55faae2397d212791efcbb26dda478dbc7405bd6be9530439a22d13d87693"
+  },
+  "earlier-insertion-sort.s": {
+    "bytes": 749,
+    "sha256": "94a773b41d0e8d895b17b31ddc24cf8f9c3b9cc8b919f2e0fee6b176e614b7b3"
+  },
+  "emulated-qsort.s": {
+    "bytes": 1312,
+    "sha256": "88ed914f7650449edccfb1bb5e2b825429dfad75a73af223b354d2bc21ed4cd2"
+  },
+  "execution-results.txt": {
+    "bytes": 13253,
+    "sha256": "8b0e69575e0376f893ab8bff0e68e42385d686293e326bf14715783af0543816"
+  },
+  "libwhatsapp.so-selected-symbols.txt": {
+    "bytes": 70,
+    "sha256": "6df6cb1039567150f9f39c8b3592d150b376be05d12577d327b996e3236eff67"
+  },
+  "libwhatsappmerged.so-selected-symbols.txt": {
+    "bytes": 70,
+    "sha256": "fd3557a012a1751313b2eb997d893cd18f3163b56985b4bd658b6058750f8b0e"
+  },
+  "member-parser-assembly.txt": {
+    "bytes": 44165,
+    "sha256": "240051a41d8d467d67ab3f92effe9c322b94824bff855ffe2c609aff56e8023c"
+  },
+  "ranges.json": {
+    "bytes": 644,
+    "sha256": "b52e65f362b32763043f995abfd1e16268ff8dbf5eed6eacc24f6c4fc449fe59"
+  },
+  "readelf-version.txt": {
+    "bytes": 277,
+    "sha256": "e478be1a230b8a58aca0fbc35e5ba6b1a6a3b821cefd62fe7a07706994d8abfe"
+  },
+  "reconstruct-members.py": {
+    "bytes": 7676,
+    "sha256": "5ae26bd8077b4aab15dd2fedbd0c64cfc334b707f706c411dbeee52ef306216b"
+  },
+  "reproduction-results.txt": {
+    "bytes": 13253,
+    "sha256": "8b0e69575e0376f893ab8bff0e68e42385d686293e326bf14715783af0543816"
+  },
+  "sort-helper-results.json": {
+    "bytes": 3807,
+    "sha256": "40124fe8352bc66e4a33b32debd82c521938317c000687e530ea9a0a9b271271"
+  },
+  "stream-buffer-assembly.txt": {
+    "bytes": 821,
+    "sha256": "696db3fee4e1316afea949bbd952dceb148363e4140d2e2b0151d3efa047f619"
+  },
+  "stream-state-assembly.txt": {
+    "bytes": 6994,
+    "sha256": "8bf2b84a5a70e3791760d35ed5560e118f9a473d848d2d9538120d511bb81eeb"
+  },
+  "validation.json": {
+    "bytes": 27937,
+    "sha256": "4bbea50d1ad087eb5db47f77de7cd76da791b2cb253cab711062034fd6e5ff15"
+  },
+  "verification-results.json": {
+    "bytes": 21302,
+    "sha256": "7e1a54a5bfa87b38403ba1f0ed3f2d84b8f413c4bce51e1db377b40ec122afaa"
+  },
+  "verify-members.py": {
+    "bytes": 1779,
+    "sha256": "a1df5b6328383751a46b6b4ea6d3ed17bd6137bc10a9b634a9872086eaa4b595"
+  }
+}

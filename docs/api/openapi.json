@@ -16125,5 +16125,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-superpack-all-blocks/README.md",
     "description": "All 213 framed blocks have length-matching decoded candidates: 140 EOF-complete XZ and 73 bounded type-42 emulations. No ELF-prefix buffers; additional so-driver stage mapped to 0x1af20/0x1adb8. Complete libraries/native metrics transport remain open. No client runtime or live operation added."
+  },
+  "x-superpack-reconstructed-members-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK reconstruction evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-superpack-reconstructed-members/README.md",
+    "description": "All 83 ARM64 packed members reconstructed via bounded native-driver emulation, matching metadata lengths and XXH64(seed=0), with clean ELF layout checks. Recovered WhatsApp libraries enable static JNI/metrics investigation; runtime/wire correctness remains unverified. No client runtime or live operation added."
   }
 }

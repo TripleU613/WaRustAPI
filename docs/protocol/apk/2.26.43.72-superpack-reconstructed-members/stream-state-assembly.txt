@@ -1,0 +1,127 @@
+            0x0002dd3c      stp   x30, x25, [sp, -0x40]!
+            0x0002dd40      stp   x24, x23, [sp, 0x10]
+            0x0002dd44      stp   x22, x21, [sp, 0x20]
+            0x0002dd48      stp   x20, x19, [sp, 0x30]
+            0x0002dd4c      mov   x23, x0
+            0x0002dd50      cmp   w1, 0x903
+            0x0002dd54      mov   w0, 1
+        ┌─< 0x0002dd58      b.hi  0x2de70
+        │   0x0002dd5c      ldr   w8, [x23]
+        │   0x0002dd60      mov   w22, w1
+        │   0x0002dd64      cmp   w8, w1
+       ┌──< 0x0002dd68      b.hs  0x2de70
+       ││   0x0002dd6c      ubfiz x0, x22, 3, 0x20
+       ││   0x0002dd70      bl    0x3316c
+      ┌───< 0x0002dd74      cbz   x0, 0x2de6c
+      │││   0x0002dd78      ldr   x24, [x23, 0x18]                     ; [0x18:4]=0
+      │││   0x0002dd7c      mov   x20, x0
+      │││   0x0002dd80      mov   w21, w22
+     ┌────< 0x0002dd84      cbz   x24, 0x2ddc0
+     ││││   0x0002dd88      mov   x0, x21
+     ││││   0x0002dd8c      mov   w1, 8
+     ││││   0x0002dd90      bl    sym.imp.calloc
+     ││││   0x0002dd94      mov   x19, x0
+    ┌─────< 0x0002dd98      cbz   x0, 0x2de10
+    │││││   0x0002dd9c      ldr   w25, [x23]
+    │││││   0x0002dda0      mov   x0, x19
+    │││││   0x0002dda4      mov   x1, x24
+    │││││   0x0002dda8      lsl   x2, x25, 3
+    │││││   0x0002ddac      bl    sym.imp.memcpy
+    │││││   0x0002ddb0      mov   w8, w25
+    │││││   0x0002ddb4      subs  w24, w22, w8
+   ┌──────< 0x0002ddb8      b.hi  0x2ddd0
+  ┌───────< 0x0002ddbc      b     0x2de8c
+  │││└────> 0x0002ddc0      ldr   w8, [x23]
+  │││ │││   0x0002ddc4      mov   x19, xzr
+  │││ │││   0x0002ddc8      subs  w24, w22, w8
+  │││┌────< 0x0002ddcc      b.ls  0x2de8c
+  │└──────> 0x0002ddd0      ubfiz x25, x8, 3, 0x20
+  │┌──────< 0x0002ddd4      b     0x2dde4
+  ────────> 0x0002ddd8      subs  w24, w24, 1
+  │││││││   0x0002dddc      add   x25, x25, 8
+  ────────< 0x0002dde0      b.eq  0x2de84
+  │└──────> 0x0002dde4      mov   w0, 1
+  │ │││││   0x0002dde8      mov   w1, 0x48                             ; 'H'
+  │ │││││   0x0002ddec      bl    0x33144
+  │ │││││   0x0002ddf0      str   x0, [x20, x25]
+  │┌──────< 0x0002ddf4      cbz   x0, 0x2de10
+  │││││││   0x0002ddf8      ldr   w0, [x23, 0x20]                      ; [0x20:4]=64 ; "@"
+  ────────< 0x0002ddfc      cbz   w0, 0x2ddd8
+  │││││││   0x0002de00      mov   w1, 4
+  │││││││   0x0002de04      bl    0x33144
+  │││││││   0x0002de08      str   x0, [x19, x25]
+  ────────< 0x0002de0c      cbnz  x0, 0x2ddd8
+  │└└─────> 0x0002de10      mov   x22, xzr
+  │ ┌─────< 0x0002de14      b     0x2de24
+  ─┌──────> 0x0002de18      add   x22, x22, 1
+  │╎│││││   0x0002de1c      cmp   x21, x22
+  ────────< 0x0002de20      b.eq  0x2de34
+  │╎└─────> 0x0002de24      ldr   x0, [x20, x22, lsl 3]
+  ────────< 0x0002de28      cbz   x0, 0x2de18
+  │╎ ││││   0x0002de2c      bl    0x315dc
+  │└──────< 0x0002de30      b     0x2de18
+  ────────> 0x0002de34      mov   x0, x20
+  │  ││││   0x0002de38      bl    0x315dc
+  │ ┌─────< 0x0002de3c      cbz   x19, 0x2de6c
+  │ │││││   0x0002de40      mov   x20, xzr
+  │┌──────< 0x0002de44      b     0x2de54
+  ────────> 0x0002de48      add   x20, x20, 1
+  │││││││   0x0002de4c      cmp   x21, x20
+  ────────< 0x0002de50      b.eq  0x2de64
+  │└──────> 0x0002de54      ldr   x0, [x19, x20, lsl 3]
+  ────────< 0x0002de58      cbz   x0, 0x2de48
+  │ │││││   0x0002de5c      bl    0x315dc
+  ────────< 0x0002de60      b     0x2de48
+  ────────> 0x0002de64      mov   x0, x19
+  │ │││││   0x0002de68      bl    0x315dc
+  │ └─└───> 0x0002de6c      mov   w0, 5
+  │  │ └└─> 0x0002de70      ldp   x20, x19, [sp, 0x30]
+  │  │      0x0002de74      ldp   x22, x21, [sp, 0x20]
+  │  │      0x0002de78      ldp   x24, x23, [sp, 0x10]
+  │  │      0x0002de7c      ldp   x30, x25, [sp], 0x40
+  │  │      0x0002de80      ret
+  ────────> 0x0002de84      ldr   w8, [x23]
+  │  │  ┌─< 0x0002de88      cbz   w8, 0x2dea4
+  └──└────> 0x0002de8c      ldr   x1, [x23, 8]                         ; [0x8:4]=0
+        │   0x0002de90      ubfiz x2, x8, 3, 0x20
+        │   0x0002de94      mov   x0, x20
+        │   0x0002de98      bl    sym.imp.memcpy
+        │   0x0002de9c      ldr   x0, [x23, 8]                         ; [0x8:4]=0
+        │   0x0002dea0      bl    0x315dc
+        └─> 0x0002dea4      ldr   x0, [x23, 0x18]                      ; [0x18:4]=0
+            0x0002dea8      bl    sym.imp.free
+            0x0002deac      mov   w0, wzr
+            0x0002deb0      str   x19, [x23, 0x18]
+            0x0002deb4      str   x20, [x23, 8]
+            0x0002deb8      str   w22, [x23]
+            0x0002debc      ldp   x20, x19, [sp, 0x30]
+            0x0002dec0      ldp   x22, x21, [sp, 0x20]
+            0x0002dec4      ldp   x24, x23, [sp, 0x10]
+            0x0002dec8      ldp   x30, x25, [sp], 0x40
+            0x0002decc      ret
+            0x0002ded0      str   x30, [sp, -0x20]!
+            0x0002ded4      stp   x20, x19, [sp, 0x10]
+            0x0002ded8      mov   w19, w0
+            0x0002dedc      mov   w0, 1
+            0x0002dee0      mov   w1, 0x28                             ; '('
+            0x0002dee4      bl    0x33144
+        ┌─< 0x0002dee8      cbz   x0, 0x2df18
+        │   0x0002deec      mov   w1, w19
+        │   0x0002def0      mov   x20, x0
+        │   0x0002def4      bl    0x2dd3c
+       ┌──< 0x0002def8      cbz   w0, 0x2df28
+       ││   0x0002defc      mov   w19, w0
+       ││   0x0002df00      mov   x0, x20
+       ││   0x0002df04      bl    0x2df38
+       ││   0x0002df08      mov   x0, x19
+       ││   0x0002df0c      ldp   x20, x19, [sp, 0x10]
+       ││   0x0002df10      ldr   x30, [sp], 0x20
+       ││   0x0002df14      ret
+       │└─> 0x0002df18      mov   w0, 5
+       │    0x0002df1c      ldp   x20, x19, [sp, 0x10]
+       │    0x0002df20      ldr   x30, [sp], 0x20
+       │    0x0002df24      ret
+       └──> 0x0002df28      mov   x0, x20
+            0x0002df2c      ldp   x20, x19, [sp, 0x10]
+            0x0002df30      ldr   x30, [sp], 0x20
+            0x0002df34      ret

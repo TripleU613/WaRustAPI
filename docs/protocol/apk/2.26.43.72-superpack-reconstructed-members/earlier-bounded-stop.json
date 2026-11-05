@@ -1,0 +1,14 @@
+{
+  "scope": "initial insertion-sort helper run",
+  "completed_members": 37,
+  "stopped_entry": "0x1adb8",
+  "stopped_pc": "0x50003068",
+  "failure": null,
+  "returned_to_sentinel": false,
+  "instruction_cap": 10000000000,
+  "timeout_microseconds": 45000000,
+  "specific_limit": "not separately measured",
+  "following_member_ordinal": 37,
+  "incomplete_output_saved": false,
+  "other_initial_stop": "first single-member attempt stopped on unsupported qsort before adding an in-emulator helper"
+}

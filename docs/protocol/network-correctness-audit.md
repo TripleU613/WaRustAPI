@@ -2383,3 +2383,13 @@ libraries remain unreconstructed. The registered so-driver resolves to 0x1af20,
 then helper 0x1adb8 for the additional member-output stage.
 [Full output manifest, 70 new emulation logs, driver assembly and limits](apk/2.26.43.72-superpack-all-blocks/README.md).
 Native metrics network/persistence behavior remains open. No Rust/live change.
+
+### All ARM64 packed native members reconstructed and metadata-checked (2026-11-05)
+
+**Observed bounded emulation / independent offline checks, APK 2.26.43.72:** all
+83 members reconstructed, 65766648 bytes. Every size and XXH64(seed=0) matches
+pinned metadata; readelf layout checks pass. First 37 also match the alternative
+sort-helper run. Recovered whatsapp/whatsappmerged are available for static JNI
+and metrics analysis, not proven Android execution or wire correctness.
+[Harness, full digest manifest, verification and limits](apk/2.26.43.72-superpack-reconstructed-members/README.md).
+Native metrics behavior and broader network audit remain open. No Rust/live change.

@@ -1,0 +1,18 @@
+            0x0002dbd0      str   x30, [sp, -0x20]!
+            0x0002dbd4      stp   x20, x19, [sp, 0x10]
+            0x0002dbd8      mov   x19, x0
+            0x0002dbdc      mov   w0, 0x20
+            0x0002dbe0      bl    0x3316c
+            0x0002dbe4      mov   x20, x0
+            0x0002dbe8      str   xzr, [x0]
+            0x0002dbec      str   x19, [x0, 0x10]
+            0x0002dbf0      mov   x0, x19
+            0x0002dbf4      bl    0x3316c
+            0x0002dbf8      mov   x8, x0
+            0x0002dbfc      cmp   x0, 0
+            0x0002dc00      str   wzr, [x20, 0x18]
+            0x0002dc04      csel  x0, xzr, x20, eq
+            0x0002dc08      str   x8, [x20, 8]
+            0x0002dc0c      ldp   x20, x19, [sp, 0x10]
+            0x0002dc10      ldr   x30, [sp], 0x20
+            0x0002dc14      ret
