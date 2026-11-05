@@ -1,0 +1,37 @@
+
+# class: LX/89Y;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLLJ)  # .registers 8
+    # full signature: LX/89Y;-><init>(LX/0DY;Lcom/whatsapp/infra/core/jid/UserJid;LX/7p2;LX/1k2;Ljava/lang/String;J)V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v5, v0, LX/89Y;->A05:Ljava/lang/String;
+    000a..000e  iput-object  v1, v0, LX/89Y;->A02:LX/0DY;
+    000e..0012  iput-object  v2, v0, LX/89Y;->A03:Lcom/whatsapp/infra/core/jid/UserJid;
+    0012..0016  iput-wide  v6, v0, LX/89Y;->A01:J
+    0016..001a  iput-object  v4, v0, LX/89Y;->A04:LX/1k2;
+    001a..001e  iput-object  v3, v0, LX/89Y;->A00:LX/7p2;
+    001e..0020  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VLLL)  # .registers 12
+    # full signature: LX/89Y;-><init>(LX/7p2;LX/1k2;LX/Eoh;)V
+    0000..0004  iget-object  v5, v11, LX/Eoh;->A08:Ljava/lang/String;
+    0004..000a  invoke-static  {v5}, LX/00l;->A04(Ljava/lang/Object;)V
+    000a..000e  iget-object  v0, v11, LX/Eoh;->A02:Lcom/whatsapp/infra/core/jid/Jid;
+    000e..0014  invoke-static  {v0}, LX/0Dn;->A00(Lcom/whatsapp/infra/core/jid/Jid;)LX/0DY;
+    0014..0016  move-result-object  v1
+    0016..001a  iget-object  v0, v11, LX/Eoh;->A01:Lcom/whatsapp/infra/core/jid/Jid;
+    001a..0020  invoke-static  {v0}, LX/0Dn;->A00(Lcom/whatsapp/infra/core/jid/Jid;)LX/0DY;
+    0020..0022  move-result-object  v0
+    0022..0028  invoke-static  {v0}, LX/2L6;->A0n(Lcom/whatsapp/infra/core/jid/Jid;)Lcom/whatsapp/infra/core/jid/UserJid;
+    0028..002a  move-result-object  v2
+    002a..002e  iget-wide  v6, v11, LX/Eoh;->A00:J
+    002e..0030  move-object  v0, v8
+    0030..0032  move-object  v3, v9
+    0032..0034  move-object  v4, v10
+    0034..003a  invoke-direct/range  {v0..v7}, LX/89Y;-><init>(LX/0DY;Lcom/whatsapp/infra/core/jid/UserJid;LX/7p2;LX/1k2;Ljava/lang/String;J)V
+    003a..003c  return-void
+    # exception table: 0 try range(s)
+.end method

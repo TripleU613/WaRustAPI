@@ -15498,5 +15498,17 @@
     "x-live": false,
     "evidence": "docs/protocol/prekey-count-notifications.md#prekey-wire-id-integrity-2026-11-04",
     "description": "Rejects signed or selected legacy IDs wider than three bytes and legacy PreKeyRecord IDs differing from store keys. Reservation failures roll back; digest inspection does not write. Native encoder low24-bit truncation and native row skipping are distinguished from these stricter local checks. No HTTP route, key repair, retry or reset added."
+  },
+  "x-prekey-count-ack-queue-evidence": {
+    "x-cli": {
+      "command": "xtask apk-smali APK --class CLASS --method METHOD --signatures --exceptions",
+      "description": "Existing offline developer disassembler; no new command or flag"
+    },
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#count-notification-ack-token-and-queue-stages-2026-11-04",
+    "description": "Native count ACK callback consumes a one-use metadata token and enters bulk or readiness/pre-ACK queue paths; it is not synchronous socket completion. Message76 can become pre-ACK message43. Same-object one-shot consumption is not permanent redelivery deduplication. Queue durability, concrete branch selection and 43 conversion/flush/drain behavior remain open. Direct76 writer links to the generic ACK builder, whose count-specific optional-field applicability remains unproven. Rust ACK/upload order is unchanged; no new API route, recovery, retry or ACK suppression."
   }
 }

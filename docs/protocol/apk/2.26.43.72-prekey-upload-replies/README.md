@@ -1538,3 +1538,96 @@ Additional export hashes:
 - [digest-resync-legacy.txt](digest-resync-legacy.txt): `8823a93bebf5301b703e756666d1e98d7955031743d69a59b9c7452a296c3125`
 - [digest-none-worker.txt](digest-none-worker.txt): `76e4d710c781be5935fb76b7841afdc5ae4aa46a6b214407309ee967d74ba536`
 - [digest-resync-kem-history.txt](digest-resync-kem-history.txt): `c0773dc2f020747600e1da17c4790a63d3bb2655fbacff062ee7a117adbfb990`
+
+## Count notification ACK token and queue stages (2026-11-04)
+
+**Confirmed static**, same pinned APK SHA-256 reverified this turn. Checked DEX
+CLI exports with signatures/exception tables; no runtime, Java source, or new
+REA Evidence envelopes are claimed.
+
+- **15v.A09**, 0060–0066 and00a8–00ae, calls inherited0v6.A07(true) only after
+  the legacy/PQ count parsing paths. Legacy schedules FcQ selector4 through
+  named0YM.A02("prekeys",Runnable); PQ schedules FeQ selector0x1c through the
+  same named queue. Both count branches request deferred metadata, rather than
+  constructing an immediate socket ACK in this method.
+- **0v6.A07(true)** consumes its AtomicReference2DT with getAndSet(null), puts
+  Eoh->1k2 in A0A under a monitor, adjusts a scheduled Runnable with6000ms
+  (0x1770), and constructs7p2(handler,Eoh) plus89Y metadata. The selected method
+  does not establish the scheduled Runnable's timeout action. false mode does
+  not construct7p2. Missing deferred context throws on the true path.
+- **89Y.A01** calls A00(A04,null,self,null). **89Y.A00**,0000–000e, atomically
+  takes and clears its7p2 reference. Only a nonnull token enters dispatch: it
+  removes Eoh from the handler A0A map, dispatches, and then removes Eoh.A08
+  from A0B. A repeated call on this same metadata object does no further ACK
+  dispatch. This is not evidence of permanent deduplication across notification
+  redelivery, new objects, process restarts, or different session generations.
+- **0v6.A00** branches on1k2.BX2(). true casts to1k3 and submits a singleton2Dx
+  through1ic.A0G. **1k3.BX2** returns constanttrue. false calls0Sf.A0O with
+  the original Eoh; the concrete1k2 implementation for a particular live count
+  notification is still unobserved. The abstract1k2 contract is retained.
+- **0Sf.A0O -> A07 -> 1i8.A03** creates Message(what0,arg1=0x4c/76,arg2=0,obj=Eoh)
+  and callsA0V. A07 also logs an optionalccq flag; its selected method does not
+  directly write a stanza. **0Sf.A0V** passesfalse,false intoA09.
+- **0Sf.A09** checks readiness, callsA05 on its ready branch andA00 on the
+  not-ready/default final-false branch, returning a readiness Boolean. **A05**
+  can convert viaA00 and dispatch through1A0.CdY rather than synchronously
+  completing a socket write. Other branches include an explicit drop or throw
+  when sending-channel state is inconsistent; this is not unconditional delivery.
+- **0Sf.A00** asks1i8.A07 to recognize a pre-ACK candidate; absent candidate
+  returnsnull. For a recognized candidate it performs loggable-stage handling,
+  adds1vZ to1iV.A0I, uses200 as a scheduling threshold and conditionally schedules
+  TB4 selector8, then returns Message(what0,arg1=0x2b/43,arg2=0,obj=1vZ).
+  This selected method shows an in-memory collection and executor path, not a
+  proven durable ACK outbox. Exact conversion eligibility, bulk flush,43 pre-ACK
+  writer body and crash/reconnect draining remain to be traced (76 continuation
+  below closes its direct writer/builder link).
+
+**Ordering consequence:** the previously retained15v.A02 decision-before-A01
+call order remains confirmed, but A01 is metadata consumption and queue
+admission, not socket completion. A0V uploads also scheduleFd5 after synchronous
+inventory work. This evidence does not order the two asynchronous writer paths.
+Rust's capture->ACK write->upload decision behavior remains a known difference;
+no socket reorder or pre-ACK key reservation is implemented from this trace.
+Freezing a Rust outcome_unknown upload before an ACK write could itself strand
+never-written keys on ACK failure; a faithful port needs the decision/queue/
+reservation/write boundaries modeled separately. That risk is an inference,
+not observed APK behavior. No automatic replay or duplicate suppression added.
+
+Exports (same apk-smali command as bundle header; caller inventory uses apk-callers):
+
+- [prekey-ack-bulk-predicate.txt](prekey-ack-bulk-predicate.txt): `4e02520fa32e9b80d8bbec0524df8ff86cdc8d15e77cca7f7ac9953e762e5cae`
+- [prekey-ack-contract.txt](prekey-ack-contract.txt): `2e82756c809b4ef2c7e2e0b42a496cbb37fbf45d64bfcbdf9b4b8897d6351aef`
+- [prekey-ack-count-dispatch.txt](prekey-ack-count-dispatch.txt): `c0fd293b063f5afd47e4b68c4f8d2db48c18e8cd0a508cf617a7546d365a2a8a`
+- [prekey-ack-dispatch.txt](prekey-ack-dispatch.txt): `42e84943e757ca535f95aa5b5cc6d5957a2550d12099df726335b99f3bdeb224`
+- [prekey-ack-enqueue.txt](prekey-ack-enqueue.txt): `2fd03f7e1badafae636dcb81508843c130e4f0bf5236ba70b127e04dc2242903`
+- [prekey-ack-handler-metadata.txt](prekey-ack-handler-metadata.txt): `4e1031bef6abe7c1d3dfc8d273f94a2e248d1139adebd5ee37e68844ba714750`
+- [prekey-ack-message.txt](prekey-ack-message.txt): `8ccfc367b2b56d5f10ae18f600e9c3af3548864f65fe35c74b3b723e5daccb37`
+- [prekey-ack-metadata-callers.txt](prekey-ack-metadata-callers.txt): `70bf329ea1a36762c15c067c005ee62919910040948ee6821df77336f096f680`
+- [prekey-ack-metadata-constructor.txt](prekey-ack-metadata-constructor.txt): `37078d424e8a6f16d738c721c29660f5a57a82236feca43f77ef4f2dc32b1e50`
+- [prekey-ack-metadata.txt](prekey-ack-metadata.txt): `5c33d76b2c14d5f7f04251bfa3abe865bcbd9b14fb45564d65664f6f46f25cbd`
+- [prekey-ack-not-ready-queue.txt](prekey-ack-not-ready-queue.txt): `6bf3bbd4a8cda9691971e0a5003066c0c2e41086e8451c72acad294f06571bb0`
+- [prekey-ack-producer.txt](prekey-ack-producer.txt): `2f929170ac3ebeadd015dff89c02d526e2fc274ca90f18e1452b4f8b17a6f4eb`
+- [prekey-ack-queue-admission.txt](prekey-ack-queue-admission.txt): `0ca962de6520bb563aaa26e201a139412a3a8001491c214374f5f94e86d7d3c8`
+- [prekey-ack-ready-dispatch.txt](prekey-ack-ready-dispatch.txt): `e195fd133b5cd248d2b1c933a4e80979026779b34e4672b2bb70dd2e8bc5087c`
+- [prekey-ack-send-admission.txt](prekey-ack-send-admission.txt): `b6cf93a6091f2f3cbb5366d05fcb61e26ca7b5f20cc52c4fd6aaac222041104b`
+- [prekey-ack-template.txt](prekey-ack-template.txt): `501a406d4fe003738f86ed40035ba3106fe5b285a06b214330894f1354876504`
+
+### ACK writer dispatch and shape continuation
+
+**Confirmed static:** retained [writer admission](../../rea/2.26.43.72-reachout-state/reachout-iq-write-admission.txt)
+switch at00f0 maps76->11b8 and43->0cf8. Case76 calls0v2.A02(Eoh), which
+builds F3e.A05(Eoh.A04,Eoh) and invokes1rj.A04(node,Eoh.A00). Case43 extracts
+1vZ.A00 andA01 and calls0v2.A01(node,43,id). The latter writer body and candidate
+conversion/flush remain outside this selected continuation.
+
+F3e.A05 emits ack attributes in order id,to,class,type, then optional participant,
+recipient,edit andextra attributes. For class=receipt/type=delivery it omits type;
+otherwise it takes Eoh.A09. edit is included only if nonempty and notliteral0.
+An optional supplied0Tp is wrapped as one child. This confirms the ordinary
+notification/encrypt ACK class/type shape, but count-specific eligibility for
+participant/recipient/edit/extra attributes needs Eoh producer evidence. Rust
+count routing currently excludes participants and itsACK omits those optional
+fields; no unsupported propagation is added from this generic builder alone.
+
+- [prekey-ack-wire-producer.txt](prekey-ack-wire-producer.txt): `fe18318954e371d556d39749bf721e1b55e6ccb22434841700af43bead6618b4`
+- [prekey-ack-wire-builder.txt](prekey-ack-wire-builder.txt): `9b174be1661356e1de1b0aefc721272b152193f8ebc010c3f4dab168007757e0`

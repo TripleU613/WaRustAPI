@@ -744,3 +744,26 @@ Validation: all 1,299 workspace/all-feature tests passed with two test threads,
 including 35 targeted prekey tests. Strict Clippy, CLI reference, fmt, JSON
 validation, coverage freshness and repository hygiene passed. Offline fixtures
 only; no server or account operation was performed.
+
+### Count ACK metadata and queue boundaries (2026-11-04)
+
+**Confirmed static, APK 2.26.43.72:** count dispatch requests deferred metadata;
+89Y.A01 consumes a one-use7p2 token viaA00. The downstream0v6.A00 branches to
+bulk1ic.A0G or0Sf.A0O readiness/pre-ACK queue admission. The latter creates
+message76 and can convert to queued pre-ACK message43; it is not a synchronous
+socket-completion callback. [Exact methods, offsets, limitations and 18 checked
+exports](apk/2.26.43.72-prekey-upload-replies/README.md#count-notification-ack-token-and-queue-stages-2026-11-04).
+
+This closes the meaning of the worker's ACK call, not native wire-order parity.
+The same metadata object dispatches at most once, but durable/redelivery-wide
+ACK deduplication is not established. A six-second handler timer and pre-ACK
+threshold200 were observed statically; neither is a new Rust timer/default.
+Concrete live branch selection, queue durability,43 pre-ACK conversion/flush and
+failure/reconnect drain behavior remain unknown. Rust ACK-before-upload-decision
+ordering remains unchanged pending those boundaries; no speculative socket
+reorder, pre-ACK outcome_unknown reservation, retry or duplicate suppression.
+No production source change or live account operation in this evidence chunk.
+
+Validation: pinned APK digest and all18 new export checksums verified;
+OpenAPI JSON, coverage freshness, staged whitespace and repository hygiene
+passed. This documentation/evidence-only chunk did not rerun Rust tests.

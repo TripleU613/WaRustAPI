@@ -1,0 +1,10 @@
+
+# class: LX/1k3;
+# extends: Ljava/lang/Object;
+
+.method public BX2(Z)  # .registers 2
+    # full signature: LX/1k3;->BX2()Z
+    0000..0002  const/4  v0, #0x1
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method
