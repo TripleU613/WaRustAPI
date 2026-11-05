@@ -1,0 +1,34 @@
+{
+  "README.md": {
+    "bytes": 3773,
+    "sha256": "23d679f028d5b2366ba0d1cce05024241a548ccc320679b612cc82d07a530ec8"
+  },
+  "cache.txt": {
+    "bytes": 806,
+    "sha256": "6cc874e860cfa4cb37a01605f5605de24af9f2481990f373d20c1f906791c781"
+  },
+  "configuration-dispatch.txt": {
+    "bytes": 11035,
+    "sha256": "c1a8fb86fc0ddf9f2abcc62a2b51478a2caf4c66f591637bcedc4fa803086607"
+  },
+  "default-entries.txt": {
+    "bytes": 9506,
+    "sha256": "7ba94fa367ac58bc55cd8b960f5f955894427810d0dd92399a053bd2948f827e"
+  },
+  "fallback-selector.txt": {
+    "bytes": 5294,
+    "sha256": "addde51eeba21784a63c0e458dc139c30505f0e07f7e5a4ce3ccd8a460fd0a2f"
+  },
+  "integer-dispatch.txt": {
+    "bytes": 1035,
+    "sha256": "e81cc7504f15b4fc1672b42029cbd1a67e4aaa6642e81a3fa2f2864f975f373d"
+  },
+  "integer-fallback.txt": {
+    "bytes": 4185,
+    "sha256": "4763fe4ee4e2f2645d47a461ff413ecb60ff4b4972487844fcdc2f2e7788d1fb"
+  },
+  "integer-getter.txt": {
+    "bytes": 423,
+    "sha256": "40e9d505e8ababfaed3f07fd7fe82dbb180bd8a3e42392ec13b31a7e65f4454f"
+  }
+}

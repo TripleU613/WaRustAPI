@@ -6757,3 +6757,16 @@ without inferred stanza time. Boundary, reopen, corruption rollback, legacy and
 normal-driver tests cover these paths. Stricter configured bucket admission,
 full native job/pending/retry/counterpart and success-store policy remain open.
 No live account operation; the age floor is necessary, not full eligibility.
+
+## Token bucket configuration follow-up — 2026-11-05
+
+**Confirmed static, 2.26.43.72:** selected 08Y.A0Q packaged integer entries
+assign 604800 to 865/996 and 4 to 909/997. With these effective values,
+0hu expiry would be 21 to under 28 days old, not the Rust 182-day fallback.
+This conditional calculation is not a claim about live account configuration.
+00E.A0a/A02/A06/A01/A0h show cache, preference/default and guarded MobileConfig
+paths; a returned AB property is insufficient to prove the effective getter.
+Whole-map final defaults, adapters and complete override precedence remain open.
+[Selected entries, complete resolver methods and reproduction](apk/2.26.43.72-token-bucket-configuration/README.md).
+No send policy changed; no live traffic. Next work is effective-policy resolution,
+then configured scheduling/admission rather than silently hardcoding these entries.

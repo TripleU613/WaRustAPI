@@ -16669,5 +16669,12 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-token-reservation-refresh/README.md",
     "description": "Queued token requests now reload current saved schedule during single/bulk reservation; refreshed wire and Sent status commit atomically. Later eligible ACKs coalesce unwritten owners, while Sent/Ok/Error bytes and IDs stay frozen. Optional ActionOutcome.deferred_reason records missing/expired/superseded local holds and is exposed through existing actions plain/JSON. Legacy ownership scan prevents duplicate resurrection; corrupt ownership rolls back with fixed diagnostics. Confirmed A04 clock/offset replaces raw wall/inferred time for scheduling and age checks. Mandatory182-day lower bound is proven independent of configuration; passing it does not prove stricter configured admission. Effective bucket/job retry/counterpart/success-store policy remains unfinished. No new flag/route, identity reset or live operation."
+  },
+  "x-token-bucket-configuration-research": {
+    "x-cli": true,
+    "x-transport": "experimental",
+    "x-live": false,
+    "description": "Static APK 2.26.43.72 selected token integer entries 865/996=604800 and 909/997=4 would imply 21 to under 28 day expiry if effective. These are not effective account settings: whole-map final defaults and cache/preferences/MobileConfig precedence remain unfinished. No runtime policy changed. Reproduce with existing xtask apk-smali.",
+    "evidence": "docs/protocol/apk/2.26.43.72-token-bucket-configuration/README.md"
   }
 }

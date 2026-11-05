@@ -1,3 +1,11 @@
+2026-11-05 — **Token bucket configuration traced further in the current APK.**
+
+Selected packaged entries are seven-day buckets/four valid buckets; if effective,
+expiry is 21 to under 28 days old. The 182-day floor remains necessary only.
+Cache/preferences/MobileConfig prevent treating raw AB rows as effective values.
+[Evidence and remaining resolver work](docs/protocol/apk/2.26.43.72-token-bucket-configuration/README.md).
+Research only; send policy unchanged, no live traffic. Effective policy remains open.
+
 2026-11-05 — **Queued trusted-contact tokens now reload current state at reservation.**
 
 Unwritten actions coalesce; reservations persist refreshed stored timestamps

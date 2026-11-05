@@ -1,0 +1,183 @@
+# Selected static DEX excerpts; omitted code is not represented as complete.
+# Full export SHA256: 8c459eec89365ff1368a492c477516194924022f1e78c94a3f37ad8738c3928a
+
+# LX/08Y;->A0Q(ImmutableMap.Builder)V: A0Q boxed week
+    02ae..02b4  const  v0, #0x93a80
+    02b4..02ba  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    02ba..02bc  move-result-object  v56
+    02bc..02c0  move-object/from16  v0, v56
+    02c0..02c6  invoke-virtual  {v13, v1, v0}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+
+# LX/08Y;->A0Q(ImmutableMap.Builder)V: A0Q boxed four
+    17cc..17d0  const/16  v0, #0xed9
+    17d0..17d6  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    17d6..17d8  move-result-object  v0
+    17d8..17da  const/4  v1, #0x4
+    17da..17e0  invoke-static  {v1}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    17e0..17e2  move-result-object  v1
+    17e2..17e8  invoke-virtual  {v13, v0, v1}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+
+# LX/08Y;->A0Q(ImmutableMap.Builder)V: A0Q token entries
+    4f42..4f46  const/16  v0, #0x361
+    4f46..4f4c  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    4f4c..4f4e  move-result-object  v3
+    4f4e..4f52  move-object/from16  v0, v56
+    4f52..4f58  invoke-virtual  {v13, v3, v0}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+    4f58..4f5c  const/16  v0, #0x3e4
+    4f5c..4f62  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    4f62..4f64  move-result-object  v3
+    4f64..4f68  move-object/from16  v0, v56
+    4f68..4f6e  invoke-virtual  {v13, v3, v0}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+    4f6e..4f72  const/16  v0, #0x38d
+    4f72..4f78  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    4f78..4f7a  move-result-object  v0
+    4f7a..4f80  invoke-virtual  {v13, v0, v1}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+    4f80..4f84  const/16  v0, #0x3e5
+    4f84..4f8a  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    4f8a..4f8c  move-result-object  v0
+    4f8c..4f92  invoke-virtual  {v13, v0, v1}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+
+# Complete destination-write inventory for v56 and v1 before token entries.
+# Include move-result destinations; v56 is an input register until overwritten.
+    000c..000e  move-result-object  v1
+    0058..005a  move-result-object  v1
+    007a..007c  move-result-object  v1
+    009c..009e  move-result-object  v1
+    00c2..00c4  move-result-object  v1
+    00de..00e0  move-result-object  v1
+    00fa..00fc  move-result-object  v1
+    011c..011e  move-result-object  v1
+    0138..013a  move-result-object  v1
+    0166..0168  move-result-object  v1
+    01f0..01f2  move-result-object  v1
+    025a..025c  move-result-object  v1
+    028c..0290  const/16  v1, #0x82
+    0298..029c  move-object/from16  v1, v17
+    02ac..02ae  move-result-object  v1
+    02ba..02bc  move-result-object  v56
+    03cc..03ce  move-result-object  v1
+    0462..0464  const/4  v1, #0x7
+    047e..0482  const/16  v1, #0x23
+    048a..048e  move-object/from16  v1, v31
+    04b2..04b6  const/16  v1, #0xe
+    04be..04c2  move-object/from16  v1, v37
+    0576..057a  move-object/from16  v1, v19
+    058c..0590  const/16  v1, #0x1e
+    05aa..05ac  move-result-object  v1
+    05de..05e0  move-result-object  v1
+    0612..0614  move-result-object  v1
+    0634..0638  const/16  v1, #0x7530
+    0640..0644  move-object/from16  v1, v20
+    0656..065a  move-object/from16  v1, v27
+    0696..0698  move-result-object  v1
+    06ba..06bc  move-result-object  v1
+    06ec..06ee  move-result-object  v1
+    070e..0710  move-result-object  v1
+    0732..0736  const/16  v1, #0x7dd
+    074e..0750  move-result-object  v1
+    0782..0784  move-result-object  v1
+    079a..079e  move-object/from16  v1, v27
+    07ae..07b0  move-result-object  v1
+    07cc..07ce  move-result-object  v1
+    07ee..07f2  const/16  v1, #0x14
+    0840..0842  move-result-object  v1
+    0876..087a  const/16  v1, #0x64
+    08b8..08ba  move-result-object  v1
+    08dc..08de  move-result-object  v1
+    0900..0902  move-result-object  v1
+    091e..0920  move-result-object  v1
+    097c..097e  move-result-object  v1
+    09f8..09fa  move-result-object  v1
+    0a28..0a2a  move-result-object  v1
+    0a80..0a82  move-result-object  v1
+    0ab4..0ab6  move-result-object  v1
+    0afa..0afc  move-result-object  v1
+    0b10..0b12  move-result-object  v1
+    0b38..0b3a  move-result-object  v1
+    0b7a..0b7c  move-result-object  v1
+    0ba4..0ba6  move-result-object  v1
+    0bd8..0bda  move-result-object  v1
+    0c9a..0c9c  move-result-object  v1
+    0cd2..0cd4  move-result-object  v1
+    0d08..0d0a  move-result-object  v1
+    0d32..0d34  move-result-object  v1
+    0d48..0d4a  move-result-object  v1
+    0d6c..0d6e  move-result-object  v1
+    0d82..0d84  move-result-object  v1
+    0d98..0d9a  move-result-object  v1
+    0dc0..0dc2  move-result-object  v1
+    0df6..0df8  move-result-object  v1
+    0e4a..0e4c  move-result-object  v1
+    0e60..0e62  move-result-object  v1
+    0e76..0e78  move-result-object  v1
+    0e8e..0e90  move-result-object  v1
+    0ec0..0ec2  move-result-object  v1
+    0f06..0f08  move-result-object  v1
+    0f2a..0f2c  move-result-object  v1
+    0f64..0f66  move-result-object  v1
+    0fce..0fd0  move-result-object  v1
+    102e..1030  move-result-object  v1
+    1066..1068  move-result-object  v1
+    10a4..10a6  move-result-object  v1
+    10f2..10f4  move-result-object  v1
+    1108..110a  move-result-object  v1
+    1160..1162  move-result-object  v1
+    11d0..11d2  move-result-object  v1
+    11e6..11e8  move-result-object  v1
+    1220..1222  move-result-object  v1
+    1266..1268  move-result-object  v1
+    12ac..12ae  move-result-object  v1
+    12dc..12de  move-result-object  v1
+    1330..1332  move-result-object  v1
+    1352..1354  move-result-object  v1
+    1368..136a  move-result-object  v1
+    138a..138c  move-result-object  v1
+    13a0..13a2  move-result-object  v1
+    13f2..13f4  move-result-object  v1
+    14b4..14b6  move-result-object  v1
+    14dc..14de  move-result-object  v1
+    150e..1512  const/16  v1, #0xfc18 (-1000)
+    1518..151a  move-result-object  v1
+    1670..1672  move-result-object  v1
+    1692..1694  move-result-object  v1
+    16b2..16b4  move-result-object  v1
+    16d4..16d6  move-result-object  v1
+    16fc..16fe  move-result-object  v1
+    1748..174a  move-result-object  v1
+    1782..1784  move-result-object  v1
+    1796..179a  const/16  v1, #0x1a
+    17a0..17a2  move-result-object  v1
+    17d8..17da  const/4  v1, #0x4
+    17e0..17e2  move-result-object  v1
+
+# LX/08Y; constructor: builders, helper admission and final integer map.
+    00d4..00da  invoke-static  {}, Lcom/google/common/collect/ImmutableMap;->builder()Lcom/google/common/collect/ImmutableMap$Builder;
+    00da..00dc  move-result-object  v14
+    00dc..00e2  invoke-static  {}, Lcom/google/common/collect/ImmutableMap;->builder()Lcom/google/common/collect/ImmutableMap$Builder;
+    00e2..00e4  move-result-object  v13
+    00e4..00ea  invoke-static  {}, Lcom/google/common/collect/ImmutableMap;->builder()Lcom/google/common/collect/ImmutableMap$Builder;
+    00ea..00ec  move-result-object  v12
+    00ec..00f2  invoke-static  {}, Lcom/google/common/collect/ImmutableMap;->builder()Lcom/google/common/collect/ImmutableMap$Builder;
+    00f2..00f4  move-result-object  v11
+    00f4..00fa  invoke-static  {}, Lcom/google/common/collect/ImmutableMap;->builder()Lcom/google/common/collect/ImmutableMap$Builder;
+    00fa..00fc  move-result-object  v10
+    43b2..43b8  invoke-static  {v13}, LX/08Y;->A0B(Lcom/google/common/collect/ImmutableMap$Builder;)V
+    43b8..43be  invoke-static  {v13}, LX/08Y;->A0I(Lcom/google/common/collect/ImmutableMap$Builder;)V
+    43be..43c4  invoke-static  {v13}, LX/08Y;->A0Q(Lcom/google/common/collect/ImmutableMap$Builder;)V
+    cc00..cc06  invoke-virtual  {v14}, Lcom/google/common/collect/ImmutableMap$Builder;->buildKeepingLast()Lcom/google/common/collect/ImmutableMap;
+    cc06..cc08  move-result-object  v1
+    cc08..cc0e  invoke-static  {v1}, LX/00l;->A05(Ljava/lang/Object;)V
+    cc0e..cc12  move-object/from16  v0, v302
+    cc12..cc16  iput-object  v1, v0, LX/08Y;->A00:Lcom/google/common/collect/ImmutableMap;
+    cc16..cc1c  invoke-virtual  {v13}, Lcom/google/common/collect/ImmutableMap$Builder;->buildKeepingLast()Lcom/google/common/collect/ImmutableMap;
+    cc1c..cc1e  move-result-object  v1
+    cc1e..cc24  invoke-static  {v1}, LX/00l;->A05(Ljava/lang/Object;)V
+    cc24..cc28  iput-object  v1, v0, LX/08Y;->A02:Lcom/google/common/collect/ImmutableMap;
+
+# Complete LX/08Y;->A1B getter
+.method public A1B(L)  # .registers 2
+    # full signature: LX/08Y;->A1B()Lcom/google/common/collect/ImmutableMap;
+    0000..0004  iget-object  v0, v1, LX/08Y;->A02:Lcom/google/common/collect/ImmutableMap;
+    0004..0006  return-object  v0
+    # exception table: 0 try range(s)
+.end method
