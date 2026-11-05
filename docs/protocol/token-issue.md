@@ -189,3 +189,21 @@ execution-time threshold before constructing the request; Rust freezes t at
 queue time. Queued supersession/coalescing, effective expiry/clock, success-store
 and native job retry policy need a separate port. Sent rows must not be rewritten
 or replayed as a workaround. No live account operation.
+
+## Trusted-contact queued timestamp reload and age floor — 2026-11-05
+
+**Confirmed static / implemented offline:**87x.A04 advances scheduled state before
+pending-set admission; the job reloads the stored timestamp at execution. Queued
+Rust token actions now coalesce by user/schedule owner and refresh their stored
+wire from current state in the same transaction that marks Sent. Reserved bytes,
+IDs and send facts are never rewritten or replayed. Legacy duplicate ownership
+is recovered without resurrecting a current Sent/Ok/Error action.
+[Native age-floor proof, ownership, clock and regressions](apk/2.26.43.72-token-reservation-refresh/README.md).
+0hu's max-per-branch then min construction proves a mandatory182-day lower bound.
+Reservation defers missing state, below-floor time and superseded rows, recording
+optional ActionOutcome.deferred_reason for actions plain/JSON; unrelated drain
+and receive continue. Scheduling/reservation use confirmed A04 clock semantics,
+without inferred stanza time. Boundary, reopen, corruption rollback, legacy and
+normal-driver tests cover these paths. Stricter configured bucket admission,
+full native job/pending/retry/counterpart and success-store policy remain open.
+No live account operation; the age floor is necessary, not full eligibility.

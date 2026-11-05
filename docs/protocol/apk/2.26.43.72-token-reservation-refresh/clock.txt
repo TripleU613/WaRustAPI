@@ -1,0 +1,22 @@
+
+# class: LX/08q;
+# extends: Ljava/lang/Object;
+
+.method public A04(J)  # .registers 6
+    # full signature: LX/08q;->A04()J
+    0000..0004  iget-wide  v3, v5, LX/08q;->A04:J
+    0004..0008  const-wide/16  v1, #0x0
+    0008..000c  cmp-long  v0, v3, v1
+    000c..0010  if-eqz  v0, +0xa
+    0010..0014  iget-wide  v2, v5, LX/08q;->A04:J
+    0014..001a  invoke-static  {}, Landroid/os/SystemClock;->elapsedRealtime()J
+    001a..001c  move-result-wide  v0
+    001c..001e  add-long/2addr  v2, v0
+    001e..0020  return-wide  v2
+    0020..0026  invoke-static  {}, Ljava/lang/System;->currentTimeMillis()J
+    0026..0028  move-result-wide  v2
+    0028..002c  iget-wide  v0, v5, LX/08q;->A02:J
+    002c..002e  sub-long/2addr  v2, v0
+    002e..0030  return-wide  v2
+    # exception table: 0 try range(s)
+.end method

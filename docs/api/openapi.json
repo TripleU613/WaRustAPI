@@ -557,6 +557,15 @@
       }
     },
     "schemas": {
+      "ActionDeferReason": {
+        "type": "string",
+        "enum": [
+          "privacy_token_state_missing",
+          "privacy_token_expired",
+          "privacy_token_superseded"
+        ],
+        "description": "Local pre-write token deferral, distinct from server refusal or uncertain delivery."
+      },
       "HistoryNoticeMetadata": {
         "type": "object",
         "description": "History-notice metadata model returned by the pure decoder and carried on the received GroupHistoryNotice event. It is not a standalone HTTP response. Returns null for another message type, a metadata model for a supported notice, or a fixed redacted local error. No receiver addresses or opaque context/bot contents are retained. Positive count/window timestamp mirror APK 2.26.37.71 DA8.CF4. Timestamp units remain unknown. This helper does not authenticate or dispatch a notice.",
@@ -1014,7 +1023,10 @@
         ],
         "properties": {
           "settlement_sequence": {
-            "type": ["integer", "null"],
+            "type": [
+              "integer",
+              "null"
+            ],
             "minimum": 1,
             "description": "Local durable monotonic receive order, assigned atomically with a newly correlated terminal IQ reply. Null for unsettled or legacy unknown-order rows; never derived from random IDs or timestamps. Sequenced contact/group/blocklist projection replay uses oldest-first order across relevant kinds. Legacy unsequenced replies remain inspectable and are excluded from that automatic projection path without changing markers or send reservations. This local order does not prove server snapshot freshness or native generation admission."
           },
@@ -1046,11 +1058,18 @@
               "null"
             ],
             "description": "Server error message if action failed"
+          },
+          "deferred_reason": {
+            "$ref": "#/components/schemas/ActionDeferReason",
+            "description": "Optional last local reservation deferral; cleared when reserved. Omitted when absent."
           }
         },
         "description": "Outcome of a one-shot queued action. Settlement receive order is a local journal property, not a server field. Session-specific pending group recovery also uses the sequenced order across group action kinds; unknown-order legacy pending replies remain preserved without projection, marker consumption or resend. Evidence and legacy limitations: docs/protocol/action-settlement-ordering.md.",
         "x-cli": "whatsapp-cli actions",
-        "x-transport": ["cli", "http"],
+        "x-transport": [
+          "cli",
+          "http"
+        ],
         "x-live": false
       },
       "ReceiptOutcome": {
@@ -16641,5 +16660,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-privacy-token-callback/README.md",
     "description": "APK43.72 trusted-contact job request299 uses32000ms independently of client-auth request314. Normal metadata-only privacy/set tokens/token trusted_contact callbacks now expire32s from pre-write start, preserving Sent uncertainty and scheduled state without retry/window reset. Typed privacy-token result follows captured-data selector3 success; outer errors remain refusals. PN/LID, delayed-write, expiry/checkpoint/duplicate/same-window and normal-driver tests. Confirmed unported gap: native job reloads scheduled state and checks execution-time expiry, while Rust freezes t at queue time. Supersession/coalescing, effective clock/expiry, success-store and job retry policy remain open; no live operation or Sent-row rewrite."
+  },
+  "x-trusted-contact-reservation-revalidation": {
+    "x-cli": true,
+    "x-transport": [
+      "normal experimental token reservation and existing actions inspection; offline tested"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-token-reservation-refresh/README.md",
+    "description": "Queued token requests now reload current saved schedule during single/bulk reservation; refreshed wire and Sent status commit atomically. Later eligible ACKs coalesce unwritten owners, while Sent/Ok/Error bytes and IDs stay frozen. Optional ActionOutcome.deferred_reason records missing/expired/superseded local holds and is exposed through existing actions plain/JSON. Legacy ownership scan prevents duplicate resurrection; corrupt ownership rolls back with fixed diagnostics. Confirmed A04 clock/offset replaces raw wall/inferred time for scheduling and age checks. Mandatory182-day lower bound is proven independent of configuration; passing it does not prove stricter configured admission. Effective bucket/job retry/counterpart/success-store policy remains unfinished. No new flag/route, identity reset or live operation."
   }
 }

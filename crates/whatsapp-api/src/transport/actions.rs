@@ -72,6 +72,18 @@ pub enum ActionStatus {
     Error,
 }
 
+/// Local pre-write deferral; distinct from a server refusal or uncertain send.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ActionDeferReason {
+    /// No saved trusted-contact scheduling state exists.
+    PrivacyTokenStateMissing,
+    /// Saved time is older than the APK's mandatory182-day lower bound.
+    PrivacyTokenExpired,
+    /// Another action owns this user's current token schedule.
+    PrivacyTokenSuperseded,
+}
+
 /// Stored row.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct Row {
@@ -80,6 +92,8 @@ struct Row {
     wire: Vec<u8>,
     status: ActionStatus,
     created_at: Timestamp,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    deferred_reason: Option<ActionDeferReason>,
     #[serde(default)]
     sent_at: Option<Timestamp>,
     #[serde(default)]
@@ -107,6 +121,9 @@ pub struct ActionOutcome {
     pub label: String,
     /// Lifecycle state.
     pub status: ActionStatus,
+    /// Last local reservation deferral; cleared when the action is reserved.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub deferred_reason: Option<ActionDeferReason>,
     /// Server error code when refused.
     pub error_code: Option<u16>,
     /// Server error text when refused.
@@ -159,6 +176,7 @@ fn queue_prepared_in(
         wire: encode(&node)?,
         status: ActionStatus::Queued,
         created_at: Timestamp::now(),
+        deferred_reason: None,
         sent_at: None,
         settled_at: None,
         settlement_sequence: None,
@@ -201,6 +219,7 @@ pub(crate) fn view_in_write(
             kind: row.kind,
             label: row.label,
             status: row.status,
+            deferred_reason: row.deferred_reason,
             error_code: row.error_code,
             error_text: row.error_text,
         },
@@ -231,11 +250,73 @@ pub(crate) fn view_in(
             kind: row.kind,
             label: row.label,
             status: row.status,
+            deferred_reason: row.deferred_reason,
             error_code: row.error_code,
             error_text: row.error_text,
         },
         reply,
     )))
+}
+
+// Complete, identity-checked producer inventory for legacy token-owner recovery.
+pub(crate) fn for_kind_in(
+    tx: &crate::store::WriteTx<'_>,
+    kind: &str,
+) -> Result<Vec<(String, ActionStatus, Node)>> {
+    let mut out = Vec::new();
+    let mut cursor = None;
+    loop {
+        let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
+        let done = rows.len() < 256;
+        cursor = rows.last().map(|(key, _)| key.clone());
+        for (key, _) in rows
+            .iter()
+            .filter(|(key, _)| key.starts_with(PREFIX.as_bytes()))
+        {
+            let Some(row): Option<Row> = tx.get_json(Table::Checkpoints, key, 1)? else {
+                continue;
+            };
+            if row.kind != kind {
+                continue;
+            }
+            let id = std::str::from_utf8(&key[PREFIX.len()..])
+                .map_err(|_| Error::invalid("action", "invalid saved action row identity"))?;
+            out.push((id.to_owned(), row.status, decode_owned(id, &row.wire)?));
+        }
+        if done {
+            return Ok(out);
+        }
+    }
+}
+
+fn prepare_token_in(
+    tx: &mut crate::store::WriteTx<'_>,
+    id: &str,
+    row: &mut Row,
+    node: Node,
+) -> Result<Option<Node>> {
+    if row.kind != super::token_issue::ACTION_KIND {
+        return Ok(Some(node));
+    }
+    let now = super::clock::a04_now_in_write(tx, Timestamp::now().as_millis())? / 1000;
+    match super::token_issue::prepare_in(tx, id, &node, now)? {
+        super::token_issue::IssueReservation::Ready(prepared) => {
+            row.wire = encode(&prepared)?;
+            row.deferred_reason = None;
+            Ok(Some(prepared))
+        }
+        super::token_issue::IssueReservation::Deferred(reason) => {
+            if row.deferred_reason != Some(reason) {
+                row.deferred_reason = Some(reason);
+                tx.put_json(Table::Checkpoints, key(id).as_bytes(), 1, row)?;
+                tracing::info!(
+                    ?reason,
+                    "trusted-contact action deferred before reservation"
+                );
+            }
+            Ok(None)
+        }
+    }
 }
 
 /// Reserve at most sixteen queued actions for one socket write, marking them
@@ -286,6 +367,9 @@ fn reserve_limit(store: &ProtocolStore, limit: usize) -> Result<Vec<Node>> {
                 let id = std::str::from_utf8(&key[PREFIX.len()..])
                     .map_err(|_| Error::invalid("action", "invalid saved action row identity"))?;
                 let node = decode_owned(id, &row.wire)?;
+                let Some(node) = prepare_token_in(tx, id, &mut row, node)? else {
+                    continue;
+                };
                 if row.kind == super::app_state_sync::HELD_FETCH_ACTION_KIND {
                     let id = node
                         .get_attr("id")
@@ -340,6 +424,12 @@ pub(crate) fn reserve_one_in(tx: &mut crate::store::WriteTx<'_>, id: &str) -> Re
         ));
     }
     let node = decode_owned(id, &row.wire)?;
+    let node = prepare_token_in(tx, id, &mut row, node)?.ok_or_else(|| {
+        Error::invalid(
+            "privacy_token",
+            "selected token action is locally deferred; no request reserved",
+        )
+    })?;
     if row.kind == super::app_state_sync::HELD_FETCH_ACTION_KIND
         && !super::app_state_sync::held_fetch::reserve_in(tx, id, &row.wire)?
     {
@@ -666,6 +756,7 @@ pub fn outcomes(store: &ProtocolStore) -> Result<Vec<ActionOutcome>> {
                     kind: row.kind,
                     label: row.label,
                     status: row.status,
+                    deferred_reason: row.deferred_reason,
                     error_code: row.error_code,
                     error_text: row.error_text,
                 });
@@ -701,6 +792,7 @@ pub(crate) fn outcomes_in_write(tx: &crate::store::WriteTx<'_>) -> Result<Vec<Ac
                 kind: row.kind,
                 label: row.label,
                 status: row.status,
+                deferred_reason: row.deferred_reason,
                 error_code: row.error_code,
                 error_text: row.error_text,
             });
@@ -806,6 +898,7 @@ pub fn settled_for_kinds(
                     kind: row.kind,
                     label: row.label,
                     status: row.status,
+                    deferred_reason: row.deferred_reason,
                     error_code: row.error_code,
                     error_text: row.error_text,
                 };

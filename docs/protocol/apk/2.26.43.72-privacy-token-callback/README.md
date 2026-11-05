@@ -40,14 +40,16 @@ and an insert fallback before later cache/counterpart effects. Complete selected
 body is retained; this chunk does not port its persistence/counterpart behavior
 or equate a queued sent timestamp with successful issuance.
 
-## Important remaining send-time validation gap
+## Send-time gap identified in the preceding chunk
 
-**Confirmed mismatch, not fixed here:** nativeA0L reloads0ht.A0O immediately
+**Historical gap at17469da8:** the following reservation/ownership and mandatory
+age-floor correction is now [implemented in the follow-up](../2.26.43.72-token-reservation-refresh/README.md).
+Stricter configured admission remains open. NativeA0L reloads0ht.A0O immediately
 before construction. It requires a current stored row and captures its current
 7p3.A00 timestamp. It compares that timestamp against0hu.A01, skipping strictly
-older values and admitting equality. Rust schedule_after_ack_in freezes user/t
-into the durable action at message-ACK time; generic action reservation currently
-does not reload current token state or check this execution-time threshold.
+older values and admitting equality. The preceding Rust schedule_after_ack_in froze user/t
+into the durable action at message-ACK time; generic action reservation then
+did not reload current token state or check this execution-time threshold.
 A long-held or superseded queued action can therefore differ from the native
 job's eventual input. Do not rewrite a Sent row or fabricate a fresh timestamp
 to hide this gap. A proper follow-up needs queued-action/pending-job ownership,

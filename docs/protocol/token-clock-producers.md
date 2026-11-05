@@ -309,3 +309,21 @@ passed (1,813 local links; 74 checksum bundles). This source-only continuation
 changes no Rust; the preceding 820-test/Clippy/Rustdoc run belongs to the runtime
 chunk, not a new full run here. Bulk class dumps and physical inventories stay
 local; the scoped findings and reproduction inputs are retained above.
+
+## Trusted-contact queued timestamp reload and age floor — 2026-11-05
+
+**Confirmed static / implemented offline:**87x.A04 advances scheduled state before
+pending-set admission; the job reloads the stored timestamp at execution. Queued
+Rust token actions now coalesce by user/schedule owner and refresh their stored
+wire from current state in the same transaction that marks Sent. Reserved bytes,
+IDs and send facts are never rewritten or replayed. Legacy duplicate ownership
+is recovered without resurrecting a current Sent/Ok/Error action.
+[Native age-floor proof, ownership, clock and regressions](apk/2.26.43.72-token-reservation-refresh/README.md).
+0hu's max-per-branch then min construction proves a mandatory182-day lower bound.
+Reservation defers missing state, below-floor time and superseded rows, recording
+optional ActionOutcome.deferred_reason for actions plain/JSON; unrelated drain
+and receive continue. Scheduling/reservation use confirmed A04 clock semantics,
+without inferred stanza time. Boundary, reopen, corruption rollback, legacy and
+normal-driver tests cover these paths. Stricter configured bucket admission,
+full native job/pending/retry/counterpart and success-store policy remain open.
+No live account operation; the age floor is necessary, not full eligibility.

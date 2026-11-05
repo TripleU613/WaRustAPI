@@ -1750,6 +1750,58 @@ mod tests {
     }
 
     #[tokio::test(start_paused = true)]
+    async fn expired_token_preflight_writes_no_token_and_keeps_receive_active() {
+        use super::super::{actions, token_issue};
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("expired-token-preflight.redb"));
+        let old = Timestamp::now().as_millis() / 1000 - token_issue::FALLBACK_SECONDS - 60;
+        let id = store
+            .write(|tx| token_issue::schedule_after_ack_in(tx, &peer(), old))
+            .unwrap()
+            .unwrap();
+        let control = actions::queue(&store, "control", "control", |id| {
+            Ok(Node::new("iq")
+                .attr("id", id)
+                .attr("type", "get")
+                .attr("xmlns", "fixture"))
+        })
+        .unwrap();
+        let mut cfg = config();
+        cfg.transport.action_delay_ms = 1;
+        let mut fake = start_with_config(&store, false, None, cfg);
+        fake.activate().await;
+        (&mut fake.ready).await.unwrap();
+        let (node, written) = fake.written().await;
+        assert_eq!(
+            node.get_attr("id").and_then(|v| v.as_text()),
+            Some(control.as_str())
+        );
+        written.send(Ok(())).unwrap();
+        fake.nothing_written(Duration::from_millis(2)).await;
+        let outcomes = actions::outcomes(&store).unwrap();
+        let held = outcomes.iter().find(|a| a.id == id).unwrap();
+        assert_eq!(held.status, actions::ActionStatus::Queued);
+        assert_eq!(
+            held.deferred_reason,
+            Some(actions::ActionDeferReason::PrivacyTokenExpired)
+        );
+        fake.deliver(
+            Node::new("receipt")
+                .attr("from", peer())
+                .attr("id", "AFTER-TOKEN-HOLD"),
+        )
+        .await;
+        let (ack, written) = fake.written().await;
+        assert_eq!(ack.description, "ack");
+        assert_eq!(
+            ack.get_attr("id").and_then(|v| v.as_text()),
+            Some("AFTER-TOKEN-HOLD")
+        );
+        written.send(Ok(())).unwrap();
+        fake.stop_cleanly().await;
+    }
+
+    #[tokio::test(start_paused = true)]
     async fn timed_action_expiry_preserves_uncertainty_without_stopping_receive() {
         use super::super::actions::{self, ActionStatus};
         for kind in [

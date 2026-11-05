@@ -1,0 +1,124 @@
+
+# class: LX/87x;
+# extends: Ljava/lang/Object;
+
+.method public A04(VL)  # .registers 20
+    # full signature: LX/87x;->A04(Lcom/whatsapp/infra/core/jid/UserJid;)V
+    0000..0002  const/4  v0, #0x0
+    0002..0006  move-object/from16  v1, v19
+    0006..000c  invoke-static  {v1, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    000c..0010  move-object/from16  v10, v18
+    0010..0016  invoke-static  {v1, v10}, LX/87x;->A00(Lcom/whatsapp/infra/core/jid/UserJid;LX/87x;)Lcom/whatsapp/infra/core/jid/UserJid;
+    0016..0018  move-result-object  v11
+    0018..001e  invoke-static  {v11}, LX/0Dn;->A0O(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    001e..0020  move-result  v0
+    0020..0024  if-nez  v0, +0xac
+    0024..0028  iget-object  v13, v10, LX/87x;->A03:LX/0ht;
+    0028..002e  invoke-virtual  {v13, v11}, LX/0ht;->A0O(Lcom/whatsapp/infra/core/jid/UserJid;)LX/7p3;
+    002e..0030  move-result-object  v6
+    0030..0034  if-eqz  v6, +0x33
+    0034..0038  iget-wide  v4, v6, LX/7p3;->A00:J
+    0038..003e  invoke-static  {v4, v5}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    003e..0040  move-result-object  v0
+    0040..0044  if-eqz  v0, +0x2b
+    0044..0048  iget-object  v1, v10, LX/87x;->A00:LX/08Y;
+    0048..004c  const/16  v0, #0x3e4
+    004c..0052  invoke-static  {v1, v0}, LX/6oe;->A02(LX/00E;I)J
+    0052..0054  move-result-wide  v2
+    0054..0058  const-wide/16  v7, #0x0
+    0058..005c  cmp-long  v0, v2, v7
+    005c..0060  if-gtz  v0, +0xa0
+    0060..0064  const-string  v0, "Bad bucket configuration, bucketLengthSec = "
+    0064..006a  invoke-static  {v2, v3, v0}, LX/2LA;->A0o(JLjava/lang/String;)Ljava/lang/String;
+    006a..006c  move-result-object  v0
+    006c..0072  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    0072..0076  iget-object  v0, v10, LX/87x;->A01:LX/08q;
+    0076..007c  invoke-virtual  {v0}, LX/08q;->A04()J
+    007c..007e  move-result-wide  v0
+    007e..0084  invoke-static  {v0, v1}, LX/2LB;->A06(J)J
+    0084..0086  move-result-wide  v7
+    0086..008c  const-wide/32  v0, #0xeff100
+    008c..008e  sub-long/2addr  v7, v0
+    008e..0092  cmp-long  v0, v4, v7
+    0092..0096  if-gez  v0, +0x73
+    0096..009a  iget-object  v0, v10, LX/87x;->A01:LX/08q;
+    009a..00a0  invoke-virtual  {v0}, LX/08q;->A04()J
+    00a0..00a2  move-result-wide  v0
+    00a2..00a6  const-wide/16  v16, #0x3e8
+    00a6..00aa  div-long  v0, v0, v16
+    00aa..00b0  invoke-virtual  {v13, v11, v0, v1}, LX/0ht;->A0W(Lcom/whatsapp/infra/core/jid/UserJid;J)V
+    00b0..00b4  if-eqz  v6, +0x65
+    00b4..00b8  iget-object  v0, v6, LX/7p3;->A01:Ljava/lang/Long;
+    00b8..00bc  if-eqz  v0, +0x61
+    00bc..00c2  invoke-virtual  {v0}, Ljava/lang/Number;->longValue()J
+    00c2..00c4  move-result-wide  v14
+    00c4..00c8  iget-object  v1, v13, LX/0ht;->A00:LX/08Y;
+    00c8..00cc  const/16  v0, #0xfdf
+    00cc..00d2  invoke-virtual  {v1, v0}, LX/00E;->A0a(I)I
+    00d2..00d4  move-result  v12
+    00d4..00d8  if-lez  v12, +0x53
+    00d8..00dc  const/16  v0, #0x3e4
+    00dc..00e2  invoke-static  {v1, v0}, LX/6oe;->A02(LX/00E;I)J
+    00e2..00e4  move-result-wide  v8
+    00e4..00e8  iget-object  v0, v13, LX/0ht;->A02:LX/09S;
+    00e8..00ee  invoke-virtual  {v0}, LX/09S;->A0R()LX/2on;
+    00ee..00f0  move-result-object  v0
+    00f0..00f6  invoke-virtual  {v0}, LX/0FZ;->A03()Landroid/content/SharedPreferences;
+    00f6..00f8  move-result-object  v3
+    00f8..00fc  const-string  v2, "privacy_token_last_batch_time_sec"
+    00fc..0100  const-wide/16  v0, #0xffff (-1)
+    0100..0106  invoke-interface  {v3, v2, v0, v1}, Landroid/content/SharedPreferences;->getLong(Ljava/lang/String;J)J
+    0106..0108  move-result-wide  v6
+    0108..010a  div-long/2addr  v6, v8
+    010a..010e  iget-object  v0, v13, LX/0ht;->A03:LX/08q;
+    010e..0114  invoke-virtual  {v0}, LX/08q;->A04()J
+    0114..0116  move-result-wide  v4
+    0116..011a  div-long  v4, v4, v16
+    011a..011c  div-long/2addr  v4, v8
+    011c..0120  sget-wide  v0, LX/FKU;->A06:J
+    0120..0124  sget-object  v2, LX/0Zn;->A08:LX/0Zn;
+    0124..012a  invoke-static  {v2, v0, v1}, LX/0qR;->A07(LX/0Zn;J)J
+    012a..012c  move-result-wide  v0
+    012c..0130  const-wide/16  v2, #0x1
+    0130..0132  add-long/2addr  v0, v2
+    0132..0134  long-to-double  v2, v0
+    0134..0138  const-wide/high16  v0, #0x3ff0000000000000
+    0138..013a  mul-double/2addr  v2, v0
+    013a..013c  long-to-double  v0, v8
+    013c..013e  div-double/2addr  v2, v0
+    013e..0144  invoke-static  {v2, v3}, Ljava/lang/Math;->ceil(D)D
+    0144..0146  move-result-wide  v0
+    0146..0148  double-to-int  v2, v0
+    0148..014a  int-to-long  v2, v2
+    014a..014e  sub-long  v0, v4, v2
+    014e..0154  invoke-static  {v6, v7, v4, v5}, Ljava/lang/Math;->min(JJ)J
+    0154..0156  move-result-wide  v2
+    0156..015c  invoke-static  {v0, v1, v2, v3}, Ljava/lang/Math;->max(JJ)J
+    015c..015e  move-result-wide  v2
+    015e..0160  int-to-long  v0, v12
+    0160..0162  sub-long/2addr  v2, v0
+    0162..0164  mul-long/2addr  v2, v8
+    0164..016a  invoke-static  {v2, v3}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    016a..016c  move-result-object  v0
+    016c..0170  if-eqz  v0, +0x7
+    0170..0174  cmp-long  v0, v14, v2
+    0174..0178  if-ltz  v0, +0x3
+    0178..017a  return-void
+    017a..0180  invoke-virtual  {v10, v11}, LX/87x;->A05(Lcom/whatsapp/infra/core/jid/UserJid;)Z
+    0180..0182  move-result  v0
+    0182..0186  if-eqz  v0, -0x5
+    0186..018a  iget-object  v1, v10, LX/87x;->A02:LX/0fW;
+    018a..018e  new-instance  v0, Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;
+    018e..0194  invoke-direct  {v0, v11}, Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;-><init>(Lcom/whatsapp/infra/core/jid/UserJid;)V
+    0194..019a  invoke-virtual  {v1, v0}, LX/0fW;->A01(Lorg/whispersystems/jobqueue/Job;)V
+    019a..019c  return-void
+    019c..01a0  iget-object  v0, v10, LX/87x;->A01:LX/08q;
+    01a0..01a6  invoke-virtual  {v0}, LX/08q;->A04()J
+    01a6..01a8  move-result-wide  v0
+    01a8..01ae  invoke-static  {v0, v1}, LX/2LB;->A06(J)J
+    01ae..01b0  move-result-wide  v7
+    01b0..01b2  div-long/2addr  v7, v2
+    01b2..01b4  div-long/2addr  v4, v2
+    01b4..01b8  goto/16  -0x93
+    # exception table: 0 try range(s)
+.end method

@@ -222,6 +222,16 @@ pub(super) fn receipt_now(tx: &ReadTx<'_>, local_ms: i64) -> Result<i64> {
     }))
 }
 
+// APK43.72 08q.A04: elapsed baseline, otherwise wall minus saved offset.
+// No historical inferred stanza sample or NTP-preferred A00 is used here.
+pub(crate) fn a04_now_in_write(tx: &crate::store::WriteTx<'_>, local_ms: i64) -> Result<i64> {
+    let value = tx.get_json::<ConfirmedClock>(Table::Checkpoints, CONFIRMED_KEY, 1)?;
+    let (epoch, elapsed) = context();
+    Ok(value.map_or(local_ms, |value| {
+        resolve(&value, local_ms, epoch, elapsed).0
+    }))
+}
+
 /// Resolve server time from confirmed input, falling back to historical inference.
 pub fn server_now(tx: &ReadTx<'_>, local_ms: i64) -> Result<Option<i64>> {
     if let Some(value) = tx.get_json::<ConfirmedClock>(Table::Checkpoints, CONFIRMED_KEY, 1)? {
@@ -278,6 +288,53 @@ mod tests {
         })
         .unwrap()
     }
+    #[test]
+    fn a04_write_clock_uses_confirmed_offset_without_inferred_stanza_time() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir);
+        let local_ms = 30_123;
+        assert_eq!(
+            store.write(|tx| a04_now_in_write(tx, local_ms)).unwrap(),
+            local_ms
+        );
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    KEY,
+                    1,
+                    &ClockSample {
+                        server_ms: 9_000_000,
+                        local_ms,
+                    },
+                )
+            })
+            .unwrap();
+        assert_eq!(
+            store.write(|tx| a04_now_in_write(tx, local_ms)).unwrap(),
+            local_ms
+        );
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    CONFIRMED_KEY,
+                    1,
+                    &ConfirmedClock {
+                        source: ConfirmedSource::LoginSuccess,
+                        client_server_diff_ms: 20_000,
+                        elapsed_base_ms: None,
+                        process_epoch: None,
+                    },
+                )
+            })
+            .unwrap();
+        assert_eq!(
+            store.write(|tx| a04_now_in_write(tx, local_ms)).unwrap(),
+            10_123
+        );
+    }
+
     #[test]
     fn receipt_clock_ignores_inferred_stanzas_and_uses_confirmed_offset() {
         let dir = tempfile::tempdir().unwrap();

@@ -1,3 +1,13 @@
+2026-11-05 — **Queued trusted-contact tokens now reload current state at reservation.**
+
+Unwritten actions coalesce; reservations persist refreshed stored timestamps
+atomically. Missing/expired/superseded requests stay queued with inspection reasons;
+other traffic continues. Sent bytes and IDs remain frozen across reopen.
+[Age-floor proof, legacy ownership, tests and remaining configured-policy gap](docs/protocol/apk/2.26.43.72-token-reservation-refresh/README.md).
+Validation:1351 workspace/all-feature tests, strict Clippy, fmt, CLI reference,
+APK coverage and hygiene passed. No live account operation; full configured
+expiry/job policy remains unfinished.
+
 2026-11-05 — **Trusted-contact token callbacks now use their native32s timer.**
 
 Expiry preserves uncertain actions and scheduled markers without retry; typed
