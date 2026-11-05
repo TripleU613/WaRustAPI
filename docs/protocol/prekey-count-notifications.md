@@ -869,3 +869,26 @@ promotion and confirmation-based retirement.
 Validation: pinned APK SHA256 and all19 new export hashes verified; OpenAPI
 JSON, coverage freshness, existing synthetic SQL oracle, staged whitespace
 and hygiene passed. Evidence/docs-only; Rust tests were not rerun.
+
+### ACK projection serial queue and row-order helpers (2026-11-04)
+
+**Confirmed static,43.72:** TB8 selector8 directly calls A07; it does not add
+another latch wait. The queue owns a098 serial executor: its load/projection/
+periodic jobs use a FIFO wrapper that attempts next-task dispatch on normal or
+exceptional completion. This closes same-instance queued-job ordering, not all
+cross-thread epoch mutation, dispatch failures or database snapshot isolation.
+
+Fey14 orders persisted row IDs naturally, substituting Long.MAX_VALUE for null;
+no loggable-ID tie-break is used. Out-of-order window merge concatenates, sorts
+and takes a prefix without deduplication. Refill keeps a null/backend failure
+separate from a completed empty read, and adjusts only memory/count state on
+successful short reads. [Methods,17 new exports and boundaries](apk/2.26.43.72-prekey-upload-replies/README.md#ack-projection-serialization-merge-order-and-refill-2026-11-04).
+
+These are additional recovery-port inputs, not implemented Rust ACK replay or
+proof every callback schedules after loading. Complete bulk ACK-list provenance,
+Flr insertion, replay ownership and ambiguous persistence failures remain open.
+No production Rust source or live account/network behavior changed.
+
+Validation: pinned APK SHA256, all17 export hashes, OpenAPI JSON, coverage
+freshness, existing synthetic SQL oracle, staged whitespace and hygiene passed.
+Evidence/docs-only chunk; Rust tests were not rerun.

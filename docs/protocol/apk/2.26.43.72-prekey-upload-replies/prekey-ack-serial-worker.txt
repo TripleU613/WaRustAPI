@@ -1,0 +1,63 @@
+
+# class: LX/1VR;
+# extends: LX/09A;
+
+.method public run(V)  # .registers 7
+    # full signature: LX/1VR;->run()V
+    0000..0004  iget  v0, v6, LX/1VR;->$t:I
+    0004..0008  if-eqz  v0, +0x18
+    0008..000c  iget-object  v2, v6, LX/1VR;->A00:Ljava/lang/Object;
+    000c..0010  check-cast  v2, LX/098;
+    0010..0012  monitor-enter
+    0012..0016  iget-object  v1, v2, LX/098;->A03:Ljava/util/HashMap;
+    0016..001a  iget-object  v0, v6, LX/1VR;->A01:Ljava/lang/Object;
+    001a..001e  check-cast  v0, Ljava/lang/Runnable;
+    001e..0024  invoke-virtual  {v1, v0}, Ljava/util/AbstractMap;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+    0024..0026  monitor-exit
+    0026..002c  invoke-virtual  {v2, v0}, LX/098;->execute(Ljava/lang/Runnable;)V
+    002c..002e  return-void
+    002e..0030  move-exception  v0
+    0030..0032  monitor-exit
+    0032..0034  throw  v0
+    0034..0038  const-wide/16  v4, #0x1
+    0038..003c  iget-object  v2, v6, LX/1VR;->A00:Ljava/lang/Object;
+    003c..0040  check-cast  v2, LX/098;
+    0040..0046  invoke-static  {}, Ljava/lang/Thread;->currentThread()Ljava/lang/Thread;
+    0046..0048  move-result-object  v0
+    0048..004e  invoke-virtual  {v0}, Ljava/lang/Thread;->getId()J
+    004e..0050  move-result-wide  v0
+    0050..0054  iput-wide  v0, v2, LX/098;->A07:J
+    0054..0058  iget-object  v1, v2, LX/098;->A02:Ljava/lang/Object;
+    0058..005a  monitor-enter
+    005a..005e  iget-object  v0, v6, LX/1VR;->A01:Ljava/lang/Object;
+    005e..0062  check-cast  v0, Ljava/lang/Runnable;
+    0062..0068  invoke-interface  {v0}, Ljava/lang/Runnable;->run()V
+    0068..006a  monitor-exit
+    006a..006e  iget-wide  v0, v2, LX/098;->A00:J
+    006e..0070  add-long/2addr  v0, v4
+    0070..0074  iput-wide  v0, v2, LX/098;->A00:J
+    0074..0078  const-wide/16  v0, #0xffff (-1)
+    0078..007c  iput-wide  v0, v2, LX/098;->A07:J
+    007c..0082  invoke-static  {v2}, LX/098;->A00(LX/098;)V
+    0082..0084  return-void
+    0084..0086  move-exception  v0
+    0086..0088  monitor-exit
+    0088..008a  throw  v0
+    008a..008c  move-exception  v3
+    008c..0090  iget-object  v2, v6, LX/1VR;->A00:Ljava/lang/Object;
+    0090..0094  check-cast  v2, LX/098;
+    0094..0098  iget-wide  v0, v2, LX/098;->A00:J
+    0098..009a  add-long/2addr  v0, v4
+    009a..009e  iput-wide  v0, v2, LX/098;->A00:J
+    009e..00a2  const-wide/16  v0, #0xffff (-1)
+    00a2..00a6  iput-wide  v0, v2, LX/098;->A07:J
+    00a6..00ac  invoke-static  {v2}, LX/098;->A00(LX/098;)V
+    00ac..00ae  throw  v3
+    # exception table: 6 try range(s)
+    # catch <all> code_units 0009..0013 -> 0017
+    # catch <all> code_units 0018..0019 -> 0017
+    # catch <all> code_units 001c..002d -> 0045
+    # catch <all> code_units 002d..0035 -> 0042
+    # catch <all> code_units 0043..0044 -> 0042
+    # catch <all> code_units 0044..0045 -> 0045
+.end method

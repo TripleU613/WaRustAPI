@@ -1,0 +1,11 @@
+
+# class: LX/Fey;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VI)  # .registers 2
+    # full signature: LX/Fey;-><init>(I)V
+    0000..0004  iput  v1, v0, LX/Fey;->$t:I
+    0004..000a  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method

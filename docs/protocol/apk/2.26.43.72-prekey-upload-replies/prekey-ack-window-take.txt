@@ -1,0 +1,59 @@
+
+# class: LX/07Z;
+# extends: LX/07Y;
+
+.method public A1L(LLI)  # .registers 6
+    # full signature: LX/07Z;->A1L(Ljava/lang/Iterable;I)Ljava/util/List;
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v4, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  if-ltz  v5, +0x48
+    000c..0010  if-nez  v5, +0x5
+    0010..0014  sget-object  v0, LX/01k;->A00:LX/01k;
+    0014..0016  return-object  v0
+    0016..001a  instance-of  v0, v4, Ljava/util/Collection;
+    001a..001c  const/4  v1, #0x1
+    001c..0020  if-eqz  v0, +0x1e
+    0020..0022  move-object  v0, v4
+    0022..0026  check-cast  v0, Ljava/util/Collection;
+    0026..002c  invoke-interface  {v0}, Ljava/util/Collection;->size()I
+    002c..002e  move-result  v0
+    002e..0032  if-lt  v5, v0, +0x7
+    0032..0038  invoke-static  {v4}, LX/07Z;->A1H(Ljava/lang/Iterable;)Ljava/util/List;
+    0038..003a  move-result-object  v0
+    003a..003c  return-object  v0
+    003c..0040  if-ne  v5, v1, +0xe
+    0040..0046  invoke-static  {v4}, LX/07Z;->A0m(Ljava/lang/Iterable;)Ljava/lang/Object;
+    0046..0048  move-result-object  v0
+    0048..004e  invoke-static  {v0}, Ljava/util/Collections;->singletonList(Ljava/lang/Object;)Ljava/util/List;
+    004e..0050  move-result-object  v0
+    0050..0056  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    0056..0058  return-object  v0
+    0058..005c  new-instance  v3, Ljava/util/ArrayList;
+    005c..0062  invoke-direct  {v3, v5}, Ljava/util/ArrayList;-><init>(I)V
+    0062..0068  invoke-interface  {v4}, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+    0068..006a  move-result-object  v2
+    006a..006c  const/4  v1, #0x0
+    006c..0072  invoke-interface  {v2}, Ljava/util/Iterator;->hasNext()Z
+    0072..0074  move-result  v0
+    0074..0078  if-eqz  v0, +0xd
+    0078..007e  invoke-interface  {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    007e..0080  move-result-object  v0
+    0080..0086  invoke-virtual  {v3, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0086..008a  add-int/lit8  v1, v1, #0x1
+    008a..008e  if-ne  v1, v5, -0xf
+    008e..0094  invoke-static  {v3}, LX/01i;->A09(Ljava/util/List;)Ljava/util/List;
+    0094..0096  move-result-object  v0
+    0096..0098  return-object  v0
+    0098..009c  const-string  v0, "Requested element count "
+    009c..00a0  new-instance  v1, Ljava/lang/StringBuilder;
+    00a0..00a6  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00a6..00ac  invoke-virtual  {v1, v5}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    00ac..00b0  const-string  v0, " is less than zero."
+    00b0..00b6  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00b6..00bc  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00bc..00be  move-result-object  v1
+    00be..00c2  new-instance  v0, Ljava/lang/IllegalArgumentException;
+    00c2..00c8  invoke-direct  {v0, v1}, Ljava/lang/IllegalArgumentException;-><init>(Ljava/lang/String;)V
+    00c8..00ca  throw  v0
+    # exception table: 0 try range(s)
+.end method

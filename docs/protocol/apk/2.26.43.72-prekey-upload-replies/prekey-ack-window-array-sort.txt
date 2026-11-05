@@ -1,0 +1,15 @@
+
+# class: LX/02C;
+# extends: LX/02B;
+
+.method public A07(VLL)  # .registers 4
+    # full signature: LX/02C;->A07([Ljava/lang/Object;Ljava/util/Comparator;)V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000a  const/4  v1, #0x1
+    000a..000c  array-length  v0, v2
+    000c..0010  if-le  v0, v1, +0x5
+    0010..0016  invoke-static  {v2, v3}, Ljava/util/Arrays;->sort([Ljava/lang/Object;Ljava/util/Comparator;)V
+    0016..0018  return-void
+    # exception table: 0 try range(s)
+.end method

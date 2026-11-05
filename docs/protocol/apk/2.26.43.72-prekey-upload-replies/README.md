@@ -2055,3 +2055,108 @@ Exports:
 - [prekey-ack-txn-register.txt](prekey-ack-txn-register.txt): `7dcc7322dcc8cc1413b30723dc2936593c02e80d3e04a42e6e1a9c176a2d4a2b`
 - [prekey-ack-txn-rollback-registration.txt](prekey-ack-txn-rollback-registration.txt): `e3609a3ab7864c3c02582891cf17de28b48ccccd959f66f3bd6318920e5b5729`
 - [prekey-ack-txn-success-marker.txt](prekey-ack-txn-success-marker.txt): `00ac7bb171f8f0137d3fba8bf80e98894c90031fda43f95190d6f27a00eb49f6`
+
+## ACK projection serialization, merge order and refill (2026-11-04)
+
+**Confirmed static**, pinned43.72 digest reverified. Checked DEX CLI exports,
+not runtime execution or REA Evidence envelopes. This continuation closes the
+TB8 projection and comparator/helper boundaries left open in the preceding trace.
+
+### Scheduled projection is not a second load barrier
+
+TB5 selector11 constructs TB8(list,manager,8) when projection must be queued.
+The Object/Object/I constructor binds A00=manager,A01=list and$t=8. TB8.run
+switch8->10a6 simply calls1iV.A07(manager,list); it does not independently await
+the initial load latch. A07's previously retained incomplete-load branch logs
+and returns, without deleting persisted rows. Do not infer a second load or an
+unconditional memory promotion merely from scheduling TB8.
+
+1iV constructor creates A0B=new098(provider08Z,false), two queue lists, the
+initial-load latch1, and the start-loading atomicfalse. This instance owns the
+executor used by the load, periodic flush and scheduled projection paths already
+retained. It initializes replay-deferred A02=-1. A static field-write inventory
+for generation A03:I finds only the explicit DEX write in1iV.A0A; Java's default
+zero initialization and reflective/native possibilities are not additional DEX
+writes or disproved by that inventory.
+
+### Serial queue execution
+
+098.execute synchronizes, wraps the Runnable in1VR(selector0), offers it to an
+ArrayDeque and starts A00 only when no active Runnable exists. A00 polls one
+head, records it as active, then dispatches through08Z.CbD for this false-mode
+instance (CbN is the alternative mode). Constructor bindings for1VR are retained.
+
+1VR selector0 invokes the wrapped Runnable under a separate monitor, updates
+its counters/thread marker, and calls098.A00 before returning. The selected
+exception path also attempts A00 before rethrowing. Selector1 is the delayed
+adapter: it removes its delayed-map entry then calls098.execute, rejoining the
+same serial queue rather than directly running the payload in parallel.
+
+**Bounded conclusion:** jobs submitted to the same instance do not overtake a
+previously queued load task. This is not a global database lock, proof that all
+projection submissions follow load startup, or serialization against every
+synchronous A0A/A0K call on other threads. Underlying08Z dispatch rejection,
+process death and unscheduled callback loss remain outside the progress claim.
+The earlier epoch-worker entry check still is not an atomic SQL-generation CAS.
+
+### Exact row-order merge helpers
+
+1iV.A07 constructs Fey(14); its constructor binds$t directly. Fey.compare
+switch14->01dc reads1vZ.A02 (SQLite row ID), substitutes Long.MAX_VALUE for a
+missing ID, then2LC.A02 ->1lN.A00 ->Comparable.compareTo performs natural Long
+comparison. Loggable ID1vZ.A00, stanza ID and account generation are not used
+as comparator tie-breaks. A null ID compares equal to a real Long.MAX_VALUE ID;
+this fallback is not evidence such a null marker was persisted or confirmed.
+
+For the out-of-order positive-window branch,07Z.A15 creates an ArrayList with
+loaded collection entries first and incoming List entries appended.07Z.A1O's
+Collection path copies to an array and02C.A07 invokes Arrays.sort(comparator).
+07Z.A1L returns the first requested number (zero gives empty; negative throws).
+These are concatenate/sort/take operations, with no distinct-by-row-ID step.
+For example the static sequence for loaded[40,80],incoming[20,60],window3 gives
+[20,40,60]; duplicate[40,40] is not eliminated by these helpers. These are derived
+synthetic examples, not observed APK runs or complete merge-state guarantees.
+Memory projection must not be mistaken for SQL insertion or ACK retirement.
+
+### Refill preserves read failure versus exhaustion
+
+1iV.A04 returns for window<=0. Under its monitor it computes requested=
+min(persistedTotal,window)-loadedSize, and only queries for a positive deficit.
+The strict-after cursor is the loaded tail's row ID when present, else0. It
+calls1iY.A03(requested,cursor), whose SQL and corrupt-page handling were retained
+in earlier exports.
+
+A null read result logs refillWindow read failed/retrying next cycle and returns
+without applying the successful-result updates. A nonnull list appends to the
+loaded window and sets A06 according to whether this fetched page is nonempty.
+If fewer entries arrived than requested, total count decreases by that deficit
+but never below loaded size. This is count reconciliation following a completed
+read, not cumulative SQL deletion or confirmation. Full DB/cursor snapshot
+isolation and exact concurrent mutation behavior remain separate questions.
+
+**Port consequence:** keep load scheduling, persisted ACK rows, ephemeral window
+projection, strict-after refill, sent marker and confirmed retirement separate.
+Do not add silent deduplication, erase durable rows on a skipped projection, or
+convert a backend error into an empty successful read as claimed native parity.
+Rust ACK recovery is still unported; this evidence adds no sends, replay,
+ordering/timing, reset or deletion behavior. No live account operations.
+
+Exports:
+
+- [prekey-ack-generation-writes.txt](prekey-ack-generation-writes.txt): `bcad7319dd43783d6215eb8ff610638a46e47f9e35b7112536cba2aed769a8b6`
+- [prekey-ack-projection-constructor.txt](prekey-ack-projection-constructor.txt): `b9489d2e40a44fa5fc8115a331850cb23294253404657cfb259894865564e600`
+- [prekey-ack-projection-worker.txt](prekey-ack-projection-worker.txt): `d3c417eb0c436d31d290d139511f912988de4d8b03e2d484e99c1382728f91fe`
+- [prekey-ack-queue-constructor.txt](prekey-ack-queue-constructor.txt): `0884612f1b230f3149b5d5b69be1417bc0f075dbf00625122a739263ba65ffc5`
+- [prekey-ack-serial-executor.txt](prekey-ack-serial-executor.txt): `436856f64de0703eba8d031176caf894184dfdfc9330e7b62aba9e2d077e6202`
+- [prekey-ack-serial-worker-constructor.txt](prekey-ack-serial-worker-constructor.txt): `b466b7b103f6bbdbb9fb61050cf813742a8e2c4d1507de894cd7d209b340174a`
+- [prekey-ack-serial-worker.txt](prekey-ack-serial-worker.txt): `05bc6e8b4ca8bc05d365884b7a49de0293bfed403d3d8888420fb4dd2d8ddf4b`
+- [prekey-ack-window-array-sort.txt](prekey-ack-window-array-sort.txt): `911354be07389bb8800d45820961e6339b35c159888e96d0da1c52dcd59cba7a`
+- [prekey-ack-window-combine.txt](prekey-ack-window-combine.txt): `a6523510de1e98faf3f93476bfe3beade42a03f542b8637fbdaf8c286b6dfd91`
+- [prekey-ack-window-comparator-constructor.txt](prekey-ack-window-comparator-constructor.txt): `9d5e79311d3d10b412dec71bfe699d5cb9db59013f370c91abbc03a6221bc45f`
+- [prekey-ack-window-comparator.txt](prekey-ack-window-comparator.txt): `d4c076c957846867550ad8d2e1351443d6a5edfcc3c12514d7a06e144901f172`
+- [prekey-ack-window-compare-helper.txt](prekey-ack-window-compare-helper.txt): `841bcbdea488030bbc3c047c0cb93daef6eb45708b09857d8331979857a5a8a1`
+- [prekey-ack-window-natural-order.txt](prekey-ack-window-natural-order.txt): `66a5fb25a5cebf2f14797186f095282e4cca0df55062027b44de8ea9fdb6389a`
+- [prekey-ack-window-null-row.txt](prekey-ack-window-null-row.txt): `af8e5b12c36c4e0ce5a37914dd10c515bd67397dc79d293764b04e39bccf4e59`
+- [prekey-ack-window-refill.txt](prekey-ack-window-refill.txt): `1ecfb73888fa2ad6be6f83ae520e0af41d5f84d36244f8c381c37994f4c86030`
+- [prekey-ack-window-sort.txt](prekey-ack-window-sort.txt): `40af51f80d36d33e0fcdf6866a0e63531d0791e61293f602a29f872069f5cd50`
+- [prekey-ack-window-take.txt](prekey-ack-window-take.txt): `af7242b8182dd1a899fc56b226048d1627ba68b0216b484eb127bbb2e3519b1b`

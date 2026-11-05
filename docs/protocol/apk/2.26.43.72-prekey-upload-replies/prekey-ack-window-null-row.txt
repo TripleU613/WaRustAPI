@@ -1,0 +1,13 @@
+
+# class: LX/DBd;
+# extends: Ljava/lang/Object;
+
+.method public A02(JLJ)  # .registers 3
+    # full signature: LX/DBd;->A02(Ljava/lang/Number;J)J
+    0000..0004  if-eqz  v0, +0x7
+    0004..000a  invoke-virtual  {v0}, Ljava/lang/Number;->longValue()J
+    000a..000c  move-result-wide  v0
+    000c..000e  return-wide  v0
+    000e..0010  return-wide  v1
+    # exception table: 0 try range(s)
+.end method

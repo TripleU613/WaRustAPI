@@ -15561,5 +15561,17 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#ack-transaction-completion-and-rollback-bridge-2026-11-04",
     "description": "Native ACK transaction callback uses a success-only post-outer-completion channel; rollback and captured endTransaction errors choose a separate release path. Bulk dispatcher/worker to transaction insertion bridge and memory projection entry traced. No guarantee for ambiguous disk outcomes or complete count-specific ACK-list provenance. Rust network, retry, recovery, timing and deletion behavior unchanged."
+  },
+  "x-preack-projection-order-evidence": {
+    "x-cli": {
+      "command": "xtask apk-smali APK --class CLASS --method METHOD --signatures --exceptions",
+      "description": "Offline developer evidence only; no new runtime command or HTTP route"
+    },
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#ack-projection-serialization-merge-order-and-refill-2026-11-04",
+    "description": "Native scheduled ACK projection uses a same-instance serial executor and delegates its load check to A07. Window comparator orders SQLite row IDs with Long.MAX_VALUE fallback; merge is concatenate/sort/take without deduplication. Refill distinguishes backend failure from successful exhaustion. Cross-thread epoch/SQL serialization and full recovery ownership remain open. Rust sends, replay, timing and deletion behavior are unchanged."
   }
 }

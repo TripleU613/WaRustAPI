@@ -1,0 +1,35 @@
+
+# class: LX/07Z;
+# extends: LX/07Y;
+
+.method public A1O(LLL)  # .registers 6
+    # full signature: LX/07Z;->A1O(Ljava/lang/Iterable;Ljava/util/Comparator;)Ljava/util/List;
+    0000..0002  const/4  v3, #0x0
+    0002..0008  invoke-static  {v4, v3}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000a  const/4  v2, #0x1
+    000a..0010  invoke-static  {v5, v2}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0010..0014  instance-of  v0, v4, Ljava/util/Collection;
+    0014..0018  if-eqz  v0, +0x24
+    0018..001a  move-object  v1, v4
+    001a..001e  check-cast  v1, Ljava/util/Collection;
+    001e..0024  invoke-interface  {v1}, Ljava/util/Collection;->size()I
+    0024..0026  move-result  v0
+    0026..002a  if-gt  v0, v2, +0x7
+    002a..0030  invoke-static  {v4}, LX/07Z;->A1H(Ljava/lang/Iterable;)Ljava/util/List;
+    0030..0032  move-result-object  v0
+    0032..0034  return-object  v0
+    0034..0038  new-array  v0, v3, [Ljava/lang/Object;
+    0038..003e  invoke-interface  {v1, v0}, Ljava/util/Collection;->toArray([Ljava/lang/Object;)[Ljava/lang/Object;
+    003e..0040  move-result-object  v0
+    0040..0046  invoke-static  {v0, v5}, LX/02C;->A07([Ljava/lang/Object;Ljava/util/Comparator;)V
+    0046..004c  invoke-static  {v0, v3}, LX/00l;->A09(Ljava/lang/Object;I)V
+    004c..0052  invoke-static  {v0}, Ljava/util/Arrays;->asList([Ljava/lang/Object;)Ljava/util/List;
+    0052..0054  move-result-object  v0
+    0054..005a  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    005a..005c  return-object  v0
+    005c..0062  invoke-static  {v4}, LX/07Z;->A1I(Ljava/lang/Iterable;)Ljava/util/List;
+    0062..0064  move-result-object  v0
+    0064..006a  invoke-static  {v0, v5}, LX/07V;->A0J(Ljava/util/List;Ljava/util/Comparator;)V
+    006a..006c  return-object  v0
+    # exception table: 0 try range(s)
+.end method

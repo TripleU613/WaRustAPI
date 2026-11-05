@@ -1,0 +1,96 @@
+
+# class: LX/1iV;
+# extends: Ljava/lang/Object;
+
+.method public A04(VL)  # .registers 8
+    # full signature: LX/1iV;->A04(LX/1iV;)V
+    0000..0004  const-wide/16  v2, #0x0
+    0004..0006  const/4  v5, #0x0
+    0006..000c  invoke-static  {v7}, LX/1iV;->A01(LX/1iV;)I
+    000c..000e  move-result  v1
+    000e..0012  if-lez  v1, +0x9c
+    0012..0014  monitor-enter
+    0014..0018  iget  v0, v7, LX/1iV;->A01:I
+    0018..001e  invoke-static  {v0, v1}, Ljava/lang/Math;->min(II)I
+    001e..0020  move-result  v1
+    0020..0024  iget-object  v6, v7, LX/1iV;->A0J:LX/0Ll;
+    0024..002a  invoke-virtual  {v6}, Ljava/util/AbstractCollection;->size()I
+    002a..002c  move-result  v0
+    002c..002e  sub-int/2addr  v1, v0
+    002e..0032  if-gtz  v1, +0x3
+    0032..0034  goto  +0x14
+    0034..003a  invoke-virtual  {v6}, LX/0Ll;->A0P()Ljava/lang/Object;
+    003a..003c  move-result-object  v0
+    003c..0040  check-cast  v0, LX/1vZ;
+    0040..0044  if-eqz  v0, +0xa
+    0044..0048  iget-object  v0, v0, LX/1vZ;->A02:Ljava/lang/Long;
+    0048..004c  if-eqz  v0, +0x6
+    004c..0052  invoke-virtual  {v0}, Ljava/lang/Number;->longValue()J
+    0052..0054  move-result-wide  v2
+    0054..0056  move  v5, v1
+    0056..0058  const/4  v0, #0x1
+    0058..005a  goto  +0x2
+    005a..005c  const/4  v0, #0x0
+    005c..005e  monitor-exit
+    005e..0062  if-eqz  v0, +0x74
+    0062..0066  iget-object  v0, v7, LX/1iV;->A09:LX/05a;
+    0066..006a  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    006a..0070  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0070..0072  move-result-object  v0
+    0072..0076  check-cast  v0, LX/1iY;
+    0076..007c  invoke-virtual  {v0, v5, v2, v3}, LX/1iY;->A03(IJ)Ljava/util/List;
+    007c..007e  move-result-object  v4
+    007e..0082  if-nez  v4, +0x19
+    0082..0086  const-string  v0, "PreacksQueue/refillWindow read failed after rowId="
+    0086..008a  new-instance  v1, Ljava/lang/StringBuilder;
+    008a..0090  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0090..0096  invoke-virtual  {v1, v2, v3}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    0096..009a  const-string  v0, ", retrying next cycle"
+    009a..00a0  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00a0..00a6  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00a6..00a8  move-result-object  v0
+    00a8..00ae  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    00ae..00b0  return-void
+    00b0..00b2  monitor-enter
+    00b2..00b8  invoke-interface  {v4}, Ljava/util/List;->isEmpty()Z
+    00b8..00ba  move-result  v0
+    00ba..00be  if-nez  v0, +0x5
+    00be..00c0  const/4  v0, #0x1
+    00c0..00c4  iput-boolean  v0, v7, LX/1iV;->A06:Z
+    00c4..00ca  invoke-virtual  {v6, v4}, Ljava/util/AbstractCollection;->addAll(Ljava/util/Collection;)Z
+    00ca..00d0  invoke-interface  {v4}, Ljava/util/List;->size()I
+    00d0..00d2  move-result  v0
+    00d2..00d6  sub-int  v0, v5, v0
+    00d6..00da  if-lez  v0, +0xe
+    00da..00de  iget  v1, v7, LX/1iV;->A01:I
+    00de..00e0  sub-int/2addr  v1, v0
+    00e0..00e6  invoke-virtual  {v6}, Ljava/util/AbstractCollection;->size()I
+    00e6..00e8  move-result  v0
+    00e8..00ec  if-lt  v1, v0, +0x3
+    00ec..00ee  move  v0, v1
+    00ee..00f2  iput  v0, v7, LX/1iV;->A01:I
+    00f2..00f4  monitor-exit
+    00f4..00fa  invoke-interface  {v4}, Ljava/util/List;->size()I
+    00fa..00fc  move-result  v4
+    00fc..0100  const-string  v0, "PreacksQueue/refillWindow loaded "
+    0100..0104  new-instance  v1, Ljava/lang/StringBuilder;
+    0104..010a  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    010a..0110  invoke-virtual  {v1, v4}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0110..0114  const-string  v0, "/"
+    0114..011a  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    011a..0120  invoke-virtual  {v1, v5}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0120..0124  const-string  v0, " pre-acks after rowId="
+    0124..012a  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    012a..0130  invoke-virtual  {v1, v2, v3}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    0130..0136  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0136..0138  move-result-object  v0
+    0138..013e  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    013e..0140  return-void
+    0140..0142  move-exception  v0
+    0142..0144  monitor-exit
+    0144..0146  throw  v0
+    0146..0148  return-void
+    # exception table: 2 try range(s)
+    # catch <all> code_units 000a..002e -> 00a0
+    # catch <all> code_units 0059..0079 -> 00a0
+.end method

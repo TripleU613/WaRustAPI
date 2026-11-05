@@ -1,0 +1,61 @@
+
+# class: LX/1iV;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 4
+    # full signature: LX/1iV;-><init>()V
+    0000..0006  invoke-direct  {v3}, Ljava/lang/Object;-><init>()V
+    0006..0008  const/4  v0, #0x5
+    0008..000e  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    000e..0010  move-result-object  v0
+    0010..0014  iput-object  v0, v3, LX/1iV;->A0A:LX/05a;
+    0014..0018  const/16  v0, #0x99
+    0018..001e  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    001e..0020  move-result-object  v0
+    0020..0024  iput-object  v0, v3, LX/1iV;->A09:LX/05a;
+    0024..0028  const/16  v0, #0x42
+    0028..002e  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    002e..0030  move-result-object  v0
+    0030..0034  iput-object  v0, v3, LX/1iV;->A07:LX/05a;
+    0034..0038  const/16  v0, #0x8b7
+    0038..003e  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    003e..0040  move-result-object  v0
+    0040..0044  iput-object  v0, v3, LX/1iV;->A08:LX/05a;
+    0044..0048  new-instance  v0, LX/0Ll;
+    0048..004e  invoke-direct  {v0}, LX/0Ll;-><init>()V
+    004e..0052  iput-object  v0, v3, LX/1iV;->A0J:LX/0Ll;
+    0052..0056  new-instance  v0, LX/0Ll;
+    0056..005c  invoke-direct  {v0}, LX/0Ll;-><init>()V
+    005c..0060  iput-object  v0, v3, LX/1iV;->A0I:LX/0Ll;
+    0060..0062  const/4  v0, #0xff (-1)
+    0062..0066  iput  v0, v3, LX/1iV;->A02:I
+    0066..0068  const/4  v2, #0x0
+    0068..006c  new-instance  v0, Ljava/util/concurrent/atomic/AtomicBoolean;
+    006c..0072  invoke-direct  {v0, v2}, Ljava/util/concurrent/atomic/AtomicBoolean;-><init>(Z)V
+    0072..0076  iput-object  v0, v3, LX/1iV;->A0F:Ljava/util/concurrent/atomic/AtomicBoolean;
+    0076..007a  new-instance  v0, Ljava/util/concurrent/atomic/AtomicInteger;
+    007a..0080  invoke-direct  {v0, v2}, Ljava/util/concurrent/atomic/AtomicInteger;-><init>(I)V
+    0080..0084  iput-object  v0, v3, LX/1iV;->A0H:Ljava/util/concurrent/atomic/AtomicInteger;
+    0084..0088  new-instance  v0, Ljava/util/concurrent/atomic/AtomicBoolean;
+    0088..008e  invoke-direct  {v0, v2}, Ljava/util/concurrent/atomic/AtomicBoolean;-><init>(Z)V
+    008e..0092  iput-object  v0, v3, LX/1iV;->A0D:Ljava/util/concurrent/atomic/AtomicBoolean;
+    0092..0094  const/4  v1, #0x1
+    0094..0098  new-instance  v0, Ljava/util/concurrent/CountDownLatch;
+    0098..009e  invoke-direct  {v0, v1}, Ljava/util/concurrent/CountDownLatch;-><init>(I)V
+    009e..00a2  iput-object  v0, v3, LX/1iV;->A0C:Ljava/util/concurrent/CountDownLatch;
+    00a2..00a6  new-instance  v0, Ljava/util/concurrent/atomic/AtomicBoolean;
+    00a6..00ac  invoke-direct  {v0, v2}, Ljava/util/concurrent/atomic/AtomicBoolean;-><init>(Z)V
+    00ac..00b0  iput-object  v0, v3, LX/1iV;->A0E:Ljava/util/concurrent/atomic/AtomicBoolean;
+    00b0..00b4  new-instance  v0, Ljava/util/concurrent/atomic/AtomicBoolean;
+    00b4..00ba  invoke-direct  {v0, v2}, Ljava/util/concurrent/atomic/AtomicBoolean;-><init>(Z)V
+    00ba..00be  iput-object  v0, v3, LX/1iV;->A0G:Ljava/util/concurrent/atomic/AtomicBoolean;
+    00be..00c2  const/16  v0, #0x6f
+    00c2..00c8  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    00c8..00ca  move-result-object  v1
+    00ca..00ce  check-cast  v1, LX/08Z;
+    00ce..00d2  new-instance  v0, LX/098;
+    00d2..00d8  invoke-direct  {v0, v1, v2}, LX/098;-><init>(LX/08Z;Z)V
+    00d8..00dc  iput-object  v0, v3, LX/1iV;->A0B:LX/098;
+    00dc..00de  return-void
+    # exception table: 0 try range(s)
+.end method

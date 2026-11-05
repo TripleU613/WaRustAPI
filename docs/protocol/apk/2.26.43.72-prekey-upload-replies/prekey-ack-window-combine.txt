@@ -1,0 +1,29 @@
+
+# class: LX/07Z;
+# extends: LX/07Y;
+
+.method public A15(LLL)  # .registers 4
+    # full signature: LX/07Z;->A15(Ljava/lang/Iterable;Ljava/util/Collection;)Ljava/util/ArrayList;
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000a  const/4  v0, #0x1
+    000a..0010  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0010..0014  instance-of  v0, v2, Ljava/util/Collection;
+    0014..0018  if-eqz  v0, +0x19
+    0018..001e  invoke-interface  {v3}, Ljava/util/Collection;->size()I
+    001e..0020  move-result  v1
+    0020..0024  check-cast  v2, Ljava/util/Collection;
+    0024..002a  invoke-interface  {v2}, Ljava/util/Collection;->size()I
+    002a..002c  move-result  v0
+    002c..002e  add-int/2addr  v1, v0
+    002e..0032  new-instance  v0, Ljava/util/ArrayList;
+    0032..0038  invoke-direct  {v0, v1}, Ljava/util/ArrayList;-><init>(I)V
+    0038..003e  invoke-virtual  {v0, v3}, Ljava/util/AbstractCollection;->addAll(Ljava/util/Collection;)Z
+    003e..0044  invoke-virtual  {v0, v2}, Ljava/util/AbstractCollection;->addAll(Ljava/util/Collection;)Z
+    0044..0046  return-object  v0
+    0046..004a  new-instance  v0, Ljava/util/ArrayList;
+    004a..0050  invoke-direct  {v0, v3}, Ljava/util/ArrayList;-><init>(Ljava/util/Collection;)V
+    0050..0056  invoke-static  {v2, v0}, LX/07W;->A0M(Ljava/lang/Iterable;Ljava/util/Collection;)V
+    0056..0058  return-object  v0
+    # exception table: 0 try range(s)
+.end method

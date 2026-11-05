@@ -1,0 +1,45 @@
+
+# class: LX/TB8;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLI)  # .registers 4
+    # full signature: LX/TB8;-><init>(LX/SoP;Ljava/io/File;I)V
+    0000..0004  iput  v3, v0, LX/TB8;->$t:I
+    0004..0008  rsub-int/lit8  v3, v3, #0x20
+    0008..000c  if-eqz  v3, +0xa
+    000c..0012  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0012..0016  iput-object  v2, v0, LX/TB8;->A00:Ljava/lang/Object;
+    0016..001a  iput-object  v1, v0, LX/TB8;->A01:Ljava/lang/Object;
+    001a..001c  return-void
+    001c..0022  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0022..0026  iput-object  v1, v0, LX/TB8;->A00:Ljava/lang/Object;
+    0026..002a  iput-object  v2, v0, LX/TB8;->A01:Ljava/lang/Object;
+    002a..002c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VLLI)  # .registers 4
+    # full signature: LX/TB8;-><init>(Landroid/view/View;Lkotlin/jvm/functions/Function0;I)V
+    0000..0004  iput  v3, v0, LX/TB8;->$t:I
+    0004..0008  rsub-int/lit8  v3, v3, #0xa
+    0008..000c  if-eqz  v3, +0xa
+    000c..0012  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0012..0016  iput-object  v1, v0, LX/TB8;->A00:Ljava/lang/Object;
+    0016..001a  iput-object  v2, v0, LX/TB8;->A01:Ljava/lang/Object;
+    001a..001c  return-void
+    001c..0022  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0022..0026  iput-object  v2, v0, LX/TB8;->A00:Ljava/lang/Object;
+    0026..002a  iput-object  v1, v0, LX/TB8;->A01:Ljava/lang/Object;
+    002a..002c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VLLI)  # .registers 4
+    # full signature: LX/TB8;-><init>(Ljava/lang/Object;Ljava/lang/Object;I)V
+    0000..0004  iput  v3, v0, LX/TB8;->$t:I
+    0004..000a  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    000a..000e  iput-object  v2, v0, LX/TB8;->A00:Ljava/lang/Object;
+    000e..0012  iput-object  v1, v0, LX/TB8;->A01:Ljava/lang/Object;
+    0012..0014  return-void
+    # exception table: 0 try range(s)
+.end method

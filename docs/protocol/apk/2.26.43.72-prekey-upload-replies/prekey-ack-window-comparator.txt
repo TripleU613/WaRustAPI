@@ -1,0 +1,268 @@
+
+# class: LX/Fey;
+# extends: Ljava/lang/Object;
+
+.method public compare(ILL)  # .registers 8
+    # full signature: LX/Fey;->compare(Ljava/lang/Object;Ljava/lang/Object;)I
+    0000..0004  iget  v0, v5, LX/Fey;->$t:I
+    0004..000a  packed-switch  v0, payload@0x3c4, cases=[0:@0x384, 1:@0x35a, 2:@0x35a, 3:@0x32c, 4:@0x30a, 5:@0x2c2, 6:@0x2a6, 7:@0x5e, 8:@0x278, 9:@0x260, 10:@0x260, 11:@0x23e, 12:@0x228, 13:@0x34, 14:@0x1dc, 15:@0x1be, 16:@0xa, 17:@0x19c, 18:@0x172, 19:@0x158, 20:@0x12e, 21:@0x114, 22:@0xda, 23:@0xa, 24:@0xb8], default@0xa
+    000a..000e  check-cast  v7, LX/0i4;
+    000e..0014  invoke-virtual  {v7}, LX/0i4;->A0F()J
+    0014..0016  move-result-wide  v0
+    0016..001c  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    001c..001e  move-result-object  v2
+    001e..0022  check-cast  v6, LX/0i4;
+    0022..0028  invoke-virtual  {v6}, LX/0i4;->A0F()J
+    0028..002a  move-result-wide  v0
+    002a..0030  invoke-static  {v2, v0, v1}, LX/2LC;->A02(Ljava/lang/Comparable;J)I
+    0030..0032  move-result  v4
+    0032..0034  return  v4
+    0034..0038  check-cast  v6, LX/EU1;
+    0038..003c  check-cast  v7, LX/EU1;
+    003c..0040  iget-wide  v2, v7, LX/EU1;->A01:J
+    0040..0044  iget-wide  v0, v6, LX/EU1;->A01:J
+    0044..0048  cmp-long  v4, v2, v0
+    0048..004c  if-nez  v4, -0xb
+    004c..0050  iget-object  v1, v6, LX/EU1;->A02:Ljava/lang/String;
+    0050..0054  iget-object  v0, v7, LX/EU1;->A02:Ljava/lang/String;
+    0054..005a  invoke-virtual  {v1, v0}, Ljava/lang/String;->compareTo(Ljava/lang/String;)I
+    005a..005c  move-result  v4
+    005c..005e  return  v4
+    005e..0062  check-cast  v6, LX/0Tp;
+    0062..0066  check-cast  v7, LX/0Tp;
+    0066..006a  const-string  v3, "jid"
+    006a..006e  const-class  v1, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    006e..0074  invoke-virtual  {v6, v1, v3}, LX/0Tp;->A0B(Ljava/lang/Class;Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+    0074..0076  move-result-object  v0
+    0076..007a  check-cast  v0, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    007a..0080  invoke-virtual  {v0}, Lcom/whatsapp/infra/core/jid/Jid;->getDevice()I
+    0080..0082  move-result  v0
+    0082..0084  const/4  v2, #0x0
+    0084..0088  if-nez  v0, +0x3
+    0088..008a  const/4  v2, #0x1
+    008a..0090  invoke-virtual  {v7, v1, v3}, LX/0Tp;->A0B(Ljava/lang/Class;Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+    0090..0092  move-result-object  v0
+    0092..0096  check-cast  v0, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0096..009c  invoke-virtual  {v0}, Lcom/whatsapp/infra/core/jid/Jid;->getDevice()I
+    009c..009e  move-result  v1
+    009e..00a0  const/4  v0, #0x0
+    00a0..00a4  if-nez  v1, +0x3
+    00a4..00a6  const/4  v0, #0x1
+    00a6..00aa  if-ne  v2, v0, +0x4
+    00aa..00ac  const/4  v4, #0x0
+    00ac..00ae  return  v4
+    00ae..00b0  const/4  v4, #0x1
+    00b0..00b4  if-eqz  v2, -0x3f
+    00b4..00b6  const/4  v4, #0xff (-1)
+    00b6..00b8  return  v4
+    00b8..00bc  check-cast  v6, LX/Dhs;
+    00bc..00c0  iget-wide  v0, v6, LX/Dhs;->timestampSeconds_:J
+    00c0..00c6  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    00c6..00c8  move-result-object  v2
+    00c8..00cc  check-cast  v7, LX/Dhs;
+    00cc..00d0  iget-wide  v0, v7, LX/Dhs;->timestampSeconds_:J
+    00d0..00d6  invoke-static  {v2, v0, v1}, LX/2LC;->A02(Ljava/lang/Comparable;J)I
+    00d6..00d8  move-result  v4
+    00d8..00da  return  v4
+    00da..00de  check-cast  v6, LX/0i4;
+    00de..00e2  iget-object  v0, v6, LX/0i4;->A13:LX/0DY;
+    00e2..00e8  invoke-static  {v0}, LX/0Dn;->A0l(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    00e8..00ea  move-result  v0
+    00ea..00f0  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    00f0..00f2  move-result-object  v1
+    00f2..00f6  check-cast  v7, LX/0i4;
+    00f6..00fa  iget-object  v0, v7, LX/0i4;->A13:LX/0DY;
+    00fa..0100  invoke-static  {v0}, LX/0Dn;->A0l(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0100..0102  move-result  v0
+    0102..0108  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    0108..010a  move-result-object  v0
+    010a..0110  invoke-static  {v1, v0}, LX/1lN;->A00(Ljava/lang/Comparable;Ljava/lang/Comparable;)I
+    0110..0112  move-result  v4
+    0112..0114  return  v4
+    0114..0118  check-cast  v6, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0118..011c  iget-object  v1, v6, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+    011c..0120  check-cast  v7, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0120..0124  iget-object  v0, v7, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+    0124..012a  invoke-static  {v1, v0}, LX/1lN;->A00(Ljava/lang/Comparable;Ljava/lang/Comparable;)I
+    012a..012c  move-result  v4
+    012c..012e  return  v4
+    012e..0132  check-cast  v7, LX/EnI;
+    0132..0136  iget-boolean  v0, v7, LX/EnI;->A06:Z
+    0136..013c  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    013c..013e  move-result-object  v1
+    013e..0142  check-cast  v6, LX/EnI;
+    0142..0146  iget-boolean  v0, v6, LX/EnI;->A06:Z
+    0146..014c  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    014c..014e  move-result-object  v0
+    014e..0154  invoke-static  {v1, v0}, LX/1lN;->A00(Ljava/lang/Comparable;Ljava/lang/Comparable;)I
+    0154..0156  move-result  v4
+    0156..0158  return  v4
+    0158..015e  invoke-virtual  {v6}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    015e..0160  move-result-object  v1
+    0160..0166  invoke-virtual  {v7}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0166..0168  move-result-object  v0
+    0168..016e  invoke-static  {v1, v0}, LX/1lN;->A00(Ljava/lang/Comparable;Ljava/lang/Comparable;)I
+    016e..0170  move-result  v4
+    0170..0172  return  v4
+    0172..0176  check-cast  v6, LX/ESG;
+    0176..017a  iget  v0, v6, LX/ESG;->A00:I
+    017a..0180  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0180..0182  move-result-object  v1
+    0182..0186  check-cast  v7, LX/ESG;
+    0186..018a  iget  v0, v7, LX/ESG;->A00:I
+    018a..0190  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0190..0192  move-result-object  v0
+    0192..0198  invoke-static  {v1, v0}, LX/1lN;->A00(Ljava/lang/Comparable;Ljava/lang/Comparable;)I
+    0198..019a  move-result  v4
+    019a..019c  return  v4
+    019c..01a0  check-cast  v6, LX/08T;
+    01a0..01a4  iget-object  v1, v6, LX/08T;->first:Ljava/lang/Object;
+    01a4..01a8  check-cast  v1, Ljava/lang/Integer;
+    01a8..01ac  check-cast  v7, LX/08T;
+    01ac..01b0  iget-object  v0, v7, LX/08T;->first:Ljava/lang/Object;
+    01b0..01b4  check-cast  v0, Ljava/lang/Integer;
+    01b4..01ba  invoke-static  {v1, v0}, LX/1lN;->A00(Ljava/lang/Comparable;Ljava/lang/Comparable;)I
+    01ba..01bc  move-result  v4
+    01bc..01be  return  v4
+    01be..01c2  check-cast  v6, LX/18U;
+    01c2..01c8  invoke-static  {v6}, LX/DBc;->A13(LX/18U;)Ljava/lang/Long;
+    01c8..01ca  move-result-object  v2
+    01ca..01ce  check-cast  v7, LX/18U;
+    01ce..01d2  iget-wide  v0, v7, LX/18U;->A0k:J
+    01d2..01d8  invoke-static  {v2, v0, v1}, LX/2LC;->A02(Ljava/lang/Comparable;J)I
+    01d8..01da  move-result  v4
+    01da..01dc  return  v4
+    01dc..01e0  check-cast  v6, LX/1vZ;
+    01e0..01e4  iget-object  v0, v6, LX/1vZ;->A02:Ljava/lang/Long;
+    01e4..01ee  const-wide  v3, #0x7fffffffffffffff (9223372036854775807)
+    01ee..01f2  if-eqz  v0, +0x17
+    01f2..01f8  invoke-virtual  {v0}, Ljava/lang/Number;->longValue()J
+    01f8..01fa  move-result-wide  v0
+    01fa..0200  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0200..0202  move-result-object  v2
+    0202..0206  check-cast  v7, LX/1vZ;
+    0206..020a  iget-object  v0, v7, LX/1vZ;->A02:Ljava/lang/Long;
+    020a..0210  invoke-static  {v0, v3, v4}, LX/DBd;->A02(Ljava/lang/Number;J)J
+    0210..0212  move-result-wide  v0
+    0212..0218  invoke-static  {v2, v0, v1}, LX/2LC;->A02(Ljava/lang/Comparable;J)I
+    0218..021a  move-result  v4
+    021a..021c  return  v4
+    021c..0226  const-wide  v0, #0x7fffffffffffffff (9223372036854775807)
+    0226..0228  goto  -0x16
+    0228..022c  check-cast  v6, LX/EoD;
+    022c..0230  check-cast  v7, LX/EoD;
+    0230..0234  iget-wide  v2, v7, LX/EoD;->A00:J
+    0234..0238  iget-wide  v0, v6, LX/EoD;->A00:J
+    0238..023c  cmp-long  v4, v2, v0
+    023c..023e  return  v4
+    023e..0242  check-cast  v6, Ljava/util/Map$Entry;
+    0242..0248  invoke-static  {v6}, LX/2LB;->A1B(Ljava/util/Map$Entry;)Ljava/lang/String;
+    0248..024a  move-result-object  v1
+    024a..024e  check-cast  v7, Ljava/util/Map$Entry;
+    024e..0254  invoke-static  {v7}, LX/2LB;->A1B(Ljava/util/Map$Entry;)Ljava/lang/String;
+    0254..0256  move-result-object  v0
+    0256..025c  invoke-static  {v1, v0}, LX/1lN;->A00(Ljava/lang/Comparable;Ljava/lang/Comparable;)I
+    025c..025e  move-result  v4
+    025e..0260  return  v4
+    0260..0266  const  v0, #0x7fffffff
+    0266..026c  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    026c..026e  move-result-object  v0
+    026e..0274  invoke-static  {v0, v0}, LX/1lN;->A00(Ljava/lang/Comparable;Ljava/lang/Comparable;)I
+    0274..0276  move-result  v4
+    0276..0278  return  v4
+    0278..027c  check-cast  v6, LX/0i4;
+    027c..0282  invoke-virtual  {v6}, LX/0i4;->A0F()J
+    0282..0284  move-result-wide  v2
+    0284..0286  neg-long  v0, v2
+    0286..028c  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    028c..028e  move-result-object  v4
+    028e..0292  check-cast  v7, LX/0i4;
+    0292..0298  invoke-virtual  {v7}, LX/0i4;->A0F()J
+    0298..029a  move-result-wide  v2
+    029a..029c  neg-long  v0, v2
+    029c..02a2  invoke-static  {v4, v0, v1}, LX/2LC;->A02(Ljava/lang/Comparable;J)I
+    02a2..02a4  move-result  v4
+    02a4..02a6  return  v4
+    02a6..02aa  check-cast  v6, LX/DxN;
+    02aa..02ae  check-cast  v7, LX/DxN;
+    02ae..02b2  iget-object  v0, v6, LX/DxN;->A04:LX/F5A;
+    02b2..02b6  iget  v4, v0, LX/F5A;->A00:I
+    02b6..02ba  iget-object  v0, v7, LX/DxN;->A04:LX/F5A;
+    02ba..02be  iget  v0, v0, LX/F5A;->A00:I
+    02be..02c0  sub-int/2addr  v4, v0
+    02c0..02c2  return  v4
+    02c2..02c6  check-cast  v6, LX/EnQ;
+    02c6..02ca  iget-object  v0, v6, LX/EnQ;->A07:Ljava/lang/String;
+    02ca..02cc  const/4  v2, #0x0
+    02cc..02d0  if-eqz  v0, +0x1d
+    02d0..02d6  invoke-virtual  {v0}, Ljava/lang/String;->length()I
+    02d6..02d8  move-result  v0
+    02d8..02de  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    02de..02e0  move-result-object  v1
+    02e0..02e4  check-cast  v7, LX/EnQ;
+    02e4..02e8  iget-object  v0, v7, LX/EnQ;->A07:Ljava/lang/String;
+    02e8..02ec  if-eqz  v0, +0xa
+    02ec..02f2  invoke-virtual  {v0}, Ljava/lang/String;->length()I
+    02f2..02f4  move-result  v0
+    02f4..02fa  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    02fa..02fc  move-result-object  v2
+    02fc..0302  invoke-static  {v1, v2}, LX/1lN;->A00(Ljava/lang/Comparable;Ljava/lang/Comparable;)I
+    0302..0304  move-result  v4
+    0304..0306  return  v4
+    0306..0308  move-object  v1, v2
+    0308..030a  goto  -0x14
+    030a..030e  check-cast  v6, LX/08T;
+    030e..0312  iget-object  v1, v6, LX/08T;->second:Ljava/lang/Object;
+    0312..0316  check-cast  v1, Ljava/lang/Float;
+    0316..031a  check-cast  v7, LX/08T;
+    031a..031e  iget-object  v0, v7, LX/08T;->second:Ljava/lang/Object;
+    031e..0322  check-cast  v0, Ljava/lang/Float;
+    0322..0328  invoke-static  {v1, v0}, LX/1lN;->A00(Ljava/lang/Comparable;Ljava/lang/Comparable;)I
+    0328..032a  move-result  v4
+    032a..032c  return  v4
+    032c..0330  check-cast  v6, LX/Ehn;
+    0330..0334  iget  v0, v6, LX/Ehn;->A00:F
+    0334..0336  float-to-double  v0, v0
+    0336..033c  invoke-static  {v0, v1}, Ljava/lang/Double;->valueOf(D)Ljava/lang/Double;
+    033c..033e  move-result-object  v2
+    033e..0342  check-cast  v7, LX/Ehn;
+    0342..0346  iget  v0, v7, LX/Ehn;->A00:F
+    0346..0348  float-to-double  v0, v0
+    0348..034e  invoke-static  {v0, v1}, Ljava/lang/Double;->valueOf(D)Ljava/lang/Double;
+    034e..0350  move-result-object  v0
+    0350..0356  invoke-static  {v2, v0}, LX/1lN;->A00(Ljava/lang/Comparable;Ljava/lang/Comparable;)I
+    0356..0358  move-result  v4
+    0358..035a  return  v4
+    035a..035e  check-cast  v7, LX/ElC;
+    035e..0362  iget-object  v0, v7, LX/ElC;->A00:LX/EnR;
+    0362..0366  iget-wide  v0, v0, LX/EnR;->A03:J
+    0366..036c  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    036c..036e  move-result-object  v2
+    036e..0372  check-cast  v6, LX/ElC;
+    0372..0376  iget-object  v0, v6, LX/ElC;->A00:LX/EnR;
+    0376..037a  iget-wide  v0, v0, LX/EnR;->A03:J
+    037a..0380  invoke-static  {v2, v0, v1}, LX/2LC;->A02(Ljava/lang/Comparable;J)I
+    0380..0382  move-result  v4
+    0382..0384  return  v4
+    0384..0388  check-cast  v6, LX/ElC;
+    0388..038c  iget-object  v0, v6, LX/ElC;->A02:Ljava/util/List;
+    038c..0392  invoke-static  {v0}, LX/Fey;->A00(Ljava/lang/Iterable;)D
+    0392..0394  move-result-wide  v0
+    0394..039a  invoke-static  {v0, v1}, Ljava/lang/Double;->valueOf(D)Ljava/lang/Double;
+    039a..039c  move-result-object  v2
+    039c..03a0  check-cast  v7, LX/ElC;
+    03a0..03a4  iget-object  v0, v7, LX/ElC;->A02:Ljava/util/List;
+    03a4..03aa  invoke-static  {v0}, LX/Fey;->A00(Ljava/lang/Iterable;)D
+    03aa..03ac  move-result-wide  v0
+    03ac..03b2  invoke-static  {v0, v1}, Ljava/lang/Double;->valueOf(D)Ljava/lang/Double;
+    03b2..03b4  move-result-object  v0
+    03b4..03ba  invoke-static  {v2, v0}, LX/1lN;->A00(Ljava/lang/Comparable;Ljava/lang/Comparable;)I
+    03ba..03bc  move-result  v4
+    03bc..03be  return  v4
+    03be..03c0  const/4  v4, #0x0
+    03c0..03c2  return  v4
+    03c2..03c4  nop
+    03c4..0430  packed-switch-payload  size=25
+    # exception table: 1 try range(s)
+    # catch LX/LIL; code_units 0035..005c -> 01df
+.end method

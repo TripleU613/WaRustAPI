@@ -1,0 +1,13 @@
+
+# class: LX/2LC;
+# extends: Ljava/lang/Object;
+
+.method public A02(ILJ)  # .registers 4
+    # full signature: LX/2LC;->A02(Ljava/lang/Comparable;J)I
+    0000..0006  invoke-static  {v2, v3}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0006..0008  move-result-object  v0
+    0008..000e  invoke-static  {v1, v0}, LX/1lN;->A00(Ljava/lang/Comparable;Ljava/lang/Comparable;)I
+    000e..0010  move-result  v0
+    0010..0012  return  v0
+    # exception table: 0 try range(s)
+.end method
