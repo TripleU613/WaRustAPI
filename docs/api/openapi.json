@@ -16557,5 +16557,12 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-sender-key-unknown-version/README.md",
     "description": "Error::SignalUnknownSenderKeyVersion and IncomingResult::UnknownSenderKeyVersion preserve skmsg UnrecognizedCiphertextVersion above3 and select retry/error4. Empty-record/short-input admission remains prior; version rejection precedes signature verification. Lower legacy versions retain no-retry handling; other formats remain separate. Header4/15 and short/legacy regressions plus normal-loop uncertain-write/no-replay checks preserve keys, timestamp and reservations. Offline replay sends nothing; no route/CLI flag or live acceptance. Full native policy remains incomplete."
+  },
+  "x-application-padding-retry-admission": {
+    "x-cli": false,
+    "x-transport": ["experimental authenticated message receive; offline tested"],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-application-padding-retry/README.md",
+    "description": "Private shared application unpadding follows APK EHq unsigned final-count rule0<count<plaintext length, without repeated-byte or16 cap; crypto authentication/CBC block padding and sender padding remain unchanged. Error::SignalInvalidApplicationPadding preserves empty/invalid framing as Unsupported without automatic retry, delivery ACK or Rust atomic state/event commit. Count255/nonrepeating/entire-padding and authenticated production-loop regressions added. Native store-before-trim durability and full ACK/provider policies remain open; no route/CLI flag or live acceptance."
   }
 }

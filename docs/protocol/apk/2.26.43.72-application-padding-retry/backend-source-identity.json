@@ -1,0 +1,12 @@
+{
+  "package": "wacore-libsignal",
+  "version": "0.7.0",
+  "file": "src/protocol/group_cipher.rs",
+  "bytes": 29940,
+  "sha256": "324b55313055b7542166c37d59748ab7b1afb3aa82cbf29db086e140350cb950",
+  "facts": [
+    "group_decrypt verifies sender signature before deriving message key",
+    "AES-CBC BadKeyOrIv -> InvalidSenderKeySession; BadCiphertext -> InvalidMessage(SenderKey, static reason)",
+    "Sender key callback store occurs after successful crypto block unpadding, before adapter application-padding admission; this is distinct from PKCS block padding"
+  ]
+}

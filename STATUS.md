@@ -1,3 +1,11 @@
+2026-11-05 — **Application-padding admission now follows the APK count rule.**
+
+Receive accepts count-only nonrepeating tails and counts above16, rejects empty/
+zero/entire/oversized framing, and no longer requests retries for these exclusions.
+Crypto authentication/block padding stays intact. [Evidence, production-loop test and native durability/ACK limits](docs/protocol/outgoing-retry-receipts.md#application-padding-count-and-retry-admission-corrected--2026-11-05).
+Validation:1332 tests, strict Clippy, fmt, CLI reference, regenerated coverage
+and hygiene passed. No live account traffic; full audit remains unfinished.
+
 2026-11-05 — **Newer unknown skmsg versions now carry retry error4.**
 
 The typed parser cause survives normal receive, preserving empty-record/length/

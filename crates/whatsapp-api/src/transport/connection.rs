@@ -1576,12 +1576,20 @@ mod tests {
                 .expect("link open")
         }
         async fn nothing_written(&mut self, window: Duration) {
-            assert!(
-                tokio::time::timeout(window, self.from_worker.recv())
-                    .await
-                    .is_err(),
-                "unexpected write"
-            );
+            match tokio::time::timeout(window, self.from_worker.recv()).await {
+                Err(_) => {}
+                Ok(None) => panic!("link closed while checking for unexpected writes"),
+                Ok(Some((node, _))) => panic!(
+                    "unexpected write: tag={} type={:?} xmlns={:?} children={:?}",
+                    node.description,
+                    node.get_attr("type").and_then(|v| v.as_text()),
+                    node.get_attr("xmlns").and_then(|v| v.as_text()),
+                    node.child_nodes()
+                        .iter()
+                        .map(|child| child.description.as_str())
+                        .collect::<Vec<_>>()
+                ),
+            }
         }
         async fn activate(&mut self) -> String {
             let (active, reply) = self.written().await;
@@ -2829,6 +2837,85 @@ mod tests {
             );
             fake.stop_cleanly().await;
         }
+    }
+
+    #[tokio::test]
+    async fn authenticated_invalid_application_padding_never_requests_retry_or_confirmation() {
+        use crate::signal::group::{
+            commit_skdm, encrypt_raw_for_test, extract_skdm_from_payload, prepare_own_sender_key,
+            process_skdm, sender_key_db_key,
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("invalid-app-padding.redb"));
+        store
+            .write(|tx| {
+                let mut account = AccountRecord::load_in_write(tx)?.unwrap();
+                account.signal_registration_id = Some(31);
+                account.save(tx)
+            })
+            .unwrap();
+        let group = Jid::parse("120363000000000001@g.us").unwrap();
+        let sender = peer().with_device(3);
+        let own = prepare_own_sender_key(&group, &sender, None).await.unwrap();
+        let (_, bytes) = extract_skdm_from_payload(&own.distribution_message).unwrap();
+        let installed = process_skdm(
+            &group,
+            &sender,
+            sender_key_db_key(&group, &sender),
+            None,
+            &bytes,
+        )
+        .await
+        .unwrap();
+        assert!(store.write(|tx| commit_skdm(tx, &installed)).unwrap());
+        let keys = store.read(|tx| tx.scan(Table::SenderKeys, 1, 10)).unwrap();
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        for (id, plain) in [("PAD-ZERO", vec![42, 0]), ("PAD-ENTIRE", vec![2, 2])] {
+            let ciphertext = encrypt_raw_for_test(&group, &sender, &own.updated_key, &plain).await;
+            fake.deliver(
+                Node::new("message")
+                    .attr("from", group.clone())
+                    .attr("participant", sender.clone())
+                    .attr("id", id)
+                    .attr("t", "1700000000")
+                    .children(vec![
+                        Node::new("enc")
+                            .attr("v", "2")
+                            .attr("type", "skmsg")
+                            .bytes(ciphertext),
+                    ]),
+            )
+            .await;
+            // This following ACK is a receive-loop barrier. An incorrect retry
+            // or delivery confirmation for the invalid payload would arrive first.
+            fake.deliver(
+                Node::new("receipt")
+                    .attr("from", peer())
+                    .attr("id", "AFTER-PADDING"),
+            )
+            .await;
+            let (ack, reply) = fake.written().await;
+            assert_eq!(ack.description, "ack");
+            assert_eq!(
+                ack.get_attr("id").and_then(|v| v.as_text()),
+                Some("AFTER-PADDING")
+            );
+            reply.send(Ok(())).unwrap();
+            fake.nothing_written(Duration::from_millis(100)).await;
+            assert!(super::super::receipts::outcomes(&store).unwrap().is_empty());
+            assert_eq!(
+                store.read(|tx| tx.scan(Table::SenderKeys, 1, 10)).unwrap(),
+                keys
+            );
+            assert!(
+                store
+                    .read(|tx| tx.scan(Table::Inbox, 1, 10))
+                    .unwrap()
+                    .is_empty()
+            );
+        }
+        fake.stop_cleanly().await;
     }
 
     #[tokio::test]
@@ -4344,7 +4431,9 @@ mod tests {
         fake.stop_cleanly().await;
     }
 
-    #[tokio::test]
+    // Upload policy is independent of wall-clock CPU/scheduling delays while
+    // synthetic PQ keys are generated; heartbeat timing has separate tests.
+    #[tokio::test(start_paused = true)]
     async fn migrated_success_and_count_notifications_write_family_specific_add() {
         let dir = tempfile::tempdir().unwrap();
         let store = registered_store(&dir.path().join("pq-add-actor.redb"));

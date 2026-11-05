@@ -4742,3 +4742,11 @@ regeneration, OpenAPI/library-symbol checks, formatting, whitespace and hygiene
 passed. Hygiene checked 1,499 local links and 40 bundles / 9,411,474 bytes.
 Caller/writer inventories and the no-matching ordinary override body result
 remain separately attributed. No fresh workspace/runtime or live test is claimed.
+
+### 2026-11-05 receive application-padding follow-up
+
+- Implemented offline: APK43.72 count-only receive admission and no automatic
+  retry for empty/invalid application framing; crypto verification unchanged.
+- Verified with authenticated group ciphertext and normal-loop no-write/state/event
+  regressions. [Evidence and remaining native commit/ACK work](protocol/outgoing-retry-receipts.md#application-padding-count-and-retry-admission-corrected--2026-11-05).
+- Native outer transaction/durability and full ACK policy remain open; no live test.

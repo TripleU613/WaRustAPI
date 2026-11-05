@@ -34,6 +34,10 @@ pub enum Error {
     #[error("Signal sender-key message version is unknown")]
     SignalUnknownSenderKeyVersion,
 
+    /// Authenticated decryption produced empty or invalid application padding.
+    #[error("Signal decrypted message is empty or has invalid application padding")]
+    SignalInvalidApplicationPadding,
+
     /// Sender-key message verification failed against the saved signing key.
     #[error("Signal sender-key message signature verification failed")]
     SignalInvalidSenderKeySignature,

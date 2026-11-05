@@ -888,18 +888,7 @@ pub async fn receive(
     )
     .await
     .map_err(crypto)?;
-    let mut plaintext = Zeroizing::new(decrypted.plaintext);
-    let padding = plaintext.last().copied().unwrap_or(0) as usize;
-    if !(1..=16).contains(&padding)
-        || padding > plaintext.len()
-        || !plaintext[plaintext.len() - padding..]
-            .iter()
-            .all(|v| *v as usize == padding)
-    {
-        return Err(invalid("invalid authenticated message padding"));
-    }
-    let unpadded_len = plaintext.len() - padding;
-    plaintext.truncate(unpadded_len);
+    let plaintext = super::padding::unpad(decrypted.plaintext)?;
     Ok(ReceivedDirect {
         plaintext,
         session: Zeroizing::new(

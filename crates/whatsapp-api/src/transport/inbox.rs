@@ -842,6 +842,12 @@ pub async fn process_with_policy(
     // session and the inbox write rolled back together, which the caller has to
     // see rather than have reported as an ordinary undecryptable message.
     match process_direct(store, account, node, capture, policy).await {
+        Err(Error::SignalInvalidApplicationPadding) => {
+            tracing::warn!(
+                "decrypted application padding refused; preserved without retry or delivery ACK"
+            );
+            Ok(IncomingResult::Unsupported)
+        }
         Err(Error::SignalIncomingLocalPrekey) => {
             tracing::warn!(
                 "incoming local prekey unavailable; capture preserved for bounded retry"
@@ -1532,6 +1538,12 @@ async fn process_group(
     policy: IdentityChangePolicy,
 ) -> Result<IncomingResult> {
     match process_group_inner(store, account, node, capture, policy).await {
+        Err(Error::SignalInvalidApplicationPadding) => {
+            tracing::warn!(
+                "decrypted application padding refused; preserved without retry or delivery ACK"
+            );
+            Ok(IncomingResult::Unsupported)
+        }
         Err(Error::SignalUnknownSenderKeyVersion) => {
             tracing::warn!(
                 "unknown sender-key message version; capture preserved for bounded retry"

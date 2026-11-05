@@ -6568,3 +6568,20 @@ journal. The production-loop fixture checks error4 before signature verification
 original timestamp, durable uncertain reservation and no second retry/delivery ACK
 on reconnect/redelivery. Offline CLI replay sends nothing. Native short-input,
 other formats and full key/count/routing/ACK parity remain unfinished. No live traffic.
+
+## Application-padding count and retry admission corrected — 2026-11-05
+
+**Confirmed static / implemented offline:** [EHq unsigned count rule, retry
+exclusion and separate CBC failure exploration](apk/2.26.43.72-application-padding-retry/README.md).
+Receive now shares the native count-only rule0<count<plaintext length. It no longer
+requires count<=16 or repeated padding bytes, and it rejects entire-buffer padding
+rather than returning empty plaintext. Existing crypto authentication/block padding
+and sender-side padding are unchanged.
+
+SignalInvalidApplicationPadding covers empty/invalid decrypted application framing;
+direct/group inbox continues as Unsupported without automatic retry, delivery ACK
+or Rust atomic inbox/ratchet commit. Native Signal-store call order before EHq
+trimming is retained as a separate durability/transaction tracing gap. Tests cover
+unsigned counts through255, nonrepeating tails, actual authenticated ciphertext
+and production-loop no-retry/no-confirmation/no-state-event behavior. CBC/provider
+errors, full native commit/ACK policy and other causes remain open; no live traffic.

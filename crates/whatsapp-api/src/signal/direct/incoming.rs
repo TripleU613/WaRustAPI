@@ -229,18 +229,7 @@ pub async fn receive_prekey_with_policy(
         other => crypto(other),
     })?;
     let consumed_prekey = decrypted.consumed_prekey_id.map(u32::from);
-    let mut plaintext = Zeroizing::new(decrypted.plaintext);
-    let padding = plaintext.last().copied().unwrap_or(0) as usize;
-    if !(1..=16).contains(&padding)
-        || padding > plaintext.len()
-        || !plaintext[plaintext.len() - padding..]
-            .iter()
-            .all(|b| *b as usize == padding)
-    {
-        return Err(invalid("invalid authenticated padding"));
-    }
-    let length = plaintext.len() - padding;
-    plaintext.truncate(length);
+    let plaintext = crate::signal::padding::unpad(decrypted.plaintext)?;
     Ok(ReceivedPrekey {
         received: ReceivedDirect {
             plaintext,

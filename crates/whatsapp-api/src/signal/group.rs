@@ -1,6 +1,7 @@
 //! Sender-key group message receive and SKDM processing.
 //! All Signal mutations stay in memory until the caller commits them atomically
 //! with the inbox/checkpoint record, matching the direct-message pattern.
+use super::padding::unpad;
 use crate::{
     Error, Result,
     model::jid::Jid,
@@ -127,6 +128,23 @@ impl SenderKeyStore for SenderKeys {
     }
 }
 
+/// Synthetic ciphertext with caller-selected application padding; test-only.
+#[cfg(test)]
+pub(crate) async fn encrypt_raw_for_test(
+    group: &Jid,
+    sender: &Jid,
+    previous: &[u8],
+    plaintext: &[u8],
+) -> Vec<u8> {
+    let mut store = SenderKeys::new(Some(previous)).unwrap();
+    let name = SenderKeyName::from_parts(&group.to_string(), &sender.to_string());
+    signal::group_encrypt(&mut store, &name, plaintext, &mut rand::rng())
+        .await
+        .unwrap()
+        .serialized()
+        .to_vec()
+}
+
 /// Result of `receive_group`: plaintext + serialized updated key for atomic commit.
 ///
 /// The caller passes the DB key and the pre-decryption value to
@@ -250,22 +268,6 @@ pub async fn receive_group(
 /// Strip the APK's E2E plaintext padding (1..=16 bytes, each equal to the pad
 /// length). Identical to the direct-message path in `direct::receive`; group
 /// plaintexts are padded the same way before sender-key encryption.
-fn unpad(plaintext: Vec<u8>) -> Result<Zeroizing<Vec<u8>>> {
-    let mut plaintext = Zeroizing::new(plaintext);
-    let padding = plaintext.last().copied().unwrap_or(0) as usize;
-    if !(1..=16).contains(&padding)
-        || padding > plaintext.len()
-        || !plaintext[plaintext.len() - padding..]
-            .iter()
-            .all(|v| *v as usize == padding)
-    {
-        return Err(invalid("invalid authenticated group message padding"));
-    }
-    let unpadded_len = plaintext.len() - padding;
-    plaintext.truncate(unpadded_len);
-    Ok(plaintext)
-}
-
 /// Process a sender key distribution message received inside a direct message.
 pub async fn process_skdm(
     group: &Jid,
@@ -570,6 +572,28 @@ mod tests {
             receive_group(&group, &sender, Some(&reserved), &signed(ceiling + 2001)).await,
             Err(Error::SignalSenderKeyFutureCounter)
         ));
+    }
+
+    #[tokio::test]
+    async fn authenticated_application_padding_uses_native_count_admission() {
+        let group = group_jid();
+        let sender = sender_jid();
+        let own = prepare_own_sender_key(&group, &sender, None).await.unwrap();
+        for (plain, expected) in [
+            (vec![42, 99, 1, 2], Some(vec![42, 99])),
+            (vec![42, 99, 0], None),
+            (vec![3, 3, 3], None),
+        ] {
+            let cipher = encrypt_raw_for_test(&group, &sender, &own.updated_key, &plain).await;
+            let result = receive_group(&group, &sender, Some(&own.updated_key), &cipher).await;
+            match expected {
+                Some(bytes) => assert_eq!(result.unwrap().unwrap().plaintext.as_slice(), bytes),
+                None => assert!(matches!(
+                    result,
+                    Err(Error::SignalInvalidApplicationPadding)
+                )),
+            }
+        }
     }
 
     #[test]

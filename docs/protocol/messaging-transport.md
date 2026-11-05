@@ -1864,3 +1864,12 @@ cancelled by this helper. A failed write returns its existing error. Unread
 late records are not captured, and expiry never proves the server did not
 receive the write. Original uncertain intents remain nonreplayable. No native
 request-address/challenge-controller parity, new route or live operation.
+
+### Receive application-padding admission — 2026-11-05
+
+APK43.72 EHq.A00 uses the unsigned final count and keeps only a nonempty prefix;
+it does not require repeated tail bytes or count<=16. Shared direct/prekey/group
+receive now follows that rule after crypto authentication/block unpadding. Empty
+or invalid framing stays captured without retry, confirmation or Rust atomic
+message-state commit. [Evidence, tests and native durability/ACK limits](outgoing-retry-receipts.md#application-padding-count-and-retry-admission-corrected--2026-11-05).
+No live acceptance or complete native commit policy is claimed.

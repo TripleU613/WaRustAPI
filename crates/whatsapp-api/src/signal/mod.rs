@@ -32,6 +32,8 @@ pub mod image;
 #[cfg(feature = "experimental-signal-crypto")]
 pub mod kem;
 #[cfg(feature = "experimental-signal-crypto")]
+mod padding;
+#[cfg(feature = "experimental-signal-crypto")]
 pub mod wire;
 
 const RECORD_V1: u16 = 1;
