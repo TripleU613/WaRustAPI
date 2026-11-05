@@ -349,3 +349,25 @@ settlements refuse and all checkpoint bytes remain unchanged. The ownership
 refusal survives reopen. Existing normal settlement and consumed-KEM-before-ACK
 regressions remain required. Historical data is not repaired automatically;
 no retries, live traffic or complete native lifecycle parity are claimed.
+
+## KEM upload reservation binding (2026-11-04)
+
+**Implemented offline, local persistence invariant.** The prior ownership
+check bound legacy IDs/metadata, but PendingUpload did not retain KEM IDs.
+Settlement trusted the saved Batch.kem_ids, so an independently changed list
+could mark different KEM rows sent or omit original rows while acknowledging
+the legacy batch. No live occurrence/native vulnerability is asserted.
+
+The same reservation transaction now returns its ordered KEM IDs alongside
+legacy IDs and frozen request. PendingUpload retains these IDs privately.
+Settlement compares the entire durable KEM list before any writes on either
+result or refusal. Missing/reordered/substituted IDs refuse atomically.
+Empty legacy-only lists compare too; no saved schema or wire change is needed.
+This remains callback correlation, not uncertain-request replay authority.
+
+The existing uncertain-KEM/reopen/consumption regression now replaces the
+saved list with empty, reversed and unrelated-ID variants. Both reply kinds
+refuse with all Prekeys/Checkpoints bytes unchanged. Restoring the synthetic
+fixture allows the original missing-row/consumption/late-ACK checks to run,
+including no resurrection and the next upload's normal behavior. Production
+never repairs an uncertain batch to pass this guard. No new retry or live traffic.

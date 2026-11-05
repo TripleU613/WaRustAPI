@@ -366,6 +366,7 @@ pub(crate) fn kem_upload_children(
 pub struct PendingUpload {
     iq_id: String,
     ids: Vec<u32>,
+    kem_ids: Vec<u32>,
     /// After this instant the outcome is treated as unknown for this session.
     pub deadline: tokio::time::Instant,
 }
@@ -485,6 +486,7 @@ pub fn begin_upload(
             let wire = Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(&node)?;
             tx.put_json(Table::Checkpoints, request_key(&iq_id).as_bytes(), 1,
             &serde_json::json!({"mode":"set", "dictionary":"comparison_2_26_37_71", "wire":wire}))?;
+            let kem_ids: Vec<u32> = kem_rows.iter().map(|r| r.id).collect();
             tx.put_json(
                 Table::Checkpoints,
                 batch_key(&iq_id).as_bytes(),
@@ -495,18 +497,19 @@ pub fn begin_upload(
                     code: None,
                     count_low: None,
                     reserved_at: Timestamp::now(),
-                    kem_ids: kem_rows.iter().map(|r| r.id).collect(),
+                    kem_ids: kem_ids.clone(),
                 },
             )?;
-            Ok(Some((ids, node)))
+            Ok(Some((ids, kem_ids, node)))
         })?;
-    let Some((ids, node)) = reserved else {
+    let Some((ids, kem_ids, node)) = reserved else {
         return Ok(None);
     };
     Ok(Some((
         PendingUpload {
             iq_id,
             ids,
+            kem_ids,
             deadline: tokio::time::Instant::now() + std::time::Duration::from_secs(30),
         },
         node,
@@ -569,6 +572,9 @@ impl PendingUpload {
             // legitimately remove a prekey before its upload ACK arrives.
             if batch.ids != self.ids {
                 return Err(invalid("reserved batch key IDs changed"));
+            }
+            if batch.kem_ids != self.kem_ids {
+                return Err(invalid("reserved batch KEM key IDs changed"));
             }
             for id in &batch.ids {
                 let meta: Meta = tx
@@ -1171,6 +1177,35 @@ mod tests {
                 })
                 .unwrap()
         };
+        // A matching IQ must not settle different KEM material if the saved
+        // batch changes independently of the original callback reservation.
+        let reserved_key = batch_key(&pending.iq_id);
+        let original: Batch = store
+            .read(|tx| tx.get_json(Table::Checkpoints, reserved_key.as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        let mut reordered = original.kem_ids.clone();
+        reordered.reverse();
+        for kem_ids in [Vec::new(), reordered, vec![0x00ff_fffe]] {
+            let mut changed = original.clone();
+            changed.kem_ids = kem_ids;
+            store
+                .write(|tx| tx.put_json(Table::Checkpoints, reserved_key.as_bytes(), 1, &changed))
+                .unwrap();
+            let damaged = snapshot(&store);
+            for kind in ["result", "error"] {
+                let reply = Node::new("iq")
+                    .attr("id", pending.iq_id.as_str())
+                    .attr("type", kind);
+                assert!(pending.settle(&store, &reply).is_err());
+                assert_eq!(snapshot(&store), damaged);
+            }
+        }
+        // Restore only this synthetic fixture; production never repairs or
+        // rewrites an uncertain batch to make a callback pass.
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, reserved_key.as_bytes(), 1, &original))
+            .unwrap();
         let before = snapshot(&store);
         assert!(begin_upload(&store, &account, &signed).unwrap().is_none());
         assert_eq!(snapshot(&store), before);

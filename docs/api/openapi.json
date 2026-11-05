@@ -15335,5 +15335,14 @@
     "x-live": false,
     "evidence": "docs/protocol/prekey-count-notifications.md#upload-settlement-reservation-ownership-2026-11-04",
     "description": "Local settlement invariant: exact ordered durable batch IDs and each pending key metadata owner/status must match before any batch/key updates. Mismatch refuses atomically. No private-key presence requirement or new retry."
+  },
+  "x-prekey-upload-kem-reservation-binding": {
+    "x-cli": "whatsapp-cli listen (existing upload settlement)",
+    "x-transport": [
+      "comparison public-client"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/prekey-count-notifications.md#kem-upload-reservation-binding-2026-11-04",
+    "description": "Local invariant: exact ordered KEM IDs in the durable batch must match the original pending reservation before result/error settlement. Changed lists refuse atomically. No wire/schema change or replay authority."
   }
 }

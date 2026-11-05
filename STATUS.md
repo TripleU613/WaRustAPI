@@ -1,3 +1,12 @@
+2026-11-04 — **KEM upload IDs bound to original callback reservation.**
+
+Changed durable KEM lists refuse settlement before any batch/key writes.
+Existing uncertainty/consumption regression covers both reply kinds.
+[Local invariant and limits](docs/protocol/prekey-count-notifications.md#kem-upload-reservation-binding-2026-11-04).
+Validation: workspace/all-feature tests, strict Clippy, CLI reference,
+formatting, JSON, coverage freshness and repository hygiene passed.
+No new retry behavior or live traffic.
+
 2026-11-04 — **Upload settlement verifies durable reservation ownership.**
 
 Ordered batch IDs and each key's pending owner/status are rechecked before

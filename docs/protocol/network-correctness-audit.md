@@ -1140,3 +1140,11 @@ rechecks ordered durable batch IDs and each key metadata status/owner inside
 the transaction. Mismatches refuse without partial writes; private-row
 absence does not imply lost ownership. Fault/reopen regression retained.
 [Details and limits](prekey-count-notifications.md#upload-settlement-reservation-ownership-2026-11-04). No new retry or live traffic.
+
+## 2026-11-04 — KEM upload reservation binding
+
+**Implemented offline, local invariant:**PendingUpload retains the KEM IDs
+from its reservation transaction and compares the durable list at settlement.
+Empty/reordered/substituted lists refuse before any writes, on result/error.
+Existing consumed-key late-ACK regression expanded.
+[Details and limits](prekey-count-notifications.md#kem-upload-reservation-binding-2026-11-04). No new retry or live traffic.
