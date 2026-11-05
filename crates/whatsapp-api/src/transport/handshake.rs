@@ -354,7 +354,14 @@ mod tests {
         }
     }
 
-    async fn exchange(wrong_root: bool, split: bool, cancel: bool) {
+    #[derive(Clone, Copy)]
+    enum RecordCase {
+        Exchange,
+        CancelRead,
+        PartialWrite,
+    }
+
+    async fn exchange(wrong_root: bool, split: bool, record_case: RecordCase) {
         let cfg = comparison_noise_config();
         let client_key = StaticKeypair::generate(&cfg).unwrap();
         let server_key = StaticKeypair::generate(&cfg).unwrap();
@@ -375,6 +382,7 @@ mod tests {
             policy.trust_root[0] ^= 1;
         }
         let (client, mut server) = tokio::io::duplex(8192);
+        let (cut_ready, cut_started) = tokio::sync::oneshot::channel();
         let peer = tokio::spawn(async move {
             let mut header = [0; 4];
             server.read_exact(&mut header).await.unwrap();
@@ -425,7 +433,23 @@ mod tests {
             .concat();
             let (login, mut transport) = noise.finish(&record);
             assert_eq!(login.as_slice(), b"local login fixture");
-            if cancel {
+            if matches!(record_case, RecordCase::PartialWrite) {
+                // Start the next record only after FrameReader has consumed the
+                // finish, so no bytes are hidden in its coalescing buffer.
+                cut_ready.send(()).unwrap();
+                let mut header = [0; 3];
+                server.read_exact(&mut header).await.unwrap();
+                let length = usize::from(header[0]) << 16
+                    | usize::from(header[1]) << 8
+                    | usize::from(header[2]);
+                assert!(length > 8192);
+                let mut prefix = [0; 64];
+                server.read_exact(&mut prefix).await.unwrap();
+                // Dropping this end after only a prefix forces a partial write,
+                // rather than a clean failure before any record bytes arrive.
+                return;
+            }
+            if matches!(record_case, RecordCase::CancelRead) {
                 assert!(reader.read_frame(&mut server).await.unwrap().is_none());
                 return;
             }
@@ -457,7 +481,7 @@ mod tests {
             let mut channel = verified.finish(b"local login fixture").await.unwrap();
             if split {
                 let (mut reader, mut writer) = channel.into_split().unwrap();
-                if cancel {
+                if matches!(record_case, RecordCase::CancelRead) {
                     assert!(
                         tokio::time::timeout(std::time::Duration::from_millis(10), reader.read())
                             .await
@@ -474,6 +498,69 @@ mod tests {
                     writer.write(b"closed").await,
                     Err(TransportError::Closed)
                 ));
+            } else if matches!(record_case, RecordCase::PartialWrite) {
+                use crate::store::{MasterKey, OpenOptions, ProtocolStore, StaticKeySource, Table};
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("partial-write.redb");
+                let open = || {
+                    ProtocolStore::open(OpenOptions {
+                        path: path.clone(),
+                        account_id: crate::model::ids::AccountId::new("fixture").unwrap(),
+                        create: true,
+                        key_source: std::sync::Arc::new(StaticKeySource::new(
+                            MasterKey::from_bytes([9; 32]),
+                        )),
+                    })
+                    .unwrap()
+                };
+                let store = open();
+                let key = b"fixture:partial-write:intent";
+                let intent = serde_json::json!({
+                    "status": "outcome_unknown", "wire_id": "partial-write", "wire": [1, 2, 3]
+                });
+                store
+                    .write(|tx| tx.put_json(Table::Checkpoints, key, 1, &intent))
+                    .unwrap();
+                let before = store.read(|tx| tx.get(Table::Checkpoints, key, 1)).unwrap();
+                assert!(before.is_some(), "uncertain intent must exist before I/O");
+                let request = crate::binary::Node::new("iq")
+                    .attr("id", "partial-write")
+                    .attr("type", "get")
+                    .bytes(vec![7; 32768]);
+                cut_started.await.unwrap();
+                let result = super::super::messaging::write_and_wait_captured(
+                    &store,
+                    &mut channel,
+                    &request,
+                    "iq",
+                    "partial-write",
+                )
+                .await;
+                assert!(matches!(
+                    result,
+                    Err(crate::Error::Transport(TransportError::Io(
+                        std::io::ErrorKind::BrokenPipe
+                    )))
+                ));
+                assert!(matches!(
+                    super::super::messaging::write_and_wait_captured(
+                        &store,
+                        &mut channel,
+                        &request,
+                        "iq",
+                        "partial-write",
+                    )
+                    .await,
+                    Err(crate::Error::Transport(TransportError::Closed))
+                ));
+                drop(store);
+                let reopened = open();
+                assert_eq!(
+                    reopened
+                        .read(|tx| tx.get(Table::Checkpoints, key, 1))
+                        .unwrap(),
+                    before
+                );
             } else {
                 channel.write(b"local record fixture").await.unwrap();
                 assert_eq!(channel.read().await.unwrap().unwrap().as_slice(), b"reply");
@@ -489,21 +576,31 @@ mod tests {
 
     #[tokio::test]
     async fn verified_handshake_and_encrypted_records() {
-        exchange(false, false, false).await;
+        exchange(false, false, RecordCase::Exchange).await;
     }
 
     #[tokio::test]
     async fn untrusted_server_never_receives_login() {
-        exchange(true, false, false).await;
+        exchange(true, false, RecordCase::Exchange).await;
     }
 
     #[tokio::test]
     async fn split_reader_does_not_block_writer_and_eof_closes_both() {
-        exchange(false, true, false).await;
+        exchange(false, true, RecordCase::Exchange).await;
     }
     #[tokio::test]
     async fn cancelled_split_read_poisons_writer_without_replay() {
-        exchange(false, true, true).await;
+        exchange(false, true, RecordCase::CancelRead).await;
+    }
+
+    #[tokio::test]
+    async fn partial_encrypted_comparison_write_keeps_durable_uncertainty_and_consumes_channel() {
+        tokio::time::timeout(
+            std::time::Duration::from_secs(5),
+            exchange(false, false, RecordCase::PartialWrite),
+        )
+        .await
+        .expect("local partial-write fixture must finish");
     }
 
     #[test]

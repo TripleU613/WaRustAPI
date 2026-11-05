@@ -428,3 +428,27 @@ broke single-feature `--all-targets` builds (outside the CI matrix, which runs
 default and all features) are now gated on the features their tests need.
 Arbitrary feature pairs such as noise+transport without Signal are still not
 lint-clean and are not a supported configuration. No live request was sent.
+
+### Partial encrypted comparison write regression (2026-11-04)
+
+**Observed offline local fixture:** the verified classic-Noise handshake test
+now exercises `messaging::write_and_wait_captured` with a real encoded IQ,
+encrypted record and framed AsyncWrite over a local Tokio duplex stream. The
+peer reads the three-byte record header and64 ciphertext bytes, then drops
+the stream. The advertised record exceeds the8192-byte duplex capacity, so
+the whole record cannot be buffered before disconnect. The helper returns
+BrokenPipe; a second attempt on that consumed channel returns Closed. A
+synthetic outcome_unknown checkpoint is unchanged after encrypted-store reopen.
+
+Test: `transport::handshake::tests::partial_encrypted_comparison_write_keeps_durable_uncertainty_and_consumes_channel`.
+The fixture synchronizes after handshake-finish consumption to avoid hiding
+record bytes inside the peer's frame-reader buffer. It uses a valid local
+certificate chain, not disabled certificate verification.
+
+This adds a partial-wire cut to the existing callback-level failure and raw
+framing/cancellation checks. It supports the [native pre-write promotion
+boundary](apk/2.26.43.72-iq-promotion-shutdown/README.md): registry admission
+and an I/O error cannot establish definite non-delivery. The checkpoint is
+a test fixture, not a production outbox reservation or complete reconnect
+policy; this is local duplex I/O, not a TCP/live-server observation. No runtime
+behavior, sender, retry authority or live account operation changes.

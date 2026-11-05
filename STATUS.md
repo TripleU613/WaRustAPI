@@ -1,3 +1,14 @@
+2026-11-04 — **Partial encrypted write uncertainty now has a regression test.**
+
+A local verified-Noise peer receives a ciphertext prefix, then disconnects.
+The comparison helper reports BrokenPipe, consumes the channel and preserves
+a synthetic uncertain intent across store reopen. This is local duplex I/O,
+not a live-server test or a production outbox reservation test.
+[Scope and limits](docs/protocol/replay-safety-audit.md).
+No runtime behavior change or live account operation.
+Validation:1,310 workspace tests, strict all-target/all-feature Clippy,
+CLI-reference regeneration, formatting, coverage freshness and hygiene.
+
 2026-11-04 — **IQ callback promotion is confirmed pre-write.**
 
 The native sent registry does not prove socket delivery. Presence checks and

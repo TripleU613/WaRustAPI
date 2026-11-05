@@ -15810,5 +15810,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-iq-promotion-shutdown/README.md",
     "description": "Selected native writer promotes queued callbacks before node writing; sent-map membership is not proof of delivery. Presence check/promotion allow a possible timeout interleaving. Local drops and sent-map shutdown flush schedule delivery-failure callbacks; queued-map and global reconnect ownership remain incomplete. No sender, route, replay authority or live operation added."
+  },
+  "x-partial-encrypted-write-regression": {
+    "x-cli": false,
+    "x-transport": [
+      "offline verified-Noise local duplex regression"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/replay-safety-audit.md",
+    "description": "A local peer receives a framed encrypted IQ prefix and disconnects during the comparison write helper. BrokenPipe consumes the channel; a second attempt returns Closed and a synthetic uncertain checkpoint survives store reopen unchanged. Not a TCP/live observation or production outbox reservation-builder test. No runtime behavior or replay authority added."
   }
 }
