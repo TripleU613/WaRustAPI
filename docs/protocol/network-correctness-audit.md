@@ -3032,3 +3032,27 @@ AB-properties expiry, outer result/error and duplicate claims. Normal-driver
 regression verifiesOk/no refusal code, continued receipt ACK and no resend.
 Saved About adoption, UI observers and full native lifecycle remain unfinished;
 no live account operation or observed server extension response is claimed.
+
+## Profile-photo callback construction and upload result — 2026-11-05
+
+**Confirmed static / implemented offline:** current Hyd.A00's namespace helper
+also returns the to=s.whatsapp.net attribute, which Hyd appends; the existing
+Rust address is confirmed rather than inferred. 6p1 lookup builds that address
+explicitly. Both selected producers pass duration0 through distinctA0W/A0R
+wrappers, so no generic20/32s callback timer is assigned. Upload success requires
+the first child picture and ignores later error extensions; Rust now preserves
+this typed success shape instead of reporting a synthetic nested refusal.
+Outer errors and other action refusal parsers remain intact.
+[Producer/helpers, separate lookup parser, tests and limits](apk/2.26.43.72-profile-photo-callbacks/README.md).
+Tests cover exact4/5 attribute counts, server address, same-connection claims at60s,
+outer result/error, duplicate/mislabeled requests and normal receive continuation.
+Lookup result adoption, full malformed-result admission, cache/removal/account-center,
+target normalization and image transforms remain unfinished. No live traffic or
+observed server extension response is claimed.
+
+Validation follow-up: the existing registration handle test searched an entire
+serialized attempt for a four-digit fixture PIN, which can occur coincidentally
+in its random hex ID or clock metadata. Its diagnostic copy now normalizes only
+identity/timestamps before that content assertion. Raw-store secret checks and
+the original Debug phone-redaction assertion remain unchanged; no registration
+runtime, persisted identity or server request changes.

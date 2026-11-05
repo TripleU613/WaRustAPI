@@ -1,3 +1,14 @@
+2026-11-05 — **Profile upload success no longer inherits generic nested refusals.**
+
+A typed upload result with first picture child retains native success when
+later error extensions exist; outer errors remain refusals. Both photo paths'
+zero timer and existing server address are confirmed from the current APK.
+[Evidence, tests and unported parser/cache branches](docs/protocol/apk/2.26.43.72-profile-photo-callbacks/README.md).
+Validation:1342 workspace/all-feature tests, strict Clippy, fmt, CLI reference,
+APK coverage and hygiene passed. The existing registration redaction test now
+normalizes unrelated random/clock metadata to avoid false PIN matches.
+No live account traffic; the broader audit remains unfinished.
+
 2026-11-05 — **About results no longer inherit unrelated nested-refusal rules.**
 
 Typed About outer result follows the APK payload-ignoring success callback;

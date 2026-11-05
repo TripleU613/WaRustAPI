@@ -1,0 +1,35 @@
+
+# class: LX/Hyd;
+# extends: Ljava/lang/Object;
+
+.method public CK4(VLL)  # .registers 8
+    # full signature: LX/Hyd;->CK4(LX/0Tp;Ljava/lang/String;)V
+    0000..0002  const/4  v0, #0x1
+    0002..0008  invoke-static  {v6, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  iget-boolean  v0, v5, LX/Hyd;->A00:Z
+    000c..000e  const/4  v4, #0x0
+    000e..0010  const/4  v1, #0x0
+    0010..0014  if-nez  v0, +0x22
+    0014..001a  invoke-virtual  {v6, v1}, LX/0Tp;->A0E(I)LX/0Tp;
+    001a..001c  move-result-object  v3
+    001c..0020  const-string  v0, "picture"
+    0020..0026  invoke-static  {v3, v0}, LX/0Tp;->A01(LX/0Tp;Ljava/lang/String;)V
+    0026..002a  if-eqz  v3, +0x1d
+    002a..002e  const-string  v0, "id"
+    002e..0034  invoke-virtual  {v3, v0, v4}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0034..0036  move-result-object  v2
+    0036..003a  const-string  v1, "has_staging"
+    003a..003e  const-string  v0, ""
+    003e..0044  invoke-virtual  {v3, v1, v0}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0044..0046  move-result-object  v4
+    0046..004a  const-string  v0, "true"
+    004a..0050  invoke-virtual  {v0, v4}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0050..0052  move-result  v1
+    0052..0054  move-object  v4, v2
+    0054..0058  iget-object  v0, v5, LX/Hyd;->A02:LX/ITY;
+    0058..005e  invoke-interface  {v0, v4, v1}, LX/ITY;->CJw(Ljava/lang/String;Z)V
+    005e..0060  return-void
+    0060..0062  move-object  v2, v4
+    0062..0064  goto  -0xe
+    # exception table: 0 try range(s)
+.end method

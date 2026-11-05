@@ -1,0 +1,58 @@
+{
+  "README.md": {
+    "bytes": 5839,
+    "sha256": "636c7989cefc181781adf1c8ecaf21ad1ff1a23b14033dc7991702bbb13909d4"
+  },
+  "get-failure.txt": {
+    "bytes": 222,
+    "sha256": "45b15e81a583ce505442e00985fec41c86d96b7851e18382da1a5bbeeeaa3a80"
+  },
+  "get-result.txt": {
+    "bytes": 3680,
+    "sha256": "788e05f4ee6d72d664e27c3d220f7d9c9929f2c4f4343055e20fd6471771ed7b"
+  },
+  "get.txt": {
+    "bytes": 6117,
+    "sha256": "885f425c4d1ff9a6153a9c0348e65135fecd5696d11a7c7e2dcccb24f4b52f18"
+  },
+  "iq-builder.txt": {
+    "bytes": 374,
+    "sha256": "e7bcf562b6d84960044e5cab5394998726164c1210dda625c0ef3094c1e7f251"
+  },
+  "namespace-helper.txt": {
+    "bytes": 718,
+    "sha256": "e607245efa1a8345fae661233bd5e761ae960e073f39aa6b36ee18c23a148c02"
+  },
+  "node-finalize.txt": {
+    "bytes": 1735,
+    "sha256": "e2c7fc22d708d059ddb35a863669c67b7e12209cdac91376cd966d15ad2a4f41"
+  },
+  "removal-flag.txt": {
+    "bytes": 322,
+    "sha256": "8b13f82e0d032e508be681c14203bbf111d10fb2a1bd193953b44d9b02fab3f8"
+  },
+  "require-tag.txt": {
+    "bytes": 1453,
+    "sha256": "3ea77a197282fd89d6c05b2961e5a488a8c710e42bac618b1c9adebc9ce521e5"
+  },
+  "server-jid.txt": {
+    "bytes": 1942,
+    "sha256": "9b7609bba92f00a97aeba1053898348d6f4c39cd17cb1c8a0001067ae16856d3"
+  },
+  "set-failure.txt": {
+    "bytes": 222,
+    "sha256": "34bfdc79f99ddbe7491165c1bbc1dd305e6c694b14fabf88c42f3f9b7bc3325a"
+  },
+  "set-result.txt": {
+    "bytes": 1594,
+    "sha256": "f3ec6cc6dc06b3a63004f960d5ba3011de9831b6b1cc802c2f1978fdc9ea1cb7"
+  },
+  "set.txt": {
+    "bytes": 7306,
+    "sha256": "b0266decd89502d2577c493df2aacc71d4bfa47c765a0d854a4eafbba00adb8b"
+  },
+  "tag-match.txt": {
+    "bytes": 554,
+    "sha256": "0d0c07f49c66761b261eb338687eccbff9286109aa0b51cda7805bd0b3f90dcc"
+  }
+}

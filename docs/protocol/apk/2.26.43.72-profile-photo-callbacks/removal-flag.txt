@@ -1,0 +1,12 @@
+
+# class: LX/2L9;
+# extends: Ljava/lang/Object;
+
+.method public A1X(ZL)  # .registers 2
+    # full signature: LX/2L9;->A1X(Ljava/lang/Object;)Z
+    0000..0002  const/4  v0, #0x0
+    0002..0006  if-nez  v1, +0x3
+    0006..0008  const/4  v0, #0x1
+    0008..000a  return  v0
+    # exception table: 0 try range(s)
+.end method

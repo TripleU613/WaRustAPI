@@ -1,0 +1,16 @@
+
+# class: LX/B22;
+# extends: Ljava/lang/Object;
+
+.method public A0F(LLLL)  # .registers 4
+    # full signature: LX/B22;->A0F(LX/0Tj;Ljava/lang/String;Ljava/lang/String;)LX/0Tl;
+    0000..0004  new-instance  v0, LX/0Tl;
+    0004..000a  invoke-direct  {v0, v2, v3}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    000a..0010  invoke-virtual  {v1, v0}, LX/0Tj;->A02(LX/0Tl;)V
+    0010..0014  sget-object  v2, LX/0mL;->A00:LX/0mL;
+    0014..0018  const-string  v1, "to"
+    0018..001c  new-instance  v0, LX/0Tl;
+    001c..0022  invoke-direct  {v0, v2, v1}, LX/0Tl;-><init>(Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;)V
+    0022..0024  return-object  v0
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,109 @@
+
+# class: LX/6p1;
+# extends: Ljava/lang/Object;
+
+.method public A00(V)  # .registers 18
+    # full signature: LX/6p1;->A00()V
+    0000..0004  move-object/from16  v11, v17
+    0004..0008  iget-object  v10, v11, LX/6p1;->A08:LX/0Sf;
+    0008..000e  invoke-virtual  {v10}, LX/0Sf;->A0G()Ljava/lang/String;
+    000e..0010  move-result-object  v13
+    0010..0014  iget-object  v0, v11, LX/6p1;->A01:LX/05a;
+    0014..001a  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    001a..001c  move-result-object  v1
+    001c..0020  check-cast  v1, LX/DBv;
+    0020..0024  iget-object  v3, v11, LX/6p1;->A02:LX/0DY;
+    0024..0028  const-string  v0, "profile-photo-pn-bot-jid-sent"
+    0028..002e  invoke-virtual  {v1, v3, v0}, LX/DBv;->A02(Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+    002e..0030  move-result-object  v5
+    0030..0034  const-string  v0, "null cannot be cast to non-null type com.whatsapp.infra.core.jid.ChatJid"
+    0034..003a  invoke-static  {v5, v0}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    003a..003e  const-string  v0, "image"
+    003e..0042  iget-object  v2, v11, LX/6p1;->A05:Ljava/lang/String;
+    0042..0048  invoke-virtual  {v0, v2}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0048..004a  move-result  v1
+    004a..0050  invoke-static  {v3}, LX/0x9;->A03(LX/0DY;)Z
+    0050..0052  move-result  v0
+    0052..0058  invoke-static  {}, LX/1Xl;->A18()Ljava/util/ArrayList;
+    0058..005a  move-result-object  v3
+    005a..005e  if-nez  v1, +0x4
+    005e..0062  if-eqz  v0, +0x9
+    0062..0066  const-string  v1, "query"
+    0066..006a  const-string  v0, "url"
+    006a..0070  invoke-static  {v1, v0, v3}, LX/6oe;->A1S(Ljava/lang/String;Ljava/lang/String;Ljava/util/AbstractCollection;)V
+    0070..0074  iget-object  v0, v11, LX/6p1;->A04:Ljava/lang/String;
+    0074..0078  const-string  v8, "id"
+    0078..007c  const-string  v4, "type"
+    007c..0080  if-eqz  v0, +0x5
+    0080..0086  invoke-static  {v8, v0, v3}, LX/6oe;->A1S(Ljava/lang/String;Ljava/lang/String;Ljava/util/AbstractCollection;)V
+    0086..008c  invoke-static  {v4, v2, v3}, LX/6oe;->A1S(Ljava/lang/String;Ljava/lang/String;Ljava/util/AbstractCollection;)V
+    008c..0090  const-string  v0, "preview"
+    0090..0096  invoke-virtual  {v0, v2}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0096..0098  move-result  v0
+    0098..009e  invoke-static  {v0}, LX/6oe;->A00(I)I
+    009e..00a0  move-result  v0
+    00a0..00a2  const/4  v6, #0x2
+    00a2..00a6  if-ne  v0, v6, +0x17
+    00a6..00aa  iget-object  v0, v11, LX/6p1;->A00:LX/05a;
+    00aa..00b0  invoke-static  {v0}, LX/2L8;->A0o(LX/05a;)LX/08Y;
+    00b0..00b2  move-result-object  v0
+    00b2..00b8  invoke-static  {v0}, LX/6p0;->A00(LX/08Y;)I
+    00b8..00ba  move-result  v0
+    00ba..00be  if-lez  v0, +0xb
+    00be..00c2  const-string  v1, "size"
+    00c2..00c8  invoke-static  {v0}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+    00c8..00ca  move-result-object  v0
+    00ca..00d0  invoke-static  {v1, v0, v3}, LX/6oe;->A1S(Ljava/lang/String;Ljava/lang/String;Ljava/util/AbstractCollection;)V
+    00d0..00d4  iget-object  v7, v11, LX/6p1;->A03:LX/6p2;
+    00d4..00d8  if-eqz  v7, +0x10
+    00d8..00dc  iget-object  v2, v7, LX/6p2;->A00:LX/1bc;
+    00dc..00e0  if-eqz  v2, +0xc
+    00e0..00e4  const-string  v1, "common_gid"
+    00e4..00e8  new-instance  v0, LX/0Tl;
+    00e8..00ee  invoke-direct  {v0, v2, v1}, LX/0Tl;-><init>(Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;)V
+    00ee..00f4  invoke-virtual  {v3, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    00f4..00f6  const/4  v9, #0x0
+    00f6..00fa  if-eqz  v7, +0x10
+    00fa..00fe  iget-object  v0, v7, LX/6p2;->A01:LX/86r;
+    00fe..0102  if-eqz  v0, +0xc
+    0102..0106  iget-object  v2, v0, LX/86r;->A01:[B
+    0106..010a  const-string  v1, "tctoken"
+    010a..010e  new-instance  v0, LX/0Tp;
+    010e..0114  invoke-direct  {v0, v1, v2, v9}, LX/0Tp;-><init>(Ljava/lang/String;[B[LX/0Tl;)V
+    0114..0116  move-object  v9, v0
+    0116..0118  const/4  v7, #0x0
+    0118..011c  new-array  v0, v7, [LX/0Tl;
+    011c..0122  invoke-virtual  {v3, v0}, Ljava/util/AbstractCollection;->toArray([Ljava/lang/Object;)[Ljava/lang/Object;
+    0122..0124  move-result-object  v1
+    0124..0128  check-cast  v1, [LX/0Tl;
+    0128..012c  const-string  v0, "picture"
+    012c..0130  new-instance  v3, LX/0Tp;
+    0130..0136  invoke-direct  {v3, v9, v0, v1}, LX/0Tp;-><init>(LX/0Tp;Ljava/lang/String;[LX/0Tl;)V
+    0136..0138  const/4  v0, #0x5
+    0138..013c  new-array  v2, v0, [LX/0Tl;
+    013c..0142  invoke-static  {v8, v13, v2, v7}, LX/3q1;->A1T(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;I)V
+    0142..0146  const-string  v1, "xmlns"
+    0146..014a  const-string  v0, "w:profile:picture"
+    014a..0150  invoke-static  {v1, v0, v2}, LX/6oe;->A1T(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+    0150..0154  sget-object  v1, LX/0mL;->A00:LX/0mL;
+    0154..0158  const-string  v0, "to"
+    0158..015e  invoke-static  {v1, v0, v2, v6}, LX/6oe;->A1K(Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;[Ljava/lang/Object;I)V
+    015e..0162  const-string  v0, "target"
+    0162..0166  new-instance  v1, LX/0Tl;
+    0166..016c  invoke-direct  {v1, v5, v0}, LX/0Tl;-><init>(Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;)V
+    016c..016e  const/4  v0, #0x3
+    016e..0172  aput-object  v1, v2, v0
+    0172..0176  const-string  v0, "get"
+    0176..017a  new-instance  v1, LX/0Tl;
+    017a..0180  invoke-direct  {v1, v4, v0}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    0180..0182  const/4  v0, #0x4
+    0182..0186  aput-object  v1, v2, v0
+    0186..018a  const-string  v0, "iq"
+    018a..018e  new-instance  v12, LX/0Tp;
+    018e..0194  invoke-direct  {v12, v3, v0, v2}, LX/0Tp;-><init>(LX/0Tp;Ljava/lang/String;[LX/0Tl;)V
+    0194..0198  const-wide/16  v15, #0x0
+    0198..019c  const/16  v14, #0x1a
+    019c..01a2  invoke-virtual/range  {v10..v16}, LX/0Sf;->A0R(LX/0lG;LX/0Tp;Ljava/lang/String;IJ)V
+    01a2..01a4  return-void
+    # exception table: 0 try range(s)
+.end method

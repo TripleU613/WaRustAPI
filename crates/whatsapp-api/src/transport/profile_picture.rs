@@ -11,15 +11,19 @@
 //!
 //! `target` is added only when its first flag is false (not our own photo);
 //! `reupload` and the account-center `encryption_metadata` branch are not used
-//! here. The builder writes no `to`; like this client's other server IQs we
-//! address `s.whatsapp.net` (**inferred**). `8kn.A00` builds the lookup
+//! here. Current 2.26.43.72 Hyd.A00 calls B22.A0F, which adds xmlns
+//! and returns the `to=s.whatsapp.net` attribute for the caller to append.
+//! The existing address is therefore confirmed. `8kn.A00` builds the lookup
 //! `<iq id xmlns="w:profile:picture" type="get" target=<jid>>
-//! <picture type="image" query="url"/></iq>` (its optional `common_gid` and
-//! `tctoken` children are not sent). The reply carries the URL; nothing is
+//! <picture type="image" query="url"/></iq>` (the optional picture attribute
+//! `common_gid` and nested `tctoken` child are not sent). The reply carries the URL; nothing is
 //! downloaded here.
 //!
-//! **Not traced:** the app's crop/resize/JPEG settings. Supply a square JPEG
-//! (the official app uploads 640×640); the server may refuse others.
+//! Current Hyd.A00 set and 6p1.A00 lookup both pass callback duration0;
+//! neither inherits a generic20/32s expiry. Upload success reads the first
+//! picture child and ignores later extensions; lookup has a separate parser.
+//! Evidence: docs/protocol/apk/2.26.43.72-profile-photo-callbacks/README.md.
+//! The app's crop/resize/JPEG settings remain untraced.
 use crate::{Error, Result, binary::Node, model::jid::Jid, store::ProtocolStore};
 
 /// Durable action kinds.
@@ -108,6 +112,11 @@ mod tests {
         );
         assert_eq!(set.get_attr("type").unwrap().as_text(), Some("set"));
         assert!(set.get_attr("target").is_none(), "own photo has no target");
+        assert_eq!(set.attributes.len(), 4);
+        assert_eq!(
+            set.get_attr("to").unwrap().as_jid(),
+            Some(&Jid::parse("s.whatsapp.net").unwrap())
+        );
         let picture = set.child("picture").unwrap();
         assert_eq!(picture.get_attr("type").unwrap().as_text(), Some("image"));
         assert!(
@@ -120,6 +129,11 @@ mod tests {
         let get = get_request("A2", &target).unwrap();
         assert_eq!(get.get_attr("type").unwrap().as_text(), Some("get"));
         assert!(get.get_attr("target").is_some());
+        assert_eq!(get.attributes.len(), 5);
+        assert_eq!(
+            get.get_attr("to").unwrap().as_jid(),
+            Some(&Jid::parse("s.whatsapp.net").unwrap())
+        );
         let picture = get.child("picture").unwrap();
         assert_eq!(picture.get_attr("query").unwrap().as_text(), Some("url"));
     }

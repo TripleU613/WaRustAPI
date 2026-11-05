@@ -1572,7 +1572,7 @@ Usage: whatsapp-cli profile-picture [OPTIONS]...
 
 ## whatsapp-cli profile-picture set
 
-Set our photo from a square JPEG (the official app uploads 640x640)
+Set our profile photo from a JPEG file
 
 ```
 Usage: whatsapp-cli profile-picture set [OPTIONS]...

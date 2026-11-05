@@ -5335,8 +5335,18 @@ mod tests {
                 .any(|window| window == b"server-login-secret")
         );
         let cur = svc.current().await.unwrap().unwrap();
-        let json = serde_json::to_string(&cur).unwrap();
-        assert!(!json.contains("928374") && !json.contains("6157"));
         assert!(!format!("{cur:?}").contains("5551234567"));
+        // Random hex IDs and clock digits can coincidentally contain a short
+        // answer. Normalize only that unrelated metadata in this diagnostic
+        // copy; all answer-bearing content and the raw-store checks remain.
+        let mut diagnostic = cur.clone();
+        diagnostic.id = AttemptId([0; 16]);
+        diagnostic.created_at = Timestamp(0);
+        diagnostic.updated_at = Timestamp(0);
+        for transition in &mut diagnostic.history {
+            transition.at = Timestamp(0);
+        }
+        let json = serde_json::to_string(&diagnostic).unwrap();
+        assert!(!json.contains("928374") && !json.contains("6157"));
     }
 }

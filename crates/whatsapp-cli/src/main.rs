@@ -995,7 +995,7 @@ enum ContactsCmd {
 #[derive(Subcommand)]
 #[cfg(feature = "experimental-transport")]
 enum ProfilePictureCmd {
-    /// Set our photo from a square JPEG (the official app uploads 640x640).
+    /// Set our profile photo from a JPEG file.
     Set {
         /// Path to the JPEG file.
         path: PathBuf,

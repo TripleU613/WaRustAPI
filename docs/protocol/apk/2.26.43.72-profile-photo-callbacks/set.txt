@@ -1,0 +1,133 @@
+
+# class: LX/Hyd;
+# extends: Ljava/lang/Object;
+
+.method public A00(VLZZZ)  # .registers 20
+    # full signature: LX/Hyd;->A00([BZZZ)V
+    0000..0004  move-object/from16  v6, v16
+    0004..000a  invoke-static  {v6}, LX/2L9;->A1X(Ljava/lang/Object;)Z
+    000a..000c  move-result  v0
+    000c..000e  move-object  v9, v15
+    000e..0012  iput-boolean  v0, v15, LX/Hyd;->A00:Z
+    0012..0016  iget-object  v8, v15, LX/Hyd;->A04:LX/0Sf;
+    0016..001c  invoke-virtual  {v8}, LX/0Sf;->A0G()Ljava/lang/String;
+    001c..001e  move-result-object  v11
+    001e..0024  invoke-static  {}, LX/B1x;->A0c()LX/0Tj;
+    0024..0026  move-result-object  v3
+    0026..002a  const-string  v0, "id"
+    002a..0030  invoke-static  {v3, v0, v11}, LX/B1y;->A1J(LX/0Tj;Ljava/lang/String;Ljava/lang/String;)V
+    0030..0034  const-string  v1, "xmlns"
+    0034..0038  const-string  v0, "w:profile:picture"
+    0038..003e  invoke-static  {v3, v1, v0}, LX/B22;->A0F(LX/0Tj;Ljava/lang/String;Ljava/lang/String;)LX/0Tl;
+    003e..0040  move-result-object  v0
+    0040..0046  invoke-virtual  {v3, v0}, LX/0Tj;->A02(LX/0Tl;)V
+    0046..004a  const-string  v0, "set"
+    004a..004e  const-string  v5, "type"
+    004e..0054  invoke-static  {v3, v5, v0}, LX/B1y;->A1J(LX/0Tj;Ljava/lang/String;Ljava/lang/String;)V
+    0054..0058  if-nez  v17, +0xe
+    0058..005c  iget-object  v2, v15, LX/Hyd;->A03:LX/0DY;
+    005c..0060  const-string  v1, "target"
+    0060..0064  new-instance  v0, LX/0Tl;
+    0064..006a  invoke-direct  {v0, v2, v1}, LX/0Tl;-><init>(Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;)V
+    006a..0070  invoke-virtual  {v3, v0}, LX/0Tj;->A02(LX/0Tl;)V
+    0070..0074  const-string  v0, "picture"
+    0074..007a  invoke-static  {v0}, LX/B1w;->A0a(Ljava/lang/String;)LX/0Tj;
+    007a..007c  move-result-object  v4
+    007c..0080  const-string  v0, "image"
+    0080..0086  invoke-static  {v4, v5, v0}, LX/B1y;->A1J(LX/0Tj;Ljava/lang/String;Ljava/lang/String;)V
+    0086..008a  iput-object  v6, v4, LX/0Tj;->A01:[B
+    008a..008e  if-eqz  v19, +0x9
+    008e..0092  const-string  v1, "reupload"
+    0092..0096  const-string  v0, "true"
+    0096..009c  invoke-static  {v4, v1, v0}, LX/B1y;->A1J(LX/0Tj;Ljava/lang/String;Ljava/lang/String;)V
+    009c..00a0  if-eqz  v18, +0x1e
+    00a0..00a2  const/4  v1, #0x0
+    00a2..00a6  const/16  v0, #0x28
+    00a6..00ac  invoke-static  {v15, v1, v0}, LX/INZ;->A01(Ljava/lang/Object;LX/0cf;I)LX/INZ;
+    00ac..00ae  move-result-object  v1
+    00ae..00b2  sget-object  v0, LX/0TL;->A00:LX/0TL;
+    00b2..00b8  invoke-static  {v0, v1}, LX/1sK;->A00(LX/01z;LX/0AW;)Ljava/lang/Object;
+    00b8..00ba  move-result-object  v1
+    00ba..00be  check-cast  v1, LX/GkS;
+    00be..00c2  instance-of  v0, v1, LX/GbU;
+    00c2..00c6  if-eqz  v0, +0x1a
+    00c6..00ca  check-cast  v1, LX/GbU;
+    00ca..00ce  iget-object  v1, v1, LX/GbU;->A00:Ljava/lang/Exception;
+    00ce..00d2  const-string  v0, "SetProfilePhotoProtocolHelper/Failed to get AC user credentials for profile photo sync"
+    00d2..00d8  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;Ljava/lang/Throwable;)V
+    00d8..00de  invoke-static  {v4, v3}, LX/B1x;->A1L(LX/0Tj;LX/0Tj;)V
+    00de..00e4  invoke-virtual  {v3}, LX/0Tj;->A01()LX/0Tp;
+    00e4..00e6  move-result-object  v10
+    00e6..00ea  const-wide/16  v13, #0x0
+    00ea..00ee  const/16  v12, #0x19
+    00ee..00f4  invoke-virtual/range  {v8..v14}, LX/0Sf;->A0W(LX/0lG;LX/0Tp;Ljava/lang/String;IJ)Z
+    00f4..00f6  return-void
+    00f6..00fa  instance-of  v0, v1, LX/GbT;
+    00fa..00fe  if-eqz  v0, +0x83
+    00fe..0102  check-cast  v1, LX/GbT;
+    0102..0106  iget-object  v2, v1, LX/GbT;->A00:Ljava/lang/Object;
+    0106..010a  check-cast  v2, LX/HGr;
+    010a..010e  if-eqz  v2, -0x19
+    010e..0112  iget-object  v0, v2, LX/HGr;->A00:LX/1Jv;
+    0112..0116  iget-object  v5, v0, LX/1Jv;->A00:Ljava/lang/Object;
+    0116..011a  if-eqz  v5, -0x1f
+    011a..011e  const-string  v0, "encryption_metadata"
+    011e..0124  invoke-static  {v0}, LX/B1w;->A0a(Ljava/lang/String;)LX/0Tj;
+    0124..0126  move-result-object  v6
+    0126..012a  const-string  v1, "version"
+    012a..012e  const-string  v0, "1"
+    012e..0134  invoke-static  {v6, v1, v0}, LX/B1y;->A1J(LX/0Tj;Ljava/lang/String;Ljava/lang/String;)V
+    0134..0138  iget-object  v7, v2, LX/HGr;->A01:LX/HLO;
+    0138..013c  iget-object  v1, v7, LX/HLO;->A00:Ljava/lang/String;
+    013c..0140  const-string  v0, "algorithm"
+    0140..0146  invoke-static  {v6, v0, v1}, LX/B1y;->A1J(LX/0Tj;Ljava/lang/String;Ljava/lang/String;)V
+    0146..014a  const-string  v0, "encrypted_key"
+    014a..0150  invoke-static  {v0}, LX/B1w;->A0a(Ljava/lang/String;)LX/0Tj;
+    0150..0152  move-result-object  v2
+    0152..0156  iget-object  v1, v7, LX/HLO;->A02:Ljava/lang/String;
+    0156..0158  const/4  v0, #0x2
+    0158..015e  invoke-static  {v1, v0}, LX/Fwt;->A1b(Ljava/lang/String;I)[B
+    015e..0160  move-result-object  v0
+    0160..0164  iput-object  v0, v2, LX/0Tj;->A01:[B
+    0164..016a  invoke-static  {v2, v6}, LX/B1x;->A1L(LX/0Tj;LX/0Tj;)V
+    016a..016e  const-string  v0, "encrypted_data"
+    016e..0174  invoke-static  {v0}, LX/B1w;->A0a(Ljava/lang/String;)LX/0Tj;
+    0174..0176  move-result-object  v2
+    0176..017a  iget-object  v1, v7, LX/HLO;->A01:Ljava/lang/String;
+    017a..017c  const/4  v0, #0x2
+    017c..0182  invoke-static  {v1, v0}, LX/Fwt;->A1b(Ljava/lang/String;I)[B
+    0182..0184  move-result-object  v0
+    0184..0188  iput-object  v0, v2, LX/0Tj;->A01:[B
+    0188..018e  invoke-static  {v2, v6}, LX/B1x;->A1L(LX/0Tj;LX/0Tj;)V
+    018e..0192  const-string  v0, "auth_tag"
+    0192..0198  invoke-static  {v0}, LX/B1w;->A0a(Ljava/lang/String;)LX/0Tj;
+    0198..019a  move-result-object  v2
+    019a..019e  iget-object  v1, v7, LX/HLO;->A04:Ljava/lang/String;
+    019e..01a0  const/4  v0, #0x2
+    01a0..01a6  invoke-static  {v1, v0}, LX/Fwt;->A1b(Ljava/lang/String;I)[B
+    01a6..01a8  move-result-object  v0
+    01a8..01ac  iput-object  v0, v2, LX/0Tj;->A01:[B
+    01ac..01b2  invoke-static  {v2, v6}, LX/B1x;->A1L(LX/0Tj;LX/0Tj;)V
+    01b2..01b6  const-string  v0, "nonce"
+    01b6..01bc  invoke-static  {v0}, LX/B1w;->A0a(Ljava/lang/String;)LX/0Tj;
+    01bc..01be  move-result-object  v2
+    01be..01c2  iget-object  v1, v7, LX/HLO;->A03:Ljava/lang/String;
+    01c2..01c4  const/4  v0, #0x2
+    01c4..01ca  invoke-static  {v1, v0}, LX/Fwt;->A1b(Ljava/lang/String;I)[B
+    01ca..01cc  move-result-object  v0
+    01cc..01d0  iput-object  v0, v2, LX/0Tj;->A01:[B
+    01d0..01d6  invoke-static  {v2, v6}, LX/B1x;->A1L(LX/0Tj;LX/0Tj;)V
+    01d6..01dc  invoke-static  {v6, v3}, LX/B1x;->A1L(LX/0Tj;LX/0Tj;)V
+    01dc..01e0  const-string  v0, "fbid"
+    01e0..01e6  invoke-static  {v0}, LX/B1w;->A0a(Ljava/lang/String;)LX/0Tj;
+    01e6..01e8  move-result-object  v1
+    01e8..01ee  invoke-static  {v5}, LX/00L;->A05(Ljava/lang/Object;)V
+    01ee..01f4  invoke-static  {v5}, Ljava/lang/String;->valueOf(Ljava/lang/Object;)Ljava/lang/String;
+    01f4..01f6  move-result-object  v0
+    01f6..01fc  invoke-static  {v1, v3, v0}, LX/Fwv;->A14(LX/0Tj;LX/0Tj;Ljava/lang/String;)V
+    01fc..0200  goto/16  -0x92
+    0200..0206  invoke-static  {}, LX/2L6;->A1N()LX/2K2;
+    0206..0208  move-result-object  v0
+    0208..020a  throw  v0
+    # exception table: 0 try range(s)
+.end method

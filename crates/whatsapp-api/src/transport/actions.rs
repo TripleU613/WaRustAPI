@@ -520,12 +520,27 @@ pub fn record_reply(store: &ProtocolStore, node: &Node) -> Result<bool> {
             && request.get_attr("xmlns").and_then(|v| v.as_text()) == Some("status")
             && request.get_attr("type").and_then(|v| v.as_text()) == Some("set")
             && matches!(request.child_nodes(), [status] if status.description == "status");
+        // APK43.72 Hyd.CK4 for a nonnull upload validates the first child
+        // as picture, reads its attributes and ignores subsequent extensions.
+        // Missing/wrong first child and lookup/removal policies remain separate.
+        let photo_set_result = kind == Some("result")
+            && row.kind == super::profile_picture::SET_KIND
+            && request.get_attr("xmlns").and_then(|v| v.as_text()) == Some("w:profile:picture")
+            && request.get_attr("type").and_then(|v| v.as_text()) == Some("set")
+            && matches!(request.child_nodes(), [picture]
+                if picture.description == "picture"
+                    && picture.get_attr("type").and_then(|v| v.as_text()) == Some("image")
+                    && matches!(&picture.content, crate::binary::NodeContent::Bytes(_)))
+            && node
+                .child_nodes()
+                .first()
+                .is_some_and(|child| child.description == "picture");
         // An `iq type=result` can still carry a refusal further in. App-state
         // answers per collection: `<sync><collection type="error"><error
         // code="409" text="conflict"/>`, observed live 2026-09-24. Reading only
         // the outer type recorded that as success, which is worse than an error
         // — it is an error the caller is told is fine.
-        let inner_error = if about_result {
+        let inner_error = if about_result || photo_set_result {
             None
         } else {
             node.child_nodes()
@@ -1411,6 +1426,82 @@ mod tests {
                 );
             }
         }
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn photo_callbacks_keep_zero_timer_and_upload_extension_semantics() {
+        use super::super::profile_picture;
+        use std::time::Duration;
+        use tokio::time::{Instant, advance};
+        for upload in [false, true] {
+            for outcome in ["result", "error"] {
+                let (_dir, store) = store();
+                let id = if upload {
+                    profile_picture::queue_set(
+                        &store,
+                        vec![0xff, 0xd8, 0xff, 0xe0, 1, 2, 0xff, 0xd9],
+                    )
+                } else {
+                    profile_picture::queue_get(
+                        &store,
+                        &crate::model::jid::Jid::parse("15555550101@s.whatsapp.net").unwrap(),
+                    )
+                }
+                .unwrap();
+                let request = reserve_next(&store).unwrap().unwrap();
+                let mut live = LiveReplies::default();
+                live.record_written(&request, Instant::now());
+                assert!(live.deadline().is_none());
+                advance(Duration::from_secs(60)).await;
+                live.expire();
+                let mut children = vec![
+                    Node::new("picture")
+                        .attr("id", "7")
+                        .attr("url", "https://example.invalid/picture.jpg"),
+                ];
+                if upload || outcome == "error" {
+                    children.push(Node::new("error").attr("code", "403"));
+                }
+                let reply = Node::new("iq")
+                    .attr("id", id.as_str())
+                    .attr("type", outcome)
+                    .children(children);
+                assert!(live.record_reply(&store, &reply).unwrap());
+                assert!(!live.record_reply(&store, &reply).unwrap());
+                let outcomes = outcomes(&store).unwrap();
+                let saved = outcomes.iter().find(|a| a.id == id).unwrap();
+                assert_eq!(
+                    saved.status,
+                    if outcome == "result" {
+                        ActionStatus::Ok
+                    } else {
+                        ActionStatus::Error
+                    }
+                );
+                assert_eq!(
+                    saved.error_code,
+                    if outcome == "result" { None } else { Some(403) }
+                );
+            }
+        }
+        // A mislabeled action must not inherit this callback's reply policy.
+        let (_dir, store) = store();
+        let id = queue(&store, profile_picture::SET_KIND, "wrong producer", ping).unwrap();
+        reserve_next(&store).unwrap().unwrap();
+        assert!(
+            record_reply(
+                &store,
+                &Node::new("iq")
+                    .attr("id", id.as_str())
+                    .attr("type", "result")
+                    .children(vec![
+                        Node::new("picture"),
+                        Node::new("error").attr("code", "403")
+                    ])
+            )
+            .unwrap()
+        );
+        assert_eq!(outcomes(&store).unwrap()[0].status, ActionStatus::Error);
     }
 
     #[test]

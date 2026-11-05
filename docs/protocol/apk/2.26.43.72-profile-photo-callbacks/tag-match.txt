@@ -1,0 +1,16 @@
+
+# class: LX/0Tp;
+# extends: Ljava/lang/Object;
+
+.method public A02(ZLL)  # .registers 2
+    # full signature: LX/0Tp;->A02(LX/0Tp;Ljava/lang/String;)Z
+    0000..0004  if-eqz  v0, +0xb
+    0004..0008  iget-object  v0, v0, LX/0Tp;->A00:Ljava/lang/String;
+    0008..000e  invoke-virtual  {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    000e..0010  move-result  v1
+    0010..0012  const/4  v0, #0x1
+    0012..0016  if-nez  v1, +0x3
+    0016..0018  const/4  v0, #0x0
+    0018..001a  return  v0
+    # exception table: 0 try range(s)
+.end method

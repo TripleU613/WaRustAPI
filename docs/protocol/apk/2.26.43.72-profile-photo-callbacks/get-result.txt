@@ -1,0 +1,72 @@
+
+# class: LX/6p1;
+# extends: Ljava/lang/Object;
+
+.method public CK4(VLL)  # .registers 15
+    # full signature: LX/6p1;->CK4(LX/0Tp;Ljava/lang/String;)V
+    0000..0002  const/4  v0, #0x1
+    0002..0008  invoke-static  {v13, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  const-string  v0, "picture"
+    000c..0012  invoke-virtual  {v13, v0}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    0012..0014  move-result-object  v4
+    0014..0018  iget-object  v3, v12, LX/6p1;->A04:Ljava/lang/String;
+    0018..001a  const/4  v9, #0x0
+    001a..001e  if-eqz  v4, +0x26
+    001e..0022  iget-object  v2, v4, LX/0Tp;->A01:[B
+    0022..0026  const-string  v0, "direct_path"
+    0026..0028  const/4  v1, #0x0
+    0028..002e  invoke-virtual  {v4, v0, v9}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    002e..0030  move-result-object  v6
+    0030..0034  const-string  v0, "hash"
+    0034..003a  invoke-virtual  {v4, v0, v9}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    003a..003c  move-result-object  v7
+    003c..0040  const-string  v0, "url"
+    0040..0046  invoke-virtual  {v4, v0, v9}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0046..0048  move-result-object  v0
+    0048..004c  if-eqz  v0, +0x13
+    004c..0050  new-instance  v9, Ljava/net/URL;
+    0050..0056  invoke-direct  {v9, v0}, Ljava/net/URL;-><init>(Ljava/lang/String;)V
+    0056..0058  goto  +0xc
+    0058..005c  const-string  v0, "Malformed picture url"
+    005c..0062  invoke-static  {v0}, LX/6oe;->A0r(Ljava/lang/String;)LX/LIL;
+    0062..0064  move-result-object  v0
+    0064..0066  throw  v0
+    0066..0068  move-object  v8, v9
+    0068..006a  move-object  v6, v9
+    006a..006c  move-object  v7, v9
+    006c..006e  goto  +0x9
+    006e..0072  const-string  v0, "id"
+    0072..0078  invoke-virtual  {v4, v0, v1}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0078..007a  move-result-object  v3
+    007a..007c  move-object  v8, v9
+    007c..007e  move-object  v9, v2
+    007e..0082  if-eqz  v3, +0x3
+    0082..0084  goto  +0x3
+    0084..0086  const/4  v10, #0xff (-1)
+    0086..0088  goto  +0x5
+    0088..008e  invoke-static  {v3}, Ljava/lang/Integer;->parseInt(Ljava/lang/String;)I
+    008e..0090  move-result  v10
+    0090..0094  iget-object  v2, v12, LX/6p1;->A07:LX/8pX;
+    0094..0098  iget-object  v5, v12, LX/6p1;->A02:LX/0DY;
+    0098..009c  iget-object  v1, v12, LX/6p1;->A05:Ljava/lang/String;
+    009c..00a0  const-string  v0, "preview"
+    00a0..00a6  invoke-virtual  {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    00a6..00a8  move-result  v0
+    00a8..00ae  invoke-static  {v0}, LX/6oe;->A00(I)I
+    00ae..00b0  move-result  v11
+    00b0..00b4  new-instance  v4, LX/H5d;
+    00b4..00ba  invoke-direct/range  {v4..v11}, LX/H5d;-><init>(LX/0DY;Ljava/lang/String;Ljava/lang/String;Ljava/net/URL;[BII)V
+    00ba..00be  iget-wide  v0, v12, LX/6p1;->A06:J
+    00be..00c4  invoke-interface  {v2, v4, v0, v1}, LX/8pX;->CAe(LX/H5d;J)V
+    00c4..00c6  return-void
+    00c6..00ca  const-string  v0, "Malformed photo id="
+    00ca..00d0  invoke-static  {v0, v3}, LX/000;->A04(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    00d0..00d2  move-result-object  v0
+    00d2..00d8  invoke-static  {v0}, LX/6oe;->A0r(Ljava/lang/String;)LX/LIL;
+    00d8..00da  move-result-object  v0
+    00da..00dc  throw  v0
+    # exception table: 3 try range(s)
+    # catch Ljava/net/MalformedURLException; code_units 0026..002c -> 002c
+    # catch Ljava/lang/NumberFormatException; code_units 0044..0053 -> 0063
+    # catch Ljava/lang/NumberFormatException; code_units 0058..0063 -> 0063
+.end method

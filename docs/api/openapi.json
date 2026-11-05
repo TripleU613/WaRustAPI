@@ -15036,7 +15036,7 @@
           "Lab"
         ],
         "summary": "Set our profile photo",
-        "description": "Queues `<iq xmlns=\"w:profile:picture\" type=\"set\" to=\"s.whatsapp.net\"><picture type=\"image\">JPEG</picture></iq>` (2.26.37.71 SetProfilePhotoProtocolHelper IXF.A00; own photo has no target; the `to` address is inferred, the builder writes none). The file must be a JPEG (start/end markers) of at most 2 MiB (local bound); the app's crop/resize was not traced, so supply a square JPEG (the app uploads 640x640). A session such as listen transmits it; actions --show reports the reply. No HTTP route is served.",
+        "description": "Queues `<iq xmlns=\"w:profile:picture\" type=\"set\" to=\"s.whatsapp.net\"><picture type=\"image\">JPEG</picture></iq>` (2.26.37.71 SetProfilePhotoProtocolHelper IXF.A00; own photo has no target; current APK2.26.43.72 Hyd.A00/B22.A0F confirms the to address). The file must be a JPEG (start/end markers) of at most 2 MiB (local bound); the app's crop/resize/JPEG settings remain untraced. A session such as listen transmits it; actions --show reports the reply. No HTTP route is served.",
         "operationId": "setProfilePicture",
         "x-cli": "whatsapp-cli profile-picture set",
         "x-transport": [
@@ -15079,7 +15079,7 @@
           "Lab"
         ],
         "summary": "Look up a profile photo URL",
-        "description": "Queues `<iq xmlns=\"w:profile:picture\" type=\"get\" to=\"s.whatsapp.net\" target=JID><picture type=\"image\" query=\"url\"/></iq>` (2.26.37.71 8kn.A00; its optional common_gid and tctoken children are not sent). actions --show reports the reply with the URL; nothing is downloaded. No HTTP route is served.",
+        "description": "Queues `<iq xmlns=\"w:profile:picture\" type=\"get\" to=\"s.whatsapp.net\" target=JID><picture type=\"image\" query=\"url\"/></iq>` (2.26.37.71 8kn.A00; current APK2.26.43.72 6p1.A00 confirms the optional picture common_gid attribute and nested tctoken child, which are not sent here). actions --show reports the reply with the URL; nothing is downloaded. No HTTP route is served.",
         "operationId": "getProfilePicture",
         "x-cli": "whatsapp-cli profile-picture get",
         "x-transport": [
@@ -16614,5 +16614,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-about-callback-lifetime/README.md",
     "description": "APK43.72 About writer29 stores JAj in a legacy map shared by1rj/1rh/1rD. The screen32s timer does not itself expire this network callback. Outer result dispatch calls JAj.A02 without examining response payload. Typed about-set with matching saved status/set shape now settles result asOk even with synthetic nested error extensions; outer error/code and other action nested-refusal policies remain intact. Paused-clock60s ownership/independent AB-properties expiry and normal-driver regressions. No new timer/replay/adoption/route; full native lifecycle and observer behavior remain open."
+  },
+  "x-profile-photo-callback-semantics": {
+    "x-cli": false,
+    "x-transport": [
+      "normal experimental typed profile-photo action settlement; offline tested"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-profile-photo-callbacks/README.md",
+    "description": "APK43.72 Hyd upload helper confirms to=s.whatsapp.net, and6p1 lookup addresses it explicitly. Both pass duration0 through distinctA0W/A0R wrappers; no invented20/32s callback timer. Typed byte/image upload result with first picture child now ignores later error extensions like Hyd.CK4; outer error and other action refusal semantics remain intact. Exact4/5 outer attribute/server checks,60s same-connection callback and normal-driver synthetic-extension regressions. Full malformed-result admission, lookup/cache/removal/account-center/target normalization/image transformation policies remain open; no live verification or media fetch."
   }
 }
