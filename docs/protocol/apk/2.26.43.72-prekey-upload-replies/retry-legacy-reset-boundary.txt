@@ -1,0 +1,49 @@
+
+# class: LX/0WJ;
+# extends: Ljava/lang/Object;
+
+.method public A0B(VL)  # .registers 5
+    # full signature: LX/0WJ;->A0B(LX/0WJ;)V
+    0000..0004  const/16  v1, #0x5245
+    0004..0008  iget-object  v0, v4, LX/0WJ;->A0Q:LX/0Xp;
+    0008..000e  invoke-virtual  {v0}, LX/0Xp;->A0E()V
+    000e..0012  iget-object  v0, v4, LX/0WJ;->A0A:LX/08Y;
+    0012..0018  invoke-virtual  {v0, v1}, LX/00E;->A14(I)Z
+    0018..001a  move-result  v0
+    001a..001e  if-eqz  v0, +0x13
+    001e..0022  iget-object  v2, v4, LX/0WJ;->A0R:Lcom/whatsapp/wamsys/JniBridge;
+    0022..0026  sget-object  v0, Lcom/whatsapp/wamsys/JniBridge;->WHATSAPP_LIB_LOADER:LX/0D8;
+    0026..002a  check-cast  v0, Lcom/whatsapp/infra/nativelibloader/WhatsAppLibLoader;
+    002a..0030  invoke-virtual  {v0}, Lcom/whatsapp/infra/nativelibloader/WhatsAppLibLoader;->BbM()Z
+    0030..0032  const/4  v1, #0x0
+    0032..0038  invoke-virtual  {v2}, Lcom/whatsapp/wamsys/JniBridge;->getWajContext()Lcom/facebook/simplejni/NativeHolder;
+    0038..003a  move-result-object  v0
+    003a..0040  invoke-static  {v1, v0}, Lcom/whatsapp/wamsys/JniBridge;->jvidispatchIO(ILjava/lang/Object;)J
+    0040..0044  iget-object  v0, v4, LX/0WJ;->A05:LX/00x;
+    0044..004a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    004a..004c  move-result-object  v0
+    004c..0050  check-cast  v0, LX/Eoe;
+    0050..0056  invoke-virtual  {v0}, LX/Eoe;->A02()V
+    0056..0058  return-void
+    0058..005a  move-exception  v3
+    005a..005e  iget-object  v0, v4, LX/0WJ;->A0A:LX/08Y;
+    005e..0064  invoke-virtual  {v0, v1}, LX/00E;->A14(I)Z
+    0064..0066  move-result  v0
+    0066..006a  if-eqz  v0, +0x13
+    006a..006e  iget-object  v2, v4, LX/0WJ;->A0R:Lcom/whatsapp/wamsys/JniBridge;
+    006e..0072  sget-object  v0, Lcom/whatsapp/wamsys/JniBridge;->WHATSAPP_LIB_LOADER:LX/0D8;
+    0072..0076  check-cast  v0, Lcom/whatsapp/infra/nativelibloader/WhatsAppLibLoader;
+    0076..007c  invoke-virtual  {v0}, Lcom/whatsapp/infra/nativelibloader/WhatsAppLibLoader;->BbM()Z
+    007c..007e  const/4  v1, #0x0
+    007e..0084  invoke-virtual  {v2}, Lcom/whatsapp/wamsys/JniBridge;->getWajContext()Lcom/facebook/simplejni/NativeHolder;
+    0084..0086  move-result-object  v0
+    0086..008c  invoke-static  {v1, v0}, Lcom/whatsapp/wamsys/JniBridge;->jvidispatchIO(ILjava/lang/Object;)J
+    008c..0090  iget-object  v0, v4, LX/0WJ;->A05:LX/00x;
+    0090..0096  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0096..0098  move-result-object  v0
+    0098..009c  check-cast  v0, LX/Eoe;
+    009c..00a2  invoke-virtual  {v0}, LX/Eoe;->A02()V
+    00a2..00a4  throw  v3
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0002..0007 -> 002c
+.end method

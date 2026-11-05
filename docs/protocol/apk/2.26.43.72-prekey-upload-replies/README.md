@@ -1131,3 +1131,52 @@ no numeric retry or regeneration policy is activated by this correction.
 No live traffic.
 
 - [error-number-parser.txt](error-number-parser.txt): `d02330cc5123b8be9d99bc042a5262fad59a71c60138568edd59c1d6a85514d5`
+
+## Legacy refusal retry workers and reset boundary (2026-11-04)
+
+**Confirmed static**, pinned2.26.43.72, same APK SHA-256 as this bundle.
+Checked DEX exports are not REA Evidence envelopes. Only selected branches
+of the full Fea.run are audited; unrelated selectors remain outside scope.
+
+- Retained **14o.BLn selector78** reads code/text, clears manager arrays
+  A08/A07/A02, setsA0X=12, clearsA0a/A0Z under monitor, calls13z.A07.
+  New **A07 ->A0C(0)** only clears **A09** under monitor. It is not itself
+  a database/key reset or the whole backoff reset.
+- In the **EMZ.A02=false** legacy error path,406 storesA0Y=406 and
+  submits **Fea9** to0YM.A02("prekeys",worker). **Fea.run11ba–11d2**
+  invokes **13z.A05**, then **A0S(reason7)**. This differs from the
+  modern **Fea13** path1174–119c, which invokesA06 thenA0R(reason7).
+  Do not substitute modern PQ-only SET for the legacy error continuation.
+- **13z.A05** acquires0Wk.A04/FjI, calls **0WJ.A0m(9)**, then
+  **0WJ.A0k** (legacy ensure previously traced), closesFjI. Failure
+  cleanup closes it and propagates exceptions; no successful A0S follows
+  if A05 throws. Exact FjI locking/transaction semantics are not rederived.
+- **0WJ.A0m** records shared preference **identity_reset_reason=9** then
+  callsA0B. **A0B** calls **0Xp.A0E ->A0B()Z**, then conditionally
+  (`0x5245`) invokes native jvidispatchIO(0,wajContext), and callsEoe.A02
+  on normal/exception cleanup paths. The SQLite helperA0B, native operation
+  andEoe effects are **untraced**: do not infer their complete deletion scope
+  or implement automatic identity/session reset from method/log names.
+- Legacy5xx scheduling at14o034a onward chooses Fea10 or11 by flag0x47af
+  after the already retained delay/allowance calculation. Both run119c–11ba
+  and1242–1258, submitting **Fea8** to named prekeys work. Fea8 checks
+  managerA06 under monitor; when true it calls **A0E(null,reason8,true)**.
+  If admitted, it calls **A03(nullCallback,manager,null,null,false,false)**;
+  if not admitted/backofffalse it clearsA0Y and returns. Thus scheduled
+  work does not unconditionally upload or regenerate. A0E's override is
+  explicit; complete admission/lifecycle conditions remain required.
+
+**Rust impact:** the saved-refusal hold remains an explicit incomplete-policy
+state. Porting native retry requires correct strategy, worker admission and
+reset semantics; this evidence does not authorize deletion or resetting real
+account material. No production change or live operation in this chunk.
+
+Additional export hashes:
+
+- [retry-legacy-retry-workers.txt](retry-legacy-retry-workers.txt): `fb2b39ffc5c0f6be036a15ed005c1f2c73f0dcbc70ae087c3d3c29e8a7490909`
+- [retry-legacy-regenerate.txt](retry-legacy-regenerate.txt): `6c038bf74ce7782a090d2f573b92077a2e5a2a4fb52e77cc0f5c40c1a8da5ed7`
+- [retry-legacy-state-clear.txt](retry-legacy-state-clear.txt): `64db0cc6046673119c8aa5bf785c2efdb1d00f6ed8c38be11bc0f5309e4b5004`
+- [retry-legacy-regeneration-storage.txt](retry-legacy-regeneration-storage.txt): `4154b37a7ba2b5e079e3050fd7ba7694aac4bd3196edbe0d09056c4b813d9d37`
+- [retry-legacy-clear-timestamp.txt](retry-legacy-clear-timestamp.txt): `a22c18346f91bde5083d37e9b9a13b5795a392f1d809ae1ae410ebd8f515f442`
+- [retry-legacy-reset-boundary.txt](retry-legacy-reset-boundary.txt): `311333af004a1fdd9625ec4d0ba49c5cd94001a0d7fc0b863657d816de1e6bef`
+- [retry-legacy-store-cleanup.txt](retry-legacy-store-cleanup.txt): `752a3b4007437a9d72b14da5b9c34145fda350a8c54b91022efa1b96eeade069`

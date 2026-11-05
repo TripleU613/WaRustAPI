@@ -1,0 +1,42 @@
+
+# class: LX/0WJ;
+# extends: Ljava/lang/Object;
+
+.method public A0m(VI)  # .registers 6
+    # full signature: LX/0WJ;->A0m(I)V
+    0000..0004  const-string  v1, "SignalCoordinator/deleteStore reason="
+    0004..0008  new-instance  v0, Ljava/lang/StringBuilder;
+    0008..000e  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    000e..0014  invoke-virtual  {v0, v5}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0014..001a  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    001a..001c  move-result-object  v0
+    001c..0022  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0022..0026  iget-object  v0, v4, LX/0WJ;->A0C:LX/09S;
+    0026..002a  iget-object  v0, v0, LX/09S;->A0U:LX/00x;
+    002a..0030  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0030..0032  move-result-object  v3
+    0032..0036  check-cast  v3, LX/0Fa;
+    0036..003c  const-string/jumbo  v1, "wa-shared-prefs/setpendingidentityresetreason/"
+    003c..0040  new-instance  v0, Ljava/lang/StringBuilder;
+    0040..0046  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0046..004c  invoke-virtual  {v0, v5}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    004c..0052  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0052..0054  move-result-object  v0
+    0054..005a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    005a..005e  iget-object  v2, v3, LX/0Fa;->A01:Ljava/lang/Object;
+    005e..0060  monitor-enter
+    0060..0066  invoke-virtual  {v3}, LX/0FZ;->A02()Landroid/content/SharedPreferences$Editor;
+    0066..0068  move-result-object  v1
+    0068..006c  const-string  v0, "identity_reset_reason"
+    006c..0072  invoke-interface  {v1, v0, v5}, Landroid/content/SharedPreferences$Editor;->putInt(Ljava/lang/String;I)Landroid/content/SharedPreferences$Editor;
+    0072..0074  move-result-object  v0
+    0074..007a  invoke-interface  {v0}, Landroid/content/SharedPreferences$Editor;->apply()V
+    007a..007c  monitor-exit
+    007c..0082  invoke-static  {v4}, LX/0WJ;->A0B(LX/0WJ;)V
+    0082..0084  return-void
+    0084..0086  move-exception  v0
+    0086..0088  monitor-exit
+    0088..008a  throw  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0030..003d -> 0042
+.end method

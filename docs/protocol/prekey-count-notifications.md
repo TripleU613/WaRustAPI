@@ -421,3 +421,11 @@ Regression covers406/503/default0 refusals, additional freshly generated
 legacy material, repeated begin attempts and reopen. No new batch/checkpoint
 write occurs. Existing acknowledged-upload and malformed-reply tests remain.
 No live traffic or account state was modified.
+
+## 2026-11-04 — Legacy refusal workers/reset boundary
+
+**Confirmed static (43.72):**legacy406 Fea9 callsA05/A0m(reason9)
+thenA0S(reason7), distinct from modernFea13/A06/A0R. A0m records identity
+reset reason and enters cleanup whose full effects remain unknown.
+Legacy5xx Fea10/11 ->Fea8 rechecks backoff/admission beforeA03.
+[Exports and incomplete port scope](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-refusal-retry-workers-and-reset-boundary-2026-11-04). No production change or live traffic.
