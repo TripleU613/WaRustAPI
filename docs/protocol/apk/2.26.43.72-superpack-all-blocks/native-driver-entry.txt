@@ -1,0 +1,128 @@
+            0x0001adb8      stp   x29, x30, [sp, -0x40]!
+            0x0001adbc      stp   x24, x23, [sp, 0x10]
+            0x0001adc0      stp   x22, x21, [sp, 0x20]
+            0x0001adc4      stp   x20, x19, [sp, 0x30]
+            0x0001adc8      sub   sp, sp, 0xa, lsl 12
+            0x0001adcc      sub   sp, sp, 0x110
+            0x0001add0      mov   x24, x0
+            0x0001add4      mov   x0, x1
+            0x0001add8      mov   x21, x4
+            0x0001addc      mov   x22, x3
+            0x0001ade0      mov   x20, x2
+            0x0001ade4      mov   x23, x1
+            0x0001ade8      bl    0x1a30c
+        ┌─< 0x0001adec      cbz   x0, 0x1ae3c
+        │   0x0001adf0      mov   x19, x0
+        │   0x0001adf4      add   x0, sp, 8
+        │   0x0001adf8      mov   w1, wzr
+        │   0x0001adfc      mov   w2, 0xa108
+        │   0x0001ae00      bl    sym.imp.memset
+        │   0x0001ae04      add   x3, sp, 8
+        │   0x0001ae08      mov   x0, x24
+        │   0x0001ae0c      mov   x1, x23
+        │   0x0001ae10      mov   x2, x19
+        │   0x0001ae14      bl    0x1a420
+       ┌──< 0x0001ae18      cbnz  w0, 0x1ae2c
+       ││   0x0001ae1c      mov   x0, x19
+       ││   0x0001ae20      bl    0xeadc
+       ││   0x0001ae24      cmp   x0, x22
+      ┌───< 0x0001ae28      b.ls  0x1ae60
+      │└──> 0x0001ae2c      mov   w20, -1
+      │┌──> 0x0001ae30      mov   x0, x19
+      │╎│   0x0001ae34      bl    0xded4
+     ┌────< 0x0001ae38      b     0x1ae40
+     ││╎└─> 0x0001ae3c      mov   w20, -1
+     └────> 0x0001ae40      mov   w0, w20
+      │╎    0x0001ae44      add   sp, sp, 0xa, lsl 12
+      │╎    0x0001ae48      add   sp, sp, 0x110
+      │╎    0x0001ae4c      ldp   x20, x19, [sp, 0x30]
+      │╎    0x0001ae50      ldp   x22, x21, [sp, 0x20]
+      │╎    0x0001ae54      ldp   x24, x23, [sp, 0x10]
+      │╎    0x0001ae58      ldp   x29, x30, [sp], 0x40
+      │╎    0x0001ae5c      ret
+      └───> 0x0001ae60      mov   x23, x0
+       ╎┌─< 0x0001ae64      cbz   x21, 0x1ae6c
+       ╎│   0x0001ae68      str   x23, [x21]
+       ╎└─> 0x0001ae6c      nop
+       ╎    0x0001ae70      adr   x1, 0x38390
+       ╎    0x0001ae74      add   x2, sp, 8
+       ╎    0x0001ae78      mov   x0, x19
+       ╎    0x0001ae7c      mov   x3, x23
+       ╎    0x0001ae80      str   x20, [sp, 0xa0]
+       ╎    0x0001ae84      bl    0xe8d4
+       ╎    0x0001ae88      cmp   x0, x23
+       ╎┌─< 0x0001ae8c      b.ne  0x1aed8
+       ╎│   0x0001ae90      mov   x0, x19
+       ╎│   0x0001ae94      mov   x1, x20
+       ╎│   0x0001ae98      bl    0xf188
+       ╎│   0x0001ae9c      add   x0, sp, 8
+       ╎│   0x0001aea0      bl    0xb898
+       ╎│   0x0001aea4      ldr   x0, [sp, 0x58]                       ; [0x58:4]=64
+      ┌───< 0x0001aea8      cbz   x0, 0x1aeb0
+      │╎│   0x0001aeac      bl    sym.imp.free
+      └───> 0x0001aeb0      ldr   x0, [sp, 0x68]                       ; [0x68:4]=504
+      ┌───< 0x0001aeb4      cbz   x0, 0x1aebc
+      │╎│   0x0001aeb8      bl    sym.imp.free
+      └───> 0x0001aebc      ldr   x0, [sp, 0x48]                       ; [0x48:4]=64
+      ┌───< 0x0001aec0      cbz   x0, 0x1aec8
+      │╎│   0x0001aec4      bl    sym.imp.free
+      └───> 0x0001aec8      ldr   x0, [sp, 0x80]                       ; [0x80:4]=0
+       ╎│   0x0001aecc      mov   w20, wzr
+      ┌───< 0x0001aed0      cbnz  x0, 0x1af10
+     ┌────< 0x0001aed4      b     0x1af14
+     ││╎└─> 0x0001aed8      add   x0, sp, 8
+     ││╎    0x0001aedc      bl    0xb898
+     ││╎    0x0001aee0      ldr   x0, [sp, 0x58]                       ; [0x58:4]=64
+     ││╎┌─< 0x0001aee4      cbz   x0, 0x1aeec
+     ││╎│   0x0001aee8      bl    sym.imp.free
+     ││╎└─> 0x0001aeec      ldr   x0, [sp, 0x68]                       ; [0x68:4]=504
+     ││╎┌─< 0x0001aef0      cbz   x0, 0x1aef8
+     ││╎│   0x0001aef4      bl    sym.imp.free
+     ││╎└─> 0x0001aef8      ldr   x0, [sp, 0x48]                       ; [0x48:4]=64
+     ││╎┌─< 0x0001aefc      cbz   x0, 0x1af04
+     ││╎│   0x0001af00      bl    sym.imp.free
+     ││╎└─> 0x0001af04      ldr   x0, [sp, 0x80]                       ; [0x80:4]=0
+     ││╎    0x0001af08      mov   w20, -1
+     ││╎┌─< 0x0001af0c      cbz   x0, 0x1af14
+     │└───> 0x0001af10      bl    sym.imp.free
+     └──└─> 0x0001af14      ldr   x0, [sp, 0x18]                       ; [0x18:4]=0
+       ╎    0x0001af18      bl    sym.imp.free
+       └──< 0x0001af1c      b     0x1ae30
+            0x0001af20      sub   sp, sp, 0x40
+            0x0001af24      stp   x30, x23, [sp, 0x10]
+            0x0001af28      stp   x22, x21, [sp, 0x20]
+            0x0001af2c      stp   x20, x19, [sp, 0x30]
+            0x0001af30      ldr   x20, [x0, 8]                         ; [0x8:4]=0
+            0x0001af34      mov   x22, x0
+            0x0001af38      mov   x0, x20
+            0x0001af3c      bl    0x2dbc8
+            0x0001af40      mov   x19, x0
+            0x0001af44      mov   x0, x20
+            0x0001af48      bl    0x33578
+            0x0001af4c      ldr   x21, [x22, 0x38]                     ; [0x38:4]=0x400009
+            0x0001af50      ldr   x22, [x22, 0x28]                     ; [0x28:4]=0x35878
+            0x0001af54      mov   x20, x0
+            0x0001af58      add   x23, x19, x0
+        ┌─> 0x0001af5c      add   x4, sp, 8
+        ╎   0x0001af60      mov   x0, x21
+        ╎   0x0001af64      mov   x1, x22
+        ╎   0x0001af68      mov   x2, x19
+        ╎   0x0001af6c      mov   x3, x20
+        ╎   0x0001af70      bl    0x1adb8
+       ┌──< 0x0001af74      cbnz  w0, 0x1afa0
+       │╎   0x0001af78      ldr   x8, [sp, 8]                          ; [0x8:4]=0
+       │╎   0x0001af7c      add   x19, x19, x8
+       │╎   0x0001af80      cmp   x19, x23
+       │└─< 0x0001af84      b.lo  0x1af5c
+       │    0x0001af88      mov   w0, wzr
+       │    0x0001af8c      ldp   x20, x19, [sp, 0x30]
+       │    0x0001af90      ldp   x22, x21, [sp, 0x20]
+       │    0x0001af94      ldp   x30, x23, [sp, 0x10]
+       │    0x0001af98      add   sp, sp, 0x40
+       │    0x0001af9c      ret
+       └──> 0x0001afa0      mov   w0, -1
+            0x0001afa4      ldp   x20, x19, [sp, 0x30]
+            0x0001afa8      ldp   x22, x21, [sp, 0x20]
+            0x0001afac      ldp   x30, x23, [sp, 0x10]
+            0x0001afb0      add   sp, sp, 0x40
+            0x0001afb4      ret

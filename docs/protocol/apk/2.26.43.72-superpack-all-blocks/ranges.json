@@ -1,0 +1,30 @@
+[
+  {
+    "file": "native-driver-registration.txt",
+    "virtual_address": "0xb43c",
+    "file_offset": "0xb43c",
+    "bytes": 76,
+    "sha256": "35cfda6e8ad085e4f3711d9e2b497ee849ff7b09d1f57e3a224144f001a82e32"
+  },
+  {
+    "file": "driver-registry-setup.txt",
+    "virtual_address": "0x1d5e8",
+    "file_offset": "0x1d5e8",
+    "bytes": 212,
+    "sha256": "55c3315a060ce9562b41fcd0a677bf61d37e92d844abad8ee29cdf75659a8b61"
+  },
+  {
+    "file": "member-dispatch.txt",
+    "virtual_address": "0x1d6bc",
+    "file_offset": "0x1d6bc",
+    "bytes": 544,
+    "sha256": "c9c6b354ddd6ea102a771a95157548ae3243bd58eabe8c7fa1bf2eea8a045792"
+  },
+  {
+    "file": "native-driver-entry.txt",
+    "virtual_address": "0x1adb8",
+    "file_offset": "0x1adb8",
+    "bytes": 512,
+    "sha256": "0acfdba439d7d160ca048292006861e9754c0c2642bc939b96523386b5998018"
+  }
+]

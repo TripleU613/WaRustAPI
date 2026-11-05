@@ -1,0 +1,10 @@
+{
+  "registry_name": "native_driver",
+  "type": "so",
+  "callback_slot_va": "0x3cdf8",
+  "callback_slot_file_offset": "0x34df8",
+  "callback_va": "0x1af20",
+  "callback_file_offset": "0x1af20",
+  "relocation": "R_AARCH64_RELATIVE (1027), symbol index zero",
+  "next_helper": "0x1adb8"
+}

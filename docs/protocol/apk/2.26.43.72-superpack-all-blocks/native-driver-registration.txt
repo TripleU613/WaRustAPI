@@ -1,0 +1,19 @@
+            0x0000b43c      stp   x30, x19, [sp, -0x10]!
+            0x0000b440      mov   w0, 0x8860
+            0x0000b444      bl    0x3316c
+            0x0000b448      nop
+            0x0000b44c      adr   x1, str.native_driver                ; 0x3577
+            0x0000b450      adrp  x2, 0x3000
+            0x0000b454      add   x2, x2, 0x991
+            0x0000b458      nop
+            0x0000b45c      adr   x5, 0x3cdf0
+            0x0000b460      mov   w3, wzr
+            0x0000b464      mov   w4, 4
+            0x0000b468      mov   x19, x0
+            0x0000b46c      bl    0x1d654
+            0x0000b470      bl    0xb488
+            0x0000b474      mov   x0, x19
+            0x0000b478      bl    0x1d5e8
+            0x0000b47c      mov   x0, x19
+            0x0000b480      ldp   x30, x19, [sp], 0x10
+            0x0000b484      ret

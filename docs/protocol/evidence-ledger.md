@@ -5941,3 +5941,13 @@ executes selected target instructions in memory, not an Android app or account.
 [Digest-bound harness, results and execution limits](apk/2.26.43.72-superpack-kind42-emulation/README.md).
 Candidates are not ELF images; member stitching/checksums, other type-42 blocks
 and native metrics network behavior remain open. No Rust behavior/live traffic changed.
+
+### Full Superpack block decode and so-driver boundary (2026-11-05)
+
+**Observed offline / emulated plus static mapping, APK 2.26.43.72:** all 213
+framed blocks produce declared lengths (140 XZ EOF-complete, 73 bounded ARM64
+emulations), totaling 81747344 bytes. None starts with ELF magic; complete native
+libraries remain unreconstructed. The registered so-driver resolves to 0x1af20,
+then helper 0x1adb8 for the additional member-output stage.
+[Full output manifest, 70 new emulation logs, driver assembly and limits](apk/2.26.43.72-superpack-all-blocks/README.md).
+Native metrics network/persistence behavior remains open. No Rust/live change.

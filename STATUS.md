@@ -1,3 +1,12 @@
+2026-11-05 — **All 213 framed blocks decoded; so-driver reconstruction next.**
+
+140 bounded XZ decodes and 73 constrained emulations produced 81747344 bytes.
+These are intermediate buffers, not recovered ELF libraries.
+[Manifest, driver mapping and limits](docs/protocol/apk/2.26.43.72-superpack-all-blocks/README.md).
+Validation: pinned hashes, complete frame EOF/length checks, emulation return
+records, all saved-buffer digests, JSON, coverage and bundle/link hygiene.
+No Rust behavior, live account operation or network traffic changed.
+
 2026-11-05 — **Type-42 decoder produced three bounded emulated block candidates.**
 
 The largest selected block returned 17778932 bytes and reproduced exactly.

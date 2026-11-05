@@ -1,0 +1,53 @@
+            0x0001d5e8      str   x30, [sp, -0x20]!
+            0x0001d5ec      stp   x20, x19, [sp, 0x10]
+            0x0001d5f0      nop
+            0x0001d5f4      adr   x20, 0x3dfd8
+            0x0001d5f8      mov   x19, x0
+            0x0001d5fc      add   x0, x20, 0x10
+            0x0001d600      bl    sym.imp.pthread_rwlock_wrlock
+            0x0001d604      ldr   x8, [x20]
+        ┌─< 0x0001d608      cbz   x8, 0x1d634
+        │   0x0001d60c      adrp  x8, 0x3d000
+        │   0x0001d610      mov   x0, x19
+        │   0x0001d614      ldr   x1, [x8, 0xfe0]                      ; [0xfe0:4]=61 ; U"=\U0000001eJ\U00000011"
+        │   0x0001d618      bl    0x335ec
+        │   0x0001d61c      adrp  x0, 0x3d000
+        │   0x0001d620      add   x0, x0, 0xfe0
+        │   0x0001d624      str   x19, [x0], 8
+        │   0x0001d628      ldp   x20, x19, [sp, 0x10]
+        │   0x0001d62c      ldr   x30, [sp], 0x20
+       ┌──< 0x0001d630      b     sym.imp.pthread_rwlock_unlock
+       │└─> 0x0001d634      adrp  x8, 0x3d000
+       │    0x0001d638      str   x19, [x8, 0xfd8]
+       │    0x0001d63c      adrp  x0, 0x3d000
+       │    0x0001d640      add   x0, x0, 0xfe0
+       │    0x0001d644      str   x19, [x0], 8
+       │    0x0001d648      ldp   x20, x19, [sp, 0x10]
+       │    0x0001d64c      ldr   x30, [sp], 0x20
+       │┌─< 0x0001d650      b     sym.imp.pthread_rwlock_unlock
+       ││   0x0001d654      str   x30, [sp, -0x30]!
+       ││   0x0001d658      stp   x22, x21, [sp, 0x10]
+       ││   0x0001d65c      stp   x20, x19, [sp, 0x20]
+       ││   0x0001d660      mov   x20, x2
+       ││   0x0001d664      mov   x21, x1
+       ││   0x0001d668      mov   w1, wzr
+       ││   0x0001d66c      mov   w2, 0x8860
+       ││   0x0001d670      mov   x19, x5
+       ││   0x0001d674      mov   x22, x0
+       ││   0x0001d678      bl    sym.imp.memset
+       ││   0x0001d67c      mov   w8, 0x8810
+       ││   0x0001d680      mov   x1, x21
+       ││   0x0001d684      mov   w2, 0x40
+       ││   0x0001d688      add   x0, x22, x8
+       ││   0x0001d68c      str   xzr, [x22]
+       ││   0x0001d690      bl    sym.imp.strncpy
+       ││   0x0001d694      mov   w8, 0x8850
+       ││   0x0001d698      mov   x1, x20
+       ││   0x0001d69c      mov   w2, 8
+       ││   0x0001d6a0      add   x0, x22, x8
+       ││   0x0001d6a4      bl    sym.imp.strncpy
+       ││   0x0001d6a8      str   x19, [x22, 8]
+       ││   0x0001d6ac      ldp   x20, x19, [sp, 0x20]
+       ││   0x0001d6b0      ldp   x22, x21, [sp, 0x10]
+       ││   0x0001d6b4      ldr   x30, [sp], 0x30
+       ││   0x0001d6b8      ret
