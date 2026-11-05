@@ -1,0 +1,76 @@
+
+# class: LX/0Yj;
+# extends: Ljava/lang/Object;
+
+.method public A02(LI)  # .registers 11
+    # full signature: LX/0Yj;->A02(I)[LX/ETs;
+    0000..0004  iget-object  v0, v9, LX/0Yj;->A07:LX/0Yb;
+    0004..000a  invoke-virtual  {v0, v10}, LX/0Yb;->A01(I)Ljava/util/ArrayList;
+    000a..000c  move-result-object  v0
+    000c..0010  new-instance  v3, Ljava/util/ArrayList;
+    0010..0016  invoke-direct  {v3}, Ljava/util/ArrayList;-><init>()V
+    0016..001c  invoke-virtual  {v0}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+    001c..001e  move-result-object  v8
+    001e..0024  invoke-interface  {v8}, Ljava/util/Iterator;->hasNext()Z
+    0024..0026  move-result  v0
+    0026..002a  if-eqz  v0, +0x51
+    002a..0030  invoke-interface  {v8}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0030..0032  move-result-object  v6
+    0032..0036  check-cast  v6, LX/ERb;
+    0036..003a  iget  v7, v6, LX/ERb;->A00:I
+    003a..003e  iget-object  v2, v6, LX/ERb;->A01:[B
+    003e..0042  new-instance  v1, LX/EEz;
+    0042..0048  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    0048..004c  sget-object  v0, LX/Ddm;->DEFAULT_INSTANCE:LX/Ddm;
+    004c..0052  invoke-static  {v0, v2}, Lcom/google/protobuf/GeneratedMessageLite;->parseFrom(Lcom/google/protobuf/GeneratedMessageLite;[B)Lcom/google/protobuf/GeneratedMessageLite;
+    0052..0054  move-result-object  v0
+    0054..0058  check-cast  v0, LX/Ddm;
+    0058..005c  iput-object  v0, v1, LX/EEz;->A00:LX/Ddm;
+    005c..0062  invoke-virtual  {v1}, LX/EEz;->A00()LX/ESl;
+    0062..0064  move-result-object  v0
+    0064..0068  iget-object  v0, v0, LX/ESl;->A01:LX/Fbl;
+    0068..006e  invoke-virtual  {v0}, LX/Fbl;->A00()[B
+    006e..0070  move-result-object  v5
+    0070..0072  array-length  v2, v5
+    0072..0074  const/4  v1, #0x1
+    0074..0076  sub-int/2addr  v2, v1
+    0076..007a  new-array  v4, v2, [B
+    007a..007c  const/4  v0, #0x0
+    007c..0082  invoke-static  {v5, v1, v4, v0, v2}, Ljava/lang/System;->arraycopy(Ljava/lang/Object;ILjava/lang/Object;II)V
+    0082..0088  invoke-static  {v7}, LX/1nr;->A04(I)[B
+    0088..008a  move-result-object  v2
+    008a..008c  const/4  v1, #0x0
+    008c..0090  new-instance  v0, LX/ETs;
+    0090..0096  invoke-direct  {v0, v2, v4, v1}, LX/ETs;-><init>([B[B[B)V
+    0096..009c  invoke-virtual  {v3, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    009c..009e  goto  -0x3f
+    009e..00a0  move-exception  v2
+    00a0..00a4  const-string  v0, "SignalProtocolStore/getUnsentPreKeys error reading prekey "
+    00a4..00a8  new-instance  v1, Ljava/lang/StringBuilder;
+    00a8..00ae  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00ae..00b2  iget  v0, v6, LX/ERb;->A00:I
+    00b2..00b8  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    00b8..00be  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00be..00c0  move-result-object  v0
+    00c0..00c6  invoke-static  {v0, v2}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    00c6..00c8  goto  -0x54
+    00c8..00cc  const-string  v0, "SignalProtocolStore/getUnsentPreKeys reporting back "
+    00cc..00d0  new-instance  v1, Ljava/lang/StringBuilder;
+    00d0..00d6  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00d6..00dc  invoke-virtual  {v3}, Ljava/util/AbstractCollection;->size()I
+    00dc..00de  move-result  v0
+    00de..00e4  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    00e4..00e8  const-string  v0, " prekeys for sending to the server"
+    00e8..00ee  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00ee..00f4  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00f4..00f6  move-result-object  v0
+    00f6..00fc  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    00fc..00fe  const/4  v0, #0x0
+    00fe..0102  new-array  v0, v0, [LX/ETs;
+    0102..0108  invoke-virtual  {v3, v0}, Ljava/util/AbstractCollection;->toArray([Ljava/lang/Object;)[Ljava/lang/Object;
+    0108..010a  move-result-object  v0
+    010a..010e  check-cast  v0, [LX/ETs;
+    010e..0110  return-object  v0
+    # exception table: 1 try range(s)
+    # catch Ljava/io/IOException; code_units 001b..004f -> 004f
+.end method

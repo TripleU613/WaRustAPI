@@ -257,3 +257,50 @@ Additional export hashes:
 - [success-constructor.txt](success-constructor.txt): `a024ab523e19a6507217f516a60a7962520146c9dc1fdd1b9d6fa52656f35577`
 - [continue-manager.txt](continue-manager.txt): `0914da61d2b4bbd955720c126a5b2d1b327442456c1ec96d2df4e3dab5dca7ce`
 - [generation-dispatch.txt](generation-dispatch.txt): `9f699fab4c95a2370b4087a06ec87b9668ec5dffc06bf04500e7cc2101e0f727`
+
+## ADD selection and exact child layout (2026-11-04)
+
+**Confirmed static**, same pinned 43.72; no runtime or wire capture.
+
+**0Yj.A02 -> 0Yb.A01:** the latter queries exactly
+`SELECT prekey_id, record FROM prekeys WHERE sent_to_server = 0 AND direct_distribution = 0 LIMIT ?`
+with the supplied limit as its single parameter. There is no ORDER BY in that
+SQL; do not infer native ascending-ID order from the returned array. 0Yj parses
+each saved Ddm through EEz/ESl/Fbl, removes the first serialized public-key byte
+via arraycopy, and constructs ETs(id,value,null). Caught IOException logs/skips
+that row; other exception classes are not caught by this method. Rust's stricter
+corrupt-row refusal remains local policy, not native skip equivalence.
+
+**1nr.A04** outputs a 3-byte big-endian low-24-bit ID: shifts16,8,0 into the
+array. This matches the existing legacy wire ID width; it does not independently
+establish generation/wraparound policy.
+
+**13z.A0B ADD branch**, retained in continue-manager.txt:
+
+- 0836–0864: first child `op` with sole attribute `mode=add` and no payload.
+- 0864–08e8: omit legacy `list` when its array is empty; otherwise each ordered
+  `key` contains `id` bytes then `value` bytes, no signature. Keys follow the
+  selected array order, not a newly sorted wire list.
+- 08e8–08ee and 0972–09fc: omit `pq_list` when empty; otherwise each `key`
+  contains `id`, `value`, `signature` from ETs fields, in that order.
+- 08ee–096e: parent attributes are **id, xmlns=encrypt, type=set, to=0mL.A00**
+  in that order, followed by the assembled children. 0Sf.A0G supplies id before
+  node construction (0810–0824). ADD builds no identity, registration, type-byte,
+  skey or pq_last_resort_key child in this branch. Those SET-only fields must
+  not be copied into ADD merely because the outer IQ type is also set.
+- 0a00–0a3c freezes exact selected arrays in callback141 before handoff. Empty
+  combined arrays take the no-send/guard-clear path at079a–07ac.
+
+**Porting readiness:** ADD layout and legacy selection filter are now closed at
+this source boundary. Remaining inputs before replacing Rust continuation are
+current generation parameters/availability, supplied batching-config provenance,
+PQ selection/admission and durable mode/limit records that never rewrite old
+SET reservations. This trace does not supply a runtime remote-config value and
+is not justification to change initial upload policy together with continuation.
+No production behavior or live traffic changed.
+
+Additional export hashes:
+
+- [add-selection.txt](add-selection.txt): `8638c79ff033e0c1ee2ca0ff30848be4a095d7a57139d613fca15f39fec055ff`
+- [add-sql.txt](add-sql.txt): `f28abbda7c8aea030aecacdd3c062f870882137653de8e49be9544ec9ba1fc15`
+- [add-id-encoding.txt](add-id-encoding.txt): `56c82fe43c2043ccfc64976d164df83b9f415f23dbb9eaf51a01780395316fdc`

@@ -147,3 +147,10 @@ No Rust scheduler change.
 **Confirmed static, 43.72 / unported:** EcZ/Fcd continuation uses ADD upload,
 configured legacy batch limit and distinct 141 callback ownership. Rust still
 uses older SET/812 follow-up construction. [Evidence and remaining porting inputs](apk/2.26.43.72-prekey-upload-replies/README.md#successful-continuation-selects-add-2026-11-04).
+
+## Current-build ADD selection and fields
+
+**Confirmed static, 43.72:** ADD uses unsent/non-direct SQL LIMIT and op plus
+optional legacy/PQ lists, without repeating SET account/signature setup children.
+[Exact layouts and remaining generation/config/persistence work](apk/2.26.43.72-prekey-upload-replies/README.md#add-selection-and-exact-child-layout-2026-11-04).
+No runtime switch yet.

@@ -1,3 +1,10 @@
+2026-11-04 — **ADD prekey selection and exact child layout traced.**
+
+43.72 SQL filter, key conversion/ID bytes and ADD-only wire shape retained.
+Generation/configuration/durable mode remain open before runtime port.
+[Evidence and limits](apk/2.26.43.72-prekey-upload-replies/README.md#add-selection-and-exact-child-layout-2026-11-04).
+No production change or live traffic.
+
 2026-11-04 — **Prekey success continuation ADD construction gap confirmed.**
 
 43.72 Fcd selects ADD/configured batching; Rust follows older SET/812 layout.

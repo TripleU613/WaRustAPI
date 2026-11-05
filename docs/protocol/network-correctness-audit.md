@@ -801,3 +801,15 @@ older full SET/812 layout, so current-build equivalence is disproven.
 No runtime patch yet: ADD selection SQL, full layout, generation and persisted
 batch compatibility must be traced. Existing uncertain reservations remain held.
 No live traffic. This gap stays open until implemented and validated.
+
+## Current-build ADD prekey selection and wire layout (2026-11-04)
+
+**Confirmed static, 43.72:** 0Yj.A02/0Yb.A01 selects unsent/non-direct keys
+with parameterized LIMIT and no SQL ordering; strips public-key type byte and
+uses 1nr.A04 three-byte IDs. 13z.A0B ADD contains op(mode=add), optional legacy
+list{id,value}, optional pq_list{id,value,signature}; outer id/xmlns/type/to.
+It does not repeat SET identity/registration/type-byte/skey/last-resort fields.
+[Exact offsets, exception policy and remaining generation/config/persistence inputs](apk/2.26.43.72-prekey-upload-replies/README.md#add-selection-and-exact-child-layout-2026-11-04).
+The known Rust SET-continuation gap remains unpatched; this closes layout and
+legacy selection research without changing initial-upload or replay policy.
+No live traffic or production change.
