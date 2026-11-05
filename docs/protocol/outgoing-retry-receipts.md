@@ -285,3 +285,25 @@ Validation:1329 workspace/all-feature tests passed. Formatting, strict workspace
 all-target/all-feature Clippy, CLI reference regeneration, APK coverage, staged
 whitespace and research checksum/link hygiene passed. Local platform-contract
 fixture passed separately; no APK or live account execution.
+
+## Classic incoming local-prekey retry error and lazy lookup — 2026-11-05
+
+**Confirmed static / inferred provider equivalence / implemented offline:**
+[matching-session reuse, local EDR -> wire3, adapter ordering and tests](apk/2.26.43.72-incoming-local-prekey-retry/README.md).
+Classic receive now decodes local prekey records only on backend key-store lookup,
+so corrupt unused records do not block a matching-session follow-up. Actual
+selected local key failures retain SignalIncomingLocalPrekey / IncomingLocalPrekey
+through normal retry/error3, including classic pairwise group processing.
+
+Real-crypto tests cover required missing/corrupt records and successful held-session
+reuse with corrupt unused records. Normal-loop cases assert error3 and unchanged
+prekeys/no repeated retry or delivery ACK after uncertain write. Three claimed
+MAC fixtures were corrected to modify the nested MAC, preserving outer selectors.
+Factory signed-material gates, storage failures, hybrid/KEM and later key-pair
+integrity classification remain separate open work. Other typed causes/count/key/
+routing/ACK parity remain incomplete; no live traffic.
+
+Validation:1329 workspace/all-feature tests passed after correcting the nested
+MAC fixtures. Formatting, strict workspace/all-target/all-feature Clippy, CLI
+reference regeneration, APK coverage, staged whitespace and research checksum/
+link hygiene passed. Offline only.

@@ -2073,6 +2073,7 @@ pub(super) async fn run(
                 | whatsapp_api::transport::inbox::IncomingResult::InvalidSenderKeySignature
                 | whatsapp_api::transport::inbox::IncomingResult::SenderKeyFutureCounter
                 | whatsapp_api::transport::inbox::IncomingResult::MissingSenderKeyChain
+                | whatsapp_api::transport::inbox::IncomingResult::IncomingLocalPrekey
                 | whatsapp_api::transport::inbox::IncomingResult::MissingSession
                 | whatsapp_api::transport::inbox::IncomingResult::Undecryptable => replayed.2 += 1,
             }
@@ -2442,6 +2443,7 @@ pub(super) async fn run(
             whatsapp_api::transport::inbox::IncomingResult::InvalidSenderKeySignature
             | whatsapp_api::transport::inbox::IncomingResult::SenderKeyFutureCounter
             | whatsapp_api::transport::inbox::IncomingResult::MissingSenderKeyChain
+            | whatsapp_api::transport::inbox::IncomingResult::IncomingLocalPrekey
             | whatsapp_api::transport::inbox::IncomingResult::MissingSession
             | whatsapp_api::transport::inbox::IncomingResult::Undecryptable => {
                 println!("inbox: a saved payload could not be decrypted; no receipt sent offline");

@@ -216,6 +216,30 @@ pub(crate) fn validate_incoming_message(ciphertext: &[u8]) -> Result<()> {
     Ok(())
 }
 
+/// Test-only mutation of the nested MAC, preserving outer prekey selectors.
+#[cfg(test)]
+pub(crate) fn corrupt_prekey_mac_for_test(ciphertext: &[u8]) -> Vec<u8> {
+    let outer = signal::PreKeySignalMessage::try_from(ciphertext).unwrap();
+    assert_eq!(outer.message_version(), 3, "classic fixture only");
+    assert!(incoming_prekey_kem(ciphertext).unwrap().is_none());
+    let mut nested = outer.message().serialized().to_vec();
+    *nested.last_mut().unwrap() ^= 1;
+    let changed = signal::PreKeySignalMessage::new(
+        outer.message_version(),
+        outer.registration_id(),
+        outer.pre_key_id(),
+        outer.signed_pre_key_id(),
+        *outer.base_key(),
+        *outer.identity_key(),
+        signal::SignalMessage::try_from(nested.as_slice()).unwrap(),
+    )
+    .unwrap();
+    assert_eq!(changed.pre_key_id(), outer.pre_key_id());
+    assert_eq!(changed.signed_pre_key_id(), outer.signed_pre_key_id());
+    assert_eq!(changed.message().serialized(), nested);
+    changed.serialized().to_vec()
+}
+
 pub(super) fn crypto(error: SignalProtocolError) -> Error {
     // libsignal errors can carry peer addresses, application strings and
     // backend details. Classify by variant, never format the underlying error.
@@ -1671,6 +1695,55 @@ mod tests {
         .unwrap();
         assert_eq!(incoming.consumed_prekey, Some(8));
         assert_eq!(&*incoming.received.plaintext, b"\x0a\x04test");
+        for (signed, ordinary) in [
+            (signed_bytes.as_slice(), None),
+            (
+                b"invalid local signed key".as_slice(),
+                Some(one_bytes.as_slice()),
+            ),
+            (
+                signed_bytes.as_slice(),
+                Some(b"invalid local ordinary key".as_slice()),
+            ),
+        ] {
+            assert!(matches!(
+                receive_prekey(
+                    &bob_account,
+                    &sender,
+                    (None, None),
+                    signed,
+                    ordinary,
+                    &encrypted.ciphertext
+                )
+                .await,
+                Err(Error::SignalIncomingLocalPrekey)
+            ));
+        }
+        // A pending prekey envelope for an already matched session does not
+        // need either local prekey. Corrupt unused rows must not block it.
+        let followup = prepare(
+            &account,
+            &recipient,
+            &bundle,
+            Some(&encrypted.session),
+            Some(&encrypted.identity),
+            "next",
+        )
+        .await
+        .unwrap();
+        assert_eq!(followup.kind, "pkmsg");
+        let reused = receive_prekey(
+            &bob_account,
+            &sender,
+            (Some(&incoming.received.session), Some(&incoming.identity)),
+            b"invalid unused signed key",
+            Some(b"invalid unused ordinary key"),
+            &followup.ciphertext,
+        )
+        .await
+        .unwrap();
+        assert_eq!(reused.consumed_prekey, None);
+        assert_eq!(&*reused.received.plaintext, b"\x0a\x04next");
         // Registration can publish a signed prekey without a one-time prekey.
         // This path must work without inventing or consuming a missing OPK.
         let signed_only = PreKeyBundle::new(

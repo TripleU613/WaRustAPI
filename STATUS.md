@@ -1,3 +1,11 @@
+2026-11-05 — **Classic local-prekey failures now carry retry error3.**
+
+Local key records decode only when requested, preserving matched-session reuse.
+Direct/classic group cases retain cause and uncertain-write reservations; nested
+MAC test mutations now preserve outer key selectors. [Evidence and remaining limits](docs/protocol/outgoing-retry-receipts.md#classic-incoming-local-prekey-retry-error-and-lazy-lookup--2026-11-05).
+Validation:1329 tests, strict Clippy, fmt, CLI reference, APK coverage and hygiene
+passed. No live account traffic; factory/hybrid/full retry policy remains unfinished.
+
 2026-11-05 — **Missing sender-key chains now carry retry error4.**
 
 A stored empty record retains error1 before parsing; an unknown chain in a

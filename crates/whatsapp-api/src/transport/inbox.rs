@@ -72,6 +72,9 @@ pub enum IncomingResult {
     /// A supported sender-key message names no chain in the saved nonempty record.
     /// Eligible for the scoped native wrapped-chain-error retry error4.
     MissingSenderKeyChain,
+    /// Classic incoming prekey processing could not load a selected local key.
+    /// Eligible for the scoped native local-prekey retry error3.
+    IncomingLocalPrekey,
 }
 
 // Token/string node bodies can be Text; raw binary bodies remain Bytes.
@@ -836,6 +839,12 @@ pub async fn process_with_policy(
     // session and the inbox write rolled back together, which the caller has to
     // see rather than have reported as an ordinary undecryptable message.
     match process_direct(store, account, node, capture, policy).await {
+        Err(Error::SignalIncomingLocalPrekey) => {
+            tracing::warn!(
+                "incoming local prekey unavailable; capture preserved for bounded retry"
+            );
+            Ok(IncomingResult::IncomingLocalPrekey)
+        }
         Err(Error::SignalOldMessageCounter) => {
             // Native ED4/-1001 is not retry eligible. It also does not prove
             // a durable authenticated record, so do not authorize a delivery ACK.
@@ -1520,6 +1529,12 @@ async fn process_group(
     policy: IdentityChangePolicy,
 ) -> Result<IncomingResult> {
     match process_group_inner(store, account, node, capture, policy).await {
+        Err(Error::SignalIncomingLocalPrekey) => {
+            tracing::warn!(
+                "incoming local prekey unavailable; capture preserved for bounded retry"
+            );
+            Ok(IncomingResult::IncomingLocalPrekey)
+        }
         Err(Error::SignalMissingSenderKeyChain) => {
             tracing::warn!("sender-key chain unavailable; capture preserved for bounded retry");
             Ok(IncomingResult::MissingSenderKeyChain)
@@ -3606,8 +3621,7 @@ mod tests {
                 Ok(())
             })
             .unwrap();
-        let mut bad = sent.ciphertext.clone();
-        *bad.last_mut().unwrap() ^= 1;
+        let bad = direct::corrupt_prekey_mac_for_test(&sent.ciphertext);
         let damaged = Node::new("message")
             .attr("from", peer.clone())
             .attr("id", "BARE-PREKEY")

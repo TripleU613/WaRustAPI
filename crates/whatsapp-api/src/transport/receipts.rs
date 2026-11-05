@@ -388,6 +388,7 @@ pub(crate) enum RetryCause {
     SenderKeySignature,
     SenderKeyFutureCounter,
     MissingSenderKeyChain,
+    IncomingLocalPrekey,
 }
 
 impl RetryCause {
@@ -402,6 +403,8 @@ impl RetryCause {
             // Eyj.A01 EDR -> EDY(Throwable) class-prefixed message retains
             // EtY -1005 -> internal4 -> DxB wire4, not bare-prefix wire2.
             Self::MissingSenderKeyChain => 4,
+            // Classic F22.A04 local key EDR -> -1003 -> internal3 -> wire3.
+            Self::IncomingLocalPrekey => 3,
         }
     }
 }

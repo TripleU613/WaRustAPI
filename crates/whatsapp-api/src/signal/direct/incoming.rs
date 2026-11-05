@@ -5,17 +5,21 @@ use signal::{
     SignedPreKeyRecord, SignedPreKeyStore,
 };
 
-struct OneTime {
-    record: Option<PreKeyRecord>,
+// F22.A04 first reuses a matching current/previous session. Load/decode
+// local key material only when the backend actually requests that key.
+struct OneTime<'a> {
+    record: Option<&'a [u8]>,
 }
 #[async_trait]
-impl PreKeyStore for OneTime {
+impl PreKeyStore for OneTime<'_> {
     async fn get_pre_key(&self, id: PreKeyId) -> signal::error::Result<PreKeyRecord> {
-        self.record
-            .as_ref()
-            .filter(|r| r.id().ok() == Some(id))
-            .cloned()
-            .ok_or(SignalProtocolError::InvalidPreKeyId)
+        let bytes = self.record.ok_or(SignalProtocolError::InvalidPreKeyId)?;
+        let record =
+            PreKeyRecord::deserialize(bytes).map_err(|_| SignalProtocolError::InvalidPreKeyId)?;
+        if record.id().ok() != Some(id) {
+            return Err(SignalProtocolError::InvalidPreKeyId);
+        }
+        Ok(record)
     }
     async fn save_pre_key(&mut self, _: PreKeyId, _: &PreKeyRecord) -> signal::error::Result<()> {
         Err(SignalProtocolError::InvalidPreKeyId)
@@ -24,17 +28,19 @@ impl PreKeyStore for OneTime {
         Err(SignalProtocolError::InvalidPreKeyId)
     }
 }
-struct Signed(SignedPreKeyRecord);
+struct Signed<'a>(&'a [u8]);
 #[async_trait]
-impl SignedPreKeyStore for Signed {
+impl SignedPreKeyStore for Signed<'_> {
     async fn get_signed_pre_key(
         &self,
         id: SignedPreKeyId,
     ) -> signal::error::Result<SignedPreKeyRecord> {
-        if self.0.id()? != id {
+        let record = SignedPreKeyRecord::deserialize(self.0)
+            .map_err(|_| SignalProtocolError::InvalidSignedPreKeyId)?;
+        if record.id().ok() != Some(id) {
             return Err(SignalProtocolError::InvalidSignedPreKeyId);
         }
-        Ok(self.0.clone())
+        Ok(record)
     }
     async fn save_signed_pre_key(
         &mut self,
@@ -201,13 +207,8 @@ pub async fn receive_prekey_with_policy(
             .map_err(crypto)?,
         address: address.clone(),
     };
-    let mut one = OneTime {
-        record: one_time
-            .map(PreKeyRecord::deserialize)
-            .transpose()
-            .map_err(crypto)?,
-    };
-    let signed = Signed(SignedPreKeyRecord::deserialize(signed).map_err(crypto)?);
+    let mut one = OneTime { record: one_time };
+    let signed = Signed(signed);
     let decrypted = signal::message_decrypt_prekey(
         &message,
         &address,
@@ -219,7 +220,14 @@ pub async fn receive_prekey_with_policy(
         UsePQRatchet::No,
     )
     .await
-    .map_err(crypto)?;
+    .map_err(|error| match error {
+        // APK43.72 F22.A04 missing/invalid local ordinary or signed key ->
+        // EDR; 0WJ.A0O -1003 -> internal3 -> wire3. Classic receive only.
+        SignalProtocolError::InvalidPreKeyId | SignalProtocolError::InvalidSignedPreKeyId => {
+            Error::SignalIncomingLocalPrekey
+        }
+        other => crypto(other),
+    })?;
     let consumed_prekey = decrypted.consumed_prekey_id.map(u32::from);
     let mut plaintext = Zeroizing::new(decrypted.plaintext);
     let padding = plaintext.last().copied().unwrap_or(0) as usize;

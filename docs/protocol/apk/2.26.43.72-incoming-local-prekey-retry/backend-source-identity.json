@@ -1,0 +1,32 @@
+{
+  "package": "wacore-libsignal",
+  "version": "0.7.0",
+  "files": [
+    {
+      "file": "src/protocol/session.rs",
+      "bytes": 8379,
+      "sha256": "51848922885f216cfdb486b7c7a38af664de67173d5f2b3f83167bced88d109f",
+      "facts": [
+        "process_prekey41-77 checks identity trust first",
+        "process_prekey_impl80-109 promotes matching current/archived session before signed/ordinary key lookup; actual key stores requested only for bootstrap"
+      ]
+    },
+    {
+      "file": "src/protocol/session_cipher.rs",
+      "bytes": 109859,
+      "sha256": "0b91b7cd1ba16b50142478e9d4cb6fa425e7d53370caa3e00887a7230e205536",
+      "facts": [
+        "message_decrypt_prekey_inner561-603 returns original process_prekey failure before nested decrypt",
+        "message_decrypt_prekey passes consumed prekey identifier to caller; caller owns durable consumption"
+      ]
+    },
+    {
+      "file": "src/protocol/protocol.rs",
+      "bytes": 51538,
+      "sha256": "415ad140d76f8517790a35d351c682eb1972840832db6749e4fa958f626d207b",
+      "facts": [
+        "PreKeySignalMessage::new545 onward emits ascending protobuf tag order; last outer byte is not a stable nested-MAC location"
+      ]
+    }
+  ]
+}

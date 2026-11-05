@@ -42,6 +42,10 @@ pub enum Error {
     #[error("Signal sender-key message chain is unavailable")]
     SignalMissingSenderKeyChain,
 
+    /// Classic incoming prekey processing could not load the selected local key.
+    #[error("Signal incoming local prekey is unavailable or invalid")]
+    SignalIncomingLocalPrekey,
+
     /// A caller-supplied value failed validation.
     #[error("invalid input for `{field}`: {reason}")]
     InvalidInput {

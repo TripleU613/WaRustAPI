@@ -860,9 +860,7 @@ mod tests {
                 let NodeContent::Bytes(bytes) = &mut children[0].content else {
                     panic!()
                 };
-                let mut tampered = bytes.to_vec();
-                *tampered.last_mut().unwrap() ^= 1;
-                *bytes = tampered.into();
+                *bytes = direct::corrupt_prekey_mac_for_test(bytes).into();
             }
             let rows = crypto_rows(&store);
             assert_eq!(
@@ -1108,9 +1106,7 @@ mod tests {
                 let NodeContent::Bytes(bytes) = &mut children[0].content else {
                     panic!()
                 };
-                let mut tampered = bytes.to_vec();
-                *tampered.last_mut().unwrap() ^= 1;
-                *bytes = tampered.into();
+                *bytes = direct::corrupt_prekey_mac_for_test(bytes).into();
             }
             assert_eq!(
                 inspect(&store, &receiver, &peer, &node, ciphertext(&node)).unwrap(),

@@ -16543,5 +16543,12 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-sender-key-chain-retry/README.md",
     "description": "Error::SignalMissingSenderKeyChain and IncomingResult::MissingSenderKeyChain preserve unknown chain in a nonempty saved sender-key record, selecting retry/error4. Stored empty record is checked before backend parsing and retains MissingSession/error1. Native wrapped EDR/EDY cause plus documented Android constructor semantics distinguish this from bare-prefix or direct-prekey errors. Production-loop fixtures preserve timestamp, uncertain reservation and unchanged keys/no repeated retry or delivery ACK. Offline replay sends nothing; no new route/CLI flag or live acceptance. Full native policy remains incomplete."
+  },
+  "x-incoming-local-prekey-retry-error": {
+    "x-cli": false,
+    "x-transport": ["normal experimental classic prekey receive; offline tested"],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-incoming-local-prekey-retry/README.md",
+    "description": "Error::SignalIncomingLocalPrekey and IncomingResult::IncomingLocalPrekey preserve selected classic local prekey lookup failures through retry/error3. Adapter borrows and lazily decodes key records, allowing matching-session prekey follow-up to ignore corrupt unused keys. Direct/classic pairwise group production-loop fixtures check error3, original timestamp, unchanged prekeys and no repeated retry/delivery ACK on uncertain write. Nested-MAC fixtures preserve outer key selectors. Factory signed-material guards/storage errors, hybrid/KEM and later integrity classifications are not relaxed; no route/CLI flag or live acceptance. Full policy remains incomplete."
   }
 }

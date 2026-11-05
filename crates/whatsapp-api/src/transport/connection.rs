@@ -989,6 +989,7 @@ pub(crate) async fn drive(
                     super::inbox::IncomingResult::InvalidSenderKeySignature => Some(super::receipts::RetryCause::SenderKeySignature),
                     super::inbox::IncomingResult::SenderKeyFutureCounter => Some(super::receipts::RetryCause::SenderKeyFutureCounter),
                     super::inbox::IncomingResult::MissingSenderKeyChain => Some(super::receipts::RetryCause::MissingSenderKeyChain),
+                    super::inbox::IncomingResult::IncomingLocalPrekey => Some(super::receipts::RetryCause::IncomingLocalPrekey),
                     _ => None,
                 };
                 if received == super::inbox::IncomingResult::Undecryptable || retry_cause.is_some() {
@@ -2523,17 +2524,31 @@ mod tests {
             "signature",
             "future",
             "chain",
+            "ordinary_prekey",
+            "signed_prekey",
+            "group_prekey",
         ] {
-            let grouped = case != "direct_missing";
+            let prekey = matches!(case, "ordinary_prekey" | "signed_prekey" | "group_prekey");
+            let grouped = matches!(
+                case,
+                "group_missing" | "group_empty" | "signature" | "future" | "chain" | "group_prekey"
+            );
             let bad_signature = case == "signature";
             let future_counter = case == "future";
             let missing_chain = case == "chain";
             let dir = tempfile::tempdir().unwrap();
-            let store = open(&dir.path().join("retry-cut.redb"));
+            let path = dir.path().join("retry-cut.redb");
+            let store = if prekey {
+                registered_store(&path)
+            } else {
+                open(&path)
+            };
             store
                 .write(|tx| {
                     let mut account = AccountRecord::load_in_write(tx)?.unwrap();
-                    account.signal_registration_id = Some(0x0102_0304);
+                    if !prekey {
+                        account.signal_registration_id = Some(0x0102_0304);
+                    }
                     account.save(tx)
                 })
                 .unwrap();
@@ -2566,6 +2581,59 @@ mod tests {
                         .attr("type", "msg")
                         .bytes(message.serialized().to_vec()),
                 ]);
+            let failed = if prekey {
+                use crate::session::{KeyMaterial, SignalIdentityKey};
+                use wacore_libsignal::protocol::{
+                    DeviceId, GenericSignedPreKey, PreKeyBundle, SignedPreKeyRecord,
+                };
+                let account = store.read(AccountRecord::load).unwrap().unwrap();
+                let signed_bytes =
+                    crate::registration::factory::registered_signed_prekey(&store).unwrap();
+                let signed = SignedPreKeyRecord::deserialize(&signed_bytes).unwrap();
+                let identity = wacore_libsignal::protocol::PublicKey::from_djb_public_key_bytes(
+                    &account.signal_identity.as_ref().unwrap().0.public,
+                )
+                .unwrap();
+                let one = KeyPair::generate(&mut rng);
+                let id: u32 = signed.id().unwrap().into();
+                let bundle = PreKeyBundle::new(
+                    account.signal_registration_id.unwrap(),
+                    DeviceId::new(0),
+                    Some((0x123456.into(), one.public_key)),
+                    (if case == "signed_prekey" { id + 1 } else { id }).into(),
+                    signed.public_key().unwrap(),
+                    signed.signature().unwrap().to_vec(),
+                    wacore_libsignal::protocol::IdentityKey::new(identity),
+                )
+                .unwrap();
+                let sender_account = AccountRecord {
+                    registration: crate::session::RegistrationStatus::Registered,
+                    signal_registration_id: Some(91),
+                    signal_identity: Some(SignalIdentityKey(KeyMaterial {
+                        public: sender.public_key().public_key_bytes().try_into().unwrap(),
+                        private: *sender.private_key().serialize(),
+                    })),
+                    ..Default::default()
+                };
+                let encrypted = crate::signal::direct::prepare(
+                    &sender_account,
+                    account.own_jid.as_ref().unwrap(),
+                    &bundle,
+                    None,
+                    None,
+                    "local prekey fixture",
+                )
+                .await
+                .unwrap();
+                failed.children(vec![
+                    Node::new("enc")
+                        .attr("v", "2")
+                        .attr("type", "pkmsg")
+                        .bytes(encrypted.ciphertext.clone()),
+                ])
+            } else {
+                failed
+            };
             let group_ciphertext = if bad_signature || future_counter || missing_chain {
                 use crate::signal::group::{
                     commit_skdm, encrypt_group_payload, extract_skdm_from_payload,
@@ -2629,21 +2697,38 @@ mod tests {
                     .unwrap();
             }
             let held_keys = store.read(|tx| tx.scan(Table::SenderKeys, 1, 10)).unwrap();
+            let direct_enc = failed.child("enc").unwrap().clone();
             let failed = if grouped {
                 failed
                     .attr("from", "120363000000000001@g.us")
-                    .attr("participant", peer().with_device(3))
-                    .children(vec![
+                    .attr(
+                        "participant",
+                        if prekey {
+                            peer()
+                        } else {
+                            peer().with_device(3)
+                        },
+                    )
+                    .children(vec![if prekey {
+                        direct_enc
+                    } else {
                         Node::new("enc")
                             .attr("v", "2")
                             .attr("type", "skmsg")
-                            .bytes(group_ciphertext),
-                    ])
+                            .bytes(group_ciphertext)
+                    }])
             } else {
                 failed
             };
             let mut fake = start(&store, false, None);
             fake.activate().await;
+            if prekey {
+                let (upload, write) = fake.written().await;
+                assert_upload(&upload);
+                write.send(Ok(())).unwrap();
+                fake.deliver(result_for(&upload, false)).await;
+            }
+            let held_prekeys = store.read(|tx| tx.scan(Table::Prekeys, 1, 1000)).unwrap();
             fake.deliver(failed.clone()).await;
             let (retry, reply) = fake.written().await;
             assert_eq!(retry.description, "receipt");
@@ -2659,6 +2744,8 @@ mod tests {
                     "6"
                 } else if missing_chain {
                     "4"
+                } else if prekey {
+                    "3"
                 } else {
                     "1"
                 })
@@ -2719,6 +2806,10 @@ mod tests {
             assert_eq!(
                 store.read(|tx| tx.scan(Table::SenderKeys, 1, 10)).unwrap(),
                 held_keys
+            );
+            assert_eq!(
+                store.read(|tx| tx.scan(Table::Prekeys, 1, 1000)).unwrap(),
+                held_prekeys
             );
             fake.stop_cleanly().await;
         }
