@@ -16242,5 +16242,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-metrics-native-endpoints/README.md",
     "description": "JNI-bound Java selector0 produces conditional custom endpoints with selected https prefix/telemetry suffix. Native scheduler preserves successful conversion order, appends selector22 fallback and stores per-task list; selected response fallback consumes it. Seven controlled append/store fixtures pass. Actual endpoints, URL policy and full retry/generation behavior remain open. No Rust/live capability added."
+  },
+  "x-metrics-native-request-tags-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK static and synthetic request-tag evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-metrics-native-request-tags/README.md",
+    "description": "Descriptor/switch tables map selected purpose1 to prefetch and category4 to analytics; empty optional fields omit. 24 bounded native selection fixtures use controlled pair/zero-format adapters, not full JSON serialization. Metadata Boolean/config sources retained separately. Upstream product, general formatting, clock/mode semantics and selector plaintext remain open. No Rust/live capability or invented telemetry added."
   }
 }

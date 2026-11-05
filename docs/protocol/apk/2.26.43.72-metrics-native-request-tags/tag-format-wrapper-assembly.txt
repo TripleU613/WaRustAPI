@@ -1,0 +1,20 @@
+            0x0072ce60      paciasp
+            0x0072ce64      sub   sp, sp, 0x110
+            0x0072ce68      stp   x29, x30, [sp, 0xf0]
+            0x0072ce6c      stp   x28, x19, [sp, 0x100]
+            0x0072ce70      add   x29, sp, 0xf0
+            0x0072ce74      bl    0xbdcc0c
+            0x0072ce78      mov   x1, x2
+            0x0072ce7c      bl    0xbe27c8
+            0x0072ce80      mov   x2, x8
+            0x0072ce84      stp   q4, q5, [sp, 0x40]
+            0x0072ce88      bl    0xbdc68c
+            0x0072ce8c      bl    sym.imp.vsnprintf
+            0x0072ce90      bl    0xbdd838
+        ┌─< 0x0072ce94      b.ne  0x72ceac
+        │   0x0072ce98      ldp   x28, x19, [sp, 0x100]
+        │   0x0072ce9c      ldp   x29, x30, [sp, 0xf0]
+        │   0x0072cea0      add   sp, sp, 0x110
+        │   0x0072cea4      autiasp
+        │   0x0072cea8      ret
+        └─> 0x0072ceac      bl    sym.imp.__stack_chk_fail

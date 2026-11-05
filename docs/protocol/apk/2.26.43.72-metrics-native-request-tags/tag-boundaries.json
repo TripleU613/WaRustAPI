@@ -1,0 +1,201 @@
+{
+  "scope": "static request-tag and metadata literals; not observed request execution",
+  "tables": [
+    {
+      "table_va": "0x2e9638",
+      "bytes_hex": "0e090004",
+      "destinations": {
+        "0": "0x72cb68",
+        "1": "0x72cb54",
+        "2": "0x72cb30",
+        "3": "0x72cb40"
+      }
+    },
+    {
+      "table_va": "0x2e963c",
+      "bytes_hex": "1d180007030f130b",
+      "destinations": {
+        "0": "0x72cc64",
+        "1": "0x72cc50",
+        "2": "0x72cbf0",
+        "3": "0x72cc0c",
+        "4": "0x72cbfc",
+        "5": "0x72cc2c",
+        "6": "0x72cc3c",
+        "7": "0x72cc1c"
+      }
+    }
+  ],
+  "strings": [
+    {
+      "va": "0x2fd905",
+      "value": "product"
+    },
+    {
+      "va": "0x109977",
+      "value": "purpose"
+    },
+    {
+      "va": "0x115f0b",
+      "value": "surface"
+    },
+    {
+      "va": "0x12bf86",
+      "value": "is_ad"
+    },
+    {
+      "va": "0x8a5c5",
+      "value": "request_category"
+    },
+    {
+      "va": "0x9fd5b",
+      "value": "retry_attempt"
+    },
+    {
+      "va": "0xc3713",
+      "value": "network_tags"
+    },
+    {
+      "va": "0xc3702",
+      "value": "application_tags"
+    },
+    {
+      "va": "0xf7dc4",
+      "value": "prefetch"
+    },
+    {
+      "va": "0xf7dc7",
+      "value": "fetch"
+    },
+    {
+      "va": "0xf779f",
+      "value": "refresh"
+    },
+    {
+      "va": "0x33bc60",
+      "value": ""
+    },
+    {
+      "va": "0x16cecc",
+      "value": "1"
+    },
+    {
+      "va": "0x16dc35",
+      "value": "0"
+    },
+    {
+      "va": "0x112ee6",
+      "value": "image"
+    },
+    {
+      "va": "0xc73dc",
+      "value": "analytics"
+    },
+    {
+      "va": "0xf6592",
+      "value": "api"
+    },
+    {
+      "va": "0xa57b2",
+      "value": "document"
+    },
+    {
+      "va": "0x12b5cd",
+      "value": "upload"
+    },
+    {
+      "va": "0x318a4e",
+      "value": "audio"
+    },
+    {
+      "va": "0x318a48",
+      "value": "video"
+    },
+    {
+      "va": "0x173673",
+      "value": "\"%s\":\"%s\","
+    },
+    {
+      "va": "0x1735d0",
+      "value": "\"%s\":%s,"
+    },
+    {
+      "va": "0x15269d",
+      "value": "%d"
+    },
+    {
+      "va": "0x33bbc2",
+      "value": "false"
+    },
+    {
+      "va": "0x33bbc8",
+      "value": "true"
+    },
+    {
+      "va": "0x890e8",
+      "value": "{\"t\": %ld,\"p\": %u,\"rt\": %s}"
+    },
+    {
+      "va": "0x89110",
+      "value": "{\"t\": %ld,\"p\": %u,\"rt\": %s,\"config_id\": \"%s\"}"
+    }
+  ],
+  "windows": [
+    {
+      "name": "tag-builder",
+      "start_va": "0x72ca94",
+      "end_va": "0x72cd24",
+      "file_offset": "0x728a94",
+      "bytes": 656,
+      "sha256": "b1e69ff66bf2bf5ac5da448fde1b9664524e543bd7f0a49bf76a21356e22b648"
+    },
+    {
+      "name": "retry-format",
+      "start_va": "0x72cd24",
+      "end_va": "0x72cd78",
+      "file_offset": "0x728d24",
+      "bytes": 84,
+      "sha256": "f2b78beec9531327ff0f7d64f71861460ad4d49b0df0ae173e6fca53f84c713b"
+    },
+    {
+      "name": "tag-pair-append",
+      "start_va": "0x72cd78",
+      "end_va": "0x72ce60",
+      "file_offset": "0x728d78",
+      "bytes": 232,
+      "sha256": "ff3818b0ca2ea2fe7c59ca43756c9086211d08f2ec8a8b8941b0bc3507646416"
+    },
+    {
+      "name": "tag-format-wrapper",
+      "start_va": "0x72ce60",
+      "end_va": "0x72ceb0",
+      "file_offset": "0x728e60",
+      "bytes": 80,
+      "sha256": "41f3ffc1e268cbe95c6239378f99f3420ac7b47c816c39a99dcd61dbc7341b03"
+    },
+    {
+      "name": "unknown-enum",
+      "start_va": "0xbe6b28",
+      "end_va": "0xbe6b34",
+      "file_offset": "0xbe2b28",
+      "bytes": 12,
+      "sha256": "9ceb582e4bfd31b3260927fa0e053fad05bfb3741797219da917904faf1d6ff9"
+    },
+    {
+      "name": "video-enum",
+      "start_va": "0xbebd84",
+      "end_va": "0xbebd90",
+      "file_offset": "0xbe7d84",
+      "bytes": 12,
+      "sha256": "3717335697f789c9d6896e8015cf7ae11b29bb137fbfc646301da50c8515c016"
+    },
+    {
+      "name": "descriptor-arguments",
+      "start_va": "0xbe67b4",
+      "end_va": "0xbe67c0",
+      "file_offset": "0xbe27b4",
+      "bytes": 12,
+      "sha256": "14acbebe558d6120320f0d216d8dbcbc1b9993458851b9578aa8bf74148ba190"
+    }
+  ]
+}

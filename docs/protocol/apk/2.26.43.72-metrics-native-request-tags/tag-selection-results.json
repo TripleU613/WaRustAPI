@@ -1,0 +1,528 @@
+{
+  "scope": "native network-tag branch selection only; append/zero-retry adapters; no JSON serialization or I/O",
+  "unicorn_version": "2.1.4",
+  "instruction_cap_per_case": 100000,
+  "timeout_microseconds_per_case": 1000000,
+  "cases": [
+    {
+      "case": "selected-sender",
+      "raw_purpose": 1,
+      "raw_category": 4,
+      "raw_is_ad": 0,
+      "pair_calls": [
+        {
+          "key": "product",
+          "value": "synthetic-product"
+        },
+        {
+          "key": "purpose",
+          "value": "prefetch"
+        },
+        {
+          "key": "surface",
+          "value": ""
+        },
+        {
+          "key": "request_category",
+          "value": "analytics"
+        },
+        {
+          "key": "retry_attempt",
+          "value": "0"
+        }
+      ],
+      "nonempty_selected_pairs": {
+        "product": "synthetic-product",
+        "purpose": "prefetch",
+        "request_category": "analytics",
+        "retry_attempt": "0"
+      },
+      "matches_independent_enum_mapping": true
+    },
+    {
+      "case": "optional-strings",
+      "raw_purpose": 2,
+      "raw_category": 3,
+      "raw_is_ad": 1,
+      "pair_calls": [
+        {
+          "key": "product",
+          "value": "synthetic-product"
+        },
+        {
+          "key": "purpose",
+          "value": "fetch"
+        },
+        {
+          "key": "surface",
+          "value": "synthetic-surface"
+        },
+        {
+          "key": "is_ad",
+          "value": "0"
+        },
+        {
+          "key": "request_category",
+          "value": "api"
+        },
+        {
+          "key": "retry_attempt",
+          "value": "0"
+        }
+      ],
+      "nonempty_selected_pairs": {
+        "product": "synthetic-product",
+        "purpose": "fetch",
+        "surface": "synthetic-surface",
+        "is_ad": "0",
+        "request_category": "api",
+        "retry_attempt": "0"
+      },
+      "matches_independent_enum_mapping": true
+    },
+    {
+      "case": "empty-strings",
+      "raw_purpose": 0,
+      "raw_category": 0,
+      "raw_is_ad": 0,
+      "pair_calls": [
+        {
+          "key": "product",
+          "value": ""
+        },
+        {
+          "key": "surface",
+          "value": ""
+        },
+        {
+          "key": "retry_attempt",
+          "value": "0"
+        }
+      ],
+      "nonempty_selected_pairs": {
+        "retry_attempt": "0"
+      },
+      "matches_independent_enum_mapping": true
+    },
+    {
+      "case": "purpose--1",
+      "raw_purpose": -1,
+      "raw_category": 0,
+      "raw_is_ad": 0,
+      "pair_calls": [
+        {
+          "key": "purpose",
+          "value": ""
+        },
+        {
+          "key": "retry_attempt",
+          "value": "0"
+        }
+      ],
+      "nonempty_selected_pairs": {
+        "retry_attempt": "0"
+      },
+      "matches_independent_enum_mapping": true
+    },
+    {
+      "case": "purpose-0",
+      "raw_purpose": 0,
+      "raw_category": 0,
+      "raw_is_ad": 0,
+      "pair_calls": [
+        {
+          "key": "retry_attempt",
+          "value": "0"
+        }
+      ],
+      "nonempty_selected_pairs": {
+        "retry_attempt": "0"
+      },
+      "matches_independent_enum_mapping": true
+    },
+    {
+      "case": "purpose-1",
+      "raw_purpose": 1,
+      "raw_category": 0,
+      "raw_is_ad": 0,
+      "pair_calls": [
+        {
+          "key": "purpose",
+          "value": "prefetch"
+        },
+        {
+          "key": "retry_attempt",
+          "value": "0"
+        }
+      ],
+      "nonempty_selected_pairs": {
+        "purpose": "prefetch",
+        "retry_attempt": "0"
+      },
+      "matches_independent_enum_mapping": true
+    },
+    {
+      "case": "purpose-2",
+      "raw_purpose": 2,
+      "raw_category": 0,
+      "raw_is_ad": 0,
+      "pair_calls": [
+        {
+          "key": "purpose",
+          "value": "fetch"
+        },
+        {
+          "key": "retry_attempt",
+          "value": "0"
+        }
+      ],
+      "nonempty_selected_pairs": {
+        "purpose": "fetch",
+        "retry_attempt": "0"
+      },
+      "matches_independent_enum_mapping": true
+    },
+    {
+      "case": "purpose-3",
+      "raw_purpose": 3,
+      "raw_category": 0,
+      "raw_is_ad": 0,
+      "pair_calls": [
+        {
+          "key": "purpose",
+          "value": "refresh"
+        },
+        {
+          "key": "retry_attempt",
+          "value": "0"
+        }
+      ],
+      "nonempty_selected_pairs": {
+        "purpose": "refresh",
+        "retry_attempt": "0"
+      },
+      "matches_independent_enum_mapping": true
+    },
+    {
+      "case": "purpose-4",
+      "raw_purpose": 4,
+      "raw_category": 0,
+      "raw_is_ad": 0,
+      "pair_calls": [
+        {
+          "key": "purpose",
+          "value": ""
+        },
+        {
+          "key": "retry_attempt",
+          "value": "0"
+        }
+      ],
+      "nonempty_selected_pairs": {
+        "retry_attempt": "0"
+      },
+      "matches_independent_enum_mapping": true
+    },
+    {
+      "case": "category--1",
+      "raw_purpose": 0,
+      "raw_category": -1,
+      "raw_is_ad": 0,
+      "pair_calls": [
+        {
+          "key": "request_category",
+          "value": ""
+        },
+        {
+          "key": "retry_attempt",
+          "value": "0"
+        }
+      ],
+      "nonempty_selected_pairs": {
+        "retry_attempt": "0"
+      },
+      "matches_independent_enum_mapping": true
+    },
+    {
+      "case": "category-0",
+      "raw_purpose": 0,
+      "raw_category": 0,
+      "raw_is_ad": 0,
+      "pair_calls": [
+        {
+          "key": "retry_attempt",
+          "value": "0"
+        }
+      ],
+      "nonempty_selected_pairs": {
+        "retry_attempt": "0"
+      },
+      "matches_independent_enum_mapping": true
+    },
+    {
+      "case": "category-1",
+      "raw_purpose": 0,
+      "raw_category": 1,
+      "raw_is_ad": 0,
+      "pair_calls": [
+        {
+          "key": "request_category",
+          "value": "image"
+        },
+        {
+          "key": "retry_attempt",
+          "value": "0"
+        }
+      ],
+      "nonempty_selected_pairs": {
+        "request_category": "image",
+        "retry_attempt": "0"
+      },
+      "matches_independent_enum_mapping": true
+    },
+    {
+      "case": "category-2",
+      "raw_purpose": 0,
+      "raw_category": 2,
+      "raw_is_ad": 0,
+      "pair_calls": [
+        {
+          "key": "request_category",
+          "value": "video"
+        },
+        {
+          "key": "retry_attempt",
+          "value": "0"
+        }
+      ],
+      "nonempty_selected_pairs": {
+        "request_category": "video",
+        "retry_attempt": "0"
+      },
+      "matches_independent_enum_mapping": true
+    },
+    {
+      "case": "category-3",
+      "raw_purpose": 0,
+      "raw_category": 3,
+      "raw_is_ad": 0,
+      "pair_calls": [
+        {
+          "key": "request_category",
+          "value": "api"
+        },
+        {
+          "key": "retry_attempt",
+          "value": "0"
+        }
+      ],
+      "nonempty_selected_pairs": {
+        "request_category": "api",
+        "retry_attempt": "0"
+      },
+      "matches_independent_enum_mapping": true
+    },
+    {
+      "case": "category-4",
+      "raw_purpose": 0,
+      "raw_category": 4,
+      "raw_is_ad": 0,
+      "pair_calls": [
+        {
+          "key": "request_category",
+          "value": "analytics"
+        },
+        {
+          "key": "retry_attempt",
+          "value": "0"
+        }
+      ],
+      "nonempty_selected_pairs": {
+        "request_category": "analytics",
+        "retry_attempt": "0"
+      },
+      "matches_independent_enum_mapping": true
+    },
+    {
+      "case": "category-5",
+      "raw_purpose": 0,
+      "raw_category": 5,
+      "raw_is_ad": 0,
+      "pair_calls": [
+        {
+          "key": "request_category",
+          "value": "upload"
+        },
+        {
+          "key": "retry_attempt",
+          "value": "0"
+        }
+      ],
+      "nonempty_selected_pairs": {
+        "request_category": "upload",
+        "retry_attempt": "0"
+      },
+      "matches_independent_enum_mapping": true
+    },
+    {
+      "case": "category-6",
+      "raw_purpose": 0,
+      "raw_category": 6,
+      "raw_is_ad": 0,
+      "pair_calls": [
+        {
+          "key": "request_category",
+          "value": "audio"
+        },
+        {
+          "key": "retry_attempt",
+          "value": "0"
+        }
+      ],
+      "nonempty_selected_pairs": {
+        "request_category": "audio",
+        "retry_attempt": "0"
+      },
+      "matches_independent_enum_mapping": true
+    },
+    {
+      "case": "category-7",
+      "raw_purpose": 0,
+      "raw_category": 7,
+      "raw_is_ad": 0,
+      "pair_calls": [
+        {
+          "key": "request_category",
+          "value": "document"
+        },
+        {
+          "key": "retry_attempt",
+          "value": "0"
+        }
+      ],
+      "nonempty_selected_pairs": {
+        "request_category": "document",
+        "retry_attempt": "0"
+      },
+      "matches_independent_enum_mapping": true
+    },
+    {
+      "case": "category-8",
+      "raw_purpose": 0,
+      "raw_category": 8,
+      "raw_is_ad": 0,
+      "pair_calls": [
+        {
+          "key": "request_category",
+          "value": ""
+        },
+        {
+          "key": "retry_attempt",
+          "value": "0"
+        }
+      ],
+      "nonempty_selected_pairs": {
+        "retry_attempt": "0"
+      },
+      "matches_independent_enum_mapping": true
+    },
+    {
+      "case": "is-ad--1",
+      "raw_purpose": 0,
+      "raw_category": 0,
+      "raw_is_ad": -1,
+      "pair_calls": [
+        {
+          "key": "is_ad",
+          "value": ""
+        },
+        {
+          "key": "retry_attempt",
+          "value": "0"
+        }
+      ],
+      "nonempty_selected_pairs": {
+        "retry_attempt": "0"
+      },
+      "matches_independent_enum_mapping": true
+    },
+    {
+      "case": "is-ad-0",
+      "raw_purpose": 0,
+      "raw_category": 0,
+      "raw_is_ad": 0,
+      "pair_calls": [
+        {
+          "key": "retry_attempt",
+          "value": "0"
+        }
+      ],
+      "nonempty_selected_pairs": {
+        "retry_attempt": "0"
+      },
+      "matches_independent_enum_mapping": true
+    },
+    {
+      "case": "is-ad-1",
+      "raw_purpose": 0,
+      "raw_category": 0,
+      "raw_is_ad": 1,
+      "pair_calls": [
+        {
+          "key": "is_ad",
+          "value": "0"
+        },
+        {
+          "key": "retry_attempt",
+          "value": "0"
+        }
+      ],
+      "nonempty_selected_pairs": {
+        "is_ad": "0",
+        "retry_attempt": "0"
+      },
+      "matches_independent_enum_mapping": true
+    },
+    {
+      "case": "is-ad-2",
+      "raw_purpose": 0,
+      "raw_category": 0,
+      "raw_is_ad": 2,
+      "pair_calls": [
+        {
+          "key": "is_ad",
+          "value": "1"
+        },
+        {
+          "key": "retry_attempt",
+          "value": "0"
+        }
+      ],
+      "nonempty_selected_pairs": {
+        "is_ad": "1",
+        "retry_attempt": "0"
+      },
+      "matches_independent_enum_mapping": true
+    },
+    {
+      "case": "is-ad-3",
+      "raw_purpose": 0,
+      "raw_category": 0,
+      "raw_is_ad": 3,
+      "pair_calls": [
+        {
+          "key": "is_ad",
+          "value": ""
+        },
+        {
+          "key": "retry_attempt",
+          "value": "0"
+        }
+      ],
+      "nonempty_selected_pairs": {
+        "retry_attempt": "0"
+      },
+      "matches_independent_enum_mapping": true
+    }
+  ]
+}

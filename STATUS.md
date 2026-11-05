@@ -1,3 +1,12 @@
+2026-11-05 — **Native request analytics mappings and metadata traced.**
+
+Selected purpose1=prefetch and category4=analytics; metadata Boolean/config
+sources distinguished.24 native branch cases pass with controlled pair/zero
+format adapters. [Evidence and serialization limits](docs/protocol/apk/2.26.43.72-metrics-native-request-tags/README.md).
+Full formatting, upstream product, selector plaintext and crypto remain open.
+Validation: pinned table/window resolver and fixtures, coverage, staged diff
+and bundle/link hygiene. No Rust runtime or live traffic changed.
+
 2026-11-05 — **Native metrics endpoint list production traced.**
 
 Java provider entries are converted in order, invalid conversions skipped and

@@ -1,0 +1,58 @@
+            0x0072cd78      paciasp
+            0x0072cd7c      stp   x29, x30, [sp, -0x40]!
+            0x0072cd80      bl    0xbddbd0
+            0x0072cd84      mov   x29, sp
+            0x0072cd88      bl    0x632540
+            0x0072cd8c      bl    0x4b11d0
+            0x0072cd90      bl    sym.imp.strlen
+            0x0072cd94      bl    0xbe197c
+            0x0072cd98      bl    sym.imp.strlen
+        ┌─< 0x0072cd9c      cbz   x22, 0x72ce50
+       ┌──< 0x0072cda0      cbz   x0, 0x72ce50
+       ││   0x0072cda4      ldr   x8, [x19, 0x10]                      ; [0x10:4]=0xb70003
+       ││   0x0072cda8      add   x9, x0, x22
+      ┌───< 0x0072cdac      cbnz  x8, 0x72cdb8
+      │││   0x0072cdb0      mov   w8, 1
+      │││   0x0072cdb4      str   x8, [x19, 0x10]
+      └───> 0x0072cdb8      ldrb  w10, [x20]
+       ││   0x0072cdbc      mov   w11, 6
+       ││   0x0072cdc0      mov   w12, 4
+       ││   0x0072cdc4      cmp   w10, 0x7b
+       ││   0x0072cdc8      csel  x11, x12, x11, eq
+       ││   0x0072cdcc      add   x24, x9, x11
+       ││   0x0072cdd0      ldr   x9, [x19, 8]                         ; [0x8:4]=0
+       ││   0x0072cdd4      add   x11, x24, x8
+       ││   0x0072cdd8      add   x11, x11, 1
+       ││   0x0072cddc      mov   x12, x9
+      ┌───> 0x0072cde0      mov   x22, x12
+      ╎││   0x0072cde4      lsl   x12, x12, 1
+      ╎││   0x0072cde8      cmp   x11, x22
+      └───< 0x0072cdec      b.hi  0x72cde0
+       ││   0x0072cdf0      adrp  x11, 0x173000
+       ││   0x0072cdf4      add   x11, x11, 0x673
+       ││   0x0072cdf8      adrp  x12, 0x173000
+       ││   0x0072cdfc      add   x12, x12, 0x5d0
+       ││   0x0072ce00      cmp   w10, 0x7b
+       ││   0x0072ce04      ldr   x0, [x19]
+       ││   0x0072ce08      csel  x23, x12, x11, eq
+       ││   0x0072ce0c      cmp   x22, x9
+      ┌───< 0x0072ce10      b.ne  0x72ce1c
+      │││   0x0072ce14      mov   x22, x9
+     ┌────< 0x0072ce18      b     0x72ce2c
+     │└───> 0x0072ce1c      mov   x1, x22
+     │ ││   0x0072ce20      bl    sym.imp.realloc
+     │ ││   0x0072ce24      ldr   x8, [x19, 0x10]                      ; [0x10:4]=0xb70003
+     │ ││   0x0072ce28      stp   x0, x22, [x19]
+     └────> 0x0072ce2c      sub   x2, x22, x8
+       ││   0x0072ce30      add   x0, x0, x8
+       ││   0x0072ce34      mov   x3, x23
+       ││   0x0072ce38      mov   x4, x21
+       ││   0x0072ce3c      mov   x5, x20
+       ││   0x0072ce40      bl    0x72ce60
+       ││   0x0072ce44      ldr   x8, [x19, 0x10]                      ; [0x10:4]=0xb70003
+       ││   0x0072ce48      add   x8, x8, x24
+       ││   0x0072ce4c      str   x8, [x19, 0x10]
+       └└─> 0x0072ce50      bl    0x4d2418
+            0x0072ce54      ldp   x29, x30, [sp], 0x40
+            0x0072ce58      autiasp
+            0x0072ce5c      ret

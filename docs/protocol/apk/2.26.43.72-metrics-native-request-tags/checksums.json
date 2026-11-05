@@ -1,0 +1,54 @@
+{
+  "README.md": {
+    "bytes": 6555,
+    "sha256": "9a4571c7fbcfe22e8574558661f7da499f7316f82ff4002f3eb7cb1ef39ce7ae"
+  },
+  "check-tag-selection.py": {
+    "bytes": 6175,
+    "sha256": "cda0ade3d6cd26d0a0d66f83c2cdd6cc4e42f722e08981a4b23b46ca46c7b93e"
+  },
+  "descriptor-arguments-assembly.txt": {
+    "bytes": 132,
+    "sha256": "61ba6b1d6dc5527fde3f17890eb0dfdf6f29b2adb8658d9b8b5b4e39209711c2"
+  },
+  "inspect-tags.py": {
+    "bytes": 1413,
+    "sha256": "cb741365e8b30935b65ef2a2e4d9a4476a8a48c9942dd66a5e2a736ccb45bd31"
+  },
+  "retry-format-assembly.txt": {
+    "bytes": 1002,
+    "sha256": "d55da660cd9a58eb6d8b743bc25ceb32e5676e6cad6beda8a6eb4b48da15d6e5"
+  },
+  "tag-boundaries.json": {
+    "bytes": 4129,
+    "sha256": "2f35b8705fe3c21b6d2af0dad9c2d093d29def03d0aa927295a4c0e17271760a"
+  },
+  "tag-builder-assembly.txt": {
+    "bytes": 9001,
+    "sha256": "0c43ad3cd865159827aad0087ecee101984c17f276015d5d883a736a8466e373"
+  },
+  "tag-format-wrapper-assembly.txt": {
+    "bytes": 949,
+    "sha256": "63716872b5e085c9c3dc1a8ad51dfb573e150333c0d03c9721aa8e3ad49884d9"
+  },
+  "tag-pair-append-assembly.txt": {
+    "bytes": 3030,
+    "sha256": "c2e03137aa3f97339109460d39559ebdef47344819ffc41d4302db5385de5cc6"
+  },
+  "tag-selection-results.json": {
+    "bytes": 11367,
+    "sha256": "3e9cf272b945c496b7c3d0deb2c2189e134b2a5de5cea883e160a245149bfd39"
+  },
+  "unknown-enum-assembly.txt": {
+    "bytes": 127,
+    "sha256": "bfb50f862a675ee37f9c7274c51f2e23e82822a81d9e23b93759dd122de90717"
+  },
+  "video-enum-assembly.txt": {
+    "bytes": 127,
+    "sha256": "91e155fb97701966196a045cd55602925e13751488e505d8f648d22af68b6bd9"
+  },
+  "windows.json": {
+    "bytes": 647,
+    "sha256": "3350632bd426085f7c0801dac76eb289da1eabb6c22da5e3836728f5f305d6b0"
+  }
+}

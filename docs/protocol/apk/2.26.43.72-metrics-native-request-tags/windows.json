@@ -1,0 +1,37 @@
+[
+  {
+    "name": "tag-builder",
+    "start_va": "0x72ca94",
+    "end_va": "0x72cd24"
+  },
+  {
+    "name": "retry-format",
+    "start_va": "0x72cd24",
+    "end_va": "0x72cd78"
+  },
+  {
+    "name": "tag-pair-append",
+    "start_va": "0x72cd78",
+    "end_va": "0x72ce60"
+  },
+  {
+    "name": "tag-format-wrapper",
+    "start_va": "0x72ce60",
+    "end_va": "0x72ceb0"
+  },
+  {
+    "name": "unknown-enum",
+    "start_va": "0xbe6b28",
+    "end_va": "0xbe6b34"
+  },
+  {
+    "name": "video-enum",
+    "start_va": "0xbebd84",
+    "end_va": "0xbebd90"
+  },
+  {
+    "name": "descriptor-arguments",
+    "start_va": "0xbe67b4",
+    "end_va": "0xbe67c0"
+  }
+]

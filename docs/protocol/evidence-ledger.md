@@ -6101,3 +6101,15 @@ consumes index0 before construction; selected response fallback reuses the list.
 [Producer conditions, native bodies, fixtures and remaining scope](apk/2.26.43.72-metrics-native-endpoints/README.md).
 Actual dynamic/default endpoint values, generic URL policy, full retry timing
 and generation fencing remain open. No Rust runtime or live operation added.
+
+### Native request analytics tags and metadata sources (2026-11-05)
+
+**Confirmed static / observed synthetic branch selection, APK43.72:** selected
+sender purpose1 maps to prefetch and category4 to analytics; empty surface/
+application fields omit.24 bounded cases verify native enum/pair selection
+with append/zero-format adapters, not full JSON serialization. Separate
+meta_data rt depends on channel3; optional config_id derives from credential
+data, not Host. Raw clock/mode semantics and actual product remain unknown.
+[Descriptor, tables, formatter scope, metadata provenance and fixtures](apk/2.26.43.72-metrics-native-request-tags/README.md).
+No Rust runtime, invented telemetry or live requests added. General formatting,
+selector plaintext and crypto remain open.

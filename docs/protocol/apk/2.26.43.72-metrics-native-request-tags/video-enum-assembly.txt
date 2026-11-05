@@ -1,0 +1,3 @@
+            0x00bebd84      adrp  x2, 0x318000
+            0x00bebd88      add   x2, x2, 0xa48
+            0x00bebd8c      ret
