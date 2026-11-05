@@ -83,3 +83,12 @@ were obtained through the repository's existing checked `apk-smali` workflow.
 REA's much larger send-job `A06` reply was partial after more than 1 MiB of JADX
 warning output. Its full partial envelope stays outside Git; no conclusion here
 uses a truncated body. The direct producer and writer helpers above are complete.
+
+## Checked root-gate follow-up (2026-11-05)
+
+The [complete current DEX export](apk/2.26.43.72-retry-root-gates/README.md)
+confirms map removals are behind multiple gates, including Enu.A0B and further
+unresolved state. This does not establish universal direct-retry normalization.
+No root attribute changes were made. The separate
+[saved-session reservation correction](retry-answers.md#saved-session-retry-reservation-guard-2026-11-05)
+rechecks local outbox/peer snapshots and age without expanding supported counts.

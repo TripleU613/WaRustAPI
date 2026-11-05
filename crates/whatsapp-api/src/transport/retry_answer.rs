@@ -27,7 +27,7 @@ use crate::{
         send::DeliveryFactKind,
         time::Timestamp,
     },
-    outbox::AttemptRecord,
+    outbox::{AttemptRecord, OutboxEntry},
     session::AccountRecord,
     store::{ProtocolStore, Table, WriteTx},
     transport::ConnectionEpoch,
@@ -238,13 +238,13 @@ pub async fn answer(
         let mut current = outbox
             .by_wire_id_in_write(tx, &wire_id)?
             .ok_or_else(|| Error::invalid("retry", "original send vanished"))?;
-        let held: Option<Vec<u8>> = tx.get_json(Table::SignalSessions, peer_key.as_bytes(), 1)?;
-        if held.as_deref() != Some(session.as_slice())
-            || tx
-                .get_json::<serde_json::Value>(Table::Checkpoints, answer_key.as_bytes(), 1)?
-                .is_some()
+        ensure_original_unchanged(&current, &entry, Timestamp::now())?;
+        ensure_retry_peer_unchanged(tx, &peer_key, identity.as_deref(), Some(&session))?;
+        if tx
+            .get_json::<serde_json::Value>(Table::Checkpoints, answer_key.as_bytes(), 1)?
+            .is_some()
         {
-            return Err(Error::invalid("retry", "session or answer changed before reservation"));
+            return Err(Error::invalid("retry", "answer changed before reservation"));
         }
         // Reservation precedes the write: a crash leaves an uncertain answer,
         // never a second one.
@@ -428,19 +428,14 @@ pub async fn complete_refetch(
         if state.as_ref().and_then(|v| v["query"].as_str()) != Some(query) {
             return Err(Error::invalid("retry", "answer changed before reservation"));
         }
-        ensure_refetch_peer_unchanged(tx, &peer_key, identity.as_deref(), previous_session.as_deref())?;
+        ensure_retry_peer_unchanged(tx, &peer_key, identity.as_deref(), previous_session.as_deref())?;
         // The consumed job, replacement session and reserved same-ID resend
         // commit together; preparation/storage failure leaves the fetch held.
         tx.delete(Table::Checkpoints, refetch_key(query).as_bytes())?;
         let mut current = outbox
             .by_wire_id_in_write(tx, &wire_id)?
             .ok_or_else(|| Error::invalid("retry", "original send vanished"))?;
-        if current != entry {
-            return Err(Error::invalid("retry", "original send changed before refetch reservation"));
-        }
-        if original_too_old(first.prepared_at, Timestamp::now()) {
-            return Err(Error::invalid("retry", "original expired before refetch reservation"));
-        }
+        ensure_original_unchanged(&current, &entry, Timestamp::now())?;
         tx.put_json(
             Table::Checkpoints,
             job.answer_key.as_bytes(),
@@ -461,10 +456,36 @@ pub async fn complete_refetch(
     Ok(Some(Some(resend)))
 }
 
+// DNP.run checks delivery before resend; async preparation must not reserve
+// against an older outbox snapshot. Apply the same transaction boundary to
+// both saved-session and fresh-bundle answers (docs/protocol/retry-answers.md).
+fn ensure_original_unchanged(
+    current: &OutboxEntry,
+    prepared_from: &OutboxEntry,
+    now: Timestamp,
+) -> Result<()> {
+    if current != prepared_from {
+        return Err(Error::invalid(
+            "retry",
+            "original send changed before retry reservation",
+        ));
+    }
+    let first = prepared_from.attempts.first().ok_or_else(|| {
+        Error::invalid("retry", "original attempt missing before retry reservation")
+    })?;
+    if original_too_old(first.prepared_at, now) {
+        return Err(Error::invalid(
+            "retry",
+            "original expired before retry reservation",
+        ));
+    }
+    Ok(())
+}
+
 // Local optimistic concurrency guard, not a native identity-reset policy.
 // Crypto preparation awaits outside the write transaction; a newer ratchet or
 // pin must survive rather than being overwritten by this prepared replacement.
-fn ensure_refetch_peer_unchanged(
+fn ensure_retry_peer_unchanged(
     tx: &WriteTx<'_>,
     peer_key: &str,
     identity: Option<&[u8]>,
@@ -477,7 +498,7 @@ fn ensure_refetch_peer_unchanged(
     if held_identity.as_deref() != identity || held_session.as_deref() != session {
         return Err(Error::invalid(
             "retry",
-            "peer state changed before refetch reservation",
+            "peer state changed before retry reservation",
         ));
     }
     Ok(())
@@ -630,7 +651,111 @@ mod tests {
     }
 
     #[test]
-    fn refetch_guard_preserves_newer_peer_state_and_pending_job() {
+    fn retry_reservation_preserves_concurrent_outbox_changes_and_age_boundary() {
+        for change in ["unchanged", "delivery", "failure", "attempt", "expired"] {
+            let dir = tempfile::tempdir().unwrap();
+            let store = ProtocolStore::open(OpenOptions {
+                path: dir.path().join("retry-reservation.redb"),
+                account_id: AccountId::new("test").unwrap(),
+                key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                    [7; 32],
+                ))),
+                create: true,
+            })
+            .unwrap();
+            let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+            let outbox = super::super::outgoing::outbox();
+            let prepared_from = store
+                .write(|tx| {
+                    let request = SendRequest {
+                        client_request_id: ClientRequestId::new("reservation-race")?,
+                        chat: ChatId::from_jid(&peer)?,
+                        content: MessageContent::Text {
+                            body: "fixture".into(),
+                            quoted: None,
+                            style: Default::default(),
+                        },
+                    };
+                    let id = outbox.enqueue(tx, &request)?.0.local_id;
+                    let mut entry = outbox.get_mut(tx, id)?.unwrap();
+                    entry.attempts.push(AttemptRecord {
+                        index: 0,
+                        prepared_at: Timestamp(0),
+                        epoch: Some(ConnectionEpoch(1)),
+                        payload: Some(vec![1].into()),
+                        re_encryption: false,
+                    });
+                    entry.facts.push(DeliveryFact {
+                        kind: DeliveryFactKind::ServerAccepted,
+                        device: None,
+                        observed_at: Timestamp(0),
+                        server_timestamp: None,
+                        code: None,
+                    });
+                    tx.put_json(Table::Outbox, &entry.local_id.0, 1, &entry)?;
+                    Ok(entry)
+                })
+                .unwrap();
+            // Another receive/send commits after the retry captured its inputs.
+            store
+                .write(|tx| {
+                    let mut current = prepared_from.clone();
+                    match change {
+                        "delivery" | "failure" => current.facts.push(DeliveryFact {
+                            kind: if change == "delivery" {
+                                DeliveryFactKind::Delivered
+                            } else {
+                                DeliveryFactKind::Failed
+                            },
+                            device: None,
+                            observed_at: Timestamp(1),
+                            server_timestamp: None,
+                            code: None,
+                        }),
+                        "attempt" => current.attempts.push(AttemptRecord {
+                            index: 1,
+                            prepared_at: Timestamp(1),
+                            epoch: Some(ConnectionEpoch(2)),
+                            payload: Some(vec![2].into()),
+                            re_encryption: true,
+                        }),
+                        _ => {}
+                    }
+                    tx.put_json(Table::Outbox, &current.local_id.0, 1, &current)
+                })
+                .unwrap();
+            let snapshot = || {
+                store
+                    .read(|tx| {
+                        [Table::Outbox, Table::Checkpoints, Table::SignalSessions]
+                            .into_iter()
+                            .map(|table| tx.scan(table, 1, 10000))
+                            .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap()
+            };
+            let before = snapshot();
+            let now = Timestamp(MAX_AGE_MS + i64::from(change == "expired"));
+            let result = store.write(|tx| {
+                let current: OutboxEntry = tx
+                    .get_json(Table::Outbox, &prepared_from.local_id.0, 1)?
+                    .unwrap();
+                ensure_original_unchanged(&current, &prepared_from, now)?;
+                tx.put_json(Table::Checkpoints, b"reserved-answer", 1, &true)?;
+                tx.put_json(Table::SignalSessions, b"peer", 1, &vec![9u8])
+            });
+            if change == "unchanged" {
+                assert!(result.is_ok()); // Exactly60 days remains eligible.
+                assert_ne!(snapshot(), before);
+            } else {
+                assert!(result.is_err(), "{change}");
+                assert_eq!(snapshot(), before, "{change}");
+            }
+        }
+    }
+
+    #[test]
+    fn retry_guard_preserves_newer_peer_state_and_pending_job() {
         for changed_table in [Table::PeerIdentities, Table::SignalSessions] {
             let dir = tempfile::tempdir().unwrap();
             let store = ProtocolStore::open(OpenOptions {
@@ -662,7 +787,7 @@ mod tests {
                 .unwrap();
             store
                 .write(|tx| {
-                    ensure_refetch_peer_unchanged(tx, peer_key, Some(&[1]), Some(&[2]))?;
+                    ensure_retry_peer_unchanged(tx, peer_key, Some(&[1]), Some(&[2]))?;
                     Ok(())
                 })
                 .unwrap();
@@ -689,7 +814,7 @@ mod tests {
             assert!(
                 store
                     .write(|tx| {
-                        ensure_refetch_peer_unchanged(tx, peer_key, Some(&[1]), Some(&[2]))?;
+                        ensure_retry_peer_unchanged(tx, peer_key, Some(&[1]), Some(&[2]))?;
                         tx.delete(Table::Checkpoints, refetch_key("Q1").as_bytes())
                     })
                     .is_err()

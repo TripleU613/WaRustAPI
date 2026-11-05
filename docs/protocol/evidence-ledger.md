@@ -1,3 +1,11 @@
+2026-11-05 — **Saved-session retry reservation race fixed offline.**
+
+Retry reservation now rechecks original outbox snapshot, identity/session and
+age after async crypto, preserving newer delivery/failure/attempt/peer state.
+Fresh and saved paths share guards. [Correction and tests](retry-answers.md#saved-session-retry-reservation-guard-2026-11-05).
+Also retained checked current-APK root-removal gates without guessing their
+applicability or changing root attributes. No live retry operation.
+
 2026-11-05 — **Recovered metrics consumer checksum and task admission traced.**
 
 Version3 payload Adler32 is checked after file loading; versions1/2 skip this

@@ -632,3 +632,40 @@ snapshot walk. Passing outgoing entries reach conditional transport handoff.
 Validation:12 native checksum cases and mismatch-counter slices plus pinned
 binding/windows. Startup flag/lifetime and actual replay remain unobserved.
 No real I/O, Rust runtime change or live traffic.
+
+## Saved-session retry reservation guard (2026-11-05)
+
+**Confirmed local correction / implemented offline:** `answer` prepared crypto
+outside the write transaction, then checked only the saved session and duplicate
+answer marker. A concurrently committed delivery/failure/attempt update could
+therefore be ignored, or a changed identity pin could be paired with the prepared
+old-session result. The fresh-bundle path already guarded the original row and
+peer state; both paths now share the same original/age and identity/session guards.
+
+Immediately before reservation, the saved-session path requires the outbox row
+to equal the snapshot used for eligibility/preparation, the current identity and
+session to equal the captured inputs, the first attempt still to be no older
+than60 days, and the answer marker to be absent. Any failed guard returns a
+local error and rolls back the write transaction: no retry attempt, reserved
+answer marker or prepared ratchet is committed. It does not overwrite newer
+state or silently retry. The exact60-day boundary remains eligible.
+
+The retained APK DNP.run delivery exclusion and150.A04 age checks motivate
+rechecking eligibility before resend; transactional equality/CAS is our local
+concurrency mechanism, not a claimed Android database implementation or new
+server policy. Native count/root/addressing rules remain separate.
+
+Regression tests simulate a captured snapshot followed by a committed delivery,
+failure or extra attempt, then try the same reservation guard/transaction. They
+verify unchanged tables on refusal and success at exactly60 days; another case
+crosses the age boundary without a row change. Existing peer-state tests cover
+identity/session changes and retained pending-job state, and the complete
+saved/fresh retry workflow remains covered. These are deterministic store/guard
+simulations, not an end-to-end scheduled thread race or live retry test.
+
+The guard assumes every outbox/pin/session change uses the same ProtocolStore
+transaction boundary. Other retry families, higher counts and complete current
+APK root normalization remain open. No live account operation occurred.
+
+[Retained current-APK root gate instructions](apk/2.26.43.72-retry-root-gates/README.md)
+remain incomplete for a normalization port.
