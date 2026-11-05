@@ -1,0 +1,54 @@
+{
+  "README.md": {
+    "bytes": 3798,
+    "sha256": "48b66b19e3e431efcc9b97b0c74f37afc4db30ee620c9e20de7b79f22df893d0"
+  },
+  "connection-drain-excerpt.txt": {
+    "bytes": 1471,
+    "sha256": "04b07678020a0b9757c3db4838bd577ee45a20f98d11fab6f2ca3093155e71e9"
+  },
+  "explicit-registration-callers.txt": {
+    "bytes": 318,
+    "sha256": "2a4cea79b474a295d7c3e4b51c945799e2766c916af61fa840690627b68c9719"
+  },
+  "manager-constructor-callers.txt": {
+    "bytes": 64,
+    "sha256": "6dee5b2d466d81be6a929a15593504c087c297fb8722a5b45c2f75cc732cb9f3"
+  },
+  "manager-factory.txt": {
+    "bytes": 313,
+    "sha256": "b3de44162525b924836de48fb3c625f30cbd0b9b8d7b2eaa5c4f89e63b459df7"
+  },
+  "observer-base-init.txt": {
+    "bytes": 2970,
+    "sha256": "e6a2c7f088ea9bbf7b59332b595b78c1a44716ba7281440451a0690be024abdf"
+  },
+  "observer-dispatch.txt": {
+    "bytes": 8069,
+    "sha256": "567e7480afe8a47331319f727620eb6b2d84dd9c3471d567b8b40a82b0e9ac46"
+  },
+  "provider-resolve.txt": {
+    "bytes": 3003,
+    "sha256": "c341b1ddb648a4214d7424c37940e96fb49defa16f827a93a33e935d7ceded9a"
+  },
+  "provider-router.txt": {
+    "bytes": 445,
+    "sha256": "61ca1ae2033c7f40604569ffa0ea628b4aa09c36bba7a9826086157e739f557a"
+  },
+  "provider-switch.txt": {
+    "bytes": 3374,
+    "sha256": "f852095f305051f8344d087a0efeb3f6742c3538d9cdde11fe11f74e2f7dda7e"
+  },
+  "set-provider.txt": {
+    "bytes": 1095,
+    "sha256": "ab81e1f0c13f081ddd7511615b1a7fe2b9b60115f4c28bb7a845725f8a618deb"
+  },
+  "state-class.txt": {
+    "bytes": 4091,
+    "sha256": "32ad6748e10616a825c9be02fc9dbab08ee32955d86c8cf2a11a017aed79491e"
+  },
+  "state-field-refs.txt": {
+    "bytes": 157,
+    "sha256": "22be6b41dd1297ae086fc42dc5b558fe39369b0ec8f4b60d110fd837974a53f9"
+  }
+}

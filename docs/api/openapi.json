@@ -15765,5 +15765,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-client-auth-token-readiness/README.md",
     "description": "Connected-handler branches produce state2; selector2 notifies BzL and the token-manager callback drains a replaceable in-memory slot with a readiness recheck. Observer registration, scheduling, concurrent lifecycle and durable recovery remain incomplete. No sender, route or replay authority added."
+  },
+  "x-client-auth-token-observer-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-client-auth-token-observer/README.md",
+    "description": "Observer dispatcher has ordinary inline and marker-dependent scheduled paths; state constructor combines provider-backed sets. Separate connection-thread pending drain located. Token-manager membership/category, shared provider identity, concurrent lifecycle and recovery remain unproven. No sender, route or replay authority added."
   }
 }

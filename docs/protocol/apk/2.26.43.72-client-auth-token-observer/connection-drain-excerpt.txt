@@ -1,0 +1,26 @@
+# Focused checked DEX excerpt, not the complete method or its entry predicates.
+# class: LX/0ZJ;
+# extends: Landroid/os/HandlerThread;
+    # full signature: LX/0ZJ;->A0z(LX/1iH;Ljava/lang/String;ZZ)V
+    0af6..0afc  invoke-interface  {v6, v7}, LX/1kR;->Cje(I)V
+    0afc..0b02  invoke-virtual/range  {v58..v58}, LX/08q;->A05()J
+    0b02..0b04  move-result-wide  v6
+    0b04..0b08  iput-wide  v6, v0, LX/0ZJ;->A01:J
+    0b08..0b0c  iget-object  v6, v0, LX/0ZJ;->A03:LX/1rj;
+    0b0c..0b12  invoke-virtual  {v6}, LX/1rj;->A05()Z
+    0b12..0b14  move-result  v7
+    0b14..0b18  iget-object  v6, v0, LX/0ZJ;->A0F:LX/00x;
+    0b18..0b1e  invoke-interface  {v6}, LX/00x;->get()Ljava/lang/Object;
+    0b1e..0b20  move-result-object  v6
+    0b20..0b24  check-cast  v6, LX/1jA;
+    0b24..0b2a  invoke-virtual  {v6}, LX/1jA;->A00()V
+    0b2a..0b2e  if-eqz  v7, +0xd
+    0b2e..0b32  iget-object  v6, v0, LX/0ZJ;->A0D:LX/00x;
+    0b32..0b38  invoke-interface  {v6}, LX/00x;->get()Ljava/lang/Object;
+    0b38..0b3a  move-result-object  v6
+    0b3a..0b3e  check-cast  v6, LX/19i;
+    0b3e..0b44  invoke-virtual  {v6}, LX/19i;->A00()V
+    0b44..0b48  new-instance  v7, Ljava/lang/StringBuilder;
+    0b48..0b4e  invoke-direct  {v7}, Ljava/lang/StringBuilder;-><init>()V
+    0b4e..0b52  const-string  v6, "ConnectionThread/connect: fetching client config; sessionId="
+    0b52..0b58  invoke-virtual  {v7, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;

@@ -1,3 +1,11 @@
+2026-11-04 — **Client-auth-token observer topology narrowed.**
+
+Provider-backed membership and inline/scheduled dispatch are distinct proof
+obligations; a separate connection-thread drain is now located.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-client-auth-token-observer/README.md).
+Research only; no runtime changes or live traffic. Validation: checksum,
+JSON, coverage freshness and repository hygiene.
+
 2026-11-04 — **Client-auth-token readiness producer traced.**
 
 Connected-handler branches set state2; notifier and manager callback connect

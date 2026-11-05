@@ -1929,3 +1929,14 @@ rechecks readiness. Registration, scheduling, instance identity and concurrent
 lifecycle ordering remain untraced.
 [Full selected bodies and limits](apk/2.26.43.72-client-auth-token-readiness/README.md).
 No runtime sender, durable recovery claim, new replay authority or live traffic.
+
+### Client-auth-token observer topology (2026-11-04)
+
+**Confirmed static, APK43.72:** readiness dispatcher separates inline ordinary
+observers from marker-dependent inline/scheduled paths. The state constructor
+uses provider-backed combined observer sets; explicit registration search alone
+cannot establish membership. A separate connection-thread pending-slot drain
+precedes a conditional rotation invocation in its selected block. Membership,
+dispatch category, provider identity and cross-thread ordering remain open.
+[Selected bodies, excerpt, searches and limits](apk/2.26.43.72-client-auth-token-observer/README.md).
+No Rust behavior change, sender, new retry authority or live traffic.

@@ -1,0 +1,8 @@
+classes5.dex  Lcom/whatsapp/userban/spamwarning/SpamWarningActivity;->onCreate(VL)
+  invoke dex byte offset: 0x375394
+classes5.dex  LX/8Nv;->Bk4(V)
+  invoke dex byte offset: 0x4a07e8
+classes9.dex  LX/Hdy;->A03(VILJ)
+  invoke dex byte offset: 0x61b180
+classes9.dex  LX/Hyi;->A01(VLL)
+  invoke dex byte offset: 0x6fe308
