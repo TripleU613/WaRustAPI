@@ -1,0 +1,18 @@
+# Selected original DEX ranges, not a complete method.
+# Source full-export SHA256: f1f8a8d914981322f8471c87f4fd862c8596483c07e7b2ae7c8d661405b350d1
+
+# class: LX/IDA;
+# extends: Ljava/lang/Object;
+
+.method public invoke(L)  # .registers 15
+    # full signature: LX/IDA;->invoke()Ljava/lang/Object;
+    0000..0004  iget  v0, v14, LX/IDA;->$t:I
+    0004..000a  packed-switch  v0, payload@0x72c, cases=[0:@0x714, 1:@0x6ea, 2:@0x6a8, 3:@0x662, 4:@0x652, 5:@0x642, 6:@0x632, 7:@0x622, 8:@0x610, 9:@0x5fe, 10:@0x5ec, 11:@0x5da, 12:@0x5c8, 13:@0x5b6, 14:@0x5a4, 15:@0x592, 16:@0x580, 17:@0x56e, 18:@0x3e8, 19:@0x3ca, 20:@0x3aa, 21:@0x392, 22:@0x376, 23:@0x35a, 24:@0x348, 25:@0x336, 26:@0x324, 27:@0x312, 28:@0x300, 29:@0x2ee, 30:@0x2dc, 31:@0x2ca, 32:@0x2b8, 33:@0x2a6, 34:@0x294, 35:@0x282, 36:@0x270, 37:@0x25e, 38:@0x23c, 39:@0x1e2, 40:@0x20, 41:@0x1c0, 42:@0x17c, 43:@0x15a, 44:@0x13a, 45:@0x11a, 46:@0x100, 47:@0xe6, 48:@0xc4], default@0xa
+    013a..013e  iget-object  v2, v14, LX/IDA;->A00:Ljava/lang/Object;
+    013e..0142  check-cast  v2, LX/HxV;
+    0142..0146  iget-object  v1, v2, LX/HxV;->A0D:LX/0pB;
+    0146..014a  new-instance  v0, LX/Hzo;
+    014a..0150  invoke-direct  {v0, v2}, LX/Hzo;-><init>(LX/HxV;)V
+    0150..0156  invoke-virtual  {v1, v0}, LX/0pB;->A00(LX/0p9;)LX/0pD;
+    0156..0158  move-result-object  v8
+    0158..015a  return-object  v8

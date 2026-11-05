@@ -6832,3 +6832,15 @@ drain continues. No automatic correlation repair, Sent reset or replay.
 Current0pD.A07 receives a caller timeout: selected HxV lightweight call is32s,
 while another0p7 call is128s. Rust contact-check's exact factory/deadline remains
 unported; no universal usync timer is inferred. No live traffic was sent.
+
+## Contact protocol metadata/backoff obligation —2026-11-05
+
+Confirmed current0pD.CK4/A01 retains contact protocol success/integrity/error,
+refresh and backoff separately from per-user in/out/invalid. Error backoff uses
+seconds*1000 capped at3600000ms, with a missing-attribute default before the cap.
+Selected observers persist positive deadlines using08q.A00;503 also writes
+contact-executor global_backoff_time, while429 has an additional guarded scope.
+Regular and lightweight query observers write different per-scope preferences.
+[Bindings, full selected methods, strict deadline gate and remaining port requirements](apk/2.26.43.72-contact-protocol-backoff/README.md).
+Rust still lacks full metadata/wait adoption. Outer IQ success alone is not contact
+protocol success. No new wait, retry or account-state mutation is implemented here.

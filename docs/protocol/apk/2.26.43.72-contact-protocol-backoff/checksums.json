@@ -1,0 +1,74 @@
+{
+  "README.md": {
+    "bytes": 6423,
+    "sha256": "d0284c354d752b23d15327c050f2099452a7e743ef85874aa494b3138eacb3cd"
+  },
+  "clock.txt": {
+    "bytes": 1012,
+    "sha256": "32c5b4ebb51978926d6398c555a7a14067d6d96bf6c32dad4cdd71e117079087"
+  },
+  "contact-sync-observer.txt": {
+    "bytes": 5090,
+    "sha256": "e1d6ff199a2f7aa16a51fda1e229f0b5e3083cdc5ef783624957e193437d33c4"
+  },
+  "executor-gate.txt": {
+    "bytes": 3317,
+    "sha256": "fb3e44dd112861b25285affbf9a5af557a967c38b53015bdbde74917ce84e558"
+  },
+  "long-reader.txt": {
+    "bytes": 616,
+    "sha256": "7791481146abc9de8d0e722ef4c93493e7fe0049319d3ebf23137698681b3621"
+  },
+  "manager-observer.txt": {
+    "bytes": 1891,
+    "sha256": "650d6d43b39f163ddf687aa7ce7db5b822ece75b1596ca1e54db5e70458214f5"
+  },
+  "mex-observer.txt": {
+    "bytes": 616,
+    "sha256": "175817d5caeff5327268ce28438026dbd1035a928922f2f1038b62e380f4abfb"
+  },
+  "observer-factory.txt": {
+    "bytes": 592,
+    "sha256": "6d86f058fe48b343f9743387324f539288529f5b9bec34b9d1ac3f0501bd4b61"
+  },
+  "preferences.txt": {
+    "bytes": 4771,
+    "sha256": "b76110e37209477430ccde42e85036622ce7a118c67fed2c417df3f4a49b87c7"
+  },
+  "protocol-result.txt": {
+    "bytes": 7370,
+    "sha256": "b542be8bcd9925bebf52c25ea29fdf88e493cdaff1af7a8e816a6f6399d3fea6"
+  },
+  "query-binding.txt": {
+    "bytes": 1360,
+    "sha256": "f42ef54e7978dba7a8b781259aa436769f0e249a53685625b6a9e9b1ef686808"
+  },
+  "query-constructor.txt": {
+    "bytes": 495,
+    "sha256": "6c2945f800bf9876310614841331fe36ef3fc9ed58f8e9fe89a06f0a0e8fce97"
+  },
+  "query-lazy-constructor.txt": {
+    "bytes": 410,
+    "sha256": "5ee5edf54ea0418eeae02b7f65593700345d3a9ec0d393b86b880f0ae27a00d9"
+  },
+  "query-lazy-factory.txt": {
+    "bytes": 491,
+    "sha256": "8384b0af2e315bc25c9fa0021d2c58824fbae1a3b9f4f233d9bd68b363786231"
+  },
+  "query-observer.txt": {
+    "bytes": 1415,
+    "sha256": "4daeb8d26f11299f502ccdca792d242ace5ca65fae28454c44c32316fff626e4"
+  },
+  "result-handler.txt": {
+    "bytes": 55213,
+    "sha256": "3697744e4214c791db38b3b8fcf0ddd8f97fc5dd6c25e3c2fca405ce8fad8fdf"
+  },
+  "result-model.txt": {
+    "bytes": 726,
+    "sha256": "4670cf8e99709350d93b0998f5d716d9f39786b09a5caf7f914c63c90ab09795"
+  },
+  "sync-binding.txt": {
+    "bytes": 803,
+    "sha256": "f1e754e9c19b71406b57fe8fcb8202bb15c6af04a83a72bf8234888b1c575d5e"
+  }
+}

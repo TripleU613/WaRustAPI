@@ -16743,5 +16743,12 @@
     "x-live": false,
     "description": "contacts check now commits its durable action and error-correlation provenance atomically. Full-disk faults leave neither; uncertain fsync permits neither/both, never a partial pair. Single/bulk reservation holds Queued contact-check rows missing correlation with ActionOutcome.deferred_reason=contact_check_correlation_missing and refuses mismatched/invalid provenance with fixed diagnostics. Existing actions plain/JSON exposes the hold. No fabricated correlation, Sent reset/replay or new route/flag. Native usync caller-specific timeout selection remains unported.",
     "evidence": "docs/protocol/apk/2.26.43.72-contact-queue-atomicity/README.md"
+  },
+  "x-contact-protocol-backoff-audit": {
+    "x-cli": true,
+    "x-transport": "experimental",
+    "x-live": false,
+    "description": "Static APK2.26.43.72 contact-protocol error/backoff audit. Protocol metadata is separate from per-user in/out/invalid. Positive waits are observer-scoped absolute A00 deadlines; selected503 errors also write a contact-executor global deadline. Native lightweight/regular scopes differ. Rust protocol metadata/wait adoption remains unported; outer IQ result is insufficient proof of contact protocol success. Existing xtask disassembly reproduces evidence. No runtime wait, retry, reset, flag or HTTP route added.",
+    "evidence": "docs/protocol/apk/2.26.43.72-contact-protocol-backoff/README.md"
   }
 }

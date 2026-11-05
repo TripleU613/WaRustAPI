@@ -1,0 +1,88 @@
+
+# class: LX/0pQ;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 2
+    # full signature: LX/0pQ;-><init>()V
+    0000..0006  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    0006..000a  const/16  v0, #0x72
+    000a..0010  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0010..0012  move-result-object  v0
+    0012..0016  check-cast  v0, LX/00S;
+    0016..001a  iput-object  v0, v1, LX/0pQ;->A01:LX/00S;
+    001a..001c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(LL)  # .registers 3
+    # full signature: LX/0pQ;->A00(LX/0pQ;)Landroid/content/SharedPreferences;
+    0000..0002  monitor-enter
+    0002..0006  iget-object  v0, v2, LX/0pQ;->A00:Landroid/content/SharedPreferences;
+    0006..000a  if-nez  v0, +0xc
+    000a..000e  iget-object  v1, v2, LX/0pQ;->A01:LX/00S;
+    000e..0012  const-string  v0, "contact_sync_prefs"
+    0012..0018  invoke-virtual  {v1, v0}, LX/00S;->A04(Ljava/lang/String;)Landroid/content/SharedPreferences;
+    0018..001a  move-result-object  v0
+    001a..001e  iput-object  v0, v2, LX/0pQ;->A00:Landroid/content/SharedPreferences;
+    001e..0020  monitor-exit
+    0020..0022  return-object  v0
+    0022..0024  move-exception  v0
+    0024..0026  monitor-exit
+    0026..0028  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0001..000f -> 0011
+    # catch <all> code_units 0012..0013 -> 0011
+.end method
+
+.method public A01(LLLLJ)  # .registers 6
+    # full signature: LX/0pQ;->A01(LX/0wD;LX/0pQ;Ljava/lang/String;J)LX/0wD;
+    0000..0004  if-nez  v1, +0x7
+    0004..0008  new-instance  v1, LX/0wD;
+    0008..000e  invoke-direct  {v1, v2}, LX/0wD;-><init>(LX/0pQ;)V
+    000e..0012  iget-object  v0, v1, LX/0wD;->A00:Landroid/content/SharedPreferences$Editor;
+    0012..0016  if-eqz  v0, +0x5
+    0016..001c  invoke-interface  {v0, v3, v4, v5}, Landroid/content/SharedPreferences$Editor;->putLong(Ljava/lang/String;J)Landroid/content/SharedPreferences$Editor;
+    001c..001e  return-object  v1
+    # exception table: 0 try range(s)
+.end method
+
+.method public A02(V)  # .registers 5
+    # full signature: LX/0pQ;->A02()V
+    0000..0002  const/4  v3, #0x0
+    0002..0006  const-wide/16  v1, #0xffff (-1)
+    0006..000a  const-string  v0, "contact_sync_backoff"
+    000a..0010  invoke-static  {v3, v4, v0, v1, v2}, LX/0pQ;->A01(LX/0wD;LX/0pQ;Ljava/lang/String;J)LX/0wD;
+    0010..0012  move-result-object  v3
+    0012..0016  const-string  v0, "full_sync_backoff"
+    0016..001c  invoke-static  {v3, v4, v0, v1, v2}, LX/0pQ;->A01(LX/0wD;LX/0pQ;Ljava/lang/String;J)LX/0wD;
+    001c..0022  const-string/jumbo  v0, "side_full_sync_backoff"
+    0022..0028  invoke-static  {v3, v4, v0, v1, v2}, LX/0pQ;->A01(LX/0wD;LX/0pQ;Ljava/lang/String;J)LX/0wD;
+    0028..002e  const-string/jumbo  v0, "sidelist_sync_backoff"
+    002e..0034  invoke-static  {v3, v4, v0, v1, v2}, LX/0pQ;->A01(LX/0wD;LX/0pQ;Ljava/lang/String;J)LX/0wD;
+    0034..003a  const-string/jumbo  v0, "status_sync_backoff"
+    003a..0040  invoke-static  {v3, v4, v0, v1, v2}, LX/0pQ;->A01(LX/0wD;LX/0pQ;Ljava/lang/String;J)LX/0wD;
+    0040..0044  const-string  v0, "picture_sync_backoff"
+    0044..004a  invoke-static  {v3, v4, v0, v1, v2}, LX/0pQ;->A01(LX/0wD;LX/0pQ;Ljava/lang/String;J)LX/0wD;
+    004a..004e  const-string  v0, "business_sync_backoff"
+    004e..0054  invoke-static  {v3, v4, v0, v1, v2}, LX/0pQ;->A01(LX/0wD;LX/0pQ;Ljava/lang/String;J)LX/0wD;
+    0054..0058  const-string  v0, "devices_sync_backoff"
+    0058..005e  invoke-static  {v3, v4, v0, v1, v2}, LX/0pQ;->A01(LX/0wD;LX/0pQ;Ljava/lang/String;J)LX/0wD;
+    005e..0062  const-string  v0, "delta_sync_backoff"
+    0062..0068  invoke-static  {v3, v4, v0, v1, v2}, LX/0pQ;->A01(LX/0wD;LX/0pQ;Ljava/lang/String;J)LX/0wD;
+    0068..006c  const-string  v0, "disappearing_mode_sync_backoff"
+    006c..0072  invoke-static  {v3, v4, v0, v1, v2}, LX/0pQ;->A01(LX/0wD;LX/0pQ;Ljava/lang/String;J)LX/0wD;
+    0072..0076  const-string  v0, "lid_sync_backoff"
+    0076..007c  invoke-static  {v3, v4, v0, v1, v2}, LX/0pQ;->A01(LX/0wD;LX/0pQ;Ljava/lang/String;J)LX/0wD;
+    007c..0080  const-string  v0, "reachability_sync_backoff"
+    0080..0086  invoke-static  {v3, v4, v0, v1, v2}, LX/0pQ;->A01(LX/0wD;LX/0pQ;Ljava/lang/String;J)LX/0wD;
+    0086..008a  const-string  v0, "global_backoff_time"
+    008a..0090  invoke-static  {v3, v4, v0, v1, v2}, LX/0pQ;->A01(LX/0wD;LX/0pQ;Ljava/lang/String;J)LX/0wD;
+    0090..0096  invoke-virtual  {v3}, LX/0wD;->A00()V
+    0096..0098  return-void
+    0098..009a  move-exception  v0
+    009a..009e  if-eqz  v3, +0x5
+    009e..00a4  invoke-virtual  {v3}, LX/0wD;->A00()V
+    00a4..00a6  throw  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0001..0048 -> 004c
+.end method

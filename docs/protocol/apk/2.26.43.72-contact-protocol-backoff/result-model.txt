@@ -1,0 +1,16 @@
+
+# class: LX/HLG;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLIZ)  # .registers 7
+    # full signature: LX/HLG;-><init>(Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Long;Ljava/lang/Long;IZ)V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-boolean  v6, v0, LX/HLG;->A05:Z
+    000a..000e  iput-object  v3, v0, LX/HLG;->A04:Ljava/lang/Long;
+    000e..0012  iput-object  v4, v0, LX/HLG;->A03:Ljava/lang/Long;
+    0012..0016  iput-object  v1, v0, LX/HLG;->A01:Ljava/lang/Integer;
+    0016..001a  iput  v5, v0, LX/HLG;->A00:I
+    001a..001e  iput-object  v2, v0, LX/HLG;->A02:Ljava/lang/Integer;
+    001e..0020  return-void
+    # exception table: 0 try range(s)
+.end method

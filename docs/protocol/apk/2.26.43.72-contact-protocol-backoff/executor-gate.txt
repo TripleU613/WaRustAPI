@@ -1,0 +1,61 @@
+# Selected original DEX ranges, not a complete method.
+# Source full-export SHA256: c377fd9e9df03f719d72605a53308214d683908acdd65b4f25adbf9413a36f7e
+
+# class: LX/0wB;
+# extends: Ljava/lang/Object;
+
+.method public run(V)  # .registers 73
+    # full signature: LX/0wB;->run()V
+    0250..0252  move-result  v0
+    0252..0256  if-eqz  v0, +0x10
+    0256..025a  const/16  v0, #0x3c7
+    025a..0260  invoke-static  {v1, v0}, LX/09H;->A03(LX/00Y;I)Ljava/lang/Object;
+    0260..0262  move-result-object  v0
+    0262..0266  check-cast  v0, LX/0GQ;
+    0266..026c  invoke-virtual  {v0}, LX/0GQ;->A08()Z
+    026c..026e  move-result  v0
+    026e..0272  if-nez  v0, +0xa
+    0272..0276  const-string  v0, "ContactSyncRequestExecutor/registration not complete"
+    0276..027c  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    027c..0280  sget-object  v2, LX/1xM;->A04:LX/1xM;
+    0280..0282  goto  -0x3b
+    0282..0286  move-object/from16  v0, v70
+    0286..028a  iget-object  v0, v0, LX/0p4;->A0Q:LX/07p;
+    028a..0290  invoke-virtual  {v0}, LX/07p;->A0T()Z
+    0290..0292  move-result  v0
+    0292..0296  if-nez  v0, +0xa
+    0296..029a  sget-object  v2, LX/1xM;->A05:LX/1xM;
+    029a..029e  move-object/from16  v0, v71
+    029e..02a4  invoke-direct  {v0, v2}, LX/0wB;->A05(LX/1xM;)V
+    02a4..02a6  goto  -0x48
+    02a6..02aa  move-object/from16  v0, v70
+    02aa..02ae  iget-object  v0, v0, LX/0p4;->A0U:LX/08q;
+    02ae..02b2  move-object/from16  v68, v0
+    02b2..02b8  invoke-static/range  {v68..v68}, LX/08q;->A00(LX/08q;)J
+    02b8..02ba  move-result-wide  v16
+    02ba..02be  move-object/from16  v0, v70
+    02be..02c2  iget-object  v0, v0, LX/0p4;->A0a:LX/0pQ;
+    02c2..02c6  move-object/from16  v67, v0
+    02c6..02cc  invoke-static/range  {v67..v67}, LX/0pQ;->A00(LX/0pQ;)Landroid/content/SharedPreferences;
+    02cc..02ce  move-result-object  v4
+    02ce..02d2  const-string  v3, "global_backoff_time"
+    02d2..02d6  const-wide/16  v0, #0xffff (-1)
+    02d6..02dc  invoke-interface  {v4, v3, v0, v1}, Landroid/content/SharedPreferences;->getLong(Ljava/lang/String;J)J
+    02dc..02de  move-result-wide  v10
+    02de..02e2  const-string  v4, "ms"
+    02e2..02e6  cmp-long  v5, v10, v16
+    02e6..02ea  if-lez  v5, +0x21
+    02ea..02ee  const-string  v2, "ContactSyncRequestExecutor/global backoff for another "
+    02ee..02f2  new-instance  v5, Ljava/lang/StringBuilder;
+    02f2..02f8  invoke-direct  {v5, v2}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    02f8..02fe  invoke-static/range  {v67..v67}, LX/0pQ;->A00(LX/0pQ;)Landroid/content/SharedPreferences;
+    02fe..0300  move-result-object  v2
+    0300..0306  invoke-interface  {v2, v3, v0, v1}, Landroid/content/SharedPreferences;->getLong(Ljava/lang/String;J)J
+    0306..0308  move-result-wide  v0
+    0308..030c  sub-long  v0, v0, v16
+    030c..0312  invoke-virtual  {v5, v0, v1}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    0312..0318  invoke-virtual  {v5, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0318..031e  invoke-virtual  {v5}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    031e..0320  move-result-object  v0
+    0320..0326  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0326..0328  goto  -0x55

@@ -1,3 +1,14 @@
+2026-11-05 — **Contact protocol backoff producer/observer scopes traced.**
+
+Native contact error metadata carries capped millisecond waits separately from
+per-user contact type. Regular/lightweight observers persist different scopes;
+selected503 responses also set a contact-executor global deadline checked before
+dispatch. Rust metadata/wait adoption remains unported.
+[Source, observer bindings, clock domain and concrete port requirements](docs/protocol/apk/2.26.43.72-contact-protocol-backoff/README.md).
+Validation: pinned APK hash, checksum/link hygiene, coverage, CLI/OpenAPI,
+fmt and strict Clippy passed. Research only; no sending/wait policy changes
+or live account operations.
+
 2026-11-05 — **Contact checks prepare request and correlation atomically.**
 
 A full-disk regression reproduced the prior sendable-orphan defect. One transaction

@@ -1,0 +1,30 @@
+
+# class: LX/Hzo;
+# extends: Ljava/lang/Object;
+
+.method public BLg(VLLIJ)  # .registers 11
+    # full signature: LX/Hzo;->BLg(LX/0vC;Ljava/lang/String;IJ)V
+    0000..0004  const-wide/16  v1, #0x0
+    0004..0008  cmp-long  v0, v9, v1
+    0008..000c  if-lez  v0, +0x26
+    000c..0010  iget-object  v3, v5, LX/Hzo;->A00:LX/HxV;
+    0010..0014  iget-object  v0, v3, LX/HxV;->A0B:LX/08q;
+    0014..001a  invoke-static  {v0}, LX/08q;->A00(LX/08q;)J
+    001a..001c  move-result-wide  v1
+    001c..001e  add-long/2addr  v1, v9
+    001e..0022  iget-object  v4, v3, LX/HxV;->A0C:LX/0pQ;
+    0022..0024  const/4  v3, #0x0
+    0024..0028  const-string  v0, "sidelist_sync_backoff"
+    0028..002e  invoke-static  {v3, v4, v0, v1, v2}, LX/0pQ;->A01(LX/0wD;LX/0pQ;Ljava/lang/String;J)LX/0wD;
+    002e..0030  move-result-object  v3
+    0030..0034  const/16  v0, #0x1f7
+    0034..0038  if-ne  v8, v0, +0xd
+    0038..003c  const-string  v0, "ContactQuerySync/handleSyncContactError need global backoff"
+    003c..0042  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    0042..0046  const-string  v0, "global_backoff_time"
+    0046..004c  invoke-static  {v3, v4, v0, v1, v2}, LX/0pQ;->A01(LX/0wD;LX/0pQ;Ljava/lang/String;J)LX/0wD;
+    004c..004e  move-result-object  v3
+    004e..0054  invoke-virtual  {v3}, LX/0wD;->A00()V
+    0054..0056  return-void
+    # exception table: 0 try range(s)
+.end method

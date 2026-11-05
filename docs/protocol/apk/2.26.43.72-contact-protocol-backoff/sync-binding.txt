@@ -1,0 +1,18 @@
+# Selected original DEX ranges, not a complete method.
+# Source full-export SHA256: de44e48e6576d0bebed9ab8bab5298b2cc7774e7282889647602bdb92f9da468
+
+# class: LX/0p7;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 4
+    # full signature: LX/0p7;-><init>()V
+    0160..0164  new-instance  v2, LX/0pA;
+    0164..016a  invoke-direct  {v2, v3}, LX/0pA;-><init>(LX/0p7;)V
+    016a..016e  iput-object  v2, v3, LX/0p7;->A0b:LX/0p9;
+    020e..0212  const/16  v0, #0x14dc
+    0212..0218  invoke-static  {v0}, LX/00T;->A03(I)Ljava/lang/Object;
+    0218..021a  move-result-object  v0
+    021a..021e  check-cast  v0, LX/0pB;
+    021e..0224  invoke-virtual  {v0, v2}, LX/0pB;->A00(LX/0p9;)LX/0pD;
+    0224..0226  move-result-object  v0
+    0226..022a  iput-object  v0, v3, LX/0p7;->A0c:LX/0pD;

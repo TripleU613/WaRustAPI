@@ -1,0 +1,40 @@
+
+# class: LX/Hzq;
+# extends: Ljava/lang/Object;
+
+.method public BLg(VLLIJ)  # .registers 11
+    # full signature: LX/Hzq;->BLg(LX/0vC;Ljava/lang/String;IJ)V
+    0000..0002  int-to-long  v0, v8
+    0002..0006  iput-wide  v0, v5, LX/Hzq;->A00:J
+    0006..000a  const-wide/16  v1, #0x0
+    000a..000e  cmp-long  v0, v9, v1
+    000e..0012  if-lez  v0, +0x24
+    0012..0016  iget-object  v0, v5, LX/Hzq;->A03:LX/08q;
+    0016..001c  invoke-static  {v0}, LX/08q;->A00(LX/08q;)J
+    001c..001e  move-result-wide  v1
+    001e..0020  add-long/2addr  v1, v9
+    0020..0024  iget-object  v4, v5, LX/Hzq;->A04:LX/0pQ;
+    0024..0026  const/4  v3, #0x0
+    0026..002a  const-string  v0, "contact_sync_backoff"
+    002a..0030  invoke-static  {v3, v4, v0, v1, v2}, LX/0pQ;->A01(LX/0wD;LX/0pQ;Ljava/lang/String;J)LX/0wD;
+    0030..0032  move-result-object  v3
+    0032..0036  const/16  v0, #0x1f7
+    0036..003a  if-ne  v8, v0, +0x11
+    003a..003e  const-string  v0, "contactsyncmanager/handleSyncContactError need global backoff="
+    003e..0044  invoke-static  {v0, v9, v10}, LX/DBh;->A1E(Ljava/lang/String;J)V
+    0044..0048  const-string  v0, "global_backoff_time"
+    0048..004e  invoke-static  {v3, v4, v0, v1, v2}, LX/0pQ;->A01(LX/0wD;LX/0pQ;Ljava/lang/String;J)LX/0wD;
+    004e..0050  move-result-object  v3
+    0050..0056  invoke-virtual  {v3}, LX/0wD;->A00()V
+    0056..0058  return-void
+    0058..005e  invoke-virtual  {v6}, LX/0vC;->A00()Z
+    005e..0060  move-result  v0
+    0060..0064  if-eqz  v0, -0x8
+    0064..0068  const/16  v0, #0x1ad
+    0068..006c  if-ne  v8, v0, -0xc
+    006c..0070  const-string  v0, "contactsyncmanager/handleSyncContactError/deltaSync need backoff="
+    0070..0076  invoke-static  {v0, v9, v10}, LX/DBh;->A1E(Ljava/lang/String;J)V
+    0076..007a  const-string  v0, "delta_sync_backoff"
+    007a..007c  goto  -0x19
+    # exception table: 0 try range(s)
+.end method

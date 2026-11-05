@@ -1,0 +1,17 @@
+
+# class: LX/0pB;
+# extends: LX/082;
+
+.method public A00(LL)  # .registers 3
+    # full signature: LX/0pB;->A00(LX/0p9;)LX/0pD;
+    0000..0006  invoke-static  {v1}, LX/00T;->A07(LX/06h;)V
+    0006..000a  new-instance  v0, LX/0pD;
+    000a..0010  invoke-direct  {v0, v2}, LX/0pD;-><init>(LX/0p9;)V
+    0010..0016  invoke-static  {}, LX/00T;->A06()V
+    0016..0018  return-object  v0
+    0018..001a  move-exception  v0
+    001a..0020  invoke-static  {}, LX/00T;->A06()V
+    0020..0022  throw  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0003..0008 -> 000c
+.end method

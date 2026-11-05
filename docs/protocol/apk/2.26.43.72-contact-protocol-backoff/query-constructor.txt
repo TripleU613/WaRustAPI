@@ -1,0 +1,12 @@
+# Selected original DEX ranges, not a complete method.
+# Source full-export SHA256: 7dfe2cbaa6eede1bf8387f003b0c5077e90f7d9c1914a470426f8796eb8cf9ab
+
+# class: LX/HxV;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 2
+    # full signature: LX/HxV;-><init>()V
+    0118..011c  const/16  v0, #0x2c
+    011c..0122  invoke-static  {v1, v0}, LX/IDA;->A01(Ljava/lang/Object;I)LX/00q;
+    0122..0124  move-result-object  v0
+    0124..0128  iput-object  v0, v1, LX/HxV;->A0H:LX/00p;

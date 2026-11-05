@@ -1,0 +1,84 @@
+
+# class: LX/0pA;
+# extends: Ljava/lang/Object;
+
+.method public BLg(VLLIJ)  # .registers 12
+    # full signature: LX/0pA;->BLg(LX/0vC;Ljava/lang/String;IJ)V
+    0000..0002  const/4  v2, #0x0
+    0002..0006  iget-object  v3, v6, LX/0pA;->A00:LX/0p7;
+    0006..0008  int-to-long  v0, v9
+    0008..000e  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    000e..0010  move-result-object  v0
+    0010..0014  iput-object  v0, v3, LX/0p7;->A01:Ljava/lang/Long;
+    0014..0018  const-string  v0, "ContactSyncHelper/handleSyncContactError/error sid="
+    0018..001c  new-instance  v1, Ljava/lang/StringBuilder;
+    001c..0022  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0022..0028  invoke-virtual  {v1, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0028..002c  const-string  v0, " index="
+    002c..0032  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0032..0038  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0038..003c  const-string  v0, " code="
+    003c..0042  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0042..0048  invoke-virtual  {v1, v9}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0048..004c  const-string  v0, " backoff="
+    004c..0052  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0052..0058  invoke-virtual  {v1, v10, v11}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    0058..005e  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    005e..0060  move-result-object  v1
+    0060..0066  invoke-static  {v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    0066..006a  const-string  v0, "Contact"
+    006a..0070  invoke-static  {v3, v0, v1}, LX/0p7;->A0A(LX/0p7;Ljava/lang/String;Ljava/lang/String;)V
+    0070..0074  const-wide/16  v1, #0x0
+    0074..0078  cmp-long  v0, v10, v1
+    0078..007c  if-lez  v0, +0x42
+    007c..0080  iget-object  v0, v3, LX/0p7;->A0W:LX/00x;
+    0080..0086  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0086..0088  move-result-object  v0
+    0088..008c  check-cast  v0, LX/08q;
+    008c..0092  invoke-static  {v0}, LX/08q;->A00(LX/08q;)J
+    0092..0094  move-result-wide  v1
+    0094..0096  add-long/2addr  v1, v10
+    0096..009a  iget-object  v5, v3, LX/0p7;->A0G:LX/00x;
+    009a..00a0  invoke-interface  {v5}, LX/00x;->get()Ljava/lang/Object;
+    00a0..00a2  move-result-object  v4
+    00a2..00a6  check-cast  v4, LX/0pQ;
+    00a6..00a8  const/4  v3, #0x0
+    00a8..00ac  const-string  v0, "contact_sync_backoff"
+    00ac..00b2  invoke-static  {v3, v4, v0, v1, v2}, LX/0pQ;->A01(LX/0wD;LX/0pQ;Ljava/lang/String;J)LX/0wD;
+    00b2..00b4  move-result-object  v4
+    00b4..00b8  const/16  v0, #0x1f7
+    00b8..00bc  if-ne  v9, v0, +0x23
+    00bc..00c0  const-string  v3, "ContactSyncHelper/handleSyncContactError need global backoff="
+    00c0..00c4  new-instance  v0, Ljava/lang/StringBuilder;
+    00c4..00ca  invoke-direct  {v0, v3}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00ca..00d0  invoke-virtual  {v0, v10, v11}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    00d0..00d6  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00d6..00d8  move-result-object  v0
+    00d8..00de  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    00de..00e4  invoke-interface  {v5}, LX/00x;->get()Ljava/lang/Object;
+    00e4..00e6  move-result-object  v3
+    00e6..00ea  check-cast  v3, LX/0pQ;
+    00ea..00ee  const-string  v0, "global_backoff_time"
+    00ee..00f4  invoke-static  {v4, v3, v0, v1, v2}, LX/0pQ;->A01(LX/0wD;LX/0pQ;Ljava/lang/String;J)LX/0wD;
+    00f4..00f6  move-result-object  v4
+    00f6..00fc  invoke-virtual  {v4}, LX/0wD;->A00()V
+    00fc..00fe  return-void
+    00fe..0104  invoke-virtual  {v7}, LX/0vC;->A00()Z
+    0104..0106  move-result  v0
+    0106..010a  if-eqz  v0, -0x8
+    010a..010e  const/16  v0, #0x1ad
+    010e..0112  if-ne  v9, v0, -0xc
+    0112..0116  const-string  v3, "ContactSyncHelper/handleSyncContactError/deltaSync need backoff="
+    0116..011a  new-instance  v0, Ljava/lang/StringBuilder;
+    011a..0120  invoke-direct  {v0, v3}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0120..0126  invoke-virtual  {v0, v10, v11}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    0126..012c  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    012c..012e  move-result-object  v0
+    012e..0134  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    0134..013a  invoke-interface  {v5}, LX/00x;->get()Ljava/lang/Object;
+    013a..013c  move-result-object  v3
+    013c..0140  check-cast  v3, LX/0pQ;
+    0140..0144  const-string  v0, "delta_sync_backoff"
+    0144..0146  goto  -0x2b
+    # exception table: 0 try range(s)
+.end method
