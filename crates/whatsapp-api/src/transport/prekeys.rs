@@ -563,6 +563,23 @@ impl PendingUpload {
             if batch.status != "outcome_unknown" {
                 return Err(invalid("batch already settled"));
             }
+            // Local reservation ownership: the callback must still describe
+            // this exact durable batch before any key or KEM state is changed.
+            // Do not require private rows: authenticated inbox consumption may
+            // legitimately remove a prekey before its upload ACK arrives.
+            if batch.ids != self.ids {
+                return Err(invalid("reserved batch key IDs changed"));
+            }
+            for id in &batch.ids {
+                let meta: Meta = tx
+                    .get_json(Table::Checkpoints, meta_key(*id).as_bytes(), 1)?
+                    .ok_or_else(|| invalid("reserved key metadata disappeared"))?;
+                if meta.status != KeyStatus::OutcomeUnknown
+                    || meta.batch.as_deref() != Some(self.iq_id.as_str())
+                {
+                    return Err(invalid("reserved key ownership changed"));
+                }
+            }
             batch.status = if accepted {
                 "server_acknowledged".into()
             } else {
@@ -1490,6 +1507,95 @@ mod tests {
             assert_eq!(batch.code.as_deref(), Some(expected), "input {raw:?}");
             assert_eq!(batch.status, "refused");
         }
+    }
+
+    #[test]
+    fn upload_settlement_rechecks_durable_key_ownership_without_partial_updates() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("ownership.redb");
+        let (account, signed) = account_and_signed();
+        let store = open(&path);
+        generate(&store).unwrap();
+        let (pending, _) = begin_upload(&store, &account, &signed).unwrap().unwrap();
+        let key = batch_key(&pending.iq_id);
+        let original: Batch = store
+            .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        let last = *pending.ids.last().unwrap();
+        for damage in 0..4 {
+            store
+                .write(|tx| {
+                    tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &original)?;
+                    for id in &pending.ids {
+                        tx.put_json(
+                            Table::Checkpoints,
+                            meta_key(*id).as_bytes(),
+                            1,
+                            &Meta {
+                                status: KeyStatus::OutcomeUnknown,
+                                batch: Some(pending.iq_id.clone()),
+                            },
+                        )?;
+                    }
+                    match damage {
+                        0 => {
+                            let mut changed = original.clone();
+                            changed.ids.reverse();
+                            tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &changed)?;
+                        }
+                        1 => {
+                            tx.delete(Table::Checkpoints, meta_key(last).as_bytes())?;
+                        }
+                        2 | 3 => {
+                            tx.put_json(
+                                Table::Checkpoints,
+                                meta_key(last).as_bytes(),
+                                1,
+                                &Meta {
+                                    status: if damage == 2 {
+                                        KeyStatus::Uploaded
+                                    } else {
+                                        KeyStatus::OutcomeUnknown
+                                    },
+                                    batch: Some(if damage == 2 {
+                                        pending.iq_id.clone()
+                                    } else {
+                                        "another-upload".into()
+                                    }),
+                                },
+                            )?;
+                        }
+                        _ => unreachable!(),
+                    }
+                    Ok(())
+                })
+                .unwrap();
+            let before = store
+                .read(|tx| tx.scan_after(Table::Checkpoints, 1, None, 4096))
+                .unwrap();
+            for kind in ["result", "error"] {
+                let reply = Node::new("iq")
+                    .attr("id", pending.iq_id.as_str())
+                    .attr("type", kind);
+                assert!(pending.settle(&store, &reply).is_err());
+                assert_eq!(
+                    store
+                        .read(|tx| tx.scan_after(Table::Checkpoints, 1, None, 4096))
+                        .unwrap(),
+                    before
+                );
+            }
+        }
+        drop(store);
+        let store = open(&path);
+        let reply = Node::new("iq")
+            .attr("id", pending.iq_id.as_str())
+            .attr("type", "result");
+        assert!(
+            pending.settle(&store, &reply).is_err(),
+            "ownership mismatch survives reopen"
+        );
     }
 
     #[test]

@@ -326,3 +326,26 @@ select first present code, parse signed Java integer, default0. Rust now
 persists canonical decimal without eight-character truncation; historical
 batches retained. Reopen regression covers malformed-first and limits.
 [Evidence and remaining scope](apk/2.26.43.72-prekey-upload-replies/README.md#rust-coded-error-selection-and-numeric-conversion-2026-11-04). No automatic retry or live traffic.
+
+## Upload settlement reservation ownership (2026-11-04)
+
+**Implemented offline, local persistence invariant.** PendingUpload::settle
+previously required unresolved status but used its in-memory legacy IDs without
+comparing the persisted batch or current per-key reservation metadata. A changed
+batch/owner could therefore be overwritten by an otherwise correlated reply.
+No native/server requirement or observed live occurrence is asserted.
+
+Settlement now verifies exact ordered batch IDs and, for each ID, existing
+OutcomeUnknown metadata owned by the same IQ. The checks run in the same write
+transaction before batch status, KEM sent flags or legacy metadata can change.
+A mismatch returns a specific diagnostic and leaves the transaction unchanged.
+Private key row presence is deliberately not required: authenticated inbox
+consumption can precede an ACK. No consumed material is regenerated/resurrected.
+
+Regression `upload_settlement_rechecks_durable_key_ownership_without_partial_updates`
+changes ordered batch IDs, removes the last key's metadata, changes its status
+with owner retained, or changes owner with status retained. Both result/error
+settlements refuse and all checkpoint bytes remain unchanged. The ownership
+refusal survives reopen. Existing normal settlement and consumed-KEM-before-ACK
+regressions remain required. Historical data is not repaired automatically;
+no retries, live traffic or complete native lifecycle parity are claimed.

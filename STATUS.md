@@ -1,3 +1,12 @@
+2026-11-04 — **Upload settlement verifies durable reservation ownership.**
+
+Ordered batch IDs and each key's pending owner/status are rechecked before
+settlement writes. Fault/reopen regression covers stale ownership.
+[Local invariant and limits](docs/protocol/prekey-count-notifications.md#upload-settlement-reservation-ownership-2026-11-04).
+Validation: workspace/all-feature tests, strict Clippy, CLI reference,
+formatting, JSON, coverage freshness and repository hygiene passed.
+No new retry behavior or live traffic.
+
 2026-11-04 — **Upload refusals retain the native numeric code.**
 
 Code-less children are skipped; first present code parses as signed Java

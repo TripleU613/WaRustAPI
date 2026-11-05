@@ -1132,3 +1132,11 @@ select first present code, parse signed Java integer, default0. Rust now
 persists canonical decimal without eight-character truncation; historical
 batches retained. Reopen regression covers malformed-first and limits.
 [Evidence and remaining scope](apk/2.26.43.72-prekey-upload-replies/README.md#rust-coded-error-selection-and-numeric-conversion-2026-11-04). No automatic retry or live traffic.
+
+## 2026-11-04 — Upload settlement reservation ownership
+
+**Implemented offline, local invariant:** correlated upload settlement now
+rechecks ordered durable batch IDs and each key metadata status/owner inside
+the transaction. Mismatches refuse without partial writes; private-row
+absence does not imply lost ownership. Fault/reopen regression retained.
+[Details and limits](prekey-count-notifications.md#upload-settlement-reservation-ownership-2026-11-04). No new retry or live traffic.

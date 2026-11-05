@@ -15326,5 +15326,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#rust-coded-error-selection-and-numeric-conversion-2026-11-04",
     "description": "New refusal batches record first present error code as canonical signed32 Java decimal string; absent/malformed/overflow becomes0. Historical strings unchanged. No automatic retry or HTTP route."
+  },
+  "x-prekey-upload-settlement-ownership": {
+    "x-cli": "whatsapp-cli listen (existing upload settlement)",
+    "x-transport": [
+      "comparison public-client"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/prekey-count-notifications.md#upload-settlement-reservation-ownership-2026-11-04",
+    "description": "Local settlement invariant: exact ordered durable batch IDs and each pending key metadata owner/status must match before any batch/key updates. Mismatch refuses atomically. No private-key presence requirement or new retry."
   }
 }
