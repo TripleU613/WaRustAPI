@@ -63,6 +63,9 @@ pub enum IncomingResult {
     /// A syntactically supported direct message has no saved session, or a
     /// group message has no sender-key record. Eligible for retry error1.
     MissingSession,
+    /// Sender-key message signature failed verification against the saved key.
+    /// Eligible for the scoped native signature retry error5.
+    InvalidSenderKeySignature,
 }
 
 // Token/string node bodies can be Text; raw binary bodies remain Bytes.
@@ -1511,6 +1514,10 @@ async fn process_group(
     policy: IdentityChangePolicy,
 ) -> Result<IncomingResult> {
     match process_group_inner(store, account, node, capture, policy).await {
+        Err(Error::SignalInvalidSenderKeySignature) => {
+            tracing::warn!("sender-key signature rejected; capture preserved for bounded retry");
+            Ok(IncomingResult::InvalidSenderKeySignature)
+        }
         Err(Error::SignalLegacySenderKeyMessage) => {
             tracing::warn!("legacy sender-key message preserved without retry or delivery ACK");
             Ok(IncomingResult::Unsupported)

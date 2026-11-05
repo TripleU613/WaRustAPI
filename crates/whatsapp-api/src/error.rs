@@ -30,6 +30,10 @@ pub enum Error {
     #[error("Signal sender-key message uses a legacy version")]
     SignalLegacySenderKeyMessage,
 
+    /// Sender-key message verification failed against the saved signing key.
+    #[error("Signal sender-key message signature verification failed")]
+    SignalInvalidSenderKeySignature,
+
     /// A caller-supplied value failed validation.
     #[error("invalid input for `{field}`: {reason}")]
     InvalidInput {

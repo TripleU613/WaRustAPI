@@ -378,7 +378,25 @@ pub fn queue_retry_for_incoming(
     account: &crate::session::AccountRecord,
     node: &Node,
 ) -> Result<usize> {
-    queue_retry_for_incoming_with_cause(store, account, node, false)
+    queue_retry_for_incoming_with_cause(store, account, node, None)
+}
+
+/// Confirmed producer-specific retry causes; no generic wire-error default.
+#[derive(Clone, Copy)]
+pub(crate) enum RetryCause {
+    MissingSession,
+    SenderKeySignature,
+}
+
+impl RetryCause {
+    fn wire_error(self) -> u32 {
+        match self {
+            // F22.A05/0WJ.A0N or Eyj.A01/0Yl.A00: EDS/-1008 -> wire1.
+            Self::MissingSession => 1,
+            // Fj2.A00/0Yl.A00 -> EtY -1203 -> internal11 -> DxB wire5.
+            Self::SenderKeySignature => 5,
+        }
+    }
 }
 
 // APK43.72 F22.A05/0WJ.A0N and Eyj.A01/0Yl.A00: missing
@@ -388,7 +406,7 @@ pub(crate) fn queue_retry_for_incoming_with_cause(
     store: &ProtocolStore,
     account: &crate::session::AccountRecord,
     node: &Node,
-    missing_session: bool,
+    cause: Option<RetryCause>,
 ) -> Result<usize> {
     if node.description != "message" {
         return Err(Error::invalid(
@@ -468,7 +486,7 @@ pub(crate) fn queue_retry_for_incoming_with_cause(
         1,
         registration,
         message_seconds,
-        missing_session.then_some(1),
+        cause.map(RetryCause::wire_error),
     )?;
     let wire = crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
         .encode(&retry)?;
@@ -1563,7 +1581,7 @@ mod tests {
                 &store,
                 &account,
                 &message.attr("t", "1700000001"),
-                true
+                Some(RetryCause::MissingSession)
             )
             .unwrap(),
             0

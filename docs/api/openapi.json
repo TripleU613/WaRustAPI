@@ -16515,5 +16515,12 @@
     "x-live": false,
     "evidence": "docs/protocol/outgoing-retry-receipts.md#legacy-sender-key-message-retry-exclusion--2026-11-05",
     "description": "Error::SignalLegacySenderKeyMessage preserves LegacyCiphertextVersion only from skmsg decryption; group inbox returns Unsupported without retry, delivery ACK or committed ratchet/event changes. Missing sender-key record remains checked first. SKDM/direct/prekey parsing, higher unknown versions and short ciphertext retain separate existing policy. Regression covers version0/1/2 rejection, version4 and short-input distinctions, unchanged keys/journal and authenticated duplicates. No CLI/HTTP route or live acceptance added."
+  },
+  "x-sender-key-signature-retry-error": {
+    "x-cli": false,
+    "x-transport": ["normal experimental group receive; offline tested"],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-sender-key-signature-retry/README.md",
+    "description": "Error::SignalInvalidSenderKeySignature and IncomingResult::InvalidSenderKeySignature preserve skmsg verification failure against the saved signing key. Normal receive serializes retry/error5 using the private typed cause enum; missing session retains error1. Other signature producers and unclassified public builders retain behavior. Original timestamp/count1, routing, durable reservation and no replay/delivery ACK on uncertain retry are unchanged. Offline CLI replay sends nothing. No HTTP route/CLI flag or live acceptance added; full native parity remains unfinished."
   }
 }

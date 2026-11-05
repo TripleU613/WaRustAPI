@@ -984,8 +984,13 @@ pub(crate) async fn drive(
                         Err(error) => return Err(error),
                     }
                 }
-                if matches!(received, super::inbox::IncomingResult::Undecryptable | super::inbox::IncomingResult::MissingSession) {
-                    match super::receipts::queue_retry_for_incoming_with_cause(&store, &account, &node, received == super::inbox::IncomingResult::MissingSession) {
+                let retry_cause = match received {
+                    super::inbox::IncomingResult::MissingSession => Some(super::receipts::RetryCause::MissingSession),
+                    super::inbox::IncomingResult::InvalidSenderKeySignature => Some(super::receipts::RetryCause::SenderKeySignature),
+                    _ => None,
+                };
+                if received == super::inbox::IncomingResult::Undecryptable || retry_cause.is_some() {
+                    match super::receipts::queue_retry_for_incoming_with_cause(&store, &account, &node, retry_cause) {
                         Ok(0) => tracing::info!(target: "whatsapp_api::incoming", "retry already recorded; no repeat"),
                         Ok(_) => {
                             for receipt in super::receipts::reserve_pending(&store)? {
@@ -2509,7 +2514,7 @@ mod tests {
 
     #[tokio::test]
     async fn undecryptable_message_requests_once_before_write_cut_and_never_replays() {
-        for grouped in [false, true] {
+        for (grouped, bad_signature) in [(false, false), (true, false), (true, true)] {
             let dir = tempfile::tempdir().unwrap();
             let store = open(&dir.path().join("retry-cut.redb"));
             store
@@ -2548,6 +2553,36 @@ mod tests {
                         .attr("type", "msg")
                         .bytes(message.serialized().to_vec()),
                 ]);
+            let group_ciphertext = if bad_signature {
+                use crate::signal::group::{
+                    commit_skdm, encrypt_group_payload, extract_skdm_from_payload,
+                    prepare_own_sender_key, process_skdm, sender_key_db_key,
+                };
+                let group = Jid::parse("120363000000000001@g.us").unwrap();
+                let sender = peer().with_device(3);
+                let mine = prepare_own_sender_key(&group, &sender, None).await.unwrap();
+                let (_, bytes) = extract_skdm_from_payload(&mine.distribution_message).unwrap();
+                let installed = process_skdm(
+                    &group,
+                    &sender,
+                    sender_key_db_key(&group, &sender),
+                    None,
+                    &bytes,
+                )
+                .await
+                .unwrap();
+                assert!(store.write(|tx| commit_skdm(tx, &installed)).unwrap());
+                let body = super::super::group_send::text_payload("signature fixture").unwrap();
+                let (cipher, _) = encrypt_group_payload(&group, &sender, &mine.updated_key, &body)
+                    .await
+                    .unwrap();
+                let mut tampered = cipher.to_vec();
+                *tampered.last_mut().unwrap() ^= 1;
+                tampered
+            } else {
+                vec![9; 48]
+            };
+            let held_keys = store.read(|tx| tx.scan(Table::SenderKeys, 1, 10)).unwrap();
             let failed = if grouped {
                 failed
                     .attr("from", "120363000000000001@g.us")
@@ -2556,7 +2591,7 @@ mod tests {
                         Node::new("enc")
                             .attr("v", "2")
                             .attr("type", "skmsg")
-                            .bytes(vec![9; 48]),
+                            .bytes(group_ciphertext),
                     ])
             } else {
                 failed
@@ -2572,7 +2607,7 @@ mod tests {
                     .unwrap()
                     .get_attr("error")
                     .and_then(|v| v.as_text()),
-                Some("1")
+                Some(if bad_signature { "5" } else { "1" })
             );
             assert_eq!(
                 retry
@@ -2627,6 +2662,10 @@ mod tests {
             reply.send(Ok(())).unwrap();
             fake.nothing_written(Duration::from_millis(100)).await;
             assert_eq!(super::super::receipts::outcomes(&store).unwrap().len(), 1);
+            assert_eq!(
+                store.read(|tx| tx.scan(Table::SenderKeys, 1, 10)).unwrap(),
+                held_keys
+            );
             fake.stop_cleanly().await;
         }
     }

@@ -198,3 +198,24 @@ No live account operation or server acceptance claimed.
 Validation:1328 workspace/all-feature tests passed. Formatting, strict workspace
 all-target/all-feature Clippy, CLI reference regeneration, APK coverage, staged
 whitespace and research checksum/link hygiene passed. Offline only.
+
+## Sender-key signature retry error preserved — 2026-11-05
+
+**Confirmed static / inferred provider equivalence:** [message signature verifier,
+status refinement, wire5 and backend source identity](apk/2.26.43.72-sender-key-signature-retry/README.md).
+Only skmsg decryption maps SignatureValidationFailed to the fixed redacted
+Error::SignalInvalidSenderKeySignature. Inbox returns InvalidSenderKeySignature;
+normal receive queues retry/error5. The private RetryCause enum now distinguishes
+missing session (wire1) from sender-key message signature (wire5), with no guessed
+generic fallback. Other signature producers are unchanged.
+
+Production-loop regression tampers a real synthetic group ciphertext signature,
+checks error5, original timestamp and reservation before failed write; reconnect
+redelivery emits neither another retry nor delivery ACK. Sender-key rows remain
+unchanged. Existing direct/group missing-session cases retain error1. Offline CLI
+replay sends nothing. Count/key progression, other typed causes, full routing/ACK
+policy and server acceptance remain unverified. No live account operation.
+
+Validation:1328 workspace/all-feature tests passed. Formatting, strict workspace
+all-target/all-feature Clippy, CLI reference regeneration, APK coverage, staged
+whitespace and research checksum/link hygiene passed. Offline only.

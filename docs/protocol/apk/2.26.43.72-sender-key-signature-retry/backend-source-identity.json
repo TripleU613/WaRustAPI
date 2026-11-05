@@ -1,0 +1,25 @@
+{
+  "package": "wacore-libsignal",
+  "version": "0.7.0",
+  "files": [
+    {
+      "file": "src/protocol/group_cipher.rs",
+      "sha256": "324b55313055b7542166c37d59748ab7b1afb3aa82cbf29db086e140350cb950",
+      "bytes": 29940,
+      "source_facts": [
+        "203-208 parse SenderKeyMessage",
+        "212-241 select saved sender-key state",
+        "250-255 verify saved signing key; false -> SignatureValidationFailed",
+        "257 onwards advance message key/decrypt only after verification"
+      ]
+    },
+    {
+      "file": "src/protocol/protocol.rs",
+      "sha256": "415ad140d76f8517790a35d351c682eb1972840832db6749e4fa958f626d207b",
+      "bytes": 51538,
+      "source_facts": [
+        "802-823 verify serialized prefix with trailing signature"
+      ]
+    }
+  ]
+}

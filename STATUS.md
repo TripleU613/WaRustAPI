@@ -1,3 +1,11 @@
+2026-11-05 — **Sender-key signature retries now carry error5.**
+
+Receive preserves message-signature failure separately from generic decryption,
+with a typed cause through durable retry construction. Missing-session error1
+and once-only reservations remain intact. [Evidence, regression and limits](docs/protocol/outgoing-retry-receipts.md#sender-key-signature-retry-error-preserved--2026-11-05).
+Validation:1328 tests, strict Clippy, fmt, CLI reference, APK coverage and
+hygiene passed. No live traffic; other producer-specific policies remain unfinished.
+
 2026-11-05 — **Legacy sender-key messages no longer trigger retries.**
 
 A typed legacy skmsg rejection preserves capture without retry, delivery ACK or
