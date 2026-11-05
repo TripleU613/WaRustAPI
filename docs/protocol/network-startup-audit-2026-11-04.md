@@ -404,3 +404,13 @@ bounded native fixtures pass. Recovery replaces rejected local snapshot state;
 this is not server/account/message replay authority.
 [Native bodies, exact ranges, synthetic harness/results and limits](apk/2.26.43.72-metrics-native-snapshot-validation/README.md).
 Error objects, full manager lifecycle and event transport remain open. No Rust/live change.
+
+### Native metrics integer payload encoding and selected field framing (2026-11-05)
+
+**Confirmed static / observed synthetic emulation, APK 2.26.43.72:** native
+integer helpers choose signed 1/2/4/8-byte little-endian payloads; scalar 0/1 use
+special tags without bytes. All 42 boundary fixtures match independent expected
+bytes/tags. Worker-to-field-encoder calls and selected header packing retained;
+full field/event framing and send/reply behavior remain incomplete.
+[Native bodies, digest-bound fixture harness and scope](apk/2.26.43.72-metrics-native-integer-encoding/README.md).
+No new Rust telemetry or inferred mandatory request. No runtime/live change.

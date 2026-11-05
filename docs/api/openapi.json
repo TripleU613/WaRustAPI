@@ -16170,5 +16170,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-metrics-native-snapshot-validation/README.md",
     "description": "Native local snapshot validator ranges/precedence checked in 43 bounded Unicorn cases. Recovery replaces rejected local snapshot state. These are local validation codes, not server limits or account/message replay authority. Full lifecycle and event transport remain open; no client runtime/live operation added."
+  },
+  "x-metrics-native-integer-encoding-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK synthetic encoding evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-metrics-native-integer-encoding/README.md",
+    "description": "Native integer width/scalar special-tag helpers checked in 42 bounded Unicorn fixtures with exact bytes. Selected worker/field-header flow retained statically. Full framing, batching and transport/replies remain open. No complete request, client runtime or live operation added."
   }
 }

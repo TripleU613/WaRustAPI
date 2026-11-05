@@ -1,0 +1,87 @@
+{
+  "scope": "native local field serialization helpers; send/reply behavior unresolved",
+  "type_dispatch_table_va": "0x2e9633",
+  "type_dispatch_table_hex": "4b000b2d04",
+  "type_dispatch_destinations": [
+    "0x72c0fc",
+    "0x72bfd0",
+    "0x72bffc",
+    "0x72c084",
+    "0x72bfe0"
+  ],
+  "integer_width_tags": {
+    "1-byte": 3,
+    "2-byte": 4,
+    "4-byte": 5,
+    "8-byte": 6
+  },
+  "scalar_special_tags": {
+    "zero": 1,
+    "one": 2
+  },
+  "windows": [
+    {
+      "name": "field-encoder",
+      "virtual_address": "0x72bf48",
+      "file_offset": "0x727f48",
+      "bytes": 572,
+      "sha256": "54194319bfe29c2862ae7f5b901f3cd9f6bb5e030fd12fe2d70e949198d9c674"
+    },
+    {
+      "name": "signed-width-encoder",
+      "virtual_address": "0x72c184",
+      "file_offset": "0x728184",
+      "bytes": 192,
+      "sha256": "75ff420cf9fc5eed2483afad3d8550fe3bff39618580f1a7c6836cbe86b2fb5c"
+    },
+    {
+      "name": "scalar-special-cases",
+      "virtual_address": "0x72c244",
+      "file_offset": "0x728244",
+      "bytes": 28,
+      "sha256": "12b37c078f639824caa171cf663c3d938bfc0318dd025cee15cbfad32254a6a0"
+    },
+    {
+      "name": "literal-zero-tag",
+      "virtual_address": "0x483d04",
+      "file_offset": "0x47fd04",
+      "bytes": 8,
+      "sha256": "5103ba3de080c52a046485f800433848701faa49ab8f60241a80987ca249d7ac"
+    },
+    {
+      "name": "literal-one-tag",
+      "virtual_address": "0x5d3a0c",
+      "file_offset": "0x5cfa0c",
+      "bytes": 8,
+      "sha256": "0becf359e148792c5ed24ca79a91209e5f15e0f015d2a0b9f4d69c2e82d59f3a"
+    },
+    {
+      "name": "append-u16",
+      "virtual_address": "0x72c958",
+      "file_offset": "0x728958",
+      "bytes": 80,
+      "sha256": "89a4c969a585420c033f46221b5f7dd0b186edaf6c84846173f62355fc934ada"
+    },
+    {
+      "name": "append-byte",
+      "virtual_address": "0x72c9a8",
+      "file_offset": "0x7289a8",
+      "bytes": 76,
+      "sha256": "c22d6200b633721a7e06f846fe2873331fa0d68001fb19a0c86c5be4655ccab7"
+    },
+    {
+      "name": "patch-header",
+      "virtual_address": "0x72c280",
+      "file_offset": "0x728280",
+      "bytes": 176,
+      "sha256": "bd8036dd596027db242ef6721def55381c869c287a6687d945f4645e58dbf0f1"
+    },
+    {
+      "name": "worker-encoder-calls",
+      "virtual_address": "0x724330",
+      "file_offset": "0x720330",
+      "bytes": 152,
+      "sha256": "f046796a8639402a051591fa2e535ea7897e8ddf48f5707b91360445ab5a662a"
+    }
+  ]
+}

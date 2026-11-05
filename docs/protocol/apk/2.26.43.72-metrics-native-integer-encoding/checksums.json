@@ -1,0 +1,58 @@
+{
+  "README.md": {
+    "bytes": 5217,
+    "sha256": "55aa96b53595ec17f28ce30af0ed2572174044b6c0d115a139547109a387bfdd"
+  },
+  "append-byte-assembly.txt": {
+    "bytes": 943,
+    "sha256": "596141e5a11899522b335e3c99af9df9892586932a370e4138b4ef6a07b0307b"
+  },
+  "append-u16-assembly.txt": {
+    "bytes": 975,
+    "sha256": "61cd36a166dd9f3d3e2255472afa6972f570e400babaa41f995acb785a0a5fdd"
+  },
+  "check-integers.py": {
+    "bytes": 5745,
+    "sha256": "b8760172eff3733ac30e749259626d253d0e822cdd9ec40de57842db994a90b4"
+  },
+  "encoding-boundaries.json": {
+    "bytes": 2434,
+    "sha256": "80884ec71624599ebea43806043839362159c3346d78e7555ff26b9418fc5ce0"
+  },
+  "field-encoder-assembly.txt": {
+    "bytes": 8416,
+    "sha256": "a1a4a731e860e1ae1be4afad7c3601f60b75d775e595c1160c7d962de791f687"
+  },
+  "inspect-encoding.py": {
+    "bytes": 1633,
+    "sha256": "5ac0e0e5b7e21864539b01460e4c86d27d5d43313a0d80a378a715ba6a195e54"
+  },
+  "integer-results.json": {
+    "bytes": 12037,
+    "sha256": "dfb79d6b1176f1214ce0b3dd0a6882c1125d6f05e70a8c204c5f179eaaf6b0df"
+  },
+  "literal-one-tag-assembly.txt": {
+    "bytes": 72,
+    "sha256": "5a81c59bc8d1d75bb5cfa6d0502a541d5a52dba6a7fbe4e904b5b21ce030e14a"
+  },
+  "literal-zero-tag-assembly.txt": {
+    "bytes": 72,
+    "sha256": "9a4052fc3cf39e95fc03baa51f44372cf38052b92f6c1beff1d72d53406feedb"
+  },
+  "patch-header-assembly.txt": {
+    "bytes": 2312,
+    "sha256": "4a0fe393b8f0b1657b6130770fdcdcf2d8d3ffa6cfbe67e6f534c08af492e130"
+  },
+  "scalar-special-cases-assembly.txt": {
+    "bytes": 367,
+    "sha256": "7c8de8e13c3118fcfbe2fc167772f95be9efad1f6686202d32a7dccee7e2e821"
+  },
+  "signed-width-encoder-assembly.txt": {
+    "bytes": 2603,
+    "sha256": "a8fbfdf51a42399c7e7d05f82cc853cbc70fcc7e3e374fda5229cd097cf9e81b"
+  },
+  "worker-encoder-calls-assembly.txt": {
+    "bytes": 2025,
+    "sha256": "0bae5f1ef730ec47fc72968ba21ab0f9e1add52fbded7fdefc7d44bdbe55e7d1"
+  }
+}

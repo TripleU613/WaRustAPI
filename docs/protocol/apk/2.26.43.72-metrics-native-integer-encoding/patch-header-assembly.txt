@@ -1,0 +1,44 @@
+            0x0072c280      paciasp
+            0x0072c284      sub   sp, sp, 0x50
+            0x0072c288      stp   x29, x30, [sp, 0x10]
+            0x0072c28c      str   x23, [sp, 0x20]
+            0x0072c290      bl    0x49bbe0
+            0x0072c294      add   x29, sp, 0x10
+            0x0072c298      bl    0xbe12c4
+            0x0072c29c      bl    0xbe6e94
+            0x0072c2a0      mov   x21, x1
+            0x0072c2a4      str   x8, [sp, 8]
+            0x0072c2a8      ldr   w22, [x0, 0x20]                      ; [0x20:4]=64 ; "@"
+            0x0072c2ac      ldr   x0, [x0, 0x18]                       ; [0x18:4]=0
+            0x0072c2b0      bl    0x72bebc
+            0x0072c2b4      cmp   w22, w0
+        ┌─< 0x0072c2b8      b.ge  0x72c328
+        │   0x0072c2bc      ldr   w0, [x19, 0x20]                      ; [0x20:4]=64 ; "@"
+        │   0x0072c2c0      mov   w1, 1
+        │   0x0072c2c4      strb  wzr, [sp, 4]
+        │   0x0072c2c8      bl    sym.imp.MCFRangeMake
+        │   0x0072c2cc      ldr   x8, [x19, 0x18]                      ; [0x18:4]=0
+        │   0x0072c2d0      mov   x22, x0
+        │   0x0072c2d4      add   x2, sp, 4
+        │   0x0072c2d8      mov   x1, x22
+        │   0x0072c2dc      mov   x0, x8
+        │   0x0072c2e0      bl    sym.imp.MCFDataGetBytes
+        │   0x0072c2e4      ldrb  w0, [sp, 4]                          ; [0x4:4]=0x10102
+        │   0x0072c2e8      mov   x1, x20
+        │   0x0072c2ec      blr   x21
+        │   0x0072c2f0      ldr   x8, [x19, 0x18]                      ; [0x18:4]=0
+        │   0x0072c2f4      strb  w0, [sp]
+        │   0x0072c2f8      mov   x2, sp
+        │   0x0072c2fc      mov   x1, x22
+        │   0x0072c300      mov   w3, 1
+        │   0x0072c304      mov   x0, x8
+        │   0x0072c308      bl    sym.imp.MCFDataReplaceBytes
+        │   0x0072c30c      bl    0xbddaf8
+       ┌──< 0x0072c310      b.ne  0x72c32c
+       ││   0x0072c314      bl    0x5ce3fc
+       ││   0x0072c318      ldp   x29, x30, [sp, 0x10]
+       ││   0x0072c31c      add   sp, sp, 0x50
+       ││   0x0072c320      autiasp
+       ││   0x0072c324      ret
+       │└─> 0x0072c328      bl    sym.imp.abort
+       └──> 0x0072c32c      bl    sym.imp.__stack_chk_fail

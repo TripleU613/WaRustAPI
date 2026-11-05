@@ -1,0 +1,484 @@
+{
+  "scope": "synthetic integer payload helpers; no complete event or live traffic",
+  "unicorn_version": "2.1.4",
+  "instruction_cap_per_case": 100000,
+  "timeout_microseconds_per_case": 1000000,
+  "cases": [
+    {
+      "entry_va": "0x72c184",
+      "value": "-9223372036854775808",
+      "native_tag": 6,
+      "native_bytes_hex": "0000000000000080",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataGetLength": 1,
+        "MCFDataIncreaseLength": 1,
+        "MCFDataGetMutableBytePtr": 1
+      }
+    },
+    {
+      "entry_va": "0x72c184",
+      "value": "-2147483649",
+      "native_tag": 6,
+      "native_bytes_hex": "ffffff7fffffffff",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataGetLength": 1,
+        "MCFDataIncreaseLength": 1,
+        "MCFDataGetMutableBytePtr": 1
+      }
+    },
+    {
+      "entry_va": "0x72c184",
+      "value": "-2147483648",
+      "native_tag": 5,
+      "native_bytes_hex": "00000080",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataGetLength": 1,
+        "MCFDataIncreaseLength": 1,
+        "MCFDataGetMutableBytePtr": 1
+      }
+    },
+    {
+      "entry_va": "0x72c184",
+      "value": "-32769",
+      "native_tag": 5,
+      "native_bytes_hex": "ff7fffff",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataGetLength": 1,
+        "MCFDataIncreaseLength": 1,
+        "MCFDataGetMutableBytePtr": 1
+      }
+    },
+    {
+      "entry_va": "0x72c184",
+      "value": "-32768",
+      "native_tag": 4,
+      "native_bytes_hex": "0080",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataGetLength": 1,
+        "MCFDataIncreaseLength": 1,
+        "MCFDataGetMutableBytePtr": 1
+      }
+    },
+    {
+      "entry_va": "0x72c184",
+      "value": "-129",
+      "native_tag": 4,
+      "native_bytes_hex": "7fff",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataGetLength": 1,
+        "MCFDataIncreaseLength": 1,
+        "MCFDataGetMutableBytePtr": 1
+      }
+    },
+    {
+      "entry_va": "0x72c184",
+      "value": "-128",
+      "native_tag": 3,
+      "native_bytes_hex": "80",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataAppendBytes": 1
+      }
+    },
+    {
+      "entry_va": "0x72c184",
+      "value": "-1",
+      "native_tag": 3,
+      "native_bytes_hex": "ff",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataAppendBytes": 1
+      }
+    },
+    {
+      "entry_va": "0x72c184",
+      "value": "0",
+      "native_tag": 3,
+      "native_bytes_hex": "00",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataAppendBytes": 1
+      }
+    },
+    {
+      "entry_va": "0x72c184",
+      "value": "1",
+      "native_tag": 3,
+      "native_bytes_hex": "01",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataAppendBytes": 1
+      }
+    },
+    {
+      "entry_va": "0x72c184",
+      "value": "2",
+      "native_tag": 3,
+      "native_bytes_hex": "02",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataAppendBytes": 1
+      }
+    },
+    {
+      "entry_va": "0x72c184",
+      "value": "127",
+      "native_tag": 3,
+      "native_bytes_hex": "7f",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataAppendBytes": 1
+      }
+    },
+    {
+      "entry_va": "0x72c184",
+      "value": "128",
+      "native_tag": 4,
+      "native_bytes_hex": "8000",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataGetLength": 1,
+        "MCFDataIncreaseLength": 1,
+        "MCFDataGetMutableBytePtr": 1
+      }
+    },
+    {
+      "entry_va": "0x72c184",
+      "value": "255",
+      "native_tag": 4,
+      "native_bytes_hex": "ff00",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataGetLength": 1,
+        "MCFDataIncreaseLength": 1,
+        "MCFDataGetMutableBytePtr": 1
+      }
+    },
+    {
+      "entry_va": "0x72c184",
+      "value": "32767",
+      "native_tag": 4,
+      "native_bytes_hex": "ff7f",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataGetLength": 1,
+        "MCFDataIncreaseLength": 1,
+        "MCFDataGetMutableBytePtr": 1
+      }
+    },
+    {
+      "entry_va": "0x72c184",
+      "value": "32768",
+      "native_tag": 5,
+      "native_bytes_hex": "00800000",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataGetLength": 1,
+        "MCFDataIncreaseLength": 1,
+        "MCFDataGetMutableBytePtr": 1
+      }
+    },
+    {
+      "entry_va": "0x72c184",
+      "value": "65535",
+      "native_tag": 5,
+      "native_bytes_hex": "ffff0000",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataGetLength": 1,
+        "MCFDataIncreaseLength": 1,
+        "MCFDataGetMutableBytePtr": 1
+      }
+    },
+    {
+      "entry_va": "0x72c184",
+      "value": "65536",
+      "native_tag": 5,
+      "native_bytes_hex": "00000100",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataGetLength": 1,
+        "MCFDataIncreaseLength": 1,
+        "MCFDataGetMutableBytePtr": 1
+      }
+    },
+    {
+      "entry_va": "0x72c184",
+      "value": "2147483647",
+      "native_tag": 5,
+      "native_bytes_hex": "ffffff7f",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataGetLength": 1,
+        "MCFDataIncreaseLength": 1,
+        "MCFDataGetMutableBytePtr": 1
+      }
+    },
+    {
+      "entry_va": "0x72c184",
+      "value": "2147483648",
+      "native_tag": 6,
+      "native_bytes_hex": "0000008000000000",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataGetLength": 1,
+        "MCFDataIncreaseLength": 1,
+        "MCFDataGetMutableBytePtr": 1
+      }
+    },
+    {
+      "entry_va": "0x72c184",
+      "value": "9223372036854775807",
+      "native_tag": 6,
+      "native_bytes_hex": "ffffffffffffff7f",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataGetLength": 1,
+        "MCFDataIncreaseLength": 1,
+        "MCFDataGetMutableBytePtr": 1
+      }
+    },
+    {
+      "entry_va": "0x72c244",
+      "value": "-9223372036854775808",
+      "native_tag": 6,
+      "native_bytes_hex": "0000000000000080",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataGetLength": 1,
+        "MCFDataIncreaseLength": 1,
+        "MCFDataGetMutableBytePtr": 1
+      }
+    },
+    {
+      "entry_va": "0x72c244",
+      "value": "-2147483649",
+      "native_tag": 6,
+      "native_bytes_hex": "ffffff7fffffffff",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataGetLength": 1,
+        "MCFDataIncreaseLength": 1,
+        "MCFDataGetMutableBytePtr": 1
+      }
+    },
+    {
+      "entry_va": "0x72c244",
+      "value": "-2147483648",
+      "native_tag": 5,
+      "native_bytes_hex": "00000080",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataGetLength": 1,
+        "MCFDataIncreaseLength": 1,
+        "MCFDataGetMutableBytePtr": 1
+      }
+    },
+    {
+      "entry_va": "0x72c244",
+      "value": "-32769",
+      "native_tag": 5,
+      "native_bytes_hex": "ff7fffff",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataGetLength": 1,
+        "MCFDataIncreaseLength": 1,
+        "MCFDataGetMutableBytePtr": 1
+      }
+    },
+    {
+      "entry_va": "0x72c244",
+      "value": "-32768",
+      "native_tag": 4,
+      "native_bytes_hex": "0080",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataGetLength": 1,
+        "MCFDataIncreaseLength": 1,
+        "MCFDataGetMutableBytePtr": 1
+      }
+    },
+    {
+      "entry_va": "0x72c244",
+      "value": "-129",
+      "native_tag": 4,
+      "native_bytes_hex": "7fff",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataGetLength": 1,
+        "MCFDataIncreaseLength": 1,
+        "MCFDataGetMutableBytePtr": 1
+      }
+    },
+    {
+      "entry_va": "0x72c244",
+      "value": "-128",
+      "native_tag": 3,
+      "native_bytes_hex": "80",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataAppendBytes": 1
+      }
+    },
+    {
+      "entry_va": "0x72c244",
+      "value": "-1",
+      "native_tag": 3,
+      "native_bytes_hex": "ff",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataAppendBytes": 1
+      }
+    },
+    {
+      "entry_va": "0x72c244",
+      "value": "0",
+      "native_tag": 1,
+      "native_bytes_hex": "",
+      "matches_independent_encoding": true,
+      "imports": {}
+    },
+    {
+      "entry_va": "0x72c244",
+      "value": "1",
+      "native_tag": 2,
+      "native_bytes_hex": "",
+      "matches_independent_encoding": true,
+      "imports": {}
+    },
+    {
+      "entry_va": "0x72c244",
+      "value": "2",
+      "native_tag": 3,
+      "native_bytes_hex": "02",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataAppendBytes": 1
+      }
+    },
+    {
+      "entry_va": "0x72c244",
+      "value": "127",
+      "native_tag": 3,
+      "native_bytes_hex": "7f",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataAppendBytes": 1
+      }
+    },
+    {
+      "entry_va": "0x72c244",
+      "value": "128",
+      "native_tag": 4,
+      "native_bytes_hex": "8000",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataGetLength": 1,
+        "MCFDataIncreaseLength": 1,
+        "MCFDataGetMutableBytePtr": 1
+      }
+    },
+    {
+      "entry_va": "0x72c244",
+      "value": "255",
+      "native_tag": 4,
+      "native_bytes_hex": "ff00",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataGetLength": 1,
+        "MCFDataIncreaseLength": 1,
+        "MCFDataGetMutableBytePtr": 1
+      }
+    },
+    {
+      "entry_va": "0x72c244",
+      "value": "32767",
+      "native_tag": 4,
+      "native_bytes_hex": "ff7f",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataGetLength": 1,
+        "MCFDataIncreaseLength": 1,
+        "MCFDataGetMutableBytePtr": 1
+      }
+    },
+    {
+      "entry_va": "0x72c244",
+      "value": "32768",
+      "native_tag": 5,
+      "native_bytes_hex": "00800000",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataGetLength": 1,
+        "MCFDataIncreaseLength": 1,
+        "MCFDataGetMutableBytePtr": 1
+      }
+    },
+    {
+      "entry_va": "0x72c244",
+      "value": "65535",
+      "native_tag": 5,
+      "native_bytes_hex": "ffff0000",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataGetLength": 1,
+        "MCFDataIncreaseLength": 1,
+        "MCFDataGetMutableBytePtr": 1
+      }
+    },
+    {
+      "entry_va": "0x72c244",
+      "value": "65536",
+      "native_tag": 5,
+      "native_bytes_hex": "00000100",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataGetLength": 1,
+        "MCFDataIncreaseLength": 1,
+        "MCFDataGetMutableBytePtr": 1
+      }
+    },
+    {
+      "entry_va": "0x72c244",
+      "value": "2147483647",
+      "native_tag": 5,
+      "native_bytes_hex": "ffffff7f",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataGetLength": 1,
+        "MCFDataIncreaseLength": 1,
+        "MCFDataGetMutableBytePtr": 1
+      }
+    },
+    {
+      "entry_va": "0x72c244",
+      "value": "2147483648",
+      "native_tag": 6,
+      "native_bytes_hex": "0000008000000000",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataGetLength": 1,
+        "MCFDataIncreaseLength": 1,
+        "MCFDataGetMutableBytePtr": 1
+      }
+    },
+    {
+      "entry_va": "0x72c244",
+      "value": "9223372036854775807",
+      "native_tag": 6,
+      "native_bytes_hex": "ffffffffffffff7f",
+      "matches_independent_encoding": true,
+      "imports": {
+        "MCFDataGetLength": 1,
+        "MCFDataIncreaseLength": 1,
+        "MCFDataGetMutableBytePtr": 1
+      }
+    }
+  ]
+}

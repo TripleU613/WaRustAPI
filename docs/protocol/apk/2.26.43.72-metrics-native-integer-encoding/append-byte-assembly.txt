@@ -1,0 +1,19 @@
+            0x0072c9a8      paciasp
+            0x0072c9ac      sub   sp, sp, 0x30
+            0x0072c9b0      stp   x29, x30, [sp, 0x10]
+            0x0072c9b4      str   x19, [sp, 0x20]
+            0x0072c9b8      add   x29, sp, 0x10
+            0x0072c9bc      mrs   x19, tpidr_el0
+            0x0072c9c0      mov   w2, 1
+            0x0072c9c4      bl    0xbe12dc
+            0x0072c9c8      strb  w1, [sp, 4]
+            0x0072c9cc      add   x1, sp, 4
+            0x0072c9d0      bl    sym.imp.MCFDataAppendBytes
+            0x0072c9d4      bl    0xbddbb0
+        ┌─< 0x0072c9d8      b.ne  0x72c9f0
+        │   0x0072c9dc      ldp   x29, x30, [sp, 0x10]
+        │   0x0072c9e0      ldr   x19, [sp, 0x20]                      ; [0x20:4]=64 ; "@"
+        │   0x0072c9e4      add   sp, sp, 0x30
+        │   0x0072c9e8      autiasp
+        │   0x0072c9ec      ret
+        └─> 0x0072c9f0      bl    sym.imp.__stack_chk_fail

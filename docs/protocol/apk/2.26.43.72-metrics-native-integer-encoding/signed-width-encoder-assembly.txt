@@ -1,0 +1,48 @@
+            0x0072c184      paciasp
+            0x0072c188      stp   x29, x30, [sp, -0x30]!
+            0x0072c18c      str   x21, [sp, 0x10]
+            0x0072c190      stp   x20, x19, [sp, 0x20]
+            0x0072c194      mov   x29, sp
+            0x0072c198      mov   x19, x1
+            0x0072c19c      cmp   x1, w19, sxtb
+        ┌─< 0x0072c1a0      b.ne  0x72c1b8
+        │   0x0072c1a4      ldr   x0, [x0, 0x18]                       ; [0x18:4]=0
+        │   0x0072c1a8      mov   w1, w19
+        │   0x0072c1ac      bl    0x72c9a8
+        │   0x0072c1b0      mov   w0, 3
+       ┌──< 0x0072c1b4      b     0x72c22c
+       │└─> 0x0072c1b8      cmp   x19, w19, sxth
+       │┌─< 0x0072c1bc      b.ne  0x72c1d4
+       ││   0x0072c1c0      ldr   x0, [x0, 0x18]                       ; [0x18:4]=0
+       ││   0x0072c1c4      mov   w1, w19
+       ││   0x0072c1c8      bl    0x72c958
+       ││   0x0072c1cc      mov   w0, 4
+      ┌───< 0x0072c1d0      b     0x72c22c
+      ││└─> 0x0072c1d4      ldr   x21, [x0, 0x18]                      ; [0x18:4]=0
+      ││    0x0072c1d8      mov   x0, x21
+      ││    0x0072c1dc      bl    sym.imp.MCFDataGetLength
+      ││    0x0072c1e0      cmp   x19, w19, sxtw
+      ││    0x0072c1e4      mov   w20, w0
+      ││    0x0072c1e8      mov   x0, x21
+      ││┌─< 0x0072c1ec      b.ne  0x72c210
+      │││   0x0072c1f0      mov   w1, 4
+      │││   0x0072c1f4      bl    sym.imp.MCFDataIncreaseLength
+      │││   0x0072c1f8      mov   x0, x21
+      │││   0x0072c1fc      bl    sym.imp.MCFDataGetMutableBytePtr
+     ┌────< 0x0072c200      cbz   x0, 0x72c23c
+     ││││   0x0072c204      str   w19, [x0, w20, sxtw]
+     ││││   0x0072c208      mov   w0, 5
+    ┌─────< 0x0072c20c      b     0x72c22c
+    ││││└─> 0x0072c210      mov   w1, 8
+    ││││    0x0072c214      bl    sym.imp.MCFDataIncreaseLength
+    ││││    0x0072c218      mov   x0, x21
+    ││││    0x0072c21c      bl    sym.imp.MCFDataGetMutableBytePtr
+    ││││┌─< 0x0072c220      cbz   x0, 0x72c240
+    │││││   0x0072c224      str   x19, [x0, w20, sxtw]
+    │││││   0x0072c228      mov   w0, 6
+    └─└└──> 0x0072c22c      bl    0x4b1850
+     │  │   0x0072c230      ldp   x29, x30, [sp], 0x30
+     │  │   0x0072c234      autiasp
+     │  │   0x0072c238      ret
+     └────> 0x0072c23c      bl    sym.imp.abort
+        └─> 0x0072c240      bl    sym.imp.abort

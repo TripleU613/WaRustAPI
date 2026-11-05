@@ -1,3 +1,12 @@
+2026-11-05 — **Native metrics integer bytes verified at width boundaries.**
+
+42 bounded cases confirm signed-width payloads and scalar-zero/one special tags;
+worker-to-field encoding and selected header packing now have static evidence.
+[Fixtures and remaining framing work](docs/protocol/apk/2.26.43.72-metrics-native-integer-encoding/README.md).
+No complete event/send/reply proof. Validation: pinned image, byte windows,
+42 native fixtures/reproduction, JSON, coverage and checksum/link hygiene.
+No Rust telemetry/runtime change or live traffic.
+
 2026-11-05 — **Native metrics snapshot validator checked with 43 bounded cases.**
 
 Exact per-group ranges/error precedence and rejected-state replacement now have
