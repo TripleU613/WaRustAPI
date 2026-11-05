@@ -1,0 +1,48 @@
+
+# class: LX/0vI;
+# extends: Landroid/os/Handler;
+
+.method public handleMessage(VL)  # .registers 6
+    # full signature: LX/0vI;->handleMessage(Landroid/os/Message;)V
+    0000..0004  iget  v2, v5, Landroid/os/Message;->what:I
+    0004..0008  if-eqz  v2, +0xe
+    0008..000a  const/4  v1, #0x1
+    000a..000e  if-eq  v2, v1, +0x46
+    000e..0010  const/4  v0, #0x2
+    0010..0014  if-ne  v2, v0, +0x7
+    0014..0018  iget-object  v0, v4, LX/0vI;->A00:LX/0v0;
+    0018..001e  invoke-virtual  {v0, v5}, LX/0v0;->A00(Landroid/os/Message;)V
+    001e..0020  return-void
+    0020..0024  const-string  v0, "WriterThread/recv/connected"
+    0024..002a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    002a..002e  iget-object  v3, v4, LX/0vI;->A00:LX/0v0;
+    002e..0032  iget-object  v0, v5, Landroid/os/Message;->obj:Ljava/lang/Object;
+    0032..0036  check-cast  v0, LX/1rj;
+    0036..003a  iput-object  v0, v3, LX/0v0;->A00:LX/1rj;
+    003a..003e  const-string  v0, "WriterThread/handleConnected re-sending stanzas from the queue, size="
+    003e..0042  new-instance  v2, Ljava/lang/StringBuilder;
+    0042..0048  invoke-direct  {v2, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0048..004c  iget-object  v1, v3, LX/0v0;->A04:Ljava/util/ArrayDeque;
+    004c..0052  invoke-virtual  {v1}, Ljava/util/AbstractCollection;->size()I
+    0052..0054  move-result  v0
+    0054..005a  invoke-virtual  {v2, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    005a..0060  invoke-virtual  {v2}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0060..0062  move-result-object  v0
+    0062..0068  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0068..006a  const/4  v0, #0x0
+    006a..006e  iput-boolean  v0, v3, LX/0v0;->A01:Z
+    006e..0072  iget-boolean  v0, v3, LX/0v0;->A01:Z
+    0072..0076  if-nez  v0, -0x2a
+    0076..007c  invoke-virtual  {v1}, Ljava/util/AbstractCollection;->isEmpty()Z
+    007c..007e  move-result  v0
+    007e..0082  if-nez  v0, -0x30
+    0082..0088  invoke-virtual  {v1}, Ljava/util/ArrayDeque;->remove()Ljava/lang/Object;
+    0088..008a  move-result-object  v0
+    008a..008e  check-cast  v0, Landroid/os/Message;
+    008e..0094  invoke-virtual  {v3, v0}, LX/0v0;->A00(Landroid/os/Message;)V
+    0094..0096  goto  -0x13
+    0096..009a  iget-object  v0, v4, LX/0vI;->A00:LX/0v0;
+    009a..009e  iput-boolean  v1, v0, LX/0v0;->A01:Z
+    009e..00a0  return-void
+    # exception table: 0 try range(s)
+.end method

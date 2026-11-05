@@ -1,0 +1,15 @@
+
+# class: LX/0v0;
+# extends: Landroid/os/HandlerThread;
+
+.method public onLooperPrepared(V)  # .registers 4
+    # full signature: LX/0v0;->onLooperPrepared()V
+    0000..0004  iget-object  v2, v3, LX/0v0;->A02:LX/0uv;
+    0004..000a  invoke-virtual  {v3}, Landroid/os/HandlerThread;->getLooper()Landroid/os/Looper;
+    000a..000c  move-result-object  v1
+    000c..0010  new-instance  v0, LX/0vI;
+    0010..0016  invoke-direct  {v0, v1, v3}, LX/0vI;-><init>(Landroid/os/Looper;LX/0v0;)V
+    0016..001c  invoke-interface  {v2, v0}, LX/0uv;->CPl(LX/0vH;)V
+    001c..001e  return-void
+    # exception table: 0 try range(s)
+.end method

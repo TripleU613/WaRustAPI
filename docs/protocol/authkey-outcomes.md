@@ -236,3 +236,15 @@ separate map; it does not directly clear IQ maps or the pending token slot.
 [Complete selected bodies, channel path and limits](apk/2.26.43.72-iq-shutdown-eligibility/README.md).
 Delegate semantics, cancellation callback effects, full reconnect ordering and
 durable ownership remain open. No Rust behavior change or live traffic.
+
+### Concrete channel queued-work predicate and deferred drain (2026-11-04)
+
+**Confirmed static, APK43.72:** selected writer readiness binds0vI into
+0ZJ.A04. The channel predicate combines connection-handler message4, writer
+message2 and a nonempty deferred deque. Those are queued-work checks, not
+wire-delivery or executing-write completion proofs. Connection case0 clears
+the writer flag and drains head Messages throughA00's existing gates; case1
+sets the flag. Dequeue/drain does not prove retransmission or safe replay.
+[Concrete binding, submit chain, drain and limits](apk/2.26.43.72-channel-queue-predicate/README.md).
+Full reconnect ordering, races, replacement/generation ownership and durable
+recovery remain open. No Rust behavior change or live account operation.

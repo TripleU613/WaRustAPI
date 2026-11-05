@@ -1,0 +1,20 @@
+
+# class: LX/0vI;
+# extends: Landroid/os/Handler;
+
+.method public BNJ(Z)  # .registers 3
+    # full signature: LX/0vI;->BNJ()Z
+    0000..0002  const/4  v0, #0x2
+    0002..0008  invoke-virtual  {v2, v0}, Landroid/os/Handler;->hasMessages(I)Z
+    0008..000a  move-result  v0
+    000a..000e  if-nez  v0, +0xd
+    000e..0012  iget-object  v0, v2, LX/0vI;->A00:LX/0v0;
+    0012..0016  iget-object  v0, v0, LX/0v0;->A04:Ljava/util/ArrayDeque;
+    0016..001c  invoke-virtual  {v0}, Ljava/util/AbstractCollection;->isEmpty()Z
+    001c..001e  move-result  v1
+    001e..0020  const/4  v0, #0x0
+    0020..0024  if-nez  v1, +0x3
+    0024..0026  const/4  v0, #0x1
+    0026..0028  return  v0
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,54 @@
+{
+  "README.md": {
+    "bytes": 4156,
+    "sha256": "8dc5cf4ef6c8fb1a90421a701869648284262d953008ae5e8787d05789192d1f"
+  },
+  "channel-constructor.txt": {
+    "bytes": 486,
+    "sha256": "f7e93041176dd2ffc0311188418686bd925a5a563d1199ddcce4beaea7a853cb"
+  },
+  "channel-message4-body.txt": {
+    "bytes": 1719,
+    "sha256": "949ab70bb502601b7669cc444d5cee525882615340fef83e77f0b71b8354b369"
+  },
+  "channel-submit.txt": {
+    "bytes": 418,
+    "sha256": "3ad72c2582cb6d73ddad2ae568a6a2c9acda91047c63f604bea6523d136d6754"
+  },
+  "writer-delegate-constructor.txt": {
+    "bytes": 389,
+    "sha256": "c0436bb47de7cd657e4ae7d2d9726ca3b8cb5db8812544aba79ad2327f23637a"
+  },
+  "writer-delegate-getter.txt": {
+    "bytes": 289,
+    "sha256": "15c3796282965f0fc087f12350b7765c88b587e66f9015d5ece97e3b180f0bd1"
+  },
+  "writer-handler.txt": {
+    "bytes": 2527,
+    "sha256": "3bcf9a92b3482cc6f113cbb6d65486e746e33157cdc255b94b0e55991767453a"
+  },
+  "writer-predicate.txt": {
+    "bytes": 728,
+    "sha256": "f58f8745b2ffd27e67e2299c79cb00a0109fd3b1d25d8913a20b5c601fa479e4"
+  },
+  "writer-ready-bridge.txt": {
+    "bytes": 291,
+    "sha256": "84212b86e0c35bdb0ae1047f9f145da3795d01e6ffc7799076e2a2b38ffd9d70"
+  },
+  "writer-ready-callback.txt": {
+    "bytes": 485,
+    "sha256": "2c3beaec72f231d3028ceea57248c84d5408d45b5e088144f3960c6f656068ea"
+  },
+  "writer-ready-handler.txt": {
+    "bytes": 1692,
+    "sha256": "5ed074bff9332c4f917d4699ec94d2e1288ac736227a6e8c013fda11619917d5"
+  },
+  "writer-ready.txt": {
+    "bytes": 630,
+    "sha256": "6a9c482ea4418d8c1641899c8d8c717b875a512535b3490087b2905dfd706d47"
+  },
+  "writer-submit.txt": {
+    "bytes": 418,
+    "sha256": "a04e006270b967c39a578ffeb59b4acef8e846efae0ad1755e454ff93bdc1f34"
+  }
+}

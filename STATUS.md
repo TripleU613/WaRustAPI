@@ -1,3 +1,11 @@
+2026-11-04 — **Channel shutdown predicate resolved to queued-work checks.**
+
+The selected predicate combines two handler queues and a deferred deque; it
+cannot prove delivery or completion of an executing write. Connection drains
+the deque through existing send gates. [Evidence and limits](docs/protocol/apk/2.26.43.72-channel-queue-predicate/README.md).
+Research only; no runtime changes or live traffic. Validation: checked exports,
+checksums, JSON, coverage freshness and repository hygiene.
+
 2026-11-04 — **IQ shutdown arguments and cancellation-map boundary traced.**
 
 Disconnect and selected login-back failure pass different flush arguments.

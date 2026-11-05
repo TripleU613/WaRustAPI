@@ -15828,5 +15828,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-iq-shutdown-eligibility/README.md",
     "description": "Selected disconnect and login-back failure paths pass distinct registry-flush arguments. Channel BNJ includes queued message4 or delegate predicate; adjacent message-client cancellation uses a separate map. Full delegate/callback effects, reconnect ordering and durable ownership remain open. No sender, route, replay authority or live operation added."
+  },
+  "x-channel-queue-predicate-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-channel-queue-predicate/README.md",
+    "description": "Selected readiness binding resolves the channel predicate to queued connection-handler message4, writer message2 or deferred deque contents. Connection drains through existing writer gates. Queue state is not delivery, active-write completion or replay authority. Full reconnect/generation/durable ownership remains open. No sender, route or live operation added."
   }
 }
