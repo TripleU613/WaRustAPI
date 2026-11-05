@@ -1,0 +1,106 @@
+
+# class: LX/0AJ;
+# extends: LX/07r;
+
+.method public <init>(VLLL)  # .registers 4
+    # full signature: LX/0AJ;-><init>(LX/06h;Ljava/util/List;[I)V
+    0000..0006  invoke-direct  {v0, v1, v3}, LX/07r;-><init>(LX/06h;[I)V
+    0006..000a  iput-object  v2, v0, LX/0AJ;->A00:Ljava/util/List;
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(LL)  # .registers 11
+    # full signature: LX/0AJ;->A00([Ljava/util/Set;)LX/0AJ;
+    0000..0004  new-instance  v5, Ljava/util/ArrayList;
+    0004..000a  invoke-direct  {v5}, Ljava/util/ArrayList;-><init>()V
+    000a..000e  new-instance  v6, Ljava/util/ArrayList;
+    000e..0014  invoke-direct  {v6}, Ljava/util/ArrayList;-><init>()V
+    0014..0018  new-instance  v9, Ljava/util/LinkedHashSet;
+    0018..001e  invoke-direct  {v9}, Ljava/util/LinkedHashSet;-><init>()V
+    001e..0020  const/4  v8, #0x2
+    0020..0022  const/4  v4, #0x0
+    0022..0024  const/4  v7, #0x0
+    0024..0028  aget-object  v3, v10, v7
+    0028..002c  instance-of  v0, v3, LX/07r;
+    002c..0030  if-nez  v0, +0x62
+    0030..0036  invoke-interface  {v3}, Ljava/util/Set;->isEmpty()Z
+    0036..0038  move-result  v0
+    0038..003c  if-nez  v0, +0x25
+    003c..0042  invoke-static  {}, LX/06o;->A00()LX/06o;
+    0042..0048  invoke-static  {}, LX/06o;->A00()LX/06o;
+    0048..004c  new-array  v2, v4, [I
+    004c..0052  invoke-static  {}, LX/06o;->A00()LX/06o;
+    0052..0054  move-result-object  v0
+    0054..0058  new-instance  v1, LX/GBE;
+    0058..005e  invoke-direct  {v1, v0, v2}, LX/07r;-><init>(LX/06h;[I)V
+    005e..0062  new-instance  v0, LX/Hmh;
+    0062..0068  invoke-direct  {v0, v1}, LX/Hmh;-><init>(LX/GBE;)V
+    0068..006c  iput-object  v0, v1, LX/GBE;->A00:LX/Hmh;
+    006c..0070  iput-object  v0, v1, LX/07r;->A05:LX/05f;
+    0070..0074  iput-boolean  v4, v1, LX/07r;->A06:Z
+    0074..0078  iget-object  v0, v1, LX/GBE;->A00:LX/Hmh;
+    0078..007c  iget-object  v0, v0, LX/Hmh;->A00:Ljava/util/List;
+    007c..0082  invoke-interface  {v0, v3}, Ljava/util/List;->addAll(Ljava/util/Collection;)Z
+    0082..0086  add-int/lit8  v7, v7, #0x1
+    0086..008a  if-lt  v7, v8, -0x31
+    008a..0090  invoke-interface  {v9}, Ljava/util/Collection;->iterator()Ljava/util/Iterator;
+    0090..0092  move-result-object  v8
+    0092..0094  const/4  v3, #0x0
+    0094..009a  invoke-interface  {v8}, Ljava/util/Iterator;->hasNext()Z
+    009a..009c  move-result  v0
+    009c..00a0  if-eqz  v0, +0x2e
+    00a0..00a6  invoke-interface  {v8}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    00a6..00a8  move-result-object  v7
+    00a8..00ac  check-cast  v7, Ljava/util/Set;
+    00ac..00b0  check-cast  v7, LX/07r;
+    00b0..00b4  if-nez  v3, +0x4
+    00b4..00b8  iget-object  v3, v7, LX/07r;->A02:LX/06h;
+    00b8..00be  invoke-virtual  {v7}, LX/07r;->A01()[I
+    00be..00c0  move-result-object  v2
+    00c0..00c2  const/4  v1, #0x0
+    00c2..00c8  invoke-virtual  {v7}, Ljava/util/AbstractCollection;->size()I
+    00c8..00ca  move-result  v0
+    00ca..00ce  if-ge  v1, v0, -0x1b
+    00ce..00d2  iget-object  v0, v7, LX/07r;->A05:LX/05f;
+    00d2..00d8  invoke-virtual  {v5, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    00d8..00dc  aget  v0, v2, v1
+    00dc..00e2  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    00e2..00e4  move-result-object  v0
+    00e4..00ea  invoke-virtual  {v6, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    00ea..00ee  add-int/lit8  v1, v1, #0x1
+    00ee..00f0  goto  -0x16
+    00f0..00f6  invoke-interface  {v9, v3}, Ljava/util/Collection;->add(Ljava/lang/Object;)Z
+    00f6..00f8  goto  -0x3a
+    00f8..00fe  invoke-virtual  {v6}, Ljava/util/AbstractCollection;->size()I
+    00fe..0100  move-result  v0
+    0100..0104  new-array  v1, v0, [I
+    0104..010a  invoke-virtual  {v6}, Ljava/util/AbstractCollection;->size()I
+    010a..010c  move-result  v0
+    010c..0110  if-ge  v4, v0, +0x11
+    0110..0116  invoke-virtual  {v6, v4}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
+    0116..0118  move-result-object  v0
+    0118..011c  check-cast  v0, Ljava/lang/Number;
+    011c..0122  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    0122..0124  move-result  v0
+    0124..0128  aput  v0, v1, v4
+    0128..012c  add-int/lit8  v4, v4, #0x1
+    012c..012e  goto  -0x14
+    012e..0132  if-nez  v3, +0x6
+    0132..0138  invoke-static  {}, LX/06o;->A00()LX/06o;
+    0138..013a  move-result-object  v3
+    013a..013e  new-instance  v0, LX/0AJ;
+    013e..0144  invoke-direct  {v0, v3, v5, v1}, LX/0AJ;-><init>(LX/06h;Ljava/util/List;[I)V
+    0144..0146  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A02(LI)  # .registers 3
+    # full signature: LX/0AJ;->A02(I)LX/05f;
+    0000..0004  iget-object  v0, v1, LX/0AJ;->A00:Ljava/util/List;
+    0004..000a  invoke-interface  {v0, v2}, Ljava/util/List;->get(I)Ljava/lang/Object;
+    000a..000c  move-result-object  v0
+    000c..0010  check-cast  v0, LX/05f;
+    0010..0012  return-object  v0
+    # exception table: 0 try range(s)
+.end method

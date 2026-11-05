@@ -1940,3 +1940,16 @@ precedes a conditional rotation invocation in its selected block. Membership,
 dispatch category, provider identity and cross-thread ordering remain open.
 [Selected bodies, excerpt, searches and limits](apk/2.26.43.72-client-auth-token-observer/README.md).
 No Rust behavior change, sender, new retry authority or live traffic.
+
+### Client-auth-token observer membership and delivery (2026-11-04)
+
+**Confirmed static, APK43.72:** readiness set binding0x1d2c includes0x83,
+which resolves to the token-manager factory through the global cached resolver.
+The combined set preserves per-member resolvers into observer iteration. DEX
+interface declarations place1jA in07v, so the null-hint readiness notification
+enters scheduled dispatch. The task re-enumerates observers before invoking
+the notifier; token-manager delivery still rechecks readiness.
+[Bindings, declarations, dispatch and limits](apk/2.26.43.72-client-auth-token-membership/README.md).
+Membership/category gaps from the prior trace are closed for this selected
+path. Executor completion/order, cache resets, generation binding, trusted
+push origin and failure/backoff remain open. No runtime or live change.

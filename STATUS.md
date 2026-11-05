@@ -1,3 +1,11 @@
+2026-11-04 — **Token-manager observer membership confirmed statically.**
+
+Provider binding and DEX interface inheritance connect readiness to the07v
+scheduled path, whose delivery re-enumerates observers before the token
+manager's readiness recheck. [Evidence and limits](docs/protocol/apk/2.26.43.72-client-auth-token-membership/README.md).
+Research only; no sender or live traffic. Validation: digest-bound declaration
+extractor, checksums, JSON, coverage freshness and repository hygiene.
+
 2026-11-04 — **Client-auth-token observer topology narrowed.**
 
 Provider-backed membership and inline/scheduled dispatch are distinct proof

@@ -1,0 +1,20 @@
+
+# class: LX/JYg;
+# extends: Ljava/lang/Object;
+
+.method public <clinit>(V)  # .registers 3
+    # full signature: LX/JYg;-><clinit>()V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0008..000a  move-result-object  v2
+    000a..0010  invoke-static  {}, LX/2L7;->A1C()Ljava/lang/Integer;
+    0010..0012  move-result-object  v1
+    0012..0014  const/4  v0, #0x2
+    0014..0018  new-array  v0, v0, [Ljava/lang/Integer;
+    0018..001e  invoke-static  {v2, v1, v0}, LX/2L7;->A1T(Ljava/lang/Object;Ljava/lang/Object;[Ljava/lang/Object;)V
+    001e..0024  invoke-static  {v0}, LX/01i;->A0A([Ljava/lang/Object;)Ljava/util/List;
+    0024..0026  move-result-object  v0
+    0026..002a  sput-object  v0, LX/JYg;->A00:Ljava/util/List;
+    002a..002c  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,54 @@
+
+# class: LX/07o;
+# extends: Ljava/lang/Object;
+
+.method public A01(VLLLZ)  # .registers 11
+    # full signature: LX/07o;->A01(LX/07o;LX/0Km;Ljava/lang/Integer;Z)V
+    0000..0004  iget-object  v0, v7, LX/07o;->A04:LX/07s;
+    0004..000a  invoke-virtual  {v0}, LX/07s;->iterator()Ljava/util/Iterator;
+    000a..000c  move-result-object  v6
+    000c..000e  const/4  v5, #0x0
+    000e..0014  invoke-interface  {v6}, Ljava/util/Iterator;->hasNext()Z
+    0014..0016  move-result  v0
+    0016..001a  if-eqz  v0, +0x35
+    001a..0020  invoke-interface  {v6}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0020..0022  move-result-object  v4
+    0022..0024  const/4  v3, #0x1
+    0024..0028  if-eqz  v9, +0x12
+    0028..002c  instance-of  v0, v4, LX/0LB;
+    002c..0030  if-eqz  v0, +0x6
+    0030..0034  const/16  v1, #0xa
+    0034..0038  if-nez  v4, +0x3
+    0038..003a  const/4  v1, #0x0
+    003a..0040  invoke-virtual  {v9}, Ljava/lang/Number;->intValue()I
+    0040..0042  move-result  v0
+    0042..0044  const/4  v2, #0x0
+    0044..0048  if-ne  v1, v0, +0x3
+    0048..004a  const/4  v2, #0x1
+    004a..004e  if-ne  v10, v3, +0x6
+    004e..0052  instance-of  v0, v4, LX/0Kn;
+    0052..0056  if-nez  v0, +0xa
+    0056..0058  const/4  v3, #0x0
+    0058..005c  if-nez  v10, +0x7
+    005c..0060  instance-of  v1, v4, LX/07v;
+    0060..0062  const/4  v0, #0x1
+    0062..0066  if-nez  v1, +0x3
+    0066..0068  const/4  v0, #0x0
+    0068..006c  if-eqz  v2, -0x2d
+    006c..0070  if-nez  v3, +0x4
+    0070..0074  if-eqz  v0, -0x31
+    0074..007a  invoke-interface  {v8, v4}, LX/0Km;->CbC(Ljava/lang/Object;)V
+    007a..007e  add-int/lit8  v5, v5, #0x1
+    007e..0080  goto  -0x38
+    0080..0084  if-lez  v5, +0xc
+    0084..0086  const/4  v1, #0x1
+    0086..008a  iget-object  v0, v7, LX/07o;->A03:LX/0UL;
+    008a..008e  if-ne  v10, v1, +0x8
+    008e..0092  if-eqz  v0, +0x5
+    0092..0098  invoke-virtual  {v0, v5}, LX/0UL;->A00(I)V
+    0098..009a  return-void
+    009a..009e  if-eqz  v0, -0x1
+    009e..00a4  invoke-virtual  {v0, v5}, LX/0UL;->A01(I)V
+    00a4..00a6  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,156 @@
+
+# class: LX/08x;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VL)  # .registers 4
+    # full signature: LX/08x;-><init>(LX/07r;)V
+    0000..0004  iput-object  v3, v2, LX/08x;->A01:LX/07r;
+    0004..000a  invoke-direct  {v2}, Ljava/lang/Object;-><init>()V
+    000a..000c  const/4  v1, #0x0
+    000c..0010  new-instance  v0, Ljava/util/concurrent/atomic/AtomicInteger;
+    0010..0016  invoke-direct  {v0, v1}, Ljava/util/concurrent/atomic/AtomicInteger;-><init>(I)V
+    0016..001a  iput-object  v0, v2, LX/08x;->A00:Ljava/util/concurrent/atomic/AtomicInteger;
+    001a..001c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public hasNext(Z)  # .registers 4
+    # full signature: LX/08x;->hasNext()Z
+    0000..0004  iget-object  v0, v3, LX/08x;->A00:Ljava/util/concurrent/atomic/AtomicInteger;
+    0004..000a  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicInteger;->get()I
+    000a..000c  move-result  v2
+    000c..0010  iget-object  v0, v3, LX/08x;->A01:LX/07r;
+    0010..0016  invoke-virtual  {v0}, Ljava/util/AbstractCollection;->size()I
+    0016..0018  move-result  v1
+    0018..001a  const/4  v0, #0x0
+    001a..001e  if-ge  v2, v1, +0x3
+    001e..0020  const/4  v0, #0x1
+    0020..0022  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public next(L)  # .registers 12
+    # full signature: LX/08x;->next()Ljava/lang/Object;
+    0000..0004  const-string  v7, "Exception thrown while injecting bindingId "
+    0004..0008  iget-object  v10, v11, LX/08x;->A01:LX/07r;
+    0008..000a  const/4  v9, #0x1
+    000a..000e  iget-object  v0, v11, LX/08x;->A00:Ljava/util/concurrent/atomic/AtomicInteger;
+    000e..0014  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicInteger;->getAndIncrement()I
+    0014..0016  move-result  v6
+    0016..001c  invoke-virtual  {v10}, Ljava/util/AbstractCollection;->size()I
+    001c..001e  move-result  v0
+    001e..0022  if-ge  v6, v0, +0xa3
+    0022..0026  iget-object  v5, v10, LX/07r;->A01:[Ljava/lang/Object;
+    0026..0028  monitor-enter
+    0028..002c  iget  v1, v10, LX/07r;->A00:I
+    002c..0030  if-lt  v6, v1, +0x6d
+    0030..0034  sget-object  v0, LX/07r;->A07:Ljava/lang/Object;
+    0034..0038  aput-object  v0, v5, v6
+    0038..003c  add-int/lit8  v0, v1, #0x1
+    003c..0040  iput  v0, v10, LX/07r;->A00:I
+    0040..0044  iget-object  v4, v10, LX/07r;->A03:Ljava/lang/ThreadLocal;
+    0044..0048  sget-object  v0, Ljava/lang/Boolean;->TRUE:Ljava/lang/Boolean;
+    0048..004e  invoke-virtual  {v4, v0}, Ljava/lang/ThreadLocal;->set(Ljava/lang/Object;)V
+    004e..0050  monitor-exit
+    0050..0052  const/4  v3, #0x0
+    0052..0058  invoke-virtual  {v10, v6}, LX/07r;->A02(I)LX/05f;
+    0058..005a  move-result-object  v1
+    005a..005e  iget-object  v0, v10, LX/07r;->A04:[I
+    005e..0062  aget  v0, v0, v6
+    0062..0068  invoke-interface  {v1, v0}, LX/05f;->get(I)Ljava/lang/Object;
+    0068..006a  move-result-object  v1
+    006a..006c  monitor-enter
+    006c..0072  invoke-virtual  {v4, v3}, Ljava/lang/ThreadLocal;->set(Ljava/lang/Object;)V
+    0072..0076  aput-object  v1, v5, v6
+    0076..007c  invoke-virtual  {v5}, Ljava/lang/Object;->notifyAll()V
+    007c..007e  monitor-exit
+    007e..0080  return-object  v1
+    0080..0082  move-exception  v0
+    0082..0084  monitor-exit
+    0084..0086  throw  v0
+    0086..0088  move-exception  v2
+    0088..008c  new-instance  v1, Ljava/lang/StringBuilder;
+    008c..0092  invoke-direct  {v1, v7}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0092..0096  iget-object  v0, v10, LX/07r;->A04:[I
+    0096..009a  aget  v0, v0, v6
+    009a..00a0  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    00a0..00a6  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00a6..00a8  move-result-object  v0
+    00a8..00ac  new-instance  v1, LX/Qw9;
+    00ac..00b2  invoke-direct  {v1, v0, v2}, LX/Qw9;-><init>(Ljava/lang/String;Ljava/lang/Throwable;)V
+    00b2..00b4  goto  +0x1a
+    00b4..00b6  move-exception  v8
+    00b6..00ba  const-string  v7, "Invalid binding id %d"
+    00ba..00be  iget-object  v0, v10, LX/07r;->A04:[I
+    00be..00c2  aget  v0, v0, v6
+    00c2..00c8  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    00c8..00ca  move-result-object  v2
+    00ca..00ce  new-array  v1, v9, [Ljava/lang/Object;
+    00ce..00d0  const/4  v0, #0x0
+    00d0..00d4  aput-object  v2, v1, v0
+    00d4..00da  invoke-static  {v7, v1}, Ljava/lang/String;->format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+    00da..00dc  move-result-object  v0
+    00dc..00e0  new-instance  v1, Ljava/lang/IllegalArgumentException;
+    00e0..00e6  invoke-direct  {v1, v0, v8}, Ljava/lang/IllegalArgumentException;-><init>(Ljava/lang/String;Ljava/lang/Throwable;)V
+    00e6..00e8  throw  v1
+    00e8..00ea  move-exception  v0
+    00ea..00ec  monitor-enter
+    00ec..00f2  invoke-virtual  {v4, v3}, Ljava/lang/ThreadLocal;->set(Ljava/lang/Object;)V
+    00f2..00f6  aput-object  v3, v5, v6
+    00f6..00fc  invoke-virtual  {v5}, Ljava/lang/Object;->notifyAll()V
+    00fc..00fe  monitor-exit
+    00fe..0100  goto  +0x3
+    0100..0102  move-exception  v0
+    0102..0104  goto  -0x3
+    0104..0106  throw  v0
+    0106..010a  aget-object  v1, v5, v6
+    010a..010e  sget-object  v0, LX/07r;->A07:Ljava/lang/Object;
+    010e..0112  if-ne  v1, v0, +0x26
+    0112..0116  iget-object  v0, v10, LX/07r;->A03:Ljava/lang/ThreadLocal;
+    0116..011c  invoke-virtual  {v0}, Ljava/lang/ThreadLocal;->get()Ljava/lang/Object;
+    011c..011e  move-result-object  v1
+    011e..0122  sget-object  v0, Ljava/lang/Boolean;->TRUE:Ljava/lang/Boolean;
+    0122..0126  if-eq  v1, v0, +0x14
+    0126..012c  invoke-virtual  {v5}, Ljava/lang/Object;->wait()V
+    012c..012e  goto  -0x13
+    012e..0130  move-exception  v1
+    0130..0136  invoke-static  {}, Ljava/lang/Thread;->currentThread()Ljava/lang/Thread;
+    0136..0138  move-result-object  v0
+    0138..013e  invoke-virtual  {v0}, Ljava/lang/Thread;->interrupt()V
+    013e..0142  new-instance  v0, Ljava/lang/RuntimeException;
+    0142..0148  invoke-direct  {v0, v1}, Ljava/lang/RuntimeException;-><init>(Ljava/lang/Throwable;)V
+    0148..014a  goto  +0x8
+    014a..014e  const-string  v1, "Circular dependency detected while injecting an ultralight set."
+    014e..0152  new-instance  v0, Ljava/lang/IllegalStateException;
+    0152..0158  invoke-direct  {v0, v1}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
+    0158..015a  throw  v0
+    015a..015c  monitor-exit
+    015c..015e  return-object  v1
+    015e..0160  move-exception  v0
+    0160..0162  monitor-exit
+    0162..0164  throw  v0
+    0164..0168  new-instance  v0, Ljava/util/NoSuchElementException;
+    0168..016e  invoke-direct  {v0}, Ljava/util/NoSuchElementException;-><init>()V
+    016e..0170  throw  v0
+    # exception table: 10 try range(s)
+    # catch <all> code_units 0014..0029 -> 00af
+    # catch Ljava/lang/IllegalArgumentException; code_units 0029..0035 -> 005a
+    # catch <all> code_units 0029..0035 -> 0043
+    # catch <all> code_units 0036..0042 -> 0040
+    # catch <all> code_units 0044..005a -> 0074
+    # catch <all> code_units 005b..0074 -> 0074
+    # catch <all> code_units 0076..0080 -> 0080
+    # catch <all> code_units 0083..0093 -> 00af
+    # catch Ljava/lang/InterruptedException; code_units 0093..0097 -> 0097
+    # catch <all> code_units 0093..0097 -> 00af
+    # catch <all> code_units 0098..00af -> 00af
+    # catch <all> code_units 00b0..00b1 -> 00af
+.end method
+
+.method public remove(V)  # .registers 2
+    # full signature: LX/08x;->remove()V
+    0000..0004  new-instance  v0, Ljava/lang/UnsupportedOperationException;
+    0004..000a  invoke-direct  {v0}, Ljava/lang/UnsupportedOperationException;-><init>()V
+    000a..000c  throw  v0
+    # exception table: 0 try range(s)
+.end method

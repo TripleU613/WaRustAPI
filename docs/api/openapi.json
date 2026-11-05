@@ -15774,5 +15774,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-client-auth-token-observer/README.md",
     "description": "Observer dispatcher has ordinary inline and marker-dependent scheduled paths; state constructor combines provider-backed sets. Separate connection-thread pending drain located. Token-manager membership/category, shared provider identity, concurrent lifecycle and recovery remain unproven. No sender, route or replay authority added."
+  },
+  "x-client-auth-token-membership-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-client-auth-token-membership/README.md",
+    "description": "Selected readiness provider set includes token-manager binding0x83 using the global cached resolver. DEX interface inheritance establishes07v scheduling; delivery re-enumerates observers and token manager rechecks readiness. Executor completion/order, cache resets, generation binding, trusted push input and failure/backoff remain open. No sender, route, replay authority or live operation added."
   }
 }

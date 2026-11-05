@@ -1,0 +1,24 @@
+# Focused checked DEX excerpt; other instructions omitted.
+
+# class: LX/1X1;
+# extends: Ljava/lang/Object;
+
+.method public invoke(L)  # .registers 12
+    # full signature: LX/1X1;->invoke()Ljava/lang/Object;
+    0000..0004  iget  v0, v11, LX/1X1;->$t:I
+    0004..000a  packed-switch  v0, payload@0x848, cases=[0:@0x832, 1:@0x7f2, 2:@0x7c4, 3:@0x7be, 4:@0x7be, 5:@0x7a0, 6:@0x77e, 7:@0x764, 8:@0x71a, 9:@0xa, 10:@0xa, 11:@0x6d4, 12:@0x6a0, 13:@0x66c, 14:@0x642, 15:@0x604, 16:@0x5c8, 17:@0x58a, 18:@0x562, 19:@0x540, 20:@0x502, 21:@0x4d8, 22:@0x4b6, 23:@0x484, 24:@0x46a, 25:@0x450, 26:@0x410, 27:@0x3d0, 28:@0x396, 29:@0x37c, 30:@0x362, 31:@0x352, 32:@0x338, 33:@0x322, 34:@0x30c, 35:@0x2f6, 36:@0x2c6, 37:@0x296, 38:@0x260, 39:@0x224, 40:@0x212, 41:@0x1e6, 42:@0x18a, 43:@0x15e, 44:@0x122, 45:@0xea, 46:@0xd0, 47:@0x2c, 48:@0xa0, 49:@0x86], default@0xa
+    0396..039a  iget-object  v0, v11, LX/1X1;->A00:Ljava/lang/Object;
+    039a..039e  check-cast  v0, LX/07s;
+    039e..03a2  iget-object  v1, v0, LX/07s;->A02:Ljava/util/Comparator;
+    03a2..03a6  iget-object  v0, v0, LX/07s;->A01:LX/00x;
+    03a6..03ac  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    03ac..03ae  move-result-object  v0
+    03ae..03b4  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    03b4..03b8  check-cast  v0, Ljava/lang/Iterable;
+    03b8..03bc  if-nez  v1, +0x7
+    03bc..03c2  invoke-static  {v0}, LX/07Z;->A1H(Ljava/lang/Iterable;)Ljava/util/List;
+    03c2..03c4  move-result-object  v4
+    03c4..03c6  return-object  v4
+    03c6..03cc  invoke-static  {v0, v1}, LX/07Z;->A1O(Ljava/lang/Iterable;Ljava/util/Comparator;)Ljava/util/List;
+    03cc..03ce  move-result-object  v4
+    03ce..03d0  return-object  v4

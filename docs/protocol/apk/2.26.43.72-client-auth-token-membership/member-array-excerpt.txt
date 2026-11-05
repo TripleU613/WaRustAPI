@@ -1,0 +1,49 @@
+# Focused checked DEX excerpt; other instructions omitted.
+
+# class: LX/07q;
+# extends: Ljava/lang/Object;
+
+.method public <clinit>(V)  # .registers 17
+    # full signature: LX/07q;-><clinit>()V
+    0000..0002  const/4  v2, #0x0
+    0002..0004  const/4  v4, #0x1
+    757c..7580  const/16  v0, #0x11
+    7580..7584  new-array  v12, v0, [I
+    7584..7588  const/16  v0, #0x83
+    7588..758c  aput  v0, v12, v2
+    758c..7590  const/16  v0, #0x84
+    7590..7594  aput  v0, v12, v4
+    7594..7598  const/16  v0, #0x85
+    7598..759c  aput  v0, v12, v10
+    759c..75a0  const/16  v0, #0x8b7
+    75a0..75a4  aput  v0, v12, v9
+    75a4..75a8  const/16  v0, #0x8b8
+    75a8..75ac  aput  v0, v12, v8
+    75ac..75b0  const/16  v0, #0x1507
+    75b0..75b4  aput  v0, v12, v7
+    75b4..75b8  const/16  v0, #0x162d
+    75b8..75bc  aput  v0, v12, v6
+    75bc..75c0  const/16  v0, #0xfe4
+    75c0..75c4  aput  v0, v12, v5
+    75c4..75c8  const/16  v0, #0x1982
+    75c8..75cc  aput  v0, v12, v3
+    75cc..75d0  const/16  v0, #0xd2e
+    75d0..75d4  aput  v0, v12, v11
+    75d4..75d8  const/16  v0, #0x15dd
+    75d8..75dc  aput  v0, v12, v15
+    75dc..75e0  const/16  v0, #0x15de
+    75e0..75e4  aput  v0, v12, v14
+    75e4..75e8  const/16  v0, #0x4019
+    75e8..75ec  aput  v0, v12, v13
+    75ec..75f0  const/16  v0, #0x401a
+    75f0..75f4  aput  v0, v12, v1
+    75f4..75f8  const/16  v16, #0x149e
+    75f8..75fc  const/16  v0, #0xe
+    75fc..7600  aput  v16, v12, v0
+    7600..7604  const/16  v16, #0x1b17
+    7604..7608  const/16  v0, #0xf
+    7608..760c  aput  v16, v12, v0
+    760c..7610  const/16  v16, #0x1af8
+    7610..7614  const/16  v0, #0x10
+    7614..7618  aput  v16, v12, v0
+    7618..761c  sput-object  v12, LX/07q;->A4c:[I

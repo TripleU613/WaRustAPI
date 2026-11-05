@@ -1,0 +1,78 @@
+{
+  "README.md": {
+    "bytes": 4445,
+    "sha256": "5033126cb91f6273c493a73dd79b1a6b5b593065269a71738089b877bf260e32"
+  },
+  "combined-set.txt": {
+    "bytes": 5078,
+    "sha256": "0822efbebf061c99ebdeaf7a6a63bd0f78dc05ef30e2feb70e5e63c1981718cb"
+  },
+  "default-set-resolver.txt": {
+    "bytes": 1136,
+    "sha256": "fe52d6841e5645247cd92e91a1f876f7f04e5e2afbb6db0892a9841b943cfd1a"
+  },
+  "delivery.txt": {
+    "bytes": 2123,
+    "sha256": "39268abeacdc2801751c7886d83847e7448d6f618ea111288834978217634b45"
+  },
+  "global-provider-init.txt": {
+    "bytes": 807,
+    "sha256": "8d048311d43487bfce78c3d3ed5385cdf89de5e966d1a00e62bce23558f0b596"
+  },
+  "global-set-resolver.txt": {
+    "bytes": 566,
+    "sha256": "e001a20b7845ecba8253c67d2709c028e11fce363c5fd8fe75a071cece0ff8be"
+  },
+  "inspect-interfaces.py": {
+    "bytes": 2014,
+    "sha256": "53fb8d9f021a0ea3adfc1cde2e7382976227261c240d53330e371b1f03c028be"
+  },
+  "interface-declarations.txt": {
+    "bytes": 236,
+    "sha256": "2d96d0639711d94345042c1f6368820d6c8c03a451a808afde5317f599783b87"
+  },
+  "lazy-set.txt": {
+    "bytes": 4240,
+    "sha256": "f6887ecf7c8fc4daa6b380dfb63f9318189fe946ae2102de18371d90c6a3c23c"
+  },
+  "marker-schedule.txt": {
+    "bytes": 3101,
+    "sha256": "b7a5c2518dbe68f05bf239b1875848c5f087c74f675da2569cf62471a7157ba6"
+  },
+  "member-array-excerpt.txt": {
+    "bytes": 1719,
+    "sha256": "ce519bd6f38c4027573204ec38b83cf5796b758c47a53fe7dbdf44a39082358d"
+  },
+  "observer-container.txt": {
+    "bytes": 6989,
+    "sha256": "0035ecba856af42eeca8a522cd8fe59f91f5831b94b47191a9c4c1b656793a7d"
+  },
+  "priority-list.txt": {
+    "bytes": 877,
+    "sha256": "21f8feee513b5b0c5f6614af55e281e097db7ba89ca65a74b0e4b2f8e35e9011"
+  },
+  "provider-shard-router.txt": {
+    "bytes": 51778,
+    "sha256": "7c697c7e3e1c45ccef430c1ca605953a5a17fc0bab323e1a2e42bbe9d00df77e"
+  },
+  "scheduled-callback.txt": {
+    "bytes": 9649,
+    "sha256": "cba59dff449551180e9a2257974b420d4f4d4a96b3325754d83596b84744a4ae"
+  },
+  "scheduled-constructor.txt": {
+    "bytes": 586,
+    "sha256": "1ba6a32cfa73e5830e444e92079e4b0cd762df1fd7077d0cc0a497ee68ad5118"
+  },
+  "set-binding.txt": {
+    "bytes": 33698,
+    "sha256": "a4814ee6c3aafb2162aa89dc21c79db9961de3cd2499419c1529afe00ed22612"
+  },
+  "set-iterator.txt": {
+    "bytes": 7865,
+    "sha256": "0f73beee5596e9bc04f7c02f933a2f6537fff185655c63263553805b9bd95373"
+  },
+  "sorted-provider-excerpt.txt": {
+    "bytes": 1712,
+    "sha256": "1aabd9dcfb1953a9dc2fb2cd0ced0a4233e5d1c499dc6ee9bb62f37608322c45"
+  }
+}
