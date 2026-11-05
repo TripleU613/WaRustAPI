@@ -1,0 +1,143 @@
+# class: Lcom/whatsapp/infra/nativelibloader/WhatsAppLibLoader;
+# extends: Ljava/lang/Object;
+
+.method public BbD(Z)  # .registers 15
+    # full signature: Lcom/whatsapp/infra/nativelibloader/WhatsAppLibLoader;->BbD()Z
+    0000..0002  const/4  v13, #0x0
+    0002..0006  iget-object  v1, v14, Lcom/whatsapp/infra/nativelibloader/WhatsAppLibLoader;->A07:LX/00x;
+    0006..000c  invoke-interface  {v1}, LX/00x;->get()Ljava/lang/Object;
+    000c..000e  move-result-object  v0
+    000e..0012  check-cast  v0, LX/0DF;
+    0012..0018  invoke-virtual  {v0}, LX/0DF;->A03()Z
+    0018..001a  move-result  v0
+    001a..001e  if-eqz  v0, +0xa6
+    001e..0024  invoke-interface  {v1}, LX/00x;->get()Ljava/lang/Object;
+    0024..0026  move-result-object  v7
+    0026..002a  check-cast  v7, LX/0DF;
+    002a..002e  iget-object  v0, v7, LX/0DF;->A02:Landroid/content/Context;
+    002e..0034  invoke-virtual  {v0}, Landroid/content/Context;->getApplicationInfo()Landroid/content/pm/ApplicationInfo;
+    0034..0036  move-result-object  v6
+    0036..003c  invoke-static  {}, Lcom/facebook/soloader/SysUtil$MarshmallowSysdeps;->getSupportedAbis()[Ljava/lang/String;
+    003c..003e  move-result-object  v5
+    003e..0040  array-length  v4, v5
+    0040..0042  const/4  v3, #0x0
+    0042..0046  if-ge  v3, v4, +0x8e
+    0046..004a  aget-object  v11, v5, v3
+    004a..004e  const-string  v0, "/split_config."
+    004e..0052  new-instance  v2, Ljava/lang/StringBuilder;
+    0052..0058  invoke-direct  {v2, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0058..005c  const/16  v1, #0x2d
+    005c..0060  const/16  v0, #0x5f
+    0060..0066  invoke-virtual  {v11, v1, v0}, Ljava/lang/String;->replace(CC)Ljava/lang/String;
+    0066..0068  move-result-object  v0
+    0068..006e  invoke-virtual  {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    006e..0072  const-string  v0, ".apk"
+    0072..0078  invoke-virtual  {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0078..007e  invoke-virtual  {v2}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    007e..0080  move-result-object  v12
+    0080..0084  iget-object  v10, v6, Landroid/content/pm/ApplicationInfo;->splitSourceDirs:[Ljava/lang/String;
+    0084..0088  const-string  v9, "!/lib/"
+    0088..008c  if-eqz  v10, +0x24
+    008c..008e  array-length  v8, v10
+    008e..0090  const/4  v2, #0x0
+    0090..0094  if-ge  v2, v8, +0x20
+    0094..0098  aget-object  v1, v10, v2
+    0098..009e  invoke-virtual  {v1, v12}, Ljava/lang/String;->endsWith(Ljava/lang/String;)Z
+    009e..00a0  move-result  v0
+    00a0..00a4  if-eqz  v0, +0x15
+    00a4..00a8  new-instance  v0, Ljava/lang/StringBuilder;
+    00a8..00ae  invoke-direct  {v0}, Ljava/lang/StringBuilder;-><init>()V
+    00ae..00b4  invoke-virtual  {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00b4..00ba  invoke-virtual  {v0, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00ba..00c0  invoke-virtual  {v0, v11}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00c0..00c6  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00c6..00c8  move-result-object  v8
+    00c8..00ca  goto  +0x18
+    00ca..00ce  add-int/lit8  v2, v2, #0x1
+    00ce..00d0  goto  -0x1f
+    00d0..00d4  new-instance  v1, Ljava/lang/StringBuilder;
+    00d4..00da  invoke-direct  {v1}, Ljava/lang/StringBuilder;-><init>()V
+    00da..00de  iget-object  v0, v6, Landroid/content/pm/ApplicationInfo;->sourceDir:Ljava/lang/String;
+    00de..00e4  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00e4..00ea  invoke-virtual  {v1, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00ea..00f0  invoke-virtual  {v1, v11}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00f0..00f6  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00f6..00f8  move-result-object  v8
+    00f8..00fc  new-instance  v1, Ljava/lang/StringBuilder;
+    00fc..0102  invoke-direct  {v1}, Ljava/lang/StringBuilder;-><init>()V
+    0102..0108  invoke-virtual  {v1, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0108..010c  const-string  v0, "/"
+    010c..0112  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0112..0116  const-string  v0, "libsuperpack.so"
+    0116..011c  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    011c..0122  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0122..0124  move-result-object  v0
+    0124..012a  invoke-static  {v0}, Ljava/lang/System;->load(Ljava/lang/String;)V
+    012a..012e  iput-object  v8, v7, LX/0DF;->A06:Ljava/lang/String;
+    012e..0130  goto  +0x27
+    0130..0132  move-exception  v2
+    0132..0138  const-string/jumbo  v1, "whatsappsoloader/decompressor not loadable from "
+    0138..013c  new-instance  v0, Ljava/lang/StringBuilder;
+    013c..0142  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0142..0148  invoke-virtual  {v0, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0148..014e  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    014e..0150  move-result-object  v0
+    0150..0156  invoke-static  {v0, v2}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0156..015a  add-int/lit8  v3, v3, #0x1
+    015a..015e  goto/16  -0x8c
+    015e..0164  invoke-static  {v14}, Lcom/whatsapp/infra/nativelibloader/WhatsAppLibLoader;->A01(Lcom/whatsapp/infra/nativelibloader/WhatsAppLibLoader;)V
+    0164..0166  return  v13
+    0166..016a  iget-object  v0, v14, Lcom/whatsapp/infra/nativelibloader/WhatsAppLibLoader;->A0D:LX/00x;
+    016a..0170  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0170..0176  const-string/jumbo  v0, "superpack"
+    0176..017c  invoke-direct  {v14, v0}, Lcom/whatsapp/infra/nativelibloader/WhatsAppLibLoader;->A02(Ljava/lang/String;)V
+    017c..0180  iget-object  v0, v14, Lcom/whatsapp/infra/nativelibloader/WhatsAppLibLoader;->A0A:LX/00x;
+    0180..0186  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0186..0188  const/4  v0, #0x3
+    0188..018c  new-array  v1, v0, [B
+    018c..0192  invoke-static  {v1}, Lcom/facebook/superpack/AssetDecompressor;->testDecompressorLibraryUsable([B)V
+    0192..0196  new-array  v0, v0, [B
+    0196..019c  fill-array-data  v0, payload@0x228, element_width=1, size=3, data=[47 77 53]
+    019c..01a2  invoke-static  {v0, v1}, Ljava/util/Arrays;->equals([B[B)Z
+    01a2..01a4  move-result  v0
+    01a4..01a8  if-nez  v0, +0x9
+    01a8..01ae  const-string/jumbo  v0, "whatsappassetdecompressor/usable compressor test array does not match"
+    01ae..01b4  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    01b4..01b6  goto  +0x10
+    01b6..01bc  const-string/jumbo  v0, "whatsappassetdecompressor/decompressor-usable isLibraryUsable: True"
+    01bc..01c2  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    01c2..01c4  const/4  v0, #0x1
+    01c4..01c6  return  v0
+    01c6..01c8  move-exception  v1
+    01c8..01ce  const-string/jumbo  v0, "whatsappassetdecompressor/decompressor-usable error while testing compressor library usability testLibraryUsable"
+    01ce..01d4  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;Ljava/lang/Throwable;)V
+    01d4..01d6  const/4  v0, #0x0
+    01d6..01d8  return  v0
+    01d8..01da  move-exception  v2
+    01da..01e0  const-string/jumbo  v1, "whatsapplibloader/compression library is corrupt/"
+    01e0..01e4  new-instance  v0, Ljava/lang/StringBuilder;
+    01e4..01ea  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    01ea..01f0  invoke-virtual  {v0, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    01f0..01f6  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    01f6..01f8  move-result-object  v0
+    01f8..01fe  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    01fe..0204  invoke-static  {}, Lcom/whatsapp/infra/nativelibloader/WhatsAppLibLoader;->A00()V
+    0204..0208  iget-object  v0, v14, Lcom/whatsapp/infra/nativelibloader/WhatsAppLibLoader;->A07:LX/00x;
+    0208..020e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    020e..0210  move-result-object  v0
+    0210..0214  check-cast  v0, LX/0DF;
+    0214..021a  invoke-virtual  {v0}, LX/0DF;->A03()Z
+    021a..021c  move-result  v0
+    021c..0220  if-eqz  v0, +0x5
+    0220..0226  invoke-static  {v14}, Lcom/whatsapp/infra/nativelibloader/WhatsAppLibLoader;->A01(Lcom/whatsapp/infra/nativelibloader/WhatsAppLibLoader;)V
+    0226..0228  return  v13
+    0228..0234  fill-array-data-payload  element_width=1, size=3, data=[47 77 53]
+    # exception table: 5 try range(s)
+    # catch Ljava/lang/UnsatisfiedLinkError; code_units 0001..007c -> 00ec
+    # catch Ljava/lang/UnsatisfiedLinkError; code_units 007c..0098 -> 0098
+    # catch Ljava/lang/UnsatisfiedLinkError; code_units 007c..0098 -> 00ec
+    # catch Ljava/lang/UnsatisfiedLinkError; code_units 0098..00c6 -> 00ec
+    # catch Ljava/lang/UnsatisfiedLinkError; code_units 00c6..00c9 -> 00e3
+    # catch Ljava/lang/UnsatisfiedLinkError; code_units 00c6..00c9 -> 00ec
+    # catch Ljava/lang/UnsatisfiedLinkError; code_units 00c9..00ec -> 00ec
+.end method

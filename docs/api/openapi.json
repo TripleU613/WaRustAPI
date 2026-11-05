@@ -16044,5 +16044,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-metrics-native-carrier/README.md",
     "description": "Metrics event/setup Java declarations are native. Pinned ARM64 carrier exposes superpack archive coordinates with different file/virtual offsets, not named JNI dispatchers in its dynamic symbols. Current REA native providers are unavailable. Inner-library extraction, JNI registration, transport and durable recovery remain open. No telemetry, sender, route or live operation added."
+  },
+  "x-superpack-unpack-boundary-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-superpack-unpack-boundary/README.md",
+    "description": "Superpack loader/API bodies and bounded digest-verified XZ probe retained. First12 of140 magic candidates decode to non-ELF-prefix payloads, not reconstructed inner libraries. Full container transforms, member identity, JNI registration and native transport/recovery remain open. No telemetry, sender, route or live operation added."
   }
 }

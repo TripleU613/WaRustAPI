@@ -1,0 +1,26 @@
+{
+  "README.md": {
+    "bytes": 3876,
+    "sha256": "779b6cc156f2c49271a4cb799b028ea23ebd5a3c2efb06ce1b60833ad8dc2ea7"
+  },
+  "decompressor-api.txt": {
+    "bytes": 3605,
+    "sha256": "6dd8873f25f9c3f14612bf53b7f48b49cbe9b3407cb76024220b94cf8dc2cf92"
+  },
+  "literal-references.txt": {
+    "bytes": 140,
+    "sha256": "8697a3da7baa836dd264e9bc5799b541b2648f68df870654cd8e5846b205b85e"
+  },
+  "loader-entry.txt": {
+    "bytes": 9707,
+    "sha256": "864f1611741c9ca62dddf94c1a04eac5783a07e8431bd8edbb5469dd6fb6a463"
+  },
+  "probe-xz.py": {
+    "bytes": 1483,
+    "sha256": "59aaccb44e35dd06fc90e0dc2856076aa6dca8ab2674e22df463e6c2ee8a1dc9"
+  },
+  "xz-probe.json": {
+    "bytes": 2885,
+    "sha256": "18af0b1cab2ba37b38005916c4dcf67a2b56d084964b2bbb1e202cfaf36d35e7"
+  }
+}

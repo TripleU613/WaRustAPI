@@ -1,3 +1,11 @@
+2026-11-05 — **Superpack loader and bounded XZ probe retained.**
+
+Twelve embedded streams decode reproducibly but do not start with ELF. Full
+inner-library reconstruction and JNI binding remain unverified.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-superpack-unpack-boundary/README.md).
+Research only; no runtime changes or live traffic. Validation: pinned digests,
+probe rerun/output match, checksums, JSON, coverage freshness and repository hygiene.
+
 2026-11-05 — **Metrics native declarations and ARM64 carrier pinned.**
 
 The selected carrier exposes superpack archive markers; JNI implementation

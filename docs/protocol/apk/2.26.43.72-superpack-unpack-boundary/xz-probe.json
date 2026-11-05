@@ -1,0 +1,102 @@
+{
+  "xz_magic_matches": 140,
+  "probe_limit": 12,
+  "rows": [
+    {
+      "archive_offset": 6228652,
+      "eof": true,
+      "output_bytes": 15685033,
+      "sha256": "56a1a8fa2c0f970df006164312bb5c9bf25083c88b0355d3f8660e41e81f1f81",
+      "elf_magic": false,
+      "stream_bytes": 2041520
+    },
+    {
+      "archive_offset": 9511305,
+      "eof": true,
+      "output_bytes": 3240276,
+      "sha256": "9b69de3b0b1473df2a99d2ce59fcb139d3cf95741e9ff48e2e730be61a96be2b",
+      "elf_magic": false,
+      "stream_bytes": 993888
+    },
+    {
+      "archive_offset": 10886688,
+      "eof": true,
+      "output_bytes": 788259,
+      "sha256": "b904f877b61f9a42560aad1bf1321a5f94e8e0454e8758afd0f763d108bc144d",
+      "elf_magic": false,
+      "stream_bytes": 227416
+    },
+    {
+      "archive_offset": 11114478,
+      "eof": true,
+      "output_bytes": 1331304,
+      "sha256": "ecb22ba9020c4d20e54992ece38ad7ce20fb7f2321a601823bf5f51feb9c784b",
+      "elf_magic": false,
+      "stream_bytes": 199044
+    },
+    {
+      "archive_offset": 11842116,
+      "eof": true,
+      "output_bytes": 140620,
+      "sha256": "c5e5b57bfa2b2e782d0216c1637a16b88a0a5c4b16f62b4f41c50aff5836eb31",
+      "elf_magic": false,
+      "stream_bytes": 116460
+    },
+    {
+      "archive_offset": 11958950,
+      "eof": true,
+      "output_bytes": 2083620,
+      "sha256": "39e47dbc61b6446b2652b0a8c265341d450d0c273cb630edfa8095ae393fb48d",
+      "elf_magic": false,
+      "stream_bytes": 104016
+    },
+    {
+      "archive_offset": 12150504,
+      "eof": true,
+      "output_bytes": 421672,
+      "sha256": "7f3c9aa37cbf1e42bb071caaf4a93ea8b8b8775fee060c361e8a11b5a910bf13",
+      "elf_magic": false,
+      "stream_bytes": 84888
+    },
+    {
+      "archive_offset": 12320755,
+      "eof": true,
+      "output_bytes": 191895,
+      "sha256": "1043c5984c8e2b5ca87dbabcf2ff1ee884e5cc42bb5c342c1820326ff2313e71",
+      "elf_magic": false,
+      "stream_bytes": 72764
+    },
+    {
+      "archive_offset": 12393893,
+      "eof": true,
+      "output_bytes": 689483,
+      "sha256": "42b9cb5a179800db27bab73cf0d8bcb60762f8943f88f81493c8b1b3fcb96486",
+      "elf_magic": false,
+      "stream_bytes": 69204
+    },
+    {
+      "archive_offset": 12596813,
+      "eof": true,
+      "output_bytes": 433521,
+      "sha256": "ffe06f5676230984497ffefb5096eb95f056db5b27fd6ffe090cb19f3a47dae5",
+      "elf_magic": false,
+      "stream_bytes": 56452
+    },
+    {
+      "archive_offset": 12653639,
+      "eof": true,
+      "output_bytes": 413568,
+      "sha256": "e24d5ea280e7242976ab19a53eacf46e1995474c6a813842c02f9cd011e451a8",
+      "elf_magic": false,
+      "stream_bytes": 56428
+    },
+    {
+      "archive_offset": 12710441,
+      "eof": true,
+      "output_bytes": 130429,
+      "sha256": "27adf7ba595aedb43f9a3df7c6aba486ca71ecd3f2944b909932677c725de62e",
+      "elf_magic": false,
+      "stream_bytes": 56112
+    }
+  ]
+}

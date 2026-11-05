@@ -5859,3 +5859,13 @@ native providers are unavailable under their configured paths.
 [Declarations, carrier metadata, readelf and scope](apk/2.26.43.72-metrics-native-carrier/README.md).
 Unpacking, JNI registration, native transport and durable recovery remain open.
 No Rust behavior or live account operation changed.
+
+### Superpack loader and bounded XZ reconstruction probe (2026-11-05)
+
+**Confirmed static, APK43.72:** loader/API bodies connect to the packaged
+superpack decoder. A digest-bound probe finds140 XZ magic candidates and
+reproduces successful bounded decoding of the first12. None starts with ELF;
+these outputs are partial payloads, not recovered native libraries.
+[Complete loader/API, reproducible probe and limits](apk/2.26.43.72-superpack-unpack-boundary/README.md).
+Archive transforms, member identity, JNI registration and native transport/recovery
+remain open. No Rust behavior or live account operation changed.
