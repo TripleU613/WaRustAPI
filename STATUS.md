@@ -1,3 +1,12 @@
+2026-11-04 — **Upload reply fields follow selected callback.**
+
+Results no longer retain error metadata; refusals no longer retain
+count_low flags. Mixed-body regression verifies persistence after reopen.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#rust-reply-field-separation-2026-11-04).
+Validation: workspace/all-feature tests, strict Clippy, regenerated CLI
+reference, formatting, JSON, coverage freshness and repository hygiene passed.
+No live traffic.
+
 2026-11-04 — **Disabled-flag upload event registry proven.**
 
 Successful startup registry initialization maps77/78 to14o even with

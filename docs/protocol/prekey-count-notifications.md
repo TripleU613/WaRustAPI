@@ -311,3 +311,10 @@ A0Q comes from property0x4c7a at construction; runtime value unknown.
 to register them. Disabled flag does not itself imply callback loss.
 Fallback disposition remains true if reached; early-event/lifecycle unknowns
 remain. [Exports and conditions](apk/2.26.43.72-prekey-upload-replies/README.md#disabled-flag-registry-route-2026-11-04). No production change or live traffic.
+
+## 2026-11-04 — Upload reply fields separated
+
+**Implemented offline,43.72 callback evidence:** successful prekey replies
+ignore error metadata; refusals ignore count_low flags. Synthetic mixed-body
+reply regression verifies outcomes and persisted batches after reopen.
+[Evidence, test and remaining gaps](apk/2.26.43.72-prekey-upload-replies/README.md#rust-reply-field-separation-2026-11-04). No live traffic.

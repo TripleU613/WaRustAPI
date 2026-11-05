@@ -531,20 +531,26 @@ impl PendingUpload {
             ));
         }
         let accepted = node.get_attr("type").and_then(|v| v.as_text()) == Some("result");
-        let count_low = node
-            .child_nodes()
-            .iter()
-            .find(|c| c.description == "list")
-            .and_then(|c| c.get_attr("count_low"))
-            .and_then(|v| v.as_text())
-            .is_some_and(|v| v.eq_ignore_ascii_case("true"));
-        let code = node
-            .child_nodes()
-            .iter()
-            .find(|c| c.description == "error")
-            .and_then(|c| c.get_attr("code"))
-            .and_then(|v| v.as_text())
-            .map(|v| v.chars().take(8).collect::<String>());
+        // APK 43.72 1rA.A03 selects result -> 1ru.A02 or error ->
+        // 1ud.A01. Fields from the other callback must not affect settlement.
+        let count_low = accepted
+            && node
+                .child_nodes()
+                .iter()
+                .find(|c| c.description == "list")
+                .and_then(|c| c.get_attr("count_low"))
+                .and_then(|v| v.as_text())
+                .is_some_and(|v| v.eq_ignore_ascii_case("true"));
+        let code = (!accepted)
+            .then(|| {
+                node.child_nodes()
+                    .iter()
+                    .find(|c| c.description == "error")
+                    .and_then(|c| c.get_attr("code"))
+                    .and_then(|v| v.as_text())
+                    .map(|v| v.chars().take(8).collect::<String>())
+            })
+            .flatten();
         store.write(|tx| {
             let key = batch_key(&self.iq_id);
             let mut batch: Batch = tx
@@ -1399,6 +1405,47 @@ mod tests {
             .unwrap();
         assert_eq!(batch.code.as_deref(), Some("500"));
         assert!(wants_upload(&store).unwrap());
+    }
+
+    #[test]
+    fn upload_reply_fields_belong_to_the_selected_callback_after_reopen() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("reply-fields.redb");
+        let (account, signed) = account_and_signed();
+        for (kind, accepted, expected_code, expected_low) in [
+            ("result", true, None, true),
+            ("error", false, Some("503"), false),
+        ] {
+            let store = open(&path);
+            generate(&store).unwrap();
+            let (pending, _) = begin_upload(&store, &account, &signed).unwrap().unwrap();
+            let reply = Node::new("iq")
+                .attr("id", pending.iq_id.as_str())
+                .attr("type", kind)
+                .children(vec![
+                    Node::new("list").attr("count_low", "TrUe"),
+                    Node::new("error").attr("code", "503"),
+                ]);
+            let outcome = pending.settle(&store, &reply).unwrap();
+            assert_eq!(outcome.accepted, accepted);
+            assert_eq!(outcome.count_low, expected_low);
+            drop(store);
+            let store = open(&path);
+            let batch: Batch = store
+                .read(|tx| tx.get_json(Table::Checkpoints, batch_key(&pending.iq_id).as_bytes(), 1))
+                .unwrap()
+                .unwrap();
+            assert_eq!(batch.code.as_deref(), expected_code);
+            assert_eq!(batch.count_low, Some(expected_low));
+            assert_eq!(
+                batch.status,
+                if accepted {
+                    "server_acknowledged"
+                } else {
+                    "refused"
+                }
+            );
+        }
     }
 
     #[test]

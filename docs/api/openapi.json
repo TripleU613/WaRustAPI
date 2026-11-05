@@ -15308,5 +15308,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#disabled-flag-registry-route-2026-11-04",
     "finding": "Successful disabled-flag registry initialization maps77/78 to14o; early-event and lifecycle scope remain unverified."
+  },
+  "x-prekey-upload-reply-field-separation": {
+    "x-cli": "whatsapp-cli listen (existing upload reply processing)",
+    "x-transport": [
+      "comparison public-client"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#rust-reply-field-separation-2026-11-04",
+    "description": "Offline correction: result parses legacy count_low and ignores error code; error parses code and ignores count_low. Existing batch persistence only; no new route or retry."
   }
 }

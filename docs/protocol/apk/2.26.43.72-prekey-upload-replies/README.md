@@ -1080,3 +1080,26 @@ Additional export hashes:
 - [registry-provider-init.txt](registry-provider-init.txt): `8d048311d43487bfce78c3d3ed5385cdf89de5e966d1a00e62bce23558f0b596`
 - [registry-startup.txt](registry-startup.txt): `72ae356f4478cdfe0a5d276a6921549c115f9747c456d31737786f5c114eab03`
 - [registry-provider-get.txt](registry-provider-get.txt): `9cdcd72ef69009750d2c0fb5fe488fe74c6dbb4d68663ca069fe40a5388806f3`
+
+## Rust reply field separation (2026-11-04)
+
+**Confirmed static / implemented offline.** Retained43.72 `1rA.A03`
+result/error branches invoke separate callbacks: result ->`1ru.A02` reads
+optional list/pq_list flags, error ->`1ud.A01` extracts error metadata.
+See the earlier legacy-reply-removal-and-error-event-path section and its
+checksummed exports; no new APK/runtime evidence is claimed.
+
+Rust previously parsed legacy count_low on either reply type and saved an
+error child's code even on successful results. `PendingUpload::settle` now
+parses count_low only for result and code only for error. Exact IQ/id/type
+admission and transactional key/batch settlement remain in force.
+
+Regression `upload_reply_fields_belong_to_the_selected_callback_after_reopen`
+uses synthetic result/error replies each carrying both list(count_low=TrUe)
+and error(code=503). It verifies selected outcome and persisted batch after
+reopen: successful result has count_low=true/code absent; refusal has
+count_low=false/code503. This tests stored semantics, not live acceptance.
+
+**Remaining:** numeric native error extraction (including first coded child),
+PQ follow-up flags, ADD strategy and gated retry are not ported by this fix.
+The historical stored batch representation is not rewritten. No live traffic.
