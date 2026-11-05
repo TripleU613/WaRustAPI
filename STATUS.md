@@ -1,3 +1,11 @@
+2026-11-05 — **AB-properties callback timer traced on the current APK.**
+
+Confirmed32s starts at callback registration before writer dispatch, with no
+restart at promotion. Expiry competes for callback ownership; the selected
+failure callback schedules no retry. Rust per-action expiry remains unported.
+[Evidence and precise implementation boundary](docs/protocol/apk/2.26.43.72-abprops-callback-timer/README.md).
+Research only; no live traffic or runtime behavior change.
+
 2026-11-05 — **Normal action replies now require live connection ownership.**
 
 Late replies cannot resurrect held action callbacks after reconnect/reopen;

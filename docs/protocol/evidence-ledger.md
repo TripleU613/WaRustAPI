@@ -6608,3 +6608,18 @@ and feature-owned reservation and before settlement. Malformed/mismatched stored
 wire fails atomically instead of registering a callback under another request's
 ID. Corruption regressions verify no row/status changes and no identifier echo.
 A fast reply queued before local write completion still settles after success.
+
+## AB-properties callback timer ordering — 2026-11-05
+
+**Confirmed static / inferred race boundary:** current APK HBE.A00 passes
+32000ms to0Sf.A0W/A0A; ready admission registers0ln.A08 before dispatch.
+The positive-duration timer starts with queued ownership and is not restarted
+byA0C promotion. Expiry handler4/A03 removes callback ownership; HyT selector2
+BsS returns without scheduling a retry. Response lookup cancels the tracked
+timer before its later response claim, without an independent age comparison.
+An overdue timer is not proof that its callback has already expired.
+[Complete producer/admission/expiry exports and limits](apk/2.26.43.72-abprops-callback-timer/README.md).
+Rust's connection-scoped action owner still lacks per-action expiry. Porting
+requires producer-specific timing and competing claims; a universal32s cutoff
+or fresh post-write budget is unsupported. No runtime behavior or live traffic
+changes in this research chunk.

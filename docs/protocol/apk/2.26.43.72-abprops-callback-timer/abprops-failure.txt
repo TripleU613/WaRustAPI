@@ -1,0 +1,30 @@
+
+# class: LX/HyT;
+# extends: Ljava/lang/Object;
+
+.method public BsS(VL)  # .registers 5
+    # full signature: LX/HyT;->BsS(Ljava/lang/String;)V
+    0000..0004  iget  v0, v3, LX/HyT;->$t:I
+    0004..000a  packed-switch  v0, payload@0x58, cases=[1:@0x16, 2:@0x14, 3:@0x48], default@0xa
+    000a..000e  const-string  v0, "clientActionLogUsingIQ/SetClientConfig delivery fail"
+    000e..0014  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0014..0016  return-void
+    0016..0018  const/4  v2, #0x0
+    0018..001e  invoke-static  {v4, v2}, LX/00l;->A09(Ljava/lang/Object;I)V
+    001e..0022  const-string  v0, "JoinSubgroupProtocolHelper/onDeliveryFailure iqid="
+    0022..0028  invoke-static  {v0, v4}, LX/2LE;->A1B(Ljava/lang/String;Ljava/lang/String;)V
+    0028..002c  iget-object  v1, v3, LX/HyT;->A00:Ljava/lang/Object;
+    002c..0030  check-cast  v1, LX/HQg;
+    0030..0034  sget-object  v0, LX/HQg;->A02:Lcom/google/common/collect/ImmutableSet;
+    0034..0038  iget-object  v0, v1, LX/HQg;->A00:LX/H2y;
+    0038..003c  iget-object  v0, v0, LX/H2y;->A02:LX/Gvq;
+    003c..0040  iget-object  v0, v0, LX/Gvq;->A00:LX/G4j;
+    0040..0046  invoke-static  {v0, v2}, LX/G4j;->A03(LX/G4j;I)V
+    0046..0048  return-void
+    0048..004c  iget-object  v0, v3, LX/HyT;->A00:Ljava/lang/Object;
+    004c..0050  check-cast  v0, LX/IUm;
+    0050..0056  invoke-interface  {v0}, LX/IUm;->BsP()V
+    0056..0058  return-void
+    0058..006c  packed-switch-payload  size=3
+    # exception table: 0 try range(s)
+.end method

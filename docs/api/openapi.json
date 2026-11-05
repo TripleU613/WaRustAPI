@@ -16571,5 +16571,12 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-action-callback-lifetime/README.md",
     "description": "Normal drive requires private live reply ownership recorded after a successful local action write. Exact IQ result/error consumes it before durable settlement; wrong shapes do not consume and duplicate/local fault cannot claim twice. Reconnect/reopen does not rebuild ownership from Sent rows or epochs. Production loop leaves late old action held while current and fast written-action replies settle. Bulk/single/feature reservation and settlement recheck saved-wire IQ/row identity, rejecting corruption atomically without ID echo. Public low-level/captured-reply reconciliation and specialized group Pending owners remain separate. No reset/replay/new request/route/CLI flag or live acceptance; full deadline/native lifecycle policy remains incomplete."
+  },
+  "x-abprops-callback-timer-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-abprops-callback-timer/README.md",
+    "description": "Static APK43.72 HBE.A00 AB-properties request uses32000ms with ready-path registration before dispatch. Positive-duration A08 timer is not restarted at promotion; handler expiry and response compete for callback ownership, and response lookup cancels tracked timer without an independent age predicate. HyT selector2 delivery-failure callback returns without retry. Rust per-action expiry remains unported; no universal timeout, automatic replay, runtime capability or live verification is claimed."
   }
 }
