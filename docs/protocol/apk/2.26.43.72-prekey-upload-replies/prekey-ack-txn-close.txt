@@ -1,0 +1,67 @@
+
+# class: LX/1hk;
+# extends: Ljava/lang/Object;
+
+.method public close(V)  # .registers 6
+    # full signature: LX/1hk;->close()V
+    0000..0004  iget-boolean  v0, v5, LX/1hk;->A00:Z
+    0004..0008  if-nez  v0, +0x73
+    0008..000c  iget-boolean  v0, v5, LX/1hk;->A01:Z
+    000c..0010  if-nez  v0, +0x7
+    0010..0014  const-string  v0, "DatabaseTransaction/close/was not set successful"
+    0014..001a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    001a..001e  iget-object  v4, v5, LX/1hk;->A04:LX/0KU;
+    001e..0024  invoke-virtual  {v4}, LX/0KU;->A0F()V
+    0024..0026  goto  +0x18
+    0026..0028  move-exception  v3
+    0028..002c  iget-object  v4, v5, LX/1hk;->A04:LX/0KU;
+    002c..0030  iget-object  v2, v4, LX/0KU;->A03:Ljava/lang/String;
+    0030..0034  const-string  v1, "DatabaseTransaction/close/endTransaction failed; db="
+    0034..0038  new-instance  v0, Ljava/lang/StringBuilder;
+    0038..003e  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    003e..0044  invoke-virtual  {v0, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0044..004a  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    004a..004c  move-result-object  v0
+    004c..0052  invoke-static  {v0, v3}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0052..0054  goto  +0x2
+    0054..0056  const/4  v3, #0x0
+    0056..005a  iget-object  v0, v5, LX/1hk;->A03:LX/0H0;
+    005a..005e  if-eqz  v0, +0x20
+    005e..0062  iget-object  v1, v4, LX/0KU;->A03:Ljava/lang/String;
+    0062..0066  iget-boolean  v0, v0, LX/0H0;->A04:Z
+    0066..006a  if-eqz  v0, +0x1a
+    006a..006e  sget-object  v0, LX/2EG;->A00:Ljava/lang/ThreadLocal;
+    006e..0074  invoke-virtual  {v0}, Ljava/lang/ThreadLocal;->get()Ljava/lang/Object;
+    0074..0076  move-result-object  v2
+    0076..007c  invoke-static  {v2}, LX/00L;->A05(Ljava/lang/Object;)V
+    007c..0082  invoke-static  {v2}, LX/00l;->A05(Ljava/lang/Object;)V
+    0082..0086  check-cast  v2, [I
+    0086..008c  invoke-static  {v1}, LX/2EG;->A00(Ljava/lang/String;)I
+    008c..008e  move-result  v1
+    008e..0092  aget  v0, v2, v1
+    0092..0096  add-int/lit8  v0, v0, #0xff (-1)
+    0096..009a  aput  v0, v2, v1
+    009a..009c  const/4  v2, #0x1
+    009c..00a0  if-nez  v3, +0x21
+    00a0..00a4  iget-boolean  v0, v5, LX/1hk;->A01:Z
+    00a4..00a8  if-eqz  v0, +0x1d
+    00a8..00ac  iget-object  v1, v5, LX/1hk;->A02:LX/0HC;
+    00ac..00b0  iget-object  v0, v1, LX/0HC;->A02:Ljava/lang/ThreadLocal;
+    00b0..00b6  invoke-virtual  {v0}, Ljava/lang/ThreadLocal;->get()Ljava/lang/Object;
+    00b6..00b8  move-result-object  v0
+    00b8..00be  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    00be..00c2  check-cast  v0, Ljava/lang/Boolean;
+    00c2..00c8  invoke-virtual  {v0}, Ljava/lang/Boolean;->booleanValue()Z
+    00c8..00ca  move-result  v0
+    00ca..00ce  if-eq  v0, v2, +0xa
+    00ce..00d4  invoke-virtual  {v1}, LX/0HC;->A02()V
+    00d4..00d8  iput-boolean  v2, v5, LX/1hk;->A00:Z
+    00d8..00dc  if-eqz  v3, +0x9
+    00dc..00de  throw  v3
+    00de..00e2  iget-object  v0, v5, LX/1hk;->A02:LX/0HC;
+    00e2..00e8  invoke-virtual  {v0}, LX/0HC;->A01()V
+    00e8..00ea  goto  -0xa
+    00ea..00ec  return-void
+    # exception table: 1 try range(s)
+    # catch <all> code_units 000d..0013 -> 0013
+.end method

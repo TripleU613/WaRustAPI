@@ -1,0 +1,105 @@
+
+# class: LX/8b6;
+# extends: Ljava/lang/Object;
+
+.method public run(V)  # .registers 13
+    # full signature: LX/8b6;->run()V
+    0000..0004  iget  v0, v12, LX/8b6;->$t:I
+    0004..000a  packed-switch  v0, payload@0x180, cases=[0:@0x102, 1:@0xb2], default@0xa
+    000a..000e  iget-object  v7, v12, LX/8b6;->A05:Ljava/lang/Object;
+    000e..0012  check-cast  v7, LX/0O2;
+    0012..0016  iget-object  v0, v12, LX/8b6;->A06:Ljava/lang/Object;
+    0016..001a  check-cast  v0, LX/7rk;
+    001a..001e  iget-object  v6, v0, LX/7rk;->A03:LX/8AT;
+    001e..0022  iget-object  v5, v12, LX/8b6;->A03:Ljava/lang/Object;
+    0022..0026  check-cast  v5, LX/1cO;
+    0026..002a  iget-wide  v3, v12, LX/8b6;->A00:J
+    002a..002e  iget-object  v2, v12, LX/8b6;->A01:Ljava/lang/Object;
+    002e..0032  check-cast  v2, LX/8WL;
+    0032..0038  invoke-static  {v6}, LX/8AT;->A03(LX/8AT;)Z
+    0038..003a  move-result  v0
+    003a..003e  if-nez  v0, +0x25
+    003e..0042  iget-object  v4, v12, LX/8b6;->A04:Ljava/lang/Object;
+    0042..0046  check-cast  v4, LX/1jL;
+    0046..004a  iget-object  v3, v12, LX/8b6;->A02:Ljava/lang/Object;
+    004a..004e  check-cast  v3, LX/0cf;
+    004e..0052  const-string  v2, "Unable to start reactions senders list job"
+    0052..0054  const/4  v1, #0x0
+    0054..0058  new-instance  v0, LX/7SS;
+    0058..005e  invoke-direct  {v0, v2, v1}, LX/7SS;-><init>(Ljava/lang/String;I)V
+    005e..0064  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/Throwable;)V
+    0064..0068  iget-boolean  v0, v4, LX/1jL;->element:Z
+    0068..006c  if-nez  v0, +0xd
+    006c..0070  new-instance  v0, LX/7UL;
+    0070..0076  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0076..007c  invoke-interface  {v3, v0}, LX/0cf;->resumeWith(Ljava/lang/Object;)V
+    007c..007e  const/4  v0, #0x1
+    007e..0082  iput-boolean  v0, v4, LX/1jL;->element:Z
+    0082..0084  return-void
+    0084..008a  invoke-static  {v3, v4}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+    008a..008c  move-result-object  v0
+    008c..0090  new-instance  v1, Lcom/whatsapp/newsletter/mex/NewsletterReactionSendersGraphqlJob;
+    0090..0096  invoke-direct  {v1, v5, v2, v0}, Lcom/whatsapp/newsletter/mex/NewsletterReactionSendersGraphqlJob;-><init>(LX/1cO;LX/8nR;Ljava/lang/String;)V
+    0096..009a  iget-object  v0, v6, LX/8AT;->A0p:LX/05a;
+    009a..00a0  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    00a0..00a2  move-result-object  v0
+    00a2..00a6  check-cast  v0, LX/0fW;
+    00a6..00ac  invoke-virtual  {v0, v1}, LX/0fW;->A01(Lorg/whispersystems/jobqueue/Job;)V
+    00ac..00b0  iput-object  v1, v7, LX/0O2;->element:Ljava/lang/Object;
+    00b0..00b2  return-void
+    00b2..00b6  iget-object  v2, v12, LX/8b6;->A01:Ljava/lang/Object;
+    00b6..00ba  check-cast  v2, LX/1ic;
+    00ba..00be  iget-object  v5, v12, LX/8b6;->A02:Ljava/lang/Object;
+    00be..00c2  check-cast  v5, Ljava/util/List;
+    00c2..00c6  iget-object  v3, v12, LX/8b6;->A03:Ljava/lang/Object;
+    00c6..00ca  check-cast  v3, Ljava/lang/Runnable;
+    00ca..00ce  iget-object  v6, v12, LX/8b6;->A04:Ljava/lang/Object;
+    00ce..00d2  check-cast  v6, Ljava/util/List;
+    00d2..00d6  iget-object  v4, v12, LX/8b6;->A05:Ljava/lang/Object;
+    00d6..00da  check-cast  v4, Ljava/lang/Runnable;
+    00da..00de  iget-wide  v7, v12, LX/8b6;->A00:J
+    00de..00e2  iget-object  v1, v12, LX/8b6;->A06:Ljava/lang/Object;
+    00e2..00e6  check-cast  v1, Ljava/lang/Runnable;
+    00e6..00ec  invoke-static/range  {v2..v8}, LX/1ic;->A0A(LX/1ic;Ljava/lang/Runnable;Ljava/lang/Runnable;Ljava/util/List;Ljava/util/List;J)V
+    00ec..00f0  sget-object  v0, LX/02X;->A01:Ljava/lang/Integer;
+    00f0..00f6  invoke-static  {v2, v0}, LX/1ic;->A08(LX/1ic;Ljava/lang/Integer;)V
+    00f6..00f8  return-void
+    00f8..00fa  move-exception  v0
+    00fa..0100  invoke-interface  {v1}, Ljava/lang/Runnable;->run()V
+    0100..0102  throw  v0
+    0102..0106  iget-object  v5, v12, LX/8b6;->A01:Ljava/lang/Object;
+    0106..010a  check-cast  v5, LX/Ev2;
+    010a..010e  iget-object  v4, v12, LX/8b6;->A02:Ljava/lang/Object;
+    010e..0112  check-cast  v4, LX/1bc;
+    0112..0116  iget-object  v3, v12, LX/8b6;->A03:Ljava/lang/Object;
+    0116..011a  check-cast  v3, Lcom/whatsapp/infra/core/jid/UserJid;
+    011a..011e  iget-wide  v0, v12, LX/8b6;->A00:J
+    011e..0122  iget-object  v9, v12, LX/8b6;->A04:Ljava/lang/Object;
+    0122..0126  iget-object  v6, v12, LX/8b6;->A05:Ljava/lang/Object;
+    0126..012a  iget-object  v8, v12, LX/8b6;->A06:Ljava/lang/Object;
+    012a..012e  iget-object  v2, v5, LX/Ev2;->A05:LX/05a;
+    012e..0134  invoke-static  {v2, v4, v3, v0, v1}, LX/8As;->A00(LX/05a;LX/1bc;Lcom/whatsapp/infra/core/jid/UserJid;J)LX/7hG;
+    0134..0136  move-result-object  v7
+    0136..013a  iget-object  v0, v5, LX/Ev2;->A01:LX/05a;
+    013a..0140  invoke-static  {v0}, LX/2LB;->A0Z(LX/05a;)LX/0bD;
+    0140..0142  move-result-object  v0
+    0142..0148  invoke-virtual  {v0, v3}, LX/0bD;->A0B(LX/0DY;)LX/0wj;
+    0148..014a  move-result-object  v0
+    014a..014c  const/4  v11, #0x0
+    014c..0150  if-eqz  v0, +0xa
+    0150..0156  invoke-virtual  {v0}, LX/0wj;->A0T()Z
+    0156..0158  move-result  v0
+    0158..015e  invoke-static  {v0, v11}, LX/2L9;->A1P(IZ)Z
+    015e..0160  move-result  v11
+    0160..0164  iget-object  v0, v5, LX/Ev2;->A02:LX/05a;
+    0164..016a  invoke-static  {v0}, LX/2L9;->A0l(LX/05a;)LX/0Js;
+    016a..016c  move-result-object  v0
+    016c..016e  const/4  v10, #0x7
+    016e..0172  new-instance  v5, LX/8ae;
+    0172..0178  invoke-direct/range  {v5..v11}, LX/8ae;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;IZ)V
+    0178..017e  invoke-virtual  {v0, v5}, LX/0Js;->CbP(Ljava/lang/Runnable;)V
+    017e..0180  return-void
+    0180..0190  packed-switch-payload  size=2
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0073..0076 -> 007c
+.end method

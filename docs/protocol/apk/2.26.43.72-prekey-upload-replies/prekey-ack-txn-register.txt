@@ -1,0 +1,17 @@
+
+# class: LX/0HC;
+# extends: Ljava/lang/Object;
+
+.method public A00(VLLL)  # .registers 4
+    # full signature: LX/0HC;->A00(LX/NdI;LX/0HC;Ljava/lang/Object;)V
+    0000..0004  iget-object  v0, v2, LX/0HC;->A04:Ljava/lang/ThreadLocal;
+    0004..000a  invoke-virtual  {v0}, Ljava/lang/ThreadLocal;->get()Ljava/lang/Object;
+    000a..000c  move-result-object  v0
+    000c..0012  invoke-static  {v0}, LX/00L;->A05(Ljava/lang/Object;)V
+    0012..0018  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    0018..001c  check-cast  v0, Ljava/util/AbstractMap;
+    001c..0022  invoke-virtual  {v0, v3, v1}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    0022..0028  invoke-interface  {v1}, LX/NdI;->onBegin()V
+    0028..002a  return-void
+    # exception table: 0 try range(s)
+.end method

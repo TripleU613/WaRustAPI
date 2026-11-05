@@ -15548,6 +15548,18 @@
     ],
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#pre-ack-reload-capacity-and-connection-generation-ownership-2026-11-04",
-    "description": "Native reload modes, dictionary-version invalidation, declared window/cap/flush values, newest-first capacity pruning and connection-generation sent cursor/retirement checks traced. Synthetic SQL fixture verifies predicates, not callback/codec or live policy parity. Effective config, transaction callback semantics, full replay ownership and epoch serialization remain open. No Rust ACK recovery, sends, deletion or timing behavior changed."
+    "description": "Native reload modes, dictionary-version invalidation, declared window/cap/flush values, newest-first capacity pruning and connection-generation sent cursor/retirement checks traced. Synthetic SQL fixture verifies predicates, not callback/codec or live policy parity. Normal transaction completion callback bridge is traced in subsequent evidence; effective config, ambiguous storage outcomes, full replay ownership and epoch serialization remain open. No Rust ACK recovery, sends, deletion or timing behavior changed."
+  },
+  "x-preack-transaction-completion-evidence": {
+    "x-cli": {
+      "command": "xtask apk-smali APK --class CLASS --method METHOD --signatures --exceptions",
+      "description": "Offline developer evidence only; no new runtime command or route"
+    },
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#ack-transaction-completion-and-rollback-bridge-2026-11-04",
+    "description": "Native ACK transaction callback uses a success-only post-outer-completion channel; rollback and captured endTransaction errors choose a separate release path. Bulk dispatcher/worker to transaction insertion bridge and memory projection entry traced. No guarantee for ambiguous disk outcomes or complete count-specific ACK-list provenance. Rust network, retry, recovery, timing and deletion behavior unchanged."
   }
 }

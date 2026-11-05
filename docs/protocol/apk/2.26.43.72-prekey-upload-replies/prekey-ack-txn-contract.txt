@@ -1,0 +1,33 @@
+
+# class: LX/NdI;
+# extends: Ljava/lang/Object;
+
+.method public BjQ(V)  # .registers 0
+    # full signature: LX/NdI;->BjQ()V
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+.method public BjU(V)  # .registers 0
+    # full signature: LX/NdI;->BjU()V
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+.method public onBegin(V)  # .registers 0
+    # full signature: LX/NdI;->onBegin()V
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+.method public onCommit(V)  # .registers 0
+    # full signature: LX/NdI;->onCommit()V
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+.method public onRollback(V)  # .registers 0
+    # full signature: LX/NdI;->onRollback()V
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method

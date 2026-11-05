@@ -1436,3 +1436,25 @@ exports and oracle](apk/2.26.43.72-prekey-upload-replies/README.md#pre-ack-reloa
 A supplied-transaction insertion path also exists, but its callback commit/
 rollback semantics and full replay-batch ownership remain unfinished. No Rust
 send/replay/deletion, socket order, timer or account behavior changed here.
+
+### ACK transaction success and rollback bridge (2026-11-04)
+
+**Confirmed static,43.72:** ACK insertion's0aq.A04 registers MZH selector1.
+Its Runnable executes in BjU after successful outer transaction completion,
+not directly in SQLite.onCommit. Separate selector2/BjQ handles rollback.
+1hk.close ends SQLite first and only selects success release when no captured
+end error, its success flag is set, and no rollback marker is present. Inner
+transaction closure does not release the outer callback map.
+
+Bulk1ic.A0G ->8b6(selector1)->1ic.A0A can insert pre-ACKs with the same0aq
+transaction used by its queue helpers, then register success/rollback Runnables.
+After successful completion, TB5(11) promotes persisted entries directly or
+schedules further projection according to load/window state. This closes the
+normal callback boundary, not crash/disk-error semantics or complete provenance
+of every count notification's ACK list. [Methods,19 new exports and limits](apk/2.26.43.72-prekey-upload-replies/README.md#ack-transaction-completion-and-rollback-bridge-2026-11-04).
+
+**Remaining:** complete count-specific bulk/config selection, Flr insertion
+coroutine, TB8 projection, exact window comparator, ambiguous persistence and
+full replay ownership. No Rust network/recovery behavior or live account state
+changed. Future port must distinguish durable insertion from post-commit memory
+promotion and confirmation-based retirement.

@@ -1,0 +1,11 @@
+
+# class: LX/0KU;
+# extends: Ljava/lang/Object;
+
+.method public A0G(V)  # .registers 2
+    # full signature: LX/0KU;->A0G()V
+    0000..0004  iget-object  v0, v1, LX/0KU;->A02:Landroid/database/sqlite/SQLiteDatabase;
+    0004..000a  invoke-virtual  {v0}, Landroid/database/sqlite/SQLiteDatabase;->setTransactionSuccessful()V
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method

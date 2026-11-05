@@ -1,0 +1,13 @@
+
+# class: LX/1hk;
+# extends: Ljava/lang/Object;
+
+.method public A00(V)  # .registers 2
+    # full signature: LX/1hk;->A00()V
+    0000..0002  const/4  v0, #0x1
+    0002..0006  iput-boolean  v0, v1, LX/1hk;->A01:Z
+    0006..000a  iget-object  v0, v1, LX/1hk;->A04:LX/0KU;
+    000a..0010  invoke-virtual  {v0}, LX/0KU;->A0G()V
+    0010..0012  return-void
+    # exception table: 0 try range(s)
+.end method

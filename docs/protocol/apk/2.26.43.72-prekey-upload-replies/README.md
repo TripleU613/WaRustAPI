@@ -1931,3 +1931,127 @@ Exports:
 - [prekey-ack-sent-watermark-writes.txt](prekey-ack-sent-watermark-writes.txt): `a0aa1aa1bb968db4c1a9cbff69ab833c09e84a89984cda159a8e29e3f8e48572`
 - [prekey-ack-transaction-callback.txt](prekey-ack-transaction-callback.txt): `e2d49eb8be1f175c28e9be6e9fab47443f8dd34fa7ba92a9d02c6eabc5c31088`
 - [prekey-ack-transaction-persist.txt](prekey-ack-transaction-persist.txt): `844a43d0a263b4032a91a35b6bb4ee40eafdde0e1a3bb9af3de98180a882d935`
+
+## ACK transaction completion and rollback bridge (2026-11-04)
+
+**Confirmed static**, pinned43.72 APK SHA256 reverified. This closes the prior
+normal-path transaction callback boundary. Checked DEX exports, not source,
+runtime observations or REA Evidence envelopes. Ambiguous storage failures and
+all count-specific bulk/config selection remain outside this claim.
+
+### Registration is not execution
+
+Previously retained0aq.A04 asserts SQLite.inTransaction and registers
+MZH(Runnable,selector1) with0HC.A00. A00 gets a ThreadLocal callback map, puts
+that adapter under a fresh object key and invokes its onBegin immediately.
+Selector1's onBegin/onCommit/onRollback are no-ops; it runs the Runnable only
+in NdI.BjU. The newly retained0aq.A03 uses selector2 for the counterpart channel.
+The NdI contract exposes BjQ, BjU and all three SQLite lifecycle methods.
+
+| MZH selector | Action relevant to registered object |
+| --- | --- |
+| 0 | Forwards onBegin/onCommit/onRollback to SQLiteTransactionListener |
+| 1 | Runs Runnable in BjU; direct SQLite callbacks are no-ops |
+| 2 | Runs Runnable in BjQ; direct SQLite callbacks are no-ops |
+
+These selector mappings are explicit branches, not guesses from obfuscated names.
+The map's fresh keys do not establish durable ACK deduplication across calls.
+
+### Outer transaction completion
+
+1hk constructor starts SQLite.beginTransactionWithListener(0HC) for the outer
+transaction, sets 0HC.A01 ThreadLocal=true and rollback markerA02=false. Its
+nested branch uses0KU.A0E -> SQLite.beginTransaction without resetting the outer
+callback state. An optional supplied SQLite listener is wrapped as selector0.
+
+1hk.A00 marks its local success flag then calls0KU.A0G ->
+SQLite.setTransactionSuccessful. 1hk.close first calls0KU.A0F ->
+SQLite.endTransaction and captures any thrown failure. Only when that returned
+without a captured failure, the local success flag is set, and the rollback
+marker is nottrue does it call0HC.A02. Other paths call0HC.A01, then a captured
+end failure is rethrown. The normal closed flag is set after callback handling;
+exceptions thrown by callbacks themselves are not claimed to be swallowed.
+
+0HC.onCommit forwards onCommit to a snapshot of listeners, then clears the outer
+active flag (also in its selected exception cleanup). onRollback forwards that
+callback, then clears outer active and sets rollback markertrue, including its
+selected exception cleanup. Neither callback directly executes MZH selector1's
+Runnable.
+
+0HC.A02 releases callbacks only when outer active==false. If rollback marker is
+true it delegates toA01; otherwise it snapshots and clears the callback map,
+then invokes BjU on each adapter. A01 similarly waits for outer active==false,
+snapshots/clears and invokes BjQ. Therefore the selected ACK projection Runnable
+runs after successful outer completion, not while an inner wrapper closes or
+inside SQLite.onCommit, and not on the normal rollback channel. A captured
+endTransaction failure selects the non-success release path; its precise engine/
+disk outcome is not established by this static control flow.
+
+Exact caller inventory for0HC.A02 reports1hk.close. Exact1iV.A0I insertion
+callers are1ic.A0A andFlr.invokeSuspend. The latter coroutine remains untraced;
+these inventories do not rule out inlining/other interface behavior.
+
+### From persisted ACKs to the in-memory window
+
+1iV.A0I, retained earlier, inserts ACK blobs using the supplied0aq transaction
+and registers TB5 selector11 via0aq.A04. TB5.run switch11->0430 reads the window
+mode flag and load latch. Its selected non-window/load-complete path calls
+1iV.A07 directly; other paths schedule TB8 selector8 on the queue executor.
+That TB8 branch remains a trace boundary. A07 itself returns if initial load
+is incomplete; it is not authority to erase SQL rows because memory was skipped.
+
+A07 updates the persisted-memory window only after its latch check. It compares
+incoming and loaded row-ID boundaries; when out-of-order entries need merging
+in positive-window mode, it combines and sorts using Fey14 and truncates via
+the configured window helper. Normal append/window-capacity branches and the
+persisted count update are retained. Exact Fey14 comparator and helper semantics
+are not reimplemented or claimed fully audited here. Callback order must not be
+mistaken for monotonic database insertion order.
+
+### Bulk route bridge and limits
+
+The earlier0v6.A00 BX2=true route calls1ic.A0G. That method validates homogeneous
+stanza runtime classes, then constructs8b6 with selector1 and can execute it
+inline or via an executor. The retained constructor binds that selector and its
+objects; run selector1 calls1ic.A0A with the same manager, callbacks, lists and
+long argument. Error handling calls a separate cleanup Runnable before rethrow.
+Many admission/cache/claim details insideA0G are retained but not exhaustively
+interpreted by this bridge trace.
+
+1ic.A0A opens a0aq/1hk transaction, invokes queue-processing helpers and, when
+the supplied pre-ACK list is nonempty, calls1iV.A0I with that same0aq. It then
+registers its success Runnable throughA04 and optional rollback Runnable through
+A03, marks successful, closes1hk and closes0aq. Empty-work paths can invoke a
+Runnable without opening this transaction; this is not proof every bulk count
+notification inserts an ACK row. Complete source of the pre-ACK list and actual
+count-specific selection remain open. Queue helpers' internal business semantics
+are not inferred merely because they run inside this transaction scope.
+
+**Port consequence:** a faithful Rust bridge needs durable ACK insertion in the
+business transaction and memory/scheduler promotion after confirmed completion,
+with a separate rollback path and recovery from durable rows if promotion never
+runs. This is an implementation requirement inferred from the normal native
+path, not a completed Rust capability or proof against power loss/fsync failure.
+No Rust ACK replay, send, ordering, timeout, reset or deletion behavior changed.
+
+Exports:
+
+- [prekey-ack-txn-adapter.txt](prekey-ack-txn-adapter.txt): `fb9a8c21dc0fb49e1ee90f435fee653c8069b619b7a5a987b9cac2df568ba3a7`
+- [prekey-ack-txn-begin.txt](prekey-ack-txn-begin.txt): `a48d10a15ba84cb89483411719f2bb6a2af7b3f3e6d15c703e718a134d8ba53f`
+- [prekey-ack-txn-bulk-admission.txt](prekey-ack-txn-bulk-admission.txt): `98c02644887a6216b37841f4baed8fb76c32988a0a7c4f0e6cac0c394b2d0426`
+- [prekey-ack-txn-bulk-transaction.txt](prekey-ack-txn-bulk-transaction.txt): `153ce16bcae85dee04f8e980a0fb41a853be54fccbf4ac9475cf3c258cb0988d`
+- [prekey-ack-txn-bulk-worker-constructor.txt](prekey-ack-txn-bulk-worker-constructor.txt): `92d94abf02a7f188cb96d49b099b261baa1bb3ef6bbabcd6876ca21d7342faec`
+- [prekey-ack-txn-bulk-worker.txt](prekey-ack-txn-bulk-worker.txt): `826baf3e1355b6e93e5c024f9c328dbcdef0324ec2feb8fe405e7bcf263db164`
+- [prekey-ack-txn-close.txt](prekey-ack-txn-close.txt): `7e639790c9f027e259583516944941eb69ab0e1586f7bcaf071e7b5424370402`
+- [prekey-ack-txn-completion-callers.txt](prekey-ack-txn-completion-callers.txt): `93873c448ece56b0364f1ffc65c3c3ec7ae56c5d08e884b267daed0ca3c08628`
+- [prekey-ack-txn-contract.txt](prekey-ack-txn-contract.txt): `452a91f9d16c030b19e0c2f7c160859614cd49b0e1b23706530cc1ac66268c55`
+- [prekey-ack-txn-end.txt](prekey-ack-txn-end.txt): `fec4e6e0d607c0876e3fca30f52bf30375027a1997385c9cb3cf1794dc16e23e`
+- [prekey-ack-txn-insertion-callers.txt](prekey-ack-txn-insertion-callers.txt): `5e3fd39dcba9b22596532b9efacb3347c1a9cd78842965b18cc1d25749bbc9e6`
+- [prekey-ack-txn-lifecycle.txt](prekey-ack-txn-lifecycle.txt): `8a41e423ef4af69a711ee25c20e9c10fdae0bcc589d87a390041d3be5d80c579`
+- [prekey-ack-txn-mark-successful.txt](prekey-ack-txn-mark-successful.txt): `7b4f0ef50a4fefa6315b283fbbf3eeba24cd0763fd7bc2afffd2ccc52bc6c5d4`
+- [prekey-ack-txn-memory-projection.txt](prekey-ack-txn-memory-projection.txt): `f37a35c89a135d3880e342ce2ebd1da855be5ed316b4fdd8fc0bb4e3d9cd6b0a`
+- [prekey-ack-txn-nested-begin.txt](prekey-ack-txn-nested-begin.txt): `dd5a6d1203ddfcde15e04418ffa39d5bf9a81553061fec4cfe23889c58baa813`
+- [prekey-ack-txn-projection.txt](prekey-ack-txn-projection.txt): `31af988f595c811213c3154b71d2c45a51c2fbdded64694dd194567bb335e926`
+- [prekey-ack-txn-register.txt](prekey-ack-txn-register.txt): `7dcc7322dcc8cc1413b30723dc2936593c02e80d3e04a42e6e1a9c176a2d4a2b`
+- [prekey-ack-txn-rollback-registration.txt](prekey-ack-txn-rollback-registration.txt): `e3609a3ab7864c3c02582891cf17de28b48ccccd959f66f3bd6318920e5b5729`
+- [prekey-ack-txn-success-marker.txt](prekey-ack-txn-success-marker.txt): `00ac7bb171f8f0137d3fba8bf80e98894c90031fda43f95190d6f27a00eb49f6`

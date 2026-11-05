@@ -1,0 +1,69 @@
+
+# class: LX/MZH;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLI)  # .registers 3
+    # full signature: LX/MZH;-><init>(Ljava/lang/Object;I)V
+    0000..0004  iput  v2, v0, LX/MZH;->$t:I
+    0004..0008  iput-object  v1, v0, LX/MZH;->A00:Ljava/lang/Object;
+    0008..000e  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public BjQ(V)  # .registers 2
+    # full signature: LX/MZH;->BjQ()V
+    0000..0004  iget  v0, v1, LX/MZH;->$t:I
+    0004..0008  rsub-int/lit8  v0, v0, #0x2
+    0008..000c  if-nez  v0, +0x9
+    000c..0010  iget-object  v0, v1, LX/MZH;->A00:Ljava/lang/Object;
+    0010..0014  check-cast  v0, Ljava/lang/Runnable;
+    0014..001a  invoke-interface  {v0}, Ljava/lang/Runnable;->run()V
+    001a..001c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public BjU(V)  # .registers 2
+    # full signature: LX/MZH;->BjU()V
+    0000..0004  iget  v0, v1, LX/MZH;->$t:I
+    0004..0008  rsub-int/lit8  v0, v0, #0x1
+    0008..000c  if-nez  v0, +0x9
+    000c..0010  iget-object  v0, v1, LX/MZH;->A00:Ljava/lang/Object;
+    0010..0014  check-cast  v0, Ljava/lang/Runnable;
+    0014..001a  invoke-interface  {v0}, Ljava/lang/Runnable;->run()V
+    001a..001c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public onBegin(V)  # .registers 2
+    # full signature: LX/MZH;->onBegin()V
+    0000..0004  iget  v0, v1, LX/MZH;->$t:I
+    0004..0008  if-nez  v0, +0x9
+    0008..000c  iget-object  v0, v1, LX/MZH;->A00:Ljava/lang/Object;
+    000c..0010  check-cast  v0, Landroid/database/sqlite/SQLiteTransactionListener;
+    0010..0016  invoke-interface  {v0}, Landroid/database/sqlite/SQLiteTransactionListener;->onBegin()V
+    0016..0018  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public onCommit(V)  # .registers 2
+    # full signature: LX/MZH;->onCommit()V
+    0000..0004  iget  v0, v1, LX/MZH;->$t:I
+    0004..0008  if-nez  v0, +0x9
+    0008..000c  iget-object  v0, v1, LX/MZH;->A00:Ljava/lang/Object;
+    000c..0010  check-cast  v0, Landroid/database/sqlite/SQLiteTransactionListener;
+    0010..0016  invoke-interface  {v0}, Landroid/database/sqlite/SQLiteTransactionListener;->onCommit()V
+    0016..0018  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public onRollback(V)  # .registers 2
+    # full signature: LX/MZH;->onRollback()V
+    0000..0004  iget  v0, v1, LX/MZH;->$t:I
+    0004..0008  if-nez  v0, +0x9
+    0008..000c  iget-object  v0, v1, LX/MZH;->A00:Ljava/lang/Object;
+    000c..0010  check-cast  v0, Landroid/database/sqlite/SQLiteTransactionListener;
+    0010..0016  invoke-interface  {v0}, Landroid/database/sqlite/SQLiteTransactionListener;->onRollback()V
+    0016..0018  return-void
+    # exception table: 0 try range(s)
+.end method

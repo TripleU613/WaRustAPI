@@ -1,0 +1,74 @@
+
+# class: LX/1hk;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLL)  # .registers 11
+    # full signature: LX/1hk;-><init>(Landroid/database/sqlite/SQLiteTransactionListener;LX/0HC;LX/0H0;LX/0KU;)V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v10, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000a  const/4  v0, #0x1
+    000a..0010  invoke-static  {v8, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0010..0016  invoke-direct  {v6}, Ljava/lang/Object;-><init>()V
+    0016..001a  iput-object  v10, v6, LX/1hk;->A04:LX/0KU;
+    001a..001e  iput-object  v8, v6, LX/1hk;->A02:LX/0HC;
+    001e..0022  iput-object  v9, v6, LX/1hk;->A03:LX/0H0;
+    0022..0024  const/4  v1, #0x0
+    0024..0028  iget-object  v5, v8, LX/0HC;->A01:Ljava/lang/ThreadLocal;
+    0028..002e  invoke-virtual  {v5}, Ljava/lang/ThreadLocal;->get()Ljava/lang/Object;
+    002e..0030  move-result-object  v0
+    0030..0036  invoke-static  {v1}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    0036..0038  move-result-object  v4
+    0038..003e  invoke-static  {v0, v4}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    003e..0040  move-result  v0
+    0040..0044  if-eqz  v0, +0x67
+    0044..0048  iget-object  v3, v10, LX/0KU;->A02:Landroid/database/sqlite/SQLiteDatabase;
+    0048..004e  invoke-virtual  {v3}, Landroid/database/sqlite/SQLiteDatabase;->inTransaction()Z
+    004e..0050  move-result  v0
+    0050..0052  const/4  v2, #0x1
+    0052..0056  xor-int/lit8  v1, v0, #0x1
+    0056..005a  const-string  v0, "OuterTransactionManager/already-in-transaction"
+    005a..0060  invoke-static  {v1, v0}, LX/00L;->A0C(ZLjava/lang/String;)V
+    0060..0066  invoke-virtual  {v3, v8}, Landroid/database/sqlite/SQLiteDatabase;->beginTransactionWithListener(Landroid/database/sqlite/SQLiteTransactionListener;)V
+    0066..006c  invoke-static  {v2}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    006c..006e  move-result-object  v2
+    006e..0074  invoke-virtual  {v5, v2}, Ljava/lang/ThreadLocal;->set(Ljava/lang/Object;)V
+    0074..0078  iget-object  v0, v8, LX/0HC;->A02:Ljava/lang/ThreadLocal;
+    0078..007e  invoke-virtual  {v0, v4}, Ljava/lang/ThreadLocal;->set(Ljava/lang/Object;)V
+    007e..0082  iget-object  v0, v8, LX/0HC;->A03:LX/00p;
+    0082..0088  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    0088..008a  move-result-object  v1
+    008a..008e  check-cast  v1, LX/0Du;
+    008e..0092  if-eqz  v1, +0xf
+    0092..0096  iget-object  v0, v1, LX/0Du;->A02:Ljava/util/concurrent/atomic/AtomicBoolean;
+    0096..009c  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicBoolean;->get()Z
+    009c..009e  move-result  v0
+    009e..00a2  if-eqz  v0, +0x7
+    00a2..00a6  iget-object  v0, v1, LX/0Du;->A00:Ljava/lang/ThreadLocal;
+    00a6..00ac  invoke-virtual  {v0, v2}, Ljava/lang/ThreadLocal;->set(Ljava/lang/Object;)V
+    00ac..00b0  if-eqz  v7, +0x10
+    00b0..00b2  const/4  v0, #0x0
+    00b2..00b6  new-instance  v1, LX/MZH;
+    00b6..00bc  invoke-direct  {v1, v7, v0}, LX/MZH;-><init>(Ljava/lang/Object;I)V
+    00bc..00c0  new-instance  v0, Ljava/lang/Object;
+    00c0..00c6  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    00c6..00cc  invoke-static  {v1, v8, v0}, LX/0HC;->A00(LX/NdI;LX/0HC;Ljava/lang/Object;)V
+    00cc..00d0  if-eqz  v9, +0x20
+    00d0..00d4  iget-object  v1, v10, LX/0KU;->A03:Ljava/lang/String;
+    00d4..00d8  iget-boolean  v0, v9, LX/0H0;->A04:Z
+    00d8..00dc  if-eqz  v0, +0x1a
+    00dc..00e0  sget-object  v0, LX/2EG;->A00:Ljava/lang/ThreadLocal;
+    00e0..00e6  invoke-virtual  {v0}, Ljava/lang/ThreadLocal;->get()Ljava/lang/Object;
+    00e6..00e8  move-result-object  v2
+    00e8..00ee  invoke-static  {v2}, LX/00L;->A05(Ljava/lang/Object;)V
+    00ee..00f4  invoke-static  {v2}, LX/00l;->A05(Ljava/lang/Object;)V
+    00f4..00f8  check-cast  v2, [I
+    00f8..00fe  invoke-static  {v1}, LX/2EG;->A00(Ljava/lang/String;)I
+    00fe..0100  move-result  v1
+    0100..0104  aget  v0, v2, v1
+    0104..0108  add-int/lit8  v0, v0, #0x1
+    0108..010c  aput  v0, v2, v1
+    010c..010e  return-void
+    010e..0114  invoke-virtual  {v10}, LX/0KU;->A0E()V
+    0114..0116  goto  -0x34
+    # exception table: 0 try range(s)
+.end method
