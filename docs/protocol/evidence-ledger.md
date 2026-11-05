@@ -1,3 +1,10 @@
+2026-11-05 — **Retry refetch query reservation now rechecks its inputs.**
+
+Original row/age and identity/session snapshots are checked atomically with
+pending query records; stale inputs produce no query job. Duplicate answer
+reservation remains once-only. [Correction and regressions](retry-answers.md#refetch-query-reservation-inputs-2026-11-05).
+No live requests or expanded retry counts/root behavior.
+
 2026-11-05 — **Saved-session retry reservation race fixed offline.**
 
 Retry reservation now rechecks original outbox snapshot, identity/session and

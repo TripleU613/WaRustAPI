@@ -16341,5 +16341,14 @@
     "x-live": false,
     "evidence": "docs/protocol/retry-answers.md#saved-session-retry-reservation-guard-2026-11-05",
     "description": "Internal retry reservation now rechecks original outbox snapshot, identity/session and60-day eligibility after asynchronous saved-session crypto preparation. Shared fresh/saved guards roll back stale reservation without overwriting newer state or adding an attempt/answer marker. Deterministic store regressions cover delivery/failure/attempt/peer changes and age boundary. Supported counts and root attributes unchanged; no new CLI/HTTP route or live retry verified."
+  },
+  "x-retry-refetch-query-reservation-guard": {
+    "x-cli": false,
+    "x-transport": [
+      "explicit comparison transport; offline tested"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/retry-answers.md#refetch-query-reservation-inputs-2026-11-05",
+    "description": "Initial retry prekey-query reservation now checks original outbox snapshot/age and identity/session inputs in the transaction creating fetching marker and pending job. Stale or missing inputs commit nothing; existing answer marker prevents another job. Deterministic store-interleaving regressions include missing-to-present session, delivery/failure/attempt updates, age and duplicate reservation. No live request, new route/CLI command or expanded retry behavior."
   }
 }

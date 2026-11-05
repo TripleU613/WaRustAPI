@@ -172,13 +172,11 @@ pub async fn answer(
         .as_deref()
         .filter(|b| b.len() <= 4)
         .map(|b| b.iter().fold(0u32, |n, byte| (n << 8) | u32::from(*byte)));
-    let session = match session {
+    let session = match session.as_deref() {
         Some(session)
             if registration.is_some()
                 && registration
-                    == Some(crate::signal::direct::session_remote_registration(
-                        &session,
-                    )?) =>
+                    == Some(crate::signal::direct::session_remote_registration(session)?) =>
         {
             session
         }
@@ -188,32 +186,21 @@ pub async fn answer(
         // finishes the answer in `complete_refetch`.
         _ => {
             let query = super::messaging::new_message_id()?;
-            let reserved = store.write(|tx| {
-                if tx
-                    .get_json::<serde_json::Value>(Table::Checkpoints, answer_key.as_bytes(), 1)?
-                    .is_some()
-                {
-                    return Ok(false);
-                }
-                tx.put_json(
-                    Table::Checkpoints,
-                    answer_key.as_bytes(),
-                    1,
-                    &serde_json::json!({"status": "fetching", "query": query, "count": retry.count}),
-                )?;
-                tx.put_json(
-                    Table::Checkpoints,
-                    refetch_key(&query).as_bytes(),
-                    1,
-                    &Refetch {
-                        wire_id: retry.message_id.clone(),
-                        answer_key: answer_key.clone(),
-                        unanswered_key: key.clone(),
-                        count: retry.count,
-                    },
-                )?;
-                Ok(true)
-            })?;
+            let job = Refetch {
+                wire_id: retry.message_id.clone(),
+                answer_key: answer_key.clone(),
+                unanswered_key: key.clone(),
+                count: retry.count,
+            };
+            let reserved = reserve_refetch(
+                store,
+                &entry,
+                &peer_key,
+                identity.as_deref(),
+                session.as_deref(),
+                &query,
+                &job,
+            )?;
             return Ok(reserved.then(|| super::messaging::key_request(&peer, &query)));
         }
     };
@@ -221,7 +208,7 @@ pub async fn answer(
         account,
         &peer,
         None,
-        Some(&session),
+        Some(session),
         identity.as_deref(),
         &source,
     )
@@ -239,7 +226,7 @@ pub async fn answer(
             .by_wire_id_in_write(tx, &wire_id)?
             .ok_or_else(|| Error::invalid("retry", "original send vanished"))?;
         ensure_original_unchanged(&current, &entry, Timestamp::now())?;
-        ensure_retry_peer_unchanged(tx, &peer_key, identity.as_deref(), Some(&session))?;
+        ensure_retry_peer_unchanged(tx, &peer_key, identity.as_deref(), Some(session))?;
         if tx
             .get_json::<serde_json::Value>(Table::Checkpoints, answer_key.as_bytes(), 1)?
             .is_some()
@@ -278,6 +265,44 @@ struct Refetch {
     answer_key: String,
     unanswered_key: String,
     count: u32,
+}
+
+// Reserving a key query must use the same eligibility snapshot as the retry
+// decision. Another transaction can update delivery or peer state even before
+// crypto begins (docs/protocol/retry-answers.md).
+fn reserve_refetch(
+    store: &ProtocolStore,
+    prepared_from: &OutboxEntry,
+    peer_key: &str,
+    identity: Option<&[u8]>,
+    session: Option<&[u8]>,
+    query: &str,
+    job: &Refetch,
+) -> Result<bool> {
+    let wire_id = MessageId::new(job.wire_id.clone())?;
+    store.write(|tx| {
+        if tx
+            .get_json::<serde_json::Value>(Table::Checkpoints, job.answer_key.as_bytes(), 1)?
+            .is_some()
+        {
+            return Ok(false);
+        }
+        let current = super::outgoing::outbox()
+            .by_wire_id_in_write(tx, &wire_id)?
+            .ok_or_else(|| {
+                Error::invalid("retry", "original send vanished before refetch query")
+            })?;
+        ensure_original_unchanged(&current, prepared_from, Timestamp::now())?;
+        ensure_retry_peer_unchanged(tx, peer_key, identity, session)?;
+        tx.put_json(
+            Table::Checkpoints,
+            job.answer_key.as_bytes(),
+            1,
+            &serde_json::json!({"status": "fetching", "query": query, "count": job.count}),
+        )?;
+        tx.put_json(Table::Checkpoints, refetch_key(query).as_bytes(), 1, job)?;
+        Ok(true)
+    })
 }
 
 /// Finish a retry answer from the directory reply to its key query.
@@ -648,6 +673,194 @@ mod tests {
         assert!(!original_too_old(Timestamp(1), Timestamp(0)));
         assert!(original_too_old(Timestamp(i64::MIN), Timestamp(i64::MAX)));
         assert!(!original_too_old(Timestamp(i64::MAX), Timestamp(i64::MIN)));
+    }
+
+    #[test]
+    fn refetch_query_reservation_rechecks_inputs_and_commits_once() {
+        for change in [
+            "unchanged",
+            "delivery",
+            "failure",
+            "attempt",
+            "identity",
+            "session",
+            "session_appeared",
+            "expired",
+            "missing",
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let store = ProtocolStore::open(OpenOptions {
+                path: dir.path().join("refetch-query.redb"),
+                account_id: AccountId::new("test").unwrap(),
+                key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                    [7; 32],
+                ))),
+                create: true,
+            })
+            .unwrap();
+            let outbox = super::super::outgoing::outbox();
+            let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+            let peer_key = format!("comparison-direct:{peer}");
+            let expected_session = (change != "session_appeared").then_some([2u8]);
+            let prepared_from = store
+                .write(|tx| {
+                    let request = SendRequest {
+                        client_request_id: ClientRequestId::new("refetch-query-race")?,
+                        chat: ChatId::from_jid(&peer)?,
+                        content: MessageContent::Text {
+                            body: "fixture".into(),
+                            quoted: None,
+                            style: Default::default(),
+                        },
+                    };
+                    let id = outbox.enqueue(tx, &request)?.0.local_id;
+                    let mut entry = outbox.get_mut(tx, id)?.unwrap();
+                    entry.wire_id = Some(MessageId::new("W1")?);
+                    entry.attempts.push(AttemptRecord {
+                        index: 0,
+                        prepared_at: if change == "expired" {
+                            Timestamp(Timestamp::now().as_millis() - MAX_AGE_MS - 1)
+                        } else {
+                            Timestamp::now()
+                        },
+                        epoch: Some(ConnectionEpoch(1)),
+                        payload: Some(vec![1].into()),
+                        re_encryption: false,
+                    });
+                    outbox.set_progress(tx, &mut entry, AttemptProgress::InFlight)?;
+                    outbox.record_fact(
+                        tx,
+                        &mut entry,
+                        DeliveryFact {
+                            kind: DeliveryFactKind::ServerAccepted,
+                            device: None,
+                            observed_at: Timestamp::now(),
+                            server_timestamp: None,
+                            code: None,
+                        },
+                    )?;
+                    tx.put_json(Table::PeerIdentities, peer_key.as_bytes(), 1, &vec![1u8])?;
+                    if let Some(session) = expected_session {
+                        tx.put_json(
+                            Table::SignalSessions,
+                            peer_key.as_bytes(),
+                            1,
+                            &session.to_vec(),
+                        )?;
+                    }
+                    Ok(entry)
+                })
+                .unwrap();
+            // Commit competing receive/outbox work after capturing the inputs.
+            store
+                .write(|tx| {
+                    let mut current = prepared_from.clone();
+                    match change {
+                        "delivery" | "failure" => current.facts.push(DeliveryFact {
+                            kind: if change == "delivery" {
+                                DeliveryFactKind::Delivered
+                            } else {
+                                DeliveryFactKind::Failed
+                            },
+                            device: None,
+                            observed_at: Timestamp::now(),
+                            server_timestamp: None,
+                            code: None,
+                        }),
+                        "attempt" => current.attempts.push(AttemptRecord {
+                            index: 1,
+                            prepared_at: Timestamp::now(),
+                            epoch: Some(ConnectionEpoch(2)),
+                            payload: Some(vec![2].into()),
+                            re_encryption: true,
+                        }),
+                        "identity" => {
+                            tx.put_json(Table::PeerIdentities, peer_key.as_bytes(), 1, &vec![9u8])?
+                        }
+                        "session" | "session_appeared" => {
+                            tx.put_json(Table::SignalSessions, peer_key.as_bytes(), 1, &vec![9u8])?
+                        }
+                        "missing" => {
+                            tx.delete(Table::Outbox, &current.local_id.0)?;
+                            return Ok(());
+                        }
+                        _ => {}
+                    }
+                    tx.put_json(Table::Outbox, &current.local_id.0, 1, &current)
+                })
+                .unwrap();
+            let snapshot = || {
+                store
+                    .read(|tx| {
+                        [
+                            Table::Outbox,
+                            Table::Checkpoints,
+                            Table::PeerIdentities,
+                            Table::SignalSessions,
+                        ]
+                        .into_iter()
+                        .map(|table| tx.scan(table, 1, 10000))
+                        .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap()
+            };
+            let job = Refetch {
+                wire_id: "W1".into(),
+                answer_key: "answer".into(),
+                unanswered_key: "unanswered".into(),
+                count: 2,
+            };
+            let before = snapshot();
+            let result = reserve_refetch(
+                &store,
+                &prepared_from,
+                &peer_key,
+                Some(&[1]),
+                expected_session.as_ref().map(|s| s.as_slice()),
+                "Q1",
+                &job,
+            );
+            if change == "unchanged" {
+                assert!(result.unwrap());
+                let reserved = snapshot();
+                assert!(
+                    !reserve_refetch(
+                        &store,
+                        &prepared_from,
+                        &peer_key,
+                        Some(&[1]),
+                        expected_session.as_ref().map(|s| s.as_slice()),
+                        "Q2",
+                        &job
+                    )
+                    .unwrap()
+                );
+                assert_eq!(snapshot(), reserved);
+                assert!(
+                    store
+                        .read(|tx| tx.get_json::<Refetch>(
+                            Table::Checkpoints,
+                            refetch_key("Q1").as_bytes(),
+                            1
+                        ))
+                        .unwrap()
+                        .is_some()
+                );
+                assert!(
+                    store
+                        .read(|tx| tx.get_json::<Refetch>(
+                            Table::Checkpoints,
+                            refetch_key("Q2").as_bytes(),
+                            1
+                        ))
+                        .unwrap()
+                        .is_none()
+                );
+            } else {
+                assert!(result.is_err(), "{change}");
+                assert_eq!(snapshot(), before, "{change}");
+            }
+        }
     }
 
     #[test]

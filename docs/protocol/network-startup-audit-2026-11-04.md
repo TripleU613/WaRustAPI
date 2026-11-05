@@ -669,3 +669,39 @@ APK root normalization remain open. No live account operation occurred.
 
 [Retained current-APK root gate instructions](apk/2.26.43.72-retry-root-gates/README.md)
 remain incomplete for a normalization port.
+
+## Refetch query reservation inputs (2026-11-05)
+
+**Confirmed local correction / implemented offline:** the initial retry key-query
+reservation previously checked only for an existing answer marker. The eligibility
+and peer snapshots came from earlier read transactions, so competing store work
+could make them stale before the fetching marker/job were committed. Even though
+this branch does not await crypto, other store users can commit between those
+transactions. The later refetch-completion guard did not prevent that unnecessary
+query reservation.
+
+`reserve_refetch` now reads the current original via its wire-id index within
+the same write transaction as the two pending records. It requires the original
+outbox row to equal the eligibility snapshot, repeats the strict >60-day age
+check and compares identity/session bytes with the captured inputs (including
+an absent session). A stale/missing original or changed peer state returns a local
+error with no fetching marker or job committed. An existing answer marker still
+returns false without another job. Only a successful reservation allows `answer`
+to return the key-request node to its caller; no socket write occurs here.
+
+This uses the same local guards as saved-session/fresh-bundle retry reservation.
+It preserves the retained APK original-recipient/delivery/age exclusions without
+claiming Android uses Rust's transaction mechanism. It does not delete/replace
+a session, relax counts, rotate identity or add automatic retry after refusal.
+
+A deterministic regression calls the actual reservation helper after a competing
+transaction commits delivery, failure, an extra attempt, identity/session change,
+an absent→present session, or deletion of the original. An aged captured original
+also refuses at this boundary. Each refusal preserves all checked outbox,
+checkpoint, identity and session rows. The unchanged case commits one pending
+query; a second query ID with the same answer key returns false and adds no job.
+The existing full saved/fresh retry workflow remains covered. These are store
+interleaving simulations, not scheduled multithread races or live key requests.
+
+**Observed live:** none. Full current-APK root normalization and higher-count
+base-key policy remain unresolved. No new CLI command, route or protocol feature.
