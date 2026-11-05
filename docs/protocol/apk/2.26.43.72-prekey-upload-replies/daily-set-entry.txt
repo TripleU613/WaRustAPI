@@ -1,0 +1,93 @@
+
+# class: LX/FKS;
+# extends: Ljava/lang/Object;
+
+.method public onRandomizedDailyCronNoMessageStore(V)  # .registers 6
+    # full signature: LX/FKS;->onRandomizedDailyCronNoMessageStore()V
+    0000..0004  const/16  v1, #0x4e3
+    0004..0008  iget-object  v0, v5, LX/FKS;->A05:LX/05a;
+    0008..000e  invoke-static  {v0, v1}, LX/2LA;->A0G(LX/05a;I)LX/05a;
+    000e..0010  move-result-object  v1
+    0010..0014  iget-object  v0, v5, LX/FKS;->A01:LX/05a;
+    0014..0018  iget-object  v4, v0, LX/05a;->A00:LX/00x;
+    0018..001e  invoke-interface  {v4}, LX/00x;->get()Ljava/lang/Object;
+    001e..0020  move-result-object  v0
+    0020..0024  check-cast  v0, LX/Ex8;
+    0024..002a  invoke-virtual  {v0}, LX/Ex8;->A04()Z
+    002a..002c  move-result  v0
+    002c..0030  if-nez  v0, +0x2f
+    0030..0034  iget-object  v0, v5, LX/FKS;->A02:LX/05a;
+    0034..003a  invoke-static  {v0}, LX/DBe;->A0g(LX/05a;)LX/0WJ;
+    003a..003c  move-result-object  v0
+    003c..0042  invoke-virtual  {v0}, LX/0WJ;->A0y()Z
+    0042..0044  move-result  v0
+    0044..0048  if-eqz  v0, +0x22
+    0048..004c  const-string  v0, "PQCheckDailyCron/onRandomizedDailyCronNoMessageStore PQ disabled but kyber prekeys exist, scheduling deletion"
+    004c..0052  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0052..0058  invoke-static  {v1}, LX/2L9;->A0V(LX/05a;)LX/0B0;
+    0058..005a  move-result-object  v4
+    005a..005c  const/4  v3, #0x0
+    005c..005e  const/4  v2, #0x2
+    005e..0062  const-string  v1, "PQCheckDailyCron/pq-disabled-kyber-prekeys-exist"
+    0062..0066  const-string  v0, "PQ is disabled but kyber prekeys still exist"
+    0066..006c  invoke-virtual  {v4, v1, v0, v3, v2}, LX/0B0;->A0h(Ljava/lang/String;Ljava/lang/String;ZI)V
+    006c..0070  iget-object  v0, v5, LX/FKS;->A04:LX/05a;
+    0070..0076  invoke-static  {v0}, LX/DBe;->A0l(LX/05a;)LX/0fW;
+    0076..0078  move-result-object  v1
+    0078..007c  new-instance  v0, Lcom/whatsapp/infra/crypto/prekeys/DeleteKyberPreKeysJob;
+    007c..0082  invoke-direct  {v0}, Lcom/whatsapp/infra/crypto/prekeys/DeleteKyberPreKeysJob;-><init>()V
+    0082..0088  invoke-virtual  {v1, v0}, LX/0fW;->A01(Lorg/whispersystems/jobqueue/Job;)V
+    0088..008a  return-void
+    008a..008e  iget-object  v0, v5, LX/FKS;->A03:LX/05a;
+    008e..0094  invoke-static  {v0}, LX/DBe;->A01(LX/05a;)J
+    0094..0096  move-result-wide  v2
+    0096..009a  iget-object  v0, v5, LX/FKS;->A00:LX/05a;
+    009a..009e  iget-object  v1, v0, LX/05a;->A00:LX/00x;
+    009e..00a4  invoke-interface  {v1}, LX/00x;->get()Ljava/lang/Object;
+    00a4..00a6  move-result-object  v0
+    00a6..00aa  check-cast  v0, LX/13z;
+    00aa..00b0  invoke-virtual  {v0, v2, v3}, LX/13z;->A0Y(J)Z
+    00b0..00b2  move-result  v0
+    00b2..00b6  if-nez  v0, -0x15
+    00b6..00bc  invoke-interface  {v4}, LX/00x;->get()Ljava/lang/Object;
+    00bc..00be  move-result-object  v0
+    00be..00c2  check-cast  v0, LX/Ex8;
+    00c2..00c8  invoke-virtual  {v0}, LX/Ex8;->A03()Z
+    00c8..00ca  move-result  v0
+    00ca..00ce  if-nez  v0, -0x21
+    00ce..00d2  const-string  v0, "PQCheckDailyCron/onRandomizedDailyCronNoMessageStore no last resort Kyber prekey found, generating and sending PQ prekeys"
+    00d2..00d8  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    00d8..00de  invoke-interface  {v1}, LX/00x;->get()Ljava/lang/Object;
+    00de..00e0  move-result-object  v3
+    00e0..00e4  check-cast  v3, LX/13z;
+    00e4..00e8  iget-object  v0, v3, LX/13z;->A0D:LX/00x;
+    00e8..00ee  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    00ee..00f0  move-result-object  v0
+    00f0..00f4  check-cast  v0, LX/Ex8;
+    00f4..00fa  invoke-virtual  {v0}, LX/Ex8;->A04()Z
+    00fa..00fc  move-result  v0
+    00fc..0100  if-eqz  v0, -0x3a
+    0100..0104  iget-object  v0, v3, LX/13z;->A0P:LX/0Wk;
+    0104..010a  invoke-virtual  {v0}, LX/0Wk;->A04()LX/FjI;
+    010a..010c  move-result-object  v2
+    010c..0110  iget-object  v1, v3, LX/13z;->A0F:LX/00x;
+    0110..0116  invoke-static  {v1}, LX/DBc;->A0i(LX/00x;)LX/0WJ;
+    0116..0118  move-result-object  v0
+    0118..011e  invoke-virtual  {v0}, LX/0WJ;->A0j()V
+    011e..0124  invoke-static  {v1}, LX/DBc;->A0i(LX/00x;)LX/0WJ;
+    0124..0126  move-result-object  v0
+    0126..012c  invoke-virtual  {v0}, LX/0WJ;->A0e()LX/ETs;
+    012c..0132  invoke-virtual  {v2}, LX/FjI;->close()V
+    0132..0136  const/16  v0, #0xa
+    0136..013c  invoke-virtual  {v3, v0}, LX/13z;->A0R(I)V
+    013c..013e  return-void
+    013e..0140  move-exception  v1
+    0140..0146  invoke-virtual  {v2}, LX/FjI;->close()V
+    0146..0148  throw  v1
+    0148..014a  move-exception  v0
+    014a..0150  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    0150..0152  throw  v1
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0086..0096 -> 009f
+    # catch <all> code_units 00a0..00a3 -> 00a4
+.end method

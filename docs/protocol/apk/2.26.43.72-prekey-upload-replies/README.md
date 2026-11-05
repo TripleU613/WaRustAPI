@@ -582,3 +582,55 @@ Additional export hashes:
 - [migrated-predicate.txt](migrated-predicate.txt): `df4a05e923ac0cc11fb2a20f1d473f1b1b840d7d0bdda8a1522b074411322a5a`
 - [set-admission.txt](set-admission.txt): `e58a2f2a9c7035d5d1f3246592541f3a90411141dd19ea3441fac3acb9ca1920`
 - [migration-state.txt](migration-state.txt): `ddaaa0effc16926ccff56b9c6bdaf28557b70ea58f835e0adaa58199c8b9cb2a`
+
+## Notification and daily PQ entry routing (2026-11-04)
+
+**Confirmed static**, pinned 43.72. This adds upstream context; startup Fea
+branches and all cron/job lifecycle are not yet fully audited.
+
+- Exact A0R callers are **FKS.onRandomizedDailyCronNoMessageStore** and
+  **Fea.run**. Exact A0V callers are **15v.A02** (two invokes) and **Fc8.run**.
+  Fc8's default selector branch simply forwards stored two booleans; which
+  producer constructs that selector remains open.
+- **15v.A02** is the count worker. It combines **Ex8.A03** migration with
+  **Ex8.A04** gate21198 and **EMv.A00** before selecting branches. EMv.<clinit>
+  registers A00 as **0x70d7**, declared defaultfalse. Current runtime value and
+  descriptor evaluator behavior were not observed.
+- Its labelled migrated/PQ-upload-enabled branch at01d6 passes **legacy-present**
+  and **PQ Integer nonnull** to A0V, not a numeric low-count threshold. Zero or
+  negative nonnull PQ counts still mean presence at this call site. The labelled
+  PQ-low-count-disabled branch at01a0 invokes A0V(true,false) only if legacy is
+  present; PQ-only skips. Raw02X branch encoding is retained rather than turning
+  every obfuscated constant name into a guessed enum ordinal.
+- The non-migrated branch logs useSET. With legacy-present it checks A10 unsent
+  availability, calls A0k if none, then A0S(reason2). PQ-only logs no action.
+  A0S's request/legacy upload path remains the next trace boundary; this method
+  does not send every count notification through modern A0B/ADD.
+- **0232–0244** calls stanzaMetadata.A01 for ACK after the worker's upload
+  decision, or logs missing metadata. This is call order, not a guaranteed wire
+  order relative to an asynchronously scheduled upload. Rust currently ACKs
+  before its generation/upload decision; that known ordering gap remains.
+- **FKS daily cron**: gate-off branch detects existing Kyber state through A0y
+  and schedules DeleteKyberPreKeysJob (selected job body not traced). Gate-on
+  branch checks A0Y(inflight) and migrated predicate; when not migrated, it
+  ensures ordinary PQ through A0j and invokes A0e (last-resort getter/generator
+  internals not retraced here), then **A0R(reason10)**. This links daily missing-
+  last-resort migration to the guarded PQ-only SET entry, not all initial uploads.
+  No deletion/reset/scheduler behavior was implemented in Rust from this trace.
+
+**Implementation consequence:** account migration/gate plus notification policy
+choose legacy SET versus ADD, with distinct daily PQ setup. Rust's unified
+maybe_upload currently omits those branch distinctions and PQ-only notification
+handling. This adds required porting inputs; it is not evidence to blindly
+switch all notifications to ADD. Upstream raw notification dispatch/parser,
+A0S/Fea startup paths, EMv effective values, non-migrated signed-key bootstrap
+and native ACK durability remain open. No production change or live traffic.
+
+Additional export hashes:
+
+- [upstream-A0R.txt](upstream-A0R.txt): `c0fa2c4d26e454dfda84c9e7cf366a18ac6277228a29debc601fabe97dffea14`
+- [upstream-A0V.txt](upstream-A0V.txt): `936bfa2b80c65347c535bb15e88634d2faae937c1d1dccb42381d376c0b1522c`
+- [count-worker-routing.txt](count-worker-routing.txt): `520aaa0e19c522f1d23a388d9d787a5aa30770015e977845d300f833a8c2edd1`
+- [daily-set-entry.txt](daily-set-entry.txt): `9eeabb113a9f5b16bed4acd708fa5db476e1c3af6e98f42a1f9ce137218c2184`
+- [count-async-routing.txt](count-async-routing.txt): `c79e8b7caa754200672f727530cca078ebd2dfe2b60cdd10553e1c4b0b97d33c`
+- [count-policy-flag.txt](count-policy-flag.txt): `ee6707c2b42e9f43caafecbc55c4c82a83e1ff9aa628cd42df1e042d9a407279`

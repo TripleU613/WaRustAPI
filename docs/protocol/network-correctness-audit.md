@@ -1017,3 +1017,13 @@ internal encrypted-store provenance, not sender authority or HTTP/CLI wire outpu
 Future cursor migration must preserve occupied/consumed IDs. Full authenticated
 receive-to-upload interleaving and historical absent-row diagnosis remain open.
 No live traffic or key resurrection. This qualifies the prior integrity section.
+
+## Current-build prekey notification/daily routing (2026-11-04)
+
+**Confirmed static, 43.72:** 15v.A02 distinguishes migrated ADD (two presence
+flags), migrated legacy-only ADD and non-migrated legacy SET via A0S. PQ-only
+non-migrated skips; ACK call follows the worker decision, not proven upload wire
+order. FKS daily missing-migrated-state branch ensures PQ and reaches A0R(reason10).
+[Configuration descriptor, caller inventory, exact scope and unported gaps](apk/2.26.43.72-prekey-upload-replies/README.md#notification-and-daily-pq-entry-routing-2026-11-04).
+Unified Rust maybe_upload is not full native strategy. A0S/Fea startup paths and
+raw dispatch/effective config still need tracing. No production change/live traffic.

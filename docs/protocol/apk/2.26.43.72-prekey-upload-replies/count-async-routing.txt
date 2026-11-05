@@ -1,0 +1,109 @@
+
+# class: LX/Fc8;
+# extends: Ljava/lang/Object;
+
+.method public run(V)  # .registers 7
+    # full signature: LX/Fc8;->run()V
+    0000..0004  iget  v0, v6, LX/Fc8;->$t:I
+    0004..000a  packed-switch  v0, payload@0x19c, cases=[0:@0x184, 1:@0x16c, 2:@0xfe, 3:@0xde, 4:@0x22, 5:@0xc6, 6:@0x9c], default@0xa
+    000a..000e  iget-object  v2, v6, LX/Fc8;->A00:Ljava/lang/Object;
+    000e..0012  check-cast  v2, LX/13z;
+    0012..0016  iget-boolean  v1, v6, LX/Fc8;->A01:Z
+    0016..001a  iget-boolean  v0, v6, LX/Fc8;->A02:Z
+    001a..0020  invoke-virtual  {v2, v1, v0}, LX/13z;->A0V(ZZ)V
+    0020..0022  return-void
+    0022..0026  iget-object  v1, v6, LX/Fc8;->A00:Ljava/lang/Object;
+    0026..002a  check-cast  v1, LX/F1I;
+    002a..002e  iget-boolean  v0, v6, LX/Fc8;->A01:Z
+    002e..0032  iget-boolean  v3, v6, LX/Fc8;->A02:Z
+    0032..0036  iget-object  v2, v1, LX/F1I;->A00:Lcom/whatsapp/contact/ui/quickcontact/QuickContactActivity;
+    0036..003a  if-eqz  v0, +0x1f
+    003a..003e  iget-object  v0, v2, Lcom/whatsapp/contact/ui/quickcontact/QuickContactActivity;->A0r:LX/15i;
+    003e..0044  invoke-static  {v0, v3}, Lcom/whatsapp/contact/ui/quickcontact/QuickContactActivity;->A0y(LX/15i;Z)V
+    0044..0048  iget-object  v0, v2, Lcom/whatsapp/contact/ui/quickcontact/QuickContactActivity;->A05:LX/00x;
+    0048..004e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    004e..0050  move-result-object  v1
+    0050..0054  check-cast  v1, LX/0yT;
+    0054..005a  invoke-static  {v2}, LX/DBc;->A0Y(Lcom/whatsapp/contact/ui/quickcontact/QuickContactActivity;)LX/0DY;
+    005a..005c  move-result-object  v0
+    005c..0062  invoke-virtual  {v1, v0}, LX/0yT;->A04(LX/0DY;)Z
+    0062..0064  move-result  v0
+    0064..0068  if-nez  v0, -0x22
+    0068..006c  iget-object  v0, v2, Lcom/whatsapp/contact/ui/quickcontact/QuickContactActivity;->A0q:LX/15i;
+    006c..0072  invoke-static  {v0, v3}, Lcom/whatsapp/contact/ui/quickcontact/QuickContactActivity;->A0y(LX/15i;Z)V
+    0072..0074  return-void
+    0074..0078  iget-object  v1, v2, Lcom/whatsapp/contact/ui/quickcontact/QuickContactActivity;->A0l:Lcom/whatsapp/ui/coreui/base/WaImageButton;
+    0078..007a  const/4  v0, #0x0
+    007a..0080  invoke-virtual  {v1, v0}, Landroid/view/View;->setVisibility(I)V
+    0080..0086  invoke-virtual  {v1, v3}, Landroid/view/View;->setEnabled(Z)V
+    0086..008c  const  v0, #0x3ecccccd
+    008c..0090  if-eqz  v3, +0x4
+    0090..0094  const/high16  v0, #0x3f800000
+    0094..009a  invoke-virtual  {v1, v0}, Landroid/view/View;->setAlpha(F)V
+    009a..009c  goto  -0x2b
+    009c..00a0  iget-object  v0, v6, LX/Fc8;->A00:Ljava/lang/Object;
+    00a0..00a4  check-cast  v0, LX/F1I;
+    00a4..00a8  iget-boolean  v2, v6, LX/Fc8;->A01:Z
+    00a8..00ac  iget-boolean  v1, v6, LX/Fc8;->A02:Z
+    00ac..00b0  iget-object  v0, v0, LX/F1I;->A00:Lcom/whatsapp/contact/ui/quickcontact/QuickContactActivity;
+    00b0..00b4  if-eqz  v2, +0x8
+    00b4..00b8  iget-object  v0, v0, Lcom/whatsapp/contact/ui/quickcontact/QuickContactActivity;->A0r:LX/15i;
+    00b8..00be  invoke-static  {v0, v1}, Lcom/whatsapp/contact/ui/quickcontact/QuickContactActivity;->A0y(LX/15i;Z)V
+    00be..00c0  return-void
+    00c0..00c4  iget-object  v0, v0, Lcom/whatsapp/contact/ui/quickcontact/QuickContactActivity;->A0m:LX/15i;
+    00c4..00c6  goto  -0x6
+    00c6..00ca  iget-object  v2, v6, LX/Fc8;->A00:Ljava/lang/Object;
+    00ca..00ce  check-cast  v2, LX/F1I;
+    00ce..00d2  iget-boolean  v1, v6, LX/Fc8;->A01:Z
+    00d2..00d6  iget-boolean  v0, v6, LX/Fc8;->A02:Z
+    00d6..00dc  invoke-static  {v2, v1, v0}, LX/F1I;->A01(LX/F1I;ZZ)V
+    00dc..00de  return-void
+    00de..00e2  iget-object  v0, v6, LX/Fc8;->A00:Ljava/lang/Object;
+    00e2..00e6  check-cast  v0, LX/FBG;
+    00e6..00ea  iget-boolean  v2, v6, LX/Fc8;->A01:Z
+    00ea..00ee  iget-boolean  v1, v6, LX/Fc8;->A02:Z
+    00ee..00f4  invoke-static  {v0}, LX/DBe;->A0F(LX/FBG;)LX/FvZ;
+    00f4..00f6  move-result-object  v0
+    00f6..00fc  invoke-interface  {v0, v2, v1}, LX/FvZ;->stopVideoCaptureStream(ZZ)V
+    00fc..00fe  return-void
+    00fe..0102  iget-object  v5, v6, LX/Fc8;->A00:Ljava/lang/Object;
+    0102..0106  check-cast  v5, LX/FBG;
+    0106..010a  iget-boolean  v4, v6, LX/Fc8;->A01:Z
+    010a..010e  iget-boolean  v3, v6, LX/Fc8;->A02:Z
+    010e..0112  iget-object  v0, v5, LX/FBG;->A1l:LX/00x;
+    0112..0118  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0118..011a  move-result-object  v2
+    011a..011e  check-cast  v2, LX/ET7;
+    011e..0122  const-string  v0, "CallLinkManager/actionCreateCallLink isVideoCallLink:"
+    0122..0128  invoke-static  {v0, v4}, LX/2L8;->A1M(Ljava/lang/String;Z)Ljava/lang/StringBuilder;
+    0128..012a  move-result-object  v1
+    012a..012e  const-string  v0, " waitingRoomEnabled: "
+    012e..0134  invoke-static  {v0, v1, v3}, LX/2LA;->A1O(Ljava/lang/String;Ljava/lang/StringBuilder;Z)V
+    0134..0138  iget-object  v0, v2, LX/ET7;->A01:LX/05a;
+    0138..013e  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    013e..0140  move-result-object  v1
+    0140..0144  check-cast  v1, LX/Ew4;
+    0144..0148  sget-object  v0, LX/E7v;->A04:LX/E7v;
+    0148..014e  invoke-virtual  {v1, v0}, LX/Ew4;->A00(LX/E7v;)V
+    014e..0152  iget-object  v0, v2, LX/ET7;->A02:LX/05a;
+    0152..0158  invoke-static  {v0}, LX/DBd;->A0Z(LX/05a;)LX/FvZ;
+    0158..015a  move-result-object  v2
+    015a..015e  const-wide/16  v0, #0x0
+    015e..0164  invoke-interface  {v2, v4, v0, v1, v3}, LX/FvZ;->createCallLink(ZJZ)V
+    0164..016a  invoke-static  {v5}, LX/FBG;->A0I(LX/FBG;)V
+    016a..016c  return-void
+    016c..0170  iget-object  v2, v6, LX/Fc8;->A00:Ljava/lang/Object;
+    0170..0174  check-cast  v2, LX/Phz;
+    0174..0178  iget-boolean  v1, v6, LX/Fc8;->A01:Z
+    0178..017c  iget-boolean  v0, v6, LX/Fc8;->A02:Z
+    017c..0182  invoke-virtual  {v2, v1, v0}, LX/Phz;->A02(ZZ)V
+    0182..0184  return-void
+    0184..0188  iget-object  v2, v6, LX/Fc8;->A00:Ljava/lang/Object;
+    0188..018c  check-cast  v2, Lcom/whatsapp/calling/camera/VoipCameraManager;
+    018c..0190  iget-boolean  v1, v6, LX/Fc8;->A01:Z
+    0190..0194  iget-boolean  v0, v6, LX/Fc8;->A02:Z
+    0194..019a  invoke-static  {v2, v1, v0}, Lcom/whatsapp/calling/camera/VoipCameraManager;->setCodecAvatarVirtualCameraOverride$lambda$0(Lcom/whatsapp/calling/camera/VoipCameraManager;ZZ)V
+    019a..019c  return-void
+    019c..01c0  packed-switch-payload  size=7
+    # exception table: 0 try range(s)
+.end method

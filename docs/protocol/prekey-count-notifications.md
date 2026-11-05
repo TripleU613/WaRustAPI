@@ -229,3 +229,10 @@ No key regeneration or uncertain-state reset.
 marker, allowing later upload settlement without resurrecting its key. Unexplained
 loss still refuses; stale allocators cannot reuse consumed IDs.
 [Ordering/rollback/reopen regressions and prior-guard qualification](network-correctness-audit.md#consumed-kem-key-before-upload-ack-2026-11-04).
+
+## Current-build routing and ACK decision order
+
+**Confirmed static, 43.72:** 15v.A02 routes migrated ADD versus non-migrated
+legacy SET, passing count presence rather than threshold. Worker ACK follows
+upload decision; asynchronous wire order is not established.
+[Notification/daily sources and remaining porting scope](apk/2.26.43.72-prekey-upload-replies/README.md#notification-and-daily-pq-entry-routing-2026-11-04).

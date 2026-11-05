@@ -1,3 +1,10 @@
+2026-11-04 — **Native notification/daily prekey routing traced.**
+
+43.72 distinguishes migrated ADD, legacy-only ADD and non-migrated SET;
+daily missing-migration path reaches PQ-only SET. Worker ACK decision order
+retained. [Evidence and remaining scope](apk/2.26.43.72-prekey-upload-replies/README.md#notification-and-daily-pq-entry-routing-2026-11-04).
+No production change or live traffic.
+
 2026-11-04 — **Consumed KEM keys can settle later upload ACKs without resurrection.**
 
 Atomic nonsecret inbox marker distinguishes legitimate consumption from missing
