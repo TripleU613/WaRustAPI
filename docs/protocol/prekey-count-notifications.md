@@ -628,3 +628,25 @@ validates the registeredsignedkey through existingfactory logic.
 **Remaining:** actualdigest request/admission, startupflag lifecycle, correlated
 responseorigin/generation, nativeinsertionordering and authorizedresync/retry.
 No liveaccountoperation or complete startup/recovery parity claimed.
+
+### Exact KEM publication signatures (2026-11-04)
+
+Implemented offline: KEM upload reservation now atomically persists the exact
+identity signature sent for each selected row. Later construction reuses and
+verifies saved signatures; digest inspection prefers the saved last-resort
+signature, with acknowledged frozen SET recovery for historical unsigned rows.
+Missing historical signatures remain unavailable; inspection never re-signs or
+writes. Invalid saved signatures fail locally. Reservation rollback and consumed
+row handling remain unchanged.
+
+Confirmed static source remains pinned APK 2.26.43.72 EqE/Dfd signature storage
+and Fdf digest preimage (see the prekey-upload-replies evidence bundle). This is
+partial storage parity: Rust signs at reservation, whereas native generation
+stores the signature earlier. No live verification, recovery, retry-policy or
+ban-prevention guarantee is implied.
+
+Validation: workspace/all-feature tests passed with two test threads, strict
+Clippy, CLI reference, fmt, coverage freshness and hygiene passed. The initial
+default-concurrency run hit an unexpected-write assertion in the migrated actor
+test; the same test passed alone and in the complete bounded run. Heartbeat
+timing under load is suspected, not proven; production timing was not changed.

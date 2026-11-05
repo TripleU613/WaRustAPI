@@ -350,9 +350,17 @@ pub(crate) fn kem_upload_children(
             return Err(invalid("KEM prekey id does not fit three bytes"));
         }
         crate::signal::kem::public_key(&row.public)?;
-        let signature = private
-            .calculate_signature(&row.public, &mut rand::rng())
-            .map_err(|_| invalid("cannot sign KEM prekey"))?;
+        let signature = if let Some(signature) = &row.signature {
+            if signature.len() != 64 || !public.verify_signature(&row.public, signature) {
+                return Err(invalid("invalid saved KEM publication signature"));
+            }
+            signature.clone()
+        } else {
+            private
+                .calculate_signature(&row.public, &mut rand::rng())
+                .map_err(|_| invalid("cannot sign KEM prekey"))?
+                .to_vec()
+        };
         Ok(vec![
             Node::new("id").bytes(be3(row.id)),
             Node::new("value").bytes(row.public.clone()),
@@ -536,6 +544,23 @@ fn begin_upload_selected(
             // Build/sign before the reservation commits. A local construction
             // failure must roll back legacy metadata and newly generated KEM rows.
             let kem_children = kem_upload_children(identity, &kem_rows)?;
+            // EqE/Dfd retains signature bytes in the native row. Preserve our
+            // exact publication signature with the row before request commit.
+            for family in &kem_children {
+                let entries = if family.description == "pq_list" { family.child_nodes() } else { std::slice::from_ref(family) };
+                for entry in entries {
+                    let bytes = |name: &str| -> Result<&[u8]> {
+                        match entry.child(name).map(|n| &n.content) {
+                            Some(crate::binary::NodeContent::Bytes(b)) => Ok(b.as_ref()),
+                            _ => Err(invalid("constructed KEM publication field missing")),
+                        }
+                    };
+                    let id = bytes("id")?;
+                    let row = kem_rows.iter().find(|r| be3(r.id) == id)
+                        .ok_or_else(|| invalid("constructed KEM publication ID changed"))?;
+                    super::kem_prekeys::retain_signature_in(tx, row, bytes("signature")?)?;
+                }
+            }
             let node = if add {
                 // 43.72 13z.A0B ADD: op, optional list, optional pq_list;
                 // no identity/registration/type/skey/last-resort child.
@@ -2153,6 +2178,28 @@ mod tests {
                     .attr("type", "result"),
             )
             .unwrap();
+        let saved_rows = store
+            .read(|tx| {
+                pending
+                    .kem_ids
+                    .iter()
+                    .map(|id| super::super::kem_prekeys::load(tx, *id).map(|row| row.unwrap()))
+                    .collect::<Result<Vec<_>>>()
+            })
+            .unwrap();
+        for row in &saved_rows {
+            let entry = if row.last_resort {
+                set.child("pq_last_resort_key").unwrap()
+            } else {
+                set.child("pq_list")
+                    .unwrap()
+                    .child_nodes()
+                    .iter()
+                    .find(|entry| child_bytes(entry, "id") == Some(be3(row.id).as_slice()))
+                    .unwrap()
+            };
+            assert_eq!(row.signature.as_deref(), child_bytes(entry, "signature"));
+        }
         // Build peer digest from the published wire fields, independently of
         // inspector's local-store lookup and frozen-history signature recovery.
         let skey = set.child("skey").unwrap();
@@ -2217,6 +2264,31 @@ mod tests {
         assert_eq!(snapshot(&store), before);
         store
             .write(|tx| tx.delete(Table::Checkpoints, request_key(&pending.iq_id).as_bytes()))
+            .unwrap();
+        assert_eq!(
+            check().disposition,
+            digest::Disposition::Matches,
+            "new row retains exact published signature without frozen history"
+        );
+        let lr_id = pending
+            .kem_ids
+            .iter()
+            .find(|id| {
+                store
+                    .read(|tx| super::super::kem_prekeys::load(tx, **id))
+                    .unwrap()
+                    .is_some_and(|r| r.last_resort)
+            })
+            .copied()
+            .unwrap();
+        store
+            .write(|tx| {
+                let key = format!("{}{}", super::super::kem_prekeys::RECORD_PREFIX, lr_id);
+                let mut row: super::super::kem_prekeys::StoredKemPrekey =
+                    tx.get_json(Table::Prekeys, key.as_bytes(), 1)?.unwrap();
+                row.signature = None; // historical synthetic fixture; no production backfill/reset
+                tx.put_json(Table::Prekeys, key.as_bytes(), 1, &row)
+            })
             .unwrap();
         assert_eq!(
             check().disposition,

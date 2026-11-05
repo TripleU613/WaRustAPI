@@ -224,70 +224,80 @@ pub(super) fn inspect_in(
             }
             let _ = super::super::kem_prekeys::load(tx, lr_id)?
                 .ok_or_else(|| invalid("local LR disappeared"))?;
-            // Local rows do not persist native signatures. Recover only from
-            // an acknowledged frozen SET request carrying the same ID/public.
-            // Re-signing would produce different bytes and a false mismatch.
-            let mut signature: Option<Vec<u8>> = None;
-            for (batch_key, batch) in
-                super::scan_prefix::<super::Batch>(tx, Table::Checkpoints, super::BATCH_PREFIX)?
-            {
-                if batch.status != "server_acknowledged" || !batch.kem_ids.contains(&lr_id) {
-                    continue;
-                }
-                let iq_id = batch_key
-                    .strip_prefix(super::BATCH_PREFIX)
-                    .ok_or_else(|| invalid("invalid local batch key"))?;
-                let Some(request) = tx.get_json::<serde_json::Value>(
-                    Table::Checkpoints,
-                    super::request_key(iq_id).as_bytes(),
-                    1,
-                )?
-                else {
-                    continue;
-                };
-                if request["mode"] != "set" || request["dictionary"] != "comparison_2_26_37_71" {
-                    continue;
-                }
-                let wire: Vec<u8> = serde_json::from_value(request["wire"].clone())
-                    .map_err(|_| invalid("invalid frozen upload bytes"))?;
-                let limits = crate::profile::Limits::default();
-                let unpacked = crate::binary::unpack_frame_payload(&wire, &limits)
-                    .map_err(|_| invalid("invalid frozen upload frame"))?;
-                let node = crate::binary::Decoder::new(
-                    &unpacked,
-                    crate::binary::TokenDictionary::comparison_2_26_37_71(),
-                    &limits,
-                )
-                .decode_node()
-                .map_err(|_| invalid("invalid frozen upload node"))?;
-                if node.description != "iq"
-                    || node.get_attr("id").and_then(|v| v.as_text()) != Some(iq_id)
-                    || node.get_attr("type").and_then(|v| v.as_text()) != Some("set")
-                    || node.get_attr("xmlns").and_then(|v| v.as_text()) != Some("encrypt")
-                {
-                    return Err(invalid("frozen upload does not match saved reservation"));
-                }
-                let Some(entry) = node.child("pq_last_resort_key") else {
-                    continue;
-                };
-                if id(bytes::<3>(required(entry, "id")?)?) != lr_id {
-                    continue;
-                }
-                if bytes::<1568>(required(entry, "value")?)?.as_slice() != lr.public {
-                    continue;
-                }
-                let sig = bytes::<64>(required(entry, "signature")?)?.to_vec();
+            // New reservations retain their exact publication signature. Historical
+            // rows may recover it from an acknowledged frozen SET; never re-sign.
+            let mut signature = lr.signature.clone();
+            if let Some(sig) = &signature {
                 let public = wacore_libsignal::protocol::PublicKey::from_djb_public_key_bytes(
                     &identity.0.public,
                 )
                 .map_err(|_| invalid("invalid local identity public key"))?;
-                if !public.verify_signature(&lr.public, &sig) {
-                    return Err(invalid("invalid frozen LR signature"));
+                if !public.verify_signature(&lr.public, sig) {
+                    return Err(invalid("invalid stored LR signature"));
                 }
-                if signature.as_ref().is_some_and(|prior| prior != &sig) {
-                    mismatch!(UnavailableLastResortSignature);
+            } else {
+                for (batch_key, batch) in
+                    super::scan_prefix::<super::Batch>(tx, Table::Checkpoints, super::BATCH_PREFIX)?
+                {
+                    if batch.status != "server_acknowledged" || !batch.kem_ids.contains(&lr_id) {
+                        continue;
+                    }
+                    let iq_id = batch_key
+                        .strip_prefix(super::BATCH_PREFIX)
+                        .ok_or_else(|| invalid("invalid local batch key"))?;
+                    let Some(request) = tx.get_json::<serde_json::Value>(
+                        Table::Checkpoints,
+                        super::request_key(iq_id).as_bytes(),
+                        1,
+                    )?
+                    else {
+                        continue;
+                    };
+                    if request["mode"] != "set" || request["dictionary"] != "comparison_2_26_37_71"
+                    {
+                        continue;
+                    }
+                    let wire: Vec<u8> = serde_json::from_value(request["wire"].clone())
+                        .map_err(|_| invalid("invalid frozen upload bytes"))?;
+                    let limits = crate::profile::Limits::default();
+                    let unpacked = crate::binary::unpack_frame_payload(&wire, &limits)
+                        .map_err(|_| invalid("invalid frozen upload frame"))?;
+                    let node = crate::binary::Decoder::new(
+                        &unpacked,
+                        crate::binary::TokenDictionary::comparison_2_26_37_71(),
+                        &limits,
+                    )
+                    .decode_node()
+                    .map_err(|_| invalid("invalid frozen upload node"))?;
+                    if node.description != "iq"
+                        || node.get_attr("id").and_then(|v| v.as_text()) != Some(iq_id)
+                        || node.get_attr("type").and_then(|v| v.as_text()) != Some("set")
+                        || node.get_attr("xmlns").and_then(|v| v.as_text()) != Some("encrypt")
+                    {
+                        return Err(invalid("frozen upload does not match saved reservation"));
+                    }
+                    let Some(entry) = node.child("pq_last_resort_key") else {
+                        continue;
+                    };
+                    if id(bytes::<3>(required(entry, "id")?)?) != lr_id {
+                        continue;
+                    }
+                    if bytes::<1568>(required(entry, "value")?)?.as_slice() != lr.public {
+                        continue;
+                    }
+                    let sig = bytes::<64>(required(entry, "signature")?)?.to_vec();
+                    let public = wacore_libsignal::protocol::PublicKey::from_djb_public_key_bytes(
+                        &identity.0.public,
+                    )
+                    .map_err(|_| invalid("invalid local identity public key"))?;
+                    if !public.verify_signature(&lr.public, &sig) {
+                        return Err(invalid("invalid frozen LR signature"));
+                    }
+                    if signature.as_ref().is_some_and(|prior| prior != &sig) {
+                        mismatch!(UnavailableLastResortSignature);
+                    }
+                    signature = Some(sig);
                 }
-                signature = Some(sig);
             }
             let Some(signature) = signature else {
                 mismatch!(UnavailableLastResortSignature);

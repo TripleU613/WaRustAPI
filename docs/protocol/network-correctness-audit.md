@@ -1260,3 +1260,19 @@ materialcomparison exposedthroughprekeys --digest-capture. Redactedresult
 only; no statechange. FrozenACKedLRsignature used without randomized
 resigning; unavailable/ambiguous evidence stays explicit. IndependentSHA1
 andread-only/PQregressions retained. [Limits and usage](prekey-count-notifications.md#offline-digest-inspection-2026-11-04). No live traffic.
+
+### Exact KEM publication signatures (2026-11-04)
+
+Implemented offline: KEM upload reservation now atomically persists the exact
+identity signature sent for each selected row. Later construction reuses and
+verifies saved signatures; digest inspection prefers the saved last-resort
+signature, with acknowledged frozen SET recovery for historical unsigned rows.
+Missing historical signatures remain unavailable; inspection never re-signs or
+writes. Invalid saved signatures fail locally. Reservation rollback and consumed
+row handling remain unchanged.
+
+Confirmed static source remains pinned APK 2.26.43.72 EqE/Dfd signature storage
+and Fdf digest preimage (see the prekey-upload-replies evidence bundle). This is
+partial storage parity: Rust signs at reservation, whereas native generation
+stores the signature earlier. No live verification, recovery, retry-policy or
+ban-prevention guarantee is implied.

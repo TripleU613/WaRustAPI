@@ -56,6 +56,10 @@ pub(crate) struct StoredKemPrekey {
     pub id: u32,
     /// Encapsulation key as published.
     pub public: Vec<u8>,
+    /// Exact identity signature published for this row; absent on historical
+    /// rows or newly generated inventory not yet reserved for upload.
+    #[serde(default)]
+    pub signature: Option<Vec<u8>>,
     /// Expanded decapsulation key.
     pub secret: Vec<u8>,
     /// Native `last_resort_key`; such keys survive successful use.
@@ -81,6 +85,9 @@ impl StoredKemPrekey {
     fn validate(&self, id: u32) -> Result<()> {
         if self.id != id {
             return Err(invalid("row ID does not match its key"));
+        }
+        if self.signature.as_ref().is_some_and(|s| s.len() != 64) {
+            return Err(invalid("unexpected KEM signature length"));
         }
         if self.public.len() != PUBLIC_LEN || self.secret.len() != SECRET_LEN {
             return Err(invalid("unexpected ML-KEM-1024 key length"));
@@ -218,6 +225,7 @@ fn generate_in(tx: &mut WriteTx<'_>, last_resort: bool) -> Result<()> {
         secret: secret.as_bytes().to_vec(),
         last_resort,
         sent: false,
+        signature: None,
     };
     row.validate(id)?;
     tx.put_json(Table::Prekeys, record_key(id).as_bytes(), 1, &row)?;
@@ -292,6 +300,37 @@ pub(crate) fn add_rows_in(
     Ok(rows)
 }
 
+/// Bind publication bytes in the existing upload reservation transaction.
+/// Never replace an existing signature or infer one for an uploaded row.
+pub(crate) fn retain_signature_in(
+    tx: &mut WriteTx<'_>,
+    original: &StoredKemPrekey,
+    signature: &[u8],
+) -> Result<()> {
+    if signature.len() != 64 {
+        return Err(invalid("unexpected KEM signature length"));
+    }
+    let key = record_key(original.id);
+    let current: StoredKemPrekey = tx
+        .get_json(Table::Prekeys, key.as_bytes(), 1)?
+        .ok_or_else(|| invalid("KEM row disappeared before signature binding"))?;
+    if &current != original {
+        return Err(invalid("KEM row changed before signature binding"));
+    }
+    if let Some(existing) = &current.signature {
+        if existing != signature {
+            return Err(invalid("KEM published signature changed"));
+        }
+        return Ok(());
+    }
+    if current.sent {
+        return Err(invalid("cannot infer historical uploaded KEM signature"));
+    }
+    let mut bound = current.clone();
+    bound.signature = Some(signature.to_vec());
+    tx.put_json(Table::Prekeys, key.as_bytes(), 1, &bound)
+}
+
 /// `sent_to_server = 1` for the rows of an acknowledged batch.
 pub(crate) fn mark_sent_in(tx: &mut WriteTx<'_>, ids: &[u32]) -> Result<()> {
     for id in ids {
@@ -333,6 +372,7 @@ pub(crate) fn install_for_test(
         secret: secret.to_vec(),
         last_resort,
         sent: false,
+        signature: None,
     };
     row.validate(id)?;
     tx.put_json(Table::Prekeys, record_key(id).as_bytes(), 1, &row)?;
