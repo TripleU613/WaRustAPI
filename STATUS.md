@@ -1,3 +1,11 @@
+2026-11-05 — **Credential callback timeout and parse-failure ownership traced.**
+
+Pinned class_def proves Hyg's ordinary dispatch path. Timeout claims callback
+before BsS/native result1; malformed required fields can consume ownership
+without reaching native completion. [Scope and unresolved recovery](docs/protocol/apk/2.26.43.72-metrics-credential-iq/README.md#credential-callback-timeout-ownership-and-schema-failure-2026-11-05).
+Validation: interface reproduction, fresh shared-body comparisons, coverage,
+checksum/link hygiene and staged diff. No Rust runtime or live traffic changed.
+
 2026-11-05 — **Metrics credential IQ schema and callback mapping traced.**
 
 Java selector7 builds exact32-byte blinded credential request; independent

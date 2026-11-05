@@ -16214,6 +16214,6 @@
     ],
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-metrics-credential-iq/README.md",
-    "description": "Java selector7 request uses privatestats/sign_credential version1 with exact32-byte binary child; callback delay32000ms registered before dispatch. Required response t and data children, optional config_id and JNI4-to-native-result mapping retained. Runtime outbound method-cache binding, crypto and full timeout/error dispatch remain open. No Rust/live capability added."
+    "description": "Java selector7 request uses privatestats/sign_credential version1 with exact32-byte binary child; callback delay32000ms registered before dispatch. Required response t and data children, optional config_id and JNI4-to-native-result mapping retained. Callback-specific class_def and shared timeout/response ownership routing retained: timeout maps to native raw1; schema errors can consume registry ownership without native completion. Runtime outbound method-cache binding, crypto and broader recovery/generation behavior remain open. No Rust/live capability added."
   }
 }

@@ -6055,3 +6055,14 @@ map through JNI selector4 to native raw1, not the Java diagnostic value3.
 [Producer, parsing/queue evidence, native bridges and binding limits](apk/2.26.43.72-metrics-credential-iq/README.md).
 Native method-cache initialization, crypto, full error/timeout dispatch and
 operational Rust support remain open. No Rust runtime or live request added.
+
+### Credential IQ timeout and malformed-response ownership (2026-11-05)
+
+**Confirmed static / derived, APK43.72:** Hyg implements only0lG, so incoming
+responses take ordinary handler2/claim-before-parse routing. Timeout handler4
+removes queued/sent callback ownership and schedules BsS via8bj21, reaching
+null-data/native result1. Required-field parse errors can consume callback
+ownership without invoking that native completion; broader recovery is unknown.
+[Callback-specific interface proof, shared dispatcher trace and scoped risk](apk/2.26.43.72-metrics-credential-iq/README.md#credential-callback-timeout-ownership-and-schema-failure-2026-11-05).
+No Rust/live change or automatic retry authority; full generation/recovery
+behavior remains unproven.

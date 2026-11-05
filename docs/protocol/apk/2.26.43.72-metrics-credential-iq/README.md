@@ -130,3 +130,61 @@ durability, and whether this metrics subsystem is required for a deployment.
 No mandatory telemetry, server restriction policy or ban guarantee is inferred.
 Next useful work is method-cache/provider binding and timeout/error dispatch,
 followed by evidence-backed Rust behavior only where a real surface exists.
+
+## Credential callback timeout, ownership and schema failure (2026-11-05)
+
+**Confirmed static / derived:** fresh DEX class_def inspection establishes Hyg
+implements only0lG, extends Object, and has neither1xZ nor1xa dispatch marker.
+Run `python inspect-interfaces.py APK`; stdout must match callback-interfaces.txt.
+This closes the callback-specific marker question, using the same pinned digest.
+The following links reuse already retained complete registry/handler methods;
+fresh exports were compared rather than duplicating their bodies here.
+
+For an incoming correlated result/error, [0ln.A0H](../2.26.43.72-iq-response-ownership/registry-A0H.txt)
+removes the tracked timer entry and message4 under A0F's monitor, then GETS the
+sent-map A0H record. With Hyg's ordinary marker set it posts handler message2;
+[0m2.handleMessage case2](../2.26.43.72-iq-promotion-shutdown/handler.txt)
+calls [0ln.A02](../2.26.43.72-iq-response-ownership/registry-A02.txt).
+That method REMOVES the sent-map record under the monitor, then queues
+[1xb.run](../2.26.43.72-iq-response-ownership/response-runnable.txt).
+[0ln.A01](../2.26.43.72-iq-response-ownership/registry-A01.txt) dispatches exact
+type=result to Hyg.CK4 and type=error to Hyg.Bvj. Unknown types are diagnostic
+failures, not successful credential replies. Upstream root/address/correlation
+admission is a separate boundary; this mapping does not establish those checks.
+
+Timeout message4 uses its obj ID and arg1 flag to call
+[0ln.A03](../2.26.43.72-iq-promotion-shutdown/registry-A03.txt), then removes the
+ID from its timer-tracking map. A03 removes queued A0I first; only when absent
+does it remove sent A0H. It releases the monitor before scheduling8bj selector21
+on executor098. The retained timeout-failure-runnable excerpt proves selector21
+calls callback.BsS(id), so the credential timeout reaches Hyg.BsS and the
+previously established null-data/native-raw1 path. This does not translate the
+timeout into native raw3 or a server refusal. Message5 invokes A03(false) too;
+[local drop A0D](../2.26.43.72-iq-promotion-shutdown/registry-A0D.txt) cancels the
+tracked timer and posts that failure message. Exact timeout execution can be
+later than its scheduled delay because handler/executor work is asynchronous.
+
+These are competing ownership claims, not proof of completed I/O. If A03
+removes first, A02 finds no sent callback and does not queue the response parser.
+If A02 removes first, a later A03 has no unchanged map entry to claim. A response
+GET in A0H, timer cancellation, and subsequent REMOVE in A02 are separate stages;
+ID reuse/replacement and callback generation remain unproven. Selected A0H/A02
+do not use their elapsedRealtime value as a strict deadline-admission check.
+Do not weaken Rust's explicit monotonic deadlines based on this static trace.
+
+For Hyg's missing required response child/t, or nonintegral t, retained parser
+helpers throw LIL(String). [The constructor](../2.26.43.72-iq-response-ownership/schema-error-constructors.txt)
+sets isRecoverable=true. Registry A01 catches LV5, reports it through0B0.A0M,
+records schema-error diagnostics, and follows recoverability routing. This
+selected catch does **not** reinsert a callback, invoke BsS/Bvj, or synthesize a
+native completion. Native credential pending byte+0x88 is cleared in the native
+completion, not by these Java helpers.
+
+**Inferred risk boundary:** a malformed credential reply can consume registry
+ownership and cancel its timer without reaching the native completion that
+clears renewal state. No whole-program stuck-state claim follows: other native
+lifecycle transitions or the concrete reporting hook may intervene. Those
+recovery effects remain unknown. A Rust port should preserve explicit pending
+ownership and report parse failure; it must not copy an assumed automatic retry
+or treat callback consumption as a valid credential. No automatic repair,
+credential replacement or telemetry was added from this observation.

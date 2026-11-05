@@ -1,15 +1,23 @@
 {
   "README.md": {
-    "bytes": 7907,
-    "sha256": "e6fa3e86212b6611d8b448b54b17211850bd89467831572aefe43319b0e1a985"
+    "bytes": 11880,
+    "sha256": "9a3b3f78e87a1589e0bec6d2682e99e497205c6317938b916c68ec4ece369090"
   },
   "binary-length-guard.txt": {
     "bytes": 1445,
     "sha256": "974f8eefcb6fa49b33b0f8fb37724896ead70fa7610ae8f58457fefcf2b6ce5d"
   },
+  "callback-interfaces.txt": {
+    "bytes": 154,
+    "sha256": "62c0bcf76de249eb05a2b6ff167845ac45e0da5acbc09545195a97b58eead03a"
+  },
   "callback-registration.txt": {
     "bytes": 6233,
     "sha256": "99acfbec072ba7b3e3cd1818627a04fa3664293655cc0a429564b416f57dfee8"
+  },
+  "inspect-interfaces.py": {
+    "bytes": 2028,
+    "sha256": "4c794b528414d9abf8d469cb6a1068936750ecd19dfc7772acf400c8ac4e246a"
   },
   "inspect-native.py": {
     "bytes": 1190,
@@ -110,6 +118,10 @@
   "send-wrapper.txt": {
     "bytes": 877,
     "sha256": "fce6204f1d5114db614a7a56b807b661947730fe6ebdcdec66cb2aac612c2e77"
+  },
+  "timeout-failure-runnable-excerpt.txt": {
+    "bytes": 866,
+    "sha256": "991a6a83cc5da90f1a61d39c0708733231be889f53f8bfa5628a0b75b1be723c"
   },
   "valid-response-arguments-assembly.txt": {
     "bytes": 116,
