@@ -1,0 +1,132 @@
+{
+  "scope": "static native metrics transport; no live requests/replies",
+  "ordinary_success_status": 200,
+  "distinct_status_branch": 401,
+  "response_worker_thunk_target": "0x728e18",
+  "regular_callback_outcomes": [
+    {
+      "code": 0,
+      "slot_va": "0xc0aae0",
+      "string_va": "0xb29f0",
+      "name": "success"
+    },
+    {
+      "code": 1,
+      "slot_va": "0xc0aae8",
+      "string_va": "0x11055b",
+      "name": "retryable"
+    },
+    {
+      "code": 2,
+      "slot_va": "0xc0aaf0",
+      "string_va": "0x110557",
+      "name": "non-retryable"
+    },
+    {
+      "code": 3,
+      "slot_va": "0xc0aaf8",
+      "string_va": "0x10b04e",
+      "name": "failure"
+    }
+  ],
+  "strings": [
+    {
+      "virtual_address": "0x8b9b7",
+      "file_offset": "0x8b9b7",
+      "value": "privatestats/wameta/transport/buffer/send response failed temporarily"
+    },
+    {
+      "virtual_address": "0xaf73d",
+      "file_offset": "0xaf73d",
+      "value": "privatestats/wameta/transport/buffer/send response failed, 401, no more endpoints"
+    },
+    {
+      "virtual_address": "0xaf6f0",
+      "file_offset": "0xaf6f0",
+      "value": "privatestats/wameta/transport/buffer/send response failed, no more endpoints"
+    },
+    {
+      "virtual_address": "0xa3add",
+      "file_offset": "0xa3add",
+      "value": "privatestats/wameta/transport/buffer/send failed, try next endpoint"
+    },
+    {
+      "virtual_address": "0x118534",
+      "file_offset": "0x118534",
+      "value": "privatestats/wameta/transport/buffer/send response success, attempting another send"
+    },
+    {
+      "virtual_address": "0xf5667",
+      "file_offset": "0xf5667",
+      "value": "_WAMTransportRegularSendTaskCallback"
+    },
+    {
+      "virtual_address": "0xced4d",
+      "file_offset": "0xced4d",
+      "value": "privatestats/wameta/transport/buffer/send - stream id: %s"
+    },
+    {
+      "virtual_address": "0xf0030",
+      "file_offset": "0xf0030",
+      "value": "WCFCallback_WAMRuntimeMaybeSendBufferResultCall"
+    }
+  ],
+  "windows": [
+    {
+      "name": "buffer-sender",
+      "virtual_address": "0x7280dc",
+      "file_offset": "0x7240dc",
+      "bytes": 2632,
+      "sha256": "208513a7b6f0f37c08b55d0a09ab06407b1f6cf56d4044a3cdb06029bda3e421"
+    },
+    {
+      "name": "completion-adapter",
+      "virtual_address": "0x728c54",
+      "file_offset": "0x724c54",
+      "bytes": 452,
+      "sha256": "dd2fb9779e998e6f3acc5324d628f503fbb9d674c7ebbcd157efedb6f7129527"
+    },
+    {
+      "name": "response-worker",
+      "virtual_address": "0x728e18",
+      "file_offset": "0x724e18",
+      "bytes": 1528,
+      "sha256": "8a6a73839a959c9b21b1586126e17e513414e38b7b70f1b0d956f2ace4557f67"
+    },
+    {
+      "name": "response-worker-thunk",
+      "virtual_address": "0xbd8fa8",
+      "file_offset": "0xbd4fa8",
+      "bytes": 8,
+      "sha256": "2ac425f783999cc5a76ace242d7e19cb17a871e1b642604774d41f63706372da"
+    },
+    {
+      "name": "has-next-endpoint",
+      "virtual_address": "0x729410",
+      "file_offset": "0x725410",
+      "bytes": 44,
+      "sha256": "a958c2d0dd79e8173981ea08fafa434bf46d5ba45fe5e654559cb1e60c491420"
+    },
+    {
+      "name": "regular-error-parser",
+      "virtual_address": "0x72943c",
+      "file_offset": "0x72543c",
+      "bytes": 260,
+      "sha256": "f409a65c248072af77133bbb3400308e1e71ead96db51c11092eb52aa8abd628"
+    },
+    {
+      "name": "task-bridge",
+      "virtual_address": "0x7345a4",
+      "file_offset": "0x7305a4",
+      "bytes": 860,
+      "sha256": "9632d71fdd1db2eb95734fa0d65b2705717d59c125488620201d43403c040ca2"
+    },
+    {
+      "name": "regular-task-callback",
+      "virtual_address": "0x7275d0",
+      "file_offset": "0x7235d0",
+      "bytes": 368,
+      "sha256": "47b22530cc27f29a8b08555163e82b0b80b8a993cf4143d2122864b68ddf174e"
+    }
+  ]
+}

@@ -1,3 +1,12 @@
+2026-11-05 — **Native metrics transport status/endpoint ordering traced.**
+
+HTTP request-object creation, async completion, ordinary 200/no-error success,
+distinct 401 and regular task outcome labels now have static evidence.
+[Branch ordering and limits](docs/protocol/apk/2.26.43.72-metrics-native-transport-responses/README.md).
+Request fields, retry timing and durable buffer ownership remain incomplete.
+Validation: pinned image, mapped byte digests, outcome/thunk resolver reproduction,
+JSON, coverage and bundle/link hygiene. No client behavior or live traffic changed.
+
 2026-11-05 — **Native metrics integer bytes verified at width boundaries.**
 
 42 bounded cases confirm signed-width payloads and scalar-zero/one special tags;

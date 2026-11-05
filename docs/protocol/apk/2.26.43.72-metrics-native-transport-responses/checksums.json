@@ -1,0 +1,46 @@
+{
+  "README.md": {
+    "bytes": 5864,
+    "sha256": "4d424f6c1ab91957b595ebff359e4cb2381592936eb265112fce5c5071e0e756"
+  },
+  "buffer-sender-assembly.txt": {
+    "bytes": 42931,
+    "sha256": "f1ad3b73325b16dc63544ad37a171bc275fe7b8aad381a445b165f565054fff9"
+  },
+  "completion-adapter-assembly.txt": {
+    "bytes": 6133,
+    "sha256": "e66bdc7843f9ec1515b115a41171f996f324a6e9d3a27890ced03f972ef12547"
+  },
+  "has-next-endpoint-assembly.txt": {
+    "bytes": 523,
+    "sha256": "fea5eea54ceb69ef0e9c84e01187b11497d8e37093efc44d3bba6e4c05494973"
+  },
+  "inspect-transport.py": {
+    "bytes": 2336,
+    "sha256": "6c7a9caa5eaed44490071dfb7c528d04eb2d8096e4fa886baac7832f0e90e3fc"
+  },
+  "regular-error-parser-assembly.txt": {
+    "bytes": 3532,
+    "sha256": "3c538cf5840a473c6db3c414290d9ec55a62917ccedee7fe4bff494542aed52f"
+  },
+  "regular-task-callback-assembly.txt": {
+    "bytes": 5785,
+    "sha256": "e1c2a31c7d968730cf244ab4417322ca5bd3b317e819c7dc1d25ab54d4b97a64"
+  },
+  "response-worker-assembly.txt": {
+    "bytes": 23641,
+    "sha256": "a5844f6d13ff4a4b883a04c56648f22aab24ca406037ce0de2c23f8d06879483"
+  },
+  "response-worker-thunk-assembly.txt": {
+    "bytes": 85,
+    "sha256": "a48174833f120985e2dacf4a23b54a03c490118f45e09576cb8d021587e93f9a"
+  },
+  "task-bridge-assembly.txt": {
+    "bytes": 13416,
+    "sha256": "f9ae6089e23ee637147cf30f3f925fc1fdba4f39726615428b58fd5325744112"
+  },
+  "transport-boundaries.json": {
+    "bytes": 3803,
+    "sha256": "8a163de74d4fee854206d89f4849ff56d7b9080b314159a417b86273846f9c85"
+  }
+}

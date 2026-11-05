@@ -1,0 +1,65 @@
+            0x0072943c      paciasp
+            0x00729440      stp   x29, x30, [sp, -0x40]!
+            0x00729444      bl    0xbddbd0
+            0x00729448      mov   x29, sp
+        ┌─< 0x0072944c      cbz   x1, 0x7294fc
+        │   0x00729450      bl    0x5d0084
+        │   0x00729454      mov   x1, xzr
+        │   0x00729458      bl    sym.imp.MCIJSONCreateDeserializedObject
+        │   0x0072945c      mov   x19, x0
+        │   0x00729460      bl    sym.imp.MCFDictionaryGetTypeID
+        │   0x00729464      mov   x1, x19
+        │   0x00729468      bl    sym.imp.__MCFCastToClassOrNull
+       ┌──< 0x0072946c      cbz   x0, 0x7294f4
+       ││   0x00729470      mov   x21, x0
+       ││   0x00729474      bl    sym.imp.MCFDictionaryGetTypeID
+       ││   0x00729478      mov   x22, x0
+       ││   0x0072947c      adrp  x1, 0xc3b000
+       ││   0x00729480      add   x1, x1, 0x6c0
+       ││   0x00729484      mov   x0, x21
+       ││   0x00729488      bl    sym.imp.MCFDictionaryGetValue
+       ││   0x0072948c      bl    0xbe13d8
+       ││   0x00729490      bl    sym.imp.__MCFCastToClassNullable
+      ┌───< 0x00729494      cbz   x0, 0x7294f4
+      │││   0x00729498      mov   x21, x0
+      │││   0x0072949c      bl    sym.imp.MCFNumberGetTypeID
+      │││   0x007294a0      mov   x22, x0
+      │││   0x007294a4      adrp  x1, 0xc3b000
+      │││   0x007294a8      add   x1, x1, 0x6f0
+      │││   0x007294ac      mov   x0, x21
+      │││   0x007294b0      bl    sym.imp.MCFDictionaryGetValue
+      │││   0x007294b4      bl    0xbe13d8
+      │││   0x007294b8      bl    sym.imp.__MCFCastToClassNullable
+     ┌────< 0x007294bc      cbz   x0, 0x7294f4
+     ││││   0x007294c0      mov   w22, 0x3386
+     ││││   0x007294c4      movk  w22, 0xffd1, lsl 16
+     ││││   0x007294c8      bl    0x71dc40
+     ││││   0x007294cc      add   w23, w0, w22
+     ││││   0x007294d0      mov   w21, w0
+     ││││   0x007294d4      cmp   w23, 2
+    ┌─────< 0x007294d8      b.hi  0x729510
+    │││││   0x007294dc      ldp   x0, x24, [x20, 0x78]
+    │││││   0x007294e0      bl    sym.imp.MCFRelease
+   ┌──────< 0x007294e4      cbz   x24, 0x729504
+   ││││││   0x007294e8      ldr   x8, [x20, 0x80]                      ; [0x80:4]=0
+   ││││││   0x007294ec      stp   x8, xzr, [x20, 0x78]
+  ┌───────< 0x007294f0      b     0x729510
+  │││└└└──> 0x007294f4      mov   w20, 5
+  │││  ┌──< 0x007294f8      b     0x729524
+  │││  │└─> 0x007294fc      mov   w20, 6
+  │││  │┌─< 0x00729500      b     0x72952c
+  │└──────> 0x00729504      mov   x0, x20
+  │ │  ││   0x00729508      str   xzr, [x20, 0x78]
+  │ │  ││   0x0072950c      bl    0x728b24
+  └─└─────> 0x00729510      add   w8, w22, w21
+       ││   0x00729514      cmp   w23, 3
+       ││   0x00729518      mov   w9, 5
+       ││   0x0072951c      add   w8, w8, 2
+       ││   0x00729520      csel  w20, w8, w9, lo
+       └──> 0x00729524      mov   x0, x19
+        │   0x00729528      bl    sym.imp.MCFRelease
+        └─> 0x0072952c      mov   w0, w20
+            0x00729530      bl    0x4d2418
+            0x00729534      ldp   x29, x30, [sp], 0x40
+            0x00729538      autiasp
+            0x0072953c      ret

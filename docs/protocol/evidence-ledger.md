@@ -6011,3 +6011,13 @@ bytes/tags. Worker-to-field-encoder calls and selected header packing retained;
 full field/event framing and send/reply behavior remain incomplete.
 [Native bodies, digest-bound fixture harness and scope](apk/2.26.43.72-metrics-native-integer-encoding/README.md).
 No new Rust telemetry or inferred mandatory request. No runtime/live change.
+
+### Native metrics HTTP response ordering and task outcomes (2026-11-05)
+
+**Confirmed static / derived, APK 2.26.43.72:** native buffer sender constructs
+HTTP-body request objects. Its response worker reads URL status and accepts the
+ordinary 200/no-error branch; error/endpoint fallback precedes distinct 401 and
+other failures. Regular task labels explicitly distinguish success, retryable,
+non-retryable and failure; callback ownership/deletion remains incomplete.
+[Complete selected transport bodies, labels/thunk resolver and scoped rules](apk/2.26.43.72-metrics-native-transport-responses/README.md).
+These rules are not universal account/login retry authority. No Rust/live change.

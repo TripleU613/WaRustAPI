@@ -1,0 +1,95 @@
+            0x007275d0      paciasp
+            0x007275d4      stp   x29, x30, [sp, -0x40]!
+            0x007275d8      str   x23, [sp, 0x10]
+            0x007275dc      bl    0x49be00
+            0x007275e0      mov   x29, sp
+        ┌─< 0x007275e4      cbz   x2, 0x7276c4
+        │   0x007275e8      mov   x20, x2
+        │   0x007275ec      bl    0xbe4f68
+        │   0x007275f0      bl    sym.imp.MCFWeakGetTypeID
+        │   0x007275f4      mov   x1, x20
+        │   0x007275f8      bl    sym.imp.__MCFCastToClassNotNull
+       ┌──< 0x007275fc      cbz   x0, 0x7276c4
+       ││   0x00727600      bl    0x7271ec
+       ││   0x00727604      mov   x22, x0
+       ││   0x00727608      bl    sym.imp.MCFWeakGetTypeID
+       ││   0x0072760c      mov   x23, x0
+       ││   0x00727610      bl    sym.imp.MCFWeakGetTypeID
+       ││   0x00727614      mov   x1, x20
+       ││   0x00727618      bl    sym.imp.__MCFCastToClassNotNull
+       ││   0x0072761c      bl    0xbe19a0
+       ││   0x00727620      bl    sym.imp.__MCFCastToClassNotNull
+       ││   0x00727624      bl    sym.imp.MCFWeakCopyRef
+       ││   0x00727628      bl    0xbe13d8
+       ││   0x0072762c      bl    sym.imp.__MCFCastToClassNullableOwnedObject
+      ┌───< 0x00727630      cbz   x0, 0x7276c4
+      │││   0x00727634      mov   x20, x0
+      │││   0x00727638      ldr   x0, [x0, 0x48]                       ; [0x48:4]=64
+      │││   0x0072763c      mov   x1, x19
+      │││   0x00727640      bl    sym.imp.MCFSetContainsValue
+      │││   0x00727644      tst   w0, 0xff
+     ┌────< 0x00727648      b.ne  0x727690
+     ││││   0x0072764c      bl    0xbe39e0
+     ││││   0x00727650      bl    sym.imp.MCILogRegistryGlobalsIsLoggingEnabled
+     ││││   0x00727654      tst   w0, 0xff
+    ┌─────< 0x00727658      b.eq  0x727690
+    │││││   0x0072765c      cmp   w21, 4
+   ┌──────< 0x00727660      b.hs  0x72773c
+   ││││││   0x00727664      adrp  x8, 0xc0a000
+   ││││││   0x00727668      add   x8, x8, 0xae0
+   ││││││   0x0072766c      bl    0xbe2374
+   ││││││   0x00727670      ldr   x7, [x8, w21, uxtw 3]
+   ││││││   0x00727674      adrp  x3, 0xf5000
+   ││││││   0x00727678      add   x3, x3, 0x667
+   ││││││   0x0072767c      adrp  x6, 0x115000
+   ││││││   0x00727680      add   x6, x6, 0x77b
+   ││││││   0x00727684      bl    0xbe39e0
+   ││││││   0x00727688      mov   w4, 0xd4
+   ││││││   0x0072768c      bl    0x734a98
+  ┌─└└────> 0x00727690      cbz   w21, 0x7276d4
+  ││  │││   0x00727694      bl    0x4b0be8
+  ││  │││   0x00727698      bl    0x7273a8
+  ││  │││   0x0072769c      cmp   w21, 1
+  ││ ┌────< 0x007276a0      b.eq  0x7276b4
+  ││ ││││   0x007276a4      cmp   w21, 2
+  ││┌─────< 0x007276a8      b.eq  0x727704
+  │││││││   0x007276ac      cmp   w21, 3
+  ────────< 0x007276b0      b.ne  0x727728
+  │││└────> 0x007276b4      ldr   x8, [x20, 0x40]                      ; segment.PHDR
+  │││ │││                                                              ; [0x40:4]=6
+  │││┌────< 0x007276b8      cbz   x8, 0x727728
+  │││││││   0x007276bc      ldr   x9, [x8, 0x20]                       ; [0x20:4]=64 ; "@"
+  ────────< 0x007276c0      b     0x72771c
+  ││││└└└─> 0x007276c4      bl    0x4c8058
+  ││││      0x007276c8      ldp   x29, x30, [sp], 0x40
+  ││││      0x007276cc      autiasp
+  ││││      0x007276d0      ret
+  └───────> 0x007276d4      ldr   x8, [x20, 0x40]                      ; segment.PHDR
+   │││                                                                 ; [0x40:4]=6
+   │││  ┌─< 0x007276d8      cbz   x8, 0x7276ec
+   │││  │   0x007276dc      ldr   x9, [x8, 0x18]                       ; [0x18:4]=0
+   │││  │   0x007276e0      ldr   x0, [x8, 0x38]                       ; [0x38:4]=0x40000a
+   │││  │   0x007276e4      mov   x1, x19
+   │││  │   0x007276e8      blr   x9
+   │││  └─> 0x007276ec      ldr   x0, [x20, 0x48]                      ; [0x48:4]=64
+   │││      0x007276f0      mov   x1, x19
+   │││      0x007276f4      bl    sym.imp.MCFSetRemoveValue
+   │││      0x007276f8      mov   x0, x20
+   │││      0x007276fc      bl    0x727294
+   │││  ┌─< 0x00727700      b     0x727728
+   │└─────> 0x00727704      ldr   x0, [x20, 0x48]                      ; [0x48:4]=64
+   │ │  │   0x00727708      mov   x1, x19
+   │ │  │   0x0072770c      bl    sym.imp.MCFSetRemoveValue
+   │ │  │   0x00727710      ldr   x8, [x20, 0x40]                      ; segment.PHDR
+   │ │  │                                                              ; [0x40:4]=6
+   │ │ ┌──< 0x00727714      cbz   x8, 0x727728
+   │ │ ││   0x00727718      ldr   x9, [x8, 0x28]                       ; [0x28:4]=0xc306e8
+  ────────> 0x0072771c      ldr   x0, [x8, 0x38]                       ; [0x38:4]=0x40000a
+   │ │ ││   0x00727720      mov   x1, x19
+   │ │ ││   0x00727724      blr   x9
+  ───└─└└─> 0x00727728      mov   x0, x20
+   │        0x0072772c      bl    0x5ce1b0
+   │        0x00727730      ldp   x29, x30, [sp], 0x40
+   │        0x00727734      autiasp
+   │    ┌─< 0x00727738      b     sym.imp.MCFRelease
+   └──────> 0x0072773c      brk   0x5512

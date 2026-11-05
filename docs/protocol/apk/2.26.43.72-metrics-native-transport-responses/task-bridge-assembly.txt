@@ -1,0 +1,218 @@
+            0x007345a4      paciasp
+            0x007345a8      stp   x29, x30, [sp, -0x60]!
+            0x007345ac      str   x27, [sp, 0x10]
+            0x007345b0      bl    0x4b0598
+            0x007345b4      mov   x29, sp
+            0x007345b8      ldr   x8, [x6]
+        ┌─< 0x007345bc      cbnz  x8, 0x7348e4
+        │   0x007345c0      mov   x24, x0
+        │   0x007345c4      mov   x0, x2
+        │   0x007345c8      mov   x19, x6
+        │   0x007345cc      mov   x22, x5
+        │   0x007345d0      mov   x20, x4
+        │   0x007345d4      mov   x25, x3
+        │   0x007345d8      mov   x23, x2
+        │   0x007345dc      mov   x26, x1
+        │   0x007345e0      bl    sym.imp.MCIExecutionQueueGetExecutionContext
+       ┌──< 0x007345e4      cbz   w0, 0x7348e8
+       ││   0x007345e8      bl    0x734520
+       ││   0x007345ec      mov   w1, 0x48                             ; 'H'
+       ││   0x007345f0      bl    0xbe1ac0
+       ││   0x007345f4      bl    sym.imp.MCFRuntimeCreateInstance
+       ││   0x007345f8      mov   x21, x0
+       ││   0x007345fc      str   x26, [x0, 0x18]
+       ││   0x00734600      mov   x0, x26
+       ││   0x00734604      bl    sym.imp.MCFRetain
+       ││   0x00734608      mov   x0, x25
+       ││   0x0073460c      str   x25, [x21, 0x20]
+       ││   0x00734610      bl    sym.imp.MCFRetain
+       ││   0x00734614      mov   x0, x23
+       ││   0x00734618      str   x23, [x21, 0x28]
+       ││   0x0073461c      bl    sym.imp.MCFRetain
+       ││   0x00734620      mov   x0, x21
+       ││   0x00734624      str   wzr, [x21, 0x30]
+       ││   0x00734628      str   x20, [x21, 0x38]
+       ││   0x0073462c      str   x21, [x19]
+       ││   0x00734630      bl    sym.imp.MCFWeakCreate
+       ││   0x00734634      bl    0xbe13e4
+       ││   0x00734638      bl    0x71e314
+       ││   0x0073463c      bl    0xbe1f78
+       ││   0x00734640      bl    sym.imp.MCILogRegistryGlobalsIsLoggingEnabled
+       ││   0x00734644      tst   w0, 0xff
+      ┌───< 0x00734648      b.eq  0x734664
+      │││   0x0073464c      bl    0xbe364c
+      │││   0x00734650      adrp  x6, 0x9f000
+      │││   0x00734654      add   x6, x6, 0x5b5
+      │││   0x00734658      bl    0xbe1f78
+      │││   0x0073465c      mov   w4, 0x22c
+      │││   0x00734660      bl    0x734a98
+      └───> 0x00734664      ldr   x8, [x21, 0x58]                      ; [0x58:4]=64 ; "@"
+      ┌───< 0x00734668      cbnz  x8, 0x7348ec
+      │││   0x0073466c      ldr   x0, [x21, 0x28]                      ; [0x28:4]=0xc306e8
+      │││   0x00734670      bl    sym.imp.MCIExecutionQueueGetExecutionContext
+      │││   0x00734674      cmp   w0, 5
+     ┌────< 0x00734678      b.hi  0x7348f8
+     ││││   0x0073467c      mov   w8, 1
+     ││││   0x00734680      mov   w9, 0x32                             ; '2'
+     ││││   0x00734684      bl    0xbede28
+    ┌─────< 0x00734688      b.eq  0x7348f8
+    │││││   0x0073468c      bl    0x719ab4
+    │││││   0x00734690      mov   w1, 0x70                             ; 'p'
+    │││││   0x00734694      bl    0xbe1ac0
+    │││││   0x00734698      bl    sym.imp.MCFRuntimeCreateInstance
+    │││││   0x0073469c      bl    0xbe3938
+    │││││   0x007346a0      bl    0x71e314
+    │││││   0x007346a4      str   x0, [x23, 0x18]
+    │││││   0x007346a8      bl    sym.imp.MCFRetain
+    │││││   0x007346ac      mov   x0, x23
+    │││││   0x007346b0      bl    sym.imp.MCFWeakCreate
+    │││││   0x007346b4      stp   x0, x20, [x23, 0x20]
+    │││││   0x007346b8      mov   x0, x20
+    │││││   0x007346bc      bl    sym.imp.MCFRetain
+    │││││   0x007346c0      adrp  x1, 0xc40000
+    │││││   0x007346c4      add   x1, x1, 0x3d0
+    │││││   0x007346c8      mov   w0, 1
+    │││││   0x007346cc      str   wzr, [x23, 0x38]
+    │││││   0x007346d0      bl    0x651550
+    │││││   0x007346d4      adrp  x8, 0x11b000
+    │││││   0x007346d8      add   x8, x8, 0xb1e
+    │││││   0x007346dc      add   x1, x0, 1
+    │││││   0x007346e0      mov   x0, x8
+    │││││   0x007346e4      bl    sym.imp.MCFStringCreateWithFormat
+    │││││   0x007346e8      str   x0, [x23, 0x40]
+   ┌──────< 0x007346ec      cbz   x24, 0x7348f0
+   ││││││   0x007346f0      ldr   x0, [x24, 0x20]                      ; [0x20:4]=64 ; "@"
+   ││││││   0x007346f4      str   x0, [x23, 0x30]
+   ││││││   0x007346f8      bl    sym.imp.MCFRetain
+   ││││││   0x007346fc      ldp   x27, x25, [x23, 0x18]
+   ││││││   0x00734700      ldr   x26, [x23, 0x40]                     ; segment.PHDR
+   ││││││                                                              ; [0x40:4]=6
+   ││││││   0x00734704      bl    sym.imp.MCIAccountSessionGetTypeID
+   ││││││   0x00734708      bl    0xbe8eb8
+   ││││││   0x0073470c      bl    0x733564
+  ┌───────< 0x00734710      cbz   x0, 0x734738
+  │││││││   0x00734714      bl    sym.imp.MCIAccountSessionGetMCISessionedNetworker
+  │││││││   0x00734718      nop
+  │││││││   0x0073471c      adr   x3, 0x719cb0
+  │││││││   0x00734720      add   x5, x23, 0x68
+  │││││││   0x00734724      mov   x1, x26
+  │││││││   0x00734728      mov   x2, xzr
+  │││││││   0x0073472c      mov   x4, x25
+  │││││││   0x00734730      bl    sym.imp.MCISessionedNetworkerRegisterTaskDidRespondObserver
+  ────────< 0x00734734      b     0x734764
+  └───────> 0x00734738      adrp  x8, 0xc27000
+   ││││││   0x0073473c      nop
+   ││││││   0x00734740      adr   x3, 0x719d7c
+   ││││││   0x00734744      ldr   x8, [x8, 0xda0]                      ; [0xda0:4]=0
+   ││││││   0x00734748      ldr   x0, [x23, 0x30]                      ; [0x30:4]=0
+   ││││││   0x0073474c      add   x6, x23, 0x60
+   ││││││   0x00734750      mov   x2, x26
+   ││││││   0x00734754      mov   x4, x25
+   ││││││   0x00734758      mov   w5, 1
+   ││││││   0x0073475c      ldr   x1, [x8]
+   ││││││   0x00734760      bl    sym.imp.MCINetworkSessionRegisterNotificationObserver
+  ────────> 0x00734764      tst   w0, 0xff
+  ┌───────< 0x00734768      b.eq  0x7347b4
+  │││││││   0x0073476c      mov   x0, x23
+  │││││││   0x00734770      str   x23, [x21, 0x58]
+  │││││││   0x00734774      bl    sym.imp.MCFRetain
+  │││││││   0x00734778      ldr   x24, [x24, 0x18]                     ; [0x18:4]=0
+  │││││││   0x0073477c      bl    sym.imp.MCIAccountSessionGetTypeID
+  │││││││   0x00734780      bl    0xbe1234
+  │││││││   0x00734784      bl    0x733564
+  ────────< 0x00734788      cbz   x0, 0x7347e0
+  │││││││   0x0073478c      ldr   x2, [x23, 0x40]                      ; segment.PHDR
+  │││││││                                                              ; [0x40:4]=6
+  ────────< 0x00734790      cbz   x2, 0x7348f4
+  │││││││   0x00734794      mov   x1, x0
+  │││││││   0x00734798      ldr   x0, [x23, 0x30]                      ; [0x30:4]=0
+  │││││││   0x0073479c      add   x7, x23, 0x58
+  │││││││   0x007347a0      mov   x3, xzr
+  │││││││   0x007347a4      mov   x4, x22
+  │││││││   0x007347a8      bl    0xbe5048
+  │││││││   0x007347ac      bl    sym.imp.MCINetworkSessionExecuteSessionedDataTask
+  ────────< 0x007347b0      b     0x734828
+  └───────> 0x007347b4      bl    0xbe1f78
+   ││││││   0x007347b8      bl    sym.imp.MCILogRegistryGlobalsIsLoggingEnabled
+   ││││││   0x007347bc      tst   w0, 0xff
+  ┌───────< 0x007347c0      b.eq  0x7348b4
+  │││││││   0x007347c4      bl    0xbe364c
+  │││││││   0x007347c8      adrp  x6, 0xe3000
+  │││││││   0x007347cc      add   x6, x6, 0x8d7
+  │││││││   0x007347d0      bl    0xbe1f78
+  │││││││   0x007347d4      mov   w4, 0x237
+  │││││││   0x007347d8      bl    0x734a98
+  ────────< 0x007347dc      b     0x7348b4
+  ────────> 0x007347e0      bl    0xbe1f78
+  │││││││   0x007347e4      bl    sym.imp.MCILogRegistryGlobalsIsLoggingEnabled
+  │││││││   0x007347e8      tst   w0, 0xff
+  ────────< 0x007347ec      b.eq  0x734808
+  │││││││   0x007347f0      bl    0xbe364c
+  │││││││   0x007347f4      adrp  x6, 0x103000
+  │││││││   0x007347f8      add   x6, x6, 0xc30
+  │││││││   0x007347fc      bl    0xbe1f78
+  │││││││   0x00734800      mov   w4, 0x24f
+  │││││││   0x00734804      bl    0x734a98
+  ────────> 0x00734808      ldr   x1, [x23, 0x40]                      ; segment.PHDR
+  │││││││                                                              ; [0x40:4]=6
+  ────────< 0x0073480c      cbz   x1, 0x7348fc
+  │││││││   0x00734810      ldr   x0, [x23, 0x30]                      ; [0x30:4]=0
+  │││││││   0x00734814      add   x6, x23, 0x58
+  │││││││   0x00734818      mov   x2, xzr
+  │││││││   0x0073481c      mov   x3, x22
+  │││││││   0x00734820      bl    0xbe1994
+  │││││││   0x00734824      bl    sym.imp.MCINetworkSessionExecuteDataTask
+  ────────> 0x00734828      tst   w0, 0xff
+  ────────< 0x0073482c      b.eq  0x734878
+  │││││││   0x00734830      mov   w8, 1
+  │││││││   0x00734834      mov   x0, x23
+  │││││││   0x00734838      strb  w8, [x23, 0x48]
+  │││││││   0x0073483c      bl    sym.imp.MCFRelease
+  │││││││   0x00734840      bl    0xbe1f78
+  │││││││   0x00734844      bl    sym.imp.MCILogRegistryGlobalsIsLoggingEnabled
+  │││││││   0x00734848      tst   w0, 0xff
+  ────────< 0x0073484c      b.eq  0x734868
+  │││││││   0x00734850      bl    0xbe364c
+  │││││││   0x00734854      adrp  x6, 0xb2000
+  │││││││   0x00734858      add   x6, x6, 0x92f
+  │││││││   0x0073485c      bl    0xbe1f78
+  │││││││   0x00734860      mov   w4, 0x266
+  │││││││   0x00734864      bl    0x734a98
+  ────────> 0x00734868      mov   x0, x20
+  │││││││   0x0073486c      bl    sym.imp.MCFRelease
+  │││││││   0x00734870      mov   w0, wzr
+  ────────< 0x00734874      b     0x7348d4
+  ────────> 0x00734878      bl    0xbe1f78
+  │││││││   0x0073487c      bl    sym.imp.MCILogRegistryGlobalsIsLoggingEnabled
+  │││││││   0x00734880      tst   w0, 0xff
+  ────────< 0x00734884      b.eq  0x7348a0
+  │││││││   0x00734888      bl    0xbe364c
+  │││││││   0x0073488c      adrp  x6, 0xf2000
+  │││││││   0x00734890      add   x6, x6, 0x97c
+  │││││││   0x00734894      bl    0xbe1f78
+  │││││││   0x00734898      mov   w4, 0x25b
+  │││││││   0x0073489c      bl    0x734a98
+  ────────> 0x007348a0      mov   x0, x23
+  │││││││   0x007348a4      str   xzr, [x21, 0x58]
+  │││││││   0x007348a8      bl    0x719bfc
+  │││││││   0x007348ac      mov   x0, x23
+  │││││││   0x007348b0      bl    sym.imp.MCFRelease
+  └───────> 0x007348b4      mov   x0, x23
+   ││││││   0x007348b8      bl    sym.imp.MCFRelease
+   ││││││   0x007348bc      mov   x0, x20
+   ││││││   0x007348c0      bl    sym.imp.MCFRelease
+   ││││││   0x007348c4      mov   x0, x21
+   ││││││   0x007348c8      str   xzr, [x19]
+   ││││││   0x007348cc      bl    sym.imp.MCFRelease
+   ││││││   0x007348d0      mov   w0, -1
+  ────────> 0x007348d4      bl    0xbdcdac
+   ││││││   0x007348d8      ldp   x29, x30, [sp], 0x60
+   ││││││   0x007348dc      autiasp
+   ││││││   0x007348e0      ret
+   │││││└─> 0x007348e4      bl    sym.imp.abort
+   ││││└──> 0x007348e8      bl    sym.imp.abort
+   │││└───> 0x007348ec      bl    sym.imp.abort
+   └──────> 0x007348f0      bl    sym.imp.abort
+  ────────> 0x007348f4      bl    sym.imp.abort
+    └└────> 0x007348f8      bl    sym.imp.abort
+  ────────> 0x007348fc      bl    sym.imp.abort

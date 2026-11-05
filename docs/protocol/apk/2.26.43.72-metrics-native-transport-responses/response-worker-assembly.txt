@@ -1,0 +1,384 @@
+            0x00728e18      paciasp
+            0x00728e1c      sub   sp, sp, 0xd0
+            0x00728e20      stp   x29, x30, [sp, 0x70]
+            0x00728e24      stp   x28, x27, [sp, 0x80]
+            0x00728e28      bl    0x49bbb8
+            0x00728e2c      add   x29, sp, 0x70
+            0x00728e30      bl    0xbe7300
+            0x00728e34      bl    0xbe423c
+            0x00728e38      stp   xzr, xzr, [x29, -0x18]
+            0x00728e3c      bl    0xbed60c
+            0x00728e40      str   xzr, [sp, 0x38]
+            0x00728e44      bl    sym.imp.MCIParamsGetTypeID
+            0x00728e48      mov   x1, x19
+            0x00728e4c      bl    sym.imp.__MCFCastToClassNotNull
+            0x00728e50      mov   x19, x0
+            0x00728e54      bl    0x727aec
+            0x00728e58      mov   x20, x0
+            0x00728e5c      bl    0x721550
+            0x00728e60      mov   x21, x0
+            0x00728e64      bl    sym.imp.MCIURLResponseGetTypeID
+            0x00728e68      mov   x22, x0
+            0x00728e6c      bl    sym.imp.MCFErrorGetTypeID
+            0x00728e70      mov   x23, x0
+            0x00728e74      bl    sym.imp.MCFDataGetTypeID
+            0x00728e78      mov   x24, x0
+            0x00728e7c      bl    sym.imp.MCFNumberGetTypeID
+            0x00728e80      add   x8, sp, 0x38
+            0x00728e84      sub   x9, x29, 0x30
+            0x00728e88      sub   x2, x29, 0x10
+            0x00728e8c      stp   x8, x0, [sp, 0x20]
+            0x00728e90      sub   x8, x29, 0x28
+            0x00728e94      sub   x4, x29, 0x18
+            0x00728e98      sub   x6, x29, 0x20
+            0x00728e9c      mov   w0, 6
+            0x00728ea0      bl    0xbddee4
+            0x00728ea4      stp   x9, x24, [sp, 0x10]
+            0x00728ea8      stp   x8, x23, [sp]
+            0x00728eac      bl    sym.imp.MCIParamsUnpackWithTypeIDs
+            0x00728eb0      ldur  x8, [x29, -0x10]
+            0x00728eb4      ldr   x0, [x8, 0x18]                       ; [0x18:4]=0
+            0x00728eb8      bl    sym.imp.MCIExecutionGlobalQueueCheckIsOnContext
+            0x00728ebc      tst   w0, 0xff
+        ┌─< 0x00728ec0      b.eq  0x729408
+        │   0x00728ec4      ldur  x8, [x29, -0x10]
+        │   0x00728ec8      ldur  x0, [x29, -0x20]
+        │   0x00728ecc      strb  wzr, [x8, 0xc0]
+        │   0x00728ed0      bl    sym.imp.MCIURLResponseGetStatusCode
+        │   0x00728ed4      ldur  x8, [x29, -0x18]
+        │   0x00728ed8      mov   w19, w0
+        │   0x00728edc      mov   x0, x8
+        │   0x00728ee0      bl    0x71f6f8
+        │   0x00728ee4      ldur  x8, [x29, -0x10]
+        │   0x00728ee8      mov   w20, w0
+        │   0x00728eec      adrp  x2, 0x14d000
+        │   0x00728ef0      add   x2, x2, 0x7d6
+        │   0x00728ef4      mov   w1, 2
+        │   0x00728ef8      mov   w3, w19
+        │   0x00728efc      ldr   x8, [x8, 0x28]                       ; [0x28:4]=0xc306e8
+        │   0x00728f00      mov   x0, x8
+        │   0x00728f04      bl    0x7216b0
+        │   0x00728f08      ldur  x9, [x29, -0x10]
+        │   0x00728f0c      ldur  x8, [x29, -0x28]
+        │   0x00728f10      ldrb  w10, [x9, 0x40]                      ; segment.PHDR
+        │                                                              ; [0x40:4]=6
+       ┌──< 0x00728f14      tbnz  w10, 0, 0x728f60
+      ┌───< 0x00728f18      cbz   x8, 0x728f60
+      │││   0x00728f1c      ldur  x1, [x29, -0x18]
+      │││   0x00728f20      ldr   x0, [x9, 0x68]                       ; [0x68:4]=0x230 ; "0\U00000002"
+      │││   0x00728f24      bl    0x729410
+     ┌────< 0x00728f28      tbz   w0, 0, 0x728f5c
+     ││││   0x00728f2c      ldur  x0, [x29, -0x10]
+     ││││   0x00728f30      ldur  x1, [x29, -0x30]
+     ││││   0x00728f34      bl    0x72943c
+     ││││   0x00728f38      ldur  x8, [x29, -0x10]
+    ┌─────> 0x00728f3c      ldr   x0, [x8, 0x28]                       ; [0x28:4]=0xc306e8
+    ╎││││   0x00728f40      adrp  x2, 0xa3000
+    ╎││││   0x00728f44      add   x2, x2, 0xadd
+    ╎││││   0x00728f48      mov   w1, 2
+    ╎││││   0x00728f4c      bl    0x7216b0
+    ╎││││   0x00728f50      ldp   x1, x0, [x29, -0x18]
+    ╎││││   0x00728f54      bl    0x7280dc
+   ┌──────< 0x00728f58      b     0x7293c0
+   │╎└────> 0x00728f5c      ldur  x8, [x29, -0x28]
+   │╎ └└──> 0x00728f60      cmp   w19, 0xc8
+   │╎   │   0x00728f64      ldur  x0, [x29, -0x18]
+   │╎   │   0x00728f68      ccmp  x8, 0, 0, eq
+   │╎   │   0x00728f6c      cset  w28, eq
+   │╎   │   0x00728f70      bl    0x71e250
+   │╎   │   0x00728f74      bl    0x72bf08
+   │╎   │   0x00728f78      cmp   w28, 1
+   │╎   │   0x00728f7c      mov   w21, w0
+   │╎  ┌──< 0x00728f80      b.ne  0x728fe0
+   │╎  ││   0x00728f84      ldp   x1, x8, [x29, -0x18]
+   │╎  ││   0x00728f88      ldr   x0, [x8, 0x60]                       ; [0x60:4]=0x230 ; "0\U00000002"
+   │╎  ││   0x00728f8c      bl    sym.imp.MCFDictionaryRemoveValue
+   │╎  ││   0x00728f90      ldp   x1, x8, [x29, -0x18]
+   │╎  ││   0x00728f94      ldr   x0, [x8, 0x68]                       ; [0x68:4]=0x230 ; "0\U00000002"
+   │╎  ││   0x00728f98      bl    sym.imp.MCFDictionaryRemoveValue
+   │╎  ││   0x00728f9c      ldur  x8, [x29, -0x10]
+   │╎  ││   0x00728fa0      ldr   x9, [x8, 0x70]                       ; [0x70:4]=8
+   │╎ ┌───< 0x00728fa4      cbz   x9, 0x728fbc
+   │╎ │││   0x00728fa8      ldur  x1, [x29, -0x18]
+   │╎ │││   0x00728fac      ldr   x8, [x9, 0x18]                       ; [0x18:4]=0
+   │╎ │││   0x00728fb0      ldr   x0, [x9, 0x38]                       ; [0x38:4]=0x40000a ; u"\n@\e\U0000001a\U00000006"
+   │╎ │││   0x00728fb4      blr   x8
+   │╎ │││   0x00728fb8      ldur  x8, [x29, -0x10]
+   │╎ └───> 0x00728fbc      ldr   x0, [x8, 0x28]                       ; [0x28:4]=0xc306e8
+   │╎  ││   0x00728fc0      adrp  x2, 0x118000
+   │╎  ││   0x00728fc4      add   x2, x2, 0x534
+   │╎  ││   0x00728fc8      mov   w1, 2
+   │╎  ││   0x00728fcc      bl    0x7216b0
+   │╎  ││   0x00728fd0      ldur  x0, [x29, -0x10]
+   │╎  ││   0x00728fd4      bl    0x727d40
+   │╎  ││   0x00728fd8      mov   w22, 1
+   │╎ ┌───< 0x00728fdc      b     0x729248
+   │╎ │└──> 0x00728fe0      ldur  x0, [x29, -0x10]
+   │╎ │ │   0x00728fe4      cmp   w19, 0x191
+   │╎ │┌──< 0x00728fe8      b.ne  0x72904c
+   │╎ │││   0x00728fec      ldr   x0, [x0, 0x60]                       ; [0x60:4]=0x230 ; "0\U00000002"
+   │╎ │││   0x00728ff0      ldur  x1, [x29, -0x18]
+   │╎ │││   0x00728ff4      bl    sym.imp.MCFDictionaryRemoveValue
+   │╎ │││   0x00728ff8      ldp   x1, x8, [x29, -0x18]
+   │╎ │││   0x00728ffc      ldr   x0, [x8, 0x68]                       ; [0x68:4]=0x230 ; "0\U00000002"
+   │╎ │││   0x00729000      bl    sym.imp.MCFDictionaryRemoveValue
+   │╎ │││   0x00729004      ldur  x8, [x29, -0x10]
+   │╎ │││   0x00729008      ldr   x9, [x8, 0x70]                       ; [0x70:4]=8
+   │╎┌────< 0x0072900c      cbz   x9, 0x729024
+   │╎││││   0x00729010      ldur  x1, [x29, -0x18]
+   │╎││││   0x00729014      ldr   x8, [x9, 0x28]                       ; [0x28:4]=0xc306e8
+   │╎││││   0x00729018      ldr   x0, [x9, 0x38]                       ; [0x38:4]=0x40000a ; u"\n@\e\U0000001a\U00000006"
+   │╎││││   0x0072901c      blr   x8
+   │╎││││   0x00729020      ldur  x8, [x29, -0x10]
+   │╎└────> 0x00729024      ldr   x0, [x8, 0x28]                       ; [0x28:4]=0xc306e8
+   │╎ │││   0x00729028      adrp  x2, 0xaf000
+   │╎ │││   0x0072902c      add   x2, x2, 0x73d
+   │╎ │││   0x00729030      mov   w1, 4
+   │╎ │││   0x00729034      bl    0x7216b0
+   │╎ │││   0x00729038      ldur  x0, [x29, -0x10]
+   │╎ │││   0x0072903c      mov   w1, 1
+   │╎ │││   0x00729040      bl    0x728050
+   │╎ │││   0x00729044      mov   w22, 6
+   │╎┌────< 0x00729048      b     0x729248
+   │╎││└──> 0x0072904c      ldrb  w8, [x0, 0x40]                       ; segment.PHDR
+   │╎││ │                                                              ; [0x40:4]=6
+   │╎││ │   0x00729050      cmp   w8, 1
+   │╎││┌──< 0x00729054      b.ne  0x729158
+   │╎││││   0x00729058      ldr   x0, [x0, 0x28]                       ; [0x28:4]=0xc306e8
+   │╎││││   0x0072905c      adrp  x2, 0x153000
+   │╎││││   0x00729060      add   x2, x2, 0xd60
+   │╎││││   0x00729064      mov   w1, 2
+   │╎││││   0x00729068      bl    0x7216b0
+   │╎││││   0x0072906c      ldur  x0, [x29, -0x28]
+  ┌───────< 0x00729070      cbz   x0, 0x7291f4
+  ││╎││││   0x00729074      bl    sym.imp.MCFErrorCopyFailureReason
+  ────────< 0x00729078      cbz   x0, 0x7291f4
+  ││╎││││   0x0072907c      adrp  x1, 0xc3b000
+  ││╎││││   0x00729080      add   x1, x1, 0x720
+  ││╎││││   0x00729084      mov   x2, xzr
+  ││╎││││   0x00729088      mov   x23, x0
+  ││╎││││   0x0072908c      bl    sym.imp.MCFStringFind
+  ││╎││││   0x00729090      mov   x22, x0
+  ││╎││││   0x00729094      cmn   w22, 1
+  ────────< 0x00729098      b.eq  0x7291ec
+  ││╎││││   0x0072909c      adrp  x0, 0xc3b000
+  ││╎││││   0x007290a0      add   x0, x0, 0x720
+  ││╎││││   0x007290a4      bl    sym.imp.MCFStringGetLength
+  ││╎││││   0x007290a8      add   w22, w0, w22
+  ││╎││││   0x007290ac      mov   x0, x23
+  ││╎││││   0x007290b0      bl    sym.imp.MCFStringGetLength
+  ││╎││││   0x007290b4      sub   w1, w0, w22
+  ││╎││││   0x007290b8      mov   w0, w22
+  ││╎││││   0x007290bc      bl    sym.imp.MCFRangeMake
+  ││╎││││   0x007290c0      bl    0xbe19a0
+  ││╎││││   0x007290c4      bl    sym.imp.MCFStringCreateWithSubstring
+  ││╎││││   0x007290c8      mov   x1, xzr
+  ││╎││││   0x007290cc      mov   x24, x0
+  ││╎││││   0x007290d0      bl    sym.imp.MCIJSONCreateDeserializedObjectFromString
+  ││╎││││   0x007290d4      mov   x25, x0
+  ││╎││││   0x007290d8      bl    sym.imp.MCFDictionaryGetTypeID
+  ││╎││││   0x007290dc      mov   x1, x25
+  ││╎││││   0x007290e0      bl    sym.imp.__MCFCastToClassOrNull
+  ────────< 0x007290e4      cbz   x0, 0x729194
+  ││╎││││   0x007290e8      mov   x22, x0
+  ││╎││││   0x007290ec      bl    sym.imp.MCFDictionaryGetTypeID
+  ││╎││││   0x007290f0      mov   x26, x0
+  ││╎││││   0x007290f4      adrp  x1, 0xc3b000
+  ││╎││││   0x007290f8      add   x1, x1, 0x6c0
+  ││╎││││   0x007290fc      mov   x0, x22
+  ││╎││││   0x00729100      bl    sym.imp.MCFDictionaryGetValue
+  ││╎││││   0x00729104      bl    0xbe4e24
+  ││╎││││   0x00729108      bl    sym.imp.__MCFCastToClassNullable
+  ────────< 0x0072910c      cbz   x0, 0x729194
+  ││╎││││   0x00729110      mov   x22, x0
+  ││╎││││   0x00729114      bl    sym.imp.MCFNumberGetTypeID
+  ││╎││││   0x00729118      mov   x26, x0
+  ││╎││││   0x0072911c      adrp  x1, 0xc3b000
+  ││╎││││   0x00729120      add   x1, x1, 0x6f0
+  ││╎││││   0x00729124      mov   x0, x22
+  ││╎││││   0x00729128      bl    sym.imp.MCFDictionaryGetValue
+  ││╎││││   0x0072912c      bl    0xbe4e24
+  ││╎││││   0x00729130      bl    sym.imp.__MCFCastToClassNullable
+  ││╎││││   0x00729134      mov   w22, 5
+  ────────< 0x00729138      cbz   x0, 0x729198
+  ││╎││││   0x0072913c      bl    0x71dc40
+  ││╎││││   0x00729140      sub   w8, w0, 0x2ec, lsl 12
+  ││╎││││   0x00729144      sub   w8, w8, 0xc7a
+  ││╎││││   0x00729148      add   w9, w8, 2
+  ││╎││││   0x0072914c      cmp   w8, 3
+  ││╎││││   0x00729150      csel  w22, w9, w22, lo
+  ────────< 0x00729154      b     0x729198
+  ││╎││└──> 0x00729158      ldur  x1, [x29, -0x30]
+  ││╎││ │   0x0072915c      bl    0x72943c
+  ││╎││ │   0x00729160      ldur  x8, [x29, -0x10]
+  ││╎││ │   0x00729164      mov   w22, w0
+  ││╎││ │   0x00729168      ldr   x9, [x8, 0x70]                       ; [0x70:4]=8
+  ││╎││┌──< 0x0072916c      cbz   x9, 0x729184
+  ││╎││││   0x00729170      ldur  x1, [x29, -0x18]
+  ││╎││││   0x00729174      ldr   x8, [x9, 0x20]                       ; [0x20:4]=64 ; "@"
+  ││╎││││   0x00729178      ldr   x0, [x9, 0x38]                       ; [0x38:4]=0x40000a ; u"\n@\e\U0000001a\U00000006"
+  ││╎││││   0x0072917c      blr   x8
+  ││╎││││   0x00729180      ldur  x8, [x29, -0x10]
+  ││╎││└──> 0x00729184      ldr   x0, [x8, 0x28]                       ; [0x28:4]=0xc306e8
+  ││╎││ │   0x00729188      adrp  x2, 0x8b000
+  ││╎││ │   0x0072918c      add   x2, x2, 0x9b7
+  ││╎││┌──< 0x00729190      b     0x729234
+  ────────> 0x00729194      mov   w22, 5
+  ────────> 0x00729198      mov   x0, x23
+  ││╎││││   0x0072919c      bl    sym.imp.MCFRelease
+  ││╎││││   0x007291a0      mov   x0, x24
+  ││╎││││   0x007291a4      bl    sym.imp.MCFRelease
+  ││╎││││   0x007291a8      mov   x0, x25
+  ││╎││││   0x007291ac      bl    sym.imp.MCFRelease
+  ││╎││││   0x007291b0      sub   w8, w22, 2
+  ││╎││││   0x007291b4      cmp   w8, 2
+  ────────< 0x007291b8      b.hi  0x7293dc
+  ││╎││││   0x007291bc      ldur  x8, [x29, -0x10]
+  ││╎││││   0x007291c0      ldp   x0, x23, [x8, 0x78]
+  ││╎││││   0x007291c4      bl    sym.imp.MCFRelease
+  ││╎││││   0x007291c8      ldur  x8, [x29, -0x10]
+  ────────< 0x007291cc      cbz   x23, 0x7293e4
+  ││╎││││   0x007291d0      ldr   x9, [x8, 0x80]                       ; [0x80:4]=0
+  ││╎││││   0x007291d4      ldr   x0, [x8, 0x28]                       ; [0x28:4]=0xc306e8
+  ││╎││││   0x007291d8      adrp  x2, 0xc2000
+  ││╎││││   0x007291dc      add   x2, x2, 0x679
+  ││╎││││   0x007291e0      mov   w1, 2
+  ││╎││││   0x007291e4      stp   x9, xzr, [x8, 0x78]
+  ────────< 0x007291e8      b     0x729238
+  ────────> 0x007291ec      mov   x0, x23
+  ││╎││││   0x007291f0      bl    sym.imp.MCFRelease
+  └───────> 0x007291f4      mov   w22, 6
+  ┌───────> 0x007291f8      ldp   x1, x8, [x29, -0x18]
+  ╎│╎││││   0x007291fc      ldr   x0, [x8, 0x68]                       ; [0x68:4]=0x230 ; "0\U00000002"
+  ╎│╎││││   0x00729200      bl    0x729410
+  ╎│╎││││   0x00729204      ldur  x8, [x29, -0x10]
+  ╎│└─────< 0x00729208      tbnz  w0, 0, 0x728f3c
+  ╎│ ││││   0x0072920c      ldr   x9, [x8, 0x70]                       ; [0x70:4]=8
+  ╎│┌─────< 0x00729210      cbz   x9, 0x729228
+  ╎││││││   0x00729214      ldur  x1, [x29, -0x18]
+  ╎││││││   0x00729218      ldr   x8, [x9, 0x20]                       ; [0x20:4]=64 ; "@"
+  ╎││││││   0x0072921c      ldr   x0, [x9, 0x38]                       ; [0x38:4]=0x40000a ; u"\n@\e\U0000001a\U00000006"
+  ╎││││││   0x00729220      blr   x8
+  ╎││││││   0x00729224      ldur  x8, [x29, -0x10]
+  ╎│└─────> 0x00729228      ldr   x0, [x8, 0x28]                       ; [0x28:4]=0xc306e8
+  ╎│ ││││   0x0072922c      adrp  x2, 0xaf000
+  ╎│ ││││   0x00729230      add   x2, x2, 0x6f0
+  ╎│ ││└──> 0x00729234      mov   w1, 4
+  ────────> 0x00729238      bl    0x7216b0
+  ╎│ ││┌──> 0x0072923c      ldur  x0, [x29, -0x10]
+  ╎│ ││╎│   0x00729240      mov   w1, 1
+  ╎│ ││╎│   0x00729244      bl    0x728050
+  ╎│ └└───> 0x00729248      bl    0xbe3de4
+  ╎│  ┌───> 0x0072924c      ldur  x9, [x29, -0x10]
+  ╎│ ┌────< 0x00729250      tbz   w8, 0, 0x72928c
+  ╎│ │╎╎│   0x00729254      ldr   x8, [x9, 0x48]                       ; [0x48:4]=64 ; "@"
+  ╎│ │╎╎│   0x00729258      cmp   x8, 0
+  ╎│ │╎╎│   0x0072925c      cset  w8, eq
+  ╎│┌─────< 0x00729260      tbnz  w8, 0, 0x729284
+  ────────> 0x00729264      mov   w8, 1
+  ────────< 0x00729268      tbz   w8, 0, 0x72927c
+  ────────> 0x0072926c      bl    0x6fef18
+  ╎│││╎╎│   0x00729270      mov   w23, w0
+  ╎│││╎╎│   0x00729274      mov   w8, wzr
+  ────────< 0x00729278      tbnz  w8, 0, 0x72926c
+  ────────> 0x0072927c      mov   w8, 1
+  ────────< 0x00729280      tbz   w8, 0, 0x729264
+  ╎│└─────> 0x00729284      mov   w8, wzr
+  ╎│ │└───< 0x00729288      b     0x72924c
+  ╎│ └────> 0x0072928c      ldr   x0, [x9, 0x28]                       ; [0x28:4]=0xc306e8
+  ╎│   ╎│   0x00729290      adrp  x2, 0x14e000
+  ╎│   ╎│   0x00729294      add   x2, x2, 0x97f
+  ╎│   ╎│   0x00729298      and   w3, w23, 1
+  ╎│   ╎│   0x0072929c      mov   w1, 2
+  ╎│   ╎│   0x007292a0      bl    0x7216b0
+  ╎│   ╎│   0x007292a4      ldur  x8, [x29, -0x10]
+  ╎│   ╎│   0x007292a8      and   w9, w20, 0xfffffffd
+  ╎│   ╎│   0x007292ac      ldr   x0, [sp, 0x38]                       ; [0x38:4]=0x40000a ; u"\n@\e\U0000001a\U00000006"
+  ╎│   ╎│   0x007292b0      cmp   w9, 1
+  ╎│   ╎│   0x007292b4      ldr   x20, [x8, 0x28]                      ; [0x28:4]=0xc306e8
+  ╎│   ╎│   0x007292b8      cset  w24, eq
+  ╎│   ╎│   0x007292bc      bl    0x6f8314
+  ╎│   ╎│   0x007292c0      sxtw  x25, w19
+  ╎│   ╎│   0x007292c4      mov   x26, x0
+  ╎│   ╎│   0x007292c8      bl    0x71f734
+  ╎│   ╎│   0x007292cc      mov   w8, 0x14
+  ╎│   ╎│   0x007292d0      cmp   w0, 2
+  ╎│   ╎│   0x007292d4      mov   w0, 0x8c4
+  ╎│   ╎│   0x007292d8      csinc x1, x8, xzr, eq
+  ╎│   ╎│   0x007292dc      mov   w2, wzr
+  ╎│   ╎│   0x007292e0      bl    0x721b54
+  ╎│   ╎│   0x007292e4      mov   w8, 1
+  ╎│   ╎│   0x007292e8      and   x3, x21, 0xffff
+  ╎│   ╎│   0x007292ec      mov   w1, 2
+  ╎│   ╎│   0x007292f0      mov   w2, 0xd
+  ╎│   ╎│   0x007292f4      mov   x19, x0
+  ╎│   ╎│   0x007292f8      strb  w8, [x0, 0x3c]
+  ╎│   ╎│   0x007292fc      bl    0x721a94
+  ╎│   ╎│   0x00729300      bl    0xbe1bbc
+  ╎│   ╎│   0x00729304      mov   w2, 3
+  ╎│   ╎│   0x00729308      mov   x3, x25
+  ╎│   ╎│   0x0072930c      bl    0x721a94
+  ╎│   ╎│   0x00729310      bl    0xbe1bbc
+  ╎│   ╎│   0x00729314      mov   w2, 2
+  ╎│   ╎│   0x00729318      mov   x3, x26
+  ╎│   ╎│   0x0072931c      bl    0x721a94
+  ╎│   ╎│   0x00729320      mov   w3, w22
+  ╎│   ╎│   0x00729324      bl    0xbe1bbc
+  ╎│   ╎│   0x00729328      mov   w2, 1
+  ╎│   ╎│   0x0072932c      bl    0x721a94
+  ╎│   ╎│   0x00729330      mov   x0, x19
+  ╎│   ╎│   0x00729334      mov   w1, 0xc
+  ╎│   ╎│   0x00729338      mov   w2, 1
+  ╎│   ╎│   0x0072933c      bl    0x721ad4
+  ╎│   ╎│   0x00729340      mov   x0, x19
+  ╎│   ╎│   0x00729344      mov   w1, 0xf
+  ╎│   ╎│   0x00729348      mov   w2, w24
+  ╎│   ╎│   0x0072934c      bl    0x721ad4
+  ╎│   ╎│   0x00729350      and   w2, w23, 1
+  ╎│   ╎│   0x00729354      mov   x0, x19
+  ╎│   ╎│   0x00729358      mov   w1, 5
+  ╎│   ╎│   0x0072935c      bl    0x721ad4
+  ╎│   ╎│   0x00729360      bl    0x49c110
+  ╎│   ╎│   0x00729364      bl    0x71f758
+  ╎│   ╎│   0x00729368      mov   x0, x19
+  ╎│   ╎│   0x0072936c      bl    sym.imp.MCFRelease
+  ╎│   ╎│   0x00729370      ldur  x0, [x29, -0x18]
+  ╎│   ╎│   0x00729374      bl    0x727a88
+  ╎│   ╎│   0x00729378      ldur  x8, [x29, -0x10]
+  ╎│   ╎│   0x0072937c      cmp   w28, 0
+  ╎│   ╎│   0x00729380      adrp  x9, 0x12a000
+  ╎│   ╎│   0x00729384      add   x9, x9, 0xda2
+  ╎│   ╎│   0x00729388      mov   x19, x0
+  ╎│   ╎│   0x0072938c      ldr   x20, [x8, 0x28]                      ; [0x28:4]=0xc306e8
+  ╎│   ╎│   0x00729390      adrp  x8, 0x127000
+  ╎│   ╎│   0x00729394      add   x8, x8, 0xa93
+  ╎│   ╎│   0x00729398      csel  x21, x9, x8, ne
+  ╎│   ╎│   0x0072939c      bl    sym.imp.MCFASCIIStringGetCString
+  ╎│   ╎│   0x007293a0      mov   x4, x0
+  ╎│   ╎│   0x007293a4      adrp  x2, str.ERROR:_nch:_d_offs:_d_startTs:_lld_curTS:_lld_size:_d_Attempted_to_retrieve_stream_with_negative_offset.__s ; 0xcf000
+  ╎│   ╎│   0x007293a8      add   x2, x2, 0x1c8
+  ╎│   ╎│   0x007293ac      bl    0x4c91e8
+  ╎│   ╎│   0x007293b0      mov   x3, x21
+  ╎│   ╎│   0x007293b4      bl    0x7216b0
+  ╎│   ╎│   0x007293b8      mov   x0, x19
+  ╎│   ╎│   0x007293bc      bl    sym.imp.MCFRelease
+  ╎└──────> 0x007293c0      bl    0xbdda34
+  ╎   ┌───< 0x007293c4      b.ne  0x72940c
+  ╎   │╎│   0x007293c8      bl    0xbdcc88
+  ╎   │╎│   0x007293cc      ldp   x29, x30, [sp, 0x70]
+  ╎   │╎│   0x007293d0      add   sp, sp, 0xd0
+  ╎   │╎│   0x007293d4      autiasp
+  ╎   │╎│   0x007293d8      ret
+  ────────> 0x007293dc      mov   w22, 5
+  └───────< 0x007293e0      b     0x7291f8
+  ────────> 0x007293e4      ldr   x0, [x8, 0x28]                       ; [0x28:4]=0xc306e8
+      │╎│   0x007293e8      adrp  x2, 0xc2000
+      │╎│   0x007293ec      add   x2, x2, 0x635
+      │╎│   0x007293f0      mov   w1, 2
+      │╎│   0x007293f4      str   xzr, [x8, 0x78]
+      │╎│   0x007293f8      bl    0x7216b0
+      │╎│   0x007293fc      ldur  x0, [x29, -0x10]
+      │╎│   0x00729400      bl    0x728b24
+      │└──< 0x00729404      b     0x72923c
+      │ └─> 0x00729408      bl    sym.imp.abort
+      └───> 0x0072940c      bl    sym.imp.__stack_chk_fail

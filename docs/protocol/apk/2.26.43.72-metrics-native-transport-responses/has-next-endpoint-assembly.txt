@@ -1,0 +1,11 @@
+            0x00729410      paciasp
+            0x00729414      stp   x29, x30, [sp, -0x10]!
+            0x00729418      mov   x29, sp
+            0x0072941c      bl    sym.imp.MCFDictionaryGetValue
+        ┌─< 0x00729420      cbz   x0, 0x729430
+        │   0x00729424      bl    sym.imp.MCFArrayGetCount
+        │   0x00729428      cmp   w0, 0
+        │   0x0072942c      cset  w0, gt
+        └─> 0x00729430      ldp   x29, x30, [sp], 0x10
+            0x00729434      autiasp
+            0x00729438      ret
