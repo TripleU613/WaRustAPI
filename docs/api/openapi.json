@@ -16197,5 +16197,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-metrics-native-request-builder/README.md",
     "description": "Imported POST method, five header sources, four multipart sections and exact literal bytes retained. Endpoint consumption precedes construction. Selector decoding, credential/provider and full metadata/analytics schema remain incomplete. No client runtime or live operation added; no mandatory telemetry or ban guarantee."
+  },
+  "x-metrics-native-credential-lifecycle-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK static and synthetic native credential evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-metrics-native-credential-lifecycle/README.md",
+    "description": "17 bounded native fixtures verify constructor storage/default counter, signed setter and refresh guards. Admission/use ordering, mode-zero override, raw result switch and cleanup retained statically. Provider selector7, crypto, clock units and full ownership remain incomplete. No client runtime/live capability or server/account limit added."
   }
 }

@@ -1,0 +1,10 @@
+            0x00be8838      ldr   d1, [x8]
+            0x00be883c      mov   x8, 0x43e0000000000000
+            0x00be8840      fadd  d0, d0, d1
+            0x00be8844      fmov  d1, 0.50000000
+            0x00be8848      fcmp  d0, 0.0
+            0x00be884c      fcsel d1, d2, d1, mi
+            0x00be8850      fadd  d0, d0, d1
+            0x00be8854      fmov  d1, x8
+            0x00be8858      fcmp  d0, d1
+            0x00be885c      ret

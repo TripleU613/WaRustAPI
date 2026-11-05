@@ -1,0 +1,54 @@
+        ╎   0x00728b24      paciasp
+        ╎   0x00728b28      stp   x29, x30, [sp, -0x20]!
+        ╎   0x00728b2c      str   x19, [sp, 0x10]
+        ╎   0x00728b30      mov   x29, sp
+        ╎   0x00728b34      bl    0xbe4704
+        ╎   0x00728b38      adrp  x2, 0x16d000
+        ╎   0x00728b3c      add   x2, x2, 0xc37
+        ╎   0x00728b40      mov   w1, 2
+        ╎   0x00728b44      bl    0x7216b0
+        ╎   0x00728b48      ldr   x8, [x19, 0x48]                      ; [0x48:4]=64
+       ┌──< 0x00728b4c      cbz   x8, 0x728b58
+       │╎   0x00728b50      bl    0x6fef18
+      ┌───< 0x00728b54      tbz   w0, 0, 0x728b90
+      │└──> 0x00728b58      ldrb  w8, [x19, 0x88]                      ; [0x88:4]=0
+      │ ╎   0x00728b5c      cmp   w8, 1
+      │┌──< 0x00728b60      b.ne  0x728b74
+      ││╎   0x00728b64      ldr   x0, [x19, 0x28]                      ; [0x28:4]=0xc306e8
+      ││╎   0x00728b68      adrp  x2, 0xf9000
+      ││╎   0x00728b6c      add   x2, x2, 0xdcb
+     ┌────< 0x00728b70      b     0x728b88
+     ││└──> 0x00728b74      ldr   x8, [x19, 0x98]                      ; [0x98:4]=0x47fca4
+     ││ ╎   0x00728b78      ldr   x0, [x19, 0x28]                      ; [0x28:4]=0xc306e8
+     ││┌──< 0x00728b7c      cbz   x8, 0x728bb0
+     │││╎   0x00728b80      adrp  x2, 0xe9000
+     │││╎   0x00728b84      add   x2, x2, 0x9d5
+     └────> 0x00728b88      mov   w1, 2
+     ┌────< 0x00728b8c      b     0x728ba0
+     │└───> 0x00728b90      ldr   x0, [x19, 0x28]                      ; [0x28:4]=0xc306e8
+     │ │╎   0x00728b94      adrp  x2, 0xaf000
+     │ │╎   0x00728b98      add   x2, x2, 0x8bd
+     │ │╎   0x00728b9c      mov   w1, 4
+     └────> 0x00728ba0      ldr   x19, [sp, 0x10]                      ; [0x10:4]=0xb70003
+       │╎   0x00728ba4      ldp   x29, x30, [sp], 0x20
+       │╎   0x00728ba8      autiasp
+       │└─< 0x00728bac      b     0x7216b0
+       └──> 0x00728bb0      adrp  x2, 0x9f000
+            0x00728bb4      add   x2, x2, 0x578
+            0x00728bb8      mov   w1, 2
+            0x00728bbc      bl    0x7216b0
+            0x00728bc0      mov   w8, 1
+            0x00728bc4      ldr   x0, [x19, 0x18]                      ; [0x18:4]=0
+            0x00728bc8      mov   x3, x19
+            0x00728bcc      strb  w8, [x19, 0x88]
+            0x00728bd0      ldr   x19, [sp, 0x10]                      ; [0x10:4]=0xb70003
+            0x00728bd4      adrp  x2, 0xbd8000
+            0x00728bd8      add   x2, x2, 0xfb8
+            0x00728bdc      movi  d0, 0000000000000000
+            0x00728be0      adrp  x4, 0xf2000
+            0x00728be4      add   x4, x4, 0x8ca
+            0x00728be8      mov   w1, wzr
+            0x00728bec      mov   w5, wzr
+            0x00728bf0      ldp   x29, x30, [sp], 0x20
+            0x00728bf4      autiasp
+        ┌─< 0x00728bf8      b     sym.imp.MCIGlobalExecuteAsyncHelper

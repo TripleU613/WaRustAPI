@@ -1,0 +1,70 @@
+{
+  "README.md": {
+    "bytes": 7179,
+    "sha256": "a59e72a979705718576f1429a56294aa7301129ef8e73a4529fc7bafb9cc3f98"
+  },
+  "check-lifecycle.py": {
+    "bytes": 6837,
+    "sha256": "0964a8d7725d5fdffca36bfbd9527173b4bd6b1b8c1d349d8c47bfd0d0648f1d"
+  },
+  "clock-assembly.txt": {
+    "bytes": 959,
+    "sha256": "d84219d36b3610837343ff0b636392353b21d2f0ee629230718aca4cbaab1030"
+  },
+  "clock-outline-assembly.txt": {
+    "bytes": 444,
+    "sha256": "6bf06264c90fee5550e3f60a20a58fe6e07c8e34b6611119e5f5cd29c1e13189"
+  },
+  "constructor-arguments-assembly.txt": {
+    "bytes": 126,
+    "sha256": "5ed39f5e90a7455b0fe029bfc1f13ad9f74f35b6e1f9d6b42191d822e81f2eb4"
+  },
+  "credential-completion-assembly.txt": {
+    "bytes": 41170,
+    "sha256": "919235cfb94bd421354cc3f06c0002294d0487d185be96dfa05bc1899336dfe7"
+  },
+  "credential-constructor-setter-assembly.txt": {
+    "bytes": 1712,
+    "sha256": "4c25434099ac9a70cd3a7830d0b5143ec7c55c9261f4c9369e02c640ca6aa1db"
+  },
+  "credential-observer-scheduler-assembly.txt": {
+    "bytes": 1135,
+    "sha256": "87e7469e637fa3b3c41186db6e2b938b063f6cec7582ee342dc56ab61263ebca"
+  },
+  "inspect-lifecycle.py": {
+    "bytes": 1989,
+    "sha256": "27867e1c71a1ba08bd19a6686e1d1a81f24a88baaadc19a1781395d9f03282d2"
+  },
+  "lifecycle-boundaries.json": {
+    "bytes": 5028,
+    "sha256": "956ab271d6f49692941c632ce94c2d01d0eea84385685c53284487a55e275009"
+  },
+  "lifecycle-results.json": {
+    "bytes": 3135,
+    "sha256": "cf54936f8f906b541d80af1928cf215a1f27d002055d3183bdad1f6ef32f3443"
+  },
+  "provider-predicate-assembly.txt": {
+    "bytes": 457,
+    "sha256": "dd4982d238149950c1874c894d2abf7c36413d62715efc88e11f4867386fa9b0"
+  },
+  "refresh-scheduler-assembly.txt": {
+    "bytes": 3065,
+    "sha256": "fa65a846b77eac618d572bb8936d093ab72d5ee6f54c84aea4b9b960bb1a8a28"
+  },
+  "refresh-thunks-assembly.txt": {
+    "bytes": 176,
+    "sha256": "e43a155dbaa6ede1ccd659f7f4e289e81aa5078f9afac06a8f91d5986f87c55f"
+  },
+  "refresh-worker-assembly.txt": {
+    "bytes": 16489,
+    "sha256": "20a359cbc15b8f18f0d9cc23ab6c02cd5aedafa345bb161a22049280f4b42fd9"
+  },
+  "scheduler-arguments-assembly.txt": {
+    "bytes": 165,
+    "sha256": "8b09e3a86f0a4e9b3322a2e2a3c24d7d32415af1bf1a6ffbdfb907154ba5cf37"
+  },
+  "temporary-cleanup-assembly.txt": {
+    "bytes": 824,
+    "sha256": "e72df13b7eb7490596da358017fb0529db2ec66857182b9e4e58d7cfedd54223"
+  }
+}

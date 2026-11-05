@@ -1,0 +1,165 @@
+{
+  "scope": "static native metrics credential lifecycle; no provider or server execution",
+  "constructor_raw_lifetime_increment": 172800,
+  "constructor_use_counter": 64,
+  "selected_mode_zero_counter_override": 180,
+  "completion_switch": {
+    "table_va": "0x2e962e",
+    "bytes_hex": "006955604e",
+    "destinations": {
+      "0": "0x729d7c",
+      "1": "0x729f20",
+      "2": "0x729ed0",
+      "3": "0x729efc",
+      "4": "0x729eb4"
+    }
+  },
+  "strings": [
+    {
+      "va": "0x16dc37",
+      "value": "privatestats/wameta/transport/credential/sync/renewing/"
+    },
+    {
+      "va": "0xf9dcb",
+      "value": "privatestats/wameta/transport/credential/sync/renewing/aborting - already renewing"
+    },
+    {
+      "va": "0xe99d5",
+      "value": "privatestats/wameta/transport/credential/sync/renewing/aborting - already have a token"
+    },
+    {
+      "va": "0xaf8bd",
+      "value": "privatestats/wameta/transport/credential/sync/renewing/failed - not connected or not ready to send realtime events"
+    },
+    {
+      "va": "0x9f578",
+      "value": "privatestats/wameta/transport/credential/sync/renewing/start"
+    },
+    {
+      "va": "0xf9d99",
+      "value": "privatestats/wameta/transport/credential/renewing"
+    },
+    {
+      "va": "0xe5b10",
+      "value": "privatestats/wameta/transport/credential/renewing/failed - no connection"
+    },
+    {
+      "va": "0xd480c",
+      "value": "privatestats/wameta/transport/token/Invalid signature received from server"
+    },
+    {
+      "va": "0xe7119",
+      "value": "privatestats/wameta/transport/token/response from chatd for fetching privatestats signature fails validation"
+    },
+    {
+      "va": "0x10aa2d",
+      "value": "privatestats/wameta/transport/token/unretriable error from chatd fetching privatestats signature"
+    },
+    {
+      "va": "0x10a9d6",
+      "value": "privatestats/wameta/transport/token/timeout from chatd fetching privatestats signature"
+    },
+    {
+      "va": "0x10aa8e",
+      "value": "privatestats/wameta/transport/token/retriable error from chatd fetching privatestats signature"
+    }
+  ],
+  "windows": [
+    {
+      "name": "refresh-scheduler",
+      "start_va": "0x728b24",
+      "end_va": "0x728bfc",
+      "file_offset": "0x724b24",
+      "bytes": 216,
+      "sha256": "aee41697484b6e25deba82cbd6b0a1ead2836cc4d3d1bc53fc562f8e9484af96"
+    },
+    {
+      "name": "credential-observer-scheduler",
+      "start_va": "0x728bfc",
+      "end_va": "0x728c54",
+      "file_offset": "0x724bfc",
+      "bytes": 88,
+      "sha256": "56695f0bd31ee4c902210c866356f4567709c67251420b5bf8a0356601d224a8"
+    },
+    {
+      "name": "refresh-worker",
+      "start_va": "0x7298b8",
+      "end_va": "0x729cd0",
+      "file_offset": "0x7258b8",
+      "bytes": 1048,
+      "sha256": "1c6cc4113e69482a826f723a27db6bfea2d9709e01d27b6b253e90594dc73f70"
+    },
+    {
+      "name": "credential-completion",
+      "start_va": "0x729cd0",
+      "end_va": "0x72a740",
+      "file_offset": "0x725cd0",
+      "bytes": 2672,
+      "sha256": "485cb48f1bc15eae804ec195e5833be49082ecd8851a39a89a1471a0dbebfb42"
+    },
+    {
+      "name": "temporary-cleanup",
+      "start_va": "0x72ad9c",
+      "end_va": "0x72add8",
+      "file_offset": "0x726d9c",
+      "bytes": 60,
+      "sha256": "92787beb371dee1a357b57944669d5080beae722eb1dcfd517b60b10073f7fb8"
+    },
+    {
+      "name": "credential-constructor-setter",
+      "start_va": "0x7212f4",
+      "end_va": "0x721388",
+      "file_offset": "0x71d2f4",
+      "bytes": 148,
+      "sha256": "0bcf4b05d9f2a9bdb63b7c1d1d997bcd27dd89267c211129be4cf5832a33ef40"
+    },
+    {
+      "name": "constructor-arguments",
+      "start_va": "0x49b830",
+      "end_va": "0x49b83c",
+      "file_offset": "0x497830",
+      "bytes": 12,
+      "sha256": "d71e05fbc42b9cb89407a0fca248fd54a70194a81e923313047a76747b181da0"
+    },
+    {
+      "name": "clock",
+      "start_va": "0x72c4fc",
+      "end_va": "0x72c548",
+      "file_offset": "0x7284fc",
+      "bytes": 76,
+      "sha256": "05eec5d1e9c8f10a613d3e4ddab9843eae2300bec68a602a45013df278603354"
+    },
+    {
+      "name": "clock-outline",
+      "start_va": "0xbe8838",
+      "end_va": "0xbe8860",
+      "file_offset": "0xbe4838",
+      "bytes": 40,
+      "sha256": "a02fd91eb961ad9dcc96c6d071b539cf6be8cdf83cea8bafdddd5b381faf4165"
+    },
+    {
+      "name": "refresh-thunks",
+      "start_va": "0xbd8fb0",
+      "end_va": "0xbd8fc0",
+      "file_offset": "0xbd4fb0",
+      "bytes": 16,
+      "sha256": "3bf3b1f566547723d2e2876743c3f531c4da5db8614a5a2c486078ca6dba1e08"
+    },
+    {
+      "name": "provider-predicate",
+      "start_va": "0x6fef18",
+      "end_va": "0x6fef40",
+      "file_offset": "0x6faf18",
+      "bytes": 40,
+      "sha256": "e699ce299de60c6f88d011058dbd86e7762d9a58894cf08770ef7d7f2ae4a47b"
+    },
+    {
+      "name": "scheduler-arguments",
+      "start_va": "0xbe4704",
+      "end_va": "0xbe4710",
+      "file_offset": "0xbe0704",
+      "bytes": 12,
+      "sha256": "c27cc69be568788ec77243423d70dce6210ea5d5550d210f70738417ca38ba4e"
+    }
+  ]
+}

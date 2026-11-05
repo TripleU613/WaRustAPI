@@ -434,3 +434,15 @@ zero is removed before construction. Credential/provider decoding, metadata
 semantics and complete transport ownership remain open.
 [Digest-bound literal/relocation resolver, helper bodies and limits](apk/2.26.43.72-metrics-native-request-builder/README.md).
 No Rust runtime or live traffic changed; no mandatory telemetry or ban guarantee.
+
+### Native metrics credential lifecycle (2026-11-05)
+
+**Confirmed static / observed synthetic emulation, APK 2.26.43.72:** credential
+admission checks use count/clock, consumes a use before construction, and can
+promote a spare. Constructor raw lifetime increment172800/default count64,
+nonnegative setter and refresh guards have17 bounded native fixture cases.
+Mode-zero count180 override, transient cleanup and raw result switch retained
+statically. These are metrics-local counters/results, not server/account limits.
+[Native bodies, pinned resolver, fixtures and unresolved provider/crypto scope](apk/2.26.43.72-metrics-native-credential-lifecycle/README.md).
+No Rust runtime or live operations changed; selector7 and completion binding
+remain open.

@@ -1,3 +1,12 @@
+2026-11-05 — **Native metrics credential gates and refresh ownership traced.**
+
+17 bounded native fixtures verify constructor storage/defaults, counter setter
+and refresh guards. Admission, mode-dependent count override, result switch and
+temporary cleanup retained statically. [Evidence and limits](docs/protocol/apk/2.26.43.72-metrics-native-credential-lifecycle/README.md).
+Provider selector7, crypto, clock units and complete callback ownership remain
+open. Validation: pinned resolver/fixture reproduction, coverage, checksum/link
+hygiene and staged diff. No Rust runtime or live requests changed.
+
 2026-11-05 — **Native metrics POST and multipart framing traced.**
 
 Five header sources and four body sections retained with exact literals; endpoint

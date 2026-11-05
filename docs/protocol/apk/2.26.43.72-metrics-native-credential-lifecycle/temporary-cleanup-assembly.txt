@@ -1,0 +1,15 @@
+            0x0072ad9c      paciasp
+            0x0072ada0      stp   x29, x30, [sp, -0x20]!
+            0x0072ada4      str   x19, [sp, 0x10]
+            0x0072ada8      mov   x29, sp
+            0x0072adac      mov   x19, x0
+            0x0072adb0      ldr   x0, [x0, 0x98]                       ; [0x98:4]=0x47fca4
+            0x0072adb4      bl    sym.imp.MCFRelease
+            0x0072adb8      ldr   x0, [x19, 0x90]                      ; [0x90:4]=0
+            0x0072adbc      str   xzr, [x19, 0x98]
+            0x0072adc0      bl    sym.imp.MCFRelease
+            0x0072adc4      str   xzr, [x19, 0x90]
+            0x0072adc8      ldr   x19, [sp, 0x10]                      ; [0x10:4]=0xb70003
+            0x0072adcc      ldp   x29, x30, [sp], 0x20
+            0x0072add0      autiasp
+            0x0072add4      ret

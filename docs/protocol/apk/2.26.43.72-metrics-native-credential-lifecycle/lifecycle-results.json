@@ -1,0 +1,164 @@
+{
+  "scope": "synthetic storage/scheduling only; no provider/crypto/network execution",
+  "unicorn_version": "2.1.4",
+  "instruction_cap_per_case": 100000,
+  "timeout_microseconds_per_case": 1000000,
+  "cases": [
+    {
+      "case": "constructor",
+      "raw_time": 0,
+      "stored_slots": [
+        268443648,
+        268447744,
+        268451840,
+        172800,
+        64
+      ],
+      "imports": [
+        "MCFRuntimeCreateInstance",
+        "MCFRetain",
+        "MCFRetain",
+        "MCFRetain"
+      ]
+    },
+    {
+      "case": "constructor",
+      "raw_time": 1700000000,
+      "stored_slots": [
+        268443648,
+        268447744,
+        268451840,
+        1700172800,
+        64
+      ],
+      "imports": [
+        "MCFRuntimeCreateInstance",
+        "MCFRetain",
+        "MCFRetain",
+        "MCFRetain"
+      ]
+    },
+    {
+      "case": "constructor",
+      "raw_time": 2147483647,
+      "stored_slots": [
+        268443648,
+        268447744,
+        268451840,
+        2147656447,
+        64
+      ],
+      "imports": [
+        "MCFRuntimeCreateInstance",
+        "MCFRetain",
+        "MCFRetain",
+        "MCFRetain"
+      ]
+    },
+    {
+      "case": "counter-setter",
+      "input": 0,
+      "stored": 0,
+      "aborted": false
+    },
+    {
+      "case": "counter-setter",
+      "input": 1,
+      "stored": 1,
+      "aborted": false
+    },
+    {
+      "case": "counter-setter",
+      "input": 64,
+      "stored": 64,
+      "aborted": false
+    },
+    {
+      "case": "counter-setter",
+      "input": 180,
+      "stored": 180,
+      "aborted": false
+    },
+    {
+      "case": "counter-setter",
+      "input": 2147483647,
+      "stored": 2147483647,
+      "aborted": false
+    },
+    {
+      "case": "counter-setter",
+      "input": -1,
+      "stored": 99,
+      "aborted": true
+    },
+    {
+      "case": "counter-setter",
+      "input": -2147483648,
+      "stored": 99,
+      "aborted": true
+    },
+    {
+      "case": "no-provider",
+      "scheduled": [
+        {
+          "callback_va": "0xbd8fb8",
+          "context": "0x10000000"
+        }
+      ],
+      "flag_after": 1,
+      "imports": [
+        "MCIGlobalExecuteAsyncHelper"
+      ]
+    },
+    {
+      "case": "ready-provider",
+      "scheduled": [
+        {
+          "callback_va": "0xbd8fb8",
+          "context": "0x10000000"
+        }
+      ],
+      "flag_after": 1,
+      "imports": [
+        "MCIGlobalExecuteAsyncHelper"
+      ]
+    },
+    {
+      "case": "provider-not-ready",
+      "scheduled": [],
+      "flag_after": 0,
+      "imports": []
+    },
+    {
+      "case": "pending",
+      "scheduled": [],
+      "flag_after": 1,
+      "imports": []
+    },
+    {
+      "case": "temporary-state",
+      "scheduled": [],
+      "flag_after": 0,
+      "imports": []
+    },
+    {
+      "case": "pending-and-temporary",
+      "scheduled": [],
+      "flag_after": 1,
+      "imports": []
+    },
+    {
+      "case": "raw-flag-two",
+      "scheduled": [
+        {
+          "callback_va": "0xbd8fb8",
+          "context": "0x10000000"
+        }
+      ],
+      "flag_after": 1,
+      "imports": [
+        "MCIGlobalExecuteAsyncHelper"
+      ]
+    }
+  ]
+}

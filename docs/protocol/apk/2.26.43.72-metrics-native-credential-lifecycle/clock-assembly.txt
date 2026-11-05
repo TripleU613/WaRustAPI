@@ -1,0 +1,19 @@
+            0x0072c4fc      paciasp
+            0x0072c500      stp   x29, x30, [sp, -0x10]!
+            0x0072c504      mov   x29, sp
+            0x0072c508      bl    sym.imp.MCFAbsoluteTimeGetCurrent
+            0x0072c50c      adrp  x8, 0xc27000
+            0x0072c510      fmov  d2, -0.50000000
+            0x0072c514      ldr   x8, [x8, 0xd88]                      ; [0xd88:4]=0
+            0x0072c518      bl    0xbe8838
+        ┌─< 0x0072c51c      b.pl  0x72c540
+        │   0x0072c520      mov   x8, -0x3c20000000000000
+        │   0x0072c524      fmov  d1, x8
+        │   0x0072c528      fcmp  d0, d1
+       ┌──< 0x0072c52c      b.le  0x72c544
+       ││   0x0072c530      fcvtzs x0, d0
+       ││   0x0072c534      ldp   x29, x30, [sp], 0x10
+       ││   0x0072c538      autiasp
+       ││   0x0072c53c      ret
+       │└─> 0x0072c540      bl    sym.imp.abort
+       └──> 0x0072c544      bl    sym.imp.abort

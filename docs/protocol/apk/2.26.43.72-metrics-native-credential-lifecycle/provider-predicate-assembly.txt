@@ -1,0 +1,10 @@
+            0x006fef18      paciasp
+            0x006fef1c      stp   x29, x30, [sp, -0x10]!
+            0x006fef20      mov   x29, sp
+            0x006fef24      bl    sym.imp.wa_log_require_thread_attached
+            0x006fef28      mov   w1, 2
+            0x006fef2c      bl    0x6ecdc0
+            0x006fef30      bl    0x50c01c
+            0x006fef34      ldp   x29, x30, [sp], 0x10
+            0x006fef38      autiasp
+            0x006fef3c      ret
