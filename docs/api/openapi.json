@@ -16062,5 +16062,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-superpack-decoder-entry/README.md",
     "description": "Pinned decoder usability export constructs fixed bytes through one JNI-table call, not archive decompression. Host JNI layout supports setter inference; Openbox Java wrapper exposes native file-range reader boundaries. Full native registration, transforms, inner-library recovery and metrics transport remain open. No sender, telemetry, route or live operation added."
+  },
+  "x-superpack-jni-registration-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-superpack-jni-registration/README.md",
+    "description": "Selected relocated JNI tables map8 decoder and5 Openbox entries to native image addresses; all full signatures match retained DEX. Bounded registration assembly and host JNI ABI support the derived mapping. Full transforms, inner-library recovery, metrics transport and durable generation/replay remain open. No sender, telemetry, route or live operation added."
   }
 }

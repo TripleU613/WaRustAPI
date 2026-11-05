@@ -1,0 +1,14 @@
+All13 selected relocated-table signatures match retained pinned DEX declarations.
+Lcom/facebook/superpack/AssetDecompressor;->decompress_range(Landroid/content/res/AssetManager;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;II)[Ljava/lang/String;
+Lcom/facebook/superpack/AssetDecompressor;->decompress_range_from_so(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;II)[Ljava/lang/String;
+Lcom/facebook/superpack/AssetDecompressor;->decompress(Landroid/content/res/AssetManager;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)[Ljava/lang/String;
+Lcom/facebook/superpack/AssetDecompressor;->decompress_from_so(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)[Ljava/lang/String;
+Lcom/facebook/superpack/AssetDecompressor;->decompress_legacy(Ljava/io/InputStream;Ljava/lang/String;Ljava/lang/String;)[Ljava/lang/String;
+Lcom/facebook/superpack/AssetDecompressor;->decompress_with_ref(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)[Ljava/lang/String;
+Lcom/facebook/superpack/AssetDecompressor;->sync_file_to_disk(Ljava/lang/String;)I
+Lcom/facebook/superpack/AssetDecompressor;->get_architecture()I
+Lcom/whatsapp/superpack/WhatsAppOpenboxArchive;->openNative(IJJ)J
+Lcom/whatsapp/superpack/WhatsAppOpenboxArchive;->getFileCountNative(J)I
+Lcom/whatsapp/superpack/WhatsAppOpenboxArchive;->getFilePtrNative(JI)J
+Lcom/whatsapp/superpack/WhatsAppOpenboxArchive;->getFileSizeNative(JI)J
+Lcom/whatsapp/superpack/WhatsAppOpenboxArchive;->closeNative(J)V

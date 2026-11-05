@@ -5880,3 +5880,14 @@ exposes file-range/reader-pointer boundaries, not a restored container schema.
 [Exact assembly, symbols, API and limits](apk/2.26.43.72-superpack-decoder-entry/README.md).
 Native registration/transforms, complete inner libraries and metrics transport
 remain open. No Rust behavior or live account operation changed.
+
+### Superpack relocated JNI entries mapped (2026-11-05)
+
+**Confirmed static / derived, APK43.72:** selected registration call sites and
+RELATIVE-relocated tables connect8 AssetDecompressor and5 Openbox methods to
+native image addresses. All13 full signatures match retained DEX declarations;
+host JNI layout checks support the registration interpretation. This is not
+executed registration or recovered inner native code.
+[Reproducible table resolver, relocations and bounded assembly](apk/2.26.43.72-superpack-jni-registration/README.md).
+Container transforms, complete libraries and metrics transport/recovery remain
+open. No Rust behavior or live account operation changed.

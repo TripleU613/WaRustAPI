@@ -1,0 +1,131 @@
+[
+  {
+    "class": "com/facebook/superpack/AssetDecompressor",
+    "table_va": "0x380d0",
+    "entries": [
+      {
+        "index": 0,
+        "slot_va": "0x380d0",
+        "slot_file_offset": "0x340d0",
+        "name": "decompress_range",
+        "signature": "(Landroid/content/res/AssetManager;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;II)[Ljava/lang/String;",
+        "function_va": "0x9764",
+        "function_file_offset": "0x9764"
+      },
+      {
+        "index": 1,
+        "slot_va": "0x380e8",
+        "slot_file_offset": "0x340e8",
+        "name": "decompress_range_from_so",
+        "signature": "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;II)[Ljava/lang/String;",
+        "function_va": "0x9a50",
+        "function_file_offset": "0x9a50"
+      },
+      {
+        "index": 2,
+        "slot_va": "0x38100",
+        "slot_file_offset": "0x34100",
+        "name": "decompress",
+        "signature": "(Landroid/content/res/AssetManager;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)[Ljava/lang/String;",
+        "function_va": "0x9ebc",
+        "function_file_offset": "0x9ebc"
+      },
+      {
+        "index": 3,
+        "slot_va": "0x38118",
+        "slot_file_offset": "0x34118",
+        "name": "decompress_from_so",
+        "signature": "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)[Ljava/lang/String;",
+        "function_va": "0x9ec8",
+        "function_file_offset": "0x9ec8"
+      },
+      {
+        "index": 4,
+        "slot_va": "0x38130",
+        "slot_file_offset": "0x34130",
+        "name": "decompress_legacy",
+        "signature": "(Ljava/io/InputStream;Ljava/lang/String;Ljava/lang/String;)[Ljava/lang/String;",
+        "function_va": "0x9ed4",
+        "function_file_offset": "0x9ed4"
+      },
+      {
+        "index": 5,
+        "slot_va": "0x38148",
+        "slot_file_offset": "0x34148",
+        "name": "decompress_with_ref",
+        "signature": "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)[Ljava/lang/String;",
+        "function_va": "0xa1dc",
+        "function_file_offset": "0xa1dc"
+      },
+      {
+        "index": 6,
+        "slot_va": "0x38160",
+        "slot_file_offset": "0x34160",
+        "name": "sync_file_to_disk",
+        "signature": "(Ljava/lang/String;)I",
+        "function_va": "0xa46c",
+        "function_file_offset": "0xa46c"
+      },
+      {
+        "index": 7,
+        "slot_va": "0x38178",
+        "slot_file_offset": "0x34178",
+        "name": "get_architecture",
+        "signature": "()I",
+        "function_va": "0xa4c4",
+        "function_file_offset": "0xa4c4"
+      }
+    ]
+  },
+  {
+    "class": "com/whatsapp/superpack/WhatsAppOpenboxArchive",
+    "table_va": "0x38018",
+    "entries": [
+      {
+        "index": 0,
+        "slot_va": "0x38018",
+        "slot_file_offset": "0x34018",
+        "name": "openNative",
+        "signature": "(IJJ)J",
+        "function_va": "0x956c",
+        "function_file_offset": "0x956c"
+      },
+      {
+        "index": 1,
+        "slot_va": "0x38030",
+        "slot_file_offset": "0x34030",
+        "name": "getFileCountNative",
+        "signature": "(J)I",
+        "function_va": "0x95ac",
+        "function_file_offset": "0x95ac"
+      },
+      {
+        "index": 2,
+        "slot_va": "0x38048",
+        "slot_file_offset": "0x34048",
+        "name": "getFilePtrNative",
+        "signature": "(JI)J",
+        "function_va": "0x95b4",
+        "function_file_offset": "0x95b4"
+      },
+      {
+        "index": 3,
+        "slot_va": "0x38060",
+        "slot_file_offset": "0x34060",
+        "name": "getFileSizeNative",
+        "signature": "(JI)J",
+        "function_va": "0x95c0",
+        "function_file_offset": "0x95c0"
+      },
+      {
+        "index": 4,
+        "slot_va": "0x38078",
+        "slot_file_offset": "0x34078",
+        "name": "closeNative",
+        "signature": "(J)V",
+        "function_va": "0x95cc",
+        "function_file_offset": "0x95cc"
+      }
+    ]
+  }
+]

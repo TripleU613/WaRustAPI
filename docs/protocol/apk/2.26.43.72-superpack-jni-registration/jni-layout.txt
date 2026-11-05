@@ -1,0 +1,1 @@
+pointer_bytes=8 method_bytes=24 name=0x0 signature=0x8 fnPtr=0x10 GetEnv=0x30 FindClass=0x30 RegisterNatives=0x6b8 ExceptionCheck=0x720

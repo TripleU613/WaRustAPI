@@ -1,3 +1,11 @@
+2026-11-05 — **Thirteen decoder/reader JNI entries mapped to native addresses.**
+
+Relocated tables and registration call sites agree with exact DEX signatures.
+This enables targeted decoder tracing; full inner libraries remain unrecovered.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-superpack-jni-registration/README.md).
+Research only; no runtime changes or live traffic. Validation: pinned digests,
+reproducible resolver, signature/layout checks, checksums, JSON, coverage and hygiene.
+
 2026-11-05 — **Decoder usability export inspected without execution.**
 
 The selected native probe writes three fixed bytes, not a decompression test.
