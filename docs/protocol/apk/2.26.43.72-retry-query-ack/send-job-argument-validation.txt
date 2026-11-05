@@ -1,0 +1,211 @@
+
+# class: Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;
+# extends: Lorg/whispersystems/jobqueue/Job;
+
+.method private A02(VLL)  # .registers 13
+    # full signature: Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A02(Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/Jid;)V
+    0000..0004  const-string  v6, "jid is not a valid axolotl address"
+    0004..0008  instance-of  v2, v12, LX/0nT;
+    0008..000c  if-eqz  v2, +0x5
+    000c..000e  const/4  v3, #0x1
+    000e..0012  if-eqz  v11, +0x3
+    0012..0014  const/4  v3, #0x0
+    0014..0016  const/4  v5, #0x1
+    0016..0018  const/4  v9, #0x1
+    0018..001c  if-eqz  v11, +0x10
+    001c..001e  const/4  v9, #0x0
+    001e..0022  if-nez  v2, +0xd
+    0022..0028  invoke-direct  {v10}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A00()Ljava/lang/String;
+    0028..002a  move-result-object  v1
+    002a..002e  const-string  v0, "participant cannot be set if the primary jid is not a group or broadcast list"
+    002e..0034  invoke-static  {v0, v1}, LX/2LF;->A0H(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    0034..0036  move-result-object  v0
+    0036..0038  throw  v0
+    0038..003c  iget  v0, v10, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->retryCount:I
+    003c..0040  if-ltz  v0, +0x14a
+    0040..0044  iget-object  v1, v10, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->groupParticipantHash:Ljava/lang/String;
+    0044..0048  if-eqz  v1, +0x2d
+    0048..004e  invoke-virtual  {v1}, Ljava/lang/String;->length()I
+    004e..0050  move-result  v0
+    0050..0054  if-eqz  v0, +0x1c
+    0054..0058  if-eqz  v2, +0xf
+    0058..005c  if-eqz  v11, +0x23
+    005c..0062  invoke-direct  {v10}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A00()Ljava/lang/String;
+    0062..0064  move-result-object  v1
+    0064..0068  const-string  v0, "groupParticipantHash cannot be set if participant is set"
+    0068..006e  invoke-static  {v0, v1}, LX/2LF;->A0H(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    006e..0070  move-result-object  v0
+    0070..0072  throw  v0
+    0072..0078  invoke-direct  {v10}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A00()Ljava/lang/String;
+    0078..007a  move-result-object  v1
+    007a..007e  const-string  v0, "groupParticipantHash cannot be set if the primary jid is not a group or broadcast list"
+    007e..0084  invoke-static  {v0, v1}, LX/2LF;->A0H(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    0084..0086  move-result-object  v0
+    0086..0088  throw  v0
+    0088..008e  invoke-direct  {v10}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A00()Ljava/lang/String;
+    008e..0090  move-result-object  v1
+    0090..0094  const-string  v0, "groupParticipantHash cannot be set to an empty string"
+    0094..009a  invoke-static  {v0, v1}, LX/2LF;->A0H(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    009a..009c  move-result-object  v0
+    009c..009e  throw  v0
+    009e..00a2  iget-boolean  v0, v10, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->includeSenderKeysInMessage:Z
+    00a2..00a6  if-eqz  v0, +0xf
+    00a6..00aa  if-nez  v2, +0xd
+    00aa..00b0  invoke-direct  {v10}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A00()Ljava/lang/String;
+    00b0..00b2  move-result-object  v1
+    00b2..00b6  const-string  v0, "includeSenderKeysInMessage cannot be set if the primary jid is not a group or broadcast list"
+    00b6..00bc  invoke-static  {v0, v1}, LX/2LF;->A0H(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    00bc..00be  move-result-object  v0
+    00be..00c0  throw  v0
+    00c0..00c4  if-eqz  v3, +0x23
+    00c4..00c8  if-eqz  v1, +0x8
+    00c8..00ce  invoke-virtual  {v1}, Ljava/lang/String;->length()I
+    00ce..00d0  move-result  v0
+    00d0..00d4  if-nez  v0, +0x1b
+    00d4..00da  invoke-direct  {v10}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A03()Z
+    00da..00dc  move-result  v0
+    00dc..00e0  if-nez  v0, +0x15
+    00e0..00e4  iget  v0, v10, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->messageType:I
+    00e4..00ea  invoke-static  {v12, v0}, LX/1tf;->A04(Lcom/whatsapp/infra/core/jid/Jid;I)Z
+    00ea..00ec  move-result  v0
+    00ec..00f0  if-nez  v0, +0xd
+    00f0..00f6  invoke-direct  {v10}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A00()Ljava/lang/String;
+    00f6..00f8  move-result-object  v1
+    00f8..00fc  const-string  v0, "cannot send e2e message to a group without a participant hash"
+    00fc..0102  invoke-static  {v0, v1}, LX/2LF;->A0H(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    0102..0104  move-result-object  v0
+    0104..0106  throw  v0
+    0106..010a  iget-wide  v0, v10, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->expireTimeMs:J
+    010a..010e  const-wide/16  v7, #0x0
+    010e..0112  cmp-long  v3, v0, v7
+    0112..0116  if-gtz  v3, +0xd
+    0116..011c  invoke-direct  {v10}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A00()Ljava/lang/String;
+    011c..011e  move-result-object  v1
+    011e..0122  const-string  v0, "expireTimeMs must be non-negative"
+    0122..0128  invoke-static  {v0, v1}, LX/2LF;->A0H(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    0128..012a  move-result-object  v0
+    012a..012c  throw  v0
+    012c..012e  const/4  v4, #0x0
+    012e..0132  if-nez  v2, +0x20
+    0132..0136  iget-object  v3, v10, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0J:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0136..013a  if-eqz  v3, +0xa
+    013a..013e  sget-object  v1, LX/E78;->A02:LX/E78;
+    013e..0142  sget-object  v0, LX/E7N;->A03:LX/E7N;
+    0142..0148  invoke-static  {v3, v1, v0}, LX/F3k;->A06(Lcom/whatsapp/infra/core/jid/DeviceJid;LX/E78;LX/E7N;)LX/EoY;
+    0148..014a  goto  +0x13
+    014a..0150  invoke-direct  {v10}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A00()Ljava/lang/String;
+    0150..0152  move-result-object  v0
+    0152..0158  invoke-static  {v6, v0}, LX/2LF;->A0H(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    0158..015a  move-result-object  v0
+    015a..015c  throw  v0
+    015c..0162  invoke-direct  {v10}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A00()Ljava/lang/String;
+    0162..0164  move-result-object  v0
+    0164..016a  invoke-static  {v6, v0}, LX/2LF;->A0H(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    016a..016c  move-result-object  v0
+    016c..016e  throw  v0
+    016e..0172  if-nez  v9, +0x1c
+    0172..0176  if-eqz  v11, +0xa
+    0176..017a  sget-object  v1, LX/E78;->A02:LX/E78;
+    017a..017e  sget-object  v0, LX/E7N;->A03:LX/E7N;
+    017e..0184  invoke-static  {v11, v1, v0}, LX/F3k;->A06(Lcom/whatsapp/infra/core/jid/DeviceJid;LX/E78;LX/E7N;)LX/EoY;
+    0184..0186  goto  +0x11
+    0186..018c  invoke-static  {}, LX/2L8;->A1C()Ljava/lang/IllegalStateException;
+    018c..018e  move-result-object  v0
+    018e..0190  throw  v0
+    0190..0196  invoke-direct  {v10}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A00()Ljava/lang/String;
+    0196..0198  move-result-object  v1
+    0198..019c  const-string  v0, "participant is not a valid axolotl address"
+    019c..01a2  invoke-static  {v0, v1}, LX/2LF;->A0H(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    01a2..01a4  move-result-object  v0
+    01a4..01a6  throw  v0
+    01a6..01ac  invoke-static  {v12}, LX/0Dn;->A0Q(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    01ac..01ae  move-result  v0
+    01ae..01b2  iget-object  v1, v10, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->ephemeralSharedSecret:[B
+    01b2..01b6  if-nez  v0, +0x2d
+    01b6..01ba  if-nez  v1, +0x20
+    01ba..01be  iget-object  v0, v10, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->broadcastParticipantEphemeralSettings:Ljava/util/HashMap;
+    01be..01c2  if-nez  v0, +0x11
+    01c2..01c6  iget-object  v0, v10, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->broadcastListName:Ljava/lang/String;
+    01c6..01ca  if-eqz  v0, +0x29
+    01ca..01d0  invoke-direct  {v10}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A00()Ljava/lang/String;
+    01d0..01d2  move-result-object  v1
+    01d2..01d6  const-string  v0, "broadcastListName should only be set for a broadcast list jid"
+    01d6..01dc  invoke-static  {v0, v1}, LX/2LF;->A0H(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    01dc..01de  move-result-object  v0
+    01de..01e0  throw  v0
+    01e0..01e6  invoke-direct  {v10}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A00()Ljava/lang/String;
+    01e6..01e8  move-result-object  v1
+    01e8..01ec  const-string  v0, "broadcastParticipantEphemeralSettings should only be set for a broadcast list jid"
+    01ec..01f2  invoke-static  {v0, v1}, LX/2LF;->A0H(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    01f2..01f4  move-result-object  v0
+    01f4..01f6  throw  v0
+    01f6..01fc  invoke-direct  {v10}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A00()Ljava/lang/String;
+    01fc..01fe  move-result-object  v1
+    01fe..0202  const-string  v0, "ephemeralSharedSecret should only be set for a broadcast list jid"
+    0202..0208  invoke-static  {v0, v1}, LX/2LF;->A0H(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    0208..020a  move-result-object  v0
+    020a..020c  throw  v0
+    020c..0210  iget-object  v0, v10, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->broadcastParticipantEphemeralSettings:Ljava/util/HashMap;
+    0210..0214  if-nez  v1, +0x15
+    0214..0218  if-nez  v0, +0x53
+    0218..021c  iget-boolean  v0, v10, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->forceSenderKeyDistribution:Z
+    021c..0220  if-eqz  v0, +0x31
+    0220..0224  if-nez  v2, +0x14
+    0224..022a  invoke-direct  {v10}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A00()Ljava/lang/String;
+    022a..022c  move-result-object  v1
+    022c..0230  const-string  v0, "forced sender key distribution can only be used with target devices "
+    0230..0236  invoke-static  {v0, v1}, LX/2LF;->A0H(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    0236..0238  move-result-object  v0
+    0238..023a  throw  v0
+    023a..023e  if-nez  v0, -0x11
+    023e..0242  iget  v0, v10, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->retryCount:I
+    0242..0246  if-eqz  v0, +0x3c
+    0246..0248  goto  -0x17
+    0248..024c  iget-object  v0, v10, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0l:LX/DiW;
+    024c..0250  if-nez  v0, +0x8
+    0250..0254  const-string  v0, "message"
+    0254..025a  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    025a..025c  throw  v4
+    025c..0260  iget  v0, v0, LX/DiW;->bitField0_:I
+    0260..0264  and-int/lit8  v0, v0, #0x2
+    0264..0268  if-nez  v0, +0xd
+    0268..026e  invoke-direct  {v10}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A00()Ljava/lang/String;
+    026e..0270  move-result-object  v1
+    0270..0274  const-string  v0, "missing sender key distribution message "
+    0274..027a  invoke-static  {v0, v1}, LX/2LF;->A0H(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    027a..027c  move-result-object  v0
+    027c..027e  throw  v0
+    027e..0282  iget-object  v4, v10, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->jid:Ljava/lang/String;
+    0282..0286  iget-object  v3, v10, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->id:Ljava/lang/String;
+    0286..028a  iget  v1, v10, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->editVersion:I
+    028a..028e  iget-object  v0, v10, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->participant:Ljava/lang/String;
+    028e..0292  new-instance  v2, LX/Ef1;
+    0292..0298  invoke-direct  {v2, v4, v3, v1, v0}, LX/Ef1;-><init>(Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;)V
+    0298..029c  sget-object  v1, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A1U:Ljava/util/concurrent/ConcurrentHashMap;
+    029c..029e  monitor-enter
+    029e..02a4  invoke-virtual  {v1, v2}, Ljava/util/AbstractMap;->containsKey(Ljava/lang/Object;)Z
+    02a4..02a6  move-result  v0
+    02a6..02aa  iput-boolean  v0, v10, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->duplicate:Z
+    02aa..02b0  invoke-static  {v2, v1, v5}, LX/DBd;->A1U(Ljava/lang/Object;Ljava/util/AbstractMap;Z)V
+    02b0..02b2  monitor-exit
+    02b2..02b4  return-void
+    02b4..02b6  move-exception  v0
+    02b6..02b8  monitor-exit
+    02b8..02ba  throw  v0
+    02ba..02c0  invoke-direct  {v10}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A00()Ljava/lang/String;
+    02c0..02c2  move-result-object  v1
+    02c2..02c6  const-string  v0, "both or neither ephemeral parameter should be set for a broadcast list jid"
+    02c6..02cc  invoke-static  {v0, v1}, LX/2LF;->A0H(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    02cc..02ce  move-result-object  v0
+    02ce..02d0  throw  v0
+    02d0..02d6  invoke-direct  {v10}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A00()Ljava/lang/String;
+    02d6..02d8  move-result-object  v1
+    02d8..02dc  const-string  v0, "retryCount cannot be negative"
+    02dc..02e2  invoke-static  {v0, v1}, LX/2LF;->A0H(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    02e2..02e4  move-result-object  v0
+    02e4..02e6  throw  v0
+    # exception table: 3 try range(s)
+    # catch Ljava/lang/IllegalArgumentException; code_units 0099..00ae -> 00ae
+    # catch Ljava/lang/IllegalArgumentException; code_units 00bb..00c8 -> 00c8
+    # catch <all> code_units 014f..0158 -> 015a
+.end method

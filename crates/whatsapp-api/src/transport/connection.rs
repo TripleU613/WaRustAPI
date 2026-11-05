@@ -1458,37 +1458,45 @@ mod tests {
 
     #[tokio::test]
     async fn retry_ack_write_precedes_resend_and_failure_stops_the_pair() {
-        for outcome_kind in ["ack_failed", "resend_failed", "written"] {
-            let (_incoming, incoming) = mpsc::channel(1);
-            let (outgoing, mut writes) = mpsc::channel(2);
-            let link = NodeLink::new(incoming, outgoing);
-            let task = tokio::spawn(async move {
-                link.send_retry_answer(&super::super::retry_answer::ReservedAnswer {
-                    confirmation: Some(
-                        Node::new("ack")
-                            .attr("id", "ROOT")
-                            .attr("class", "receipt")
-                            .attr("type", "retry"),
-                    ),
-                    node: Node::new("message").attr("id", "W1"),
-                })
-                .await
-            });
-            let (first, outcome) = writes.recv().await.unwrap();
-            assert_eq!(first.description, "ack");
-            assert_eq!(first.get_attr("id").and_then(|v| v.as_text()), Some("ROOT"));
-            assert!(matches!(
-                writes.try_recv(),
-                Err(mpsc::error::TryRecvError::Empty)
-            ));
-            if outcome_kind != "ack_failed" {
-                outcome.send(Ok(())).unwrap();
-                let (second, outcome) = writes.recv().await.unwrap();
-                assert_eq!(second.description, "message");
-                assert_eq!(second.get_attr("id").and_then(|v| v.as_text()), Some("W1"));
-                if outcome_kind == "written" {
+        for answer_kind in ["message", "iq"] {
+            for outcome_kind in ["ack_failed", "resend_failed", "written"] {
+                let (_incoming, incoming) = mpsc::channel(1);
+                let (outgoing, mut writes) = mpsc::channel(2);
+                let link = NodeLink::new(incoming, outgoing);
+                let task = tokio::spawn(async move {
+                    link.send_retry_answer(&super::super::retry_answer::ReservedAnswer {
+                        confirmation: Some(
+                            Node::new("ack")
+                                .attr("id", "ROOT")
+                                .attr("class", "receipt")
+                                .attr("type", "retry"),
+                        ),
+                        node: Node::new(answer_kind).attr("id", "W1"),
+                    })
+                    .await
+                });
+                let (first, outcome) = writes.recv().await.unwrap();
+                assert_eq!(first.description, "ack");
+                assert_eq!(first.get_attr("id").and_then(|v| v.as_text()), Some("ROOT"));
+                assert!(matches!(
+                    writes.try_recv(),
+                    Err(mpsc::error::TryRecvError::Empty)
+                ));
+                if outcome_kind != "ack_failed" {
                     outcome.send(Ok(())).unwrap();
-                    assert!(task.await.unwrap().unwrap());
+                    let (second, outcome) = writes.recv().await.unwrap();
+                    assert_eq!(second.description, answer_kind);
+                    assert_eq!(second.get_attr("id").and_then(|v| v.as_text()), Some("W1"));
+                    if outcome_kind == "written" {
+                        outcome.send(Ok(())).unwrap();
+                        assert!(task.await.unwrap().unwrap());
+                    } else {
+                        outcome
+                            .send(Err(Error::Transport(TransportError::Closed)))
+                            .unwrap();
+                        assert!(task.await.unwrap().is_err());
+                        assert!(writes.recv().await.is_none());
+                    }
                 } else {
                     outcome
                         .send(Err(Error::Transport(TransportError::Closed)))
@@ -1496,12 +1504,6 @@ mod tests {
                     assert!(task.await.unwrap().is_err());
                     assert!(writes.recv().await.is_none());
                 }
-            } else {
-                outcome
-                    .send(Err(Error::Transport(TransportError::Closed)))
-                    .unwrap();
-                assert!(task.await.unwrap().is_err());
-                assert!(writes.recv().await.is_none());
             }
         }
     }

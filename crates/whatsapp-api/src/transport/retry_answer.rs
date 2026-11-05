@@ -75,7 +75,7 @@ fn unanswered(store: &ProtocolStore, key: &str, reason: &str) -> Result<Option<N
 }
 
 /// A resend/key query whose state has already committed. A confirmation is
-/// attached only for an actual reserved message, never merely parsed input.
+/// attached only after actual message/query work commits, never merely parsed input.
 pub(crate) struct ReservedAnswer {
     pub node: Node,
     pub confirmation: Option<Node>,
@@ -90,7 +90,10 @@ pub(crate) async fn answer_with_confirmation(
     let Some(answer) = answer(store, account, node, epoch).await? else {
         return Ok(None);
     };
-    let confirmation = if answer.description == "message" {
+    // APK43.72 ACK submission precedes the Fe5 callback which adds a send
+    // job; that job's A0J starts a key fetch for unmet session/base-key
+    // requirements. docs/protocol/retry-ack-dispatch.md
+    let confirmation = if matches!(answer.description.as_str(), "message" | "iq") {
         let confirmation = super::messaging::handled_retry_confirmation(node);
         if confirmation.is_none() {
             tracing::warn!(
@@ -100,8 +103,6 @@ pub(crate) async fn answer_with_confirmation(
         }
         confirmation
     } else {
-        // Fresh-bundle work has a different asynchronous path. Do not infer
-        // its complete ACK/recovery policy from the saved-session callback.
         None
     };
     Ok(Some(ReservedAnswer {
@@ -1609,10 +1610,39 @@ mod tests {
                         .await?;
                 Ok::<_, Error>(reserved.map(|answer| {
                     if answer.node.description == "iq" {
-                        assert!(
-                            answer.confirmation.is_none(),
-                            "query alone is not success-ACK authority"
+                        let query = answer
+                            .node
+                            .get_attr("id")
+                            .and_then(|v| v.as_text())
+                            .unwrap();
+                        let job: Refetch = store_ref
+                            .read(|tx| {
+                                tx.get_json(Table::Checkpoints, refetch_key(query).as_bytes(), 1)
+                            })
+                            .unwrap()
+                            .unwrap();
+                        let state: serde_json::Value = store_ref
+                            .read(|tx| {
+                                tx.get_json(Table::Checkpoints, job.answer_key.as_bytes(), 1)
+                            })
+                            .unwrap()
+                            .unwrap();
+                        assert_eq!(state["status"], "fetching");
+                        assert_eq!(state["query"], query);
+                        assert_eq!(state["count"], job.count);
+                        let ack = answer
+                            .confirmation
+                            .as_ref()
+                            .expect("durable refetch gets a receipt ACK");
+                        assert_eq!(
+                            ack.get_attr("id").and_then(|v| v.as_text()),
+                            node.get_attr("id").and_then(|v| v.as_text())
                         );
+                        assert_eq!(
+                            ack.get_attr("type").and_then(|v| v.as_text()),
+                            Some("retry")
+                        );
+                        assert!(ack.get_attr("error").is_none());
                     }
                     answer.node
                 }))

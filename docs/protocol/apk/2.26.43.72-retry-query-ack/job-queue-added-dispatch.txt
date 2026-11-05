@@ -1,0 +1,143 @@
+
+# class: LX/NhR;
+# extends: Ljava/lang/Object;
+
+.method public A04(ZLLZ)  # .registers 13
+    # full signature: LX/NhR;->A04(Lorg/whispersystems/jobqueue/Job;LX/NhR;Z)Z
+    0000..0004  const-wide/16  v8, #0x0
+    0004..0006  const/4  v2, #0x1
+    0006..0008  const/4  v4, #0x0
+    0008..000c  iget-object  v0, v10, Lorg/whispersystems/jobqueue/Job;->parameters:Lorg/whispersystems/jobqueue/JobParameters;
+    000c..0010  iget-boolean  v0, v0, Lorg/whispersystems/jobqueue/JobParameters;->isPersistent:Z
+    0010..0014  if-eqz  v0, +0x62
+    0014..0018  iget-object  v5, v11, LX/NhR;->A06:LX/NhT;
+    0018..001c  new-instance  v7, Landroid/content/ContentValues;
+    001c..0022  invoke-direct  {v7}, Landroid/content/ContentValues;-><init>()V
+    0022..0026  iget-object  v0, v5, LX/NhT;->A01:LX/Nhe;
+    0026..002c  invoke-virtual  {v0, v10}, LX/Nhe;->A00(Lorg/whispersystems/jobqueue/Job;)Ljava/lang/String;
+    002c..002e  move-result-object  v1
+    002e..0032  const-string  v0, "item"
+    0032..0038  invoke-virtual  {v7, v0, v1}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/String;)V
+    0038..003e  invoke-static  {v4}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    003e..0040  move-result-object  v1
+    0040..0044  const-string  v0, "encrypted"
+    0044..004a  invoke-virtual  {v7, v0, v1}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Boolean;)V
+    004a..004e  iget-object  v6, v5, LX/NhT;->A02:Ljava/util/concurrent/locks/ReentrantReadWriteLock;
+    004e..0054  invoke-virtual  {v6}, Ljava/util/concurrent/locks/ReentrantReadWriteLock;->readLock()Ljava/util/concurrent/locks/ReentrantReadWriteLock$ReadLock;
+    0054..0056  move-result-object  v0
+    0056..005c  invoke-virtual  {v0}, Ljava/util/concurrent/locks/ReentrantReadWriteLock$ReadLock;->lock()V
+    005c..0060  iget-object  v0, v5, LX/NhT;->A03:LX/Nj4;
+    0060..0066  invoke-virtual  {v0}, Landroid/database/sqlite/SQLiteOpenHelper;->getWritableDatabase()Landroid/database/sqlite/SQLiteDatabase;
+    0066..0068  move-result-object  v3
+    0068..006c  const-string  v1, "queue"
+    006c..006e  const/4  v0, #0x0
+    006e..0074  invoke-virtual  {v3, v1, v0, v7}, Landroid/database/sqlite/SQLiteDatabase;->insert(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;)J
+    0074..0076  move-result-wide  v0
+    0076..007c  invoke-virtual  {v10, v0, v1}, Lorg/whispersystems/jobqueue/Job;->A0H(J)V
+    007c..0082  invoke-virtual  {v6}, Ljava/util/concurrent/locks/ReentrantReadWriteLock;->readLock()Ljava/util/concurrent/locks/ReentrantReadWriteLock$ReadLock;
+    0082..0084  move-result-object  v0
+    0084..008a  invoke-virtual  {v0}, Ljava/util/concurrent/locks/ReentrantReadWriteLock$ReadLock;->unlock()V
+    008a..008e  iget-wide  v0, v10, Lorg/whispersystems/jobqueue/Job;->A01:J
+    008e..0092  cmp-long  v3, v0, v8
+    0092..0098  invoke-static  {v3}, LX/2L9;->A1N(I)Z
+    0098..009a  move-result  v3
+    009a..009e  if-eqz  v12, +0x1d
+    009e..00a2  if-nez  v3, +0x1b
+    00a2..00a6  cmp-long  v2, v0, v8
+    00a6..00aa  if-lez  v2, +0x8
+    00aa..00b0  invoke-virtual  {v5, v0, v1}, LX/NhT;->A02(J)V
+    00b0..00b2  goto  +0x3
+    00b2..00b4  move-exception  v0
+    00b4..00b6  goto  +0x6b
+    00b6..00bc  invoke-static  {v10, v4}, LX/NhR;->A02(Lorg/whispersystems/jobqueue/Job;Z)V
+    00bc..00be  goto  +0x4e
+    00be..00c0  move-exception  v1
+    00c0..00c4  iget-object  v0, v5, LX/NhT;->A02:Ljava/util/concurrent/locks/ReentrantReadWriteLock;
+    00c4..00ca  invoke-virtual  {v0}, Ljava/util/concurrent/locks/ReentrantReadWriteLock;->readLock()Ljava/util/concurrent/locks/ReentrantReadWriteLock$ReadLock;
+    00ca..00cc  move-result-object  v0
+    00cc..00d2  invoke-virtual  {v0}, Ljava/util/concurrent/locks/ReentrantReadWriteLock$ReadLock;->unlock()V
+    00d2..00d4  throw  v1
+    00d4..00d8  iget-object  v0, v11, LX/NhR;->A07:Landroid/content/Context;
+    00d8..00de  invoke-static  {v0, v10}, LX/Nhf;->A00(Landroid/content/Context;Lorg/whispersystems/jobqueue/Job;)V
+    00de..00e4  invoke-virtual  {v10}, Lorg/whispersystems/jobqueue/Job;->A0J()V
+    00e4..00e8  iget-object  v1, v11, LX/NhR;->A05:LX/NhN;
+    00e8..00ea  monitor-enter
+    00ea..00ee  iget-object  v0, v1, LX/NhN;->A01:Ljava/util/LinkedList;
+    00ee..00f4  invoke-virtual  {v0, v10}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    00f4..00fa  invoke-static  {v10, v1}, LX/NhN;->A00(Lorg/whispersystems/jobqueue/Job;LX/NhN;)V
+    00fa..00fe  iget-object  v0, v1, LX/NhN;->A05:LX/NhM;
+    00fe..0102  iget-object  v0, v0, LX/NhM;->A02:Landroid/os/ConditionVariable;
+    0102..0108  invoke-virtual  {v0}, Landroid/os/ConditionVariable;->open()V
+    0108..010a  monitor-exit
+    010a..010c  return  v2
+    010c..010e  move-exception  v0
+    010e..0110  monitor-exit
+    0110..0112  throw  v0
+    0112..0114  move-exception  v1
+    0114..0116  const/4  v3, #0x1
+    0116..0118  goto  +0xb
+    0118..011a  move-exception  v4
+    011a..011c  const/4  v3, #0x0
+    011c..011e  goto  +0x3
+    011e..0120  move-exception  v4
+    0120..0122  const/4  v3, #0x1
+    0122..0126  if-eqz  v12, +0x3b
+    0126..0128  goto  +0x20
+    0128..012a  move-exception  v1
+    012a..012c  const/4  v3, #0x0
+    012c..0130  const-string  v0, "JobManager"
+    0130..0136  invoke-static  {v0, v1}, Landroid/util/Log;->w(Ljava/lang/String;Ljava/lang/Throwable;)I
+    0136..013a  if-eqz  v12, +0xe
+    013a..013e  iget-wide  v1, v10, Lorg/whispersystems/jobqueue/Job;->A01:J
+    013e..0142  cmp-long  v0, v1, v8
+    0142..0146  if-lez  v0, +0x7
+    0146..014a  iget-object  v0, v11, LX/NhR;->A06:LX/NhT;
+    014a..0150  invoke-virtual  {v0, v1, v2}, LX/NhT;->A02(J)V
+    0150..0152  move  v2, v3
+    0152..0158  invoke-static  {v10, v2}, LX/NhR;->A02(Lorg/whispersystems/jobqueue/Job;Z)V
+    0158..015e  invoke-static  {v10}, LX/NhR;->A00(Lorg/whispersystems/jobqueue/Job;)V
+    015e..0160  return  v4
+    0160..0162  move-exception  v4
+    0162..0166  if-eqz  v12, +0x18
+    0166..016a  iget-wide  v1, v10, Lorg/whispersystems/jobqueue/Job;->A01:J
+    016a..016e  cmp-long  v0, v1, v8
+    016e..0172  if-lez  v0, +0x7
+    0172..0176  iget-object  v0, v11, LX/NhR;->A06:LX/NhT;
+    0176..017c  invoke-virtual  {v0, v1, v2}, LX/NhT;->A02(J)V
+    017c..017e  move  v2, v3
+    017e..0180  goto  +0xa
+    0180..0182  move-exception  v0
+    0182..0188  invoke-static  {v10, v3}, LX/NhR;->A02(Lorg/whispersystems/jobqueue/Job;Z)V
+    0188..018a  goto  +0x4
+    018a..0190  invoke-static  {v10, v4}, LX/NhR;->A02(Lorg/whispersystems/jobqueue/Job;Z)V
+    0190..0192  throw  v0
+    0192..0198  invoke-static  {v10, v2}, LX/NhR;->A02(Lorg/whispersystems/jobqueue/Job;Z)V
+    0198..019e  invoke-static  {v10}, LX/NhR;->A00(Lorg/whispersystems/jobqueue/Job;)V
+    019e..01a0  throw  v4
+    01a0..01a2  move-exception  v0
+    01a2..01a8  invoke-static  {v10}, LX/NhR;->A00(Lorg/whispersystems/jobqueue/Job;)V
+    01a8..01aa  throw  v0
+    # exception table: 16 try range(s)
+    # catch Ljava/io/IOException; code_units 0004..0025 -> 0094
+    # catch <all> code_units 0004..0025 -> 008c
+    # catch <all> code_units 0025..003e -> 005f
+    # catch Ljava/io/IOException; code_units 003e..0047 -> 0094
+    # catch <all> code_units 003e..0047 -> 008c
+    # catch <all> code_units 0055..0059 -> 0059
+    # catch <all> code_units 005b..005f -> 00d0
+    # catch Ljava/io/IOException; code_units 005f..006f -> 0094
+    # catch <all> code_units 005f..006f -> 008c
+    # catch Ljava/io/IOException; code_units 006f..0075 -> 0089
+    # catch <all> code_units 006f..0075 -> 008f
+    # catch <all> code_units 0075..0084 -> 0086
+    # catch Ljava/io/IOException; code_units 0084..0086 -> 0089
+    # catch <all> code_units 0084..0086 -> 008f
+    # catch <all> code_units 0087..0088 -> 0086
+    # catch Ljava/io/IOException; code_units 0088..0089 -> 0089
+    # catch <all> code_units 0088..0089 -> 008f
+    # catch <all> code_units 0096..009d -> 00b0
+    # catch <all> code_units 009d..00a9 -> 00c0
+    # catch <all> code_units 00a9..00ac -> 00d0
+    # catch <all> code_units 00b3..00c0 -> 00c0
+    # catch <all> code_units 00c1..00cc -> 00d0
+.end method

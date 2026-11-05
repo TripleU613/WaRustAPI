@@ -1,0 +1,97 @@
+
+# class: Lcom/whatsapp/infra/jobs/requirements/AxolotlDifferentAliceBaseKeyRequirement;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLZ)  # .registers 6
+    # full signature: Lcom/whatsapp/infra/jobs/requirements/AxolotlDifferentAliceBaseKeyRequirement;-><init>(Lcom/whatsapp/infra/core/jid/DeviceJid;LX/E78;[BZ)V
+    0000..0002  const/4  v0, #0x2
+    0002..0008  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000e  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    000e..0012  iput-object  v2, v1, Lcom/whatsapp/infra/jobs/requirements/AxolotlDifferentAliceBaseKeyRequirement;->A00:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0012..0016  iput-boolean  v5, v1, Lcom/whatsapp/infra/jobs/requirements/AxolotlDifferentAliceBaseKeyRequirement;->fetchPqPrekey:Z
+    0016..001c  invoke-virtual  {v2}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+    001c..001e  move-result-object  v0
+    001e..0022  iput-object  v0, v1, Lcom/whatsapp/infra/jobs/requirements/AxolotlDifferentAliceBaseKeyRequirement;->jid:Ljava/lang/String;
+    0022..0026  iget  v0, v3, LX/E78;->intValue:I
+    0026..002a  iput  v0, v1, Lcom/whatsapp/infra/jobs/requirements/AxolotlDifferentAliceBaseKeyRequirement;->sessionScopeValue:I
+    002a..002e  const-string  v0, ""
+    002e..0034  invoke-static  {v4, v0}, LX/00L;->A0F([BLjava/lang/String;)V
+    0034..0038  iput-object  v4, v1, Lcom/whatsapp/infra/jobs/requirements/AxolotlDifferentAliceBaseKeyRequirement;->oldAliceBaseKey:[B
+    0038..003a  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method private readObject(VL)  # .registers 4
+    # full signature: Lcom/whatsapp/infra/jobs/requirements/AxolotlDifferentAliceBaseKeyRequirement;->readObject(Ljava/io/ObjectInputStream;)V
+    0000..0006  invoke-virtual  {v3}, Ljava/io/ObjectInputStream;->defaultReadObject()V
+    0006..000a  sget-object  v1, Lcom/whatsapp/infra/core/jid/DeviceJid;->Companion:LX/0EB;
+    000a..000e  iget-object  v0, v2, Lcom/whatsapp/infra/jobs/requirements/AxolotlDifferentAliceBaseKeyRequirement;->jid:Ljava/lang/String;
+    000e..0014  invoke-virtual  {v1, v0}, LX/0EB;->A03(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0014..0016  move-result-object  v0
+    0016..001a  iput-object  v0, v2, Lcom/whatsapp/infra/jobs/requirements/AxolotlDifferentAliceBaseKeyRequirement;->A00:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    001a..001e  iget-object  v0, v2, Lcom/whatsapp/infra/jobs/requirements/AxolotlDifferentAliceBaseKeyRequirement;->oldAliceBaseKey:[B
+    001e..0022  if-eqz  v0, +0x6
+    0022..0024  array-length  v0, v0
+    0024..0028  if-eqz  v0, +0x3
+    0028..002a  return-void
+    002a..002e  const-string  v0, "oldAliceBaseKey must not be empty"
+    002e..0034  invoke-static  {v0}, LX/DBc;->A11(Ljava/lang/String;)Ljava/io/InvalidObjectException;
+    0034..0036  move-result-object  v0
+    0036..0038  throw  v0
+    0038..003c  iget-object  v1, v2, Lcom/whatsapp/infra/jobs/requirements/AxolotlDifferentAliceBaseKeyRequirement;->jid:Ljava/lang/String;
+    003c..0040  const-string  v0, "jid must be a valid user jid; jid="
+    0040..0046  invoke-static  {v0, v1}, LX/000;->A04(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0046..0048  move-result-object  v0
+    0048..004e  invoke-static  {v0}, LX/DBc;->A11(Ljava/lang/String;)Ljava/io/InvalidObjectException;
+    004e..0050  move-result-object  v0
+    0050..0052  throw  v0
+    # exception table: 1 try range(s)
+    # catch LX/09P; code_units 0003..000d -> 001c
+.end method
+
+.method public BWq(Z)  # .registers 6
+    # full signature: Lcom/whatsapp/infra/jobs/requirements/AxolotlDifferentAliceBaseKeyRequirement;->BWq()Z
+    0000..0004  iget-object  v4, v5, Lcom/whatsapp/infra/jobs/requirements/AxolotlDifferentAliceBaseKeyRequirement;->A01:LX/0WJ;
+    0004..0006  const/4  v3, #0x0
+    0006..000a  if-eqz  v4, +0x3b
+    000a..000e  iget  v0, v5, Lcom/whatsapp/infra/jobs/requirements/AxolotlDifferentAliceBaseKeyRequirement;->sessionScopeValue:I
+    000e..0014  invoke-static  {v0}, LX/EHr;->A00(I)LX/E78;
+    0014..0016  move-result-object  v2
+    0016..001a  iget-boolean  v0, v5, Lcom/whatsapp/infra/jobs/requirements/AxolotlDifferentAliceBaseKeyRequirement;->fetchPqPrekey:Z
+    001a..001e  if-eqz  v0, +0x23
+    001e..0022  iget-object  v1, v5, Lcom/whatsapp/infra/jobs/requirements/AxolotlDifferentAliceBaseKeyRequirement;->A00:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0022..0026  sget-object  v0, LX/E7N;->A02:LX/E7N;
+    0026..002c  invoke-static  {v1, v2, v0}, LX/F3k;->A06(Lcom/whatsapp/infra/core/jid/DeviceJid;LX/E78;LX/E7N;)LX/EoY;
+    002c..002e  move-result-object  v1
+    002e..0034  invoke-virtual  {v4, v1}, LX/0WJ;->A14(LX/EoY;)Z
+    0034..0036  move-result  v0
+    0036..003a  if-eqz  v0, +0x15
+    003a..0040  invoke-virtual  {v4, v1}, LX/0WJ;->A0M(LX/EoY;)LX/Etk;
+    0040..0042  move-result-object  v0
+    0042..0046  iget-object  v1, v5, Lcom/whatsapp/infra/jobs/requirements/AxolotlDifferentAliceBaseKeyRequirement;->oldAliceBaseKey:[B
+    0046..004a  iget-object  v0, v0, LX/Etk;->A01:LX/EZK;
+    004a..0050  invoke-virtual  {v0}, LX/EZK;->A00()[B
+    0050..0052  move-result-object  v0
+    0052..0058  invoke-static  {v1, v0}, Ljava/util/Arrays;->equals([B[B)Z
+    0058..005a  move-result  v0
+    005a..005e  xor-int/lit8  v0, v0, #0x1
+    005e..0060  return  v0
+    0060..0064  iget-object  v1, v5, Lcom/whatsapp/infra/jobs/requirements/AxolotlDifferentAliceBaseKeyRequirement;->A00:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0064..0068  sget-object  v0, LX/E7N;->A03:LX/E7N;
+    0068..006e  invoke-static  {v1, v2, v0}, LX/F3k;->A06(Lcom/whatsapp/infra/core/jid/DeviceJid;LX/E78;LX/E7N;)LX/EoY;
+    006e..0070  move-result-object  v1
+    0070..0076  invoke-virtual  {v4, v1}, LX/0WJ;->A14(LX/EoY;)Z
+    0076..0078  move-result  v0
+    0078..007c  if-nez  v0, -0x1f
+    007c..007e  return  v3
+    # exception table: 0 try range(s)
+.end method
+
+.method public Cf0(VL)  # .registers 3
+    # full signature: Lcom/whatsapp/infra/jobs/requirements/AxolotlDifferentAliceBaseKeyRequirement;->Cf0(Landroid/content/Context;)V
+    0000..0006  invoke-static  {}, LX/DBf;->A0J()LX/0WJ;
+    0006..0008  move-result-object  v0
+    0008..000c  iput-object  v0, v1, Lcom/whatsapp/infra/jobs/requirements/AxolotlDifferentAliceBaseKeyRequirement;->A01:LX/0WJ;
+    000c..000e  return-void
+    # exception table: 0 try range(s)
+.end method

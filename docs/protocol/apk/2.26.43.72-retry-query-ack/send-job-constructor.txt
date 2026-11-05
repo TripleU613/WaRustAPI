@@ -1,0 +1,290 @@
+
+# class: Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;
+# extends: Lorg/whispersystems/jobqueue/Job;
+
+.method public <init>(VLLLLLLLLLLLLLLLLLLIIIJJJJJZZZZZZZZZZ)  # .registers 72
+    # full signature: Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;-><init>(Lcom/google/common/base/Optional;Lcom/whatsapp/infra/aea/statemanagement/AeaReconciliationRequirement;Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/Jid;Lcom/whatsapp/infra/core/jid/UserJid;Lcom/whatsapp/infra/core/jid/UserJid;LX/FMF;LX/DiW;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/util/Set;[B[BIIIJJJJJZZZZZZZZZZ)V
+    0000..0004  move/from16  v27, v50
+    0004..000a  invoke-static/range  {v27..v27}, LX/2L9;->A1N(I)Z
+    000a..000c  move-result  v2
+    000c..0010  move-object/from16  v11, v35
+    0010..0012  move-object  v0, v11
+    0012..0016  move-object/from16  v6, v33
+    0016..0018  move-object  v3, v6
+    0018..001c  move-object/from16  v28, v43
+    001c..0020  move-object/from16  v22, v28
+    0020..0024  move-object/from16  v5, v34
+    0024..0028  if-nez  v35, +0x12
+    0028..002e  invoke-static  {v5}, LX/0Dn;->A0S(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    002e..0030  move-result  v0
+    0030..0034  if-eqz  v0, +0x57
+    0034..0038  const-string  v0, "null cannot be cast to non-null type com.whatsapp.infra.core.jid.DeviceJid"
+    0038..003e  invoke-static  {v5, v0}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    003e..0040  move-object  v0, v5
+    0040..0044  check-cast  v0, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0044..0048  iget-object  v0, v0, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+    0048..004e  invoke-virtual  {v0}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+    004e..0050  move-result-object  v1
+    0050..0054  if-eqz  v2, +0xc
+    0054..005a  invoke-static  {v1}, LX/1Xl;->A16(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    005a..005c  move-result-object  v1
+    005c..0060  const-string  v0, "_retry"
+    0060..0066  invoke-static  {v0, v1}, LX/1Xl;->A0z(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    0066..0068  move-result-object  v1
+    0068..006e  invoke-static  {}, LX/DCZ;->A00()LX/DCZ;
+    006e..0070  move-result-object  v0
+    0070..0074  iput-object  v1, v0, LX/DCZ;->A01:Ljava/lang/String;
+    0074..007a  invoke-static  {v0}, LX/DCZ;->A02(LX/DCZ;)V
+    007a..007e  move/from16  v2, v49
+    007e..0084  invoke-static  {v2}, LX/1dX;->A0B(I)Z
+    0084..0086  move-result  v16
+    0086..008a  if-nez  v16, +0x5
+    008a..008c  const/4  v1, #0x1
+    008c..0090  iput-boolean  v1, v0, LX/DCZ;->A03:Z
+    0090..0094  instance-of  v1, v5, LX/0nT;
+    0094..0098  if-eqz  v1, +0x5
+    0098..009a  const/4  v7, #0x1
+    009a..009e  if-eqz  v33, +0x3
+    009e..00a0  const/4  v7, #0x0
+    00a0..00a4  move-object/from16  v1, v32
+    00a4..00a8  if-eqz  v32, +0x5
+    00a8..00ae  invoke-virtual  {v0, v1}, LX/DCZ;->A04(Lorg/whispersystems/jobqueue/requirements/Requirement;)V
+    00ae..00b2  if-eqz  v71, +0xa
+    00b2..00b6  new-instance  v1, Lcom/whatsapp/teechatinfra/send/TeeNodeTokenRequirement;
+    00b6..00bc  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    00bc..00c2  invoke-virtual  {v0, v1}, LX/DCZ;->A04(Lorg/whispersystems/jobqueue/requirements/Requirement;)V
+    00c2..00c6  move-object/from16  v13, v47
+    00c6..00ca  if-eqz  v47, +0xe
+    00ca..00cc  array-length  v1, v13
+    00cc..00d0  if-nez  v1, +0xb
+    00d0..00d4  const-string  v0, "cannot use empty old alice base key"
+    00d4..00da  invoke-static  {v0}, LX/1Xl;->A0f(Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    00da..00dc  move-result-object  v0
+    00dc..00de  throw  v0
+    00de..00e0  move-object  v0, v5
+    00e0..00e2  goto  -0x4c
+    00e2..00e6  move/from16  v10, v64
+    00e6..00ea  if-eqz  v7, +0x1a
+    00ea..00ee  if-nez  v47, +0x11
+    00ee..00f2  if-nez  v64, +0x16
+    00f2..00f8  invoke-static  {v5, v2}, LX/1tf;->A04(Lcom/whatsapp/infra/core/jid/Jid;I)Z
+    00f8..00fa  move-result  v1
+    00fa..00fe  if-nez  v1, +0x10
+    00fe..0102  const-string  v0, "cannot use group encryption without including sender key in message"
+    0102..0108  invoke-static  {v0}, LX/1Xl;->A0f(Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    0108..010a  move-result-object  v0
+    010a..010c  throw  v0
+    010c..0110  const-string  v0, "cannot use group encryption and old alice base key simultaneously"
+    0110..0116  invoke-static  {v0}, LX/1Xl;->A0f(Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    0116..0118  move-result-object  v0
+    0118..011a  throw  v0
+    011a..011e  const-string  v12, "Required value was null."
+    011e..0122  move/from16  v9, v66
+    0122..0126  move/from16  v25, v67
+    0126..012a  move/from16  v8, v69
+    012a..012e  move-object/from16  v15, v41
+    012e..0132  move/from16  v1, v70
+    0132..0136  move-object/from16  v29, v42
+    0136..013a  move-object/from16  v14, v46
+    013a..013e  move/from16  v4, v51
+    013e..0142  if-eqz  v7, +0x68
+    0142..0146  sget-object  v3, LX/0nT;->A00:LX/0nV;
+    0146..014c  invoke-static  {v5}, LX/0nV;->A00(Lcom/whatsapp/infra/core/jid/Jid;)LX/0nT;
+    014c..014e  move-result-object  v18
+    014e..0152  if-eqz  v18, +0x183
+    0152..0156  if-nez  v69, +0x4
+    0156..015a  move-object/from16  v22, v29
+    015a..015e  const/16  v3, #0x8
+    015e..0164  invoke-static  {v4, v3}, LX/2LD;->A1J(II)Z
+    0164..0166  move-result  v3
+    0166..016c  invoke-static  {v3}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    016c..016e  move-result-object  v20
+    016e..0172  sget-object  v3, LX/E78;->A02:LX/E78;
+    0172..0176  new-instance  v7, Lcom/whatsapp/productinfra/messaging/jobqueue/requirement/AxolotlMultiDeviceSenderKeyRequirement;
+    0176..017a  move-object/from16  v17, v7
+    017a..017e  move-object/from16  v19, v3
+    017e..0182  move-object/from16  v21, v15
+    0182..0186  move-object/from16  v23, v14
+    0186..018a  move/from16  v24, v2
+    018a..018e  move/from16  v26, v8
+    018e..0194  invoke-direct/range  {v17..v26}, Lcom/whatsapp/productinfra/messaging/jobqueue/requirement/AxolotlMultiDeviceSenderKeyRequirement;-><init>(LX/0nT;LX/E78;Ljava/lang/Boolean;Ljava/lang/String;Ljava/lang/String;Ljava/util/Set;IZZ)V
+    0194..019a  invoke-virtual  {v0, v7}, LX/DCZ;->A04(Lorg/whispersystems/jobqueue/requirements/Requirement;)V
+    019a..019e  if-eqz  v36, +0x10
+    019e..01a4  invoke-interface  {v14}, Ljava/util/Set;->isEmpty()Z
+    01a4..01a6  move-result  v7
+    01a6..01aa  if-nez  v7, +0x26
+    01aa..01ae  if-nez  v16, +0x24
+    01ae..01b4  invoke-static  {v5}, LX/0Dn;->A0l(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    01b4..01b6  move-result  v7
+    01b6..01ba  if-eqz  v7, +0x1e
+    01ba..01be  move-object/from16  v7, v40
+    01be..01c2  if-eqz  v40, +0xa
+    01c2..01c6  new-instance  v3, Lcom/whatsapp/locationsharing/jobqueue/requirement/AxolotlFastRatchetSenderKeyRequirement;
+    01c6..01cc  invoke-direct  {v3}, Lcom/whatsapp/locationsharing/jobqueue/requirement/AxolotlFastRatchetSenderKeyRequirement;-><init>()V
+    01cc..01d2  invoke-virtual  {v0, v3}, LX/DCZ;->A04(Lorg/whispersystems/jobqueue/requirements/Requirement;)V
+    01d2..01d8  invoke-virtual/range  {v31..v31}, Lcom/google/common/base/Optional;->isPresent()Z
+    01d8..01da  move-result  v3
+    01da..01de  if-eqz  v3, +0x64
+    01de..01e4  invoke-virtual/range  {v31..v31}, Lcom/google/common/base/Optional;->get()Ljava/lang/Object;
+    01e4..01e8  const-string  v0, "getValidVNameRequirement"
+    01e8..01ee  invoke-static  {v0}, LX/2L6;->A18(Ljava/lang/String;)Ljava/lang/NullPointerException;
+    01ee..01f0  move-result-object  v0
+    01f0..01f2  throw  v0
+    01f2..01f8  invoke-virtual/range  {v36..v36}, Lcom/whatsapp/infra/core/jid/UserJid;->getPrimaryDevice()Lcom/whatsapp/infra/core/jid/DeviceJid;
+    01f8..01fa  move-result-object  v13
+    01fa..01fc  const/4  v12, #0x0
+    01fc..0200  new-instance  v7, Lcom/whatsapp/infra/crypto/jobqueue/requirement/AxolotlSessionRequirement;
+    0200..0206  invoke-direct  {v7, v13, v3, v12}, Lcom/whatsapp/infra/crypto/jobqueue/requirement/AxolotlSessionRequirement;-><init>(Lcom/whatsapp/infra/core/jid/DeviceJid;LX/E78;Z)V
+    0206..020c  invoke-virtual  {v0, v7}, LX/DCZ;->A04(Lorg/whispersystems/jobqueue/requirements/Requirement;)V
+    020c..020e  goto  -0x29
+    020e..0212  if-eqz  v66, +0x2d
+    0212..0216  const/16  v3, #0x8
+    0216..021c  invoke-static  {v4, v3}, LX/2LD;->A1J(II)Z
+    021c..021e  move-result  v3
+    021e..0224  invoke-static  {v3}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    0224..0226  move-result-object  v20
+    0226..022a  const-string  v3, "null cannot be cast to non-null type com.whatsapp.infra.core.jid.UserJid"
+    022a..0230  invoke-static  {v5, v3}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    0230..0232  move-object  v7, v5
+    0232..0236  check-cast  v7, LX/0DY;
+    0236..023a  sget-object  v3, LX/E78;->A02:LX/E78;
+    023a..023e  new-instance  v12, Lcom/whatsapp/productinfra/messaging/jobqueue/requirement/AxolotlMultiDeviceSessionRequirement;
+    023e..0242  move-object/from16  v17, v12
+    0242..0246  move-object/from16  v18, v7
+    0246..024a  move-object/from16  v19, v3
+    024a..024e  move-object/from16  v21, v15
+    024e..0252  move-object/from16  v22, v14
+    0252..0256  move/from16  v23, v2
+    0256..025a  move/from16  v24, v1
+    025a..0260  invoke-direct/range  {v17..v24}, Lcom/whatsapp/productinfra/messaging/jobqueue/requirement/AxolotlMultiDeviceSessionRequirement;-><init>(LX/0DY;LX/E78;Ljava/lang/Boolean;Ljava/lang/String;Ljava/util/Set;IZ)V
+    0260..0266  invoke-virtual  {v0, v12}, LX/DCZ;->A04(Lorg/whispersystems/jobqueue/requirements/Requirement;)V
+    0266..0268  goto  -0x66
+    0268..026c  sget-object  v7, Lcom/whatsapp/infra/core/jid/DeviceJid;->Companion:LX/0EB;
+    026c..0270  if-nez  v33, +0x3
+    0270..0272  move-object  v3, v5
+    0272..0278  invoke-virtual  {v7, v3}, LX/0EB;->A00(Lcom/whatsapp/infra/core/jid/Jid;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0278..027a  move-result-object  v7
+    027a..027e  if-eqz  v7, +0xf2
+    027e..0282  sget-object  v3, LX/E78;->A02:LX/E78;
+    0282..0286  new-instance  v12, Lcom/whatsapp/infra/crypto/jobqueue/requirement/AxolotlSessionRequirement;
+    0286..028c  invoke-direct  {v12, v7, v3, v1}, Lcom/whatsapp/infra/crypto/jobqueue/requirement/AxolotlSessionRequirement;-><init>(Lcom/whatsapp/infra/core/jid/DeviceJid;LX/E78;Z)V
+    028c..0292  invoke-virtual  {v0, v12}, LX/DCZ;->A04(Lorg/whispersystems/jobqueue/requirements/Requirement;)V
+    0292..0296  if-eqz  v47, -0x7c
+    0296..029a  new-instance  v12, Lcom/whatsapp/infra/jobs/requirements/AxolotlDifferentAliceBaseKeyRequirement;
+    029a..02a0  invoke-direct  {v12, v7, v3, v13, v1}, Lcom/whatsapp/infra/jobs/requirements/AxolotlDifferentAliceBaseKeyRequirement;-><init>(Lcom/whatsapp/infra/core/jid/DeviceJid;LX/E78;[BZ)V
+    02a0..02a2  goto  -0x20
+    02a2..02a8  invoke-virtual  {v0}, LX/DCZ;->A03()Lorg/whispersystems/jobqueue/JobParameters;
+    02a8..02aa  move-result-object  v3
+    02aa..02ae  move-object/from16  v0, v30
+    02ae..02b4  invoke-direct  {v0, v3}, Lorg/whispersystems/jobqueue/Job;-><init>(Lorg/whispersystems/jobqueue/JobParameters;)V
+    02b4..02ba  invoke-static  {v15}, LX/00L;->A04(Ljava/lang/CharSequence;)V
+    02ba..02be  iput-object  v15, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->id:Ljava/lang/String;
+    02be..02c4  invoke-virtual  {v5}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+    02c4..02c6  move-result-object  v3
+    02c6..02ca  iput-object  v3, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->jid:Ljava/lang/String;
+    02ca..02d0  invoke-static  {v6}, LX/0Dn;->A09(Lcom/whatsapp/infra/core/jid/Jid;)Ljava/lang/String;
+    02d0..02d2  move-result-object  v3
+    02d2..02d6  iput-object  v3, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->participant:Ljava/lang/String;
+    02d6..02dc  invoke-static  {v11}, LX/0Dn;->A09(Lcom/whatsapp/infra/core/jid/Jid;)Ljava/lang/String;
+    02dc..02de  move-result-object  v3
+    02de..02e2  iput-object  v3, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->recipientRawJid:Ljava/lang/String;
+    02e2..02e8  invoke-static  {}, LX/2L6;->A1F()Ljava/util/HashSet;
+    02e8..02ea  move-result-object  v3
+    02ea..02f0  invoke-static  {v14, v3}, LX/0Dn;->A0J(Ljava/lang/Iterable;Ljava/util/Collection;)V
+    02f0..02f4  iput-object  v3, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->targetDeviceRawJids:Ljava/util/HashSet;
+    02f4..02fa  invoke-static/range  {v36..v36}, LX/0Dn;->A09(Lcom/whatsapp/infra/core/jid/Jid;)Ljava/lang/String;
+    02fa..02fc  move-result-object  v3
+    02fc..0300  iput-object  v3, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->botInvokeRawJid:Ljava/lang/String;
+    0300..0304  iput  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->messageType:I
+    0304..0308  move/from16  v2, v63
+    0308..030c  iput-boolean  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->isRetryReceiptLid:Z
+    030c..0310  move/from16  v2, v62
+    0310..0314  iput-boolean  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0r:Z
+    0314..0318  move-wide/from16  v2, v52
+    0318..031c  iput-wide  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0s:J
+    031c..0320  move/from16  v2, v27
+    0320..0324  iput  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->retryCount:I
+    0324..0328  move-object/from16  v2, v39
+    0328..032c  iput-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->messageSendRetrySource:Ljava/lang/Integer;
+    032c..0330  move-object/from16  v2, v29
+    0330..0334  iput-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->groupParticipantHash:Ljava/lang/String;
+    0334..0338  move-object/from16  v2, v28
+    0338..033c  iput-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->groupParticipantUserHash:Ljava/lang/String;
+    033c..0340  iput-boolean  v10, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->includeSenderKeysInMessage:Z
+    0340..0344  move-wide/from16  v2, v54
+    0344..0348  iput-wide  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->expireTimeMs:J
+    0348..034c  move-wide/from16  v2, v56
+    034c..0350  iput-wide  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->messageSendStartTime:J
+    0350..0354  move-wide/from16  v2, v58
+    0354..0358  iput-wide  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->originalTimestamp:J
+    0358..035c  move-wide/from16  v2, v60
+    035c..0360  iput-wide  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->originationFlags:J
+    0360..0364  iput  v4, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->editVersion:I
+    0364..0368  move/from16  v2, v65
+    0368..036c  iput-boolean  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->useOneOneEncryptionOnPHashMismatch:Z
+    036c..0370  iput-object  v7, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->liveLocationDuration:Ljava/lang/Integer;
+    0370..0374  iput-boolean  v9, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->multiDeviceFanOut:Z
+    0374..0378  move/from16  v2, v25
+    0378..037c  iput-boolean  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->useLidForEncryption:Z
+    037c..0380  move-object/from16  v2, v48
+    0380..0384  iput-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->ephemeralSharedSecret:[B
+    0384..0386  const/4  v10, #0x0
+    0386..038a  if-eqz  v45, +0x2c
+    038a..0390  invoke-interface/range  {v45..v45}, Ljava/util/Map;->entrySet()Ljava/util/Set;
+    0390..0392  move-result-object  v2
+    0392..0398  invoke-static  {}, LX/2L6;->A1E()Ljava/util/HashMap;
+    0398..039a  move-result-object  v9
+    039a..039e  if-eqz  v2, +0x23
+    039e..03a4  invoke-interface  {v2}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    03a4..03a6  move-result-object  v7
+    03a6..03ac  invoke-interface  {v7}, Ljava/util/Iterator;->hasNext()Z
+    03ac..03ae  move-result  v2
+    03ae..03b2  if-eqz  v2, +0x19
+    03b2..03b8  invoke-static  {v7}, LX/1Xl;->A1E(Ljava/util/Iterator;)Ljava/util/Map$Entry;
+    03b8..03ba  move-result-object  v4
+    03ba..03c0  invoke-static  {v4}, LX/DBc;->A0e(Ljava/util/Map$Entry;)Lcom/whatsapp/infra/core/jid/Jid;
+    03c0..03c2  move-result-object  v2
+    03c2..03c6  if-eqz  v2, -0xe
+    03c6..03cc  invoke-virtual  {v2}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+    03cc..03ce  move-result-object  v3
+    03ce..03d4  invoke-interface  {v4}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+    03d4..03d6  move-result-object  v2
+    03d6..03dc  invoke-virtual  {v9, v3, v2}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    03dc..03de  goto  -0x1b
+    03de..03e0  move-object  v9, v10
+    03e0..03e4  iput-object  v9, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->broadcastParticipantEphemeralSettings:Ljava/util/HashMap;
+    03e4..03e8  move-object/from16  v2, v44
+    03e8..03ec  iput-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->broadcastListName:Ljava/lang/String;
+    03ec..03f2  invoke-static  {}, LX/2L6;->A1E()Ljava/util/HashMap;
+    03f2..03f4  move-result-object  v2
+    03f4..03f8  iput-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->encryptionRetryCounts:Ljava/util/HashMap;
+    03f8..03fc  move/from16  v2, v68
+    03fc..0400  iput-boolean  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->forceSenderKeyDistribution:Z
+    0400..0404  iput-boolean  v8, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->useParticipantUserHash:Z
+    0404..0408  iput-boolean  v1, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->fetchPqPrekey:Z
+    0408..040c  move-object/from16  v1, v37
+    040c..0410  if-eqz  v37, +0x4
+    0410..0414  iget-object  v10, v1, LX/FMF;->A00:[B
+    0414..0418  iput-object  v10, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->innerMessagePlaintextWithoutPadding:[B
+    0418..041c  move-object/from16  v1, v38
+    041c..0422  invoke-static  {v1}, LX/00L;->A05(Ljava/lang/Object;)V
+    0422..0426  iput-object  v1, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0l:LX/DiW;
+    0426..042a  iput-object  v5, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0K:Lcom/whatsapp/infra/core/jid/Jid;
+    042a..0430  invoke-static  {v5}, LX/DBc;->A0Z(Lcom/whatsapp/infra/core/jid/Jid;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0430..0432  move-result-object  v1
+    0432..0436  iput-object  v1, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0J:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0436..043a  iput-object  v11, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0L:Lcom/whatsapp/infra/core/jid/UserJid;
+    043a..0440  invoke-direct  {v0}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A00()Ljava/lang/String;
+    0440..0442  move-result-object  v2
+    0442..0446  const-string  v1, "SendE2EMessageJob/e2e message send job created"
+    0446..044c  invoke-static  {v1, v2}, LX/2LA;->A1N(Ljava/lang/String;Ljava/lang/String;)V
+    044c..0452  invoke-direct  {v0, v6, v5}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A02(Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/Jid;)V
+    0452..0454  return-void
+    0454..045a  invoke-static  {v12}, LX/1Xl;->A0g(Ljava/lang/String;)Ljava/lang/IllegalStateException;
+    045a..045c  move-result-object  v0
+    045c..045e  throw  v0
+    045e..0464  invoke-static  {v12}, LX/1Xl;->A0g(Ljava/lang/String;)Ljava/lang/IllegalStateException;
+    0464..0466  move-result-object  v0
+    0466..0468  throw  v0
+    # exception table: 0 try range(s)
+.end method

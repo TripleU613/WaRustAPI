@@ -1,0 +1,15 @@
+
+# class: LX/NhR;
+# extends: Ljava/lang/Object;
+
+.method public A00(VL)  # .registers 2
+    # full signature: LX/NhR;->A00(Lorg/whispersystems/jobqueue/Job;)V
+    0000..0004  iget-object  v1, v1, Lorg/whispersystems/jobqueue/Job;->A02:Landroid/os/PowerManager$WakeLock;
+    0004..0008  if-eqz  v1, +0xb
+    0008..000e  invoke-virtual  {v1}, Landroid/os/PowerManager$WakeLock;->isHeld()Z
+    000e..0010  move-result  v0
+    0010..0014  if-eqz  v0, +0x5
+    0014..001a  invoke-static  {v1}, LX/0a8;->A01(Landroid/os/PowerManager$WakeLock;)V
+    001a..001c  return-void
+    # exception table: 0 try range(s)
+.end method

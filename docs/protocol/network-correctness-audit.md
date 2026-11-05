@@ -2917,3 +2917,10 @@ Normal receive attaches success ACK only after durable message reservation and
 uses root receipt correlation. ACK failure prevents resend submission; any
 uncertain work stays held. Queries/refusals/duplicates/group paths remain outside
 this ACK authority. [Evidence, tests and limits](retry-ack-dispatch.md#reserved-direct-resend-success-ack--2026-11-05). No live traffic.
+
+2026-11-05 — **Durable retry key queries now ACK first.**
+
+Selected post-ACK job/session-requirement fetch entry traced. Normal wrapper
+attaches root receipt ACK only after pending job and fetching marker commit;
+ACK/query failure stops without replay. [Evidence, tests and limits](retry-ack-dispatch.md#durable-retry-key-query-ack-ordering--2026-11-05).
+No key-request field/backoff change or live traffic; recovery remains incomplete.

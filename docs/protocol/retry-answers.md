@@ -372,3 +372,11 @@ message resend has committed its reservation and before submitting that resend.
 Key-query/refused/duplicate paths do not gain ACK authority. The public answer
 API is unchanged; the private normal-driver wrapper carries the optional ACK.
 [Evidence, ordering/fault regressions and remaining recovery scope](retry-ack-dispatch.md#reserved-direct-resend-success-ack--2026-11-05).
+
+## Durable retry key-query ACK (2026-11-05)
+
+After tracing the selected post-ACK job's session requirements and key-fetch
+entry, the normal private wrapper also attaches a receipt ACK to an already
+reserved fresh-key IQ. Both pending job and fetching marker precede ACK/query
+writes. Directory reply handling remains guarded and sends no extra receipt ACK.
+[Evidence, workflow/fault regressions and limits](retry-ack-dispatch.md#durable-retry-key-query-ack-ordering--2026-11-05).

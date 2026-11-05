@@ -90,6 +90,9 @@ push. This validates local decoded-node behavior, not live server acceptance.
 
 ## Reserved direct resend success ACK — 2026-11-05
 
+This initial31273d5 chunk excluded queries; the follow-up below supersedes that
+query exclusion after tracing their deferred job requirements.
+
 **Confirmed static / bounded local port.** In pinned43.72,160.A04 buildsFe5 and
 puts it into14h.A09 at0668..06ac. On the selected non-BX2 successful-handler
 path,14h.A00 calls0Sf.A0O at0156..015c then branches to00fe, removes the Runnable
@@ -135,3 +138,33 @@ channels and synthetic crypto/store data, not a socket, APK runtime or account.
 Validation:1325 workspace/all-feature tests passed, along with strict workspace/
 all-target/all-feature Clippy, formatting, CLI-reference regeneration, APK
 coverage and repository hygiene. No live request or runtime-native observation.
+
+## Durable retry key-query ACK ordering — 2026-11-05
+
+[Selected session preparation, job requirements, job-added key fetch and limits](apk/2.26.43.72-retry-query-ack/README.md)
+now establish the selected query path after ACK submission. FG2.CbE performs
+pre-ACK session preparation through163.A05/A04. Registration mismatch can
+return the **old base key** after selected cleanup. The post-ACKFe5 callback
+constructs the send job with SessionRequirement and, for that old key,
+DifferentAliceBaseKeyRequirement. ItsA0J job-added requirement scan invokes
+14t.A07 for an unmet device session/base-key requirement.
+The selected enqueue hook is bound through0fW.A01 →Qlv selector31 →NhR.A04
+→virtualJob.A0J; persistent-job insertion is conditional and precedes that hook.
+
+Normal direct answer_with_confirmation now attaches a handled-retry ACK after a
+key IQ's pending job and fetching/query/count checkpoint commit. NodeLink writes
+ACK before IQ with the same failure stop rule as a reserved message. The later
+IQ reply still must pass ownership/original/peer guards before resend; it does
+not create a new receipt ACK. Refusal/duplicate/group/unsupported-context paths,
+uncertain holds and no-automatic-replay policy remain unchanged.
+
+0wT.A02 and the send-job constructor'sA02 were ruled out as key-fetch entries:
+they are rejection diagnostics and argument validation, respectively. Native
+14t.A03's selected backoff reset is recorded, not copied as an unconditional
+Rust policy. Manager batching/backoff/final wire serializer, redelivery ACKs,
+full recovery and every native job provider remain open. No live traffic.
+
+Validation:1325 workspace/all-feature tests passed with the expanded query
+reservation and two-route write-failure checks. Strict workspace/all-target/
+all-feature Clippy, formatting, CLI reference, APK coverage and research hygiene
+passed. No live server or native-runtime validation.

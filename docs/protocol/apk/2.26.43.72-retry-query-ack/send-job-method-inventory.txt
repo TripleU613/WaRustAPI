@@ -1,0 +1,20 @@
+# class: Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;
+    # full signature: Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;-><clinit>()V
+    # full signature: Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;-><init>(Lcom/google/common/base/Optional;Lcom/whatsapp/infra/aea/statemanagement/AeaReconciliationRequirement;Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/Jid;Lcom/whatsapp/infra/core/jid/UserJid;Lcom/whatsapp/infra/core/jid/UserJid;LX/FMF;LX/DiW;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/util/Set;[B[BIIIJJJJJZZZZZZZZZZ)V
+    # full signature: Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A00()Ljava/lang/String;
+    # full signature: Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A01()Ljava/util/HashSet;
+    # full signature: Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A02(Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/Jid;)V
+    # full signature: Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A03()Z
+    # full signature: Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A04()Z
+    # full signature: Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A05()Z
+    # full signature: Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A06(LX/0DY;Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/PhoneUserJid;Lcom/whatsapp/infra/core/jid/PhoneUserJid;LX/1dW;Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;Ljava/lang/String;Ljava/lang/String;Ljava/util/Collection;IJZZ)Z
+    # full signature: Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->readObject(Ljava/io/ObjectInputStream;)V
+    # full signature: Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->writeObject(Ljava/io/ObjectOutputStream;)V
+    # full signature: Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0J()V
+    # full signature: Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0K()V
+    # full signature: Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0L()V
+    # full signature: Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0M()Z
+    # full signature: Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0N(Ljava/lang/Exception;)Z
+    # full signature: Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0O()LX/1dW;
+    # full signature: Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0P(LX/18U;Ljava/lang/Integer;Ljava/util/Collection;IIIIZZ)V
+    # full signature: Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->Cf0(Landroid/content/Context;)V

@@ -1,0 +1,76 @@
+
+# class: Lcom/whatsapp/infra/crypto/jobqueue/requirement/AxolotlSessionRequirement;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLZ)  # .registers 5
+    # full signature: Lcom/whatsapp/infra/crypto/jobqueue/requirement/AxolotlSessionRequirement;-><init>(Lcom/whatsapp/infra/core/jid/DeviceJid;LX/E78;Z)V
+    0000..0006  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v2, v1, Lcom/whatsapp/infra/crypto/jobqueue/requirement/AxolotlSessionRequirement;->A00:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    000a..0010  invoke-virtual  {v2}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+    0010..0012  move-result-object  v0
+    0012..0016  iput-object  v0, v1, Lcom/whatsapp/infra/crypto/jobqueue/requirement/AxolotlSessionRequirement;->jid:Ljava/lang/String;
+    0016..001a  iput-boolean  v4, v1, Lcom/whatsapp/infra/crypto/jobqueue/requirement/AxolotlSessionRequirement;->fetchPqPrekey:Z
+    001a..001e  iget  v0, v3, LX/E78;->intValue:I
+    001e..0022  iput  v0, v1, Lcom/whatsapp/infra/crypto/jobqueue/requirement/AxolotlSessionRequirement;->sessionScopeValue:I
+    0022..0024  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method private readObject(VL)  # .registers 4
+    # full signature: Lcom/whatsapp/infra/crypto/jobqueue/requirement/AxolotlSessionRequirement;->readObject(Ljava/io/ObjectInputStream;)V
+    0000..0006  invoke-virtual  {v3}, Ljava/io/ObjectInputStream;->defaultReadObject()V
+    0006..000a  iget-object  v1, v2, Lcom/whatsapp/infra/crypto/jobqueue/requirement/AxolotlSessionRequirement;->jid:Ljava/lang/String;
+    000a..000e  sget-object  v0, Lcom/whatsapp/infra/core/jid/DeviceJid;->Companion:LX/0EB;
+    000e..0014  invoke-virtual  {v0, v1}, LX/0EB;->A03(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0014..0016  move-result-object  v0
+    0016..001a  iput-object  v0, v2, Lcom/whatsapp/infra/crypto/jobqueue/requirement/AxolotlSessionRequirement;->A00:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    001a..001c  return-void
+    001c..0020  const-string  v0, "jid must be a valid user jid; jid="
+    0020..0026  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0026..0028  move-result-object  v1
+    0028..002c  iget-object  v0, v2, Lcom/whatsapp/infra/crypto/jobqueue/requirement/AxolotlSessionRequirement;->jid:Ljava/lang/String;
+    002c..0032  invoke-static  {v0, v1}, LX/DBg;->A0Z(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/io/InvalidObjectException;
+    0032..0034  move-result-object  v0
+    0034..0036  throw  v0
+    # exception table: 1 try range(s)
+    # catch LX/09P; code_units 0003..000e -> 000e
+.end method
+
+.method public BWq(Z)  # .registers 5
+    # full signature: Lcom/whatsapp/infra/crypto/jobqueue/requirement/AxolotlSessionRequirement;->BWq()Z
+    0000..0004  iget  v0, v4, Lcom/whatsapp/infra/crypto/jobqueue/requirement/AxolotlSessionRequirement;->sessionScopeValue:I
+    0004..000a  invoke-static  {v0}, LX/EHr;->A00(I)LX/E78;
+    000a..000c  move-result-object  v3
+    000c..0010  iget-boolean  v0, v4, Lcom/whatsapp/infra/crypto/jobqueue/requirement/AxolotlSessionRequirement;->fetchPqPrekey:Z
+    0010..0014  if-eqz  v0, +0x14
+    0014..0018  iget-object  v2, v4, Lcom/whatsapp/infra/crypto/jobqueue/requirement/AxolotlSessionRequirement;->A01:LX/0WJ;
+    0018..001c  iget-object  v1, v4, Lcom/whatsapp/infra/crypto/jobqueue/requirement/AxolotlSessionRequirement;->A00:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    001c..0020  sget-object  v0, LX/E7N;->A02:LX/E7N;
+    0020..0026  invoke-static  {v1, v3, v0}, LX/F3k;->A06(Lcom/whatsapp/infra/core/jid/DeviceJid;LX/E78;LX/E7N;)LX/EoY;
+    0026..0028  move-result-object  v0
+    0028..002e  invoke-virtual  {v2, v0}, LX/0WJ;->A14(LX/EoY;)Z
+    002e..0030  move-result  v0
+    0030..0034  if-eqz  v0, +0x4
+    0034..0036  const/4  v0, #0x1
+    0036..0038  return  v0
+    0038..003c  iget-object  v2, v4, Lcom/whatsapp/infra/crypto/jobqueue/requirement/AxolotlSessionRequirement;->A01:LX/0WJ;
+    003c..0040  iget-object  v1, v4, Lcom/whatsapp/infra/crypto/jobqueue/requirement/AxolotlSessionRequirement;->A00:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0040..0042  const/4  v0, #0x0
+    0042..0048  invoke-static  {v1, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0048..004c  sget-object  v0, LX/E7N;->A03:LX/E7N;
+    004c..0052  invoke-static  {v1, v3, v0}, LX/F3k;->A06(Lcom/whatsapp/infra/core/jid/DeviceJid;LX/E78;LX/E7N;)LX/EoY;
+    0052..0054  move-result-object  v0
+    0054..005a  invoke-virtual  {v2, v0}, LX/0WJ;->A14(LX/EoY;)Z
+    005a..005c  move-result  v0
+    005c..005e  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public Cf0(VL)  # .registers 3
+    # full signature: Lcom/whatsapp/infra/crypto/jobqueue/requirement/AxolotlSessionRequirement;->Cf0(Landroid/content/Context;)V
+    0000..0006  invoke-static  {}, LX/DBb;->A0c()LX/0WJ;
+    0006..0008  move-result-object  v0
+    0008..000c  iput-object  v0, v1, Lcom/whatsapp/infra/crypto/jobqueue/requirement/AxolotlSessionRequirement;->A01:LX/0WJ;
+    000c..000e  return-void
+    # exception table: 0 try range(s)
+.end method
