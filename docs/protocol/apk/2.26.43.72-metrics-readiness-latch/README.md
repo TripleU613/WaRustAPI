@@ -66,9 +66,47 @@ the selected executor-context predicate true calls the wait helper first, while
 false queues a wrapper. Its integer meaning and native continuation are not
 reconstructed here. It is not a per-event server confirmation API.
 
+## FIFO completion advances even after an initialization exception
+
+**Confirmed static,2026-11-05:** the complete [098 executor](../2.26.43.72-prekey-upload-replies/prekey-ack-serial-executor.txt)
+and [1VR wrapper](../2.26.43.72-prekey-upload-replies/prekey-ack-serial-worker.txt)
+were re-exported and matched those retained sources byte for byte.098's
+constructor creates ArrayDeque; execute offers a selector0 wrapper at its tail,
+andA00 polls the head, marks it active and submits to08Z.0NR constructs its
+three098 objects with the final Boolean false, selectingCbD in that submission.
+
+1VR selector0 runs the task under a separate execution lock. On normal return
+it increments the completed-task counter, clears its current-thread marker and
+calls098.A00 to dispatch the next queued task. Its catch-all path performs the
+same bookkeeping/next dispatch, then rethrows the original failure if that
+advance returns. Therefore a task's exception does not by itself permanently
+stop this serial queue. Failure in the next-dispatch call can still prevent
+progress or replace the thrown outcome; underlying executor behavior is open.
+
+0NY.ALK submits initialization47 before release3 to the same0NR.A00 instance.
+Consequently, for accepted tasks whose wrappers execute/advance normally,
+release cannot run ahead of that initialization task's completion, but completion
+can be exceptional. Native setup may throw and the wrapper can still advance
+to the release task. This is a static control-flow possibility, not an observed
+native failure or proof the underlying executor always survives exceptions.
+
+The intervening0NQ owner resolves0NR through the same global provider0x51 used
+by the factory supplying0NY.A09. Under that shared cache binding, its scheduled
+work also joinsA00 between those tasks. Provider replacement/invalidation and
+concurrent activation are not tested here.0NQ constructs its own separate
+CountDownLatch(1); that instance latch must not be confused with static0NY.A0I.
+The middle task's full behavior remains untraced.
+
+098.A03 can clear pending queue work and delayed-work bookkeeping, as shown in
+the retained full executor. Its call sites and applicability to this metrics
+startup remain open; no claim is made that it actually clears a release here.
+A lost/rejected dispatch, queue clearing, thread/process termination or an
+interrupted waiting event remains distinct from successful initialization.
+No request replay, recovery latch reset or fabricated metrics is added.
+
 ## Remaining work
 
-Concrete executor FIFO/failure behavior for this setup, activation callers,
+Underlying executor rejection/termination, activation callers,
 network/session authority, complete configuration policy, native operations,
 buffers, transport, server responses, durability and account-generation fencing
 remain incomplete. No latch manipulation, synthetic configuration, telemetry,

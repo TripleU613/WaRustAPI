@@ -1,0 +1,22 @@
+# class: LX/0NQ;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 3
+    # full signature: LX/0NQ;-><init>()V
+    0000..0006  invoke-direct  {v2}, Ljava/lang/Object;-><init>()V
+    0006..000a  const/16  v0, #0xa8a
+    000a..0010  invoke-static  {v0}, LX/05W;->A00(I)LX/05a;
+    0010..0012  move-result-object  v0
+    0012..0016  iput-object  v0, v2, LX/0NQ;->A01:LX/05a;
+    0016..001a  const/16  v0, #0x51
+    001a..0020  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0020..0022  move-result-object  v0
+    0022..0026  check-cast  v0, LX/0NR;
+    0026..002a  iput-object  v0, v2, LX/0NQ;->A02:LX/0NR;
+    002a..002c  const/4  v1, #0x1
+    002c..0030  new-instance  v0, Ljava/util/concurrent/CountDownLatch;
+    0030..0036  invoke-direct  {v0, v1}, Ljava/util/concurrent/CountDownLatch;-><init>(I)V
+    0036..003a  iput-object  v0, v2, LX/0NQ;->A03:Ljava/util/concurrent/CountDownLatch;
+    003a..003c  return-void
+    # exception table: 0 try range(s)
+.end method

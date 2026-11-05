@@ -16026,5 +16026,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-metrics-readiness-latch/README.md",
     "description": "Primary metrics activation submits initialization and a separate static latch-release task. isInitialized checks count zero, while activation is per-instance and native setup return is discarded. This does not establish native success for every instance. Executor, source authority, native transport and durable generation recovery remain open. No telemetry, sender, route or live operation added."
+  },
+  "x-metrics-fifo-failure-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-metrics-readiness-latch/README.md#fifo-completion-advances-even-after-an-initialization-exception",
+    "description": "Reverified serial executor advances queued tasks after normal or exceptional completion. Metrics initialization precedes latch-release task but failure can still advance toward release; latch opening is not a native-success result. Underlying dispatch failure, activation authority, native transport and durable recovery remain open. No sender, retry, route or live operation added."
   }
 }

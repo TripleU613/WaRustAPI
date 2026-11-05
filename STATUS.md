@@ -1,3 +1,11 @@
+2026-11-05 — **Metrics FIFO and exceptional latch-release ordering verified.**
+
+The serial wrapper advances after thrown initialization work as well as normal
+return, so subsequent latch release is not a checked native-success result.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-metrics-readiness-latch/README.md#fifo-completion-advances-even-after-an-initialization-exception).
+Research only; no runtime changes or live traffic. Validation: two complete
+export/source matches, checksums, JSON, coverage freshness and repository hygiene.
+
 2026-11-05 — **Metrics readiness latch release and native setup traced.**
 
 Release is a separate queued task; static count zero and per-instance activation

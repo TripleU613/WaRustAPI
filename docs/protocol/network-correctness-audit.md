@@ -2270,3 +2270,13 @@ Count zero is not by itself proof every instance's native setup succeeded.
 [Selected activation, release, status and native boundary](apk/2.26.43.72-metrics-readiness-latch/README.md).
 Executor failure/order, activation/source authority, native transport and durable
 generation recovery remain open. No Rust behavior or live account operation changed.
+
+### Metrics FIFO advances after exceptional completion (2026-11-05)
+
+**Confirmed static, APK43.72:** reverified098/1VR FIFO dispatches the next task
+after either task return or catch-all cleanup. Initialization47 precedes release3
+on the same queue, but exceptional completion can still advance toward latch
+release. An open latch therefore remains distinct from native success.
+[Full executor links and scoped failure analysis](apk/2.26.43.72-metrics-readiness-latch/README.md#fifo-completion-advances-even-after-an-initialization-exception).
+Underlying dispatch failure, middle task, activation authority and native transport
+remain open. No Rust behavior or live account operation changed.

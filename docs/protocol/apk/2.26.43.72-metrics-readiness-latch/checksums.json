@@ -1,7 +1,7 @@
 {
   "README.md": {
-    "bytes": 4480,
-    "sha256": "2d8e77ecdcff1d5b2396ef4a9c4c4e11a0db65f023d5c7c85b7f5f4693ca0b2c"
+    "bytes": 6967,
+    "sha256": "eb45c924c4b9c19eb85939fc006afd540de0681ccc545194f204c566abf5bddb"
   },
   "activate.txt": {
     "bytes": 1660,
@@ -14,6 +14,10 @@
   "executor-constructor.txt": {
     "bytes": 1069,
     "sha256": "fef59d47dab3ef397d7feba983cab3aefc80ccd2cf3b297895adaa97cc8ba20d"
+  },
+  "init-owner-constructor.txt": {
+    "bytes": 998,
+    "sha256": "48bf4080d98a45bfe1c99f64b6fd01c5c06b19d4b531e4e87aa273e9b4a7ceaf"
   },
   "initialization47-selected-excerpts.txt": {
     "bytes": 10050,
