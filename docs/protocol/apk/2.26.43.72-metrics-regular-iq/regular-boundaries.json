@@ -1,0 +1,70 @@
+{
+  "scope": "static regular metrics producer and outcome mapping, not live requests or Java execution",
+  "jni_method": "jnidispatchIO(ILjava/lang/Object;)J",
+  "cache_va": "0xc467f0",
+  "selector": 6,
+  "native_result_mapping": {
+    "java_bridge_true": 0,
+    "java_bridge_false": 3
+  },
+  "declared_diagnostic_binary_bounds": [
+    4,
+    126976
+  ],
+  "declared_diagnostic_time_bounds": [
+    1577865600,
+    4102473600
+  ],
+  "diagnostic_assert_throws": false,
+  "callback_delay_ms": 32000,
+  "windows": [
+    {
+      "name": "regular-native-job",
+      "start_va": "0x6fedf0",
+      "end_va": "0x6fef18",
+      "file_offset": "0x6fadf0",
+      "bytes": 296,
+      "sha256": "3f9ee1133c22547daeb8752ac31479e4340fdaaed904d6c096773eb5f43a184f"
+    },
+    {
+      "name": "queued-native-callback",
+      "start_va": "0x6fea64",
+      "end_va": "0x6feb00",
+      "file_offset": "0x6faa64",
+      "bytes": 156,
+      "sha256": "5192da9b6053a13e89d94d337a054d5dd4a1ece21974ce49140ff56c25fcb312"
+    },
+    {
+      "name": "regular-outcome-thunk",
+      "start_va": "0xbd8a68",
+      "end_va": "0xbd8a70",
+      "file_offset": "0xbd4a68",
+      "bytes": 8,
+      "sha256": "13c14913c2fbebdf0c5e777eff51b1c17eb733735f9009de903474f42bbb64bb"
+    },
+    {
+      "name": "queued-outcome-thunk",
+      "start_va": "0xbd8b98",
+      "end_va": "0xbd8ba0",
+      "file_offset": "0xbd4b98",
+      "bytes": 8,
+      "sha256": "7555e73527f4a9819937cbedb6457d10deb9936507b6aded36be988ddc7d9958"
+    },
+    {
+      "name": "job-unpack-arguments",
+      "start_va": "0xbdd3f0",
+      "end_va": "0xbdd40c",
+      "file_offset": "0xbd93f0",
+      "bytes": 28,
+      "sha256": "8ca403418cc1ee404e565d7c32e0e6686e9886f85727544917dce6fd0287eac8"
+    },
+    {
+      "name": "outcome-arguments",
+      "start_va": "0xbe19f4",
+      "end_va": "0xbe1a00",
+      "file_offset": "0xbdd9f4",
+      "bytes": 12,
+      "sha256": "dbba0a6c27880adb17b876a3540df008ac2e395a3d5732f32f12c0b1be49b237"
+    }
+  ]
+}

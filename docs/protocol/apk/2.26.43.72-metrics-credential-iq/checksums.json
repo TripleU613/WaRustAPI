@@ -1,9 +1,9 @@
 {
   "README.md": {
-    "bytes": 12248,
-    "sha256": "926292b520d4a6ae5453f00220f3dc5ee67690330b8bbd477f3be1882b40829a"
+    "bytes": 12514,
+    "sha256": "5caeb132cfe65984adaee3b98bbf13112dafc38e77d54bdd2e59205ca3117272"
   },
-  "binary-length-guard.txt": {
+  "binary-length-diagnostic.txt": {
     "bytes": 1445,
     "sha256": "974f8eefcb6fa49b33b0f8fb37724896ead70fa7610ae8f58457fefcf2b6ce5d"
   },

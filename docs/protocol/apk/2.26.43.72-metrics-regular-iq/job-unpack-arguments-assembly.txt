@@ -1,0 +1,7 @@
+            0x00bdd3f0      mov   x7, x0
+            0x00bdd3f4      add   x2, sp, 0x10
+            0x00bdd3f8      add   x4, sp, 8
+            0x00bdd3fc      mov   x6, sp
+            0x00bdd400      mov   w0, 3
+            0x00bdd404      mov   x1, x19
+            0x00bdd408      mov   x3, x20

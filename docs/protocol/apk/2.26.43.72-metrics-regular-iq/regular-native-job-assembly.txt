@@ -1,0 +1,74 @@
+            0x006fedf0      paciasp
+            0x006fedf4      sub   sp, sp, 0x60
+            0x006fedf8      stp   x29, x30, [sp, 0x20]
+            0x006fedfc      str   x23, [sp, 0x30]
+            0x006fee00      bl    0x4c8a08
+            0x006fee04      add   x29, sp, 0x20
+            0x006fee08      bl    0xbdd428
+            0x006fee0c      bl    0xbe515c
+            0x006fee10      bl    sym.imp.MCIParamsGetTypeID
+            0x006fee14      mov   x1, x19
+            0x006fee18      bl    sym.imp.__MCFCastToClassNotNull
+            0x006fee1c      mov   x19, x0
+            0x006fee20      bl    0x6fed5c
+            0x006fee24      mov   x20, x0
+            0x006fee28      bl    0x721550
+            0x006fee2c      mov   x21, x0
+            0x006fee30      bl    0x736504
+            0x006fee34      bl    0xbdd3f0
+            0x006fee38      mov   w22, 3
+            0x006fee3c      bl    sym.imp.MCIParamsUnpackWithTypeIDs
+            0x006fee40      ldp   x20, x19, [sp]
+            0x006fee44      mov   x0, x19
+            0x006fee48      bl    0x71e250
+            0x006fee4c      ldr   x21, [x0, 0x18]                      ; [0x18:4]=0
+            0x006fee50      bl    sym.imp.wa_log_require_thread_attached
+            0x006fee54      mov   w1, 6
+            0x006fee58      mov   x2, x21
+            0x006fee5c      bl    0x6ecd60
+            0x006fee60      tst   w0, 1
+            0x006fee64      csel  w21, wzr, w22, ne
+            0x006fee68      bl    0x736504
+            0x006fee6c      mov   x1, x20
+            0x006fee70      bl    sym.imp.__MCFCastToClassNotNull
+            0x006fee74      ldr   x20, [x0, 0x28]                      ; [0x28:4]=0xc306e8
+            0x006fee78      bl    0xbe197c
+            0x006fee7c      bl    sym.imp.MCIExecutionQueueGetExecutionContext
+        ┌─< 0x006fee80      cbz   w0, 0x6feed4
+        │   0x006fee84      mov   w0, w21
+        │   0x006fee88      bl    0x6fe95c
+        │   0x006fee8c      mov   x21, x0
+        │   0x006fee90      mov   w0, 3
+        │   0x006fee94      mov   x1, x22
+        │   0x006fee98      bl    0xbe6b94
+        │   0x006fee9c      bl    sym.imp.MCIParamsCreate
+        │   0x006feea0      bl    0xbe1a60
+        │   0x006feea4      bl    sym.imp.MCFRelease
+        │   0x006feea8      movi  d0, 0000000000000000
+        │   0x006feeac      adrp  x2, 0xbd8000
+        │   0x006feeb0      add   x2, x2, 0xb98
+        │   0x006feeb4      adrp  x4, 0xf0000
+        │   0x006feeb8      add   x4, x4, 0x204
+        │   0x006feebc      mov   x0, x20
+        │   0x006feec0      bl    0xbdfcb0
+        │   0x006feec4      bl    sym.imp.MCIExecutionQueueExecuteAsyncHelper
+        │   0x006feec8      mov   x0, x19
+        │   0x006feecc      bl    sym.imp.MCFRelease
+       ┌──< 0x006feed0      b     0x6feef4
+       │└─> 0x006feed4      ldr   x8, [x22, 0x18]                      ; [0x18:4]=0
+       │    0x006feed8      adrp  x9, 0xbd8000
+       │    0x006feedc      add   x9, x9, 0xa68
+       │    0x006feee0      cmp   x8, x9
+       │┌─< 0x006feee4      b.ne  0x6fef14
+       ││   0x006feee8      ldr   x2, [x22, 0x20]                      ; [0x20:4]=64 ; "@"
+       ││   0x006feeec      bl    0xbe19f4
+       ││   0x006feef0      blr   x8
+       └──> 0x006feef4      bl    0xbdd6fc
+       ┌──< 0x006feef8      b.ne  0x6fef10
+       ││   0x006feefc      bl    0x5ccddc
+       ││   0x006fef00      ldp   x29, x30, [sp, 0x20]
+       ││   0x006fef04      add   sp, sp, 0x60
+       ││   0x006fef08      autiasp
+       ││   0x006fef0c      ret
+       └──> 0x006fef10      bl    sym.imp.__stack_chk_fail
+        └─> 0x006fef14      brk   0x5502

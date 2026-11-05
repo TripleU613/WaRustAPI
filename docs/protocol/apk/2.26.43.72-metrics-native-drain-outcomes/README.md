@@ -45,7 +45,8 @@ retains the first snapshot value, sets+0x50=1 and, when callback table exists,
 invokes its+0x30 status function with context,w1=1,w2=0,error=null. Set snapshot
 order is not a proved FIFO/priority guarantee. It then packages three objects
 and submits an asynchronous job via **0xbd8bb8 →0x6fedf0** on the selected queue.
-Full job-to-network producer binding is not closed in this bundle.
+The subsequent [regular-IQ trace](../2.26.43.72-metrics-regular-iq/README.md)
+now binds this job to Java selector6 and w:stats request/result handling.
 
 If no selected task exists, it calls the same0x7273a8 helper with raw argument0.
 An active drain therefore reports its no-error end through this path; merely

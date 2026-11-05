@@ -1,0 +1,74 @@
+{
+  "README.md": {
+    "bytes": 8559,
+    "sha256": "13fe848af3a65c80394890d76a7ca8ceb63096af407b01cfe13a464be4dc4b38"
+  },
+  "callback-interfaces.txt": {
+    "bytes": 155,
+    "sha256": "f196a2163712dac0efdd7f5fc710fedadc5c9dba5ec68372bd61dbf0c1139192"
+  },
+  "diagnostic-assert.txt": {
+    "bytes": 512,
+    "sha256": "624cde421ffd23991d9104849d5d30c6f8add802b5daa811c5f493d69c21c443"
+  },
+  "diagnostic-long-range.txt": {
+    "bytes": 1804,
+    "sha256": "c1d675dc67eb903b6fee1ed0a5d5e194e5f801e1d5bcad46577a095820aa930b"
+  },
+  "inspect-interfaces.py": {
+    "bytes": 2025,
+    "sha256": "98ba67713f2f7664d02a1229eec126e2e87894dfee0554a07915bc3dfca8340c"
+  },
+  "inspect-regular.py": {
+    "bytes": 1519,
+    "sha256": "3e54c0b36c482f7816a1a9594d0f614461508bad48743cad80300567d07d51e5"
+  },
+  "java-selector6-excerpt.txt": {
+    "bytes": 10273,
+    "sha256": "1c8b98d0a4034dbf94e21835a06f3a9e3a730c130078d78e7879af27255736ba"
+  },
+  "java-waiter-callback.txt": {
+    "bytes": 10558,
+    "sha256": "5272f2c8eaebab2985dabb6509a612ad8e83b5089496406716cf59394b4c69b8"
+  },
+  "java-waiter.txt": {
+    "bytes": 4547,
+    "sha256": "98ee2d6cf1d5b090cb16d55041d452b3fde6035cbe0b959a5cdf71a4f3861ebc"
+  },
+  "job-unpack-arguments-assembly.txt": {
+    "bytes": 297,
+    "sha256": "2835b8f8eab5e569dc1e0ad9b538811b759cea86ec7c5aa00a25c325e491ff68"
+  },
+  "outcome-arguments-assembly.txt": {
+    "bytes": 116,
+    "sha256": "182696e189c13b00703284e387f8f681b92134252795090dcee7462f7cad0d12"
+  },
+  "queued-native-callback-assembly.txt": {
+    "bytes": 2016,
+    "sha256": "296632751b4e630d3cac0493ef59c5d48be2263f38810fdf51fc4085958dc527"
+  },
+  "queued-outcome-thunk-assembly.txt": {
+    "bytes": 85,
+    "sha256": "f391a946bc59f6ab8a53cea46f920a46a3dd1092b88b48afc5f8d2a3a8a9f66b"
+  },
+  "regular-boundaries.json": {
+    "bytes": 1979,
+    "sha256": "0309ebe624f200aa112f6e31e4a89d1bdd7ec9cd4e3a9569f80717ef01afb17c"
+  },
+  "regular-native-job-assembly.txt": {
+    "bytes": 3765,
+    "sha256": "08df53a36af7b7d7a3dd7e8ecec7c4ba1c955130de877a40324e652be5e4ae5d"
+  },
+  "regular-outcome-thunk-assembly.txt": {
+    "bytes": 85,
+    "sha256": "f1672af6d66c387272b913c49c7b2b7ec0d92005493e6d5c9523658b8123fabf"
+  },
+  "send-if-connected.txt": {
+    "bytes": 4183,
+    "sha256": "1e1cfa0680809b0ffe191a5f394920317bea49600ecd12affab395cd38ac7456"
+  },
+  "windows.json": {
+    "bytes": 589,
+    "sha256": "fc20646162cf2f43156016d7c0823a84915b3c88d8c555403d11e4c491e2f49b"
+  }
+}

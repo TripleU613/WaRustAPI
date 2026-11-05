@@ -2479,7 +2479,7 @@ remain open.
 ### Metrics credential IQ producer and native callback mapping (2026-11-05)
 
 **Confirmed static / derived, APK 2.26.43.72:** Java selector7 constructs
-privatestats/sign_credential version1 with exact32-byte blinded_credential;
+privatestats/sign_credential version1 with diagnostic32-byte blinded_credential bounds;
 callback registration and32000ms delay precede dispatch. Selected not-ready
 wrapper returns false without Java BsS. Hyg parses required integral t and
 signed/public-key data plus optional config_id. Both selected failure methods
@@ -2591,3 +2591,16 @@ retain retryable/failure entries or remove success/non-retryable entries.
 [Start/end bodies, helper fixtures and ownership distinctions](apk/2.26.43.72-metrics-native-drain-outcomes/README.md).
 Upper callback/network job binding, backoff, generation and durable ownership
 remain open. No Rust runtime or live operation changed.
+
+### Regular metrics w:stats IQ and diagnostic-bound correction (2026-11-05)
+
+**Confirmed static, APK43.72:** regular native job calls Java selector6, builds
+iq/set/xmlns=w:stats/add binary payload, registers32000ms callback before send
+and waits through FfK/T54. Exact result returns true; inhibition/error/wait
+failures return false, mapped to native success0/failure3. Callback-backed wait
+is distinct from hard end-to-end deadline and durable delivery.
+**Correction:**00L.A0C logs AssertionError and returns. A04 bounds are diagnostic,
+not hard writer rejection; prior credential exact32-byte guard wording corrected.
+[Native/Java contract, callback interfaces and diagnostic source](apk/2.26.43.72-metrics-regular-iq/README.md).
+No Rust runtime or live request added. Full buffer/retry/durable ownership
+remains open.

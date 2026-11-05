@@ -1,0 +1,32 @@
+[
+  {
+    "name": "regular-native-job",
+    "start_va": "0x6fedf0",
+    "end_va": "0x6fef18"
+  },
+  {
+    "name": "queued-native-callback",
+    "start_va": "0x6fea64",
+    "end_va": "0x6feb00"
+  },
+  {
+    "name": "regular-outcome-thunk",
+    "start_va": "0xbd8a68",
+    "end_va": "0xbd8a70"
+  },
+  {
+    "name": "queued-outcome-thunk",
+    "start_va": "0xbd8b98",
+    "end_va": "0xbd8ba0"
+  },
+  {
+    "name": "job-unpack-arguments",
+    "start_va": "0xbdd3f0",
+    "end_va": "0xbdd40c"
+  },
+  {
+    "name": "outcome-arguments",
+    "start_va": "0xbe19f4",
+    "end_va": "0xbe1a00"
+  }
+]

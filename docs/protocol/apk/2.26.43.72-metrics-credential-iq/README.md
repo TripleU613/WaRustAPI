@@ -21,9 +21,12 @@ those must not be merged with selector7. It constructs:
 | sign_credential | version=1; child of iq |
 | blinded_credential | supplied binary bytes; child of sign_credential |
 
-At0130 it calls 0Tk.A04(bytes,32,32). That helper checks both lower/upper
-length bounds, so this selected payload is exactly **32 bytes**; it is not a
-text encoding or an arbitrary token. 0Sf.A0G supplies the ID. Conditional ID
+At0130 it calls 0Tk.A04(bytes,32,32), declaring a32-byte diagnostic range.
+**Correction:**00L.A0C logs AssertionError and returns; it does not throw.
+The selected Java writer therefore does not hard-reject a different length
+through this helper before storing the bytes. This is binary content, not a
+text-encoding rule. Native producer/response constraints remain separate; see
+[the diagnostic helper trace](../2.26.43.72-metrics-regular-iq/README.md). 0Sf.A0G supplies the ID. Conditional ID
 validation is retained, not replaced with an assumption that every generated
 string is accepted. 0mL's server destination was previously traced as
 s.whatsapp.net in [confirmation-IQ evidence](../2.26.43.72-prekey-upload-replies/README.md).

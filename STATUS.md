@@ -1,3 +1,12 @@
+2026-11-05 — **Regular metrics IQ producer and response bridge traced.**
+
+Native job reaches selector6 w:stats; callback-backed32s wait maps exact result
+to success0, other outcomes to failure3. Corrected earlier Java length-enforcement
+claim: A04 logs bounds through nonthrowing A0C. [Evidence and limits](docs/protocol/apk/2.26.43.72-metrics-regular-iq/README.md).
+Validation: pinned window/JNI/interface resolvers, fresh Java exports, coverage
+and bundle/link hygiene. Full durable/retry ownership remains open. No Rust
+runtime or live traffic changed.
+
 2026-11-05 — **Regular metrics drain notifier separated from task ownership.**
 
 Fourteen native helper cases verify one-shot flag/status/error behavior. This
@@ -80,7 +89,7 @@ checksum/link hygiene and staged diff. No Rust runtime or live traffic changed.
 
 2026-11-05 — **Metrics credential IQ schema and callback mapping traced.**
 
-Java selector7 builds exact32-byte blinded credential request; independent
+Java selector7 builds diagnostic32-byte blinded credential bounds; independent
 callback registration precedes dispatch. Required response fields and JNI4
 failure-to-native-raw1 mapping retained. [Evidence and limits](docs/protocol/apk/2.26.43.72-metrics-credential-iq/README.md).
 Native outbound method-cache binding, crypto and full timeout/error dispatch

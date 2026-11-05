@@ -1,0 +1,39 @@
+            0x006fea64      paciasp
+            0x006fea68      sub   sp, sp, 0x50
+            0x006fea6c      stp   x29, x30, [sp, 0x20]
+            0x006fea70      bl    0x49bbe0
+            0x006fea74      add   x29, sp, 0x20
+            0x006fea78      bl    0xbdd374
+            0x006fea7c      bl    0xbe515c
+            0x006fea80      bl    sym.imp.MCIParamsGetTypeID
+            0x006fea84      mov   x1, x19
+            0x006fea88      bl    sym.imp.__MCFCastToClassNotNull
+            0x006fea8c      mov   x19, x0
+            0x006fea90      bl    0x736504
+            0x006fea94      mov   x20, x0
+            0x006fea98      bl    0x721550
+            0x006fea9c      mov   x21, x0
+            0x006feaa0      bl    sym.imp.MCFNumberGetTypeID
+            0x006feaa4      bl    0xbdd3f0
+            0x006feaa8      bl    sym.imp.MCIParamsUnpackWithTypeIDs
+            0x006feaac      ldr   x0, [sp]
+            0x006feab0      bl    0x6fa6c8
+            0x006feab4      ldr   x9, [sp, 0x10]                       ; [0x10:4]=0xb70003
+            0x006feab8      adrp  x10, 0xbd8000
+            0x006feabc      add   x10, x10, 0xa68
+            0x006feac0      ldr   x8, [x9, 0x18]                       ; [0x18:4]=0
+            0x006feac4      cmp   x8, x10
+        ┌─< 0x006feac8      b.ne  0x6feaf8
+        │   0x006feacc      mov   w1, w0
+        │   0x006fead0      ldr   x0, [sp, 8]                          ; [0x8:4]=0
+        │   0x006fead4      ldr   x2, [x9, 0x20]                       ; [0x20:4]=64 ; "@"
+        │   0x006fead8      blr   x8
+        │   0x006feadc      bl    0xbdd6d8
+       ┌──< 0x006feae0      b.ne  0x6feafc
+       ││   0x006feae4      bl    0x4c8e6c
+       ││   0x006feae8      ldp   x29, x30, [sp, 0x20]
+       ││   0x006feaec      add   sp, sp, 0x50
+       ││   0x006feaf0      autiasp
+       ││   0x006feaf4      ret
+       │└─> 0x006feaf8      brk   0x5502
+       └──> 0x006feafc      bl    sym.imp.__stack_chk_fail

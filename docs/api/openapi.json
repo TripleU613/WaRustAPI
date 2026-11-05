@@ -16214,7 +16214,7 @@
     ],
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-metrics-credential-iq/README.md",
-    "description": "Java selector7 request uses privatestats/sign_credential version1 with exact32-byte binary child; callback delay32000ms registered before dispatch. Required response t and data children, optional config_id and JNI4-to-native-result mapping retained. Callback-specific class_def and shared timeout/response ownership routing retained: timeout maps to native raw1; schema errors can consume registry ownership without native completion. Static outbound method-cache binding is confirmed in the JNI cache evidence; live availability, crypto and broader recovery/generation behavior remain open. No Rust/live capability added."
+    "description": "Java selector7 request uses privatestats/sign_credential version1 with diagnostic32-byte binary bounds (not a hard Java rejection guard); callback delay32000ms registered before dispatch. Required response t and data children, optional config_id and JNI4-to-native-result mapping retained. Callback-specific class_def and shared timeout/response ownership routing retained: timeout maps to native raw1; schema errors can consume registry ownership without native completion. Static outbound method-cache binding is confirmed in the JNI cache evidence; live availability, crypto and broader recovery/generation behavior remain open. No Rust/live capability added."
   },
   "x-metrics-jni-method-cache-evidence": {
     "x-cli": false,
@@ -16278,5 +16278,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-metrics-native-drain-outcomes/README.md",
     "description": "14 bounded native cases verify regular one-shot drain-end flag/status/error behavior. It is not a backoff or persistent mutation helper; per-task retain/remove branches remain distinct. Start/async job boundary retained statically. Upper callback binding, full retry/generation and durable ownership remain open. No Rust/live capability added."
+  },
+  "x-metrics-regular-iq-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK static regular metrics IQ evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-metrics-regular-iq/README.md",
+    "description": "Regular native job binds Java selector6 w:stats/add producer and FfK/T54 callback wait; exact result maps to native success0, other outcomes failure3. Delay32000ms is a callback timer, not hard whole-operation deadline. A04 and nonnull A05 bounds log through nonthrowing A0C; prior hard credential-length guard wording corrected. Eligibility, full framing/retry/durable ownership remain open. No Rust/live capability added."
   }
 }
