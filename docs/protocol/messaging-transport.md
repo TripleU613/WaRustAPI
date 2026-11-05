@@ -1554,3 +1554,9 @@ shows a brief activation continuing the count (attempt 2).
 before the pending-ready branch can complete or refuse it. Same-ID non-reply
 IQs stay captured without ending receive or starting post-activation writes.
 [APK 43.72 0ln.A01 and actor regression](network-correctness-audit.md#activation-reply-type-admission-2026-11-04).
+
+## Keepalive reply admission correction (2026-11-04)
+
+**Confirmed / implemented offline:** pending pings require exact result/error
+for settlement. Non-reply IQs remain captured without refusal or clearing the
+pending ping; its original timeout remains active. [APK 43.72 0ln.A01 and actor tests](network-correctness-audit.md#keepalive-reply-type-admission-2026-11-04).

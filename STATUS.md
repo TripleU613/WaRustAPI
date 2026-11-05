@@ -1,3 +1,11 @@
+2026-11-04 — **Keepalive waits for an actual result/error reply.**
+
+Same-ID non-reply IQs neither terminate receive nor clear the outstanding ping.
+Actor regression covers continued processing, later result, actual error and
+unanswered timeout. [Evidence and scope](docs/protocol/network-correctness-audit.md#keepalive-reply-type-admission-2026-11-04).
+Validation: **1,279 workspace/all-feature tests**, strict Clippy, CLI reference,
+formatting, coverage freshness and repository hygiene passed. No live traffic.
+
 2026-11-04 — **Non-reply IQs no longer terminate activation as refused.**
 
 Exact result/error admission now precedes activation completion/refusal.

@@ -575,3 +575,29 @@ resolves readiness. Existing cut-point regression retains terminal actual-error
 coverage. No live account traffic. The bounded queued-action review also
 confirmed actions.record_reply already requires exact result/error before
 lookup/mutation; no change or full action-policy parity claim there.
+
+## Keepalive reply type admission (2026-11-04)
+
+**Confirmed source defect / fixed offline:** connection's pending_ping branch
+matched iq/id alone, then classified every non-result as keepalive refused.
+Missing/get/set/uppercase/unknown type could terminate receive without a reply.
+It now admits exact result/error before clearing or refusing the pending ping.
+**Confirmed static basis:** APK **2.26.43.72**, **0ln.A01**, offsets 0014–004c,
+result/error alone invoke CK4/Bvj. [Retained shared dispatch](rea/2.26.43.72-reachout-state/reachout-iq-reply-dispatch.txt).
+Preserving the Rust outstanding ping is local lifetime policy, not proof of
+native unexpected-type callback retention or full heartbeat timing parity.
+
+**Verified offline actor regression:** three paused-clock scenarios each inject
+five non-reply types with an error child, followed by server pings proving
+ordered continued processing and saved captures. A later valid result permits
+the next heartbeat; actual error remains terminal; no actual reply still reaches
+the existing recoverable timeout rather than clearing pending_ping. Thus
+non-replies do not falsely satisfy keepalive. The interval and timeout policy
+were not changed. No live traffic.
+
+**Bounded audit notes:** identity_query already checks result/error before its
+reply-body application and peer-key parsing has its own typed reply admission;
+this skim is not a complete body/sender-policy audit. A guessed file path
+media_route_coordinator.rs was absent; media coordinator locations must be
+resolved from actual source inventory on the next pass, not inferred from that
+filename. Remaining payload/origin, timing and persistence questions stay open.

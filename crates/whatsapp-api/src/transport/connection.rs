@@ -708,7 +708,9 @@ pub(crate) async fn drive(
                         }
                         continue;
                     }
-                    if id == pending_ping.as_deref() && pending_ping.is_some() {
+                    // APK 43.72 0ln.A01: non-reply IQs cannot settle a ping.
+                    if id == pending_ping.as_deref() && pending_ping.is_some()
+                        && matches!(node.get_attr("type").and_then(|v| v.as_text()), Some("result" | "error")) {
                         if node.get_attr("type").and_then(|v| v.as_text()) != Some("result") { return Err(Error::invalid("connection", "keepalive refused")); }
                         pending_ping = None; continue;
                     }
@@ -4425,6 +4427,81 @@ mod tests {
         assert!(pending_users(&store).unwrap().is_empty());
         fake.nothing_written(Duration::from_millis(300)).await;
         fake.stop_cleanly().await;
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn non_reply_iqs_leave_keepalive_pending_until_real_reply_or_timeout() {
+        for outcome in ["result", "error", "timeout"] {
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(&dir.path().join("ping-nonreply.redb"));
+            let mut fake = start(&store, false, None);
+            fake.activate().await;
+            let (ping, written) = fake.written_within(Duration::from_secs(60)).await;
+            let id = ping.get_attr("id").unwrap().clone();
+            written.send(Ok(())).unwrap();
+            for kind in [
+                None,
+                Some("get"),
+                Some("set"),
+                Some("RESULT"),
+                Some("unexpected"),
+            ] {
+                let mut node = Node::new("iq")
+                    .attr("id", id.clone())
+                    .children(vec![Node::new("error").attr("code", "503")]);
+                if let Some(kind) = kind {
+                    node = node.attr("type", kind);
+                }
+                let capture = format!(
+                    "inbound:sha256:{}",
+                    hex::encode(sha2::Sha256::digest(encode(&node).unwrap()))
+                );
+                fake.deliver(node).await;
+                fake.deliver(
+                    Node::new("iq")
+                        .attr("type", "get")
+                        .attr("xmlns", "urn:xmpp:ping"),
+                )
+                .await;
+                let (pong, written) = fake.written().await;
+                assert_eq!(
+                    pong.get_attr("type").and_then(|v| v.as_text()),
+                    Some("result")
+                );
+                assert!(
+                    store
+                        .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                        .unwrap()
+                        .is_some()
+                );
+                written.send(Ok(())).unwrap();
+            }
+            if outcome != "timeout" {
+                fake.deliver(Node::new("iq").attr("id", id).attr("type", outcome))
+                    .await;
+            }
+            if outcome == "result" {
+                let (next_ping, written) = fake.written_within(Duration::from_secs(60)).await;
+                assert_eq!(
+                    next_ping.get_attr("xmlns").and_then(|v| v.as_text()),
+                    Some("w:p")
+                );
+                written.send(Ok(())).unwrap();
+                fake.stop_cleanly().await;
+            } else {
+                let error = fake
+                    .finished_within(Duration::from_secs(60))
+                    .await
+                    .unwrap_err();
+                if outcome == "timeout" {
+                    assert!(matches!(error, Error::Timeout(_)));
+                    assert!(error.is_recoverable_by_reconnect());
+                } else {
+                    assert!(matches!(error, Error::InvalidInput { .. }));
+                    assert!(!error.is_recoverable_by_reconnect());
+                }
+            }
+        }
     }
 
     #[tokio::test(start_paused = true)]
