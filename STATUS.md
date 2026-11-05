@@ -1,3 +1,12 @@
+2026-11-04 — **Client-auth-token reply validation traced.**
+
+Original request ID/destination and result type bind token parsing; cat holds
+1..1024 opaque bytes. Invalid-header/value outcomes differ. Input authenticity,
+full JID parsing and recovery remain unfinished.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-client-auth-token-reply/README.md).
+Validation: checksums, JSON, coverage freshness and repository hygiene.
+Research only; no production changes or live traffic.
+
 2026-11-04 — **Client-auth-token request writer traced.**
 
 Selected constructor emits server IQ GET/pn input; length checks are diagnostic

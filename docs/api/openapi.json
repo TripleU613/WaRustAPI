@@ -15738,5 +15738,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-client-auth-token-writer/README.md",
     "description": "Selected native constructor28 builds a server push-namespace IQ GET with UTF-8 pn input. String helper checks length rather than numeric ID range; nonnull length violations are diagnostic in the inspected bodies. Input provenance, gating, converters and durable recovery remain unported. No phone/registration prerequisite inferred, request sender, route, automatic retry or live operation added."
+  },
+  "x-client-auth-token-reply-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-client-auth-token-reply/README.md",
+    "description": "Selected native token reply pipeline correlates IQ ID and parsed from against the original request, requires result type, then reads1..1024 opaque cat bytes. First-child selection and distinct invalid-header/value outcomes are retained. Input authenticity, native JID mapping, failure/backoff and durable recovery remain incomplete. No token sender, route, replay authority or live operation added."
   }
 }

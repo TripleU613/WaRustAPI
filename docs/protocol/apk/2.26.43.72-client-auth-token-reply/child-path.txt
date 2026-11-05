@@ -1,0 +1,12 @@
+
+# class: LX/6of;
+# extends: Ljava/lang/Object;
+
+.method public A0i(LLLI)  # .registers 4
+    # full signature: LX/6of;->A0i(LX/0Tp;[Ljava/lang/String;I)LX/0Tp;
+    0000..0004  aget-object  v0, v2, v3
+    0004..000a  invoke-virtual  {v1, v0}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    000a..000c  move-result-object  v0
+    000c..000e  return-object  v0
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,70 @@
+{
+  "README.md": {
+    "bytes": 6660,
+    "sha256": "8244fbe4d41dfb77f61ecfa26d5ee16d9147787f47c5934ea303c830d91fcab3"
+  },
+  "attribute-validation.txt": {
+    "bytes": 18991,
+    "sha256": "42989269b621c6c4fcc3c4aec860fd5cf05bcd3d8832e069c0e2bc2d708acd86"
+  },
+  "child-path.txt": {
+    "bytes": 406,
+    "sha256": "00d7411ef9fe930830b5b7e3230375cda7867a818426a9c646e42daac37a70e9"
+  },
+  "child-selection.txt": {
+    "bytes": 872,
+    "sha256": "d0d1534f2ccbf7046482d845157b888f83e86e8cb2bc779074725b95f3bfecb6"
+  },
+  "converter-wrapper.txt": {
+    "bytes": 494,
+    "sha256": "a75bc8b0cb71bcdb3b35487892bb5d12488b3b221af72772ebe95182484bc7d6"
+  },
+  "entry-validation.txt": {
+    "bytes": 332,
+    "sha256": "5232ae9a8eb8a33ba69cfc8d3ef7dd09f0929d319d34ab34739f8e0ed35a85c6"
+  },
+  "equality.txt": {
+    "bytes": 523,
+    "sha256": "8be8f552e79d63c23f38a38309a950088bb57d78f9fa186e558b5a62024b48bf"
+  },
+  "from-path.txt": {
+    "bytes": 399,
+    "sha256": "cee93223d3065581e322515c00aeafd24b1c307388d273e5f59f1b0326276cc9"
+  },
+  "min-length.txt": {
+    "bytes": 389,
+    "sha256": "2328f15eab9797dcc4296afac4c2268336e55acb6bae97f8b70a956f4f901448"
+  },
+  "primary-converter-all.txt": {
+    "bytes": 22312,
+    "sha256": "d3c5d2bcecbaae34286fd8653eaa3eefc3b5e94a3ba57b95bbc46bec6c7ee3c8"
+  },
+  "root-required.txt": {
+    "bytes": 1453,
+    "sha256": "3ea77a197282fd89d6c05b2961e5a488a8c710e42bac618b1c9adebc9ce521e5"
+  },
+  "schema-dispatch.txt": {
+    "bytes": 1054,
+    "sha256": "298ba4c69ea2aad57d689812fbb8eef82a5575b62778d776e3a0864bfa39dee9"
+  },
+  "tag-validation.txt": {
+    "bytes": 1056,
+    "sha256": "a849bb008b49bb291e8275afa105f4dffe7fbd9f92479199a450cdf65ebf20e3"
+  },
+  "type-path.txt": {
+    "bytes": 399,
+    "sha256": "8446751f6e9f827c7edd7cb82506f27d827e80826e8f5b1329cce60e53fd0d35"
+  },
+  "value-binding.txt": {
+    "bytes": 916,
+    "sha256": "c632b9a5deb6f7c4104b9baad607841c9ff8b0f4871b89f6b5ddbbc9e8288c80"
+  },
+  "value-converter-all.txt": {
+    "bytes": 29224,
+    "sha256": "1a44982c4032b2a099b6395a67819be1bfa88ec5edada4f4ad517fa1e46baccd"
+  },
+  "value-validation.txt": {
+    "bytes": 2245,
+    "sha256": "c4adce48153d30ff2f05eafaeb5b70e8e427f626180d7c876b0f05958b17f336"
+  }
+}

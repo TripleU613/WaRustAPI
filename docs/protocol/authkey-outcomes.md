@@ -71,7 +71,8 @@ constructor28 builder grammar is now traced in the writer follow-up below;
 its conditional input provenance remains a prerequisite.
 The successful `FUT.CK4` branch validates/converts the reply, saves a Base64
 `pref_client_auth_token`, calls the rotation manager, then invokes0Sf.A08.
-The converters remain untraced. The post-token held-request selection/dispatch
+The selected reply converters are now traced in the reply-validation follow-up
+below. The post-token held-request selection/dispatch
 helper is now connected in the challenged-request ownership follow-up below.
 
 **Bounded negative/correction:** the other A01 caller is `F2Y.A02`, identified
@@ -86,7 +87,8 @@ past account or caused a restriction.
 
 ## Remaining implementation obligations
 
-Constructor28 is now traced; close reply converters, push/connection gating, wire-to-sent
+Constructor28 and the selected reply converters are now traced; close
+push/connection gating, native JID parsing, wire-to-sent
 promotion, candidate lifetime and lost-result/restart reconciliation. Then
 connect durable request/candidate/token state and accepted key installation,
 preserving native attempt/cooldown distinctions and the usable old key.
@@ -124,3 +126,17 @@ in the selected validator;300 is not a proven server or hard constructor limit.
 Writer construction is now connected; input eligibility/authenticity, reply
 converters and durable challenge recovery remain unported. No production
 change, request sender, new retry authority or live traffic.
+
+### Client-auth-token reply binding and byte grammar (2026-11-04)
+
+**Confirmed static, APK43.72:** FUT's selected result pipeline first requires
+iq, matching original request ID, parsed from equal to original destination
+and type=result. It then reads opaque cat bytes with strict1..1024 bounds.
+The value converter alone does not perform request correlation. Native child
+lookup picks the first cat, without duplicate counting in this selected path.
+Invalid header throws schema error; null token conversion after a valid header
+returns without token persistence or held-request dispatch.
+[Converters, helper chain and remaining eligibility/recovery limits](apk/2.26.43.72-client-auth-token-reply/README.md).
+This closes the selected reply converter gap, not native JID parser, input
+authenticity, failure/backoff or durable recovery parity. No production change
+or live operation; Rust uncertain holds remain.

@@ -1893,3 +1893,17 @@ in the selected validator;300 is not a proven server or hard constructor limit.
 Writer construction is now connected; input eligibility/authenticity, reply
 converters and durable challenge recovery remain unported. No production
 change, request sender, new retry authority or live traffic.
+
+### Client-auth-token reply binding and byte grammar (2026-11-04)
+
+**Confirmed static, APK43.72:** FUT's selected result pipeline first requires
+iq, matching original request ID, parsed from equal to original destination
+and type=result. It then reads opaque cat bytes with strict1..1024 bounds.
+The value converter alone does not perform request correlation. Native child
+lookup picks the first cat, without duplicate counting in this selected path.
+Invalid header throws schema error; null token conversion after a valid header
+returns without token persistence or held-request dispatch.
+[Converters, helper chain and remaining eligibility/recovery limits](apk/2.26.43.72-client-auth-token-reply/README.md).
+This closes the selected reply converter gap, not native JID parser, input
+authenticity, failure/backoff or durable recovery parity. No production change
+or live operation; Rust uncertain holds remain.

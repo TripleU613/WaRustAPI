@@ -1,0 +1,46 @@
+
+# class: LX/8B6;
+# extends: Ljava/lang/Object;
+
+.method public A0I(LLLLLLL)  # .registers 20
+    # full signature: LX/8B6;->A0I(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;)Ljava/lang/Object;
+    0000..0002  move-object  v7, v15
+    0002..0008  invoke-static  {v15}, LX/3q3;->A1T(Ljava/lang/Object;)Z
+    0008..000a  move-result  v12
+    000a..000c  move-object  v5, v13
+    000c..000e  move-object  v6, v14
+    000e..0012  move-object/from16  v8, v16
+    0012..0016  move-object/from16  v9, v17
+    0016..001a  move-object/from16  v10, v18
+    001a..001e  move-object/from16  v11, v19
+    001e..0024  invoke-virtual/range  {v5..v12}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    0024..0026  move-result-object  v0
+    0026..002a  if-nez  v0, +0x18
+    002a..002e  if-nez  v18, +0x22
+    002e..0034  invoke-virtual  {v8}, Ljava/lang/Number;->longValue()J
+    0034..0036  move-result-wide  v3
+    0036..003a  const-wide/16  v1, #0x0
+    003a..003e  cmp-long  v0, v3, v1
+    003e..0042  if-gtz  v0, +0x18
+    0042..0046  const-class  v0, Ljava/lang/String;
+    0046..004c  invoke-virtual  {v15, v0}, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z
+    004c..004e  move-result  v0
+    004e..0052  if-eqz  v0, +0x5
+    0052..0056  const-string  v0, ""
+    0056..0058  return-object  v0
+    0058..005c  const-class  v0, [B
+    005c..0062  invoke-virtual  {v15, v0}, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z
+    0062..0064  move-result  v0
+    0064..0068  if-eqz  v0, +0x5
+    0068..006c  new-array  v0, v12, [B
+    006c..006e  return-object  v0
+    006e..0072  iget-object  v1, v14, LX/0Tp;->A00:Ljava/lang/String;
+    0072..0076  const-string  v0, "Element value missing for tag '"
+    0076..007c  invoke-static  {v0, v1}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    007c..007e  move-result-object  v1
+    007e..0082  const-string  v0, "'"
+    0082..0088  invoke-static  {v13, v0, v1}, LX/8B6;->A0B(LX/8B6;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    0088..008a  const/4  v0, #0x0
+    008a..008c  return-object  v0
+    # exception table: 0 try range(s)
+.end method

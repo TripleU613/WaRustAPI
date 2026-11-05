@@ -1,0 +1,13 @@
+
+# class: LX/6of;
+# extends: Ljava/lang/Object;
+
+.method public A1Y(LI)  # .registers 4
+    # full signature: LX/6of;->A1Y(I)[Ljava/lang/String;
+    0000..0002  const/4  v2, #0x0
+    0002..0006  new-array  v1, v3, [Ljava/lang/String;
+    0006..000a  const-string  v0, "type"
+    000a..000e  aput-object  v0, v1, v2
+    000e..0010  return-object  v1
+    # exception table: 0 try range(s)
+.end method
