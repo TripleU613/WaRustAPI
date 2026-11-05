@@ -549,3 +549,29 @@ result: table snapshots stay identical and the later reply still produces one
 same-wire-ID re-encryption with the received retry count. No retry/requeue,
 identity reset or live operation was added. Sender/body policies, higher counts,
 base-key decisions and activation admission remain separate unfinished work.
+
+## Activation reply type admission (2026-11-04)
+
+**Confirmed source defect / fixed offline:** connection's activation branch
+matched iq/id and pending readiness only; any non-result was terminal
+activation refused, including missing/get/set/unknown type. It now admits
+only exact result/error before entering that branch. Real error remains
+terminal; non-reply stanzas remain captured and do not resolve readiness,
+announce availability or schedule post-activation work.
+
+**Confirmed static basis:** APK **2.26.43.72**, **0ln.A01** offsets 0014–004c,
+only result/error dispatch to CK4/Bvj. Retained
+[shared dispatcher](rea/2.26.43.72-reachout-state/reachout-iq-reply-dispatch.txt).
+This is type admission only, not full native activation callback/body/sender
+parity or pending-map lifetime equivalence. The Rust activation deadline is
+unchanged; unrelated input does not restart it.
+
+**Verified offline actor regression:** inject same-ID missing/get/set/uppercase/
+unknown types with an error child before activation. A subsequent server ping
+for each proves the actor continued processing in order; its pong is the next
+write, readiness is still pending, inbound evidence exists, and account rows/
+journal remain unchanged. A later valid result then emits availability and
+resolves readiness. Existing cut-point regression retains terminal actual-error
+coverage. No live account traffic. The bounded queued-action review also
+confirmed actions.record_reply already requires exact result/error before
+lookup/mutation; no change or full action-policy parity claim there.

@@ -629,7 +629,10 @@ pub(crate) async fn drive(
                         continue;
                     }
                     let id = node.get_attr("id").and_then(|v| v.as_text());
-                    if id == Some(active_id.as_str()) && ready.is_some() {
+                    // APK 43.72 0ln.A01 dispatches only result/error callbacks.
+                    // A same-ID request is not an activation refusal.
+                    if id == Some(active_id.as_str()) && ready.is_some()
+                        && matches!(node.get_attr("type").and_then(|v| v.as_text()), Some("result" | "error")) {
                         if node.get_attr("type").and_then(|v| v.as_text()) != Some("result") {
                             return Err(Error::invalid("connection", "activation refused"));
                         }
@@ -2180,6 +2183,74 @@ mod tests {
             .clone()
     }
     use sha2::Digest;
+
+    #[tokio::test]
+    async fn non_reply_iqs_do_not_refuse_or_complete_activation() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("activation-nonreply.redb"));
+        let account = store.read(|tx| tx.scan(Table::Account, 1, 100)).unwrap();
+        let journal = store.journal_head().unwrap();
+        let mut fake = start(&store, false, None);
+        let (active, written) = fake.written().await;
+        let id = active.get_attr("id").unwrap().clone();
+        written.send(Ok(())).unwrap();
+        for kind in [
+            None,
+            Some("get"),
+            Some("set"),
+            Some("RESULT"),
+            Some("unexpected"),
+        ] {
+            let mut node = Node::new("iq")
+                .attr("id", id.clone())
+                .children(vec![Node::new("error").attr("code", "503")]);
+            if let Some(kind) = kind {
+                node = node.attr("type", kind);
+            }
+            let capture = format!(
+                "inbound:sha256:{}",
+                hex::encode(sha2::Sha256::digest(encode(&node).unwrap()))
+            );
+            fake.deliver(node).await;
+            // A subsequent server ping proves the actor processed the preceding
+            // stanza without terminating or advancing to availability/startup.
+            fake.deliver(
+                Node::new("iq")
+                    .attr("type", "get")
+                    .attr("xmlns", "urn:xmpp:ping"),
+            )
+            .await;
+            let (pong, written) = fake.written().await;
+            assert_eq!(pong.description, "iq");
+            assert_eq!(
+                pong.get_attr("type").and_then(|v| v.as_text()),
+                Some("result")
+            );
+            assert!(matches!(
+                fake.ready.try_recv(),
+                Err(oneshot::error::TryRecvError::Empty)
+            ));
+            assert!(
+                store
+                    .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                    .unwrap()
+                    .is_some()
+            );
+            assert_eq!(
+                store.read(|tx| tx.scan(Table::Account, 1, 100)).unwrap(),
+                account
+            );
+            assert_eq!(store.journal_head().unwrap(), journal);
+            written.send(Ok(())).unwrap();
+        }
+        fake.deliver(Node::new("iq").attr("id", id).attr("type", "result"))
+            .await;
+        let (presence, written) = fake.written().await;
+        assert_eq!(presence.description, "presence");
+        written.send(Ok(())).unwrap();
+        (&mut fake.ready).await.unwrap();
+        fake.stop_cleanly().await;
+    }
 
     #[tokio::test]
     async fn activation_cut_points_end_the_epoch_without_readiness() {

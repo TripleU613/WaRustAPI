@@ -1,3 +1,11 @@
+2026-11-04 — **Non-reply IQs no longer terminate activation as refused.**
+
+Exact result/error admission now precedes activation completion/refusal.
+Actor regression checks continued ping handling, capture, pending readiness,
+unchanged account/journal, then valid activation. Actual error stays terminal.
+[Evidence and limits](network-correctness-audit.md#activation-reply-type-admission-2026-11-04).
+No live traffic.
+
 2026-11-04 — **Retry refetch preserves pending state for non-reply IQs.**
 
 Exact result/error is admitted before loading/deleting a refetch checkpoint.

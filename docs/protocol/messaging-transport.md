@@ -1547,3 +1547,10 @@ now shows a stable connection resetting to attempt 1, then three activated but
 immediately dropped connections exhausting the budget;
 `waiters_span_backoff_while_nudge_connect_and_disconnect_control_the_wait`
 shows a brief activation continuing the count (attempt 2).
+
+## Activation reply admission correction (2026-11-04)
+
+**Confirmed / implemented offline:** activation requires exact result/error
+before the pending-ready branch can complete or refuse it. Same-ID non-reply
+IQs stay captured without ending receive or starting post-activation writes.
+[APK 43.72 0ln.A01 and actor regression](network-correctness-audit.md#activation-reply-type-admission-2026-11-04).
