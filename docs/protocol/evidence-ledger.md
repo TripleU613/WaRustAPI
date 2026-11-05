@@ -5971,3 +5971,13 @@ to a state-based local manager and returns literal zero. Local append/scheduling
 is not delivery or native persistence proof.
 [Tuple resolver, complete selected native bodies, outlined flow and limits](apk/2.26.43.72-metrics-native-event-routing/README.md).
 Setup initialization, flush/storage/transport and replies remain open. No Rust/live change.
+
+### Native metrics pending drain, time enrichment and selected persistence (2026-11-05)
+
+**Confirmed static / derived, APK 2.26.43.72:** queued thunk reaches native pending
+worker, which removes array index zero before processing. Channels 2/3 bucket a
+clock-derived field 47 by 3600. Selected snapshot/file helpers reach fwrite and
+fflush; flush return is ignored by the selected snapshot caller. Guard/caller
+reachability, full durable format and actual transport remain unverified.
+[Complete selected bodies, clock/thunk resolver and scoped limits](apk/2.26.43.72-metrics-native-drain-persistence/README.md).
+No queue removal/stdio flush is promoted to delivery or crash durability. No Rust/live change.

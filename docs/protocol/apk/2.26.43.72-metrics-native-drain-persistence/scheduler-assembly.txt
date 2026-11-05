@@ -1,0 +1,21 @@
+            0x007239ec      paciasp
+            0x007239f0      stp   x29, x30, [sp, -0x20]!
+            0x007239f4      str   x19, [sp, 0x10]
+            0x007239f8      mov   x29, sp
+            0x007239fc      mov   x19, x0
+            0x00723a00      bl    0xbe392c
+            0x00723a04      bl    sym.imp.MCIParamsCreate
+            0x00723a08      ldr   x8, [x19, 0x18]                      ; [0x18:4]=0
+            0x00723a0c      bl    0xbe1c4c
+            0x00723a10      bl    sym.imp.MCIExecutionGlobalQueueGetExecutionQueue
+            0x00723a14      movi  d0, 0000000000000000
+            0x00723a18      adrp  x2, 0xbd8000
+            0x00723a1c      add   x2, x2, 0xed8
+            0x00723a20      adrp  x4, 0x153000
+            0x00723a24      add   x4, x4, 0x6ee
+            0x00723a28      bl    0xbdfe18
+            0x00723a2c      bl    sym.imp.MCIExecutionQueueExecuteAsyncHelper
+            0x00723a30      bl    0x49bae8
+            0x00723a34      ldp   x29, x30, [sp], 0x20
+            0x00723a38      autiasp
+        ┌─< 0x00723a3c      b     sym.imp.MCFRelease

@@ -1,3 +1,12 @@
+2026-11-05 — **Native metrics pending worker and selected persistence traced.**
+
+Async drain removes before processing and adds channel-specific time metadata;
+selected snapshot helpers reach fwrite/fflush with explicit unresolved guards.
+[Evidence and remaining boundaries](docs/protocol/apk/2.26.43.72-metrics-native-drain-persistence/README.md).
+No delivery or crash-durability proof. Actual transport/replies remain open.
+Validation: pinned image, mapped byte digests, thunk/clock resolver reproduction,
+JSON, coverage and checksum/link hygiene. No Rust runtime change or live traffic.
+
 2026-11-05 — **Native metrics event/setup JNI entries and local routing mapped.**
 
 Recovered libwhatsapp tuples now connect Java events to typed native fields and

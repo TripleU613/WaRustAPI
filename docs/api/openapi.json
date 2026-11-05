@@ -16143,5 +16143,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-metrics-native-event-routing/README.md",
     "description": "Recovered libwhatsapp JNI tuples map metrics event/setup dispatch. Event native body narrows longs, handles channel-specific psId, typed fields and conditional state-based local manager handoff; normal return is zero. Flush, durable storage and wire/reply behavior remain open. No client runtime/live operation added."
+  },
+  "x-metrics-native-drain-persistence-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK static native evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-metrics-native-drain-persistence/README.md",
+    "description": "Native pending worker removes local queue entries before processing, adds channel-specific clock-derived field 47, and has selected snapshot paths to fwrite/fflush. Guard/caller reachability, full durable format and transport/replies remain open. No delivery/durability claim or client runtime/live operation added."
   }
 }

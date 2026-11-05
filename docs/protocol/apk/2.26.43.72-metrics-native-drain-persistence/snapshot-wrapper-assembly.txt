@@ -1,0 +1,27 @@
+            0x00724fc8      paciasp
+            0x00724fcc      stp   x29, x30, [sp, -0x30]!
+            0x00724fd0      str   x21, [sp, 0x10]
+            0x00724fd4      stp   x20, x19, [sp, 0x20]
+            0x00724fd8      mov   x29, sp
+            0x00724fdc      bl    0x49c49c
+        ┌─< 0x00724fe0      cbz   w2, 0x724fec
+        │   0x00724fe4      mov   w21, 1
+       ┌──< 0x00724fe8      b     0x725000
+       │└─> 0x00724fec      bl    sym.imp.MCIExecutionGetCurrentContext_DEPRECATED
+       │    0x00724ff0      ldr   w8, [x19, 0x20]                      ; [0x20:4]=64 ; "@"
+       │    0x00724ff4      cmp   w0, w8
+       │┌─< 0x00724ff8      b.ne  0x725030
+       ││   0x00724ffc      mov   w21, wzr
+       └──> 0x00725000      ldr   x0, [x20, 0x18]                      ; [0x18:4]=0
+        │   0x00725004      bl    0x71fdf4
+        │   0x00725008      bl    0xbe8b68
+        │   0x0072500c      mov   w2, w21
+        │   0x00725010      bl    0xbedd60
+        │   0x00725014      bl    0x6fdca0
+        │   0x00725018      mov   x0, x19
+        │   0x0072501c      bl    sym.imp.MCFRelease
+        │   0x00725020      bl    0xbe7d04
+        │   0x00725024      ldp   x29, x30, [sp], 0x30
+        │   0x00725028      autiasp
+       ┌──< 0x0072502c      b     sym.imp.MCFRelease
+       │└─> 0x00725030      bl    sym.imp.abort

@@ -1,0 +1,98 @@
+[
+  {
+    "virtual_address": "0xbe392c",
+    "file_offset": "0xbdf92c",
+    "bytes": 12,
+    "sha256": "cc9a6bcfc8233e6d9dd0ed36d2996a14bbd7a92fe62a3a7bad299e35d87ee903"
+  },
+  {
+    "virtual_address": "0xbe1c4c",
+    "file_offset": "0xbddc4c",
+    "bytes": 12,
+    "sha256": "74e90a3c290acc4a7ce4dbd0bf52eefea6dc5b850fea6304df08075a30427ada"
+  },
+  {
+    "virtual_address": "0xbdfe18",
+    "file_offset": "0xbdbe18",
+    "bytes": 16,
+    "sha256": "86f488cc21a0f03c51de3b2d26e0762c327a48170db5d76bf93948382f9cc681"
+  },
+  {
+    "virtual_address": "0x49c49c",
+    "file_offset": "0x49849c",
+    "bytes": 12,
+    "sha256": "a026b74f83931c678549cedf7d67eb6c1403356d2449b320810afe77a8f1b0bf"
+  },
+  {
+    "virtual_address": "0xbe8b68",
+    "file_offset": "0xbe4b68",
+    "bytes": 12,
+    "sha256": "6360c50cd663a57af05504771b679cee2fbcbbe566f3915081cc5336f3beda5f"
+  },
+  {
+    "virtual_address": "0xbedd60",
+    "file_offset": "0xbe9d60",
+    "bytes": 12,
+    "sha256": "f685d21f66fa2bd5ee19a419d9360304c02402090b22a9bbb0e1a58983dfb9a5"
+  },
+  {
+    "virtual_address": "0xbe6640",
+    "file_offset": "0xbe2640",
+    "bytes": 12,
+    "sha256": "67f095db039bf99bb825ab2ff0f12d240f2393b7342509d0ce0e70cacbf975a3"
+  },
+  {
+    "virtual_address": "0xbe523c",
+    "file_offset": "0xbe123c",
+    "bytes": 12,
+    "sha256": "fbc9b938b21b9f8ab6e4ae6ced62c8deb6bd54250e88a45bb5988e5ac112b451"
+  },
+  {
+    "virtual_address": "0xbe2658",
+    "file_offset": "0xbde658",
+    "bytes": 12,
+    "sha256": "7c200c2ab4a6ac6d78dba9a752766cf03cb45650a0c3df744eee4472e72862d8"
+  },
+  {
+    "virtual_address": "0xbe8838",
+    "file_offset": "0xbe4838",
+    "bytes": 40,
+    "sha256": "a02fd91eb961ad9dcc96c6d071b539cf6be8cdf83cea8bafdddd5b381faf4165"
+  },
+  {
+    "virtual_address": "0x5d0418",
+    "file_offset": "0x5cc418",
+    "bytes": 12,
+    "sha256": "c9e646fee32a31a8aa3e39e215e0ac84c5c5e89a146358efc372f46cc29a1586"
+  },
+  {
+    "virtual_address": "0x523fe0",
+    "file_offset": "0x51ffe0",
+    "bytes": 12,
+    "sha256": "415b4b9987a6382531bdfee50f99a97f3fd42525b39fc72e93a6303186da4e22"
+  },
+  {
+    "virtual_address": "0xbe6d74",
+    "file_offset": "0xbe2d74",
+    "bytes": 12,
+    "sha256": "9d529583f0d94e8f91a73bffdb5ddd9461e143492958b84b45d2163dac5650c7"
+  },
+  {
+    "virtual_address": "0xbe2290",
+    "file_offset": "0xbde290",
+    "bytes": 12,
+    "sha256": "1ec6e828010512f6106ee2021806ac1aa3ae8fc9066d4cfa55264226872ac724"
+  },
+  {
+    "virtual_address": "0xbe3ad0",
+    "file_offset": "0xbdfad0",
+    "bytes": 12,
+    "sha256": "54c65448aa5ef3512a4067e567e164c2b21d07ff55c5a55ab9577f71498094a4"
+  },
+  {
+    "virtual_address": "0xbe5b18",
+    "file_offset": "0xbe1b18",
+    "bytes": 12,
+    "sha256": "982361f506fc0ef02cc0d2d0072daec95a21fbc63541d970253a67bce486b76c"
+  }
+]

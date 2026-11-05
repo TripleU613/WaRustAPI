@@ -1,0 +1,95 @@
+{
+  "scope": "static selected boundaries only; no metrics execution",
+  "windows": [
+    {
+      "name": "scheduler",
+      "virtual_address": "0x7239ec",
+      "file_offset": "0x71f9ec",
+      "bytes": 84,
+      "sha256": "c0424a6dc4a0fa125b6b76f5e3f1bb70e3e9138f5dfbff912336aeca8e02fc8b"
+    },
+    {
+      "name": "pending-worker",
+      "virtual_address": "0x723a40",
+      "file_offset": "0x71fa40",
+      "bytes": 5512,
+      "sha256": "a9eae9091faa39aed3f31ca6d860bf3873a8d9521cb0e9d6496ac0de40e93044"
+    },
+    {
+      "name": "async-thunk",
+      "virtual_address": "0xbd8ed8",
+      "file_offset": "0xbd4ed8",
+      "bytes": 8,
+      "sha256": "d60f794b5ced9904ea544661ccf7ece0f52a7d7bc99ef0eb1ea3c7cf7020afce"
+    },
+    {
+      "name": "snapshot-wrapper",
+      "virtual_address": "0x724fc8",
+      "file_offset": "0x720fc8",
+      "bytes": 108,
+      "sha256": "80d818ca24ee8f2301ba0bc3b6bcbafa64f03db6332ce1536facfd8461f48bab"
+    },
+    {
+      "name": "metadata-write",
+      "virtual_address": "0x6fdca0",
+      "file_offset": "0x6f9ca0",
+      "bytes": 644,
+      "sha256": "2405b2231f5daced0d776170805a954a64d6838010a6bb921f9d99dd88dd7416"
+    },
+    {
+      "name": "file-write",
+      "virtual_address": "0x734210",
+      "file_offset": "0x730210",
+      "bytes": 292,
+      "sha256": "6d0918be966e7a43c5302d8640ef0f6ae0ebc9d445eed821e05e14a13a2b2033"
+    },
+    {
+      "name": "stdio-flush",
+      "virtual_address": "0x734334",
+      "file_offset": "0x730334",
+      "bytes": 112,
+      "sha256": "2a62d0828f675cb1c27ed534220567cfd79e1e4703a07523d6441dc5bbe6a64f"
+    },
+    {
+      "name": "event-clock",
+      "virtual_address": "0x72c4fc",
+      "file_offset": "0x7284fc",
+      "bytes": 76,
+      "sha256": "05eec5d1e9c8f10a613d3e4ddab9843eae2300bec68a602a45013df278603354"
+    }
+  ],
+  "async_thunk_destination": "0x723a40",
+  "strings": [
+    {
+      "virtual_address": "0x1536ee",
+      "file_offset": "0x1536ee",
+      "value": "_WAMRuntimeProcessPendingEventsAsync"
+    },
+    {
+      "virtual_address": "0x1710b6",
+      "file_offset": "0x1710b6",
+      "value": "Cannot log before WAM runtime is initialized."
+    },
+    {
+      "virtual_address": "0x17132e",
+      "file_offset": "0x17132e",
+      "value": "Cannot log after WAM runtime is terminated."
+    },
+    {
+      "virtual_address": "0x151bd2",
+      "file_offset": "0x151bd2",
+      "value": "wameta/logger/terminating - pending logging queue size is : %d"
+    },
+    {
+      "virtual_address": "0x15d372",
+      "file_offset": "0x15d372",
+      "value": "Persisting all buffers and metadata"
+    }
+  ],
+  "clock_offset_relocation": {
+    "slot_va": "0xc27d88",
+    "type": 1025,
+    "symbol": "kMCFAbsoluteTimeIntervalSince1970",
+    "addend": 0
+  }
+}
