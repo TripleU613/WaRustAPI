@@ -1,0 +1,14 @@
+
+# class: LX/B21;
+# extends: Ljava/lang/Object;
+
+.method public A1B(VL)  # .registers 4
+    # full signature: LX/B21;->A1B(LX/0Tj;)V
+    0000..0004  const-string  v2, "type"
+    0004..0008  const-string  v1, "get"
+    0008..000c  new-instance  v0, LX/0Tl;
+    000c..0012  invoke-direct  {v0, v2, v1}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    0012..0018  invoke-virtual  {v3, v0}, LX/0Tj;->A02(LX/0Tl;)V
+    0018..001a  return-void
+    # exception table: 0 try range(s)
+.end method

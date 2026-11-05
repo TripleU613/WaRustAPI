@@ -1,0 +1,20 @@
+
+# class: LX/B23;
+# extends: Ljava/lang/Object;
+
+.method public A03(JLLZ)  # .registers 11
+    # full signature: LX/B23;->A03(LX/0Tj;Ljava/lang/String;Z)J
+    0000..0004  const-string  v1, "id"
+    0004..0008  const-wide/16  v3, #0x0
+    0008..0012  const-wide  v5, #0x1fffffffffffff (9007199254740991)
+    0012..0014  move-object  v2, v9
+    0014..0016  move  v7, v10
+    0016..001c  invoke-static/range  {v2..v7}, LX/0Tk;->A06(Ljava/lang/String;JJZ)Z
+    001c..001e  move-result  v0
+    001e..0022  if-eqz  v0, +0xa
+    0022..0026  new-instance  v0, LX/0Tl;
+    0026..002c  invoke-direct  {v0, v1, v9}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    002c..0032  invoke-virtual  {v8, v0}, LX/0Tj;->A02(LX/0Tl;)V
+    0032..0034  return-wide  v3
+    # exception table: 0 try range(s)
+.end method

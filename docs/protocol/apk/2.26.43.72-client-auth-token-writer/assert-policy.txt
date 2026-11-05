@@ -1,0 +1,13 @@
+
+# class: LX/00L;
+# extends: Ljava/lang/Object;
+
+.method public A0C(VZL)  # .registers 2
+    # full signature: LX/00L;->A0C(ZLjava/lang/String;)V
+    0000..0004  if-nez  v0, +0xa
+    0004..0008  new-instance  v0, Ljava/lang/AssertionError;
+    0008..000e  invoke-direct  {v0, v1}, Ljava/lang/AssertionError;-><init>(Ljava/lang/Object;)V
+    000e..0014  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/Throwable;)V
+    0014..0016  return-void
+    # exception table: 0 try range(s)
+.end method

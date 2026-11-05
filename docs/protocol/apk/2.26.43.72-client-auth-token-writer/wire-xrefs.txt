@@ -1,0 +1,51 @@
+["auth_token"]  (25 reference(s))
+  classes.dex  Lcom/whatsapp/orbitsso/OrbitSsoProvider;->A0J(LLL)
+    dex byte offset: 0x3e8b98
+  classes.dex  LX/0VM;->A08(VL)
+    dex byte offset: 0x5bf004
+  classes10.dex  LX/KXU;->invoke(LL)
+    dex byte offset: 0x672a5a
+  classes10.dex  LX/Kam;->invokeSuspend(LL)
+    dex byte offset: 0x695622
+  classes10.dex  LX/Kam;->invokeSuspend(LL)
+    dex byte offset: 0x695c10
+  classes10.dex  LX/Kam;->invokeSuspend(LL)
+    dex byte offset: 0x695ed4
+  classes11.dex  LX/MsP;->CbC(VL)
+    dex byte offset: 0x6a911a
+  classes13.dex  Lcom/whatsapp/bot/agentbrowser/noise/WaNoiseChannel;->A02(LLLLJ)
+    dex byte offset: 0x4d6314
+  classes2.dex  LX/1xY;->CK4(VLL)
+    dex byte offset: 0x29131a
+  classes4.dex  Lcom/whatsapp/waffle/accountlinking/logging/NativeAuthEligibilityVerifier;->A00(LLLL)
+    dex byte offset: 0x5630c0
+  classes4.dex  LX/6S2;->invokeSuspend(LL)
+    dex byte offset: 0x70aa5c
+  classes4.dex  LX/6S2;->invokeSuspend(LL)
+    dex byte offset: 0x70aaec
+  classes7.dex  LX/BVv;-><init>(VLLLL)
+    dex byte offset: 0x310780
+  classes7.dex  LX/Ctt;->run(V)
+    dex byte offset: 0x58bdf8
+  classes9.dex  LX/Gqa;->A00(LLL)
+    dex byte offset: 0x520a3a
+  classes9.dex  LX/HT1;->A00(LLLLLZ)
+    dex byte offset: 0x5a1c70
+  classes9.dex  LX/HTD;->A00(LLLL)
+    dex byte offset: 0x5a3e8e
+  classes9.dex  LX/Hd0;->A03(LLLL)
+    dex byte offset: 0x608146
+  classes9.dex  LX/Hd0;->A04(LLLL)
+    dex byte offset: 0x60835e
+  classes9.dex  LX/Hd0;->A05(LLLL)
+    dex byte offset: 0x608560
+  classes9.dex  LX/IBX;->run(V)
+    dex byte offset: 0x7596fa
+  classes9.dex  LX/INC;->invokeSuspend(LL)
+    dex byte offset: 0x800d4a
+  classes9.dex  LX/INC;->invokeSuspend(LL)
+    dex byte offset: 0x800e60
+  classes9.dex  LX/INI;->invokeSuspend(LL)
+    dex byte offset: 0x803ea4
+  classes9.dex  LX/INN;->invokeSuspend(LL)
+    dex byte offset: 0x805470

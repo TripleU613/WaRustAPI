@@ -15729,5 +15729,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-challenged-request-ownership/README.md",
     "description": "Traces challenged/unacked map selection, conditional count-based removal, token-result and connected re-dispatch, preserved callbacks and readiness queue behavior. Eligible held entries are selected without deletion; rotation invocation does not prove completion. Full token, family, generation and durable restart ownership remain incomplete. Rust uncertain holds and no-replay policy remain unchanged; no command, route or live operation."
+  },
+  "x-client-auth-token-writer-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-client-auth-token-writer/README.md",
+    "description": "Selected native constructor28 builds a server push-namespace IQ GET with UTF-8 pn input. String helper checks length rather than numeric ID range; nonnull length violations are diagnostic in the inspected bodies. Input provenance, gating, converters and durable recovery remain unported. No phone/registration prerequisite inferred, request sender, route, automatic retry or live operation added."
   }
 }

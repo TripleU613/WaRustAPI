@@ -67,7 +67,8 @@ CAT bytes and all transitive failure conditions are still unclosed here.
 `1jA.A00` atomically takes a pending string and calls A01 only when one exists.
 A01 defers the string when its connection gate is false; otherwise it constructs
 `Dzb(id,string,28)` and submits through A0Q with type314 and32,000ms. Exact
-constructor28 wire construction remains a prerequisite; no IQ shape is guessed.
+constructor28 builder grammar is now traced in the writer follow-up below;
+its conditional input provenance remains a prerequisite.
 The successful `FUT.CK4` branch validates/converts the reply, saves a Base64
 `pref_client_auth_token`, calls the rotation manager, then invokes0Sf.A08.
 The converters remain untraced. The post-token held-request selection/dispatch
@@ -85,7 +86,7 @@ past account or caused a restriction.
 
 ## Remaining implementation obligations
 
-Close constructor28, reply converters, push/connection gating, wire-to-sent
+Constructor28 is now traced; close reply converters, push/connection gating, wire-to-sent
 promotion, candidate lifetime and lost-result/restart reconciliation. Then
 connect durable request/candidate/token state and accepted key installation,
 preserving native attempt/cooldown distinctions and the usable old key.
@@ -110,3 +111,16 @@ a server retry allowance or authority to replay Rust reservations.
 The post-token helper is now connected; token construction/converters, request
 family/callback ownership and durable restart recovery remain incomplete.
 No production change, new retry authority or live operation.
+
+### Client-auth-token writer grammar and validation (2026-11-04)
+
+**Confirmed static, APK43.72:** exact Dzb(String,String,int) selector28 builds
+a server IQ GET in urn:xmpp:whatsapp:push with a pn child containing UTF-8
+manager input. That label is not proof of phone-number input; the branch does
+not create an auth_token element. The ID helper checks String.length, not a
+53-bit numeric value. Nonnull length violations log via00L.A0C and return true
+in the selected validator;300 is not a proven server or hard constructor limit.
+[Selected overload, helper chain, checksums and unknowns](apk/2.26.43.72-client-auth-token-writer/README.md).
+Writer construction is now connected; input eligibility/authenticity, reply
+converters and durable challenge recovery remain unported. No production
+change, request sender, new retry authority or live traffic.

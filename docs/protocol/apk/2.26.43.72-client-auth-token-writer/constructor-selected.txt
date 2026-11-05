@@ -1,0 +1,62 @@
+# Selected overload: LX/Dzb;-><init>(Ljava/lang/String;Ljava/lang/String;I)V
+.method public <init>(VLLI)  # .registers 14
+    # full signature: LX/Dzb;-><init>(Ljava/lang/String;Ljava/lang/String;I)V
+    0000..0004  iput  v13, v10, LX/Dzb;->$t:I
+    0004..0006  const/4  v9, #0x0
+    0006..000c  invoke-direct  {v10}, Ljava/lang/Object;-><init>()V
+    000c..0010  const-string  v0, "iq"
+    0010..0016  invoke-static  {v0}, LX/B1w;->A0a(Ljava/lang/String;)LX/0Tj;
+    0016..0018  move-result-object  v2
+    0018..001a  move-object  v4, v12
+    001a..001e  rsub-int/lit8  v13, v13, #0x1c
+    001e..0022  if-eqz  v13, +0x44
+    0022..0028  invoke-static  {v2}, LX/B21;->A1B(LX/0Tj;)V
+    0028..002e  invoke-static  {v2}, LX/B21;->A1A(LX/0Tj;)V
+    002e..0034  const-string/jumbo  v1, "xmlns"
+    0034..003a  const-string/jumbo  v0, "w:sync:app:state"
+    003a..0040  invoke-static  {v1, v0}, LX/B1w;->A0X(Ljava/lang/String;Ljava/lang/String;)LX/0Tl;
+    0040..0042  move-result-object  v0
+    0042..0048  invoke-static  {v0, v2, v11, v9}, LX/B23;->A0e(LX/0Tl;LX/0Tj;Ljava/lang/String;Z)V
+    0048..004c  const-string  v0, "coex"
+    004c..0052  invoke-static  {v0}, LX/B1w;->A0a(Ljava/lang/String;)LX/0Tj;
+    0052..0054  move-result-object  v3
+    0054..0058  const-string  v1, "mode"
+    0058..005c  const-string  v0, "digest"
+    005c..0062  invoke-static  {v3, v1, v0}, LX/B1y;->A1J(LX/0Tj;Ljava/lang/String;Ljava/lang/String;)V
+    0062..0066  const-string  v0, "bot"
+    0066..006c  invoke-static  {v0}, LX/B1w;->A0a(Ljava/lang/String;)LX/0Tj;
+    006c..006e  move-result-object  v1
+    006e..0072  const-wide/16  v5, #0x20
+    0072..0074  move-wide  v7, v5
+    0074..007a  invoke-static/range  {v4..v9}, LX/0Tk;->A06(Ljava/lang/String;JJZ)Z
+    007a..007c  move-result  v0
+    007c..0080  if-eqz  v0, +0x7
+    0080..0084  const-string  v0, "coex_dirty_hash"
+    0084..008a  invoke-static  {v1, v0, v12}, LX/B1y;->A1J(LX/0Tj;Ljava/lang/String;Ljava/lang/String;)V
+    008a..0090  invoke-static  {v1, v3}, LX/B21;->A0P(LX/0Tj;LX/0Tj;)LX/0Tp;
+    0090..0092  move-result-object  v0
+    0092..0098  invoke-virtual  {v2, v0}, LX/0Tj;->A03(LX/0Tp;)V
+    0098..009e  invoke-virtual  {v2}, LX/0Tj;->A01()LX/0Tp;
+    009e..00a0  move-result-object  v0
+    00a0..00a4  iput-object  v0, v10, LX/Dzb;->A00:Ljava/lang/Object;
+    00a4..00a6  return-void
+    00a6..00ac  const-string/jumbo  v1, "xmlns"
+    00ac..00b2  const-string/jumbo  v0, "urn:xmpp:whatsapp:push"
+    00b2..00b8  invoke-static  {v2, v1, v0}, LX/B1y;->A1J(LX/0Tj;Ljava/lang/String;Ljava/lang/String;)V
+    00b8..00be  invoke-static  {v2}, LX/B21;->A1A(LX/0Tj;)V
+    00be..00c4  invoke-static  {v2}, LX/B21;->A1B(LX/0Tj;)V
+    00c4..00ca  invoke-static  {v2, v11, v9}, LX/B23;->A03(LX/0Tj;Ljava/lang/String;Z)J
+    00ca..00cc  move-result-wide  v5
+    00cc..00d0  const-string  v0, "pn"
+    00d0..00d6  invoke-static  {v0}, LX/B1w;->A0a(Ljava/lang/String;)LX/0Tj;
+    00d6..00d8  move-result-object  v1
+    00d8..00dc  const-wide/16  v7, #0x12c
+    00dc..00e2  invoke-static/range  {v4..v9}, LX/0Tk;->A06(Ljava/lang/String;JJZ)Z
+    00e2..00e4  move-result  v0
+    00e4..00e8  if-eqz  v0, +0x5
+    00e8..00ee  invoke-virtual  {v1, v12}, LX/0Tj;->A05(Ljava/lang/String;)V
+    00ee..00f4  invoke-virtual  {v1}, LX/0Tj;->A01()LX/0Tp;
+    00f4..00f6  move-result-object  v0
+    00f6..00f8  goto  -0x32
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,37 @@
+
+# class: LX/0Tj;
+# extends: Ljava/lang/Object;
+
+.method public A01(L)  # .registers 5
+    # full signature: LX/0Tj;->A01()LX/0Tp;
+    0000..0004  iget-object  v1, v4, LX/0Tj;->A02:Ljava/util/List;
+    0004..000a  invoke-interface  {v1}, Ljava/util/List;->isEmpty()Z
+    000a..000c  move-result  v0
+    000c..000e  const/4  v2, #0x0
+    000e..0010  const/4  v3, #0x0
+    0010..0014  if-nez  v0, +0x8
+    0014..0018  new-array  v0, v2, [LX/0Tl;
+    0018..001e  invoke-interface  {v1, v0}, Ljava/util/List;->toArray([Ljava/lang/Object;)[Ljava/lang/Object;
+    001e..0020  move-result-object  v3
+    0020..0024  iget-object  v1, v4, LX/0Tj;->A03:Ljava/util/List;
+    0024..002a  invoke-interface  {v1}, Ljava/util/List;->isEmpty()Z
+    002a..002c  move-result  v0
+    002c..0030  if-nez  v0, +0x16
+    0030..0034  new-array  v0, v2, [LX/0Tp;
+    0034..003a  invoke-interface  {v1, v0}, Ljava/util/List;->toArray([Ljava/lang/Object;)[Ljava/lang/Object;
+    003a..003c  move-result-object  v1
+    003c..0040  check-cast  v1, [LX/0Tp;
+    0040..0044  if-eqz  v1, +0xc
+    0044..0048  iget-object  v0, v4, LX/0Tj;->A00:Ljava/lang/String;
+    0048..004c  check-cast  v3, [LX/0Tl;
+    004c..0050  new-instance  v2, LX/0Tp;
+    0050..0056  invoke-direct  {v2, v0, v3, v1}, LX/0Tp;-><init>(Ljava/lang/String;[LX/0Tl;[LX/0Tp;)V
+    0056..0058  return-object  v2
+    0058..005c  iget-object  v1, v4, LX/0Tj;->A00:Ljava/lang/String;
+    005c..0060  check-cast  v3, [LX/0Tl;
+    0060..0064  iget-object  v0, v4, LX/0Tj;->A01:[B
+    0064..0068  new-instance  v2, LX/0Tp;
+    0068..006e  invoke-direct  {v2, v1, v0, v3}, LX/0Tp;-><init>(Ljava/lang/String;[B[LX/0Tl;)V
+    006e..0070  return-object  v2
+    # exception table: 0 try range(s)
+.end method

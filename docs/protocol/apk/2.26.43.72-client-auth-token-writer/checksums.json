@@ -1,0 +1,50 @@
+{
+  "README.md": {
+    "bytes": 5431,
+    "sha256": "fda392d5974fc656d5cc0759b71c5462d6d7126aea2b6243cb9384175742ea08"
+  },
+  "address-helper.txt": {
+    "bytes": 526,
+    "sha256": "0a3f4593e81c8fb588150474f1b3fdd9688f50df41a0af82c295dba9836d99c9"
+  },
+  "assert-policy.txt": {
+    "bytes": 512,
+    "sha256": "624cde421ffd23991d9104849d5d30c6f8add802b5daa811c5f493d69c21c443"
+  },
+  "charset.txt": {
+    "bytes": 2292,
+    "sha256": "69ac55ea0e4e83cb125dffb15ef6c4483509af82776f34bd4de1783bc6e00c47"
+  },
+  "constructor-selected.txt": {
+    "bytes": 3408,
+    "sha256": "46930a4ee8390c0b984e0ed231adf228cd9caafa77a55ecd773ae97b0ee93a08"
+  },
+  "destination-class.txt": {
+    "bytes": 1942,
+    "sha256": "9b7609bba92f00a97aeba1053898348d6f4c39cd17cb1c8a0001067ae16856d3"
+  },
+  "id-helper.txt": {
+    "bytes": 807,
+    "sha256": "f41a1c8f84b2ab0bf70b1845e9a41f428c8ce3c28f63be969d523f59385c5fe4"
+  },
+  "input-validation.txt": {
+    "bytes": 1859,
+    "sha256": "f59ac3f687221f42dc9f8bc9fd1c6d218245d8b2a2d0c5e809eef6fcc31244b9"
+  },
+  "node-build.txt": {
+    "bytes": 1735,
+    "sha256": "e2c7fc22d708d059ddb35a863669c67b7e12209cdac91376cd966d15ad2a4f41"
+  },
+  "text-storage.txt": {
+    "bytes": 653,
+    "sha256": "e5dd80acb479040ba7097a31c3c925ad5673a5f9f72e5a33aea6d4ec44e69d4a"
+  },
+  "type-helper.txt": {
+    "bytes": 499,
+    "sha256": "203fcd9e64b071140ef6579afb8cceada18c23762247371686f9889150e55be8"
+  },
+  "wire-xrefs.txt": {
+    "bytes": 1875,
+    "sha256": "e506886fd6debb79c0e867d7212f2301eb05bb8ceef4eb9acdc5a84ce6b95b89"
+  }
+}

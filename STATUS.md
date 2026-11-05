@@ -1,3 +1,11 @@
+2026-11-04 — **Client-auth-token request writer traced.**
+
+Selected constructor emits server IQ GET/pn input; length checks are diagnostic
+and do not prove a numeric ID requirement or mandatory phone-number field.
+[Evidence and unported eligibility/recovery](docs/protocol/apk/2.26.43.72-client-auth-token-writer/README.md).
+Validation: checksums, JSON, coverage freshness and repository hygiene.
+Research only; no sender or live traffic.
+
 2026-11-04 — **Challenged-request map ownership traced.**
 
 Held selection retains eligible entries; token-result and connected paths reach

@@ -5448,3 +5448,16 @@ a server retry allowance or authority to replay Rust reservations.
 The post-token helper is now connected; token construction/converters, request
 family/callback ownership and durable restart recovery remain incomplete.
 No production change, new retry authority or live operation.
+
+### Client-auth-token writer grammar and validation (2026-11-04)
+
+**Confirmed static, APK43.72:** exact Dzb(String,String,int) selector28 builds
+a server IQ GET in urn:xmpp:whatsapp:push with a pn child containing UTF-8
+manager input. That label is not proof of phone-number input; the branch does
+not create an auth_token element. The ID helper checks String.length, not a
+53-bit numeric value. Nonnull length violations log via00L.A0C and return true
+in the selected validator;300 is not a proven server or hard constructor limit.
+[Selected overload, helper chain, checksums and unknowns](apk/2.26.43.72-client-auth-token-writer/README.md).
+Writer construction is now connected; input eligibility/authenticity, reply
+converters and durable challenge recovery remain unported. No production
+change, request sender, new retry authority or live traffic.
