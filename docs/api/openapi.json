@@ -15627,5 +15627,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-ack-key-normalization/README.md",
     "description": "Native callback-key propagation, primary-device normalization, exact-key failure removal and generic inbound bridge traced. Distribution expected-address inputs and native parser mapping remain incomplete. No new command, route, normalization policy or production behavior."
+  },
+  "x-ack-api-variants-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-ack-api-variants/README.md",
+    "description": "Distinguishes native null-result and node-result ACK wrappers, selected offline readiness failure branches and location notification distribution. Location jobs and includeSenderKeysInMessage alone do not establish ordinary direct reaction SKDM shape or expected ACK addresses. No command, route or production behavior change."
   }
 }

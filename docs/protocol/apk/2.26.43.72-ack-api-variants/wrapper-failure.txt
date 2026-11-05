@@ -1,0 +1,12 @@
+
+# class: LX/2Gc;
+# extends: Ljava/lang/Object;
+
+.method public BsR(VL)  # .registers 3
+    # full signature: LX/2Gc;->BsR(Ljava/lang/Exception;)V
+    0000..0004  iget-object  v0, v1, LX/2Gc;->A01:Ljava/lang/Object;
+    0004..0008  check-cast  v0, LX/1ue;
+    0008..000e  invoke-interface  {v0, v2}, LX/1ue;->BsR(Ljava/lang/Exception;)V
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method

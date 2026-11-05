@@ -286,3 +286,15 @@ are not one atomic transaction.
 [Methods, offsets, local persistence gap and next port boundary](apk/2.26.43.72-sender-key-ack-confirmation/README.md).
 Native out-of-band distribution address/registration ownership remains open.
 No production change, new replay authority or live operation.
+
+### ACK API result variants and distribution-shape qualification (2026-11-04)
+
+**Confirmed static, APK43.72:**0Sf.A0B/A0C register through0Th.A01/2Gc0,
+which discards the returned node; A0D and ordinary SendE2EMessageJob use
+A02/2Gc1 and retain it. Null get() results therefore do not universally mean
+a missing ACK. Failure forwarding does not retire the held pre-ACK marker.
+SendLiveLocationKeyJob builds notification/type=location with participants,
+not ordinary direct messages. Neither that job nor includeSenderKeysInMessage
+proves the native ordinary reaction distribution shape or callback address tuple.
+[Methods, caller inventories and remaining gaps](apk/2.26.43.72-ack-api-variants/README.md).
+No production behavior, speculative address restriction or live operation changed.

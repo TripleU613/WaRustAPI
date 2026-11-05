@@ -1,0 +1,54 @@
+{
+  "README.md": {
+    "bytes": 5654,
+    "sha256": "fcf498dcd26e0926551f00e9be0084ac3f4d675d94b0aef164c65a866ad12e7c"
+  },
+  "api-b.txt": {
+    "bytes": 1567,
+    "sha256": "a30c11a369d8e45a318fcc5015d3ad4a01888d8342b223d07c9537da2e996cc9"
+  },
+  "api-c-callers.txt": {
+    "bytes": 1054,
+    "sha256": "be4de3f66e4fc1103f920905d58b16a2361b2020daac07870e829fdee765d5f5"
+  },
+  "api-c.txt": {
+    "bytes": 1983,
+    "sha256": "41e166d8ab1baa284b1ed720c31a5dbee27050d817124908c7492f4094b89baa"
+  },
+  "api-callers.txt": {
+    "bytes": 845,
+    "sha256": "23959fc17c605e5956026d26782c9a7f27fe9e73615e4e3b445f02b7466b509f"
+  },
+  "api-d-callers.txt": {
+    "bytes": 598,
+    "sha256": "cb98c6bfca7956adc644134301ef0af5df6b7ac425d0918d940ac3e8fe9c1225"
+  },
+  "api-d.txt": {
+    "bytes": 2093,
+    "sha256": "9e678768e2b4a7ec819cdfddb3a7620c7732a15329bbc5bf4a8a5c7c62622aa8"
+  },
+  "location-destination-init.txt": {
+    "bytes": 347,
+    "sha256": "506b8f139d021f7da80c31127a87743c5967033a423f3a0c37b50b37dddac411"
+  },
+  "location-destination.txt": {
+    "bytes": 545,
+    "sha256": "0b74ef0ea7e9adf9754084a34f4218e6b4baa3c271770da169fba6a9220d6ce2"
+  },
+  "location-job.txt": {
+    "bytes": 22335,
+    "sha256": "3977d47d53e9d080276e4bdaed34433312a9206efe7eebdc7989b9c3e792f3f1"
+  },
+  "registration-a01.txt": {
+    "bytes": 3420,
+    "sha256": "77e00a8bdd26d93c4d6f8c29561149da59f6c962becb07dc8f74e3fb3c60ed1d"
+  },
+  "send-job-callers.txt": {
+    "bytes": 171,
+    "sha256": "5618b25630de881e00d1016a052f7ebb5c1d40967716261ad488a69b6b210c6c"
+  },
+  "wrapper-failure.txt": {
+    "bytes": 415,
+    "sha256": "e399bf9184ae6c9788ffb5405bd578bb747806a8244858cc955595391c8c2c1b"
+  }
+}

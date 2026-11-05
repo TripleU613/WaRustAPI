@@ -1,0 +1,18 @@
+classes.dex  LX/137;->A01(LLLLLI)
+  invoke dex byte offset: 0x7e0640
+classes8.dex  Lcom/whatsapp/status/api/SendNewsletterStatusViewReceiptJob;->A0L(V)
+  invoke dex byte offset: 0x8cc51e
+classes8.dex  Lcom/whatsapp/newsletter/messages/job/SendViewReceiptJob;->A0L(V)
+  invoke dex byte offset: 0x8cc80e
+classes8.dex  Lcom/whatsapp/locationsharing/jobqueue/job/SendDisableLiveLocationJob;->A0L(V)
+  invoke dex byte offset: 0x8cd488
+classes8.dex  Lcom/whatsapp/payments/productinfra/jobqueue/job/SendPaymentInviteSetupJob;->A0L(V)
+  invoke dex byte offset: 0x8cd76c
+classes8.dex  Lcom/whatsapp/locationsharing/jobqueue/job/SendLiveLocationKeyJob;->A0L(V)
+  invoke dex byte offset: 0x8d2d38
+classes8.dex  Lcom/whatsapp/productinfra/status/sendflow/SendNewsletterStatusJob;->A0L(V)
+  invoke dex byte offset: 0x8d4790
+classes8.dex  Lcom/whatsapp/newsletter/messages/job/SendNewsletterMessageJob;->A0L(V)
+  invoke dex byte offset: 0x8de426
+classes8.dex  Lcom/whatsapp/newsletter/messages/job/SendNewsletterMessageJob;->A0L(V)
+  invoke dex byte offset: 0x8de4e2

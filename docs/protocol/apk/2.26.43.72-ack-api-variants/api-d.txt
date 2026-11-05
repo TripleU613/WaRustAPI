@@ -1,0 +1,40 @@
+
+# class: LX/0Sf;
+# extends: Ljava/lang/Object;
+
+.method public A0D(LLLI)  # .registers 9
+    # full signature: LX/0Sf;->A0D(LX/0Tp;LX/Eoh;I)LX/FfK;
+    0000..0002  const/4  v0, #0x2
+    0002..0008  invoke-static  {v6, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000e  invoke-static  {v7}, LX/0Sf;->A02(LX/Eoh;)LX/Eoh;
+    000e..0010  move-result-object  v3
+    0010..0014  new-instance  v4, LX/FfK;
+    0014..001a  invoke-direct  {v4}, LX/FfK;-><init>()V
+    001a..001e  iget-object  v1, v5, LX/0Sf;->A07:LX/0AI;
+    001e..0022  iget-boolean  v0, v1, LX/0AI;->A06:Z
+    0022..0026  if-eqz  v0, +0x27
+    0026..002c  invoke-virtual  {v1}, LX/0AI;->A0O()Z
+    002c..002e  move-result  v0
+    002e..0032  if-eqz  v0, +0x21
+    0032..0036  iget-object  v0, v5, LX/0Sf;->A0B:LX/0Th;
+    0036..003c  invoke-virtual  {v0, v4, v3}, LX/0Th;->A02(LX/1ue;LX/Eoh;)V
+    003c..003e  const/4  v2, #0x0
+    003e..0042  new-instance  v1, LX/ERp;
+    0042..0048  invoke-direct  {v1, v6, v3}, LX/ERp;-><init>(LX/0Tp;LX/Eoh;)V
+    0048..004a  const/4  v3, #0x0
+    004a..004e  const/16  v0, #0x1e6
+    004e..0054  invoke-static  {v2, v3, v0, v8, v1}, Landroid/os/Message;->obtain(Landroid/os/Handler;IIILjava/lang/Object;)Landroid/os/Message;
+    0054..0056  move-result-object  v2
+    0056..005c  invoke-virtual  {v2}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    005c..005e  move-result-object  v1
+    005e..0062  const-string  v0, "messageClient:dropIfOffline"
+    0062..0068  invoke-virtual  {v1, v0, v3}, Landroid/os/BaseBundle;->putBoolean(Ljava/lang/String;Z)V
+    0068..006e  invoke-static  {v2, v5, v3, v3}, LX/0Sf;->A05(Landroid/os/Message;LX/0Sf;ZZ)V
+    006e..0070  return-object  v4
+    0070..0074  const-string  v1, "MessageClient not ready, user not registered likely"
+    0074..0078  new-instance  v0, Ljava/io/IOException;
+    0078..007e  invoke-direct  {v0, v1}, Ljava/io/IOException;-><init>(Ljava/lang/String;)V
+    007e..0084  invoke-virtual  {v4, v0}, LX/FfK;->BsR(Ljava/lang/Exception;)V
+    0084..0086  return-object  v4
+    # exception table: 0 try range(s)
+.end method

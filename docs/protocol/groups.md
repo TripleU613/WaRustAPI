@@ -650,10 +650,13 @@ own message.
 
 ### Out-of-band distribution
 
-The APK supports not carrying sender keys in the message at all:
-`includeSenderKeysInMessage` is a per-send constructor flag, and
-`SendLiveLocationKeyJob` distributes its keys entirely out of band. So the
-private message JSON now takes `skdm_delivery`:
+`includeSenderKeysInMessage` is a per-send constructor flag. Historical local
+experiments added the private JSON `skdm_delivery` choices below. **Qualification,
+2026-11-04:** this flag does not establish the native producer used when false.
+APK43.72 SendLiveLocationKeyJob distributes through a location notification,
+not a plain direct message; it cannot justify ordinary reaction distribution
+shape. [Retained API/job trace](apk/2.26.43.72-ack-api-variants/README.md).
+The experimental private message JSON takes `skdm_delivery`:
 
 * `participants` (default) — one `<enc>` per device inside the group stanza's
   `<participants>`, the form built so far;

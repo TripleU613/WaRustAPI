@@ -1,0 +1,38 @@
+
+# class: LX/0Sf;
+# extends: Ljava/lang/Object;
+
+.method public A0C(LLLI)  # .registers 9
+    # full signature: LX/0Sf;->A0C(LX/0Tp;LX/Eoh;I)LX/FfK;
+    0000..0006  invoke-static  {v7}, LX/0Sf;->A02(LX/Eoh;)LX/Eoh;
+    0006..0008  move-result-object  v3
+    0008..000c  new-instance  v4, LX/FfK;
+    000c..0012  invoke-direct  {v4}, LX/FfK;-><init>()V
+    0012..0016  iget-object  v1, v5, LX/0Sf;->A07:LX/0AI;
+    0016..001a  iget-boolean  v0, v1, LX/0AI;->A06:Z
+    001a..001e  if-eqz  v0, +0x27
+    001e..0024  invoke-virtual  {v1}, LX/0AI;->A0O()Z
+    0024..0026  move-result  v0
+    0026..002a  if-eqz  v0, +0x21
+    002a..002e  iget-object  v0, v5, LX/0Sf;->A0B:LX/0Th;
+    002e..0034  invoke-virtual  {v0, v4, v3}, LX/0Th;->A01(LX/1ue;LX/Eoh;)V
+    0034..0036  const/4  v2, #0x0
+    0036..003a  new-instance  v1, LX/ERp;
+    003a..0040  invoke-direct  {v1, v6, v3}, LX/ERp;-><init>(LX/0Tp;LX/Eoh;)V
+    0040..0042  const/4  v3, #0x0
+    0042..0046  const/16  v0, #0x1e6
+    0046..004c  invoke-static  {v2, v3, v0, v8, v1}, Landroid/os/Message;->obtain(Landroid/os/Handler;IIILjava/lang/Object;)Landroid/os/Message;
+    004c..004e  move-result-object  v2
+    004e..0054  invoke-virtual  {v2}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    0054..0056  move-result-object  v1
+    0056..005a  const-string  v0, "messageClient:dropIfOffline"
+    005a..0060  invoke-virtual  {v1, v0, v3}, Landroid/os/BaseBundle;->putBoolean(Ljava/lang/String;Z)V
+    0060..0066  invoke-static  {v2, v5, v3, v3}, LX/0Sf;->A05(Landroid/os/Message;LX/0Sf;ZZ)V
+    0066..0068  return-object  v4
+    0068..006c  const-string  v1, "MessageClient not ready, user not registered likely"
+    006c..0070  new-instance  v0, Ljava/io/IOException;
+    0070..0076  invoke-direct  {v0, v1}, Ljava/io/IOException;-><init>(Ljava/lang/String;)V
+    0076..007c  invoke-virtual  {v4, v0}, LX/FfK;->BsR(Ljava/lang/Exception;)V
+    007c..007e  return-object  v4
+    # exception table: 0 try range(s)
+.end method

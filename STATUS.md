@@ -1,3 +1,12 @@
+2026-11-04 — **ACK API result variants and location distribution distinguished.**
+
+Null-returning ACK wrappers differ from node-returning message callbacks.
+Location notification distribution is not proof of ordinary direct SKDM shape;
+the historical inference is now qualified.
+[Evidence and remaining ownership gaps](docs/protocol/apk/2.26.43.72-ack-api-variants/README.md).
+Validation: JSON, checksum/link hygiene and coverage freshness. Evidence/docs
+only; no production changes or live traffic.
+
 2026-11-04 — **ACK key propagation and normalization traced.**
 
 Device-zero canonicalization and exact-key failure removal distinguished from

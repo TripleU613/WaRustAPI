@@ -1,0 +1,10 @@
+classes5.dex  LX/8iv;->invokeSuspend(LL)
+  invoke dex byte offset: 0x5be3dc
+classes5.dex  Lcom/whatsapp/newsletter/scheduling/job/CancelNewsletterScheduledUpdateJob;->A0L(V)
+  invoke dex byte offset: 0x5d12c2
+classes5.dex  Lcom/whatsapp/newsletter/scheduling/job/SendNewsletterScheduledUpdateNowJob;->A0L(V)
+  invoke dex byte offset: 0x5d14de
+classes5.dex  Lcom/whatsapp/newsletter/scheduling/job/RescheduleNewsletterScheduledUpdateJob;->A0L(V)
+  invoke dex byte offset: 0x5d16fa
+classes8.dex  Lcom/whatsapp/productinfra/status/sendflow/SendE2eStatusJob;->A0L(V)
+  invoke dex byte offset: 0x8e3500

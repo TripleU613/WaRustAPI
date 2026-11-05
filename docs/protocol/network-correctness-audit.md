@@ -1598,3 +1598,15 @@ A0T is exact normalized-key failure removal, not success handling.
 [Field propagation, type predicates, callers and port limits](apk/2.26.43.72-ack-key-normalization/README.md).
 Distribution producer inputs and parser/type mapping still need tracing before
 changing expected-address admission. No production or live behavior changed.
+
+### ACK API result variants and distribution-shape qualification (2026-11-04)
+
+**Confirmed static, APK43.72:**0Sf.A0B/A0C register through0Th.A01/2Gc0,
+which discards the returned node; A0D and ordinary SendE2EMessageJob use
+A02/2Gc1 and retain it. Null get() results therefore do not universally mean
+a missing ACK. Failure forwarding does not retire the held pre-ACK marker.
+SendLiveLocationKeyJob builds notification/type=location with participants,
+not ordinary direct messages. Neither that job nor includeSenderKeysInMessage
+proves the native ordinary reaction distribution shape or callback address tuple.
+[Methods, caller inventories and remaining gaps](apk/2.26.43.72-ack-api-variants/README.md).
+No production behavior, speculative address restriction or live operation changed.
