@@ -221,3 +221,13 @@ alternate or both, not a universal per-connect network write.
 [Factory route, complete entries, metadata and limits](apk/2.26.43.72-startup-metrics-sink/README.md).
 Full predicates, event authority, queue/transport, responses and durable generation
 recovery remain open. No Rust behavior or live account operation changed.
+
+### Primary metrics worker reaches a native boundary (2026-11-05)
+
+**Confirmed static, APK43.72:** selected worker14 can enqueue validation diagnostics
+and still continue the original event. It awaits a latch (interruption returns
+normally after reinterrupt), maps channels and calls JniBridge with event fields.
+The return is discarded; native/network delivery remains unproven.
+[Constructor, selected worker, wait and limits](apk/2.26.43.72-startup-metrics-native-handoff/README.md).
+Native serialization/transport, alternate sink, durability and generation ownership
+remain open. No Rust behavior or live account operation changed.

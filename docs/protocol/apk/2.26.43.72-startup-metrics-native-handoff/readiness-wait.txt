@@ -1,0 +1,25 @@
+# class: LX/0NY;
+# extends: Ljava/lang/Object;
+
+.method public A00(V)  # .registers 3
+    # full signature: LX/0NY;->A00()V
+    0000..0004  sget-object  v0, LX/0NY;->A0I:Ljava/util/concurrent/CountDownLatch;
+    0004..000a  invoke-virtual  {v0}, Ljava/util/concurrent/CountDownLatch;->await()V
+    000a..000c  return-void
+    000c..000e  move-exception  v2
+    000e..0014  const-string/jumbo  v0, "wamruntime: unexpected thread interrupt ("
+    0014..0018  new-instance  v1, Ljava/lang/StringBuilder;
+    0018..001e  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    001e..0024  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    0024..0028  const-string  v0, ")"
+    0028..002e  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    002e..0034  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0034..0036  move-result-object  v0
+    0036..003c  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->a(Ljava/lang/String;)V
+    003c..0042  invoke-static  {}, Ljava/lang/Thread;->currentThread()Ljava/lang/Thread;
+    0042..0044  move-result-object  v0
+    0044..004a  invoke-virtual  {v0}, Ljava/lang/Thread;->interrupt()V
+    004a..004c  return-void
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/InterruptedException; code_units 0000..0006 -> 0006
+.end method

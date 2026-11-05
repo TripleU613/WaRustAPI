@@ -1,3 +1,11 @@
+2026-11-05 — **Primary metrics worker validation and JNI handoff traced.**
+
+Validation diagnostics do not automatically drop the original event. Latch return
+and a discarded native result are not proof of network or server delivery.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-startup-metrics-native-handoff/README.md).
+Research only; no runtime changes or live traffic. Validation: checked exports,
+source/excerpt match, checksums, JSON, coverage freshness and repository hygiene.
+
 2026-11-05 — **Startup metrics sink factory and primary sampling traced.**
 
 Configuration selects one of three sinks; primary admission can drop or queue.

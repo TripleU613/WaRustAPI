@@ -1,0 +1,13 @@
+# class: LX/KTj;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLIIL)  # .registers 5
+    # full signature: LX/KTj;-><init>(Ljava/lang/Object;IILjava/lang/Object;)V
+    0000..0004  iput  v3, v0, LX/KTj;->$t:I
+    0004..000a  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    000a..000e  iput  v2, v0, LX/KTj;->A00:I
+    000e..0012  iput-object  v4, v0, LX/KTj;->A01:Ljava/lang/Object;
+    0012..0016  iput-object  v1, v0, LX/KTj;->A02:Ljava/lang/Object;
+    0016..0018  return-void
+    # exception table: 0 try range(s)
+.end method

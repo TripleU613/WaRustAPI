@@ -1,0 +1,18 @@
+{
+  "README.md": {
+    "bytes": 3908,
+    "sha256": "0aa9feb26f16716b5f1a87ef1803498615b38ecbb7c199c9457ce3699063ad76"
+  },
+  "readiness-wait.txt": {
+    "bytes": 1449,
+    "sha256": "f89ede8699be8b8f7dcb1713d9edac6688330271079ffa1189a46579dcd99e74"
+  },
+  "worker-constructor.txt": {
+    "bytes": 544,
+    "sha256": "c2f2f835dfde167844bdc229638a2fcef3f366ab2e5f6df3918d26013b7e284e"
+  },
+  "worker14-selected-excerpts.txt": {
+    "bytes": 19488,
+    "sha256": "4eb75582a8961f8f5f4746eb6c9f7ebab8db4d97833013cae429c45ee83c4b8a"
+  }
+}
