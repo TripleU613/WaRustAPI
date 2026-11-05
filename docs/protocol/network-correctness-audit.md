@@ -2616,3 +2616,14 @@ not account restriction codes. [Evidence and limits](apk/2.26.43.72-metrics-erro
 Validation:24 synthetic body-parser cases,7 worker integer-slice cases, pinned
 resolver and bundle checks. Full retry/durable ownership and server meanings
 remain open. No Rust runtime or live traffic changed.
+
+## Regular metrics recovery (2026-11-05)
+
+2026-11-05 — **Regular metrics recovery timer and provider gates traced.**
+
+Matching provider/status0 with idle low bit starts a drain and interval30 timer;
+status1 cancels the existing timer and signals drain error. Timer callbacks
+require ready and idle low bits. [Evidence and limits](apk/2.26.43.72-metrics-regular-recovery/README.md).
+Validation:72 native status-decision and16 timer-decision fixtures plus pinned
+window resolver. Weak resolution, actual timers and durable ownership remain
+separate; no Rust runtime or live traffic changed.

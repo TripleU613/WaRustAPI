@@ -1,0 +1,114 @@
+            0x00727740      paciasp
+            0x00727744      sub   sp, sp, 0x60
+            0x00727748      str   d8, [sp, 0x10]
+            0x0072774c      stp   x29, x30, [sp, 0x20]
+            0x00727750      bl    0x49b638
+            0x00727754      add   x29, sp, 0x20
+            0x00727758      mrs   x24, tpidr_el0
+            0x0072775c      bl    0xbe4674
+            0x00727760      ldr   x8, [x24, 0x28]                      ; [0x28:4]=0xc306e8
+            0x00727764      mov   x21, x0
+            0x00727768      bl    0xbe1e8c
+            0x0072776c      bl    sym.imp.MCIParamsGetTypeID
+            0x00727770      mov   x1, x19
+            0x00727774      bl    sym.imp.__MCFCastToClassNotNull
+            0x00727778      mov   x19, x0
+            0x0072777c      bl    sym.imp.MCFWeakGetTypeID
+            0x00727780      bl    0xbea06c
+            0x00727784      bl    0xbe392c
+            0x00727788      bl    sym.imp.MCIParamsUnpackWithTypeIDs
+            0x0072778c      ldr   x19, [sp]
+            0x00727790      bl    sym.imp.MCFWeakGetTypeID
+            0x00727794      mov   x1, x19
+            0x00727798      bl    sym.imp.__MCFCastToClassNotNull
+        ┌─< 0x0072779c      cbz   x0, 0x7278dc
+        │   0x007277a0      bl    0x7271ec
+        │   0x007277a4      mov   x22, x0
+        │   0x007277a8      bl    sym.imp.MCFWeakGetTypeID
+        │   0x007277ac      mov   x23, x0
+        │   0x007277b0      bl    sym.imp.MCFWeakGetTypeID
+        │   0x007277b4      mov   x1, x19
+        │   0x007277b8      bl    sym.imp.__MCFCastToClassNotNull
+        │   0x007277bc      bl    0xbe19a0
+        │   0x007277c0      bl    sym.imp.__MCFCastToClassNotNull
+        │   0x007277c4      bl    sym.imp.MCFWeakCopyRef
+        │   0x007277c8      bl    0xbe13d8
+        │   0x007277cc      bl    sym.imp.__MCFCastToClassNullableOwnedObject
+       ┌──< 0x007277d0      cbz   x0, 0x7278dc
+       ││   0x007277d4      mov   x19, x0
+       ││   0x007277d8      bl    sym.imp.MCFWeakGetTypeID
+       ││   0x007277dc      mov   x1, x21
+       ││   0x007277e0      bl    sym.imp.__MCFCastToClassNotNull
+      ┌───< 0x007277e4      cbz   x0, 0x7278d4
+      │││   0x007277e8      bl    0x6fed5c
+      │││   0x007277ec      mov   x22, x0
+      │││   0x007277f0      bl    sym.imp.MCFWeakGetTypeID
+      │││   0x007277f4      mov   x23, x0
+      │││   0x007277f8      bl    sym.imp.MCFWeakGetTypeID
+      │││   0x007277fc      mov   x1, x21
+      │││   0x00727800      bl    sym.imp.__MCFCastToClassNotNull
+      │││   0x00727804      bl    0xbe19a0
+      │││   0x00727808      bl    sym.imp.__MCFCastToClassNotNull
+      │││   0x0072780c      bl    sym.imp.MCFWeakCopyRef
+      │││   0x00727810      bl    0xbe13d8
+      │││   0x00727814      bl    sym.imp.__MCFCastToClassNullableOwnedObject
+     ┌────< 0x00727818      cbz   x0, 0x7278d4
+     ││││   0x0072781c      mov   x21, x0
+     ││││   0x00727820      bl    sym.imp.MCFAbsoluteTimeGetCurrent
+     ││││   0x00727824      fmov  d8, d0
+     ││││   0x00727828      ldr   x8, [x19, 0x28]                      ; [0x28:4]=0xc306e8
+     ││││   0x0072782c      cmp   x21, x8
+    ┌─────< 0x00727830      b.ne  0x7278bc
+    │││││   0x00727834      cmp   w20, 1
+   ┌──────< 0x00727838      b.eq  0x7278a8
+  ┌───────< 0x0072783c      cbnz  w20, 0x727904
+  │││││││   0x00727840      ldrb  w8, [x19, 0x50]                      ; [0x50:4]=64
+  ────────< 0x00727844      tbnz  w8, 0, 0x7278bc
+  │││││││   0x00727848      mov   x0, x19
+  │││││││   0x0072784c      bl    0x727294
+  │││││││   0x00727850      ldp   x22, x0, [x19, 0x18]
+  │││││││   0x00727854      ldr   x20, [x19, 0x38]                     ; [0x38:4]=0x40000a
+  │││││││   0x00727858      bl    sym.imp.MCIExecutionGlobalQueueGetExecutionQueue
+  │││││││   0x0072785c      fmov  d0, 30.00000000
+  │││││││   0x00727860      mov   x3, x0
+  │││││││   0x00727864      adrp  x1, 0xbd8000
+  │││││││   0x00727868      add   x1, x1, 0xf88
+  │││││││   0x0072786c      adrp  x4, 0xfd000
+  │││││││   0x00727870      add   x4, x4, 0x589
+  │││││││   0x00727874      bl    0xbe8e64
+  │││││││   0x00727878      bl    0x735fdc
+  │││││││   0x0072787c      ldr   x22, [x19, 0x58]                     ; [0x58:4]=64
+  │││││││   0x00727880      mov   x20, x0
+  │││││││   0x00727884      str   x0, [x19, 0x58]
+  │││││││   0x00727888      bl    sym.imp.MCFRetain
+  │││││││   0x0072788c      mov   x0, x22
+  │││││││   0x00727890      bl    sym.imp.MCFRelease
+  │││││││   0x00727894      mov   x0, x20
+  │││││││   0x00727898      bl    0x7360fc
+  │││││││   0x0072789c      mov   x0, x20
+  │││││││   0x007278a0      bl    sym.imp.MCFRelease
+  ────────< 0x007278a4      b     0x7278bc
+  │└──────> 0x007278a8      ldr   x0, [x19, 0x58]                      ; [0x58:4]=64
+  │┌──────< 0x007278ac      cbz   x0, 0x7278b4
+  │││││││   0x007278b0      bl    0x73629c
+  │└──────> 0x007278b4      bl    0xbe05c8
+  │ │││││   0x007278b8      bl    0x7273a8
+  ──└─────> 0x007278bc      bl    sym.imp.MCFAbsoluteTimeGetCurrent
+  │  ││││   0x007278c0      bl    0xbe865c
+  │  ││││   0x007278c4      bl    sym.imp.MCFTimeDiffInSeconds
+  │  ││││   0x007278c8      mov   x0, x19
+  │  ││││   0x007278cc      bl    sym.imp.MCFRelease
+  │  ││││   0x007278d0      mov   x19, x21
+  │  └└───> 0x007278d4      mov   x0, x19
+  │    ││   0x007278d8      bl    sym.imp.MCFRelease
+  │    └└─> 0x007278dc      bl    0xbddfa8
+  │     ┌─< 0x007278e0      b.ne  0x727900
+  │     │   0x007278e4      ldp   x20, x19, [sp, 0x50]
+  │     │   0x007278e8      ldr   d8, [sp, 0x10]                       ; [0x10:4]=0xb70003
+  │     │   0x007278ec      bl    0x5ce23c
+  │     │   0x007278f0      ldp   x29, x30, [sp, 0x20]
+  │     │   0x007278f4      add   sp, sp, 0x60
+  │     │   0x007278f8      autiasp
+  │     │   0x007278fc      ret
+  │     └─> 0x00727900      bl    sym.imp.__stack_chk_fail
+  └───────> 0x00727904      bl    sym.imp.abort

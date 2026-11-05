@@ -1,0 +1,54 @@
+{
+  "scope": "static regular recovery windows, not complete callback registration",
+  "timer_thunk_target": "0x727908",
+  "windows": [
+    {
+      "name": "regular-status-callback",
+      "start_va": "0x727740",
+      "end_va": "0x727908",
+      "file_offset": "0x723740",
+      "bytes": 456,
+      "sha256": "5165e4949f242060b456fd55beffd51deeccef96d2ef3809598a9ed59aba760b"
+    },
+    {
+      "name": "regular-timer-callback",
+      "start_va": "0x727908",
+      "end_va": "0x7279a4",
+      "file_offset": "0x723908",
+      "bytes": 156,
+      "sha256": "15e9e980f9aba252fdda5eb1daaaec34a739064979e1791ff3739b8ae358e7a1"
+    },
+    {
+      "name": "regular-timer-thunk",
+      "start_va": "0xbd8f88",
+      "end_va": "0xbd8f90",
+      "file_offset": "0xbd4f88",
+      "bytes": 8,
+      "sha256": "699f85d43f933049d04110e9cb302d081cd630951d49064399fc55fdfca0bcd0"
+    },
+    {
+      "name": "timer-create-arguments",
+      "start_va": "0xbe8e64",
+      "end_va": "0xbe8e70",
+      "file_offset": "0xbe4e64",
+      "bytes": 12,
+      "sha256": "f090ac46a2a9e3cd94e4f9b76f8568b8a74e84122428f3e8813b6833222ee600"
+    },
+    {
+      "name": "drain-error-arguments",
+      "start_va": "0xbe05c8",
+      "end_va": "0xbe05d4",
+      "file_offset": "0xbdc5c8",
+      "bytes": 12,
+      "sha256": "981cd9e2a013285b54af8435df1a9f831029024c7639ae372c77b171d5faf0c2"
+    },
+    {
+      "name": "status-entry-arguments",
+      "start_va": "0xbe4674",
+      "end_va": "0xbe4680",
+      "file_offset": "0xbe0674",
+      "bytes": 12,
+      "sha256": "4e613dd6bdae7d32f5d3d16c3cbf73aa634fa7e08c1cfffc044ec8294d712eb7"
+    }
+  ]
+}

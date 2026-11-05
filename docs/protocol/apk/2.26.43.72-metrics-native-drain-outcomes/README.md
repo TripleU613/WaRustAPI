@@ -98,3 +98,9 @@ ownership must remain separate porting concerns. **Observed live:** none.
 **Unknown:** upper callback binding, full regular job/send schema, backoff,
 generation fencing and persistent deletion/recovery. No server restriction
 policy, automatic retry or ban-prevention guarantee is inferred.
+
+## Later recovery entry
+
+The [regular status and timer trace](../2.26.43.72-metrics-regular-recovery/README.md)
+binds a separate interval30 readiness/idle recheck and provider-identity gate.
+This does not turn the drain-end notifier into backoff or prove durable deletion.

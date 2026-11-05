@@ -1,0 +1,39 @@
+            0x00727908      paciasp
+            0x0072790c      stp   x29, x30, [sp, -0x30]!
+            0x00727910      str   x21, [sp, 0x10]
+            0x00727914      stp   x20, x19, [sp, 0x20]
+            0x00727918      mov   x29, sp
+        ┌─< 0x0072791c      cbz   x0, 0x727994
+        │   0x00727920      mov   x19, x0
+        │   0x00727924      bl    sym.imp.MCFWeakGetTypeID
+        │   0x00727928      mov   x1, x19
+        │   0x0072792c      bl    sym.imp.__MCFCastToClassNotNull
+       ┌──< 0x00727930      cbz   x0, 0x727994
+       ││   0x00727934      bl    0x7271ec
+       ││   0x00727938      mov   x20, x0
+       ││   0x0072793c      bl    sym.imp.MCFWeakGetTypeID
+       ││   0x00727940      mov   x21, x0
+       ││   0x00727944      bl    sym.imp.MCFWeakGetTypeID
+       ││   0x00727948      mov   x1, x19
+       ││   0x0072794c      bl    sym.imp.__MCFCastToClassNotNull
+       ││   0x00727950      bl    0xbe0a3c
+       ││   0x00727954      bl    sym.imp.__MCFCastToClassNotNull
+       ││   0x00727958      bl    sym.imp.MCFWeakCopyRef
+       ││   0x0072795c      bl    0xbe0ebc
+       ││   0x00727960      bl    sym.imp.__MCFCastToClassNullableOwnedObject
+      ┌───< 0x00727964      cbz   x0, 0x727994
+      │││   0x00727968      mov   x19, x0
+      │││   0x0072796c      bl    0x6fef18
+     ┌────< 0x00727970      tbz   w0, 0, 0x727984
+     ││││   0x00727974      ldrb  w8, [x19, 0x50]                      ; [0x50:4]=64
+    ┌─────< 0x00727978      tbnz  w8, 0, 0x727984
+    │││││   0x0072797c      mov   x0, x19
+    │││││   0x00727980      bl    0x727294
+    └└────> 0x00727984      bl    0x49d294
+      │││   0x00727988      ldp   x29, x30, [sp], 0x30
+      │││   0x0072798c      autiasp
+     ┌────< 0x00727990      b     sym.imp.MCFRelease
+     │└└└─> 0x00727994      bl    0x4b1850
+     │      0x00727998      ldp   x29, x30, [sp], 0x30
+     │      0x0072799c      autiasp
+     │      0x007279a0      ret

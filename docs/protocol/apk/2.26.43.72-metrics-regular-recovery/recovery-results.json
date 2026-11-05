@@ -1,0 +1,556 @@
+{
+  "scope": "synthetic post-weak-resolution status and timer decision slices; external drain/timer/provider operations intercepted; no real waits, network or storage",
+  "unicorn_version": "2.1.4",
+  "status_cases": [
+    {
+      "same_provider": false,
+      "raw_status": 0,
+      "busy_byte": 0,
+      "old_timer": false,
+      "events": [],
+      "stored_timer": "0x0"
+    },
+    {
+      "same_provider": false,
+      "raw_status": 0,
+      "busy_byte": 0,
+      "old_timer": true,
+      "events": [],
+      "stored_timer": "0x10000900"
+    },
+    {
+      "same_provider": false,
+      "raw_status": 0,
+      "busy_byte": 1,
+      "old_timer": false,
+      "events": [],
+      "stored_timer": "0x0"
+    },
+    {
+      "same_provider": false,
+      "raw_status": 0,
+      "busy_byte": 1,
+      "old_timer": true,
+      "events": [],
+      "stored_timer": "0x10000900"
+    },
+    {
+      "same_provider": false,
+      "raw_status": 0,
+      "busy_byte": 2,
+      "old_timer": false,
+      "events": [],
+      "stored_timer": "0x0"
+    },
+    {
+      "same_provider": false,
+      "raw_status": 0,
+      "busy_byte": 2,
+      "old_timer": true,
+      "events": [],
+      "stored_timer": "0x10000900"
+    },
+    {
+      "same_provider": false,
+      "raw_status": 1,
+      "busy_byte": 0,
+      "old_timer": false,
+      "events": [],
+      "stored_timer": "0x0"
+    },
+    {
+      "same_provider": false,
+      "raw_status": 1,
+      "busy_byte": 0,
+      "old_timer": true,
+      "events": [],
+      "stored_timer": "0x10000900"
+    },
+    {
+      "same_provider": false,
+      "raw_status": 1,
+      "busy_byte": 1,
+      "old_timer": false,
+      "events": [],
+      "stored_timer": "0x0"
+    },
+    {
+      "same_provider": false,
+      "raw_status": 1,
+      "busy_byte": 1,
+      "old_timer": true,
+      "events": [],
+      "stored_timer": "0x10000900"
+    },
+    {
+      "same_provider": false,
+      "raw_status": 1,
+      "busy_byte": 2,
+      "old_timer": false,
+      "events": [],
+      "stored_timer": "0x0"
+    },
+    {
+      "same_provider": false,
+      "raw_status": 1,
+      "busy_byte": 2,
+      "old_timer": true,
+      "events": [],
+      "stored_timer": "0x10000900"
+    },
+    {
+      "same_provider": false,
+      "raw_status": 2,
+      "busy_byte": 0,
+      "old_timer": false,
+      "events": [],
+      "stored_timer": "0x0"
+    },
+    {
+      "same_provider": false,
+      "raw_status": 2,
+      "busy_byte": 0,
+      "old_timer": true,
+      "events": [],
+      "stored_timer": "0x10000900"
+    },
+    {
+      "same_provider": false,
+      "raw_status": 2,
+      "busy_byte": 1,
+      "old_timer": false,
+      "events": [],
+      "stored_timer": "0x0"
+    },
+    {
+      "same_provider": false,
+      "raw_status": 2,
+      "busy_byte": 1,
+      "old_timer": true,
+      "events": [],
+      "stored_timer": "0x10000900"
+    },
+    {
+      "same_provider": false,
+      "raw_status": 2,
+      "busy_byte": 2,
+      "old_timer": false,
+      "events": [],
+      "stored_timer": "0x0"
+    },
+    {
+      "same_provider": false,
+      "raw_status": 2,
+      "busy_byte": 2,
+      "old_timer": true,
+      "events": [],
+      "stored_timer": "0x10000900"
+    },
+    {
+      "same_provider": true,
+      "raw_status": 0,
+      "busy_byte": 0,
+      "old_timer": false,
+      "events": [
+        {
+          "action": "drain-start"
+        },
+        {
+          "action": "timer-create",
+          "seconds": 30.0,
+          "callback": "0xbd8f88",
+          "context": "0x10000700"
+        },
+        {
+          "action": "MCFRetain",
+          "object": "0x10000b00"
+        },
+        {
+          "action": "MCFRelease",
+          "object": "0x0"
+        },
+        {
+          "action": "timer-start",
+          "object": "0x10000b00"
+        },
+        {
+          "action": "MCFRelease",
+          "object": "0x10000b00"
+        }
+      ],
+      "stored_timer": "0x10000b00"
+    },
+    {
+      "same_provider": true,
+      "raw_status": 0,
+      "busy_byte": 0,
+      "old_timer": true,
+      "events": [
+        {
+          "action": "drain-start"
+        },
+        {
+          "action": "timer-create",
+          "seconds": 30.0,
+          "callback": "0xbd8f88",
+          "context": "0x10000700"
+        },
+        {
+          "action": "MCFRetain",
+          "object": "0x10000b00"
+        },
+        {
+          "action": "MCFRelease",
+          "object": "0x10000900"
+        },
+        {
+          "action": "timer-start",
+          "object": "0x10000b00"
+        },
+        {
+          "action": "MCFRelease",
+          "object": "0x10000b00"
+        }
+      ],
+      "stored_timer": "0x10000b00"
+    },
+    {
+      "same_provider": true,
+      "raw_status": 0,
+      "busy_byte": 1,
+      "old_timer": false,
+      "events": [],
+      "stored_timer": "0x0"
+    },
+    {
+      "same_provider": true,
+      "raw_status": 0,
+      "busy_byte": 1,
+      "old_timer": true,
+      "events": [],
+      "stored_timer": "0x10000900"
+    },
+    {
+      "same_provider": true,
+      "raw_status": 0,
+      "busy_byte": 2,
+      "old_timer": false,
+      "events": [
+        {
+          "action": "drain-start"
+        },
+        {
+          "action": "timer-create",
+          "seconds": 30.0,
+          "callback": "0xbd8f88",
+          "context": "0x10000700"
+        },
+        {
+          "action": "MCFRetain",
+          "object": "0x10000b00"
+        },
+        {
+          "action": "MCFRelease",
+          "object": "0x0"
+        },
+        {
+          "action": "timer-start",
+          "object": "0x10000b00"
+        },
+        {
+          "action": "MCFRelease",
+          "object": "0x10000b00"
+        }
+      ],
+      "stored_timer": "0x10000b00"
+    },
+    {
+      "same_provider": true,
+      "raw_status": 0,
+      "busy_byte": 2,
+      "old_timer": true,
+      "events": [
+        {
+          "action": "drain-start"
+        },
+        {
+          "action": "timer-create",
+          "seconds": 30.0,
+          "callback": "0xbd8f88",
+          "context": "0x10000700"
+        },
+        {
+          "action": "MCFRetain",
+          "object": "0x10000b00"
+        },
+        {
+          "action": "MCFRelease",
+          "object": "0x10000900"
+        },
+        {
+          "action": "timer-start",
+          "object": "0x10000b00"
+        },
+        {
+          "action": "MCFRelease",
+          "object": "0x10000b00"
+        }
+      ],
+      "stored_timer": "0x10000b00"
+    },
+    {
+      "same_provider": true,
+      "raw_status": 1,
+      "busy_byte": 0,
+      "old_timer": false,
+      "events": [
+        {
+          "action": "drain-end-error"
+        }
+      ],
+      "stored_timer": "0x0"
+    },
+    {
+      "same_provider": true,
+      "raw_status": 1,
+      "busy_byte": 0,
+      "old_timer": true,
+      "events": [
+        {
+          "action": "timer-cancel",
+          "object": "0x10000900"
+        },
+        {
+          "action": "drain-end-error"
+        }
+      ],
+      "stored_timer": "0x10000900"
+    },
+    {
+      "same_provider": true,
+      "raw_status": 1,
+      "busy_byte": 1,
+      "old_timer": false,
+      "events": [
+        {
+          "action": "drain-end-error"
+        }
+      ],
+      "stored_timer": "0x0"
+    },
+    {
+      "same_provider": true,
+      "raw_status": 1,
+      "busy_byte": 1,
+      "old_timer": true,
+      "events": [
+        {
+          "action": "timer-cancel",
+          "object": "0x10000900"
+        },
+        {
+          "action": "drain-end-error"
+        }
+      ],
+      "stored_timer": "0x10000900"
+    },
+    {
+      "same_provider": true,
+      "raw_status": 1,
+      "busy_byte": 2,
+      "old_timer": false,
+      "events": [
+        {
+          "action": "drain-end-error"
+        }
+      ],
+      "stored_timer": "0x0"
+    },
+    {
+      "same_provider": true,
+      "raw_status": 1,
+      "busy_byte": 2,
+      "old_timer": true,
+      "events": [
+        {
+          "action": "timer-cancel",
+          "object": "0x10000900"
+        },
+        {
+          "action": "drain-end-error"
+        }
+      ],
+      "stored_timer": "0x10000900"
+    },
+    {
+      "same_provider": true,
+      "raw_status": 2,
+      "busy_byte": 0,
+      "old_timer": false,
+      "events": [
+        {
+          "action": "abort"
+        }
+      ],
+      "stored_timer": "0x0"
+    },
+    {
+      "same_provider": true,
+      "raw_status": 2,
+      "busy_byte": 0,
+      "old_timer": true,
+      "events": [
+        {
+          "action": "abort"
+        }
+      ],
+      "stored_timer": "0x10000900"
+    },
+    {
+      "same_provider": true,
+      "raw_status": 2,
+      "busy_byte": 1,
+      "old_timer": false,
+      "events": [
+        {
+          "action": "abort"
+        }
+      ],
+      "stored_timer": "0x0"
+    },
+    {
+      "same_provider": true,
+      "raw_status": 2,
+      "busy_byte": 1,
+      "old_timer": true,
+      "events": [
+        {
+          "action": "abort"
+        }
+      ],
+      "stored_timer": "0x10000900"
+    },
+    {
+      "same_provider": true,
+      "raw_status": 2,
+      "busy_byte": 2,
+      "old_timer": false,
+      "events": [
+        {
+          "action": "abort"
+        }
+      ],
+      "stored_timer": "0x0"
+    },
+    {
+      "same_provider": true,
+      "raw_status": 2,
+      "busy_byte": 2,
+      "old_timer": true,
+      "events": [
+        {
+          "action": "abort"
+        }
+      ],
+      "stored_timer": "0x10000900"
+    }
+  ],
+  "timer_cases": [
+    {
+      "readiness_result": 0,
+      "busy_byte": 0,
+      "events": []
+    },
+    {
+      "readiness_result": 0,
+      "busy_byte": 1,
+      "events": []
+    },
+    {
+      "readiness_result": 0,
+      "busy_byte": 2,
+      "events": []
+    },
+    {
+      "readiness_result": 0,
+      "busy_byte": 3,
+      "events": []
+    },
+    {
+      "readiness_result": 1,
+      "busy_byte": 0,
+      "events": [
+        {
+          "action": "drain-start"
+        }
+      ]
+    },
+    {
+      "readiness_result": 1,
+      "busy_byte": 1,
+      "events": []
+    },
+    {
+      "readiness_result": 1,
+      "busy_byte": 2,
+      "events": [
+        {
+          "action": "drain-start"
+        }
+      ]
+    },
+    {
+      "readiness_result": 1,
+      "busy_byte": 3,
+      "events": []
+    },
+    {
+      "readiness_result": 2,
+      "busy_byte": 0,
+      "events": []
+    },
+    {
+      "readiness_result": 2,
+      "busy_byte": 1,
+      "events": []
+    },
+    {
+      "readiness_result": 2,
+      "busy_byte": 2,
+      "events": []
+    },
+    {
+      "readiness_result": 2,
+      "busy_byte": 3,
+      "events": []
+    },
+    {
+      "readiness_result": 3,
+      "busy_byte": 0,
+      "events": [
+        {
+          "action": "drain-start"
+        }
+      ]
+    },
+    {
+      "readiness_result": 3,
+      "busy_byte": 1,
+      "events": []
+    },
+    {
+      "readiness_result": 3,
+      "busy_byte": 2,
+      "events": [
+        {
+          "action": "drain-start"
+        }
+      ]
+    },
+    {
+      "readiness_result": 3,
+      "busy_byte": 3,
+      "events": []
+    }
+  ]
+}

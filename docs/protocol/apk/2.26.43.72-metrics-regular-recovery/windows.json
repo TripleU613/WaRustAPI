@@ -1,0 +1,32 @@
+[
+  {
+    "name": "regular-status-callback",
+    "start_va": "0x727740",
+    "end_va": "0x727908"
+  },
+  {
+    "name": "regular-timer-callback",
+    "start_va": "0x727908",
+    "end_va": "0x7279a4"
+  },
+  {
+    "name": "regular-timer-thunk",
+    "start_va": "0xbd8f88",
+    "end_va": "0xbd8f90"
+  },
+  {
+    "name": "timer-create-arguments",
+    "start_va": "0xbe8e64",
+    "end_va": "0xbe8e70"
+  },
+  {
+    "name": "drain-error-arguments",
+    "start_va": "0xbe05c8",
+    "end_va": "0xbe05d4"
+  },
+  {
+    "name": "status-entry-arguments",
+    "start_va": "0xbe4674",
+    "end_va": "0xbe4680"
+  }
+]
