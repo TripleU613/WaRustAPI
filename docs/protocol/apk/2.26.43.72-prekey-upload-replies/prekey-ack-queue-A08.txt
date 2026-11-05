@@ -1,0 +1,28 @@
+
+# class: LX/1iV;
+# extends: Ljava/lang/Object;
+
+.method private A08(Z)  # .registers 4
+    # full signature: LX/1iV;->A08()Z
+    0000..0006  invoke-static  {v3}, LX/1iV;->A02(LX/1iV;)I
+    0006..0008  move-result  v1
+    0008..000a  monitor-enter
+    000a..000e  if-lez  v1, +0x15
+    000e..0012  iget  v2, v3, LX/1iV;->A01:I
+    0012..0016  iget-object  v0, v3, LX/1iV;->A0J:LX/0Ll;
+    0016..001c  invoke-virtual  {v0}, Ljava/util/AbstractCollection;->size()I
+    001c..001e  move-result  v0
+    001e..0024  invoke-static  {v1, v0}, Ljava/lang/Math;->max(II)I
+    0024..0026  move-result  v1
+    0026..0028  const/4  v0, #0x1
+    0028..002c  if-ge  v2, v1, +0x7
+    002c..002e  goto  +0x4
+    002e..0030  move-exception  v0
+    0030..0032  monitor-exit
+    0032..0034  throw  v0
+    0034..0036  const/4  v0, #0x0
+    0036..0038  monitor-exit
+    0038..003a  return  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0007..0017 -> 0017
+.end method

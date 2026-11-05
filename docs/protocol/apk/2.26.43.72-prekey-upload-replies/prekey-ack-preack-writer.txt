@@ -1,0 +1,33 @@
+
+# class: LX/0v2;
+# extends: Ljava/lang/Object;
+
+.method public A01(VLIJ)  # .registers 8
+    # full signature: LX/0v2;->A01(LX/0Tp;IJ)V
+    0000..0004  iget-object  v0, v3, LX/0v2;->A00:LX/0v0;
+    0004..0008  iget-object  v0, v0, LX/0v0;->A00:LX/1rj;
+    0008..000e  invoke-virtual  {v0, v4, v6, v7}, LX/1rj;->A04(LX/0Tp;J)V
+    000e..0012  const-string  v0, "WriterThread/write/type="
+    0012..0016  new-instance  v2, Ljava/lang/StringBuilder;
+    0016..001c  invoke-direct  {v2, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    001c..0022  invoke-virtual  {v2, v5}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0022..0026  const-string  v0, " tag="
+    0026..002c  invoke-virtual  {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    002c..0030  iget-object  v0, v4, LX/0Tp;->A00:Ljava/lang/String;
+    0030..0036  invoke-virtual  {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0036..003a  const-string  v0, ", loggableStanzaId="
+    003a..0040  invoke-virtual  {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0040..0046  invoke-virtual  {v2, v6, v7}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    0046..004a  const-string  v0, ", id="
+    004a..0050  invoke-virtual  {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0050..0054  const-string  v1, "id"
+    0054..0056  const/4  v0, #0x0
+    0056..005c  invoke-virtual  {v4, v1, v0}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    005c..005e  move-result-object  v0
+    005e..0064  invoke-virtual  {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0064..006a  invoke-virtual  {v2}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    006a..006c  move-result-object  v0
+    006c..0072  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0072..0074  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -767,3 +767,29 @@ No production source change or live account operation in this evidence chunk.
 Validation: pinned APK digest and all18 new export checksums verified;
 OpenAPI JSON, coverage freshness, staged whitespace and repository hygiene
 passed. This documentation/evidence-only chunk did not rerun Rust tests.
+
+### Durable pre-ACK storage and confirmation watermark (2026-11-04)
+
+**Confirmed static, APK2.26.43.72:** the ACK conversion helper accepts message76
+and uses the same generic ACK builder as its direct writer. Message43 writes the
+already-built node. Native1iV.A0F serializes queued nodes into SQLite preacks.ptn;
+1iY loads by ascending row ID and deletes cumulatively through a confirmed row
+watermark. This closes the prior unknown about existence of durable pre-ACK
+storage, but not whether every live count notification selects that branch.
+
+The ping manager snapshots a queue marker and its successful IQ callback requests
+retirement; socket write alone is not proven retirement authority. Replay-deferred
+and passive-state holds, a reconnect-epoch check, capacity-driven pending drops,
+periodic flush scheduling and persisted/pending selection are retained. [Exact
+methods, boundaries and 24 new checked exports](apk/2.26.43.72-prekey-upload-replies/README.md#pre-ack-conversion-sqlite-persistence-and-retirement-2026-11-04).
+
+**Still open:** effective configuration, complete initial load and replay-send
+ownership, bulkCCQ selection, ping correlation/error timing, partial/ambiguous
+commit handling, and all retirement entry points. Rust has durable raw inbound
+captures, not this native pre-ACK queue. No ACK replay/deduplication, new ping,
+automatic deletion or socket-order change was implemented from partial evidence.
+No live account operation; this is a documentation/evidence chunk.
+
+Validation: pinned APK SHA256 and all24 new export hashes verified; OpenAPI
+JSON, coverage freshness, staged whitespace and repository hygiene passed.
+Documentation/evidence-only change; Rust tests were not rerun.

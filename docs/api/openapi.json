@@ -15509,6 +15509,18 @@
     ],
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#count-notification-ack-token-and-queue-stages-2026-11-04",
-    "description": "Native count ACK callback consumes a one-use metadata token and enters bulk or readiness/pre-ACK queue paths; it is not synchronous socket completion. Message76 can become pre-ACK message43. Same-object one-shot consumption is not permanent redelivery deduplication. Queue durability, concrete branch selection and 43 conversion/flush/drain behavior remain open. Direct76 writer links to the generic ACK builder, whose count-specific optional-field applicability remains unproven. Rust ACK/upload order is unchanged; no new API route, recovery, retry or ACK suppression."
+    "description": "Native count ACK callback consumes a one-use metadata token and enters bulk or readiness/pre-ACK queue paths; it is not synchronous socket completion. Message76 can become pre-ACK message43. Same-object one-shot consumption is not permanent redelivery deduplication. Further trace confirms SQLite persistence and the direct43 writer; full crash/reconnect guarantees and concrete branch selection remain open. Direct76 writer links to the generic ACK builder, whose count-specific optional-field applicability remains unproven. Rust ACK/upload order is unchanged; no new API route, recovery, retry or ACK suppression."
+  },
+  "x-prekey-durable-preack-evidence": {
+    "x-cli": {
+      "command": "xtask apk-smali APK --class CLASS --method METHOD --signatures --exceptions",
+      "description": "Existing offline developer disassembler; no new CLI or HTTP capability"
+    },
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#pre-ack-conversion-sqlite-persistence-and-retirement-2026-11-04",
+    "description": "Native pre-ACK message76 conversion shares the direct ACK builder; message43 writes an already-built node. Selected queue flush persists serialized nodes in SQLite preacks, and confirmation-watermark cleanup deletes rows cumulatively. Ping success, passive/deferred holds and reconnect epoch gating are partially traced. Effective config, full load/replay ownership, bulk CCQ and ambiguous persistence failures remain open. Rust ACK ordering and recovery remain unchanged; no ACK replay, suppression, new ping or route added."
   }
 }

@@ -1,0 +1,22 @@
+
+# class: LX/1iV;
+# extends: Ljava/lang/Object;
+
+.method public A0E(V)  # .registers 4
+    # full signature: LX/1iV;->A0E()V
+    0000..0004  iget-object  v1, v3, LX/1iV;->A0F:Ljava/util/concurrent/atomic/AtomicBoolean;
+    0004..0006  const/4  v0, #0x1
+    0006..000c  invoke-virtual  {v1, v0}, Ljava/util/concurrent/atomic/AtomicBoolean;->getAndSet(Z)Z
+    000c..000e  move-result  v0
+    000e..0012  if-nez  v0, +0x16
+    0012..0016  iget-object  v2, v3, LX/1iV;->A0B:LX/098;
+    0016..001a  const/16  v1, #0x29
+    001a..001e  new-instance  v0, LX/2JI;
+    001e..0024  invoke-direct  {v0, v3, v1}, LX/2JI;-><init>(Ljava/lang/Object;I)V
+    0024..002a  invoke-virtual  {v2, v0}, LX/098;->execute(Ljava/lang/Runnable;)V
+    002a..002e  const-string  v0, "PreacksQueue/startLoadingAsync starting a periodic writer"
+    002e..0034  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0034..003a  invoke-static  {v3}, LX/1iV;->A05(LX/1iV;)V
+    003a..003c  return-void
+    # exception table: 0 try range(s)
+.end method

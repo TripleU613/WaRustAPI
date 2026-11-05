@@ -1,0 +1,28 @@
+
+# class: LX/1iV;
+# extends: Ljava/lang/Object;
+
+.method public A05(VL)  # .registers 6
+    # full signature: LX/1iV;->A05(LX/1iV;)V
+    0000..0004  iget-object  v0, v5, LX/1iV;->A07:LX/05a;
+    0004..0008  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0008..000e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    000e..0010  move-result-object  v1
+    0010..0014  check-cast  v1, LX/00E;
+    0014..0018  sget-object  v0, LX/1hy;->A06:LX/0AB;
+    0018..001e  invoke-static  {v0}, LX/00l;->A06(Ljava/lang/Object;)V
+    001e..0024  invoke-virtual  {v1, v0}, LX/00E;->A0e(LX/0AB;)I
+    0024..0026  move-result  v0
+    0026..0028  int-to-long  v3, v0
+    0028..002c  const-wide/16  v1, #0x64
+    002c..0030  cmp-long  v0, v3, v1
+    0030..0034  if-gez  v0, +0x4
+    0034..0038  const-wide/16  v3, #0x64
+    0038..003c  iget-object  v2, v5, LX/1iV;->A0B:LX/098;
+    003c..0040  const/16  v1, #0x2a
+    0040..0044  new-instance  v0, LX/2JI;
+    0044..004a  invoke-direct  {v0, v5, v1}, LX/2JI;-><init>(Ljava/lang/Object;I)V
+    004a..0050  invoke-virtual  {v2, v0, v3, v4}, LX/098;->A05(Ljava/lang/Runnable;J)V
+    0050..0052  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,46 @@
+
+# class: LX/1t2;
+# extends: Ljava/lang/Object;
+
+.method public A01(V)  # .registers 7
+    # full signature: LX/1t2;->A01()V
+    0000..0004  iget-object  v0, v6, LX/1t2;->A00:LX/05a;
+    0004..0008  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0008..000e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    000e..0010  move-result-object  v0
+    0010..0014  check-cast  v0, LX/1jQ;
+    0014..0018  iget-object  v0, v0, LX/1jQ;->A06:Ljava/util/concurrent/atomic/AtomicBoolean;
+    0018..001e  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicBoolean;->get()Z
+    001e..0020  move-result  v0
+    0020..0024  if-nez  v0, +0x28
+    0024..002a  const-wide/32  v2, #0xea60
+    002a..002e  iget-object  v5, v6, LX/1t2;->A07:LX/00p;
+    002e..0034  invoke-interface  {v5}, LX/00p;->getValue()Ljava/lang/Object;
+    0034..0036  move-result-object  v1
+    0036..003a  check-cast  v1, Landroid/os/Handler;
+    003a..003e  iget-object  v4, v6, LX/1t2;->A08:LX/00p;
+    003e..0044  invoke-interface  {v4}, LX/00p;->getValue()Ljava/lang/Object;
+    0044..0046  move-result-object  v0
+    0046..004a  check-cast  v0, Ljava/lang/Runnable;
+    004a..0050  invoke-virtual  {v1, v0}, Landroid/os/Handler;->removeCallbacks(Ljava/lang/Runnable;)V
+    0050..0056  invoke-interface  {v5}, LX/00p;->getValue()Ljava/lang/Object;
+    0056..0058  move-result-object  v1
+    0058..005c  check-cast  v1, Landroid/os/Handler;
+    005c..0062  invoke-interface  {v4}, LX/00p;->getValue()Ljava/lang/Object;
+    0062..0064  move-result-object  v0
+    0064..0068  check-cast  v0, Ljava/lang/Runnable;
+    0068..006e  invoke-virtual  {v1, v0, v2, v3}, Landroid/os/Handler;->postDelayed(Ljava/lang/Runnable;J)Z
+    006e..0070  return-void
+    0070..0074  iget-object  v1, v6, LX/1t2;->A03:LX/08Y;
+    0074..0078  sget-object  v0, LX/1hy;->A03:LX/0AB;
+    0078..007e  invoke-static  {v0}, LX/00l;->A06(Ljava/lang/Object;)V
+    007e..0084  invoke-virtual  {v1, v0}, LX/00E;->A0e(LX/0AB;)I
+    0084..0086  move-result  v0
+    0086..0088  int-to-long  v0, v0
+    0088..008c  const-wide/16  v2, #0x1388
+    008c..0092  const-wide/32  v4, #0xea60
+    0092..0098  invoke-static/range  {v0..v5}, LX/0HS;->A05(JJJ)J
+    0098..009a  move-result-wide  v2
+    009a..009c  goto  -0x38
+    # exception table: 0 try range(s)
+.end method

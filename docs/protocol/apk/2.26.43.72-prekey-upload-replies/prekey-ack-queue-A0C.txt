@@ -1,0 +1,60 @@
+
+# class: LX/1iV;
+# extends: Ljava/lang/Object;
+
+.method public A0C(L)  # .registers 6
+    # full signature: LX/1iV;->A0C()LX/1vZ;
+    0000..0006  invoke-direct  {v5}, LX/1iV;->A03()V
+    0006..000c  invoke-static  {v5}, LX/1iV;->A01(LX/1iV;)I
+    000c..000e  move-result  v4
+    000e..0014  invoke-static  {v5}, LX/1iV;->A02(LX/1iV;)I
+    0014..0016  move-result  v3
+    0016..0018  monitor-enter
+    0018..001c  iget  v2, v5, LX/1iV;->A02:I
+    001c..0020  iget  v1, v5, LX/1iV;->A03:I
+    0020..0022  const/4  v0, #0x0
+    0022..0026  if-ne  v2, v1, +0x3
+    0026..0028  const/4  v0, #0x1
+    0028..002a  const/4  v1, #0x0
+    002a..002e  if-nez  v0, +0x41
+    002e..0032  if-gtz  v4, +0x15
+    0032..0036  iget-object  v0, v5, LX/1iV;->A0I:LX/0Ll;
+    0036..003c  invoke-virtual  {v0}, LX/0Ll;->A0P()Ljava/lang/Object;
+    003c..003e  move-result-object  v1
+    003e..0042  check-cast  v1, LX/1vZ;
+    0042..0046  if-nez  v1, +0x35
+    0046..004a  iget-object  v0, v5, LX/1iV;->A0J:LX/0Ll;
+    004a..0050  invoke-virtual  {v0}, LX/0Ll;->A0P()Ljava/lang/Object;
+    0050..0052  move-result-object  v1
+    0052..0056  check-cast  v1, LX/1vZ;
+    0056..0058  goto  +0x2b
+    0058..005e  invoke-direct  {v5, v4, v3}, LX/1iV;->A00(II)I
+    005e..0060  move-result  v3
+    0060..0064  if-eqz  v3, +0x26
+    0064..0068  iget-object  v2, v5, LX/1iV;->A0J:LX/0Ll;
+    0068..006e  invoke-virtual  {v2}, Ljava/util/AbstractCollection;->size()I
+    006e..0070  move-result  v0
+    0070..0074  if-gt  v3, v0, +0xf
+    0074..0078  iget-boolean  v0, v5, LX/1iV;->A06:Z
+    0078..007c  if-nez  v0, +0x1a
+    007c..0080  add-int/lit8  v0, v3, #0xff (-1)
+    0080..0086  invoke-virtual  {v2, v0}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
+    0086..0088  move-result-object  v1
+    0088..008c  check-cast  v1, LX/1vZ;
+    008c..008e  goto  +0x10
+    008e..0092  iget-object  v1, v5, LX/1iV;->A0I:LX/0Ll;
+    0092..0098  invoke-virtual  {v2}, Ljava/util/AbstractCollection;->size()I
+    0098..009a  move-result  v0
+    009a..009c  sub-int/2addr  v3, v0
+    009c..00a0  add-int/lit8  v0, v3, #0xff (-1)
+    00a0..00a6  invoke-virtual  {v1, v0}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
+    00a6..00a8  move-result-object  v1
+    00a8..00ac  check-cast  v1, LX/1vZ;
+    00ac..00ae  monitor-exit
+    00ae..00b0  return-object  v1
+    00b0..00b2  move-exception  v0
+    00b2..00b4  monitor-exit
+    00b4..00b6  throw  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 000c..0056 -> 0058
+.end method

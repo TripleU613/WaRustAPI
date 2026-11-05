@@ -1,0 +1,309 @@
+
+# class: LX/1iY;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 3
+    # full signature: LX/1iY;-><init>()V
+    0000..0006  invoke-direct  {v2}, Ljava/lang/Object;-><init>()V
+    0006..0008  const/4  v0, #0x5
+    0008..000e  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    000e..0010  move-result-object  v0
+    0010..0014  iput-object  v0, v2, LX/1iY;->A01:LX/05a;
+    0014..0018  const/16  v0, #0xf5
+    0018..001e  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    001e..0020  move-result-object  v0
+    0020..0024  check-cast  v0, LX/09S;
+    0024..0028  iput-object  v0, v2, LX/1iY;->A02:LX/09S;
+    0028..002c  const/16  v0, #0xc3e
+    002c..0032  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0032..0034  move-result-object  v0
+    0034..0038  iput-object  v0, v2, LX/1iY;->A00:LX/05a;
+    0038..003c  const/16  v1, #0x1b
+    003c..0040  new-instance  v0, LX/2Je;
+    0040..0046  invoke-direct  {v0, v2, v1}, LX/2Je;-><init>(Ljava/lang/Object;I)V
+    0046..004c  invoke-static  {v0}, LX/00o;->A01(Lkotlin/jvm/functions/Function0;)LX/00q;
+    004c..004e  move-result-object  v0
+    004e..0052  iput-object  v0, v2, LX/1iY;->A03:LX/00p;
+    0052..0056  new-instance  v0, LX/122;
+    0056..005c  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    005c..0060  iput-object  v0, v2, LX/1iY;->A04:LX/122;
+    0060..0062  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(LLL)  # .registers 11
+    # full signature: LX/1iY;->A00(Landroid/database/Cursor;LX/1iY;)LX/1jo;
+    0000..0004  new-instance  v7, Ljava/util/ArrayList;
+    0004..000a  invoke-direct  {v7}, Ljava/util/ArrayList;-><init>()V
+    000a..000e  const-string  v0, "_id"
+    000e..0014  invoke-interface  {v9, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    0014..0016  move-result  v8
+    0016..001a  const-string  v0, "ptn"
+    001a..0020  invoke-interface  {v9, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    0020..0022  move-result  v6
+    0022..0026  iget-object  v0, v10, LX/1iY;->A04:LX/122;
+    0026..0028  const/4  v5, #0x0
+    0028..002c  new-instance  v4, LX/123;
+    002c..0032  invoke-direct  {v4, v0}, LX/123;-><init>(LX/122;)V
+    0032..0038  invoke-interface  {v9}, Landroid/database/Cursor;->moveToNext()Z
+    0038..003a  move-result  v0
+    003a..003e  if-eqz  v0, +0x1f
+    003e..0044  invoke-interface  {v9, v8}, Landroid/database/Cursor;->getLong(I)J
+    0044..0046  move-result-wide  v0
+    0046..004c  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    004c..004e  move-result-object  v5
+    004e..0054  invoke-interface  {v9, v6}, Landroid/database/Cursor;->getBlob(I)[B
+    0054..0056  move-result-object  v0
+    0056..005c  invoke-static  {v4, v0}, LX/27E;->A00(LX/123;[B)LX/0Tp;
+    005c..005e  move-result-object  v3
+    005e..0062  if-eqz  v3, -0x16
+    0062..0066  const-wide/16  v1, #0xffff (-1)
+    0066..006a  new-instance  v0, LX/1vZ;
+    006a..0070  invoke-direct  {v0, v3, v5, v1, v2}, LX/1vZ;-><init>(LX/0Tp;Ljava/lang/Long;J)V
+    0070..0076  invoke-virtual  {v7, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0076..0078  goto  -0x22
+    0078..007c  new-instance  v0, LX/1jo;
+    007c..0082  invoke-direct  {v0, v5, v7}, LX/1jo;-><init>(Ljava/lang/Long;Ljava/util/List;)V
+    0082..0084  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A01(ZL)  # .registers 6
+    # full signature: LX/1iY;->A01(LX/1iY;)Z
+    0000..0002  monitor-enter
+    0002..0006  iget-object  v0, v5, LX/1iY;->A02:LX/09S;
+    0006..000a  iget-object  v4, v0, LX/09S;->A0U:LX/00x;
+    000a..0010  invoke-interface  {v4}, LX/00x;->get()Ljava/lang/Object;
+    0010..0012  move-result-object  v0
+    0012..0016  check-cast  v0, LX/0Fa;
+    0016..001c  invoke-virtual  {v0}, LX/0FZ;->A03()Landroid/content/SharedPreferences;
+    001c..001e  move-result-object  v1
+    001e..0022  const-string  v3, "wa_dictionary_version"
+    0022..0024  const/4  v0, #0x0
+    0024..002a  invoke-interface  {v1, v3, v0}, Landroid/content/SharedPreferences;->getInt(Ljava/lang/String;I)I
+    002a..002c  move-result  v2
+    002c..002e  const/4  v1, #0x3
+    002e..0032  if-eq  v2, v1, +0x13
+    0032..0038  invoke-interface  {v4}, LX/00x;->get()Ljava/lang/Object;
+    0038..003a  move-result-object  v0
+    003a..003e  check-cast  v0, LX/0Fa;
+    003e..0044  invoke-virtual  {v0}, LX/0FZ;->A02()Landroid/content/SharedPreferences$Editor;
+    0044..0046  move-result-object  v0
+    0046..004c  invoke-interface  {v0, v3, v1}, Landroid/content/SharedPreferences$Editor;->putInt(Ljava/lang/String;I)Landroid/content/SharedPreferences$Editor;
+    004c..004e  move-result-object  v0
+    004e..0054  invoke-interface  {v0}, Landroid/content/SharedPreferences$Editor;->apply()V
+    0054..0056  monitor-exit
+    0056..005a  if-eqz  v2, +0x2b
+    005a..005e  if-eq  v2, v1, +0x29
+    005e..0062  const-string  v0, "PreacksStore/deleteAll preacks"
+    0062..0068  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0068..006c  iget-object  v0, v5, LX/1iY;->A03:LX/00p;
+    006c..0072  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    0072..0074  move-result-object  v0
+    0074..0078  check-cast  v0, LX/0Xp;
+    0078..007e  invoke-virtual  {v0}, LX/0Xp;->A07()LX/0aq;
+    007e..0080  move-result-object  v4
+    0080..0084  iget-object  v3, v4, LX/0aq;->A02:LX/0KU;
+    0084..0088  const-string  v2, "preacks"
+    0088..008c  const-string  v1, "PreacksStore/DELETE_ALL"
+    008c..008e  const/4  v0, #0x0
+    008e..0094  invoke-virtual  {v3, v2, v0, v1, v0}, LX/0KU;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+    0094..009a  invoke-virtual  {v4}, LX/0aq;->close()V
+    009a..009c  const/4  v0, #0x1
+    009c..009e  return  v0
+    009e..00a0  move-exception  v1
+    00a0..00a2  throw  v1
+    00a2..00a4  move-exception  v0
+    00a4..00aa  invoke-static  {v4, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    00aa..00ac  throw  v0
+    00ac..00ae  const/4  v0, #0x0
+    00ae..00b0  return  v0
+    00b0..00b2  move-exception  v0
+    00b2..00b4  monitor-exit
+    00b4..00b6  throw  v0
+    # exception table: 3 try range(s)
+    # catch <all> code_units 0001..002a -> 0058
+    # catch <all> code_units 0040..004a -> 004f
+    # catch <all> code_units 0050..0051 -> 0051
+.end method
+
+.method public A02(IJ)  # .registers 13
+    # full signature: LX/1iY;->A02(J)I
+    0000..0004  const/16  v1, #0x4e3
+    0004..0008  iget-object  v0, v10, LX/1iY;->A01:LX/05a;
+    0008..000c  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    000c..0012  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0012..0014  move-result-object  v0
+    0014..0018  check-cast  v0, LX/00X;
+    0018..001e  invoke-virtual  {v0}, LX/00X;->A01()LX/00Y;
+    001e..0020  move-result-object  v0
+    0020..0024  check-cast  v0, LX/00Z;
+    0024..002a  invoke-static  {v0, v1}, LX/09H;->A03(LX/00Y;I)Ljava/lang/Object;
+    002a..002c  move-result-object  v5
+    002c..0030  check-cast  v5, LX/0B0;
+    0030..0034  const-wide/16  v1, #0x0
+    0034..0036  const/4  v8, #0x1
+    0036..0038  const/4  v9, #0x0
+    0038..003c  cmp-long  v0, v11, v1
+    003c..003e  const/4  v2, #0x0
+    003e..0042  if-ltz  v0, +0x3
+    0042..0044  const/4  v2, #0x1
+    0044..0048  const-string  v0, "Invalid rowId="
+    0048..004c  new-instance  v1, Ljava/lang/StringBuilder;
+    004c..0052  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0052..0058  invoke-virtual  {v1, v11, v12}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    0058..005c  const-string  v0, " provided"
+    005c..0062  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0062..0068  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0068..006a  move-result-object  v0
+    006a..0070  invoke-static  {v2, v0}, LX/00L;->A0D(ZLjava/lang/String;)V
+    0070..0072  const/4  v4, #0x0
+    0072..0076  iget-object  v0, v10, LX/1iY;->A03:LX/00p;
+    0076..007c  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    007c..007e  move-result-object  v0
+    007e..0082  check-cast  v0, LX/0Xp;
+    0082..0088  invoke-virtual  {v0}, LX/0Xp;->A07()LX/0aq;
+    0088..008a  move-result-object  v7
+    008a..008e  iget-object  v6, v7, LX/0aq;->A02:LX/0KU;
+    008e..0092  const-string  v3, "preacks"
+    0092..0096  const-string  v2, "_id <= ?"
+    0096..009c  invoke-static  {v11, v12}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+    009c..009e  move-result-object  v0
+    009e..00a2  new-array  v1, v8, [Ljava/lang/String;
+    00a2..00a6  aput-object  v0, v1, v9
+    00a6..00aa  const-string  v0, "PreacksStore/DELETE_ALL_OLDER_THAN_OR_EQUAL"
+    00aa..00b0  invoke-virtual  {v6, v3, v2, v0, v1}, LX/0KU;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+    00b0..00b2  move-result  v0
+    00b2..00b8  invoke-virtual  {v7}, LX/0aq;->close()V
+    00b8..00ba  return  v0
+    00ba..00bc  move-exception  v1
+    00bc..00be  throw  v1
+    00be..00c0  move-exception  v0
+    00c0..00c6  invoke-static  {v7, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    00c6..00c8  throw  v0
+    00c8..00ca  move-exception  v1
+    00ca..00ce  const-string  v0, "PreacksStore/deleteAllOlderThanOrEqual failed to remove pre-acks from DB"
+    00ce..00d4  invoke-static  {v0, v1}, LX/00L;->A08(Ljava/lang/String;Ljava/lang/Throwable;)V
+    00d4..00d8  const-string  v0, "failed_to_remove_pre_acks"
+    00d8..00de  invoke-virtual  {v5, v0, v4, v1}, LX/0B0;->A0e(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+    00de..00e0  return  v9
+    # exception table: 5 try range(s)
+    # catch Ljava/lang/Exception; code_units 0039..0045 -> 0064
+    # catch <all> code_units 0045..0059 -> 005d
+    # catch Ljava/lang/Exception; code_units 0059..005d -> 0064
+    # catch <all> code_units 005e..005f -> 005f
+    # catch Ljava/lang/Exception; code_units 0060..0064 -> 0064
+.end method
+
+.method public A03(LIJ)  # .registers 15
+    # full signature: LX/1iY;->A03(IJ)Ljava/util/List;
+    0000..0004  const/16  v1, #0x4e3
+    0004..0008  iget-object  v0, v11, LX/1iY;->A01:LX/05a;
+    0008..000c  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    000c..0012  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0012..0014  move-result-object  v0
+    0014..0018  check-cast  v0, LX/00X;
+    0018..001e  invoke-virtual  {v0}, LX/00X;->A01()LX/00Y;
+    001e..0020  move-result-object  v0
+    0020..0024  check-cast  v0, LX/00Z;
+    0024..002a  invoke-static  {v0, v1}, LX/09H;->A03(LX/00Y;I)Ljava/lang/Object;
+    002a..002c  move-result-object  v3
+    002c..0030  check-cast  v3, LX/0B0;
+    0030..0034  if-gtz  v12, +0x15
+    0034..0038  const-string  v1, "PreacksStore/safePageSize non-positive limit="
+    0038..003c  new-instance  v0, Ljava/lang/StringBuilder;
+    003c..0042  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0042..0048  invoke-virtual  {v0, v12}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0048..004e  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    004e..0050  move-result-object  v1
+    0050..0052  const/4  v0, #0x0
+    0052..0058  invoke-static  {v0, v1}, LX/00L;->A0C(ZLjava/lang/String;)V
+    0058..005a  const/4  v12, #0x1
+    005a..005c  const/4  v10, #0x0
+    005c..0060  iget-object  v0, v11, LX/1iY;->A03:LX/00p;
+    0060..0066  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    0066..0068  move-result-object  v0
+    0068..006c  check-cast  v0, LX/0Xp;
+    006c..0072  invoke-virtual  {v0}, LX/0Xp;->A06()LX/0aq;
+    0072..0074  move-result-object  v2
+    0074..0076  const/4  v9, #0x0
+    0076..0078  const/4  v5, #0x0
+    0078..007c  const/16  v0, #0x8
+    007c..0080  if-ge  v5, v0, +0x53
+    0080..0084  iget-object  v8, v2, LX/0aq;->A02:LX/0KU;
+    0084..0088  const-string  v7, "\n      SELECT _id, ptn\n      FROM preacks\n      WHERE _id > ?\n      ORDER BY _id\n      LIMIT ?\n    "
+    0088..008e  invoke-static  {v13, v14}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+    008e..0090  move-result-object  v6
+    0090..0096  invoke-static  {v12}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+    0096..0098  move-result-object  v4
+    0098..009a  const/4  v0, #0x2
+    009a..009e  new-array  v1, v0, [Ljava/lang/String;
+    009e..00a2  aput-object  v6, v1, v9
+    00a2..00a4  const/4  v0, #0x1
+    00a4..00a8  aput-object  v4, v1, v0
+    00a8..00ac  const-string  v0, "PreacksStore/GET_PREACKS_AFTER_ROW_ID"
+    00ac..00b2  invoke-virtual  {v8, v7, v0, v1}, LX/0KU;->A0A(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;
+    00b2..00b4  move-result-object  v4
+    00b4..00ba  invoke-static  {v4, v11}, LX/1iY;->A00(Landroid/database/Cursor;LX/1iY;)LX/1jo;
+    00ba..00bc  move-result-object  v0
+    00bc..00c0  if-eqz  v4, +0x5
+    00c0..00c6  invoke-interface  {v4}, Landroid/database/Cursor;->close()V
+    00c6..00ca  iget-object  v4, v0, LX/1jo;->A00:Ljava/lang/Long;
+    00ca..00ce  iget-object  v1, v0, LX/1jo;->A01:Ljava/util/List;
+    00ce..00d4  invoke-interface  {v1}, Ljava/util/List;->isEmpty()Z
+    00d4..00d6  move-result  v0
+    00d6..00da  if-eqz  v0, +0x2c
+    00da..00de  if-eqz  v4, +0x2a
+    00de..00e2  new-instance  v1, Ljava/lang/StringBuilder;
+    00e2..00e8  invoke-direct  {v1}, Ljava/lang/StringBuilder;-><init>()V
+    00e8..00ec  const-string  v0, "PreacksStore/loadAfter skipping an undecodable page ending at rowId="
+    00ec..00f2  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00f2..00f8  invoke-virtual  {v1, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    00f8..00fe  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00fe..0100  move-result-object  v0
+    0100..0106  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0106..010c  invoke-virtual  {v4}, Ljava/lang/Number;->longValue()J
+    010c..010e  move-result-wide  v13
+    010e..0112  add-int/lit8  v5, v5, #0x1
+    0112..0114  goto  -0x4d
+    0114..0116  move-exception  v1
+    0116..0118  throw  v1
+    0118..011a  move-exception  v0
+    011a..0120  invoke-static  {v4, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    0120..0122  throw  v0
+    0122..0126  const-string  v0, "PreacksStore/loadAfter gave up after 8 undecodable pages"
+    0126..012c  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    012c..012e  move-object  v1, v10
+    012e..0134  invoke-virtual  {v2}, LX/0aq;->close()V
+    0134..0136  return-object  v1
+    0136..0138  move-exception  v1
+    0138..013a  throw  v1
+    013a..013c  move-exception  v0
+    013c..0142  invoke-static  {v2, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    0142..0144  throw  v0
+    0144..0146  move-exception  v2
+    0146..014a  const-string  v0, "PreacksStore/loadAfter"
+    014a..0150  invoke-static  {v0, v2}, LX/00L;->A08(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0150..0154  const-string  v1, "failed_to_load_pre_acks"
+    0154..0158  const-string  v0, "exception"
+    0158..015e  invoke-virtual  {v3, v1, v0, v2}, LX/0B0;->A0e(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+    015e..0160  return-object  v10
+    # exception table: 9 try range(s)
+    # catch Ljava/lang/Exception; code_units 002e..0040 -> 00a2
+    # catch <all> code_units 0040..005a -> 009b
+    # catch <all> code_units 005a..0060 -> 008a
+    # catch <all> code_units 0060..008a -> 009b
+    # catch <all> code_units 008b..008c -> 008c
+    # catch <all> code_units 008d..0097 -> 009b
+    # catch Ljava/lang/Exception; code_units 0097..009b -> 00a2
+    # catch <all> code_units 009c..009d -> 009d
+    # catch Ljava/lang/Exception; code_units 009e..00a2 -> 00a2
+.end method
+
+.method public getName(L)  # .registers 2
+    # full signature: LX/1iY;->getName()Ljava/lang/String;
+    0000..0006  invoke-static  {}, LX/RNI;->createAndThrow()LX/RNI;
+    0006..0008  move-result-object  v0
+    0008..000a  throw  v0
+    # exception table: 0 try range(s)
+.end method

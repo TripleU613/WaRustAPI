@@ -1,0 +1,178 @@
+
+# class: LX/1iV;
+# extends: Ljava/lang/Object;
+
+.method public A0F(V)  # .registers 18
+    # full signature: LX/1iV;->A0F()V
+    0000..0004  move-object/from16  v3, v17
+    0004..000a  invoke-direct  {v3}, LX/1iV;->A08()Z
+    000a..000c  move-result  v0
+    000c..000e  const/4  v4, #0x0
+    000e..0010  monitor-enter
+    0010..0014  if-eqz  v0, +0xd
+    0014..0018  iget-object  v0, v3, LX/1iV;->A0I:LX/0Ll;
+    0018..001e  invoke-virtual  {v0}, Ljava/util/AbstractCollection;->size()I
+    001e..0020  move-result  v1
+    0020..0026  invoke-virtual  {v0}, Ljava/util/AbstractCollection;->clear()V
+    0026..002a  goto/16  +0x11f
+    002a..002e  iget-object  v5, v3, LX/1iV;->A0I:LX/0Ll;
+    002e..0034  invoke-virtual  {v5}, Ljava/util/AbstractCollection;->isEmpty()Z
+    0034..0036  move-result  v0
+    0036..003a  if-eqz  v0, +0x9
+    003a..003e  iget-object  v0, v3, LX/1iV;->A0D:Ljava/util/concurrent/atomic/AtomicBoolean;
+    003e..0044  invoke-virtual  {v0, v4}, Ljava/util/concurrent/atomic/AtomicBoolean;->set(Z)V
+    0044..0048  goto/16  +0x10e
+    0048..004c  new-instance  v6, Ljava/util/ArrayList;
+    004c..0052  invoke-direct  {v6, v5}, Ljava/util/ArrayList;-><init>(Ljava/util/Collection;)V
+    0052..0054  monitor-exit
+    0054..0058  iget-object  v0, v3, LX/1iV;->A09:LX/05a;
+    0058..005c  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    005c..0062  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0062..0064  move-result-object  v8
+    0064..0068  check-cast  v8, LX/1iY;
+    0068..006c  const/16  v1, #0x4e3
+    006c..0070  iget-object  v0, v8, LX/1iY;->A01:LX/05a;
+    0070..0074  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0074..007a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    007a..007c  move-result-object  v0
+    007c..0080  check-cast  v0, LX/00X;
+    0080..0086  invoke-virtual  {v0}, LX/00X;->A01()LX/00Y;
+    0086..0088  move-result-object  v0
+    0088..008c  check-cast  v0, LX/00Z;
+    008c..0092  invoke-static  {v0, v1}, LX/09H;->A03(LX/00Y;I)Ljava/lang/Object;
+    0092..0094  move-result-object  v7
+    0094..0098  check-cast  v7, LX/0B0;
+    0098..009e  invoke-virtual  {v6}, Ljava/util/AbstractCollection;->size()I
+    009e..00a0  move-result  v2
+    00a0..00a4  const-string  v1, "PreacksStore/insertMany size="
+    00a4..00a8  new-instance  v0, Ljava/lang/StringBuilder;
+    00a8..00ae  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00ae..00b4  invoke-virtual  {v0, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    00b4..00ba  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00ba..00bc  move-result-object  v0
+    00bc..00c2  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    00c2..00c6  new-instance  v13, Ljava/util/ArrayList;
+    00c6..00cc  invoke-direct  {v13}, Ljava/util/ArrayList;-><init>()V
+    00cc..00d0  const/16  v0, #0x40
+    00d0..00d4  new-instance  v12, Ljava/io/ByteArrayOutputStream;
+    00d4..00da  invoke-direct  {v12, v0}, Ljava/io/ByteArrayOutputStream;-><init>(I)V
+    00da..00e0  invoke-static  {v8}, LX/1iY;->A01(LX/1iY;)Z
+    00e0..00e4  iget-object  v0, v8, LX/1iY;->A03:LX/00p;
+    00e4..00ea  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    00ea..00ec  move-result-object  v0
+    00ec..00f0  check-cast  v0, LX/0Xp;
+    00f0..00f6  invoke-virtual  {v0}, LX/0Xp;->A07()LX/0aq;
+    00f6..00f8  move-result-object  v10
+    00f8..00fe  invoke-virtual  {v10}, LX/0aq;->A00()LX/1hk;
+    00fe..0100  move-result-object  v11
+    0100..0106  invoke-virtual  {v6}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+    0106..0108  move-result-object  v16
+    0108..010e  invoke-interface/range  {v16..v16}, Ljava/util/Iterator;->hasNext()Z
+    010e..0110  move-result  v0
+    0110..0114  if-eqz  v0, +0x38
+    0114..011a  invoke-interface/range  {v16..v16}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    011a..011c  move-result-object  v8
+    011c..0120  check-cast  v8, LX/1vZ;
+    0120..0124  new-instance  v15, Landroid/content/ContentValues;
+    0124..012a  invoke-direct  {v15}, Landroid/content/ContentValues;-><init>()V
+    012a..012e  iget-object  v9, v8, LX/1vZ;->A01:LX/0Tp;
+    012e..0134  invoke-static  {v9, v12}, LX/27E;->A01(LX/0Tp;Ljava/io/ByteArrayOutputStream;)[B
+    0134..0136  move-result-object  v1
+    0136..013a  const-string  v0, "ptn"
+    013a..0140  invoke-virtual  {v15, v0, v1}, Landroid/content/ContentValues;->put(Ljava/lang/String;[B)V
+    0140..0144  iget-object  v14, v10, LX/0aq;->A02:LX/0KU;
+    0144..0148  const-string  v2, "preacks"
+    0148..014c  const-string  v1, "PreacksStore/INSERT_MANY"
+    014c..014e  const/4  v0, #0x3
+    014e..0154  invoke-virtual  {v14, v2, v1, v15, v0}, LX/0KU;->A09(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;I)J
+    0154..0156  move-result-wide  v14
+    0156..015a  const-wide/16  v1, #0x0
+    015a..015e  cmp-long  v0, v14, v1
+    015e..0162  if-ltz  v0, -0x2b
+    0162..0166  iget-wide  v0, v8, LX/1vZ;->A00:J
+    0166..016c  invoke-static  {v14, v15}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    016c..016e  move-result-object  v8
+    016e..0172  new-instance  v2, LX/1vZ;
+    0172..0178  invoke-direct  {v2, v9, v8, v0, v1}, LX/1vZ;-><init>(LX/0Tp;Ljava/lang/Long;J)V
+    0178..017e  invoke-virtual  {v13, v2}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    017e..0180  goto  -0x3b
+    0180..0186  invoke-virtual  {v11}, LX/1hk;->A00()V
+    0186..018c  invoke-virtual  {v11}, LX/1hk;->close()V
+    018c..0192  invoke-virtual  {v10}, LX/0aq;->close()V
+    0192..0194  goto  +0x43
+    0194..0196  move-exception  v1
+    0196..0198  throw  v1
+    0198..019a  move-exception  v0
+    019a..01a0  invoke-static  {v11, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    01a0..01a2  throw  v0
+    01a2..01a4  move-exception  v1
+    01a4..01a6  throw  v1
+    01a6..01a8  move-exception  v0
+    01a8..01ae  invoke-static  {v10, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    01ae..01b0  throw  v0
+    01b0..01b2  move-exception  v8
+    01b2..01b8  invoke-virtual  {v6}, Ljava/util/AbstractCollection;->size()I
+    01b8..01ba  move-result  v2
+    01ba..01be  const-string  v0, "PreacksStore/insertManyCatchingErrors failed to persist "
+    01be..01c2  new-instance  v1, Ljava/lang/StringBuilder;
+    01c2..01c8  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    01c8..01ce  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    01ce..01d2  const-string  v0, " pre-acks"
+    01d2..01d8  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    01d8..01de  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    01de..01e0  move-result-object  v0
+    01e0..01e6  invoke-static  {v0, v8}, LX/00L;->A08(Ljava/lang/String;Ljava/lang/Throwable;)V
+    01e6..01ec  invoke-virtual  {v6}, Ljava/util/AbstractCollection;->size()I
+    01ec..01ee  move-result  v2
+    01ee..01f2  const-string  v1, "count="
+    01f2..01f6  new-instance  v0, Ljava/lang/StringBuilder;
+    01f6..01fc  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    01fc..0202  invoke-virtual  {v0, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0202..0208  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0208..020a  move-result-object  v1
+    020a..020e  const-string  v0, "failed_to_persist_pre_acks"
+    020e..0214  invoke-virtual  {v7, v0, v1, v8}, LX/0B0;->A0e(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+    0214..0218  sget-object  v13, LX/01k;->A00:LX/01k;
+    0218..021e  invoke-interface  {v13}, Ljava/util/List;->isEmpty()Z
+    021e..0220  move-result  v0
+    0220..0224  if-nez  v0, +0x2f
+    0224..0226  monitor-enter
+    0226..022c  invoke-static  {v3, v13}, LX/1iV;->A07(LX/1iV;Ljava/util/List;)V
+    022c..0232  invoke-virtual  {v5}, Ljava/util/AbstractCollection;->size()I
+    0232..0234  move-result  v1
+    0234..023a  invoke-virtual  {v6}, Ljava/util/AbstractCollection;->size()I
+    023a..023c  move-result  v0
+    023c..0242  invoke-static  {v1, v0}, Ljava/lang/Math;->min(II)I
+    0242..0244  move-result  v1
+    0244..0246  const/4  v0, #0x0
+    0246..024a  if-ge  v0, v1, +0x8
+    024a..0250  invoke-virtual  {v5}, LX/0Ll;->removeFirst()Ljava/lang/Object;
+    0250..0254  add-int/lit8  v0, v0, #0x1
+    0254..0256  goto  -0x7
+    0256..025a  iget-object  v0, v3, LX/1iV;->A0D:Ljava/util/concurrent/atomic/AtomicBoolean;
+    025a..0260  invoke-virtual  {v0, v4}, Ljava/util/concurrent/atomic/AtomicBoolean;->set(Z)V
+    0260..0262  monitor-exit
+    0262..0264  return-void
+    0264..0266  monitor-exit
+    0266..026a  if-lez  v1, +0x7
+    026a..026e  iget-object  v0, v3, LX/1iV;->A0H:Ljava/util/concurrent/atomic/AtomicInteger;
+    026e..0274  invoke-virtual  {v0, v1}, Ljava/util/concurrent/atomic/AtomicInteger;->addAndGet(I)I
+    0274..0278  iget-object  v0, v3, LX/1iV;->A0D:Ljava/util/concurrent/atomic/AtomicBoolean;
+    0278..027e  invoke-virtual  {v0, v4}, Ljava/util/concurrent/atomic/AtomicBoolean;->set(Z)V
+    027e..0280  return-void
+    0280..0282  move-exception  v0
+    0282..0284  monitor-exit
+    0284..0286  throw  v0
+    # exception table: 11 try range(s)
+    # catch <all> code_units 000a..0029 -> 0140
+    # catch Ljava/lang/Exception; code_units 004c..007c -> 00d8
+    # catch <all> code_units 007c..0080 -> 00d1
+    # catch <all> code_units 0080..00c3 -> 00ca
+    # catch <all> code_units 00c3..00c6 -> 00d1
+    # catch Ljava/lang/Exception; code_units 00c6..00ca -> 00d8
+    # catch <all> code_units 00cb..00cc -> 00cc
+    # catch <all> code_units 00cd..00d1 -> 00d1
+    # catch <all> code_units 00d2..00d3 -> 00d3
+    # catch Ljava/lang/Exception; code_units 00d3..00d8 -> 00d8
+    # catch <all> code_units 0113..0130 -> 0140
+.end method

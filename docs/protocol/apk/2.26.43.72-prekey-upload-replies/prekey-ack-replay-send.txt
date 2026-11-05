@@ -1,0 +1,27 @@
+
+# class: LX/1t2;
+# extends: Ljava/lang/Object;
+
+.method public A00(VLZ)  # .registers 6
+    # full signature: LX/1t2;->A00(LX/1t2;Z)V
+    0000..0004  iget-object  v0, v4, LX/1t2;->A01:LX/05a;
+    0004..0008  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0008..000e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    000e..0010  move-result-object  v0
+    0010..0014  check-cast  v0, LX/1iV;
+    0014..001a  invoke-virtual  {v0}, LX/1iV;->A0C()LX/1vZ;
+    001a..001c  move-result-object  v1
+    001c..0020  if-nez  v1, +0x8
+    0020..0024  if-eqz  v5, +0x5
+    0024..002a  invoke-virtual  {v4}, LX/1t2;->A01()V
+    002a..002c  return-void
+    002c..0030  const-string  v0, "PreacksPingManager/sendPingAndClearPreacks/sending ping to clear preacks"
+    0030..0036  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0036..003a  iget-object  v3, v4, LX/1t2;->A05:LX/1A7;
+    003a..003e  new-instance  v2, LX/8RG;
+    003e..0044  invoke-direct  {v2, v1, v4, v5}, LX/8RG;-><init>(LX/1vZ;LX/1t2;Z)V
+    0044..0048  const-wide/16  v0, #0x7d00
+    0048..004e  invoke-virtual  {v3, v2, v0, v1}, LX/1A7;->A0A(LX/0lG;J)V
+    004e..0050  return-void
+    # exception table: 0 try range(s)
+.end method

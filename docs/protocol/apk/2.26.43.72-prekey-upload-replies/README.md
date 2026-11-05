@@ -1631,3 +1631,124 @@ fields; no unsupported propagation is added from this generic builder alone.
 
 - [prekey-ack-wire-producer.txt](prekey-ack-wire-producer.txt): `fe18318954e371d556d39749bf721e1b55e6ccb22434841700af43bead6618b4`
 - [prekey-ack-wire-builder.txt](prekey-ack-wire-builder.txt): `9b174be1661356e1de1b0aefc721272b152193f8ebc010c3f4dab168007757e0`
+
+## Pre-ACK conversion, SQLite persistence and retirement (2026-11-04)
+
+**Confirmed static**, same pinned43.72 APK digest reverified. This continuation
+closes the earlier unknown about whether a durable pre-ACK path exists. It does
+not establish that every live count notification selects that path, or port it.
+All files below are checked DEX CLI exports, not REA Evidence envelopes.
+
+### Conversion and writer
+
+1i8.A07 checks Message.arg1=76 at0014–001c and targets0202. It requires Eoh,
+builds F3e.A05(Eoh.A04,Eoh), retains Eoh.A00, and constructs1vZ(node,null,id)
+at02a0–02ac. Thus the notification ACK's exact generic builder is shared by
+direct76 and converted43 paths; conversion is not an unrelated new ACK grammar.
+Other supported message cases include9,11,129,157,419,431,475 and71–73; unsupported
+cases returnnull. This inventory does not establish authorization for all those
+message types in Rust.
+
+The existing0v0.A00 writer switch43->0cf8 extracts1vZ.A01/A00 and calls0v2.A01.
+The newly retained0v2.A01 calls1rj.A04(node,loggableId) before logging. Therefore
+43 writes an already-built ACK/receipt node; it does not await an IQ reply or
+retire durable rows in that selected writer method. Loggable ID1vZ.A00 and SQLite
+row ID1vZ.A02 are separate identities and must not be conflated.
+
+### Persistence and selection
+
+1iV.A0F snapshots A0I under a monitor unless A08 reports its configured capacity
+condition; that branch clears pending memory and records dropped count. A08 is
+a count/capacity predicate (A02>0 and A01>=max(A02,A0J.size)), not a traced
+Boolean enable/disable gate. A01 reads1hy.A04 and caps values above2000; A02
+returns0 when A01<=0, otherwise reads1hy.A05. Effective descriptor values remain
+unknown; these are not new Rust defaults.
+
+A0F's nonempty snapshot serializes each1vZ.A01 via27E.A01 into ContentValues
+ptn and inserts into SQLite preacks through0KU.A09 inside a1hk transaction.
+Nonnegative returned IDs produce new1vZ(node,Long(rowId),loggableId) values.
+After nonempty insert results, A07 receives the new wrappers and a bounded
+snapshot-sized prefix is removed from A0I. Exceptions are caught/logged as
+failed_to_persist_pre_acks and reset the scheduling latch; an empty result does
+not take that successful transfer branch. Exact partial/ambiguous commit failure
+semantics are not inferred from helper names or logs.
+
+A0E starts loading once using AtomicBoolean/getAndSet, schedules2JI selector41,
+and starts A05's periodic writer (1hy.A06 delay clamped to at least100ms).
+A03 waits on the load latch for at most60000ms and reports timeout; a timeout is
+not proof of an empty durable queue. The load Runnable and effective timing
+values remain untraced here. 1iY.A03 queries SELECT _id,ptn FROM preacks WHERE
+_id>? ORDER BY _id LIMIT?, and reports a nonpositive page limit before substituting1 if that helper returns. Its parser
+and further paging logic remain retained without claiming complete reload parity.
+
+A0D selects replay material from persisted A0J then pending A0I without clearing
+them. With A01<=0 it returns the combined list or its last2000 entries. Positive
+mode uses A00's bounded selection algorithm (untraced here). A0C selects a
+confirmation marker, with deferred-batch state checks, rather than deleting it.
+Neither selection constitutes confirmed delivery.
+
+### Confirmation and cumulative retirement
+
+1t2.A00 gets a1vZ marker through A0C, then calls1A7.A0A with8RG(callback holding
+that marker) and the literal timing argument32000. Its log calls this sendPingAndClearPreacks. 8RG.CK4's
+default selector calls1iV.A0J(marker) and optionally reschedules1t2.A01. The
+latter is a scheduler: it removes/reposts a Runnable, using60000ms in the selected
+passive branch or1hy.A03 clamped5000..60000ms otherwise. The exported filename
+prekey-ack-replay-request.txt contains this scheduler, not a request constructor.
+1A7.A0A obtains an ID via0Sf.A0G, constructsDzb selector16 and forwards the
+node, callback, ID, selector22 and that timing argument to0Sf.A0Q. Dzb request
+construction, A0Q timing units/correlation and error callback remain to trace.
+
+A0J can hold removal while replay is deferred or the connection is passive;
+otherwise it schedules Fef selector13. Fef.run's switch13->0364 removes the
+pending prefix through an exact matching1vZ when found, or searches persisted
+markers by row ID / node equality according to the selected mode. It updates
+counts and calls1iY.A02 only when it obtains a row watermark. A02 deletes
+preacks WHERE _id<=? with a nonnegative input check and catches/logs exceptions.
+This is cumulative row retirement, not deletion by stanza ID or an inferred
+ban/rate-limit signal.
+
+The exact A0J caller inventory also includes0ZJ.A1S,2Gc.BsT,Fef.run andFeq.run.
+0ZJ.A1S at006c compares its captured integer with A1L; a mismatch logs
+superseded by a reconnect, not retiring and returns before retirement. Matching
+state chooses A0H(epoch) or A0J(A08), clearing the held marker afterward.
+2Gc.BsT invokes its wrapped success callback and can callA0J for a held marker;
+its construction/origin is not yet traced, so socket-write success is not assumed
+to be that marker's confirmation authority. Fef/Feq alternative caller branches
+are not exhaustively audited by this selected13 branch.
+
+**Port consequence:** Rust needs distinct capture, business-decision, ACK-node
+queue, optional durable flush, write, epoch/confirmation watermark and retirement
+states for native recovery parity. Existing raw inbound capture and an ACK socket
+write alone do not implement this native queue. No automatic replay, duplicate
+suppression, new ping, wait or deletion policy was added from this trace. Count
+worker wire-order parity, bulkCCQ handling, complete reload/drain gates and
+crash/ambiguous-commit behavior remain open. No live traffic was performed.
+
+Exports:
+
+- [prekey-ack-connection-drain.txt](prekey-ack-connection-drain.txt): `fa6d80803738f5f1e9d5262176a548d00b716c721bc79e614e29e08d04fcbbf3`
+- [prekey-ack-conversion.txt](prekey-ack-conversion.txt): `eb41c1a8e70420f09881e13784678553df2d77898588ecc7f2c2bc90f6a11fac`
+- [prekey-ack-delete-watermark.txt](prekey-ack-delete-watermark.txt): `a50b2a9865bc157581ea8788c6337820d3286ed9a6b20371bdf36a6d55a34b42`
+- [prekey-ack-delivery-callback.txt](prekey-ack-delivery-callback.txt): `3236c6386ccc2b03bda3973a0a0052b3199b22f541584b6655a0e129b6f2f488`
+- [prekey-ack-delivery-callers.txt](prekey-ack-delivery-callers.txt): `6e26f12354cb8f25327db36cea506573ea4e78b447684ffcdebd72f1c650c7a0`
+- [prekey-ack-load-entry.txt](prekey-ack-load-entry.txt): `6c59893caabc6526b56768b976b4f35a999711866f88cadd31d94db848d144f5`
+- [prekey-ack-periodic-writer.txt](prekey-ack-periodic-writer.txt): `868ef749294c68d310d40e5c6b4178e2e13c44295b6672ef249df795dbc18c13`
+- [prekey-ack-preack-writer.txt](prekey-ack-preack-writer.txt): `ce5e593015b01265120626826bbe3d673c3629317f967ba0ffbf05921c96c54f`
+- [prekey-ack-queue-A01.txt](prekey-ack-queue-A01.txt): `23658696947eea1c17c8e6701765ae7b699713d07c0daf93bd6d9fd5a6db47ac`
+- [prekey-ack-queue-A02.txt](prekey-ack-queue-A02.txt): `40a045c726871f33b72b83252211d433fb0c98f7c7288dd09122183c6f714039`
+- [prekey-ack-queue-A03.txt](prekey-ack-queue-A03.txt): `bc63d2beb4ab2986eafb8341bc6a6666c6adf61e05110ae82456b16c7d0c08d8`
+- [prekey-ack-queue-A08.txt](prekey-ack-queue-A08.txt): `36022f21708b1b8a293ce59452885500da997b2b2b67b37e4bc5660cdb5ec1e2`
+- [prekey-ack-queue-A0B.txt](prekey-ack-queue-A0B.txt): `b73ef3d336a5d65b1f0f7c80aa29a20620a5da25ae1f56bfdd6ad74ad0d3f9a0`
+- [prekey-ack-queue-A0C.txt](prekey-ack-queue-A0C.txt): `ccf740b782e250f035dd700a9161fe21f82121ecc8c3b051a267f06be8213da9`
+- [prekey-ack-queue-A0D.txt](prekey-ack-queue-A0D.txt): `8420f2fa7b6fac16d0d2821d98ee464c2fafeb91901f98e55d77bafcfa2653ef`
+- [prekey-ack-queue-A0F.txt](prekey-ack-queue-A0F.txt): `ea2e082385f1bdc961553c77388a3e5577be2e96165ad3ac812947e44ce2418d`
+- [prekey-ack-queue-A0J.txt](prekey-ack-queue-A0J.txt): `8077405fb8ecc8ad6dc68a565f1d3f5ebeb28de5a275672c12f802bac9db4a6c`
+- [prekey-ack-queue-refs.txt](prekey-ack-queue-refs.txt): `971dd56e1ef64792206eef56ac46ced9043909f37aedd7c92ab5331a92d0eb9b`
+- [prekey-ack-removal-worker.txt](prekey-ack-removal-worker.txt): `a4b7dda79fb51ca0b2c321c478ff1d10386e1016908adac5de07d1995b01cf65`
+- [prekey-ack-replay-request.txt](prekey-ack-replay-request.txt): `fea24a37d67ec6a894f4e6e105c584ce1da87e5c93e4e1962abc9998b68ecfd2`
+- [prekey-ack-replay-result.txt](prekey-ack-replay-result.txt): `94b158e03ae6f81108abbbaf335e2812f6af9cea7e9a91b3ecdbc786bd014c4d`
+- [prekey-ack-replay-send.txt](prekey-ack-replay-send.txt): `2231a7523884c7e23fe69d4cbca75abb785270b22f5ea625a71b9585bb6b03bc`
+- [prekey-ack-store.txt](prekey-ack-store.txt): `d2c50ce3377d739be960efc9ae11b743d484ed9d12dc9841de73e3b760c2c237`
+
+- [prekey-ack-confirmation-ping.txt](prekey-ack-confirmation-ping.txt): `7f10dab1e03cbda36b03ceb97720a858ded99a81613afbf236b53a4a85d60ad2`

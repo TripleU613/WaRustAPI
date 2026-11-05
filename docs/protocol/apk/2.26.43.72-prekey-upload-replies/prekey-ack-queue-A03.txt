@@ -1,0 +1,35 @@
+
+# class: LX/1iV;
+# extends: Ljava/lang/Object;
+
+.method private A03(V)  # .registers 6
+    # full signature: LX/1iV;->A03()V
+    0000..0004  const/16  v1, #0x4e3
+    0004..0008  iget-object  v0, v5, LX/1iV;->A0A:LX/05a;
+    0008..000c  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    000c..0012  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0012..0014  move-result-object  v0
+    0014..0018  check-cast  v0, LX/00X;
+    0018..001e  invoke-virtual  {v0}, LX/00X;->A01()LX/00Y;
+    001e..0020  move-result-object  v0
+    0020..0024  check-cast  v0, LX/00Z;
+    0024..002a  invoke-static  {v0, v1}, LX/09H;->A00(LX/00Y;I)LX/05a;
+    002a..002c  move-result-object  v4
+    002c..0032  invoke-virtual  {v5}, LX/1iV;->A0E()V
+    0032..0036  iget-object  v3, v5, LX/1iV;->A0C:Ljava/util/concurrent/CountDownLatch;
+    0036..003c  const-wide/32  v1, #0xea60
+    003c..0040  sget-object  v0, Ljava/util/concurrent/TimeUnit;->MILLISECONDS:Ljava/util/concurrent/TimeUnit;
+    0040..0046  invoke-virtual  {v3, v1, v2, v0}, Ljava/util/concurrent/CountDownLatch;->await(JLjava/util/concurrent/TimeUnit;)Z
+    0046..0048  move-result  v0
+    0048..004c  if-nez  v0, +0x12
+    004c..0050  iget-object  v0, v4, LX/05a;->A00:LX/00x;
+    0050..0056  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0056..0058  move-result-object  v3
+    0058..005c  check-cast  v3, LX/0B0;
+    005c..0060  const-string  v2, "timeout"
+    0060..0062  const/4  v1, #0x0
+    0062..0066  const-string  v0, "failed_to_load_pre_acks"
+    0066..006c  invoke-virtual  {v3, v0, v2, v1}, LX/0B0;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+    006c..006e  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,23 @@
+
+# class: LX/1iV;
+# extends: Ljava/lang/Object;
+
+.method public A02(IL)  # .registers 2
+    # full signature: LX/1iV;->A02(LX/1iV;)I
+    0000..0006  invoke-static  {v1}, LX/1iV;->A01(LX/1iV;)I
+    0006..0008  move-result  v0
+    0008..000c  if-gtz  v0, +0x4
+    000c..000e  const/4  v0, #0x0
+    000e..0010  return  v0
+    0010..0014  iget-object  v0, v1, LX/1iV;->A07:LX/05a;
+    0014..0018  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0018..001e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    001e..0020  move-result-object  v1
+    0020..0024  check-cast  v1, LX/00E;
+    0024..0028  sget-object  v0, LX/1hy;->A05:LX/0AB;
+    0028..002e  invoke-static  {v0}, LX/00l;->A06(Ljava/lang/Object;)V
+    002e..0034  invoke-virtual  {v1, v0}, LX/00E;->A0d(LX/0AB;)I
+    0034..0036  move-result  v0
+    0036..0038  return  v0
+    # exception table: 0 try range(s)
+.end method

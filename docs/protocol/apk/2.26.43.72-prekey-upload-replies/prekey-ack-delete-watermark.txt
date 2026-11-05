@@ -1,0 +1,71 @@
+
+# class: LX/1iY;
+# extends: Ljava/lang/Object;
+
+.method public A02(IJ)  # .registers 13
+    # full signature: LX/1iY;->A02(J)I
+    0000..0004  const/16  v1, #0x4e3
+    0004..0008  iget-object  v0, v10, LX/1iY;->A01:LX/05a;
+    0008..000c  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    000c..0012  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0012..0014  move-result-object  v0
+    0014..0018  check-cast  v0, LX/00X;
+    0018..001e  invoke-virtual  {v0}, LX/00X;->A01()LX/00Y;
+    001e..0020  move-result-object  v0
+    0020..0024  check-cast  v0, LX/00Z;
+    0024..002a  invoke-static  {v0, v1}, LX/09H;->A03(LX/00Y;I)Ljava/lang/Object;
+    002a..002c  move-result-object  v5
+    002c..0030  check-cast  v5, LX/0B0;
+    0030..0034  const-wide/16  v1, #0x0
+    0034..0036  const/4  v8, #0x1
+    0036..0038  const/4  v9, #0x0
+    0038..003c  cmp-long  v0, v11, v1
+    003c..003e  const/4  v2, #0x0
+    003e..0042  if-ltz  v0, +0x3
+    0042..0044  const/4  v2, #0x1
+    0044..0048  const-string  v0, "Invalid rowId="
+    0048..004c  new-instance  v1, Ljava/lang/StringBuilder;
+    004c..0052  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0052..0058  invoke-virtual  {v1, v11, v12}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    0058..005c  const-string  v0, " provided"
+    005c..0062  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0062..0068  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0068..006a  move-result-object  v0
+    006a..0070  invoke-static  {v2, v0}, LX/00L;->A0D(ZLjava/lang/String;)V
+    0070..0072  const/4  v4, #0x0
+    0072..0076  iget-object  v0, v10, LX/1iY;->A03:LX/00p;
+    0076..007c  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    007c..007e  move-result-object  v0
+    007e..0082  check-cast  v0, LX/0Xp;
+    0082..0088  invoke-virtual  {v0}, LX/0Xp;->A07()LX/0aq;
+    0088..008a  move-result-object  v7
+    008a..008e  iget-object  v6, v7, LX/0aq;->A02:LX/0KU;
+    008e..0092  const-string  v3, "preacks"
+    0092..0096  const-string  v2, "_id <= ?"
+    0096..009c  invoke-static  {v11, v12}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+    009c..009e  move-result-object  v0
+    009e..00a2  new-array  v1, v8, [Ljava/lang/String;
+    00a2..00a6  aput-object  v0, v1, v9
+    00a6..00aa  const-string  v0, "PreacksStore/DELETE_ALL_OLDER_THAN_OR_EQUAL"
+    00aa..00b0  invoke-virtual  {v6, v3, v2, v0, v1}, LX/0KU;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+    00b0..00b2  move-result  v0
+    00b2..00b8  invoke-virtual  {v7}, LX/0aq;->close()V
+    00b8..00ba  return  v0
+    00ba..00bc  move-exception  v1
+    00bc..00be  throw  v1
+    00be..00c0  move-exception  v0
+    00c0..00c6  invoke-static  {v7, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    00c6..00c8  throw  v0
+    00c8..00ca  move-exception  v1
+    00ca..00ce  const-string  v0, "PreacksStore/deleteAllOlderThanOrEqual failed to remove pre-acks from DB"
+    00ce..00d4  invoke-static  {v0, v1}, LX/00L;->A08(Ljava/lang/String;Ljava/lang/Throwable;)V
+    00d4..00d8  const-string  v0, "failed_to_remove_pre_acks"
+    00d8..00de  invoke-virtual  {v5, v0, v4, v1}, LX/0B0;->A0e(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+    00de..00e0  return  v9
+    # exception table: 5 try range(s)
+    # catch Ljava/lang/Exception; code_units 0039..0045 -> 0064
+    # catch <all> code_units 0045..0059 -> 005d
+    # catch Ljava/lang/Exception; code_units 0059..005d -> 0064
+    # catch <all> code_units 005e..005f -> 005f
+    # catch Ljava/lang/Exception; code_units 0060..0064 -> 0064
+.end method
