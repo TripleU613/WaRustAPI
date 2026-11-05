@@ -1,0 +1,21 @@
+# Checked DEX excerpt; full method retained in iq-shutdown-eligibility/message-handler.txt.
+# class: LX/0YU;
+# extends: Landroid/os/Handler;
+    # full signature: LX/0YU;->handleMessage(Landroid/os/Message;)V
+    0456..045a  iget-object  v1, v0, LX/0YU;->A00:LX/0YB;
+    045a..045e  sget-object  v0, LX/0YB;->A1J:Ljava/util/concurrent/atomic/AtomicBoolean;
+    045e..0462  iget-object  v0, v1, LX/0YB;->A0W:LX/00x;
+    0462..0468  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0468..046a  move-result-object  v1
+    046a..046e  check-cast  v1, LX/0Th;
+    046e..0472  iget-object  v0, v4, Landroid/os/Message;->obj:Ljava/lang/Object;
+    0472..0476  iget-object  v2, v1, LX/0Th;->A05:Ljava/util/Map;
+    0476..0478  monitor-enter
+    0478..047e  invoke-interface  {v2, v0}, Ljava/util/Map;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+    047e..0480  move-result-object  v1
+    0480..0484  check-cast  v1, LX/1ue;
+    0484..0486  monitor-exit
+    0486..048a  if-eqz  v1, -0x239
+    048a..048c  const/4  v0, #0x0
+    048c..0492  invoke-interface  {v1, v0}, LX/1ue;->BsT(Ljava/lang/Object;)V
+    0492..0494  return-void

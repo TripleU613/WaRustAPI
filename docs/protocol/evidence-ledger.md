@@ -5619,3 +5619,15 @@ or held-request dispatch. Recoverable does not authorize network replay.
 [Dispatch chain, declarations, exception routing and limits](apk/2.26.43.72-iq-response-ownership/README.md).
 Full upstream admission, hooks, executor ordering and durable/generation
 ownership remain open. No Rust behavior change or live account operation.
+
+### IQ reader admission and unmatched fallback (2026-11-04)
+
+**Confirmed static, APK43.72:** the selected1rD IQ processor reaches the
+ordinary response bridge only for result/error with nonnull ID. get/set have
+separate branches. A lower-level1ru map can process a result first; an
+ordinary IQ-registry miss posts a fallback which can remove a separate
+message callback and invokeBsT(null). A registry miss is not proof of global
+nonprocessing. Declared iq tag mapping and processor-map registration are
+traced; full injected/alternate bindings and callback effects remain open.
+[Selected bodies, caller inventories and limits](apk/2.26.43.72-iq-reader-admission/README.md).
+No Rust behavior change, new replay authority or live account operation.

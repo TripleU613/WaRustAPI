@@ -1,0 +1,14 @@
+
+# class: LX/1r7;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLL)  # .registers 5
+    # full signature: LX/1r7;-><init>(LX/1r5;LX/1r6;LX/1lZ;Ljava/util/Map;)V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v3, v0, LX/1r7;->A02:LX/1lZ;
+    000a..000e  iput-object  v4, v0, LX/1r7;->A03:Ljava/util/Map;
+    000e..0012  iput-object  v1, v0, LX/1r7;->A00:LX/1r5;
+    0012..0016  iput-object  v2, v0, LX/1r7;->A01:LX/1r6;
+    0016..0018  return-void
+    # exception table: 0 try range(s)
+.end method

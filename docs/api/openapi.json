@@ -15846,5 +15846,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-iq-response-ownership/README.md",
     "description": "Token response timer cancellation, callback claim and executor parsing are distinct stages. Selected schema catch uses recoverable exception routing without reinsertion, delivery-failure restoration or replay. Upstream admission, concrete reporting hooks, concurrent ID/generation ownership and durable recovery remain open. No sender, route or live operation added."
+  },
+  "x-iq-reader-admission-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-iq-reader-admission/README.md",
+    "description": "Selected IQ processor forwards result/error with nonnull ID to the ordinary callback router. Lower-level callback processing can precede that route; registry misses have a separate message-callback fallback. Full injected root bindings, callback effects, concurrency and durable ownership remain open. No sender, route, replay authority or live operation added."
   }
 }

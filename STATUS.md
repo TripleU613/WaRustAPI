@@ -1,3 +1,11 @@
+2026-11-04 — **IQ reader type/ID admission and fallback traced.**
+
+The selected response path requires result/error plus nonnull ID. Lower-level
+callbacks and an unmatched-response fallback have separate ownership.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-iq-reader-admission/README.md).
+Research only; no runtime changes or live traffic. Validation: checked exports,
+digest-bound metadata extraction, checksums, JSON, coverage freshness and hygiene.
+
 2026-11-04 — **IQ response ownership and token schema-catch chain traced.**
 
 Timer cancellation, callback claim and parsing are separate stages. A schema
