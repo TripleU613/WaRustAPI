@@ -1,0 +1,19 @@
+
+# class: LX/00E;
+# extends: Ljava/lang/Object;
+
+.method public A13(Z)  # .registers 3
+    # full signature: LX/00E;->A13()Z
+    0000..0004  iget-boolean  v0, v2, LX/00E;->A0E:Z
+    0004..0008  if-eqz  v0, +0xf
+    0008..000c  iget-boolean  v0, v2, LX/00E;->A0b:Z
+    000c..0010  if-eqz  v0, +0xb
+    0010..0014  iget-object  v0, v2, LX/00E;->A0S:Ljava/util/concurrent/atomic/AtomicBoolean;
+    0014..001a  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicBoolean;->get()Z
+    001a..001c  move-result  v1
+    001c..001e  const/4  v0, #0x1
+    001e..0022  if-eqz  v1, +0x3
+    0022..0024  const/4  v0, #0x0
+    0024..0026  return  v0
+    # exception table: 0 try range(s)
+.end method

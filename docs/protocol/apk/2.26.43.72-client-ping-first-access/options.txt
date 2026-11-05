@@ -1,0 +1,132 @@
+
+# class: LX/00G;
+# extends: Ljava/lang/Object;
+
+.method public <clinit>(V)  # .registers 4
+    # full signature: LX/00G;-><clinit>()V
+    0000..0002  const/4  v3, #0x0
+    0002..0006  sget-object  v1, LX/02X;->A01:Ljava/lang/Integer;
+    0006..000a  new-instance  v0, LX/00G;
+    000a..0010  invoke-direct  {v0, v1, v3}, LX/00G;-><init>(Ljava/lang/Integer;Z)V
+    0010..0014  sput-object  v0, LX/00G;->A03:LX/00G;
+    0014..0016  const/4  v2, #0x1
+    0016..001a  new-instance  v0, LX/00G;
+    001a..0020  invoke-direct  {v0, v1, v2}, LX/00G;-><init>(Ljava/lang/Integer;Z)V
+    0020..0024  sput-object  v0, LX/00G;->A02:LX/00G;
+    0024..0028  sget-object  v1, LX/02X;->A00:Ljava/lang/Integer;
+    0028..002c  new-instance  v0, LX/00G;
+    002c..0032  invoke-direct  {v0, v1, v3}, LX/00G;-><init>(Ljava/lang/Integer;Z)V
+    0032..0036  sput-object  v0, LX/00G;->A06:LX/00G;
+    0036..003a  new-instance  v0, LX/00G;
+    003a..0040  invoke-direct  {v0, v1, v2}, LX/00G;-><init>(Ljava/lang/Integer;Z)V
+    0040..0044  sput-object  v0, LX/00G;->A05:LX/00G;
+    0044..0048  sget-object  v1, LX/02X;->A0C:Ljava/lang/Integer;
+    0048..004c  new-instance  v0, LX/00G;
+    004c..0052  invoke-direct  {v0, v1, v3}, LX/00G;-><init>(Ljava/lang/Integer;Z)V
+    0052..0056  sput-object  v0, LX/00G;->A04:LX/00G;
+    0056..0058  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VLZ)  # .registers 3
+    # full signature: LX/00G;-><init>(Ljava/lang/Integer;Z)V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-boolean  v2, v0, LX/00G;->A01:Z
+    000a..000e  iput-object  v1, v0, LX/00G;->A00:Ljava/lang/Integer;
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(L)  # .registers 4
+    # full signature: LX/00G;->A00()LX/00G;
+    0000..0004  iget-object  v0, v3, LX/00G;->A00:Ljava/lang/Integer;
+    0004..0008  sget-object  v2, LX/02X;->A00:Ljava/lang/Integer;
+    0008..000c  if-ne  v0, v2, +0x3
+    000c..000e  return-object  v3
+    000e..0012  sget-object  v0, LX/00G;->A03:LX/00G;
+    0012..0016  if-ne  v3, v0, +0x5
+    0016..001a  sget-object  v1, LX/00G;->A06:LX/00G;
+    001a..001c  return-object  v1
+    001c..0020  sget-object  v0, LX/00G;->A02:LX/00G;
+    0020..0024  if-ne  v3, v0, +0x5
+    0024..0028  sget-object  v1, LX/00G;->A05:LX/00G;
+    0028..002a  return-object  v1
+    002a..002e  iget-boolean  v0, v3, LX/00G;->A01:Z
+    002e..0032  new-instance  v1, LX/00G;
+    0032..0038  invoke-direct  {v1, v2, v0}, LX/00G;-><init>(Ljava/lang/Integer;Z)V
+    0038..003a  return-object  v1
+    # exception table: 0 try range(s)
+.end method
+
+.method public equals(ZL)  # .registers 6
+    # full signature: LX/00G;->equals(Ljava/lang/Object;)Z
+    0000..0002  const/4  v3, #0x1
+    0002..0006  if-eq  v4, v5, +0x16
+    0006..000a  instance-of  v0, v5, LX/00G;
+    000a..000c  const/4  v2, #0x0
+    000c..0010  if-eqz  v0, +0x10
+    0010..0014  check-cast  v5, LX/00G;
+    0014..0018  iget-boolean  v1, v4, LX/00G;->A01:Z
+    0018..001c  iget-boolean  v0, v5, LX/00G;->A01:Z
+    001c..0020  if-ne  v1, v0, +0x8
+    0020..0024  iget-object  v1, v4, LX/00G;->A00:Ljava/lang/Integer;
+    0024..0028  iget-object  v0, v5, LX/00G;->A00:Ljava/lang/Integer;
+    0028..002c  if-eq  v1, v0, +0x3
+    002c..002e  return  v2
+    002e..0030  return  v3
+    # exception table: 0 try range(s)
+.end method
+
+.method public hashCode(I)  # .registers 4
+    # full signature: LX/00G;->hashCode()I
+    0000..0004  iget-boolean  v1, v3, LX/00G;->A01:Z
+    0004..0008  const/16  v0, #0x4d5
+    0008..000c  if-eqz  v1, +0x4
+    000c..0010  const/16  v0, #0x4cf
+    0010..0014  mul-int/lit8  v2, v0, #0x1f
+    0014..0018  iget-object  v0, v3, LX/00G;->A00:Ljava/lang/Integer;
+    0018..001e  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    001e..0020  move-result  v1
+    0020..0026  packed-switch  v1, payload@0x44, cases=[0:@0x3e, 1:@0x38], default@0x26
+    0026..002a  const-string  v0, "WITH_URGENT_EXPOSURE_LOGGING"
+    002a..0030  invoke-virtual  {v0}, Ljava/lang/String;->hashCode()I
+    0030..0032  move-result  v0
+    0032..0034  add-int/2addr  v0, v1
+    0034..0036  add-int/2addr  v2, v0
+    0036..0038  return  v2
+    0038..003c  const-string  v0, "WITH_EXPOSURE_LOGGING"
+    003c..003e  goto  -0x9
+    003e..0042  const-string  v0, "WITHOUT_EXPOSURE_LOGGING"
+    0042..0044  goto  -0xc
+    0044..0054  packed-switch-payload  size=2
+    # exception table: 0 try range(s)
+.end method
+
+.method public toString(L)  # .registers 5
+    # full signature: LX/00G;->toString()Ljava/lang/String;
+    0000..0004  iget-boolean  v3, v4, LX/00G;->A01:Z
+    0004..0008  iget-object  v2, v4, LX/00G;->A00:Ljava/lang/Integer;
+    0008..000c  const-string  v0, "AbPropsOptions(firstAccessValue="
+    000c..0010  new-instance  v1, Ljava/lang/StringBuilder;
+    0010..0016  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0016..001c  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    001c..0020  const-string  v0, ", exposureOptions="
+    0020..0026  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0026..002c  invoke-virtual  {v2}, Ljava/lang/Number;->intValue()I
+    002c..002e  move-result  v0
+    002e..0034  packed-switch  v0, payload@0x60, cases=[0:@0x52, 1:@0x58], default@0x34
+    0034..0038  const-string  v0, "WITH_URGENT_EXPOSURE_LOGGING"
+    0038..003e  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    003e..0042  const-string  v0, ")"
+    0042..0048  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0048..004e  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    004e..0050  move-result-object  v0
+    0050..0052  return-object  v0
+    0052..0056  const-string  v0, "WITHOUT_EXPOSURE_LOGGING"
+    0056..0058  goto  -0xf
+    0058..005c  const-string  v0, "WITH_EXPOSURE_LOGGING"
+    005c..005e  goto  -0x12
+    005e..0060  nop
+    0060..0070  packed-switch-payload  size=2
+    # exception table: 0 try range(s)
+.end method

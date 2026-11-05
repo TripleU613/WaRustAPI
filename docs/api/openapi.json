@@ -16899,5 +16899,12 @@
     "x-live": false,
     "description": "Normal driver schedules its next client keepalive relative to accepted result/error response, independently of maintenance deadlines. Delayed replies cannot cause an early fixed-grid ping; malformed/duplicate/unowned replies do not restart scheduling. Existing locally selected durations remain unchanged. Selected native packaged15s/240s/32s entries and resolver/mode limits are documented, not applied as effective settings.",
     "evidence": "docs/protocol/apk/2.26.43.72-client-ping-scheduling/README.md"
+  },
+  "x-client-ping-first-access-research": {
+    "x-cli": false,
+    "x-transport": "experimental",
+    "x-live": false,
+    "description": "Static APK43.72 keepalive configuration uses firstAccessValue=true/A07, with selected readiness reset affecting A0d instead. SDK comparison legacy-read population and putIfAbsent precedence differ from direct SDK selection. Effective flags/values and owner lifetime remain unported; no raw AB or packaged-entry adoption is added.",
+    "evidence": "docs/protocol/apk/2.26.43.72-client-ping-first-access/README.md"
   }
 }

@@ -1006,3 +1006,17 @@ do not restart it. Red/green actor regression covers bothresult anderror.
 [Evidence, packaged15s/240s/32s entries and resolver limits](apk/2.26.43.72-client-ping-scheduling/README.md).
 Effective native durations/configuration/mode remain unported; existing local
 values, wire requests, uncertainty guards and no-live-operation boundary remain.
+
+
+## Client ping first-access configuration precedence — 2026-11-05
+
+**Confirmed static**, APK2.26.43.72: ping getters use00G.A02 with
+firstAccessValue=true, selectingA07 rather than the token getters' ordinary
+cache. Selected readiness resetA0t replacesA0d, notA07. The SDK comparison
+branch clones exposure options while preserving first-access semantics; a
+successful legacy read can populate the winner before SDKputIfAbsent. Direct
+SDK selection remains distinct. No effective value is inferred from raw AB
+rows or missing specifiers, and cache owner/replacement scope remains open.
+[Complete options/getters, field census and conditional precedence proof](apk/2.26.43.72-client-ping-first-access/README.md).
+Research only; native effective timing/configuration remains unported. No live,
+request, timer, retry/reset, account or clock behavior changed.

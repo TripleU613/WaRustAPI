@@ -1,3 +1,15 @@
+2026-11-05 — **Client timing first-access cache and reset scope traced.**
+
+Native ping getters retain selected first-access values in a distinct cache;
+SDK readiness reset does not directly clear it. Conditional SDK comparison and
+direct selection differ, so raw AB rows/default entries cannot identify the
+actual timer. Effective configuration and owner lifetime remain open.
+[Evidence and concrete port requirements](docs/protocol/apk/2.26.43.72-client-ping-first-access/README.md).
+Research only: no runtime timing/configuration or live account operation changed.
+Validation: pinned APK hash, exact cache-method re-exports, checksum/link hygiene,
+APK coverage, CLI/OpenAPI, fmt and strict Clippy passed. Shared Rust is unchanged
+from the preceding 1373-test validated commit.
+
 2026-11-05 — **Next client ping waits a full interval after its response.**
 
 A delayed reply no longer allows an almost-immediate next ping. Independent

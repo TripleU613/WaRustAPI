@@ -1,0 +1,137 @@
+
+# class: LX/1XL;
+# extends: Ljava/lang/Object;
+
+.method public invoke(LLL)  # .registers 12
+    # full signature: LX/1XL;->invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    0000..0004  iget  v0, v9, LX/1XL;->$t:I
+    0004..0008  iget-object  v2, v9, LX/1XL;->A00:Ljava/lang/Object;
+    0008..000c  check-cast  v2, LX/00E;
+    000c..0010  if-eqz  v0, +0x8b
+    0010..0014  iget-object  v6, v9, LX/1XL;->A01:Ljava/lang/String;
+    0014..0018  check-cast  v10, Ljava/lang/Number;
+    0018..001e  invoke-virtual  {v10}, Ljava/lang/Number;->intValue()I
+    001e..0020  move-result  v3
+    0020..0024  check-cast  v11, LX/00G;
+    0024..0026  const/4  v0, #0x3
+    0026..002c  invoke-static  {v11, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    002c..0030  const-string  v7, "AbstractABProps/invalid json format for property; prefKey="
+    0030..0034  const-string  v1, "Unknown JsonField: "
+    0034..003a  invoke-virtual  {v2, v11, v3}, LX/00E;->A0h(LX/00G;I)Ljava/lang/Object;
+    003a..003c  move-result-object  v8
+    003c..0040  if-nez  v8, +0xd0
+    0040..0042  monitor-enter
+    0042..0048  invoke-virtual  {v2, v11, v3}, LX/00E;->A0h(LX/00G;I)Ljava/lang/Object;
+    0048..004a  move-result-object  v8
+    004a..004e  check-cast  v8, Lorg/json/JSONObject;
+    004e..0052  if-nez  v8, +0xc2
+    0052..0058  invoke-static  {v11, v2, v3}, LX/00E;->A09(LX/00G;LX/00E;I)V
+    0058..005e  invoke-virtual  {v2}, LX/00E;->A1C()Lcom/google/common/collect/ImmutableMap;
+    005e..0060  move-result-object  v0
+    0060..0066  invoke-virtual  {v0, v10}, Lcom/google/common/collect/ImmutableMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    0066..0068  move-result-object  v0
+    0068..006c  check-cast  v0, Ljava/lang/String;
+    006c..0070  if-eqz  v0, +0x3
+    0070..0072  move-object  v6, v0
+    0072..0076  if-eqz  v6, +0x53
+    0076..007c  invoke-static  {v3}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+    007c..007e  move-result-object  v5
+    007e..0082  iget-object  v4, v2, LX/00E;->A00:Landroid/content/SharedPreferences;
+    0082..0084  const/4  v0, #0x0
+    0084..008a  invoke-interface  {v4, v5, v0}, Landroid/content/SharedPreferences;->getString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    008a..008c  move-result-object  v1
+    008c..0090  if-eqz  v1, +0x9
+    0090..0096  invoke-virtual  {v1}, Ljava/lang/String;->length()I
+    0096..0098  move-result  v0
+    0098..009c  if-eqz  v0, +0x3
+    009c..009e  move-object  v6, v1
+    009e..00a2  new-instance  v8, Lorg/json/JSONObject;
+    00a2..00a8  invoke-direct  {v8, v6}, Lorg/json/JSONObject;-><init>(Ljava/lang/String;)V
+    00a8..00ac  iget-boolean  v0, v11, LX/00G;->A01:Z
+    00ac..00b0  if-nez  v0, +0xc
+    00b0..00b6  invoke-virtual  {v2, v8, v3}, LX/00E;->A12(Lorg/json/JSONObject;I)V
+    00b6..00bc  invoke-static  {v2, v3}, LX/00E;->A0E(LX/00E;I)Z
+    00bc..00c0  sget-object  v0, LX/00M;->A03:Ljava/lang/Boolean;
+    00c0..00c4  goto/16  +0x89
+    00c4..00c8  iget-object  v0, v2, LX/00E;->A07:Ljava/util/concurrent/ConcurrentHashMap;
+    00c8..00ce  invoke-virtual  {v0, v10, v8}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    00ce..00d0  goto  -0xc
+    00d0..00d2  move-exception  v3
+    00d2..00d8  invoke-interface  {v4}, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
+    00d8..00da  move-result-object  v0
+    00da..00e0  invoke-interface  {v0, v5}, Landroid/content/SharedPreferences$Editor;->remove(Ljava/lang/String;)Landroid/content/SharedPreferences$Editor;
+    00e0..00e6  invoke-interface  {v0}, Landroid/content/SharedPreferences$Editor;->apply()V
+    00e6..00ec  invoke-static  {v7, v5}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00ec..00ee  move-result-object  v1
+    00ee..00f2  const-string  v0, "; value="
+    00f2..00f8  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00f8..00fe  invoke-virtual  {v1, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00fe..0104  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0104..0106  move-result-object  v0
+    0106..010c  invoke-static  {v0, v3}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    010c..0110  new-instance  v8, Lorg/json/JSONObject;
+    0110..0116  invoke-direct  {v8}, Lorg/json/JSONObject;-><init>()V
+    0116..0118  goto  +0x5e
+    0118..011e  invoke-static  {v1, v3}, LX/000;->A02(Ljava/lang/String;I)Ljava/lang/IllegalArgumentException;
+    011e..0120  move-result-object  v0
+    0120..0122  throw  v0
+    0122..0126  iget-object  v4, v9, LX/1XL;->A01:Ljava/lang/String;
+    0126..012a  check-cast  v10, Ljava/lang/Number;
+    012a..0130  invoke-virtual  {v10}, Ljava/lang/Number;->intValue()I
+    0130..0132  move-result  v3
+    0132..0136  check-cast  v11, LX/00G;
+    0136..0138  const/4  v0, #0x3
+    0138..013e  invoke-static  {v11, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    013e..0142  const-string  v1, "Unknown StringField: "
+    0142..0148  invoke-virtual  {v2, v11, v3}, LX/00E;->A0h(LX/00G;I)Ljava/lang/Object;
+    0148..014a  move-result-object  v8
+    014a..014e  if-nez  v8, +0x49
+    014e..0150  monitor-enter
+    0150..0156  invoke-virtual  {v2, v11, v3}, LX/00E;->A0h(LX/00G;I)Ljava/lang/Object;
+    0156..0158  move-result-object  v8
+    0158..015c  check-cast  v8, Ljava/lang/String;
+    015c..0160  if-nez  v8, +0x3b
+    0160..0166  invoke-static  {v11, v2, v3}, LX/00E;->A09(LX/00G;LX/00E;I)V
+    0166..016c  invoke-virtual  {v2}, LX/00E;->A1D()Lcom/google/common/collect/ImmutableMap;
+    016c..016e  move-result-object  v0
+    016e..0174  invoke-virtual  {v0, v10}, Lcom/google/common/collect/ImmutableMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    0174..0176  move-result-object  v0
+    0176..017a  check-cast  v0, Ljava/lang/String;
+    017a..017e  if-eqz  v0, +0x3
+    017e..0180  move-object  v4, v0
+    0180..0184  if-eqz  v4, +0x24
+    0184..0188  iget-object  v1, v2, LX/00E;->A00:Landroid/content/SharedPreferences;
+    0188..018e  invoke-static  {v3}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+    018e..0190  move-result-object  v0
+    0190..0196  invoke-interface  {v1, v0, v4}, Landroid/content/SharedPreferences;->getString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0196..0198  move-result-object  v0
+    0198..019c  if-eqz  v0, +0x3
+    019c..019e  move-object  v4, v0
+    019e..01a2  iget-boolean  v0, v11, LX/00G;->A01:Z
+    01a2..01a6  if-nez  v0, +0xb
+    01a6..01ac  invoke-virtual  {v2, v3, v4}, LX/00E;->A0x(ILjava/lang/String;)V
+    01ac..01b2  invoke-static  {v2, v3}, LX/00E;->A0E(LX/00E;I)Z
+    01b2..01b6  sget-object  v0, LX/00M;->A03:Ljava/lang/Boolean;
+    01b6..01b8  goto  +0x7
+    01b8..01bc  iget-object  v0, v2, LX/00E;->A07:Ljava/util/concurrent/ConcurrentHashMap;
+    01bc..01c2  invoke-virtual  {v0, v10, v4}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    01c2..01c4  goto  -0xb
+    01c4..01c6  monitor-exit
+    01c6..01c8  return-object  v4
+    01c8..01ce  invoke-static  {v1, v3}, LX/000;->A02(Ljava/lang/String;I)Ljava/lang/IllegalArgumentException;
+    01ce..01d0  move-result-object  v0
+    01d0..01d2  throw  v0
+    01d2..01d4  monitor-exit
+    01d4..01d6  return-object  v8
+    01d6..01d8  move-exception  v0
+    01d8..01da  monitor-exit
+    01da..01dc  throw  v0
+    01dc..01de  return-object  v8
+    # exception table: 5 try range(s)
+    # catch <all> code_units 0021..004f -> 00eb
+    # catch Lorg/json/JSONException; code_units 004f..0068 -> 0068
+    # catch <all> code_units 004f..0068 -> 00eb
+    # catch <all> code_units 0069..0091 -> 00eb
+    # catch <all> code_units 00a8..00e2 -> 00eb
+    # catch <all> code_units 00e4..00e9 -> 00eb
+.end method

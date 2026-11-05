@@ -1,0 +1,46 @@
+{
+  "README.md": {
+    "bytes": 6762,
+    "sha256": "c51cbf5a401661c9561cb8e16d0fb251ee604a9a9dfd83478380016a8dcd86af"
+  },
+  "boolean-fallback.txt": {
+    "bytes": 4209,
+    "sha256": "5402d3fcf138b02267fc0b044b4a14f2b0a127245fea628b40ddb99827deead5"
+  },
+  "cache-select.txt": {
+    "bytes": 806,
+    "sha256": "6cc874e860cfa4cb37a01605f5605de24af9f2481990f373d20c1f906791c781"
+  },
+  "first-cache-constructor.txt": {
+    "bytes": 466,
+    "sha256": "80a47ce70df829859a2dbcbd42cbb514abf3cc6ccd1c938d39a17a243aa1c7d7"
+  },
+  "first-cache-field-refs.txt": {
+    "bytes": 731,
+    "sha256": "5a2382ef0f4fbaf41c125d39f08333a0de28e5cec87402f4a170037c1bfb0a4d"
+  },
+  "numeric-adapters.txt": {
+    "bytes": 5294,
+    "sha256": "addde51eeba21784a63c0e458dc139c30505f0e07f7e5a4ce3ccd8a460fd0a2f"
+  },
+  "options.txt": {
+    "bytes": 6215,
+    "sha256": "a5da818587df44f1f22a51f8ee47ecdafb635153583da5b3f0bfc93bfc98d22b"
+  },
+  "sdk-cache-reset.txt": {
+    "bytes": 586,
+    "sha256": "3fc4b7e1f85fbb3d6ff94dc2871c2b71cbeac038d87aa67e363cd69b7fbf98f1"
+  },
+  "sdk-reinitialize.txt": {
+    "bytes": 2076,
+    "sha256": "44eaca11fe140e4edd5af0cdf3fc7b145642a79db383d2db9597c176727870ff"
+  },
+  "sdk-selection-gate.txt": {
+    "bytes": 691,
+    "sha256": "a88b94bfc1a4ecd723659be5aa442bfebe7311ddfb3cc8d296b01079f9eef838"
+  },
+  "structured-string-adapters.txt": {
+    "bytes": 7867,
+    "sha256": "8f536396a817c7c92ff2b16e4fd3daa54dd1bf8c57b092343e6d0eab69634057"
+  }
+}

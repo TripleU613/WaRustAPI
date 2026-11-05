@@ -1,0 +1,6 @@
+# Selected LX/00E; constructor first-access cache initialization.
+# Full export SHA256: db1d4512ea691c3f752b7366c8ef35f187904a6434e011337af503864dbb67bd
+# Selected byte-PC range 01a0..01ae (end exclusive)
+    01a0..01a4  new-instance  v0, Ljava/util/concurrent/ConcurrentHashMap;
+    01a4..01aa  invoke-direct  {v0, v1}, Ljava/util/concurrent/ConcurrentHashMap;-><init>(I)V
+    01aa..01ae  iput-object  v0, v10, LX/00E;->A07:Ljava/util/concurrent/ConcurrentHashMap;

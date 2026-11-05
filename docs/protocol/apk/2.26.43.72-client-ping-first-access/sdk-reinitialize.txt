@@ -1,0 +1,43 @@
+
+# class: LX/00E;
+# extends: Ljava/lang/Object;
+
+.method public A0u(V)  # .registers 11
+    # full signature: LX/00E;->A0u()V
+    0000..0004  iget-object  v1, v10, LX/00E;->A09:Ljava/util/concurrent/atomic/AtomicBoolean;
+    0004..0006  const/4  v0, #0x0
+    0006..000c  invoke-virtual  {v1, v0}, Ljava/util/concurrent/atomic/AtomicBoolean;->set(Z)V
+    000c..0010  iget-object  v3, v10, LX/00E;->A0M:Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+    0010..0014  instance-of  v0, v3, LX/09u;
+    0014..0018  if-eqz  v0, +0x38
+    0018..001c  iget-object  v4, v10, LX/00E;->A0N:LX/0A7;
+    001c..0020  if-eqz  v4, +0x23
+    0020..0022  move-object  v5, v3
+    0022..0026  check-cast  v5, LX/09u;
+    0026..002a  sget-object  v2, LX/00G;->A02:LX/00G;
+    002a..002c  const/4  v1, #0x0
+    002c..0030  const/16  v0, #0x679c
+    0030..0036  invoke-static  {v2, v10, v1, v0}, LX/00E;->A0C(LX/00G;LX/00E;Ljava/lang/Boolean;I)Z
+    0036..0038  move-result  v7
+    0038..003c  const/16  v0, #0x679d
+    003c..0042  invoke-static  {v2, v10, v1, v0}, LX/00E;->A01(LX/00G;LX/00E;Ljava/lang/Integer;I)I
+    0042..0044  move-result  v6
+    0044..0048  const/16  v0, #0x6f1b
+    0048..004e  invoke-static  {v2, v10, v1, v0}, LX/00E;->A0C(LX/00G;LX/00E;Ljava/lang/Boolean;I)Z
+    004e..0050  move-result  v8
+    0050..0054  const/16  v0, #0x76e9
+    0054..005a  invoke-static  {v2, v10, v1, v0}, LX/00E;->A0C(LX/00G;LX/00E;Ljava/lang/Boolean;I)Z
+    005a..005c  move-result  v9
+    005c..0062  invoke-interface/range  {v4..v9}, LX/0A7;->Cgu(LX/09u;IZZZ)V
+    0062..0066  sget-object  v2, LX/00G;->A03:LX/00G;
+    0066..0068  const/4  v1, #0x0
+    0068..006c  const/16  v0, #0x6810
+    006c..0072  invoke-static  {v2, v10, v1, v0}, LX/00E;->A0C(LX/00G;LX/00E;Ljava/lang/Boolean;I)Z
+    0072..0074  move-result  v1
+    0074..0078  if-eqz  v4, +0x8
+    0078..007c  check-cast  v3, LX/09u;
+    007c..007e  const/4  v0, #0x0
+    007e..0084  invoke-interface  {v4, v3, v1, v0}, LX/0A7;->BPZ(LX/09u;ZZ)V
+    0084..0086  return-void
+    # exception table: 0 try range(s)
+.end method
