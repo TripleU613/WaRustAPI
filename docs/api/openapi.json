@@ -15927,5 +15927,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-push-config-trigger-error/README.md",
     "description": "Selected startup calls config GET after token drain and conditional rotation. Lower-level error code callbacks bridge type27; selected404 handler queues VERIFY with null String inputs, not a direct GET retry. Multiple error children can produce repeated callbacks. Full startup gates, providers, timeout and durable recovery remain open. No sender, route or live operation added."
+  },
+  "x-push-config-fbns-reconciliation-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-push-config-fbns-reconciliation/README.md",
+    "description": "Selected FBNS reconciliation compares server/local token and app version behind an eligibility gate, updates last-server-token view, then conditionally requests an accepted Android provider via service IPC. Null server view removal is not local token deletion. Provider callback, persistence, later SET and durable recovery remain open. No sender, route, provider invocation or live operation added."
   }
 }

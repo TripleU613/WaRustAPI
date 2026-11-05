@@ -1,0 +1,32 @@
+# class: LX/1uq;
+# extends: Ljava/lang/Object;
+
+.method public <clinit>(V)  # .registers 9
+    # full signature: LX/1uq;-><clinit>()V
+    0000..0002  const/4  v8, #0x3
+    0002..0006  new-array  v0, v8, [Ljava/lang/String;
+    0006..0008  const/4  v7, #0x0
+    0008..000c  const-string  v6, "com.facebook.services"
+    000c..0010  aput-object  v6, v0, v7
+    0010..0012  const/4  v5, #0x1
+    0012..0016  const-string  v4, "com.oculus.vrshell"
+    0016..001a  aput-object  v4, v0, v5
+    001a..001c  const/4  v3, #0x2
+    001c..0020  const-string  v2, "com.oculus.horizon"
+    0020..0024  aput-object  v2, v0, v3
+    0024..002a  invoke-static  {v0}, LX/01i;->A0A([Ljava/lang/Object;)Ljava/util/List;
+    002a..002c  move-result-object  v0
+    002c..0030  sput-object  v0, LX/1uq;->A00:Ljava/util/List;
+    0030..0032  const/4  v0, #0x4
+    0032..0036  new-array  v1, v0, [Ljava/lang/String;
+    0036..003a  aput-object  v6, v1, v7
+    003a..003e  aput-object  v4, v1, v5
+    003e..0042  aput-object  v2, v1, v3
+    0042..0046  const-string  v0, "com.facebook.services.dev"
+    0046..004a  aput-object  v0, v1, v8
+    004a..0050  invoke-static  {v1}, LX/01i;->A0A([Ljava/lang/Object;)Ljava/util/List;
+    0050..0052  move-result-object  v0
+    0052..0056  sput-object  v0, LX/1uq;->A01:Ljava/util/List;
+    0056..0058  return-void
+    # exception table: 0 try range(s)
+.end method

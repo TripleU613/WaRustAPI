@@ -1,0 +1,66 @@
+# class: LX/1uo;
+# extends: Ljava/lang/Object;
+
+.method public A01(Z)  # .registers 11
+    # full signature: LX/1uo;->A01()Z
+    0000..0004  iget-object  v1, v10, LX/1uo;->A07:LX/08Y;
+    0004..0008  const/16  v0, #0x384c
+    0008..000e  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    000e..0010  move-result  v0
+    0010..0012  const/4  v9, #0x0
+    0012..0014  const/4  v8, #0x1
+    0014..0018  if-nez  v0, +0xb
+    0018..001c  iget-object  v0, v10, LX/1uo;->A05:LX/00x;
+    001c..0022  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0022..0024  const/4  v7, #0x0
+    0024..0026  move-object  v6, v10
+    0026..0028  monitor-enter
+    0028..002a  goto  +0x3
+    002a..002c  const/4  v7, #0x1
+    002c..002e  goto  -0x4
+    002e..0032  iget-object  v0, v10, LX/1uo;->A00:Ljava/lang/Boolean;
+    0032..0036  if-nez  v0, +0x35
+    0036..003a  iget-object  v2, v10, LX/1uo;->A04:LX/0B8;
+    003a..003e  iget-object  v1, v2, LX/0B8;->A02:Landroid/os/UserManager;
+    003e..0042  if-nez  v1, +0x12
+    0042..0046  const-string  v1, "user"
+    0046..004c  invoke-static  {}, LX/00J;->A00()Landroid/app/Application;
+    004c..004e  move-result-object  v0
+    004e..0054  invoke-virtual  {v0, v1}, Landroid/content/Context;->getSystemService(Ljava/lang/String;)Ljava/lang/Object;
+    0054..0056  move-result-object  v1
+    0056..005a  check-cast  v1, Landroid/os/UserManager;
+    005a..005e  iput-object  v1, v2, LX/0B8;->A02:Landroid/os/UserManager;
+    005e..0062  if-eqz  v1, +0x18
+    0062..0068  invoke-static  {}, Landroid/os/Process;->myUserHandle()Landroid/os/UserHandle;
+    0068..006a  move-result-object  v0
+    006a..0070  invoke-virtual  {v1, v0}, Landroid/os/UserManager;->getSerialNumberForUser(Landroid/os/UserHandle;)J
+    0070..0072  move-result-wide  v4
+    0072..0076  const-wide/16  v2, #0x0
+    0076..007a  cmp-long  v1, v4, v2
+    007a..007c  const/4  v0, #0x0
+    007c..0080  if-nez  v1, +0xa
+    0080..0082  goto  +0x7
+    0082..0084  move-exception  v1
+    0084..0088  const-string  v0, "FbnsTokenManager/isAdminUser"
+    0088..008e  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    008e..0090  const/4  v0, #0x1
+    0090..0096  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    0096..0098  move-result-object  v0
+    0098..009c  iput-object  v0, v10, LX/1uo;->A00:Ljava/lang/Boolean;
+    009c..00a2  invoke-virtual  {v0}, Ljava/lang/Boolean;->booleanValue()Z
+    00a2..00a4  move-result  v0
+    00a4..00a6  monitor-exit
+    00a6..00aa  if-eqz  v7, +0x5
+    00aa..00ae  if-eqz  v0, +0x3
+    00ae..00b0  return  v8
+    00b0..00b2  return  v9
+    00b2..00b4  move-exception  v0
+    00b4..00b6  monitor-exit
+    00b6..00b8  throw  v0
+    # exception table: 4 try range(s)
+    # catch <all> code_units 0017..0035 -> 0059
+    # catch Ljava/lang/Exception; code_units 0035..0041 -> 0041
+    # catch <all> code_units 0035..0041 -> 0059
+    # catch <all> code_units 0041..0052 -> 0059
+    # catch <all> code_units 005a..005b -> 0059
+.end method

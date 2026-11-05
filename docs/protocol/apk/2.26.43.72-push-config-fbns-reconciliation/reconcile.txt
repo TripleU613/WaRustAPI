@@ -1,0 +1,240 @@
+# class: LX/1uo;
+# extends: Ljava/lang/Object;
+
+.method public A00(VL)  # .registers 10
+    # full signature: LX/1uo;->A00(Ljava/lang/String;)V
+    0000..0004  iget-object  v0, v8, LX/1uo;->A06:LX/00x;
+    0004..000a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    000a..000c  move-result-object  v0
+    000c..0010  check-cast  v0, LX/00X;
+    0010..0016  invoke-virtual  {v0}, LX/00X;->A01()LX/00Y;
+    0016..0018  move-result-object  v1
+    0018..001c  check-cast  v1, LX/00Z;
+    001c..0020  const/16  v0, #0xd24
+    0020..0026  invoke-static  {v1, v0}, LX/09H;->A00(LX/00Y;I)LX/05a;
+    0026..0028  move-result-object  v1
+    0028..002e  invoke-virtual  {v8}, LX/1uo;->A01()Z
+    002e..0030  move-result  v0
+    0030..0034  if-eqz  v0, +0x17f
+    0034..0038  iget-object  v3, v1, LX/05a;->A00:LX/00x;
+    0038..003e  invoke-interface  {v3}, LX/00x;->get()Ljava/lang/Object;
+    003e..0040  move-result-object  v2
+    0040..0044  check-cast  v2, LX/1iC;
+    0044..0048  iget-object  v0, v2, LX/1iC;->A00:Ljava/util/concurrent/atomic/AtomicBoolean;
+    0048..004e  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicBoolean;->get()Z
+    004e..0050  move-result  v0
+    0050..0054  if-eqz  v0, +0x2e
+    0054..0058  iget-object  v1, v2, LX/1iC;->A04:Ljava/util/concurrent/atomic/AtomicInteger;
+    0058..005c  iget-object  v0, v2, LX/1iC;->A06:Ljava/util/concurrent/atomic/AtomicInteger;
+    005c..0062  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicInteger;->getAndIncrement()I
+    0062..0064  move-result  v0
+    0064..006a  invoke-virtual  {v1, v0}, Ljava/util/concurrent/atomic/AtomicInteger;->set(I)V
+    006a..0070  invoke-static  {v2}, LX/1iC;->A00(LX/1iC;)LX/0BX;
+    0070..0072  move-result-object  v4
+    0072..0078  invoke-virtual  {v1}, Ljava/util/concurrent/atomic/AtomicInteger;->get()I
+    0078..007a  move-result  v2
+    007a..007e  const-string  v0, "on_verify_fbns_token_"
+    007e..0082  new-instance  v1, Ljava/lang/StringBuilder;
+    0082..0088  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0088..008e  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    008e..0092  const-string  v0, "_start"
+    0092..0098  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0098..009e  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    009e..00a0  move-result-object  v1
+    00a0..00a6  const  v0, #0x10d0116c
+    00a6..00ac  invoke-interface  {v4, v0, v1}, LX/0BX;->markerPoint(ILjava/lang/String;)V
+    00ac..00b0  iget-object  v6, v8, LX/1uo;->A03:LX/09S;
+    00b0..00b6  invoke-virtual  {v6}, LX/09S;->A0S()LX/1nA;
+    00b6..00b8  move-result-object  v0
+    00b8..00be  invoke-virtual  {v0}, LX/0FZ;->A03()Landroid/content/SharedPreferences;
+    00be..00c0  move-result-object  v2
+    00c0..00c4  const-string  v1, "fbns_token"
+    00c4..00c6  const/4  v0, #0x0
+    00c6..00cc  invoke-interface  {v2, v1, v0}, Landroid/content/SharedPreferences;->getString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    00cc..00ce  move-result-object  v5
+    00ce..00d4  invoke-virtual  {v6}, LX/09S;->A0S()LX/1nA;
+    00d4..00d6  move-result-object  v0
+    00d6..00dc  invoke-virtual  {v0}, LX/0FZ;->A03()Landroid/content/SharedPreferences;
+    00dc..00de  move-result-object  v2
+    00de..00e2  const-string  v1, "fbns_app_vers"
+    00e2..00e4  const/4  v0, #0x0
+    00e4..00ea  invoke-interface  {v2, v1, v0}, Landroid/content/SharedPreferences;->getInt(Ljava/lang/String;I)I
+    00ea..00ec  move-result  v4
+    00ec..00f2  const  v1, #0xfc10226
+    00f2..00f8  invoke-static  {v9}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+    00f8..00fa  move-result  v0
+    00fa..00fe  if-nez  v0, +0xb
+    00fe..0104  invoke-virtual  {v9, v5}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0104..0106  move-result  v0
+    0106..010a  if-eqz  v0, +0x5
+    010a..010c  const/4  v2, #0x0
+    010c..0110  if-eq  v1, v4, +0x3
+    0110..0112  const/4  v2, #0x1
+    0112..0118  invoke-virtual  {v6}, LX/09S;->A0S()LX/1nA;
+    0118..011a  move-result-object  v0
+    011a..011e  const-string  v1, "last_server_fbns_token"
+    011e..0124  invoke-virtual  {v0}, LX/0FZ;->A02()Landroid/content/SharedPreferences$Editor;
+    0124..0126  move-result-object  v0
+    0126..012a  if-nez  v9, +0x14a
+    012a..0130  invoke-interface  {v0, v1}, Landroid/content/SharedPreferences$Editor;->remove(Ljava/lang/String;)Landroid/content/SharedPreferences$Editor;
+    0130..0132  move-result-object  v0
+    0132..0138  invoke-interface  {v0}, Landroid/content/SharedPreferences$Editor;->apply()V
+    0138..013c  if-eqz  v2, +0x13b
+    013c..0142  invoke-interface  {v3}, LX/00x;->get()Ljava/lang/Object;
+    0142..0144  move-result-object  v1
+    0144..0148  check-cast  v1, LX/1iC;
+    0148..014c  iget-object  v0, v1, LX/1iC;->A00:Ljava/util/concurrent/atomic/AtomicBoolean;
+    014c..0152  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicBoolean;->get()Z
+    0152..0154  move-result  v0
+    0154..0158  if-eqz  v0, +0x25
+    0158..015e  invoke-static  {v1}, LX/1iC;->A00(LX/1iC;)LX/0BX;
+    015e..0160  move-result-object  v4
+    0160..0164  iget-object  v0, v1, LX/1iC;->A04:Ljava/util/concurrent/atomic/AtomicInteger;
+    0164..016a  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicInteger;->get()I
+    016a..016c  move-result  v2
+    016c..0170  const-string  v0, "on_request_fbns_token_"
+    0170..0174  new-instance  v1, Ljava/lang/StringBuilder;
+    0174..017a  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    017a..0180  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0180..0184  const-string  v0, "_start"
+    0184..018a  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    018a..0190  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0190..0192  move-result-object  v1
+    0192..0198  const  v0, #0x10d0116c
+    0198..019e  invoke-interface  {v4, v0, v1}, LX/0BX;->markerPoint(ILjava/lang/String;)V
+    019e..01a2  iget-object  v5, v8, LX/1uo;->A01:Landroid/content/Context;
+    01a2..01a6  sget-object  v7, LX/0cJ;->A0G:Ljava/lang/String;
+    01a6..01aa  const/16  v0, #0x42ac
+    01aa..01b0  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    01b0..01b4  sget-object  v6, LX/1uq;->A00:Ljava/util/List;
+    01b4..01ba  invoke-interface  {v6}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    01ba..01bc  move-result-object  v1
+    01bc..01c2  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    01c2..01c4  move-result  v0
+    01c4..01c8  if-eqz  v0, +0xf2
+    01c8..01ce  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    01ce..01d0  move-result-object  v4
+    01d0..01d4  check-cast  v4, Ljava/lang/String;
+    01d4..01da  invoke-static  {v5, v4}, LX/1ur;->A01(Landroid/content/Context;Ljava/lang/String;)Z
+    01da..01dc  move-result  v0
+    01dc..01e0  if-eqz  v0, -0x10
+    01e0..01e2  const/4  v2, #0x1
+    01e2..01e6  if-nez  v4, +0x3
+    01e6..01e8  const/4  v2, #0x0
+    01e8..01ec  const-string  v1, "FbnsTokenManager/requestFbnsToken fbns-enabled:"
+    01ec..01f0  new-instance  v0, Ljava/lang/StringBuilder;
+    01f0..01f6  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    01f6..01fc  invoke-virtual  {v0, v2}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    01fc..0202  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0202..0204  move-result-object  v0
+    0204..020a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    020a..020e  if-eqz  v2, +0x30
+    020e..0212  if-eqz  v4, +0x2e
+    0212..0216  const-string  v0, "com.facebook.rti.fbns.intent.REGISTER"
+    0216..021a  new-instance  v2, Landroid/content/Intent;
+    021a..0220  invoke-direct  {v2, v0}, Landroid/content/Intent;-><init>(Ljava/lang/String;)V
+    0220..0226  invoke-virtual  {v5}, Landroid/content/Context;->getPackageName()Ljava/lang/String;
+    0226..0228  move-result-object  v1
+    0228..022c  const-string  v0, "pkg_name"
+    022c..0232  invoke-virtual  {v2, v0, v1}, Landroid/content/Intent;->putExtra(Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;
+    0232..0236  const-string  v0, "appid"
+    0236..023c  invoke-virtual  {v2, v0, v7}, Landroid/content/Intent;->putExtra(Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;
+    023c..0242  invoke-interface  {v6, v4}, Ljava/util/List;->contains(Ljava/lang/Object;)Z
+    0242..0244  move-result  v0
+    0244..0248  if-nez  v0, +0x76
+    0248..024c  const-string  v1, "FBNSPreloadIPC/Unknown package "
+    024c..0250  new-instance  v0, Ljava/lang/StringBuilder;
+    0250..0256  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0256..025c  invoke-virtual  {v0, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    025c..0262  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0262..0264  move-result-object  v0
+    0264..026a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    026a..0270  invoke-interface  {v3}, LX/00x;->get()Ljava/lang/Object;
+    0270..0272  move-result-object  v1
+    0272..0276  check-cast  v1, LX/1iC;
+    0276..027a  iget-object  v0, v1, LX/1iC;->A00:Ljava/util/concurrent/atomic/AtomicBoolean;
+    027a..0280  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicBoolean;->get()Z
+    0280..0282  move-result  v0
+    0282..0286  if-eqz  v0, +0x25
+    0286..028c  invoke-static  {v1}, LX/1iC;->A00(LX/1iC;)LX/0BX;
+    028c..028e  move-result-object  v4
+    028e..0292  iget-object  v0, v1, LX/1iC;->A04:Ljava/util/concurrent/atomic/AtomicInteger;
+    0292..0298  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicInteger;->get()I
+    0298..029a  move-result  v2
+    029a..029e  const-string  v0, "on_request_fbns_token_"
+    029e..02a2  new-instance  v1, Ljava/lang/StringBuilder;
+    02a2..02a8  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    02a8..02ae  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    02ae..02b2  const-string  v0, "_end"
+    02b2..02b8  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    02b8..02be  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    02be..02c0  move-result-object  v1
+    02c0..02c6  const  v0, #0x10d0116c
+    02c6..02cc  invoke-interface  {v4, v0, v1}, LX/0BX;->markerPoint(ILjava/lang/String;)V
+    02cc..02d2  invoke-interface  {v3}, LX/00x;->get()Ljava/lang/Object;
+    02d2..02d4  move-result-object  v1
+    02d4..02d8  check-cast  v1, LX/1iC;
+    02d8..02dc  iget-object  v0, v1, LX/1iC;->A00:Ljava/util/concurrent/atomic/AtomicBoolean;
+    02dc..02e2  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicBoolean;->get()Z
+    02e2..02e4  move-result  v0
+    02e4..02e8  if-eqz  v0, +0x25
+    02e8..02ee  invoke-static  {v1}, LX/1iC;->A00(LX/1iC;)LX/0BX;
+    02ee..02f0  move-result-object  v3
+    02f0..02f4  iget-object  v0, v1, LX/1iC;->A04:Ljava/util/concurrent/atomic/AtomicInteger;
+    02f4..02fa  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicInteger;->get()I
+    02fa..02fc  move-result  v2
+    02fc..0300  const-string  v0, "on_verify_fbns_token_"
+    0300..0304  new-instance  v1, Ljava/lang/StringBuilder;
+    0304..030a  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    030a..0310  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0310..0314  const-string  v0, "_end"
+    0314..031a  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    031a..0320  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0320..0322  move-result-object  v1
+    0322..0328  const  v0, #0x10d0116c
+    0328..032e  invoke-interface  {v3, v0, v1}, LX/0BX;->markerPoint(ILjava/lang/String;)V
+    032e..0330  return-void
+    0330..0334  const-string  v0, "com.oculus.vrshell"
+    0334..033a  invoke-virtual  {v4, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    033a..033c  move-result  v0
+    033c..0340  if-nez  v0, +0x1f
+    0340..0344  const-string  v0, "com.oculus.horizon"
+    0344..034a  invoke-virtual  {v4, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    034a..034c  move-result  v0
+    034c..0350  if-nez  v0, +0x14
+    0350..0354  const-string  v1, "com.facebook.oxygen.services.fbns.PreloadedFbnsService"
+    0354..0358  new-instance  v0, Landroid/content/ComponentName;
+    0358..035e  invoke-direct  {v0, v4, v1}, Landroid/content/ComponentName;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    035e..0364  invoke-virtual  {v2, v0}, Landroid/content/Intent;->setComponent(Landroid/content/ComponentName;)Landroid/content/Intent;
+    0364..036a  invoke-static  {v5, v2}, LX/1ur;->A00(Landroid/content/Context;Landroid/content/Intent;)V
+    036a..0370  invoke-virtual  {v5, v2}, Landroid/content/Context;->startService(Landroid/content/Intent;)Landroid/content/ComponentName;
+    0370..0374  goto/16  -0x83
+    0374..0378  const-string  v1, "com.oculus.horizon.push.HorizonFbnsService"
+    0378..037a  goto  -0x12
+    037a..037e  const-string  v1, "com.oculus.vrshell.notifications.fbns.VrFbnsService"
+    037e..0380  goto  -0x15
+    0380..0382  move-exception  v2
+    0382..0388  invoke-virtual  {v2}, Ljava/lang/Throwable;->getCause()Ljava/lang/Throwable;
+    0388..038a  move-result-object  v0
+    038a..038e  instance-of  v0, v0, Landroid/os/DeadObjectException;
+    038e..0392  if-eqz  v0, +0x1c
+    0392..0396  goto/16  -0x94
+    0396..0398  move-exception  v2
+    0398..039c  sget  v1, Landroid/os/Build$VERSION;->SDK_INT:I
+    039c..03a0  const/16  v0, #0x1a
+    03a0..03a4  if-lt  v1, v0, +0x13
+    03a4..03a8  goto/16  -0x9d
+    03a8..03aa  const/4  v4, #0x0
+    03aa..03ae  goto/16  -0xe2
+    03ae..03b2  const-string  v0, "FbnsTokenManager/verifyFbnsToken no-need-to-refresh"
+    03b2..03b8  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    03b8..03ba  goto  -0x76
+    03ba..03c0  invoke-interface  {v0, v1, v9}, Landroid/content/SharedPreferences$Editor;->putString(Ljava/lang/String;Ljava/lang/String;)Landroid/content/SharedPreferences$Editor;
+    03c0..03c2  move-result-object  v0
+    03c2..03c6  goto/16  -0x148
+    03c6..03c8  throw  v2
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/IllegalStateException; code_units 0198..01c0 -> 01cb
+    # catch Ljava/lang/SecurityException; code_units 0198..01c0 -> 0135
+    # catch Ljava/lang/RuntimeException; code_units 0198..01c0 -> 01c0
+.end method

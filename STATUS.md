@@ -1,3 +1,11 @@
+2026-11-05 — **FBNS reconciliation gate and preference ordering traced.**
+
+Null config removes the saved server token view, not the local token here.
+Refresh conditionally enters Android provider IPC before any later SET.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-push-config-fbns-reconciliation/README.md).
+Research only; no runtime changes or live traffic. Validation: checked exports,
+checksums, JSON, coverage freshness and repository hygiene.
+
 2026-11-05 — **Push-config startup order and404 reconciliation work traced.**
 
 The selected GET follows token drain/conditional rotation. Its404 error queues

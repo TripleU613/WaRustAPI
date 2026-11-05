@@ -5722,3 +5722,14 @@ handling that queues VERIFY with seven null String inputs, not a direct GET
 retry. [Caller, excerpt, error bodies and limits](apk/2.26.43.72-push-config-trigger-error/README.md).
 Full startup eligibility, provider work, timeouts and durable recovery remain
 open. No Rust behavior or live account operation changed.
+
+### FBNS local/server comparison and provider entry (2026-11-05)
+
+**Confirmed static, APK43.72:**1uo suppresses refresh only for a nonempty matching
+server/local token and matching saved app version, behind its eligibility gate.
+It updates last_server_fbns_token before refresh; null removes that server view,
+not the local token in this body. Refresh selects an accepted Android provider
+and requests registration through explicit service IPC, not a direct IQ resend.
+[Complete methods and limits](apk/2.26.43.72-push-config-fbns-reconciliation/README.md).
+Provider callback/authenticity, token persistence, later SET and durable recovery
+remain open. No Rust behavior, provider IPC or live account operation changed.
