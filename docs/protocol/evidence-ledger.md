@@ -5689,3 +5689,14 @@ conversions. Converter exceptions are not caught by the selected helpers.
 [Complete selected methods and limits](apk/2.26.43.72-push-config-reply-collection/README.md).
 Individual variant grammar, thrown failures, duplicate semantics and durable
 reconciliation remain open. No Rust behavior change or live account operation.
+
+### Android push-config wire fields and null gates (2026-11-05)
+
+**Confirmed static, APK43.72:**8TD requires platform adm/fbns/gcm and token
+id String length1..1024 to construct its Android variant. Optional mute/count/
+pkey/VOIP results may be null; appid/settings parse results are discarded.
+Item/hash parsing bounds converted entries at0..1 and nullable item failure
+does not itself reject the Android variant.
+[Field mapping, exact helpers and limits](apk/2.26.43.72-push-config-android-grammar/README.md).
+Other variants, header/Long lexical details, provenance and durable reconciliation
+remain open. No Rust behavior change or live account operation.

@@ -1,3 +1,11 @@
+2026-11-05 — **Android push-config wire fields and null gates traced.**
+
+Platform/token gate the selected variant; optional field failures do not all
+reject it. Internal projection is now connected to actual wire attributes.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-push-config-android-grammar/README.md).
+Research only; no runtime changes or live traffic. Validation: pinned APK hash,
+checked exports, checksums, JSON, coverage freshness and repository hygiene.
+
 2026-11-05 — **Push-config reply collection bound traced.**
 
 The0..2 bound counts converted wrappers; null variant conversions are skipped.

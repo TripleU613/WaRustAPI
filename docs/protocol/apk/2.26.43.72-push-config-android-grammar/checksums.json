@@ -1,0 +1,54 @@
+{
+  "README.md": {
+    "bytes": 4933,
+    "sha256": "716fe809daef2f28cdc61b0069d593af6b5424bf800bf5ed7f5cb29025160716"
+  },
+  "android-converter.txt": {
+    "bytes": 7492,
+    "sha256": "1105a77d7a3ce59129843332c3b144eb2386b335f6ab8a2b5f5ba36cf5bca7ad"
+  },
+  "android-value.txt": {
+    "bytes": 908,
+    "sha256": "8e2a25d584a91839356b92469794248935088bee3061049af57add5934b71325"
+  },
+  "child-list.txt": {
+    "bytes": 3413,
+    "sha256": "a314bcbaba3f94baddfaa5a33846f29dfe429eace2a0a5f9165d95b3204862f9"
+  },
+  "enum-parser.txt": {
+    "bytes": 1096,
+    "sha256": "d5616147abc94c8abd10ef53b3eda464e9c839ce37de99afd116562b839d72f2"
+  },
+  "id-path.txt": {
+    "bytes": 396,
+    "sha256": "33f0865ec8c08eaa2b1534c2f3f3779166b40c1a30f0fc89339a2d652b5014c6"
+  },
+  "item-converter-all.txt": {
+    "bytes": 17466,
+    "sha256": "54a21a12e3a0cb881447d71323804fc6f92b288ed09e5843f855712187b10a19"
+  },
+  "item-selector.txt": {
+    "bytes": 321,
+    "sha256": "fc4132d6e261c41cece23024a6c6a63b7d12e5c4d862186fdfbf6e6f57488cad"
+  },
+  "item-value.txt": {
+    "bytes": 533,
+    "sha256": "27fca292a030ce408b1b8e527c3e4b9d448e0d9d62c56817aebd21c4625d7d1e"
+  },
+  "numeric-max.txt": {
+    "bytes": 417,
+    "sha256": "75eb80fdfc69df6fc6574b6a06a34cd530ddbc3c0d1b9bc95aac8d55b98653fb"
+  },
+  "numeric-min.txt": {
+    "bytes": 388,
+    "sha256": "adf03a618f579bde687399b52fee62e63cd6d1e009a3f7236581c8cffba5193f"
+  },
+  "optional-child.txt": {
+    "bytes": 1062,
+    "sha256": "9a7b9969857c1e2de4016c82a6f5cf76fcc3b7ccf5fde4416f94c5bb05298995"
+  },
+  "string-min.txt": {
+    "bytes": 388,
+    "sha256": "533a881438bffd8de9a7bdc4aaa163b709f19aa34feda5938d78442433d78f89"
+  }
+}

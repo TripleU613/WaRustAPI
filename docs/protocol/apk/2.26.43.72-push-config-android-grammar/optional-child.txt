@@ -1,0 +1,25 @@
+# class: LX/8B6;
+# extends: Ljava/lang/Object;
+
+.method public A0G(LLLL)  # .registers 15
+    # full signature: LX/8B6;->A0G(LX/0Tp;LX/8oe;[Ljava/lang/String;)Ljava/lang/Object;
+    0000..0002  const/4  v2, #0x0
+    0002..0006  const-wide/16  v7, #0x0
+    0006..000a  const-wide/16  v9, #0x1
+    000a..000c  move-object  v3, v11
+    000c..000e  move-object  v4, v12
+    000e..0010  move-object  v5, v13
+    0010..0012  move-object  v6, v14
+    0012..0018  invoke-virtual/range  {v3..v10}, LX/8B6;->A0M(LX/0Tp;LX/8oe;[Ljava/lang/String;JJ)Ljava/util/ArrayList;
+    0018..001a  move-result-object  v1
+    001a..001e  if-eqz  v1, +0xd
+    001e..0024  invoke-virtual  {v1}, Ljava/util/AbstractCollection;->isEmpty()Z
+    0024..0026  move-result  v0
+    0026..002a  if-nez  v0, +0x7
+    002a..0030  invoke-virtual  {v1, v2}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
+    0030..0032  move-result-object  v0
+    0032..0034  return-object  v0
+    0034..0036  const/4  v0, #0x0
+    0036..0038  return-object  v0
+    # exception table: 0 try range(s)
+.end method
