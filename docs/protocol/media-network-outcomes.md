@@ -500,3 +500,10 @@ key aliases/fragment-only parameters do not; accepted bytes are not rewritten.
 This is presence, not signature authentication or expiry-time verification.
 Original complete response is stored before refusal, and no replay is enabled.
 [Native helper, platform semantics and regressions](rea/2.26.43.72-media-upload-response/README.md#ordinary-path-query-presence-correction-2026-11-04-offline).
+
+## Media-refresh admission regression (2026-11-04)
+
+**Confirmed existing behavior / newly tested offline:** invalid reply admission
+preserves the old usable route and complete pending refresh across reopen.
+A later valid result applies once; its identical duplicate is idempotent.
+[Source boundary, pinned evidence and limits](network-correctness-audit.md#media-refresh-settlement-admission-review-2026-11-04).

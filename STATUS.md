@@ -1,3 +1,12 @@
+2026-11-04 — **Media refresh admission and durable route preservation verified.**
+
+Existing type/ID/tag/generation guard reviewed; new regression preserves full
+checkpoint state across invalid replies and reopen, then applies a valid reply
+idempotently. Production behavior unchanged.
+[Evidence and remaining scope](docs/protocol/network-correctness-audit.md#media-refresh-settlement-admission-review-2026-11-04).
+Validation: **1,280 workspace/all-feature tests**, strict Clippy, CLI reference,
+formatting, coverage freshness and repository hygiene passed. No live traffic.
+
 2026-11-04 — **Keepalive waits for an actual result/error reply.**
 
 Same-ID non-reply IQs neither terminate receive nor clear the outstanding ping.

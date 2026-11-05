@@ -694,6 +694,80 @@ mod tests {
         store.write(|tx| settle_in(tx, id, node)).unwrap()
     }
     #[test]
+    fn rejected_reply_admission_preserves_current_and_pending_route_across_reopen() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("admission.redb");
+        let store = open(&path);
+        prepare(&store, "old").unwrap();
+        settle(
+            &store,
+            "old",
+            &reply("old", "1", "old-route", "old-auth", "old.whatsapp.net"),
+        );
+        prepare(&store, "pending").unwrap();
+        let snapshot = |store: &ProtocolStore| {
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                .unwrap()
+        };
+        let before = snapshot(&store);
+        let current = current_summary(&store).unwrap();
+        let mut rejected = Vec::new();
+        for kind in [
+            None,
+            Some("get"),
+            Some("set"),
+            Some("RESULT"),
+            Some("unexpected"),
+        ] {
+            let mut node = Node::new("iq")
+                .attr("id", "pending")
+                .children(vec![Node::new("error").attr("code", "503")]);
+            if let Some(kind) = kind {
+                node = node.attr("type", kind);
+            }
+            rejected.push(node);
+        }
+        rejected.push(reply(
+            "unrelated",
+            "1",
+            "new-route",
+            "new-auth",
+            "new.whatsapp.net",
+        ));
+        rejected.push(
+            Node::new("message")
+                .attr("id", "pending")
+                .attr("type", "result"),
+        );
+        for node in rejected {
+            assert!(store.write(|tx| settle_in(tx, "pending", &node)).is_err());
+            assert_eq!(snapshot(&store), before);
+            assert_eq!(current_summary(&store).unwrap(), current);
+        }
+        drop(store);
+        let store = open(&path);
+        assert_eq!(snapshot(&store), before);
+        assert_eq!(current_summary(&store).unwrap(), current);
+        assert!(prepare(&store, "pending").is_err());
+        let valid = reply("pending", "1", "new-route", "new-auth", "new.whatsapp.net");
+        assert_eq!(settle(&store, "pending", &valid), Settlement::Applied);
+        let after = snapshot(&store);
+        assert_eq!(settle(&store, "pending", &valid), Settlement::Applied);
+        assert_eq!(snapshot(&store), after);
+        let applied: Current = store
+            .read(|tx| tx.get_json(Table::Checkpoints, CURRENT, 1))
+            .unwrap()
+            .unwrap();
+        assert_eq!(applied.action_id, "pending");
+        let route = super::super::super::actions::decode(&applied.wire).unwrap();
+        assert_eq!(
+            route.get_attr("id").and_then(|v| v.as_text()),
+            Some("new-route")
+        );
+    }
+
+    #[test]
     fn prospective_first_and_conditional_merge_survive_reopen() {
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("merge.redb");

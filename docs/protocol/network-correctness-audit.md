@@ -601,3 +601,37 @@ this skim is not a complete body/sender-policy audit. A guessed file path
 media_route_coordinator.rs was absent; media coordinator locations must be
 resolved from actual source inventory on the next pass, not inferred from that
 filename. Remaining payload/origin, timing and persistence questions stay open.
+
+## Media-refresh settlement admission review (2026-11-04)
+
+**Confirmed source review / existing behavior:** actual implementation is
+transport/media_routing/refresh.rs (not media_route.rs or
+media_route_coordinator.rs). settle_impl_in validates the sealed record,
+action ID, account generation, iq tag, matching reply ID and exact result/error
+before mutation. Already-settled byte-identical replies return the stored
+outcome; differing replies conflict. New results also require coordinator owner
+and generation-consistent current route; changed prior is retained stale.
+No production correction was needed for this admission boundary.
+
+**New offline regression:** establish an old applied route and reserve a new
+refresh. Missing/get/set/uppercase/unknown types with error content, wrong ID
+with otherwise usable media metadata, and wrong tag all fail without changing
+any checkpoint (including old current route, owner and pending reservation).
+Reopen preserves the complete snapshot and current summary, re-preparing the
+same ID refuses, a later valid result applies, and its identical duplicate
+causes no further mutation. This verifies durable admission/settlement behavior,
+not a live server response or authority of a supplied route.
+
+**Evidence / limits:** exact result/error callback split is pinned APK
+**2.26.43.72 0ln.A01**, [retained dispatcher](rea/2.26.43.72-reachout-state/reachout-iq-reply-dispatch.txt).
+Native media projection evidence is **0VM.A0A / 1xY.CK4** in
+[versioned route evidence](rea/2.26.43.72-media-route-lifetimes/README.md).
+Durable account binding, CAS/current pointer, byte-identical idempotence and
+strong refusal of repeat preparation are Rust policies; this test does not
+establish their native equivalent. Full origin validation, native callback
+body constraints and automatic refresh scheduling remain open. No live traffic.
+
+**Inspection limit confirmed:** current_summary returns host count/usability,
+so two different usable one-host routes can have identical summaries. The
+regression therefore verifies the final Current.action_id and decoded route ID
+directly; summary equality is not evidence that route authority is unchanged.
