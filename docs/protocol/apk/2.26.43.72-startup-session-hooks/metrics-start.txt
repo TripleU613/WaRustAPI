@@ -1,0 +1,49 @@
+# class: LX/1jG;
+# extends: Ljava/lang/Object;
+
+.method public A05(V)  # .registers 6
+    # full signature: LX/1jG;->A05()V
+    0000..0002  monitor-enter
+    0002..0006  iget-wide  v1, v5, LX/1jG;->A0A:J
+    0006..000a  const-wide/16  v3, #0x0
+    000a..000e  cmp-long  v0, v1, v3
+    000e..0012  if-nez  v0, +0xe
+    0012..0016  iget-object  v2, v5, LX/1jG;->A0P:LX/098;
+    0016..001a  const/16  v1, #0x27
+    001a..001e  new-instance  v0, LX/2JI;
+    001e..0024  invoke-direct  {v0, v5, v1}, LX/2JI;-><init>(Ljava/lang/Object;I)V
+    0024..002a  invoke-virtual  {v2, v0}, LX/098;->execute(Ljava/lang/Runnable;)V
+    002a..002e  iget-wide  v1, v5, LX/1jG;->A09:J
+    002e..0032  cmp-long  v0, v1, v3
+    0032..0036  if-nez  v0, +0xf
+    0036..003a  iget-object  v0, v5, LX/1jG;->A0M:LX/05a;
+    003a..003e  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    003e..0044  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0044..004a  invoke-static  {}, Landroid/os/SystemClock;->uptimeMillis()J
+    004a..004c  move-result-wide  v0
+    004c..0050  iput-wide  v0, v5, LX/1jG;->A09:J
+    0050..0054  iget-object  v0, v5, LX/1jG;->A0M:LX/05a;
+    0054..0058  iget-object  v2, v0, LX/05a;->A00:LX/00x;
+    0058..005e  invoke-interface  {v2}, LX/00x;->get()Ljava/lang/Object;
+    005e..0060  move-result-object  v0
+    0060..0064  check-cast  v0, LX/08q;
+    0064..006a  invoke-static  {v0}, LX/08q;->A00(LX/08q;)J
+    006a..006c  move-result-wide  v0
+    006c..0070  iput-wide  v0, v5, LX/1jG;->A0A:J
+    0070..0076  invoke-interface  {v2}, LX/00x;->get()Ljava/lang/Object;
+    0076..007c  invoke-static  {}, Landroid/os/SystemClock;->uptimeMillis()J
+    007c..007e  move-result-wide  v0
+    007e..0082  iput-wide  v0, v5, LX/1jG;->A0B:J
+    0082..0084  const/4  v0, #0x0
+    0084..0088  iput-object  v0, v5, LX/1jG;->A0E:Ljava/lang/Long;
+    0088..008a  const/4  v0, #0x0
+    008a..008e  iput  v0, v5, LX/1jG;->A00:I
+    008e..0094  invoke-static  {v5, v0}, LX/1jG;->A04(LX/1jG;Z)V
+    0094..0096  monitor-exit
+    0096..0098  return-void
+    0098..009a  move-exception  v0
+    009a..009c  monitor-exit
+    009c..009e  throw  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0001..004a -> 004c
+.end method

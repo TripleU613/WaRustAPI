@@ -15990,5 +15990,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-startup-availability/README.md",
     "description": "Current-build selected startup conditionally emits bare availability after config/unified-session. Rust wire shape agrees but full mode/gate policy remains unproven. Unified-session literal search finds only outbound builders; this does not establish absence of replies or ACKs. Full Cyu, response policy and generation recovery remain open. No sender, retry, route or live operation added."
+  },
+  "x-startup-session-hooks-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-startup-session-hooks/README.md",
+    "description": "Selected post-availability startup hooks record session/uptime and conditionally hand offline-resume metrics to a sink. Persisted metrics are removed before parse/handoff. Sink invocation does not prove transmission, mandatory telemetry or application completion. Full sink transport, offline-complete semantics and durable generation recovery remain open. No sender, retry, route or live operation added."
   }
 }

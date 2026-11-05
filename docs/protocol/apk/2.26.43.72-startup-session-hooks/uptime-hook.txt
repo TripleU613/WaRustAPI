@@ -1,0 +1,14 @@
+# class: LX/1lQ;
+# extends: Ljava/lang/Object;
+
+.method public A02(V)  # .registers 3
+    # full signature: LX/1lQ;->A02()V
+    0000..0004  iget-object  v0, v2, LX/1lQ;->A0D:LX/05a;
+    0004..0008  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0008..000e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    000e..0014  invoke-static  {}, Landroid/os/SystemClock;->uptimeMillis()J
+    0014..0016  move-result-wide  v0
+    0016..001a  iput-wide  v0, v2, LX/1lQ;->A02:J
+    001a..001c  return-void
+    # exception table: 0 try range(s)
+.end method

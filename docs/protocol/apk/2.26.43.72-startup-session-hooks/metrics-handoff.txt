@@ -1,0 +1,245 @@
+# class: LX/1jG;
+# extends: Ljava/lang/Object;
+
+.method public A00(LLLLI)  # .registers 15
+    # full signature: LX/1jG;->A00(LX/1jG;LX/2L1;Ljava/lang/String;I)LX/28f;
+    0000..0004  iget-object  v0, v11, LX/1jG;->A0M:LX/05a;
+    0004..0008  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0008..000e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    000e..0014  invoke-static  {}, Landroid/os/SystemClock;->uptimeMillis()J
+    0014..0016  move-result-wide  v9
+    0016..001a  iget-object  v0, v11, LX/1jG;->A0J:LX/05a;
+    001a..001e  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    001e..0024  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0024..0026  move-result-object  v1
+    0026..002a  check-cast  v1, LX/0Ta;
+    002a..002e  iget-object  v0, v1, LX/0Ta;->A00:Ljava/util/HashSet;
+    002e..0034  invoke-static  {v1, v0}, LX/0Ta;->A00(LX/0Ta;Ljava/util/Set;)Ljava/lang/String;
+    0034..0036  move-result-object  v3
+    0036..003a  iget-object  v0, v11, LX/1jG;->A0G:LX/05a;
+    003a..003e  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    003e..0044  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0044..0046  move-result-object  v0
+    0046..004a  check-cast  v0, LX/0BD;
+    004a..004e  iget-boolean  v4, v0, LX/0BD;->A02:Z
+    004e..0052  new-instance  v2, LX/28f;
+    0052..0058  invoke-direct  {v2}, LX/28f;-><init>()V
+    0058..005e  invoke-interface  {v12}, LX/2L1;->B7A()Ljava/lang/String;
+    005e..0060  move-result-object  v0
+    0060..0064  iput-object  v0, v2, LX/28f;->A0W:Ljava/lang/String;
+    0064..006a  invoke-interface  {v12}, LX/2L1;->AX8()I
+    006a..006c  move-result  v0
+    006c..006e  int-to-long  v0, v0
+    006e..0074  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0074..0076  move-result-object  v0
+    0076..007a  iput-object  v0, v2, LX/28f;->A06:Ljava/lang/Long;
+    007a..0080  invoke-static  {v14}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0080..0082  move-result-object  v0
+    0082..0086  iput-object  v0, v2, LX/28f;->A05:Ljava/lang/Integer;
+    0086..008c  invoke-interface  {v12}, LX/2L1;->ApN()Z
+    008c..008e  move-result  v0
+    008e..0092  xor-int/lit8  v0, v0, #0x1
+    0092..0098  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    0098..009a  move-result-object  v0
+    009a..009e  iput-object  v0, v2, LX/28f;->A01:Ljava/lang/Boolean;
+    009e..00a4  invoke-interface  {v12}, LX/2L1;->Ago()Z
+    00a4..00a6  move-result  v0
+    00a6..00ac  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    00ac..00ae  move-result-object  v0
+    00ae..00b2  iput-object  v0, v2, LX/28f;->A00:Ljava/lang/Boolean;
+    00b2..00b8  invoke-interface  {v12}, LX/2L1;->Ajf()LX/28B;
+    00b8..00ba  move-result-object  v0
+    00ba..00be  iget  v0, v0, LX/28B;->messages_:I
+    00be..00c0  int-to-long  v0, v0
+    00c0..00c6  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    00c6..00c8  move-result-object  v0
+    00c8..00cc  iput-object  v0, v2, LX/28f;->A0A:Ljava/lang/Long;
+    00cc..00d2  invoke-interface  {v12}, LX/2L1;->Ajf()LX/28B;
+    00d2..00d4  move-result-object  v0
+    00d4..00d8  iget  v0, v0, LX/28B;->receipts_:I
+    00d8..00da  int-to-long  v0, v0
+    00da..00e0  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    00e0..00e2  move-result-object  v0
+    00e2..00e6  iput-object  v0, v2, LX/28f;->A0C:Ljava/lang/Long;
+    00e6..00ec  invoke-interface  {v12}, LX/2L1;->Ajf()LX/28B;
+    00ec..00ee  move-result-object  v0
+    00ee..00f2  iget  v0, v0, LX/28B;->notifications_:I
+    00f2..00f4  int-to-long  v0, v0
+    00f4..00fa  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    00fa..00fc  move-result-object  v0
+    00fc..0100  iput-object  v0, v2, LX/28f;->A0B:Ljava/lang/Long;
+    0100..0106  invoke-interface  {v12}, LX/2L1;->Ajf()LX/28B;
+    0106..0108  move-result-object  v0
+    0108..010c  iget  v0, v0, LX/28B;->calls_:I
+    010c..010e  int-to-long  v0, v0
+    010e..0114  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0114..0116  move-result-object  v0
+    0116..011a  iput-object  v0, v2, LX/28f;->A09:Ljava/lang/Long;
+    011a..0120  invoke-interface  {v12}, LX/2L1;->B36()LX/28B;
+    0120..0122  move-result-object  v0
+    0122..0126  iget  v0, v0, LX/28B;->messages_:I
+    0126..0128  int-to-long  v0, v0
+    0128..012e  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    012e..0130  move-result-object  v0
+    0130..0134  iput-object  v0, v2, LX/28f;->A0H:Ljava/lang/Long;
+    0134..013a  invoke-interface  {v12}, LX/2L1;->B36()LX/28B;
+    013a..013c  move-result-object  v0
+    013c..0140  iget  v0, v0, LX/28B;->receipts_:I
+    0140..0142  int-to-long  v0, v0
+    0142..0148  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0148..014a  move-result-object  v0
+    014a..014e  iput-object  v0, v2, LX/28f;->A0L:Ljava/lang/Long;
+    014e..0154  invoke-interface  {v12}, LX/2L1;->B36()LX/28B;
+    0154..0156  move-result-object  v0
+    0156..015a  iget  v0, v0, LX/28B;->notifications_:I
+    015a..015c  int-to-long  v0, v0
+    015c..0162  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0162..0164  move-result-object  v0
+    0164..0168  iput-object  v0, v2, LX/28f;->A0I:Ljava/lang/Long;
+    0168..016e  invoke-interface  {v12}, LX/2L1;->B36()LX/28B;
+    016e..0170  move-result-object  v0
+    0170..0174  iget  v0, v0, LX/28B;->calls_:I
+    0174..0176  int-to-long  v0, v0
+    0176..017c  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    017c..017e  move-result-object  v0
+    017e..0182  iput-object  v0, v2, LX/28f;->A0G:Ljava/lang/Long;
+    0182..0188  invoke-interface  {v12}, LX/2L1;->Ajf()LX/28B;
+    0188..018a  move-result-object  v0
+    018a..018e  iget  v0, v0, LX/28B;->bitField0_:I
+    018e..0192  and-int/lit16  v0, v0, #0x80
+    0192..0196  if-eqz  v0, +0x1c
+    0196..019c  invoke-interface  {v12}, LX/2L1;->Ajf()LX/28B;
+    019c..019e  move-result-object  v0
+    019e..01a2  iget  v0, v0, LX/28B;->statuses_:I
+    01a2..01a4  int-to-long  v0, v0
+    01a4..01aa  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    01aa..01ac  move-result-object  v0
+    01ac..01b0  iput-object  v0, v2, LX/28f;->A0D:Ljava/lang/Long;
+    01b0..01b6  invoke-interface  {v12}, LX/2L1;->B36()LX/28B;
+    01b6..01b8  move-result-object  v0
+    01b8..01bc  iget  v0, v0, LX/28B;->statuses_:I
+    01bc..01be  int-to-long  v0, v0
+    01be..01c4  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    01c4..01c6  move-result-object  v0
+    01c6..01ca  iput-object  v0, v2, LX/28f;->A0N:Ljava/lang/Long;
+    01ca..01d0  invoke-interface  {v12}, LX/2L1;->Acn()J
+    01d0..01d2  move-result-wide  v7
+    01d2..01d8  invoke-static  {v7, v8}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    01d8..01da  move-result-object  v0
+    01da..01de  iput-object  v0, v2, LX/28f;->A0S:Ljava/lang/Long;
+    01de..01e4  invoke-interface  {v12}, LX/2L1;->Aw6()J
+    01e4..01e6  move-result-wide  v0
+    01e6..01ec  invoke-interface  {v12}, LX/2L1;->Aco()J
+    01ec..01ee  move-result-wide  v5
+    01ee..01f0  sub-long/2addr  v0, v5
+    01f0..01f6  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    01f6..01f8  move-result-object  v0
+    01f8..01fc  iput-object  v0, v2, LX/28f;->A0J:Ljava/lang/Long;
+    01fc..0202  invoke-interface  {v12}, LX/2L1;->BMn()Z
+    0202..0204  move-result  v0
+    0204..0208  if-eqz  v0, +0xd
+    0208..020e  invoke-interface  {v12}, LX/2L1;->AqM()J
+    020e..0210  move-result-wide  v0
+    0210..0212  sub-long/2addr  v0, v5
+    0212..0218  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0218..021a  move-result-object  v0
+    021a..021e  iput-object  v0, v2, LX/28f;->A0E:Ljava/lang/Long;
+    021e..0224  invoke-interface  {v12}, LX/2L1;->BLr()Z
+    0224..0226  move-result  v0
+    0226..022a  if-eqz  v0, +0xd
+    022a..0230  invoke-interface  {v12}, LX/2L1;->AV8()J
+    0230..0232  move-result-wide  v0
+    0232..0234  sub-long/2addr  v0, v5
+    0234..023a  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    023a..023c  move-result-object  v0
+    023c..0240  iput-object  v0, v2, LX/28f;->A0O:Ljava/lang/Long;
+    0240..0244  sub-long  v0, v9, v5
+    0244..024a  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    024a..024c  move-result-object  v0
+    024c..0250  iput-object  v0, v2, LX/28f;->A0K:Ljava/lang/Long;
+    0250..0256  invoke-interface  {v12}, LX/2L1;->Al8()J
+    0256..0258  move-result-wide  v0
+    0258..025a  sub-long/2addr  v9, v0
+    025a..0260  invoke-static  {v9, v10}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0260..0262  move-result-object  v0
+    0262..0266  iput-object  v0, v2, LX/28f;->A0M:Ljava/lang/Long;
+    0266..026c  invoke-interface  {v12}, LX/2L1;->B8p()Z
+    026c..026e  move-result  v0
+    026e..0274  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    0274..0276  move-result-object  v0
+    0276..027a  iput-object  v0, v2, LX/28f;->A03:Ljava/lang/Boolean;
+    027a..0280  invoke-static  {v4}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    0280..0282  move-result-object  v0
+    0282..0286  iput-object  v0, v2, LX/28f;->A02:Ljava/lang/Boolean;
+    0286..028c  invoke-interface  {v12}, LX/2L1;->AwN()Z
+    028c..028e  move-result  v0
+    028e..0294  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    0294..0296  move-result-object  v0
+    0296..029a  iput-object  v0, v2, LX/28f;->A04:Ljava/lang/Boolean;
+    029a..029e  iput-object  v3, v2, LX/28f;->A0V:Ljava/lang/String;
+    029e..02a4  invoke-interface  {v12}, LX/2L1;->AwD()J
+    02a4..02a6  move-result-wide  v5
+    02a6..02b0  const-wide  v3, #0x7fffffffffffffff (9223372036854775807)
+    02b0..02b4  cmp-long  v0, v5, v3
+    02b4..02b8  if-eqz  v0, +0xd
+    02b8..02ba  sub-long/2addr  v7, v5
+    02ba..02c0  const-wide/32  v0, #0x5265c00
+    02c0..02c2  div-long/2addr  v7, v0
+    02c2..02c8  invoke-static  {v7, v8}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    02c8..02ca  move-result-object  v0
+    02ca..02ce  iput-object  v0, v2, LX/28f;->A0F:Ljava/lang/Long;
+    02ce..02d4  invoke-interface  {v12}, LX/2L1;->Ab8()I
+    02d4..02d6  move-result  v0
+    02d6..02d8  int-to-long  v0, v0
+    02d8..02de  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    02de..02e0  move-result-object  v0
+    02e0..02e4  iput-object  v0, v2, LX/28f;->A07:Ljava/lang/Long;
+    02e4..02ea  invoke-interface  {v12}, LX/2L1;->Ahc()I
+    02ea..02ec  move-result  v0
+    02ec..02ee  int-to-long  v0, v0
+    02ee..02f4  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    02f4..02f6  move-result-object  v0
+    02f6..02fa  iput-object  v0, v2, LX/28f;->A08:Ljava/lang/Long;
+    02fa..0300  invoke-interface  {v12}, LX/2L1;->BEU()I
+    0300..0302  move-result  v0
+    0302..0304  int-to-long  v0, v0
+    0304..030a  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    030a..030c  move-result-object  v0
+    030c..0310  iput-object  v0, v2, LX/28f;->A0T:Ljava/lang/Long;
+    0310..0316  invoke-interface  {v12}, LX/2L1;->B36()LX/28B;
+    0316..0318  move-result-object  v0
+    0318..031c  iget  v0, v0, LX/28B;->messagesPersistableInCcq_:I
+    031c..031e  int-to-long  v0, v0
+    031e..0324  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0324..0326  move-result-object  v0
+    0326..032a  iput-object  v0, v2, LX/28f;->A0P:Ljava/lang/Long;
+    032a..0330  invoke-interface  {v12}, LX/2L1;->B36()LX/28B;
+    0330..0332  move-result-object  v0
+    0332..0336  iget  v0, v0, LX/28B;->notificationsPersistableInCcq_:I
+    0336..0338  int-to-long  v0, v0
+    0338..033e  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    033e..0340  move-result-object  v0
+    0340..0344  iput-object  v0, v2, LX/28f;->A0Q:Ljava/lang/Long;
+    0344..034a  invoke-interface  {v12}, LX/2L1;->B36()LX/28B;
+    034a..034c  move-result-object  v0
+    034c..0350  iget  v0, v0, LX/28B;->receiptsPersistableInCcq_:I
+    0350..0352  int-to-long  v0, v0
+    0352..0358  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0358..035a  move-result-object  v0
+    035a..035e  iput-object  v0, v2, LX/28f;->A0R:Ljava/lang/Long;
+    035e..0362  iput-object  v13, v2, LX/28f;->A0U:Ljava/lang/String;
+    0362..0366  iget-object  v0, v11, LX/1jG;->A0O:LX/05a;
+    0366..036a  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    036a..0370  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0370..0372  move-result-object  v0
+    0372..0376  check-cast  v0, LX/0NX;
+    0376..037c  invoke-interface  {v0, v2}, LX/0NX;->CSW(LX/0FP;)V
+    037c..0380  iget-object  v0, v11, LX/1jG;->A0K:LX/05a;
+    0380..0384  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0384..038a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    038a..0390  invoke-interface  {v12}, LX/2L1;->B7A()Ljava/lang/String;
+    0390..0392  move-result-object  v0
+    0392..0398  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    0398..039a  return-object  v2
+    # exception table: 0 try range(s)
+.end method

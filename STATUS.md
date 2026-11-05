@@ -1,3 +1,11 @@
+2026-11-05 — **Post-availability session bookkeeping and metrics traced.**
+
+Selected hooks record session/uptime and conditionally hand offline-resume
+metrics to a sink. Neither scheduling nor handoff proves network delivery.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-startup-session-hooks/README.md).
+Research only; no runtime changes or live traffic. Validation: checked exports,
+source/excerpt match, checksums, JSON, coverage freshness and repository hygiene.
+
 2026-11-05 — **Current-build bare availability and startup conditions traced.**
 
 The selected post-config/unified-session write is conditional bare availability.

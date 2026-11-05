@@ -1,0 +1,42 @@
+{
+  "README.md": {
+    "bytes": 4163,
+    "sha256": "53372bc6ced2f3a0e5ca6c5ea1a6e333c54b064306fc8340d0907ff9224f0579"
+  },
+  "active-metric-removal.txt": {
+    "bytes": 1344,
+    "sha256": "8d55daca22913f3aee8f60ee26fb820b817d38fd8d4be22ef2a1d1d646c2b7b2"
+  },
+  "metrics-handoff.txt": {
+    "bytes": 13282,
+    "sha256": "05f36a24bed8a4bceb3eeace60fd59a5211c9013bf195c04c1d7c2114e0458e2"
+  },
+  "metrics-start.txt": {
+    "bytes": 2230,
+    "sha256": "901c3e2fb981b0aad2a7aeffaa3fe36aebbb6704156cab830286d7d712032c84"
+  },
+  "prior-metrics-cleanup.txt": {
+    "bytes": 4082,
+    "sha256": "590999eb014eba3e4af333c1f6db7f6f7e2eda39fc6520f00c411b3683faea0b"
+  },
+  "session-tracker.txt": {
+    "bytes": 1313,
+    "sha256": "312f1aae63184b4c4a57891681726087864d2d54381ad53fef60fbd682ff9cd0"
+  },
+  "startup-order-excerpt.txt": {
+    "bytes": 1192,
+    "sha256": "9081fc7deac1bda2b1f02564384fb99635f9e82fefbc3d487565d3b49f62d2a5"
+  },
+  "uptime-hook.txt": {
+    "bytes": 555,
+    "sha256": "7c6a7ebb3f085b446b52cb4bce5548816479c7edfa72bcea161b951c9bc48f45"
+  },
+  "worker-constructor.txt": {
+    "bytes": 409,
+    "sha256": "4c2adbbb26c2108d6be887859c7efd79ba2fc43343cced96bdbc92c98c783b0d"
+  },
+  "worker39-selected-excerpts.txt": {
+    "bytes": 13497,
+    "sha256": "e404515d1f262b44557bdb755e209df71b4290f93977064bfb49e69a92b2f8b5"
+  }
+}

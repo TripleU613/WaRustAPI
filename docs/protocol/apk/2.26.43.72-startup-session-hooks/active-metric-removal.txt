@@ -1,0 +1,30 @@
+# class: LX/1jG;
+# extends: Ljava/lang/Object;
+
+.method public A01(LLL)  # .registers 5
+    # full signature: LX/1jG;->A01(LX/2DU;LX/1jG;)LX/0Dy;
+    0000..0004  iget-object  v0, v4, LX/1jG;->A0D:LX/2DU;
+    0004..000a  invoke-static  {v0, v3}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    000a..000c  move-result  v0
+    000c..000e  const/4  v3, #0x0
+    000e..0012  if-nez  v0, +0x3
+    0012..0014  return-object  v3
+    0014..0018  iput-object  v3, v4, LX/1jG;->A0D:LX/2DU;
+    0018..001c  iget-object  v0, v4, LX/1jG;->A0I:LX/05a;
+    001c..0020  iget-object  v2, v0, LX/05a;->A00:LX/00x;
+    0020..0026  invoke-interface  {v2}, LX/00x;->get()Ljava/lang/Object;
+    0026..0028  move-result-object  v0
+    0028..002c  check-cast  v0, LX/0Du;
+    002c..0030  const-string  v1, "offline_resume"
+    0030..0036  invoke-virtual  {v0, v1}, LX/0Du;->A04(Ljava/lang/String;)Z
+    0036..0038  move-result  v0
+    0038..003c  if-eqz  v0, +0xd
+    003c..0042  invoke-interface  {v2}, LX/00x;->get()Ljava/lang/Object;
+    0042..0044  move-result-object  v0
+    0044..0048  check-cast  v0, LX/0Du;
+    0048..004e  invoke-virtual  {v0, v1}, LX/0Du;->A01(Ljava/lang/String;)LX/0Dy;
+    004e..0050  move-result-object  v0
+    0050..0052  return-object  v0
+    0052..0054  return-object  v3
+    # exception table: 0 try range(s)
+.end method

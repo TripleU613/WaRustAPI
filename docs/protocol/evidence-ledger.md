@@ -5797,3 +5797,14 @@ literal search finds only its two outbound builders, not proof of absent ACKs.
 [Complete writer, selected gates, query and limits](apk/2.26.43.72-startup-availability/README.md).
 Full caller/companion/passive semantics, response policy and generation recovery
 remain open. No Rust behavior or live account operation changed.
+
+### Post-availability session hooks and metrics handoff (2026-11-05)
+
+**Confirmed static, APK43.72:** selected startup records session ID, starts
+conditional offline-resume metrics and records uptime. Persisted metric bytes
+are removed before parsing/handoff; prior incomplete metric entries can be
+removed before sink invocation. This is metrics state, not proof of application
+completion, mandatory telemetry or request replay authority.
+[Complete methods, explicit worker excerpts and limits](apk/2.26.43.72-startup-session-hooks/README.md).
+Full sink transport/sampling, offline-complete semantics and durable/generation
+recovery remain open. No Rust behavior or live account operation changed.

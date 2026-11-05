@@ -1,0 +1,231 @@
+# Explicit excerpts, not complete LX/2JI;->run()V.
+# Complete export SHA256: 1f2028887956226083d0595ed98d5c118d82ed2b419d4a7f39353a3d8e4d5c0a
+# Reproduce: xtask apk-smali APK --class LX/2JI; --method run --signatures --exceptions
+# Dispatcher, selector39 body/continuations and full exception table; printed offsets are bytes, deltas/ranges code units.
+    0000..0004  move-object/from16  v1, v24
+    0004..0008  iget  v0, v1, LX/2JI;->$t:I
+    0008..000e  packed-switch  v0, payload@0x31d0, cases=[0:@0x18dc, 1:@0x1710, 2:@0x1376, 3:@0xe, 4:@0x2fd8, 5:@0x125a, 6:@0x1202, 7:@0x1e, 8:@0x11ca, 9:@0x2f14, 10:@0xff4, 11:@0x2e38, 12:@0x2e20, 13:@0x2e00, 14:@0x2de0, 15:@0xfaa, 16:@0xf38, 17:@0xeee, 18:@0xe74, 19:@0xdfe, 20:@0x26fa, 21:@0xdbe, 22:@0x718, 23:@0x26ea, 24:@0x1a32, 25:@0x6c2, 26:@0x26d8, 27:@0x26cc, 28:@0x670, 29:@0x26b2, 30:@0x26a2, 31:@0x2696, 32:@0x33c, 33:@0x2686, 34:@0x2676, 35:@0x29e, 36:@0xe, 37:@0x23d8, 38:@0x2396, 39:@0x1b8, 40:@0x2384, 41:@0x1fac, 42:@0x1d76, 43:@0x1d66, 44:@0x164, 45:@0x1c96, 46:@0x1ab0, 47:@0x1a94, 48:@0x4a, 49:@0x1a82], default@0xe
+    01b8..01bc  iget-object  v5, v1, LX/2JI;->A00:Ljava/lang/Object;
+    01bc..01c0  check-cast  v5, LX/1jG;
+    01c0..01c4  iget-object  v0, v5, LX/1jG;->A0F:LX/05a;
+    01c4..01ca  invoke-static  {v0}, LX/05a;->A00(LX/05a;)LX/00E;
+    01ca..01cc  move-result-object  v2
+    01cc..01d0  const/16  v1, #0x2280
+    01d0..01d4  sget-object  v0, LX/00G;->A02:LX/00G;
+    01d4..01da  invoke-virtual  {v2, v0, v1}, LX/00E;->A15(LX/00G;I)Z
+    01da..01dc  move-result  v0
+    01dc..01e0  if-eqz  v0, -0xe0
+    01e0..01e2  monitor-enter
+    01e2..01e6  iget-object  v3, v5, LX/1jG;->A0R:LX/00p;
+    01e6..01ec  invoke-interface  {v3}, LX/00p;->getValue()Ljava/lang/Object;
+    01ec..01ee  move-result-object  v0
+    01ee..01f2  check-cast  v0, Landroid/content/SharedPreferences;
+    01f2..01f6  const-string  v2, "attempt_metrics_list_proto"
+    01f6..01fc  invoke-static  {v0, v2}, LX/1ia;->A02(Landroid/content/SharedPreferences;Ljava/lang/String;)[B
+    01fc..01fe  move-result-object  v1
+    01fe..0202  if-eqz  v1, +0x1753
+    0202..0208  invoke-interface  {v3}, LX/00p;->getValue()Ljava/lang/Object;
+    0208..020a  move-result-object  v0
+    020a..020e  check-cast  v0, Landroid/content/SharedPreferences;
+    020e..0214  invoke-interface  {v0}, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
+    0214..0216  move-result-object  v0
+    0216..021c  invoke-interface  {v0, v2}, Landroid/content/SharedPreferences$Editor;->remove(Ljava/lang/String;)Landroid/content/SharedPreferences$Editor;
+    021c..021e  move-result-object  v0
+    021e..0224  invoke-interface  {v0}, Landroid/content/SharedPreferences$Editor;->apply()V
+    0224..0226  monitor-exit
+    0226..022a  sget-object  v0, LX/289;->DEFAULT_INSTANCE:LX/289;
+    022a..0230  invoke-static  {v0, v1}, Lcom/google/protobuf/GeneratedMessageLite;->parseFrom(Lcom/google/protobuf/GeneratedMessageLite;[B)Lcom/google/protobuf/GeneratedMessageLite;
+    0230..0232  move-result-object  v4
+    0232..0236  check-cast  v4, LX/289;
+    0236..023a  iget-object  v0, v4, LX/289;->attemptMetrics_:Lcom/google/protobuf/Internal$ProtobufList;
+    023a..0240  invoke-interface  {v0}, Ljava/util/List;->size()I
+    0240..0242  move-result  v1
+    0242..0246  iget-wide  v2, v4, LX/289;->lastPersistedAtUptimeMillis_:J
+    0246..024a  const-string  v0, "OfflineResumeMetrics/logPersistedMetricsAsAppRestarted count="
+    024a..0250  invoke-static  {v1, v0}, LX/1Xl;->A14(ILjava/lang/String;)Ljava/lang/StringBuilder;
+    0250..0252  move-result-object  v1
+    0252..0256  const-string  v0, " persistedAt="
+    0256..025c  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    025c..0262  invoke-virtual  {v1, v2, v3}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    0262..0268  invoke-static  {v1}, LX/1Xl;->A1N(Ljava/lang/Object;)V
+    0268..026c  iget-object  v0, v4, LX/289;->attemptMetrics_:Lcom/google/protobuf/Internal$ProtobufList;
+    026c..0272  invoke-interface  {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0272..0274  move-result-object  v3
+    0274..027a  invoke-interface  {v3}, Ljava/util/Iterator;->hasNext()Z
+    027a..027c  move-result  v0
+    027c..0280  if-eqz  v0, -0x130
+    0280..0286  invoke-interface  {v3}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0286..0288  move-result-object  v2
+    0288..028c  check-cast  v2, LX/RnN;
+    028c..0292  invoke-static  {v2}, LX/00l;->A08(Ljava/lang/Object;)V
+    0292..0294  const/4  v1, #0x0
+    0294..0296  const/4  v0, #0x4
+    0296..029c  invoke-static  {v5, v2, v1, v0}, LX/1jG;->A00(LX/1jG;LX/2L1;Ljava/lang/String;I)LX/28f;
+    029c..029e  goto  -0x14
+    30a4..30a6  monitor-exit
+    30a6..30a8  return-void
+    30a8..30aa  move-exception  v1
+    30aa..30ac  monitor-exit
+    30ac..30ae  throw  v1
+    # exception table: 145 try range(s)
+    # catch <all> code_units 00f1..0112 -> 1854
+    # catch <all> code_units 01aa..01ee -> 185d
+    # catch <all> code_units 01ee..01fd -> 1857
+    # catch <all> code_units 01fd..0206 -> 185d
+    # catch <all> code_units 0206..0225 -> 185a
+    # catch <all> code_units 0225..02b0 -> 185d
+    # catch <all> code_units 02bc..02cd -> 185d
+    # catch <all> code_units 033c..0351 -> 0351
+    # catch <all> code_units 03bf..03d8 -> 187d
+    # catch <all> code_units 03d8..03ec -> 1876
+    # catch <all> code_units 03ec..03ef -> 187d
+    # catch <all> code_units 040a..041c -> 186f
+    # catch <all> code_units 041c..0439 -> 1868
+    # catch <all> code_units 0439..043c -> 186f
+    # catch Landroid/database/sqlite/SQLiteDatabaseCorruptException; code_units 0441..0447 -> 048f
+    # catch <all> code_units 0447..0455 -> 0488
+    # catch <all> code_units 0455..047a -> 0481
+    # catch <all> code_units 047a..047d -> 0488
+    # catch Landroid/database/sqlite/SQLiteDatabaseCorruptException; code_units 047d..0481 -> 048f
+    # catch <all> code_units 0482..0483 -> 0483
+    # catch <all> code_units 0484..0488 -> 0488
+    # catch <all> code_units 0489..048a -> 048a
+    # catch Landroid/database/sqlite/SQLiteDatabaseCorruptException; code_units 048b..048f -> 048f
+    # catch <all> code_units 04be..04f0 -> 06cd
+    # catch Ljava/lang/IllegalStateException; code_units 04f0..04f6 -> 055e
+    # catch Landroid/database/sqlite/SQLiteDatabaseCorruptException; code_units 04f0..04f6 -> 0565
+    # catch Landroid/database/sqlite/SQLiteDiskIOException; code_units 04f0..04f6 -> 0557
+    # catch <all> code_units 04f0..04f6 -> 06cd
+    # catch <all> code_units 04f6..0508 -> 0550
+    # catch <all> code_units 0508..0542 -> 0549
+    # catch <all> code_units 0542..0545 -> 0550
+    # catch Ljava/lang/IllegalStateException; code_units 0545..0549 -> 055e
+    # catch Landroid/database/sqlite/SQLiteDatabaseCorruptException; code_units 0545..0549 -> 0565
+    # catch Landroid/database/sqlite/SQLiteDiskIOException; code_units 0545..0549 -> 0557
+    # catch <all> code_units 0545..0549 -> 06cd
+    # catch <all> code_units 054a..054b -> 054b
+    # catch <all> code_units 054c..0550 -> 0550
+    # catch <all> code_units 0551..0552 -> 0552
+    # catch Ljava/lang/IllegalStateException; code_units 0553..0557 -> 055e
+    # catch Landroid/database/sqlite/SQLiteDatabaseCorruptException; code_units 0553..0557 -> 0565
+    # catch Landroid/database/sqlite/SQLiteDiskIOException; code_units 0553..0557 -> 0557
+    # catch <all> code_units 0553..0557 -> 06cd
+    # catch <all> code_units 0557..0641 -> 06cd
+    # catch <all> code_units 0641..0647 -> 06c6
+    # catch <all> code_units 0647..067a -> 06bf
+    # catch <all> code_units 067a..067d -> 06c6
+    # catch <all> code_units 067d..06bf -> 06cd
+    # catch <all> code_units 06c0..06c1 -> 06c1
+    # catch <all> code_units 06c2..06c6 -> 06c6
+    # catch <all> code_units 06c7..06c8 -> 06c8
+    # catch <all> code_units 06c8..06cd -> 06cd
+    # catch <all> code_units 0ca7..0cd3 -> 18de
+    # catch <all> code_units 0cd3..0cee -> 18d2
+    # catch <all> code_units 0cee..0cf1 -> 18de
+    # catch Ljava/lang/IllegalStateException; code_units 0e7c..0e80 -> 0eac
+    # catch <all> code_units 0e80..0e94 -> 0ea5
+    # catch Ljava/lang/IllegalStateException; code_units 0e94..0e97 -> 0eac
+    # catch <all> code_units 0ea6..0ea7 -> 0ea7
+    # catch Ljava/lang/IllegalStateException; code_units 0ea8..0eac -> 0eac
+    # catch <all> code_units 0ebf..0ecc -> 0fd1
+    # catch <all> code_units 0ecc..0edd -> 0fce
+    # catch <all> code_units 0edd..0f66 -> 0fd1
+    # catch Ljava/lang/Exception; code_units 0f66..0f72 -> 0fbb
+    # catch <all> code_units 0f66..0f72 -> 0fd1
+    # catch <all> code_units 0f72..0f8e -> 0fb4
+    # catch Ljava/lang/Exception; code_units 0f8e..0f93 -> 0fbb
+    # catch <all> code_units 0f8e..0f93 -> 0fd1
+    # catch <all> code_units 0f93..0f94 -> 0fd1
+    # catch <all> code_units 0f94..0fa1 -> 0fce
+    # catch <all> code_units 0fa1..0fb4 -> 0fd1
+    # catch <all> code_units 0fb5..0fb6 -> 0fb6
+    # catch Ljava/lang/Exception; code_units 0fb7..0fbb -> 0fbb
+    # catch <all> code_units 0fb7..0fbb -> 0fd1
+    # catch <all> code_units 0fbb..0fca -> 0fd1
+    # catch <all> code_units 0fce..0fd1 -> 0fd1
+    # catch Ljava/lang/Exception; code_units 1003..1018 -> 1042
+    # catch <all> code_units 1018..1025 -> 103b
+    # catch <all> code_units 1025..102d -> 1034
+    # catch <all> code_units 102d..1030 -> 103b
+    # catch Ljava/lang/Exception; code_units 1030..1034 -> 1042
+    # catch <all> code_units 1035..1036 -> 1036
+    # catch <all> code_units 1037..103b -> 103b
+    # catch <all> code_units 103c..103d -> 103d
+    # catch Ljava/lang/Exception; code_units 103e..1042 -> 1042
+    # catch <all> code_units 1064..1071 -> 11bf
+    # catch Ljava/lang/Exception; code_units 1092..10a8 -> 117d
+    # catch <all> code_units 10a8..10b1 -> 1176
+    # catch <all> code_units 10b1..10bc -> 116f
+    # catch <all> code_units 10bc..10dc -> 1168
+    # catch <all> code_units 10dc..10e5 -> 116f
+    # catch Ljava/lang/Exception; code_units 10e5..10f5 -> 114d
+    # catch <all> code_units 10e5..10f5 -> 116f
+    # catch <all> code_units 10f5..10fc -> 1146
+    # catch Ljava/lang/Exception; code_units 10fc..1117 -> 114d
+    # catch <all> code_units 10fc..1117 -> 116f
+    # catch <all> code_units 1117..111d -> 1146
+    # catch Ljava/lang/Exception; code_units 111d..1146 -> 114d
+    # catch <all> code_units 111d..1146 -> 116f
+    # catch <all> code_units 1147..1148 -> 1148
+    # catch Ljava/lang/Exception; code_units 1148..114d -> 114d
+    # catch <all> code_units 1148..114d -> 116f
+    # catch <all> code_units 114e..1161 -> 116f
+    # catch <all> code_units 1161..1164 -> 1176
+    # catch Ljava/lang/Exception; code_units 1164..1168 -> 117d
+    # catch <all> code_units 1169..116a -> 116a
+    # catch <all> code_units 116b..116f -> 116f
+    # catch <all> code_units 1170..1171 -> 1171
+    # catch <all> code_units 1172..1176 -> 1176
+    # catch <all> code_units 1177..1178 -> 1178
+    # catch Ljava/lang/Exception; code_units 1179..117d -> 117d
+    # catch <all> code_units 11a9..11b8 -> 11bf
+    # catch <all> code_units 11db..11e7 -> 11e9
+    # catch <all> code_units 11ea..11eb -> 11e9
+    # catch <all> code_units 125d..1279 -> 12b4
+    # catch <all> code_units 1279..127f -> 12ad
+    # catch <all> code_units 127f..1282 -> 12b4
+    # catch <all> code_units 12ae..12af -> 12af
+    # catch <all> code_units 12b0..12b4 -> 12b4
+    # catch <all> code_units 12b5..12b6 -> 12b6
+    # catch <all> code_units 12f8..12fc -> 1334
+    # catch <all> code_units 12fc..1326 -> 132d
+    # catch <all> code_units 1326..1329 -> 1334
+    # catch <all> code_units 132e..132f -> 132f
+    # catch <all> code_units 1330..1334 -> 1334
+    # catch <all> code_units 1335..1336 -> 1336
+    # catch <all> code_units 1382..142d -> 16ed
+    # catch <all> code_units 142d..143f -> 166e
+    # catch <all> code_units 143f..145b -> 1662
+    # catch <all> code_units 145b..145e -> 166e
+    # catch <all> code_units 145e..1662 -> 16ed
+    # catch <all> code_units 1665..1669 -> 1669
+    # catch <all> code_units 166a..166e -> 166e
+    # catch <all> code_units 166f..1673 -> 1673
+    # catch <all> code_units 1673..16ed -> 16ed
+    # catch <all> code_units 16ee..16ef -> 16ed
+    # catch <all> code_units 172a..177e -> 1787
+    # catch <all> code_units 1788..1789 -> 1787
+    # catch <all> code_units 1791..17a8 -> 17e9
+    # catch <all> code_units 17a8..17b4 -> 17bf
+    # catch <all> code_units 17b4..17bf -> 17e9
+    # catch <all> code_units 17c0..17c2 -> 17bf
+    # catch <all> code_units 17c2..17c8 -> 17e9
+    # catch <all> code_units 17c8..17cf -> 17e6
+    # catch <all> code_units 17cf..17e6 -> 17e9
+    # catch <all> code_units 17e7..17e8 -> 17e6
+    # catch <all> code_units 17e8..17eb -> 17e9
+    # catch <all> code_units 17f1..184c -> 1861
+    # catch <all> code_units 1857..185d -> 185d
+    # catch <all> code_units 1869..186a -> 186a
+    # catch <all> code_units 186b..186f -> 186f
+    # catch <all> code_units 1870..1871 -> 1871
+    # catch <all> code_units 1877..1878 -> 1878
+    # catch <all> code_units 1879..187d -> 187d
+    # catch <all> code_units 187e..187f -> 187f
+    # catch <all> code_units 18a7..18ab -> 18de
+    # catch <all> code_units 18ab..18c6 -> 18cd
+    # catch <all> code_units 18c6..18c9 -> 18de
+    # catch <all> code_units 18ce..18d2 -> 18d9
+    # catch <all> code_units 18d5..18d9 -> 18d9
+    # catch <all> code_units 18da..18de -> 18de
+    # catch <all> code_units 18df..18e2 -> 18e3

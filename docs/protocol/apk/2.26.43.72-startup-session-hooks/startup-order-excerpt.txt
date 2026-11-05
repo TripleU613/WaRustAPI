@@ -1,0 +1,23 @@
+# Explicit excerpt, not complete0ZJ.A0z.
+# Source: ../../rea/2.26.43.72-authkey-outcomes/startup-trigger-checked.txt
+    0b9c..0ba0  if-nez  v9, +0x1a
+    0ba0..0ba4  if-eqz  v64, +0x7
+    0ba4..0ba8  iget-object  v6, v0, LX/0ZJ;->A03:LX/1rj;
+    0ba8..0bae  invoke-virtual  {v6}, LX/1rj;->A01()V
+    0bae..0bb2  iget-object  v6, v0, LX/0ZJ;->A0f:LX/00x;
+    0bb2..0bb8  invoke-interface  {v6}, LX/00x;->get()Ljava/lang/Object;
+    0bb8..0bba  move-result-object  v7
+    0bba..0bbe  check-cast  v7, LX/1s1;
+    0bbe..0bc4  invoke-virtual  {v1}, LX/1jv;->A08()LX/1jz;
+    0bc4..0bc6  move-result-object  v6
+    0bc6..0bca  iget  v6, v6, LX/1jz;->A08:I
+    0bca..0bd0  invoke-virtual  {v7, v6}, LX/1s1;->A00(I)V
+    0bd0..0bd4  iget-object  v6, v0, LX/0ZJ;->A0Y:LX/00x;
+    0bd4..0bda  invoke-interface  {v6}, LX/00x;->get()Ljava/lang/Object;
+    0bda..0bdc  move-result-object  v6
+    0bdc..0be0  check-cast  v6, LX/1jG;
+    0be0..0be6  invoke-virtual  {v6}, LX/1jG;->A05()V
+    0be6..0bec  invoke-interface/range  {v54..v54}, LX/00x;->get()Ljava/lang/Object;
+    0bec..0bee  move-result-object  v6
+    0bee..0bf2  check-cast  v6, LX/1lQ;
+    0bf2..0bf8  invoke-virtual  {v6}, LX/1lQ;->A02()V
