@@ -597,6 +597,8 @@ mod tests {
             .attr("id", "W1")
             .children(vec![
                 Node::new("retry")
+                    .attr("id", "W1")
+                    .attr("t", "1")
                     .attr("count", count.to_string())
                     .attr("v", "1"),
                 Node::new("registration").bytes(registration.to_be_bytes().to_vec()),
@@ -1304,7 +1306,13 @@ mod tests {
             Some(vec![1; 5]),
             Some(vec![1; 64]),
         ] {
-            let mut children = vec![Node::new("retry").attr("count", "1").attr("v", "1")];
+            let mut children = vec![
+                Node::new("retry")
+                    .attr("id", "W1")
+                    .attr("t", "1")
+                    .attr("count", "1")
+                    .attr("v", "1"),
+            ];
             children.extend(registration.map(|bytes| Node::new("registration").bytes(bytes)));
             let node = receipt(&peer, 1, 42).children(children);
             assert!(
@@ -1316,8 +1324,38 @@ mod tests {
             assert_eq!(all_retry_state(), before_invalid);
         }
         for retry in [
-            Node::new("retry").attr("v", "2").attr("count", "1"),
-            Node::new("retry").attr("count", "2147483648"),
+            Node::new("retry")
+                .attr("id", "W1")
+                .attr("t", "1")
+                .attr("v", "2")
+                .attr("count", "1"),
+            Node::new("retry")
+                .attr("id", "W1")
+                .attr("t", "1")
+                .attr("count", "2147483648"),
+        ] {
+            let node = receipt(&peer, 1, 42).children(vec![
+                retry,
+                Node::new("registration").bytes(42u32.to_be_bytes().to_vec()),
+            ]);
+            assert!(
+                answer(&store, &account, &node, ConnectionEpoch(2))
+                    .await
+                    .unwrap()
+                    .is_none()
+            );
+            assert_eq!(all_retry_state(), before_invalid);
+        }
+        // The nested ID identifies the failed message, independently of the
+        // root receipt ID. Never resend W1 merely because the root names W1.
+        for retry in [
+            Node::new("retry").attr("id", "OTHER").attr("t", "1"),
+            Node::new("retry").attr("t", "1"),
+            Node::new("retry").attr("id", "W1"),
+            Node::new("retry").attr("id", "W1").attr("t", "x"),
+            Node::new("retry")
+                .attr("id", "W1")
+                .attr("t", "9223372036854775808"),
         ] {
             let node = receipt(&peer, 1, 42).children(vec![
                 retry,
@@ -1386,10 +1424,12 @@ mod tests {
             }
         }
         // A later supported receipt without keys still follows normal policy.
-        let default_count = receipt(&peer, 1, 42).children(vec![
-            Node::new("retry"),
-            Node::new("registration").bytes(42u32.to_be_bytes().to_vec()),
-        ]);
+        let default_count = receipt(&peer, 1, 42)
+            .attr("id", "ROOT-RECEIPT")
+            .children(vec![
+                Node::new("retry").attr("id", "W1").attr("t", "1"),
+                Node::new("registration").bytes(42u32.to_be_bytes().to_vec()),
+            ]);
         super::super::receipts::validate(&default_count).unwrap();
         assert_eq!(
             super::super::receipts::record(&store, &default_count).unwrap(),

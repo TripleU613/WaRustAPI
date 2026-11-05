@@ -4226,8 +4226,9 @@ pub struct RetryRequest {
     pub chat: Jid,
     /// The device that could not decrypt and wants it again.
     pub device: Jid,
-    /// The original message id, which the resend must reuse so the recipient
-    /// matches it to the message it is holding.
+    /// The nested `retry.id` original message id, which the resend must reuse
+    /// so the recipient matches it to the message it is holding. This is
+    /// independent of the root receipt id.
     pub message_id: String,
     /// Which attempt this is; the first is 1.
     pub count: u32,
@@ -4251,8 +4252,8 @@ pub fn parse_retry(node: &Node) -> Option<RetryRequest> {
             .cloned()
             .or_else(|| Jid::parse(value.as_text()?).ok())
     };
-    let message_id = node.get_attr("id")?.as_text()?.to_owned();
-    if message_id.is_empty() || message_id.len() > 128 {
+    let receipt_id = node.get_attr("id")?.as_text()?;
+    if receipt_id.is_empty() || receipt_id.len() > 128 {
         return None;
     }
     let retry = node.child("retry")?;
@@ -4293,11 +4294,31 @@ pub fn parse_retry(node: &Node) -> Option<RetryRequest> {
             count
         }
     };
+    // F10.A04 reads required nested t/id, then uses nested id to build
+    // the original message key. The root receipt id is separate correlation.
+    // docs/protocol/retry-parser-admission.md
+    if retry
+        .get_attr("t")
+        .and_then(|value| value.as_text())
+        .and_then(|text| text.parse::<i64>().ok())
+        .is_none()
+    {
+        tracing::debug!(field = "retry.t", "retry requires a signed64-bit timestamp");
+        return None;
+    }
+    let Some(message_id) = retry.get_attr("id").and_then(|value| value.as_text()) else {
+        tracing::debug!(field = "retry.id", "retry requires the original message id");
+        return None;
+    };
+    if message_id.is_empty() || message_id.len() > 128 {
+        tracing::debug!(field = "retry.id", "invalid original message id length");
+        return None;
+    }
     Some(RetryRequest {
         chat: jid("from")?,
         // A direct retry names no participant; the peer is the chat itself.
         device: jid("participant").or_else(|| jid("from"))?,
-        message_id,
+        message_id: message_id.to_owned(),
         count,
         registration: Some(registration),
     })
@@ -4316,7 +4337,11 @@ mod retry_tests {
             node = node.attr("participant", Jid::parse("222222222222222@lid").unwrap());
         }
         node.children(vec![
-            Node::new("retry").attr("count", "1").attr("v", "1"),
+            Node::new("retry")
+                .attr("id", "M1")
+                .attr("t", "1")
+                .attr("count", "1")
+                .attr("v", "1"),
             Node::new("registration").bytes(vec![1, 2, 3, 4]),
         ])
     }
@@ -4341,7 +4366,10 @@ mod retry_tests {
             .attr("type", "retry")
             .attr("id", "M2")
             .children(vec![
-                Node::new("retry").attr("count", "2"),
+                Node::new("retry")
+                    .attr("id", "M2")
+                    .attr("t", "1")
+                    .attr("count", "2"),
                 Node::new("registration").bytes(vec![1, 2, 3, 4]),
             ]);
         let parsed = parse_retry(&node).unwrap();
@@ -4357,26 +4385,29 @@ mod retry_tests {
             .attr("type", "retry")
             .attr("id", "M2");
         let registration = || Node::new("registration").bytes(vec![1, 2, 3, 4]);
-        let defaults = base
-            .clone()
-            .children(vec![Node::new("retry"), registration()]);
+        let defaults = base.clone().children(vec![
+            Node::new("retry").attr("id", "M2").attr("t", "1"),
+            registration(),
+        ]);
         let parsed = parse_retry(&defaults).unwrap();
         assert_eq!(parsed.count, 1);
         assert_eq!(parsed.registration, Some(vec![1, 2, 3, 4]));
         for version in ["", "0", "2", "01"] {
             assert!(
-                parse_retry(
-                    &base
-                        .clone()
-                        .children(vec![Node::new("retry").attr("v", version), registration()])
-                )
+                parse_retry(&base.clone().children(vec![
+                        Node::new("retry")
+                            .attr("id", "M2")
+                            .attr("t", "1")
+                            .attr("v", version),
+                        registration()
+                    ]))
                 .is_none()
             );
         }
         for count in ["", "x", "-1", "2147483648", "4294967295"] {
             assert!(
                 parse_retry(&base.clone().children(vec![
-                    Node::new("retry").attr("count", count),
+                    Node::new("retry").attr("id", "M2").attr("t", "1").attr("count", count),
                     registration()
                 ]))
                 .is_none()
@@ -4392,7 +4423,7 @@ mod retry_tests {
         ] {
             assert!(
                 parse_retry(&base.clone().children(vec![
-                    Node::new("retry"),
+                    Node::new("retry").attr("id", "M2").attr("t", "1"),
                     Node::new("registration").bytes(bytes)
                 ]))
                 .is_none()
@@ -4403,21 +4434,61 @@ mod retry_tests {
             Some(Node::new("registration")),
             Some(Node::new("registration").children(vec![Node::new("value")])),
         ] {
-            let mut children = vec![Node::new("retry")];
+            let mut children = vec![Node::new("retry").attr("id", "M2").attr("t", "1")];
             children.extend(invalid);
             assert!(parse_retry(&base.clone().children(children)).is_none());
         }
         for count in ["0", "1", "2", "4", "2147483647"] {
             assert_eq!(
                 parse_retry(&base.clone().children(vec![
-                    Node::new("retry").attr("v", "1").attr("count", count),
-                    registration()
-                ]))
+                        Node::new("retry")
+                            .attr("id", "M2")
+                            .attr("t", "1")
+                            .attr("v", "1")
+                            .attr("count", count),
+                        registration()
+                    ]))
                 .unwrap()
                 .count
                 .to_string(),
                 count
             );
+        }
+    }
+
+    #[test]
+    fn retry_uses_nested_message_id_and_requires_nested_id_and_timestamp() {
+        let base = receipt(false).attr("id", "ROOT-RECEIPT");
+        let registration = || Node::new("registration").bytes(vec![1, 2, 3, 4]);
+        for time in ["0", "-1", "9223372036854775807", "-9223372036854775808"] {
+            let node = base.clone().children(vec![
+                Node::new("retry").attr("id", "ORIGINAL").attr("t", time),
+                registration(),
+            ]);
+            let parsed = parse_retry(&node).unwrap();
+            assert_eq!(parsed.message_id, "ORIGINAL");
+            assert_eq!(parsed.count, 1);
+        }
+        let long_id = "x".repeat(129);
+        for id in [None, Some(""), Some(long_id.as_str())] {
+            let mut retry = Node::new("retry").attr("t", "1");
+            if let Some(id) = id {
+                retry = retry.attr("id", id);
+            }
+            assert!(parse_retry(&base.clone().children(vec![retry, registration()])).is_none());
+        }
+        for time in [
+            None,
+            Some(""),
+            Some("x"),
+            Some("9223372036854775808"),
+            Some("-9223372036854775809"),
+        ] {
+            let mut retry = Node::new("retry").attr("id", "ORIGINAL");
+            if let Some(time) = time {
+                retry = retry.attr("t", time);
+            }
+            assert!(parse_retry(&base.clone().children(vec![retry, registration()])).is_none());
         }
     }
 

@@ -317,3 +317,7 @@ checkpoint/session/count issues are recorded there; no full group retry port.
 The comparison group/status window now also [guards its peer snapshot and
 settles reserved retry writes](group-retry-admission.md#peer-snapshot-and-write-settlement-correction-2026-11-05).
 A successful local write is not a recipient-delivery result.
+
+The [nested retry message-key correction](retry-parser-admission.md#nested-message-key-and-timestamp-correction-2026-11-05)
+uses retry.id instead of root receipt id for original lookup, requires valid
+retry.t and preserves the independent root ACK/correlation policy.

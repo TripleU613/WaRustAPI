@@ -40,7 +40,7 @@ These are synthetic offline tests, not handset/server compatibility proof.
 
 The shared parser is used by the normal direct driver and the explicit CLI group
 comparison window, so both now refuse these malformed fields and see defaults.
-That does not complete group retry policy. Nested retry id/t, recipient/address
+That does not complete group retry policy. Complete timestamp consumers, recipient/address
 mapping, full current root normalization, receipt-carried key processing,
 higher-count base-key state and all ACK/error consequences remain open.
 
@@ -48,3 +48,40 @@ Validation:1313 workspace/all-feature tests passed, as did strict workspace/
 all-target/all-feature Clippy, formatting and CLI-reference regeneration.
 Pinned count-reader exports reproduced; APK coverage and hygiene checked before
 push. No live compatibility or account-restriction result was measured.
+
+## Nested message key and timestamp correction (2026-11-05)
+
+**Confirmed static / corrected offline:** the shared parser used root receipt id
+as RetryRequest.message_id and ignored nested retry.id/t. Current F10.A04 instead
+requires nested t/id and builds the original message key from nested id. Complete
+[required readers and message-key construction](apk/2.26.43.72-retry-message-correlation/README.md)
+close that selected correlation gap.
+
+The parser now returns **nested retry.id** for original-send lookup. It requires
+nested t to parse as a signed64-bit integer and applies existing local identifier
+bounds to nested id. Root receipt id remains separately validated; no equality
+between root/nested IDs is invented. Missing/malformed nested fields produce a
+redacted field diagnostic and no actionable retry, before any outbox lookup,
+query reservation, crypto or retry checkpoint mutation.
+
+The timestamp is validated, not turned into a new retry/expiry clock. Native
+F10 multiplies its parsed seconds by1000; complete downstream timing consumers
+remain open. Rust still checks age against the persisted original first attempt.
+The model/API adds no timestamp field, and full Java Unicode numeric syntax is
+not claimed. Receipt ACK construction is unchanged and retains its own root
+correlation semantics; all native parser/ACK exception effects remain unproven.
+
+A parser regression covers independent root/nested IDs, missing/empty/oversized
+nested id, missing/nonintegral/overflow t and signed64-bit boundary values.
+The full saved/fresh retry workflow verifies root W1 + nested OTHER sends nothing
+and leaves all retry tables unchanged. Missing/invalid nested fields do likewise.
+Conversely, root ROOT-RECEIPT + nested W1 reaches the intended W1 resend with the
+same original wire ID and remains once-only. Existing parser/version/count/key
+fixtures now include valid id/t so they continue testing their intended fields.
+The group comparison admission fixtures likewise use nested IDs. No live receipt,
+key query, resend or ACK was sent.
+
+Nested-field follow-up validation:1318 workspace/all-feature tests, strict
+workspace/all-target/all-feature Clippy, formatting and CLI-reference regeneration
+passed. Required-reader/key-construction exports reproduced; APK coverage and
+repository hygiene checked before push.

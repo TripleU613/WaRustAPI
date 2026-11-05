@@ -1206,7 +1206,10 @@ mod retry_admission_tests {
         let other = Jid::parse("333333333333333:4@lid").unwrap();
         let receipt = |from: &Jid, peer: &Jid, id: &str, count: u32, keys: bool| {
             let mut children = vec![
-                Node::new("retry").attr("count", count.to_string()),
+                Node::new("retry")
+                    .attr("id", id)
+                    .attr("t", "1")
+                    .attr("count", count.to_string()),
                 Node::new("registration").bytes(vec![0, 0, 0, 42]),
             ];
             if keys {

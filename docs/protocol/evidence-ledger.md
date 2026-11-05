@@ -1,3 +1,10 @@
+2026-11-05 — **Retry original-message correlation corrected.**
+
+Shared parser now uses required nested retry.id for original lookup and requires
+signed64-bit retry.t. Root receipt ID is independent; malformed nested fields
+cannot mutate/query retry state. [Evidence and regressions](retry-parser-admission.md#nested-message-key-and-timestamp-correction-2026-11-05).
+No live request or new timestamp/ACK policy.
+
 2026-11-05 — **Comparison group retry enc counts corrected from pinned DEX.**
 
 Received count1/2 now reaches root skmsg and pairwise distribution enc children
