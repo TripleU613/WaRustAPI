@@ -187,6 +187,8 @@ pub struct Summary {
     pub kem_last_resort: usize,
     /// Historical acknowledged batches reporting PQ count_low; not current demand.
     pub pq_low_acknowledged_batches: usize,
+    /// Saved refusal holds upload until the native retry policy is implemented.
+    pub upload_held_after_refusal: bool,
 }
 
 fn scan_prefix<T: serde::de::DeserializeOwned>(
@@ -417,6 +419,13 @@ pub fn begin_upload(
     let pq_batch = 10;
     let reserved =
         store.write(|tx| {
+            // Refusal retry/backoff/regeneration policy is not ported. Returning
+            // keys to Unsent is inventory state, not authority to reserve a new
+            // IQ on the next notification or reconnect (43.72 13z.A02/14o.BLn).
+            if refused_upload_in(&*tx)? {
+                tracing::warn!("prekey upload held: saved refusal; retry policy unimplemented");
+                return Ok(None);
+            }
             let ids: Vec<u32> = unsent_in(&*tx)?.into_iter().take(UNSENT_TARGET).collect();
             if ids.is_empty() {
                 return Ok(None);
@@ -706,10 +715,18 @@ pub fn low_count_ack(node: &Node) -> Result<Node> {
         .attr("type", "encrypt"))
 }
 
-/// Whether a session should upload now: something is unsent, or nothing has
-/// ever been generated (then `generate` first, mirroring `LX/DNq.run`).
+fn refused_upload_in(tx: &impl Lookup) -> Result<bool> {
+    Ok(scan_prefix::<Batch>(tx, Table::Checkpoints, BATCH_PREFIX)?
+        .iter()
+        .any(|(_, batch)| batch.status == "refused"))
+}
+
+/// Whether unsent/initial inventory permits upload, with no saved refusal.
+/// Native refusal retry policy is unported; reconnect is not retry authority.
 pub fn wants_upload(store: &ProtocolStore) -> Result<bool> {
-    store.read(|tx| Ok(!unsent_in(tx)?.is_empty() || record_ids(tx)?.is_empty()))
+    store.read(|tx| {
+        Ok(!refused_upload_in(tx)? && (!unsent_in(tx)?.is_empty() || record_ids(tx)?.is_empty()))
+    })
 }
 
 /// Local row state for the KEM prekey an incoming hybrid `pkmsg` names.
@@ -755,6 +772,7 @@ pub fn summary(store: &ProtocolStore) -> Result<Summary> {
             }
         }
         for (_, batch) in scan_prefix::<Batch>(tx, Table::Checkpoints, BATCH_PREFIX)? {
+            summary.upload_held_after_refusal |= batch.status == "refused";
             if batch.status == "server_acknowledged" && batch.pq_count_low == Some(true) {
                 summary.pq_low_acknowledged_batches += 1;
             }
@@ -1481,7 +1499,11 @@ mod tests {
             .unwrap()
             .unwrap();
         assert_eq!(batch.code.as_deref(), Some("500"));
-        assert!(wants_upload(&store).unwrap());
+        assert!(
+            !wants_upload(&store).unwrap(),
+            "refusal is not retry authority"
+        );
+        assert!(begin_upload(&store, &account, &signed).unwrap().is_none());
     }
 
     #[test]
@@ -1530,7 +1552,7 @@ mod tests {
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("coded-errors.redb");
         let (account, signed) = account_and_signed();
-        for (raw, expected) in [
+        for (case, (raw, expected)) in [
             (None, "0"),
             (Some("+00503"), "503"),
             (Some("-2147483648"), "-2147483648"),
@@ -1540,7 +1562,11 @@ mod tests {
             (Some(" 503"), "0"),
             (Some("oops"), "0"),
             (Some("５０３"), "503"),
-        ] {
+        ]
+        .into_iter()
+        .enumerate()
+        {
+            let path = path.with_file_name(format!("coded-errors-{case}.redb"));
             let store = open(&path);
             generate(&store).unwrap();
             let (pending, _) = begin_upload(&store, &account, &signed).unwrap().unwrap();
@@ -1691,6 +1717,50 @@ mod tests {
             assert_eq!(
                 restored.pq_count_low, None,
                 "unknown historical flag stays unknown"
+            );
+        }
+    }
+
+    #[test]
+    fn refused_upload_holds_new_reservations_after_notifications_and_reopen() {
+        for kind in ["406", "503", "0"] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("refusal-hold.redb");
+            let store = open(&path);
+            let (account, signed) = account_and_signed();
+            generate(&store).unwrap();
+            let (pending, _) = begin_upload(&store, &account, &signed).unwrap().unwrap();
+            let error = Node::new("iq")
+                .attr("id", pending.iq_id.as_str())
+                .attr("type", "error")
+                .children(vec![Node::new("error").attr("code", kind)]);
+            assert!(!pending.settle(&store, &error).unwrap().accepted);
+            // Fresh unsent keys do not authorize retry of a refused upload.
+            generate(&store).unwrap();
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 4096))
+                .unwrap();
+            assert!(!wants_upload(&store).unwrap());
+            assert!(summary(&store).unwrap().upload_held_after_refusal);
+            for _ in 0..2 {
+                assert!(begin_upload(&store, &account, &signed).unwrap().is_none());
+            }
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 4096))
+                    .unwrap(),
+                before
+            );
+            drop(store);
+            let store = open(&path);
+            assert!(!wants_upload(&store).unwrap());
+            assert!(summary(&store).unwrap().upload_held_after_refusal);
+            assert!(begin_upload(&store, &account, &signed).unwrap().is_none());
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 4096))
+                    .unwrap(),
+                before
             );
         }
     }

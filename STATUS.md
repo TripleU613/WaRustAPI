@@ -1,3 +1,12 @@
+2026-11-04 — **Saved prekey refusals hold implicit retries.**
+
+Notifications/reconnect cannot reserve another upload after a saved refusal.
+Status exposes the hold; native retry/backoff/regeneration remains unported.
+[Source audit, local policy and regression](docs/protocol/prekey-count-notifications.md#durable-refusal-upload-hold-2026-11-04).
+Validation: workspace/all-feature tests, strict Clippy, CLI reference,
+formatting, JSON, coverage freshness and repository hygiene passed.
+No live traffic.
+
 2026-11-04 — **PQ count-low replies retained independently.**
 
 New batch/outcome flag and historical acknowledged-batch status count preserve

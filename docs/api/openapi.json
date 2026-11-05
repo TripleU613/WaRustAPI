@@ -2175,7 +2175,8 @@
           "batches",
           "kem_local",
           "kem_last_resort",
-          "pq_low_acknowledged_batches"
+          "pq_low_acknowledged_batches",
+          "upload_held_after_refusal"
         ],
         "properties": {
           "unsent": {
@@ -2208,6 +2209,10 @@
           "pq_low_acknowledged_batches": {
             "type": "integer",
             "description": "Historical acknowledged upload batches recording pq_list/@count_low=true. Not current server demand; old batches without the field stay unknown and do not count. No automatic PQ follow-up is implied."
+          },
+          "upload_held_after_refusal": {
+            "type": "boolean",
+            "description": "A saved refused upload holds all new automatic upload reservations while native retry/backoff/regeneration policy remains unported. No cooldown or safe retry time is inferred. Historical refusals also hold; no automatic reset."
           }
         },
         "description": "Redacted one-time and KEM prekey inventory and upload-batch status, as emitted by `prekeys --json`. No key material is returned."
@@ -15359,5 +15364,15 @@
     "x-live": false,
     "evidence": "docs/protocol/prekey-count-notifications.md#independent-pq-count-low-retention-2026-11-04",
     "description": "Independent pq_count_low is persisted for new settled uploads; historical missing fields stay unknown. Existing prekey status adds pq_low_acknowledged_batches, a historical count rather than current demand. PQ follow-up strategy remains incomplete."
+  },
+  "x-prekey-upload-durable-refusal-hold": {
+    "x-cli": "whatsapp-cli prekeys [--json]; listen (existing prekey actor)",
+    "x-transport": [
+      "comparison public-client",
+      "existing read-only GET /v1/prekeys"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/prekey-count-notifications.md#durable-refusal-upload-hold-2026-11-04",
+    "description": "Local incomplete-policy hold: any saved refused batch prevents new upload reservations across notifications/reconnect. Summary exposes upload_held_after_refusal. Native retry scheduling remains unported; no reset or inferred cooldown."
   }
 }

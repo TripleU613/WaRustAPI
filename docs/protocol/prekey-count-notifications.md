@@ -393,3 +393,31 @@ historical counter is not incremented by refusals/false. Missing historical
 field deserializesNone. Existing actor still schedules followup from legacy
 count_low only: PQ-only automatic replenishment requires the incomplete
 current SET/ADD routing strategy. No such port or live behavior is claimed.
+
+## Durable refusal upload hold (2026-11-04)
+
+**Confirmed source mismatch / implemented offline local policy.** A refused
+upload returned legacy metadata toUnsent; wants_upload and begin_upload
+then permitted a new IQ on reconnect or another count notification. Earlier
+"does not retry" statements covered only the immediate error callback and
+were too broad. Reconnect was implicitly retrying without the native retry
+policy. Pinned43.72 13z.A02/14o.BLn evidence describes conditional backoff,
+406 regeneration and other code/gate-specific handling; that complete policy
+is still unported, so no correct delay or retry is invented here.
+
+New reservations now check for any persisted refused Batch in their write
+transaction and returnNone with a fixed diagnostic. wants_upload also returns
+false for startup. Keys remain intact/unsent; this status is inventory rather
+than retry authority. Historical refusals also hold. The existing prekey
+CLI/JSON/HTTP summary exposes upload_held_after_refusal and text explains it.
+There is no reset/delete/resume operation or inferred cooldown.
+
+This is an explicit local hold while retry strategy is incomplete, **not
+native behavior parity or completion**. Porting the native strategy must
+replace this hold with evidence-backed admission; do not clear refusal
+records merely to regain uploads.
+
+Regression covers406/503/default0 refusals, additional freshly generated
+legacy material, repeated begin attempts and reopen. No new batch/checkpoint
+write occurs. Existing acknowledged-upload and malformed-reply tests remain.
+No live traffic or account state was modified.

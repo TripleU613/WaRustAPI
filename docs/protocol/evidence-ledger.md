@@ -4734,3 +4734,11 @@ flag, retain historicalunknowns and expose redacted acknowledged-batch count
 in existing CLI/HTTP prekey status. No PQ-to-legacy trigger conflation or
 automatic PQ replenishment added.
 [Evidence and regression](prekey-count-notifications.md#independent-pq-count-low-retention-2026-11-04). No live traffic.
+
+## 2026-11-04 — Durable refusal upload hold
+
+**Implemented offline, local incomplete-policy hold:** source audit found
+refused unsent keys could be reserved again on notification/reconnect.
+Any saved refusal now holds new reservations transactionally and is visible
+in prekey status. Native retry strategy is still required, not declared
+complete. [Evidence, regression and correction](prekey-count-notifications.md#durable-refusal-upload-hold-2026-11-04). No live traffic.

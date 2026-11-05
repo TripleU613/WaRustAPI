@@ -1376,6 +1376,9 @@ pub(super) fn prekeys_status(cli: &super::Cli) -> Result<(), Error> {
         "prekeys: unsent={} uncertain={} uploaded={} (uncertain batches are never re-sent)",
         summary.unsent, summary.uncertain, summary.uploaded
     );
+    if summary.upload_held_after_refusal {
+        println!("  upload held: saved refusal; retry policy is not implemented");
+    }
     for (status, count) in &summary.batches {
         println!("  batches {status}: {count}");
     }
