@@ -1,0 +1,41 @@
+
+# class: LX/8B6;
+# extends: Ljava/lang/Object;
+
+.method public A0F(LLLL)  # .registers 13
+    # full signature: LX/8B6;->A0F(LX/0Tp;Ljava/util/List;[Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+    0000..0002  const/4  v8, #0x0
+    0002..0006  const-class  v3, Lcom/whatsapp/infra/core/jid/Jid;
+    0006..0008  const/4  v4, #0x0
+    0008..000a  move-object  v1, v9
+    000a..000c  move-object  v6, v4
+    000c..000e  move-object  v2, v10
+    000e..0010  move-object  v7, v12
+    0010..0012  move-object  v5, v4
+    0012..0018  invoke-virtual/range  {v1..v8}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    0018..001a  move-result-object  v3
+    001a..001e  check-cast  v3, Lcom/whatsapp/infra/core/jid/Jid;
+    001e..0022  if-nez  v3, +0x3
+    0022..0024  return-object  v4
+    0024..0028  instance-of  v0, v11, Ljava/util/Collection;
+    0028..002c  if-eqz  v0, +0x9
+    002c..0032  invoke-interface  {v11}, Ljava/util/Collection;->isEmpty()Z
+    0032..0034  move-result  v0
+    0034..0038  if-eqz  v0, +0x3
+    0038..003a  return-object  v4
+    003a..0040  invoke-interface  {v11}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0040..0042  move-result-object  v2
+    0042..0048  invoke-interface  {v2}, Ljava/util/Iterator;->hasNext()Z
+    0048..004a  move-result  v0
+    004a..004e  if-eqz  v0, -0x9
+    004e..0054  invoke-interface  {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0054..0056  move-result-object  v1
+    0056..005a  check-cast  v1, Ljava/lang/Class;
+    005a..0060  invoke-virtual  {v3}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+    0060..0062  move-result-object  v0
+    0062..0068  invoke-virtual  {v1, v0}, Ljava/lang/Class;->isAssignableFrom(Ljava/lang/Class;)Z
+    0068..006a  move-result  v0
+    006a..006e  if-eqz  v0, -0x14
+    006e..0070  return-object  v3
+    # exception table: 0 try range(s)
+.end method

@@ -417,6 +417,56 @@ pub fn last_login_status(store: &ProtocolStore) -> Result<Option<String>> {
     })
 }
 
+struct PendingPing {
+    id: String,
+    deadline: tokio::time::Instant,
+    response_claim: bool,
+}
+
+impl PendingPing {
+    fn claim_reply(&mut self, node: &Node) -> bool {
+        if !self.response_claim
+            || tokio::time::Instant::now() >= self.deadline
+            || !super::messaging::iq_reply_matches(node, &self.id)
+        {
+            return false;
+        }
+        // APK43.72 0ln.A02 removes the IQ owner before 0ln.A01/1xa.CK4.
+        self.response_claim = false;
+        true
+    }
+}
+
+fn validate_keepalive_result(node: &Node, id: &str) -> std::result::Result<(), &'static str> {
+    // APK43.72 1xa.CK4 -> 8B6.A0F/A0J: JID from, request-bound id,
+    // required inclusive timestamp bounds and exact result type.
+    if node.description != "iq" || node.get_attr("type").and_then(|v| v.as_text()) != Some("result")
+    {
+        return Err("type");
+    }
+    let from = node.get_attr("from").ok_or("from")?;
+    if from.as_jid().is_none()
+        && from
+            .as_text()
+            .and_then(|v| crate::model::jid::Jid::parse(v).ok())
+            .is_none()
+    {
+        return Err("from");
+    }
+    if node.get_attr("id").and_then(|v| v.as_text()) != Some(id) {
+        return Err("id");
+    }
+    let timestamp = node
+        .get_attr("t")
+        .and_then(|v| v.as_text())
+        .and_then(super::mex::java_decimal_long)
+        .ok_or("t")?;
+    if !(1_577_865_600..=4_102_473_600).contains(&timestamp) {
+        return Err("t");
+    }
+    Ok(())
+}
+
 fn activation_matches(node: &Node, id: &str, deadline: tokio::time::Instant) -> bool {
     super::messaging::iq_reply_matches(node, id) && tokio::time::Instant::now() < deadline
 }
@@ -457,7 +507,7 @@ pub(crate) async fn drive(
     let mut heartbeat = tokio::time::interval(ping_period);
     heartbeat.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Delay);
     heartbeat.tick().await;
-    let mut pending_ping: Option<(String, tokio::time::Instant)> = None;
+    let mut pending_ping: Option<PendingPing> = None;
     // Pending jobs stay durable, but callback authority is local to this link.
     let mut retry_refetches = super::retry_answer::ActiveRefetches::default();
     let mut outgoing: Option<super::outgoing::Pending> = None;
@@ -481,7 +531,7 @@ pub(crate) async fn drive(
         }
         let ping_deadline = pending_ping
             .as_ref()
-            .map(|(_, deadline)| *deadline)
+            .map(|ping| ping.deadline)
             .unwrap_or_else(tokio::time::Instant::now);
         let upload_deadline = upload
             .as_ref()
@@ -577,7 +627,7 @@ pub(crate) async fn drive(
                 // Comparison LX/EIY.<init>(VLI), branch 15, 0x006a..009e.
                 let ping = Node::new("iq").attr("id", id.as_str()).attr("type", "get")
                     .attr("xmlns", "w:p").attr("to", crate::model::jid::Jid::parse("s.whatsapp.net")?);
-                pending_ping = Some((id, tokio::time::Instant::now() + ping_period));
+                pending_ping = Some(PendingPing { id, deadline: tokio::time::Instant::now() + ping_period, response_claim: true });
                 link.send(&ping).await?;
             }
             incoming = link.incoming.recv() => {
@@ -764,9 +814,12 @@ pub(crate) async fn drive(
                         continue;
                     }
                     // APK 43.72 0ln.A01: non-reply IQs cannot settle a ping.
-                    if id == pending_ping.as_ref().map(|(id, _)| id.as_str())
-                        && pending_ping.as_ref().is_some_and(|(_, deadline)| tokio::time::Instant::now() < *deadline)
-                        && matches!(node.get_attr("type").and_then(|v| v.as_text()), Some("result" | "error")) {
+                    if pending_ping.as_mut().is_some_and(|ping| ping.claim_reply(&node)) {
+                        if node.get_attr("type").and_then(|v| v.as_text()) == Some("result")
+                            && let Err(field) = validate_keepalive_result(&node, id.expect("claimed ping id")) {
+                            tracing::warn!(field, "malformed keepalive result ignored; timer remains pending");
+                            continue;
+                        }
                         // APK43.72 1xa.Bvj and CK4 both schedule Fea(24), which
                         // clears the outstanding ping without a connection refusal.
                         if node.get_attr("type").and_then(|v| v.as_text()) == Some("error") {
@@ -1855,11 +1908,9 @@ mod tests {
                 Some("w:p")
             );
             written.send(Ok(())).unwrap();
-            fake.deliver(
-                Node::new("iq")
-                    .attr("id", ping.get_attr("id").and_then(|v| v.as_text()).unwrap())
-                    .attr("type", "result"),
-            )
+            fake.deliver(valid_keepalive_reply(
+                ping.get_attr("id").and_then(|v| v.as_text()).unwrap(),
+            ))
             .await;
             // Let the due expiry branch run before presenting the late reply.
             fake.nothing_written(Duration::from_millis(1)).await;
@@ -4448,11 +4499,9 @@ mod tests {
             Some("w:p")
         );
         write.send(Ok(())).unwrap();
-        fake.deliver(
-            Node::new("iq")
-                .attr("type", "result")
-                .attr("id", ping.get_attr("id").and_then(|v| v.as_text()).unwrap()),
-        )
+        fake.deliver(valid_keepalive_reply(
+            ping.get_attr("id").and_then(|v| v.as_text()).unwrap(),
+        ))
         .await;
         fake.deliver(notification).await;
         let (ack, write) = fake.written().await;
@@ -4923,11 +4972,9 @@ mod tests {
             Some("w:p")
         );
         write.send(Ok(())).unwrap();
-        fake.deliver(
-            Node::new("iq")
-                .attr("id", ping.get_attr("id").unwrap().as_text().unwrap())
-                .attr("type", "result"),
-        )
+        fake.deliver(valid_keepalive_reply(
+            ping.get_attr("id").unwrap().as_text().unwrap(),
+        ))
         .await;
         fake.deliver(device_reply(&query, vec![peer])).await;
         tokio::time::timeout(Duration::from_secs(5), async {
@@ -5140,11 +5187,9 @@ mod tests {
                 node.get_attr("xmlns").and_then(|v| v.as_text()),
                 Some("w:p")
             );
-            fake.deliver(
-                Node::new("iq")
-                    .attr("id", node.get_attr("id").unwrap().as_text().unwrap())
-                    .attr("type", "result"),
-            )
+            fake.deliver(valid_keepalive_reply(
+                node.get_attr("id").unwrap().as_text().unwrap(),
+            ))
             .await;
         };
         let targets = second
@@ -5169,11 +5214,9 @@ mod tests {
             Some("w:p")
         );
         write.send(Ok(())).unwrap();
-        fake.deliver(
-            Node::new("iq")
-                .attr("id", ping.get_attr("id").unwrap().as_text().unwrap())
-                .attr("type", "result"),
-        )
+        fake.deliver(valid_keepalive_reply(
+            ping.get_attr("id").unwrap().as_text().unwrap(),
+        ))
         .await;
         fake.deliver(device_reply(&second, vec![users[64].clone()]))
             .await;
@@ -5398,6 +5441,107 @@ mod tests {
         fake.stop_cleanly().await;
     }
 
+    fn valid_keepalive_reply(id: impl Into<crate::binary::AttributeValue>) -> Node {
+        Node::new("iq")
+            .attr("id", id)
+            .attr("type", "result")
+            .attr("from", Jid::parse("s.whatsapp.net").unwrap())
+            .attr("t", "1700000000")
+    }
+
+    #[test]
+    fn keepalive_result_schema_requires_native_fields_and_timestamp_range() {
+        let valid = valid_keepalive_reply("ping");
+        assert_eq!(validate_keepalive_result(&valid, "ping"), Ok(()));
+        for field in ["from", "id", "t", "type"] {
+            let mut missing = valid.clone();
+            missing.attributes.retain(|a| a.name != field);
+            assert_eq!(validate_keepalive_result(&missing, "ping"), Err(field));
+        }
+        for (text, accepted) in [
+            ("1577865600", true),
+            ("4102473600", true),
+            ("1577865599", false),
+            ("4102473601", false),
+            ("+1700000000", true),
+            ("١٧٠٠٠٠٠٠٠٠", true),
+            ("", false),
+            (" 1700000000", false),
+            ("1700000000.0", false),
+            ("0x6553f100", false),
+            ("9223372036854775808", false),
+            ("-9223372036854775808", false),
+            ("1700000000000", false),
+        ] {
+            let mut reply = valid.clone();
+            reply.attributes.retain(|a| a.name != "t");
+            reply = reply.attr("t", text);
+            assert_eq!(
+                validate_keepalive_result(&reply, "ping").is_ok(),
+                accepted,
+                "{text}"
+            );
+        }
+        let mut text_from = valid.clone();
+        text_from.attributes.retain(|a| a.name != "from");
+        assert_eq!(
+            validate_keepalive_result(&text_from.clone().attr("from", "s.whatsapp.net"), "ping"),
+            Ok(())
+        );
+        // The selected callback admits Jid, not just the server constant.
+        assert_eq!(
+            validate_keepalive_result(
+                &text_from.clone().attr("from", "120363012345678901@g.us"),
+                "ping"
+            ),
+            Ok(())
+        );
+        assert_eq!(
+            validate_keepalive_result(&text_from.attr("from", "bad jid"), "ping"),
+            Err("from")
+        );
+        assert_eq!(validate_keepalive_result(&valid, "other"), Err("id"));
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn malformed_keepalive_result_consumes_callback_without_clearing_timer() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("ping-malformed.redb"));
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        let (ping, written) = fake.written_within(Duration::from_secs(60)).await;
+        let id = ping.get_attr("id").unwrap().clone();
+        written.send(Ok(())).unwrap();
+        fake.deliver(
+            Node::new("iq")
+                .attr("id", id.clone())
+                .attr("type", "result"),
+        )
+        .await;
+        // Native one-shot ownership is gone: even a later valid same-ID result
+        // or error cannot invoke this callback and clear the outstanding timer.
+        fake.deliver(valid_keepalive_reply(id.clone())).await;
+        fake.deliver(Node::new("iq").attr("id", id).attr("type", "error"))
+            .await;
+        fake.deliver(
+            Node::new("iq")
+                .attr("type", "get")
+                .attr("xmlns", "urn:xmpp:ping"),
+        )
+        .await;
+        let (pong, written) = fake.written().await;
+        assert_eq!(
+            pong.get_attr("type").and_then(|v| v.as_text()),
+            Some("result")
+        );
+        written.send(Ok(())).unwrap();
+        let error = fake
+            .finished_within(Duration::from_secs(60))
+            .await
+            .unwrap_err();
+        assert!(matches!(error, Error::Timeout(_)));
+    }
+
     #[tokio::test(start_paused = true)]
     async fn keepalive_error_clears_only_its_live_ping_without_ending_receive() {
         let dir = tempfile::tempdir().unwrap();
@@ -5501,8 +5645,12 @@ mod tests {
                 written.send(Ok(())).unwrap();
             }
             if outcome != "timeout" {
-                fake.deliver(Node::new("iq").attr("id", id).attr("type", outcome))
-                    .await;
+                let reply = if outcome == "result" {
+                    valid_keepalive_reply(id)
+                } else {
+                    Node::new("iq").attr("id", id).attr("type", outcome)
+                };
+                fake.deliver(reply).await;
             }
             if outcome != "timeout" {
                 let (next_ping, written) = fake.written_within(Duration::from_secs(60)).await;
@@ -5806,12 +5954,7 @@ mod tests {
             .and_then(|v| v.as_text())
             .unwrap()
             .to_owned();
-        fake.deliver(
-            Node::new("iq")
-                .attr("id", id.as_str())
-                .attr("type", "result"),
-        )
-        .await;
+        fake.deliver(valid_keepalive_reply(id.as_str())).await;
         let (second, reply) = fake.written_within(Duration::from_secs(60)).await;
         assert_eq!(
             second.get_attr("xmlns").and_then(|v| v.as_text()),

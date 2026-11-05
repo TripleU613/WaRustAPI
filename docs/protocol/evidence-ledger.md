@@ -6934,3 +6934,17 @@ account, request retry or restriction-reset authority is added.
 [Callback binding, red/green regression and open cadence/schema gaps](apk/2.26.43.72-client-ping-errors/README.md).
 Full native keepalive scheduling/configuration and successful-result schema
 remain unported; no live account operation or causal ban-prevention claim.
+
+
+## Client pong success schema and consumed callback — 2026-11-05
+
+**Confirmed static / corrected locally**, APK2.26.43.72:1xa.CK4 requires parsed
+from, original-request ID equality, bounded signed-long t and exactresult.
+Malformed responses throw recoverableLIL before the manager response, after
+one-shot IQ callback removal. Rust now separates callback claim from ping timer:
+malformedresult consumes the claim, leaves the original timeout active and
+continues receive; a later same-ID validresult/error cannot revive it. Fixed
+field diagnostics contain no supplied values. Error-response behavior remains
+separate. Existing Rust JID text bounds are a local supported-path limit.
+[Reader/exception/ownership proof, regressions and remaining gaps](apk/2.26.43.72-client-pong-schema/README.md).
+No clock adoption, replay, new request, cadence/timeout change or live traffic.

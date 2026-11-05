@@ -1,0 +1,53 @@
+
+# class: LX/LV5;
+# extends: Ljava/lang/Exception;
+
+.method public <init>(VLL)  # .registers 3
+    # full signature: LX/LV5;-><init>(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0000..0006  invoke-direct  {v0, v1, v2}, Ljava/lang/Exception;-><init>(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0006..000a  iput-object  v1, v0, LX/LV5;->message:Ljava/lang/String;
+    000a..000e  iput-object  v2, v0, LX/LV5;->cause:Ljava/lang/Throwable;
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A01(Z)  # .registers 3
+    # full signature: LX/LV5;->A01()Z
+    0000..0004  instance-of  v0, v2, LX/LIL;
+    0004..0008  if-eqz  v0, +0x8
+    0008..000a  move-object  v0, v2
+    000a..000e  check-cast  v0, LX/LIL;
+    000e..0012  iget-boolean  v0, v0, LX/LIL;->isRecoverable:Z
+    0012..0014  return  v0
+    0014..0018  instance-of  v0, v2, LX/LIM;
+    0018..001c  if-eqz  v0, +0x17
+    001c..001e  move-object  v1, v2
+    001e..0022  check-cast  v1, LX/LIM;
+    0022..0026  instance-of  v0, v1, LX/LI7;
+    0026..002a  if-eqz  v0, +0x7
+    002a..002e  check-cast  v1, LX/LI7;
+    002e..0032  iget-boolean  v0, v1, LX/LI7;->isRecoverable:Z
+    0032..0034  return  v0
+    0034..0038  iget-object  v1, v1, LX/LIM;->category:Ljava/lang/String;
+    0038..003c  const-string  v0, "TRANSPORT"
+    003c..0042  invoke-static  {v1, v0}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    0042..0044  move-result  v0
+    0044..0046  return  v0
+    0046..0048  const/4  v0, #0x0
+    0048..004a  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public getCause(L)  # .registers 2
+    # full signature: LX/LV5;->getCause()Ljava/lang/Throwable;
+    0000..0004  iget-object  v0, v1, LX/LV5;->cause:Ljava/lang/Throwable;
+    0004..0006  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public getMessage(L)  # .registers 2
+    # full signature: LX/LV5;->getMessage()Ljava/lang/String;
+    0000..0004  iget-object  v0, v1, LX/LV5;->message:Ljava/lang/String;
+    0004..0006  return-object  v0
+    # exception table: 0 try range(s)
+.end method

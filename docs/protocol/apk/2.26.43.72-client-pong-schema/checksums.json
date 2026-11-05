@@ -1,0 +1,50 @@
+{
+  "README.md": {
+    "bytes": 5730,
+    "sha256": "4e84542c1fdb83ce77cfd17b9652d2799a01219309ef84e5d75751c548ffb1f5"
+  },
+  "callback-dispatch-callers.txt": {
+    "bytes": 130,
+    "sha256": "92b75134b884308e4de5e49a008ce038bc3470dc93746ce24c96b4fb8e74755f"
+  },
+  "callback-worker.txt": {
+    "bytes": 659,
+    "sha256": "35da237be4736bf87b37caf665e7a0abe3580af9203c42ebdde2d144f24b6022"
+  },
+  "error-recoverability.txt": {
+    "bytes": 2119,
+    "sha256": "b5db8b9b9aee5b57b747285c8d475f96936db58f6decc56d6fe026c42f86f6ad"
+  },
+  "iq-callback-dispatch.txt": {
+    "bytes": 4141,
+    "sha256": "8b29f6e3bf5c91e05c350ec6cfa5c1bd6e21261dc2ed5b4f0a31c1bf16018f2b"
+  },
+  "jid-reader.txt": {
+    "bytes": 4444,
+    "sha256": "0e1523de412bd1c3e33fecc249ec1ed222f1656cb875b02634893a0b574fbee8"
+  },
+  "jid-validation.txt": {
+    "bytes": 1952,
+    "sha256": "1204166f8d46f188ebe4f9de8506e349fca3e8bbeacc7c2f37eeeca2486f1f63"
+  },
+  "number-entry.txt": {
+    "bytes": 507,
+    "sha256": "2c6215cb47d59fe77b7def802954c8b80ac85b7f268b995bf32ef9c86c0cec4f"
+  },
+  "number-parser.txt": {
+    "bytes": 2783,
+    "sha256": "3c00c1b09875e82935471e19ea42bcdfeee1518dc00db28f8182ad0ae654f227"
+  },
+  "one-shot-ownership.txt": {
+    "bytes": 3080,
+    "sha256": "b6e5be45b964593e496e761c0c176fbf2ad82bae5080002545eb4f855645a9ff"
+  },
+  "recoverable-schema-error.txt": {
+    "bytes": 3933,
+    "sha256": "7101ce7d61c3faaa6bef5a0e36cd24894f5d96a7e5899ecebc49ff72c7bd1ec2"
+  },
+  "typed-reader.txt": {
+    "bytes": 18991,
+    "sha256": "42989269b621c6c4fcc3c4aec860fd5cf05bcd3d8832e069c0e2bc2d708acd86"
+  }
+}

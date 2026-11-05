@@ -1,0 +1,54 @@
+.method public A02(VLLLZ)  # .registers 9
+    # full signature: LX/0ln;->A02(LX/0Tp;LX/0ln;Ljava/lang/String;Z)V
+    0000..0004  iget-object  v1, v6, LX/0ln;->A0F:Ljava/lang/Object;
+    0004..0006  monitor-enter
+    0006..000a  iget-object  v0, v6, LX/0ln;->A0H:Ljava/util/Map;
+    000a..0010  invoke-interface  {v0, v7}, Ljava/util/Map;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+    0010..0012  move-result-object  v4
+    0012..0016  check-cast  v4, LX/1bW;
+    0016..0018  monitor-exit
+    0018..001c  if-eqz  v4, +0x3e
+    001c..0022  invoke-static  {}, Landroid/os/SystemClock;->elapsedRealtime()J
+    0022..0024  move-result-wide  v0
+    0024..0028  iget-object  v2, v4, LX/1bW;->A01:Ljava/lang/Object;
+    0028..002c  check-cast  v2, Ljava/lang/Number;
+    002c..0032  invoke-virtual  {v2}, Ljava/lang/Number;->longValue()J
+    0032..0034  move-result-wide  v2
+    0034..0036  sub-long/2addr  v0, v2
+    0036..003a  iget-object  v2, v6, LX/0ln;->A0M:LX/00x;
+    003a..0040  invoke-interface  {v2}, LX/00x;->get()Ljava/lang/Object;
+    0040..0042  move-result-object  v2
+    0042..0046  check-cast  v2, LX/0V4;
+    0046..004c  invoke-virtual  {v2, v0, v1}, LX/0V4;->A0C(J)V
+    004c..0050  iget-object  v0, v6, LX/0ln;->A0B:LX/0TT;
+    0050..0056  invoke-virtual  {v0, v7}, LX/0TT;->A02(Ljava/lang/String;)V
+    0056..005a  if-eqz  v8, +0x14
+    005a..005e  iget-object  v0, v6, LX/0ln;->A0L:LX/00x;
+    005e..0064  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0064..0066  move-result-object  v0
+    0066..006a  check-cast  v0, LX/08Z;
+    006a..006c  const/4  v8, #0x5
+    006c..0070  new-instance  v3, LX/FcV;
+    0070..0076  invoke-direct/range  {v3..v8}, LX/FcV;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;I)V
+    0076..007c  invoke-interface  {v0, v3}, LX/08Z;->CbN(Ljava/lang/Runnable;)V
+    007c..007e  return-void
+    007e..0082  iget-object  v1, v6, LX/0ln;->A08:LX/098;
+    0082..0086  new-instance  v0, LX/1xb;
+    0086..008c  invoke-direct  {v0, v4, v5, v6, v7}, LX/1xb;-><init>(LX/1bW;LX/0Tp;LX/0ln;Ljava/lang/String;)V
+    008c..0092  invoke-virtual  {v1, v0}, LX/098;->execute(Ljava/lang/Runnable;)V
+    0092..0094  return-void
+    0094..0098  const-string  v1, "XmppIncomingMessageRouter/ignoring response due to missing callback for iqId:"
+    0098..009c  new-instance  v0, Ljava/lang/StringBuilder;
+    009c..00a2  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00a2..00a8  invoke-virtual  {v0, v7}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00a8..00ae  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00ae..00b0  move-result-object  v0
+    00b0..00b6  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    00b6..00b8  return-void
+    00b8..00ba  move-exception  v0
+    00ba..00bc  monitor-exit
+    00bc..00be  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0003..000e -> 005c
+    # catch <all> code_units 005d..005e -> 005c
+.end method

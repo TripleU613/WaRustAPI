@@ -1,0 +1,85 @@
+
+# class: LX/LIL;
+# extends: LX/LV5;
+
+.method public <init>(V)  # .registers 3
+    # full signature: LX/LIL;-><init>()V
+    0000..0002  const/4  v1, #0x0
+    0002..0008  invoke-direct  {v2, v1, v1}, LX/LV5;-><init>(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0008..000a  const/4  v0, #0x1
+    000a..000e  iput-boolean  v0, v2, LX/LIL;->isRecoverable:Z
+    000e..0012  iput-object  v1, v2, LX/LIL;->stanza:Ljava/lang/String;
+    0012..0014  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VL)  # .registers 4
+    # full signature: LX/LIL;-><init>(Ljava/lang/String;)V
+    0000..0002  const/4  v1, #0x0
+    0002..0008  invoke-direct  {v2, v3, v1}, LX/LV5;-><init>(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0008..000a  const/4  v0, #0x1
+    000a..000e  iput-boolean  v0, v2, LX/LIL;->isRecoverable:Z
+    000e..0012  iput-object  v1, v2, LX/LIL;->stanza:Ljava/lang/String;
+    0012..0014  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VLL)  # .registers 4
+    # full signature: LX/LIL;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-direct  {v1, v2, v0}, LX/LV5;-><init>(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0008..000a  const/4  v0, #0x1
+    000a..000e  iput-boolean  v0, v1, LX/LIL;->isRecoverable:Z
+    000e..0012  iput-object  v3, v1, LX/LIL;->stanza:Ljava/lang/String;
+    0012..0014  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VLL)  # .registers 4
+    # full signature: LX/LIL;-><init>(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0000..0006  invoke-direct  {v1, v2, v3}, LX/LV5;-><init>(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0006..0008  const/4  v0, #0x1
+    0008..000c  iput-boolean  v0, v1, LX/LIL;->isRecoverable:Z
+    000c..000e  const/4  v0, #0x0
+    000e..0012  iput-object  v0, v1, LX/LIL;->stanza:Ljava/lang/String;
+    0012..0014  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VL)  # .registers 4
+    # full signature: LX/LIL;-><init>(Ljava/lang/Throwable;)V
+    0000..0002  const/4  v1, #0x0
+    0002..0008  invoke-direct  {v2, v1, v3}, LX/LV5;-><init>(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0008..000a  const/4  v0, #0x1
+    000a..000e  iput-boolean  v0, v2, LX/LIL;->isRecoverable:Z
+    000e..0012  iput-object  v1, v2, LX/LIL;->stanza:Ljava/lang/String;
+    0012..0014  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public Csh(LL)  # .registers 7
+    # full signature: LX/LIL;->Csh(Ljava/lang/String;)LX/MAh;
+    0000..0006  invoke-virtual  {v5}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    0006..0008  move-result-object  v2
+    0008..000c  if-nez  v2, +0x10
+    000c..0012  invoke-virtual  {v5}, Ljava/lang/Throwable;->getCause()Ljava/lang/Throwable;
+    0012..0014  move-result-object  v0
+    0014..0018  if-eqz  v0, +0x8
+    0018..001e  invoke-virtual  {v0}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    001e..0020  move-result-object  v2
+    0020..0024  if-nez  v2, +0x4
+    0024..0028  const-string  v2, "null"
+    0028..002c  const-string  v0, "source="
+    002c..0032  invoke-static  {v0, v6}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0032..0034  move-result-object  v1
+    0034..0038  const-string  v0, " message="
+    0038..003e  invoke-static  {v0, v2, v1}, LX/1Xl;->A0x(Ljava/lang/String;Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    003e..0040  move-result-object  v4
+    0040..0042  const/4  v3, #0x0
+    0042..0046  const-string  v2, "CorruptStreamException"
+    0046..0048  const/4  v1, #0x0
+    0048..004c  new-instance  v0, LX/MAh;
+    004c..0052  invoke-direct  {v0, v2, v4, v1, v3}, LX/MAh;-><init>(Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;)V
+    0052..0054  return-object  v0
+    # exception table: 0 try range(s)
+.end method

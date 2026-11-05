@@ -1,3 +1,14 @@
+2026-11-05 — **Malformed client pong results cannot clear liveness timers.**
+
+The driver validates required supported sender JID, original ID and native
+inclusive timestamp bounds. Schema failure consumes its callback claim but
+retains the original timer, so later same-ID replies cannot resurrect it.
+[Source, exception lifecycle, regression and remaining parity limits](docs/protocol/apk/2.26.43.72-client-pong-schema/README.md).
+No request/cadence/timeout, clock, retry/reset or live account behavior added.
+Validation:1372 workspace/all-feature tests, strict Clippy, fmt, CLI/OpenAPI,
+APK coverage, pinned APK hash and checksum/link hygiene passed. Actor regression
+failed against parent code; intended success fixtures now include native fields.
+
 2026-11-05 — **Matched keepalive errors preserve the connection.**
 
 A red regression reproduced the prior receive termination. Native error and
