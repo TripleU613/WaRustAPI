@@ -375,15 +375,50 @@ pub(crate) fn reserve_one_in(tx: &mut crate::store::WriteTx<'_>, id: &str) -> Re
 /// APK43.72 0ln.A02 removes sent-map ownership before callback parsing;
 /// selected disconnect handler case3 clears A0H, separately from queued A0I.
 #[derive(Default)]
-pub(crate) struct LiveReplies(std::collections::HashSet<String>);
+pub(crate) struct LiveReplies(
+    std::collections::HashSet<String>,
+    std::collections::HashMap<String, tokio::time::Instant>,
+);
 
 impl LiveReplies {
-    pub(crate) fn record_written(&mut self, node: &Node) {
+    pub(crate) fn record_written(&mut self, node: &Node, started: tokio::time::Instant) {
         if node.description == "iq"
             && let Some(id) = node.get_attr("id").and_then(|value| value.as_text())
         {
             self.0.insert(id.to_owned());
+            // APK43.72 HBE.A00 -> 0Sf.A0W/A0A -> 0ln.A08: the initial
+            // AB-properties callback has 32000ms from pre-dispatch registration.
+            // Other producers' durations are not inferred from this request.
+            if node.get_attr("type").and_then(|v| v.as_text()) == Some("get")
+                && node.get_attr("xmlns").and_then(|v| v.as_text()) == Some("abt")
+                && let [props] = node.child_nodes()
+                && props.description == "props"
+                && props.get_attr("protocol").and_then(|v| v.as_text()) == Some("1")
+                && props.get_attr("hash").and_then(|v| v.as_text()) == Some("")
+                && props.get_attr("refresh_id").is_none()
+            {
+                self.1
+                    .insert(id.to_owned(), started + std::time::Duration::from_secs(32));
+            }
         }
+    }
+
+    pub(crate) fn deadline(&self) -> Option<tokio::time::Instant> {
+        self.1.values().copied().min()
+    }
+
+    pub(crate) fn expire(&mut self) {
+        let now = tokio::time::Instant::now();
+        // Timer and response are competing claims. Do not add an age check to
+        // record_reply: native A0H cancels message4 before A02 claims ownership.
+        self.1.retain(|id, deadline| {
+            if *deadline <= now {
+                self.0.remove(id);
+                false
+            } else {
+                true
+            }
+        });
     }
 
     pub(crate) fn record_reply(&mut self, store: &ProtocolStore, node: &Node) -> Result<bool> {
@@ -403,6 +438,7 @@ impl LiveReplies {
         if !self.0.remove(id) {
             return Ok(false);
         }
+        self.1.remove(id);
         record_reply(store, node)
     }
 }
@@ -1069,6 +1105,73 @@ mod tests {
         (dir, s)
     }
 
+    #[tokio::test(start_paused = true)]
+    async fn initial_abprops_timer_claims_once_from_before_write() {
+        use std::time::Duration;
+        use tokio::time::{Instant, advance};
+
+        for outcome in ["expire", "result", "error", "overdue_response"] {
+            let (_dir, store) = store();
+            let id = super::super::abprops::queue(&store).unwrap();
+            let request = reserve_next(&store).unwrap().unwrap();
+            let generic = queue(&store, "fixture", "fixture", ping).unwrap();
+            let generic_request = reserve_next(&store).unwrap().unwrap();
+            let started = Instant::now();
+            advance(Duration::from_secs(5)).await;
+            let mut live = LiveReplies::default();
+            live.record_written(&request, started);
+            live.record_written(&generic_request, started);
+            assert_eq!(live.deadline(), Some(started + Duration::from_secs(32)));
+            advance(Duration::from_secs(26)).await;
+            live.expire();
+            assert!(live.0.contains(&id));
+            let reply = Node::new("iq").attr("id", id.as_str()).attr(
+                "type",
+                if outcome == "error" {
+                    "error"
+                } else {
+                    "result"
+                },
+            );
+            if outcome == "expire" {
+                let before = store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap();
+                advance(Duration::from_secs(1)).await;
+                live.expire();
+                assert!(!live.record_reply(&store, &reply).unwrap());
+                assert_eq!(
+                    store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap(),
+                    before
+                );
+            } else {
+                if outcome == "overdue_response" {
+                    // Nominal time alone is not the native expiry claim: a
+                    // reply may cancel a timer not yet dispatched by the loop.
+                    advance(Duration::from_secs(2)).await;
+                }
+                assert!(live.record_reply(&store, &reply).unwrap());
+                assert!(!live.record_reply(&store, &reply).unwrap());
+                advance(Duration::from_secs(32)).await;
+                live.expire();
+            }
+            assert!(live.deadline().is_none());
+            assert!(!live.0.contains(&id));
+            // No universal32s policy: an unrelated live IQ still owns its reply.
+            assert!(
+                live.record_reply(
+                    &store,
+                    &Node::new("iq")
+                        .attr("id", generic.as_str())
+                        .attr("type", "result")
+                )
+                .unwrap()
+            );
+        }
+    }
+
     #[test]
     fn live_reply_claims_do_not_resurrect_from_durable_rows() {
         for outcome in ["result", "error", "disconnect", "local_failure"] {
@@ -1088,7 +1191,7 @@ mod tests {
                 !live.record_reply(&store, &reply).unwrap(),
                 "reservation alone owns no callback"
             );
-            live.record_written(&request);
+            live.record_written(&request, tokio::time::Instant::now());
             for wrong in [
                 Node::new("iq").attr("id", id.as_str()).attr("type", "get"),
                 Node::new("iq").attr("id", id.as_str()).attr("type", "set"),

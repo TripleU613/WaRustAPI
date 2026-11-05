@@ -1,3 +1,12 @@
+2026-11-05 — **Initial AB-properties callback now expires without replay.**
+
+The normal loop uses its confirmed32s pre-write timer, including write delay.
+Expiry preserves the uncertain Sent row and receive continues; late replies
+cannot reclaim an expired callback. Other IQs retain their own policies.
+[Evidence, tests and concurrency limits](docs/protocol/apk/2.26.43.72-abprops-callback-timer/README.md).
+Validation:1336 workspace/all-feature tests, strict Clippy, fmt, CLI reference,
+APK coverage and hygiene passed. No live account traffic.
+
 2026-11-05 — **AB-properties callback timer traced on the current APK.**
 
 Confirmed32s starts at callback registration before writer dispatch, with no

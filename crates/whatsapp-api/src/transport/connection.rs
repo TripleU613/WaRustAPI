@@ -499,7 +499,11 @@ pub(crate) async fn drive(
             .as_ref()
             .map(|q| q.deadline)
             .unwrap_or_else(tokio::time::Instant::now);
+        let action_deadline = action_replies.deadline();
         tokio::select! {
+            _ = tokio::time::sleep_until(action_deadline.unwrap_or_else(tokio::time::Instant::now)), if action_deadline.is_some() => {
+                action_replies.expire();
+            }
             _ = tokio::time::sleep_until(group_deadline), if group_outgoing.is_some() => {
                 group_outgoing.take().expect("expired group preparation").expire(&store, &mut device_cursor)?;
             }
@@ -521,8 +525,9 @@ pub(crate) async fn drive(
             }
             _ = tokio::time::sleep_until(action_drain.deadline()), if ready.is_none() && action_drain.remaining > 0 => {
                 if let Some(action) = super::actions::reserve_next(&store)? {
+                    let started = tokio::time::Instant::now();
                     link.send(&action).await?;
-                    action_replies.record_written(&action);
+                    action_replies.record_written(&action, started);
                     action_drain.sent(config.transport.action_delay_ms);
                 } else {
                     action_drain.finish();
@@ -1651,6 +1656,70 @@ mod tests {
             assert!(self.finished().await.is_ok());
         }
     }
+    #[tokio::test(start_paused = true)]
+    async fn abprops_expiry_preserves_uncertainty_without_stopping_receive() {
+        use super::super::actions::{self, ActionStatus};
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("abprops-expiry.redb"));
+        let id = super::super::abprops::queue(&store).unwrap();
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        (&mut fake.ready).await.unwrap();
+        let (query, written) = fake.written().await;
+        assert_eq!(
+            query.get_attr("id").and_then(|v| v.as_text()),
+            Some(id.as_str())
+        );
+        // Include time spent waiting for the local write; completing it must
+        // not start another32s budget. No delivery assertion follows expiry.
+        tokio::time::advance(Duration::from_secs(33)).await;
+        written.send(Ok(())).unwrap();
+        let (ping, written) = fake.written().await;
+        assert_eq!(
+            ping.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("w:p")
+        );
+        written.send(Ok(())).unwrap();
+        fake.deliver(
+            Node::new("iq")
+                .attr("id", ping.get_attr("id").and_then(|v| v.as_text()).unwrap())
+                .attr("type", "result"),
+        )
+        .await;
+        // Let the due expiry branch run before presenting the late reply.
+        fake.nothing_written(Duration::from_millis(1)).await;
+        fake.deliver(
+            Node::new("iq")
+                .attr("id", id.as_str())
+                .attr("type", "result"),
+        )
+        .await;
+        fake.deliver(
+            Node::new("receipt")
+                .attr("from", peer())
+                .attr("id", "AFTER-ABPROPS-EXPIRY"),
+        )
+        .await;
+        let (ack, written) = fake.written().await;
+        assert_eq!(ack.description, "ack");
+        assert_eq!(
+            ack.get_attr("id").and_then(|v| v.as_text()),
+            Some("AFTER-ABPROPS-EXPIRY")
+        );
+        written.send(Ok(())).unwrap();
+        assert_eq!(
+            actions::outcomes(&store)
+                .unwrap()
+                .iter()
+                .find(|a| a.id == id)
+                .unwrap()
+                .status,
+            ActionStatus::Sent
+        );
+        fake.nothing_written(Duration::from_millis(1)).await;
+        fake.stop_cleanly().await;
+    }
+
     #[tokio::test]
     async fn paced_actions_keep_receive_and_stop_responsive_and_reserve_only_one() {
         use super::super::actions::{self, ActionStatus};

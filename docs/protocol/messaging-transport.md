@@ -1895,3 +1895,18 @@ Rust's connection-scoped action owner still lacks per-action expiry. Porting
 requires producer-specific timing and competing claims; a universal32s cutoff
 or fresh post-write budget is unsupported. No runtime behavior or live traffic
 changes in this research chunk.
+
+## Initial AB-properties callback expiry ported — 2026-11-05
+
+**Implemented offline / confirmed static timer:** the normal connection now
+expires the initial abt/get/props protocol1 empty-hash callback32s from the
+pre-write boundary, including local-write delay. A dedicated select branch
+releases callback authority without changing the durable Sent row, replaying,
+applying configuration or stopping receive. Response claims cancel the timer;
+an overdue timer not yet dispatched remains a competing event, not a separate
+reply-age predicate. Other action producers receive no invented default timeout.
+[Producer, not-ready placeholder removal, implementation and regressions](apk/2.26.43.72-abprops-callback-timer/README.md).
+Paused-clock unit and normal-driver tests cover expiry, reply cancellation,
+late replies, write delay, unrelated IQs and continued receive. Rust serializes
+expiry after awaited local writes; full Android concurrent scheduling, other
+producer durations and configuration scheduling remain open. No live traffic.
