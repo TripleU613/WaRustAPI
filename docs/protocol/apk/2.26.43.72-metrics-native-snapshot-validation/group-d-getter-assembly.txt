@@ -1,0 +1,8 @@
+            0x0071fa6c      bti   c
+        ┌─< 0x0071fa70      cbz   x0, 0x71fa7c
+        │   0x0071fa74      ldr   w0, [x0, 0x24]                       ; [0x24:4]=0
+        │   0x0071fa78      ret
+        └─> 0x0071fa7c      paciasp
+            0x0071fa80      stp   x29, x30, [sp, -0x10]!
+            0x0071fa84      mov   x29, sp
+            0x0071fa88      bl    sym.imp.abort

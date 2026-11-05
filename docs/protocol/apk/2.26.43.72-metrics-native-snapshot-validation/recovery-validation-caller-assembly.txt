@@ -1,0 +1,36 @@
+            0x0072b438      mov   x0, xzr
+            0x0072b43c      mov   w8, 1
+        ┌─< 0x0072b440      tbz   w8, 0, 0x72b498
+       ┌──> 0x0072b444      mov   w8, 1
+      ┌───< 0x0072b448      tbz   w8, 0, 0x72b490
+    ┌┌────> 0x0072b44c      cbz   x20, 0x72b484
+    │╎│╎│   0x0072b450      mov   w9, 1
+  ┌┌──────> 0x0072b454      tbz   w9, 0, 0x72b488
+  ╎╎│╎│╎│   0x0072b458      bl    0x49c110
+  ╎╎│╎│╎│   0x0072b45c      bl    0x71fc84
+  ╎╎│╎│╎│   0x0072b460      mov   w8, w0
+  ╎╎│╎│╎│   0x0072b464      mov   w9, wzr
+  ╎╎│╎│╎│   0x0072b468      mov   x0, x20
+  └───────< 0x0072b46c      cbz   w8, 0x72b454
+   ╎│╎│╎│   0x0072b470      mov   x0, x20
+   ╎│╎│╎│   0x0072b474      bl    sym.imp.MCFRelease
+   ╎│╎│╎│   0x0072b478      bl    0x71fb58
+   ╎│╎│╎│   0x0072b47c      mov   w9, wzr
+   └──────< 0x0072b480      b     0x72b454
+    └─────> 0x0072b484      bl    0x71fb58
+  ────────> 0x0072b488      mov   w8, wzr
+     └────< 0x0072b48c      tbnz  w8, 0, 0x72b44c
+      └───> 0x0072b490      mov   w8, wzr
+       └──< 0x0072b494      tbnz  w8, 0, 0x72b444
+       ┌└─> 0x0072b498      cbz   x0, 0x72b4c0
+       │    0x0072b49c      bl    0xbde3cc
+       │┌─< 0x0072b4a0      b.ne  0x72b4c4
+       ││   0x0072b4a4      bl    0xbdd21c
+       ││   0x0072b4a8      ldp   x29, x30, [sp, 0x10]
+       ││   0x0072b4ac      add   sp, sp, 0x70
+       ││   0x0072b4b0      autiasp
+       ││   0x0072b4b4      ret
+       ││   0x0072b4b8      bl    sym.imp.abort
+       ││   0x0072b4bc      bl    sym.imp.abort
+       └──> 0x0072b4c0      bl    sym.imp.abort
+        └─> 0x0072b4c4      bl    sym.imp.__stack_chk_fail

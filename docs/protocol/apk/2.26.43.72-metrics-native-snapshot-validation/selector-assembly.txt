@@ -1,0 +1,33 @@
+            0x0071fd70      paciasp
+            0x0071fd74      stp   x29, x30, [sp, -0x10]!
+            0x0071fd78      mov   x29, sp
+            0x0071fd7c      cmp   w1, 3
+        ┌─< 0x0071fd80      b.hi  0x71fdf0
+        │   0x0071fd84      mov   w8, w1
+        │   0x0071fd88      adrp  x9, 0x2e2000
+        │   0x0071fd8c      add   x9, x9, 0xc59
+        │   0x0071fd90      adr   x10, 0x71fda0
+        │   0x0071fd94      ldrb  w11, [x9, x8]
+        │   0x0071fd98      add   x10, x10, x11, lsl 2
+        │   0x0071fd9c      br    x10
+        │   0x0071fda0      bti   j
+        │   0x0071fda4      ldr   x0, [x0, 0x18]                       ; [0x18:4]=0
+        │   0x0071fda8      bl    0x720890
+       ┌──< 0x0071fdac      b     0x71fddc
+       ││   0x0071fdb0      bti   j
+       ││   0x0071fdb4      ldr   x0, [x0, 0x18]                       ; [0x18:4]=0
+       ││   0x0071fdb8      bl    0x7207f4
+      ┌───< 0x0071fdbc      b     0x71fddc
+      │││   0x0071fdc0      bti   j
+      │││   0x0071fdc4      ldr   x0, [x0, 0x18]                       ; [0x18:4]=0
+      │││   0x0071fdc8      bl    0x720828
+     ┌────< 0x0071fdcc      b     0x71fddc
+     ││││   0x0071fdd0      bti   j
+     ││││   0x0071fdd4      ldr   x0, [x0, 0x18]                       ; [0x18:4]=0
+     ││││   0x0071fdd8      bl    0x72085c
+    ┌└└└──> 0x0071fddc      cbz   x0, 0x71fdec
+    │   │   0x0071fde0      ldp   x29, x30, [sp], 0x10
+    │   │   0x0071fde4      autiasp
+    │   │   0x0071fde8      ret
+    └─────> 0x0071fdec      bl    sym.imp.abort
+        └─> 0x0071fdf0      bl    sym.imp.abort

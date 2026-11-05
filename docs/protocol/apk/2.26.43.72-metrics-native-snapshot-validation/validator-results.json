@@ -1,0 +1,1513 @@
+{
+  "scope": "synthetic local validator emulation; no Android runtime or I/O",
+  "unicorn_version": "2.1.4",
+  "instruction_cap_per_case": 100000,
+  "timeout_microseconds_per_case": 1000000,
+  "cases": [
+    {
+      "case": "valid",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 0,
+      "actual": 0,
+      "imports": {
+        "MCFRetain": 4,
+        "MCFRelease": 4
+      }
+    },
+    {
+      "case": "g0-field0--1",
+      "groups": [
+        [
+          -1,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 9,
+      "actual": 9,
+      "imports": {
+        "MCFRetain": 1,
+        "MCFRelease": 1
+      }
+    },
+    {
+      "case": "g0-field1--1",
+      "groups": [
+        [
+          0,
+          -1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 10,
+      "actual": 10,
+      "imports": {
+        "MCFRetain": 1,
+        "MCFRelease": 1
+      }
+    },
+    {
+      "case": "g0-field2-0",
+      "groups": [
+        [
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 11,
+      "actual": 11,
+      "imports": {
+        "MCFRetain": 1,
+        "MCFRelease": 1
+      }
+    },
+    {
+      "case": "g0-field2-65536",
+      "groups": [
+        [
+          0,
+          0,
+          65536,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 12,
+      "actual": 12,
+      "imports": {
+        "MCFRetain": 1,
+        "MCFRelease": 1
+      }
+    },
+    {
+      "case": "g0-field3-0",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 13,
+      "actual": 13,
+      "imports": {
+        "MCFRetain": 1,
+        "MCFRelease": 1
+      }
+    },
+    {
+      "case": "g0-field3-65536",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          65536
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 14,
+      "actual": 14,
+      "imports": {
+        "MCFRetain": 1,
+        "MCFRelease": 1
+      }
+    },
+    {
+      "case": "g0-field0-2147483647",
+      "groups": [
+        [
+          2147483647,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 0,
+      "actual": 0,
+      "imports": {
+        "MCFRetain": 4,
+        "MCFRelease": 4
+      }
+    },
+    {
+      "case": "g0-field1-2147483647",
+      "groups": [
+        [
+          0,
+          2147483647,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 0,
+      "actual": 0,
+      "imports": {
+        "MCFRetain": 4,
+        "MCFRelease": 4
+      }
+    },
+    {
+      "case": "g0-field2-65535",
+      "groups": [
+        [
+          0,
+          0,
+          65535,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 0,
+      "actual": 0,
+      "imports": {
+        "MCFRetain": 4,
+        "MCFRelease": 4
+      }
+    },
+    {
+      "case": "g0-field3-65535",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          65535
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 0,
+      "actual": 0,
+      "imports": {
+        "MCFRetain": 4,
+        "MCFRelease": 4
+      }
+    },
+    {
+      "case": "g1-field0--1",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          -1,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 9,
+      "actual": 9,
+      "imports": {
+        "MCFRetain": 2,
+        "MCFRelease": 2
+      }
+    },
+    {
+      "case": "g1-field1--1",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          -1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 10,
+      "actual": 10,
+      "imports": {
+        "MCFRetain": 2,
+        "MCFRelease": 2
+      }
+    },
+    {
+      "case": "g1-field2-0",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 11,
+      "actual": 11,
+      "imports": {
+        "MCFRetain": 2,
+        "MCFRelease": 2
+      }
+    },
+    {
+      "case": "g1-field2-65536",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          65536,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 12,
+      "actual": 12,
+      "imports": {
+        "MCFRetain": 2,
+        "MCFRelease": 2
+      }
+    },
+    {
+      "case": "g1-field3-0",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 13,
+      "actual": 13,
+      "imports": {
+        "MCFRetain": 2,
+        "MCFRelease": 2
+      }
+    },
+    {
+      "case": "g1-field3-65536",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          65536
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 14,
+      "actual": 14,
+      "imports": {
+        "MCFRetain": 2,
+        "MCFRelease": 2
+      }
+    },
+    {
+      "case": "g1-field0-2147483647",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          2147483647,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 0,
+      "actual": 0,
+      "imports": {
+        "MCFRetain": 4,
+        "MCFRelease": 4
+      }
+    },
+    {
+      "case": "g1-field1-2147483647",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          2147483647,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 0,
+      "actual": 0,
+      "imports": {
+        "MCFRetain": 4,
+        "MCFRelease": 4
+      }
+    },
+    {
+      "case": "g1-field2-65535",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          65535,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 0,
+      "actual": 0,
+      "imports": {
+        "MCFRetain": 4,
+        "MCFRelease": 4
+      }
+    },
+    {
+      "case": "g1-field3-65535",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          65535
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 0,
+      "actual": 0,
+      "imports": {
+        "MCFRetain": 4,
+        "MCFRelease": 4
+      }
+    },
+    {
+      "case": "g2-field0--1",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          -1,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 9,
+      "actual": 9,
+      "imports": {
+        "MCFRetain": 3,
+        "MCFRelease": 3
+      }
+    },
+    {
+      "case": "g2-field1--1",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          -1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 10,
+      "actual": 10,
+      "imports": {
+        "MCFRetain": 3,
+        "MCFRelease": 3
+      }
+    },
+    {
+      "case": "g2-field2-0",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 11,
+      "actual": 11,
+      "imports": {
+        "MCFRetain": 3,
+        "MCFRelease": 3
+      }
+    },
+    {
+      "case": "g2-field2-65536",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          65536,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 12,
+      "actual": 12,
+      "imports": {
+        "MCFRetain": 3,
+        "MCFRelease": 3
+      }
+    },
+    {
+      "case": "g2-field3-0",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 13,
+      "actual": 13,
+      "imports": {
+        "MCFRetain": 3,
+        "MCFRelease": 3
+      }
+    },
+    {
+      "case": "g2-field3-65536",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          65536
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 14,
+      "actual": 14,
+      "imports": {
+        "MCFRetain": 3,
+        "MCFRelease": 3
+      }
+    },
+    {
+      "case": "g2-field0-2147483647",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          2147483647,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 0,
+      "actual": 0,
+      "imports": {
+        "MCFRetain": 4,
+        "MCFRelease": 4
+      }
+    },
+    {
+      "case": "g2-field1-2147483647",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          2147483647,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 0,
+      "actual": 0,
+      "imports": {
+        "MCFRetain": 4,
+        "MCFRelease": 4
+      }
+    },
+    {
+      "case": "g2-field2-65535",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          65535,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 0,
+      "actual": 0,
+      "imports": {
+        "MCFRetain": 4,
+        "MCFRelease": 4
+      }
+    },
+    {
+      "case": "g2-field3-65535",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          65535
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 0,
+      "actual": 0,
+      "imports": {
+        "MCFRetain": 4,
+        "MCFRelease": 4
+      }
+    },
+    {
+      "case": "g3-field0--1",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          -1,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 9,
+      "actual": 9,
+      "imports": {
+        "MCFRetain": 4,
+        "MCFRelease": 4
+      }
+    },
+    {
+      "case": "g3-field1--1",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          -1,
+          1,
+          1
+        ]
+      ],
+      "expected": 10,
+      "actual": 10,
+      "imports": {
+        "MCFRetain": 4,
+        "MCFRelease": 4
+      }
+    },
+    {
+      "case": "g3-field2-0",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          1
+        ]
+      ],
+      "expected": 11,
+      "actual": 11,
+      "imports": {
+        "MCFRetain": 4,
+        "MCFRelease": 4
+      }
+    },
+    {
+      "case": "g3-field2-65536",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          65536,
+          1
+        ]
+      ],
+      "expected": 12,
+      "actual": 12,
+      "imports": {
+        "MCFRetain": 4,
+        "MCFRelease": 4
+      }
+    },
+    {
+      "case": "g3-field3-0",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          0
+        ]
+      ],
+      "expected": 13,
+      "actual": 13,
+      "imports": {
+        "MCFRetain": 4,
+        "MCFRelease": 4
+      }
+    },
+    {
+      "case": "g3-field3-65536",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          65536
+        ]
+      ],
+      "expected": 14,
+      "actual": 14,
+      "imports": {
+        "MCFRetain": 4,
+        "MCFRelease": 4
+      }
+    },
+    {
+      "case": "g3-field0-2147483647",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          2147483647,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 0,
+      "actual": 0,
+      "imports": {
+        "MCFRetain": 4,
+        "MCFRelease": 4
+      }
+    },
+    {
+      "case": "g3-field1-2147483647",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          2147483647,
+          1,
+          1
+        ]
+      ],
+      "expected": 0,
+      "actual": 0,
+      "imports": {
+        "MCFRetain": 4,
+        "MCFRelease": 4
+      }
+    },
+    {
+      "case": "g3-field2-65535",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          65535,
+          1
+        ]
+      ],
+      "expected": 0,
+      "actual": 0,
+      "imports": {
+        "MCFRetain": 4,
+        "MCFRelease": 4
+      }
+    },
+    {
+      "case": "g3-field3-65535",
+      "groups": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          65535
+        ]
+      ],
+      "expected": 0,
+      "actual": 0,
+      "imports": {
+        "MCFRetain": 4,
+        "MCFRelease": 4
+      }
+    },
+    {
+      "case": "same-group-error-precedence",
+      "groups": [
+        [
+          -1,
+          -1,
+          0,
+          65536
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 14,
+      "actual": 14,
+      "imports": {
+        "MCFRetain": 1,
+        "MCFRelease": 1
+      }
+    },
+    {
+      "case": "first-failing-group",
+      "groups": [
+        [
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          65536
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": 11,
+      "actual": 11,
+      "imports": {
+        "MCFRetain": 1,
+        "MCFRelease": 1
+      }
+    }
+  ]
+}

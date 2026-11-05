@@ -1,0 +1,59 @@
+            0x0071fc84      paciasp
+            0x0071fc88      sub   sp, sp, 0x70
+            0x0071fc8c      stp   x29, x30, [sp, 0x10]
+            0x0071fc90      bl    0x5cb538
+            0x0071fc94      add   x29, sp, 0x10
+            0x0071fc98      bl    0xbec370
+            0x0071fc9c      mov   w24, 9
+            0x0071fca0      mov   w25, 0xa
+            0x0071fca4      mov   w26, 0xb
+            0x0071fca8      mov   w27, 0xc
+            0x0071fcac      mov   w28, 0xd
+            0x0071fcb0      mov   w19, 0xe
+            0x0071fcb4      str   x1, [sp, 8]
+        ┌─> 0x0071fcb8      cmp   w21, 4
+       ┌──< 0x0071fcbc      b.eq  0x71fd54
+       │╎   0x0071fcc0      bl    0x5d09d4
+       │╎   0x0071fcc4      bl    0x71fd70
+       │╎   0x0071fcc8      mov   x23, x0
+       │╎   0x0071fccc      bl    0x71de74
+       │╎   0x0071fcd0      and   w22, w24, w0, asr 31
+       │╎   0x0071fcd4      mov   x0, x23
+       │╎   0x0071fcd8      bl    0x71f6f8
+       │╎   0x0071fcdc      cmp   w0, 0
+       │╎   0x0071fce0      mov   x0, x23
+       │╎   0x0071fce4      csel  w22, w25, w22, lt
+       │╎   0x0071fce8      bl    0x71fa30
+       │╎   0x0071fcec      cmp   w0, 1
+       │╎   0x0071fcf0      mov   x0, x23
+       │╎   0x0071fcf4      csel  w22, w26, w22, lt
+       │╎   0x0071fcf8      bl    0x71fa30
+       │╎   0x0071fcfc      cmp   w0, 0x10, lsl 12
+       │╎   0x0071fd00      mov   x0, x23
+       │╎   0x0071fd04      csel  w22, w27, w22, ge
+       │╎   0x0071fd08      bl    0x71fa6c
+       │╎   0x0071fd0c      cmp   w0, 1
+       │╎   0x0071fd10      mov   x0, x23
+       │╎   0x0071fd14      csel  w22, w28, w22, lt
+       │╎   0x0071fd18      bl    0x71fa6c
+       │╎   0x0071fd1c      cmp   w0, 0x10, lsl 12
+       │╎   0x0071fd20      mov   x0, x23
+       │╎   0x0071fd24      csel  w22, w19, w22, ge
+       │╎   0x0071fd28      bl    sym.imp.MCFRelease
+       │╎   0x0071fd2c      add   w21, w21, 1
+       │└─< 0x0071fd30      cbz   w22, 0x71fcb8
+       │    0x0071fd34      ldr   x19, [sp, 8]                         ; [0x8:4]=0
+       │┌─< 0x0071fd38      cbz   x19, 0x71fd58
+       ││   0x0071fd3c      bl    0xbe9ce8
+       ││   0x0071fd40      mov   w1, w22
+       ││   0x0071fd44      mov   x2, xzr
+       ││   0x0071fd48      bl    sym.imp.MCFErrorCreate
+       ││   0x0071fd4c      str   x0, [x19]
+      ┌───< 0x0071fd50      b     0x71fd58
+      │└──> 0x0071fd54      mov   w22, wzr
+      └─└─> 0x0071fd58      mov   w0, w22
+            0x0071fd5c      bl    0x5cb550
+            0x0071fd60      ldp   x29, x30, [sp, 0x10]
+            0x0071fd64      add   sp, sp, 0x70
+            0x0071fd68      autiasp
+            0x0071fd6c      ret

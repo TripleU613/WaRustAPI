@@ -394,3 +394,13 @@ a normal worker save passes the snapshot's zero guard. Termination and complete
 validation/durability/transport semantics remain open.
 [Mode/branch resolver, paired read/write evidence and limits](apk/2.26.43.72-metrics-native-metadata-file/README.md).
 Local metrics metadata is not account/message replay authority. No Rust/live change.
+
+### Native metrics snapshot range validation and replacement (2026-11-05)
+
+**Confirmed static / observed synthetic emulation, APK 2.26.43.72:** local
+validator checks four groups, with A/B nonnegative and C/D in 1..65535. Later
+checks win within a group; the first failing group stops validation. All 43
+bounded native fixtures pass. Recovery replaces rejected local snapshot state;
+this is not server/account/message replay authority.
+[Native bodies, exact ranges, synthetic harness/results and limits](apk/2.26.43.72-metrics-native-snapshot-validation/README.md).
+Error objects, full manager lifecycle and event transport remain open. No Rust/live change.

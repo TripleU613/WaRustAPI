@@ -16161,5 +16161,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-metrics-native-metadata-file/README.md",
     "description": "Static metadata path appends /wam-metadata, opens rb/wb and rewinds before selected snapshot writes. Recovery checks 1692-byte MTD/version-4 prefix; normal save passes zero guard. Full validation, crash durability and actual transport/replies remain open. No client runtime/live operation added."
+  },
+  "x-metrics-native-snapshot-validation-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK synthetic native validation evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-metrics-native-snapshot-validation/README.md",
+    "description": "Native local snapshot validator ranges/precedence checked in 43 bounded Unicorn cases. Recovery replaces rejected local snapshot state. These are local validation codes, not server limits or account/message replay authority. Full lifecycle and event transport remain open; no client runtime/live operation added."
   }
 }

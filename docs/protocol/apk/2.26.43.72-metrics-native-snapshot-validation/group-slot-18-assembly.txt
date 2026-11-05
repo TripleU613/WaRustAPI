@@ -1,0 +1,13 @@
+            0x007207f4      paciasp
+            0x007207f8      stp   x29, x30, [sp, -0x20]!
+            0x007207fc      str   x19, [sp, 0x10]
+            0x00720800      mov   x29, sp
+        ┌─< 0x00720804      cbz   x0, 0x720824
+        │   0x00720808      ldr   x19, [x0, 0x18]                      ; [0x18:4]=0
+        │   0x0072080c      mov   x0, x19
+        │   0x00720810      bl    sym.imp.MCFRetain
+        │   0x00720814      bl    0x49bae8
+        │   0x00720818      ldp   x29, x30, [sp], 0x20
+        │   0x0072081c      autiasp
+        │   0x00720820      ret
+        └─> 0x00720824      bl    sym.imp.abort

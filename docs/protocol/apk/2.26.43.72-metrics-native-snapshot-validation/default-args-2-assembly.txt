@@ -1,0 +1,3 @@
+            0x00be0568      mov   w3, 1
+            0x00be056c      mov   w4, wzr
+            0x00be0570      ret

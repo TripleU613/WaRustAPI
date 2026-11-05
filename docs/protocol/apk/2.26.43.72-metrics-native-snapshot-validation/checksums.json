@@ -1,0 +1,98 @@
+{
+  "README.md": {
+    "bytes": 5223,
+    "sha256": "900e420af13ada61e12a284e7ffcd22624e971f3b78fbfb2761891de9d15223d"
+  },
+  "a-field-outline-assembly.txt": {
+    "bytes": 116,
+    "sha256": "032e7cc7c7a7dfb252e281b06989f071e4105a33a40b042e704becdc630b3189"
+  },
+  "b-field-outline-assembly.txt": {
+    "bytes": 116,
+    "sha256": "56ebd58292afff981905a64b7821607c231edf597f919345a4606dccc5845142"
+  },
+  "c-field-outline-assembly.txt": {
+    "bytes": 123,
+    "sha256": "78334d9c10d33612805560174a1c4d2b6d0d5953f3fd6bd016439695357f54e6"
+  },
+  "check-validator.py": {
+    "bytes": 4986,
+    "sha256": "de61f0ab0156a72043c4e4c8cd56a2c02fcdc6c036538fcc6207bc8869a32f4a"
+  },
+  "default-args-1-assembly.txt": {
+    "bytes": 114,
+    "sha256": "de4407310e1ce04f149373f9ae801d20142038ee369a45cb46d33e5fb5952b14"
+  },
+  "default-args-2-assembly.txt": {
+    "bytes": 114,
+    "sha256": "d7e2831c5da235dca7769c7de13ee4c0cf509150a644b5b7c181dc124ad56c29"
+  },
+  "default-snapshot-constructor-assembly.txt": {
+    "bytes": 2491,
+    "sha256": "4afc1da2313ea1be5ec8b19084ac11adafaa3964be65e65187e1cbc1d05af83b"
+  },
+  "group-a-getter-assembly.txt": {
+    "bytes": 331,
+    "sha256": "10230c78c1f0aa058e2aa30c8047d777ea0d88bf23f9d1cebca52c26ad611911"
+  },
+  "group-b-getter-assembly.txt": {
+    "bytes": 331,
+    "sha256": "bdfba9d36c9f491e1e6fa1c5ca6ddb5b140b6e7db02541f709967ab19f1bc603"
+  },
+  "group-c-getter-assembly.txt": {
+    "bytes": 331,
+    "sha256": "03701c7e710c0e86418ca10a7b28a47992c113fe611dab6f708d3071009e7210"
+  },
+  "group-d-getter-assembly.txt": {
+    "bytes": 394,
+    "sha256": "fa1f62c02ddfc2ef5662a3b839a0bfd77ccee002e8884f42f16c27db5e302ab4"
+  },
+  "group-slot-18-assembly.txt": {
+    "bytes": 646,
+    "sha256": "b5ccf7f54648c4575f1182683dbd4c4af5e7f2747a468fe358d11ef3ce70c6eb"
+  },
+  "group-slot-20-assembly.txt": {
+    "bytes": 653,
+    "sha256": "2343b387a47153dfcd8a821a1ac85baf2f125f55dba3333ff451d98e7680482d"
+  },
+  "group-slot-28-assembly.txt": {
+    "bytes": 653,
+    "sha256": "080d85c88c3aed993d1c5934ebff6269a2678f6d16afda16680b2744d8e4c526"
+  },
+  "group-slot-30-assembly.txt": {
+    "bytes": 646,
+    "sha256": "4ce16ce966be6d1a86d858ad2a92f6b9afb14c1d150a5d21b8af245342eaad94"
+  },
+  "inspect-validator.py": {
+    "bytes": 2410,
+    "sha256": "4f01a7c9089056157c4e437a8b4d4b73b81c6d1304fdecb78b1196b239c18d13"
+  },
+  "recovery-validation-caller-assembly.txt": {
+    "bytes": 1925,
+    "sha256": "2ed1ec805b2f436e970baa5d1ceccd47a1d45b282f9b276c4e9dc57d104b0dee"
+  },
+  "selector-assembly.txt": {
+    "bytes": 1732,
+    "sha256": "7c6f6bf0cae408f01a20093aa44683e1f36ca10ae0aa041e84df72626c0dee34"
+  },
+  "validator-assembly.txt": {
+    "bytes": 2860,
+    "sha256": "a0e7df49c55ece26255e90ba90ac5c42b2e6f921af503cec3e89f2847a9da872"
+  },
+  "validator-boundaries.json": {
+    "bytes": 4929,
+    "sha256": "8baeb9b796a243dace348648d2412e429dc6348ccc83cf4640a4763610176370"
+  },
+  "validator-init-outline-assembly.txt": {
+    "bytes": 117,
+    "sha256": "1205f6abd543ddac35661406f571442008de5933e6f02c0f54012a36335e47a9"
+  },
+  "validator-results.json": {
+    "bytes": 20822,
+    "sha256": "b2773639891e7977ab4dfd097c91b4baf517d7f2ba048f1c88033c3d7aca0b22"
+  },
+  "validator-selector-outline-assembly.txt": {
+    "bytes": 116,
+    "sha256": "b5cbdf69d954ca4a8f99bd3cf332f258aae8deb40a12e8e07f242d1bf9d5dbf3"
+  }
+}

@@ -1,3 +1,12 @@
+2026-11-05 — **Native metrics snapshot validator checked with 43 bounded cases.**
+
+Exact per-group ranges/error precedence and rejected-state replacement now have
+static and synthetic native-code evidence.
+[Harness, results and scope](docs/protocol/apk/2.26.43.72-metrics-native-snapshot-validation/README.md).
+Local metadata validation only; full lifecycle and transport/replies remain open.
+Validation: pinned image, raw byte digests, 43 native fixtures/reproduction,
+JSON, coverage and bundle/link hygiene. No Rust/live account/network change.
+
 2026-11-05 — **Native metrics metadata file path and recovery envelope mapped.**
 
 Paired writer/recovery evidence identifies /wam-metadata, rb/wb modes, rewind,

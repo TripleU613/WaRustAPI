@@ -1,0 +1,55 @@
+            0x0071fb58      paciasp
+            0x0071fb5c      sub   sp, sp, 0x70
+            0x0071fb60      stp   x29, x30, [sp, 0x30]
+            0x0071fb64      bl    0x4b0d64
+            0x0071fb68      add   x29, sp, 0x30
+            0x0071fb6c      mov   w0, wzr
+            0x0071fb70      bl    0xbe3174
+            0x0071fb74      bl    0xbe0568
+            0x0071fb78      bl    0x71f984
+            0x0071fb7c      bl    0xbe67e4
+            0x0071fb80      bl    0xbe3174
+            0x0071fb84      bl    0xbe0568
+            0x0071fb88      bl    0x71f984
+            0x0071fb8c      bl    0xbe7558
+            0x0071fb90      bl    0xbe3174
+            0x0071fb94      bl    0xbe0568
+            0x0071fb98      bl    0x71f984
+            0x0071fb9c      bl    0xbe6e04
+            0x0071fba0      bl    0xbe3174
+            0x0071fba4      bl    0xbe0568
+            0x0071fba8      bl    0x71f984
+            0x0071fbac      bl    0xbec2ec
+            0x0071fbb0      bl    sym.imp.MCFDictionaryCreateMutable
+            0x0071fbb4      movi  d0, 0000000000000000
+            0x0071fbb8      mov   x23, x0
+            0x0071fbbc      bl    0xbe459c
+            0x0071fbc0      bl    0xbe65ec
+            0x0071fbc4      str   x0, [sp, 0x20]
+            0x0071fbc8      bl    0xbdf07c
+            0x0071fbcc      mov   x3, x22
+            0x0071fbd0      str   wzr, [sp, 0x18]
+            0x0071fbd4      str   wzr, [sp, 0x10]
+            0x0071fbd8      str   wzr, [sp, 8]
+            0x0071fbdc      str   wzr, [sp]
+            0x0071fbe0      bl    0x7206fc
+            0x0071fbe4      bl    0xbe3ed4
+            0x0071fbe8      bl    sym.imp.MCFRelease
+            0x0071fbec      mov   x0, x19
+            0x0071fbf0      bl    sym.imp.MCFRelease
+            0x0071fbf4      mov   x0, x20
+            0x0071fbf8      bl    sym.imp.MCFRelease
+            0x0071fbfc      mov   x0, x21
+            0x0071fc00      bl    sym.imp.MCFRelease
+            0x0071fc04      mov   x0, x22
+            0x0071fc08      bl    sym.imp.MCFRelease
+            0x0071fc0c      mov   x0, x24
+            0x0071fc10      bl    0x71fc34
+            0x0071fc14      bl    0xbe3ef8
+            0x0071fc18      bl    sym.imp.MCFRelease
+            0x0071fc1c      mov   x0, x19
+            0x0071fc20      bl    0x500c58
+            0x0071fc24      ldp   x29, x30, [sp, 0x30]
+            0x0071fc28      add   sp, sp, 0x70
+            0x0071fc2c      autiasp
+            0x0071fc30      ret
