@@ -1,3 +1,12 @@
+2026-11-05 — **Native metrics event/setup JNI entries and local routing mapped.**
+
+Recovered libwhatsapp tuples now connect Java events to typed native fields and
+state-dependent local manager handoff. Normal event return is literal zero.
+[Static evidence and limits](docs/protocol/apk/2.26.43.72-metrics-native-event-routing/README.md).
+Serialization, persistence, flush, transport and server replies remain unverified.
+Validation: image identity, exact tuple signatures, section-aware byte digests,
+resolver reproduction, JSON, coverage and checksum/link hygiene. No Rust/live change.
+
 2026-11-05 — **All 83 packed ARM64 libraries reconstructed and metadata-checked.**
 
 65766648 recovered bytes match metadata lengths/XXH64 and pass ELF layout checks.

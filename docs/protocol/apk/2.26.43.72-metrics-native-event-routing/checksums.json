@@ -1,0 +1,54 @@
+{
+  "README.md": {
+    "bytes": 6107,
+    "sha256": "c1e516d629814bdc8da19b30ba351b5d0470427587244268f2e39d690de1ab8a"
+  },
+  "elf-sections.txt": {
+    "bytes": 2826,
+    "sha256": "9bf253edd435f0875bf6be5257bb7c9c3cd4dd4d4b8456f3976c83fbb65aaa4e"
+  },
+  "event-constructor.txt": {
+    "bytes": 1485,
+    "sha256": "44a1aeeb3bea28b09e5bffa6158a7371cf18fd29498cd4e9ec4798a5fdcf98c8"
+  },
+  "event-entry.txt": {
+    "bytes": 2640,
+    "sha256": "a223e5deb50165e605b7a80bdc95bae7ee28a95d613e028b5d2d3f15f40f1a2f"
+  },
+  "event-field-visitor.txt": {
+    "bytes": 5963,
+    "sha256": "7bcc10f11a495c1ef1b6006f468ac579e7be9a4ffc2b43d44d397f9be6f4b597"
+  },
+  "jni-tuples.json": {
+    "bytes": 892,
+    "sha256": "d7db942b2d27889d1de4714b1531f78e0180a2b5c07f2ef745ac277d1d147b6e"
+  },
+  "manager-routing.txt": {
+    "bytes": 2359,
+    "sha256": "5c814f54312ed2936077a4db2f3091ccaafd26d59b1f5ebfcd91ad2d8f5b0457"
+  },
+  "native-context-unwrapper.txt": {
+    "bytes": 717,
+    "sha256": "333afda15f32372c7ef9d37928d8eb944a89812daf11d6598a1ddbbdd323cab5"
+  },
+  "outlined-register-flow.txt": {
+    "bytes": 1971,
+    "sha256": "8be650127d9bfe6eb30342d32f493b8cd2f0817eadf6a4e48e007b62de0b89f7"
+  },
+  "ranges.json": {
+    "bytes": 4710,
+    "sha256": "76a192f80ef8c4dbc10cd3c3d9304211b1c98438181e95513961da4aa9a42e02"
+  },
+  "resolve-jni.py": {
+    "bytes": 2834,
+    "sha256": "4265547d7d83adaee2e1082a5ba5b74be0cf3ef87ff2d43eed2c0451ed637afe"
+  },
+  "setup-entry-excerpt.txt": {
+    "bytes": 6265,
+    "sha256": "92186b2a76504098bb7e62880a841be48a5c456593134d4335ee4f778b21bd07"
+  },
+  "setup-selector-body.txt": {
+    "bytes": 16882,
+    "sha256": "ebb0b141c21b4eee0d463f440437931a3a7920dad340960c4da984a8c3e4118f"
+  }
+}

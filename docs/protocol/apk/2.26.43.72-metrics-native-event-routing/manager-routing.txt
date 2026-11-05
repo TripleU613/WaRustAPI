@@ -1,0 +1,40 @@
+       ╎╎   0x007259cc      paciasp
+       ╎╎   0x007259d0      stp   x29, x30, [sp, -0x20]!
+       ╎╎   0x007259d4      stp   x20, x19, [sp, 0x10]
+       ╎╎   0x007259d8      mov   x29, sp
+       ╎╎   0x007259dc      ldr   w8, [x0, 0xc8]                       ; [0xc8:4]=0x483cb0 segment.LOAD1
+       ╎╎   0x007259e0      bl    0x54700c
+       ╎╎   0x007259e4      subs  w8, w8, 4
+      ┌───< 0x007259e8      b.hs  0x725a38
+      │╎╎   0x007259ec      add   x0, x19, 0xfc
+      │╎╎   0x007259f0      bl    sym.imp.pthread_mutex_lock
+      │╎╎   0x007259f4      ldr   x0, [x19, 0x50]                      ; [0x50:4]=64
+      │╎╎   0x007259f8      mov   x1, x20
+      │╎╎   0x007259fc      bl    sym.imp.MCFArrayAppendValue
+      │╎╎   0x00725a00      add   x0, x19, 0xfc
+      │╎╎   0x00725a04      bl    sym.imp.pthread_mutex_unlock
+      │╎╎   0x00725a08      ldr   x8, [x20, 0x28]                      ; [0x28:4]=0xc306e8
+      │╎╎   0x00725a0c      cmp   x8, 0xa0e
+     ┌────< 0x00725a10      b.ne  0x725a28
+     ││╎╎   0x00725a14      ldr   x0, [x19, 0x20]                      ; [0x20:4]=64 ; "@"
+     ││╎╎   0x00725a18      adrp  x2, 0xa3000
+     ││╎╎   0x00725a1c      add   x2, x2, 0xebb
+     ││╎╎   0x00725a20      mov   w1, 3
+     ││╎╎   0x00725a24      bl    0x7216b0
+     └────> 0x00725a28      bl    0x4f47ec
+      │╎╎   0x00725a2c      ldp   x29, x30, [sp], 0x20
+      │╎╎   0x00725a30      autiasp
+      │╎└─< 0x00725a34      b     0x7239ec
+      └───> 0x00725a38      cmp   w8, 1
+       ╎┌─< 0x00725a3c      b.hi  0x725a68
+       ╎│   0x00725a40      ldr   x0, [x19, 0x80]                      ; [0x80:4]=0
+       ╎│   0x00725a44      ldr   w2, [x20, 0x38]                      ; [0x38:4]=0x40000a
+       ╎│   0x00725a48      mov   w1, 1
+       ╎│   0x00725a4c      bl    0x71ffc8
+       ╎│   0x00725a50      ldp   x0, x1, [x19, 0x80]
+       ╎│   0x00725a54      mov   w2, 1
+       ╎│   0x00725a58      ldp   x20, x19, [sp, 0x10]
+       ╎│   0x00725a5c      ldp   x29, x30, [sp], 0x20
+       ╎│   0x00725a60      autiasp
+       └──< 0x00725a64      b     0x724fc8
+        └─> 0x00725a68      bl    sym.imp.abort

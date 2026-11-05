@@ -1,0 +1,14 @@
+            0x006e99e8      paciasp
+            0x006e99ec      stp   x29, x30, [sp, -0x20]!
+            0x006e99f0      str   x19, [sp, 0x10]
+            0x006e99f4      mov   x29, sp
+        ┌─< 0x006e99f8      cbz   x1, 0x6e9a0c
+        │   0x006e99fc      bl    method.facebook::simplejni::NativeHolder.getNativePointer__JNIEnv____jobject
+        │   0x006e9a00      mov   x19, x0
+        │   0x006e9a04      bl    sym.imp.MCFRetain
+       ┌──< 0x006e9a08      b     0x6e9a10
+       │└─> 0x006e9a0c      mov   x19, xzr
+       └──> 0x006e9a10      bl    0x49bae8
+            0x006e9a14      ldp   x29, x30, [sp], 0x20
+            0x006e9a18      autiasp
+            0x006e9a1c      ret

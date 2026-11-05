@@ -1,0 +1,47 @@
+            0x0049b664      stp   x24, x23, [sp, 0x20]
+            0x0049b668      stp   x22, x21, [sp, 0x30]
+            0x0049b66c      stp   x20, x19, [sp, 0x40]
+            0x00be3df0      mov   x21, x5
+            0x00be3df4      mov   x22, x4
+            0x00be3df8      ret
+            0x00be5738      mov   x23, x3
+            0x00be573c      mov   x24, x2
+            0x00be5740      ret
+            0x00be46f8      mov   x19, x0
+            0x00be46fc      mov   x0, x25
+            0x00be4700      ret
+            0x00483e68      mov   x0, x21
+            0x00483e6c      mov   x1, x20
+            0x00483e70      ret
+            0x00632540      mov   x19, x0
+            0x00632544      mov   x0, x1
+            0x00632548      ret
+            0x0054700c      mov   x19, x0
+            0x00547010      mov   x20, x1
+            0x00547014      ret
+            0x0063c894      stp   x22, x21, [sp, 0x10]
+            0x0063c898      stp   x20, x19, [sp, 0x20]
+            0x0063c89c      ret
+            0x006065bc      mov   x21, x0
+            0x006065c0      mov   x20, x1
+            0x006065c4      ret
+            0x00bdde08      ldp   x22, x21, [sp, 0x30]
+            0x00bdde0c      ldr   x25, [sp, 0x10]                      ; [0x10:4]=0xb70003
+            0x00bdde10      ldp   x24, x23, [sp, 0x20]
+            0x00bdde14      ret
+            0x00be3a94      mov   x23, x0
+            0x00be3a98      mov   x0, x24
+            0x00be3a9c      ret
+            0x00be1bbc      mov   x0, x19
+            0x00be1bc0      mov   w1, 2
+            0x00be1bc4      ret
+            0x00be3168      mov   x2, x23
+            0x00be316c      mov   x3, x24
+            0x00be3170      ret
+            0x00bdfe48      mov   x0, x22
+            0x00bdfe4c      mov   x1, x20
+            0x00bdfe50      mov   x2, x21
+            0x00bdfe54      ret
+            0x005d3d94      mov   x0, x19
+            0x005d3d98      mov   x1, x23
+            0x005d3d9c      ret

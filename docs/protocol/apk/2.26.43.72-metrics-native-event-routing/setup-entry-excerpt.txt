@@ -1,0 +1,115 @@
+            0x006f8b90      paciasp
+            0x006f8b94      sub   sp, sp, 0x160
+            0x006f8b98      stp   d9, d8, [sp, 0xf0]
+            0x006f8b9c      stp   x29, x30, [sp, 0x100]
+            0x006f8ba0      stp   x28, x27, [sp, 0x110]
+            0x006f8ba4      stp   x26, x25, [sp, 0x120]
+            0x006f8ba8      bl    0xbdef14
+            0x006f8bac      add   x29, sp, 0x100
+            0x006f8bb0      bl    0xbe258c
+            0x006f8bb4      stur  x8, [x29, -0x20]
+            0x006f8bb8      ldr   x21, [x0, 0x38]                      ; [0x38:4]=0x40000a
+            0x006f8bbc      stp   x1, x0, [x29, -0x50]
+        ┌─< 0x006f8bc0      cbz   x21, 0x6f8bf4
+        │   0x006f8bc4      ldr   x8, [x27, 0x28]                      ; [0x28:4]=0xc306e8
+        │   0x006f8bc8      ldur  x9, [x29, -0x20]
+        │   0x006f8bcc      cmp   x21, 0
+        │   0x006f8bd0      cset  w0, eq
+        │   0x006f8bd4      cmp   x8, x9
+       ┌──< 0x006f8bd8      b.ne  0x6fa684
+       ││   0x006f8bdc      bl    0x4c9e94
+       ││   0x006f8be0      ldp   x29, x30, [sp, 0x100]
+       ││   0x006f8be4      ldp   d9, d8, [sp, 0xf0]
+       ││   0x006f8be8      add   sp, sp, 0x160
+       ││   0x006f8bec      autiasp
+       ││   0x006f8bf0      ret
+       │└─> 0x006f8bf4      adrp  x1, 0xc3b000
+       │    0x006f8bf8      add   x1, x1, 0
+       │    0x006f8bfc      mov   x0, x3
+       │    0x006f8c00      mov   x28, x3
+       │    0x006f8c04      mov   x20, x2
+       │    0x006f8c08      bl    sym.imp.MCFDictionaryContainsKey
+       │    0x006f8c0c      tst   w0, 0xff
+       │┌─< 0x006f8c10      b.eq  0x6f8c30
+       ││   0x006f8c14      adrp  x1, 0xc3b000
+       ││   0x006f8c18      add   x1, x1, 0
+       ││   0x006f8c1c      mov   x0, x28
+       ││   0x006f8c20      bl    sym.imp.MCFDictionaryGetValue
+       ││   0x006f8c24      bl    0x6fa6c8
+       ││   0x006f8c28      mov   w19, w0
+      ┌───< 0x006f8c2c      b     0x6f8c34
+      ││└─> 0x006f8c30      mov   w19, 0xffff
+      └───> 0x006f8c34      adrp  x1, 0xc3b000
+       │    0x006f8c38      add   x1, x1, 0x30
+       │    0x006f8c3c      mov   x0, x28
+       │    0x006f8c40      bl    sym.imp.MCFDictionaryContainsKey
+       │    0x006f8c44      tst   w0, 0xff
+       │    0x006f8c48      stp   x21, x20, [x29, -0x78]
+       │┌─< 0x006f8c4c      b.eq  0x6f8c7c
+       ││   0x006f8c50      adrp  x1, 0xc3b000
+       ││   0x006f8c54      add   x1, x1, 0x30
+       ││   0x006f8c58      mov   x0, x28
+       ││   0x006f8c5c      bl    sym.imp.MCFDictionaryGetValue
+      ┌───< 0x006f8c60      cbz   x0, 0x6f8c88
+      │││   0x006f8c64      sub   x2, x29, 0x40
+      │││   0x006f8c68      mov   w1, 1
+      │││   0x006f8c6c      stur  xzr, [x29, -0x40]
+      │││   0x006f8c70      bl    sym.imp.MCFNumberGetValue
+      │││   0x006f8c74      ldur  x24, [x29, -0x40]
+     ┌────< 0x006f8c78      b     0x6f8c8c
+     │││└─> 0x006f8c7c      mov   w24, 0xfff4
+     │││    0x006f8c80      movk  w24, 0xb, lsl 16
+     │││┌─< 0x006f8c84      b     0x6f8c8c
+     │└───> 0x006f8c88      mov   x24, xzr
+     └──└─> 0x006f8c8c      ldur  x25, [x29, -0x48]
+       │    0x006f8c90      ldr   x22, [x25, 0x18]                     ; [0x18:4]=0
+       │    0x006f8c94      bl    0x6fdad8
+       │    0x006f8c98      mov   w1, 0x38                             ; '8'
+       │    0x006f8c9c      bl    0xbe1ac0
+       │    0x006f8ca0      bl    sym.imp.MCFRuntimeCreateInstance
+       │    0x006f8ca4      mov   w21, 4
+       │    0x006f8ca8      mov   x23, x0
+       │    0x006f8cac      str   x22, [x0, 0x20]
+       │    0x006f8cb0      str   w21, [x0, 0x18]
+       │    0x006f8cb4      mov   x0, x22
+       │    0x006f8cb8      bl    sym.imp.MCFRetain
+       │    0x006f8cbc      ldur  x26, [x29, -0x50]
+       │    0x006f8cc0      mov   x0, x26
+       │    0x006f8cc4      str   x26, [x23, 0x28]
+       │    0x006f8cc8      bl    sym.imp.MCFRetain
+       │    0x006f8ccc      mov   w2, 0x100
+       │    0x006f8cd0      adrp  x0, 0x10b000
+       │    0x006f8cd4      add   x0, x0, 0x1e3
+       │    0x006f8cd8      mov   w1, 0x22                             ; '"'
+       │    0x006f8cdc      movk  w2, 0x800, lsl 16
+       │    0x006f8ce0      bl    sym.imp._MCFStringCreateWithConstCStringAndLenNoCopy
+       │    0x006f8ce4      mov   w8, 0x69c
+       │    0x006f8ce8      stur  x23, [x29, -0x58]
+       │    0x006f8cec      stp   x0, x8, [x23, 0x30]
+       │    0x006f8cf0      strb  wzr, [x23, 0x40]
+       │    0x006f8cf4      bl    sym.imp.MCIGlobalGetMCIExecutionGlobalQueueForUtility
+       │    0x006f8cf8      ldr   x22, [x25, 0x18]                     ; [0x18:4]=0
+       │    0x006f8cfc      mov   x23, x0
+       │    0x006f8d00      bl    0x6fdf24
+       │    0x006f8d04      mov   w1, 0x30                             ; '0'
+       │    0x006f8d08      bl    0xbe1ac0
+       │    0x006f8d0c      bl    sym.imp.MCFRuntimeCreateInstance
+       │    0x006f8d10      mov   x20, x0
+       │    0x006f8d14      str   x23, [x0, 0x18]
+       │    0x006f8d18      mov   x0, x23
+       │    0x006f8d1c      bl    sym.imp.MCFRetain
+       │    0x006f8d20      mov   x0, x22
+       │    0x006f8d24      str   x22, [x20, 0x20]
+       │    0x006f8d28      bl    sym.imp.MCFRetain
+       │    0x006f8d2c      mov   x0, x26
+       │    0x006f8d30      bl    sym.imp.MCFASCIIStringCreateWithMCFString
+       │    0x006f8d34      bl    sym.imp.MCFASCIIStringEnsureNotNull
+       │    0x006f8d38      str   x0, [x20, 0x28]
+       │    0x006f8d3c      mov   w0, 8
+       │    0x006f8d40      str   w19, [x20, 0x30]
+       │    0x006f8d44      str   x24, [x20, 0x38]
+       │    0x006f8d48      bl    sym.imp.MCFDictionaryCreateMutable
+       │    0x006f8d4c      str   x0, [x20, 0x40]
+       │    0x006f8d50      ldr   x19, [x25, 0x18]                     ; [0x18:4]=0
+       │    0x006f8d54      stur  x20, [x29, -0x60]
+       │    0x006f8d58      bl    0x6fe62c

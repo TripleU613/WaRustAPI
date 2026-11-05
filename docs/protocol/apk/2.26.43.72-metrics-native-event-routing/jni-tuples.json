@@ -1,0 +1,31 @@
+{
+  "scope": "static relocated tuples; registration execution not observed",
+  "methods": [
+    {
+      "name": "jvidispatchIIIIIOO",
+      "signature": "(JJJJLjava/lang/Object;Ljava/lang/Object;)J",
+      "slot_va": "0xc07c58",
+      "slot_file_offset": "0xbffc58",
+      "function_va": "0x6f71ac",
+      "function_file_offset": "0x6f31ac"
+    },
+    {
+      "name": "jvidispatchIOOOO",
+      "signature": "(ILjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+      "slot_va": "0xc079a0",
+      "slot_file_offset": "0xbff9a0",
+      "function_va": "0x6eee64",
+      "function_file_offset": "0x6eae64"
+    }
+  ],
+  "setup_selector_table_va": "0x2e9553",
+  "setup_selector_table_hex": "00b32a9713c5",
+  "setup_selector_destinations": {
+    "0": "0x6eeec0",
+    "1": "0x6ef18c",
+    "2": "0x6eef68",
+    "3": "0x6ef11c",
+    "4": "0x6eef0c",
+    "5": "0x6ef1d4"
+  }
+}

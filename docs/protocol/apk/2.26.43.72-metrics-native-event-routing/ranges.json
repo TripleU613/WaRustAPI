@@ -1,0 +1,156 @@
+[
+  {
+    "file": "event-entry.txt",
+    "virtual_address": "0x6f71ac",
+    "file_offset": "0x6f31ac",
+    "bytes": 216,
+    "sha256": "2a9b83e012e477cd3518be0d46f26244f636bcca5c4e26bee7af1ef2b838a2db"
+  },
+  {
+    "file": "setup-selector-body.txt",
+    "virtual_address": "0x6eee64",
+    "file_offset": "0x6eae64",
+    "bytes": 1132,
+    "sha256": "23d775091a90c083b7f4e78c9887864b031d4e34a80a5df645adfbb6b7962a60"
+  },
+  {
+    "file": "setup-entry-excerpt.txt",
+    "virtual_address": "0x6f8b90",
+    "file_offset": "0x6f4b90",
+    "bytes": 460,
+    "sha256": "80c63b9370bdbdd4a155c65c202f83dabe182c0176510af88cd805d5902dfb2a"
+  },
+  {
+    "file": "event-constructor.txt",
+    "virtual_address": "0x721b54",
+    "file_offset": "0x71db54",
+    "bytes": 116,
+    "sha256": "a0c95576b7345712c07e672d7a0c1688b79c55f6063f8c19df0e16c870d4f61b"
+  },
+  {
+    "file": "event-field-visitor.txt",
+    "virtual_address": "0x6f8164",
+    "file_offset": "0x6f4164",
+    "bytes": 432,
+    "sha256": "6e9bbc79599cbb89f3cea4391ae897fb3c93aafb26060e88015bb1fe7106e30b"
+  },
+  {
+    "file": "manager-routing.txt",
+    "virtual_address": "0x7259cc",
+    "file_offset": "0x7219cc",
+    "bytes": 160,
+    "sha256": "55e056026630cdb31e255943ac9067d27b3fd8f7fd7be9b0f7896d44ad12a1a6"
+  },
+  {
+    "file": "outlined-register-flow.txt",
+    "virtual_address": "0x49b664",
+    "file_offset": "0x497664",
+    "bytes": 12,
+    "sha256": "7745f0a72613c0a2ee4dda87f0f36e4708120abaf1807c92232e6f9b73019393"
+  },
+  {
+    "file": "outlined-register-flow.txt",
+    "virtual_address": "0xbe3df0",
+    "file_offset": "0xbdfdf0",
+    "bytes": 12,
+    "sha256": "ef123481aaf11cdbbcdb5a35d4d29217f5639b66ccddc1442369aaab245c7d39"
+  },
+  {
+    "file": "outlined-register-flow.txt",
+    "virtual_address": "0xbe5738",
+    "file_offset": "0xbe1738",
+    "bytes": 12,
+    "sha256": "f54d23929d867191c7ab18f1cb7dd9f4af14114dfc2efcd6cdc4b804e813ed79"
+  },
+  {
+    "file": "outlined-register-flow.txt",
+    "virtual_address": "0xbe46f8",
+    "file_offset": "0xbe06f8",
+    "bytes": 12,
+    "sha256": "d12ce7f04f5388793e7dd7b3bcf0ee75dae441c841685943ccdc95d588f22b73"
+  },
+  {
+    "file": "outlined-register-flow.txt",
+    "virtual_address": "0x483e68",
+    "file_offset": "0x47fe68",
+    "bytes": 12,
+    "sha256": "ee91a10a708bca865dc47bc58506b7a330ef67a56734c68b1ed695e758def61c"
+  },
+  {
+    "file": "outlined-register-flow.txt",
+    "virtual_address": "0x632540",
+    "file_offset": "0x62e540",
+    "bytes": 12,
+    "sha256": "fd30064326aabc1024004728582596c76d53fa81a2e9a93deb15e90e8c6dc96e"
+  },
+  {
+    "file": "outlined-register-flow.txt",
+    "virtual_address": "0x54700c",
+    "file_offset": "0x54300c",
+    "bytes": 12,
+    "sha256": "93f60273fdf2c383e028d42f4a03efc682ea5a7565338b3daec6b6ec6a2a912e"
+  },
+  {
+    "file": "outlined-register-flow.txt",
+    "virtual_address": "0x63c894",
+    "file_offset": "0x638894",
+    "bytes": 12,
+    "sha256": "bdb57161aa4ea13dc477d7fc891a17021a911b0728c77e5c43ad5d17652fb96a"
+  },
+  {
+    "file": "outlined-register-flow.txt",
+    "virtual_address": "0x6065bc",
+    "file_offset": "0x6025bc",
+    "bytes": 12,
+    "sha256": "83927798ac66ddd736cd603b87f6905c5d52441a3edcc6615bc9da86d9cc4168"
+  },
+  {
+    "file": "outlined-register-flow.txt",
+    "virtual_address": "0xbdde08",
+    "file_offset": "0xbd9e08",
+    "bytes": 16,
+    "sha256": "f7776ee1abfedc7de849cf5f27a8f3858687cd3619991e6d42b1b581175f0c08"
+  },
+  {
+    "file": "outlined-register-flow.txt",
+    "virtual_address": "0xbe3a94",
+    "file_offset": "0xbdfa94",
+    "bytes": 12,
+    "sha256": "30b0c70118b7d34c66bbafb92d8228ac5c0ad25f15514b58c185e9de785e0dcc"
+  },
+  {
+    "file": "outlined-register-flow.txt",
+    "virtual_address": "0xbe1bbc",
+    "file_offset": "0xbddbbc",
+    "bytes": 12,
+    "sha256": "7d62e2f8fe9d1df3dc5e982c839b879bdc7238e7169185809ca13fa4da1ae536"
+  },
+  {
+    "file": "outlined-register-flow.txt",
+    "virtual_address": "0xbe3168",
+    "file_offset": "0xbdf168",
+    "bytes": 12,
+    "sha256": "33e285e4877d7c220d074a1e4ed8311c4942fb687db91e50f77c3ce491c48ef1"
+  },
+  {
+    "file": "outlined-register-flow.txt",
+    "virtual_address": "0xbdfe48",
+    "file_offset": "0xbdbe48",
+    "bytes": 16,
+    "sha256": "e756cc70637842cb00331eb48c794129c7747642bba71e9e1a45cbc5c0a49282"
+  },
+  {
+    "file": "outlined-register-flow.txt",
+    "virtual_address": "0x5d3d94",
+    "file_offset": "0x5cfd94",
+    "bytes": 12,
+    "sha256": "b703d7ea93419ab46d56387d4855c0eb87d35db12a6fe9d83bc16418e80764fc"
+  },
+  {
+    "file": "native-context-unwrapper.txt",
+    "virtual_address": "0x6e99e8",
+    "file_offset": "0x6e59e8",
+    "bytes": 56,
+    "sha256": "3779b16ea55fb739d924f89dbb5d2bb8ab835ff661f55ea764c2569daf0b9ff8"
+  }
+]

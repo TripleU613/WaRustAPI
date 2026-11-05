@@ -5961,3 +5961,13 @@ sort-helper run. Recovered whatsapp/whatsappmerged are available for static JNI
 and metrics analysis, not proven Android execution or wire correctness.
 [Harness, full digest manifest, verification and limits](apk/2.26.43.72-superpack-reconstructed-members/README.md).
 Native metrics behavior and broader network audit remain open. No Rust/live change.
+
+### Recovered native metrics JNI event routing (2026-11-05)
+
+**Confirmed static / derived, APK 2.26.43.72:** exact relocated JNI tuples map
+event/setup dispatch into recovered libwhatsapp.so. Event entry narrows longs,
+keeps channel-dependent psId handling, visits typed fields, conditionally hands
+to a state-based local manager and returns literal zero. Local append/scheduling
+is not delivery or native persistence proof.
+[Tuple resolver, complete selected native bodies, outlined flow and limits](apk/2.26.43.72-metrics-native-event-routing/README.md).
+Setup initialization, flush/storage/transport and replies remain open. No Rust/live change.

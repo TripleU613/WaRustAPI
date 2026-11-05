@@ -1,0 +1,54 @@
+            0x006f71ac      paciasp
+            0x006f71b0      stp   x29, x30, [sp, -0x50]!
+            0x006f71b4      str   x25, [sp, 0x10]
+            0x006f71b8      bl    0x49b664
+            0x006f71bc      mov   x29, sp
+            0x006f71c0      mov   x1, x6
+            0x006f71c4      mov   x20, x7
+            0x006f71c8      bl    0xbe3df0
+            0x006f71cc      bl    0xbe5738
+            0x006f71d0      mov   x25, x0
+            0x006f71d4      bl    0x6e99e8
+            0x006f71d8      bl    0xbe46f8
+            0x006f71dc      mov   x1, x20
+            0x006f71e0      bl    0x6e9f88
+            0x006f71e4      subs  w8, w21, 2
+            0x006f71e8      mov   x20, x0
+        ┌─< 0x006f71ec      b.lo  0x6f7220
+        │   0x006f71f0      cmp   w8, 1
+       ┌──< 0x006f71f4      b.hi  0x6f7280
+       ││   0x006f71f8      and   w8, w21, 0xfffffffe
+       ││   0x006f71fc      cmp   w8, 2
+      ┌───< 0x006f7200      b.ne  0x6f727c
+      │││   0x006f7204      sxtw  x1, w23
+      │││   0x006f7208      sxtw  x0, w24
+      │││   0x006f720c      mov   w2, w21
+      │││   0x006f7210      bl    0x721b54
+      │││   0x006f7214      mov   x21, x0
+      │││   0x006f7218      str   w22, [x0, 0x40]
+     ┌────< 0x006f721c      b     0x6f7234
+     │││└─> 0x006f7220      sxtw  x0, w24
+     │││    0x006f7224      sxtw  x1, w23
+     │││    0x006f7228      mov   w2, w21
+     │││    0x006f722c      bl    0x721b54
+     │││    0x006f7230      mov   x21, x0
+     └────> 0x006f7234      bl    0x483e68
+      ││    0x006f7238      bl    0x6f8164
+      ││    0x006f723c      ldr   x0, [x19, 0x38]                      ; [0x38:4]=0x40000a
+      ││┌─< 0x006f7240      cbz   x0, 0x6f724c
+      │││   0x006f7244      mov   x1, x21
+      │││   0x006f7248      bl    0x7259cc
+      ││└─> 0x006f724c      mov   x0, x21
+      ││    0x006f7250      bl    sym.imp.MCFRelease
+      ││    0x006f7254      mov   x0, x20
+      ││    0x006f7258      bl    sym.imp.MCFRelease
+      ││    0x006f725c      mov   x0, x19
+      ││    0x006f7260      bl    sym.imp.MCFRelease
+      ││    0x006f7264      ldp   x20, x19, [sp, 0x40]
+      ││    0x006f7268      mov   x0, xzr
+      ││    0x006f726c      bl    0xbdde08
+      ││    0x006f7270      ldp   x29, x30, [sp], 0x50
+      ││    0x006f7274      autiasp
+      ││    0x006f7278      ret
+      └───> 0x006f727c      bl    sym.imp.abort
+       └──> 0x006f7280      bl    sym.imp.abort

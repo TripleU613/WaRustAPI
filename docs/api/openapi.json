@@ -16134,5 +16134,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-superpack-reconstructed-members/README.md",
     "description": "All 83 ARM64 packed members reconstructed via bounded native-driver emulation, matching metadata lengths and XXH64(seed=0), with clean ELF layout checks. Recovered WhatsApp libraries enable static JNI/metrics investigation; runtime/wire correctness remains unverified. No client runtime or live operation added."
+  },
+  "x-metrics-native-event-routing-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK static native evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-metrics-native-event-routing/README.md",
+    "description": "Recovered libwhatsapp JNI tuples map metrics event/setup dispatch. Event native body narrows longs, handles channel-specific psId, typed fields and conditional state-based local manager handoff; normal return is zero. Flush, durable storage and wire/reply behavior remain open. No client runtime/live operation added."
   }
 }

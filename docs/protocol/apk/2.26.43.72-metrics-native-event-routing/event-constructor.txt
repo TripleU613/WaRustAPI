@@ -1,0 +1,29 @@
+            0x00721b54      paciasp
+            0x00721b58      stp   x29, x30, [sp, -0x30]!
+            0x00721b5c      bl    0x63c894
+            0x00721b60      mov   x29, sp
+        ┌─< 0x00721b64      tbnz  x0, 0x3f, 0x721bc4
+        │   0x00721b68      mov   w19, w2
+        │   0x00721b6c      bl    0x6065bc
+        │   0x00721b70      bl    0x721914
+        │   0x00721b74      mov   w1, 0x30                             ; '0'
+        │   0x00721b78      bl    0xbe1ac0
+        │   0x00721b7c      bl    sym.imp.MCFRuntimeCreateInstance
+        │   0x00721b80      bl    0xbec2ec
+        │   0x00721b84      bl    sym.imp.MCFArrayCreateMutable
+        │   0x00721b88      str   x0, [x22, 0x18]
+        │   0x00721b8c      mov   w0, wzr
+        │   0x00721b90      bl    sym.imp.MCFArrayCreateMutable
+        │   0x00721b94      mov   w8, -1
+        │   0x00721b98      stp   x0, x21, [x22, 0x20]
+        │   0x00721b9c      mov   x0, x22
+        │   0x00721ba0      str   x20, [x22, 0x30]
+        │   0x00721ba4      str   w19, [x22, 0x38]
+        │   0x00721ba8      ldp   x20, x19, [sp, 0x20]
+        │   0x00721bac      strb  wzr, [x22, 0x3c]
+        │   0x00721bb0      str   w8, [x22, 0x40]
+        │   0x00721bb4      ldp   x22, x21, [sp, 0x10]
+        │   0x00721bb8      ldp   x29, x30, [sp], 0x30
+        │   0x00721bbc      autiasp
+        │   0x00721bc0      ret
+        └─> 0x00721bc4      bl    sym.imp.abort
