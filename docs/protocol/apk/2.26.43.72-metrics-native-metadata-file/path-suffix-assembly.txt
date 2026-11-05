@@ -1,0 +1,15 @@
+            0x006fdc64      paciasp
+            0x006fdc68      stp   x29, x30, [sp, -0x20]!
+            0x006fdc6c      str   x19, [sp, 0x10]
+            0x006fdc70      mov   x29, sp
+            0x006fdc74      mov   x1, x0
+            0x006fdc78      mov   w0, wzr
+            0x006fdc7c      bl    sym.imp.MCFStringCreateMutableCopy
+            0x006fdc80      adrp  x1, 0x15d000
+            0x006fdc84      add   x1, x1, 0x33d
+            0x006fdc88      mov   x19, x0
+            0x006fdc8c      bl    sym.imp.MCFStringAppendCStringWithFormat
+            0x006fdc90      bl    0x49bae8
+            0x006fdc94      ldp   x29, x30, [sp], 0x20
+            0x006fdc98      autiasp
+            0x006fdc9c      ret

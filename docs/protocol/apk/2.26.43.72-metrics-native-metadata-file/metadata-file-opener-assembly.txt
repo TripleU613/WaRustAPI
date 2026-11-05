@@ -1,0 +1,39 @@
+            0x006fdb7c      paciasp
+            0x006fdb80      stp   x29, x30, [sp, -0x40]!
+            0x006fdb84      str   x23, [sp, 0x10]
+            0x006fdb88      bl    0x49be00
+            0x006fdb8c      mov   x29, sp
+            0x006fdb90      bl    0xbe4704
+            0x006fdb94      mov   w20, w1
+            0x006fdb98      bl    0x6fdc64
+            0x006fdb9c      mov   w1, wzr
+            0x006fdba0      mov   x22, x0
+            0x006fdba4      bl    sym.imp.MCFURLCreateWithFileSystemPath
+            0x006fdba8      bl    0xbe1aa8
+            0x006fdbac      bl    sym.imp.MCFRelease
+            0x006fdbb0      cmp   x21, 0
+            0x006fdbb4      mov   x22, xzr
+            0x006fdbb8      mov   w8, 1
+            0x006fdbbc      cset  w23, eq
+        ┌─< 0x006fdbc0      tbz   w8, 0, 0x6fdc04
+       ┌──> 0x006fdbc4      mov   w8, w23
+      ┌───< 0x006fdbc8      tbnz  w8, 0, 0x6fdbfc
+     ┌────> 0x006fdbcc      mov   w8, 1
+    ┌─────< 0x006fdbd0      tbz   w8, 0, 0x6fdbf4
+   ┌──────> 0x006fdbd4      ldr   x0, [x19, 0x20]                      ; [0x20:4]=64 ; "@"
+   ╎│╎│╎│   0x006fdbd8      mov   x1, x21
+   ╎│╎│╎│   0x006fdbdc      mov   w2, w20
+   ╎│╎│╎│   0x006fdbe0      bl    0x733ce0
+   ╎│╎│╎│   0x006fdbe4      bl    0x4d73b0
+   ╎│╎│╎│   0x006fdbe8      bl    sym.imp.MCFRelease
+   ╎│╎│╎│   0x006fdbec      mov   w8, wzr
+   └──────< 0x006fdbf0      tbnz  w8, 0, 0x6fdbd4
+    └─────> 0x006fdbf4      mov   w8, 1
+     └────< 0x006fdbf8      tbz   w8, 0, 0x6fdbcc
+      └───> 0x006fdbfc      mov   w8, wzr
+       └──< 0x006fdc00      tbnz  w8, 0, 0x6fdbc4
+        └─> 0x006fdc04      mov   x0, x22
+            0x006fdc08      bl    0x5ce1b0
+            0x006fdc0c      ldp   x29, x30, [sp], 0x40
+            0x006fdc10      autiasp
+            0x006fdc14      ret

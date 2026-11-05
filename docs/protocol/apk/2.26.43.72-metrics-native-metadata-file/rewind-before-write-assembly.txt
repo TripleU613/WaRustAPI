@@ -1,0 +1,41 @@
+            0x007343a4      paciasp
+            0x007343a8      stp   x29, x30, [sp, -0x20]!
+            0x007343ac      stp   x20, x19, [sp, 0x10]
+            0x007343b0      mov   x29, sp
+        ┌─< 0x007343b4      tbnz  w1, 0x1f, 0x734444
+        │   0x007343b8      ldr   w8, [x0, 0x2c]                       ; [0x2c:4]=0
+        │   0x007343bc      mov   x19, x0
+        │   0x007343c0      cmp   w8, 3
+       ┌──< 0x007343c4      b.ne  0x7343e4
+       ││   0x007343c8      ldr   x0, [x19, 0x38]                      ; [0x38:4]=0x40000a
+       ││   0x007343cc      adrp  x1, 0x10f000
+       ││   0x007343d0      add   x1, x1, 0xfd6
+       ││   0x007343d4      mov   w2, wzr
+       ││   0x007343d8      bl    0x733df0
+       ││   0x007343dc      mov   w0, 2
+      ┌───< 0x007343e0      b     0x734434
+      │└──> 0x007343e4      ldr   x20, [x19, 0x20]                     ; [0x20:4]=64 ; "@"
+      │ │   0x007343e8      mov   w0, w1
+      │ │   0x007343ec      bl    sym.imp.MCFSizeTFromInt32
+      │ │   0x007343f0      bl    0xbe0ebc
+      │ │   0x007343f4      mov   w2, wzr
+      │ │   0x007343f8      bl    sym.imp.fseek
+      │┌──< 0x007343fc      cbz   w0, 0x73442c
+      │││   0x00734400      bl    sym.imp.__errno
+      │││   0x00734404      ldr   x19, [x19, 0x20]                     ; [0x20:4]=64 ; "@"
+      │││   0x00734408      ldr   w20, [x0]
+      │││   0x0073440c      mov   x0, x19
+      │││   0x00734410      bl    sym.imp.ferror
+     ┌────< 0x00734414      cbz   w0, 0x734420
+     ││││   0x00734418      mov   x0, x19
+     ││││   0x0073441c      bl    sym.imp.clearerr
+     └────> 0x00734420      mov   w8, 1
+      │││   0x00734424      orr   x0, x8, x20, lsl 32
+     ┌────< 0x00734428      b     0x734434
+     ││└──> 0x0073442c      mov   x0, xzr
+     ││ │   0x00734430      strb  wzr, [x19, 0x30]
+     └└───> 0x00734434      ldp   x20, x19, [sp, 0x10]
+        │   0x00734438      ldp   x29, x30, [sp], 0x20
+        │   0x0073443c      autiasp
+        │   0x00734440      ret
+        └─> 0x00734444      bl    sym.imp.abort

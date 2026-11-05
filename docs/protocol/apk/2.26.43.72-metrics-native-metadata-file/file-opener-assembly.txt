@@ -1,0 +1,68 @@
+            0x00733ce0      paciasp
+            0x00733ce4      stp   x29, x30, [sp, -0x30]!
+            0x00733ce8      bl    0x63c894
+            0x00733cec      mov   x29, sp
+        ┌─< 0x00733cf0      cbz   x1, 0x733dec
+        │   0x00733cf4      bl    0xbe8448
+        │   0x00733cf8      mov   x22, x0
+        │   0x00733cfc      bl    0x733c44
+        │   0x00733d00      bl    0xbdff44
+        │   0x00733d04      bl    sym.imp.MCFRuntimeCreateInstance
+        │   0x00733d08      mov   x19, x0
+        │   0x00733d0c      str   x22, [x0, 0x18]
+        │   0x00733d10      mov   x0, x22
+        │   0x00733d14      bl    sym.imp.MCFRetain
+        │   0x00733d18      mov   w8, 3
+        │   0x00733d1c      mov   x0, x20
+        │   0x00733d20      str   w8, [x19, 0x2c]
+        │   0x00733d24      bl    sym.imp.MCFURLCopyFileSystemPath
+        │   0x00733d28      mov   x20, x0
+       ┌──< 0x00733d2c      cbz   x0, 0x733d8c
+       ││   0x00733d30      mov   w0, 0x400
+       ││   0x00733d34      bl    sym.imp.MCFSizeTFromInt32
+       ││   0x00733d38      bl    sym.imp.MCFMalloc
+       ││   0x00733d3c      mov   w3, 0x100
+       ││   0x00733d40      mov   x1, x0
+       ││   0x00733d44      str   x0, [x19, 0x38]
+       ││   0x00733d48      mov   x0, x20
+       ││   0x00733d4c      mov   w2, 0x400
+       ││   0x00733d50      movk  w3, 0x800, lsl 16
+       ││   0x00733d54      bl    sym.imp.MCFStringGetCString
+       ││   0x00733d58      tst   w0, 0xff
+      ┌───< 0x00733d5c      b.eq  0x733d98
+      │││   0x00733d60      adrp  x8, 0xc0c000
+      │││   0x00733d64      add   x8, x8, 0x10
+      │││   0x00733d68      ldr   x0, [x19, 0x38]                      ; [0x38:4]=0x40000a
+      │││   0x00733d6c      ldr   x1, [x8, w21, uxtw 3]
+      │││   0x00733d70      bl    sym.imp.fopen
+      │││   0x00733d74      str   x0, [x19, 0x20]
+     ┌────< 0x00733d78      cbz   x0, 0x733dd0
+     ││││   0x00733d7c      mov   x0, x20
+     ││││   0x00733d80      stp   w21, wzr, [x19, 0x28]
+     ││││   0x00733d84      bl    sym.imp.MCFRelease
+    ┌─────< 0x00733d88      b     0x733dc0
+    │││└──> 0x00733d8c      adrp  x1, 0xfa000
+    │││ │   0x00733d90      add   x1, x1, 0xdac
+    │││┌──< 0x00733d94      b     0x733da4
+    ││└───> 0x00733d98      adrp  x1, 0xfb000
+    ││ ││   0x00733d9c      add   x1, x1, 0x1aa
+    ││ ││   0x00733da0      mov   x0, xzr
+    ││ └──> 0x00733da4      mov   w2, wzr
+    ││ ┌──> 0x00733da8      bl    0x733df0
+    ││ ╎│   0x00733dac      mov   x0, x19
+    ││ ╎│   0x00733db0      bl    sym.imp.MCFRelease
+    ││ ╎│   0x00733db4      mov   x0, x20
+    ││ ╎│   0x00733db8      bl    sym.imp.MCFRelease
+    ││ ╎│   0x00733dbc      mov   x19, xzr
+    └─────> 0x00733dc0      bl    0xbde028
+     │ ╎│   0x00733dc4      ldp   x29, x30, [sp], 0x30
+     │ ╎│   0x00733dc8      autiasp
+     │ ╎│   0x00733dcc      ret
+     └────> 0x00733dd0      bl    sym.imp.__errno
+       ╎│   0x00733dd4      ldr   x8, [x19, 0x38]                      ; [0x38:4]=0x40000a
+       ╎│   0x00733dd8      ldr   w2, [x0]
+       ╎│   0x00733ddc      adrp  x1, 0x10f000
+       ╎│   0x00733de0      add   x1, x1, 0xe3d
+       ╎│   0x00733de4      mov   x0, x8
+       └──< 0x00733de8      b     0x733da8
+        └─> 0x00733dec      bl    sym.imp.abort

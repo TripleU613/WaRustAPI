@@ -1,0 +1,182 @@
+{
+  "scope": "static path/mode/layout evidence; direct branches only, not indirect callers",
+  "path_suffix": "/wam-metadata",
+  "path_suffix_va": "0x15d33d",
+  "magic": "MTD",
+  "magic_va": "0x165e0f",
+  "record_bytes": 1692,
+  "version_byte": 4,
+  "writer_header_constant_va": "0x18a190",
+  "writer_header_bytes_hex": "4d544404",
+  "mode_table": [
+    {
+      "index": 0,
+      "slot_va": "0xc0c010",
+      "slot_file_offset": "0xc04010",
+      "string_va": "0x15c70d",
+      "value": "rb"
+    },
+    {
+      "index": 1,
+      "slot_va": "0xc0c018",
+      "slot_file_offset": "0xc04018",
+      "string_va": "0x15c67c",
+      "value": "wb"
+    },
+    {
+      "index": 2,
+      "slot_va": "0xc0c020",
+      "slot_file_offset": "0xc04020",
+      "string_va": "0x15ce5e",
+      "value": "ab"
+    }
+  ],
+  "direct_references": {
+    "0x6fdb7c": [
+      {
+        "va": "0x6fdcf0",
+        "file_offset": "0x6f9cf0",
+        "opcode": "BL"
+      },
+      {
+        "va": "0x72b224",
+        "file_offset": "0x727224",
+        "opcode": "BL"
+      }
+    ],
+    "0x6fdca0": [
+      {
+        "va": "0x725014",
+        "file_offset": "0x721014",
+        "opcode": "BL"
+      }
+    ],
+    "0x724fc8": [
+      {
+        "va": "0x7242b0",
+        "file_offset": "0x7202b0",
+        "opcode": "BL"
+      },
+      {
+        "va": "0x724f1c",
+        "file_offset": "0x720f1c",
+        "opcode": "BL"
+      },
+      {
+        "va": "0x725360",
+        "file_offset": "0x721360",
+        "opcode": "BL"
+      },
+      {
+        "va": "0x725a64",
+        "file_offset": "0x721a64",
+        "opcode": "B"
+      },
+      {
+        "va": "0x725b5c",
+        "file_offset": "0x721b5c",
+        "opcode": "BL"
+      }
+    ]
+  },
+  "windows": [
+    {
+      "name": "snapshot-creation",
+      "virtual_address": "0x71fdf4",
+      "file_offset": "0x71bdf4",
+      "bytes": 124,
+      "sha256": "9000c5ccab2fcb5ac0a048d1d2544ec7c993dea71ca1e296c14f81ed2f5e3eb6"
+    },
+    {
+      "name": "path-suffix",
+      "virtual_address": "0x6fdc64",
+      "file_offset": "0x6f9c64",
+      "bytes": 60,
+      "sha256": "126d605c3c97c2a497647fc1a4fb396b113fc1022426552b163c489266618364"
+    },
+    {
+      "name": "metadata-file-opener",
+      "virtual_address": "0x6fdb7c",
+      "file_offset": "0x6f9b7c",
+      "bytes": 156,
+      "sha256": "2733dbc303c9e9961df9908fc5e818adf6fb2a369e782cb7462b6e500e2f0bc9"
+    },
+    {
+      "name": "file-opener",
+      "virtual_address": "0x733ce0",
+      "file_offset": "0x72fce0",
+      "bytes": 272,
+      "sha256": "3dcbbb236903c68837c39caf475aaad398ca73f987c099e6a9193c306c966804"
+    },
+    {
+      "name": "metadata-recovery",
+      "virtual_address": "0x72b1d8",
+      "file_offset": "0x7271d8",
+      "bytes": 752,
+      "sha256": "4b821d8aed95b105b265370289d4d284896615740d8facb543ae99192cc6066d"
+    },
+    {
+      "name": "normal-worker-save",
+      "virtual_address": "0x724280",
+      "file_offset": "0x720280",
+      "bytes": 84,
+      "sha256": "76a7d8ae81ce6880de2b88b5752f5e10810b87eb6201d4b3ce4aa656ff5a84b3"
+    },
+    {
+      "name": "other-normal-save",
+      "virtual_address": "0x725350",
+      "file_offset": "0x721350",
+      "bytes": 20,
+      "sha256": "da6bd61c99a1c749405225a500975c24b806f0e258c7e64445ee218cad856693"
+    },
+    {
+      "name": "recovery-mode",
+      "virtual_address": "0x5ce230",
+      "file_offset": "0x5ca230",
+      "bytes": 12,
+      "sha256": "2095c3ed783954377521c0a68bfa4ce31bd128cc611a96988a0fe590d69a8592"
+    },
+    {
+      "name": "write-mode",
+      "virtual_address": "0x5cf848",
+      "file_offset": "0x5cb848",
+      "bytes": 12,
+      "sha256": "e8c9028d3802ef59d33a18abf8b483495322a0c66e5d663b4024018320216d8e"
+    },
+    {
+      "name": "opener-register-flow",
+      "virtual_address": "0xbe8448",
+      "file_offset": "0xbe4448",
+      "bytes": 12,
+      "sha256": "ccf18f9a82acee09a22f2e7b54161edba692d8e76386bc604f509739713edc58"
+    },
+    {
+      "name": "rewind-before-write",
+      "virtual_address": "0x7343a4",
+      "file_offset": "0x7303a4",
+      "bytes": 164,
+      "sha256": "8d5570d6653a3da7a4822f268cf44be5bbca8a496bf0f53b5706acf7d6183987"
+    },
+    {
+      "name": "rewind-arguments",
+      "virtual_address": "0xbe06b0",
+      "file_offset": "0xbdc6b0",
+      "bytes": 12,
+      "sha256": "91e10beb669e1318c528f49844b6b38f7cc4c4647225eb26c04ea68f0a6a7e54"
+    },
+    {
+      "name": "path-register-flow",
+      "virtual_address": "0xbe4704",
+      "file_offset": "0xbe0704",
+      "bytes": 12,
+      "sha256": "c27cc69be568788ec77243423d70dce6210ea5d5550d210f70738417ca38ba4e"
+    },
+    {
+      "name": "url-register-flow",
+      "virtual_address": "0xbe1aa8",
+      "file_offset": "0xbddaa8",
+      "bytes": 12,
+      "sha256": "ad9cacec40dd97b1b54370693ea2de20b22c6a67b7fd67f98004a42108f94414"
+    }
+  ]
+}

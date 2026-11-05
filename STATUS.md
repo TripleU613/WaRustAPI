@@ -1,3 +1,12 @@
+2026-11-05 — **Native metrics metadata file path and recovery envelope mapped.**
+
+Paired writer/recovery evidence identifies /wam-metadata, rb/wb modes, rewind,
+1692-byte MTD/version-4 records and a compatible normal-path snapshot guard.
+[Evidence and remaining limits](docs/protocol/apk/2.26.43.72-metrics-native-metadata-file/README.md).
+Full validation, durability, buffer format and transport/replies remain open.
+Validation: pinned image, section-aware digests, mode/direct-branch resolver
+reproduction, JSON, coverage and bundle/link hygiene. No Rust/live change.
+
 2026-11-05 — **Native metrics pending worker and selected persistence traced.**
 
 Async drain removes before processing and adds channel-specific time metadata;

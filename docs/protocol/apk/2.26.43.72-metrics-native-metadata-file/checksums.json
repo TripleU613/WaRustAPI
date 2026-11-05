@@ -1,0 +1,70 @@
+{
+  "README.md": {
+    "bytes": 5798,
+    "sha256": "69878534f73677c224944271f9165ef849e50418209c00432c8bb7a03bda450e"
+  },
+  "file-boundary.json": {
+    "bytes": 4800,
+    "sha256": "cd32e355e6c80f386b7abe13dc63bbe64ad6c61f4265fbbd79a14a1a7a2f6775"
+  },
+  "file-opener-assembly.txt": {
+    "bytes": 3624,
+    "sha256": "13e33e35bad80a558afb1c6f7dd41095191e7123db84f575c69d23fccaee2f70"
+  },
+  "inspect-file-boundary.py": {
+    "bytes": 3197,
+    "sha256": "bba1d42f378960927a270b3eafe56311ae875cd00ab98b42952d26dcae61fe2a"
+  },
+  "metadata-file-opener-assembly.txt": {
+    "bytes": 1983,
+    "sha256": "42dc0fb993a9c95e20fd73b13cf1ed466d88b5bbd6c9531a886524500dc178f7"
+  },
+  "metadata-recovery-assembly.txt": {
+    "bytes": 11915,
+    "sha256": "4686f107560bd210096b61c67d29c544c7e7671f825500a6792b7b4b5fc63c56"
+  },
+  "normal-worker-save-assembly.txt": {
+    "bytes": 1137,
+    "sha256": "2224da66056dd51a2f73eda27a02052bbdae4c59598dc90d75f2d777d3b86bde"
+  },
+  "opener-register-flow-assembly.txt": {
+    "bytes": 116,
+    "sha256": "a5611789512168fcf4a25eaa646999eb106de70dbef783e7893c043b9d267250"
+  },
+  "other-normal-save-assembly.txt": {
+    "bytes": 233,
+    "sha256": "c60bb00b6ac511ca6b0c05ad466314fbfe79e15d04c4cdc0484ca80cd37b4ec6"
+  },
+  "path-register-flow-assembly.txt": {
+    "bytes": 165,
+    "sha256": "8b09e3a86f0a4e9b3322a2e2a3c24d7d32415af1bf1a6ffbdfb907154ba5cf37"
+  },
+  "path-suffix-assembly.txt": {
+    "bytes": 715,
+    "sha256": "ecb7bc20f11e9acf72ffd09802271ba69339d3c1d048987e6d28db768f9796b1"
+  },
+  "recovery-mode-assembly.txt": {
+    "bytes": 116,
+    "sha256": "3abe7284293e10f32313503f0f33f7fffa7ba3e7e29039fe9bb084e0554f2e4e"
+  },
+  "rewind-arguments-assembly.txt": {
+    "bytes": 116,
+    "sha256": "55a83340f77ace6e3273d6738afbbf7e9d0729bf1f87e4a3816c8683f23d3c00"
+  },
+  "rewind-before-write-assembly.txt": {
+    "bytes": 2252,
+    "sha256": "d8011bf2aa58b2d4e58d83294ba5cab08bd953f74274855142847b165209c6ba"
+  },
+  "snapshot-creation-assembly.txt": {
+    "bytes": 1783,
+    "sha256": "91521107213f603467d517b14db0bf8e7a72a79a56846e6dbb3cce4ad94b6483"
+  },
+  "url-register-flow-assembly.txt": {
+    "bytes": 116,
+    "sha256": "917535882d288db6165b42074d1d554ac9eb37fa50e2d1ee3c3d4432990bd77d"
+  },
+  "write-mode-assembly.txt": {
+    "bytes": 114,
+    "sha256": "8aa84f589c30336d7829d05a4fdc7837f848f1e8bbdc844f47e9af26a528d3e6"
+  }
+}

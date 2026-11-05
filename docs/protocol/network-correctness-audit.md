@@ -2413,3 +2413,13 @@ fflush; flush return is ignored by the selected snapshot caller. Guard/caller
 reachability, full durable format and actual transport remain unverified.
 [Complete selected bodies, clock/thunk resolver and scoped limits](apk/2.26.43.72-metrics-native-drain-persistence/README.md).
 No queue removal/stdio flush is promoted to delivery or crash durability. No Rust/live change.
+
+### Native metrics metadata path, modes and recovery envelope (2026-11-05)
+
+**Confirmed static / derived, APK 2.26.43.72:** selected metadata path appends
+/wam-metadata, uses rb recovery/wb writing, and rewinds before snapshot writes.
+Reader checks 1692-byte MTD/version-4 envelope, matching writer header bytes;
+a normal worker save passes the snapshot's zero guard. Termination and complete
+validation/durability/transport semantics remain open.
+[Mode/branch resolver, paired read/write evidence and limits](apk/2.26.43.72-metrics-native-metadata-file/README.md).
+Local metrics metadata is not account/message replay authority. No Rust/live change.
