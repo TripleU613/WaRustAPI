@@ -15873,5 +15873,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-push-config-projection/README.md",
     "description": "Push-config visitor projects eight internal values and selected type6 handler forwards seven strings to push-registration handling with FBNS separate. Internal Bundle keys are not proven wire attributes. Wire grammar, handler/provider binding, downstream effects and durable reconciliation remain open. No sender, route or live operation added."
+  },
+  "x-push-config-verification-work-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-push-config-verification-work/README.md",
+    "description": "Selected push-config consumer queues verification work with omitted empty String extras and account/VOIP int fallbacks1/0. Normal callback return does not prove enqueue completion or send. Later service comparison/gate path invokes a separate sender; full provider lifecycle, sender outcomes and durable ownership remain open. No sender, route or live operation added."
   }
 }

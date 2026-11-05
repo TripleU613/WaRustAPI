@@ -1,3 +1,11 @@
+2026-11-04 — **Push-config verification work and fallback values traced.**
+
+Config handling queues VERIFY work, omits empty String extras, and defaults
+account count/VOIP parse failures to1/0. Later service gates control corrective
+send invocation. [Evidence and limits](docs/protocol/apk/2.26.43.72-push-config-verification-work/README.md).
+Research only; no runtime changes or live traffic. Validation: checked exports,
+checksums, JSON, coverage freshness and repository hygiene.
+
 2026-11-04 — **Push-config internal fields and selected consumer traced.**
 
 Eight projected values concern push registration, mute/account/key state and

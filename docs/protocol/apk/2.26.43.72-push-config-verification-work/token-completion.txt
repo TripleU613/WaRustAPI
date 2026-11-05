@@ -1,0 +1,372 @@
+
+# class: LX/2Fn;
+# extends: Ljava/lang/Object;
+
+.method public onComplete(VL)  # .registers 26
+    # full signature: LX/2Fn;->onComplete(Lcom/google/android/gms/tasks/Task;)V
+    0000..0004  move-object/from16  v3, v24
+    0004..0008  iget-object  v2, v3, LX/2Fn;->A01:Lcom/whatsapp/infra/push/RegistrationIntentService;
+    0008..000c  iget-object  v11, v3, LX/2Fn;->A00:Landroid/content/Intent;
+    000c..0010  iget-boolean  v7, v3, LX/2Fn;->A04:Z
+    0010..0014  iget-boolean  v10, v3, LX/2Fn;->A05:Z
+    0014..0018  iget-boolean  v0, v3, LX/2Fn;->A06:Z
+    0018..001c  iget-object  v1, v3, LX/2Fn;->A02:Ljava/lang/String;
+    001c..0020  iget-object  v3, v3, LX/2Fn;->A03:Ljava/util/concurrent/CountDownLatch;
+    0020..0022  const/4  v4, #0x7
+    0022..0026  move-object/from16  v5, v25
+    0026..002c  invoke-static  {v5, v4}, LX/00l;->A09(Ljava/lang/Object;I)V
+    002c..0032  invoke-static  {}, Landroid/os/Binder;->clearCallingIdentity()J
+    0032..0034  move-result-wide  v15
+    0034..003a  invoke-virtual  {v5}, Lcom/google/android/gms/tasks/Task;->isSuccessful()Z
+    003a..003c  move-result  v4
+    003c..0040  if-eqz  v4, +0x10e
+    0040..0046  invoke-virtual  {v5}, Lcom/google/android/gms/tasks/Task;->getResult()Ljava/lang/Object;
+    0046..0048  move-result-object  v6
+    0048..004c  check-cast  v6, Ljava/lang/String;
+    004c..0050  if-nez  v6, +0x9
+    0050..0054  const-string  v0, "GCM: successful token fetch returned null"
+    0054..005a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    005a..005e  goto/16  +0x284
+    005e..0062  iget-object  v4, v2, Lcom/whatsapp/infra/push/RegistrationIntentService;->A0B:LX/05a;
+    0062..0068  invoke-static  {v4}, LX/1Xl;->A0W(LX/05a;)LX/00Y;
+    0068..006a  move-result-object  v5
+    006a..006e  check-cast  v5, LX/00Z;
+    006e..0074  invoke-static  {v2}, Lcom/whatsapp/infra/push/RegistrationIntentService;->A02(Lcom/whatsapp/infra/push/RegistrationIntentService;)LX/09S;
+    0074..0076  move-result-object  v4
+    0076..007c  invoke-virtual  {v4}, LX/09S;->A0S()LX/1nA;
+    007c..007e  move-result-object  v4
+    007e..0084  invoke-virtual  {v4}, LX/0FZ;->A03()Landroid/content/SharedPreferences;
+    0084..0086  move-result-object  v8
+    0086..008a  const-string  v12, "c2dm_app_vers"
+    008a..008c  const/4  v4, #0x0
+    008c..0092  invoke-interface  {v8, v12, v4}, Landroid/content/SharedPreferences;->getInt(Ljava/lang/String;I)I
+    0092..0094  move-result  v13
+    0094..0098  const-string  v4, "registrationId"
+    0098..009e  invoke-virtual  {v11, v4}, Landroid/content/Intent;->getStringExtra(Ljava/lang/String;)Ljava/lang/String;
+    009e..00a0  move-result-object  v9
+    00a0..00a6  const  v8, #0xfc10226
+    00a6..00a8  const/4  v4, #0x0
+    00a8..00ac  if-eqz  v7, +0xd
+    00ac..00b0  if-eqz  v9, +0x8
+    00b0..00b6  invoke-virtual  {v9}, Ljava/lang/String;->length()I
+    00b6..00b8  move-result  v14
+    00b8..00bc  if-nez  v14, +0x5
+    00bc..00c0  const/16  v19, #0x1
+    00c0..00c2  goto  +0x5
+    00c2..00c6  const/16  v19, #0x0
+    00c6..00ca  if-eqz  v7, +0xa
+    00ca..00d0  invoke-static  {v9, v1}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    00d0..00d2  move-result  v14
+    00d2..00d6  const/16  v18, #0x1
+    00d6..00da  if-eqz  v14, +0x4
+    00da..00de  const/16  v18, #0x0
+    00de..00e2  if-eqz  v1, +0xa
+    00e2..00e8  invoke-virtual  {v1}, Ljava/lang/String;->length()I
+    00e8..00ea  move-result  v14
+    00ea..00ee  const/16  v17, #0x0
+    00ee..00f2  if-nez  v14, +0x4
+    00f2..00f6  const/16  v17, #0x1
+    00f6..00f8  const/4  v14, #0x0
+    00f8..00fc  if-eq  v8, v13, +0x3
+    00fc..00fe  const/4  v14, #0x1
+    00fe..0102  if-nez  v19, +0xb
+    0102..0106  if-nez  v17, +0x9
+    0106..010a  if-nez  v18, +0x7
+    010a..010e  if-nez  v14, +0x5
+    010e..0110  const/4  v14, #0x0
+    0110..0114  if-eqz  v0, +0x3
+    0114..0116  const/4  v14, #0x1
+    0116..011c  invoke-virtual  {v6}, Ljava/lang/String;->length()I
+    011c..011e  move-result  v13
+    011e..0122  const-string  v0, "GCM: token retrieved successfully; token="
+    0122..0128  invoke-static  {v13, v0}, LX/1Xl;->A14(ILjava/lang/String;)Ljava/lang/StringBuilder;
+    0128..012a  move-result-object  v13
+    012a..012e  const-string  v0, " bytes; applicationVersion="
+    012e..0134  invoke-static  {v0, v13, v8}, LX/1Xl;->A1U(Ljava/lang/String;Ljava/lang/StringBuilder;I)V
+    0134..0138  if-eqz  v17, +0x1c
+    0138..013c  const-string  v0, "GCM: no previously saved token"
+    013c..0142  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0142..0148  invoke-static  {v2}, Lcom/whatsapp/infra/push/RegistrationIntentService;->A02(Lcom/whatsapp/infra/push/RegistrationIntentService;)LX/09S;
+    0148..014a  move-result-object  v0
+    014a..0150  invoke-virtual  {v0}, LX/09S;->A0U()LX/1rs;
+    0150..0152  move-result-object  v0
+    0152..0158  invoke-virtual  {v0}, LX/0FZ;->A02()Landroid/content/SharedPreferences$Editor;
+    0158..015a  move-result-object  v13
+    015a..015e  const-string  v0, "logins_with_messages"
+    015e..0164  invoke-interface  {v13, v0, v4}, Landroid/content/SharedPreferences$Editor;->putInt(Ljava/lang/String;I)Landroid/content/SharedPreferences$Editor;
+    0164..0166  move-result-object  v0
+    0166..016c  invoke-interface  {v0}, Landroid/content/SharedPreferences$Editor;->apply()V
+    016c..0172  invoke-virtual  {v6, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0172..0174  move-result  v13
+    0174..0178  if-nez  v14, +0x4
+    0178..017c  if-nez  v13, +0x5d
+    017c..0182  invoke-static  {v2}, Lcom/whatsapp/infra/push/RegistrationIntentService;->A02(Lcom/whatsapp/infra/push/RegistrationIntentService;)LX/09S;
+    0182..0184  move-result-object  v0
+    0184..018a  invoke-virtual  {v0}, LX/09S;->A0S()LX/1nA;
+    018a..018c  move-result-object  v0
+    018c..0192  invoke-virtual  {v0}, LX/0FZ;->A02()Landroid/content/SharedPreferences$Editor;
+    0192..0194  move-result-object  v1
+    0194..0198  const-string  v0, "c2dm_reg_id"
+    0198..019e  invoke-interface  {v1, v0, v6}, Landroid/content/SharedPreferences$Editor;->putString(Ljava/lang/String;Ljava/lang/String;)Landroid/content/SharedPreferences$Editor;
+    019e..01a0  move-result-object  v0
+    01a0..01a6  invoke-interface  {v0, v12, v8}, Landroid/content/SharedPreferences$Editor;->putInt(Ljava/lang/String;I)Landroid/content/SharedPreferences$Editor;
+    01a6..01a8  move-result-object  v0
+    01a8..01ae  invoke-interface  {v0}, Landroid/content/SharedPreferences$Editor;->apply()V
+    01ae..01b2  if-nez  v10, +0x8
+    01b2..01b8  invoke-virtual  {v6, v9}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    01b8..01ba  move-result  v0
+    01ba..01be  if-nez  v0, +0x3
+    01be..01c0  const/4  v4, #0x1
+    01c0..01c4  const-string  v0, "GCM: sending client config due to new token"
+    01c4..01ca  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    01ca..01ce  if-eqz  v14, +0x34
+    01ce..01d2  if-eqz  v19, +0x32
+    01d2..01d6  if-eqz  v13, +0x30
+    01d6..01dc  invoke-static  {v2}, Lcom/whatsapp/infra/push/RegistrationIntentService;->A02(Lcom/whatsapp/infra/push/RegistrationIntentService;)LX/09S;
+    01dc..01de  move-result-object  v0
+    01de..01e4  invoke-virtual  {v0}, LX/09S;->A0S()LX/1nA;
+    01e4..01e6  move-result-object  v0
+    01e6..01ec  invoke-virtual  {v0}, LX/0FZ;->A03()Landroid/content/SharedPreferences;
+    01ec..01ee  move-result-object  v1
+    01ee..01f2  const-string  v8, "saved_gcm_token_server_unreg"
+    01f2..01f4  const/4  v0, #0x0
+    01f4..01fa  invoke-interface  {v1, v8, v0}, Landroid/content/SharedPreferences;->getBoolean(Ljava/lang/String;Z)Z
+    01fa..01fc  move-result  v0
+    01fc..0200  if-nez  v0, +0x1b
+    0200..0204  const-string  v0, "GCM: verifying tokenUnregisteredOnServer fetched saved token"
+    0204..020a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    020a..0210  invoke-static  {v2}, Lcom/whatsapp/infra/push/RegistrationIntentService;->A02(Lcom/whatsapp/infra/push/RegistrationIntentService;)LX/09S;
+    0210..0212  move-result-object  v0
+    0212..0218  invoke-virtual  {v0}, LX/09S;->A0S()LX/1nA;
+    0218..021a  move-result-object  v0
+    021a..021c  const/4  v1, #0x1
+    021c..0222  invoke-virtual  {v0}, LX/0FZ;->A02()Landroid/content/SharedPreferences$Editor;
+    0222..0224  move-result-object  v0
+    0224..022a  invoke-interface  {v0, v8, v1}, Landroid/content/SharedPreferences$Editor;->putBoolean(Ljava/lang/String;Z)Landroid/content/SharedPreferences$Editor;
+    022a..022c  move-result-object  v0
+    022c..0232  invoke-interface  {v0}, Landroid/content/SharedPreferences$Editor;->apply()V
+    0232..0236  const-string  v21, "gcm"
+    0236..023a  move-object/from16  v18, v2
+    023a..023e  move-object/from16  v19, v5
+    023e..0242  move-object/from16  v20, v6
+    0242..0246  move/from16  v22, v7
+    0246..024a  move/from16  v23, v4
+    024a..024e  move-object/from16  v17, v11
+    024e..0254  invoke-static/range  {v17..v23}, Lcom/whatsapp/infra/push/RegistrationIntentService;->A05(Landroid/content/Intent;Lcom/whatsapp/infra/push/RegistrationIntentService;LX/00Z;Ljava/lang/String;Ljava/lang/String;ZZ)Z
+    0254..0258  goto/16  +0x187
+    0258..025c  const-string  v0, "GCM: failed to get token"
+    025c..0262  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    0262..0268  invoke-virtual  {v5}, Lcom/google/android/gms/tasks/Task;->getException()Ljava/lang/Exception;
+    0268..026a  move-result-object  v10
+    026a..026e  instance-of  v0, v10, Ljava/io/IOException;
+    026e..0272  if-eqz  v0, +0x171
+    0272..0276  check-cast  v10, Ljava/io/IOException;
+    0276..027c  invoke-virtual  {v10}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    027c..027e  move-result-object  v0
+    027e..0282  if-eqz  v0, +0x17f
+    0282..0284  move-object  v4, v10
+    0284..0286  move-object  v1, v10
+    0286..028c  invoke-virtual  {v1}, Ljava/lang/Throwable;->getCause()Ljava/lang/Throwable;
+    028c..028e  move-result-object  v1
+    028e..0292  if-nez  v1, +0xe4
+    0292..0298  invoke-virtual  {v4}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    0298..029a  move-result-object  v5
+    029a..029e  if-eqz  v5, +0x154
+    029e..02a2  const/16  v1, #0x4e3
+    02a2..02a6  iget-object  v0, v2, Lcom/whatsapp/infra/push/RegistrationIntentService;->A0B:LX/05a;
+    02a6..02ac  invoke-static  {v0}, LX/1Xl;->A0W(LX/05a;)LX/00Y;
+    02ac..02ae  move-result-object  v0
+    02ae..02b2  check-cast  v0, LX/00Z;
+    02b2..02b8  invoke-static  {v0, v1}, LX/09H;->A00(LX/00Y;I)LX/05a;
+    02b8..02ba  move-result-object  v14
+    02ba..02c0  invoke-virtual  {v5}, Ljava/lang/String;->hashCode()I
+    02c0..02c2  move-result  v8
+    02c2..02c6  const-string  v7, "FIS_AUTH_ERROR"
+    02c6..02ca  const-string  v9, "AUTHENTICATION_FAILED"
+    02ca..02ce  const-string  v6, "PHONE_REGISTRATION_ERROR"
+    02ce..02d2  const-string  v12, "; playServicesAvailable="
+    02d2..02d6  const-string  v13, "GCM: attempted to register for GCM but received undocumented error; exceptionMessage="
+    02d6..02d8  const/4  v4, #0x0
+    02d8..02de  sparse-switch  v8, payload@0x598, cases=[-1992442893:@0x382, -1800638118:@0x412, -1579216525:@0x404, -1515255836:@0x3fa, -829011630:@0x3ec, -630263762:@0x3e6, -595928767:@0x370, 370784008:@0x36a, 855732677:@0x364, 901541140:@0x35e, 1669997632:@0x354, 1750400351:@0x33e], default@0x2de
+    02de..02e4  invoke-static  {v2}, LX/0tb;->A00(Landroid/content/Context;)I
+    02e4..02e6  move-result  v1
+    02e6..02ec  invoke-virtual  {v10}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    02ec..02ee  move-result-object  v0
+    02ee..02f4  invoke-static  {v13, v0}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    02f4..02f6  move-result-object  v0
+    02f6..02fc  invoke-static  {v12, v0, v1}, LX/1Xl;->A11(Ljava/lang/String;Ljava/lang/StringBuilder;I)Ljava/lang/String;
+    02fc..02fe  move-result-object  v0
+    02fe..0304  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    0304..030a  invoke-static  {v2}, Lcom/whatsapp/infra/push/RegistrationIntentService;->A02(Lcom/whatsapp/infra/push/RegistrationIntentService;)LX/09S;
+    030a..030c  move-result-object  v0
+    030c..0312  invoke-virtual  {v0}, LX/09S;->A0S()LX/1nA;
+    0312..0314  move-result-object  v0
+    0314..031a  invoke-virtual  {v0}, LX/1nA;->A04()V
+    031a..031c  const/4  v2, #0x0
+    031c..0322  invoke-static  {v14}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0322..0324  move-result-object  v1
+    0324..0328  check-cast  v1, LX/0GO;
+    0328..032c  const-string  v0, "gcm-get-token-"
+    032c..0332  invoke-static  {v0, v5}, LX/000;->A04(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0332..0334  move-result-object  v0
+    0334..033a  invoke-virtual  {v1, v0, v2, v4}, LX/0B0;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+    033a..033e  goto/16  +0x114
+    033e..0342  const-string  v0, "MISSING_INSTANCEID_SERVICE"
+    0342..0348  invoke-virtual  {v5, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0348..034a  move-result  v0
+    034a..034e  if-eqz  v0, -0x36
+    034e..0352  const-string  v0, "GCM: attempted to register for GCM but Google Play Services was missing"
+    0352..0354  goto  +0x72
+    0354..035a  invoke-virtual  {v5, v7}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    035a..035c  move-result  v0
+    035c..035e  goto  +0x58
+    035e..0362  const-string  v0, "ACCOUNT_MISSING"
+    0362..0364  goto  +0x47
+    0364..0368  const-string  v0, "TOO_MANY_REGISTRATIONS"
+    0368..036a  goto  +0x57
+    036a..036e  const-string  v0, "BACKOFF"
+    036e..0370  goto  +0x3
+    0370..0374  const-string  v0, "TIMEOUT"
+    0374..037a  invoke-virtual  {v5, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    037a..037c  move-result  v0
+    037c..0380  if-nez  v0, +0xb
+    0380..0382  goto  -0x51
+    0382..0386  const-string  v0, "SERVICE_NOT_AVAILABLE"
+    0386..038c  invoke-virtual  {v5, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    038c..038e  move-result  v0
+    038e..0392  if-eqz  v0, -0x58
+    0392..0396  const-wide/16  v0, #0x3a98
+    0396..039a  const-string  v8, "delay_ms"
+    039a..03a0  invoke-virtual  {v11, v8, v0, v1}, Landroid/content/Intent;->getLongExtra(Ljava/lang/String;J)J
+    03a0..03a2  move-result-wide  v5
+    03a2..03a8  const-wide/32  v0, #0x5265c00
+    03a8..03ae  invoke-static  {v5, v6, v0, v1}, Ljava/lang/Math;->min(JJ)J
+    03ae..03b0  move-result-wide  v6
+    03b0..03b4  const-wide/16  v0, #0x2
+    03b4..03b6  mul-long/2addr  v0, v6
+    03b6..03bc  invoke-virtual  {v11, v8, v0, v1}, Landroid/content/Intent;->putExtra(Ljava/lang/String;J)Landroid/content/Intent;
+    03bc..03c0  iget-object  v0, v2, Lcom/whatsapp/infra/push/RegistrationIntentService;->A08:LX/05a;
+    03c0..03c6  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    03c6..03c8  move-result-object  v0
+    03c8..03cc  check-cast  v0, LX/0B8;
+    03cc..03d2  invoke-virtual  {v0}, LX/0B8;->A04()Landroid/app/AlarmManager;
+    03d2..03d4  move-result-object  v5
+    03d4..03d8  const/high16  v0, #0x4000000
+    03d8..03de  invoke-static  {v2, v4, v11, v0}, Landroid/app/PendingIntent;->getService(Landroid/content/Context;ILandroid/content/Intent;I)Landroid/app/PendingIntent;
+    03de..03e0  move-result-object  v4
+    03e0..03e4  if-eqz  v5, +0x5a
+    03e4..03e6  goto  +0x42
+    03e6..03ea  const-string  v0, "INTERNAL_SERVER_ERROR"
+    03ea..03ec  goto  +0x3
+    03ec..03f0  const-string  v0, "INVALID_PARAMETERS"
+    03f0..03f6  invoke-virtual  {v5, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    03f6..03f8  move-result  v0
+    03f8..03fa  goto  +0xa
+    03fa..0400  invoke-virtual  {v5, v9}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0400..0402  move-result  v0
+    0402..0404  goto  +0x5
+    0404..040a  invoke-virtual  {v5, v6}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    040a..040c  move-result  v0
+    040c..0410  if-eqz  v0, -0x97
+    0410..0412  goto  +0x48
+    0412..0416  const-string  v0, "QUOTA_EXCEEDED"
+    0416..041c  invoke-virtual  {v5, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    041c..041e  move-result  v0
+    041e..0422  if-eqz  v0, -0xa0
+    0422..0428  invoke-virtual  {v10}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    0428..042a  move-result-object  v1
+    042a..042e  const-string  v0, "GCM: attempted to register for GCM but registration count was exceeded already; exceptionMessage="
+    042e..0434  invoke-static  {v0, v1}, LX/000;->A04(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0434..0436  move-result-object  v0
+    0436..043c  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    043c..0442  invoke-static  {v2}, Lcom/whatsapp/infra/push/RegistrationIntentService;->A02(Lcom/whatsapp/infra/push/RegistrationIntentService;)LX/09S;
+    0442..0444  move-result-object  v0
+    0444..044a  invoke-virtual  {v0}, LX/09S;->A0S()LX/1nA;
+    044a..044c  move-result-object  v0
+    044c..0452  invoke-virtual  {v0}, LX/1nA;->A04()V
+    0452..0456  goto/16  +0x88
+    0456..045a  instance-of  v0, v1, Ljava/io/IOException;
+    045a..045e  if-eqz  v0, -0xea
+    045e..0460  move-object  v4, v1
+    0460..0464  check-cast  v4, Ljava/io/IOException;
+    0464..0468  goto/16  -0xef
+    0468..046c  if-eqz  v4, +0x16
+    046c..0472  invoke-virtual  {v5, v4}, Landroid/app/AlarmManager;->cancel(Landroid/app/PendingIntent;)V
+    0472..0476  iget-object  v0, v2, Lcom/whatsapp/infra/push/RegistrationIntentService;->A09:LX/05a;
+    0476..047a  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    047a..0480  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0480..0486  invoke-static  {}, Landroid/os/SystemClock;->elapsedRealtime()J
+    0486..0488  move-result-wide  v1
+    0488..048a  add-long/2addr  v1, v6
+    048a..048c  const/4  v0, #0x3
+    048c..0492  invoke-virtual  {v5, v0, v1, v2, v4}, Landroid/app/AlarmManager;->set(IJLandroid/app/PendingIntent;)V
+    0492..0494  goto  +0x68
+    0494..0498  const-string  v0, "RegistrationIntentService/onHandleWork AlarmManager or pendingIntent is null"
+    0498..049e  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    049e..04a0  goto  +0x62
+    04a0..04a6  invoke-static  {v2}, LX/0tb;->A00(Landroid/content/Context;)I
+    04a6..04a8  move-result  v1
+    04a8..04ae  invoke-virtual  {v10}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    04ae..04b0  move-result-object  v0
+    04b0..04b6  invoke-static  {v13, v0}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    04b6..04b8  move-result-object  v0
+    04b8..04be  invoke-static  {v12, v0, v1}, LX/1Xl;->A11(Ljava/lang/String;Ljava/lang/StringBuilder;I)Ljava/lang/String;
+    04be..04c0  move-result-object  v0
+    04c0..04c6  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    04c6..04cc  invoke-static  {v2}, Lcom/whatsapp/infra/push/RegistrationIntentService;->A02(Lcom/whatsapp/infra/push/RegistrationIntentService;)LX/09S;
+    04cc..04ce  move-result-object  v0
+    04ce..04d4  invoke-virtual  {v0}, LX/09S;->A0S()LX/1nA;
+    04d4..04d6  move-result-object  v0
+    04d6..04dc  invoke-virtual  {v0}, LX/1nA;->A04()V
+    04dc..04e2  const  v0, #0xa1df1173
+    04e2..04e6  if-eq  v8, v0, +0x18
+    04e6..04ec  const  v0, #0xa5af07e4
+    04ec..04f0  if-eq  v8, v0, +0xc
+    04f0..04f6  const  v0, #0x638a2440
+    04f6..04fa  if-ne  v8, v0, +0x15
+    04fa..0500  invoke-virtual  {v5, v7}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0500..0502  move-result  v0
+    0502..0504  goto  +0x5
+    0504..050a  invoke-virtual  {v5, v9}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    050a..050c  move-result  v0
+    050c..0510  if-nez  v0, +0x2b
+    0510..0512  goto  +0x8
+    0512..0518  invoke-virtual  {v5, v6}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0518..051a  move-result  v0
+    051a..051e  if-eqz  v0, +0x3
+    051e..0520  goto  +0x22
+    0520..0526  invoke-static  {v14}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0526..0528  move-result-object  v2
+    0528..052c  check-cast  v2, LX/0GO;
+    052c..0530  const-string  v0, "gcm-"
+    0530..0536  invoke-static  {v0, v5}, LX/000;->A04(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0536..0538  move-result-object  v1
+    0538..053a  const/4  v0, #0x0
+    053a..0540  invoke-virtual  {v2, v1, v0, v4}, LX/0B0;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+    0540..0542  goto  +0x11
+    0542..0546  const-string  v0, "Required value was null."
+    0546..054c  invoke-static  {v0}, LX/1Xl;->A0f(Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    054c..054e  move-result-object  v0
+    054e..0550  goto  +0x1c
+    0550..0554  instance-of  v0, v10, Ljava/lang/SecurityException;
+    0554..0558  if-eqz  v0, +0xe
+    0558..055c  check-cast  v10, Ljava/lang/SecurityException;
+    055c..0562  invoke-static  {v2, v10}, Lcom/whatsapp/infra/push/RegistrationIntentService;->A04(Lcom/whatsapp/infra/push/RegistrationIntentService;Ljava/lang/SecurityException;)V
+    0562..0568  invoke-virtual  {v3}, Ljava/util/concurrent/CountDownLatch;->countDown()V
+    0568..056e  invoke-static/range  {v15..v16}, Landroid/os/Binder;->restoreCallingIdentity(J)V
+    056e..0570  return-void
+    0570..0574  new-instance  v0, Ljava/lang/RuntimeException;
+    0574..057a  invoke-direct  {v0, v10}, Ljava/lang/RuntimeException;-><init>(Ljava/lang/Throwable;)V
+    057a..057c  goto  +0x6
+    057c..0580  new-instance  v0, Ljava/lang/AssertionError;
+    0580..0586  invoke-direct  {v0, v10}, Ljava/lang/AssertionError;-><init>(Ljava/lang/Object;)V
+    0586..0588  throw  v0
+    0588..058a  move-exception  v0
+    058a..0590  invoke-virtual  {v3}, Ljava/util/concurrent/CountDownLatch;->countDown()V
+    0590..0596  invoke-static/range  {v15..v16}, Landroid/os/Binder;->restoreCallingIdentity(J)V
+    0596..0598  throw  v0
+    0598..05fc  sparse-switch-payload  size=12
+    # exception table: 2 try range(s)
+    # catch <all> code_units 001a..02b1 -> 02c4
+    # catch <all> code_units 02b8..02c4 -> 02c4
+.end method

@@ -295,3 +295,15 @@ Strings to1uj.A04 and handles FBNS separately via conditional1uo.A00.
 [Projection, dispatch/consumer bodies and limits](apk/2.26.43.72-push-config-projection/README.md).
 Full wire grammar, injected handler binding, downstream effects and durable
 reconciliation remain open. No Rust behavior change or live account operation.
+
+### Push-config verification work and numeric defaults (2026-11-04)
+
+**Confirmed static, APK43.72:**1uj.A04 builds VERIFY work and omits null/empty
+String extras. It puts account count/VOIP ints with parse fallbacks1/0; the
+helper uses Java Integer.parseInt without explicit trim/clamp. Enqueue failure
+can be logged with normal return, so parsing/consumer return does not establish
+work completion or corrective send. ServiceA05 separately compares state and
+applies additional numeric/helper gates before invokingEbv.A00.
+[Projection, callers, selected gates and limits](apk/2.26.43.72-push-config-verification-work/README.md).
+Complete token/provider lifecycle, comparisons, sender outcomes and durable
+ownership remain open. No Rust behavior change or live account operation.

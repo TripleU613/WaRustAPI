@@ -1,0 +1,35 @@
+# class: Lcom/whatsapp/infra/push/RegistrationIntentService;
+
+.method public A06(ZLLL)  # .registers 10
+    # full signature: Lcom/whatsapp/infra/push/RegistrationIntentService;->A06(Landroid/content/Intent;Lcom/whatsapp/infra/push/RegistrationIntentService;Ljava/lang/String;)Z
+    0000..0006  invoke-static  {}, Landroid/os/Binder;->clearCallingIdentity()J
+    0006..0008  move-result-wide  v1
+    0008..000c  const-string  v0, "admRegistrationIdFromServer"
+    000c..000e  move-object  v3, v7
+    000e..0014  invoke-virtual  {v7, v0}, Landroid/content/Intent;->getStringExtra(Ljava/lang/String;)Ljava/lang/String;
+    0014..0016  move-result-object  v0
+    0016..001a  const-string  v7, "adm"
+    001a..001c  move-object  v6, v9
+    001c..0022  invoke-virtual  {v9, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0022..0024  move-result  v0
+    0024..0028  xor-int/lit8  v9, v0, #0x1
+    0028..002a  move-object  v4, v8
+    002a..002e  iget-object  v0, v8, Lcom/whatsapp/infra/push/RegistrationIntentService;->A0B:LX/05a;
+    002e..0032  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0032..0038  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0038..003a  move-result-object  v0
+    003a..003e  check-cast  v0, LX/00X;
+    003e..0044  invoke-virtual  {v0}, LX/00X;->A01()LX/00Y;
+    0044..0046  move-result-object  v5
+    0046..004a  check-cast  v5, LX/00Z;
+    004a..004c  const/4  v8, #0x1
+    004c..0052  invoke-static/range  {v3..v9}, Lcom/whatsapp/infra/push/RegistrationIntentService;->A05(Landroid/content/Intent;Lcom/whatsapp/infra/push/RegistrationIntentService;LX/00Z;Ljava/lang/String;Ljava/lang/String;ZZ)Z
+    0052..0054  move-result  v0
+    0054..005a  invoke-static  {v1, v2}, Landroid/os/Binder;->restoreCallingIdentity(J)V
+    005a..005c  return  v0
+    005c..005e  move-exception  v0
+    005e..0064  invoke-static  {v1, v2}, Landroid/os/Binder;->restoreCallingIdentity(J)V
+    0064..0066  throw  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0004..002a -> 002e
+.end method
