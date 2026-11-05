@@ -5733,3 +5733,14 @@ and requests registration through explicit service IPC, not a direct IQ resend.
 [Complete methods and limits](apk/2.26.43.72-push-config-fbns-reconciliation/README.md).
 Provider callback/authenticity, token persistence, later SET and durable recovery
 remain open. No Rust behavior, provider IPC or live account operation changed.
+
+### FBNS token receipt and optimistic server marker (2026-11-05)
+
+**Confirmed static, APK43.72:** registered-token worker validates the provider
+PendingIntent creator, eligibility and nonempty token before its state path.
+When the token differs from last_server_fbns_token it invokes config SET,
+discards the admission boolean and writes that marker on normal return before
+local-token comparison/save. The marker is not exclusively server-observed state.
+[Receiver, explicit excerpts, helpers and limits](apk/2.26.43.72-push-config-fbns-token-received/README.md).
+Full provider/generation authority, ACKs and durable recovery remain open.
+No Rust behavior, provider IPC or live account operation changed.

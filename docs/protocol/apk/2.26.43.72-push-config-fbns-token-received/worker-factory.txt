@@ -1,0 +1,10 @@
+# class: LX/Fei;
+# extends: Ljava/lang/Object;
+
+.method public A00(LLLLI)  # .registers 5
+    # full signature: LX/Fei;->A00(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)LX/Fei;
+    0000..0004  new-instance  v0, LX/Fei;
+    0004..000a  invoke-direct  {v0, v1, v2, v3, v4}, LX/Fei;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
+    000a..000c  return-object  v0
+    # exception table: 0 try range(s)
+.end method

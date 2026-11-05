@@ -1,0 +1,11 @@
+# class: LX/6og;
+# extends: Ljava/lang/Object;
+
+.method public A1M(VLLI)  # .registers 3
+    # full signature: LX/6og;->A1M(Landroid/content/SharedPreferences$Editor;Ljava/lang/String;I)V
+    0000..0006  invoke-interface  {v0, v1, v2}, Landroid/content/SharedPreferences$Editor;->putInt(Ljava/lang/String;I)Landroid/content/SharedPreferences$Editor;
+    0006..0008  move-result-object  v0
+    0008..000e  invoke-interface  {v0}, Landroid/content/SharedPreferences$Editor;->apply()V
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method

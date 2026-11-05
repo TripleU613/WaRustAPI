@@ -15936,5 +15936,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-push-config-fbns-reconciliation/README.md",
     "description": "Selected FBNS reconciliation compares server/local token and app version behind an eligibility gate, updates last-server-token view, then conditionally requests an accepted Android provider via service IPC. Null server view removal is not local token deletion. Provider callback, persistence, later SET and durable recovery remain open. No sender, route, provider invocation or live operation added."
+  },
+  "x-push-config-fbns-token-received-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-push-config-fbns-token-received/README.md",
+    "description": "Selected FBNS receiver validates PendingIntent creator and token gates. Registered-token path calls config SET when server marker differs, discards submit boolean, updates last-server marker on normal return, then compares/saves local token. Marker is not exclusive server evidence or delivery proof. Full authority, ACK and durable recovery remain open. No sender, route, provider invocation or live operation added."
   }
 }

@@ -1,0 +1,13 @@
+# class: LX/Fei;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLI)  # .registers 5
+    # full signature: LX/Fei;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
+    0000..0004  iput  v4, v0, LX/Fei;->$t:I
+    0004..0008  iput-object  v1, v0, LX/Fei;->A01:Ljava/lang/Object;
+    0008..000c  iput-object  v2, v0, LX/Fei;->A02:Ljava/lang/Object;
+    000c..0010  iput-object  v3, v0, LX/Fei;->A00:Ljava/lang/Object;
+    0010..0016  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0016..0018  return-void
+    # exception table: 0 try range(s)
+.end method

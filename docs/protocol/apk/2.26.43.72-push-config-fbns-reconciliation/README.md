@@ -71,6 +71,13 @@ or rethrow. Do not treat its normal return/markers as a completed token request,
 and do not infer an unconditional retry from these catches. The complete
 exception paths remain in the checked export.
 
+## Later callback caveat
+
+The [registered-token callback](../2.26.43.72-push-config-fbns-token-received/README.md)
+also writes last_server_fbns_token optimistically after the SET sender returns,
+without checking its admission boolean. The preference is therefore not an
+exclusive server observation or proof of acceptance.
+
 ## Port boundary
 
 This closes selected FBNS eligibility, server/local comparison, last-server-view

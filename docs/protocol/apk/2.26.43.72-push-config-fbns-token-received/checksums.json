@@ -1,0 +1,42 @@
+{
+  "README.md": {
+    "bytes": 4845,
+    "sha256": "01d5d1be601b18bde4db706ad95f6deb3eef7552af67dd7ed063bc08bc68b243"
+  },
+  "outgoing-ipc-auth.txt": {
+    "bytes": 1469,
+    "sha256": "7a57a3672a770c738d558c58b0283132188f97ad71aeb4231839bd89d4f619b4"
+  },
+  "preferences.txt": {
+    "bytes": 476,
+    "sha256": "dac916b4a2eeddc18be2544b24ae883811459209bfc17c23dba1fd77fbd2aac6"
+  },
+  "receiver.txt": {
+    "bytes": 2059,
+    "sha256": "420ccc08be1cf27209655871baedee0f6acd76b7ff3c2d45a9d33ee1715b00b5"
+  },
+  "server-marker-apply.txt": {
+    "bytes": 597,
+    "sha256": "72701970be4e842883e6f6db0e3246ee157a0533e828d7bfb84fa84f1cf5b6f7"
+  },
+  "token-string-references.txt": {
+    "bytes": 387,
+    "sha256": "119bea87e4ebb3eb1564a0796505797f00a88a8612718ce9584ae3e753f408c9"
+  },
+  "version-apply.txt": {
+    "bytes": 560,
+    "sha256": "a84bc43337f78f99f178e4cf1a6fd9b3b758101eeeefc4fa2473dab13c8a995f"
+  },
+  "worker-constructor.txt": {
+    "bytes": 585,
+    "sha256": "c7c9875f9eed2f70f82c32bdd3b64e3e5bf87a4a08a0ac343060150473852874"
+  },
+  "worker-factory.txt": {
+    "bytes": 442,
+    "sha256": "887bf43ef961ab5c767a8e81bfded817af55d8aa60e8eb6b4dc5453ad5cf5d45"
+  },
+  "worker-selected-excerpts.txt": {
+    "bytes": 18957,
+    "sha256": "1270da2c103375367c422ee19514aabfb6d69d5811430004f3bd25b31b60c5d6"
+  }
+}
