@@ -1,3 +1,11 @@
+2026-11-04 — **Token delivery-failure and IQ-error effects distinguished.**
+
+Delivery failure restores a nonce only into an empty pending slot; IQ error
+only logs in the selected callback. Submit-time readiness has an additional
+flag check. [Evidence and limits](docs/protocol/apk/2.26.43.72-client-auth-token-failure/README.md).
+Research only; no sender or live traffic. Validation: checked callback/helper
+exports, checksums, JSON, coverage freshness and repository hygiene.
+
 2026-11-04 — **Token-manager nonce register flow verified statically.**
 
 Conservative control-flow analysis confirms the original nonnull push nonce

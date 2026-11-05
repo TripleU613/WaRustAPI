@@ -1,0 +1,17 @@
+
+# class: LX/0Sf;
+# extends: Ljava/lang/Object;
+
+.method public A0U(Z)  # .registers 3
+    # full signature: LX/0Sf;->A0U()Z
+    0000..0004  iget-object  v1, v2, LX/0Sf;->A07:LX/0AI;
+    0004..0008  iget-boolean  v0, v1, LX/0AI;->A06:Z
+    0008..000c  if-eqz  v0, +0x9
+    000c..0012  invoke-virtual  {v1}, LX/0AI;->A0O()Z
+    0012..0014  move-result  v1
+    0014..0016  const/4  v0, #0x1
+    0016..001a  if-nez  v1, +0x3
+    001a..001c  const/4  v0, #0x0
+    001c..001e  return  v0
+    # exception table: 0 try range(s)
+.end method

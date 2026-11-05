@@ -5533,3 +5533,16 @@ retained method was regenerated from the pinned APK and matched byte-for-byte.
 This closes the register-preservation gap, not trusted push origin, freshness,
 complete eligibility, failure/backoff or durable recovery. No runtime change,
 sender, new retry authority or live traffic.
+
+### Client-auth-token delivery failure versus IQ error (2026-11-04)
+
+**Confirmed static, APK43.72:** FUT's token selector restores the original
+nonce on BsS only via compareAndSet(null,nonce), preserving newer pending
+input. Bvj only logs in that selector; client-config selector0 behavior does
+not apply. Neither branch immediately sends or dispatches held requests.
+Submit-time A0U requires ready flag A06 plus state2, beyond the manager's first
+state2 check; failure calls BsS directly, while success registers before dispatch.
+[Callbacks, helper, submit chain and outcome limits](apk/2.26.43.72-client-auth-token-failure/README.md).
+Timer expiry shares BsS restoration, not proof of rejection or safe replay.
+Global backoff, shutdown/callback races and durable recovery remain open.
+No Rust sender, runtime change, new retry authority or live traffic.

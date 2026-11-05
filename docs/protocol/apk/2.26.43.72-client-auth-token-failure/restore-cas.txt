@@ -1,0 +1,18 @@
+
+# class: LX/012;
+# extends: Ljava/lang/Object;
+
+.method public A00(ZLLL)  # .registers 4
+    # full signature: LX/012;->A00(Ljava/lang/Object;Ljava/lang/Object;Ljava/util/concurrent/atomic/AtomicReference;)Z
+    0000..0006  invoke-virtual  {v3, v1, v2}, Ljava/util/concurrent/atomic/AtomicReference;->compareAndSet(Ljava/lang/Object;Ljava/lang/Object;)Z
+    0006..0008  move-result  v0
+    0008..000c  if-eqz  v0, +0x4
+    000c..000e  const/4  v0, #0x1
+    000e..0010  return  v0
+    0010..0016  invoke-virtual  {v3}, Ljava/util/concurrent/atomic/AtomicReference;->get()Ljava/lang/Object;
+    0016..0018  move-result-object  v0
+    0018..001c  if-eq  v0, v1, -0xc
+    001c..001e  const/4  v0, #0x0
+    001e..0020  return  v0
+    # exception table: 0 try range(s)
+.end method

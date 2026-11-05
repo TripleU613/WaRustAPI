@@ -15792,5 +15792,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-client-auth-token-nonce-flow/README.md",
     "description": "Digest-bound conservative CFG analysis proves the original nonnull pushNonce reaches the selected manager invocation; later register reuses do not. Fresh pinned-APK export matches retained input. Trusted delivery, replay freshness, full eligibility, generation binding and failure/backoff remain open. No sender, route, replay authority or live operation added."
+  },
+  "x-client-auth-token-failure-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-client-auth-token-failure/README.md",
+    "description": "Token delivery-failure callback restores original nonce only if pending slot is empty; IQ-error callback only logs. Submit gate additionally requires ready flag plus state2 and registers callback before dispatch. No immediate retry established; global backoff, callback/shutdown races and durable recovery remain open. No sender, route, replay authority or live operation added."
   }
 }

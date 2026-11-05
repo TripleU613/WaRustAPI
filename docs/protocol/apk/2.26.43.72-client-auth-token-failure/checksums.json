@@ -1,0 +1,34 @@
+{
+  "README.md": {
+    "bytes": 4525,
+    "sha256": "cef1f2657263d8b2285fe215e81b4e0d4d2f191341e2208c71b2c31c22e271fc"
+  },
+  "callbacks.txt": {
+    "bytes": 7393,
+    "sha256": "1221451f2ac740263f1a46c1ba2c84b5a836264721399fec1489a80f379eb482"
+  },
+  "delivery-callback-callers.txt": {
+    "bytes": 336,
+    "sha256": "3ce58fa640a2d083d0f19ade90d3539d1967d32b22e7bacd3bb8f8b5fc251f69"
+  },
+  "local-failure-bookkeeping.txt": {
+    "bytes": 988,
+    "sha256": "4e4a2f3bf409c4277b2a0998685087145a9367952e05239d32e13ce9d29d58c3"
+  },
+  "restore-cas.txt": {
+    "bytes": 776,
+    "sha256": "c96bd9a72cd6e91a32a075501e2b1f913ea6ca06fd8da78617acbed53d7a1e22"
+  },
+  "submit-body.txt": {
+    "bytes": 4183,
+    "sha256": "1e1cfa0680809b0ffe191a5f394920317bea49600ecd12affab395cd38ac7456"
+  },
+  "submit-gate.txt": {
+    "bytes": 533,
+    "sha256": "8eaefecc9e202e783bc27832bde76cd957d805bace7eea88b8dec0ec30ea56e9"
+  },
+  "submit-wrapper.txt": {
+    "bytes": 815,
+    "sha256": "a9950bb7cfad49f8d6d9d63fc20232c97c3018474add06d31ceed965b9c04e28"
+  }
+}
