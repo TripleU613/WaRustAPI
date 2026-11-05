@@ -468,12 +468,34 @@ fn begin_upload_selected(
     let signed_signature = signed
         .signature()
         .map_err(|_| invalid("signed prekey signature"))?;
+    let identity_public =
+        wacore_libsignal::protocol::PublicKey::from_djb_public_key_bytes(&identity.0.public)
+            .map_err(|_| invalid("invalid publication identity"))?;
+    if !identity_public.verify_signature(&signed_public.serialize(), &signed_signature) {
+        return Err(invalid("signed prekey does not match publication identity"));
+    }
     let iq_id = super::messaging::new_message_id()?;
     // 07t.A0R 0196..01a2: property 21201 defaults to 10; returned values are
     // not applied (MobileConfig unported), so the default is used.
     let pq_batch = 10;
     let reserved =
         store.write(|tx| {
+            // The actor's snapshot can outlive a local account update. Bind
+            // publication authority before selecting keys or freezing bytes.
+            let current = AccountRecord::load_in_write(tx)?
+                .ok_or_else(|| invalid("publication account unavailable"))?;
+            let same_identity = current.signal_identity.as_ref().is_some_and(|key|
+                key.0.public == identity.0.public && key.0.private == identity.0.private);
+            if !account.is_registered() || !current.is_registered()
+                || current.generation != tx.generation()
+                || current.generation != account.generation
+                || current.signal_registration_id != Some(registration)
+                || current.own_jid != account.own_jid
+                || current.phone != account.phone
+                || !same_identity
+            {
+                return Err(invalid("publication account changed"));
+            }
             let pq_enabled = super::abprops::pq_keys_upload_enabled_in_write(tx)?;
             // Refusal retry/backoff/regeneration policy is not ported. Returning
             // keys to Unsent is inventory state, not authority to reserve a new
@@ -992,7 +1014,7 @@ mod tests {
         })
         .unwrap()
     }
-    fn account_and_signed() -> (AccountRecord, Vec<u8>) {
+    fn account_and_signed(store: &ProtocolStore) -> (AccountRecord, Vec<u8>) {
         let mut rng = rand::rng();
         let identity = KeyPair::generate(&mut rng);
         let signed = KeyPair::generate(&mut rng);
@@ -1007,18 +1029,18 @@ mod tests {
         );
         let mut public = [0u8; 32];
         public.copy_from_slice(identity.public_key.public_key_bytes());
-        (
-            AccountRecord {
-                registration: RegistrationStatus::Registered,
-                signal_registration_id: Some(0x0102_0304),
-                signal_identity: Some(SignalIdentityKey(KeyMaterial {
-                    public,
-                    private: *identity.private_key.serialize(),
-                })),
-                ..Default::default()
-            },
-            record.serialize().unwrap(),
-        )
+        let account = AccountRecord {
+            generation: store.generation(),
+            registration: RegistrationStatus::Registered,
+            signal_registration_id: Some(0x0102_0304),
+            signal_identity: Some(SignalIdentityKey(KeyMaterial {
+                public,
+                private: *identity.private_key.serialize(),
+            })),
+            ..Default::default()
+        };
+        store.write(|tx| account.save(tx)).unwrap();
+        (account, record.serialize().unwrap())
     }
     fn set_status(tx: &mut WriteTx<'_>, id: u32, status: KeyStatus) -> Result<()> {
         tx.put_json(
@@ -1093,10 +1115,92 @@ mod tests {
     /// on, and only with an unsent last-resort key; once that is acknowledged
     /// the next upload carries none.
     #[test]
+    fn publication_rejects_stale_account_authority_without_reserving_keys() {
+        for change in 0..9 {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("stale-publication.redb");
+            let store = open(&path);
+            let (account, signed) = account_and_signed(&store);
+            generate(&store).unwrap();
+            let mut current = account.clone();
+            match change {
+                0 => current.generation.0 += 1,
+                1 => current.registration = RegistrationStatus::Revoked,
+                2 => current.signal_registration_id = Some(42),
+                3 => current.signal_identity.as_mut().unwrap().0.public[0] ^= 1,
+                4 => current.signal_identity.as_mut().unwrap().0.private[0] ^= 1,
+                5 => current.own_jid = Some(Jid::parse("15555550123@s.whatsapp.net").unwrap()),
+                6 => {
+                    current.phone =
+                        Some(crate::model::phone::PhoneNumber::new(1, "5555550123").unwrap())
+                }
+                7 => current.signal_identity = None,
+                8 => {}
+                _ => unreachable!(),
+            }
+            store
+                .write(|tx| {
+                    if change == 8 {
+                        tx.delete(Table::Account, b"account").map(|_| ())
+                    } else {
+                        current.save(tx)
+                    }
+                })
+                .unwrap();
+            let snapshot = |store: &ProtocolStore| {
+                store
+                    .read(|tx| {
+                        [Table::Prekeys, Table::Checkpoints]
+                            .into_iter()
+                            .map(|table| tx.scan(table, 1, 10000))
+                            .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap()
+            };
+            let before = snapshot(&store);
+            assert!(
+                begin_upload(&store, &account, &signed).is_err(),
+                "case {change}"
+            );
+            assert_eq!(snapshot(&store), before);
+            drop(store);
+            let store = open(&path);
+            assert_eq!(snapshot(&store), before);
+        }
+    }
+
+    #[test]
+    fn legacy_publication_requires_a_signed_key_for_its_identity() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("signature.redb"));
+        let (account, signed) = account_and_signed(&store);
+        let other = open(&dir.path().join("other.redb"));
+        let (_, foreign_signed) = account_and_signed(&other);
+        generate(&store).unwrap();
+        assert!(!super::super::abprops::pq_keys_upload_enabled(&store).unwrap());
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+            .unwrap();
+        assert!(begin_upload(&store, &account, &foreign_signed).is_err());
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                .unwrap(),
+            before
+        );
+        assert_eq!(summary(&store).unwrap().uncertain, 0);
+        // Unrelated account metadata may change without revoking publication.
+        let mut updated = account.clone();
+        updated.last_authenticated_at = Some(Timestamp::now());
+        store.write(|tx| updated.save(tx)).unwrap();
+        assert!(begin_upload(&store, &account, &signed).unwrap().is_some());
+    }
+
+    #[test]
     fn kyber_keys_upload_only_behind_the_server_property() {
         let dir = tempfile::tempdir().unwrap();
         let store = open(&dir.path().join("kyber.redb"));
-        let (account, signed) = account_and_signed();
+        let (account, signed) = account_and_signed(&store);
         generate(&store).unwrap();
         let (pending, iq) = begin_upload(&store, &account, &signed).unwrap().unwrap();
         assert!(iq.child("pq_list").is_none() && iq.child("pq_last_resort_key").is_none());
@@ -1174,7 +1278,7 @@ mod tests {
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("non-reply.redb");
         let store = open(&path);
-        let (account, signed) = account_and_signed();
+        let (account, signed) = account_and_signed(&store);
         assert_eq!(generate(&store).unwrap(), 50);
         let (pending, _) = begin_upload(&store, &account, &signed).unwrap().unwrap();
         let original: serde_json::Value = store
@@ -1253,7 +1357,7 @@ mod tests {
                     .unwrap()
             };
             let before = snapshot(&store);
-            let (mut account, signed) = account_and_signed();
+            let (mut account, signed) = account_and_signed(&store);
             account.signal_identity.as_mut().unwrap().0.public[0] ^= 1;
             assert!(begin_upload(&store, &account, &signed).is_err());
             assert_eq!(snapshot(&store), before);
@@ -1278,7 +1382,7 @@ mod tests {
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("kem-uncertain.redb");
         let store = open(&path);
-        let (account, signed) = account_and_signed();
+        let (account, signed) = account_and_signed(&store);
         let id = super::super::abprops::queue(&store).unwrap();
         super::super::actions::reserve_pending(&store).unwrap();
         super::super::actions::record_reply(
@@ -1424,7 +1528,7 @@ mod tests {
             let dir = tempfile::tempdir().unwrap();
             let path = dir.path().join("frozen.redb");
             let store = open(&path);
-            let (account, signed) = account_and_signed();
+            let (account, signed) = account_and_signed(&store);
             generate(&store).unwrap();
             let (pending, node) = begin_upload(&store, &account, &signed).unwrap().unwrap();
             let key = request_key(&pending.iq_id);
@@ -1489,7 +1593,7 @@ mod tests {
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("upload.redb");
         let store = open(&path);
-        let (account, signed) = account_and_signed();
+        let (account, signed) = account_and_signed(&store);
         assert!(begin_upload(&store, &account, &signed).unwrap().is_none());
         assert_eq!(generate(&store).unwrap(), 50);
         let (pending, iq) = begin_upload(&store, &account, &signed).unwrap().unwrap();
@@ -1606,7 +1710,9 @@ mod tests {
     fn upload_reply_fields_belong_to_the_selected_callback_after_reopen() {
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("reply-fields.redb");
-        let (account, signed) = account_and_signed();
+        let store = open(&path);
+        let (account, signed) = account_and_signed(&store);
+        drop(store);
         for (kind, accepted, expected_code, expected_low) in [
             ("result", true, None, true),
             ("error", false, Some("503"), false),
@@ -1647,7 +1753,6 @@ mod tests {
     fn upload_refusal_selects_first_coded_error_and_preserves_java_integer() {
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("coded-errors.redb");
-        let (account, signed) = account_and_signed();
         for (case, (raw, expected)) in [
             (None, "0"),
             (Some("+00503"), "503"),
@@ -1664,6 +1769,7 @@ mod tests {
         {
             let path = path.with_file_name(format!("coded-errors-{case}.redb"));
             let store = open(&path);
+            let (account, signed) = account_and_signed(&store);
             generate(&store).unwrap();
             let (pending, _) = begin_upload(&store, &account, &signed).unwrap().unwrap();
             let mut children = vec![Node::new("error").attr("text", "no-code")];
@@ -1691,8 +1797,8 @@ mod tests {
     fn upload_settlement_rechecks_durable_key_ownership_without_partial_updates() {
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("ownership.redb");
-        let (account, signed) = account_and_signed();
         let store = open(&path);
+        let (account, signed) = account_and_signed(&store);
         generate(&store).unwrap();
         let (pending, _) = begin_upload(&store, &account, &signed).unwrap().unwrap();
         let key = batch_key(&pending.iq_id);
@@ -1780,7 +1886,9 @@ mod tests {
     fn pq_count_low_is_independent_first_child_and_persisted_without_backfill() {
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("pq-low.redb");
-        let (account, signed) = account_and_signed();
+        let store = open(&path);
+        let (account, signed) = account_and_signed(&store);
+        drop(store);
         for (kind, first, expected) in [
             ("result", "TrUe", true),
             ("result", "false", false),
@@ -1823,7 +1931,7 @@ mod tests {
             let dir = tempfile::tempdir().unwrap();
             let path = dir.path().join("refusal-hold.redb");
             let store = open(&path);
-            let (account, signed) = account_and_signed();
+            let (account, signed) = account_and_signed(&store);
             generate(&store).unwrap();
             let (pending, _) = begin_upload(&store, &account, &signed).unwrap().unwrap();
             let error = Node::new("iq")
@@ -1867,7 +1975,7 @@ mod tests {
             let dir = tempfile::tempdir().unwrap();
             let path = dir.path().join("add.redb");
             let store = open(&path);
-            let (account, signed) = account_and_signed();
+            let (account, signed) = account_and_signed(&store);
             assert!(
                 begin_followup_upload(&store, &account, &signed, legacy, pq)
                     .unwrap()
@@ -2155,7 +2263,7 @@ mod tests {
         use sha2::Digest;
         let dir = tempfile::tempdir().unwrap();
         let store = open(&dir.path().join("digest-pq.redb"));
-        let (account, signed) = account_and_signed();
+        let (account, signed) = account_and_signed(&store);
         let prop = super::super::abprops::queue(&store).unwrap();
         super::super::actions::reserve_pending(&store).unwrap();
         super::super::actions::record_reply(

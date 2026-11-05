@@ -15470,5 +15470,17 @@
     "x-live": false,
     "evidence": "docs/protocol/prekey-count-notifications.md#offline-digest-inspection-2026-11-04",
     "description": "Read-only library prekeys::digest::inspect and CLI compare a saved IQ result with current local material. No sends, ACKs, recovery writes or HTTP route. Saved PQ gate, account and keys share one immutable local read snapshot; no request/account-generation correlation authority. Exact stored publication signature preferred for LR; historical rows use acknowledged frozen SET evidence, with ambiguity/unavailability reported. New reservations atomically retain signatures; no inspection backfill. Historical input never authorizes resync."
+  },
+  "x-prekey-publication-account-authority": {
+    "x-cli": {
+      "command": "whatsapp-cli listen",
+      "description": "Existing prekey upload admission; no new command or flag"
+    },
+    "x-transport": [
+      "experimental-transport prekey SET/ADD reservation"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/prekey-count-notifications.md#prekey-publication-account-authority-2026-11-04",
+    "description": "Upload reservation binds caller publication identity to the registered durable account in its WriteTx, including generation, registration ID, own JID, phone and Signal identity bytes. Signed-prekey signature must verify under publication identity even with PQ disabled. Fixed local errors occur before reservation writes; no HTTP route, reset, retry or live validation added. Same-identity signed-key rotation authority and post-reservation account changes remain open."
   }
 }

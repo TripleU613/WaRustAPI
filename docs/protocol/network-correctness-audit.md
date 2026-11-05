@@ -1298,3 +1298,32 @@ checks uncommitted gate deletion in a write transaction and rollback, and
 reopens the resulting synthetic store. Request/reply origin, current actor
 account binding, effective MobileConfig, startup recovery and safe resync remain
 separate unfinished work. No live operation or automatic recovery was added.
+
+### Prekey publication account authority (2026-11-04)
+
+**Confirmed local defect, fixed offline:** begin_upload_selected accepted an
+AccountRecord supplied before reservation without rereading the durable account.
+It also serialized the supplied signed-prekey signature without verification on
+the PQ-disabled path. A stale caller could therefore freeze a SET under obsolete
+registration/identity material, or submit a signed key from another identity.
+
+SET and ADD admission now require registered caller and stored accounts, equal
+transaction/stored/caller generation, registration ID, own JID, phone and Signal
+public/private identity. These checks run in the existing reservation WriteTx
+before key selection, generation, signature persistence or request freezing.
+Missing account and changed authority have fixed local errors. Signed-prekey
+signature is verified over the type-prefixed serialized public key under the
+publication identity even when PQ is off. Authentication timestamps/credentials
+are not publication identity and do not invalidate an otherwise matching caller.
+
+This is a local consistency invariant. APK 2.26.43.72 13z.A0B/A0S request layout
+and stored key sourcing remain documented in the prekey-upload-replies bundle;
+these Rust error messages and checks are not claimed as native callback policy.
+Regression fixtures now persist their synthetic account before reserving uploads.
+Nine stale/missing/revoked account cases leave Prekeys and Checkpoints unchanged
+across reopen; a foreign-identity signed key fails with PQ off, while an unrelated
+authentication timestamp update permits the valid request.
+
+**Remaining:** same-identity signed-key rotation ownership, account changes after
+reservation/before write, correlated digest recovery and native retry/reset
+policy are not closed by this guard. No live operations or automatic resets.
