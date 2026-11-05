@@ -1,0 +1,75 @@
+# class: LX/8TG;
+# extends: Ljava/lang/Object;
+
+.method public ABJ(LLL)  # .registers 23
+    # full signature: LX/8TG;->ABJ(LX/0Tp;LX/8B6;)Ljava/lang/Object;
+    0000..0002  const/4  v11, #0x0
+    0002..0006  move-object/from16  v5, v21
+    0006..000a  move-object/from16  v4, v22
+    000a..0010  invoke-static  {v5, v4, v11}, LX/1Xl;->A1Y(Ljava/lang/Object;Ljava/lang/Object;I)Z
+    0010..0012  move-result  v2
+    0012..0016  const-string  v0, "config"
+    0016..001c  invoke-virtual  {v4, v5, v0}, LX/8B6;->A0N(LX/0Tp;Ljava/lang/String;)Z
+    001c..001e  move-result  v0
+    001e..0020  const/4  v9, #0x0
+    0020..0024  if-eqz  v0, +0x74
+    0024..0026  const/4  v0, #0x3
+    0026..002a  new-array  v1, v0, [Ljava/lang/String;
+    002a..002e  const-string  v0, "uwp_alpha"
+    002e..0032  aput-object  v0, v1, v11
+    0032..0036  const-string  v0, "uwp_beta"
+    0036..003a  aput-object  v0, v1, v2
+    003a..003e  const-string  v0, "uwp_hybrid_dogfooding"
+    003e..0044  invoke-static  {v0, v1}, LX/2LC;->A1B(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/util/List;
+    0044..0046  move-result-object  v3
+    0046..004a  new-array  v1, v2, [Ljava/lang/String;
+    004a..004e  const-string  v0, "version"
+    004e..0052  aput-object  v0, v1, v11
+    0052..0058  invoke-virtual  {v4, v5, v3, v1}, LX/8B6;->A0L(LX/0Tp;Ljava/util/List;[Ljava/lang/String;)Ljava/lang/String;
+    0058..005e  invoke-static  {v2}, LX/6of;->A1U(I)[Ljava/lang/String;
+    005e..0060  move-result-object  v10
+    0060..0064  const-class  v6, Ljava/lang/String;
+    0064..006a  invoke-static  {}, LX/6oj;->A0p()Ljava/lang/Long;
+    006a..006c  move-result-object  v7
+    006c..0070  const-wide/16  v0, #0xff
+    0070..0076  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0076..0078  move-result-object  v8
+    0078..007e  invoke-virtual/range  {v4..v11}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    007e..0080  move-result-object  v0
+    0080..0084  if-eqz  v0, +0x44
+    0084..0088  new-array  v10, v2, [Ljava/lang/String;
+    0088..008c  const-string  v0, "pkey"
+    008c..0090  aput-object  v0, v10, v11
+    0090..0094  const-wide/16  v0, #0x40
+    0094..009a  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    009a..009c  move-result-object  v8
+    009c..00a2  invoke-virtual/range  {v4..v11}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    00a2..00a6  new-array  v1, v2, [Ljava/lang/String;
+    00a6..00aa  const-string  v0, "settings"
+    00aa..00ae  aput-object  v0, v1, v11
+    00ae..00b2  sget-object  v14, Ljava/lang/Long;->TYPE:Ljava/lang/Class;
+    00b2..00b8  invoke-static  {}, LX/3q4;->A0d()Ljava/lang/Long;
+    00b8..00ba  move-result-object  v15
+    00ba..00c0  invoke-static  {}, LX/6oi;->A0s()Ljava/lang/Long;
+    00c0..00c2  move-result-object  v16
+    00c2..00c4  move-object  v12, v4
+    00c4..00c6  move-object  v13, v5
+    00c6..00ca  move-object/from16  v17, v9
+    00ca..00ce  move-object/from16  v18, v1
+    00ce..00d2  move/from16  v19, v11
+    00d2..00d8  invoke-virtual/range  {v12..v19}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    00d8..00dc  new-array  v1, v2, [Ljava/lang/String;
+    00dc..00e0  const-string  v0, "platform"
+    00e0..00e6  invoke-static  {v0, v1, v11}, LX/6oj;->A0v(Ljava/lang/Object;[Ljava/lang/Object;I)Ljava/lang/Long;
+    00e6..00e8  move-result-object  v15
+    00e8..00ec  const-string  v17, "wns"
+    00ec..00ee  move-object  v14, v6
+    00ee..00f2  move-object/from16  v18, v1
+    00f2..00f8  invoke-virtual/range  {v12..v19}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    00f8..00fa  move-result-object  v0
+    00fa..00fe  if-eqz  v0, +0x7
+    00fe..0102  new-instance  v9, LX/7OW;
+    0102..0108  invoke-direct  {v9, v5}, LX/7OW;-><init>(LX/0Tp;)V
+    0108..010a  return-object  v9
+    # exception table: 0 try range(s)
+.end method

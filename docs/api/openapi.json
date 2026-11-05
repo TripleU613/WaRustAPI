@@ -15909,5 +15909,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-push-config-android-grammar/README.md",
     "description": "Selected Android push-config variant requires recognized platform and id length1..1024. Optional parsed values may be null; appid/settings results are discarded. Item/hash conversion counts valid entries0..1; nullable item failure does not gate the variant. Other variants, Long lexical details, provenance and durable reconciliation remain open. No parser, sender, route or live operation added."
+  },
+  "x-push-config-variant-admission-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-push-config-variant-admission/README.md",
+    "description": "Selected non-Android config converters contribute to the converted-entry bound despite no Android holder projection. Long helper handles optional sign, leading zeros and overflow, without trimming; digit acceptance delegates to Android Character.digit. Full optional/Apple item grammar, Unicode tables, header/provenance and durable ownership remain open. No parser, sender, route or live operation added."
   }
 }

@@ -1,0 +1,38 @@
+{
+  "README.md": {
+    "bytes": 5169,
+    "sha256": "b838dfa470f297a4f411e6e9ac87cf3a7ea4c46934d6331cfae81a6cce581de9"
+  },
+  "long-decimal.txt": {
+    "bytes": 506,
+    "sha256": "bbc21646b029e18f04264ef4dec9bad7ba950106e81c6c42b3571cc0165f52fc"
+  },
+  "long-radix.txt": {
+    "bytes": 2782,
+    "sha256": "4a9c41996b7c524db5a8f5e5290f2366e763f4877781493b35a5bba165490bde"
+  },
+  "path-and-lower-bound.txt": {
+    "bytes": 501,
+    "sha256": "698c36de3794861f37f97396387611596c42e86e9f0d9d3467fe1ece25ea528e"
+  },
+  "variant-8TE.txt": {
+    "bytes": 2363,
+    "sha256": "cbef3b18cb5eb0edac34fb708fd7f8fcd4ea3626732cff5ffa7a1de1bfbdc6b7"
+  },
+  "variant-8TF.txt": {
+    "bytes": 8997,
+    "sha256": "4ff4264893f4663a2a01cbb884536cdaa6fa6922d08537b8483f00b3bd0a9736"
+  },
+  "variant-8TG.txt": {
+    "bytes": 4163,
+    "sha256": "ecbd45b6600e62a689cf1f6eef073692062e18b5395e4d2a71e25bd36296474f"
+  },
+  "variant-FVH.txt": {
+    "bytes": 14863,
+    "sha256": "3ac1dfdda309937424266f50e022fd0805bd198a4385feda56dd4bd421fabda7"
+  },
+  "variant-Hz6.txt": {
+    "bytes": 3964,
+    "sha256": "4cdb3370a9195051862c4cb95b83fdbd07c5c7ceaa5f3b12e867ef1bf9c78ea8"
+  }
+}

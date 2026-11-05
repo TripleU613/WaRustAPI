@@ -341,3 +341,14 @@ does not itself reject the Android variant.
 [Field mapping, exact helpers and limits](apk/2.26.43.72-push-config-android-grammar/README.md).
 Other variants, header/Long lexical details, provenance and durable reconciliation
 remain open. No Rust behavior change or live account operation.
+
+### Push-config alternate variants and Long syntax (2026-11-05)
+
+**Confirmed static, APK43.72:** the five non-Android converter types have
+selected admission gates and still count toward the reply collection bound,
+even though their visitors do not update Android projection holders. Long
+conversion handles optional sign, leading zeros and overflow without trimming;
+Character.digit delegates digit acceptance to the Android runtime.
+[Selected converter gates, complete exports and limits](apk/2.26.43.72-push-config-variant-admission/README.md).
+Full optional/Apple item semantics, Unicode tables, header validation, provenance
+and durable reconciliation remain open. No Rust behavior or live traffic changed.

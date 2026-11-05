@@ -1,3 +1,11 @@
+2026-11-05 — **Alternate push-config admission and Long syntax traced.**
+
+Non-Android parsed entries still consume the reply collection allowance, despite
+no Android holder projection. Numeric syntax and field bounds remain separate.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-push-config-variant-admission/README.md).
+Research only; no runtime changes or live traffic. Validation: checked exports,
+checksums, JSON, coverage freshness and repository hygiene.
+
 2026-11-05 — **Android push-config wire fields and null gates traced.**
 
 Platform/token gate the selected variant; optional field failures do not all

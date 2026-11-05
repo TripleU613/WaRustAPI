@@ -1,0 +1,193 @@
+# class: LX/8TF;
+# extends: Ljava/lang/Object;
+
+.method public ABJ(LLL)  # .registers 23
+    # full signature: LX/8TF;->ABJ(LX/0Tp;LX/8B6;)Ljava/lang/Object;
+    0000..0002  const/4  v11, #0x0
+    0002..0006  move-object/from16  v5, v21
+    0006..000a  move-object/from16  v4, v22
+    000a..0010  invoke-static  {v5, v4, v11}, LX/1Xl;->A1Y(Ljava/lang/Object;Ljava/lang/Object;I)Z
+    0010..0012  move-result  v2
+    0012..0016  const-string  v0, "config"
+    0016..001c  invoke-virtual  {v4, v5, v0}, LX/8B6;->A0N(LX/0Tp;Ljava/lang/String;)Z
+    001c..001e  move-result  v0
+    001e..0020  const/4  v9, #0x0
+    0020..0024  if-eqz  v0, +0x159
+    0024..0028  const/16  v0, #0x2b
+    0028..002c  new-array  v3, v0, [Ljava/lang/String;
+    002c..0030  const-string  v0, "1019394685547802"
+    0030..0034  aput-object  v0, v3, v11
+    0034..0038  const-string  v0, "105910932827969"
+    0038..003c  aput-object  v0, v3, v2
+    003c..0040  const-string  v1, "124024574287414"
+    0040..0042  const/4  v0, #0x2
+    0042..0046  aput-object  v1, v3, v0
+    0046..004a  const-string  v1, "134692073335995"
+    004a..004c  const/4  v0, #0x3
+    004c..0050  aput-object  v1, v3, v0
+    0050..0054  const-string  v1, "1392961504647453"
+    0054..0056  const/4  v0, #0x4
+    0056..005a  aput-object  v1, v3, v0
+    005a..005e  const-string  v1, "1464225827161561"
+    005e..0060  const/4  v0, #0x5
+    0060..0064  aput-object  v1, v3, v0
+    0064..0068  const-string  v1, "1546062975675674"
+    0068..006a  const/4  v0, #0x6
+    006a..006e  aput-object  v1, v3, v0
+    006e..0072  const-string  v1, "1711196729025634"
+    0072..0074  const/4  v0, #0x7
+    0074..0078  aput-object  v1, v3, v0
+    0078..007c  const-string  v1, "173847642670370"
+    007c..0080  const/16  v0, #0x8
+    0080..0084  aput-object  v1, v3, v0
+    0084..0088  const-string  v1, "180813502049746"
+    0088..008c  const/16  v0, #0x9
+    008c..0090  aput-object  v1, v3, v0
+    0090..0094  const-string  v1, "181425161904154"
+    0094..0098  const/16  v0, #0xa
+    0098..009c  aput-object  v1, v3, v0
+    009c..00a0  const-string  v1, "1931350367173590"
+    00a0..00a4  const/16  v0, #0xb
+    00a4..00a8  aput-object  v1, v3, v0
+    00a8..00ac  const-string  v1, "220512758076565"
+    00ac..00b0  const/16  v0, #0xc
+    00b0..00b4  aput-object  v1, v3, v0
+    00b4..00b8  const-string  v1, "2220391788200892"
+    00b8..00bc  const/16  v0, #0xd
+    00bc..00c0  aput-object  v1, v3, v0
+    00c0..00c4  const-string  v1, "2259778240752974"
+    00c4..00c8  const/16  v0, #0xe
+    00c8..00cc  aput-object  v1, v3, v0
+    00cc..00d0  const-string  v1, "256002347743983"
+    00d0..00d4  const/16  v0, #0xf
+    00d4..00d8  aput-object  v1, v3, v0
+    00d8..00dc  const-string  v1, "260352717816449"
+    00dc..00e0  const/16  v0, #0x10
+    00e0..00e4  aput-object  v1, v3, v0
+    00e4..00e8  const-string  v1, "265002623618499"
+    00e8..00ec  const/16  v0, #0x11
+    00ec..00f0  aput-object  v1, v3, v0
+    00f0..00f4  const-string  v1, "267929034378503"
+    00f4..00f8  const/16  v0, #0x12
+    00f8..00fc  aput-object  v1, v3, v0
+    00fc..0100  const-string  v1, "275254692598279"
+    0100..0104  const/16  v0, #0x13
+    0104..0108  aput-object  v1, v3, v0
+    0108..010c  const-string  v1, "2786197261644303"
+    010c..0110  const/16  v0, #0x14
+    0110..0114  aput-object  v1, v3, v0
+    0114..0118  const-string  v1, "330211543730728"
+    0118..011c  const/16  v0, #0x15
+    011c..0120  aput-object  v1, v3, v0
+    0120..0124  const-string  v1, "338624972879457"
+    0124..0128  const/16  v0, #0x16
+    0128..012c  aput-object  v1, v3, v0
+    012c..0130  const-string  v1, "350685531728"
+    0130..0134  const/16  v0, #0x17
+    0134..0138  aput-object  v1, v3, v0
+    0138..013c  const-string  v1, "3534234083363713"
+    013c..0140  const/16  v0, #0x18
+    0140..0144  aput-object  v1, v3, v0
+    0144..0148  const-string  v1, "361996119987349"
+    0148..014c  const/16  v0, #0x19
+    014c..0150  aput-object  v1, v3, v0
+    0150..0154  const-string  v1, "386226551805820"
+    0154..0158  const/16  v0, #0x1a
+    0158..015c  aput-object  v1, v3, v0
+    015c..0160  const-string  v1, "3965760973453145"
+    0160..0164  const/16  v0, #0x1b
+    0164..0168  aput-object  v1, v3, v0
+    0168..016c  const-string  v1, "437626316973788"
+    016c..0170  const/16  v0, #0x1c
+    0170..0174  aput-object  v1, v3, v0
+    0174..0178  const-string  v1, "451384735309667"
+    0178..017c  const/16  v0, #0x1d
+    017c..0180  aput-object  v1, v3, v0
+    0180..0184  const-string  v1, "462062864670721"
+    0184..0188  const/16  v0, #0x1e
+    0188..018c  aput-object  v1, v3, v0
+    018c..0190  const-string  v1, "567067343352427"
+    0190..0194  const/16  v0, #0x1f
+    0194..0198  aput-object  v1, v3, v0
+    0198..019c  const-string  v1, "581956559359077"
+    019c..01a0  const/16  v0, #0x20
+    01a0..01a4  aput-object  v1, v3, v0
+    01a4..01a8  const-string  v1, "606306547673172"
+    01a8..01ac  const/16  v0, #0x21
+    01ac..01b0  aput-object  v1, v3, v0
+    01b0..01b4  const-string  v1, "638638284359690"
+    01b4..01b8  const/16  v0, #0x22
+    01b8..01bc  aput-object  v1, v3, v0
+    01bc..01c0  const-string  v1, "6628568379"
+    01c0..01c4  const/16  v0, #0x23
+    01c4..01c8  aput-object  v1, v3, v0
+    01c8..01cc  const-string  v1, "673098596976877"
+    01cc..01d0  const/16  v0, #0x24
+    01d0..01d4  aput-object  v1, v3, v0
+    01d4..01d8  const-string  v1, "759456018252168"
+    01d8..01dc  const/16  v0, #0x25
+    01dc..01e0  aput-object  v1, v3, v0
+    01e0..01e4  const-string  v1, "770089894047039"
+    01e4..01e8  const/16  v0, #0x26
+    01e8..01ec  aput-object  v1, v3, v0
+    01ec..01f0  const-string  v1, "772021112871879"
+    01f0..01f4  const/16  v0, #0x27
+    01f4..01f8  aput-object  v1, v3, v0
+    01f8..01fc  const-string  v1, "867848743379534"
+    01fc..0200  const/16  v0, #0x28
+    0200..0204  aput-object  v1, v3, v0
+    0204..0208  const-string  v1, "882766346203812"
+    0208..020c  const/16  v0, #0x29
+    020c..0210  aput-object  v1, v3, v0
+    0210..0214  const-string  v1, "905593853150754"
+    0214..0218  const/16  v0, #0x2a
+    0218..021e  invoke-static  {v1, v3, v0}, LX/2L6;->A1H(Ljava/lang/Object;[Ljava/lang/Object;I)Ljava/util/List;
+    021e..0220  move-result-object  v3
+    0220..0224  new-array  v1, v2, [Ljava/lang/String;
+    0224..0228  const-string  v0, "appid"
+    0228..022c  aput-object  v0, v1, v11
+    022c..0232  invoke-virtual  {v4, v5, v3, v1}, LX/8B6;->A0L(LX/0Tp;Ljava/util/List;[Ljava/lang/String;)Ljava/lang/String;
+    0232..0234  move-result-object  v0
+    0234..0238  if-eqz  v0, +0x4f
+    0238..023c  new-array  v10, v2, [Ljava/lang/String;
+    023c..0240  const-string  v0, "deviceid"
+    0240..0244  aput-object  v0, v10, v11
+    0244..0248  const-class  v6, Ljava/lang/String;
+    0248..024c  const-wide/16  v0, #0x10
+    024c..0252  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0252..0254  move-result-object  v7
+    0254..0258  const-wide/16  v0, #0x24
+    0258..025e  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    025e..0260  move-result-object  v8
+    0260..0266  invoke-virtual/range  {v4..v11}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    0266..0268  move-result-object  v0
+    0268..026c  if-eqz  v0, +0x35
+    026c..0270  new-array  v10, v2, [Ljava/lang/String;
+    0270..0274  const-string  v0, "fbid"
+    0274..0278  aput-object  v0, v10, v11
+    0278..027e  invoke-static  {}, LX/6oj;->A0p()Ljava/lang/Long;
+    027e..0280  move-result-object  v7
+    0280..0284  const-wide/16  v0, #0x14
+    0284..028a  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    028a..028c  move-result-object  v8
+    028c..0292  invoke-virtual/range  {v4..v11}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    0292..0296  new-array  v1, v2, [Ljava/lang/String;
+    0296..029a  const-string  v0, "platform"
+    029a..02a0  invoke-static  {v0, v1, v11}, LX/6oj;->A0v(Ljava/lang/Object;[Ljava/lang/Object;I)Ljava/lang/Long;
+    02a0..02a2  move-result-object  v15
+    02a2..02a8  invoke-static  {}, LX/6oi;->A0s()Ljava/lang/Long;
+    02a8..02aa  move-result-object  v16
+    02aa..02ae  const-string  v17, "fb"
+    02ae..02b0  move-object  v12, v4
+    02b0..02b2  move-object  v13, v5
+    02b2..02b4  move-object  v14, v6
+    02b4..02b8  move-object/from16  v18, v1
+    02b8..02bc  move/from16  v19, v11
+    02bc..02c2  invoke-virtual/range  {v12..v19}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    02c2..02c4  move-result-object  v0
+    02c4..02c8  if-eqz  v0, +0x7
+    02c8..02cc  new-instance  v9, LX/7OV;
+    02cc..02d2  invoke-direct  {v9, v5}, LX/7OV;-><init>(LX/0Tp;)V
+    02d2..02d4  return-object  v9
+    # exception table: 0 try range(s)
+.end method
