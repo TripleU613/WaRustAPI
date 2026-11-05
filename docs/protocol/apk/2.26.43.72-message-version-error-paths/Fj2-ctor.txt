@@ -1,0 +1,131 @@
+
+# class: LX/Fj2;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLII)  # .registers 14
+    # full signature: LX/Fj2;-><init>(LX/EQ7;[BII)V
+    0000..0006  invoke-direct  {v9}, Ljava/lang/Object;-><init>()V
+    0006..0008  const/4  v8, #0x3
+    0008..000c  const/16  v0, #0x33
+    000c..000e  const/4  v7, #0x1
+    000e..0012  new-array  v6, v7, [B
+    0012..0014  const/4  v5, #0x0
+    0014..0018  aput-byte  v0, v6, v5
+    0018..001c  sget-object  v0, LX/Ddk;->DEFAULT_INSTANCE:LX/Ddk;
+    001c..0022  invoke-static  {v0}, LX/DBd;->A0R(Lcom/google/protobuf/GeneratedMessageLite;)Lcom/google/protobuf/GeneratedMessageLite$Builder;
+    0022..0024  move-result-object  v3
+    0024..0028  iget-object  v1, v3, Lcom/google/protobuf/GeneratedMessageLite$Builder;->instance:Lcom/google/protobuf/GeneratedMessageLite;
+    0028..002c  check-cast  v1, LX/Ddk;
+    002c..0030  iget  v0, v1, LX/Ddk;->bitField0_:I
+    0030..0034  or-int/lit8  v0, v0, #0x1
+    0034..0038  iput  v0, v1, LX/Ddk;->bitField0_:I
+    0038..003c  iput  v12, v1, LX/Ddk;->id_:I
+    003c..0042  invoke-static  {v3}, LX/8t1;->A0Z(Lcom/google/protobuf/GeneratedMessageLite$Builder;)Lcom/google/protobuf/GeneratedMessageLite;
+    0042..0044  move-result-object  v1
+    0044..0048  check-cast  v1, LX/Ddk;
+    0048..004c  iget  v0, v1, LX/Ddk;->bitField0_:I
+    004c..0050  or-int/lit8  v0, v0, #0x2
+    0050..0054  iput  v0, v1, LX/Ddk;->bitField0_:I
+    0054..0058  iput  v13, v1, LX/Ddk;->iteration_:I
+    0058..005e  invoke-static  {v3, v11, v5}, LX/DBe;->A0B(Lcom/google/protobuf/GeneratedMessageLite$Builder;[BI)Lcom/google/protobuf/ByteString;
+    005e..0060  move-result-object  v2
+    0060..0064  iget-object  v1, v3, Lcom/google/protobuf/GeneratedMessageLite$Builder;->instance:Lcom/google/protobuf/GeneratedMessageLite;
+    0064..0068  check-cast  v1, LX/Ddk;
+    0068..006c  iget  v0, v1, LX/Ddk;->bitField0_:I
+    006c..0070  or-int/lit8  v0, v0, #0x4
+    0070..0074  iput  v0, v1, LX/Ddk;->bitField0_:I
+    0074..0078  iput-object  v2, v1, LX/Ddk;->ciphertext_:Lcom/google/protobuf/ByteString;
+    0078..007e  invoke-static  {v3}, LX/DBe;->A1a(Lcom/google/protobuf/GeneratedMessageLite$Builder;)[B
+    007e..0080  move-result-object  v4
+    0080..0082  const/4  v3, #0x2
+    0082..0086  new-array  v0, v3, [[B
+    0086..008a  aput-object  v6, v0, v5
+    008a..008e  aput-object  v4, v0, v7
+    008e..0094  invoke-static  {v0}, LX/Exr;->A00([[B)[B
+    0094..0096  move-result-object  v2
+    0096..009a  sget-object  v1, LX/EMC;->A00:LX/1oA;
+    009a..009e  iget-object  v0, v10, LX/EQ7;->A00:[B
+    009e..00a4  invoke-virtual  {v1, v0, v2}, LX/1oA;->A03([B[B)[B
+    00a4..00a6  move-result-object  v1
+    00a6..00aa  new-array  v0, v8, [[B
+    00aa..00ae  aput-object  v6, v0, v5
+    00ae..00b2  aput-object  v4, v0, v7
+    00b2..00b6  aput-object  v1, v0, v3
+    00b6..00bc  invoke-static  {v0}, LX/Exr;->A00([[B)[B
+    00bc..00be  move-result-object  v0
+    00be..00c2  iput-object  v0, v9, LX/Fj2;->A03:[B
+    00c2..00c6  iput  v12, v9, LX/Fj2;->A01:I
+    00c6..00ca  iput  v13, v9, LX/Fj2;->A00:I
+    00ca..00ce  iput-object  v11, v9, LX/Fj2;->A02:[B
+    00ce..00d0  return-void
+    00d0..00d2  move-exception  v0
+    00d2..00d8  invoke-static  {v0}, LX/DBb;->A0q(Ljava/lang/Object;)Ljava/lang/AssertionError;
+    00d8..00da  move-result-object  v0
+    00da..00dc  throw  v0
+    # exception table: 1 try range(s)
+    # catch LX/EDQ; code_units 004b..0053 -> 0068
+.end method
+
+.method public <init>(VL)  # .registers 8
+    # full signature: LX/Fj2;-><init>([B)V
+    0000..0004  const-string  v5, "Unknown version: "
+    0004..0008  const-string  v4, "Legacy message: "
+    0008..000e  invoke-direct  {v6}, Ljava/lang/Object;-><init>()V
+    000e..0010  array-length  v0, v7
+    0010..0014  add-int/lit8  v1, v0, #0xbf (-65)
+    0014..0018  const/16  v0, #0x40
+    0018..001a  const/4  v3, #0x1
+    001a..0020  invoke-static  {v7, v3, v1, v0}, LX/Exr;->A02([BIII)[[B
+    0020..0022  move-result-object  v2
+    0022..0024  const/4  v1, #0x0
+    0024..0028  aget-object  v0, v2, v1
+    0028..002c  aget-byte  v0, v0, v1
+    002c..0030  aget-object  v2, v2, v3
+    0030..0034  and-int/lit16  v0, v0, #0xff
+    0034..0038  shr-int/lit8  v1, v0, #0x4
+    0038..003a  const/4  v0, #0x3
+    003a..003e  if-lt  v1, v0, +0x35
+    003e..0042  if-gt  v1, v0, +0x3d
+    0042..0046  sget-object  v0, LX/Ddk;->DEFAULT_INSTANCE:LX/Ddk;
+    0046..004c  invoke-static  {v0, v2}, Lcom/google/protobuf/GeneratedMessageLite;->parseFrom(Lcom/google/protobuf/GeneratedMessageLite;[B)Lcom/google/protobuf/GeneratedMessageLite;
+    004c..004e  move-result-object  v2
+    004e..0052  check-cast  v2, LX/Ddk;
+    0052..0056  iget  v1, v2, LX/Ddk;->bitField0_:I
+    0056..005a  and-int/lit8  v0, v1, #0x1
+    005a..005e  if-eqz  v0, +0x1d
+    005e..0062  and-int/lit8  v0, v1, #0x2
+    0062..0066  if-eqz  v0, +0x19
+    0066..006a  and-int/lit8  v0, v1, #0x4
+    006a..006e  if-eqz  v0, +0x15
+    006e..0072  iput-object  v7, v6, LX/Fj2;->A03:[B
+    0072..0076  iget  v0, v2, LX/Ddk;->id_:I
+    0076..007a  iput  v0, v6, LX/Fj2;->A01:I
+    007a..007e  iget  v0, v2, LX/Ddk;->iteration_:I
+    007e..0082  iput  v0, v6, LX/Fj2;->A00:I
+    0082..0086  iget-object  v0, v2, LX/Ddk;->ciphertext_:Lcom/google/protobuf/ByteString;
+    0086..008c  invoke-virtual  {v0}, Lcom/google/protobuf/ByteString;->toByteArray()[B
+    008c..008e  move-result-object  v0
+    008e..0092  iput-object  v0, v6, LX/Fj2;->A02:[B
+    0092..0094  return-void
+    0094..0098  const-string  v0, "Incomplete message."
+    0098..009c  new-instance  v1, LX/EDY;
+    009c..00a2  invoke-direct  {v1, v0}, LX/EDY;-><init>(Ljava/lang/String;)V
+    00a2..00a4  goto  +0x14
+    00a4..00aa  invoke-static  {v4, v1}, LX/2LA;->A0p(Ljava/lang/String;I)Ljava/lang/String;
+    00aa..00ac  move-result-object  v0
+    00ac..00b0  new-instance  v1, LX/ED6;
+    00b0..00b6  invoke-direct  {v1, v0}, LX/ED6;-><init>(Ljava/lang/String;)V
+    00b6..00b8  goto  +0xa
+    00b8..00be  invoke-static  {v5, v1}, LX/2LA;->A0p(Ljava/lang/String;I)Ljava/lang/String;
+    00be..00c0  move-result-object  v0
+    00c0..00c4  new-instance  v1, LX/EDY;
+    00c4..00ca  invoke-direct  {v1, v0}, LX/EDY;-><init>(Ljava/lang/String;)V
+    00ca..00cc  throw  v1
+    00cc..00ce  move-exception  v1
+    00ce..00d2  new-instance  v0, LX/EDY;
+    00d2..00d8  invoke-direct  {v0, v1}, LX/EDY;-><init>(Ljava/lang/Throwable;)V
+    00d8..00da  throw  v0
+    # exception table: 1 try range(s)
+    # catch Lcom/google/protobuf/InvalidProtocolBufferException; code_units 0007..0066 -> 0066
+    # catch Ljava/text/ParseException; code_units 0007..0066 -> 0066
+.end method

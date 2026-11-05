@@ -1,0 +1,29 @@
+{
+  "package": "wacore-libsignal",
+  "version": "0.7.0",
+  "file": "src/protocol/protocol.rs",
+  "sha256": "415ad140d76f8517790a35d351c682eb1972840832db6749e4fa958f626d207b",
+  "bytes": 51538,
+  "facts": [
+    {
+      "lines": "111-114",
+      "fact": "sender-key version3; direct/prekey supported range3 through4"
+    },
+    {
+      "lines": "129-138",
+      "fact": "direct length check precedes version admission; outside range yields UnrecognizedCiphertextVersion for both low and high versions"
+    },
+    {
+      "lines": "175-184",
+      "fact": "prekey empty check precedes version admission; outside range yields UnrecognizedCiphertextVersion for both low and high versions"
+    },
+    {
+      "lines": "884-898",
+      "fact": "sender-key message length check then low version LegacyCiphertextVersion and high version UnrecognizedCiphertextVersion"
+    },
+    {
+      "lines": "1016-1031",
+      "fact": "sender-key distribution length check then low version LegacyCiphertextVersion and high version UnrecognizedCiphertextVersion"
+    }
+  ]
+}

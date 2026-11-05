@@ -16501,5 +16501,12 @@
     "x-live": false,
     "evidence": "docs/protocol/outgoing-retry-receipts.md#missing-session-retry-error-preserved--2026-11-05",
     "description": "IncomingResult::MissingSession distinguishes supported direct ciphertext with absent session and group absent sender-key record. Direct syntax parsing precedes missing-session classification; missing identity with existing session stays generic. Normal receive serializes retry/error=1 for this cause with existing count1/original timestamp and durable once-only reservations. Historical held wire is not rewritten or replayed. Offline CLI replay sends nothing. Existing public unclassified builders retain behavior; no HTTP route, new CLI flag or live acceptance added. Other causes/native retry policies remain incomplete."
+  },
+  "x-message-version-retry-evidence": {
+    "x-cli": false,
+    "x-transport": ["offline pinned-APK and dependency source inspection only"],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-message-version-error-paths/README.md",
+    "description": "Selected constructor legacy/high-version gates differ across direct, prekey and sender-key formats. ED6 legacy status exclusions are not proof of identity-refusal semantics; prekey outer constructor has separate catch regions. Native direct version gate2..4 differs from backend3..4, but complete version2 primitive support is unproven. Blanket unsupported-version retry suppression would lose producer context. No runtime/route/capability added; mapping remains incomplete."
   }
 }

@@ -528,3 +528,17 @@ error1/original timestamp, pending reservation before failed write, and no repea
 or delivery ACK after reconnect/redelivery. This does not prove server acceptance.
 Generic failures still lack full typed eligibility/error classification, and
 native key/count/routing/ACK parity remains unfinished. No live account traffic.
+
+## Version gates and no-retry limits — 2026-11-05
+
+**Confirmed static:** [selected native version gates and backend comparison](apk/2.26.43.72-message-version-error-paths/README.md).
+ED6 is used for legacy versions by four selected message constructors; it does
+not establish identity-refusal semantics. Direct Fj3 admits version nibble2..4,
+while the current backend admits3..4. Full version2 crypto support is not proven.
+Prekey gate3..4 and sender-key gates exactly3 have different high-version exception
+paths. Ordinary direct/group ED6 -> -1007 is excluded, while EDY -> -1005 is eligible.
+Prekey outer construction has a separate catch region; later ED6 handlers cannot
+be applied indiscriminately to it. These differences rule out a blanket backend
+unsupported-version -> no-retry mapping. Identity policy, full range/primitive
+parity and producer-specific retry causes remain open. Research only; no new
+wire code, runtime behavior or live request.

@@ -1,0 +1,240 @@
+
+# class: LX/Fj1;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLLIII)  # .registers 14
+    # full signature: LX/Fj1;-><init>(LX/EuZ;LX/Fbl;LX/Fj3;LX/Fbh;LX/Fbh;III)V
+    0000..0006  invoke-direct  {v5}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput  v11, v5, LX/Fj1;->A02:I
+    000a..000e  iput  v12, v5, LX/Fj1;->A00:I
+    000e..0012  iput-object  v9, v5, LX/Fj1;->A07:LX/Fbh;
+    0012..0016  iput  v13, v5, LX/Fj1;->A01:I
+    0016..001a  iput-object  v7, v5, LX/Fj1;->A04:LX/Fbl;
+    001a..001e  iput-object  v6, v5, LX/Fj1;->A03:LX/EuZ;
+    001e..0022  iput-object  v8, v5, LX/Fj1;->A05:LX/Fj3;
+    0022..0026  iput-object  v10, v5, LX/Fj1;->A06:LX/Fbh;
+    0026..002a  sget-object  v0, LX/Dgl;->DEFAULT_INSTANCE:LX/Dgl;
+    002a..0030  invoke-static  {v0}, LX/DBd;->A0R(Lcom/google/protobuf/GeneratedMessageLite;)Lcom/google/protobuf/GeneratedMessageLite$Builder;
+    0030..0032  move-result-object  v1
+    0032..0036  iget-object  v2, v1, Lcom/google/protobuf/GeneratedMessageLite$Builder;->instance:Lcom/google/protobuf/GeneratedMessageLite;
+    0036..003a  check-cast  v2, LX/Dgl;
+    003a..003e  iget  v0, v2, LX/Dgl;->bitField0_:I
+    003e..0042  or-int/lit8  v0, v0, #0x4
+    0042..0046  iput  v0, v2, LX/Dgl;->bitField0_:I
+    0046..004a  iput  v13, v2, LX/Dgl;->signedPreKeyId_:I
+    004a..0050  invoke-virtual  {v7}, LX/Fbl;->A00()[B
+    0050..0052  move-result-object  v0
+    0052..0054  const/4  v4, #0x0
+    0054..005a  invoke-static  {v1, v0, v4}, LX/DBe;->A0B(Lcom/google/protobuf/GeneratedMessageLite$Builder;[BI)Lcom/google/protobuf/ByteString;
+    005a..005c  move-result-object  v3
+    005c..0060  iget-object  v2, v1, Lcom/google/protobuf/GeneratedMessageLite$Builder;->instance:Lcom/google/protobuf/GeneratedMessageLite;
+    0060..0064  check-cast  v2, LX/Dgl;
+    0064..0068  iget  v0, v2, LX/Dgl;->bitField0_:I
+    0068..006c  or-int/lit8  v0, v0, #0x20
+    006c..0070  iput  v0, v2, LX/Dgl;->bitField0_:I
+    0070..0074  iput-object  v3, v2, LX/Dgl;->baseKey_:Lcom/google/protobuf/ByteString;
+    0074..0078  iget-object  v0, v6, LX/EuZ;->A00:LX/Fbl;
+    0078..007e  invoke-virtual  {v0}, LX/Fbl;->A00()[B
+    007e..0080  move-result-object  v0
+    0080..0086  invoke-static  {v1, v0, v4}, LX/DBe;->A0B(Lcom/google/protobuf/GeneratedMessageLite$Builder;[BI)Lcom/google/protobuf/ByteString;
+    0086..0088  move-result-object  v3
+    0088..008c  iget-object  v2, v1, Lcom/google/protobuf/GeneratedMessageLite$Builder;->instance:Lcom/google/protobuf/GeneratedMessageLite;
+    008c..0090  check-cast  v2, LX/Dgl;
+    0090..0094  iget  v0, v2, LX/Dgl;->bitField0_:I
+    0094..0098  or-int/lit8  v0, v0, #0x40
+    0098..009c  iput  v0, v2, LX/Dgl;->bitField0_:I
+    009c..00a0  iput-object  v3, v2, LX/Dgl;->identityKey_:Lcom/google/protobuf/ByteString;
+    00a0..00a4  iget-object  v0, v8, LX/Fj3;->A04:[B
+    00a4..00aa  invoke-static  {v1, v0, v4}, LX/DBe;->A0B(Lcom/google/protobuf/GeneratedMessageLite$Builder;[BI)Lcom/google/protobuf/ByteString;
+    00aa..00ac  move-result-object  v3
+    00ac..00b0  iget-object  v2, v1, Lcom/google/protobuf/GeneratedMessageLite$Builder;->instance:Lcom/google/protobuf/GeneratedMessageLite;
+    00b0..00b4  check-cast  v2, LX/Dgl;
+    00b4..00b8  iget  v0, v2, LX/Dgl;->bitField0_:I
+    00b8..00bc  or-int/lit16  v0, v0, #0x80
+    00bc..00c0  iput  v0, v2, LX/Dgl;->bitField0_:I
+    00c0..00c4  iput-object  v3, v2, LX/Dgl;->message_:Lcom/google/protobuf/ByteString;
+    00c4..00ca  invoke-static  {v1}, LX/8t1;->A0Z(Lcom/google/protobuf/GeneratedMessageLite$Builder;)Lcom/google/protobuf/GeneratedMessageLite;
+    00ca..00cc  move-result-object  v2
+    00cc..00d0  check-cast  v2, LX/Dgl;
+    00d0..00d4  iget  v0, v2, LX/Dgl;->bitField0_:I
+    00d4..00d8  or-int/lit8  v0, v0, #0x1
+    00d8..00dc  iput  v0, v2, LX/Dgl;->bitField0_:I
+    00dc..00e0  iput  v12, v2, LX/Dgl;->registrationId_:I
+    00e0..00e4  instance-of  v0, v9, LX/Fqj;
+    00e4..00e8  if-eqz  v0, +0x18
+    00e8..00ee  invoke-virtual  {v9}, LX/Fbh;->A00()Ljava/lang/Object;
+    00ee..00f0  move-result-object  v0
+    00f0..00f6  invoke-static  {v0}, LX/000;->A00(Ljava/lang/Object;)I
+    00f6..00f8  move-result  v3
+    00f8..00fe  invoke-static  {v1}, LX/8t1;->A0Z(Lcom/google/protobuf/GeneratedMessageLite$Builder;)Lcom/google/protobuf/GeneratedMessageLite;
+    00fe..0100  move-result-object  v2
+    0100..0104  check-cast  v2, LX/Dgl;
+    0104..0108  iget  v0, v2, LX/Dgl;->bitField0_:I
+    0108..010c  or-int/lit8  v0, v0, #0x2
+    010c..0110  iput  v0, v2, LX/Dgl;->bitField0_:I
+    0110..0114  iput  v3, v2, LX/Dgl;->preKeyId_:I
+    0114..0118  instance-of  v0, v10, LX/Fqj;
+    0118..011c  if-eqz  v0, +0x30
+    011c..0122  invoke-virtual  {v10}, LX/Fbh;->A00()Ljava/lang/Object;
+    0122..0124  move-result-object  v0
+    0124..0128  check-cast  v0, LX/Ej4;
+    0128..012c  iget  v3, v0, LX/Ej4;->A00:I
+    012c..0132  invoke-static  {v1}, LX/8t1;->A0Z(Lcom/google/protobuf/GeneratedMessageLite$Builder;)Lcom/google/protobuf/GeneratedMessageLite;
+    0132..0134  move-result-object  v2
+    0134..0138  check-cast  v2, LX/Dgl;
+    0138..013c  iget  v0, v2, LX/Dgl;->bitField0_:I
+    013c..0140  or-int/lit8  v0, v0, #0x8
+    0140..0144  iput  v0, v2, LX/Dgl;->bitField0_:I
+    0144..0148  iput  v3, v2, LX/Dgl;->kyberPreKeyId_:I
+    0148..014e  invoke-virtual  {v10}, LX/Fbh;->A00()Ljava/lang/Object;
+    014e..0150  move-result-object  v0
+    0150..0154  check-cast  v0, LX/Ej4;
+    0154..0158  iget-object  v0, v0, LX/Ej4;->A01:[B
+    0158..015e  invoke-static  {v1, v0, v4}, LX/DBe;->A0B(Lcom/google/protobuf/GeneratedMessageLite$Builder;[BI)Lcom/google/protobuf/ByteString;
+    015e..0160  move-result-object  v3
+    0160..0164  iget-object  v2, v1, Lcom/google/protobuf/GeneratedMessageLite$Builder;->instance:Lcom/google/protobuf/GeneratedMessageLite;
+    0164..0168  check-cast  v2, LX/Dgl;
+    0168..016c  iget  v0, v2, LX/Dgl;->bitField0_:I
+    016c..0170  or-int/lit8  v0, v0, #0x10
+    0170..0174  iput  v0, v2, LX/Dgl;->bitField0_:I
+    0174..0178  iput-object  v3, v2, LX/Dgl;->kyberCiphertext_:Lcom/google/protobuf/ByteString;
+    0178..017c  shl-int/lit8  v0, v11, #0x4
+    017c..017e  or-int/2addr  v0, v11
+    017e..0182  and-int/lit16  v0, v0, #0xff
+    0182..0184  int-to-byte  v0, v0
+    0184..0186  const/4  v3, #0x1
+    0186..018a  new-array  v2, v3, [B
+    018a..018e  aput-byte  v0, v2, v4
+    018e..0194  invoke-static  {v1}, LX/DBe;->A1a(Lcom/google/protobuf/GeneratedMessageLite$Builder;)[B
+    0194..0196  move-result-object  v1
+    0196..0198  const/4  v0, #0x2
+    0198..019c  new-array  v0, v0, [[B
+    019c..01a0  aput-object  v2, v0, v4
+    01a0..01a4  aput-object  v1, v0, v3
+    01a4..01aa  invoke-static  {v0}, LX/Exr;->A00([[B)[B
+    01aa..01ac  move-result-object  v0
+    01ac..01b0  iput-object  v0, v5, LX/Fj1;->A08:[B
+    01b0..01b2  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VL)  # .registers 6
+    # full signature: LX/Fj1;-><init>([B)V
+    0000..0004  const-string  v3, "Legacy version: "
+    0004..0008  const-string  v2, "Unknown version: "
+    0008..000e  invoke-direct  {v4}, Ljava/lang/Object;-><init>()V
+    000e..0010  const/4  v0, #0x0
+    0010..0014  aget-byte  v0, v5, v0
+    0014..0018  and-int/lit16  v0, v0, #0xff
+    0018..001c  shr-int/lit8  v1, v0, #0x4
+    001c..0020  iput  v1, v4, LX/Fj1;->A02:I
+    0020..0022  const/4  v0, #0x4
+    0022..0026  if-gt  v1, v0, +0xad
+    0026..0028  const/4  v0, #0x3
+    0028..002c  if-lt  v1, v0, +0xa0
+    002c..002e  array-length  v1, v5
+    002e..0030  const/4  v0, #0x1
+    0030..0032  sub-int/2addr  v1, v0
+    0032..0038  invoke-static  {v5, v0, v1}, Lcom/google/protobuf/ByteString;->copyFrom([BII)Lcom/google/protobuf/ByteString;
+    0038..003a  move-result-object  v1
+    003a..003e  sget-object  v0, LX/Dgl;->DEFAULT_INSTANCE:LX/Dgl;
+    003e..0044  invoke-static  {v0, v1}, Lcom/google/protobuf/GeneratedMessageLite;->parseFrom(Lcom/google/protobuf/GeneratedMessageLite;Lcom/google/protobuf/ByteString;)Lcom/google/protobuf/GeneratedMessageLite;
+    0044..0046  move-result-object  v3
+    0046..004a  check-cast  v3, LX/Dgl;
+    004a..004e  iget  v1, v3, LX/Dgl;->bitField0_:I
+    004e..0052  and-int/lit8  v0, v1, #0x4
+    0052..0058  invoke-static  {v0}, LX/2L9;->A1M(I)Z
+    0058..005a  move-result  v0
+    005a..005e  const-string  v2, "Incomplete message."
+    005e..0062  if-eqz  v0, +0x7f
+    0062..0066  and-int/lit8  v0, v1, #0x20
+    0066..006a  if-eqz  v0, +0x7b
+    006a..006e  and-int/lit8  v0, v1, #0x40
+    006e..0072  if-eqz  v0, +0x77
+    0072..0076  and-int/lit16  v0, v1, #0x80
+    0076..007a  if-eqz  v0, +0x73
+    007a..007e  iput-object  v5, v4, LX/Fj1;->A08:[B
+    007e..0082  iget  v0, v3, LX/Dgl;->registrationId_:I
+    0082..0086  iput  v0, v4, LX/Fj1;->A00:I
+    0086..008a  and-int/lit8  v0, v1, #0x2
+    008a..008e  if-eqz  v0, +0x3
+    008e..0090  goto  +0x4
+    0090..0094  sget-object  v0, LX/Fqk;->A00:LX/Fqk;
+    0094..0096  goto  +0xf
+    0096..009a  iget  v0, v3, LX/Dgl;->preKeyId_:I
+    009a..00a0  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    00a0..00a2  move-result-object  v1
+    00a2..00a8  invoke-virtual  {v1}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+    00a8..00ac  new-instance  v0, LX/Fqj;
+    00ac..00b2  invoke-direct  {v0, v1}, LX/Fqj;-><init>(Ljava/lang/Object;)V
+    00b2..00b6  iput-object  v0, v4, LX/Fj1;->A07:LX/Fbh;
+    00b6..00ba  iget  v0, v3, LX/Dgl;->bitField0_:I
+    00ba..00be  and-int/lit8  v0, v0, #0x4
+    00be..00c2  if-eqz  v0, +0x24
+    00c2..00c6  iget  v0, v3, LX/Dgl;->signedPreKeyId_:I
+    00c6..00ca  iput  v0, v4, LX/Fj1;->A01:I
+    00ca..00ce  iget-object  v0, v3, LX/Dgl;->baseKey_:Lcom/google/protobuf/ByteString;
+    00ce..00d4  invoke-static  {v0}, LX/DBe;->A16(Lcom/google/protobuf/ByteString;)LX/Fbl;
+    00d4..00d6  move-result-object  v0
+    00d6..00da  iput-object  v0, v4, LX/Fj1;->A04:LX/Fbl;
+    00da..00de  iget-object  v0, v3, LX/Dgl;->identityKey_:Lcom/google/protobuf/ByteString;
+    00de..00e4  invoke-static  {v0}, LX/DBe;->A16(Lcom/google/protobuf/ByteString;)LX/Fbl;
+    00e4..00e6  move-result-object  v1
+    00e6..00ea  new-instance  v0, LX/EuZ;
+    00ea..00f0  invoke-direct  {v0, v1}, LX/EuZ;-><init>(LX/Fbl;)V
+    00f0..00f4  iput-object  v0, v4, LX/Fj1;->A03:LX/EuZ;
+    00f4..00f8  iget  v0, v3, LX/Dgl;->bitField0_:I
+    00f8..00fc  and-int/lit8  v1, v0, #0x8
+    00fc..0100  and-int/lit8  v0, v0, #0x10
+    0100..0104  if-eqz  v1, +0x1a
+    0104..0106  goto  +0x3
+    0106..0108  const/4  v0, #0xff (-1)
+    0108..010a  goto  -0x21
+    010a..010e  if-eqz  v0, +0x43
+    010e..0112  iget  v2, v3, LX/Dgl;->kyberPreKeyId_:I
+    0112..0116  iget-object  v0, v3, LX/Dgl;->kyberCiphertext_:Lcom/google/protobuf/ByteString;
+    0116..011c  invoke-virtual  {v0}, Lcom/google/protobuf/ByteString;->toByteArray()[B
+    011c..011e  move-result-object  v1
+    011e..0122  new-instance  v0, LX/Ej4;
+    0122..0128  invoke-direct  {v0, v2, v1}, LX/Ej4;-><init>(I[B)V
+    0128..012c  new-instance  v1, LX/Fqj;
+    012c..0132  invoke-direct  {v1, v0}, LX/Fqj;-><init>(Ljava/lang/Object;)V
+    0132..0134  goto  +0x5
+    0134..0138  if-nez  v0, +0x2e
+    0138..013c  sget-object  v1, LX/Fqk;->A00:LX/Fqk;
+    013c..0140  iput-object  v1, v4, LX/Fj1;->A06:LX/Fbh;
+    0140..0144  iget-object  v0, v3, LX/Dgl;->message_:Lcom/google/protobuf/ByteString;
+    0144..014a  invoke-virtual  {v0}, Lcom/google/protobuf/ByteString;->toByteArray()[B
+    014a..014c  move-result-object  v1
+    014c..0150  new-instance  v0, LX/Fj3;
+    0150..0156  invoke-direct  {v0, v1}, LX/Fj3;-><init>([B)V
+    0156..015a  iput-object  v0, v4, LX/Fj1;->A05:LX/Fj3;
+    015a..015c  return-void
+    015c..0160  new-instance  v1, LX/EDY;
+    0160..0166  invoke-direct  {v1, v2}, LX/EDY;-><init>(Ljava/lang/String;)V
+    0166..0168  goto  +0x1a
+    0168..016e  invoke-static  {v3, v1}, LX/2LA;->A0p(Ljava/lang/String;I)Ljava/lang/String;
+    016e..0170  move-result-object  v0
+    0170..0174  new-instance  v1, LX/ED6;
+    0174..017a  invoke-direct  {v1, v0}, LX/ED6;-><init>(Ljava/lang/String;)V
+    017a..017c  goto  +0x10
+    017c..0182  invoke-static  {v2, v1}, LX/2LA;->A0p(Ljava/lang/String;I)Ljava/lang/String;
+    0182..0184  move-result-object  v0
+    0184..0188  new-instance  v1, LX/ED5;
+    0188..018e  invoke-direct  {v1, v0}, LX/ED5;-><init>(Ljava/lang/String;)V
+    018e..0190  goto  +0x6
+    0190..0194  new-instance  v1, LX/EDY;
+    0194..019a  invoke-direct  {v1, v2}, LX/EDY;-><init>(Ljava/lang/String;)V
+    019a..019c  throw  v1
+    019c..019e  move-exception  v1
+    019e..01a2  new-instance  v0, LX/EDY;
+    01a2..01a8  invoke-direct  {v0, v1}, LX/EDY;-><init>(Ljava/lang/Throwable;)V
+    01a8..01aa  throw  v0
+    # exception table: 2 try range(s)
+    # catch Lcom/google/protobuf/InvalidProtocolBufferException; code_units 0008..0027 -> 00ce
+    # catch LX/EDQ; code_units 0008..0027 -> 00ce
+    # catch LX/ED6; code_units 0008..0027 -> 00ce
+    # catch Lcom/google/protobuf/InvalidProtocolBufferException; code_units 003d..00ce -> 00ce
+    # catch LX/EDQ; code_units 003d..00ce -> 00ce
+    # catch LX/ED6; code_units 003d..00ce -> 00ce
+.end method

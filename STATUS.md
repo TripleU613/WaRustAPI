@@ -1,3 +1,11 @@
+2026-11-05 — **Message-version retry distinctions recovered.**
+
+Legacy and higher unknown versions take different exception/status paths;
+prekey constructor catch regions differ too. Native direct version2 gate exceeds
+the backend's supported range, with full primitive parity unproven. ED6 does not
+prove an identity refusal. [Evidence and limits](docs/protocol/outgoing-retry-receipts.md#version-gates-and-no-retry-limits--2026-11-05).
+Research only; no runtime change or live traffic.
+
 2026-11-05 — **Normal missing-session retries now include error1.**
 
 Direct syntax admission precedes absent-session classification; group absent
