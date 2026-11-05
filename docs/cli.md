@@ -154,6 +154,10 @@ Show one-time prekey counts and upload batches (offline, redacted)
 Usage: whatsapp-cli prekeys [OPTIONS]...
 ```
 
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+| --digest-capture | DIGEST_CAPTURE | no |  |  |  | Inspect a saved inbound digest reply offline; never applies recovery |
+
 ## whatsapp-cli receipts
 
 Show queued read, played and retry receipts and their outcomes (offline, redacted)

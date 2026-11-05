@@ -1252,3 +1252,11 @@ Attempttime andpersisted digestflag clears distinguished.
 and clears key-type uploadhistory, preserving recordfields inselectedSQL.
 Uncertain Rustreservations remain distinct; correlation/port stillopen.
 [Exports and statechange boundaries](apk/2.26.43.72-prekey-upload-replies/README.md#digest-not-foundserver-error-and-metadata-resync-scope-2026-11-04). No production change or live traffic.
+
+## 2026-11-04 — Offline digest inspection
+
+**Implemented/verified offline:**existingcapturereply grammar andlocal
+materialcomparison exposedthroughprekeys --digest-capture. Redactedresult
+only; no statechange. FrozenACKedLRsignature used without randomized
+resigning; unavailable/ambiguous evidence stays explicit. IndependentSHA1
+andread-only/PQregressions retained. [Limits and usage](prekey-count-notifications.md#offline-digest-inspection-2026-11-04). No live traffic.

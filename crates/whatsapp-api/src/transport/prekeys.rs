@@ -40,6 +40,9 @@
 //! an uncertain batch are never re-sent. Startup generates first when nothing
 //! is unsent and then uploads in the same session (the APK does these on
 //! separate runs). Follow-up uploads after `count_low` are capped per session.
+/// Read-only digest grammar and local material inspection; never resets keys.
+pub mod digest;
+
 use crate::{
     Error, Result,
     binary::{Encoder, Node, TokenDictionary},
@@ -2016,6 +2019,209 @@ mod tests {
                 checkpoint
             );
         }
+    }
+
+    #[test]
+    fn offline_digest_matches_independent_sha1_vector_and_keeps_server_id_order() {
+        use wacore_libsignal::protocol::{PrivateKey, Timestamp as SignalTimestamp};
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("digest-vector.redb"));
+        let pair = |byte| {
+            let private_key = PrivateKey::deserialize(&[byte; 32]).unwrap();
+            KeyPair {
+                public_key: private_key.public_key().unwrap(),
+                private_key,
+            }
+        };
+        let mut account = AccountRecord {
+            signal_registration_id: Some(0x01020304),
+            ..Default::default()
+        };
+        account.signal_identity = Some(SignalIdentityKey(KeyMaterial {
+            public: [1; 32],
+            private: [1; 32],
+        }));
+        // Structural hash fixture, not an authenticated signed-key fixture.
+        let signed = SignedPreKeyRecord::new(
+            7.into(),
+            SignalTimestamp::from_epoch_millis(0),
+            &pair(2),
+            &[7; 64],
+        )
+        .serialize()
+        .unwrap();
+        store
+            .write(|tx| {
+                for (id, byte) in [(1u32, 3u8), (2, 4)] {
+                    tx.put_json(
+                        Table::Prekeys,
+                        record_key(id).as_bytes(),
+                        1,
+                        &PreKeyRecord::new(id.into(), &pair(byte))
+                            .serialize()
+                            .unwrap(),
+                    )?;
+                }
+                Ok(())
+            })
+            .unwrap();
+        // Python hashlib + cryptography X25519 independently computed this
+        // identity||signed public||signature||legacy public3||public4 vector.
+        let vector: serde_json::Value = serde_json::from_str(include_str!(
+            "../../fixtures/prekeys/2.26.43.72-digest-reference.json"
+        ))
+        .unwrap();
+        let hash = hex::decode(vector["sha1"].as_str().unwrap()).unwrap();
+        let reply = |order: &[u32]| {
+            Node::new("iq")
+                .attr("type", "result")
+                .children(vec![Node::new("digest").children(vec![
+                    Node::new("registration").bytes(vec![1, 2, 3, 4]),
+                    Node::new("type").bytes(vec![5]),
+                    Node::new("skey").children(vec![Node::new("id").bytes(be3(7))]),
+                    Node::new("list").children(
+                        order
+                            .iter()
+                            .map(|id| Node::new("id").bytes(be3(*id)))
+                            .collect(),
+                    ),
+                    Node::new("hash").bytes(hash.clone()),
+                ])])
+        };
+        let check = |node: &Node| {
+            store
+                .read(|tx| digest::inspect_in(tx, &account, &signed, false, node))
+                .unwrap()
+        };
+        let before = store.read(|tx| tx.scan(Table::Prekeys, 1, 100)).unwrap();
+        assert_eq!(
+            check(&reply(&[1, 2])).disposition,
+            digest::Disposition::Matches
+        );
+        assert_eq!(
+            check(&reply(&[2, 1])).disposition,
+            digest::Disposition::HashMismatch
+        );
+        assert_eq!(
+            check(&reply(&[1, 1])).disposition,
+            digest::Disposition::HashMismatch
+        );
+        assert_eq!(
+            check(&reply(&[1, 3])).disposition,
+            digest::Disposition::MissingLegacyKey
+        );
+        let mut malformed = reply(&[1, 2]);
+        let mut children = malformed.child("digest").unwrap().child_nodes().to_vec();
+        children[4] = Node::new("hash").bytes(vec![0; 32]);
+        malformed = malformed.children(vec![Node::new("digest").children(children)]);
+        assert!(
+            store
+                .read(|tx| digest::inspect_in(tx, &account, &signed, false, &malformed))
+                .is_err()
+        );
+        assert_eq!(
+            store.read(|tx| tx.scan(Table::Prekeys, 1, 100)).unwrap(),
+            before
+        );
+    }
+
+    #[test]
+    fn offline_pq_digest_uses_acknowledged_frozen_signature_without_resigning() {
+        use sha2::Digest;
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("digest-pq.redb"));
+        let (account, signed) = account_and_signed();
+        let prop = super::super::abprops::queue(&store).unwrap();
+        super::super::actions::reserve_pending(&store).unwrap();
+        super::super::actions::record_reply(
+            &store,
+            &Node::new("iq")
+                .attr("id", prop.as_str())
+                .attr("type", "result")
+                .children(vec![Node::new("props").attr("hash", "fixture").children(
+                    vec![Node::new("prop").attr("config_code", "21198").attr("config_value", "1")],
+                )]),
+        )
+        .unwrap();
+        generate(&store).unwrap();
+        let (pending, set) = begin_upload(&store, &account, &signed).unwrap().unwrap();
+        pending
+            .settle(
+                &store,
+                &Node::new("iq")
+                    .attr("id", pending.iq_id.as_str())
+                    .attr("type", "result"),
+            )
+            .unwrap();
+        // Build peer digest from the published wire fields, independently of
+        // inspector's local-store lookup and frozen-history signature recovery.
+        let skey = set.child("skey").unwrap();
+        let lr = set.child("pq_last_resort_key").unwrap();
+        let list = set.child("list").unwrap();
+        let pq = set.child("pq_list").unwrap();
+        let mut input = child_bytes(&set, "identity").unwrap().to_vec();
+        input.extend_from_slice(child_bytes(skey, "value").unwrap());
+        input.extend_from_slice(child_bytes(skey, "signature").unwrap());
+        for key in list.child_nodes() {
+            input.extend_from_slice(child_bytes(key, "value").unwrap());
+        }
+        input.extend_from_slice(child_bytes(lr, "value").unwrap());
+        input.extend_from_slice(child_bytes(lr, "signature").unwrap());
+        for key in pq.child_nodes() {
+            input.extend_from_slice(child_bytes(key, "value").unwrap());
+        }
+        let reply =
+            Node::new("iq")
+                .attr("type", "result")
+                .children(vec![Node::new("digest").children(vec![
+                set.child("registration").unwrap().clone(),
+                Node::new("type").bytes(vec![5]),
+                Node::new("skey").children(vec![skey.child("id").unwrap().clone()]),
+                Node::new("list").children(
+                    list.child_nodes()
+                        .iter()
+                        .map(|n| n.child("id").unwrap().clone())
+                        .collect(),
+                ),
+                Node::new("hash").bytes(sha2::Sha256::digest(&input).to_vec()),
+                Node::new("pq_list").children(
+                    pq.child_nodes()
+                        .iter()
+                        .map(|n| n.child("id").unwrap().clone())
+                        .collect(),
+                ),
+                Node::new("pq_last_resort_key").children(vec![lr.child("id").unwrap().clone()]),
+            ])]);
+        let snapshot = |store: &ProtocolStore| {
+            store
+                .read(|tx| {
+                    [Table::Prekeys, Table::Checkpoints]
+                        .into_iter()
+                        .map(|t| tx.scan(t, 1, 10000))
+                        .collect::<Result<Vec<_>>>()
+                })
+                .unwrap()
+        };
+        let before = snapshot(&store);
+        let check = || {
+            store
+                .read(|tx| digest::inspect_in(tx, &account, &signed, true, &reply))
+                .unwrap()
+        };
+        assert_eq!(check().disposition, digest::Disposition::Matches);
+        assert_eq!(
+            check().disposition,
+            digest::Disposition::Matches,
+            "randomized re-signing would fail this"
+        );
+        assert_eq!(snapshot(&store), before);
+        store
+            .write(|tx| tx.delete(Table::Checkpoints, request_key(&pending.iq_id).as_bytes()))
+            .unwrap();
+        assert_eq!(
+            check().disposition,
+            digest::Disposition::UnavailableLastResortSignature
+        );
     }
 
     #[test]

@@ -1356,13 +1356,37 @@ pub(super) fn report(
 
 /// Offline one-time prekey summary: counts by upload state and batch outcomes.
 /// No key material is read or printed.
-pub(super) fn prekeys_status(cli: &super::Cli) -> Result<(), Error> {
+pub(super) fn prekeys_status(cli: &super::Cli, digest_capture: Option<&str>) -> Result<(), Error> {
     let store = ProtocolStore::open(OpenOptions {
         path: cli.store.clone(),
         account_id: AccountId::new(cli.account.clone())?,
         key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
         create: false,
     })?;
+    if let Some(key) = digest_capture {
+        if !is_capture(key.as_bytes()) {
+            return Err(Error::invalid(
+                "prekey_digest",
+                "requires a saved inbound capture key",
+            ));
+        }
+        let wire: Vec<u8> = store
+            .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))?
+            .ok_or_else(|| Error::invalid("prekey_digest", "capture unavailable"))?;
+        let limits = Limits::default();
+        let unpacked = unpack_frame_payload(&wire, &limits)
+            .map_err(|_| Error::invalid("prekey_digest", "invalid saved frame"))?;
+        let node = Decoder::new(&unpacked, TokenDictionary::comparison_2_26_37_71(), &limits)
+            .decode_node()
+            .map_err(|_| Error::invalid("prekey_digest", "invalid saved node"))?;
+        let inspection = whatsapp_api::transport::prekeys::digest::inspect(&store, &node)?;
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&inspection)
+                .map_err(|_| Error::invalid("prekey_digest", "cannot serialize inspection"))?
+        );
+        return Ok(());
+    }
     let summary = whatsapp_api::transport::prekeys::summary(&store)?;
     if cli.json {
         println!(

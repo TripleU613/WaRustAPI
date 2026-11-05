@@ -15457,5 +15457,18 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#digest-not-foundserver-error-and-metadata-resync-scope-2026-11-04",
     "description": "Static43.72 digest404 resync versus503 attemptclear and selected metadata/history SQL traced. Private row deletion is not inferred. Correlated recovery port stillopen; no reset or new request capability."
+  },
+  "x-prekey-offline-digest-inspection": {
+    "x-cli": {
+      "command": "whatsapp-cli prekeys",
+      "flag": "--digest-capture <saved-inbound-capture-key>",
+      "output": "redacted JSON Inspection (disposition, legacy_ids, pq_ids, last_resort_present, sha256)"
+    },
+    "x-transport": [
+      "offline encrypted-store read"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/prekey-count-notifications.md#offline-digest-inspection-2026-11-04",
+    "description": "Read-only library prekeys::digest::inspect and CLI compare a saved IQ result with current local material. No sends, ACKs, recovery writes or HTTP route. Gate read is separate from account/key snapshot; no request/account-generation correlation authority. Frozen acknowledged SET signature required forLR; ambiguity/unavailability reported. Historical input never authorizes resync."
   }
 }

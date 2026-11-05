@@ -1,3 +1,12 @@
+2026-11-04 — **Offline digest inspection implemented.**
+
+Savedcapturegrammar/localkeycomparison produces redacteddiagnostics without
+resigning orstatechanges. FrozenLRsignature provenance required.
+[Usage, regressions and authority limits](docs/protocol/prekey-count-notifications.md#offline-digest-inspection-2026-11-04).
+Validation: workspace/all-feature tests, strict Clippy, regenerated CLI
+reference/coverage report, formatting, JSON and repository hygiene passed.
+No live traffic.
+
 2026-11-04 — **Digest404/503 recovery and metadata scope traced.**
 
 404 resync differs from503 attemptclear;resync SQL doesnot imply private

@@ -265,7 +265,11 @@ enum Cmd {
     OutboxGroupPreparations,
     /// Show one-time prekey counts and upload batches (offline, redacted).
     #[cfg(feature = "experimental-transport")]
-    Prekeys,
+    Prekeys {
+        /// Inspect a saved inbound digest reply offline; never applies recovery.
+        #[arg(long)]
+        digest_capture: Option<String>,
+    },
     /// Show queued read, played and retry receipts and their outcomes (offline, redacted).
     #[cfg(feature = "experimental-transport")]
     Receipts,
@@ -1879,7 +1883,9 @@ async fn run(cli: Cli) -> Result<(), Error> {
         #[cfg(feature = "experimental-transport")]
         Cmd::OutboxGroupPreparations => transport_receive::outbox_group_preparations(&cli),
         #[cfg(feature = "experimental-transport")]
-        Cmd::Prekeys => transport_receive::prekeys_status(&cli),
+        Cmd::Prekeys { digest_capture } => {
+            transport_receive::prekeys_status(&cli, digest_capture.as_deref())
+        }
         #[cfg(feature = "experimental-transport")]
         Cmd::Receipts => transport_receive::receipts_status(&cli),
         #[cfg(feature = "experimental-transport")]

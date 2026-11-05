@@ -582,3 +582,49 @@ Attempttime andpersisted digestflag clears distinguished.
 and clears key-type uploadhistory, preserving recordfields inselectedSQL.
 Uncertain Rustreservations remain distinct; correlation/port stillopen.
 [Exports and statechange boundaries](apk/2.26.43.72-prekey-upload-replies/README.md#digest-not-foundserver-error-and-metadata-resync-scope-2026-11-04). No production change or live traffic.
+
+## Offline digest inspection (2026-11-04)
+
+**Implemented/verified offline from43.72 wire/verifier evidence.**
+`whatsapp-cli prekeys --digest-capture <saved-inbound-capture-key>` decodes
+a single existing encrypted capture and prints redactedJSON disposition,
+legacy/PQ counts,LRpresence andalgorithm. Library entry is
+`transport::prekeys::digest::inspect(store,node)`. It requiresIQresult/digest
+grammar and never sends, queues, acknowledges, clearsflags, resetsmetadata
+or applies recovery. Existing GET /v1/prekeys remains summary-only; this
+CLI flag does not create an HTTP inspection route.
+
+Parser keeps firstmatchingrequiredchildren, direct3-byteID lists andoptional
+PQ null-versus-empty distinction; LRpresence determineswirehash length.
+Local comparison uses registration,type,signedID, requestedlegacy order,
+PQgate/LR algorithm condition andavailablekeymaterial. Sorting/deduplication
+is not introduced. Missing/material mismatches are fixed redacted dispositions;
+invalid localrecords/grammar return fixed diagnostics ratherthan rawpayload.
+MultipleuploadedLR rows returnAmbiguousLastResort because native insertion
+order metadata is not available locally; no highest-ID guess is made.
+
+**Local signature gap:** StoredKemPrekey doesnot persist uploadedLR signature.
+Re-signing is randomized and would givefalsehashmismatch. Inspector recovers
+only from an acknowledged frozenmode=set request naming the sameLRID and
+publicbytes, validates requestID/type/namespace andidentitysignature, and
+requires unambiguous signature bytes. Missinghistoricalwire orconflicting
+signatures returnsUnavailableLastResortSignature. No backfill or rowmutation.
+
+Account,keyrows and registeredsignedprekey validation shareoneReadTx via
+extractedfactory helper. The savedPQgate isread separately; results are
+provisional offline evidence, **not request correlation, snapshot authority
+for recovery, or proof of currentserver state**. Historicalreply comparison
+usescurrentlocalmaterial and cannot establish a past match or authorize
+changingOutcomeUnknown reservations.
+
+Regressions: independentPython cryptography/X25519 +hashlibSHA1 public-material
+vector (oracles/prekey_digest_reference.py anddigest-referencefixture),
+reordered/repeated/missingIDs, invalidhashsize, read-onlytablecomparison;
+PQdigest builtfrompublishedSET verifies repeatedinspections do notresign;
+removing onlysynthetic frozenhistory yieldsUnavailableSignature.
+The structuralSHA1 fixture is not an authenticatedkey fixture; publicinspect
+validates the registeredsignedkey through existingfactory logic.
+
+**Remaining:** actualdigest request/admission, startupflag lifecycle, correlated
+responseorigin/generation, nativeinsertionordering and authorizedresync/retry.
+No liveaccountoperation or complete startup/recovery parity claimed.
