@@ -3271,3 +3271,17 @@ process-static recent-success guard may skip it. Property2225 conditionally
 controls the dual one-day adoption rejection; neither effective value is known.
 [Source exports, field/caller census, search limits and port obligations](apk/2.26.43.72-contact-backoff-clock/README.md).
 No Rust clock/eligibility, NTP acquisition, retry/reset or live account changes.
+
+
+## Client keepalive error response correction — 2026-11-05
+
+**Confirmed static / locally corrected**, APK2.26.43.72:1xa.Bvj routes a ping
+IQ error through the sameFea(24) manager response as validated success. Rust
+previously ended receive as nonrecoverable keepalive refused. A matched live
+ping error now clears only that ping and receive continues with a fixed
+redacted diagnostic. Duplicate old errors do not consume successor pings;
+non-replies/late replies and unowned IQs retain existing admission. No clock,
+account, request retry or restriction-reset authority is added.
+[Callback binding, red/green regression and open cadence/schema gaps](apk/2.26.43.72-client-ping-errors/README.md).
+Full native keepalive scheduling/configuration and successful-result schema
+remain unported; no live account operation or causal ban-prevention claim.

@@ -16878,5 +16878,12 @@
     "x-live": false,
     "description": "Static pinned APK2.26.43.72 NTP-preferred contact backoff clock and NTP scheduling trace: property170 WorkManager12h/6h-flex versus12h elapsed alarm, immediate setup acquisition, independent six-hour process success guard and one-day constructor cache admission. Effective flags, NTP acquisition and full contact deadline enforcement remain unported.",
     "evidence": "docs/protocol/apk/2.26.43.72-contact-backoff-clock/README.md"
+  },
+  "x-client-keepalive-error-response": {
+    "x-cli": true,
+    "x-transport": "experimental",
+    "x-live": false,
+    "description": "Normal receive accepts an owned unexpired client keepalive IQ error as a ping liveness response, matching APK43.72 1xa.Bvj -> Fea(24), instead of ending the connection. Fixed diagnostic, no clock/account update, retry or restriction reset. Native cadence/configuration and full success schema remain unported.",
+    "evidence": "docs/protocol/apk/2.26.43.72-client-ping-errors/README.md"
   }
 }

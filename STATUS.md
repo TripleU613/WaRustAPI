@@ -1,3 +1,14 @@
+2026-11-05 — **Matched keepalive errors preserve the connection.**
+
+A red regression reproduced the prior receive termination. Native error and
+success callbacks share the manager response path; Rust now clears the matching
+live ping without treating its error as a connection refusal. Duplicate errors
+cannot consume a successor; unanswered successors still time out.
+[Evidence, tests and open cadence/result-schema gaps](docs/protocol/apk/2.26.43.72-client-ping-errors/README.md).
+No request cadence/timeout, account policy, automatic retry/reset or live traffic change.
+Validation:1370 workspace/all-feature tests, strict Clippy, fmt, CLI/OpenAPI,
+APK coverage and checksum/link hygiene passed. New regression failed before fix.
+
 2026-11-05 — **Contact backoff clock reanchored; NTP scheduler traced.**
 
 Pinned43.72 evidence separates NTP-preferred contact time from token time,

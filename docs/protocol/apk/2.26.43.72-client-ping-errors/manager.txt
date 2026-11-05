@@ -1,0 +1,521 @@
+
+# class: LX/1A7;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 13
+    # full signature: LX/1A7;-><init>()V
+    0000..0004  const/16  v0, #0xa2
+    0004..000a  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    000a..000c  move-result-object  v11
+    000c..0010  check-cast  v11, LX/08q;
+    0010..0014  const/16  v0, #0x138
+    0014..001a  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    001a..001c  move-result-object  v10
+    001c..0020  check-cast  v10, LX/0W4;
+    0020..0026  invoke-static  {}, LX/00J;->A00()Landroid/app/Application;
+    0026..0028  move-result-object  v9
+    0028..002c  const/16  v0, #0x6f
+    002c..0032  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0032..0034  move-result-object  v8
+    0034..0038  check-cast  v8, LX/08Z;
+    0038..003c  const/16  v0, #0x8c
+    003c..0042  invoke-static  {v0}, LX/00D;->A00(I)LX/05h;
+    0042..0044  move-result-object  v7
+    0044..0048  const/16  v0, #0x141
+    0048..004e  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    004e..0050  move-result-object  v6
+    0050..0054  check-cast  v6, LX/0B8;
+    0054..0058  const/16  v0, #0x101
+    0058..005e  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    005e..0060  move-result-object  v5
+    0060..0064  check-cast  v5, LX/0AI;
+    0064..0068  const/16  v0, #0x4281
+    0068..006e  invoke-static  {v0}, LX/00D;->A00(I)LX/05h;
+    006e..0070  move-result-object  v4
+    0070..0074  const/16  v0, #0x179a
+    0074..007a  invoke-static  {v0}, LX/00D;->A00(I)LX/05h;
+    007a..007c  move-result-object  v0
+    007c..0082  invoke-virtual  {v0}, LX/05h;->get()Ljava/lang/Object;
+    0082..0084  move-result-object  v0
+    0084..0088  check-cast  v0, LX/0ty;
+    0088..008e  invoke-virtual  {v0}, LX/0ty;->A00()Landroid/os/Looper;
+    008e..0090  move-result-object  v3
+    0090..0096  invoke-direct  {v12}, Ljava/lang/Object;-><init>()V
+    0096..009a  const/16  v0, #0x42
+    009a..00a0  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    00a0..00a2  move-result-object  v0
+    00a2..00a6  check-cast  v0, LX/08Y;
+    00a6..00aa  iput-object  v0, v12, LX/1A7;->A0D:LX/08Y;
+    00aa..00ae  const/16  v0, #0x27
+    00ae..00b2  new-instance  v1, LX/1Wu;
+    00b2..00b8  invoke-direct  {v1, v12, v0}, LX/1Wu;-><init>(Ljava/lang/Object;I)V
+    00b8..00ba  const/4  v2, #0x0
+    00ba..00be  new-instance  v0, LX/00y;
+    00be..00c4  invoke-direct  {v0, v2, v1}, LX/00y;-><init>(Ljava/lang/Object;LX/00v;)V
+    00c4..00c8  iput-object  v0, v12, LX/1A7;->A0A:LX/00x;
+    00c8..00cc  const/16  v0, #0x28
+    00cc..00d0  new-instance  v1, LX/1Wu;
+    00d0..00d6  invoke-direct  {v1, v12, v0}, LX/1Wu;-><init>(Ljava/lang/Object;I)V
+    00d6..00da  new-instance  v0, LX/00y;
+    00da..00e0  invoke-direct  {v0, v2, v1}, LX/00y;-><init>(Ljava/lang/Object;LX/00v;)V
+    00e0..00e4  iput-object  v0, v12, LX/1A7;->A0B:LX/00x;
+    00e4..00e8  iput-object  v11, v12, LX/1A7;->A0G:LX/08q;
+    00e8..00ec  iput-object  v10, v12, LX/1A7;->A0E:LX/0W4;
+    00ec..00f0  iput-object  v9, v12, LX/1A7;->A07:Landroid/content/Context;
+    00f0..00f4  iput-object  v7, v12, LX/1A7;->A0C:LX/00x;
+    00f4..00f6  const/4  v1, #0x1
+    00f6..00fa  new-instance  v0, LX/098;
+    00fa..0100  invoke-direct  {v0, v8, v1}, LX/098;-><init>(LX/08Z;Z)V
+    0100..0104  iput-object  v0, v12, LX/1A7;->A0H:LX/098;
+    0104..0108  iput-object  v6, v12, LX/1A7;->A0F:LX/0B8;
+    0108..010c  new-instance  v0, Landroid/os/Handler;
+    010c..0112  invoke-direct  {v0, v3}, Landroid/os/Handler;-><init>(Landroid/os/Looper;)V
+    0112..0116  iput-object  v0, v12, LX/1A7;->A08:Landroid/os/Handler;
+    0116..011a  iput-object  v5, v12, LX/1A7;->A0I:LX/0AI;
+    011a..011e  iput-object  v4, v12, LX/1A7;->A09:LX/00x;
+    011e..0120  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method private A00(V)  # .registers 3
+    # full signature: LX/1A7;->A00()V
+    0000..0004  iget-object  v1, v2, LX/1A7;->A0H:LX/098;
+    0004..000a  invoke-virtual  {v1}, LX/098;->A02()V
+    000a..0010  invoke-static  {v2}, LX/1A7;->A06(LX/1A7;)Z
+    0010..0012  move-result  v0
+    0012..0016  if-eqz  v0, +0x13
+    0016..001a  const-string  v0, "ClientPingManager/periodic/cancel-delayed-runnable"
+    001a..0020  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0020..0024  iget-object  v0, v2, LX/1A7;->A0A:LX/00x;
+    0024..002a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    002a..002c  move-result-object  v0
+    002c..0030  check-cast  v0, Ljava/lang/Runnable;
+    0030..0036  invoke-virtual  {v1, v0}, LX/098;->A04(Ljava/lang/Runnable;)V
+    0036..0038  return-void
+    0038..003c  const-string  v0, "ClientPingManager/periodic/cancel-alarm"
+    003c..0042  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0042..0046  const-string  v0, "com.whatsapp.alarm.CLIENT_PING_PERIODIC"
+    0046..004a  new-instance  v1, Landroid/content/Intent;
+    004a..0050  invoke-direct  {v1, v0}, Landroid/content/Intent;-><init>(Ljava/lang/String;)V
+    0050..0056  invoke-static  {}, LX/010;->A00()Ljava/lang/String;
+    0056..0058  move-result-object  v0
+    0058..005e  invoke-virtual  {v1, v0}, Landroid/content/Intent;->setPackage(Ljava/lang/String;)Landroid/content/Intent;
+    005e..0060  move-result-object  v0
+    0060..0066  invoke-virtual  {v2, v0}, LX/1A7;->A09(Landroid/content/Intent;)V
+    0066..0068  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method private A01(V)  # .registers 3
+    # full signature: LX/1A7;->A01()V
+    0000..0004  iget-object  v1, v2, LX/1A7;->A0H:LX/098;
+    0004..000a  invoke-virtual  {v1}, LX/098;->A02()V
+    000a..0010  invoke-static  {v2}, LX/1A7;->A06(LX/1A7;)Z
+    0010..0012  move-result  v0
+    0012..0016  if-eqz  v0, +0x13
+    0016..001a  const-string  v0, "ClientPingManager/timeout/cancel-delayed-runnable"
+    001a..0020  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0020..0024  iget-object  v0, v2, LX/1A7;->A0B:LX/00x;
+    0024..002a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    002a..002c  move-result-object  v0
+    002c..0030  check-cast  v0, Ljava/lang/Runnable;
+    0030..0036  invoke-virtual  {v1, v0}, LX/098;->A04(Ljava/lang/Runnable;)V
+    0036..0038  return-void
+    0038..003c  const-string  v0, "ClientPingManager/timeout/cancel-alarm"
+    003c..0042  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0042..0046  const-string  v0, "com.whatsapp.alarm.CLIENT_PING_TIMEOUT"
+    0046..004a  new-instance  v1, Landroid/content/Intent;
+    004a..0050  invoke-direct  {v1, v0}, Landroid/content/Intent;-><init>(Ljava/lang/String;)V
+    0050..0056  invoke-static  {}, LX/010;->A00()Ljava/lang/String;
+    0056..0058  move-result-object  v0
+    0058..005e  invoke-virtual  {v1, v0}, Landroid/content/Intent;->setPackage(Ljava/lang/String;)Landroid/content/Intent;
+    005e..0060  move-result-object  v0
+    0060..0066  invoke-virtual  {v2, v0}, LX/1A7;->A09(Landroid/content/Intent;)V
+    0066..0068  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A02(VL)  # .registers 7
+    # full signature: LX/1A7;->A02(LX/1A7;)V
+    0000..0004  const-string  v0, "ClientPingManager/on-disconnected"
+    0004..000a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    000a..000e  iget-object  v5, v6, LX/1A7;->A0H:LX/098;
+    000e..0014  invoke-virtual  {v5}, LX/098;->A02()V
+    0014..0018  iget-boolean  v0, v6, LX/1A7;->A05:Z
+    0018..001c  if-nez  v0, +0x8
+    001c..0020  const-string  v0, "ClientPingManager/on-disconnected; not connected, ignoring..."
+    0020..0026  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0026..0028  return-void
+    0028..002c  iget-wide  v3, v6, LX/1A7;->A0J:J
+    002c..0030  const-wide/16  v1, #0x0
+    0030..0034  cmp-long  v0, v3, v1
+    0034..0038  if-lez  v0, +0x5
+    0038..003e  invoke-direct  {v6}, LX/1A7;->A01()V
+    003e..0044  invoke-virtual  {v5}, LX/098;->A02()V
+    0044..0048  iget-object  v0, v6, LX/1A7;->A03:LX/1tB;
+    0048..004c  if-eqz  v0, +0x14
+    004c..0050  iget-object  v2, v6, LX/1A7;->A07:Landroid/content/Context;
+    0050..0054  iget-object  v0, v6, LX/1A7;->A09:LX/00x;
+    0054..005a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    005a..005c  move-result-object  v1
+    005c..0060  check-cast  v1, LX/1t6;
+    0060..0064  iget-object  v0, v6, LX/1A7;->A03:LX/1tB;
+    0064..006a  invoke-virtual  {v1, v0, v2}, LX/1t6;->A02(Landroid/content/BroadcastReceiver;Landroid/content/Context;)V
+    006a..006c  const/4  v0, #0x0
+    006c..0070  iput-object  v0, v6, LX/1A7;->A03:LX/1tB;
+    0070..0076  invoke-direct  {v6}, LX/1A7;->A00()V
+    0076..007c  invoke-virtual  {v5}, LX/098;->A02()V
+    007c..0080  iget-object  v0, v6, LX/1A7;->A02:LX/1t4;
+    0080..0084  if-eqz  v0, +0x14
+    0084..0088  iget-object  v2, v6, LX/1A7;->A07:Landroid/content/Context;
+    0088..008c  iget-object  v0, v6, LX/1A7;->A09:LX/00x;
+    008c..0092  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0092..0094  move-result-object  v1
+    0094..0098  check-cast  v1, LX/1t6;
+    0098..009c  iget-object  v0, v6, LX/1A7;->A02:LX/1t4;
+    009c..00a2  invoke-virtual  {v1, v0, v2}, LX/1t6;->A02(Landroid/content/BroadcastReceiver;Landroid/content/Context;)V
+    00a2..00a4  const/4  v0, #0x0
+    00a4..00a8  iput-object  v0, v6, LX/1A7;->A02:LX/1t4;
+    00a8..00aa  const/4  v0, #0x0
+    00aa..00ae  iput-object  v0, v6, LX/1A7;->A01:LX/1A0;
+    00ae..00b0  const/4  v0, #0x0
+    00b0..00b4  iput-boolean  v0, v6, LX/1A7;->A05:Z
+    00b4..00b6  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A03(VL)  # .registers 2
+    # full signature: LX/1A7;->A03(LX/1A7;)V
+    0000..0004  const-string  v0, "ClientPingManager/ping-timeout"
+    0004..000a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    000a..000e  iget-object  v0, v1, LX/1A7;->A0H:LX/098;
+    000e..0014  invoke-virtual  {v0}, LX/098;->A02()V
+    0014..0018  iget-boolean  v0, v1, LX/1A7;->A05:Z
+    0018..001c  if-eqz  v0, +0x19
+    001c..0020  iget-object  v0, v1, LX/1A7;->A01:LX/1A0;
+    0020..0024  if-eqz  v0, +0x15
+    0024..0028  iget-object  v0, v1, LX/1A7;->A0I:LX/0AI;
+    0028..002c  iget-boolean  v0, v0, LX/0AI;->A06:Z
+    002c..0030  if-nez  v0, +0x8
+    0030..0034  const-string  v0, "ClientPingManager/ping-timeout; xmpp connection is not ready, ignoring."
+    0034..003a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    003a..003c  return-void
+    003c..0040  iget-boolean  v0, v1, LX/1A7;->A06:Z
+    0040..0044  if-eqz  v0, +0x8
+    0044..0048  const-string  v0, "ClientPingManager/ping-timeout; already notified about timeout, ignoring."
+    0048..004a  goto  -0xa
+    004a..004e  const-string  v0, "ClientPingManager/ping-timeout; not connected, ignoring."
+    004e..0050  goto  -0xd
+    0050..0054  iget-object  v0, v1, LX/1A7;->A01:LX/1A0;
+    0054..005a  invoke-interface  {v0}, LX/1A0;->CdJ()V
+    005a..005c  const/4  v0, #0x1
+    005c..0060  iput-boolean  v0, v1, LX/1A7;->A06:Z
+    0060..0066  invoke-direct  {v1}, LX/1A7;->A01()V
+    0066..0068  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A04(VL)  # .registers 8
+    # full signature: LX/1A7;->A04(LX/1A7;)V
+    0000..0004  const-string  v0, "ClientPingManager/send-ping"
+    0004..000a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    000a..000e  iget-object  v5, v7, LX/1A7;->A0H:LX/098;
+    000e..0014  invoke-virtual  {v5}, LX/098;->A02()V
+    0014..0018  iget-boolean  v0, v7, LX/1A7;->A05:Z
+    0018..001c  if-eqz  v0, +0xa7
+    001c..0020  iget-object  v0, v7, LX/1A7;->A01:LX/1A0;
+    0020..0024  if-eqz  v0, +0xa3
+    0024..0028  iget-wide  v1, v7, LX/1A7;->A0J:J
+    0028..002c  const-wide/16  v3, #0x0
+    002c..0030  cmp-long  v0, v1, v3
+    0030..0034  if-lez  v0, +0x20
+    0034..0038  const-string  v0, "ClientPingManager/send-ping; skipping ping request, pending ping already exists."
+    0038..003e  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    003e..0042  iget-wide  v1, v7, LX/1A7;->A0J:J
+    0042..0046  cmp-long  v0, v1, v3
+    0046..004a  if-lez  v0, +0x14
+    004a..0050  invoke-static  {}, Landroid/os/SystemClock;->elapsedRealtime()J
+    0050..0052  move-result-wide  v4
+    0052..0056  iget-wide  v2, v7, LX/1A7;->A0J:J
+    0056..005c  invoke-virtual  {v7}, LX/1A7;->A07()J
+    005c..005e  move-result-wide  v0
+    005e..0060  add-long/2addr  v2, v0
+    0060..0064  cmp-long  v0, v4, v2
+    0064..0068  if-lez  v0, +0x5
+    0068..006e  invoke-static  {v7}, LX/1A7;->A03(LX/1A7;)V
+    006e..0070  return-void
+    0070..0076  invoke-direct  {v7}, LX/1A7;->A00()V
+    0076..007c  invoke-static  {}, Landroid/os/SystemClock;->elapsedRealtime()J
+    007c..007e  move-result-wide  v0
+    007e..0082  iput-wide  v0, v7, LX/1A7;->A0J:J
+    0082..0084  const/4  v3, #0x0
+    0084..0088  iput-boolean  v3, v7, LX/1A7;->A06:Z
+    0088..008e  invoke-virtual  {v5}, LX/098;->A02()V
+    008e..0094  invoke-static  {v7}, LX/1A7;->A06(LX/1A7;)Z
+    0094..0096  move-result  v0
+    0096..009a  if-eqz  v0, +0x2a
+    009a..009e  const-string  v0, "ClientPingManager/timeout/schedule-delayed-runnable"
+    009e..00a4  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    00a4..00a8  iget-object  v3, v7, LX/1A7;->A0B:LX/00x;
+    00a8..00ae  invoke-interface  {v3}, LX/00x;->get()Ljava/lang/Object;
+    00ae..00b0  move-result-object  v0
+    00b0..00b4  check-cast  v0, Ljava/lang/Runnable;
+    00b4..00ba  invoke-virtual  {v5, v0}, LX/098;->A04(Ljava/lang/Runnable;)V
+    00ba..00c0  invoke-virtual  {v7}, LX/1A7;->A07()J
+    00c0..00c2  move-result-wide  v1
+    00c2..00c8  invoke-interface  {v3}, LX/00x;->get()Ljava/lang/Object;
+    00c8..00ca  move-result-object  v0
+    00ca..00ce  check-cast  v0, Ljava/lang/Runnable;
+    00ce..00d4  invoke-virtual  {v5, v0, v1, v2}, LX/098;->A05(Ljava/lang/Runnable;J)V
+    00d4..00d6  const/4  v0, #0x0
+    00d6..00dc  invoke-virtual  {v7, v0}, LX/1A7;->A0B(Ljava/lang/Runnable;)V
+    00dc..00e0  iget  v0, v7, LX/1A7;->A00:I
+    00e0..00e4  add-int/lit8  v0, v0, #0x1
+    00e4..00e8  iput  v0, v7, LX/1A7;->A00:I
+    00e8..00ea  return-void
+    00ea..00ee  const-string  v0, "ClientPingManager/timeout/schedule-alarm"
+    00ee..00f4  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    00f4..00f8  iget-object  v2, v7, LX/1A7;->A07:Landroid/content/Context;
+    00f8..00fc  const-string  v0, "com.whatsapp.alarm.CLIENT_PING_TIMEOUT"
+    00fc..0100  new-instance  v1, Landroid/content/Intent;
+    0100..0106  invoke-direct  {v1, v0}, Landroid/content/Intent;-><init>(Ljava/lang/String;)V
+    0106..010c  invoke-static  {}, LX/010;->A00()Ljava/lang/String;
+    010c..010e  move-result-object  v0
+    010e..0114  invoke-virtual  {v1, v0}, Landroid/content/Intent;->setPackage(Ljava/lang/String;)Landroid/content/Intent;
+    0114..0116  move-result-object  v1
+    0116..011a  const/high16  v0, #0x8000000
+    011a..0120  invoke-static  {v2, v3, v1, v0}, LX/1At;->A00(Landroid/content/Context;ILandroid/content/Intent;I)Landroid/app/PendingIntent;
+    0120..0122  move-result-object  v2
+    0122..0128  invoke-virtual  {v7}, LX/1A7;->A07()J
+    0128..012a  move-result-wide  v0
+    012a..0130  invoke-static  {}, Landroid/os/SystemClock;->elapsedRealtime()J
+    0130..0132  move-result-wide  v4
+    0132..0134  add-long/2addr  v4, v0
+    0134..0138  iget-object  v0, v7, LX/1A7;->A0E:LX/0W4;
+    0138..013a  const/4  v3, #0x2
+    013a..013c  const/4  v6, #0x0
+    013c..0140  iget-object  v1, v0, LX/0W4;->A00:LX/0W8;
+    0140..0146  invoke-virtual/range  {v1..v6}, LX/0W8;->A02(Landroid/app/PendingIntent;IJZ)Z
+    0146..0148  move-result  v0
+    0148..014c  if-nez  v0, -0x3a
+    014c..0150  const-string  v0, "ClientPingManager/timeout/schedule-alarm; failed to schedule alarm"
+    0150..0156  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0156..0158  goto  -0x41
+    0158..015a  move-exception  v1
+    015a..015e  const-string  v0, "ClientPingManager/timeout/schedule-alarm; getBroadcast failed"
+    015e..0164  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0164..0166  goto  -0x48
+    0166..016a  const-string  v0, "ClientPingManager/send-ping; not connected, ignoring."
+    016a..0170  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0170..0172  return-void
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/RuntimeException; code_units 008d..0091 -> 00ac
+.end method
+
+.method public A05(VL)  # .registers 9
+    # full signature: LX/1A7;->A05(LX/1A7;)V
+    0000..0004  iget-object  v4, v8, LX/1A7;->A0H:LX/098;
+    0004..000a  invoke-virtual  {v4}, LX/098;->A02()V
+    000a..0010  invoke-direct  {v8}, LX/1A7;->A00()V
+    0010..0016  invoke-direct  {v8}, LX/1A7;->A01()V
+    0016..001c  invoke-virtual  {v4}, LX/098;->A02()V
+    001c..0022  invoke-static  {v8}, LX/1A7;->A06(LX/1A7;)Z
+    0022..0024  move-result  v0
+    0024..0028  if-eqz  v0, +0x25
+    0028..002c  const-string  v0, "ClientPingManager/periodic/schedule-delayed-runnable"
+    002c..0032  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0032..0036  iget  v0, v8, LX/1A7;->A00:I
+    0036..003a  const/16  v3, #0x3b4f
+    003a..003e  if-nez  v0, +0x4
+    003e..0042  const/16  v3, #0x3ba6
+    0042..0046  iget-object  v2, v8, LX/1A7;->A0D:LX/08Y;
+    0046..004a  sget-object  v1, LX/00G;->A02:LX/00G;
+    004a..004c  const/4  v0, #0x0
+    004c..0052  invoke-static  {v1, v2, v0, v3}, LX/00E;->A02(LX/00G;LX/00E;Ljava/lang/Integer;I)I
+    0052..0054  move-result  v0
+    0054..0056  int-to-long  v1, v0
+    0056..005a  iget-object  v0, v8, LX/1A7;->A0A:LX/00x;
+    005a..0060  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0060..0062  move-result-object  v0
+    0062..0066  check-cast  v0, Ljava/lang/Runnable;
+    0066..006c  invoke-virtual  {v4, v0, v1, v2}, LX/098;->A05(Ljava/lang/Runnable;J)V
+    006c..006e  return-void
+    006e..0072  const-string  v0, "ClientPingManager/periodic/schedule-alarm"
+    0072..0078  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0078..007c  iget-object  v0, v8, LX/1A7;->A0F:LX/0B8;
+    007c..0082  invoke-virtual  {v0}, LX/0B8;->A04()Landroid/app/AlarmManager;
+    0082..0084  move-result-object  v7
+    0084..0088  if-nez  v7, +0x8
+    0088..008c  const-string  v0, "ClientPingManager/periodic/schedule-alarm; alarm manager is null"
+    008c..0092  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0092..0094  return-void
+    0094..0098  const-string  v0, "com.whatsapp.alarm.CLIENT_PING_PERIODIC"
+    0098..009c  new-instance  v1, Landroid/content/Intent;
+    009c..00a2  invoke-direct  {v1, v0}, Landroid/content/Intent;-><init>(Ljava/lang/String;)V
+    00a2..00a8  invoke-static  {}, LX/010;->A00()Ljava/lang/String;
+    00a8..00aa  move-result-object  v0
+    00aa..00b0  invoke-virtual  {v1, v0}, Landroid/content/Intent;->setPackage(Ljava/lang/String;)Landroid/content/Intent;
+    00b0..00b2  move-result-object  v3
+    00b2..00b6  iget-object  v2, v8, LX/1A7;->A07:Landroid/content/Context;
+    00b6..00b8  const/4  v1, #0x0
+    00b8..00bc  const/high16  v0, #0x8000000
+    00bc..00c2  invoke-static  {v2, v1, v3, v0}, LX/1At;->A00(Landroid/content/Context;ILandroid/content/Intent;I)Landroid/app/PendingIntent;
+    00c2..00c4  move-result-object  v6
+    00c4..00ca  invoke-static  {}, Landroid/os/SystemClock;->elapsedRealtime()J
+    00ca..00cc  move-result-wide  v2
+    00cc..00d0  iget  v0, v8, LX/1A7;->A00:I
+    00d0..00d4  const/16  v5, #0x3b4f
+    00d4..00d8  if-nez  v0, +0x4
+    00d8..00dc  const/16  v5, #0x3ba6
+    00dc..00e0  iget-object  v4, v8, LX/1A7;->A0D:LX/08Y;
+    00e0..00e4  sget-object  v1, LX/00G;->A02:LX/00G;
+    00e4..00e6  const/4  v0, #0x0
+    00e6..00ec  invoke-static  {v1, v4, v0, v5}, LX/00E;->A02(LX/00G;LX/00E;Ljava/lang/Integer;I)I
+    00ec..00ee  move-result  v0
+    00ee..00f0  int-to-long  v0, v0
+    00f0..00f2  add-long/2addr  v2, v0
+    00f2..00f6  iget-boolean  v1, v8, LX/1A7;->A04:Z
+    00f6..00f8  const/4  v0, #0x2
+    00f8..00fc  if-eqz  v1, +0x3
+    00fc..00fe  const/4  v0, #0x3
+    00fe..0104  invoke-virtual  {v7, v0, v2, v3, v6}, Landroid/app/AlarmManager;->set(IJLandroid/app/PendingIntent;)V
+    0104..0106  return-void
+    0106..0108  move-exception  v1
+    0108..010c  const-string  v0, "ClientPingManager/periodic/schedule-alarm; getBroadcast failed"
+    010c..0112  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0112..0114  return-void
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/RuntimeException; code_units 0059..0062 -> 0083
+.end method
+
+.method public A06(ZL)  # .registers 4
+    # full signature: LX/1A7;->A06(LX/1A7;)Z
+    0000..0004  iget-boolean  v0, v3, LX/1A7;->A04:Z
+    0004..0008  if-eqz  v0, +0x10
+    0008..000c  iget-object  v3, v3, LX/1A7;->A0D:LX/08Y;
+    000c..0010  sget-object  v2, LX/00G;->A02:LX/00G;
+    0010..0014  const/16  v1, #0x195d
+    0014..0016  const/4  v0, #0x0
+    0016..001c  invoke-static  {v2, v3, v0, v1}, LX/00E;->A0D(LX/00G;LX/00E;Ljava/lang/Boolean;I)Z
+    001c..001e  move-result  v1
+    001e..0020  const/4  v0, #0x1
+    0020..0024  if-nez  v1, +0x3
+    0024..0026  const/4  v0, #0x0
+    0026..0028  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A07(J)  # .registers 5
+    # full signature: LX/1A7;->A07()J
+    0000..0004  iget-object  v3, v4, LX/1A7;->A0D:LX/08Y;
+    0004..0008  sget-object  v2, LX/00G;->A02:LX/00G;
+    0008..000c  const/16  v1, #0x3aff
+    000c..000e  const/4  v0, #0x0
+    000e..0014  invoke-static  {v2, v3, v0, v1}, LX/00E;->A02(LX/00G;LX/00E;Ljava/lang/Integer;I)I
+    0014..0016  move-result  v0
+    0016..0018  int-to-long  v2, v0
+    0018..001c  const-wide/16  v0, #0x1f40
+    001c..0022  invoke-static  {v0, v1, v2, v3}, Ljava/lang/Math;->max(JJ)J
+    0022..0024  move-result-wide  v2
+    0024..0028  const-wide/16  v0, #0x7d00
+    0028..002e  invoke-static  {v0, v1, v2, v3}, Ljava/lang/Math;->min(JJ)J
+    002e..0030  move-result-wide  v0
+    0030..0032  return-wide  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A08(V)  # .registers 4
+    # full signature: LX/1A7;->A08()V
+    0000..0004  const-string  v0, "ClientPingManager/on-demand-ping"
+    0004..000a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    000a..000e  iget-object  v2, v3, LX/1A7;->A0H:LX/098;
+    000e..0012  const/16  v1, #0x1a
+    0012..0016  new-instance  v0, LX/Fea;
+    0016..001c  invoke-direct  {v0, v3, v1}, LX/Fea;-><init>(Ljava/lang/Object;I)V
+    001c..0022  invoke-virtual  {v2, v0}, LX/098;->execute(Ljava/lang/Runnable;)V
+    0022..0024  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A09(VL)  # .registers 5
+    # full signature: LX/1A7;->A09(Landroid/content/Intent;)V
+    0000..0004  iget-object  v2, v3, LX/1A7;->A07:Landroid/content/Context;
+    0004..0006  const/4  v1, #0x0
+    0006..000a  const/high16  v0, #0x24000000
+    000a..0010  invoke-static  {v2, v1, v4, v0}, Landroid/app/PendingIntent;->getBroadcast(Landroid/content/Context;ILandroid/content/Intent;I)Landroid/app/PendingIntent;
+    0010..0012  move-result-object  v1
+    0012..0016  if-eqz  v1, +0xf
+    0016..001a  iget-object  v0, v3, LX/1A7;->A0F:LX/0B8;
+    001a..0020  invoke-virtual  {v0}, LX/0B8;->A04()Landroid/app/AlarmManager;
+    0020..0022  move-result-object  v0
+    0022..0026  if-nez  v0, +0x8
+    0026..002a  const-string  v0, "ClientPingManager/cancel-alarm; service is null"
+    002a..0030  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0030..0032  return-void
+    0032..0038  invoke-virtual  {v0, v1}, Landroid/app/AlarmManager;->cancel(Landroid/app/PendingIntent;)V
+    0038..003e  invoke-virtual  {v1}, Landroid/app/PendingIntent;->cancel()V
+    003e..0040  return-void
+    0040..0042  move-exception  v1
+    0042..0046  const-string  v0, "ClientPingManager/cancel-alarm; getBroadcast failed"
+    0046..004c  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    004c..004e  return-void
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/RuntimeException; code_units 0000..000b -> 0020
+.end method
+
+.method public A0A(VLJ)  # .registers 11
+    # full signature: LX/1A7;->A0A(LX/0lG;J)V
+    0000..0004  iget-object  v2, v7, LX/1A7;->A0C:LX/00x;
+    0004..000a  invoke-interface  {v2}, LX/00x;->get()Ljava/lang/Object;
+    000a..000c  move-result-object  v0
+    000c..0010  check-cast  v0, LX/SJ9;
+    0010..0014  iget-object  v0, v0, LX/SJ9;->A00:LX/0Sf;
+    0014..001a  invoke-virtual  {v0}, LX/0Sf;->A0G()Ljava/lang/String;
+    001a..001c  move-result-object  v3
+    001c..0020  const/16  v1, #0x10
+    0020..0024  new-instance  v0, LX/Dzb;
+    0024..002a  invoke-direct  {v0, v3, v1}, LX/Dzb;-><init>(Ljava/lang/String;I)V
+    002a..0030  invoke-interface  {v2}, LX/00x;->get()Ljava/lang/Object;
+    0030..0032  move-result-object  v1
+    0032..0036  check-cast  v1, LX/SJ9;
+    0036..003a  iget-object  v2, v0, LX/Dzb;->A00:Ljava/lang/Object;
+    003a..003e  check-cast  v2, LX/0Tp;
+    003e..0042  const/16  v4, #0x16
+    0042..0044  const/4  v0, #0x2
+    0044..004a  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    004a..004e  iget-object  v0, v1, LX/SJ9;->A00:LX/0Sf;
+    004e..0050  move-object  v1, v8
+    0050..0052  move-wide  v5, v9
+    0052..0058  invoke-virtual/range  {v0..v6}, LX/0Sf;->A0Q(LX/0lG;LX/0Tp;Ljava/lang/String;IJ)V
+    0058..005a  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A0B(VL)  # .registers 10
+    # full signature: LX/1A7;->A0B(Ljava/lang/Runnable;)V
+    0000..0004  iget-object  v2, v8, LX/1A7;->A0C:LX/00x;
+    0004..000a  invoke-interface  {v2}, LX/00x;->get()Ljava/lang/Object;
+    000a..000c  move-result-object  v0
+    000c..0010  check-cast  v0, LX/SJ9;
+    0010..0014  iget-object  v0, v0, LX/SJ9;->A00:LX/0Sf;
+    0014..001a  invoke-virtual  {v0}, LX/0Sf;->A0G()Ljava/lang/String;
+    001a..001c  move-result-object  v4
+    001c..0020  const/16  v1, #0x10
+    0020..0024  new-instance  v0, LX/Dzb;
+    0024..002a  invoke-direct  {v0, v4, v1}, LX/Dzb;-><init>(Ljava/lang/String;I)V
+    002a..0030  invoke-interface  {v2}, LX/00x;->get()Ljava/lang/Object;
+    0030..0032  move-result-object  v1
+    0032..0036  check-cast  v1, LX/SJ9;
+    0036..003a  iget-object  v3, v0, LX/Dzb;->A00:Ljava/lang/Object;
+    003a..003e  check-cast  v3, LX/0Tp;
+    003e..0042  new-instance  v2, LX/1xa;
+    0042..0048  invoke-direct  {v2, v8, v0, v9}, LX/1xa;-><init>(LX/1A7;LX/Dzb;Ljava/lang/Runnable;)V
+    0048..004c  const-wide/16  v6, #0x7d00
+    004c..0050  const/16  v5, #0x16
+    0050..0052  const/4  v0, #0x2
+    0052..0058  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0058..005c  iget-object  v1, v1, LX/SJ9;->A00:LX/0Sf;
+    005c..0062  invoke-virtual/range  {v1..v7}, LX/0Sf;->A0Q(LX/0lG;LX/0Tp;Ljava/lang/String;IJ)V
+    0062..0064  return-void
+    # exception table: 0 try range(s)
+.end method

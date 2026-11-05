@@ -767,7 +767,11 @@ pub(crate) async fn drive(
                     if id == pending_ping.as_ref().map(|(id, _)| id.as_str())
                         && pending_ping.as_ref().is_some_and(|(_, deadline)| tokio::time::Instant::now() < *deadline)
                         && matches!(node.get_attr("type").and_then(|v| v.as_text()), Some("result" | "error")) {
-                        if node.get_attr("type").and_then(|v| v.as_text()) != Some("result") { return Err(Error::invalid("connection", "keepalive refused")); }
+                        // APK43.72 1xa.Bvj and CK4 both schedule Fea(24), which
+                        // clears the outstanding ping without a connection refusal.
+                        if node.get_attr("type").and_then(|v| v.as_text()) == Some("error") {
+                            tracing::info!("keepalive error response received");
+                        }
                         pending_ping = None; continue;
                     }
                 }
@@ -5395,6 +5399,61 @@ mod tests {
     }
 
     #[tokio::test(start_paused = true)]
+    async fn keepalive_error_clears_only_its_live_ping_without_ending_receive() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("ping-error.redb"));
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        let before_clock =
+            serde_json::to_value(super::super::clock::inspect(&store).unwrap()).unwrap();
+        let (ping, written) = fake.written_within(Duration::from_secs(60)).await;
+        let first_id = ping.get_attr("id").unwrap().clone();
+        written.send(Ok(())).unwrap();
+        let error = Node::new("iq")
+            .attr("id", first_id.clone())
+            .attr("type", "error")
+            .attr("t", "1900000000")
+            .children(vec![
+                Node::new("error")
+                    .attr("code", "503")
+                    .attr("text", "fixture-only"),
+            ]);
+        fake.deliver(error.clone()).await;
+        let (next, written) = fake.written_within(Duration::from_secs(60)).await;
+        assert_eq!(
+            next.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("w:p")
+        );
+        assert_ne!(next.get_attr("id"), Some(&first_id));
+        written.send(Ok(())).unwrap();
+        // An old duplicate cannot consume the successor's pending response.
+        fake.deliver(error).await;
+        fake.deliver(
+            Node::new("iq")
+                .attr("type", "get")
+                .attr("xmlns", "urn:xmpp:ping"),
+        )
+        .await;
+        let (pong, written) = fake.written().await;
+        assert_eq!(
+            pong.get_attr("type").and_then(|v| v.as_text()),
+            Some("result")
+        );
+        written.send(Ok(())).unwrap();
+        assert_eq!(
+            serde_json::to_value(super::super::clock::inspect(&store).unwrap()).unwrap(),
+            before_clock
+        );
+        // If the stale error cleared the successor, this deadline would not terminate.
+        let error = fake
+            .finished_within(Duration::from_secs(60))
+            .await
+            .unwrap_err();
+        assert!(matches!(error, Error::Timeout(_)));
+        assert!(error.is_recoverable_by_reconnect());
+    }
+
+    #[tokio::test(start_paused = true)]
     async fn non_reply_iqs_leave_keepalive_pending_until_real_reply_or_timeout() {
         for outcome in ["result", "error", "timeout"] {
             let dir = tempfile::tempdir().unwrap();
@@ -5445,7 +5504,7 @@ mod tests {
                 fake.deliver(Node::new("iq").attr("id", id).attr("type", outcome))
                     .await;
             }
-            if outcome == "result" {
+            if outcome != "timeout" {
                 let (next_ping, written) = fake.written_within(Duration::from_secs(60)).await;
                 assert_eq!(
                     next_ping.get_attr("xmlns").and_then(|v| v.as_text()),
@@ -5458,13 +5517,8 @@ mod tests {
                     .finished_within(Duration::from_secs(60))
                     .await
                     .unwrap_err();
-                if outcome == "timeout" {
-                    assert!(matches!(error, Error::Timeout(_)));
-                    assert!(error.is_recoverable_by_reconnect());
-                } else {
-                    assert!(matches!(error, Error::InvalidInput { .. }));
-                    assert!(!error.is_recoverable_by_reconnect());
-                }
+                assert!(matches!(error, Error::Timeout(_)));
+                assert!(error.is_recoverable_by_reconnect());
             }
         }
     }

@@ -923,3 +923,17 @@ Crypto status, internal failure kind and wire error are distinct; selected
 crypto eligibility and guarded refinements recovered. Other producers bypass
 the converter. [Evidence and remaining typed-cause work](outgoing-retry-receipts.md#error-domains-and-eligibility-recovered--2026-11-05).
 No blanket error default, runtime behavior change or live traffic.
+
+
+## Client keepalive error response correction — 2026-11-05
+
+**Confirmed static / locally corrected**, APK2.26.43.72:1xa.Bvj routes a ping
+IQ error through the sameFea(24) manager response as validated success. Rust
+previously ended receive as nonrecoverable keepalive refused. A matched live
+ping error now clears only that ping and receive continues with a fixed
+redacted diagnostic. Duplicate old errors do not consume successor pings;
+non-replies/late replies and unowned IQs retain existing admission. No clock,
+account, request retry or restriction-reset authority is added.
+[Callback binding, red/green regression and open cadence/schema gaps](apk/2.26.43.72-client-ping-errors/README.md).
+Full native keepalive scheduling/configuration and successful-result schema
+remain unported; no live account operation or causal ban-prevention claim.

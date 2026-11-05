@@ -1,0 +1,12 @@
+["ClientPingManager/periodic/receiver"]  (1 reference(s))
+  classes8.dex  LX/Fef;->run(V)
+    dex byte offset: 0x833bea
+["ClientPingManager/periodic/schedule-alarm"]  (1 reference(s))
+  classes.dex  LX/1A7;->A05(VL)
+    dex byte offset: 0x83de36
+["ClientPingManager/periodic/schedule-delayed-runnable"]  (1 reference(s))
+  classes.dex  LX/1A7;->A05(VL)
+    dex byte offset: 0x83ddf0
+["ClientPingManager/timeout/schedule-alarm"]  (1 reference(s))
+  classes.dex  LX/1A7;->A04(VL)
+    dex byte offset: 0x83dd1e

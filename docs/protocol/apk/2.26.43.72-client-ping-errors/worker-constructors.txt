@@ -1,0 +1,22 @@
+
+# class: LX/Fea;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VL)  # .registers 3
+    # full signature: LX/Fea;-><init>(LX/13z;)V
+    0000..0002  const/4  v0, #0x7
+    0002..0006  iput  v0, v1, LX/Fea;->$t:I
+    0006..000c  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    000c..0010  iput-object  v2, v1, LX/Fea;->A00:Ljava/lang/Object;
+    0010..0012  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VLI)  # .registers 3
+    # full signature: LX/Fea;-><init>(Ljava/lang/Object;I)V
+    0000..0004  iput  v2, v0, LX/Fea;->$t:I
+    0004..000a  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    000a..000e  iput-object  v1, v0, LX/Fea;->A00:Ljava/lang/Object;
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method

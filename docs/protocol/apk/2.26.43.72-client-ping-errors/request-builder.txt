@@ -1,0 +1,23 @@
+.method public <init>(VLI)  # .registers 8
+    # full signature: LX/Dzb;-><init>(Ljava/lang/String;I)V
+    0000..0004  const/16  v0, #0x10
+    0004..0008  iput  v0, v5, LX/Dzb;->$t:I
+    0008..000a  const/4  v4, #0x0
+    000a..0010  invoke-direct  {v5}, Ljava/lang/Object;-><init>()V
+    0010..0016  invoke-static  {}, LX/B1x;->A0c()LX/0Tj;
+    0016..0018  move-result-object  v3
+    0018..001e  invoke-static  {v3}, LX/B21;->A1B(LX/0Tj;)V
+    001e..0024  const-string/jumbo  v1, "xmlns"
+    0024..002a  const-string/jumbo  v0, "w:p"
+    002a..0030  invoke-static  {v3, v1, v0}, LX/B1y;->A1J(LX/0Tj;Ljava/lang/String;Ljava/lang/String;)V
+    0030..0034  sget-object  v2, LX/0mL;->A00:LX/0mL;
+    0034..003a  const-string/jumbo  v1, "to"
+    003a..003e  new-instance  v0, LX/0Tl;
+    003e..0044  invoke-direct  {v0, v2, v1}, LX/0Tl;-><init>(Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;)V
+    0044..004a  invoke-static  {v0, v3, v6, v4}, LX/B23;->A0e(LX/0Tl;LX/0Tj;Ljava/lang/String;Z)V
+    004a..0050  invoke-virtual  {v3}, LX/0Tj;->A01()LX/0Tp;
+    0050..0052  move-result-object  v0
+    0052..0056  iput-object  v0, v5, LX/Dzb;->A00:Ljava/lang/Object;
+    0056..0058  return-void
+    # exception table: 0 try range(s)
+.end method
