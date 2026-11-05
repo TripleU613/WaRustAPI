@@ -1,10 +1,16 @@
 {
   "openapi": "3.1.0",
+  "x-retry-version-error-ack": {
+    "x-cli": false,
+    "x-transport": "shared normal and comparison receipt confirmation",
+    "x-live": false,
+    "description": "Pinned APK2.26.43.72: explicit non-1 text retry version, after exactly four binary registration bytes, now gets receipt ACK error487 with supported root correlation fields. F10 returns before nested id/t/count/keys parsing. Current callers retain durable capture/admission before confirmation. Does not classify every parse_retry(None) as protocol error or ACK v1/missing version/local capability refusals. Selected Message76/pre-ACK conversion paths bind to F3e.A05; ACK submission precedes deferred Fe5 invocation, physical wire order unproved. Native parse-exception/success ACK and recovery parity remain unfinished. No HTTP route/live verification. docs/protocol/retry-ack-dispatch.md"
+  },
   "x-retry-ack-dispatch-audit": {
     "x-cli": false,
     "x-transport": "offline static research only",
     "x-live": false,
-    "description": "Pinned APK2.26.43.72 retry receipt dispatch distinguishes handler success, unhandled error487 (490 is local diagnostic), and LIL parse-error handling. Actual selected base context factory 14h.BLn -> F0R.A03/A00 located. Current Rust excludes retry ACKs; suspected accidental plain ACK refuted. Final Android Message76 writer binding and async ordering remain open. No runtime ACK policy change or HTTP route. Evidence: docs/protocol/retry-ack-dispatch.md."
+    "description": "Pinned APK2.26.43.72 retry receipt dispatch distinguishes handler success, unhandled error487 (490 is local diagnostic), and LIL parse-error handling. Actual selected base context factory 14h.BLn -> F0R.A03/A00 located. Initial bb6567d research found Rust excluded retry ACKs and refuted suspected accidental plain ACKs. Follow-up x-retry-version-error-ack implements unsupported-version error487 and traces selected writer binding/deferred callback order; success/error/recovery parity remains incomplete. No HTTP route. Evidence: docs/protocol/retry-ack-dispatch.md."
   },
   "x-research-tools": [
     {

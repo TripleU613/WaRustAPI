@@ -1,0 +1,2 @@
+classes.dex  LX/0ZJ;->A15(VL)
+  write opcode 0x5b, dex byte offset: 0x5ef518

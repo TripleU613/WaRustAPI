@@ -2889,3 +2889,10 @@ Current Rust excludes retry ACKs. Selected APK handler separates handled,
 unhandled/error487 and parse-exception paths; actual receipt context factory
 located. Final Message76 writer binding/async order remain open.
 [Evidence and limits](retry-ack-dispatch.md). No runtime policy change or live request.
+
+2026-11-05 — **Unsupported retry versions now receive error487.**
+
+Shared confirmation mirrors supported receipt context for explicit non-1 text
+versions after four-byte registration admission. Writer binding and deferred
+callback ordering traced. [Evidence, regressions and limits](retry-ack-dispatch.md#unsupported-version-error-response-correction--2026-11-05).
+Other retry ACK/error/recovery policy remains incomplete; no live traffic.

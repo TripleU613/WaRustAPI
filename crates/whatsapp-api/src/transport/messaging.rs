@@ -856,12 +856,21 @@ pub fn received_confirmation_for_account(
 /// burst of `receipt chat=group confirmed=false` lines).
 ///
 /// Only the receipt types this client handles are acknowledged — delivery,
-/// read and played. The APK acknowledges every type after processing it; an
-/// ack for a type we do not process would tell the server it was handled when
-/// it was only preserved, so those stay unacknowledged.
+/// read and played. Retry success/error handling is distinct: the evidenced
+/// unsupported-version branch below gets error487, while other retry cases
+/// remain unacknowledged until their handler/completion policy is implemented.
 fn receipt_ack(incoming: &Node) -> Option<Node> {
     let from = super::receipts::ack_address(super::receipts::network_jid(incoming, "from")?);
-    let kind = super::receipts::receipt_kind(incoming)?;
+    // APK43.72 F10.A04 returns null for a non-1 version after registration
+    // admission; 160.A04 -> 14h.A00 -> 2Cx.A00 adds error487. This is not a
+    // generic response to parse_retry(None) or a local capability refusal.
+    // docs/protocol/retry-ack-dispatch.md
+    let retry_error = unsupported_retry_version(incoming);
+    let kind = if retry_error {
+        "retry"
+    } else {
+        super::receipts::receipt_kind(incoming)?
+    };
     let id = incoming.get_attr("id")?.as_text()?;
     if id.is_empty() || id.len() > 128 {
         return None;
@@ -886,7 +895,51 @@ fn receipt_ack(incoming: &Node) -> Option<Node> {
     {
         ack = ack.attr("edit", edit);
     }
+    if retry_error {
+        tracing::debug!(
+            field = "retry.v",
+            error = 487,
+            "unsupported retry version response"
+        );
+        ack = ack.attr("error", "487");
+    }
     Some(ack)
+}
+
+fn unsupported_retry_version(incoming: &Node) -> bool {
+    if incoming.get_attr("type").and_then(|v| v.as_text()) != Some("retry") {
+        return false;
+    }
+    // F10 reads required retry/registration before version, and returns before
+    // reading count/t/id/keys for an unsupported version. Do not infer this
+    // branch for missing/non-binary registration or non-text attributes.
+    if !matches!(
+        incoming.child("registration").map(|n| &n.content),
+        Some(crate::binary::NodeContent::Bytes(bytes)) if bytes.len() == 4
+    ) {
+        return false;
+    }
+    if !incoming
+        .child("retry")
+        .and_then(|n| n.get_attr("v"))
+        .and_then(|v| v.as_text())
+        .is_some_and(|v| v != "1")
+    {
+        return false;
+    }
+    // Keep unsupported context/address grammars unacknowledged rather than
+    // silently dropping supplied correlation fields from the error response.
+    if incoming.get_attr("participant").is_some()
+        && super::receipts::network_jid(incoming, "participant").is_none()
+    {
+        return false;
+    }
+    if incoming.get_attr("recipient").is_some() && super::receipts::recipient(incoming).is_none() {
+        return false;
+    }
+    incoming
+        .get_attr("edit")
+        .is_none_or(|v| v.as_text().is_some())
 }
 
 /// Comparison LX/0ip.A07: request current media routes, not an upload.
@@ -1327,6 +1380,104 @@ mod tests {
                 .is_none()
         );
     }
+    #[test]
+    fn unsupported_retry_version_gets_native_487_without_parsing_later_fields() {
+        let from = Jid::parse("15555550100:2@s.whatsapp.net").unwrap();
+        let participant = Jid::parse("15555550101:3@s.whatsapp.net").unwrap();
+        let recipient = Jid::parse("123456789@lid").unwrap();
+        for version in ["", "0", "2", "01"] {
+            // Native returns null at F10.A04+004e before required nested id/t,
+            // count or carried keys. Root receipt ID remains ACK correlation.
+            let node = Node::new("receipt")
+                .attr("id", "ROOT")
+                .attr("from", from.clone())
+                .attr("type", "retry")
+                .attr("participant", participant.clone())
+                .attr("recipient", recipient.clone())
+                .attr("edit", "7")
+                .children(vec![
+                    Node::new("retry").attr("v", version).attr("count", "bad"),
+                    Node::new("registration").bytes(vec![1, 2, 3, 4]),
+                    Node::new("keys"),
+                ]);
+            assert!(super::super::receipts::parse_retry(&node).is_none());
+            let ack = received_confirmation(&node).unwrap();
+            assert_eq!(
+                ack,
+                Node::new("ack")
+                    .attr("id", "ROOT")
+                    .attr("to", super::super::receipts::ack_address(from.clone()))
+                    .attr("class", "receipt")
+                    .attr("type", "retry")
+                    .attr(
+                        "participant",
+                        super::super::receipts::ack_address(participant.clone())
+                    )
+                    .attr("recipient", recipient.clone())
+                    .attr("edit", "7")
+                    .attr("error", "487")
+            );
+            let dictionary = TokenDictionary::comparison_2_26_37_71();
+            let encoded = Encoder::new(dictionary).encode(&ack).unwrap();
+            assert_eq!(
+                Decoder::new(&encoded[1..], dictionary, &Limits::default())
+                    .decode_node()
+                    .unwrap(),
+                ack
+            );
+        }
+    }
+
+    #[test]
+    fn retry_version_error_does_not_ack_other_local_refusals() {
+        let base = Node::new("receipt")
+            .attr("id", "ROOT")
+            .attr("from", Jid::parse("15555550100@s.whatsapp.net").unwrap())
+            .attr("type", "retry");
+        let registration = || Node::new("registration").bytes(vec![1, 2, 3, 4]);
+        for retry in [
+            Node::new("retry"),
+            Node::new("retry").attr("v", "1"),
+            Node::new("retry").attr("v", "1").attr("count", "4"),
+        ] {
+            assert!(
+                received_confirmation(&base.clone().children(vec![
+                    retry,
+                    registration(),
+                    Node::new("keys")
+                ]))
+                .is_none()
+            );
+        }
+        for bytes in [vec![], vec![1, 2, 3], vec![1, 2, 3, 4, 5]] {
+            assert!(
+                received_confirmation(&base.clone().children(vec![
+                    Node::new("retry").attr("v", "2"),
+                    Node::new("registration").bytes(bytes)
+                ]))
+                .is_none()
+            );
+        }
+        assert!(
+            received_confirmation(
+                &base
+                    .clone()
+                    .children(vec![Node::new("retry").attr("v", "2")])
+            )
+            .is_none()
+        );
+        assert!(received_confirmation(&base.clone().children(vec![registration()])).is_none());
+        let unsupported = base.children(vec![Node::new("retry").attr("v", "2"), registration()]);
+        for (name, value) in [
+            ("participant", "bad"),
+            ("recipient", "bad"),
+            ("id", ""),
+            ("from", "bad"),
+        ] {
+            assert!(received_confirmation(&unsupported.clone().attr(name, value)).is_none());
+        }
+    }
+
     /// `LX/Cp2->A05`: a receipt's ack mirrors the receipt — `to` its `from`,
     /// its `participant` and `recipient`, its `type` unless delivery, and its
     /// `edit` unless `"0"` — so group receipts are acknowledged too.

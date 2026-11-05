@@ -1,3 +1,10 @@
+2026-11-05 — **Unsupported retry versions now receive error487.**
+
+Shared confirmation mirrors supported receipt context for explicit non-1 text
+versions after four-byte registration admission. Writer binding and deferred
+callback ordering traced. [Evidence, regressions and limits](retry-ack-dispatch.md#unsupported-version-error-response-correction--2026-11-05).
+Other retry ACK/error/recovery policy remains incomplete; no live traffic.
+
 2026-11-05 — **Retry ACK dispatch traced; plain-ACK suspicion refuted.**
 
 Current Rust excludes retry ACKs. Selected APK handler separates handled,

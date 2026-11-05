@@ -1,0 +1,34 @@
+
+# class: LX/0uw;
+# extends: Landroid/os/Handler;
+
+.method public handleMessage(VL)  # .registers 4
+    # full signature: LX/0uw;->handleMessage(Landroid/os/Message;)V
+    0000..0004  iget  v1, v3, Landroid/os/Message;->what:I
+    0004..0008  if-eqz  v1, +0x22
+    0008..000a  const/4  v0, #0x1
+    000a..000e  if-eq  v1, v0, +0x12
+    000e..0010  const/4  v0, #0x2
+    0010..0014  if-ne  v1, v0, +0xe
+    0014..0018  iget-object  v1, v2, LX/0uw;->A00:LX/0ZJ;
+    0018..001c  iget-object  v0, v3, Landroid/os/Message;->obj:Ljava/lang/Object;
+    001c..0022  invoke-static  {v0}, LX/00L;->A05(Ljava/lang/Object;)V
+    0022..0026  check-cast  v0, LX/1dW;
+    0026..002c  invoke-static  {v0, v1}, LX/0ZJ;->A0x(LX/1dW;LX/0ZJ;)V
+    002c..002e  return-void
+    002e..0032  iget-object  v1, v2, LX/0uw;->A00:LX/0ZJ;
+    0032..0036  iget-object  v0, v3, Landroid/os/Message;->obj:Ljava/lang/Object;
+    0036..003c  invoke-static  {v0}, LX/00L;->A05(Ljava/lang/Object;)V
+    003c..0040  check-cast  v0, LX/1rj;
+    0040..0046  invoke-static  {v0, v1}, LX/0ZJ;->A14(LX/1rj;LX/0ZJ;)V
+    0046..0048  return-void
+    0048..004c  const-string  v0, "ConnectionThread/WriterThreadObserver/sending_channel_ready"
+    004c..0052  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0052..0056  iget-object  v1, v2, LX/0uw;->A00:LX/0ZJ;
+    0056..005a  iget-object  v0, v3, Landroid/os/Message;->obj:Ljava/lang/Object;
+    005a..0060  invoke-static  {v0}, LX/00L;->A05(Ljava/lang/Object;)V
+    0060..0064  check-cast  v0, LX/0vH;
+    0064..006a  invoke-static  {v0, v1}, LX/0ZJ;->A16(LX/0vH;LX/0ZJ;)V
+    006a..006c  return-void
+    # exception table: 0 try range(s)
+.end method
