@@ -945,3 +945,48 @@ Additional export hashes:
 - [manager-provider-router.txt](manager-provider-router.txt): `f852095f305051f8344d087a0efeb3f6742c3538d9cdde11fe11f74e2f7dda7e`
 - [manager-provider-ctor.txt](manager-provider-ctor.txt): `54e4e9380731428ec7f6f8152419cfb60f33ebaa8ef817548a35473dc854fb02`
 - [manager-provider-subrouter.txt](manager-provider-subrouter.txt): `7c697c7e3e1c45ccef430c1ca605953a5a17fc0bab323e1a2e42bbe9d00df77e`
+
+## Legacy fallback event route (2026-11-04)
+
+**Confirmed static, conditional**, pinned2.26.43.72, same APK hash as this
+bundle. DEX exports are not REA Evidence envelopes. Large constructor/handler
+exports were inspected only for the selected paths described below.
+
+- Earlier **1lY.CPm** false-A0G branch queues what0 on1lY, then
+  **0ZJ.A0s ->A0q**. A0q handles selectors4/87 specially; for77/78 it
+  copies the event and calls **0ZJ.A1B.CPn** (0016–0028).
+- 0ZJ constructor overloads preserve incoming0YS; full constructor
+  **0442–0446** stores it in A1B. **0ZH.A00** passes the argument through.
+  Its exact caller **1WY.run,0032–0052** supplies **0YB.A13:0YU** while
+  creating/storing A1C/0ZJ for the selected cold_start worker path.
+- **0YU.CPn** sets what5 and queues the event. **0YU.handleMessage**
+  case5 starts012e, obtains DEe and checks arg1. The selected chain checks
+  5,12,64,158,237,20,21,271,272; **77/78 match none**. The final if-ne at
+  **019c** with delta-0xc4 targets **0014**, the return-void. Therefore
+  this selected fallback does **not** deliver these upload events to14o.
+  It is not an alternative equivalent prekey completion route.
+- This does not establish that77/78 ever take fallback in normal operation:
+  enabled A0Q explicitly admits them and disabled A0Q depends on registered
+  sparse/list membership. Those configuration/registration proofs remain open.
+- 14o constructor is retained: A07 is a13z dependency, not a reader-generation
+  token. No stale-reader check is visible in the specific forwarding chain
+  above; this bounded observation is **not** proof of absent reconnect
+  protection elsewhere or permission to weaken Rust generation checks.
+
+**Impact:** prior alternate-route unknown is narrowed: selected cold-start
+fallback discards77/78, while the enabled route is proven to14o. Actual
+configuration, factory membership, teardown and stale-reader lifecycle remain
+unverified. No production change or live traffic.
+
+Additional export hashes:
+
+- [alternate-forward.txt](alternate-forward.txt): `6bbd1f87763a2a684d21e34e843e3cec2526c28d073af93270fdcbe10ec83d46`
+- [alternate-dispatch.txt](alternate-dispatch.txt): `2e1144001ae26240ac67d9692605314132e2b210b329f374aed8d41ca21936a9`
+- [alternate-owner.txt](alternate-owner.txt): `622190e42b4fe2423d486e4899254d2b0a5fa671f1b285915738989e7380f691`
+- [alternate-owner-callers.txt](alternate-owner-callers.txt): `3ccfe91dc1691d39ab84b21908a213771461e4a28db5894f7ebf944b83889cf2`
+- [alternate-create.txt](alternate-create.txt): `e367156a6db3d4d1b85d0866b859db438014345b4920e11775c82fd6c7e3b105`
+- [alternate-create-callers.txt](alternate-create-callers.txt): `41857dd037ef4cf577a4884adcdc07712ce85e2dbdca2c2c1bb1685334b09628`
+- [alternate-worker.txt](alternate-worker.txt): `2e9500fd9d09839d5f1ed752229f8053e7906006f5f54fed5e4dd09c107ca00a`
+- [alternate-listener.txt](alternate-listener.txt): `1d83f6a5ed8e06ff127e171fa8826537728a756404f46bc95ad60995f4ffb669`
+- [alternate-handler.txt](alternate-handler.txt): `098d0fcc38eb07bd64d3ac1baa91fa3ea8825cf5ac0cb23d8a4bdb1c22cc30f0`
+- [alternate-manager-ctor.txt](alternate-manager-ctor.txt): `fcbf8475a7e6e43caf6401e1535978929baa8751abc4a06e72809b1248e013a7`

@@ -4671,3 +4671,11 @@ SQ0.A0s provider6735, whose application-scope factory constructs14o.
 This closes the A0Q-enabled route to retained14o.BLn upload branches.
 Alternate configuration/factory membership remain unproven.
 [Exports and conditions](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-enabled-route-manager-binding-2026-11-04). No production change or live traffic.
+
+## 2026-11-04 — Legacy fallback event route
+
+**Confirmed static, conditional (43.72):** selected cold-start fallback
+0ZJ.A0q ->0YU.CPn/what5 returns without handling77/78. This does not
+prove these events take fallback in normal configuration. Enabled route
+remains bound to14o; lifecycle guards remain unverified.
+[Exports and boundaries](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-fallback-event-route-2026-11-04). No production change or live traffic.

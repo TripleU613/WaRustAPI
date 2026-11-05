@@ -1,3 +1,11 @@
+2026-11-04 — **Legacy fallback route narrowed.**
+
+Selected cold-start fallback does not handle upload events77/78;
+normal routing configuration and reconnect lifecycle remain unverified.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#legacy-fallback-event-route-2026-11-04).
+Validation: JSON parsing, coverage freshness, staged diff and repository
+hygiene passed. No production change or live traffic.
+
 2026-11-04 — **Legacy enabled-route manager binding traced.**
 
 Provider6735 binds selectors77/78 to14o when A0Q is enabled.
