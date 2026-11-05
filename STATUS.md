@@ -1,3 +1,11 @@
+2026-11-05 — **Sender-key old counters now avoid automatic retries.**
+
+Group replay preserves the typed old-counter condition; group diagnostics no
+longer format provider payloads. Other key/signature retry mappings remain
+producer-specific and unported. [Evidence and limits](docs/protocol/outgoing-retry-receipts.md#group-counter-and-producer-specific-errors--2026-11-05).
+Validation:1328 tests, strict Clippy, fmt, CLI reference, APK coverage and
+hygiene passed. No live traffic.
+
 2026-11-05 — **Consumed Signal counters no longer trigger automatic retries.**
 
 Typed direct crypto rejection continues receive without retry or delivery ACK;

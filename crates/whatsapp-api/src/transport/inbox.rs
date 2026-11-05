@@ -2631,6 +2631,23 @@ mod tests {
             process(&store, &account, &node, &capture).await.unwrap(),
             IncomingResult::Decrypted
         );
+        // A fresh stanza ID must reach the sender-key consumed counter rather
+        // than authorize confirmation via the authenticated same-ID record.
+        let replay = node.clone().attr("id", "GROUP-OLD-COUNTER");
+        let replay_capture = preserve(&store, &replay).unwrap();
+        let head_before_replay = store.journal_head().unwrap();
+        let keys_before_replay = store.read(|tx| tx.scan(Table::SenderKeys, 1, 10)).unwrap();
+        assert_eq!(
+            process(&store, &account, &replay, &replay_capture)
+                .await
+                .unwrap(),
+            IncomingResult::Unsupported
+        );
+        assert_eq!(store.journal_head().unwrap(), head_before_replay);
+        assert_eq!(
+            store.read(|tx| tx.scan(Table::SenderKeys, 1, 10)).unwrap(),
+            keys_before_replay
+        );
         let key = super::super::group_inbox::key(&chat, &sender, "VIEWED-ONCE").unwrap();
         let mut saved: serde_json::Value = store
             .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))

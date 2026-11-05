@@ -19,7 +19,13 @@ fn invalid(reason: &'static str) -> Error {
 }
 
 fn crypto(e: SignalProtocolError) -> Error {
-    Error::invalid("group_crypto", e.to_string())
+    // Reuse variant-only diagnostics; provider strings can contain peer names
+    // and backend details. APK43.72 Eyj.A01 -> 0Yl.A00 maps ED4 old counters
+    // to -1001, excluded by EtY.A00. Preserve the typed no-retry condition.
+    match super::direct::crypto(e) {
+        Error::InvalidInput { reason, .. } => Error::invalid("group_crypto", reason),
+        other => other,
+    }
 }
 
 /// Storage key for a (group, sender) sender key record.
@@ -405,6 +411,29 @@ pub(crate) fn pad(plaintext: &[u8]) -> Result<Zeroizing<Vec<u8>>> {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn crypto_diagnostics_never_format_provider_details() {
+        use wacore_libsignal::protocol::{DeviceId, ProtocolAddress};
+        let address = ProtocolAddress::new("private-group-peer", DeviceId::new(0));
+        for error in [
+            SignalProtocolError::SessionNotFound(address),
+            SignalProtocolError::InvalidArgument("private-group-peer".into()),
+            SignalProtocolError::BackendError(
+                "private-group-peer",
+                Box::new(std::io::Error::other("private-group-peer")),
+            ),
+        ] {
+            let mapped = crypto(error);
+            assert!(!format!("{mapped:?}").contains("private-group-peer"));
+            assert!(matches!(
+                mapped,
+                Error::InvalidInput {
+                    field: "group_crypto",
+                    ..
+                }
+            ));
+        }
+    }
     /// Our own send path must produce something our own receive path accepts:
     /// mint a sender key, publish its distribution message, install that on a
     /// notional recipient, then encrypt and decrypt a padded payload. This
@@ -750,6 +779,12 @@ mod tests {
         assert_eq!(received.plaintext.len(), unpadded_len);
         let decoded = TextMessage::decode(&**received.plaintext).unwrap();
         assert_eq!(decoded.conversation, "group hello");
+        // A consumed sender-key counter is not a fresh decryption failure:
+        // preserve the typed condition so inbox does not request another retry.
+        assert!(matches!(
+            receive_group(&group, &sender, Some(&received.updated_key), &ciphertext).await,
+            Err(Error::SignalOldMessageCounter)
+        ));
         // And it survives the field scan the projection uses.
         assert_eq!(
             crate::signal::direct::payload_fields(&received.plaintext).unwrap(),

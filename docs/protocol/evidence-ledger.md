@@ -6367,3 +6367,19 @@ Other retry error codes, native old-counter confirmation policy, sender-key
 primitive classification and full route/key/count policy remain open. Existing
 group crypto error formatting is also still an uncorrected redaction gap; no
 primitive equivalence is inferred from direct cipher evidence. No live request.
+
+## Group counter and producer-specific errors — 2026-11-05
+
+**Confirmed static:** [sender-key ED4/-1001 and key-error producer paths](apk/2.26.43.72-group-counter-error-paths/README.md).
+Sender-key old counters use the same excluded retry status as direct messages.
+**Inferred mapping, implemented offline:** group DuplicatedMessage now retains
+SignalOldMessageCounter, preserving capture without retry, delivery ACK or state
+commit. Group provider diagnostics now use fixed variant-only messages. Durable
+authenticated duplicates retain their prior confirmation behavior.
+
+EDR identifies missing/invalid local prekeys in F22.A04, but group Eyj.A01 wraps
+EDR as EDY before result classification. Session builder signature failures
+also use a different exception from the exact “Invalid signature!” refinement.
+Global exception/error-name -> wire-code mappings would lose these distinctions.
+No other retry wire-code policy changed. Full native ACK policy and remaining
+producer/primitive/key/count/routing parity remain open; no live request.

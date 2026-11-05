@@ -209,7 +209,7 @@ fn payload_summary_depth(bytes: &[u8], depth: usize) -> Result<String> {
     }
     Ok(summary)
 }
-fn crypto(error: SignalProtocolError) -> Error {
+pub(super) fn crypto(error: SignalProtocolError) -> Error {
     // libsignal errors can carry peer addresses, application strings and
     // backend details. Classify by variant, never format the underlying error.
     // Preserved live pkmsg failures (2026-10-06) exposed how the former blanket

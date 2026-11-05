@@ -1,0 +1,247 @@
+
+# class: LX/Eyj;
+# extends: Ljava/lang/Object;
+
+.method public A01(LLL)  # .registers 16
+    # full signature: LX/Eyj;->A01(LX/FuC;[B)[B
+    0000..0004  const-string  v1, "No sender key for: "
+    0004..0008  iget-object  v7, v13, LX/Eyj;->A01:LX/0YK;
+    0008..000c  iget-object  v6, v13, LX/Eyj;->A00:LX/Eef;
+    000c..0012  invoke-interface  {v7, v6}, LX/0YK;->BbT(LX/Eef;)LX/EZp;
+    0012..0014  move-result-object  v5
+    0014..0018  iget-object  v0, v5, LX/EZp;->A00:Ljava/util/LinkedList;
+    0018..001e  invoke-virtual  {v0}, Ljava/util/AbstractCollection;->isEmpty()Z
+    001e..0020  move-result  v0
+    0020..0024  if-nez  v0, +0x19e
+    0024..0028  new-instance  v3, LX/Fj2;
+    0028..002e  invoke-direct  {v3, v15}, LX/Fj2;-><init>([B)V
+    002e..0032  iget  v4, v3, LX/Fj2;->A01:I
+    0032..0036  iget-object  v0, v5, LX/EZp;->A00:Ljava/util/LinkedList;
+    0036..003c  invoke-virtual  {v0}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+    003c..003e  move-result-object  v2
+    003e..0044  invoke-interface  {v2}, Ljava/util/Iterator;->hasNext()Z
+    0044..0046  move-result  v0
+    0046..004a  if-eqz  v0, +0x17f
+    004a..0050  invoke-interface  {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0050..0052  move-result-object  v9
+    0052..0056  check-cast  v9, LX/EeF;
+    0056..005a  iget-object  v1, v9, LX/EeF;->A00:LX/Dev;
+    005a..005e  iget  v0, v1, LX/Dev;->senderKeyId_:I
+    005e..0062  if-ne  v0, v4, -0x10
+    0062..0066  iget-object  v0, v1, LX/Dev;->senderSigningKey_:LX/Dc1;
+    0066..006a  if-nez  v0, +0x4
+    006a..006e  sget-object  v0, LX/Dc1;->DEFAULT_INSTANCE:LX/Dc1;
+    006e..0072  iget-object  v0, v0, LX/Dc1;->public_:Lcom/google/protobuf/ByteString;
+    0072..0078  invoke-static  {v0}, LX/DBe;->A16(Lcom/google/protobuf/ByteString;)LX/Fbl;
+    0078..007a  move-result-object  v0
+    007a..0080  invoke-virtual  {v3, v0}, LX/Fj2;->A00(LX/Fbl;)V
+    0080..0084  iget  v4, v3, LX/Fj2;->A00:I
+    0084..008a  invoke-virtual  {v9}, LX/EeF;->A00()LX/Eud;
+    008a..008c  move-result-object  v8
+    008c..0090  iget  v2, v8, LX/Eud;->A00:I
+    0090..0094  if-le  v2, v4, +0x81
+    0094..0098  iget-object  v0, v9, LX/EeF;->A00:LX/Dev;
+    0098..009c  iget-object  v0, v0, LX/Dev;->senderMessageKeys_:Lcom/google/protobuf/Internal$ProtobufList;
+    009c..00a2  invoke-interface  {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    00a2..00a4  move-result-object  v1
+    00a4..00aa  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    00aa..00ac  move-result  v0
+    00ac..00b0  if-eqz  v0, +0x60
+    00b0..00b6  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    00b6..00b8  move-result-object  v0
+    00b8..00bc  check-cast  v0, LX/Dc0;
+    00bc..00c0  iget  v0, v0, LX/Dc0;->iteration_:I
+    00c0..00c4  if-ne  v0, v4, -0xe
+    00c4..00c8  iget-object  v0, v9, LX/EeF;->A00:LX/Dev;
+    00c8..00cc  iget-object  v0, v0, LX/Dev;->senderMessageKeys_:Lcom/google/protobuf/Internal$ProtobufList;
+    00cc..00d0  new-instance  v10, Ljava/util/LinkedList;
+    00d0..00d6  invoke-direct  {v10, v0}, Ljava/util/LinkedList;-><init>(Ljava/util/Collection;)V
+    00d6..00dc  invoke-interface  {v10}, Ljava/util/Deque;->iterator()Ljava/util/Iterator;
+    00dc..00de  move-result-object  v1
+    00de..00e4  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    00e4..00e6  move-result  v0
+    00e6..00e8  const/4  v2, #0x0
+    00e8..00ec  if-eqz  v0, +0x3c
+    00ec..00f2  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    00f2..00f4  move-result-object  v8
+    00f4..00f8  check-cast  v8, LX/Dc0;
+    00f8..00fc  iget  v0, v8, LX/Dc0;->iteration_:I
+    00fc..0100  if-ne  v0, v4, -0xf
+    0100..0106  invoke-interface  {v1}, Ljava/util/Iterator;->remove()V
+    0106..010a  iget-object  v0, v9, LX/EeF;->A00:LX/Dev;
+    010a..0110  invoke-static  {v0}, LX/DBd;->A0Q(Lcom/google/protobuf/GeneratedMessageLite;)Lcom/google/protobuf/GeneratedMessageLite$Builder;
+    0110..0112  move-result-object  v11
+    0112..0116  iget-object  v1, v11, Lcom/google/protobuf/GeneratedMessageLite$Builder;->instance:Lcom/google/protobuf/GeneratedMessageLite;
+    0116..011a  check-cast  v1, LX/Dev;
+    011a..011e  sget-object  v0, Lcom/google/protobuf/ProtobufArrayList;->EMPTY_LIST:Lcom/google/protobuf/ProtobufArrayList;
+    011e..0122  iput-object  v0, v1, LX/Dev;->senderMessageKeys_:Lcom/google/protobuf/Internal$ProtobufList;
+    0122..0128  invoke-static  {v11}, LX/8t1;->A0Z(Lcom/google/protobuf/GeneratedMessageLite$Builder;)Lcom/google/protobuf/GeneratedMessageLite;
+    0128..012a  move-result-object  v4
+    012a..012e  check-cast  v4, LX/Dev;
+    012e..0132  iget-object  v1, v4, LX/Dev;->senderMessageKeys_:Lcom/google/protobuf/Internal$ProtobufList;
+    0132..0138  invoke-interface  {v1}, Lcom/google/protobuf/Internal$ProtobufList;->isModifiable()Z
+    0138..013a  move-result  v0
+    013a..013e  if-nez  v0, +0x8
+    013e..0144  invoke-static  {v1}, Lcom/google/protobuf/GeneratedMessageLite;->mutableCopy(Lcom/google/protobuf/Internal$ProtobufList;)Lcom/google/protobuf/Internal$ProtobufList;
+    0144..0146  move-result-object  v0
+    0146..014a  iput-object  v0, v4, LX/Dev;->senderMessageKeys_:Lcom/google/protobuf/Internal$ProtobufList;
+    014a..014e  iget-object  v0, v4, LX/Dev;->senderMessageKeys_:Lcom/google/protobuf/Internal$ProtobufList;
+    014e..0154  invoke-static  {v11, v10, v0}, LX/DBd;->A0U(Lcom/google/protobuf/GeneratedMessageLite$Builder;Ljava/lang/Iterable;Ljava/util/List;)Lcom/google/protobuf/GeneratedMessageLite;
+    0154..0156  move-result-object  v0
+    0156..015a  check-cast  v0, LX/Dev;
+    015a..015e  iput-object  v0, v9, LX/EeF;->A00:LX/Dev;
+    015e..0160  goto  +0x3
+    0160..0162  move-object  v8, v2
+    0162..0164  goto  -0x2e
+    0164..0168  if-eqz  v8, +0xbf
+    0168..016c  goto/16  +0xb0
+    016c..0170  const-string  v0, "Received message with old counter: "
+    0170..0176  invoke-static  {v2, v0}, LX/1Xl;->A14(ILjava/lang/String;)Ljava/lang/StringBuilder;
+    0176..0178  move-result-object  v1
+    0178..017c  const-string  v0, " , "
+    017c..0182  invoke-static  {v0, v1, v4}, LX/1Xl;->A11(Ljava/lang/String;Ljava/lang/StringBuilder;I)Ljava/lang/String;
+    0182..0184  move-result-object  v0
+    0184..0188  new-instance  v1, LX/ED4;
+    0188..018e  invoke-direct  {v1, v0}, LX/ED4;-><init>(Ljava/lang/String;)V
+    018e..0192  goto/16  +0xf8
+    0192..0196  sub-int  v1, v4, v2
+    0196..019a  const/16  v0, #0x7d0
+    019a..019e  if-le  v1, v0, +0x4
+    019e..01a2  goto/16  +0xe9
+    01a2..01a6  iget  v0, v8, LX/Eud;->A00:I
+    01a6..01aa  if-ge  v0, v4, +0x85
+    01aa..01b0  invoke-virtual  {v8}, LX/Eud;->A01()LX/EVd;
+    01b0..01b2  move-result-object  v11
+    01b2..01b6  sget-object  v0, LX/Dc0;->DEFAULT_INSTANCE:LX/Dc0;
+    01b6..01bc  invoke-virtual  {v0}, Lcom/google/protobuf/GeneratedMessageLite;->createBuilder()Lcom/google/protobuf/GeneratedMessageLite$Builder;
+    01bc..01be  move-result-object  v10
+    01be..01c2  iget  v2, v11, LX/EVd;->A00:I
+    01c2..01c8  invoke-static  {v10}, LX/8t1;->A0Z(Lcom/google/protobuf/GeneratedMessageLite$Builder;)Lcom/google/protobuf/GeneratedMessageLite;
+    01c8..01ca  move-result-object  v1
+    01ca..01ce  check-cast  v1, LX/Dc0;
+    01ce..01d2  iget  v0, v1, LX/Dc0;->bitField0_:I
+    01d2..01d6  or-int/lit8  v0, v0, #0x1
+    01d6..01da  iput  v0, v1, LX/Dc0;->bitField0_:I
+    01da..01de  iput  v2, v1, LX/Dc0;->iteration_:I
+    01de..01e2  iget-object  v0, v11, LX/EVd;->A03:[B
+    01e2..01e4  const/4  v11, #0x0
+    01e4..01ea  invoke-static  {v10, v0, v11}, LX/DBe;->A0B(Lcom/google/protobuf/GeneratedMessageLite$Builder;[BI)Lcom/google/protobuf/ByteString;
+    01ea..01ec  move-result-object  v2
+    01ec..01f0  iget-object  v1, v10, Lcom/google/protobuf/GeneratedMessageLite$Builder;->instance:Lcom/google/protobuf/GeneratedMessageLite;
+    01f0..01f4  check-cast  v1, LX/Dc0;
+    01f4..01f8  iget  v0, v1, LX/Dc0;->bitField0_:I
+    01f8..01fc  or-int/lit8  v0, v0, #0x2
+    01fc..0200  iput  v0, v1, LX/Dc0;->bitField0_:I
+    0200..0204  iput-object  v2, v1, LX/Dc0;->seed_:Lcom/google/protobuf/ByteString;
+    0204..020a  invoke-virtual  {v10}, Lcom/google/protobuf/GeneratedMessageLite$Builder;->build()Lcom/google/protobuf/GeneratedMessageLite;
+    020a..020c  move-result-object  v2
+    020c..0210  iget-object  v0, v9, LX/EeF;->A00:LX/Dev;
+    0210..0216  invoke-static  {v0}, LX/DBd;->A0Q(Lcom/google/protobuf/GeneratedMessageLite;)Lcom/google/protobuf/GeneratedMessageLite$Builder;
+    0216..0218  move-result-object  v10
+    0218..021c  iget-object  v12, v10, Lcom/google/protobuf/GeneratedMessageLite$Builder;->instance:Lcom/google/protobuf/GeneratedMessageLite;
+    021c..0220  check-cast  v12, LX/Dev;
+    0220..0224  iget-object  v1, v12, LX/Dev;->senderMessageKeys_:Lcom/google/protobuf/Internal$ProtobufList;
+    0224..022a  invoke-interface  {v1}, Lcom/google/protobuf/Internal$ProtobufList;->isModifiable()Z
+    022a..022c  move-result  v0
+    022c..0230  if-nez  v0, +0x8
+    0230..0236  invoke-static  {v1}, Lcom/google/protobuf/GeneratedMessageLite;->mutableCopy(Lcom/google/protobuf/Internal$ProtobufList;)Lcom/google/protobuf/Internal$ProtobufList;
+    0236..0238  move-result-object  v0
+    0238..023c  iput-object  v0, v12, LX/Dev;->senderMessageKeys_:Lcom/google/protobuf/Internal$ProtobufList;
+    023c..0240  iget-object  v0, v12, LX/Dev;->senderMessageKeys_:Lcom/google/protobuf/Internal$ProtobufList;
+    0240..0246  invoke-interface  {v0, v2}, Ljava/util/List;->add(Ljava/lang/Object;)Z
+    0246..024a  iget-object  v0, v10, Lcom/google/protobuf/GeneratedMessageLite$Builder;->instance:Lcom/google/protobuf/GeneratedMessageLite;
+    024a..024e  check-cast  v0, LX/Dev;
+    024e..0252  iget-object  v0, v0, LX/Dev;->senderMessageKeys_:Lcom/google/protobuf/Internal$ProtobufList;
+    0252..0258  invoke-interface  {v0}, Ljava/util/List;->size()I
+    0258..025a  move-result  v1
+    025a..025e  const/16  v0, #0x7d0
+    025e..0262  if-le  v1, v0, +0x1b
+    0262..0268  invoke-static  {v10}, LX/8t1;->A0Z(Lcom/google/protobuf/GeneratedMessageLite$Builder;)Lcom/google/protobuf/GeneratedMessageLite;
+    0268..026a  move-result-object  v2
+    026a..026e  check-cast  v2, LX/Dev;
+    026e..0272  iget-object  v1, v2, LX/Dev;->senderMessageKeys_:Lcom/google/protobuf/Internal$ProtobufList;
+    0272..0278  invoke-interface  {v1}, Lcom/google/protobuf/Internal$ProtobufList;->isModifiable()Z
+    0278..027a  move-result  v0
+    027a..027e  if-nez  v0, +0x8
+    027e..0284  invoke-static  {v1}, Lcom/google/protobuf/GeneratedMessageLite;->mutableCopy(Lcom/google/protobuf/Internal$ProtobufList;)Lcom/google/protobuf/Internal$ProtobufList;
+    0284..0286  move-result-object  v0
+    0286..028a  iput-object  v0, v2, LX/Dev;->senderMessageKeys_:Lcom/google/protobuf/Internal$ProtobufList;
+    028a..028e  iget-object  v0, v2, LX/Dev;->senderMessageKeys_:Lcom/google/protobuf/Internal$ProtobufList;
+    028e..0294  invoke-interface  {v0, v11}, Ljava/util/List;->remove(I)Ljava/lang/Object;
+    0294..029a  invoke-virtual  {v10}, Lcom/google/protobuf/GeneratedMessageLite$Builder;->build()Lcom/google/protobuf/GeneratedMessageLite;
+    029a..029c  move-result-object  v0
+    029c..02a0  check-cast  v0, LX/Dev;
+    02a0..02a4  iput-object  v0, v9, LX/EeF;->A00:LX/Dev;
+    02a4..02aa  invoke-virtual  {v8}, LX/Eud;->A00()LX/Eud;
+    02aa..02ac  move-result-object  v8
+    02ac..02b0  goto/16  -0x85
+    02b0..02b6  invoke-virtual  {v8}, LX/Eud;->A00()LX/Eud;
+    02b6..02b8  move-result-object  v0
+    02b8..02be  invoke-virtual  {v9, v0}, LX/EeF;->A01(LX/Eud;)V
+    02be..02c4  invoke-virtual  {v8}, LX/Eud;->A01()LX/EVd;
+    02c4..02c6  move-result-object  v2
+    02c6..02c8  goto  +0xe
+    02c8..02cc  iget  v1, v8, LX/Dc0;->iteration_:I
+    02cc..02d0  iget-object  v0, v8, LX/Dc0;->seed_:Lcom/google/protobuf/ByteString;
+    02d0..02d6  invoke-virtual  {v0}, Lcom/google/protobuf/ByteString;->toByteArray()[B
+    02d6..02d8  move-result-object  v0
+    02d8..02dc  new-instance  v2, LX/EVd;
+    02dc..02e2  invoke-direct  {v2, v1, v0}, LX/EVd;-><init>(I[B)V
+    02e2..02e6  iget-object  v0, v2, LX/EVd;->A02:[B
+    02e6..02ea  iget-object  v1, v2, LX/EVd;->A01:[B
+    02ea..02ee  iget-object  v4, v3, LX/Fj2;->A02:[B
+    02ee..02f2  new-instance  v3, Ljavax/crypto/spec/IvParameterSpec;
+    02f2..02f8  invoke-direct  {v3, v0}, Ljavax/crypto/spec/IvParameterSpec;-><init>([B)V
+    02f8..02fc  const-string  v0, "AES/CBC/PKCS5Padding"
+    02fc..0302  invoke-static  {v0}, Ljavax/crypto/Cipher;->getInstance(Ljava/lang/String;)Ljavax/crypto/Cipher;
+    0302..0304  move-result-object  v2
+    0304..030a  invoke-static  {v1}, LX/DBd;->A1L([B)Ljavax/crypto/spec/SecretKeySpec;
+    030a..030c  move-result-object  v1
+    030c..030e  const/4  v0, #0x2
+    030e..0314  invoke-virtual  {v2, v0, v1, v3}, Ljavax/crypto/Cipher;->init(ILjava/security/Key;Ljava/security/spec/AlgorithmParameterSpec;)V
+    0314..031a  invoke-virtual  {v2, v4}, Ljavax/crypto/Cipher;->doFinal([B)[B
+    031a..031c  move-result-object  v0
+    031c..0322  invoke-interface  {v14, v0}, LX/FuC;->BLW([B)V
+    0322..0328  invoke-interface  {v7, v6, v5}, LX/0YK;->CrS(LX/Eef;LX/EZp;)V
+    0328..032a  return-object  v0
+    032a..032c  move-exception  v0
+    032c..0330  new-instance  v1, LX/EDY;
+    0330..0336  invoke-direct  {v1, v0}, LX/EDY;-><init>(Ljava/lang/Throwable;)V
+    0336..0338  goto  +0x24
+    0338..033a  move-exception  v0
+    033a..0340  invoke-static  {v0}, LX/DBb;->A0q(Ljava/lang/Object;)Ljava/lang/AssertionError;
+    0340..0342  move-result-object  v1
+    0342..0344  goto  +0x1e
+    0344..0348  const-string  v0, "No keys for: "
+    0348..034e  invoke-static  {v0, v4}, LX/2LA;->A0p(Ljava/lang/String;I)Ljava/lang/String;
+    034e..0350  move-result-object  v0
+    0350..0354  new-instance  v1, LX/EDR;
+    0354..035a  invoke-direct  {v1, v0}, LX/EDR;-><init>(Ljava/lang/String;)V
+    035a..035c  goto  +0x12
+    035c..0362  invoke-static  {v1, v6}, LX/1Xl;->A0w(Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/String;
+    0362..0364  move-result-object  v0
+    0364..0368  new-instance  v1, LX/EDS;
+    0368..036e  invoke-direct  {v1, v0}, LX/EDS;-><init>(Ljava/lang/String;)V
+    036e..0370  goto  +0x8
+    0370..0374  const-string  v0, "Over 2000 messages into the future!"
+    0374..0378  new-instance  v1, LX/EDY;
+    0378..037e  invoke-direct  {v1, v0}, LX/EDY;-><init>(Ljava/lang/String;)V
+    037e..0380  throw  v1
+    0380..0382  move-exception  v1
+    0382..0386  new-instance  v0, LX/EDY;
+    0386..038c  invoke-direct  {v0, v1}, LX/EDY;-><init>(Ljava/lang/Throwable;)V
+    038c..038e  throw  v0
+    # exception table: 3 try range(s)
+    # catch LX/EDQ; code_units 0002..0177 -> 01c0
+    # catch LX/EDR; code_units 0002..0177 -> 01c0
+    # catch Ljava/security/NoSuchAlgorithmException; code_units 0177..018e -> 019c
+    # catch Ljavax/crypto/NoSuchPaddingException; code_units 0177..018e -> 019c
+    # catch Ljava/security/InvalidKeyException; code_units 0177..018e -> 019c
+    # catch Ljava/security/InvalidAlgorithmParameterException; code_units 0177..018e -> 019c
+    # catch Ljavax/crypto/IllegalBlockSizeException; code_units 0177..018e -> 0195
+    # catch Ljavax/crypto/BadPaddingException; code_units 0177..018e -> 0195
+    # catch LX/EDQ; code_units 0177..018e -> 01c0
+    # catch LX/EDR; code_units 0177..018e -> 01c0
+    # catch LX/EDQ; code_units 018e..01c0 -> 01c0
+    # catch LX/EDR; code_units 018e..01c0 -> 01c0
+.end method

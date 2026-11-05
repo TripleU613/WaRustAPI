@@ -1,0 +1,83 @@
+
+# class: LX/0Yl;
+# extends: Ljava/lang/Object;
+
+.method public A00(LLLLL)  # .registers 9
+    # full signature: LX/0Yl;->A00(LX/0Yl;LX/FtG;LX/Eyj;[B)LX/EtY;
+    0000..0002  const/4  v2, #0x0
+    0002..0006  if-eqz  v6, +0x8
+    0006..000a  new-instance  v4, LX/Fix;
+    000a..0010  invoke-direct  {v4, v6}, LX/Fix;-><init>(LX/FtG;)V
+    0010..0012  goto  +0x6
+    0012..0016  new-instance  v4, LX/Fiw;
+    0016..001c  invoke-direct  {v4}, Ljava/lang/Object;-><init>()V
+    001c..0020  iget-object  v3, v5, LX/0Yl;->A00:LX/08Y;
+    0020..0024  sget-object  v1, LX/00G;->A02:LX/00G;
+    0024..0028  const/16  v0, #0x60e5
+    0028..002e  invoke-static  {v1, v3, v2, v0}, LX/00E;->A0D(LX/00G;LX/00E;Ljava/lang/Boolean;I)Z
+    002e..0030  move-result  v0
+    0030..0034  if-nez  v0, +0x16
+    0034..0038  iget-object  v0, v5, LX/0Yl;->A05:LX/0YM;
+    0038..003e  invoke-virtual  {v0}, LX/0YM;->A03()Z
+    003e..0040  move-result  v0
+    0040..0044  if-eqz  v0, +0xe
+    0044..0048  sget-object  v1, LX/Eyj;->A02:Ljava/lang/Object;
+    0048..004a  monitor-enter
+    004a..0050  invoke-virtual  {v7, v4, v8}, LX/Eyj;->A01(LX/FuC;[B)[B
+    0050..0052  move-result-object  v3
+    0052..0054  monitor-exit
+    0054..0056  goto  +0x8
+    0056..0058  move-exception  v0
+    0058..005a  monitor-exit
+    005a..005c  throw  v0
+    005c..0062  invoke-virtual  {v7, v4, v8}, LX/Eyj;->A01(LX/FuC;[B)[B
+    0062..0064  move-result-object  v3
+    0064..0066  const/4  v0, #0x0
+    0066..006c  invoke-static  {v2, v3, v0}, LX/EHq;->A00(Ljava/lang/Exception;[BI)LX/EtY;
+    006c..006e  move-result-object  v0
+    006e..0070  return-object  v0
+    0070..0072  move-exception  v1
+    0072..0076  instance-of  v0, v1, Landroid/database/sqlite/SQLiteFullException;
+    0076..007a  if-nez  v0, +0x12
+    007a..007e  instance-of  v0, v1, Landroid/database/sqlite/SQLiteDatabaseCorruptException;
+    007e..0082  if-nez  v0, +0xe
+    0082..0086  const-string  v0, "SignalCoordinatorDefault/decryptForGroup"
+    0086..008c  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;Ljava/lang/Throwable;)V
+    008c..0090  const/16  v0, #0xfc18 (-1000)
+    0090..0096  invoke-static  {v1, v2, v0}, LX/EHq;->A00(Ljava/lang/Exception;[BI)LX/EtY;
+    0096..0098  move-result-object  v0
+    0098..009a  return-object  v0
+    009a..009c  throw  v1
+    009c..009e  move-exception  v1
+    009e..00a2  const/16  v0, #0xfc10 (-1008)
+    00a2..00a8  invoke-static  {v1, v2, v0}, LX/EHq;->A00(Ljava/lang/Exception;[BI)LX/EtY;
+    00a8..00aa  move-result-object  v0
+    00aa..00ac  return-object  v0
+    00ac..00ae  move-exception  v1
+    00ae..00b2  const/16  v0, #0xfc17 (-1001)
+    00b2..00b8  invoke-static  {v1, v2, v0}, LX/EHq;->A00(Ljava/lang/Exception;[BI)LX/EtY;
+    00b8..00ba  move-result-object  v0
+    00ba..00bc  return-object  v0
+    00bc..00be  move-exception  v1
+    00be..00c2  const/16  v0, #0xfc13 (-1005)
+    00c2..00c8  invoke-static  {v1, v2, v0}, LX/EHq;->A00(Ljava/lang/Exception;[BI)LX/EtY;
+    00c8..00ca  move-result-object  v0
+    00ca..00cc  return-object  v0
+    00cc..00ce  move-exception  v1
+    00ce..00d2  const/16  v0, #0xfc11 (-1007)
+    00d2..00d8  invoke-static  {v1, v2, v0}, LX/EHq;->A00(Ljava/lang/Exception;[BI)LX/EtY;
+    00d8..00da  move-result-object  v0
+    00da..00dc  return-object  v0
+    # exception table: 3 try range(s)
+    # catch LX/ED6; code_units 0003..0025 -> 0066
+    # catch LX/EDY; code_units 0003..0025 -> 005e
+    # catch LX/ED4; code_units 0003..0025 -> 0056
+    # catch LX/EDS; code_units 0003..0025 -> 004e
+    # catch Ljava/lang/Exception; code_units 0003..0025 -> 0038
+    # catch <all> code_units 0025..002d -> 002b
+    # catch LX/ED6; code_units 002d..0038 -> 0066
+    # catch LX/EDY; code_units 002d..0038 -> 005e
+    # catch LX/ED4; code_units 002d..0038 -> 0056
+    # catch LX/EDS; code_units 002d..0038 -> 004e
+    # catch Ljava/lang/Exception; code_units 002d..0038 -> 0038
+.end method

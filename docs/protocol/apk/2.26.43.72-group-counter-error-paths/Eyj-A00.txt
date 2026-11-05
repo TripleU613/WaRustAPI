@@ -1,0 +1,95 @@
+
+# class: LX/Eyj;
+# extends: Ljava/lang/Object;
+
+.method public A00(LLLL)  # .registers 11
+    # full signature: LX/Eyj;->A00(LX/Eef;LX/0YK;[B)[B
+    0000..0006  invoke-interface  {v9, v8}, LX/0YK;->BbT(LX/Eef;)LX/EZp;
+    0006..0008  move-result-object  v5
+    0008..000c  iget-object  v1, v5, LX/EZp;->A00:Ljava/util/LinkedList;
+    000c..0012  invoke-virtual  {v1}, Ljava/util/AbstractCollection;->isEmpty()Z
+    0012..0014  move-result  v0
+    0014..0018  if-nez  v0, +0x77
+    0018..001a  const/4  v0, #0x0
+    001a..0020  invoke-virtual  {v1, v0}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
+    0020..0022  move-result-object  v4
+    0022..0026  check-cast  v4, LX/EeF;
+    0026..002c  invoke-virtual  {v4}, LX/EeF;->A00()LX/Eud;
+    002c..002e  move-result-object  v0
+    002e..0034  invoke-virtual  {v0}, LX/Eud;->A01()LX/EVd;
+    0034..0036  move-result-object  v7
+    0036..003a  iget-object  v1, v4, LX/EeF;->A00:LX/Dev;
+    003a..003e  iget  v0, v1, LX/Dev;->bitField0_:I
+    003e..0042  and-int/lit8  v0, v0, #0x4
+    0042..0046  if-eqz  v0, +0x12
+    0046..004a  iget-object  v0, v1, LX/Dev;->senderSigningKey_:LX/Dc1;
+    004a..004c  move-object  v1, v0
+    004c..0050  if-nez  v0, +0x4
+    0050..0054  sget-object  v0, LX/Dc1;->DEFAULT_INSTANCE:LX/Dc1;
+    0054..0058  iget  v0, v0, LX/Dc1;->bitField0_:I
+    0058..005c  and-int/lit8  v0, v0, #0x2
+    005c..0060  if-eqz  v0, +0x5
+    0060..0064  if-nez  v1, +0x7
+    0064..0066  goto  +0x3
+    0066..0068  const/4  v6, #0x0
+    0068..006a  goto  +0xe
+    006a..006e  sget-object  v1, LX/Dc1;->DEFAULT_INSTANCE:LX/Dc1;
+    006e..0072  iget-object  v0, v1, LX/Dc1;->private_:Lcom/google/protobuf/ByteString;
+    0072..0078  invoke-virtual  {v0}, Lcom/google/protobuf/ByteString;->toByteArray()[B
+    0078..007a  move-result-object  v0
+    007a..007e  new-instance  v6, LX/EQ7;
+    007e..0084  invoke-direct  {v6, v0}, LX/EQ7;-><init>([B)V
+    0084..0088  iget-object  v0, v7, LX/EVd;->A02:[B
+    0088..008c  iget-object  v1, v7, LX/EVd;->A01:[B
+    008c..0090  new-instance  v3, Ljavax/crypto/spec/IvParameterSpec;
+    0090..0096  invoke-direct  {v3, v0}, Ljavax/crypto/spec/IvParameterSpec;-><init>([B)V
+    0096..009a  const-string  v0, "AES/CBC/PKCS5Padding"
+    009a..00a0  invoke-static  {v0}, Ljavax/crypto/Cipher;->getInstance(Ljava/lang/String;)Ljavax/crypto/Cipher;
+    00a0..00a2  move-result-object  v2
+    00a2..00a8  invoke-static  {v1}, LX/DBd;->A1L([B)Ljavax/crypto/spec/SecretKeySpec;
+    00a8..00aa  move-result-object  v1
+    00aa..00ac  const/4  v0, #0x1
+    00ac..00b2  invoke-virtual  {v2, v0, v1, v3}, Ljavax/crypto/Cipher;->init(ILjava/security/Key;Ljava/security/spec/AlgorithmParameterSpec;)V
+    00b2..00b8  invoke-virtual  {v2, v10}, Ljavax/crypto/Cipher;->doFinal([B)[B
+    00b8..00ba  move-result-object  v3
+    00ba..00be  if-eqz  v6, +0x2c
+    00be..00c2  iget-object  v0, v4, LX/EeF;->A00:LX/Dev;
+    00c2..00c6  iget  v2, v0, LX/Dev;->senderKeyId_:I
+    00c6..00ca  iget  v0, v7, LX/EVd;->A00:I
+    00ca..00ce  new-instance  v1, LX/Fj2;
+    00ce..00d4  invoke-direct  {v1, v6, v3, v2, v0}, LX/Fj2;-><init>(LX/EQ7;[BII)V
+    00d4..00da  invoke-virtual  {v4}, LX/EeF;->A00()LX/Eud;
+    00da..00dc  move-result-object  v0
+    00dc..00e2  invoke-virtual  {v0}, LX/Eud;->A00()LX/Eud;
+    00e2..00e4  move-result-object  v0
+    00e4..00ea  invoke-virtual  {v4, v0}, LX/EeF;->A01(LX/Eud;)V
+    00ea..00f0  invoke-interface  {v9, v8, v5}, LX/0YK;->CrS(LX/Eef;LX/EZp;)V
+    00f0..00f4  iget-object  v0, v1, LX/Fj2;->A03:[B
+    00f4..00f6  return-object  v0
+    00f6..00f8  move-exception  v0
+    00f8..00fe  invoke-static  {v0}, LX/DBb;->A0q(Ljava/lang/Object;)Ljava/lang/AssertionError;
+    00fe..0100  move-result-object  v1
+    0100..0102  goto  +0x10
+    0102..0106  const-string  v0, "No key state in record!"
+    0106..010a  new-instance  v1, LX/EDR;
+    010a..0110  invoke-direct  {v1, v0}, LX/EDR;-><init>(Ljava/lang/String;)V
+    0110..0112  goto  +0x8
+    0112..0116  const-string  v0, "Session missing signature key!"
+    0116..011a  new-instance  v1, LX/EDQ;
+    011a..0120  invoke-direct  {v1, v0}, LX/EDQ;-><init>(Ljava/lang/String;)V
+    0120..0122  throw  v1
+    0122..0124  move-exception  v1
+    0124..0128  new-instance  v0, LX/EDS;
+    0128..012e  invoke-direct  {v0, v1}, LX/EDS;-><init>(Ljava/lang/Exception;)V
+    012e..0130  throw  v0
+    # exception table: 3 try range(s)
+    # catch LX/EDR; code_units 0000..0046 -> 0091
+    # catch Ljava/security/NoSuchAlgorithmException; code_units 0046..005f -> 007b
+    # catch Ljavax/crypto/NoSuchPaddingException; code_units 0046..005f -> 007b
+    # catch Ljava/security/InvalidAlgorithmParameterException; code_units 0046..005f -> 007b
+    # catch Ljavax/crypto/IllegalBlockSizeException; code_units 0046..005f -> 007b
+    # catch Ljavax/crypto/BadPaddingException; code_units 0046..005f -> 007b
+    # catch Ljava/security/InvalidKeyException; code_units 0046..005f -> 007b
+    # catch LX/EDR; code_units 0046..005f -> 0091
+    # catch LX/EDR; code_units 005f..0091 -> 0091
+.end method
