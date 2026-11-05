@@ -34,6 +34,10 @@ pub enum Error {
     #[error("Signal sender-key message signature verification failed")]
     SignalInvalidSenderKeySignature,
 
+    /// Verified sender-key message exceeds the confirmed forward-counter window.
+    #[error("Signal sender-key message exceeds the forward-counter window")]
+    SignalSenderKeyFutureCounter,
+
     /// A caller-supplied value failed validation.
     #[error("invalid input for `{field}`: {reason}")]
     InvalidInput {

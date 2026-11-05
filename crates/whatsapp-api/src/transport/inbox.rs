@@ -66,6 +66,9 @@ pub enum IncomingResult {
     /// Sender-key message signature failed verification against the saved key.
     /// Eligible for the scoped native signature retry error5.
     InvalidSenderKeySignature,
+    /// Verified sender-key message exceeds the confirmed forward-counter window.
+    /// Eligible for the scoped native future-counter retry error6.
+    SenderKeyFutureCounter,
 }
 
 // Token/string node bodies can be Text; raw binary bodies remain Bytes.
@@ -1514,6 +1517,12 @@ async fn process_group(
     policy: IdentityChangePolicy,
 ) -> Result<IncomingResult> {
     match process_group_inner(store, account, node, capture, policy).await {
+        Err(Error::SignalSenderKeyFutureCounter) => {
+            tracing::warn!(
+                "sender-key counter exceeds forward window; capture preserved for bounded retry"
+            );
+            Ok(IncomingResult::SenderKeyFutureCounter)
+        }
         Err(Error::SignalInvalidSenderKeySignature) => {
             tracing::warn!("sender-key signature rejected; capture preserved for bounded retry");
             Ok(IncomingResult::InvalidSenderKeySignature)

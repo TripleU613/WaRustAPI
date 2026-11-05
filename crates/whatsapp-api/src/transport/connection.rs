@@ -987,6 +987,7 @@ pub(crate) async fn drive(
                 let retry_cause = match received {
                     super::inbox::IncomingResult::MissingSession => Some(super::receipts::RetryCause::MissingSession),
                     super::inbox::IncomingResult::InvalidSenderKeySignature => Some(super::receipts::RetryCause::SenderKeySignature),
+                    super::inbox::IncomingResult::SenderKeyFutureCounter => Some(super::receipts::RetryCause::SenderKeyFutureCounter),
                     _ => None,
                 };
                 if received == super::inbox::IncomingResult::Undecryptable || retry_cause.is_some() {
@@ -2514,7 +2515,12 @@ mod tests {
 
     #[tokio::test]
     async fn undecryptable_message_requests_once_before_write_cut_and_never_replays() {
-        for (grouped, bad_signature) in [(false, false), (true, false), (true, true)] {
+        for (grouped, bad_signature, future_counter) in [
+            (false, false, false),
+            (true, false, false),
+            (true, true, false),
+            (true, false, true),
+        ] {
             let dir = tempfile::tempdir().unwrap();
             let store = open(&dir.path().join("retry-cut.redb"));
             store
@@ -2553,7 +2559,7 @@ mod tests {
                         .attr("type", "msg")
                         .bytes(message.serialized().to_vec()),
                 ]);
-            let group_ciphertext = if bad_signature {
+            let group_ciphertext = if bad_signature || future_counter {
                 use crate::signal::group::{
                     commit_skdm, encrypt_group_payload, extract_skdm_from_payload,
                     prepare_own_sender_key, process_skdm, sender_key_db_key,
@@ -2572,13 +2578,31 @@ mod tests {
                 .await
                 .unwrap();
                 assert!(store.write(|tx| commit_skdm(tx, &installed)).unwrap());
-                let body = super::super::group_send::text_payload("signature fixture").unwrap();
-                let (cipher, _) = encrypt_group_payload(&group, &sender, &mine.updated_key, &body)
-                    .await
-                    .unwrap();
-                let mut tampered = cipher.to_vec();
-                *tampered.last_mut().unwrap() ^= 1;
-                tampered
+                if future_counter {
+                    use wacore_libsignal::protocol::{SenderKeyMessage, SenderKeyRecord};
+                    let own_record = SenderKeyRecord::deserialize(&mine.updated_key).unwrap();
+                    let state = own_record.sender_key_state().unwrap();
+                    SenderKeyMessage::new(
+                        3,
+                        state.chain_id(),
+                        2001,
+                        vec![0; 1].into_boxed_slice(),
+                        &mut rng,
+                        &state.signing_key_private().unwrap(),
+                    )
+                    .unwrap()
+                    .serialized()
+                    .to_vec()
+                } else {
+                    let body = super::super::group_send::text_payload("signature fixture").unwrap();
+                    let (cipher, _) =
+                        encrypt_group_payload(&group, &sender, &mine.updated_key, &body)
+                            .await
+                            .unwrap();
+                    let mut tampered = cipher.to_vec();
+                    *tampered.last_mut().unwrap() ^= 1;
+                    tampered
+                }
             } else {
                 vec![9; 48]
             };
@@ -2607,7 +2631,13 @@ mod tests {
                     .unwrap()
                     .get_attr("error")
                     .and_then(|v| v.as_text()),
-                Some(if bad_signature { "5" } else { "1" })
+                Some(if bad_signature {
+                    "5"
+                } else if future_counter {
+                    "6"
+                } else {
+                    "1"
+                })
             );
             assert_eq!(
                 retry

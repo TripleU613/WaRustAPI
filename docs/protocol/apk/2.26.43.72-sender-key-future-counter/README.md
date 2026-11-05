@@ -66,3 +66,8 @@ not a backend/native execution harness.
 Validation:31 filtered retry tests, APK coverage, staged whitespace and research
 checksum/link hygiene passed. No Rust source changed; the full workspace suite
 was not rerun for this research-only chunk.
+
+Follow-up: [effective loaded-record metadata view and bounded typed implementation](../2.26.43.72-sender-key-future-retry/README.md) now resolve matching-state access
+for confirmed nonnegative signed-int jumps. High-bit/overflow and complete native
+parity remain open. The earlier projection warning still applies to choosing an
+unadjusted/raw or component-export position without matching load semantics.

@@ -28,6 +28,57 @@ fn crypto(e: SignalProtocolError) -> Error {
     }
 }
 
+// Read only metadata from the effective loaded record, not into_components
+// (which may fast-forward reservations). Schema: waproto0.7 whatsapp.proto
+// SenderKeyRecordStructure/StateStructure/ChainKey, fields1/1,2/1.
+fn excessive_sender_key_jump(record: &SenderKeyRecord, ciphertext: &[u8]) -> bool {
+    use prost::Message;
+    #[derive(prost::Message)]
+    struct Positions {
+        #[prost(message, repeated, tag = "1")]
+        states: Vec<Position>,
+    }
+    #[derive(prost::Message)]
+    struct Position {
+        #[prost(uint32, optional, tag = "1")]
+        id: Option<u32>,
+        #[prost(message, optional, tag = "2")]
+        chain: Option<Chain>,
+    }
+    #[derive(prost::Message)]
+    struct Chain {
+        #[prost(uint32, optional, tag = "1")]
+        iteration: Option<u32>,
+    }
+    let Ok(message) = signal::SenderKeyMessage::try_from(ciphertext) else {
+        return false;
+    };
+    let Ok(bytes) = record.serialize() else {
+        return false;
+    };
+    let bytes = Zeroizing::new(bytes);
+    let Ok(positions) = Positions::decode(bytes.as_slice()) else {
+        return false;
+    };
+    let Some(current) = positions
+        .states
+        .into_iter()
+        .find(|state| state.id.unwrap_or_default() == message.chain_id())
+        .and_then(|state| state.chain)
+        .and_then(|chain| chain.iteration)
+    else {
+        return false;
+    };
+    let incoming = message.iteration();
+    // Eyj.A01 uses signed Java ints. The backend uses u32: do not assert
+    // native equivalence for high-bit counters. Both strict limits are2000.
+    current <= i32::MAX as u32
+        && incoming <= i32::MAX as u32
+        && incoming
+            .checked_sub(current)
+            .is_some_and(|jump| jump > 2000)
+}
+
 /// Storage key for a (group, sender) sender key record.
 /// APK 37.71 Cnr.A03 includes B76 recipient/device fields in its key tuple.
 /// Keep the actual sender device: flattening companions merges independent
@@ -153,6 +204,17 @@ pub async fn receive_group(
             // 0Yl.A00 -1005 -> EtY -1203 -> DxB wire5. skmsg only.
             SignalProtocolError::SignatureValidationFailed => {
                 Error::SignalInvalidSenderKeySignature
+            }
+            // Backend group_decrypt verifies the signature before producing
+            // InvalidMessage from its counter/CBC paths. Inspect only on error;
+            // do not move the counter check ahead of signature verification.
+            SignalProtocolError::InvalidMessage(signal::CiphertextMessageType::SenderKey, _)
+                if store
+                    .record
+                    .as_ref()
+                    .is_some_and(|record| excessive_sender_key_jump(record, ciphertext)) =>
+            {
+                Error::SignalSenderKeyFutureCounter
             }
             other => crypto(other),
         })?;
@@ -421,6 +483,81 @@ pub(crate) fn pad(plaintext: &[u8]) -> Result<Zeroizing<Vec<u8>>> {
 
 #[cfg(test)]
 mod tests {
+    #[tokio::test]
+    async fn future_counter_uses_matching_loaded_chain_and_preserves_signature_precedence() {
+        use signal::SenderKeyMessage;
+        let group = group_jid();
+        let sender = sender_jid();
+        let mine = prepare_own_sender_key(&group, &sender, None).await.unwrap();
+        let original = SenderKeyRecord::deserialize(&mine.updated_key).unwrap();
+        let state = original.sender_key_state().unwrap();
+        let id = state.chain_id();
+        let signing = state.signing_key_private().unwrap();
+        let signed = |iteration| {
+            SenderKeyMessage::new(
+                3,
+                id,
+                iteration,
+                vec![0; 1].into_boxed_slice(),
+                &mut rand::rng(),
+                &signing,
+            )
+            .unwrap()
+            .serialized()
+            .to_vec()
+        };
+        // Newest state differs from the matching older chain. Reading only
+        // the front iteration (3000) would miss the old chain's >2000 jump.
+        let mut components = original.clone().into_components().unwrap();
+        let mut front = components.states[0].clone();
+        front.key_id = id.wrapping_add(1);
+        front.chain_key.iteration = 3000;
+        components.states.insert(0, front);
+        let saved = SenderKeyRecord::from_components(components)
+            .unwrap()
+            .serialize()
+            .unwrap();
+        assert!(matches!(
+            receive_group(&group, &sender, Some(&saved), &signed(2001)).await,
+            Err(Error::SignalSenderKeyFutureCounter)
+        ));
+        // At the boundary the one-byte ciphertext reaches CBC failure, not
+        // future-counter classification. High-bit arithmetic remains unmapped.
+        for iteration in [2000, 0x8000_0000] {
+            assert!(matches!(
+                receive_group(&group, &sender, Some(&saved), &signed(iteration)).await,
+                Err(Error::InvalidInput {
+                    field: "group_crypto",
+                    ..
+                })
+            ));
+        }
+        let mut bad_signature = signed(2001);
+        *bad_signature.last_mut().unwrap() ^= 1;
+        assert!(matches!(
+            receive_group(&group, &sender, Some(&saved), &bad_signature).await,
+            Err(Error::SignalInvalidSenderKeySignature)
+        ));
+        // Loading a reserved snapshot advances its effective front position;
+        // metadata must describe that loaded position, not raw saved counters.
+        let mut reserved = original;
+        reserved.reserve_iterations(1);
+        let ceiling = reserved.reserved_iteration();
+        assert!(ceiling > 0);
+        let reserved = reserved.serialize().unwrap();
+        assert!(matches!(
+            receive_group(&group, &sender, Some(&reserved), &signed(ceiling + 2000)).await,
+            Err(Error::InvalidInput {
+                field: "group_crypto",
+                ..
+            })
+        ));
+        assert!(matches!(
+            receive_group(&group, &sender, Some(&reserved), &signed(ceiling + 2001)).await,
+            Err(Error::SignalSenderKeyFutureCounter)
+        ));
+    }
+
     #[test]
     fn crypto_diagnostics_never_format_provider_details() {
         use wacore_libsignal::protocol::{DeviceId, ProtocolAddress};

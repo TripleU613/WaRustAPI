@@ -386,6 +386,7 @@ pub fn queue_retry_for_incoming(
 pub(crate) enum RetryCause {
     MissingSession,
     SenderKeySignature,
+    SenderKeyFutureCounter,
 }
 
 impl RetryCause {
@@ -395,6 +396,8 @@ impl RetryCause {
             Self::MissingSession => 1,
             // Fj2.A00/0Yl.A00 -> EtY -1203 -> internal11 -> DxB wire5.
             Self::SenderKeySignature => 5,
+            // Eyj.A01 -> EtY -1202 -> internal10 -> DxB wire6.
+            Self::SenderKeyFutureCounter => 6,
         }
     }
 }

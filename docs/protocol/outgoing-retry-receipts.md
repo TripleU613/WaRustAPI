@@ -239,3 +239,25 @@ Research only; no runtime behavior or live request changed.
 Validation:31 filtered retry tests, APK coverage, staged whitespace and research
 checksum/link hygiene passed. No Rust source changed; the full workspace suite
 was not rerun for this research-only chunk.
+
+## Sender-key future-counter retry error preserved — 2026-11-05
+
+**Confirmed source / inferred provider equivalence / implemented offline:**
+[effective matching-state metadata view and typed future-counter retry](apk/2.26.43.72-sender-key-future-retry/README.md).
+Loaded-record serialization provides a passive view after reservation recovery,
+without component-export advancement or front-state guessing. After backend
+InvalidMessage(SenderKey), the adapter classifies only a matching-chain jump
+strictly above2000 with both counters in native nonnegative signed-int range.
+It uses typed fields, not provider strings, and zeroizes temporary record bytes.
+
+The fixed typed error/outcome reaches normal retry/error6; signature precedence,
+missing-session error1, signature error5, original timestamp and once-only durable
+reservation remain intact. Actual backend tests cover2000/2001, retained older
+chain, reservation ceiling, bad signature and high-bit nonclassification. The
+production loop checks error6 and no replay/state change after uncertain write.
+Offline CLI replay sends nothing. High-bit/native arithmetic equivalence, other
+primitives and full retry key/count/routing/ACK parity remain open. No live traffic.
+
+Validation:1329 workspace/all-feature tests passed. Formatting, strict workspace
+all-target/all-feature Clippy, CLI reference regeneration, APK coverage, staged
+whitespace and research checksum/link hygiene passed. Offline only.

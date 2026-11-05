@@ -1,0 +1,32 @@
+{
+  "sources": [
+    {
+      "file": "wacore-libsignal-0.7.0/src/protocol/sender_keys.rs",
+      "bytes": 74034,
+      "sha256": "bfa526fb70eb6345e64bc844c45fb89c92200db8f58a28c3ffa92aaffd52ab5c",
+      "facts": [
+        "deserialize_inner689-751: truncate retained states; validate seeds; reservation recovery advances front state on ordinary deserialize",
+        "serialize879-921: serialize current states and append local reservation field through &self; no additional ratchet advancement",
+        "chain_id337 uses optional ID default0; sender_key_state_for_chain_id785 scans first matching state",
+        "as_protobuf868 preserves all effective retained states in order"
+      ]
+    },
+    {
+      "file": "waproto-0.7.0/src/whatsapp.proto",
+      "bytes": 200145,
+      "sha256": "037b3f83b9eb77af23bd5cdcbb29022665bf63d9e92f7a2a83f5c34bf7e1d8d7",
+      "facts": [
+        "5216-5240: record repeated states field1; state ID1, chain2; chain iteration1, seed2; signing/message keys omitted by metadata view"
+      ]
+    },
+    {
+      "file": "wacore-libsignal-0.7.0/src/protocol/group_cipher.rs",
+      "bytes": 29940,
+      "sha256": "324b55313055b7542166c37d59748ab7b1afb3aa82cbf29db086e140350cb950",
+      "facts": [
+        "203-255 parse/select/version/signature checks precede message-key lookup",
+        "153-201 excessive jump InvalidMessage and 257-283 CBC InvalidMessage share variant; store callback happens only on success"
+      ]
+    }
+  ]
+}

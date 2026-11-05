@@ -1,3 +1,11 @@
+2026-11-05 — **Confirmed sender-key future jumps now carry retry error6.**
+
+Typed classification uses the effective matching saved chain, preserves signature
+precedence and leaves high-bit arithmetic unmapped. Boundary/older-chain/reservation
+regressions and normal-loop no-replay checks added. [Evidence and remaining scope](docs/protocol/outgoing-retry-receipts.md#sender-key-future-counter-retry-error-preserved--2026-11-05).
+Validation:1329 tests, strict Clippy, fmt, CLI reference, APK coverage and
+hygiene passed. No live account traffic.
+
 2026-11-05 — **Future-counter retry prerequisites identified.**
 
 Native sender-key future rejection maps to wire6 after signature verification;
