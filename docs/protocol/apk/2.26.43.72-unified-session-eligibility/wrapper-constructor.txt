@@ -1,0 +1,20 @@
+# class: LX/09G;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 3
+    # full signature: LX/09G;-><init>()V
+    0000..0002  const/4  v0, #0x5
+    0002..0008  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0008..000a  move-result-object  v0
+    000a..000e  check-cast  v0, LX/00X;
+    000e..0014  invoke-virtual  {v0}, LX/00X;->A01()LX/00Y;
+    0014..0016  move-result-object  v1
+    0016..001a  const/16  v0, #0xee
+    001a..0020  invoke-static  {v1, v0}, LX/09H;->A03(LX/00Y;I)Ljava/lang/Object;
+    0020..0022  move-result-object  v0
+    0022..0026  check-cast  v0, LX/09O;
+    0026..002c  invoke-direct  {v2}, Ljava/lang/Object;-><init>()V
+    002c..0030  iput-object  v0, v2, LX/09G;->A00:LX/09O;
+    0030..0032  return-void
+    # exception table: 0 try range(s)
+.end method

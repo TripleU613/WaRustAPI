@@ -2198,3 +2198,13 @@ boolean does not establish delivery.
 [Exact methods, callers and limits](apk/2.26.43.72-unified-session-startup/README.md).
 Full eligibility, clock authority, cadence, writer/ACK and durable recovery remain
 open. No Rust behavior or live account operation changed.
+
+### Unified-session eligibility is Me-record presence (2026-11-05)
+
+**Confirmed static, APK43.72:**0Sb's global provider binds09G, whose BUx delegates
+to09O: lazy-load then test nonnull Me record. That predicate is not socket
+readiness or current authenticated-session proof. The cached unified ID fast path
+can return before rechecking it; explicit refresh and identity observer are separate.
+[Provider route, metadata, exact predicate and limits](apk/2.26.43.72-unified-session-eligibility/README.md).
+Full provider/load authority, generation fencing, writer/ACK policy and durable
+recovery remain open. No Rust behavior or live account operation changed.

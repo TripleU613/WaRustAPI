@@ -1,0 +1,26 @@
+# class: LX/0Sb;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 2
+    # full signature: LX/0Sb;-><init>()V
+    0000..0006  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    0006..000a  const/16  v0, #0x8d
+    000a..0010  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0010..0012  move-result-object  v0
+    0012..0016  iput-object  v0, v1, LX/0Sb;->A02:LX/05a;
+    0016..001a  const/16  v0, #0xed
+    001a..0020  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0020..0022  move-result-object  v0
+    0022..0026  check-cast  v0, LX/09F;
+    0026..002a  iput-object  v0, v1, LX/0Sb;->A03:LX/09F;
+    002a..002e  const/16  v0, #0xa2
+    002e..0034  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0034..0036  move-result-object  v0
+    0036..003a  check-cast  v0, LX/08q;
+    003a..003e  iput-object  v0, v1, LX/0Sb;->A04:LX/08q;
+    003e..0042  new-instance  v0, Ljava/lang/Object;
+    0042..0048  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0048..004c  iput-object  v0, v1, LX/0Sb;->A05:Ljava/lang/Object;
+    004c..004e  return-void
+    # exception table: 0 try range(s)
+.end method

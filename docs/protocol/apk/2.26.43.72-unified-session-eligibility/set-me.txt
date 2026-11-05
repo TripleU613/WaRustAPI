@@ -1,0 +1,63 @@
+# class: LX/09O;
+# extends: Ljava/lang/Object;
+
+.method public A00(LLL)  # .registers 8
+    # full signature: LX/09O;->A00(LX/0E2;LX/09O;)LX/0E2;
+    0000..0002  monitor-enter
+    0002..0006  iget-object  v3, v7, LX/09O;->A0H:LX/0E2;
+    0006..000a  if-eqz  v6, +0x56
+    000a..000e  iput-object  v6, v7, LX/09O;->A0H:LX/0E2;
+    000e..0012  iget-object  v5, v6, LX/0E2;->A01:Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+    0012..0016  iget-object  v4, v6, LX/0E2;->A00:LX/0Dx;
+    0016..001a  iget-object  v1, v7, LX/09O;->A0E:LX/09d;
+    001a..001c  const/4  v0, #0x2
+    001c..0020  new-instance  v2, LX/1Wr;
+    0020..0026  invoke-direct  {v2, v5, v7, v0}, LX/1Wr;-><init>(Ljava/lang/Object;Ljava/lang/Object;I)V
+    0026..002a  iget-object  v1, v1, LX/09d;->A00:Ljava/util/concurrent/atomic/AtomicReference;
+    002a..002e  new-instance  v0, LX/09c;
+    002e..0034  invoke-direct  {v0, v2}, LX/09c;-><init>(LX/00v;)V
+    0034..003a  invoke-virtual  {v1, v0}, Ljava/util/concurrent/atomic/AtomicReference;->set(Ljava/lang/Object;)V
+    003a..003e  iget-object  v1, v7, LX/09O;->A0D:LX/09d;
+    003e..0040  const/4  v0, #0x3
+    0040..0044  new-instance  v2, LX/1Wr;
+    0044..004a  invoke-direct  {v2, v4, v7, v0}, LX/1Wr;-><init>(Ljava/lang/Object;Ljava/lang/Object;I)V
+    004a..004e  iget-object  v1, v1, LX/09d;->A00:Ljava/util/concurrent/atomic/AtomicReference;
+    004e..0052  new-instance  v0, LX/09c;
+    0052..0058  invoke-direct  {v0, v2}, LX/09c;-><init>(LX/00v;)V
+    0058..005e  invoke-virtual  {v1, v0}, Ljava/util/concurrent/atomic/AtomicReference;->set(Ljava/lang/Object;)V
+    005e..0062  if-nez  v5, +0x8
+    0062..0066  if-nez  v4, +0x6
+    0066..006c  invoke-direct  {v7}, LX/09O;->A01()V
+    006c..006e  goto  +0x26
+    006e..0074  invoke-virtual  {v7}, LX/09O;->Auf()I
+    0074..0076  move-result  v2
+    0076..0078  const/4  v1, #0x0
+    0078..007c  if-nez  v5, +0x4
+    007c..007e  move-object  v0, v1
+    007e..0080  goto  +0x9
+    0080..0084  sget-object  v0, Lcom/whatsapp/infra/core/jid/DeviceJid;->Companion:LX/0EB;
+    0084..008a  invoke-virtual  {v0, v5, v2}, LX/0EB;->A01(Lcom/whatsapp/infra/core/jid/UserJid;I)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    008a..008c  move-result-object  v0
+    008c..0090  check-cast  v0, LX/0EE;
+    0090..0094  iput-object  v0, v7, LX/09O;->A00:LX/0EE;
+    0094..0098  if-eqz  v4, +0x6
+    0098..009e  invoke-static  {v4, v2}, LX/0Dn;->A04(LX/0Dx;I)LX/0EM;
+    009e..00a0  move-result-object  v1
+    00a0..00a4  iput-object  v1, v7, LX/09O;->A0G:LX/0EM;
+    00a4..00a6  goto  +0xa
+    00a6..00a8  move-exception  v1
+    00a8..00ac  const-string  v0, "memanager/setMe/invalid_jid_error"
+    00ac..00b2  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    00b2..00b8  invoke-direct  {v7}, LX/09O;->A01()V
+    00b8..00ba  monitor-exit
+    00ba..00bc  return-object  v3
+    00bc..00be  move-exception  v0
+    00be..00c0  monitor-exit
+    00c0..00c2  throw  v0
+    # exception table: 4 try range(s)
+    # catch <all> code_units 0001..0005 -> 005e
+    # catch LX/09P; code_units 0005..0053 -> 0053
+    # catch <all> code_units 0005..0053 -> 005e
+    # catch <all> code_units 0054..005c -> 005e
+    # catch <all> code_units 005f..0060 -> 005e
+.end method

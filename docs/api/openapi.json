@@ -15963,5 +15963,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-unified-session-startup/README.md",
     "description": "Selected post-config startup node is ib/unified_session with a cached clock-derived String ID. Explicit refresh and identity observer can submit separately through family447, without proving delivery. Full startup gates, clock authority, cadence, writer/ACK policy and durable recovery remain open. No sender, route or live operation added."
+  },
+  "x-unified-session-eligibility-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-unified-session-eligibility/README.md",
+    "description": "Selected unified-session provider resolves09G delegating to09O.BUx, which lazy-loads and tests nonnull Me record. This is not socket readiness or fresh authentication proof. Cached ID fast path can return without rechecking. Provider/load authority, generation fence, writer/ACK and durable recovery remain open. No sender, route or live operation added."
   }
 }

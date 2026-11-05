@@ -1,3 +1,11 @@
+2026-11-05 — **Unified-session eligibility provider resolved.**
+
+The selected predicate loads and tests Me-record presence, not socket readiness.
+Cached-ID return remains separate from refresh/identity-change handling.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-unified-session-eligibility/README.md).
+Research only; no runtime changes or live traffic. Validation: pinned APK digest,
+checked exports, reused-source match, checksums, JSON, coverage and hygiene.
+
 2026-11-05 — **Unified-session startup stanza and ID lifecycle identified.**
 
 The post-config node is ib/unified_session. Cached ID generation, refresh and

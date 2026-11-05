@@ -1,0 +1,302 @@
+classes.dex  Lcom/whatsapp/pixel/besties/provider/PixelBestiesApiContentProvider;->A04(V)
+  invoke dex byte offset: 0x3dc510
+classes.dex  Lcom/whatsapp/orbitsso/OrbitSsoProvider;->A0J(LLL)
+  invoke dex byte offset: 0x3e84a2
+classes.dex  Lcom/whatsapp/orbitsso/OrbitSsoProvider;->A0O(LLL)
+  invoke dex byte offset: 0x3e8ea6
+classes.dex  LX/0Fw;->A00(V)
+  invoke dex byte offset: 0x52c61c
+classes.dex  LX/0Ir;->A5E(V)
+  invoke dex byte offset: 0x55a3bc
+classes.dex  Lcom/whatsapp/Main;->A5g(V)
+  invoke dex byte offset: 0x55c076
+classes.dex  Lcom/whatsapp/Main;->A5g(V)
+  invoke dex byte offset: 0x55c110
+classes.dex  LX/0Sb;->A00(VL)
+  invoke dex byte offset: 0x5ab82e
+classes.dex  LX/0Sb;->A03(L)
+  invoke dex byte offset: 0x5ab9b6
+classes.dex  LX/0YB;->A00(VLLLLIIZZZZZZZ)
+  invoke dex byte offset: 0x5dec18
+classes.dex  LX/0aN;->A01(Z)
+  invoke dex byte offset: 0x5f8838
+classes.dex  LX/0aS;->A0B(LLL)
+  invoke dex byte offset: 0x5fa1fc
+classes.dex  LX/0aS;->A0D(LLZ)
+  invoke dex byte offset: 0x5fa320
+classes.dex  LX/0aS;->A0F(LLZ)
+  invoke dex byte offset: 0x5fa4e4
+classes.dex  LX/0aS;->A0G(LLZZ)
+  invoke dex byte offset: 0x5fa5cc
+classes.dex  LX/0aS;->A0K(LLZ)
+  invoke dex byte offset: 0x5fa84c
+classes.dex  LX/0cq;->A05(VL)
+  invoke dex byte offset: 0x62ca20
+classes.dex  LX/0cq;->A07(VZJ)
+  invoke dex byte offset: 0x62cd78
+classes.dex  LX/0cq;->A07(VZJ)
+  invoke dex byte offset: 0x62cdfe
+classes.dex  LX/0gd;->A00(LL)
+  invoke dex byte offset: 0x65b0d8
+classes.dex  LX/0i2;->A00(ZL)
+  invoke dex byte offset: 0x6a2948
+classes.dex  LX/0j7;->A0M(LL)
+  invoke dex byte offset: 0x6ae738
+classes.dex  LX/0jD;->A02(L)
+  invoke dex byte offset: 0x6b2cac
+classes.dex  LX/0jV;->A01(ZL)
+  invoke dex byte offset: 0x6bf78c
+classes.dex  LX/0jY;->A0d(ZLI)
+  invoke dex byte offset: 0x6c1124
+classes.dex  LX/0lJ;->A03(VZ)
+  invoke dex byte offset: 0x6d511a
+classes.dex  LX/0ob;->A0M(VZ)
+  invoke dex byte offset: 0x6f8360
+classes.dex  LX/0qs;->A00(V)
+  invoke dex byte offset: 0x717c2c
+classes.dex  Lcom/whatsapp/home/ui/HomeActivityKt;->A6W(Z)
+  invoke dex byte offset: 0x71bc9a
+classes.dex  LX/0sX;->Bjr(V)
+  invoke dex byte offset: 0x72bfee
+classes.dex  LX/0sn;->C2J(V)
+  invoke dex byte offset: 0x72d254
+classes.dex  LX/0uT;->onChange(VZ)
+  invoke dex byte offset: 0x73468a
+classes.dex  LX/0wB;->run(V)
+  invoke dex byte offset: 0x74da4a
+classes.dex  LX/0wc;->A0g(VLZ)
+  invoke dex byte offset: 0x76e550
+classes.dex  LX/13e;->Bk5(V)
+  invoke dex byte offset: 0x7e844e
+classes.dex  LX/13f;->A01(L)
+  invoke dex byte offset: 0x7e8518
+classes.dex  LX/15K;->A07(LLLLLLLLLLLLLLLJJZZZ)
+  invoke dex byte offset: 0x7ff874
+classes.dex  LX/15K;->A07(LLLLLLLLLLLLLLLJJZZZ)
+  invoke dex byte offset: 0x7ffbc6
+classes.dex  LX/1BB;->A00(Z)
+  invoke dex byte offset: 0x844f4a
+classes.dex  LX/1VI;->handleMessage(VL)
+  invoke dex byte offset: 0x92a23c
+classes.dex  LX/1Wk;->call(L)
+  invoke dex byte offset: 0x93515a
+classes.dex  LX/1X0;->invoke(L)
+  invoke dex byte offset: 0x93bc4a
+classes.dex  LX/1XE;->invoke(LL)
+  invoke dex byte offset: 0x941944
+classes10.dex  Lcom/whatsapp/inappbugreporting/InAppBugReportingViewModel;->A10(Z)
+  invoke dex byte offset: 0x37b820
+classes10.dex  LX/Imi;->A00(VLI)
+  invoke dex byte offset: 0x37bd12
+classes10.dex  LX/Imi;->A01(VLI)
+  invoke dex byte offset: 0x37bdbe
+classes10.dex  LX/Imi;->A0w(V)
+  invoke dex byte offset: 0x37bfd4
+classes10.dex  Lcom/whatsapp/messagedrafts/reminder/worker/DraftReminderWorker;->A0D(L)
+  invoke dex byte offset: 0x3a6ea2
+classes10.dex  Lcom/whatsapp/migration/export/ui/ExportMigrationActivity;->onCreate(VL)
+  invoke dex byte offset: 0x49b486
+classes10.dex  Lcom/whatsapp/nativediscovery/businessdirectory/view/activity/DirectorySetLocationMapActivity;->onCreate(VL)
+  invoke dex byte offset: 0x4a5eda
+classes10.dex  Lcom/whatsapp/inappsupport/ui/app/ContactUsActivity;->onCreate(VL)
+  invoke dex byte offset: 0x4a93aa
+classes10.dex  Lcom/whatsapp/settings/ui/SettingsDataUsageActivity;->onCreate(VL)
+  invoke dex byte offset: 0x4ac856
+classes10.dex  LX/K4w;->onSensorChanged(VL)
+  invoke dex byte offset: 0x56b886
+classes10.dex  LX/K4z;->A0X(VLL)
+  invoke dex byte offset: 0x56db4a
+classes10.dex  LX/KLu;->onRandomizedDailyCronNoMessageStore(V)
+  invoke dex byte offset: 0x5df7e8
+classes10.dex  LX/KLw;->onRandomizedDailyCronNoMessageStore(V)
+  invoke dex byte offset: 0x5dfd44
+classes11.dex  Lcom/whatsapp/waquickpromotionclient/consumer/QpGqlManager;->A00(VL)
+  invoke dex byte offset: 0x344384
+classes11.dex  Lcom/whatsapp/backup/firstbackup/workers/FirstBackupWorker;->A0D(L)
+  invoke dex byte offset: 0x3936aa
+classes11.dex  LX/LE4;->A08(VL)
+  invoke dex byte offset: 0x3cd346
+classes11.dex  LX/LE4;->A08(VL)
+  invoke dex byte offset: 0x3cd5ae
+classes11.dex  Lcom/whatsapp/backup/google/GoogleBackupService;->onHandleIntent(VL)
+  invoke dex byte offset: 0x3e2294
+classes11.dex  LX/LGx;->A0C(LLL)
+  invoke dex byte offset: 0x3e7c8c
+classes11.dex  LX/LHw;->A0i(LL)
+  invoke dex byte offset: 0x3fad54
+classes11.dex  Lcom/whatsapp/migration/transfer/ui/ChatTransferViewModel;->A1I(V)
+  invoke dex byte offset: 0x40ff34
+classes11.dex  Lcom/whatsapp/migration/transfer/ui/ChatTransferViewModel;->A1I(V)
+  invoke dex byte offset: 0x40ff5c
+classes11.dex  LX/M9z;->A00(L)
+  invoke dex byte offset: 0x4893b4
+classes11.dex  LX/M9z;->A01(Z)
+  invoke dex byte offset: 0x4894f2
+classes11.dex  LX/MD9;->A02(L)
+  invoke dex byte offset: 0x4a2e86
+classes11.dex  LX/MM9;->A00(L)
+  invoke dex byte offset: 0x4d7d64
+classes11.dex  LX/MT6;->A06(Z)
+  invoke dex byte offset: 0x52f63a
+classes11.dex  LX/Mrc;->Bk5(V)
+  invoke dex byte offset: 0x69ae90
+classes11.dex  LX/Mrw;->A02(VL)
+  invoke dex byte offset: 0x69d7c2
+classes11.dex  LX/N28;->run(V)
+  invoke dex byte offset: 0x702afa
+classes11.dex  LX/NFQ;->invokeSuspend(LL)
+  invoke dex byte offset: 0x786e9c
+classes12.dex  LX/Qeo;->C9V(V)
+  invoke dex byte offset: 0x725aa0
+classes13.dex  LX/SRK;->A00(L)
+  invoke dex byte offset: 0x461d0e
+classes13.dex  LX/TB9;->run(V)
+  invoke dex byte offset: 0x61fab0
+classes2.dex  LX/1nD;->ABS(VLL)
+  invoke dex byte offset: 0x21d2d0
+classes2.dex  LX/1vG;->A0U(Z)
+  invoke dex byte offset: 0x26db30
+classes2.dex  LX/1wR;->A00(LLLLL)
+  invoke dex byte offset: 0x27f77c
+classes2.dex  LX/1wf;->A00(LLZ)
+  invoke dex byte offset: 0x283b24
+classes2.dex  LX/2Ge;->onDailyCron(V)
+  invoke dex byte offset: 0x2d905c
+classes2.dex  LX/2Ih;->Bk2(V)
+  invoke dex byte offset: 0x2e3864
+classes2.dex  LX/2JI;->run(V)
+  invoke dex byte offset: 0x2e973c
+classes3.dex  LX/2MM;->BrI(VL)
+  invoke dex byte offset: 0x1bff04
+classes3.dex  LX/2MW;->C7O(V)
+  invoke dex byte offset: 0x1d5862
+classes3.dex  LX/2NQ;->A0O(V)
+  invoke dex byte offset: 0x1e7834
+classes3.dex  Lcom/whatsapp/migration/android/api/DeferredRestoreBroadcastReceiver;->A06(VLLL)
+  invoke dex byte offset: 0x28e250
+classes4.dex  Lcom/whatsapp/logout/ui/PrimaryLogoutActivity;->A48(V)
+  invoke dex byte offset: 0x4774a8
+classes4.dex  Lcom/whatsapp/logout/ui/PrimaryLoginBackActivity;->A48(V)
+  invoke dex byte offset: 0x47e744
+classes4.dex  LX/62i;->A0Q(LLLI)
+  invoke dex byte offset: 0x645d08
+classes5.dex  LX/6ou;->A07(LLI)
+  invoke dex byte offset: 0x234970
+classes5.dex  Lcom/whatsapp/wamo/ui/waist/WamoWaistBottomSheetFragment;->A04(LLLL)
+  invoke dex byte offset: 0x365846
+classes5.dex  Lcom/whatsapp/contact/ui/picker/ContactPicker;->onCreate(VL)
+  invoke dex byte offset: 0x372ad8
+classes5.dex  LX/85G;->A01(VLL)
+  invoke dex byte offset: 0x3fb86e
+classes5.dex  LX/894;->A02(V)
+  invoke dex byte offset: 0x4196c8
+classes5.dex  LX/8Mt;->BjM(V)
+  invoke dex byte offset: 0x49c2e4
+classes5.dex  LX/8O2;->Bnp(VL)
+  invoke dex byte offset: 0x4a31b4
+classes5.dex  LX/8Oc;->onRandomizedDailyCronNoMessageStore(V)
+  invoke dex byte offset: 0x4a7228
+classes6.dex  LX/9CX;->onCreate(VL)
+  invoke dex byte offset: 0x30a888
+classes6.dex  Lcom/whatsapp/accountsync/ProfileActivity;->onCreate(VL)
+  invoke dex byte offset: 0x3c6e44
+classes6.dex  Lcom/whatsapp/camera/ui/CameraActivity;->onCreate(VL)
+  invoke dex byte offset: 0x3d266c
+classes6.dex  Lcom/whatsapp/music/license/StatusMusicLicenseCheckGqlManager;->A04(LLL)
+  invoke dex byte offset: 0x4aed10
+classes6.dex  LX/AP8;->Bk4(V)
+  invoke dex byte offset: 0x5393e0
+classes6.dex  LX/AiA;->run(V)
+  invoke dex byte offset: 0x5aabb2
+classes7.dex  LX/B3O;->A01(VLL)
+  invoke dex byte offset: 0x269f36
+classes7.dex  LX/C90;->A00(Z)
+  invoke dex byte offset: 0x424b48
+classes7.dex  LX/CdK;->Bk5(V)
+  invoke dex byte offset: 0x51f168
+classes7.dex  LX/Ce1;->Bzo(V)
+  invoke dex byte offset: 0x523fa4
+classes7.dex  Lcom/whatsapp/backup/encryptedbackup/PasskeyDataMigrationCron;->onRandomizedDailyCronNoMessageStore(V)
+  invoke dex byte offset: 0x5275f6
+classes8.dex  LX/DvZ;->A0i(LL)
+  invoke dex byte offset: 0x4ffeac
+classes8.dex  LX/Eb8;->A00(LL)
+  invoke dex byte offset: 0x57efd8
+classes8.dex  LX/Eb9;->A00(VZ)
+  invoke dex byte offset: 0x57f174
+classes8.dex  LX/EeZ;->A01(L)
+  invoke dex byte offset: 0x597200
+classes8.dex  Lcom/whatsapp/calling/voipcalling/LargeMlModelBackgroundScheduler;->A00(ZL)
+  invoke dex byte offset: 0x5edc38
+classes8.dex  LX/F33;->A04(LLLZ)
+  invoke dex byte offset: 0x693c72
+classes8.dex  LX/FIJ;->Bk4(V)
+  invoke dex byte offset: 0x749de4
+classes8.dex  LX/FJG;->CbC(VL)
+  invoke dex byte offset: 0x74ecf8
+classes8.dex  LX/FJm;->Bzo(V)
+  invoke dex byte offset: 0x753ebc
+classes8.dex  LX/FJp;->Brp(V)
+  invoke dex byte offset: 0x754134
+classes8.dex  LX/FK3;->A02(VL)
+  invoke dex byte offset: 0x759c9e
+classes8.dex  LX/FKT;->onDailyCron(V)
+  invoke dex byte offset: 0x761a04
+classes8.dex  LX/FS9;->Btt(VLL)
+  invoke dex byte offset: 0x79b704
+classes8.dex  LX/FdK;->run(V)
+  invoke dex byte offset: 0x80c310
+classes8.dex  LX/Feo;->run(V)
+  invoke dex byte offset: 0x8405ac
+classes8.dex  LX/Fep;->run(V)
+  invoke dex byte offset: 0x841c76
+classes8.dex  LX/Feq;->run(V)
+  invoke dex byte offset: 0x8430da
+classes8.dex  Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;->A0L(V)
+  invoke dex byte offset: 0x8d051c
+classes9.dex  LX/FxR;->A02(VL)
+  invoke dex byte offset: 0x34e514
+classes9.dex  LX/G0Z;->A01(LLL)
+  invoke dex byte offset: 0x377974
+classes9.dex  LX/GM9;->A0k(VL)
+  invoke dex byte offset: 0x4153fa
+classes9.dex  Lcom/whatsapp/profile/ui/ViewProfilePhoto;->onCreate(VL)
+  invoke dex byte offset: 0x4324a2
+classes9.dex  Lcom/whatsapp/deeplink/ui/DeepLinkActivity;->A0y(VLLLL)
+  invoke dex byte offset: 0x4c1490
+classes9.dex  Lcom/whatsapp/deeplink/ui/DeepLinkActivity;->A0y(VLLLL)
+  invoke dex byte offset: 0x4c1c10
+classes9.dex  Lcom/whatsapp/deeplink/ui/DeepLinkActivity;->A0y(VLLLL)
+  invoke dex byte offset: 0x4c1c8e
+classes9.dex  Lcom/whatsapp/deeplink/ui/DeepLinkActivity;->A5f(Z)
+  invoke dex byte offset: 0x4c91c4
+classes9.dex  Lcom/whatsapp/deeplink/ui/DeepLinkActivity;->onCreate(VL)
+  invoke dex byte offset: 0x4c9706
+classes9.dex  LX/Gkw;->A00(LLL)
+  invoke dex byte offset: 0x516cb8
+classes9.dex  LX/HBK;->A00(LLLLLLLLZ)
+  invoke dex byte offset: 0x541c76
+classes9.dex  LX/HSL;->A00(LLLL)
+  invoke dex byte offset: 0x59bde2
+classes9.dex  LX/He0;->A06(VI)
+  invoke dex byte offset: 0x61bfde
+classes9.dex  LX/Hp3;->Brq(VL)
+  invoke dex byte offset: 0x6b9d94
+classes9.dex  LX/Hp4;->Brq(VL)
+  invoke dex byte offset: 0x6b9fce
+classes9.dex  LX/HwE;->Bzo(V)
+  invoke dex byte offset: 0x6e4b20
+classes9.dex  LX/HwH;->Brp(V)
+  invoke dex byte offset: 0x6e4f2c
+classes9.dex  LX/HwM;->Bro(V)
+  invoke dex byte offset: 0x6e5f20
+classes9.dex  LX/HwW;->onRandomizedDailyCronNoMessageStore(V)
+  invoke dex byte offset: 0x6e7780
+classes9.dex  LX/Hwm;->A00(V)
+  invoke dex byte offset: 0x6ecc94
+classes9.dex  Lcom/whatsapp/wamo/WamoUserIdManager;->A09(L)
+  invoke dex byte offset: 0x731f66
+classes9.dex  LX/I9Y;->run(V)
+  invoke dex byte offset: 0x73f96c
+classes9.dex  LX/INy;->invokeSuspend(LL)
+  invoke dex byte offset: 0x81e9e6

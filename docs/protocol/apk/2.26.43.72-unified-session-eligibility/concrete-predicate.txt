@@ -1,0 +1,13 @@
+# class: LX/09O;
+# extends: Ljava/lang/Object;
+
+.method public BUx(Z)  # .registers 3
+    # full signature: LX/09O;->BUx()Z
+    0000..0006  invoke-virtual  {v2}, LX/09O;->A07()V
+    0006..000a  iget-object  v1, v2, LX/09O;->A0H:LX/0E2;
+    000a..000c  const/4  v0, #0x0
+    000c..0010  if-eqz  v1, +0x3
+    0010..0012  const/4  v0, #0x1
+    0012..0014  return  v0
+    # exception table: 0 try range(s)
+.end method
