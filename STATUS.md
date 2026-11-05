@@ -1,3 +1,11 @@
+2026-11-05 — **Legacy sender-key messages no longer trigger retries.**
+
+A typed legacy skmsg rejection preserves capture without retry, delivery ACK or
+state commit. Newer unknown versions, short inputs and other message producers
+retain separate policy. [Evidence, regressions and remaining work](docs/protocol/outgoing-retry-receipts.md#legacy-sender-key-message-retry-exclusion--2026-11-05).
+Validation:1328 tests, strict Clippy, fmt, CLI reference, APK coverage and
+hygiene passed. No live traffic.
+
 2026-11-05 — **Message-version retry distinctions recovered.**
 
 Legacy and higher unknown versions take different exception/status paths;

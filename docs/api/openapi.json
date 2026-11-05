@@ -16508,5 +16508,12 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-message-version-error-paths/README.md",
     "description": "Selected constructor legacy/high-version gates differ across direct, prekey and sender-key formats. ED6 legacy status exclusions are not proof of identity-refusal semantics; prekey outer constructor has separate catch regions. Native direct version gate2..4 differs from backend3..4, but complete version2 primitive support is unproven. Blanket unsupported-version retry suppression would lose producer context. No runtime/route/capability added; mapping remains incomplete."
+  },
+  "x-legacy-sender-key-message-retry-exclusion": {
+    "x-cli": false,
+    "x-transport": ["experimental group receive; offline tested"],
+    "x-live": false,
+    "evidence": "docs/protocol/outgoing-retry-receipts.md#legacy-sender-key-message-retry-exclusion--2026-11-05",
+    "description": "Error::SignalLegacySenderKeyMessage preserves LegacyCiphertextVersion only from skmsg decryption; group inbox returns Unsupported without retry, delivery ACK or committed ratchet/event changes. Missing sender-key record remains checked first. SKDM/direct/prekey parsing, higher unknown versions and short ciphertext retain separate existing policy. Regression covers version0/1/2 rejection, version4 and short-input distinctions, unchanged keys/journal and authenticated duplicates. No CLI/HTTP route or live acceptance added."
   }
 }

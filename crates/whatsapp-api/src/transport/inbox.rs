@@ -1511,6 +1511,10 @@ async fn process_group(
     policy: IdentityChangePolicy,
 ) -> Result<IncomingResult> {
     match process_group_inner(store, account, node, capture, policy).await {
+        Err(Error::SignalLegacySenderKeyMessage) => {
+            tracing::warn!("legacy sender-key message preserved without retry or delivery ACK");
+            Ok(IncomingResult::Unsupported)
+        }
         Err(Error::SignalOldMessageCounter) => {
             // Native ED4/-1001 is not retry eligible. It also does not prove
             // a durable authenticated record, so do not authorize a delivery ACK.
@@ -2655,6 +2659,41 @@ mod tests {
             store.read(|tx| tx.scan(Table::SenderKeys, 1, 10)).unwrap(),
             keys_before_replay
         );
+        // Native legacy skmsg is not retry eligible. Higher unknown versions
+        // remain generic failures; the separate policy is not guessed here.
+        for (version, short) in [(0u8, false), (1, false), (2, false), (4, false), (2, true)] {
+            let mut changed = cipher.to_vec();
+            changed[0] = (version << 4) | (changed[0] & 0x0f);
+            if short {
+                changed.truncate(64); // Backend length admission precedes version handling.
+            }
+            let changed_node = node
+                .clone()
+                .attr("id", format!("VERSION-{version}-{short}"))
+                .children(vec![
+                    Node::new("enc")
+                        .attr("v", "2")
+                        .attr("type", "skmsg")
+                        .bytes(changed),
+                ]);
+            let capture = preserve(&store, &changed_node).unwrap();
+            let head = store.journal_head().unwrap();
+            assert_eq!(
+                process(&store, &account, &changed_node, &capture)
+                    .await
+                    .unwrap(),
+                if version < 3 && !short {
+                    IncomingResult::Unsupported
+                } else {
+                    IncomingResult::Undecryptable
+                }
+            );
+            assert_eq!(store.journal_head().unwrap(), head);
+            assert_eq!(
+                store.read(|tx| tx.scan(Table::SenderKeys, 1, 10)).unwrap(),
+                keys_before_replay
+            );
+        }
         let key = super::super::group_inbox::key(&chat, &sender, "VIEWED-ONCE").unwrap();
         let mut saved: serde_json::Value = store
             .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))

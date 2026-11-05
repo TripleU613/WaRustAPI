@@ -127,7 +127,7 @@ pub fn load_sender_key_bytes(
 }
 
 /// Decrypt one `skmsg` ciphertext using the pre-loaded sender key bytes.
-/// Returns `None` when no sender key exists (SKDM not yet received → Unsupported).
+/// Returns `None` when no sender key exists; the inbox preserves MissingSession.
 pub async fn receive_group(
     group: &Jid,
     sender: &Jid,
@@ -138,14 +138,19 @@ pub async fn receive_group(
         return Err(invalid("skmsg ciphertext exceeds bound"));
     }
     if previous_bytes.is_none() {
-        // No SKDM received yet — caller keeps the stanza as Unsupported.
+        // No SKDM received yet; preserve the missing-session cause before parsing.
         return Ok(None);
     }
     let mut store = SenderKeys::new(previous_bytes)?;
     let name = SenderKeyName::from_parts(&group.to_string(), &sender.to_string());
     let plaintext = signal::group_decrypt(ciphertext, &mut store, &name)
         .await
-        .map_err(crypto)?;
+        .map_err(|error| match error {
+            // APK43.72 Fj2([B) low version -> ED6 -> 0Yl.A00 -1007;
+            // EtY excludes this status. Scope to skmsg, not SKDM ingestion.
+            SignalProtocolError::LegacyCiphertextVersion(_) => Error::SignalLegacySenderKeyMessage,
+            other => crypto(other),
+        })?;
     let plaintext = unpad(plaintext)?;
     let updated_key = Zeroizing::new(
         store

@@ -25,6 +25,11 @@ pub enum Error {
     #[error("Signal duplicate or old message counter")]
     SignalOldMessageCounter,
 
+    /// Sender-key message parsing rejected a legacy ciphertext version.
+    /// This is distinct from key-distribution parsing and newer unknown versions.
+    #[error("Signal sender-key message uses a legacy version")]
+    SignalLegacySenderKeyMessage,
+
     /// A caller-supplied value failed validation.
     #[error("invalid input for `{field}`: {reason}")]
     InvalidInput {

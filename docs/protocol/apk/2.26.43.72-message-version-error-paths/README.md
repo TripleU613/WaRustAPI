@@ -55,9 +55,11 @@ from high UnrecognizedCiphertextVersion, and check byte length first.
 
 **Confirmed gap:** native Fj3's version2 gate differs from the backend's direct
 version3 minimum. This does not establish safe version2 crypto support: full
-primitive/key/MAC/session semantics are unported. Rust currently merges these
-backend version variants into generic diagnostics/Undecryptable in relevant
-receive paths; blanket mapping would discard native producer and range context.
+primitive/key/MAC/session semantics are unported. The initial research found these backend version variants merged into generic
+diagnostics/Undecryptable. A subsequent focused skmsg fix preserves legacy
+sender-key message rejection only; other producer/range policies remain open.
+[Implementation and regressions](../../outgoing-retry-receipts.md#legacy-sender-key-message-retry-exclusion--2026-11-05).
+Blanket mapping would discard native producer and range context.
 **Unknown:** all native low-version consumers, native short-input exception
 semantics, distribution ingestion policy, identity refusals, provider equivalence
 and complete count/key/routing/ACK behavior. No request shape/behavior changed.

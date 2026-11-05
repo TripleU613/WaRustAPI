@@ -170,3 +170,31 @@ wire code, runtime behavior or live request.
 Validation:31 filtered retry tests, APK coverage, staged whitespace and research
 checksum/link hygiene passed. No Rust source changed; the full workspace suite
 was not rerun for this research-only chunk.
+
+## Legacy sender-key message retry exclusion — 2026-11-05
+
+**Confirmed static:** [Fj2 legacy version gate -> ED6 and selected -1007 exclusion](apk/2.26.43.72-message-version-error-paths/README.md),
+with [0Yl.A00 group coordinator catch table](apk/2.26.43.72-group-counter-error-paths/README.md).
+**Inferred provider mapping / implemented offline:** only receive_group's skmsg
+decryption maps backend LegacyCiphertextVersion to the redacted typed error
+SignalLegacySenderKeyMessage. Group inbox preserves capture and continues as
+Unsupported, with no automatic retry or delivery ACK and no ratchet/event commit.
+This neither authenticates the input nor creates a durable duplicate marker.
+
+The classification stays scoped to sender-key message decrypt. SKDM ingestion,
+ordinary/prekey direct parsing, newer unknown versions and short ciphertext
+retain their existing policy; their full native result semantics are not inferred
+from the legacy skmsg branch. Missing sender-key record is still classified
+before message parsing and uses the existing MissingSession/error1 path.
+
+Offline inbox regression mutates real synthetic sender-key ciphertext to version
+nibbles0/1/2 under fresh IDs and verifies Unsupported with unchanged journal and
+sender keys. Version4 and a64-byte version2 payload remain Undecryptable, showing
+that newer-version and length admission are not swept into this exclusion.
+Authenticated durable duplicates, including consumed content, remain Duplicate.
+Other producer-specific retry code/key/count/routing/ACK parity remains unfinished.
+No live account operation or server acceptance claimed.
+
+Validation:1328 workspace/all-feature tests passed. Formatting, strict workspace
+all-target/all-feature Clippy, CLI reference regeneration, APK coverage, staged
+whitespace and research checksum/link hygiene passed. Offline only.
