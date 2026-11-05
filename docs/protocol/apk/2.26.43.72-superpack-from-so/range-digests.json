@@ -1,0 +1,23 @@
+[
+  {
+    "virtual_start": "0x9ec8",
+    "virtual_end_exclusive": "0x9ed4",
+    "file_start": "0x9ec8",
+    "bytes": 12,
+    "sha256": "79f744ad4cbabbdfaa25a111927a23b14f7cfd6b90d32ae206bfe457ebdeb69e"
+  },
+  {
+    "virtual_start": "0x9a50",
+    "virtual_end_exclusive": "0x9c50",
+    "file_start": "0x9a50",
+    "bytes": 512,
+    "sha256": "def8d794e5c8985f6cd688a89936b73dabfaa596e70b5cf182ba19175757d51d"
+  },
+  {
+    "virtual_start": "0x9c50",
+    "virtual_end_exclusive": "0x9ebc",
+    "file_start": "0x9c50",
+    "bytes": 620,
+    "sha256": "bed5382217c196770858a99573278a80911f87116ac32cc4aa49bbd568be0b7b"
+  }
+]

@@ -1,0 +1,22 @@
+{
+  "README.md": {
+    "bytes": 4520,
+    "sha256": "94e9dce9f4d383a4c1efd59f1afdba1455d5838f54bfd8de083a71e7c0bf2040"
+  },
+  "continuation-assembly.txt": {
+    "bytes": 9069,
+    "sha256": "3da14728a0dfdef1f3b0d7f67f2d5cdba4271d1596088285bdbc2a94a7f818fe"
+  },
+  "entry-assembly.txt": {
+    "bytes": 7105,
+    "sha256": "34ff6792509bfb22b79df4eec194770262a6701bcbb646f6ccf10f26daf48bfd"
+  },
+  "range-digests.json": {
+    "bytes": 620,
+    "sha256": "75c704326a5798a11df44d77abb53bdde3f515f1247a24219da1b252089c9259"
+  },
+  "referenced-strings.json": {
+    "bytes": 1095,
+    "sha256": "88d2967cf716b0f205ed0be2ebcaa2289030218e33bc420a9483d4066610bcaf"
+  }
+}

@@ -1,0 +1,52 @@
+[
+  {
+    "virtual_address": "0x3180",
+    "file_offset": "0x3180",
+    "value": "_superpack_archive_start"
+  },
+  {
+    "virtual_address": "0x3ece",
+    "file_offset": "0x3ece",
+    "value": "_superpack_archive_end"
+  },
+  {
+    "virtual_address": "0x39a4",
+    "file_offset": "0x39a4",
+    "value": "spo"
+  },
+  {
+    "virtual_address": "0x3994",
+    "file_offset": "0x3994",
+    "value": "so file must be spo"
+  },
+  {
+    "virtual_address": "0x3e25",
+    "file_offset": "0x3e25",
+    "value": "could not extract so name"
+  },
+  {
+    "virtual_address": "0x3e06",
+    "file_offset": "0x3e06",
+    "value": "could not extract storage type"
+  },
+  {
+    "virtual_address": "0x2e63",
+    "file_offset": "0x2e63",
+    "value": "could not extract output directory"
+  },
+  {
+    "virtual_address": "0x3323",
+    "file_offset": "0x3323",
+    "value": "Failed to load symbols"
+  },
+  {
+    "virtual_address": "0x330c",
+    "file_offset": "0x330c",
+    "value": "could not load symbols"
+  },
+  {
+    "virtual_address": "0x3ea6",
+    "file_offset": "0x3ea6",
+    "value": "invalid library range"
+  }
+]

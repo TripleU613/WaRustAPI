@@ -1,0 +1,131 @@
+        ╎   0x00009ec8      mov   w5, -1
+        ╎   0x00009ecc      mov   w6, -1
+        └─< 0x00009ed0      b     0x9a50
+            0x00009a50      sub   sp, sp, 0x70
+            0x00009a54      stp   x29, x30, [sp, 0x10]
+            0x00009a58      stp   x28, x27, [sp, 0x20]
+            0x00009a5c      stp   x26, x25, [sp, 0x30]
+            0x00009a60      stp   x24, x23, [sp, 0x40]
+            0x00009a64      stp   x22, x21, [sp, 0x50]
+            0x00009a68      stp   x20, x19, [sp, 0x60]
+            0x00009a6c      ldr   x8, [x0]
+            0x00009a70      mov   x21, x2
+            0x00009a74      cmp   w6, 0
+            0x00009a78      mov   x1, x2
+            0x00009a7c      mov   x2, xzr
+            0x00009a80      mov   w27, w6
+            0x00009a84      ldr   x8, [x8, 0x548]                      ; [0x548:4]=0
+            0x00009a88      mov   w29, w5
+            0x00009a8c      mov   x20, x4
+            0x00009a90      mov   x19, x0
+            0x00009a94      mov   x23, x3
+            0x00009a98      csinv w28, w6, wzr, ge
+            0x00009a9c      blr   x8
+        ┌─< 0x00009aa0      cbz   x0, 0x9b24
+        │   0x00009aa4      ldr   x8, [x19]
+        │   0x00009aa8      mov   x22, x0
+        │   0x00009aac      mov   x0, x19
+        │   0x00009ab0      mov   x1, x23
+        │   0x00009ab4      mov   x2, xzr
+        │   0x00009ab8      ldr   x8, [x8, 0x548]                      ; [0x548:4]=0
+        │   0x00009abc      blr   x8
+       ┌──< 0x00009ac0      cbz   x0, 0x9b38
+       ││   0x00009ac4      ldr   x8, [x19]
+       ││   0x00009ac8      mov   x25, x0
+       ││   0x00009acc      mov   x0, x19
+       ││   0x00009ad0      mov   x1, x20
+       ││   0x00009ad4      mov   x2, xzr
+       ││   0x00009ad8      ldr   x8, [x8, 0x548]                      ; [0x548:4]=0
+       ││   0x00009adc      blr   x8
+       ││   0x00009ae0      mov   x24, x0
+      ┌───< 0x00009ae4      cbz   x0, 0x9b5c
+      │││   0x00009ae8      bic   w8, w29, w29, asr 31
+      │││   0x00009aec      mov   x0, x22
+      │││   0x00009af0      mov   w1, 6
+      │││   0x00009af4      str   x20, [sp, 8]
+      │││   0x00009af8      str   w8, [sp, 4]
+      │││   0x00009afc      bl    sym.imp.dlopen
+     ┌────< 0x00009b00      cbz   x0, 0x9b78
+     ││││   0x00009b04      mov   x20, x0
+     ││││   0x00009b08      adrp  x1, 0x3000
+     ││││   0x00009b0c      add   x1, x1, 0xb3e
+     ││││   0x00009b10      adrp  x2, 0x2000
+     ││││   0x00009b14      add   x2, x2, 0xf19
+     ││││   0x00009b18      mov   w0, 6
+     ││││   0x00009b1c      bl    sym.imp.__android_log_print
+    ┌─────< 0x00009b20      b     0x9ba8
+    ││││└─> 0x00009b24      adrp  x1, 0x3000
+    ││││    0x00009b28      add   x1, x1, 0x9c8
+    ││││    0x00009b2c      adrp  x2, 0x3000
+    ││││    0x00009b30      add   x2, x2, 0xe25
+    ││││┌─< 0x00009b34      b     0x9c78
+    │││└──> 0x00009b38      adrp  x1, 0x3000
+    │││ │   0x00009b3c      add   x1, x1, 0x9c8
+    │││ │   0x00009b40      adrp  x2, 0x3000
+    │││ │   0x00009b44      add   x2, x2, 0xe06
+    │││ │   0x00009b48      mov   x0, x19
+    │││ │   0x00009b4c      bl    0xb184
+    │││ │   0x00009b50      mov   x24, xzr
+    │││ │   0x00009b54      mov   x26, xzr
+    │││┌──< 0x00009b58      b     0x9c18
+    ││└───> 0x00009b5c      adrp  x1, 0x3000
+    ││ ││   0x00009b60      add   x1, x1, 0x9c8
+    ││ ││   0x00009b64      adrp  x2, 0x2000
+    ││ ││   0x00009b68      add   x2, x2, 0xe63
+    ││ ││   0x00009b6c      mov   x0, x19
+    ││ ││   0x00009b70      bl    0xb184
+    ││┌───< 0x00009b74      b     0x9bfc
+    │└────> 0x00009b78      adrp  x1, 0x3000
+    │ │││   0x00009b7c      add   x1, x1, 0xb3e
+    │ │││   0x00009b80      adrp  x2, 0x2000
+    │ │││   0x00009b84      add   x2, x2, 0xefe
+    │ │││   0x00009b88      mov   w0, 6
+    │ │││   0x00009b8c      bl    sym.imp.__android_log_print
+    │ │││   0x00009b90      mov   x0, x22
+    │ │││   0x00009b94      mov   w1, 2
+    │ │││   0x00009b98      mov   x2, xzr
+    │ │││   0x00009b9c      bl    sym.imp.android_dlopen_ext
+    │ │││   0x00009ba0      mov   x20, x0
+    │┌────< 0x00009ba4      cbz   x0, 0x9d04
+    └─────> 0x00009ba8      adrp  x1, 0x3000
+     ││││   0x00009bac      add   x1, x1, 0x180
+     ││││   0x00009bb0      mov   x0, x20
+     ││││   0x00009bb4      bl    sym.imp.dlsym
+     ││││   0x00009bb8      mov   x26, x0
+     ││││   0x00009bbc      adrp  x1, 0x3000
+     ││││   0x00009bc0      add   x1, x1, 0xece
+     ││││   0x00009bc4      mov   x0, x20
+     ││││   0x00009bc8      bl    sym.imp.dlsym
+    ┌─────< 0x00009bcc      cbz   x26, 0x9c50
+   ┌──────< 0x00009bd0      cbz   x0, 0x9c50
+  ┌───────< 0x00009bd4      tbnz  w27, 0x1f, 0x9ca8
+  │││││││   0x00009bd8      cmp   w29, w27
+  ────────< 0x00009bdc      b.le  0x9ca8
+  │││││││   0x00009be0      adrp  x1, 0x3000
+  │││││││   0x00009be4      add   x1, x1, 0x9c8
+  │││││││   0x00009be8      adrp  x2, 0x3000
+  │││││││   0x00009bec      add   x2, x2, 0xea6
+  │││││││   0x00009bf0      mov   x0, x19
+  │││││││   0x00009bf4      bl    0xb184
+  │││││││   0x00009bf8      ldr   x20, [sp, 8]                         ; [0x8:4]=0
+  ││││└───> 0x00009bfc      mov   x26, xzr
+  ││││ ││   0x00009c00      ldr   x8, [x19]
+  ││││ ││   0x00009c04      mov   x0, x19
+  ││││ ││   0x00009c08      mov   x1, x23
+  ││││ ││   0x00009c0c      mov   x2, x25
+  ││││ ││   0x00009c10      ldr   x8, [x8, 0x550]                      ; [0x550:4]=306
+  ││││ ││   0x00009c14      blr   x8
+  ││││ └──> 0x00009c18      ldr   x8, [x19]
+  ││││  │   0x00009c1c      mov   x0, x19
+  ││││  │   0x00009c20      mov   x1, x21
+  ││││  │   0x00009c24      mov   x2, x22
+  ││││  │   0x00009c28      ldr   x8, [x8, 0x550]                      ; [0x550:4]=306
+  ││││  │   0x00009c2c      blr   x8
+  ││││ ┌──< 0x00009c30      cbz   x24, 0x9c84
+  ││││ ││   0x00009c34      ldr   x8, [x19]
+  ││││ ││   0x00009c38      mov   x0, x19
+  ││││ ││   0x00009c3c      mov   x1, x20
+  ││││ ││   0x00009c40      mov   x2, x24
+  ││││ ││   0x00009c44      ldr   x8, [x8, 0x550]                      ; [0x550:4]=306
+  ││││ ││   0x00009c48      blr   x8
+  ││││┌───< 0x00009c4c      b     0x9c84

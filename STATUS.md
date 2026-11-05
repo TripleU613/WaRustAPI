@@ -1,3 +1,11 @@
+2026-11-05 — **From-so decoder connected to verified carrier archive range.**
+
+Default ranges, spo type gate, symbol lookup and cached/error branches now lead
+to the identified decode core; full unpacking remains unverified.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-superpack-from-so/README.md).
+Research only; no runtime changes or live traffic. Validation: pinned/range
+digests, mapped Strings, bounded disassembly, checksums, JSON, coverage and hygiene.
+
 2026-11-05 — **Thirteen decoder/reader JNI entries mapped to native addresses.**
 
 Relocated tables and registration call sites agree with exact DEX signatures.

@@ -2323,3 +2323,13 @@ executed registration or recovered inner native code.
 [Reproducible table resolver, relocations and bounded assembly](apk/2.26.43.72-superpack-jni-registration/README.md).
 Container transforms, complete libraries and metrics transport/recovery remain
 open. No Rust behavior or live account operation changed.
+
+### Superpack carrier loading and decode-core handoff (2026-11-05)
+
+**Confirmed static / derived, APK43.72:** mapped from-so wrapper supplies default
+ranges, resolves exact carrier archive symbols and passes end-start to0xa964
+under the spo storage branch. Missing symbols/error and cached-buffer paths
+remain distinct; the core format and complete recovery are not yet reconstructed.
+[Bounded assembly, byte digests, exact Strings and limits](apk/2.26.43.72-superpack-from-so/README.md).
+Full transforms, inner libraries and metrics network/durable behavior remain
+open. No Rust behavior or live account operation changed.

@@ -16071,5 +16071,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-superpack-jni-registration/README.md",
     "description": "Selected relocated JNI tables map8 decoder and5 Openbox entries to native image addresses; all full signatures match retained DEX. Bounded registration assembly and host JNI ABI support the derived mapping. Full transforms, inner-library recovery, metrics transport and durable generation/replay remain open. No sender, telemetry, route or live operation added."
+  },
+  "x-superpack-from-so-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-superpack-from-so/README.md",
+    "description": "Mapped from-so decoder resolves carrier start/end symbols and supplies their range to native core0xa964, with default range and spo gate traced. Error/cache alternatives remain separate. Full format transforms, inner libraries and metrics transport/durable recovery remain open. No sender, telemetry, route or live operation added."
   }
 }
