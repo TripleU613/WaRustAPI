@@ -765,3 +765,15 @@ universal no-retry rule. Runtime helpers/runnables/config value remain untraced.
 This advances the earlier downstream boundary; it does not implement retries,
 key regeneration or resets, nor claim the Rust failure policy is full parity.
 No live traffic or production change.
+
+## Current-build prekey retry limits and delay inputs (2026-11-04)
+
+**Confirmed static, 43.72:** 13z.A02 gates 406/5xx, distinguishes A05 limited
+allowance from the 0Vf counter threshold 11, and selects fixed configured delay
+for limited-mode 406/503 versus Fibonacci-style delay elsewhere. EMZ.A02's
+descriptor key is 0x8b60 with declared false default; actual runtime evaluation
+is not known. Manager seed/cap are 10/610. Configuration, allowance producers
+and runnable effects remain untraced; Rust scheduling remains unchanged.
+[Exact strict boundaries, raw exports and inferred sequence limits](apk/2.26.43.72-prekey-upload-replies/README.md#retry-limits-and-delay-inputs-2026-11-04).
+No live traffic or production change; this is not permission to retry/reforge
+uncertain upload reservations or regenerate account keys.

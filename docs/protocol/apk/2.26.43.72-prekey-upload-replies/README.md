@@ -111,3 +111,52 @@ Additional export hashes:
 - [legacy-upload-write.txt](legacy-upload-write.txt): `089a5706fbf848ae3fbb5fcc028e26043a315d6007903978076a015df5d0589a`
 - [kyber-upload-write.txt](kyber-upload-write.txt): `a129382aa4da80fc00b371b799864ba27a011f769fdb32163981c387671828ec`
 - [completion-policy.txt](completion-policy.txt): `0241b2d1b32f46a863b4673debfbd8526b55b6c27c2eab431bebedee2cf17160`
+
+## Retry limits and delay inputs (2026-11-04)
+
+**Confirmed static**, pinned 43.72 as above; no runtime configuration observed.
+
+- **EMZ.<clinit>**, 003a–004c constructs A02 with key **0x8b60** and false
+  passed through 2L6.A0s to 00f.<init>(id,false,false). This is a declared
+  descriptor input/default, not proof 00E.A17 returns false for an account.
+- **13z.A02**, 0002–0022 returns null/reset via A09 unless code=406 or
+  500<=code<600. The accepted branch sets A06=true under a monitor.
+- If **A05=true**, it reads A00's old value, decrements it, then requires the
+  old value >=1 (0034–0044). Therefore old=1 can still produce a delay with
+  remaining=0; old=0 decrements to -1 then enters cleanup, not another retry.
+- If **A05=false**, it reads 0Vf.A00, the current invocation counter, and
+  refuses/cleans up at counter>=11 (0046–005e). Do not call this a universal
+  eleven-attempt limit: counter initialization, other consumers and mode changes
+  also matter. Cleanup clears A06/A05/A00/A03 and resets the backoff object.
+- For code **503 or 406** with A05=true, delay is A0a(**0x374b**) *1000
+  (007c–00ae). It does not invoke 0Vf.A01 in this branch. Other eligible cases
+  invoke 0Vf.A01()*1000. No range/default for that configured integer is proven.
+- **0Vf.A00** reads its invocation counter. **A01** increments it, then returns
+  the prior A00 sequence field; when prior<=cap it advances the two sequence
+  fields by addition. **A02** resets counter and previous to zero, next to seed.
+  The constructor asserts positive seed/cap. **13z.<init>**, 017a–0190 binds
+  seed=10 and cap=0x262 (610). This is a Fibonacci-style sequence, not an
+  exponential or jittered law; the condition is not a hard min(value,610).
+  A03 can reset/advance to a requested invocation index and is retained too.
+- **Inferred from those operations**, starting from reset, successive A01 return
+  values are 0,10,10,20,30,50,80,130,210,340,550 before the ordinary counter
+  limit blocks another A02-mediated retry. These are helper values before the
+  explicit *1000 in callers, not observed server wait requirements or proof of
+  the number of sends, and the shared counter may already have advanced.
+- Bounded A05 write inventory identifies 13z.A02, 14o.BLn (two writes) and
+  FDh.CbF. Those producers and their A00 budgets are not yet traced; the mode
+  must not be enabled by guesswork. Scheduler/worker behavior, A09 reset,
+  runtime config value and flag evaluation remain separate questions.
+
+This narrows the earlier completion-policy unknowns without implementing a
+retry scheduler, regenerating keys, changing local failure settlement or sending
+traffic. Exports below are DEX text, not REA Evidence envelopes.
+
+Additional export hashes:
+
+- [retry-delay.txt](retry-delay.txt): `1aa3144ac0d7aa1a6b2693b5c2b5edfa63a78c23fe46cb63430947cf98c6cbf1`
+- [policy-flags.txt](policy-flags.txt): `6868dd5daf0c484f086fdfb58d4ad6b450c5e3e9bb0485f989cbff52ba040deb`
+- [backoff.txt](backoff.txt): `1fe16d57e0cbacb6707834a4af954e76f64f78658cf9ef133e04ff3801352aeb`
+- [limited-mode-writers.txt](limited-mode-writers.txt): `3e2e8081d2a7fb5008e9695646b48180315f07fba0bd135956541b6b065413b3`
+- [flag-constructor.txt](flag-constructor.txt): `95640509d28e00f7f00fffc5d569127c738d6d03594a8292e9679b977ca52717`
+- [manager-constructor.txt](manager-constructor.txt): `b9f2b70458589561ca4509b4270257d398506c3a23518e374500a2a3a955bb96`

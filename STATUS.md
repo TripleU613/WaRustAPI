@@ -1,3 +1,11 @@
+2026-11-04 — **Prekey retry boundaries and delay inputs traced.**
+
+43.72 13z.A02 separates limited allowance from backoff counter bounds;
+406/503 limited mode uses configured delay. Runtime gate/mode producers
+remain open. [Evidence and limits](docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#retry-limits-and-delay-inputs-2026-11-04).
+Validation: JSON parsing, coverage freshness, staged diff and repository
+hygiene passed. No production change or live traffic.
+
 2026-11-04 — **Prekey storage effects and gated failure branches traced.**
 
 43.72 result worker marks legacy/Kyber sent before completion. EcZ has

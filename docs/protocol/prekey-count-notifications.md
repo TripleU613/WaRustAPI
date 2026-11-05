@@ -127,3 +127,10 @@ No runtime change or full upload scheduling parity is claimed.
 EcZ.A00 has gated 406/5xx scheduling branches. This supersedes the earlier
 untraced downstream boundary without proving full retry or regeneration policy.
 [Exports and pending helper/runnable trace](apk/2.26.43.72-prekey-upload-replies/README.md#store-effects-and-completion-policy-follow-up-2026-11-04).
+
+## Current-build retry delay inputs
+
+**Confirmed static, 43.72:** 13z.A02 bounds ordinary retry by a backoff counter
+and limited mode by a decrementing allowance; 406/503 limited mode uses a
+configured delay. [Configuration descriptor, helpers and unresolved producers](apk/2.26.43.72-prekey-upload-replies/README.md#retry-limits-and-delay-inputs-2026-11-04).
+No Rust retry/scheduling behavior changed.

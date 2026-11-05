@@ -1,0 +1,8 @@
+classes.dex  LX/13z;->A02(LLI)
+  write opcode 0x5c, dex byte offset: 0x7ed18c
+classes.dex  LX/14o;->BLn(ZLI)
+  write opcode 0x5c, dex byte offset: 0x7f88fc
+classes.dex  LX/14o;->BLn(ZLI)
+  write opcode 0x5c, dex byte offset: 0x7f8a90
+classes8.dex  LX/FDh;->CbF(LLLLLL)
+  write opcode 0x5c, dex byte offset: 0x72b2e2
