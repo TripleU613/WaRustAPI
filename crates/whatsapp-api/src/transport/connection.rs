@@ -435,7 +435,7 @@ pub(crate) async fn drive(
     let mut heartbeat = tokio::time::interval(ping_period);
     heartbeat.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Delay);
     heartbeat.tick().await;
-    let mut pending_ping: Option<String> = None;
+    let mut pending_ping: Option<(String, tokio::time::Instant)> = None;
     let mut outgoing: Option<super::outgoing::Pending> = None;
     let mut group_outgoing: Option<super::outgoing_group::Pending> = None;
     let mut upload: Option<super::prekeys::PendingUpload> = None;
@@ -454,7 +454,14 @@ pub(crate) async fn drive(
         if *stop.borrow() {
             return Ok(());
         }
+        let ping_deadline = pending_ping
+            .as_ref()
+            .map(|(_, deadline)| *deadline)
+            .unwrap_or_else(tokio::time::Instant::now);
         tokio::select! {
+            _ = tokio::time::sleep_until(ping_deadline), if pending_ping.is_some() => {
+                return Err(Error::Timeout(ping_period));
+            }
             _ = tokio::time::sleep_until(action_drain.deadline()), if ready.is_none() && action_drain.remaining > 0 => {
                 if let Some(action) = super::actions::reserve_next(&store)? {
                     link.send(&action).await?;
@@ -515,13 +522,16 @@ pub(crate) async fn drive(
                 }
                 for receipt in super::receipts::reserve_pending(&store)? { link.send(&receipt).await?; }
                 action_drain.trigger();
-                // Unanswered keepalive: classified recoverable; the actor decides on reconnect.
-                if pending_ping.is_some() { return Err(Error::Timeout(ping_period)); }
+                // A maintenance write can delay this ping within the heartbeat
+                // interval. Its response window belongs to its own admission,
+                // not the next timer tick (43.72 0Sf.A06 -> 0ln.A08).
+                if pending_ping.is_some() { continue; }
                 let id = super::messaging::new_message_id()?;
                 // Comparison LX/EIY.<init>(VLI), branch 15, 0x006a..009e.
                 let ping = Node::new("iq").attr("id", id.as_str()).attr("type", "get")
                     .attr("xmlns", "w:p").attr("to", crate::model::jid::Jid::parse("s.whatsapp.net")?);
-                link.send(&ping).await?; pending_ping = Some(id);
+                pending_ping = Some((id, tokio::time::Instant::now() + ping_period));
+                link.send(&ping).await?;
             }
             incoming = link.incoming.recv() => {
                 let inbound = match incoming.ok_or_else(|| Error::invalid("connection", "reader ended"))? {
@@ -709,7 +719,7 @@ pub(crate) async fn drive(
                         continue;
                     }
                     // APK 43.72 0ln.A01: non-reply IQs cannot settle a ping.
-                    if id == pending_ping.as_deref() && pending_ping.is_some()
+                    if id == pending_ping.as_ref().map(|(id, _)| id.as_str()) && pending_ping.is_some()
                         && matches!(node.get_attr("type").and_then(|v| v.as_text()), Some("result" | "error")) {
                         if node.get_attr("type").and_then(|v| v.as_text()) != Some("result") { return Err(Error::invalid("connection", "keepalive refused")); }
                         pending_ping = None; continue;
@@ -4682,6 +4692,60 @@ mod tests {
                 }
             }
         }
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn delayed_heartbeat_work_does_not_shorten_the_ping_response_window() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("ping-phase.redb"));
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        (&mut fake.ready).await.unwrap();
+        // Queue after activation so the next heartbeat discovers this read.
+        super::super::devices::request_sync(&store, None, &peer(), None, "test").unwrap();
+        let (query, written) = fake.written_within(Duration::from_secs(60)).await;
+        assert_eq!(
+            query.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("usync")
+        );
+        // The heartbeat has ticked, but its maintenance write blocks the ping.
+        tokio::time::advance(Duration::from_secs(19)).await;
+        written.send(Ok(())).unwrap();
+        let (ping, written) = fake.written().await;
+        assert_eq!(
+            ping.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("w:p")
+        );
+        written.send(Ok(())).unwrap();
+        let sent_at = tokio::time::Instant::now();
+        // At the next heartbeat the ping is only one second old. A separate
+        // inbound ping is a receive-loop barrier, not an answer to our ping.
+        tokio::time::advance(Duration::from_secs(1)).await;
+        fake.deliver(
+            Node::new("iq")
+                .attr("id", "barrier")
+                .attr("type", "get")
+                .attr("xmlns", "urn:xmpp:ping"),
+        )
+        .await;
+        let (pong, written) = fake.written().await;
+        assert_eq!(
+            pong.get_attr("type").and_then(|v| v.as_text()),
+            Some("result")
+        );
+        assert!(pong.get_attr("id").is_none());
+        written.send(Ok(())).unwrap();
+        // Silence still expires at this ping's own 20-second deadline.
+        let error = fake
+            .finished_within(Duration::from_secs(30))
+            .await
+            .unwrap_err();
+        assert!(matches!(error, Error::Timeout(_)));
+        assert!(error.is_recoverable_by_reconnect());
+        assert_eq!(
+            tokio::time::Instant::now() - sent_at,
+            Duration::from_secs(20)
+        );
     }
 
     #[tokio::test(start_paused = true)]

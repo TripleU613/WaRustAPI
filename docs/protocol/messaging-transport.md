@@ -1560,3 +1560,22 @@ IQs stay captured without ending receive or starting post-activation writes.
 **Confirmed / implemented offline:** pending pings require exact result/error
 for settlement. Non-reply IQs remain captured without refusal or clearing the
 pending ping; its original timeout remains active. [APK 43.72 0ln.A01 and actor tests](network-correctness-audit.md#keepalive-reply-type-admission-2026-11-04).
+
+### Independent keepalive response deadline (2026-11-04)
+
+**Fixed, offline:** heartbeat maintenance writes could delay an outbound ping,
+then the next heartbeat expired it after only the remaining fraction of the
+interval. A paused-clock regression reproduces a19-second maintenance delay
+followed by a ping that previously timed out1second later. Each ping now owns
+an admission-time deadline and a separate timeout selection; silence still
+produces the existing recoverable Timeout after the configured full window.
+Heartbeats cannot send a second ping while one is pending. Existing response
+correlation, duration policy, request shape and reconnect classification remain.
+
+**Confirmed static, APK43.72:** the pre-ACK confirmation ping is an empty
+IQ/get/w:p to s.whatsapp.net. 0Sf.A06 registers its ID callback in0ln.A08 before
+send admission, with an independent Handler delay (32000ms for this native
+purpose). [Request, timer methods and regression limits](apk/2.26.43.72-prekey-upload-replies/README.md#confirmation-ping-request-and-independent-timeout-2026-11-04).
+The native pre-ACK delay does not replace Rust's local keepalive setting. This
+does not port durable ACK replay/retirement, or guarantee timely observation
+while the actor is blocked in a write. No live operation was performed.

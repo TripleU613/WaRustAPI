@@ -1,0 +1,15 @@
+
+# class: LX/0mL;
+# extends: Lcom/whatsapp/infra/core/jid/Jid;
+
+.method public <clinit>(V)  # .registers 1
+    # full signature: LX/0mL;-><clinit>()V
+    0000..0004  new-instance  v0, LX/0mL;
+    0004..000a  invoke-direct  {v0}, LX/0mL;-><init>()V
+    000a..000e  sput-object  v0, LX/0mL;->A00:LX/0mL;
+    000e..0012  new-instance  v0, LX/0mM;
+    0012..0018  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0018..001c  sput-object  v0, LX/0mL;->CREATOR:Landroid/os/Parcelable$Creator;
+    001c..001e  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -15522,5 +15522,17 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#pre-ack-conversion-sqlite-persistence-and-retirement-2026-11-04",
     "description": "Native pre-ACK message76 conversion shares the direct ACK builder; message43 writes an already-built node. Selected queue flush persists serialized nodes in SQLite preacks, and confirmation-watermark cleanup deletes rows cumulatively. Ping success, passive/deferred holds and reconnect epoch gating are partially traced. Effective config, full load/replay ownership, bulk CCQ and ambiguous persistence failures remain open. Rust ACK ordering and recovery remain unchanged; no ACK replay, suppression, new ping or route added."
+  },
+  "x-keepalive-independent-deadline": {
+    "x-cli": {
+      "command": "whatsapp-cli listen",
+      "description": "Existing experimental connection actor; no new command or flag"
+    },
+    "x-transport": [
+      "experimental-transport keepalive scheduling"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#confirmation-ping-request-and-independent-timeout-2026-11-04",
+    "description": "Keepalive owns an admission-time response deadline instead of expiring on the next heartbeat phase after delayed maintenance writes. Existing configured duration, IQ shape, result/error correlation and recoverable timeout classification are retained. Native pre-ACK ping callback timing is separate from this local correction; no durable ACK replay, new route or live validation. Awaited writes can still delay observing expiry."
   }
 }

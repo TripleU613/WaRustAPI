@@ -1,0 +1,12 @@
+
+# class: LX/B1x;
+# extends: Ljava/lang/Object;
+
+.method public A0c(L)  # .registers 2
+    # full signature: LX/B1x;->A0c()LX/0Tj;
+    0000..0004  const-string  v1, "iq"
+    0004..0008  new-instance  v0, LX/0Tj;
+    0008..000e  invoke-direct  {v0, v1}, LX/0Tj;-><init>(Ljava/lang/String;)V
+    000e..0010  return-object  v0
+    # exception table: 0 try range(s)
+.end method

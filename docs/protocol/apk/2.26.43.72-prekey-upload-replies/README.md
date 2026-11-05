@@ -1752,3 +1752,65 @@ Exports:
 - [prekey-ack-store.txt](prekey-ack-store.txt): `d2c50ce3377d739be960efc9ae11b743d484ed9d12dc9841de73e3b760c2c237`
 
 - [prekey-ack-confirmation-ping.txt](prekey-ack-confirmation-ping.txt): `7f10dab1e03cbda36b03ceb97720a858ded99a81613afbf236b53a4a85d60ad2`
+
+## Confirmation ping request and independent timeout (2026-11-04)
+
+**Confirmed static**, pinned43.72 APK digest reverified; checked CLI exports,
+not live traffic or REA Evidence envelopes.
+
+1A7.A0A's previously retained Dzb(String,I) constructor specializes selector16.
+It calls B1x.A0c (iq builder), B21.A1B (type=get), appends xmlns=w:p and to=0mL.A00,
+then B23.A0e appends the destination and conditionally the supplied ID through
+0Tk.A06. No child is added in this constructor. 0mL.<clinit> constructs its
+singleton, its constructor supplies empty Jid user, and getServer returns
+s.whatsapp.net. These are the semantic fields of Rust's existing keepalive IQ;
+attribute byte order, ID-generation/validation and queue policy equivalence are
+not inferred. The full Dzb constructor export includes other overloads too.
+
+0Sf.A0Q forwards callback,node,id,selector22 and timing argument toA06. On ready
+admission A06 first calls0ln.A08 to register the callback, then constructs and
+dispatches the outgoing message throughA01/A05. Its disconnected branch calls
+A0E(id) and callback.BsS without taking that send branch. Native0ln.A08 stores
+the callback by ID under a monitor; for positive delay it schedules Handler
+messagewhat4 keyed by that ID using sendMessageDelayed. Thus the32000 supplied
+by the pre-ACK ping manager is a32-second callback delay, registered before
+writer dispatch. It is independent of a recurring heartbeat phase. Timeout
+message handling/cancellation and all error callbacks remain separate trace
+boundaries; this does not establish total request latency under blocked workers.
+
+**Confirmed local defect, fixed:** Rust's actor previously expired any pending
+keepalive at the next heartbeat tick. Maintenance writes occur inside that
+heartbeat before creating the ping, so a delayed maintenance write could consume
+nearly its entire response window. The new paused-clock regression delays a
+usync write19seconds within a20-second heartbeat: old code closes at the next
+tick after the ping is only1second old. Corrected code stays responsive then
+returns the existing recoverable timeout exactly20seconds after ping admission.
+
+Rust now records (id,deadline) before sending each ping and selects its timeout
+independently. Heartbeats still perform maintenance but do not create a second
+ping while one is pending. Exact result/error correlation and the configured
+local response duration remain unchanged. This is a local scheduling correction,
+not a port of the native pre-ACK confirmation queue: the native32-second delay
+is not substituted for Rust's existing configurable keepalive response window.
+An actor blocked in an awaited write may still observe deadlines late; this
+change does not claim fully independent reader/writer scheduling or interrupt I/O.
+
+Regression: cargo test --locked -p whatsapp-api --all-features
+ delayed_heartbeat_work_does_not_shorten_the_ping_response_window.
+It also checks ordinary inbound server-ping processing while the outbound ping
+remains unanswered; the existing native-derived pong omits the inbound ID.
+Original regression failed with link closure; the corrected regression and
+existing result/error/non-reply/silence keepalive tests pass offline.
+
+Exports:
+
+- [prekey-ack-ping-admission.txt](prekey-ack-ping-admission.txt): `a9950bb7cfad49f8d6d9d63fc20232c97c3018474add06d31ceed965b9c04e28`
+- [prekey-ack-ping-constructor.txt](prekey-ack-ping-constructor.txt): `1ed579a36122786ffbab593b6442d12c018efaff836c23154dab0c30660ec935`
+- [prekey-ack-ping-destination-class.txt](prekey-ack-ping-destination-class.txt): `9b7609bba92f00a97aeba1053898348d6f4c39cd17cb1c8a0001067ae16856d3`
+- [prekey-ack-ping-destination-constructor.txt](prekey-ack-ping-destination-constructor.txt): `89b8f6102b053f434f2e2ff2111f82788ae0cd649ac1d5657bbbea01cce38851`
+- [prekey-ack-ping-destination.txt](prekey-ack-ping-destination.txt): `980fe80b7482094daa3b7da1b6664efd2789018c46a6792ce436d99c8beaf33f`
+- [prekey-ack-ping-identity.txt](prekey-ack-ping-identity.txt): `e336aa46c6992ae815e754c8d26ee7c50548f3e4af951f9673d4ce6f4ace3a81`
+- [prekey-ack-ping-request-owner.txt](prekey-ack-ping-request-owner.txt): `1e1cfa0680809b0ffe191a5f394920317bea49600ecd12affab395cd38ac7456`
+- [prekey-ack-ping-root.txt](prekey-ack-ping-root.txt): `e7bcf562b6d84960044e5cab5394998726164c1210dda625c0ef3094c1e7f251`
+- [prekey-ack-ping-timeout-registration.txt](prekey-ack-ping-timeout-registration.txt): `99acfbec072ba7b3e3cd1818627a04fa3664293655cc0a429564b416f57dfee8`
+- [prekey-ack-ping-type.txt](prekey-ack-ping-type.txt): `203fcd9e64b071140ef6579afb8cceada18c23762247371686f9889150e55be8`

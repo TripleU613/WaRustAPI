@@ -1,0 +1,11 @@
+
+# class: LX/0mL;
+# extends: Lcom/whatsapp/infra/core/jid/Jid;
+
+.method public <init>(V)  # .registers 2
+    # full signature: LX/0mL;-><init>()V
+    0000..0004  const-string  v0, ""
+    0004..000a  invoke-direct  {v1, v0}, Lcom/whatsapp/infra/core/jid/Jid;-><init>(Ljava/lang/String;)V
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method

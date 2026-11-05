@@ -793,3 +793,28 @@ No live account operation; this is a documentation/evidence chunk.
 Validation: pinned APK SHA256 and all24 new export hashes verified; OpenAPI
 JSON, coverage freshness, staged whitespace and repository hygiene passed.
 Documentation/evidence-only change; Rust tests were not rerun.
+
+### Independent keepalive response deadline (2026-11-04)
+
+**Fixed, offline:** heartbeat maintenance writes could delay an outbound ping,
+then the next heartbeat expired it after only the remaining fraction of the
+interval. A paused-clock regression reproduces a19-second maintenance delay
+followed by a ping that previously timed out1second later. Each ping now owns
+an admission-time deadline and a separate timeout selection; silence still
+produces the existing recoverable Timeout after the configured full window.
+Heartbeats cannot send a second ping while one is pending. Existing response
+correlation, duration policy, request shape and reconnect classification remain.
+
+**Confirmed static, APK43.72:** the pre-ACK confirmation ping is an empty
+IQ/get/w:p to s.whatsapp.net. 0Sf.A06 registers its ID callback in0ln.A08 before
+send admission, with an independent Handler delay (32000ms for this native
+purpose). [Request, timer methods and regression limits](apk/2.26.43.72-prekey-upload-replies/README.md#confirmation-ping-request-and-independent-timeout-2026-11-04).
+The native pre-ACK delay does not replace Rust's local keepalive setting. This
+does not port durable ACK replay/retirement, or guarantee timely observation
+while the actor is blocked in a write. No live operation was performed.
+
+Validation: original paused-clock regression reproduced premature link closure;
+corrected regression and existing keepalive tests passed. All 1,300 workspace/
+all-feature tests passed with two test threads; strict Clippy, CLI reference,
+fmt, JSON validation, coverage freshness, ten new export hashes and hygiene
+passed. Tests used offline injected links; no live operations.
