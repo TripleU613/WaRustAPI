@@ -16080,5 +16080,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-superpack-from-so/README.md",
     "description": "Mapped from-so decoder resolves carrier start/end symbols and supplies their range to native core0xa964, with default range and spo gate traced. Error/cache alternatives remain separate. Full format transforms, inner libraries and metrics transport/durable recovery remain open. No sender, telemetry, route or live operation added."
+  },
+  "x-superpack-member-output-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-superpack-member-output/README.md",
+    "description": "Static core selects iterator ordinal ranges with exclusive end and returns selected written member names. Selected writer checks fwrite length but ignores fclose result; full parser/transforms and complete libraries remain unverified. No runtime behavior, route or live operation added."
   }
 }

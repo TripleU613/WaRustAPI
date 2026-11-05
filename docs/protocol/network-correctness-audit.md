@@ -2333,3 +2333,13 @@ remain distinct; the core format and complete recovery are not yet reconstructed
 [Bounded assembly, byte digests, exact Strings and limits](apk/2.26.43.72-superpack-from-so/README.md).
 Full transforms, inner libraries and metrics network/durable behavior remain
 open. No Rust behavior or live account operation changed.
+
+### Superpack member selection and disk-output boundary (2026-11-05)
+
+**Confirmed static / derived, APK 2.26.43.72:** core 0xa964 iterates members,
+selects ordinal start/exclusive-end (end -1 means exhaustion), writes selected
+members and returns their names. The selected writer checks fwrite length but
+ignores fclose result; this body has no fsync/rename or prior-file rollback.
+[Complete selected core/writer windows, ABI probe and limits](apk/2.26.43.72-superpack-member-output/README.md).
+Parser transforms, usable complete libraries and native metrics transport remain
+unverified. No Rust behavior or live account operation changed.

@@ -1,0 +1,155 @@
+            0x0000a964      sub   sp, sp, 0x70
+            0x0000a968      str   x30, [sp, 0x10]
+            0x0000a96c      stp   x28, x27, [sp, 0x20]
+            0x0000a970      stp   x26, x25, [sp, 0x30]
+            0x0000a974      stp   x24, x23, [sp, 0x40]
+            0x0000a978      stp   x22, x21, [sp, 0x50]
+            0x0000a97c      stp   x20, x19, [sp, 0x60]
+            0x0000a980      mov   x8, x1
+            0x0000a984      mov   w22, w5
+            0x0000a988      mov   w23, w4
+            0x0000a98c      mov   x19, x0
+            0x0000a990      adrp  x1, 0x3000
+            0x0000a994      add   x1, x1, 0x9a4
+            0x0000a998      mov   x0, x8
+            0x0000a99c      mov   w4, w5
+            0x0000a9a0      mov   x5, xzr
+            0x0000a9a4      mov   x21, x6
+            0x0000a9a8      bl    0x1c7ac
+            0x0000a9ac      mov   x20, x0
+            0x0000a9b0      cmp   x0, 0x17
+        ┌─< 0x0000a9b4      b.hi  0xa9fc
+       ┌──< 0x0000a9b8      cbz   x20, 0xa9fc
+       ││   0x0000a9bc      adrp  x1, 0x3000
+       ││   0x0000a9c0      add   x1, x1, 0x9c8
+       ││   0x0000a9c4      adrp  x2, 0x3000
+       ││   0x0000a9c8      add   x2, x2, 0xd2d
+       ││   0x0000a9cc      mov   x0, x19
+       ││   0x0000a9d0      bl    0xb184
+     ┌┌───> 0x0000a9d4      mov   x20, xzr
+   ┌┌─────> 0x0000a9d8      mov   x0, x20
+   ╎╎╎╎││   0x0000a9dc      ldp   x20, x19, [sp, 0x60]
+   ╎╎╎╎││   0x0000a9e0      ldp   x22, x21, [sp, 0x50]
+   ╎╎╎╎││   0x0000a9e4      ldr   x30, [sp, 0x10]                      ; [0x10:4]=0xb70003
+   ╎╎╎╎││   0x0000a9e8      ldp   x24, x23, [sp, 0x40]
+   ╎╎╎╎││   0x0000a9ec      ldp   x26, x25, [sp, 0x30]
+   ╎╎╎╎││   0x0000a9f0      ldp   x28, x27, [sp, 0x20]
+   ╎╎╎╎││   0x0000a9f4      add   sp, sp, 0x70
+   ╎╎╎╎││   0x0000a9f8      ret
+   ╎╎╎╎└└─> 0x0000a9fc      mov   w24, wzr
+   ╎╎╎╎     0x0000aa00      mov   w28, wzr
+   ╎╎╎╎     0x0000aa04      mov   x25, sp
+   ╎╎╎╎     0x0000aa08      str   xzr, [sp]
+   ╎╎╎╎ ┌─> 0x0000aa0c      cmn   w22, 1
+   ╎╎╎╎ ╎   0x0000aa10      ccmp  w28, w22, 8, ne
+   ╎╎╎╎┌──< 0x0000aa14      b.ge  0xaa9c
+   ╎╎╎╎│╎   0x0000aa18      mov   x0, x20
+   ╎╎╎╎│╎   0x0000aa1c      bl    0x1cca4
+  ┌───────< 0x0000aa20      cbz   x0, 0xaa9c
+  │╎╎╎╎│╎   0x0000aa24      mov   x26, x0
+  │╎╎╎╎│╎   0x0000aa28      cmp   w28, w23
+  ────────< 0x0000aa2c      b.ge  0xaa3c
+  │╎╎╎╎│╎   0x0000aa30      mov   x0, x26
+  │╎╎╎╎│╎   0x0000aa34      bl    0x3322c
+  ────────< 0x0000aa38      b     0xaa94
+  ────────> 0x0000aa3c      cmp   x26, 0x17
+  ────────< 0x0000aa40      b.ls  0xab58
+  │╎╎╎╎│╎   0x0000aa44      mov   x0, x26
+  │╎╎╎╎│╎   0x0000aa48      mov   x1, x21
+  │╎╎╎╎│╎   0x0000aa4c      bl    0xa774
+  ────────< 0x0000aa50      cbnz  w0, 0xab74
+  │╎╎╎╎│╎   0x0000aa54      mov   w0, 1
+  │╎╎╎╎│╎   0x0000aa58      mov   w1, 0x10
+  │╎╎╎╎│╎   0x0000aa5c      bl    0x33144
+  │╎╎╎╎│╎   0x0000aa60      mov   x27, x0
+  │╎╎╎╎│╎   0x0000aa64      mov   x0, x26
+  │╎╎╎╎│╎   0x0000aa68      bl    0x33570
+  │╎╎╎╎│╎   0x0000aa6c      mov   w1, 0x1000
+  │╎╎╎╎│╎   0x0000aa70      bl    0x331a8
+  │╎╎╎╎│╎   0x0000aa74      str   x0, [x27, 8]
+  │╎╎╎╎│╎   0x0000aa78      mov   x0, x27
+  │╎╎╎╎│╎   0x0000aa7c      mov   x1, x25
+  │╎╎╎╎│╎   0x0000aa80      bl    0x335ec
+  │╎╎╎╎│╎   0x0000aa84      mov   x0, x26
+  │╎╎╎╎│╎   0x0000aa88      bl    0x3322c
+  │╎╎╎╎│╎   0x0000aa8c      add   w24, w24, 1
+  │╎╎╎╎│╎   0x0000aa90      mov   x25, x27
+  ────────> 0x0000aa94      add   w28, w28, 1
+  │╎╎╎╎│└─< 0x0000aa98      b     0xaa0c
+  └────└──> 0x0000aa9c      mov   x0, x20
+   ╎╎╎╎     0x0000aaa0      bl    0x1c714
+   ╎╎╎╎     0x0000aaa4      ldr   x8, [x19]
+   ╎╎╎╎     0x0000aaa8      adrp  x1, 0x3000
+   ╎╎╎╎     0x0000aaac      add   x1, x1, 0xbb6
+   ╎╎╎╎     0x0000aab0      mov   x0, x19
+   ╎╎╎╎     0x0000aab4      ldr   x20, [x8, 0x560]                     ; [0x560:4]=0
+   ╎╎╎╎     0x0000aab8      ldr   x8, [x8, 0x30]                       ; [0x30:4]=0
+   ╎╎╎╎     0x0000aabc      blr   x8
+   ╎╎╎╎     0x0000aac0      mov   x2, x0
+   ╎╎╎╎     0x0000aac4      mov   x0, x19
+   ╎╎╎╎     0x0000aac8      mov   w1, w24
+   ╎╎╎╎     0x0000aacc      mov   x3, xzr
+   ╎╎╎╎     0x0000aad0      blr   x20
+   ╎╎╎╎     0x0000aad4      ldr   x22, [sp]
+   ╎╎╎╎     0x0000aad8      mov   x20, x0
+   ╎╎╎╎     0x0000aadc      mov   w21, wzr
+   └──────< 0x0000aae0      cbz   x22, 0xa9d8
+    ╎╎╎ ┌─> 0x0000aae4      mov   x0, x22
+    ╎╎╎ ╎   0x0000aae8      bl    0x335f4
+    ╎╎╎ ╎   0x0000aaec      ldr   x8, [x19]
+    ╎╎╎ ╎   0x0000aaf0      ldr   x1, [x22, 8]                         ; [0x8:4]=0
+    ╎╎╎ ╎   0x0000aaf4      mov   x23, x0
+    ╎╎╎ ╎   0x0000aaf8      mov   x0, x19
+    ╎╎╎ ╎   0x0000aafc      ldr   x8, [x8, 0x538]                      ; [0x538:4]=297
+    ╎╎╎ ╎   0x0000ab00      blr   x8
+    ╎╎╎ ╎   0x0000ab04      ldr   x8, [x19]
+    ╎╎╎ ╎   0x0000ab08      mov   x24, x0
+    ╎╎╎ ╎   0x0000ab0c      mov   x0, x19
+    ╎╎╎ ╎   0x0000ab10      mov   x1, x20
+    ╎╎╎ ╎   0x0000ab14      mov   w2, w21
+    ╎╎╎ ╎   0x0000ab18      mov   x3, x24
+    ╎╎╎ ╎   0x0000ab1c      ldr   x8, [x8, 0x570]                      ; [0x570:4]=0
+    ╎╎╎ ╎   0x0000ab20      blr   x8
+    ╎╎╎ ╎   0x0000ab24      ldr   x8, [x19]
+    ╎╎╎ ╎   0x0000ab28      mov   x0, x19
+    ╎╎╎ ╎   0x0000ab2c      mov   x1, x24
+    ╎╎╎ ╎   0x0000ab30      ldr   x8, [x8, 0xb8]                       ; [0xb8:4]=0x33f80
+    ╎╎╎ ╎   0x0000ab34      blr   x8
+    ╎╎╎ ╎   0x0000ab38      ldr   x0, [x22, 8]                         ; [0x8:4]=0
+    ╎╎╎ ╎   0x0000ab3c      add   w21, w21, 1
+    ╎╎╎ ╎   0x0000ab40      bl    0x315dc
+    ╎╎╎ ╎   0x0000ab44      mov   x0, x22
+    ╎╎╎ ╎   0x0000ab48      bl    0x315dc
+    ╎╎╎ ╎   0x0000ab4c      mov   x22, x23
+    ╎╎╎ └─< 0x0000ab50      cbnz  x22, 0xaae4
+    └─────< 0x0000ab54      b     0xa9d8
+  ────────> 0x0000ab58      adrp  x1, 0x3000
+     ╎╎     0x0000ab5c      add   x1, x1, 0x9c8
+     ╎╎     0x0000ab60      adrp  x2, 0x3000
+     ╎╎     0x0000ab64      add   x2, x2, 0xd2d
+     ╎╎     0x0000ab68      mov   x0, x19
+     ╎╎     0x0000ab6c      bl    0xb184
+     ╎╎ ┌─< 0x0000ab70      b     0xab94
+  ────────> 0x0000ab74      bl    0x95d4
+     ╎╎ │   0x0000ab78      mov   x2, x0
+     ╎╎ │   0x0000ab7c      adrp  x1, 0x3000
+     ╎╎ │   0x0000ab80      add   x1, x1, 0x9c8
+     ╎╎ │   0x0000ab84      mov   x0, x19
+     ╎╎ │   0x0000ab88      bl    0xb184
+     ╎╎ │   0x0000ab8c      mov   x0, x26
+     ╎╎ │   0x0000ab90      bl    0x3322c
+     ╎╎ └─> 0x0000ab94      mov   x0, x20
+     ╎╎     0x0000ab98      bl    0x1c714
+     ╎╎     0x0000ab9c      ldr   x19, [sp]
+     └────< 0x0000aba0      cbz   x19, 0xa9d4
+      ╎ ┌─> 0x0000aba4      mov   x0, x19
+      ╎ ╎   0x0000aba8      bl    0x335f4
+      ╎ ╎   0x0000abac      ldr   x8, [x19, 8]                         ; [0x8:4]=0
+      ╎ ╎   0x0000abb0      mov   x20, x0
+      ╎ ╎   0x0000abb4      mov   x0, x8
+      ╎ ╎   0x0000abb8      bl    0x315dc
+      ╎ ╎   0x0000abbc      mov   x0, x19
+      ╎ ╎   0x0000abc0      bl    0x315dc
+      ╎ ╎   0x0000abc4      mov   x19, x20
+      ╎ └─< 0x0000abc8      cbnz  x19, 0xaba4
+      └───< 0x0000abcc      b     0xa9d4

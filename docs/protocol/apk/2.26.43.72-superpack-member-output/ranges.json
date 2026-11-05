@@ -1,0 +1,30 @@
+[
+  {
+    "file": "core-assembly.txt",
+    "virtual_address": "0xa964",
+    "file_offset": "0xa964",
+    "bytes": 620,
+    "sha256": "b57230487fef26efe2d7095066c66299de356fe287aa32a0e797dd8e12c3c667"
+  },
+  {
+    "file": "write-assembly.txt",
+    "virtual_address": "0xa774",
+    "file_offset": "0xa774",
+    "bytes": 448,
+    "sha256": "638ab03fd5f45f8dfd343f366f4d39422f75d6e40c9d8415a387a486546bd8c9"
+  },
+  {
+    "file": "accessor-assembly.txt",
+    "virtual_address": "0x33570",
+    "file_offset": "0x33570",
+    "bytes": 16,
+    "sha256": "40e7c33d665001fa2a35439568902e100f946b67a1be302fe2b5a8dfd10079dc"
+  },
+  {
+    "file": "name-copy-assembly.txt",
+    "virtual_address": "0x331a8",
+    "file_offset": "0x331a8",
+    "bytes": 24,
+    "sha256": "99db4622e964e3a7af328d68049e42d952ecdebcaf5127c02235e922ed87d0be"
+  }
+]

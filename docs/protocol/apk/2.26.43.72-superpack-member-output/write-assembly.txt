@@ -1,0 +1,112 @@
+            0x0000a774      sub   sp, sp, 0xc0
+            0x0000a778      str   x30, [sp, 0x80]
+            0x0000a77c      stp   x24, x23, [sp, 0x90]
+            0x0000a780      stp   x22, x21, [sp, 0xa0]
+            0x0000a784      stp   x20, x19, [sp, 0xb0]
+            0x0000a788      mov   x19, x1
+            0x0000a78c      mov   x21, x0
+            0x0000a790      bl    0x33570
+            0x0000a794      mov   x1, x0
+            0x0000a798      mov   x0, x19
+            0x0000a79c      bl    0x33628
+            0x0000a7a0      mov   x19, x0
+            0x0000a7a4      cmp   x0, 0x17
+        ┌─< 0x0000a7a8      b.hi  0xa7b8
+       ┌──< 0x0000a7ac      cbz   x19, 0xa7b8
+       ││   0x0000a7b0      mov   w21, 1
+      ┌───< 0x0000a7b4      b     0xa918
+      │└└─> 0x0000a7b8      mov   x1, sp
+      │     0x0000a7bc      mov   x0, x19
+      │     0x0000a7c0      bl    sym.imp.stat
+      │     0x0000a7c4      ldr   w24, [sp, 0x10]                      ; [0x10:4]=0xb70003
+      │     0x0000a7c8      cmp   w0, 0
+      │     0x0000a7cc      mov   w9, 0x80
+      │     0x0000a7d0      mov   w22, w0
+      │     0x0000a7d4      mov   x0, x19
+      │     0x0000a7d8      orr   w8, w24, 0x80
+      │     0x0000a7dc      csel  w1, w8, w9, eq
+      │     0x0000a7e0      bl    sym.imp.chmod
+      │ ┌─< 0x0000a7e4      cbz   w0, 0xa7f8
+      │ │   0x0000a7e8      bl    sym.imp.__errno
+      │ │   0x0000a7ec      ldr   w8, [x0]
+      │ │   0x0000a7f0      cmp   w8, 2
+      │┌──< 0x0000a7f4      b.ne  0xa87c
+      ││└─> 0x0000a7f8      adrp  x1, 0x4000
+      ││    0x0000a7fc      add   x1, x1, 0x95
+      ││    0x0000a800      mov   x0, x19
+      ││    0x0000a804      bl    sym.imp.fopen
+      ││┌─< 0x0000a808      cbz   x0, 0xa884
+      │││   0x0000a80c      mov   x20, x0
+      │││   0x0000a810      mov   x0, x21
+      │││   0x0000a814      bl    0x33578
+      │││   0x0000a818      mov   x23, x0
+      │││   0x0000a81c      mov   x0, x20
+      │││   0x0000a820      bl    sym.imp.fileno
+      │││   0x0000a824      mov   w1, w0
+      │││   0x0000a828      mov   w0, 0x2f                             ; '/'
+      │││   0x0000a82c      mov   w2, wzr
+      │││   0x0000a830      mov   x3, xzr
+      │││   0x0000a834      mov   x4, x23
+      │││   0x0000a838      bl    sym.imp.syscall
+      │││   0x0000a83c      cmn   w0, 1
+     ┌────< 0x0000a840      b.ne  0xa8a4
+     ││││   0x0000a844      bl    sym.imp.__errno
+     ││││   0x0000a848      ldr   w5, [x0]
+     ││││   0x0000a84c      adrp  x1, 0x3000
+     ││││   0x0000a850      add   x1, x1, 0xb3e
+     ││││   0x0000a854      cmp   w5, 0x1c
+    ┌─────< 0x0000a858      b.ne  0xa88c
+    │││││   0x0000a85c      adrp  x2, 0x3000
+    │││││   0x0000a860      add   x2, x2, 0x2e
+    │││││   0x0000a864      mov   w0, 6
+    │││││   0x0000a868      mov   x3, x19
+    │││││   0x0000a86c      mov   x4, x23
+    │││││   0x0000a870      bl    sym.imp.__android_log_print
+    │││││   0x0000a874      mov   w21, 3
+   ┌──────< 0x0000a878      b     0xa904
+   ││││└──> 0x0000a87c      mov   w21, 6
+   ││││┌──< 0x0000a880      b     0xa90c
+   │││││└─> 0x0000a884      mov   w21, 2
+   │││││┌─< 0x0000a888      b     0xa90c
+   │└─────> 0x0000a88c      adrp  x2, 0x4000
+   │ ││││   0x0000a890      add   x2, x2, 0x4c
+   │ ││││   0x0000a894      mov   w0, 3
+   │ ││││   0x0000a898      mov   x3, x19
+   │ ││││   0x0000a89c      mov   x4, x23
+   │ ││││   0x0000a8a0      bl    sym.imp.__android_log_print
+   │ └────> 0x0000a8a4      mov   x0, x21
+   │  │││   0x0000a8a8      bl    0x2dbc8
+   │  │││   0x0000a8ac      mov   w1, 1
+   │  │││   0x0000a8b0      mov   x2, x23
+   │  │││   0x0000a8b4      mov   x3, x20
+   │  │││   0x0000a8b8      bl    sym.imp.fwrite
+   │  │││   0x0000a8bc      cmp   x0, x23
+   │ ┌────< 0x0000a8c0      b.hs  0xa8cc
+   │ ││││   0x0000a8c4      mov   w21, 4
+   │┌─────< 0x0000a8c8      b     0xa904
+  ┌──└────> 0x0000a8cc      cbz   w22, 0xa8ec
+  │││ │││   0x0000a8d0      mov   x1, sp
+  │││ │││   0x0000a8d4      mov   x0, x19
+  │││ │││   0x0000a8d8      bl    sym.imp.stat
+  │││┌────< 0x0000a8dc      cbz   w0, 0xa8e8
+  │││││││   0x0000a8e0      mov   w21, 7
+  ────────< 0x0000a8e4      b     0xa904
+  │││└────> 0x0000a8e8      ldr   w24, [sp, 0x10]                      ; [0x10:4]=0xb70003
+  └───────> 0x0000a8ec      and   w1, w24, 0xffffff7f
+   ││ │││   0x0000a8f0      mov   x0, x19
+   ││ │││   0x0000a8f4      bl    sym.imp.chmod
+   ││ │││   0x0000a8f8      mov   w8, 7
+   ││ │││   0x0000a8fc      cmp   w0, 0
+   ││ │││   0x0000a900      csel  w21, wzr, w8, eq
+  ─└└─────> 0x0000a904      mov   x0, x20
+      │││   0x0000a908      bl    sym.imp.fclose
+     ┌─└└─> 0x0000a90c      cbz   x19, 0xa918
+     ││     0x0000a910      mov   x0, x19
+     ││     0x0000a914      bl    0x315dc
+     └└───> 0x0000a918      mov   w0, w21
+            0x0000a91c      ldp   x20, x19, [sp, 0xb0]
+            0x0000a920      ldp   x22, x21, [sp, 0xa0]
+            0x0000a924      ldr   x30, [sp, 0x80]                      ; [0x80:4]=0
+            0x0000a928      ldp   x24, x23, [sp, 0x90]
+            0x0000a92c      add   sp, sp, 0xc0
+            0x0000a930      ret

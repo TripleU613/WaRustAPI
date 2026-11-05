@@ -1,0 +1,38 @@
+{
+  "README.md": {
+    "bytes": 5520,
+    "sha256": "12c904b8ccb08fc1722e748abe33df2d06abf135e3e5a295a22cc718fcf787a9"
+  },
+  "accessor-assembly.txt": {
+    "bytes": 231,
+    "sha256": "47c80e20a18cc27285dd234f40bb3a70b3bb4760946223b629c25911823507c7"
+  },
+  "core-assembly.txt": {
+    "bytes": 8417,
+    "sha256": "ffbef7adf7b2be23595d4daf8901bd8d835848086b2888e001bc04408bf99b6a"
+  },
+  "jni-layout.c": {
+    "bytes": 337,
+    "sha256": "5e16b8252475155c74950c17646d96479212fbc39349ad7182de15bdb2db46c8"
+  },
+  "jni-layout.txt": {
+    "bytes": 119,
+    "sha256": "d8ae94ba5005e592c57436e99c499f9877c806be65f748380ce0c1234d54afdb"
+  },
+  "name-copy-assembly.txt": {
+    "bytes": 290,
+    "sha256": "f956655fc64a597b63a54ec71fb2c0b1822aa992277b6683e9e9699aa73d70f7"
+  },
+  "ranges.json": {
+    "bytes": 827,
+    "sha256": "499f4d0eca94cd97985743f146ee0af9bbc22180ffa6375b3befa35f885840de"
+  },
+  "strings.json": {
+    "bytes": 544,
+    "sha256": "23d9bb58893ccd73604c6f3c4f9177dd8eec01c66432b2038faf353fd70b341d"
+  },
+  "write-assembly.txt": {
+    "bytes": 5908,
+    "sha256": "81c549fac15f46bd1a89672811c08669b4b6fc705b06a458b48058a444b278cd"
+  }
+}

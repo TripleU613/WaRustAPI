@@ -1,0 +1,27 @@
+[
+  {
+    "virtual_address": "0x39a4",
+    "file_offset": "0x39a4",
+    "value": "spo"
+  },
+  {
+    "virtual_address": "0x39c8",
+    "file_offset": "0x39c8",
+    "value": "com/facebook/superpack/AssetDecompressionException"
+  },
+  {
+    "virtual_address": "0x3d2d",
+    "file_offset": "0x3d2d",
+    "value": "could not extract file from archive"
+  },
+  {
+    "virtual_address": "0x3bb6",
+    "file_offset": "0x3bb6",
+    "value": "java/lang/String"
+  },
+  {
+    "virtual_address": "0x4095",
+    "file_offset": "0x4095",
+    "value": "wb"
+  }
+]

@@ -1,3 +1,11 @@
+2026-11-05 — **Superpack member ranges and disk-output boundary traced.**
+
+The core selects iterator ordinals and returns names after selected writes;
+its writer does not establish crash-durable multi-file extraction.
+[Evidence and remaining parser work](docs/protocol/apk/2.26.43.72-superpack-member-output/README.md).
+Research only; no runtime change or live traffic. Validation: pinned APK/member
+identity, byte-window digests, host JNI layout, JSON, coverage and bundle hygiene.
+
 2026-11-05 — **From-so decoder connected to verified carrier archive range.**
 
 Default ranges, spo type gate, symbol lookup and cached/error branches now lead

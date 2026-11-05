@@ -1,0 +1,6 @@
+            0x000331a8      str   x30, [sp, -0x10]!
+            0x000331ac      bl    sym.imp.strndup
+        ┌─< 0x000331b0      cbz   x0, 0x331bc
+        │   0x000331b4      ldr   x30, [sp], 0x10
+        │   0x000331b8      ret
+        └─> 0x000331bc      bl    sym.imp.abort

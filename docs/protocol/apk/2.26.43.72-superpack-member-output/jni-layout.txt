@@ -1,0 +1,6 @@
+pointer_bytes=8
+FindClass=0x30
+NewObjectArray=0x560
+NewStringUTF=0x538
+SetObjectArrayElement=0x570
+DeleteLocalRef=0xb8
