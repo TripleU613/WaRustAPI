@@ -1,3 +1,11 @@
+2026-11-05 — **Newer unknown skmsg versions now carry retry error4.**
+
+The typed parser cause survives normal receive, preserving empty-record/length/
+version/signature precedence. Legacy versions remain no-retry; other formats
+retain separate policies. [Evidence, regressions and remaining limits](docs/protocol/outgoing-retry-receipts.md#newer-unknown-sender-key-versions-retain-retry-error4--2026-11-05).
+Validation:1329 tests, strict Clippy, fmt, CLI reference, APK coverage and
+hygiene passed. No live account traffic.
+
 2026-11-05 — **Classic local-prekey failures now carry retry error3.**
 
 Local key records decode only when requested, preserving matched-session reuse.

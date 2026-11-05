@@ -990,6 +990,7 @@ pub(crate) async fn drive(
                     super::inbox::IncomingResult::SenderKeyFutureCounter => Some(super::receipts::RetryCause::SenderKeyFutureCounter),
                     super::inbox::IncomingResult::MissingSenderKeyChain => Some(super::receipts::RetryCause::MissingSenderKeyChain),
                     super::inbox::IncomingResult::IncomingLocalPrekey => Some(super::receipts::RetryCause::IncomingLocalPrekey),
+                    super::inbox::IncomingResult::UnknownSenderKeyVersion => Some(super::receipts::RetryCause::UnknownSenderKeyVersion),
                     _ => None,
                 };
                 if received == super::inbox::IncomingResult::Undecryptable || retry_cause.is_some() {
@@ -2527,15 +2528,23 @@ mod tests {
             "ordinary_prekey",
             "signed_prekey",
             "group_prekey",
+            "unknown_version",
         ] {
             let prekey = matches!(case, "ordinary_prekey" | "signed_prekey" | "group_prekey");
             let grouped = matches!(
                 case,
-                "group_missing" | "group_empty" | "signature" | "future" | "chain" | "group_prekey"
+                "group_missing"
+                    | "group_empty"
+                    | "signature"
+                    | "future"
+                    | "chain"
+                    | "group_prekey"
+                    | "unknown_version"
             );
             let bad_signature = case == "signature";
             let future_counter = case == "future";
             let missing_chain = case == "chain";
+            let unknown_version = case == "unknown_version";
             let dir = tempfile::tempdir().unwrap();
             let path = dir.path().join("retry-cut.redb");
             let store = if prekey {
@@ -2634,57 +2643,64 @@ mod tests {
             } else {
                 failed
             };
-            let group_ciphertext = if bad_signature || future_counter || missing_chain {
-                use crate::signal::group::{
-                    commit_skdm, encrypt_group_payload, extract_skdm_from_payload,
-                    prepare_own_sender_key, process_skdm, sender_key_db_key,
-                };
-                let group = Jid::parse("120363000000000001@g.us").unwrap();
-                let sender = peer().with_device(3);
-                let mine = prepare_own_sender_key(&group, &sender, None).await.unwrap();
-                let (_, bytes) = extract_skdm_from_payload(&mine.distribution_message).unwrap();
-                let installed = process_skdm(
-                    &group,
-                    &sender,
-                    sender_key_db_key(&group, &sender),
-                    None,
-                    &bytes,
-                )
-                .await
-                .unwrap();
-                assert!(store.write(|tx| commit_skdm(tx, &installed)).unwrap());
-                if future_counter || missing_chain {
-                    use wacore_libsignal::protocol::{SenderKeyMessage, SenderKeyRecord};
-                    let own_record = SenderKeyRecord::deserialize(&mine.updated_key).unwrap();
-                    let state = own_record.sender_key_state().unwrap();
-                    SenderKeyMessage::new(
-                        3,
-                        if missing_chain {
-                            state.chain_id().wrapping_add(1)
-                        } else {
-                            state.chain_id()
-                        },
-                        if future_counter { 2001 } else { 0 },
-                        vec![0; 1].into_boxed_slice(),
-                        &mut rng,
-                        &state.signing_key_private().unwrap(),
+            let group_ciphertext =
+                if bad_signature || future_counter || missing_chain || unknown_version {
+                    use crate::signal::group::{
+                        commit_skdm, encrypt_group_payload, extract_skdm_from_payload,
+                        prepare_own_sender_key, process_skdm, sender_key_db_key,
+                    };
+                    let group = Jid::parse("120363000000000001@g.us").unwrap();
+                    let sender = peer().with_device(3);
+                    let mine = prepare_own_sender_key(&group, &sender, None).await.unwrap();
+                    let (_, bytes) = extract_skdm_from_payload(&mine.distribution_message).unwrap();
+                    let installed = process_skdm(
+                        &group,
+                        &sender,
+                        sender_key_db_key(&group, &sender),
+                        None,
+                        &bytes,
                     )
-                    .unwrap()
-                    .serialized()
-                    .to_vec()
+                    .await
+                    .unwrap();
+                    assert!(store.write(|tx| commit_skdm(tx, &installed)).unwrap());
+                    if future_counter || missing_chain {
+                        use wacore_libsignal::protocol::{SenderKeyMessage, SenderKeyRecord};
+                        let own_record = SenderKeyRecord::deserialize(&mine.updated_key).unwrap();
+                        let state = own_record.sender_key_state().unwrap();
+                        SenderKeyMessage::new(
+                            3,
+                            if missing_chain {
+                                state.chain_id().wrapping_add(1)
+                            } else {
+                                state.chain_id()
+                            },
+                            if future_counter { 2001 } else { 0 },
+                            vec![0; 1].into_boxed_slice(),
+                            &mut rng,
+                            &state.signing_key_private().unwrap(),
+                        )
+                        .unwrap()
+                        .serialized()
+                        .to_vec()
+                    } else {
+                        let body =
+                            super::super::group_send::text_payload("signature fixture").unwrap();
+                        let (cipher, _) =
+                            encrypt_group_payload(&group, &sender, &mine.updated_key, &body)
+                                .await
+                                .unwrap();
+                        let mut tampered = cipher.to_vec();
+                        if unknown_version {
+                            // Parser version rejection precedes signature verification.
+                            tampered[0] = 0x43;
+                        } else {
+                            *tampered.last_mut().unwrap() ^= 1;
+                        }
+                        tampered
+                    }
                 } else {
-                    let body = super::super::group_send::text_payload("signature fixture").unwrap();
-                    let (cipher, _) =
-                        encrypt_group_payload(&group, &sender, &mine.updated_key, &body)
-                            .await
-                            .unwrap();
-                    let mut tampered = cipher.to_vec();
-                    *tampered.last_mut().unwrap() ^= 1;
-                    tampered
-                }
-            } else {
-                vec![9; 48]
-            };
+                    vec![9; 48]
+                };
             if case == "group_empty" {
                 let group = Jid::parse("120363000000000001@g.us").unwrap();
                 let sender = peer().with_device(3);
@@ -2742,7 +2758,7 @@ mod tests {
                     "5"
                 } else if future_counter {
                     "6"
-                } else if missing_chain {
+                } else if missing_chain || unknown_version {
                     "4"
                 } else if prekey {
                     "3"

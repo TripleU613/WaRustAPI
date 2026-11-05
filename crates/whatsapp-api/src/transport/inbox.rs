@@ -75,6 +75,9 @@ pub enum IncomingResult {
     /// Classic incoming prekey processing could not load a selected local key.
     /// Eligible for the scoped native local-prekey retry error3.
     IncomingLocalPrekey,
+    /// Sender-key message parsing rejected a newer unknown ciphertext version.
+    /// Eligible for the scoped native generic retry error4.
+    UnknownSenderKeyVersion,
 }
 
 // Token/string node bodies can be Text; raw binary bodies remain Bytes.
@@ -1529,6 +1532,12 @@ async fn process_group(
     policy: IdentityChangePolicy,
 ) -> Result<IncomingResult> {
     match process_group_inner(store, account, node, capture, policy).await {
+        Err(Error::SignalUnknownSenderKeyVersion) => {
+            tracing::warn!(
+                "unknown sender-key message version; capture preserved for bounded retry"
+            );
+            Ok(IncomingResult::UnknownSenderKeyVersion)
+        }
         Err(Error::SignalIncomingLocalPrekey) => {
             tracing::warn!(
                 "incoming local prekey unavailable; capture preserved for bounded retry"
@@ -2697,9 +2706,17 @@ mod tests {
             store.read(|tx| tx.scan(Table::SenderKeys, 1, 10)).unwrap(),
             keys_before_replay
         );
-        // Native legacy skmsg is not retry eligible. Higher unknown versions
-        // remain generic failures; the separate policy is not guessed here.
-        for (version, short) in [(0u8, false), (1, false), (2, false), (4, false), (2, true)] {
+        // Legacy and higher unknown skmsg versions retain different retry
+        // policy. Short inputs fail before the version gate in the backend.
+        for (version, short) in [
+            (0u8, false),
+            (1, false),
+            (2, false),
+            (4, false),
+            (15, false),
+            (2, true),
+            (4, true),
+        ] {
             let mut changed = cipher.to_vec();
             changed[0] = (version << 4) | (changed[0] & 0x0f);
             if short {
@@ -2720,10 +2737,12 @@ mod tests {
                 process(&store, &account, &changed_node, &capture)
                     .await
                     .unwrap(),
-                if version < 3 && !short {
+                if short {
+                    IncomingResult::Undecryptable
+                } else if version < 3 {
                     IncomingResult::Unsupported
                 } else {
-                    IncomingResult::Undecryptable
+                    IncomingResult::UnknownSenderKeyVersion
                 }
             );
             assert_eq!(store.journal_head().unwrap(), head);

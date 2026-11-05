@@ -72,3 +72,6 @@ backend identity before reusing its line references after a dependency update.
 Validation:31 filtered retry tests, APK coverage, staged whitespace and research
 checksum/link hygiene passed. No Rust source changed; the full workspace suite
 was not rerun for this research-only chunk.
+
+Further follow-up: [newer unknown skmsg versions now retain retry error4](../2.26.43.72-sender-key-unknown-version/README.md), separate from legacy exclusion.
+Short-input and other producer/version policies remain open.

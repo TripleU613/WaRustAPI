@@ -205,6 +205,11 @@ pub async fn receive_group(
             // APK43.72 Fj2([B) low version -> ED6 -> 0Yl.A00 -1007;
             // EtY excludes this status. Scope to skmsg, not SKDM ingestion.
             SignalProtocolError::LegacyCiphertextVersion(_) => Error::SignalLegacySenderKeyMessage,
+            // Fj2([B) version>3 -> EDY("Unknown version: ...") ->
+            // 0Yl.A00 -1005 unchanged by EtY -> kind4 -> wire4. skmsg only.
+            SignalProtocolError::UnrecognizedCiphertextVersion(version) if version > 3 => {
+                Error::SignalUnknownSenderKeyVersion
+            }
             // Fj2.A00 false signature -> EDY("Invalid signature!") ->
             // 0Yl.A00 -1005 -> EtY -1203 -> DxB wire5. skmsg only.
             SignalProtocolError::SignatureValidationFailed => {

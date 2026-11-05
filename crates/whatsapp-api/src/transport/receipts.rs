@@ -389,6 +389,7 @@ pub(crate) enum RetryCause {
     SenderKeyFutureCounter,
     MissingSenderKeyChain,
     IncomingLocalPrekey,
+    UnknownSenderKeyVersion,
 }
 
 impl RetryCause {
@@ -405,6 +406,8 @@ impl RetryCause {
             Self::MissingSenderKeyChain => 4,
             // Classic F22.A04 local key EDR -> -1003 -> internal3 -> wire3.
             Self::IncomingLocalPrekey => 3,
+            // Fj2([B) high version EDY -> -1005 unchanged -> kind4 -> wire4.
+            Self::UnknownSenderKeyVersion => 4,
         }
     }
 }

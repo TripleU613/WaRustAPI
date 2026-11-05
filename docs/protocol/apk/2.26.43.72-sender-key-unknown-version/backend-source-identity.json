@@ -1,0 +1,11 @@
+{
+  "package": "wacore-libsignal",
+  "version": "0.7.0",
+  "file": "src/protocol/protocol.rs",
+  "bytes": 51538,
+  "sha256": "415ad140d76f8517790a35d351c682eb1972840832db6749e4fa958f626d207b",
+  "facts": [
+    "SenderKeyMessage::try_from884-900 checks minimum65 bytes, high nibble below3 -> LegacyCiphertextVersion, above3 -> UnrecognizedCiphertextVersion",
+    "This version gate precedes protobuf payload decode and signature verification; other message formats have their own parser rules"
+  ]
+}

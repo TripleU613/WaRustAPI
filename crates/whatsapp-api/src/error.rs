@@ -30,6 +30,10 @@ pub enum Error {
     #[error("Signal sender-key message uses a legacy version")]
     SignalLegacySenderKeyMessage,
 
+    /// Sender-key message parsing rejected a newer unknown ciphertext version.
+    #[error("Signal sender-key message version is unknown")]
+    SignalUnknownSenderKeyVersion,
+
     /// Sender-key message verification failed against the saved signing key.
     #[error("Signal sender-key message signature verification failed")]
     SignalInvalidSenderKeySignature,

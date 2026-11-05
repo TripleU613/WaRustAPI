@@ -653,3 +653,18 @@ MAC fixtures were corrected to modify the nested MAC, preserving outer selectors
 Factory signed-material gates, storage failures, hybrid/KEM and later key-pair
 integrity classification remain separate open work. Other typed causes/count/key/
 routing/ACK parity remain incomplete; no live traffic.
+
+## Newer unknown sender-key versions retain retry error4 — 2026-11-05
+
+**Confirmed static / inferred provider equivalence / implemented offline:**
+[version gate, cause refinement and backend identity](apk/2.26.43.72-sender-key-unknown-version/README.md).
+Only skmsg version>3 typed rejection becomes SignalUnknownSenderKeyVersion /
+UnknownSenderKeyVersion and normal retry/error4. Native Unknown version is not
+EtY's Unknown type refinement. Lower legacy versions keep no-retry handling;
+empty-record and short-input precedence remain intact. Other formats are unchanged.
+
+Inbox tests cover high nibbles4/15, legacy0/1/2 and short2/4, with unchanged keys/
+journal. The production-loop fixture checks error4 before signature verification,
+original timestamp, durable uncertain reservation and no second retry/delivery ACK
+on reconnect/redelivery. Offline CLI replay sends nothing. Native short-input,
+other formats and full key/count/routing/ACK parity remain unfinished. No live traffic.
