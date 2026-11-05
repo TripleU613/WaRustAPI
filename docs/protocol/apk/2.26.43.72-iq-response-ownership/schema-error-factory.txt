@@ -1,0 +1,12 @@
+
+# class: LX/8B6;
+# extends: Ljava/lang/Object;
+
+.method public A00(LL)  # .registers 2
+    # full signature: LX/8B6;->A00(LX/8B6;)LX/LIL;
+    0000..0004  iget-object  v1, v1, LX/8B6;->A00:Ljava/lang/String;
+    0004..0008  new-instance  v0, LX/LIL;
+    0008..000e  invoke-direct  {v0, v1}, LX/LIL;-><init>(Ljava/lang/String;)V
+    000e..0010  return-object  v0
+    # exception table: 0 try range(s)
+.end method

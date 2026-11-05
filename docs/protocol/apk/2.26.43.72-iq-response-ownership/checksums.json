@@ -1,0 +1,50 @@
+{
+  "README.md": {
+    "bytes": 4955,
+    "sha256": "f0069b4642992bb57043f0c0dedf7464d22353ce702adab8b67d8c16a5c6db93"
+  },
+  "inspect-interfaces.py": {
+    "bytes": 2015,
+    "sha256": "25aeee80e865481502a09c033f57b05128b5f2b6d3bf492f8b0e1d0f0720cdbd"
+  },
+  "interface-declarations.txt": {
+    "bytes": 154,
+    "sha256": "a81512b848282889e49309e5bb5f8e9a666126a9cfc2ebc981f19ae90977328e"
+  },
+  "registry-A01.txt": {
+    "bytes": 4140,
+    "sha256": "c021d0721323e45137756d4db364ec19a835ca84c3a4c4dbd2c5fdcaebf25459"
+  },
+  "registry-A02.txt": {
+    "bytes": 3128,
+    "sha256": "a0ab73b22859944c5d63c7372edeeb6d438430b8616acaebaa48df29a3598556"
+  },
+  "registry-A0H.txt": {
+    "bytes": 6029,
+    "sha256": "aa06809c07f0f91097b7a4a747319fa608b1725fa72c1e220f756894a6c92023"
+  },
+  "response-runnable.txt": {
+    "bytes": 1173,
+    "sha256": "4be9c9ac2a9244958ba7c7b1acb6d94e0c8a900a515c8bd46d3349a82c0bc585"
+  },
+  "schema-error-constructors.txt": {
+    "bytes": 2492,
+    "sha256": "a903e078d17848759c3e4609e22656eb419aacab7441fd399826168693ed76e9"
+  },
+  "schema-error-factory.txt": {
+    "bytes": 412,
+    "sha256": "6440e54204c81084ace2958b9837de619b8ba2b4037203e246deff1a0ce19da9"
+  },
+  "schema-error-predicate.txt": {
+    "bytes": 1123,
+    "sha256": "9f7e1d2648ccc5b7897fc119e46c4ba594757c69ad3b02b896d31e5c94f98b24"
+  },
+  "schema-error-report-interface.txt": {
+    "bytes": 209,
+    "sha256": "279b889e107811f654b2784047e12ed61221da86c32d979a7f0dc708dbe27f26"
+  },
+  "schema-error-writes.txt": {
+    "bytes": 411,
+    "sha256": "48c484aca01349c4e66a2121cd15d46672fab1d388d29e05ea2b71986234283f"
+  }
+}

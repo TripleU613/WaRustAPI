@@ -1,0 +1,69 @@
+# class: LX/0ln;
+# extends: Ljava/lang/Object;
+
+.method public A01(VLLLL)  # .registers 10
+    # full signature: LX/0ln;->A01(LX/0lG;LX/0Tp;LX/0ln;Ljava/lang/String;)V
+    0000..0004  const-string  v5, "Unexpected type="
+    0004..000a  const-string/jumbo  v0, "type"
+    000a..000c  const/4  v3, #0x0
+    000c..0012  invoke-virtual  {v7, v0, v3}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0012..0014  move-result-object  v4
+    0014..0018  const-string  v0, "result"
+    0018..001e  invoke-virtual  {v0, v4}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    001e..0020  move-result  v0
+    0020..0024  if-eqz  v0, +0xb
+    0024..002a  invoke-interface  {v6, v7, v9}, LX/0lG;->CK4(LX/0Tp;Ljava/lang/String;)V
+    002a..002e  iget-object  v0, v8, LX/0ln;->A0B:LX/0TT;
+    002e..0034  invoke-virtual  {v0, v9, v3}, LX/0TT;->A03(Ljava/lang/String;Ljava/lang/Integer;)V
+    0034..0036  goto  +0x2f
+    0036..003a  const-string  v0, "error"
+    003a..0040  invoke-virtual  {v0, v4}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0040..0042  move-result  v0
+    0042..0046  if-eqz  v0, +0x6
+    0046..004c  invoke-interface  {v6, v7, v9}, LX/0lG;->Bvj(LX/0Tp;Ljava/lang/String;)V
+    004c..004e  goto  -0x11
+    004e..0052  iget-object  v2, v8, LX/0ln;->A07:LX/0B0;
+    0052..0058  const-string/jumbo  v1, "unexpected_recv_iq_type"
+    0058..005a  const/4  v0, #0x0
+    005a..0060  invoke-virtual  {v2, v1, v4, v0}, LX/0B0;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+    0060..0064  new-instance  v1, Ljava/lang/StringBuilder;
+    0064..006a  invoke-direct  {v1, v5}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    006a..0070  invoke-virtual  {v1, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0070..0074  const-string  v0, " for iq="
+    0074..007a  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    007a..0080  invoke-virtual  {v1, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0080..0086  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0086..0088  move-result-object  v1
+    0088..008a  const/4  v0, #0x0
+    008a..0090  invoke-static  {v0, v1}, LX/00L;->A0C(ZLjava/lang/String;)V
+    0090..0092  goto  -0x33
+    0092..0094  return-void
+    0094..0096  move-exception  v2
+    0096..009a  const-string  v1, "XmppIncomingMessageRouter/handleIncomingIqResponse/corrupt-stream-error iqId="
+    009a..009e  new-instance  v0, Ljava/lang/StringBuilder;
+    009e..00a4  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00a4..00aa  invoke-virtual  {v0, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00aa..00b0  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00b0..00b2  move-result-object  v0
+    00b2..00b8  invoke-static  {v0, v2}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;Ljava/lang/Throwable;)V
+    00b8..00bc  iget-object  v0, v8, LX/0ln;->A07:LX/0B0;
+    00bc..00c2  invoke-virtual  {v0, v2}, LX/0B0;->A0M(LX/LV5;)V
+    00c2..00c6  instance-of  v0, v2, LX/LIL;
+    00c6..00ca  if-eqz  v0, +0x19
+    00ca..00ce  sget-object  v1, LX/02X;->A01:Ljava/lang/Integer;
+    00ce..00d2  iget-object  v0, v8, LX/0ln;->A0B:LX/0TT;
+    00d2..00d8  invoke-virtual  {v0, v9, v1}, LX/0TT;->A03(Ljava/lang/String;Ljava/lang/Integer;)V
+    00d8..00de  invoke-virtual  {v2}, LX/LV5;->A01()Z
+    00de..00e0  move-result  v0
+    00e0..00e4  if-nez  v0, +0xf
+    00e4..00ea  invoke-virtual  {v2}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    00ea..00ec  move-result-object  v1
+    00ec..00f0  new-instance  v0, Ljava/lang/RuntimeException;
+    00f0..00f6  invoke-direct  {v0, v1, v2}, Ljava/lang/RuntimeException;-><init>(Ljava/lang/String;Ljava/lang/Throwable;)V
+    00f6..00f8  throw  v0
+    00f8..00fc  sget-object  v1, LX/02X;->A0Y:Ljava/lang/Integer;
+    00fc..00fe  goto  -0x17
+    00fe..0100  return-void
+    # exception table: 1 try range(s)
+    # catch LX/LV5; code_units 000a..004a -> 004a
+.end method

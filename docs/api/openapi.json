@@ -15837,5 +15837,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-channel-queue-predicate/README.md",
     "description": "Selected readiness binding resolves the channel predicate to queued connection-handler message4, writer message2 or deferred deque contents. Connection drains through existing writer gates. Queue state is not delivery, active-write completion or replay authority. Full reconnect/generation/durable ownership remains open. No sender, route or live operation added."
+  },
+  "x-iq-response-ownership-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-iq-response-ownership/README.md",
+    "description": "Token response timer cancellation, callback claim and executor parsing are distinct stages. Selected schema catch uses recoverable exception routing without reinsertion, delivery-failure restoration or replay. Upstream admission, concrete reporting hooks, concurrent ID/generation ownership and durable recovery remain open. No sender, route or live operation added."
   }
 }

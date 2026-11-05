@@ -248,3 +248,15 @@ sets the flag. Dequeue/drain does not prove retransmission or safe replay.
 [Concrete binding, submit chain, drain and limits](apk/2.26.43.72-channel-queue-predicate/README.md).
 Full reconnect ordering, races, replacement/generation ownership and durable
 recovery remain open. No Rust behavior change or live account operation.
+
+### IQ response ownership precedes token parsing (2026-11-04)
+
+**Confirmed static, APK43.72:** response admission cancels the tracked timer
+and looks upA0H; the ordinary token callback is later claimed by removal in
+A02 before executor parsing. Failure/shutdown can win between those stages;
+lookup or timer removal is not successful token installation. The selected
+LV5 catch handles LIL's recoverable flag without reinsertion, BsS restoration
+or held-request dispatch. Recoverable does not authorize network replay.
+[Dispatch chain, declarations, exception routing and limits](apk/2.26.43.72-iq-response-ownership/README.md).
+Full upstream admission, hooks, executor ordering and durable/generation
+ownership remain open. No Rust behavior change or live account operation.

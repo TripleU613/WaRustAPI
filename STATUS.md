@@ -1,3 +1,11 @@
+2026-11-04 — **IQ response ownership and token schema-catch chain traced.**
+
+Timer cancellation, callback claim and parsing are separate stages. A schema
+failure does not restore the pending nonce in the selected catch body.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-iq-response-ownership/README.md).
+Research only; no runtime changes or live traffic. Validation: checked exports,
+digest-bound metadata extraction, checksums, JSON, coverage freshness and hygiene.
+
 2026-11-04 — **Channel shutdown predicate resolved to queued-work checks.**
 
 The selected predicate combines two handler queues and a deferred deque; it
