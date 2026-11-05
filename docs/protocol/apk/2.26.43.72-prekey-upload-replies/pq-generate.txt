@@ -1,0 +1,237 @@
+
+# class: LX/0Yl;
+# extends: Ljava/lang/Object;
+
+.method public A06(V)  # .registers 17
+    # full signature: LX/0Yl;->A06()V
+    0000..0004  move-object/from16  v0, v16
+    0004..0008  iget-object  v12, v0, LX/0Yl;->A03:LX/0Yj;
+    0008..000c  iget-object  v0, v12, LX/0Yj;->A06:LX/0Yd;
+    000c..0010  const-string  v6, "SignalKyberPreKeyStore/getUnsetKyberPrekeyCount has "
+    0010..0014  iget-object  v0, v0, LX/0Yd;->A01:LX/0Xp;
+    0014..001a  invoke-virtual  {v0}, LX/0Xp;->A06()LX/0aq;
+    001a..001c  move-result-object  v4
+    001c..0020  iget-object  v5, v4, LX/0aq;->A02:LX/0KU;
+    0020..0024  const-string  v3, "SELECT COUNT(*) as count FROM kyber_prekeys WHERE sent_to_server = 0 AND direct_distribution = 0 AND last_resort_key = ?"
+    0024..0026  const/4  v0, #0x1
+    0026..002a  new-array  v2, v0, [Ljava/lang/String;
+    002a..002e  const-string  v1, "0"
+    002e..0030  const/4  v0, #0x0
+    0030..0034  aput-object  v1, v2, v0
+    0034..0038  const-string  v0, "SignalKyberPreKeyStore/getUnsetKyberPrekeyCount"
+    0038..003e  invoke-virtual  {v5, v3, v0, v2}, LX/0KU;->A0A(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;
+    003e..0040  move-result-object  v2
+    0040..0046  invoke-interface  {v2}, Landroid/database/Cursor;->moveToNext()Z
+    0046..0048  move-result  v0
+    0048..004c  if-eqz  v0, +0x171
+    004c..0050  const-string  v0, "count"
+    0050..0056  invoke-interface  {v2, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    0056..0058  move-result  v0
+    0058..005e  invoke-interface  {v2, v0}, Landroid/database/Cursor;->getInt(I)I
+    005e..0060  move-result  v3
+    0060..0064  new-instance  v1, Ljava/lang/StringBuilder;
+    0064..006a  invoke-direct  {v1, v6}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    006a..0070  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0070..0074  const-string  v0, " unsent kyber prekeys"
+    0074..007a  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    007a..0080  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0080..0082  move-result-object  v0
+    0082..0088  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0088..008e  invoke-interface  {v2}, Landroid/database/Cursor;->close()V
+    008e..0094  invoke-virtual  {v4}, LX/0aq;->close()V
+    0094..0098  iget  v2, v12, LX/0Yj;->A00:I
+    0098..009c  if-lt  v3, v2, +0x19
+    009c..00a0  const-string  v0, "SignalProtocolStore/get-schema skipping key generation because already more than "
+    00a0..00a4  new-instance  v1, Ljava/lang/StringBuilder;
+    00a4..00aa  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00aa..00b0  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    00b0..00b4  const-string  v0, " are unsent"
+    00b4..00ba  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00ba..00c0  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00c0..00c2  move-result-object  v0
+    00c2..00c8  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    00c8..00ca  return-void
+    00ca..00ce  sub-int  v11, v2, v3
+    00ce..00d2  iget-object  v0, v12, LX/0Yj;->A01:LX/00x;
+    00d2..00d8  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    00d8..00da  move-result-object  v0
+    00da..00de  check-cast  v0, LX/00X;
+    00de..00e4  invoke-virtual  {v0}, LX/00X;->A01()LX/00Y;
+    00e4..00e6  move-result-object  v1
+    00e6..00ea  const/16  v0, #0x4e3
+    00ea..00f0  invoke-static  {v1, v0}, LX/09H;->A00(LX/00Y;I)LX/05a;
+    00f0..00f2  move-result-object  v10
+    00f2..00f6  if-lez  v11, +0x108
+    00f6..00fa  if-gt  v11, v2, +0x106
+    00fa..00fe  iget-object  v0, v12, LX/0Yj;->A02:LX/00x;
+    00fe..0104  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0104..0106  move-result-object  v0
+    0106..010a  check-cast  v0, Lcom/whatsapp/infra/nativelibloader/WhatsAppLibLoader;
+    010a..0110  invoke-virtual  {v0}, Lcom/whatsapp/infra/nativelibloader/WhatsAppLibLoader;->BbM()Z
+    0110..0112  move-result  v0
+    0112..0116  const-string  v7, "SignalProtocolStore/generateKyberPreKeys"
+    0116..0118  const/4  v2, #0x1
+    0118..011c  if-nez  v0, +0x15
+    011c..0120  const-string  v0, "SignalProtocolStore/generateKyberPreKeys native library not loaded, skipping"
+    0120..0126  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    0126..012a  iget-object  v0, v10, LX/05a;->A00:LX/00x;
+    012a..0130  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0130..0132  move-result-object  v1
+    0132..0136  check-cast  v1, LX/0B0;
+    0136..013a  const-string  v0, "Failure loading libwhatsapp explicitly; skipping PQ key generation"
+    013a..0140  invoke-virtual  {v1, v7, v0, v2}, LX/0B0;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+    0140..0142  return-void
+    0142..0146  const-string  v0, "SignalProtocolStore/generateKyberPreKeys generating "
+    0146..014a  new-instance  v1, Ljava/lang/StringBuilder;
+    014a..0150  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0150..0156  invoke-virtual  {v1, v11}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0156..015a  const-string  v0, " Kyber prekeys"
+    015a..0160  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0160..0166  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0166..0168  move-result-object  v0
+    0168..016e  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    016e..0174  invoke-virtual  {v12}, LX/0Yj;->Anw()LX/ESk;
+    0174..0176  move-result-object  v9
+    0176..017a  iget-object  v2, v12, LX/0Yj;->A05:LX/0YT;
+    017a..017e  const-string  v8, "next_kyber_prekey_id"
+    017e..0182  const-string  v1, "getNextKyberPreKeyId"
+    0182..0186  const-string  v0, "SELECT next_kyber_prekey_id FROM identities WHERE recipient_id =? AND recipient_type = ? AND device_id =?"
+    0186..018c  invoke-static  {v2, v0, v8, v1}, LX/0YT;->A01(LX/0YT;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)I
+    018c..018e  move-result  v6
+    018e..0192  const/16  v0, #0x32
+    0192..0198  invoke-static  {v11, v0}, Ljava/lang/Math;->min(II)I
+    0198..019a  move-result  v5
+    019a..019e  new-instance  v14, Ljava/util/ArrayList;
+    019e..01a4  invoke-direct  {v14}, Ljava/util/ArrayList;-><init>()V
+    01a4..01a8  new-instance  v3, Ljava/util/LinkedList;
+    01a8..01ae  invoke-direct  {v3}, Ljava/util/LinkedList;-><init>()V
+    01ae..01b2  add-int/lit8  v4, v6, #0xff (-1)
+    01b2..01b4  const/4  v2, #0x0
+    01b4..01b8  if-ge  v2, v5, +0x16
+    01b8..01bc  add-int  v1, v4, v2
+    01bc..01c2  const  v0, #0xfffffe
+    01c2..01c4  rem-int/2addr  v1, v0
+    01c4..01c8  add-int/lit8  v1, v1, #0x1
+    01c8..01cc  sget-object  v0, Lorg/whispersystems/libsignal/kem/KEMKeyType;->A02:Lorg/whispersystems/libsignal/kem/KEMKeyType;
+    01cc..01d2  invoke-static  {v9, v0, v1}, LX/EqE;->A00(LX/ESk;Lorg/whispersystems/libsignal/kem/KEMKeyType;I)LX/EQ8;
+    01d2..01d4  move-result-object  v0
+    01d4..01da  invoke-virtual  {v3, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    01da..01de  add-int/lit8  v2, v2, #0x1
+    01de..01e0  goto  -0x15
+    01e0..01e6  invoke-interface  {v3}, Ljava/util/Deque;->iterator()Ljava/util/Iterator;
+    01e6..01e8  move-result-object  v3
+    01e8..01ee  invoke-interface  {v3}, Ljava/util/Iterator;->hasNext()Z
+    01ee..01f0  move-result  v0
+    01f0..01f4  if-eqz  v0, +0x19
+    01f4..01fa  invoke-interface  {v3}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    01fa..01fc  move-result-object  v0
+    01fc..0200  check-cast  v0, LX/EQ8;
+    0200..0204  iget-object  v0, v0, LX/EQ8;->A00:LX/Dfd;
+    0204..0208  iget  v2, v0, LX/Dfd;->id_:I
+    0208..020e  invoke-virtual  {v0}, Lcom/google/protobuf/AbstractMessageLite;->toByteArray()[B
+    020e..0210  move-result-object  v1
+    0210..0214  new-instance  v0, LX/ERb;
+    0214..021a  invoke-direct  {v0, v2, v1}, LX/ERb;-><init>(I[B)V
+    021a..0220  invoke-virtual  {v14, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0220..0222  goto  -0x1c
+    0222..0224  add-int/2addr  v6, v5
+    0224..022a  const  v0, #0xfffffe
+    022a..022c  rem-int/2addr  v6, v0
+    022c..0230  add-int/lit8  v6, v6, #0x1
+    0230..0234  iget-object  v13, v12, LX/0Yj;->A03:LX/0WJ;
+    0234..0238  iget-object  v0, v13, LX/0WJ;->A0I:LX/0Wk;
+    0238..023e  invoke-virtual  {v0}, LX/0Wk;->A04()LX/FjI;
+    023e..0240  move-result-object  v15
+    0240..0246  invoke-virtual  {v14}, Ljava/util/AbstractCollection;->isEmpty()Z
+    0246..0248  move-result  v0
+    0248..024c  if-nez  v0, +0x23
+    024c..0250  iget-object  v0, v13, LX/0WJ;->A0Q:LX/0Xp;
+    0250..0256  invoke-virtual  {v0}, LX/0Xp;->A07()LX/0aq;
+    0256..0258  move-result-object  v4
+    0258..025e  invoke-virtual  {v4}, LX/0aq;->A00()LX/1hk;
+    025e..0260  move-result-object  v3
+    0260..0264  iget-object  v2, v13, LX/0WJ;->A0K:LX/0Yd;
+    0264..0266  const/4  v1, #0x0
+    0266..0268  const/4  v0, #0x0
+    0268..026e  invoke-static  {v2, v1, v14, v0}, LX/0Yd;->A01(LX/0Yd;Ljava/lang/Long;Ljava/util/List;I)V
+    026e..0272  iget-object  v1, v13, LX/0WJ;->A0J:LX/0YT;
+    0272..0276  const-string  v0, "saveNextKyberPreKeyId"
+    0276..027c  invoke-static  {v1, v8, v0, v6}, LX/0YT;->A06(LX/0YT;Ljava/lang/String;Ljava/lang/String;I)V
+    027c..0282  invoke-virtual  {v3}, LX/1hk;->A00()V
+    0282..0288  invoke-virtual  {v3}, LX/1hk;->close()V
+    0288..028e  invoke-virtual  {v4}, LX/0aq;->close()V
+    028e..0294  invoke-virtual  {v15}, LX/FjI;->close()V
+    0294..0296  sub-int/2addr  v11, v5
+    0296..029a  if-lez  v11, -0xe7
+    029a..029e  goto/16  -0x86
+    029e..02a0  move-exception  v1
+    02a0..02a6  invoke-virtual  {v3}, LX/1hk;->close()V
+    02a6..02a8  goto  +0x5
+    02a8..02aa  move-exception  v0
+    02aa..02b0  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    02b0..02b2  throw  v1
+    02b2..02b4  move-exception  v1
+    02b4..02ba  invoke-virtual  {v4}, LX/0aq;->close()V
+    02ba..02bc  goto  +0x5
+    02bc..02be  move-exception  v0
+    02be..02c4  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    02c4..02c6  throw  v1
+    02c6..02c8  move-exception  v1
+    02c8..02ce  invoke-virtual  {v15}, LX/FjI;->close()V
+    02ce..02d0  throw  v1
+    02d0..02d2  move-exception  v0
+    02d2..02d8  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    02d8..02da  throw  v1
+    02da..02dc  move-exception  v2
+    02dc..02e0  const-string  v0, "SignalProtocolStore/generateKyberPreKeys UnsatisfiedLinkError generating Kyber prekeys"
+    02e0..02e6  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    02e6..02ea  iget-object  v0, v10, LX/05a;->A00:LX/00x;
+    02ea..02f0  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    02f0..02f2  move-result-object  v1
+    02f2..02f6  check-cast  v1, LX/0B0;
+    02f6..02fa  const-string  v0, "UnsatisfiedLinkError during Kyber prekey generation"
+    02fa..0300  invoke-virtual  {v1, v7, v0, v2}, LX/0B0;->A0e(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+    0300..0302  return-void
+    0302..0306  const-string  v1, "Count must be between 1 and "
+    0306..030a  new-instance  v0, Ljava/lang/StringBuilder;
+    030a..0310  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0310..0316  invoke-virtual  {v0, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0316..031c  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    031c..031e  move-result-object  v1
+    031e..0322  new-instance  v0, Ljava/lang/IllegalArgumentException;
+    0322..0328  invoke-direct  {v0, v1}, Ljava/lang/IllegalArgumentException;-><init>(Ljava/lang/String;)V
+    0328..032a  throw  v0
+    032a..0330  const-string/jumbo  v1, "unable to fetch count from table"
+    0330..0334  new-instance  v0, Landroid/database/sqlite/SQLiteException;
+    0334..033a  invoke-direct  {v0, v1}, Landroid/database/sqlite/SQLiteException;-><init>(Ljava/lang/String;)V
+    033a..033c  throw  v0
+    033c..033e  move-exception  v1
+    033e..0340  throw  v1
+    0340..0342  move-exception  v0
+    0342..0348  invoke-static  {v2, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    0348..034a  throw  v0
+    034a..034c  move-exception  v1
+    034c..034e  throw  v1
+    034e..0350  move-exception  v0
+    0350..0356  invoke-static  {v4, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    0356..0358  throw  v0
+    # exception table: 18 try range(s)
+    # catch <all> code_units 000e..0020 -> 01a5
+    # catch <all> code_units 0020..0044 -> 019e
+    # catch <all> code_units 0044..0047 -> 01a5
+    # catch Ljava/lang/UnsatisfiedLinkError; code_units 00d2..0111 -> 016d
+    # catch <all> code_units 0120..012c -> 0163
+    # catch <all> code_units 012c..0130 -> 0159
+    # catch <all> code_units 0130..0141 -> 014f
+    # catch <all> code_units 0141..0144 -> 0159
+    # catch <all> code_units 0144..0147 -> 0163
+    # catch <all> code_units 0150..0154 -> 0154
+    # catch <all> code_units 0155..0159 -> 0159
+    # catch <all> code_units 015a..015e -> 015e
+    # catch <all> code_units 015f..0163 -> 0163
+    # catch <all> code_units 0164..0167 -> 0168
+    # catch <all> code_units 0195..019e -> 019e
+    # catch <all> code_units 019f..01a0 -> 01a0
+    # catch <all> code_units 01a1..01a5 -> 01a5
+    # catch <all> code_units 01a6..01a7 -> 01a7
+.end method

@@ -1,0 +1,30 @@
+
+# class: LX/0Yj;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLLLLLLI)  # .registers 12
+    # full signature: LX/0Yj;-><init>(LX/08Y;LX/0WJ;LX/0YW;LX/0YT;LX/0Yd;LX/0Yb;LX/0YL;LX/0YE;LX/0Ye;I)V
+    0000..0006  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    0006..0008  const/4  v0, #0x5
+    0008..000e  invoke-static  {v0}, LX/00D;->A00(I)LX/05h;
+    000e..0010  move-result-object  v0
+    0010..0014  iput-object  v0, v1, LX/0Yj;->A01:LX/00x;
+    0014..0018  const/16  v0, #0x3bb
+    0018..001e  invoke-static  {v0}, LX/00D;->A00(I)LX/05h;
+    001e..0020  move-result-object  v0
+    0020..0024  iput-object  v0, v1, LX/0Yj;->A02:LX/00x;
+    0024..0028  iput-object  v2, v1, LX/0Yj;->A0A:LX/08Y;
+    0028..002c  iput-object  v3, v1, LX/0Yj;->A03:LX/0WJ;
+    002c..0030  iput-object  v9, v1, LX/0Yj;->A0B:LX/0YE;
+    0030..0034  iput-object  v8, v1, LX/0Yj;->A08:LX/0YL;
+    0034..0038  new-instance  v0, LX/0Yk;
+    0038..003e  invoke-direct  {v0, v10}, LX/0Yk;-><init>(LX/0Ye;)V
+    003e..0042  iput-object  v0, v1, LX/0Yj;->A09:LX/0Yk;
+    0042..0046  iput-object  v7, v1, LX/0Yj;->A07:LX/0Yb;
+    0046..004a  iput-object  v6, v1, LX/0Yj;->A06:LX/0Yd;
+    004a..004e  iput-object  v5, v1, LX/0Yj;->A05:LX/0YT;
+    004e..0052  iput-object  v4, v1, LX/0Yj;->A04:LX/0YW;
+    0052..0056  iput  v11, v1, LX/0Yj;->A00:I
+    0056..0058  return-void
+    # exception table: 0 try range(s)
+.end method

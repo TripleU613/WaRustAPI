@@ -835,3 +835,12 @@ closes the creation range/reader boundary, not schema/JNI migration writers.
 [Exact exports, xref bounds and existing-store compatibility](apk/2.26.43.72-prekey-upload-replies/README.md#native-cursor-ownership-and-creation-seed-2026-11-04).
 A Rust port must keep local zero-based history distinct and preserve uncertain
 batches, not reseed existing accounts. No implementation/reset/live traffic.
+
+## Current-build ADD ordinary-PQ selection/generation (2026-11-04)
+
+**Confirmed static, 43.72:** 0WJ.A1A/0Yd.A02 excludes last-resort PQ keys;
+0WJ.A0j/0Yl.A06 fills a supplied target in<=50 chunks with native-loader gating
+and separate positive cursor. Target provider and signing/conversion internals
+remain open. ADD ordinary-PQ selection does not require SET last-resort material.
+[Methods, SQL, branches and porting limits](apk/2.26.43.72-prekey-upload-replies/README.md#add-ordinary-pq-selection-and-generation-dispatch-2026-11-04).
+No runtime change/live traffic; this is not full current-build PQ upload parity.

@@ -168,3 +168,10 @@ Older 37.71 text above is not evidence of current-build generation parity.
 throws, creation seeds1..0xfffffe separately for legacy/PQ. This is not a reset
 policy. [Reader/writer and creation evidence](apk/2.26.43.72-prekey-upload-replies/README.md#native-cursor-ownership-and-creation-seed-2026-11-04).
 Existing local zero-based cursor remains unchanged pending versioned compatibility.
+
+## Current-build ADD ordinary PQ
+
+**Confirmed static, 43.72:** ADD selects non-last-resort ordinary PQ keys;
+generation fills an injected target with loader gating,<=50 chunks and separate
+cursor. [Evidence and remaining target/signature/admission trace](apk/2.26.43.72-prekey-upload-replies/README.md#add-ordinary-pq-selection-and-generation-dispatch-2026-11-04).
+No runtime switch.

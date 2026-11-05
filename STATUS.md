@@ -1,3 +1,11 @@
+2026-11-04 — **ADD ordinary-PQ selection/generation boundary traced.**
+
+Non-last-resort SQL selection, supplied generation target, native-loader gate
+and chunked cursor path retained; target/signing providers remain open.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#add-ordinary-pq-selection-and-generation-dispatch-2026-11-04).
+Validation: JSON parsing, coverage freshness, staged diff and repository
+hygiene passed. No production change or live traffic.
+
 2026-11-04 — **Native prekey cursor ownership and creation range traced.**
 
 Self-row reader throws when missing; creation independently seeds positive

@@ -396,3 +396,51 @@ Additional export hashes:
 - [cursor-xref.txt](cursor-xref.txt): `f3780f5da2bd5b2d70040a912386290d00b59ac222218508fa0fa05df0036c32`
 - [cursor-initialization.txt](cursor-initialization.txt): `fd9e6ca9522e1702ee489bf0f26e83ce287ff786886080afe2b5545392e2b3ac`
 - [cursor-random.txt](cursor-random.txt): `f33beedb4a9b05bab2ccc69b56d4fdc9484dd492ddb8378fb15ba647e7e1c2a4`
+
+## ADD ordinary-PQ selection and generation dispatch (2026-11-04)
+
+**Confirmed static**, pinned 43.72 as above; not runtime observation.
+
+- **0WJ.A1A**, 0010–0038, reads **0x52d1**, clamps its retrieval limit to
+  max(1,value), and calls **0Yd.A02**. That SQL selects kyber_prekeys with
+  **sent_to_server=0 AND direct_distribution=0 AND last_resort_key=0 LIMIT ?**,
+  with no ORDER BY. It therefore selects ordinary PQ keys, not last-resort.
+  The enclosing ADD builder separately applies min(requested,available), and
+  only invokes this retrieval when its requested PQ count is positive.
+- A1A parses each row through **EqE.A01 -> 0Yj.A00** to ETs; caught Exception
+  logs/skips that row. Conversion/signature producer internals are not retraced
+  here; a malformed row is not proof of different algorithm negotiation.
+- **0WJ.A0j -> 0Yl.A06** ensures ordinary PQ generation. A06 counts the same
+  unsent/non-direct/non-last-resort population. Target is **0Yj.A00**, supplied
+  as the final integer constructor parameter (0Yj.<init>0052–0056), not a literal
+  812 in this method. The provider/default of that constructor argument remains
+  untraced. Count>=target skips generation; otherwise deficit=target-count.
+- A06 checks native **WhatsAppLibLoader.BbM**. Missing library logs/reports and
+  skips; UnsatisfiedLinkError around generation is caught/reported. This is
+  actual gating, not permission to silently omit required PQ fields elsewhere.
+- It obtains identity through **0Yj.Anw**, reads positive native
+  next_kyber_prekey_id, and generates min(deficit,50) records per chunk through
+  **EqE.A00(identity,KEMKeyType.A02,id)**. Exact enum/algorithm and signature
+  implementation are not established by the enum field name alone.
+- ID expression is **((cursor-1+i)%0xfffffe)+1**, next cursor is
+  **((cursor+chunkCount)%0xfffffe)+1**. It saves records through
+  **0Yd.A01(...,null,records,0)** and next cursor through 0YT.A06, then reduces
+  deficit (0294–029e). If positive, the backward branch returns to018e for
+  another <=50 chunk; otherwise it returns. No last-resort-generation call
+  occurs in this selected ensure method. Full save-flag semantics remain open.
+
+**Porting consequence:** ADD can carry ordinary PQ without last-resort material;
+SET and ADD must not share an unconditional last-resort prerequisite. This does
+not establish native target value, algorithm negotiation or signature parity,
+and does not implement a Rust policy change. Remaining concrete inputs are PQ
+target DI provider, EqE/0Yj conversion signing path and current-build initial
+upload admission/config scope. Existing uncertain batch mode and IDs must stay
+unchanged during any port. No production change or live traffic.
+
+Additional export hashes:
+
+- [pq-A0j.txt](pq-A0j.txt): `acd09a632b5d10d1d8e1a32961e2bbc6b8ff44b0377756ad9f33612b3393bffc`
+- [pq-A1A.txt](pq-A1A.txt): `29845c40d2ad7529466c29b4d4917e17f008af8658a7a10c8e74058468743543`
+- [pq-generate.txt](pq-generate.txt): `8396a8f8a77ba85979664a3e67321dc4298eef056bbf367821e384f6a3289e97`
+- [pq-select-sql.txt](pq-select-sql.txt): `513ae1e2069257144d2505856e5015a21d511c9c91184745e24be337283c294d`
+- [pq-target.txt](pq-target.txt): `f7a384316b86f180773159089b55439ca42e4a4685b4d0cbd3860992bfbcd5b0`

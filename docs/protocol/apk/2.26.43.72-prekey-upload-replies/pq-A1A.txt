@@ -1,0 +1,80 @@
+
+# class: LX/0WJ;
+# extends: Ljava/lang/Object;
+
+.method public A1A(L)  # .registers 8
+    # full signature: LX/0WJ;->A1A()[LX/ETs;
+    0000..0004  iget-object  v0, v7, LX/0WJ;->A0I:LX/0Wk;
+    0004..000a  invoke-virtual  {v0}, LX/0Wk;->A04()LX/FjI;
+    000a..000c  move-result-object  v6
+    000c..0010  iget-object  v2, v7, LX/0WJ;->A01:LX/0Yl;
+    0010..0014  iget-object  v1, v2, LX/0Yl;->A00:LX/08Y;
+    0014..0018  const/16  v0, #0x52d1
+    0018..001e  invoke-virtual  {v1, v0}, LX/00E;->A0a(I)I
+    001e..0020  move-result  v1
+    0020..0022  const/4  v0, #0x1
+    0022..0028  invoke-static  {v0, v1}, Ljava/lang/Math;->max(II)I
+    0028..002a  move-result  v1
+    002a..002e  iget-object  v0, v2, LX/0Yl;->A03:LX/0Yj;
+    002e..0032  iget-object  v0, v0, LX/0Yj;->A06:LX/0Yd;
+    0032..0038  invoke-virtual  {v0, v1}, LX/0Yd;->A02(I)Ljava/util/ArrayList;
+    0038..003a  move-result-object  v0
+    003a..003e  new-instance  v3, Ljava/util/ArrayList;
+    003e..0044  invoke-direct  {v3}, Ljava/util/ArrayList;-><init>()V
+    0044..004a  invoke-virtual  {v0}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+    004a..004c  move-result-object  v5
+    004c..0052  invoke-interface  {v5}, Ljava/util/Iterator;->hasNext()Z
+    0052..0054  move-result  v0
+    0054..0058  if-eqz  v0, +0x2d
+    0058..005e  invoke-interface  {v5}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    005e..0060  move-result-object  v4
+    0060..0064  check-cast  v4, LX/ERb;
+    0064..0068  iget  v1, v4, LX/ERb;->A00:I
+    0068..006c  iget-object  v0, v4, LX/ERb;->A01:[B
+    006c..0072  invoke-static  {v0}, LX/EqE;->A01([B)LX/EQ8;
+    0072..0074  move-result-object  v0
+    0074..007a  invoke-static  {v0, v1}, LX/0Yj;->A00(LX/EQ8;I)LX/ETs;
+    007a..007c  move-result-object  v0
+    007c..0082  invoke-virtual  {v3, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0082..0084  goto  -0x1b
+    0084..0086  move-exception  v2
+    0086..008a  const-string  v0, "SignalProtocolStore/getUnsentKyberPreKeys error reading Kyber prekey "
+    008a..008e  new-instance  v1, Ljava/lang/StringBuilder;
+    008e..0094  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0094..0098  iget  v0, v4, LX/ERb;->A00:I
+    0098..009e  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    009e..00a4  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00a4..00a6  move-result-object  v0
+    00a6..00ac  invoke-static  {v0, v2}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    00ac..00ae  goto  -0x30
+    00ae..00b2  const-string  v0, "SignalProtocolStore/getUnsentKyberPreKeys reporting back "
+    00b2..00b6  new-instance  v1, Ljava/lang/StringBuilder;
+    00b6..00bc  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00bc..00c2  invoke-virtual  {v3}, Ljava/util/AbstractCollection;->size()I
+    00c2..00c4  move-result  v0
+    00c4..00ca  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    00ca..00ce  const-string  v0, " unsent Kyber prekeys"
+    00ce..00d4  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00d4..00da  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00da..00dc  move-result-object  v0
+    00dc..00e2  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    00e2..00e4  const/4  v0, #0x0
+    00e4..00e8  new-array  v0, v0, [LX/ETs;
+    00e8..00ee  invoke-virtual  {v3, v0}, Ljava/util/AbstractCollection;->toArray([Ljava/lang/Object;)[Ljava/lang/Object;
+    00ee..00f0  move-result-object  v0
+    00f0..00f4  check-cast  v0, [LX/ETs;
+    00f4..00fa  invoke-virtual  {v6}, LX/FjI;->close()V
+    00fa..00fc  return-object  v0
+    00fc..00fe  move-exception  v1
+    00fe..0104  invoke-virtual  {v6}, LX/FjI;->close()V
+    0104..0106  throw  v1
+    0106..0108  move-exception  v0
+    0108..010e  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    010e..0110  throw  v1
+    # exception table: 4 try range(s)
+    # catch <all> code_units 0006..0032 -> 007e
+    # catch Ljava/lang/Exception; code_units 0032..0042 -> 0042
+    # catch <all> code_units 0032..0042 -> 007e
+    # catch <all> code_units 0042..007a -> 007e
+    # catch <all> code_units 007f..0082 -> 0083
+.end method
